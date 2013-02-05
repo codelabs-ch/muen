@@ -1,13 +1,25 @@
-NUM_CPUS := $(shell getconf _NPROCESSORS_ONLN)
-
+NUM_CPUS  := $(shell getconf _NPROCESSORS_ONLN)
 BUILD_OPTS = -p -j$(NUM_CPUS) --RTS=zfp
 
-all: kernel
+TARGET_IP = 192.168.254.2
 
-kernel:
-	gprbuild $(BUILD_OPTS) -P$@
-	cp obj/$@ obj/kernel.elf
-	objcopy -O binary obj/$@ obj/$@
+all: obj/kernel
+
+obj/kernel.elf:
+	gprbuild $(BUILD_OPTS) -Pkernel
+
+obj/kernel: obj/kernel.elf
+	objcopy -O binary $< $@
+
+deploy: obj/kernel .server
+	echo y | amttool $(TARGET_IP) reset
+
+.server:
+	(cd obj && python -m SimpleHTTPServer >/dev/null 2>&1 & echo "$$!" > $@)
 
 clean:
-	rm -rf obj
+	rm -rf obj/*
+	kill `cat .server 2>/dev/null` 2>/dev/null || true
+	rm -f .server
+
+.PHONY: obj/kernel.elf

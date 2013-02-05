@@ -1,14 +1,21 @@
                                [ NOTE ]
 
-This copyright does *not* cover user programs or subjects that use the
-separation kernel interface to invoke kernel operations or services
-provided by other subjects. The kernel interface constitutes a GPL
-boundary and thus its usage is merely considered normal use of the
-kernel.
+This separation kernel and the τ0 subject are licensed under the GPL
+version 3 or any later version.
 
-However τ0 is considered an integral part of the separation kernel and
-the τ0/kernel interface is *not* considered a GPL boundary. Thus usage
-of the τ0/kernel interface falls under the heading of "derived work".
+Note: Due to its close integration τ0 is considered an integral part of
+the separation kernel. As a consequence components interacting with the
+kernel over the τ0/kernel interface may become "covered work".
+
+In contrast the interface between the kernel and other subjects (virtual
+machines / user programs) and the interface between τ0 and other
+subjects constitute GPL boundaries. Therefore subjects cannot be
+considered "covered work" simply by accessing these interfaces.
+
+For the avoidance of doubt, this license explicitly grants and affirms
+the  permission to integrate the kernel and τ0 with differently licensed
+subjects into a single boot image provided that the image can be
+transformed back into its components.
 
 ========================================================================
 

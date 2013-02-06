@@ -71,7 +71,9 @@ start64: .align 4096
 
 	movq (kernel_stack_pointer), %rsp
 
-	movl $0x07690748, 0xB80F0
+	// call kernel main
+
+	call kmain
 
 	cli
 

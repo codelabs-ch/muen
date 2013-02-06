@@ -15,6 +15,14 @@ SECTIONS
 		*(.gdt)
 		*(.*data*)
 	}
+
+	. = ALIGN (4096);
+
+	.bss :
+	{
+		. += 0x1000;
+		kernel_stack = .;
+	}
 	image_end = .;
 
 	/DISCARD/ :

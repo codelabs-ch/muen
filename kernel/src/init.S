@@ -67,6 +67,10 @@ _start:
 .code64
 start64: .align 4096
 
+	// set up kernel stack
+
+	movq (kernel_stack_pointer), %rsp
+
 	movl $0x07690748, 0xB80F0
 
 	cli
@@ -74,3 +78,7 @@ start64: .align 4096
 freeze:
 	hlt
 	jmp freeze
+
+.data
+kernel_stack_pointer:
+	.quad kernel_stack

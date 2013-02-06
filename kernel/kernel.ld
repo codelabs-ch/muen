@@ -11,6 +11,7 @@ SECTIONS
 
 	.data 0x110000 :
 	{
+		*(.pagetable)
 		*(.*data*)
 	}
 	image_end = .;

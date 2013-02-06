@@ -14,4 +14,11 @@ SECTIONS
 		*(.*data*)
 	}
 	image_end = .;
+
+	/DISCARD/ :
+	{
+		*(.comment)
+		*(.eh_frame)
+		*(.eh_frame_hdr)
+	}
 }

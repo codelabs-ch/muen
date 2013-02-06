@@ -56,6 +56,17 @@ _start:
 	btsl $CR0_PG_BIT, %eax
 	movl %eax, %cr0
 
+	// (5) set up GDT
+
+	lgdt gdt_pointer
+
+	// (6) indirect long jump to 64-bit code
+
+	ljmp $8, $start64
+
+.code64
+start64: .align 4096
+
 	movl $0x07690748, 0xB80F0
 
 	cli

@@ -16,7 +16,10 @@ project Kernel is
    end Compiler;
 
    package Linker is
-      for Default_Switches ("Asm") use ("-T", "kernel.ld", "-nostdlib");
+      for Default_Switches ("Asm") use
+        ("-T", "kernel.ld",
+         "-nostdlib",
+         "-n");
    end Linker;
 
    package Naming is

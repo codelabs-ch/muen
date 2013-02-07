@@ -3,6 +3,8 @@ with System.Machine_Code;
 package body SK.Kernel
 is
 
+   --# hide SK.Kernel;
+
    -------------------------------------------------------------------------
 
    procedure Main

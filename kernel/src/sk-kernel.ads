@@ -1,8 +1,9 @@
 package SK.Kernel
 is
 
-   procedure Main;
    --  Kernel entry point.
+   procedure Main;
+   --# derives ;
    pragma Export (C, Main, "kmain");
 
 end SK.Kernel;

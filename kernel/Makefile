@@ -1,6 +1,10 @@
 OBJ_DIR = $(CURDIR)/obj
 VC_DIR  = $(OBJ_DIR)/vc
 
+VERSION_SPEC = src/sk-version.ads
+VERSION      = $(GIT_REV)
+GIT_REV      = $(shell git describe --always)
+
 NUM_CPUS  := $(shell getconf _NPROCESSORS_ONLN)
 BUILD_OPTS = -p -j$(NUM_CPUS) --RTS=zfp
 
@@ -27,7 +31,24 @@ endif
 
 all: $(ALL)
 
-kernel:
+git-rev: FORCE
+	@if [ -d .git ]; then \
+		if [ -r $@ ]; then \
+			if [ "$$(cat $@)" != "$(GIT_REV)" ]; then \
+				echo $(GIT_REV) > $@; \
+			fi; \
+		else \
+			echo $(GIT_REV) > $@; \
+		fi \
+	fi
+
+$(VERSION_SPEC): git-rev
+	@echo "package SK.Version is"                   > $@
+	@echo "   Version_String : constant String :=" >> $@
+	@echo "     \"$(VERSION)\";"                   >> $@
+	@echo "end SK.Version;"                        >> $@
+
+kernel: $(VERSION_SPEC)
 	gprbuild $(BUILD_OPTS) -Pkernel
 
 deploy: kernel .server
@@ -65,3 +86,5 @@ clean:
 	rm -rf obj/*
 	kill `cat .server 2>/dev/null` 2>/dev/null || true
 	rm -f .server
+
+FORCE:

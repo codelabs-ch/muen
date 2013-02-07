@@ -1,4 +1,5 @@
 with SK.Console;
+with SK.Version;
 
 package body SK.Kernel
 is
@@ -9,7 +10,9 @@ is
    is
    begin
       pragma Debug
-        (SK.Console.Put_String (Item => "Booting Separation Kernel..."));
+        (SK.Console.Put_String
+           (Item => "Booting Separation Kernel ("
+            & SK.Version.Version_String & ") ..."));
       null;
    end Main;
 

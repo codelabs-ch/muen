@@ -13,6 +13,7 @@ project Kernel is
 
    package Compiler is
       for Required_Switches ("Asm") use ("-x", "assembler-with-cpp");
+      for Default_Switches ("Ada") use ("-g", "-gnata", "-gnatp", "-gnatwe");
    end Compiler;
 
    package Linker is

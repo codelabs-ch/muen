@@ -1,18 +1,16 @@
-with System.Machine_Code;
+with SK.Console;
 
 package body SK.Kernel
 is
-
-   --# hide SK.Kernel;
 
    -------------------------------------------------------------------------
 
    procedure Main
    is
    begin
-      System.Machine_Code.Asm
-        (Template => "movl $0x07690748, 0xB80F0",
-         Volatile => True);
+      pragma Debug
+        (SK.Console.Put_String (Item => "Booting Separation Kernel..."));
+      null;
    end Main;
 
 end SK.Kernel;

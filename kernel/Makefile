@@ -3,15 +3,12 @@ BUILD_OPTS = -p -j$(NUM_CPUS) --RTS=zfp
 
 TARGET_IP = 192.168.254.2
 
-all: obj/kernel
+all: kernel
 
-obj/kernel.elf:
+kernel:
 	gprbuild $(BUILD_OPTS) -Pkernel
 
-obj/kernel: obj/kernel.elf
-	objcopy -O binary $< $@
-
-deploy: obj/kernel .server
+deploy: kernel .server
 	echo y | amttool $(TARGET_IP) reset
 
 .server:
@@ -21,5 +18,3 @@ clean:
 	rm -rf obj/*
 	kill `cat .server 2>/dev/null` 2>/dev/null || true
 	rm -f .server
-
-.PHONY: obj/kernel.elf

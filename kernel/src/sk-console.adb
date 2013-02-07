@@ -188,14 +188,17 @@ is
    --#    in out Buffer;
    --#       out Screen;
    --# derives
-   --#    Cur_X          from *, Cur_Y &
-   --#    Cur_Y          from *, Cur_X &
+   --#    Cur_X          from *, Item        &
+   --#    Cur_Y          from *, Cur_X, Item &
    --#    Buffer, Screen from Buffer, Item, Cur_X, Cur_Y;
    is
-      --# hide Put_String;
+      Max_String_Length : constant := Console_Width * Console_Height;
+
+      subtype String_Range is Positive range 1 .. Max_String_Length;
    begin
-      for I in Item'First .. Item'Last
+      for I in String_Range
       loop
+         exit when I > Item'Length;
          Put_Char (Item => Item (I));
       end loop;
    end Put_String;

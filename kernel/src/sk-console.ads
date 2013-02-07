@@ -51,7 +51,7 @@ is
    --#    in out Buffer;
    --#       out Screen;
    --# derives
-   --#    Cursor_Position from * &
+   --#    Cursor_Position from *, Item &
    --#    Buffer, Screen  from Buffer, Item, Cursor_Position;
 
    --  Write contents of buffer to screen.

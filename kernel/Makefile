@@ -1,3 +1,4 @@
+SRC_DIR = $(CURDIR)/src
 OBJ_DIR = $(CURDIR)/obj
 VC_DIR  = $(OBJ_DIR)/vc
 
@@ -74,6 +75,7 @@ $(OBJ_DIR)/kernel.idx: src/*.ad*
 	@sparkmake $(SPARKMAKE_OPTS)     \
 		-index=$(OBJ_DIR)/kernel.idx \
 		-meta=$(OBJ_DIR)/kernel.smf  \
+		-exclude=$(SRC_DIR)/debug/*  \
 		-exclude=$(OBJ_DIR)/*
 
 $(OBJ_DIR)/target.cfg: $(OBJ_DIR)/confgen

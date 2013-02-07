@@ -71,6 +71,10 @@ start64: .align 4096
 
 	movq (kernel_stack_pointer), %rsp
 
+	// initialize Ada runtime
+
+	call adainit
+
 	// call kernel main
 
 	call kmain

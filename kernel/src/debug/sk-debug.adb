@@ -10,15 +10,16 @@ is
    -------------------------------------------------------------------------
 
    procedure Isr_Dump
+     (RIP    : Word64;
+      CS     : Word64;
+      RFLAGS : Word64;
+      RSP    : Word64;
+      SS     : Word64)
    is
-      RSP, RAX, RBX, RCX, RDX, RSI, RDI, RBP : Word64;
+      RAX, RBX, RCX, RDX, RSI, RDI, RBP      : Word64;
       R08, R09, R10, R11, R12, R13, R14, R15 : Word64;
       CR0, CR2, CR3, CR4                     : Word64;
    begin
-      System.Machine_Code.Asm
-        (Template => "movq %%rsp, %0",
-         Outputs  => (Word64'Asm_Output ("=r", RSP)),
-         Volatile => True);
       System.Machine_Code.Asm
         (Template => "movq %%rax, %0",
          Outputs  => (Word64'Asm_Output ("=r", RAX)),
@@ -96,8 +97,15 @@ is
          Outputs  => (Word64'Asm_Output ("=r", CR4)),
          Volatile => True);
 
-      Console.Put_String (Item => "RSP: ");
+      Console.Put_String ("RIP: ");
+      Console.Put_Word64 (Item => RIP);
+      Console.Put_String (" CS : ");
+      Console.Put_Word16 (Item => Word16 (CS));
+      Console.New_Line;
+      Console.Put_String ("RSP: ");
       Console.Put_Word64 (Item => RSP);
+      Console.Put_String (" SS : ");
+      Console.Put_Word16 (Item => Word16 (SS));
       Console.New_Line;
 
       Console.Put_String (Item => "RAX: ");
@@ -150,6 +158,9 @@ is
 
       Console.Put_String (Item => "CR4: ");
       Console.Put_Word64 (Item => CR4);
+      Console.Put_String (" EFL: ");
+      Console.Put_Word32 (Item => Word32 (RFLAGS));
+      Console.New_Line;
    end Isr_Dump;
 
 end SK.Debug;

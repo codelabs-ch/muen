@@ -60,8 +60,41 @@ is
    procedure Isr_UD
    is
       --# hide Isr_UD;
+
+      RIP, CS, RFLAGS, RSP, SS : Word64;
    begin
-      pragma Debug (SK.Debug.Dump_Info);
+
+      --  Get RIP, CS, RFLAGS, RSP and SS from the stack.
+      --  See Intel SDM, Volume 3A, chapter 6.14.2 "64-Bit Mode Stack Frame".
+
+      System.Machine_Code.Asm
+        (Template => "pushq 0x8(%%rbp); popq %0",
+         Outputs  => (Word64'Asm_Output ("=m", RIP)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "pushq 0x10(%%rbp); popq %0",
+         Outputs  => (Word64'Asm_Output ("=m", CS)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "pushq 0x18(%%rbp); popq %0",
+         Outputs  => (Word64'Asm_Output ("=m", RFLAGS)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "pushq 0x20(%%rbp); popq %0",
+         Outputs  => (Word64'Asm_Output ("=m", RSP)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "pushq 0x28(%%rbp); popq %0",
+         Outputs  => (Word64'Asm_Output ("=m", SS)),
+         Volatile => True);
+
+      pragma Debug
+        (SK.Debug.Isr_Dump
+           (RIP    => RIP,
+            CS     => CS,
+            RFLAGS => RFLAGS,
+            RSP    => RSP,
+            SS     => SS));
       System.Machine_Code.Asm
         (Template => "hlt",
          Volatile => True);

@@ -16,6 +16,9 @@ is
    --  Output given word in hex.
    procedure Put_Word16 (Item : Word16);
 
+   --  Output given doubleword in hex.
+   procedure Put_Word32 (Item : Word32);
+
    --  Output given quadword in hex.
    procedure Put_Word64 (Item : Word64);
 

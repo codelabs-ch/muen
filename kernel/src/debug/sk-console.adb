@@ -178,6 +178,20 @@ is
 
    ---------------------------------------------------------------------------
 
+   procedure Put_Word32 (Item : Word32)
+   is
+      subtype Word32_Range is Positive range 1 .. 8;
+      subtype Word32_String is String (Word32_Range);
+
+      Str : Word32_String := Word32_String'(others => '0');
+   begin
+      To_Hex (Item   => Word64 (Item),
+              Buffer => Str);
+      Put_String (Item => Str);
+   end Put_Word32;
+
+   ---------------------------------------------------------------------------
+
    procedure Put_Word64 (Item : Word64)
    is
       subtype Word64_Range is Positive range 1 .. 16;

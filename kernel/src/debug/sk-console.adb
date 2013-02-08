@@ -53,6 +53,12 @@ is
    end record;
    for Screen_Cell_Type'Size use 16;
 
+   Console_Width  : constant Natural := 80;
+   Console_Height : constant Natural := 25;
+
+   subtype Console_Width_Range  is Natural range 1 .. Console_Width;
+   subtype Console_Height_Range is Natural range 1 .. Console_Height;
+
    type Screen_Row_Type is array (Console_Width_Range) of Screen_Cell_Type;
    --  VGA screen row.
 
@@ -72,6 +78,9 @@ is
 
    --  Return character representation of given quadword.
    function To_Character (Value : Word64) return Character;
+
+   --  Scroll screen if current Y position is equal to the last row.
+   procedure Scroll;
 
    -------------------------------------------------------------------------
 

@@ -1,12 +1,6 @@
 package SK.Console
 is
 
-   Console_Width  : constant Natural := 80;
-   Console_Height : constant Natural := 25;
-
-   subtype Console_Width_Range  is Natural range 1 .. Console_Width;
-   subtype Console_Height_Range is Natural range 1 .. Console_Height;
-
    --  Clear screen.
    procedure Clear;
 
@@ -21,10 +15,5 @@ is
 
    --  Output given quadword in hex.
    procedure Put_Word64 (Item : Word64);
-
-private
-
-   --  Scroll screen if current Y position is equal to the last row.
-   procedure Scroll;
 
 end SK.Console;

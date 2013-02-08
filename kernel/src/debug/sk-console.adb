@@ -61,35 +61,21 @@ is
 
    Cur_X  : Console_Width_Range;
    Cur_Y  : Console_Height_Range;
-   Buffer : Screen_Type;
    Screen : Screen_Type;
    pragma Import (Ada, Screen);
    for Screen'Address use System'To_Address (16#000B_8000#);
 
    -------------------------------------------------------------------------
 
-   procedure Update_Screen
-   is
-   begin
-      for Y in Console_Height_Range loop
-         for X in Console_Width_Range loop
-            Screen (Y)(X) := Buffer (Y)(X);
-         end loop;
-      end loop;
-   end Update_Screen;
-
-   -------------------------------------------------------------------------
-
    procedure Clear
    is
    begin
-      Buffer := Screen_Type'
+      Screen := Screen_Type'
         (others => Screen_Row_Type'
            (others => Screen_Cell_Type'
               (Char     => ' ',
                FG_Color => White,
                BG_Color => Black)));
-      Update_Screen;
 
       Cur_X := Console_Width_Range'First;
       Cur_Y := Console_Height_Range'First;
@@ -104,16 +90,14 @@ is
    begin
       for Y in Console_To_Last_Row
       loop
-         Buffer (Y) := Buffer (Y + 1);
+         Screen (Y) := Screen (Y + 1);
       end loop;
 
-      Buffer (Console_Height_Range'Last) := Screen_Row_Type'
+      Screen (Console_Height_Range'Last) := Screen_Row_Type'
         (others => Screen_Cell_Type'
            (Char     => ' ',
             FG_Color => White,
             BG_Color => Black));
-
-      Update_Screen;
    end Scroll;
 
    -------------------------------------------------------------------------
@@ -134,7 +118,7 @@ is
    procedure Put_Char (Item : Character)
    is
    begin
-      Buffer (Cur_Y)(Cur_X) := Screen_Cell_Type'
+      Screen (Cur_Y)(Cur_X) := Screen_Cell_Type'
         (Char     => Item,
          FG_Color => White,
          BG_Color => Black);
@@ -144,8 +128,6 @@ is
       else
          Cur_X := Cur_X + 1;
       end if;
-
-      Update_Screen;
    end Put_Char;
 
    -------------------------------------------------------------------------
@@ -164,7 +146,7 @@ is
    end Put_String;
 
 begin
-   Buffer := Screen_Type'
+   Screen := Screen_Type'
      (others => Screen_Row_Type'
         (others => Screen_Cell_Type'
            (Char     => ' ',

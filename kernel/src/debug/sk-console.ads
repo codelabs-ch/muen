@@ -19,9 +19,6 @@ is
    --  Output given string.
    procedure Put_String (Item : String);
 
-   --  Write contents of buffer to screen.
-   procedure Update_Screen;
-
 private
 
    --  Scroll screen if current Y position is equal to the last row.

@@ -11,7 +11,7 @@ BUILD_OPTS = -p -j$(NUM_CPUS) --RTS=zfp
 
 TARGET_IP = 192.168.254.2
 
-SPARK_OPTS = \
+SPARK_OPTS =                             \
 	-vcg                                 \
 	-nosli                               \
 	-nolistings                          \
@@ -20,13 +20,17 @@ SPARK_OPTS = \
 	-brief                               \
 	-rules=all
 
+SPARKMAKE_OPTS =           \
+	-duplicates_are_errors \
+	-nometa
+
 ALL = kernel
 
 ifeq ($(NO_PROOF),)
 ALL   += $(OBJ_DIR)/kernel.sum
 DUMMY := $(shell mkdir -p $(VC_DIR))
 ifeq ($(SPARK_DIR),)
-$(error SPARK_DIR not set!)
+$(error SPARK_DIR not set)
 endif
 endif
 
@@ -74,7 +78,6 @@ $(OBJ_DIR)/kernel.rep: $(OBJ_DIR)/kernel.idx $(OBJ_DIR)/target.cfg
 $(OBJ_DIR)/kernel.idx: src/*.ad*
 	@sparkmake $(SPARKMAKE_OPTS)     \
 		-index=$(OBJ_DIR)/kernel.idx \
-		-meta=$(OBJ_DIR)/kernel.smf  \
 		-exclude=$(SRC_DIR)/debug/*  \
 		-exclude=$(OBJ_DIR)/*
 

@@ -1,7 +1,6 @@
 with System;
 
 package body SK.Console
---# own Cursor_Position is Cur_X, Cur_Y;
 is
 
    type VGA_Color_Type is
@@ -82,16 +81,6 @@ is
    -------------------------------------------------------------------------
 
    procedure Clear
-   --# global
-   --#    out Cur_X;
-   --#    out Cur_Y;
-   --#    out Buffer;
-   --#    out Screen;
-   --# derives
-   --#    Cur_X, Cur_Y, Buffer, Screen from ;
-   --# post
-   --#    Cur_X = Console_Width_Range'First and
-   --#    Cur_Y = Console_Height_Range'First;
    is
    begin
       Buffer := Screen_Type'
@@ -130,17 +119,6 @@ is
    -------------------------------------------------------------------------
 
    procedure New_Line
-   --# global
-   --#    in out Buffer;
-   --#    in out Cur_Y;
-   --#       out Cur_X;
-   --#       out Screen;
-   --# derives
-   --#    Cur_X          from   &
-   --#    Cur_Y          from * &
-   --#    Buffer, Screen from Buffer, Cur_Y;
-   --# post
-   --#    Cur_X = Console_Width_Range'First;
    is
    begin
       Cur_X := Console_Width_Range'First;
@@ -154,15 +132,6 @@ is
    -------------------------------------------------------------------------
 
    procedure Put_Char (Item : Character)
-   --# global
-   --#    in out Cur_X;
-   --#    in out Cur_Y;
-   --#    in out Buffer;
-   --#       out Screen;
-   --# derives
-   --#    Cur_X          from *        &
-   --#    Cur_Y          from *, Cur_X &
-   --#    Buffer, Screen from Buffer, Item, Cur_X, Cur_Y;
    is
    begin
       Buffer (Cur_Y)(Cur_X) := Screen_Cell_Type'
@@ -182,15 +151,6 @@ is
    -------------------------------------------------------------------------
 
    procedure Put_String (Item : String)
-   --# global
-   --#    in out Cur_X;
-   --#    in out Cur_Y;
-   --#    in out Buffer;
-   --#       out Screen;
-   --# derives
-   --#    Cur_X          from *, Item        &
-   --#    Cur_Y          from *, Cur_X, Item &
-   --#    Buffer, Screen from Buffer, Item, Cur_X, Cur_Y;
    is
       Max_String_Length : constant := Console_Width * Console_Height;
 

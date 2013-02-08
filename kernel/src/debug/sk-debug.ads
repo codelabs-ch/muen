@@ -1,7 +1,7 @@
 package SK.Debug
 is
 
-   --  Dump register state to console.
-   procedure Dump_Info;
+   --  Dump execution environment from interrupt context.
+   procedure Isr_Dump;
 
 end SK.Debug;

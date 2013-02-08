@@ -9,7 +9,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Dump_Info
+   procedure Isr_Dump
    is
       RSP, RAX, RBX, RCX, RDX, RSI, RDI, RBP : Word64;
       R08, R09, R10, R11, R12, R13, R14, R15 : Word64;
@@ -150,6 +150,6 @@ is
 
       Console.Put_String (Item => "CR4: ");
       Console.Put_Word64 (Item => CR4);
-   end Dump_Info;
+   end Isr_Dump;
 
 end SK.Debug;

@@ -22,63 +22,63 @@ is
    begin
       System.Machine_Code.Asm
         (Template => "movq %%rax, %0",
-         Outputs  => (Word64'Asm_Output ("=r", RAX)),
+         Outputs  => (Word64'Asm_Output ("=m", RAX)),
          Volatile => True);
       System.Machine_Code.Asm
         (Template => "movq %%rbx, %0",
-         Outputs  => (Word64'Asm_Output ("=r", RBX)),
+         Outputs  => (Word64'Asm_Output ("=m", RBX)),
          Volatile => True);
       System.Machine_Code.Asm
         (Template => "movq %%rcx, %0",
-         Outputs  => (Word64'Asm_Output ("=r", RCX)),
+         Outputs  => (Word64'Asm_Output ("=m", RCX)),
          Volatile => True);
       System.Machine_Code.Asm
         (Template => "movq %%rdx, %0",
-         Outputs  => (Word64'Asm_Output ("=r", RDX)),
+         Outputs  => (Word64'Asm_Output ("=m", RDX)),
          Volatile => True);
       System.Machine_Code.Asm
         (Template => "movq %%rsi, %0",
-         Outputs => (Word64'Asm_Output ("=r", RSI)),
+         Outputs  => (Word64'Asm_Output ("=m", RSI)),
          Volatile => True);
       System.Machine_Code.Asm
         (Template => "movq %%rdi, %0",
-         Outputs  => (Word64'Asm_Output ("=r", RDI)),
+         Outputs  => (Word64'Asm_Output ("=m", RDI)),
          Volatile => True);
       System.Machine_Code.Asm
         (Template => "movq %%rbp, %0",
-         Outputs  => (Word64'Asm_Output ("=r", RBP)),
+         Outputs  => (Word64'Asm_Output ("=m", RBP)),
          Volatile => True);
       System.Machine_Code.Asm
         (Template => "movq %%r8, %0",
-         Outputs  => (Word64'Asm_Output ("=r", R08)),
+         Outputs  => (Word64'Asm_Output ("=m", R08)),
          Volatile => True);
       System.Machine_Code.Asm
         (Template => "movq %%r9, %0",
-         Outputs  => (Word64'Asm_Output ("=r", R09)),
+         Outputs  => (Word64'Asm_Output ("=m", R09)),
          Volatile => True);
       System.Machine_Code.Asm
         (Template => "movq %%r10, %0",
-         Outputs  => (Word64'Asm_Output ("=r", R10)),
+         Outputs  => (Word64'Asm_Output ("=m", R10)),
          Volatile => True);
       System.Machine_Code.Asm
         (Template => "movq %%r11, %0",
-         Outputs  => (Word64'Asm_Output ("=r", R11)),
+         Outputs  => (Word64'Asm_Output ("=m", R11)),
          Volatile => True);
       System.Machine_Code.Asm
         (Template => "movq %%r12, %0",
-         Outputs  => (Word64'Asm_Output ("=r", R12)),
+         Outputs  => (Word64'Asm_Output ("=m", R12)),
          Volatile => True);
       System.Machine_Code.Asm
         (Template => "movq %%r13, %0",
-         Outputs  => (Word64'Asm_Output ("=r", R13)),
+         Outputs  => (Word64'Asm_Output ("=m", R13)),
          Volatile => True);
       System.Machine_Code.Asm
         (Template => "movq %%r14, %0",
-         Outputs  => (Word64'Asm_Output ("=r", R14)),
+         Outputs  => (Word64'Asm_Output ("=m", R14)),
          Volatile => True);
       System.Machine_Code.Asm
         (Template => "movq %%r15, %0",
-         Outputs  => (Word64'Asm_Output ("=r", R15)),
+         Outputs  => (Word64'Asm_Output ("=m", R15)),
          Volatile => True);
       System.Machine_Code.Asm
         (Template => "movq %%cr0, %0",

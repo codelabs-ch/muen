@@ -164,6 +164,20 @@ is
 
    ---------------------------------------------------------------------------
 
+   procedure Put_Word16 (Item : Word16)
+   is
+      subtype Word16_Range is Positive range 1 .. 4;
+      subtype Word16_String is String (Word16_Range);
+
+      Str : Word16_String := Word16_String'(others => '0');
+   begin
+      To_Hex (Item   => Word64 (Item),
+              Buffer => Str);
+      Put_String (Item => Str);
+   end Put_Word16;
+
+   ---------------------------------------------------------------------------
+
    procedure Put_Word64 (Item : Word64)
    is
       subtype Word64_Range is Positive range 1 .. 16;

@@ -13,6 +13,9 @@ is
    --  Output given string.
    procedure Put_String (Item : String);
 
+   --  Output given word in hex.
+   procedure Put_Word16 (Item : Word16);
+
    --  Output given quadword in hex.
    procedure Put_Word64 (Item : Word64);
 

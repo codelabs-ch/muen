@@ -24,7 +24,7 @@ SPARKMAKE_OPTS =           \
 	-duplicates_are_errors \
 	-nometa
 
-ALL = kernel
+ALL = $(OBJ_DIR)/kernel
 
 ifeq ($(NO_PROOF),)
 ALL   += $(OBJ_DIR)/kernel.sum
@@ -53,10 +53,13 @@ $(VERSION_SPEC): git-rev
 	@echo "     \"$(VERSION)\";"                   >> $@
 	@echo "end SK.Version;"                        >> $@
 
-kernel: $(VERSION_SPEC)
+$(OBJ_DIR)/kernel.elf: $(VERSION_SPEC)
 	gprbuild $(BUILD_OPTS) -Pkernel
 
-deploy: kernel .server
+$(OBJ_DIR)/kernel: $(OBJ_DIR)/kernel.elf
+	objcopy -O binary $< $@
+
+deploy: $(OBJ_DIR)/kernel .server
 	echo y | amttool $(TARGET_IP) reset
 
 .server:
@@ -93,3 +96,5 @@ clean:
 	rm -f .server
 
 FORCE:
+
+PHONY: $(OBJ_DIR)/kernel.elf

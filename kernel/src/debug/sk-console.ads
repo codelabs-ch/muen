@@ -19,6 +19,9 @@ is
    --  Output given string.
    procedure Put_String (Item : String);
 
+   --  Output given quadword in hex.
+   procedure Put_Word64 (Item : Word64);
+
 private
 
    --  Scroll screen if current Y position is equal to the last row.

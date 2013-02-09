@@ -8,6 +8,6 @@ is
       RFLAGS : Word64;
       RSP    : Word64;
       SS     : Word64);
-   pragma Inline (Isr_Dump);
+   pragma Inline_Always (Isr_Dump);
 
 end SK.Debug;

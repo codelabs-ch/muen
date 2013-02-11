@@ -12,7 +12,6 @@ is
 
    procedure Main
    is
-      --# hide Main;
    begin
       pragma Debug
         (SK.Console.Put_String
@@ -22,12 +21,12 @@ is
 
       --  Setup IDT.
 
-      SK.Interrupts.Init;
-      SK.Interrupts.Load;
+      Interrupts.Init;
+      Interrupts.Load;
 
-      System.Machine_Code.Asm
+      pragma Debug (System.Machine_Code.Asm
         (Template => "ud2",
-         Volatile => True);
+         Volatile => True));
    end Main;
 
 end SK.Kernel;

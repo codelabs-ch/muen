@@ -164,6 +164,20 @@ is
 
    ---------------------------------------------------------------------------
 
+   procedure Put_Byte (Item : Byte)
+   is
+      subtype Byte_Range is Positive range 1 .. 2;
+      subtype Byte_String is String (Byte_Range);
+
+      Str : Byte_String := Byte_String'(others => '0');
+   begin
+      To_Hex (Item   => Word64 (Item),
+              Buffer => Str);
+      Put_String (Item => Str);
+   end Put_Byte;
+
+   ---------------------------------------------------------------------------
+
    procedure Put_Word16 (Item : Word16)
    is
       subtype Word16_Range is Positive range 1 .. 4;

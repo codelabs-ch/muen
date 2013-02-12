@@ -35,8 +35,7 @@ is
          Outputs  => (Word64'Asm_Output ("=r", CR4)),
          Volatile => True);
 
-      Console.Put_String ("[KERNEL PANIC]");
-      Console.New_Line;
+      Console.Put_Line ("[KERNEL PANIC]");
 
       Console.Put_String ("Vector: ");
       Console.Put_Byte (Item => Byte (Vec));

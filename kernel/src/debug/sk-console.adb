@@ -149,6 +149,15 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Put_Line (Item : String)
+   is
+   begin
+      Put_String (Item => Item);
+      New_Line;
+   end Put_Line;
+
+   -------------------------------------------------------------------------
+
    procedure Put_String (Item : String)
    is
       Max_String_Length : constant := Console_Width * Console_Height;

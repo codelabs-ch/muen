@@ -14,10 +14,9 @@ is
    is
    begin
       pragma Debug
-        (SK.Console.Put_String
+        (SK.Console.Put_Line
            (Item => "Booting Separation Kernel ("
             & SK.Version.Version_String & ") ..."));
-      pragma Debug (SK.Console.New_Line);
 
       --  Setup IDT.
 

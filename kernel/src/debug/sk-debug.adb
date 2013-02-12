@@ -10,76 +10,14 @@ is
    -------------------------------------------------------------------------
 
    procedure Isr_Dump
-     (RIP    : Word64;
-      CS     : Word64;
-      RFLAGS : Word64;
-      RSP    : Word64;
-      SS     : Word64)
+     (RDI : Word64; RSI : Word64; RDX : Word64; RCX : Word64; R08 : Word64;
+      R09 : Word64; RAX : Word64; RBX : Word64; RBP : Word64; R10 : Word64;
+      R11 : Word64; R12 : Word64; R13 : Word64; R14 : Word64; R15 : Word64;
+      Vec : Word64; Err : Word64; RIP : Word64; CS  : Word64; RFL : Word64;
+      RSP : Word64; SS  : Word64)
    is
-      RAX, RBX, RCX, RDX, RSI, RDI, RBP      : Word64;
-      R08, R09, R10, R11, R12, R13, R14, R15 : Word64;
-      CR0, CR2, CR3, CR4                     : Word64;
+      CR0, CR2, CR3, CR4 : Word64;
    begin
-      System.Machine_Code.Asm
-        (Template => "movq %%rax, %0",
-         Outputs  => (Word64'Asm_Output ("=m", RAX)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%rbx, %0",
-         Outputs  => (Word64'Asm_Output ("=m", RBX)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%rcx, %0",
-         Outputs  => (Word64'Asm_Output ("=m", RCX)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%rdx, %0",
-         Outputs  => (Word64'Asm_Output ("=m", RDX)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%rsi, %0",
-         Outputs  => (Word64'Asm_Output ("=m", RSI)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%rdi, %0",
-         Outputs  => (Word64'Asm_Output ("=m", RDI)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%rbp, %0",
-         Outputs  => (Word64'Asm_Output ("=m", RBP)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%r8, %0",
-         Outputs  => (Word64'Asm_Output ("=m", R08)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%r9, %0",
-         Outputs  => (Word64'Asm_Output ("=m", R09)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%r10, %0",
-         Outputs  => (Word64'Asm_Output ("=m", R10)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%r11, %0",
-         Outputs  => (Word64'Asm_Output ("=m", R11)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%r12, %0",
-         Outputs  => (Word64'Asm_Output ("=m", R12)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%r13, %0",
-         Outputs  => (Word64'Asm_Output ("=m", R13)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%r14, %0",
-         Outputs  => (Word64'Asm_Output ("=m", R14)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%r15, %0",
-         Outputs  => (Word64'Asm_Output ("=m", R15)),
-         Volatile => True);
       System.Machine_Code.Asm
         (Template => "movq %%cr0, %0",
          Outputs  => (Word64'Asm_Output ("=r", CR0)),
@@ -96,6 +34,16 @@ is
         (Template => "movq %%cr4, %0",
          Outputs  => (Word64'Asm_Output ("=r", CR4)),
          Volatile => True);
+
+      Console.Put_String ("[KERNEL PANIC]");
+      Console.New_Line;
+
+      Console.Put_String ("Vector: ");
+      Console.Put_Byte (Item => Byte (Vec));
+      Console.Put_String (", Error: ");
+      Console.Put_Word64 (Item => Err);
+      Console.New_Line;
+      Console.New_Line;
 
       Console.Put_String ("RIP: ");
       Console.Put_Word64 (Item => RIP);
@@ -159,8 +107,12 @@ is
       Console.Put_String (Item => "CR4: ");
       Console.Put_Word64 (Item => CR4);
       Console.Put_String (" EFL: ");
-      Console.Put_Word32 (Item => Word32 (RFLAGS));
+      Console.Put_Word32 (Item => Word32 (RFL));
       Console.New_Line;
+
+      System.Machine_Code.Asm
+        (Template => "hlt",
+         Volatile => True);
    end Isr_Dump;
 
 end SK.Debug;

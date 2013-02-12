@@ -4,15 +4,18 @@
 --#    SK;
 
 package SK.Interrupts
---# own IDT, IDT_Pointer;
+--# own
+--#       IDT, IDT_Pointer;
+--#    in ISR_List : ISR_List_Type;
 is
 
    --  Initialize Interrupt Descriptor Table.
    procedure Init;
    --# global
-   --#    out IDT;
+   --#    in     ISR_List;
+   --#       out IDT;
    --# derives
-   --#    IDT from ;
+   --#    IDT from ISR_List;
 
    --  Load IDT into IDT register.
    procedure Load;
@@ -21,11 +24,5 @@ is
    --#       out IDT_Pointer;
    --# derives
    --#    IDT_Pointer from IDT;
-
-private
-
-   --  Interrupt service routine for #UD fault.
-   procedure Isr_UD;
-   --# derives ;
 
 end SK.Interrupts;

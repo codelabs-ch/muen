@@ -1,5 +1,3 @@
-with Ada.Unchecked_Conversion;
-
 with System;
 with System.Machine_Code;
 
@@ -10,6 +8,17 @@ is
 
    --  Interrupt vector number.
    subtype Vector_Type is SK.Byte range 0 .. 255;
+
+   --  Address of ISR.
+   subtype ISR_Address_Type is SK.Word64;
+
+   --  ISR list type.
+   type ISR_List_Type is array (Vector_Type) of ISR_Address_Type;
+
+   --  ISR trampoline list.
+   ISR_List : ISR_List_Type;
+   pragma Import (C, ISR_List, "isrlist");
+   --# assert ISR_List'Always_Valid;
 
    -- Interrupt gate descriptor.
    type Gate_Type is record
@@ -44,68 +53,17 @@ is
    end record;
    for IDT_Pointer_Type'Size use 80;
 
-   --  IDT
+   --  IDT, see Intel SDM chapter 6.10.
    IDT : IDT_Type;
    for IDT'Alignment use 8;
 
    --  Interrupt table pointer, loaded into IDTR
    IDT_Pointer : IDT_Pointer_Type;
 
-   function To_Word64 is new Ada.Unchecked_Conversion
-     (Source => System.Address,
-      Target => SK.Word64);
-
-   -------------------------------------------------------------------------
-
-   procedure Isr_UD
-   is
-      --# hide Isr_UD;
-
-      RIP, CS, RFLAGS, RSP, SS : Word64;
-   begin
-
-      --  Get RIP, CS, RFLAGS, RSP and SS from the stack.
-      --  See Intel SDM, Volume 3A, chapter 6.14.2 "64-Bit Mode Stack Frame".
-
-      System.Machine_Code.Asm
-        (Template => "pushq 0x8(%%rbp); popq %0",
-         Outputs  => (Word64'Asm_Output ("=m", RIP)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "pushq 0x10(%%rbp); popq %0",
-         Outputs  => (Word64'Asm_Output ("=m", CS)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "pushq 0x18(%%rbp); popq %0",
-         Outputs  => (Word64'Asm_Output ("=m", RFLAGS)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "pushq 0x20(%%rbp); popq %0",
-         Outputs  => (Word64'Asm_Output ("=m", RSP)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "pushq 0x28(%%rbp); popq %0",
-         Outputs  => (Word64'Asm_Output ("=m", SS)),
-         Volatile => True);
-
-      pragma Debug
-        (SK.Debug.Isr_Dump
-           (RIP    => RIP,
-            CS     => CS,
-            RFLAGS => RFLAGS,
-            RSP    => RSP,
-            SS     => SS));
-      System.Machine_Code.Asm
-        (Template => "hlt",
-         Volatile => True);
-   end Isr_UD;
-
    -------------------------------------------------------------------------
 
    procedure Init
    is
-      --# hide Init;
-
       Temp : SK.Word64;
    begin
       IDT := IDT_Type'
@@ -117,19 +75,21 @@ is
             Offset_63_32     => 0,
             Reserved         => 0));
 
-      --  Install #UD interrupt service routine.
+      for I in Vector_Type range IDT'Range loop
+         Temp := ISR_List (I);
+         --# check Temp in SK.Word64;
 
-      Temp := To_Word64 (Isr_Ud'Address);
-      IDT (6) := Gate_Type'
-        (Offset_15_00     => SK.Word16
-           (Temp and 16#0000_0000_0000_ffff#),
-         Segment_Selector => 16#0008#,
-         Flags            => 16#8e00#,
-         Offset_31_16     => SK.Word16
-           ((Temp and 16#0000_0000_ffff_0000#) / 2**16),
-         Offset_63_32     => SK.Word32
-           ((Temp and 16#ffff_ffff_0000_0000#) / 2**32),
-         Reserved         => 0);
+         IDT (I) := Gate_Type'
+           (Offset_15_00     => SK.Word16
+              (Temp and 16#0000_0000_0000_ffff#),
+            Segment_Selector => 16#0008#,
+            Flags            => 16#8e00#,
+            Offset_31_16     => SK.Word16
+              ((Temp and 16#0000_0000_ffff_0000#) / 2**16),
+            Offset_63_32     => SK.Word32
+              ((Temp and 16#ffff_ffff_0000_0000#) / 2**32),
+            Reserved         => 0);
+      end loop;
    end Init;
 
    -------------------------------------------------------------------------

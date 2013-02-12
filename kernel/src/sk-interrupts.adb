@@ -20,7 +20,7 @@ is
    pragma Import (C, ISR_List, "isrlist");
    --# assert ISR_List'Always_Valid;
 
-   -- Interrupt gate descriptor.
+   --  Interrupt gate descriptor.
    type Gate_Type is record
       Offset_15_00     : SK.Word16;
       Segment_Selector : SK.Word16;

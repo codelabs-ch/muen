@@ -1,5 +1,4 @@
 --# inherit
---#    SK,
 --#    SK.Interrupts;
 package SK.Kernel
 is

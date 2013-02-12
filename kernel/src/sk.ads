@@ -13,4 +13,12 @@ is
    type Word64 is mod 2**64;
    for Word64'Size use 64;
 
+   type Word64_Pos is range 0 .. 63;
+
+   --  Test if bit at given position is set.
+   function Bit_Test
+     (Value : Word64;
+      Pos   : Word64_Pos)
+      return Boolean;
+
 end SK;

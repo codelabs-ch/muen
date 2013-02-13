@@ -7,7 +7,6 @@ is
    CPUID_FEATURE_VMX_FLAG : constant := 5;
    CR0_PE_FLAG            : constant := 0;
    CR0_PG_FLAG            : constant := 0;
-   CR4_VMXE_FLAG          : constant := 13;
    IA32_EFER_LMA_FLAG     : constant := 10;
    IA32_FCTRL_SMX_FLAG    : constant := 2;
    RFLAGS_VM_FLAG         : constant := 17;
@@ -125,7 +124,7 @@ is
       CR4_Valid := Fixed_Valid
         (Register => SK.Bit_Set
            (Value => CPU.Get_CR4,
-            Pos   => CR4_VMXE_FLAG),
+            Pos   => CPU.CR4_VMXE_FLAG),
          Fixed0   => CPU.Get_MSR64 (Register => IA32_VMX_CR4_FIXED0),
          Fixed1   => CPU.Get_MSR64 (Register => IA32_VMX_CR4_FIXED1));
       pragma Debug

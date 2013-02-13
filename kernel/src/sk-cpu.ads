@@ -3,6 +3,8 @@
 package SK.CPU
 is
 
+   CR4_VMXE_FLAG : constant := 13;
+
    --  Execute CPUID instruction.
    procedure CPUID
       (EAX : in out SK.Word32;

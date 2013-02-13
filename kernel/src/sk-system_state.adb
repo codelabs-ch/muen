@@ -7,6 +7,7 @@ is
    CPUID_FEATURE_VMX_FLAG : constant := 5;
    CR0_PE_FLAG            : constant := 0;
    CR0_PG_FLAG            : constant := 0;
+   IA32_FEATURE_CONTROL   : constant := 16#3a#;
    IA32_VMX_CR0_FIXED0    : constant := 16#486#;
    IA32_VMX_CR0_FIXED1    : constant := 16#487#;
 
@@ -56,20 +57,30 @@ is
 
    function Is_Valid return Boolean
    is
-      VMX_Support, Protected_Mode, Paging, CR0_Valid : Boolean;
+      VMX_Support, VMX_Locked, Protected_Mode, Paging, CR0_Valid : Boolean;
    begin
       VMX_Support := Has_VMX_Support;
-      pragma Debug (not VMX_Support,
-                    SK.Console.Put_Line (Item => "VMX not supported"));
+      pragma Debug
+        (not VMX_Support,
+         SK.Console.Put_Line (Item => "VMX not supported"));
 
-      Protected_Mode := SK.Bit_Test (Value => CPU.Get_CR0,
-                                     Pos   => CR0_PE_FLAG);
+      VMX_Locked := SK.Bit_Test
+        (Value => CPU.Get_MSR (IA32_FEATURE_CONTROL),
+         Pos   => 0);
+      pragma Debug
+        (not VMX_Locked,
+         SK.Console.Put_Line ("IA32_FEATURE_CONTROL not locked"));
+
+      Protected_Mode := SK.Bit_Test
+        (Value => CPU.Get_CR0,
+         Pos   => CR0_PE_FLAG);
       pragma Debug
         (not Protected_Mode,
          SK.Console.Put_Line (Item => "Protected mode not enabled"));
 
-      Paging := SK.Bit_Test (Value => CPU.Get_CR0,
-                             Pos   => CR0_PG_FLAG);
+      Paging := SK.Bit_Test
+        (Value => CPU.Get_CR0,
+         Pos   => CR0_PG_FLAG);
       pragma Debug
         (not Paging,
          SK.Console.Put_Line (Item => "Paging not enabled"));
@@ -82,7 +93,11 @@ is
         (not CR0_Valid,
          SK.Console.Put_Line (Item => "CR0 is invalid"));
 
-      return VMX_Support and Protected_Mode and Paging and CR0_Valid;
+      return VMX_Support and
+        VMX_Locked       and
+        Protected_Mode   and
+        Paging           and
+        CR0_Valid;
    end Is_Valid;
 
 end SK.System_State;

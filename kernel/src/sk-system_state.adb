@@ -8,11 +8,13 @@ is
    CR0_PE_FLAG            : constant := 0;
    CR0_PG_FLAG            : constant := 0;
    CR4_VMXE_FLAG          : constant := 13;
+   IA32_EFER_LMA_FLAG     : constant := 10;
    IA32_FEATURE_CONTROL   : constant := 16#3a#;
    IA32_VMX_CR0_FIXED0    : constant := 16#486#;
    IA32_VMX_CR0_FIXED1    : constant := 16#487#;
    IA32_VMX_CR4_FIXED0    : constant := 16#488#;
    IA32_VMX_CR4_FIXED1    : constant := 16#489#;
+   IA32_EFER              : constant := 16#C000_0080#;
 
    -------------------------------------------------------------------------
 
@@ -60,8 +62,8 @@ is
 
    function Is_Valid return Boolean
    is
-      VMX_Support, VMX_Locked, Protected_Mode, Paging : Boolean;
-      CR0_Valid, CR4_Valid                            : Boolean;
+      VMX_Support, VMX_Locked, Protected_Mode, Paging, IA_32e_Mode : Boolean;
+      CR0_Valid, CR4_Valid                                         : Boolean;
    begin
       VMX_Support := Has_VMX_Support;
       pragma Debug
@@ -73,7 +75,7 @@ is
          Pos   => 0);
       pragma Debug
         (not VMX_Locked,
-         SK.Console.Put_Line ("IA32_FEATURE_CONTROL not locked"));
+         SK.Console.Put_Line (Item => "IA32_FEATURE_CONTROL not locked"));
 
       Protected_Mode := SK.Bit_Test
         (Value => CPU.Get_CR0,
@@ -88,6 +90,13 @@ is
       pragma Debug
         (not Paging,
          SK.Console.Put_Line (Item => "Paging not enabled"));
+
+      IA_32e_Mode := SK.Bit_Test
+        (Value => CPU.Get_MSR (Register => IA32_EFER),
+         Pos   => IA32_EFER_LMA_FLAG);
+      pragma Debug
+        (not IA_32e_Mode,
+         SK.Console.Put_Line (Item => "IA-32e mode not enabled"));
 
       CR0_Valid := Fixed_Valid
         (Register => CPU.Get_CR0,
@@ -105,12 +114,13 @@ is
          Fixed1   => CPU.Get_MSR (IA32_VMX_CR4_FIXED1));
       pragma Debug
         (not CR4_Valid,
-         SK.Console.Put_Line ("CR4 is invalid"));
+         SK.Console.Put_Line (Item => "CR4 is invalid"));
 
       return VMX_Support and
         VMX_Locked       and
         Protected_Mode   and
         Paging           and
+        IA_32e_Mode      and
         CR0_Valid        and
         CR4_Valid;
    end Is_Valid;

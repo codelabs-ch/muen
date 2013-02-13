@@ -95,4 +95,4 @@ clean:
 
 FORCE:
 
-PHONY: FORCE $(OBJ_DIR)/kernel.elf
+.PHONY: FORCE $(OBJ_DIR)/kernel.elf

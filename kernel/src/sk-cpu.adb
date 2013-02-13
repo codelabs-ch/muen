@@ -66,4 +66,18 @@ is
       return 2**31 * SK.Word64 (EDX) + SK.Word64 (EAX);
    end Get_MSR;
 
+   -------------------------------------------------------------------------
+
+   function Get_RFLAGS return SK.Word64
+   is
+      Result : SK.Word64;
+   begin
+      System.Machine_Code.Asm
+        (Template => "pushf; pop %0",
+         Outputs  => (SK.Word64'Asm_Output ("=m", Result)),
+         Volatile => True,
+         Clobber  => "memory");
+      return Result;
+   end Get_RFLAGS;
+
 end SK.CPU;

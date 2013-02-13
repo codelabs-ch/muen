@@ -40,6 +40,19 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_CR4 return SK.Word64
+   is
+      Result : SK.Word64;
+   begin
+      System.Machine_Code.Asm
+        (Template => "movq %%cr4, %0",
+         Outputs  => (SK.Word64'Asm_Output ("=r", Result)),
+         Volatile => True);
+      return Result;
+   end Get_CR4;
+
+   -------------------------------------------------------------------------
+
    function Get_MSR (Register : SK.Word32) return SK.Word64
    is
       EAX, EDX : SK.Word32;

@@ -110,4 +110,16 @@ is
          Volatile => True);
    end Hlt;
 
+   -------------------------------------------------------------------------
+
+   procedure Set_CR4 (Value : SK.Word64)
+   is
+      --# hide Set_CR4;
+   begin
+      System.Machine_Code.Asm
+        (Template => "movq %0, %%cr4",
+         Inputs   => (SK.Word64'Asm_Input ("r", Value)),
+         Volatile => True);
+   end Set_CR4;
+
 end SK.CPU;

@@ -21,6 +21,9 @@ is
    --  Return current value of CR4 register.
    function Get_CR4 return SK.Word64;
 
+   --  Set value of CR4.
+   procedure Set_CR4 (Value : SK.Word64);
+
    --  Return current value of given model specific register.
    function Get_MSR64 (Register : SK.Word32) return SK.Word64;
 

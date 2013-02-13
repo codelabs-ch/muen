@@ -39,4 +39,9 @@ is
    --  Return current RFLAGS.
    function Get_RFLAGS return SK.Word64;
 
+   --  Enter VMX operation.
+   procedure VMXON
+     (Region  :     SK.Word64;
+      Success : out Boolean);
+
 end SK.CPU;

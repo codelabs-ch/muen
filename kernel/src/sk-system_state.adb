@@ -9,6 +9,7 @@ is
    CR0_PG_FLAG            : constant := 0;
    CR4_VMXE_FLAG          : constant := 13;
    IA32_EFER_LMA_FLAG     : constant := 10;
+   IA32_FCTRL_SMX_FLAG    : constant := 2;
    RFLAGS_VM_FLAG         : constant := 17;
    IA32_FEATURE_CONTROL   : constant := 16#3a#;
    IA32_VMX_CR0_FIXED0    : constant := 16#486#;
@@ -64,7 +65,7 @@ is
    function Is_Valid return Boolean
    is
       VMX_Support, VMX_Locked, Protected_Mode, Paging, IA_32e_Mode : Boolean;
-      CR0_Valid, CR4_Valid, Not_Virtual_8086                       : Boolean;
+      CR0_Valid, CR4_Valid, Not_Virtual_8086, Not_In_SMX           : Boolean;
    begin
       VMX_Support := Has_VMX_Support;
       pragma Debug
@@ -106,6 +107,13 @@ is
         (not Not_Virtual_8086,
          SK.Console.Put_Line (Item => "Virtual-8086 mode enabled"));
 
+      Not_In_SMX := SK.Bit_Test
+        (Value => CPU.Get_MSR (Register => IA32_FEATURE_CONTROL),
+         Pos   => IA32_FCTRL_SMX_FLAG);
+      pragma Debug
+        (not Not_In_SMX,
+         SK.Console.Put_Line (Item => "SMX mode enabled"));
+
       CR0_Valid := Fixed_Valid
         (Register => CPU.Get_CR0,
          Fixed0   => CPU.Get_MSR (Register => IA32_VMX_CR0_FIXED0),
@@ -130,6 +138,7 @@ is
         Paging           and
         IA_32e_Mode      and
         Not_Virtual_8086 and
+        Not_In_SMX       and
         CR0_Valid        and
         CR4_Valid;
    end Is_Valid;

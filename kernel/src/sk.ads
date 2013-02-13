@@ -21,4 +21,10 @@ is
       Pos   : Word64_Pos)
       return Boolean;
 
+   --  Set bit at given position.
+   function Bit_Set
+     (Value : Word64;
+      Pos   : Word64_Pos)
+      return Word64;
+
 end SK;

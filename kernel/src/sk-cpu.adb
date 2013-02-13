@@ -3,6 +3,8 @@ with System.Machine_Code;
 package body SK.CPU
 is
 
+   RFLAGS_CF_FLAG : constant := 0;
+
    subtype Alignment_Type is SK.Word16 range 1 .. SK.Word16'Last;
 
    ---------------------------------------------------------------------------

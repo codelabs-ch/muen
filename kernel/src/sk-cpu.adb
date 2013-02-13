@@ -38,4 +38,19 @@ is
       return Result;
    end Get_CR0;
 
+   -------------------------------------------------------------------------
+
+   function Get_MSR (Register : SK.Word32) return SK.Word64
+   is
+      EAX, EDX : SK.Word32;
+   begin
+      System.Machine_Code.Asm
+        (Template => "rdmsr",
+         Inputs   => (SK.Word32'Asm_Input  ("c", Register)),
+         Outputs  => (SK.Word32'Asm_Output ("=d", EDX),
+                      SK.Word32'Asm_Output ("=a", EAX)),
+         Volatile => True);
+      return 2**31 * SK.Word64 (EDX) + SK.Word64 (EAX);
+   end Get_MSR;
+
 end SK.CPU;

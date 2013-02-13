@@ -15,4 +15,7 @@ is
    --  Return current value of CR0 register.
    function Get_CR0 return SK.Word64;
 
+   --  Return current value of given model specific register.
+   function Get_MSR (Register : SK.Word32) return SK.Word64;
+
 end SK.CPU;

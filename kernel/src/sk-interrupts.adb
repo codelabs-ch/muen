@@ -52,7 +52,7 @@ is
    end record;
    for IDT_Pointer_Type'Size use 80;
 
-   --  IDT, see Intel SDM chapter 6.10.
+   --  IDT, see Intel SDM 3A, chapter 6.10.
    IDT : IDT_Type;
    for IDT'Alignment use 8;
 

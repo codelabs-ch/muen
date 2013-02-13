@@ -3,6 +3,20 @@ with System.Machine_Code;
 package body SK.CPU
 is
 
+   subtype Alignment_Type is SK.Word16 range 1 .. SK.Word16'Last;
+
+   ---------------------------------------------------------------------------
+
+   --  Check alignment of given address.
+   function Is_Aligned
+     (Address   : SK.Word64;
+      Alignment : Alignment_Type)
+      return Boolean
+   is
+   begin
+      return (Address mod SK.Word64 (Alignment)) = 0;
+   end Is_Aligned;
+
    -------------------------------------------------------------------------
 
    procedure CPUID

@@ -80,4 +80,14 @@ is
       return Result;
    end Get_RFLAGS;
 
+   -------------------------------------------------------------------------
+
+   procedure Hlt
+   is
+   begin
+      System.Machine_Code.Asm
+        (Template => "hlt",
+         Volatile => True);
+   end Hlt;
+
 end SK.CPU;

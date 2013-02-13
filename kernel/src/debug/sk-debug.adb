@@ -2,6 +2,7 @@ with Interfaces;
 
 with System.Machine_Code;
 
+with SK.CPU;
 with SK.Console;
 
 package body SK.Debug
@@ -109,9 +110,7 @@ is
       Console.Put_Word32 (Item => Word32 (RFL));
       Console.New_Line;
 
-      System.Machine_Code.Asm
-        (Template => "hlt",
-         Volatile => True);
+      CPU.Hlt;
    end Isr_Dump;
 
 end SK.Debug;

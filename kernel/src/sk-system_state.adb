@@ -7,9 +7,12 @@ is
    CPUID_FEATURE_VMX_FLAG : constant := 5;
    CR0_PE_FLAG            : constant := 0;
    CR0_PG_FLAG            : constant := 0;
+   CR4_VMXE_FLAG          : constant := 13;
    IA32_FEATURE_CONTROL   : constant := 16#3a#;
    IA32_VMX_CR0_FIXED0    : constant := 16#486#;
    IA32_VMX_CR0_FIXED1    : constant := 16#487#;
+   IA32_VMX_CR4_FIXED0    : constant := 16#488#;
+   IA32_VMX_CR4_FIXED1    : constant := 16#489#;
 
    -------------------------------------------------------------------------
 
@@ -41,10 +44,10 @@ is
       --#        Flow, 10, Unused_EBX, "Result unused" &
       --#        Flow, 10, Unused_EDX, "Result unused";
       CPU.CPUID
-         (EAX => Unused_EAX,
-          EBX => Unused_EBX,
-          ECX => ECX,
-          EDX => Unused_EDX);
+        (EAX => Unused_EAX,
+         EBX => Unused_EBX,
+         ECX => ECX,
+         EDX => Unused_EDX);
 
       --# accept Flow, 33, Unused_EBX, "Result unused" &
       --#        Flow, 33, Unused_EDX, "Result unused";
@@ -57,7 +60,8 @@ is
 
    function Is_Valid return Boolean
    is
-      VMX_Support, VMX_Locked, Protected_Mode, Paging, CR0_Valid : Boolean;
+      VMX_Support, VMX_Locked, Protected_Mode, Paging : Boolean;
+      CR0_Valid, CR4_Valid                            : Boolean;
    begin
       VMX_Support := Has_VMX_Support;
       pragma Debug
@@ -93,11 +97,22 @@ is
         (not CR0_Valid,
          SK.Console.Put_Line (Item => "CR0 is invalid"));
 
+      CR4_Valid := Fixed_Valid
+        (Register => SK.Bit_Set
+           (Value => CPU.Get_CR4,
+            Pos   => CR4_VMXE_FLAG),
+         Fixed0   => CPU.Get_MSR (IA32_VMX_CR4_FIXED0),
+         Fixed1   => CPU.Get_MSR (IA32_VMX_CR4_FIXED1));
+      pragma Debug
+        (not CR4_Valid,
+         SK.Console.Put_Line ("CR4 is invalid"));
+
       return VMX_Support and
         VMX_Locked       and
         Protected_Mode   and
         Paging           and
-        CR0_Valid;
+        CR0_Valid        and
+        CR4_Valid;
    end Is_Valid;
 
 end SK.System_State;

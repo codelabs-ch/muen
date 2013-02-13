@@ -3,6 +3,8 @@ with System.Machine_Code;
 package body SK.CPU
 is
 
+   --# hide SK.CPU
+
    -------------------------------------------------------------------------
 
    procedure CPUID
@@ -11,7 +13,6 @@ is
       ECX : in out SK.Word32;
       EDX :    out SK.Word32)
    is
-      --# hide CPUID
    begin
       System.Machine_Code.Asm
         (Template => "cpuid",
@@ -23,5 +24,18 @@ is
                       SK.Word32'Asm_Output ("=d", EDX)),
          Volatile => True);
    end CPUID;
+
+   -------------------------------------------------------------------------
+
+   function Get_CR0 return SK.Word64
+   is
+      Result : SK.Word64;
+   begin
+      System.Machine_Code.Asm
+        (Template => "movq %%cr0, %0",
+         Outputs  => (SK.Word64'Asm_Output ("=r", Result)),
+         Volatile => True);
+      return Result;
+   end Get_CR0;
 
 end SK.CPU;

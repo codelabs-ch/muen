@@ -12,4 +12,7 @@ is
    --# derives
    --#    EAX, EBX, ECX, EDX from EAX, ECX;
 
+   --  Return current value of CR0 register.
+   function Get_CR0 return SK.Word64;
+
 end SK.CPU;

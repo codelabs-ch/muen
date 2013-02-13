@@ -2,6 +2,7 @@
 
 #define MSR_EFER 0xc0000080
 
+#define CR0_NE_BIT   5
 #define CR0_PG_BIT   31
 #define CR4_PAE_BIT  5
 #define EFER_LME_BIT 8
@@ -50,10 +51,11 @@ _start:
 	btsl $EFER_LME_BIT, %eax
 	wrmsr
 
-	// (4) enable paging
+	// (4) enable paging and native FPU error reporting
 
 	movl %cr0, %eax
 	btsl $CR0_PG_BIT, %eax
+	btsl $CR0_NE_BIT, %eax
 	movl %eax, %cr0
 
 	// (5) set up GDT

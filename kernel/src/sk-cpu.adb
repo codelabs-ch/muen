@@ -3,8 +3,6 @@ with System.Machine_Code;
 package body SK.CPU
 is
 
-   --# hide SK.CPU
-
    -------------------------------------------------------------------------
 
    procedure CPUID
@@ -13,6 +11,7 @@ is
       ECX : in out SK.Word32;
       EDX :    out SK.Word32)
    is
+      --# hide CPUID;
    begin
       System.Machine_Code.Asm
         (Template => "cpuid",
@@ -29,6 +28,8 @@ is
 
    function Get_CR0 return SK.Word64
    is
+      --# hide Get_CR0;
+
       Result : SK.Word64;
    begin
       System.Machine_Code.Asm
@@ -42,6 +43,8 @@ is
 
    function Get_CR4 return SK.Word64
    is
+      --# hide Get_CR4;
+
       Result : SK.Word64;
    begin
       System.Machine_Code.Asm
@@ -53,23 +56,39 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_MSR (Register : SK.Word32) return SK.Word64
+   procedure Get_MSR
+     (Register :     SK.Word32;
+      Low      : out SK.Word32;
+      High     : out SK.Word32)
    is
-      EAX, EDX : SK.Word32;
+      --# hide Get_MSR;
    begin
       System.Machine_Code.Asm
         (Template => "rdmsr",
-         Inputs   => (SK.Word32'Asm_Input  ("c", Register)),
-         Outputs  => (SK.Word32'Asm_Output ("=d", EDX),
-                      SK.Word32'Asm_Output ("=a", EAX)),
+         Inputs   => (SK.Word32'Asm_Input ("c", Register)),
+         Outputs  => (SK.Word32'Asm_Output ("=d", High),
+                      SK.Word32'Asm_Output ("=a", Low)),
          Volatile => True);
-      return 2**31 * SK.Word64 (EDX) + SK.Word64 (EAX);
    end Get_MSR;
+
+   -------------------------------------------------------------------------
+
+   function Get_MSR64 (Register : SK.Word32) return SK.Word64
+   is
+      Low_Dword, High_Dword : SK.Word32;
+   begin
+      Get_MSR (Register => Register,
+               Low      => Low_Dword,
+               High     => High_Dword);
+      return 2**31 * SK.Word64 (High_Dword) + SK.Word64 (Low_Dword);
+   end Get_MSR64;
 
    -------------------------------------------------------------------------
 
    function Get_RFLAGS return SK.Word64
    is
+      --# hide Get_RFLAGS;
+
       Result : SK.Word64;
    begin
       System.Machine_Code.Asm
@@ -84,6 +103,7 @@ is
 
    procedure Hlt
    is
+      --# hide Hlt;
    begin
       System.Machine_Code.Asm
         (Template => "hlt",

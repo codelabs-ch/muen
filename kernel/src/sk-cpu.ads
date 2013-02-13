@@ -22,7 +22,14 @@ is
    function Get_CR4 return SK.Word64;
 
    --  Return current value of given model specific register.
-   function Get_MSR (Register : SK.Word32) return SK.Word64;
+   function Get_MSR64 (Register : SK.Word32) return SK.Word64;
+
+   --  Return value of given MSR as low/high doublewords.
+   procedure Get_MSR
+     (Register :     SK.Word32;
+      Low      : out SK.Word32;
+      High     : out SK.Word32);
+   --# derives Low, High from Register;
 
    --  Return current RFLAGS.
    function Get_RFLAGS return SK.Word64;

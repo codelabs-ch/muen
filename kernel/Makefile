@@ -36,18 +36,16 @@ endif
 
 all: $(ALL)
 
-git-rev: FORCE
-	@if [ -d .git ]; then \
-		if [ -r $@ ]; then \
-			if [ "$$(cat $@)" != "$(GIT_REV)" ]; then \
-				echo $(GIT_REV) > $@; \
-			fi; \
-		else \
+.git-rev: FORCE
+	@if [ -r $@ ]; then \
+		if [ "$$(cat $@)" != "$(GIT_REV)" ]; then \
 			echo $(GIT_REV) > $@; \
-		fi \
+		fi; \
+	else \
+		echo $(GIT_REV) > $@; \
 	fi
 
-$(VERSION_SPEC): git-rev
+$(VERSION_SPEC): .git-rev
 	@echo "package SK.Version is"                   > $@
 	@echo "   Version_String : constant String :=" >> $@
 	@echo "     \"$(VERSION)\";"                   >> $@
@@ -93,8 +91,8 @@ $(OBJ_DIR)/confgen: $(SPARK_DIR)/lib/spark/confgen.adb
 clean:
 	rm -rf obj/*
 	kill `cat .server 2>/dev/null` 2>/dev/null || true
-	rm -f .server
+	rm -f .git-rev .server
 
 FORCE:
 
-PHONY: $(OBJ_DIR)/kernel.elf
+PHONY: FORCE $(OBJ_DIR)/kernel.elf

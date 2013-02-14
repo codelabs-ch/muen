@@ -15,4 +15,10 @@ is
    --# derives
    --#    X86_64.State from *, VMXON_Address;
 
+   procedure Launch;
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *;
+
 end SK.VMX;

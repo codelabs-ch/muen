@@ -56,6 +56,31 @@ is
       end if;
    end Enable;
 
+   -------------------------------------------------------------------------
+
+   procedure Launch
+   is
+      --# hide Launch;
+   begin
+      CPU.VMLAUNCH;
+
+      if SK.Bit_Test
+        (Value => CPU.Get_RFLAGS,
+         Pos   => CPU.RFLAGS_CF_FLAG)
+      then
+         pragma Debug
+           (SK.Console.Put_Line ("Error launching VM (VMfailInvalid)"));
+         CPU.Panic;
+      elsif SK.Bit_Test
+          (Value => CPU.Get_RFLAGS,
+           Pos   => CPU.RFLAGS_ZF_FLAG)
+      then
+         pragma Debug
+           (SK.Console.Put_Line ("Error launching VM (VMfailValid"));
+         CPU.Panic;
+      end if;
+   end Launch;
+
 begin
 
    --# hide SK.VMX;

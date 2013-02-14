@@ -164,6 +164,22 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VMPTRLD
+     (Region  :     SK.Word64;
+      Success : out Boolean)
+   is
+      --# hide VMPTRLD;
+   begin
+      System.Machine_Code.Asm
+        (Template => "vmptrld %1; seta %0",
+         Inputs   => (Word64'Asm_Input ("m", Region)),
+         Outputs  => (Boolean'Asm_Output ("=q", Success)),
+         Clobber  => "cc",
+         Volatile => True);
+   end VMPTRLD;
+
+   -------------------------------------------------------------------------
+
    procedure VMXON
      (Region  :     SK.Word64;
       Success : out Boolean)

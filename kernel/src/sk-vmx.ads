@@ -19,8 +19,9 @@ is
 
    procedure Launch;
    --# global
+   --#    in     VMCS_Address;
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from *;
+   --#    X86_64.State from *, VMCS_Address;
 
 end SK.VMX;

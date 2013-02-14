@@ -63,7 +63,16 @@ is
    procedure Launch
    is
       --# hide Launch;
+
+      Success : Boolean;
    begin
+      Success := Is_Aligned
+        (Address   => VMCS_Address,
+         Alignment => 4096);
+      if not Success then
+         pragma Debug (SK.Console.Put_Line ("VMCS region alignment invalid"));
+         CPU.Panic;
+      end if;
       CPU.VMLAUNCH;
 
       if SK.Bit_Test

@@ -183,15 +183,17 @@ is
    -------------------------------------------------------------------------
 
    procedure VMREAD
-     (Field :     SK.Word64;
-      Value : out SK.Word64)
+     (Field   :     SK.Word64;
+      Value   : out SK.Word64;
+      Success : out Boolean)
    is
       --# hide VMREAD;
    begin
       System.Machine_Code.Asm
-        (Template => "vmread %1, %0",
+        (Template => "vmread %2, %0; seta %1",
          Inputs   => (Word64'Asm_Input ("r", Field)),
-         Outputs  => (Word64'Asm_Output ("=rm", Value)),
+         Outputs  => (Word64'Asm_Output ("=rm", Value),
+                      Boolean'Asm_Output ("=q", Success)),
          Clobber  => "cc",
          Volatile => True);
    end VMREAD;

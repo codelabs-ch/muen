@@ -91,8 +91,9 @@ is
 
       CPU.VMLAUNCH (Success => Success);
       if not Success then
-         pragma Debug (CPU.VMREAD (Field => VMX_INST_ERROR,
-                                   Value => Error));
+         pragma Debug (CPU.VMREAD (Field   => VMX_INST_ERROR,
+                                   Value   => Error,
+                                   Success => Success));
          pragma Debug
            (SK.Console.Put_String (Item => "Error launching VM ("));
          pragma Debug (SK.Console.Put_Byte (Item => Byte (Error)));

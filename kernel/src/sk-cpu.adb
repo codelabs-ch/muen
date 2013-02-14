@@ -153,12 +153,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure VMLAUNCH
+   procedure VMLAUNCH (Success : out Boolean)
    is
       --# hide VMLAUNCH;
    begin
       System.Machine_Code.Asm
-        (Template => "vmlaunch",
+        (Template => "vmlaunch; seta %0",
+         Outputs  => (Boolean'Asm_Output ("=q", Success)),
+         Clobber  => "cc",
          Volatile => True);
    end VMLAUNCH;
 

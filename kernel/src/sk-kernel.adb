@@ -30,6 +30,7 @@ is
       Success := System_State.Is_Valid;
       if Success then
          VMX.Enable;
+         VMX.Launch;
       else
          pragma Debug
            (SK.Console.Put_Line

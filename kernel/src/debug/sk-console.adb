@@ -312,12 +312,5 @@ is
    end To_Hex;
 
 begin
-   Screen := Screen_Type'
-     (others => Screen_Row_Type'
-        (others => Screen_Cell_Type'
-           (Char     => ' ',
-            FG_Color => White,
-            BG_Color => Black)));
-   Cur_X := Console_Width_Range'First;
-   Cur_Y := Console_Height_Range'First;
+   Clear;
 end SK.Console;

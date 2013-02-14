@@ -102,4 +102,12 @@ is
    --#    X86_64.State from *, Region &
    --#    Success      from X86_64.State, Region;
 
+   procedure VMREAD
+     (Field :     SK.Word64;
+      Value : out SK.Word64);
+   --# global
+   --#    X86_64.State;
+   --# derives
+   --#    Value from X86_64.State, Field;
+
 end SK.CPU;

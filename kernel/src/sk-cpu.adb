@@ -182,6 +182,22 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VMREAD
+     (Field :     SK.Word64;
+      Value : out SK.Word64)
+   is
+      --# hide VMREAD;
+   begin
+      System.Machine_Code.Asm
+        (Template => "vmread %1, %0",
+         Inputs   => (Word64'Asm_Input ("r", Field)),
+         Outputs  => (Word64'Asm_Output ("=rm", Value)),
+         Clobber  => "cc",
+         Volatile => True);
+   end VMREAD;
+
+   -------------------------------------------------------------------------
+
    procedure VMXON
      (Region  :     SK.Word64;
       Success : out Boolean)

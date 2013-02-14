@@ -15,7 +15,7 @@ is
 
    procedure Main
    is
-      --# hide Main;
+      Success : Boolean;
    begin
       pragma Debug
         (SK.Console.Put_Line
@@ -27,10 +27,8 @@ is
       Interrupts.Init;
       Interrupts.Load;
 
-      if System_State.Is_Valid then
-
-         --  Enable VMX operation.
-
+      Success := System_State.Is_Valid;
+      if Success then
          VMX.Enable;
       else
          pragma Debug
@@ -42,9 +40,6 @@ is
       pragma Debug
         (SK.Console.Put_Line
            (Item => "Terminating"));
-      pragma Debug (System.Machine_Code.Asm
-        (Template => "ud2",
-         Volatile => True));
    end Main;
 
 end SK.Kernel;

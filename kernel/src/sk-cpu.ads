@@ -17,6 +17,13 @@ is
    --  Halt the CPU.
    procedure Hlt;
 
+   --  Panic.
+   procedure Panic;
+   --# global
+   --#    X86_64.State;
+   --# derives
+   --#    X86_64.State from *;
+
    --  Return current value of CR0 register.
    function Get_CR0 return SK.Word64;
 

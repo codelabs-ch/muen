@@ -130,6 +130,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Panic
+   is
+      --# hide Panic;
+   begin
+      System.Machine_Code.Asm
+        (Template => "ud2",
+         Volatile => True);
+   end Panic;
+
+   -------------------------------------------------------------------------
+
    procedure Set_CR4 (Value : SK.Word64)
    is
       --# hide Set_CR4;

@@ -150,8 +150,8 @@ is
                 Pos   => CR4_VMXE_FLAG));
 
       System.Machine_Code.Asm
-        (Template => "vmxon (%0)",
-         Inputs   => (Word64'Asm_Input ("r", Region)),
+        (Template => "vmxon %0",
+         Inputs   => (Word64'Asm_Input ("m", Region)),
          Volatile => True);
 
       Success := SK.Bit_Test

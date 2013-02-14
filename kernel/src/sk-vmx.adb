@@ -7,6 +7,7 @@ package body SK.VMX
 is
 
    IA32_VMX_BASIC : constant := 16#480#;
+   VMX_INST_ERROR : constant := 16#4400#;
 
    subtype Alignment_Type is SK.Word16 range 1 .. SK.Word16'Last;
 
@@ -62,9 +63,8 @@ is
 
    procedure Launch
    is
-      --# hide Launch;
-
       Success : Boolean;
+      Error   : SK.Word64;
    begin
       Success := Is_Aligned
         (Address   => VMCS_Address,
@@ -73,23 +73,33 @@ is
          pragma Debug (SK.Console.Put_Line ("VMCS region alignment invalid"));
          CPU.Panic;
       end if;
-      CPU.VMLAUNCH;
 
-      if SK.Bit_Test
-        (Value => CPU.Get_RFLAGS,
-         Pos   => CPU.RFLAGS_CF_FLAG)
-      then
-         pragma Debug
-           (SK.Console.Put_Line ("Error launching VM (VMfailInvalid)"));
-         CPU.Panic;
-      elsif SK.Bit_Test
-          (Value => CPU.Get_RFLAGS,
-           Pos   => CPU.RFLAGS_ZF_FLAG)
-      then
-         pragma Debug
-           (SK.Console.Put_Line ("Error launching VM (VMfailValid"));
+      CPU.VMCLEAR (Region  => VMCS_Address,
+                   Success => Success);
+      if not Success then
+         pragma Debug (SK.Console.Put_Line (Item => "Error clearing VMCS"));
          CPU.Panic;
       end if;
+
+      CPU.VMPTRLD (Region  => VMCS_Address,
+                   Success => Success);
+      if not Success then
+         pragma Debug
+           (SK.Console.Put_Line (Item => "Error loading VMCS pointer"));
+         CPU.Panic;
+      end if;
+
+      CPU.VMLAUNCH (Success => Success);
+      if not Success then
+         pragma Debug (CPU.VMREAD (Field => VMX_INST_ERROR,
+                                   Value => Error));
+         pragma Debug
+           (SK.Console.Put_String (Item => "Error launching VM ("));
+         pragma Debug (SK.Console.Put_Byte (Item => Byte (Error)));
+         pragma Debug (SK.Console.Put_Line (Item => ")"));
+         CPU.Panic;
+      end if;
+      --# accept Warning, 400, Error, "Only used for debug output";
    end Launch;
 
 begin

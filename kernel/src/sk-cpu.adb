@@ -137,6 +137,22 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VMCLEAR
+     (Region  :     SK.Word64;
+      Success : out Boolean)
+   is
+      --# hide VMCLEAR;
+   begin
+      System.Machine_Code.Asm
+        (Template => "vmclear %1; seta %0",
+         Inputs   => (Word64'Asm_Input ("m", Region)),
+         Outputs  => (Boolean'Asm_Output ("=q", Success)),
+         Clobber  => "cc",
+         Volatile => True);
+   end VMCLEAR;
+
+   -------------------------------------------------------------------------
+
    procedure VMLAUNCH
    is
       --# hide VMLAUNCH;

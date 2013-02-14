@@ -83,4 +83,13 @@ is
    --# derives
    --#    X86_64.State from *;
 
+   procedure VMCLEAR
+     (Region  :     SK.Word64;
+      Success : out Boolean);
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *, Region &
+   --#    Success      from X86_64.State, Region;
+
 end SK.CPU;

@@ -5,6 +5,7 @@ package SK.CPU
 is
 
    RFLAGS_CF_FLAG : constant := 0;
+   RFLAGS_ZF_FLAG : constant := 6;
    CR4_VMXE_FLAG  : constant := 13;
 
    --  Execute CPUID instruction.

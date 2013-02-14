@@ -72,4 +72,11 @@ is
    --# derives
    --#    X86_64.State from *, Region;
 
+   --  Launch VM designated by current VMCS.
+   procedure VMLAUNCH;
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *;
+
 end SK.CPU;

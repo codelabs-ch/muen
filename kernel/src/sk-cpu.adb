@@ -137,6 +137,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VMLAUNCH
+   is
+      --# hide VMLAUNCH;
+   begin
+      System.Machine_Code.Asm
+        (Template => "vmlaunch",
+         Volatile => True);
+   end VMLAUNCH;
+
+   -------------------------------------------------------------------------
+
    procedure VMXON (Region : SK.Word64)
    is
       --# hide VMXON;

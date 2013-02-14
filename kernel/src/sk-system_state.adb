@@ -37,6 +37,8 @@ is
 
    --  Returns true if VMX is supported by the CPU.
    function Has_VMX_Support return Boolean
+   --# global
+   --#    X86_64.State;
    is
       Unused_EAX, Unused_EBX, ECX, Unused_EDX : SK.Word32;
    begin

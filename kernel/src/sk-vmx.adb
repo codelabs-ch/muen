@@ -15,6 +15,11 @@ is
    pragma Import (C, VMXON_Address, "vmxon_pointer");
    --# end accept;
 
+   --# accept Warning, 350, VMCS_Address, "Imported from Linker";
+   VMCS_Address : SK.Word64;
+   pragma Import (C, VMCS_Address, "vmcs_pointer");
+   --# end accept;
+
    ---------------------------------------------------------------------------
 
    --  Check alignment of given address.
@@ -83,12 +88,16 @@ begin
    --# hide SK.VMX;
 
    declare
-      VMXON_Region, Unused_High : SK.Word32;
+      Revision, Unused_High, VMXON_Region, VMCS_Region : SK.Word32;
       for VMXON_Region'Address use System'To_Address (VMXON_Address);
+      for VMCS_Region'Address use System'To_Address (VMCS_Address);
    begin
       CPU.Get_MSR
         (Register => IA32_VMX_BASIC,
-         Low      => VMXON_Region,
+         Low      => Revision,
          High     => Unused_High);
+
+      VMXON_Region := Revision;
+      VMCS_Region  := Revision;
    end;
 end SK.VMX;

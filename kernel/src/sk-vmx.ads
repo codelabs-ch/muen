@@ -3,9 +3,11 @@
 --#    SK.CPU;
 package SK.VMX
 --# own
---#    VMXON_Address;
+--#    VMXON_Address,
+--#    VMCS_Address;
 --# initializes
---#    VMXON_Address;
+--#    VMXON_Address,
+--#    VMCS_Address;
 is
 
    procedure Enable;

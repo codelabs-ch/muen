@@ -7,20 +7,6 @@ is
 
    RFLAGS_CF_FLAG : constant := 0;
 
-   subtype Alignment_Type is SK.Word16 range 1 .. SK.Word16'Last;
-
-   ---------------------------------------------------------------------------
-
-   --  Check alignment of given address.
-   function Is_Aligned
-     (Address   : SK.Word64;
-      Alignment : Alignment_Type)
-      return Boolean
-   is
-   begin
-      return (Address mod SK.Word64 (Alignment)) = 0;
-   end Is_Aligned;
-
    -------------------------------------------------------------------------
 
    procedure CPUID
@@ -158,30 +144,19 @@ is
       Success : out Boolean)
    is
       --# hide VMXON;
-
-      Region_Alignment : Boolean;
    begin
-      Region_Alignment := Is_Aligned
-        (Address   => Region,
-         Alignment => 4096);
+      Set_CR4 (Value => SK.Bit_Set
+               (Value => Get_CR4,
+                Pos   => CR4_VMXE_FLAG));
 
-      if Region_Alignment then
-         Set_CR4 (Value => SK.Bit_Set
-                  (Value => Get_CR4,
-                   Pos   => CR4_VMXE_FLAG));
+      System.Machine_Code.Asm
+        (Template => "vmxon (%0)",
+         Inputs   => (Word64'Asm_Input ("r", Region)),
+         Volatile => True);
 
-         System.Machine_Code.Asm
-           (Template => "vmxon (%0)",
-            Inputs   => (Word64'Asm_Input ("r", Region)),
-            Volatile => True);
-
-         Success := SK.Bit_Test
-           (Value => Get_RFLAGS,
-            Pos   => RFLAGS_CF_FLAG);
-      else
-         pragma Debug (SK.Console.Put_Line ("VMXON region alignment invalid"));
-         Success := False;
-      end if;
+      Success := SK.Bit_Test
+        (Value => Get_RFLAGS,
+         Pos   => RFLAGS_CF_FLAG);
    end VMXON;
 
 end SK.CPU;

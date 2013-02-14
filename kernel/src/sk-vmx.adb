@@ -8,25 +8,45 @@ is
 
    IA32_VMX_BASIC : constant := 16#480#;
 
+   subtype Alignment_Type is SK.Word16 range 1 .. SK.Word16'Last;
+
    --# accept Warning, 350, VMXON_Address, "Imported from Linker";
    VMXON_Address : SK.Word64;
    pragma Import (C, VMXON_Address, "vmxon_pointer");
    --# end accept;
 
+   ---------------------------------------------------------------------------
+
+   --  Check alignment of given address.
+   function Is_Aligned
+     (Address   : SK.Word64;
+      Alignment : Alignment_Type)
+      return Boolean
+   is
+   begin
+      return (Address mod SK.Word64 (Alignment)) = 0;
+   end Is_Aligned;
+
    -------------------------------------------------------------------------
 
    procedure Enable
    is
-      --# hide Enable;
-
       Success : Boolean;
    begin
+      Success := Is_Aligned
+        (Address   => VMXON_Address,
+         Alignment => 4096);
+      if not Success then
+         pragma Debug (SK.Console.Put_Line ("VMXON region alignment invalid"));
+         CPU.Panic;
+      end if;
+
       CPU.VMXON
         (Region  => VMXON_Address,
          Success => Success);
       if not Success then
-         pragma Debug (SK.Console.Put_Line ("VMXON failed"));
-         null;
+         pragma Debug (SK.Console.Put_Line ("Error enabling VMX"));
+         CPU.Panic;
       end if;
    end Enable;
 

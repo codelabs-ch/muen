@@ -111,4 +111,13 @@ is
    --# derives
    --#    Value, Success from X86_64.State, Field;
 
+   procedure VMWRITE
+     (Field   :     SK.Word64;
+      Value   :     SK.Word64;
+      Success : out Boolean);
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State, Success from X86_64.State, Field, Value;
+
 end SK.CPU;

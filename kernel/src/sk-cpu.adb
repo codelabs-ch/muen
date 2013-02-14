@@ -200,6 +200,24 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VMWRITE
+     (Field   :     SK.Word64;
+      Value   :     SK.Word64;
+      Success : out Boolean)
+   is
+      --# hide VMWRITE;
+   begin
+      System.Machine_Code.Asm
+        (Template => "vmwrite %1, %2; seta %0",
+         Inputs   => (Word64'Asm_Input ("rm", Value),
+                      Word64'Asm_Input ("r", Field)),
+         Outputs  => (Boolean'Asm_Output ("=q", Success)),
+         Clobber  => "cc",
+         Volatile => True);
+   end VMWRITE;
+
+   -------------------------------------------------------------------------
+
    procedure VMXON
      (Region  :     SK.Word64;
       Success : out Boolean)

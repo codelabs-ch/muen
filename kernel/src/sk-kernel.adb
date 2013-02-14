@@ -1,12 +1,8 @@
-with System.Machine_Code;
-
 with SK.Console;
 with SK.Version;
-with SK.Debug;
 with SK.Interrupts;
 with SK.System_State;
 with SK.VMX;
-with SK.CPU;
 
 package body SK.Kernel
 is

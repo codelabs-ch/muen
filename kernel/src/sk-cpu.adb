@@ -1,7 +1,5 @@
 with System.Machine_Code;
 
-with SK.Console;
-
 package body SK.CPU
 is
 

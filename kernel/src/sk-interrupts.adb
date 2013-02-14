@@ -1,7 +1,5 @@
 with System.Machine_Code;
 
-with SK.Debug;
-
 package body SK.Interrupts
 is
 

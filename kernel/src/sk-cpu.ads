@@ -67,11 +67,14 @@ is
    --#    X86_64.State;
 
    --  Enter VMX operation.
-   procedure VMXON (Region : SK.Word64);
+   procedure VMXON
+     (Region  :     SK.Word64;
+      Success : out Boolean);
    --# global
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from *, Region;
+   --#    X86_64.State from *, Region &
+   --#    Success      from X86_64.State, Region;
 
    --  Launch VM designated by current VMCS.
    procedure VMLAUNCH;

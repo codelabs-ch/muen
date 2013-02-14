@@ -5,8 +5,6 @@ with SK.Console;
 package body SK.CPU
 is
 
-   RFLAGS_CF_FLAG : constant := 0;
-
    -------------------------------------------------------------------------
 
    procedure CPUID
@@ -139,24 +137,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure VMXON
-     (Region  :     SK.Word64;
-      Success : out Boolean)
+   procedure VMXON (Region : SK.Word64)
    is
       --# hide VMXON;
    begin
-      Set_CR4 (Value => SK.Bit_Set
-               (Value => Get_CR4,
-                Pos   => CR4_VMXE_FLAG));
-
       System.Machine_Code.Asm
         (Template => "vmxon %0",
          Inputs   => (Word64'Asm_Input ("m", Region)),
          Volatile => True);
-
-      Success := SK.Bit_Test
-        (Value => Get_RFLAGS,
-         Pos   => RFLAGS_CF_FLAG);
    end VMXON;
 
 end SK.CPU;

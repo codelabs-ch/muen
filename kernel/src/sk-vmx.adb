@@ -41,10 +41,16 @@ is
          CPU.Panic;
       end if;
 
-      CPU.VMXON
-        (Region  => VMXON_Address,
-         Success => Success);
-      if not Success then
+      CPU.Set_CR4 (Value => SK.Bit_Set
+                   (Value => CPU.Get_CR4,
+                    Pos   => CPU.CR4_VMXE_FLAG));
+
+      CPU.VMXON (Region => VMXON_Address);
+
+      if SK.Bit_Test
+        (Value => CPU.Get_RFLAGS,
+         Pos   => CPU.RFLAGS_CF_FLAG)
+      then
          pragma Debug (SK.Console.Put_Line ("Error enabling VMX"));
          CPU.Panic;
       end if;

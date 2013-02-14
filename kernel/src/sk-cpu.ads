@@ -4,7 +4,8 @@
 package SK.CPU
 is
 
-   CR4_VMXE_FLAG : constant := 13;
+   RFLAGS_CF_FLAG : constant := 0;
+   CR4_VMXE_FLAG  : constant := 13;
 
    --  Execute CPUID instruction.
    procedure CPUID
@@ -65,13 +66,10 @@ is
    --#    X86_64.State;
 
    --  Enter VMX operation.
-   procedure VMXON
-     (Region  :     SK.Word64;
-      Success : out Boolean);
+   procedure VMXON (Region : SK.Word64);
    --# global
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from *, Region &
-   --#    Success      from Region;
+   --#    X86_64.State from *, Region;
 
 end SK.CPU;

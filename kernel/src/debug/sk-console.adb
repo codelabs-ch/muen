@@ -1,4 +1,4 @@
-with System;
+with System.Machine_Code;
 
 package body SK.Console
 is
@@ -56,6 +56,7 @@ is
    Console_Width  : constant Natural := 80;
    Console_Height : constant Natural := 25;
 
+   subtype Position_Type is Natural range 1 .. Console_Width * Console_Height;
    subtype Console_Width_Range  is Natural range 1 .. Console_Width;
    subtype Console_Height_Range is Natural range 1 .. Console_Height;
 
@@ -82,6 +83,41 @@ is
    --  Scroll screen if current Y position is equal to the last row.
    procedure Scroll;
 
+   --  Send byte to given port.
+   procedure Outb
+     (Port  : Word16;
+      Value : Byte)
+   is
+   begin
+      System.Machine_Code.Asm
+        (Template => "outb %1, %0",
+         Inputs   => (Word16'Asm_Input ("dN", Port),
+                      Byte'Asm_Input ("a", Value)),
+         Volatile => True);
+   end Outb;
+
+   --  Update cursor position.
+   procedure Update_Cursor
+   is
+      Pos : Position_Type;
+   begin
+      Pos := (Cur_Y - 1) * Console_Width  + Cur_X - 1;
+
+      --  Set high cursor byte
+
+      Outb (Port  => 16#3D4#,
+            Value => 14);
+      Outb (Port  => 16#3D5#,
+            Value => Byte (Pos / 2 ** 8));
+
+      --  Set low cursor byte
+
+      Outb (Port  => 16#3D4#,
+            Value => 15);
+      Outb (Port  => 16#3D5#,
+            Value => Byte (Pos));
+   end Update_Cursor;
+
    -------------------------------------------------------------------------
 
    procedure Clear
@@ -96,6 +132,7 @@ is
 
       Cur_X := Console_Width_Range'First;
       Cur_Y := Console_Height_Range'First;
+      Update_Cursor;
    end Clear;
 
    -------------------------------------------------------------------------
@@ -128,6 +165,7 @@ is
       else
          Cur_Y := Cur_Y + 1;
       end if;
+      Update_Cursor;
    end New_Line;
 
    -------------------------------------------------------------------------
@@ -145,6 +183,7 @@ is
       else
          Cur_X := Cur_X + 1;
       end if;
+      Update_Cursor;
    end Put_Char;
 
    -------------------------------------------------------------------------

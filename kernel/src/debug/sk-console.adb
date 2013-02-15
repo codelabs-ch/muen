@@ -83,6 +83,8 @@ is
    --  Scroll screen if current Y position is equal to the last row.
    procedure Scroll;
 
+   -------------------------------------------------------------------------
+
    --  Send byte to given port.
    procedure Outb
      (Port  : Word16;
@@ -95,6 +97,8 @@ is
                       Byte'Asm_Input ("a", Value)),
          Volatile => True);
    end Outb;
+
+   -------------------------------------------------------------------------
 
    --  Update cursor position.
    procedure Update_Cursor

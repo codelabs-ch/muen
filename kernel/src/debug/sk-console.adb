@@ -72,17 +72,6 @@ is
    pragma Import (Ada, Screen);
    for Screen'Address use System'To_Address (16#000B_8000#);
 
-   --  Convert given quadword to hex string and store it in specified buffer.
-   procedure To_Hex
-     (Item   :        Word64;
-      Buffer : in out String);
-
-   --  Return character representation of given quadword.
-   function To_Character (Value : Word64) return Character;
-
-   --  Scroll screen if current Y position is equal to the last row.
-   procedure Scroll;
-
    -------------------------------------------------------------------------
 
    --  Send byte to given port.
@@ -124,23 +113,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Clear
-   is
-   begin
-      Screen := Screen_Type'
-        (others => Screen_Row_Type'
-           (others => Screen_Cell_Type'
-              (Char     => ' ',
-               FG_Color => White,
-               BG_Color => Black)));
-
-      Cur_X := Console_Width_Range'First;
-      Cur_Y := Console_Height_Range'First;
-      Update_Cursor;
-   end Clear;
-
-   -------------------------------------------------------------------------
-
+   --  Scroll screen if current Y position is equal to the last row.
    procedure Scroll
    is
       subtype Console_To_Last_Row is Console_Height_Range range
@@ -157,6 +130,70 @@ is
             FG_Color => White,
             BG_Color => Black));
    end Scroll;
+
+   -------------------------------------------------------------------------
+
+   --  Return character representation of given quadword.
+   function To_Character (Value : Word64) return Character
+   is
+      Result : Character;
+   begin
+      case Value is
+         when 16#0#  => Result := '0';
+         when 16#1#  => Result := '1';
+         when 16#2#  => Result := '2';
+         when 16#3#  => Result := '3';
+         when 16#4#  => Result := '4';
+         when 16#5#  => Result := '5';
+         when 16#6#  => Result := '6';
+         when 16#7#  => Result := '7';
+         when 16#8#  => Result := '8';
+         when 16#9#  => Result := '9';
+         when 16#a#  => Result := 'a';
+         when 16#b#  => Result := 'b';
+         when 16#c#  => Result := 'c';
+         when 16#d#  => Result := 'd';
+         when 16#e#  => Result := 'e';
+         when 16#f#  => Result := 'f';
+         when others => Result := '?';
+      end case;
+
+      return Result;
+   end To_Character;
+
+   -------------------------------------------------------------------------
+
+   --  Convert given quadword to hex string and store it in specified buffer.
+   procedure To_Hex
+     (Item   :        Word64;
+      Buffer : in out String)
+   is
+      Temp : Word64;
+   begin
+      Temp := Item;
+      for Pos in reverse Buffer'Range loop
+         Buffer (Pos) := To_Character (Temp mod 16);
+         Temp         := Temp / 16;
+         exit when Temp = 0;
+      end loop;
+   end To_Hex;
+
+   -------------------------------------------------------------------------
+
+   procedure Clear
+   is
+   begin
+      Screen := Screen_Type'
+        (others => Screen_Row_Type'
+           (others => Screen_Cell_Type'
+              (Char     => ' ',
+               FG_Color => White,
+               BG_Color => Black)));
+
+      Cur_X := Console_Width_Range'First;
+      Cur_Y := Console_Height_Range'First;
+      Update_Cursor;
+   end Clear;
 
    -------------------------------------------------------------------------
 
@@ -269,51 +306,6 @@ is
               Buffer => Str);
       Put_String (Item => Str);
    end Put_Word64;
-
-   -------------------------------------------------------------------------
-
-   function To_Character (Value : Word64) return Character
-   is
-      Result : Character;
-   begin
-      case Value is
-         when 16#0#  => Result := '0';
-         when 16#1#  => Result := '1';
-         when 16#2#  => Result := '2';
-         when 16#3#  => Result := '3';
-         when 16#4#  => Result := '4';
-         when 16#5#  => Result := '5';
-         when 16#6#  => Result := '6';
-         when 16#7#  => Result := '7';
-         when 16#8#  => Result := '8';
-         when 16#9#  => Result := '9';
-         when 16#a#  => Result := 'a';
-         when 16#b#  => Result := 'b';
-         when 16#c#  => Result := 'c';
-         when 16#d#  => Result := 'd';
-         when 16#e#  => Result := 'e';
-         when 16#f#  => Result := 'f';
-         when others => Result := '?';
-      end case;
-
-      return Result;
-   end To_Character;
-
-   -------------------------------------------------------------------------
-
-   procedure To_Hex
-     (Item   :        Word64;
-      Buffer : in out String)
-   is
-      Temp : Word64;
-   begin
-      Temp := Item;
-      for Pos in reverse Buffer'Range loop
-         Buffer (Pos) := To_Character (Temp mod 16);
-         Temp         := Temp / 16;
-         exit when Temp = 0;
-      end loop;
-   end To_Hex;
 
 begin
    Clear;

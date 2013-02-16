@@ -1,9 +1,6 @@
 package SK.Console
 is
 
-   --  Clear screen.
-   procedure Clear;
-
    --  Output a new line.
    procedure New_Line;
 
@@ -27,5 +24,12 @@ is
 
    --  Output given quadword in hex.
    procedure Put_Word64 (Item : Word64);
+
+private
+
+   --  Send byte to given port.
+   procedure Outb
+     (Port  : Word16;
+      Value : Byte);
 
 end SK.Console;

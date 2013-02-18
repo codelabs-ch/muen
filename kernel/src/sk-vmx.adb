@@ -6,8 +6,20 @@ with SK.Console;
 package body SK.VMX
 is
 
-   IA32_VMX_BASIC : constant := 16#480#;
-   VMX_INST_ERROR : constant := 16#4400#;
+   IA32_VMX_BASIC          : constant := 16#480#;
+   IA32_VMX_PINBASED_CTLS  : constant := 16#481#;
+   IA32_VMX_PROCBASED_CTLS : constant := 16#482#;
+   IA32_VMX_EXIT_CTLS      : constant := 16#483#;
+   IA32_VMX_ENTRY_CTLS     : constant := 16#484#;
+
+   PIN_BASED_EXEC_CONTROL : constant := 16#4000#;
+   CPU_BASED_EXEC_CONTROL : constant := 16#4002#;
+   VM_EXIT_CONTROLS       : constant := 16#400c#;
+   VM_ENTRY_CONTROLS      : constant := 16#4012#;
+   VMX_INST_ERROR         : constant := 16#4400#;
+
+   --  VM-Exit controls
+   VM_EXIT_IA32E_MODE : constant := 16#200#;
 
    subtype Alignment_Type is SK.Word16 range 1 .. SK.Word16'Last;
 
@@ -32,6 +44,80 @@ is
    begin
       return (Address mod SK.Word64 (Alignment)) = 0;
    end Is_Aligned;
+
+   -------------------------------------------------------------------------
+
+   procedure VMCS_Setup_Control_Fields
+   --# global
+   --#    in out X86_64.State;
+   --# derives X86_64.State from *;
+   is
+      Success            : Boolean;
+      Default0, Default1 : SK.Word32;
+      Value              : SK.Word64;
+   begin
+      CPU.Get_MSR (Register => IA32_VMX_PINBASED_CTLS,
+                   Low      => Default0,
+                   High     => Default1);
+      Value := 0;
+      Value := Value and SK.Word64 (Default1);
+      Value := Value or  SK.Word64 (Default0);
+      CPU.VMWRITE (Field   => PIN_BASED_EXEC_CONTROL,
+                   Value   => Value,
+                   Success => Success);
+      if not Success then
+         pragma Debug
+           (SK.Console.Put_Line
+              (Item => "Error setting pin-based execution controls"));
+         CPU.Panic;
+      end if;
+
+      CPU.Get_MSR (Register => IA32_VMX_PROCBASED_CTLS,
+                   Low      => Default0,
+                   High     => Default1);
+      Value := 0;
+      Value := Value and SK.Word64 (Default1);
+      Value := Value or  SK.Word64 (Default0);
+      CPU.VMWRITE (Field   => CPU_BASED_EXEC_CONTROL,
+                   Value   => Value,
+                   Success => Success);
+      if not Success then
+         pragma Debug
+           (SK.Console.Put_Line
+              (Item => "Error setting processor-based execution controls"));
+         CPU.Panic;
+      end if;
+
+      CPU.Get_MSR (Register => IA32_VMX_EXIT_CTLS,
+                   Low      => Default0,
+                   High     => Default1);
+      Value := VM_EXIT_IA32E_MODE;
+      Value := Value and SK.Word64 (Default1);
+      Value := Value or  SK.Word64 (Default0);
+      CPU.VMWRITE (Field   => VM_EXIT_CONTROLS,
+                   Value   => Value,
+                   Success => Success);
+      if not Success then
+         pragma Debug
+           (SK.Console.Put_Line (Item => "Error setting VM-exit controls"));
+         CPU.Panic;
+      end if;
+
+      CPU.Get_MSR (Register => IA32_VMX_ENTRY_CTLS,
+                   Low      => Default0,
+                   High     => Default1);
+      Value := 0;
+      Value := Value and SK.Word64 (Default1);
+      Value := Value or  SK.Word64 (Default0);
+      CPU.VMWRITE (Field   => VM_ENTRY_CONTROLS,
+                   Value   => Value,
+                   Success => Success);
+      if not Success then
+         pragma Debug
+           (SK.Console.Put_Line (Item => "Error setting VM-entry controls"));
+         CPU.Panic;
+      end if;
+   end VMCS_Setup_Control_Fields;
 
    -------------------------------------------------------------------------
 
@@ -88,6 +174,8 @@ is
            (SK.Console.Put_Line (Item => "Error loading VMCS pointer"));
          CPU.Panic;
       end if;
+
+      VMCS_Setup_Control_Fields;
 
       CPU.VMLAUNCH (Success => Success);
       if not Success then

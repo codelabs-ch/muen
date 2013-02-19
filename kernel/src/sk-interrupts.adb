@@ -48,6 +48,14 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_IDT_Pointer return IDT_Pointer_Type
+   is
+   begin
+      return IDT_Pointer;
+   end Get_IDT_Pointer;
+
+   -------------------------------------------------------------------------
+
    procedure Init
    is
       Temp : SK.Word64;

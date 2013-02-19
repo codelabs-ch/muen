@@ -25,12 +25,16 @@ is
    --# derives
    --#    IDT_Pointer from IDT;
 
-
    --  Interrupt Descriptor table pointer, see Intel SDM vol. 3A, chapter 6.10.
    type IDT_Pointer_Type is record
       Limit : SK.Word16;
       Base  : System.Address;
    end record;
+
+   --  Return IDT pointer.
+   function Get_IDT_Pointer return IDT_Pointer_Type;
+   --# global
+   --#    IDT_Pointer;
 
 private
 

@@ -116,6 +116,21 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_RSP return SK.Word64
+   is
+      --# hide Get_RSP;
+
+      Result : SK.Word64;
+   begin
+      System.Machine_Code.Asm
+        (Template => "movq %%rsp, %0",
+         Outputs  => (SK.Word64'Asm_Output ("=m", Result)),
+         Volatile => True);
+      return Result;
+   end Get_RSP;
+
+   -------------------------------------------------------------------------
+
    procedure Hlt
    is
       --# hide Hlt;

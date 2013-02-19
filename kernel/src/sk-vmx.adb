@@ -1,7 +1,10 @@
-with System;
+with System.Storage_Elements;
 
 with SK.CPU;
+with SK.Interrupts;
+with SK.Descriptors;
 with SK.Console;
+with SK.GDT;
 
 package body SK.VMX
 is
@@ -12,14 +15,34 @@ is
    IA32_VMX_EXIT_CTLS      : constant := 16#483#;
    IA32_VMX_ENTRY_CTLS     : constant := 16#484#;
 
+   HOST_SEL_ES : constant := 16#0c00#;
+   HOST_SEL_CS : constant := 16#0c02#;
+   HOST_SEL_SS : constant := 16#0c04#;
+   HOST_SEL_DS : constant := 16#0c06#;
+   HOST_SEL_TR : constant := 16#0c0c#;
+
    PIN_BASED_EXEC_CONTROL : constant := 16#4000#;
    CPU_BASED_EXEC_CONTROL : constant := 16#4002#;
    VM_EXIT_CONTROLS       : constant := 16#400c#;
    VM_ENTRY_CONTROLS      : constant := 16#4012#;
    VMX_INST_ERROR         : constant := 16#4400#;
 
+   HOST_CR0       : constant := 16#6c00#;
+   HOST_CR3       : constant := 16#6c02#;
+   HOST_CR4       : constant := 16#6c04#;
+   HOST_BASE_GDTR : constant := 16#6c0c#;
+   HOST_BASE_IDTR : constant := 16#6c0e#;
+   HOST_RSP       : constant := 16#6c14#;
+   HOST_RIP       : constant := 16#6c16#;
+
    --  VM-Exit controls
    VM_EXIT_IA32E_MODE : constant := 16#200#;
+
+   --  Segment selectors
+
+   SEL_KERN_CODE : constant := 16#08#;
+   SEL_KERN_DATA : constant := 16#10#;
+   SEL_TSS       : constant := 16#18#;
 
    subtype Alignment_Type is SK.Word16 range 1 .. SK.Word16'Last;
 
@@ -44,6 +67,32 @@ is
    begin
       return (Address mod SK.Word64 (Alignment)) = 0;
    end Is_Aligned;
+
+   -------------------------------------------------------------------------
+
+   --  Handle VM exit.
+   procedure Handle_Vmx_Exit
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *;
+   is
+   begin
+      pragma Debug (SK.Console.Put_Line (Item => "VM EXIT"));
+      CPU.Panic;
+   end Handle_Vmx_Exit;
+
+   -------------------------------------------------------------------------
+
+   --  Return address of VM exit handler.
+   function Get_Vmx_Exit_Address return SK.Word64
+   is
+      --# hide Get_Vmx_Exit_Address;
+   begin
+      return SK.Word64
+        (System.Storage_Elements.To_Integer
+           (Value => Handle_Vmx_Exit'Address));
+   end Get_Vmx_Exit_Address;
 
    -------------------------------------------------------------------------
 
@@ -123,6 +172,49 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VMCS_Setup_Host_Fields
+   --# global
+   --#    in     Interrupts.IDT_Pointer;
+   --#    in     GDT.GDT_Pointer;
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *, Interrupts.IDT_Pointer, GDT.GDT_Pointer;
+   is
+      PD : Descriptors.Pseudo_Descriptor_Type;
+   begin
+      VMCS_Write (Field => HOST_SEL_CS,
+                  Value => SEL_KERN_CODE);
+      VMCS_Write (Field => HOST_SEL_DS,
+                  Value => SEL_KERN_DATA);
+      VMCS_Write (Field => HOST_SEL_ES,
+                  Value => SEL_KERN_DATA);
+      VMCS_Write (Field => HOST_SEL_SS,
+                  Value => SEL_KERN_DATA);
+      VMCS_Write (Field => HOST_SEL_TR,
+                  Value => SEL_TSS);
+
+      VMCS_Write (Field => HOST_CR0,
+                  Value => CPU.Get_CR0);
+      VMCS_Write (Field => HOST_CR3,
+                  Value => CPU.Get_CR3);
+      VMCS_Write (Field => HOST_CR4,
+                  Value => CPU.Get_CR4);
+
+      PD := Interrupts.Get_IDT_Pointer;
+      VMCS_Write (Field => HOST_BASE_IDTR,
+                  Value => PD.Base);
+      PD := GDT.Get_GDT_Pointer;
+      VMCS_Write (Field => HOST_BASE_GDTR,
+                  Value => PD.Base);
+
+      VMCS_Write (Field => HOST_RSP,
+                  Value => CPU.Get_RSP);
+      VMCS_Write (Field => HOST_RIP,
+                  Value => Get_Vmx_Exit_Address);
+   end VMCS_Setup_Host_Fields;
+
+   -------------------------------------------------------------------------
+
    procedure Enable
    is
       Success : Boolean;
@@ -178,6 +270,7 @@ is
       end if;
 
       VMCS_Setup_Control_Fields;
+      VMCS_Setup_Host_Fields;
 
       CPU.VMLAUNCH (Success => Success);
       if not Success then

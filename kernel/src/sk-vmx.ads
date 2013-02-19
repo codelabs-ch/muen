@@ -1,6 +1,9 @@
 --# inherit
 --#    X86_64,
---#    SK.CPU;
+--#    SK.CPU,
+--#    SK.Interrupts,
+--#    SK.GDT,
+--#    SK.Descriptors;
 package SK.VMX
 --# own
 --#    VMXON_Address,
@@ -19,9 +22,15 @@ is
 
    procedure Launch;
    --# global
+   --#    in     GDT.GDT_Pointer;
+   --#    in     Interrupts.IDT_Pointer;
    --#    in     VMCS_Address;
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from *, VMCS_Address;
+   --#    X86_64.State from
+   --#       *,
+   --#       Interrupts.IDT_Pointer,
+   --#       GDT.GDT_Pointer,
+   --#       VMCS_Address;
 
 end SK.VMX;

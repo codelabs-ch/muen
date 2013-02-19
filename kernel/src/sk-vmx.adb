@@ -36,8 +36,9 @@ is
    HOST_RSP       : constant := 16#6c14#;
    HOST_RIP       : constant := 16#6c16#;
 
-   --  VM-Exit controls
-   VM_EXIT_IA32E_MODE : constant := 16#200#;
+   --  VMX control flags
+
+   VM_CONTROL_IA32E_MODE    : constant := 16#200#;
 
    --  Segment selectors
 
@@ -187,7 +188,7 @@ is
       CPU.Get_MSR (Register => IA32_VMX_EXIT_CTLS,
                    Low      => Default0,
                    High     => Default1);
-      Value := VM_EXIT_IA32E_MODE;
+      Value := VM_CONTROL_IA32E_MODE;
       Value := Value and SK.Word64 (Default1);
       Value := Value or  SK.Word64 (Default0);
       VMCS_Write (Field => VM_EXIT_CONTROLS,

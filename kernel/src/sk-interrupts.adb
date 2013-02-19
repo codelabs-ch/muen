@@ -39,17 +39,6 @@ is
 
    type IDT_Type is array (Vector_Type) of Gate_Type;
 
-   type IDT_Pointer_Type is record
-      Limit : SK.Word16;
-      Base  : System.Address;
-   end record;
-
-   for IDT_Pointer_Type use record
-      Limit at 0 range 0 .. 15;
-      Base  at 2 range 0 .. 63;
-   end record;
-   for IDT_Pointer_Type'Size use 80;
-
    --  IDT, see Intel SDM 3A, chapter 6.10.
    IDT : IDT_Type;
    for IDT'Alignment use 8;

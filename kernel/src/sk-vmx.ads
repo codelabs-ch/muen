@@ -3,7 +3,8 @@
 --#    SK.CPU,
 --#    SK.Interrupts,
 --#    SK.GDT,
---#    SK.Descriptors;
+--#    SK.Descriptors,
+--#    SK.Constants;
 package SK.VMX
 --# own
 --#    VMXON_Address,

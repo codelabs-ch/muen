@@ -124,6 +124,32 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Read value from specified field of the current, active VMCS. If the
+   --  operation fails, CPU.Panic is called.
+   procedure VMCS_Read
+     (Field :     SK.Word16;
+      Value : out SK.Word64)
+   --# global
+   --#    X86_64.State;
+   --# derives
+   --#    Value, X86_64.State from X86_64.State, Field;
+   is
+      Success : Boolean;
+   begin
+      CPU.VMREAD (Field   => SK.Word64 (Field),
+                  Value   => Value,
+                  Success => Success);
+      if not Success then
+         pragma Debug (SK.Console.Put_String
+                       (Item => "Error reading VMCS field "));
+         pragma Debug (SK.Console.Put_Word16 (Item => Field));
+         pragma Debug (SK.Console.New_Line);
+         CPU.Panic;
+      end if;
+   end VMCS_Read;
+
+   -------------------------------------------------------------------------
+
    procedure VMCS_Setup_Control_Fields
    --# global
    --#    in out X86_64.State;

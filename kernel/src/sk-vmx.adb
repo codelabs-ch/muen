@@ -59,6 +59,11 @@ is
    pragma Import (C, VMCS_Address, "vmcs_pointer");
    --# end accept;
 
+   --# accept Warning, 350, Subject_Main_Address, "Imported from Linker";
+   Subject_Main_Address : SK.Word64;
+   pragma Import (C, Subject_Main_Address, "subject_main_pointer");
+   --# end accept;
+
    ---------------------------------------------------------------------------
 
    --  Check alignment of given address.

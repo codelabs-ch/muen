@@ -8,9 +8,11 @@ package SK.VMX
 --# own
 --#    VMXON_Address,
 --#    VMCS_Address;
+--#    Subject_Main_Address;
 --# initializes
 --#    VMXON_Address,
---#    VMCS_Address;
+--#    VMCS_Address,
+--#    Subject_Main_Address;
 is
 
    procedure Enable;

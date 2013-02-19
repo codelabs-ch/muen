@@ -6,7 +6,7 @@ VERSION_SPEC = src/sk-version.ads
 VERSION      = $(GIT_REV)
 GIT_REV      = $(shell git describe --always)
 
-CONSOLE ?= VGA
+CONSOLE ?= Serial
 
 NUM_CPUS  := $(shell getconf _NPROCESSORS_ONLN)
 BUILD_OPTS = -p -j$(NUM_CPUS) --RTS=zfp

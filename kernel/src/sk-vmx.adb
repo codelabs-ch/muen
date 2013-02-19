@@ -9,32 +9,37 @@ with SK.GDT;
 package body SK.VMX
 is
 
-   IA32_VMX_BASIC          : constant := 16#480#;
-   IA32_VMX_PINBASED_CTLS  : constant := 16#481#;
-   IA32_VMX_PROCBASED_CTLS : constant := 16#482#;
-   IA32_VMX_EXIT_CTLS      : constant := 16#483#;
-   IA32_VMX_ENTRY_CTLS     : constant := 16#484#;
+   --  VMX MSRs
 
-   HOST_SEL_ES : constant := 16#0c00#;
-   HOST_SEL_CS : constant := 16#0c02#;
-   HOST_SEL_SS : constant := 16#0c04#;
-   HOST_SEL_DS : constant := 16#0c06#;
-   HOST_SEL_TR : constant := 16#0c0c#;
+   IA32_VMX_BASIC           : constant := 16#480#;
+   IA32_VMX_PINBASED_CTLS   : constant := 16#481#;
+   IA32_VMX_PROCBASED_CTLS  : constant := 16#482#;
+   IA32_VMX_EXIT_CTLS       : constant := 16#483#;
+   IA32_VMX_ENTRY_CTLS      : constant := 16#484#;
 
-   PIN_BASED_EXEC_CONTROL : constant := 16#4000#;
-   CPU_BASED_EXEC_CONTROL : constant := 16#4002#;
-   VM_EXIT_CONTROLS       : constant := 16#400c#;
-   VM_ENTRY_CONTROLS      : constant := 16#4012#;
-   VMX_INST_ERROR         : constant := 16#4400#;
-   VMX_EXIT_REASON        : constant := 16#4402#;
+   --  Control fields
 
-   HOST_CR0       : constant := 16#6c00#;
-   HOST_CR3       : constant := 16#6c02#;
-   HOST_CR4       : constant := 16#6c04#;
-   HOST_BASE_GDTR : constant := 16#6c0c#;
-   HOST_BASE_IDTR : constant := 16#6c0e#;
-   HOST_RSP       : constant := 16#6c14#;
-   HOST_RIP       : constant := 16#6c16#;
+   PIN_BASED_EXEC_CONTROL   : constant := 16#4000#;
+   CPU_BASED_EXEC_CONTROL   : constant := 16#4002#;
+   VM_EXIT_CONTROLS         : constant := 16#400c#;
+   VM_ENTRY_CONTROLS        : constant := 16#4012#;
+   VMX_INST_ERROR           : constant := 16#4400#;
+   VMX_EXIT_REASON          : constant := 16#4402#;
+
+   --  Host state fields
+
+   HOST_SEL_ES              : constant := 16#0c00#;
+   HOST_SEL_CS              : constant := 16#0c02#;
+   HOST_SEL_SS              : constant := 16#0c04#;
+   HOST_SEL_DS              : constant := 16#0c06#;
+   HOST_SEL_TR              : constant := 16#0c0c#;
+   HOST_CR0                 : constant := 16#6c00#;
+   HOST_CR3                 : constant := 16#6c02#;
+   HOST_CR4                 : constant := 16#6c04#;
+   HOST_BASE_GDTR           : constant := 16#6c0c#;
+   HOST_BASE_IDTR           : constant := 16#6c0e#;
+   HOST_RSP                 : constant := 16#6c14#;
+   HOST_RIP                 : constant := 16#6c16#;
 
    --  VMX control flags
 
@@ -43,9 +48,9 @@ is
 
    --  Segment selectors
 
-   SEL_KERN_CODE : constant := 16#08#;
-   SEL_KERN_DATA : constant := 16#10#;
-   SEL_TSS       : constant := 16#18#;
+   SEL_KERN_CODE            : constant := 16#08#;
+   SEL_KERN_DATA            : constant := 16#10#;
+   SEL_TSS                  : constant := 16#18#;
 
    subtype Alignment_Type is SK.Word16 range 1 .. SK.Word16'Last;
 

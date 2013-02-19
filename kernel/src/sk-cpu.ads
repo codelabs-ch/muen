@@ -39,6 +39,11 @@ is
    --# global
    --#    X86_64.State;
 
+   --  Return current value of CR3 register.
+   function Get_CR3 return SK.Word64;
+   --# global
+   --#    X86_64.State;
+
    --  Set value of CR4.
    procedure Set_CR4 (Value : SK.Word64);
    --# global

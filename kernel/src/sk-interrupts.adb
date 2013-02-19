@@ -1,4 +1,5 @@
 with System.Machine_Code;
+with System.Storage_Elements;
 
 package body SK.Interrupts
 is
@@ -44,11 +45,11 @@ is
    for IDT'Alignment use 8;
 
    --  Interrupt table pointer, loaded into IDTR
-   IDT_Pointer : IDT_Pointer_Type;
+   IDT_Pointer : Descriptors.Pseudo_Descriptor_Type;
 
    -------------------------------------------------------------------------
 
-   function Get_IDT_Pointer return IDT_Pointer_Type
+   function Get_IDT_Pointer return Descriptors.Pseudo_Descriptor_Type
    is
    begin
       return IDT_Pointer;
@@ -92,9 +93,10 @@ is
    is
       --# hide Load;
    begin
-      IDT_Pointer := IDT_Pointer_Type'
+      IDT_Pointer := Descriptors.Pseudo_Descriptor_Type'
         (Limit => SK.Word16 (16 * IDT'Last) - 1,
-         Base  => IDT'Address);
+         Base  => SK.Word64
+           (System.Storage_Elements.To_Integer (Value => IDT'Address)));
       System.Machine_Code.Asm
         (Template => "lidt (%0)",
          Inputs   => (System.Address'Asm_Input ("r", IDT_Pointer'Address)),

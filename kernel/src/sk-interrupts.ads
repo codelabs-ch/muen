@@ -1,8 +1,9 @@
-with System;
+with SK.Descriptors;
 
 --# inherit
 --#    System,
---#    SK;
+--#    SK,
+--#    SK.Descriptors;
 package SK.Interrupts
 --# own
 --#       IDT, IDT_Pointer;
@@ -25,23 +26,9 @@ is
    --# derives
    --#    IDT_Pointer from IDT;
 
-   --  Interrupt Descriptor table pointer, see Intel SDM vol. 3A, chapter 6.10.
-   type IDT_Pointer_Type is record
-      Limit : SK.Word16;
-      Base  : System.Address;
-   end record;
-
    --  Return IDT pointer.
-   function Get_IDT_Pointer return IDT_Pointer_Type;
+   function Get_IDT_Pointer return Descriptors.Pseudo_Descriptor_Type;
    --# global
    --#    IDT_Pointer;
-
-private
-
-   for IDT_Pointer_Type use record
-      Limit at 0 range 0 .. 15;
-      Base  at 2 range 0 .. 63;
-   end record;
-   for IDT_Pointer_Type'Size use 80;
 
 end SK.Interrupts;

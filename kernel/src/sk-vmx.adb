@@ -319,7 +319,7 @@ is
 
       CPU.Set_CR4 (Value => SK.Bit_Set
                    (Value => CPU.Get_CR4,
-                    Pos   => CPU.CR4_VMXE_FLAG));
+                    Pos   => Constants.CR4_VMXE_FLAG));
 
       CPU.VMXON (Region  => VMXON_Address,
                  Success => Success);

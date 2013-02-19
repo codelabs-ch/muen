@@ -1,6 +1,24 @@
 package SK.Constants
 is
 
+   -----------
+   -- Flags --
+   -----------
+
+   RFLAGS_CF_FLAG           : constant := 0;
+   RFLAGS_ZF_FLAG           : constant := 6;
+   RFLAGS_VM_FLAG           : constant := 17;
+
+   CR0_PE_FLAG              : constant := 0;
+   CR0_PG_FLAG              : constant := 0;
+
+   CR4_VMXE_FLAG            : constant := 13;
+
+   CPUID_FEATURE_VMX_FLAG   : constant := 5;
+
+   IA32_EFER_LMA_FLAG       : constant := 10;
+   IA32_FCTRL_SMX_FLAG      : constant := 2;
+
    ----------
    -- MSRs --
    ----------

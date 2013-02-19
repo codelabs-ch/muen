@@ -38,6 +38,7 @@ is
 
    --  VMX control flags
 
+   VM_CONTROL_EXIT_HLT      : constant := 16#080#;
    VM_CONTROL_IA32E_MODE    : constant := 16#200#;
 
    --  Segment selectors
@@ -179,7 +180,7 @@ is
       CPU.Get_MSR (Register => IA32_VMX_PROCBASED_CTLS,
                    Low      => Default0,
                    High     => Default1);
-      Value := 0;
+      Value := VM_CONTROL_EXIT_HLT;
       Value := Value and SK.Word64 (Default1);
       Value := Value or  SK.Word64 (Default0);
       VMCS_Write (Field => CPU_BASED_EXEC_CONTROL,

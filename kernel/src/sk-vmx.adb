@@ -108,15 +108,20 @@ is
    --# derives
    --#    X86_64.State from *;
    is
-      Reason  : SK.Word64;
+      Reason, Qualification : SK.Word64;
    begin
       pragma Debug (VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                                Value => Reason));
+      pragma Debug (VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
+                               Value => Qualification));
       pragma Debug (SK.Console.Put_String (Item => "VM EXIT ("));
       pragma Debug (SK.Console.Put_Word16 (Item => SK.Word16 (Reason)));
+      pragma Debug (SK.Console.Put_String (Item => ":"));
+      pragma Debug (SK.Console.Put_Word32 (Item => SK.Word32 (Qualification)));
       pragma Debug (SK.Console.Put_Line (Item => ")"));
       CPU.Panic;
       --# accept Warning, 400, Reason, "Only used for debug output";
+      --# accept Warning, 400, Qualification, "Only used for debug output";
    end Handle_Vmx_Exit;
 
    -------------------------------------------------------------------------

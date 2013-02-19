@@ -65,12 +65,12 @@ is
       --  Enable FIFO.
 
       Outb (Port  => Port + 2,
-            Value => 16#C7#);
+            Value => 16#c7#);
 
       --  IRQS enabled, RTS/DSR set.
 
       Outb (Port  => Port + 4,
-            Value => 16#0B#);
+            Value => 16#0b#);
    end Init;
 
    -------------------------------------------------------------------------

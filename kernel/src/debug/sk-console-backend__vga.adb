@@ -32,12 +32,12 @@ is
       Light_Grey    => 16#7#,
       Dark_Grey     => 16#8#,
       Light_Blue    => 16#9#,
-      Light_Green   => 16#A#,
-      Light_Cyan    => 16#B#,
-      Light_Red     => 16#C#,
-      Light_Magenta => 16#D#,
-      Yellow        => 16#E#,
-      White         => 16#F#);
+      Light_Green   => 16#a#,
+      Light_Cyan    => 16#b#,
+      Light_Red     => 16#c#,
+      Light_Magenta => 16#d#,
+      Yellow        => 16#e#,
+      White         => 16#f#);
    for VGA_Color_Type'Size use 4;
 
    type Screen_Cell_Type is record
@@ -70,7 +70,7 @@ is
    Cur_Y  : Console_Height_Range;
    Screen : Screen_Type;
    pragma Import (Ada, Screen);
-   for Screen'Address use System'To_Address (16#000B_8000#);
+   for Screen'Address use System'To_Address (16#000b_8000#);
 
    -------------------------------------------------------------------------
 
@@ -103,16 +103,16 @@ is
 
       --  Set high cursor byte
 
-      Outb (Port  => 16#3D4#,
+      Outb (Port  => 16#3d4#,
             Value => 14);
-      Outb (Port  => 16#3D5#,
+      Outb (Port  => 16#3d5#,
             Value => Byte (Pos / 2 ** 8));
 
       --  Set low cursor byte
 
-      Outb (Port  => 16#3D4#,
+      Outb (Port  => 16#3d4#,
             Value => 15);
-      Outb (Port  => 16#3D5#,
+      Outb (Port  => 16#3d5#,
             Value => Byte (Pos));
    end Update_Cursor;
 

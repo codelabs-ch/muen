@@ -26,6 +26,7 @@ is
    VM_EXIT_CONTROLS       : constant := 16#400c#;
    VM_ENTRY_CONTROLS      : constant := 16#4012#;
    VMX_INST_ERROR         : constant := 16#4400#;
+   VMX_EXIT_REASON        : constant := 16#4402#;
 
    HOST_CR0       : constant := 16#6c00#;
    HOST_CR3       : constant := 16#6c02#;
@@ -67,32 +68,6 @@ is
    begin
       return (Address mod SK.Word64 (Alignment)) = 0;
    end Is_Aligned;
-
-   -------------------------------------------------------------------------
-
-   --  Handle VM exit.
-   procedure Handle_Vmx_Exit
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *;
-   is
-   begin
-      pragma Debug (SK.Console.Put_Line (Item => "VM EXIT"));
-      CPU.Panic;
-   end Handle_Vmx_Exit;
-
-   -------------------------------------------------------------------------
-
-   --  Return address of VM exit handler.
-   function Get_Vmx_Exit_Address return SK.Word64
-   is
-      --# hide Get_Vmx_Exit_Address;
-   begin
-      return SK.Word64
-        (System.Storage_Elements.To_Integer
-           (Value => Handle_Vmx_Exit'Address));
-   end Get_Vmx_Exit_Address;
 
    -------------------------------------------------------------------------
 
@@ -147,6 +122,38 @@ is
          CPU.Panic;
       end if;
    end VMCS_Read;
+
+   -------------------------------------------------------------------------
+
+   --  Handle VM exit.
+   procedure Handle_Vmx_Exit
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *;
+   is
+      Reason  : SK.Word64;
+   begin
+      pragma Debug (VMCS_Read (Field => VMX_EXIT_REASON,
+                               Value => Reason));
+      pragma Debug (SK.Console.Put_String (Item => "VM EXIT ("));
+      pragma Debug (SK.Console.Put_Word16 (Item => SK.Word16 (Reason)));
+      pragma Debug (SK.Console.Put_Line (Item => ")"));
+      CPU.Panic;
+      --# accept Warning, 400, Reason, "Only used for debug output";
+   end Handle_Vmx_Exit;
+
+   -------------------------------------------------------------------------
+
+   --  Return address of VM exit handler.
+   function Get_Vmx_Exit_Address return SK.Word64
+   is
+      --# hide Get_Vmx_Exit_Address;
+   begin
+      return SK.Word64
+        (System.Storage_Elements.To_Integer
+           (Value => Handle_Vmx_Exit'Address));
+   end Get_Vmx_Exit_Address;
 
    -------------------------------------------------------------------------
 

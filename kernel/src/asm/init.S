@@ -73,6 +73,15 @@ start64: .align 4096
 
 	movq (kernel_stack_pointer), %rsp
 
+	// set up kernel segment selectors
+
+	mov $0x10, %ecx
+	mov %ecx, %ds
+	mov %ecx, %es
+	mov %ecx, %fs
+	mov %ecx, %gs
+	mov %ecx, %ss
+
 	// initialize Ada runtime
 
 	call adainit

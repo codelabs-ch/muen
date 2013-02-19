@@ -47,12 +47,40 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Write given value to the specified field of the current, active VMCS. If
+   --  the operation fails, CPU.Panic is called.
+   procedure VMCS_Write
+     (Field : SK.Word16;
+      Value : SK.Word64)
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *, Field, Value;
+   is
+      Success : Boolean;
+   begin
+      CPU.VMWRITE (Field   => SK.Word64 (Field),
+                   Value   => Value,
+                   Success => Success);
+      if not Success then
+         pragma Debug (SK.Console.Put_String
+                       (Item => "Error setting VMCS field "));
+         pragma Debug (SK.Console.Put_Word16 (Item => Field));
+         pragma Debug (SK.Console.Put_String (Item => " to value "));
+         pragma Debug (SK.Console.Put_Word64 (Item => Value));
+         pragma Debug (SK.Console.New_Line);
+         CPU.Panic;
+      end if;
+   end VMCS_Write;
+
+   -------------------------------------------------------------------------
+
    procedure VMCS_Setup_Control_Fields
    --# global
    --#    in out X86_64.State;
-   --# derives X86_64.State from *;
+   --# derives
+   --#    X86_64.State from *;
    is
-      Success            : Boolean;
       Default0, Default1 : SK.Word32;
       Value              : SK.Word64;
    begin
@@ -62,15 +90,8 @@ is
       Value := 0;
       Value := Value and SK.Word64 (Default1);
       Value := Value or  SK.Word64 (Default0);
-      CPU.VMWRITE (Field   => PIN_BASED_EXEC_CONTROL,
-                   Value   => Value,
-                   Success => Success);
-      if not Success then
-         pragma Debug
-           (SK.Console.Put_Line
-              (Item => "Error setting pin-based execution controls"));
-         CPU.Panic;
-      end if;
+      VMCS_Write (Field => PIN_BASED_EXEC_CONTROL,
+                  Value => Value);
 
       CPU.Get_MSR (Register => IA32_VMX_PROCBASED_CTLS,
                    Low      => Default0,
@@ -78,15 +99,8 @@ is
       Value := 0;
       Value := Value and SK.Word64 (Default1);
       Value := Value or  SK.Word64 (Default0);
-      CPU.VMWRITE (Field   => CPU_BASED_EXEC_CONTROL,
-                   Value   => Value,
-                   Success => Success);
-      if not Success then
-         pragma Debug
-           (SK.Console.Put_Line
-              (Item => "Error setting processor-based execution controls"));
-         CPU.Panic;
-      end if;
+      VMCS_Write (Field => CPU_BASED_EXEC_CONTROL,
+                  Value => Value);
 
       CPU.Get_MSR (Register => IA32_VMX_EXIT_CTLS,
                    Low      => Default0,
@@ -94,14 +108,8 @@ is
       Value := VM_EXIT_IA32E_MODE;
       Value := Value and SK.Word64 (Default1);
       Value := Value or  SK.Word64 (Default0);
-      CPU.VMWRITE (Field   => VM_EXIT_CONTROLS,
-                   Value   => Value,
-                   Success => Success);
-      if not Success then
-         pragma Debug
-           (SK.Console.Put_Line (Item => "Error setting VM-exit controls"));
-         CPU.Panic;
-      end if;
+      VMCS_Write (Field => VM_EXIT_CONTROLS,
+                  Value => Value);
 
       CPU.Get_MSR (Register => IA32_VMX_ENTRY_CTLS,
                    Low      => Default0,
@@ -109,14 +117,8 @@ is
       Value := 0;
       Value := Value and SK.Word64 (Default1);
       Value := Value or  SK.Word64 (Default0);
-      CPU.VMWRITE (Field   => VM_ENTRY_CONTROLS,
-                   Value   => Value,
-                   Success => Success);
-      if not Success then
-         pragma Debug
-           (SK.Console.Put_Line (Item => "Error setting VM-entry controls"));
-         CPU.Panic;
-      end if;
+      VMCS_Write (Field => VM_ENTRY_CONTROLS,
+                  Value => Value);
    end VMCS_Setup_Control_Fields;
 
    -------------------------------------------------------------------------

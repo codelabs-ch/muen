@@ -13,6 +13,7 @@ is
    --#    in out X86_64.State;
    --#    in     VMX.VMXON_Address;
    --#    in     VMX.VMCS_Address;
+   --#    in     VMX.Subject_Main_Address;
    --#    in     Interrupts.ISR_List;
    --#    in     GDT.GDT_Pointer;
    --#       out Interrupts.IDT;
@@ -23,6 +24,7 @@ is
    --#       *,
    --#       VMX.VMXON_Address,
    --#       VMX.VMCS_Address,
+   --#       VMX.Subject_Main_Address,
    --#       Interrupts.ISR_List,
    --#       GDT.GDT_Pointer;
    pragma Export (C, Main, "kmain");

@@ -41,6 +41,36 @@ is
    HOST_RSP                 : constant := 16#6c14#;
    HOST_RIP                 : constant := 16#6c16#;
 
+   --  Guest state fields
+
+   GUEST_SEL_CS             : constant := 16#0802#;
+   GUEST_SEL_SS             : constant := 16#0804#;
+   GUEST_SEL_DS             : constant := 16#0806#;
+   GUEST_SEL_TR             : constant := 16#080e#;
+   VMCS_LINK_POINTER        : constant := 16#2800#;
+   GUEST_LIMIT_CS           : constant := 16#4802#;
+   GUEST_LIMIT_SS           : constant := 16#4804#;
+   GUEST_LIMIT_DS           : constant := 16#4806#;
+   GUEST_LIMIT_TR           : constant := 16#480e#;
+   GUEST_LIMIT_GDTR         : constant := 16#4810#;
+   GUEST_LIMIT_IDTR         : constant := 16#4812#;
+   GUEST_ACCESS_RIGHTS_ES   : constant := 16#4814#;
+   GUEST_ACCESS_RIGHTS_CS   : constant := 16#4816#;
+   GUEST_ACCESS_RIGHTS_SS   : constant := 16#4818#;
+   GUEST_ACCESS_RIGHTS_DS   : constant := 16#481a#;
+   GUEST_ACCESS_RIGHTS_FS   : constant := 16#481c#;
+   GUEST_ACCESS_RIGHTS_GS   : constant := 16#481e#;
+   GUEST_ACCESS_RIGHTS_LDTR : constant := 16#4820#;
+   GUEST_ACCESS_RIGHTS_TR   : constant := 16#4822#;
+   GUEST_CR0                : constant := 16#6800#;
+   GUEST_CR3                : constant := 16#6802#;
+   GUEST_CR4                : constant := 16#6804#;
+   GUEST_BASE_GDTR          : constant := 16#6816#;
+   GUEST_BASE_IDTR          : constant := 16#6818#;
+   GUEST_RSP                : constant := 16#681c#;
+   GUEST_RIP                : constant := 16#681e#;
+   GUEST_RFLAGS             : constant := 16#6820#;
+
    --  VMX control flags
 
    VM_CONTROL_EXIT_HLT      : constant := 16#080#;
@@ -260,6 +290,87 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VMCS_Setup_Guest_Fields
+   --# global
+   --#    in     Interrupts.IDT_Pointer;
+   --#    in     GDT.GDT_Pointer;
+   --#    in     Subject_Main_Address;
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from
+   --#       *,
+   --#       Interrupts.IDT_Pointer,
+   --#       GDT.GDT_Pointer,
+   --#       Subject_Main_Address;
+   is
+      PD : Descriptors.Pseudo_Descriptor_Type;
+   begin
+      VMCS_Write (Field => VMCS_LINK_POINTER,
+                  Value => SK.Word64'Last);
+
+      VMCS_Write (Field => GUEST_SEL_CS,
+                  Value => SEL_KERN_CODE);
+      VMCS_Write (Field => GUEST_SEL_DS,
+                  Value => SEL_KERN_DATA);
+      VMCS_Write (Field => GUEST_SEL_SS,
+                  Value => SEL_KERN_DATA);
+      VMCS_Write (Field => GUEST_SEL_TR,
+                  Value => SEL_TSS);
+
+      VMCS_Write (Field => GUEST_LIMIT_CS,
+                  Value => SK.Word64 (SK.Word32'Last));
+      VMCS_Write (Field => GUEST_LIMIT_DS,
+                  Value => SK.Word64 (SK.Word32'Last));
+      VMCS_Write (Field => GUEST_LIMIT_SS,
+                  Value => SK.Word64 (SK.Word32'Last));
+      VMCS_Write (Field => GUEST_LIMIT_TR,
+                  Value => SK.Word64 (SK.Byte'Last));
+
+      VMCS_Write (Field => GUEST_ACCESS_RIGHTS_CS,
+                  Value => 16#c09b#);
+      VMCS_Write (Field => GUEST_ACCESS_RIGHTS_DS,
+                  Value => 16#c093#);
+      VMCS_Write (Field => GUEST_ACCESS_RIGHTS_ES,
+                  Value => 16#10000#);
+      VMCS_Write (Field => GUEST_ACCESS_RIGHTS_FS,
+                  Value => 16#10000#);
+      VMCS_Write (Field => GUEST_ACCESS_RIGHTS_GS,
+                  Value => 16#10000#);
+      VMCS_Write (Field => GUEST_ACCESS_RIGHTS_LDTR,
+                  Value => 16#10000#);
+      VMCS_Write (Field => GUEST_ACCESS_RIGHTS_SS,
+                  Value => 16#c093#);
+      VMCS_Write (Field => GUEST_ACCESS_RIGHTS_TR,
+                  Value => 16#8b#);
+
+      VMCS_Write (Field => GUEST_CR0,
+                  Value => CPU.Get_CR0);
+      VMCS_Write (Field => GUEST_CR3,
+                  Value => CPU.Get_CR3);
+      VMCS_Write (Field => GUEST_CR4,
+                  Value => CPU.Get_CR4);
+
+      PD := Interrupts.Get_IDT_Pointer;
+      VMCS_Write (Field => GUEST_BASE_IDTR,
+                  Value => PD.Base);
+      VMCS_Write (Field => GUEST_LIMIT_IDTR,
+                  Value => SK.Word64 (PD.Limit));
+      PD := GDT.Get_GDT_Pointer;
+      VMCS_Write (Field => GUEST_BASE_GDTR,
+                  Value => PD.Base);
+      VMCS_Write (Field => GUEST_LIMIT_GDTR,
+                  Value => SK.Word64 (PD.Limit));
+
+      VMCS_Write (Field => GUEST_RFLAGS,
+                  Value => CPU.Get_RFLAGS);
+      VMCS_Write (Field => GUEST_RSP,
+                  Value => CPU.Get_RSP);
+      VMCS_Write (Field => GUEST_RIP,
+                  Value => Subject_Main_Address);
+   end VMCS_Setup_Guest_Fields;
+
+   -------------------------------------------------------------------------
+
    procedure Enable
    is
       Success : Boolean;
@@ -316,6 +427,7 @@ is
 
       VMCS_Setup_Control_Fields;
       VMCS_Setup_Host_Fields;
+      VMCS_Setup_Guest_Fields;
 
       CPU.VMLAUNCH (Success => Success);
       if not Success then

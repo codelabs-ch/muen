@@ -27,12 +27,14 @@ is
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
    --#    in     VMCS_Address;
+   --#    in     Subject_Main_Address;
    --#    in out X86_64.State;
    --# derives
    --#    X86_64.State from
    --#       *,
    --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,
-   --#       VMCS_Address;
+   --#       VMCS_Address,
+   --#       Subject_Main_Address;
 
 end SK.VMX;

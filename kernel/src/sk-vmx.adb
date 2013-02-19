@@ -197,7 +197,7 @@ is
       CPU.Get_MSR (Register => IA32_VMX_ENTRY_CTLS,
                    Low      => Default0,
                    High     => Default1);
-      Value := 0;
+      Value := VM_CONTROL_IA32E_MODE;
       Value := Value and SK.Word64 (Default1);
       Value := Value or  SK.Word64 (Default0);
       VMCS_Write (Field => VM_ENTRY_CONTROLS,

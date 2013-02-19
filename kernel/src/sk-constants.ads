@@ -2,6 +2,23 @@ package SK.Constants
 is
 
    ----------
+   -- MSRs --
+   ----------
+
+   IA32_FEATURE_CONTROL     : constant := 16#3a#;
+   IA32_EFER                : constant := 16#c000_0080#;
+
+   IA32_VMX_BASIC           : constant := 16#480#;
+   IA32_VMX_PINBASED_CTLS   : constant := 16#481#;
+   IA32_VMX_PROCBASED_CTLS  : constant := 16#482#;
+   IA32_VMX_EXIT_CTLS       : constant := 16#483#;
+   IA32_VMX_ENTRY_CTLS      : constant := 16#484#;
+   IA32_VMX_CR0_FIXED0      : constant := 16#486#;
+   IA32_VMX_CR0_FIXED1      : constant := 16#487#;
+   IA32_VMX_CR4_FIXED0      : constant := 16#488#;
+   IA32_VMX_CR4_FIXED1      : constant := 16#489#;
+
+   ----------
    -- VMCS --
    ----------
 

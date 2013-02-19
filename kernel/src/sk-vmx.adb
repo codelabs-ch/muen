@@ -10,14 +10,6 @@ with SK.Constants;
 package body SK.VMX
 is
 
-   --  VMX MSRs
-
-   IA32_VMX_BASIC           : constant := 16#480#;
-   IA32_VMX_PINBASED_CTLS   : constant := 16#481#;
-   IA32_VMX_PROCBASED_CTLS  : constant := 16#482#;
-   IA32_VMX_EXIT_CTLS       : constant := 16#483#;
-   IA32_VMX_ENTRY_CTLS      : constant := 16#484#;
-
    --  Segment selectors
 
    SEL_KERN_CODE            : constant := 16#08#;
@@ -150,7 +142,7 @@ is
       Default0, Default1 : SK.Word32;
       Value              : SK.Word64;
    begin
-      CPU.Get_MSR (Register => IA32_VMX_PINBASED_CTLS,
+      CPU.Get_MSR (Register => Constants.IA32_VMX_PINBASED_CTLS,
                    Low      => Default0,
                    High     => Default1);
       Value := 0;
@@ -159,7 +151,7 @@ is
       VMCS_Write (Field => Constants.PIN_BASED_EXEC_CONTROL,
                   Value => Value);
 
-      CPU.Get_MSR (Register => IA32_VMX_PROCBASED_CTLS,
+      CPU.Get_MSR (Register => Constants.IA32_VMX_PROCBASED_CTLS,
                    Low      => Default0,
                    High     => Default1);
       Value := Constants.VM_CONTROL_EXIT_HLT;
@@ -168,7 +160,7 @@ is
       VMCS_Write (Field => Constants.CPU_BASED_EXEC_CONTROL,
                   Value => Value);
 
-      CPU.Get_MSR (Register => IA32_VMX_EXIT_CTLS,
+      CPU.Get_MSR (Register => Constants.IA32_VMX_EXIT_CTLS,
                    Low      => Default0,
                    High     => Default1);
       Value := Constants.VM_CONTROL_IA32E_MODE;
@@ -177,7 +169,7 @@ is
       VMCS_Write (Field => Constants.VM_EXIT_CONTROLS,
                   Value => Value);
 
-      CPU.Get_MSR (Register => IA32_VMX_ENTRY_CTLS,
+      CPU.Get_MSR (Register => Constants.IA32_VMX_ENTRY_CTLS,
                    Low      => Default0,
                    High     => Default1);
       Value := Constants.VM_CONTROL_IA32E_MODE;
@@ -395,7 +387,7 @@ begin
       for VMCS_Region'Address use System'To_Address (VMCS_Address);
    begin
       CPU.Get_MSR
-        (Register => IA32_VMX_BASIC,
+        (Register => Constants.IA32_VMX_BASIC,
          Low      => Revision,
          High     => Unused_High);
 

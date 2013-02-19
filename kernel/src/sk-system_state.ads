@@ -1,6 +1,7 @@
 --# inherit
 --#    X86_64,
---#    SK.CPU;
+--#    SK.CPU,
+--#    SK.Constants;
 package SK.System_State
 is
 

@@ -1,5 +1,6 @@
 with SK.CPU;
 with SK.Console;
+with SK.Constants;
 
 package body SK.System_State
 is
@@ -10,12 +11,6 @@ is
    IA32_EFER_LMA_FLAG     : constant := 10;
    IA32_FCTRL_SMX_FLAG    : constant := 2;
    RFLAGS_VM_FLAG         : constant := 17;
-   IA32_FEATURE_CONTROL   : constant := 16#3a#;
-   IA32_VMX_CR0_FIXED0    : constant := 16#486#;
-   IA32_VMX_CR0_FIXED1    : constant := 16#487#;
-   IA32_VMX_CR4_FIXED0    : constant := 16#488#;
-   IA32_VMX_CR4_FIXED1    : constant := 16#489#;
-   IA32_EFER              : constant := 16#C000_0080#;
 
    -------------------------------------------------------------------------
 
@@ -74,7 +69,7 @@ is
          SK.Console.Put_Line (Item => "VMX not supported"));
 
       VMX_Locked := SK.Bit_Test
-        (Value => CPU.Get_MSR64 (Register => IA32_FEATURE_CONTROL),
+        (Value => CPU.Get_MSR64 (Register => Constants.IA32_FEATURE_CONTROL),
          Pos   => 0);
       pragma Debug
         (not VMX_Locked,
@@ -95,7 +90,7 @@ is
          SK.Console.Put_Line (Item => "Paging not enabled"));
 
       IA_32e_Mode := SK.Bit_Test
-        (Value => CPU.Get_MSR64 (Register => IA32_EFER),
+        (Value => CPU.Get_MSR64 (Register => Constants.IA32_EFER),
          Pos   => IA32_EFER_LMA_FLAG);
       pragma Debug
         (not IA_32e_Mode,
@@ -109,7 +104,7 @@ is
          SK.Console.Put_Line (Item => "Virtual-8086 mode enabled"));
 
       Not_In_SMX := SK.Bit_Test
-        (Value => CPU.Get_MSR64 (Register => IA32_FEATURE_CONTROL),
+        (Value => CPU.Get_MSR64 (Register => Constants.IA32_FEATURE_CONTROL),
          Pos   => IA32_FCTRL_SMX_FLAG);
       pragma Debug
         (not Not_In_SMX,
@@ -117,8 +112,10 @@ is
 
       CR0_Valid := Fixed_Valid
         (Register => CPU.Get_CR0,
-         Fixed0   => CPU.Get_MSR64 (Register => IA32_VMX_CR0_FIXED0),
-         Fixed1   => CPU.Get_MSR64 (Register => IA32_VMX_CR0_FIXED1));
+         Fixed0   => CPU.Get_MSR64
+           (Register => Constants.IA32_VMX_CR0_FIXED0),
+         Fixed1   => CPU.Get_MSR64
+           (Register => Constants.IA32_VMX_CR0_FIXED1));
       pragma Debug
         (not CR0_Valid,
          SK.Console.Put_Line (Item => "CR0 is invalid"));
@@ -127,8 +124,10 @@ is
         (Register => SK.Bit_Set
            (Value => CPU.Get_CR4,
             Pos   => CPU.CR4_VMXE_FLAG),
-         Fixed0   => CPU.Get_MSR64 (Register => IA32_VMX_CR4_FIXED0),
-         Fixed1   => CPU.Get_MSR64 (Register => IA32_VMX_CR4_FIXED1));
+         Fixed0   => CPU.Get_MSR64
+           (Register => Constants.IA32_VMX_CR4_FIXED0),
+         Fixed1   => CPU.Get_MSR64
+           (Register => Constants.IA32_VMX_CR4_FIXED1));
       pragma Debug
         (not CR4_Valid,
          SK.Console.Put_Line (Item => "CR4 is invalid"));

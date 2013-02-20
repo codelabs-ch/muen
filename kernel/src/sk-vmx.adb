@@ -6,6 +6,7 @@ with SK.Descriptors;
 with SK.KC;
 with SK.GDT;
 with SK.Constants;
+with SK.Subject;
 
 package body SK.VMX
 is
@@ -26,11 +27,6 @@ is
    --# accept Warning, 350, VMCS_Address, "Imported from Linker";
    VMCS_Address : SK.Word64;
    pragma Import (C, VMCS_Address, "vmcs_pointer");
-   --# end accept;
-
-   --# accept Warning, 350, Subject_Main_Address, "Imported from Linker";
-   Subject_Main_Address : SK.Word64;
-   pragma Import (C, Subject_Main_Address, "subject_main_pointer");
    --# end accept;
 
    ---------------------------------------------------------------------------
@@ -231,14 +227,12 @@ is
    --# global
    --#    in     Interrupts.IDT_Pointer;
    --#    in     GDT.GDT_Pointer;
-   --#    in     Subject_Main_Address;
    --#    in out X86_64.State;
    --# derives
    --#    X86_64.State from
    --#       *,
    --#       Interrupts.IDT_Pointer,
-   --#       GDT.GDT_Pointer,
-   --#       Subject_Main_Address;
+   --#       GDT.GDT_Pointer;
    is
       PD : Descriptors.Pseudo_Descriptor_Type;
    begin
@@ -303,7 +297,7 @@ is
       VMCS_Write (Field => Constants.GUEST_RSP,
                   Value => CPU.Get_RSP);
       VMCS_Write (Field => Constants.GUEST_RIP,
-                  Value => Subject_Main_Address);
+                  Value => Subject.Get_Main_Address);
    end VMCS_Setup_Guest_Fields;
 
    -------------------------------------------------------------------------

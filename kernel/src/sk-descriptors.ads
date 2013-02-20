@@ -1,4 +1,5 @@
---# inherit SK;
+--# inherit
+--#    SK;
 package SK.Descriptors
 is
 

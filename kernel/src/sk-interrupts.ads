@@ -2,7 +2,6 @@ with SK.Descriptors;
 
 --# inherit
 --#    System,
---#    SK,
 --#    SK.Descriptors;
 package SK.Interrupts
 --# own

@@ -1,6 +1,8 @@
 with System;
 
-package body SK.Console.Backend
+with SK.IO;
+
+package body SK.Console_VGA
 is
 
    type VGA_Color_Type is
@@ -103,17 +105,17 @@ is
 
       --  Set high cursor byte
 
-      Outb (Port  => 16#3d4#,
-            Value => 14);
-      Outb (Port  => 16#3d5#,
-            Value => Byte (Pos / 2 ** 8));
+      IO.Outb (Port  => 16#3d4#,
+               Value => 14);
+      IO.Outb (Port  => 16#3d5#,
+               Value => Byte (Pos / 2 ** 8));
 
       --  Set low cursor byte
 
-      Outb (Port  => 16#3d4#,
-            Value => 15);
-      Outb (Port  => 16#3d5#,
-            Value => Byte (Pos));
+      IO.Outb (Port  => 16#3d4#,
+               Value => 15);
+      IO.Outb (Port  => 16#3d5#,
+               Value => Byte (Pos));
    end Update_Cursor;
 
    -------------------------------------------------------------------------
@@ -165,4 +167,4 @@ is
       Update_Cursor;
    end Put_Char;
 
-end SK.Console.Backend;
+end SK.Console_VGA;

@@ -6,8 +6,6 @@ VERSION_SPEC = src/sk-version.ads
 VERSION      = $(GIT_REV)
 GIT_REV      = $(shell git describe --always)
 
-CONSOLE ?= Serial
-
 NUM_CPUS  := $(shell getconf _NPROCESSORS_ONLN)
 BUILD_OPTS = -p -j$(NUM_CPUS) --RTS=zfp
 TARGET_IP = 192.168.254.2
@@ -53,7 +51,7 @@ $(VERSION_SPEC): .git-rev
 	@echo "end SK.Version;"                        >> $@
 
 $(OBJ_DIR)/kernel.elf: $(VERSION_SPEC)
-	gprbuild $(BUILD_OPTS) -Pkernel -XCONSOLE=$(CONSOLE)
+	gprbuild $(BUILD_OPTS) -Pkernel
 
 $(OBJ_DIR)/kernel: $(OBJ_DIR)/kernel.elf
 	objcopy -O binary $< $@

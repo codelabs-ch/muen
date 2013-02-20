@@ -1,4 +1,4 @@
-package SK.Console.Backend
+package SK.Console_VGA
 is
 
    --  Clear screen and set initial cursor position.
@@ -10,4 +10,4 @@ is
    --  Print character at current cursor position.
    procedure Put_Char (Item : Character);
 
-end SK.Console.Backend;
+end SK.Console_VGA;

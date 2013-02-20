@@ -3,7 +3,7 @@ with System.Storage_Elements;
 with SK.CPU;
 with SK.Interrupts;
 with SK.Descriptors;
-with SK.Console;
+with SK.KC;
 with SK.GDT;
 with SK.Constants;
 
@@ -63,12 +63,11 @@ is
                    Value   => Value,
                    Success => Success);
       if not Success then
-         pragma Debug (SK.Console.Put_String
-                       (Item => "Error setting VMCS field "));
-         pragma Debug (SK.Console.Put_Word16 (Item => Field));
-         pragma Debug (SK.Console.Put_String (Item => " to value "));
-         pragma Debug (SK.Console.Put_Word64 (Item => Value));
-         pragma Debug (SK.Console.New_Line);
+         pragma Debug (KC.Put_String (Item => "Error setting VMCS field "));
+         pragma Debug (KC.Put_Word16 (Item => Field));
+         pragma Debug (KC.Put_String (Item => " to value "));
+         pragma Debug (KC.Put_Word64 (Item => Value));
+         pragma Debug (KC.New_Line);
          CPU.Panic;
       end if;
    end VMCS_Write;
@@ -91,10 +90,9 @@ is
                   Value   => Value,
                   Success => Success);
       if not Success then
-         pragma Debug (SK.Console.Put_String
-                       (Item => "Error reading VMCS field "));
-         pragma Debug (SK.Console.Put_Word16 (Item => Field));
-         pragma Debug (SK.Console.New_Line);
+         pragma Debug (KC.Put_String (Item => "Error reading VMCS field "));
+         pragma Debug (KC.Put_Word16 (Item => Field));
+         pragma Debug (KC.New_Line);
          CPU.Panic;
       end if;
    end VMCS_Read;
@@ -114,11 +112,11 @@ is
                                Value => Reason));
       pragma Debug (VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
                                Value => Qualification));
-      pragma Debug (SK.Console.Put_String (Item => "VM EXIT ("));
-      pragma Debug (SK.Console.Put_Word16 (Item => SK.Word16 (Reason)));
-      pragma Debug (SK.Console.Put_String (Item => ":"));
-      pragma Debug (SK.Console.Put_Word32 (Item => SK.Word32 (Qualification)));
-      pragma Debug (SK.Console.Put_Line (Item => ")"));
+      pragma Debug (KC.Put_String (Item => "VM EXIT ("));
+      pragma Debug (KC.Put_Word16 (Item => SK.Word16 (Reason)));
+      pragma Debug (KC.Put_String (Item => ":"));
+      pragma Debug (KC.Put_Word32 (Item => SK.Word32 (Qualification)));
+      pragma Debug (KC.Put_Line (Item => ")"));
       CPU.Panic;
       --# accept Warning, 400, Reason, "Only used for debug output";
       --# accept Warning, 400, Qualification, "Only used for debug output";
@@ -318,7 +316,7 @@ is
         (Address   => VMXON_Address,
          Alignment => 4096);
       if not Success then
-         pragma Debug (SK.Console.Put_Line ("VMXON region alignment invalid"));
+         pragma Debug (KC.Put_Line ("VMXON region alignment invalid"));
          CPU.Panic;
       end if;
 
@@ -329,7 +327,7 @@ is
       CPU.VMXON (Region  => VMXON_Address,
                  Success => Success);
       if not Success then
-         pragma Debug (SK.Console.Put_Line (Item => "Error enabling VMX"));
+         pragma Debug (KC.Put_Line (Item => "Error enabling VMX"));
          CPU.Panic;
       end if;
    end Enable;
@@ -345,14 +343,14 @@ is
         (Address   => VMCS_Address,
          Alignment => 4096);
       if not Success then
-         pragma Debug (SK.Console.Put_Line ("VMCS region alignment invalid"));
+         pragma Debug (KC.Put_Line ("VMCS region alignment invalid"));
          CPU.Panic;
       end if;
 
       CPU.VMCLEAR (Region  => VMCS_Address,
                    Success => Success);
       if not Success then
-         pragma Debug (SK.Console.Put_Line (Item => "Error clearing VMCS"));
+         pragma Debug (KC.Put_Line (Item => "Error clearing VMCS"));
          CPU.Panic;
       end if;
 
@@ -360,7 +358,7 @@ is
                    Success => Success);
       if not Success then
          pragma Debug
-           (SK.Console.Put_Line (Item => "Error loading VMCS pointer"));
+           (KC.Put_Line (Item => "Error loading VMCS pointer"));
          CPU.Panic;
       end if;
 
@@ -373,10 +371,9 @@ is
          pragma Debug (CPU.VMREAD (Field   => Constants.VMX_INST_ERROR,
                                    Value   => Error,
                                    Success => Success));
-         pragma Debug
-           (SK.Console.Put_String (Item => "Error launching VM ("));
-         pragma Debug (SK.Console.Put_Byte (Item => Byte (Error)));
-         pragma Debug (SK.Console.Put_Line (Item => ")"));
+         pragma Debug (KC.Put_String (Item => "Error launching VM ("));
+         pragma Debug (KC.Put_Byte (Item => Byte (Error)));
+         pragma Debug (KC.Put_Line (Item => ")"));
          CPU.Panic;
       end if;
       --# accept Warning, 400, Error, "Only used for debug output";

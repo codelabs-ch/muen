@@ -1,16 +1,5 @@
 project Kernel is
 
-   type Debug_Type is ("VGA", "Serial");
-   Debug_Console : Debug_Type := external ("CONSOLE", "VGA");
-   Debug_Backend := "sk-console-backend__vga.adb";
-
-   case Debug_Console is
-      when "VGA" =>
-         Debug_Backend := "sk-console-backend__vga.adb";
-      when "Serial" =>
-         Debug_Backend := "sk-console-backend__serial.adb";
-   end case;
-
    for Languages use ("Ada", "Asm");
    for Source_Dirs use ("src/**");
    for Object_Dir use "obj";
@@ -41,7 +30,6 @@ project Kernel is
 
    package Naming is
       for Body_Suffix ("Asm") use ".S";
-      for Implementation ("SK.Console.Backend") use Debug_Backend;
    end Naming;
 
 end Kernel;

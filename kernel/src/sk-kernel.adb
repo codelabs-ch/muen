@@ -1,4 +1,4 @@
-with SK.Console;
+with SK.KC;
 with SK.Version;
 with SK.Interrupts;
 with SK.System_State;
@@ -13,10 +13,10 @@ is
    is
       Success : Boolean;
    begin
+      pragma Debug (KC.Init);
       pragma Debug
-        (SK.Console.Put_Line
-           (Item => "Booting Separation Kernel ("
-            & SK.Version.Version_String & ") ..."));
+        (KC.Put_Line (Item => "Booting Separation Kernel ("
+                      & SK.Version.Version_String & ") ..."));
 
       --  Setup IDT.
 
@@ -28,15 +28,11 @@ is
          VMX.Enable;
          VMX.Launch;
       else
-         pragma Debug
-           (SK.Console.Put_Line
-              (Item => "System initialisation error"));
+         pragma Debug (KC.Put_Line (Item => "System initialisation error"));
          null;
       end if;
 
-      pragma Debug
-        (SK.Console.Put_Line
-           (Item => "Terminating"));
+      pragma Debug (KC.Put_Line (Item => "Terminating"));
    end Main;
 
 end SK.Kernel;

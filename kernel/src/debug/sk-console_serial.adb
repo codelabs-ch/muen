@@ -1,6 +1,6 @@
-with System.Machine_Code;
+with SK.IO;
 
-package body SK.Console.Backend
+package body SK.Console_Serial
 is
 
    --  Intel AMT SoL port address.
@@ -10,27 +10,12 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Receive byte from given port.
-   procedure Inb
-     (Port  :     Word16;
-      Value : out Byte)
-   is
-   begin
-      System.Machine_Code.Asm
-        (Template => "inb %1, %0",
-         Inputs   => (Word16'Asm_Input ("d", Port)),
-         Outputs  => (Byte'Asm_Output ("=a", Value)),
-         Volatile => True);
-   end Inb;
-
-   -------------------------------------------------------------------------
-
    function Empty_Send_Buffer return Boolean
    is
       Data : Byte;
    begin
-      Inb (Port  => Port + 5,
-           Value => Data);
+      IO.Inb (Port  => Port + 5,
+              Value => Data);
       return (Data and 16#20#) /= 0;
    end Empty_Send_Buffer;
 
@@ -42,35 +27,35 @@ is
 
       --  Disable interrupts.
 
-      Outb (Port  => Port + 1,
-            Value => 0);
+      IO.Outb (Port  => Port + 1,
+               Value => 0);
 
       --  Enable DLAB.
 
-      Outb (Port  => Port + 3,
-            Value => 16#80#);
+      IO.Outb (Port  => Port + 3,
+               Value => 16#80#);
 
       --  Set divisor (least/most significant byte).
 
-      Outb (Port  => Port,
-            Value => Divisor);
-      Outb (Port  => Port + 1,
-            Value => 0);
+      IO.Outb (Port  => Port,
+               Value => Divisor);
+      IO.Outb (Port  => Port + 1,
+               Value => 0);
 
       --  Clear DLAB and set 8 bits, no parity, one stop bit (8N1).
 
-      Outb (Port  => Port + 3,
-            Value => 3);
+      IO.Outb (Port  => Port + 3,
+               Value => 3);
 
       --  Enable FIFO.
 
-      Outb (Port  => Port + 2,
-            Value => 16#c7#);
+      IO.Outb (Port  => Port + 2,
+               Value => 16#c7#);
 
       --  IRQS enabled, RTS/DSR set.
 
-      Outb (Port  => Port + 4,
-            Value => 16#0b#);
+      IO.Outb (Port  => Port + 4,
+               Value => 16#0b#);
    end Init;
 
    -------------------------------------------------------------------------
@@ -79,7 +64,7 @@ is
    is
    begin
 
-      --#  Newline + Linefeed
+      --  Newline + Linefeed
 
       Put_Char (Item => Character'Val (10));
       Put_Char (Item => Character'Val (12));
@@ -94,8 +79,8 @@ is
          null;
       end loop;
 
-      Outb (Port  => Port,
-            Value => Character'Pos (Item));
+      IO.Outb (Port  => Port,
+               Value => Character'Pos (Item));
    end Put_Char;
 
-end SK.Console.Backend;
+end SK.Console_Serial;

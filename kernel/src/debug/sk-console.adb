@@ -1,24 +1,13 @@
-with System.Machine_Code;
-
-with SK.Console.Backend;
-
 package body SK.Console
 is
 
    -------------------------------------------------------------------------
 
-   --  Send byte to given port.
-   procedure Outb
-     (Port  : Word16;
-      Value : Byte)
+   procedure Init
    is
    begin
-      System.Machine_Code.Asm
-        (Template => "outb %0, %1",
-         Inputs   => (Byte'Asm_Input ("a", Value),
-                      Word16'Asm_Input ("d", Port)),
-         Volatile => True);
-   end Outb;
+      Initialize;
+   end Init;
 
    -------------------------------------------------------------------------
 
@@ -69,11 +58,19 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure New_Line renames Backend.New_Line;
+   procedure New_Line
+   is
+   begin
+      Output_New_Line;
+   end New_Line;
 
    -------------------------------------------------------------------------
 
-   procedure Put_Char (Item : Character) renames Backend.Put_Char;
+   procedure Put_Char (Item : Character)
+   is
+   begin
+      Output_Char (Item => Item);
+   end Put_Char;
 
    -------------------------------------------------------------------------
 
@@ -150,6 +147,4 @@ is
       Put_String (Item => Str);
    end Put_Word64;
 
-begin
-   Backend.Init;
 end SK.Console;

@@ -1,5 +1,19 @@
+generic
+
+   --  Implementation of the console initialization operation.
+   with procedure Initialize;
+
+   --  Implementation of the new line output operation.
+   with procedure Output_New_Line;
+
+   --  Implementation of the character output operation.
+   with procedure Output_Char (Item : Character);
+
 package SK.Console
 is
+
+   --  Initialize console.
+   procedure Init;
 
    --  Output a new line.
    procedure New_Line;
@@ -24,12 +38,5 @@ is
 
    --  Output given quadword in hex.
    procedure Put_Word64 (Item : Word64);
-
-private
-
-   --  Send byte to given port.
-   procedure Outb
-     (Port  : Word16;
-      Value : Byte);
 
 end SK.Console;

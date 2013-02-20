@@ -1,7 +1,7 @@
 with System.Machine_Code;
 
 with SK.CPU;
-with SK.Console;
+with SK.KC;
 
 package body SK.Debug
 is
@@ -34,79 +34,79 @@ is
          Outputs  => (Word64'Asm_Output ("=r", CR4)),
          Volatile => True);
 
-      Console.Put_Line ("[KERNEL PANIC]");
+      KC.Put_Line ("[KERNEL PANIC]");
 
-      Console.Put_String ("Vector: ");
-      Console.Put_Byte (Item => Byte (Vec));
-      Console.Put_String (", Error: ");
-      Console.Put_Word64 (Item => Err);
-      Console.New_Line;
-      Console.New_Line;
+      KC.Put_String ("Vector: ");
+      KC.Put_Byte (Item => Byte (Vec));
+      KC.Put_String (", Error: ");
+      KC.Put_Word64 (Item => Err);
+      KC.New_Line;
+      KC.New_Line;
 
-      Console.Put_String ("RIP: ");
-      Console.Put_Word64 (Item => RIP);
-      Console.Put_String (" CS : ");
-      Console.Put_Word16 (Item => Word16 (CS));
-      Console.New_Line;
-      Console.Put_String ("RSP: ");
-      Console.Put_Word64 (Item => RSP);
-      Console.Put_String (" SS : ");
-      Console.Put_Word16 (Item => Word16 (SS));
-      Console.New_Line;
+      KC.Put_String ("RIP: ");
+      KC.Put_Word64 (Item => RIP);
+      KC.Put_String (" CS : ");
+      KC.Put_Word16 (Item => Word16 (CS));
+      KC.New_Line;
+      KC.Put_String ("RSP: ");
+      KC.Put_Word64 (Item => RSP);
+      KC.Put_String (" SS : ");
+      KC.Put_Word16 (Item => Word16 (SS));
+      KC.New_Line;
 
-      Console.Put_String (Item => "RAX: ");
-      Console.Put_Word64 (Item => RAX);
-      Console.Put_String (Item => " RBX: ");
-      Console.Put_Word64 (Item => RBX);
-      Console.Put_String (Item => " RCX: ");
-      Console.Put_Word64 (Item => RCX);
-      Console.New_Line;
+      KC.Put_String (Item => "RAX: ");
+      KC.Put_Word64 (Item => RAX);
+      KC.Put_String (Item => " RBX: ");
+      KC.Put_Word64 (Item => RBX);
+      KC.Put_String (Item => " RCX: ");
+      KC.Put_Word64 (Item => RCX);
+      KC.New_Line;
 
-      Console.Put_String (Item => "RDX: ");
-      Console.Put_Word64 (Item => RDX);
-      Console.Put_String (Item => " RSI: ");
-      Console.Put_Word64 (Item => RSI);
-      Console.Put_String (Item => " RDI: ");
-      Console.Put_Word64 (Item => RDI);
-      Console.New_Line;
+      KC.Put_String (Item => "RDX: ");
+      KC.Put_Word64 (Item => RDX);
+      KC.Put_String (Item => " RSI: ");
+      KC.Put_Word64 (Item => RSI);
+      KC.Put_String (Item => " RDI: ");
+      KC.Put_Word64 (Item => RDI);
+      KC.New_Line;
 
-      Console.Put_String (Item => "RBP: ");
-      Console.Put_Word64 (Item => RBP);
-      Console.Put_String (Item => " R08: ");
-      Console.Put_Word64 (Item => R08);
-      Console.Put_String (Item => " R09: ");
-      Console.Put_Word64 (Item => R09);
-      Console.New_Line;
+      KC.Put_String (Item => "RBP: ");
+      KC.Put_Word64 (Item => RBP);
+      KC.Put_String (Item => " R08: ");
+      KC.Put_Word64 (Item => R08);
+      KC.Put_String (Item => " R09: ");
+      KC.Put_Word64 (Item => R09);
+      KC.New_Line;
 
-      Console.Put_String (Item => "R10: ");
-      Console.Put_Word64 (Item => R10);
-      Console.Put_String (Item => " R11: ");
-      Console.Put_Word64 (Item => R11);
-      Console.Put_String (Item => " R12: ");
-      Console.Put_Word64 (Item => R12);
-      Console.New_Line;
+      KC.Put_String (Item => "R10: ");
+      KC.Put_Word64 (Item => R10);
+      KC.Put_String (Item => " R11: ");
+      KC.Put_Word64 (Item => R11);
+      KC.Put_String (Item => " R12: ");
+      KC.Put_Word64 (Item => R12);
+      KC.New_Line;
 
-      Console.Put_String (Item => "R13: ");
-      Console.Put_Word64 (Item => R13);
-      Console.Put_String (Item => " R14: ");
-      Console.Put_Word64 (Item => R14);
-      Console.Put_String (Item => " R15: ");
-      Console.Put_Word64 (Item => R15);
-      Console.New_Line;
+      KC.Put_String (Item => "R13: ");
+      KC.Put_Word64 (Item => R13);
+      KC.Put_String (Item => " R14: ");
+      KC.Put_Word64 (Item => R14);
+      KC.Put_String (Item => " R15: ");
+      KC.Put_Word64 (Item => R15);
+      KC.New_Line;
 
-      Console.Put_String (Item => "CR0: ");
-      Console.Put_Word64 (Item => CR0);
-      Console.Put_String (Item => " CR2: ");
-      Console.Put_Word64 (Item => CR2);
-      Console.Put_String (Item => " CR3: ");
-      Console.Put_Word64 (Item => CR3);
-      Console.New_Line;
+      KC.Put_String (Item => "CR0: ");
+      KC.Put_Word64 (Item => CR0);
+      KC.Put_String (Item => " CR2: ");
+      KC.Put_Word64 (Item => CR2);
+      KC.Put_String (Item => " CR3: ");
+      KC.Put_Word64 (Item => CR3);
+      KC.New_Line;
 
-      Console.Put_String (Item => "CR4: ");
-      Console.Put_Word64 (Item => CR4);
-      Console.Put_String (" EFL: ");
-      Console.Put_Word32 (Item => Word32 (RFL));
-      Console.New_Line;
+      KC.Put_String (Item => "CR4: ");
+      KC.Put_Word64 (Item => CR4);
+      KC.Put_String (" EFL: ");
+      KC.Put_Word32 (Item => Word32 (RFL));
+      KC.New_Line;
 
       CPU.Hlt;
    end Isr_Dump;

@@ -13,9 +13,9 @@ is
 
    --  Segment selectors
 
-   SEL_KERN_CODE            : constant := 16#08#;
-   SEL_KERN_DATA            : constant := 16#10#;
-   SEL_TSS                  : constant := 16#18#;
+   SEL_KERN_CODE : constant := 16#08#;
+   SEL_KERN_DATA : constant := 16#10#;
+   SEL_TSS       : constant := 16#18#;
 
    subtype Alignment_Type is SK.Word16 range 1 .. SK.Word16'Last;
 

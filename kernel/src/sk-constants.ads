@@ -67,11 +67,13 @@ is
 
    --  Guest state fields
 
+   GUEST_SEL_ES             : constant := 16#0800#;
    GUEST_SEL_CS             : constant := 16#0802#;
    GUEST_SEL_SS             : constant := 16#0804#;
    GUEST_SEL_DS             : constant := 16#0806#;
    GUEST_SEL_TR             : constant := 16#080e#;
    VMCS_LINK_POINTER        : constant := 16#2800#;
+   GUEST_LIMIT_ES           : constant := 16#4800#;
    GUEST_LIMIT_CS           : constant := 16#4802#;
    GUEST_LIMIT_SS           : constant := 16#4804#;
    GUEST_LIMIT_DS           : constant := 16#4806#;

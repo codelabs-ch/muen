@@ -243,6 +243,8 @@ is
                   Value => SEL_KERN_CODE);
       VMCS_Write (Field => Constants.GUEST_SEL_DS,
                   Value => SEL_KERN_DATA);
+      VMCS_Write (Field => Constants.GUEST_SEL_ES,
+                  Value => SEL_KERN_DATA);
       VMCS_Write (Field => Constants.GUEST_SEL_SS,
                   Value => SEL_KERN_DATA);
       VMCS_Write (Field => Constants.GUEST_SEL_TR,
@@ -251,6 +253,8 @@ is
       VMCS_Write (Field => Constants.GUEST_LIMIT_CS,
                   Value => SK.Word64 (SK.Word32'Last));
       VMCS_Write (Field => Constants.GUEST_LIMIT_DS,
+                  Value => SK.Word64 (SK.Word32'Last));
+      VMCS_Write (Field => Constants.GUEST_LIMIT_ES,
                   Value => SK.Word64 (SK.Word32'Last));
       VMCS_Write (Field => Constants.GUEST_LIMIT_SS,
                   Value => SK.Word64 (SK.Word32'Last));
@@ -262,17 +266,20 @@ is
       VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_DS,
                   Value => 16#c093#);
       VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_ES,
-                  Value => 16#10000#);
+                  Value => 16#c093#);
+      VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_SS,
+                  Value => 16#c093#);
+      VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_TR,
+                  Value => 16#8b#);
+
+      --  Disable fs, gs and ldt segments for now.
+
       VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_FS,
                   Value => 16#10000#);
       VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_GS,
                   Value => 16#10000#);
       VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_LDTR,
                   Value => 16#10000#);
-      VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_SS,
-                  Value => 16#c093#);
-      VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_TR,
-                  Value => 16#8b#);
 
       VMCS_Write (Field => Constants.GUEST_CR0,
                   Value => CPU.Get_CR0);

@@ -127,7 +127,7 @@ is
         (others => Screen_Row_Type'
            (others => Screen_Cell_Type'
               (Char     => ' ',
-               FG_Color => White,
+               FG_Color => Light_Grey,
                BG_Color => Black)));
 
       Cur_X := Console_Width_Range'First;
@@ -156,7 +156,7 @@ is
    begin
       Screen (Cur_Y) (Cur_X) := Screen_Cell_Type'
         (Char     => Item,
-         FG_Color => White,
+         FG_Color => Light_Grey,
          BG_Color => Black);
 
       if Cur_X = Console_Width_Range'Last then

@@ -1,18 +1,27 @@
 with System.Storage_Elements;
 
 with SK.CPU;
+with SK.Console;
+with SK.Console_VGA;
 
 package body SK.Subject
 is
 
    --# hide SK.Subject;
 
+   package Text_IO is new SK.Console
+     (Initialize      => Console_VGA.Init,
+      Output_New_Line => Console_VGA.New_Line,
+      Output_Char     => Console_VGA.Put_Char);
+
    -------------------------------------------------------------------------
 
    procedure Main
    is
    begin
-      CPU.Hlt;
+      Text_IO.Init;
+      Text_IO.Put_Line (Item => "Hello from guest world");
+      CPU.Panic;
    end Main;
 
    -------------------------------------------------------------------------

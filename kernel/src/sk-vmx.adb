@@ -144,7 +144,7 @@ is
       CPU.Get_MSR (Register => Constants.IA32_VMX_PINBASED_CTLS,
                    Low      => Default0,
                    High     => Default1);
-      Value := 0;
+      Value := Constants.VM_CONTROL_PREEMPT_TIMER;
       Value := Value and SK.Word64 (Default1);
       Value := Value or  SK.Word64 (Default0);
       VMCS_Write (Field => Constants.PIN_BASED_EXEC_CONTROL,
@@ -305,6 +305,9 @@ is
                   Value => CPU.Get_RSP);
       VMCS_Write (Field => Constants.GUEST_RIP,
                   Value => Subject.Get_Main_Address);
+
+      VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
+                  Value => 200_000_000);
    end VMCS_Setup_Guest_Fields;
 
    -------------------------------------------------------------------------

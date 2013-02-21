@@ -88,6 +88,7 @@ is
    GUEST_ACCESS_RIGHTS_GS   : constant := 16#481e#;
    GUEST_ACCESS_RIGHTS_LDTR : constant := 16#4820#;
    GUEST_ACCESS_RIGHTS_TR   : constant := 16#4822#;
+   GUEST_VMX_PREEMPT_TIMER  : constant := 16#482e#;
    GUEST_CR0                : constant := 16#6800#;
    GUEST_CR3                : constant := 16#6802#;
    GUEST_CR4                : constant := 16#6804#;
@@ -99,6 +100,7 @@ is
 
    --  VMX control flags
 
+   VM_CONTROL_PREEMPT_TIMER : constant := 16#040#;
    VM_CONTROL_EXIT_HLT      : constant := 16#080#;
    VM_CONTROL_IA32E_MODE    : constant := 16#200#;
 

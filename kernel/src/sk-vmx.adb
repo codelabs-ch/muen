@@ -262,7 +262,7 @@ is
                   Value => SK.Word64 (SK.Byte'Last));
 
       VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_CS,
-                  Value => 16#c09b#);
+                  Value => 16#a09b#);
       VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_DS,
                   Value => 16#c093#);
       VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_ES,

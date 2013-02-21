@@ -55,12 +55,7 @@ is
    end record;
    for Screen_Cell_Type'Size use 16;
 
-   Console_Width  : constant Natural := 80;
-   Console_Height : constant Natural := 25;
-
    subtype Position_Type is Natural range 1 .. Console_Width * Console_Height;
-   subtype Console_Width_Range  is Natural range 1 .. Console_Width;
-   subtype Console_Height_Range is Natural range 1 .. Console_Height;
 
    --  VGA screen row.
    type Screen_Row_Type is array (Console_Width_Range) of Screen_Cell_Type;
@@ -166,5 +161,17 @@ is
       end if;
       Update_Cursor;
    end Put_Char;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Position
+     (X : Console_Width_Range;
+      Y : Console_Height_Range)
+   is
+   begin
+      Cur_X := X;
+      Cur_Y := Y;
+      Update_Cursor;
+   end Set_Position;
 
 end SK.Console_VGA;

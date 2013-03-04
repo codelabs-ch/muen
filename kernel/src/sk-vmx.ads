@@ -9,10 +9,14 @@
 package SK.VMX
 --# own
 --#    VMXON_Address,
---#    VMCS_Address;
+--#    VMCS_Address,
+--#    Kernel_Stack_Address,
+--#    Guest_Stack_Address;
 --# initializes
 --#    VMXON_Address,
---#    VMCS_Address;
+--#    VMCS_Address,
+--#    Kernel_Stack_Address,
+--#    Guest_Stack_Address;
 is
 
    procedure Enable;
@@ -27,12 +31,16 @@ is
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
    --#    in     VMCS_Address;
+   --#    in     Kernel_Stack_Address;
+   --#    in     Guest_Stack_Address;
    --#    in out X86_64.State;
    --# derives
    --#    X86_64.State from
    --#       *,
    --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,
-   --#       VMCS_Address;
+   --#       VMCS_Address,
+   --#       Kernel_Stack_Address,
+   --#       Guest_Stack_Address;
 
 end SK.VMX;

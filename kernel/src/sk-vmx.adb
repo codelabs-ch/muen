@@ -29,6 +29,16 @@ is
    pragma Import (C, VMCS_Address, "vmcs_pointer");
    --# end accept;
 
+   --# accept Warning, 350, Kernel_Stack_Address, "Imported from Linker";
+   Kernel_Stack_Address : SK.Word64;
+   pragma Import (C, Kernel_Stack_Address, "kernel_stack_pointer");
+   --# end accept;
+
+   --# accept Warning, 350, Guest_Stack_Address, "Imported from Linker";
+   Guest_Stack_Address : SK.Word64;
+   pragma Import (C, Guest_Stack_Address, "guest_stack_pointer");
+   --# end accept;
+
    ---------------------------------------------------------------------------
 
    --  Check alignment of given address.
@@ -184,9 +194,14 @@ is
    --# global
    --#    in     Interrupts.IDT_Pointer;
    --#    in     GDT.GDT_Pointer;
+   --#    in     Kernel_Stack_Address;
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from *, Interrupts.IDT_Pointer, GDT.GDT_Pointer;
+   --#    X86_64.State from
+   --#       *,
+   --#       Interrupts.IDT_Pointer,
+   --#       GDT.GDT_Pointer,
+   --#       Kernel_Stack_Address;
    is
       PD : Descriptors.Pseudo_Descriptor_Type;
    begin
@@ -216,7 +231,7 @@ is
                   Value => PD.Base);
 
       VMCS_Write (Field => Constants.HOST_RSP,
-                  Value => CPU.Get_RSP);
+                  Value => Kernel_Stack_Address);
       VMCS_Write (Field => Constants.HOST_RIP,
                   Value => Get_Vmx_Exit_Address);
    end VMCS_Setup_Host_Fields;
@@ -227,12 +242,14 @@ is
    --# global
    --#    in     Interrupts.IDT_Pointer;
    --#    in     GDT.GDT_Pointer;
+   --#    in     Guest_Stack_Address;
    --#    in out X86_64.State;
    --# derives
    --#    X86_64.State from
    --#       *,
    --#       Interrupts.IDT_Pointer,
-   --#       GDT.GDT_Pointer;
+   --#       GDT.GDT_Pointer,
+   --#       Guest_Stack_Address;
    is
       PD : Descriptors.Pseudo_Descriptor_Type;
    begin
@@ -302,7 +319,7 @@ is
       VMCS_Write (Field => Constants.GUEST_RFLAGS,
                   Value => CPU.Get_RFLAGS);
       VMCS_Write (Field => Constants.GUEST_RSP,
-                  Value => CPU.Get_RSP);
+                  Value => Guest_Stack_Address);
       VMCS_Write (Field => Constants.GUEST_RIP,
                   Value => Subject.Get_Main_Address);
 

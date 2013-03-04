@@ -194,6 +194,19 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VMRESUME (Success : out Boolean)
+   is
+      --# hide VMRESUME;
+   begin
+      System.Machine_Code.Asm
+        (Template => "vmresume; seta %0",
+         Outputs  => (Boolean'Asm_Output ("=q", Success)),
+         Clobber  => "cc",
+         Volatile => True);
+   end VMRESUME;
+
+   -------------------------------------------------------------------------
+
    procedure VMPTRLD
      (Region  :     SK.Word64;
       Success : out Boolean)

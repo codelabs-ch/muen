@@ -90,6 +90,14 @@ is
    --#    X86_64.State from * &
    --#    Success      from X86_64.State;
 
+   --  Resume VM designated by current VMCS.
+   procedure VMRESUME (Success : out Boolean);
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from * &
+   --#    Success      from X86_64.State;
+
    procedure VMCLEAR
      (Region  :     SK.Word64;
       Success : out Boolean);

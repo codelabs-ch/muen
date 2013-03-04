@@ -67,11 +67,6 @@ is
    --# global
    --#    X86_64.State;
 
-   --  Return RSP value.
-   function Get_RSP return SK.Word64;
-   --# global
-   --#    X86_64.State;
-
    --  Enter VMX operation.
    procedure VMXON
      (Region  :     SK.Word64;

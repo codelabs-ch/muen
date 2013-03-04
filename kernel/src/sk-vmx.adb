@@ -1,4 +1,4 @@
-with System.Storage_Elements;
+with System;
 
 with SK.CPU;
 with SK.Interrupts;
@@ -27,6 +27,11 @@ is
    --# accept Warning, 350, VMCS_Address, "Imported from Linker";
    VMCS_Address : SK.Word64;
    pragma Import (C, VMCS_Address, "vmcs_pointer");
+   --# end accept;
+
+   --# accept Warning, 350, VMX_Exit_Address, "Imported from Linker";
+   VMX_Exit_Address : SK.Word64;
+   pragma Import (C, VMX_Exit_Address, "vmx_exit_handler_pointer");
    --# end accept;
 
    --# accept Warning, 350, Kernel_Stack_Address, "Imported from Linker";
@@ -105,17 +110,13 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Handle VM exit.
    procedure Handle_Vmx_Exit
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *;
    is
       Reason, Qualification : SK.Word64;
    begin
-      pragma Debug (VMCS_Read (Field => Constants.VMX_EXIT_REASON,
-                               Value => Reason));
+      VMCS_Read (Field => Constants.VMX_EXIT_REASON,
+                 Value => Reason);
+
       pragma Debug (VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
                                Value => Qualification));
       pragma Debug (KC.Put_String (Item => "VM EXIT ("));
@@ -123,22 +124,16 @@ is
       pragma Debug (KC.Put_String (Item => ":"));
       pragma Debug (KC.Put_Word32 (Item => SK.Word32 (Qualification)));
       pragma Debug (KC.Put_Line (Item => ")"));
-      CPU.Panic;
-      --# accept Warning, 400, Reason, "Only used for debug output";
+
+      if Reason /= Constants.VMEXIT_TIMER_EXPIRY then
+         CPU.Panic;
+      end if;
+
+      VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
+                  Value => 200_000_000);
+
       --# accept Warning, 400, Qualification, "Only used for debug output";
    end Handle_Vmx_Exit;
-
-   -------------------------------------------------------------------------
-
-   --  Return address of VM exit handler.
-   function Get_Vmx_Exit_Address return SK.Word64
-   is
-      --# hide Get_Vmx_Exit_Address;
-   begin
-      return SK.Word64
-        (System.Storage_Elements.To_Integer
-           (Value => Handle_Vmx_Exit'Address));
-   end Get_Vmx_Exit_Address;
 
    -------------------------------------------------------------------------
 
@@ -194,6 +189,7 @@ is
    --# global
    --#    in     Interrupts.IDT_Pointer;
    --#    in     GDT.GDT_Pointer;
+   --#    in     VMX_Exit_Address;
    --#    in     Kernel_Stack_Address;
    --#    in out X86_64.State;
    --# derives
@@ -201,6 +197,7 @@ is
    --#       *,
    --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,
+   --#       VMX_Exit_Address,
    --#       Kernel_Stack_Address;
    is
       PD : Descriptors.Pseudo_Descriptor_Type;
@@ -233,7 +230,7 @@ is
       VMCS_Write (Field => Constants.HOST_RSP,
                   Value => Kernel_Stack_Address);
       VMCS_Write (Field => Constants.HOST_RIP,
-                  Value => Get_Vmx_Exit_Address);
+                  Value => VMX_Exit_Address);
    end VMCS_Setup_Host_Fields;
 
    -------------------------------------------------------------------------

@@ -10,11 +10,13 @@ package SK.VMX
 --# own
 --#    VMXON_Address,
 --#    VMCS_Address,
+--#    VMX_Exit_Address,
 --#    Kernel_Stack_Address,
 --#    Guest_Stack_Address;
 --# initializes
 --#    VMXON_Address,
 --#    VMCS_Address,
+--#    VMX_Exit_Address,
 --#    Kernel_Stack_Address,
 --#    Guest_Stack_Address;
 is
@@ -31,6 +33,7 @@ is
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
    --#    in     VMCS_Address;
+   --#    in     VMX_Exit_Address;
    --#    in     Kernel_Stack_Address;
    --#    in     Guest_Stack_Address;
    --#    in out X86_64.State;
@@ -40,7 +43,18 @@ is
    --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,
    --#       VMCS_Address,
+   --#       VMX_Exit_Address,
    --#       Kernel_Stack_Address,
    --#       Guest_Stack_Address;
+
+private
+
+   --  VMX exit handler.
+   procedure Handle_Vmx_Exit;
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *;
+   pragma Export (C, Handle_Vmx_Exit, "handle_vmx_exit");
 
 end SK.VMX;

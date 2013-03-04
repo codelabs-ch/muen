@@ -13,6 +13,7 @@ is
    --#    in out X86_64.State;
    --#    in     VMX.VMXON_Address;
    --#    in     VMX.VMCS_Address;
+   --#    in     VMX.VMX_Exit_Address;
    --#    in     VMX.Kernel_Stack_Address;
    --#    in     VMX.Guest_Stack_Address;
    --#    in     Interrupts.ISR_List;
@@ -25,6 +26,7 @@ is
    --#       *,
    --#       VMX.VMXON_Address,
    --#       VMX.VMCS_Address,
+   --#       VMX.VMX_Exit_Address,
    --#       VMX.Kernel_Stack_Address,
    --#       VMX.Guest_Stack_Address,
    --#       Interrupts.ISR_List,

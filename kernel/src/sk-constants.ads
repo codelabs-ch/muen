@@ -104,4 +104,8 @@ is
    VM_CONTROL_EXIT_HLT      : constant := 16#080#;
    VM_CONTROL_IA32E_MODE    : constant := 16#200#;
 
+   --  VMX basic exit reasons
+
+   VMEXIT_TIMER_EXPIRY      : constant := 52;
+
 end SK.Constants;

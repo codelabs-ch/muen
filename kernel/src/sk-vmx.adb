@@ -103,19 +103,26 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Resume (Regs : CPU.Registers_Type)
+   procedure Resume
    --# global
+   --#    in     Current_Subject;
+   --#    in     Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from *, Regs;
+   --#    X86_64.State from *, Current_Subject, Subjects.Descriptors;
    is
       Error   : SK.Word64;
       Success : Boolean;
    begin
+      pragma Debug (KC.Put_String (Item => "Resuming subject "));
+      pragma Debug (KC.Put_Byte (Item => Byte (Current_Subject)));
+      pragma Debug (KC.New_Line);
+
       VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
                   Value => 200_000_000);
 
-      CPU.Restore_Registers (Regs => Regs);
+      CPU.Restore_Registers
+        (Regs => Subjects.Get_State (Idx => Current_Subject).Regs);
       CPU.VMRESUME (Success => Success);
       if not Success then
          pragma Debug (CPU.VMREAD (Field   => Constants.VMX_INST_ERROR,
@@ -432,7 +439,7 @@ is
       Current_Subject := Current_Subject + 1;
       Launch;
 
-      Resume (Regs => State.Regs);
+      Resume;
       --# accept Warning, 400, Qualification, "Only used for debug output";
    end Handle_Vmx_Exit;
 

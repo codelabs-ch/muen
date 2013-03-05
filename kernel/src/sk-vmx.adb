@@ -139,9 +139,31 @@ is
    -------------------------------------------------------------------------
 
    procedure Handle_Vmx_Exit
+     (RDI : SK.Word64; RSI : SK.Word64; RDX : SK.Word64; RCX : SK.Word64;
+      R08 : SK.Word64; R09 : SK.Word64; RAX : SK.Word64; RBX : SK.Word64;
+      RBP : SK.Word64; R10 : SK.Word64; R11 : SK.Word64; R12 : SK.Word64;
+      R13 : SK.Word64; R14 : SK.Word64; R15 : SK.Word64)
    is
       Reason, Qualification : SK.Word64;
+      Subject_State         : CPU.Registers_Type;
    begin
+      CPU.Save_Registers (Regs => Subject_State,
+                          RAX  => RAX,
+                          RBX  => RBX,
+                          RCX  => RCX,
+                          RDX  => RDX,
+                          RDI  => RDI,
+                          RSI  => RSI,
+                          RBP  => RBP,
+                          R08  => R08,
+                          R09  => R09,
+                          R10  => R10,
+                          R11  => R11,
+                          R12  => R12,
+                          R13  => R13,
+                          R14  => R14,
+                          R15  => R15);
+
       VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                  Value => Reason);
 
@@ -157,9 +179,7 @@ is
          CPU.Panic;
       end if;
 
-      VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                  Value => 200_000_000);
-
+      Resume (Regs => Subject_State);
       --# accept Warning, 400, Qualification, "Only used for debug output";
    end Handle_Vmx_Exit;
 

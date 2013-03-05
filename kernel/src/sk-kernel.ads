@@ -15,6 +15,7 @@ is
    --#    in     VMX.VMXON_Address;
    --#    in     VMX.VMX_Exit_Address;
    --#    in     VMX.Kernel_Stack_Address;
+   --#    in     VMX.Current_Subject;
    --#    in     Interrupts.ISR_List;
    --#    in     GDT.GDT_Pointer;
    --#    in     Subjects.Descriptors;
@@ -27,6 +28,7 @@ is
    --#       VMX.VMXON_Address,
    --#       VMX.VMX_Exit_Address,
    --#       VMX.Kernel_Stack_Address,
+   --#       VMX.Current_Subject,
    --#       Interrupts.ISR_List,
    --#       GDT.GDT_Pointer,
    --#       Subjects.Descriptors;

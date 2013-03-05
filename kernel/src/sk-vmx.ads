@@ -1,5 +1,7 @@
 with SK.Subjects;
 
+use type SK.Subjects.Index_Type;
+
 --# inherit
 --#    X86_64,
 --#    SK.CPU,
@@ -12,11 +14,13 @@ package SK.VMX
 --# own
 --#    VMXON_Address,
 --#    VMX_Exit_Address,
---#    Kernel_Stack_Address;
+--#    Kernel_Stack_Address,
+--#    Current_Subject;
 --# initializes
 --#    VMXON_Address,
 --#    VMX_Exit_Address,
---#    Kernel_Stack_Address;
+--#    Kernel_Stack_Address,
+--#    Current_Subject;
 is
 
    procedure Enable;
@@ -26,12 +30,13 @@ is
    --# derives
    --#    X86_64.State from *, VMXON_Address;
 
-   procedure Launch (Id : Subjects.Index_Type);
+   procedure Launch;
    --# global
-   --#    in     GDT.GDT_Pointer;
-   --#    in     Interrupts.IDT_Pointer;
+   --#    in     Current_Subject;
    --#    in     VMX_Exit_Address;
    --#    in     Kernel_Stack_Address;
+   --#    in     GDT.GDT_Pointer;
+   --#    in     Interrupts.IDT_Pointer;
    --#    in     Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
@@ -42,7 +47,7 @@ is
    --#       VMX_Exit_Address,
    --#       Kernel_Stack_Address,
    --#       Subjects.Descriptors,
-   --#       Id;
+   --#       Current_Subject;
 
 private
 
@@ -57,10 +62,12 @@ private
    --#    in     Interrupts.IDT_Pointer;
    --#    in     VMX_Exit_Address;
    --#    in     Kernel_Stack_Address;
+   --#    in out Current_Subject;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from
+   --#    Current_Subject from * &
+   --#    X86_64.State    from
    --#       *,
    --#       RAX,
    --#       RBX,
@@ -77,10 +84,11 @@ private
    --#       R13,
    --#       R14,
    --#       R15,
-   --#       Interrupts.IDT_Pointer,
-   --#       GDT.GDT_Pointer,
    --#       VMX_Exit_Address,
    --#       Kernel_Stack_Address,
+   --#       Current_Subject,
+   --#       Interrupts.IDT_Pointer,
+   --#       GDT.GDT_Pointer,
    --#       Subjects.Descriptors &
    --#    Subjects.Descriptors from
    --#       *,

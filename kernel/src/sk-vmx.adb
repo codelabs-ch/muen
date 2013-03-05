@@ -18,6 +18,10 @@ is
 
    subtype Alignment_Type is SK.Word16 range 1 .. SK.Word16'Last;
 
+   --  Current active subject, initialized to root subject.
+
+   Current_Subject : Subjects.Index_Type := 0;
+
    --# accept Warning, 350, VMXON_Address, "Imported from Linker";
    VMXON_Address : SK.Word64;
    pragma Import (C, VMXON_Address, "vmxon_pointer");
@@ -318,17 +322,17 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Launch (Id : Subjects.Index_Type)
+   procedure Launch
    is
       Success : Boolean;
       Error   : SK.Word64;
       State   : Subjects.State_Type;
    begin
       pragma Debug (KC.Put_String (Item => "Launching subject "));
-      pragma Debug (KC.Put_Byte (Item => Byte (Id)));
+      pragma Debug (KC.Put_Byte (Item => Byte (Current_Subject)));
       pragma Debug (KC.New_Line);
 
-      State := Subjects.Get_State (Idx => Id);
+      State := Subjects.Get_State (Idx => Current_Subject);
 
       Success := Is_Aligned
         (Address   => State.VMCS_Address,
@@ -360,7 +364,7 @@ is
          Entry_Point   => State.Entry_Point);
 
       CPU.Restore_Registers
-        (Regs => Subjects.Get_State (Idx => Id).Regs);
+        (Regs => Subjects.Get_State (Idx => Current_Subject).Regs);
       CPU.VMLAUNCH (Success => Success);
       if not Success then
          pragma Debug (CPU.VMREAD (Field   => Constants.VMX_INST_ERROR,
@@ -413,7 +417,9 @@ is
       pragma Debug (VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
                                Value => Qualification));
 
-      pragma Debug (KC.Put_String (Item => "VM EXIT ("));
+      pragma Debug (KC.Put_String (Item => "Subject "));
+      pragma Debug (KC.Put_Byte   (Item => Byte (Current_Subject)));
+      pragma Debug (KC.Put_String (Item => " EXIT ("));
       pragma Debug (KC.Put_Word16 (Item => SK.Word16 (Reason)));
       pragma Debug (KC.Put_String (Item => ":"));
       pragma Debug (KC.Put_Word32 (Item => SK.Word32 (Qualification)));
@@ -423,7 +429,8 @@ is
          CPU.Panic;
       end if;
 
-      Launch (Id => 1);
+      Current_Subject := Current_Subject + 1;
+      Launch;
 
       Resume (Regs => State.Regs);
       --# accept Warning, 400, Qualification, "Only used for debug output";

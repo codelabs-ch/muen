@@ -30,7 +30,7 @@ is
    --# derives
    --#    X86_64.State from *, VMXON_Address;
 
-   procedure Launch (Id : Subjects.Subject_Idx_Type);
+   procedure Launch (Id : Subjects.Index_Type);
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;

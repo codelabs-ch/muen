@@ -6,14 +6,14 @@ with SK.Console_VGA;
 package body SK.Subjects
 is
 
-   type Subject_Array is array (Subject_Idx_Type) of Subject_State_Type;
+   type Subject_Array is array (Index_Type) of State_Type;
 
    --  Descriptors used to manage subjects.
    Descriptors : Subject_Array;
 
    -------------------------------------------------------------------------
 
-   function Get_State (Idx : Subject_Idx_Type) return Subject_State_Type
+   function Get_State (Idx : Index_Type) return State_Type
    is
    begin
       return Descriptors (Idx);
@@ -22,8 +22,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Set_State
-     (Idx   : Subject_Idx_Type;
-      State : Subject_State_Type)
+     (Idx   : Index_Type;
+      State : State_Type)
    is
    begin
       Descriptors (Idx) := State;
@@ -79,7 +79,7 @@ begin
    --# hide SK.Subjects;
 
    Descriptors (Descriptors'First)
-     := Subject_State_Type'
+     := State_Type'
        (Regs        => CPU.Null_Regs,
         Entry_Point => SK.Word64
           (System.Storage_Elements.To_Integer

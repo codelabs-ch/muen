@@ -145,7 +145,7 @@ is
    is
       Reason, Qualification : SK.Word64;
       Registers             : CPU.Registers_Type;
-      State                 : Subjects.Subject_State_Type;
+      State                 : Subjects.State_Type;
    begin
       CPU.Save_Registers (Regs => Registers,
                           RAX  => RAX,
@@ -164,9 +164,9 @@ is
                           R14  => R14,
                           R15  => R15);
 
-      State := Subjects.Get_State (Idx => Subjects.Subject_Idx_Type'First);
+      State := Subjects.Get_State (Idx => Subjects.Index_Type'First);
       State.Regs := Registers;
-      Subjects.Set_State (Idx   => Subjects.Subject_Idx_Type'First,
+      Subjects.Set_State (Idx   => Subjects.Index_Type'First,
                           State => State);
 
       VMCS_Read (Field => Constants.VMX_EXIT_REASON,
@@ -406,7 +406,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Launch (Id : Subjects.Subject_Idx_Type)
+   procedure Launch (Id : Subjects.Index_Type)
    is
       Success : Boolean;
       Error   : SK.Word64;

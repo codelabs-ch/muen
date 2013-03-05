@@ -3,6 +3,7 @@
 --#    SK.Interrupts,
 --#    SK.GDT,
 --#    SK.System_State,
+--#    SK.Subject,
 --#    SK.VMX;
 package SK.Kernel
 is
@@ -18,6 +19,7 @@ is
    --#    in     VMX.Guest_Stack_Address;
    --#    in     Interrupts.ISR_List;
    --#    in     GDT.GDT_Pointer;
+   --#    in     Subject.Descriptors;
    --#       out Interrupts.IDT;
    --#       out Interrupts.IDT_Pointer;
    --# derives
@@ -30,7 +32,8 @@ is
    --#       VMX.Kernel_Stack_Address,
    --#       VMX.Guest_Stack_Address,
    --#       Interrupts.ISR_List,
-   --#       GDT.GDT_Pointer;
+   --#       GDT.GDT_Pointer,
+   --#       Subject.Descriptors;
    pragma Export (C, Main, "kmain");
 
 end SK.Kernel;

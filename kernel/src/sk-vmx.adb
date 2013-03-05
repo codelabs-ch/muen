@@ -6,7 +6,6 @@ with SK.Descriptors;
 with SK.KC;
 with SK.GDT;
 with SK.Constants;
-with SK.Subject;
 
 package body SK.VMX
 is
@@ -283,7 +282,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure VMCS_Setup_Guest_Fields
+   procedure VMCS_Setup_Guest_Fields (Entry_Point : SK.Word64)
    --# global
    --#    in     Interrupts.IDT_Pointer;
    --#    in     GDT.GDT_Pointer;
@@ -294,7 +293,8 @@ is
    --#       *,
    --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,
-   --#       Guest_Stack_Address;
+   --#       Guest_Stack_Address,
+   --#       Entry_Point;
    is
       PD : Descriptors.Pseudo_Descriptor_Type;
    begin
@@ -366,7 +366,7 @@ is
       VMCS_Write (Field => Constants.GUEST_RSP,
                   Value => Guest_Stack_Address);
       VMCS_Write (Field => Constants.GUEST_RIP,
-                  Value => Subject.Get_Main_Address);
+                  Value => Entry_Point);
 
       VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
                   Value => 200_000_000);
@@ -400,11 +400,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Launch
+   procedure Launch (Id : Subject.Subject_Idx_Type)
    is
       Success : Boolean;
       Error   : SK.Word64;
    begin
+      pragma Debug (KC.Put_String (Item => "Launching subject "));
+      pragma Debug (KC.Put_Byte (Item => Byte (Id)));
+      pragma Debug (KC.New_Line);
       Success := Is_Aligned
         (Address   => VMCS_Address,
          Alignment => 4096);
@@ -430,9 +433,10 @@ is
 
       VMCS_Setup_Control_Fields;
       VMCS_Setup_Host_Fields;
-      VMCS_Setup_Guest_Fields;
+      VMCS_Setup_Guest_Fields
+        (Entry_Point => Subject.Descriptors (Id).Entry_Point);
 
-      CPU.Restore_Registers (Regs => CPU.Null_Regs);
+      CPU.Restore_Registers (Regs => Subject.Descriptors (Id).Regs);
       CPU.VMLAUNCH (Success => Success);
       if not Success then
          pragma Debug (CPU.VMREAD (Field   => Constants.VMX_INST_ERROR,

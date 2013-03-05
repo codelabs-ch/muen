@@ -1,9 +1,27 @@
+with SK.CPU;
+
 --# inherit
---#    SK;
+--#    SK.CPU;
 package SK.Subject
+--# own
+--#    Descriptors;
+--# initializes
+--#    Descriptors;
 is
 
-   --  Returns the address of the subject main procedure.
-   function Get_Main_Address return SK.Word64;
+   pragma Elaborate_Body (Subject);
+
+   --  Subject state.
+   type Subject_State_Type is record
+      Regs        : CPU.Registers_Type;
+      Entry_Point : SK.Word64;
+   end record;
+
+   type Subject_Idx_Type is mod 2 ** 1;
+
+   type Subject_Array is array (Subject_Idx_Type) of Subject_State_Type;
+
+   --  Descriptors used to manage subjects.
+   Descriptors : Subject_Array;
 
 end SK.Subject;

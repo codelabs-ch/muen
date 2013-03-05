@@ -2,6 +2,7 @@ with SK.KC;
 with SK.Version;
 with SK.Interrupts;
 with SK.System_State;
+with SK.Subject;
 with SK.VMX;
 
 package body SK.Kernel
@@ -26,7 +27,7 @@ is
       Success := System_State.Is_Valid;
       if Success then
          VMX.Enable;
-         VMX.Launch;
+         VMX.Launch (Id => Subject.Descriptors'First);
       else
          pragma Debug (KC.Put_Line (Item => "System initialisation error"));
          null;

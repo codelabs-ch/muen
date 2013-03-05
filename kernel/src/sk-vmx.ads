@@ -1,3 +1,5 @@
+with SK.Subject;
+
 --# inherit
 --#    X86_64,
 --#    SK.CPU,
@@ -28,7 +30,7 @@ is
    --# derives
    --#    X86_64.State from *, VMXON_Address;
 
-   procedure Launch;
+   procedure Launch (Id : Subject.Subject_Idx_Type);
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
@@ -36,6 +38,7 @@ is
    --#    in     VMX_Exit_Address;
    --#    in     Kernel_Stack_Address;
    --#    in     Guest_Stack_Address;
+   --#    in     Subject.Descriptors;
    --#    in out X86_64.State;
    --# derives
    --#    X86_64.State from
@@ -45,7 +48,9 @@ is
    --#       VMCS_Address,
    --#       VMX_Exit_Address,
    --#       Kernel_Stack_Address,
-   --#       Guest_Stack_Address;
+   --#       Guest_Stack_Address,
+   --#       Subject.Descriptors,
+   --#       Id;
 
 private
 

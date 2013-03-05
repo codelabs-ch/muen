@@ -1,6 +1,5 @@
 with System.Storage_Elements;
 
-with SK.CPU;
 with SK.Console;
 with SK.Console_VGA;
 
@@ -53,14 +52,11 @@ is
       CPU.Panic;
    end Main;
 
-   -------------------------------------------------------------------------
-
-   function Get_Main_Address return SK.Word64
-   is
-   begin
-      return SK.Word64
-        (System.Storage_Elements.To_Integer
-           (Value => Main'Address));
-   end Get_Main_Address;
-
+begin
+   Descriptors (Descriptors'First)
+     := Subject_State_Type'
+       (Regs        => CPU.Null_Regs,
+        Entry_Point => SK.Word64
+          (System.Storage_Elements.To_Integer
+             (Value => Main'Address)));
 end SK.Subject;

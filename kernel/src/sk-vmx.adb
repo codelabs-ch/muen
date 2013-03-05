@@ -110,6 +110,34 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Resume (Regs : CPU.Registers_Type)
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *, Regs;
+   is
+      Error   : SK.Word64;
+      Success : Boolean;
+   begin
+      VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
+                  Value => 200_000_000);
+
+      CPU.Restore_Registers (Regs => Regs);
+      CPU.VMRESUME (Success => Success);
+      if not Success then
+         pragma Debug (CPU.VMREAD (Field   => Constants.VMX_INST_ERROR,
+                                   Value   => Error,
+                                   Success => Success));
+         pragma Debug (KC.Put_String (Item => "Error resuming VM ("));
+         pragma Debug (KC.Put_Byte (Item => Byte (Error)));
+         pragma Debug (KC.Put_Line (Item => ")"));
+         CPU.Panic;
+      end if;
+      --# accept Warning, 400, Error, "Only used for debug output";
+   end Resume;
+
+   -------------------------------------------------------------------------
+
    procedure Handle_Vmx_Exit
    is
       Reason, Qualification : SK.Word64;

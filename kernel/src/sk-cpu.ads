@@ -142,6 +142,7 @@ is
    --# derives
    --#    X86_64.State from * &
    --#    Success      from X86_64.State;
+   pragma Inline_Always (VMRESUME);
 
    procedure VMCLEAR
      (Region  :     SK.Word64;

@@ -9,8 +9,6 @@ package SK.Subjects
 --#    Descriptors;
 is
 
-   pragma Elaborate_Body (Subjects);
-
    --  Subject state.
    type Subject_State_Type is record
       Regs        : CPU.Registers_Type;
@@ -19,9 +17,9 @@ is
 
    type Subject_Idx_Type is mod 2 ** 1;
 
-   type Subject_Array is array (Subject_Idx_Type) of Subject_State_Type;
-
-   --  Descriptors used to manage subjects.
-   Descriptors : Subject_Array;
+   --  Get subject state with given index.
+   function Get_State (Idx : Subject_Idx_Type) return Subject_State_Type;
+   --# global
+   --#    Descriptors;
 
 end SK.Subjects;

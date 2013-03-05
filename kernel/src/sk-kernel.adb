@@ -27,7 +27,7 @@ is
       Success := System_State.Is_Valid;
       if Success then
          VMX.Enable;
-         VMX.Launch (Id => Subjects.Descriptors'First);
+         VMX.Launch (Id => Subjects.Subject_Idx_Type'First);
       else
          pragma Debug (KC.Put_Line (Item => "System initialisation error"));
          null;

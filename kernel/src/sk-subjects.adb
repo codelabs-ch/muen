@@ -6,22 +6,34 @@ with SK.Console_VGA;
 package body SK.Subjects
 is
 
-   --# hide SK.Subjects;
+   type Subject_Array is array (Subject_Idx_Type) of Subject_State_Type;
 
-   package Text_IO is new SK.Console
-     (Initialize      => Console_VGA.Init,
-      Output_New_Line => Console_VGA.New_Line,
-      Output_Char     => Console_VGA.Put_Char);
+   --  Descriptors used to manage subjects.
+   Descriptors : Subject_Array;
 
-   Greeter : constant String := "Hello from guest world";
+   -------------------------------------------------------------------------
+
+   function Get_State (Idx : Subject_Idx_Type) return Subject_State_Type
+   is
+   begin
+      return Descriptors (Idx);
+   end Get_State;
 
    -------------------------------------------------------------------------
 
    procedure Main
    is
-      Counter : SK.Word32 := 0;
-      Idx     : Positive  := 1;
-      Dlt     : Integer   := -1;
+      --# hide Main;
+
+      package Text_IO is new SK.Console
+        (Initialize      => Console_VGA.Init,
+         Output_New_Line => Console_VGA.New_Line,
+         Output_Char     => Console_VGA.Put_Char);
+
+      Greeter : constant String := "Hello from guest world";
+      Counter : SK.Word32       := 0;
+      Idx     : Positive        := 1;
+      Dlt     : Integer         := -1;
    begin
       Text_IO.Init;
       Text_IO.Put_Line (Item => Greeter);
@@ -53,6 +65,9 @@ is
    end Main;
 
 begin
+
+   --# hide SK.Subjects;
+
    Descriptors (Descriptors'First)
      := Subject_State_Type'
        (Regs        => CPU.Null_Regs,

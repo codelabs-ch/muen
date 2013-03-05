@@ -144,9 +144,10 @@ is
       R13 : SK.Word64; R14 : SK.Word64; R15 : SK.Word64)
    is
       Reason, Qualification : SK.Word64;
-      Subject_State         : CPU.Registers_Type;
+      Registers             : CPU.Registers_Type;
+      State                 : Subjects.Subject_State_Type;
    begin
-      CPU.Save_Registers (Regs => Subject_State,
+      CPU.Save_Registers (Regs => Registers,
                           RAX  => RAX,
                           RBX  => RBX,
                           RCX  => RCX,
@@ -163,6 +164,11 @@ is
                           R14  => R14,
                           R15  => R15);
 
+      State := Subjects.Get_State (Idx => Subjects.Subject_Idx_Type'First);
+      State.Regs := Registers;
+      Subjects.Set_State (Idx   => Subjects.Subject_Idx_Type'First,
+                          State => State);
+
       VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                  Value => Reason);
 
@@ -178,7 +184,7 @@ is
          CPU.Panic;
       end if;
 
-      Resume (Regs => Subject_State);
+      Resume (Regs => State.Regs);
       --# accept Warning, 400, Qualification, "Only used for debug output";
    end Handle_Vmx_Exit;
 

@@ -61,9 +61,10 @@ private
       RBP : SK.Word64; R10 : SK.Word64; R11 : SK.Word64; R12 : SK.Word64;
       R13 : SK.Word64; R14 : SK.Word64; R15 : SK.Word64);
    --# global
+   --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from
+   --#    Subjects.Descriptors, X86_64.State from
    --#       *,
    --#       RAX,
    --#       RBX,

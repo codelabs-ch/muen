@@ -31,9 +31,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Main
+   procedure Subject_Main_1
    is
-      --# hide Main;
+      --# hide Subject_Main_1;
 
       package Text_IO is new SK.Console
         (Initialize      => Console_VGA.Init,
@@ -72,7 +72,7 @@ is
       end loop;
 
       CPU.Panic;
-   end Main;
+   end Subject_Main_1;
 
 begin
 
@@ -83,5 +83,5 @@ begin
        (Regs        => CPU.Null_Regs,
         Entry_Point => SK.Word64
           (System.Storage_Elements.To_Integer
-             (Value => Main'Address)));
+             (Value => Subject_Main_1'Address)));
 end SK.Subjects;

@@ -409,7 +409,7 @@ is
         (Address   => VMCS_Address,
          Alignment => 4096);
       if not Success then
-         pragma Debug (KC.Put_Line ("VMCS region alignment invalid"));
+         pragma Debug (KC.Put_Line (Item => "VMCS region alignment invalid"));
          CPU.Panic;
       end if;
 

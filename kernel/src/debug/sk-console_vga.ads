@@ -1,11 +1,18 @@
+with System;
+
+generic
+
+   --  Console width range.
+   type Width_Type is range <>;
+
+   --  Console heigth range.
+   type Height_Type is range <>;
+
+   --  Base address of video framebuffer.
+   Base_Address : System.Address;
+
 package SK.Console_VGA
 is
-
-   Console_Width  : constant Natural := 80;
-   Console_Height : constant Natural := 25;
-
-   subtype Console_Width_Range  is Natural range 1 .. Console_Width;
-   subtype Console_Height_Range is Natural range 1 .. Console_Height;
 
    --  Clear screen and set initial cursor position.
    procedure Init;
@@ -18,7 +25,7 @@ is
 
    --  Set cursor position.
    procedure Set_Position
-     (X : Console_Width_Range;
-      Y : Console_Height_Range);
+     (X : Width_Type;
+      Y : Height_Type);
 
 end SK.Console_VGA;

@@ -1,5 +1,3 @@
-with System;
-
 with SK.IO;
 
 package body SK.Console_VGA
@@ -55,34 +53,35 @@ is
    end record;
    for Screen_Cell_Type'Size use 16;
 
-   subtype Position_Type is Natural range 1 .. Console_Width * Console_Height;
+   subtype Position_Type is Natural range
+     1 .. Natural (Width_Type'Last) * Natural (Height_Type'Last);
 
    --  VGA screen row.
-   type Screen_Row_Type is array (Console_Width_Range) of Screen_Cell_Type;
+   type Screen_Row_Type is array (Width_Type'Range) of Screen_Cell_Type;
 
    --  VGA screen.
-   type Screen_Type is array (Console_Height_Range) of Screen_Row_Type;
+   type Screen_Type is array (Height_Type) of Screen_Row_Type;
 
-   Cur_X  : Console_Width_Range;
-   Cur_Y  : Console_Height_Range;
+   Cur_X  : Width_Type;
+   Cur_Y  : Height_Type;
    Screen : Screen_Type;
    pragma Import (Ada, Screen);
-   for Screen'Address use System'To_Address (16#000b_8000#);
+   for Screen'Address use Base_Address;
 
    -------------------------------------------------------------------------
 
    --  Scroll screen if current Y position is equal to the last row.
    procedure Scroll
    is
-      subtype Console_To_Last_Row is Console_Height_Range range
-        Console_Height_Range'First .. Console_Height_Range'Last - 1;
+      subtype Console_To_Last_Row is Height_Type range
+        Height_Type'First .. Height_Type'Last - 1;
    begin
       for Y in Console_To_Last_Row
       loop
          Screen (Y) := Screen (Y + 1);
       end loop;
 
-      Screen (Console_Height_Range'Last) := Screen_Row_Type'
+      Screen (Height_Type'Last) := Screen_Row_Type'
         (others => Screen_Cell_Type'
            (Char     => ' ',
             FG_Color => White,
@@ -96,7 +95,8 @@ is
    is
       Pos : Position_Type;
    begin
-      Pos := (Cur_Y - 1) * Console_Width  + Cur_X - 1;
+      Pos := Position_Type (Cur_Y - 1) * Position_Type (Width_Type'Last)
+        + Position_Type (Cur_X) - 1;
 
       --  Set high cursor byte
 
@@ -125,8 +125,8 @@ is
                FG_Color => Light_Grey,
                BG_Color => Black)));
 
-      Cur_X := Console_Width_Range'First;
-      Cur_Y := Console_Height_Range'First;
+      Cur_X := Width_Type'First;
+      Cur_Y := Height_Type'First;
       Update_Cursor;
    end Init;
 
@@ -135,8 +135,8 @@ is
    procedure New_Line
    is
    begin
-      Cur_X := Console_Width_Range'First;
-      if Cur_Y = Console_Height_Range'Last then
+      Cur_X := Width_Type'First;
+      if Cur_Y = Height_Type'Last then
          Scroll;
       else
          Cur_Y := Cur_Y + 1;
@@ -154,7 +154,7 @@ is
          FG_Color => Light_Grey,
          BG_Color => Black);
 
-      if Cur_X = Console_Width_Range'Last then
+      if Cur_X = Width_Type'Last then
          New_Line;
       else
          Cur_X := Cur_X + 1;
@@ -165,8 +165,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Set_Position
-     (X : Console_Width_Range;
-      Y : Console_Height_Range)
+     (X : Width_Type;
+      Y : Height_Type)
    is
    begin
       Cur_X := X;

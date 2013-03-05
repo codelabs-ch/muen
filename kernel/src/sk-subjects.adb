@@ -3,10 +3,10 @@ with System.Storage_Elements;
 with SK.Console;
 with SK.Console_VGA;
 
-package body SK.Subject
+package body SK.Subjects
 is
 
-   --# hide SK.Subject;
+   --# hide SK.Subjects;
 
    package Text_IO is new SK.Console
      (Initialize      => Console_VGA.Init,
@@ -59,4 +59,4 @@ begin
         Entry_Point => SK.Word64
           (System.Storage_Elements.To_Integer
              (Value => Main'Address)));
-end SK.Subject;
+end SK.Subjects;

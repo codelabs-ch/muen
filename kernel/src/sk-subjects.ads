@@ -2,14 +2,14 @@ with SK.CPU;
 
 --# inherit
 --#    SK.CPU;
-package SK.Subject
+package SK.Subjects
 --# own
 --#    Descriptors;
 --# initializes
 --#    Descriptors;
 is
 
-   pragma Elaborate_Body (Subject);
+   pragma Elaborate_Body (Subjects);
 
    --  Subject state.
    type Subject_State_Type is record
@@ -24,4 +24,4 @@ is
    --  Descriptors used to manage subjects.
    Descriptors : Subject_Array;
 
-end SK.Subject;
+end SK.Subjects;

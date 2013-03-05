@@ -400,7 +400,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Launch (Id : Subject.Subject_Idx_Type)
+   procedure Launch (Id : Subjects.Subject_Idx_Type)
    is
       Success : Boolean;
       Error   : SK.Word64;
@@ -434,9 +434,9 @@ is
       VMCS_Setup_Control_Fields;
       VMCS_Setup_Host_Fields;
       VMCS_Setup_Guest_Fields
-        (Entry_Point => Subject.Descriptors (Id).Entry_Point);
+        (Entry_Point => Subjects.Descriptors (Id).Entry_Point);
 
-      CPU.Restore_Registers (Regs => Subject.Descriptors (Id).Regs);
+      CPU.Restore_Registers (Regs => Subjects.Descriptors (Id).Regs);
       CPU.VMLAUNCH (Success => Success);
       if not Success then
          pragma Debug (CPU.VMREAD (Field   => Constants.VMX_INST_ERROR,

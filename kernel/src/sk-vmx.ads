@@ -1,4 +1,4 @@
-with SK.Subject;
+with SK.Subjects;
 
 --# inherit
 --#    X86_64,
@@ -7,7 +7,7 @@ with SK.Subject;
 --#    SK.GDT,
 --#    SK.Descriptors,
 --#    SK.Constants,
---#    SK.Subject;
+--#    SK.Subjects;
 package SK.VMX
 --# own
 --#    VMXON_Address,
@@ -30,7 +30,7 @@ is
    --# derives
    --#    X86_64.State from *, VMXON_Address;
 
-   procedure Launch (Id : Subject.Subject_Idx_Type);
+   procedure Launch (Id : Subjects.Subject_Idx_Type);
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
@@ -38,7 +38,7 @@ is
    --#    in     VMX_Exit_Address;
    --#    in     Kernel_Stack_Address;
    --#    in     Guest_Stack_Address;
-   --#    in     Subject.Descriptors;
+   --#    in     Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
    --#    X86_64.State from
@@ -49,7 +49,7 @@ is
    --#       VMX_Exit_Address,
    --#       Kernel_Stack_Address,
    --#       Guest_Stack_Address,
-   --#       Subject.Descriptors,
+   --#       Subjects.Descriptors,
    --#       Id;
 
 private

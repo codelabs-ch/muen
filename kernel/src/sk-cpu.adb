@@ -138,6 +138,119 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Restore_Registers (Regs : Registers_Type)
+   is
+      --# hide Restore_Registers;
+   begin
+      System.Machine_Code.Asm
+        (Template => "movq %0, %%rbx;",
+         Inputs   => (SK.Word64'Asm_Input ("a", Regs.RBX)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "movq %0, %%rcx;",
+         Inputs   => (SK.Word64'Asm_Input ("a", Regs.RCX)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "movq %0, %%rdx;",
+         Inputs   => (SK.Word64'Asm_Input ("a", Regs.RDX)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "movq %0, %%rdi;",
+         Inputs   => (SK.Word64'Asm_Input ("a", Regs.RDI)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "movq %0, %%rsi;",
+         Inputs   => (SK.Word64'Asm_Input ("a", Regs.RSI)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "movq %0, %%r8;",
+         Inputs   => (SK.Word64'Asm_Input ("a", Regs.R08)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "movq %0, %%r9;",
+         Inputs   => (SK.Word64'Asm_Input ("a", Regs.R09)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "movq %0, %%r10;",
+         Inputs   => (SK.Word64'Asm_Input ("a", Regs.R10)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "movq %0, %%r11;",
+         Inputs   => (SK.Word64'Asm_Input ("a", Regs.R11)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "movq %0, %%r12;",
+         Inputs   => (SK.Word64'Asm_Input ("a", Regs.R12)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "movq %0, %%r13;",
+         Inputs   => (SK.Word64'Asm_Input ("a", Regs.R13)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "movq %0, %%r14;",
+         Inputs   => (SK.Word64'Asm_Input ("a", Regs.R14)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "movq %0, %%r15;",
+         Inputs   => (SK.Word64'Asm_Input ("a", Regs.R15)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "movq %0, %%rax; push %%rax",
+         Inputs   => (SK.Word64'Asm_Input ("m", Regs.RBP)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "movq %0, %%rax;",
+         Inputs   => (SK.Word64'Asm_Input ("a", Regs.RAX)),
+         Volatile => True);
+
+      --  The RBP register must be written as the final value since it will
+      --  break any RBP-relative adressing.
+
+      System.Machine_Code.Asm
+        (Template => "popq %%rbp;",
+         Volatile => True);
+   end Restore_Registers;
+
+   -------------------------------------------------------------------------
+
+   procedure Save_Registers
+     (Regs : out Registers_Type;
+      RAX  :     SK.Word64;
+      RBX  :     SK.Word64;
+      RCX  :     SK.Word64;
+      RDX  :     SK.Word64;
+      RDI  :     SK.Word64;
+      RSI  :     SK.Word64;
+      RBP  :     SK.Word64;
+      R08  :     SK.Word64;
+      R09  :     SK.Word64;
+      R10  :     SK.Word64;
+      R11  :     SK.Word64;
+      R12  :     SK.Word64;
+      R13  :     SK.Word64;
+      R14  :     SK.Word64;
+      R15  :     SK.Word64)
+   is
+   begin
+      Regs.RAX := RAX;
+      Regs.RBX := RBX;
+      Regs.RCX := RCX;
+      Regs.RDX := RDX;
+      Regs.RDI := RDI;
+      Regs.RSI := RSI;
+      Regs.RBP := RBP;
+      Regs.R08 := R08;
+      Regs.R09 := R09;
+      Regs.R10 := R10;
+      Regs.R11 := R11;
+      Regs.R12 := R12;
+      Regs.R13 := R13;
+      Regs.R14 := R14;
+      Regs.R15 := R15;
+   end Save_Registers;
+
+   -------------------------------------------------------------------------
+
    procedure Set_CR4 (Value : SK.Word64)
    is
       --# hide Set_CR4;

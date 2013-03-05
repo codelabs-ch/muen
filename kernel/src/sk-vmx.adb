@@ -384,6 +384,7 @@ is
       VMCS_Setup_Host_Fields;
       VMCS_Setup_Guest_Fields;
 
+      CPU.Restore_Registers (Regs => CPU.Null_Regs);
       CPU.VMLAUNCH (Success => Success);
       if not Success then
          pragma Debug (CPU.VMREAD (Field   => Constants.VMX_INST_ERROR,

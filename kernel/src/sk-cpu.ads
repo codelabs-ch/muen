@@ -133,6 +133,7 @@ is
    --# derives
    --#    X86_64.State from * &
    --#    Success      from X86_64.State;
+   pragma Inline_Always (VMLAUNCH);
 
    --  Resume VM designated by current VMCS.
    procedure VMRESUME (Success : out Boolean);

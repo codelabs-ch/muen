@@ -11,12 +11,10 @@ with SK.Subjects;
 package SK.VMX
 --# own
 --#    VMXON_Address,
---#    VMCS_Address,
 --#    VMX_Exit_Address,
 --#    Kernel_Stack_Address;
 --# initializes
 --#    VMXON_Address,
---#    VMCS_Address,
 --#    VMX_Exit_Address,
 --#    Kernel_Stack_Address;
 is
@@ -32,7 +30,6 @@ is
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
-   --#    in     VMCS_Address;
    --#    in     VMX_Exit_Address;
    --#    in     Kernel_Stack_Address;
    --#    in     Subjects.Descriptors;
@@ -42,7 +39,6 @@ is
    --#       *,
    --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,
-   --#       VMCS_Address,
    --#       VMX_Exit_Address,
    --#       Kernel_Stack_Address,
    --#       Subjects.Descriptors,

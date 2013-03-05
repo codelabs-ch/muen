@@ -23,11 +23,6 @@ is
    pragma Import (C, VMXON_Address, "vmxon_pointer");
    --# end accept;
 
-   --# accept Warning, 350, VMCS_Address, "Imported from Linker";
-   VMCS_Address : SK.Word64;
-   pragma Import (C, VMCS_Address, "vmcs_pointer");
-   --# end accept;
-
    --# accept Warning, 350, VMX_Exit_Address, "Imported from Linker";
    VMX_Exit_Address : SK.Word64;
    pragma Import (C, VMX_Exit_Address, "vmx_exit_handler_pointer");
@@ -411,22 +406,25 @@ is
       pragma Debug (KC.Put_String (Item => "Launching subject "));
       pragma Debug (KC.Put_Byte (Item => Byte (Id)));
       pragma Debug (KC.New_Line);
+
+      State := Subjects.Get_State (Idx => Id);
+
       Success := Is_Aligned
-        (Address   => VMCS_Address,
+        (Address   => State.VMCS_Address,
          Alignment => 4096);
       if not Success then
          pragma Debug (KC.Put_Line (Item => "VMCS region alignment invalid"));
          CPU.Panic;
       end if;
 
-      CPU.VMCLEAR (Region  => VMCS_Address,
+      CPU.VMCLEAR (Region  => State.VMCS_Address,
                    Success => Success);
       if not Success then
          pragma Debug (KC.Put_Line (Item => "Error clearing VMCS"));
          CPU.Panic;
       end if;
 
-      CPU.VMPTRLD (Region  => VMCS_Address,
+      CPU.VMPTRLD (Region  => State.VMCS_Address,
                    Success => Success);
       if not Success then
          pragma Debug
@@ -436,8 +434,6 @@ is
 
       VMCS_Setup_Control_Fields;
       VMCS_Setup_Host_Fields;
-
-      State := Subjects.Get_State (Idx => Id);
       VMCS_Setup_Guest_Fields
         (Stack_Address => State.Stack_Address,
          Entry_Point   => State.Entry_Point);
@@ -462,16 +458,12 @@ begin
    --# hide SK.VMX;
 
    declare
-      Revision, Unused_High, VMXON_Region, VMCS_Region : SK.Word32;
+      Unused_High, VMXON_Region : SK.Word32;
       for VMXON_Region'Address use System'To_Address (VMXON_Address);
-      for VMCS_Region'Address use System'To_Address (VMCS_Address);
    begin
       CPU.Get_MSR
         (Register => Constants.IA32_VMX_BASIC,
-         Low      => Revision,
+         Low      => VMXON_Region,
          High     => Unused_High);
-
-      VMXON_Region := Revision;
-      VMCS_Region  := Revision;
    end;
 end SK.VMX;

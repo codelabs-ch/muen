@@ -5,16 +5,19 @@ with SK.CPU;
 package SK.Subjects
 --# own
 --#    Descriptors,
---#    Guest_Stack_Address;
+--#    Guest_Stack_Address,
+--#    VMCS_Address;
 --# initializes
 --#    Descriptors,
---#    Guest_Stack_Address;
+--#    Guest_Stack_Address,
+--#    VMCS_Address;
 is
 
    --  Subject state.
    type State_Type is record
       Regs          : CPU.Registers_Type;
       Stack_Address : SK.Word64;
+      VMCS_Address  : SK.Word64;
       Entry_Point   : SK.Word64;
    end record;
 

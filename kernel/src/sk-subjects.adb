@@ -1,5 +1,6 @@
 with System.Storage_Elements;
 
+with SK.Constants;
 with SK.Console;
 with SK.Console_VGA;
 
@@ -14,6 +15,11 @@ is
    --# accept Warning, 350, Guest_Stack_Address, "Imported from Linker";
    Guest_Stack_Address : SK.Word64;
    pragma Import (C, Guest_Stack_Address, "guest_stack_pointer");
+   --# end accept;
+
+   --# accept Warning, 350, VMCS_Address, "Imported from Linker";
+   VMCS_Address : SK.Word64;
+   pragma Import (C, VMCS_Address, "vmcs_pointer");
    --# end accept;
 
    -------------------------------------------------------------------------
@@ -81,11 +87,22 @@ begin
 
    --# hide SK.Subjects;
 
-   Descriptors (Descriptors'First)
-     := State_Type'
-       (Regs          => CPU.Null_Regs,
-        Stack_Address => Guest_Stack_Address,
-        Entry_Point   => SK.Word64
-          (System.Storage_Elements.To_Integer
-             (Value => Subject_Main_1'Address)));
+   declare
+      Unused_High, VMCS_Region : SK.Word32;
+      for VMCS_Region'Address use System'To_Address (VMCS_Address);
+   begin
+      CPU.Get_MSR
+        (Register => Constants.IA32_VMX_BASIC,
+         Low      => VMCS_Region,
+         High     => Unused_High);
+
+      Descriptors (Descriptors'First)
+        := State_Type'
+          (Regs          => CPU.Null_Regs,
+           Stack_Address => Guest_Stack_Address,
+           VMCS_Address  => VMCS_Address,
+           Entry_Point   => SK.Word64
+             (System.Storage_Elements.To_Integer
+                (Value => Subject_Main_1'Address)));
+   end;
 end SK.Subjects;

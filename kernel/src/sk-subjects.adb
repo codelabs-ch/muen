@@ -11,6 +11,11 @@ is
    --  Descriptors used to manage subjects.
    Descriptors : Subject_Array;
 
+   --# accept Warning, 350, Guest_Stack_Address, "Imported from Linker";
+   Guest_Stack_Address : SK.Word64;
+   pragma Import (C, Guest_Stack_Address, "guest_stack_pointer");
+   --# end accept;
+
    -------------------------------------------------------------------------
 
    function Get_State (Idx : Index_Type) return State_Type
@@ -78,8 +83,9 @@ begin
 
    Descriptors (Descriptors'First)
      := State_Type'
-       (Regs        => CPU.Null_Regs,
-        Entry_Point => SK.Word64
+       (Regs          => CPU.Null_Regs,
+        Stack_Address => Guest_Stack_Address,
+        Entry_Point   => SK.Word64
           (System.Storage_Elements.To_Integer
              (Value => Subject_Main_1'Address)));
 end SK.Subjects;

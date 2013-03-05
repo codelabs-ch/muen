@@ -13,14 +13,12 @@ package SK.VMX
 --#    VMXON_Address,
 --#    VMCS_Address,
 --#    VMX_Exit_Address,
---#    Kernel_Stack_Address,
---#    Guest_Stack_Address;
+--#    Kernel_Stack_Address;
 --# initializes
 --#    VMXON_Address,
 --#    VMCS_Address,
 --#    VMX_Exit_Address,
---#    Kernel_Stack_Address,
---#    Guest_Stack_Address;
+--#    Kernel_Stack_Address;
 is
 
    procedure Enable;
@@ -37,7 +35,6 @@ is
    --#    in     VMCS_Address;
    --#    in     VMX_Exit_Address;
    --#    in     Kernel_Stack_Address;
-   --#    in     Guest_Stack_Address;
    --#    in     Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
@@ -48,7 +45,6 @@ is
    --#       VMCS_Address,
    --#       VMX_Exit_Address,
    --#       Kernel_Stack_Address,
-   --#       Guest_Stack_Address,
    --#       Subjects.Descriptors,
    --#       Id;
 

@@ -4,15 +4,18 @@ with SK.CPU;
 --#    SK.CPU;
 package SK.Subjects
 --# own
---#    Descriptors;
+--#    Descriptors,
+--#    Guest_Stack_Address;
 --# initializes
---#    Descriptors;
+--#    Descriptors,
+--#    Guest_Stack_Address;
 is
 
    --  Subject state.
    type State_Type is record
-      Regs        : CPU.Registers_Type;
-      Entry_Point : SK.Word64;
+      Regs          : CPU.Registers_Type;
+      Stack_Address : SK.Word64;
+      Entry_Point   : SK.Word64;
    end record;
 
    type Index_Type is mod 2 ** 1;

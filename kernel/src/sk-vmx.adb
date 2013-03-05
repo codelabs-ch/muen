@@ -38,11 +38,6 @@ is
    pragma Import (C, Kernel_Stack_Address, "kernel_stack_pointer");
    --# end accept;
 
-   --# accept Warning, 350, Guest_Stack_Address, "Imported from Linker";
-   Guest_Stack_Address : SK.Word64;
-   pragma Import (C, Guest_Stack_Address, "guest_stack_pointer");
-   --# end accept;
-
    ---------------------------------------------------------------------------
 
    --  Check alignment of given address.
@@ -288,18 +283,19 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure VMCS_Setup_Guest_Fields (Entry_Point : SK.Word64)
+   procedure VMCS_Setup_Guest_Fields
+     (Stack_Address : SK.Word64;
+      Entry_Point   : SK.Word64)
    --# global
    --#    in     Interrupts.IDT_Pointer;
    --#    in     GDT.GDT_Pointer;
-   --#    in     Guest_Stack_Address;
    --#    in out X86_64.State;
    --# derives
    --#    X86_64.State from
    --#       *,
    --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,
-   --#       Guest_Stack_Address,
+   --#       Stack_Address,
    --#       Entry_Point;
    is
       PD : Descriptors.Pseudo_Descriptor_Type;
@@ -370,7 +366,7 @@ is
       VMCS_Write (Field => Constants.GUEST_RFLAGS,
                   Value => CPU.Get_RFLAGS);
       VMCS_Write (Field => Constants.GUEST_RSP,
-                  Value => Guest_Stack_Address);
+                  Value => Stack_Address);
       VMCS_Write (Field => Constants.GUEST_RIP,
                   Value => Entry_Point);
 
@@ -410,6 +406,7 @@ is
    is
       Success : Boolean;
       Error   : SK.Word64;
+      State   : Subjects.State_Type;
    begin
       pragma Debug (KC.Put_String (Item => "Launching subject "));
       pragma Debug (KC.Put_Byte (Item => Byte (Id)));
@@ -439,9 +436,11 @@ is
 
       VMCS_Setup_Control_Fields;
       VMCS_Setup_Host_Fields;
+
+      State := Subjects.Get_State (Idx => Id);
       VMCS_Setup_Guest_Fields
-        (Entry_Point => Subjects.Get_State
-           (Idx => Id).Entry_Point);
+        (Stack_Address => State.Stack_Address,
+         Entry_Point   => State.Entry_Point);
 
       CPU.Restore_Registers
         (Regs => Subjects.Get_State (Idx => Id).Regs);

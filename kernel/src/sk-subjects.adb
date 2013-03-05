@@ -42,25 +42,24 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Subject_Main_1
+   procedure Print_Statusbar (Name : String)
    is
-      --# hide Subject_Main_1;
+      --# hide Print_Statusbar;
 
       package Text_IO is new SK.Console
         (Initialize      => Console_VGA.Init,
          Output_New_Line => Console_VGA.New_Line,
          Output_Char     => Console_VGA.Put_Char);
 
-      Greeter : constant String := "Hello from guest world";
-      Counter : SK.Word32       := 0;
-      Idx     : Positive        := 1;
-      Dlt     : Integer         := -1;
+      Counter : SK.Word32 := 0;
+      Idx     : Positive  := 1;
+      Dlt     : Integer   := -1;
    begin
       Text_IO.Init;
-      Text_IO.Put_Line (Item => Greeter);
+      Text_IO.Put_Line (Item => Name);
       Text_IO.New_Line;
 
-      for I in Greeter'Range loop
+      for I in Name'Range loop
          Text_IO.Put_Char (Item => Character'Val (176));
       end loop;
 
@@ -69,9 +68,9 @@ is
             Console_VGA.Set_Position (X => Integer (Idx - Dlt),
                                       Y => 3);
             Text_IO.Put_Char (Item => Character'Val (176));
-            if Idx = Greeter'Last then
+            if Idx = Name'Last then
                Dlt := -1;
-            elsif Idx = Greeter'First then
+            elsif Idx = Name'First then
                Dlt := 1;
             end if;
             Console_VGA.Set_Position (X => Integer (Idx),
@@ -81,6 +80,22 @@ is
          end if;
          Counter := Counter + 1;
       end loop;
+   end Print_Statusbar;
+
+   -------------------------------------------------------------------------
+
+   procedure Subject_Main_0
+   is
+   begin
+      Print_Statusbar (Name => "Subject 0");
+   end Subject_Main_0;
+
+   -------------------------------------------------------------------------
+
+   procedure Subject_Main_1
+   is
+   begin
+      Print_Statusbar (Name => "Subject 1");
    end Subject_Main_1;
 
 begin
@@ -88,19 +103,30 @@ begin
    --# hide SK.Subjects;
 
    declare
-      Unused_High, VMCS_Region : SK.Word32;
-      for VMCS_Region'Address use System'To_Address (VMCS_Address);
+      Revision, Unused_High, VMCS_Region0, VMCS_Region1 : SK.Word32;
+      for VMCS_Region0'Address use System'To_Address (VMCS_Address);
+      for VMCS_Region1'Address use System'To_Address (VMCS_Address + 4096);
    begin
       CPU.Get_MSR
         (Register => Constants.IA32_VMX_BASIC,
-         Low      => VMCS_Region,
+         Low      => Revision,
          High     => Unused_High);
+      VMCS_Region0 := Revision;
+      VMCS_Region1 := Revision;
 
       Descriptors (Descriptors'First)
         := State_Type'
           (Regs          => CPU.Null_Regs,
            Stack_Address => Guest_Stack_Address,
            VMCS_Address  => VMCS_Address,
+           Entry_Point   => SK.Word64
+             (System.Storage_Elements.To_Integer
+                (Value => Subject_Main_0'Address)));
+      Descriptors (Descriptors'Last)
+        := State_Type'
+          (Regs          => CPU.Null_Regs,
+           Stack_Address => Guest_Stack_Address - 4096,
+           VMCS_Address  => VMCS_Address        + 4096,
            Entry_Point   => SK.Word64
              (System.Storage_Elements.To_Integer
                 (Value => Subject_Main_1'Address)));

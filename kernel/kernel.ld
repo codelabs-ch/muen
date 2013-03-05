@@ -22,7 +22,7 @@ SECTIONS
 	{
 		. += 0x1000;
 		kernel_stack = .;
-		. += 0x1000;
+		. += 0x2000;
 		guest_stack = .;
 	}
 	image_end = .;

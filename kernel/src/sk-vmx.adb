@@ -127,59 +127,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Handle_Vmx_Exit
-     (RDI : SK.Word64; RSI : SK.Word64; RDX : SK.Word64; RCX : SK.Word64;
-      R08 : SK.Word64; R09 : SK.Word64; RAX : SK.Word64; RBX : SK.Word64;
-      RBP : SK.Word64; R10 : SK.Word64; R11 : SK.Word64; R12 : SK.Word64;
-      R13 : SK.Word64; R14 : SK.Word64; R15 : SK.Word64)
-   is
-      Reason, Qualification : SK.Word64;
-      Registers             : CPU.Registers_Type;
-      State                 : Subjects.State_Type;
-   begin
-      CPU.Save_Registers (Regs => Registers,
-                          RAX  => RAX,
-                          RBX  => RBX,
-                          RCX  => RCX,
-                          RDX  => RDX,
-                          RDI  => RDI,
-                          RSI  => RSI,
-                          RBP  => RBP,
-                          R08  => R08,
-                          R09  => R09,
-                          R10  => R10,
-                          R11  => R11,
-                          R12  => R12,
-                          R13  => R13,
-                          R14  => R14,
-                          R15  => R15);
-
-      State := Subjects.Get_State (Idx => Subjects.Index_Type'First);
-      State.Regs := Registers;
-      Subjects.Set_State (Idx   => Subjects.Index_Type'First,
-                          State => State);
-
-      VMCS_Read (Field => Constants.VMX_EXIT_REASON,
-                 Value => Reason);
-
-      pragma Debug (VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
-                               Value => Qualification));
-      pragma Debug (KC.Put_String (Item => "VM EXIT ("));
-      pragma Debug (KC.Put_Word16 (Item => SK.Word16 (Reason)));
-      pragma Debug (KC.Put_String (Item => ":"));
-      pragma Debug (KC.Put_Word32 (Item => SK.Word32 (Qualification)));
-      pragma Debug (KC.Put_Line (Item => ")"));
-
-      if Reason /= Constants.VMEXIT_TIMER_EXPIRY then
-         CPU.Panic;
-      end if;
-
-      Resume (Regs => State.Regs);
-      --# accept Warning, 400, Qualification, "Only used for debug output";
-   end Handle_Vmx_Exit;
-
-   -------------------------------------------------------------------------
-
    procedure VMCS_Setup_Control_Fields
    --# global
    --#    in out X86_64.State;
@@ -371,32 +318,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Enable
-   is
-      Success : Boolean;
-   begin
-      Success := Is_Aligned
-        (Address   => VMXON_Address,
-         Alignment => 4096);
-      if not Success then
-         pragma Debug (KC.Put_Line ("VMXON region alignment invalid"));
-         CPU.Panic;
-      end if;
-
-      CPU.Set_CR4 (Value => SK.Bit_Set
-                   (Value => CPU.Get_CR4,
-                    Pos   => Constants.CR4_VMXE_FLAG));
-
-      CPU.VMXON (Region  => VMXON_Address,
-                 Success => Success);
-      if not Success then
-         pragma Debug (KC.Put_Line (Item => "Error enabling VMX"));
-         CPU.Panic;
-      end if;
-   end Enable;
-
-   -------------------------------------------------------------------------
-
    procedure Launch (Id : Subjects.Index_Type)
    is
       Success : Boolean;
@@ -452,6 +373,87 @@ is
       end if;
       --# accept Warning, 400, Error, "Only used for debug output";
    end Launch;
+
+   -------------------------------------------------------------------------
+
+   procedure Handle_Vmx_Exit
+     (RDI : SK.Word64; RSI : SK.Word64; RDX : SK.Word64; RCX : SK.Word64;
+      R08 : SK.Word64; R09 : SK.Word64; RAX : SK.Word64; RBX : SK.Word64;
+      RBP : SK.Word64; R10 : SK.Word64; R11 : SK.Word64; R12 : SK.Word64;
+      R13 : SK.Word64; R14 : SK.Word64; R15 : SK.Word64)
+   is
+      Reason, Qualification : SK.Word64;
+      Registers             : CPU.Registers_Type;
+      State                 : Subjects.State_Type;
+   begin
+      CPU.Save_Registers (Regs => Registers,
+                          RAX  => RAX,
+                          RBX  => RBX,
+                          RCX  => RCX,
+                          RDX  => RDX,
+                          RDI  => RDI,
+                          RSI  => RSI,
+                          RBP  => RBP,
+                          R08  => R08,
+                          R09  => R09,
+                          R10  => R10,
+                          R11  => R11,
+                          R12  => R12,
+                          R13  => R13,
+                          R14  => R14,
+                          R15  => R15);
+
+      State := Subjects.Get_State (Idx => Subjects.Index_Type'First);
+      State.Regs := Registers;
+      Subjects.Set_State (Idx   => Subjects.Index_Type'First,
+                          State => State);
+
+      VMCS_Read (Field => Constants.VMX_EXIT_REASON,
+                 Value => Reason);
+      pragma Debug (VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
+                               Value => Qualification));
+
+      pragma Debug (KC.Put_String (Item => "VM EXIT ("));
+      pragma Debug (KC.Put_Word16 (Item => SK.Word16 (Reason)));
+      pragma Debug (KC.Put_String (Item => ":"));
+      pragma Debug (KC.Put_Word32 (Item => SK.Word32 (Qualification)));
+      pragma Debug (KC.Put_Line   (Item => ")"));
+
+      if Reason /= Constants.VMEXIT_TIMER_EXPIRY then
+         CPU.Panic;
+      end if;
+
+      Launch (Id => 1);
+
+      Resume (Regs => State.Regs);
+      --# accept Warning, 400, Qualification, "Only used for debug output";
+   end Handle_Vmx_Exit;
+
+   -------------------------------------------------------------------------
+
+   procedure Enable
+   is
+      Success : Boolean;
+   begin
+      Success := Is_Aligned
+        (Address   => VMXON_Address,
+         Alignment => 4096);
+      if not Success then
+         pragma Debug (KC.Put_Line ("VMXON region alignment invalid"));
+         CPU.Panic;
+      end if;
+
+      CPU.Set_CR4 (Value => SK.Bit_Set
+                   (Value => CPU.Get_CR4,
+                    Pos   => Constants.CR4_VMXE_FLAG));
+
+      CPU.VMXON (Region  => VMXON_Address,
+                 Success => Success);
+      if not Success then
+         pragma Debug (KC.Put_Line (Item => "Error enabling VMX"));
+         CPU.Panic;
+      end if;
+   end Enable;
 
 begin
 

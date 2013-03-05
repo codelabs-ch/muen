@@ -70,8 +70,6 @@ is
          end if;
          Counter := Counter + 1;
       end loop;
-
-      CPU.Panic;
    end Subject_Main_1;
 
 begin

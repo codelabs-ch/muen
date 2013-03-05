@@ -22,4 +22,13 @@ is
    --# global
    --#    Descriptors;
 
+   --  Set state of subject identified by index.
+   procedure Set_State
+     (Idx   : Subject_Idx_Type;
+      State : Subject_State_Type);
+   --# global
+   --#    Descriptors;
+   --# derives
+   --#    Descriptors from *, Idx, State;
+
 end SK.Subjects;

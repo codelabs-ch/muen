@@ -21,6 +21,16 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Set_State
+     (Idx   : Subject_Idx_Type;
+      State : Subject_State_Type)
+   is
+   begin
+      Descriptors (Idx) := State;
+   end Set_State;
+
+   -------------------------------------------------------------------------
+
    procedure Main
    is
       --# hide Main;

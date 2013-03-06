@@ -16,6 +16,10 @@ is
    SEL_KERN_DATA : constant := 16#10#;
    SEL_TSS       : constant := 16#18#;
 
+   --  Subject preemption time in ticks. Used to set the VMX preemption timer.
+
+   Subject_Time_Slice : constant := 500;
+
    subtype Alignment_Type is SK.Word16 range 1 .. SK.Word16'Last;
 
    --  Current active subject, initialized to root subject.
@@ -115,10 +119,6 @@ is
       Success : Boolean;
       State   : Subjects.State_Type;
    begin
-      pragma Debug (KC.Put_String (Item => "Resuming subject "));
-      pragma Debug (KC.Put_Byte (Item => Byte (Current_Subject)));
-      pragma Debug (KC.New_Line);
-
       State := Subjects.Get_State (Idx => Current_Subject);
 
       CPU.VMPTRLD (Region  => State.VMCS_Address,
@@ -129,7 +129,7 @@ is
       end if;
 
       VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                  Value => 200_000_000);
+                  Value => Subject_Time_Slice);
 
       CPU.Restore_Registers (Regs => State.Regs);
       CPU.VMRESUME (Success => Success);
@@ -333,7 +333,7 @@ is
                   Value => Entry_Point);
 
       VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                  Value => 200_000_000);
+                  Value => Subject_Time_Slice);
    end VMCS_Setup_Guest_Fields;
 
    -------------------------------------------------------------------------
@@ -433,18 +433,18 @@ is
 
       VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                  Value => Reason);
-      pragma Debug (VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
-                               Value => Qualification));
-
-      pragma Debug (KC.Put_String (Item => "Subject "));
-      pragma Debug (KC.Put_Byte   (Item => Byte (Current_Subject)));
-      pragma Debug (KC.Put_String (Item => " EXIT ("));
-      pragma Debug (KC.Put_Word16 (Item => SK.Word16 (Reason)));
-      pragma Debug (KC.Put_String (Item => ":"));
-      pragma Debug (KC.Put_Word32 (Item => SK.Word32 (Qualification)));
-      pragma Debug (KC.Put_Line   (Item => ")"));
 
       if Reason /= Constants.VMEXIT_TIMER_EXPIRY then
+         pragma Debug (VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
+                                  Value => Qualification));
+
+         pragma Debug (KC.Put_String (Item => "Subject "));
+         pragma Debug (KC.Put_Byte   (Item => Byte (Current_Subject)));
+         pragma Debug (KC.Put_String (Item => " EXIT ("));
+         pragma Debug (KC.Put_Word16 (Item => SK.Word16 (Reason)));
+         pragma Debug (KC.Put_String (Item => ":"));
+         pragma Debug (KC.Put_Word32 (Item => SK.Word32 (Qualification)));
+         pragma Debug (KC.Put_Line   (Item => ")"));
          CPU.Panic;
       end if;
 

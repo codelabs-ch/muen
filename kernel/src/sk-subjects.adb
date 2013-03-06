@@ -60,13 +60,13 @@ begin
            Regs          => CPU.Null_Regs,
            Stack_Address => Guest_Stack_Address,
            VMCS_Address  => VMCS_Address,
-           Entry_Point   => 16#104ad6#);
+           Entry_Point   => 16#1805d8#);
       Descriptors (Descriptors'Last)
         := State_Type'
           (Launched      => False,
            Regs          => CPU.Null_Regs,
            Stack_Address => Guest_Stack_Address - 4096,
            VMCS_Address  => VMCS_Address        + 4096,
-           Entry_Point   => 16#105056#);
+           Entry_Point   => 16#1a05d8#);
    end;
 end SK.Subjects;

@@ -9,7 +9,7 @@ SECTIONS
 		*(.text)
 	}
 
-	.data 0x110000 :
+	.data 0x00110000 :
 	{
 		*(.pagetable)
 		*(.gdt)
@@ -26,24 +26,7 @@ SECTIONS
 		guest_stack = .;
 	}
 
-	. = ALIGN (4096);
-
-	.subject0 :
-	{
-		../../subjects/obj/subject_0.o(.text)
-		../../subjects/obj/subject_0.o(.data)
-		../../subjects/obj/subject_0.o(.bss)
-	}
-
-	. = ALIGN (4096);
-
-	.subject1 :
-	{
-		../../subjects/obj/subject_1.o(.text)
-		../../subjects/obj/subject_1.o(.data)
-		../../subjects/obj/subject_1.o(.bss)
-	}
-
+	. = 0x001f0000;
 	image_end = .;
 
 	/DISCARD/ :

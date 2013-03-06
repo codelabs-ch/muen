@@ -1,0 +1,20 @@
+project Subjects is
+
+   for Languages use ("Ada");
+   for Source_Dirs use ("../kernel/src/**", "src");
+   for Object_Dir use "obj";
+
+   package Builder is
+      for Global_Configuration_Pragmas use "../kernel/kernel.adc";
+   end Builder;
+
+   package Compiler is
+      for Default_Switches ("Ada") use
+        ("-g",
+         "-gnata",
+         "-gnatp",
+         "-gnatwale",
+         "-gnatygAdISux-s");
+   end Compiler;
+
+end Subjects;

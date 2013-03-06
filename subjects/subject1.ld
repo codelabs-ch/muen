@@ -6,7 +6,14 @@ SECTIONS
 
 	.text :	{ *(.text) }
 	.data :	{ *(.data) }
-	.bss  : { *(.bss)  }
+
+	. = ALIGN (4096);
+
+	.bss :
+	{
+		. += 0x1000;
+		stack = .;
+	}
 
 	/DISCARD/ :
 	{

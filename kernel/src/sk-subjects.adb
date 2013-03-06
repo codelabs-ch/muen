@@ -12,6 +12,10 @@ is
    --  Descriptors used to manage subjects.
    Descriptors : Subject_Array;
 
+   --  Test subject console width and height.
+   subtype Width_Type  is Natural range 1 .. 80;
+   subtype Height_Type is Natural range 1 .. 12;
+
    --# accept Warning, 350, Guest_Stack_Address, "Imported from Linker";
    Guest_Stack_Address : SK.Word64;
    pragma Import (C, Guest_Stack_Address, "guest_stack_pointer");
@@ -42,12 +46,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_Statusbar (Name : String)
+   procedure Subject_Main_0
    is
-      --# hide Print_Statusbar;
-
-      subtype Width_Type  is Natural range 1 .. 80;
-      subtype Height_Type is Natural range 1 .. 25;
+      --# hide Subject_Main_0;
 
       package VGA is new SK.Console_VGA
         (Width_Type   => Width_Type,
@@ -59,9 +60,10 @@ is
          Output_New_Line => VGA.New_Line,
          Output_Char     => VGA.Put_Char);
 
-      Counter : SK.Word32 := 0;
-      Idx     : Positive  := 1;
-      Dlt     : Integer   := -1;
+      Name    : constant String := "Subject 0";
+      Counter : SK.Word32       := 0;
+      Idx     : Positive        := 1;
+      Dlt     : Integer         := -1;
    begin
       Text_IO.Init;
       Text_IO.Put_Line (Item => Name);
@@ -88,22 +90,54 @@ is
          end if;
          Counter := Counter + 1;
       end loop;
-   end Print_Statusbar;
-
-   -------------------------------------------------------------------------
-
-   procedure Subject_Main_0
-   is
-   begin
-      Print_Statusbar (Name => "Subject 0");
    end Subject_Main_0;
 
    -------------------------------------------------------------------------
 
    procedure Subject_Main_1
    is
+      --# hide Subject_Main_1;
+
+      package VGA is new SK.Console_VGA
+        (Width_Type   => Width_Type,
+         Height_Type  => Height_Type,
+         Base_Address => System'To_Address (16#000b_8820#));
+
+      package Text_IO is new SK.Console
+        (Initialize      => VGA.Init,
+         Output_New_Line => VGA.New_Line,
+         Output_Char     => VGA.Put_Char);
+
+      Name    : constant String := "Subject 1";
+      Counter : SK.Word32       := 0;
+      Idx     : Positive        := 1;
+      Dlt     : Integer         := -1;
    begin
-      Print_Statusbar (Name => "Subject 1");
+      Text_IO.Init;
+      Text_IO.Put_Line (Item => Name);
+      Text_IO.New_Line;
+
+      for I in Name'Range loop
+         Text_IO.Put_Char (Item => Character'Val (176));
+      end loop;
+
+      while True loop
+         if Counter mod 2**19 = 0 then
+            VGA.Set_Position (X => Integer (Idx - Dlt),
+                              Y => 3);
+            Text_IO.Put_Char (Item => Character'Val (176));
+            if Idx = Name'Last then
+               Dlt := -1;
+            elsif Idx = Name'First then
+               Dlt := 1;
+            end if;
+            VGA.Set_Position (X => Integer (Idx),
+                              Y => 3);
+            Text_IO.Put_Char (Item => Character'Val (178));
+            Idx := Idx + Dlt;
+         end if;
+         Counter := Counter + 1;
+      end loop;
    end Subject_Main_1;
 
 begin

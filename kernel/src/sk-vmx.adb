@@ -113,16 +113,25 @@ is
    is
       Error   : SK.Word64;
       Success : Boolean;
+      State   : Subjects.State_Type;
    begin
       pragma Debug (KC.Put_String (Item => "Resuming subject "));
       pragma Debug (KC.Put_Byte (Item => Byte (Current_Subject)));
       pragma Debug (KC.New_Line);
 
+      State := Subjects.Get_State (Idx => Current_Subject);
+
+      CPU.VMPTRLD (Region  => State.VMCS_Address,
+                   Success => Success);
+      if not Success then
+         pragma Debug (KC.Put_Line (Item => "Error loading VMCS pointer"));
+         CPU.Panic;
+      end if;
+
       VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
                   Value => 200_000_000);
 
-      CPU.Restore_Registers
-        (Regs => Subjects.Get_State (Idx => Current_Subject).Regs);
+      CPU.Restore_Registers (Regs => State.Regs);
       CPU.VMRESUME (Success => Success);
       if not Success then
          pragma Debug (CPU.VMREAD (Field   => Constants.VMX_INST_ERROR,
@@ -359,8 +368,7 @@ is
       CPU.VMPTRLD (Region  => State.VMCS_Address,
                    Success => Success);
       if not Success then
-         pragma Debug
-           (KC.Put_Line (Item => "Error loading VMCS pointer"));
+         pragma Debug (KC.Put_Line (Item => "Error loading VMCS pointer"));
          CPU.Panic;
       end if;
 
@@ -369,6 +377,10 @@ is
       VMCS_Setup_Guest_Fields
         (Stack_Address => State.Stack_Address,
          Entry_Point   => State.Entry_Point);
+
+      State.Launched := True;
+      Subjects.Set_State (Idx   => Current_Subject,
+                          State => State);
 
       CPU.Restore_Registers
         (Regs => Subjects.Get_State (Idx => Current_Subject).Regs);
@@ -414,9 +426,9 @@ is
                           R14  => R14,
                           R15  => R15);
 
-      State := Subjects.Get_State (Idx => Subjects.Index_Type'First);
+      State := Subjects.Get_State (Idx => Current_Subject);
       State.Regs := Registers;
-      Subjects.Set_State (Idx   => Subjects.Index_Type'First,
+      Subjects.Set_State (Idx   => Current_Subject,
                           State => State);
 
       VMCS_Read (Field => Constants.VMX_EXIT_REASON,
@@ -437,9 +449,11 @@ is
       end if;
 
       Current_Subject := Current_Subject + 1;
-      Launch;
-
-      Resume;
+      if Subjects.Get_State (Idx => Current_Subject).Launched then
+         Resume;
+      else
+         Launch;
+      end if;
       --# accept Warning, 400, Qualification, "Only used for debug output";
    end Handle_Vmx_Exit;
 

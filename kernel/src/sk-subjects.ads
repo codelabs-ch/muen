@@ -15,6 +15,7 @@ is
 
    --  Subject state.
    type State_Type is record
+      Launched      : Boolean;
       Regs          : CPU.Registers_Type;
       Stack_Address : SK.Word64;
       VMCS_Address  : SK.Word64;

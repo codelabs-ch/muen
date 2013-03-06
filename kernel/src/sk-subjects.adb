@@ -116,7 +116,8 @@ begin
 
       Descriptors (Descriptors'First)
         := State_Type'
-          (Regs          => CPU.Null_Regs,
+          (Launched      => False,
+           Regs          => CPU.Null_Regs,
            Stack_Address => Guest_Stack_Address,
            VMCS_Address  => VMCS_Address,
            Entry_Point   => SK.Word64
@@ -124,7 +125,8 @@ begin
                 (Value => Subject_Main_0'Address)));
       Descriptors (Descriptors'Last)
         := State_Type'
-          (Regs          => CPU.Null_Regs,
+          (Launched      => False,
+           Regs          => CPU.Null_Regs,
            Stack_Address => Guest_Stack_Address - 4096,
            VMCS_Address  => VMCS_Address        + 4096,
            Entry_Point   => SK.Word64

@@ -37,9 +37,10 @@ is
    --#    in     Kernel_Stack_Address;
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
-   --#    in     Subjects.Descriptors;
+   --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
+   --#    Subjects.Descriptors from *, Current_Subject &
    --#    X86_64.State from
    --#       *,
    --#       Interrupts.IDT_Pointer,
@@ -106,7 +107,8 @@ private
    --#       R12,
    --#       R13,
    --#       R14,
-   --#       R15;
+   --#       R15,
+   --#       Current_Subject;
    pragma Export (C, Handle_Vmx_Exit, "handle_vmx_exit");
 
 end SK.VMX;

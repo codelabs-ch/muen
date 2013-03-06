@@ -8,7 +8,7 @@ project Kernel is
 
    package Builder is
       for Executable ("init.S") use "kernel.elf";
-      for Global_Configuration_Pragmas use "kernel.adc";
+      for Global_Configuration_Pragmas use "../common/restrictions.adc";
    end Builder;
 
    package Compiler is

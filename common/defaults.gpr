@@ -1,5 +1,7 @@
 project Defaults is
 
+   for Languages use ();
+
    Ada_Compiler_Switches := ("-g",
                              "-gnata",
                              "-gnatp",

@@ -1,3 +1,5 @@
+with "../common/defaults";
+
 project Subjects is
 
    for Languages use ("Ada");
@@ -9,12 +11,7 @@ project Subjects is
    end Builder;
 
    package Compiler is
-      for Default_Switches ("Ada") use
-        ("-g",
-         "-gnata",
-         "-gnatp",
-         "-gnatwale",
-         "-gnatygAdISux-s");
+      for Default_Switches ("Ada") use Defaults.Ada_Compiler_Switches;
    end Compiler;
 
 end Subjects;

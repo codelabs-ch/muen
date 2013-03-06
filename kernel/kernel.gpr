@@ -1,3 +1,5 @@
+with "../common/defaults";
+
 project Kernel is
 
    for Languages use ("Ada", "Asm");
@@ -13,12 +15,7 @@ project Kernel is
 
    package Compiler is
       for Required_Switches ("Asm") use ("-x", "assembler-with-cpp");
-      for Default_Switches ("Ada") use
-        ("-g",
-         "-gnata",
-         "-gnatp",
-         "-gnatwale",
-         "-gnatygAdISux-s");
+      for Default_Switches ("Ada") use Defaults.Ada_Compiler_Switches;
    end Compiler;
 
    package Linker is

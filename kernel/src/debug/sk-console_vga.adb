@@ -53,9 +53,6 @@ is
    end record;
    for Screen_Cell_Type'Size use 16;
 
-   subtype Position_Type is Natural range
-     1 .. Natural (Width_Type'Last) * Natural (Height_Type'Last);
-
    --  VGA screen row.
    type Screen_Row_Type is array (Width_Type'Range) of Screen_Cell_Type;
 
@@ -90,28 +87,14 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Update cursor position.
-   procedure Update_Cursor
+   procedure Disable_Cursor
    is
-      Pos : Position_Type;
    begin
-      Pos := Position_Type (Cur_Y - 1) * Position_Type (Width_Type'Last)
-        + Position_Type (Cur_X) - 1;
-
-      --  Set high cursor byte
-
       IO.Outb (Port  => 16#3d4#,
-               Value => 14);
+               Value => 10);
       IO.Outb (Port  => 16#3d5#,
-               Value => Byte (Pos / 2 ** 8));
-
-      --  Set low cursor byte
-
-      IO.Outb (Port  => 16#3d4#,
-               Value => 15);
-      IO.Outb (Port  => 16#3d5#,
-               Value => Byte (Pos));
-   end Update_Cursor;
+               Value => 16);
+   end Disable_Cursor;
 
    -------------------------------------------------------------------------
 
@@ -127,7 +110,7 @@ is
 
       Cur_X := Width_Type'First;
       Cur_Y := Height_Type'First;
-      Update_Cursor;
+      Disable_Cursor;
    end Init;
 
    -------------------------------------------------------------------------
@@ -141,7 +124,6 @@ is
       else
          Cur_Y := Cur_Y + 1;
       end if;
-      Update_Cursor;
    end New_Line;
 
    -------------------------------------------------------------------------
@@ -159,7 +141,6 @@ is
       else
          Cur_X := Cur_X + 1;
       end if;
-      Update_Cursor;
    end Put_Char;
 
    -------------------------------------------------------------------------
@@ -171,7 +152,6 @@ is
    begin
       Cur_X := X;
       Cur_Y := Y;
-      Update_Cursor;
    end Set_Position;
 
 end SK.Console_VGA;

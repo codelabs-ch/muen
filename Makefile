@@ -6,6 +6,9 @@ subjects:
 kernel: subjects
 	$(MAKE) -C $@
 
+deploy: kernel
+	$(MAKE) -C $< $@
+
 clean:
 	$(MAKE) clean -C kernel
 	$(MAKE) clean -C subjects

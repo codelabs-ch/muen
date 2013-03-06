@@ -1,12 +1,15 @@
 with "../common/defaults";
 
-project Subjects is
+project Subject1 is
 
    for Languages use ("Ada");
    for Source_Dirs use ("../common/src/**", "src");
    for Object_Dir use "obj";
 
+   for Main use ("subject_1");
+
    package Builder is
+      for Executable ("subject_1.adb") use "subject_1.elf";
       for Global_Configuration_Pragmas use "../common/restrictions.adc";
    end Builder;
 
@@ -14,4 +17,11 @@ project Subjects is
       for Default_Switches ("Ada") use Defaults.Ada_Compiler_Switches;
    end Compiler;
 
-end Subjects;
+   package Linker is
+      for Default_Switches ("Ada") use
+        ("-T", "subject1.ld",
+         "-nostdlib",
+         "-n");
+   end Linker;
+
+end Subject1;

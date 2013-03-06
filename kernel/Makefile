@@ -72,14 +72,15 @@ $(OBJ_DIR)/kernel.rep: $(OBJ_DIR)/kernel.idx $(OBJ_DIR)/target.cfg
 		-index_file=$(OBJ_DIR)/kernel.idx  \
 		-config_file=$(OBJ_DIR)/target.cfg \
 		-output_directory=$(VC_DIR)        \
-		src/*.adb
+		src/*.adb ../common/src/*.adb
 	(cd $(VC_DIR) && sparksimp -l)
 
-$(OBJ_DIR)/kernel.idx: src/*.ad*
+$(OBJ_DIR)/kernel.idx: src/*.ad* ../common/src/*.ad*
 	@sparkmake $(SPARKMAKE_OPTS)     \
 		-index=$(OBJ_DIR)/kernel.idx \
 		-exclude=$(SRC_DIR)/debug/*  \
-		-exclude=$(OBJ_DIR)/*
+		-exclude=$(OBJ_DIR)/*        \
+		-directory=../common/src
 
 $(OBJ_DIR)/target.cfg: $(OBJ_DIR)/confgen
 	$< > $@

@@ -1,6 +1,5 @@
 .global _start
 .global kernel_stack_pointer
-.global guest_stack_pointer
 
 #define MSR_EFER 0xc0000080
 
@@ -101,5 +100,3 @@ freeze:
 .data
 kernel_stack_pointer:
 	.quad kernel_stack
-guest_stack_pointer:
-	.quad guest_stack

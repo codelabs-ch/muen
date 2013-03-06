@@ -10,11 +10,6 @@ is
    --  Descriptors used to manage subjects.
    Descriptors : Subject_Array;
 
-   --# accept Warning, 350, Guest_Stack_Address, "Imported from Linker";
-   Guest_Stack_Address : SK.Word64;
-   pragma Import (C, Guest_Stack_Address, "guest_stack_pointer");
-   --# end accept;
-
    --# accept Warning, 350, VMCS_Address, "Imported from Linker";
    VMCS_Address : SK.Word64;
    pragma Import (C, VMCS_Address, "vmcs_pointer");
@@ -58,15 +53,15 @@ begin
         := State_Type'
           (Launched      => False,
            Regs          => CPU.Null_Regs,
-           Stack_Address => Guest_Stack_Address,
+           Stack_Address => 16#182000#,
            VMCS_Address  => VMCS_Address,
            Entry_Point   => 16#1805d8#);
       Descriptors (Descriptors'Last)
         := State_Type'
           (Launched      => False,
            Regs          => CPU.Null_Regs,
-           Stack_Address => Guest_Stack_Address - 4096,
-           VMCS_Address  => VMCS_Address        + 4096,
+           Stack_Address => 16#1a2000#,
+           VMCS_Address  => VMCS_Address + 4096,
            Entry_Point   => 16#1a05d8#);
    end;
 end SK.Subjects;

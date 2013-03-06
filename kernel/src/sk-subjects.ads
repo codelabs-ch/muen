@@ -5,11 +5,9 @@ with SK.CPU;
 package SK.Subjects
 --# own
 --#    Descriptors,
---#    Guest_Stack_Address,
 --#    VMCS_Address;
 --# initializes
 --#    Descriptors,
---#    Guest_Stack_Address,
 --#    VMCS_Address;
 is
 

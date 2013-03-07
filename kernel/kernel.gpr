@@ -3,7 +3,7 @@ with "../common/defaults";
 project Kernel is
 
    for Languages use ("Ada", "Asm");
-   for Source_Dirs use ("../common/src/**", "src/**");
+   for Source_Dirs use ("../common/src/", "../common/debug/", "src/**");
    for Object_Dir use "obj";
 
    for Main use ("init");

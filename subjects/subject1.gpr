@@ -3,7 +3,7 @@ with "../common/defaults";
 project Subject1 is
 
    for Languages use ("Ada");
-   for Source_Dirs use ("../common/src/**", "src");
+   for Source_Dirs use ("../common/src/**", "../common/debug", "src");
    for Object_Dir use "obj";
 
    for Main use ("subject_1");

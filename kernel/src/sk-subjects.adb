@@ -1,5 +1,7 @@
 with System;
 
+with Config_Subjects.Bins;
+
 with SK.Constants;
 
 package body SK.Subjects
@@ -49,19 +51,16 @@ begin
       VMCS_Region0 := Revision;
       VMCS_Region1 := Revision;
 
-      Descriptors (Descriptors'First)
-        := State_Type'
-          (Launched      => False,
-           Regs          => CPU.Null_Regs,
-           Stack_Address => 16#182000#,
-           VMCS_Address  => VMCS_Address,
-           Entry_Point   => 16#1805d8#);
-      Descriptors (Descriptors'Last)
-        := State_Type'
-          (Launched      => False,
-           Regs          => CPU.Null_Regs,
-           Stack_Address => 16#1a2000#,
-           VMCS_Address  => VMCS_Address + 4096,
-           Entry_Point   => 16#1a05d8#);
+      for S in Config_Subjects.Bins.Subjects'Range loop
+         Descriptors (Index_Type (S - 1))
+           := State_Type'
+             (Launched      => False,
+              Regs          => CPU.Null_Regs,
+              Stack_Address => Config_Subjects.Bins.Subjects (S).Stack_Address,
+              VMCS_Address  => VMCS_Address,
+              Entry_Point   => Config_Subjects.Bins.Subjects (S).Entry_Point);
+
+         VMCS_Address := VMCS_Address + 4096;
+      end loop;
    end;
 end SK.Subjects;

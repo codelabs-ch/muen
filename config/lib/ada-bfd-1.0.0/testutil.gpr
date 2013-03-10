@@ -1,0 +1,23 @@
+with "config";
+
+project Testutil is
+   Version      := "1.6.0";
+   Library_Type : Config.Library_Type_Type := external ("LIBRARY_TYPE", "static");
+
+   for Source_Dirs use ("testutil", "testutil/ahven", "testutil/ahven/unix");
+   for Library_Name use "adatestutil";
+   for Library_Kind use Library_Type;
+   for Library_Version use "lib" & Project'Library_Name & ".so." & Version;
+
+   for Library_Dir use "lib/testutil/" & Project'Library_Kind;
+   for Object_Dir use "obj/testutil/" & Project'Library_Kind;
+
+   package compiler is
+      --  Disable some comment style checks to avoid several warnings in Ahven files.
+      for Default_Switches ("Ada") use Config.Compiler'Default_Switches ("Ada") & ("-gnaty-cs");
+   end compiler;
+
+   package Binder renames Config.Binder;
+   package Builder renames Config.Builder;
+
+end Testutil;

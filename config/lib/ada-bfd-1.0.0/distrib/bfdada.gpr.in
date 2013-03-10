@@ -1,0 +1,11 @@
+project Bfdada is
+   Version := "@BFDADA_VERSION@";
+
+   for Library_Name use "ada-bfd";
+   for Library_Dir use "INSTALL/lib";
+   for Library_Kind use "LIBRARY_TYPE";
+
+   for Source_Dirs use ("INSTALL/share/ada/adainclude/bfdada");
+   for Library_ALI_Dir use "INSTALL/lib/ada/adalib/bfdada/" & Project'Library_Kind;
+   for Externally_Built use "true";
+end Bfdada;

@@ -1,0 +1,7 @@
+Version 1.0 - Nov 2012
+  - Fixed installation of library
+  - Added examples for BfdAda
+  - Add support to use the disassembler
+
+Version 0.9 - Feb 2003
+  - Bfd Ada library with tests

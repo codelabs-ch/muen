@@ -1,0 +1,1967 @@
+------------------------------------------------------------------------
+r211 | Stephane.Carrez@gmail.com | 2012-11-04 10:28:08 +0100 (Sun, 04 Nov 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/README
+
+Mention the licenses
+
+------------------------------------------------------------------------
+r210 | Stephane.Carrez@gmail.com | 2012-11-04 10:27:18 +0100 (Sun, 04 Nov 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/Makefile.in
+   D /trunk/bfdada/regtests/Makefile.in
+
+Fix the distribution of Ada BFD
+
+------------------------------------------------------------------------
+r209 | Stephane.Carrez@gmail.com | 2012-11-04 10:26:48 +0100 (Sun, 04 Nov 2012) | 2 lines
+Changed paths:
+   A /trunk/bfdada/testutil/LICENSE.Ahven
+   A /trunk/bfdada/testutil/LICENSE.txt
+   A /trunk/bfdada/testutil/NOTICE.txt
+
+Integrate the license documents from Ada Util and Ahven
+
+------------------------------------------------------------------------
+r208 | Stephane.Carrez@gmail.com | 2012-11-04 10:12:01 +0100 (Sun, 04 Nov 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-symbols.ads
+
+Update the email address
+
+------------------------------------------------------------------------
+r207 | Stephane.Carrez@gmail.com | 2012-11-04 10:01:56 +0100 (Sun, 04 Nov 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfdc.c
+
+Update email address
+
+------------------------------------------------------------------------
+r206 | Stephane.Carrez@gmail.com | 2012-11-04 09:58:54 +0100 (Sun, 04 Nov 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/INSTALL
+   M /trunk/bfdada/README
+
+Udate the installation and readme files
+
+------------------------------------------------------------------------
+r205 | Stephane.Carrez@gmail.com | 2012-11-03 23:29:15 +0100 (Sat, 03 Nov 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/NEWS
+
+Update the news file
+
+------------------------------------------------------------------------
+r204 | Stephane.Carrez@gmail.com | 2012-11-03 22:56:26 +0100 (Sat, 03 Nov 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/support/bfdgen.c
+
+Fix compilation warning
+
+------------------------------------------------------------------------
+r203 | Stephane.Carrez@gmail.com | 2012-11-03 16:46:22 +0100 (Sat, 03 Nov 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/samples/bfdinfo.adb
+   M /trunk/bfdada/samples/disassemble.adb
+   M /trunk/bfdada/samples/symbol.adb
+
+Update the samples: rename Open_Symbols into Read_Symbols
+
+------------------------------------------------------------------------
+r202 | Stephane.Carrez@gmail.com | 2012-11-03 16:45:42 +0100 (Sat, 03 Nov 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/regtests/bfd-symbols-tests.adb
+   M /trunk/bfdada/regtests/bfd-tests.adb
+
+Update the unit tests: rename Open_Symbols into Read_Symbols
+
+------------------------------------------------------------------------
+r201 | Stephane.Carrez@gmail.com | 2012-11-03 16:45:11 +0100 (Sat, 03 Nov 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-symbols.adb
+   M /trunk/bfdada/src/bfd-symbols.ads
+
+Rename Open_Symbols into Read_Symbols to better follow the BFD C library
+
+------------------------------------------------------------------------
+r200 | Stephane.Carrez@gmail.com | 2012-11-03 15:14:46 +0100 (Sat, 03 Nov 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-files.adb
+   D /trunk/bfdada/src/bfd-internal.adb
+   M /trunk/bfdada/src/bfd-internal.ads
+   M /trunk/bfdada/src/bfd-sections.adb
+   M /trunk/bfdada/src/bfd-symbols.adb
+   M /trunk/bfdada/src/bfd-thin-sections.ads
+   M /trunk/bfdada/src/bfd-thin-symbols.ads
+   M /trunk/bfdada/src/bfd-thin.ads
+   M /trunk/bfdada/src/bfd.adb
+
+Remove To_Ada and use Interfaces.C.Strings.Value instead
+
+------------------------------------------------------------------------
+r199 | Stephane.Carrez@gmail.com | 2012-11-03 14:49:02 +0100 (Sat, 03 Nov 2012) | 3 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-files.adb
+   M /trunk/bfdada/src/bfd.ads
+
+- Move the linker options in the Bfd.Files package
+- Build the linker options by using the generated constant
+
+------------------------------------------------------------------------
+r198 | Stephane.Carrez@gmail.com | 2012-11-03 14:46:54 +0100 (Sat, 03 Nov 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/support/bfdgen.c
+
+Generate a string for the Linker_options configuration
+
+------------------------------------------------------------------------
+r197 | Stephane.Carrez@gmail.com | 2012-10-28 20:34:54 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/Makefile.in
+
+Cleanup makefile
+
+------------------------------------------------------------------------
+r196 | Stephane.Carrez@gmail.com | 2012-10-28 20:23:30 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/distrib
+   M /trunk/bfdada/regtests
+   M /trunk/bfdada/src
+
+Ignore some files
+
+------------------------------------------------------------------------
+r195 | Stephane.Carrez@gmail.com | 2012-10-28 20:22:23 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada
+   M /trunk/bfdada/Makefile.in
+
+Add a prepare-release target
+
+------------------------------------------------------------------------
+r194 | Stephane.Carrez@gmail.com | 2012-10-28 20:06:27 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/samples.gpr
+
+Add new example 'symbol' to show the symbol table usage
+
+------------------------------------------------------------------------
+r193 | Stephane.Carrez@gmail.com | 2012-10-28 20:05:20 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   A /trunk/bfdada/samples/symbol.adb
+
+New example to look a symbol in the symbol table
+
+------------------------------------------------------------------------
+r192 | Stephane.Carrez@gmail.com | 2012-10-28 17:55:03 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/configure
+   M /trunk/bfdada/configure.in
+
+Check whether the -ldl or the -lintl libraries are necessary to generate a Linker_Options pragma
+
+------------------------------------------------------------------------
+r191 | Stephane.Carrez@gmail.com | 2012-10-28 17:54:00 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/Makefile.in
+
+Use the CFLAGS defined by configure to build the bfdgen tool
+
+------------------------------------------------------------------------
+r190 | Stephane.Carrez@gmail.com | 2012-10-28 17:53:32 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd.ads
+   M /trunk/bfdada/support/bfdgen.c
+
+Generate the pragma Linker_Options in the generated Ada file because this depends on the platform
+
+------------------------------------------------------------------------
+r189 | Stephane.Carrez@gmail.com | 2012-10-28 17:25:20 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/Makefile.in
+
+Create the bin directory if needed
+
+------------------------------------------------------------------------
+r188 | Stephane.Carrez@gmail.com | 2012-10-28 17:24:15 +0100 (Sun, 28 Oct 2012) | 3 lines
+Changed paths:
+   M /trunk/bfdada/support/bfdgen.c
+
+If a flag is not defined, make it 0
+This allows to use the BfdAda with old Binutils implementation.
+
+------------------------------------------------------------------------
+r187 | Stephane.Carrez@gmail.com | 2012-10-28 17:16:54 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/Makefile.in
+
+Fix distribution target
+
+------------------------------------------------------------------------
+r186 | Stephane.Carrez@gmail.com | 2012-10-28 17:03:08 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/configure
+   M /trunk/bfdada/configure.in
+
+Update the configure script
+
+------------------------------------------------------------------------
+r185 | Stephane.Carrez@gmail.com | 2012-10-28 17:01:00 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   D /trunk/bfdada/doc
+
+Remove
+
+------------------------------------------------------------------------
+r184 | Stephane.Carrez@gmail.com | 2012-10-28 16:56:52 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/Makefile.in
+
+Build bfdgen with -g for the unit tests
+
+------------------------------------------------------------------------
+r183 | Stephane.Carrez@gmail.com | 2012-10-28 16:56:23 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/regtests/bfd-sections-tests.adb
+   M /trunk/bfdada/regtests/bfd-symbols-tests.adb
+   M /trunk/bfdada/regtests/bfd-tests.adb
+
+Fix memory leaks in the unit test
+
+------------------------------------------------------------------------
+r182 | Stephane.Carrez@gmail.com | 2012-10-28 16:49:19 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd.adb
+   M /trunk/bfdada/src/bfd.ads
+
+Fix File_Flags definition
+
+------------------------------------------------------------------------
+r181 | Stephane.Carrez@gmail.com | 2012-10-28 16:48:58 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/regtests/bfd-tests.adb
+   M /trunk/bfdada/regtests/bfd-tests.ads
+
+Add unit tests to check the Get_File_Flags
+
+------------------------------------------------------------------------
+r180 | Stephane.Carrez@gmail.com | 2012-10-28 16:08:48 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/regtests/bfd-symbols-tests.adb
+
+Fix the unit test
+
+------------------------------------------------------------------------
+r179 | Stephane.Carrez@gmail.com | 2012-10-28 15:56:51 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-files.ads
+
+Use the exception defined in Bfd
+
+------------------------------------------------------------------------
+r178 | Stephane.Carrez@gmail.com | 2012-10-28 15:48:24 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/regtests/bfd-sections-tests.adb
+   A /trunk/bfdada/regtests/bfd-symbols-tests.adb (from /trunk/bfdada/regtests/bfd-symtab-tests.adb:175)
+   A /trunk/bfdada/regtests/bfd-symbols-tests.ads (from /trunk/bfdada/regtests/bfd-symtab-tests.ads:155)
+   D /trunk/bfdada/regtests/bfd-symtab-tests.adb
+   D /trunk/bfdada/regtests/bfd-symtab-tests.ads
+   M /trunk/bfdada/regtests/bfd-tests.adb
+   M /trunk/bfdada/regtests/bfd-testsuite.adb
+
+Update the unit tests after Bfd refactorisation
+
+------------------------------------------------------------------------
+r177 | Stephane.Carrez@gmail.com | 2012-10-28 15:45:15 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-disassembler.adb
+   M /trunk/bfdada/src/bfd-disassembler.ads
+   M /trunk/bfdada/src/bfd-thin-disassembler.ads
+
+Use the Bfd.Symbols and cleanup the implementation
+
+------------------------------------------------------------------------
+r176 | Stephane.Carrez@gmail.com | 2012-10-28 15:44:53 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/samples/bfdinfo.adb
+   M /trunk/bfdada/samples/disassemble.adb
+
+Update the examples
+
+------------------------------------------------------------------------
+r175 | Stephane.Carrez@gmail.com | 2012-10-28 15:36:55 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/regtests/bfd-sections-tests.adb
+   M /trunk/bfdada/regtests/bfd-symtab-tests.adb
+
+Update the unit tests
+
+------------------------------------------------------------------------
+r174 | Stephane.Carrez@gmail.com | 2012-10-28 15:36:42 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/regtests/bfd-tests.adb
+   M /trunk/bfdada/regtests/bfd-tests.ads
+
+Update the unit tests
+
+------------------------------------------------------------------------
+r173 | Stephane.Carrez@gmail.com | 2012-10-28 15:36:16 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/support/bfdgen.c
+
+Do not define the Symbol_Flags and Section_Flags types
+
+------------------------------------------------------------------------
+r172 | Stephane.Carrez@gmail.com | 2012-10-28 15:35:42 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   A /trunk/bfdada/src/bfd-symbols.adb (from /trunk/bfdada/src/bfd-symtab.adb:171)
+   A /trunk/bfdada/src/bfd-symbols.ads (from /trunk/bfdada/src/bfd-symtab.ads:171)
+   D /trunk/bfdada/src/bfd-symtab.adb
+   D /trunk/bfdada/src/bfd-symtab.ads
+   A /trunk/bfdada/src/bfd-thin-symbols.ads (from /trunk/bfdada/src/bfd-thin-symtab.ads:157)
+   D /trunk/bfdada/src/bfd-thin-symtab.ads
+
+Rename Symtab into Symbols so that this is more homogeneous with other APIs
+
+------------------------------------------------------------------------
+r171 | Stephane.Carrez@gmail.com | 2012-10-28 15:29:05 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-symtab.adb
+   M /trunk/bfdada/src/bfd-symtab.ads
+
+Use Bfd.Files package
+
+------------------------------------------------------------------------
+r170 | Stephane.Carrez@gmail.com | 2012-10-28 15:28:40 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-disassembler.adb
+   M /trunk/bfdada/src/bfd-disassembler.ads
+
+Use Bfd.Files.File_Type
+
+------------------------------------------------------------------------
+r169 | Stephane.Carrez@gmail.com | 2012-10-28 15:28:06 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/samples/bfdinfo.adb
+
+Use Bfd.Files package
+
+------------------------------------------------------------------------
+r168 | Stephane.Carrez@gmail.com | 2012-10-28 15:27:54 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/samples/disassemble.adb
+
+Use Bfd.Files package
+
+------------------------------------------------------------------------
+r167 | Stephane.Carrez@gmail.com | 2012-10-28 15:27:35 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/samples/sections.adb
+
+Use Bfd.Files package
+
+------------------------------------------------------------------------
+r166 | Stephane.Carrez@gmail.com | 2012-10-28 15:27:08 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-sections.adb
+   M /trunk/bfdada/src/bfd-sections.ads
+
+Cleanup the implementation
+
+------------------------------------------------------------------------
+r165 | Stephane.Carrez@gmail.com | 2012-10-28 15:15:16 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd.adb
+   M /trunk/bfdada/src/bfd.ads
+
+Moved the File_Type type and its operations in a separate package
+
+------------------------------------------------------------------------
+r164 | Stephane.Carrez@gmail.com | 2012-10-28 15:13:03 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   A /trunk/bfdada/src/bfd-files.adb (from /trunk/bfdada/src/bfd.adb:150)
+   A /trunk/bfdada/src/bfd-files.ads (from /trunk/bfdada/src/bfd.ads:60)
+
+Moved the Open/Close and File_Type definition to a separate package: Bfd.Files
+
+------------------------------------------------------------------------
+r163 | Stephane.Carrez@gmail.com | 2012-10-28 11:15:34 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-symtab.adb
+   M /trunk/bfdada/src/bfd-symtab.ads
+
+Remove unused operations
+
+------------------------------------------------------------------------
+r162 | Stephane.Carrez@gmail.com | 2012-10-28 11:15:13 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-thin.ads
+
+Declare the Get_File_Flags operation
+
+------------------------------------------------------------------------
+r161 | Stephane.Carrez@gmail.com | 2012-10-28 11:14:46 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/Makefile.in
+
+Update the makefile for the generation of src/bfd-constants.ads
+
+------------------------------------------------------------------------
+r160 | Stephane.Carrez@gmail.com | 2012-10-28 11:14:21 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfdc.c
+
+New function ada_bfd_get_file_flags
+
+------------------------------------------------------------------------
+r159 | Stephane.Carrez@gmail.com | 2012-10-28 11:14:00 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/support/bfdgen.c
+
+Add file flags and change the generated package to Bfd.Constants
+
+------------------------------------------------------------------------
+r158 | Stephane.Carrez@gmail.com | 2012-10-28 10:30:20 +0100 (Sun, 28 Oct 2012) | 3 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-symtab.adb
+   M /trunk/bfdada/src/bfd-symtab.ads
+
+Implement Get_Symbol lookup method (this is a linear lookup for now
+because the symbol table is not sorted by default)
+
+------------------------------------------------------------------------
+r157 | Stephane.Carrez@gmail.com | 2012-10-28 10:29:14 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-thin-symtab.ads
+
+Let the thin Get_Symbol_Name function return a chars_ptr
+
+------------------------------------------------------------------------
+r156 | Stephane.Carrez@gmail.com | 2012-10-28 10:28:44 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-internal.ads
+
+Defined Strcmp to implement symbol table lookup
+
+------------------------------------------------------------------------
+r155 | Stephane.Carrez@gmail.com | 2012-10-28 10:28:06 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/regtests/bfd-symtab-tests.adb
+   M /trunk/bfdada/regtests/bfd-symtab-tests.ads
+
+Add some tests to check Get_Symbol and checking the symbol flags
+
+------------------------------------------------------------------------
+r154 | Stephane.Carrez@gmail.com | 2012-10-28 10:27:42 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/regtests/bfd-tests.adb
+   M /trunk/bfdada/regtests/bfd-tests.ads
+
+Update the unit test
+
+------------------------------------------------------------------------
+r153 | Stephane.Carrez@gmail.com | 2012-10-28 09:13:35 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   D /trunk/bfdada/regtests/bfd_suite.adb
+   M /trunk/bfdada/regtests/bfdada_harness.adb
+
+Update the unit test to use the Bfd.Testsuite package
+
+------------------------------------------------------------------------
+r152 | Stephane.Carrez@gmail.com | 2012-10-28 09:13:10 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/regtests/bfd-tests.adb
+   M /trunk/bfdada/regtests/bfd-tests.ads
+
+Fix memory leaks in the unit test
+
+------------------------------------------------------------------------
+r151 | Stephane.Carrez@gmail.com | 2012-10-28 09:12:40 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-symtab.adb
+
+Fix the symbol table iterator (last symbol was skipped)
+
+------------------------------------------------------------------------
+r150 | Stephane.Carrez@gmail.com | 2012-10-28 09:11:50 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd.adb
+
+If the BFD file cannot be opened, release the allocated file name before raising the exception
+
+------------------------------------------------------------------------
+r149 | Stephane.Carrez@gmail.com | 2012-10-28 09:11:16 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   A /trunk/bfdada/regtests/bfd-symtab-tests.adb
+   A /trunk/bfdada/regtests/bfd-symtab-tests.ads
+
+Add some unit tests for the symbol table API
+
+------------------------------------------------------------------------
+r148 | Stephane.Carrez@gmail.com | 2012-10-28 09:10:44 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   A /trunk/bfdada/regtests/bfd-testsuite.adb (from /trunk/bfdada/regtests/bfd_suite.adb:134)
+   A /trunk/bfdada/regtests/bfd-testsuite.ads
+
+Define the bfd testsuite in a specific package (solves memory leak)
+
+------------------------------------------------------------------------
+r147 | Stephane.Carrez@gmail.com | 2012-10-28 09:10:00 +0100 (Sun, 28 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/Makefile.in
+
+Add the support and testutil files in the distribution
+
+------------------------------------------------------------------------
+r146 | Stephane.Carrez@gmail.com | 2012-10-27 23:38:30 +0200 (Sat, 27 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-symtab.ads
+
+For the symbol flags, use the constants defined in Bfd.Thin.Constants
+
+------------------------------------------------------------------------
+r145 | Stephane.Carrez@gmail.com | 2012-10-27 23:37:50 +0200 (Sat, 27 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/support/bfdgen.c
+
+Generate the constants used for symbol flags
+
+------------------------------------------------------------------------
+r144 | Stephane.Carrez@gmail.com | 2012-10-27 23:15:56 +0200 (Sat, 27 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/regtests/bfd-sections-tests.adb
+
+Fix compilation of unit test
+
+------------------------------------------------------------------------
+r143 | Stephane.Carrez@gmail.com | 2012-10-27 23:15:29 +0200 (Sat, 27 Oct 2012) | 3 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-sections.ads
+
+Fix definition of section flags by using a Bfd.Thin.Constants package
+generated with the current definition found in bfd.h
+
+------------------------------------------------------------------------
+r142 | Stephane.Carrez@gmail.com | 2012-10-27 23:14:40 +0200 (Sat, 27 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/Makefile.in
+
+Build the support/bfdgen program and generate the Bfd.Thin.Constants package
+
+------------------------------------------------------------------------
+r141 | Stephane.Carrez@gmail.com | 2012-10-27 23:14:08 +0200 (Sat, 27 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/testutil.gpr
+
+Fix location of testutil library
+
+------------------------------------------------------------------------
+r140 | Stephane.Carrez@gmail.com | 2012-10-27 23:13:41 +0200 (Sat, 27 Oct 2012) | 2 lines
+Changed paths:
+   A /trunk/bfdada/support
+   A /trunk/bfdada/support/bfdgen.c
+
+Add a small C program to generate a thin Ada package with Bfd specific constants
+
+------------------------------------------------------------------------
+r139 | Stephane.Carrez@gmail.com | 2012-10-27 23:11:42 +0200 (Sat, 27 Oct 2012) | 4 lines
+Changed paths:
+   M /trunk/bfdada/testutil/util-tests.adb
+   M /trunk/bfdada/testutil/util-tests.ads
+
+New function Verbose and new test harness option '-v' to set the verbose flag
+(Intended to be used to activate some test specific verbose/debugging
+support) 
+
+------------------------------------------------------------------------
+r138 | Stephane.Carrez@gmail.com | 2012-10-27 17:38:47 +0200 (Sat, 27 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/AUTHORS
+
+Mention Tero Koskinen <tero.koskinen@iki.fi> for Ahven (integrated in Ada Test Util)
+
+------------------------------------------------------------------------
+r137 | Stephane.Carrez@gmail.com | 2012-10-27 17:38:14 +0200 (Sat, 27 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/tests.gpr
+
+Fix the GNAT project file to build the unit tests
+
+------------------------------------------------------------------------
+r136 | Stephane.Carrez@gmail.com | 2012-10-27 17:37:44 +0200 (Sat, 27 Oct 2012) | 2 lines
+Changed paths:
+   A /trunk/bfdada/testutil.gpr
+
+Add GNAT project to build Ada Test Util
+
+------------------------------------------------------------------------
+r135 | Stephane.Carrez@gmail.com | 2012-10-27 17:36:43 +0200 (Sat, 27 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/testutil/util.ads
+
+Update the SVN version used for Util package
+
+------------------------------------------------------------------------
+r134 | Stephane.Carrez@gmail.com | 2012-10-27 17:29:28 +0200 (Sat, 27 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/regtests/bfd_suite.adb
+   M /trunk/bfdada/regtests/bfdada_harness.adb
+
+Translate the test to use Ada Test Util
+
+------------------------------------------------------------------------
+r133 | Stephane.Carrez@gmail.com | 2012-10-27 17:28:41 +0200 (Sat, 27 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/regtests/bfd-sections-tests.adb
+   M /trunk/bfdada/regtests/bfd-sections-tests.ads
+
+Translate the unit test to use Ada Test Util
+
+------------------------------------------------------------------------
+r132 | Stephane.Carrez@gmail.com | 2012-10-27 17:27:31 +0200 (Sat, 27 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/regtests/bfd-tests.adb
+   M /trunk/bfdada/regtests/bfd-tests.ads
+
+Translate the unit test to use the Ada Test Util
+
+------------------------------------------------------------------------
+r131 | Stephane.Carrez@gmail.com | 2012-10-27 17:26:51 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/aunit/util-test_caller.adb
+   A /trunk/bfdada/testutil/aunit/util-test_caller.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r130 | Stephane.Carrez@gmail.com | 2012-10-27 17:26:31 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/aunit/util-tests-reporter.adb
+   A /trunk/bfdada/testutil/aunit/util-tests-reporter.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r129 | Stephane.Carrez@gmail.com | 2012-10-27 17:25:49 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/aunit/util-assertions.adb
+   A /trunk/bfdada/testutil/aunit/util-assertions.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r128 | Stephane.Carrez@gmail.com | 2012-10-27 17:25:32 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/aunit/util-xunit.adb
+   A /trunk/bfdada/testutil/aunit/util-xunit.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r127 | Stephane.Carrez@gmail.com | 2012-10-27 17:24:58 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/aunit
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r126 | Stephane.Carrez@gmail.com | 2012-10-27 17:24:36 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/ahven/ahven-tap_runner.adb
+   A /trunk/bfdada/testutil/ahven/ahven-tap_runner.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r125 | Stephane.Carrez@gmail.com | 2012-10-27 17:24:22 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/ahven/ahven-astrings.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r124 | Stephane.Carrez@gmail.com | 2012-10-27 17:24:06 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/ahven/windows
+   A /trunk/bfdada/testutil/ahven/windows/ahven_compat.adb
+   A /trunk/bfdada/testutil/ahven/windows/ahven_compat.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r123 | Stephane.Carrez@gmail.com | 2012-10-27 17:23:58 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/ahven/unix
+   A /trunk/bfdada/testutil/ahven/unix/ahven_compat.adb
+   A /trunk/bfdada/testutil/ahven/unix/ahven_compat.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r122 | Stephane.Carrez@gmail.com | 2012-10-27 17:23:45 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/ahven/ahven-listeners-basic.adb
+   A /trunk/bfdada/testutil/ahven/ahven-listeners-basic.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r121 | Stephane.Carrez@gmail.com | 2012-10-27 17:23:30 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/ahven/ahven-xml_runner.adb
+   A /trunk/bfdada/testutil/ahven/ahven-xml_runner.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r120 | Stephane.Carrez@gmail.com | 2012-10-27 17:23:05 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/ahven/ahven-runner.adb
+   A /trunk/bfdada/testutil/ahven/ahven-runner.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r119 | Stephane.Carrez@gmail.com | 2012-10-27 17:22:30 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/ahven/util-test_caller.adb
+   A /trunk/bfdada/testutil/ahven/util-test_caller.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r118 | Stephane.Carrez@gmail.com | 2012-10-27 17:19:51 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/ahven/util-assertions.adb
+   A /trunk/bfdada/testutil/ahven/util-assertions.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r117 | Stephane.Carrez@gmail.com | 2012-10-27 17:19:17 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/ahven/util-xunit.adb
+   A /trunk/bfdada/testutil/ahven/util-xunit.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r116 | Stephane.Carrez@gmail.com | 2012-10-27 17:18:47 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/ahven/ahven-text_runner.adb
+   A /trunk/bfdada/testutil/ahven/ahven-text_runner.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r115 | Stephane.Carrez@gmail.com | 2012-10-27 17:18:37 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/ahven/ahven-temporary_output.adb
+   A /trunk/bfdada/testutil/ahven/ahven-temporary_output.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r114 | Stephane.Carrez@gmail.com | 2012-10-27 17:18:17 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/ahven/ahven-listeners.adb
+   A /trunk/bfdada/testutil/ahven/ahven-listeners.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r113 | Stephane.Carrez@gmail.com | 2012-10-27 17:18:07 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/ahven/ahven-framework.adb
+   A /trunk/bfdada/testutil/ahven/ahven-framework.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r112 | Stephane.Carrez@gmail.com | 2012-10-27 17:17:56 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/ahven/ahven-parameters.adb
+   A /trunk/bfdada/testutil/ahven/ahven-parameters.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r111 | Stephane.Carrez@gmail.com | 2012-10-27 17:17:44 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/ahven/ahven-results.adb
+   A /trunk/bfdada/testutil/ahven/ahven-results.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r110 | Stephane.Carrez@gmail.com | 2012-10-27 17:17:35 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/ahven/ahven-slist.adb
+   A /trunk/bfdada/testutil/ahven/ahven-slist.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r109 | Stephane.Carrez@gmail.com | 2012-10-27 17:17:05 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/ahven/ahven.adb
+   A /trunk/bfdada/testutil/ahven/ahven.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r108 | Stephane.Carrez@gmail.com | 2012-10-27 17:16:37 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/ahven
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r107 | Stephane.Carrez@gmail.com | 2012-10-27 17:15:49 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-streams-texts.adb
+   A /trunk/bfdada/testutil/util-streams-texts.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r106 | Stephane.Carrez@gmail.com | 2012-10-27 17:15:40 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-streams-buffered.adb
+   A /trunk/bfdada/testutil/util-streams-buffered.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r105 | Stephane.Carrez@gmail.com | 2012-10-27 17:15:30 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-streams.adb
+   A /trunk/bfdada/testutil/util-streams.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r104 | Stephane.Carrez@gmail.com | 2012-10-27 17:15:19 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-files.adb
+   A /trunk/bfdada/testutil/util-files.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r103 | Stephane.Carrez@gmail.com | 2012-10-27 17:15:01 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-properties-hash.adb
+   A /trunk/bfdada/testutil/util-properties-hash.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r102 | Stephane.Carrez@gmail.com | 2012-10-27 17:14:50 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-properties-factories.adb
+   A /trunk/bfdada/testutil/util-properties-factories.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r101 | Stephane.Carrez@gmail.com | 2012-10-27 17:14:38 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-concurrent-counters.adb
+   A /trunk/bfdada/testutil/util-concurrent-counters.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r100 | Stephane.Carrez@gmail.com | 2012-10-27 17:14:23 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-concurrent.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r99 | Stephane.Carrez@gmail.com | 2012-10-27 17:14:09 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-measures.adb
+   A /trunk/bfdada/testutil/util-measures.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r98 | Stephane.Carrez@gmail.com | 2012-10-27 17:13:58 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-properties.adb
+   A /trunk/bfdada/testutil/util-properties.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r97 | Stephane.Carrez@gmail.com | 2012-10-27 17:13:06 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-texts-transforms.adb
+   A /trunk/bfdada/testutil/util-texts-transforms.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r96 | Stephane.Carrez@gmail.com | 2012-10-27 17:12:31 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-texts-tokenizers.adb
+   A /trunk/bfdada/testutil/util-texts-tokenizers.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r95 | Stephane.Carrez@gmail.com | 2012-10-27 17:12:15 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-texts.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r94 | Stephane.Carrez@gmail.com | 2012-10-27 17:11:56 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-strings-maps.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r93 | Stephane.Carrez@gmail.com | 2012-10-27 17:11:49 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-strings-tokenizers.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r92 | Stephane.Carrez@gmail.com | 2012-10-27 17:11:21 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-strings-transforms.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r91 | Stephane.Carrez@gmail.com | 2012-10-27 17:11:08 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-strings.adb
+   A /trunk/bfdada/testutil/util-strings.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r90 | Stephane.Carrez@gmail.com | 2012-10-27 17:10:57 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-log-loggers-traceback.adb
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r89 | Stephane.Carrez@gmail.com | 2012-10-27 17:10:46 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-log-loggers.adb
+   A /trunk/bfdada/testutil/util-log-loggers.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r88 | Stephane.Carrez@gmail.com | 2012-10-27 17:10:36 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-log-appenders.adb
+   A /trunk/bfdada/testutil/util-log-appenders.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r87 | Stephane.Carrez@gmail.com | 2012-10-27 17:10:23 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-log.adb
+   A /trunk/bfdada/testutil/util-log.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r86 | Stephane.Carrez@gmail.com | 2012-10-27 17:10:03 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util-tests.adb
+   A /trunk/bfdada/testutil/util-tests.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r85 | Stephane.Carrez@gmail.com | 2012-10-27 17:09:47 +0200 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   A /trunk/bfdada/testutil/util.ads
+
+Integrate Ada testutil for the unit tests
+------------------------------------------------------------------------
+r84 | Stephane.Carrez@gmail.com | 2012-10-27 17:06:16 +0200 (Sat, 27 Oct 2012) | 2 lines
+Changed paths:
+   A /trunk/bfdada/testutil
+
+Integrate Ada testutil for the unit tests
+
+------------------------------------------------------------------------
+r83 | Stephane.Carrez@gmail.com | 2012-10-25 22:00:11 +0200 (Thu, 25 Oct 2012) | 2 lines
+Changed paths:
+   D /trunk/bfdada/bfdada-config.in
+
+Remove unused file
+
+------------------------------------------------------------------------
+r82 | Stephane.Carrez@gmail.com | 2012-10-25 00:05:42 +0200 (Thu, 25 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-internal.adb
+   M /trunk/bfdada/src/bfd-internal.ads
+
+Fix style
+
+------------------------------------------------------------------------
+r81 | Stephane.Carrez@gmail.com | 2012-10-25 00:03:24 +0200 (Thu, 25 Oct 2012) | 2 lines
+Changed paths:
+   D /trunk/bfdada/src/Makefile.in
+
+Remove the old makefile
+
+------------------------------------------------------------------------
+r80 | Stephane.Carrez@gmail.com | 2012-10-25 00:01:38 +0200 (Thu, 25 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/NEWS
+
+Mention the disassembler support
+
+------------------------------------------------------------------------
+r79 | Stephane.Carrez@gmail.com | 2012-10-24 23:51:00 +0200 (Wed, 24 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/samples/bfdinfo.adb
+
+Use Element and Has_Element for the symbols and section iterators
+
+------------------------------------------------------------------------
+r78 | Stephane.Carrez@gmail.com | 2012-10-24 23:50:31 +0200 (Wed, 24 Oct 2012) | 3 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-disassembler-c.c
+   M /trunk/bfdada/src/bfd-symtab.adb
+   M /trunk/bfdada/src/bfd-symtab.ads
+
+- Implement Finalize for the Symbol_Table to free the symbol table
+- Use Has_Element and Element for the symbol table iterator
+
+------------------------------------------------------------------------
+r77 | Stephane.Carrez@gmail.com | 2012-10-24 23:41:23 +0200 (Wed, 24 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-disassembler.adb
+
+Setup the symbol table for the disassembler
+
+------------------------------------------------------------------------
+r76 | Stephane.Carrez@gmail.com | 2012-10-24 23:40:50 +0200 (Wed, 24 Oct 2012) | 3 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-symtab.adb
+   M /trunk/bfdada/src/bfd-symtab.ads
+
+- Use a limited type for the symbol table and make it private
+- New internal operation to get the internal symbol table for the disassembler
+
+------------------------------------------------------------------------
+r75 | Stephane.Carrez@gmail.com | 2012-10-24 23:19:47 +0200 (Wed, 24 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/samples/disassemble.adb
+
+Use Find_Nearest_Line to print the file, function and line numbers if any
+
+------------------------------------------------------------------------
+r74 | Stephane.Carrez@gmail.com | 2012-10-24 22:59:46 +0200 (Wed, 24 Oct 2012) | 3 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-disassembler.adb
+   M /trunk/bfdada/src/bfd-internal.adb
+
+- Fix invocation of Set_Symbol_Table
+- Fix To_Ada if the pointer is null
+
+------------------------------------------------------------------------
+r73 | Stephane.Carrez@gmail.com | 2012-10-24 22:58:03 +0200 (Wed, 24 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-thin-disassembler.ads
+
+Do not try to pass an Ada array type to a C function
+
+------------------------------------------------------------------------
+r72 | Stephane.Carrez@gmail.com | 2012-10-24 22:57:25 +0200 (Wed, 24 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-symtab.ads
+
+Do not try to specify any language rule for symbol table address
+
+------------------------------------------------------------------------
+r71 | Stephane.Carrez@gmail.com | 2012-10-24 22:56:18 +0200 (Wed, 24 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfdc.c
+
+Fix find_nearest_line address
+
+------------------------------------------------------------------------
+r70 | Stephane.Carrez@gmail.com | 2012-10-24 21:39:12 +0200 (Wed, 24 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-symtab.adb
+   M /trunk/bfdada/src/bfd-symtab.ads
+
+Fix implementation of Is_Undefined_Class
+
+------------------------------------------------------------------------
+r69 | Stephane.Carrez@gmail.com | 2012-10-24 20:57:48 +0200 (Wed, 24 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/Makefile.in
+   M /trunk/bfdada/config.gpr
+
+Fix cleanup target and optimize compilation flags
+
+------------------------------------------------------------------------
+r68 | Stephane.Carrez@gmail.com | 2012-10-22 00:10:18 +0200 (Mon, 22 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/INSTALL
+   M /trunk/bfdada/README
+
+Update the documentation
+
+------------------------------------------------------------------------
+r67 | Stephane.Carrez@gmail.com | 2012-10-21 23:49:36 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/Makefile.in
+   M /trunk/bfdada/bfdada.gpr.in
+
+Fix makefile and GNAT project file
+
+------------------------------------------------------------------------
+r66 | Stephane.Carrez@gmail.com | 2012-10-21 20:58:47 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/Makefile.in
+
+Add missing files in the distribution
+
+------------------------------------------------------------------------
+r65 | Stephane.Carrez@gmail.com | 2012-10-21 20:46:03 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/configure
+   M /trunk/bfdada/configure.in
+   A /trunk/bfdada/distrib
+   A /trunk/bfdada/distrib/bfdada.gpr.in
+
+Add GNAT project file for the distribution
+
+------------------------------------------------------------------------
+r64 | Stephane.Carrez@gmail.com | 2012-10-21 20:42:57 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/samples/disassemble.adb
+
+Simplify the disassembler sample
+
+------------------------------------------------------------------------
+r63 | Stephane.Carrez@gmail.com | 2012-10-21 20:32:31 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/Makefile.in
+
+Force compilation of samples
+
+------------------------------------------------------------------------
+r62 | Stephane.Carrez@gmail.com | 2012-10-21 20:32:13 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/samples/sections.adb
+
+Simplify the cleanup the sample
+
+------------------------------------------------------------------------
+r61 | Stephane.Carrez@gmail.com | 2012-10-21 20:10:48 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   D /trunk/bfdada/examples
+   A /trunk/bfdada/samples (from /trunk/bfdada/examples:60)
+   M /trunk/bfdada/samples.gpr
+
+Rename examples into samples
+
+------------------------------------------------------------------------
+r60 | Stephane.Carrez@gmail.com | 2012-10-21 20:08:25 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/INSTALL
+   M /trunk/bfdada/README
+
+Update the readme and installation steps
+
+------------------------------------------------------------------------
+r59 | Stephane.Carrez@gmail.com | 2012-10-21 20:08:14 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/Makefile.in
+
+Add a make target to build the samples
+
+------------------------------------------------------------------------
+r58 | Stephane.Carrez@gmail.com | 2012-10-21 19:55:19 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   A /trunk/bfdada/tests.gpr
+
+GNAT project file for unit tests
+
+------------------------------------------------------------------------
+r57 | Stephane.Carrez@gmail.com | 2012-10-21 19:54:24 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   D /trunk/bfdada/bfdada.gpr
+
+Remove
+
+------------------------------------------------------------------------
+r56 | Stephane.Carrez@gmail.com | 2012-10-21 19:54:05 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   A /trunk/bfdada/bfdada.gpr.in
+
+GNAT project file
+
+------------------------------------------------------------------------
+r55 | Stephane.Carrez@gmail.com | 2012-10-21 19:53:30 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/Makefile.in
+   M /trunk/bfdada/configure
+   M /trunk/bfdada/configure.in
+
+Update distribution and configuration
+
+------------------------------------------------------------------------
+r54 | Stephane.Carrez@gmail.com | 2012-10-21 19:52:24 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/missing
+
+Update for a newest version
+
+------------------------------------------------------------------------
+r53 | Stephane.Carrez@gmail.com | 2012-10-21 19:00:30 +0200 (Sun, 21 Oct 2012) | 4 lines
+Changed paths:
+   D /trunk/bfdada/Makefile.am
+   M /trunk/bfdada/Makefile.in
+   M /trunk/bfdada/aclocal.m4
+   M /trunk/bfdada/configure
+   M /trunk/bfdada/configure.in
+
+- Simplify the makefile
+- Get rid of the automake
+- Update the configure script
+
+------------------------------------------------------------------------
+r52 | Stephane.Carrez@gmail.com | 2012-10-21 11:08:18 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/regtests/bfd-tests.adb
+   M /trunk/bfdada/regtests/bfd-tests.ads
+
+Fix unit test for symbol table
+
+------------------------------------------------------------------------
+r51 | Stephane.Carrez@gmail.com | 2012-10-21 11:07:51 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/regtests/bfd-sections-tests.adb
+
+Fix test for reading bfd section contents
+
+------------------------------------------------------------------------
+r50 | Stephane.Carrez@gmail.com | 2012-10-21 11:05:22 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   D /trunk/bfdada/examples/Makefile.in
+   M /trunk/bfdada/examples/disassemble.adb
+
+Remove unused makefile
+
+------------------------------------------------------------------------
+r49 | Stephane.Carrez@gmail.com | 2012-10-21 11:04:42 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/examples/utils.adb
+   M /trunk/bfdada/examples/utils.ads
+
+Fix coding style and compilation warnings
+
+------------------------------------------------------------------------
+r48 | Stephane.Carrez@gmail.com | 2012-10-21 11:04:19 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-sections.ads
+
+Update some definitions from bfd.h
+
+------------------------------------------------------------------------
+r47 | Stephane.Carrez@gmail.com | 2012-10-21 10:30:58 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-disassembler.adb
+   M /trunk/bfdada/src/bfd-disassembler.ads
+
+Fix the disassembler implementation
+
+------------------------------------------------------------------------
+r46 | Stephane.Carrez@gmail.com | 2012-10-21 10:28:23 +0200 (Sun, 21 Oct 2012) | 3 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd.adb
+   M /trunk/bfdada/src/bfd.ads
+
+- Make the File_Type a limited type
+- Implement Finalize to close the bfd file and release the file name
+
+------------------------------------------------------------------------
+r45 | Stephane.Carrez@gmail.com | 2012-10-21 10:27:29 +0200 (Sun, 21 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-thin.ads
+
+Fix the thin interface to open the bfd file
+
+------------------------------------------------------------------------
+r44 | Stephane.Carrez@gmail.com | 2012-10-21 09:53:28 +0200 (Sun, 21 Oct 2012) | 3 lines
+Changed paths:
+   M /trunk/bfdada/src/bfd-sections.adb
+   M /trunk/bfdada/src/bfd-sections.ads
+
+New operations Has_Element and rename Current into Element to have an
+iterator that follows Ada containers
+
+------------------------------------------------------------------------
+r43 | Stephane.Carrez@gmail.com | 2012-10-20 23:56:14 +0200 (Sat, 20 Oct 2012) | 2 lines
+Changed paths:
+   A /trunk/bfdada/samples.gpr
+
+New project file to build the samples
+
+------------------------------------------------------------------------
+r42 | Stephane.Carrez@gmail.com | 2012-10-20 23:53:43 +0200 (Sat, 20 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/examples/bfdinfo.adb
+
+Update the style
+
+------------------------------------------------------------------------
+r41 | Stephane.Carrez@gmail.com | 2012-10-20 23:32:11 +0200 (Sat, 20 Oct 2012) | 29 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   A /trunk/bfdada/bfdada.gpr
+   A /trunk/bfdada/config.gpr
+   A /trunk/bfdada/regtests/bfd-sections-tests.adb (from /trunk/bfdada/regtests/bfd-tests-sections.adb:40)
+   A /trunk/bfdada/regtests/bfd-sections-tests.ads (from /trunk/bfdada/regtests/bfd-tests-sections.ads:40)
+   D /trunk/bfdada/regtests/bfd-tests-sections.adb
+   D /trunk/bfdada/regtests/bfd-tests-sections.ads
+   M /trunk/bfdada/regtests/bfd-tests.adb
+   M /trunk/bfdada/regtests/bfd-tests.ads
+   M /trunk/bfdada/regtests/bfd_suite.adb
+   A /trunk/bfdada/regtests/bfdada_harness.adb (from /trunk/bfdada/regtests/harness.adb:40)
+   D /trunk/bfdada/regtests/harness.adb
+   A /trunk/bfdada/src/bfd-disassembler-c.c (from /trunk/bfdada/src/bfdc.c:40)
+   M /trunk/bfdada/src/bfd-disassembler.ads
+   M /trunk/bfdada/src/bfd-thin-disassembler.ads
+   M /trunk/bfdada/src/bfd.ads
+   M /trunk/bfdada/src/bfdc.c
+   D /trunk/bfdada/src/make_bfd.adb
+
+2012-10-20  Stephane Carrez  <Stephane.Carrez@gmail.com>
+
+* regtests/bfd-tests-sections.adb: Removed.
+* regtests/bfd-tests-sections.ads: Removed.
+* regtests/harness.adb: Removed.
+* src/make_bfd.adb: Removed.
+* bfdada.gpr: New file.
+* config.gpr: New file.
+* regtests/bfd-sections-tests.adb: New file.
+* regtests/bfd-sections-tests.ads: New file.
+* regtests/bfdada_harness.adb: New file.
+* src/bfd-disassembler.c: New file.
+* tests.gpr: New file.
+* regtests/bfd-tests.adb: 
+* regtests/bfd-tests.ads: 
+* regtests/bfd_suite.adb: 
+* src/bfd-disassembler.ads: 
+* src/bfd-thin-disassembler.ads: 
+* src/bfd.ads: Fix style and compilation warnings.
+* src/bfdc.c (bfdada_memory_error_handler): Move to
+bfd-disassembler-c.c.
+(dis_printf): Likewise.
+(bfd_ada_disassembler_init): Likewise.
+(bfd_ada_disassembler_get_data): Likewise.
+(bfd_ada_disassembler_disassemble): Likewise.
+(bfd_ada_disassembler_set_symbol_table): Likewise.
+(bfd_ada_disassembler_set_buffer): Likewise.
+
+
+------------------------------------------------------------------------
+r40 | Stephane.Carrez@gmail.com | 2012-10-20 22:14:03 +0200 (Sat, 20 Oct 2012) | 6 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   D /trunk/bfdada/bfdada
+   A /trunk/bfdada/regtests (from /trunk/bfdada/bfdada/testsuite:39)
+   A /trunk/bfdada/src (from /trunk/bfdada/bfdada:39)
+   D /trunk/bfdada/src/testsuite
+
+2012-10-20  Stephane Carrez  <Stephane.Carrez@gmail.com>
+
+* src: Rename from bfdada.
+* regtests: Moved bfdada/testsuite to regtests.
+
+
+------------------------------------------------------------------------
+r38 | ciceron | 2012-10-20 19:00:14 +0200 (Sat, 20 Oct 2012) | 5 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/bfdada/bfd-internal.adb
+   M /trunk/bfdada/bfdada/bfd-sections.adb
+
+2012-10-20  Stephane Carrez  <Stephane.Carrez@gmail.com>
+
+* bfdada/bfd-internal.adb: Fix style and compilation warnings.
+* bfdada/bfd-sections.adb: Likewise.
+
+------------------------------------------------------------------------
+r37 | ciceron | 2012-10-20 18:42:36 +0200 (Sat, 20 Oct 2012) | 8 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/bfdada/bfd-disassembler.adb
+   M /trunk/bfdada/bfdada/bfd-disassembler.ads
+   M /trunk/bfdada/bfdada/bfd-symtab.adb
+   M /trunk/bfdada/bfdada/bfd-symtab.ads
+   M /trunk/bfdada/bfdada/bfd-thin-disassembler.ads
+   M /trunk/bfdada/bfdada/bfd-thin-symtab.ads
+   M /trunk/bfdada/bfdada/bfd-thin.ads
+   M /trunk/bfdada/bfdada/bfd.adb
+   M /trunk/bfdada/bfdada/bfd.ads
+
+2012-10-20  Stephane Carrez  <Stephane.Carrez@gmail.com>
+
+* bfdada/bfd-disassembler.ads: Fix syle and compilation warnings.
+* bfdada/bfd-thin-disassembler.ads: Likewise.
+* bfdada/bfd-thin-symtab.ads:  Likewise.
+* bfdada/bfd-thin.ads:  Likewise.
+* bfdada/bfd.adb:  Likewise.
+
+------------------------------------------------------------------------
+r36 | ciceron | 2012-10-20 18:06:41 +0200 (Sat, 20 Oct 2012) | 10 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/INSTALL
+   M /trunk/bfdada/bfdada/bfd-disassembler.adb
+   M /trunk/bfdada/bfdada/bfd-symtab.adb
+   M /trunk/bfdada/bfdada/bfd-symtab.ads
+   M /trunk/bfdada/bfdada/bfd.ads
+   M /trunk/bfdada/doc/bfdada.cfg
+
+2012-10-20  Stephane Carrez  <Stephane.Carrez@gmail.com>
+
+* bfdada/bfd-disassembler.adb (Symbol_At_Address): Use
+Interfaces.C.int for return type.
+* bfdada/bfd-symtab.adb: Fix various compilation warnings.
+* bfdada/bfd-symtab.ads: Fix some style.
+* bfdada/bfd.ads: Fix coding style.
+* doc/bfdada.cfg: Fix configuration.
+* INSTALL: Document the installation step.
+
+------------------------------------------------------------------------
+r35 | ciceron | 2012-10-20 17:19:01 +0200 (Sat, 20 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/AUTHORS
+   M /trunk/bfdada/ChangeLog
+
+Update email address
+
+------------------------------------------------------------------------
+r34 | ciceron | 2012-10-20 17:03:34 +0200 (Sat, 20 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/README
+
+Update
+
+------------------------------------------------------------------------
+r33 | ciceron | 2012-10-20 17:02:20 +0200 (Sat, 20 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/bfdada/Makefile.in
+
+Fix Makefile
+
+------------------------------------------------------------------------
+r32 | ciceron | 2006-05-09 22:50:57 +0200 (Tue, 09 May 2006) | 6 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/examples/Makefile.in
+   M /trunk/bfdada/examples/bfdinfo.adb
+   A /trunk/bfdada/examples/disassemble.adb
+   M /trunk/bfdada/examples/sections.adb
+   M /trunk/bfdada/examples/utils.adb
+   M /trunk/bfdada/examples/utils.ads
+
+* examples/disassemble.adb: New file, disassembler example.
+* examples/Makefile.in: Build the example.
+* examples/*: Update FSF address.
+* examples/utils.adb (Output): Use Put instead of Put_Line.
+* examples/utils.ads (Output): Fix to use the new disassembler.
+
+------------------------------------------------------------------------
+r31 | ciceron | 2006-05-09 22:41:31 +0200 (Tue, 09 May 2006) | 20 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/bfdada/Makefile.in
+   D /trunk/bfdada/bfdada/bfd-disassemble.adb
+   D /trunk/bfdada/bfdada/bfd-disassemble.ads
+   A /trunk/bfdada/bfdada/bfd-disassembler.adb
+   A /trunk/bfdada/bfdada/bfd-disassembler.ads
+   M /trunk/bfdada/bfdada/bfd-internal.adb
+   M /trunk/bfdada/bfdada/bfd-internal.ads
+   M /trunk/bfdada/bfdada/bfd-sections.adb
+   M /trunk/bfdada/bfdada/bfd-sections.ads
+   M /trunk/bfdada/bfdada/bfd-symtab.adb
+   M /trunk/bfdada/bfdada/bfd-symtab.ads
+   M /trunk/bfdada/bfdada/bfd-thin-disassembler.ads
+   M /trunk/bfdada/bfdada/bfd-thin-sections.ads
+   M /trunk/bfdada/bfdada/bfd-thin-symtab.ads
+   M /trunk/bfdada/bfdada/bfd-thin.ads
+   M /trunk/bfdada/bfdada/bfd.adb
+   M /trunk/bfdada/bfdada/bfd.ads
+   M /trunk/bfdada/bfdada/bfdc.c
+   M /trunk/bfdada/bfdada/make_bfd.adb
+   M /trunk/bfdada/bfdada/testsuite/bfd-tests-sections.adb
+   M /trunk/bfdada/bfdada/testsuite/bfd-tests-sections.ads
+   M /trunk/bfdada/bfdada/testsuite/bfd-tests.adb
+   M /trunk/bfdada/bfdada/testsuite/bfd-tests.ads
+   M /trunk/bfdada/bfdada/testsuite/bfd_suite.adb
+   M /trunk/bfdada/bfdada/testsuite/harness.adb
+
+	* bfdada/bfd-symtab.ads (Symbol_Array, Symbol_Array_Access,
+	Symbol_Table): Make public.
+	* bfdada/bfd-disassembler.ads: New disassembler implementation.
+	* bfdada/bfd-disassembler.adb: New disassembler implementation.
+	* bfdada/bfd-disassemble.ads: Remove.
+	* bfdada/bfd-disassemble.adb: Remove.
+	* bfdada/bfdc.c (_bfd_get_section_size): Use bfd_get_section_size().
+	(ada_bfd_asymbol_section): Return type is a struct bfd_section.
+	(ada_dis_memory_handler): Fix prototype.
+	(ada_dis_symbol_at_address): Declare.
+	(ada_dis_read_memory_handler): Declare.
+	(SFILE): Declare (stolen and adjusted from objdump.c)
+	(ada_disassembler_output, ada_disassembler_output_address): Declare.
+	(dis_printf): New to override printf and send to the Output procedure
+	(bfd_ada_disassembler_init): Rename and update; do more initialization.
+	(bfd_ada_disassembler_get_data): New to get the Ada application data.
+	(bfd_ada_disassembler_disassemble): New to disassemble.
+	(bfd_ada_disassembler_set_symbol_table): New to set the symbols.
+	(bfd_ada_disassembler_set_buffer): New to set the memory buffer.
+
+------------------------------------------------------------------------
+r30 | ciceron | 2006-05-09 22:34:21 +0200 (Tue, 09 May 2006) | 2 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/aunit-1.01/aunit/framework/aunit-assertions.adb
+   M /trunk/bfdada/aunit-1.01/aunit/framework/aunit-assertions.ads
+   M /trunk/bfdada/aunit-1.01/aunit/framework/aunit-lists.adb
+   M /trunk/bfdada/aunit-1.01/aunit/framework/aunit-lists.ads
+   M /trunk/bfdada/aunit-1.01/aunit/framework/aunit-test_cases-registration.adb
+   M /trunk/bfdada/aunit-1.01/aunit/framework/aunit-test_cases-registration.ads
+   M /trunk/bfdada/aunit-1.01/aunit/framework/aunit-test_cases.adb
+   M /trunk/bfdada/aunit-1.01/aunit/framework/aunit-test_cases.ads
+   M /trunk/bfdada/aunit-1.01/aunit/framework/aunit-test_results.adb
+   M /trunk/bfdada/aunit-1.01/aunit/framework/aunit-test_results.ads
+   M /trunk/bfdada/aunit-1.01/aunit/framework/aunit-test_runner.ads
+   M /trunk/bfdada/aunit-1.01/aunit/framework/aunit-test_suites.adb
+   M /trunk/bfdada/aunit-1.01/aunit/framework/aunit-test_suites.ads
+   M /trunk/bfdada/aunit-1.01/aunit/framework/aunit-tests.ads
+   M /trunk/bfdada/aunit-1.01/aunit/framework/aunit.ads
+   M /trunk/bfdada/aunit-1.01/aunit/text_reporter/aunit-options.adb
+   M /trunk/bfdada/aunit-1.01/aunit/text_reporter/aunit-options.ads
+   M /trunk/bfdada/aunit-1.01/aunit/text_reporter/aunit-test_results-text_reporter.adb
+   M /trunk/bfdada/aunit-1.01/aunit/text_reporter/aunit-test_results-text_reporter.ads
+   M /trunk/bfdada/aunit-1.01/aunit/text_reporter/aunit-test_runner.adb
+
+* aunit-1.0.1/*, bfdada/*: Update FSF address.
+
+------------------------------------------------------------------------
+r29 | ciceron | 2006-05-08 10:48:57 +0200 (Mon, 08 May 2006) | 2 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/examples/bfdinfo.adb
+   M /trunk/bfdada/examples/utils.ads
+
+* examples/bfdinfo.adb (HexImage, Print): Remove, use Utils package.
+
+------------------------------------------------------------------------
+r28 | ciceron | 2005-11-01 18:09:51 +0100 (Tue, 01 Nov 2005) | 2 lines
+Changed paths:
+   M /trunk/bfdada/bfdada/Makefile.in
+   M /trunk/bfdada/bfdada/bfd-disassemble.ads
+   M /trunk/bfdada/bfdada/bfd-sections.ads
+   M /trunk/bfdada/bfdada/bfd-symtab.ads
+   M /trunk/bfdada/bfdada/bfd.ads
+   M /trunk/bfdada/bfdada/bfdc.c
+   M /trunk/bfdada/bfdada/testsuite/Makefile.in
+   M /trunk/bfdada/configure
+   M /trunk/bfdada/configure.in
+   M /trunk/bfdada/doc/adabrowse.css
+   M /trunk/bfdada/doc/bfdada.cfg
+
+Update, fix build
+
+------------------------------------------------------------------------
+r27 | ciceron | 2005-11-01 18:09:09 +0100 (Tue, 01 Nov 2005) | 5 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/examples/Makefile.in
+   M /trunk/bfdada/examples/sections.adb
+   M /trunk/bfdada/examples/utils.adb
+   M /trunk/bfdada/examples/utils.ads
+
+* examples/utils.adb (Output): New procedure for disassembler.
+* examples/utils.ads (Output): Declare it.
+* examples/Makefile.in (GNATLINK): Need -lopcodes
+* bfdada/testsuite/Makefile.in: Likewise.
+
+------------------------------------------------------------------------
+r26 | ciceron | 2004-03-21 11:12:26 +0100 (Sun, 21 Mar 2004) | 4 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   A /trunk/bfdada/doc
+   A /trunk/bfdada/doc/Makefile.in
+   A /trunk/bfdada/doc/adabrowse.css
+   A /trunk/bfdada/doc/bfdada.cfg
+
+* doc/Makefile.in (all): New file to make the documentation.
+* doc/adabrowse.css: New file, stylesheet from Adabrowse 4.0
+* doc/bfdada.cfg: New file, configuration file for Adabrowse.
+
+------------------------------------------------------------------------
+r25 | ciceron | 2004-03-21 11:10:27 +0100 (Sun, 21 Mar 2004) | 13 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/Makefile.am
+   M /trunk/bfdada/Makefile.in
+   M /trunk/bfdada/bfdada/Makefile.in
+   M /trunk/bfdada/bfdada/bfd.adb
+   A /trunk/bfdada/bfdada-config.in
+   M /trunk/bfdada/configure
+   M /trunk/bfdada/configure.in
+   M /trunk/bfdada/examples/Makefile.in
+   A /trunk/bfdada/examples/sections.adb
+   A /trunk/bfdada/examples/utils.adb
+   A /trunk/bfdada/examples/utils.ads
+
+* examples/utils.ads: New file, from several functions from bfdinfo.
+* examples/utils.adb: New file, likewise.
+* examples/sections.adb: New file, split example from bfdinfo.
+* examples/Makefile.in: Build new example.
+
+* configure.in: Configure it.
+* bfdada-config.in: New file.
+* Makefile.am: Likewise and install it.
+* Makefile.in: Rebuild.
+* configure: Rebuild.
+* bfdada/Makefile.in: Build the html documentation with adabrowse.
+* bfdada/bfd.adb (Safe_Mode): Make constant.
+
+------------------------------------------------------------------------
+r24 | ciceron | 2004-03-20 17:59:09 +0100 (Sat, 20 Mar 2004) | 10 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/bfdada/bfd-disassemble.ads
+   M /trunk/bfdada/bfdada/bfd-internal.ads
+   M /trunk/bfdada/bfdada/bfd-sections.ads
+   M /trunk/bfdada/bfdada/bfd-symtab.ads
+   M /trunk/bfdada/bfdada/bfd-thin-disassembler.ads
+   M /trunk/bfdada/bfdada/bfd-thin-sections.ads
+   M /trunk/bfdada/bfdada/bfd-thin-symtab.ads
+   M /trunk/bfdada/bfdada/bfd-thin.ads
+   M /trunk/bfdada/bfdada/bfd.ads
+   M /trunk/bfdada/examples/bfdinfo.adb
+
+* examples/bfdinfo.adb (List_Symbols): Remove unused variable.
+* bfdada/bfd.ads: Likewise.
+* bfdada/bfd-thin-symtab.ads: Likewise.
+* bfdada/bfd-thin-sections.ads: Likewise.
+* bfdada/bfd-thin-disassembler.ads: Likewise.
+* bfdada/bfd-symtab.ads: Likewise.
+* bfdada/bfd-sections.ads: Likewise.
+* bfdada/bfd-disassemble.ads: Likewise.
+* bfdada/bfd-internal.ads: Fix comment for adabrowse.
+
+------------------------------------------------------------------------
+r23 | ciceron | 2004-02-27 22:42:09 +0100 (Fri, 27 Feb 2004) | 6 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/bfdada/bfd.adb
+   M /trunk/bfdada/bfdada/testsuite/bfd-tests.adb
+
+* bfdada/bfd.adb (Check_Bfd): New function.
+(Get_Filename): Call it.
+(Check_Format): And here.
+(Get_Start_Address): Likewise.
+(Get_Symbol_Count): Likewise.
+
+------------------------------------------------------------------------
+r22 | ciceron | 2004-02-27 22:29:39 +0100 (Fri, 27 Feb 2004) | 2 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/bfdada/bfd.ads
+
+* bfdada/bfd.ads: Fix initialization of File_Type.
+
+------------------------------------------------------------------------
+r21 | ciceron | 2004-02-27 22:19:55 +0100 (Fri, 27 Feb 2004) | 7 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/Makefile.in
+   M /trunk/bfdada/bfdada/Makefile.in
+   M /trunk/bfdada/bfdada/bfd-sections.adb
+   M /trunk/bfdada/bfdada/bfd-sections.ads
+   M /trunk/bfdada/bfdada/bfd.adb
+   M /trunk/bfdada/bfdada/bfd.ads
+   M /trunk/bfdada/examples/Makefile.in
+
+* bfdada/Makefile.in: Update
+* bfdada/bfd-sections.adb (Current): Fix indent.
+* bfdada/bfd-sections.ads (Set_Section_Contents): Likewise.
+* bfdada/bfd.adb: Likewise.
+* bfdada/bfd.ads: Likewise.
+* examples/Makefile.in: Update.
+
+------------------------------------------------------------------------
+r20 | ciceron | 2003-05-21 22:23:48 +0200 (Wed, 21 May 2003) | 3 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   A /trunk/bfdada/bfdada/bfd-thin-disassembler.ads
+   M /trunk/bfdada/bfdada/bfdc.c
+   M /trunk/bfdada/bfdada/make_bfd.adb
+
+* bfdada/bfdc.c (bfdada_memory_error_handler): New function.
+* bfdada/bfd-thin-disassembler.ads: New file, disassembler.
+
+------------------------------------------------------------------------
+r19 | ciceron | 2003-05-21 22:20:42 +0200 (Wed, 21 May 2003) | 4 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   A /trunk/bfdada/bfdada/bfd-disassemble.adb
+   A /trunk/bfdada/bfdada/bfd-disassemble.ads
+
+* bfdada/bfd-disassemble.adb: New file, disassembler package.
+* bfdada/bfd-disassemble.ads: New file, disassembler package.
+* bfdada/make_bfd.adb: Build the disassembler.
+
+------------------------------------------------------------------------
+r18 | ciceron | 2003-05-21 22:17:29 +0200 (Wed, 21 May 2003) | 3 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/configure
+   M /trunk/bfdada/configure.in
+
+* configure.in: Check for bfd.h and dis-asm.h
+* configure: Rebuild.
+
+------------------------------------------------------------------------
+r17 | ciceron | 2003-02-08 10:25:44 +0100 (Sat, 08 Feb 2003) | 2 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/examples/Makefile.in
+
+	* examples/Makefile.in (GNATLINK): Add flags to search the libraries.
+
+------------------------------------------------------------------------
+r16 | ciceron | 2003-02-08 10:19:50 +0100 (Sat, 08 Feb 2003) | 3 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/bfdada/Makefile.in
+
+	* bfdada/Makefile.in: Remove the lib-obj hack that I copied from
+	GtkAda.
+
+------------------------------------------------------------------------
+r15 | ciceron | 2003-02-08 10:11:12 +0100 (Sat, 08 Feb 2003) | 2 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/bfdada/Makefile.in
+
+	* bfdada/Makefile.in (install_ali): Fix build in another directory.
+
+------------------------------------------------------------------------
+r14 | ciceron | 2003-02-08 09:57:01 +0100 (Sat, 08 Feb 2003) | 2 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/NEWS
+
+	* NEWS: Update.
+
+------------------------------------------------------------------------
+r13 | ciceron | 2003-02-08 09:53:59 +0100 (Sat, 08 Feb 2003) | 2 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/bfdada/bfd-internal.ads
+
+	* bfdada/bfd-internal.ads: Fix -gnaty warnings.
+
+------------------------------------------------------------------------
+r12 | ciceron | 2003-02-08 09:52:37 +0100 (Sat, 08 Feb 2003) | 6 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/bfdada/bfdc.c
+
+	* bfdada/bfdc.c (bfd_read_symbols): Don't allocate the symbol
+	table array, it's allocated by Ada code.
+	(ada_bfd_asymbol_value): New function.
+	(ada_bfd_asymbol_flags): New function.
+	(ada_bfd_get_symtab_upper_bound): New function.
+
+------------------------------------------------------------------------
+r11 | ciceron | 2003-02-07 23:41:39 +0100 (Fri, 07 Feb 2003) | 12 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/bfdada/Makefile.in
+   M /trunk/bfdada/bfdada/bfd-internal.adb
+   M /trunk/bfdada/bfdada/bfd-sections.adb
+   M /trunk/bfdada/bfdada/bfd-sections.ads
+   M /trunk/bfdada/bfdada/bfd-symtab.adb
+   M /trunk/bfdada/bfdada/bfd-symtab.ads
+   M /trunk/bfdada/bfdada/bfd-thin-sections.ads
+   M /trunk/bfdada/bfdada/bfd-thin-symtab.ads
+   M /trunk/bfdada/bfdada/bfd-thin.ads
+   M /trunk/bfdada/bfdada/bfd.adb
+   M /trunk/bfdada/bfdada/bfd.ads
+
+	* bfdada/Makefile.in (GNATFLAGS): Compile with -gnaty.
+	* bfdada/bfd-internal.adb: Fix -gnaty warnings.
+	* bfdada/bfd-sections.adb: Likewise.
+	* bfdada/bfd-sections.ads: Likewise.
+	* bfdada/bfd-symtab.adb: Likewise.
+	* bfdada/bfd-symtab.ads: Likewise.
+	* bfdada/bfd-thin-sections.ads: Likewise.
+	* bfdada/bfd-thin-symtab.ads: Likewise.
+	* bfdada/bfd-thin.ads: Likewise.
+	* bfdada/bfd.adb: Likewise.
+	* bfdada/bfd.ads: Likewise.
+
+------------------------------------------------------------------------
+r10 | ciceron | 2003-02-07 22:46:47 +0100 (Fri, 07 Feb 2003) | 7 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/bfdada/bfd-symtab.adb
+
+	* bfdada/bfd-symtab.adb (Is_Done): New function.
+	(Current, Get_Iterator): Likewise.
+	(Next): New procedure.
+	(Open_Symbols): Fix symbol table creation.
+	(Find_Nearest_Line): Fix passing of symbol table.
+        (Get_Symbol): Return the symbol at the specified index.
+
+------------------------------------------------------------------------
+r9 | ciceron | 2003-02-07 22:31:49 +0100 (Fri, 07 Feb 2003) | 7 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/bfdada/bfd-symtab.ads
+
+	* bfdada/bfd-symtab.ads (Is_Done): New function.
+	(Current, Get_Iterator): Likewise.
+	(Next): New procedure.
+	(Symbol_Iterator): New record.
+	(Get_Value, Get_Flags): Update import pragma.
+        (Get_Symbol): Use positive for index.
+
+------------------------------------------------------------------------
+r8 | ciceron | 2003-02-07 21:33:44 +0100 (Fri, 07 Feb 2003) | 3 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   A /trunk/bfdada/examples
+   A /trunk/bfdada/examples/Makefile.in
+   A /trunk/bfdada/examples/bfdinfo.adb
+
+* examples/bfdinfo.adb: New example (very crude readelf).
+* examples/Makefile.in: New file.
+
+------------------------------------------------------------------------
+r7 | ciceron | 2003-02-07 21:31:27 +0100 (Fri, 07 Feb 2003) | 5 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/Makefile.am
+   M /trunk/bfdada/Makefile.in
+   M /trunk/bfdada/configure
+   M /trunk/bfdada/configure.in
+
+  * Makefile.am (SUBDIRS): Add examples.
+  * Makefile.in: Generate.
+  * configure.in: Configure example Makefile.
+  * configure: Generate.
+
+------------------------------------------------------------------------
+r6 | ciceron | 2003-02-02 21:08:11 +0100 (Sun, 02 Feb 2003) | 2 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/bfdada/Makefile.in
+
+	* bfdada/Makefile.in: Fix install.
+
+------------------------------------------------------------------------
+r5 | ciceron | 2003-02-02 20:50:28 +0100 (Sun, 02 Feb 2003) | 4 lines
+Changed paths:
+   M /trunk/bfdada/ChangeLog
+   M /trunk/bfdada/bfdada/Makefile.in
+   M /trunk/bfdada/bfdada/testsuite/Makefile.in
+
+	* bfdada/testsuite/Makefile.in: Add -I$(srcdir) so that
+	  compiling in another directory is possible.
+	* bfdada/Makefile.in: Likewise and cleanup
+
+------------------------------------------------------------------------
+r4 | ciceron | 2003-02-02 20:23:17 +0100 (Sun, 02 Feb 2003) | 3 lines
+Changed paths:
+   M /trunk/bfdada/bfdada/bfd-sections.ads
+   M /trunk/bfdada/bfdada/bfd-symtab.ads
+
+* bfdada/bfd-sections.ads: Remove Interfaces dependency.
+* bfdada/bfd-symtab.ads: Likewise.
+
+------------------------------------------------------------------------
+r3 | ciceron | 2003-02-02 20:22:36 +0100 (Sun, 02 Feb 2003) | 2 lines
+Changed paths:
+   A /trunk/bfdada/ChangeLog
+
+Import BfdAda (version 0.9)
+
+------------------------------------------------------------------------
+r2 | ciceron | 2003-02-02 10:17:23 +0100 (Sun, 02 Feb 2003) | 2 lines
+Changed paths:
+   A /trunk/bfdada
+   A /trunk/bfdada/AUTHORS
+   A /trunk/bfdada/COPYING
+   A /trunk/bfdada/INSTALL
+   A /trunk/bfdada/Makefile.am
+   A /trunk/bfdada/Makefile.in
+   A /trunk/bfdada/NEWS
+   A /trunk/bfdada/README
+   A /trunk/bfdada/aclocal.m4
+   A /trunk/bfdada/aunit-1.01
+   A /trunk/bfdada/aunit-1.01/AUnit.html
+   A /trunk/bfdada/aunit-1.01/COPYING
+   A /trunk/bfdada/aunit-1.01/aunit
+   A /trunk/bfdada/aunit-1.01/aunit/framework
+   A /trunk/bfdada/aunit-1.01/aunit/framework/aunit-assertions.adb
+   A /trunk/bfdada/aunit-1.01/aunit/framework/aunit-assertions.ads
+   A /trunk/bfdada/aunit-1.01/aunit/framework/aunit-lists.adb
+   A /trunk/bfdada/aunit-1.01/aunit/framework/aunit-lists.ads
+   A /trunk/bfdada/aunit-1.01/aunit/framework/aunit-test_cases-registration.adb
+   A /trunk/bfdada/aunit-1.01/aunit/framework/aunit-test_cases-registration.ads
+   A /trunk/bfdada/aunit-1.01/aunit/framework/aunit-test_cases.adb
+   A /trunk/bfdada/aunit-1.01/aunit/framework/aunit-test_cases.ads
+   A /trunk/bfdada/aunit-1.01/aunit/framework/aunit-test_results.adb
+   A /trunk/bfdada/aunit-1.01/aunit/framework/aunit-test_results.ads
+   A /trunk/bfdada/aunit-1.01/aunit/framework/aunit-test_runner.ads
+   A /trunk/bfdada/aunit-1.01/aunit/framework/aunit-test_suites.adb
+   A /trunk/bfdada/aunit-1.01/aunit/framework/aunit-test_suites.ads
+   A /trunk/bfdada/aunit-1.01/aunit/framework/aunit-tests.ads
+   A /trunk/bfdada/aunit-1.01/aunit/framework/aunit.ads
+   A /trunk/bfdada/aunit-1.01/aunit/text_reporter
+   A /trunk/bfdada/aunit-1.01/aunit/text_reporter/aunit-options.adb
+   A /trunk/bfdada/aunit-1.01/aunit/text_reporter/aunit-options.ads
+   A /trunk/bfdada/aunit-1.01/aunit/text_reporter/aunit-test_results-text_reporter.adb
+   A /trunk/bfdada/aunit-1.01/aunit/text_reporter/aunit-test_results-text_reporter.ads
+   A /trunk/bfdada/aunit-1.01/aunit/text_reporter/aunit-test_runner.adb
+   A /trunk/bfdada/aunit-1.01/readme
+   A /trunk/bfdada/aunit-1.01/template
+   A /trunk/bfdada/aunit-1.01/template/aunit.gpr
+   A /trunk/bfdada/aunit-1.01/template/harness.adb
+   A /trunk/bfdada/aunit-1.01/template/pr_xxxx_xxx.adb
+   A /trunk/bfdada/aunit-1.01/template/pr_xxxx_xxx.ads
+   A /trunk/bfdada/aunit-1.01/template/sample.adp
+   A /trunk/bfdada/aunit-1.01/template/sample_suite.adb
+   A /trunk/bfdada/aunit-1.01/test
+   A /trunk/bfdada/aunit-1.01/test/aunit_suite.adb
+   A /trunk/bfdada/aunit-1.01/test/default.adp
+   A /trunk/bfdada/aunit-1.01/test/empty_test_case.adb
+   A /trunk/bfdada/aunit-1.01/test/empty_test_case.ads
+   A /trunk/bfdada/aunit-1.01/test/harness.adb
+   A /trunk/bfdada/aunit-1.01/test/one_test_case-inherited_test_case.adb
+   A /trunk/bfdada/aunit-1.01/test/one_test_case-inherited_test_case.ads
+   A /trunk/bfdada/aunit-1.01/test/one_test_case.adb
+   A /trunk/bfdada/aunit-1.01/test/one_test_case.ads
+   A /trunk/bfdada/aunit-1.01/test/simple_test_case.adb
+   A /trunk/bfdada/aunit-1.01/test/simple_test_case.ads
+   A /trunk/bfdada/aunit-1.01/test/test_lists.adb
+   A /trunk/bfdada/aunit-1.01/test/test_lists.ads
+   A /trunk/bfdada/aunit-1.01/test/test_test_case.adb
+   A /trunk/bfdada/aunit-1.01/test/test_test_case.ads
+   A /trunk/bfdada/aunit-1.01/test/test_test_case_registration.adb
+   A /trunk/bfdada/aunit-1.01/test/test_test_case_registration.ads
+   A /trunk/bfdada/aunit-1.01/test/test_test_suite.adb
+   A /trunk/bfdada/aunit-1.01/test/test_test_suite.ads
+   A /trunk/bfdada/aunit-1.01/test/timed_harness.adb
+   A /trunk/bfdada/bfdada
+   A /trunk/bfdada/bfdada/Makefile.in
+   A /trunk/bfdada/bfdada/bfd-internal.adb
+   A /trunk/bfdada/bfdada/bfd-internal.ads
+   A /trunk/bfdada/bfdada/bfd-sections.adb
+   A /trunk/bfdada/bfdada/bfd-sections.ads
+   A /trunk/bfdada/bfdada/bfd-symtab.adb
+   A /trunk/bfdada/bfdada/bfd-symtab.ads
+   A /trunk/bfdada/bfdada/bfd-thin-sections.ads
+   A /trunk/bfdada/bfdada/bfd-thin-symtab.ads
+   A /trunk/bfdada/bfdada/bfd-thin.ads
+   A /trunk/bfdada/bfdada/bfd.adb
+   A /trunk/bfdada/bfdada/bfd.ads
+   A /trunk/bfdada/bfdada/bfdc.c
+   A /trunk/bfdada/bfdada/make_bfd.adb
+   A /trunk/bfdada/bfdada/testsuite
+   A /trunk/bfdada/bfdada/testsuite/Makefile.in
+   A /trunk/bfdada/bfdada/testsuite/bfd-tests-sections.adb
+   A /trunk/bfdada/bfdada/testsuite/bfd-tests-sections.ads
+   A /trunk/bfdada/bfdada/testsuite/bfd-tests.adb
+   A /trunk/bfdada/bfdada/testsuite/bfd-tests.ads
+   A /trunk/bfdada/bfdada/testsuite/bfd_suite.adb
+   A /trunk/bfdada/bfdada/testsuite/harness.adb
+   A /trunk/bfdada/config.guess
+   A /trunk/bfdada/config.sub
+   A /trunk/bfdada/configure
+   A /trunk/bfdada/configure.in
+   A /trunk/bfdada/install-sh
+   A /trunk/bfdada/missing
+   A /trunk/bfdada/mkinstalldirs
+
+Import BfdAda (version 0.9)
+
+------------------------------------------------------------------------

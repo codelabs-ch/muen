@@ -1,0 +1,19 @@
+with "../common/defaults";
+with "lib";
+
+project Skconfig is
+
+   for Source_Dirs use ("src", "../common/**", "subjects");
+   for Object_Dir use "obj/";
+   for Main use ("skconfig.adb");
+
+   package Compiler is
+      for Default_Switches ("Ada") use Defaults.Ada_Compiler_Switches
+        & "-gnat05";
+   end Compiler;
+
+   package Linker is
+      for Default_Switches ("Ada") use ("-lbfd");
+   end Linker;
+
+end Skconfig;

@@ -9,7 +9,6 @@ project Subject1 is
    for Main use ("subject_1");
 
    package Builder is
-      for Executable ("subject_1.adb") use "subject_1.elf";
       for Global_Configuration_Pragmas use "../common/restrictions.adc";
    end Builder;
 

@@ -1,4 +1,4 @@
-all: kernel
+all: packer
 
 subjects:
 	$(MAKE) -C $@
@@ -9,12 +9,16 @@ config: subjects
 kernel: config
 	$(MAKE) -C $@
 
-deploy: kernel
+packer: kernel
+	$(MAKE) -C $@
+
+deploy: packer
 	$(MAKE) -C $< $@
 
 clean:
 	$(MAKE) clean -C config
 	$(MAKE) clean -C kernel
+	$(MAKE) clean -C packer
 	$(MAKE) clean -C subjects
 
-.PHONY: config kernel subjects
+.PHONY: config kernel packer subjects

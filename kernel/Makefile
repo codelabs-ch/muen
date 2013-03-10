@@ -50,23 +50,8 @@ $(VERSION_SPEC): .git-rev
 	@echo "     \"$(VERSION)\";"                   >> $@
 	@echo "end SK.Version;"                        >> $@
 
-$(OBJ_DIR)/kernel.elf: $(VERSION_SPEC)
+$(OBJ_DIR)/kernel: $(VERSION_SPEC)
 	gprbuild $(BUILD_OPTS) -Pkernel
-
-$(OBJ_DIR)/kernel: $(OBJ_DIR)/kernel.elf
-	objcopy --add-section .subject0=../subjects/obj/subject_0 $< $@ \
-		--change-section-address .subject0=0x00180000 \
-		--set-section-flags .subject0=alloc
-	objcopy --add-section .subject1=../subjects/obj/subject_1 $@ \
-		--change-section-address .subject1=0x001a0000 \
-		--set-section-flags .subject1=alloc
-	objcopy -O binary $@ $@
-
-deploy: $(OBJ_DIR)/kernel .server
-	echo y | amttool $(TARGET_IP) reset
-
-.server:
-	(cd obj && python -m SimpleHTTPServer >/dev/null 2>&1 & echo "$$!" > $@)
 
 $(OBJ_DIR)/kernel.sum: $(OBJ_DIR)/kernel.rep
 	pogs -d=$(VC_DIR) -o=$@
@@ -101,4 +86,4 @@ clean:
 
 FORCE:
 
-.PHONY: FORCE $(OBJ_DIR)/kernel.elf
+.PHONY: FORCE $(OBJ_DIR)/kernel

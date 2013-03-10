@@ -1,3 +1,5 @@
+with SK.Utils;
+
 package body SK.Console
 is
 
@@ -8,53 +10,6 @@ is
    begin
       Initialize;
    end Init;
-
-   -------------------------------------------------------------------------
-
-   --  Return character representation of given quadword.
-   function To_Character (Value : Word64) return Character
-   is
-      Result : Character;
-   begin
-      case Value is
-         when 16#0#  => Result := '0';
-         when 16#1#  => Result := '1';
-         when 16#2#  => Result := '2';
-         when 16#3#  => Result := '3';
-         when 16#4#  => Result := '4';
-         when 16#5#  => Result := '5';
-         when 16#6#  => Result := '6';
-         when 16#7#  => Result := '7';
-         when 16#8#  => Result := '8';
-         when 16#9#  => Result := '9';
-         when 16#a#  => Result := 'a';
-         when 16#b#  => Result := 'b';
-         when 16#c#  => Result := 'c';
-         when 16#d#  => Result := 'd';
-         when 16#e#  => Result := 'e';
-         when 16#f#  => Result := 'f';
-         when others => Result := '?';
-      end case;
-
-      return Result;
-   end To_Character;
-
-   -------------------------------------------------------------------------
-
-   --  Convert given quadword to hex string and store it in specified buffer.
-   procedure To_Hex
-     (Item   :        Word64;
-      Buffer : in out String)
-   is
-      Temp : Word64;
-   begin
-      Temp := Item;
-      for Pos in reverse Buffer'Range loop
-         Buffer (Pos) := To_Character (Temp mod 16);
-         Temp         := Temp / 16;
-         exit when Temp = 0;
-      end loop;
-   end To_Hex;
 
    -------------------------------------------------------------------------
 
@@ -100,8 +55,8 @@ is
 
       Str : Byte_String := Byte_String'(others => '0');
    begin
-      To_Hex (Item   => Word64 (Item),
-              Buffer => Str);
+      Utils.To_Hex (Item   => Word64 (Item),
+                    Buffer => Str);
       Put_String (Item => Str);
    end Put_Byte;
 
@@ -114,8 +69,8 @@ is
 
       Str : Word16_String := Word16_String'(others => '0');
    begin
-      To_Hex (Item   => Word64 (Item),
-              Buffer => Str);
+      Utils.To_Hex (Item   => Word64 (Item),
+                    Buffer => Str);
       Put_String (Item => Str);
    end Put_Word16;
 
@@ -128,8 +83,8 @@ is
 
       Str : Word32_String := Word32_String'(others => '0');
    begin
-      To_Hex (Item   => Word64 (Item),
-              Buffer => Str);
+      Utils.To_Hex (Item   => Word64 (Item),
+                    Buffer => Str);
       Put_String (Item => Str);
    end Put_Word32;
 
@@ -142,8 +97,8 @@ is
 
       Str : Word64_String := Word64_String'(others => '0');
    begin
-      To_Hex (Item   => Item,
-              Buffer => Str);
+      Utils.To_Hex (Item   => Item,
+                    Buffer => Str);
       Put_String (Item => Str);
    end Put_Word64;
 

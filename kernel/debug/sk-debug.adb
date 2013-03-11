@@ -139,7 +139,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Isr_Dump
+   procedure Print_Isr_Context
      (RDI : Word64; RSI : Word64; RDX : Word64; RCX : Word64; R08 : Word64;
       R09 : Word64; RAX : Word64; RBX : Word64; RBP : Word64; R10 : Word64;
       R11 : Word64; R12 : Word64; R13 : Word64; R14 : Word64; R15 : Word64;
@@ -200,6 +200,6 @@ is
                       CR4 => CR4);
 
       CPU.Hlt;
-   end Isr_Dump;
+   end Print_Isr_Context;
 
 end SK.Debug;

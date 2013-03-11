@@ -20,7 +20,7 @@ $(OBJ_DIR)/subject_1: $(SUBJ_DIR)/obj/subject_1
 
 $(OBJ_DIR)/kernel: $(KERN_DIR)/obj/kernel $(SUBJ_BINS)
 	objcopy --add-section .subject0=$(OBJ_DIR)/subject_0 $< $@ \
-		--change-section-address .subject0=0x00180000          \
+		--change-section-address .subject0=0x00200000          \
 		--set-section-flags .subject0=alloc
 	objcopy --add-section .subject1=$(OBJ_DIR)/subject_1 $@ \
 		--change-section-address .subject1=0x001a0000       \

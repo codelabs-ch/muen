@@ -38,3 +38,27 @@ subject_pdp:
 subject_pd:
 	.quad 0x00018f
 	.fill 511, 8, 0x0
+
+subject0_pml4:
+	.quad 0x1f400f
+	.fill 511, 8, 0x0
+
+	.align 4096
+subject0_pdp:
+	.quad 0x1f500f
+	.fill 511, 8, 0x0
+
+	.align 4096
+subject0_pd:
+	.quad 0x1f600f
+	.fill 511, 8, 0x0
+
+	.align 4096
+subject0_pte:
+	.quad 0x20018f
+	.quad 0x20118f
+	.quad 0x20218f
+	.fill 181, 8, 0x0
+	// PTE for video memory b8000
+	.quad 0x0b818f
+	.fill 327, 8, 0x0

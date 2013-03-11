@@ -29,7 +29,7 @@ SECTIONS
 		*(.subject_pt)
 	}
 
-	. = 0x00200000;
+	. = 0x00300000;
 	image_end = .;
 
 	/DISCARD/ :

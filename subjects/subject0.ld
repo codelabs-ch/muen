@@ -2,8 +2,6 @@ ENTRY(main)
 
 SECTIONS
 {
-	. = 0x00180000;
-
 	.text :	{ *(.text) }
 	.data :	{ *(.data) }
 

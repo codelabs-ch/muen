@@ -63,5 +63,7 @@ begin
 
          VMCS_Address := VMCS_Address + 4096;
       end loop;
+
+      Descriptors (0).PML4_Address := 16#1f3000#;
    end;
 end SK.Subjects;

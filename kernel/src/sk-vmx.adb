@@ -174,6 +174,9 @@ is
       VMCS_Write (Field => Constants.CPU_BASED_EXEC_CONTROL,
                   Value => Value);
 
+      VMCS_Write (Field => Constants.EXCEPTION_BITMAP,
+                  Value => 16#ffffffff#);
+
       CPU.Get_MSR (Register => Constants.IA32_VMX_EXIT_CTLS,
                    Low      => Default0,
                    High     => Default1);

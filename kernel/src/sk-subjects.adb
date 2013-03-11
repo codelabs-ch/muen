@@ -22,6 +22,9 @@ is
    pragma Import (C, Pagetable_Address, "subjects_pt_pointer");
    --# end accept;
 
+   --  Size of VMCS structure.
+   VMCS_Size : constant := 4096;
+
    --  Size of page table (4 pages).
    Pagetable_Size : constant := 4 * 4096;
 
@@ -69,7 +72,7 @@ begin
               PML4_Address  => Pagetable_Address,
               Entry_Point   => Config_Subjects.Bins.Subjects (S).Entry_Point);
 
-         VMCS_Address      := VMCS_Address + 4096;
+         VMCS_Address      := VMCS_Address + VMCS_Size;
          Pagetable_Address := Pagetable_Address + Pagetable_Size;
       end loop;
    end;

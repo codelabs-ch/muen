@@ -1,5 +1,10 @@
+with SK.Subjects;
+
 package SK.Debug
 is
+
+   --  Print state of subject specified by index to kernel console.
+   procedure Print_State (Subject : Subjects.Index_Type);
 
    --  Dump execution environment from interrupt context.
    procedure Isr_Dump

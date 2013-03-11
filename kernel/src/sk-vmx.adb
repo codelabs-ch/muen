@@ -82,15 +82,9 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Read value from specified field of the current, active VMCS. If the
-   --  operation fails, CPU.Panic is called.
    procedure VMCS_Read
      (Field :     SK.Word16;
       Value : out SK.Word64)
-   --# global
-   --#    X86_64.State;
-   --# derives
-   --#    Value, X86_64.State from X86_64.State, Field;
    is
       Success : Boolean;
    begin

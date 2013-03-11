@@ -250,6 +250,7 @@ is
 
    procedure VMCS_Setup_Guest_Fields
      (Stack_Address : SK.Word64;
+      PML4_Address  : SK.Word64;
       Entry_Point   : SK.Word64)
    --# global
    --#    in out X86_64.State;
@@ -257,6 +258,7 @@ is
    --#    X86_64.State from
    --#       *,
    --#       Stack_Address,
+   --#       PML4_Address,
    --#       Entry_Point;
    is
    begin
@@ -308,7 +310,7 @@ is
       VMCS_Write (Field => Constants.GUEST_CR0,
                   Value => CPU.Get_CR0);
       VMCS_Write (Field => Constants.GUEST_CR3,
-                  Value => CPU.Get_CR3);
+                  Value => PML4_Address);
       VMCS_Write (Field => Constants.GUEST_CR4,
                   Value => CPU.Get_CR4);
 
@@ -363,6 +365,7 @@ is
       VMCS_Setup_Host_Fields;
       VMCS_Setup_Guest_Fields
         (Stack_Address => State.Stack_Address,
+         PML4_Address  => State.PML4_Address,
          Entry_Point   => State.Entry_Point);
 
       State.Launched := True;

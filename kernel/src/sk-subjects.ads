@@ -17,6 +17,7 @@ is
       Regs          : CPU.Registers_Type;
       Stack_Address : SK.Word64;
       VMCS_Address  : SK.Word64;
+      PML4_Address  : SK.Word64;
       Entry_Point   : SK.Word64;
    end record;
 

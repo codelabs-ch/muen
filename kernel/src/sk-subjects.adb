@@ -58,6 +58,7 @@ begin
               Regs          => CPU.Null_Regs,
               Stack_Address => Config_Subjects.Bins.Subjects (S).Stack_Address,
               VMCS_Address  => VMCS_Address,
+              PML4_Address  => 16#110000#,
               Entry_Point   => Config_Subjects.Bins.Subjects (S).Entry_Point);
 
          VMCS_Address := VMCS_Address + 4096;

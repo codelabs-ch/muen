@@ -24,7 +24,12 @@ SECTIONS
 		kernel_stack = .;
 	}
 
-	. = 0x001f0000;
+	.subject_pt 0x001f0000 :
+	{
+		*(.subject_pt)
+	}
+
+	. = 0x00200000;
 	image_end = .;
 
 	/DISCARD/ :

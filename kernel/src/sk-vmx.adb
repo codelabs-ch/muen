@@ -6,7 +6,7 @@ with SK.Descriptors;
 with SK.KC;
 with SK.GDT;
 with SK.Constants;
-with SK.Debug;
+with SK.Dump;
 
 package body SK.VMX
 is
@@ -438,7 +438,7 @@ is
          pragma Debug (Reason = Constants.VMEXIT_EXCEPTION_NMI,
                        KC.Put_Word32 (Item => SK.Word32 (Intr_Info)));
          pragma Debug (KC.Put_Line (Item => ")"));
-         pragma Debug (Debug.Print_State (Subject => Current_Subject));
+         pragma Debug (Dump.Print_State (Subject => Current_Subject));
 
          CPU.Panic;
       end if;

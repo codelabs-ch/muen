@@ -1,6 +1,6 @@
 with SK.Subjects;
 
-package SK.Debug
+package SK.Dump
 is
 
    --  Print state of subject specified by index to kernel console.
@@ -15,4 +15,4 @@ is
       RSP : Word64; SS  : Word64);
    pragma Export (C, Print_Isr_Context, "dispatch_interrupt");
 
-end SK.Debug;
+end SK.Dump;

@@ -5,7 +5,7 @@ with SK.KC;
 with SK.VMX;
 with SK.Constants;
 
-package body SK.Debug
+package body SK.Dump
 is
 
    -------------------------------------------------------------------------
@@ -202,4 +202,4 @@ is
       CPU.Hlt;
    end Print_Isr_Context;
 
-end SK.Debug;
+end SK.Dump;

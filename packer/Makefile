@@ -23,7 +23,7 @@ $(OBJ_DIR)/kernel: $(KERN_DIR)/obj/kernel $(SUBJ_BINS)
 		--change-section-address .subject0=0x00200000          \
 		--set-section-flags .subject0=alloc
 	objcopy --add-section .subject1=$(OBJ_DIR)/subject_1 $@ \
-		--change-section-address .subject1=0x001a0000       \
+		--change-section-address .subject1=0x00210000       \
 		--set-section-flags .subject1=alloc
 	objcopy -O binary $@ $@
 

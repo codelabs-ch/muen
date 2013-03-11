@@ -58,12 +58,13 @@ begin
               Regs          => CPU.Null_Regs,
               Stack_Address => Config_Subjects.Bins.Subjects (S).Stack_Address,
               VMCS_Address  => VMCS_Address,
-              PML4_Address  => 16#1f0000#,
+              PML4_Address  => 0,
               Entry_Point   => Config_Subjects.Bins.Subjects (S).Entry_Point);
 
          VMCS_Address := VMCS_Address + 4096;
       end loop;
 
-      Descriptors (0).PML4_Address := 16#1f3000#;
+      Descriptors (0).PML4_Address := 16#1f0000#;
+      Descriptors (1).PML4_Address := 16#1f4000#;
    end;
 end SK.Subjects;

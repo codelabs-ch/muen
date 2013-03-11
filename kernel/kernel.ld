@@ -24,7 +24,7 @@ SECTIONS
 		kernel_stack = .;
 	}
 
-	.subject_pt 0x001f0000 :
+	.subjects_pt 0x001f0000 :
 	{
 		*(.subject_pt)
 	}

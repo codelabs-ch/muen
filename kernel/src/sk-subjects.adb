@@ -17,6 +17,14 @@ is
    pragma Import (C, VMCS_Address, "vmcs_pointer");
    --# end accept;
 
+   --# accept Warning, 350, Pagetable_Address, "Imported from Linker";
+   Pagetable_Address : SK.Word64;
+   pragma Import (C, Pagetable_Address, "subjects_pt_pointer");
+   --# end accept;
+
+   --  Size of page table (4 pages).
+   Pagetable_Size : constant := 4 * 4096;
+
    -------------------------------------------------------------------------
 
    function Get_State (Idx : Index_Type) return State_Type
@@ -58,13 +66,11 @@ begin
               Regs          => CPU.Null_Regs,
               Stack_Address => Config_Subjects.Bins.Subjects (S).Stack_Address,
               VMCS_Address  => VMCS_Address,
-              PML4_Address  => 0,
+              PML4_Address  => Pagetable_Address,
               Entry_Point   => Config_Subjects.Bins.Subjects (S).Entry_Point);
 
-         VMCS_Address := VMCS_Address + 4096;
+         VMCS_Address      := VMCS_Address + 4096;
+         Pagetable_Address := Pagetable_Address + Pagetable_Size;
       end loop;
-
-      Descriptors (0).PML4_Address := 16#1f0000#;
-      Descriptors (1).PML4_Address := 16#1f4000#;
    end;
 end SK.Subjects;

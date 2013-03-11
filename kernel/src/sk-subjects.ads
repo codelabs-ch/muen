@@ -5,9 +5,11 @@ with SK.CPU;
 package SK.Subjects
 --# own
 --#    Descriptors,
+--#    Pagetable_Address,
 --#    VMCS_Address;
 --# initializes
 --#    Descriptors,
+--#    Pagetable_Address,
 --#    VMCS_Address;
 is
 

@@ -1,4 +1,5 @@
 .global kernel_pml4_ptr
+.global subjects_pt_pointer
 
 .section .pagetable
 
@@ -25,6 +26,7 @@ kernel_pml4_ptr:
 
 .section .subject_pt, "a"
 	.align 4096
+subjects_pt_start:
 subject0_pml4:
 	.quad 0x1f100f
 	.fill 511, 8, 0x0
@@ -73,3 +75,6 @@ subject1_pte:
 	// PTE for video memory b8000
 	.quad 0x0b818f
 	.fill 327, 8, 0x0
+
+subjects_pt_pointer:
+	.quad subjects_pt_start

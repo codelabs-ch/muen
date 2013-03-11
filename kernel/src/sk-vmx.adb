@@ -6,6 +6,7 @@ with SK.Descriptors;
 with SK.KC;
 with SK.GDT;
 with SK.Constants;
+with SK.Debug;
 
 package body SK.VMX
 is
@@ -389,9 +390,9 @@ is
       RBP : SK.Word64; R10 : SK.Word64; R11 : SK.Word64; R12 : SK.Word64;
       R13 : SK.Word64; R14 : SK.Word64; R15 : SK.Word64)
    is
-      Reason, Qualification : SK.Word64;
-      Registers             : CPU.Registers_Type;
-      State                 : Subjects.State_Type;
+      Reason, Qualification, Intr_Info : SK.Word64;
+      Registers                        : CPU.Registers_Type;
+      State                            : Subjects.State_Type;
    begin
       Registers := CPU.Registers_Type'
         (RAX  => RAX,
@@ -428,7 +429,17 @@ is
          pragma Debug (KC.Put_Word16 (Item => SK.Word16 (Reason)));
          pragma Debug (KC.Put_String (Item => ":"));
          pragma Debug (KC.Put_Word32 (Item => SK.Word32 (Qualification)));
-         pragma Debug (KC.Put_Line   (Item => ")"));
+
+         pragma Debug (Reason = Constants.VMEXIT_EXCEPTION_NMI,
+           VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
+                      Value => Intr_Info));
+         pragma Debug (Reason = Constants.VMEXIT_EXCEPTION_NMI,
+                       KC.Put_String (Item => ":"));
+         pragma Debug (Reason = Constants.VMEXIT_EXCEPTION_NMI,
+                       KC.Put_Word32 (Item => SK.Word32 (Intr_Info)));
+         pragma Debug (KC.Put_Line (Item => ")"));
+         pragma Debug (Debug.Print_State (Subject => Current_Subject));
+
          CPU.Panic;
       end if;
 
@@ -439,6 +450,7 @@ is
          Launch;
       end if;
       --# accept Warning, 400, Qualification, "Only used for debug output";
+      --# accept Warning, 400, Intr_Info, "Only used for debug output";
    end Handle_Vmx_Exit;
 
    -------------------------------------------------------------------------

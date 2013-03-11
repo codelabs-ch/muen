@@ -108,6 +108,7 @@ is
 
    --  VMX basic exit reasons
 
+   VMEXIT_EXCEPTION_NMI     : constant := 0;
    VMEXIT_TIMER_EXPIRY      : constant := 52;
 
 end SK.Constants;

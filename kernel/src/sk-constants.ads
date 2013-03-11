@@ -49,6 +49,7 @@ is
    VM_ENTRY_CONTROLS        : constant := 16#4012#;
    VMX_INST_ERROR           : constant := 16#4400#;
    VMX_EXIT_REASON          : constant := 16#4402#;
+   VMX_EXIT_INTR_INFO       : constant := 16#4404#;
    VMX_EXIT_QUALIFICATION   : constant := 16#6400#;
 
    --  Host state fields

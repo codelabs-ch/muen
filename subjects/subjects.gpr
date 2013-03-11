@@ -1,12 +1,12 @@
 with "../common/defaults";
 
-project Subject0 is
+project Subjects is
 
    for Languages use ("Ada");
    for Source_Dirs use ("../common/src", "../common/debug", "src");
    for Object_Dir use "obj";
 
-   for Main use ("subject_0");
+   for Main use ("subject_0", "subject_1");
 
    package Builder is
       for Global_Configuration_Pragmas use "../common/restrictions.adc";
@@ -23,4 +23,4 @@ project Subject0 is
          "-n");
    end Linker;
 
-end Subject0;
+end Subjects;

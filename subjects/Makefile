@@ -5,8 +5,7 @@ BUILD_OPTS = -p -j0 --RTS=zfp
 all: subjects
 
 subjects:
-	gprbuild $(BUILD_OPTS) -Psubject0
-	gprbuild $(BUILD_OPTS) -Psubject1
+	gprbuild $(BUILD_OPTS) -P$@
 
 clean:
 	rm -rf obj

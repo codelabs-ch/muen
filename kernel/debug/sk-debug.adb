@@ -8,41 +8,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Isr_Dump
+   procedure Dump_Registers
      (RDI : Word64; RSI : Word64; RDX : Word64; RCX : Word64; R08 : Word64;
       R09 : Word64; RAX : Word64; RBX : Word64; RBP : Word64; R10 : Word64;
       R11 : Word64; R12 : Word64; R13 : Word64; R14 : Word64; R15 : Word64;
-      Vec : Word64; Err : Word64; RIP : Word64; CS  : Word64; RFL : Word64;
-      RSP : Word64; SS  : Word64)
+      RIP : Word64; CS  : Word64; RFL : Word64; RSP : Word64; SS  : Word64;
+      CR0 : Word64; CR2 : Word64; CR3 : Word64; CR4 : Word64)
    is
-      CR0, CR2, CR3, CR4 : Word64;
    begin
-      System.Machine_Code.Asm
-        (Template => "movq %%cr0, %0",
-         Outputs  => (Word64'Asm_Output ("=r", CR0)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%cr2, %0",
-         Outputs  => (Word64'Asm_Output ("=r", CR2)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%cr3, %0",
-         Outputs  => (Word64'Asm_Output ("=r", CR3)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%cr4, %0",
-         Outputs  => (Word64'Asm_Output ("=r", CR4)),
-         Volatile => True);
-
-      KC.Put_Line ("[KERNEL PANIC]");
-
-      KC.Put_String ("Vector: ");
-      KC.Put_Byte (Item => Byte (Vec));
-      KC.Put_String (", Error: ");
-      KC.Put_Word64 (Item => Err);
-      KC.New_Line;
-      KC.New_Line;
-
       KC.Put_String ("RIP: ");
       KC.Put_Word64 (Item => RIP);
       KC.Put_String (" CS : ");
@@ -107,6 +80,70 @@ is
       KC.Put_String (" EFL: ");
       KC.Put_Word32 (Item => Word32 (RFL));
       KC.New_Line;
+   end Dump_Registers;
+   pragma Inline_Always (Dump_Registers);
+
+   -------------------------------------------------------------------------
+
+   procedure Isr_Dump
+     (RDI : Word64; RSI : Word64; RDX : Word64; RCX : Word64; R08 : Word64;
+      R09 : Word64; RAX : Word64; RBX : Word64; RBP : Word64; R10 : Word64;
+      R11 : Word64; R12 : Word64; R13 : Word64; R14 : Word64; R15 : Word64;
+      Vec : Word64; Err : Word64; RIP : Word64; CS  : Word64; RFL : Word64;
+      RSP : Word64; SS  : Word64)
+   is
+      CR0, CR2, CR3, CR4 : Word64;
+   begin
+      System.Machine_Code.Asm
+        (Template => "movq %%cr0, %0",
+         Outputs  => (Word64'Asm_Output ("=r", CR0)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "movq %%cr2, %0",
+         Outputs  => (Word64'Asm_Output ("=r", CR2)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "movq %%cr3, %0",
+         Outputs  => (Word64'Asm_Output ("=r", CR3)),
+         Volatile => True);
+      System.Machine_Code.Asm
+        (Template => "movq %%cr4, %0",
+         Outputs  => (Word64'Asm_Output ("=r", CR4)),
+         Volatile => True);
+
+      KC.Put_Line ("[KERNEL PANIC]");
+
+      KC.Put_String ("Vector: ");
+      KC.Put_Byte (Item => Byte (Vec));
+      KC.Put_String (", Error: ");
+      KC.Put_Word64 (Item => Err);
+      KC.New_Line;
+      KC.New_Line;
+
+      Dump_Registers (RDI => RDI,
+                      RSI => RSI,
+                      RDX => RDX,
+                      RCX => RCX,
+                      R08 => R08,
+                      R09 => R09,
+                      RAX => RAX,
+                      RBX => RBX,
+                      RBP => RBP,
+                      R10 => R10,
+                      R11 => R11,
+                      R12 => R12,
+                      R13 => R13,
+                      R14 => R14,
+                      R15 => R15,
+                      RIP => RIP,
+                      CS  => CS,
+                      RFL => RFL,
+                      RSP => RSP,
+                      SS  => SS,
+                      CR0 => CR0,
+                      CR2 => CR2,
+                      CR3 => CR3,
+                      CR4 => CR4);
 
       CPU.Hlt;
    end Isr_Dump;

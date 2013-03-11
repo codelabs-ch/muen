@@ -252,13 +252,11 @@ is
      (Stack_Address : SK.Word64;
       Entry_Point   : SK.Word64)
    --# global
-   --#    in     Interrupts.IDT_Pointer;
    --#    in     GDT.GDT_Pointer;
    --#    in out X86_64.State;
    --# derives
    --#    X86_64.State from
    --#       *,
-   --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,
    --#       Stack_Address,
    --#       Entry_Point;
@@ -317,11 +315,6 @@ is
       VMCS_Write (Field => Constants.GUEST_CR4,
                   Value => CPU.Get_CR4);
 
-      PD := Interrupts.Get_IDT_Pointer;
-      VMCS_Write (Field => Constants.GUEST_BASE_IDTR,
-                  Value => PD.Base);
-      VMCS_Write (Field => Constants.GUEST_LIMIT_IDTR,
-                  Value => SK.Word64 (PD.Limit));
       PD := GDT.Get_GDT_Pointer;
       VMCS_Write (Field => Constants.GUEST_BASE_GDTR,
                   Value => PD.Base);

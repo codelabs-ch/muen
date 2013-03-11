@@ -213,44 +213,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Save_Registers
-     (Regs : out Registers_Type;
-      RAX  :     SK.Word64;
-      RBX  :     SK.Word64;
-      RCX  :     SK.Word64;
-      RDX  :     SK.Word64;
-      RDI  :     SK.Word64;
-      RSI  :     SK.Word64;
-      RBP  :     SK.Word64;
-      R08  :     SK.Word64;
-      R09  :     SK.Word64;
-      R10  :     SK.Word64;
-      R11  :     SK.Word64;
-      R12  :     SK.Word64;
-      R13  :     SK.Word64;
-      R14  :     SK.Word64;
-      R15  :     SK.Word64)
-   is
-   begin
-      Regs.RAX := RAX;
-      Regs.RBX := RBX;
-      Regs.RCX := RCX;
-      Regs.RDX := RDX;
-      Regs.RDI := RDI;
-      Regs.RSI := RSI;
-      Regs.RBP := RBP;
-      Regs.R08 := R08;
-      Regs.R09 := R09;
-      Regs.R10 := R10;
-      Regs.R11 := R11;
-      Regs.R12 := R12;
-      Regs.R13 := R13;
-      Regs.R14 := R14;
-      Regs.R15 := R15;
-   end Save_Registers;
-
-   -------------------------------------------------------------------------
-
    procedure Set_CR4 (Value : SK.Word64)
    is
       --# hide Set_CR4;

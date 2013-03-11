@@ -5,43 +5,23 @@ package SK.CPU
 is
 
    --  General purpose registers.
-   type Registers_Type is private;
-
-   --  Save CPU register values.
-   procedure Save_Registers
-     (Regs : out Registers_Type;
-      RAX  :     SK.Word64;
-      RBX  :     SK.Word64;
-      RCX  :     SK.Word64;
-      RDX  :     SK.Word64;
-      RDI  :     SK.Word64;
-      RSI  :     SK.Word64;
-      RBP  :     SK.Word64;
-      R08  :     SK.Word64;
-      R09  :     SK.Word64;
-      R10  :     SK.Word64;
-      R11  :     SK.Word64;
-      R12  :     SK.Word64;
-      R13  :     SK.Word64;
-      R14  :     SK.Word64;
-      R15  :     SK.Word64);
-   --# derives
-   --#    Regs from
-   --#       RAX,
-   --#       RBX,
-   --#       RCX,
-   --#       RDX,
-   --#       RDI,
-   --#       RSI,
-   --#       RBP,
-   --#       R08,
-   --#       R09,
-   --#       R10,
-   --#       R11,
-   --#       R12,
-   --#       R13,
-   --#       R14,
-   --#       R15;
+   type Registers_Type is record
+      RAX : SK.Word64;
+      RBX : SK.Word64;
+      RCX : SK.Word64;
+      RDX : SK.Word64;
+      RDI : SK.Word64;
+      RSI : SK.Word64;
+      RBP : SK.Word64;
+      R08 : SK.Word64;
+      R09 : SK.Word64;
+      R10 : SK.Word64;
+      R11 : SK.Word64;
+      R12 : SK.Word64;
+      R13 : SK.Word64;
+      R14 : SK.Word64;
+      R15 : SK.Word64;
+   end record;
 
    --  Restore CPU register values.
    procedure Restore_Registers (Regs : Registers_Type);
@@ -181,24 +161,6 @@ is
    --#    X86_64.State, Success from X86_64.State, Field, Value;
 
 private
-
-   type Registers_Type is record
-      RAX : SK.Word64;
-      RBX : SK.Word64;
-      RCX : SK.Word64;
-      RDX : SK.Word64;
-      RDI : SK.Word64;
-      RSI : SK.Word64;
-      RBP : SK.Word64;
-      R08 : SK.Word64;
-      R09 : SK.Word64;
-      R10 : SK.Word64;
-      R11 : SK.Word64;
-      R12 : SK.Word64;
-      R13 : SK.Word64;
-      R14 : SK.Word64;
-      R15 : SK.Word64;
-   end record;
 
    Null_Regs : constant Registers_Type := Registers_Type'
      (RAX => 0,

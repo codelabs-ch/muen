@@ -399,22 +399,22 @@ is
       Registers             : CPU.Registers_Type;
       State                 : Subjects.State_Type;
    begin
-      CPU.Save_Registers (Regs => Registers,
-                          RAX  => RAX,
-                          RBX  => RBX,
-                          RCX  => RCX,
-                          RDX  => RDX,
-                          RDI  => RDI,
-                          RSI  => RSI,
-                          RBP  => RBP,
-                          R08  => R08,
-                          R09  => R09,
-                          R10  => R10,
-                          R11  => R11,
-                          R12  => R12,
-                          R13  => R13,
-                          R14  => R14,
-                          R15  => R15);
+      Registers := CPU.Registers_Type'
+        (RAX  => RAX,
+         RBX  => RBX,
+         RCX  => RCX,
+         RDX  => RDX,
+         RDI  => RDI,
+         RSI  => RSI,
+         RBP  => RBP,
+         R08  => R08,
+         R09  => R09,
+         R10  => R10,
+         R11  => R11,
+         R12  => R12,
+         R13  => R13,
+         R14  => R14,
+         R15  => R15);
 
       State := Subjects.Get_State (Idx => Current_Subject);
       State.Regs := Registers;

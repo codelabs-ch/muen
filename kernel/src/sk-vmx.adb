@@ -142,11 +142,13 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure VMCS_Setup_Control_Fields (IO_Bitmap_Address : SK.Word64)
+   procedure VMCS_Setup_Control_Fields
+     (IO_Bitmap_Address : SK.Word64;
+      Ctls_Exec_Pin     : SK.Word32)
    --# global
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from *, IO_Bitmap_Address;
+   --#    X86_64.State from *, Ctls_Exec_Pin, IO_Bitmap_Address;
    is
       Default0, Default1, Value : SK.Word32;
    begin
@@ -156,7 +158,7 @@ is
       CPU.Get_MSR (Register => Constants.IA32_VMX_PINBASED_CTLS,
                    Low      => Default0,
                    High     => Default1);
-      Value := Constants.VM_CONTROL_PREEMPT_TIMER;
+      Value := Ctls_Exec_Pin;
       Value := Value and Default1;
       Value := Value or  Default0;
 
@@ -391,7 +393,8 @@ is
       end if;
 
       VMCS_Setup_Control_Fields
-        (IO_Bitmap_Address => State.IO_Bitmap_Address);
+        (IO_Bitmap_Address => State.IO_Bitmap_Address,
+         Ctls_Exec_Pin     => State.Ctls_Exec_Pin);
       VMCS_Setup_Host_Fields;
       VMCS_Setup_Guest_Fields
         (Stack_Address => State.Stack_Address,

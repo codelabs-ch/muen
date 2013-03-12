@@ -75,6 +75,7 @@ begin
               VMCS_Address      => VMCS_Address,
               PML4_Address      => Pagetable_Address,
               IO_Bitmap_Address => IO_Bitmap_Address,
+              Ctls_Exec_Pin     => Constants.VM_CONTROL_PREEMPT_TIMER,
               Entry_Point       => Config_Subjects.Bins.Subjects
                 (S).Entry_Point);
 

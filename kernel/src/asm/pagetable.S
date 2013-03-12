@@ -43,10 +43,10 @@ subject0_pd:
 
 	.align 4096
 subject0_pte:
-	.quad 0x20018f
-	.quad 0x20118f
-	.quad 0x20218f
-	.quad 0x20318f
+	.quad 0x20008d
+	.quad 0x20108d
+	.quad 0x20208f
+	.quad 0x20308f
 	.fill 180, 8, 0x0
 	// PTE for video memory b8000
 	.quad 0x0b818f
@@ -69,10 +69,10 @@ subject1_pd:
 
 	.align 4096
 subject1_pte:
-	.quad 0x21018f
-	.quad 0x21118f
-	.quad 0x21218f
-	.quad 0x21318f
+	.quad 0x21008d
+	.quad 0x21108d
+	.quad 0x21208f
+	.quad 0x21308f
 	.fill 180, 8, 0x0
 	// PTE for video memory b8000
 	.quad 0x0b818f

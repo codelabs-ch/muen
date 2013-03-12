@@ -148,53 +148,81 @@ is
    --# derives
    --#    X86_64.State from *, IO_Bitmap_Address;
    is
-      Default0, Default1 : SK.Word32;
-      Value              : SK.Word64;
+      Default0, Default1, Value : SK.Word32;
    begin
+
+      --  Pin-based controls.
+
       CPU.Get_MSR (Register => Constants.IA32_VMX_PINBASED_CTLS,
                    Low      => Default0,
                    High     => Default1);
       Value := Constants.VM_CONTROL_PREEMPT_TIMER;
-      Value := Value and SK.Word64 (Default1);
-      Value := Value or  SK.Word64 (Default0);
+      Value := Value and Default1;
+      Value := Value or  Default0;
+
+      pragma Debug (KC.Put_String (Item => "PIN_BASED_EXEC_CONTROL "));
+      pragma Debug (KC.Put_Word32 (Item => Value));
+      pragma Debug (KC.New_Line);
       VMCS_Write (Field => Constants.PIN_BASED_EXEC_CONTROL,
-                  Value => Value);
+                  Value => SK.Word64 (Value));
+
+      --  Processor-based controls.
 
       CPU.Get_MSR (Register => Constants.IA32_VMX_PROCBASED_CTLS,
                    Low      => Default0,
                    High     => Default1);
       Value := Constants.VM_CONTROL_EXIT_HLT or
         Constants.VM_CONTROL_IO_BITMAPS;
-      Value := Value and SK.Word64 (Default1);
-      Value := Value or  SK.Word64 (Default0);
+      Value := Value and Default1;
+      Value := Value or  Default0;
+
+      pragma Debug (KC.Put_String (Item => "CPU_BASED_EXEC_CONTROL "));
+      pragma Debug (KC.Put_Word32 (Item => Value));
+      pragma Debug (KC.New_Line);
       VMCS_Write (Field => Constants.CPU_BASED_EXEC_CONTROL,
-                  Value => Value);
+                  Value => SK.Word64 (Value));
+
+      --  Exception bitmap.
 
       VMCS_Write (Field => Constants.EXCEPTION_BITMAP,
                   Value => 16#ffffffff#);
+
+      --  I/O bitmaps.
 
       VMCS_Write (Field => Constants.IO_BITMAP_A,
                   Value => IO_Bitmap_Address);
       VMCS_Write (Field => Constants.IO_BITMAP_B,
                   Value => IO_Bitmap_Address + SK.Page_Size);
 
+      --  VM-exit controls.
+
       CPU.Get_MSR (Register => Constants.IA32_VMX_EXIT_CTLS,
                    Low      => Default0,
                    High     => Default1);
       Value := Constants.VM_CONTROL_IA32E_MODE;
-      Value := Value and SK.Word64 (Default1);
-      Value := Value or  SK.Word64 (Default0);
+      Value := Value and Default1;
+      Value := Value or  Default0;
+
+      pragma Debug (KC.Put_String (Item => "VM_EXIT_CONTROLS       "));
+      pragma Debug (KC.Put_Word32 (Item => Value));
+      pragma Debug (KC.New_Line);
       VMCS_Write (Field => Constants.VM_EXIT_CONTROLS,
-                  Value => Value);
+                  Value => SK.Word64 (Value));
+
+      --  VM-entry controls.
 
       CPU.Get_MSR (Register => Constants.IA32_VMX_ENTRY_CTLS,
                    Low      => Default0,
                    High     => Default1);
       Value := Constants.VM_CONTROL_IA32E_MODE;
-      Value := Value and SK.Word64 (Default1);
-      Value := Value or  SK.Word64 (Default0);
+      Value := Value and Default1;
+      Value := Value or  Default0;
+
+      pragma Debug (KC.Put_String (Item => "VM_ENTRY_CONTROLS      "));
+      pragma Debug (KC.Put_Word32 (Item => Value));
+      pragma Debug (KC.New_Line);
       VMCS_Write (Field => Constants.VM_ENTRY_CONTROLS,
-                  Value => Value);
+                  Value => SK.Word64 (Value));
    end VMCS_Setup_Control_Fields;
 
    -------------------------------------------------------------------------

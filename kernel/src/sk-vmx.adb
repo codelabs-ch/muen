@@ -145,7 +145,8 @@ is
    procedure VMCS_Setup_Control_Fields
      (IO_Bitmap_Address : SK.Word64;
       Ctls_Exec_Pin     : SK.Word32;
-      Ctls_Exec_Proc    : SK.Word32)
+      Ctls_Exec_Proc    : SK.Word32;
+      Ctls_Exec_Proc2   : SK.Word32)
    --# global
    --#    in out X86_64.State;
    --# derives
@@ -153,6 +154,7 @@ is
    --#       *,
    --#       Ctls_Exec_Pin,
    --#       Ctls_Exec_Proc,
+   --#       Ctls_Exec_Proc2,
    --#       IO_Bitmap_Address;
    is
       Default0, Default1, Value : SK.Word32;
@@ -167,13 +169,13 @@ is
       Value := Value and Default1;
       Value := Value or  Default0;
 
-      pragma Debug (KC.Put_String (Item => "PIN_BASED_EXEC_CONTROL "));
+      pragma Debug (KC.Put_String (Item => "PIN_BASED_EXEC_CONTROL  "));
       pragma Debug (KC.Put_Word32 (Item => Value));
       pragma Debug (KC.New_Line);
       VMCS_Write (Field => Constants.PIN_BASED_EXEC_CONTROL,
                   Value => SK.Word64 (Value));
 
-      --  Processor-based controls.
+      --  Primary processor-based controls.
 
       CPU.Get_MSR (Register => Constants.IA32_VMX_PROCBASED_CTLS,
                    Low      => Default0,
@@ -182,10 +184,25 @@ is
       Value := Value and Default1;
       Value := Value or  Default0;
 
-      pragma Debug (KC.Put_String (Item => "CPU_BASED_EXEC_CONTROL "));
+      pragma Debug (KC.Put_String (Item => "CPU_BASED_EXEC_CONTROL  "));
       pragma Debug (KC.Put_Word32 (Item => Value));
       pragma Debug (KC.New_Line);
       VMCS_Write (Field => Constants.CPU_BASED_EXEC_CONTROL,
+                  Value => SK.Word64 (Value));
+
+      --  Secondary processor-based controls.
+
+      CPU.Get_MSR (Register => Constants.IA32_VMX_PROCBASED_CTLS2,
+                   Low      => Default0,
+                   High     => Default1);
+      Value := Ctls_Exec_Proc2;
+      Value := Value and Default1;
+      Value := Value or  Default0;
+
+      pragma Debug (KC.Put_String (Item => "CPU_BASED_EXEC_CONTROL2 "));
+      pragma Debug (KC.Put_Word32 (Item => Value));
+      pragma Debug (KC.New_Line);
+      VMCS_Write (Field => Constants.CPU_BASED_EXEC_CONTROL2,
                   Value => SK.Word64 (Value));
 
       --  Exception bitmap.
@@ -209,7 +226,7 @@ is
       Value := Value and Default1;
       Value := Value or  Default0;
 
-      pragma Debug (KC.Put_String (Item => "VM_EXIT_CONTROLS       "));
+      pragma Debug (KC.Put_String (Item => "VM_EXIT_CONTROLS        "));
       pragma Debug (KC.Put_Word32 (Item => Value));
       pragma Debug (KC.New_Line);
       VMCS_Write (Field => Constants.VM_EXIT_CONTROLS,
@@ -224,7 +241,7 @@ is
       Value := Value and Default1;
       Value := Value or  Default0;
 
-      pragma Debug (KC.Put_String (Item => "VM_ENTRY_CONTROLS      "));
+      pragma Debug (KC.Put_String (Item => "VM_ENTRY_CONTROLS       "));
       pragma Debug (KC.Put_Word32 (Item => Value));
       pragma Debug (KC.New_Line);
       VMCS_Write (Field => Constants.VM_ENTRY_CONTROLS,
@@ -399,7 +416,8 @@ is
       VMCS_Setup_Control_Fields
         (IO_Bitmap_Address => State.IO_Bitmap_Address,
          Ctls_Exec_Pin     => State.Ctls_Exec_Pin,
-         Ctls_Exec_Proc    => State.Ctls_Exec_Proc);
+         Ctls_Exec_Proc    => State.Ctls_Exec_Proc,
+         Ctls_Exec_Proc2   => State.Ctls_Exec_Proc2);
       VMCS_Setup_Host_Fields;
       VMCS_Setup_Guest_Fields
         (Stack_Address => State.Stack_Address,

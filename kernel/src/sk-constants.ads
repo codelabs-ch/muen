@@ -35,6 +35,7 @@ is
    IA32_VMX_CR0_FIXED1      : constant := 16#487#;
    IA32_VMX_CR4_FIXED0      : constant := 16#488#;
    IA32_VMX_CR4_FIXED1      : constant := 16#489#;
+   IA32_VMX_PROCBASED_CTLS2 : constant := 16#48b#;
 
    ----------
    -- VMCS --
@@ -47,6 +48,7 @@ is
    EXCEPTION_BITMAP         : constant := 16#4004#;
    VM_EXIT_CONTROLS         : constant := 16#400c#;
    VM_ENTRY_CONTROLS        : constant := 16#4012#;
+   CPU_BASED_EXEC_CONTROL2  : constant := 16#401e#;
    VMX_INST_ERROR           : constant := 16#4400#;
    VMX_EXIT_REASON          : constant := 16#4402#;
    VMX_EXIT_INTR_INFO       : constant := 16#4404#;
@@ -104,6 +106,8 @@ is
 
    --  VMX control flags
 
+   VM_CTRL_EXIT_DT          : constant := 16#0000_0004#;
+   VM_CTRL_EXIT_WBINVD      : constant := 16#0000_0040#;
    VM_CTRL_PREEMPT_TIMER    : constant := 16#0000_0040#;
    VM_CTRL_EXIT_HLT         : constant := 16#0000_0080#;
    VM_CTRL_IA32E_MODE       : constant := 16#0000_0200#;

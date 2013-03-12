@@ -89,6 +89,8 @@ begin
               or Constants.VM_CTRL_EXIT_CR8_STORE
               or Constants.VM_CTRL_EXIT_MOV_DR
               or Constants.VM_CTRL_EXIT_MONITOR,
+              Ctls_Exec_Proc2   => Constants.VM_CTRL_EXIT_DT
+              or Constants.VM_CTRL_EXIT_WBINVD,
               Entry_Point       => Config_Subjects.Bins.Subjects
                 (S).Entry_Point);
 

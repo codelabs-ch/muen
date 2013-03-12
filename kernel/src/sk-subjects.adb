@@ -76,8 +76,18 @@ begin
               PML4_Address      => Pagetable_Address,
               IO_Bitmap_Address => IO_Bitmap_Address,
               Ctls_Exec_Pin     => Constants.VM_CTRL_PREEMPT_TIMER,
-              Ctls_Exec_Proc    => Constants.VM_CTRL_EXIT_HLT or
-                Constants.VM_CTRL_IO_BITMAPS,
+              Ctls_Exec_Proc    => Constants.VM_CTRL_IO_BITMAPS
+              or Constants.VM_CTRL_EXIT_HLT
+              or Constants.VM_CTRL_EXIT_INVLPG
+              or Constants.VM_CTRL_EXIT_MWAIT
+              or Constants.VM_CTRL_EXIT_RDPMC
+              or Constants.VM_CTRL_EXIT_RDTSC
+              or Constants.VM_CTRL_EXIT_CR3_LOAD
+              or Constants.VM_CTRL_EXIT_CR3_STORE
+              or Constants.VM_CTRL_EXIT_CR8_LOAD
+              or Constants.VM_CTRL_EXIT_CR8_STORE
+              or Constants.VM_CTRL_EXIT_MOV_DR
+              or Constants.VM_CTRL_EXIT_MONITOR,
               Entry_Point       => Config_Subjects.Bins.Subjects
                 (S).Entry_Point);
 

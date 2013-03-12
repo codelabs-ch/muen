@@ -8,6 +8,7 @@
 #define CR0_PG_BIT   31
 #define CR4_PAE_BIT  5
 #define EFER_LME_BIT 8
+#define EFER_NXE_BIT 11
 
 #define MBOOT_PAGEALIGN  1 <<  0
 #define MBOOT_MEMINFO    1 <<  1
@@ -46,11 +47,12 @@ _start:
 	movl kernel_pml4_ptr, %eax
 	movl %eax, %cr3
 
-	// (3) enable IA-32e mode
+	// (3) enable IA-32e mode and execute-disable
 
 	movl $MSR_EFER, %ecx
 	rdmsr
 	btsl $EFER_LME_BIT, %eax
+	btsl $EFER_NXE_BIT, %eax
 	wrmsr
 
 	// (4) enable paging, write protection and native FPU error reporting

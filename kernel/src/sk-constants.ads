@@ -74,6 +74,8 @@ is
    GUEST_SEL_SS             : constant := 16#0804#;
    GUEST_SEL_DS             : constant := 16#0806#;
    GUEST_SEL_TR             : constant := 16#080e#;
+   IO_BITMAP_A              : constant := 16#2000#;
+   IO_BITMAP_B              : constant := 16#2002#;
    VMCS_LINK_POINTER        : constant := 16#2800#;
    GUEST_LIMIT_ES           : constant := 16#4800#;
    GUEST_LIMIT_CS           : constant := 16#4802#;
@@ -102,9 +104,10 @@ is
 
    --  VMX control flags
 
-   VM_CONTROL_PREEMPT_TIMER : constant := 16#040#;
-   VM_CONTROL_EXIT_HLT      : constant := 16#080#;
-   VM_CONTROL_IA32E_MODE    : constant := 16#200#;
+   VM_CONTROL_PREEMPT_TIMER : constant := 16#0000040#;
+   VM_CONTROL_EXIT_HLT      : constant := 16#0000080#;
+   VM_CONTROL_IA32E_MODE    : constant := 16#0000200#;
+   VM_CONTROL_IO_BITMAPS    : constant := 16#2000000#;
 
    --  VMX basic exit reasons
 

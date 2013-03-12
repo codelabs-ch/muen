@@ -77,6 +77,7 @@ begin
               IO_Bitmap_Address => IO_Bitmap_Address,
               Ctls_Exec_Pin     => Constants.VM_CTRL_PREEMPT_TIMER,
               Ctls_Exec_Proc    => Constants.VM_CTRL_IO_BITMAPS
+              or Constants.VM_CTRL_SECONDARY_PROC
               or Constants.VM_CTRL_EXIT_HLT
               or Constants.VM_CTRL_EXIT_INVLPG
               or Constants.VM_CTRL_EXIT_MWAIT

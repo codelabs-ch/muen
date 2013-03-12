@@ -24,6 +24,7 @@ is
       PML4_Address      : SK.Word64;
       IO_Bitmap_Address : SK.Word64;
       Ctls_Exec_Pin     : SK.Word32;
+      Ctls_Exec_Proc    : SK.Word32;
       Entry_Point       : SK.Word64;
    end record;
 

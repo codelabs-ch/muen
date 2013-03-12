@@ -76,6 +76,8 @@ begin
               PML4_Address      => Pagetable_Address,
               IO_Bitmap_Address => IO_Bitmap_Address,
               Ctls_Exec_Pin     => Constants.VM_CONTROL_PREEMPT_TIMER,
+              Ctls_Exec_Proc    => Constants.VM_CONTROL_EXIT_HLT or
+                Constants.VM_CONTROL_IO_BITMAPS,
               Entry_Point       => Config_Subjects.Bins.Subjects
                 (S).Entry_Point);
 

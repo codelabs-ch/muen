@@ -144,11 +144,16 @@ is
 
    procedure VMCS_Setup_Control_Fields
      (IO_Bitmap_Address : SK.Word64;
-      Ctls_Exec_Pin     : SK.Word32)
+      Ctls_Exec_Pin     : SK.Word32;
+      Ctls_Exec_Proc    : SK.Word32)
    --# global
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from *, Ctls_Exec_Pin, IO_Bitmap_Address;
+   --#    X86_64.State from
+   --#       *,
+   --#       Ctls_Exec_Pin,
+   --#       Ctls_Exec_Proc,
+   --#       IO_Bitmap_Address;
    is
       Default0, Default1, Value : SK.Word32;
    begin
@@ -173,8 +178,7 @@ is
       CPU.Get_MSR (Register => Constants.IA32_VMX_PROCBASED_CTLS,
                    Low      => Default0,
                    High     => Default1);
-      Value := Constants.VM_CONTROL_EXIT_HLT or
-        Constants.VM_CONTROL_IO_BITMAPS;
+      Value := Ctls_Exec_Proc;
       Value := Value and Default1;
       Value := Value or  Default0;
 
@@ -394,7 +398,8 @@ is
 
       VMCS_Setup_Control_Fields
         (IO_Bitmap_Address => State.IO_Bitmap_Address,
-         Ctls_Exec_Pin     => State.Ctls_Exec_Pin);
+         Ctls_Exec_Pin     => State.Ctls_Exec_Pin,
+         Ctls_Exec_Proc    => State.Ctls_Exec_Proc);
       VMCS_Setup_Host_Fields;
       VMCS_Setup_Guest_Fields
         (Stack_Address => State.Stack_Address,

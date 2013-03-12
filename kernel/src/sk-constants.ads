@@ -104,14 +104,14 @@ is
 
    --  VMX control flags
 
-   VM_CONTROL_PREEMPT_TIMER : constant := 16#0000040#;
-   VM_CONTROL_EXIT_HLT      : constant := 16#0000080#;
-   VM_CONTROL_IA32E_MODE    : constant := 16#0000200#;
-   VM_CONTROL_IO_BITMAPS    : constant := 16#2000000#;
+   VM_CTRL_PREEMPT_TIMER    : constant := 16#0000040#;
+   VM_CTRL_EXIT_HLT         : constant := 16#0000080#;
+   VM_CTRL_IA32E_MODE       : constant := 16#0000200#;
+   VM_CTRL_IO_BITMAPS       : constant := 16#2000000#;
 
    --  VMX basic exit reasons
 
-   VMEXIT_EXCEPTION_NMI     : constant := 0;
-   VMEXIT_TIMER_EXPIRY      : constant := 52;
+   VM_EXIT_EXCEPTION_NMI    : constant := 0;
+   VM_EXIT_TIMER_EXPIRY     : constant := 52;
 
 end SK.Constants;

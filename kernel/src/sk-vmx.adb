@@ -205,7 +205,7 @@ is
       CPU.Get_MSR (Register => Constants.IA32_VMX_EXIT_CTLS,
                    Low      => Default0,
                    High     => Default1);
-      Value := Constants.VM_CONTROL_IA32E_MODE;
+      Value := Constants.VM_CTRL_IA32E_MODE;
       Value := Value and Default1;
       Value := Value or  Default0;
 
@@ -220,7 +220,7 @@ is
       CPU.Get_MSR (Register => Constants.IA32_VMX_ENTRY_CTLS,
                    Low      => Default0,
                    High     => Default1);
-      Value := Constants.VM_CONTROL_IA32E_MODE;
+      Value := Constants.VM_CTRL_IA32E_MODE;
       Value := Value and Default1;
       Value := Value or  Default0;
 
@@ -462,7 +462,7 @@ is
       VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                  Value => Reason);
 
-      if Reason /= Constants.VMEXIT_TIMER_EXPIRY then
+      if Reason /= Constants.VM_EXIT_TIMER_EXPIRY then
          pragma Debug (VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
                                   Value => Qualification));
 
@@ -473,12 +473,12 @@ is
          pragma Debug (KC.Put_String (Item => ":"));
          pragma Debug (KC.Put_Word32 (Item => SK.Word32 (Qualification)));
 
-         pragma Debug (Reason = Constants.VMEXIT_EXCEPTION_NMI,
+         pragma Debug (Reason = Constants.VM_EXIT_EXCEPTION_NMI,
            VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
                       Value => Intr_Info));
-         pragma Debug (Reason = Constants.VMEXIT_EXCEPTION_NMI,
+         pragma Debug (Reason = Constants.VM_EXIT_EXCEPTION_NMI,
                        KC.Put_String (Item => ":"));
-         pragma Debug (Reason = Constants.VMEXIT_EXCEPTION_NMI,
+         pragma Debug (Reason = Constants.VM_EXIT_EXCEPTION_NMI,
                        KC.Put_Word32 (Item => SK.Word32 (Intr_Info)));
          pragma Debug (KC.Put_Line (Item => ")"));
          pragma Debug (Dump.Print_State (Subject => Current_Subject));

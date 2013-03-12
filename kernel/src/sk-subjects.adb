@@ -22,6 +22,11 @@ is
    pragma Import (C, Pagetable_Address, "subjects_pt_pointer");
    --# end accept;
 
+   --# accept Warning, 350, IO_Bitmap_Address, "Imported from Linker";
+   IO_Bitmap_Address : SK.Word64;
+   pragma Import (C, IO_Bitmap_Address, "io_bitmap_ptr");
+   --# end accept;
+
    --  Size of VMCS structure.
    VMCS_Size : constant := 4096;
 
@@ -65,12 +70,15 @@ begin
       for S in Config_Subjects.Bins.Subjects'Range loop
          Descriptors (Index_Type (S - 1))
            := State_Type'
-             (Launched      => False,
-              Regs          => CPU.Null_Regs,
-              Stack_Address => Config_Subjects.Bins.Subjects (S).Stack_Address,
-              VMCS_Address  => VMCS_Address,
-              PML4_Address  => Pagetable_Address,
-              Entry_Point   => Config_Subjects.Bins.Subjects (S).Entry_Point);
+             (Launched          => False,
+              Regs              => CPU.Null_Regs,
+              Stack_Address     => Config_Subjects.Bins.Subjects
+                (S).Stack_Address,
+              VMCS_Address      => VMCS_Address,
+              PML4_Address      => Pagetable_Address,
+              IO_Bitmap_Address => IO_Bitmap_Address,
+              Entry_Point       => Config_Subjects.Bins.Subjects
+                (S).Entry_Point);
 
          VMCS_Address      := VMCS_Address + VMCS_Size;
          Pagetable_Address := Pagetable_Address + Pagetable_Size;

@@ -6,21 +6,24 @@ package SK.Subjects
 --# own
 --#    Descriptors,
 --#    Pagetable_Address,
+--#    IO_Bitmap_Address,
 --#    VMCS_Address;
 --# initializes
 --#    Descriptors,
 --#    Pagetable_Address,
+--#    IO_Bitmap_Address,
 --#    VMCS_Address;
 is
 
    --  Subject state.
    type State_Type is record
-      Launched      : Boolean;
-      Regs          : CPU.Registers_Type;
-      Stack_Address : SK.Word64;
-      VMCS_Address  : SK.Word64;
-      PML4_Address  : SK.Word64;
-      Entry_Point   : SK.Word64;
+      Launched          : Boolean;
+      Regs              : CPU.Registers_Type;
+      Stack_Address     : SK.Word64;
+      VMCS_Address      : SK.Word64;
+      PML4_Address      : SK.Word64;
+      IO_Bitmap_Address : SK.Word64;
+      Entry_Point       : SK.Word64;
    end record;
 
    type Index_Type is mod 2 ** 1;

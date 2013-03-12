@@ -176,7 +176,7 @@ is
       VMCS_Write (Field => Constants.IO_BITMAP_A,
                   Value => IO_Bitmap_Address);
       VMCS_Write (Field => Constants.IO_BITMAP_B,
-                  Value => IO_Bitmap_Address + 4096);
+                  Value => IO_Bitmap_Address + SK.Page_Size);
 
       CPU.Get_MSR (Register => Constants.IA32_VMX_EXIT_CTLS,
                    Low      => Default0,
@@ -342,7 +342,7 @@ is
 
       Success := Is_Aligned
         (Address   => State.VMCS_Address,
-         Alignment => 4096);
+         Alignment => SK.Page_Size);
       if not Success then
          pragma Debug (KC.Put_Line (Item => "VMCS region alignment invalid"));
          CPU.Panic;
@@ -468,7 +468,7 @@ is
    begin
       Success := Is_Aligned
         (Address   => VMXON_Address,
-         Alignment => 4096);
+         Alignment => SK.Page_Size);
       if not Success then
          pragma Debug (KC.Put_Line ("VMXON region alignment invalid"));
          CPU.Panic;

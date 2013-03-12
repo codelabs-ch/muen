@@ -15,6 +15,9 @@ is
 
    type Word64_Pos is range 0 .. 63;
 
+   --  Size of one page (4k).
+   Page_Size : constant := 4096;
+
    --  Test if bit at given position is set.
    function Bit_Test
      (Value : Word64;

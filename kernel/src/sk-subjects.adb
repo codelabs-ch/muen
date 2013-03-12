@@ -27,11 +27,8 @@ is
    pragma Import (C, IO_Bitmap_Address, "io_bitmap_ptr");
    --# end accept;
 
-   --  Size of VMCS structure.
-   VMCS_Size : constant := 4096;
-
    --  Size of page table (4 pages).
-   Pagetable_Size : constant := 4 * 4096;
+   Pagetable_Size : constant := 4 * SK.Page_Size;
 
    -------------------------------------------------------------------------
 
@@ -58,7 +55,8 @@ begin
    declare
       Revision, Unused_High, VMCS_Region0, VMCS_Region1 : SK.Word32;
       for VMCS_Region0'Address use System'To_Address (VMCS_Address);
-      for VMCS_Region1'Address use System'To_Address (VMCS_Address + 4096);
+      for VMCS_Region1'Address use System'To_Address
+        (VMCS_Address + Page_Size);
    begin
       CPU.Get_MSR
         (Register => Constants.IA32_VMX_BASIC,
@@ -80,7 +78,7 @@ begin
               Entry_Point       => Config_Subjects.Bins.Subjects
                 (S).Entry_Point);
 
-         VMCS_Address      := VMCS_Address + VMCS_Size;
+         VMCS_Address      := VMCS_Address      + Page_Size;
          Pagetable_Address := Pagetable_Address + Pagetable_Size;
       end loop;
    end;

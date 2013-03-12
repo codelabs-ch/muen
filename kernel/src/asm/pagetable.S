@@ -46,7 +46,8 @@ subject0_pte:
 	.quad 0x20018f
 	.quad 0x20118f
 	.quad 0x20218f
-	.fill 181, 8, 0x0
+	.quad 0x20318f
+	.fill 180, 8, 0x0
 	// PTE for video memory b8000
 	.quad 0x0b818f
 	.fill 327, 8, 0x0
@@ -71,7 +72,8 @@ subject1_pte:
 	.quad 0x21018f
 	.quad 0x21118f
 	.quad 0x21218f
-	.fill 181, 8, 0x0
+	.quad 0x21318f
+	.fill 180, 8, 0x0
 	// PTE for video memory b8000
 	.quad 0x0b818f
 	.fill 327, 8, 0x0

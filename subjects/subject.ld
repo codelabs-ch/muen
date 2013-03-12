@@ -3,6 +3,9 @@ ENTRY(main)
 SECTIONS
 {
 	.text :	{ *(.text) }
+
+	. = ALIGN (4096);
+
 	.data :	{ *(.data) }
 
 	. = ALIGN (4096);

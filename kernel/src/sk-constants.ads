@@ -52,6 +52,10 @@ is
    VMX_INST_ERROR           : constant := 16#4400#;
    VMX_EXIT_REASON          : constant := 16#4402#;
    VMX_EXIT_INTR_INFO       : constant := 16#4404#;
+   CR0_MASK                 : constant := 16#6000#;
+   CR4_MASK                 : constant := 16#6002#;
+   CR0_READ_SHADOW          : constant := 16#6004#;
+   CR4_READ_SHADOW          : constant := 16#6006#;
    VMX_EXIT_QUALIFICATION   : constant := 16#6400#;
 
    --  Host state fields

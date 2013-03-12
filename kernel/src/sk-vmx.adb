@@ -208,7 +208,21 @@ is
       --  Exception bitmap.
 
       VMCS_Write (Field => Constants.EXCEPTION_BITMAP,
-                  Value => 16#ffffffff#);
+                  Value => 16#ffff_ffff#);
+
+      --  Disallow write access to CR0/CR4.
+
+      VMCS_Write (Field => Constants.CR0_MASK,
+                  Value => 16#ffff_ffff#);
+      VMCS_Write (Field => Constants.CR4_MASK,
+                  Value => 16#ffff_ffff#);
+
+      --  Shadow read access to CR0/CR4.
+
+      VMCS_Write (Field => Constants.CR0_READ_SHADOW,
+                  Value => CPU.Get_CR0);
+      VMCS_Write (Field => Constants.CR4_READ_SHADOW,
+                  Value => CPU.Get_CR4);
 
       --  I/O bitmaps.
 

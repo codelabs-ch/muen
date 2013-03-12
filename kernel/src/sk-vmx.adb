@@ -142,11 +142,11 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure VMCS_Setup_Control_Fields
+   procedure VMCS_Setup_Control_Fields (IO_Bitmap_Address : SK.Word64)
    --# global
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from *;
+   --#    X86_64.State from *, IO_Bitmap_Address;
    is
       Default0, Default1 : SK.Word32;
       Value              : SK.Word64;
@@ -163,7 +163,8 @@ is
       CPU.Get_MSR (Register => Constants.IA32_VMX_PROCBASED_CTLS,
                    Low      => Default0,
                    High     => Default1);
-      Value := Constants.VM_CONTROL_EXIT_HLT;
+      Value := Constants.VM_CONTROL_EXIT_HLT or
+        Constants.VM_CONTROL_IO_BITMAPS;
       Value := Value and SK.Word64 (Default1);
       Value := Value or  SK.Word64 (Default0);
       VMCS_Write (Field => Constants.CPU_BASED_EXEC_CONTROL,
@@ -171,6 +172,11 @@ is
 
       VMCS_Write (Field => Constants.EXCEPTION_BITMAP,
                   Value => 16#ffffffff#);
+
+      VMCS_Write (Field => Constants.IO_BITMAP_A,
+                  Value => IO_Bitmap_Address);
+      VMCS_Write (Field => Constants.IO_BITMAP_B,
+                  Value => IO_Bitmap_Address + 4096);
 
       CPU.Get_MSR (Register => Constants.IA32_VMX_EXIT_CTLS,
                    Low      => Default0,
@@ -356,7 +362,8 @@ is
          CPU.Panic;
       end if;
 
-      VMCS_Setup_Control_Fields;
+      VMCS_Setup_Control_Fields
+        (IO_Bitmap_Address => State.IO_Bitmap_Address);
       VMCS_Setup_Host_Fields;
       VMCS_Setup_Guest_Fields
         (Stack_Address => State.Stack_Address,

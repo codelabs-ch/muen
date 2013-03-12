@@ -3,7 +3,7 @@ is
 
    --  Global descriptor table pointer
    GDT_Pointer : Descriptors.Pseudo_Descriptor_Type;
-   pragma Import (C, GDT_Pointer, "gdt_pointer");
+   pragma Import (C, GDT_Pointer, "gdt_ptr");
    --# assert GDT_Pointer'Always_Valid;
 
    -------------------------------------------------------------------------

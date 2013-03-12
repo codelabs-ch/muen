@@ -1,7 +1,7 @@
-.global vmx_exit_handler_pointer
+.global vmx_exit_handler_ptr
 
 .data
-vmx_exit_handler_pointer:
+vmx_exit_handler_ptr:
 	.quad vmx_exit_handler
 
 .text

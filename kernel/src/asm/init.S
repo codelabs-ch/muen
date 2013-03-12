@@ -1,5 +1,5 @@
 .global _start
-.global kernel_stack_pointer
+.global kernel_stack_ptr
 
 #define MSR_EFER 0xc0000080
 
@@ -61,7 +61,7 @@ _start:
 
 	// (5) set up GDT
 
-	lgdt gdt_pointer
+	lgdt gdt_ptr
 
 	// (6) indirect long jump to 64-bit code
 
@@ -72,7 +72,7 @@ start64: .align 4096
 
 	// set up kernel stack
 
-	movq (kernel_stack_pointer), %rsp
+	movq (kernel_stack_ptr), %rsp
 
 	// set up kernel segment selectors
 
@@ -98,5 +98,5 @@ freeze:
 	jmp freeze
 
 .data
-kernel_stack_pointer:
+kernel_stack_ptr:
 	.quad kernel_stack

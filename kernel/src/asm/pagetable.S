@@ -1,5 +1,5 @@
 .global kernel_pml4_ptr
-.global subjects_pt_pointer
+.global subjects_pt_ptr
 
 .section .pagetable
 
@@ -76,5 +76,5 @@ subject1_pte:
 	.quad 0x0b818f
 	.fill 327, 8, 0x0
 
-subjects_pt_pointer:
+subjects_pt_ptr:
 	.quad subjects_pt_start

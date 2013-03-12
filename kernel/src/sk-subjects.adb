@@ -14,12 +14,12 @@ is
 
    --# accept Warning, 350, VMCS_Address, "Imported from Linker";
    VMCS_Address : SK.Word64;
-   pragma Import (C, VMCS_Address, "vmcs_pointer");
+   pragma Import (C, VMCS_Address, "vmcs_ptr");
    --# end accept;
 
    --# accept Warning, 350, Pagetable_Address, "Imported from Linker";
    Pagetable_Address : SK.Word64;
-   pragma Import (C, Pagetable_Address, "subjects_pt_pointer");
+   pragma Import (C, Pagetable_Address, "subjects_pt_ptr");
    --# end accept;
 
    --# accept Warning, 350, IO_Bitmap_Address, "Imported from Linker";

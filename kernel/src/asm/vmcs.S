@@ -1,12 +1,12 @@
 .data
 
-.global vmxon_pointer
-.global vmcs_pointer
+.global vmxon_ptr
+.global vmcs_ptr
 
-vmxon_pointer:
+vmxon_ptr:
 	.quad vmxon_start
 
-vmcs_pointer:
+vmcs_ptr:
 	.quad vmcs_start
 
 	.align 4096

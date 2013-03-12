@@ -29,17 +29,17 @@ is
 
    --# accept Warning, 350, VMXON_Address, "Imported from Linker";
    VMXON_Address : SK.Word64;
-   pragma Import (C, VMXON_Address, "vmxon_pointer");
+   pragma Import (C, VMXON_Address, "vmxon_ptr");
    --# end accept;
 
    --# accept Warning, 350, VMX_Exit_Address, "Imported from Linker";
    VMX_Exit_Address : SK.Word64;
-   pragma Import (C, VMX_Exit_Address, "vmx_exit_handler_pointer");
+   pragma Import (C, VMX_Exit_Address, "vmx_exit_handler_ptr");
    --# end accept;
 
    --# accept Warning, 350, Kernel_Stack_Address, "Imported from Linker";
    Kernel_Stack_Address : SK.Word64;
-   pragma Import (C, Kernel_Stack_Address, "kernel_stack_pointer");
+   pragma Import (C, Kernel_Stack_Address, "kernel_stack_ptr");
    --# end accept;
 
    ---------------------------------------------------------------------------

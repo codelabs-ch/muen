@@ -9,7 +9,7 @@
 
 #define GDTE_SYS_TSS 0x900
 
-.global gdt_pointer
+.global gdt_ptr
 
 .section .gdt
 
@@ -17,7 +17,7 @@
 	.space 2
 
 // Segment descriptor tables: See Intel SDM 3A, chapter 3.5.1.
-gdt_pointer:
+gdt_ptr:
 	.word gdt_end - gdt_start - 1 // limit
 	.long gdt_start               // base address
 

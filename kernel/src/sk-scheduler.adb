@@ -12,6 +12,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Schedule
+   is
+   begin
+      if Subjects.Get_State (Idx => Current_Subject).Launched then
+         VMX.Resume (Subject_Id => Current_Subject);
+      else
+         VMX.Launch (Subject_Id => Current_Subject);
+      end if;
+   end Schedule;
+
+   -------------------------------------------------------------------------
+
    procedure Handle_Vmx_Exit
      (RDI : SK.Word64; RSI : SK.Word64; RDX : SK.Word64; RCX : SK.Word64;
       R08 : SK.Word64; R09 : SK.Word64; RAX : SK.Word64; RBX : SK.Word64;
@@ -73,11 +85,8 @@ is
       end if;
 
       Current_Subject := Current_Subject + 1;
-      if Subjects.Get_State (Idx => Current_Subject).Launched then
-         VMX.Resume (Subject_Id => Current_Subject);
-      else
-         VMX.Launch (Subject_Id => Current_Subject);
-      end if;
+      Schedule;
+
       --# accept Warning, 400, Qualification, "Only used for debug output";
       --# accept Warning, 400, Intr_Info, "Only used for debug output";
    end Handle_Vmx_Exit;

@@ -2,6 +2,7 @@
 --#    X86_64,
 --#    SK.Interrupts,
 --#    SK.GDT,
+--#    SK.Scheduler,
 --#    SK.System_State,
 --#    SK.Subjects,
 --#    SK.VMX;
@@ -18,13 +19,15 @@ is
    --#    in     VMX.Kernel_Stack_Address;
    --#    in     Interrupts.ISR_List;
    --#    in     GDT.GDT_Pointer;
+   --#    in     Scheduler.Current_Subject;
    --#       out Interrupts.IDT;
    --#       out Interrupts.IDT_Pointer;
    --# derives
    --#    Interrupts.IDT, Interrupts.IDT_Pointer from Interrupts.ISR_List &
    --#    Subjects.Descriptors from
    --#       *,
-   --#       X86_64.State &
+   --#       X86_64.State,
+   --#       Scheduler.Current_Subject &
    --#    X86_64.State from
    --#       *,
    --#       VMX.VMXON_Address,
@@ -32,7 +35,8 @@ is
    --#       VMX.Kernel_Stack_Address,
    --#       Interrupts.ISR_List,
    --#       GDT.GDT_Pointer,
-   --#       Subjects.Descriptors;
+   --#       Subjects.Descriptors,
+   --#       Scheduler.Current_Subject;
    pragma Export (C, Main, "kmain");
 
 end SK.Kernel;

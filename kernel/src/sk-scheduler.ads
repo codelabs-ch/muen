@@ -16,6 +16,28 @@ package SK.Scheduler
 --# initializes
 --#    Current_Subject;
 is
+
+   --  Schedule subject according to the current scheduling plan.
+   procedure Schedule;
+   --# global
+   --#    in     VMX.VMX_Exit_Address;
+   --#    in     VMX.Kernel_Stack_Address;
+   --#    in     GDT.GDT_Pointer;
+   --#    in     Interrupts.IDT_Pointer;
+   --#    in     Current_Subject;
+   --#    in out X86_64.State;
+   --#    in out Subjects.Descriptors;
+   --# derives
+   --#    Subjects.Descriptors from *, Current_Subject &
+   --#    X86_64.State from
+   --#       *,
+   --#       VMX.VMX_Exit_Address,
+   --#       VMX.Kernel_Stack_Address,
+   --#       GDT.GDT_Pointer,
+   --#       Interrupts.IDT_Pointer,
+   --#       Subjects.Descriptors,
+   --#       Current_Subject;
+
 private
 
    --  VMX exit handler.

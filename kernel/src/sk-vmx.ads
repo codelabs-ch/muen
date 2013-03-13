@@ -49,6 +49,13 @@ is
    --#       Subjects.Descriptors,
    --#       Subject_Id;
 
+   procedure Resume (Subject_Id : Subjects.Index_Type);
+   --# global
+   --#    in     Subjects.Descriptors;
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *, Subject_Id, Subjects.Descriptors;
+
    --  Read value from specified field of the current, active VMCS. If the
    --  operation fails, CPU.Panic is called.
    procedure VMCS_Read

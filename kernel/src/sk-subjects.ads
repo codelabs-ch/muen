@@ -30,7 +30,7 @@ is
    end record;
 
    --  Subject ID.
-   type Id_Type is mod 2 ** 1;
+   type Id_Type is range 0 .. 1;
 
    --  Get state of subject with given ID.
    function Get_State (Id : Id_Type) return State_Type;

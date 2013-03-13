@@ -30,9 +30,8 @@ is
    --# derives
    --#    X86_64.State from *, VMXON_Address;
 
-   procedure Launch;
+   procedure Launch (Subject_Id : Subjects.Index_Type);
    --# global
-   --#    in     Current_Subject;
    --#    in     VMX_Exit_Address;
    --#    in     Kernel_Stack_Address;
    --#    in     GDT.GDT_Pointer;
@@ -40,7 +39,7 @@ is
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    Subjects.Descriptors from *, Current_Subject &
+   --#    Subjects.Descriptors from *, Subject_Id &
    --#    X86_64.State from
    --#       *,
    --#       Interrupts.IDT_Pointer,
@@ -48,7 +47,7 @@ is
    --#       VMX_Exit_Address,
    --#       Kernel_Stack_Address,
    --#       Subjects.Descriptors,
-   --#       Current_Subject;
+   --#       Subject_Id;
 
    --  Read value from specified field of the current, active VMCS. If the
    --  operation fails, CPU.Panic is called.

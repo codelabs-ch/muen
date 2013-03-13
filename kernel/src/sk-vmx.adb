@@ -393,17 +393,17 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Launch
+   procedure Launch (Subject_Id : Subjects.Index_Type)
    is
       Success : Boolean;
       Error   : SK.Word64;
       State   : Subjects.State_Type;
    begin
       pragma Debug (KC.Put_String (Item => "Launching subject "));
-      pragma Debug (KC.Put_Byte (Item => Byte (Current_Subject)));
+      pragma Debug (KC.Put_Byte (Item => Byte (Subject_Id)));
       pragma Debug (KC.New_Line);
 
-      State := Subjects.Get_State (Idx => Current_Subject);
+      State := Subjects.Get_State (Idx => Subject_Id);
 
       Success := Is_Aligned
         (Address   => State.VMCS_Address,
@@ -439,11 +439,11 @@ is
          Entry_Point   => State.Entry_Point);
 
       State.Launched := True;
-      Subjects.Set_State (Idx   => Current_Subject,
+      Subjects.Set_State (Idx   => Subject_Id,
                           State => State);
 
       CPU.Restore_Registers
-        (Regs => Subjects.Get_State (Idx => Current_Subject).Regs);
+        (Regs => Subjects.Get_State (Idx => Subject_Id).Regs);
       CPU.VMLAUNCH (Success => Success);
       if not Success then
          pragma Debug (CPU.VMREAD (Field   => Constants.VMX_INST_ERROR,
@@ -522,7 +522,7 @@ is
       if Subjects.Get_State (Idx => Current_Subject).Launched then
          Resume;
       else
-         Launch;
+         Launch (Subject_Id => Current_Subject);
       end if;
       --# accept Warning, 400, Qualification, "Only used for debug output";
       --# accept Warning, 400, Intr_Info, "Only used for debug output";

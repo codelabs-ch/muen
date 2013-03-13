@@ -1,6 +1,5 @@
 with System;
 
-with SK.CPU;
 with SK.VMX;
 with SK.Constants;
 with SK.KC;
@@ -79,11 +78,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Handle_Vmx_Exit
-     (RDI : SK.Word64; RSI : SK.Word64; RDX : SK.Word64; RCX : SK.Word64;
-      R08 : SK.Word64; R09 : SK.Word64; RAX : SK.Word64; RBX : SK.Word64;
-      RBP : SK.Word64; R10 : SK.Word64; R11 : SK.Word64; R12 : SK.Word64;
-      R13 : SK.Word64; R14 : SK.Word64; R15 : SK.Word64)
+   procedure Handle_Vmx_Exit (Subject_Registers : CPU.Registers_Type)
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
@@ -99,21 +94,7 @@ is
    --#    Current_Minor from *         &
    --#    X86_64.State  from
    --#       *,
-   --#       RAX,
-   --#       RBX,
-   --#       RCX,
-   --#       RDX,
-   --#       RDI,
-   --#       RSI,
-   --#       RBP,
-   --#       R08,
-   --#       R09,
-   --#       R10,
-   --#       R11,
-   --#       R12,
-   --#       R13,
-   --#       R14,
-   --#       R15,
+   --#       Subject_Registers,
    --#       New_Major,
    --#       Current_Major,
    --#       Current_Minor,
@@ -124,52 +105,19 @@ is
    --#       Subjects.Descriptors &
    --#    Subjects.Descriptors from
    --#       *,
-   --#       RAX,
-   --#       RBX,
-   --#       RCX,
-   --#       RDX,
-   --#       RDI,
-   --#       RSI,
-   --#       RBP,
-   --#       R08,
-   --#       R09,
-   --#       R10,
-   --#       R11,
-   --#       R12,
-   --#       R13,
-   --#       R14,
-   --#       R15,
+   --#       Subject_Registers,
    --#       New_Major,
    --#       Current_Major,
    --#       Current_Minor,
    --#       Scheduling_Plan;
    is
       Reason, Qualification, Intr_Info : SK.Word64;
-      Registers                        : CPU.Registers_Type;
       State                            : Subjects.State_Type;
       Current_Subject                  : Subjects.Id_Type;
    begin
       Current_Subject := Scheduling_Plan (Current_Major) (Current_Minor);
-
-      Registers := CPU.Registers_Type'
-        (RAX => RAX,
-         RBX => RBX,
-         RCX => RCX,
-         RDX => RDX,
-         RDI => RDI,
-         RSI => RSI,
-         RBP => RBP,
-         R08 => R08,
-         R09 => R09,
-         R10 => R10,
-         R11 => R11,
-         R12 => R12,
-         R13 => R13,
-         R14 => R14,
-         R15 => R15);
-
-      State := Subjects.Get_State (Id => Current_Subject);
-      State.Regs := Registers;
+      State           := Subjects.Get_State (Id => Current_Subject);
+      State.Regs      := Subject_Registers;
       Subjects.Set_State (Id    => Current_Subject,
                           State => State);
 

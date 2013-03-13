@@ -14,12 +14,10 @@ is
    --# global
    --#    in out X86_64.State;
    --#    in out Subjects.Descriptors;
-   --#    in     VMX.VMXON_Address;
-   --#    in     VMX.VMX_Exit_Address;
-   --#    in     VMX.Kernel_Stack_Address;
    --#    in     Interrupts.ISR_List;
    --#    in     GDT.GDT_Pointer;
    --#    in     Scheduler.State;
+   --#    in     VMX.State;
    --#       out Interrupts.IDT;
    --#       out Interrupts.IDT_Pointer;
    --# derives
@@ -30,13 +28,11 @@ is
    --#       Scheduler.State &
    --#    X86_64.State from
    --#       *,
-   --#       VMX.VMXON_Address,
-   --#       VMX.VMX_Exit_Address,
-   --#       VMX.Kernel_Stack_Address,
    --#       Interrupts.ISR_List,
    --#       GDT.GDT_Pointer,
    --#       Subjects.Descriptors,
-   --#       Scheduler.State;
+   --#       Scheduler.State,
+   --#       VMX.State;
    pragma Export (C, Main, "kmain");
 
 end SK.Kernel;

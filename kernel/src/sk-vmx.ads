@@ -12,28 +12,23 @@ use type SK.Subjects.Id_Type;
 --#    SK.Subjects;
 package SK.VMX
 --# own
---#    VMXON_Address,
---#    VMX_Exit_Address,
---#    Kernel_Stack_Address;
+--#    State;
 --# initializes
---#    VMXON_Address,
---#    VMX_Exit_Address,
---#    Kernel_Stack_Address;
+--#    State;
 is
 
    procedure Enable;
    --# global
-   --#    in     VMXON_Address;
+   --#    in     State;
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from *, VMXON_Address;
+   --#    X86_64.State from *, State;
 
    procedure Launch (Subject_Id : Subjects.Id_Type);
    --# global
-   --#    in     VMX_Exit_Address;
-   --#    in     Kernel_Stack_Address;
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
+   --#    in     State;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
@@ -42,10 +37,9 @@ is
    --#       *,
    --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,
-   --#       VMX_Exit_Address,
-   --#       Kernel_Stack_Address,
    --#       Subjects.Descriptors,
-   --#       Subject_Id;
+   --#       Subject_Id,
+   --#       State;
 
    procedure Resume (Subject_Id : Subjects.Id_Type);
    --# global

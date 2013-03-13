@@ -42,8 +42,7 @@ is
 
    procedure Schedule
    --# global
-   --#    in     VMX.VMX_Exit_Address;
-   --#    in     VMX.Kernel_Stack_Address;
+   --#    in     VMX.State;
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
    --#    in     Current_Major;
@@ -59,8 +58,7 @@ is
    --#       Scheduling_Plan &
    --#    X86_64.State from
    --#       *,
-   --#       VMX.VMX_Exit_Address,
-   --#       VMX.Kernel_Stack_Address,
+   --#       VMX.State,
    --#       GDT.GDT_Pointer,
    --#       Interrupts.IDT_Pointer,
    --#       Subjects.Descriptors,
@@ -89,8 +87,7 @@ is
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
-   --#    in     VMX.VMX_Exit_Address;
-   --#    in     VMX.Kernel_Stack_Address;
+   --#    in     VMX.State;
    --#    in     New_Major;
    --#    in     Scheduling_Plan;
    --#    in out Current_Major;
@@ -117,12 +114,11 @@ is
    --#       R13,
    --#       R14,
    --#       R15,
-   --#       VMX.VMX_Exit_Address,
-   --#       VMX.Kernel_Stack_Address,
    --#       New_Major,
    --#       Current_Major,
    --#       Current_Minor,
    --#       Scheduling_Plan,
+   --#       VMX.State,
    --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,
    --#       Subjects.Descriptors &

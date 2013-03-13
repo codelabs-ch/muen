@@ -21,8 +21,7 @@ is
    --  Schedule subject according to the current scheduling plan.
    procedure Schedule;
    --# global
-   --#    in     VMX.VMX_Exit_Address;
-   --#    in     VMX.Kernel_Stack_Address;
+   --#    in     VMX.State;
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
    --#    in     State;
@@ -32,8 +31,7 @@ is
    --#    Subjects.Descriptors from *, State &
    --#    X86_64.State         from
    --#       *,
-   --#       VMX.VMX_Exit_Address,
-   --#       VMX.Kernel_Stack_Address,
+   --#       VMX.State,
    --#       GDT.GDT_Pointer,
    --#       Interrupts.IDT_Pointer,
    --#       Subjects.Descriptors,
@@ -50,8 +48,7 @@ private
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
-   --#    in     VMX.VMX_Exit_Address;
-   --#    in     VMX.Kernel_Stack_Address;
+   --#    in     VMX.State;
    --#    in out State;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
@@ -74,8 +71,7 @@ private
    --#       R13,
    --#       R14,
    --#       R15,
-   --#       VMX.VMX_Exit_Address,
-   --#       VMX.Kernel_Stack_Address,
+   --#       VMX.State,
    --#       State,
    --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,

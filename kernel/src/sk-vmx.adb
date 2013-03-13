@@ -8,6 +8,8 @@ with SK.GDT;
 with SK.Constants;
 
 package body SK.VMX
+--# own
+--#    State is Kernel_Stack_Address, VMX_Exit_Address, VMXON_Address;
 is
 
    --  Segment selectors
@@ -383,6 +385,23 @@ is
    -------------------------------------------------------------------------
 
    procedure Launch (Subject_Id : Subjects.Id_Type)
+   --# global
+   --#    in     GDT.GDT_Pointer;
+   --#    in     Interrupts.IDT_Pointer;
+   --#    in     VMX_Exit_Address;
+   --#    in     Kernel_Stack_Address;
+   --#    in out Subjects.Descriptors;
+   --#    in out X86_64.State;
+   --# derives
+   --#    Subjects.Descriptors from *, Subject_Id &
+   --#    X86_64.State from
+   --#       *,
+   --#       GDT.GDT_Pointer,
+   --#       Interrupts.IDT_Pointer,
+   --#       VMX_Exit_Address,
+   --#       Kernel_Stack_Address,
+   --#       Subjects.Descriptors,
+   --#       Subject_Id;
    is
       Success : Boolean;
       Error   : SK.Word64;
@@ -449,6 +468,11 @@ is
    -------------------------------------------------------------------------
 
    procedure Enable
+   --# global
+   --#    in     VMXON_Address;
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *, VMXON_Address;
    is
       Success : Boolean;
    begin

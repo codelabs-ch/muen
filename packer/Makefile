@@ -20,10 +20,10 @@ $(OBJ_DIR)/subject_1: $(SUBJ_DIR)/obj/subject_1
 
 $(OBJ_DIR)/kernel: $(KERN_DIR)/obj/kernel $(SUBJ_BINS)
 	objcopy --add-section .subject0=$(OBJ_DIR)/subject_0 $< $@ \
-		--change-section-address .subject0=0x00200000          \
+		--change-section-address .subject0=0x00240000          \
 		--set-section-flags .subject0=alloc 2>/dev/null
 	objcopy --add-section .subject1=$(OBJ_DIR)/subject_1 $@ \
-		--change-section-address .subject1=0x00210000       \
+		--change-section-address .subject1=0x00250000       \
 		--set-section-flags .subject1=alloc 2>/dev/null
 	objcopy -O binary $@ $@
 

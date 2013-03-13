@@ -15,6 +15,9 @@ is
 
    type Word64_Pos is range 0 .. 63;
 
+   --  Number of major frames in a scheduling plan.
+   type Major_Frame_Range is range 0 .. 1;
+
    --  Size of one page (4k).
    Page_Size : constant := 4096;
 

@@ -17,11 +17,9 @@ is
    --  A major frame specifies which subject to schedule in which minor frame.
    type Major_Frame_Type is array (Minor_Frame_Range) of Subjects.Id_Type;
 
-   --  Number of major frames in a scheduling plan.
-   type Major_Frame_Range is range 0 .. 1;
-
    --  A scheduling plan consists of multiple major frames.
-   type Scheduling_Plan_Type is array (Major_Frame_Range) of Major_Frame_Type;
+   type Scheduling_Plan_Type is
+     array (SK.Major_Frame_Range) of Major_Frame_Type;
 
    --  Configured scheduling plan.
    Scheduling_Plan : Scheduling_Plan_Type;
@@ -29,13 +27,13 @@ is
    Tau0_Kernel_Iface_Address : SK.Word64;
    pragma Import (C, Tau0_Kernel_Iface_Address, "tau0kernel_iface_ptr");
 
-   New_Major : Major_Frame_Range;
+   New_Major : SK.Major_Frame_Range;
    for New_Major'Address use System'To_Address (Tau0_Kernel_Iface_Address);
    --# assert New_Major'Always_Valid;
 
    --  Current major, minor frame.
-   Current_Major : Major_Frame_Range := Major_Frame_Range'First;
-   Current_Minor : Minor_Frame_Range := Minor_Frame_Range'First;
+   Current_Major : SK.Major_Frame_Range := SK.Major_Frame_Range'First;
+   Current_Minor : Minor_Frame_Range    := Minor_Frame_Range'First;
 
    -------------------------------------------------------------------------
 

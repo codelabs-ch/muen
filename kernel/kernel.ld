@@ -34,6 +34,11 @@ SECTIONS
 		*(.subject_pt)
 	}
 
+	.interfaces 0x00200000 :
+	{
+		*(.interfaces)
+	}
+
 	. = 0x00300000;
 	image_end = .;
 

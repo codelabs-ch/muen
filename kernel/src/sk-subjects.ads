@@ -29,20 +29,21 @@ is
       Entry_Point       : SK.Word64;
    end record;
 
-   type Index_Type is mod 2 ** 1;
+   --  Subject ID.
+   type Id_Type is mod 2 ** 1;
 
-   --  Get subject state with given index.
-   function Get_State (Idx : Index_Type) return State_Type;
+   --  Get state of subject with given ID.
+   function Get_State (Id : Id_Type) return State_Type;
    --# global
    --#    Descriptors;
 
-   --  Set state of subject identified by index.
+   --  Set state of subject identified by ID.
    procedure Set_State
-     (Idx   : Index_Type;
+     (Id    : Id_Type;
       State : State_Type);
    --# global
    --#    Descriptors;
    --# derives
-   --#    Descriptors from *, Idx, State;
+   --#    Descriptors from *, Id, State;
 
 end SK.Subjects;

@@ -4,7 +4,7 @@ package SK.Dump
 is
 
    --  Print state of subject specified by index to kernel console.
-   procedure Print_State (Subject : Subjects.Index_Type);
+   procedure Print_State (Subject : Subjects.Id_Type);
 
    --  Print execution environment from interrupt context.
    procedure Print_Isr_Context

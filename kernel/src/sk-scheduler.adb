@@ -8,14 +8,14 @@ package body SK.Scheduler
 is
 
    --  Current active subject, initialized to root subject.
-   Current_Subject : Subjects.Index_Type := 0;
+   Current_Subject : Subjects.Id_Type := 0;
 
    -------------------------------------------------------------------------
 
    procedure Schedule
    is
    begin
-      if Subjects.Get_State (Idx => Current_Subject).Launched then
+      if Subjects.Get_State (Id => Current_Subject).Launched then
          VMX.Resume (Subject_Id => Current_Subject);
       else
          VMX.Launch (Subject_Id => Current_Subject);
@@ -51,9 +51,9 @@ is
          R14 => R14,
          R15 => R15);
 
-      State := Subjects.Get_State (Idx => Current_Subject);
+      State := Subjects.Get_State (Id => Current_Subject);
       State.Regs := Registers;
-      Subjects.Set_State (Idx   => Current_Subject,
+      Subjects.Set_State (Id    => Current_Subject,
                           State => State);
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,

@@ -1,6 +1,6 @@
 with SK.Subjects;
 
-use type SK.Subjects.Index_Type;
+use type SK.Subjects.Id_Type;
 
 --# inherit
 --#    X86_64,
@@ -28,7 +28,7 @@ is
    --# derives
    --#    X86_64.State from *, VMXON_Address;
 
-   procedure Launch (Subject_Id : Subjects.Index_Type);
+   procedure Launch (Subject_Id : Subjects.Id_Type);
    --# global
    --#    in     VMX_Exit_Address;
    --#    in     Kernel_Stack_Address;
@@ -47,7 +47,7 @@ is
    --#       Subjects.Descriptors,
    --#       Subject_Id;
 
-   procedure Resume (Subject_Id : Subjects.Index_Type);
+   procedure Resume (Subject_Id : Subjects.Id_Type);
    --# global
    --#    in     Subjects.Descriptors;
    --#    in out X86_64.State;

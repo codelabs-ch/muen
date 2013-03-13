@@ -1,6 +1,6 @@
 with SK.Subjects;
 
-use type SK.Subjects.Index_Type;
+use type SK.Subjects.Id_Type;
 
 --# inherit
 --#    X86_64,

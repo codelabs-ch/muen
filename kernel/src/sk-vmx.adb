@@ -97,13 +97,13 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Resume (Subject_Id : Subjects.Index_Type)
+   procedure Resume (Subject_Id : Subjects.Id_Type)
    is
       Error   : SK.Word64;
       Success : Boolean;
       State   : Subjects.State_Type;
    begin
-      State := Subjects.Get_State (Idx => Subject_Id);
+      State := Subjects.Get_State (Id => Subject_Id);
 
       CPU.VMPTRLD (Region  => State.VMCS_Address,
                    Success => Success);
@@ -382,7 +382,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Launch (Subject_Id : Subjects.Index_Type)
+   procedure Launch (Subject_Id : Subjects.Id_Type)
    is
       Success : Boolean;
       Error   : SK.Word64;
@@ -392,7 +392,7 @@ is
       pragma Debug (KC.Put_Byte (Item => Byte (Subject_Id)));
       pragma Debug (KC.New_Line);
 
-      State := Subjects.Get_State (Idx => Subject_Id);
+      State := Subjects.Get_State (Id => Subject_Id);
 
       Success := Is_Aligned
         (Address   => State.VMCS_Address,
@@ -428,11 +428,11 @@ is
          Entry_Point   => State.Entry_Point);
 
       State.Launched := True;
-      Subjects.Set_State (Idx   => Subject_Id,
+      Subjects.Set_State (Id    => Subject_Id,
                           State => State);
 
       CPU.Restore_Registers
-        (Regs => Subjects.Get_State (Idx => Subject_Id).Regs);
+        (Regs => Subjects.Get_State (Id => Subject_Id).Regs);
       CPU.VMLAUNCH (Success => Success);
       if not Success then
          pragma Debug (CPU.VMREAD (Field   => Constants.VMX_INST_ERROR,

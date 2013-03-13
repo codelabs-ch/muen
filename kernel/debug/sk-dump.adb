@@ -87,11 +87,11 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_State (Subject : Subjects.Index_Type)
+   procedure Print_State (Subject : Subjects.Id_Type)
    is
       RIP, RSP, CS, SS, CR0, CR3, CR4, RFL : Word64;
       State : constant Subjects.State_Type
-        := Subjects.Get_State (Idx => Subject);
+        := Subjects.Get_State (Id => Subject);
    begin
       VMX.VMCS_Read (Field => Constants.GUEST_RIP,
                      Value => RIP);

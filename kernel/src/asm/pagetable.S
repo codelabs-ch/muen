@@ -56,7 +56,8 @@ subject0_pte:
 	.quad 0x800000000024108d
 	.quad 0x800000000024208f
 	.quad 0x800000000024308f
-	.fill 180, 8, 0x0
+	.quad 0x800000000020018f
+	.fill 179, 8, 0x0
 	// PTE for video memory b8000
 	.quad 0x80000000000b818f
 	.fill 327, 8, 0x0

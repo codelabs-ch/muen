@@ -12,9 +12,10 @@ use type SK.Subjects.Id_Type;
 --#    SK.VMX;
 package SK.Scheduler
 --# own
---#    Current_Subject;
+--#       State,
+--#    in Tau0_Kernel_Iface_Address;
 --# initializes
---#    Current_Subject;
+--#    State;
 is
 
    --  Schedule subject according to the current scheduling plan.
@@ -24,19 +25,19 @@ is
    --#    in     VMX.Kernel_Stack_Address;
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
-   --#    in     Current_Subject;
+   --#    in     State;
    --#    in out X86_64.State;
    --#    in out Subjects.Descriptors;
    --# derives
-   --#    Subjects.Descriptors from *, Current_Subject &
-   --#    X86_64.State from
+   --#    Subjects.Descriptors from *, State &
+   --#    X86_64.State         from
    --#       *,
    --#       VMX.VMX_Exit_Address,
    --#       VMX.Kernel_Stack_Address,
    --#       GDT.GDT_Pointer,
    --#       Interrupts.IDT_Pointer,
    --#       Subjects.Descriptors,
-   --#       Current_Subject;
+   --#       State;
 
 private
 
@@ -51,12 +52,12 @@ private
    --#    in     Interrupts.IDT_Pointer;
    --#    in     VMX.VMX_Exit_Address;
    --#    in     VMX.Kernel_Stack_Address;
-   --#    in out Current_Subject;
+   --#    in out State;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    Current_Subject from * &
-   --#    X86_64.State    from
+   --#    State        from * &
+   --#    X86_64.State from
    --#       *,
    --#       RAX,
    --#       RBX,
@@ -75,7 +76,7 @@ private
    --#       R15,
    --#       VMX.VMX_Exit_Address,
    --#       VMX.Kernel_Stack_Address,
-   --#       Current_Subject,
+   --#       State,
    --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,
    --#       Subjects.Descriptors &
@@ -96,7 +97,7 @@ private
    --#       R13,
    --#       R14,
    --#       R15,
-   --#       Current_Subject;
+   --#       State;
    pragma Export (C, Handle_Vmx_Exit, "handle_vmx_exit");
 
 end SK.Scheduler;

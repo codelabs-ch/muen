@@ -19,7 +19,7 @@ is
    --#    in     VMX.Kernel_Stack_Address;
    --#    in     Interrupts.ISR_List;
    --#    in     GDT.GDT_Pointer;
-   --#    in     Scheduler.Current_Subject;
+   --#    in     Scheduler.State;
    --#       out Interrupts.IDT;
    --#       out Interrupts.IDT_Pointer;
    --# derives
@@ -27,7 +27,7 @@ is
    --#    Subjects.Descriptors from
    --#       *,
    --#       X86_64.State,
-   --#       Scheduler.Current_Subject &
+   --#       Scheduler.State &
    --#    X86_64.State from
    --#       *,
    --#       VMX.VMXON_Address,
@@ -36,7 +36,7 @@ is
    --#       Interrupts.ISR_List,
    --#       GDT.GDT_Pointer,
    --#       Subjects.Descriptors,
-   --#       Scheduler.Current_Subject;
+   --#       Scheduler.State;
    pragma Export (C, Main, "kmain");
 
 end SK.Kernel;

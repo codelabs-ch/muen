@@ -16,6 +16,11 @@ SECTIONS
 		*(.data)
 	}
 
+	.rodata :
+	{
+		*(.rodata)
+	}
+
 	. = ALIGN (4096);
 
 	.bss :

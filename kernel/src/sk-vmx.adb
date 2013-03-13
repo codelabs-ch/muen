@@ -102,19 +102,18 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Resume
+   procedure Resume (Subject_Id : Subjects.Index_Type)
    --# global
-   --#    in     Current_Subject;
    --#    in     Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from *, Current_Subject, Subjects.Descriptors;
+   --#    X86_64.State from *, Subject_Id, Subjects.Descriptors;
    is
       Error   : SK.Word64;
       Success : Boolean;
       State   : Subjects.State_Type;
    begin
-      State := Subjects.Get_State (Idx => Current_Subject);
+      State := Subjects.Get_State (Idx => Subject_Id);
 
       CPU.VMPTRLD (Region  => State.VMCS_Address,
                    Success => Success);
@@ -520,7 +519,7 @@ is
 
       Current_Subject := Current_Subject + 1;
       if Subjects.Get_State (Idx => Current_Subject).Launched then
-         Resume;
+         Resume (Subject_Id => Current_Subject);
       else
          Launch (Subject_Id => Current_Subject);
       end if;

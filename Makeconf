@@ -5,13 +5,13 @@ VC_DIR  = $(OBJ_DIR)/vc
 
 BUILD_OPTS = -p -j0 --RTS=zfp
 
-SPARK_OPTS =                             \
-	-vcg                                 \
-	-nosli                               \
-	-nolistings                          \
-	-warning_file=warnings.conf          \
-	-error_explanations=first_occurrence \
-	-brief                               \
+SPARK_OPTS =                                      \
+	-vcg                                          \
+	-nosli                                        \
+	-nolistings                                   \
+	-warning_file=$(TOP_DIR)/common/warnings.conf \
+	-error_explanations=first_occurrence          \
+	-brief                                        \
 	-rules=all
 
 SPARKMAKE_OPTS =           \

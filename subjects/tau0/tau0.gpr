@@ -1,0 +1,26 @@
+with "../../common/defaults";
+
+project Tau0 is
+
+   for Languages use ("Ada");
+   for Source_Dirs use ("../../common/src", "../../common/debug", "src");
+   for Object_Dir use "obj";
+
+   for Main use ("tau0");
+
+   package Builder is
+      for Global_Configuration_Pragmas use "../../common/restrictions.adc";
+   end Builder;
+
+   package Compiler is
+      for Default_Switches ("Ada") use Defaults.Ada_Compiler_Switches;
+   end Compiler;
+
+   package Linker is
+      for Default_Switches ("Ada") use
+        ("-T", "../subject.ld",
+         "-nostdlib",
+         "-n");
+   end Linker;
+
+end Tau0;

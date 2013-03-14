@@ -18,7 +18,7 @@ project Subjects is
 
    package Linker is
       for Default_Switches ("Ada") use
-        ("-T", "subject.ld",
+        ("-T", "../subject.ld",
          "-nostdlib",
          "-n");
    end Linker;

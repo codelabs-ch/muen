@@ -1,15 +1,15 @@
-with "../common/defaults";
+with "../../common/defaults";
 
 project Subjects is
 
    for Languages use ("Ada");
-   for Source_Dirs use ("../common/src", "../common/debug", "src");
+   for Source_Dirs use ("../../common/src", "../../common/debug", "src");
    for Object_Dir use "obj";
 
    for Main use ("subject_0", "subject_1");
 
    package Builder is
-      for Global_Configuration_Pragmas use "../common/restrictions.adc";
+      for Global_Configuration_Pragmas use "../../common/restrictions.adc";
    end Builder;
 
    package Compiler is

@@ -12,10 +12,10 @@ SUBJ_BINS = \
 
 all: $(OBJ_DIR)/kernel
 
-$(OBJ_DIR)/subject_0: $(SUBJ_DIR)/obj/subject_0
+$(OBJ_DIR)/subject_0: $(SUBJ_DIR)/test/obj/subject_0
 	objcopy -O binary $< $@
 
-$(OBJ_DIR)/subject_1: $(SUBJ_DIR)/obj/subject_1
+$(OBJ_DIR)/subject_1: $(SUBJ_DIR)/test/obj/subject_1
 	objcopy -O binary $< $@
 
 $(OBJ_DIR)/kernel: $(KERN_DIR)/obj/kernel $(SUBJ_BINS)

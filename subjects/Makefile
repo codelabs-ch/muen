@@ -1,11 +1,9 @@
-OBJ_DIR = $(CURDIR)/obj
+all: test
 
-BUILD_OPTS = -p -j0 --RTS=zfp
-
-all: subjects
-
-subjects:
-	gprbuild $(BUILD_OPTS) -P$@
+test:
+	$(MAKE) -C $@
 
 clean:
-	rm -rf obj
+	$(MAKE) clean -C test
+
+.PHONY: test

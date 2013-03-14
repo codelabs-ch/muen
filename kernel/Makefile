@@ -79,9 +79,8 @@ $(OBJ_DIR)/confgen: $(SPARK_DIR)/lib/spark/confgen.adb
 	LIBRARY_PATH=/usr/lib/x86_64-linux-gnu gnatmake -D $(OBJ_DIR) -o $@ $<
 
 clean:
-	rm -rf obj/*
-	kill `cat .server 2>/dev/null` 2>/dev/null || true
-	rm -f .git-rev .server
+	rm -rf obj
+	rm -f .git-rev
 
 FORCE:
 

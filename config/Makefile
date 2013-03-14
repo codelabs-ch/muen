@@ -1,6 +1,6 @@
 SUBJECTS = \
-	../subjects/test/obj/subject_0 \
-	../subjects/test/obj/subject_1
+	../subjects/test/obj/subject_1 \
+	../subjects/test/obj/subject_2
 
 BUILD_OPTS = -p -j0
 

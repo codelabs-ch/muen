@@ -1,38 +1,10 @@
-SRC_DIR = $(CURDIR)/src
-OBJ_DIR = $(CURDIR)/obj
-VC_DIR  = $(OBJ_DIR)/vc
+PACKAGE = kernel
 
 VERSION_SPEC = src/sk-version.ads
 VERSION      = $(GIT_REV)
 GIT_REV      = $(shell git describe --always)
 
-NUM_CPUS  := $(shell getconf _NPROCESSORS_ONLN)
-BUILD_OPTS = -p -j$(NUM_CPUS) --RTS=zfp
-
-SPARK_OPTS =                             \
-	-vcg                                 \
-	-nosli                               \
-	-nolistings                          \
-	-warning_file=warnings.conf          \
-	-error_explanations=first_occurrence \
-	-brief                               \
-	-rules=all
-
-SPARKMAKE_OPTS =           \
-	-duplicates_are_errors \
-	-nometa
-
-ALL = $(OBJ_DIR)/kernel
-
-ifeq ($(NO_PROOF),)
-ALL   += $(OBJ_DIR)/kernel.sum
-DUMMY := $(shell mkdir -p $(VC_DIR))
-ifeq ($(SPARK_DIR),)
-$(error SPARK_DIR not set)
-endif
-endif
-
-all: $(ALL)
+include ../Makeconf
 
 .git-rev: FORCE
 	@if [ -r $@ ]; then \
@@ -49,39 +21,13 @@ $(VERSION_SPEC): .git-rev
 	@echo "     \"$(VERSION)\";"                   >> $@
 	@echo "end SK.Version;"                        >> $@
 
-$(OBJ_DIR)/kernel: $(VERSION_SPEC)
-	gprbuild $(BUILD_OPTS) -Pkernel
-
-$(OBJ_DIR)/kernel.sum: $(OBJ_DIR)/kernel.rep
-	pogs -d=$(VC_DIR) -o=$@
-	tail -n13 $@ | head -n12
-
-$(OBJ_DIR)/kernel.rep: $(OBJ_DIR)/kernel.idx $(OBJ_DIR)/target.cfg
-	@spark $(SPARK_OPTS)                   \
-		-report_file=$@                    \
-		-index_file=$(OBJ_DIR)/kernel.idx  \
-		-config_file=$(OBJ_DIR)/target.cfg \
-		-output_directory=$(VC_DIR)        \
-		src/*.adb ../common/src/*.adb
-	(cd $(VC_DIR) && sparksimp -l)
-
-$(OBJ_DIR)/kernel.idx: src/*.ad* ../common/src/*.ad*
-	@sparkmake $(SPARKMAKE_OPTS)     \
-		-index=$(OBJ_DIR)/kernel.idx \
-		-exclude=$(SRC_DIR)/debug/*  \
-		-exclude=$(OBJ_DIR)/*        \
-		-directory=../common/src
-
-$(OBJ_DIR)/target.cfg: $(OBJ_DIR)/confgen
-	$< > $@
-
-$(OBJ_DIR)/confgen: $(SPARK_DIR)/lib/spark/confgen.adb
-	LIBRARY_PATH=/usr/lib/x86_64-linux-gnu gnatmake -D $(OBJ_DIR) -o $@ $<
+$(OBJ_DIR)/$(PACKAGE): $(VERSION_SPEC)
+	gprbuild $(BUILD_OPTS) -P$(PACKAGE)
 
 clean:
-	rm -rf obj
+	rm -rf $(OBJ_DIR)
 	rm -f .git-rev
 
 FORCE:
 
-.PHONY: FORCE $(OBJ_DIR)/kernel
+.PHONY: FORCE

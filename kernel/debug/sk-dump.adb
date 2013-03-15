@@ -10,9 +10,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Dump_Registers
-     (RDI : Word64; RSI : Word64; RDX : Word64; RCX : Word64; R08 : Word64;
-      R09 : Word64; RAX : Word64; RBX : Word64; RBP : Word64; R10 : Word64;
-      R11 : Word64; R12 : Word64; R13 : Word64; R14 : Word64; R15 : Word64;
+     (GPR : CPU.Registers_Type;
       RIP : Word64; CS  : Word64; RFL : Word64; RSP : Word64; SS  : Word64;
       CR0 : Word64; CR2 : Word64; CR3 : Word64; CR4 : Word64)
    is
@@ -29,43 +27,43 @@ is
       KC.New_Line;
 
       KC.Put_String (Item => "RAX: ");
-      KC.Put_Word64 (Item => RAX);
+      KC.Put_Word64 (Item => GPR.RAX);
       KC.Put_String (Item => " RBX: ");
-      KC.Put_Word64 (Item => RBX);
+      KC.Put_Word64 (Item => GPR.RBX);
       KC.Put_String (Item => " RCX: ");
-      KC.Put_Word64 (Item => RCX);
+      KC.Put_Word64 (Item => GPR.RCX);
       KC.New_Line;
 
       KC.Put_String (Item => "RDX: ");
-      KC.Put_Word64 (Item => RDX);
+      KC.Put_Word64 (Item => GPR.RDX);
       KC.Put_String (Item => " RSI: ");
-      KC.Put_Word64 (Item => RSI);
+      KC.Put_Word64 (Item => GPR.RSI);
       KC.Put_String (Item => " RDI: ");
-      KC.Put_Word64 (Item => RDI);
+      KC.Put_Word64 (Item => GPR.RDI);
       KC.New_Line;
 
       KC.Put_String (Item => "RBP: ");
-      KC.Put_Word64 (Item => RBP);
+      KC.Put_Word64 (Item => GPR.RBP);
       KC.Put_String (Item => " R08: ");
-      KC.Put_Word64 (Item => R08);
+      KC.Put_Word64 (Item => GPR.R08);
       KC.Put_String (Item => " R09: ");
-      KC.Put_Word64 (Item => R09);
+      KC.Put_Word64 (Item => GPR.R09);
       KC.New_Line;
 
       KC.Put_String (Item => "R10: ");
-      KC.Put_Word64 (Item => R10);
+      KC.Put_Word64 (Item => GPR.R10);
       KC.Put_String (Item => " R11: ");
-      KC.Put_Word64 (Item => R11);
+      KC.Put_Word64 (Item => GPR.R11);
       KC.Put_String (Item => " R12: ");
-      KC.Put_Word64 (Item => R12);
+      KC.Put_Word64 (Item => GPR.R12);
       KC.New_Line;
 
       KC.Put_String (Item => "R13: ");
-      KC.Put_Word64 (Item => R13);
+      KC.Put_Word64 (Item => GPR.R13);
       KC.Put_String (Item => " R14: ");
-      KC.Put_Word64 (Item => R14);
+      KC.Put_Word64 (Item => GPR.R14);
       KC.Put_String (Item => " R15: ");
-      KC.Put_Word64 (Item => R15);
+      KC.Put_Word64 (Item => GPR.R15);
       KC.New_Line;
 
       KC.Put_String (Item => "CR0: ");
@@ -109,21 +107,7 @@ is
       VMX.VMCS_Read (Field => Constants.GUEST_RFLAGS,
                      Value => RFL);
 
-      Dump_Registers (RDI => State.Regs.RDI,
-                      RSI => State.Regs.RSI,
-                      RDX => State.Regs.RDX,
-                      RCX => State.Regs.RCX,
-                      R08 => State.Regs.R08,
-                      R09 => State.Regs.R09,
-                      RAX => State.Regs.RAX,
-                      RBX => State.Regs.RBX,
-                      RBP => State.Regs.RBP,
-                      R10 => State.Regs.R10,
-                      R11 => State.Regs.R11,
-                      R12 => State.Regs.R12,
-                      R13 => State.Regs.R13,
-                      R14 => State.Regs.R14,
-                      R15 => State.Regs.R15,
+      Dump_Registers (GPR => State.Regs,
                       RIP => RIP,
                       CS  => CS,
                       RFL => RFL,
@@ -168,21 +152,7 @@ is
       KC.New_Line;
       KC.New_Line;
 
-      Dump_Registers (RDI => Context.GPR.RDI,
-                      RSI => Context.GPR.RSI,
-                      RDX => Context.GPR.RDX,
-                      RCX => Context.GPR.RCX,
-                      R08 => Context.GPR.R08,
-                      R09 => Context.GPR.R09,
-                      RAX => Context.GPR.RAX,
-                      RBX => Context.GPR.RBX,
-                      RBP => Context.GPR.RBP,
-                      R10 => Context.GPR.R10,
-                      R11 => Context.GPR.R11,
-                      R12 => Context.GPR.R12,
-                      R13 => Context.GPR.R13,
-                      R14 => Context.GPR.R14,
-                      R15 => Context.GPR.R15,
+      Dump_Registers (GPR => Context.GPR,
                       RIP => Context.RIP,
                       CS  => Context.CS,
                       RFL => Context.RFLAGS,

@@ -100,5 +100,10 @@ begin
          VMCS_Address      := VMCS_Address      + Page_Size;
          Pagetable_Address := Pagetable_Address + Pagetable_Size;
       end loop;
+
+      --  Set IO Bitmap of Tau0
+
+      Descriptors (Id_Type'First).IO_Bitmap_Address
+        := IO_Bitmap_Address + 2 * Page_Size;
    end;
 end SK.Subjects;

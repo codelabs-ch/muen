@@ -1,6 +1,5 @@
 with System.Machine_Code;
 
-with SK.CPU;
 with SK.KC;
 with SK.VMX;
 with SK.Constants;
@@ -139,12 +138,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_Isr_Context
-     (RDI : Word64; RSI : Word64; RDX : Word64; RCX : Word64; R08 : Word64;
-      R09 : Word64; RAX : Word64; RBX : Word64; RBP : Word64; R10 : Word64;
-      R11 : Word64; R12 : Word64; R13 : Word64; R14 : Word64; R15 : Word64;
-      Vec : Word64; Err : Word64; RIP : Word64; CS  : Word64; RFL : Word64;
-      RSP : Word64; SS  : Word64)
+   procedure Print_State (Context : Isr_Context_Type)
    is
       CR0, CR2, CR3, CR4 : Word64;
    begin
@@ -168,38 +162,38 @@ is
       KC.Put_Line ("[KERNEL PANIC]");
 
       KC.Put_String ("Vector: ");
-      KC.Put_Byte (Item => Byte (Vec));
+      KC.Put_Byte (Item => Byte (Context.Vector));
       KC.Put_String (", Error: ");
-      KC.Put_Word64 (Item => Err);
+      KC.Put_Word64 (Item => Context.Error_Code);
       KC.New_Line;
       KC.New_Line;
 
-      Dump_Registers (RDI => RDI,
-                      RSI => RSI,
-                      RDX => RDX,
-                      RCX => RCX,
-                      R08 => R08,
-                      R09 => R09,
-                      RAX => RAX,
-                      RBX => RBX,
-                      RBP => RBP,
-                      R10 => R10,
-                      R11 => R11,
-                      R12 => R12,
-                      R13 => R13,
-                      R14 => R14,
-                      R15 => R15,
-                      RIP => RIP,
-                      CS  => CS,
-                      RFL => RFL,
-                      RSP => RSP,
-                      SS  => SS,
+      Dump_Registers (RDI => Context.GPR.RDI,
+                      RSI => Context.GPR.RSI,
+                      RDX => Context.GPR.RDX,
+                      RCX => Context.GPR.RCX,
+                      R08 => Context.GPR.R08,
+                      R09 => Context.GPR.R09,
+                      RAX => Context.GPR.RAX,
+                      RBX => Context.GPR.RBX,
+                      RBP => Context.GPR.RBP,
+                      R10 => Context.GPR.R10,
+                      R11 => Context.GPR.R11,
+                      R12 => Context.GPR.R12,
+                      R13 => Context.GPR.R13,
+                      R14 => Context.GPR.R14,
+                      R15 => Context.GPR.R15,
+                      RIP => Context.RIP,
+                      CS  => Context.CS,
+                      RFL => Context.RFLAGS,
+                      RSP => Context.RSP,
+                      SS  => Context.SS,
                       CR0 => CR0,
                       CR2 => CR2,
                       CR3 => CR3,
                       CR4 => CR4);
 
       CPU.Hlt;
-   end Print_Isr_Context;
+   end Print_State;
 
 end SK.Dump;

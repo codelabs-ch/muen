@@ -31,9 +31,17 @@ handle_all:
 	push %r12
 	push %r11
 	push %r10
+	push %r9
+	push %r8
 	push %rbp
+	push %rsi
+	push %rdi
+	push %rdx
+	push %rcx
 	push %rbx
 	push %rax
+	mov %rsp, %rdi
+
 	call dispatch_interrupt
 	iret
 

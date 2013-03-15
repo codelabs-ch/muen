@@ -8,6 +8,7 @@ TARGET_IP = 192.168.254.2
 
 SUBJ_BINS = \
 	$(OBJ_DIR)/tau0 \
+	$(OBJ_DIR)/subject_1 \
 	$(OBJ_DIR)/subject_2
 
 all: $(OBJ_DIR)/kernel
@@ -22,11 +23,14 @@ $(OBJ_DIR)/subject_2: $(SUBJ_DIR)/test/obj/subject_2
 	objcopy -O binary $< $@
 
 $(OBJ_DIR)/kernel: $(KERN_DIR)/obj/kernel $(SUBJ_BINS)
-	objcopy --add-section .subject1=$(OBJ_DIR)/tau0 $< $@ \
-		--change-section-address .subject1=0x00240000          \
+	objcopy --add-section .tau0=$(OBJ_DIR)/tau0 $< $@ \
+		--change-section-address .tau0=0x00240000          \
+		--set-section-flags .tau0=alloc 2>/dev/null
+	objcopy --add-section .subject1=$(OBJ_DIR)/subject_1 $@ \
+		--change-section-address .subject1=0x00250000       \
 		--set-section-flags .subject1=alloc 2>/dev/null
 	objcopy --add-section .subject2=$(OBJ_DIR)/subject_2 $@ \
-		--change-section-address .subject2=0x00250000       \
+		--change-section-address .subject2=0x00260000       \
 		--set-section-flags .subject2=alloc 2>/dev/null
 	objcopy -O binary $@ $@
 

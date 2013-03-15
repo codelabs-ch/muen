@@ -36,53 +36,78 @@ kernel_pml4_ptr:
 .section .subject_pt, "a"
 	.align 4096
 subjects_pt_start:
-subject1_pml4:
+tau0_pml4:
 	.quad 0x1f100f
 	.fill 511, 8, 0x0
 
 	.align 4096
-subject1_pdp:
+tau0_pdp:
 	.quad 0x1f200f
 	.fill 511, 8, 0x0
 
 	.align 4096
-subject1_pd:
+tau0_pd:
 	.quad 0x1f300f
 	.fill 511, 8, 0x0
 
 	.align 4096
-subject1_pte:
+tau0_pte:
 	.quad 0x000000000024008d
 	.quad 0x800000000024108d
 	.quad 0x800000000024208f
 	.quad 0x800000000024308f
+	// PTE for τ0 -> kernel interface page
 	.quad 0x800000000020018f
-	.fill 179, 8, 0x0
+	.fill 507, 8, 0x0
+
+subject1_pml4:
+	.quad 0x1f500f
+	.fill 511, 8, 0x0
+
+	.align 4096
+subject1_pdp:
+	.quad 0x1f600f
+	.fill 511, 8, 0x0
+
+	.align 4096
+subject1_pd:
+	.quad 0x1f700f
+	.fill 511, 8, 0x0
+
+	.align 4096
+subject1_pte:
+	.quad 0x000000000025008d
+	.quad 0x800000000025108d
+	.quad 0x800000000025208f
+	.quad 0x800000000025308f
+	.fill 180, 8, 0x0
 	// PTE for video memory b8000
 	.quad 0x80000000000b818f
 	.fill 327, 8, 0x0
 
 	.align 4096
+
+	.align 4096
 subject2_pml4:
-	.quad 0x1f500f
+	.quad 0x1f900f
 	.fill 511, 8, 0x0
 
 	.align 4096
 subject2_pdp:
-	.quad 0x1f600f
+	.quad 0x1fa00f
 	.fill 511, 8, 0x0
 
 	.align 4096
 subject2_pd:
-	.quad 0x1f700f
+	.quad 0x1fb00f
 	.fill 511, 8, 0x0
 
 	.align 4096
 subject2_pte:
-	.quad 0x000000000025008d
-	.quad 0x800000000025108d
-	.quad 0x800000000025208f
-	.quad 0x800000000025308f
+	.quad 0x000000000026008d
+	.quad 0x800000000026108d
+	.quad 0x800000000026208f
+	.quad 0x800000000026308f
 	.fill 180, 8, 0x0
 	// PTE for video memory b8000
 	.quad 0x80000000000b818f

@@ -29,8 +29,11 @@ is
       Entry_Point       : SK.Word64;
    end record;
 
+   --  Maximum number of supported subjects.
+   Max_Subjects : constant := 3;
+
    --  Subject ID.
-   type Id_Type is range 0 .. 1;
+   type Id_Type is range 0 .. Max_Subjects - 1;
 
    --  Get state of subject with given ID.
    function Get_State (Id : Id_Type) return State_Type;

@@ -431,7 +431,9 @@ is
       CPU.VMPTRLD (Region  => State.VMCS_Address,
                    Success => Success);
       if not Success then
-         pragma Debug (KC.Put_Line (Item => "Error loading VMCS pointer"));
+         pragma Debug (KC.Put_String (Item => "Error loading VMCS pointer: "));
+         pragma Debug (KC.Put_Word64 (Item => State.VMCS_Address));
+         pragma Debug (KC.New_Line);
          CPU.Panic;
       end if;
 

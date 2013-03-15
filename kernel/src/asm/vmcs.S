@@ -19,4 +19,4 @@ vmxon_start:
 // VMCS region, see Intel SDM 3C, chapter 24.2.
 
 vmcs_start:
-	.fill 8192
+	.fill 12288

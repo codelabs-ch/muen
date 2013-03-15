@@ -53,17 +53,12 @@ begin
    --# hide SK.Subjects;
 
    declare
-      Revision, Unused_High, VMCS_Region0, VMCS_Region1 : SK.Word32;
-      for VMCS_Region0'Address use System'To_Address (VMCS_Address);
-      for VMCS_Region1'Address use System'To_Address
-        (VMCS_Address + Page_Size);
+      Revision, Unused_High : SK.Word32;
    begin
       CPU.Get_MSR
         (Register => Constants.IA32_VMX_BASIC,
          Low      => Revision,
          High     => Unused_High);
-      VMCS_Region0 := Revision;
-      VMCS_Region1 := Revision;
 
       for S in Config_Subjects.Bins.Subjects'Range loop
          Descriptors (Id_Type (S - 1))
@@ -93,6 +88,14 @@ begin
               or Constants.VM_CTRL_EXIT_WBINVD,
               Entry_Point       => Config_Subjects.Bins.Subjects
                 (S).Entry_Point);
+
+         Init_VMCS_Region :
+         declare
+            VMCS_Region : SK.Word32;
+            for VMCS_Region'Address use System'To_Address (VMCS_Address);
+         begin
+            VMCS_Region := Revision;
+         end Init_VMCS_Region;
 
          VMCS_Address      := VMCS_Address      + Page_Size;
          Pagetable_Address := Pagetable_Address + Pagetable_Size;

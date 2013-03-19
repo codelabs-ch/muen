@@ -9,7 +9,7 @@ project Skconfig is
 
    package Compiler is
       for Default_Switches ("Ada") use Defaults.Ada_Compiler_Switches
-        & "-gnat05";
+        & "-gnat05" & "-gnatwale";
    end Compiler;
 
    package Linker is

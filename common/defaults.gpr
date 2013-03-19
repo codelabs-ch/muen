@@ -5,7 +5,6 @@ project Defaults is
    Ada_Compiler_Switches := ("-g",
                              "-gnata",
                              "-gnatp",
-                             "-gnatwale",
                              "-gnatygAdISux-s");
 
 end Defaults;

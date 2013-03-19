@@ -13,7 +13,8 @@ project Subjects is
    end Builder;
 
    package Compiler is
-      for Default_Switches ("Ada") use Defaults.Ada_Compiler_Switches;
+      for Default_Switches ("Ada") use Defaults.Ada_Compiler_Switches
+        & "-gnatwal";
    end Compiler;
 
    package Linker is

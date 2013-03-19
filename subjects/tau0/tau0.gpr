@@ -13,7 +13,8 @@ project Tau0 is
    end Builder;
 
    package Compiler is
-      for Default_Switches ("Ada") use Defaults.Ada_Compiler_Switches;
+      for Default_Switches ("Ada") use Defaults.Ada_Compiler_Switches
+        & "-gnatwale";
    end Compiler;
 
    package Linker is

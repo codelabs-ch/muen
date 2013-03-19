@@ -1,0 +1,26 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="./types.xsd"/>
+
+	<xs:simpleType name="subject_name_type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="subject_type">
+		<xs:sequence>
+			<xs:element name="memory_layout" type="memory_layout_type" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="ports"         type="io_ports_type"      minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="id"   type="xs:nonNegativeInteger" use="required"/>
+		<xs:attribute name="name" type="subject_name_type"     use="optional"/>
+	</xs:complexType>
+
+	<xs:complexType name="subjects_type">
+		<xs:sequence>
+			<xs:element name="subject" type="subject_type" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,62 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+	<xs:simpleType name="hex_string">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9a-fA-F]+"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="access_type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ro"/>
+			<xs:enumeration value="rw"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="address_type">
+		<xs:restriction base="hex_string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="memory_size_type">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]+[kKmMgG]"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="port_address_type">
+		<xs:restriction base="hex_string">
+			<xs:length value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="io_port_type">
+		<xs:attribute name="start" type="port_address_type" use="required"/>
+		<xs:attribute name="end"   type="port_address_type" use="optional"/>
+	</xs:complexType>
+
+	<xs:complexType name="memory_region_type">
+		<xs:attribute name="physical_address" type="address_type"     use="required"/>
+		<xs:attribute name="size"             type="memory_size_type" use="required"/>
+		<xs:attribute name="virtual_address"  type="address_type"     use="optional"/>
+		<xs:attribute name="access"           type="access_type"      use="required"/>
+		<xs:attribute name="executable"       type="xs:boolean"       use="optional" default="false"/>
+	</xs:complexType>
+
+	<xs:complexType name="memory_layout_type">
+		<xs:sequence>
+			<xs:element name="memory_region" type="memory_region_type" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="pml4_address" type="address_type" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="io_ports_type">
+		<xs:sequence>
+			<xs:element name="port" type="io_port_type" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="io_bitmap_address" type="address_type" use="required"/>
+	</xs:complexType>
+
+</xs:schema>

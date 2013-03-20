@@ -5,6 +5,7 @@ VERSION      = $(GIT_REV)
 GIT_REV      = $(shell git describe --always)
 
 include ../Makeconf
+include ../Makespark
 
 .git-rev: FORCE
 	@if [ -r $@ ]; then \

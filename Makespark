@@ -1,0 +1,56 @@
+VC_DIR  = $(OBJ_DIR)/vc
+
+BUILD_OPTS += --RTS=zfp
+
+SPARK_OPTS =                                      \
+	-vcg                                          \
+	-nosli                                        \
+	-nolistings                                   \
+	-warning_file=$(TOP_DIR)/common/warnings.conf \
+	-error_explanations=first_occurrence          \
+	-brief                                        \
+	-rules=all
+
+SPARKMAKE_OPTS =           \
+	-duplicates_are_errors \
+	-nometa
+
+ALL = $(OBJ_DIR)/$(PACKAGE)
+
+ifeq ($(NO_PROOF),)
+ALL   += $(OBJ_DIR)/$(PACKAGE).sum
+DUMMY := $(shell mkdir -p $(VC_DIR))
+ifeq ($(SPARK_DIR),)
+$(error SPARK_DIR not set)
+endif
+endif
+
+all: $(ALL)
+
+$(OBJ_DIR)/$(PACKAGE).sum: $(OBJ_DIR)/$(PACKAGE).rep
+	pogs -d=$(VC_DIR) -o=$@
+	tail -n13 $@ | head -n12
+
+$(OBJ_DIR)/$(PACKAGE).rep: $(OBJ_DIR)/$(PACKAGE).idx $(OBJ_DIR)/target.cfg
+	@spark $(SPARK_OPTS)                   \
+		-report_file=$@                    \
+		-index_file=$(OBJ_DIR)/$(PACKAGE).idx  \
+		-config_file=$(OBJ_DIR)/target.cfg \
+		-output_directory=$(VC_DIR)        \
+		src/*.adb $(TOP_DIR)/common/src/*.adb
+	(cd $(VC_DIR) && sparksimp -l)
+
+$(OBJ_DIR)/$(PACKAGE).idx: src/*.ad* $(TOP_DIR)/common/src/*.ad*
+	@sparkmake $(SPARKMAKE_OPTS)     \
+		-index=$(OBJ_DIR)/$(PACKAGE).idx \
+		-exclude=$(SRC_DIR)/debug/*  \
+		-exclude=$(OBJ_DIR)/*        \
+		-directory=$(TOP_DIR)/common/src
+
+$(OBJ_DIR)/target.cfg: $(OBJ_DIR)/confgen
+	$< > $@
+
+$(OBJ_DIR)/confgen: $(SPARK_DIR)/lib/spark/confgen.adb
+	LIBRARY_PATH=/usr/lib/x86_64-linux-gnu gnatmake -D $(OBJ_DIR) -o $@ $<
+
+.PHONY: $(OBJ_DIR)/$(PACKAGE)

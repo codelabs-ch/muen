@@ -3,7 +3,7 @@ SUBJECTS = \
 	../subjects/test/obj/subject_1 \
 	../subjects/test/obj/subject_2
 
-BUILD_OPTS = -p -j0
+include ../Makeconf
 
 all: config_subjects
 

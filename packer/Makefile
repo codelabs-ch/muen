@@ -1,10 +1,11 @@
-OBJ_DIR  = obj
 KERN_DIR = $(CURDIR)/../kernel
 SUBJ_DIR = $(CURDIR)/../subjects
 
-DUMMY := $(shell mkdir -p $(OBJ_DIR))
-
 TARGET_IP = 192.168.254.2
+
+include ../Makeconf
+
+DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
 SUBJ_BINS = \
 	$(OBJ_DIR)/tau0 \

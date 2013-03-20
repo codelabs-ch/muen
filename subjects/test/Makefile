@@ -1,6 +1,6 @@
-OBJ_DIR = $(CURDIR)/obj
+include ../../Makeconf
 
-BUILD_OPTS = -p -j0 --RTS=zfp
+BUILD_OPTS += --RTS=zfp
 
 all: subjects
 

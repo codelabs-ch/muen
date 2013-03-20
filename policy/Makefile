@@ -1,5 +1,4 @@
-OBJ_DIR    = obj
-BUILD_OPTS = -p -j0
+include ../Makeconf
 
 all:
 

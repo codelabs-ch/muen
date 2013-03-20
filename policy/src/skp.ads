@@ -1,18 +1,31 @@
 with Ada.Strings.Unbounded;
 with Ada.Containers.Ordered_Sets;
+with Ada.Containers.Doubly_Linked_Lists;
 
 with SK;
 
 package Skp
 is
 
+   --  Subject name.
    subtype Subject_Name_Type is Ada.Strings.Unbounded.Unbounded_String;
+
+   --  Memory access permissions.
+   type Memory_Permission_Type is
+     (Read_Only,
+      Read_Write);
+
+   --  Memory region specification.
+   type Memory_Region_Type is private;
 
    --  Memory layout specification.
    type Memory_Layout_Type is private;
 
    --  Return PML4 address of memory layout.
    function Get_Pml4_Address (Layout : Memory_Layout_Type) return SK.Word64;
+
+   --  Return memory layout region count.
+   function Get_Region_Count (Layout : Memory_Layout_Type) return Positive;
 
    --  Subject specification.
    type Subject_Type is private;
@@ -51,8 +64,20 @@ private
 
    function "<" (Left, Right : Subject_Type) return Boolean;
 
+   type Memory_Region_Type is record
+      Physical_Address : SK.Word64;
+      Virtual_Address  : SK.Word64;
+      Size             : SK.Word64;
+      Permission       : Memory_Permission_Type;
+      Executable       : Boolean;
+   end record;
+
+   package Memregion_Package is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => Memory_Region_Type);
+
    type Memory_Layout_Type is record
       Pml4_Address : SK.Word64;
+      Regions      : Memregion_Package.List;
    end record;
 
    type Subject_Type is record

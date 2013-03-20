@@ -45,6 +45,14 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Region_Count (Layout : Memory_Layout_Type) return Positive
+   is
+   begin
+      return Positive (Layout.Regions.Length);
+   end Get_Region_Count;
+
+   -------------------------------------------------------------------------
+
    function Get_Subject
      (Policy : Policy_Type;
       Id     : Natural)

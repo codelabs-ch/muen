@@ -187,6 +187,8 @@ is
          M := Get_Memory_Layout (Subject => S);
          Assert (Condition => Get_Pml4_Address (Layout => M) = 2031616,
                  Message   => "PML4 address mismatch");
+         Assert (Condition => Get_Region_Count (Layout => M) = 2,
+                 Message   => "Memory region count mismatch");
       end;
    end Xml_To_Policy;
 

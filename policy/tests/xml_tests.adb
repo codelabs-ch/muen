@@ -38,13 +38,13 @@ is
 
    procedure Load_Invalid_Xml
    is
-      Data    : Skp.Xml.XML_Data_Type;
+      Data    : Xml.XML_Data_Type;
       Ref_Msg : constant String := "Error reading XML file 'data/invalid' - "
         & "data/invalid:1:1: Non-white space found at top level";
    begin
-      Skp.Xml.Parse (Data   => Data,
-                     File   => "data/invalid",
-                     Schema => "schema/system.xsd");
+      Xml.Parse (Data   => Data,
+                 File   => "data/invalid",
+                 Schema => "schema/system.xsd");
 
    exception
       when E : Xml.Processing_Error =>
@@ -57,13 +57,13 @@ is
 
    procedure Load_Invalid_Xsd
    is
-      Data    : Skp.Xml.XML_Data_Type;
+      Data    : Xml.XML_Data_Type;
       Ref_Msg : constant String := "Error reading XSD file 'data/invalid' - "
         & "data/invalid:1:1: Non-white space found at top level";
    begin
-      Skp.Xml.Parse (Data   => Data,
-                     File   => "examples/test_policy1.xml",
-                     Schema => "data/invalid");
+      Xml.Parse (Data   => Data,
+                 File   => "examples/test_policy1.xml",
+                 Schema => "data/invalid");
 
    exception
       when E : Xml.Processing_Error =>
@@ -76,13 +76,13 @@ is
 
    procedure Load_Nonexistent_Xml
    is
-      Data    : Skp.Xml.XML_Data_Type;
+      Data    : Xml.XML_Data_Type;
       Ref_Msg : constant String
         := "Error reading XML file 'nonexistent' - Could not open nonexistent";
    begin
-      Skp.Xml.Parse (Data   => Data,
-                     File   => "nonexistent",
-                     Schema => "schema/system.xsd");
+      Xml.Parse (Data   => Data,
+                 File   => "nonexistent",
+                 Schema => "schema/system.xsd");
 
    exception
       when E : Xml.Processing_Error =>
@@ -95,13 +95,13 @@ is
 
    procedure Load_Nonexistent_Xsd
    is
-      Data    : Skp.Xml.XML_Data_Type;
+      Data    : Xml.XML_Data_Type;
       Ref_Msg : constant String
         := "Error reading XSD file 'nonexistent' - Could not open nonexistent";
    begin
-      Skp.Xml.Parse (Data   => Data,
-                     File   => "examples/test_policy1.xml",
-                     Schema => "nonexistent");
+      Xml.Parse (Data   => Data,
+                 File   => "examples/test_policy1.xml",
+                 Schema => "nonexistent");
 
    exception
       when E : Xml.Processing_Error =>
@@ -114,11 +114,11 @@ is
 
    procedure Load_Policy_Xml
    is
-      Data : Skp.Xml.XML_Data_Type;
+      Data : Xml.XML_Data_Type;
    begin
-      Skp.Xml.Parse (Data   => Data,
-                     File   => "data/test_policy1.xml",
-                     Schema => "schema/system.xsd");
+      Xml.Parse (Data   => Data,
+                 File   => "data/test_policy1.xml",
+                 Schema => "schema/system.xsd");
 
       --  Must not raise an exception.
 
@@ -128,7 +128,7 @@ is
 
    procedure Xml_To_Policy
    is
-      D : Skp.Xml.XML_Data_Type;
+      D : Xml.XML_Data_Type;
       P : Policy_Type;
    begin
       Xml.Parse (Data   => D,

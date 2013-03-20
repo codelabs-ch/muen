@@ -51,11 +51,11 @@ is
 
    -------------------------------------------------------------------------
 
-   function Read (Binary : String) return Config_Subjects.Binary_Type
+   function Read (Binary : String) return SK.Config.Subject_Binary_Type
    is
       File    : Bfd.Files.File_Type;
       Symbols : Bfd.Symbols.Symbol_Table;
-      Bin     : Config_Subjects.Binary_Type;
+      Bin     : SK.Config.Subject_Binary_Type;
    begin
       begin
          Bfd.Files.Open (File   => File,
@@ -106,10 +106,12 @@ is
       end if;
 
       Put_Line (File => File,
-                Item => "package Config_Subjects.Bins is");
+                Item => "with SK.Config; use SK.Config;");
       Put_Line (File => File,
-                Item => "   Subjects : constant array (1 .."
-                & Subjs'Length'Img & ") of Binary_Type := (");
+                Item => "package Skc.Subjects is");
+      Put_Line (File => File,
+                Item => "   Binaries : constant array (1 .."
+                & Subjs'Length'Img & ") of Subject_Binary_Type := (");
 
       for S in Subjs'Range loop
          Put_Line (File => File,
@@ -127,7 +129,7 @@ is
       Put_Line (File => File,
                 Item => ");");
       Put_Line (File => File,
-                Item => "end Config_Subjects.Bins;");
+                Item => "end Skc.Subjects;");
    end Write;
 
 end Skc.Subjects;

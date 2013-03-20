@@ -25,6 +25,6 @@ begin
       end;
    end loop;
 
-   Skc.Subjects.Write (Spec  => "subjects/config_subjects-bins.ads",
+   Skc.Subjects.Write (Spec  => "include/skc-subjects.ads",
                        Subjs => Bins);
 end Skconfig;

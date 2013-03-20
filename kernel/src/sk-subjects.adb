@@ -1,6 +1,6 @@
 with System;
 
-with Config_Subjects.Bins;
+with Skc.Subjects;
 
 with SK.Constants;
 
@@ -60,13 +60,12 @@ begin
          Low      => Revision,
          High     => Unused_High);
 
-      for S in Config_Subjects.Bins.Subjects'Range loop
+      for S in Skc.Subjects.Binaries'Range loop
          Descriptors (Id_Type (S - 1))
            := State_Type'
              (Launched          => False,
               Regs              => CPU.Null_Regs,
-              Stack_Address     => Config_Subjects.Bins.Subjects
-                (S).Stack_Address,
+              Stack_Address     => Skc.Subjects.Binaries (S).Stack_Address,
               VMCS_Address      => VMCS_Address,
               PML4_Address      => Pagetable_Address,
               IO_Bitmap_Address => IO_Bitmap_Address,
@@ -86,8 +85,7 @@ begin
               or Constants.VM_CTRL_EXIT_MONITOR,
               Ctls_Exec_Proc2   => Constants.VM_CTRL_EXIT_DT
               or Constants.VM_CTRL_EXIT_WBINVD,
-              Entry_Point       => Config_Subjects.Bins.Subjects
-                (S).Entry_Point);
+              Entry_Point       => Skc.Subjects.Binaries (S).Entry_Point);
 
          Init_VMCS_Region :
          declare

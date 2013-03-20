@@ -14,4 +14,4 @@ config_subjects: skconfig $(SUBJECTS)
 	obj/skconfig $(SUBJECTS)
 
 clean:
-	@rm -rf obj subjects/config_subjects-bins.ads
+	@rm -rf obj include/skc-*.ads

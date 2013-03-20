@@ -73,21 +73,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Iterate
-     (Policy  : Policy_Type;
-      Process : not null access procedure (S : Subject_Type))
-   is
-      procedure Dispatch (Pos : Subjects_Package.Cursor)
-      is
-      begin
-         Process (S => Subjects_Package.Element (Position => Pos));
-      end Dispatch;
-   begin
-      Policy.Subjects.Iterate (Process => Dispatch'Access);
-   end Iterate;
-
-   -------------------------------------------------------------------------
-
    function Get_Size (Region : Memory_Region_Type) return SK.Word64
    is
    begin
@@ -119,5 +104,20 @@ is
    begin
       return Region.Executable;
    end Is_Executable;
+
+   -------------------------------------------------------------------------
+
+   procedure Iterate
+     (Policy  : Policy_Type;
+      Process : not null access procedure (S : Subject_Type))
+   is
+      procedure Dispatch (Pos : Subjects_Package.Cursor)
+      is
+      begin
+         Process (S => Subjects_Package.Element (Position => Pos));
+      end Dispatch;
+   begin
+      Policy.Subjects.Iterate (Process => Dispatch'Access);
+   end Iterate;
 
 end Skp;

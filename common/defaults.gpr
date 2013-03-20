@@ -2,9 +2,19 @@ project Defaults is
 
    for Languages use ();
 
-   Ada_Compiler_Switches := ("-g",
-                             "-gnata",
-                             "-gnatp",
-                             "-gnatygAdISux-s");
+   Common_Compiler_Switches :=
+     ("-g",
+      "-gnata");
+
+   Spark_Compiler_Switches := Common_Compiler_Switches
+     & ("-gnatygAdISux-s",
+        "-gnatp");
+
+   Ada_Compiler_Switches := Common_Compiler_Switches
+     & ("-gnatygAdISuxo-s",
+        "-gnatVa",
+        "-gnatf",
+        "-fstack-check",
+        "-gnato");
 
 end Defaults;

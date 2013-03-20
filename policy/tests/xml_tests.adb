@@ -226,26 +226,10 @@ is
       Assert (Condition => Iterate_Count = Get_Subject_Count (Policy => P),
               Message   => "Iterate count mismatch");
 
-      begin
-         declare
-            S : constant Subject_Type := Get_Subject
-              (Policy => P,
-               Id     => 255);
-            pragma Unreferenced (S);
-         begin
-            Fail (Message => "Exception expected");
-         end;
-
-      exception
-         when Subject_Not_Found => null;
-      end;
-
       declare
          use type SK.Word64;
 
-         S : constant Subject_Type := Get_Subject
-           (Policy => P,
-            Id     => 0);
+         S : constant Subject_Type := Test.First (Policy => P);
          M : Memory_Layout_Type;
          R : Memory_Region_Type;
       begin

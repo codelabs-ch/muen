@@ -52,12 +52,6 @@ is
    --  Return subjects count.
    function Get_Subject_Count (Policy : Policy_Type) return Positive;
 
-   --  Return subject with given Id.
-   function Get_Subject
-     (Policy : Policy_Type;
-      Id     : Natural)
-      return Subject_Type;
-
    --  Iterate over subjects.
    procedure Iterate
      (Policy  : Policy_Type;

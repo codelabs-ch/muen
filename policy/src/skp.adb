@@ -63,28 +63,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Subject
-     (Policy : Policy_Type;
-      Id     : Natural)
-      return Subject_Type
-   is
-      use type Subjects_Package.Cursor;
-
-      Pos : Subjects_Package.Cursor := Policy.Subjects.First;
-   begin
-      while Pos /= Subjects_Package.No_Element loop
-         if Subjects_Package.Element (Position => Pos).Id = Id then
-            return Subjects_Package.Element (Position => Pos);
-         end if;
-
-         Subjects_Package.Next (Position => Pos);
-      end loop;
-
-      raise Subject_Not_Found with "No subject with ID" & Id'Img & " found";
-   end Get_Subject;
-
-   -------------------------------------------------------------------------
-
    procedure Iterate
      (Policy  : Policy_Type;
       Process : not null access procedure (S : Subject_Type))

@@ -7,10 +7,10 @@ BUILD_OPTS = -p -j0
 
 all: config_subjects
 
-skconfig:
+skc_tool:
 	@LIBRARY_PATH=/usr/lib/x86_64-linux-gnu gprbuild $(BUILD_OPTS) -P$@
 
-config_subjects: skconfig $(SUBJECTS)
+config_subjects: skc_tool $(SUBJECTS)
 	obj/skconfig $(SUBJECTS)
 
 clean:

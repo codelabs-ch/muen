@@ -1,7 +1,7 @@
 with "../common/defaults";
 with "lib";
 
-project Skconfig is
+project Skc_Tool is
 
    for Source_Dirs use ("src", "../common/**");
    for Object_Dir use "obj/";
@@ -16,4 +16,4 @@ project Skconfig is
       for Default_Switches ("Ada") use ("-lbfd");
    end Linker;
 
-end Skconfig;
+end Skc_Tool;

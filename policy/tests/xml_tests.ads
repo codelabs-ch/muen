@@ -26,4 +26,7 @@ is
    --  Test XML data to Ada Policy_Type conversion.
    procedure Xml_To_Policy;
 
+   --  Test size string to memory size conversion.
+   procedure String_To_Memory_Size;
+
 end Xml_Tests;

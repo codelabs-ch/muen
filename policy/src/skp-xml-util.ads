@@ -42,4 +42,9 @@ is
       Tag_Name : String;
       Process  : not null access procedure (Node : DOM.Core.Node));
 
+   --  Convert XML memory size string to word64.
+   function To_Memory_Size (Str : String) return SK.Word64;
+
+   Conversion_Error : exception;
+
 end Skp.Xml.Util;

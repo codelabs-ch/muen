@@ -4,6 +4,7 @@ with Ada.Strings.Unbounded;
 with SK;
 
 with Skp.Xml;
+with Skp.Xml.Util;
 
 package body Xml_Tests
 is
@@ -35,6 +36,9 @@ is
       T.Add_Test_Routine
         (Routine => Xml_To_Policy'Access,
          Name    => "Deserialize Ada policy type");
+      T.Add_Test_Routine
+        (Routine => String_To_Memory_Size'Access,
+         Name    => "Convert string to memory size");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -126,6 +130,47 @@ is
       --  Must not raise an exception.
 
    end Load_Policy_Xml;
+
+   -------------------------------------------------------------------------
+
+   procedure String_To_Memory_Size
+   is
+      use type SK.Word64;
+   begin
+      Assert (Condition => Xml.Util.To_Memory_Size (Str => "4k") = 4096,
+              Message   => "Size mismatch (1)");
+      Assert (Condition => Xml.Util.To_Memory_Size (Str => "1K") = 1024,
+              Message   => "Size mismatch (2)");
+      Assert (Condition => Xml.Util.To_Memory_Size (Str => "4m") = 4194304,
+              Message   => "Size mismatch (3)");
+      Assert (Condition => Xml.Util.To_Memory_Size (Str => "1M") = 1048576,
+              Message   => "Size mismatch (4)");
+      Assert (Condition => Xml.Util.To_Memory_Size (Str => "1g") = 1073741824,
+              Message   => "Size mismatch (5)");
+      Assert (Condition => Xml.Util.To_Memory_Size (Str => "2G") = 2147483648,
+              Message   => "Size mismatch (6)");
+
+      declare
+         Dummy : SK.Word64;
+         pragma Unreferenced (Dummy);
+      begin
+         begin
+            Dummy := Xml.Util.To_Memory_Size (Str => "abc");
+            Fail (Message => "Exception expected");
+
+         exception
+            when Xml.Util.Conversion_Error => null;
+         end;
+
+         begin
+            Dummy := Xml.Util.To_Memory_Size (Str => "12f");
+            Fail (Message => "Exception expected");
+
+         exception
+            when Xml.Util.Conversion_Error => null;
+         end;
+      end;
+   end String_To_Memory_Size;
 
    -------------------------------------------------------------------------
 

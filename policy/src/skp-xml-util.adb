@@ -109,4 +109,29 @@ is
       end if;
    end Get_Element_Value_By_Tag_Name;
 
+   -------------------------------------------------------------------------
+
+   function To_Memory_Size (Str : String) return SK.Word64
+   is
+      use type SK.Word64;
+
+      Nr_Str : constant String    := Str (Str'First .. Str'Last - 1);
+      Unit   : constant Character := Str (Str'Last);
+      Value  : SK.Word64;
+   begin
+      Value := SK.Word64'Value (Nr_Str);
+
+      case Unit is
+         when 'k' | 'K' => return Value * (2 ** 10);
+         when 'm' | 'M' => return Value * (2 ** 20);
+         when 'g' | 'G' => return Value * (2 ** 30);
+         when others    => raise Conversion_Error with "Invalid unit '" & Unit
+              & "' in size conversion";
+      end case;
+
+   exception
+      when Constraint_Error =>
+         raise Conversion_Error with "Invalid size string '" & Str & "'";
+   end To_Memory_Size;
+
 end Skp.Xml.Util;

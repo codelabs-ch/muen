@@ -112,4 +112,12 @@ is
       return Region.Virtual_Address;
    end Get_Virtual_Address;
 
+   -------------------------------------------------------------------------
+
+   function Is_Executable (Region : Memory_Region_Type) return Boolean
+   is
+   begin
+      return Region.Executable;
+   end Is_Executable;
+
 end Skp;

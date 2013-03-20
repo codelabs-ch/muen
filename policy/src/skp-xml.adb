@@ -134,6 +134,10 @@ is
               (Str => DOM.Core.Elements.Get_Attribute
                  (Elem => Node,
                   Name => "permission"));
+            R.Executable       := Boolean'Value
+              (DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "executable"));
 
             Mem_Layout.Regions.Append (New_Item => R);
          end Add_Mem_Region;

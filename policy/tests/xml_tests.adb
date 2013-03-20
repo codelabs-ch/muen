@@ -254,6 +254,8 @@ is
                  Message   => "Memory size mismatch (1)");
          Assert (Condition => Get_Permission (Region => R) = Read_Write,
                  Message   => "Permission mismatch (1)");
+         Assert (Condition => Is_Executable (Region => R),
+                 Message   => "Executable mismatch (1)");
          R := Test.Last (Layout => M);
          Assert (Condition => Get_Physical_Address (Region => R) = 16#200000#,
                  Message   => "Physical address mismatch (2)");
@@ -263,6 +265,8 @@ is
                  Message   => "Memory size mismatch (2)");
          Assert (Condition => Get_Permission (Region => R) = Read_Only,
                  Message   => "Permission mismatch (2)");
+         Assert (Condition => not Is_Executable (Region => R),
+                 Message   => "Executable mismatch (2)");
       end;
    end Xml_To_Policy;
 

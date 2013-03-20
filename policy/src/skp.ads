@@ -36,6 +36,9 @@ is
      (Region : Memory_Region_Type)
       return Memory_Permission_Type;
 
+   --  Returns True if the memory region is marked as executable.
+   function Is_Executable (Region : Memory_Region_Type) return Boolean;
+
    --  Memory layout specification.
    type Memory_Layout_Type is private;
 

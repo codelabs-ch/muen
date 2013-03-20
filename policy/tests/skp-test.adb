@@ -19,6 +19,14 @@ is
 
    -------------------------------------------------------------------------
 
+   function First (Ports : IO_Ports_Type) return IO_Port_Range
+   is
+   begin
+      return Ports.Ranges.First_Element;
+   end First;
+
+   -------------------------------------------------------------------------
+
    function Last (Layout : Memory_Layout_Type) return Memory_Region_Type
    is
    begin

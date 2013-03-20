@@ -19,6 +19,14 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_End (Port_Range : IO_Port_Range) return SK.Word16
+   is
+   begin
+      return Port_Range.End_Port;
+   end Get_End;
+
+   -------------------------------------------------------------------------
+
    function Get_Id (Subject : Subject_Type) return Natural
    is
    begin
@@ -94,6 +102,14 @@ is
    begin
       return Region.Size;
    end Get_Size;
+
+   -------------------------------------------------------------------------
+
+   function Get_Start (Port_Range : IO_Port_Range) return SK.Word16
+   is
+   begin
+      return Port_Range.Start_Port;
+   end Get_Start;
 
    -------------------------------------------------------------------------
 

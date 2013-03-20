@@ -10,4 +10,7 @@ is
    --  Return first subject description in system policy.
    function First (Policy : Policy_Type) return Subject_Type;
 
+   --  Return first I/O port range.
+   function First (Ports : IO_Ports_Type) return IO_Port_Range;
+
 end Skp.Test;

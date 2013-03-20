@@ -227,12 +227,14 @@ is
               Message   => "Iterate count mismatch");
 
       declare
+         use type SK.Word16;
          use type SK.Word64;
 
-         S : constant Subject_Type := Test.First (Policy => P);
-         M : Memory_Layout_Type;
-         R : Memory_Region_Type;
-         I : IO_Ports_Type;
+         S  : constant Subject_Type := Test.First (Policy => P);
+         M  : Memory_Layout_Type;
+         R  : Memory_Region_Type;
+         I  : IO_Ports_Type;
+         PR : IO_Port_Range;
       begin
          Assert (Condition => Get_Id (Subject => S) = 0,
                  Message   => "Id mismatch");
@@ -272,6 +274,12 @@ is
          I := Get_IO_Ports (Subject => S);
          Assert (Condition => Get_Bitmap_Address (Ports => I) = 16#12345678#,
                  Message   => "I/O bitmap address mismatch");
+
+         PR := Test.First (Ports => I);
+         Assert (Condition => Get_Start (Port_Range => PR) = 16#50b0#,
+                 Message   => "Port start mismatch");
+         Assert (Condition => Get_End (Port_Range => PR) = 16#50b0#,
+                 Message   => "Port end mismatch");
       end;
    end Xml_To_Policy;
 

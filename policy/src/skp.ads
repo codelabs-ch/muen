@@ -48,6 +48,15 @@ is
    --  Return memory layout region count.
    function Get_Region_Count (Layout : Memory_Layout_Type) return Positive;
 
+   --  I/O port range.
+   type IO_Port_Range is private;
+
+   --  Return start address of I/O port range.
+   function Get_Start (Port_Range : IO_Port_Range) return SK.Word16;
+
+   --  Return end address of I/O port range.
+   function Get_End (Port_Range : IO_Port_Range) return SK.Word16;
+
    --  IO ports specification.
    type IO_Ports_Type is private;
 
@@ -104,8 +113,17 @@ private
       Regions      : Memregion_Package.List;
    end record;
 
+   type IO_Port_Range is record
+      Start_Port : SK.Word16;
+      End_Port   : SK.Word16;
+   end record;
+
+   package Ports_Package is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => IO_Port_Range);
+
    type IO_Ports_Type is record
       IO_Bitmap_Address : SK.Word64;
+      Ranges            : Ports_Package.List;
    end record;
 
    type Subject_Type is record

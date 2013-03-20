@@ -138,6 +138,30 @@ is
 
          -------------------------------------------------------------------
 
+         --  Add I/O port range to subject I/O ports.
+         procedure Add_Port_Range (Node : DOM.Core.Node)
+         is
+            R            : IO_Port_Range;
+            End_Port_Str : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "end");
+         begin
+            R.Start_Port := SK.Word16 (To_Word64
+              (Hex => DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "start")));
+
+            if End_Port_Str'Length = 0 then
+               R.End_Port := R.Start_Port;
+            else
+               R.End_Port := SK.Word16 (To_Word64 (Hex => End_Port_Str));
+            end if;
+
+            Ports.Ranges.Append (New_Item => R);
+         end Add_Port_Range;
+
+         -------------------------------------------------------------------
+
          function To_Word64 (Hex : String) return SK.Word64
          is
          begin
@@ -157,6 +181,9 @@ is
               (Node      => Node,
                Tag_Name  => "io_ports",
                Attr_Name => "bitmap_address"));
+         Util.For_Each_Node (Node     => Node,
+                             Tag_Name => "port_range",
+                             Process  => Add_Port_Range'Access);
 
          P.Subjects.Insert
            (New_Item =>

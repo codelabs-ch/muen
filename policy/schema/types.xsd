@@ -6,7 +6,7 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:simpleType name="access_type">
+	<xs:simpleType name="permission_type">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="ro"/>
 			<xs:enumeration value="rw"/>
@@ -41,7 +41,7 @@
 		<xs:attribute name="physical_address" type="address_type"     use="required"/>
 		<xs:attribute name="size"             type="memory_size_type" use="required"/>
 		<xs:attribute name="virtual_address"  type="address_type"     use="optional"/>
-		<xs:attribute name="access"           type="access_type"      use="required"/>
+		<xs:attribute name="permission"       type="permission_type"  use="required"/>
 		<xs:attribute name="executable"       type="xs:boolean"       use="optional" default="false"/>
 	</xs:complexType>
 

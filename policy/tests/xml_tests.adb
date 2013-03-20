@@ -5,6 +5,7 @@ with SK;
 
 with Skp.Xml;
 with Skp.Xml.Util;
+with Skp.Test;
 
 package body Xml_Tests
 is
@@ -246,6 +247,7 @@ is
            (Policy => P,
             Id     => 0);
          M : Memory_Layout_Type;
+         R : Memory_Region_Type;
       begin
          Assert (Condition => Get_Id (Subject => S) = 0,
                  Message   => "Id mismatch");
@@ -258,6 +260,10 @@ is
                  Message   => "PML4 address mismatch");
          Assert (Condition => Get_Region_Count (Layout => M) = 2,
                  Message   => "Memory region count mismatch");
+
+         R := Test.First (Layout => M);
+         Assert (Condition => Get_Physical_Address (Region => R) = 2359296,
+                 Message   => "Physical address mismatch");
       end;
    end Xml_To_Policy;
 

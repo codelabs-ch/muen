@@ -18,6 +18,11 @@ is
    --  Memory region specification.
    type Memory_Region_Type is private;
 
+   --  Return physical start address of memory region.
+   function Get_Physical_Address
+     (Region : Memory_Region_Type)
+      return SK.Word64;
+
    --  Memory layout specification.
    type Memory_Layout_Type is private;
 

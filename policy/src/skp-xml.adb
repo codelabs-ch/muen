@@ -96,21 +96,25 @@ is
 
          Mem_Layout : Memory_Layout_Type;
 
-         --  Add memory region to memory layout.
-         procedure Add_Mem_Region (Node : DOM.Core.Node)
-         is
-            R : Memory_Region_Type;
-            pragma Unreferenced (Node);
-         begin
-            Mem_Layout.Regions.Append (New_Item => R);
-         end Add_Mem_Region;
-
          --  Convert given hex string to word64.
          function To_Word64 (Hex : String) return SK.Word64
          is
          begin
             return SK.Word64'Value ("16#" & Hex & "#");
          end To_Word64;
+
+         --  Add memory region to memory layout.
+         procedure Add_Mem_Region (Node : DOM.Core.Node)
+         is
+            R : Memory_Region_Type;
+         begin
+            R.Physical_Address := To_Word64
+              (Hex => DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "physical_address"));
+
+            Mem_Layout.Regions.Append (New_Item => R);
+         end Add_Mem_Region;
       begin
          Mem_Layout.Pml4_Address := To_Word64 (Hex => Pml4_Str);
          Util.For_Each_Node (Node     => Node,

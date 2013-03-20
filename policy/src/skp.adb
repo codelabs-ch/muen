@@ -37,6 +37,16 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Physical_Address
+     (Region : Memory_Region_Type)
+      return SK.Word64
+   is
+   begin
+      return Region.Physical_Address;
+   end Get_Physical_Address;
+
+   -------------------------------------------------------------------------
+
    function Get_Pml4_Address (Layout : Memory_Layout_Type) return SK.Word64
    is
    begin

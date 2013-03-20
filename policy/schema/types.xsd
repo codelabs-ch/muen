@@ -56,7 +56,7 @@
 		<xs:sequence>
 			<xs:element name="port" type="io_port_type" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="io_bitmap_address" type="address_type" use="required"/>
+		<xs:attribute name="bitmap_address" type="address_type" use="required"/>
 	</xs:complexType>
 
 </xs:schema>

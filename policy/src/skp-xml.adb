@@ -155,8 +155,8 @@ is
          Ports.IO_Bitmap_Address := To_Word64
            (Hex => Util.Get_Element_Attr_By_Tag_Name
               (Node      => Node,
-               Tag_Name  => "ports",
-               Attr_Name => "io_bitmap_address"));
+               Tag_Name  => "io_ports",
+               Attr_Name => "bitmap_address"));
 
          P.Subjects.Insert
            (New_Item =>

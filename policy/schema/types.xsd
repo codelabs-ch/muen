@@ -54,7 +54,7 @@
 
 	<xs:complexType name="io_ports_type">
 		<xs:sequence>
-			<xs:element name="port" type="io_port_type" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="port_range" type="io_port_type" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="bitmap_address" type="address_type" use="required"/>
 	</xs:complexType>

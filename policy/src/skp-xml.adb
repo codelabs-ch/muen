@@ -75,6 +75,8 @@ is
 
       procedure Add_Subject (Node : DOM.Core.Node)
       is
+         use Ada.Strings.Unbounded;
+
          Name   : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "name");
@@ -82,11 +84,25 @@ is
            (Elem => Node,
             Name => "id");
          Id     : constant Natural := Natural'Value (Id_Str);
+
+         Pml4_Str : constant String := Util.Get_Element_Attr_By_Tag_Name
+           (Node      => Node,
+            Tag_Name  => "memory_layout",
+            Attr_Name => "pml4_address");
+
+         --  Convert given hex string to word64.
+         function To_Word64 (Hex : String) return SK.Word64
+         is
+         begin
+            return SK.Word64'Value ("16#" & Hex & "#");
+         end To_Word64;
       begin
          P.Subjects.Insert
            (New_Item =>
-              (Id   => Id,
-               Name => Ada.Strings.Unbounded.To_Unbounded_String (Name)));
+              (Id            => Id,
+               Name          => To_Unbounded_String (Name),
+               Memory_Layout => (Pml4_Address => To_Word64
+                                 (Hex => Pml4_Str))));
       end Add_Subject;
    begin
       Util.For_Each_Node (Data     => Data,

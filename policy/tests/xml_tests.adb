@@ -1,6 +1,8 @@
 with Ada.Exceptions;
 with Ada.Strings.Unbounded;
 
+with SK;
+
 with Skp.Xml;
 
 package body Xml_Tests
@@ -134,23 +136,13 @@ is
       D : Xml.XML_Data_Type;
       P : Policy_Type;
 
-      Ref_Id : Natural := 1;
-      Subj_Names : constant array (1 .. 3) of Subject_Name_Type
-        := (1 => To_Unbounded_String (Source => "tau0"),
-            2 => To_Unbounded_String (Source => "subject1"),
-            3 => To_Unbounded_String (Source => "subject2"));
-
-      --  Assert given subject.
-      procedure Assert_Subject (S : Subject_Type)
+      Iterate_Count : Natural := 0;
+      procedure Inc_Iterate_Counter (S : Subject_Type)
       is
+         pragma Unreferenced (S);
       begin
-         Assert (Condition => Get_Id (Subject => S) = Ref_Id - 1,
-                 Message   => "Id mismatch");
-         Assert (Condition => Get_Name (Subject => S) = Subj_Names (Ref_Id),
-                 Message   => "Name mismatch");
-         Ref_Id := Ref_Id + 1;
-      end Assert_Subject;
-
+         Iterate_Count := Iterate_Count + 1;
+      end Inc_Iterate_Counter;
    begin
       Xml.Parse (Data   => D,
                  File   => "data/test_policy1.xml",
@@ -160,7 +152,42 @@ is
               Message   => "Subject count mismatch");
 
       Iterate (Policy  => P,
-               Process => Assert_Subject'Access);
+               Process => Inc_Iterate_Counter'Access);
+      Assert (Condition => Iterate_Count = Get_Subject_Count (Policy => P),
+              Message   => "Iterate count mismatch");
+
+      begin
+         declare
+            S : constant Subject_Type := Get_Subject
+              (Policy => P,
+               Id     => 255);
+            pragma Unreferenced (S);
+         begin
+            Fail (Message => "Exception expected");
+         end;
+
+      exception
+         when Subject_Not_Found => null;
+      end;
+
+      declare
+         use type SK.Word64;
+
+         S : constant Subject_Type := Get_Subject
+           (Policy => P,
+            Id     => 0);
+         M : Memory_Layout_Type;
+      begin
+         Assert (Condition => Get_Id (Subject => S) = 0,
+                 Message   => "Id mismatch");
+         Assert (Condition => Get_Name (Subject => S) = To_Unbounded_String
+                 (Source => "tau0"),
+                 Message   => "Name mismatch");
+
+         M := Get_Memory_Layout (Subject => S);
+         Assert (Condition => Get_Pml4_Address (Layout => M) = 2031616,
+                 Message   => "PML4 address mismatch");
+      end;
    end Xml_To_Policy;
 
 end Xml_Tests;

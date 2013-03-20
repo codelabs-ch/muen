@@ -1,10 +1,18 @@
 with Ada.Strings.Unbounded;
 with Ada.Containers.Ordered_Sets;
 
+with SK;
+
 package Skp
 is
 
    subtype Subject_Name_Type is Ada.Strings.Unbounded.Unbounded_String;
+
+   --  Memory layout specification.
+   type Memory_Layout_Type is private;
+
+   --  Return PML4 address of memory layout.
+   function Get_Pml4_Address (Layout : Memory_Layout_Type) return SK.Word64;
 
    --  Subject specification.
    type Subject_Type is private;
@@ -15,24 +23,42 @@ is
    --  Return subject name.
    function Get_Name (Subject : Subject_Type) return Subject_Name_Type;
 
+   --  Return subject memory layout.
+   function Get_Memory_Layout
+     (Subject : Subject_Type)
+      return Memory_Layout_Type;
+
    --  SK system policy.
    type Policy_Type is private;
 
    --  Return subjects count.
    function Get_Subject_Count (Policy : Policy_Type) return Positive;
 
+   --  Return subject with given Id.
+   function Get_Subject
+     (Policy : Policy_Type;
+      Id     : Natural)
+      return Subject_Type;
+
    --  Iterate over subjects.
    procedure Iterate
      (Policy  : Policy_Type;
       Process : not null access procedure (S : Subject_Type));
 
+   Subject_Not_Found : exception;
+
 private
 
    function "<" (Left, Right : Subject_Type) return Boolean;
 
+   type Memory_Layout_Type is record
+      Pml4_Address : SK.Word64;
+   end record;
+
    type Subject_Type is record
-      Id   : Natural;
-      Name : Subject_Name_Type;
+      Id            : Natural;
+      Name          : Subject_Name_Type;
+      Memory_Layout : Memory_Layout_Type;
    end record;
 
    package Subjects_Package is new Ada.Containers.Ordered_Sets

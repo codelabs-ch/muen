@@ -19,11 +19,51 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Memory_Layout
+     (Subject : Subject_Type)
+      return Memory_Layout_Type
+   is
+   begin
+      return Subject.Memory_Layout;
+   end Get_Memory_Layout;
+
+   -------------------------------------------------------------------------
+
    function Get_Name (Subject : Subject_Type) return Subject_Name_Type
    is
    begin
       return Subject.Name;
    end Get_Name;
+
+   -------------------------------------------------------------------------
+
+   function Get_Pml4_Address (Layout : Memory_Layout_Type) return SK.Word64
+   is
+   begin
+      return Layout.Pml4_Address;
+   end Get_Pml4_Address;
+
+   -------------------------------------------------------------------------
+
+   function Get_Subject
+     (Policy : Policy_Type;
+      Id     : Natural)
+      return Subject_Type
+   is
+      use type Subjects_Package.Cursor;
+
+      Pos : Subjects_Package.Cursor := Policy.Subjects.First;
+   begin
+      while Pos /= Subjects_Package.No_Element loop
+         if Subjects_Package.Element (Position => Pos).Id = Id then
+            return Subjects_Package.Element (Position => Pos);
+         end if;
+
+         Subjects_Package.Next (Position => Pos);
+      end loop;
+
+      raise Subject_Not_Found with "No subject with ID" & Id'Img & " found";
+   end Get_Subject;
 
    -------------------------------------------------------------------------
 

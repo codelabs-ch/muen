@@ -1,4 +1,5 @@
 with Ada.Exceptions;
+with Ada.Strings.Unbounded;
 
 with Skp.Xml;
 
@@ -128,8 +129,28 @@ is
 
    procedure Xml_To_Policy
    is
+      use Ada.Strings.Unbounded;
+
       D : Xml.XML_Data_Type;
       P : Policy_Type;
+
+      Ref_Id : Natural := 1;
+      Subj_Names : constant array (1 .. 3) of Subject_Name_Type
+        := (1 => To_Unbounded_String (Source => "tau0"),
+            2 => To_Unbounded_String (Source => "subject1"),
+            3 => To_Unbounded_String (Source => "subject2"));
+
+      --  Assert given subject.
+      procedure Assert_Subject (S : Subject_Type)
+      is
+      begin
+         Assert (Condition => Get_Id (Subject => S) = Ref_Id - 1,
+                 Message   => "Id mismatch");
+         Assert (Condition => Get_Name (Subject => S) = Subj_Names (Ref_Id),
+                 Message   => "Name mismatch");
+         Ref_Id := Ref_Id + 1;
+      end Assert_Subject;
+
    begin
       Xml.Parse (Data   => D,
                  File   => "data/test_policy1.xml",
@@ -137,6 +158,9 @@ is
       P := Xml.To_Policy (Data => D);
       Assert (Condition => Get_Subject_Count (Policy => P) = 3,
               Message   => "Subject count mismatch");
+
+      Iterate (Policy  => P,
+               Process => Assert_Subject'Access);
    end Xml_To_Policy;
 
 end Xml_Tests;

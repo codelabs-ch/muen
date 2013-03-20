@@ -75,12 +75,18 @@ is
 
       procedure Add_Subject (Node : DOM.Core.Node)
       is
+         Name   : constant String  := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "name");
          Id_Str : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "id");
          Id     : constant Natural := Natural'Value (Id_Str);
       begin
-         P.Subjects.Insert (New_Item => (Id => Id));
+         P.Subjects.Insert
+           (New_Item =>
+              (Id   => Id,
+               Name => Ada.Strings.Unbounded.To_Unbounded_String (Name)));
       end Add_Subject;
    begin
       Util.For_Each_Node (Data     => Data,

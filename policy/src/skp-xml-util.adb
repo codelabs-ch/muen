@@ -134,4 +134,18 @@ is
          raise Conversion_Error with "Invalid size string '" & Str & "'";
    end To_Memory_Size;
 
+   -------------------------------------------------------------------------
+
+   function To_Permission (Str : String) return Memory_Permission_Type
+   is
+   begin
+      if Str = "ro" then
+         return Read_Only;
+      elsif Str = "rw" then
+         return Read_Write;
+      end if;
+
+      raise Conversion_Error with "Invalid permission string '" & Str & "'";
+   end To_Permission;
+
 end Skp.Xml.Util;

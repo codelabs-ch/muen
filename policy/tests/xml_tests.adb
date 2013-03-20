@@ -39,6 +39,9 @@ is
       T.Add_Test_Routine
         (Routine => String_To_Memory_Size'Access,
          Name    => "Convert string to memory size");
+      T.Add_Test_Routine
+        (Routine => String_To_Permission'Access,
+         Name    => "Convert string to permission");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -171,6 +174,27 @@ is
          end;
       end;
    end String_To_Memory_Size;
+
+   -------------------------------------------------------------------------
+
+   procedure String_To_Permission
+   is
+      Dummy : Memory_Permission_Type;
+      pragma Unreferenced (Dummy);
+   begin
+      Assert (Condition => Xml.Util.To_Permission (Str => "ro") = Read_Only,
+              Message   => "Read_Only expected");
+      Assert (Condition => Xml.Util.To_Permission (Str => "rw") = Read_Write,
+              Message   => "Read_Write expected");
+
+      begin
+         Dummy := Xml.Util.To_Permission (Str => "perm");
+         Fail (Message => "Exception expected");
+
+      exception
+         when Xml.Util.Conversion_Error => null;
+      end;
+   end String_To_Permission;
 
    -------------------------------------------------------------------------
 

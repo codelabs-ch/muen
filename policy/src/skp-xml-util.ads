@@ -45,6 +45,9 @@ is
    --  Convert XML memory size string to word64.
    function To_Memory_Size (Str : String) return SK.Word64;
 
+   --  Convert XML permission string to memory permission type.
+   function To_Permission (Str : String) return Memory_Permission_Type;
+
    Conversion_Error : exception;
 
 end Skp.Xml.Util;

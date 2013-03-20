@@ -78,6 +78,14 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Size (Region : Memory_Region_Type) return SK.Word64
+   is
+   begin
+      return Region.Size;
+   end Get_Size;
+
+   -------------------------------------------------------------------------
+
    function Get_Subject_Count (Policy : Policy_Type) return Positive
    is
    begin

@@ -250,11 +250,15 @@ is
                  Message   => "Physical address mismatch (1)");
          Assert (Condition => Get_Virtual_Address (Region => R) = 0,
                  Message   => "Virtual address mismatch (1)");
+         Assert (Condition => Get_Size (Region => R) = 65536,
+                 Message   => "Memory size mismatch (1)");
          R := Test.Last (Layout => M);
          Assert (Condition => Get_Physical_Address (Region => R) = 16#200000#,
                  Message   => "Physical address mismatch (2)");
          Assert (Condition => Get_Virtual_Address (Region => R) = 16#200000#,
                  Message   => "Virtual address mismatch (2)");
+         Assert (Condition => Get_Size (Region => R) = 4096,
+                 Message   => "Memory size mismatch (2)");
       end;
    end Xml_To_Policy;
 

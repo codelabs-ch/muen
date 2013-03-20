@@ -126,6 +126,10 @@ is
 
             R.Physical_Address := PM;
             R.Virtual_Address  := VM;
+            R.Size             := Util.To_Memory_Size
+              (Str => DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "size"));
 
             Mem_Layout.Regions.Append (New_Item => R);
          end Add_Mem_Region;

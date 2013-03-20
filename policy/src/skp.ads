@@ -23,6 +23,11 @@ is
      (Region : Memory_Region_Type)
       return SK.Word64;
 
+   --  Return virtual start address of memory region.
+   function Get_Virtual_Address
+     (Region : Memory_Region_Type)
+      return SK.Word64;
+
    --  Memory layout specification.
    type Memory_Layout_Type is private;
 

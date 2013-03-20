@@ -106,12 +106,26 @@ is
          --  Add memory region to memory layout.
          procedure Add_Mem_Region (Node : DOM.Core.Node)
          is
-            R : Memory_Region_Type;
+            R      : Memory_Region_Type;
+            PM     : SK.Word64;
+            VM     : SK.Word64;
+            VM_Str : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "virtual_address");
          begin
-            R.Physical_Address := To_Word64
+            PM := To_Word64
               (Hex => DOM.Core.Elements.Get_Attribute
                  (Elem => Node,
                   Name => "physical_address"));
+
+            if VM_Str'Length = 0 then
+               VM := PM;
+            else
+               VM := To_Word64 (Hex => VM_Str);
+            end if;
+
+            R.Physical_Address := PM;
+            R.Virtual_Address  := VM;
 
             Mem_Layout.Regions.Append (New_Item => R);
          end Add_Mem_Region;

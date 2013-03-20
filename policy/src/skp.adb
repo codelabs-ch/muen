@@ -84,4 +84,14 @@ is
       return Positive (Policy.Subjects.Length);
    end Get_Subject_Count;
 
+   -------------------------------------------------------------------------
+
+   function Get_Virtual_Address
+     (Region : Memory_Region_Type)
+      return SK.Word64
+   is
+   begin
+      return Region.Virtual_Address;
+   end Get_Virtual_Address;
+
 end Skp;

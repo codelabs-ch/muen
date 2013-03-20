@@ -17,4 +17,12 @@ is
       return Policy.Subjects.First_Element;
    end First;
 
+   -------------------------------------------------------------------------
+
+   function Last (Layout : Memory_Layout_Type) return Memory_Region_Type
+   is
+   begin
+      return Layout.Regions.Last_Element;
+   end Last;
+
 end Skp.Test;

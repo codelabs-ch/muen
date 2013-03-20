@@ -240,14 +240,21 @@ is
                  Message   => "Name mismatch");
 
          M := Get_Memory_Layout (Subject => S);
-         Assert (Condition => Get_Pml4_Address (Layout => M) = 2031616,
+         Assert (Condition => Get_Pml4_Address (Layout => M) = 16#1f0000#,
                  Message   => "PML4 address mismatch");
          Assert (Condition => Get_Region_Count (Layout => M) = 2,
                  Message   => "Memory region count mismatch");
 
          R := Test.First (Layout => M);
-         Assert (Condition => Get_Physical_Address (Region => R) = 2359296,
-                 Message   => "Physical address mismatch");
+         Assert (Condition => Get_Physical_Address (Region => R) = 16#240000#,
+                 Message   => "Physical address mismatch (1)");
+         Assert (Condition => Get_Virtual_Address (Region => R) = 0,
+                 Message   => "Virtual address mismatch (1)");
+         R := Test.Last (Layout => M);
+         Assert (Condition => Get_Physical_Address (Region => R) = 16#200000#,
+                 Message   => "Physical address mismatch (2)");
+         Assert (Condition => Get_Virtual_Address (Region => R) = 16#200000#,
+                 Message   => "Virtual address mismatch (2)");
       end;
    end Xml_To_Policy;
 

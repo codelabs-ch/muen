@@ -1,11 +1,13 @@
 with Ada.Exceptions;
 
 with DOM.Core.Nodes;
+with DOM.Core.Elements;
 with Input_Sources.File;
 with Sax.Readers;
 with Schema.Dom_Readers;
 with Schema.Validators;
 
+with Skp.Xml.Util;
 with Skp.Xml.Grammar;
 
 package body Skp.Xml
@@ -62,5 +64,29 @@ is
               & "' - " & Ada.Exceptions.Exception_Message (X => E);
       end;
    end Parse;
+
+   -------------------------------------------------------------------------
+
+   function To_Policy (Data : XML_Data_Type) return Policy_Type
+   is
+      P : Policy_Type;
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Subject (Node : DOM.Core.Node)
+      is
+         Id_Str : constant String  := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "id");
+         Id     : constant Natural := Natural'Value (Id_Str);
+      begin
+         P.Subjects.Insert (New_Item => (Id => Id));
+      end Add_Subject;
+   begin
+      Util.For_Each_Node (Data     => Data,
+                          Tag_Name => "subject",
+                          Process  => Add_Subject'Access);
+      return P;
+   end To_Policy;
 
 end Skp.Xml;

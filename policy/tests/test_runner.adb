@@ -3,7 +3,8 @@ with Ahven.Framework;
 
 with Xml_Tests;
 
-procedure Test_Runner is
+procedure Test_Runner
+is
    use Ahven.Framework;
 
    S : constant Test_Suite_Access := Create_Suite (Suite_Name => "SKP tests");

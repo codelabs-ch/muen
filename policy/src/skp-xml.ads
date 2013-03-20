@@ -14,6 +14,9 @@ is
       File   :        String;
       Schema :        String);
 
+   --  Create SK system policy from given XML document.
+   function To_Policy (Data : XML_Data_Type) return Policy_Type;
+
    Processing_Error : exception;
 
 private

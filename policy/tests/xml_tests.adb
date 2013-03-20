@@ -2,7 +2,8 @@ with Ada.Exceptions;
 
 with Skp.Xml;
 
-package body Xml_Tests is
+package body Xml_Tests
+is
 
    use Ahven;
    use Skp;
@@ -26,8 +27,11 @@ package body Xml_Tests is
         (Routine => Load_Invalid_Xml'Access,
          Name    => "Load invalid XML");
       T.Add_Test_Routine
-        (Routine => Load_Policy'Access,
-         Name    => "Load policy");
+        (Routine => Load_Policy_Xml'Access,
+         Name    => "Load policy from XML");
+      T.Add_Test_Routine
+        (Routine => Xml_To_Policy'Access,
+         Name    => "Deserialize Ada policy type");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -108,7 +112,7 @@ package body Xml_Tests is
 
    -------------------------------------------------------------------------
 
-   procedure Load_Policy
+   procedure Load_Policy_Xml
    is
       Data : Skp.Xml.XML_Data_Type;
    begin
@@ -118,6 +122,21 @@ package body Xml_Tests is
 
       --  Must not raise an exception.
 
-   end Load_Policy;
+   end Load_Policy_Xml;
+
+   -------------------------------------------------------------------------
+
+   procedure Xml_To_Policy
+   is
+      D : Skp.Xml.XML_Data_Type;
+      P : Policy_Type;
+   begin
+      Xml.Parse (Data   => D,
+                 File   => "data/test_policy1.xml",
+                 Schema => "schema/system.xsd");
+      P := Xml.To_Policy (Data => D);
+      Assert (Condition => Get_Subject_Count (Policy => P) = 3,
+              Message   => "Subject count mismatch");
+   end Xml_To_Policy;
 
 end Xml_Tests;

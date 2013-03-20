@@ -38,7 +38,7 @@ is
    --  Invoke the given process procedure for each tag with specified name in
    --  the given XML data.
    procedure For_Each_Node
-     (Data     : XML_Data_Type;
+     (Node     : DOM.Core.Element;
       Tag_Name : String;
       Process  : not null access procedure (Node : DOM.Core.Node));
 

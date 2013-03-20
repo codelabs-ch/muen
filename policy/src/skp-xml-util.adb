@@ -1,6 +1,5 @@
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
-with DOM.Core.Documents;
 
 package body Skp.Xml.Util
 is
@@ -8,7 +7,7 @@ is
    -------------------------------------------------------------------------
 
    procedure For_Each_Node
-     (Data     : XML_Data_Type;
+     (Node     : DOM.Core.Element;
       Tag_Name : String;
       Process  : not null access procedure (Node : DOM.Core.Node))
    is
@@ -16,9 +15,9 @@ is
 
       List : DC.Node_List;
    begin
-      List := DC.Documents.Get_Elements_By_Tag_Name
-        (Doc      => Data.Doc,
-         Tag_Name => Tag_Name);
+      List := DC.Elements.Get_Elements_By_Tag_Name
+        (Elem => Node,
+         Name => Tag_Name);
 
       for Index in 1 .. DC.Nodes.Length (List => List) loop
          Process (Node => DC.Nodes.Item

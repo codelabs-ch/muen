@@ -2,6 +2,7 @@ with Ada.Exceptions;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
+with DOM.Core.Documents;
 with Input_Sources.File;
 with Sax.Readers;
 with Schema.Dom_Readers;
@@ -69,6 +70,9 @@ is
 
    function To_Policy (Data : XML_Data_Type) return Policy_Type
    is
+
+      package DCD renames DOM.Core.Documents;
+
       P : Policy_Type;
 
       ----------------------------------------------------------------------
@@ -105,7 +109,7 @@ is
                                  (Hex => Pml4_Str))));
       end Add_Subject;
    begin
-      Util.For_Each_Node (Data     => Data,
+      Util.For_Each_Node (Node     => DCD.Get_Element (Doc => Data.Doc),
                           Tag_Name => "subject",
                           Process  => Add_Subject'Access);
       return P;

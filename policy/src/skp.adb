@@ -37,6 +37,16 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Permission
+     (Region : Memory_Region_Type)
+      return Memory_Permission_Type
+   is
+   begin
+      return Region.Permission;
+   end Get_Permission;
+
+   -------------------------------------------------------------------------
+
    function Get_Physical_Address
      (Region : Memory_Region_Type)
       return SK.Word64

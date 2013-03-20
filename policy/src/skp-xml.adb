@@ -130,6 +130,10 @@ is
               (Str => DOM.Core.Elements.Get_Attribute
                  (Elem => Node,
                   Name => "size"));
+            R.Permission       := Util.To_Permission
+              (Str => DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "permission"));
 
             Mem_Layout.Regions.Append (New_Item => R);
          end Add_Mem_Region;

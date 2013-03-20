@@ -31,6 +31,11 @@ is
    --  Return size of memory region in bytes.
    function Get_Size (Region : Memory_Region_Type) return SK.Word64;
 
+   --  Return access permissions of memory region.
+   function Get_Permission
+     (Region : Memory_Region_Type)
+      return Memory_Permission_Type;
+
    --  Memory layout specification.
    type Memory_Layout_Type is private;
 

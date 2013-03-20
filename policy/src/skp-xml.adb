@@ -89,12 +89,8 @@ is
             Name => "id");
          Id     : constant Natural := Natural'Value (Id_Str);
 
-         Pml4_Str : constant String := Util.Get_Element_Attr_By_Tag_Name
-           (Node      => Node,
-            Tag_Name  => "memory_layout",
-            Attr_Name => "pml4_address");
-
          Mem_Layout : Memory_Layout_Type;
+         Ports      : IO_Ports_Type;
 
          --  Convert given hex string to word64.
          function To_Word64 (Hex : String) return SK.Word64;
@@ -148,15 +144,26 @@ is
             return SK.Word64'Value ("16#" & Hex & "#");
          end To_Word64;
       begin
-         Mem_Layout.Pml4_Address := To_Word64 (Hex => Pml4_Str);
+         Mem_Layout.Pml4_Address := To_Word64
+           (Hex => Util.Get_Element_Attr_By_Tag_Name
+              (Node      => Node,
+               Tag_Name  => "memory_layout",
+               Attr_Name => "pml4_address"));
          Util.For_Each_Node (Node     => Node,
                              Tag_Name => "memory_region",
                              Process  => Add_Mem_Region'Access);
+         Ports.IO_Bitmap_Address := To_Word64
+           (Hex => Util.Get_Element_Attr_By_Tag_Name
+              (Node      => Node,
+               Tag_Name  => "ports",
+               Attr_Name => "io_bitmap_address"));
+
          P.Subjects.Insert
            (New_Item =>
               (Id            => Id,
                Name          => To_Unbounded_String (Name),
-               Memory_Layout => Mem_Layout));
+               Memory_Layout => Mem_Layout,
+               IO_Ports      => Ports));
       end Add_Subject;
    begin
       Util.For_Each_Node (Node     => DCD.Get_Element (Doc => Data.Doc),

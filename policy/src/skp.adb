@@ -11,11 +11,27 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Bitmap_Address (Ports : IO_Ports_Type) return SK.Word64
+   is
+   begin
+      return Ports.IO_Bitmap_Address;
+   end Get_Bitmap_Address;
+
+   -------------------------------------------------------------------------
+
    function Get_Id (Subject : Subject_Type) return Natural
    is
    begin
       return Subject.Id;
    end Get_Id;
+
+   -------------------------------------------------------------------------
+
+   function Get_IO_Ports (Subject : Subject_Type) return IO_Ports_Type
+   is
+   begin
+      return Subject.IO_Ports;
+   end Get_IO_Ports;
 
    -------------------------------------------------------------------------
 

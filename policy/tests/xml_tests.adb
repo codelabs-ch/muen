@@ -232,6 +232,7 @@ is
          S : constant Subject_Type := Test.First (Policy => P);
          M : Memory_Layout_Type;
          R : Memory_Region_Type;
+         I : IO_Ports_Type;
       begin
          Assert (Condition => Get_Id (Subject => S) = 0,
                  Message   => "Id mismatch");
@@ -267,6 +268,10 @@ is
                  Message   => "Permission mismatch (2)");
          Assert (Condition => not Is_Executable (Region => R),
                  Message   => "Executable mismatch (2)");
+
+         I := Get_IO_Ports (Subject => S);
+         Assert (Condition => Get_Bitmap_Address (Ports => I) = 16#12345678#,
+                 Message   => "I/O bitmap address mismatch");
       end;
    end Xml_To_Policy;
 

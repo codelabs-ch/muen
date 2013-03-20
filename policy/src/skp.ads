@@ -48,6 +48,12 @@ is
    --  Return memory layout region count.
    function Get_Region_Count (Layout : Memory_Layout_Type) return Positive;
 
+   --  IO ports specification.
+   type IO_Ports_Type is private;
+
+   --  Return IO bitmap memory address.
+   function Get_Bitmap_Address (Ports : IO_Ports_Type) return SK.Word64;
+
    --  Subject specification.
    type Subject_Type is private;
 
@@ -61,6 +67,9 @@ is
    function Get_Memory_Layout
      (Subject : Subject_Type)
       return Memory_Layout_Type;
+
+   --  Return allowed I/O ports.
+   function Get_IO_Ports (Subject : Subject_Type) return IO_Ports_Type;
 
    --  SK system policy.
    type Policy_Type is private;
@@ -95,10 +104,15 @@ private
       Regions      : Memregion_Package.List;
    end record;
 
+   type IO_Ports_Type is record
+      IO_Bitmap_Address : SK.Word64;
+   end record;
+
    type Subject_Type is record
       Id            : Natural;
       Name          : Subject_Name_Type;
       Memory_Layout : Memory_Layout_Type;
+      IO_Ports      : IO_Ports_Type;
    end record;
 
    package Subjects_Package is new Ada.Containers.Ordered_Sets

@@ -1,5 +1,4 @@
 .global kernel_pml4_ptr
-.global subjects_pt_ptr
 
 .section .pagetable
 
@@ -112,6 +111,3 @@ subject2_pte:
 	// PTE for video memory b8000
 	.quad 0x80000000000b818f
 	.fill 327, 8, 0x0
-
-subjects_pt_ptr:
-	.quad subjects_pt_start

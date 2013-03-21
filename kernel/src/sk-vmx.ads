@@ -1,6 +1,6 @@
-with SK.Subjects;
+with SK.Policy;
 
-use type SK.Subjects.Id_Type;
+use type SK.Policy.Subject_Id_Type;
 
 --# inherit
 --#    X86_64,
@@ -9,6 +9,7 @@ use type SK.Subjects.Id_Type;
 --#    SK.GDT,
 --#    SK.Descriptors,
 --#    SK.Constants,
+--#    SK.Policy,
 --#    SK.Subjects;
 package SK.VMX
 --# own
@@ -24,7 +25,7 @@ is
    --# derives
    --#    X86_64.State from *, State;
 
-   procedure Launch (Subject_Id : Subjects.Id_Type);
+   procedure Launch (Subject_Id : Policy.Subject_Id_Type);
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
@@ -41,7 +42,7 @@ is
    --#       Subject_Id,
    --#       State;
 
-   procedure Resume (Subject_Id : Subjects.Id_Type);
+   procedure Resume (Subject_Id : Policy.Subject_Id_Type);
    --# global
    --#    in     Subjects.Descriptors;
    --#    in out X86_64.State;

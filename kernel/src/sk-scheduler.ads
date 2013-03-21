@@ -1,7 +1,7 @@
 with SK.CPU;
-with SK.Subjects;
+with SK.Policy;
 
-use type SK.Subjects.Id_Type;
+use type SK.Policy.Subject_Id_Type;
 
 --# inherit
 --#    X86_64,
@@ -9,6 +9,7 @@ use type SK.Subjects.Id_Type;
 --#    SK.CPU,
 --#    SK.GDT,
 --#    SK.Interrupts,
+--#    SK.Policy,
 --#    SK.Subjects,
 --#    SK.VMX;
 package SK.Scheduler

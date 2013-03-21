@@ -7,7 +7,7 @@ with SK.Constants;
 package body SK.Subjects
 is
 
-   type Subject_Array is array (Id_Type) of State_Type;
+   type Subject_Array is array (Policy.Subject_Id_Type) of State_Type;
 
    --  Descriptors used to manage subjects.
    Descriptors : Subject_Array;
@@ -17,22 +17,14 @@ is
    pragma Import (C, VMCS_Address, "vmcs_ptr");
    --# end accept;
 
-   --# accept Warning, 350, Pagetable_Address, "Imported from Linker";
-   Pagetable_Address : SK.Word64;
-   pragma Import (C, Pagetable_Address, "subjects_pt_ptr");
-   --# end accept;
-
    --# accept Warning, 350, IO_Bitmap_Address, "Imported from Linker";
    IO_Bitmap_Address : SK.Word64;
    pragma Import (C, IO_Bitmap_Address, "io_bitmap_ptr");
    --# end accept;
 
-   --  Size of page table (4 pages).
-   Pagetable_Size : constant := 4 * SK.Page_Size;
-
    -------------------------------------------------------------------------
 
-   function Get_State (Id : Id_Type) return State_Type
+   function Get_State (Id : Policy.Subject_Id_Type) return State_Type
    is
    begin
       return Descriptors (Id);
@@ -41,7 +33,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Set_State
-     (Id    : Id_Type;
+     (Id    : Policy.Subject_Id_Type;
       State : State_Type)
    is
    begin
@@ -61,13 +53,12 @@ begin
          High     => Unused_High);
 
       for S in Skc.Subjects.Binaries'Range loop
-         Descriptors (Id_Type (S - 1))
+         Descriptors (Policy.Subject_Id_Type (S - 1))
            := State_Type'
              (Launched          => False,
               Regs              => CPU.Null_Regs,
               Stack_Address     => Skc.Subjects.Binaries (S).Stack_Address,
               VMCS_Address      => VMCS_Address,
-              PML4_Address      => Pagetable_Address,
               IO_Bitmap_Address => IO_Bitmap_Address,
               Ctls_Exec_Pin     => Constants.VM_CTRL_PREEMPT_TIMER,
               Ctls_Exec_Proc    => Constants.VM_CTRL_IO_BITMAPS
@@ -95,13 +86,12 @@ begin
             VMCS_Region := Revision;
          end Init_VMCS_Region;
 
-         VMCS_Address      := VMCS_Address      + Page_Size;
-         Pagetable_Address := Pagetable_Address + Pagetable_Size;
+         VMCS_Address := VMCS_Address + Page_Size;
       end loop;
 
       --  Set IO Bitmap of Tau0
 
-      Descriptors (Id_Type'First).IO_Bitmap_Address
+      Descriptors (Policy.Subject_Id_Type'First).IO_Bitmap_Address
         := IO_Bitmap_Address + 2 * Page_Size;
    end;
 end SK.Subjects;

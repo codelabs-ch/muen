@@ -1,16 +1,16 @@
 with SK.CPU;
+with SK.Policy;
 
 --# inherit
---#    SK.CPU;
+--#    SK.CPU,
+--#    SK.Policy;
 package SK.Subjects
 --# own
 --#    Descriptors,
---#    Pagetable_Address,
 --#    IO_Bitmap_Address,
 --#    VMCS_Address;
 --# initializes
 --#    Descriptors,
---#    Pagetable_Address,
 --#    IO_Bitmap_Address,
 --#    VMCS_Address;
 is
@@ -21,7 +21,6 @@ is
       Regs              : CPU.Registers_Type;
       Stack_Address     : SK.Word64;
       VMCS_Address      : SK.Word64;
-      PML4_Address      : SK.Word64;
       IO_Bitmap_Address : SK.Word64;
       Ctls_Exec_Pin     : SK.Word32;
       Ctls_Exec_Proc    : SK.Word32;
@@ -29,20 +28,14 @@ is
       Entry_Point       : SK.Word64;
    end record;
 
-   --  Maximum number of supported subjects.
-   Max_Subjects : constant := 3;
-
-   --  Subject ID.
-   type Id_Type is range 0 .. Max_Subjects - 1;
-
    --  Get state of subject with given ID.
-   function Get_State (Id : Id_Type) return State_Type;
+   function Get_State (Id : Policy.Subject_Id_Type) return State_Type;
    --# global
    --#    Descriptors;
 
    --  Set state of subject identified by ID.
    procedure Set_State
-     (Id    : Id_Type;
+     (Id    : Policy.Subject_Id_Type;
       State : State_Type);
    --# global
    --#    Descriptors;

@@ -3,6 +3,7 @@ with System.Machine_Code;
 with SK.KC;
 with SK.VMX;
 with SK.Constants;
+with SK.Subjects;
 
 package body SK.Dump
 is
@@ -84,7 +85,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_State (Subject : Subjects.Id_Type)
+   procedure Print_State (Subject : Policy.Subject_Id_Type)
    is
       RIP, RSP, CS, SS, CR0, CR3, CR4, RFL : Word64;
       State : constant Subjects.State_Type

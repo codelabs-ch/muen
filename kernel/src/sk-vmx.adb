@@ -6,6 +6,7 @@ with SK.Descriptors;
 with SK.KC;
 with SK.GDT;
 with SK.Constants;
+with SK.Subjects;
 
 package body SK.VMX
 --# own
@@ -99,7 +100,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Resume (Subject_Id : Subjects.Id_Type)
+   procedure Resume (Subject_Id : Policy.Subject_Id_Type)
    is
       Error   : SK.Word64;
       Success : Boolean;
@@ -384,7 +385,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Launch (Subject_Id : Subjects.Id_Type)
+   procedure Launch (Subject_Id : Policy.Subject_Id_Type)
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
@@ -405,12 +406,14 @@ is
    is
       Success : Boolean;
       Error   : SK.Word64;
+      Spec    : Policy.Subject_Spec_Type;
       State   : Subjects.State_Type;
    begin
       pragma Debug (KC.Put_String (Item => "Launching subject "));
       pragma Debug (KC.Put_Byte (Item => Byte (Subject_Id)));
       pragma Debug (KC.New_Line);
 
+      Spec  := Policy.Subject_Specs (Subject_Id);
       State := Subjects.Get_State (Id => Subject_Id);
 
       Success := Is_Aligned
@@ -445,7 +448,7 @@ is
       VMCS_Setup_Host_Fields;
       VMCS_Setup_Guest_Fields
         (Stack_Address => State.Stack_Address,
-         PML4_Address  => State.PML4_Address,
+         PML4_Address  => Spec.PML4_Address,
          Entry_Point   => State.Entry_Point);
 
       State.Launched := True;

@@ -48,6 +48,11 @@ is
    --  Return memory layout region count.
    function Get_Region_Count (Layout : Memory_Layout_Type) return Positive;
 
+   --  Iterate over regions in memory layout.
+   procedure Iterate
+     (Layout  : Memory_Layout_Type;
+      Process : not null access procedure (R : Memory_Region_Type));
+
    --  I/O port range.
    type IO_Port_Range is private;
 

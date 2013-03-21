@@ -140,6 +140,21 @@ is
    -------------------------------------------------------------------------
 
    procedure Iterate
+     (Layout  : Memory_Layout_Type;
+      Process : not null access procedure (R : Memory_Region_Type))
+   is
+      procedure Dispatch (Pos : Memregion_Package.Cursor)
+      is
+      begin
+         Process (R => Memregion_Package.Element (Position => Pos));
+      end Dispatch;
+   begin
+      Layout.Regions.Iterate (Process => Dispatch'Access);
+   end Iterate;
+
+   -------------------------------------------------------------------------
+
+   procedure Iterate
      (Policy  : Policy_Type;
       Process : not null access procedure (S : Subject_Type))
    is

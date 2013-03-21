@@ -1,5 +1,3 @@
-with SK;
-
 package SK.Config
 is
 

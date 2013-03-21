@@ -1,5 +1,3 @@
-.global io_bitmap_ptr
-
 .section .rodata
 
 	.align 4096
@@ -23,7 +21,3 @@ tau0_io_bitmap_a:
 	.align 4096
 tau0_io_bitmap_b:
 	.fill 4096, 1, 0xff
-
-
-io_bitmap_ptr:
-	.quad io_bitmap_start

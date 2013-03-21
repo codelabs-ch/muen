@@ -17,11 +17,6 @@ is
    pragma Import (C, VMCS_Address, "vmcs_ptr");
    --# end accept;
 
-   --# accept Warning, 350, IO_Bitmap_Address, "Imported from Linker";
-   IO_Bitmap_Address : SK.Word64;
-   pragma Import (C, IO_Bitmap_Address, "io_bitmap_ptr");
-   --# end accept;
-
    -------------------------------------------------------------------------
 
    function Get_State (Id : Skp.Subjects.Subject_Id_Type) return State_Type
@@ -59,7 +54,6 @@ begin
               Regs              => CPU.Null_Regs,
               Stack_Address     => Skc.Subjects.Binaries (S).Stack_Address,
               VMCS_Address      => VMCS_Address,
-              IO_Bitmap_Address => IO_Bitmap_Address,
               Ctls_Exec_Pin     => Constants.VM_CTRL_PREEMPT_TIMER,
               Ctls_Exec_Proc    => Constants.VM_CTRL_IO_BITMAPS
               or Constants.VM_CTRL_SECONDARY_PROC
@@ -88,10 +82,5 @@ begin
 
          VMCS_Address := VMCS_Address + Page_Size;
       end loop;
-
-      --  Set IO Bitmap of Tau0
-
-      Descriptors (Skp.Subjects.Subject_Id_Type'First).IO_Bitmap_Address
-        := IO_Bitmap_Address + 2 * Page_Size;
    end;
 end SK.Subjects;

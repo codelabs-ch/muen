@@ -441,7 +441,7 @@ is
       end if;
 
       VMCS_Setup_Control_Fields
-        (IO_Bitmap_Address => State.IO_Bitmap_Address,
+        (IO_Bitmap_Address => Spec.IO_Bitmap_Address,
          Ctls_Exec_Pin     => State.Ctls_Exec_Pin,
          Ctls_Exec_Proc    => State.Ctls_Exec_Proc,
          Ctls_Exec_Proc2   => State.Ctls_Exec_Proc2);

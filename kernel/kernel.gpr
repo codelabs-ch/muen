@@ -7,6 +7,7 @@ project Kernel is
      ("../common/src/",
       "../common/debug/",
       "../config/include/",
+      "../policy/include/",
       "src/**",
       "debug");
    for Object_Dir use "obj";

@@ -7,6 +7,8 @@ GIT_REV      = $(shell git describe --always)
 include ../Makeconf
 include ../Makespark
 
+SPARKMAKE_OPTS += -directory=$(TOP_DIR)/policy/include
+
 .git-rev: FORCE
 	@if [ -r $@ ]; then \
 		if [ "$$(cat $@)" != "$(GIT_REV)" ]; then \

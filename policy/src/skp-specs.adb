@@ -25,15 +25,26 @@ is
       --  Write specification of given subject.
       procedure Write_Subject (S : Subject_Type)
       is
+         IO_Ports   : constant IO_Ports_Type := Get_IO_Ports (Subject => S);
          Mem_Layout : constant Memory_Layout_Type
            := Get_Memory_Layout (Subject => S);
       begin
+         Put_Line (File => File,
+                   Item => Indent & "  " & Get_Id (Subject => S)'Img
+                   & " => Subject_Spec_Type'(");
          Put (File => File,
-              Item => Indent & "  " & Get_Id (Subject => S)'Img
-              & " => Subject_Spec_Type'(PML4_Address => 16#");
+              Item => Indent & "    PML4_Address      => 16#");
          Put (File => File,
               Item => SK.Utils.To_Hex
                 (Item => Get_Pml4_Address (Layout => Mem_Layout)));
+         Put_Line (File => File,
+                   Item => "#,");
+
+         Put (File => File,
+              Item => Indent & "    IO_Bitmap_Address => 16#");
+         Put (File => File,
+              Item => SK.Utils.To_Hex
+                (Item => Get_Bitmap_Address (Ports => IO_Ports)));
          Put (File => File,
               Item => "#)");
 
@@ -72,7 +83,9 @@ is
       Put_Line (File => File,
                 Item => Indent & "type Subject_Spec_Type is record");
       Put_Line (File => File,
-                Item => Indent & "   PML4_Address : SK.Word64;");
+                Item => Indent & "   PML4_Address      : SK.Word64;");
+      Put_Line (File => File,
+                Item => Indent & "   IO_Bitmap_Address : SK.Word64;");
       Put_Line (File => File,
                 Item => Indent & "end record;");
       New_Line (File => File);

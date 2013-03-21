@@ -6,14 +6,21 @@ package Skp.Subjects is
    type Subject_Id_Type is range 0 .. 2;
 
    type Subject_Spec_Type is record
-      PML4_Address : SK.Word64;
+      PML4_Address      : SK.Word64;
+      IO_Bitmap_Address : SK.Word64;
    end record;
 
    type Subject_Spec_Array is array (Subject_Id_Type) of Subject_Spec_Type;
 
    Subject_Specs : constant Subject_Spec_Array := Subject_Spec_Array'(
-      0 => Subject_Spec_Type'(PML4_Address => 16#00000000001f0000#),
-      1 => Subject_Spec_Type'(PML4_Address => 16#00000000001f4000#),
-      2 => Subject_Spec_Type'(PML4_Address => 16#00000000001f8000#));
+      0 => Subject_Spec_Type'(
+       PML4_Address      => 16#00000000001f0000#,
+       IO_Bitmap_Address => 16#0000000012345678#),
+      1 => Subject_Spec_Type'(
+       PML4_Address      => 16#00000000001f4000#,
+       IO_Bitmap_Address => 16#0000000012345678#),
+      2 => Subject_Spec_Type'(
+       PML4_Address      => 16#00000000001f8000#,
+       IO_Bitmap_Address => 16#0000000012345678#));
 
 end Skp.Subjects;

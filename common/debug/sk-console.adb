@@ -21,6 +21,20 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Put_Byte (Item : Byte)
+   is
+      subtype Byte_Range is Positive range 1 .. 2;
+      subtype Byte_String is String (Byte_Range);
+
+      Str : Byte_String := Byte_String'(others => '0');
+   begin
+      Utils.To_Hex (Item   => Word64 (Item),
+                    Buffer => Str);
+      Put_String (Item => Str);
+   end Put_Byte;
+
+   -------------------------------------------------------------------------
+
    procedure Put_Char (Item : Character)
    is
    begin
@@ -45,20 +59,6 @@ is
          Put_Char (Item => Item (I));
       end loop;
    end Put_String;
-
-   -------------------------------------------------------------------------
-
-   procedure Put_Byte (Item : Byte)
-   is
-      subtype Byte_Range is Positive range 1 .. 2;
-      subtype Byte_String is String (Byte_Range);
-
-      Str : Byte_String := Byte_String'(others => '0');
-   begin
-      Utils.To_Hex (Item   => Word64 (Item),
-                    Buffer => Str);
-      Put_String (Item => Str);
-   end Put_Byte;
 
    -------------------------------------------------------------------------
 

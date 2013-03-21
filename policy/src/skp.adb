@@ -143,6 +143,9 @@ is
      (Layout  : Memory_Layout_Type;
       Process : not null access procedure (R : Memory_Region_Type))
    is
+      --  Dispatch process call to memory region given by cursor.
+      procedure Dispatch (Pos : Memregion_Package.Cursor);
+
       procedure Dispatch (Pos : Memregion_Package.Cursor)
       is
       begin
@@ -158,6 +161,9 @@ is
      (Policy  : Policy_Type;
       Process : not null access procedure (S : Subject_Type))
    is
+      --  Dispatch process call to subject given by cursor.
+      procedure Dispatch (Pos : Subjects_Package.Cursor);
+
       procedure Dispatch (Pos : Subjects_Package.Cursor)
       is
       begin

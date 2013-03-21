@@ -20,9 +20,11 @@ is
       S_Count : constant Positive := Get_Subject_Count (Policy => Policy);
       Indent  : constant String   := "   ";
 
+      --  Write specification of given subject.
+      procedure Write_Subject (S : Subject_Type);
+
       ----------------------------------------------------------------------
 
-      --  Write specification of given subject.
       procedure Write_Subject (S : Subject_Type)
       is
          IO_Ports   : constant IO_Ports_Type := Get_IO_Ports (Subject => S);

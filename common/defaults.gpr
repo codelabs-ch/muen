@@ -11,7 +11,7 @@ project Defaults is
         "-gnatp");
 
    Ada_Compiler_Switches := Common_Compiler_Switches
-     & ("-gnatygAdISuxo-s",
+     & ("-gnatygAdISuxo",
         "-gnatVa",
         "-gnatf",
         "-fstack-check",

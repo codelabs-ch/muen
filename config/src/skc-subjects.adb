@@ -10,6 +10,12 @@ with SK.Utils;
 package body Skc.Subjects
 is
 
+   --  Check symbol given by name and return its value.
+   function Check_Symbol
+     (Syms : Bfd.Symbols.Symbol_Table;
+      Name : String)
+      return SK.Word64;
+
    -------------------------------------------------------------------------
 
    --  Check symbol given by name and return its value.

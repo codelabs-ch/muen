@@ -207,6 +207,10 @@ is
       P : Policy_Type;
 
       Iterate_Count : Natural := 0;
+
+      --  Increment iteration counter.
+      procedure Inc_Iterate_Counter (S : Subject_Type);
+
       procedure Inc_Iterate_Counter (S : Subject_Type)
       is
          pragma Unreferenced (S);

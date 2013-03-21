@@ -1,9 +1,11 @@
 package body SK.Utils
 is
 
+   --  Return character representation of given quadword.
+   function To_Character (Value : Word64) return Character;
+
    -------------------------------------------------------------------------
 
-   --  Return character representation of given quadword.
    function To_Character (Value : Word64) return Character
    is
       Result : Character;

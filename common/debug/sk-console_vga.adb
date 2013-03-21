@@ -65,25 +65,11 @@ is
    pragma Import (Ada, Screen);
    for Screen'Address use Base_Address;
 
-   -------------------------------------------------------------------------
+   --  Disable position cursor.
+   procedure Disable_Cursor;
 
    --  Scroll screen if current Y position is equal to the last row.
-   procedure Scroll
-   is
-      subtype Console_To_Last_Row is Height_Type range
-        Height_Type'First .. Height_Type'Last - 1;
-   begin
-      for Y in Console_To_Last_Row
-      loop
-         Screen (Y) := Screen (Y + 1);
-      end loop;
-
-      Screen (Height_Type'Last) := Screen_Row_Type'
-        (others => Screen_Cell_Type'
-           (Char     => ' ',
-            FG_Color => White,
-            BG_Color => Black));
-   end Scroll;
+   procedure Scroll;
 
    -------------------------------------------------------------------------
 
@@ -142,6 +128,25 @@ is
          Cur_X := Cur_X + 1;
       end if;
    end Put_Char;
+
+   -------------------------------------------------------------------------
+
+   procedure Scroll
+   is
+      subtype Console_To_Last_Row is Height_Type range
+        Height_Type'First .. Height_Type'Last - 1;
+   begin
+      for Y in Console_To_Last_Row
+      loop
+         Screen (Y) := Screen (Y + 1);
+      end loop;
+
+      Screen (Height_Type'Last) := Screen_Row_Type'
+        (others => Screen_Cell_Type'
+           (Char     => ' ',
+            FG_Color => White,
+            BG_Color => Black));
+   end Scroll;
 
    -------------------------------------------------------------------------
 

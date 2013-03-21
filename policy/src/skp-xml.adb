@@ -75,6 +75,9 @@ is
 
       P : Policy_Type;
 
+      --  Add subject specification to policy.
+      procedure Add_Subject (Node : DOM.Core.Node);
+
       ----------------------------------------------------------------------
 
       procedure Add_Subject (Node : DOM.Core.Node)
@@ -92,12 +95,17 @@ is
          Mem_Layout : Memory_Layout_Type;
          Ports      : IO_Ports_Type;
 
+         --  Add memory region to memory layout.
+         procedure Add_Mem_Region (Node : DOM.Core.Node);
+
+         --  Add I/O port range to subject I/O ports.
+         procedure Add_Port_Range (Node : DOM.Core.Node);
+
          --  Convert given hex string to word64.
          function To_Word64 (Hex : String) return SK.Word64;
 
          -------------------------------------------------------------------
 
-         --  Add memory region to memory layout.
          procedure Add_Mem_Region (Node : DOM.Core.Node)
          is
             R      : Memory_Region_Type;
@@ -138,7 +146,6 @@ is
 
          -------------------------------------------------------------------
 
-         --  Add I/O port range to subject I/O ports.
          procedure Add_Port_Range (Node : DOM.Core.Node)
          is
             R            : IO_Port_Range;

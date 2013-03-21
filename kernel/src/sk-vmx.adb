@@ -100,7 +100,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Resume (Subject_Id : Policy.Subject_Id_Type)
+   procedure Resume (Subject_Id : Skp.Subjects.Subject_Id_Type)
    is
       Error   : SK.Word64;
       Success : Boolean;
@@ -385,7 +385,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Launch (Subject_Id : Policy.Subject_Id_Type)
+   procedure Launch (Subject_Id : Skp.Subjects.Subject_Id_Type)
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
@@ -406,14 +406,14 @@ is
    is
       Success : Boolean;
       Error   : SK.Word64;
-      Spec    : Policy.Subject_Spec_Type;
+      Spec    : Skp.Subjects.Subject_Spec_Type;
       State   : Subjects.State_Type;
    begin
       pragma Debug (KC.Put_String (Item => "Launching subject "));
       pragma Debug (KC.Put_Byte (Item => Byte (Subject_Id)));
       pragma Debug (KC.New_Line);
 
-      Spec  := Policy.Subject_Specs (Subject_Id);
+      Spec  := Skp.Subjects.Subject_Specs (Subject_Id);
       State := Subjects.Get_State (Id => Subject_Id);
 
       Success := Is_Aligned

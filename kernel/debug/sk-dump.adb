@@ -85,7 +85,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_State (Subject : Policy.Subject_Id_Type)
+   procedure Print_State (Subject : Skp.Subjects.Subject_Id_Type)
    is
       RIP, RSP, CS, SS, CR0, CR3, CR4, RFL : Word64;
       State : constant Subjects.State_Type

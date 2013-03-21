@@ -1,11 +1,11 @@
 with SK.CPU;
-with SK.Policy;
+with Skp.Subjects;
 
 package SK.Dump
 is
 
    --  Print state of subject specified by index to kernel console.
-   procedure Print_State (Subject : Policy.Subject_Id_Type);
+   procedure Print_State (Subject : Skp.Subjects.Subject_Id_Type);
 
    --  ISR execution environment state.
    type Isr_Context_Type is record

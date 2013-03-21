@@ -7,7 +7,7 @@ with SK.Constants;
 package body SK.Subjects
 is
 
-   type Subject_Array is array (Policy.Subject_Id_Type) of State_Type;
+   type Subject_Array is array (Skp.Subjects.Subject_Id_Type) of State_Type;
 
    --  Descriptors used to manage subjects.
    Descriptors : Subject_Array;
@@ -24,7 +24,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_State (Id : Policy.Subject_Id_Type) return State_Type
+   function Get_State (Id : Skp.Subjects.Subject_Id_Type) return State_Type
    is
    begin
       return Descriptors (Id);
@@ -33,7 +33,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Set_State
-     (Id    : Policy.Subject_Id_Type;
+     (Id    : Skp.Subjects.Subject_Id_Type;
       State : State_Type)
    is
    begin
@@ -53,7 +53,7 @@ begin
          High     => Unused_High);
 
       for S in Skc.Subjects.Binaries'Range loop
-         Descriptors (Policy.Subject_Id_Type (S - 1))
+         Descriptors (Skp.Subjects.Subject_Id_Type (S - 1))
            := State_Type'
              (Launched          => False,
               Regs              => CPU.Null_Regs,
@@ -91,7 +91,7 @@ begin
 
       --  Set IO Bitmap of Tau0
 
-      Descriptors (Policy.Subject_Id_Type'First).IO_Bitmap_Address
+      Descriptors (Skp.Subjects.Subject_Id_Type'First).IO_Bitmap_Address
         := IO_Bitmap_Address + 2 * Page_Size;
    end;
 end SK.Subjects;

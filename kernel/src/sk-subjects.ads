@@ -1,9 +1,10 @@
+with Skp.Subjects;
+
 with SK.CPU;
-with SK.Policy;
 
 --# inherit
---#    SK.CPU,
---#    SK.Policy;
+--#    Skp.Subjects,
+--#    SK.CPU;
 package SK.Subjects
 --# own
 --#    Descriptors,
@@ -29,13 +30,13 @@ is
    end record;
 
    --  Get state of subject with given ID.
-   function Get_State (Id : Policy.Subject_Id_Type) return State_Type;
+   function Get_State (Id : Skp.Subjects.Subject_Id_Type) return State_Type;
    --# global
    --#    Descriptors;
 
    --  Set state of subject identified by ID.
    procedure Set_State
-     (Id    : Policy.Subject_Id_Type;
+     (Id    : Skp.Subjects.Subject_Id_Type;
       State : State_Type);
    --# global
    --#    Descriptors;

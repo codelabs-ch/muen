@@ -2,7 +2,7 @@ with Ada.Text_IO;
 with Ada.Command_Line;
 
 with Skp.Xml;
-with Skp.Specs;
+with Skp.Writers;
 
 procedure Skpolicy
 is
@@ -15,9 +15,10 @@ begin
                   Schema => "schema/system.xsd");
 
    Policy := Skp.Xml.To_Policy (Data => Data);
-   Skp.Specs.Write_Subjects (File_Name    => Out_File,
-                             Package_Name => "Skp.Subjects",
-                             Policy       => Policy);
+   Skp.Writers.Write_Subjects
+     (File_Name    => Out_File,
+      Package_Name => "Skp.Subjects",
+      Policy       => Policy);
 
    Ada.Text_IO.Put_Line ("Wrote subject specs to " & Out_File);
 end Skpolicy;

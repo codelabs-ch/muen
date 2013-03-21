@@ -3,7 +3,7 @@ with Ada.Directories;
 
 with SK.Utils;
 
-package body Skp.Specs
+package body Skp.Writers
 is
 
    -------------------------------------------------------------------------
@@ -107,4 +107,4 @@ is
       Close (File => File);
    end Write_Subjects;
 
-end Skp.Specs;
+end Skp.Writers;

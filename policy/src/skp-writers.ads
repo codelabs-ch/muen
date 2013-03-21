@@ -1,4 +1,4 @@
-package Skp.Specs
+package Skp.Writers
 is
 
    --  Write subject specs to package with given name. The output is stored to
@@ -8,4 +8,4 @@ is
       Package_Name : String;
       Policy       : Policy_Type);
 
-end Skp.Specs;
+end Skp.Writers;

@@ -1,7 +1,7 @@
 with Ada.Directories;
 
 with Skp.Xml;
-with Skp.Specs;
+with Skp.Writers;
 
 with Test_Utils;
 
@@ -36,9 +36,9 @@ is
 
       Policy := Xml.To_Policy (Data => Data);
 
-      Specs.Write_Subjects (File_Name    => Out_File,
-                            Package_Name => "Skp.Subjects",
-                            Policy       => Policy);
+      Writers.Write_Subjects (File_Name    => Out_File,
+                              Package_Name => "Skp.Subjects",
+                              Policy       => Policy);
 
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => Out_File,

@@ -2,6 +2,10 @@ VC_DIR  = $(OBJ_DIR)/vc
 
 BUILD_OPTS += --RTS=zfp
 
+SPARK_FILES = \
+	$(SRC_DIR)/*.adb \
+	$(TOP_DIR)/common/src/*.adb
+
 SPARK_OPTS =                                      \
 	-vcg                                          \
 	-nosli                                        \
@@ -37,7 +41,7 @@ $(OBJ_DIR)/$(PACKAGE).rep: $(OBJ_DIR)/$(PACKAGE).idx $(OBJ_DIR)/target.cfg
 		-index_file=$(OBJ_DIR)/$(PACKAGE).idx  \
 		-config_file=$(OBJ_DIR)/target.cfg \
 		-output_directory=$(VC_DIR)        \
-		src/*.adb $(TOP_DIR)/common/src/*.adb
+		$(SPARK_FILES)
 	(cd $(VC_DIR) && sparksimp -l)
 
 $(OBJ_DIR)/$(PACKAGE).idx: src/*.ad* $(TOP_DIR)/common/src/*.ad*

@@ -66,6 +66,9 @@ is
    --  activated.
    function Has_PAT (E : Directory_Entry_Type) return Boolean;
 
+   --  Returns True if given directory entry maps a physical page.
+   function Maps_Page (E : Directory_Entry_Type) return Boolean;
+
    --  Page directory pointer table entry, see Intel SDM Vol. 3a, page 4-28.
    subtype PDPT_Entry_Type is Directory_Entry_Type;
 

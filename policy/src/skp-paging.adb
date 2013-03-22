@@ -386,6 +386,16 @@ is
 
    -------------------------------------------------------------------------
 
+   function Maps_Page (E : Directory_Entry_Type) return Boolean
+   is
+   begin
+      return SK.Bit_Test
+        (Value => SK.Word64 (E),
+         Pos   => Page_Size_Flag);
+   end Maps_Page;
+
+   -------------------------------------------------------------------------
+
    function PT_Has_PAT (E : PT_Entry_Type) return Boolean
    is
    begin

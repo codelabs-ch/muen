@@ -14,4 +14,7 @@ is
    --  PDPT entry creation tests.
    procedure Create_PDPT_Entry;
 
+   --  PD entry creation tests.
+   procedure Create_PD_Entry;
+
 end Paging_Tests;

@@ -8,7 +8,9 @@ procedure Skpolicy
 is
    Data     : Skp.Xml.XML_Data_Type;
    Policy   : Skp.Policy_Type;
-   Out_File : constant String := "include/skp-subjects.ads";
+   Out_Dir  : constant String := "include";
+   Out_File : constant String := Out_Dir & "/skp-subjects.ads";
+
 begin
    Skp.Xml.Parse (Data   => Data,
                   File   => Ada.Command_Line.Argument (Number => 1),
@@ -19,6 +21,10 @@ begin
      (File_Name    => Out_File,
       Package_Name => "Skp.Subjects",
       Policy       => Policy);
+   Ada.Text_IO.Put_Line (Item => "Wrote subject specs to " & Out_File);
 
-   Ada.Text_IO.Put_Line ("Wrote subject specs to " & Out_File);
+   Skp.Writers.Write_Pagetables
+     (Dir_Name => Out_Dir,
+      Policy   => Policy);
+   Ada.Text_IO.Put_Line (Item => "Wrote pagetables to " & Out_Dir);
 end Skpolicy;

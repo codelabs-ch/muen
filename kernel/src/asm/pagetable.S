@@ -35,30 +35,6 @@ kernel_pml4_ptr:
 .section .subject_pt, "a"
 	.align 4096
 subjects_pt_start:
-tau0_pml4:
-	.quad 0x1f100f
-	.fill 511, 8, 0x0
-
-	.align 4096
-tau0_pdp:
-	.quad 0x1f200f
-	.fill 511, 8, 0x0
-
-	.align 4096
-tau0_pd:
-	.quad 0x1f300f
-	.fill 511, 8, 0x0
-
-	.align 4096
-tau0_pte:
-	.quad 0x000000000024008d
-	.quad 0x800000000024108d
-	.quad 0x800000000024208f
-	.quad 0x800000000024308f
-	// PTE for τ0 -> kernel interface page
-	.quad 0x800000000020018f
-	.fill 507, 8, 0x0
-
 subject1_pml4:
 	.quad 0x1f500f
 	.fill 511, 8, 0x0

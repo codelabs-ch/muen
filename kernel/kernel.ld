@@ -29,11 +29,6 @@ SECTIONS
 		kernel_stack = .;
 	}
 
-	.subjects_pt 0x001f8000 :
-	{
-		*(.subject_pt)
-	}
-
 	.interfaces 0x00200000 :
 	{
 		*(.interfaces)

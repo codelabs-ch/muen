@@ -40,6 +40,9 @@ $(OBJ_DIR)/kernel: $(KERN_DIR)/obj/kernel $(SUBJ_BINS)
 	objcopy --add-section .subject2=$(OBJ_DIR)/subject_2 $@    \
 		--change-section-address .subject2=0x00260000          \
 		--set-section-flags .subject2=alloc 2>/dev/null
+	objcopy --add-section .subject2pt=$(PT_DIR)/subject2.pt $@ \
+		--change-section-address .subject2pt=0x001f8000        \
+		--set-section-flags .subject2pt=alloc 2>/dev/null
 	objcopy -O binary $@ $@
 
 deploy: $(OBJ_DIR)/kernel .server

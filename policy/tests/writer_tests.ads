@@ -11,4 +11,7 @@ is
    --  Write subject specs to file.
    procedure Write_Subjects;
 
+   --  Write pagetables to files.
+   procedure Write_Pagetables;
+
 end Writer_Tests;

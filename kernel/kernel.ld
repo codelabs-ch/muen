@@ -29,7 +29,7 @@ SECTIONS
 		kernel_stack = .;
 	}
 
-	.subjects_pt 0x001f4000 :
+	.subjects_pt 0x001f8000 :
 	{
 		*(.subject_pt)
 	}

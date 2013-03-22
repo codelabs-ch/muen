@@ -1,5 +1,6 @@
 KERN_DIR = $(CURDIR)/../kernel
 SUBJ_DIR = $(CURDIR)/../subjects
+PT_DIR   = $(CURDIR)/../policy/include
 
 TARGET_IP = 192.168.254.2
 
@@ -24,9 +25,12 @@ $(OBJ_DIR)/subject_2: $(SUBJ_DIR)/test/obj/subject_2
 	objcopy -O binary $< $@
 
 $(OBJ_DIR)/kernel: $(KERN_DIR)/obj/kernel $(SUBJ_BINS)
-	objcopy --add-section .tau0=$(OBJ_DIR)/tau0 $< $@ \
-		--change-section-address .tau0=0x00240000          \
+	objcopy --add-section .tau0=$(OBJ_DIR)/tau0 $< $@       \
+		--change-section-address .tau0=0x00240000           \
 		--set-section-flags .tau0=alloc 2>/dev/null
+	objcopy --add-section .tau0pt=$(PT_DIR)/tau0.pt $@      \
+		--change-section-address .tau0pt=0x001f0000         \
+		--set-section-flags .tau0pt=alloc 2>/dev/null
 	objcopy --add-section .subject1=$(OBJ_DIR)/subject_1 $@ \
 		--change-section-address .subject1=0x00250000       \
 		--set-section-flags .subject1=alloc 2>/dev/null

@@ -11,4 +11,7 @@ is
    --  PML4 entry creation tests.
    procedure Create_PML4_Entry;
 
+   --  PDPT entry creation tests.
+   procedure Create_PDPT_Entry;
+
 end Paging_Tests;

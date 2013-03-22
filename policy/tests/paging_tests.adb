@@ -164,6 +164,57 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Index_Calculation
+   is
+      use type Skp.Paging.Table_Range;
+
+      PML4, PDPT, PD, PT : Paging.Table_Range;
+   begin
+      Paging.Get_Indexes (Address    => 0,
+                          PML4_Index => PML4,
+                          PDPT_Index => PDPT,
+                          PD_Index   => PD,
+                          PT_Index   => PT);
+      Assert (Condition => PML4 = 1,
+              Message   => "PML4 index mismatch (1)");
+      Assert (Condition => PDPT = 1,
+              Message   => "PDPT index mismatch (1)");
+      Assert (Condition => PD = 1,
+              Message   => "PD index mismatch (1)");
+      Assert (Condition => PT = 1,
+              Message   => "PT index mismatch (1)");
+
+      Paging.Get_Indexes (Address    => SK.Word64'Last,
+                          PML4_Index => PML4,
+                          PDPT_Index => PDPT,
+                          PD_Index   => PD,
+                          PT_Index   => PT);
+      Assert (Condition => PML4 = Paging.Table_Range'Last,
+              Message   => "PML4 index mismatch (2)");
+      Assert (Condition => PDPT = Paging.Table_Range'Last,
+              Message   => "PDPT index mismatch (2)");
+      Assert (Condition => PD = Paging.Table_Range'Last,
+              Message   => "PD index mismatch (2)");
+      Assert (Condition => PT = Paging.Table_Range'Last,
+              Message   => "PT index mismatch (2)");
+
+      Paging.Get_Indexes (Address    => 16#fffc80200f000#,
+                          PML4_Index => PML4,
+                          PDPT_Index => PDPT,
+                          PD_Index   => PD,
+                          PT_Index   => PT);
+            Assert (Condition => PML4 = 512,
+              Message   => "PML4 index mismatch (3)");
+      Assert (Condition => PDPT = 289,
+              Message   => "PDPT index mismatch (3)");
+      Assert (Condition => PD = 17,
+              Message   => "PD index mismatch (3)");
+      Assert (Condition => PT = 16,
+              Message   => "PT index mismatch (3)");
+   end Index_Calculation;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -180,6 +231,9 @@ is
       T.Add_Test_Routine
         (Routine => Create_PT_Entry'Access,
          Name    => "PT entry creation");
+      T.Add_Test_Routine
+        (Routine => Index_Calculation'Access,
+         Name    => "Paging structure index calculation");
    end Initialize;
 
 end Paging_Tests;

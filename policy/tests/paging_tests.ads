@@ -20,4 +20,7 @@ is
    --  PT entry creation tests.
    procedure Create_PT_Entry;
 
+   --  Verify page table entry index calculation.
+   procedure Index_Calculation;
+
 end Paging_Tests;

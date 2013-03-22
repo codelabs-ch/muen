@@ -264,9 +264,9 @@ is
          Assert (Condition => Is_Executable (Region => R),
                  Message   => "Executable mismatch (1)");
          R := Test.Last (Layout => M);
-         Assert (Condition => Get_Physical_Address (Region => R) = 16#200000#,
+         Assert (Condition => Get_Physical_Address (Region => R) = 16#100000#,
                  Message   => "Physical address mismatch (2)");
-         Assert (Condition => Get_Virtual_Address (Region => R) = 16#200000#,
+         Assert (Condition => Get_Virtual_Address (Region => R) = 16#100000#,
                  Message   => "Virtual address mismatch (2)");
          Assert (Condition => Get_Size (Region => R) = 4096,
                  Message   => "Memory size mismatch (2)");

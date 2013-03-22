@@ -132,10 +132,10 @@ is
               (Str => DOM.Core.Elements.Get_Attribute
                  (Elem => Node,
                   Name => "size"));
-            R.Permission       := Util.To_Permission
-              (Str => DOM.Core.Elements.Get_Attribute
+            R.Writable         := Boolean'Value
+              (DOM.Core.Elements.Get_Attribute
                  (Elem => Node,
-                  Name => "permission"));
+                  Name => "writable"));
             R.Executable       := Boolean'Value
               (DOM.Core.Elements.Get_Attribute
                  (Elem => Node,

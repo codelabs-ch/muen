@@ -2,8 +2,8 @@
 	<subjects>
 		<subject id="0" name="tau0">
 			<memory_layout pml4_address="1f0000">
-				<memory_region physical_address="240000" virtual_address="0" size="64k" permission="rw" executable="true"/>
-				<memory_region physical_address="100000" size="4k" permission="ro" executable="false"/>
+				<memory_region physical_address="240000" virtual_address="0" size="64k" writable="true" executable="true"/>
+				<memory_region physical_address="100000" size="4k" writable="false" executable="false"/>
 			</memory_layout>
 			<io_ports bitmap_address="12345678">
 				<port_range start="50b0"/>
@@ -11,8 +11,8 @@
 		</subject>
 		<subject id="1" name="subject1">
 			<memory_layout pml4_address="1f4000">
-				<memory_region physical_address="250000" virtual_address="0" size="12k" permission="rw" executable="true"/>
-				<memory_region physical_address="b8000" size="4k" permission="rw" executable="false"/>
+				<memory_region physical_address="250000" virtual_address="0" size="12k" writable="true" executable="true"/>
+				<memory_region physical_address="b8000" size="4k" writable="true" executable="false"/>
 			</memory_layout>
 			<io_ports bitmap_address="12345678">
 				<port_range start="03d4" end="03d5"/>
@@ -20,8 +20,8 @@
 		</subject>
 		<subject id="2" name="subject2">
 			<memory_layout pml4_address="1f8000">
-				<memory_region physical_address="260000" virtual_address="0" size="12k" permission="rw" executable="true"/>
-				<memory_region physical_address="b8000" size="4k" permission="rw" executable="false"/>
+				<memory_region physical_address="260000" virtual_address="0" size="12k" writable="true" executable="true"/>
+				<memory_region physical_address="b8000" size="4k" writable="true" executable="false"/>
 			</memory_layout>
 			<io_ports bitmap_address="12345678">
 				<port_range start="03d4" end="03d5"/>

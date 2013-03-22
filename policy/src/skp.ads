@@ -10,11 +10,6 @@ is
    --  Subject name.
    subtype Subject_Name_Type is Ada.Strings.Unbounded.Unbounded_String;
 
-   --  Memory access permissions.
-   type Memory_Permission_Type is
-     (Read_Only,
-      Read_Write);
-
    --  Memory region specification.
    type Memory_Region_Type is private;
 
@@ -31,10 +26,8 @@ is
    --  Return size of memory region in bytes.
    function Get_Size (Region : Memory_Region_Type) return SK.Word64;
 
-   --  Return access permissions of memory region.
-   function Get_Permission
-     (Region : Memory_Region_Type)
-      return Memory_Permission_Type;
+   --  Returns True if the memory region allows write access.
+   function Is_Writable (Region : Memory_Region_Type) return Boolean;
 
    --  Returns True if the memory region is marked as executable.
    function Is_Executable (Region : Memory_Region_Type) return Boolean;
@@ -106,7 +99,7 @@ private
       Physical_Address : SK.Word64;
       Virtual_Address  : SK.Word64;
       Size             : SK.Word64;
-      Permission       : Memory_Permission_Type;
+      Writable         : Boolean;
       Executable       : Boolean;
    end record;
 

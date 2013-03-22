@@ -40,9 +40,6 @@ is
       T.Add_Test_Routine
         (Routine => String_To_Memory_Size'Access,
          Name    => "Convert string to memory size");
-      T.Add_Test_Routine
-        (Routine => String_To_Permission'Access,
-         Name    => "Convert string to permission");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -178,27 +175,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure String_To_Permission
-   is
-      Dummy : Memory_Permission_Type;
-      pragma Unreferenced (Dummy);
-   begin
-      Assert (Condition => Xml.Util.To_Permission (Str => "ro") = Read_Only,
-              Message   => "Read_Only expected");
-      Assert (Condition => Xml.Util.To_Permission (Str => "rw") = Read_Write,
-              Message   => "Read_Write expected");
-
-      begin
-         Dummy := Xml.Util.To_Permission (Str => "perm");
-         Fail (Message => "Exception expected");
-
-      exception
-         when Xml.Util.Conversion_Error => null;
-      end;
-   end String_To_Permission;
-
-   -------------------------------------------------------------------------
-
    procedure Xml_To_Policy
    is
       use Ada.Strings.Unbounded;
@@ -259,8 +235,8 @@ is
                  Message   => "Virtual address mismatch (1)");
          Assert (Condition => Get_Size (Region => R) = 65536,
                  Message   => "Memory size mismatch (1)");
-         Assert (Condition => Get_Permission (Region => R) = Read_Write,
-                 Message   => "Permission mismatch (1)");
+         Assert (Condition => Is_Writable (Region => R),
+                 Message   => "Writable mismatch (1)");
          Assert (Condition => Is_Executable (Region => R),
                  Message   => "Executable mismatch (1)");
          R := Test.Last (Layout => M);
@@ -270,8 +246,8 @@ is
                  Message   => "Virtual address mismatch (2)");
          Assert (Condition => Get_Size (Region => R) = 4096,
                  Message   => "Memory size mismatch (2)");
-         Assert (Condition => Get_Permission (Region => R) = Read_Only,
-                 Message   => "Permission mismatch (2)");
+         Assert (Condition => not Is_Writable (Region => R),
+                 Message   => "Writable mismatch (2)");
          Assert (Condition => not Is_Executable (Region => R),
                  Message   => "Executable mismatch (2)");
 

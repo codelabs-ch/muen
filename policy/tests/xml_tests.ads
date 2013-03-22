@@ -29,7 +29,4 @@ is
    --  Test size string to memory size conversion.
    procedure String_To_Memory_Size;
 
-   --  Test string to memory permission conversion.
-   procedure String_To_Permission;
-
 end Xml_Tests;

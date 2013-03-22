@@ -68,8 +68,6 @@ is
               := Get_Virtual_Address (Region => R);
             Virt_End      : constant SK.Word64
               := Virt_Start + Get_Size (Region => R) - 1;
-            Permission    : constant Memory_Permission_Type
-              := Get_Permission (Region => R);
          begin
             Paging.Get_Indexes (Address    => Virt_Start,
                                 PML4_Index => PML4_Idx_Start,
@@ -137,7 +135,7 @@ is
                if not Paging.Is_Present (E => PT (Idx)) then
                   PT (Idx) := Paging.Create_PT_Entry
                     (Address       => Physical_Addr,
-                     Writable      => Permission = Read_Write,
+                     Writable      => Is_Writable (Region => R),
                      User_Access   => True,
                      Writethrough  => True,
                      Cache_Disable => False,

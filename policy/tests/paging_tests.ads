@@ -17,4 +17,7 @@ is
    --  PD entry creation tests.
    procedure Create_PD_Entry;
 
+   --  PT entry creation tests.
+   procedure Create_PT_Entry;
+
 end Paging_Tests;

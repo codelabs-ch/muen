@@ -1,5 +1,5 @@
 with "../common/defaults";
-with "ahven";
+with "../contrib/ahven";
 with "../contrib/xmlada";
 
 project Skp_Tests is

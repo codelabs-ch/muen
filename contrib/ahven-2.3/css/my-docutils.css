@@ -1,0 +1,14 @@
+
+/*
+:Author: Tero Koskinen
+:Contact: Tero Koskinen <tero.koskinen@iki.fi>
+:Copyright: This stylesheet has been placed in the public domain.
+
+Stylesheet for use with Ahven and Docutils.
+*/
+
+
+h1 {
+    background-color: #cdcdff;
+    padding: 0.1em;
+}

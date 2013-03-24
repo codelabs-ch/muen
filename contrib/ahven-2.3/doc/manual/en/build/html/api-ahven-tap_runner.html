@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Ahven.Tap_Runner – Package &mdash; Ahven 2.3 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ahven 2.3 documentation" href="index.html" />
+    <link rel="up" title="API Documentation for Ahven" href="api.html" />
+    <link rel="next" title="Ahven.Temporary_Output – Package" href="api-ahven-temporary_output.html" />
+    <link rel="prev" title="Ahven.SList – Package" href="api-ahven-slist.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="ada-modindex.html" title="Ada Module Index"
+             >Ada modules</a> |</li>
+        <li class="right" >
+          <a href="api-ahven-temporary_output.html" title="Ahven.Temporary_Output – Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="api-ahven-slist.html" title="Ahven.SList – Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Ahven 2.3 documentation</a> &raquo;</li>
+          <li><a href="api.html" accesskey="U">API Documentation for Ahven</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-Ahven.Tap_Runner">
+<span id="ahven-tap-runner-package"></span><h1><tt class="xref py py-mod docutils literal"><span class="pre">Ahven.Tap_Runner</span></tt> &#8211; Package<a class="headerlink" href="#module-Ahven.Tap_Runner" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="procedures-and-functions">
+<h2>Procedures and Functions<a class="headerlink" href="#procedures-and-functions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="run">
+<h3>Run<a class="headerlink" href="#run" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">procedure</span> <span class="nf">Run</span> <span class="p">(</span><span class="nv">Suite</span> <span class="p">: </span><span class="nv">in</span> <span class="nv">out</span> <span class="nv">Framework</span><span class="p">.</span><span class="nv">Test</span><span class="p">&#39;</span><span class="na">Class</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Run the suite and print the results.</p>
+</div>
+<div class="section" id="add-pass">
+<h3>Add_Pass<a class="headerlink" href="#add-pass" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">procedure</span> <span class="nf">Add_Pass</span> <span class="p">(</span><span class="nv">Listener</span> <span class="p">: </span><span class="nv">in</span> <span class="nv">out</span> <span class="nv">Tap_Listener</span><span class="p">;</span>
+                    <span class="nv">Info</span>     <span class="p">: </span>       <span class="nv">Context</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="add-failure">
+<h3>Add_Failure<a class="headerlink" href="#add-failure" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">procedure</span> <span class="nf">Add_Failure</span> <span class="p">(</span><span class="nv">Listener</span> <span class="p">: </span><span class="nv">in</span> <span class="nv">out</span> <span class="nv">Tap_Listener</span><span class="p">;</span>
+                       <span class="nv">Info</span>     <span class="p">: </span>       <span class="nv">Context</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="add-error">
+<h3>Add_Error<a class="headerlink" href="#add-error" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">procedure</span> <span class="nf">Add_Error</span> <span class="p">(</span><span class="nv">Listener</span> <span class="p">: </span><span class="nv">in</span> <span class="nv">out</span> <span class="nv">Tap_Listener</span><span class="p">;</span>
+                     <span class="nv">Info</span>     <span class="p">: </span>       <span class="nv">Context</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="start-test">
+<h3>Start_Test<a class="headerlink" href="#start-test" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">procedure</span> <span class="nf">Start_Test</span> <span class="p">(</span><span class="nv">Listener</span> <span class="p">: </span><span class="nv">in</span> <span class="nv">out</span> <span class="nv">Tap_Listener</span><span class="p">;</span>
+                      <span class="nv">Info</span>     <span class="p">: </span>       <span class="nv">Context</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="end-test">
+<h3>End_Test<a class="headerlink" href="#end-test" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">procedure</span> <span class="nf">End_Test</span> <span class="p">(</span><span class="nv">Listener</span> <span class="p">: </span><span class="nv">in</span> <span class="nv">out</span> <span class="nv">Tap_Listener</span><span class="p">;</span>
+                    <span class="nv">Info</span>     <span class="p">: </span>       <span class="nv">Context</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">Ahven.Tap_Runner</span></tt> &#8211; Package</a><ul>
+<li><a class="reference internal" href="#procedures-and-functions">Procedures and Functions</a><ul>
+<li><a class="reference internal" href="#run">Run</a></li>
+<li><a class="reference internal" href="#add-pass">Add_Pass</a></li>
+<li><a class="reference internal" href="#add-failure">Add_Failure</a></li>
+<li><a class="reference internal" href="#add-error">Add_Error</a></li>
+<li><a class="reference internal" href="#start-test">Start_Test</a></li>
+<li><a class="reference internal" href="#end-test">End_Test</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="api-ahven-slist.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">Ahven.SList</span></tt> &#8211; Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="api-ahven-temporary_output.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">Ahven.Temporary_Output</span></tt> &#8211; Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/api-ahven-tap_runner.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="ada-modindex.html" title="Ada Module Index"
+             >Ada modules</a> |</li>
+        <li class="right" >
+          <a href="api-ahven-temporary_output.html" title="Ahven.Temporary_Output – Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="api-ahven-slist.html" title="Ahven.SList – Package"
+             >previous</a> |</li>
+        <li><a href="index.html">Ahven 2.3 documentation</a> &raquo;</li>
+          <li><a href="api.html" >API Documentation for Ahven</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Tero Koskinen.
+      Last updated on Jan 23, 2013.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2pre.
+    </div>
+  </body>
+</html>

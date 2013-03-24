@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title> Ahven Unit Test Library - Tutorial </title>
+<style type="text/css">
+      body { background-color: white }
+</style>
+<!-- <link rel="stylesheet" type="text/css" href="ahven.css"/> -->
+<!-- <meta http-equiv="Content-Type" content="text/html;charset=utf-8" /> -->
+</head><body>
+<h1>Ahven Tutorial</h1>
+<p>Copyright (c) 2007, 2008 Tero Koskinen
+   &lt;<a href="mailto:tero.koskinen@iki.fi">tero.koskinen@iki.fi</a>&gt;
+<p> Contents:
+  <ul>
+    <li> <a href="tutorial.html#introduction">Introduction</a> </li>
+    <li> <a href="tutorial.html#firsttest">First Test Case</a> </li>
+    <li> <a href="tutorial.html#running">Running a Test Case</a> </li>
+  </ul>
+
+</p>
+<h2><a name="introduction">Introduction</a></h2>
+<p> Ahven is a unit test library modeled after JUnit library for Java.
+    So, for JUnit users the API should be familiar.
+</p>
+
+<p> The heart of the library is an abstract
+    class called <code>Test</code>. It has two subclasses,
+    <code>Test_Case</code>, and <code>Test_Suite</code>.
+    <code>Test_Case</code> is the base class for other unit tests
+    and <code>Test_Suite</code> is a container, which can hold
+    <code>Test</code> objects.
+</p>
+<p> <img src="ahven.png" title="Ahven.Framework" alt="Ahven.Framework class diagram" />
+</p>
+<h2><a name="firsttest">First Test Case</a></h2>
+<p>For your first test case, you need to create a new package and a new
+   class, which is derived from Ahven.Framework.Test_Case.
+   Let's call the package <code>My_Tests</code> and the class
+   <code>My_Tests.Test</code>.
+</p>
+<p>
+<code>
+<pre>
+   -- my_tests.ads
+   with Ahven.Framework;
+   package My_Tests is
+      type Test is new Ahven.Framework.Test_Case with null record;
+   end My_Tests;
+</pre>
+</code>
+</p>
+
+<p> After you have defined your class, you need to overload 
+    <code>Test_Case</code>'s <code>Initialize</code> procedure
+    and create your own test procedure (<code>My_First_Test</code>).
+</p>
+<p>
+<code>
+<pre>
+   -- my_tests.ads
+   with Ahven.Framework;
+   package My_Tests is
+      type Test is new Ahven.Framework.Test_Case with null record;
+
+      <b>procedure Initialize (T : in out Test);</b>
+
+      <b>procedure My_First_Test;</b>
+   end My_Tests;
+</pre>
+</code>
+</p>
+<p> Next you need to create the body of the My_Tests package.
+    In <code>Initialize</code> procedure you need to do two things:
+    <ul>
+      <li> Set a name for the test case,
+      <li> and register the test procedures.
+    </ul>
+</p>
+<p>
+<code>
+<pre>
+   -- my_tests.adb
+   package body My_Tests is
+      procedure Initialize (T : in out Test) is
+      begin
+         <b>Set_Name (T, "My tests");</b>
+
+         <b>Ahven.Framework.Add_Test_Routine
+           (T, My_First_Test'Access, "My first test");</b>
+      end Initialize;
+
+      ...
+   end My_Tests;
+</pre>
+</code>
+</p>
+<p> In the test procedure <code>My_First_Test</code> you can do anything
+    you want. The Ahven package defines two utility procedures for you:
+    <code>Assert (Condition : Boolean; Message : String)</code>
+    and <code>Fail (Message : String)</code>.
+</p>
+<p> <code>Assert</code> will raise Assertion_Error if
+    <code>Condition</code> is <code>False</code>.
+    <code>Fail</code> does what its name implies and will raise
+    <code>Assertion_Error</code> always.
+    These <code>Assertion_Error</code>s will show as failures when you
+    run the tests.
+</p>
+<p> Here is an example: </p> 
+<p>
+<code>
+<pre>
+   -- my_tests.adb
+   <b>with Ahven;
+   use Ahven;</b>
+
+   package body My_Tests is
+      procedure Initialize (T : in out Test) is
+      begin
+         Set_Name (T, "My tests");
+
+         Framework.Add_Test_Routine
+           (T, My_First_Test'Access, "My first test");
+      end Initialize;
+      <b>
+      procedure My_First_Test is
+      begin
+         Assert (1 /= 4, "1 /= 4 failed!");
+      end My_First_Test;
+      </b>
+   end My_Tests;
+</pre>
+</code>
+</p>
+<h2><a name="running">Running a Test Case</a></h2>
+<p> To run your tests you need to feed them to a test runner.
+    For example, <code>Ahven.Text_Runner.Run</code> runs the tests
+    and prints the results to the standard output.
+</p>
+<p> The best way to run the tests is to define a Test_Suite, add
+    the tests there, and give the test suite to the runner.
+</p>
+<p>
+<code>
+<pre>
+-- runner.adb
+with Ahven.Text_Runner;
+with Ahven.Framework;
+with My_Tests;
+
+procedure Runner is
+   S : Ahven.Framework.Test_Suite_Access :=
+     Ahven.Framework.Create_Suite ("All my tests");
+begin
+   Ahven.Framework.Add_Test (S.all, new My_Tests.Test);
+   Ahven.Text_Runner.Run (S);
+   Ahven.Framework.Release_Suite (S);
+   -- Release_Suite will release all its children also.
+end Runner;
+</pre>
+</code>
+</p>
+<hr/>
+<p>Tero Koskinen, 2008-01-07</p>
+</body></html>

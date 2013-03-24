@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
+<!ENTITY % envdata SYSTEM "data.ent" > %envdata;
+]>
+<book>
+	<bookinfo>
+
+		<title>&project; Testresults</title>
+
+		<author>
+			<othername>&project; development team</othername>
+			<email>&email;</email>
+		</author>
+
+		<pubdate>&time;</pubdate>
+
+		<abstract>
+			<para>
+				This document is an auto-generated testreport for the &project;
+				project. The unit tests have been run on the testhost described
+				in <xref linkend="env"/>.
+			</para>
+			<para>
+				<xref linkend="overview"/> shows overall statistics of this
+				testrun, detailed results for each executed test can be found in
+				<xref linkend="results"/>.
+			</para>
+		</abstract>
+
+	</bookinfo>
+
+	<chapter id="env">
+		<title>Environment</title>
+		The unit tests have been executed in the following environment:
+		<informaltable>
+			<tgroup cols='2'>
+				<tbody>
+					<row>
+						<entry>Date and Time</entry><entry>&time;</entry>
+					</row>
+					<row>
+						<entry>Hostname</entry><entry>&hostname;</entry>
+					</row>
+					<row>
+						<entry>Operating System</entry><entry>&os;</entry>
+					</row>
+					<row>
+						<entry>Kernel</entry>
+						<entry>
+							&kernel_name; &kernel_release; (&kernel_version;)
+						</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</informaltable>
+	</chapter>
+
+	<!-- Include generated overview file -->
+
+	<xi:include href="overview.xml" xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+	<!-- Include generated testresult files -->
+
+	<xi:include href="result.xml" xmlns:xi="http://www.w3.org/2003/XInclude"/>
+
+</book>

@@ -1,0 +1,502 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Ahven User’s Guide &mdash; Ahven 2.3 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ahven 2.3 documentation" href="index.html" />
+    <link rel="next" title="API Documentation for Ahven" href="api.html" />
+    <link rel="prev" title="Welcome to Ahven’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="ada-modindex.html" title="Ada Module Index"
+             >Ada modules</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="API Documentation for Ahven"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Ahven’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Ahven 2.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ahven-user-s-guide">
+<h1>Ahven User&#8217;s Guide<a class="headerlink" href="#ahven-user-s-guide" title="Permalink to this headline">¶</a></h1>
+<p>Tero Koskinen</p>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="introduction">
+<h3>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h3>
+<p>Ahven is a unit test library. It is modeled after
+JUnit framework for Java, but some ideas are also
+taken from another Ada unit test library, AUnit.</p>
+<p>The purpose of Ahven is to be a small and portable
+unit test library, which works with multiple
+different Ada 95 compilers. Ahven has no
+external dependencies and therefore it is easy
+to build on various platforms.</p>
+<p>Ahven tries to be compatible with utilities related
+to unit testing. For example, it uses same
+XML format for test results as Java tools.
+This allows easy integration to CruiseControl, Ant,
+and other similar programs.</p>
+</div>
+<div class="section" id="license">
+<h3>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h3>
+<p>Ahven is distributed under permissive ISC license (shown below).</p>
+<div class="highlight-ada"><div class="highlight"><pre><span class="c1">--</span>
+<span class="c1">-- Copyright (c) 2008, 2009, 2010 Tero Koskinen &lt;tero.koskinen@iki.fi&gt;</span>
+<span class="c1">--</span>
+<span class="c1">-- Permission to use, copy, modify, and distribute this software for any</span>
+<span class="c1">-- purpose with or without fee is hereby granted, provided that the above</span>
+<span class="c1">-- copyright notice and this permission notice appear in all copies.</span>
+<span class="c1">--</span>
+<span class="c1">-- THE SOFTWARE IS PROVIDED &quot;AS IS&quot; AND THE AUTHOR DISCLAIMS ALL WARRANTIES</span>
+<span class="c1">-- WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF</span>
+<span class="c1">-- MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR</span>
+<span class="c1">-- ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES</span>
+<span class="c1">-- WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN</span>
+<span class="c1">-- ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF</span>
+<span class="c1">-- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</span>
+<span class="c1">--</span>
+</pre></div>
+</div>
+<p>You are allowed to embed Ahven into a proprietary commercial application.
+Only requirement is to keep the copyright notice and the permission notice
+in the source code files. You do not need to distribute Ahven&#8217;s source code
+if you distribute Ahven or some parts of Ahven in the binary form.</p>
+</div>
+</div>
+<div class="section" id="building-and-installing-ahven">
+<h2>Building and Installing Ahven<a class="headerlink" href="#building-and-installing-ahven" title="Permalink to this headline">¶</a></h2>
+<p>To build and install Ahven source code, you need an Ada 95 compiler.
+At the moment, Ahven is tested with four different
+compiler families: GNAT, ObjectAda, Irvine ICCAda, and Janus/Ada.</p>
+<div class="section" id="gnat-gpl-series-and-fsf-gcc">
+<h3>GNAT GPL series and FSF GCC<a class="headerlink" href="#gnat-gpl-series-and-fsf-gcc" title="Permalink to this headline">¶</a></h3>
+<p>When you have GNAT GPL or FSF GCC, the easieast way to
+compile and install Ahven is to use
+the <em>make</em> utility and Makefile.</p>
+<p>When compiling using the <em>make</em> utility,
+you need to tell your platform type. Currently,
+only supported platform types are <em>unix</em>
+and <em>windows</em>. The type can be told by
+setting OS_VERSION variable to the selected platform.</p>
+<div class="highlight-ada"><pre>$ make OS_VERSION=unix</pre>
+</div>
+<p>If you are unable to use <em>make</em>, you
+can use the GNAT project files directly.
+Ahven distribution comes with three GNAT project files:
+ahven.gpr, ahven_lib.gpr, and ahven_tests.gpr.
+The <em>ahven.gpr</em> file is meant to be used
+when compiling unit tests. The library itself is built
+using the <em>ahven_lib.gpr</em> file.
+To build the testsuite of the Ahven, one needs to
+use the <em>ahven_tests.gpr</em> file.</p>
+<p>Like with Makefile, you need to tell your platform type.
+This time the selection happens by using an environment variable
+called <em>OS</em>. The variable accepts same
+values as Makefile.</p>
+<div class="highlight-ada"><pre>$ OS=windows gnatmake -P ahven_lib
+$ OS=windows gnatmake -P ahven_tests</pre>
+</div>
+<div class="section" id="installing-library">
+<h4>Installing Library<a class="headerlink" href="#installing-library" title="Permalink to this headline">¶</a></h4>
+<p>You can install the library by using command <em>make install</em>.
+By default the installation happens to the <em>/usr/local</em> directory.
+Alternative directory can be set by overwriting the <em>PREFIX</em> variable.</p>
+<div class="highlight-ada"><pre>$ make OS_VERSION=unix PREFIX=/opt/ada install</pre>
+</div>
+</div>
+</div>
+<div class="section" id="gnat-3-15p">
+<h3>GNAT 3.15p<a class="headerlink" href="#gnat-3-15p" title="Permalink to this headline">¶</a></h3>
+<p>Version 3.15p of GNAT does not understand some features used in
+the default GNAT project files. Therefore, you need to use
+project files from the <em>contrib/gnat315p</em> directory.</p>
+</div>
+<div class="section" id="objectada">
+<h3>ObjectAda<a class="headerlink" href="#objectada" title="Permalink to this headline">¶</a></h3>
+<p>There is no project file included for ObjectAda.
+To compile Ahven, you need to create
+a new project and import the source code of Ahven
+to the project.</p>
+</div>
+<div class="section" id="irvine-iccada">
+<h3>Irvine ICCAda<a class="headerlink" href="#irvine-iccada" title="Permalink to this headline">¶</a></h3>
+<p>Easiest way to build Ahven with ICCAda is to use <em>icm</em> utility:</p>
+<div class="highlight-ada"><pre>C:\ahven-2.2&gt;cd src
+C:\ahven-2.2\src&gt;icm new
+C:\ahven-2.2\src&gt;icm scan *.ad? windows\*.ad?
+C:\ahven-2.2\src&gt;icm make libmain
+C:\ahven-2.2\src&gt;cd ..\test
+C:\ahven-2.2\test&gt;icm new -search=..\src
+C:\ahven-2.2\test&gt;icm scan *.ad?
+C:\ahven-2.2\test&gt;icm make tester</pre>
+</div>
+</div>
+<div class="section" id="janus-ada">
+<h3>Janus/Ada<a class="headerlink" href="#janus-ada" title="Permalink to this headline">¶</a></h3>
+<p>Directory <em>janusada</em> contains project file creation scripts for Janus/Ada.
+By default, the scripts assume Janus/Ada to be installed to directory
+<em>C:\Janus312\</em>.  If that is not the case, change the path from
+file <em>prepare.bat</em>.</p>
+<div class="highlight-ada"><pre>C:\ahven-2.2&gt;janusada\prepare.bat</pre>
+</div>
+<p>Before compiling the library, you need to run
+the preparation script <em>janusada\prepare.bat</em>.
+Then, scan the sources and create compilation script
+by running <em>janusada\update.bat</em>.</p>
+<div class="highlight-ada"><pre>C:\ahven-2.2&gt;janusada\update.bat</pre>
+</div>
+<p>Now you are ready to compile the project.
+This happens by running
+<em>compile.bat</em> script.</p>
+<div class="highlight-ada"><pre>C:\ahven-2.2&gt;janusada\compile.bat</pre>
+</div>
+<p>After a while, you should have compiled library files
+in the <em>lib_obj</em> directory and
+an executable called <em>tap_test.exe</em>
+in the <em>test_obj</em> directory.
+The executable is Ahven&#8217;s test  suite and if it reports
+no errors, everything is working as expected.</p>
+<p>At the time of writing (Ahven 2.2), every test, which is not skipped,
+should pass with the latest version of Janus/Ada.</p>
+<p>However, with earlier versions of Janus/Ada some tests will fail.
+The failing tests are worked around in Ahven&#8217;s source code, but
+the test exists so that one can verify when the Janus/Ada bug
+causing the failure is fixed.</p>
+</div>
+</div>
+<div class="section" id="using-ahven">
+<h2>Using Ahven<a class="headerlink" href="#using-ahven" title="Permalink to this headline">¶</a></h2>
+<p>The heart of Ahven is an abstract type called <tt class="docutils literal"><span class="pre">Test</span></tt>.
+It presents an entity which can be run by <em>a test runner</em>.
+Types <tt class="docutils literal"><span class="pre">Test_Case</span></tt> and <tt class="docutils literal"><span class="pre">Test_Suite</span></tt> are derived from the
+<tt class="docutils literal"><span class="pre">Test</span></tt> type. The <tt class="docutils literal"><span class="pre">Test_Case</span></tt> type is the base type
+for unit tests and the <tt class="docutils literal"><span class="pre">Test_Suite</span></tt> type is a container,
+which can hold other <tt class="docutils literal"><span class="pre">Test</span></tt> objects.</p>
+<div class="section" id="writing-a-test-case">
+<h3>Writing a Test Case<a class="headerlink" href="#writing-a-test-case" title="Permalink to this headline">¶</a></h3>
+<p>To create a new test case you need to create a new package
+and a new type, which is derived from
+<tt class="docutils literal"><span class="pre">Ahven.Framework.Test_Case</span></tt>.
+There are no required functions or procedures to
+be implemented, but to make the test case do something
+you need to override the <tt class="docutils literal"><span class="pre">Initialize</span></tt> procedure
+and create at least one procedure which tests something:</p>
+<div class="highlight-ada"><div class="highlight"><pre><span class="c1">-- my_tests.ads</span>
+<span class="kn">with</span> <span class="nn">Ahven.Framework</span><span class="p">;</span>
+<span class="kd">package</span> <span class="nc">My_Tests</span> <span class="kr">is</span>
+   <span class="kd">type</span> <span class="kt">Test</span> <span class="kr">is</span> <span class="kr">new</span> <span class="n">Ahven</span><span class="p">.</span><span class="n">Framework</span><span class="p">.</span><span class="n">Test_Case</span> <span class="kr">with</span> <span class="kc">null</span> <span class="kr">record</span><span class="p">;</span>
+   <span class="nv">procedure</span> <span class="nv">Initialize</span> <span class="p">(</span><span class="nv">T</span> <span class="p">: </span><span class="nv">in</span> <span class="nv">out</span> <span class="nv">Test</span><span class="p">);</span>
+<span class="kd">private</span>
+   <span class="kd">procedure</span> <span class="nf">Test_Addition</span><span class="p">;</span>
+<span class="kr">end</span> <span class="nf">My_Tests</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>To add tests to the test case you need to
+call procedure <tt class="docutils literal"><span class="pre">Ahven.Framework.Add_Test_Routine</span></tt>
+during the test case initialization (in other words, in the
+<tt class="docutils literal"><span class="pre">Initialize</span></tt> procedure).
+<a class="reference internal" href="#testcase-a-body"><em>A test case package body</em></a> shows how the
+<tt class="docutils literal"><span class="pre">Test_Addition</span></tt> is added to the test case.
+It also shows how to set a name for the test case with
+the <tt class="docutils literal"><span class="pre">Set_Name</span></tt> procedure.</p>
+<div class="section" id="a-test-case-package-body">
+<span id="testcase-a-body"></span><h4>A test case package body<a class="headerlink" href="#a-test-case-package-body" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-ada"><div class="highlight"><pre><span class="c1">-- my_tests.adb</span>
+<span class="kd">package</span> <span class="kd">body</span> <span class="nc">My_Tests</span> <span class="kr">is</span>
+   <span class="kd">procedure</span> <span class="nf">Initialize</span> <span class="p">(</span><span class="nv">T</span> <span class="p">: </span><span class="nv">in</span> <span class="nv">out</span> <span class="nv">Test</span><span class="p">)</span> <span class="kr">is</span>
+   <span class="kr">begin</span>
+      <span class="n">Set_Name</span> <span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="s">&quot;My tests&quot;</span><span class="p">);</span>
+      <span class="n">Ahven</span><span class="p">.</span><span class="n">Framework</span><span class="p">.</span><span class="n">Add_Test_Routine</span>
+        <span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">Test_Addition</span><span class="p">&#39;</span><span class="na">Access</span><span class="p">,</span> <span class="s">&quot;Addition&quot;</span><span class="p">);</span>
+   <span class="kr">end</span> <span class="nf">Initialize</span><span class="p">;</span>
+
+   <span class="kd">procedure</span> <span class="nf">Test_Addition</span> <span class="kr">is</span>
+   <span class="kr">begin</span>
+      <span class="kc">null</span><span class="p">;</span>
+   <span class="kr">end</span> <span class="nf">Test_Addition</span><span class="p">;</span>
+<span class="kr">end</span> <span class="nf">My_Tests</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="calling-assertion-procedures">
+<h3>Calling Assertion Procedures<a class="headerlink" href="#calling-assertion-procedures" title="Permalink to this headline">¶</a></h3>
+<p>To test whether a condition is true or false,
+Ahven offers you three procedures. The first
+procedure is <a class="reference internal" href="api-ahven.html#ahven-assert"><em>Ahven.Assert</em></a>.
+It takes a boolean value and a message string as its parameters.
+If the boolean value is false the <tt class="docutils literal"><span class="pre">Assert</span></tt>
+raises an <tt class="docutils literal"><span class="pre">Assertion_Error</span></tt> exception
+with the given string. The exception is catched by the framework.
+and when the test results are shown the error is also shown
+with the given message.</p>
+<p>Another assertion procedure is a generic
+<a class="reference internal" href="api-ahven.html#ahven-assert-equal"><em>Ahven.Assert_Equal</em></a> procedure.
+It is meant for comparing two objects of same type.
+If the objects are not equal
+the <tt class="docutils literal"><span class="pre">Assertion_Error</span></tt> exception
+with the given message string is raised.</p>
+<p>The third assertion procedure is simple
+<a class="reference internal" href="api-ahven.html#ahven-fail"><em>Ahven.Fail</em></a> which always raises
+the <tt class="docutils literal"><span class="pre">Assertion_Error</span></tt> exception.
+It is handy for situations where the execution should not
+reach a certain place (see <a class="reference internal" href="#fail-example"><em>Fail in action</em></a>).</p>
+<div class="section" id="fail-in-action">
+<span id="fail-example"></span><h4>Fail in action<a class="headerlink" href="#fail-in-action" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">package</span> <span class="kd">body</span> <span class="nc">My_Tests</span> <span class="kr">is</span>
+   <span class="p">...</span>
+   <span class="kd">procedure</span> <span class="nf">Test_My_Proc</span> <span class="kr">is</span>
+   <span class="kr">begin</span>
+      <span class="kr">begin</span>
+         <span class="n">My_Proc</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span> <span class="c1">-- should raise Custom_Error</span>
+         <span class="n">Fail</span> <span class="p">(</span><span class="s">&quot;Custom_Error expected&quot;</span><span class="p">);</span>
+      <span class="kr">exception</span>
+         <span class="kr">when</span> <span class="n">Custom_Error</span> <span class="p">=&gt;</span>
+            <span class="kc">null</span><span class="p">;</span> <span class="c1">-- expected</span>
+            <span class="c1">-- Note: the exception block should not</span>
+            <span class="c1">-- catch Assertion_Error. Otherwise</span>
+            <span class="c1">-- the assertion failure will not be noticed.</span>
+      <span class="kr">end</span><span class="p">;</span>
+   <span class="kr">end</span> <span class="nf">Test_My_Proc</span><span class="p">;</span>
+<span class="kr">end</span> <span class="nf">My_Tests</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="composing-test-hierarchies-with-test-suites">
+<h3>Composing Test Hierarchies With Test Suites<a class="headerlink" href="#composing-test-hierarchies-with-test-suites" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">Test_Suite</span></tt> type is used to group related tests together.
+You can also add other test suites to the suite and create
+a hierarchy of tests.</p>
+<p>The tests are added to the test suite using either procedure
+<tt class="docutils literal"><span class="pre">Add_Static_Test</span></tt> or <tt class="docutils literal"><span class="pre">Add_Test</span></tt>.
+The former procedure is meant for statically created tests and
+it places a copy of the given test to the test suite.
+The <tt class="docutils literal"><span class="pre">Add_Test</span></tt> procedure is used with dynamically created tests
+and test objects of type Test_Class_Access.</p>
+<p>At the moment, the dynamically added tests are executed first in
+the order they have been added (first in, first out - FIFO)
+and after them the statically added tests, also in FIFO order.</p>
+<p><a class="reference internal" href="#suite-example"><em>Suite Example</em></a> shows how to put test cases in a test suite.</p>
+<div class="section" id="suite-example">
+<span id="id1"></span><h4>Suite Example<a class="headerlink" href="#suite-example" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">package</span> <span class="kd">body</span> <span class="nc">My_Tests</span> <span class="kr">is</span>
+   <span class="p">...</span>
+   <span class="kd">function</span> <span class="nf">Get_Test_Suite</span> <span class="nf">return</span> <span class="nf">Ahven</span><span class="p">.</span><span class="nf">Framework</span><span class="p">.</span><span class="nf">Test_Suite</span> <span class="kr">is</span>
+      <span class="n">S</span> <span class="p">:</span> <span class="n">Framework</span><span class="p">.</span><span class="n">Test_Suite</span> <span class="p">:=</span> <span class="n">Framework</span><span class="p">.</span><span class="n">Create_Suite</span> <span class="p">(</span><span class="s">&quot;All&quot;</span><span class="p">);</span>
+      <span class="n">Hello_World_Test</span> <span class="p">:</span> <span class="n">Hello_World</span><span class="p">.</span><span class="n">Test</span><span class="p">;</span>
+      <span class="n">Listener_Test</span>    <span class="p">:</span> <span class="n">Basic_Listener_Tests</span><span class="p">.</span><span class="n">Test</span><span class="p">;</span>
+   <span class="kr">begin</span>
+      <span class="n">Framework</span><span class="p">.</span><span class="n">Add_Static_Test</span> <span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">Hello_World_Test</span><span class="p">);</span>
+      <span class="n">Framework</span><span class="p">.</span><span class="n">Add_Static_Test</span> <span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">Listener_Test</span><span class="p">);</span>
+      <span class="kr">return</span> <span class="n">S</span><span class="p">;</span>
+   <span class="kr">end</span> <span class="nf">Get_Test_Suite</span><span class="p">;</span>
+<span class="kr">end</span> <span class="nf">My_Tests</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="running-tests">
+<h3>Running Tests<a class="headerlink" href="#running-tests" title="Permalink to this headline">¶</a></h3>
+<p>The tests are run by test runners.  These runners are procedures which take
+either test cases or test suites as their parameters.</p>
+<p>Currently, there exists three test runners. Ahven.Runner is the basic
+runner, which prints the test results as a hierarchy. Ahven.XML_Runner
+on the other hand writes the test results to an XML file, which is
+understood by continuous integration systems like CruiseControl and Hudson.
+The third runner is Ahven.Tap_Runner. It produces the results in
+Test-Anything-Protocol (TAP) format.</p>
+<p>The recommended way to use these test runners is to call them from
+the main program:</p>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kn">with</span> <span class="nn">Ahven.Text_Runner</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">Ahven.Framework</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">Simple_Tests</span><span class="p">;</span>
+<span class="kd">procedure</span> <span class="nf">Tester</span> <span class="kr">is</span>
+   <span class="n">S</span> <span class="p">:</span> <span class="n">Ahven</span><span class="p">.</span><span class="n">Framework</span><span class="p">.</span><span class="n">Test_Suite</span> <span class="p">:=</span> <span class="n">Ahven</span><span class="p">.</span><span class="n">Framework</span><span class="p">.</span><span class="n">Create_Suite</span> <span class="p">(</span><span class="s">&quot;All&quot;</span><span class="p">);</span>
+<span class="kr">begin</span>
+    <span class="n">Ahven</span><span class="p">.</span><span class="n">Framework</span><span class="p">.</span><span class="n">Add_Test</span> <span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="kr">new</span> <span class="n">Simple_Tests</span><span class="p">.</span><span class="n">Test</span><span class="p">);</span>
+    <span class="n">Ahven</span><span class="p">.</span><span class="n">Text_Runner</span><span class="p">.</span><span class="n">Run</span> <span class="p">(</span><span class="n">S</span><span class="p">);</span>
+<span class="kr">end</span> <span class="nf">Tester</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="section" id="parameters">
+<h4>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h4>
+<p>Ahven.Text_Runner recognizes following parameters:</p>
+<dl class="cmdoption">
+<dt id="cmdoption-tester-d">
+<tt class="descname">-d</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-tester-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>directory for test results</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-tester-x">
+<tt class="descname">-x</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-tester-x" title="Permalink to this definition">¶</a></dt>
+<dd><p>output in XML format</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-tester-c">
+<tt class="descname">-c</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-tester-c" title="Permalink to this definition">¶</a></dt>
+<dd><p>capture and report test outputs</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-tester-t">
+<tt class="descname">-t</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-tester-t" title="Permalink to this definition">¶</a></dt>
+<dd><p>specify timeout value for tests</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-tester-q">
+<tt class="descname">-q</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-tester-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>quiet results</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-tester-v">
+<tt class="descname">-v</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-tester-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>verbose results (default)</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Ahven User&#8217;s Guide</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#building-and-installing-ahven">Building and Installing Ahven</a><ul>
+<li><a class="reference internal" href="#gnat-gpl-series-and-fsf-gcc">GNAT GPL series and FSF GCC</a><ul>
+<li><a class="reference internal" href="#installing-library">Installing Library</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gnat-3-15p">GNAT 3.15p</a></li>
+<li><a class="reference internal" href="#objectada">ObjectAda</a></li>
+<li><a class="reference internal" href="#irvine-iccada">Irvine ICCAda</a></li>
+<li><a class="reference internal" href="#janus-ada">Janus/Ada</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#using-ahven">Using Ahven</a><ul>
+<li><a class="reference internal" href="#writing-a-test-case">Writing a Test Case</a><ul>
+<li><a class="reference internal" href="#a-test-case-package-body">A test case package body</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#calling-assertion-procedures">Calling Assertion Procedures</a><ul>
+<li><a class="reference internal" href="#fail-in-action">Fail in action</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#composing-test-hierarchies-with-test-suites">Composing Test Hierarchies With Test Suites</a><ul>
+<li><a class="reference internal" href="#suite-example">Suite Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#running-tests">Running Tests</a><ul>
+<li><a class="reference internal" href="#parameters">Parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to Ahven&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="api.html"
+                        title="next chapter">API Documentation for Ahven</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/manual.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="ada-modindex.html" title="Ada Module Index"
+             >Ada modules</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="API Documentation for Ahven"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Ahven’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">Ahven 2.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Tero Koskinen.
+      Last updated on Jan 23, 2013.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2pre.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Ahven.Listeners.Basic – Package &mdash; Ahven 2.3 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ahven 2.3 documentation" href="index.html" />
+    <link rel="up" title="API Documentation for Ahven" href="api.html" />
+    <link rel="next" title="Ahven.Listeners – Package" href="api-ahven-listeners.html" />
+    <link rel="prev" title="Ahven.Framework – Package" href="api-ahven-framework.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="ada-modindex.html" title="Ada Module Index"
+             >Ada modules</a> |</li>
+        <li class="right" >
+          <a href="api-ahven-listeners.html" title="Ahven.Listeners – Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="api-ahven-framework.html" title="Ahven.Framework – Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Ahven 2.3 documentation</a> &raquo;</li>
+          <li><a href="api.html" accesskey="U">API Documentation for Ahven</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-Ahven.Listeners.Basic">
+<span id="ahven-listeners-basic-package"></span><h1><tt class="xref py py-mod docutils literal"><span class="pre">Ahven.Listeners.Basic</span></tt> &#8211; Package<a class="headerlink" href="#module-Ahven.Listeners.Basic" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="types">
+<h2>Types<a class="headerlink" href="#types" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="result-type">
+<h3>Result_Type<a class="headerlink" href="#result-type" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">type</span> <span class="kt">Result_Type</span> <span class="kr">is</span> <span class="p">(</span><span class="nv">NO_RESULT</span><span class="p">,</span> <span class="nv">PASS_RESULT</span><span class="p">,</span> <span class="nv">FAILURE_RESULT</span><span class="p">,</span> <span class="nv">ERROR_RESULT</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="basic-listener">
+<h3>Basic_Listener<a class="headerlink" href="#basic-listener" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">type</span> <span class="kt">Basic_Listener</span> <span class="kr">is</span> <span class="kr">new</span> <span class="n">Result_Listener</span> <span class="kr">with</span> <span class="kr">record</span>
+   <span class="nv">Main_Result</span>       <span class="p">: </span><span class="nv">aliased</span> <span class="nv">Result_Collection</span><span class="p">;</span>
+   <span class="nv">Current_Result</span>    <span class="p">: </span><span class="nv">Result_Collection_Access</span><span class="p">;</span>
+   <span class="nv">Last_Test_Result</span>  <span class="p">: </span><span class="nv">Result_Type</span> <span class="p">:=</span> <span class="nv">NO_RESULT</span><span class="p">;</span>
+   <span class="nv">Last_Info</span>         <span class="p">: </span><span class="nv">Result_Info</span> <span class="p">:=</span> <span class="nv">Empty_Result_Info</span><span class="p">;</span>
+   <span class="nv">Capture_Output</span>    <span class="p">: </span><span class="nv">Boolean</span>     <span class="p">:=</span> <span class="nv">False</span><span class="p">;</span>
+   <span class="nv">Output_File</span>       <span class="p">: </span><span class="nv">Temporary_Output</span><span class="p">.</span><span class="nv">Temporary_File</span><span class="p">;</span>
+   <span class="nv">Start_Time</span>        <span class="p">: </span><span class="nv">Ada</span><span class="p">.</span><span class="nv">Calendar</span><span class="p">.</span><span class="nv">Time</span><span class="p">;</span>
+<span class="nv">end</span> <span class="nv">record</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="procedures-and-functions">
+<h2>Procedures and Functions<a class="headerlink" href="#procedures-and-functions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="add-pass">
+<h3>Add_Pass<a class="headerlink" href="#add-pass" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">procedure</span> <span class="nf">Add_Pass</span> <span class="p">(</span><span class="nv">Listener</span> <span class="p">: </span><span class="nv">in</span> <span class="nv">out</span> <span class="nv">Basic_Listener</span><span class="p">;</span>
+                    <span class="nv">Info</span>     <span class="p">: </span>       <span class="nv">Context</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>New implementation for Listeners.Add_Pass</p>
+</div>
+<div class="section" id="add-failure">
+<h3>Add_Failure<a class="headerlink" href="#add-failure" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">procedure</span> <span class="nf">Add_Failure</span> <span class="p">(</span><span class="nv">Listener</span> <span class="p">: </span><span class="nv">in</span> <span class="nv">out</span> <span class="nv">Basic_Listener</span><span class="p">;</span>
+                       <span class="nv">Info</span>     <span class="p">: </span>       <span class="nv">Context</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>New implementation for Listeners.Add_Failure</p>
+</div>
+<div class="section" id="add-error">
+<h3>Add_Error<a class="headerlink" href="#add-error" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">procedure</span> <span class="nf">Add_Error</span> <span class="p">(</span><span class="nv">Listener</span> <span class="p">: </span><span class="nv">in</span> <span class="nv">out</span> <span class="nv">Basic_Listener</span><span class="p">;</span>
+                     <span class="nv">Info</span>     <span class="p">: </span>       <span class="nv">Context</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>New implementation for Listeners.Add_Error</p>
+</div>
+<div class="section" id="start-test">
+<h3>Start_Test<a class="headerlink" href="#start-test" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">procedure</span> <span class="nf">Start_Test</span> <span class="p">(</span><span class="nv">Listener</span> <span class="p">: </span><span class="nv">in</span> <span class="nv">out</span> <span class="nv">Basic_Listener</span><span class="p">;</span>
+                      <span class="nv">Info</span>     <span class="p">: </span>       <span class="nv">Context</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>New implementation for Listeners.Start_Test</p>
+</div>
+<div class="section" id="end-test">
+<h3>End_Test<a class="headerlink" href="#end-test" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">procedure</span> <span class="nf">End_Test</span> <span class="p">(</span><span class="nv">Listener</span> <span class="p">: </span><span class="nv">in</span> <span class="nv">out</span> <span class="nv">Basic_Listener</span><span class="p">;</span>
+                    <span class="nv">Info</span>     <span class="p">: </span>       <span class="nv">Context</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>New implementation for Listeners.End_Test</p>
+</div>
+<div class="section" id="set-output-capture">
+<h3>Set_Output_Capture<a class="headerlink" href="#set-output-capture" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">procedure</span> <span class="nf">Set_Output_Capture</span> <span class="p">(</span><span class="nv">Listener</span> <span class="p">: </span><span class="nv">in</span> <span class="nv">out</span> <span class="nv">Basic_Listener</span><span class="p">;</span>
+                              <span class="nv">Capture</span>  <span class="p">: </span>       <span class="nv">Boolean</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Enable or disable Ada.Text_IO output capturing</p>
+</div>
+<div class="section" id="get-output-capture">
+<h3>Get_Output_Capture<a class="headerlink" href="#get-output-capture" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">function</span> <span class="nf">Get_Output_Capture</span> <span class="p">(</span><span class="nv">Listener</span> <span class="p">: </span><span class="nv">Basic_Listener</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">Boolean</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Capture the Ada.Text_IO output?</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">Ahven.Listeners.Basic</span></tt> &#8211; Package</a><ul>
+<li><a class="reference internal" href="#types">Types</a><ul>
+<li><a class="reference internal" href="#result-type">Result_Type</a></li>
+<li><a class="reference internal" href="#basic-listener">Basic_Listener</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#procedures-and-functions">Procedures and Functions</a><ul>
+<li><a class="reference internal" href="#add-pass">Add_Pass</a></li>
+<li><a class="reference internal" href="#add-failure">Add_Failure</a></li>
+<li><a class="reference internal" href="#add-error">Add_Error</a></li>
+<li><a class="reference internal" href="#start-test">Start_Test</a></li>
+<li><a class="reference internal" href="#end-test">End_Test</a></li>
+<li><a class="reference internal" href="#set-output-capture">Set_Output_Capture</a></li>
+<li><a class="reference internal" href="#get-output-capture">Get_Output_Capture</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="api-ahven-framework.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">Ahven.Framework</span></tt> &#8211; Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="api-ahven-listeners.html"
+                        title="next chapter"><tt class="docutils literal docutils literal"><span class="pre">Ahven.Listeners</span></tt> &#8211; Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/api-ahven-listeners-basic.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="ada-modindex.html" title="Ada Module Index"
+             >Ada modules</a> |</li>
+        <li class="right" >
+          <a href="api-ahven-listeners.html" title="Ahven.Listeners – Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="api-ahven-framework.html" title="Ahven.Framework – Package"
+             >previous</a> |</li>
+        <li><a href="index.html">Ahven 2.3 documentation</a> &raquo;</li>
+          <li><a href="api.html" >API Documentation for Ahven</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Tero Koskinen.
+      Last updated on Jan 23, 2013.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2pre.
+    </div>
+  </body>
+</html>

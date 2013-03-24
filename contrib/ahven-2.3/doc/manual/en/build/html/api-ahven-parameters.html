@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Ahven.Parameters – Package &mdash; Ahven 2.3 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ahven 2.3 documentation" href="index.html" />
+    <link rel="up" title="API Documentation for Ahven" href="api.html" />
+    <link rel="next" title="Ahven.Results – Package" href="api-ahven-results.html" />
+    <link rel="prev" title="Ahven.Listeners – Package" href="api-ahven-listeners.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="ada-modindex.html" title="Ada Module Index"
+             >Ada modules</a> |</li>
+        <li class="right" >
+          <a href="api-ahven-results.html" title="Ahven.Results – Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="api-ahven-listeners.html" title="Ahven.Listeners – Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Ahven 2.3 documentation</a> &raquo;</li>
+          <li><a href="api.html" accesskey="U">API Documentation for Ahven</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-Ahven.Parameters">
+<span id="ahven-parameters-package"></span><h1><tt class="xref py py-mod docutils literal"><span class="pre">Ahven.Parameters</span></tt> &#8211; Package<a class="headerlink" href="#module-Ahven.Parameters" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="types">
+<h2>Types<a class="headerlink" href="#types" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="parameter-info">
+<h3>Parameter_Info<a class="headerlink" href="#parameter-info" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">type</span> <span class="kt">Parameter_Info</span> <span class="kr">is</span> <span class="kd">private</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="parameter-mode">
+<h3>Parameter_Mode<a class="headerlink" href="#parameter-mode" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">type</span> <span class="kt">Parameter_Mode</span> <span class="kr">is</span> <span class="p">(</span><span class="nv">NORMAL_PARAMETERS</span><span class="p">,</span> <span class="nv">TAP_PARAMETERS</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="procedures-and-functions">
+<h2>Procedures and Functions<a class="headerlink" href="#procedures-and-functions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="parse-parameters">
+<h3>Parse_Parameters<a class="headerlink" href="#parse-parameters" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">procedure</span> <span class="nf">Parse_Parameters</span> <span class="p">(</span><span class="nv">Mode</span> <span class="p">: </span>    <span class="nv">Parameter_Mode</span><span class="p">;</span>
+                            <span class="nv">Info</span> <span class="p">: </span><span class="nv">out</span> <span class="nv">Parameter_Info</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Parse Ada.Command_Line parameters and put the results
+to the Info parameter. Raises Invalid_Parameter if
+some parameter is invalid.</p>
+</div>
+<div class="section" id="usage">
+<h3>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">procedure</span> <span class="nf">Usage</span> <span class="p">(</span><span class="nv">Mode</span> <span class="p">: </span><span class="nv">Parameter_Mode</span> <span class="p">:=</span> <span class="nv">NORMAL_PARAMETERS</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Print usage.</p>
+</div>
+<div class="section" id="capture">
+<h3>Capture<a class="headerlink" href="#capture" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">function</span> <span class="nf">Capture</span> <span class="p">(</span><span class="nv">Info</span> <span class="p">: </span><span class="nv">Parameter_Info</span><span class="p">)</span> <span class="kr">return</span> <span class="n">Boolean</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Should we capture Ada.Text_IO output?</p>
+</div>
+<div class="section" id="verbose">
+<h3>Verbose<a class="headerlink" href="#verbose" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">function</span> <span class="nf">Verbose</span> <span class="p">(</span><span class="nv">Info</span> <span class="p">: </span><span class="nv">Parameter_Info</span><span class="p">)</span> <span class="kr">return</span> <span class="n">Boolean</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Should we use verbose mode?</p>
+</div>
+<div class="section" id="xml-results">
+<h3>XML_Results<a class="headerlink" href="#xml-results" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">function</span> <span class="nf">XML_Results</span> <span class="p">(</span><span class="nv">Info</span> <span class="p">: </span><span class="nv">Parameter_Info</span><span class="p">)</span> <span class="kr">return</span> <span class="n">Boolean</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Should we output XML?</p>
+</div>
+<div class="section" id="single-test">
+<h3>Single_Test<a class="headerlink" href="#single-test" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">function</span> <span class="nf">Single_Test</span> <span class="p">(</span><span class="nv">Info</span> <span class="p">: </span><span class="nv">Parameter_Info</span><span class="p">)</span> <span class="kr">return</span> <span class="n">Boolean</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Should we run a single test (case/suite/routine) only?</p>
+</div>
+<div class="section" id="test-name">
+<h3>Test_Name<a class="headerlink" href="#test-name" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">function</span> <span class="nf">Test_Name</span> <span class="p">(</span><span class="nv">Info</span> <span class="p">: </span><span class="nv">Parameter_Info</span><span class="p">)</span> <span class="kr">return</span> <span class="kt">String</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Return the name of the test passed as a parameter.</p>
+</div>
+<div class="section" id="result-dir">
+<h3>Result_Dir<a class="headerlink" href="#result-dir" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ada"><div class="highlight"><pre><span class="kd">function</span> <span class="nf">Result_Dir</span> <span class="p">(</span><span class="nv">Info</span> <span class="p">: </span><span class="nv">Parameter_Info</span><span class="p">)</span> <span class="kr">return</span> <span class="kt">String</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Return the directory for XML results.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">Ahven.Parameters</span></tt> &#8211; Package</a><ul>
+<li><a class="reference internal" href="#types">Types</a><ul>
+<li><a class="reference internal" href="#parameter-info">Parameter_Info</a></li>
+<li><a class="reference internal" href="#parameter-mode">Parameter_Mode</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#procedures-and-functions">Procedures and Functions</a><ul>
+<li><a class="reference internal" href="#parse-parameters">Parse_Parameters</a></li>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#capture">Capture</a></li>
+<li><a class="reference internal" href="#verbose">Verbose</a></li>
+<li><a class="reference internal" href="#xml-results">XML_Results</a></li>
+<li><a class="reference internal" href="#single-test">Single_Test</a></li>
+<li><a class="reference internal" href="#test-name">Test_Name</a></li>
+<li><a class="reference internal" href="#result-dir">Result_Dir</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="api-ahven-listeners.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">Ahven.Listeners</span></tt> &#8211; Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="api-ahven-results.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">Ahven.Results</span></tt> &#8211; Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/api-ahven-parameters.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="ada-modindex.html" title="Ada Module Index"
+             >Ada modules</a> |</li>
+        <li class="right" >
+          <a href="api-ahven-results.html" title="Ahven.Results – Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="api-ahven-listeners.html" title="Ahven.Listeners – Package"
+             >previous</a> |</li>
+        <li><a href="index.html">Ahven 2.3 documentation</a> &raquo;</li>
+          <li><a href="api.html" >API Documentation for Ahven</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Tero Koskinen.
+      Last updated on Jan 23, 2013.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2pre.
+    </div>
+  </body>
+</html>

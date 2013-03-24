@@ -1,0 +1,6 @@
+project Ahven is
+
+   for Source_Dirs use ("ahven-2.3/src", "ahven-2.3/src/unix");
+   for Object_Dir use "obj/ahven";
+
+end Ahven;

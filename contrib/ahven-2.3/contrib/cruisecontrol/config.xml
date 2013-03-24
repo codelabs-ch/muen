@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<cruisecontrol>
+  <project name="ahven_trunk" buildafterfailed="false">
+    <listeners>
+      <currentbuildstatuslistener
+         file="logs/ahven_trunk/status.txt"/>
+    </listeners>
+    <bootstrappers>
+      <svnbootstrapper localWorkingCopy="checkout/ahven_trunk"/>
+    </bootstrappers>
+    
+    <plugin name="ant"
+	    uselogger="true"
+            antscript="/usr/local/bin/ant"/>
+
+    <modificationset quietperiod="10">
+      <svn LocalWorkingCopy="checkout/ahven_trunk"/>
+    </modificationset>
+    <schedule interval="36000">
+      <ant buildfile="build-ahven_trunk.xml" target="test"/>
+    </schedule>
+
+    <log dir="logs/ahven_trunk">
+      <merge dir="checkout/ahven_trunk/results"/>
+    </log>
+    <publishers>
+    </publishers>
+  </project>
+</cruisecontrol>

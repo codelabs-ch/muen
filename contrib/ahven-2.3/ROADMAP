@@ -1,0 +1,23 @@
+Ahven - Roadmap
+================
+
+Release schedule and versioning
+-------------------------------
+Ahven will use simple a.b version numbers. After "1.9" comes "2.0".
+I plan to release a new version two or three times a year.
+
+API stability
+-------------
+I do not guarantee API stability but I will try to keep
+specification of packages Ahven and Ahven.Framework unchanged.
+But for example, function Ahven.Framework.Name changed to
+Ahven.Framework.Get_Name in Ahven 1.1.
+
+Other packages will most likely see changes.
+
+Long-term todo-list
+-------------------
+* Graphical (GTK+/CLAW) UI for the test result reporter
+* Improve documentation
+* Replace adhoc XML writer with "a proper solution"
+

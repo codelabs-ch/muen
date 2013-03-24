@@ -1,0 +1,447 @@
+2013-01-24 Ahven 2.3
+====================
+
+Changes
+-------
+	* Various procedure descriptions in the API documentation
+	  were improved.
+	* Character limit of long messages in test results have been
+	  increased to 1024. On some compilers this means that
+	  memory usage is over 1 kilobytes per test result.
+	* New constant: Ahven.Max_Long_String_Len
+	* Exception backtraces are now stored to test results
+	  when test fails or has an error.
+
+Bugs fixed
+----------
+	* TAP runner did not output multiline (long) messages correctly.
+	  This is now fixed.
+
+Internal
+--------
+	* New package: Ahven.Long_AStrings
+	* Some coding style fixes.
+
+Known issues
+------------
+	* On Fedora 17/18 you need to first install libgnat-static package:
+
+	  sudo yum install libgnat-static
+
+	  Otherwise GNAT will die with internal error when building Ahven.
+
+
+2012-03-05 Ahven 2.2
+====================
+
+Changes
+-------
+	* GNAT 3.15p project files from contrib/gnat315p removed.
+	* The code snippets in the documentation are now highlighted
+	  as Ada code.
+	* API documentation generation using Adabrowse is now deprecated.
+	  The new way is to use Sphinx for document generation.
+
+Bugs fixed
+----------
+	* Ahven.XML_Runner did not report skipped tests correctly.
+	  This is now fixed. (The bug was similar to Ahven.Text_Runner
+	  bug in Ahven 2.1.)
+
+Internal
+--------
+	* Small test suite improvements.
+
+2011-09-24 Ahven 2.1
+====================
+
+Bugs fixed
+----------
+	* Ahven.Text_Runner did not report skipped tests correctly.
+	  This is now fixed.
+
+Internal
+--------
+	* Function Ahven.Results.Skipped_Count was added.
+
+2011-09-23 Ahven 2.0
+====================
+
+Changes
+-------
+	* Tests can be now given a timeout value. If a test is not
+	  executed in the given time, it is stopped and a timeout
+          failure is reported. See '-t' option of the test runners.
+	  The timeout feature depends on the possibility to abort
+	  a task after a certain amount of time. If the task abortion
+	  is not possible, the current test will continue running
+	  even after the given timeout.
+
+	* A test can be now skipped programmatically by calling
+	  procedure Skip("Message"). A skipped test are considered
+	  to be equal to passed tests, but depending on the test
+	  runner, they can have extra "SKIP" information attached.
+
+	* README is now provided in reStructured text format,
+	  just like the manual.
+
+Bugs fixed
+----------
+	* Ahven can be compiled on Fedora systems by installing
+	  package "libgnat-static". Note: This was not a bug in
+	  Ahven but a configuration issue on Fedora.
+
+2011-04-19 Ahven 1.9
+====================
+
+Changes
+-------
+	* Manual was added to 'doc/manual/en' directory. It includes
+          User's Guide section and API documentation. The documentation
+          is written using reStructuredText and Sphinx 1.0, so Python
+          and py-sphinx are required for building. API documentation
+          generation via Adabrowse is still supported, but it will be
+          deprecated and dropped later.
+
+Bugs fixed
+----------
+	* Extra Test'Class (...) type conversion was removed from
+	  ahven-framework.adb. This allows compilation with GNAT GPL 2010.
+	  (Bug bitbucket#3)
+
+Internal
+--------
+	* Package Ahven.VStrings was replaced with an instantiation of
+	  Ada.Strings.Bounded.Generic_Bounded_Length. This allowed us to
+	  remove over 100 lines of code.
+
+Known issues
+------------
+	* Ahven (or actually file ahven-parameters.adb) cannot be compiled
+	  on Fedora 14 with gcc 4.5.1. See bug
+          https://bugzilla.redhat.com/show_bug.cgi?id=690610 for details.
+
+2010-06-02 Ahven 1.8
+====================
+
+Changes
+-------
+	* The dynamic library support with GNAT was removed since
+	  it did not work automatically in a trouble-free way on
+	  Debian, Fedora, and Windows.
+
+	* Ada.Calendar dependency was removed from Ahven.Framework.
+	  Equivalent functionality is now implemented in
+	  the test runners.
+
+	* Support for TAP 1.3 was dropped. TAP 1.2 is supported
+	  normally.
+	
+	* Janus/Ada 3.1.1d support was dropped. Ahven now requires
+	  Janus/Ada 3.1.2beta or newer.
+
+	* There is now ahven.spec file in contrib/fedora to
+	  make packaging and installing Ahven easier on Fedora.
+
+Bugs fixed
+----------
+	* If user placed a dynamically allocated Test_Case into
+	  a statically allocated Test_Suite the finalization
+	  procedure tried to release the same memory twice.
+	  This is now fixed by implementing Adjust for the
+	  Test_Suite type. (Bug bitbucket#2)
+
+	* Many Some_Type'(initial values) expressions were
+	  changed into more simpler (initial values) form.
+	  This was done to avoid Janus/Ada bug no 73.
+
+Internal
+--------
+	* Code cleanup: style fixes, removal of compiler warnings
+	  and comment clarifications.
+
+	* Remove_All procedure from Ahven.SList package was renamed
+	  to Clear. The new name is more consistent with Ada.Containers
+	  naming style.
+
+	* Ahven.VStrings package now depends on Ada.Strings.Fixed.
+
+	* Ahven.Framework.Indefinite_Test_List has no longer
+	  procedures or functions for Cursors. Same functionality
+	  can be now achieved using generic For_Each procedure.
+
+2009-09-14 Ahven 1.7
+====================
+
+Changes
+-------
+	* The source code repository and the issue tracker are
+	  now hosted at Bitbucket, http://bitbucket.org/tkoskine/ahven
+
+	* The usage of Unbounded_String was completely removed
+	  from all packages. Now Ahven.Framework.Get_Name function
+	  returns String.
+
+	* GNAT project files (.gpr) were moved to the 'gnat' directory.
+
+	* The upper limit (Count_Type'Last) of Ahven.SList
+	  is now documented.
+
+	* A PDF report generation example from XML result files
+	  was added to 'contrib/docbook-testreport'. From Reto Buerki.
+
+Bugs fixed
+----------
+	* Fix Contraint_Error when one tries to truncate
+	  overlong string. Bug report and patch from Reto Buerki.
+	  (Bug bitbucket#1)
+
+	* XML_Runner now filters special characters like space or /
+	  from the filenames. Patch from Reto Buerki.
+
+Internal
+--------
+	* Makefile now has 'tags' target for generating 'tags' file.
+	  It assumes that ctags utility has support for Ada.
+
+	* It is no longer necessary to have procedure or function
+	  declarations for all procedures and functions. The purpose
+	  is to allow somewhat shorter code.
+
+	* User's Guide has seen some progress, but it is still not
+	  completely ready. (=one should not rely on it.)
+
+	* In the test code, some Assert calls were converted to
+	  more compact Assert_Equal calls.
+
+2009-02-28 Ahven 1.6
+====================
+
+Bugs fixed
+----------
+	* Installation scripts for GNAT were fixed.
+	  Bug report and patch from Reto Buerki.
+
+2009-02-23 Ahven 1.5
+====================
+
+Changes
+-------
+	* Ahven is now hosted at sourceforge.net. New URLs are:
+	  Project page: http://sourceforge.net/projects/ahven
+	  Home page:    http://ahven.sourceforge.net/
+
+	* Janus/Ada build system was rewritten. See README for details.
+	  Also, some minor changes were done to GNAT build scripts.
+
+Bug fixed
+---------
+	* API documentation was not generated for the Ahven.SList package.
+
+2009-01-22 Ahven 1.4
+====================
+
+Changes
+-------
+	* Type Ahven.Framework.Test_Result and related code was removed.
+	  Ahven.Framework.Execute now takes Listeners.Result_Listener'Class
+	  directly instead of Test_Result object.
+
+	* New abstract function Test_Count was added to the Test type.
+	  The function returns the amount of test routines which will
+	  be executed when the Run procedure is called.
+
+	* Test Anything Protocol (TAP) support: There is now a new
+	  Ahven.Tap_Runner package, which outputs test results in
+	  TAP format (versions 1.2 and 1.3 are supported).
+
+	* Get_Message and Get_Long_Message functions now return String
+	  instead of Unbounded_String.
+
+	* The GNAT project files for GNAT 3.15p were synchronised
+	  with the GNAT GPL versions.
+
+	* Janus/Ada build scripts are now in the 'janusada' directory
+	  instead of 'contrib\janusada'.
+
+	* New (generic) assertion procedure:
+	    Assert_Equal (Expected, Actual, Message).
+	  Suggestion and the source code from Pawel Plazienski.
+
+	* New procedure for inserting stack-allocated tests into test suites:
+	    Add_Static_Test (Suite, T).
+	  Idea from Pawel Plazienski.
+
+	* Internally, almost all Unbounded_Strings were converted into
+	  VStrings. This limits the maximum length of test names and
+	  failure messages to 160 characters. Constraint_Error is
+	  raised for overlong test names and too long failure messages
+	  are silently truncated into 160 characters.
+	  This was done for better Janus/Ada 3.1.1d compatibility.
+
+Bugs fixed
+-----------
+	* Text-based test runner results are now aligned in a better way.
+	  Fix for bug #12220.
+
+Internal
+--------
+	* All lists were converted into singly linked lists. Lists were
+	  made generic wherever possible.
+
+	* Listeners.Output_Capture was combined into Listeners.Basic.
+
+2008-08-13 Ahven 1.3
+====================
+
+Changes
+-------
+	* Example configuration for Cruisecontrol was added.
+
+	* The GNAT project file for GNAT 3.15p was added. 
+
+	* Fix for bug #12165 and make test suite to work
+	  with Janus/Ada 3.1.x.
+
+Bugs fixed
+----------
+	* The API documentation is now generated also for
+	  the Ahven.Compat and Ahven.XML_Runner packages.
+
+	* The use of System.Address_To_Access_Conversions was removed.
+	  This allows Ahven to be compiled with Janus/Ada.
+	  At the same time, Ahven.Framework.Run (T : Test;...)
+	  was changed back to Ahven.Framework.Run (T : in out Test;...).
+	  Sorry for the inconvenience.
+
+	* Non-standard pragmas were removed. The code should compile
+	  now on multiple Ada compilers without warnings about
+	  unrecognised pragmas.
+
+Internal
+--------
+	* Variable "OS" in Makefile and GNAT project files was renamed
+	  to "OS_Version".
+
+	* New tests:
+	    Result_Tests.Test_Add_{Pass,Failure,Error},
+	    Framework_Tests.Test_Tear_Down,
+	    Ahven.Result_Listener_List.Test_Append.
+
+	* Removed tests: List_Tests.*.
+
+	* Code cleanups:
+	  + Duplicate code from Text_Runner.Run and XML_Runner.Run
+	    moved into Runner.Run_Suite.
+	  + Duplicate code from various Framework.Run procedures was
+	    moved into Framework.Run_Internal.
+
+	* Ahven.Doubly_Linked_List was removed. This is related
+	  to bug #12165.
+
+2008-05-12 Ahven 1.2
+====================
+
+Changes
+-------
+	* New XML_Runner which generates JUnit compatible XML test results.
+	  XML_Runner can be either run explicitly or via Text_Runner
+	  using the '-x' parameter.
+
+	* Unused access types Test_Access, Test_Case_Class_Access,
+	  Test_Case_Access, Test_Suite_Class_Access, Result_Listener_Access,
+	  Test_Command_Access, Test_Object_Command_Access,
+	  Basic_Listener_Access, and Output_Capture_Listener_Access removed.
+
+	* Ahven.Framework.Run (T : in out Test;...) is changed to
+	  Ahven.Framework.Run (T : Test;...), because 'in out' mode
+	  was not necessary.
+
+	* New procedures/functions:
+	    Ahven.Text_Runner.Run (Suite : Framework.Test_Suite'Class);
+	    Ahven.Framework.Create_Suite return Test_Suite;
+	  With these, the suite can be created on stack and one does not
+	  need to play with access types.
+
+Bugs fixed
+----------
+	* Ahven can be now compiled with GNAT 3.15p.
+
+	* The GNAT project file should work on Windows again.
+
+Internal
+--------
+	* XML_Runner introduced a need for some platform specific files.
+	  Therefore, 'src' directory now contains subdirectories 'unix'
+	  and 'windows'.
+
+	* New tests: Result_Tests.Test_*
+
+	* Next_* procedures for in the Results package were replaced
+	  with proper iterators.
+
+2008-01-30 Ahven 1.1
+====================
+
+Changes
+-------
+	* The Ahven.Framework and the test runners are able to optionally
+	  run only the tests which match the given name.
+
+	* The default Text_Runner is able to capture Ada.Text_IO output
+	  from a test into a temporary file and show the output if
+	  the test does not pass.
+	  Option '-c' turns the capture feature on.
+
+	* The default Text_Runner shows the exception message in addition
+	  to the exception name when the test ends in error.
+	  (Idea and original patch from Alexander Senier)
+
+	* The default Text_Runner is now able to provide a short summary
+	  instead of full test report.
+	  Use option '-q' to get the test summary.
+
+	* The GNAT project file is now called 'ahven.gpr' instead of
+	  old 'ahven_lib.gpr'.
+
+	* ALI files (*.ali) are now installed read-only, so GNAT
+	  does not try to rebuild the library.
+	  (Patch from Alexander Senier)
+
+	* Function Ahven.Framework.Name is renamed
+	  to Ahven.Framework.Get_Name.
+
+	* Shared library produced by GNAT now includes the version number.
+
+Internal
+--------
+	* New listener: Output_Capture_Listener, which will
+	  forward Ada.Text_IO output into a temporary file.
+
+	* Type Ahven.Results.Result_Place is renamed to
+	  Ahven.Results.Result_Info.
+
+	* Ahven.Double_Linked_List is renamed to Ahven.Doubly_Linked_List,
+	  because other Ada linked list implementations also use
+	  similar naming scheme.
+
+	* AdaControl is used to enforce some parts of the coding style.
+	  This caused some API changes, but in most cases the changes
+	  are invisible.
+
+2007-10-24 Ahven 1.0
+====================
+Initial release.
+
+Ahven is a simple unit test library for Ada 95.
+It is modeled after JUnit and some ideas are
+taken from AUnit. Ahven 1.0 is distributed under
+ISC license.
+
+Features
+========
+* Test, Test_Case, and Test_Suite classes (tagged types)
+* Assert and Fail procedures for triggering assertion failures
+* Text-based test runner
+
+Tero Koskinen <tero.koskinen@iki.fi>

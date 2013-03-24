@@ -31,6 +31,9 @@ $(OBJ_DIR)/kernel: $(KERN_DIR)/obj/kernel $(SUBJ_BINS)
 	objcopy --add-section .tau0pt=$(PT_DIR)/tau0.pt $@         \
 		--change-section-address .tau0pt=0x001f0000            \
 		--set-section-flags .tau0pt=alloc 2>/dev/null
+	objcopy --add-section .tau0iobm=$(PT_DIR)/tau0.iobm $@     \
+		--change-section-address .tau0iobm=0x00244000          \
+		--set-section-flags .tau0iobm=alloc 2>/dev/null
 	objcopy --add-section .subject1=$(OBJ_DIR)/subject_1 $@    \
 		--change-section-address .subject1=0x00250000          \
 		--set-section-flags .subject1=alloc 2>/dev/null

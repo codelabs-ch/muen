@@ -61,6 +61,11 @@ is
    --  Return IO bitmap memory address.
    function Get_Bitmap_Address (Ports : IO_Ports_Type) return SK.Word64;
 
+   --  Iterate over ranges of I/O ports.
+   procedure Iterate
+     (Ports   : IO_Ports_Type;
+      Process : not null access procedure (R : IO_Port_Range));
+
    --  Subject specification.
    type Subject_Type is private;
 

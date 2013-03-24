@@ -138,6 +138,24 @@ is
    -------------------------------------------------------------------------
 
    procedure Iterate
+     (Ports   : IO_Ports_Type;
+      Process : not null access procedure (R : IO_Port_Range))
+   is
+      --  Dispatch process call to I/O port range given by cursor.
+      procedure Dispatch (Pos : Ports_Package.Cursor);
+
+      procedure Dispatch (Pos : Ports_Package.Cursor)
+      is
+      begin
+         Process (R => Ports_Package.Element (Position => Pos));
+      end Dispatch;
+   begin
+      Ports.Ranges.Iterate (Process => Dispatch'Access);
+   end Iterate;
+
+   -------------------------------------------------------------------------
+
+   procedure Iterate
      (Layout  : Memory_Layout_Type;
       Process : not null access procedure (R : Memory_Region_Type))
    is

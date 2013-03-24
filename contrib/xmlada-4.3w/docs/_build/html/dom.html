@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>5. The DOM module &mdash; XML/Ada: the XML Library for Ada 4.3w documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '4.3w',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="XML/Ada: the XML Library for Ada 4.3w documentation" href="index.html" />
+    <link rel="next" title="6. The Schema module" href="schema.html" />
+    <link rel="prev" title="4. The SAX module" href="sax.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="schema.html" title="6. The Schema module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="sax.html" title="4. The SAX module"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">XML/Ada: the XML Library for Ada 4.3w documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/adacore_transparent.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">5. The DOM module</a><ul>
+<li><a class="reference internal" href="#using-dom">5.1. Using DOM</a></li>
+<li><a class="reference internal" href="#editing-dom-trees">5.2. Editing DOM trees</a></li>
+<li><a class="reference internal" href="#printing-dom-tress">5.3. Printing DOM tress</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="sax.html"
+                        title="previous chapter">4. The SAX module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="schema.html"
+                        title="next chapter">6. The Schema module</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/dom.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-dom-module">
+<span id="id1"></span><h1>5. The DOM module<a class="headerlink" href="#the-dom-module" title="Permalink to this headline">¶</a></h1>
+<p>DOM is another standard associated with XML, in which the XML stream is
+represented as a tree in memory. This tree can be manipulated at will, to add
+new nodes, remove existing nodes, change attributes,...</p>
+<p>Since it contains the whole XML information, it can then in turn be dump to a
+stream.</p>
+<p>As an example, most modern web browsers provide a DOM interface to the document
+currently loaded in the browser. Using javascript, one can thus modify
+dynamically the document. The calls to do so are similar to the ones provided
+by XML/Ada for manipulating a DOM tree, and all are defined in the DOM
+standard.</p>
+<p>The W3C commitee (<a class="reference external" href="http://www.w3c.org">http://www.w3c.org</a>) has defined
+several version of the DOM, each building on the previous one and adding
+several enhancements.</p>
+<p>XML/Ada currently supports the second revision of DOM (DOM 2.0), which mostly
+adds namespaces over the first revision. The third revision is not supported at
+this point, and it adds support for loading and saving XML streams in a
+standardized fashion.</p>
+<p>Although it doesn&#8217;t support DOM 3.0, XML/Ada provides subprograms for doing
+similar things.</p>
+<p>Only the Core module of the DOM standard is currently implemented, other
+modules will follow.</p>
+<p>Note that the <tt class="file docutils literal"><span class="pre">encodings.ads</span></tt> file specifies the encoding to use to store
+the tree in memory. Full compatibility with the XML standard requires that this
+be UTF16, however, it is generally much more memory-efficient for European
+languages to use UTF8. You can freely change this and recompile.</p>
+<div class="section" id="using-dom">
+<span id="id2"></span><h2>5.1. Using DOM<a class="headerlink" href="#using-dom" title="Permalink to this headline">¶</a></h2>
+<p>In XML/Ada, the DOM tree is build through a special implementation of a
+SAX parser, provided in the <cite>DOM.Readers</cite> package.</p>
+<p>Using DOM to read an XML document is similar to using SAX: one must setup an
+input stream, then parse the document and get the tree. This is done with a
+code similar to the following:</p>
+<div class="highlight-ada"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">with</span> <span class="nn">Input_Sources.File</span><span class="p">;</span> <span class="kn">use</span> <span class="nn">Input_Sources.File</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">Sax.Readers</span><span class="p">;</span>        <span class="kn">use</span> <span class="nn">Sax.Readers</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">DOM.Readers</span><span class="p">;</span>        <span class="kn">use</span> <span class="nn">DOM.Readers</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">DOM.Core</span><span class="p">;</span>           <span class="kn">use</span> <span class="nn">DOM.Core</span><span class="p">;</span>
+
+<span class="kd">procedure</span> <span class="nf">DomExample</span> <span class="kr">is</span>
+   <span class="n">Input</span>  <span class="p">:</span> <span class="n">File_Input</span><span class="p">;</span>
+   <span class="n">Reader</span> <span class="p">:</span> <span class="n">Tree_Reader</span><span class="p">;</span>
+   <span class="n">Doc</span>    <span class="p">:</span> <span class="n">Document</span><span class="p">;</span>
+<span class="kr">begin</span>
+   <span class="n">Set_Public_Id</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="s">&quot;Preferences file&quot;</span><span class="p">);</span>
+   <span class="n">Open</span> <span class="p">(</span><span class="s">&quot;pref.xml&quot;</span><span class="p">,</span> <span class="n">Input</span><span class="p">);</span>
+
+   <span class="n">Set_Feature</span> <span class="p">(</span><span class="n">Reader</span><span class="p">,</span> <span class="n">Validation_Feature</span><span class="p">,</span> <span class="kc">False</span><span class="p">);</span>
+   <span class="n">Set_Feature</span> <span class="p">(</span><span class="n">Reader</span><span class="p">,</span> <span class="n">Namespace_Feature</span><span class="p">,</span> <span class="kc">False</span><span class="p">);</span>
+
+   <span class="n">Parse</span> <span class="p">(</span><span class="n">Reader</span><span class="p">,</span> <span class="n">Input</span><span class="p">);</span>
+   <span class="n">Close</span> <span class="p">(</span><span class="n">Input</span><span class="p">);</span>
+
+   <span class="n">Doc</span> <span class="p">:=</span> <span class="n">Get_Tree</span> <span class="p">(</span><span class="n">Reader</span><span class="p">);</span> 
+
+   <span class="n">Free</span> <span class="p">(</span><span class="n">Reader</span><span class="p">);</span>
+<span class="kr">end</span> <span class="nf">DomExample</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>This code is almost exactly the same as the code that was used when
+demonstrating the use of SAX (<a class="reference internal" href="sax.html#using-sax"><em>Using SAX</em></a>).</p>
+<p>The main two differences are:</p>
+<ul class="simple">
+<li>We no longer need to define our own XML reader, and we simply use the
+one provided in <cite>DOM.Readers</cite>.</li>
+<li>We therefore do not add our own callbacks to react to the XML events.
+Instead, the last instruction of the program gets a handle on the tree that
+was created in memory.</li>
+</ul>
+<p>The tree can now be manipulated to get access to the value stored.
+If we want to implement the same thing we did for SAX, the code would look
+like:</p>
+<div class="highlight-ada"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">with</span> <span class="nn">Input_Sources.File</span><span class="p">;</span> <span class="kn">use</span> <span class="nn">Input_Sources.File</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">Sax.Readers</span><span class="p">;</span>        <span class="kn">use</span> <span class="nn">Sax.Readers</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">DOM.Readers</span><span class="p">;</span>        <span class="kn">use</span> <span class="nn">DOM.Readers</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">DOM.Core</span><span class="p">;</span>           <span class="kn">use</span> <span class="nn">DOM.Core</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">DOM.Core.Documents</span><span class="p">;</span> <span class="kn">use</span> <span class="nn">DOM.Core.Documents</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">DOM.Core.Nodes</span><span class="p">;</span>     <span class="kn">use</span> <span class="nn">DOM.Core.Nodes</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">DOM.Core.Attrs</span><span class="p">;</span>     <span class="kn">use</span> <span class="nn">DOM.Core.Attrs</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">Ada.Text_IO</span><span class="p">;</span>        <span class="kn">use</span> <span class="nn">Ada.Text_IO</span><span class="p">;</span>
+
+<span class="kd">procedure</span> <span class="nf">DomExample2</span> <span class="kr">is</span>
+   <span class="n">Input</span>  <span class="p">:</span> <span class="n">File_Input</span><span class="p">;</span>
+   <span class="n">Reader</span> <span class="p">:</span> <span class="n">Tree_Reader</span><span class="p">;</span>
+   <span class="n">Doc</span>    <span class="p">:</span> <span class="n">Document</span><span class="p">;</span>
+   <span class="n">List</span>   <span class="p">:</span> <span class="n">Node_List</span><span class="p">;</span>
+   <span class="n">N</span>      <span class="p">:</span> <span class="n">Node</span><span class="p">;</span>
+   <span class="n">A</span>      <span class="p">:</span> <span class="n">Attr</span><span class="p">;</span>
+   <span class="n">C</span>      <span class="p">:</span> <span class="n">Node</span><span class="p">;</span>
+<span class="kr">begin</span>
+   <span class="n">Set_Public_Id</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="s">&quot;Preferences file&quot;</span><span class="p">);</span>
+   <span class="n">Open</span> <span class="p">(</span><span class="s">&quot;pref.xml&quot;</span><span class="p">,</span> <span class="n">Input</span><span class="p">);</span>
+
+   <span class="n">Set_Feature</span> <span class="p">(</span><span class="n">Reader</span><span class="p">,</span> <span class="n">Validation_Feature</span><span class="p">,</span> <span class="kc">False</span><span class="p">);</span>
+   <span class="n">Set_Feature</span> <span class="p">(</span><span class="n">Reader</span><span class="p">,</span> <span class="n">Namespace_Feature</span><span class="p">,</span> <span class="kc">False</span><span class="p">);</span>
+
+   <span class="n">Parse</span> <span class="p">(</span><span class="n">Reader</span><span class="p">,</span> <span class="n">Input</span><span class="p">);</span>
+   <span class="n">Close</span> <span class="p">(</span><span class="n">Input</span><span class="p">);</span>
+
+   <span class="n">Doc</span> <span class="p">:=</span> <span class="n">Get_Tree</span> <span class="p">(</span><span class="n">Reader</span><span class="p">);</span> 
+
+   <span class="n">List</span> <span class="p">:=</span> <span class="n">Get_Elements_By_Tag_Name</span> <span class="p">(</span><span class="n">Doc</span><span class="p">,</span> <span class="s">&quot;pref&quot;</span><span class="p">);</span>
+
+   <span class="kr">for</span> <span class="n">Index</span> <span class="ow">in</span> <span class="mi">1</span> <span class="p">..</span> <span class="n">Length</span> <span class="p">(</span><span class="n">List</span><span class="p">)</span> <span class="kr">loop</span>
+       <span class="n">N</span> <span class="p">:=</span> <span class="n">Item</span> <span class="p">(</span><span class="n">List</span><span class="p">,</span> <span class="n">Index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+       <span class="n">A</span> <span class="p">:=</span> <span class="n">Get_Named_Item</span> <span class="p">(</span><span class="n">Attributes</span> <span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="s">&quot;name&quot;</span><span class="p">);</span>
+       <span class="n">Put_Line</span> <span class="p">(</span><span class="s">&quot;Value of &quot;&quot;&quot;</span> <span class="o">&amp;</span> <span class="n">Value</span> <span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">&amp;</span> <span class="s">&quot;&quot;&quot; is &quot;</span>
+                 <span class="o">&amp;</span> <span class="n">Node_Value</span> <span class="p">(</span><span class="n">First_Child</span> <span class="p">(</span><span class="n">N</span><span class="p">)));</span>
+   <span class="kr">end</span> <span class="kr">loop</span><span class="p">;</span> 
+
+   <span class="n">Free</span> <span class="p">(</span><span class="n">List</span><span class="p">);</span>
+
+   <span class="n">Free</span> <span class="p">(</span><span class="n">Reader</span><span class="p">);</span>
+<span class="kr">end</span> <span class="nf">DomExample2</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>The code is much simpler than with SAX, since most of the work is done
+internally by XML/Ada. In particular, for SAX we had to take into account the
+fact that the textual contents of a node could be reported in several events.
+For DOM, the tree is initially normalized, ie all text nodes are collapsed
+together when possible.</p>
+<p>This added simplicity has one drawback, which is the amount of memory required
+to represent even a simple tree.</p>
+<p>XML/Ada optimizes the memory necessary to represent a tree by sharing the
+strings as much as possible (this is under control of constants at the
+beginning of <tt class="file docutils literal"><span class="pre">dom-core.ads</span></tt>). Still, DOM requires a significant amount of
+information to be kept for each node.</p>
+<p>For really big XML streams, it might prove impossible to keep the whole tree in
+memory, in which case ad hoc storage might be implemented through the use of a
+SAX parser. The implementation of <cite>dom-readers.adb</cite> will prove helpful in
+creating such a parser.</p>
+</div>
+<div class="section" id="editing-dom-trees">
+<h2>5.2. Editing DOM trees<a class="headerlink" href="#editing-dom-trees" title="Permalink to this headline">¶</a></h2>
+<p>Once in memory, DOM trees can be manipulated through subprograms provides by
+the DOM API.</p>
+<p>Each of these subprograms is fully documented both in the Ada specs (the
+<tt class="file docutils literal"><span class="pre">*.ads</span></tt> files) and in the DOM standard itself, which XML/Ada follows
+fully.</p>
+<p>One important note however is related to the use of strings. Various
+subprograms allows you to set the textual content of a node, modify its
+attributes,.... Such subprograms take a Byte_Sequence as a parameter.</p>
+<p>This Byte_Sequence must always be encoded in the encoding defined in the
+package <cite>Sax.Encoding</cite> (as described earlier, changing this package requires
+recompiling XML/Ada). By default, this is UTF-8.</p>
+<p>Therefore, if you need to set an attribute to a string encoded for
+instance in iso-8859-15, you should use the subprogram
+<cite>Unicode.Encodings.Convert</cite> to convert it appropriately.
+The code would thus look as follows:</p>
+<div class="highlight-ada"><div class="highlight"><pre><span class="n">Set_Attribute</span> <span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">Convert</span> <span class="p">(</span><span class="s">&quot;å&quot;</span><span class="p">,</span> <span class="n">From</span> <span class="p">=&gt;</span> <span class="n">Get_By_Name</span> <span class="p">(</span><span class="s">&quot;iso-8859-15&quot;</span><span class="p">)));</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="printing-dom-tress">
+<h2>5.3. Printing DOM tress<a class="headerlink" href="#printing-dom-tress" title="Permalink to this headline">¶</a></h2>
+<p>The standard DOM 2.0 does not define a common way to read DOM trees from
+input sources, nor how to write them back to output sources. This was
+added in later revision of the standard (DOM 3.0), which is not yet
+supported by XML/Ada.</p>
+<p>However, the package <tt class="file docutils literal"><span class="pre">DOM.Core.Nodes</span></tt> provides a <cite>Write</cite>
+procedure that can be used for that purpose. It outputs a given DOM tree
+to an Ada stream. This stream can then be connected to a standard file
+on the disk, to a socket, or be used to transform the tree into a string
+in memory.</p>
+<p>An example is provided in the XML/Ada distribution, called
+<tt class="file docutils literal"><span class="pre">dom/test/tostring.adb</span></tt> which shows how you can create a stream to
+convert the tree in memory, without going through a file on the disk</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="schema.html" title="6. The Schema module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="sax.html" title="4. The SAX module"
+             >previous</a> |</li>
+        <li><a href="index.html">XML/Ada: the XML Library for Ada 4.3w documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2003-2012, AdaCore.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

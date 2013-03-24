@@ -1,0 +1,168 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>3. The Input module &mdash; XML/Ada: the XML Library for Ada 4.3w documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '4.3w',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="XML/Ada: the XML Library for Ada 4.3w documentation" href="index.html" />
+    <link rel="next" title="4. The SAX module" href="sax.html" />
+    <link rel="prev" title="2. The Unicode module" href="unicode.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="sax.html" title="4. The SAX module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="unicode.html" title="2. The Unicode module"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">XML/Ada: the XML Library for Ada 4.3w documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/adacore_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="unicode.html"
+                        title="previous chapter">2. The Unicode module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="sax.html"
+                        title="next chapter">4. The SAX module</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/input.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-input-module">
+<span id="id1"></span><h1>3. The Input module<a class="headerlink" href="#the-input-module" title="Permalink to this headline">¶</a></h1>
+<p>This module provides a set of packages with a common interface to access the
+characters contained in a stream. Various implementations are provided to
+access files and manipulate standard Ada strings.</p>
+<p>A top-level tagged type is provided that must be extended for the various
+streams. It is assumed that the pointer to the current character in the stream
+can only go forward, and never backward. As a result, it is possible to
+implement this package for sockets or other strings where it isn&#8217;t even
+possible to go backward. This also means that one doesn&#8217;t have to provide
+buffers in such cases, and thus that it is possible to provide memory-efficient
+readers.</p>
+<p>Two predefined readers are available, namely <cite>String_Input</cite> to read characters
+from a standard Ada string, and <cite>File_Input</cite> to read characters from a standard
+text file.</p>
+<p>They all provide the following primite operations:</p>
+<p><cite>Open</cite></p>
+<blockquote>
+<div>Although this operation isn&#8217;t exactly overriden, since its parameters
+depend on the type of stream you want to read from, it is nice to
+use a standard name for this constructor.</div></blockquote>
+<dl class="docutils">
+<dt><cite>Close</cite></dt>
+<dd>This terminates the stream reader and free any associated memory. It
+is no longer possible to read from the stream afterwards.</dd>
+<dt><cite>Next_Char</cite></dt>
+<dd><p class="first">Return the next Unicode character in the stream. Note this character doesn&#8217;t
+have to be associated specifically with a single byte, but that it depends on
+the encoding chosen for the stream (see the unicode module documentation for
+more information).</p>
+<p class="last">The next time this function is called, it returns the following character
+from the stream.</p>
+</dd>
+<dt><cite>Eof</cite></dt>
+<dd>This function should return True when the reader has already returned the
+last character from the stream. Note that it is not guarantee that a second
+call to Eof will also return True.</dd>
+</dl>
+<p>It is the responsability of this stream reader to correctly call the decoding
+functions in the unicode module so as to return one single valid unicode
+character. No further processing is done on the result of <cite>Next_Char</cite>. Note
+that the standard <cite>File_Input</cite> and <cite>String_Input</cite> streams can automatically
+detect the encoding to use for a file, based on a header read directly from the
+file.</p>
+<p>Based on the first four bytes of the stream (assuming this is valid XML), they
+will automatically detect whether the file was encoded as Utf8, Utf16,... If
+you are writing your own input streams, consider adding this automatic
+detection as well.</p>
+<p>However, it is always possible to override the default through a call to
+<cite>Set_Encoding</cite>. This allows you to specify both the character set (Latin1, ...)
+and the character encoding scheme (Utf8,...).</p>
+<p>The user is also encouraged to set the identifiers for the stream they are
+parsing, through calls to <cite>Set_System_Id</cite> and <cite>Set_Public_Id</cite>. These are used
+when reporting error messages.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="sax.html" title="4. The SAX module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="unicode.html" title="2. The Unicode module"
+             >previous</a> |</li>
+        <li><a href="index.html">XML/Ada: the XML Library for Ada 4.3w documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2003-2012, AdaCore.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

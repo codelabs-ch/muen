@@ -1,0 +1,112 @@
+=======================================
+Known problems in XML/Ada version 3.2.0
+=======================================
+
+Copyright (c) 2009-2010, AdaCore
+
+The following is a listing of known problems in release 3.2.0. Except where
+specifically noted, all these problems have been corrected in the development
+tree of the 3.2 technology. This means they are corrected in any 3.3.0w
+wavefront issued subsequent to the date specified (in ISO format YYYY-MM-DD) in
+the status line. This can be used to determine if a given wavefront has the fix
+identified in the entry.
+
+KP-32-J325-027 Missing obj directories
+
+  Problem:    When compiling XML/Ada, gnatmake will sometimes complain of
+              missing object directories, which may not be part of the source
+              package.
+
+  Status:     Fixes in XML/Ada 3.2.1
+
+  Workaround: In the Makefile, replace "gnatmake" with "gnatmake -p"
+
+KP-32-J302-043 Lots of fixes in schema validation
+
+  Problem:    Several problems were found in the schema validation testsuite.
+              These include:
+              - Incorrect checking of date ranges (valid days in the month for
+                instance), or in time (seconds < 60);
+              - Elements with no type should have processContents lax, rather
+                than strict. This means that their children element should be
+                checked if they have entries in the schema, rather than just
+                ignored;
+              - Attributes "use" and "fixed" were ignored for attribute whose
+                type was defined with a "ref". For instance:
+                    <xsd:attribute ref="tn:number" use="required"/>
+                Furthermore, when using ref, the referenced attribute's fixed
+                was also ignored.
+              - Unicity was not checked for types derived from ID. In
+                particular, XML/Ada did not check unicity for elements (only
+                for certain cases of attributes)
+              - HexBinary length must be even
+              - In XSD 1.0, elements must have at most one ID attribute. This
+                restriction was lifted in XSD 1.1 (and XML/Ada now handles both
+                cases)
+              - In XSD 1.0, schemaLocation cannot be used after an element has
+                already used that namespace
+              - Regexp are always anchored implicitly ("^..$"), and "\w" should
+                not match "_"
+              - Namespaces specified as ##other should not allow unqualified
+                elements.
+              - Fix computation of length on lists, and therefore the facets
+                minLength, length and maxLength
+              - Fix handling of anyAttribute when defined in an attributeGroup
+              - When multiple anyAttributes are defined for an element, they
+                must all match
+              - "qualified/unqualified" does not apply to elements defined
+                through a <group> when they have a "ref" attribute, since they
+                are considered global in that case.
+              - "fixed" attribute values should be compared with non-normalized
+                value of the attribute
+              - Verify the "form" for attributes (whether they should be
+                namespace qualified or not)
+              - QName elements must have a valid namespace
+              - <facet name="pattern" value="..."> should preserve spaces in
+                the pattern
+              - Handling of <group> inside a <restriction>
+              - Error when root element is abstract
+              - Support for block="substitution"
+              - Type of <element> should be computed from its
+                substitutionGroup if there is no other type defined
+              - Raise explicit exception (XML_Not_Supported) for various
+                regexp constructs that are not supported (unicode,...)
+              - Length facets should be ignored for QName (always match)
+              - A restriction does not inherit wildcard attributes from its
+                base type
+              - Added support for "final" attribute in <simpleType>
+              - <anyAttribute> should accept multiple namespaces in its
+                namespace attribute
+              - A sequence of <any> elements failed when the first one did
+                not match (XML/Ada never tried to match the next one)
+              - Elements with a simpleType need to normalize their whitespaces
+                before validation
+              - When in a restriction, all the <anyAttribute> must match,
+                whereas in an extension only one of them has to match
+              - The "fixed" value must also match the type from xsi:type
+              - A "prohibited" attribute might still be accepted through a
+                <anyAttribute> if there is one in the same element
+              - Two attributes with different namespaces: the second one was
+                never validated
+              - All elements are nillable by default
+              - "fixed" does not specify the exact string the element or
+                attribute must have, but its value. For instance, if this is
+                a float attribute, specifying "1.0" as a float still allows
+                "1" as the actual value. Same for enumerations.
+
+  Status:     Fixed in 4.0.0
+
+  Workaround: None
+
+KP-32-IC10-021 Incorrect validation of "date" types with timezone
+
+  Problem:    If an attribute is of type xsd:date, it should allow the use of
+              timezones (either "Z" or "+00:00" for instance). XML/Ada does not
+              support these in 3.2.0 version
+
+  Status:     Fixed in 4.0.0
+
+  Workaround: You could have two elements, one for the date the other for the
+              timezone, although that's not as elegant
+
+

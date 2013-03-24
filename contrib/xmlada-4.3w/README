@@ -1,0 +1,278 @@
+
+XML/Ada: A XML parser for Ada95
+
+I    - INSTALLING THIS LIBRARY ON UNIX
+II   - INSTALLING THIS LIBRARY ON VMS
+III  - INSTALLING THIS LIBRARY ON WINDOWS
+IV   - TWEAKING THE LIBRARY
+V    - USING THE LIBRARY
+VI   - TESTING THE LIBRARY
+VII  - CONTENTS OF THE LIBRARY
+VIII - LICENSING
+IX   - BUG REPORTS
+
+
+I - INSTALLING THIS LIBRARY ON UNIX
+===================================
+
+Make sure that you do not have a previous installation of XML/Ada in one
+of the directories given in ADA_OBJECTS_PATH, or some files will not be
+properly recompiled.
+
+Compiling with GNAT 3.14 and GNAT 3.15
+----------------------------------------
+
+Compilation with these older versions of GNAT is done differently than
+with more versions, since the GNAT project files were lacking some important
+features at that point.
+
+To compile with such versions, do the following:
+  >  ./configure --prefix=<PREFIX>
+  > <possible Makefile.module.314 modification, as documented below>
+  >  make -f Makefile.314 install
+
+This will compile and install XML/Ada in the <PREFIX> directory. The resulting
+installation can only be used through xmlada-config, as documented below,
+and not with project files.
+
+If your system requires -fPIC when compiling source files for shared
+libraries, modify the Makefile.module.314 file to change
+   FPIC=
+to
+   FPIC=-fPIC
+
+Compiling with GNAT 3.16 or newer versions of GNAT
+---------------------------------------------------
+
+You need to automatically detect a few aspects of your build environment,
+which is done by running
+    ./configure --prefix=PREFIX
+where PREFIX is the installation directory you wish to use. It is recommended
+to install into the GNAT directory. This way the project files will be
+installed into the default location where gnatmake and gprbuild are looking
+for projects.
+
+If, however, you are running a cross-compiler, you need to add an additional
+command line switch to configure, namely
+    ./configure --prefix=PREFIX --target=TARGET
+where target will be similar to "powerpc-wrs-vxworks", "powerpc-elinos-linux",
+or any other prefix used to find the name of the gnatmake executable to run.
+
+By default, XML/Ada will build both static and shared libraries, if
+"configure" detected that the latter were supported on your system. You can
+prevent the building of shared libraries by specifying --disable-shared as
+an extra switch to configure.
+
+Once installed, your applications will by default be linked statically with
+XML/Ada. You can change that default by specifying explicitly --enable-shared
+as an extra switch to configure.
+
+Depending on what Ada runtime your application is build with, you might need to
+change the file shared.gpr (at the root of the XML/Ada directory) so that the
+Default_Switches lines in the Compiler package contain something like:
+   for Default_Switches ("Ada") use ("--RTS=sjlj", ...);
+
+To install the library, use the following command line:
+   make all install
+
+Compiling with other Ada compilers
+----------------------------------
+
+This library has been reported as being compilable with other compilers than
+GNAT. No build script is provided however, but take a look at
+Makefile.314 and Makefile.module.314 to get ideas on how this could be done.
+
+II - INSTALLING THIS LIBRARY ON VMS
+===================================
+
+On VMS, you should have a recent version of GNAT (3.15 or more recent), since
+the makefile is set up to use the GNAT project files that are now available.
+
+Do the following, from the root directory of XML/Ada:
+
+   - Edit makefile.vms, and change the PREFIX variable to reflect the directory
+     where you want to install XML/Ada
+   - make -f makefile.vms
+   - make -f makefile.vms install
+     If you do not have MKDIR.EXE and other unix-like tools, this command
+     will fail.
+     You can replace it with some manual steps:
+       * Create the installation directory
+       * copy the files
+           unicode/obj/*
+           unicode/*.adb unicode/*.ads
+           input_sources/obj/*
+           input_sources/*.ads input_sources/*.adb
+           sax/obj/*
+           sax/*.adb sax/*.ads
+           dom/obj/*
+           dom/*.adb dom/*.ads
+         into this directory
+
+      To use XML/Ada in your own applications, you need to add the installation
+      directory on the gnatmake command line with a -I switch
+
+   - (optional) make -f makefile.vms test
+     This last step is only required if you want to build the test executables
+     testsax and testdom which can be used to test the library on any XML file.
+
+
+III - INSTALLING THIS LIBRARY ON WINDOWS
+========================================
+
+1. Due to the nature of GNU Make you need to have a UNIX-type shell and
+   utilities installed to build this library. If you do not have this,
+   you can download a set at:
+
+     Cygwin : http://cygwin.com/
+     Mingw  : http://www.mingw.org/ (MSYS Toolset)
+
+2. Run 'sh configure --prefix=<installation directory>' to generate the
+   makefile.
+   where "installation directory" is the place where you want to install
+   XML/Ada.
+
+3. Before building make sure to set the following values in 'Makefile':
+      PREFIX=C:/GNATPRO/6.4.2
+   the makefile where to install the library. Note the slashes in the path!
+   The value should have been set properly by the call to configure.
+
+   It is recommended to install into the GNAT directory. This way the project
+   files will be installed into the default location where gnatmake and
+   gprbuild are looking for projects.
+
+4. As a general rule for GNAT, the temporary directory must be accessible
+   from gnatmake native applications (not a cygwin path). For instance, from
+   cygwin:
+       export TMPDIR=c:/tmp
+   Failing to check this might prevent the building of shared libraries
+
+5. The best way to proceed is to do a 'make all install'.
+   It is possible that make complains that it cannot execute an "install"
+   executable. In such a case, it is recommended to execute
+   "make INSTALL=cp install" instead to use "cp" to do the installation
+
+IV - TWEAKING THE LIBRARY
+=========================
+
+You can change the way the library behaves, in particular the DOM part,
+by changing some of the hard-coded constants in the code. If you change
+these, you will need to recompile the library and your application:
+
+- sax-encodings.ads :: Encoding
+  It contains the encoding used internally by the library. The default is
+  UTF8, which supports the whole Unicode range, and is economical
+  memory-wise
+
+- dom-core.ads :: Shared_Strings  and dom-core.ads :: Shared_Node_Names
+  Whether the internal representation of namespaces should be shared among
+  nodes. The default is yes
+
+V - USING THE LIBRARY
+=====================
+
+See the XML/Ada user's guide for information on how to use this library.
+
+VI - TESTING THE LIBRARY
+========================
+
+Several test programs are provided in the XML/Ada source package. These
+are found in the dom/test and sax/test subdirectories. These are very simple
+examples on how to use the DOM and SAX API.
+
+The w3c organization has constructed an official testsuite that can be used to
+check XML/Ada. Most likely, this is only useful to you if you are modifying
+XML/Ada itself. Here is how you can run this testsuite:
+   You need to download the official XML Conformance Testsuite for XML,
+   The name of the current archive is
+       xmlconf-20080827.tar
+   The URL is:
+       http://www.w3.org/XML/Test/
+
+   Uncompress it somewhere on your disk, then add a link in dom/test, which
+   points to the directory where you unpackaged the testsuite. The link should
+   be called "tests".
+
+A similar setup is required for the W3C schema testsuite. The URL of the
+testsuite is:
+   http://www.w3.org/XML/2004/xml-schema-test-suite/xmlschema2006-11-06/xsts-2007-06-20.tar.gz
+This file should be extracted in the schema/test directory (creating a
+xmlschema-2006-11-06 subdirectory as a result).
+
+   Then execute the command from the toplevel directory:
+       make run_test
+
+   This will report the number of errors found.
+
+The W3C committee has reviewed the status of a number of tests since the
+testsuite was released (as developers of XML parsers have reported issues
+with the testsuite). They provide a public CVS repository that include the
+metadata for the tests (list of tests, their status, expected output,...),
+but unfortunately not the tests themselves. As a result, getting the latest
+version requires several steps. First get the .tar.gz as described above,
+and extract it in schema/test. From the same directory, run:
+
+   cvs -d :pserver:anonymous@dev.w3.org:/sources/public login
+   cvs -d :pserver:anonymous@dev.w3.org:/sources/public -z5 co XML/xml-schema-test-suite/2004-01-14/xmlschema2006-11-06
+
+You can update that directory at any time with:
+   cd XML; cvs update
+
+The XML/Ada testsuite will automatically take advantage of that directory
+if found. You need however to manually run
+   cd schema/test
+   ./schematest --cvs
+to get the output under those conditions, since "make run_test" is setup
+for the .tar.gz output.
+
+
+VII - CONTENTS OF THE LIBRARY
+=============================
+
+The sources in this library are split into several subdirectories, each
+with its own README, sources, documentation and unit tests.
+
+The list of subdirectories (aka modules) is:
+
+- unicode:
+  provides a full support for Unicode and Utf8/Utf16/Utf32 encodings. It also
+  support other encodings like Latin1, Latin2, ...
+
+- input_sources
+  provides types to read characters from several types of media.
+
+- sax
+  Provides a common, standard interface for any XML parser, through
+  callback subprograms. You can extend any of the tagged types defined in these
+  package and thus parse XML files without having to store a XML tree in
+  memory.
+  This package is compatible with SAX 2.0, but doesn't implement the functions
+  specific to SAX 1.0
+
+- dom
+  The Document Object Model is a set of standard subprograms to manipulate
+  XML tree in memory.
+  Only the Core module is currently implemented.
+
+- docs
+  This contains the full documentation for this XML library
+
+
+VIII - LICENSING
+================
+
+This library is distributed under the GNAT-Modified GNU Public License.
+It has the following addition to the GPL:
+
+"As a special exception, if other files instantiate generics from
+ this unit, or you link this unit with other files to produce an
+ executable, this  unit  does not  by itself cause  the resulting
+ executable to be covered by the GNU General Public License. This
+ exception does not however invalidate any other reasons why the
+ executable file  might be covered by the  GNU Public License."
+
+IX - BUG REPORTS
+================
+
+Please send questions and bug reports to report@gnat.com following
+the same procedures used to submit reports with the GNAT toolset itself.

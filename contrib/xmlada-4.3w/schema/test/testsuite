@@ -1,0 +1,206 @@
+#!/bin/sh
+
+## Location of the testsuite's files for Schemas
+## You can download these from the web
+##   http://www.w3.org/XML/Schema in the "Test Collection"
+## part for a link to the latest .tar.gz package.
+## Also:
+##   http://www.w3.org/XML/2004/xml-schema-test-suite/index.html
+##
+## The following page is a FAQ on runnning the testsuite
+##   http://www.w3.org/XML/2004/xml-schema-test-suite/schemafaq.html
+
+## XML/Ada was tested with http://www.w3.org/XML/2004/xml-schema-test-suite/xmlschema2006-11-06/xsts-2007-06-20.tar.gz
+
+## IMPORTANT: BUG FIXES TO THE TESTSUITE:
+## msxsdtest/element/elemT074.xml
+##   - needs to be modified to point to right schema (not elemT074.xml)
+##   - suntest/SunTestsAll/xsd003b.xsd: replace use of xsd:number with
+##     xsd:decimal, since the former doesn't exist in the standard
+
+## All Sun tests are included in this testsuite
+## All NIST tests are included in this testsuite
+## Some Microsoft tests are missing in this testsuite
+
+xmltests=./xmlschema2006-11-06
+
+if [ -d $xmltests ]; then
+  :
+else
+  echo "./testsuite: NOT RUN (xmltests.2002-01-16 not found)"
+  exit
+fi
+
+## Name of the driver.
+# testschema=${TESTSCHEMA:=./testdomschema -silent}
+testschema=${TESTSCHEMA:-./testschema}
+
+if [ x$USE_VALGRIND = x1 ]; then
+valgrind="valgrind --leak-check=full -q"
+else
+valgrind=""
+fi
+
+debug=""
+verbose=0
+show_expected_failure=0
+
+while getopts "vhdseuan:m:N" opt
+do
+   case $opt in
+      d) debug="-debug";;
+      v) verbose=1;;
+      s) show_expected_failure=1;;
+      h) cat <<EOF
+ -d   : debug mode ON
+ -v   : verbose mode ON: list the tests are they are passed
+ -s   : show output for expected failures
+EOF
+         exit 1;;
+      *) echo "Invalid command line switch: $opt"
+         exit 1
+         ;;
+   esac
+done
+
+
+XML="$testschema -base $debug"
+act="act_testsuite"
+
+total=0
+failed=0
+expected_fail=0
+passed=0
+not_run=0
+
+#######################################
+## summary ()
+#######################################
+
+summary() {
+  echo "Total:$total  Passed:$passed  Failed:$failed  Expected_Fail:$expected_fail  Notrun:$not_run"
+}
+
+#######################################
+## expect()
+##   $1=schema file (can be empty)
+##   $2=test file (can be empty)
+##   $3=expected output
+#######################################
+
+expect() {
+   xsd_file="$1"
+   xml_file="$2"
+   expected="$3"
+   extra_args=${4:-""}
+
+   xsd=""
+   if [ x"$xsd_file" != x ]; then
+     xsd="-xsd $xsd_file"
+   fi
+
+   out=`eval $valgrind $XML $extra_args $xsd $xml_file 2>&1`
+   compare "$XML $extra_args $xsd $xml_file" "$out" "$expected"
+}
+
+#######################################
+## compare()
+##   $1=testname
+##   $2=actual output
+##   $3=expected output
+#######################################
+
+compare() {
+   testname="$1"
+   actual="$2"
+   expected="$3"
+
+   total=`expr $total + 1`
+
+   if [ x"$actual" != x"$expected" ]; then
+      quoted=`echo $actual | sed -e 's/\"/\\\"/g'`
+      echo "#------------ Test failed ------------"
+      echo "  cmd: $testname"
+      echo "  quoted  = $quoted"
+      # echo "  actual  = $actual--"
+      echo "  expected= $expected--"
+      failed=`expr $failed + 1`
+   else
+      passed=`expr $passed + 1`
+      if [ x$verbose = x1 ]; then
+         echo "#+++++ Test passed +++++"
+         echo "  cmd: $testname"
+      fi
+   fi
+}
+
+compare_file() {
+   testname="$1"
+   actual="$2"
+   expected="$3"
+   total=`expr $total + 1`
+
+   if diff $expected $actual >/dev/null ; then
+      passed=`expr $passed + 1`
+      if [ x$verbose = x1 ]; then
+         echo "#+++++ Test passed +++++"
+         echo "  cmd: $testname"
+      fi
+   else
+      echo "#------------ Test failed ------------"
+      echo "  cmd: $testname"
+      echo ""
+      diff -u $expected $actual
+      failed=`expr $failed + 1`
+   fi
+}
+
+###############
+## ACT tests ##
+###############
+
+expect "" "$act/basic_types-1.xml" \
+     "basic_types-1.xml:11:20: 03:01:03 is greater than maxExclusive (03:01:02.5)"
+expect "" "$act/basic_types-2.xml" \
+     "basic_types-2.xml:10:20: 04:01:02 is greater than maxInclusive (03:01:02)"
+expect "" "$act/basic_types-3.xml" \
+     "basic_types-3.xml:14:21: 12521 is greater than maxInclusive (1.252E+4)"
+expect "" "$act/E802-003.xml" ""
+expect "" "$act/uri.xml" ""
+expect "" "$act/wf.xml" "wf.xml:7:86: Name differ for closing tag (expecting test, opened line 6)"
+expect "$act/ns1.xsd" "" "ns1.xsd:5:30: Unexpected element \"element\": expecting \"close parent|{http://www.w3.org/2001/XMLSchema}any|{http://www.w3.org/2001/XMLSchema}sequence|{http://www.w3.org/2001/XMLSchema}choice|{http://www.w3.org/2001/XMLSchema}group|{http://www.w3.org/2001/XMLSchema}element|{http://www.w3.org/2001/XMLSchema}annotation\""
+expect "" "$act/empty.xml" "empty.xml:3:69: No character data allowed by content model"
+expect "$act/recursive_import/import.xsd" "" ""
+expect "" "$act/elementFormDefault/doc.xml" ""
+expect "" "$act/elementFormDefault/doc2.xml" ""
+expect "$act/F427-004/xmldsig-core-schema.xsd" "$act/F427-004/dsig-example.xml" ""
+expect "$act/F511-007/xmldsig-core-schema.xsd" "$act/F511-007/test.xml" ""
+expect "$act/F511-009/xmldsig-core-schema.xsd" "$act/F511-009/Untitled7-2.xml" \
+     "Untitled7-2.xml:15:17: Invalid base64Binary: \"UjBsR@409EbGhjZ0dTQUxNQUFBUUNBRU1tQ1p0dU1GUXhEUzhi\""
+(cd act_testsuite/multiple_schemas; compare "multiple_schemas" "`./run.sh 2>&1`" "")
+expect "" "$act/F822-009/file.xml" ""
+expect "$act/FA16-002/6_xhtml1-frameset.xsd" "" "NOT IMPLEMENTED: 6_xhtml1-frameset.xsd:2226:36: Unsupported type IDREF and IDREFS"
+expect "" "$act/F822-009_2/file.xml" "test.xsd:21:43: Reference to undefined attributeGroup: {http://www.w3.org/2001/XMLSchema}attributes2"
+expect "" "$act/G404-019/c_test.xml" "c_test.xml:16:10: Attribute \"{http://www.consafelogistics.com/sattmate}subSystemId\" is required in this context"
+   #expect "" "$act/H212-023/default_H212-023.xml" "<root xsi:noNamespaceSchemaLocation=\"H212-023.xsd\"> <Acknowledge>false</Acknowledge></root>" "-dom"
+expect "$act/I723-028/test.xsd" "" ""
+expect "$act/I727-025/test.xsd" "$act/I727-025/test.xml" ""
+expect "$act/I728-012/test.xsd" "$act/I728-012/test.xml" ""
+expect "$act/I702-017/test.xsd" "$act/I702-017/test.xml" "test.xml:7:11: Unexpected element \"size\": expecting \"contents\""
+expect "$act/IC10-021/pref.xsd" "$act/IC10-021/pref.xml" ""
+
+for dir in tasking \
+           K518-020 \
+           L103-011_unknown_simple \
+           L103-016_extend_simplecontent \
+           L104-016_inherit_mixed \
+           L104-021_duplicate_child \
+           ;
+do
+   (cd act_testsuite/$dir
+    sh ./test.sh | tr -d '\r' > tmp.out
+    compare_file "$dir" tmp.out test.out
+   )
+done
+
+# summary

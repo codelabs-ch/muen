@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<preferences xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:noNamespaceSchemaLocation="pref.xsd" >
+   <pref name="pref1">Value1</pref>
+   <pref name="pref2">Value2</pref>
+</preferences>
+

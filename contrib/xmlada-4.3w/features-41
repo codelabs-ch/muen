@@ -1,0 +1,33 @@
+=========================
+XML/Ada NEW FEATURES LIST
+=========================
+
+Copyright (C) 2001-2010, AdaCore
+
+This file contains a list of new features introduced in GPS.
+A full description of all GPS features can be found in the GPS
+documentation.
+
+An ISO date (YYYY-MM-DD) appears in parentheses after the
+description line. This date shows the implementation date
+of the feature.
+
+New features in version 4.1
+---------------------------
+
+NF-41-JB09-020 Support for XML 1.0 (Fifth Edition) (2010-11-09)
+
+   XML/Ada now support the fifth edition of XML 1.0 (but you can still
+   chose to use earlier versions). The differences mostly have to do with
+   the range of characters allowed for names. This change was needed to
+   run the most recent version of the W3C XML testsuite.
+
+NF-41-J302-043 Rewrite schema validation module (2010-11-05)
+
+   The schema validation module was almost fully rewritten. It is now
+   based on a finite-state machine (which changes dynamically if you use
+   features such as xsi:type to override types in your XML documents).
+   This results in slightly better performances, better results in the
+   W3C testsuite (where, given a valid XSD file, we have 100% correct
+   results when checking the validity of XML files), and much more
+   readable code.

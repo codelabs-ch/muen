@@ -1,0 +1,4 @@
+with "../../sax/sax";
+project Default is
+   for Main use ("saxexample_main.adb");  
+end Default;

@@ -1,0 +1,17 @@
+--  Only set these while in debug mode, since these need to be true partition-wide
+pragma Profile (Ravenscar);
+
+--  pragma Restrictions (No_Tasking);
+--  pragma Restrictions (No_Asynchronous_Control);
+--  pragma Restrictions (Max_Asynchronous_Select_Nesting => 0);
+--  pragma Restrictions (No_Abort_Statements);
+--  pragma Initialize_Scalars;
+--  pragma Restrictions (No_Dynamic_Interrupts);
+--  pragma Restrictions (No_Implicit_Dynamic_Code);
+--  pragma Restrictions (No_Initialize_Scalars);
+--  pragma Restrictions (No_Wide_Characters);
+--  pragma Restricted_Run_Time;
+--  pragma Restrictions (No_Secondary_Stack);
+--  pragma Restrictions (No_Streams);
+
+

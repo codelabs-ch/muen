@@ -1,0 +1,30 @@
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}
+\BOOKMARK [0][-]{chapter.2}{The Unicode module}{}
+\BOOKMARK [1][-]{section.2.1}{Glyphs}{chapter.2}
+\BOOKMARK [1][-]{section.2.2}{Repertoires and subsets}{chapter.2}
+\BOOKMARK [1][-]{section.2.3}{Character sets}{chapter.2}
+\BOOKMARK [1][-]{section.2.4}{Character encoding schemes}{chapter.2}
+\BOOKMARK [1][-]{section.2.5}{Unicode\137Encoding}{chapter.2}
+\BOOKMARK [1][-]{section.2.6}{Misc. functions}{chapter.2}
+\BOOKMARK [0][-]{chapter.3}{The Input module}{}
+\BOOKMARK [0][-]{chapter.4}{The SAX module}{}
+\BOOKMARK [1][-]{section.4.1}{Description}{chapter.4}
+\BOOKMARK [1][-]{section.4.2}{Examples}{chapter.4}
+\BOOKMARK [1][-]{section.4.3}{The SAX parser}{chapter.4}
+\BOOKMARK [1][-]{section.4.4}{The SAX handlers}{chapter.4}
+\BOOKMARK [1][-]{section.4.5}{Using SAX}{chapter.4}
+\BOOKMARK [1][-]{section.4.6}{Understanding SAX error messages}{chapter.4}
+\BOOKMARK [0][-]{chapter.5}{The DOM module}{}
+\BOOKMARK [1][-]{section.5.1}{Using DOM}{chapter.5}
+\BOOKMARK [1][-]{section.5.2}{Editing DOM trees}{chapter.5}
+\BOOKMARK [1][-]{section.5.3}{Printing DOM tress}{chapter.5}
+\BOOKMARK [0][-]{chapter.6}{The Schema module}{}
+\BOOKMARK [1][-]{section.6.1}{XML Grammars}{chapter.6}
+\BOOKMARK [1][-]{section.6.2}{XML Schema Syntax}{chapter.6}
+\BOOKMARK [1][-]{section.6.3}{Connecting XML documents and schemas}{chapter.6}
+\BOOKMARK [1][-]{section.6.4}{Validating documents with SAX}{chapter.6}
+\BOOKMARK [1][-]{section.6.5}{Validating documents with DOM}{chapter.6}
+\BOOKMARK [1][-]{section.6.6}{Unsupported schema elements}{chapter.6}
+\BOOKMARK [0][-]{chapter.7}{Using the library}{}
+\BOOKMARK [1][-]{section.7.1}{Running on VxWorks}{chapter.7}
+\BOOKMARK [0][-]{section*.6}{Index}{}

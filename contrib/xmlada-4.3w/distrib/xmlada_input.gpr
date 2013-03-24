@@ -1,0 +1,13 @@
+with "xmlada_shared";
+with "xmlada_unicode";
+project XmlAda_Input is
+    for Library_Name use "xmlada_input_sources";
+
+    for Library_Kind use Xmlada_Shared.Xmlada_Kind;
+    for Source_Dirs use ("../../include/xmlada");
+    for Source_List_File use "xmlada/" & Project'Library_Name & ".lgpr";
+    for Library_Dir use Xmlada_Shared.Libdir;
+    for Library_Version use
+       "lib" & Project'Library_Name & ".so." & Xmlada_Shared.Version;
+    for Externally_Built use "true";
+end XmlAda_Input;

@@ -1,0 +1,48 @@
+GNATMAKE=gnatmake
+CC=cc
+
+FPIC=
+FLAGS=-O2 -gnatN
+AR=ar
+ARFLAGS=cr
+RANLIB=ranlib
+CP=cp -p -f
+LN=ln -f -s
+
+BUILD_SHARED=
+PREFIX=
+MAJOR=
+MINOR=
+MODULE=
+
+SRC=${wildcard *.ads}
+OBJ=${SRC:%.ads=%.o}
+
+libname=libxmlada_${MODULE}
+soname=libxmlada_${MODULE}-${MAJOR}.${MINOR}
+
+DEP_SRC=-aI../../unicode -aI../../input_sources -aI../../sax -aI../../dom
+
+
+all: ${OBJ}
+
+${OBJ}: force
+	cd obj; ${GNATMAKE} -u ${FPIC} ${DEP_SRC} -I../ ${@:%.o=%} ${FLAGS}
+
+lib: force
+	cd obj; ${AR} ${ARFLAGS} ${libname}.a ${OBJ}
+ifneq (${RANLIB}, )
+	cd obj; ${RANLIB} ${libname}.a
+endif
+ifeq (${BUILD_SHARED}, TRUE)
+	cd obj; ${CC} -shared -o ${soname}.so ${OBJ}
+endif
+	cd obj; ${CP} *.ali ${PREFIX}/include/xmlada
+	${CP} *.ad[bs] ${PREFIX}/include/xmlada
+	cd obj; ${CP} ${libname}.a ${PREFIX}/lib
+ifeq (${BUILD_SHARED}, TRUE)
+	cd obj; ${CP} ${soname}.so ${PREFIX}/lib
+	cd ${PREFIX}/lib; ${LN} ${soname}.so ${libname}.so
+endif
+
+force:

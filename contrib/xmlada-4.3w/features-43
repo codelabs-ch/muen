@@ -1,0 +1,38 @@
+=========================
+XML/Ada NEW FEATURES LIST
+=========================
+
+Copyright (C) 2001-2012, AdaCore
+
+This file contains a list of new features introduced in GPS.
+A full description of all GPS features can be found in the GPS
+documentation.
+
+An ISO date (YYYY-MM-DD) appears in parentheses after the
+description line. This date shows the implementation date
+of the feature.
+
+Compatibility with previous releases
+------------------------------------
+
+Schema.Dom_Readers.Free no longer frees the DOM tree (see the known-problems
+ file for L327-044).
+
+New features in version 4.3
+---------------------------
+
+NF-43-KC20-003 License updated to GPL3 (2011-12-20)
+
+   The license for XML/Ada Pro is now GPL3 with the standard exception
+   allowing the creation of proprietary software.
+
+NF-43-KC07-033 Documentation converted to Sphinx (2011-12-08)
+
+   The documentation was converted to another format, providing nicer
+   looking output. It also adds support for searching in the documentation.
+
+NF-43-KC01-026 Schema: Ignore unsupported xsd:unique (2011-12-01)
+
+   In the 4.2 version, we added support for silently ignoring some
+   schema constructs rather than receive a fatal error. This has been
+   extended to <xsd:unique> elements.

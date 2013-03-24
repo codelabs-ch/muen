@@ -1,0 +1,12 @@
+\begin{theindex}
+\def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
+
+  \bigletter P
+  \item project files, \hyperpage{31}
+
+  \indexspace
+  \bigletter X
+  \item xmlada-config, \hyperpage{31}
+  \item xmlada.gpr, \hyperpage{31}
+
+\end{theindex}

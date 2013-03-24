@@ -1,0 +1,137 @@
+#!/bin/sh
+# @configure_input@
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@/xmlada
+includedir=@includedir@/xmlada
+
+cflags="-I${includedir}"
+mflags_relocatable="-aI${includedir} -aO${libdir}/relocatable"
+mflags_static="-aI${includedir} -aO${libdir}/static"
+libs_relocatable="-L${libdir}/relocatable -lxmlada_input_sources -lxmlada_sax -lxmlada_unicode"
+libs_static="${libdir}/static/libxmlada_input_sources.a ${libdir}/static/libxmlada_sax.a ${libdir}/static/libxmlada_unicode.a"
+
+full_libs_relocatable="-lxmlada_dom -lxmlada_schema"
+full_libs_static="${libdir}/static/libxmlada_dom.a ${libdir}/static/libxmlada_schema.a"
+
+show_cflags=0
+show_mflags=1
+show_libs=1
+sax_only=0
+libtype=@DEFAULT_LIBRARY_TYPE@
+
+usage()
+{
+   cat <<EOF
+Usage: xmlada-config [OPTIONS]
+Options:
+        No option:
+            Output all the flags (compiler and linker) required
+            to compiler your program
+        [--prefix]
+            Output the directory in which XML/Ada is installed
+        [--version|-v]
+            Output the version of XML/Ada
+        [--libs]
+            Output the linker flags to use for XML/Ada
+        [--cflags]
+            Output the compiler flags to use for XML/Ada
+        [--sax]
+            Output all the flags to use for XML/Ada, provided
+            you are not using the DOM module.
+        [--static]
+            Output all the flags (compiler and linker) required to
+            compile a static version of your program
+        [--shared]
+            Output flags to link with a shared library
+EOF
+}
+
+while test $# -gt 0; do
+  case "$1" in
+  -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+  *) optarg= ;;
+  esac
+
+  case $1 in
+    --help|-h)
+      usage 1>&2
+      exit 1
+      ;;
+    --prefix)
+      echo $prefix
+      exit 0
+      ;;
+    --version|-v)
+      echo XmlAda @PACKAGE_VERSION@
+      exit 0
+      ;;
+    --libs)
+      show_libs=1
+      show_cflags=0
+      show_mflags=0
+      ;;
+    --sax)
+      sax_only=1
+      ;;
+    --cflags)
+      show_libs=0
+      show_cflags=1
+      show_mflags=0
+      ;;
+    --static)
+      libtype=static
+      ;;
+    --shared)
+      libtype=relocatable
+      ;;
+    *)
+      usage 1>&2
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+## Force static if relocatable was not installed
+if [ -d $libdir/relocatable ]; then
+   :
+else
+   libtype=static
+fi
+
+result=""
+
+if [ $show_cflags = 1 ]; then
+   result="$cflags"
+fi
+
+if [ $show_mflags = 1 ]; then
+   if [ $libtype = static ]; then
+      result="$mflags_static"
+   else
+      result="$mflags_relocatable"
+   fi
+
+   if [ $show_libs = 1 ]; then
+      result="$result -largs "
+   fi
+fi
+
+if [ $show_libs = 1 ]; then
+   if [ $libtype = static ]; then
+      result="${result}${libs_static}"
+      if [ $sax_only = 0 ]; then
+         result="${result} ${full_libs_static}"
+      fi
+   else
+      result="${result}${libs_relocatable}"
+      if [ $sax_only = 0 ]; then
+         result="${result} ${full_libs_relocatable}"
+      fi
+   fi
+fi
+
+echo $result
+

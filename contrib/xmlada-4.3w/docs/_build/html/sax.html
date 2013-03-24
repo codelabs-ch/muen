@@ -1,0 +1,638 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>4. The SAX module &mdash; XML/Ada: the XML Library for Ada 4.3w documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '4.3w',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="XML/Ada: the XML Library for Ada 4.3w documentation" href="index.html" />
+    <link rel="next" title="5. The DOM module" href="dom.html" />
+    <link rel="prev" title="3. The Input module" href="input.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="dom.html" title="5. The DOM module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="input.html" title="3. The Input module"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">XML/Ada: the XML Library for Ada 4.3w documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/adacore_transparent.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4. The SAX module</a><ul>
+<li><a class="reference internal" href="#description">4.1. Description</a></li>
+<li><a class="reference internal" href="#examples">4.2. Examples</a></li>
+<li><a class="reference internal" href="#the-sax-parser">4.3. The SAX parser</a></li>
+<li><a class="reference internal" href="#the-sax-handlers">4.4. The SAX handlers</a></li>
+<li><a class="reference internal" href="#using-sax">4.5. Using SAX</a><ul>
+<li><a class="reference internal" href="#parsing-the-file">4.5.1. Parsing the file</a></li>
+<li><a class="reference internal" href="#reacting-to-events">4.5.2. Reacting to events</a><ul>
+<li><a class="reference internal" href="#start-of-xml-tags">4.5.2.1. Start of XML tags</a></li>
+<li><a class="reference internal" href="#characters">4.5.2.2. Characters</a></li>
+<li><a class="reference internal" href="#end-of-tag">4.5.2.3. End of tag</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#understanding-sax-error-messages">4.6. Understanding SAX error messages</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="input.html"
+                        title="previous chapter">3. The Input module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="dom.html"
+                        title="next chapter">5. The DOM module</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/sax.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-sax-module">
+<span id="id1"></span><h1>4. The SAX module<a class="headerlink" href="#the-sax-module" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<h2>4.1. Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>Parsing XML streams can be done with two different methods. They each have
+their pros and cons. Although the simplest, and probably most usual way to
+manipulate XML files is to represent them in a tree and manipulate it through
+the DOM interface (see next chapter).</p>
+<p>The <strong>Simple API for XML</strong> is an other method that can be used for parsing.  It
+is based on a callbacks mechanism, and doesn&#8217;t store any data in memory (unless
+of course you choose to do so in your callbacks). It can thus be more efficient
+to use SAX than DOM for some specialized algorithms.  In fact, this whole Ada
+XML library is based on such a SAX parser, then creates the DOM tree through
+callbacks.</p>
+<p>Note that this module supports the second release of SAX (SAX2), that fully
+supports namespaces as defined in the XML standard.</p>
+<p>SAX can also be used in cases where a tree would not be the most efficient
+representation for your data. There is no point in building a tree with DOM,
+then extracting the data and freeing the tree occupied by the tree. It is much
+more efficient to directly store your data through SAX callbacks.</p>
+<p>With SAX, you register a number of callback routines that the parser will call
+them when certain conditions occur.</p>
+<p>This documentation is in no way a full documentation on SAX. Instead, you
+should refer to the standard itself, available at <a class="reference external" href="http://sax.sourceforge.net">http://sax.sourceforge.net</a>.</p>
+<p>Some of the more useful callbacks are <cite>Start_Document</cite>, <cite>End_Document</cite>,
+<cite>Start_Element</cite>, <cite>End_Element</cite>, <cite>Get_Entity</cite> and <cite>Characters</cite>. Most of these
+are quite self explanatory. The characters callback is called when characters
+outside a tag are parsed.</p>
+<p>Consider the following XML file:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>Title<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+</pre></div>
+</div>
+<p>The following events would then be generated when this file is parsed:</p>
+<div class="highlight-xml"><pre>Start_Document           Start parsing the file
+Start_Prefix_Mapping     (handling of namespaces for "xml")
+Start_Prefix_Mapping     Parameter is "xmlns"
+Processing_Instruction   Parameters are "xml" and "version="1.0""
+Start_Element            Parameter is "body"
+Characters               Parameter is ASCII.LF &amp; "  "
+Start_Element            Parameter is "h1"
+Characters               Parameter is "Title"
+End_Element              Parameter is "h1"
+Characters               Parameter is ASCII.LF &amp; "  "
+End_Element              Parameter is "body"
+End_Prefix_Mapping       Parameter is "xmlns"
+End_Prefix_Mapping       Parameter is "xml"
+End_Document             End of parsing</pre>
+</div>
+<p>As you can see, there is a number of events even for a very small file.
+However, you can easily choose to ignore the events you don&#8217;t care
+about, for instance the ones related to namespace handling.</p>
+</div>
+<div class="section" id="examples">
+<h2>4.2. Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>There are several cases where using a SAX parser rather than a DOM
+parser would make sense. Here are some examples, although obvisouly
+this doesn&#8217;t include all the possible cases. These examples are taken
+from the documentation of libxml, a GPL C toolkit for manipulating XML files.</p>
+<ul>
+<li><p class="first">Using XML files as a database</p>
+<p>One of the common usage for XML files is to use them as a kind of basic
+database, They obviously provide a strongly structured format, and you could
+for instance store a series of numbers with the following format:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;array&gt;</span> <span class="nt">&lt;value&gt;</span>1<span class="nt">&lt;/value&gt;</span> <span class="nt">&lt;value&gt;</span>2<span class="nt">&lt;/value&gt;</span> ....<span class="nt">&lt;/array&gt;</span>
+</pre></div>
+</div>
+<p>In this case, rather than reading this file into a tree, it would obviously
+be easier to manipulate it through a SAX parser, that would directly create a
+standard Ada array while reading the values.</p>
+<p>This can be extended to much more complex cases that would map to Ada records
+for instance.</p>
+</li>
+<li><p class="first">Large repetitive XML files</p>
+<p>Sometimes we have XML files with many subtrees of the same format describing
+different things. An example of this is an index file for a documentation
+similar to this one. This contains a lot (maybe thousands) of similar
+entries, each containing for instance the name of the symbol and a list of
+locations.</p>
+<p>If the user is looking for a specific entry, there is no point in loading the
+whole file in memory and then traverse the resulting tree. The memory usage
+increases very fast with the size of the file, and this might even be
+unfeasible for a 35 megabytes file.</p>
+</li>
+<li><p class="first">Simple XML files</p>
+<p>Even for simple XML files, it might make sense to use a SAX parser. For
+instance, if there are some known constraints in the input file, say there
+are no attributes for elements, you can save quite a lot of memory, and maybe
+time, by rebuilding your own tree rather than using the full DOM tree.</p>
+</li>
+</ul>
+<p>However, there are also a number of drawbacks to using SAX:</p>
+<ul>
+<li><p class="first">SAX parsers generally require you to write a little bit more code than the
+DOM interface</p>
+</li>
+<li><p class="first">There is no easy way to write the XML data back to a file, unless you build
+your own internal tree to save the XML.  As a result, SAX is probably not the
+best interface if you want to load, modify and dump back an XML file.</p>
+<p>Note however that in this Ada implementation, the DOM tree is built through a
+set of SAX callbacks anyway, so you do not lose any power or speed by using
+DOM instead of SAX.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="the-sax-parser">
+<h2>4.3. The SAX parser<a class="headerlink" href="#the-sax-parser" title="Permalink to this headline">¶</a></h2>
+<p>The basic type in the SAX module is the <strong>SAX.Readers</strong> package. It defines a
+tagged type, called <cite>Reader</cite>, that represents the SAX parser itself.</p>
+<p>Several features are define in the SAX standard for the parsers. They indicate
+which behavior can be expected from the parser. The package <cite>SAX.Readers</cite>
+defines a number of constant strings for each of these features. Some of these
+features are read-only, whereas others can be modified by the user to adapt the
+parser. See the <cite>Set_Feature</cite> and <cite>Get_Feature</cite> subprograms for how to
+manipulate them.</p>
+<p>The main primitive operation for the parser is <cite>Parse</cite>. It takes an input
+stream for argument, associated with some XML data, and then parses it and
+calls the appropriate callbacks. It returns once there are no more characters
+left in the stream.</p>
+<p>Several other primitive subprograms are defined for the parser, that are called
+the <strong>callbacks</strong>. They get called automatically by the <cite>Parse</cite> procedure when
+some events are seen.</p>
+<p>As a result, you should always override at least some of these subprograms to
+get something done. The default implementation for these is to do nothing,
+except for the error handler that raises Ada exceptions appropriately.</p>
+<p>An example of such an implementation of a SAX parser is available in the DOM
+module, and it creates a tree in memory. As you will see if you look at the
+code, the callbacks are actually very short.</p>
+<p>Note that internally, all the strings are encoded with a unique character
+encoding scheme, that is defined in the file <tt class="file docutils literal"><span class="pre">sax-encodings.ads</span></tt>. The
+input stream is converted on the fly to this internal encoding, and all the
+subprograms from then on will receive and pass parameters with this new
+encoding. You can of course freely change the encoding defined in the file
+<tt class="file docutils literal"><span class="pre">sax-encodings.ads</span></tt>.</p>
+<p>The encoding used for the input stream is either automatically detected by the
+stream itself (<a class="reference internal" href="input.html#the-input-module"><em>The Input module</em></a>), or by parsing the:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&#39;1.0&#39; encoding=&#39;UTF-8&#39; ?&gt;</span>
+</pre></div>
+</div>
+<p>processing instruction at the beginning of the document. The list of supported
+encodings is the same as for the Unicode module (<a class="reference internal" href="unicode.html#the-unicode-module"><em>The Unicode module</em></a>).</p>
+</div>
+<div class="section" id="the-sax-handlers">
+<h2>4.4. The SAX handlers<a class="headerlink" href="#the-sax-handlers" title="Permalink to this headline">¶</a></h2>
+<p>We do not intend to document the whole set of possible callbacks associated
+with a SAX parser. These are all fully documented in the file
+<tt class="file docutils literal"><span class="pre">sax-readers.ads</span></tt>.</p>
+<p>here is a list of the most frequently used callbacks, that you will probably
+need to override in most of your applications.</p>
+<dl class="docutils">
+<dt><em>Start_Document</em></dt>
+<dd>This callback, that doesn&#8217;t receive any parameter, is called once, just
+before parsing the document. It should generally be used to initialize
+internal data needed later on. It is also garanteed to be called only once
+per input stream.</dd>
+<dt><em>End_Document</em></dt>
+<dd>This one is the reverse of the previous one, and will also be called only
+once per input stream. It should be used to release the memory you have
+allocated in Start_Document.</dd>
+<dt><em>Start_Element</em></dt>
+<dd>This callback is called every time the parser encounters the start of an
+element in the XML file. It is passed the name of the element, as well as
+the relevant namespace information. The attributes defined in this element
+are also passed as a list. Thus, you get all the required information for
+this element in a single function call.</dd>
+<dt><em>End_Element</em></dt>
+<dd>This is the opposite of the previous callback, and will be called once per
+element. Calls to <cite>Start_Element</cite> and <cite>End_Element</cite> are garanteed
+to be properly nested (ie you can&#8217;t see the end of an element before seeing
+the end of all its nested children.</dd>
+<dt><em>Characters and Ignore_Whitespace</em></dt>
+<dd>This procedure will be called every time some character not part of an
+element declaration are encounted. The characters themselves are passed as an
+argument to the callback. Note that the white spaces (and tabulations) are
+reported separately in the Ignorable_Spaces callback in case the XML
+attribute <cite>xml:space</cite> was set to something else than <cite>preserve</cite> for this
+element.</dd>
+</dl>
+<p>You should compile and run the <tt class="file docutils literal"><span class="pre">testsax</span></tt> executable found in this
+module to visualize the SAX events that are generated for a given XML file.</p>
+</div>
+<div class="section" id="using-sax">
+<span id="id2"></span><h2>4.5. Using SAX<a class="headerlink" href="#using-sax" title="Permalink to this headline">¶</a></h2>
+<p>This section will guide you through the creation of a small SAX application.
+This application will read an XML file, assumed to be a configuration file, and
+setup some preferences according to the contents of the file.</p>
+<p>The XML file is the following:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;preferences&gt;</span>
+   <span class="nt">&lt;pref</span> <span class="na">name=</span><span class="s">&quot;pref1&quot;</span><span class="nt">&gt;</span>Value1<span class="nt">&lt;/pref&gt;</span>
+   <span class="nt">&lt;pref</span> <span class="na">name=</span><span class="s">&quot;pref2&quot;</span><span class="nt">&gt;</span>Value2<span class="nt">&lt;/pref&gt;</span>
+<span class="nt">&lt;/preferences&gt;</span>
+</pre></div>
+</div>
+<p>This is a very simple example which doesn&#8217;t use namespaces, and has a very
+limited nesting of nodes. However, that should help demonstrate the basics of
+using SAX.</p>
+<div class="section" id="parsing-the-file">
+<h3>4.5.1. Parsing the file<a class="headerlink" href="#parsing-the-file" title="Permalink to this headline">¶</a></h3>
+<p>The first thing to do is to declare a parser, and parse the file. No callback
+is put in place in this first version, and as a result nothing happens.</p>
+<p>The main program is the following:</p>
+<div class="highlight-ada"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">with</span> <span class="nn">Sax.Readers</span><span class="p">;</span>        <span class="kn">use</span> <span class="nn">Sax.Readers</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">Input_Sources.File</span><span class="p">;</span> <span class="kn">use</span> <span class="nn">Input_Sources.File</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">SaxExample</span><span class="p">;</span>         <span class="kn">use</span> <span class="nn">SaxExample</span><span class="p">;</span>
+
+<span class="kd">procedure</span> <span class="nf">SaxExample_Main</span> <span class="kr">is</span>
+   <span class="n">My_Reader</span> <span class="p">:</span> <span class="n">SaxExample</span><span class="p">.</span><span class="n">Reader</span><span class="p">;</span>
+   <span class="n">Input</span>     <span class="p">:</span> <span class="n">File_Input</span><span class="p">;</span>
+<span class="kr">begin</span>
+   <span class="n">Set_Public_Id</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="s">&quot;Preferences file&quot;</span><span class="p">);</span>
+   <span class="n">Set_System_Id</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="s">&quot;pref.xml&quot;</span><span class="p">);</span>
+   <span class="n">Open</span> <span class="p">(</span><span class="s">&quot;pref.xml&quot;</span><span class="p">,</span> <span class="n">Input</span><span class="p">);</span>
+
+   <span class="n">Set_Feature</span> <span class="p">(</span><span class="n">My_Reader</span><span class="p">,</span> <span class="n">Namespace_Prefixes_Feature</span><span class="p">,</span> <span class="kc">False</span><span class="p">);</span>
+   <span class="n">Set_Feature</span> <span class="p">(</span><span class="n">My_Reader</span><span class="p">,</span> <span class="n">Namespace_Feature</span><span class="p">,</span> <span class="kc">False</span><span class="p">);</span>
+   <span class="n">Set_Feature</span> <span class="p">(</span><span class="n">My_Reader</span><span class="p">,</span> <span class="n">Validation_Feature</span><span class="p">,</span> <span class="kc">False</span><span class="p">);</span>
+
+   <span class="n">Parse</span> <span class="p">(</span><span class="n">My_Reader</span><span class="p">,</span> <span class="n">Input</span><span class="p">);</span>
+
+   <span class="n">Close</span> <span class="p">(</span><span class="n">Input</span><span class="p">);</span>
+<span class="kr">end</span> <span class="nf">SaxExample_Main</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>A separate package is provided that contain our implementation of an XML
+parser:</p>
+<div class="highlight-ada"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">with</span> <span class="nn">Sax.Readers</span><span class="p">;</span>
+
+<span class="kd">package</span> <span class="nc">SaxExample</span> <span class="kr">is</span>
+
+   <span class="kd">type</span> <span class="kt">Reader</span> <span class="kr">is</span> <span class="kr">new</span> <span class="n">Sax</span><span class="p">.</span><span class="n">Readers</span><span class="p">.</span><span class="n">Reader</span> <span class="kr">with</span> <span class="kc">null</span> <span class="kr">record</span><span class="p">;</span>
+
+<span class="kr">end</span> <span class="nf">SaxExample</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>There are two steps in setting up an XML parser:</p>
+<ul>
+<li><p class="first">Create an input stream</p>
+<p>This input stream is in charge of providing the XML input to the parser.
+Several input streams are provided by XML/Ada, including the one we use in
+this example to read the XML data from a file on the disk. The file is called
+<tt class="file docutils literal"><span class="pre">pref.xml</span></tt>.</p>
+<p>It has two properties, that should generally be set: the public id will be
+used by XML/Ada in its error message to reference locations in that file; the
+system id should be the location of the file on the system. It is used to
+resolve relative paths found in the XML document.</p>
+</li>
+<li><p class="first">Setup the parser</p>
+<p>The behavior of an XML parser can be changed in several ways by activating or
+deactivating some features. In the example above, we have specified that the
+XML document doesn&#8217;t contain namespaces, and that we do not intend to
+validate the XML file against a grammar.</p>
+</li>
+</ul>
+<p>Once the two steps above are done, we can simply call the procedure <cite>Parse</cite> to
+perform the actual parsing. Since we are using SAX, XML/Ada will call the
+primitive operations of <cite>My_Reader</cite>, which, so far, are inherited form the
+default ones provided by XML, and do nothing.</p>
+</div>
+<div class="section" id="reacting-to-events">
+<h3>4.5.2. Reacting to events<a class="headerlink" href="#reacting-to-events" title="Permalink to this headline">¶</a></h3>
+<p>We are now going to enhance the example a little, and make it react to the
+contents of the XML file.</p>
+<p>We are only interested in two particular type of events, which are the opening
+and closing of an XML tag, and finding the value of each preference.</p>
+<p>The way to react to these events is to override some of the primitive
+subprograms in the package <tt class="file docutils literal"><span class="pre">saxexample.ads</span></tt> as follows:</p>
+<div class="highlight-ada"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">with</span> <span class="nn">Sax.Readers</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">Unicode.CES</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">Sax.Attributes</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">Ada.Strings.Unbounded</span><span class="p">;</span> <span class="kn">use</span> <span class="nn">Ada.Strings.Unbounded</span><span class="p">;</span>
+
+<span class="kd">package</span> <span class="nc">SaxExample</span> <span class="kr">is</span>
+
+   <span class="kd">type</span> <span class="kt">String_Access</span> <span class="kr">is</span> <span class="kr">access</span> <span class="kt">String</span><span class="p">;</span>
+
+   <span class="kd">type</span> <span class="kt">Reader</span> <span class="kr">is</span> <span class="kr">new</span> <span class="n">Sax</span><span class="p">.</span><span class="n">Readers</span><span class="p">.</span><span class="n">Reader</span> <span class="kr">with</span> <span class="kr">record</span>
+       <span class="nv">Current_Pref</span>  <span class="p">: </span><span class="n">Unbounded_String</span><span class="p">;</span>
+       <span class="nv">Current_Value</span> <span class="p">: </span><span class="n">Unbounded_String</span><span class="p">;</span>
+   <span class="kr">end</span> <span class="kr">record</span><span class="p">;</span>
+
+   <span class="kd">procedure</span> <span class="nf">Start_Element</span>
+     <span class="p">(</span><span class="nv">Handler</span>       <span class="p">: </span><span class="kr">in</span> <span class="kr">out</span> <span class="n">Reader</span><span class="p">;</span>
+      <span class="nv">Namespace_URI</span> <span class="p">: </span><span class="n">Unicode</span><span class="p">.</span><span class="n">CES</span><span class="p">.</span><span class="n">Byte_Sequence</span> <span class="p">:=</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+      <span class="nv">Local_Name</span>    <span class="p">: </span><span class="n">Unicode</span><span class="p">.</span><span class="n">CES</span><span class="p">.</span><span class="n">Byte_Sequence</span> <span class="p">:=</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+      <span class="nv">Qname</span>         <span class="p">: </span><span class="n">Unicode</span><span class="p">.</span><span class="n">CES</span><span class="p">.</span><span class="n">Byte_Sequence</span> <span class="p">:=</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+      <span class="nv">Atts</span>          <span class="p">: </span><span class="n">Sax</span><span class="p">.</span><span class="n">Attributes</span><span class="p">.</span><span class="n">Attributes</span><span class="p">&#39;</span><span class="na">Class</span><span class="p">);</span>
+
+   <span class="kd">procedure</span> <span class="nf">End_Element</span>
+     <span class="p">(</span><span class="nv">Handler</span> <span class="p">: </span><span class="kr">in</span> <span class="kr">out</span> <span class="n">Reader</span><span class="p">;</span>
+      <span class="nv">Namespace_URI</span> <span class="p">: </span><span class="n">Unicode</span><span class="p">.</span><span class="n">CES</span><span class="p">.</span><span class="n">Byte_Sequence</span> <span class="p">:=</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+      <span class="nv">Local_Name</span>    <span class="p">: </span><span class="n">Unicode</span><span class="p">.</span><span class="n">CES</span><span class="p">.</span><span class="n">Byte_Sequence</span> <span class="p">:=</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+      <span class="nv">Qname</span>         <span class="p">: </span><span class="n">Unicode</span><span class="p">.</span><span class="n">CES</span><span class="p">.</span><span class="n">Byte_Sequence</span> <span class="p">:=</span> <span class="s">&quot;&quot;</span><span class="p">);</span>
+
+   <span class="kd">procedure</span> <span class="nf">Characters</span>
+     <span class="p">(</span><span class="nv">Handler</span> <span class="p">: </span><span class="kr">in</span> <span class="kr">out</span> <span class="n">Reader</span><span class="p">;</span>
+      <span class="nv">Ch</span>      <span class="p">: </span><span class="n">Unicode</span><span class="p">.</span><span class="n">CES</span><span class="p">.</span><span class="n">Byte_Sequence</span><span class="p">);</span>
+
+<span class="kr">end</span> <span class="nf">SaxExample</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>The primitive operations will be called automatically when the corresponding
+events are detected in the XML file.</p>
+<p>The implementation for these subprograms is detailed below.</p>
+<div class="section" id="start-of-xml-tags">
+<h4>4.5.2.1. Start of XML tags<a class="headerlink" href="#start-of-xml-tags" title="Permalink to this headline">¶</a></h4>
+<p>When an XML tag is started, we need to check whether it corresponds to the
+definition of a preference value. If that is the case, we get the value of the
+<cite>name</cite> attribute, which specifies the name of a preference:</p>
+<div class="highlight-ada"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">with</span> <span class="nn">Unicode.CES</span><span class="p">;</span>    <span class="kn">use</span> <span class="nn">Unicode.CES</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">Sax.Attributes</span><span class="p">;</span> <span class="kn">use</span> <span class="nn">Sax.Attributes</span><span class="p">;</span>
+<span class="kn">with</span> <span class="nn">Ada.Text_IO</span><span class="p">;</span>    <span class="kn">use</span> <span class="nn">Ada.Text_IO</span><span class="p">;</span>
+
+<span class="kd">package</span> <span class="kd">body</span> <span class="nc">SaxExample</span> <span class="kr">is</span>
+
+   <span class="kd">procedure</span> <span class="nf">Start_Element</span>
+     <span class="p">(</span><span class="nv">Handler</span>       <span class="p">: </span><span class="kr">in</span> <span class="kr">out</span> <span class="n">Reader</span><span class="p">;</span>
+      <span class="nv">Namespace_URI</span> <span class="p">: </span><span class="n">Unicode</span><span class="p">.</span><span class="n">CES</span><span class="p">.</span><span class="n">Byte_Sequence</span> <span class="p">:=</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+      <span class="nv">Local_Name</span>    <span class="p">: </span><span class="n">Unicode</span><span class="p">.</span><span class="n">CES</span><span class="p">.</span><span class="n">Byte_Sequence</span> <span class="p">:=</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+      <span class="nv">Qname</span>         <span class="p">: </span><span class="n">Unicode</span><span class="p">.</span><span class="n">CES</span><span class="p">.</span><span class="n">Byte_Sequence</span> <span class="p">:=</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+      <span class="nv">Atts</span>          <span class="p">: </span><span class="n">Sax</span><span class="p">.</span><span class="n">Attributes</span><span class="p">.</span><span class="n">Attributes</span><span class="p">&#39;</span><span class="na">Class</span><span class="p">)</span>
+   <span class="kr">is</span>
+   <span class="kr">begin</span>
+      <span class="n">Handler</span><span class="p">.</span><span class="n">Current_Pref</span>  <span class="p">:=</span> <span class="n">Null_Unbounded_String</span><span class="p">;</span>
+      <span class="n">Handler</span><span class="p">.</span><span class="n">Current_Value</span> <span class="p">:=</span> <span class="n">Null_Unbounded_String</span><span class="p">;</span>
+
+      <span class="kr">if</span> <span class="n">Local_Name</span> <span class="o">=</span> <span class="s">&quot;pref&quot;</span> <span class="kr">then</span>
+         <span class="n">Handler</span><span class="p">.</span><span class="n">Current_Pref</span> <span class="p">:=</span>
+           <span class="n">To_Unbounded_String</span> <span class="p">(</span><span class="n">Get_Value</span> <span class="p">(</span><span class="n">Atts</span><span class="p">,</span> <span class="s">&quot;name&quot;</span><span class="p">));</span>
+      <span class="kr">end</span> <span class="kr">if</span><span class="p">;</span>
+   <span class="kr">end</span> <span class="nf">Start_Element</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="characters">
+<h4>4.5.2.2. Characters<a class="headerlink" href="#characters" title="Permalink to this headline">¶</a></h4>
+<p>XML/Ada will report the textual contents of an XML tag through one or more
+calls to the <cite>Characters</cite> primitive operation. An XML parser is free to
+divide the contents into as many calls to <cite>Characters</cite> as it needs, and
+we must be prepared to handle this properly. Therefore, we concatenate the
+characters with the current value:</p>
+<div class="highlight-ada"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">procedure</span> <span class="nf">Characters</span>
+  <span class="p">(</span><span class="nv">Handler</span> <span class="p">: </span><span class="kr">in</span> <span class="kr">out</span> <span class="n">Reader</span><span class="p">;</span>
+   <span class="nv">Ch</span>      <span class="p">: </span><span class="n">Unicode</span><span class="p">.</span><span class="n">CES</span><span class="p">.</span><span class="n">Byte_Sequence</span><span class="p">)</span> <span class="kr">is</span>
+<span class="kr">begin</span>
+   <span class="kr">if</span> <span class="n">Handler</span><span class="p">.</span><span class="n">Current_Pref</span> <span class="o">/=</span> <span class="n">Null_Unbounded_String</span> <span class="kr">then</span>
+      <span class="n">Handler</span><span class="p">.</span><span class="n">Current_Value</span> <span class="p">:=</span> <span class="n">Handler</span><span class="p">.</span><span class="n">Current_Value</span> <span class="o">&amp;</span> <span class="n">Ch</span><span class="p">;</span>
+   <span class="kr">end</span> <span class="kr">if</span><span class="p">;</span>
+<span class="kr">end</span> <span class="nf">Characters</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="end-of-tag">
+<h4>4.5.2.3. End of tag<a class="headerlink" href="#end-of-tag" title="Permalink to this headline">¶</a></h4>
+<p>Once we meet the end of a tag, we know there will be no more addition to
+the value, and we can now set the value of the preference. In this example,
+we simply display the value on the standard output:</p>
+<div class="highlight-ada"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">procedure</span> <span class="nf">End_Element</span>
+  <span class="p">(</span><span class="nv">Handler</span> <span class="p">: </span><span class="kr">in</span> <span class="kr">out</span> <span class="n">Reader</span><span class="p">;</span>
+   <span class="nv">Namespace_URI</span> <span class="p">: </span><span class="n">Unicode</span><span class="p">.</span><span class="n">CES</span><span class="p">.</span><span class="n">Byte_Sequence</span> <span class="p">:=</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+   <span class="nv">Local_Name</span>    <span class="p">: </span><span class="n">Unicode</span><span class="p">.</span><span class="n">CES</span><span class="p">.</span><span class="n">Byte_Sequence</span> <span class="p">:=</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+   <span class="nv">Qname</span>         <span class="p">: </span><span class="n">Unicode</span><span class="p">.</span><span class="n">CES</span><span class="p">.</span><span class="n">Byte_Sequence</span> <span class="p">:=</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+<span class="kr">is</span>
+<span class="kr">begin</span>
+   <span class="kr">if</span> <span class="n">Local_Name</span> <span class="o">=</span> <span class="s">&quot;pref&quot;</span> <span class="kr">then</span>
+      <span class="n">Put_Line</span> <span class="p">(</span><span class="s">&quot;Value for &quot;&quot;&quot;</span> <span class="o">&amp;</span> <span class="n">To_String</span> <span class="p">(</span><span class="n">Handler</span><span class="p">.</span><span class="n">Current_Pref</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="s">&quot;&quot;&quot; is &quot;</span> <span class="o">&amp;</span> <span class="n">To_String</span> <span class="p">(</span><span class="n">Handler</span><span class="p">.</span><span class="n">Current_Value</span><span class="p">));</span>
+   <span class="kr">end</span> <span class="kr">if</span><span class="p">;</span>
+<span class="kr">end</span> <span class="nf">End_Element</span><span class="p">;</span>
+</pre></div>
+</td></tr></table></div>
+<p>In a real application, we would need to handle error cases in the XML file.
+Thankfully, most of the work is already done by XML/Ada, and the errors will be
+reported as calls to the primitive operation <cite>Fatal_Error</cite>, which by default
+raises an exception.</p>
+</div>
+</div>
+</div>
+<div class="section" id="understanding-sax-error-messages">
+<h2>4.6. Understanding SAX error messages<a class="headerlink" href="#understanding-sax-error-messages" title="Permalink to this headline">¶</a></h2>
+<p>XML/Ada error messages try to be as explicit as possible. They are not,
+however, meant to be understood by someone who doesn&#8217;t know XML.</p>
+<p>In addition to the location of the error (line and column in the file),
+they might contain one of the following abbreviations:</p>
+<ul>
+<li><p class="first"><cite>[WF]</cite>
+.. index:: WF</p>
+<p>This abbreviation indicates that the error message is related to a
+well-formedness issue, as defined in the XML standard. Basically, the
+structure of the XML document is invalid, for instance because an
+open tag has never been closed. Some of the error messages also indicate
+a more precise section in the XML standard.</p>
+</li>
+<li><p class="first"><cite>[VC]</cite>
+.. index:: VC
+.. index:: DTD</p>
+<p>This abbreviation indicates that the error message is related to an
+unsatisfied validity-constraint, as defined in the XML standard. The XML
+document is well formed, although it doesn&#8217;t match the semantic rules
+that the grammar defines. For instance, if you are trying to validate an
+XML document against a DTD, the document must contain a DTD that defines the
+name of the root element.</p>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="dom.html" title="5. The DOM module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="input.html" title="3. The Input module"
+             >previous</a> |</li>
+        <li><a href="index.html">XML/Ada: the XML Library for Ada 4.3w documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2003-2012, AdaCore.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

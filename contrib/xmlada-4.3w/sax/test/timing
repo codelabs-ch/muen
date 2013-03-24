@@ -1,0 +1,88 @@
+(cd ..; make CFLAGS="-O2 -gnatN")
+
+
+On ot.xml (old testament):
+  3487163 bytes
+  number of opening tags: 15933
+
+Old parser (no optimization)
+  ./testsax ot.xml > /dev/null  78.62s user 2.31s system 99% cpu 1:21.11 total
+
+Old parser (compiled with -O2 -gnatN)
+  ./testsax ot.xml > /dev/null  62.49s user 2.53s system 98% cpu 1:06.03 total
+
+Old parser (compiled with -O2 -gnatN, no "debug_reader")
+  ./testsax ot.xml > /dev/null  29.99s user 0.19s system 96% cpu 31.174 total
+
+New parser (no optimization)
+  ./testsax2 ot.xml > /dev/null  70.33s user 2.61s system 98% cpu 1:13.75 total
+  ./testsax2 ot.xml > /dev/null  69.94s user 2.77s system 96% cpu 1:15.09 total
+
+New parser (compiled with -O2 -gnatN)
+  ./testsax2 ot.xml > /dev/null  52.93s user 1.95s system 99% cpu 55.255 total
+ 
+New parser (compiled with -O2 -gnatN, no "debug_reader")
+  ./testsax2 ot.xml > /dev/null  15.69s user 0.18s system 100% cpu 15.851 total
+
+
+06/06/2002 (1Ghz, Linux 2.2, laptop hardrive)
+==========
+
+XMLAda 0.7.1
+  same, with -O2 -gnatp -gnatN
+  ./testsax ot.xml         12.57s user 0.98s system 73% cpu 18.473 total
+
+Using GNAT.Spitbol for default attributes (no optimization)
+  ./testsax ot.xml         19.07s user 0.93s system 97% cpu 20.462 total
+  ./testsax -silent ot.xml  8.49s user 0.07s system 98% cpu 8.675 total
+
+  same, with -O2 -gnatN
+  ./testsax ot.xml         14.48s user 0.80s system 98% cpu 15.464 total
+  ./testsax -silent ot.xml  5.84s user 0.08s system 99% cpu 5.971 total
+
+  same, with -O2 -gnatN -gnatp
+  ./testsax ot.xml         11.83s user 0.67s system 99% cpu 12.587 total
+  ./testsax -silent ot.xml  4.13s user 0.05s system 97% cpu 4.270 total
+
+Remove GNAT.Spitbol, replace by own table (no optimization)
+  with -gnatVaMI  Initialize_Scalars
+  ./testsax ot.xml         23.37s user 0.98s system 98% cpu 24.677 total
+  ./testsax -silent ot.xml 12.08s user 0.07s system 98% cpu 12.299 total
+
+  same, with -O2 -gnatN -gnatVaMI  Initialize_Scalars
+  ./testsax ot.xml         16.68s user 0.82s system 98% cpu 17.718 total
+  ./testsax -silent ot.xml  7.34s user 0.12s system 98% cpu 7.581 total
+
+  same, with -O2 -gnatN -gnatp -gnatVaMI  Initialize_Scalars
+  ./testsax ot.xml         11.43s user 0.95s system 98% cpu 12.589 total
+  ./testsax -silent ot.xml  3.89s user 0.09s system 97% cpu 4.069 total
+
+Replace function Unicode.Encode (returns String) with a procedure
+  with -gnatVaMI  Initialize_Scalars
+  ./testsax ot.xml          4.41s user 0.17s system 99% cpu 4.617 total
+  ./testsax -silent ot.xml  3.74s user 0.08s system 97% cpu 3.913 total
+
+  same with -O2 -gnatN -gnatVaMI  Initialize_Scalars
+  ./testsax ot.xml          3.12s user 0.10s system 96% cpu 3.322 total
+  ./testsax -silent ot.xml  2.35s user 0.08s system 99% cpu 2.452 total
+
+  same with -O2 -gnatN -gnatp -gnatVaMI  Initialize_Scalars
+  ./testsax ot.xml          2.24s user 0.07s system 99% cpu 2.314 total 
+  ./testsax -silent ot.xml  1.64s user 0.04s system 98% cpu 1.698 total
+
+Merge subprograms Unicode.Read and Unicode.Width
+  with -gnatVaMI  Initialize_Scalars
+  ./testsax ot.xml          4.63s user 0.14s system 99% cpu 4.797 total
+  ./testsax -silent ot.xml  3.87s user 0.05s system 97% cpu 4.017 total
+
+  same with -O2 -gnatN -gnatVaMI  Initialize_Scalars
+  ./testsax ot.xml          3.01s user 0.09s system 100% cpu 3.088 total
+  ./testsax -silent ot.xml  2.36s user 0.05s system 98% cpu 2.439 total
+
+  same with -O2 -gnatN -gnatp -gnatVaMI  Initialize_Scalars
+  ./testsax ot.xml          2.21s user 0.08s system 99% cpu 2.299 tota 
+  ./testsax -silent ot.xml  1.56s user 0.05s system 99% cpu 1.611 total
+
+  same with -O2 -gnatN -gnatp
+  ./testsax ot.xml          2.08s user 0.10s system 98% cpu 2.213 total
+  ./testsax -silent ot.xml  1.42s user 0.08s system 98% cpu 1.526 total

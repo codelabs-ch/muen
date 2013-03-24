@@ -1,0 +1,175 @@
+=========================
+XML/Ada NEW FEATURES LIST
+=========================
+
+Copyright (C) 2001-2009, AdaCore
+
+This file contains a list of new features introduced in GPS.
+A full description of all GPS features can be found in the GPS
+documentation.
+
+An ISO date (YYYY-MM-DD) appears in parentheses after the
+description line. This date shows the implementation date
+of the feature.
+
+New features in version 3.1
+---------------------------
+
+ Unicode:
+  - H523-017 Add support for the windows-1251 encoding.
+
+ Schema validation:
+  - H212-023 The default value of elements is properly taken into account
+    when validating the contents of the node. A SAX event is also generated
+    for the default value, so that users automatically get access to the
+    default value (the latter is also included in the resulting DOM tree
+    when using Schema.Dom_Readers)
+
+ Installation
+  - HA21-023 prefix/lib no longer contains unversioned .so files, since this
+    prevents the use of static libraries on some systems if the user has
+    prefix/lib in his LD_LIBRARY_PATH. Instead, only the .so.<version> are
+    copied into that directory, since they are enough to run the executables
+    linked dynamically with XML/Ada
+
+New features in version 3.0
+===========================
+
+ WARNING: the version number of XML/Ada was bumped to 3.x because the API
+ has changed slightly in several packages, providing reference-counted types
+ and thus automatic memory management. This was necessary to fix some meory
+ leaks that couldn't be fix as easily otherwise.
+
+ Input_Sources:
+  - G718-020 http input now uses http 1.0 instead of http 1.1, since the
+    latter is not always properly understood by servers, and we do not need
+    new features from newer versions anyway
+
+ Schema validation:
+  - G404-019 fixed handling of use='required' in schemas
+  - G425-003 schema-date_time.ads now contains subprograms to convert to
+    standard Ada time representation
+  - G510-017 API change: ref-counted grammar
+    The XML_Grammar type is now reference-counted, and memory management is
+    taken care of automatically. This is a change of API, since the Free
+    subprogram no longer exists and doesn't need to be called by the user in
+    any case.
+  - GA01-010 Validation of mixed content for a complex type or an extension
+    with no child nodes
+
+ SAX:
+  - API change: sax.locators is now ref-counted
+    The types in Sax.Locators are now reference-counted, and memory management
+    is taken care of automatically. This affects the primitive operation
+    Set_Document_Locator of the SAX parser.
+    Unfortunately, the memory leaks could not easily be resolved without
+    breaking the API here. The changes are minor, but might affect user code,
+    removing all needs for calling Ref/Unref
+
+ DOM:
+  - FA12-014, G508-017 DOM.Core.Write: new subprogram
+    It outputs a Node, based on Ada95 streams.
+    This provides additional capabilities over DOM.Core.Print, for instance
+    output to sockets or memory without going through a file on disk.
+    See also the new example dom/tests/tostring.adb
+  - G522-006 Support for pretty-printing in the output
+    When a DOM tree is output, an extra parameter was added to Write to
+    control the pretty-printing (ie special handling of whitespaces and
+    newline character to hopefully make the output more readable to humans)
+
+New features in version 2.3
+===========================
+
+ Schema validation:
+  - Add support for parsing several .xsd files before parsing an XML file.
+    This was possible before but might have resulted in errors about multiply
+    defined elements and types
+  - Attribute's value normalization is now done based on the value of their
+    whitespace facet.
+
+New features in version 2.2
+===========================
+
+ Unicode:
+  - Properties of characters are now stored in tables, instead of computed
+    through tests. This is more efficient
+  - Support for new encodings: "ascii" and "utf8"
+
+ SAX parser:
+  - We now pass the newer version of the XML Conformance Testsuite
+  - Better compatibility with valgrind: no error message is issued by valgrind.
+    There were false warnings, but might make it harder to use valgrind on
+    your own application.
+
+ DOM:
+  - DOM.Core.Documents.Get_Element_By_Id is now implemented
+  - Partial port to DOM 3.0
+
+ Schema validation:
+  - Added support for base64Binary type
+
+New features in version 2.1
+===========================
+
+ Unicode:
+  - E930-022 Added support for windows-1252 encoding
+
+ SAX parser:
+  - E912-011 No longer use an exception internally to report the end of stream
+
+ DOM:
+  - DOM.Core.Nodes.Print now uses the <../> syntax to represent empty nodes
+  - EB02-005 DOM.Core.Nodes.Print now prints the namespace declarations
+
+ Schema validation:
+  - E802-003 Added support for time-related types, like dateTime, time, date,..
+  - Added support for totalDigits and fractionDigits facets for integer types
+  - Added support for all missing simple types: anyURI, hexBinary, double, ...
+  - Improve support for arbitrary precision types like decimal and integer
+  - Add support for using an attributeGroup reference when defining a local
+    type for an element
+
+ Documentation:
+  - More code examples
+  - Describe the syntax to use for XML Schemas
+
+New features in version 2.0
+===========================
+
+- Initial support for schema validation is now provided.
+
+- Documentation is now provided in PDF format
+
+- Enhanced documentation; examples of use are now provided
+
+- D507-011: Dom.Core.Nodes.Print can now output real newline characters
+
+- DA04-015: Dom.Core.Nodes.Print can now output with different character set
+  or encoding scheme
+
+- D719-001: Dom.Core.Nodes.Print will now output the <?xml?> PI when outputing
+  a document
+
+- D714-002: Comments are now properly stored in the DOM tree
+
+- Sax.Locators are now reference-counted, so that they can be preserved across
+  calls to Parse.
+
+- D609-022 Shared strings in DOM tree, to reduce memory usage by up to 50%
+
+- Improve location reports in SAX events. In particular, check
+  debug_readers.adb
+  on how to get the context of an entity expansion if you want even better
+  locations.
+
+- CB14-002 Add support for SAX's Entity_Resolver
+
+- A new input source is now provided: Http
+  See testxml.adb for an example of use
+
+- A project file is now installed by default (xmlada.gpr) to facilitate the
+  use of XML/Ada
+
+- Better integration with GtkAda: A special SAX reader is provided that can
+  generate an XML tree in the format expected by Glib.XML
+

@@ -1,0 +1,64 @@
+=========================
+XML/Ada NEW FEATURES LIST
+=========================
+
+Copyright (C) 2001-2010, AdaCore
+
+This file contains a list of new features introduced in GPS.
+A full description of all GPS features can be found in the GPS
+documentation.
+
+An ISO date (YYYY-MM-DD) appears in parentheses after the
+description line. This date shows the implementation date
+of the feature.
+
+Compatibility with previous releases
+------------------------------------
+
+This new release introduces a few changes to the API for schema
+validation. In particular, the calls to Global_Check that were
+previously needed in some cases to detect missing declarations in the
+XSD files are no longer necessary.
+The Set_Validating_Grammar and Set_Created_Grammar subprograms were
+merged into Set_Grammar.
+Get_Created_Grammar was renames to Get_Grammar.
+In case of validation error, Parse raises the exception XML_Validation_Error
+as before; the text of the error message is no longer retrieved through
+Exception_Message (where GNAT limits its length), but through a new subprogram
+Get_Error_Message.
+
+Various optimizations were performed on the code (impacting all modules,
+but especially the schema validation). They significantly reduce the number
+of calls to malloc and memcpy by using a symbol table rather than access
+to strings. These symbols are also made available to you through new
+callbacks (Start_Element, End_Element,...) with different profiles. A new
+tagged type Sax_Reader was added for that purpose. Existing code based on
+Reader will still work, although it will be less efficient in most cases.
+
+New features in version 4.0
+---------------------------
+
+NF-40-J818-003 Unicode: new exception Incomplete_Encoding (2010-08-31)
+
+   A new exception was defined in the unicode module. This exception is
+   used to distinguish between cases where we might simply be missing
+   some characters (and thus should wait for more) with cases where the
+   encoding is indeed invalid.
+
+NF-40-J610-021 XML/Ada is compatible with pragma Ravenscar (2010-06-29)
+
+   XML/Ada is now compatible with the ravenscar profile
+
+NF-40-J302-043 New exception XML_Not_Implemented (2010-03-24)
+
+   A new exception is raised when using a schema (.xsd) validator, and
+   the schema uses features that are not supported by XML/Ada.
+   Unsupported features are: xsd:key elements, IDREF and IDREFS types,
+   various forms of regexps, and redefine.
+   It is also possible to explicitly disable support for some features
+   to make sure the subset of Schema you use is fully supported by
+   XML/Ada and passes all relevant tests of the W3C testsuite
+
+   The W3C committee has reviewed the status of some of their schema
+   tests since their last release. Support was added to use this latest
+   version. See the README file for information on the setup.

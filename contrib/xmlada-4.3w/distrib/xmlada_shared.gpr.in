@@ -1,0 +1,10 @@
+project Xmlada_Shared is
+   for Source_Dirs use ();
+   Version := "@PACKAGE_VERSION@";
+
+   type Xmlada_Kind_Type is ("static", "relocatable");
+   Xmlada_Kind : Xmlada_Kind_Type := external ("LIBRARY_TYPE", "@DEFAULT_LIBRARY_TYPE@");
+
+   --  Location for the dynamic library and ALI files
+   Libdir := "../../@LIB@/xmlada/" & Xmlada_Kind;
+end Xmlada_Shared;

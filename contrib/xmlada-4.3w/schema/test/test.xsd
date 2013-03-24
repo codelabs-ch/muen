@@ -1,0 +1,169 @@
+<?xml version="1.0" ?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:test2="http://test2"
+            xsi:schemaLocation="http://test2 test2.xsd"
+       >
+<xsd:element name="root">
+ <xsd:complexType>
+  <xsd:sequence>
+    <xsd:group ref="toplevel"/>
+    <xsd:sequence>
+      <xsd:element ref="strs" maxOccurs="2"/>
+    </xsd:sequence>
+    <xsd:element ref="person" minOccurs="0" maxOccurs="unbounded"/>
+
+    <!--  The following would be non-determinist
+    <xsd:any namespace="##local" processContents="lax"
+       minOccurs="0" maxOccurs="unbounded"/>
+    -->
+    <xsd:element ref="test2:manu"/>
+    <xsd:any namespace="##other" processContents="lax"
+       minOccurs="0" maxOccurs="unbounded"/>
+  </xsd:sequence>
+ </xsd:complexType>
+</xsd:element>
+
+<xsd:group name="toplevel">
+ <xsd:sequence>
+  <xsd:element ref="my_string" />
+  <xsd:element ref="zip"  maxOccurs="3" />
+  <xsd:element ref="zipb" maxOccurs="3" />
+  <xsd:element ref="zipr" maxOccurs="3" />
+  <xsd:element ref="strs"/>
+ </xsd:sequence>
+</xsd:group>
+
+<xsd:attributeGroup name="Tzip_attrs">
+ <!--<xsd:attribute name="attr2" type="xsd:boolean" use="default" value="true"/>
+ -->
+ <xsd:attribute name="attr3">
+    <xsd:simpleType>
+       <xsd:list itemType="xsd:int"/>
+    </xsd:simpleType>
+ </xsd:attribute>
+ <xsd:attribute name="attr4" use="optional">
+    <xsd:simpleType>
+       <xsd:restriction base="xsd:NMTOKEN">
+          <xsd:enumeration value="value1"/>
+          <xsd:enumeration value="value2"/>
+       </xsd:restriction>
+    </xsd:simpleType>
+ </xsd:attribute>
+</xsd:attributeGroup>
+
+<xsd:complexType name="Tzip">
+ <xsd:complexContent>
+   <xsd:extension base="Tzip_base">
+     <xsd:sequence>
+        <xsd:element name="foo" type="xsd:string"/>
+     </xsd:sequence>
+     <xsd:attributeGroup ref="Tzip_attrs"/>
+   </xsd:extension>
+ </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="zip" type="Tzip" />
+
+<xsd:complexType name="Tzip_restr">
+ <xsd:complexContent>
+    <xsd:restriction base="Tzip_base">
+       <xsd:choice>
+          <xsd:element name="zipcode" type="xsd:string"/>
+       </xsd:choice>
+    </xsd:restriction>
+ </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="zipr" type="Tzip_restr"/>
+
+<xsd:complexType name="Tzip_base">
+ <xsd:sequence>
+  <xsd:choice>
+   <xsd:element name="zipcode" type="xsd:string" maxOccurs="2"/>
+   <xsd:element name="code_postal" type="xsd:string"/>
+  </xsd:choice>
+ </xsd:sequence>
+ <xsd:attribute name="attr1" use="optional">
+    <xsd:simpleType>
+       <xsd:union memberTypes="xsd:time myRange"/>
+    </xsd:simpleType>
+ </xsd:attribute>
+</xsd:complexType>
+<xsd:element name="zipb" type="Tzip_base" />
+
+<xsd:simpleType name="myRange">
+   <xsd:restriction base="myRange2">
+      <xsd:maxInclusive value="-11"/>
+   </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:simpleType name="myRange2">
+   <xsd:restriction base="xsd:nonPositiveInteger">
+   </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="my_string" type="AdaString" />
+<xsd:complexType name="AdaString">
+ <xsd:sequence>
+  <xsd:element name="size"     type="xsd:nonNegativeInteger"/>
+  <xsd:element name="contents" type="xsd:string" />
+ </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="stdstring" type="xsd:string" />
+
+<!-- Ambigous:
+  Error at file /home/briot/Ada/xml/xmlada/schema/test/test.xml, line 4, char 49
+  Message: 'str' and 'str' violate the Unique Particle Attribution rule
+  -->
+<!--
+<xsd:complexType name="ambiguous">
+ <xsd:choice>
+  <xsd:sequence>
+    <xsd:element name="str" type="xsd:string"/>
+    <xsd:element name="str2" type="xsd:string"/>
+  </xsd:sequence>
+  <xsd:element name="str" type="xsd:string"/>
+ </xsd:choice>
+</xsd:complexType>
+-->
+
+<!-- Valid, since sequence doesn't mix with "str" -->
+
+<xsd:complexType name="Tstrs">
+ <xsd:sequence>
+  <xsd:sequence>
+   <xsd:element name="str" type="xsd:string"/>
+   <xsd:element name="str2" type="xsd:string"/>
+  </xsd:sequence>
+  <xsd:element name="str" type="xsd:string"/>
+ </xsd:sequence>
+</xsd:complexType>
+<xsd:element name="strs" type="Tstrs" />
+
+<xsd:element name="person">
+  <xsd:complexType>
+    <xsd:all minOccurs="0">
+      <xsd:element name="first_name" type="xsd:string"/>
+      <xsd:element name="last_name" type="xsd:string" minOccurs="0"/>
+    </xsd:all>
+  </xsd:complexType>
+</xsd:element>
+
+<!-- Ambiguous2:
+  Error at file /home/briot/Ada/xml/xmlada/schema/test/test.xml, line 4, char 49
+  Message: 'str' and 'str' violate the Unique Particle Attribution rule -->
+
+<!--
+<xsd:complexType name="ambiguous2">
+ <xsd:choice>
+  <xsd:choice>
+   <xsd:element name="str2" type="xsd:string"/>
+   <xsd:element name="str" type="xsd:string"/>
+  </xsd:choice>
+  <xsd:element name="str" type="xsd:string"/>
+ </xsd:choice>
+</xsd:complexType>
+-->
+
+</xsd:schema>

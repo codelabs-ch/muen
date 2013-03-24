@@ -1,0 +1,33 @@
+=========================
+XML/Ada NEW FEATURES LIST
+=========================
+
+Copyright (C) 2001-2011, AdaCore
+
+This file contains a list of new features introduced in GPS.
+A full description of all GPS features can be found in the GPS
+documentation.
+
+An ISO date (YYYY-MM-DD) appears in parentheses after the
+description line. This date shows the implementation date
+of the feature.
+
+New features in version 4.2
+---------------------------
+
+NF-42-K708-021 Schema: Improved multi-tasking support (2011-07-26)
+
+   It is now possible to parse an XSD file once, and then use it for
+   several parsers in different threads.
+
+NF-42-K429-012 Schema: Ignore unsupported schema elements (2011-08-16)
+
+   It is now possible to ignore unsupported elements from a XSD file
+   (<key>, <keyref>, <field> and <selector>) rather than receive a fatal
+   error. This is activated through a call to Set_Feature, see
+   schema-schema_readers.ads
+
+NF-42-J818-003 New input source for streaming sockets (2010-12-16)
+
+   A new package was contributed by a user as an example on how to handle
+   streaming input, as opposed to reading the whole input at once.

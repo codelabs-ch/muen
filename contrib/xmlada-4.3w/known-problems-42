@@ -1,0 +1,103 @@
+=======================================
+Known problems in XML/Ada version 4.2.0
+=======================================
+
+Copyright (C) 2011-2012, AdaCore
+
+The following is a listing of known problems in release 4.2.0. Except where
+specifically noted, all these problems have been corrected in the development
+tree of the 4.0 technology. This means they are corrected in any 4.3.0w
+wavefront issued subsequent to the date specified (in ISO format YYYY-MM-DD) in
+the status line. This can be used to determine if a given wavefront has the fix
+identified in the entry.
+
+KP-42-L327-044 Schema: change of behavior in Schema.Dom_Readers.Free
+
+  Problem:    The previous implementation of Free would free the DOM tree
+              that was just parsed, and not call the inherited Free, thus
+              leaving a memory leak. As a result, the implementation was
+              changed so that now you must call Free on the parser. But since
+              users might want to keep the tree around for a longer time, Free
+              no longer deallocates the tree, which must be freed separately.
+
+  Status:     Fixed in XML/Ada 4.3.0
+
+  Workaround: Do not call Schema.Dom_Readers.Free with older versions of
+              XML/Ada. This will result in a small memory leak. but is safe
+              when you need to keep the tree around.
+
+KP-42-L316-045 SAX: slow parsing when node character content contains slashes
+
+  Problem:    When a node's text content contains slashes ('/'), the parsing
+              is slow
+
+  Status:     Fixed in XML/Ada 4.3.0
+
+  Workaround: Use a <![CDATA[...]]> markup to protect the whole contents of
+              the node.
+
+KP-42-L104-021 Schema: missing checks for Unique Particle Attribution rule
+
+  Problem:    A schema should be reported as invalid in a number of cases:
+              when an element has multiple children with the same name but
+              different types, or when a <choice> or <all> has multiple
+              children with the same name.
+
+  Status:     Fixed in XML/Ada 4.3.0
+
+  Workaround: Check the grammar with an external tool first. This issue does
+              not impact document validation if the grammar is correct.
+
+KP-42-L104-016 Schema: mixedContent ignored when using complexContent
+
+  Problem:    When a type is declared as a <complexType mixed="true"..> but
+              contains a <complexContent> child, the mixed attribute is
+              ignored. As a result, nodes of this type cannot include text
+              contents.
+
+  Status:     Fixed in XML/Ada 4.3.0
+
+  Workaround: None.
+
+KP-42-L103-016 Schema: a complexContent's base must be a complex type
+
+  Problem:    XML/Ada does not check that the base type in a complexContent
+              is a complex type.
+
+  Status:     Fixed in XML/Ada 4.3.0
+
+  Workaround: Check the grammar with an external tool first. This issue does
+              not impact document validation if the grammar is correct.
+
+KP-42-L103-011 Schema: missing check for valid attribute types
+
+  Problem:    When an attribute is defined as using an unknown simple type
+              (for instance xsd:natural), no error is reported.
+
+  Status:     Fixed in XML/Ada 4.3.0
+
+  Workaround: Check the grammar with an external tool first. Once the grammar
+              is correct, XML/Ada will correctly handle it.
+
+KP-42-KC09-030 Project files not found on x86_64-linux
+
+  Problem:    When installing on a 64bit linux platform, the projects
+              files are copied into the wrong directory and cannot be found
+              automatically by the compiler.
+
+  Status:     Fixed in XML/Ada 4.3.0
+
+  Workaround: Either set the GPR_PROJECT_PATH environment variable, or
+              manually copy the project files from prefix/lib64/gnat/ to
+              prefix/lib/gnat/.
+
+KP-42-K518-020 Heap exhausted when validating <all> element
+
+  Problem:    The implementation of the state machine for <all> nodes was
+              generating states for all possible combinations of the children
+              of <all>. In many cases, this resulted in huge state machines
+              and heap exhaustion.
+
+  Status:     Fixed in XML/Ada 4.3.0
+
+  Workaround: None.

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- target coverage information -->
+<!DOCTYPE TEST [
+<!ELEMENT TEST (#PCDATA)>
+<!ATTLIST TEST NAME CDATA #IMPLIED>
+]>
+
+<TEST NAME="hohohotest">
+ho ho ho
+</TEST>
+

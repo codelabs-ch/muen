@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<?my_pi ?>
+<!--  top level comment -->
+<html xmlns:top="http://top-levelns">
+   <top:h1>  Big &amp; &#65; &#x41; header</top:h1>
+   <manu:h2 xmlns:manu="http://manuns"
+      a1="  a  b  " a2=" &#x20; &#x20; a  b&#x20;  " />
+   <xml:img 	xml:src='&#65;&amp;toto.gif' />
+		    <!-- an invalid comment  -->
+   <empty_tag xmlns="http://foons" attr='foo' />
+   <full_tag attr="foo"><![CDATA[<greeting]]>full</full_tag>
+
+       <!--  A comment in the middle -->
+       <good xmlns:n1="http://www.w3.org" 
+  	  xmlns="http://www.w3.org"
+	  n1:a="1"  a="2" >   <bad><bad>Test</bad></bad></good>
+</html>
+
+<!--  Activate this to test that only one single root child is allowed
+<foo2>
+</foo2>
+-->

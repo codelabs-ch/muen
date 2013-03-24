@@ -1,0 +1,8 @@
+
+<?xml version="1.0"?>
+<!DOCTYPE mydtd [
+ <!ENTITY e "<?xml?>">
+  ] >
+&e;
+<a>
+</a>

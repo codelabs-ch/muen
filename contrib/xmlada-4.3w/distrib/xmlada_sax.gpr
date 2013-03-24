@@ -1,0 +1,14 @@
+with "xmlada_shared";
+with "xmlada_input";
+with "xmlada_unicode";
+project XmlAda_Sax is
+    for Library_Name use "xmlada_sax";
+
+    for Library_Kind use Xmlada_Shared.Xmlada_Kind;
+    for Source_Dirs use ("../../include/xmlada");
+    for Source_List_File use "xmlada/" & Project'Library_Name & ".lgpr";
+    for Library_Dir use Xmlada_Shared.Libdir;
+    for Library_Version use
+       "lib" & Project'Library_Name & ".so." & Xmlada_Shared.Version;
+    for Externally_Built use "true";
+end XmlAda_Sax;

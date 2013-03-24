@@ -1,0 +1,9 @@
+This is a tentative roadmap for XML/Ada.
+None of the dates and/or tentative contents for the releases should
+be taken as firm.
+
+[XML/Ada 4.3]
+
+- Improve memory usage in the validation of <all> elements
+- Initial support for XInclude
+

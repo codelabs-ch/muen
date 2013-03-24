@@ -1,0 +1,11 @@
+--  Project file for use of XML/Ada.
+--  Put the directory that contains xmlada.gpr in your ADA_PROJECT_PATH
+--  variable. Then, in our own project file, add a "with" dependency on
+--  "xmlada.gpr".
+
+with "xmlada_unicode", "xmlada_sax", "xmlada_input", "xmlada_dom";
+with "xmlada_schema";
+
+project Xmlada is
+   for Source_Dirs use ();
+end Xmlada;

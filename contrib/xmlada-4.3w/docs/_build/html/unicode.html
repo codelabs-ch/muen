@@ -1,0 +1,417 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2. The Unicode module &mdash; XML/Ada: the XML Library for Ada 4.3w documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '4.3w',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="XML/Ada: the XML Library for Ada 4.3w documentation" href="index.html" />
+    <link rel="next" title="3. The Input module" href="input.html" />
+    <link rel="prev" title="1. Introduction" href="intro.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="input.html" title="3. The Input module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="1. Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">XML/Ada: the XML Library for Ada 4.3w documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/adacore_transparent.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2. The Unicode module</a><ul>
+<li><a class="reference internal" href="#glyphs">2.1. Glyphs</a></li>
+<li><a class="reference internal" href="#repertoires-and-subsets">2.2. Repertoires and subsets</a></li>
+<li><a class="reference internal" href="#character-sets">2.3. Character sets</a></li>
+<li><a class="reference internal" href="#character-encoding-schemes">2.4. Character encoding schemes</a></li>
+<li><a class="reference internal" href="#unicode-encoding">2.5. Unicode_Encoding</a></li>
+<li><a class="reference internal" href="#misc-functions">2.6. Misc. functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="intro.html"
+                        title="previous chapter">1. Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="input.html"
+                        title="next chapter">3. The Input module</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/unicode.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-unicode-module">
+<span id="id1"></span><h1>2. The Unicode module<a class="headerlink" href="#the-unicode-module" title="Permalink to this headline">¶</a></h1>
+<p>Unicode provides a unique number for every character, no matter what the
+platform, no matter what the program, no matter what the language.</p>
+<p>Fundamentally, computers just deal with numbers. They store letters and other
+characters by assigning a number for each one. Before Unicode was invented,
+there were hundreds of different encoding systems for assigning these numbers.
+No single encoding could contain enough characters: for example, the European
+Union alone requires several different encodings to cover all its languages.
+Even for a single language like English no single encoding was adequate for all
+the letters, punctuation, and technical symbols in common use.</p>
+<p>These encoding systems also conflict with one another. That is, two encodings
+can use the same number for two different characters, or use different numbers
+for the same character. Any given computer (especially servers) needs to
+support many different encodings; yet whenever data is passed between different
+encodings or platforms, that data always runs the risk of corruption.</p>
+<p>Unicode provides a unique number for every character, no matter what the
+platform, no matter what the program, no matter what the language. The Unicode
+Standard has been adopted by such industry leaders as Apple, HP, IBM,
+JustSystem, Microsoft, Oracle, SAP, Sun, Sybase, Unisys and many others.
+Unicode is required by modern standards such as XML, Java, ECMAScript
+(JavaScript), LDAP, CORBA 3.0, WML, etc., and is the official way to implement
+ISO/IEC 10646. It is supported in many operating systems, all modern browsers,
+and many other products. The emergence of the Unicode Standard, and the
+availability of tools supporting it, are among the most significant recent
+global software technology trends.</p>
+<p>The following sections explain the basic vocabulary and concepts associated
+with Unicode and encodings.</p>
+<p>Most of the information comes from the official Unicode Web site, at
+<a class="reference external" href="http://www.unicode.org/unicode/reports/tr17">http://www.unicode.org/unicode/reports/tr17</a>.</p>
+<p>Part of this documentation comes from <a class="reference external" href="http://www.unicode.org">http://www.unicode.org</a>, the official web site for Unicode.</p>
+<p>Some information was also extracted from the &#8220;UTF-8 and Unicode FAQ&#8221; by M.
+Kuhn, available at <a class="reference external" href="???">???</a>.</p>
+<div class="section" id="glyphs">
+<span id="id3"></span><h2>2.1. Glyphs<a class="headerlink" href="#glyphs" title="Permalink to this headline">¶</a></h2>
+<p>A glyph is a particular representation of a character or part of a character.</p>
+<p>Several representations are possible, mostly depending on the exact font used
+at that time. A single glyph can correspond to a sequence of characters, or a
+single character to a sequence of glyphs.</p>
+<p>The Unicode standard doesn&#8217;t deal with glyphs, although a suggested
+representation is given for each character in the standard. Likewise, this
+module doesn&#8217;t provide any graphical support for Unicode, and will just deal
+with textual memory representation and encodings.</p>
+<p>Take a look at the <strong>GtkAda</strong> library that provides the graphical interface for
+unicode in the upcoming 2.0 version.</p>
+</div>
+<div class="section" id="repertoires-and-subsets">
+<h2>2.2. Repertoires and subsets<a class="headerlink" href="#repertoires-and-subsets" title="Permalink to this headline">¶</a></h2>
+<p>A repertoire is a set of abstract characters to be encoded, normally a familiar
+alphabet or symbol set. For instance, the alphabet used to spell English words,
+or the one used for the Russian alphabet are two such repertoires.</p>
+<p>There exist two types of repertoires, close and open ones. The former is the
+most common one, and the two examples above are such repertoires.  No character
+is ever added to them.</p>
+<p>Unicode is also a repertoire, but an open one. New entries are added to it.
+However, it is guaranteed that none will ever be deleted from it.  Unicode
+intends to be a universal repertoire, with all possible characters currently
+used in the world. It currently contains all the alphabets, including a number
+of alphabets associated with dead languages like hieroglyphs. It also contains
+a number of often used symbols, like mathematical signs.</p>
+<p>The goal of this Unicode module is to convert all characters to entries in the
+Unicode repertoire, so that any applications can communicate with each other in
+a portable manner.</p>
+<p>Given its size, most applications will only support a subset of Unicode.  Some
+of the scripts, most notably Arabic and Asian languages, require a special
+support in the application (right-to-left writing,...), and thus will not be
+supported by some applications.</p>
+<p>The Unicode standard includes a set of internal catalogs, called collections.
+Each character in these collections is given a special name, in addition to its
+code, to improve readability.</p>
+<p>Several child packages (<strong>Unicode.Names.*</strong>) define those names. For instance:</p>
+<dl class="docutils">
+<dt><em>Unicode.Names.Basic_Latin</em></dt>
+<dd>This contains the basic characters used in most western European languages,
+including the standard ASCII subset.</dd>
+<dt><em>Unicode.Names.Cyrillic</em></dt>
+<dd>This contains the Russian alphabet.</dd>
+<dt><em>Unicode.Names.Mathematical_Operators</em></dt>
+<dd>This contains several mathematical symbols</dd>
+</dl>
+<p>More than 80 such packages exist.</p>
+</div>
+<div class="section" id="character-sets">
+<h2>2.3. Character sets<a class="headerlink" href="#character-sets" title="Permalink to this headline">¶</a></h2>
+<p>A character set is a mapping from a set of abstract characters to some
+non-negative integers. The integer associated with a character is called its
+code point, and the character itself is called the encoded character.</p>
+<p>There exist a number of standard character sets, unfortunately not compatible
+with each other. For instance, ASCII is one of these character sets, and
+contains 128 characters. A super-set of it is the ISO/8859-1 character set.
+Another character set is the JIS X 0208, used to encode Japanese characters.</p>
+<p>Note that a character set is different from a repertoire. For instance, the
+same character C with cedilla doesn&#8217;t have the same integer value in the
+ISO/8859-1 character set and the ISO/8859-2 character set.</p>
+<p>Unicode is also such a character set, that contains all the possible characters
+and associate a standard integer with them. A similar and fully compatible
+character set is ISO/10646. The only addition that Unicode does to ISO/10646 is
+that it also specifies algorithms for rendering presentation forms of some
+scripts (say Arabic), handling of bi-directional texts that mix for instance
+Latin and Hebrew, algorithms for sorting and string comparison, and much more.</p>
+<p>Currently, our Unicode package doesn&#8217;t include any support for these
+algorithms.</p>
+<p>Unicode and ISO 10646 define formally a 31-bit character set. However, of this
+huge code space, so far characters have been assigned only to the first 65534
+positions (0x0000 to 0xFFFD). The characters that are expected to be encoded
+outside the 16-bit range belong all to rather exotic scripts (e.g.,
+Hieroglyphics) that are only used by specialists for historic and scientific
+purposes</p>
+<p>The Unicode module contains a set of packages to provide conversion from some
+of the most common character sets to and from Unicode. These are the
+<strong>Unicode.CCS.*</strong> packages.</p>
+<p>All these packages have a common structure:</p>
+<ul>
+<li><p class="first">They define a global variable of type <cite>Character_Set</cite> with two fields, ie the
+two conversion functions between the given character set and Unicode.</p>
+<p>These functions convert one character (actually its code point) at a time.</p>
+</li>
+<li><p class="first">They also define a number of standard names associated with this character
+set. For instance, the ISO/8859-1 set is also known as Latin1.</p>
+<p>The function <cite>Unicode.CCS.Get_Character_Set</cite> can be used to find a character
+set by its standard name.</p>
+</li>
+</ul>
+<p>Currently, the following sets are supported:</p>
+<p><em>ISO/8859-1 aka Latin1</em></p>
+<blockquote>
+<div>This is the standard character set used to represent most Western European
+languages including: Albanian, Catalan, Danish, Dutch, English, Faroese,
+Finnish, French, Galician, German, Irish, Icelandic, Italian, Norwegian,
+Portuguese, Spanish and Swedish.</div></blockquote>
+<p><em>ISO/8859-2 aka Latin2</em></p>
+<blockquote>
+<div>This character set supports the Slavic languages of Central Europe which use
+the Latin alphabet. The ISO-8859-2 set is used for the following languages:
+Czech, Croat, German, Hungarian, Polish, Romanian, Slovak and Slovenian.</div></blockquote>
+<p><em>ISO/8859-3</em></p>
+<blockquote>
+<div>This character set is used for Esperanto, Galician, Maltese and Turkish</div></blockquote>
+<p><em>ISO/8859-4</em></p>
+<blockquote>
+<div>Some letters were added to the ISO-8859-4 to support languages such as
+Estonian, Latvian and Lithuanian. It is an incomplete precursor of the Latin
+6 set.</div></blockquote>
+</div>
+<div class="section" id="character-encoding-schemes">
+<h2>2.4. Character encoding schemes<a class="headerlink" href="#character-encoding-schemes" title="Permalink to this headline">¶</a></h2>
+<p>We now know how each encoded character can be represented by an integer value
+(code point) depending on the character set.</p>
+<p>Character encoding schemes deal with the representation of a sequence of
+integers to a sequence of code units. A code unit is a sequence of bytes on a
+computer architecture.</p>
+<p>There exists a number of possible encoding schemes. Some of them encode all
+integers on the same number of bytes. They are called fixed-width encoding
+forms, and include the standard encoding for Internet emails (<strong>7bits</strong>, but it
+can&#8217;t encode all characters), as well as the simple <strong>8bits</strong> scheme, or the
+<strong>EBCDIC</strong> scheme. Among them is also the <strong>UTF-32</strong> scheme which is defined in
+the Unicode standard.</p>
+<p>Another set of encoding schemes encode integers on a variable number of bytes.
+These include two schemes that are also defined in the Unicode standard, namely
+<strong>Utf-8</strong> and <strong>Utf-16</strong>.</p>
+<p>Unicode doesn&#8217;t impose any specific encoding. However, it is most often
+associated with one of the Utf encodings. They each have their own properties
+and advantages:</p>
+<p><em>Utf32</em></p>
+<blockquote>
+<div>This is the simplest of all these encodings. It simply encodes all the
+characters on 32 bits (4 bytes). This encodes all the possible characters in
+Unicode, and is obviously straightforward to manipulate. However, given that
+the first 65535 characters in Unicode are enough to encode all known
+languages currently in use, Utf32 is also a waste of space in most cases.</div></blockquote>
+<p><em>Utf16</em></p>
+<blockquote>
+<div>For the above reason, Utf16 was defined. Most characters are only encoded on
+two bytes (which is enough for the first 65535 and most current characters).
+In addition, a number of special code points have been defined, known as
+<em>surrogate pairs</em>, that make the encoding of integers greater than 65535
+possible. The integers are then encoded on four bytes.  As a result, Utf16 is
+thus much more memory-efficient and requires less space than Utf32 to encode
+sequences of characters. However, it is also more complex to decode.</div></blockquote>
+<p><em>Utf8</em></p>
+<blockquote>
+<div><p>This is an even more space-efficient encoding, but is also more complex to
+decode. More important, it is compatible with the most currently used simple
+8bit encoding.</p>
+<p>Utf8 has the following properties:</p>
+<ul class="simple">
+<li>Characters 0 to 127 (ASCII) are encoded simply as a single byte.
+This means that files and strings which contain only 7-bit ASCII
+characters have the same encoding under both ASCII and UTF-8.</li>
+<li>Characters greater than 127 are encoded as a sequence of several
+bytes, each of which has the most significant bit set. Therefore,
+no ASCII byte can appear as part of any other character.</li>
+<li>The first byte of a multibyte sequence that represents a non-ASCII
+character is always in the range 0xC0 to 0xFD and it indicates how
+many bytes follow for this character. All further bytes in a
+multibyte sequence are in the range 0x80 to 0xBF. This allows easy
+resynchronization and makes the encoding stateless and robust
+against missing bytes.</li>
+<li>UTF-8 encoded characters may theoretically be up to six bytes
+long, however the first 16-bit characters are only up to three bytes
+long.</li>
+</ul>
+</div></blockquote>
+<p>Note that the encodings above, except for Utf8, have two versions, depending on
+the chosen byte order on the machine.</p>
+<p>The Ada95 Unicode module provides a set of packages that provide an easy
+conversion between all the encoding schemes, as well as basic manipulations of
+these byte sequences. These are the <strong>Unicode.CES.*</strong> packages.  Currently,
+four encoding schemes are supported, the three Utf schemes and the basic 8bit
+encoding which corresponds to the standard Ada strings.</p>
+<p>It also supports some routines to convert from one byte-order to another.</p>
+<p>The following examples show a possible use of these packages:</p>
+<div class="highlight-python"><pre>Converting a latin1 string coded on 8 bits to a Utf8 latin2 file
+involves the following steps:
+
+   Latin1 string  (bytes associated with code points in Latin1)
+     |    "use Unicode.CES.Basic_8bit.To_Utf32"
+     v
+   Utf32 latin1 string (contains code points in Latin1)
+     |    "Convert argument to To_Utf32 should be
+     v         Unicode.CCS.Iso_8859_1.Convert"
+   Utf32 Unicode string (contains code points in Unicode)
+     |    "use Unicode.CES.Utf8.From_Utf32"
+     v
+   Utf8 Unicode string (contains code points in Unicode)
+     |    "Convert argument to From_Utf32 should be
+     v         Unicode.CCS.Iso_8859_2.Convert"
+   Utf8 Latin2 string (contains code points in Latin2)</pre>
+</div>
+</div>
+<div class="section" id="unicode-encoding">
+<h2>2.5. Unicode_Encoding<a class="headerlink" href="#unicode-encoding" title="Permalink to this headline">¶</a></h2>
+<p>XML/Ada groups the two notions of character sets and encoding schemes into a
+single type, <cite>Unicode.Encodings.Unicode_Encoding</cite>.</p>
+<p>This package provides additional functions to manipulate these encodings, for
+instance to retrieve them by the common name that is associated with them (for
+instance &#8220;utf-8&#8221;, &#8220;iso-8859-15&#8221;,...), since very often the encoding scheme is
+implicit. If you are speaking of utf-8 string, most people always assume you
+also use the unicode character set. Likewise, if you are speaking of
+&#8220;iso-8859-1&#8221;, most people will assume you string is encoded as 8 byte
+characters.</p>
+<p>The goal of the <cite>Unicode.Encodings</cite> package is to make these implicit
+associations more obvious.</p>
+<p>It also provides one additional function <cite>Convert</cite>, which can be used to
+convert a sequence of bytes from one encoding to another. This is a convenience
+function that you can use when for instance creating DOM trees directly through
+Ada calls, since XML/Ada excepts all its strings to be in utf-8 by default.</p>
+</div>
+<div class="section" id="misc-functions">
+<h2>2.6. Misc. functions<a class="headerlink" href="#misc-functions" title="Permalink to this headline">¶</a></h2>
+<p>The package <strong>Unicode</strong> contains a series of <cite>Is_*</cite> functions, matching the
+Unicode standard.</p>
+<p><cite>Is_White_Space</cite></p>
+<blockquote>
+<div>Return True if the character argument is a space character, ie a space,
+horizontal tab, line feed or carriage return.</div></blockquote>
+<p><cite>Is_Letter</cite></p>
+<blockquote>
+<div>Return True if the character argument is a letter. This includes the
+standard English letters, as well as some less current cases defined in the
+standard.</div></blockquote>
+<dl class="docutils">
+<dt><cite>Is_Base_Char</cite></dt>
+<dd>Return True if the character is a base character, ie a character whose
+meaning can be modified with a combining character.</dd>
+<dt><cite>Is_Digit</cite></dt>
+<dd>Return True if the character is a digit (numeric character)</dd>
+<dt><cite>Is_Combining_Char</cite></dt>
+<dd><p class="first">Return True if the character is a combining character. Combining characters
+are accents or other diacritical marks that are added to the previous
+character.</p>
+<p>The most important accented characters, like those used in the orthographies
+of common languages, have codes of their own in Unicode to ensure backwards
+compatibility with older character sets. Accented characters that have their
+own code position, but could also be represented as a pair of another
+character followed by a combining character, are known as precomposed
+characters. Precomposed characters are available in Unicode for backwards
+compatibility with older encodings such as ISO 8859 that had no combining
+characters. The combining character mechanism allows to add accents and other
+diacritical marks to any character</p>
+<p class="last">Note however that your application must provide specific support for
+combining characters, at least if you want to represent them visually.</p>
+</dd>
+<dt><cite>Is_Extender</cite></dt>
+<dd>True if Char is an extender character.</dd>
+<dt><cite>Is_Ideographic</cite></dt>
+<dd>True if Char is an ideographic character. This is defined only for
+Asian languages.</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="input.html" title="3. The Input module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="1. Introduction"
+             >previous</a> |</li>
+        <li><a href="index.html">XML/Ada: the XML Library for Ada 4.3w documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2003-2012, AdaCore.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

@@ -7,8 +7,9 @@
 				<memory_region physical_address="242000" virtual_address="2000" size="8k" writable="true"  executable="false"/>
 				<memory_region physical_address="200000" virtual_address="4000" size="4k" writable="true"  executable="false"/>
 			</memory_layout>
-			<io_ports bitmap_address="11d000">
+			<io_ports bitmap_address="244000">
 				<port_range start="50b0"/>
+				<port_range start="50b5"/>
 			</io_ports>
 		</subject>
 		<subject id="1" name="subject1">

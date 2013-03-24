@@ -14,4 +14,10 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type);
 
+   --  Write subject I/O bitmaps to directory specified by name. The generated
+   --  I/O bitmap files are named as follows: Dir_Name/SUBJECT_NAME.iobm.
+   procedure Write_IO_Bitmaps
+     (Dir_Name : String;
+      Policy   : Policy_Type);
+
 end Skp.Writers;

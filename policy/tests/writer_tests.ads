@@ -14,4 +14,7 @@ is
    --  Write pagetables to files.
    procedure Write_Pagetables;
 
+   --  Write IO_Bitmaps to files.
+   procedure Write_IO_Bitmaps;
+
 end Writer_Tests;

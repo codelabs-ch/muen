@@ -6,9 +6,71 @@ with Ada.Strings.Unbounded;
 with SK.Utils;
 
 with Skp.Paging;
+with Skp.IO_Ports;
 
 package body Skp.Writers
 is
+
+   -------------------------------------------------------------------------
+
+   procedure Write_IO_Bitmaps
+     (Dir_Name : String;
+      Policy   : Policy_Type)
+   is
+
+      --  Write I/O bitmap of given subject.
+      procedure Write_Subject (S : Subject_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Write_Subject (S : Subject_Type)
+      is
+         use Ada.Strings.Unbounded;
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+
+         File_Name : constant String := Dir_Name & "/"
+           & To_String (Get_Name (Subject => S)) & ".iobm";
+         Ports     : constant IO_Ports_Type := Get_IO_Ports (Subject => S);
+         Bitmap    : IO_Ports.IO_Bitmap_Type := IO_Ports.Null_IO_Bitmap;
+
+         --  Add given I/O port range to subject's I/O bitmap.
+         procedure Add_Port_Range (R : IO_Port_Range);
+
+         -------------------------------------------------------------------
+
+         procedure Add_Port_Range (R : IO_Port_Range)
+         is
+         begin
+            IO_Ports.Allow_Ports
+              (B          => Bitmap,
+               Start_Port => Get_Start (Port_Range => R),
+               End_Port   => Get_End (Port_Range => R));
+         end Add_Port_Range;
+      begin
+         if Ada.Directories.Exists (Name => File_Name) then
+            Open (File => File,
+                  Mode => Out_File,
+                  Name => File_Name);
+         else
+            Create (File => File,
+                    Mode => Out_File,
+                    Name => File_Name);
+         end if;
+
+         Iterate (Ports   => Ports,
+                  Process => Add_Port_Range'Access);
+
+         Write (File => File,
+                Item => IO_Ports.To_Stream (B => Bitmap));
+
+         Close (File => File);
+      end Write_Subject;
+   begin
+      Iterate (Policy  => Policy,
+               Process => Write_Subject'Access);
+   end Write_IO_Bitmaps;
 
    -------------------------------------------------------------------------
 

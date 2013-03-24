@@ -6,7 +6,10 @@ subjects:
 config: subjects
 	$(MAKE) -C $@
 
-kernel: config
+policy:
+	$(MAKE) -C $@
+
+kernel: config policy
 	$(MAKE) -C $@
 
 packer: kernel
@@ -19,6 +22,7 @@ clean:
 	$(MAKE) clean -C config
 	$(MAKE) clean -C kernel
 	$(MAKE) clean -C packer
+	$(MAKE) clean -C policy
 	$(MAKE) clean -C subjects
 
-.PHONY: config kernel packer subjects
+.PHONY: config kernel packer policy subjects

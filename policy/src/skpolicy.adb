@@ -27,4 +27,9 @@ begin
      (Dir_Name => Out_Dir,
       Policy   => Policy);
    Ada.Text_IO.Put_Line (Item => "Wrote pagetables to " & Out_Dir);
+
+   Skp.Writers.Write_IO_Bitmaps
+     (Dir_Name => Out_Dir,
+      Policy   => Policy);
+   Ada.Text_IO.Put_Line (Item => "Wrote I/O bitmaps to " & Out_Dir);
 end Skpolicy;

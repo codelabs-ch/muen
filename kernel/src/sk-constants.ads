@@ -15,6 +15,8 @@ is
    CR4_VMXE_FLAG            : constant := 13;
 
    CPUID_FEATURE_VMX_FLAG   : constant := 5;
+   CPUID_FEATURE_LOCAL_APIC : constant := 9;
+   CPUID_FEATURE_X2APIC     : constant := 21;
 
    IA32_EFER_LMA_FLAG       : constant := 10;
    IA32_FCTRL_SMX_FLAG      : constant := 2;

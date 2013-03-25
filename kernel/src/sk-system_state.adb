@@ -23,6 +23,36 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Returns True if local APIC is present and supports x2APIC mode, see
+   --  Intel SDM 3A, chapters 10.4.2 and 10.12.1.
+   function Has_X2_Apic return Boolean
+   --# global
+   --#    X86_64.State;
+   is
+      Unused_EAX, Unused_EBX, ECX, EDX : SK.Word32;
+   begin
+      Unused_EAX := 1;
+      ECX        := 0;
+
+      --# accept Flow, 10, Unused_EAX, "Result unused" &
+      --#        Flow, 10, Unused_EBX, "Result unused";
+      CPU.CPUID
+        (EAX => Unused_EAX,
+         EBX => Unused_EBX,
+         ECX => ECX,
+         EDX => EDX);
+
+      --# accept Flow, 33, Unused_EBX, "Result unused";
+      return SK.Bit_Test
+        (Value => SK.Word64 (EDX),
+         Pos   => Constants.CPUID_FEATURE_LOCAL_APIC) and then
+        SK.Bit_Test
+          (Value => SK.Word64 (ECX),
+           Pos   => Constants.CPUID_FEATURE_X2APIC);
+   end Has_X2_Apic;
+
+   -------------------------------------------------------------------------
+
    --  Returns true if VMX is supported by the CPU.
    function Has_VMX_Support return Boolean
    --# global
@@ -53,8 +83,9 @@ is
 
    function Is_Valid return Boolean
    is
-      VMX_Support, VMX_Locked, Protected_Mode, Paging, IA_32e_Mode : Boolean;
-      CR0_Valid, CR4_Valid, Not_Virtual_8086, Not_In_SMX           : Boolean;
+      VMX_Support, VMX_Locked, Protected_Mode            : Boolean;
+      Paging, IA_32e_Mode, Apic_Support                  : Boolean;
+      CR0_Valid, CR4_Valid, Not_Virtual_8086, Not_In_SMX : Boolean;
    begin
       VMX_Support := Has_VMX_Support;
       pragma Debug
@@ -119,6 +150,10 @@ is
         (not CR4_Valid,
          KC.Put_Line (Item => "CR4 is invalid"));
 
+      Apic_Support := Has_X2_Apic;
+      pragma Debug
+        (not Apic_Support, KC.Put_Line (Item => "Local x2APIC not present"));
+
       return VMX_Support and
         VMX_Locked       and
         Protected_Mode   and
@@ -127,7 +162,8 @@ is
         Not_Virtual_8086 and
         Not_In_SMX       and
         CR0_Valid        and
-        CR4_Valid;
+        CR4_Valid        and
+        Apic_Support;
    end Is_Valid;
 
 end SK.System_State;

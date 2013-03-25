@@ -21,15 +21,17 @@ begin
      (File_Name    => Out_File,
       Package_Name => "Skp.Subjects",
       Policy       => Policy);
-   Ada.Text_IO.Put_Line (Item => "Wrote subject specs to " & Out_File);
+   Ada.Text_IO.Put_Line (Item => "Wrote subject specs to '" & Out_File & "'");
 
    Skp.Writers.Write_Pagetables
      (Dir_Name => Out_Dir,
       Policy   => Policy);
-   Ada.Text_IO.Put_Line (Item => "Wrote pagetables to " & Out_Dir);
+   Ada.Text_IO.Put_Line (Item => "Wrote pagetables to '" & Out_Dir
+                         & "' directory");
 
    Skp.Writers.Write_IO_Bitmaps
      (Dir_Name => Out_Dir,
       Policy   => Policy);
-   Ada.Text_IO.Put_Line (Item => "Wrote I/O bitmaps to " & Out_Dir);
+   Ada.Text_IO.Put_Line (Item => "Wrote I/O bitmaps to '" & Out_Dir
+                         & "' directory");
 end Skpolicy;

@@ -18,6 +18,9 @@ packer: kernel
 deploy: packer
 	$(MAKE) -C $< $@
 
+tests:
+	$(MAKE) tests -C policy
+
 clean:
 	$(MAKE) clean -C config
 	$(MAKE) clean -C kernel

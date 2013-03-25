@@ -25,6 +25,7 @@ is
    -- MSRs --
    ----------
 
+   IA32_APIC_BASE           : constant := 16#1b#;
    IA32_FEATURE_CONTROL     : constant := 16#3a#;
    IA32_EFER                : constant := 16#c000_0080#;
 

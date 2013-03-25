@@ -74,6 +74,16 @@ is
    --# derives
    --#    Low, High from X86_64.State, Register;
 
+   --  Write specified low/high doublewords to given MSR.
+   procedure Write_MSR
+     (Register : SK.Word32;
+      Low      : SK.Word32;
+      High     : SK.Word32);
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *, Register, Low, High;
+
    --  Return current RFLAGS.
    function Get_RFLAGS return SK.Word64;
    --# global

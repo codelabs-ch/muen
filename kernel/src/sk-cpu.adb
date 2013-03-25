@@ -341,4 +341,21 @@ is
          Volatile => True);
    end VMXON;
 
+   -------------------------------------------------------------------------
+
+   procedure Write_MSR
+     (Register : SK.Word32;
+      Low      : SK.Word32;
+      High     : SK.Word32)
+   is
+      --# hide Write_MSR;
+   begin
+      System.Machine_Code.Asm
+        (Template => "wrmsr",
+         Inputs   => (Word32'Asm_Input ("a", Low),
+                      Word32'Asm_Input ("d", High),
+                      Word32'Asm_Input ("c", Register)),
+         Volatile => True);
+   end Write_MSR;
+
 end SK.CPU;

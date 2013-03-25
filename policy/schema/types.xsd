@@ -19,6 +19,12 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="memory_alignment_type">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="4[kK]|2[mM]|1[gG]"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:simpleType name="port_address_type">
 		<xs:restriction base="hex_string">
 			<xs:length value="4"/>
@@ -31,11 +37,12 @@
 	</xs:complexType>
 
 	<xs:complexType name="memory_region_type">
-		<xs:attribute name="physical_address" type="address_type"     use="required"/>
-		<xs:attribute name="size"             type="memory_size_type" use="required"/>
-		<xs:attribute name="virtual_address"  type="address_type"     use="optional"/>
-		<xs:attribute name="writable"         type="xs:boolean"       use="required"/>
-		<xs:attribute name="executable"       type="xs:boolean"       use="optional" default="false"/>
+		<xs:attribute name="physical_address" type="address_type"          use="required"/>
+		<xs:attribute name="size"             type="memory_size_type"      use="required"/>
+		<xs:attribute name="alignment"        type="memory_alignment_type" use="optional" default="4k"/>
+		<xs:attribute name="virtual_address"  type="address_type"          use="optional"/>
+		<xs:attribute name="writable"         type="xs:boolean"            use="required"/>
+		<xs:attribute name="executable"       type="xs:boolean"            use="optional" default="false"/>
 	</xs:complexType>
 
 	<xs:complexType name="memory_layout_type">

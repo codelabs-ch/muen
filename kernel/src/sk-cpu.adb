@@ -95,7 +95,7 @@ is
       Get_MSR (Register => Register,
                Low      => Low_Dword,
                High     => High_Dword);
-      return 2**31 * SK.Word64 (High_Dword) + SK.Word64 (Low_Dword);
+      return 2 ** 31 * SK.Word64 (High_Dword) + SK.Word64 (Low_Dword);
    end Get_MSR64;
 
    -------------------------------------------------------------------------
@@ -357,5 +357,21 @@ is
                       Word32'Asm_Input ("c", Register)),
          Volatile => True);
    end Write_MSR;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_MSR64
+     (Register : SK.Word32;
+      Value    : SK.Word64)
+   is
+      Low_Dword, High_Dword : SK.Word32;
+   begin
+      Low_Dword  := SK.Word32'Mod (Value);
+      High_Dword := SK.Word32'Mod (Value / 2 ** 31);
+
+      Write_MSR (Register => Register,
+                 Low      => Low_Dword,
+                 High     => High_Dword);
+   end Write_MSR64;
 
 end SK.CPU;

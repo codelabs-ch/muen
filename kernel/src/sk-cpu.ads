@@ -74,6 +74,15 @@ is
    --# derives
    --#    Low, High from X86_64.State, Register;
 
+   --  Write specified quadword to given MSR.
+   procedure Write_MSR64
+     (Register : SK.Word32;
+      Value    : SK.Word64);
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *, Register, Value;
+
    --  Write specified low/high doublewords to given MSR.
    procedure Write_MSR
      (Register : SK.Word32;

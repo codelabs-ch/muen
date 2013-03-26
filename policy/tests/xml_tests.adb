@@ -235,6 +235,8 @@ is
                  Message   => "Virtual address mismatch (1)");
          Assert (Condition => Get_Size (Region => R) = 65536,
                  Message   => "Memory size mismatch (1)");
+         Assert (Condition => Get_Alignment (Region => R) = 4096,
+                 Message   => "Memory alignment mismatch (1)");
          Assert (Condition => Is_Writable (Region => R),
                  Message   => "Writable mismatch (1)");
          Assert (Condition => Is_Executable (Region => R),

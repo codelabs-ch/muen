@@ -26,6 +26,9 @@ is
    --  Return size of memory region in bytes.
    function Get_Size (Region : Memory_Region_Type) return SK.Word64;
 
+   --  Return alignment of memory region in bytes.
+   function Get_Alignment (Region : Memory_Region_Type) return SK.Word64;
+
    --  Returns True if the memory region allows write access.
    function Is_Writable (Region : Memory_Region_Type) return Boolean;
 
@@ -104,6 +107,7 @@ private
       Physical_Address : SK.Word64;
       Virtual_Address  : SK.Word64;
       Size             : SK.Word64;
+      Alignment        : SK.Word64;
       Writable         : Boolean;
       Executable       : Boolean;
    end record;

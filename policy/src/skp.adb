@@ -11,6 +11,14 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Alignment (Region : Memory_Region_Type) return SK.Word64
+   is
+   begin
+      return Region.Alignment;
+   end Get_Alignment;
+
+   -------------------------------------------------------------------------
+
    function Get_Bitmap_Address (Ports : IO_Ports_Type) return SK.Word64
    is
    begin

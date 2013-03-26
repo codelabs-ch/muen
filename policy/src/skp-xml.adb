@@ -132,10 +132,15 @@ is
               (Str => DOM.Core.Elements.Get_Attribute
                  (Elem => Node,
                   Name => "size"));
+            R.Alignment        := Util.To_Memory_Size
+              (Str => DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "alignment"));
             R.Writable         := Boolean'Value
               (DOM.Core.Elements.Get_Attribute
                  (Elem => Node,
                   Name => "writable"));
+
             R.Executable       := Boolean'Value
               (DOM.Core.Elements.Get_Attribute
                  (Elem => Node,

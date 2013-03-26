@@ -52,7 +52,12 @@ is
    package Subjects_Package is new Ada.Containers.Ordered_Sets
      (Element_Type => Subject_Type);
 
+   type Kernel_Type is record
+      Memory_Layout : Memory_Layout_Type;
+   end record;
+
    type Policy_Type is record
+      Kernel   : Kernel_Type;
       Subjects : Subjects_Package.Set;
    end record;
 

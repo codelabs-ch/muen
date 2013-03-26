@@ -295,7 +295,18 @@ is
          Write (Layout   => S.Memory_Layout,
                 Filename => File);
       end Write_Subject;
+
+      Kernel_Pt : Ada.Text_IO.File_Type;
    begin
+      Open (Filename => Dir_Name & "/kernel_pt.h",
+            File     => Kernel_Pt);
+      Ada.Text_IO.Put_Line
+        (File => Kernel_Pt,
+         Item => "#define KERNEL_PML4 0x"
+         & SK.Utils.To_Hex
+           (Item => Policy.Kernel.Memory_Layout.Pml4_Address));
+      Ada.Text_IO.Close (File => Kernel_Pt);
+
       Write (Layout   => Policy.Kernel.Memory_Layout,
              Filename => Dir_Name & "/kernel.pt");
       Policy.Subjects.Iterate (Process => Write_Subject'Access);

@@ -68,11 +68,13 @@ is
 
    procedure Write_Pagetables
    is
-      T0_Pts : constant String := "obj/tau0.pt";
-      S1_Pts : constant String := "obj/subject1.pt";
-      S2_Pts : constant String := "obj/subject2.pt";
-      Data   : Xml.XML_Data_Type;
-      Policy : Policy_Type;
+      Knl_Pts : constant String := "obj/kernel.pt";
+      Knl_H   : constant String := "obj/kernel_pt.h";
+      T0_Pts  : constant String := "obj/tau0.pt";
+      S1_Pts  : constant String := "obj/subject1.pt";
+      S2_Pts  : constant String := "obj/subject2.pt";
+      Data    : Xml.XML_Data_Type;
+      Policy  : Policy_Type;
    begin
       Xml.Parse (Data   => Data,
                  File   => "data/test_policy1.xml",
@@ -81,6 +83,15 @@ is
       Policy := Xml.To_Policy (Data => Data);
       Writers.Write_Pagetables (Dir_Name => "obj",
                                 Policy   => Policy);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Knl_Pts,
+               Filename2 => "data/kernel.pt.ref"),
+              Message   => "Kernel pagetables mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Knl_H,
+               Filename2 => "data/kernel_pt.h.ref"),
+              Message   => "Kernel pt include mismatch");
 
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => T0_Pts,
@@ -95,6 +106,8 @@ is
                Filename2 => "data/subject2.pt.ref"),
               Message   => "Subject2 pagetables mismatch");
 
+      Ada.Directories.Delete_File (Name => Knl_Pts);
+      Ada.Directories.Delete_File (Name => Knl_H);
       Ada.Directories.Delete_File (Name => T0_Pts);
       Ada.Directories.Delete_File (Name => S1_Pts);
       Ada.Directories.Delete_File (Name => S2_Pts);

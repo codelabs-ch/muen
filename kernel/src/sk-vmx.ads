@@ -20,10 +20,9 @@ is
 
    procedure Enable;
    --# global
-   --#    in     State;
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from *, State;
+   --#    X86_64.State from *;
 
    procedure Launch (Subject_Id : Skp.Subjects.Subject_Id_Type);
    --# global

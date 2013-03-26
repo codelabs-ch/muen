@@ -3,7 +3,8 @@
 .global _start
 .global kernel_stack_ptr
 
-#define MSR_EFER 0xc0000080
+#define IA32_VMX_BASIC 0x480
+#define IA32_EFER      0xc0000080
 
 #define CR0_NE_BIT   5
 #define CR0_WP_BIT   16
@@ -38,6 +39,12 @@ multiboot_header:
 
 _start:
 
+	// (0) initialize VMX regions
+
+	movl $IA32_VMX_BASIC, %ecx
+	rdmsr
+	movl %eax, 0
+
 	// (1) enable PAE
 
 	movl %cr4, %eax
@@ -51,7 +58,7 @@ _start:
 
 	// (3) enable IA-32e mode and execute-disable
 
-	movl $MSR_EFER, %ecx
+	movl $IA32_EFER, %ecx
 	rdmsr
 	btsl $EFER_LME_BIT, %eax
 	btsl $EFER_NXE_BIT, %eax

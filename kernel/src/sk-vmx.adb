@@ -1,5 +1,3 @@
-with System;
-
 with SK.CPU;
 with SK.Interrupts;
 with SK.Descriptors;
@@ -10,7 +8,7 @@ with SK.Subjects;
 
 package body SK.VMX
 --# own
---#    State is Kernel_Stack_Address, VMX_Exit_Address, VMXON_Address;
+--#    State is Kernel_Stack_Address, VMX_Exit_Address;
 is
 
    --  Segment selectors
@@ -24,11 +22,6 @@ is
    Subject_Time_Slice : constant := 500;
 
    subtype Alignment_Type is SK.Word16 range 1 .. SK.Word16'Last;
-
-   --# accept Warning, 350, VMXON_Address, "Imported from Linker";
-   VMXON_Address : SK.Word64;
-   pragma Import (C, VMXON_Address, "vmxon_ptr");
-   --# end accept;
 
    --# accept Warning, 350, VMX_Exit_Address, "Imported from Linker";
    VMX_Exit_Address : SK.Word64;
@@ -473,27 +466,14 @@ is
    -------------------------------------------------------------------------
 
    procedure Enable
-   --# global
-   --#    in     VMXON_Address;
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, VMXON_Address;
    is
       Success : Boolean;
    begin
-      Success := Is_Aligned
-        (Address   => VMXON_Address,
-         Alignment => SK.Page_Size);
-      if not Success then
-         pragma Debug (KC.Put_Line ("VMXON region alignment invalid"));
-         CPU.Panic;
-      end if;
-
       CPU.Set_CR4 (Value => SK.Bit_Set
                    (Value => CPU.Get_CR4,
                     Pos   => Constants.CR4_VMXE_FLAG));
 
-      CPU.VMXON (Region  => VMXON_Address,
+      CPU.VMXON (Region  => 0,
                  Success => Success);
       if not Success then
          pragma Debug (KC.Put_Line (Item => "Error enabling VMX"));
@@ -501,17 +481,4 @@ is
       end if;
    end Enable;
 
-begin
-
-   --# hide SK.VMX;
-
-   declare
-      Unused_High, VMXON_Region : SK.Word32;
-      for VMXON_Region'Address use System'To_Address (VMXON_Address);
-   begin
-      CPU.Get_MSR
-        (Register => Constants.IA32_VMX_BASIC,
-         Low      => VMXON_Region,
-         High     => Unused_High);
-   end;
 end SK.VMX;

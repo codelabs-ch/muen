@@ -1,0 +1,8 @@
+<kernel>
+	<memory_layout pml4_address="200000">
+		<!-- kernel code and data        -->
+		<memory_region physical_address="100000" size="112k" alignment="4k" writable="true"  executable="true"/>
+		<!-- τ0 => kernel interface page -->
+		<memory_region physical_address="1ff000" size="4k"   alignment="4k" writable="false" executable="false"/>
+	</memory_layout>
+</kernel>

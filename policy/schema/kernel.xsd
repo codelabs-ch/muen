@@ -1,0 +1,10 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="./types.xsd"/>
+
+	<xs:complexType name="kernel_type">
+		<xs:sequence>
+			<xs:element name="memory_layout" type="memory_layout_type" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

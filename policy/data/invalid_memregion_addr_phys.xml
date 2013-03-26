@@ -1,4 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE system [
+<!ENTITY kernel SYSTEM "default_kernel.xml">
+]>
 <system>
+	&kernel;
+
 	<subjects>
 		<subject id="0" name="tau0">
 			<memory_layout pml4_address="1f0000">

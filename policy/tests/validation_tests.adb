@@ -27,15 +27,16 @@ is
 
    procedure Invalid_Memregion_Addrs
    is
-      D : Xml.XML_Data_Type;
-      P : Policy_Type;
-      pragma Unreferenced (P);
    begin
-      Xml.Parse (Data   => D,
-                 File   => "data/invalid_memregion_addr_phys.xml",
-                 Schema => "schema/system.xsd");
-
+      declare
+         D : Xml.XML_Data_Type;
+         P : Policy_Type;
+         pragma Unreferenced (P);
       begin
+         Xml.Parse (Data   => D,
+                    File   => "data/invalid_memregion_addr_phys.xml",
+                    Schema => "schema/system.xsd");
+
          P := Xml.To_Policy (Data => D);
          Fail (Message => "Exception expected");
 
@@ -44,6 +45,27 @@ is
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Subject tau0: Invalid memory region physical address "
                     & "0000000000000023 for specified alignment "
+                    & "0000000000001000",
+                    Message   => "Exception message mismatch");
+      end;
+
+      declare
+         D : Xml.XML_Data_Type;
+         P : Policy_Type;
+         pragma Unreferenced (P);
+      begin
+         Xml.Parse (Data   => D,
+                    File   => "data/invalid_memregion_addr_virt.xml",
+                    Schema => "schema/system.xsd");
+
+         P := Xml.To_Policy (Data => D);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject tau0: Invalid memory region virtual address "
+                    & "0000000000000028 for specified alignment "
                     & "0000000000001000",
                     Message   => "Exception message mismatch");
       end;

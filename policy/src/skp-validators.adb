@@ -22,6 +22,13 @@ is
            & " for specified alignment "
            & SK.Utils.To_Hex (Item => Region.Alignment);
       end if;
+
+      if Region.Virtual_Address mod Region.Alignment /= 0 then
+         raise Validation_Error with "Invalid memory region virtual address "
+           & SK.Utils.To_Hex (Item => Region.Virtual_Address)
+           & " for specified alignment "
+           & SK.Utils.To_Hex (Item => Region.Alignment);
+      end if;
    end Validate;
 
 end Skp.Validators;

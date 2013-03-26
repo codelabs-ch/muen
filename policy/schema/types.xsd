@@ -53,8 +53,11 @@
 	</xs:complexType>
 
 	<xs:complexType name="io_ports_type">
+		<xs:annotation>
+			<xs:documentation>Allowed I/O ports, zero port range denies all access.</xs:documentation>
+		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="port_range" type="io_port_type" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="port_range" type="io_port_type" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="bitmap_address" type="address_type" use="required"/>
 	</xs:complexType>

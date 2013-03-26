@@ -1,11 +1,11 @@
 with Ada.Exceptions;
 with Ada.Strings.Unbounded;
+with Ada.Containers;
 
 with SK;
 
 with Skp.Xml;
 with Skp.Xml.Util;
-with Skp.Test;
 
 package body Xml_Tests
 is
@@ -178,89 +178,68 @@ is
    procedure Xml_To_Policy
    is
       use Ada.Strings.Unbounded;
+      use type Ada.Containers.Count_Type;
 
       D : Xml.XML_Data_Type;
       P : Policy_Type;
-
-      Iterate_Count : Natural := 0;
-
-      --  Increment iteration counter.
-      procedure Inc_Iterate_Counter (S : Subject_Type);
-
-      procedure Inc_Iterate_Counter (S : Subject_Type)
-      is
-         pragma Unreferenced (S);
-      begin
-         Iterate_Count := Iterate_Count + 1;
-      end Inc_Iterate_Counter;
    begin
       Xml.Parse (Data   => D,
                  File   => "data/test_policy1.xml",
                  Schema => "schema/system.xsd");
       P := Xml.To_Policy (Data => D);
-      Assert (Condition => Get_Subject_Count (Policy => P) = 3,
+      Assert (Condition => P.Subjects.Length = 3,
               Message   => "Subject count mismatch");
-
-      Iterate (Policy  => P,
-               Process => Inc_Iterate_Counter'Access);
-      Assert (Condition => Iterate_Count = Get_Subject_Count (Policy => P),
-              Message   => "Iterate count mismatch");
 
       declare
          use type SK.Word16;
          use type SK.Word64;
 
-         S  : constant Subject_Type := Test.First (Policy => P);
-         M  : Memory_Layout_Type;
+         S  : constant Subject_Type := P.Subjects.First_Element;
          R  : Memory_Region_Type;
-         I  : IO_Ports_Type;
          PR : IO_Port_Range;
       begin
-         Assert (Condition => Get_Id (Subject => S) = 0,
+         Assert (Condition => S.Id = 0,
                  Message   => "Id mismatch");
-         Assert (Condition => Get_Name (Subject => S) = To_Unbounded_String
-                 (Source => "tau0"),
+         Assert (Condition => S.Name = To_Unbounded_String (Source => "tau0"),
                  Message   => "Name mismatch");
 
-         M := Get_Memory_Layout (Subject => S);
-         Assert (Condition => Get_Pml4_Address (Layout => M) = 16#1f0000#,
+         Assert (Condition => S.Memory_Layout.Pml4_Address = 16#1f0000#,
                  Message   => "PML4 address mismatch");
-         Assert (Condition => Get_Region_Count (Layout => M) = 2,
+         Assert (Condition => S.Memory_Layout.Regions.Length = 2,
                  Message   => "Memory region count mismatch");
 
-         R := Test.First (Layout => M);
-         Assert (Condition => Get_Physical_Address (Region => R) = 16#240000#,
+         R := S.Memory_Layout.Regions.First_Element;
+         Assert (Condition => R.Physical_Address = 16#240000#,
                  Message   => "Physical address mismatch (1)");
-         Assert (Condition => Get_Virtual_Address (Region => R) = 0,
+         Assert (Condition => R.Virtual_Address = 0,
                  Message   => "Virtual address mismatch (1)");
-         Assert (Condition => Get_Size (Region => R) = 65536,
+         Assert (Condition => R.Size = 65536,
                  Message   => "Memory size mismatch (1)");
-         Assert (Condition => Get_Alignment (Region => R) = 4096,
+         Assert (Condition => R.Alignment = 4096,
                  Message   => "Memory alignment mismatch (1)");
-         Assert (Condition => Is_Writable (Region => R),
+         Assert (Condition => R.Writable,
                  Message   => "Writable mismatch (1)");
-         Assert (Condition => Is_Executable (Region => R),
+         Assert (Condition => R.Executable,
                  Message   => "Executable mismatch (1)");
-         R := Test.Last (Layout => M);
-         Assert (Condition => Get_Physical_Address (Region => R) = 16#100000#,
+         R := S.Memory_Layout.Regions.Last_Element;
+         Assert (Condition => R.Physical_Address = 16#100000#,
                  Message   => "Physical address mismatch (2)");
-         Assert (Condition => Get_Virtual_Address (Region => R) = 16#100000#,
+         Assert (Condition => R.Virtual_Address = 16#100000#,
                  Message   => "Virtual address mismatch (2)");
-         Assert (Condition => Get_Size (Region => R) = 4096,
+         Assert (Condition => R.Size = 4096,
                  Message   => "Memory size mismatch (2)");
-         Assert (Condition => not Is_Writable (Region => R),
+         Assert (Condition => not R.Writable,
                  Message   => "Writable mismatch (2)");
-         Assert (Condition => not Is_Executable (Region => R),
+         Assert (Condition => not R.Executable,
                  Message   => "Executable mismatch (2)");
 
-         I := Get_IO_Ports (Subject => S);
-         Assert (Condition => Get_Bitmap_Address (Ports => I) = 16#12345678#,
+         Assert (Condition => S.IO_Ports.IO_Bitmap_Address = 16#12345678#,
                  Message   => "I/O bitmap address mismatch");
 
-         PR := Test.First (Ports => I);
-         Assert (Condition => Get_Start (Port_Range => PR) = 16#50b0#,
+         PR := S.IO_Ports.Ranges.First_Element;
+         Assert (Condition => PR.Start_Port = 16#50b0#,
                  Message   => "Port start mismatch");
-         Assert (Condition => Get_End (Port_Range => PR) = 16#50b0#,
+         Assert (Condition => PR.End_Port = 16#50b0#,
                  Message   => "Port end mismatch");
       end;
    end Xml_To_Policy;

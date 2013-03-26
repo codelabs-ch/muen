@@ -19,34 +19,36 @@ is
    is
 
       --  Write I/O bitmap of given subject.
-      procedure Write_Subject (S : Subject_Type);
+      procedure Write_Subject (C : Subjects_Package.Cursor);
 
       ----------------------------------------------------------------------
 
-      procedure Write_Subject (S : Subject_Type)
+      procedure Write_Subject (C : Subjects_Package.Cursor)
       is
          use Ada.Strings.Unbounded;
          use Ada.Streams.Stream_IO;
 
-         File : File_Type;
-
-         File_Name : constant String := Dir_Name & "/"
-           & To_String (Get_Name (Subject => S)) & ".iobm";
-         Ports     : constant IO_Ports_Type := Get_IO_Ports (Subject => S);
+         File      : File_Type;
+         S         : constant Subject_Type   := Subjects_Package.Element
+           (Position => C);
          Bitmap    : IO_Ports.IO_Bitmap_Type := IO_Ports.Null_IO_Bitmap;
+         File_Name : constant String         := Dir_Name & "/"
+           & To_String (S.Name) & ".iobm";
 
          --  Add given I/O port range to subject's I/O bitmap.
-         procedure Add_Port_Range (R : IO_Port_Range);
+         procedure Add_Port_Range (C : Ports_Package.Cursor);
 
          -------------------------------------------------------------------
 
-         procedure Add_Port_Range (R : IO_Port_Range)
+         procedure Add_Port_Range (C : Ports_Package.Cursor)
          is
+            R : constant IO_Port_Range := Ports_Package.Element
+              (Position => C);
          begin
             IO_Ports.Allow_Ports
               (B          => Bitmap,
-               Start_Port => Get_Start (Port_Range => R),
-               End_Port   => Get_End (Port_Range => R));
+               Start_Port => R.Start_Port,
+               End_Port   => R.End_Port);
          end Add_Port_Range;
       begin
          if Ada.Directories.Exists (Name => File_Name) then
@@ -59,8 +61,7 @@ is
                     Name => File_Name);
          end if;
 
-         Iterate (Ports   => Ports,
-                  Process => Add_Port_Range'Access);
+         S.IO_Ports.Ranges.Iterate (Process => Add_Port_Range'Access);
 
          Write (File => File,
                 Item => IO_Ports.To_Stream (B => Bitmap));
@@ -68,8 +69,7 @@ is
          Close (File => File);
       end Write_Subject;
    begin
-      Iterate (Policy  => Policy,
-               Process => Write_Subject'Access);
+      Policy.Subjects.Iterate (Process => Write_Subject'Access);
    end Write_IO_Bitmaps;
 
    -------------------------------------------------------------------------
@@ -80,21 +80,20 @@ is
    is
 
       --  Write pagetables of given subject.
-      procedure Write_Subject (S : Subject_Type);
+      procedure Write_Subject (C : Subjects_Package.Cursor);
 
       ----------------------------------------------------------------------
 
-      procedure Write_Subject (S : Subject_Type)
+      procedure Write_Subject (C : Subjects_Package.Cursor)
       is
          use Ada.Strings.Unbounded;
          use Ada.Streams.Stream_IO;
 
-         File : File_Type;
-
-         File_Name  : constant String := Dir_Name & "/"
-           & To_String (Get_Name (Subject => S)) & ".pt";
-         Mem_Layout : constant Memory_Layout_Type
-           := Get_Memory_Layout (Subject => S);
+         File      : File_Type;
+         S         : constant Subject_Type := Subjects_Package.Element
+           (Position => C);
+         File_Name : constant String       := Dir_Name & "/"
+           & To_String (S.Name) & ".pt";
 
          PML4 : Paging.PML4_Table_Type := Paging.Null_PML4_Table;
          PDPT : Paging.PDP_Table_Type  := Paging.Null_PDP_Table;
@@ -102,11 +101,11 @@ is
          PT   : Paging.Page_Table_Type := Paging.Null_Page_Table;
 
          --  Add given memory region to subject's pagetables.
-         procedure Add_Memory_Region (R : Memory_Region_Type);
+         procedure Add_Memory_Region (C : Memregion_Package.Cursor);
 
          -------------------------------------------------------------------
 
-         procedure Add_Memory_Region (R : Memory_Region_Type)
+         procedure Add_Memory_Region (C : Memregion_Package.Cursor)
          is
             use type SK.Word64;
 
@@ -115,9 +114,11 @@ is
             PD_Idx_Start, PD_Idx_End     : Paging.Table_Range;
             PT_Idx_Start, PT_Idx_End     : Paging.Table_Range;
 
+            R : constant Memory_Region_Type := Memregion_Package.Element
+              (Position => C);
+
             --  Physical start address of PML4 paging structure(s).
-            PML4_Addr : constant SK.Word64 := Get_Pml4_Address
-              (Layout => Mem_Layout);
+            PML4_Addr : constant SK.Word64 := S.Memory_Layout.Pml4_Address;
             --  Physical start address of PDPT paging structure(s).
             PDPT_Addr : SK.Word64;
             --  Physical start address of PD paging structure(s).
@@ -125,11 +126,9 @@ is
             --  Physical start address of PT paging structure(s).
             PT_Addr   : SK.Word64;
 
-            Physical_Addr : SK.Word64 := Get_Physical_Address (Region => R);
-            Virt_Start    : constant SK.Word64
-              := Get_Virtual_Address (Region => R);
-            Virt_End      : constant SK.Word64
-              := Virt_Start + Get_Size (Region => R) - 1;
+            Physical_Addr : SK.Word64          := R.Physical_Address;
+            Virt_Start    : constant SK.Word64 := R.Virtual_Address;
+            Virt_End      : constant SK.Word64 := Virt_Start + R.Size - 1;
          begin
             Paging.Get_Indexes (Address    => Virt_Start,
                                 PML4_Index => PML4_Idx_Start,
@@ -197,13 +196,13 @@ is
                if not Paging.Is_Present (E => PT (Idx)) then
                   PT (Idx) := Paging.Create_PT_Entry
                     (Address       => Physical_Addr,
-                     Writable      => Is_Writable (Region => R),
+                     Writable      => R.Writable,
                      User_Access   => True,
                      Writethrough  => True,
                      Cache_Disable => False,
                      Global        => False,
                      PAT           => True,
-                     Exec_Disable  => not Is_Executable (Region => R));
+                     Exec_Disable  => not R.Executable);
 
                   Physical_Addr := Physical_Addr + SK.Page_Size;
                end if;
@@ -220,8 +219,7 @@ is
                     Name => File_Name);
          end if;
 
-         Iterate (Layout  => Mem_Layout,
-                  Process => Add_Memory_Region'Access);
+         S.Memory_Layout.Regions.Iterate (Process => Add_Memory_Region'Access);
 
          Paging.PML4_Table_Type'Write (Stream (File => File), PML4);
          Paging.PDP_Table_Type'Write  (Stream (File => File), PDPT);
@@ -231,8 +229,7 @@ is
          Close (File => File);
       end Write_Subject;
    begin
-      Iterate (Policy  => Policy,
-               Process => Write_Subject'Access);
+      Policy.Subjects.Iterate (Process => Write_Subject'Access);
    end Write_Pagetables;
 
    -------------------------------------------------------------------------
@@ -246,36 +243,34 @@ is
 
       File    : File_Type;
       Current : Natural           := 0;
-      S_Count : constant Positive := Get_Subject_Count (Policy => Policy);
+      S_Count : constant Positive := Positive (Policy.Subjects.Length);
       Indent  : constant String   := "   ";
 
       --  Write specification of given subject.
-      procedure Write_Subject (S : Subject_Type);
+      procedure Write_Subject (C : Subjects_Package.Cursor);
 
       ----------------------------------------------------------------------
 
-      procedure Write_Subject (S : Subject_Type)
+      procedure Write_Subject (C : Subjects_Package.Cursor)
       is
-         IO_Ports   : constant IO_Ports_Type := Get_IO_Ports (Subject => S);
-         Mem_Layout : constant Memory_Layout_Type
-           := Get_Memory_Layout (Subject => S);
+         S  : constant Subject_Type := Subjects_Package.Element
+           (Position => C);
       begin
          Put_Line (File => File,
-                   Item => Indent & "  " & Get_Id (Subject => S)'Img
+                   Item => Indent & "  " & S.Id'Img
                    & " => Subject_Spec_Type'(");
          Put (File => File,
               Item => Indent & "    PML4_Address      => 16#");
          Put (File => File,
               Item => SK.Utils.To_Hex
-                (Item => Get_Pml4_Address (Layout => Mem_Layout)));
+                (Item => S.Memory_Layout.Pml4_Address));
          Put_Line (File => File,
                    Item => "#,");
 
          Put (File => File,
               Item => Indent & "    IO_Bitmap_Address => 16#");
          Put (File => File,
-              Item => SK.Utils.To_Hex
-                (Item => Get_Bitmap_Address (Ports => IO_Ports)));
+              Item => SK.Utils.To_Hex (Item => S.IO_Ports.IO_Bitmap_Address));
          Put (File => File,
               Item => "#)");
 
@@ -328,8 +323,7 @@ is
                 Item => Indent & "Subject_Specs : constant Subject_Spec_Array"
                 & " := Subject_Spec_Array'(");
 
-      Iterate (Policy  => Policy,
-               Process => Write_Subject'Access);
+      Policy.Subjects.Iterate (Process => Write_Subject'Access);
 
       New_Line (File => File);
       Put_Line (File => File,

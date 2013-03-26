@@ -25,7 +25,10 @@ $(OBJ_DIR)/subject_2: $(SUBJ_DIR)/test/obj/subject_2
 	objcopy -O binary $< $@
 
 $(OBJ_DIR)/kernel: $(KERN_DIR)/obj/kernel $(SUBJ_BINS)
-	objcopy --add-section .tau0=$(OBJ_DIR)/tau0 $< $@              \
+	objcopy --add-section .kernelpt=$(PT_DIR)/kernel.pt $< $@      \
+		--change-section-address .kernelpt=0x00200000              \
+		--set-section-flags .kernelpt=alloc 2>/dev/null
+	objcopy --add-section .tau0=$(OBJ_DIR)/tau0 $@                 \
 		--change-section-address .tau0=0x00240000                  \
 		--set-section-flags .tau0=alloc 2>/dev/null
 	objcopy --add-section .tau0pt=$(PT_DIR)/tau0.pt $@             \

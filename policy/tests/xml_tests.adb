@@ -201,7 +201,7 @@ is
 
          --  Kernel
 
-         Assert (Condition => P.Kernel.Memory_Layout.Pml4_Address = 16#110000#,
+         Assert (Condition => P.Kernel.Memory_Layout.Pml4_Address = 16#200000#,
                  Message   => "Kernel PML4 address mismatch");
          Assert (Condition => P.Kernel.Memory_Layout.Regions.Length = 2,
                  Message   => "Kernel memory region count mismatch");

@@ -247,6 +247,8 @@ is
                 Filename => File);
       end Write_Subject;
    begin
+      Write (Layout   => Policy.Kernel.Memory_Layout,
+             Filename => Dir_Name & "/kernel.pt");
       Policy.Subjects.Iterate (Process => Write_Subject'Access);
    end Write_Pagetables;
 

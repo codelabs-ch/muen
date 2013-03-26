@@ -11,7 +11,6 @@ SECTIONS
 
 	.data 0x00110000 :
 	{
-		*(.pagetable)
 		*(.gdt)
 		*(.data)
 	}
@@ -29,7 +28,7 @@ SECTIONS
 		kernel_stack = .;
 	}
 
-	.interfaces 0x00200000 :
+	.interfaces 0x001ff000 :
 	{
 		*(.interfaces)
 	}

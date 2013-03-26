@@ -1,6 +1,8 @@
 .global _start
 .global kernel_stack_ptr
 
+#define KERNEL_PML4 0x200000
+
 #define MSR_EFER 0xc0000080
 
 #define CR0_NE_BIT   5
@@ -44,7 +46,7 @@ _start:
 
 	// (2) load CR3 with PML4
 
-	movl kernel_pml4_ptr, %eax
+	movl $KERNEL_PML4, %eax
 	movl %eax, %cr3
 
 	// (3) enable IA-32e mode and execute-disable

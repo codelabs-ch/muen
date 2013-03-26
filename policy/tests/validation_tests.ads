@@ -11,4 +11,7 @@ is
    --  Verify invalid memory region size check.
    procedure Invalid_Memregion_Size;
 
+   --  Verify invalid memory region addresses.
+   procedure Invalid_Memregion_Addrs;
+
 end Validation_Tests;

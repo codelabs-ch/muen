@@ -15,6 +15,13 @@ is
            & " for specified alignment "
            & SK.Utils.To_Hex (Item => Region.Alignment);
       end if;
+
+      if Region.Physical_Address mod Region.Alignment /= 0 then
+         raise Validation_Error with "Invalid memory region physical address "
+           & SK.Utils.To_Hex (Item => Region.Physical_Address)
+           & " for specified alignment "
+           & SK.Utils.To_Hex (Item => Region.Alignment);
+      end if;
    end Validate;
 
 end Skp.Validators;

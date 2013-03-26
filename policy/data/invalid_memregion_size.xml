@@ -1,0 +1,10 @@
+<system>
+	<subjects>
+		<subject id="0" name="tau0">
+			<memory_layout pml4_address="1f0000">
+				<memory_region physical_address="0" size="64k" alignment="2m" writable="true" executable="true"/>
+			</memory_layout>
+			<io_ports bitmap_address="2f0000"/>
+		</subject>
+	</subjects>
+</system>

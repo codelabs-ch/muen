@@ -10,6 +10,7 @@ with Schema.Validators;
 
 with Skp.Xml.Util;
 with Skp.Xml.Grammar;
+with Skp.Validators;
 
 package body Skp.Xml
 is
@@ -146,6 +147,7 @@ is
                  (Elem => Node,
                   Name => "executable"));
 
+            Validators.Validate (Region => R);
             Mem_Layout.Regions.Append (New_Item => R);
          end Add_Mem_Region;
 
@@ -203,6 +205,13 @@ is
                Name          => To_Unbounded_String (Name),
                Memory_Layout => Mem_Layout,
                IO_Ports      => Ports));
+
+      exception
+         when E : others =>
+            Ada.Exceptions.Raise_Exception
+              (E       => Ada.Exceptions.Exception_Identity (X => E),
+               Message => "Subject " & Name & ": "
+               & Ada.Exceptions.Exception_Message (X => E));
       end Add_Subject;
    begin
       Util.For_Each_Node (Node     => DCD.Get_Element (Doc => Data.Doc),

@@ -473,7 +473,7 @@ is
                    (Value => CPU.Get_CR4,
                     Pos   => Constants.CR4_VMXE_FLAG));
 
-      CPU.VMXON (Region  => 0,
+      CPU.VMXON (Region  => Skp.Vmxon_Address,
                  Success => Success);
       if not Success then
          pragma Debug (KC.Put_Line (Item => "Error enabling VMX"));

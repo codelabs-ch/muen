@@ -1,5 +1,6 @@
 --# inherit
 --#    X86_64,
+--#    SK.Apic,
 --#    SK.Interrupts,
 --#    SK.GDT,
 --#    SK.Scheduler,

@@ -4,6 +4,7 @@ with SK.Interrupts;
 with SK.System_State;
 with SK.VMX;
 with SK.Scheduler;
+with SK.Apic;
 
 package body SK.Kernel
 is
@@ -26,6 +27,7 @@ is
 
       Success := System_State.Is_Valid;
       if Success then
+         Apic.Enable;
          VMX.Enable;
          Scheduler.Schedule;
       else

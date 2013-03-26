@@ -2,6 +2,7 @@ with Ada.Text_IO;
 with Ada.Streams.Stream_IO;
 with Ada.Directories;
 with Ada.Strings.Unbounded;
+with Ada.Exceptions;
 
 with SK.Utils;
 
@@ -16,6 +17,68 @@ is
    procedure Write
      (Layout   : Memory_Layout_Type;
       Filename : String);
+
+   --  Open file given by filename. Raises IO_Error if the file could not be
+   --  opened.
+   procedure Open
+     (Filename :     String;
+      File     : out Ada.Text_IO.File_Type);
+
+   --  Open file given by filename. Raises IO_Error if the file could not be
+   --  opened.
+   procedure Open
+     (Filename :     String;
+      File     : out Ada.Streams.Stream_IO.File_Type);
+
+   -------------------------------------------------------------------------
+
+   procedure Open
+     (Filename :     String;
+      File     : out Ada.Text_IO.File_Type)
+   is
+   begin
+      if Ada.Directories.Exists (Name => Filename) then
+         Ada.Text_IO.Open
+           (File => File,
+            Mode => Ada.Text_IO.Out_File,
+            Name => Filename);
+      else
+         Ada.Text_IO.Create
+           (File => File,
+            Mode => Ada.Text_IO.Out_File,
+            Name => Filename);
+      end if;
+
+   exception
+      when E : others =>
+         raise IO_Error with "Unable to open file '" & Filename & "' - "
+           & Ada.Exceptions.Exception_Message (X => E);
+   end Open;
+
+   -------------------------------------------------------------------------
+
+   procedure Open
+     (Filename :     String;
+      File     : out Ada.Streams.Stream_IO.File_Type)
+   is
+   begin
+      if Ada.Directories.Exists (Name => Filename) then
+         Ada.Streams.Stream_IO.Open
+           (File => File,
+            Mode => Ada.Streams.Stream_IO.Out_File,
+            Name => Filename);
+      else
+         Ada.Streams.Stream_IO.Create
+           (File => File,
+            Mode => Ada.Streams.Stream_IO.Out_File,
+            Name => Filename);
+      end if;
+
+   exception
+      when E : others =>
+         raise IO_Error with "Unable to open file '" & Filename & "' - "
+           & Ada.Exceptions.Exception_Message (X => E);
+   end Open;
 
    -------------------------------------------------------------------------
 
@@ -140,15 +203,8 @@ is
          end loop;
       end Add_Memory_Region;
    begin
-      if Ada.Directories.Exists (Name => Filename) then
-         Open (File => File,
-               Mode => Out_File,
-               Name => Filename);
-      else
-         Create (File => File,
-                 Mode => Out_File,
-                 Name => Filename);
-      end if;
+      Open (Filename => Filename,
+            File     => File);
 
       Layout.Regions.Iterate (Process => Add_Memory_Region'Access);
 
@@ -200,15 +256,8 @@ is
                End_Port   => R.End_Port);
          end Add_Port_Range;
       begin
-         if Ada.Directories.Exists (Name => File_Name) then
-            Open (File => File,
-                  Mode => Out_File,
-                  Name => File_Name);
-         else
-            Create (File => File,
-                    Mode => Out_File,
-                    Name => File_Name);
-         end if;
+         Open (Filename => File_Name,
+               File     => File);
 
          S.IO_Ports.Ranges.Iterate (Process => Add_Port_Range'Access);
 
@@ -304,15 +353,8 @@ is
          end if;
       end Write_Subject;
    begin
-      if Ada.Directories.Exists (Name => File_Name) then
-         Open (File => File,
-               Mode => Out_File,
-               Name => File_Name);
-      else
-         Create (File => File,
-                 Mode => Out_File,
-                 Name => File_Name);
-      end if;
+      Open (Filename => File_Name,
+            File     => File);
 
       Put_Line (File => File,
                 Item => "with SK;");

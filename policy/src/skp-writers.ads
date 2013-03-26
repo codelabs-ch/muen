@@ -22,4 +22,6 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type);
 
+   IO_Error : exception;
+
 end Skp.Writers;

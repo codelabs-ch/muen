@@ -12,6 +12,7 @@ SPARK_OPTS =                                      \
 	-nolistings                                   \
 	-warning_file=$(TOP_DIR)/common/warnings.conf \
 	-error_explanations=first_occurrence          \
+	-language=2005                                \
 	-brief                                        \
 	-rules=all
 

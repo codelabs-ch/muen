@@ -198,6 +198,16 @@ is
          R  : Memory_Region_Type;
          PR : IO_Port_Range;
       begin
+
+         --  Kernel
+
+         Assert (Condition => P.Kernel.Memory_Layout.Pml4_Address = 16#110000#,
+                 Message   => "Kernel PML4 address mismatch");
+         Assert (Condition => P.Kernel.Memory_Layout.Regions.Length = 2,
+                 Message   => "Kernel memory region count mismatch");
+
+         --  Subjects
+
          Assert (Condition => S.Id = 0,
                  Message   => "Id mismatch");
          Assert (Condition => S.Name = To_Unbounded_String (Source => "tau0"),

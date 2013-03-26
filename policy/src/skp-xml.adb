@@ -151,7 +151,8 @@ is
 
       package DCD renames DOM.Core.Documents;
 
-      P : Policy_Type;
+      Root : constant DOM.Core.Node := DCD.Get_Element (Doc => Data.Doc);
+      P    : Policy_Type;
 
       --  Add subject specification to policy.
       procedure Add_Subject (Node : DOM.Core.Node);
@@ -221,7 +222,17 @@ is
                & Ada.Exceptions.Exception_Message (X => E));
       end Add_Subject;
    begin
-      Util.For_Each_Node (Node     => DCD.Get_Element (Doc => Data.Doc),
+      declare
+         Kernel_Node : constant DOM.Core.Node
+           := Xml.Util.Get_Element_By_Tag_Name
+             (Node     => Root,
+              Tag_Name => "kernel");
+      begin
+         P.Kernel.Memory_Layout := Deserialize_Mem_Layout
+           (Node => Kernel_Node);
+      end;
+
+      Util.For_Each_Node (Node     => Root,
                           Tag_Name => "subject",
                           Process  => Add_Subject'Access);
       return P;

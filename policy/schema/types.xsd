@@ -39,10 +39,10 @@
 	<xs:complexType name="memory_region_type">
 		<xs:attribute name="physical_address" type="address_type"          use="required"/>
 		<xs:attribute name="size"             type="memory_size_type"      use="required"/>
-		<xs:attribute name="alignment"        type="memory_alignment_type" use="optional" default="4k"/>
+		<xs:attribute name="alignment"        type="memory_alignment_type" use="required"/>
 		<xs:attribute name="virtual_address"  type="address_type"          use="optional"/>
 		<xs:attribute name="writable"         type="xs:boolean"            use="required"/>
-		<xs:attribute name="executable"       type="xs:boolean"            use="optional" default="false"/>
+		<xs:attribute name="executable"       type="xs:boolean"            use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="memory_layout_type">

@@ -5,7 +5,7 @@ SECTIONS
 	.text :
 	{
 		image_start = .;
-		*(.multiboot)
+		multiboot.o(.multiboot)
 		*(.text)
 	}
 

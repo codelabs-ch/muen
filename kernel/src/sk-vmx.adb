@@ -120,8 +120,17 @@ is
    -------------------------------------------------------------------------
 
    procedure Resume (Subject_Id : Skp.Subjects.Subject_Id_Type)
+   --# global
+   --#    in     Subjects.Descriptors;
+   --#    in     Kernel_Stack_Address;
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from
+   --#       *,
+   --#       Subject_Id,
+   --#       Subjects.Descriptors,
+   --#       Kernel_Stack_Address;
    is
-      Error   : SK.Word64;
       Success : Boolean;
       State   : Subjects.State_Type;
    begin
@@ -138,17 +147,17 @@ is
                   Value => Subject_Time_Slice);
 
       CPU.Restore_Registers (Regs => State.Regs);
-      CPU.VMRESUME (Success => Success);
-      if not Success then
-         pragma Debug (CPU.VMREAD (Field   => Constants.VMX_INST_ERROR,
-                                   Value   => Error,
-                                   Success => Success));
-         pragma Debug (KC.Put_String (Item => "Error resuming VM ("));
-         pragma Debug (KC.Put_Byte (Item => Byte (Error)));
-         pragma Debug (KC.Put_Line (Item => ")"));
-         CPU.Panic;
-      end if;
-      --# accept Warning, 400, Error, "Only used for debug output";
+      CPU.VMRESUME;
+
+      --  VM resume failed.
+
+      CPU.Set_Stack (Address => Kernel_Stack_Address);
+
+      pragma Debug (KC.Put_String (Item => "Error resuming subject "));
+      pragma Debug (KC.Put_Byte (Item => Byte (Subject_Id)));
+      pragma Debug (KC.New_Line);
+
+      VMX_Error;
    end Resume;
 
    -------------------------------------------------------------------------

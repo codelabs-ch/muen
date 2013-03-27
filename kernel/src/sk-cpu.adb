@@ -259,20 +259,17 @@ is
    begin
       System.Machine_Code.Asm
         (Template => "vmlaunch",
-         Clobber  => "cc",
          Volatile => True);
    end VMLAUNCH;
 
    -------------------------------------------------------------------------
 
-   procedure VMRESUME (Success : out Boolean)
+   procedure VMRESUME
    is
       --# hide VMRESUME;
    begin
       System.Machine_Code.Asm
-        (Template => "vmresume; seta %0",
-         Outputs  => (Boolean'Asm_Output ("=q", Success)),
-         Clobber  => "cc",
+        (Template => "vmresume",
          Volatile => True);
    end VMRESUME;
 

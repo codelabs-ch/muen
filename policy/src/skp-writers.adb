@@ -18,6 +18,11 @@ is
      (Layout   : Memory_Layout_Type;
       Filename : String);
 
+   --  Create I/O bitmap from given ports and write them to the specified file.
+   procedure Write
+     (Ports    : IO_Ports_Type;
+      Filename : String);
+
    --  Open file given by filename. Raises IO_Error if the file could not be
    --  opened.
    procedure Open
@@ -218,57 +223,41 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Write_IO_Bitmaps
-     (Dir_Name : String;
-      Policy   : Policy_Type)
+   procedure Write
+     (Ports    : IO_Ports_Type;
+      Filename : String)
    is
+      use Ada.Streams.Stream_IO;
 
-      --  Write I/O bitmap of given subject.
-      procedure Write_Subject (C : Subjects_Package.Cursor);
+      File   : File_Type;
+      Bitmap : IO_Ports.IO_Bitmap_Type := IO_Ports.Null_IO_Bitmap;
 
-      ----------------------------------------------------------------------
+      --  Add given I/O port range to I/O bitmap.
+      procedure Add_Port_Range (C : Ports_Package.Cursor);
 
-      procedure Write_Subject (C : Subjects_Package.Cursor)
+      -------------------------------------------------------------------
+
+      procedure Add_Port_Range (C : Ports_Package.Cursor)
       is
-         use Ada.Strings.Unbounded;
-         use Ada.Streams.Stream_IO;
-
-         File      : File_Type;
-         S         : constant Subject_Type   := Subjects_Package.Element
+         R : constant IO_Port_Range := Ports_Package.Element
            (Position => C);
-         Bitmap    : IO_Ports.IO_Bitmap_Type := IO_Ports.Null_IO_Bitmap;
-         File_Name : constant String         := Dir_Name & "/"
-           & To_String (S.Name) & ".iobm";
-
-         --  Add given I/O port range to subject's I/O bitmap.
-         procedure Add_Port_Range (C : Ports_Package.Cursor);
-
-         -------------------------------------------------------------------
-
-         procedure Add_Port_Range (C : Ports_Package.Cursor)
-         is
-            R : constant IO_Port_Range := Ports_Package.Element
-              (Position => C);
-         begin
-            IO_Ports.Allow_Ports
-              (B          => Bitmap,
-               Start_Port => R.Start_Port,
-               End_Port   => R.End_Port);
-         end Add_Port_Range;
       begin
-         Open (Filename => File_Name,
-               File     => File);
-
-         S.IO_Ports.Ranges.Iterate (Process => Add_Port_Range'Access);
-
-         Write (File => File,
-                Item => IO_Ports.To_Stream (B => Bitmap));
-
-         Close (File => File);
-      end Write_Subject;
+         IO_Ports.Allow_Ports
+           (B          => Bitmap,
+            Start_Port => R.Start_Port,
+            End_Port   => R.End_Port);
+      end Add_Port_Range;
    begin
-      Policy.Subjects.Iterate (Process => Write_Subject'Access);
-   end Write_IO_Bitmaps;
+      Open (Filename => Filename,
+            File     => File);
+
+      Ports.Ranges.Iterate (Process => Add_Port_Range'Access);
+
+      Write (File => File,
+             Item => IO_Ports.To_Stream (B => Bitmap));
+
+      Close (File => File);
+   end Write;
 
    -------------------------------------------------------------------------
 
@@ -293,124 +282,117 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Write_Pagetables
-     (Dir_Name : String;
-      Policy   : Policy_Type)
-   is
-
-      --  Write pagetables of given subject.
-      procedure Write_Subject (C : Subjects_Package.Cursor);
-
-      ----------------------------------------------------------------------
-
-      procedure Write_Subject (C : Subjects_Package.Cursor)
-      is
-         use Ada.Strings.Unbounded;
-
-         S    : constant Subject_Type := Subjects_Package.Element
-           (Position => C);
-         File : constant String       := Dir_Name & "/" & To_String (S.Name)
-           & ".pt";
-
-      begin
-         Write (Layout   => S.Memory_Layout,
-                Filename => File);
-      end Write_Subject;
-   begin
-      Policy.Subjects.Iterate (Process => Write_Subject'Access);
-   end Write_Pagetables;
-
-   -------------------------------------------------------------------------
-
    procedure Write_Subjects
-     (File_Name    : String;
-      Package_Name : String;
-      Policy       : Policy_Type)
+     (Dir_Name : String;
+      Subjects : Subjects_Package.Set)
    is
       use Ada.Text_IO;
+      use Ada.Strings.Unbounded;
 
-      File    : File_Type;
-      Current : Natural           := 0;
-      S_Count : constant Positive := Positive (Policy.Subjects.Length);
-      Indent  : constant String   := "   ";
+      Pkg_Name  : constant String   := "Skp.Subjects";
+      Spec_Name : constant String   := Dir_Name & "/skp-subjects.ads";
+      S_Count   : constant Positive := Positive (Subjects.Length);
+      Indent    : constant String   := "   ";
+      Current   : Natural           := 0;
+      Spec_File : File_Type;
+
+      --  Write subject specs and pagetable.
+      procedure Write_Subject (C : Subjects_Package.Cursor);
 
       --  Write specification of given subject.
-      procedure Write_Subject (C : Subjects_Package.Cursor);
+      procedure Write_Subject_Spec (Subject : Subject_Type);
 
       ----------------------------------------------------------------------
 
       procedure Write_Subject (C : Subjects_Package.Cursor)
       is
-         S  : constant Subject_Type := Subjects_Package.Element
+         S       : constant Subject_Type := Subjects_Package.Element
            (Position => C);
+         PT_File : constant String       := Dir_Name & "/" & To_String (S.Name)
+           & ".pt";
+         IO_File : constant String       := Dir_Name & "/" & To_String (S.Name)
+           & ".iobm";
       begin
-         Put_Line (File => File,
-                   Item => Indent & "  " & S.Id'Img
+         Write_Subject_Spec (Subject => S);
+         Write (Layout   => S.Memory_Layout,
+                Filename => PT_File);
+         Write (Ports    => S.IO_Ports,
+                Filename => IO_File);
+      end Write_Subject;
+
+      ----------------------------------------------------------------------
+
+      procedure Write_Subject_Spec (Subject : Subject_Type)
+      is
+      begin
+         Put_Line (File => Spec_File,
+                   Item => Indent & "  " & Subject.Id'Img
                    & " => Subject_Spec_Type'(");
-         Put (File => File,
+         Put (File => Spec_File,
               Item => Indent & "    PML4_Address      => 16#");
-         Put (File => File,
+         Put (File => Spec_File,
               Item => SK.Utils.To_Hex
-                (Item => S.Memory_Layout.Pml4_Address));
-         Put_Line (File => File,
+                (Item => Subject.Memory_Layout.Pml4_Address));
+         Put_Line (File => Spec_File,
                    Item => "#,");
 
-         Put (File => File,
+         Put (File => Spec_File,
               Item => Indent & "    IO_Bitmap_Address => 16#");
-         Put (File => File,
-              Item => SK.Utils.To_Hex (Item => S.IO_Ports.IO_Bitmap_Address));
-         Put (File => File,
+         Put (File => Spec_File,
+              Item => SK.Utils.To_Hex
+                (Item => Subject.IO_Ports.IO_Bitmap_Address));
+         Put (File => Spec_File,
               Item => "#)");
 
          Current := Current + 1;
          if Current /= S_Count then
-            Put_Line (File => File,
+            Put_Line (File => Spec_File,
                       Item => ",");
          else
-            Put_Line (File => File,
+            Put_Line (File => Spec_File,
                       Item => ");");
          end if;
-      end Write_Subject;
+      end Write_Subject_Spec;
    begin
-      Open (Filename => File_Name,
-            File     => File);
+      Open (Filename => Spec_Name,
+            File     => Spec_File);
 
-      Put_Line (File => File,
+      Put_Line (File => Spec_File,
                 Item => "with SK;");
-      New_Line (File => File);
-      Put_Line (File => File,
+      New_Line (File => Spec_File);
+      Put_Line (File => Spec_File,
                 Item => "--# inherit SK;");
-      Put_Line (File => File,
-                Item => "package " & Package_Name & " is");
-      New_Line (File => File);
-      Put_Line (File => File,
+      Put_Line (File => Spec_File,
+                Item => "package " & Pkg_Name & " is");
+      New_Line (File => Spec_File);
+      Put_Line (File => Spec_File,
                 Item => Indent & "type Subject_Id_Type is range 0 .."
                 & Positive'Image (S_Count - 1) & ";");
-      New_Line (File => File);
-      Put_Line (File => File,
+      New_Line (File => Spec_File);
+      Put_Line (File => Spec_File,
                 Item => Indent & "type Subject_Spec_Type is record");
-      Put_Line (File => File,
+      Put_Line (File => Spec_File,
                 Item => Indent & "   PML4_Address      : SK.Word64;");
-      Put_Line (File => File,
+      Put_Line (File => Spec_File,
                 Item => Indent & "   IO_Bitmap_Address : SK.Word64;");
-      Put_Line (File => File,
+      Put_Line (File => Spec_File,
                 Item => Indent & "end record;");
-      New_Line (File => File);
-      Put_Line (File => File,
+      New_Line (File => Spec_File);
+      Put_Line (File => Spec_File,
                 Item => Indent & "type Subject_Spec_Array is array "
                 & "(Subject_Id_Type) of Subject_Spec_Type;");
-      New_Line (File => File);
-      Put_Line (File => File,
+      New_Line (File => Spec_File);
+      Put_Line (File => Spec_File,
                 Item => Indent & "Subject_Specs : constant Subject_Spec_Array"
                 & " := Subject_Spec_Array'(");
 
-      Policy.Subjects.Iterate (Process => Write_Subject'Access);
+      Subjects.Iterate (Process => Write_Subject'Access);
 
-      New_Line (File => File);
-      Put_Line (File => File,
-                Item => "end " & Package_Name & ";");
+      New_Line (File => Spec_File);
+      Put_Line (File => Spec_File,
+                Item => "end " & Pkg_Name & ";");
 
-      Close (File => File);
+      Close (File => Spec_File);
    end Write_Subjects;
 
 end Skp.Writers;

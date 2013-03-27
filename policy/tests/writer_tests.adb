@@ -22,50 +22,8 @@ is
          Name    => "Write kernel policy files");
       T.Add_Test_Routine
         (Routine => Write_Subjects'Access,
-         Name    => "Write subject specifications");
-      T.Add_Test_Routine
-        (Routine => Write_Pagetables'Access,
-         Name    => "Write pagetables");
-      T.Add_Test_Routine
-        (Routine => Write_IO_Bitmaps'Access,
-         Name    => "Write I/O bitmaps");
+         Name    => "Write subject policy files");
    end Initialize;
-
-   -------------------------------------------------------------------------
-
-   procedure Write_IO_Bitmaps
-   is
-      T0_Bm  : constant String := "obj/tau0.iobm";
-      S1_Bm  : constant String := "obj/subject1.iobm";
-      S2_Bm  : constant String := "obj/subject2.iobm";
-      Data   : Xml.XML_Data_Type;
-      Policy : Policy_Type;
-   begin
-      Xml.Parse (Data   => Data,
-                 File   => "data/test_policy1.xml",
-                 Schema => "schema/system.xsd");
-
-      Policy := Xml.To_Policy (Data => Data);
-      Writers.Write_IO_Bitmaps (Dir_Name => "obj",
-                                Policy   => Policy);
-
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => T0_Bm,
-               Filename2 => "data/tau0.iobm.ref"),
-              Message   => "Tau0 I/O bitmap mismatch");
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => S1_Bm,
-               Filename2 => "data/subject1.iobm.ref"),
-              Message   => "Subject1 I/O bitmap mismatch");
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => S2_Bm,
-               Filename2 => "data/subject2.iobm.ref"),
-              Message   => "Subject2 I/O bitmap mismatch");
-
-      Ada.Directories.Delete_File (Name => T0_Bm);
-      Ada.Directories.Delete_File (Name => S1_Bm);
-      Ada.Directories.Delete_File (Name => S2_Bm);
-   end Write_IO_Bitmaps;
 
    -------------------------------------------------------------------------
 
@@ -99,21 +57,35 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Write_Pagetables
+   procedure Write_Subjects
    is
-      T0_Pts : constant String := "obj/tau0.pt";
-      S1_Pts : constant String := "obj/subject1.pt";
-      S2_Pts : constant String := "obj/subject2.pt";
-      Data   : Xml.XML_Data_Type;
-      Policy : Policy_Type;
+      Out_File : constant String := "obj/skp-subjects.ads";
+      T0_Pts   : constant String := "obj/tau0.pt";
+      S1_Pts   : constant String := "obj/subject1.pt";
+      S2_Pts   : constant String := "obj/subject2.pt";
+      T0_Bm    : constant String := "obj/tau0.iobm";
+      S1_Bm    : constant String := "obj/subject1.iobm";
+      S2_Bm    : constant String := "obj/subject2.iobm";
+      Data     : Xml.XML_Data_Type;
+      Policy   : Policy_Type;
    begin
       Xml.Parse (Data   => Data,
                  File   => "data/test_policy1.xml",
                  Schema => "schema/system.xsd");
 
       Policy := Xml.To_Policy (Data => Data);
-      Writers.Write_Pagetables (Dir_Name => "obj",
-                                Policy   => Policy);
+
+      Writers.Write_Subjects (Dir_Name => "obj",
+                              Subjects => Policy.Subjects);
+
+      --  Specs
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Out_File,
+               Filename2 => "data/skp-subjects.ref"),
+              Message   => "Output file mismatch");
+
+      --  Pagetables
 
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => T0_Pts,
@@ -128,34 +100,27 @@ is
                Filename2 => "data/subject2.pt.ref"),
               Message   => "Subject2 pagetables mismatch");
 
+      --  I/O bitmaps
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => T0_Bm,
+               Filename2 => "data/tau0.iobm.ref"),
+              Message   => "Tau0 I/O bitmap mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => S1_Bm,
+               Filename2 => "data/subject1.iobm.ref"),
+              Message   => "Subject1 I/O bitmap mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => S2_Bm,
+               Filename2 => "data/subject2.iobm.ref"),
+              Message   => "Subject2 I/O bitmap mismatch");
+
+      Ada.Directories.Delete_File (Name => T0_Bm);
+      Ada.Directories.Delete_File (Name => S1_Bm);
+      Ada.Directories.Delete_File (Name => S2_Bm);
       Ada.Directories.Delete_File (Name => T0_Pts);
       Ada.Directories.Delete_File (Name => S1_Pts);
       Ada.Directories.Delete_File (Name => S2_Pts);
-   end Write_Pagetables;
-
-   -------------------------------------------------------------------------
-
-   procedure Write_Subjects
-   is
-      Out_File : constant String := "obj/skp-subjects.ads";
-      Data     : Xml.XML_Data_Type;
-      Policy   : Policy_Type;
-   begin
-      Xml.Parse (Data   => Data,
-                 File   => "data/test_policy1.xml",
-                 Schema => "schema/system.xsd");
-
-      Policy := Xml.To_Policy (Data => Data);
-
-      Writers.Write_Subjects (File_Name    => Out_File,
-                              Package_Name => "Skp.Subjects",
-                              Policy       => Policy);
-
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => Out_File,
-               Filename2 => "data/skp-subjects.ref"),
-              Message   => "Output file mismatch");
-
       Ada.Directories.Delete_File (Name => Out_File);
    end Write_Subjects;
 

@@ -11,13 +11,7 @@ is
    --  Write kernel policy files.
    procedure Write_Kernel;
 
-   --  Write subject specs to file.
+   --  Write subject policy files.
    procedure Write_Subjects;
-
-   --  Write pagetables to files.
-   procedure Write_Pagetables;
-
-   --  Write IO_Bitmaps to files.
-   procedure Write_IO_Bitmaps;
 
 end Writer_Tests;

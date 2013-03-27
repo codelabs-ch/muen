@@ -115,12 +115,11 @@ is
    --#    Success      from X86_64.State, Region;
 
    --  Launch VM designated by current VMCS.
-   procedure VMLAUNCH (Success : out Boolean);
+   procedure VMLAUNCH;
    --# global
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from * &
-   --#    Success      from X86_64.State;
+   --#    X86_64.State from *;
    pragma Inline_Always (VMLAUNCH);
 
    --  Resume VM designated by current VMCS.

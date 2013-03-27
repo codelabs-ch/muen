@@ -93,6 +93,32 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VMX_Error
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *;
+   is
+      Error   : SK.Word64;
+      Success : Boolean;
+   begin
+      pragma Debug (CPU.VMREAD (Field   => Constants.VMX_INST_ERROR,
+                                Value   => Error,
+                                Success => Success));
+      pragma Debug (Success, KC.Put_String (Item => "VM instruction error: "));
+      pragma Debug (Success, KC.Put_Byte (Item => Byte (Error)));
+      pragma Debug (Success, KC.New_Line);
+      pragma Debug (not Success, KC.Put_Line
+        (Item => "Unable to read VMX instruction error"));
+
+      CPU.Panic;
+
+      --# accept Warning, 400, Error,   "Only used for debug output";
+      --# accept Warning, 400, Success, "Only used for debug output";
+   end VMX_Error;
+
+   -------------------------------------------------------------------------
+
    procedure Resume (Subject_Id : Skp.Subjects.Subject_Id_Type)
    is
       Error   : SK.Word64;
@@ -398,7 +424,6 @@ is
    --#       Subject_Id;
    is
       Success : Boolean;
-      Error   : SK.Word64;
       Spec    : Skp.Subjects.Subject_Spec_Type;
       State   : Subjects.State_Type;
    begin
@@ -450,17 +475,17 @@ is
 
       CPU.Restore_Registers
         (Regs => Subjects.Get_State (Id => Subject_Id).Regs);
-      CPU.VMLAUNCH (Success => Success);
-      if not Success then
-         pragma Debug (CPU.VMREAD (Field   => Constants.VMX_INST_ERROR,
-                                   Value   => Error,
-                                   Success => Success));
-         pragma Debug (KC.Put_String (Item => "Error launching VM ("));
-         pragma Debug (KC.Put_Byte (Item => Byte (Error)));
-         pragma Debug (KC.Put_Line (Item => ")"));
-         CPU.Panic;
-      end if;
-      --# accept Warning, 400, Error, "Only used for debug output";
+      CPU.VMLAUNCH;
+
+      --  VM launch failed.
+
+      CPU.Set_Stack (Address => Kernel_Stack_Address);
+
+      pragma Debug (KC.Put_String (Item => "Error launching subject "));
+      pragma Debug (KC.Put_Byte (Item => Byte (Subject_Id)));
+      pragma Debug (KC.New_Line);
+
+      VMX_Error;
    end Launch;
 
    -------------------------------------------------------------------------

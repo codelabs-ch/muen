@@ -96,6 +96,14 @@ is
    --# global
    --#    X86_64.State;
 
+   --  Set CPU RSP and RBP registers to given address.
+   procedure Set_Stack (Address : SK.Word64);
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *, Address;
+   pragma Inline_Always (Set_Stack);
+
    --  Enter VMX operation.
    procedure VMXON
      (Region  :     SK.Word64;

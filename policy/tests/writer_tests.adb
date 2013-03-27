@@ -30,7 +30,7 @@ is
    procedure Write_Kernel
    is
       Knl_Pts : constant String := "obj/kernel.pt";
-      Knl_H   : constant String := "obj/kernel_pt.h";
+      Knl_H   : constant String := "obj/policy.h";
       Data    : Xml.XML_Data_Type;
       Policy  : Policy_Type;
    begin
@@ -48,8 +48,8 @@ is
               Message   => "Kernel pagetables mismatch");
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => Knl_H,
-               Filename2 => "data/kernel_pt.h.ref"),
-              Message   => "Kernel pt include mismatch");
+               Filename2 => "data/policy.h.ref"),
+              Message   => "Policy asm include mismatch");
 
       Ada.Directories.Delete_File (Name => Knl_Pts);
       Ada.Directories.Delete_File (Name => Knl_H);

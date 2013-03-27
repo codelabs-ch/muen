@@ -1,4 +1,4 @@
-#include "kernel_pt.h"
+#include "policy.h"
 
 .global _start
 .global kernel_stack_ptr

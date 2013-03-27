@@ -267,13 +267,16 @@ is
    is
       Kernel_Pt : Ada.Text_IO.File_Type;
    begin
-      Open (Filename => Dir_Name & "/kernel_pt.h",
+      Open (Filename => Dir_Name & "/policy.h",
             File     => Kernel_Pt);
       Ada.Text_IO.Put_Line
         (File => Kernel_Pt,
-         Item => "#define KERNEL_PML4 0x"
+         Item => "#define KERNEL_PML4   0x"
          & SK.Utils.To_Hex
            (Item => Policy.Kernel.Memory_Layout.Pml4_Address));
+      Ada.Text_IO.Put_Line
+        (File => Kernel_Pt,
+         Item => "#define SUBJECT_COUNT" & Policy.Subjects.Length'Img);
       Ada.Text_IO.Close (File => Kernel_Pt);
 
       Write (Layout   => Policy.Kernel.Memory_Layout,

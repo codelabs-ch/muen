@@ -17,6 +17,11 @@ begin
                   Schema => "schema/system.xsd");
 
    Policy := Skp.Xml.To_Policy (Data => Data);
+   Skp.Writers.Write_Kernel (Dir_Name => Out_Dir,
+                             Policy   => Policy);
+   Ada.Text_IO.Put_Line (Item => "Wrote kernel policy to '" & Out_Dir
+                         & "' directory");
+
    Skp.Writers.Write_Subjects
      (File_Name    => Out_File,
       Package_Name => "Skp.Subjects",

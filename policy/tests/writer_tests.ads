@@ -8,6 +8,9 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
+   --  Write kernel policy files.
+   procedure Write_Kernel;
+
    --  Write subject specs to file.
    procedure Write_Subjects;
 

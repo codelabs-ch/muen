@@ -1,6 +1,11 @@
 package Skp.Writers
 is
 
+   --  Write kernel-related policy files to directory specified by name.
+   procedure Write_Kernel
+     (Dir_Name : String;
+      Policy   : Policy_Type);
+
    --  Write subject specs to package with given name. The output is stored to
    --  the file specified by name.
    procedure Write_Subjects

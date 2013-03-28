@@ -1,4 +1,1 @@
-include/*.h
-include/skp-*.ads
-include/*.pt
-include/*.iobm
+include

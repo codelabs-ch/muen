@@ -36,13 +36,15 @@ _start:
 	// (0) initialize VMX regions (one VMXON + one VMCS per subject)
 
 	clear VMXON_ADDRESS 1
-	clear 0x1000 SUBJECT_COUNT
+	clear VMCS_ADDRESS SUBJECT_COUNT
 
 	movl $IA32_VMX_BASIC, %ecx
 	rdmsr
+
+	movl %eax, VMXON_ADDRESS
+
 	movl $SUBJECT_COUNT, %ecx
-	add $1, %ecx
-	xor %edx, %edx
+	movl $VMCS_ADDRESS, %edx
 set_rev:
 	movl %eax, (%edx)
 	add $0x1000, %edx

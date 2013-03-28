@@ -1,3 +1,5 @@
+with Skp.Kernel;
+
 with SK.CPU;
 with SK.Interrupts;
 with SK.Descriptors;
@@ -8,7 +10,7 @@ with SK.Subjects;
 
 package body SK.VMX
 --# own
---#    State is Kernel_Stack_Address, VMX_Exit_Address;
+--#    State is VMX_Exit_Address;
 is
 
    --  Segment selectors
@@ -26,11 +28,6 @@ is
    --# accept Warning, 350, VMX_Exit_Address, "Imported from Linker";
    VMX_Exit_Address : SK.Word64;
    pragma Import (C, VMX_Exit_Address, "vmx_exit_handler_ptr");
-   --# end accept;
-
-   --# accept Warning, 350, Kernel_Stack_Address, "Imported from Linker";
-   Kernel_Stack_Address : SK.Word64;
-   pragma Import (C, Kernel_Stack_Address, "kernel_stack_ptr");
    --# end accept;
 
    ---------------------------------------------------------------------------
@@ -120,16 +117,6 @@ is
    -------------------------------------------------------------------------
 
    procedure Resume (Subject_Id : Skp.Subjects.Subject_Id_Type)
-   --# global
-   --#    in     Subjects.Descriptors;
-   --#    in     Kernel_Stack_Address;
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from
-   --#       *,
-   --#       Subject_Id,
-   --#       Subjects.Descriptors,
-   --#       Kernel_Stack_Address;
    is
       Success : Boolean;
       Spec    : Skp.Subjects.Subject_Spec_Type;
@@ -153,7 +140,7 @@ is
 
       --  VM resume failed.
 
-      CPU.Set_Stack (Address => Kernel_Stack_Address);
+      CPU.Set_Stack (Address => Skp.Kernel.Stack_Address);
 
       pragma Debug (KC.Put_String (Item => "Error resuming subject "));
       pragma Debug (KC.Put_Byte (Item => Byte (Subject_Id)));
@@ -291,15 +278,13 @@ is
    --#    in     Interrupts.IDT_Pointer;
    --#    in     GDT.GDT_Pointer;
    --#    in     VMX_Exit_Address;
-   --#    in     Kernel_Stack_Address;
    --#    in out X86_64.State;
    --# derives
    --#    X86_64.State from
    --#       *,
    --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,
-   --#       VMX_Exit_Address,
-   --#       Kernel_Stack_Address;
+   --#       VMX_Exit_Address;
    is
       PD : Descriptors.Pseudo_Descriptor_Type;
    begin
@@ -329,7 +314,7 @@ is
                   Value => PD.Base);
 
       VMCS_Write (Field => Constants.HOST_RSP,
-                  Value => Kernel_Stack_Address);
+                  Value => Skp.Kernel.Stack_Address);
       VMCS_Write (Field => Constants.HOST_RIP,
                   Value => VMX_Exit_Address);
    end VMCS_Setup_Host_Fields;
@@ -420,7 +405,6 @@ is
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
    --#    in     VMX_Exit_Address;
-   --#    in     Kernel_Stack_Address;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
@@ -430,7 +414,6 @@ is
    --#       GDT.GDT_Pointer,
    --#       Interrupts.IDT_Pointer,
    --#       VMX_Exit_Address,
-   --#       Kernel_Stack_Address,
    --#       Subjects.Descriptors,
    --#       Subject_Id;
    is
@@ -490,7 +473,7 @@ is
 
       --  VM launch failed.
 
-      CPU.Set_Stack (Address => Kernel_Stack_Address);
+      CPU.Set_Stack (Address => Skp.Kernel.Stack_Address);
 
       pragma Debug (KC.Put_String (Item => "Error launching subject "));
       pragma Debug (KC.Put_Byte (Item => Byte (Subject_Id)));

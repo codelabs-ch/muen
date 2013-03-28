@@ -22,10 +22,9 @@ SECTIONS
 
 	. = ALIGN (4096);
 
-	.bss :
+	.bss 0x00111000 :
 	{
 		. += 0x1000;
-		kernel_stack = .;
 	}
 
 	.interfaces 0x001ff000 :

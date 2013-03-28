@@ -3,6 +3,7 @@ with Skp.Subjects;
 use type Skp.Subjects.Subject_Id_Type;
 
 --# inherit
+--#    Skp.Kernel,
 --#    Skp.Subjects,
 --#    X86_64,
 --#    SK.CPU,
@@ -44,10 +45,9 @@ is
    procedure Resume (Subject_Id : Skp.Subjects.Subject_Id_Type);
    --# global
    --#    in     Subjects.Descriptors;
-   --#    in     State;
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from *, Subject_Id, Subjects.Descriptors, State;
+   --#    X86_64.State from *, Subject_Id, Subjects.Descriptors;
 
    --  Read value from specified field of the current, active VMCS. If the
    --  operation fails, CPU.Panic is called.

@@ -1,7 +1,6 @@
 #include "policy.h"
 
 .global _start
-.global kernel_stack_ptr
 
 #define IA32_VMX_BASIC 0x480
 #define IA32_EFER      0xc0000080
@@ -90,7 +89,7 @@ start64: .align 4096
 
 	// set up kernel stack
 
-	movq (kernel_stack_ptr), %rsp
+	movq $KERNEL_STACK, %rsp
 
 	// set up kernel segment selectors
 
@@ -114,7 +113,3 @@ start64: .align 4096
 freeze:
 	hlt
 	jmp freeze
-
-.data
-kernel_stack_ptr:
-	.quad kernel_stack

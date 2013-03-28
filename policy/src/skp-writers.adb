@@ -303,11 +303,18 @@ is
                             Item => "package " & Pkg_Name & " is");
       Ada.Text_IO.New_Line (File => File);
       Ada.Text_IO.Put (File => File,
-                       Item => Indent
-                       & "Stack_Address : constant := 16#");
+                       Item => Indent & "Stack_Address : constant := 16#");
       Ada.Text_IO.Put (File => File,
                        Item => SK.Utils.To_Hex
                          (Item => Policy.Kernel.Stack_Address));
+      Ada.Text_IO.Put_Line (File => File,
+                            Item => "#;");
+      Ada.Text_IO.New_Line (File => File);
+      Ada.Text_IO.Put (File => File,
+                       Item => Indent & "PML4_Address  : constant := 16#");
+      Ada.Text_IO.Put (File => File,
+                       Item => SK.Utils.To_Hex
+                         (Item => Policy.Kernel.Memory_Layout.Pml4_Address));
       Ada.Text_IO.Put_Line (File => File,
                             Item => "#;");
       Ada.Text_IO.New_Line (File => File);

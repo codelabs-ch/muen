@@ -37,8 +37,8 @@ begin
 
    Image.Add_Section (Filename => Policy_Dir & "/kernel_pt",
                       Address  => Kernel.PML4_Address);
-   Ada.Text_IO.Put_Line ("[PML4 @ " & SK.Utils.To_Hex
-                         (Item => Kernel.PML4_Address) & "]");
+   Ada.Text_IO.Put_Line (SK.Utils.To_Hex (Item => Kernel.PML4_Address)
+                         & " [PML4] kernel");
 
    --  Subjects.
 
@@ -48,13 +48,14 @@ begin
          Name : constant String := Ada.Directories.Base_Name (Name => Fn);
       begin
          Ada.Text_IO.Put_Line
-           (SK.Utils.To_Hex (Item => Subjects (S).Address) & " => " & Name);
+           (SK.Utils.To_Hex (Item => Subjects (S).Address)
+            & " [BIN ] " & Name);
          Ada.Text_IO.Put_Line
-           ("  [PML4 @ " & SK.Utils.To_Hex
-              (Item => Subject_Specs (S).PML4_Address) & "]");
+           (SK.Utils.To_Hex (Item => Subject_Specs (S).PML4_Address)
+            & " [PML4] " & Name);
          Ada.Text_IO.Put_Line
-           ("  [IOBM @ " & SK.Utils.To_Hex
-              (Item => Subject_Specs (S).IO_Bitmap_Address) & "]");
+           (SK.Utils.To_Hex (Item => Subject_Specs (S).IO_Bitmap_Address)
+            & " [IOBM] " & Name);
 
          Image.Add_Section (Filename => Fn,
                             Address  => Subjects (S).Address);

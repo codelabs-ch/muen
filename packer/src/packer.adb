@@ -4,6 +4,7 @@ with Ada.Strings.Unbounded;
 
 with SK.Utils;
 
+with Skp.Kernel;
 with Skp.Subjects;
 
 with Pack.Image;
@@ -12,6 +13,7 @@ procedure Packer
 is
    use Ada.Strings.Unbounded;
    use Pack;
+   use Skp;
    use Skp.Subjects;
 
    Policy_Dir : constant String := "../policy/include";
@@ -34,7 +36,9 @@ begin
    --  Kernel sections.
 
    Image.Add_Section (Filename => Policy_Dir & "/kernel_pt",
-                      Address  => 16#00200000#);
+                      Address  => Kernel.PML4_Address);
+   Ada.Text_IO.Put_Line ("[PML4 @ " & SK.Utils.To_Hex
+                         (Item => Kernel.PML4_Address) & "]");
 
    --  Subjects.
 

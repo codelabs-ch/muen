@@ -215,6 +215,17 @@ is
          Assert (Condition => P.Kernel.Memory_Layout.Regions.Length = 2,
                  Message   => "Kernel memory region count mismatch");
 
+         --  Binaries
+
+         Assert (Condition => P.Binaries.Length = 3,
+                 Message   => "Binary count mismatch");
+         Assert (Condition => P.Binaries.First_Element.Path
+                 = To_Unbounded_String ("subjects/tau0/obj/tau0"),
+                 Message   => "Binary path mismatch");
+         Assert (Condition => P.Binaries.First_Element.Physical_Address
+                 = 16#240000#,
+                 Message   => "Binary address mismatch");
+
          --  Subjects
 
          Assert (Condition => S.Id = 0,

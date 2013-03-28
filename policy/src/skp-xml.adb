@@ -248,6 +248,39 @@ is
            (Node => Kernel_Node);
       end;
 
+      declare
+         Bin_Node : constant DOM.Core.Node
+           := Xml.Util.Get_Element_By_Tag_Name
+             (Node     => Root,
+              Tag_Name => "binaries");
+
+         --  Add binary to policy.
+         procedure Add_Binary (Node : DOM.Core.Node);
+
+         -------------------------------------------------------------------
+
+         procedure Add_Binary (Node : DOM.Core.Node)
+         is
+            use Ada.Strings.Unbounded;
+
+            Path : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "path");
+            Addr : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "physical_address");
+         begin
+            P.Binaries.Append
+              (New_Item =>
+                 (Path             => To_Unbounded_String (Path),
+                  Physical_Address => To_Word64 (Hex => Addr)));
+         end Add_Binary;
+      begin
+         Util.For_Each_Node (Node     => Bin_Node,
+                             Tag_Name => "binary",
+                             Process  => Add_Binary'Access);
+      end;
+
       Util.For_Each_Node (Node     => Root,
                           Tag_Name => "subject",
                           Process  => Add_Subject'Access);

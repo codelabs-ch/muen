@@ -10,18 +10,18 @@ DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
 SUBJ_BINS = \
 	$(OBJ_DIR)/tau0 \
-	$(OBJ_DIR)/subject_1 \
-	$(OBJ_DIR)/subject_2
+	$(OBJ_DIR)/subject1 \
+	$(OBJ_DIR)/subject2
 
 all: $(OBJ_DIR)/kernel
 
 $(OBJ_DIR)/tau0: $(SUBJ_DIR)/tau0/obj/tau0
 	objcopy -O binary $< $@
 
-$(OBJ_DIR)/subject_1: $(SUBJ_DIR)/test/obj/subject_1
+$(OBJ_DIR)/subject1: $(SUBJ_DIR)/test/obj/subject1
 	objcopy -O binary $< $@
 
-$(OBJ_DIR)/subject_2: $(SUBJ_DIR)/test/obj/subject_2
+$(OBJ_DIR)/subject2: $(SUBJ_DIR)/test/obj/subject2
 	objcopy -O binary $< $@
 
 packer:

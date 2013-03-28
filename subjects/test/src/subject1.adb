@@ -3,7 +3,7 @@ with System;
 with SK.Console;
 with SK.Console_VGA;
 
-procedure Subject_1
+procedure Subject1
 is
 
    use type SK.Word32;
@@ -53,4 +53,4 @@ begin
       Counter := Counter + 1;
    end loop;
 
-end Subject_1;
+end Subject1;

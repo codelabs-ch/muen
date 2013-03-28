@@ -1,7 +1,7 @@
 SUBJECTS = \
 	../subjects/tau0/obj/tau0 \
-	../subjects/test/obj/subject_1 \
-	../subjects/test/obj/subject_2
+	../subjects/test/obj/subject1 \
+	../subjects/test/obj/subject2
 
 include ../Makeconf
 

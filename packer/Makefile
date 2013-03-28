@@ -63,6 +63,12 @@ deploy: $(OBJ_DIR)/kernel .server
 .server:
 	(cd obj && python -m SimpleHTTPServer >/dev/null 2>&1 & echo "$$!" > $@)
 
+tests: build_tests
+	@$(OBJ_DIR)/test_runner
+
+build_tests:
+	@LIBRARY_PATH=/usr/lib/x86_64-linux-gnu gprbuild $(BUILD_OPTS) -Ppacker_tests
+
 clean:
 	rm -rf obj/*
 	kill `cat .server 2>/dev/null` 2>/dev/null || true

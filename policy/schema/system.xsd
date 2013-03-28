@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 	<xs:include schemaLocation="./kernel.xsd"/>
+	<xs:include schemaLocation="./binary.xsd"/>
 	<xs:include schemaLocation="./subject.xsd"/>
 
 	<xs:complexType name="system_type">
 		<xs:sequence>
 			<xs:element name="kernel"   type="kernel_type"   minOccurs="1" maxOccurs="1"/>
+			<xs:element name="binaries" type="binaries_type" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="subjects" type="subjects_type" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute name="vmxon_address"      type="address_type" use="required"/>

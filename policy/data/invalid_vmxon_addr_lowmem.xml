@@ -1,9 +1,11 @@
 <?xml version="1.0"?>
 <!DOCTYPE system [
-<!ENTITY kernel SYSTEM "default_kernel.xml">
+<!ENTITY kernel   SYSTEM "default_kernel.xml">
+<!ENTITY binaries SYSTEM "default_binaries.xml">
 ]>
 <system vmxon_address="200000" vmcs_start_address="1000">
 	&kernel;
+	&binaries;
 
 	<subjects>
 		<subject id="0" name="tau0">

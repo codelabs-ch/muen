@@ -15,6 +15,12 @@ is
            & SK.Utils.To_Hex (Item => Policy.Vmxon_Address)
            & " - address must be 4k aligned";
       end if;
+
+      if Policy.Vmxon_Address > (16#100000# - SK.Page_Size) then
+         raise Validation_Error with "Invalid VMXON address "
+           & SK.Utils.To_Hex (Item => Policy.Vmxon_Address)
+           & " - address must be below 1m";
+      end if;
    end Validate;
 
    -------------------------------------------------------------------------

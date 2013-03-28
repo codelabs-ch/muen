@@ -79,7 +79,7 @@ is
       Policy := Xml.To_Policy (Data => Data);
 
       Writers.Write_Subjects (Dir_Name => "obj",
-                              Subjects => Policy.Subjects);
+                              Policy   => Policy);
 
       --  Specs
 

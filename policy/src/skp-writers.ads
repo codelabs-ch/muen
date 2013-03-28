@@ -9,7 +9,7 @@ is
    --  Write subjects-related policy files to directory specified by name.
    procedure Write_Subjects
      (Dir_Name : String;
-      Subjects : Subjects_Package.Set);
+      Policy   : Policy_Type);
 
    --  Write system-related policy files to directory specified by name.
    procedure Write_System

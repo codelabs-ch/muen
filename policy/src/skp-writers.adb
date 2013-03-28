@@ -296,14 +296,14 @@ is
 
    procedure Write_Subjects
      (Dir_Name : String;
-      Subjects : Subjects_Package.Set)
+      Policy   : Policy_Type)
    is
       use Ada.Text_IO;
       use Ada.Strings.Unbounded;
 
       Pkg_Name  : constant String   := "Skp.Subjects";
       Spec_Name : constant String   := Dir_Name & "/skp-subjects.ads";
-      S_Count   : constant Positive := Positive (Subjects.Length);
+      S_Count   : constant Positive := Positive (Policy.Subjects.Length);
       Indent    : constant String   := "   ";
       Current   : Natural           := 0;
       Spec_File : File_Type;
@@ -336,6 +336,10 @@ is
 
       procedure Write_Subject_Spec (Subject : Subject_Type)
       is
+         use type SK.Word64;
+
+         VMCS_Address : constant SK.Word64
+           := Policy.Vmcs_Start_Address + SK.Word64 (Current) * SK.Page_Size;
       begin
          Put_Line (File => Spec_File,
                    Item => Indent & "  " & Subject.Id'Img
@@ -347,7 +351,12 @@ is
                 (Item => Subject.Memory_Layout.Pml4_Address));
          Put_Line (File => Spec_File,
                    Item => "#,");
-
+         Put (File => Spec_File,
+              Item => Indent & "    VMCS_Address      => 16#");
+         Put (File => Spec_File,
+              Item => SK.Utils.To_Hex (Item => VMCS_Address));
+         Put_Line (File => Spec_File,
+                   Item => "#,");
          Put (File => Spec_File,
               Item => Indent & "    IO_Bitmap_Address => 16#");
          Put (File => Spec_File,
@@ -386,6 +395,8 @@ is
       Put_Line (File => Spec_File,
                 Item => Indent & "   PML4_Address      : SK.Word64;");
       Put_Line (File => Spec_File,
+                Item => Indent & "   VMCS_Address      : SK.Word64;");
+      Put_Line (File => Spec_File,
                 Item => Indent & "   IO_Bitmap_Address : SK.Word64;");
       Put_Line (File => Spec_File,
                 Item => Indent & "end record;");
@@ -398,7 +409,7 @@ is
                 Item => Indent & "Subject_Specs : constant Subject_Spec_Array"
                 & " := Subject_Spec_Array'(");
 
-      Subjects.Iterate (Process => Write_Subject'Access);
+      Policy.Subjects.Iterate (Process => Write_Subject'Access);
 
       New_Line (File => Spec_File);
       Put_Line (File => Spec_File,

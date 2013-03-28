@@ -316,7 +316,7 @@ is
       Ada.Text_IO.Close (File => File);
 
       Write (Layout   => Policy.Kernel.Memory_Layout,
-             Filename => Dir_Name & "/kernel.pt");
+             Filename => Dir_Name & "/kernel_pt");
    end Write_Kernel;
 
    -------------------------------------------------------------------------
@@ -347,9 +347,9 @@ is
          S       : constant Subject_Type := Subjects_Package.Element
            (Position => C);
          PT_File : constant String       := Dir_Name & "/" & To_String (S.Name)
-           & ".pt";
+           & "_pt";
          IO_File : constant String       := Dir_Name & "/" & To_String (S.Name)
-           & ".iobm";
+           & "_iobm";
       begin
          Write_Subject_Spec (Subject => S);
          Write (Layout   => S.Memory_Layout,

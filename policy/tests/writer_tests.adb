@@ -32,7 +32,7 @@ is
 
    procedure Write_Kernel
    is
-      Knl_Pts  : constant String := "obj/kernel.pt";
+      Knl_Pts  : constant String := "obj/kernel_pt";
       Knl_H    : constant String := "obj/policy.h";
       Knl_Spec : constant String := "obj/skp-kernel.ads";
       Data     : Xml.XML_Data_Type;
@@ -48,7 +48,7 @@ is
 
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => Knl_Pts,
-               Filename2 => "data/kernel.pt.ref"),
+               Filename2 => "data/kernel_pt.ref"),
               Message   => "Kernel pagetables mismatch");
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => Knl_H,
@@ -69,12 +69,12 @@ is
    procedure Write_Subjects
    is
       Out_File : constant String := "obj/skp-subjects.ads";
-      T0_Pts   : constant String := "obj/tau0.pt";
-      S1_Pts   : constant String := "obj/subject1.pt";
-      S2_Pts   : constant String := "obj/subject2.pt";
-      T0_Bm    : constant String := "obj/tau0.iobm";
-      S1_Bm    : constant String := "obj/subject1.iobm";
-      S2_Bm    : constant String := "obj/subject2.iobm";
+      T0_Pts   : constant String := "obj/tau0_pt";
+      S1_Pts   : constant String := "obj/subject1_pt";
+      S2_Pts   : constant String := "obj/subject2_pt";
+      T0_Bm    : constant String := "obj/tau0_iobm";
+      S1_Bm    : constant String := "obj/subject1_iobm";
+      S2_Bm    : constant String := "obj/subject2_iobm";
       Data     : Xml.XML_Data_Type;
       Policy   : Policy_Type;
    begin
@@ -98,30 +98,30 @@ is
 
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => T0_Pts,
-               Filename2 => "data/tau0.pt.ref"),
+               Filename2 => "data/tau0_pt.ref"),
               Message   => "Tau0 pagetables mismatch");
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => S1_Pts,
-               Filename2 => "data/subject1.pt.ref"),
+               Filename2 => "data/subject1_pt.ref"),
               Message   => "Subject1 pagetables mismatch");
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => S2_Pts,
-               Filename2 => "data/subject2.pt.ref"),
+               Filename2 => "data/subject2_pt.ref"),
               Message   => "Subject2 pagetables mismatch");
 
       --  I/O bitmaps
 
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => T0_Bm,
-               Filename2 => "data/tau0.iobm.ref"),
+               Filename2 => "data/tau0_iobm.ref"),
               Message   => "Tau0 I/O bitmap mismatch");
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => S1_Bm,
-               Filename2 => "data/subject1.iobm.ref"),
+               Filename2 => "data/subject1_iobm.ref"),
               Message   => "Subject1 I/O bitmap mismatch");
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => S2_Bm,
-               Filename2 => "data/subject2.iobm.ref"),
+               Filename2 => "data/subject2_iobm.ref"),
               Message   => "Subject2 I/O bitmap mismatch");
 
       Ada.Directories.Delete_File (Name => T0_Bm);

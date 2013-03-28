@@ -10,8 +10,6 @@ is
    --  Descriptors used to manage subjects.
    Descriptors : Subject_Array;
 
-   VMCS_Address : SK.Word64 := SK.Page_Size;
-
    -------------------------------------------------------------------------
 
    function Get_State (Id : Skp.Subjects.Subject_Id_Type) return State_Type
@@ -40,7 +38,6 @@ begin
           (Launched        => False,
            Regs            => CPU.Null_Regs,
            Stack_Address   => Skc.Subjects.Binaries (S).Stack_Address,
-           VMCS_Address    => VMCS_Address,
            Ctls_Exec_Pin   => Constants.VM_CTRL_PREEMPT_TIMER,
            Ctls_Exec_Proc  => Constants.VM_CTRL_IO_BITMAPS
            or Constants.VM_CTRL_SECONDARY_PROC
@@ -58,8 +55,6 @@ begin
            Ctls_Exec_Proc2 => Constants.VM_CTRL_EXIT_DT
            or Constants.VM_CTRL_EXIT_WBINVD,
            Entry_Point     => Skc.Subjects.Binaries (S).Entry_Point);
-
-      VMCS_Address := VMCS_Address + Page_Size;
    end loop;
 
 end SK.Subjects;

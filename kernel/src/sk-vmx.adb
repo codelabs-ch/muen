@@ -132,11 +132,13 @@ is
    --#       Kernel_Stack_Address;
    is
       Success : Boolean;
+      Spec    : Skp.Subjects.Subject_Spec_Type;
       State   : Subjects.State_Type;
    begin
+      Spec  := Skp.Subjects.Subject_Specs (Subject_Id);
       State := Subjects.Get_State (Id => Subject_Id);
 
-      CPU.VMPTRLD (Region  => State.VMCS_Address,
+      CPU.VMPTRLD (Region  => Spec.VMCS_Address,
                    Success => Success);
       if not Success then
          pragma Debug (KC.Put_Line (Item => "Error loading VMCS pointer"));
@@ -444,25 +446,25 @@ is
       State := Subjects.Get_State (Id => Subject_Id);
 
       Success := Is_Aligned
-        (Address   => State.VMCS_Address,
+        (Address   => Spec.VMCS_Address,
          Alignment => SK.Page_Size);
       if not Success then
          pragma Debug (KC.Put_Line (Item => "VMCS region alignment invalid"));
          CPU.Panic;
       end if;
 
-      CPU.VMCLEAR (Region  => State.VMCS_Address,
+      CPU.VMCLEAR (Region  => Spec.VMCS_Address,
                    Success => Success);
       if not Success then
          pragma Debug (KC.Put_Line (Item => "Error clearing VMCS"));
          CPU.Panic;
       end if;
 
-      CPU.VMPTRLD (Region  => State.VMCS_Address,
+      CPU.VMPTRLD (Region  => Spec.VMCS_Address,
                    Success => Success);
       if not Success then
          pragma Debug (KC.Put_String (Item => "Error loading VMCS pointer: "));
-         pragma Debug (KC.Put_Word64 (Item => State.VMCS_Address));
+         pragma Debug (KC.Put_Word64 (Item => Spec.VMCS_Address));
          pragma Debug (KC.New_Line);
          CPU.Panic;
       end if;

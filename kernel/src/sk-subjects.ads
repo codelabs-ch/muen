@@ -7,11 +7,9 @@ with SK.CPU;
 --#    SK.CPU;
 package SK.Subjects
 --# own
---#    Descriptors,
---#    VMCS_Address;
+--#    Descriptors;
 --# initializes
---#    Descriptors,
---#    VMCS_Address;
+--#    Descriptors;
 is
 
    --  Subject state.
@@ -19,7 +17,6 @@ is
       Launched        : Boolean;
       Regs            : CPU.Registers_Type;
       Stack_Address   : SK.Word64;
-      VMCS_Address    : SK.Word64;
       Ctls_Exec_Pin   : SK.Word32;
       Ctls_Exec_Proc  : SK.Word32;
       Ctls_Exec_Proc2 : SK.Word32;

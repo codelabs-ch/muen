@@ -203,6 +203,8 @@ is
 
          Assert (Condition => P.Vmxon_Address = 0,
                  Message   => "VMXON address mismatch");
+         Assert (Condition => P.Vmcs_Start_Address = 16#1000#,
+                 Message   => "VMCS start address mismatch");
 
          --  Kernel
 

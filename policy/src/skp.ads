@@ -57,9 +57,10 @@ is
    end record;
 
    type Policy_Type is record
-      Vmxon_Address : SK.Word64;
-      Kernel        : Kernel_Type;
-      Subjects      : Subjects_Package.Set;
+      Vmxon_Address      : SK.Word64;
+      Vmcs_Start_Address : SK.Word64;
+      Kernel             : Kernel_Type;
+      Subjects           : Subjects_Package.Set;
    end record;
 
 end Skp;

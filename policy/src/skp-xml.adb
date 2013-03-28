@@ -227,6 +227,11 @@ is
               (Node      => Root,
                Tag_Name  => "system",
                Attr_Name => "vmxon_address"));
+      P.Vmcs_Start_Address := To_Word64
+        (Hex => Util.Get_Element_Attr_By_Tag_Name
+           (Node      => Root,
+            Tag_Name  => "system",
+            Attr_Name => "vmcs_start_address"));
 
       declare
          Kernel_Node : constant DOM.Core.Node

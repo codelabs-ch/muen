@@ -24,4 +24,9 @@ begin
                                Subjects => Policy.Subjects);
    Ada.Text_IO.Put_Line (Item => "Wrote subject policy to '" & Out_Dir
                          & "' directory");
+
+   Skp.Writers.Write_System (Dir_Name => Out_Dir,
+                             Policy   => Policy);
+   Ada.Text_IO.Put_Line (Item => "Wrote system policy to '" & Out_Dir
+                         & "' directory");
 end Skpolicy;

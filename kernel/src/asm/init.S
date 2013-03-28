@@ -35,7 +35,7 @@ _start:
 
 	// (0) initialize VMX regions (one VMXON + one VMCS per subject)
 
-	clear 0x0 1
+	clear VMXON_ADDRESS 1
 	clear 0x1000 SUBJECT_COUNT
 
 	movl $IA32_VMX_BASIC, %ecx

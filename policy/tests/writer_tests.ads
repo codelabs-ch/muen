@@ -14,4 +14,7 @@ is
    --  Write subject policy files.
    procedure Write_Subjects;
 
+   --  Write systen policy files.
+   procedure Write_System;
+
 end Writer_Tests;

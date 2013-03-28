@@ -407,4 +407,25 @@ is
       Close (File => Spec_File);
    end Write_Subjects;
 
+   -------------------------------------------------------------------------
+
+   procedure Write_System
+     (Dir_Name : String;
+      Policy   : Policy_Type)
+   is
+      use Ada.Text_IO;
+
+      Pol_File : File_Type;
+   begin
+      Open (Filename => Dir_Name & "/" & Policy_File,
+            File     => Pol_File,
+            Append   => True);
+      Ada.Text_IO.Put_Line
+        (File => Pol_File,
+         Item => "#define VMXON_ADDRESS 0x"
+         & SK.Utils.To_Hex (Item => Policy.Vmxon_Address));
+
+      Close (File => Pol_File);
+   end Write_System;
+
 end Skp.Writers;

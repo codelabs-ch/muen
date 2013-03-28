@@ -23,6 +23,9 @@ is
       T.Add_Test_Routine
         (Routine => Write_Subjects'Access,
          Name    => "Write subject policy files");
+      T.Add_Test_Routine
+        (Routine => Write_System'Access,
+         Name    => "Write system policy files");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -123,5 +126,29 @@ is
       Ada.Directories.Delete_File (Name => S2_Pts);
       Ada.Directories.Delete_File (Name => Out_File);
    end Write_Subjects;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_System
+   is
+      Policy_H : constant String := "obj/policy.h";
+      Data     : Xml.XML_Data_Type;
+      Policy   : Policy_Type;
+   begin
+      Xml.Parse (Data   => Data,
+                 File   => "data/test_policy1.xml",
+                 Schema => "schema/system.xsd");
+
+      Policy := Xml.To_Policy (Data => Data);
+      Writers.Write_System (Dir_Name => "obj",
+                            Policy   => Policy);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Policy_H,
+               Filename2 => "data/policy.h.system.ref"),
+              Message   => "Policy asm include mismatch");
+
+      Ada.Directories.Delete_File (Name => Policy_H);
+   end Write_System;
 
 end Writer_Tests;

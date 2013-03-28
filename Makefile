@@ -15,8 +15,8 @@ kernel: config policy
 packer: kernel
 	$(MAKE) -C $@
 
-deploy: packer
-	$(MAKE) -C $< $@
+deploy: kernel
+	$(MAKE) -C packer $@
 
 tests:
 	$(MAKE) tests -C packer

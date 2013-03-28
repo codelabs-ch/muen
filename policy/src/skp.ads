@@ -53,6 +53,7 @@ is
      (Element_Type => Subject_Type);
 
    type Kernel_Type is record
+      Stack_Address : SK.Word64;
       Memory_Layout : Memory_Layout_Type;
    end record;
 

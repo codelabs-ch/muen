@@ -239,6 +239,11 @@ is
              (Node     => Root,
               Tag_Name => "kernel");
       begin
+         P.Kernel.Stack_Address  := To_Word64
+           (Hex => Util.Get_Element_Attr_By_Tag_Name
+              (Node      => Root,
+               Tag_Name  => "kernel",
+               Attr_Name => "stack_address"));
          P.Kernel.Memory_Layout := Deserialize_Mem_Layout
            (Node => Kernel_Node);
       end;

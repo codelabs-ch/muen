@@ -208,6 +208,8 @@ is
 
          --  Kernel
 
+         Assert (Condition => P.Kernel.Stack_Address = 16#112000#,
+                 Message   => "Kernel stack address mismatch");
          Assert (Condition => P.Kernel.Memory_Layout.Pml4_Address = 16#200000#,
                  Message   => "Kernel PML4 address mismatch");
          Assert (Condition => P.Kernel.Memory_Layout.Regions.Length = 2,

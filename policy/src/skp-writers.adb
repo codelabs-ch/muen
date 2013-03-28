@@ -435,6 +435,10 @@ is
         (File => Pol_File,
          Item => "#define VMXON_ADDRESS 0x"
          & SK.Utils.To_Hex (Item => Policy.Vmxon_Address));
+      Ada.Text_IO.Put_Line
+        (File => Pol_File,
+         Item => "#define VMCS_ADDRESS  0x"
+         & SK.Utils.To_Hex (Item => Policy.Vmcs_Start_Address));
 
       Close (File => Pol_File);
    end Write_System;

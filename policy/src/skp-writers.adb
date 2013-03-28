@@ -24,10 +24,12 @@ is
       Filename : String);
 
    --  Open file given by filename. Raises IO_Error if the file could not be
-   --  opened.
+   --  opened. If Append is True any writes will be appended to the existing
+   --  file.
    procedure Open
      (Filename :     String;
-      File     : out Ada.Text_IO.File_Type);
+      File     : out Ada.Text_IO.File_Type;
+      Append   :     Boolean := False);
 
    --  Open file given by filename. Raises IO_Error if the file could not be
    --  opened.
@@ -39,18 +41,23 @@ is
 
    procedure Open
      (Filename :     String;
-      File     : out Ada.Text_IO.File_Type)
+      File     : out Ada.Text_IO.File_Type;
+      Append   :     Boolean := False)
    is
+      File_Mode : Ada.Text_IO.File_Mode := Ada.Text_IO.Out_File;
    begin
       if Ada.Directories.Exists (Name => Filename) then
+         if Append then
+            File_Mode := Ada.Text_IO.Append_File;
+         end if;
          Ada.Text_IO.Open
            (File => File,
-            Mode => Ada.Text_IO.Out_File,
+            Mode => File_Mode,
             Name => Filename);
       else
          Ada.Text_IO.Create
            (File => File,
-            Mode => Ada.Text_IO.Out_File,
+            Mode => File_Mode,
             Name => Filename);
       end if;
 

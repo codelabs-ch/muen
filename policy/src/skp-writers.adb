@@ -415,13 +415,9 @@ is
                 Item => "with SK;");
       New_Line (File => Spec_File);
       Put_Line (File => Spec_File,
-                Item => "--# inherit SK;");
+                Item => "--# inherit SK, Skp;");
       Put_Line (File => Spec_File,
                 Item => "package " & Pkg_Name & " is");
-      New_Line (File => Spec_File);
-      Put_Line (File => Spec_File,
-                Item => Indent & "type Subject_Id_Type is range 0 .."
-                & Positive'Image (S_Count - 1) & ";");
       New_Line (File => Spec_File);
       Put_Line (File => Spec_File,
                 Item => Indent & "type Subject_Spec_Type is record");
@@ -436,7 +432,7 @@ is
       New_Line (File => Spec_File);
       Put_Line (File => Spec_File,
                 Item => Indent & "type Subject_Spec_Array is array "
-                & "(Subject_Id_Type) of Subject_Spec_Type;");
+                & "(Skp.Subject_Id_Type) of Subject_Spec_Type;");
       New_Line (File => Spec_File);
       Put_Line (File => Spec_File,
                 Item => Indent & "Subject_Specs : constant Subject_Spec_Array"
@@ -459,8 +455,9 @@ is
    is
       use Ada.Text_IO;
 
-      Pkg_Name  : constant String := "Skp";
-      Spec_Name : constant String := Dir_Name & "/skp.ads";
+      Pkg_Name  : constant String   := "Skp";
+      Spec_Name : constant String   := Dir_Name & "/skp.ads";
+      S_Count   : constant Positive := Positive (Policy.Subjects.Length);
 
       File : File_Type;
    begin
@@ -481,6 +478,10 @@ is
             File     => File);
       Put_Line (File => File,
                 Item => "package " & Pkg_Name & " is");
+      New_Line (File => File);
+      Put_Line (File => File,
+                Item => Indent & "type Subject_Id_Type is range 0 .."
+                & Positive'Image (S_Count - 1) & ";");
       New_Line (File => File);
       Put (File => File,
            Item => Indent & "Vmxon_Address : constant := 16#");

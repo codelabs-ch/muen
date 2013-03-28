@@ -16,8 +16,7 @@ is
    type Minor_Frame_Range is mod 2 ** 2;
 
    --  A major frame specifies which subject to schedule in which minor frame.
-   type Major_Frame_Type is array (Minor_Frame_Range)
-     of Skp.Subjects.Subject_Id_Type;
+   type Major_Frame_Type is array (Minor_Frame_Range) of Skp.Subject_Id_Type;
 
    --  A scheduling plan consists of multiple major frames.
    type Scheduling_Plan_Type is
@@ -65,7 +64,7 @@ is
    --#       Current_Minor,
    --#       Scheduling_Plan;
    is
-      Current_Subject : Skp.Subjects.Subject_Id_Type;
+      Current_Subject : Skp.Subject_Id_Type;
    begin
       Current_Subject := Scheduling_Plan (Current_Major) (Current_Minor);
 
@@ -113,7 +112,7 @@ is
    is
       Reason, Qualification, Intr_Info : SK.Word64;
       State                            : Subjects.State_Type;
-      Current_Subject                  : Skp.Subjects.Subject_Id_Type;
+      Current_Subject                  : Skp.Subject_Id_Type;
    begin
       Current_Subject := Scheduling_Plan (Current_Major) (Current_Minor);
       State           := Subjects.Get_State (Id => Current_Subject);

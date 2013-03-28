@@ -1,6 +1,6 @@
-with Skp.Subjects;
+with Skp;
 
-use type Skp.Subjects.Subject_Id_Type;
+use type Skp.Subject_Id_Type;
 
 --# inherit
 --#    Skp.Kernel,
@@ -25,7 +25,7 @@ is
    --# derives
    --#    X86_64.State from *;
 
-   procedure Launch (Subject_Id : Skp.Subjects.Subject_Id_Type);
+   procedure Launch (Subject_Id : Skp.Subject_Id_Type);
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
@@ -42,7 +42,7 @@ is
    --#       Subject_Id,
    --#       State;
 
-   procedure Resume (Subject_Id : Skp.Subjects.Subject_Id_Type);
+   procedure Resume (Subject_Id : Skp.Subject_Id_Type);
    --# global
    --#    in     Subjects.Descriptors;
    --#    in out X86_64.State;

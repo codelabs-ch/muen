@@ -1,9 +1,7 @@
 with SK;
 
---# inherit SK;
+--# inherit SK, Skp;
 package Skp.Subjects is
-
-   type Subject_Id_Type is range 0 .. 2;
 
    type Subject_Spec_Type is record
       PML4_Address      : SK.Word64;
@@ -11,7 +9,7 @@ package Skp.Subjects is
       IO_Bitmap_Address : SK.Word64;
    end record;
 
-   type Subject_Spec_Array is array (Subject_Id_Type) of Subject_Spec_Type;
+   type Subject_Spec_Array is array (Skp.Subject_Id_Type) of Subject_Spec_Type;
 
    Subject_Specs : constant Subject_Spec_Array := Subject_Spec_Array'(
       0 => Subject_Spec_Type'(

@@ -5,14 +5,14 @@ with SK.Constants;
 package body SK.Subjects
 is
 
-   type Subject_Array is array (Skp.Subjects.Subject_Id_Type) of State_Type;
+   type Subject_Array is array (Skp.Subject_Id_Type) of State_Type;
 
    --  Descriptors used to manage subjects.
    Descriptors : Subject_Array;
 
    -------------------------------------------------------------------------
 
-   function Get_State (Id : Skp.Subjects.Subject_Id_Type) return State_Type
+   function Get_State (Id : Skp.Subject_Id_Type) return State_Type
    is
    begin
       return Descriptors (Id);
@@ -21,7 +21,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Set_State
-     (Id    : Skp.Subjects.Subject_Id_Type;
+     (Id    : Skp.Subject_Id_Type;
       State : State_Type)
    is
    begin
@@ -33,7 +33,7 @@ begin
    --#  hide SK.Subjects;
 
    for S in Skc.Subjects.Binaries'Range loop
-      Descriptors (Skp.Subjects.Subject_Id_Type (S - 1))
+      Descriptors (Skp.Subject_Id_Type (S - 1))
         := State_Type'
           (Launched        => False,
            Regs            => CPU.Null_Regs,

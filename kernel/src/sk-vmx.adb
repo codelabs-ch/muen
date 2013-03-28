@@ -1,4 +1,5 @@
 with Skp.Kernel;
+with Skp.Subjects;
 
 with SK.CPU;
 with SK.Interrupts;
@@ -116,7 +117,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Resume (Subject_Id : Skp.Subjects.Subject_Id_Type)
+   procedure Resume (Subject_Id : Skp.Subject_Id_Type)
    is
       Success : Boolean;
       Spec    : Skp.Subjects.Subject_Spec_Type;
@@ -400,7 +401,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Launch (Subject_Id : Skp.Subjects.Subject_Id_Type)
+   procedure Launch (Subject_Id : Skp.Subject_Id_Type)
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;

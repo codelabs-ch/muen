@@ -1,8 +1,8 @@
-with Skp.Subjects;
+with Skp;
 
 with SK.CPU;
 
-use type Skp.Subjects.Subject_Id_Type;
+use type Skp.Subject_Id_Type;
 
 --# inherit
 --#    Skp.Subjects,

@@ -1,0 +1,5 @@
+package Skp is
+
+   Vmxon_Address : constant := 16#0000000000000000#;
+
+end Skp;

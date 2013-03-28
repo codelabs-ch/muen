@@ -13,6 +13,7 @@ package body Skp.Writers
 is
 
    Policy_File : constant String := "policy.h";
+   Indent      : constant String := "   ";
 
    --  Create paging structures from given memory layout and write them to the
    --  specified file.
@@ -304,7 +305,6 @@ is
       Pkg_Name  : constant String   := "Skp.Subjects";
       Spec_Name : constant String   := Dir_Name & "/skp-subjects.ads";
       S_Count   : constant Positive := Positive (Policy.Subjects.Length);
-      Indent    : constant String   := "   ";
       Current   : Natural           := 0;
       Spec_File : File_Type;
 
@@ -426,21 +426,40 @@ is
    is
       use Ada.Text_IO;
 
-      Pol_File : File_Type;
+      Pkg_Name  : constant String := "Skp";
+      Spec_Name : constant String := Dir_Name & "/skp.ads";
+
+      File : File_Type;
    begin
       Open (Filename => Dir_Name & "/" & Policy_File,
-            File     => Pol_File,
+            File     => File,
             Append   => True);
       Ada.Text_IO.Put_Line
-        (File => Pol_File,
+        (File => File,
          Item => "#define VMXON_ADDRESS 0x"
          & SK.Utils.To_Hex (Item => Policy.Vmxon_Address));
       Ada.Text_IO.Put_Line
-        (File => Pol_File,
+        (File => File,
          Item => "#define VMCS_ADDRESS  0x"
          & SK.Utils.To_Hex (Item => Policy.Vmcs_Start_Address));
+      Close (File => File);
 
-      Close (File => Pol_File);
+      Open (Filename => Spec_Name,
+            File     => File);
+      Put_Line (File => File,
+                Item => "package " & Pkg_Name & " is");
+      New_Line (File => File);
+      Put (File => File,
+           Item => Indent & "Vmxon_Address : constant := 16#");
+      Put (File => File,
+           Item => SK.Utils.To_Hex
+             (Item => Policy.Vmxon_Address));
+      Put_Line (File => File,
+                Item => "#;");
+      New_Line (File => File);
+      Put_Line (File => File,
+                Item => "end " & Pkg_Name & ";");
+      Close (File => File);
    end Write_System;
 
 end Skp.Writers;

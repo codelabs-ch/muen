@@ -131,9 +131,10 @@ is
 
    procedure Write_System
    is
-      Policy_H : constant String := "obj/policy.h";
-      Data     : Xml.XML_Data_Type;
-      Policy   : Policy_Type;
+      Spec_File : constant String := "obj/skp.ads";
+      Policy_H  : constant String := "obj/policy.h";
+      Data      : Xml.XML_Data_Type;
+      Policy    : Policy_Type;
    begin
       Xml.Parse (Data   => Data,
                  File   => "data/test_policy1.xml",
@@ -144,10 +145,15 @@ is
                             Policy   => Policy);
 
       Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Spec_File,
+               Filename2 => "data/skp.ref"),
+              Message   => "Spec file mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => Policy_H,
                Filename2 => "data/policy.h.system.ref"),
               Message   => "Policy asm include mismatch");
 
+      Ada.Directories.Delete_File (Name => Spec_File);
       Ada.Directories.Delete_File (Name => Policy_H);
    end Write_System;
 

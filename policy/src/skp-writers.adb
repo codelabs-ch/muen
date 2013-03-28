@@ -12,6 +12,8 @@ with Skp.IO_Ports;
 package body Skp.Writers
 is
 
+   Policy_File : constant String := "policy.h";
+
    --  Create paging structures from given memory layout and write them to the
    --  specified file.
    procedure Write
@@ -272,19 +274,19 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type)
    is
-      Kernel_Pt : Ada.Text_IO.File_Type;
+      Kernel_Pol : Ada.Text_IO.File_Type;
    begin
-      Open (Filename => Dir_Name & "/policy.h",
-            File     => Kernel_Pt);
+      Open (Filename => Dir_Name & "/" & Policy_File,
+            File     => Kernel_Pol);
       Ada.Text_IO.Put_Line
-        (File => Kernel_Pt,
+        (File => Kernel_Pol,
          Item => "#define KERNEL_PML4   0x"
          & SK.Utils.To_Hex
            (Item => Policy.Kernel.Memory_Layout.Pml4_Address));
       Ada.Text_IO.Put_Line
-        (File => Kernel_Pt,
+        (File => Kernel_Pol,
          Item => "#define SUBJECT_COUNT" & Policy.Subjects.Length'Img);
-      Ada.Text_IO.Close (File => Kernel_Pt);
+      Ada.Text_IO.Close (File => Kernel_Pol);
 
       Write (Layout   => Policy.Kernel.Memory_Layout,
              Filename => Dir_Name & "/kernel.pt");

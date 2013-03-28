@@ -19,6 +19,7 @@ deploy: packer
 	$(MAKE) -C $< $@
 
 tests:
+	$(MAKE) tests -C packer
 	$(MAKE) tests -C policy
 
 clean:

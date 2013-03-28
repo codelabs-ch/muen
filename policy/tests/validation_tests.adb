@@ -127,6 +127,26 @@ is
                     & "must be 4k aligned",
                     Message   => "Exception message mismatch (alignment)");
       end;
+
+      declare
+         D : Xml.XML_Data_Type;
+         P : Policy_Type;
+         pragma Unreferenced (P);
+      begin
+         Xml.Parse (Data   => D,
+                    File   => "data/invalid_vmcs_addr_lowmem.xml",
+                    Schema => "schema/system.xsd");
+
+         P := Xml.To_Policy (Data => D);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid VMCS start address 0000000000110000 - address "
+                    & "must be below 1m - 4k * 1",
+                    Message   => "Exception message mismatch (lowmem)");
+      end;
    end Invalid_Vmcs_Addrs;
 
    -------------------------------------------------------------------------

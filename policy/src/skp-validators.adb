@@ -9,6 +9,9 @@ is
 
    procedure Validate (Policy : Policy_Type)
    is
+      One_Megabyte   : constant SK.Word64 := 16#100000#;
+      VMCS_Area_Size : constant SK.Word64
+        := SK.Word64 (Policy.Subjects.Length) * SK.Page_Size;
    begin
       if Policy.Vmxon_Address mod SK.Page_Size /= 0 then
          raise Validation_Error with "Invalid VMXON address "
@@ -16,7 +19,7 @@ is
            & " - address must be 4k aligned";
       end if;
 
-      if Policy.Vmxon_Address > (16#100000# - SK.Page_Size) then
+      if Policy.Vmxon_Address > (One_Megabyte - SK.Page_Size) then
          raise Validation_Error with "Invalid VMXON address "
            & SK.Utils.To_Hex (Item => Policy.Vmxon_Address)
            & " - address must be below 1m";
@@ -26,6 +29,12 @@ is
          raise Validation_Error with "Invalid VMCS start address "
            & SK.Utils.To_Hex (Item => Policy.Vmcs_Start_Address)
            & " - address must be 4k aligned";
+      end if;
+
+      if Policy.Vmcs_Start_Address + VMCS_Area_Size > One_Megabyte then
+         raise Validation_Error with "Invalid VMCS start address "
+           & SK.Utils.To_Hex (Item => Policy.Vmcs_Start_Address)
+           & " - address must be below 1m - 4k *" & Policy.Subjects.Length'Img;
       end if;
    end Validate;
 

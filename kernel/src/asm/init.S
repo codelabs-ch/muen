@@ -13,6 +13,19 @@
 #define EFER_LME_BIT 8
 #define EFER_NXE_BIT 11
 
+// Clear pagecount number of 4k memory starting at given address
+.macro clear address pagecount
+	movl $\address, %ebx
+	movl $\pagecount, %eax
+	movl $0x400, %ecx
+	mull %ecx
+	movl %eax, %ecx
+1:
+	movl $0, (%ebx)
+	add $4, %ebx
+	loop 1b
+.endm
+
 .text
 .code32
 
@@ -20,11 +33,20 @@
 
 _start:
 
-	// (0) initialize VMX regions
+	// (0) initialize VMX regions (one VMXON + one VMCS per subject)
+
+	clear 0x0 1
+	clear 0x1000 SUBJECT_COUNT
 
 	movl $IA32_VMX_BASIC, %ecx
 	rdmsr
-	movl %eax, 0
+	movl $SUBJECT_COUNT, %ecx
+	add $1, %ecx
+	xor %edx, %edx
+set_rev:
+	movl %eax, (%edx)
+	add $0x1000, %edx
+	loop set_rev
 
 	// (1) enable PAE
 

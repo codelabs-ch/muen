@@ -1,5 +1,3 @@
-with System;
-
 with Skc.Subjects;
 
 with SK.Constants;
@@ -12,10 +10,7 @@ is
    --  Descriptors used to manage subjects.
    Descriptors : Subject_Array;
 
-   --# accept Warning, 350, VMCS_Address, "Imported from Linker";
-   VMCS_Address : SK.Word64;
-   pragma Import (C, VMCS_Address, "vmcs_ptr");
-   --# end accept;
+   VMCS_Address : SK.Word64 := SK.Page_Size;
 
    -------------------------------------------------------------------------
 
@@ -37,50 +32,34 @@ is
 
 begin
 
-   --# hide SK.Subjects;
+   --#  hide SK.Subjects;
 
-   declare
-      Revision, Unused_High : SK.Word32;
-   begin
-      CPU.Get_MSR
-        (Register => Constants.IA32_VMX_BASIC,
-         Low      => Revision,
-         High     => Unused_High);
+   for S in Skc.Subjects.Binaries'Range loop
+      Descriptors (Skp.Subjects.Subject_Id_Type (S - 1))
+        := State_Type'
+          (Launched        => False,
+           Regs            => CPU.Null_Regs,
+           Stack_Address   => Skc.Subjects.Binaries (S).Stack_Address,
+           VMCS_Address    => VMCS_Address,
+           Ctls_Exec_Pin   => Constants.VM_CTRL_PREEMPT_TIMER,
+           Ctls_Exec_Proc  => Constants.VM_CTRL_IO_BITMAPS
+           or Constants.VM_CTRL_SECONDARY_PROC
+           or Constants.VM_CTRL_EXIT_HLT
+           or Constants.VM_CTRL_EXIT_INVLPG
+           or Constants.VM_CTRL_EXIT_MWAIT
+           or Constants.VM_CTRL_EXIT_RDPMC
+           or Constants.VM_CTRL_EXIT_RDTSC
+           or Constants.VM_CTRL_EXIT_CR3_LOAD
+           or Constants.VM_CTRL_EXIT_CR3_STORE
+           or Constants.VM_CTRL_EXIT_CR8_LOAD
+           or Constants.VM_CTRL_EXIT_CR8_STORE
+           or Constants.VM_CTRL_EXIT_MOV_DR
+           or Constants.VM_CTRL_EXIT_MONITOR,
+           Ctls_Exec_Proc2 => Constants.VM_CTRL_EXIT_DT
+           or Constants.VM_CTRL_EXIT_WBINVD,
+           Entry_Point     => Skc.Subjects.Binaries (S).Entry_Point);
 
-      for S in Skc.Subjects.Binaries'Range loop
-         Descriptors (Skp.Subjects.Subject_Id_Type (S - 1))
-           := State_Type'
-             (Launched        => False,
-              Regs            => CPU.Null_Regs,
-              Stack_Address   => Skc.Subjects.Binaries (S).Stack_Address,
-              VMCS_Address    => VMCS_Address,
-              Ctls_Exec_Pin   => Constants.VM_CTRL_PREEMPT_TIMER,
-              Ctls_Exec_Proc  => Constants.VM_CTRL_IO_BITMAPS
-              or Constants.VM_CTRL_SECONDARY_PROC
-              or Constants.VM_CTRL_EXIT_HLT
-              or Constants.VM_CTRL_EXIT_INVLPG
-              or Constants.VM_CTRL_EXIT_MWAIT
-              or Constants.VM_CTRL_EXIT_RDPMC
-              or Constants.VM_CTRL_EXIT_RDTSC
-              or Constants.VM_CTRL_EXIT_CR3_LOAD
-              or Constants.VM_CTRL_EXIT_CR3_STORE
-              or Constants.VM_CTRL_EXIT_CR8_LOAD
-              or Constants.VM_CTRL_EXIT_CR8_STORE
-              or Constants.VM_CTRL_EXIT_MOV_DR
-              or Constants.VM_CTRL_EXIT_MONITOR,
-              Ctls_Exec_Proc2 => Constants.VM_CTRL_EXIT_DT
-              or Constants.VM_CTRL_EXIT_WBINVD,
-              Entry_Point     => Skc.Subjects.Binaries (S).Entry_Point);
+      VMCS_Address := VMCS_Address + Page_Size;
+   end loop;
 
-         Init_VMCS_Region :
-         declare
-            VMCS_Region : SK.Word32;
-            for VMCS_Region'Address use System'To_Address (VMCS_Address);
-         begin
-            VMCS_Region := Revision;
-         end Init_VMCS_Region;
-
-         VMCS_Address := VMCS_Address + Page_Size;
-      end loop;
-   end;
 end SK.Subjects;

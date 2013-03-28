@@ -32,10 +32,11 @@ is
 
    procedure Write_Kernel
    is
-      Knl_Pts : constant String := "obj/kernel.pt";
-      Knl_H   : constant String := "obj/policy.h";
-      Data    : Xml.XML_Data_Type;
-      Policy  : Policy_Type;
+      Knl_Pts  : constant String := "obj/kernel.pt";
+      Knl_H    : constant String := "obj/policy.h";
+      Knl_Spec : constant String := "obj/skp-kernel.ads";
+      Data     : Xml.XML_Data_Type;
+      Policy   : Policy_Type;
    begin
       Xml.Parse (Data   => Data,
                  File   => "data/test_policy1.xml",
@@ -53,9 +54,14 @@ is
               (Filename1 => Knl_H,
                Filename2 => "data/policy.h.ref"),
               Message   => "Policy asm include mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Knl_Spec,
+               Filename2 => "data/skp-kernel.ref"),
+              Message   => "Kernel spec mismatch");
 
       Ada.Directories.Delete_File (Name => Knl_Pts);
       Ada.Directories.Delete_File (Name => Knl_H);
+      Ada.Directories.Delete_File (Name => Knl_Spec);
    end Write_Kernel;
 
    -------------------------------------------------------------------------

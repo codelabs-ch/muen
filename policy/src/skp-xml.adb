@@ -222,6 +222,12 @@ is
                & Ada.Exceptions.Exception_Message (X => E));
       end Add_Subject;
    begin
+      P.Vmxon_Address := To_Word64
+           (Hex => Util.Get_Element_Attr_By_Tag_Name
+              (Node      => Root,
+               Tag_Name  => "system",
+               Attr_Name => "vmxon_address"));
+
       declare
          Kernel_Node : constant DOM.Core.Node
            := Xml.Util.Get_Element_By_Tag_Name

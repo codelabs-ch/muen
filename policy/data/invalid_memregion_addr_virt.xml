@@ -2,7 +2,7 @@
 <!DOCTYPE system [
 <!ENTITY kernel SYSTEM "default_kernel.xml">
 ]>
-<system>
+<system vmxon_address="0">
 	&kernel;
 
 	<subjects>

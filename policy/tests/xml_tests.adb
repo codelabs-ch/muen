@@ -199,6 +199,11 @@ is
          PR : IO_Port_Range;
       begin
 
+         --  System
+
+         Assert (Condition => P.Vmxon_Address = 0,
+                 Message   => "VMXON address mismatch");
+
          --  Kernel
 
          Assert (Condition => P.Kernel.Memory_Layout.Pml4_Address = 16#200000#,

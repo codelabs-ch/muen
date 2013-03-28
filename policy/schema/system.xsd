@@ -8,6 +8,7 @@
 			<xs:element name="kernel"   type="kernel_type"   minOccurs="1" maxOccurs="1"/>
 			<xs:element name="subjects" type="subjects_type" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
+		<xs:attribute name="vmxon_address" type="address_type" use="required"/>
 	</xs:complexType>
 
 	<xs:element name="system" type="system_type"/>

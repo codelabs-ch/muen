@@ -251,6 +251,8 @@ is
       Util.For_Each_Node (Node     => Root,
                           Tag_Name => "subject",
                           Process  => Add_Subject'Access);
+
+      Validators.Validate (Policy => P);
       return P;
    end To_Policy;
 

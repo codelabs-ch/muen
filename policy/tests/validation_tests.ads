@@ -14,4 +14,7 @@ is
    --  Verify invalid memory region addresses.
    procedure Invalid_Memregion_Addrs;
 
+   --  Verify invalid VMXON addresses.
+   procedure Invalid_Vmxon_Addrs;
+
 end Validation_Tests;

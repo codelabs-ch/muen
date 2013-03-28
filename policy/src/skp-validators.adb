@@ -21,6 +21,12 @@ is
            & SK.Utils.To_Hex (Item => Policy.Vmxon_Address)
            & " - address must be below 1m";
       end if;
+
+      if Policy.Vmcs_Start_Address mod SK.Page_Size /= 0 then
+         raise Validation_Error with "Invalid VMCS start address "
+           & SK.Utils.To_Hex (Item => Policy.Vmcs_Start_Address)
+           & " - address must be 4k aligned";
+      end if;
    end Validate;
 
    -------------------------------------------------------------------------

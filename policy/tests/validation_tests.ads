@@ -17,4 +17,7 @@ is
    --  Verify invalid VMXON addresses.
    procedure Invalid_Vmxon_Addrs;
 
+   --  Verify invalid VMCS addresses.
+   procedure Invalid_Vmcs_Addrs;
+
 end Validation_Tests;

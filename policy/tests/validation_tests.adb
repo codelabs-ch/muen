@@ -24,6 +24,9 @@ is
       T.Add_Test_Routine
         (Routine => Invalid_Vmxon_Addrs'Access,
          Name    => "Invalid VMXON addresses");
+      T.Add_Test_Routine
+        (Routine => Invalid_Vmcs_Addrs'Access,
+         Name    => "Invalid VMCS addresses");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -99,6 +102,32 @@ is
                     Message   => "Exception message mismatch");
       end;
    end Invalid_Memregion_Size;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Vmcs_Addrs
+   is
+   begin
+      declare
+         D : Xml.XML_Data_Type;
+         P : Policy_Type;
+         pragma Unreferenced (P);
+      begin
+         Xml.Parse (Data   => D,
+                    File   => "data/invalid_vmcs_addr_alignment.xml",
+                    Schema => "schema/system.xsd");
+
+         P := Xml.To_Policy (Data => D);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid VMCS start address 0000000000000023 - address "
+                    & "must be 4k aligned",
+                    Message   => "Exception message mismatch (alignment)");
+      end;
+   end Invalid_Vmcs_Addrs;
 
    -------------------------------------------------------------------------
 

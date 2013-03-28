@@ -52,6 +52,14 @@ is
    package Subjects_Package is new Ada.Containers.Ordered_Sets
      (Element_Type => Subject_Type);
 
+   type Binary_Type is record
+      Path             : Ada.Strings.Unbounded.Unbounded_String;
+      Physical_Address : SK.Word64;
+   end record;
+
+   package Binary_Package is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => Binary_Type);
+
    type Kernel_Type is record
       Stack_Address : SK.Word64;
       Memory_Layout : Memory_Layout_Type;
@@ -62,6 +70,7 @@ is
       Vmcs_Start_Address : SK.Word64;
       Kernel             : Kernel_Type;
       Subjects           : Subjects_Package.Set;
+      Binaries           : Binary_Package.List;
    end record;
 
 end Skp;

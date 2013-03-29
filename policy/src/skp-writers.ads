@@ -11,6 +11,11 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type);
 
+   --  Write binary information files to directory specified by name.
+   procedure Write_Binaries
+     (Dir_Name : String;
+      Policy   : Policy_Type);
+
    --  Write system-related policy files to directory specified by name.
    procedure Write_System
      (Dir_Name : String;

@@ -271,6 +271,91 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Write_Binaries
+     (Dir_Name : String;
+      Policy   : Policy_Type)
+   is
+      use Ada.Text_IO;
+      use Ada.Strings.Unbounded;
+
+      Pkg_Name  : constant String   := "Skp.Binaries";
+      Spec_Name : constant String   := Dir_Name & "/skp-binaries.ads";
+      B_Count   : constant Positive := Positive (Policy.Binaries.Length);
+      Current   : Natural           := 0;
+      Spec_File : File_Type;
+
+      --  Write binary spec.
+      procedure Write_Binary_Spec (C : Binary_Package.Cursor);
+
+      ----------------------------------------------------------------------
+
+      procedure Write_Binary_Spec (C : Binary_Package.Cursor)
+      is
+         Binary : constant Binary_Type := Binary_Package.Element
+           (Position => C);
+      begin
+         Put_Line (File => Spec_File,
+                   Item => Indent & "  (Path             => "
+                   & "To_Unbounded_String ("""
+                   & To_String (Binary.Path) & """),");
+         Put (File => Spec_File,
+              Item => Indent & "   Physical_Address => 16#");
+         Put (File => Spec_File,
+              Item => SK.Utils.To_Hex (Item => Binary.Physical_Address));
+         Put (File => Spec_File,
+              Item => "#)");
+
+         Current := Current + 1;
+         if Current /= B_Count then
+            Put_Line (File => Spec_File,
+                      Item => ",");
+         else
+            Put_Line (File => Spec_File,
+                      Item => ");");
+         end if;
+      end Write_Binary_Spec;
+   begin
+      Open (Filename => Spec_Name,
+            File     => Spec_File);
+
+      Put (File => Spec_File,
+           Item => "with Ada.Strings.Unbounded; ");
+      Put_Line (File => Spec_File,
+                Item => "use Ada.Strings.Unbounded;");
+      Put_Line (File => Spec_File,
+                Item => "with SK;");
+      New_Line (File => Spec_File);
+      Put_Line (File => Spec_File,
+                Item => "package " & Pkg_Name & " is");
+      New_Line (File => Spec_File);
+      Put_Line (File => Spec_File,
+                Item => Indent & "type Binary_Spec_Type is record");
+      Put_Line (File => Spec_File,
+                Item => Indent & "   Path             : Unbounded_String;");
+      Put_Line (File => Spec_File,
+                Item => Indent & "   Physical_Address : SK.Word64;");
+      Put_Line (File => Spec_File,
+                Item => Indent & "end record;");
+      New_Line (File => Spec_File);
+      Put_Line (File => Spec_File,
+                Item => Indent & "type Binary_Spec_Array is array "
+                & "(Subject_Id_Type) of Binary_Spec_Type;");
+      New_Line (File => Spec_File);
+      Put_Line (File => Spec_File,
+                Item => Indent & "Binary_Specs : constant Binary_Spec_Array"
+                & " := (");
+
+      Policy.Binaries.Iterate (Process => Write_Binary_Spec'Access);
+
+      New_Line (File => Spec_File);
+      Put_Line (File => Spec_File,
+                Item => "end " & Pkg_Name & ";");
+
+      Close (File => Spec_File);
+   end Write_Binaries;
+
+   -------------------------------------------------------------------------
+
    procedure Write_Kernel
      (Dir_Name : String;
       Policy   : Policy_Type)

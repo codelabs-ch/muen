@@ -26,7 +26,34 @@ is
       T.Add_Test_Routine
         (Routine => Write_System'Access,
          Name    => "Write system policy files");
+      T.Add_Test_Routine
+        (Routine => Write_Binaries'Access,
+         Name    => "Write binary information files");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_Binaries
+   is
+      Bin_Spec : constant String := "obj/skp-binaries.ads";
+      Data     : Xml.XML_Data_Type;
+      Policy   : Policy_Type;
+   begin
+      Xml.Parse (Data   => Data,
+                 File   => "data/test_policy1.xml",
+                 Schema => "schema/system.xsd");
+
+      Policy := Xml.To_Policy (Data => Data);
+      Writers.Write_Binaries (Dir_Name => "obj",
+                              Policy   => Policy);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Bin_Spec,
+               Filename2 => "data/skp-binaries.ref"),
+              Message   => "Binary spec mismatch");
+
+      Ada.Directories.Delete_File (Name => Bin_Spec);
+   end Write_Binaries;
 
    -------------------------------------------------------------------------
 

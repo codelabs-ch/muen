@@ -14,7 +14,10 @@ is
    --  Write subject policy files.
    procedure Write_Subjects;
 
-   --  Write systen policy files.
+   --  Write system policy files.
    procedure Write_System;
+
+   --  Write binary spec files.
+   procedure Write_Binaries;
 
 end Writer_Tests;

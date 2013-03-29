@@ -5,6 +5,7 @@ with Ada.Strings.Unbounded;
 with SK.Utils;
 
 with Skp.Kernel;
+with Skp.Binaries;
 with Skp.Subjects;
 
 with Pack.Image;
@@ -15,21 +16,10 @@ is
    use Pack;
    use Skp;
    use Skp.Subjects;
+   use Skp.Binaries;
 
-   Policy_Dir : constant String := "../policy/include";
-
-   type Binary_Type is record
-      Filename : Unbounded_String;
-      Address  : SK.Word64;
-   end record;
-
-   Subjects : constant array (Subject_Id_Type) of Binary_Type :=
-       ((Filename => To_Unbounded_String ("obj/tau0"),
-         Address  => 16#00240000#),
-        (Filename => To_Unbounded_String ("obj/subject1"),
-         Address  => 16#00250000#),
-        (Filename => To_Unbounded_String ("obj/subject2"),
-         Address  => 16#00260000#));
+   Top_Dir    : constant String := "..";
+   Policy_Dir : constant String := Top_Dir & "/policy/include";
 begin
    Ada.Text_IO.Put_Line ("Packaging kernel image ...");
 
@@ -44,11 +34,12 @@ begin
 
    for S in Subject_Specs'Range loop
       declare
-         Fn   : constant String := To_String (Subjects (S).Filename);
+         Fn   : constant String := Top_Dir & "/" & To_String
+           (Binary_Specs (S).Path);
          Name : constant String := Ada.Directories.Base_Name (Name => Fn);
       begin
          Ada.Text_IO.Put_Line
-           (SK.Utils.To_Hex (Item => Subjects (S).Address)
+           (SK.Utils.To_Hex (Item => Binary_Specs (S).Physical_Address)
             & " [BIN ] " & Name);
          Ada.Text_IO.Put_Line
            (SK.Utils.To_Hex (Item => Subject_Specs (S).PML4_Address)
@@ -57,8 +48,8 @@ begin
            (SK.Utils.To_Hex (Item => Subject_Specs (S).IO_Bitmap_Address)
             & " [IOBM] " & Name);
 
-         Image.Add_Section (Filename => Fn,
-                            Address  => Subjects (S).Address);
+         Image.Add_Section (Filename => "obj/" & Name,
+                            Address  => Binary_Specs (S).Physical_Address);
          Image.Add_Section (Filename => Policy_Dir & "/" & Name & "_pt",
                             Address  => Subject_Specs (S).PML4_Address);
          Image.Add_Section (Filename => Policy_Dir & "/" & Name & "_iobm",

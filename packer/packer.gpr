@@ -2,7 +2,11 @@ with "../common/defaults";
 
 project Packer is
 
-   for Source_Dirs use ("src", "../common/**", "../policy/include");
+   for Source_Dirs use
+     ("src",
+      "../common/**",
+      "../policy/include",
+      "../policy/pack");
    for Object_Dir use "obj";
    for Main use ("packer.adb");
 

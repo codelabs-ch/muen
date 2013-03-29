@@ -2,6 +2,7 @@ with Ahven.Text_Runner;
 with Ahven.Framework;
 
 with OS_Tests;
+with Image_Tests;
 
 procedure Test_Runner
 is
@@ -12,6 +13,8 @@ is
 begin
    Add_Test (Suite => S.all,
              T     => new OS_Tests.Testcase);
+   Add_Test (Suite => S.all,
+             T     => new Image_Tests.Testcase);
 
    Ahven.Text_Runner.Run (Suite => S);
    Release_Suite (T => S);

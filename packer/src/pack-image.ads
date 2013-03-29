@@ -11,4 +11,9 @@ is
       Filename : String;
       Address  : SK.Word64);
 
+   --  Convert given source ELF binary to raw binary file.
+   procedure To_Binary
+     (Src_Elf : String;
+      Dst_Bin : String);
+
 end Pack.Image;

@@ -25,4 +25,15 @@ is
          & Name & "=alloc 2>/dev/null");
    end Add_Section;
 
+   -------------------------------------------------------------------------
+
+   procedure To_Binary
+     (Src_Elf : String;
+      Dst_Bin : String)
+   is
+   begin
+      OS.Execute (Command => Objcopy & " -O binary " & Src_Elf
+                  & " " & Dst_Bin);
+   end To_Binary;
+
 end Pack.Image;

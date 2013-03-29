@@ -27,9 +27,8 @@ $(OBJ_DIR)/subject2: $(SUBJ_DIR)/test/obj/subject2
 packer:
 	@LIBRARY_PATH=/usr/lib/x86_64-linux-gnu gprbuild $(BUILD_OPTS) -P$@
 
-$(OBJ_DIR)/kernel: packer $(KERN_DIR)/obj/kernel $(SUBJ_BINS)
-	cp $(KERN_DIR)/obj/kernel $@
-	$(OBJ_DIR)/packer
+$(OBJ_DIR)/kernel: packer $(SUBJ_BINS)
+	$(OBJ_DIR)/packer $(KERN_DIR)/obj/kernel
 	objcopy -O binary $@ $@
 
 deploy: $(OBJ_DIR)/kernel .server

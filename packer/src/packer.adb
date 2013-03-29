@@ -1,6 +1,7 @@
 with Ada.Text_IO;
 with Ada.Directories;
 with Ada.Strings.Unbounded;
+with Ada.Command_Line;
 
 with SK.Utils;
 
@@ -18,14 +19,31 @@ is
    use Skp.Subjects;
    use Skp.Binaries;
 
+   --  Print packer usage.
+   procedure Print_Usage;
+   procedure Print_Usage
+   is
+   begin
+      Ada.Text_IO.Put_Line (Ada.Command_Line.Command_Name & " <kernel_elf>");
+   end Print_Usage;
+
    Knl_Elf    : constant String := "obj/kernel";
    Top_Dir    : constant String := "..";
    Policy_Dir : constant String := Top_Dir & "/policy/include";
 begin
+   if Ada.Command_Line.Argument_Count /= 1 then
+      Print_Usage;
+      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
+      return;
+   end if;
+
    Ada.Text_IO.Put_Line ("Packaging kernel image ...");
 
-   --  Kernel sections.
+   --  Kernel
 
+   Ada.Directories.Copy_File
+     (Source_Name => Ada.Command_Line.Argument (1),
+      Target_Name => Knl_Elf);
    Image.Add_Section
      (Image    => Knl_Elf,
       Filename => Policy_Dir & "/kernel_pt",
@@ -33,7 +51,7 @@ begin
    Ada.Text_IO.Put_Line (SK.Utils.To_Hex (Item => Kernel.PML4_Address)
                          & " [PML4] kernel");
 
-   --  Subjects.
+   --  Subjects
 
    for S in Subject_Specs'Range loop
       declare

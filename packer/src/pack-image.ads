@@ -7,7 +7,8 @@ is
    --  the specified physical address. The section name is derived from the
    --  filename.
    procedure Add_Section
-     (Filename : String;
+     (Image    : String;
+      Filename : String;
       Address  : SK.Word64);
 
 end Pack.Image;

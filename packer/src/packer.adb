@@ -18,6 +18,7 @@ is
    use Skp.Subjects;
    use Skp.Binaries;
 
+   Knl_Elf    : constant String := "obj/kernel";
    Top_Dir    : constant String := "..";
    Policy_Dir : constant String := Top_Dir & "/policy/include";
 begin
@@ -25,8 +26,10 @@ begin
 
    --  Kernel sections.
 
-   Image.Add_Section (Filename => Policy_Dir & "/kernel_pt",
-                      Address  => Kernel.PML4_Address);
+   Image.Add_Section
+     (Image    => Knl_Elf,
+      Filename => Policy_Dir & "/kernel_pt",
+      Address  => Kernel.PML4_Address);
    Ada.Text_IO.Put_Line (SK.Utils.To_Hex (Item => Kernel.PML4_Address)
                          & " [PML4] kernel");
 
@@ -48,12 +51,18 @@ begin
            (SK.Utils.To_Hex (Item => Subject_Specs (S).IO_Bitmap_Address)
             & " [IOBM] " & Name);
 
-         Image.Add_Section (Filename => "obj/" & Name,
-                            Address  => Binary_Specs (S).Physical_Address);
-         Image.Add_Section (Filename => Policy_Dir & "/" & Name & "_pt",
-                            Address  => Subject_Specs (S).PML4_Address);
-         Image.Add_Section (Filename => Policy_Dir & "/" & Name & "_iobm",
-                            Address  => Subject_Specs (S).IO_Bitmap_Address);
+         Image.Add_Section
+           (Image    => Knl_Elf,
+            Filename => "obj/" & Name,
+            Address  => Binary_Specs (S).Physical_Address);
+         Image.Add_Section
+           (Image    => Knl_Elf,
+            Filename => Policy_Dir & "/" & Name & "_pt",
+            Address  => Subject_Specs (S).PML4_Address);
+         Image.Add_Section
+           (Image    => Knl_Elf,
+            Filename => Policy_Dir & "/" & Name & "_iobm",
+            Address  => Subject_Specs (S).IO_Bitmap_Address);
       end;
    end loop;
 end Packer;

@@ -57,10 +57,14 @@ begin
 
    for S in Subject_Specs'Range loop
       declare
-         Fn   : constant String := Top_Dir & "/" & To_String
+         Fn      : constant String := Top_Dir & "/" & To_String
            (Binary_Specs (S).Path);
-         Name : constant String := Ada.Directories.Base_Name (Name => Fn);
+         Name    : constant String := Ada.Directories.Base_Name (Name => Fn);
+         Raw_Bin : constant String := "obj/" & Name;
       begin
+         Image.To_Binary (Src_Elf => Fn,
+                          Dst_Bin => Raw_Bin);
+
          Ada.Text_IO.Put_Line
            (SK.Utils.To_Hex (Item => Binary_Specs (S).Physical_Address)
             & " [BIN ] " & Name);
@@ -73,7 +77,7 @@ begin
 
          Image.Add_Section
            (Image    => Knl_Elf,
-            Filename => "obj/" & Name,
+            Filename => Raw_Bin,
             Address  => Binary_Specs (S).Physical_Address);
          Image.Add_Section
            (Image    => Knl_Elf,

@@ -8,11 +8,6 @@ include ../Makeconf
 
 DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
-SUBJ_BINS = \
-	$(OBJ_DIR)/tau0 \
-	$(OBJ_DIR)/subject1 \
-	$(OBJ_DIR)/subject2
-
 all: $(OBJ_DIR)/kernel
 
 $(OBJ_DIR)/tau0: $(SUBJ_DIR)/tau0/obj/tau0
@@ -27,7 +22,7 @@ $(OBJ_DIR)/subject2: $(SUBJ_DIR)/test/obj/subject2
 packer:
 	@LIBRARY_PATH=/usr/lib/x86_64-linux-gnu gprbuild $(BUILD_OPTS) -P$@
 
-$(OBJ_DIR)/kernel: packer $(SUBJ_BINS)
+$(OBJ_DIR)/kernel: packer
 	$(OBJ_DIR)/packer $(KERN_DIR)/obj/kernel obj/kernel
 
 deploy: $(OBJ_DIR)/kernel .server

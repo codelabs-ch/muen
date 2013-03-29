@@ -29,7 +29,6 @@ packer:
 
 $(OBJ_DIR)/kernel: packer $(SUBJ_BINS)
 	$(OBJ_DIR)/packer $(KERN_DIR)/obj/kernel obj/kernel
-	objcopy -O binary $@ $@
 
 deploy: $(OBJ_DIR)/kernel .server
 	echo y | amttool $(TARGET_IP) reset

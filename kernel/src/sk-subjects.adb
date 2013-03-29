@@ -32,12 +32,12 @@ begin
 
    --#  hide SK.Subjects;
 
-   for S in Skc.Subjects.Binaries'Range loop
-      Descriptors (Skp.Subject_Id_Type (S - 1))
+   for S in Skc.Subjects.Bins'Range loop
+      Descriptors (S)
         := State_Type'
           (Launched        => False,
            Regs            => CPU.Null_Regs,
-           Stack_Address   => Skc.Subjects.Binaries (S).Stack_Address,
+           Stack_Address   => Skc.Subjects.Bins (S).Stack_Address,
            Ctls_Exec_Pin   => Constants.VM_CTRL_PREEMPT_TIMER,
            Ctls_Exec_Proc  => Constants.VM_CTRL_IO_BITMAPS
            or Constants.VM_CTRL_SECONDARY_PROC
@@ -54,7 +54,7 @@ begin
            or Constants.VM_CTRL_EXIT_MONITOR,
            Ctls_Exec_Proc2 => Constants.VM_CTRL_EXIT_DT
            or Constants.VM_CTRL_EXIT_WBINVD,
-           Entry_Point     => Skc.Subjects.Binaries (S).Entry_Point);
+           Entry_Point     => Skc.Subjects.Bins (S).Entry_Point);
    end loop;
 
 end SK.Subjects;

@@ -1,18 +1,23 @@
 with Ada.Text_IO;
-with Ada.Command_Line;
+with Ada.Strings.Unbounded;
 
 with SK.Utils;
+
+with Skp.Binaries;
 
 with Skc.Subjects;
 
 procedure Skconfig
 is
-   Count : constant Natural := Ada.Command_Line.Argument_Count;
-   Bins  : Skc.Subjects.Binary_Array (1 .. Count);
+   use Ada.Strings.Unbounded;
+
+   Top_Dir : constant String := "..";
+   Bins    : Skc.Subjects.Binary_Array;
 begin
    for B in Bins'Range loop
       declare
-         Subj : constant String := Ada.Command_Line.Argument (B);
+         Subj : constant String := Top_Dir & "/" & To_String
+           (Skp.Binaries.Binary_Specs (B).Path);
       begin
          Ada.Text_IO.Put_Line (Item => "Subject '" & Subj & "'");
 

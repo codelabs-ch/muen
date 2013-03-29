@@ -1,9 +1,11 @@
 with SK.Config;
 
+with Skp;
+
 package Skc.Subjects
 is
 
-   type Binary_Array is array (Positive range <>)
+   type Binary_Array is array (Skp.Subject_Id_Type)
      of SK.Config.Subject_Binary_Type;
 
    --  Read and analyze subject binary. Raises Binary_Error if a check fails.

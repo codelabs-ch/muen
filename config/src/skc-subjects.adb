@@ -98,6 +98,7 @@ is
       Subjs : Binary_Array)
    is
       use Ada.Text_IO;
+      use type Skp.Subject_Id_Type;
 
       File : File_Type;
    begin
@@ -114,10 +115,13 @@ is
       Put_Line (File => File,
                 Item => "with SK.Config; use SK.Config;");
       Put_Line (File => File,
+                Item => "with Skp; use Skp;");
+      New_Line (File => File);
+      Put_Line (File => File,
                 Item => "package Skc.Subjects is");
       Put_Line (File => File,
-                Item => "   Binaries : constant array (1 .."
-                & Subjs'Length'Img & ") of Subject_Binary_Type := (");
+                Item => "   Bins : constant array (Subject_Id_Type'Range) "
+                & "of Subject_Binary_Type := (");
 
       for S in Subjs'Range loop
          Put_Line (File => File,

@@ -9,7 +9,7 @@ config: subjects
 policy:
 	$(MAKE) -C $@
 
-kernel: config policy
+kernel: policy config
 	$(MAKE) -C $@
 
 packer: kernel

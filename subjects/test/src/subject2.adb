@@ -10,12 +10,12 @@ is
 
    --  Test subject console width and height.
    subtype Width_Type  is Natural range 1 .. 80;
-   subtype Height_Type is Natural range 1 .. 12;
+   subtype Height_Type is Natural range 1 .. 3;
 
    package VGA is new SK.Console_VGA
      (Width_Type   => Width_Type,
       Height_Type  => Height_Type,
-      Base_Address => System'To_Address (16#000b_8820#));
+      Base_Address => System'To_Address (16#000b_8280#));
 
    package Text_IO is new SK.Console
      (Initialize      => VGA.Init,

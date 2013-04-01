@@ -3,5 +3,6 @@
 	<binary path="subjects/dumper/obj/dumper"  physical_address="226000"/>
 	<binary path="subjects/test/obj/subject_a" physical_address="236000"/>
 	<binary path="subjects/test/obj/subject_b" physical_address="246000"/>
+	<binary path="subjects/test/obj/subject_c" physical_address="256000"/>
 	<binary path="subjects/idle/obj/idle"      physical_address="266000"/>
 </binaries>

@@ -12,6 +12,8 @@
 <!ENTITY subjamem   SYSTEM "subject_a_mem.xml">
 <!ENTITY subjbinit  SYSTEM "subject_b.xml">
 <!ENTITY subjbmem   SYSTEM "subject_b_mem.xml">
+<!ENTITY subjcinit  SYSTEM "subject_c.xml">
+<!ENTITY subjcmem   SYSTEM "subject_c_mem.xml">
 <!ENTITY idleinit   SYSTEM "idle.xml">
 <!ENTITY idlemem    SYSTEM "idle_mem.xml">
 ]>
@@ -52,7 +54,14 @@
 			</memory_layout>
 			<device name="vga"/>
 		</subject>
-		<subject id="4" name="idle" pml4_address="260000" io_bitmap_address="264000">
+		<subject id="4" name="subject_c" pml4_address="250000" io_bitmap_address="254000">
+			&subjcinit;
+			<memory_layout>
+				&subjcmem;
+			</memory_layout>
+			<device name="vga"/>
+		</subject>
+		<subject id="5" name="idle" pml4_address="260000" io_bitmap_address="264000">
 			&idleinit;
 			<memory_layout>
 				&idlemem;

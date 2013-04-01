@@ -35,8 +35,7 @@ is
      or Constants.VM_CTRL_EXIT_CR8_STORE
      or Constants.VM_CTRL_EXIT_MOV_DR
      or Constants.VM_CTRL_EXIT_MONITOR;
-   Exec_Proc2_Defaults : constant SK.Word32 := Constants.VM_CTRL_EXIT_DT
-     or Constants.VM_CTRL_EXIT_WBINVD;
+   Exec_Proc2_Defaults : constant SK.Word32 := Constants.VM_CTRL_EXIT_WBINVD;
 
    Exit_Ctrl_Defaults  : constant SK.Word32 := Constants.VM_CTRL_IA32E_MODE
      or Constants.VM_CTRL_EXIT_ACK_INT;

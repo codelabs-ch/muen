@@ -51,6 +51,9 @@ is
    EXCEPTION_BITMAP         : constant := 16#4004#;
    VM_EXIT_CONTROLS         : constant := 16#400c#;
    VM_ENTRY_CONTROLS        : constant := 16#4012#;
+   VM_ENTRY_INTERRUPT_INFO  : constant := 16#4016#;
+   VM_ENTRY_EXC_ERROR_CODE  : constant := 16#4018#;
+   VM_ENTRY_INSTRUCTION_LEN : constant := 16#401a#;
    CPU_BASED_EXEC_CONTROL2  : constant := 16#401e#;
    VMX_INST_ERROR           : constant := 16#4400#;
    VMX_EXIT_REASON          : constant := 16#4402#;

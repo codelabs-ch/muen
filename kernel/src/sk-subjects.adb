@@ -1,5 +1,3 @@
-with Skc.Subjects;
-
 with SK.Constants;
 
 package body SK.Subjects
@@ -32,12 +30,11 @@ begin
 
    --#  hide SK.Subjects;
 
-   for S in Skc.Subjects.Bins'Range loop
+   for S in Skp.Subject_Id_Type'Range loop
       Descriptors (S)
         := State_Type'
           (Launched        => False,
            Regs            => CPU.Null_Regs,
-           Stack_Address   => Skc.Subjects.Bins (S).Stack_Address,
            Ctls_Exec_Pin   => Constants.VM_CTRL_PREEMPT_TIMER,
            Ctls_Exec_Proc  => Constants.VM_CTRL_IO_BITMAPS
            or Constants.VM_CTRL_SECONDARY_PROC
@@ -53,8 +50,7 @@ begin
            or Constants.VM_CTRL_EXIT_MOV_DR
            or Constants.VM_CTRL_EXIT_MONITOR,
            Ctls_Exec_Proc2 => Constants.VM_CTRL_EXIT_DT
-           or Constants.VM_CTRL_EXIT_WBINVD,
-           Entry_Point     => Skc.Subjects.Bins (S).Entry_Point);
+           or Constants.VM_CTRL_EXIT_WBINVD);
    end loop;
 
 end SK.Subjects;

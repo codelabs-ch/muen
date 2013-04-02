@@ -6,7 +6,6 @@ project Kernel is
    for Source_Dirs use
      ("../common/src/",
       "../common/debug/",
-      "../config/include/",
       "../policy/include/",
       "src/**",
       "debug");

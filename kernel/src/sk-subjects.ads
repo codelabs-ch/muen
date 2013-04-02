@@ -16,11 +16,9 @@ is
    type State_Type is record
       Launched        : Boolean;
       Regs            : CPU.Registers_Type;
-      Stack_Address   : SK.Word64;
       Ctls_Exec_Pin   : SK.Word32;
       Ctls_Exec_Proc  : SK.Word32;
       Ctls_Exec_Proc2 : SK.Word32;
-      Entry_Point     : SK.Word64;
    end record;
 
    --  Get state of subject with given ID.

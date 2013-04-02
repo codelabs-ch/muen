@@ -460,9 +460,9 @@ is
          Ctls_Exec_Proc2   => State.Ctls_Exec_Proc2);
       VMCS_Setup_Host_Fields;
       VMCS_Setup_Guest_Fields
-        (Stack_Address => State.Stack_Address,
+        (Stack_Address => Spec.Stack_Address,
          PML4_Address  => Spec.PML4_Address,
-         Entry_Point   => State.Entry_Point);
+         Entry_Point   => Spec.Entry_Point);
 
       State.Launched := True;
       Subjects.Set_State (Id    => Subject_Id,

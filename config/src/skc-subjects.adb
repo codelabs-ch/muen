@@ -57,11 +57,11 @@ is
 
    -------------------------------------------------------------------------
 
-   function Read (Binary : String) return SK.Config.Subject_Binary_Type
+   function Read (Binary : String) return Binary_Type
    is
       File    : Bfd.Files.File_Type;
       Symbols : Bfd.Symbols.Symbol_Table;
-      Bin     : SK.Config.Subject_Binary_Type;
+      Bin     : Binary_Type;
    begin
       begin
          Bfd.Files.Open (File   => File,

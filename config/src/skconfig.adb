@@ -1,35 +1,40 @@
 with Ada.Text_IO;
-with Ada.Strings.Unbounded;
+with Ada.Command_Line;
 
 with SK.Utils;
-
-with Skp.Binaries;
 
 with Skc.Subjects;
 
 procedure Skconfig
 is
-   use Ada.Strings.Unbounded;
+   --  Print config tool usage.
+   procedure Print_Usage;
+   procedure Print_Usage
+   is
+   begin
+      Ada.Text_IO.Put_Line (Ada.Command_Line.Command_Name & " <binary>");
+   end Print_Usage;
 
-   Top_Dir : constant String := "..";
-   Bins    : Skc.Subjects.Binary_Array;
+   Binary : Skc.Subjects.Binary_Type;
 begin
-   for B in Bins'Range loop
-      declare
-         Subj : constant String := Top_Dir & "/" & To_String
-           (Skp.Binaries.Binary_Specs (B).Path);
-      begin
-         Ada.Text_IO.Put_Line (Item => "Subject '" & Subj & "'");
+   if Ada.Command_Line.Argument_Count /= 1 then
+      Print_Usage;
+      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
+      return;
+   end if;
 
-         Bins (B) := Skc.Subjects.Read (Binary => Subj);
+   declare
+      Path : constant String := Ada.Command_Line.Argument (1);
+   begin
+      Ada.Text_IO.Put_Line (Item => "Subject '" & Path & "'");
+      Binary := Skc.Subjects.Read (Binary => Path);
 
-         Ada.Text_IO.Put_Line (Item => "  Entry " & SK.Utils.To_Hex
-                               (Item => Bins (B).Entry_Point));
-         Ada.Text_IO.Put_Line (Item => "  Stack " & SK.Utils.To_Hex
-                               (Item => Bins (B).Stack_Address));
-      end;
-   end loop;
-
-   Skc.Subjects.Write (Spec  => "include/skc-subjects.ads",
-                       Subjs => Bins);
+      Ada.Text_IO.Put_Line (Item => "  Entry " & SK.Utils.To_Hex
+                            (Item => Binary.Entry_Point));
+      Ada.Text_IO.Put_Line (Item => "  Stack " & SK.Utils.To_Hex
+                            (Item => Binary.Stack_Address));
+      Skc.Subjects.Write (XML_File => Path & ".xml",
+                          Subject  => Binary);
+      Ada.Text_IO.Put_Line (Item => "Wrote XML spec to '" & Path & ".xml'");
+   end;
 end Skconfig;

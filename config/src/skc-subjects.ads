@@ -1,7 +1,5 @@
 with SK;
 
-with Skp;
-
 package Skc.Subjects
 is
 
@@ -11,15 +9,13 @@ is
       Stack_Address : SK.Word64;
    end record;
 
-   type Binary_Array is array (Skp.Subject_Id_Type) of Binary_Type;
-
    --  Read and analyze subject binary. Raises Binary_Error if a check fails.
    function Read (Binary : String) return Binary_Type;
 
-   --  Write subject binaries specification to given file.
+   --  Write subject binary specification to given XML file.
    procedure Write
-     (Spec  : String;
-      Subjs : Binary_Array);
+     (XML_File : String;
+      Subject  : Binary_Type);
 
    Open_Error   : exception;
    Binary_Error : exception;

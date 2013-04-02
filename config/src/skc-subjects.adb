@@ -94,52 +94,37 @@ is
    -------------------------------------------------------------------------
 
    procedure Write
-     (Spec  : String;
-      Subjs : Binary_Array)
+     (XML_File : String;
+      Subject  : Binary_Type)
    is
       use Ada.Text_IO;
-      use type Skp.Subject_Id_Type;
 
       File : File_Type;
    begin
-      if Ada.Directories.Exists (Name => Spec) then
+      if Ada.Directories.Exists (Name => XML_File) then
          Open (File => File,
                Mode => Out_File,
-               Name => Spec);
+               Name => XML_File);
       else
          Create (File => File,
                  Mode => Out_File,
-                 Name => Spec);
+                 Name => XML_File);
       end if;
 
-      Put_Line (File => File,
-                Item => "with SK.Config; use SK.Config;");
-      Put_Line (File => File,
-                Item => "with Skp; use Skp;");
-      New_Line (File => File);
-      Put_Line (File => File,
-                Item => "package Skc.Subjects is");
-      Put_Line (File => File,
-                Item => "   Bins : constant array (Subject_Id_Type'Range) "
-                & "of Subject_Binary_Type := (");
+      Put (File => File,
+           Item => "<initial_state ");
 
-      for S in Subjs'Range loop
-         Put_Line (File => File,
-                   Item => "     (Entry_Point   => 16#"
-                   & SK.Utils.To_Hex (Item => Subjs (S).Entry_Point) & "#,");
-         Put (File => File,
-              Item => "      Stack_Address => 16#"
-              & SK.Utils.To_Hex (Item => Subjs (S).Stack_Address) & "#)");
-         exit when S = Subjs'Last;
-
-         Put_Line (File => File,
-                   Item => ",");
-      end loop;
+      Put (File => File,
+           Item => "stack_address=""" & SK.Utils.To_Hex
+             (Item => Subject.Stack_Address) & """");
+      Put (File => File,
+           Item => " entry_point=""" & SK.Utils.To_Hex
+             (Item => Subject.Entry_Point) & """");
 
       Put_Line (File => File,
-                Item => ");");
-      Put_Line (File => File,
-                Item => "end Skc.Subjects;");
+                Item => "/>");
+
+      Close (File => File);
    end Write;
 
 end Skc.Subjects;

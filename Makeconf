@@ -3,3 +3,5 @@ SRC_DIR = $(CURDIR)/src
 OBJ_DIR = $(CURDIR)/obj
 
 BUILD_OPTS = -p -j0
+
+SKCONFIG = $(TOP_DIR)/config/obj/skconfig

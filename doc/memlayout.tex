@@ -1,0 +1,50 @@
+\documentclass[a4paper]{article}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{bytefield}
+
+% Create new memory section (start, end, size, text).
+\newcommand{\memsection}[4]{
+	\bytefieldsetup{bitheight=#3\baselineskip} % define the height of the memsection
+	\bitbox[]{10}{
+		\footnotesize\texttt{0x#2} % print end address
+		\\ \vspace{#3\baselineskip} \vspace{-2\baselineskip} \vspace{-#3pt}
+		\footnotesize\texttt{0x#1} % print start address
+	}
+	\bitbox{16}{#4} % print box with caption
+}
+
+\begin{document}
+\begin{bytefield}{}
+	\begin{rightwordgroup}{\color{Cyan}Subject2}
+	\memsection{0023 6000}{0023 9fff}{2}{Code and data}\\
+	\memsection{0023 4000}{0023 5fff}{2}{I/O bitmap}\\
+	\memsection{0023 0000}{0023 3fff}{2}{Pagetable}
+	\end{rightwordgroup}\\
+	\memsection{0022 a000}{0022 ffff}{3}{\color{gray}-- free --}\\
+	\begin{rightwordgroup}{\color{Cyan}Subject1}
+	\memsection{0022 6000}{0022 9fff}{2}{Code and data}\\
+	\memsection{0022 4000}{0022 5fff}{2}{I/O bitmap}\\
+	\memsection{0022 0000}{0022 3fff}{2}{Pagetable}
+	\end{rightwordgroup}\\
+	\memsection{0021 a000}{0021 ffff}{3}{\color{gray}-- free --}\\
+	\begin{rightwordgroup}{\color{Cyan}$\tau0$}
+	\memsection{0021 6000}{0021 9fff}{2}{Code and data}\\
+	\memsection{0021 4000}{0021 5fff}{2}{I/O bitmap}\\
+	\memsection{0021 0000}{0021 3fff}{2}{Pagetable}
+	\end{rightwordgroup}\\
+	\memsection{0020 4000}{0020 ffff}{3}{\color{gray}--  free --}\\
+	\memsection{0020 0000}{0020 3fff}{2}{Kernel pagetable}\\
+	\begin{rightwordgroup}{Kernel memory}
+		\memsection{001f f000}{001f ffff}{2}{$\tau0\rightarrow$kernel interface}\\
+		\memsection{0011 c000}{001f efff}{3}{\color{gray}-- free --}\\
+		\memsection{0010 0000}{0011 bfff}{2}{Kernel code and data}
+	\end{rightwordgroup}\\
+	\memsection{0000 4000}{000f ffff}{3}{\color{gray}-- free --}\\
+	\begin{rightwordgroup}{VMX regions}
+		\memsection{0000 3000}{0000 3fff}{2}{VMCS2}\\
+		\memsection{0000 2000}{0000 2fff}{2}{VMCS1}\\
+		\memsection{0000 1000}{0000 1fff}{2}{VMCS0}\\
+		\memsection{0000 0000}{0000 0fff}{2}{VMXON}
+	\end{rightwordgroup}\\
+\end{bytefield}
+\end{document}

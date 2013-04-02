@@ -28,6 +28,8 @@ is
       Success := System_State.Is_Valid;
       if Success then
          Apic.Enable;
+         Apic.Start_AP_Processors;
+
          VMX.Enable;
          Scheduler.Schedule;
       else

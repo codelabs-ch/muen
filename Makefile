@@ -1,15 +1,15 @@
 all: packer
 
-subjects:
+subjects: config
 	$(MAKE) -C $@
 
-config: subjects
+config:
 	$(MAKE) -C $@
 
-policy:
+policy: subjects
 	$(MAKE) -C $@
 
-kernel: policy config
+kernel: policy
 	$(MAKE) -C $@
 
 packer: kernel

@@ -13,4 +13,12 @@ is
    --# derives
    --#    X86_64.State from *;
 
+   --  Startup AP processors by sending INIT-SIPI-SIPI IPI sequence, see Intel
+   --  SDM 3A chapter 8.4.4.
+   procedure Start_AP_Processors;
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *;
+
 end SK.Apic;

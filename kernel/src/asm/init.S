@@ -5,6 +5,8 @@
 #define IA32_VMX_BASIC 0x480
 #define IA32_EFER      0xc0000080
 
+#define TRAMPOLINE_ADDR 0x0007e000
+
 #define CR0_NE_BIT   5
 #define CR0_WP_BIT   16
 #define CR0_PG_BIT   31
@@ -12,7 +14,7 @@
 #define EFER_LME_BIT 8
 #define EFER_NXE_BIT 11
 
-// Clear pagecount number of 4k memory starting at given address
+// clear pagecount number of 4k memory starting at given address
 .macro clear address pagecount
 	movl $\address, %ebx
 	movl $\pagecount, %eax
@@ -28,11 +30,20 @@
 .text
 .code32
 
-// See "Initializing IA-32e Mode" in the Intel SDM, Volume 3A, Chapter 9.8.5.
+// see "Initializing IA-32e Mode" in the Intel SDM, Volume 3A, Chapter 9.8.5
 
 _start:
 
-	// (0) initialize VMX regions (one VMXON + one VMCS per subject)
+	// copy AP trampoline code to low-memory
+
+	mov $trampoline_start, %esi
+	mov $TRAMPOLINE_ADDR, %edi
+	cld
+	mov $trampoline_end, %ecx
+	sub $trampoline_start, %ecx
+	rep movsb
+
+	// initialize VMX regions (one VMXON + one VMCS per subject)
 
 	clear VMXON_ADDRESS 1
 	clear VMCS_ADDRESS SUBJECT_COUNT
@@ -49,18 +60,18 @@ set_rev:
 	add $0x1000, %edx
 	loop set_rev
 
-	// (1) enable PAE
+	// enable PAE
 
 	movl %cr4, %eax
 	btsl $CR4_PAE_BIT, %eax
 	movl %eax, %cr4
 
-	// (2) load CR3 with PML4
+	// load CR3 with PML4
 
 	movl $KERNEL_PML4, %eax
 	movl %eax, %cr3
 
-	// (3) enable IA-32e mode and execute-disable
+	// enable IA-32e mode and execute-disable
 
 	movl $IA32_EFER, %ecx
 	rdmsr
@@ -68,7 +79,7 @@ set_rev:
 	btsl $EFER_NXE_BIT, %eax
 	wrmsr
 
-	// (4) enable paging, write protection and native FPU error reporting
+	// enable paging, write protection and native FPU error reporting
 
 	movl %cr0, %eax
 	btsl $CR0_PG_BIT, %eax
@@ -76,11 +87,11 @@ set_rev:
 	btsl $CR0_NE_BIT, %eax
 	movl %eax, %cr0
 
-	// (5) set up GDT
+	// set up GDT
 
 	lgdt gdt_ptr
 
-	// (6) indirect long jump to 64-bit code
+	// indirect long jump to 64-bit code
 
 	ljmp $8, $start64
 
@@ -113,3 +124,8 @@ start64: .align 4096
 freeze:
 	hlt
 	jmp freeze
+
+trampoline_start:
+	cli
+	hlt
+trampoline_end:

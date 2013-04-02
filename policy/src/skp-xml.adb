@@ -223,10 +223,10 @@ is
       end Add_Subject;
    begin
       P.Vmxon_Address := To_Word64
-           (Hex => Util.Get_Element_Attr_By_Tag_Name
-              (Node      => Root,
-               Tag_Name  => "system",
-               Attr_Name => "vmxon_address"));
+        (Hex => Util.Get_Element_Attr_By_Tag_Name
+           (Node      => Root,
+            Tag_Name  => "system",
+            Attr_Name => "vmxon_address"));
       P.Vmcs_Start_Address := To_Word64
         (Hex => Util.Get_Element_Attr_By_Tag_Name
            (Node      => Root,

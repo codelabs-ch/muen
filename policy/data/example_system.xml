@@ -9,6 +9,7 @@
 
 	<subjects>
 		<subject id="0" name="tau0">
+			<initial_state stack_address="4000" entry_point="ba"/>
 			<memory_layout pml4_address="210000">
 				<memory_region physical_address="216000" virtual_address="0"    size="4k" alignment="4k" writable="false" executable="true"/>
 				<memory_region physical_address="217000" virtual_address="1000" size="4k" alignment="4k" writable="false" executable="false"/>
@@ -22,6 +23,7 @@
 			</io_ports>
 		</subject>
 		<subject id="1" name="subject1">
+			<initial_state stack_address="4000" entry_point="6c6"/>
 			<memory_layout pml4_address="220000">
 				<memory_region physical_address="226000" virtual_address="0"    size="4k" alignment="4k" writable="false" executable="true"/>
 				<memory_region physical_address="227000" virtual_address="1000" size="4k" alignment="4k" writable="false" executable="false"/>
@@ -33,6 +35,7 @@
 			</io_ports>
 		</subject>
 		<subject id="2" name="subject2">
+			<initial_state stack_address="4000" entry_point="6c6"/>
 			<memory_layout pml4_address="230000">
 				<memory_region physical_address="236000" virtual_address="0"    size="4k" alignment="4k" writable="false" executable="true"/>
 				<memory_region physical_address="237000" virtual_address="1000" size="4k" alignment="4k" writable="false" executable="false"/>

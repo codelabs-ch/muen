@@ -1,6 +1,11 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 	<xs:include schemaLocation="./types.xsd"/>
 
+	<xs:complexType name="initial_state_type">
+		<xs:attribute name="stack_address" type="address_type" use="required"/>
+		<xs:attribute name="entry_point"   type="address_type" use="required"/>
+	</xs:complexType>
+
 	<xs:simpleType name="subject_name_type">
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1"/>
@@ -10,6 +15,7 @@
 
 	<xs:complexType name="subject_type">
 		<xs:sequence>
+			<xs:element name="initial_state" type="initial_state_type" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="memory_layout" type="memory_layout_type" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="io_ports"      type="io_ports_type"      minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>

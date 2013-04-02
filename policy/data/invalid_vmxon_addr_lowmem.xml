@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE system [
-<!ENTITY kernel   SYSTEM "default_kernel.xml">
-<!ENTITY binaries SYSTEM "default_binaries.xml">
+<!ENTITY kernel     SYSTEM "default_kernel.xml">
+<!ENTITY binaries   SYSTEM "default_binaries.xml">
+<!ENTITY subj_state SYSTEM "default_subject_state.xml">
 ]>
 <system vmxon_address="200000" vmcs_start_address="1000">
 	&kernel;
@@ -9,6 +10,7 @@
 
 	<subjects>
 		<subject id="0" name="tau0">
+			&subj_state;
 			<memory_layout pml4_address="1f0000">
 				<memory_region physical_address="240000" virtual_address="0" size="64k" alignment="4k" writable="true"  executable="true"/>
 				<memory_region physical_address="100000"                     size="4k"  alignment="4k" writable="false" executable="false"/>

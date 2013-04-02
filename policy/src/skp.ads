@@ -40,9 +40,15 @@ is
       Ranges            : Ports_Package.List;
    end record;
 
+   type Initial_State_Type is record
+      Stack_Address : SK.Word64;
+      Entry_Point   : SK.Word64;
+   end record;
+
    type Subject_Type is record
       Id            : Natural;
       Name          : Subject_Name_Type;
+      Init_State    : Initial_State_Type;
       Memory_Layout : Memory_Layout_Type;
       IO_Ports      : IO_Ports_Type;
    end record;

@@ -171,6 +171,7 @@ is
             Name => "id");
          Id     : constant Natural := Natural'Value (Id_Str);
          Ports  : IO_Ports_Type;
+         State  : Initial_State_Type;
 
          --  Add I/O port range to subject I/O ports.
          procedure Add_Port_Range (Node : DOM.Core.Node);
@@ -207,10 +208,21 @@ is
                              Tag_Name => "port_range",
                              Process  => Add_Port_Range'Access);
 
+         State.Stack_Address := To_Word64
+           (Hex => Util.Get_Element_Attr_By_Tag_Name
+              (Node      => Node,
+               Tag_Name  => "initial_state",
+               Attr_Name => "stack_address"));
+         State.Entry_Point := To_Word64
+           (Hex => Util.Get_Element_Attr_By_Tag_Name
+              (Node      => Node,
+               Tag_Name  => "initial_state",
+               Attr_Name => "entry_point"));
          P.Subjects.Insert
            (New_Item =>
               (Id            => Id,
                Name          => To_Unbounded_String (Name),
+               Init_State    => State,
                Memory_Layout => Deserialize_Mem_Layout (Node => Node),
                IO_Ports      => Ports));
 

@@ -233,6 +233,11 @@ is
          Assert (Condition => S.Name = To_Unbounded_String (Source => "tau0"),
                  Message   => "Name mismatch");
 
+         Assert (Condition => S.Init_State.Stack_Address = 16#120000#,
+                 Message   => "Subject stack mismatch");
+         Assert (Condition => S.Init_State.Entry_Point = 16#abc#,
+                 Message   => "Subject RIP mismatch");
+
          Assert (Condition => S.Memory_Layout.Pml4_Address = 16#1f0000#,
                  Message   => "PML4 address mismatch");
          Assert (Condition => S.Memory_Layout.Regions.Length = 2,

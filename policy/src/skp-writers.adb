@@ -480,6 +480,20 @@ is
          Put (File => Spec_File,
               Item => SK.Utils.To_Hex
                 (Item => Subject.IO_Ports.IO_Bitmap_Address));
+         Put_Line (File => Spec_File,
+                   Item => "#,");
+         Put (File => Spec_File,
+              Item => Indent & "    Stack_Address     => 16#");
+         Put (File => Spec_File,
+              Item => SK.Utils.To_Hex
+                (Item => Subject.Init_State.Stack_Address));
+         Put_Line (File => Spec_File,
+                   Item => "#,");
+         Put (File => Spec_File,
+              Item => Indent & "    Entry_Point       => 16#");
+         Put (File => Spec_File,
+              Item => SK.Utils.To_Hex
+                (Item => Subject.Init_State.Entry_Point));
          Put (File => Spec_File,
               Item => "#)");
 
@@ -512,6 +526,10 @@ is
                 Item => Indent & "   VMCS_Address      : SK.Word64;");
       Put_Line (File => Spec_File,
                 Item => Indent & "   IO_Bitmap_Address : SK.Word64;");
+      Put_Line (File => Spec_File,
+                Item => Indent & "   Stack_Address     : SK.Word64;");
+      Put_Line (File => Spec_File,
+                Item => Indent & "   Entry_Point       : SK.Word64;");
       Put_Line (File => Spec_File,
                 Item => Indent & "end record;");
       New_Line (File => Spec_File);

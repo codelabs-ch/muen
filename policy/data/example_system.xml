@@ -9,37 +9,37 @@
 
 	<subjects>
 		<subject id="0" name="tau0">
-			<memory_layout pml4_address="1f0000">
-				<memory_region physical_address="240000" virtual_address="0"    size="4k" alignment="4k" writable="false" executable="true"/>
-				<memory_region physical_address="241000" virtual_address="1000" size="4k" alignment="4k" writable="false" executable="false"/>
-				<memory_region physical_address="242000" virtual_address="2000" size="8k" alignment="4k" writable="true"  executable="false"/>
+			<memory_layout pml4_address="210000">
+				<memory_region physical_address="216000" virtual_address="0"    size="4k" alignment="4k" writable="false" executable="true"/>
+				<memory_region physical_address="217000" virtual_address="1000" size="4k" alignment="4k" writable="false" executable="false"/>
+				<memory_region physical_address="218000" virtual_address="2000" size="8k" alignment="4k" writable="true"  executable="false"/>
 				<!-- τ0 => kernel interface page -->
 				<memory_region physical_address="1ff000" virtual_address="4000" size="4k" alignment="4k" writable="true"  executable="false"/>
 			</memory_layout>
-			<io_ports bitmap_address="244000">
+			<io_ports bitmap_address="214000">
 				<port_range start="50b0"/>
 				<port_range start="50b5"/>
 			</io_ports>
 		</subject>
 		<subject id="1" name="subject1">
-			<memory_layout pml4_address="1f4000">
-				<memory_region physical_address="250000" virtual_address="0"    size="4k" alignment="4k" writable="false" executable="true"/>
-				<memory_region physical_address="251000" virtual_address="1000" size="4k" alignment="4k" writable="false" executable="false"/>
-				<memory_region physical_address="252000" virtual_address="2000" size="8k" alignment="4k" writable="true"  executable="false"/>
+			<memory_layout pml4_address="220000">
+				<memory_region physical_address="226000" virtual_address="0"    size="4k" alignment="4k" writable="false" executable="true"/>
+				<memory_region physical_address="227000" virtual_address="1000" size="4k" alignment="4k" writable="false" executable="false"/>
+				<memory_region physical_address="228000" virtual_address="2000" size="8k" alignment="4k" writable="true"  executable="false"/>
 				<memory_region physical_address="b8000"                         size="4k" alignment="4k" writable="true"  executable="false"/>
 			</memory_layout>
-			<io_ports bitmap_address="254000">
+			<io_ports bitmap_address="224000">
 				<port_range start="03d4" end="03d5"/>
 			</io_ports>
 		</subject>
 		<subject id="2" name="subject2">
-			<memory_layout pml4_address="1f8000">
-				<memory_region physical_address="260000" virtual_address="0"    size="4k" alignment="4k" writable="false" executable="true"/>
-				<memory_region physical_address="261000" virtual_address="1000" size="4k" alignment="4k" writable="false" executable="false"/>
-				<memory_region physical_address="262000" virtual_address="2000" size="8k" alignment="4k" writable="true"  executable="false"/>
+			<memory_layout pml4_address="230000">
+				<memory_region physical_address="236000" virtual_address="0"    size="4k" alignment="4k" writable="false" executable="true"/>
+				<memory_region physical_address="237000" virtual_address="1000" size="4k" alignment="4k" writable="false" executable="false"/>
+				<memory_region physical_address="238000" virtual_address="2000" size="8k" alignment="4k" writable="true"  executable="false"/>
 				<memory_region physical_address="b8000"                         size="4k" alignment="4k" writable="true"  executable="false"/>
 			</memory_layout>
-			<io_ports bitmap_address="264000">
+			<io_ports bitmap_address="234000">
 				<port_range start="03d4" end="03d5"/>
 			</io_ports>
 		</subject>

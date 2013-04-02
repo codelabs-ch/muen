@@ -66,14 +66,14 @@ begin
                           Dst_Bin => Raw_Bin);
 
          Ada.Text_IO.Put_Line
-           (SK.Utils.To_Hex (Item => Binary_Specs (S).Physical_Address)
-            & " [BIN ] " & Name);
-         Ada.Text_IO.Put_Line
            (SK.Utils.To_Hex (Item => Subject_Specs (S).PML4_Address)
             & " [PML4] " & Name);
          Ada.Text_IO.Put_Line
            (SK.Utils.To_Hex (Item => Subject_Specs (S).IO_Bitmap_Address)
             & " [IOBM] " & Name);
+         Ada.Text_IO.Put_Line
+           (SK.Utils.To_Hex (Item => Binary_Specs (S).Physical_Address)
+            & " [BIN ] " & Name);
 
          Image.Add_Section
            (Image    => Knl_Elf,

@@ -12,10 +12,10 @@ package Skp.Binaries is
 
    Binary_Specs : constant Binary_Spec_Array := (
      (Path             => To_Unbounded_String ("subjects/tau0/obj/tau0"),
-      Physical_Address => 16#0000000000240000#),
+      Physical_Address => 16#0000000000216000#),
      (Path             => To_Unbounded_String ("subjects/test/obj/subject1"),
-      Physical_Address => 16#0000000000250000#),
+      Physical_Address => 16#0000000000226000#),
      (Path             => To_Unbounded_String ("subjects/test/obj/subject2"),
-      Physical_Address => 16#0000000000260000#));
+      Physical_Address => 16#0000000000236000#));
 
 end Skp.Binaries;

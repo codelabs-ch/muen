@@ -1,6 +1,9 @@
+with Ada.Directories;
 with Ada.Exceptions;
 
 with Skc.Subjects;
+
+with Test_Utils;
 
 package body Binary_Tests
 is
@@ -32,6 +35,9 @@ is
       T.Add_Test_Routine
         (Routine => Read_Undefined_Symbols'Access,
          Name    => "Read file with undefined symbols");
+      T.Add_Test_Routine
+        (Routine => Write_Binary_Spec'Access,
+         Name    => "Write binary XML specification");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -145,5 +151,24 @@ is
                  (X => E) = "Undefined symbol main",
                  Message   => "Exception message mismatch");
    end Read_Undefined_Symbols;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_Binary_Spec
+   is
+      XML_Spec : constant String := "obj/bin1.xml";
+   begin
+      Subjects.Write
+        (XML_File => XML_Spec,
+         Subject  => (Entry_Point   => 16#0c#,
+                      Stack_Address => 16#18#));
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/bin1.xml.ref",
+               Filename2 => XML_Spec),
+              Message   => "XML specification mismatch");
+
+      Ada.Directories.Delete_File (Name => XML_Spec);
+   end Write_Binary_Spec;
 
 end Binary_Tests;

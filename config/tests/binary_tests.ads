@@ -26,4 +26,7 @@ is
    --  Try to read a binary file which contains undefined symbols.
    procedure Read_Undefined_Symbols;
 
+   --  Write binary XML specification.
+   procedure Write_Binary_Spec;
+
 end Binary_Tests;

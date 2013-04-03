@@ -2,9 +2,10 @@ POLICY  = data/example_system.xml
 INC_DIR = include
 PAC_DIR = pack
 
-include ../Makeconf
-
 all: process_policy
+
+include ../Makeconf
+include ../Makecov
 
 $(INC_DIR):
 	@mkdir $@
@@ -23,6 +24,10 @@ tests: build_tests
 
 build_tests:
 	@LIBRARY_PATH=/usr/lib/x86_64-linux-gnu gprbuild $(BUILD_OPTS) -Pskp_tests
+
+build_cov:
+	@LIBRARY_PATH=/usr/lib/x86_64-linux-gnu gprbuild $(BUILD_OPTS) \
+		-Pskp_tests -XBUILD="coverage"
 
 clean:
 	@rm -rf $(OBJ_DIR) $(INC_DIR) $(PAC_DIR)

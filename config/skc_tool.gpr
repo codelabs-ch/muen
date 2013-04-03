@@ -1,5 +1,5 @@
 with "../common/defaults";
-with "../contrib/ada-bfd";
+with "../contrib/ada_bfd";
 
 project Skc_Tool is
 

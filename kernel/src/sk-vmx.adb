@@ -20,6 +20,23 @@ is
    SEL_KERN_DATA : constant := 16#10#;
    SEL_TSS       : constant := 16#18#;
 
+   Exec_Pin_Defaults   : constant SK.Word32 := Constants.VM_CTRL_PREEMPT_TIMER;
+   Exec_Proc_Defaults  : constant SK.Word32 := Constants.VM_CTRL_IO_BITMAPS
+     or Constants.VM_CTRL_SECONDARY_PROC
+     or Constants.VM_CTRL_EXIT_HLT
+     or Constants.VM_CTRL_EXIT_INVLPG
+     or Constants.VM_CTRL_EXIT_MWAIT
+     or Constants.VM_CTRL_EXIT_RDPMC
+     or Constants.VM_CTRL_EXIT_RDTSC
+     or Constants.VM_CTRL_EXIT_CR3_LOAD
+     or Constants.VM_CTRL_EXIT_CR3_STORE
+     or Constants.VM_CTRL_EXIT_CR8_LOAD
+     or Constants.VM_CTRL_EXIT_CR8_STORE
+     or Constants.VM_CTRL_EXIT_MOV_DR
+     or Constants.VM_CTRL_EXIT_MONITOR;
+   Exec_Proc2_Defaults : constant SK.Word32 := Constants.VM_CTRL_EXIT_DT
+     or Constants.VM_CTRL_EXIT_WBINVD;
+
    --  Subject preemption time in ticks. Used to set the VMX preemption timer.
 
    Subject_Time_Slice : constant := 500;
@@ -455,9 +472,9 @@ is
 
       VMCS_Setup_Control_Fields
         (IO_Bitmap_Address => Spec.IO_Bitmap_Address,
-         Ctls_Exec_Pin     => State.Ctls_Exec_Pin,
-         Ctls_Exec_Proc    => State.Ctls_Exec_Proc,
-         Ctls_Exec_Proc2   => State.Ctls_Exec_Proc2);
+         Ctls_Exec_Pin     => Exec_Pin_Defaults,
+         Ctls_Exec_Proc    => Exec_Proc_Defaults,
+         Ctls_Exec_Proc2   => Exec_Proc2_Defaults);
       VMCS_Setup_Host_Fields;
       VMCS_Setup_Guest_Fields
         (Stack_Address => Spec.Stack_Address,

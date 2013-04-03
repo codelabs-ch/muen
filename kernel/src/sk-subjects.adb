@@ -1,5 +1,3 @@
-with SK.Constants;
-
 package body SK.Subjects
 is
 
@@ -27,30 +25,7 @@ is
    end Set_State;
 
 begin
-
-   --#  hide SK.Subjects;
-
-   for S in Skp.Subject_Id_Type'Range loop
-      Descriptors (S)
-        := State_Type'
-          (Launched        => False,
-           Regs            => CPU.Null_Regs,
-           Ctls_Exec_Pin   => Constants.VM_CTRL_PREEMPT_TIMER,
-           Ctls_Exec_Proc  => Constants.VM_CTRL_IO_BITMAPS
-           or Constants.VM_CTRL_SECONDARY_PROC
-           or Constants.VM_CTRL_EXIT_HLT
-           or Constants.VM_CTRL_EXIT_INVLPG
-           or Constants.VM_CTRL_EXIT_MWAIT
-           or Constants.VM_CTRL_EXIT_RDPMC
-           or Constants.VM_CTRL_EXIT_RDTSC
-           or Constants.VM_CTRL_EXIT_CR3_LOAD
-           or Constants.VM_CTRL_EXIT_CR3_STORE
-           or Constants.VM_CTRL_EXIT_CR8_LOAD
-           or Constants.VM_CTRL_EXIT_CR8_STORE
-           or Constants.VM_CTRL_EXIT_MOV_DR
-           or Constants.VM_CTRL_EXIT_MONITOR,
-           Ctls_Exec_Proc2 => Constants.VM_CTRL_EXIT_DT
-           or Constants.VM_CTRL_EXIT_WBINVD);
-   end loop;
-
+   Descriptors := Subject_Array'
+     (others => State_Type'(Launched => False,
+                            Regs     => CPU.Null_Regs));
 end SK.Subjects;

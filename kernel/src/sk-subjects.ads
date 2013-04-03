@@ -14,11 +14,8 @@ is
 
    --  Subject state.
    type State_Type is record
-      Launched        : Boolean;
-      Regs            : CPU.Registers_Type;
-      Ctls_Exec_Pin   : SK.Word32;
-      Ctls_Exec_Proc  : SK.Word32;
-      Ctls_Exec_Proc2 : SK.Word32;
+      Launched : Boolean;
+      Regs     : CPU.Registers_Type;
    end record;
 
    --  Get state of subject with given ID.

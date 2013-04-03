@@ -14,33 +14,35 @@
 }
 
 \begin{document}
-\begin{bytefield}{}
-	\begin{rightwordgroup}{\color{Cyan}Subject2}
+\begin{bytefield}{24}
+	\bitbox[]{10}{}
+	\bitbox[]{16}{$\vdots$}\\[1ex]
+	\begin{rightwordgroup}{\color{Cyan}Subject1}
 	\memsection{0023 6000}{0023 9fff}{2}{Code and data}\\
 	\memsection{0023 4000}{0023 5fff}{2}{I/O bitmap}\\
 	\memsection{0023 0000}{0023 3fff}{2}{Pagetable}
 	\end{rightwordgroup}\\
-	\memsection{0022 a000}{0022 ffff}{3}{\color{gray}-- free --}\\
-	\begin{rightwordgroup}{\color{Cyan}Subject1}
+	\memsection{0022 a000}{0022 ffff}{3}{\color{Gray}-- free --}\\
+	\begin{rightwordgroup}{\color{PineGreen}Dumper}
 	\memsection{0022 6000}{0022 9fff}{2}{Code and data}\\
 	\memsection{0022 4000}{0022 5fff}{2}{I/O bitmap}\\
 	\memsection{0022 0000}{0022 3fff}{2}{Pagetable}
 	\end{rightwordgroup}\\
-	\memsection{0021 a000}{0021 ffff}{3}{\color{gray}-- free --}\\
-	\begin{rightwordgroup}{\color{Cyan}$\tau0$}
+	\memsection{0021 a000}{0021 ffff}{3}{\color{Gray}-- free --}\\
+	\begin{rightwordgroup}{\color{PineGreen}$\tau0$}
 	\memsection{0021 6000}{0021 9fff}{2}{Code and data}\\
 	\memsection{0021 4000}{0021 5fff}{2}{I/O bitmap}\\
 	\memsection{0021 0000}{0021 3fff}{2}{Pagetable}
 	\end{rightwordgroup}\\
-	\memsection{0020 4000}{0020 ffff}{3}{\color{gray}--  free --}\\
+	\memsection{0020 4000}{0020 ffff}{3}{\color{Gray}--  free --}\\
 	\memsection{0020 0000}{0020 3fff}{2}{Kernel pagetable}\\
 	\begin{rightwordgroup}{Kernel memory}
-		\memsection{001f f000}{001f ffff}{2}{\color{red}$\tau0\rightarrow$kernel interface}\\
-		\memsection{001f e000}{001e ffff}{2}{\color{red}Subject state descriptors}\\
-		\memsection{0011 c000}{001f dfff}{3}{\color{gray}-- free --}\\
+		\memsection{001f f000}{001f ffff}{2}{\color{Red}$\tau0\rightarrow$kernel interface}\\
+		\memsection{001f e000}{001e ffff}{2}{\color{Red}Subject state descriptors}\\
+		\memsection{0011 c000}{001f dfff}{3}{\color{Gray}-- free --}\\
 		\memsection{0010 0000}{0011 bfff}{2}{Kernel code and data}
 	\end{rightwordgroup}\\
-	\memsection{0000 4000}{000f ffff}{3}{\color{gray}-- free --}\\
+	\memsection{0000 4000}{000f ffff}{3}{\color{Gray}-- free --}\\
 	\begin{rightwordgroup}{VMX regions}
 		\memsection{0000 3000}{0000 3fff}{2}{VMCS2}\\
 		\memsection{0000 2000}{0000 2fff}{2}{VMCS1}\\

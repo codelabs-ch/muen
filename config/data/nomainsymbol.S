@@ -1,0 +1,2 @@
+.text
+_start:

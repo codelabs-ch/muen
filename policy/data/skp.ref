@@ -1,6 +1,6 @@
 package Skp is
 
-   type Subject_Id_Type is range 0 .. 2;
+   subtype Subject_Id_Type is Natural range 0 .. 2;
 
    Vmxon_Address : constant := 16#0000000000000000#;
 

@@ -583,8 +583,8 @@ is
                 Item => "package " & Pkg_Name & " is");
       New_Line (File => File);
       Put_Line (File => File,
-                Item => Indent & "type Subject_Id_Type is range 0 .."
-                & Positive'Image (S_Count - 1) & ";");
+                Item => Indent & "subtype Subject_Id_Type is Natural range 0 "
+                & ".." & Positive'Image (S_Count - 1) & ";");
       New_Line (File => File);
       Put (File => File,
            Item => Indent & "Vmxon_Address : constant := 16#");

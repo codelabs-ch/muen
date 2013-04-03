@@ -9,6 +9,11 @@ SECTIONS
 		*(.text)
 	}
 
+	.trampoline :
+	{
+		*(.trampoline)
+	}
+
 	.data 0x00110000 :
 	{
 		*(.gdt)

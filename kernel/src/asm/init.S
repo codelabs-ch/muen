@@ -124,8 +124,3 @@ start64: .align 4096
 freeze:
 	hlt
 	jmp freeze
-
-trampoline_start:
-	cli
-	hlt
-trampoline_end:

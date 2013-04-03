@@ -162,5 +162,5 @@ is
 begin
    Scheduling_Plan := Scheduling_Plan_Type'
      (0 => Major_Frame_Type'(0, 0, 0, 0),
-      1 => Major_Frame_Type'(0, 1, 2, 0));
+      1 => Major_Frame_Type'(0, 2, 3, 0));
 end SK.Scheduler;

@@ -35,8 +35,9 @@
 	\memsection{0020 4000}{0020 ffff}{3}{\color{gray}--  free --}\\
 	\memsection{0020 0000}{0020 3fff}{2}{Kernel pagetable}\\
 	\begin{rightwordgroup}{Kernel memory}
-		\memsection{001f f000}{001f ffff}{2}{$\tau0\rightarrow$kernel interface}\\
-		\memsection{0011 c000}{001f efff}{3}{\color{gray}-- free --}\\
+		\memsection{001f f000}{001f ffff}{2}{\color{red}$\tau0\rightarrow$kernel interface}\\
+		\memsection{001f e000}{001e ffff}{2}{\color{red}Subject state descriptors}\\
+		\memsection{0011 c000}{001f dfff}{3}{\color{gray}-- free --}\\
 		\memsection{0010 0000}{0011 bfff}{2}{Kernel code and data}
 	\end{rightwordgroup}\\
 	\memsection{0000 4000}{000f ffff}{3}{\color{gray}-- free --}\\

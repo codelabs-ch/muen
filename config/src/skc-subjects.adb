@@ -76,7 +76,7 @@ is
         (File   => File,
          Expect => Bfd.Files.OBJECT)
       then
-         raise Binary_Error with "Binary '" & Binary & "' has invalid format";
+         raise Binary_Error with "File '" & Binary & "' has invalid format";
       end if;
 
       Bfd.Symbols.Read_Symbols (File    => File,

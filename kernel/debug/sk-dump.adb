@@ -1,6 +1,7 @@
 with System.Machine_Code;
 
 with SK.KC;
+with SK.CPU;
 with SK.VMX;
 with SK.Constants;
 with SK.Subjects;
@@ -11,7 +12,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Dump_Registers
-     (GPR : CPU.Registers_Type;
+     (GPR : CPU_Registers_Type;
       RIP : Word64; CS  : Word64; RFL : Word64; RSP : Word64; SS  : Word64;
       CR0 : Word64; CR2 : Word64; CR3 : Word64; CR4 : Word64)
    is
@@ -88,7 +89,7 @@ is
    procedure Print_State (Subject : Skp.Subject_Id_Type)
    is
       RIP, RSP, CS, SS, CR0, CR3, CR4, RFL : Word64;
-      State : constant Subjects.State_Type
+      State : constant Subject_State_Type
         := Subjects.Get_State (Id => Subject);
    begin
       VMX.VMCS_Read (Field => Constants.GUEST_RIP,

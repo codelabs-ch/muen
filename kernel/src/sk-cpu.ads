@@ -4,34 +4,13 @@
 package SK.CPU
 is
 
-   --  General purpose registers.
-   type Registers_Type is record
-      RAX : SK.Word64;
-      RBX : SK.Word64;
-      RCX : SK.Word64;
-      RDX : SK.Word64;
-      RDI : SK.Word64;
-      RSI : SK.Word64;
-      RBP : SK.Word64;
-      R08 : SK.Word64;
-      R09 : SK.Word64;
-      R10 : SK.Word64;
-      R11 : SK.Word64;
-      R12 : SK.Word64;
-      R13 : SK.Word64;
-      R14 : SK.Word64;
-      R15 : SK.Word64;
-   end record;
-
    --  Restore CPU register values.
-   procedure Restore_Registers (Regs : Registers_Type);
+   procedure Restore_Registers (Regs : SK.CPU_Registers_Type);
    --# global
    --#    X86_64.State;
    --# derives
    --#    X86_64.State from *, Regs;
    pragma Inline_Always (Restore_Registers);
-
-   Null_Regs : constant Registers_Type;
 
    --  Execute CPUID instruction.
    procedure CPUID
@@ -165,24 +144,5 @@ is
    --#    in out X86_64.State;
    --# derives
    --#    X86_64.State, Success from X86_64.State, Field, Value;
-
-private
-
-   Null_Regs : constant Registers_Type := Registers_Type'
-     (RAX => 0,
-      RBX => 0,
-      RCX => 0,
-      RDX => 0,
-      RDI => 0,
-      RSI => 0,
-      RBP => 0,
-      R08 => 0,
-      R09 => 0,
-      R10 => 0,
-      R11 => 0,
-      R12 => 0,
-      R13 => 0,
-      R14 => 0,
-      R15 => 0);
 
 end SK.CPU;

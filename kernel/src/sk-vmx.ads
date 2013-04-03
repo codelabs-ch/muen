@@ -1,7 +1,5 @@
 with Skp;
 
-use type Skp.Subject_Id_Type;
-
 --# inherit
 --#    Skp.Kernel,
 --#    Skp.Subjects,

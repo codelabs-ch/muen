@@ -1,8 +1,11 @@
 with System;
 
+with Skp;
+
 with SK.VMX;
 with SK.Constants;
 with SK.KC;
+with SK.CPU;
 with SK.Dump;
 with SK.Subjects;
 
@@ -77,7 +80,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Handle_Vmx_Exit (Subject_Registers : CPU.Registers_Type)
+   procedure Handle_Vmx_Exit (Subject_Registers : SK.CPU_Registers_Type)
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
@@ -111,7 +114,7 @@ is
    --#       Scheduling_Plan;
    is
       Reason, Qualification, Intr_Info : SK.Word64;
-      State                            : Subjects.State_Type;
+      State                            : SK.Subject_State_Type;
       Current_Subject                  : Skp.Subject_Id_Type;
    begin
       Current_Subject := Scheduling_Plan (Current_Major) (Current_Minor);

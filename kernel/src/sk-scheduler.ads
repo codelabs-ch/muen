@@ -1,9 +1,3 @@
-with Skp;
-
-with SK.CPU;
-
-use type Skp.Subject_Id_Type;
-
 --# inherit
 --#    Skp.Subjects,
 --#    X86_64,
@@ -43,7 +37,7 @@ is
 private
 
    --  VMX exit handler.
-   procedure Handle_Vmx_Exit (Subject_Registers : CPU.Registers_Type);
+   procedure Handle_Vmx_Exit (Subject_Registers : SK.CPU_Registers_Type);
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;

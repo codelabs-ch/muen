@@ -138,7 +138,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Restore_Registers (Regs : Registers_Type)
+   procedure Restore_Registers (Regs : SK.CPU_Registers_Type)
    is
       --# hide Restore_Registers;
    begin

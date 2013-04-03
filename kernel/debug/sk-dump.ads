@@ -1,7 +1,5 @@
 with Skp;
 
-with SK.CPU;
-
 package SK.Dump
 is
 
@@ -10,7 +8,7 @@ is
 
    --  ISR execution environment state.
    type Isr_Context_Type is record
-      GPR        : CPU.Registers_Type;
+      GPR        : CPU_Registers_Type;
       Vector     : SK.Word64;
       Error_Code : SK.Word64;
       RIP        : SK.Word64;

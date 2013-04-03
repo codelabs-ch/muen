@@ -138,7 +138,7 @@ is
    is
       Success : Boolean;
       Spec    : Skp.Subjects.Subject_Spec_Type;
-      State   : Subjects.State_Type;
+      State   : SK.Subject_State_Type;
    begin
       Spec  := Skp.Subjects.Subject_Specs (Subject_Id);
       State := Subjects.Get_State (Id => Subject_Id);
@@ -437,7 +437,7 @@ is
    is
       Success : Boolean;
       Spec    : Skp.Subjects.Subject_Spec_Type;
-      State   : Subjects.State_Type;
+      State   : SK.Subject_State_Type;
    begin
       pragma Debug (KC.Put_String (Item => "Launching subject "));
       pragma Debug (KC.Put_Byte (Item => Byte (Subject_Id)));

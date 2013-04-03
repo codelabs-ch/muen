@@ -7,14 +7,18 @@ SECTIONS
 		image_start = .;
 		multiboot.o(.multiboot)
 		*(.text)
+
+		trampoline_src = .;
 	}
 
-	.trampoline :
+	.trampoline 0x00007000 : AT (ADDR (.text) + SIZEOF (.text))
 	{
-		*(.trampoline)
+		trampoline_start = .;
+		trampoline.o(.trampoline)
+		trampoline_end = .;
 	}
 
-	.data 0x00110000 :
+	.data 0x00110000 : AT (0x00110000)
 	{
 		*(.gdt)
 		*(.data)

@@ -5,8 +5,6 @@
 #define IA32_VMX_BASIC 0x480
 #define IA32_EFER      0xc0000080
 
-#define TRAMPOLINE_ADDR 0x0007e000
-
 #define CR0_NE_BIT   5
 #define CR0_WP_BIT   16
 #define CR0_PG_BIT   31
@@ -36,9 +34,9 @@ _start:
 
 	// copy AP trampoline code to low-memory
 
-	mov $trampoline_start, %esi
-	mov $TRAMPOLINE_ADDR, %edi
 	cld
+	mov $trampoline_src, %esi
+	mov $trampoline_start, %edi
 	mov $trampoline_end, %ecx
 	sub $trampoline_start, %ecx
 	rep movsb

@@ -1,4 +1,4 @@
-POLICY  = data/example_system.xml
+POLICY  = systems/example_system.xml
 INC_DIR = include
 PAC_DIR = pack
 

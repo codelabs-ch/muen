@@ -17,4 +17,8 @@ project Defaults is
         "-fstack-check",
         "-gnato");
 
+   Cov_Compiler_Switches := ("-ftest-coverage", "-fprofile-arcs");
+
+   Cov_Linker_Switches := ("-fprofile-generate");
+
 end Defaults;

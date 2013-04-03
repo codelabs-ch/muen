@@ -26,5 +26,3 @@ build_tests:
 
 clean:
 	@rm -rf $(OBJ_DIR) $(INC_DIR) $(PAC_DIR)
-
-.PHONY: tests

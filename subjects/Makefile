@@ -1,6 +1,9 @@
-all: tau0 test
+all: tau0 dumper test
 
 tau0:
+	$(MAKE) -C $@
+
+dumper:
 	$(MAKE) -C $@
 
 test:
@@ -8,6 +11,7 @@ test:
 
 clean:
 	$(MAKE) clean -C tau0
+	$(MAKE) clean -C dumper
 	$(MAKE) clean -C test
 
-.PHONY: tau0 test
+.PHONY: dumper tau0 test

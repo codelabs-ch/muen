@@ -85,32 +85,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Element_Value_By_Tag_Name
-     (Node     : DOM.Core.Element;
-      Tag_Name : String;
-      Required : Boolean := True)
-      return String
-   is
-      use type DOM.Core.Node;
-
-      Val_Node : constant DOM.Core.Node
-        := Get_Element_By_Tag_Name (Node     => Node,
-                                    Tag_Name => Tag_Name,
-                                    Required => Required);
-   begin
-      if Val_Node /= null
-        and then DOM.Core.Nodes.Has_Child_Nodes (N => Val_Node)
-      then
-         return DOM.Core.Nodes.Node_Value
-           (N => DOM.Core.Nodes.First_Child
-              (N => Val_Node));
-      else
-         return "";
-      end if;
-   end Get_Element_Value_By_Tag_Name;
-
-   -------------------------------------------------------------------------
-
    function To_Memory_Size (Str : String) return SK.Word64
    is
       use type SK.Word64;

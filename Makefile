@@ -19,6 +19,7 @@ deploy: kernel
 	$(MAKE) -C packer $@
 
 tests:
+	$(MAKE) tests -C config
 	$(MAKE) tests -C packer
 	$(MAKE) tests -C policy
 

@@ -107,29 +107,28 @@ is
    --#       Subjects.Descriptors &
    --#    Subjects.Descriptors from
    --#       *,
+   --#       X86_64.State,
    --#       Subject_Registers,
    --#       New_Major,
    --#       Current_Major,
    --#       Current_Minor,
    --#       Scheduling_Plan;
    is
-      Reason, Qualification, Intr_Info : SK.Word64;
-      State                            : SK.Subject_State_Type;
-      Current_Subject                  : Skp.Subject_Id_Type;
+      Reason, Qualification : SK.Word64;
+      State                 : SK.Subject_State_Type;
+      Current_Subject       : Skp.Subject_Id_Type;
    begin
       Current_Subject := Scheduling_Plan (Current_Major) (Current_Minor);
       State           := Subjects.Get_State (Id => Current_Subject);
       State.Regs      := Subject_Registers;
-      Subjects.Set_State (Id    => Current_Subject,
-                          State => State);
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => Reason);
 
       if Reason /= Constants.VM_EXIT_TIMER_EXPIRY then
          pragma Debug (VMX.VMCS_Read
-           (Field => Constants.VMX_EXIT_QUALIFICATION,
-            Value => Qualification));
+                       (Field => Constants.VMX_EXIT_QUALIFICATION,
+                        Value => Qualification));
 
          pragma Debug (KC.Put_String (Item => "Subject "));
          pragma Debug (KC.Put_Byte   (Item => Byte (Current_Subject)));
@@ -137,26 +136,27 @@ is
          pragma Debug (KC.Put_Word16 (Item => SK.Word16 (Reason)));
          pragma Debug (KC.Put_String (Item => ":"));
          pragma Debug (KC.Put_Word32 (Item => SK.Word32 (Qualification)));
-
-         pragma Debug (Reason = Constants.VM_EXIT_EXCEPTION_NMI,
-           VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
-                          Value => Intr_Info));
-         pragma Debug (Reason = Constants.VM_EXIT_EXCEPTION_NMI,
-                       KC.Put_String (Item => ":"));
-         pragma Debug (Reason = Constants.VM_EXIT_EXCEPTION_NMI,
-                       KC.Put_Word32 (Item => SK.Word32 (Intr_Info)));
          pragma Debug (KC.Put_Line (Item => ")"));
-         pragma Debug (Dump.Print_State (Subject => Current_Subject));
+
+         if Reason = Constants.VM_EXIT_EXCEPTION_NMI then
+            VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
+                           Value => State.Interrupt_Info);
+         else
+            pragma Debug (Dump.Print_State (Subject => Current_Subject));
+            null;
+         end if;
 
          CPU.Panic;
       end if;
+
+      Subjects.Set_State (Id    => Current_Subject,
+                          State => State);
 
       Current_Major := New_Major;
       Current_Minor := Current_Minor + 1;
       Schedule;
 
       --# accept Warning, 400, Qualification, "Only used for debug output";
-      --# accept Warning, 400, Intr_Info, "Only used for debug output";
    end Handle_Vmx_Exit;
 
 begin

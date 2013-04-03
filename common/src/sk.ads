@@ -41,8 +41,9 @@ is
 
    --  Subject state.
    type Subject_State_Type is record
-      Launched : Boolean;
-      Regs     : CPU_Registers_Type;
+      Launched       : Boolean;
+      Regs           : CPU_Registers_Type;
+      Interrupt_Info : Word64;
    end record;
 
    type Subject_State_Array is array (Natural range <>) of Subject_State_Type;

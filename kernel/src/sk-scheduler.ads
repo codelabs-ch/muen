@@ -46,8 +46,8 @@ private
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    State                from *                           &
-   --#    Subjects.Descriptors from *, Subject_Registers, State &
+   --#    State                from *                                         &
+   --#    Subjects.Descriptors from *, Subject_Registers, State, X86_64.State &
    --#    X86_64.State         from
    --#       *,
    --#       Subject_Registers,

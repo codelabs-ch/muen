@@ -32,6 +32,7 @@ is
 begin
    Descriptors := Descriptor_Array'
      (others => SK.Subject_State_Type'
-        (Launched => False,
-         Regs     => SK.CPU_Null_Regs));
+        (Launched       => False,
+         Regs           => SK.CPU_Null_Regs,
+         Interrupt_Info => 0));
 end SK.Subjects;

@@ -25,6 +25,9 @@ is
    type Scheduling_Plan_Type is
      array (SK.Major_Frame_Range) of Major_Frame_Type;
 
+   --  Dumper subject id.
+   Dumper_Id : constant := 1;
+
    --  Configured scheduling plan.
    Scheduling_Plan : Scheduling_Plan_Type;
 
@@ -106,15 +109,16 @@ is
    --#    in     Interrupts.IDT_Pointer;
    --#    in     VMX.State;
    --#    in     New_Major;
-   --#    in     Scheduling_Plan;
+   --#    in out Scheduling_Plan;
    --#    in out Current_Major;
    --#    in out Current_Minor;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    Current_Major from New_Major &
-   --#    Current_Minor from *         &
-   --#    X86_64.State  from
+   --#    Current_Major   from New_Major                                     &
+   --#    Current_Minor   from *                                             &
+   --#    Scheduling_Plan from *, Current_Major, Current_Minor, X86_64.State &
+   --#    X86_64.State    from
    --#       *,
    --#       Subject_Registers,
    --#       New_Major,
@@ -158,15 +162,16 @@ is
          pragma Debug (KC.Put_Word32 (Item => SK.Word32 (Qualification)));
          pragma Debug (KC.Put_Line (Item => ")"));
 
-         if Reason = Constants.VM_EXIT_EXCEPTION_NMI then
+         if Reason = Constants.VM_EXIT_EXCEPTION_NMI
+           and then Current_Subject /= Dumper_Id then
             VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
                            Value => State.Interrupt_Info);
+            Swap_Subject (Old_Id => Current_Subject,
+                          New_Id => Dumper_Id);
          else
             pragma Debug (Dump.Print_State (Subject => Current_Subject));
-            null;
+            CPU.Hlt;
          end if;
-
-         CPU.Panic;
       end if;
 
       Subjects.Set_State (Id    => Current_Subject,

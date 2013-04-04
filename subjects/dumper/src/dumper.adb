@@ -4,12 +4,13 @@ with SK.Console_VGA;
 with SK.Console;
 
 with Dumper_Kernel_Iface;
-with Dump;
 
 procedure Dumper
 is
 
    package DKI renames Dumper_Kernel_Iface;
+
+   use type SK.Word64;
 
    --  Dumper console width and height.
    subtype Width_Type  is Natural range 1 .. 80;
@@ -25,13 +26,15 @@ is
       Output_New_Line => VGA.New_Line,
       Output_Char     => VGA.Put_Char);
 
+   VM_EXIT_TIMER_EXPIRY : constant := 52;
+
    State : SK.Subject_State_Type;
 begin
    Text_IO.Init;
 
    for I in DKI.Descriptors_Range loop
       State := DKI.Get_Subject_State (Id => I);
-      if Dump.Is_Valid (Info => State.Interrupt_Info) then
+      if State.Exit_Reason /= VM_EXIT_TIMER_EXPIRY then
          Text_IO.Put_String (Item => "Subject ");
          Text_IO.Put_Byte   (Item => SK.Byte (I));
          Text_IO.Put_String (Item => " EXIT (");
@@ -39,10 +42,8 @@ begin
          Text_IO.Put_String (Item => ":");
          Text_IO.Put_Word32 (Item => SK.Word32 (State.Exit_Qualification));
          Text_IO.Put_String (Item => ":");
-         Text_IO.Put_Byte
-           (Item => Dump.Get_Vector
-              (Intr_Info => State.Interrupt_Info));
-         Text_IO.Put_Line (Item => ")");
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.Interrupt_Info));
+         Text_IO.Put_Line   (Item => ")");
          Text_IO.New_Line;
 
          Text_IO.Put_String ("RIP: ");

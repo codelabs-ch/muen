@@ -1,6 +1,5 @@
-with System.Machine_Code;
-
 with SK.KC;
+with SK.Hypercall;
 
 with Dumper_Kernel_Iface;
 
@@ -15,8 +14,7 @@ is
    --  Subject state after first launch (launched, no exit yet).
    Pristine_State : Subject_State_Type := Null_Subject_State;
 
-   State : SK.Subject_State_Type;
-   Tmp   : SK.Word64;
+   State : Subject_State_Type;
 begin
    Pristine_State.Launched := True;
 
@@ -96,11 +94,7 @@ begin
          KC.Put_Word64 (Item => State.CR4);
          KC.New_Line;
 
-         Tmp := Word64 (I);
-         System.Machine_Code.Asm
-           (Template => "movq %0, %%rax; vmcall",
-            Inputs   => (Word64'Asm_Input ("m", Tmp)),
-            Volatile => True);
+         Hypercall.Swap_Relaunch (Subject_Id => Byte (I));
       end if;
    end loop;
 

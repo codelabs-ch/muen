@@ -37,6 +37,9 @@ begin
          Text_IO.Put_String (Item => "Subject ");
          Text_IO.Put_Byte (Item => SK.Byte (I));
          Text_IO.New_Line;
+         Text_IO.Put_String (Item => "Qualification ");
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.Exit_Qualification));
+         Text_IO.New_Line;
          Text_IO.Put_String (Item => "Exception ");
          Text_IO.Put_Byte
            (Item => Dump.Get_Vector

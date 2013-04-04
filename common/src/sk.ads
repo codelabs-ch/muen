@@ -41,17 +41,18 @@ is
 
    --  Subject state.
    type Subject_State_Type is record
-      Launched       : Boolean;
-      Regs           : CPU_Registers_Type;
-      Interrupt_Info : Word64;
-      RIP            : Word64;
-      CS             : Word64;
-      RSP            : Word64;
-      SS             : Word64;
-      CR0            : Word64;
-      CR3            : Word64;
-      CR4            : Word64;
-      RFLAGS         : Word64;
+      Launched           : Boolean;
+      Regs               : CPU_Registers_Type;
+      Interrupt_Info     : Word64;
+      Exit_Qualification : Word64;
+      RIP                : Word64;
+      CS                 : Word64;
+      RSP                : Word64;
+      SS                 : Word64;
+      CR0                : Word64;
+      CR3                : Word64;
+      CR4                : Word64;
+      RFLAGS             : Word64;
    end record;
 
    type Subject_State_Array is array (Natural range <>) of Subject_State_Type;

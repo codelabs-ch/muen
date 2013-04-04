@@ -25,6 +25,10 @@ is
 
    --  Halt the CPU.
    procedure Hlt;
+   --# global
+   --#    X86_64.State;
+   --# derives
+   --#    X86_64.State from *;
 
    --  Panic.
    procedure Panic;

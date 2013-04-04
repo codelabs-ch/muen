@@ -131,6 +131,7 @@ is
    --  VMX basic exit reasons
 
    VM_EXIT_EXCEPTION_NMI    : constant := 0;
+   VM_EXIT_HYPERCALL        : constant := 18;
    VM_EXIT_TIMER_EXPIRY     : constant := 52;
 
 end SK.Constants;

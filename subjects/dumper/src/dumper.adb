@@ -98,6 +98,8 @@ begin
          Text_IO.Put_Word64 (Item => State.CR0);
          Text_IO.Put_String (Item => " CR3: ");
          Text_IO.Put_Word64 (Item => State.CR3);
+         Text_IO.Put_String (Item => " CR4: ");
+         Text_IO.Put_Word64 (Item => State.CR4);
          Text_IO.New_Line;
       end if;
    end loop;

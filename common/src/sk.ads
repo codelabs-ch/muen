@@ -50,6 +50,7 @@ is
       SS             : Word64;
       CR0            : Word64;
       CR3            : Word64;
+      CR4            : Word64;
    end record;
 
    type Subject_State_Array is array (Natural range <>) of Subject_State_Type;

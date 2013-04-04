@@ -13,7 +13,7 @@ is
 
    --  Dumper console width and height.
    subtype Width_Type  is Natural range 1 .. 80;
-   subtype Height_Type is Natural range 1 .. 10;
+   subtype Height_Type is Natural range 1 .. 17;
 
    package VGA is new SK.Console_VGA
      (Width_Type   => Width_Type,

@@ -37,7 +37,8 @@
 				<memory_region physical_address="b8000"                         size="4k" alignment="4k" writable="true"  executable="false"/>
 			</memory_layout>
 			<io_ports bitmap_address="224000">
-				<port_range start="03d4" end="03d5"/>
+				<port_range start="50b0"/>
+				<port_range start="50b5"/>
 			</io_ports>
 		</subject>
 		<subject id="2" name="subject_a">

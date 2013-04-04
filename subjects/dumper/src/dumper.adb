@@ -50,6 +50,8 @@ begin
          Text_IO.New_Line;
          Text_IO.Put_String ("RSP: ");
          Text_IO.Put_Word64 (Item => State.RSP);
+         Text_IO.Put_String (" SS : ");
+         Text_IO.Put_Word16 (Item => SK.Word16 (State.SS));
          Text_IO.New_Line;
 
          Text_IO.Put_String (Item => "RAX: ");

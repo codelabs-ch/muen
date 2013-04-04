@@ -71,6 +71,40 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Read VMCS fields and store them in the given subject state.
+   procedure Store_Subject_Info (State : in out SK.Subject_State_Type)
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from * &
+   --#    State        from *, X86_64.State;
+   is
+   begin
+      VMX.VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
+                     Value => State.Exit_Qualification);
+      VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
+                     Value => State.Interrupt_Info);
+
+      VMX.VMCS_Read (Field => Constants.GUEST_RIP,
+                     Value => State.RIP);
+      VMX.VMCS_Read (Field => Constants.GUEST_SEL_CS,
+                     Value => State.CS);
+      VMX.VMCS_Read (Field => Constants.GUEST_RSP,
+                     Value => State.RSP);
+      VMX.VMCS_Read (Field => Constants.GUEST_SEL_SS,
+                     Value => State.SS);
+      VMX.VMCS_Read (Field => Constants.GUEST_CR0,
+                     Value => State.CR0);
+      VMX.VMCS_Read (Field => Constants.GUEST_CR3,
+                     Value => State.CR3);
+      VMX.VMCS_Read (Field => Constants.GUEST_CR4,
+                     Value => State.CR4);
+      VMX.VMCS_Read (Field => Constants.GUEST_RFLAGS,
+                     Value => State.RFLAGS);
+   end Store_Subject_Info;
+
+   -------------------------------------------------------------------------
+
    procedure Schedule
    --# global
    --#    in     VMX.State;
@@ -179,28 +213,7 @@ is
 
          --  Abnormal subject exit, schedule dumper.
 
-         VMX.VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
-                        Value => State.Exit_Qualification);
-         VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
-                        Value => State.Interrupt_Info);
-
-         VMX.VMCS_Read (Field => Constants.GUEST_RIP,
-                        Value => State.RIP);
-         VMX.VMCS_Read (Field => Constants.GUEST_SEL_CS,
-                        Value => State.CS);
-         VMX.VMCS_Read (Field => Constants.GUEST_RSP,
-                        Value => State.RSP);
-         VMX.VMCS_Read (Field => Constants.GUEST_SEL_SS,
-                        Value => State.SS);
-         VMX.VMCS_Read (Field => Constants.GUEST_CR0,
-                        Value => State.CR0);
-         VMX.VMCS_Read (Field => Constants.GUEST_CR3,
-                        Value => State.CR3);
-         VMX.VMCS_Read (Field => Constants.GUEST_CR4,
-                        Value => State.CR4);
-         VMX.VMCS_Read (Field => Constants.GUEST_RFLAGS,
-                        Value => State.RFLAGS);
-
+         Store_Subject_Info (State => State);
          Swap_Subject (Old_Id => Current_Subject,
                        New_Id => Dumper_Id);
       end if;

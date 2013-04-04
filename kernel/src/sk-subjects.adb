@@ -38,5 +38,6 @@ begin
          RIP            => 0,
          CS             => 0,
          RSP            => 0,
-         SS             => 0));
+         SS             => 0,
+         CR0            => 0));
 end SK.Subjects;

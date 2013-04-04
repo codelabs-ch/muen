@@ -93,6 +93,10 @@ begin
          Text_IO.Put_String (Item => " R15: ");
          Text_IO.Put_Word64 (Item => State.Regs.R15);
          Text_IO.New_Line;
+
+         Text_IO.Put_String (Item => "CR0: ");
+         Text_IO.Put_Word64 (Item => State.CR0);
+         Text_IO.New_Line;
       end if;
    end loop;
 

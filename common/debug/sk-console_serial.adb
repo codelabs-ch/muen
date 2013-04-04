@@ -8,6 +8,9 @@ is
    --  Baud rate: 115200
    Divisor : constant := 1;
 
+   --  Return True if the send buffer is empty.
+   function Empty_Send_Buffer return Boolean;
+
    -------------------------------------------------------------------------
 
    function Empty_Send_Buffer return Boolean

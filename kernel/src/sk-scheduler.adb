@@ -41,6 +41,26 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Remove subject specified by Old_Id from the scheduling plan and replace
+   --  it with the subject given by New_Id.
+   procedure Swap_Subject (Old_Id, New_Id : Skp.Subject_Id_Type)
+   --# global
+   --#    in out Scheduling_Plan;
+   --# derives
+   --#    Scheduling_Plan from *, Old_Id, New_Id;
+   is
+   begin
+      for I in SK.Major_Frame_Range loop
+         for J in Minor_Frame_Range loop
+            if Scheduling_Plan (I)(J) = Old_Id then
+               Scheduling_Plan (I)(J) := New_Id;
+            end if;
+         end loop;
+      end loop;
+   end Swap_Subject;
+
+   -------------------------------------------------------------------------
+
    procedure Schedule
    --# global
    --#    in     VMX.State;

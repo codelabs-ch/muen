@@ -3,7 +3,7 @@ with System.Machine_Code;
 with SK.Console;
 with SK.Console_VGA;
 
-procedure Subject2
+procedure Subject_B
 is
 
    use type SK.Word32;
@@ -22,7 +22,7 @@ is
       Output_New_Line => VGA.New_Line,
       Output_Char     => VGA.Put_Char);
 
-   Name    : constant String := "Subject 2";
+   Name    : constant String := "Subject B";
    Counter : SK.Word32       := 0;
    Idx     : Positive        := 1;
    Dlt     : Integer         := -1;
@@ -61,4 +61,4 @@ begin
       end if;
    end loop;
 
-end Subject2;
+end Subject_B;

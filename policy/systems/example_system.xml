@@ -4,8 +4,8 @@
 <!ENTITY binaries   SYSTEM "example_binaries.xml">
 <!ENTITY tau0init   SYSTEM "../../subjects/tau0/obj/tau0.xml">
 <!ENTITY dumperinit SYSTEM "../../subjects/dumper/obj/dumper.xml">
-<!ENTITY subj1init  SYSTEM "../../subjects/test/obj/subject1.xml">
-<!ENTITY subj2init  SYSTEM "../../subjects/test/obj/subject2.xml">
+<!ENTITY subjainit  SYSTEM "../../subjects/test/obj/subject_a.xml">
+<!ENTITY subjbinit  SYSTEM "../../subjects/test/obj/subject_b.xml">
 ]>
 <system vmxon_address="0" vmcs_start_address="1000">
 	&kernel;
@@ -40,8 +40,8 @@
 				<port_range start="03d4" end="03d5"/>
 			</io_ports>
 		</subject>
-		<subject id="2" name="subject1">
-			&subj1init;
+		<subject id="2" name="subject_a">
+			&subjainit;
 			<memory_layout pml4_address="230000">
 				<memory_region physical_address="236000" virtual_address="0"    size="4k" alignment="4k" writable="false" executable="true"/>
 				<memory_region physical_address="237000" virtual_address="1000" size="4k" alignment="4k" writable="false" executable="false"/>
@@ -52,8 +52,8 @@
 				<port_range start="03d4" end="03d5"/>
 			</io_ports>
 		</subject>
-		<subject id="3" name="subject2">
-			&subj2init;
+		<subject id="3" name="subject_b">
+			&subjbinit;
 			<memory_layout pml4_address="240000">
 				<memory_region physical_address="246000" virtual_address="0"    size="4k" alignment="4k" writable="false" executable="true"/>
 				<memory_region physical_address="247000" virtual_address="1000" size="4k" alignment="4k" writable="false" executable="false"/>

@@ -36,5 +36,6 @@ begin
          Regs           => SK.CPU_Null_Regs,
          Interrupt_Info => 0,
          RIP            => 0,
-         CS             => 0));
+         CS             => 0,
+         RSP            => 0));
 end SK.Subjects;

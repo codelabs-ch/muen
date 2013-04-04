@@ -46,6 +46,7 @@ is
       Interrupt_Info : Word64;
       RIP            : Word64;
       CS             : Word64;
+      RSP            : Word64;
    end record;
 
    type Subject_State_Array is array (Natural range <>) of Subject_State_Type;

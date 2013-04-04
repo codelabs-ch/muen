@@ -153,6 +153,8 @@ is
                      Value => State.RIP);
       VMX.VMCS_Read (Field => Constants.GUEST_SEL_CS,
                      Value => State.CS);
+      VMX.VMCS_Read (Field => Constants.GUEST_RSP,
+                     Value => State.RSP);
 
       if Reason /= Constants.VM_EXIT_TIMER_EXPIRY then
          pragma Debug (VMX.VMCS_Read

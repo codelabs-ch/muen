@@ -1,4 +1,4 @@
-with System;
+with System.Machine_Code;
 
 with SK.Console;
 with SK.Console_VGA;
@@ -51,6 +51,14 @@ begin
          Idx := Idx + Dlt;
       end if;
       Counter := Counter + 1;
+
+      if Counter mod 2 ** 22 = 0 then
+
+         --  Provoke exception to schedule dumper.
+
+         System.Machine_Code.Asm (Template => "ud2",
+                                  Volatile => True);
+      end if;
    end loop;
 
 end Subject2;

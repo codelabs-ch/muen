@@ -1,4 +1,4 @@
-with System;
+with System.Machine_Code;
 
 with SK.Console_VGA;
 with SK.Console;
@@ -29,6 +29,7 @@ is
    VM_EXIT_TIMER_EXPIRY : constant := 52;
 
    State : SK.Subject_State_Type;
+   Tmp   : SK.Word64;
 begin
    Text_IO.Init;
 
@@ -106,10 +107,13 @@ begin
          Text_IO.Put_String (Item => " CR4: ");
          Text_IO.Put_Word64 (Item => State.CR4);
          Text_IO.New_Line;
+
+         Tmp := SK.Word64 (I);
+         System.Machine_Code.Asm
+           (Template => "movq %0, %%rax; vmcall",
+            Inputs   => (SK.Word64'Asm_Input ("m", Tmp)),
+            Volatile => True);
       end if;
    end loop;
 
-   loop
-      null;
-   end loop;
 end Dumper;

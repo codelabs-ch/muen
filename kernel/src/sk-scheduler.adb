@@ -146,7 +146,6 @@ is
    --#       Current_Minor,
    --#       Scheduling_Plan;
    is
-      Reason          : SK.Word64;
       State           : SK.Subject_State_Type;
       Current_Subject : Skp.Subject_Id_Type;
    begin
@@ -155,7 +154,7 @@ is
       State.Regs      := Subject_Registers;
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
-                     Value => Reason);
+                     Value => State.Exit_Reason);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
                      Value => State.Exit_Qualification);
 
@@ -176,14 +175,8 @@ is
       VMX.VMCS_Read (Field => Constants.GUEST_RFLAGS,
                      Value => State.RFLAGS);
 
-      if Reason /= Constants.VM_EXIT_TIMER_EXPIRY then
-         pragma Debug (KC.Put_String (Item => "Subject "));
-         pragma Debug (KC.Put_Byte   (Item => Byte (Current_Subject)));
-         pragma Debug (KC.Put_String (Item => " EXIT ("));
-         pragma Debug (KC.Put_Word16 (Item => SK.Word16 (Reason)));
-         pragma Debug (KC.Put_Line (Item => ")"));
-
-         if Reason = Constants.VM_EXIT_EXCEPTION_NMI then
+      if State.Exit_Reason /= Constants.VM_EXIT_TIMER_EXPIRY then
+         if State.Exit_Reason = Constants.VM_EXIT_EXCEPTION_NMI then
             VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
                            Value => State.Interrupt_Info);
             Swap_Subject (Old_Id => Current_Subject,

@@ -43,8 +43,9 @@ is
    type Subject_State_Type is record
       Launched           : Boolean;
       Regs               : CPU_Registers_Type;
-      Interrupt_Info     : Word64;
+      Exit_Reason        : Word64;
       Exit_Qualification : Word64;
+      Interrupt_Info     : Word64;
       RIP                : Word64;
       CS                 : Word64;
       RSP                : Word64;
@@ -97,8 +98,9 @@ private
      := Subject_State_Type'
        (Launched           => False,
         Regs               => Null_CPU_Regs,
-        Interrupt_Info     => 0,
+        Exit_Reason        => 0,
         Exit_Qualification => 0,
+        Interrupt_Info     => 0,
         RIP                => 0,
         CS                 => 0,
         RSP                => 0,

@@ -55,6 +55,8 @@ is
       RFLAGS             : Word64;
    end record;
 
+   Null_Subject_State : constant Subject_State_Type;
+
    type Subject_State_Array is array (Natural range <>) of Subject_State_Type;
 
    --  Size of one page (4k).
@@ -90,5 +92,20 @@ private
       R13 => 0,
       R14 => 0,
       R15 => 0);
+
+   Null_Subject_State : constant Subject_State_Type
+     := Subject_State_Type'
+       (Launched           => False,
+        Regs               => CPU_Null_Regs,
+        Interrupt_Info     => 0,
+        Exit_Qualification => 0,
+        RIP                => 0,
+        CS                 => 0,
+        RSP                => 0,
+        SS                 => 0,
+        CR0                => 0,
+        CR3                => 0,
+        CR4                => 0,
+        RFLAGS             => 0);
 
 end SK;

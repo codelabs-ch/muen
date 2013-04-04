@@ -105,6 +105,40 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Handle_Hypercall
+     (Current_Subject :        Skp.Subject_Id_Type;
+      Subject_State   : in out SK.Subject_State_Type)
+   --# global
+   --#    in out X86_64.State;
+   --#    in out Subjects.Descriptors;
+   --#    in out Scheduling_Plan;
+   --# derives
+   --#    X86_64.State, Scheduling_Plan from
+   --#       *,
+   --#       Current_Subject,
+   --#       Subject_State &
+   --#    Subject_State        from * &
+   --#    Subjects.Descriptors from *, Subject_State;
+   is
+      New_Subject : Skp.Subject_Id_Type;
+   begin
+      if Subject_State.Regs.RAX <= SK.Word64 (Skp.Subject_Id_Type'Last) then
+         New_Subject := Skp.Subject_Id_Type (Subject_State.Regs.RAX);
+         Subjects.Set_State (Id    => New_Subject,
+                             State => SK.Null_Subject_State);
+
+         Swap_Subject
+           (Old_Id => Current_Subject,
+            New_Id => New_Subject);
+         Subject_State := SK.Null_Subject_State;
+      else
+         pragma Debug (KC.Put_String ("Invalid hypercall parameter"));
+         CPU.Panic;
+      end if;
+   end Handle_Hypercall;
+
+   -------------------------------------------------------------------------
+
    procedure Schedule
    --# global
    --#    in     VMX.State;
@@ -163,8 +197,9 @@ is
    --#       Current_Major,
    --#       Current_Minor,
    --#       Subject_Registers,
+   --#       Subjects.Descriptors,
    --#       X86_64.State &
-   --#    X86_64.State    from
+   --#    X86_64.State from
    --#       *,
    --#       Subject_Registers,
    --#       New_Major,
@@ -184,8 +219,8 @@ is
    --#       Current_Minor,
    --#       Scheduling_Plan;
    is
-      State                   : SK.Subject_State_Type;
-      Current_Subject, New_Id : Skp.Subject_Id_Type;
+      State           : SK.Subject_State_Type;
+      Current_Subject : Skp.Subject_Id_Type;
    begin
       Current_Subject := Scheduling_Plan (Current_Major) (Current_Minor);
       State           := Subjects.Get_State (Id => Current_Subject);
@@ -195,20 +230,8 @@ is
                      Value => State.Exit_Reason);
 
       if State.Exit_Reason = Constants.VM_EXIT_HYPERCALL then
-
-         --  Hypercall.
-
-         if State.Regs.RAX <= SK.Word64 (Skp.Subject_Id_Type'Last) then
-            New_Id := Skp.Subject_Id_Type (State.Regs.RAX);
-            Subjects.Set_State (Id    => New_Id,
-                                State => SK.Null_Subject_State);
-            Swap_Subject (Old_Id => Current_Subject,
-                          New_Id => New_Id);
-            State := SK.Null_Subject_State;
-         else
-            pragma Debug (KC.Put_String ("Invalid hypercall parameter"));
-            CPU.Panic;
-         end if;
+         Handle_Hypercall (Current_Subject => Current_Subject,
+                           Subject_State   => State);
       elsif State.Exit_Reason /= Constants.VM_EXIT_TIMER_EXPIRY then
 
          --  Abnormal subject exit, schedule dumper.

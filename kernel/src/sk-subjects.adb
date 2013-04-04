@@ -34,5 +34,6 @@ begin
      (others => SK.Subject_State_Type'
         (Launched       => False,
          Regs           => SK.CPU_Null_Regs,
-         Interrupt_Info => 0));
+         Interrupt_Info => 0,
+         RIP            => 0));
 end SK.Subjects;

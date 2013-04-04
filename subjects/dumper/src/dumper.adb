@@ -43,6 +43,10 @@ begin
               (Intr_Info => State.Interrupt_Info));
          Text_IO.New_Line;
 
+         Text_IO.Put_String ("RIP: ");
+         Text_IO.Put_Word64 (Item => State.RIP);
+         Text_IO.New_Line;
+
          Text_IO.Put_String (Item => "RAX: ");
          Text_IO.Put_Word64 (Item => State.Regs.RAX);
          Text_IO.Put_String (Item => " RBX: ");

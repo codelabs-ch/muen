@@ -149,6 +149,9 @@ is
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => Reason);
 
+      VMX.VMCS_Read (Field => Constants.GUEST_RIP,
+                     Value => State.RIP);
+
       if Reason /= Constants.VM_EXIT_TIMER_EXPIRY then
          pragma Debug (VMX.VMCS_Read
                        (Field => Constants.VMX_EXIT_QUALIFICATION,

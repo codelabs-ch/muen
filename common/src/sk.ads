@@ -44,6 +44,7 @@ is
       Launched       : Boolean;
       Regs           : CPU_Registers_Type;
       Interrupt_Info : Word64;
+      RIP            : Word64;
    end record;
 
    type Subject_State_Array is array (Natural range <>) of Subject_State_Type;

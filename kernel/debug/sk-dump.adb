@@ -2,9 +2,6 @@ with System.Machine_Code;
 
 with SK.KC;
 with SK.CPU;
-with SK.VMX;
-with SK.Constants;
-with SK.Subjects;
 
 package body SK.Dump
 is
@@ -83,44 +80,6 @@ is
       KC.New_Line;
    end Dump_Registers;
    pragma Inline_Always (Dump_Registers);
-
-   -------------------------------------------------------------------------
-
-   procedure Print_State (Subject : Skp.Subject_Id_Type)
-   is
-      RIP, RSP, CS, SS, CR0, CR3, CR4, RFL : Word64;
-      State : constant Subject_State_Type
-        := Subjects.Get_State (Id => Subject);
-   begin
-      VMX.VMCS_Read (Field => Constants.GUEST_RIP,
-                     Value => RIP);
-      VMX.VMCS_Read (Field => Constants.GUEST_RSP,
-                     Value => RSP);
-      VMX.VMCS_Read (Field => Constants.GUEST_SEL_CS,
-                     Value => CS);
-      VMX.VMCS_Read (Field => Constants.GUEST_SEL_SS,
-                     Value => SS);
-      VMX.VMCS_Read (Field => Constants.GUEST_CR0,
-                     Value => CR0);
-      VMX.VMCS_Read (Field => Constants.GUEST_CR3,
-                     Value => CR3);
-      VMX.VMCS_Read (Field => Constants.GUEST_CR4,
-                     Value => CR4);
-      VMX.VMCS_Read (Field => Constants.GUEST_RFLAGS,
-                     Value => RFL);
-
-      Dump_Registers (GPR => State.Regs,
-                      RIP => RIP,
-                      CS  => CS,
-                      RFL => RFL,
-                      RSP => RSP,
-                      SS  => SS,
-                      CR0 => CR0,
-                      CR2 => 0,
-                      CR3 => CR3,
-                      CR4 => CR4);
-      KC.New_Line;
-   end Print_State;
 
    -------------------------------------------------------------------------
 

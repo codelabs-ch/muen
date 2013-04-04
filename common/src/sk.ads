@@ -37,7 +37,7 @@ is
       R15 : Word64;
    end record;
 
-   CPU_Null_Regs : constant CPU_Registers_Type;
+   Null_CPU_Regs : constant CPU_Registers_Type;
 
    --  Subject state.
    type Subject_State_Type is record
@@ -76,7 +76,7 @@ is
 
 private
 
-   CPU_Null_Regs : constant CPU_Registers_Type := CPU_Registers_Type'
+   Null_CPU_Regs : constant CPU_Registers_Type := CPU_Registers_Type'
      (RAX => 0,
       RBX => 0,
       RCX => 0,
@@ -96,7 +96,7 @@ private
    Null_Subject_State : constant Subject_State_Type
      := Subject_State_Type'
        (Launched           => False,
-        Regs               => CPU_Null_Regs,
+        Regs               => Null_CPU_Regs,
         Interrupt_Info     => 0,
         Exit_Qualification => 0,
         RIP                => 0,

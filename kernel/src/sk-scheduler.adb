@@ -48,11 +48,19 @@ is
    --  it with the subject given by New_Id.
    procedure Swap_Subject (Old_Id, New_Id : Skp.Subject_Id_Type)
    --# global
+   --#    in out X86_64.State;
    --#    in out Scheduling_Plan;
    --# derives
-   --#    Scheduling_Plan from *, Old_Id, New_Id;
+   --#    X86_64.State, Scheduling_Plan from *, Old_Id, New_Id;
    is
    begin
+      if Old_Id = New_Id then
+         pragma Debug (KC.Put_String (Item => "Scheduling error: subject "));
+         pragma Debug (KC.Put_Byte   (Item => Byte (Old_Id)));
+         pragma Debug (KC.Put_Line   (Item => " swap to self"));
+         CPU.Panic;
+      end if;
+
       for I in SK.Major_Frame_Range loop
          for J in Minor_Frame_Range loop
             if Scheduling_Plan (I)(J) = Old_Id then
@@ -179,8 +187,7 @@ is
          pragma Debug (KC.Put_Word32 (Item => SK.Word32 (Qualification)));
          pragma Debug (KC.Put_Line (Item => ")"));
 
-         if Reason = Constants.VM_EXIT_EXCEPTION_NMI
-           and then Current_Subject /= Dumper_Id then
+         if Reason = Constants.VM_EXIT_EXCEPTION_NMI then
             VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
                            Value => State.Interrupt_Info);
             Swap_Subject (Old_Id => Current_Subject,

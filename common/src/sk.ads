@@ -51,6 +51,7 @@ is
       CR0            : Word64;
       CR3            : Word64;
       CR4            : Word64;
+      RFLAGS         : Word64;
    end record;
 
    type Subject_State_Array is array (Natural range <>) of Subject_State_Type;

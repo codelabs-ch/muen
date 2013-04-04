@@ -47,6 +47,8 @@ begin
          Text_IO.Put_Word64 (Item => State.RIP);
          Text_IO.Put_String (" CS : ");
          Text_IO.Put_Word16 (Item => SK.Word16 (State.CS));
+         Text_IO.Put_String (" RFLAGS: ");
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.RFLAGS));
          Text_IO.New_Line;
          Text_IO.Put_String ("RSP: ");
          Text_IO.Put_Word64 (Item => State.RSP);

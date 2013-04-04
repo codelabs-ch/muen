@@ -41,5 +41,6 @@ begin
          SS             => 0,
          CR0            => 0,
          CR3            => 0,
-         CR4            => 0));
+         CR4            => 0,
+         RFLAGS         => 0));
 end SK.Subjects;

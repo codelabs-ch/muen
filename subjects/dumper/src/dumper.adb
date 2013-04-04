@@ -45,6 +45,8 @@ begin
 
          Text_IO.Put_String ("RIP: ");
          Text_IO.Put_Word64 (Item => State.RIP);
+         Text_IO.Put_String (" CS : ");
+         Text_IO.Put_Word16 (Item => SK.Word16 (State.CS));
          Text_IO.New_Line;
 
          Text_IO.Put_String (Item => "RAX: ");

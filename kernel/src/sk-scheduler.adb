@@ -6,7 +6,6 @@ with SK.VMX;
 with SK.Constants;
 with SK.KC;
 with SK.CPU;
-with SK.Dump;
 with SK.Subjects;
 
 package body SK.Scheduler
@@ -155,36 +154,32 @@ is
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => State.Exit_Reason);
-      VMX.VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
-                     Value => State.Exit_Qualification);
-
-      VMX.VMCS_Read (Field => Constants.GUEST_RIP,
-                     Value => State.RIP);
-      VMX.VMCS_Read (Field => Constants.GUEST_SEL_CS,
-                     Value => State.CS);
-      VMX.VMCS_Read (Field => Constants.GUEST_RSP,
-                     Value => State.RSP);
-      VMX.VMCS_Read (Field => Constants.GUEST_SEL_SS,
-                     Value => State.SS);
-      VMX.VMCS_Read (Field => Constants.GUEST_CR0,
-                     Value => State.CR0);
-      VMX.VMCS_Read (Field => Constants.GUEST_CR3,
-                     Value => State.CR3);
-      VMX.VMCS_Read (Field => Constants.GUEST_CR4,
-                     Value => State.CR4);
-      VMX.VMCS_Read (Field => Constants.GUEST_RFLAGS,
-                     Value => State.RFLAGS);
 
       if State.Exit_Reason /= Constants.VM_EXIT_TIMER_EXPIRY then
-         if State.Exit_Reason = Constants.VM_EXIT_EXCEPTION_NMI then
-            VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
-                           Value => State.Interrupt_Info);
-            Swap_Subject (Old_Id => Current_Subject,
-                          New_Id => Dumper_Id);
-         else
-            pragma Debug (Dump.Print_State (Subject => Current_Subject));
-            CPU.Hlt;
-         end if;
+         VMX.VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
+                        Value => State.Exit_Qualification);
+         VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
+                        Value => State.Interrupt_Info);
+
+         VMX.VMCS_Read (Field => Constants.GUEST_RIP,
+                        Value => State.RIP);
+         VMX.VMCS_Read (Field => Constants.GUEST_SEL_CS,
+                        Value => State.CS);
+         VMX.VMCS_Read (Field => Constants.GUEST_RSP,
+                        Value => State.RSP);
+         VMX.VMCS_Read (Field => Constants.GUEST_SEL_SS,
+                        Value => State.SS);
+         VMX.VMCS_Read (Field => Constants.GUEST_CR0,
+                        Value => State.CR0);
+         VMX.VMCS_Read (Field => Constants.GUEST_CR3,
+                        Value => State.CR3);
+         VMX.VMCS_Read (Field => Constants.GUEST_CR4,
+                        Value => State.CR4);
+         VMX.VMCS_Read (Field => Constants.GUEST_RFLAGS,
+                        Value => State.RFLAGS);
+
+         Swap_Subject (Old_Id => Current_Subject,
+                       New_Id => Dumper_Id);
       end if;
 
       Subjects.Set_State (Id    => Current_Subject,

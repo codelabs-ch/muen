@@ -1,6 +1,7 @@
 #include "policy.h"
 
 .global _start
+.global ap_entry_point
 
 #define IA32_VMX_BASIC 0x480
 #define IA32_EFER      0xc0000080
@@ -57,6 +58,8 @@ set_rev:
 	movl %eax, (%edx)
 	add $0x1000, %edx
 	loop set_rev
+
+ap_entry_point:
 
 	// enable PAE
 

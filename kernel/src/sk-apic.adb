@@ -10,6 +10,7 @@ is
 
    APIC_BSP_FLAG : constant := 8;
 
+   MSR_X2APIC_ID  : constant := 16#802#;
    MSR_X2APIC_SVR : constant := 16#80f#;
    MSR_X2APIC_ICR : constant := 16#830#;
 
@@ -52,6 +53,24 @@ is
       CPU.Write_MSR64 (Register => MSR_X2APIC_SVR,
                        Value    => Svr);
    end Enable;
+
+   -------------------------------------------------------------------------
+
+   function Get_ID return SK.Byte
+   is
+      ID, Unused : SK.Word32;
+   begin
+
+      --# accept Flow, 10, Unused, "Result unused";
+
+      CPU.Get_MSR (Register => MSR_X2APIC_ID,
+                   Low      => ID,
+                   High     => Unused);
+
+      --# accept Flow, 33, Unused, "Result unused";
+
+      return SK.Byte'Mod (ID);
+   end Get_ID;
 
    -------------------------------------------------------------------------
 

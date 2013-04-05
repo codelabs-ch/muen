@@ -26,4 +26,9 @@ is
    --# global
    --#    X86_64.State;
 
+   --  Return local APIC ID.
+   function Get_ID return SK.Byte;
+   --# global
+   --#    in X86_64.State;
+
 end SK.Apic;

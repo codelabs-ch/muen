@@ -25,13 +25,13 @@ gdt_ptr:
 gdt_start:
 	// Null descriptor
 	.quad 0x0000000000000000
-	// 64-bit code segment descriptor, index 8
+	// 64-bit code segment descriptor, index 1
 	.long 0
 	.long (GDTE_LONG | GDTE_PRESENT | GDTE_CODE | GDTE_NON_SYSTEM)
-	// 64-bit data segment descriptor, index 16
+	// 64-bit data segment descriptor, index 2
 	.long 0
 	.long (GDTE_LONG | GDTE_PRESENT | GDTE_TYPE_DATA_A | GDTE_TYPE_DATA_W | GDTE_NON_SYSTEM)
-	// Task segement descriptor, index 24
+	// Task segement descriptor, index 3
 	.long 0
 	.long (GDTE_PRESENT | GDTE_SYS_TSS)
 gdt_end:

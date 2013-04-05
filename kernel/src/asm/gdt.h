@@ -6,5 +6,6 @@
 #define GDTE_NON_SYSTEM  (1 << 12)
 #define GDTE_PRESENT     (1 << 15)
 #define GDTE_LONG        (1 << 21)
+#define GDTE_32BIT       (1 << 22)
 
 #define GDTE_SYS_TSS 0x900

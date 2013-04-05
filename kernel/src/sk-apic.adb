@@ -8,6 +8,8 @@ is
    ENABLE_APIC         : constant := 8;
    ENABLE_X2_MODE_FLAG : constant := 10;
 
+   APIC_BSP_FLAG : constant := 8;
+
    MSR_X2APIC_SVR : constant := 16#80f#;
    MSR_X2APIC_ICR : constant := 16#830#;
 
@@ -50,6 +52,17 @@ is
       CPU.Write_MSR64 (Register => MSR_X2APIC_SVR,
                        Value    => Svr);
    end Enable;
+
+   -------------------------------------------------------------------------
+
+   function Is_BSP return Boolean
+   is
+      Base : SK.Word64;
+   begin
+      Base := CPU.Get_MSR64 (Register => Constants.IA32_APIC_BASE);
+      return SK.Bit_Test (Value => Base,
+                          Pos   => APIC_BSP_FLAG);
+   end Is_BSP;
 
    -------------------------------------------------------------------------
 

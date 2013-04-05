@@ -3,13 +3,13 @@ PACKAGE = tau0
 include ../../Makeconf
 include ../../Makespark
 
-all: $(ALL) $(OBJ_DIR)/$(PACKAGE).xml
+all: $(ALL) specs
 
 $(OBJ_DIR)/$(PACKAGE):
 	gprbuild $(BUILD_OPTS) -P$(PACKAGE)
 
-$(OBJ_DIR)/$(PACKAGE).xml: $(OBJ_DIR)/$(PACKAGE)
-	$(SKCONFIG) $<
+specs: $(OBJ_DIR)/$(PACKAGE)
+	$(SKCONFIG) $< 16#216000#
 
 clean:
 	rm -rf $(OBJ_DIR)

@@ -8,8 +8,8 @@ subjects:
 	gprbuild $(BUILD_OPTS) -P$@
 
 specs: subjects
-	$(SKCONFIG) $(OBJ_DIR)/subject_a
-	$(SKCONFIG) $(OBJ_DIR)/subject_b
+	$(SKCONFIG) $(OBJ_DIR)/subject_a 16#236000#
+	$(SKCONFIG) $(OBJ_DIR)/subject_b 16#246000#
 
 clean:
 	rm -rf obj

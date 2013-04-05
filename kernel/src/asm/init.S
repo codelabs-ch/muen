@@ -99,9 +99,18 @@ ap_entry_point:
 .code64
 start64: .align 4096
 
-	// set up kernel stack
+	// get default APIC ID (CPUID.0BH:EDX[7:0])
 
-	movq $KERNEL_STACK, %rsp
+	movq $0xb, %rax
+	cpuid
+
+	// set up per-CPU kernel stack
+
+	mov %dl, %al
+	mov $0x1000, %rdx
+	mul %rdx
+	add $KERNEL_STACK, %rax
+	mov %rax, %rsp
 
 	// set up kernel segment selectors
 

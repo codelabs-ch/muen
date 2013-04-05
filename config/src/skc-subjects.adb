@@ -16,6 +16,11 @@ is
       Name : String)
       return SK.Word64;
 
+   --  Open binary file specified by name.
+   procedure Open_Bfd_File
+     (File : out Bfd.Files.File_Type;
+      Name :     String);
+
    -------------------------------------------------------------------------
 
    --  Check symbol given by name and return its value.
@@ -57,38 +62,57 @@ is
 
    -------------------------------------------------------------------------
 
-   function Read (Binary : String) return Binary_Type
+   procedure Open_Bfd_File
+     (File : out Bfd.Files.File_Type;
+      Name :     String)
    is
-      File    : Bfd.Files.File_Type;
-      Symbols : Bfd.Symbols.Symbol_Table;
-      Bin     : Binary_Type;
    begin
       begin
-         Bfd.Files.Open (File   => File,
-                         Name   => Binary);
+         Bfd.Files.Open (File => File,
+                         Name => Name);
 
       exception
          when others =>
-            raise Open_Error with "Unable to open binary '" & Binary & "'";
+            raise Open_Error with "Unable to open file '" & Name & "'";
       end;
 
       if not Bfd.Files.Check_Format
         (File   => File,
          Expect => Bfd.Files.OBJECT)
       then
-         raise Binary_Error with "File '" & Binary & "' has invalid format";
+         Bfd.Files.Close (File => File);
+         raise Binary_Error with "File '" & Name & "' has invalid format";
       end if;
+   end Open_Bfd_File;
 
-      Bfd.Symbols.Read_Symbols (File    => File,
-                                Symbols => Symbols);
+   -------------------------------------------------------------------------
 
-      Bin.Entry_Point := Check_Symbol
-        (Syms => Symbols,
-         Name => "main");
-      Bin.Stack_Address := Check_Symbol
-        (Syms => Symbols,
-         Name => "stack");
-      return Bin;
+   function Read (Binary : String) return Binary_Type
+   is
+      File    : Bfd.Files.File_Type;
+      Symbols : Bfd.Symbols.Symbol_Table;
+      Bin     : Binary_Type;
+   begin
+      Open_Bfd_File (File => File,
+                     Name => Binary);
+
+      begin
+         Bfd.Symbols.Read_Symbols (File    => File,
+                                   Symbols => Symbols);
+
+         Bin.Entry_Point := Check_Symbol
+           (Syms => Symbols,
+            Name => "main");
+         Bin.Stack_Address := Check_Symbol
+           (Syms => Symbols,
+            Name => "stack");
+         return Bin;
+
+      exception
+         when others =>
+            Bfd.Files.Close (File => File);
+            raise;
+      end;
    end Read;
 
    -------------------------------------------------------------------------

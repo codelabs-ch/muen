@@ -7,5 +7,6 @@
 #define GDTE_PRESENT     (1 << 15)
 #define GDTE_LONG        (1 << 21)
 #define GDTE_32BIT       (1 << 22)
+#define GDTE_GRANULAR_4K (1 << 23)
 
 #define GDTE_SYS_TSS 0x900

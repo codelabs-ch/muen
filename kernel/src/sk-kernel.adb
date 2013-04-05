@@ -6,6 +6,7 @@ with SK.VMX;
 with SK.Scheduler;
 with SK.Apic;
 with SK.CPU;
+with SK.MP;
 
 package body SK.Kernel
 is
@@ -16,6 +17,8 @@ is
    is
       Success, Is_Bsp : Boolean;
    begin
+      MP.Increment_CPU_Count;
+
       Is_Bsp := Apic.Is_BSP;
       if Is_Bsp then
          pragma Debug (KC.Init);
@@ -36,9 +39,14 @@ is
 
       Success := System_State.Is_Valid;
       if Success then
+
          pragma Debug (KC.Put_Line (Item => "Starting AP processors"));
          Apic.Enable;
          Apic.Start_AP_Processors;
+         MP.Wait_For_AP_Processors;
+
+         pragma Debug (KC.Put_Byte (Item => MP.Get_CPU_Count));
+         pragma Debug (KC.Put_Line (Item => " processors online"));
 
          VMX.Enable;
          Scheduler.Schedule;

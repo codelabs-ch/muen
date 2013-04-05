@@ -6,7 +6,9 @@
 --#    SK.Scheduler,
 --#    SK.System_State,
 --#    SK.Subjects,
---#    SK.VMX;
+--#    SK.VMX,
+--#    SK.MP,
+--#    SK.CPU;
 package SK.Kernel
 is
 
@@ -15,6 +17,7 @@ is
    --# global
    --#    in out X86_64.State;
    --#    in out Subjects.Descriptors;
+   --#    in out MP.CPU_Online_Count;
    --#    in     Interrupts.ISR_List;
    --#    in     GDT.GDT_Pointer;
    --#    in     Scheduler.State;
@@ -23,6 +26,7 @@ is
    --#       out Interrupts.IDT_Pointer;
    --# derives
    --#    Interrupts.IDT, Interrupts.IDT_Pointer from Interrupts.ISR_List &
+   --#    MP.CPU_Online_Count                    from *                   &
    --#    Subjects.Descriptors from
    --#       *,
    --#       X86_64.State,

@@ -27,8 +27,12 @@ is
 
       Success := System_State.Is_Valid;
       if Success then
-         Apic.Enable;
-         Apic.Start_AP_Processors;
+         if Apic.Is_BSP then
+            pragma Debug (KC.Put_Line
+                          (Item => "BSP online, waking AP processors"));
+            Apic.Enable;
+            Apic.Start_AP_Processors;
+         end if;
 
          VMX.Enable;
          Scheduler.Schedule;

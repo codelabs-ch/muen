@@ -18,6 +18,9 @@ packer: kernel
 deploy: kernel
 	$(MAKE) -C packer $@
 
+emulate: packer
+	$(MAKE) -C $@
+
 tests:
 	$(MAKE) tests -C config
 	$(MAKE) tests -C packer
@@ -30,4 +33,4 @@ clean:
 	$(MAKE) clean -C policy
 	$(MAKE) clean -C subjects
 
-.PHONY: config kernel packer policy subjects
+.PHONY: config emulate kernel packer policy subjects

@@ -38,6 +38,9 @@ is
       T.Add_Test_Routine
         (Routine => Write_Binary_Spec'Access,
          Name    => "Write binary XML specification");
+      T.Add_Test_Routine
+        (Routine => Write_Memlayout_Spec'Access,
+         Name    => "Write memory layout XML specification");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -170,5 +173,24 @@ is
 
       Ada.Directories.Delete_File (Name => XML_Spec);
    end Write_Binary_Spec;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_Memlayout_Spec
+   is
+      XML_Spec : constant String := "obj/bin1_mem.xml";
+   begin
+      Subjects.Write_Memory_Layout
+        (XML_File      => XML_Spec,
+         Binary        => "data/bin1",
+         Start_Address => 16#216000#);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/bin1_mem.xml.ref",
+               Filename2 => XML_Spec),
+              Message   => "XML specification mismatch");
+
+      Ada.Directories.Delete_File (Name => XML_Spec);
+   end Write_Memlayout_Spec;
 
 end Binary_Tests;

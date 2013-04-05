@@ -29,4 +29,7 @@ is
    --  Write binary XML specification.
    procedure Write_Binary_Spec;
 
+   --  Write memory layout XML specification.
+   procedure Write_Memlayout_Spec;
+
 end Binary_Tests;

@@ -31,4 +31,11 @@ is
    --# global
    --#    in X86_64.State;
 
+   --  Signal interrupt servicing completion.
+   procedure EOI;
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *;
+
 end SK.Apic;

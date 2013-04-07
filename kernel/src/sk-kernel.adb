@@ -7,6 +7,7 @@ with SK.Scheduler;
 with SK.Apic;
 with SK.CPU;
 with SK.MP;
+with SK.Locks;
 
 package body SK.Kernel
 is
@@ -27,8 +28,10 @@ is
             & SK.Version.Version_String & ") ..."));
          null;
       else
+         Locks.Spin_Lock;
          pragma Debug (KC.Put_Line
                        (Item => "AP online -> hlt"));
+         Locks.Unlock;
          CPU.Hlt;
       end if;
 

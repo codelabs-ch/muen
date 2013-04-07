@@ -28,6 +28,7 @@ is
             & SK.Version.Version_String & ") ..."));
          null;
       else
+         Apic.Enable;
          Locks.Spin_Lock;
          pragma Debug (KC.Put_Line
                        (Item => "AP online -> hlt"));

@@ -29,9 +29,12 @@ is
          null;
       else
          Apic.Enable;
+
          Locks.Spin_Lock;
+         pragma Debug (KC.Put_String (Item => "CPU"));
+         pragma Debug (KC.Put_Byte   (Item => Apic.Get_ID));
          pragma Debug (KC.Put_Line
-                       (Item => "AP online -> hlt"));
+                       (Item => ": AP online -> halting"));
          Locks.Unlock;
          CPU.Hlt;
       end if;
@@ -49,8 +52,9 @@ is
          Apic.Start_AP_Processors;
          MP.Wait_For_AP_Processors;
 
-         pragma Debug (KC.Put_Byte (Item => MP.Get_CPU_Count));
-         pragma Debug (KC.Put_Line (Item => " processors online"));
+         pragma Debug (KC.Put_String (Item => "Processors online: "));
+         pragma Debug (KC.Put_Byte   (Item => MP.Get_CPU_Count));
+         pragma Debug (KC.New_Line);
 
          VMX.Enable;
          Scheduler.Schedule;

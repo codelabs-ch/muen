@@ -26,6 +26,7 @@ $(OBJ_DIR)/kernel: packer
 	$(OBJ_DIR)/packer $(KERN_DIR)/obj/kernel obj/kernel
 
 deploy: $(OBJ_DIR)/kernel .server
+	echo y | amttool $(TARGET_IP) powerup
 	echo y | amttool $(TARGET_IP) reset
 
 .server:

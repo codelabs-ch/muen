@@ -11,7 +11,7 @@
 <!ENTITY subjbinit  SYSTEM "../../subjects/test/obj/subject_b.xml">
 <!ENTITY subjbmem   SYSTEM "../../subjects/test/obj/subject_b_mem.xml">
 ]>
-<system vmxon_address="0" vmcs_start_address="1000">
+<system vmxon_address="1000" vmcs_start_address="2000">
 	&kernel;
 	&binaries;
 

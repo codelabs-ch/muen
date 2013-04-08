@@ -13,11 +13,16 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:complexType name="device_reference_type">
+		<xs:attribute name="name" type="device_name_type" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="subject_type">
 		<xs:sequence>
-			<xs:element name="initial_state" type="initial_state_type" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="memory_layout" type="memory_layout_type" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="io_ports"      type="io_ports_type"      minOccurs="1" maxOccurs="1"/>
+			<xs:element name="initial_state" type="initial_state_type"    minOccurs="1" maxOccurs="1"/>
+			<xs:element name="memory_layout" type="memory_layout_type"    minOccurs="1" maxOccurs="1"/>
+			<xs:element name="device"        type="device_reference_type" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="io_ports"      type="io_ports_type"         minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute name="id"                type="xs:nonNegativeInteger" use="required"/>
 		<xs:attribute name="name"              type="subject_name_type"     use="required"/>

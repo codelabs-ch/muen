@@ -232,6 +232,8 @@ is
                  Message   => "Id mismatch");
          Assert (Condition => S.Name = To_Unbounded_String (Source => "tau0"),
                  Message   => "Name mismatch");
+         Assert (Condition => S.IO_Bitmap_Address = 16#12345678#,
+                 Message   => "I/O bitmap address mismatch");
 
          Assert (Condition => S.Init_State.Stack_Address = 16#120000#,
                  Message   => "Subject stack mismatch");
@@ -267,9 +269,6 @@ is
                  Message   => "Writable mismatch (2)");
          Assert (Condition => not R.Executable,
                  Message   => "Executable mismatch (2)");
-
-         Assert (Condition => S.IO_Ports.IO_Bitmap_Address = 16#12345678#,
-                 Message   => "I/O bitmap address mismatch");
 
          PR := S.IO_Ports.Ranges.First_Element;
          Assert (Condition => PR.Start_Port = 16#50b0#,

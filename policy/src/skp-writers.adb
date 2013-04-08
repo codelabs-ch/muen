@@ -479,7 +479,7 @@ is
               Item => Indent & "    IO_Bitmap_Address => 16#");
          Put (File => Spec_File,
               Item => SK.Utils.To_Hex
-                (Item => Subject.IO_Ports.IO_Bitmap_Address));
+                (Item => Subject.IO_Bitmap_Address));
          Put_Line (File => Spec_File,
                    Item => "#,");
          Put (File => Spec_File,

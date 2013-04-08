@@ -36,8 +36,7 @@ is
      (Element_Type => IO_Port_Range);
 
    type IO_Ports_Type is record
-      IO_Bitmap_Address : SK.Word64;
-      Ranges            : Ports_Package.List;
+      Ranges : Ports_Package.List;
    end record;
 
    type Initial_State_Type is record
@@ -46,11 +45,12 @@ is
    end record;
 
    type Subject_Type is record
-      Id            : Natural;
-      Name          : Subject_Name_Type;
-      Init_State    : Initial_State_Type;
-      Memory_Layout : Memory_Layout_Type;
-      IO_Ports      : IO_Ports_Type;
+      Id                : Natural;
+      Name              : Subject_Name_Type;
+      IO_Bitmap_Address : SK.Word64;
+      Init_State        : Initial_State_Type;
+      Memory_Layout     : Memory_Layout_Type;
+      IO_Ports          : IO_Ports_Type;
    end record;
 
    function "<" (Left, Right : Subject_Type) return Boolean;

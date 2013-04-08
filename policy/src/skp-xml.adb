@@ -163,15 +163,18 @@ is
       is
          use Ada.Strings.Unbounded;
 
-         Name   : constant String  := DOM.Core.Elements.Get_Attribute
+         Name     : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "name");
-         Id_Str : constant String  := DOM.Core.Elements.Get_Attribute
+         Id_Str   : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "id");
-         Id     : constant Natural := Natural'Value (Id_Str);
-         Ports  : IO_Ports_Type;
-         State  : Initial_State_Type;
+         Id       : constant Natural := Natural'Value (Id_Str);
+         IOBM_Str : constant String  := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "io_bitmap_address");
+         Ports    : IO_Ports_Type;
+         State    : Initial_State_Type;
 
          --  Add I/O port range to subject I/O ports.
          procedure Add_Port_Range (Node : DOM.Core.Node);
@@ -199,11 +202,6 @@ is
             Ports.Ranges.Append (New_Item => R);
          end Add_Port_Range;
       begin
-         Ports.IO_Bitmap_Address := To_Word64
-           (Hex => Util.Get_Element_Attr_By_Tag_Name
-              (Node      => Node,
-               Tag_Name  => "io_ports",
-               Attr_Name => "bitmap_address"));
          Util.For_Each_Node (Node     => Node,
                              Tag_Name => "port_range",
                              Process  => Add_Port_Range'Access);
@@ -220,11 +218,12 @@ is
                Attr_Name => "entry_point"));
          P.Subjects.Insert
            (New_Item =>
-              (Id            => Id,
-               Name          => To_Unbounded_String (Name),
-               Init_State    => State,
-               Memory_Layout => Deserialize_Mem_Layout (Node => Node),
-               IO_Ports      => Ports));
+              (Id                => Id,
+               Name              => To_Unbounded_String (Name),
+               IO_Bitmap_Address => To_Word64 (Hex => IOBM_Str),
+               Init_State        => State,
+               Memory_Layout     => Deserialize_Mem_Layout (Node => Node),
+               IO_Ports          => Ports));
 
       exception
          when E : others =>

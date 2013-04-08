@@ -59,7 +59,6 @@
 		<xs:sequence>
 			<xs:element name="port_range" type="io_port_type" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="bitmap_address" type="address_type" use="required"/>
 	</xs:complexType>
 
 	<xs:simpleType name="device_name_type">

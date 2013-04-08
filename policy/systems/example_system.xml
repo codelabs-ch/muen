@@ -18,19 +18,19 @@
 	&binaries;
 
 	<subjects>
-		<subject id="0" name="tau0">
+		<subject id="0" name="tau0" io_bitmap_address="214000">
 			&tau0init;
 			<memory_layout pml4_address="210000">
 				&tau0mem;
 				<!-- τ0 => kernel interface page -->
 				<memory_region physical_address="1ff000" virtual_address="4000" size="4k" alignment="4k" writable="true"  executable="false"/>
 			</memory_layout>
-			<io_ports bitmap_address="214000">
+			<io_ports>
 				<port_range start="50b0"/>
 				<port_range start="50b5"/>
 			</io_ports>
 		</subject>
-		<subject id="1" name="dumper">
+		<subject id="1" name="dumper" io_bitmap_address="224000">
 			&dumperinit;
 			<memory_layout pml4_address="220000">
 				&dumpermem;
@@ -38,28 +38,28 @@
 				<memory_region physical_address="1fe000" virtual_address="5000" size="4k" alignment="4k" writable="false" executable="false"/>
 				<memory_region physical_address="b8000"                         size="4k" alignment="4k" writable="true"  executable="false"/>
 			</memory_layout>
-			<io_ports bitmap_address="224000">
+			<io_ports>
 				<port_range start="50b0"/>
 				<port_range start="50b5"/>
 			</io_ports>
 		</subject>
-		<subject id="2" name="subject_a">
+		<subject id="2" name="subject_a" io_bitmap_address="234000">
 			&subjainit;
 			<memory_layout pml4_address="230000">
 				&subjamem;
 				<memory_region physical_address="b8000" size="4k" alignment="4k" writable="true"  executable="false"/>
 			</memory_layout>
-			<io_ports bitmap_address="234000">
+			<io_ports>
 				<port_range start="03d4" end="03d5"/>
 			</io_ports>
 		</subject>
-		<subject id="3" name="subject_b">
+		<subject id="3" name="subject_b" io_bitmap_address="244000">
 			&subjbinit;
 			<memory_layout pml4_address="240000">
 				&subjbmem;
 				<memory_region physical_address="b8000" size="4k" alignment="4k" writable="true"  executable="false"/>
 			</memory_layout>
-			<io_ports bitmap_address="244000">
+			<io_ports>
 				<port_range start="03d4" end="03d5"/>
 			</io_ports>
 		</subject>

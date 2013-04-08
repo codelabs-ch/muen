@@ -19,8 +19,9 @@
 			<xs:element name="memory_layout" type="memory_layout_type" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="io_ports"      type="io_ports_type"      minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
-		<xs:attribute name="id"   type="xs:nonNegativeInteger" use="required"/>
-		<xs:attribute name="name" type="subject_name_type"     use="required"/>
+		<xs:attribute name="id"                type="xs:nonNegativeInteger" use="required"/>
+		<xs:attribute name="name"              type="subject_name_type"     use="required"/>
+		<xs:attribute name="io_bitmap_address" type="address_type"          use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="subjects_type">

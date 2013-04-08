@@ -62,4 +62,11 @@
 		<xs:attribute name="bitmap_address" type="address_type" use="required"/>
 	</xs:complexType>
 
+	<xs:simpleType name="device_name_type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="128"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 </xs:schema>

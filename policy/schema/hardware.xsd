@@ -1,0 +1,17 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="./types.xsd"/>
+
+	<xs:complexType name="device_type">
+		<xs:sequence>
+			<xs:element name="io_port" type="io_port_type" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="device_name_type" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="hardware_type">
+		<xs:sequence>
+			<xs:element name="device" type="device_type" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

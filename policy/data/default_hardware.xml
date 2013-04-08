@@ -1,0 +1,5 @@
+<hardware>
+	<device name="debugport">
+		<io_port start="50b0"/>
+	</device>
+</hardware>

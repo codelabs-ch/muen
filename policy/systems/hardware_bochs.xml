@@ -1,0 +1,8 @@
+<hardware>
+	<device name="debugport">
+		<io_port start="03f8" end="03fd"/>
+	</device>
+	<device name="vga">
+		<io_port start="03d4" end="03d5"/>
+	</device>
+</hardware>

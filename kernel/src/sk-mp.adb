@@ -1,3 +1,5 @@
+with System.Machine_Code;
+
 package body SK.MP
 is
 
@@ -17,8 +19,12 @@ is
 
    procedure Increment_CPU_Count
    is
+      --# hide Increment_CPU_Count;
    begin
-      CPU_Online_Count := CPU_Online_Count + 1;
+      System.Machine_Code.Asm
+        (Template => "lock incb %0",
+         Inputs   => (SK.Byte'Asm_Input ("m", CPU_Online_Count)),
+         Volatile => True);
    end Increment_CPU_Count;
 
    -------------------------------------------------------------------------

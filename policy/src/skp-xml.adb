@@ -245,9 +245,6 @@ is
          Util.For_Each_Node (Node     => Node,
                              Tag_Name => "device",
                              Process  => Add_Device'Access);
-         Util.For_Each_Node (Node     => Node,
-                             Tag_Name => "port_range",
-                             Process  => Add_Port_Range'Access);
 
          State.Stack_Address := To_Word64
            (Hex => Util.Get_Element_Attr_By_Tag_Name

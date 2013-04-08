@@ -16,7 +16,6 @@
 			<memory_layout pml4_address="1f0000">
 				<memory_region physical_address="0" virtual_address="28" size="4k" alignment="4k" writable="true" executable="true"/>
 			</memory_layout>
-			<io_ports/>
 		</subject>
 	</subjects>
 </system>

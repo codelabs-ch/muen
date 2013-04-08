@@ -17,9 +17,7 @@
 				<memory_region physical_address="240000" virtual_address="0" size="64k" alignment="4k" writable="true"  executable="true"/>
 				<memory_region physical_address="100000"                     size="4k"  alignment="4k" writable="false" executable="false"/>
 			</memory_layout>
-			<io_ports>
-				<port_range start="50b0"/>
-			</io_ports>
+			<device name="debugport"/>
 		</subject>
 		<subject id="1" name="subject1" io_bitmap_address="12345678">
 			&subj_state;
@@ -27,9 +25,7 @@
 				<memory_region physical_address="250000" virtual_address="0" size="12k" alignment="4k" writable="true" executable="true"/>
 				<memory_region physical_address="b8000"                      size="4k"  alignment="4k" writable="true" executable="false"/>
 			</memory_layout>
-			<io_ports>
-				<port_range start="03d4" end="03d5"/>
-			</io_ports>
+			<device name="vga"/>
 		</subject>
 		<subject id="2" name="subject2" io_bitmap_address="12345678">
 			&subj_state;
@@ -37,9 +33,7 @@
 				<memory_region physical_address="260000" virtual_address="0" size="12k" alignment="4k" writable="true" executable="true"/>
 				<memory_region physical_address="b8000"                      size="4k"  alignment="4k" writable="true" executable="false"/>
 			</memory_layout>
-			<io_ports>
-				<port_range start="03d4" end="03d5"/>
-			</io_ports>
+			<device name="vga"/>
 		</subject>
 	</subjects>
 </system>

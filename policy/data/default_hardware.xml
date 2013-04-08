@@ -2,4 +2,7 @@
 	<device name="debugport">
 		<io_port start="50b0"/>
 	</device>
+	<device name="vga">
+		<io_port start="03d4" end="03d5"/>
+	</device>
 </hardware>

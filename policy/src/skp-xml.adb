@@ -151,8 +151,14 @@ is
 
       package DCD renames DOM.Core.Documents;
 
-      Root : constant DOM.Core.Node := DCD.Get_Element (Doc => Data.Doc);
-      P    : Policy_Type;
+      Root    : constant DOM.Core.Node := DCD.Get_Element (Doc => Data.Doc);
+      Devices : constant DOM.Core.Node_List
+        := DOM.Core.Elements.Get_Elements_By_Tag_Name
+          (Elem => Util.Get_Element_By_Tag_Name
+               (Node     => Root,
+                Tag_Name => "hardware"),
+           Name => "device");
+      P       : Policy_Type;
 
       --  Add subject specification to policy.
       procedure Add_Subject (Node : DOM.Core.Node);
@@ -179,6 +185,40 @@ is
          --  Add I/O port range to subject I/O ports.
          procedure Add_Port_Range (Node : DOM.Core.Node);
 
+         --  Add device ressources to subject.
+         procedure Add_Device (Node : DOM.Core.Node);
+
+         -------------------------------------------------------------------
+
+         procedure Add_Device (Node : DOM.Core.Node)
+         is
+            use type DOM.Core.Node;
+
+            Dev_Name : constant String :=  DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "name");
+            Dev_Node : DOM.Core.Node;
+         begin
+            for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
+               Dev_Node := DOM.Core.Nodes.Item
+                 (List  => Devices,
+                  Index => I);
+               if Dev_Name = DOM.Core.Elements.Get_Attribute
+                   (Elem => Dev_Node,
+                    Name => "name")
+               then
+                  Util.For_Each_Node
+                    (Node     => Dev_Node,
+                     Tag_Name => "io_port",
+                     Process  => Add_Port_Range'Access);
+                  return;
+               end if;
+            end loop;
+
+            raise Processing_Error with "No hardware device with name '"
+              & Dev_Name & "'";
+         end Add_Device;
+
          -------------------------------------------------------------------
 
          procedure Add_Port_Range (Node : DOM.Core.Node)
@@ -202,6 +242,9 @@ is
             Ports.Ranges.Append (New_Item => R);
          end Add_Port_Range;
       begin
+         Util.For_Each_Node (Node     => Node,
+                             Tag_Name => "device",
+                             Process  => Add_Device'Access);
          Util.For_Each_Node (Node     => Node,
                              Tag_Name => "port_range",
                              Process  => Add_Port_Range'Access);

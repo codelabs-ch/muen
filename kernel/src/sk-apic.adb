@@ -1,4 +1,3 @@
-with SK.KC;
 with SK.CPU;
 with SK.Constants;
 
@@ -88,19 +87,16 @@ is
    procedure Start_AP_Processors
    is
    begin
-      pragma Debug (KC.Put_Line (Item => "Sending INIT IPI to all APs"));
       CPU.Write_MSR (Register => MSR_X2APIC_ICR,
                      Low      => Ipi_Init_Broadcast,
                      High     => 0);
       Sleep (Count => 10);
 
-      pragma Debug (KC.Put_Line (Item => "Sending SIPI IPI to all APs"));
       CPU.Write_MSR (Register => MSR_X2APIC_ICR,
                      Low      => Ipi_Start_Broadcast,
                      High     => 0);
       Sleep (Count => 200);
 
-      pragma Debug (KC.Put_Line (Item => "Sending SIPI IPI to all APs"));
       CPU.Write_MSR (Register => MSR_X2APIC_ICR,
                      Low      => Ipi_Start_Broadcast,
                      High     => 0);

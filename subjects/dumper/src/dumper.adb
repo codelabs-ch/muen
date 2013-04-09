@@ -1,3 +1,5 @@
+with Skp;
+
 with SK.KC;
 with SK.Hypercall;
 
@@ -18,7 +20,7 @@ is
 begin
    Pristine_State.Launched := True;
 
-   for I in DKI.Descriptors_Range loop
+   for I in Skp.Subject_Id_Type loop
       State := DKI.Get_Subject_State (Id => I);
       if State /= Pristine_State
         and then State.Exit_Reason /= VM_EXIT_TIMER_EXPIRY

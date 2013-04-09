@@ -32,6 +32,9 @@ begin
    Ada.Text_IO.Put_Line (Item => "Wrote system policy to '" & Inc_Dir
                          & "' directory");
 
+   Skp.Writers.Write_Hardware (Dir_Name => Inc_Dir,
+                               Policy   => Policy);
+
    Skp.Writers.Write_Binaries (Dir_Name => Pac_Dir,
                                Policy   => Policy);
    Ada.Text_IO.Put_Line (Item => "Wrote packer policy to '" & Pac_Dir

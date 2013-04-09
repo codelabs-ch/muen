@@ -179,11 +179,12 @@ is
             Name => "io_bitmap_address");
          Ports    : IO_Ports_Type;
          State    : Initial_State_Type;
+         Subj_Mem : Memory_Layout_Type;
 
          --  Add I/O port range to subject I/O ports.
          procedure Add_Port_Range (Node : DOM.Core.Node);
 
-         --  Add device ressources to subject.
+         --  Add device ressources (memory and I/O ports) to subject.
          procedure Add_Device (Node : DOM.Core.Node);
 
          -------------------------------------------------------------------
@@ -196,6 +197,7 @@ is
               (Elem => Node,
                Name => "name");
             Dev_Node : DOM.Core.Node;
+            Dev_Mem  : Memory_Layout_Type;
          begin
             for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
                Dev_Node := DOM.Core.Nodes.Item
@@ -209,6 +211,10 @@ is
                     (Node     => Dev_Node,
                      Tag_Name => "io_port",
                      Process  => Add_Port_Range'Access);
+                  Dev_Mem := Deserialize_Mem_Layout (Node => Dev_Node);
+                  Subj_Mem.Regions.Splice
+                    (Before => Memregion_Package.No_Element,
+                     Source => Dev_Mem.Regions);
                   return;
                end if;
             end loop;
@@ -240,6 +246,8 @@ is
             Ports.Ranges.Append (New_Item => R);
          end Add_Port_Range;
       begin
+         Subj_Mem := Deserialize_Mem_Layout (Node => Node);
+
          Util.For_Each_Node (Node     => Node,
                              Tag_Name => "device",
                              Process  => Add_Device'Access);
@@ -261,7 +269,7 @@ is
                Pml4_Address      => To_Word64 (Hex => PML4_Str),
                IO_Bitmap_Address => To_Word64 (Hex => IOBM_Str),
                Init_State        => State,
-               Memory_Layout     => Deserialize_Mem_Layout (Node => Node),
+               Memory_Layout     => Subj_Mem,
                IO_Ports          => Ports));
 
       exception

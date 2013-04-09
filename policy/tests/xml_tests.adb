@@ -212,7 +212,7 @@ is
                  Message   => "Kernel stack address mismatch");
          Assert (Condition => P.Kernel.Pml4_Address = 16#200000#,
                  Message   => "Kernel PML4 address mismatch");
-         Assert (Condition => P.Kernel.Memory_Layout.Regions.Length = 2,
+         Assert (Condition => P.Kernel.Memory_Layout.Length = 2,
                  Message   => "Kernel memory region count mismatch");
 
          --  Binaries
@@ -242,10 +242,10 @@ is
          Assert (Condition => S.Init_State.Entry_Point = 16#abc#,
                  Message   => "Subject RIP mismatch");
 
-         Assert (Condition => S.Memory_Layout.Regions.Length = 2,
+         Assert (Condition => S.Memory_Layout.Length = 2,
                  Message   => "Memory region count mismatch");
 
-         R := S.Memory_Layout.Regions.First_Element;
+         R := S.Memory_Layout.First_Element;
          Assert (Condition => R.Physical_Address = 16#240000#,
                  Message   => "Physical address mismatch (1)");
          Assert (Condition => R.Virtual_Address = 0,
@@ -258,7 +258,7 @@ is
                  Message   => "Writable mismatch (1)");
          Assert (Condition => R.Executable,
                  Message   => "Executable mismatch (1)");
-         R := S.Memory_Layout.Regions.Last_Element;
+         R := S.Memory_Layout.Last_Element;
          Assert (Condition => R.Physical_Address = 16#100000#,
                  Message   => "Physical address mismatch (2)");
          Assert (Condition => R.Virtual_Address = 16#100000#,
@@ -270,7 +270,7 @@ is
          Assert (Condition => not R.Executable,
                  Message   => "Executable mismatch (2)");
 
-         PR := S.IO_Ports.Ranges.First_Element;
+         PR := S.IO_Ports.First_Element;
          Assert (Condition => PR.Start_Port = 16#50b0#,
                  Message   => "Port start mismatch");
          Assert (Condition => PR.End_Port = 16#50b0#,

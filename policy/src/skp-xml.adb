@@ -32,7 +32,7 @@ is
      (Node : DOM.Core.Node)
       return Memory_Layout_Type
    is
-      Layout : Memory_Layout_Type;
+      Mem_Layout : Memory_Layout_Type;
 
       --  Add memory region to memory layout.
       procedure Add_Mem_Region (Node : DOM.Core.Node);
@@ -80,14 +80,14 @@ is
                Name => "executable"));
 
          Validators.Validate (Region => R);
-         Layout.Regions.Append (New_Item => R);
+         Mem_Layout.Append (New_Item => R);
       end Add_Mem_Region;
    begin
       Util.For_Each_Node (Node     => Node,
                           Tag_Name => "memory_region",
                           Process  => Add_Mem_Region'Access);
 
-      return Layout;
+      return Mem_Layout;
    end Deserialize_Mem_Layout;
 
    -------------------------------------------------------------------------
@@ -212,9 +212,8 @@ is
                      Tag_Name => "io_port",
                      Process  => Add_Port_Range'Access);
                   Dev_Mem := Deserialize_Mem_Layout (Node => Dev_Node);
-                  Subj_Mem.Regions.Splice
-                    (Before => Memregion_Package.No_Element,
-                     Source => Dev_Mem.Regions);
+                  Subj_Mem.Splice (Before => Memregion_Package.No_Element,
+                                   Source => Dev_Mem);
                   return;
                end if;
             end loop;
@@ -243,7 +242,7 @@ is
                R.End_Port := SK.Word16 (To_Word64 (Hex => End_Port_Str));
             end if;
 
-            Ports.Ranges.Append (New_Item => R);
+            Ports.Append (New_Item => R);
          end Add_Port_Range;
       begin
          Subj_Mem := Deserialize_Mem_Layout (Node => Node);

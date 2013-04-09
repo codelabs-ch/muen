@@ -19,7 +19,7 @@ is
    --  specified file. The PML4 address parameter specifies the physical start
    --  address of the PML4 paging structure.
    procedure Write
-     (Layout       : Memory_Layout_Type;
+     (Mem_Layout   : Memory_Layout_Type;
       Pml4_Address : SK.Word64;
       Filename     : String);
 
@@ -100,7 +100,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Write
-     (Layout       : Memory_Layout_Type;
+     (Mem_Layout   : Memory_Layout_Type;
       Pml4_Address : SK.Word64;
       Filename     : String)
    is
@@ -222,7 +222,7 @@ is
       Open (Filename => Filename,
             File     => File);
 
-      Layout.Regions.Iterate (Process => Add_Memory_Region'Access);
+      Mem_Layout.Iterate (Process => Add_Memory_Region'Access);
 
       Paging.PML4_Table_Type'Write (Stream (File => File), PML4);
       Paging.PDP_Table_Type'Write  (Stream (File => File), PDPT);
@@ -262,7 +262,7 @@ is
       Open (Filename => Filename,
             File     => File);
 
-      Ports.Ranges.Iterate (Process => Add_Port_Range'Access);
+      Ports.Iterate (Process => Add_Port_Range'Access);
 
       Write (File => File,
              Item => IO_Ports.To_Stream (B => Bitmap));
@@ -408,7 +408,7 @@ is
                             Item => "end " & Pkg_Name & ";");
       Ada.Text_IO.Close (File => File);
 
-      Write (Layout       => Policy.Kernel.Memory_Layout,
+      Write (Mem_Layout   => Policy.Kernel.Memory_Layout,
              Pml4_Address => Policy.Kernel.Pml4_Address,
              Filename     => Dir_Name & "/kernel_pt");
    end Write_Kernel;
@@ -446,7 +446,7 @@ is
            & "_iobm";
       begin
          Write_Subject_Spec (Subject => S);
-         Write (Layout       => S.Memory_Layout,
+         Write (Mem_Layout   => S.Memory_Layout,
                 Pml4_Address => S.Pml4_Address,
                 Filename     => PT_File);
          Write (Ports    => S.IO_Ports,

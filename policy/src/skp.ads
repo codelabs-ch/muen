@@ -22,9 +22,7 @@ is
    package Memregion_Package is new Ada.Containers.Doubly_Linked_Lists
      (Element_Type => Memory_Region_Type);
 
-   type Memory_Layout_Type is record
-      Regions : Memregion_Package.List;
-   end record;
+   subtype Memory_Layout_Type is Memregion_Package.List;
 
    type IO_Port_Range is record
       Start_Port : SK.Word16;
@@ -34,9 +32,7 @@ is
    package Ports_Package is new Ada.Containers.Doubly_Linked_Lists
      (Element_Type => IO_Port_Range);
 
-   type IO_Ports_Type is record
-      Ranges : Ports_Package.List;
-   end record;
+   subtype IO_Ports_Type is Ports_Package.List;
 
    type Initial_State_Type is record
       Stack_Address : SK.Word64;

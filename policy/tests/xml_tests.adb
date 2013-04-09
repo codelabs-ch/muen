@@ -261,7 +261,7 @@ is
          declare
             Dev : constant Device_Type := P.Hardware.Devices.First_Element;
          begin
-            Assert (Condition => Dev.Name = To_Unbounded_String ("debugport"),
+            Assert (Condition => Dev.Name = To_Unbounded_String ("serial"),
                     Message   => "Device name mismatch");
             Assert (Condition => Dev.Memory_Layout.Is_Empty,
                     Message   => "Device memory not empty");

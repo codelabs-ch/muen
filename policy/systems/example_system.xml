@@ -25,7 +25,7 @@
 				<!-- τ0 => kernel interface page -->
 				<memory_region physical_address="1ff000" virtual_address="4000" size="4k" alignment="4k" writable="true"  executable="false"/>
 			</memory_layout>
-			<device name="debugport"/>
+			<device name="serial"/>
 		</subject>
 		<subject id="1" name="dumper" pml4_address="220000" io_bitmap_address="224000">
 			&dumperinit;
@@ -34,7 +34,7 @@
 				<!-- subject state descriptors -->
 				<memory_region physical_address="1fe000" virtual_address="5000" size="4k" alignment="4k" writable="false" executable="false"/>
 			</memory_layout>
-			<device name="debugport"/>
+			<device name="serial"/>
 		</subject>
 		<subject id="2" name="subject_a" pml4_address="230000" io_bitmap_address="234000">
 			&subjainit;

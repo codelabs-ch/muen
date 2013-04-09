@@ -1,5 +1,5 @@
 <hardware>
-	<device name="debugport">
+	<device name="serial">
 		<io_port start="50b0"/>
 	</device>
 	<device name="vga">

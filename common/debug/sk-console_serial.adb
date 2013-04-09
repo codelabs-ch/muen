@@ -1,10 +1,12 @@
+with Skp.Hardware;
+
 with SK.IO;
 
 package body SK.Console_Serial
 is
 
-   --  Intel AMT SoL port address.
-   Port    : constant := 16#50b0#;
+   --  Serial output address.
+   Port    : constant := Skp.Hardware.Serial_Port1_Start;
    --  Baud rate: 115200
    Divisor : constant := 1;
 

@@ -3,7 +3,11 @@ with "../../common/defaults";
 project Dumper is
 
    for Languages use ("Ada");
-   for Source_Dirs use ("../../common/src", "../../common/debug", "src");
+   for Source_Dirs use
+     ("../../common/src",
+      "../../common/debug",
+      "../../policy/include/",
+      "src");
    for Object_Dir use "obj";
 
    for Main use ("dumper");

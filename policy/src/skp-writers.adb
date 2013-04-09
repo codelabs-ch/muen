@@ -16,10 +16,12 @@ is
    Indent      : constant String := "   ";
 
    --  Create paging structures from given memory layout and write them to the
-   --  specified file.
+   --  specified file. The PML4 address parameter specifies the physical start
+   --  address of the PML4 paging structure.
    procedure Write
-     (Layout   : Memory_Layout_Type;
-      Filename : String);
+     (Layout       : Memory_Layout_Type;
+      Pml4_Address : SK.Word64;
+      Filename     : String);
 
    --  Create I/O bitmap from given ports and write them to the specified file.
    procedure Write
@@ -98,8 +100,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Write
-     (Layout   : Memory_Layout_Type;
-      Filename : String)
+     (Layout       : Memory_Layout_Type;
+      Pml4_Address : SK.Word64;
+      Filename     : String)
    is
       use Ada.Streams.Stream_IO;
 
@@ -126,8 +129,6 @@ is
          PD_Idx_Start, PD_Idx_End     : Paging.Table_Range;
          PT_Idx_Start, PT_Idx_End     : Paging.Table_Range;
 
-         --  Physical start address of PML4 paging structure(s).
-         PML4_Addr : constant SK.Word64 := Layout.Pml4_Address;
          --  Physical start address of PDPT paging structure(s).
          PDPT_Addr : SK.Word64;
          --  Physical start address of PD paging structure(s).
@@ -150,9 +151,9 @@ is
                              PD_Index   => PD_Idx_End,
                              PT_Index   => PT_Idx_End);
 
-         PDPT_Addr := PML4_Addr + SK.Word64 (PML4_Idx_End) * SK.Page_Size;
-         PD_Addr   := PDPT_Addr + SK.Word64 (PDPT_Idx_End) * SK.Page_Size;
-         PT_Addr   := PD_Addr   + SK.Word64 (PD_Idx_End)   * SK.Page_Size;
+         PDPT_Addr := Pml4_Address + SK.Word64 (PML4_Idx_End) * SK.Page_Size;
+         PD_Addr   := PDPT_Addr    + SK.Word64 (PDPT_Idx_End) * SK.Page_Size;
+         PT_Addr   := PD_Addr      + SK.Word64 (PD_Idx_End)   * SK.Page_Size;
 
          for Idx in Paging.Table_Range range PML4_Idx_Start .. PML4_Idx_End
          loop
@@ -407,8 +408,9 @@ is
                             Item => "end " & Pkg_Name & ";");
       Ada.Text_IO.Close (File => File);
 
-      Write (Layout   => Policy.Kernel.Memory_Layout,
-             Filename => Dir_Name & "/kernel_pt");
+      Write (Layout       => Policy.Kernel.Memory_Layout,
+             Pml4_Address => Policy.Kernel.Memory_Layout.Pml4_Address,
+             Filename     => Dir_Name & "/kernel_pt");
    end Write_Kernel;
 
    -------------------------------------------------------------------------
@@ -444,8 +446,9 @@ is
            & "_iobm";
       begin
          Write_Subject_Spec (Subject => S);
-         Write (Layout   => S.Memory_Layout,
-                Filename => PT_File);
+         Write (Layout       => S.Memory_Layout,
+                Pml4_Address => S.Memory_Layout.Pml4_Address,
+                Filename     => PT_File);
          Write (Ports    => S.IO_Ports,
                 Filename => IO_File);
       end Write_Subject;

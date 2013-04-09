@@ -206,6 +206,22 @@ is
          Assert (Condition => P.Vmcs_Start_Address = 16#1000#,
                  Message   => "VMCS start address mismatch");
 
+         --  Hardware
+
+         Assert (Condition => P.Hardware.Devices.Length = 2,
+                 Message   => "Device count mismatch");
+
+         declare
+            Dev : constant Device_Type := P.Hardware.Devices.First_Element;
+         begin
+            Assert (Condition => Dev.Name = To_Unbounded_String ("debugport"),
+                    Message   => "Device name mismatch");
+            Assert (Condition => Dev.Memory_Layout.Is_Empty,
+                    Message   => "Device memory not empty");
+            Assert (Condition => Dev.IO_Ports.Length = 1,
+                    Message   => "Device ports mismatch");
+         end;
+
          --  Kernel
 
          Assert (Condition => P.Kernel.Stack_Address = 16#112000#,

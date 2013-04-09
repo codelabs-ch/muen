@@ -15,6 +15,8 @@ with Skp.Validators;
 package body Skp.Xml
 is
 
+   use Ada.Strings.Unbounded;
+
    package DR renames Schema.Dom_Readers;
    package SV renames Schema.Validators;
 
@@ -25,6 +27,9 @@ is
    function Deserialize_Mem_Layout
      (Node : DOM.Core.Node)
       return Memory_Layout_Type;
+
+   --  Deserialize I/O ports from XML data.
+   function Deserialize_Ports (Node : DOM.Core.Node) return IO_Ports_Type;
 
    -------------------------------------------------------------------------
 
@@ -92,6 +97,44 @@ is
 
    -------------------------------------------------------------------------
 
+   function Deserialize_Ports (Node : DOM.Core.Node) return IO_Ports_Type
+   is
+      Ports : IO_Ports_Type;
+
+      --  Add I/O port range to I/O ports.
+      procedure Add_Port_Range (Node : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Port_Range (Node : DOM.Core.Node)
+      is
+         P_Range        : IO_Port_Range;
+         Start_Port_Str : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "start");
+         End_Port_Str   : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "end");
+      begin
+         P_Range.Start_Port := SK.Word16 (To_Word64 (Hex => Start_Port_Str));
+
+         if End_Port_Str'Length = 0 then
+            P_Range.End_Port := P_Range.Start_Port;
+         else
+            P_Range.End_Port := SK.Word16 (To_Word64 (Hex => End_Port_Str));
+         end if;
+
+         Ports.Append (New_Item => P_Range);
+      end Add_Port_Range;
+   begin
+      Util.For_Each_Node (Node     => Node,
+                          Tag_Name => "io_port",
+                          Process  => Add_Port_Range'Access);
+      return Ports;
+   end Deserialize_Ports;
+
+   -------------------------------------------------------------------------
+
    procedure Finalize (Object : in out XML_Data_Type)
    is
    begin
@@ -146,14 +189,8 @@ is
 
       package DCD renames DOM.Core.Documents;
 
-      Root    : constant DOM.Core.Node := DCD.Get_Element (Doc => Data.Doc);
-      Devices : constant DOM.Core.Node_List
-        := DOM.Core.Elements.Get_Elements_By_Tag_Name
-          (Elem => Util.Get_Element_By_Tag_Name
-               (Node     => Root,
-                Tag_Name => "hardware"),
-           Name => "device");
-      P       : Policy_Type;
+      Root   : constant DOM.Core.Node := DCD.Get_Element (Doc => Data.Doc);
+      Policy : Policy_Type;
 
       --  Add subject specification to policy.
       procedure Add_Subject (Node : DOM.Core.Node);
@@ -162,8 +199,6 @@ is
 
       procedure Add_Subject (Node : DOM.Core.Node)
       is
-         use Ada.Strings.Unbounded;
-
          Name     : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "name");
@@ -181,9 +216,6 @@ is
          State    : Initial_State_Type;
          Subj_Mem : Memory_Layout_Type;
 
-         --  Add I/O port range to subject I/O ports.
-         procedure Add_Port_Range (Node : DOM.Core.Node);
-
          --  Add device ressources (memory and I/O ports) to subject.
          procedure Add_Device (Node : DOM.Core.Node);
 
@@ -191,59 +223,23 @@ is
 
          procedure Add_Device (Node : DOM.Core.Node)
          is
-            use type DOM.Core.Node;
-
-            Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => "name");
-            Dev_Node : DOM.Core.Node;
-            Dev_Mem  : Memory_Layout_Type;
+            Dev      : Device_Type;
+            Dev_Name : constant Unbounded_String := To_Unbounded_String
+              (DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "name"));
          begin
-            for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
-               Dev_Node := DOM.Core.Nodes.Item
-                 (List  => Devices,
-                  Index => I);
-               if Dev_Name = DOM.Core.Elements.Get_Attribute
-                   (Elem => Dev_Node,
-                    Name => "name")
-               then
-                  Util.For_Each_Node
-                    (Node     => Dev_Node,
-                     Tag_Name => "io_port",
-                     Process  => Add_Port_Range'Access);
-                  Dev_Mem := Deserialize_Mem_Layout (Node => Dev_Node);
-                  Subj_Mem.Splice (Before => Memregion_Package.No_Element,
-                                   Source => Dev_Mem);
-                  return;
-               end if;
-            end loop;
+            Dev := Policy.Hardware.Devices.Element (Key => Dev_Name);
+            Subj_Mem.Splice (Before => Memregion_Package.No_Element,
+                             Source => Dev.Memory_Layout);
+            Ports.Splice (Before => Ports_Package.No_Element,
+                          Source => Dev.IO_Ports);
 
-            raise Processing_Error with "No hardware device with name '"
-              & Dev_Name & "'";
+         exception
+            when others =>
+               raise Processing_Error with "No hardware device with name '"
+                 & To_String (Dev_Name) & "'";
          end Add_Device;
-
-         -------------------------------------------------------------------
-
-         procedure Add_Port_Range (Node : DOM.Core.Node)
-         is
-            R            : IO_Port_Range;
-            End_Port_Str : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => "end");
-         begin
-            R.Start_Port := SK.Word16 (To_Word64
-              (Hex => DOM.Core.Elements.Get_Attribute
-               (Elem => Node,
-                Name => "start")));
-
-            if End_Port_Str'Length = 0 then
-               R.End_Port := R.Start_Port;
-            else
-               R.End_Port := SK.Word16 (To_Word64 (Hex => End_Port_Str));
-            end if;
-
-            Ports.Append (New_Item => R);
-         end Add_Port_Range;
       begin
          Subj_Mem := Deserialize_Mem_Layout (Node => Node);
 
@@ -261,7 +257,7 @@ is
               (Node      => Node,
                Tag_Name  => "initial_state",
                Attr_Name => "entry_point"));
-         P.Subjects.Insert
+         Policy.Subjects.Insert
            (New_Item =>
               (Id                => Id,
                Name              => To_Unbounded_String (Name),
@@ -279,16 +275,48 @@ is
                & Ada.Exceptions.Exception_Message (X => E));
       end Add_Subject;
    begin
-      P.Vmxon_Address := To_Word64
+      Policy.Vmxon_Address := To_Word64
         (Hex => Util.Get_Element_Attr_By_Tag_Name
            (Node      => Root,
             Tag_Name  => "system",
             Attr_Name => "vmxon_address"));
-      P.Vmcs_Start_Address := To_Word64
+      Policy.Vmcs_Start_Address := To_Word64
         (Hex => Util.Get_Element_Attr_By_Tag_Name
            (Node      => Root,
             Tag_Name  => "system",
             Attr_Name => "vmcs_start_address"));
+
+      declare
+         HW_Node : constant DOM.Core.Node
+           := Xml.Util.Get_Element_By_Tag_Name
+             (Node     => Root,
+              Tag_Name => "hardware");
+
+         --  Add device to hardware policy.
+         procedure Add_Device (Node : DOM.Core.Node);
+
+         -------------------------------------------------------------------
+
+         procedure Add_Device (Node : DOM.Core.Node)
+         is
+            Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "name");
+            Dev  : Device_Type;
+         begin
+            Dev.Name          := To_Unbounded_String (Name);
+            Dev.Memory_Layout := Deserialize_Mem_Layout (Node => Node);
+            Dev.IO_Ports      := Deserialize_Ports (Node => Node);
+
+            Policy.Hardware.Devices.Insert
+              (Key      => Dev.Name,
+               New_Item => Dev);
+         end Add_Device;
+      begin
+         Util.For_Each_Node (Node     => HW_Node,
+                             Tag_Name => "device",
+                             Process  => Add_Device'Access);
+      end;
 
       declare
          Kernel_Node : constant DOM.Core.Node
@@ -296,17 +324,17 @@ is
              (Node     => Root,
               Tag_Name => "kernel");
       begin
-         P.Kernel.Stack_Address := To_Word64
+         Policy.Kernel.Stack_Address := To_Word64
            (Hex => Util.Get_Element_Attr_By_Tag_Name
               (Node      => Root,
                Tag_Name  => "kernel",
                Attr_Name => "stack_address"));
-         P.Kernel.Pml4_Address := To_Word64
+         Policy.Kernel.Pml4_Address := To_Word64
            (Hex => Util.Get_Element_Attr_By_Tag_Name
               (Node      => Root,
                Tag_Name  => "kernel",
                Attr_Name => "pml4_address"));
-         P.Kernel.Memory_Layout := Deserialize_Mem_Layout
+         Policy.Kernel.Memory_Layout := Deserialize_Mem_Layout
            (Node => Kernel_Node);
       end;
 
@@ -323,8 +351,6 @@ is
 
          procedure Add_Binary (Node : DOM.Core.Node)
          is
-            use Ada.Strings.Unbounded;
-
             Path : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "path");
@@ -332,10 +358,9 @@ is
               (Elem => Node,
                Name => "physical_address");
          begin
-            P.Binaries.Append
-              (New_Item =>
-                 (Path             => To_Unbounded_String (Path),
-                  Physical_Address => To_Word64 (Hex => Addr)));
+            Policy.Binaries.Append
+              (New_Item => (Path             => To_Unbounded_String (Path),
+                            Physical_Address => To_Word64 (Hex => Addr)));
          end Add_Binary;
       begin
          Util.For_Each_Node (Node     => Bin_Node,
@@ -347,8 +372,8 @@ is
                           Tag_Name => "subject",
                           Process  => Add_Subject'Access);
 
-      Validators.Validate (Policy => P);
-      return P;
+      Validators.Validate (Policy => Policy);
+      return Policy;
    end To_Policy;
 
    -------------------------------------------------------------------------

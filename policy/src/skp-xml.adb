@@ -194,7 +194,7 @@ is
          is
             use type DOM.Core.Node;
 
-            Dev_Name : constant String :=  DOM.Core.Elements.Get_Attribute
+            Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "name");
             Dev_Node : DOM.Core.Node;

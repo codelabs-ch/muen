@@ -50,8 +50,9 @@ begin
      (Image    => Knl_Elf,
       Filename => Policy_Dir & "/kernel_pt",
       Address  => Kernel.PML4_Address);
-   Ada.Text_IO.Put_Line (SK.Utils.To_Hex (Item => Kernel.PML4_Address)
-                         & " [PML4] kernel");
+   Ada.Text_IO.Put_Line
+     (SK.Utils.To_Hex (Item => SK.Word64'(Kernel.PML4_Address))
+      & " [PML4] kernel");
 
    --  Subjects
 

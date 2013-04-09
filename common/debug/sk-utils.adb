@@ -51,6 +51,17 @@ is
 
    -------------------------------------------------------------------------
 
+   function To_Hex (Item : Word16) return Word16_Hex_Str
+   is
+      Buffer : Word64_Hex_Str := (others => '0');
+   begin
+      To_Hex (Item   => Word64 (Item),
+              Buffer => Buffer);
+      return Buffer (13 .. 16);
+   end To_Hex;
+
+   -------------------------------------------------------------------------
+
    function To_Hex (Item : Word64) return Word64_Hex_Str
    is
       Buffer : Word64_Hex_Str := (others => '0');

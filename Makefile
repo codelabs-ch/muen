@@ -1,21 +1,21 @@
 all: packer
 
-subjects: config
+subjects: config policy
 	$(MAKE) -C $@
 
 config:
 	$(MAKE) -C $@
 
-policy: subjects
+policy:
 	$(MAKE) -C $@
 
 kernel: policy
 	$(MAKE) -C $@
 
-packer: kernel
+packer: kernel subjects
 	$(MAKE) -C $@
 
-deploy: kernel
+deploy: kernel subjects
 	$(MAKE) -C packer $@
 
 emulate: packer

@@ -2,7 +2,7 @@ include ../../Makeconf
 
 BUILD_OPTS += --RTS=zfp
 
-all: spec
+all: dumper
 
 dumper:
 	gprbuild $(BUILD_OPTS) -P$@

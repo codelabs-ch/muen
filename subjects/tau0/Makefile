@@ -3,7 +3,7 @@ PACKAGE = tau0
 include ../../Makeconf
 include ../../Makespark
 
-all: $(ALL) specs
+all: $(ALL)
 
 $(OBJ_DIR)/$(PACKAGE):
 	gprbuild $(BUILD_OPTS) -P$(PACKAGE)

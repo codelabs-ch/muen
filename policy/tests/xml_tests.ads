@@ -20,6 +20,9 @@ is
    --  Try to load an invalid XML file.
    procedure Load_Invalid_Xml;
 
+   --  Try to load policy with invalid subject device reference.
+   procedure Load_Invalid_Device;
+
    --  Load policy from XML file.
    procedure Load_Policy_Xml;
 

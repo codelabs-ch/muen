@@ -32,6 +32,9 @@ is
         (Routine => Load_Invalid_Xml'Access,
          Name    => "Load invalid XML");
       T.Add_Test_Routine
+        (Routine => Load_Invalid_Device'Access,
+         Name    => "Load invalid subject device");
+      T.Add_Test_Routine
         (Routine => Load_Policy_Xml'Access,
          Name    => "Load policy from XML");
       T.Add_Test_Routine
@@ -41,6 +44,28 @@ is
         (Routine => String_To_Memory_Size'Access,
          Name    => "Convert string to memory size");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Load_Invalid_Device
+   is
+      D : Xml.XML_Data_Type;
+      P : Policy_Type;
+      pragma Unreferenced (P);
+   begin
+      Xml.Parse (Data   => D,
+                 File   => "data/invalid_device_ref.xml",
+                 Schema => "schema/system.xsd");
+
+      P := Xml.To_Policy (Data => D);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Xml.Processing_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Subject tau0: No hardware device with name 'nonexistent'",
+                 Message   => "Exception message mismatch");
+   end Load_Invalid_Device;
 
    -------------------------------------------------------------------------
 

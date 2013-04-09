@@ -16,27 +16,19 @@ begin
                   Schema => "schema/system.xsd");
 
    Policy := Skp.Xml.To_Policy (Data => Data);
+
    Skp.Writers.Write_Kernel (Dir_Name => Inc_Dir,
                              Policy   => Policy);
-
-   Ada.Text_IO.Put_Line (Item => "Wrote kernel policy to '" & Inc_Dir
-                         & "' directory");
-
    Skp.Writers.Write_Subjects (Dir_Name => Inc_Dir,
                                Policy   => Policy);
-   Ada.Text_IO.Put_Line (Item => "Wrote subject policy to '" & Inc_Dir
-                         & "' directory");
-
    Skp.Writers.Write_System (Dir_Name => Inc_Dir,
                              Policy   => Policy);
-   Ada.Text_IO.Put_Line (Item => "Wrote system policy to '" & Inc_Dir
-                         & "' directory");
-
    Skp.Writers.Write_Hardware (Dir_Name => Inc_Dir,
                                Policy   => Policy);
-
    Skp.Writers.Write_Binaries (Dir_Name => Pac_Dir,
                                Policy   => Policy);
-   Ada.Text_IO.Put_Line (Item => "Wrote packer policy to '" & Pac_Dir
-                         & "' directory");
+
+   Ada.Text_IO.Put_Line (Item => "Policy compilation successful");
+   Ada.Text_IO.Put_Line (Item => "  * Include directory: " & Inc_Dir);
+   Ada.Text_IO.Put_Line (Item => "  * Packer  directory: " & Pac_Dir);
 end Skpolicy;

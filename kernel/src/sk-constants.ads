@@ -113,6 +113,7 @@ is
 
    --  VMX control flags
 
+   VM_CTRL_EXIT_EXT_INT     : constant := 16#0000_0001#;
    VM_CTRL_EXIT_DT          : constant := 16#0000_0004#;
    VM_CTRL_EXIT_WBINVD      : constant := 16#0000_0040#;
    VM_CTRL_PREEMPT_TIMER    : constant := 16#0000_0040#;

@@ -49,7 +49,6 @@
 		<xs:sequence>
 			<xs:element name="memory_region" type="memory_region_type" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="pml4_address" type="address_type" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="io_ports_type">

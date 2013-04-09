@@ -210,7 +210,7 @@ is
 
          Assert (Condition => P.Kernel.Stack_Address = 16#112000#,
                  Message   => "Kernel stack address mismatch");
-         Assert (Condition => P.Kernel.Memory_Layout.Pml4_Address = 16#200000#,
+         Assert (Condition => P.Kernel.Pml4_Address = 16#200000#,
                  Message   => "Kernel PML4 address mismatch");
          Assert (Condition => P.Kernel.Memory_Layout.Regions.Length = 2,
                  Message   => "Kernel memory region count mismatch");
@@ -232,6 +232,8 @@ is
                  Message   => "Id mismatch");
          Assert (Condition => S.Name = To_Unbounded_String (Source => "tau0"),
                  Message   => "Name mismatch");
+         Assert (Condition => S.Pml4_Address = 16#1f0000#,
+                 Message   => "PML4 address mismatch");
          Assert (Condition => S.IO_Bitmap_Address = 16#12345678#,
                  Message   => "I/O bitmap address mismatch");
 
@@ -240,8 +242,6 @@ is
          Assert (Condition => S.Init_State.Entry_Point = 16#abc#,
                  Message   => "Subject RIP mismatch");
 
-         Assert (Condition => S.Memory_Layout.Pml4_Address = 16#1f0000#,
-                 Message   => "PML4 address mismatch");
          Assert (Condition => S.Memory_Layout.Regions.Length = 2,
                  Message   => "Memory region count mismatch");
 

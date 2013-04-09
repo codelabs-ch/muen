@@ -83,11 +83,6 @@ is
          Layout.Regions.Append (New_Item => R);
       end Add_Mem_Region;
    begin
-      Layout.Pml4_Address := To_Word64
-        (Hex => Util.Get_Element_Attr_By_Tag_Name
-           (Node      => Node,
-            Tag_Name  => "memory_layout",
-            Attr_Name => "pml4_address"));
       Util.For_Each_Node (Node     => Node,
                           Tag_Name => "memory_region",
                           Process  => Add_Mem_Region'Access);
@@ -176,6 +171,9 @@ is
            (Elem => Node,
             Name => "id");
          Id       : constant Natural := Natural'Value (Id_Str);
+         PML4_Str : constant String  := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "pml4_address");
          IOBM_Str : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "io_bitmap_address");
@@ -260,6 +258,7 @@ is
            (New_Item =>
               (Id                => Id,
                Name              => To_Unbounded_String (Name),
+               Pml4_Address      => To_Word64 (Hex => PML4_Str),
                IO_Bitmap_Address => To_Word64 (Hex => IOBM_Str),
                Init_State        => State,
                Memory_Layout     => Deserialize_Mem_Layout (Node => Node),
@@ -290,11 +289,16 @@ is
              (Node     => Root,
               Tag_Name => "kernel");
       begin
-         P.Kernel.Stack_Address  := To_Word64
+         P.Kernel.Stack_Address := To_Word64
            (Hex => Util.Get_Element_Attr_By_Tag_Name
               (Node      => Root,
                Tag_Name  => "kernel",
                Attr_Name => "stack_address"));
+         P.Kernel.Pml4_Address := To_Word64
+           (Hex => Util.Get_Element_Attr_By_Tag_Name
+              (Node      => Root,
+               Tag_Name  => "kernel",
+               Attr_Name => "pml4_address"));
          P.Kernel.Memory_Layout := Deserialize_Mem_Layout
            (Node => Kernel_Node);
       end;

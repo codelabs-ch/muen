@@ -23,8 +23,7 @@ is
      (Element_Type => Memory_Region_Type);
 
    type Memory_Layout_Type is record
-      Pml4_Address : SK.Word64;
-      Regions      : Memregion_Package.List;
+      Regions : Memregion_Package.List;
    end record;
 
    type IO_Port_Range is record
@@ -47,6 +46,7 @@ is
    type Subject_Type is record
       Id                : Natural;
       Name              : Subject_Name_Type;
+      Pml4_Address      : SK.Word64;
       IO_Bitmap_Address : SK.Word64;
       Init_State        : Initial_State_Type;
       Memory_Layout     : Memory_Layout_Type;
@@ -68,6 +68,7 @@ is
 
    type Kernel_Type is record
       Stack_Address : SK.Word64;
+      Pml4_Address  : SK.Word64;
       Memory_Layout : Memory_Layout_Type;
    end record;
 

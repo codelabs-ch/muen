@@ -18,18 +18,18 @@
 	&binaries;
 
 	<subjects>
-		<subject id="0" name="tau0" io_bitmap_address="214000">
+		<subject id="0" name="tau0" pml4_address="210000" io_bitmap_address="214000">
 			&tau0init;
-			<memory_layout pml4_address="210000">
+			<memory_layout>
 				&tau0mem;
 				<!-- τ0 => kernel interface page -->
 				<memory_region physical_address="1ff000" virtual_address="4000" size="4k" alignment="4k" writable="true"  executable="false"/>
 			</memory_layout>
 			<device name="debugport"/>
 		</subject>
-		<subject id="1" name="dumper" io_bitmap_address="224000">
+		<subject id="1" name="dumper" pml4_address="220000" io_bitmap_address="224000">
 			&dumperinit;
-			<memory_layout pml4_address="220000">
+			<memory_layout>
 				&dumpermem;
 				<!-- subject state descriptors -->
 				<memory_region physical_address="1fe000" virtual_address="5000" size="4k" alignment="4k" writable="false" executable="false"/>
@@ -37,17 +37,17 @@
 			</memory_layout>
 			<device name="debugport"/>
 		</subject>
-		<subject id="2" name="subject_a" io_bitmap_address="234000">
+		<subject id="2" name="subject_a" pml4_address="230000" io_bitmap_address="234000">
 			&subjainit;
-			<memory_layout pml4_address="230000">
+			<memory_layout>
 				&subjamem;
 				<memory_region physical_address="b8000" size="4k" alignment="4k" writable="true"  executable="false"/>
 			</memory_layout>
 			<device name="vga"/>
 		</subject>
-		<subject id="3" name="subject_b" io_bitmap_address="244000">
+		<subject id="3" name="subject_b" pml4_address="240000" io_bitmap_address="244000">
 			&subjbinit;
-			<memory_layout pml4_address="240000">
+			<memory_layout>
 				&subjbmem;
 				<memory_region physical_address="b8000" size="4k" alignment="4k" writable="true"  executable="false"/>
 			</memory_layout>

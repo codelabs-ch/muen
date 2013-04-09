@@ -6,6 +6,7 @@
 			<xs:element name="memory_layout" type="memory_layout_type" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute name="stack_address" type="address_type" use="required"/>
+		<xs:attribute name="pml4_address"  type="address_type" use="required"/>
 	</xs:complexType>
 
 </xs:schema>

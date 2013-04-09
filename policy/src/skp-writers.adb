@@ -377,7 +377,7 @@ is
         (File => File,
          Item => "#define KERNEL_PML4   0x"
          & SK.Utils.To_Hex
-           (Item => Policy.Kernel.Memory_Layout.Pml4_Address));
+           (Item => Policy.Kernel.Pml4_Address));
       Ada.Text_IO.Put_Line
         (File => File,
          Item => "#define SUBJECT_COUNT" & Policy.Subjects.Length'Img);
@@ -400,7 +400,7 @@ is
                        Item => Indent & "PML4_Address  : constant := 16#");
       Ada.Text_IO.Put (File => File,
                        Item => SK.Utils.To_Hex
-                         (Item => Policy.Kernel.Memory_Layout.Pml4_Address));
+                         (Item => Policy.Kernel.Pml4_Address));
       Ada.Text_IO.Put_Line (File => File,
                             Item => "#;");
       Ada.Text_IO.New_Line (File => File);
@@ -409,7 +409,7 @@ is
       Ada.Text_IO.Close (File => File);
 
       Write (Layout       => Policy.Kernel.Memory_Layout,
-             Pml4_Address => Policy.Kernel.Memory_Layout.Pml4_Address,
+             Pml4_Address => Policy.Kernel.Pml4_Address,
              Filename     => Dir_Name & "/kernel_pt");
    end Write_Kernel;
 
@@ -447,7 +447,7 @@ is
       begin
          Write_Subject_Spec (Subject => S);
          Write (Layout       => S.Memory_Layout,
-                Pml4_Address => S.Memory_Layout.Pml4_Address,
+                Pml4_Address => S.Pml4_Address,
                 Filename     => PT_File);
          Write (Ports    => S.IO_Ports,
                 Filename => IO_File);
@@ -468,8 +468,7 @@ is
          Put (File => Spec_File,
               Item => Indent & "    PML4_Address      => 16#");
          Put (File => Spec_File,
-              Item => SK.Utils.To_Hex
-                (Item => Subject.Memory_Layout.Pml4_Address));
+              Item => SK.Utils.To_Hex (Item => Subject.Pml4_Address));
          Put_Line (File => Spec_File,
                    Item => "#,");
          Put (File => Spec_File,

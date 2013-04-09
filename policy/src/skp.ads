@@ -1,4 +1,5 @@
 with Ada.Strings.Unbounded;
+with Ada.Containers.Ordered_Maps;
 with Ada.Containers.Ordered_Sets;
 with Ada.Containers.Doubly_Linked_Lists;
 
@@ -68,9 +69,25 @@ is
       Memory_Layout : Memory_Layout_Type;
    end record;
 
+   type Device_Type is record
+      Name          : Ada.Strings.Unbounded.Unbounded_String;
+      Memory_Layout : Memory_Layout_Type;
+      IO_Ports      : IO_Ports_Type;
+   end record;
+
+   package Devices_Package is new Ada.Containers.Ordered_Maps
+     (Key_Type     => Ada.Strings.Unbounded.Unbounded_String,
+      Element_Type => Device_Type,
+      "<"          => Ada.Strings.Unbounded."<");
+
+   type Hardware_Type is record
+      Devices : Devices_Package.Map;
+   end record;
+
    type Policy_Type is record
       Vmxon_Address      : SK.Word64;
       Vmcs_Start_Address : SK.Word64;
+      Hardware           : Hardware_Type;
       Kernel             : Kernel_Type;
       Subjects           : Subjects_Package.Set;
       Binaries           : Binary_Package.List;

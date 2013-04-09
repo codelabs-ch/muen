@@ -32,6 +32,9 @@ is
         (Routine => Load_Non_Xml_File'Access,
          Name    => "Load non-XML file");
       T.Add_Test_Routine
+        (Routine => Load_Invalid_Xml'Access,
+         Name    => "Load invalid XML file");
+      T.Add_Test_Routine
         (Routine => Load_Invalid_Device'Access,
          Name    => "Load invalid subject device");
       T.Add_Test_Routine
@@ -66,6 +69,21 @@ is
                  = "Subject tau0: No hardware device with name 'nonexistent'",
                  Message   => "Exception message mismatch");
    end Load_Invalid_Device;
+
+   -------------------------------------------------------------------------
+
+   procedure Load_Invalid_Xml
+   is
+      Data : Xml.XML_Data_Type;
+   begin
+      Xml.Parse (Data   => Data,
+                 File   => "data/invalid.xml",
+                 Schema => "schema/system.xsd");
+      Fail (Message => "Exception expected");
+
+   exception
+      when Xml.Processing_Error => null;
+   end Load_Invalid_Xml;
 
    -------------------------------------------------------------------------
 

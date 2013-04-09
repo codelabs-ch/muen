@@ -20,6 +20,9 @@ is
    --  Try to load a file which is not XML.
    procedure Load_Non_Xml_File;
 
+   --  Try to load an invalid XML file.
+   procedure Load_Invalid_Xml;
+
    --  Try to load policy with invalid subject device reference.
    procedure Load_Invalid_Device;
 

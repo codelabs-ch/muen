@@ -174,7 +174,7 @@ is
 
       exception
          when SV.XML_Validation_Error =>
-            raise Processing_Error with "XML validation error - "
+            raise Processing_Error with "XML processing error - "
               & Reader.Get_Error_Message;
          when E : others =>
             raise Processing_Error with "Error reading XML file '" & File

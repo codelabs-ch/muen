@@ -1,7 +1,9 @@
 with Ada.Text_IO;
 with Ada.Streams.Stream_IO;
 with Ada.Directories;
+with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
+with Ada.Characters.Handling;
 with Ada.Exceptions;
 
 with SK.Utils;
@@ -11,6 +13,8 @@ with Skp.IO_Ports;
 
 package body Skp.Writers
 is
+
+   use Ada.Strings.Unbounded;
 
    Policy_File : constant String := "policy.h";
    Indent      : constant String := "   ";
@@ -277,7 +281,6 @@ is
       Policy   : Policy_Type)
    is
       use Ada.Text_IO;
-      use Ada.Strings.Unbounded;
 
       Pkg_Name  : constant String   := "Skp.Binaries";
       Spec_Name : constant String   := Dir_Name & "/skp-binaries.ads";
@@ -357,11 +360,93 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Write_Hardware
+     (Dir_Name : String;
+      Policy   : Policy_Type)
+   is
+      Pkg_Name  : constant String := "Skp.Hardware";
+      Spec_Name : constant String := Dir_Name & "/skp-hardware.ads";
+
+      File : Ada.Text_IO.File_Type;
+
+      --  Write device constants to hardware spec.
+      procedure Write_Device (Pos : Devices_Package.Cursor);
+
+      ----------------------------------------------------------------------
+
+      procedure Write_Device (Pos : Devices_Package.Cursor)
+      is
+         Dev      : constant Device_Type
+           := Devices_Package.Element (Position => Pos);
+         Dev_Name : String               := To_String (Dev.Name);
+         Port_Idx : Ports_Package.Cursor := Dev.IO_Ports.First;
+      begin
+         Dev_Name (Dev_Name'First) := Ada.Characters.Handling.To_Upper
+           (Item => Dev_Name (Dev_Name'First));
+
+         for P in 1 .. Dev.IO_Ports.Length loop
+            declare
+               Port    : constant IO_Port_Range
+                 := Ports_Package.Element (Position => Port_Idx);
+               Port_Nr : constant String := Ada.Strings.Fixed.Trim
+                 (Source => P'Img,
+                  Side   => Ada.Strings.Left);
+
+               --  Write port constant to hardware spec file.
+               procedure Write_Port
+                 (Suffix : String;
+                  Value  : SK.Word16);
+
+               -------------------------------------------------------------
+
+               procedure Write_Port
+                 (Suffix : String;
+                  Value  : SK.Word16)
+               is
+               begin
+                  Ada.Text_IO.Put (File => File,
+                                   Item => Indent & Dev_Name);
+                  Ada.Text_IO.Put (File => File,
+                                   Item => "_Port" & Port_Nr);
+                  Ada.Text_IO.Put
+                    (File => File,
+                     Item => "_" & Suffix & " : constant := 16#");
+                  Ada.Text_IO.Put (File => File,
+                                   Item => SK.Utils.To_Hex (Item => Value));
+                  Ada.Text_IO.Put_Line (File => File,
+                                        Item => "#;");
+               end Write_Port;
+            begin
+               Write_Port (Suffix => "Start",
+                           Value  => Port.Start_Port);
+               Write_Port (Suffix => "End  ",
+                           Value  => Port.End_Port);
+            end;
+
+            Ports_Package.Next (Position => Port_Idx);
+         end loop;
+         Ada.Text_IO.New_Line (File => File);
+      end Write_Device;
+   begin
+      Open (Filename => Spec_Name,
+            File     => File);
+      Ada.Text_IO.Put_Line (File => File,
+                            Item => "package " & Pkg_Name & " is");
+      Ada.Text_IO.New_Line (File => File);
+
+      Policy.Hardware.Devices.Iterate (Process => Write_Device'Access);
+
+      Ada.Text_IO.Put_Line (File => File,
+                            Item => "end " & Pkg_Name & ";");
+      Ada.Text_IO.Close (File => File);
+   end Write_Hardware;
+
+   -------------------------------------------------------------------------
+
    procedure Write_Kernel
      (Dir_Name : String;
       Policy   : Policy_Type)
    is
-
       Pkg_Name  : constant String := "Skp.Kernel";
       Spec_Name : constant String := Dir_Name & "/skp-kernel.ads";
 
@@ -420,7 +505,6 @@ is
       Policy   : Policy_Type)
    is
       use Ada.Text_IO;
-      use Ada.Strings.Unbounded;
 
       Pkg_Name  : constant String   := "Skp.Subjects";
       Spec_Name : constant String   := Dir_Name & "/skp-subjects.ads";

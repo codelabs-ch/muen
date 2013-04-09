@@ -21,6 +21,11 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type);
 
+   --  Write hardware-related policy files to directory specified by name.
+   procedure Write_Hardware
+     (Dir_Name : String;
+      Policy   : Policy_Type);
+
    IO_Error : exception;
 
 end Skp.Writers;

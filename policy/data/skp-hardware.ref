@@ -1,0 +1,14 @@
+package Skp.Hardware is
+
+   Multiport_Port1_Start : constant := 16#03f8#;
+   Multiport_Port1_End   : constant := 16#03fd#;
+   Multiport_Port2_Start : constant := 16#abcd#;
+   Multiport_Port2_End   : constant := 16#bcda#;
+
+   Serial_Port1_Start : constant := 16#50b0#;
+   Serial_Port1_End   : constant := 16#50b0#;
+
+   Vga_Port1_Start : constant := 16#03d4#;
+   Vga_Port1_End   : constant := 16#03d5#;
+
+end Skp.Hardware;

@@ -255,17 +255,17 @@ is
 
          --  Hardware
 
-         Assert (Condition => P.Hardware.Devices.Length = 2,
+         Assert (Condition => P.Hardware.Devices.Length = 3,
                  Message   => "Device count mismatch");
 
          declare
             Dev : constant Device_Type := P.Hardware.Devices.First_Element;
          begin
-            Assert (Condition => Dev.Name = To_Unbounded_String ("serial"),
+            Assert (Condition => Dev.Name = To_Unbounded_String ("multiport"),
                     Message   => "Device name mismatch");
             Assert (Condition => Dev.Memory_Layout.Is_Empty,
                     Message   => "Device memory not empty");
-            Assert (Condition => Dev.IO_Ports.Length = 1,
+            Assert (Condition => Dev.IO_Ports.Length = 2,
                     Message   => "Device ports mismatch");
          end;
 

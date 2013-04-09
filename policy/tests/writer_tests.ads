@@ -20,4 +20,7 @@ is
    --  Write binary spec files.
    procedure Write_Binaries;
 
+   --  Write hardware spec file.
+   procedure Write_Hardware;
+
 end Writer_Tests;

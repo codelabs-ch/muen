@@ -96,6 +96,7 @@ is
       Xml.Parse (Data   => Data,
                  File   => "examples/test_policy1.xml",
                  Schema => "data/invalid");
+      Fail (Message => "Exception expected");
 
    exception
       when E : Xml.Processing_Error =>
@@ -115,6 +116,7 @@ is
       Xml.Parse (Data   => Data,
                  File   => "data/invalid",
                  Schema => "schema/system.xsd");
+      Fail (Message => "Exception expected");
 
    exception
       when E : Xml.Processing_Error =>
@@ -134,6 +136,7 @@ is
       Xml.Parse (Data   => Data,
                  File   => "nonexistent",
                  Schema => "schema/system.xsd");
+      Fail (Message => "Exception expected");
 
    exception
       when E : Xml.Processing_Error =>
@@ -153,6 +156,7 @@ is
       Xml.Parse (Data   => Data,
                  File   => "examples/test_policy1.xml",
                  Schema => "nonexistent");
+      Fail (Message => "Exception expected");
 
    exception
       when E : Xml.Processing_Error =>

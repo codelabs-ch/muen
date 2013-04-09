@@ -23,7 +23,6 @@
 			&subj_state;
 			<memory_layout>
 				<memory_region physical_address="250000" virtual_address="0" size="12k" alignment="4k" writable="true" executable="true"/>
-				<memory_region physical_address="b8000"                      size="4k"  alignment="4k" writable="true" executable="false"/>
 			</memory_layout>
 			<device name="vga"/>
 		</subject>
@@ -31,7 +30,6 @@
 			&subj_state;
 			<memory_layout>
 				<memory_region physical_address="260000" virtual_address="0" size="12k" alignment="4k" writable="true" executable="true"/>
-				<memory_region physical_address="b8000"                      size="4k"  alignment="4k" writable="true" executable="false"/>
 			</memory_layout>
 			<device name="vga"/>
 		</subject>

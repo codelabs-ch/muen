@@ -33,7 +33,6 @@
 				&dumpermem;
 				<!-- subject state descriptors -->
 				<memory_region physical_address="1fe000" virtual_address="5000" size="4k" alignment="4k" writable="false" executable="false"/>
-				<memory_region physical_address="b8000"                         size="4k" alignment="4k" writable="true"  executable="false"/>
 			</memory_layout>
 			<device name="debugport"/>
 		</subject>
@@ -41,7 +40,6 @@
 			&subjainit;
 			<memory_layout>
 				&subjamem;
-				<memory_region physical_address="b8000" size="4k" alignment="4k" writable="true"  executable="false"/>
 			</memory_layout>
 			<device name="vga"/>
 		</subject>
@@ -49,7 +47,6 @@
 			&subjbinit;
 			<memory_layout>
 				&subjbmem;
-				<memory_region physical_address="b8000" size="4k" alignment="4k" writable="true"  executable="false"/>
 			</memory_layout>
 			<device name="vga"/>
 		</subject>

@@ -29,8 +29,8 @@ is
         (Routine => Load_Nonexistent_Xml'Access,
          Name    => "Load nonexistent XML");
       T.Add_Test_Routine
-        (Routine => Load_Invalid_Xml'Access,
-         Name    => "Load invalid XML");
+        (Routine => Load_Non_Xml_File'Access,
+         Name    => "Load non-XML file");
       T.Add_Test_Routine
         (Routine => Load_Invalid_Device'Access,
          Name    => "Load invalid subject device");
@@ -69,25 +69,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Load_Invalid_Xml
-   is
-      Data    : Xml.XML_Data_Type;
-      Ref_Msg : constant String := "Error reading XML file 'data/invalid' - "
-        & "data/invalid:1:1: Non-white space found at top level";
-   begin
-      Xml.Parse (Data   => Data,
-                 File   => "data/invalid",
-                 Schema => "schema/system.xsd");
-
-   exception
-      when E : Xml.Processing_Error =>
-         Assert (Condition => Ada.Exceptions.Exception_Message
-                 (X => E) = Ref_Msg,
-                 Message   => "Exception message mismatch");
-   end Load_Invalid_Xml;
-
-   -------------------------------------------------------------------------
-
    procedure Load_Invalid_Xsd
    is
       Data    : Xml.XML_Data_Type;
@@ -104,6 +85,25 @@ is
                  (X => E) = Ref_Msg,
                  Message   => "Exception message mismatch");
    end Load_Invalid_Xsd;
+
+   -------------------------------------------------------------------------
+
+   procedure Load_Non_Xml_File
+   is
+      Data    : Xml.XML_Data_Type;
+      Ref_Msg : constant String := "Error reading XML file 'data/invalid' - "
+        & "data/invalid:1:1: Non-white space found at top level";
+   begin
+      Xml.Parse (Data   => Data,
+                 File   => "data/invalid",
+                 Schema => "schema/system.xsd");
+
+   exception
+      when E : Xml.Processing_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message
+                 (X => E) = Ref_Msg,
+                 Message   => "Exception message mismatch");
+   end Load_Non_Xml_File;
 
    -------------------------------------------------------------------------
 

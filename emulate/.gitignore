@@ -1,4 +1,5 @@
 bochsout.txt
 bootable.iso
+debugger.out
 iso/boot/kernel.bin
 serial.out

@@ -2,9 +2,18 @@
 	<xs:include schemaLocation="./types.xsd"/>
 
 	<xs:complexType name="device_type">
-		<xs:sequence>
-			<xs:element name="io_port" type="io_port_type" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="memory_layout" type="memory_layout_type" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="io_port"       type="io_port_type"       minOccurs="1" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="memory_layout" type="memory_layout_type" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="io_port"       type="io_port_type"       minOccurs="1" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:choice>
 		<xs:attribute name="name" type="device_name_type" use="required"/>
 	</xs:complexType>
 

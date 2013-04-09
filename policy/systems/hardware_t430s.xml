@@ -3,6 +3,9 @@
 		<io_port start="50b0" end="50b5"/>
 	</device>
 	<device name="vga">
+		<memory_layout>
+			<memory_region physical_address="b8000" size="4k" alignment="4k" writable="true" executable="false"/>
+		</memory_layout>
 		<io_port start="03d4" end="03d5"/>
 	</device>
 </hardware>

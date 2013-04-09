@@ -10,15 +10,6 @@ DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
 all: $(OBJ_DIR)/kernel
 
-$(OBJ_DIR)/tau0: $(SUBJ_DIR)/tau0/obj/tau0
-	objcopy -O binary $< $@
-
-$(OBJ_DIR)/subject1: $(SUBJ_DIR)/test/obj/subject1
-	objcopy -O binary $< $@
-
-$(OBJ_DIR)/subject2: $(SUBJ_DIR)/test/obj/subject2
-	objcopy -O binary $< $@
-
 packer:
 	@LIBRARY_PATH=/usr/lib/x86_64-linux-gnu gprbuild $(BUILD_OPTS) -P$@
 

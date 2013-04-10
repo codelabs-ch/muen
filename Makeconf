@@ -4,6 +4,10 @@ OBJ_DIR = $(CURDIR)/obj
 
 BUILD_OPTS = -p -j0
 
+POLICY_DIR = $(TOP_DIR)/policy
+POLICY_INC = $(POLICY_DIR)/include
+POLICY_PAC = $(POLICY_DIR)/pack
+
 SKCONFIG = $(TOP_DIR)/tools/config/obj/skconfig
 SKPACKER = $(TOP_DIR)/tools/packer/obj/skpacker
 SKPOLICY = $(TOP_DIR)/tools/policy/obj/skpolicy

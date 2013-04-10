@@ -1,16 +1,18 @@
-POLICY  = example_system.xml
+POLICY  = $(wildcard xml/*.xml)
+SYSTEM  = xml/example_system.xml
 SCHEMA  = $(TOP_DIR)/tools/policy/schema/system.xsd
 INC_DIR = include
 PAC_DIR = pack
+OUTPUT  = $(INC_DIR)/skp.ads
 
 DUMMY := $(shell mkdir -p $(INC_DIR) $(PAC_DIR))
 
-all: process_policy
+all: $(OUTPUT)
 
 include ../Makeconf
 
-process_policy: $(POLICY) $(INC_DIR) $(PAC_DIR)
-	$(SKPOLICY) $(SCHEMA) $(POLICY)
+$(OUTPUT): $(POLICY) $(INC_DIR) $(PAC_DIR)
+	$(SKPOLICY) $(SCHEMA) $(SYSTEM)
 
 clean:
 	@rm -rf $(INC_DIR) $(PAC_DIR)

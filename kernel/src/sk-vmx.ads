@@ -17,13 +17,20 @@ package SK.VMX
 --#    State;
 is
 
+   --  VMX preemption timer value.
+   subtype Time_Type is SK.Word32;
+
+   --  Enter VMX root operation.
    procedure Enable;
    --# global
    --#    in out X86_64.State;
    --# derives
    --#    X86_64.State from *;
 
-   procedure Launch (Subject_Id : Skp.Subject_Id_Type);
+   --  Launch given subject for the specified VMX time.
+   procedure Launch
+     (Subject_Id : Skp.Subject_Id_Type;
+      Time_Slice : Time_Type);
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
@@ -38,14 +45,18 @@ is
    --#       GDT.GDT_Pointer,
    --#       Subjects.Descriptors,
    --#       Subject_Id,
-   --#       State;
+   --#       State,
+   --#       Time_Slice;
 
-   procedure Resume (Subject_Id : Skp.Subject_Id_Type);
+   --  Resume given subject for the specified VMX time.
+   procedure Resume
+     (Subject_Id : Skp.Subject_Id_Type;
+      Time_Slice : Time_Type);
    --# global
    --#    in     Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from *, Subject_Id, Subjects.Descriptors;
+   --#    X86_64.State from *, Subject_Id, Subjects.Descriptors, Time_Slice;
 
    --  Read value from specified field of the current, active VMCS. If the
    --  operation fails, CPU.Panic is called.

@@ -37,10 +37,6 @@ is
    Exec_Proc2_Defaults : constant SK.Word32 := Constants.VM_CTRL_EXIT_DT
      or Constants.VM_CTRL_EXIT_WBINVD;
 
-   --  Subject preemption time in ticks. Used to set the VMX preemption timer.
-
-   Subject_Time_Slice : constant := 500;
-
    subtype Alignment_Type is SK.Word16 range 1 .. SK.Word16'Last;
 
    --# accept Warning, 350, VMX_Exit_Address, "Imported from Linker";
@@ -134,7 +130,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Resume (Subject_Id : Skp.Subject_Id_Type)
+   procedure Resume
+     (Subject_Id : Skp.Subject_Id_Type;
+      Time_Slice : Time_Type)
    is
       Success : Boolean;
       Spec    : Skp.Subjects.Subject_Spec_Type;
@@ -151,7 +149,7 @@ is
       end if;
 
       VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                  Value => Subject_Time_Slice);
+                  Value => SK.Word64 (Time_Slice));
 
       CPU.Restore_Registers (Regs => State.Regs);
       CPU.VMRESUME;
@@ -415,7 +413,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Launch (Subject_Id : Skp.Subject_Id_Type)
+   procedure Launch
+     (Subject_Id : Skp.Subject_Id_Type;
+      Time_Slice : Time_Type)
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
@@ -430,7 +430,8 @@ is
    --#       Interrupts.IDT_Pointer,
    --#       VMX_Exit_Address,
    --#       Subjects.Descriptors,
-   --#       Subject_Id;
+   --#       Subject_Id,
+   --#       Time_Slice;
    is
       Success : Boolean;
       Spec    : Skp.Subjects.Subject_Spec_Type;
@@ -479,7 +480,7 @@ is
          Entry_Point   => Spec.Entry_Point);
 
       VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                  Value => Subject_Time_Slice);
+                  Value => SK.Word64 (Time_Slice));
 
       State.Launched := True;
       Subjects.Set_State (Id    => Subject_Id,

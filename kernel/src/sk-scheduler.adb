@@ -13,6 +13,9 @@ package body SK.Scheduler
 --#    State is in New_Major, Current_Major, Current_Minor, Scheduling_Plan;
 is
 
+   --  Subject preemption time.
+   Subject_Time_Slice : constant := 500;
+
    --  The minor frame range specifies the number of minor frames that
    --  constitute a major frame.
    type Minor_Frame_Range is mod 2 ** 2;
@@ -170,9 +173,11 @@ is
       Current_Subject := Scheduling_Plan (Current_Major) (Current_Minor);
 
       if Subjects.Get_State (Id => Current_Subject).Launched then
-         VMX.Resume (Subject_Id => Current_Subject);
+         VMX.Resume (Subject_Id => Current_Subject,
+                     Time_Slice => Subject_Time_Slice);
       else
-         VMX.Launch (Subject_Id => Current_Subject);
+         VMX.Launch (Subject_Id => Current_Subject,
+                     Time_Slice => Subject_Time_Slice);
       end if;
    end Schedule;
 

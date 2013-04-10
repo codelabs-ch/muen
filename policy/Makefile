@@ -10,12 +10,15 @@ DUMMY := $(shell mkdir -p $(POLICY_INC) $(POLICY_PAC))
 
 all: $(OUTPUT)
 
+$(SYSTEM): $(SYSTEM).tmpl $(HWSTAMP)
+	@sed 's/__HARDWARE__/$(HARDWARE)/g' $< > $@
+
 $(HWSTAMP): xml/hardware/$(HARDWARE).xml
 	@rm -f $(POLICY_INC)/.*.stamp
 	@touch $@
 
-$(OUTPUT): $(POLICY) $(HWSTAMP)
+$(OUTPUT): $(POLICY) $(SYSTEM)
 	$(SKPOLICY) $(SCHEMA) $(SYSTEM)
 
 clean:
-	@rm -rf $(POLICY_INC) $(POLICY_PAC)
+	@rm -rf $(POLICY_INC) $(POLICY_PAC) $(SYSTEM)

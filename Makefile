@@ -35,4 +35,4 @@ clean:
 	$(MAKE) clean -C policy
 	$(MAKE) clean -C subjects
 
-.PHONY: deploy emulate
+.PHONY: deploy emulate kernel pack policy subjects

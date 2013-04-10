@@ -6,7 +6,10 @@ skconfig:
 skpacker: policy
 	$(MAKE) $@ -C tools
 
-policy:
+skpolicy:
+	$(MAKE) $@ -C tools
+
+policy: skpolicy
 	$(MAKE) -C $@
 
 subjects: skconfig policy
@@ -24,9 +27,6 @@ deploy: pack
 emulate: pack
 	$(MAKE) -C $@
 
-tests:
-	$(MAKE) tests -C policy
-
 clean:
 	$(MAKE) clean -C deploy
 	$(MAKE) clean -C tools
@@ -34,4 +34,4 @@ clean:
 	$(MAKE) clean -C policy
 	$(MAKE) clean -C subjects
 
-.PHONY: deploy emulate kernel policy subjects
+.PHONY: deploy emulate

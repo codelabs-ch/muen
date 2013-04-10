@@ -6,3 +6,4 @@ BUILD_OPTS = -p -j0
 
 SKCONFIG = $(TOP_DIR)/tools/config/obj/skconfig
 SKPACKER = $(TOP_DIR)/tools/packer/obj/packer
+SKPOLICY = $(TOP_DIR)/tools/policy/obj/skpolicy

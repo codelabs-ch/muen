@@ -1,9 +1,9 @@
-with "../common/defaults";
-with "../contrib/xmlada";
+with "../../common/defaults";
+with "../../contrib/xmlada";
 
 project Skp_Tool is
 
-   for Source_Dirs use ("src", "../common/**");
+   for Source_Dirs use ("src", "../../common/**");
    for Object_Dir use "obj/";
    for Main use ("skpolicy.adb");
 

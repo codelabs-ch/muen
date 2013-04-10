@@ -1,0 +1,10 @@
+<kernel stack_address="112000" pml4_address="200000">
+	<memory_layout>
+		<!-- kernel code and data        -->
+		<memory_region physical_address="100000" size="112k" alignment="4k" writable="true"  executable="true"/>
+		<!-- subject state descriptors -->
+		<memory_region physical_address="1fe000" size="4k"   alignment="4k" writable="true"  executable="false"/>
+		<!-- τ0 => kernel interface page -->
+		<memory_region physical_address="1ff000" size="4k"   alignment="4k" writable="false" executable="false"/>
+	</memory_layout>
+</kernel>

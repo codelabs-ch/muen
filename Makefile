@@ -1,3 +1,7 @@
+include Makeconf
+
+export HARDWARE
+
 all: pack
 
 skconfig:
@@ -21,6 +25,7 @@ kernel: policy
 pack: skpacker kernel subjects
 	$(MAKE) -C $@
 
+deploy: HARDWARE=t430s
 deploy: pack
 	$(MAKE) -C $@
 

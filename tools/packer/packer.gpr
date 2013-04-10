@@ -8,7 +8,7 @@ project Packer is
       "../../policy/include",
       "../../policy/pack");
    for Object_Dir use "obj";
-   for Main use ("packer.adb");
+   for Main use ("skpacker.adb");
 
    package Compiler is
       for Default_Switches ("Ada") use Defaults.Ada_Compiler_Switches

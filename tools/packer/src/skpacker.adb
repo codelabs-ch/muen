@@ -11,7 +11,7 @@ with Skp.Subjects;
 
 with Pack.Image;
 
-procedure Packer
+procedure Skpacker
 is
    use Ada.Strings.Unbounded;
    use Pack;
@@ -93,4 +93,4 @@ begin
 
    Image.To_Binary (Src_Elf => Knl_Elf,
                     Dst_Bin => Ada.Command_Line.Argument (2));
-end Packer;
+end Skpacker;

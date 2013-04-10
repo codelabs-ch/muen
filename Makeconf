@@ -11,3 +11,5 @@ POLICY_PAC = $(POLICY_DIR)/pack
 SKCONFIG = $(TOP_DIR)/tools/config/obj/skconfig
 SKPACKER = $(TOP_DIR)/tools/packer/obj/skpacker
 SKPOLICY = $(TOP_DIR)/tools/policy/obj/skpolicy
+
+HARDWARE ?= bochs

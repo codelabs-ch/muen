@@ -1,9 +1,9 @@
-with "../common/defaults";
-with "../contrib/ahven";
+with "../../common/defaults";
+with "../../contrib/ahven";
 
 project Packer_Tests is
 
-   for Source_Dirs use ("src", "tests", "../common/**");
+   for Source_Dirs use ("src", "tests", "../../common/**");
    for Object_Dir use "obj";
    for Main use ("test_runner.adb");
 

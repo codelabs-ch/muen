@@ -1,6 +1,6 @@
 all: start_bochs
 
-bootable.iso: ../packer/obj/kernel
+bootable.iso: ../pack/obj/kernel
 	cp $< iso/boot/kernel.bin
 	grub-mkrescue -o $@ iso/
 

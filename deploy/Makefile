@@ -1,4 +1,4 @@
-PACK_DIR = $(CURDIR)/../packer/obj
+PACK_DIR = $(CURDIR)/../pack/obj
 
 TARGET_IP = 192.168.254.2
 

@@ -5,3 +5,4 @@ OBJ_DIR = $(CURDIR)/obj
 BUILD_OPTS = -p -j0
 
 SKCONFIG = $(TOP_DIR)/tools/config/obj/skconfig
+SKPACKER = $(TOP_DIR)/packer/obj/packer

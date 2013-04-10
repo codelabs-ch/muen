@@ -15,8 +15,8 @@ kernel: policy
 packer: kernel subjects
 	$(MAKE) -C $@
 
-deploy: kernel subjects
-	$(MAKE) -C packer $@
+deploy: packer
+	$(MAKE) -C $@
 
 emulate: packer
 	$(MAKE) -C $@
@@ -26,10 +26,11 @@ tests:
 	$(MAKE) tests -C policy
 
 clean:
+	$(MAKE) clean -C deploy
 	$(MAKE) clean -C tools
 	$(MAKE) clean -C kernel
 	$(MAKE) clean -C packer
 	$(MAKE) clean -C policy
 	$(MAKE) clean -C subjects
 
-.PHONY: emulate kernel packer policy subjects tools
+.PHONY: deploy emulate kernel packer policy subjects tools

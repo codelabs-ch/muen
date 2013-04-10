@@ -31,6 +31,7 @@ clean:
 	$(MAKE) clean -C deploy
 	$(MAKE) clean -C tools
 	$(MAKE) clean -C kernel
+	$(MAKE) clean -C pack
 	$(MAKE) clean -C policy
 	$(MAKE) clean -C subjects
 

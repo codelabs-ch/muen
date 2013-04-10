@@ -411,9 +411,6 @@ is
                   Value => Stack_Address);
       VMCS_Write (Field => Constants.GUEST_RIP,
                   Value => Entry_Point);
-
-      VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                  Value => Subject_Time_Slice);
    end VMCS_Setup_Guest_Fields;
 
    -------------------------------------------------------------------------
@@ -480,6 +477,9 @@ is
         (Stack_Address => Spec.Stack_Address,
          PML4_Address  => Spec.PML4_Address,
          Entry_Point   => Spec.Entry_Point);
+
+      VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
+                  Value => Subject_Time_Slice);
 
       State.Launched := True;
       Subjects.Set_State (Id    => Subject_Id,

@@ -1,12 +1,10 @@
-all: config
+all: skconfig
 
-config:
-	$(MAKE) -C $@
+skconfig:
+	$(MAKE) -C config
 
 tests:
 	$(MAKE) tests -C config
 
 clean:
 	$(MAKE) clean -C config
-
-.PHONY: config

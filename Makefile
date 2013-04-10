@@ -1,12 +1,12 @@
 all: packer
 
-tools:
-	$(MAKE) -C $@
+skconfig:
+	$(MAKE) $@ -C tools
 
 policy:
 	$(MAKE) -C $@
 
-subjects: policy tools
+subjects: skconfig policy
 	$(MAKE) -C $@
 
 kernel: policy
@@ -33,4 +33,4 @@ clean:
 	$(MAKE) clean -C policy
 	$(MAKE) clean -C subjects
 
-.PHONY: deploy emulate kernel packer policy subjects tools
+.PHONY: deploy emulate kernel packer policy subjects

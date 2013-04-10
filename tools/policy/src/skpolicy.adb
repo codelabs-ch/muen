@@ -6,14 +6,30 @@ with Skp.Writers;
 
 procedure Skpolicy
 is
+
+   --  Print tool usage.
+   procedure Print_Usage;
+   procedure Print_Usage
+   is
+   begin
+      Ada.Text_IO.Put_Line
+        (Ada.Command_Line.Command_Name & " <schema> <policy>");
+   end Print_Usage;
+
    Data    : Skp.Xml.XML_Data_Type;
    Policy  : Skp.Policy_Type;
    Inc_Dir : constant String := "include";
    Pac_Dir : constant String := "pack";
 begin
+   if Ada.Command_Line.Argument_Count /= 2 then
+      Print_Usage;
+      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
+      return;
+   end if;
+
    Skp.Xml.Parse (Data   => Data,
-                  File   => Ada.Command_Line.Argument (Number => 1),
-                  Schema => "schema/system.xsd");
+                  File   => Ada.Command_Line.Argument (Number => 2),
+                  Schema => Ada.Command_Line.Argument (Number => 1));
 
    Policy := Skp.Xml.To_Policy (Data => Data);
 

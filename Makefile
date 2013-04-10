@@ -1,12 +1,12 @@
 all: packer
 
-subjects: config policy
-	$(MAKE) -C $@
-
-config:
+tools:
 	$(MAKE) -C $@
 
 policy:
+	$(MAKE) -C $@
+
+subjects: policy tools
 	$(MAKE) -C $@
 
 kernel: policy
@@ -22,15 +22,14 @@ emulate: packer
 	$(MAKE) -C $@
 
 tests:
-	$(MAKE) tests -C config
 	$(MAKE) tests -C packer
 	$(MAKE) tests -C policy
 
 clean:
-	$(MAKE) clean -C config
+	$(MAKE) clean -C tools
 	$(MAKE) clean -C kernel
 	$(MAKE) clean -C packer
 	$(MAKE) clean -C policy
 	$(MAKE) clean -C subjects
 
-.PHONY: config emulate kernel packer policy subjects
+.PHONY: emulate kernel packer policy subjects tools

@@ -1,9 +1,9 @@
-with "../common/defaults";
-with "../contrib/ada_bfd";
+with "../../common/defaults";
+with "../../contrib/ada_bfd";
 
 project Skc_Tool is
 
-   for Source_Dirs use ("src", "../common/**");
+   for Source_Dirs use ("src", "../../common/**");
    for Object_Dir use "obj/";
    for Main use ("skconfig.adb");
 

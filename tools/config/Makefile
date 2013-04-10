@@ -1,7 +1,7 @@
 all: skc_tool
 
-include ../Makeconf
-include ../Makecov
+include ../../Makeconf
+include ../../Makecov
 
 skc_tool:
 	@LIBRARY_PATH=/usr/lib/x86_64-linux-gnu gprbuild $(BUILD_OPTS) -P$@

@@ -1,12 +1,8 @@
 KERN_DIR = $(CURDIR)/../kernel
-SUBJ_DIR = $(CURDIR)/../subjects
-PT_DIR   = $(CURDIR)/../policy/include
 
 TARGET_IP = 192.168.254.2
 
 include ../Makeconf
-
-DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
 all: $(OBJ_DIR)/kernel
 

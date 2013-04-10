@@ -37,20 +37,21 @@ $(OBJ_DIR)/$(PACKAGE).sum: $(OBJ_DIR)/$(PACKAGE).rep
 	tail -n13 $@ | head -n12
 
 $(OBJ_DIR)/$(PACKAGE).rep: $(OBJ_DIR)/$(PACKAGE).idx $(OBJ_DIR)/target.cfg
-	@spark $(SPARK_OPTS)                   \
-		-report_file=$@                    \
-		-index_file=$(OBJ_DIR)/$(PACKAGE).idx  \
-		-config_file=$(OBJ_DIR)/target.cfg \
-		-output_directory=$(VC_DIR)        \
+	@spark $(SPARK_OPTS)                      \
+		-report_file=$@                       \
+		-index_file=$(OBJ_DIR)/$(PACKAGE).idx \
+		-config_file=$(OBJ_DIR)/target.cfg    \
+		-output_directory=$(VC_DIR)           \
 		$(SPARK_FILES)
 	(cd $(VC_DIR) && sparksimp -l)
 
-$(OBJ_DIR)/$(PACKAGE).idx: src/*.ad* $(TOP_DIR)/common/src/*.ad*
-	@sparkmake $(SPARKMAKE_OPTS)     \
+$(OBJ_DIR)/$(PACKAGE).idx: src/*.ad* $(TOP_DIR)/common/src/*.ad* $(POLICY_INC)/*.ad*
+	@sparkmake $(SPARKMAKE_OPTS)         \
 		-index=$(OBJ_DIR)/$(PACKAGE).idx \
-		-exclude=$(SRC_DIR)/debug/*  \
-		-exclude=$(OBJ_DIR)/*        \
-		-directory=$(TOP_DIR)/common/src
+		-exclude=$(SRC_DIR)/debug/*      \
+		-exclude=$(OBJ_DIR)/*            \
+		-directory=$(TOP_DIR)/common/src \
+		-directory=$(POLICY_INC)
 
 $(OBJ_DIR)/target.cfg: $(OBJ_DIR)/confgen
 	$< > $@

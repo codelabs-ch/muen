@@ -114,4 +114,6 @@ is
       Scheduling         : Scheduling_Type;
    end record;
 
+   IO_Error : exception;
+
 end Skp;

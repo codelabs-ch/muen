@@ -84,6 +84,26 @@ is
       Devices : Devices_Package.Map;
    end record;
 
+   type Minor_Frame_Type is record
+      Subject_Id : Natural;
+      Ticks      : Positive;
+   end record;
+
+   package Minor_Frames_Package is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => Minor_Frame_Type);
+
+   subtype Major_Frame_Type is Minor_Frames_Package.List;
+
+   package Major_Frames_Package is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => Major_Frame_Type,
+      "="          => Minor_Frames_Package."=");
+
+   subtype Major_Frames_Type is Major_Frames_Package.List;
+
+   type Scheduling_Type is record
+      Major_Frames : Major_Frames_Type;
+   end record;
+
    type Policy_Type is record
       Vmxon_Address      : SK.Word64;
       Vmcs_Start_Address : SK.Word64;
@@ -91,6 +111,7 @@ is
       Kernel             : Kernel_Type;
       Subjects           : Subjects_Package.Set;
       Binaries           : Binary_Package.List;
+      Scheduling         : Scheduling_Type;
    end record;
 
 end Skp;

@@ -31,6 +31,11 @@ is
    --  Deserialize I/O ports from XML data.
    function Deserialize_Ports (Node : DOM.Core.Node) return IO_Ports_Type;
 
+   --  Deserialize scheduling plans from XML data.
+   function Deserialize_Scheduling
+     (Node : DOM.Core.Node)
+      return Scheduling_Type;
+
    -------------------------------------------------------------------------
 
    function Deserialize_Mem_Layout
@@ -132,6 +137,56 @@ is
                           Process  => Add_Port_Range'Access);
       return Ports;
    end Deserialize_Ports;
+
+      -------------------------------------------------------------------------
+
+   function Deserialize_Scheduling
+     (Node : DOM.Core.Node)
+      return Scheduling_Type
+   is
+      Sched : Scheduling_Type;
+
+      --  Add major frame to scheduling plan.
+      procedure Add_Major_Frame (Node : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Major_Frame (Node : DOM.Core.Node)
+      is
+         Major_Frame : Major_Frame_Type;
+
+         --  Add minor frame to major frame.
+         procedure Add_Minor_Frame (Node : DOM.Core.Node);
+
+         -------------------------------------------------------------------
+
+         procedure Add_Minor_Frame (Node : DOM.Core.Node)
+         is
+            Minor_Frame : Minor_Frame_Type;
+            Subj_Id_Str : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "subject_id");
+            Ticks_Str   : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "ticks");
+         begin
+            Minor_Frame.Subject_Id := Natural'Value (Subj_Id_Str);
+            Minor_Frame.Ticks      := Positive'Value (Ticks_Str);
+
+            Major_Frame.Append (New_Item => Minor_Frame);
+         end Add_Minor_Frame;
+      begin
+         Util.For_Each_Node (Node     => Node,
+                             Tag_Name => "minor_frame",
+                             Process  => Add_Minor_Frame'Access);
+         Sched.Major_Frames.Append (New_Item => Major_Frame);
+      end Add_Major_Frame;
+   begin
+      Util.For_Each_Node (Node     => Node,
+                          Tag_Name => "major_frame",
+                          Process  => Add_Major_Frame'Access);
+      return Sched;
+   end Deserialize_Scheduling;
 
    -------------------------------------------------------------------------
 
@@ -366,6 +421,16 @@ is
          Util.For_Each_Node (Node     => Bin_Node,
                              Tag_Name => "binary",
                              Process  => Add_Binary'Access);
+      end;
+
+      declare
+         Scheduling_Node : constant DOM.Core.Node
+           := Xml.Util.Get_Element_By_Tag_Name
+             (Node     => Root,
+              Tag_Name => "scheduling");
+      begin
+         Policy.Scheduling := Deserialize_Scheduling
+           (Node => Scheduling_Node);
       end;
 
       Util.For_Each_Node (Node     => Root,

@@ -289,6 +289,33 @@ is
                  = 16#216000#,
                  Message   => "Binary address mismatch");
 
+         --  Scheduling
+
+         Assert (Condition => P.Scheduling.Major_Frames.Length = 2,
+                 Message   => "Major frame count mismatch");
+         Assert
+           (Condition => P.Scheduling.Major_Frames.First_Element.Length = 1,
+            Message   => "Minor frame count mismatch (1)");
+         Assert
+           (Condition => P.Scheduling.Major_Frames.Last_Element.Length = 4,
+            Message   => "Minor frame count mismatch (2)");
+
+         declare
+            Minor_1 : constant Minor_Frame_Type
+              := P.Scheduling.Major_Frames.Last_Element.First_Element;
+            Minor_2 : constant Minor_Frame_Type
+              := P.Scheduling.Major_Frames.Last_Element.Last_Element;
+         begin
+            Assert (Condition => Minor_1.Subject_Id = 0,
+                    Message   => "Minor frame subject id mismatch (1)");
+            Assert (Condition => Minor_1.Ticks = 500,
+                    Message   => "Minor frame ticks mismatch (1)");
+            Assert (Condition => Minor_2.Subject_Id = 4,
+                    Message   => "Minor frame subject id mismatch (2)");
+            Assert (Condition => Minor_2.Ticks = 200,
+                    Message   => "Minor frame ticks mismatch (2)");
+         end;
+
          --  Subjects
 
          Assert (Condition => S.Id = 0,

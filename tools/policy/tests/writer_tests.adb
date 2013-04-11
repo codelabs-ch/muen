@@ -196,6 +196,9 @@ is
       Data      : Xml.XML_Data_Type;
       Policy    : Policy_Type;
    begin
+      Ada.Directories.Copy_File (Source_Name => "templates/policy.h",
+                                 Target_Name => Policy_H);
+
       Xml.Parse (Data   => Data,
                  File   => "data/test_policy1.xml",
                  Schema => "schema/system.xsd");

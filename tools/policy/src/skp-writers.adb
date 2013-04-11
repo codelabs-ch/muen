@@ -398,7 +398,7 @@ is
             Content  => SK.Utils.To_Hex (Item => Policy.Kernel.Pml4_Address));
       end Replace_Kernel_Patterns;
    begin
-      Tmpl := Templates.Load (Filename => "policy.h");
+      Tmpl := Templates.Load (Filename => Policy_File);
       Replace_Kernel_Patterns;
       Templates.Replace
         (Template => Tmpl,
@@ -407,7 +407,7 @@ is
            (Source => Policy.Subjects.Length'Img,
             Side   => Ada.Strings.Left));
       Templates.Write (Template => Tmpl,
-                       Filename => Dir_Name & "/policy.h");
+                       Filename => Dir_Name & "/" & Policy_File);
 
       Tmpl := Templates.Load (Filename => "skp-kernel.ads");
       Replace_Kernel_Patterns;
@@ -506,22 +506,21 @@ is
       Policy   : Policy_Type)
    is
       S_Count : constant Positive := Positive (Policy.Subjects.Length);
-      File    : Ada.Text_IO.File_Type;
-      Buffer  : Unbounded_String;
       Tmpl    : Templates.Template_Type;
    begin
-      Buffer := Buffer & "#define VMXON_ADDRESS 0x"
-        & SK.Utils.To_Hex (Item => Policy.Vmxon_Address)
-        & ASCII.LF
-        & "#define VMCS_ADDRESS  0x"
-        & SK.Utils.To_Hex (Item => Policy.Vmcs_Start_Address);
-
-      Open (Filename => Dir_Name & "/" & Policy_File,
-            File     => File,
-            Append   => True);
-      Ada.Text_IO.Put_Line (File => File,
-                            Item => To_String (Buffer));
-      Ada.Text_IO.Close (File => File);
+      Tmpl := Templates.Load
+        (Filename  => Dir_Name & "/" & Policy_File,
+         Use_Store => False);
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__vmxon_addr__",
+                         Content  => SK.Utils.To_Hex
+                           (Item => Policy.Vmxon_Address));
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__vmcs_addr__",
+                         Content  => SK.Utils.To_Hex
+                           (Item => Policy.Vmcs_Start_Address));
+      Templates.Write (Template => Tmpl,
+                       Filename => Dir_Name & "/" & Policy_File);
 
       Tmpl := Templates.Load (Filename => "skp.ads");
       Templates.Replace (Template => Tmpl,

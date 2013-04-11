@@ -3,6 +3,7 @@ with Ada.Command_Line;
 
 with Skp.Xml;
 with Skp.Writers;
+with Skp.Templates;
 
 procedure Skpolicy
 is
@@ -13,7 +14,7 @@ is
    is
    begin
       Ada.Text_IO.Put_Line
-        (Ada.Command_Line.Command_Name & " <schema> <policy>");
+        (Ada.Command_Line.Command_Name & " <schema> <templates_dir> <policy>");
    end Print_Usage;
 
    Data    : Skp.Xml.XML_Data_Type;
@@ -21,17 +22,20 @@ is
    Inc_Dir : constant String := "include";
    Pac_Dir : constant String := "pack";
 begin
-   if Ada.Command_Line.Argument_Count /= 2 then
+   if Ada.Command_Line.Argument_Count /= 3 then
       Print_Usage;
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
       return;
    end if;
 
    Skp.Xml.Parse (Data   => Data,
-                  File   => Ada.Command_Line.Argument (Number => 2),
+                  File   => Ada.Command_Line.Argument (Number => 3),
                   Schema => Ada.Command_Line.Argument (Number => 1));
 
    Policy := Skp.Xml.To_Policy (Data => Data);
+
+   Skp.Templates.Set_Template_Dir
+     (Path => Ada.Command_Line.Argument (Number => 2));
 
    Skp.Writers.Write_Kernel (Dir_Name => Inc_Dir,
                              Policy   => Policy);

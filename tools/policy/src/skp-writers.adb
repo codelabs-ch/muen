@@ -403,33 +403,39 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type)
    is
-      File   : Ada.Text_IO.File_Type;
-      Buffer : Unbounded_String;
-      Tmpl   : Templates.Template_Type;
-   begin
-      Buffer := Buffer & "#define KERNEL_STACK  0x"
-        & SK.Utils.To_Hex (Item => Policy.Kernel.Stack_Address)
-        & ASCII.LF
-        & "#define KERNEL_PML4   0x"
-        & SK.Utils.To_Hex (Item => Policy.Kernel.Pml4_Address)
-        & ASCII.LF
-        & "#define SUBJECT_COUNT" & Policy.Subjects.Length'Img;
+      Tmpl : Templates.Template_Type;
 
-      Open (Filename => Dir_Name & "/" & Policy_File,
-            File     => File);
-      Ada.Text_IO.Put_Line (File => File,
-                            Item => To_String (Buffer));
-      Ada.Text_IO.Close (File => File);
+      --  Replace kernel stack and PML4 patterns with actual values.
+      procedure Replace_Kernel_Patterns;
+
+      ----------------------------------------------------------------------
+
+      procedure Replace_Kernel_Patterns
+      is
+      begin
+         Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__stack_addr__",
+            Content  => SK.Utils.To_Hex (Item => Policy.Kernel.Stack_Address));
+         Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__kpml4_addr__",
+            Content  => SK.Utils.To_Hex (Item => Policy.Kernel.Pml4_Address));
+      end Replace_Kernel_Patterns;
+   begin
+      Tmpl := Templates.Load (Filename => "policy.h");
+      Replace_Kernel_Patterns;
+      Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__subj_count__",
+         Content  => Ada.Strings.Fixed.Trim
+           (Source => Policy.Subjects.Length'Img,
+            Side   => Ada.Strings.Left));
+      Templates.Write (Template => Tmpl,
+                       Filename => Dir_Name & "/policy.h");
 
       Tmpl := Templates.Load (Filename => "skp-kernel.ads");
-      Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__stack_addr__",
-         Content  => SK.Utils.To_Hex (Item => Policy.Kernel.Stack_Address));
-      Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__kpml4_addr__",
-         Content  => SK.Utils.To_Hex (Item => Policy.Kernel.Pml4_Address));
+      Replace_Kernel_Patterns;
       Templates.Write (Template => Tmpl,
                        Filename => Dir_Name & "/skp-kernel.ads");
 

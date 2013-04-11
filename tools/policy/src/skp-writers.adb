@@ -505,12 +505,10 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type)
    is
-      Pkg_Name  : constant String   := "Skp";
-      Spec_Name : constant String   := Dir_Name & "/skp.ads";
-      S_Count   : constant Positive := Positive (Policy.Subjects.Length);
-
-      File   : Ada.Text_IO.File_Type;
-      Buffer : Unbounded_String;
+      S_Count : constant Positive := Positive (Policy.Subjects.Length);
+      File    : Ada.Text_IO.File_Type;
+      Buffer  : Unbounded_String;
+      Tmpl    : Templates.Template_Type;
    begin
       Buffer := Buffer & "#define VMXON_ADDRESS 0x"
         & SK.Utils.To_Hex (Item => Policy.Vmxon_Address)
@@ -525,21 +523,16 @@ is
                             Item => To_String (Buffer));
       Ada.Text_IO.Close (File => File);
 
-      Buffer := Null_Unbounded_String & "package " & Pkg_Name & " is"
-        & ASCII.LF & ASCII.LF
-        & Indent & "subtype Subject_Id_Type is Natural range 0 " & ".."
-        & Positive'Image (S_Count - 1) & ";"
-        & ASCII.LF & ASCII.LF
-        & Indent & "Vmxon_Address : constant := 16#"
-        & SK.Utils.To_Hex (Item => Policy.Vmxon_Address) & "#;"
-        & ASCII.LF & ASCII.LF
-        & "end " & Pkg_Name & ";";
-
-      Open (Filename => Spec_Name,
-            File     => File);
-      Ada.Text_IO.Put_Line (File => File,
-                            Item => To_String (Buffer));
-      Ada.Text_IO.Close (File => File);
+      Tmpl := Templates.Load (Filename => "skp.ads");
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__subj_range__",
+                         Content  => "0 .."  & Positive'Image (S_Count - 1));
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__vmxon_addr__",
+                         Content  => SK.Utils.To_Hex
+                           (Item => Policy.Vmxon_Address));
+      Templates.Write (Template => Tmpl,
+                       Filename => Dir_Name & "/skp.ads");
    end Write_System;
 
 end Skp.Writers;

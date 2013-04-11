@@ -13,15 +13,18 @@ package body SK.Scheduler
 --#    State is in New_Major, Current_Major, Current_Minor, Scheduling_Plan;
 is
 
-   --  Subject preemption time.
-   Subject_Time_Slice : constant := 500;
+   --  Scheduling minor frame.
+   type Minor_Frame_Type is record
+      Subject_Id : Skp.Subject_Id_Type;
+      Ticks      : SK.Word32;
+   end record;
 
    --  The minor frame range specifies the number of minor frames that
    --  constitute a major frame.
    type Minor_Frame_Range is mod 2 ** 2;
 
-   --  A major frame specifies which subject to schedule in which minor frame.
-   type Major_Frame_Type is array (Minor_Frame_Range) of Skp.Subject_Id_Type;
+   --  A major frame specifies a sequence of minor frames to schedule.
+   type Major_Frame_Type is array (Minor_Frame_Range) of Minor_Frame_Type;
 
    --  A scheduling plan consists of multiple major frames.
    type Scheduling_Plan_Type is
@@ -65,8 +68,8 @@ is
 
       for I in SK.Major_Frame_Range loop
          for J in Minor_Frame_Range loop
-            if Scheduling_Plan (I)(J) = Old_Id then
-               Scheduling_Plan (I)(J) := New_Id;
+            if Scheduling_Plan (I)(J).Subject_Id = Old_Id then
+               Scheduling_Plan (I)(J).Subject_Id := New_Id;
             end if;
          end loop;
       end loop;
@@ -168,16 +171,16 @@ is
    --#       Current_Minor,
    --#       Scheduling_Plan;
    is
-      Current_Subject : Skp.Subject_Id_Type;
+      Current_Frame : Minor_Frame_Type;
    begin
-      Current_Subject := Scheduling_Plan (Current_Major) (Current_Minor);
+      Current_Frame := Scheduling_Plan (Current_Major) (Current_Minor);
 
-      if Subjects.Get_State (Id => Current_Subject).Launched then
-         VMX.Resume (Subject_Id => Current_Subject,
-                     Time_Slice => Subject_Time_Slice);
+      if Subjects.Get_State (Id => Current_Frame.Subject_Id).Launched then
+         VMX.Resume (Subject_Id => Current_Frame.Subject_Id,
+                     Time_Slice => Current_Frame.Ticks);
       else
-         VMX.Launch (Subject_Id => Current_Subject,
-                     Time_Slice => Subject_Time_Slice);
+         VMX.Launch (Subject_Id => Current_Frame.Subject_Id,
+                     Time_Slice => Current_Frame.Ticks);
       end if;
    end Schedule;
 
@@ -227,7 +230,8 @@ is
       State           : SK.Subject_State_Type;
       Current_Subject : Skp.Subject_Id_Type;
    begin
-      Current_Subject := Scheduling_Plan (Current_Major) (Current_Minor);
+      Current_Subject := Scheduling_Plan
+        (Current_Major) (Current_Minor).Subject_Id;
       State           := Subjects.Get_State (Id => Current_Subject);
       State.Regs      := Subject_Registers;
 
@@ -256,6 +260,14 @@ is
 
 begin
    Scheduling_Plan := Scheduling_Plan_Type'
-     (0 => Major_Frame_Type'(0, 0, 0, 0),
-      1 => Major_Frame_Type'(0, 2, 3, 0));
+     (0 => Major_Frame_Type'
+        (Minor_Frame_Type'(Subject_Id => 0, Ticks => 500),
+         Minor_Frame_Type'(Subject_Id => 0, Ticks => 500),
+         Minor_Frame_Type'(Subject_Id => 0, Ticks => 500),
+         Minor_Frame_Type'(Subject_Id => 0, Ticks => 500)),
+      1 => Major_Frame_Type'
+        (Minor_Frame_Type'(Subject_Id => 0, Ticks => 500),
+         Minor_Frame_Type'(Subject_Id => 2, Ticks => 500),
+         Minor_Frame_Type'(Subject_Id => 3, Ticks => 500),
+         Minor_Frame_Type'(Subject_Id => 0, Ticks => 500)));
 end SK.Scheduler;

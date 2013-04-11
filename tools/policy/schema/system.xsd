@@ -4,13 +4,15 @@
 	<xs:include schemaLocation="./kernel.xsd"/>
 	<xs:include schemaLocation="./binary.xsd"/>
 	<xs:include schemaLocation="./subject.xsd"/>
+	<xs:include schemaLocation="./scheduling.xsd"/>
 
 	<xs:complexType name="system_type">
 		<xs:sequence>
-			<xs:element name="hardware" type="hardware_type" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="kernel"   type="kernel_type"   minOccurs="1" maxOccurs="1"/>
-			<xs:element name="binaries" type="binaries_type" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="subjects" type="subjects_type" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="hardware"   type="hardware_type"   minOccurs="1" maxOccurs="1"/>
+			<xs:element name="kernel"     type="kernel_type"     minOccurs="1" maxOccurs="1"/>
+			<xs:element name="binaries"   type="binaries_type"   minOccurs="1" maxOccurs="1"/>
+			<xs:element name="subjects"   type="subjects_type"   minOccurs="1" maxOccurs="1"/>
+			<xs:element name="scheduling" type="scheduling_type" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute name="vmxon_address"      type="address_type" use="required"/>
 		<xs:attribute name="vmcs_start_address" type="address_type" use="required"/>

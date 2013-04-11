@@ -1,0 +1,11 @@
+<scheduling>
+	<major_frame>
+		<minor_frame subject_id="0" ticks="2000"/>
+	</major_frame>
+	<major_frame>
+		<minor_frame subject_id="0" ticks="500"/>
+		<minor_frame subject_id="2" ticks="500"/>
+		<minor_frame subject_id="3" ticks="500"/>
+		<minor_frame subject_id="0" ticks="500"/>
+	</major_frame>
+</scheduling>

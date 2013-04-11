@@ -425,12 +425,10 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type)
    is
-      Pkg_Name  : constant String   := "Skp.Subjects";
-      Spec_Name : constant String   := Dir_Name & "/skp-subjects.ads";
-      S_Count   : constant Positive := Positive (Policy.Subjects.Length);
-      Current   : Natural           := 0;
-      Spec_File : Ada.Text_IO.File_Type;
-      Buffer    : Unbounded_String;
+      S_Count : constant Positive := Positive (Policy.Subjects.Length);
+      Current : Natural           := 0;
+      Buffer  : Unbounded_String;
+      Tmpl    : Templates.Template_Type;
 
       --  Write subject specs and pagetable.
       procedure Write_Subject (C : Subjects_Package.Cursor);
@@ -487,41 +485,18 @@ is
          Current := Current + 1;
          if Current /= S_Count then
             Buffer := Buffer & "," & ASCII.LF;
-         else
-            Buffer := Buffer & ");" & ASCII.LF;
          end if;
       end Write_Subject_Spec;
    begin
-      Buffer := Buffer & "with SK;"
-        & ASCII.LF & ASCII.LF
-        & "--# inherit SK, Skp;"
-        & ASCII.LF
-        & "package " & Pkg_Name & " is"
-        & ASCII.LF & ASCII.LF
-        & Indent & "type Subject_Spec_Type is record"  & ASCII.LF
-        & Indent & "   PML4_Address      : SK.Word64;" & ASCII.LF
-        & Indent & "   VMCS_Address      : SK.Word64;" & ASCII.LF
-        & Indent & "   IO_Bitmap_Address : SK.Word64;" & ASCII.LF
-        & Indent & "   Stack_Address     : SK.Word64;" & ASCII.LF
-        & Indent & "   Entry_Point       : SK.Word64;" & ASCII.LF
-        & Indent & "end record;"
-        & ASCII.LF & ASCII.LF
-        & Indent & "type Subject_Spec_Array is array (Skp.Subject_Id_Type) "
-        & "of Subject_Spec_Type;"
-        & ASCII.LF & ASCII.LF
-        & Indent & "Subject_Specs : constant Subject_Spec_Array := "
-        & "Subject_Spec_Array'("
-        & ASCII.LF;
+      Tmpl := Templates.Load (Filename => "skp-subjects.ads");
 
       Policy.Subjects.Iterate (Process => Write_Subject'Access);
 
-      Buffer := Buffer & ASCII.LF & "end " & Pkg_Name & ";";
-
-      Open (Filename => Spec_Name,
-            File     => Spec_File);
-      Ada.Text_IO.Put_Line (File => Spec_File,
-                            Item => To_String (Buffer));
-      Ada.Text_IO.Close (File => Spec_File);
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__subjects__",
+                         Content  => To_String (Buffer));
+      Templates.Write (Template => Tmpl,
+                       Filename => Dir_Name & "/skp-subjects.ads");
    end Write_Subjects;
 
    -------------------------------------------------------------------------

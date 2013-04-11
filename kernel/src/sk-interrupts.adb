@@ -72,7 +72,6 @@ is
 
       for I in Vector_Type range IDT'Range loop
          Temp := ISR_List (I);
-         --# check Temp in SK.Word64;
 
          IDT (I) := Gate_Type'
            (Offset_15_00     => SK.Word16

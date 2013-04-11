@@ -6,6 +6,7 @@ with Writer_Tests;
 with Paging_Tests;
 with IO_Port_Tests;
 with Validation_Tests;
+with Templates_Tests;
 
 procedure Test_Runner
 is
@@ -23,6 +24,8 @@ begin
              T     => new IO_Port_Tests.Testcase);
    Add_Test (Suite => S.all,
              T     => new Validation_Tests.Testcase);
+   Add_Test (Suite => S.all,
+             T     => new Templates_Tests.Testcase);
 
    Ahven.Text_Runner.Run (Suite => S);
    Release_Suite (T => S);

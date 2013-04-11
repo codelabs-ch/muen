@@ -10,6 +10,7 @@ with SK.Utils;
 
 with Skp.Paging;
 with Skp.IO_Ports;
+with Skp.Templates;
 
 package body Skp.Writers
 is
@@ -402,11 +403,9 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type)
    is
-      Pkg_Name  : constant String := "Skp.Kernel";
-      Spec_Name : constant String := Dir_Name & "/skp-kernel.ads";
-
       File   : Ada.Text_IO.File_Type;
       Buffer : Unbounded_String;
+      Tmpl   : Templates.Template_Type;
    begin
       Buffer := Buffer & "#define KERNEL_STACK  0x"
         & SK.Utils.To_Hex (Item => Policy.Kernel.Stack_Address)
@@ -422,21 +421,17 @@ is
                             Item => To_String (Buffer));
       Ada.Text_IO.Close (File => File);
 
-      Buffer := Null_Unbounded_String & "package " & Pkg_Name & " is"
-        & ASCII.LF & ASCII.LF
-        & Indent & "Stack_Address : constant := 16#"
-        & SK.Utils.To_Hex (Item => Policy.Kernel.Stack_Address) & "#;"
-        & ASCII.LF
-        & Indent & "PML4_Address  : constant := 16#"
-        & SK.Utils.To_Hex (Item => Policy.Kernel.Pml4_Address) & "#;"
-        & ASCII.LF & ASCII.LF
-        & "end " & Pkg_Name & ";";
-
-      Open (Filename => Spec_Name,
-            File     => File);
-      Ada.Text_IO.Put_Line (File => File,
-                            Item => To_String (Buffer));
-      Ada.Text_IO.Close (File => File);
+      Tmpl := Templates.Load (Filename => "skp-kernel.ads");
+      Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__stack_addr__",
+         Content  => SK.Utils.To_Hex (Item => Policy.Kernel.Stack_Address));
+      Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__kpml4_addr__",
+         Content  => SK.Utils.To_Hex (Item => Policy.Kernel.Pml4_Address));
+      Templates.Write (Template => Tmpl,
+                       Filename => Dir_Name & "/skp-kernel.ads");
 
       Write (Mem_Layout   => Policy.Kernel.Memory_Layout,
              Pml4_Address => Policy.Kernel.Pml4_Address,

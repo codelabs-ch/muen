@@ -38,11 +38,16 @@ is
          when IO_Error => null;
       end;
 
+      T := Templates.Load (Filename  => "data/template",
+                           Use_Store => False);
+      Assert (Condition => Templates.Get_Size (Template => T) = 37,
+              Message   => "Template size mismatch (1)");
+
       Templates.Set_Template_Dir (Path => "./data");
       T := Templates.Load (Filename => "template");
 
       Assert (Condition => Templates.Get_Size (Template => T) = 37,
-              Message   => "Template size mismatch");
+              Message   => "Template size mismatch (2)");
    end Load_Template;
 
    -------------------------------------------------------------------------

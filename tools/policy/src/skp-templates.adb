@@ -19,12 +19,20 @@ is
 
    -------------------------------------------------------------------------
 
-   function Load (Filename : String) return Template_Type
+   function Load
+     (Filename  : String;
+      Use_Store : Boolean := True)
+      return Template_Type
    is
-      Path : constant String := To_String (Store_Path) & "/" & Filename;
+      Path : Unbounded_String := To_Unbounded_String (Filename);
    begin
+      if Use_Store then
+         Path := To_String (Store_Path) & "/" & Path;
+      end if;
+
       declare
-         Size : constant Natural := Natural (Ada.Directories.Size (Path));
+         Size : constant Natural := Natural
+           (Ada.Directories.Size (To_String (Path)));
 
          subtype Content_String is String (1 .. Size);
          package FIO is new Ada.Direct_IO (Content_String);
@@ -34,7 +42,7 @@ is
       begin
          FIO.Open (File => Input_File,
                    Mode => FIO.In_File,
-                   Name => Path,
+                   Name => To_String (Path),
                    Form => "shared=yes");
          FIO.Read (File => Input_File,
                    Item => Content);
@@ -54,7 +62,8 @@ is
 
    exception
       when others =>
-         raise IO_Error with "Unable to open template file '" & Path & "'";
+         raise IO_Error with "Unable to open template file '"
+           & To_String (Path) & "'";
    end Load;
 
    -------------------------------------------------------------------------

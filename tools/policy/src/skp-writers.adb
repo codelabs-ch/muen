@@ -1,4 +1,3 @@
-with Ada.Text_IO;
 with Ada.Streams.Stream_IO;
 with Ada.Directories;
 with Ada.Strings.Fixed;
@@ -34,48 +33,10 @@ is
       Filename : String);
 
    --  Open file given by filename. Raises IO_Error if the file could not be
-   --  opened. If Append is True any writes will be appended to the existing
-   --  file.
-   procedure Open
-     (Filename :     String;
-      File     : out Ada.Text_IO.File_Type;
-      Append   :     Boolean := False);
-
-   --  Open file given by filename. Raises IO_Error if the file could not be
    --  opened.
    procedure Open
      (Filename :     String;
       File     : out Ada.Streams.Stream_IO.File_Type);
-
-   -------------------------------------------------------------------------
-
-   procedure Open
-     (Filename :     String;
-      File     : out Ada.Text_IO.File_Type;
-      Append   :     Boolean := False)
-   is
-      File_Mode : Ada.Text_IO.File_Mode := Ada.Text_IO.Out_File;
-   begin
-      if Ada.Directories.Exists (Name => Filename) then
-         if Append then
-            File_Mode := Ada.Text_IO.Append_File;
-         end if;
-         Ada.Text_IO.Open
-           (File => File,
-            Mode => File_Mode,
-            Name => Filename);
-      else
-         Ada.Text_IO.Create
-           (File => File,
-            Mode => File_Mode,
-            Name => Filename);
-      end if;
-
-   exception
-      when E : others =>
-         raise IO_Error with "Unable to open file '" & Filename & "' - "
-           & Ada.Exceptions.Exception_Message (X => E);
-   end Open;
 
    -------------------------------------------------------------------------
 

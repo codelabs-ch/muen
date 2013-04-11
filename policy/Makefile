@@ -17,7 +17,7 @@ $(HWSTAMP): xml/hardware/$(HARDWARE).xml
 	@rm -f $(POLICY_INC)/.*.stamp
 	@touch $@
 
-$(OUTPUT): $(POLICY) $(SYSTEM)
+$(OUTPUT): $(POLICY) $(SYSTEM) $(SCHEMA)
 	$(SKPOLICY) $(SCHEMA) $(SYSTEM)
 
 clean:

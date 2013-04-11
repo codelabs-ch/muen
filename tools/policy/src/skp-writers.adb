@@ -223,16 +223,14 @@ is
          end loop;
       end Add_Memory_Region;
    begin
-      Open (Filename => Filename,
-            File     => File);
-
       Mem_Layout.Iterate (Process => Add_Memory_Region'Access);
 
+      Open (Filename => Filename,
+            File     => File);
       Paging.PML4_Table_Type'Write (Stream (File => File), PML4);
       Paging.PDP_Table_Type'Write  (Stream (File => File), PDPT);
       Paging.PD_Table_Type'Write   (Stream (File => File), PD);
       Paging.Page_Table_Type'Write (Stream (File => File), PT);
-
       Close (File => File);
    end Write;
 
@@ -242,9 +240,7 @@ is
      (Ports    : IO_Ports_Type;
       Filename : String)
    is
-      use Ada.Streams.Stream_IO;
-
-      File   : File_Type;
+      File   : Ada.Streams.Stream_IO.File_Type;
       Bitmap : IO_Ports.IO_Bitmap_Type := IO_Ports.Null_IO_Bitmap;
 
       --  Add given I/O port range to I/O bitmap.
@@ -263,15 +259,13 @@ is
             End_Port   => R.End_Port);
       end Add_Port_Range;
    begin
-      Open (Filename => Filename,
-            File     => File);
-
       Ports.Iterate (Process => Add_Port_Range'Access);
 
-      Write (File => File,
-             Item => IO_Ports.To_Stream (B => Bitmap));
-
-      Close (File => File);
+      Open (Filename => Filename,
+            File     => File);
+      Ada.Streams.Stream_IO.Write (File => File,
+                                   Item => IO_Ports.To_Stream (B => Bitmap));
+      Ada.Streams.Stream_IO.Close (File => File);
    end Write;
 
    -------------------------------------------------------------------------
@@ -280,13 +274,12 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type)
    is
-      use Ada.Text_IO;
-
       Pkg_Name  : constant String   := "Skp.Binaries";
       Spec_Name : constant String   := Dir_Name & "/skp-binaries.ads";
       B_Count   : constant Positive := Positive (Policy.Binaries.Length);
       Current   : Natural           := 0;
-      Spec_File : File_Type;
+      Spec_File : Ada.Text_IO.File_Type;
+      Buffer    : Unbounded_String;
 
       --  Write binary spec.
       procedure Write_Binary_Spec (C : Binary_Package.Cursor);
@@ -298,64 +291,48 @@ is
          Binary : constant Binary_Type := Binary_Package.Element
            (Position => C);
       begin
-         Put_Line (File => Spec_File,
-                   Item => Indent & "  (Path             => "
-                   & "To_Unbounded_String ("""
-                   & To_String (Binary.Path) & """),");
-         Put (File => Spec_File,
-              Item => Indent & "   Physical_Address => 16#");
-         Put (File => Spec_File,
-              Item => SK.Utils.To_Hex (Item => Binary.Physical_Address));
-         Put (File => Spec_File,
-              Item => "#)");
+         Buffer := Buffer & Indent
+           & "  (Path             => To_Unbounded_String ("""
+           & To_String (Binary.Path) & """),"
+           & ASCII.LF
+           & Indent & "   Physical_Address => 16#"
+           & SK.Utils.To_Hex (Item => Binary.Physical_Address) & "#)";
 
          Current := Current + 1;
          if Current /= B_Count then
-            Put_Line (File => Spec_File,
-                      Item => ",");
+            Buffer := Buffer & "," & ASCII.LF;
          else
-            Put_Line (File => Spec_File,
-                      Item => ");");
+            Buffer := Buffer & ");" & ASCII.LF;
          end if;
       end Write_Binary_Spec;
    begin
-      Open (Filename => Spec_Name,
-            File     => Spec_File);
-
-      Put (File => Spec_File,
-           Item => "with Ada.Strings.Unbounded; ");
-      Put_Line (File => Spec_File,
-                Item => "use Ada.Strings.Unbounded;");
-      Put_Line (File => Spec_File,
-                Item => "with SK;");
-      New_Line (File => Spec_File);
-      Put_Line (File => Spec_File,
-                Item => "package " & Pkg_Name & " is");
-      New_Line (File => Spec_File);
-      Put_Line (File => Spec_File,
-                Item => Indent & "type Binary_Spec_Type is record");
-      Put_Line (File => Spec_File,
-                Item => Indent & "   Path             : Unbounded_String;");
-      Put_Line (File => Spec_File,
-                Item => Indent & "   Physical_Address : SK.Word64;");
-      Put_Line (File => Spec_File,
-                Item => Indent & "end record;");
-      New_Line (File => Spec_File);
-      Put_Line (File => Spec_File,
-                Item => Indent & "type Binary_Spec_Array is array "
-                & "(Subject_Id_Type) of Binary_Spec_Type;");
-      New_Line (File => Spec_File);
-      Put_Line (File => Spec_File,
-                Item => Indent & "Binary_Specs : constant Binary_Spec_Array"
-                & " := (");
+      Buffer := Buffer & "with Ada.Strings.Unbounded; "
+        & "use Ada.Strings.Unbounded;"
+        & ASCII.LF
+        & "with SK;"
+        & ASCII.LF & ASCII.LF
+        & "package " & Pkg_Name & " is"
+        & ASCII.LF & ASCII.LF
+        & Indent & "type Binary_Spec_Type is record"         & ASCII.LF
+        & Indent & "   Path             : Unbounded_String;" & ASCII.LF
+        & Indent & "   Physical_Address : SK.Word64;"        & ASCII.LF
+        & Indent & "end record;"
+        & ASCII.LF & ASCII.LF
+        & Indent & "type Binary_Spec_Array is array (Subject_Id_Type) of "
+        & "Binary_Spec_Type;"
+        & ASCII.LF & ASCII.LF
+        & Indent & "Binary_Specs : constant Binary_Spec_Array := ("
+        & ASCII.LF;
 
       Policy.Binaries.Iterate (Process => Write_Binary_Spec'Access);
 
-      New_Line (File => Spec_File);
-      Put_Line (File => Spec_File,
-                Item => "end " & Pkg_Name & ";");
+      Buffer := Buffer & ASCII.LF & "end " & Pkg_Name & ";";
 
-      Close (File => Spec_File);
+      Open (Filename => Spec_Name,
+            File     => Spec_File);
+      Ada.Text_IO.Put_Line (File => Spec_File,
+                            Item => To_String (Buffer));
+      Ada.Text_IO.Close (File => Spec_File);
    end Write_Binaries;
 
    -------------------------------------------------------------------------
@@ -367,7 +344,8 @@ is
       Pkg_Name  : constant String := "Skp.Hardware";
       Spec_Name : constant String := Dir_Name & "/skp-hardware.ads";
 
-      File : Ada.Text_IO.File_Type;
+      File   : Ada.Text_IO.File_Type;
+      Buffer : Unbounded_String;
 
       --  Write device constants to hardware spec.
       procedure Write_Device (Pos : Devices_Package.Cursor);
@@ -391,53 +369,30 @@ is
                Port_Nr : constant String := Ada.Strings.Fixed.Trim
                  (Source => P'Img,
                   Side   => Ada.Strings.Left);
-
-               --  Write port constant to hardware spec file.
-               procedure Write_Port
-                 (Suffix : String;
-                  Value  : SK.Word16);
-
-               -------------------------------------------------------------
-
-               procedure Write_Port
-                 (Suffix : String;
-                  Value  : SK.Word16)
-               is
-               begin
-                  Ada.Text_IO.Put (File => File,
-                                   Item => Indent & Dev_Name);
-                  Ada.Text_IO.Put (File => File,
-                                   Item => "_Port" & Port_Nr);
-                  Ada.Text_IO.Put
-                    (File => File,
-                     Item => "_" & Suffix & " : constant := 16#");
-                  Ada.Text_IO.Put (File => File,
-                                   Item => SK.Utils.To_Hex (Item => Value));
-                  Ada.Text_IO.Put_Line (File => File,
-                                        Item => "#;");
-               end Write_Port;
             begin
-               Write_Port (Suffix => "Start",
-                           Value  => Port.Start_Port);
-               Write_Port (Suffix => "End  ",
-                           Value  => Port.End_Port);
+               Buffer := Buffer & Indent & Dev_Name & "_Port" & Port_Nr
+                 & "_Start : constant := 16#"
+                 & SK.Utils.To_Hex (Item => Port.Start_Port) & "#;"
+                 & ASCII.LF
+                 & Indent & Dev_Name & "_Port" & Port_Nr
+                 & "_End   : constant := 16#"
+                 & SK.Utils.To_Hex (Item => Port.End_Port) & "#;"
+                 & ASCII.LF;
             end;
 
             Ports_Package.Next (Position => Port_Idx);
          end loop;
-         Ada.Text_IO.New_Line (File => File);
+         Buffer := Buffer & ASCII.LF;
       end Write_Device;
    begin
+      Buffer := Buffer & "package " & Pkg_Name & " is" & ASCII.LF & ASCII.LF;
+      Policy.Hardware.Devices.Iterate (Process => Write_Device'Access);
+      Buffer := Buffer & "end " & Pkg_Name & ";";
+
       Open (Filename => Spec_Name,
             File     => File);
       Ada.Text_IO.Put_Line (File => File,
-                            Item => "package " & Pkg_Name & " is");
-      Ada.Text_IO.New_Line (File => File);
-
-      Policy.Hardware.Devices.Iterate (Process => Write_Device'Access);
-
-      Ada.Text_IO.Put_Line (File => File,
-                            Item => "end " & Pkg_Name & ";");
+                            Item => To_String (Buffer));
       Ada.Text_IO.Close (File => File);
    end Write_Hardware;
 
@@ -450,47 +405,37 @@ is
       Pkg_Name  : constant String := "Skp.Kernel";
       Spec_Name : constant String := Dir_Name & "/skp-kernel.ads";
 
-      File : Ada.Text_IO.File_Type;
+      File   : Ada.Text_IO.File_Type;
+      Buffer : Unbounded_String;
    begin
+      Buffer := Buffer & "#define KERNEL_STACK  0x"
+        & SK.Utils.To_Hex (Item => Policy.Kernel.Stack_Address)
+        & ASCII.LF
+        & "#define KERNEL_PML4   0x"
+        & SK.Utils.To_Hex (Item => Policy.Kernel.Pml4_Address)
+        & ASCII.LF
+        & "#define SUBJECT_COUNT" & Policy.Subjects.Length'Img;
+
       Open (Filename => Dir_Name & "/" & Policy_File,
             File     => File);
-      Ada.Text_IO.Put_Line
-        (File => File,
-         Item => "#define KERNEL_STACK  0x"
-         & SK.Utils.To_Hex (Item => Policy.Kernel.Stack_Address));
-      Ada.Text_IO.Put_Line
-        (File => File,
-         Item => "#define KERNEL_PML4   0x"
-         & SK.Utils.To_Hex
-           (Item => Policy.Kernel.Pml4_Address));
-      Ada.Text_IO.Put_Line
-        (File => File,
-         Item => "#define SUBJECT_COUNT" & Policy.Subjects.Length'Img);
+      Ada.Text_IO.Put_Line (File => File,
+                            Item => To_String (Buffer));
       Ada.Text_IO.Close (File => File);
+
+      Buffer := Null_Unbounded_String & "package " & Pkg_Name & " is"
+        & ASCII.LF & ASCII.LF
+        & Indent & "Stack_Address : constant := 16#"
+        & SK.Utils.To_Hex (Item => Policy.Kernel.Stack_Address) & "#;"
+        & ASCII.LF & ASCII.LF
+        & Indent & "PML4_Address  : constant := 16#"
+        & SK.Utils.To_Hex (Item => Policy.Kernel.Pml4_Address) & "#;"
+        & ASCII.LF & ASCII.LF
+        & "end " & Pkg_Name & ";";
 
       Open (Filename => Spec_Name,
             File     => File);
       Ada.Text_IO.Put_Line (File => File,
-                            Item => "package " & Pkg_Name & " is");
-      Ada.Text_IO.New_Line (File => File);
-      Ada.Text_IO.Put (File => File,
-                       Item => Indent & "Stack_Address : constant := 16#");
-      Ada.Text_IO.Put (File => File,
-                       Item => SK.Utils.To_Hex
-                         (Item => Policy.Kernel.Stack_Address));
-      Ada.Text_IO.Put_Line (File => File,
-                            Item => "#;");
-      Ada.Text_IO.New_Line (File => File);
-      Ada.Text_IO.Put (File => File,
-                       Item => Indent & "PML4_Address  : constant := 16#");
-      Ada.Text_IO.Put (File => File,
-                       Item => SK.Utils.To_Hex
-                         (Item => Policy.Kernel.Pml4_Address));
-      Ada.Text_IO.Put_Line (File => File,
-                            Item => "#;");
-      Ada.Text_IO.New_Line (File => File);
-      Ada.Text_IO.Put_Line (File => File,
-                            Item => "end " & Pkg_Name & ";");
+                            Item => To_String (Buffer));
       Ada.Text_IO.Close (File => File);
 
       Write (Mem_Layout   => Policy.Kernel.Memory_Layout,
@@ -504,13 +449,12 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type)
    is
-      use Ada.Text_IO;
-
       Pkg_Name  : constant String   := "Skp.Subjects";
       Spec_Name : constant String   := Dir_Name & "/skp-subjects.ads";
       S_Count   : constant Positive := Positive (Policy.Subjects.Length);
       Current   : Natural           := 0;
-      Spec_File : File_Type;
+      Spec_File : Ada.Text_IO.File_Type;
+      Buffer    : Unbounded_String;
 
       --  Write subject specs and pagetable.
       procedure Write_Subject (C : Subjects_Package.Cursor);
@@ -546,94 +490,62 @@ is
          VMCS_Address : constant SK.Word64
            := Policy.Vmcs_Start_Address + SK.Word64 (Current) * SK.Page_Size;
       begin
-         Put_Line (File => Spec_File,
-                   Item => Indent & "  " & Subject.Id'Img
-                   & " => Subject_Spec_Type'(");
-         Put (File => Spec_File,
-              Item => Indent & "    PML4_Address      => 16#");
-         Put (File => Spec_File,
-              Item => SK.Utils.To_Hex (Item => Subject.Pml4_Address));
-         Put_Line (File => Spec_File,
-                   Item => "#,");
-         Put (File => Spec_File,
-              Item => Indent & "    VMCS_Address      => 16#");
-         Put (File => Spec_File,
-              Item => SK.Utils.To_Hex (Item => VMCS_Address));
-         Put_Line (File => Spec_File,
-                   Item => "#,");
-         Put (File => Spec_File,
-              Item => Indent & "    IO_Bitmap_Address => 16#");
-         Put (File => Spec_File,
-              Item => SK.Utils.To_Hex
-                (Item => Subject.IO_Bitmap_Address));
-         Put_Line (File => Spec_File,
-                   Item => "#,");
-         Put (File => Spec_File,
-              Item => Indent & "    Stack_Address     => 16#");
-         Put (File => Spec_File,
-              Item => SK.Utils.To_Hex
-                (Item => Subject.Init_State.Stack_Address));
-         Put_Line (File => Spec_File,
-                   Item => "#,");
-         Put (File => Spec_File,
-              Item => Indent & "    Entry_Point       => 16#");
-         Put (File => Spec_File,
-              Item => SK.Utils.To_Hex
-                (Item => Subject.Init_State.Entry_Point));
-         Put (File => Spec_File,
-              Item => "#)");
+         Buffer := Buffer & Indent & "  " & Subject.Id'Img
+           & " => Subject_Spec_Type'("
+           & ASCII.LF
+           & Indent & "    PML4_Address      => 16#"
+           & SK.Utils.To_Hex (Item => Subject.Pml4_Address) & "#,"
+           & ASCII.LF
+           & Indent & "    VMCS_Address      => 16#"
+           & SK.Utils.To_Hex (Item => VMCS_Address) & "#,"
+           & ASCII.LF
+           & Indent & "    IO_Bitmap_Address => 16#"
+           & SK.Utils.To_Hex (Item => Subject.IO_Bitmap_Address) & "#,"
+           & ASCII.LF
+           & Indent & "    Stack_Address     => 16#"
+           & SK.Utils.To_Hex (Item => Subject.Init_State.Stack_Address) & "#,"
+           & ASCII.LF
+           & Indent & "    Entry_Point       => 16#"
+           & SK.Utils.To_Hex (Item => Subject.Init_State.Entry_Point) & "#)";
 
          Current := Current + 1;
          if Current /= S_Count then
-            Put_Line (File => Spec_File,
-                      Item => ",");
+            Buffer := Buffer & "," & ASCII.LF;
          else
-            Put_Line (File => Spec_File,
-                      Item => ");");
+            Buffer := Buffer & ");" & ASCII.LF;
          end if;
       end Write_Subject_Spec;
    begin
-      Open (Filename => Spec_Name,
-            File     => Spec_File);
-
-      Put_Line (File => Spec_File,
-                Item => "with SK;");
-      New_Line (File => Spec_File);
-      Put_Line (File => Spec_File,
-                Item => "--# inherit SK, Skp;");
-      Put_Line (File => Spec_File,
-                Item => "package " & Pkg_Name & " is");
-      New_Line (File => Spec_File);
-      Put_Line (File => Spec_File,
-                Item => Indent & "type Subject_Spec_Type is record");
-      Put_Line (File => Spec_File,
-                Item => Indent & "   PML4_Address      : SK.Word64;");
-      Put_Line (File => Spec_File,
-                Item => Indent & "   VMCS_Address      : SK.Word64;");
-      Put_Line (File => Spec_File,
-                Item => Indent & "   IO_Bitmap_Address : SK.Word64;");
-      Put_Line (File => Spec_File,
-                Item => Indent & "   Stack_Address     : SK.Word64;");
-      Put_Line (File => Spec_File,
-                Item => Indent & "   Entry_Point       : SK.Word64;");
-      Put_Line (File => Spec_File,
-                Item => Indent & "end record;");
-      New_Line (File => Spec_File);
-      Put_Line (File => Spec_File,
-                Item => Indent & "type Subject_Spec_Array is array "
-                & "(Skp.Subject_Id_Type) of Subject_Spec_Type;");
-      New_Line (File => Spec_File);
-      Put_Line (File => Spec_File,
-                Item => Indent & "Subject_Specs : constant Subject_Spec_Array"
-                & " := Subject_Spec_Array'(");
+      Buffer := Buffer & "with SK;"
+        & ASCII.LF & ASCII.LF
+        & "--# inherit SK, Skp;"
+        & ASCII.LF
+        & "package " & Pkg_Name & " is"
+        & ASCII.LF & ASCII.LF
+        & Indent & "type Subject_Spec_Type is record"  & ASCII.LF
+        & Indent & "   PML4_Address      : SK.Word64;" & ASCII.LF
+        & Indent & "   VMCS_Address      : SK.Word64;" & ASCII.LF
+        & Indent & "   IO_Bitmap_Address : SK.Word64;" & ASCII.LF
+        & Indent & "   Stack_Address     : SK.Word64;" & ASCII.LF
+        & Indent & "   Entry_Point       : SK.Word64;" & ASCII.LF
+        & Indent & "end record;"
+        & ASCII.LF & ASCII.LF
+        & Indent & "type Subject_Spec_Array is array (Skp.Subject_Id_Type) "
+        & "of Subject_Spec_Type;"
+        & ASCII.LF & ASCII.LF
+        & Indent & "Subject_Specs : constant Subject_Spec_Array := "
+        & "Subject_Spec_Array'("
+        & ASCII.LF;
 
       Policy.Subjects.Iterate (Process => Write_Subject'Access);
 
-      New_Line (File => Spec_File);
-      Put_Line (File => Spec_File,
-                Item => "end " & Pkg_Name & ";");
+      Buffer := Buffer & ASCII.LF & "end " & Pkg_Name & ";";
 
-      Close (File => Spec_File);
+      Open (Filename => Spec_Name,
+            File     => Spec_File);
+      Ada.Text_IO.Put_Line (File => Spec_File,
+                            Item => To_String (Buffer));
+      Ada.Text_IO.Close (File => Spec_File);
    end Write_Subjects;
 
    -------------------------------------------------------------------------
@@ -642,47 +554,41 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type)
    is
-      use Ada.Text_IO;
-
       Pkg_Name  : constant String   := "Skp";
       Spec_Name : constant String   := Dir_Name & "/skp.ads";
       S_Count   : constant Positive := Positive (Policy.Subjects.Length);
 
-      File : File_Type;
+      File   : Ada.Text_IO.File_Type;
+      Buffer : Unbounded_String;
    begin
+      Buffer := Buffer & "#define VMXON_ADDRESS 0x"
+        & SK.Utils.To_Hex (Item => Policy.Vmxon_Address)
+        & ASCII.LF
+        & "#define VMCS_ADDRESS  0x"
+        & SK.Utils.To_Hex (Item => Policy.Vmcs_Start_Address);
+
       Open (Filename => Dir_Name & "/" & Policy_File,
             File     => File,
             Append   => True);
-      Ada.Text_IO.Put_Line
-        (File => File,
-         Item => "#define VMXON_ADDRESS 0x"
-         & SK.Utils.To_Hex (Item => Policy.Vmxon_Address));
-      Ada.Text_IO.Put_Line
-        (File => File,
-         Item => "#define VMCS_ADDRESS  0x"
-         & SK.Utils.To_Hex (Item => Policy.Vmcs_Start_Address));
-      Close (File => File);
+      Ada.Text_IO.Put_Line (File => File,
+                            Item => To_String (Buffer));
+      Ada.Text_IO.Close (File => File);
+
+      Buffer := Null_Unbounded_String & "package " & Pkg_Name & " is"
+        & ASCII.LF & ASCII.LF
+        & Indent & "subtype Subject_Id_Type is Natural range 0 " & ".."
+        & Positive'Image (S_Count - 1) & ";"
+        & ASCII.LF & ASCII.LF
+        & Indent & "Vmxon_Address : constant := 16#"
+        & SK.Utils.To_Hex (Item => Policy.Vmxon_Address) & "#;"
+        & ASCII.LF & ASCII.LF
+        & "end " & Pkg_Name & ";";
 
       Open (Filename => Spec_Name,
             File     => File);
-      Put_Line (File => File,
-                Item => "package " & Pkg_Name & " is");
-      New_Line (File => File);
-      Put_Line (File => File,
-                Item => Indent & "subtype Subject_Id_Type is Natural range 0 "
-                & ".." & Positive'Image (S_Count - 1) & ";");
-      New_Line (File => File);
-      Put (File => File,
-           Item => Indent & "Vmxon_Address : constant := 16#");
-      Put (File => File,
-           Item => SK.Utils.To_Hex
-             (Item => Policy.Vmxon_Address));
-      Put_Line (File => File,
-                Item => "#;");
-      New_Line (File => File);
-      Put_Line (File => File,
-                Item => "end " & Pkg_Name & ";");
-      Close (File => File);
+      Ada.Text_IO.Put_Line (File => File,
+                            Item => To_String (Buffer));
+      Ada.Text_IO.Close (File => File);
    end Write_System;
 
 end Skp.Writers;

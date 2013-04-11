@@ -426,7 +426,7 @@ is
         & ASCII.LF & ASCII.LF
         & Indent & "Stack_Address : constant := 16#"
         & SK.Utils.To_Hex (Item => Policy.Kernel.Stack_Address) & "#;"
-        & ASCII.LF & ASCII.LF
+        & ASCII.LF
         & Indent & "PML4_Address  : constant := 16#"
         & SK.Utils.To_Hex (Item => Policy.Kernel.Pml4_Address) & "#;"
         & ASCII.LF & ASCII.LF

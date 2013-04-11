@@ -19,12 +19,21 @@ is
       Ticks      : SK.Word32;
    end record;
 
+   Null_Minor_Frame : constant Minor_Frame_Type := Minor_Frame_Type'
+     (Subject_Id => 0,
+      Ticks      => 0);
+
    --  The minor frame range specifies the number of minor frames that
    --  constitute a major frame.
    type Minor_Frame_Range is mod 2 ** 2;
 
+   type Minor_Frame_Array is array (Minor_Frame_Range) of Minor_Frame_Type;
+
    --  A major frame specifies a sequence of minor frames to schedule.
-   type Major_Frame_Type is array (Minor_Frame_Range) of Minor_Frame_Type;
+   type Major_Frame_Type is record
+      Length       : Minor_Frame_Range;
+      Minor_Frames : Minor_Frame_Array;
+   end record;
 
    --  A scheduling plan consists of multiple major frames.
    type Scheduling_Plan_Type is
@@ -68,8 +77,8 @@ is
 
       for I in SK.Major_Frame_Range loop
          for J in Minor_Frame_Range loop
-            if Scheduling_Plan (I)(J).Subject_Id = Old_Id then
-               Scheduling_Plan (I)(J).Subject_Id := New_Id;
+            if Scheduling_Plan (I).Minor_Frames (J).Subject_Id = Old_Id then
+               Scheduling_Plan (I).Minor_Frames (J).Subject_Id := New_Id;
             end if;
          end loop;
       end loop;
@@ -173,7 +182,8 @@ is
    is
       Current_Frame : Minor_Frame_Type;
    begin
-      Current_Frame := Scheduling_Plan (Current_Major) (Current_Minor);
+      Current_Frame := Scheduling_Plan (Current_Major).Minor_Frames
+        (Current_Minor);
 
       if Subjects.Get_State (Id => Current_Frame.Subject_Id).Launched then
          VMX.Resume (Subject_Id => Current_Frame.Subject_Id,
@@ -199,7 +209,15 @@ is
    --#    in out X86_64.State;
    --# derives
    --#    Current_Major   from New_Major &
-   --#    Current_Minor   from *         &
+   --#    Current_Minor   from
+   --#       *,
+   --#       New_Major,
+   --#       Current_Major,
+   --#       Current_Minor,
+   --#       Scheduling_Plan,
+   --#       Subject_Registers,
+   --#       Subjects.Descriptors,
+   --#       X86_64.State &
    --#    Scheduling_Plan from
    --#       *,
    --#       Current_Major,
@@ -230,8 +248,8 @@ is
       State           : SK.Subject_State_Type;
       Current_Subject : Skp.Subject_Id_Type;
    begin
-      Current_Subject := Scheduling_Plan
-        (Current_Major) (Current_Minor).Subject_Id;
+      Current_Subject := Scheduling_Plan (Current_Major).Minor_Frames
+        (Current_Minor).Subject_Id;
       State           := Subjects.Get_State (Id => Current_Subject);
       State.Regs      := Subject_Registers;
 
@@ -254,20 +272,26 @@ is
                           State => State);
 
       Current_Major := New_Major;
-      Current_Minor := Current_Minor + 1;
+      if Scheduling_Plan (Current_Major).Length = Current_Minor then
+         Current_Minor := Minor_Frame_Range'First;
+      else
+         Current_Minor := Current_Minor + 1;
+      end if;
       Schedule;
    end Handle_Vmx_Exit;
 
 begin
    Scheduling_Plan := Scheduling_Plan_Type'
      (0 => Major_Frame_Type'
-        (Minor_Frame_Type'(Subject_Id => 0, Ticks => 500),
-         Minor_Frame_Type'(Subject_Id => 0, Ticks => 500),
-         Minor_Frame_Type'(Subject_Id => 0, Ticks => 500),
-         Minor_Frame_Type'(Subject_Id => 0, Ticks => 500)),
+        (Length       => 1,
+         Minor_Frames => Minor_Frame_Array'
+           (Minor_Frame_Type'(Subject_Id => 0, Ticks => 2000),
+            others => Null_Minor_Frame)),
       1 => Major_Frame_Type'
-        (Minor_Frame_Type'(Subject_Id => 0, Ticks => 500),
-         Minor_Frame_Type'(Subject_Id => 2, Ticks => 500),
-         Minor_Frame_Type'(Subject_Id => 3, Ticks => 500),
-         Minor_Frame_Type'(Subject_Id => 0, Ticks => 500)));
+        (Length       => 3,
+         Minor_Frames => Minor_Frame_Array'
+           (Minor_Frame_Type'(Subject_Id => 0, Ticks => 500),
+            Minor_Frame_Type'(Subject_Id => 2, Ticks => 500),
+            Minor_Frame_Type'(Subject_Id => 3, Ticks => 500),
+            Minor_Frame_Type'(Subject_Id => 0, Ticks => 500))));
 end SK.Scheduler;

@@ -320,11 +320,8 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type)
    is
-      Pkg_Name  : constant String := "Skp.Hardware";
-      Spec_Name : constant String := Dir_Name & "/skp-hardware.ads";
-
-      File   : Ada.Text_IO.File_Type;
       Buffer : Unbounded_String;
+      Tmpl   : Templates.Template_Type;
 
       --  Write device constants to hardware spec.
       procedure Write_Device (Pos : Devices_Package.Cursor);
@@ -341,6 +338,7 @@ is
          Dev_Name (Dev_Name'First) := Ada.Characters.Handling.To_Upper
            (Item => Dev_Name (Dev_Name'First));
 
+         Buffer := Buffer & ASCII.LF;
          for P in 1 .. Dev.IO_Ports.Length loop
             declare
                Port    : constant IO_Port_Range
@@ -361,18 +359,17 @@ is
 
             Ports_Package.Next (Position => Port_Idx);
          end loop;
-         Buffer := Buffer & ASCII.LF;
       end Write_Device;
    begin
-      Buffer := Buffer & "package " & Pkg_Name & " is" & ASCII.LF & ASCII.LF;
-      Policy.Hardware.Devices.Iterate (Process => Write_Device'Access);
-      Buffer := Buffer & "end " & Pkg_Name & ";";
+      Tmpl := Templates.Load (Filename => "skp-hardware.ads");
 
-      Open (Filename => Spec_Name,
-            File     => File);
-      Ada.Text_IO.Put_Line (File => File,
-                            Item => To_String (Buffer));
-      Ada.Text_IO.Close (File => File);
+      Policy.Hardware.Devices.Iterate (Process => Write_Device'Access);
+
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__devices__",
+                         Content  => To_String (Buffer));
+      Templates.Write (Template => Tmpl,
+                       Filename => Dir_Name & "/skp-hardware.ads");
    end Write_Hardware;
 
    -------------------------------------------------------------------------

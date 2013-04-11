@@ -275,12 +275,10 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type)
    is
-      Pkg_Name  : constant String   := "Skp.Binaries";
-      Spec_Name : constant String   := Dir_Name & "/skp-binaries.ads";
-      B_Count   : constant Positive := Positive (Policy.Binaries.Length);
-      Current   : Natural           := 0;
-      Spec_File : Ada.Text_IO.File_Type;
-      Buffer    : Unbounded_String;
+      B_Count : constant Positive := Positive (Policy.Binaries.Length);
+      Current : Natural           := 0;
+      Buffer  : Unbounded_String;
+      Tmpl    : Templates.Template_Type;
 
       --  Write binary spec.
       procedure Write_Binary_Spec (C : Binary_Package.Cursor);
@@ -302,38 +300,18 @@ is
          Current := Current + 1;
          if Current /= B_Count then
             Buffer := Buffer & "," & ASCII.LF;
-         else
-            Buffer := Buffer & ");" & ASCII.LF;
          end if;
       end Write_Binary_Spec;
    begin
-      Buffer := Buffer & "with Ada.Strings.Unbounded; "
-        & "use Ada.Strings.Unbounded;"
-        & ASCII.LF
-        & "with SK;"
-        & ASCII.LF & ASCII.LF
-        & "package " & Pkg_Name & " is"
-        & ASCII.LF & ASCII.LF
-        & Indent & "type Binary_Spec_Type is record"         & ASCII.LF
-        & Indent & "   Path             : Unbounded_String;" & ASCII.LF
-        & Indent & "   Physical_Address : SK.Word64;"        & ASCII.LF
-        & Indent & "end record;"
-        & ASCII.LF & ASCII.LF
-        & Indent & "type Binary_Spec_Array is array (Subject_Id_Type) of "
-        & "Binary_Spec_Type;"
-        & ASCII.LF & ASCII.LF
-        & Indent & "Binary_Specs : constant Binary_Spec_Array := ("
-        & ASCII.LF;
+      Tmpl := Templates.Load (Filename => "skp-binaries.ads");
 
       Policy.Binaries.Iterate (Process => Write_Binary_Spec'Access);
 
-      Buffer := Buffer & ASCII.LF & "end " & Pkg_Name & ";";
-
-      Open (Filename => Spec_Name,
-            File     => Spec_File);
-      Ada.Text_IO.Put_Line (File => Spec_File,
-                            Item => To_String (Buffer));
-      Ada.Text_IO.Close (File => Spec_File);
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__binaries__",
+                         Content  => To_String (Buffer));
+      Templates.Write (Template => Tmpl,
+                       Filename => Dir_Name & "/skp-binaries.ads");
    end Write_Binaries;
 
    -------------------------------------------------------------------------

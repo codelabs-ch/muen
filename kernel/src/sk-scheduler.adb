@@ -25,7 +25,7 @@ is
 
    --  The minor frame range specifies the number of minor frames that
    --  constitute a major frame.
-   type Minor_Frame_Range is mod 2 ** 2;
+   type Minor_Frame_Range is range 1 .. 4;
 
    type Minor_Frame_Array is array (Minor_Frame_Range) of Minor_Frame_Type;
 
@@ -272,9 +272,15 @@ is
                           State => State);
 
       Current_Major := New_Major;
-      if Scheduling_Plan (Current_Major).Length = Current_Minor then
+      if Current_Minor >= Scheduling_Plan (Current_Major).Length then
          Current_Minor := Minor_Frame_Range'First;
       else
+
+         --# assert
+         --#    Current_Minor < Scheduling_Plan (Current_Major).Length and
+         --#    Scheduling_Plan (Current_Major).Length
+         --#       <= Minor_Frame_Range'Last;
+
          Current_Minor := Current_Minor + 1;
       end if;
       Schedule;
@@ -288,7 +294,7 @@ begin
            (Minor_Frame_Type'(Subject_Id => 0, Ticks => 2000),
             others => Null_Minor_Frame)),
       1 => Major_Frame_Type'
-        (Length       => 3,
+        (Length       => 4,
          Minor_Frames => Minor_Frame_Array'
            (Minor_Frame_Type'(Subject_Id => 0, Ticks => 500),
             Minor_Frame_Type'(Subject_Id => 2, Ticks => 500),

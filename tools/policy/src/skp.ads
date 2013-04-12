@@ -108,6 +108,7 @@ is
    subtype Major_Frames_Type is Major_Frames_Package.List;
 
    type Scheduling_Type is record
+      Tick_Rate    : Positive;
       Major_Frames : Major_Frames_Type;
    end record;
 

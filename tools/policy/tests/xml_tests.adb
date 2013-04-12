@@ -298,6 +298,9 @@ is
 
          --  Scheduling
 
+         Assert (Condition => P.Scheduling.Tick_Rate = 1000,
+                 Message   => "Tick rate mismatch");
+
          Assert (Condition => P.Scheduling.Major_Frames.Length = 2,
                  Message   => "Major frame count mismatch");
          Assert

@@ -194,7 +194,10 @@ is
      (Node : DOM.Core.Node)
       return Scheduling_Type
    is
-      Sched : Scheduling_Type;
+      Tick_Rate_Str : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Node,
+         Name => "tick_rate");
+      Sched         : Scheduling_Type;
 
       --  Add major frame to scheduling plan.
       procedure Add_Major_Frame (Node : DOM.Core.Node);
@@ -232,6 +235,7 @@ is
          Sched.Major_Frames.Append (New_Item => Major_Frame);
       end Add_Major_Frame;
    begin
+      Sched.Tick_Rate := Positive'Value (Tick_Rate_Str);
       Util.For_Each_Node (Node     => Node,
                           Tag_Name => "major_frame",
                           Process  => Add_Major_Frame'Access);

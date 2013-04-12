@@ -8,7 +8,7 @@ is
    procedure Validate_Mem_Layout (L : Memory_Layout_Type);
 
    --  Validate device specification.
-   procedure Validate (Device : Device_Type);
+   procedure Validate_Device (D : Device_Type);
 
    --  Validate kernel specification.
    procedure Validate (Kernel : Kernel_Type);

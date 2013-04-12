@@ -7,14 +7,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Validate (Device : Device_Type)
-   is
-   begin
-      Validate_Mem_Layout (L => Device.Memory_Layout);
-   end Validate;
-
-   -------------------------------------------------------------------------
-
    procedure Validate (Kernel : Kernel_Type)
    is
    begin
@@ -55,6 +47,14 @@ is
 
       Validate (Kernel => Policy.Kernel);
    end Validate;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Device (D : Device_Type)
+   is
+   begin
+      Validate_Mem_Layout (L => D.Memory_Layout);
+   end Validate_Device;
 
    -------------------------------------------------------------------------
 

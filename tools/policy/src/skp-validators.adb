@@ -105,9 +105,10 @@ is
            & " - address must be below 1m - 4k *" & P.Subjects.Length'Img;
       end if;
 
-      Validate_Hardware (H => P.Hardware);
-      Validate_Kernel   (K => P.Kernel);
-      Validate_Subjects (P => P);
+      Validate_Hardware   (H => P.Hardware);
+      Validate_Kernel     (K => P.Kernel);
+      Validate_Subjects   (P => P);
+      Validate_Scheduling (S => P.Scheduling);
    end Validate_Policy;
 
    -------------------------------------------------------------------------

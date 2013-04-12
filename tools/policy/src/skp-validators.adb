@@ -7,14 +7,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Validate (Kernel : Kernel_Type)
-   is
-   begin
-      Validate_Mem_Layout (L => Kernel.Memory_Layout);
-   end Validate;
-
-   -------------------------------------------------------------------------
-
    procedure Validate (Policy : Policy_Type)
    is
       One_Megabyte   : constant SK.Word64 := 16#100000#;
@@ -45,7 +37,7 @@ is
            & " - address must be below 1m - 4k *" & Policy.Subjects.Length'Img;
       end if;
 
-      Validate (Kernel => Policy.Kernel);
+      Validate_Kernel (K => Policy.Kernel);
    end Validate;
 
    -------------------------------------------------------------------------
@@ -55,6 +47,14 @@ is
    begin
       Validate_Mem_Layout (L => D.Memory_Layout);
    end Validate_Device;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Kernel (K : Kernel_Type)
+   is
+   begin
+      Validate_Mem_Layout (L => K.Memory_Layout);
+   end Validate_Kernel;
 
    -------------------------------------------------------------------------
 

@@ -11,7 +11,7 @@ is
    procedure Validate_Device (D : Device_Type);
 
    --  Validate kernel specification.
-   procedure Validate (Kernel : Kernel_Type);
+   procedure Validate_Kernel (K : Kernel_Type);
 
    --  Validate given policy.
    procedure Validate (Policy : Policy_Type);

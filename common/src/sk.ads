@@ -15,9 +15,6 @@ is
 
    type Word64_Pos is range 0 .. 63;
 
-   --  Number of major frames in a scheduling plan.
-   type Major_Frame_Range is range 0 .. 1;
-
    --  CPU registers.
    type CPU_Registers_Type is record
       RAX : Word64;

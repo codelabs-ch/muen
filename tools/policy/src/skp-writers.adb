@@ -386,10 +386,16 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type)
    is
-      Max_Minor_Count : Positive          := 1;
-      Cur_Major       : Natural           := 0;
-      Major_Count     : constant Positive := Positive
+      CPU_Speed_Hz    : constant Long_Integer
+        := Long_Integer (Policy.Hardware.Processor.Speed) * 1_000_000;
+      Timer_Rate      : constant Long_Integer
+        := 2 ** Policy.Hardware.Processor.VMX_Timer_Rate;
+      Timer_Factor    : constant Long_Integer := CPU_Speed_Hz /
+        (Timer_Rate * Long_Integer (Policy.Scheduling.Tick_Rate));
+      Major_Count     : constant Positive     := Positive
         (Policy.Scheduling.Major_Frames.Length);
+      Max_Minor_Count : Positive              := 1;
+      Cur_Major       : Natural               := 0;
       Buffer          : Unbounded_String;
       Tmpl            : Templates.Template_Type;
 
@@ -429,10 +435,12 @@ is
          is
             Minor : constant Minor_Frame_Type := Minor_Frames_Package.Element
               (Position => C);
+            Ticks : Long_Integer;
          begin
+            Ticks := Long_Integer (Minor.Ticks) * Timer_Factor;
             Buffer := Buffer & Indent & Indent & Indent
               & "Minor_Frame_Type'(Subject_Id =>" & Minor.Subject_Id'Img
-              & ", Ticks =>" & Minor.Ticks'Img & ")";
+              & ", Ticks =>" & Ticks'Img & ")";
 
             if Cur_Minor /= Minor_Count then
                Buffer := Buffer & "," & ASCII.LF;

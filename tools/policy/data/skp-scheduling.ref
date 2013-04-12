@@ -29,14 +29,14 @@ package Skp.Scheduling is
      0 => Major_Frame_Type'
       (Length       => 1,
        Minor_Frames => Minor_Frame_Array'(
-         Minor_Frame_Type'(Subject_Id => 0, Ticks => 1700),
+         Minor_Frame_Type'(Subject_Id => 0, Ticks => 154062500),
          others => Null_Minor_Frame)),
      1 => Major_Frame_Type'
       (Length       => 4,
        Minor_Frames => Minor_Frame_Array'(
-         Minor_Frame_Type'(Subject_Id => 0, Ticks => 500),
-         Minor_Frame_Type'(Subject_Id => 2, Ticks => 500),
-         Minor_Frame_Type'(Subject_Id => 3, Ticks => 500),
-         Minor_Frame_Type'(Subject_Id => 4, Ticks => 200))));
+         Minor_Frame_Type'(Subject_Id => 0, Ticks => 45312500),
+         Minor_Frame_Type'(Subject_Id => 2, Ticks => 45312500),
+         Minor_Frame_Type'(Subject_Id => 3, Ticks => 45312500),
+         Minor_Frame_Type'(Subject_Id => 4, Ticks => 18125000))));
 
 end Skp.Scheduling;

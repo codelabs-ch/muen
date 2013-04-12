@@ -93,7 +93,8 @@ is
            & " - address must be below 1m - 4k *" & P.Subjects.Length'Img;
       end if;
 
-      Validate_Kernel (K => P.Kernel);
+      Validate_Kernel   (K => P.Kernel);
+      Validate_Subjects (P => P);
    end Validate_Policy;
 
    -------------------------------------------------------------------------

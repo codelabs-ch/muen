@@ -4,6 +4,7 @@ with Ada.Command_Line;
 with Skp.Xml;
 with Skp.Writers;
 with Skp.Templates;
+with Skp.Validators;
 
 procedure Skpolicy
 is
@@ -33,6 +34,7 @@ begin
                   Schema => Ada.Command_Line.Argument (Number => 1));
 
    Policy := Skp.Xml.To_Policy (Data => Data);
+   Skp.Validators.Validate_Policy (P => Policy);
 
    Skp.Templates.Set_Template_Dir
      (Path => Ada.Command_Line.Argument (Number => 2));

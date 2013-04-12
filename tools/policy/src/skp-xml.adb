@@ -89,7 +89,7 @@ is
               (Elem => Node,
                Name => "executable"));
 
-         Validators.Validate (Region => R);
+         Validators.Validate_Mem_Region (R => R);
          Mem_Layout.Append (New_Item => R);
       end Add_Mem_Region;
    begin

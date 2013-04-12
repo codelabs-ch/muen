@@ -40,7 +40,7 @@ is
                Alignment        => 16#1000#,
                others           => <>);
       begin
-         Validators.Validate (Region => R);
+         Validators.Validate_Mem_Region (R => R);
          Fail (Message => "Exception expected");
 
       exception
@@ -59,7 +59,7 @@ is
                Alignment        => 16#1000#,
                others           => <>);
       begin
-         Validators.Validate (Region => R);
+         Validators.Validate_Mem_Region (R => R);
          Fail (Message => "Exception expected");
 
       exception
@@ -80,7 +80,7 @@ is
             Alignment => 16#200000#,
             others    => <>);
    begin
-      Validators.Validate (Region => R);
+      Validators.Validate_Mem_Region (R => R);
       Fail (Message => "Exception expected");
 
    exception

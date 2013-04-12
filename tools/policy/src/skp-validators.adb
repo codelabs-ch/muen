@@ -12,7 +12,8 @@ is
       Pos : Memregion_Package.Cursor := Memory_Layout.First;
    begin
       while Memregion_Package.Has_Element (Position => Pos) loop
-         Validate (Region => Memregion_Package.Element (Position => Pos));
+         Validate_Mem_Region (R => Memregion_Package.Element
+                              (Position => Pos));
          Memregion_Package.Next (Position => Pos);
       end loop;
    end Validate;
@@ -70,29 +71,29 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Validate (Region : Memory_Region_Type)
+   procedure Validate_Mem_Region (R : Memory_Region_Type)
    is
    begin
-      if Region.Size mod Region.Alignment /= 0 then
+      if R.Size mod R.Alignment /= 0 then
          raise Validation_Error with "Invalid memory region size "
-           & SK.Utils.To_Hex (Item => Region.Size)
+           & SK.Utils.To_Hex (Item => R.Size)
            & " for specified alignment "
-           & SK.Utils.To_Hex (Item => Region.Alignment);
+           & SK.Utils.To_Hex (Item => R.Alignment);
       end if;
 
-      if Region.Physical_Address mod Region.Alignment /= 0 then
+      if R.Physical_Address mod R.Alignment /= 0 then
          raise Validation_Error with "Invalid memory region physical address "
-           & SK.Utils.To_Hex (Item => Region.Physical_Address)
+           & SK.Utils.To_Hex (Item => R.Physical_Address)
            & " for specified alignment "
-           & SK.Utils.To_Hex (Item => Region.Alignment);
+           & SK.Utils.To_Hex (Item => R.Alignment);
       end if;
 
-      if Region.Virtual_Address mod Region.Alignment /= 0 then
+      if R.Virtual_Address mod R.Alignment /= 0 then
          raise Validation_Error with "Invalid memory region virtual address "
-           & SK.Utils.To_Hex (Item => Region.Virtual_Address)
+           & SK.Utils.To_Hex (Item => R.Virtual_Address)
            & " for specified alignment "
-           & SK.Utils.To_Hex (Item => Region.Alignment);
+           & SK.Utils.To_Hex (Item => R.Alignment);
       end if;
-   end Validate;
+   end Validate_Mem_Region;
 
 end Skp.Validators;

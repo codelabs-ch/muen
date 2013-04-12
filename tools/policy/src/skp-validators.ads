@@ -13,6 +13,9 @@ is
    --  Validate kernel specification.
    procedure Validate_Kernel (K : Kernel_Type);
 
+   --  Validate subjects.
+   procedure Validate_Subjects (P : Policy_Type);
+
    --  Validate given policy.
    procedure Validate_Policy (P : Policy_Type);
 

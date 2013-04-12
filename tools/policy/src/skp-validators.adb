@@ -96,4 +96,24 @@ is
       Validate_Kernel (K => P.Kernel);
    end Validate_Policy;
 
+   -------------------------------------------------------------------------
+
+   procedure Validate_Subjects (P : Policy_Type)
+   is
+      --  Validate given subject.
+      procedure Validate_Subject (Pos : Subjects_Package.Cursor);
+
+      ----------------------------------------------------------------------
+
+      procedure Validate_Subject (Pos : Subjects_Package.Cursor)
+      is
+         S : constant Subject_Type := Subjects_Package.Element
+           (Position => Pos);
+      begin
+         Validate_Mem_Layout (L => S.Memory_Layout);
+      end Validate_Subject;
+   begin
+      P.Subjects.Iterate (Process => Validate_Subject'Access);
+   end Validate_Subjects;
+
 end Skp.Validators;

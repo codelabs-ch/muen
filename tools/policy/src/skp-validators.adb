@@ -7,6 +7,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Validate (Memory_Layout : Memory_Layout_Type)
+   is
+      Pos : Memregion_Package.Cursor := Memory_Layout.First;
+   begin
+      while Memregion_Package.Has_Element (Position => Pos) loop
+         Validate (Region => Memregion_Package.Element (Position => Pos));
+         Memregion_Package.Next (Position => Pos);
+      end loop;
+   end Validate;
+
+   -------------------------------------------------------------------------
+
    procedure Validate (Policy : Policy_Type)
    is
       One_Megabyte   : constant SK.Word64 := 16#100000#;

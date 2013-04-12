@@ -437,7 +437,7 @@ is
                           Tag_Name => "subject",
                           Process  => Add_Subject'Access);
 
-      Validators.Validate (Policy => Policy);
+      Validators.Validate_Policy (P => Policy);
       return Policy;
    end To_Policy;
 

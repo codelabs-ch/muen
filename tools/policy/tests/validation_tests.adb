@@ -101,7 +101,7 @@ is
       begin
          P.Vmxon_Address      := 0;
          P.Vmcs_Start_Address := 16#23#;
-         Validators.Validate (Policy => P);
+         Validators.Validate_Policy (P => P);
          Fail (Message => "Exception expected");
 
       exception
@@ -119,7 +119,7 @@ is
          P.Vmcs_Start_Address := 16#110000#;
          P.Subjects.Insert (New_Item => (others => <>));
 
-         Validators.Validate (Policy => P);
+         Validators.Validate_Policy (P => P);
          Fail (Message => "Exception expected");
 
       exception
@@ -140,7 +140,7 @@ is
          P : Policy_Type;
       begin
          P.Vmxon_Address := 16#42#;
-         Validators.Validate (Policy => P);
+         Validators.Validate_Policy (P => P);
          Fail (Message => "Exception expected");
 
       exception
@@ -155,7 +155,7 @@ is
          P : Policy_Type;
       begin
          P.Vmxon_Address := 16#200000#;
-         Validators.Validate (Policy => P);
+         Validators.Validate_Policy (P => P);
          Fail (Message => "Exception expected");
 
       exception

@@ -14,7 +14,7 @@ is
    procedure Validate_Kernel (K : Kernel_Type);
 
    --  Validate given policy.
-   procedure Validate (Policy : Policy_Type);
+   procedure Validate_Policy (P : Policy_Type);
 
    Validation_Error : exception;
 

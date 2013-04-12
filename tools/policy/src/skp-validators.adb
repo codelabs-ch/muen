@@ -7,41 +7,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Validate (Policy : Policy_Type)
-   is
-      One_Megabyte   : constant SK.Word64 := 16#100000#;
-      VMCS_Area_Size : constant SK.Word64
-        := SK.Word64 (Policy.Subjects.Length) * SK.Page_Size;
-   begin
-      if Policy.Vmxon_Address mod SK.Page_Size /= 0 then
-         raise Validation_Error with "Invalid VMXON address "
-           & SK.Utils.To_Hex (Item => Policy.Vmxon_Address)
-           & " - address must be 4k aligned";
-      end if;
-
-      if Policy.Vmxon_Address > (One_Megabyte - SK.Page_Size) then
-         raise Validation_Error with "Invalid VMXON address "
-           & SK.Utils.To_Hex (Item => Policy.Vmxon_Address)
-           & " - address must be below 1m";
-      end if;
-
-      if Policy.Vmcs_Start_Address mod SK.Page_Size /= 0 then
-         raise Validation_Error with "Invalid VMCS start address "
-           & SK.Utils.To_Hex (Item => Policy.Vmcs_Start_Address)
-           & " - address must be 4k aligned";
-      end if;
-
-      if Policy.Vmcs_Start_Address + VMCS_Area_Size > One_Megabyte then
-         raise Validation_Error with "Invalid VMCS start address "
-           & SK.Utils.To_Hex (Item => Policy.Vmcs_Start_Address)
-           & " - address must be below 1m - 4k *" & Policy.Subjects.Length'Img;
-      end if;
-
-      Validate_Kernel (K => Policy.Kernel);
-   end Validate;
-
-   -------------------------------------------------------------------------
-
    procedure Validate_Device (D : Device_Type)
    is
    begin
@@ -95,5 +60,40 @@ is
            & SK.Utils.To_Hex (Item => R.Alignment);
       end if;
    end Validate_Mem_Region;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Policy (P : Policy_Type)
+   is
+      One_Megabyte   : constant SK.Word64 := 16#100000#;
+      VMCS_Area_Size : constant SK.Word64
+        := SK.Word64 (P.Subjects.Length) * SK.Page_Size;
+   begin
+      if P.Vmxon_Address mod SK.Page_Size /= 0 then
+         raise Validation_Error with "Invalid VMXON address "
+           & SK.Utils.To_Hex (Item => P.Vmxon_Address)
+           & " - address must be 4k aligned";
+      end if;
+
+      if P.Vmxon_Address > (One_Megabyte - SK.Page_Size) then
+         raise Validation_Error with "Invalid VMXON address "
+           & SK.Utils.To_Hex (Item => P.Vmxon_Address)
+           & " - address must be below 1m";
+      end if;
+
+      if P.Vmcs_Start_Address mod SK.Page_Size /= 0 then
+         raise Validation_Error with "Invalid VMCS start address "
+           & SK.Utils.To_Hex (Item => P.Vmcs_Start_Address)
+           & " - address must be 4k aligned";
+      end if;
+
+      if P.Vmcs_Start_Address + VMCS_Area_Size > One_Megabyte then
+         raise Validation_Error with "Invalid VMCS start address "
+           & SK.Utils.To_Hex (Item => P.Vmcs_Start_Address)
+           & " - address must be below 1m - 4k *" & P.Subjects.Length'Img;
+      end if;
+
+      Validate_Kernel (K => P.Kernel);
+   end Validate_Policy;
 
 end Skp.Validators;

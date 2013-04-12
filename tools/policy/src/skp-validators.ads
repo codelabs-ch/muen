@@ -10,6 +10,9 @@ is
    --  Validate device specification.
    procedure Validate_Device (D : Device_Type);
 
+   --  Validate hardware specification.
+   procedure Validate_Hardware (H : Hardware_Type);
+
    --  Validate kernel specification.
    procedure Validate_Kernel (K : Kernel_Type);
 

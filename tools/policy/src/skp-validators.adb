@@ -15,6 +15,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Validate_Hardware (H : Hardware_Type)
+   is
+      Pos : Devices_Package.Cursor := H.Devices.First;
+   begin
+      while Devices_Package.Has_Element (Position => Pos) loop
+         Validate_Device (D => Devices_Package.Element (Position => Pos));
+         Devices_Package.Next (Position => Pos);
+      end loop;
+   end Validate_Hardware;
+
+   -------------------------------------------------------------------------
+
    procedure Validate_Kernel (K : Kernel_Type)
    is
    begin

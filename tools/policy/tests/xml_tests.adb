@@ -258,6 +258,13 @@ is
          Assert (Condition => P.Hardware.Devices.Length = 3,
                  Message   => "Device count mismatch");
 
+         Assert (Condition => P.Hardware.Processor.Logical_CPUs = 4,
+                 Message   => "Logical CPUs mismatch");
+         Assert (Condition => P.Hardware.Processor.Speed = 2900,
+                 Message   => "Speed mismatch");
+         Assert (Condition => P.Hardware.Processor.VMX_Timer_Rate = 5,
+                 Message   => "VMX preemption timer rate mismatch");
+
          declare
             Dev : constant Device_Type := P.Hardware.Devices.First_Element;
          begin

@@ -80,8 +80,15 @@ is
       Element_Type => Device_Type,
       "<"          => Ada.Strings.Unbounded."<");
 
+   type Processor_Type is record
+      Logical_CPUs   : Positive;
+      Speed          : Positive;
+      VMX_Timer_Rate : Natural;
+   end record;
+
    type Hardware_Type is record
-      Devices : Devices_Package.Map;
+      Processor : Processor_Type;
+      Devices   : Devices_Package.Map;
    end record;
 
    type Minor_Frame_Type is record

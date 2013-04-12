@@ -42,7 +42,19 @@ is
 
    function Deserialize_Hardware (Node : DOM.Core.Node) return Hardware_Type
    is
-      Hardware : Hardware_Type;
+      Timer_Rate_Str : constant String := Util.Get_Element_Attr_By_Tag_Name
+        (Node      => Node,
+         Tag_Name  => "processor",
+         Attr_Name => "vmx_timer_rate");
+      CPUs_Str       : constant String := Util.Get_Element_Attr_By_Tag_Name
+        (Node      => Node,
+         Tag_Name  => "processor",
+         Attr_Name => "logical_cpus");
+      Speed_Str      : constant String := Util.Get_Element_Attr_By_Tag_Name
+        (Node      => Node,
+         Tag_Name  => "processor",
+         Attr_Name => "speed");
+      Hardware       : Hardware_Type;
 
       --  Add device to hardware.
       procedure Add_Device (Node : DOM.Core.Node);
@@ -65,6 +77,10 @@ is
             New_Item => Dev);
       end Add_Device;
    begin
+      Hardware.Processor.Logical_CPUs   := Positive'Value (CPUs_Str);
+      Hardware.Processor.Speed          := Positive'Value (Speed_Str);
+      Hardware.Processor.VMX_Timer_Rate := Natural'Value (Timer_Rate_Str);
+
       Util.For_Each_Node (Node     => Node,
                           Tag_Name => "device",
                           Process  => Add_Device'Access);

@@ -1,7 +1,5 @@
 with System;
 
-with Skp;
-
 with SK.VMX;
 with SK.Constants;
 with SK.KC;
@@ -13,48 +11,24 @@ package body SK.Scheduler
 --#    State is in New_Major, Current_Major, Current_Minor, Scheduling_Plan;
 is
 
-   --  Scheduling minor frame.
-   type Minor_Frame_Type is record
-      Subject_Id : Skp.Subject_Id_Type;
-      Ticks      : SK.Word32;
-   end record;
-
-   Null_Minor_Frame : constant Minor_Frame_Type := Minor_Frame_Type'
-     (Subject_Id => 0,
-      Ticks      => 0);
-
-   --  The minor frame range specifies the number of minor frames that
-   --  constitute a major frame.
-   type Minor_Frame_Range is range 1 .. 4;
-
-   type Minor_Frame_Array is array (Minor_Frame_Range) of Minor_Frame_Type;
-
-   --  A major frame specifies a sequence of minor frames to schedule.
-   type Major_Frame_Type is record
-      Length       : Minor_Frame_Range;
-      Minor_Frames : Minor_Frame_Array;
-   end record;
-
-   --  A scheduling plan consists of multiple major frames.
-   type Scheduling_Plan_Type is
-     array (SK.Major_Frame_Range) of Major_Frame_Type;
-
    --  Dumper subject id.
    Dumper_Id : constant := 1;
 
    --  Configured scheduling plan.
-   Scheduling_Plan : Scheduling_Plan_Type;
+   Scheduling_Plan : Skp.Scheduling.Scheduling_Plan_Type;
 
    Tau0_Kernel_Iface_Address : SK.Word64;
    pragma Import (C, Tau0_Kernel_Iface_Address, "tau0kernel_iface_ptr");
 
-   New_Major : SK.Major_Frame_Range;
+   New_Major : Skp.Scheduling.Major_Frame_Range;
    for New_Major'Address use System'To_Address (Tau0_Kernel_Iface_Address);
    --# assert New_Major'Always_Valid;
 
    --  Current major, minor frame.
-   Current_Major : SK.Major_Frame_Range := SK.Major_Frame_Range'First;
-   Current_Minor : Minor_Frame_Range    := Minor_Frame_Range'First;
+   Current_Major : Skp.Scheduling.Major_Frame_Range :=
+     Skp.Scheduling.Major_Frame_Range'First;
+   Current_Minor : Skp.Scheduling.Minor_Frame_Range :=
+     Skp.Scheduling.Minor_Frame_Range'First;
 
    -------------------------------------------------------------------------
 
@@ -75,8 +49,8 @@ is
          CPU.Panic;
       end if;
 
-      for I in SK.Major_Frame_Range loop
-         for J in Minor_Frame_Range loop
+      for I in Skp.Scheduling.Major_Frame_Range loop
+         for J in Skp.Scheduling.Minor_Frame_Range loop
             if Scheduling_Plan (I).Minor_Frames (J).Subject_Id = Old_Id then
                Scheduling_Plan (I).Minor_Frames (J).Subject_Id := New_Id;
             end if;
@@ -180,7 +154,7 @@ is
    --#       Current_Minor,
    --#       Scheduling_Plan;
    is
-      Current_Frame : Minor_Frame_Type;
+      Current_Frame : Skp.Scheduling.Minor_Frame_Type;
    begin
       Current_Frame := Scheduling_Plan (Current_Major).Minor_Frames
         (Current_Minor);
@@ -273,13 +247,13 @@ is
 
       Current_Major := New_Major;
       if Current_Minor >= Scheduling_Plan (Current_Major).Length then
-         Current_Minor := Minor_Frame_Range'First;
+         Current_Minor := Skp.Scheduling.Minor_Frame_Range'First;
       else
 
          --# assert
          --#    Current_Minor < Scheduling_Plan (Current_Major).Length and
          --#    Scheduling_Plan (Current_Major).Length
-         --#       <= Minor_Frame_Range'Last;
+         --#       <= Skp.Scheduling.Minor_Frame_Range'Last;
 
          Current_Minor := Current_Minor + 1;
       end if;
@@ -287,17 +261,5 @@ is
    end Handle_Vmx_Exit;
 
 begin
-   Scheduling_Plan := Scheduling_Plan_Type'
-     (0 => Major_Frame_Type'
-        (Length       => 1,
-         Minor_Frames => Minor_Frame_Array'
-           (Minor_Frame_Type'(Subject_Id => 0, Ticks => 2000),
-            others => Null_Minor_Frame)),
-      1 => Major_Frame_Type'
-        (Length       => 4,
-         Minor_Frames => Minor_Frame_Array'
-           (Minor_Frame_Type'(Subject_Id => 0, Ticks => 500),
-            Minor_Frame_Type'(Subject_Id => 2, Ticks => 500),
-            Minor_Frame_Type'(Subject_Id => 3, Ticks => 500),
-            Minor_Frame_Type'(Subject_Id => 0, Ticks => 500))));
+   Scheduling_Plan := Skp.Scheduling.Scheduling_Plans;
 end SK.Scheduler;

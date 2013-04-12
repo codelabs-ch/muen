@@ -1,5 +1,10 @@
+with Skp.Scheduling;
+
+use type Skp.Scheduling.Minor_Frame_Range;
+
 --# inherit
 --#    Skp.Subjects,
+--#    Skp.Scheduling,
 --#    X86_64,
 --#    SK.Constants,
 --#    SK.CPU,

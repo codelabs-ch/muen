@@ -17,9 +17,22 @@
 		<xs:attribute name="name" type="device_name_type" use="required"/>
 	</xs:complexType>
 
+	<xs:simpleType name="vmx_timer_rate_type">
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="31"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="processor_type">
+		<xs:attribute name="logical_cpus"   type="xs:positiveInteger"  use="required"/>
+		<xs:attribute name="speed"          type="xs:positiveInteger"  use="required"/>
+		<xs:attribute name="vmx_timer_rate" type="vmx_timer_rate_type" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="hardware_type">
 		<xs:sequence>
-			<xs:element name="device" type="device_type" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="processor" type="processor_type" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="device"    type="device_type"    minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 

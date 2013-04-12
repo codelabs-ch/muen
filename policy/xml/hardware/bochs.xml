@@ -1,4 +1,5 @@
 <hardware>
+	<processor logical_cpus="4" speed="50" vmx_timer_rate="0"/>
 	<device name="serial">
 		<io_port start="03f8" end="03fd"/>
 	</device>

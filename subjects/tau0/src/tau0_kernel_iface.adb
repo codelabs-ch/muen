@@ -1,31 +1,39 @@
 with System;
 
+with Skp.Scheduling;
+
+use type Skp.Scheduling.Major_Frame_Range;
+
 package body Tau0_Kernel_Iface
 --# own
---#    State is out New_Major, Index;
+--#    State is out Active_Major, Cur_Major;
 is
 
-   type Index_Type is mod 2 ** 1;
+   Cur_Major : Skp.Scheduling.Major_Frame_Range
+     := Skp.Scheduling.Major_Frame_Range'First;
 
-   Index : Index_Type := 0;
-
-   New_Major : SK.Major_Frame_Range;
-   for New_Major'Address use System'To_Address (16#4000#);
-   pragma Atomic (New_Major);
+   Active_Major : Skp.Scheduling.Major_Frame_Range;
+   for Active_Major'Address use System'To_Address (16#4000#);
+   pragma Atomic (Active_Major);
 
    -------------------------------------------------------------------------
 
    procedure Switch_Major_Frame
    --# global
-   --#       out New_Major;
-   --#    in out Index;
+   --#       out Active_Major;
+   --#    in out Cur_Major;
    --# derives
-   --#    Index     from * &
-   --#    New_Major from Index;
+   --#    Cur_Major    from * &
+   --#    Active_Major from Cur_Major;
    is
    begin
-      Index     := Index + 1;
-      New_Major := SK.Major_Frame_Range (Index);
+      if Cur_Major = Skp.Scheduling.Major_Frame_Range'Last then
+         Cur_Major := Skp.Scheduling.Major_Frame_Range'First;
+      else
+         Cur_Major := Cur_Major + 1;
+      end if;
+
+      Active_Major := Cur_Major;
    end Switch_Major_Frame;
 
 end Tau0_Kernel_Iface;

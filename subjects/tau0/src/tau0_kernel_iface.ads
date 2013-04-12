@@ -1,9 +1,5 @@
-with SK;
-
-use type SK.Major_Frame_Range;
-
 --# inherit
---#    SK;
+--#    Skp.Scheduling;
 package Tau0_Kernel_Iface
 --# own
 --#    State;

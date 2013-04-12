@@ -1,4 +1,4 @@
-<scheduling>
+<scheduling tick_rate="1000">
 	<major_frame>
 		<minor_frame subject_id="0" ticks="1700"/>
 	</major_frame>

@@ -15,6 +15,7 @@
 		<xs:sequence>
 			<xs:element name="major_frame" type="major_frame_type" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
+		<xs:attribute name="tick_rate" type="xs:positiveInteger" use="required"/>
 	</xs:complexType>
 
 </xs:schema>

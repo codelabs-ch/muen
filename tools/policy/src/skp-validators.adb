@@ -7,23 +7,10 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Validate (Memory_Layout : Memory_Layout_Type)
-   is
-      Pos : Memregion_Package.Cursor := Memory_Layout.First;
-   begin
-      while Memregion_Package.Has_Element (Position => Pos) loop
-         Validate_Mem_Region (R => Memregion_Package.Element
-                              (Position => Pos));
-         Memregion_Package.Next (Position => Pos);
-      end loop;
-   end Validate;
-
-   -------------------------------------------------------------------------
-
    procedure Validate (Device : Device_Type)
    is
    begin
-      Validate (Memory_Layout => Device.Memory_Layout);
+      Validate_Mem_Layout (L => Device.Memory_Layout);
    end Validate;
 
    -------------------------------------------------------------------------
@@ -31,7 +18,7 @@ is
    procedure Validate (Kernel : Kernel_Type)
    is
    begin
-      Validate (Memory_Layout => Kernel.Memory_Layout);
+      Validate_Mem_Layout (L => Kernel.Memory_Layout);
    end Validate;
 
    -------------------------------------------------------------------------
@@ -68,6 +55,19 @@ is
 
       Validate (Kernel => Policy.Kernel);
    end Validate;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Mem_Layout (L : Memory_Layout_Type)
+   is
+      Pos : Memregion_Package.Cursor := L.First;
+   begin
+      while Memregion_Package.Has_Element (Position => Pos) loop
+         Validate_Mem_Region (R => Memregion_Package.Element
+                              (Position => Pos));
+         Memregion_Package.Next (Position => Pos);
+      end loop;
+   end Validate_Mem_Layout;
 
    -------------------------------------------------------------------------
 

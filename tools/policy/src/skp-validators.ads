@@ -5,7 +5,7 @@ is
    procedure Validate_Mem_Region (R : Memory_Region_Type);
 
    --  Validate memory layout.
-   procedure Validate (Memory_Layout : Memory_Layout_Type);
+   procedure Validate_Mem_Layout (L : Memory_Layout_Type);
 
    --  Validate device specification.
    procedure Validate (Device : Device_Type);

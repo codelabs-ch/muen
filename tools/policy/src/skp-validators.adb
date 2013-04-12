@@ -56,6 +56,8 @@ is
            & SK.Utils.To_Hex (Item => Policy.Vmcs_Start_Address)
            & " - address must be below 1m - 4k *" & Policy.Subjects.Length'Img;
       end if;
+
+      Validate (Kernel => Policy.Kernel);
    end Validate;
 
    -------------------------------------------------------------------------

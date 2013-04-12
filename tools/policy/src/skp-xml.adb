@@ -22,6 +22,9 @@ is
    --  Convert given hex string to word64.
    function To_Word64 (Hex : String) return SK.Word64;
 
+   --  Deserialize hardware information from XML data.
+   function Deserialize_Hardware (Node : DOM.Core.Node) return Hardware_Type;
+
    --  Deserialize memory layout from XML data.
    function Deserialize_Mem_Layout
      (Node : DOM.Core.Node)
@@ -34,6 +37,39 @@ is
    function Deserialize_Scheduling
      (Node : DOM.Core.Node)
       return Scheduling_Type;
+
+   -------------------------------------------------------------------------
+
+   function Deserialize_Hardware (Node : DOM.Core.Node) return Hardware_Type
+   is
+      Hardware : Hardware_Type;
+
+      --  Add device to hardware.
+      procedure Add_Device (Node : DOM.Core.Node);
+
+      -------------------------------------------------------------------
+
+      procedure Add_Device (Node : DOM.Core.Node)
+      is
+         Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "name");
+         Dev  : Device_Type;
+      begin
+         Dev.Name          := To_Unbounded_String (Name);
+         Dev.Memory_Layout := Deserialize_Mem_Layout (Node => Node);
+         Dev.IO_Ports      := Deserialize_Ports (Node => Node);
+
+         Hardware.Devices.Insert
+           (Key      => Dev.Name,
+            New_Item => Dev);
+      end Add_Device;
+   begin
+      Util.For_Each_Node (Node     => Node,
+                          Tag_Name => "device",
+                          Process  => Add_Device'Access);
+      return Hardware;
+   end Deserialize_Hardware;
 
    -------------------------------------------------------------------------
 
@@ -344,31 +380,8 @@ is
            := Xml.Util.Get_Element_By_Tag_Name
              (Node     => Root,
               Tag_Name => "hardware");
-
-         --  Add device to hardware policy.
-         procedure Add_Device (Node : DOM.Core.Node);
-
-         -------------------------------------------------------------------
-
-         procedure Add_Device (Node : DOM.Core.Node)
-         is
-            Name : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => "name");
-            Dev  : Device_Type;
-         begin
-            Dev.Name          := To_Unbounded_String (Name);
-            Dev.Memory_Layout := Deserialize_Mem_Layout (Node => Node);
-            Dev.IO_Ports      := Deserialize_Ports (Node => Node);
-
-            Policy.Hardware.Devices.Insert
-              (Key      => Dev.Name,
-               New_Item => Dev);
-         end Add_Device;
       begin
-         Util.For_Each_Node (Node     => HW_Node,
-                             Tag_Name => "device",
-                             Process  => Add_Device'Access);
+         Policy.Hardware := Deserialize_Hardware (Node => HW_Node);
       end;
 
       declare

@@ -32,6 +32,9 @@ is
       T.Add_Test_Routine
         (Routine => Write_Hardware'Access,
          Name    => "Write hardware policy files");
+      T.Add_Test_Routine
+        (Routine => Write_Scheduling'Access,
+         Name    => "Write scheduling policy files");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -117,6 +120,30 @@ is
       Ada.Directories.Delete_File (Name => Knl_H);
       Ada.Directories.Delete_File (Name => Knl_Spec);
    end Write_Kernel;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_Scheduling
+   is
+      Spec_File : constant String := "obj/skp-scheduling.ads";
+      Data      : Xml.XML_Data_Type;
+      Policy    : Policy_Type;
+   begin
+      Xml.Parse (Data   => Data,
+                 File   => "data/test_policy1.xml",
+                 Schema => "schema/system.xsd");
+
+      Policy := Xml.To_Policy (Data => Data);
+      Writers.Write_Scheduling (Dir_Name => "obj",
+                                Policy   => Policy);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Spec_File,
+               Filename2 => "data/skp-scheduling.ref"),
+              Message   => "Spec file mismatch");
+
+      Ada.Directories.Delete_File (Name => Spec_File);
+   end Write_Scheduling;
 
    -------------------------------------------------------------------------
 

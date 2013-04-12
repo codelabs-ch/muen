@@ -382,6 +382,110 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Write_Scheduling
+     (Dir_Name : String;
+      Policy   : Policy_Type)
+   is
+      Max_Minor_Count : Positive          := 1;
+      Cur_Major       : Natural           := 0;
+      Major_Count     : constant Positive := Positive
+        (Policy.Scheduling.Major_Frames.Length);
+      Buffer          : Unbounded_String;
+      Tmpl            : Templates.Template_Type;
+
+      --  Determine maximum count of minor frames per major frame.
+      procedure Calc_Max_Minor_Count (C : Major_Frames_Package.Cursor);
+
+      --  Write major frame to buffer.
+      procedure Write_Major_Frame (C : Major_Frames_Package.Cursor);
+
+      ----------------------------------------------------------------------
+
+      procedure Calc_Max_Minor_Count (C : Major_Frames_Package.Cursor)
+      is
+         Major : constant Major_Frame_Type :=
+           Major_Frames_Package.Element (C);
+      begin
+         if Positive (Major.Length) > Max_Minor_Count then
+            Max_Minor_Count := Positive (Major.Length);
+         end if;
+      end Calc_Max_Minor_Count;
+
+      ----------------------------------------------------------------------
+
+      procedure Write_Major_Frame (C : Major_Frames_Package.Cursor)
+      is
+         Major       : constant Major_Frame_Type :=
+           Major_Frames_Package.Element (C);
+         Minor_Count : constant Positive         := Positive (Major.Length);
+         Cur_Minor   : Natural                   := 1;
+
+         --  Write minor frame to buffer.
+         procedure Write_Minor_Frame (C : Minor_Frames_Package.Cursor);
+
+         ----------------------------------------------------------------------
+
+         procedure Write_Minor_Frame (C : Minor_Frames_Package.Cursor)
+         is
+            Minor : constant Minor_Frame_Type := Minor_Frames_Package.Element
+              (Position => C);
+         begin
+            Buffer := Buffer & Indent & Indent & Indent
+              & "Minor_Frame_Type'(Subject_Id =>" & Minor.Subject_Id'Img
+              & ", Ticks =>" & Minor.Ticks'Img & ")";
+
+            if Cur_Minor /= Minor_Count then
+               Buffer := Buffer & "," & ASCII.LF;
+            end if;
+            Cur_Minor := Cur_Minor + 1;
+         end Write_Minor_Frame;
+      begin
+         Buffer := Buffer & Indent
+           & " " & Cur_Major'Img & " => Major_Frame_Type'"
+           & ASCII.LF
+           & Indent & Indent & "(Length       =>" & Major.Length'Img & ","
+           & ASCII.LF
+           & Indent & Indent & " Minor_Frames => Minor_Frame_Array'("
+           & ASCII.LF;
+
+         Major.Iterate (Process => Write_Minor_Frame'Access);
+
+         if Positive (Major.Length) < Max_Minor_Count then
+            Buffer := Buffer & "," & ASCII.LF & Indent & Indent & Indent
+              & "others => Null_Minor_Frame";
+         end if;
+
+         Buffer := Buffer & "))";
+
+         if Cur_Major /= Major_Count - 1 then
+            Buffer := Buffer & "," & ASCII.LF;
+         end if;
+         Cur_Major := Cur_Major + 1;
+      end Write_Major_Frame;
+   begin
+      Policy.Scheduling.Major_Frames.Iterate
+        (Process => Calc_Max_Minor_Count'Access);
+
+      Policy.Scheduling.Major_Frames.Iterate
+        (Process => Write_Major_Frame'Access);
+
+      Tmpl := Templates.Load (Filename  => "skp-scheduling.ads");
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__minor_range__",
+                         Content  => "1 .." & Max_Minor_Count'Img);
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__major_range__",
+                         Content  => "0 .." & Natural'Image (Major_Count - 1));
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__scheduling_plans__",
+                         Content  => To_String (Buffer));
+
+      Templates.Write (Template => Tmpl,
+                       Filename => Dir_Name & "/skp-scheduling.ads");
+   end Write_Scheduling;
+
+   -------------------------------------------------------------------------
+
    procedure Write_Subjects
      (Dir_Name : String;
       Policy   : Policy_Type)

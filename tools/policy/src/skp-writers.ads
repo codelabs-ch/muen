@@ -26,4 +26,9 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type);
 
+   --  Write scheduling-related policy files to directory specified by name.
+   procedure Write_Scheduling
+     (Dir_Name : String;
+      Policy   : Policy_Type);
+
 end Skp.Writers;

@@ -23,4 +23,7 @@ is
    --  Write hardware spec file.
    procedure Write_Hardware;
 
+   --  Write scheduling spec file.
+   procedure Write_Scheduling;
+
 end Writer_Tests;

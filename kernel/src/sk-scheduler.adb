@@ -94,6 +94,37 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Update scheduling information. If the end of the current major frame is
+   --  reached, the minor frame index is reset and the major frame is switched
+   --  to the one set by Tau0. Otherwise the minor frame index is incremented
+   --  by 1.
+   procedure Update_Scheduling_Info
+   --# global
+   --#    in     New_Major;
+   --#    in     Scheduling_Plan;
+   --#    in out Current_Major;
+   --#    in out Current_Minor;
+   --# derives
+   --#    Current_Minor from *, Current_Major, Scheduling_Plan &
+   --#    Current_Major from *, Current_Minor, New_Major, Scheduling_Plan;
+   is
+   begin
+      if Current_Minor < Scheduling_Plan (Current_Major).Length then
+
+         --# assert
+         --#    Current_Minor < Scheduling_Plan (Current_Major).Length and
+         --#    Scheduling_Plan (Current_Major).Length
+         --#       <= Skp.Scheduling.Minor_Frame_Range'Last;
+
+         Current_Minor := Current_Minor + 1;
+      else
+         Current_Minor := Skp.Scheduling.Minor_Frame_Range'First;
+         Current_Major := New_Major;
+      end if;
+   end Update_Scheduling_Info;
+
+   -------------------------------------------------------------------------
+
    procedure Handle_Hypercall
      (Current_Subject :        Skp.Subject_Id_Type;
       Subject_State   : in out SK.Subject_State_Type)
@@ -182,12 +213,17 @@ is
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    Current_Major   from New_Major &
-   --#    Current_Minor   from
+   --#    Current_Major from
    --#       *,
-   --#       New_Major,
-   --#       Current_Major,
    --#       Current_Minor,
+   --#       New_Major,
+   --#       Scheduling_Plan,
+   --#       Subject_Registers,
+   --#       Subjects.Descriptors,
+   --#       X86_64.State  &
+   --#    Current_Minor from
+   --#       *,
+   --#       Current_Major,
    --#       Scheduling_Plan,
    --#       Subject_Registers,
    --#       Subjects.Descriptors,
@@ -245,18 +281,7 @@ is
       Subjects.Set_State (Id    => Current_Subject,
                           State => State);
 
-      Current_Major := New_Major;
-      if Current_Minor >= Scheduling_Plan (Current_Major).Length then
-         Current_Minor := Skp.Scheduling.Minor_Frame_Range'First;
-      else
-
-         --# assert
-         --#    Current_Minor < Scheduling_Plan (Current_Major).Length and
-         --#    Scheduling_Plan (Current_Major).Length
-         --#       <= Skp.Scheduling.Minor_Frame_Range'Last;
-
-         Current_Minor := Current_Minor + 1;
-      end if;
+      Update_Scheduling_Info;
       Schedule;
    end Handle_Vmx_Exit;
 

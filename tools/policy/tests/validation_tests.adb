@@ -155,15 +155,10 @@ is
    is
    begin
       declare
-         D : Xml.XML_Data_Type;
          P : Policy_Type;
-         pragma Unreferenced (P);
       begin
-         Xml.Parse (Data   => D,
-                    File   => "data/invalid_vmxon_addr_alignment.xml",
-                    Schema => "schema/system.xsd");
-
-         P := Xml.To_Policy (Data => D);
+         P.Vmxon_Address := 16#42#;
+         Validators.Validate (Policy => P);
          Fail (Message => "Exception expected");
 
       exception
@@ -175,15 +170,10 @@ is
       end;
 
       declare
-         D : Xml.XML_Data_Type;
          P : Policy_Type;
-         pragma Unreferenced (P);
       begin
-         Xml.Parse (Data   => D,
-                    File   => "data/invalid_vmxon_addr_lowmem.xml",
-                    Schema => "schema/system.xsd");
-
-         P := Xml.To_Policy (Data => D);
+         P.Vmxon_Address := 16#200000#;
+         Validators.Validate (Policy => P);
          Fail (Message => "Exception expected");
 
       exception

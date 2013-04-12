@@ -1,6 +1,6 @@
 <scheduling>
 	<major_frame>
-		<minor_frame subject_id="0" ticks="2000"/>
+		<minor_frame subject_id="0" ticks="1700"/>
 	</major_frame>
 	<major_frame>
 		<minor_frame subject_id="0" ticks="500"/>

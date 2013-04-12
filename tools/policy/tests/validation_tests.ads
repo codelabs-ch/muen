@@ -20,6 +20,9 @@ is
    --  Verify invalid VMCS addresses.
    procedure Invalid_Vmcs_Addrs;
 
+   --  Verify major frames with different total tick count.
+   procedure Invalid_Major_Frame_Ticks;
+
    --  Validate policy.
    procedure Policy_Validation;
 

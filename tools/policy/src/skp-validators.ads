@@ -19,6 +19,9 @@ is
    --  Validate subjects.
    procedure Validate_Subjects (P : Policy_Type);
 
+   --  Validate scheduling plan.
+   procedure Validate_Scheduling (S : Scheduling_Type);
+
    --  Validate given policy.
    procedure Validate_Policy (P : Policy_Type);
 

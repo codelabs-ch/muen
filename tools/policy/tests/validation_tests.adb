@@ -1,6 +1,5 @@
 with Ada.Exceptions;
 
-with Skp.Xml;
 with Skp.Validators;
 
 package body Validation_Tests
@@ -35,44 +34,39 @@ is
    is
    begin
       declare
-         D : Xml.XML_Data_Type;
-         P : Policy_Type;
-         pragma Unreferenced (P);
+         R : constant Memory_Region_Type
+           := (Physical_Address => 16#0023#,
+               Size             => 16#1000#,
+               Alignment        => 16#1000#,
+               others           => <>);
       begin
-         Xml.Parse (Data   => D,
-                    File   => "data/invalid_memregion_addr_phys.xml",
-                    Schema => "schema/system.xsd");
-
-         P := Xml.To_Policy (Data => D);
+         Validators.Validate (Region => R);
          Fail (Message => "Exception expected");
 
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject tau0: Invalid memory region physical address "
-                    & "0000000000000023 for specified alignment "
-                    & "0000000000001000",
+                    = "Invalid memory region physical address 0000000000000023"
+                    & " for specified alignment 0000000000001000",
                     Message   => "Exception message mismatch");
       end;
 
       declare
-         D : Xml.XML_Data_Type;
-         P : Policy_Type;
-         pragma Unreferenced (P);
+         R : constant Memory_Region_Type
+           := (Physical_Address => 16#0000#,
+               Virtual_Address  => 16#0028#,
+               Size             => 16#1000#,
+               Alignment        => 16#1000#,
+               others           => <>);
       begin
-         Xml.Parse (Data   => D,
-                    File   => "data/invalid_memregion_addr_virt.xml",
-                    Schema => "schema/system.xsd");
-
-         P := Xml.To_Policy (Data => D);
+         Validators.Validate (Region => R);
          Fail (Message => "Exception expected");
 
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject tau0: Invalid memory region virtual address "
-                    & "0000000000000028 for specified alignment "
-                    & "0000000000001000",
+                    = "Invalid memory region virtual address 0000000000000028 "
+                    & "for specified alignment 0000000000001000",
                     Message   => "Exception message mismatch");
       end;
    end Invalid_Memregion_Addrs;

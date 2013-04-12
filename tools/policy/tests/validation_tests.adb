@@ -81,26 +81,20 @@ is
 
    procedure Invalid_Memregion_Size
    is
-      D : Xml.XML_Data_Type;
-      P : Policy_Type;
-      pragma Unreferenced (P);
+      R : constant Memory_Region_Type
+        := (Size      => 16#010000#,
+            Alignment => 16#200000#,
+            others    => <>);
    begin
-      Xml.Parse (Data   => D,
-                 File   => "data/invalid_memregion_size.xml",
-                 Schema => "schema/system.xsd");
+      Validators.Validate (Region => R);
+      Fail (Message => "Exception expected");
 
-      begin
-         P := Xml.To_Policy (Data => D);
-         Fail (Message => "Exception expected");
-
-      exception
-         when E : Validators.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject tau0: Invalid memory region size "
-                    & "0000000000010000 for specified alignment "
-                    & "0000000000200000",
-                    Message   => "Exception message mismatch");
-      end;
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Invalid memory region size 0000000000010000 for specified "
+                 & "alignment 0000000000200000",
+                 Message   => "Exception message mismatch");
    end Invalid_Memregion_Size;
 
    -------------------------------------------------------------------------

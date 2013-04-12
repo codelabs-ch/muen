@@ -20,4 +20,7 @@ is
    --  Verify invalid VMCS addresses.
    procedure Invalid_Vmcs_Addrs;
 
+   --  Validate policy.
+   procedure Policy_Validation;
+
 end Validation_Tests;

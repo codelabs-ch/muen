@@ -10,7 +10,6 @@ with Schema.Validators;
 
 with Skp.Xml.Util;
 with Skp.Xml.Grammar;
-with Skp.Validators;
 
 package body Skp.Xml
 is
@@ -435,8 +434,6 @@ is
       Util.For_Each_Node (Node     => Root,
                           Tag_Name => "subject",
                           Process  => Add_Subject'Access);
-
-      Validators.Validate_Policy (P => Policy);
       return Policy;
    end To_Policy;
 

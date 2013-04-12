@@ -1,5 +1,6 @@
 with Ada.Exceptions;
 
+with Skp.Xml;
 with Skp.Validators;
 
 package body Validation_Tests
@@ -26,6 +27,9 @@ is
       T.Add_Test_Routine
         (Routine => Invalid_Vmcs_Addrs'Access,
          Name    => "Invalid VMCS addresses");
+      T.Add_Test_Routine
+        (Routine => Policy_Validation'Access,
+         Name    => "Validate policy");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -166,5 +170,22 @@ is
                     Message   => "Exception message mismatch (lowmem)");
       end;
    end Invalid_Vmxon_Addrs;
+
+   -------------------------------------------------------------------------
+
+   procedure Policy_Validation
+   is
+      D : Xml.XML_Data_Type;
+      P : Policy_Type;
+   begin
+      Xml.Parse (Data   => D,
+                 File   => "data/test_policy1.xml",
+                 Schema => "schema/system.xsd");
+      P := Xml.To_Policy (Data => D);
+      Validators.Validate_Policy (P => P);
+
+      --  Must not raise an exception.
+
+   end Policy_Validation;
 
 end Validation_Tests;

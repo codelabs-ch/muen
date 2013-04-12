@@ -19,6 +19,14 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Validate (Device : Device_Type)
+   is
+   begin
+      Validate (Memory_Layout => Device.Memory_Layout);
+   end Validate;
+
+   -------------------------------------------------------------------------
+
    procedure Validate (Kernel : Kernel_Type)
    is
    begin

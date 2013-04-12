@@ -19,6 +19,14 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Validate (Kernel : Kernel_Type)
+   is
+   begin
+      Validate (Memory_Layout => Kernel.Memory_Layout);
+   end Validate;
+
+   -------------------------------------------------------------------------
+
    procedure Validate (Policy : Policy_Type)
    is
       One_Megabyte   : constant SK.Word64 := 16#100000#;

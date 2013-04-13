@@ -10,7 +10,8 @@
 --#    SK.MP,
 --#    SK.CPU,
 --#    SK.Locks,
---#    SK.IO;
+--#    SK.IO,
+--#    SK.Hpet;
 package SK.Kernel
 is
 
@@ -21,16 +22,21 @@ is
    --#    in out Subjects.Descriptors;
    --#    in out MP.CPU_Online_Count;
    --#    in out Locks.State;
+   --#    in     Hpet.Hpet_In;
    --#    in     Interrupts.ISR_List;
    --#    in     GDT.GDT_Pointer;
    --#    in     Scheduler.State;
    --#    in     VMX.State;
+   --#       out Hpet.Hpet_Out;
    --#       out Interrupts.IDT;
    --#       out Interrupts.IDT_Pointer;
    --# derives
    --#    Interrupts.IDT, Interrupts.IDT_Pointer from Interrupts.ISR_List &
    --#    MP.CPU_Online_Count                    from *                   &
    --#    Locks.State                            from *, X86_64.State     &
+   --#    Hpet.Hpet_Out from
+   --#       Hpet.Hpet_In,
+   --#       X86_64.State &
    --#    Subjects.Descriptors from
    --#       *,
    --#       X86_64.State,

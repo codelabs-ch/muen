@@ -9,6 +9,7 @@ with SK.CPU;
 with SK.MP;
 with SK.Locks;
 with SK.IO;
+with SK.Hpet;
 
 package body SK.Kernel
 is
@@ -80,6 +81,7 @@ is
          pragma Debug (KC.New_Line);
 
          VMX.Enable;
+         Hpet.Enable;
          Scheduler.Schedule;
       else
          pragma Debug (KC.Put_Line (Item => "System initialisation error"));

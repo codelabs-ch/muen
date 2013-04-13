@@ -8,9 +8,32 @@ with SK.Apic;
 with SK.CPU;
 with SK.MP;
 with SK.Locks;
+with SK.IO;
 
 package body SK.Kernel
 is
+
+   -------------------------------------------------------------------------
+
+   --  Mask all interrupts in the legacy PIC.
+   procedure Disable_Legacy_PIC
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *;
+   is
+   begin
+
+      --  Disable slave.
+
+      IO.Outb (Port  => 16#a1#,
+               Value => 16#ff#);
+
+      --  Disable master.
+
+      IO.Outb (Port  => 16#21#,
+               Value => 16#ff#);
+   end Disable_Legacy_PIC;
 
    -------------------------------------------------------------------------
 
@@ -26,7 +49,7 @@ is
          pragma Debug (KC.Put_Line
            (Item => "Booting Separation Kernel ("
             & SK.Version.Version_String & ") ..."));
-         null;
+         Disable_Legacy_PIC;
       else
          Apic.Enable;
 

@@ -9,7 +9,8 @@
 --#    SK.VMX,
 --#    SK.MP,
 --#    SK.CPU,
---#    SK.Locks;
+--#    SK.Locks,
+--#    SK.IO;
 package SK.Kernel
 is
 

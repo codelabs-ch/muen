@@ -72,6 +72,12 @@ is
       Pos   : Word64_Pos)
       return Word64;
 
+   --  Clear bit at given position.
+   function Bit_Clear
+     (Value : Word64;
+      Pos   : Word64_Pos)
+      return Word64;
+
 private
 
    Null_CPU_Regs : constant CPU_Registers_Type := CPU_Registers_Type'

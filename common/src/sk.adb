@@ -3,6 +3,19 @@ is
 
    -------------------------------------------------------------------------
 
+   function Bit_Clear
+     (Value : Word64;
+      Pos   : Word64_Pos)
+      return Word64
+   is
+      Mask : Word64;
+   begin
+      Mask := not (2 ** Natural (Pos));
+      return Value and Mask;
+   end Bit_Clear;
+
+   -------------------------------------------------------------------------
+
    function Bit_Set
      (Value : Word64;
       Pos   : Word64_Pos)

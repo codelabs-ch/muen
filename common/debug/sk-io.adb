@@ -6,9 +6,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Inb
-     (Port  :     Word16;
-      Value : out Byte)
+     (Port  :     SK.Word16;
+      Value : out SK.Byte)
    is
+      --# hide Inb;
    begin
       System.Machine_Code.Asm
         (Template => "inb %1, %0",
@@ -20,9 +21,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Outb
-     (Port  : Word16;
-      Value : Byte)
+     (Port  : SK.Word16;
+      Value : SK.Byte)
    is
+      --# hide Outb;
    begin
       System.Machine_Code.Asm
         (Template => "outb %0, %1",

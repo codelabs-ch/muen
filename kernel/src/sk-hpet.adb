@@ -22,6 +22,33 @@ is
 
    --  HPET memory map, see IA-PC HPET Specification Rev 1.0a, section 2.1.
 
+   type Flag_Type is mod 2 ** 1;
+   for Flag_Type'Size use 1;
+
+   type Timer_Number_Type is mod 2 ** 5;
+   for Timer_Number_Type'Size use 5;
+
+   --  General Capability and ID register, see IA-PC HPET Specification Rev
+   --  1.0a, section 2.3.4.
+   type Capabilities_Register_Type is record
+      Rev_Id             : SK.Byte;
+      Num_Tim_Cap        : Timer_Number_Type;
+      Count_Size_Cap     : Flag_Type;
+      Leg_RT_Cap         : Flag_Type;
+      Vendor_Id          : SK.Word16;
+      Counter_Clk_Period : Counter_Period_Type;
+   end record;
+
+   for Capabilities_Register_Type use record
+      Rev_Id             at 0 range  0 .. 7;
+      Num_Tim_Cap        at 0 range  8 .. 12;
+      Count_Size_Cap     at 0 range 13 .. 13;
+      Leg_RT_Cap         at 0 range 15 .. 15;
+      Vendor_Id          at 0 range 16 .. 31;
+      Counter_Clk_Period at 0 range 32 .. 63;
+   end record;
+   for Capabilities_Register_Type'Size use 64;
+
    type Timer_Type is record
       Config     : SK.Word64;
       Comparator : SK.Word64;
@@ -41,7 +68,7 @@ is
    for Timers_Type'Size use Num_Timers * 4 * 64;
 
    type HPET_Type is record
-      Capabilities       : SK.Word64;
+      Capabilities       : Capabilities_Register_Type;
       Config             : SK.Word64;
       Interrupt_Status   : SK.Word64;
       Main_Counter_Value : SK.Word64;
@@ -69,17 +96,16 @@ is
    for Hpet_Out'Address use System'To_Address (Hpet_Address);
    pragma Volatile (Hpet_Out);
 
-   High_Word32_Mask : constant SK.Word64 := 16#ffffffff00000000#;
-
    -------------------------------------------------------------------------
 
-   function Get_Counter_Period return SK.Word32
+   function Get_Counter_Period return Counter_Period_Type
    is
-      Cap : SK.Word64;
    begin
-      Cap := Hpet_In.Capabilities;
-      Cap := (Cap and High_Word32_Mask) / 2 ** 32;
-      return SK.Word32'Mod (Cap);
+
+      --# assert
+      --#    Hpet_In.Capabilities.Counter_Clk_Period in Counter_Period_Type;
+
+      return Hpet_In.Capabilities.Counter_Clk_Period;
    end Get_Counter_Period;
 
    -------------------------------------------------------------------------

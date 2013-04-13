@@ -13,6 +13,14 @@ is
    --  Interrupt trigger type.
    type Interrupt_Kind is (Level, Edge);
 
+   --  Main Counter Tick period, representing the value range of the
+   --  COUNTER_CLK_PERIOD general capability register, see IA-PC HPET
+   --  specification Rev 1.0a, section 2.3.4:
+   --    "A value of 0 in this field is not permitted. The value in this field
+   --     must be less than or equal to 05F5E100h (10^8 femptoseconds = 100
+   --     nanoseconds)."
+   subtype Counter_Period_Type is SK.Word32 range 1 .. 16#05f5e100#;
+
    --  Initialize and enable HPET timer.
    procedure Enable;
    --# global
@@ -23,7 +31,7 @@ is
 
    --  Returns the main HPET counter period in at which the counter increments
    --  in femptoseconds (10^-15 [s]).
-   function Get_Counter_Period return SK.Word32;
+   function Get_Counter_Period return Counter_Period_Type;
    --# global
    --#    in Hpet_In;
 

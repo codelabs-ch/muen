@@ -237,6 +237,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Sti
+   is
+      --# hide Sti;
+   begin
+      System.Machine_Code.Asm
+        (Template => "sti",
+         Volatile => True);
+   end Sti;
+
+   -------------------------------------------------------------------------
+
    procedure VMCLEAR
      (Region  :     SK.Word64;
       Success : out Boolean)

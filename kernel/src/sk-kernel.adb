@@ -16,6 +16,47 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Arm the Hpet timer to fire every second.
+   procedure Arm_Hpet_Timer
+   --# global
+   --#    in     X86_64.State;
+   --#    in     Hpet.Hpet_In;
+   --#       out Hpet.Hpet_Out;
+   --# derives
+   --#    Hpet.Hpet_Out from Hpet.Hpet_In, X86_64.State;
+   is
+      Sec_To_Femto : constant SK.Word64 := 10 ** 15;
+      Period       : SK.Word32;
+      Timer_Ticks  : SK.Word64;
+   begin
+
+      --  Setup timer 0 in FSB mode.
+
+      Hpet.Configure_Timer (Id             => 1,
+                            Periodic       => True,
+                            FSB_Mode       => True,
+                            Interrupt_Type => Hpet.Edge);
+
+      --  Deliver timer interrupt to local APIC as vector 32.
+
+      Hpet.Set_FSB_Route (Id             => 1,
+                          Destination_Id => Apic.Get_ID,
+                          Vector         => 32);
+
+      --  Calculate ticks: convert second to femto and divide by period.
+
+      Period := Hpet.Get_Counter_Period;
+      Timer_Ticks := (1 * Sec_To_Femto) /  SK.Word64 (Period);
+
+      Hpet.Set_Timer (Id    => 1,
+                      Ticks => Timer_Ticks);
+
+      Hpet.Unmask_Interrupt (Id => 1);
+      Hpet.Set_Main_Counter (Value => 0);
+   end Arm_Hpet_Timer;
+
+   -------------------------------------------------------------------------
+
    --  Mask all interrupts in the legacy PIC.
    procedure Disable_Legacy_PIC
    --# global
@@ -82,6 +123,7 @@ is
 
          VMX.Enable;
          Hpet.Enable;
+         Arm_Hpet_Timer;
          Scheduler.Schedule;
       else
          pragma Debug (KC.Put_Line (Item => "System initialisation error"));

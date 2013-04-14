@@ -1,0 +1,145 @@
+with System;
+
+package body SK.IO_Apic
+--# own State is
+--#    in     In_Window,
+--#       out Out_Window,
+--#       out Register_Select,
+--#       out EOI_Register;
+is
+
+   --  I/O APIC at physical address 0xfec00000 is mapped at virtual address
+   --  0x1fc000.
+
+   IO_Apic_Address : constant := 16#1fc000#;
+
+   --  I/O APIC register offsets relative to I/O Apic address, see 82093AA I/O
+   --  Advanced Programmable Interrupt Controller (IOAPIC) specification,
+   --  section 3.2.4.
+
+   IO_APIC_IND  : constant := 16#00#;
+   IO_APIC_DAT  : constant := 16#10#;
+   IO_APIC_EOIR : constant := 16#40#;
+
+   IO_APIC_REDTBL : constant := 16#10#;
+
+   RED_TRIGGER_MODE : constant := 15;
+   RED_MASK         : constant := 16;
+
+   Register_Select : SK.Word32;
+   for Register_Select'Address use System'To_Address
+     (IO_Apic_Address + IO_APIC_IND);
+   pragma Volatile (Register_Select);
+
+   In_Window : SK.Word32;
+   for In_Window'Address use System'To_Address (IO_Apic_Address + IO_APIC_DAT);
+   pragma Volatile (In_Window);
+   --# assert In_Window'Always_Valid;
+
+   Out_Window : SK.Word32;
+   for Out_Window'Address use System'To_Address
+     (IO_Apic_Address + IO_APIC_DAT);
+   pragma Volatile (Out_Window);
+
+   EOI_Register : SK.Word32;
+   for EOI_Register'Address use System'To_Address
+     (IO_Apic_Address + IO_APIC_EOIR);
+   pragma Volatile (EOI_Register);
+
+   -------------------------------------------------------------------------
+
+   --  Create redirection entry from specified parameters, see 82093AA I/O
+   --  Advanced Programmable Interrupt Controller (IOAPIC) specification,
+   --  section 3.2.4.
+   procedure Create_Redirection_Entry
+     (Redir_Entry    : out SK.Word64;
+      Vector         :     SK.Byte;
+      Trigger_Mode   :     Trigger_Kind;
+      Destination_Id :     SK.Byte)
+   --# derives
+   --#    Redir_Entry from Vector, Trigger_Mode, Destination_Id;
+   is
+   begin
+      Redir_Entry := SK.Word64 (Vector);
+
+      if Trigger_Mode = Level then
+         Redir_Entry := SK.Bit_Set (Value => Redir_Entry,
+                                    Pos   => RED_TRIGGER_MODE);
+      end if;
+
+      Redir_Entry := Redir_Entry + SK.Word64 (Destination_Id) * 2 ** 56;
+   end Create_Redirection_Entry;
+
+   -------------------------------------------------------------------------
+
+   procedure Route_IRQ
+     (IRQ            : SK.Byte;
+      Vector         : SK.Byte;
+      Trigger_Mode   : Trigger_Kind;
+      Destination_Id : SK.Byte)
+   --# global
+   --#    out Register_Select;
+   --#    out Out_Window;
+   --# derives
+   --#    Register_Select from IRQ &
+   --#    Out_Window      from Vector, Trigger_Mode, Destination_Id;
+   is
+      Redir_Entry : SK.Word64;
+   begin
+      Create_Redirection_Entry (Redir_Entry    => Redir_Entry,
+                                Vector         => Vector,
+                                Trigger_Mode   => Trigger_Mode,
+                                Destination_Id => Destination_Id);
+
+      Register_Select := IO_APIC_REDTBL + SK.Word32 (IRQ) * 2;
+      Out_Window      := SK.Word32'Mod (Redir_Entry);
+
+      Register_Select := IO_APIC_REDTBL + SK.Word32 (IRQ) * 2 + 1;
+      Out_Window      := SK.Word32 (Redir_Entry / 2 ** 32);
+   end Route_IRQ;
+
+   -------------------------------------------------------------------------
+
+   procedure Mask_Interrupt (IRQ : SK.Byte)
+   --# global
+   --#    in     In_Window;
+   --#       out Out_Window;
+   --#       out Register_Select;
+   --# derives
+   --#    Register_Select from IRQ &
+   --#    Out_Window      from In_Window;
+   is
+      Value : SK.Word32;
+   begin
+      Register_Select := IO_APIC_REDTBL + SK.Word32 (IRQ) * 2;
+
+      Value := In_Window;
+      Value := SK.Word32'Mod
+        (SK.Bit_Set (Value => SK.Word64 (Value),
+                     Pos   => RED_MASK));
+      Out_Window := Value;
+   end Mask_Interrupt;
+
+   -------------------------------------------------------------------------
+
+   procedure Unmask_Interrupt (IRQ : SK.Byte)
+   --# global
+   --#    in     In_Window;
+   --#       out Out_Window;
+   --#       out Register_Select;
+   --# derives
+   --#    Register_Select from IRQ &
+   --#    Out_Window      from In_Window;
+   is
+      Value : SK.Word32;
+   begin
+      Register_Select := IO_APIC_REDTBL + SK.Word32 (IRQ) * 2;
+
+      Value := In_Window;
+      Value := SK.Word32'Mod
+        (SK.Bit_Clear (Value => SK.Word64 (Value),
+                       Pos   => RED_MASK));
+      Out_Window := Value;
+   end Unmask_Interrupt;
+
+end SK.IO_Apic;

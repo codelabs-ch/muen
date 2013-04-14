@@ -24,4 +24,13 @@ is
    --# derives
    --#    Descriptors from *, Id, State;
 
+   --  Set pending event of subject specified by id to given vector.
+   procedure Set_Pending_Event
+     (Id     : Skp.Subject_Id_Type;
+      Vector : SK.Byte);
+   --# global
+   --#    Descriptors;
+   --# derives
+   --#    Descriptors from *, Id, Vector;
+
 end SK.Subjects;

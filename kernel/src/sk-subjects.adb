@@ -29,6 +29,16 @@ is
       Descriptors (Id) := State;
    end Set_State;
 
+   -------------------------------------------------------------------------
+
+   procedure Set_Pending_Event
+     (Id     : Skp.Subject_Id_Type;
+      Vector : SK.Byte)
+   is
+   begin
+      Descriptors (Id).Pending_Event := Vector;
+   end Set_Pending_Event;
+
 begin
    Descriptors := Descriptor_Array'
      (others => SK.Subject_State_Type'

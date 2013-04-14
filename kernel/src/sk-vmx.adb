@@ -163,6 +163,14 @@ is
          CPU.Panic;
       end if;
 
+      if State.Pending_Event > 0 then
+         VMCS_Write (Field => Constants.VM_ENTRY_INTERRUPT_INFO,
+                     Value => 16#80000000# + SK.Word64 (State.Pending_Event));
+         State.Pending_Event := 0;
+         Subjects.Set_State (Id    => Subject_Id,
+                             State => State);
+      end if;
+
       VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
                   Value => SK.Word64 (Time_Slice));
 

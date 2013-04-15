@@ -121,6 +121,7 @@ is
    VM_CTRL_IA32E_MODE       : constant := 16#0000_0200#;
    VM_CTRL_EXIT_INVLPG      : constant := 16#0000_0200#;
    VM_CTRL_EXIT_MWAIT       : constant := 16#0000_0400#;
+   VM_CTRL_EXIT_ACK_INT     : constant := 16#0000_8000#;
    VM_CTRL_EXIT_RDPMC       : constant := 16#0000_0800#;
    VM_CTRL_EXIT_RDTSC       : constant := 16#0000_1000#;
    VM_CTRL_EXIT_CR3_LOAD    : constant := 16#0000_8000#;

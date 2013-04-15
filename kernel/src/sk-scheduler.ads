@@ -11,7 +11,8 @@ use type Skp.Scheduling.Minor_Frame_Range;
 --#    SK.GDT,
 --#    SK.Interrupts,
 --#    SK.Subjects,
---#    SK.VMX;
+--#    SK.VMX,
+--#    SK.Apic;
 package SK.Scheduler
 --# own
 --#       State,

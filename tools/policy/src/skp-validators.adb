@@ -116,7 +116,7 @@ is
    procedure Validate_Scheduling (S : Scheduling_Type)
    is
 
-      Major_Ticks : Natural := 0;
+      CPU_Ticks : Natural := 0;
 
       --  Validate major frame.
       procedure Validate_Major_Frame (Pos : Major_Frames_Package.Cursor);
@@ -125,25 +125,40 @@ is
 
       procedure Validate_Major_Frame (Pos : Major_Frames_Package.Cursor)
       is
-         Major     : constant Major_Frame_Type
-           := Major_Frames_Package.Element (Position => Pos);
-         Minor_Idx : Minor_Frames_Package.Cursor := Major.First;
-         Ticks     : Natural                     := 0;
-      begin
-         while Minor_Frames_Package.Has_Element (Position => Minor_Idx) loop
-            Ticks := Ticks + Minor_Frames_Package.Element
-              (Position => Minor_Idx).Ticks;
-            Minor_Frames_Package.Next (Position => Minor_Idx);
-         end loop;
 
-         if Major_Ticks = 0 then
-            Major_Ticks := Ticks;
-         else
-            if Major_Ticks /= Ticks then
-               raise Validation_Error with "Invalid major frames in scheduling"
-                 & " plan, tick counts differ";
+         --  Validate CPU element.
+         procedure Validate_CPU (Pos : CPU_Package.Cursor);
+
+         -------------------------------------------------------------------
+
+         procedure Validate_CPU (Pos : CPU_Package.Cursor)
+         is
+            CPU       : constant CPU_Type
+              := CPU_Package.Element (Position => Pos);
+            Minor_Idx : Minor_Frames_Package.Cursor := CPU.First;
+            Ticks     : Natural                     := 0;
+         begin
+            while Minor_Frames_Package.Has_Element (Position => Minor_Idx)
+            loop
+               Ticks := Ticks + Minor_Frames_Package.Element
+                 (Position => Minor_Idx).Ticks;
+               Minor_Frames_Package.Next (Position => Minor_Idx);
+            end loop;
+
+            if CPU_Ticks = 0 then
+               CPU_Ticks := Ticks;
+            else
+               if CPU_Ticks /= Ticks then
+                  raise Validation_Error with "Invalid CPU elements in "
+                    & "scheduling plan, tick counts differ";
+               end if;
             end if;
-         end if;
+         end Validate_CPU;
+
+         Major : constant Major_Frame_Type := Major_Frames_Package.Element
+           (Position => Pos);
+      begin
+         Major.Iterate (Process => Validate_CPU'Access);
       end Validate_Major_Frame;
    begin
       S.Major_Frames.Iterate (Process => Validate_Major_Frame'Access);

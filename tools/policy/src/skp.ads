@@ -99,11 +99,17 @@ is
    package Minor_Frames_Package is new Ada.Containers.Doubly_Linked_Lists
      (Element_Type => Minor_Frame_Type);
 
-   subtype Major_Frame_Type is Minor_Frames_Package.List;
+   subtype CPU_Type is Minor_Frames_Package.List;
+
+   package CPU_Package is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => CPU_Type,
+      "="          => Minor_Frames_Package."=");
+
+   subtype Major_Frame_Type is CPU_Package.List;
 
    package Major_Frames_Package is new Ada.Containers.Doubly_Linked_Lists
      (Element_Type => Major_Frame_Type,
-      "="          => Minor_Frames_Package."=");
+      "="          => CPU_Package."=");
 
    subtype Major_Frames_Type is Major_Frames_Package.List;
 

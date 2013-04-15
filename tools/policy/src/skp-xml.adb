@@ -188,7 +188,7 @@ is
       return Ports;
    end Deserialize_Ports;
 
-      -------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    function Deserialize_Scheduling
      (Node : DOM.Core.Node)
@@ -208,30 +208,45 @@ is
       is
          Major_Frame : Major_Frame_Type;
 
-         --  Add minor frame to major frame.
-         procedure Add_Minor_Frame (Node : DOM.Core.Node);
+         --  Add CPU element to major frame.
+         procedure Add_CPU_Element (Node : DOM.Core.Node);
 
          -------------------------------------------------------------------
 
-         procedure Add_Minor_Frame (Node : DOM.Core.Node)
+         procedure Add_CPU_Element (Node : DOM.Core.Node)
          is
-            Minor_Frame : Minor_Frame_Type;
-            Subj_Id_Str : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => "subject_id");
-            Ticks_Str   : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => "ticks");
-         begin
-            Minor_Frame.Subject_Id := Natural'Value (Subj_Id_Str);
-            Minor_Frame.Ticks      := Positive'Value (Ticks_Str);
+            CPU : CPU_Type;
 
-            Major_Frame.Append (New_Item => Minor_Frame);
-         end Add_Minor_Frame;
+            --  Add minor frame to CPU element.
+            procedure Add_Minor_Frame (Node : DOM.Core.Node);
+
+            ----------------------------------------------------------------
+
+            procedure Add_Minor_Frame (Node : DOM.Core.Node)
+            is
+               Minor_Frame : Minor_Frame_Type;
+               Subj_Id_Str : constant String := DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "subject_id");
+               Ticks_Str   : constant String := DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "ticks");
+            begin
+               Minor_Frame.Subject_Id := Natural'Value (Subj_Id_Str);
+               Minor_Frame.Ticks      := Positive'Value (Ticks_Str);
+
+               CPU.Append (New_Item => Minor_Frame);
+            end Add_Minor_Frame;
+         begin
+            Util.For_Each_Node (Node     => Node,
+                                Tag_Name => "minor_frame",
+                                Process  => Add_Minor_Frame'Access);
+            Major_Frame.Append (New_Item => CPU);
+         end Add_CPU_Element;
       begin
          Util.For_Each_Node (Node     => Node,
-                             Tag_Name => "minor_frame",
-                             Process  => Add_Minor_Frame'Access);
+                             Tag_Name => "cpu",
+                             Process  => Add_CPU_Element'Access);
          Sched.Major_Frames.Append (New_Item => Major_Frame);
       end Add_Major_Frame;
    begin

@@ -305,17 +305,19 @@ is
                  Message   => "Major frame count mismatch");
          Assert
            (Condition => P.Scheduling.Major_Frames.First_Element.Length = 1,
-            Message   => "Minor frame count mismatch (1)");
+            Message   => "CPU element count mismatch (1)");
          Assert
-           (Condition => P.Scheduling.Major_Frames.Last_Element.Length = 4,
-            Message   => "Minor frame count mismatch (2)");
+           (Condition => P.Scheduling.Major_Frames.Last_Element.Length = 1,
+            Message   => "CPU element count mismatch (2)");
 
          declare
-            Minor_1 : constant Minor_Frame_Type
+            CPU_0   : constant CPU_Type
               := P.Scheduling.Major_Frames.Last_Element.First_Element;
-            Minor_2 : constant Minor_Frame_Type
-              := P.Scheduling.Major_Frames.Last_Element.Last_Element;
+            Minor_1 : constant Minor_Frame_Type := CPU_0.First_Element;
+            Minor_2 : constant Minor_Frame_Type := CPU_0.Last_Element;
          begin
+            Assert (Condition => CPU_0.Length = 4,
+                    Message   => "Minor frame count mismatch");
             Assert (Condition => Minor_1.Subject_Id = 0,
                     Message   => "Minor frame subject id mismatch (1)");
             Assert (Condition => Minor_1.Ticks = 500,

@@ -20,8 +20,8 @@ is
    --  Verify invalid VMCS addresses.
    procedure Invalid_Vmcs_Addrs;
 
-   --  Verify major frames with different total tick count.
-   procedure Invalid_Major_Frame_Ticks;
+   --  Verify scheduling CPU elements with different total tick count.
+   procedure Invalid_Sched_CPU_Ticks;
 
    --  Validate policy.
    procedure Policy_Validation;

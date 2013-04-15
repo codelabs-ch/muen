@@ -28,35 +28,12 @@ is
         (Routine => Invalid_Vmcs_Addrs'Access,
          Name    => "Invalid VMCS addresses");
       T.Add_Test_Routine
-        (Routine => Invalid_Major_Frame_Ticks'Access,
-         Name    => "Invalid major frame ticks");
+        (Routine => Invalid_Sched_CPU_Ticks'Access,
+         Name    => "Invalid CPU ticks");
       T.Add_Test_Routine
         (Routine => Policy_Validation'Access,
          Name    => "Validate policy");
    end Initialize;
-
-   -------------------------------------------------------------------------
-
-   procedure Invalid_Major_Frame_Ticks
-   is
-      S     : Scheduling_Type;
-      Major : Major_Frame_Type;
-   begin
-      Major.Append (New_Item => (0, 100));
-      S.Major_Frames.Append (New_Item => Major);
-
-      Major.Append (New_Item => (1, 200));
-      S.Major_Frames.Append (New_Item => Major);
-      Validators.Validate_Scheduling (S => S);
-      Fail (Message => "Exception expected");
-
-   exception
-      when E : Validators.Validation_Error =>
-         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                 = "Invalid major frames in scheduling plan, tick counts "
-                 & "differ",
-                 Message   => "Exception message mismatch");
-   end Invalid_Major_Frame_Ticks;
 
    -------------------------------------------------------------------------
 
@@ -120,6 +97,32 @@ is
                  & "alignment 0000000000200000",
                  Message   => "Exception message mismatch");
    end Invalid_Memregion_Size;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Sched_CPU_Ticks
+   is
+      S     : Scheduling_Type;
+      Major : Major_Frame_Type;
+      CPU   : CPU_Type;
+   begin
+      CPU.Append (New_Item => (0, 100));
+      Major.Append (New_Item => CPU);
+      S.Major_Frames.Append (New_Item => Major);
+
+      CPU.Append (New_Item => (1, 200));
+      Major.Append (New_Item => CPU);
+      S.Major_Frames.Append (New_Item => Major);
+      Validators.Validate_Scheduling (S => S);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Invalid CPU elements in scheduling plan, tick counts "
+                 & "differ",
+                 Message   => "Exception message mismatch");
+   end Invalid_Sched_CPU_Ticks;
 
    -------------------------------------------------------------------------
 

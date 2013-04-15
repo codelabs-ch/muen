@@ -399,7 +399,7 @@ is
       Buffer          : Unbounded_String;
       Tmpl            : Templates.Template_Type;
 
-      --  Determine maximum count of minor frames per major frame.
+      --  Determine maximum count of minor frames.
       procedure Calc_Max_Minor_Count (C : Major_Frames_Package.Cursor);
 
       --  Write major frame to buffer.
@@ -409,22 +409,29 @@ is
 
       procedure Calc_Max_Minor_Count (C : Major_Frames_Package.Cursor)
       is
-         Major : constant Major_Frame_Type :=
-           Major_Frames_Package.Element (C);
+         Major   : constant Major_Frame_Type
+           := Major_Frames_Package.Element (Position => C);
+         CPU_Pos : CPU_Package.Cursor := Major.First;
+         CPU     : CPU_Type;
       begin
-         if Positive (Major.Length) > Max_Minor_Count then
-            Max_Minor_Count := Positive (Major.Length);
-         end if;
+         while CPU_Package.Has_Element (Position => CPU_Pos) loop
+            CPU := CPU_Package.Element (Position => CPU_Pos);
+            if Positive (CPU.Length) > Max_Minor_Count then
+               Max_Minor_Count := Positive (CPU.Length);
+            end if;
+            CPU_Package.Next (Position => CPU_Pos);
+         end loop;
       end Calc_Max_Minor_Count;
 
       ----------------------------------------------------------------------
 
       procedure Write_Major_Frame (C : Major_Frames_Package.Cursor)
       is
-         Major       : constant Major_Frame_Type :=
-           Major_Frames_Package.Element (C);
-         Minor_Count : constant Positive         := Positive (Major.Length);
-         Cur_Minor   : Natural                   := 1;
+         Major       : constant Major_Frame_Type
+           := Major_Frames_Package.Element (C);
+         CPU_0       : constant CPU_Type := Major.First_Element;
+         Minor_Count : constant Positive := Positive (CPU_0.Length);
+         Cur_Minor   : Natural           := 1;
 
          --  Write minor frame to buffer.
          procedure Write_Minor_Frame (C : Minor_Frames_Package.Cursor);
@@ -451,14 +458,14 @@ is
          Buffer := Buffer & Indent
            & " " & Cur_Major'Img & " => Major_Frame_Type'"
            & ASCII.LF
-           & Indent & Indent & "(Length       =>" & Major.Length'Img & ","
+           & Indent & Indent & "(Length       =>" & CPU_0.Length'Img & ","
            & ASCII.LF
            & Indent & Indent & " Minor_Frames => Minor_Frame_Array'("
            & ASCII.LF;
 
-         Major.Iterate (Process => Write_Minor_Frame'Access);
+         CPU_0.Iterate (Process => Write_Minor_Frame'Access);
 
-         if Positive (Major.Length) < Max_Minor_Count then
+         if Positive (CPU_0.Length) < Max_Minor_Count then
             Buffer := Buffer & "," & ASCII.LF & Indent & Indent & Indent
               & "others => Null_Minor_Frame";
          end if;

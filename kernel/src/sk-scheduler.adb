@@ -246,6 +246,7 @@ is
    --#    in out Scheduling_Plan;
    --#    in out Current_Major;
    --#    in out Current_Minor;
+   --#    in out Interrupt_Count;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
@@ -271,6 +272,9 @@ is
    --#       Subject_Registers,
    --#       Subjects.Descriptors,
    --#       X86_64.State &
+   --#    Interrupt_Count from
+   --#       *,
+   --#       X86_64.State &
    --#    X86_64.State from
    --#       *,
    --#       Subject_Registers,
@@ -293,6 +297,7 @@ is
    is
       State           : SK.Subject_State_Type;
       Current_Subject : Skp.Subject_Id_Type;
+      Interrupt_Info  : SK.Word64;
    begin
       Current_Subject := Scheduling_Plan (Current_Major).Minor_Frames
         (Current_Minor).Subject_Id;
@@ -302,7 +307,11 @@ is
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => State.Exit_Reason);
 
-      if State.Exit_Reason = Constants.VM_EXIT_HYPERCALL then
+      if State.Exit_Reason = Constants.VM_EXIT_EXTERNAL_INT then
+         VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
+                        Value => Interrupt_Info);
+         Handle_Irq (Vector => SK.Byte'Mod (Interrupt_Info));
+      elsif State.Exit_Reason = Constants.VM_EXIT_HYPERCALL then
          Handle_Hypercall (Current_Subject => Current_Subject,
                            Subject_State   => State);
       elsif State.Exit_Reason /= Constants.VM_EXIT_TIMER_EXPIRY then

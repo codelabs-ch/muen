@@ -38,6 +38,9 @@ is
    Exec_Proc2_Defaults : constant SK.Word32 := Constants.VM_CTRL_EXIT_DT
      or Constants.VM_CTRL_EXIT_WBINVD;
 
+   Exit_Ctrl_Defaults  : constant SK.Word32 := Constants.VM_CTRL_IA32E_MODE
+     or Constants.VM_CTRL_EXIT_ACK_INT;
+
    subtype Alignment_Type is SK.Word16 range 1 .. SK.Word16'Last;
 
    --# accept Warning, 350, VMX_Exit_Address, "Imported from Linker";
@@ -262,7 +265,7 @@ is
       CPU.Get_MSR (Register => Constants.IA32_VMX_EXIT_CTLS,
                    Low      => Default0,
                    High     => Default1);
-      Value := Constants.VM_CTRL_IA32E_MODE;
+      Value := Exit_Ctrl_Defaults;
       Value := Value and Default1;
       Value := Value or  Default0;
 

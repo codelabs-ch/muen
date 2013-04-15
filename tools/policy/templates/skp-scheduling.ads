@@ -16,6 +16,8 @@ package Skp.Scheduling is
 
    type Minor_Frame_Array is array (Minor_Frame_Range) of Minor_Frame_Type;
 
+   type CPU_Range is range __cpu_range__;
+
    type Major_Frame_Type is record
       Length       : Minor_Frame_Range;
       Minor_Frames : Minor_Frame_Array;

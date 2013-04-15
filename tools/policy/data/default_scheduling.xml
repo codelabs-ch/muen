@@ -1,11 +1,15 @@
 <scheduling tick_rate="1000">
 	<major_frame>
-		<minor_frame subject_id="0" ticks="1700"/>
+		<cpu>
+			<minor_frame subject_id="0" ticks="1700"/>
+		</cpu>
 	</major_frame>
 	<major_frame>
-		<minor_frame subject_id="0" ticks="500"/>
-		<minor_frame subject_id="2" ticks="500"/>
-		<minor_frame subject_id="3" ticks="500"/>
-		<minor_frame subject_id="4" ticks="200"/>
+		<cpu>
+			<minor_frame subject_id="0" ticks="500"/>
+			<minor_frame subject_id="2" ticks="500"/>
+			<minor_frame subject_id="3" ticks="500"/>
+			<minor_frame subject_id="4" ticks="200"/>
+		</cpu>
 	</major_frame>
 </scheduling>

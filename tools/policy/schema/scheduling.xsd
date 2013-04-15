@@ -11,6 +11,18 @@
 		</xs:sequence>
 	</xs:complexType>
 
+	<xs:complexType name="cpu_type">
+		<xs:sequence>
+			<xs:element name="minor_frame" type="minor_frame_type" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="major_frame_type">
+		<xs:sequence>
+			<xs:element name="cpu" type="cpu_type" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
 	<xs:complexType name="scheduling_type">
 		<xs:sequence>
 			<xs:element name="major_frame" type="major_frame_type" minOccurs="1" maxOccurs="unbounded"/>

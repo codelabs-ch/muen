@@ -9,7 +9,8 @@ with SK.Apic;
 
 package body SK.Scheduler
 --# own
---#    State is in New_Major, Current_Major, Current_Minors, Scheduling_Plan;
+--#    State is in New_Major, Current_Major, Current_Minors, Scheduling_Plan,
+--#             Interrupt_Count;
 is
 
    --  Dumper subject id.
@@ -35,6 +36,13 @@ is
 
    Current_Minors : Current_Minor_Array := Current_Minor_Array'
      (others => Skp.Scheduling.Minor_Frame_Range'First);
+
+   subtype Ext_Int_Type is SK.Byte range 32 .. 255;
+
+   type Interrupt_Counter_Array is array (Ext_Int_Type) of SK.Word32;
+
+   Interrupt_Count : Interrupt_Counter_Array
+     := Interrupt_Counter_Array'(others => 0);
 
    -------------------------------------------------------------------------
 
@@ -220,6 +228,33 @@ is
          CPU.Panic;
       end if;
    end Handle_Hypercall;
+
+   -------------------------------------------------------------------------
+
+   --  Handle external interrupt request with given vector.
+   procedure Handle_Irq (Vector : SK.Byte)
+   --# global
+   --#    in out Interrupt_Count;
+   --#    in out X86_64.State;
+   --# derives
+   --#    Interrupt_Count from *, Vector &
+   --#    X86_64.State from *;
+   is
+   begin
+      if Vector >= Ext_Int_Type'First then
+         Interrupt_Count (Vector) := Interrupt_Count (Vector) + 1;
+         pragma Debug (KC.Put_String (Item => "IRQ "));
+         pragma Debug (KC.Put_Byte (Item => Vector));
+         pragma Debug (KC.New_Line);
+      else
+         pragma Debug (KC.Put_String (Item => "IRQ with invalid vector "));
+         pragma Debug (KC.Put_Byte (Item => Vector));
+         pragma Debug (KC.New_Line);
+         null;
+      end if;
+
+      Apic.EOI;
+   end Handle_Irq;
 
    -------------------------------------------------------------------------
 

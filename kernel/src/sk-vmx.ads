@@ -57,7 +57,7 @@ is
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    Subjects.Descriptors from *, Subject_Id &
+   --#    Subjects.Descriptors from *, Subject_Id, X86_64.State &
    --#    X86_64.State from *, Subject_Id, Subjects.Descriptors, Time_Slice;
 
    --  Read value from specified field of the current, active VMCS. If the

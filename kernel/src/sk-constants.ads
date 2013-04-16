@@ -138,6 +138,10 @@ is
    VM_CTRL_EXIT_MONITOR     : constant := 16#2000_0000#;
    VM_CTRL_SECONDARY_PROC   : constant := 16#8000_0000#;
 
+   --  VM entry/exit interruption-information flags
+
+   VM_INTERRUPT_INFO_VALID  : constant := 16#8000_0000#;
+
    --  VMX basic exit reasons
 
    VM_EXIT_EXCEPTION_NMI    : constant := 0;

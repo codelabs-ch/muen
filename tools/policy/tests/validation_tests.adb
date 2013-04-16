@@ -29,7 +29,10 @@ is
          Name    => "Invalid VMCS addresses");
       T.Add_Test_Routine
         (Routine => Invalid_Sched_CPU_Ticks'Access,
-         Name    => "Invalid CPU ticks");
+         Name    => "Invalid CPU ticks in scheduling plan");
+      T.Add_Test_Routine
+        (Routine => Invalid_Sched_CPU_Count'Access,
+         Name    => "Invalid CPU elements in scheduling plan");
       T.Add_Test_Routine
         (Routine => Policy_Validation'Access,
          Name    => "Validate policy");
@@ -100,20 +103,47 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Invalid_Sched_CPU_Count
+   is
+      Policy : Policy_Type;
+      CPU    : CPU_Type;
+      Major  : Major_Frame_Type;
+   begin
+      Policy.Hardware.Processor.Logical_CPUs := 1;
+
+      Major.Append (New_Item => CPU);
+      Major.Append (New_Item => CPU);
+
+      Policy.Scheduling.Major_Frames.Append (New_Item => Major);
+      Validators.Validate_Scheduling (P => Policy);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Invalid CPU elements in scheduling plan, logical CPU count"
+                 & " differs",
+                 Message   => "Exception message mismatch");
+   end Invalid_Sched_CPU_Count;
+
+   -------------------------------------------------------------------------
+
    procedure Invalid_Sched_CPU_Ticks
    is
-      S     : Scheduling_Type;
-      Major : Major_Frame_Type;
-      CPU   : CPU_Type;
+      Policy         : Policy_Type;
+      Major1, Major2 : Major_Frame_Type;
+      CPU            : CPU_Type;
    begin
-      CPU.Append (New_Item => (0, 100));
-      Major.Append (New_Item => CPU);
-      S.Major_Frames.Append (New_Item => Major);
+      Policy.Hardware.Processor.Logical_CPUs := 1;
 
-      CPU.Append (New_Item => (1, 200));
-      Major.Append (New_Item => CPU);
-      S.Major_Frames.Append (New_Item => Major);
-      Validators.Validate_Scheduling (S => S);
+      CPU.Append (New_Item => (0, 100));
+      Major1.Append (New_Item => CPU);
+      Policy.Scheduling.Major_Frames.Append (New_Item => Major1);
+
+      CPU.Append (New_Item => (0, 200));
+      Major2.Append (New_Item => CPU);
+      Policy.Scheduling.Major_Frames.Append (New_Item => Major2);
+      Validators.Validate_Scheduling (P => Policy);
       Fail (Message => "Exception expected");
 
    exception

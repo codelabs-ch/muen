@@ -108,12 +108,12 @@ is
       Validate_Hardware   (H => P.Hardware);
       Validate_Kernel     (K => P.Kernel);
       Validate_Subjects   (P => P);
-      Validate_Scheduling (S => P.Scheduling);
+      Validate_Scheduling (P => P);
    end Validate_Policy;
 
    -------------------------------------------------------------------------
 
-   procedure Validate_Scheduling (S : Scheduling_Type)
+   procedure Validate_Scheduling (P : Policy_Type)
    is
 
       CPU_Ticks : Natural := 0;
@@ -158,10 +158,16 @@ is
          Major : constant Major_Frame_Type := Major_Frames_Package.Element
            (Position => Pos);
       begin
+         if Natural (Major.Length) /= P.Hardware.Processor.Logical_CPUs then
+            raise Validation_Error with "Invalid CPU elements in scheduling "
+              & "plan, logical CPU count differs";
+         end if;
+
          Major.Iterate (Process => Validate_CPU'Access);
       end Validate_Major_Frame;
    begin
-      S.Major_Frames.Iterate (Process => Validate_Major_Frame'Access);
+      P.Scheduling.Major_Frames.Iterate
+        (Process => Validate_Major_Frame'Access);
    end Validate_Scheduling;
 
    -------------------------------------------------------------------------

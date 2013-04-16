@@ -258,7 +258,7 @@ is
          Assert (Condition => P.Hardware.Devices.Length = 3,
                  Message   => "Device count mismatch");
 
-         Assert (Condition => P.Hardware.Processor.Logical_CPUs = 4,
+         Assert (Condition => P.Hardware.Processor.Logical_CPUs = 2,
                  Message   => "Logical CPUs mismatch");
          Assert (Condition => P.Hardware.Processor.Speed = 2900,
                  Message   => "Speed mismatch");

@@ -23,6 +23,9 @@ is
    --  Verify scheduling CPU elements with different total tick count.
    procedure Invalid_Sched_CPU_Ticks;
 
+   --  Verify scheduling major frame with incorrect CPU element count.
+   procedure Invalid_Sched_CPU_Count;
+
    --  Validate policy.
    procedure Policy_Validation;
 

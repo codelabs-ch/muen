@@ -3,6 +3,9 @@
 		<cpu>
 			<minor_frame subject_id="0" ticks="1700"/>
 		</cpu>
+		<cpu>
+			<minor_frame subject_id="1" ticks="1700"/>
+		</cpu>
 	</major_frame>
 	<major_frame>
 		<cpu>

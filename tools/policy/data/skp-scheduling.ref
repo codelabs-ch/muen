@@ -21,7 +21,7 @@ package Skp.Scheduling is
       Minor_Frames : Minor_Frame_Array;
    end record;
 
-   type CPU_Range is range 1 .. 4;
+   type CPU_Range is range 1 .. 2;
 
    type CPU_Array is array (CPU_Range) of CPU_Type;
 
@@ -39,6 +39,11 @@ package Skp.Scheduling is
          (Length       => 1,
           Minor_Frames => Minor_Frame_Array'(
             Minor_Frame_Type'(Subject_Id => 0, Ticks => 154062500),
+            others => Null_Minor_Frame)),
+       2 => CPU_Type'
+         (Length       => 1,
+          Minor_Frames => Minor_Frame_Array'(
+            Minor_Frame_Type'(Subject_Id => 1, Ticks => 154062500),
             others => Null_Minor_Frame)))),
      1 => Major_Frame_Type'(CPUs => CPU_Array'(
        1 => CPU_Type'

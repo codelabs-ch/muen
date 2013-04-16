@@ -101,6 +101,8 @@ is
          86     => '<',
          others => ' ');
 
+   Ctrl : Boolean := False;
+
    -------------------------------------------------------------------------
 
    procedure Handle_Interrupt
@@ -118,7 +120,41 @@ is
 
          SK.IO.Inb (Port  => Data_Port,
                     Value => Data);
-         Text_IO.Put_Char (Item => Char_Map (Data));
+
+         if Data <= 86 then
+            case Data is
+            when 1  =>
+               Text_IO.Init;
+            when 15 =>
+               Text_IO.Put_String ("    ");
+            when 28 =>
+               Text_IO.New_Line;
+            when 29 =>
+               Ctrl := True;
+            when 42 =>
+               --  Caps Lock or Shift pressed
+               null;
+            when 56 =>
+               --  Alt pressed
+               null;
+            when 58 =>
+               --  Ctrl pressed
+               Ctrl := not Ctrl;
+            when others =>
+               Text_IO.Put_Char (Item => Char_Map (Data));
+            end case;
+         end if;
+
+         if Data = 157 then
+            --  Ctrl released
+            Ctrl := False;
+         elsif Data = 170 then
+            --  Shift released
+            null;
+         elsif Data = 184 then
+            --  Alt released
+            null;
+         end if;
       end loop;
    end Handle_Interrupt;
 

@@ -428,7 +428,7 @@ is
       procedure Write_Major_Frame (C : Major_Frames_Package.Cursor)
       is
 
-         Cur_CPU : Natural := 1;
+         Cur_CPU : Natural := 0;
          Major   : constant Major_Frame_Type
            := Major_Frames_Package.Element (C);
 
@@ -485,7 +485,7 @@ is
 
             Buffer := Buffer & "))";
 
-            if Cur_CPU /= Positive (Major.Length) then
+            if Cur_CPU /= Positive (Major.Length) - 1 then
                Buffer := Buffer & ",";
             end if;
             Cur_CPU := Cur_CPU + 1;
@@ -516,8 +516,8 @@ is
                          Content  => "1 .." & Max_Minor_Count'Img);
       Templates.Replace (Template => Tmpl,
                          Pattern  => "__cpu_range__",
-                         Content  => "1 .."
-                         & Policy.Hardware.Processor.Logical_CPUs'Img);
+                         Content  => "0 .." & Natural'Image
+                           (Policy.Hardware.Processor.Logical_CPUs - 1));
       Templates.Replace (Template => Tmpl,
                          Pattern  => "__major_range__",
                          Content  => "0 .." & Natural'Image (Major_Count - 1));

@@ -211,4 +211,8 @@ is
       Text_IO.Init;
    end Initialize;
 
+begin
+   System.Machine_Code.Asm
+     (Template => "cli",
+      Volatile => True);
 end SubjC;

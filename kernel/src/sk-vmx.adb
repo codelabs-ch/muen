@@ -330,7 +330,8 @@ is
                   Value => PD.Base);
 
       VMCS_Write (Field => Constants.HOST_RSP,
-                  Value => Skp.Kernel.Stack_Address);
+                  Value => Skp.Kernel.Stack_Address +
+                    SK.Word64 (Apic.Get_ID) * SK.Page_Size);
       VMCS_Write (Field => Constants.HOST_RIP,
                   Value => VMX_Exit_Address);
    end VMCS_Setup_Host_Fields;

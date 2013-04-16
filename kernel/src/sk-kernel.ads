@@ -8,7 +8,8 @@
 --#    SK.Subjects,
 --#    SK.VMX,
 --#    SK.MP,
---#    SK.IO;
+--#    SK.IO,
+--#    SK.IO_Apic;
 package SK.Kernel
 is
 
@@ -18,13 +19,14 @@ is
    --#    in out X86_64.State;
    --#    in out Subjects.Descriptors;
    --#    in out MP.Barrier;
+   --#    in out IO_Apic.State;
    --#    in     GDT.GDT_Pointer;
    --#    in     Scheduler.State;
    --#    in     VMX.State;
    --#    in     Interrupts.IDT;
    --#    in     Interrupts.IDT_Pointer;
    --# derives
-   --#    MP.Barrier from
+   --#    MP.Barrier, IO_Apic.State from
    --#       *,
    --#       X86_64.State,
    --#       Interrupts.IDT,

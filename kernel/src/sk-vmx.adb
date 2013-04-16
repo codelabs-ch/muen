@@ -23,7 +23,6 @@ is
    Exec_Pin_Defaults   : constant SK.Word32 := Constants.VM_CTRL_PREEMPT_TIMER;
    Exec_Proc_Defaults  : constant SK.Word32 := Constants.VM_CTRL_IO_BITMAPS
      or Constants.VM_CTRL_SECONDARY_PROC
-     or Constants.VM_CTRL_EXIT_HLT
      or Constants.VM_CTRL_EXIT_INVLPG
      or Constants.VM_CTRL_EXIT_MWAIT
      or Constants.VM_CTRL_EXIT_RDPMC

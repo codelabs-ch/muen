@@ -615,12 +615,18 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type)
    is
-      S_Count : constant Positive := Positive (Policy.Subjects.Length);
       Tmpl    : Templates.Template_Type;
+      S_Count : constant Positive := Positive (Policy.Subjects.Length);
+      C_Count : constant String   := Ada.Strings.Fixed.Trim
+        (Source => Policy.Hardware.Processor.Logical_CPUs'Img,
+         Side   => Ada.Strings.Left);
    begin
       Tmpl := Templates.Load
         (Filename  => Dir_Name & "/" & Policy_File,
          Use_Store => False);
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__cpu_count__",
+                         Content  => C_Count);
       Templates.Replace (Template => Tmpl,
                          Pattern  => "__vmxon_addr__",
                          Content  => SK.Utils.To_Hex

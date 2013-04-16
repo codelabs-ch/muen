@@ -1,3 +1,4 @@
+#define CPU_COUNT     __cpu_count__
 #define KERNEL_STACK  0x0000000000112000
 #define KERNEL_PML4   0x0000000000200000
 #define SUBJECT_COUNT 3

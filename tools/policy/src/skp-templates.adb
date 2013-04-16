@@ -108,15 +108,12 @@ is
       Input_File : FIO.File_Type;
    begin
       if Ada.Directories.Exists (Name => Filename) then
-         FIO.Open (File => Input_File,
-                   Mode => FIO.Out_File,
-                   Name => Filename);
-      else
-         FIO.Create (File => Input_File,
-                     Mode => FIO.Out_File,
-                     Name => Filename);
+         Ada.Directories.Delete_File (Name => Filename);
       end if;
 
+      FIO.Create (File => Input_File,
+                  Mode => FIO.Out_File,
+                  Name => Filename);
       FIO.Write (File => Input_File,
                  Item => To_String (Template.Data));
       FIO.Close (File => Input_File);

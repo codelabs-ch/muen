@@ -3,6 +3,10 @@
 	<device name="serial">
 		<io_port start="03f8" end="03fd"/>
 	</device>
+	<device name="keyboard">
+		<io_port start="0060"/>
+		<io_port start="0064"/>
+	</device>
 	<device name="vga">
 		<memory_layout>
 			<memory_region physical_address="b8000" size="4k" alignment="4k" writable="true" executable="false"/>

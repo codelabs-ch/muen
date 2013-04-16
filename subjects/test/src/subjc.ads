@@ -1,16 +1,11 @@
-with SK;
-
 package SubjC
 is
 
-   Counter : SK.Word64;
-   pragma Atomic (Counter);
+   --  Interrupt handler.
+   procedure Handle_Interrupt;
+   pragma Export (C, Handle_Interrupt, "dispatch_interrupt");
 
-   --  Exported ISR which increments the interrupt counter.
-   procedure Increment_Counter;
-   pragma Export (C, Increment_Counter, "dispatch_interrupt");
-
-   --  Reset interrupt counter and install ISR.
+   --  Install ISR, load IDT and initialize VGA console.
    procedure Initialize;
 
 end SubjC;

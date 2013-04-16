@@ -3,9 +3,24 @@ with System.Storage_Elements;
 
 with SK.Descriptors;
 with SK.IO;
+with SK.Console;
+with SK.Console_VGA;
 
 package body SubjC
 is
+
+   subtype Width_Type  is Natural range 1 .. 80;
+   subtype Height_Type is Natural range 1 .. 7;
+
+   package VGA is new SK.Console_VGA
+     (Width_Type   => Width_Type,
+      Height_Type  => Height_Type,
+      Base_Address => System'To_Address (16#000b_8b40#));
+
+   package Text_IO is new SK.Console
+     (Initialize      => VGA.Init,
+      Output_New_Line => VGA.New_Line,
+      Output_Char     => VGA.Put_Char);
 
    --  Assembly ISR.
    ISR_Handler : SK.Word64;
@@ -31,26 +46,81 @@ is
 
    OUTPUT_BUFFER_STATUS : constant := 0;
 
+   type Scancode_Map is array (SK.Byte'Range) of Character;
+
+   Char_Map : constant Scancode_Map
+     := (2      => '1',
+         3      => '2',
+         4      => '3',
+         5      => '4',
+         6      => '5',
+         7      => '6',
+         8      => '7',
+         9      => '8',
+         10     => '9',
+         11     => '0',
+         12     => '-',
+         13     => '=',
+         16     => 'q',
+         17     => 'w',
+         18     => 'e',
+         19     => 'r',
+         20     => 't',
+         21     => 'z',
+         22     => 'u',
+         23     => 'i',
+         24     => 'o',
+         25     => 'p',
+         26     => '[',
+         27     => ']',
+         30     => 'a',
+         31     => 's',
+         32     => 'd',
+         33     => 'f',
+         34     => 'g',
+         35     => 'h',
+         36     => 'j',
+         37     => 'k',
+         38     => 'l',
+         39     => ';',
+         40     => ''',
+         41     => '`',
+         43     => ''',
+         44     => 'y',
+         45     => 'x',
+         46     => 'c',
+         47     => 'v',
+         48     => 'b',
+         49     => 'n',
+         50     => 'm',
+         51     => ',',
+         52     => '.',
+         53     => '-',
+         55     => '*',
+         57     => ' ',
+         86     => '<',
+         others => ' ');
+
    -------------------------------------------------------------------------
 
-   procedure Increment_Counter
+   procedure Handle_Interrupt
    is
-      use type SK.Word64;
+      use type SK.Byte;
 
-      Dummy : SK.Byte;
+      Status, Data : SK.Byte;
    begin
-      Counter := Counter + 1;
       loop
          SK.IO.Inb (Port  => Status_Register,
-                    Value => Dummy);
+                    Value => Status);
          exit when not SK.Bit_Test
-           (Value => SK.Word64 (Dummy),
+           (Value => SK.Word64 (Status),
             Pos   => OUTPUT_BUFFER_STATUS);
 
          SK.IO.Inb (Port  => Data_Port,
-                    Value => Dummy);
+                    Value => Data);
+         Text_IO.Put_Char (Item => Char_Map (Data));
       end loop;
-   end Increment_Counter;
+   end Handle_Interrupt;
 
    -------------------------------------------------------------------------
 
@@ -59,8 +129,6 @@ is
       use type SK.Word16;
       use type SK.Word64;
    begin
-      Counter := 0;
-
       GDT := GDT_Type'(1 => 0,
                        2 => 16#20980000000000#,
                        3 => 16#20930000000000#);
@@ -103,6 +171,8 @@ is
         (Template => "lidt (%0)",
          Inputs   => (System.Address'Asm_Input ("r", IDT_Pointer'Address)),
          Volatile => True);
+
+      Text_IO.Init;
    end Initialize;
 
 end SubjC;

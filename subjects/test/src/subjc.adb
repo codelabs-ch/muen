@@ -2,6 +2,7 @@ with System.Machine_Code;
 with System.Storage_Elements;
 
 with SK.Descriptors;
+with SK.IO;
 
 package body SubjC
 is
@@ -23,13 +24,32 @@ is
    --  Global descriptor table pointer, loaded into GDTR
    GDT_Pointer : SK.Descriptors.Pseudo_Descriptor_Type;
 
+   --  PS/2 constants.
+
+   Data_Port       : constant := 16#60#;
+   Status_Register : constant := 16#64#;
+
+   OUTPUT_BUFFER_STATUS : constant := 0;
+
    -------------------------------------------------------------------------
 
    procedure Increment_Counter
    is
       use type SK.Word64;
+
+      Dummy : SK.Byte;
    begin
       Counter := Counter + 1;
+      loop
+         SK.IO.Inb (Port  => Status_Register,
+                    Value => Dummy);
+         exit when not SK.Bit_Test
+           (Value => SK.Word64 (Dummy),
+            Pos   => OUTPUT_BUFFER_STATUS);
+
+         SK.IO.Inb (Port  => Data_Port,
+                    Value => Dummy);
+      end loop;
    end Increment_Counter;
 
    -------------------------------------------------------------------------

@@ -342,15 +342,13 @@ is
    --#       Subject_Registers,
    --#       Subjects.Descriptors,
    --#       X86_64.State &
-   --#    Scheduling_Plan from
+   --#    Scheduling_Plan, Interrupt_Count from
    --#       *,
+   --#       Scheduling_Plan,
    --#       Current_Major,
    --#       Current_Minors,
    --#       Subject_Registers,
    --#       Subjects.Descriptors,
-   --#       X86_64.State &
-   --#    Interrupt_Count from
-   --#       *,
    --#       X86_64.State &
    --#    X86_64.State from
    --#       *,
@@ -387,6 +385,8 @@ is
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => State.Exit_Reason);
 
+      Store_Subject_Info (State => State);
+
       if State.Exit_Reason = Constants.VM_EXIT_EXTERNAL_INT then
          VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
                         Value => Interrupt_Info);
@@ -398,7 +398,6 @@ is
 
          --  Abnormal subject exit, schedule dumper.
 
-         Store_Subject_Info (State => State);
          Swap_Subject (Old_Id => Current_Subject,
                        New_Id => Dumper_Id);
       end if;

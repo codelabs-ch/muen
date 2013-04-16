@@ -9,7 +9,8 @@ with Skp;
 --#    SK.GDT,
 --#    SK.Descriptors,
 --#    SK.Constants,
---#    SK.Subjects;
+--#    SK.Subjects,
+--#    SK.Apic;
 package SK.VMX
 --# own
 --#    State;

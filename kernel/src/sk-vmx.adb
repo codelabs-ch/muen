@@ -8,6 +8,7 @@ with SK.KC;
 with SK.GDT;
 with SK.Constants;
 with SK.Subjects;
+with SK.Apic;
 
 package body SK.VMX
 --# own
@@ -510,7 +511,8 @@ is
                    (Value => CPU.Get_CR4,
                     Pos   => Constants.CR4_VMXE_FLAG));
 
-      CPU.VMXON (Region  => Skp.Vmxon_Address,
+      CPU.VMXON (Region  => Skp.Vmxon_Address + SK.Word64
+                 (Apic.Get_ID) * SK.Page_Size,
                  Success => Success);
       if not Success then
          pragma Debug (KC.Put_Line (Item => "Error enabling VMX"));

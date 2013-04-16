@@ -5,7 +5,6 @@ with SK.System_State;
 with SK.VMX;
 with SK.Scheduler;
 with SK.Apic;
-with SK.CPU;
 with SK.MP;
 
 package body SK.Kernel
@@ -42,16 +41,12 @@ is
             pragma Debug (KC.Put_String (Item => "Processors online: "));
             pragma Debug (KC.Put_Byte   (Item => MP.Get_CPU_Count));
             pragma Debug (KC.New_Line);
-
-            VMX.Enable;
-            Scheduler.Schedule;
-         else
-
-            --  APs
-
-            VMX.Enable;
-            CPU.Hlt;
          end if;
+
+         --  BSP & APs
+
+         VMX.Enable;
+         Scheduler.Schedule;
       else
          pragma Debug (KC.Put_Line (Item => "System initialisation error"));
          null;

@@ -7,8 +7,7 @@
 --#    SK.System_State,
 --#    SK.Subjects,
 --#    SK.VMX,
---#    SK.MP,
---#    SK.CPU;
+--#    SK.MP;
 package SK.Kernel
 is
 

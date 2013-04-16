@@ -373,7 +373,6 @@ is
       CPU_ID          : Skp.Scheduling.CPU_Range;
       State           : SK.Subject_State_Type;
       Current_Subject : Skp.Subject_Id_Type;
-      Interrupt_Info  : SK.Word64;
    begin
       Get_ID (ID => CPU_ID);
 
@@ -388,9 +387,7 @@ is
       Store_Subject_Info (State => State);
 
       if State.Exit_Reason = Constants.VM_EXIT_EXTERNAL_INT then
-         VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
-                        Value => Interrupt_Info);
-         Handle_Irq (Vector => SK.Byte'Mod (Interrupt_Info));
+         Handle_Irq (Vector => SK.Byte'Mod (State.Interrupt_Info));
       elsif State.Exit_Reason = Constants.VM_EXIT_HYPERCALL then
          Handle_Hypercall (Current_Subject => Current_Subject,
                            Subject_State   => State);

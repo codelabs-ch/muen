@@ -10,8 +10,7 @@
 			<minor_frame subject_id="3" ticks="40"/>
 		</cpu>
 		<cpu>
-			<minor_frame subject_id="4" ticks="20"/>
-			<minor_frame subject_id="4" ticks="20"/>
+			<minor_frame subject_id="4" ticks="40"/>
 		</cpu>
 	</major_frame>
 	<major_frame>
@@ -25,8 +24,7 @@
 			<minor_frame subject_id="3" ticks="80"/>
 		</cpu>
 		<cpu>
-			<minor_frame subject_id="4" ticks="40"/>
-			<minor_frame subject_id="4" ticks="40"/>
+			<minor_frame subject_id="4" ticks="80"/>
 		</cpu>
 	</major_frame>
 </scheduling>

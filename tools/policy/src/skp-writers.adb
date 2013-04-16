@@ -458,8 +458,8 @@ is
             begin
                Ticks := Long_Integer (Minor.Ticks) * Timer_Factor;
                Buffer := Buffer & Indent & Indent & Indent & Indent
-                 & "Minor_Frame_Type'(Subject_Id =>" & Minor.Subject_Id'Img
-                 & ", Ticks =>" & Ticks'Img & ")";
+                 & Cur_Minor'Img & " => Minor_Frame_Type'(Subject_Id =>"
+                 & Minor.Subject_Id'Img & ", Ticks =>" & Ticks'Img & ")";
 
                if Cur_Minor /= Minor_Count then
                   Buffer := Buffer & "," & ASCII.LF;
@@ -480,7 +480,7 @@ is
 
             if Positive (CPU.Length) < Max_Minor_Count then
                Buffer := Buffer & "," & ASCII.LF & Indent & Indent & Indent
-                 & Indent & "others => Null_Minor_Frame";
+                 & Indent & " others => Null_Minor_Frame";
             end if;
 
             Buffer := Buffer & "))";

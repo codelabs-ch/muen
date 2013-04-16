@@ -7,9 +7,6 @@ package SK.MP
 --#    CPU_Online_Count;
 is
 
-   --  Logical CPUs in the system.
-   CPU_Count : constant := 4;
-
    --  Increment counter of online CPUs.
    procedure Increment_CPU_Count;
    --# global

@@ -1,5 +1,7 @@
 with System.Machine_Code;
 
+with Skp.Scheduling;
+
 package body SK.MP
 is
 
@@ -36,7 +38,7 @@ is
 
       --  Spin until all APs are online.
 
-      while CPU_Online_Count /= CPU_Count loop
+      while CPU_Online_Count <= Byte (Skp.Scheduling.CPU_Range'Last) loop
          null;
       end loop;
    end Wait_For_AP_Processors;

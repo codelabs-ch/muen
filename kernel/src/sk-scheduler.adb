@@ -5,6 +5,7 @@ with SK.Constants;
 with SK.KC;
 with SK.CPU;
 with SK.Subjects;
+with SK.Apic;
 
 package body SK.Scheduler
 --# own
@@ -32,6 +33,31 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Return CPU scheduling ID.
+   procedure Get_ID (ID : out Skp.Scheduling.CPU_Range)
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from * &
+   --#    ID           from X86_64.State;
+   is
+      Apic_ID : SK.Byte;
+   begin
+      ID      := 0;
+      Apic_ID := Apic.Get_ID;
+
+      if Apic_ID > SK.Byte (Skp.Scheduling.CPU_Range'Last) then
+         pragma Debug (KC.Put_String (Item => "CPU ID not in range: "));
+         pragma Debug (KC.Put_Byte   (Item => Apic_ID));
+         pragma Debug (KC.New_Line);
+         CPU.Panic;
+      else
+         ID := Skp.Scheduling.CPU_Range (Apic_ID);
+      end if;
+   end Get_ID;
+
+   -------------------------------------------------------------------------
+
    --  Remove subject specified by Old_Id from the scheduling plan and replace
    --  it with the subject given by New_Id.
    procedure Swap_Subject (Old_Id, New_Id : Skp.Subject_Id_Type)
@@ -39,9 +65,13 @@ is
    --#    in out X86_64.State;
    --#    in out Scheduling_Plan;
    --# derives
-   --#    X86_64.State, Scheduling_Plan from *, Old_Id, New_Id;
+   --#    X86_64.State    from *, Old_Id, New_Id &
+   --#    Scheduling_Plan from *, Old_Id, New_Id, X86_64.State;
    is
+      CPU_ID : Skp.Scheduling.CPU_Range;
    begin
+      Get_ID (ID => CPU_ID);
+
       if Old_Id = New_Id then
          pragma Debug (KC.Put_String (Item => "Scheduling error: subject "));
          pragma Debug (KC.Put_Byte   (Item => Byte (Old_Id)));
@@ -51,10 +81,10 @@ is
 
       for I in Skp.Scheduling.Major_Frame_Range loop
          for J in Skp.Scheduling.Minor_Frame_Range loop
-            if Scheduling_Plan (I).CPUs (0).Minor_Frames
+            if Scheduling_Plan (I).CPUs (CPU_ID).Minor_Frames
               (J).Subject_Id = Old_Id
             then
-               Scheduling_Plan (I).CPUs (0).Minor_Frames
+               Scheduling_Plan (I).CPUs (CPU_ID).Minor_Frames
                  (J).Subject_Id := New_Id;
             end if;
          end loop;
@@ -107,17 +137,29 @@ is
    --#    in     Scheduling_Plan;
    --#    in out Current_Major;
    --#    in out Current_Minor;
+   --#    in out X86_64.State;
    --# derives
-   --#    Current_Minor from *, Current_Major, Scheduling_Plan &
-   --#    Current_Major from *, Current_Minor, New_Major, Scheduling_Plan;
+   --#    X86_64.State  from *                                               &
+   --#    Current_Minor from *, Current_Major, Scheduling_Plan, X86_64.State &
+   --#    Current_Major from
+   --#       *,
+   --#       Current_Minor,
+   --#       New_Major,
+   --#       Scheduling_Plan,
+   --#       X86_64.State;
    is
+      CPU_ID : Skp.Scheduling.CPU_Range;
    begin
-      if Current_Minor < Scheduling_Plan (Current_Major).CPUs (0).Length then
+      Get_ID (ID => CPU_ID);
+
+      if Current_Minor < Scheduling_Plan
+        (Current_Major).CPUs (CPU_ID).Length
+      then
 
          --# assert
          --#    Current_Minor < Scheduling_Plan
-         --#       (Current_Major).CPUs (0).Length and
-         --#    Scheduling_Plan (Current_Major).CPUs (0).Length
+         --#       (Current_Major).CPUs (CPU_ID).Length and
+         --#    Scheduling_Plan (Current_Major).CPUs (CPU_ID).Length
          --#       <= Skp.Scheduling.Minor_Frame_Range'Last;
 
          Current_Minor := Current_Minor + 1;
@@ -137,10 +179,15 @@ is
    --#    in out Subjects.Descriptors;
    --#    in out Scheduling_Plan;
    --# derives
-   --#    X86_64.State, Scheduling_Plan from
+   --#    X86_64.State from
    --#       *,
    --#       Current_Subject,
    --#       Subject_State &
+   --#    Scheduling_Plan from
+   --#       *,
+   --#       Current_Subject,
+   --#       Subject_State,
+   --#       X86_64.State &
    --#    Subject_State        from * &
    --#    Subjects.Descriptors from *, Subject_State;
    is
@@ -178,7 +225,8 @@ is
    --#       *,
    --#       Current_Major,
    --#       Current_Minor,
-   --#       Scheduling_Plan &
+   --#       Scheduling_Plan,
+   --#       X86_64.State &
    --#    X86_64.State from
    --#       *,
    --#       VMX.State,
@@ -189,10 +237,13 @@ is
    --#       Current_Minor,
    --#       Scheduling_Plan;
    is
+      CPU_ID        : Skp.Scheduling.CPU_Range;
       Current_Frame : Skp.Scheduling.Minor_Frame_Type;
    begin
-      Current_Frame := Scheduling_Plan (Current_Major).CPUs (0).Minor_Frames
-        (Current_Minor);
+      Get_ID (ID => CPU_ID);
+
+      Current_Frame := Scheduling_Plan (Current_Major).CPUs
+        (CPU_ID).Minor_Frames (Current_Minor);
 
       if Subjects.Get_State (Id => Current_Frame.Subject_Id).Launched then
          VMX.Resume (Subject_Id => Current_Frame.Subject_Id,
@@ -259,11 +310,14 @@ is
    --#       Current_Minor,
    --#       Scheduling_Plan;
    is
+      CPU_ID          : Skp.Scheduling.CPU_Range;
       State           : SK.Subject_State_Type;
       Current_Subject : Skp.Subject_Id_Type;
    begin
-      Current_Subject := Scheduling_Plan (Current_Major).CPUs (0).Minor_Frames
-        (Current_Minor).Subject_Id;
+      Get_ID (ID => CPU_ID);
+
+      Current_Subject := Scheduling_Plan (Current_Major).CPUs
+        (CPU_ID).Minor_Frames (Current_Minor).Subject_Id;
       State           := Subjects.Get_State (Id => Current_Subject);
       State.Regs      := Subject_Registers;
 

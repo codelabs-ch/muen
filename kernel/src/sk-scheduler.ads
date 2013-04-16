@@ -11,7 +11,8 @@ use type Skp.Scheduling.Minor_Frame_Range;
 --#    SK.GDT,
 --#    SK.Interrupts,
 --#    SK.Subjects,
---#    SK.VMX;
+--#    SK.VMX,
+--#    SK.Apic;
 package SK.Scheduler
 --# own
 --#       State,
@@ -30,7 +31,7 @@ is
    --#    in out X86_64.State;
    --#    in out Subjects.Descriptors;
    --# derives
-   --#    Subjects.Descriptors from *, State &
+   --#    Subjects.Descriptors from *, State, X86_64.State &
    --#    X86_64.State         from
    --#       *,
    --#       VMX.State,

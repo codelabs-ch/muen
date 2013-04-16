@@ -42,12 +42,10 @@
 		\memsection{0011 c000}{001f dfff}{3}{\color{Gray}-- free --}\\
 		\memsection{0010 0000}{0011 bfff}{2}{Kernel code and data}
 	\end{rightwordgroup}\\
-	\memsection{0000 5000}{000f ffff}{3}{\color{Gray}-- free --}\\
+	\memsection{0000 8000}{000f ffff}{3}{\color{Gray}-- free --}\\
 	\begin{rightwordgroup}{VMX regions}
-		\memsection{0000 4000}{0000 4fff}{2}{VMCS2}\\
-		\memsection{0000 3000}{0000 3fff}{2}{VMCS1}\\
-		\memsection{0000 2000}{0000 2fff}{2}{VMCS0}\\
-		\memsection{0000 1000}{0000 1fff}{2}{VMXON}
+		\memsection{0000 5000}{0000 7fff}{2}{VMCS}\\
+		\memsection{0000 1000}{0000 4fff}{2}{VMXON}
 	\end{rightwordgroup}\\
 	\memsection{0000 0000}{0000 0fff}{2}{AP trampoline}
 \end{bytefield}

@@ -12,6 +12,8 @@
 <!ENTITY subjamem   SYSTEM "subject_a_mem.xml">
 <!ENTITY subjbinit  SYSTEM "subject_b.xml">
 <!ENTITY subjbmem   SYSTEM "subject_b_mem.xml">
+<!ENTITY idleinit   SYSTEM "idle.xml">
+<!ENTITY idlemem    SYSTEM "idle_mem.xml">
 ]>
 <system vmxon_address="1000" vmcs_start_address="2000">
 	&hardware;
@@ -50,6 +52,12 @@
 				&subjbmem;
 			</memory_layout>
 			<device name="vga"/>
+		</subject>
+		<subject id="4" name="idle" pml4_address="250000" io_bitmap_address="254000">
+			&idleinit;
+			<memory_layout>
+				&idlemem;
+			</memory_layout>
 		</subject>
 	</subjects>
 

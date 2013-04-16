@@ -49,6 +49,7 @@ is
 
             --  APs
 
+            VMX.Enable;
             CPU.Hlt;
          end if;
       else

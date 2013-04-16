@@ -2,28 +2,24 @@ with SK.Descriptors;
 
 --# inherit
 --#    System,
---#    SK.Descriptors;
+--#    SK.Descriptors,
+--#    X86_64;
 package SK.Interrupts
 --# own
 --#       IDT, IDT_Pointer;
 --#    in ISR_List : ISR_List_Type;
+--# initializes
+--#    IDT, IDT_Pointer;
 is
-
-   --  Initialize Interrupt Descriptor Table.
-   procedure Init;
-   --# global
-   --#    in     ISR_List;
-   --#       out IDT;
-   --# derives
-   --#    IDT from ISR_List;
 
    --  Load IDT into IDT register.
    procedure Load;
    --# global
    --#    in     IDT;
-   --#       out IDT_Pointer;
+   --#    in     IDT_Pointer;
+   --#    in out X86_64.State;
    --# derives
-   --#    IDT_Pointer from IDT;
+   --#    X86_64.State from *, IDT, IDT_Pointer;
 
    --  Return IDT pointer.
    function Get_IDT_Pointer return Descriptors.Pseudo_Descriptor_Type;

@@ -39,9 +39,6 @@ is
          CPU.Hlt;
       end if;
 
-      --  Setup IDT.
-
-      Interrupts.Init;
       Interrupts.Load;
 
       Success := System_State.Is_Valid;

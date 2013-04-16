@@ -57,8 +57,21 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Init
+   procedure Load
    is
+      --# hide Load;
+   begin
+      System.Machine_Code.Asm
+        (Template => "lidt (%0)",
+         Inputs   => (System.Address'Asm_Input ("r", IDT_Pointer'Address)),
+         Volatile => True);
+   end Load;
+
+begin
+
+   --# hide SK.Interrupts;
+
+   declare
       Temp : SK.Word64;
    begin
       IDT := IDT_Type'
@@ -79,27 +92,15 @@ is
             Segment_Selector => 16#0008#,
             Flags            => 16#8e00#,
             Offset_31_16     => SK.Word16
-              ((Temp and 16#0000_0000_ffff_0000#) / 2**16),
+              ((Temp and 16#0000_0000_ffff_0000#) / 2 ** 16),
             Offset_63_32     => SK.Word32
-              ((Temp and 16#ffff_ffff_0000_0000#) / 2**32),
+              ((Temp and 16#ffff_ffff_0000_0000#) / 2 ** 32),
             Reserved         => 0);
       end loop;
-   end Init;
 
-   -------------------------------------------------------------------------
-
-   procedure Load
-   is
-      --# hide Load;
-   begin
       IDT_Pointer := Descriptors.Pseudo_Descriptor_Type'
         (Limit => 16 * SK.Word16 (IDT'Last) - 1,
          Base  => SK.Word64
            (System.Storage_Elements.To_Integer (Value => IDT'Address)));
-      System.Machine_Code.Asm
-        (Template => "lidt (%0)",
-         Inputs   => (System.Address'Asm_Input ("r", IDT_Pointer'Address)),
-         Volatile => True);
-   end Load;
-
+   end;
 end SK.Interrupts;

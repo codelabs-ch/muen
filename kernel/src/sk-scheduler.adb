@@ -250,9 +250,6 @@ is
    begin
       if Vector >= Ext_Int_Type'First then
          Interrupt_Count (Vector) := Interrupt_Count (Vector) + 1;
-         pragma Debug (KC.Put_String (Item => "IRQ "));
-         pragma Debug (KC.Put_Byte (Item => Vector));
-         pragma Debug (KC.New_Line);
          Subjects.Set_Pending_Event
            (Id     => Int_Routing_Table (Vector),
             Vector => Vector);

@@ -1,4 +1,4 @@
-with SK.KC;
+with SK;
 
 with Tau0_Kernel_Iface;
 
@@ -16,8 +16,6 @@ is
    Counter : SK.Word32;
 begin
    Counter := 0;
-
-   pragma Debug (SK.KC.Put_Line (Item => "Tau0: Starting ..."));
 
    loop
       if Counter mod 2**20 = 0 then

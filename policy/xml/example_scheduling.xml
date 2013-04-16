@@ -3,6 +3,15 @@
 		<cpu>
 			<minor_frame subject_id="0" ticks="20"/>
 		</cpu>
+		<cpu>
+			<minor_frame subject_id="0" ticks="20"/>
+		</cpu>
+		<cpu>
+			<minor_frame subject_id="0" ticks="20"/>
+		</cpu>
+		<cpu>
+			<minor_frame subject_id="0" ticks="20"/>
+		</cpu>
 	</major_frame>
 	<major_frame>
 		<cpu>
@@ -10,6 +19,15 @@
 			<minor_frame subject_id="2" ticks="5"/>
 			<minor_frame subject_id="3" ticks="5"/>
 			<minor_frame subject_id="0" ticks="5"/>
+		</cpu>
+		<cpu>
+			<minor_frame subject_id="0" ticks="20"/>
+		</cpu>
+		<cpu>
+			<minor_frame subject_id="0" ticks="20"/>
+		</cpu>
+		<cpu>
+			<minor_frame subject_id="0" ticks="20"/>
 		</cpu>
 	</major_frame>
 </scheduling>

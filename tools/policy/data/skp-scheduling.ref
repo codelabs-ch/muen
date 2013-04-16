@@ -16,11 +16,17 @@ package Skp.Scheduling is
 
    type Minor_Frame_Array is array (Minor_Frame_Range) of Minor_Frame_Type;
 
-   type CPU_Range is range 1 .. 4;
-
-   type Major_Frame_Type is record
+   type CPU_Type is record
       Length       : Minor_Frame_Range;
       Minor_Frames : Minor_Frame_Array;
+   end record;
+
+   type CPU_Range is range 1 .. 4;
+
+   type CPU_Array is array (CPU_Range) of CPU_Type;
+
+   type Major_Frame_Type is record
+      CPUs : CPU_Array;
    end record;
 
    type Major_Frame_Range is range 0 .. 1;
@@ -28,17 +34,25 @@ package Skp.Scheduling is
    type Scheduling_Plan_Type is array (Major_Frame_Range) of Major_Frame_Type;
 
    Scheduling_Plans : constant Scheduling_Plan_Type := Scheduling_Plan_Type'(
-     0 => Major_Frame_Type'
-      (Length       => 1,
-       Minor_Frames => Minor_Frame_Array'(
-         Minor_Frame_Type'(Subject_Id => 0, Ticks => 154062500),
-         others => Null_Minor_Frame)),
-     1 => Major_Frame_Type'
-      (Length       => 4,
-       Minor_Frames => Minor_Frame_Array'(
-         Minor_Frame_Type'(Subject_Id => 0, Ticks => 45312500),
-         Minor_Frame_Type'(Subject_Id => 2, Ticks => 45312500),
-         Minor_Frame_Type'(Subject_Id => 3, Ticks => 45312500),
-         Minor_Frame_Type'(Subject_Id => 4, Ticks => 18125000))));
+     0 => Major_Frame_Type'(CPUs => CPU_Array'(
+       1 => CPU_Type'
+         (Length       => 1,
+          Minor_Frames => Minor_Frame_Array'(
+            Minor_Frame_Type'(Subject_Id => 0, Ticks => 154062500),
+            others => Null_Minor_Frame)))),
+     1 => Major_Frame_Type'(CPUs => CPU_Array'(
+       1 => CPU_Type'
+         (Length       => 4,
+          Minor_Frames => Minor_Frame_Array'(
+            Minor_Frame_Type'(Subject_Id => 0, Ticks => 45312500),
+            Minor_Frame_Type'(Subject_Id => 2, Ticks => 45312500),
+            Minor_Frame_Type'(Subject_Id => 3, Ticks => 45312500),
+            Minor_Frame_Type'(Subject_Id => 4, Ticks => 18125000))),
+       2 => CPU_Type'
+         (Length       => 2,
+          Minor_Frames => Minor_Frame_Array'(
+            Minor_Frame_Type'(Subject_Id => 1, Ticks => 90625000),
+            Minor_Frame_Type'(Subject_Id => 2, Ticks => 63437500),
+            others => Null_Minor_Frame)))));
 
 end Skp.Scheduling;

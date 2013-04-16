@@ -51,8 +51,11 @@ is
 
       for I in Skp.Scheduling.Major_Frame_Range loop
          for J in Skp.Scheduling.Minor_Frame_Range loop
-            if Scheduling_Plan (I).Minor_Frames (J).Subject_Id = Old_Id then
-               Scheduling_Plan (I).Minor_Frames (J).Subject_Id := New_Id;
+            if Scheduling_Plan (I).CPUs (1).Minor_Frames
+              (J).Subject_Id = Old_Id
+            then
+               Scheduling_Plan (I).CPUs (1).Minor_Frames
+                 (J).Subject_Id := New_Id;
             end if;
          end loop;
       end loop;
@@ -109,11 +112,12 @@ is
    --#    Current_Major from *, Current_Minor, New_Major, Scheduling_Plan;
    is
    begin
-      if Current_Minor < Scheduling_Plan (Current_Major).Length then
+      if Current_Minor < Scheduling_Plan (Current_Major).CPUs (1).Length then
 
          --# assert
-         --#    Current_Minor < Scheduling_Plan (Current_Major).Length and
-         --#    Scheduling_Plan (Current_Major).Length
+         --#    Current_Minor < Scheduling_Plan
+         --#       (Current_Major).CPUs (1).Length and
+         --#    Scheduling_Plan (Current_Major).CPUs (1).Length
          --#       <= Skp.Scheduling.Minor_Frame_Range'Last;
 
          Current_Minor := Current_Minor + 1;
@@ -187,7 +191,7 @@ is
    is
       Current_Frame : Skp.Scheduling.Minor_Frame_Type;
    begin
-      Current_Frame := Scheduling_Plan (Current_Major).Minor_Frames
+      Current_Frame := Scheduling_Plan (Current_Major).CPUs (1).Minor_Frames
         (Current_Minor);
 
       if Subjects.Get_State (Id => Current_Frame.Subject_Id).Launched then
@@ -258,7 +262,7 @@ is
       State           : SK.Subject_State_Type;
       Current_Subject : Skp.Subject_Id_Type;
    begin
-      Current_Subject := Scheduling_Plan (Current_Major).Minor_Frames
+      Current_Subject := Scheduling_Plan (Current_Major).CPUs (1).Minor_Frames
         (Current_Minor).Subject_Id;
       State           := Subjects.Get_State (Id => Current_Subject);
       State.Regs      := Subject_Registers;

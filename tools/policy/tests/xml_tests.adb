@@ -304,11 +304,8 @@ is
          Assert (Condition => P.Scheduling.Major_Frames.Length = 2,
                  Message   => "Major frame count mismatch");
          Assert
-           (Condition => P.Scheduling.Major_Frames.First_Element.Length = 1,
-            Message   => "CPU element count mismatch (1)");
-         Assert
-           (Condition => P.Scheduling.Major_Frames.Last_Element.Length = 1,
-            Message   => "CPU element count mismatch (2)");
+           (Condition => P.Scheduling.Major_Frames.Last_Element.Length = 2,
+            Message   => "CPU element count mismatch");
 
          declare
             CPU_0   : constant CPU_Type

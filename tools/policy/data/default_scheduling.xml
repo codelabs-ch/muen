@@ -11,5 +11,9 @@
 			<minor_frame subject_id="3" ticks="500"/>
 			<minor_frame subject_id="4" ticks="200"/>
 		</cpu>
+		<cpu>
+			<minor_frame subject_id="1" ticks="1000"/>
+			<minor_frame subject_id="2" ticks="700"/>
+		</cpu>
 	</major_frame>
 </scheduling>

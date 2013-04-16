@@ -427,48 +427,74 @@ is
 
       procedure Write_Major_Frame (C : Major_Frames_Package.Cursor)
       is
-         Major       : constant Major_Frame_Type
+
+         Cur_CPU : Natural := 1;
+         Major   : constant Major_Frame_Type
            := Major_Frames_Package.Element (C);
-         CPU_0       : constant CPU_Type := Major.First_Element;
-         Minor_Count : constant Positive := Positive (CPU_0.Length);
-         Cur_Minor   : Natural           := 1;
 
-         --  Write minor frame to buffer.
-         procedure Write_Minor_Frame (C : Minor_Frames_Package.Cursor);
+         --  Write CPU element to buffer.
+         procedure Write_CPU_Element (C : CPU_Package.Cursor);
 
-         ----------------------------------------------------------------------
+         -------------------------------------------------------------------
 
-         procedure Write_Minor_Frame (C : Minor_Frames_Package.Cursor)
+         procedure Write_CPU_Element (C : CPU_Package.Cursor)
          is
-            Minor : constant Minor_Frame_Type := Minor_Frames_Package.Element
-              (Position => C);
-            Ticks : Long_Integer;
-         begin
-            Ticks := Long_Integer (Minor.Ticks) * Timer_Factor;
-            Buffer := Buffer & Indent & Indent & Indent
-              & "Minor_Frame_Type'(Subject_Id =>" & Minor.Subject_Id'Img
-              & ", Ticks =>" & Ticks'Img & ")";
+            CPU : constant CPU_Type := CPU_Package.Element (Position => C);
 
-            if Cur_Minor /= Minor_Count then
-               Buffer := Buffer & "," & ASCII.LF;
+            Minor_Count : constant Positive := Positive (CPU.Length);
+            Cur_Minor   : Natural           := 1;
+
+            --  Write minor frame to buffer.
+            procedure Write_Minor_Frame (C : Minor_Frames_Package.Cursor);
+
+            ----------------------------------------------------------------
+
+            procedure Write_Minor_Frame (C : Minor_Frames_Package.Cursor)
+            is
+               Ticks : Long_Integer;
+               Minor : constant Minor_Frame_Type
+                 := Minor_Frames_Package.Element (Position => C);
+
+            begin
+               Ticks := Long_Integer (Minor.Ticks) * Timer_Factor;
+               Buffer := Buffer & Indent & Indent & Indent & Indent
+                 & "Minor_Frame_Type'(Subject_Id =>" & Minor.Subject_Id'Img
+                 & ", Ticks =>" & Ticks'Img & ")";
+
+               if Cur_Minor /= Minor_Count then
+                  Buffer := Buffer & "," & ASCII.LF;
+               end if;
+               Cur_Minor := Cur_Minor + 1;
+            end Write_Minor_Frame;
+         begin
+            Buffer := Buffer & ASCII.LF & Indent & Indent
+              & Cur_CPU'Img & " => CPU_Type'"
+              & ASCII.LF & Indent & Indent & Indent
+              & "(Length       =>" & CPU.Length'Img & ","
+              & ASCII.LF
+              & Indent & Indent & Indent
+              & " Minor_Frames => Minor_Frame_Array'("
+              & ASCII.LF;
+
+            CPU.Iterate (Process => Write_Minor_Frame'Access);
+
+            if Positive (CPU.Length) < Max_Minor_Count then
+               Buffer := Buffer & "," & ASCII.LF & Indent & Indent & Indent
+                 & Indent & "others => Null_Minor_Frame";
             end if;
-            Cur_Minor := Cur_Minor + 1;
-         end Write_Minor_Frame;
+
+            Buffer := Buffer & "))";
+
+            if Cur_CPU /= Positive (Major.Length) then
+               Buffer := Buffer & ",";
+            end if;
+            Cur_CPU := Cur_CPU + 1;
+         end Write_CPU_Element;
       begin
          Buffer := Buffer & Indent
-           & " " & Cur_Major'Img & " => Major_Frame_Type'"
-           & ASCII.LF
-           & Indent & Indent & "(Length       =>" & CPU_0.Length'Img & ","
-           & ASCII.LF
-           & Indent & Indent & " Minor_Frames => Minor_Frame_Array'("
-           & ASCII.LF;
+           & " " & Cur_Major'Img & " => Major_Frame_Type'(CPUs => CPU_Array'(";
 
-         CPU_0.Iterate (Process => Write_Minor_Frame'Access);
-
-         if Positive (CPU_0.Length) < Max_Minor_Count then
-            Buffer := Buffer & "," & ASCII.LF & Indent & Indent & Indent
-              & "others => Null_Minor_Frame";
-         end if;
+         Major.Iterate (Process => Write_CPU_Element'Access);
 
          Buffer := Buffer & "))";
 

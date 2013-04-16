@@ -3,6 +3,7 @@
 .global _start
 .global ap_entry_point
 
+#define IA32_APIC_BASE 0x1b
 #define IA32_VMX_BASIC 0x480
 #define IA32_EFER      0xc0000080
 
@@ -12,6 +13,7 @@
 #define CR4_PAE_BIT  5
 #define EFER_LME_BIT 8
 #define EFER_NXE_BIT 11
+#define APIC_BSP_BIT 8
 
 // clear pagecount number of 4k memory starting at given address
 .macro clear address pagecount
@@ -121,9 +123,15 @@ start64: .align 4096
 	mov %ecx, %gs
 	mov %ecx, %ss
 
-	// initialize Ada runtime
+	// initialize Ada runtime (BSP only)
 
+	movl $IA32_APIC_BASE, %ecx
+	rdmsr
+	bt $APIC_BSP_BIT, %eax
+	jz kernel_main
 	call adainit
+
+kernel_main:
 
 	// call kernel main
 

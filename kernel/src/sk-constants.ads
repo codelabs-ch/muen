@@ -7,6 +7,7 @@ is
 
    RFLAGS_CF_FLAG           : constant := 0;
    RFLAGS_ZF_FLAG           : constant := 6;
+   RFLAGS_IF_FLAG           : constant := 9;
    RFLAGS_VM_FLAG           : constant := 17;
 
    CR0_PE_FLAG              : constant := 0;

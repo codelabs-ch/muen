@@ -130,19 +130,18 @@ is
 
    procedure Invalid_Sched_CPU_Ticks
    is
-      Policy         : Policy_Type;
-      Major1, Major2 : Major_Frame_Type;
-      CPU            : CPU_Type;
+      Policy     : Policy_Type;
+      Major      : Major_Frame_Type;
+      CPU1, CPU2 : CPU_Type;
    begin
-      Policy.Hardware.Processor.Logical_CPUs := 1;
+      Policy.Hardware.Processor.Logical_CPUs := 2;
 
-      CPU.Append (New_Item => (0, 100));
-      Major1.Append (New_Item => CPU);
-      Policy.Scheduling.Major_Frames.Append (New_Item => Major1);
+      CPU1.Append (New_Item => (0, 100));
+      CPU2.Append (New_Item => (2, 200));
+      Major.Append (New_Item => CPU1);
+      Major.Append (New_Item => CPU2);
+      Policy.Scheduling.Major_Frames.Append (New_Item => Major);
 
-      CPU.Append (New_Item => (0, 200));
-      Major2.Append (New_Item => CPU);
-      Policy.Scheduling.Major_Frames.Append (New_Item => Major2);
       Validators.Validate_Scheduling (P => Policy);
       Fail (Message => "Exception expected");
 

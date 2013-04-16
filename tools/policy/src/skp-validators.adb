@@ -116,8 +116,6 @@ is
    procedure Validate_Scheduling (P : Policy_Type)
    is
 
-      CPU_Ticks : Natural := 0;
-
       --  Validate major frame.
       procedure Validate_Major_Frame (Pos : Major_Frames_Package.Cursor);
 
@@ -125,6 +123,8 @@ is
 
       procedure Validate_Major_Frame (Pos : Major_Frames_Package.Cursor)
       is
+
+         CPU_Ticks : Natural := 0;
 
          --  Validate CPU element.
          procedure Validate_CPU (Pos : CPU_Package.Cursor);

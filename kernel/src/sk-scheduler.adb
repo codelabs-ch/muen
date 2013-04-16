@@ -44,6 +44,12 @@ is
    Interrupt_Count : Interrupt_Counter_Array
      := Interrupt_Counter_Array'(others => 0);
 
+   type Interrupt_Routing_Type is array (SK.Byte) of Skp.Subject_Id_Type;
+
+   --  Interrupt routing table.
+   Int_Routing_Table : constant Interrupt_Routing_Type
+     := Interrupt_Routing_Type'(others => 4);
+
    -------------------------------------------------------------------------
 
    --  Return CPU scheduling ID.
@@ -236,8 +242,9 @@ is
    --# global
    --#    in out Interrupt_Count;
    --#    in out X86_64.State;
+   --#    in out Subjects.Descriptors;
    --# derives
-   --#    Interrupt_Count from *, Vector &
+   --#    Interrupt_Count, Subjects.Descriptors from *, Vector &
    --#    X86_64.State from *;
    is
    begin
@@ -246,6 +253,9 @@ is
          pragma Debug (KC.Put_String (Item => "IRQ "));
          pragma Debug (KC.Put_Byte (Item => Vector));
          pragma Debug (KC.New_Line);
+         Subjects.Set_Pending_Event
+           (Id     => Int_Routing_Table (Vector),
+            Vector => Vector);
       else
          pragma Debug (KC.Put_String (Item => "IRQ with invalid vector "));
          pragma Debug (KC.Put_Byte (Item => Vector));

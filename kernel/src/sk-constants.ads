@@ -105,6 +105,7 @@ is
    GUEST_ACCESS_RIGHTS_GS   : constant := 16#481e#;
    GUEST_ACCESS_RIGHTS_LDTR : constant := 16#4820#;
    GUEST_ACCESS_RIGHTS_TR   : constant := 16#4822#;
+   GUEST_INTERRUPTIBILITY   : constant := 16#4824#;
    GUEST_VMX_PREEMPT_TIMER  : constant := 16#482e#;
    GUEST_CR0                : constant := 16#6800#;
    GUEST_CR3                : constant := 16#6802#;

@@ -44,22 +44,31 @@ _start:
 	sub $trampoline_start, %ecx
 	rep movsb
 
-	// initialize VMX regions (one VMXON + one VMCS per subject)
+	// initialize VMX regions
 
-	clear VMXON_ADDRESS 1
+	clear VMXON_ADDRESS CPU_COUNT
 	clear VMCS_ADDRESS SUBJECT_COUNT
 
 	movl $IA32_VMX_BASIC, %ecx
 	rdmsr
 
-	movl %eax, VMXON_ADDRESS
+	// VMXON
+
+	movl $CPU_COUNT, %ecx
+	movl $VMXON_ADDRESS, %edx
+1:
+	movl %eax, (%edx)
+	add $0x1000, %edx
+	loop 1b
+
+	// VMCS
 
 	movl $SUBJECT_COUNT, %ecx
 	movl $VMCS_ADDRESS, %edx
-set_rev:
+1:
 	movl %eax, (%edx)
 	add $0x1000, %edx
-	loop set_rev
+	loop 1b
 
 ap_entry_point:
 

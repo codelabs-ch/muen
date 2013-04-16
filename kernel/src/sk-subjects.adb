@@ -25,8 +25,11 @@ is
      (Id    : Skp.Subject_Id_Type;
       State : SK.Subject_State_Type)
    is
+      Vector : SK.Byte;
    begin
+      Vector := Descriptors (Id).Pending_Event;
       Descriptors (Id) := State;
+      Descriptors (Id).Pending_Event := Vector;
    end Set_State;
 
    -------------------------------------------------------------------------

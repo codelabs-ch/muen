@@ -175,7 +175,10 @@ is
          Current_Minors (CPU_ID) := Current_Minors (CPU_ID) + 1;
       else
          Current_Minors (CPU_ID) := Skp.Scheduling.Minor_Frame_Range'First;
-         Current_Major := New_Major;
+
+         if Apic.Is_BSP then
+            Current_Major := New_Major;
+         end if;
       end if;
    end Update_Scheduling_Info;
 

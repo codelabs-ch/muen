@@ -2,6 +2,7 @@ with System.Machine_Code;
 
 with SK.KC;
 with SK.CPU;
+with SK.Apic;
 
 package body SK.Dump
 is
@@ -104,11 +105,14 @@ is
          Outputs  => (Word64'Asm_Output ("=r", CR4)),
          Volatile => True);
 
-      KC.Put_Line ("[KERNEL PANIC]");
+      KC.New_Line;
+      KC.Put_String (Item => "[CPU ");
+      KC.Put_Byte   (Item => Apic.Get_ID);
+      KC.Put_Line   (Item => " KERNEL PANIC]");
 
-      KC.Put_String ("Vector: ");
-      KC.Put_Byte (Item => Byte (Context.Vector));
-      KC.Put_String (", Error: ");
+      KC.Put_String (Item => "Vector: ");
+      KC.Put_Byte   (Item => Byte (Context.Vector));
+      KC.Put_String (Item => ", Error: ");
       KC.Put_Word64 (Item => Context.Error_Code);
       KC.New_Line;
       KC.New_Line;

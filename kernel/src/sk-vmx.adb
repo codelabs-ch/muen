@@ -46,6 +46,17 @@ is
 
    ---------------------------------------------------------------------------
 
+   --  Return per-CPU memory offset.
+   function Get_CPU_Offset return SK.Word64
+   --# global
+   --#    X86_64.State;
+   is
+   begin
+      return SK.Word64 (Apic.Get_ID) * SK.Page_Size;
+   end Get_CPU_Offset;
+
+   ---------------------------------------------------------------------------
+
    --  Check alignment of given address.
    function Is_Aligned
      (Address   : SK.Word64;
@@ -156,7 +167,7 @@ is
 
       --  VM resume failed.
 
-      CPU.Set_Stack (Address => Skp.Kernel.Stack_Address);
+      CPU.Set_Stack (Address => Skp.Kernel.Stack_Address + Get_CPU_Offset);
 
       pragma Debug (KC.Put_String (Item => "Error resuming subject "));
       pragma Debug (KC.Put_Byte (Item => Byte (Subject_Id)));
@@ -469,7 +480,7 @@ is
 
       --  VM launch failed.
 
-      CPU.Set_Stack (Address => Skp.Kernel.Stack_Address);
+      CPU.Set_Stack (Address => Skp.Kernel.Stack_Address + Get_CPU_Offset);
 
       pragma Debug (KC.Put_String (Item => "Error launching subject "));
       pragma Debug (KC.Put_Byte (Item => Byte (Subject_Id)));
@@ -488,8 +499,7 @@ is
                    (Value => CPU.Get_CR4,
                     Pos   => Constants.CR4_VMXE_FLAG));
 
-      CPU.VMXON (Region  => Skp.Vmxon_Address + SK.Word64
-                 (Apic.Get_ID) * SK.Page_Size,
+      CPU.VMXON (Region  => Skp.Vmxon_Address + Get_CPU_Offset,
                  Success => Success);
       if not Success then
          pragma Debug (KC.Put_Line (Item => "Error enabling VMX"));

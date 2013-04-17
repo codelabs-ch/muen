@@ -11,3 +11,5 @@ $(OBJ_DIR)/kernel: $(KERNEL)
 
 clean:
 	@rm -rf $(OBJ_DIR)
+
+.PHONY: $(OBJ_DIR)/kernel

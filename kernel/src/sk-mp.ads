@@ -1,21 +1,27 @@
 --# inherit
+--#    Skp.Scheduling,
 --#    SK;
 package SK.MP
 --# own
---#    CPU_Online_Count;
+--#    Barrier : SK.Byte;
 --# initializes
---#    CPU_Online_Count;
+--#    Barrier;
 is
 
-   --  Increment counter of online CPUs.
-   procedure Increment_CPU_Count;
+   --  Reset MP barrier.
+   procedure Reset_Barrier;
    --# global
-   --#    in out CPU_Online_Count;
+   --#    out Barrier;
    --# derives
-   --#    CPU_Online_Count from *;
+   --#    Barrier from ;
+   --# post
+   --#    Barrier = 0;
 
-   --  Wait until all AP processors are online.
-   procedure Wait_For_AP_Processors;
-   --# derives ;
+   --  Blocks until all logical processors are waiting on barrier.
+   procedure Wait_For_All;
+   --# global
+   --#    in out Barrier;
+   --# derives
+   --#    Barrier from *;
 
 end SK.MP;

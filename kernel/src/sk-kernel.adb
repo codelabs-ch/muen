@@ -17,7 +17,6 @@ is
       Success, Is_Bsp : Boolean;
    begin
       Interrupts.Load;
-      MP.Increment_CPU_Count;
 
       Success := System_State.Is_Valid;
       if Success then
@@ -36,7 +35,14 @@ is
 
             pragma Debug (KC.Put_Line (Item => "Starting AP processors"));
             Apic.Start_AP_Processors;
-            MP.Wait_For_AP_Processors;
+         end if;
+
+         --  Synchronize all logical CPUs
+
+         MP.Wait_For_All;
+
+         if Apic.Is_BSP then
+            MP.Reset_Barrier;
          end if;
 
          --  BSP & APs

@@ -16,14 +16,18 @@ is
    --# global
    --#    in out X86_64.State;
    --#    in out Subjects.Descriptors;
-   --#    in out MP.CPU_Online_Count;
+   --#    in out MP.Barrier;
    --#    in     GDT.GDT_Pointer;
    --#    in     Scheduler.State;
    --#    in     VMX.State;
    --#    in     Interrupts.IDT;
    --#    in     Interrupts.IDT_Pointer;
    --# derives
-   --#    MP.CPU_Online_Count  from * &
+   --#    MP.Barrier from
+   --#       *,
+   --#       X86_64.State,
+   --#       Interrupts.IDT,
+   --#       Interrupts.IDT_Pointer &
    --#    Subjects.Descriptors from
    --#       *,
    --#       X86_64.State,

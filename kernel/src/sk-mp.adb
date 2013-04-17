@@ -5,34 +5,46 @@ with Skp.Scheduling;
 package body SK.MP
 is
 
-   --  CPUs online.
-   CPU_Online_Count : SK.Byte := 0;
-   pragma Atomic (CPU_Online_Count);
+   Barrier : SK.Byte := 0;
+   pragma Atomic (Barrier);
 
    -------------------------------------------------------------------------
 
-   procedure Increment_CPU_Count
+   procedure Increment_Barrier
+   --# global
+   --#    in out Barrier;
+   --# derives
+   --#    Barrier from *;
    is
-      --# hide Increment_CPU_Count;
+      --# hide Increment_Barrier;
    begin
       System.Machine_Code.Asm
         (Template => "lock incb %0",
-         Inputs   => (SK.Byte'Asm_Input ("m", CPU_Online_Count)),
+         Inputs   => (SK.Byte'Asm_Input ("m", Barrier)),
          Volatile => True);
-   end Increment_CPU_Count;
+   end Increment_Barrier;
 
    -------------------------------------------------------------------------
 
-   procedure Wait_For_AP_Processors
+   procedure Reset_Barrier
    is
-      --# hide Wait_For_AP_Processors;
    begin
+      Barrier := 0;
+   end Reset_Barrier;
 
-      --  Spin until all APs are online.
+   -------------------------------------------------------------------------
 
-      while CPU_Online_Count <= Byte (Skp.Scheduling.CPU_Range'Last) loop
+   procedure Wait_For_All
+   is
+      --# hide Wait_For_All;
+   begin
+      Increment_Barrier;
+
+      --  Wait until all CPUs are blocked by the barrier.
+
+      while Barrier <= SK.Byte (Skp.Scheduling.CPU_Range'Last) loop
          null;
       end loop;
-   end Wait_For_AP_Processors;
+   end Wait_For_All;
 
 end SK.MP;

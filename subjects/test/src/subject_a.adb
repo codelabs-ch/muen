@@ -36,7 +36,7 @@ begin
    end loop;
 
    loop
-      if Counter mod 2**15 = 0 then
+      if Counter mod 2 ** 19 = 0 then
          VGA.Set_Position (X => Integer (Idx - Dlt),
                            Y => 3);
          Text_IO.Put_Char (Item => Character'Val (176));

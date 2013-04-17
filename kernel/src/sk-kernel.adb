@@ -37,10 +37,6 @@ is
             pragma Debug (KC.Put_Line (Item => "Starting AP processors"));
             Apic.Start_AP_Processors;
             MP.Wait_For_AP_Processors;
-
-            pragma Debug (KC.Put_String (Item => "Processors online: "));
-            pragma Debug (KC.Put_Byte   (Item => MP.Get_CPU_Count));
-            pragma Debug (KC.New_Line);
          end if;
 
          --  BSP & APs

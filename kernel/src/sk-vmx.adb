@@ -193,10 +193,6 @@ is
       Value := Ctls_Exec_Pin;
       Value := Value and Default1;
       Value := Value or  Default0;
-
-      pragma Debug (KC.Put_String (Item => "PIN_BASED_EXEC_CONTROL  "));
-      pragma Debug (KC.Put_Word32 (Item => Value));
-      pragma Debug (KC.New_Line);
       VMCS_Write (Field => Constants.PIN_BASED_EXEC_CONTROL,
                   Value => SK.Word64 (Value));
 
@@ -208,10 +204,6 @@ is
       Value := Ctls_Exec_Proc;
       Value := Value and Default1;
       Value := Value or  Default0;
-
-      pragma Debug (KC.Put_String (Item => "CPU_BASED_EXEC_CONTROL  "));
-      pragma Debug (KC.Put_Word32 (Item => Value));
-      pragma Debug (KC.New_Line);
       VMCS_Write (Field => Constants.CPU_BASED_EXEC_CONTROL,
                   Value => SK.Word64 (Value));
 
@@ -223,10 +215,6 @@ is
       Value := Ctls_Exec_Proc2;
       Value := Value and Default1;
       Value := Value or  Default0;
-
-      pragma Debug (KC.Put_String (Item => "CPU_BASED_EXEC_CONTROL2 "));
-      pragma Debug (KC.Put_Word32 (Item => Value));
-      pragma Debug (KC.New_Line);
       VMCS_Write (Field => Constants.CPU_BASED_EXEC_CONTROL2,
                   Value => SK.Word64 (Value));
 
@@ -264,10 +252,6 @@ is
       Value := Constants.VM_CTRL_IA32E_MODE;
       Value := Value and Default1;
       Value := Value or  Default0;
-
-      pragma Debug (KC.Put_String (Item => "VM_EXIT_CONTROLS        "));
-      pragma Debug (KC.Put_Word32 (Item => Value));
-      pragma Debug (KC.New_Line);
       VMCS_Write (Field => Constants.VM_EXIT_CONTROLS,
                   Value => SK.Word64 (Value));
 
@@ -279,10 +263,6 @@ is
       Value := Constants.VM_CTRL_IA32E_MODE;
       Value := Value and Default1;
       Value := Value or  Default0;
-
-      pragma Debug (KC.Put_String (Item => "VM_ENTRY_CONTROLS       "));
-      pragma Debug (KC.Put_Word32 (Item => Value));
-      pragma Debug (KC.New_Line);
       VMCS_Write (Field => Constants.VM_ENTRY_CONTROLS,
                   Value => SK.Word64 (Value));
    end VMCS_Setup_Control_Fields;
@@ -438,10 +418,6 @@ is
       Spec    : Skp.Subjects.Subject_Spec_Type;
       State   : SK.Subject_State_Type;
    begin
-      pragma Debug (KC.Put_String (Item => "Launching subject "));
-      pragma Debug (KC.Put_Byte (Item => Byte (Subject_Id)));
-      pragma Debug (KC.New_Line);
-
       Spec  := Skp.Subjects.Subject_Specs (Subject_Id);
       State := Subjects.Get_State (Id => Subject_Id);
 

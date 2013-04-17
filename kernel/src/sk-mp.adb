@@ -11,14 +11,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_CPU_Count return SK.Byte
-   is
-   begin
-      return CPU_Online_Count;
-   end Get_CPU_Count;
-
-   -------------------------------------------------------------------------
-
    procedure Increment_CPU_Count
    is
       --# hide Increment_CPU_Count;

@@ -2,7 +2,11 @@ ENTRY(main)
 
 SECTIONS
 {
-	.text :	{ *(.text) }
+	.text :
+	{
+		stub.o(.stub)
+		*(.text)
+	}
 
 	. = ALIGN (4096);
 

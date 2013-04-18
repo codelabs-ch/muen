@@ -15,7 +15,7 @@ is
    use SK;
 
    subtype Width_Type  is Natural range 1 .. 80;
-   subtype Height_Type is Natural range 1 .. 17;
+   subtype Height_Type is Natural range 1 .. 9;
 
    package VGA is new SK.Console_VGA
      (Width_Type   => Width_Type,
@@ -111,7 +111,6 @@ begin
          Text_IO.Put_Word64 (Item => State.CR3);
          Text_IO.Put_String (Item => " CR4: ");
          Text_IO.Put_Word64 (Item => State.CR4);
-         Text_IO.New_Line;
 
          Hypercall.Swap_Relaunch (Subject_Id => Byte (I));
       end if;

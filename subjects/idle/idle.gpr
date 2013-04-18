@@ -1,3 +1,4 @@
+with "../subject";
 with "../../common/defaults";
 
 project Idle is

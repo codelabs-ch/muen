@@ -32,7 +32,6 @@
 			<memory_layout>
 				<memory_region physical_address="260000" virtual_address="0" size="12k" alignment="4k" writable="true" executable="true"/>
 			</memory_layout>
-			<device name="vga"/>
 		</subject>
 	</subjects>
 

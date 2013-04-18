@@ -84,13 +84,13 @@ is
       Bin : Subjects.Binary_Type;
       pragma Unreferenced (Bin);
    begin
-      Bin := Subjects.Read (Binary => "data/noglobalmainsymbol");
+      Bin := Subjects.Read (Binary => "data/noglobalentrysymbol");
       Fail (Message => "Exception expected");
 
    exception
       when E : Subjects.Binary_Error =>
          Assert (Condition => Ada.Exceptions.Exception_Message
-                 (X => E) = "main is not a global symbol",
+                 (X => E) = "subject_entry is not a global symbol",
                  Message   => "Exception message mismatch");
    end Read_No_Global_Symbols;
 
@@ -102,13 +102,13 @@ is
       pragma Unreferenced (Bin);
    begin
       begin
-         Bin := Subjects.Read (Binary => "data/nomainsymbol");
+         Bin := Subjects.Read (Binary => "data/noentrysymbol");
          Fail (Message => "Exception expected");
 
       exception
          when E : Subjects.Binary_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message
-                    (X => E) = "No main symbol",
+                    (X => E) = "No subject_entry symbol",
                     Message   => "Exception message mismatch");
       end;
 
@@ -145,13 +145,13 @@ is
       Bin : Subjects.Binary_Type;
       pragma Unreferenced (Bin);
    begin
-      Bin := Subjects.Read (Binary => "data/undefmain");
+      Bin := Subjects.Read (Binary => "data/undefentry");
       Fail (Message => "Exception expected");
 
    exception
       when E : Subjects.Binary_Error =>
          Assert (Condition => Ada.Exceptions.Exception_Message
-                 (X => E) = "Undefined symbol main",
+                 (X => E) = "Undefined symbol subject_entry",
                  Message   => "Exception message mismatch");
    end Read_Undefined_Symbols;
 

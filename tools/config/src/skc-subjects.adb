@@ -103,7 +103,7 @@ is
 
          Bin.Entry_Point := Check_Symbol
            (Syms => Symbols,
-            Name => "main");
+            Name => "subject_entry");
          Bin.Stack_Address := Check_Symbol
            (Syms => Symbols,
             Name => "stack");

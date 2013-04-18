@@ -1,4 +1,4 @@
-.global main
+.global subject_entry
 
 .text
-main:
+subject_entry:

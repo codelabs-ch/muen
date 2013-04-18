@@ -1,3 +1,5 @@
+with Ada.Strings.Unbounded;
+
 with SK.Utils;
 
 package body Skp.Validators
@@ -181,9 +183,18 @@ is
 
       procedure Validate_Subject (Pos : Subjects_Package.Cursor)
       is
+         use Ada.Strings.Unbounded;
+
          S : constant Subject_Type := Subjects_Package.Element
            (Position => Pos);
       begin
+         if S.Pml4_Address mod SK.Page_Size /= 0 then
+            raise Validation_Error with To_String (S.Name)
+              & ": Invalid PML4 address "
+              & SK.Utils.To_Hex (Item => S.Pml4_Address)
+              & " - address must be 4k aligned";
+         end if;
+
          Validate_Mem_Layout (L => S.Memory_Layout);
       end Validate_Subject;
    begin

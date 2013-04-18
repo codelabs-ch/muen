@@ -26,6 +26,9 @@ is
    --  Verify scheduling major frame with incorrect CPU element count.
    procedure Invalid_Sched_CPU_Count;
 
+   --  Verify subject with invalid PML4 address.
+   procedure Invalid_Subj_Pml4_Addr;
+
    --  Validate policy.
    procedure Policy_Validation;
 

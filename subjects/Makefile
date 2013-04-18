@@ -13,7 +13,6 @@ test:
 	$(MAKE) -C $@
 
 clean:
-	@rm -rf obj
 	$(MAKE) clean -C tau0
 	$(MAKE) clean -C dumper
 	$(MAKE) clean -C idle

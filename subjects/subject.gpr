@@ -1,13 +1,25 @@
+with "../common/defaults";
+
 project Subject is
 
    for Languages use ("Asm");
    for Source_Dirs use ("stubs");
-   for Object_Dir use "obj";
 
-   Ada_Linker_Switches :=
-     ("-T", "../subject.ld",
-      "-nostdlib",
-      "-n");
+   package Builder is
+      for Global_Configuration_Pragmas use "../common/restrictions.adc";
+   end Builder;
+
+   package Compiler is
+      for Default_Switches ("Ada") use Defaults.Ada_Compiler_Switches
+        & "-gnatwale";
+   end Compiler;
+
+   package Linker is
+      for Default_Switches ("Ada") use
+        ("-T", "../subject.ld",
+         "-nostdlib",
+         "-n");
+   end Linker;
 
    package Naming is
       for Body_Suffix ("Asm") use ".S";

@@ -4,6 +4,11 @@ project Subject is
    for Source_Dirs use ("stubs");
    for Object_Dir use "obj";
 
+   Ada_Linker_Switches :=
+     ("-T", "../subject.ld",
+      "-nostdlib",
+      "-n");
+
    package Naming is
       for Body_Suffix ("Asm") use ".S";
    end Naming;

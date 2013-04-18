@@ -19,10 +19,7 @@ project Idle is
    end Compiler;
 
    package Linker is
-      for Default_Switches ("Ada") use
-        ("-T", "../subject.ld",
-         "-nostdlib",
-         "-n");
+      for Default_Switches ("Ada") use Subject.Ada_Linker_Switches;
    end Linker;
 
 end Idle;

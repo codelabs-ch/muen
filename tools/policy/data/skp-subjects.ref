@@ -17,19 +17,19 @@ package Skp.Subjects is
       0 => Subject_Spec_Type'(
        PML4_Address      => 16#00000000001f0000#,
        VMCS_Address      => 16#0000000000001000#,
-       IO_Bitmap_Address => 16#0000000012345678#,
+       IO_Bitmap_Address => 16#00000000001a0000#,
        Stack_Address     => 16#0000000000120000#,
        Entry_Point       => 16#0000000000000abc#),
       1 => Subject_Spec_Type'(
        PML4_Address      => 16#00000000001f4000#,
        VMCS_Address      => 16#0000000000002000#,
-       IO_Bitmap_Address => 16#0000000012345678#,
+       IO_Bitmap_Address => 16#00000000001b0000#,
        Stack_Address     => 16#0000000000120000#,
        Entry_Point       => 16#0000000000000abc#),
       2 => Subject_Spec_Type'(
        PML4_Address      => 16#00000000001f8000#,
        VMCS_Address      => 16#0000000000003000#,
-       IO_Bitmap_Address => 16#0000000012345678#,
+       IO_Bitmap_Address => 16#00000000001c0000#,
        Stack_Address     => 16#0000000000120000#,
        Entry_Point       => 16#0000000000000abc#));
 

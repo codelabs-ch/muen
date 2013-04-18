@@ -38,6 +38,9 @@ is
         (Routine => Invalid_Subj_Pml4_Addr'Access,
          Name    => "Invalid subject PML4 address");
       T.Add_Test_Routine
+        (Routine => Invalid_Subj_IO_Bitmap_Addr'Access,
+         Name    => "Invalid subject I/O bitmap address");
+      T.Add_Test_Routine
         (Routine => Policy_Validation'Access,
          Name    => "Validate policy");
    end Initialize;
@@ -156,6 +159,30 @@ is
                  & "differ",
                  Message   => "Exception message mismatch");
    end Invalid_Sched_CPU_Ticks;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Subj_IO_Bitmap_Addr
+   is
+      use Ada.Strings.Unbounded;
+
+      P : Policy_Type;
+   begin
+      P.Subjects.Insert
+        (New_Item => (Name              => To_Unbounded_String ("s1"),
+                      Pml4_Address      => 0,
+                      IO_Bitmap_Address => 15,
+                      others            => <>));
+      Validators.Validate_Subjects (P => P);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : others =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "s1: Invalid I/O bitmap address 000000000000000f - address "
+                 &  "must be 4k aligned",
+                 Message   => "Exception message mismatch");
+   end Invalid_Subj_IO_Bitmap_Addr;
 
    -------------------------------------------------------------------------
 

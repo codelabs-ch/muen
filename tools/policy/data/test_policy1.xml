@@ -12,7 +12,7 @@
 	&binaries;
 
 	<subjects>
-		<subject id="0" name="tau0" pml4_address="1f0000" io_bitmap_address="12345678">
+		<subject id="0" name="tau0" pml4_address="1f0000" io_bitmap_address="1a0000">
 			&subj_state;
 			<memory_layout>
 				<memory_region physical_address="240000" virtual_address="0" size="64k" alignment="4k" writable="true"  executable="true"/>
@@ -20,14 +20,14 @@
 			</memory_layout>
 			<device name="serial"/>
 		</subject>
-		<subject id="1" name="subject1" pml4_address="1f4000" io_bitmap_address="12345678">
+		<subject id="1" name="subject1" pml4_address="1f4000" io_bitmap_address="1b0000">
 			&subj_state;
 			<memory_layout>
 				<memory_region physical_address="250000" virtual_address="0" size="12k" alignment="4k" writable="true" executable="true"/>
 			</memory_layout>
 			<device name="vga"/>
 		</subject>
-		<subject id="2" name="subject2" pml4_address="1f8000" io_bitmap_address="12345678">
+		<subject id="2" name="subject2" pml4_address="1f8000" io_bitmap_address="1c0000">
 			&subj_state;
 			<memory_layout>
 				<memory_region physical_address="260000" virtual_address="0" size="12k" alignment="4k" writable="true" executable="true"/>

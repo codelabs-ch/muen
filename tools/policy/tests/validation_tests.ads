@@ -29,6 +29,9 @@ is
    --  Verify subject with invalid PML4 address.
    procedure Invalid_Subj_Pml4_Addr;
 
+   --  Verify subject with invalid I/O bitmap address.
+   procedure Invalid_Subj_IO_Bitmap_Addr;
+
    --  Validate policy.
    procedure Policy_Validation;
 

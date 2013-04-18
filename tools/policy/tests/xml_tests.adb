@@ -333,7 +333,7 @@ is
                  Message   => "Name mismatch");
          Assert (Condition => S.Pml4_Address = 16#1f0000#,
                  Message   => "PML4 address mismatch");
-         Assert (Condition => S.IO_Bitmap_Address = 16#12345678#,
+         Assert (Condition => S.IO_Bitmap_Address = 16#1a0000#,
                  Message   => "I/O bitmap address mismatch");
 
          Assert (Condition => S.Init_State.Stack_Address = 16#120000#,

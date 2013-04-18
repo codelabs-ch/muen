@@ -194,6 +194,12 @@ is
               & SK.Utils.To_Hex (Item => S.Pml4_Address)
               & " - address must be 4k aligned";
          end if;
+         if S.IO_Bitmap_Address mod SK.Page_Size /= 0 then
+            raise Validation_Error with To_String (S.Name)
+              & ": Invalid I/O bitmap address "
+              & SK.Utils.To_Hex (Item => S.IO_Bitmap_Address)
+              & " - address must be 4k aligned";
+         end if;
 
          Validate_Mem_Layout (L => S.Memory_Layout);
       end Validate_Subject;

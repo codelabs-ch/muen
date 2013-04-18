@@ -1,0 +1,11 @@
+project Subject is
+
+   for Languages use ("Asm");
+   for Source_Dirs use ("stubs");
+   for Object_Dir use "obj";
+
+   package Naming is
+      for Body_Suffix ("Asm") use ".S";
+   end Naming;
+
+end Subject;

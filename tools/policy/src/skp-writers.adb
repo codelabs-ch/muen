@@ -515,10 +515,6 @@ is
                          Pattern  => "__minor_range__",
                          Content  => "1 .." & Max_Minor_Count'Img);
       Templates.Replace (Template => Tmpl,
-                         Pattern  => "__cpu_range__",
-                         Content  => "0 .." & Natural'Image
-                           (Policy.Hardware.Processor.Logical_CPUs - 1));
-      Templates.Replace (Template => Tmpl,
                          Pattern  => "__major_range__",
                          Content  => "0 .." & Natural'Image (Major_Count - 1));
       Templates.Replace (Template => Tmpl,
@@ -639,6 +635,10 @@ is
                        Filename => Dir_Name & "/" & Policy_File);
 
       Tmpl := Templates.Load (Filename => "skp.ads");
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__cpu_range__",
+                         Content  => "0 .." & Natural'Image
+                           (Policy.Hardware.Processor.Logical_CPUs - 1));
       Templates.Replace (Template => Tmpl,
                          Pattern  => "__subj_range__",
                          Content  => "0 .."  & Positive'Image (S_Count - 1));

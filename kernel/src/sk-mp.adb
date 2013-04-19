@@ -1,6 +1,6 @@
 with System.Machine_Code;
 
-with Skp.Scheduling;
+with Skp;
 
 package body SK.MP
 is
@@ -42,7 +42,7 @@ is
 
       --  Wait until all CPUs are blocked by the barrier.
 
-      while Barrier <= SK.Byte (Skp.Scheduling.CPU_Range'Last) loop
+      while Barrier <= SK.Byte (Skp.CPU_Range'Last) loop
          null;
       end loop;
    end Wait_For_All;

@@ -31,7 +31,7 @@ is
      := Skp.Scheduling.Major_Frame_Range'First;
 
    --  Current per-CPU minor frames.
-   type Current_Minor_Array is array (Skp.Scheduling.CPU_Range)
+   type Current_Minor_Array is array (Skp.CPU_Range)
      of Skp.Scheduling.Minor_Frame_Range;
 
    Current_Minors : Current_Minor_Array := Current_Minor_Array'
@@ -53,7 +53,7 @@ is
    -------------------------------------------------------------------------
 
    --  Return CPU scheduling ID.
-   procedure Get_ID (ID : out Skp.Scheduling.CPU_Range)
+   procedure Get_ID (ID : out Skp.CPU_Range)
    --# global
    --#    in out X86_64.State;
    --# derives
@@ -65,13 +65,13 @@ is
       ID      := 0;
       Apic_ID := Apic.Get_ID;
 
-      if Apic_ID > SK.Byte (Skp.Scheduling.CPU_Range'Last) then
+      if Apic_ID > SK.Byte (Skp.CPU_Range'Last) then
          pragma Debug (KC.Put_String (Item => "CPU ID not in range: "));
          pragma Debug (KC.Put_Byte   (Item => Apic_ID));
          pragma Debug (KC.New_Line);
          CPU.Panic;
       else
-         ID := Skp.Scheduling.CPU_Range (Apic_ID);
+         ID := Skp.CPU_Range (Apic_ID);
       end if;
    end Get_ID;
 
@@ -87,7 +87,7 @@ is
    --#    X86_64.State    from *, Old_Id, New_Id &
    --#    Scheduling_Plan from *, Old_Id, New_Id, X86_64.State;
    is
-      CPU_ID : Skp.Scheduling.CPU_Range;
+      CPU_ID : Skp.CPU_Range;
    begin
       Get_ID (ID => CPU_ID);
 
@@ -171,7 +171,7 @@ is
    --#       Scheduling_Plan,
    --#       X86_64.State;
    is
-      CPU_ID : Skp.Scheduling.CPU_Range;
+      CPU_ID : Skp.CPU_Range;
    begin
       Get_ID (ID => CPU_ID);
 
@@ -180,7 +180,7 @@ is
       then
 
          --# assert
-         --#    CPU_ID in Skp.Scheduling.CPU_Range      and
+         --#    CPU_ID in Skp.CPU_Range and
          --#    Current_Minors (CPU_ID) < Scheduling_Plan
          --#       (Current_Major).CPUs (CPU_ID).Length and
          --#    Scheduling_Plan (Current_Major).CPUs (CPU_ID).Length
@@ -292,7 +292,7 @@ is
    --#       Current_Minors,
    --#       Scheduling_Plan;
    is
-      CPU_ID        : Skp.Scheduling.CPU_Range;
+      CPU_ID        : Skp.CPU_Range;
       Current_Frame : Skp.Scheduling.Minor_Frame_Type;
    begin
       Get_ID (ID => CPU_ID);
@@ -367,7 +367,7 @@ is
    --#       Current_Minors,
    --#       Scheduling_Plan;
    is
-      CPU_ID          : Skp.Scheduling.CPU_Range;
+      CPU_ID          : Skp.CPU_Range;
       State           : SK.Subject_State_Type;
       Current_Subject : Skp.Subject_Id_Type;
    begin

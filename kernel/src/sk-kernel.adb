@@ -6,7 +6,6 @@ with SK.VMX;
 with SK.Scheduler;
 with SK.Apic;
 with SK.MP;
-with SK.IO_Apic;
 
 package body SK.Kernel
 is
@@ -35,11 +34,7 @@ is
                            & SK.Version.Version_String & ") ..."));
 
             Interrupts.Disable_Legacy_PIC;
-
-            IO_Apic.Route_IRQ (IRQ            => 1,
-                               Vector         => 32,
-                               Trigger_Mode   => IO_Apic.Edge,
-                               Destination_Id => Apic.Get_ID);
+            Interrupts.Setup_IRQ_Routing;
 
             pragma Debug (KC.Put_Line (Item => "Starting AP processors"));
             Apic.Start_AP_Processors;

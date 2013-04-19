@@ -1,7 +1,9 @@
 with System.Machine_Code;
 with System.Storage_Elements;
 
+with SK.Apic;
 with SK.IO;
+with SK.IO_Apic;
 
 package body SK.Interrupts
 is
@@ -56,6 +58,17 @@ is
          Inputs   => (System.Address'Asm_Input ("r", IDT_Pointer'Address)),
          Volatile => True);
    end Load;
+
+   -------------------------------------------------------------------------
+
+   procedure Setup_IRQ_Routing
+   is
+   begin
+      IO_Apic.Route_IRQ (IRQ            => 1,
+                         Vector         => 32,
+                         Trigger_Mode   => IO_Apic.Edge,
+                         Destination_Id => Apic.Get_ID);
+   end Setup_IRQ_Routing;
 
 begin
 

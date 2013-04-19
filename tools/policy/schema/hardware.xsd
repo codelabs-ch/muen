@@ -21,6 +21,7 @@
 			</xs:sequence>
 		</xs:choice>
 		<xs:attribute name="name" type="device_name_type" use="required"/>
+		<xs:attribute name="irq"  type="irq_type"         use="optional"/>
 	</xs:complexType>
 
 	<xs:simpleType name="vmx_timer_rate_type">

@@ -1,5 +1,7 @@
 with System;
 
+with Skp.Interrupts;
+
 with SK.VMX;
 with SK.Constants;
 with SK.KC;
@@ -37,12 +39,6 @@ is
      (others => Skp.Scheduling.Minor_Frame_Range'First);
 
    subtype Ext_Int_Type is SK.Byte range 32 .. 255;
-
-   type Interrupt_Routing_Type is array (SK.Byte) of Skp.Subject_Id_Type;
-
-   --  Interrupt routing table.
-   Int_Routing_Table : constant Interrupt_Routing_Type
-     := Interrupt_Routing_Type'(others => 4);
 
    -------------------------------------------------------------------------
 
@@ -242,9 +238,18 @@ is
    is
    begin
       if Vector >= Ext_Int_Type'First then
-         Subjects.Set_Pending_Event
-           (Id     => Int_Routing_Table (Vector),
-            Vector => Vector);
+         if Skp.Interrupts.Vector_Routing
+           (Vector) not in Skp.Subject_Id_Type
+         then
+            pragma Debug (KC.Put_String (Item => "Spurious IRQ vector "));
+            pragma Debug (KC.Put_Byte (Item => Vector));
+            pragma Debug (KC.New_Line);
+            null;
+         else
+            Subjects.Set_Pending_Event
+              (Id     => Skp.Interrupts.Vector_Routing (Vector),
+               Vector => Vector);
+         end if;
       else
          pragma Debug (KC.Put_String (Item => "IRQ with invalid vector "));
          pragma Debug (KC.Put_Byte (Item => Vector));

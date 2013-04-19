@@ -1,12 +1,13 @@
---# inherit Skp;
+with SK;
+
+--# inherit SK, Skp;
 package Skp.Interrupts is
 
-   type IRQ_Type    is range 0  .. 255;
-   type Vector_Type is range 32 .. 255;
+   subtype Vector_Type is SK.Byte range 32 .. 255;
 
    type IRQ_Route_Type is record
       CPU    : Skp.CPU_Range;
-      IRQ    : IRQ_Type;
+      IRQ    : SK.Byte;
       Vector : Vector_Type;
    end record;
 

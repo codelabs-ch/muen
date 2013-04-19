@@ -67,8 +67,8 @@ is
    begin
       for I in Skp.Interrupts.IRQ_Range loop
          IO_Apic.Route_IRQ
-           (IRQ            => SK.Byte (Skp.Interrupts.IRQ_Routing (I).IRQ),
-            Vector         => SK.Byte (Skp.Interrupts.IRQ_Routing (I).Vector),
+           (IRQ            => Skp.Interrupts.IRQ_Routing (I).IRQ,
+            Vector         => Skp.Interrupts.IRQ_Routing (I).Vector,
             Trigger_Mode   => IO_Apic.Edge,
             Destination_Id => SK.Byte (Skp.Interrupts.IRQ_Routing (I).CPU));
       end loop;

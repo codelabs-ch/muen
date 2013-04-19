@@ -402,8 +402,8 @@ is
       --  IRQ to host Vector offset.
       Vector_Offset : constant := 32;
 
-      IRQ_Count, Current : Natural := 0;
-      Buffer             : Unbounded_String;
+      IRQ_Count, Current        : Natural := 0;
+      IRQ_Buffer, Vector_Buffer : Unbounded_String;
 
       --  Calculate total number configured IRQs.
       procedure Calc_IRQ_Count;
@@ -446,7 +446,9 @@ is
             Majors     => Policy.Scheduling.Major_Frames);
          Current := Current + 1;
 
-         Buffer := Buffer & Indent & Indent
+         --  IRQ routing table.
+
+         IRQ_Buffer := IRQ_Buffer & Indent & Indent
            & Current'Img & " => IRQ_Route_Type'("
            & ASCII.LF
            & Indent & Indent & Indent & "CPU    =>" & CPU'Img
@@ -456,8 +458,15 @@ is
            & Indent & Indent & Indent & "Vector =>"
            & Positive'Image (Vector_Offset + Dev.IRQ) & ")";
 
+         --  Vector -> subject routing table.
+
+         Vector_Buffer := Vector_Buffer & Indent & Indent
+           & Positive'Image (Vector_Offset + Dev.IRQ) & " =>"
+           & Dev.Owners.First_Element'Img;
+
          if Current /= IRQ_Count then
-            Buffer := Buffer & "," & ASCII.LF;
+            IRQ_Buffer    := IRQ_Buffer    & "," & ASCII.LF;
+            Vector_Buffer := Vector_Buffer & "," & ASCII.LF;
          end if;
       end Write_Device;
 
@@ -468,13 +477,18 @@ is
       Tmpl := Templates.Load (Filename => "skp-interrupts.ads");
 
       Policy.Hardware.Devices.Iterate (Process => Write_Device'Access);
+      Vector_Buffer := Vector_Buffer & ","
+        & ASCII.LF & Indent & Indent & " others => Invalid_Subject";
 
       Templates.Replace (Template => Tmpl,
                          Pattern  => "__irq_range__",
                          Content  => "1 .." & IRQ_Count'Img);
       Templates.Replace (Template => Tmpl,
                          Pattern  => "__irq_routing_table__",
-                         Content  => To_String (Buffer));
+                         Content  => To_String (IRQ_Buffer));
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__vector_routing_table__",
+                         Content  => To_String (Vector_Buffer));
 
       Templates.Write (Template => Tmpl,
                        Filename => Dir_Name & "/skp-interrupts.ads");

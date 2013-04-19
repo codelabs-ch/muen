@@ -30,4 +30,15 @@ package Skp.Interrupts is
          IRQ    => 15,
          Vector => 47));
 
+   Invalid_Subject : constant := Skp.Subject_Id_Type'Last + 1;
+
+   subtype Vector_Dst_Type is Natural range 0 .. Invalid_Subject;
+
+   type Vector_Routing_Array is array (Vector_Type) of Vector_Dst_Type;
+
+   Vector_Routing : constant Vector_Routing_Array := Vector_Routing_Array'(
+       44 => 1,
+       47 => 1,
+       others => Invalid_Subject);
+
 end Skp.Interrupts;

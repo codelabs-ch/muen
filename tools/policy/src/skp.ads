@@ -69,11 +69,17 @@ is
       Memory_Layout : Memory_Layout_Type;
    end record;
 
+   package Owners_Package is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => Natural);
+
+   subtype Owners_Type is Owners_Package.List;
+
    type Device_Type is record
       Name          : Ada.Strings.Unbounded.Unbounded_String;
       Memory_Layout : Memory_Layout_Type;
       IO_Ports      : IO_Ports_Type;
       IRQ           : Integer := -1;
+      Owners        : Owners_Type;
    end record;
 
    package Devices_Package is new Ada.Containers.Ordered_Maps

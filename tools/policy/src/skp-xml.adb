@@ -361,11 +361,15 @@ is
                   Name => "name"));
          begin
             Dev := Policy.Hardware.Devices.Element (Key => Dev_Name);
+            Dev.Owners.Append (New_Item => Id);
+            Devices_Package.Replace (Container => Policy.Hardware.Devices,
+                                     Key       => Dev_Name,
+                                     New_Item  => Dev);
+
             Subj_Mem.Splice (Before => Memregion_Package.No_Element,
                              Source => Dev.Memory_Layout);
             Ports.Splice (Before => Ports_Package.No_Element,
                           Source => Dev.IO_Ports);
-
          exception
             when others =>
                raise Processing_Error with "No hardware device with name '"

@@ -277,8 +277,14 @@ is
                     Message   => "Device ports mismatch");
             Assert (Condition => Dev1.IRQ = 12,
                     Message   => "Device IRQ mismatch (1)");
+            Assert (Condition => Dev1.Owners.Is_Empty,
+                    Message   => "Device owners count mismatch (1)");
             Assert (Condition => Dev2.IRQ = -1,
                     Message   => "Device IRQ mismatch (2)");
+            Assert (Condition => Dev2.Owners.Length = 1,
+                    Message   => "Device owners count mismatch (2)");
+            Assert (Condition => Dev2.Owners.First_Element = 1,
+                    Message   => "Device owner mismatch");
          end;
 
          --  Kernel

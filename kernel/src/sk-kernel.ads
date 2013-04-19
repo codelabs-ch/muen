@@ -8,7 +8,6 @@
 --#    SK.Subjects,
 --#    SK.VMX,
 --#    SK.MP,
---#    SK.IO,
 --#    SK.IO_Apic;
 package SK.Kernel
 is

@@ -1,6 +1,8 @@
 with System.Machine_Code;
 with System.Storage_Elements;
 
+with SK.IO;
+
 package body SK.Interrupts
 is
 
@@ -17,6 +19,23 @@ is
 
    --  Interrupt table pointer, loaded into IDTR
    IDT_Pointer : Descriptors.Pseudo_Descriptor_Type;
+
+   -------------------------------------------------------------------------
+
+   procedure Disable_Legacy_PIC
+   is
+   begin
+
+      --  Disable slave.
+
+      IO.Outb (Port  => 16#a1#,
+               Value => 16#ff#);
+
+      --  Disable master.
+
+      IO.Outb (Port  => 16#21#,
+               Value => 16#ff#);
+   end Disable_Legacy_PIC;
 
    -------------------------------------------------------------------------
 

@@ -1,8 +1,9 @@
 all: .emulate
 
-bootable.iso: ../pack/obj/kernel
-	cp $< iso/boot/kernel.bin
-	grub-mkrescue -o $@ iso/
+bootable.iso: ../pack/obj/kernel grub.cfg Makefile
+	grub-mkrescue -o $@ -graft-points \
+		boot/grub/grub.cfg=grub.cfg \
+		boot/kernel.bin=../pack/obj/kernel
 
 .emulate: stop bootable.iso
 	@bochs -q >/dev/null 2>&1 & echo "$$!" > $@
@@ -12,6 +13,6 @@ stop:
 
 clean: stop
 	@rm -f bootable.iso bochsout.txt serial.out debugger.out
-	@rm -f iso/boot/kernel.bin .emulate
+	@rm -f .emulate
 
 .PHONY: .emulate

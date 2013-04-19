@@ -9,7 +9,7 @@
 		</memory_layout>
 		<io_port start="03d4" end="03d5"/>
 	</device>
-	<device name="multiport">
+	<device name="multiport" irq="12">
 		<io_port start="03f8" end="03fd"/>
 		<io_port start="abcd" end="bcda"/>
 	</device>

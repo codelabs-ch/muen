@@ -266,14 +266,19 @@ is
                  Message   => "VMX preemption timer rate mismatch");
 
          declare
-            Dev : constant Device_Type := P.Hardware.Devices.First_Element;
+            Dev1 : constant Device_Type := P.Hardware.Devices.First_Element;
+            Dev2 : constant Device_Type := P.Hardware.Devices.Last_Element;
          begin
-            Assert (Condition => Dev.Name = To_Unbounded_String ("multiport"),
+            Assert (Condition => Dev1.Name = To_Unbounded_String ("multiport"),
                     Message   => "Device name mismatch");
-            Assert (Condition => Dev.Memory_Layout.Is_Empty,
+            Assert (Condition => Dev1.Memory_Layout.Is_Empty,
                     Message   => "Device memory not empty");
-            Assert (Condition => Dev.IO_Ports.Length = 2,
+            Assert (Condition => Dev1.IO_Ports.Length = 2,
                     Message   => "Device ports mismatch");
+            Assert (Condition => Dev1.IRQ = 12,
+                    Message   => "Device IRQ mismatch (1)");
+            Assert (Condition => Dev2.IRQ = -1,
+                    Message   => "Device IRQ mismatch (2)");
          end;
 
          --  Kernel

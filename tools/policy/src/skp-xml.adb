@@ -66,11 +66,18 @@ is
          Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "name");
+         IRQ  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "irq");
          Dev  : Device_Type;
       begin
          Dev.Name          := To_Unbounded_String (Name);
          Dev.Memory_Layout := Deserialize_Mem_Layout (Node => Node);
          Dev.IO_Ports      := Deserialize_Ports (Node => Node);
+
+         if IRQ'Length > 0 then
+            Dev.IRQ := Natural'Value (IRQ);
+         end if;
 
          Hardware.Devices.Insert
            (Key      => Dev.Name,

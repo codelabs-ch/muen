@@ -73,6 +73,7 @@ is
       Name          : Ada.Strings.Unbounded.Unbounded_String;
       Memory_Layout : Memory_Layout_Type;
       IO_Ports      : IO_Ports_Type;
+      IRQ           : Integer := -1;
    end record;
 
    package Devices_Package is new Ada.Containers.Ordered_Maps

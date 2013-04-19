@@ -8,6 +8,9 @@ package Skp.Hardware is
    Serial_Port1_Start : constant := 16#50b0#;
    Serial_Port1_End   : constant := 16#50b0#;
 
+   Testdevice_Port1_Start : constant := 16#00ab#;
+   Testdevice_Port1_End   : constant := 16#00ab#;
+
    Vga_Port1_Start : constant := 16#03d4#;
    Vga_Port1_End   : constant := 16#03d5#;
 

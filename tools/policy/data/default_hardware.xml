@@ -13,4 +13,7 @@
 		<io_port start="03f8" end="03fd"/>
 		<io_port start="abcd" end="bcda"/>
 	</device>
+	<device name="testdevice" irq="15">
+		<io_port start="00ab"/>
+	</device>
 </hardware>

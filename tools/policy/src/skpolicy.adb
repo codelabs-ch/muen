@@ -49,6 +49,8 @@ begin
                                Policy   => Policy);
    Skp.Writers.Write_Scheduling (Dir_Name => Inc_Dir,
                                  Policy   => Policy);
+   Skp.Writers.Write_Interrupts (Dir_Name => Inc_Dir,
+                                 Policy   => Policy);
    Skp.Writers.Write_Binaries (Dir_Name => Pac_Dir,
                                Policy   => Policy);
 

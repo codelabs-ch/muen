@@ -26,4 +26,7 @@ is
    --  Write scheduling spec file.
    procedure Write_Scheduling;
 
+   --  Write interrupts spec file.
+   procedure Write_Interrupts;
+
 end Writer_Tests;

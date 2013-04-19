@@ -38,6 +38,66 @@ is
      (Filename :     String;
       File     : out Ada.Streams.Stream_IO.File_Type);
 
+   --  Returns ID of CPU which executes the given subject in specified major
+   --  frames.
+   function Get_Executing_CPU
+     (Subject_Id : Natural;
+      Majors     : Major_Frames_Type)
+      return Natural;
+
+   -------------------------------------------------------------------------
+
+   function Get_Executing_CPU
+     (Subject_Id : Natural;
+      Majors     : Major_Frames_Type)
+      return Natural
+   is
+      CPU : Integer := -1;
+
+      --  Check major frame.
+      procedure Check_Major (Pos : Major_Frames_Package.Cursor);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Major (Pos : Major_Frames_Package.Cursor)
+      is
+         Current_CPU : Natural := 0;
+
+         --  Check CPU element.
+         procedure Check_CPU (Pos : CPU_Package.Cursor);
+
+         -------------------------------------------------------------------
+
+         procedure Check_CPU (Pos : CPU_Package.Cursor)
+         is
+            --  Check minor frame.
+            procedure Check_Minor (Pos : Minor_Frames_Package.Cursor);
+
+            ----------------------------------------------------------------
+
+            procedure Check_Minor (Pos : Minor_Frames_Package.Cursor)
+            is
+               Min : constant Minor_Frame_Type := Minor_Frames_Package.Element
+                 (Position => Pos);
+            begin
+               if Min.Subject_Id = Subject_Id then
+                  CPU := Current_CPU;
+               end if;
+            end Check_Minor;
+         begin
+            CPU_Package.Element (Position => Pos).Iterate
+              (Process => Check_Minor'Access);
+            Current_CPU := Current_CPU + 1;
+         end Check_CPU;
+      begin
+         Major_Frames_Package.Element (Position => Pos).Iterate
+           (Process => Check_CPU'Access);
+      end Check_Major;
+   begin
+      Majors.Iterate (Process => Check_Major'Access);
+      return CPU;
+   end Get_Executing_CPU;
+
    -------------------------------------------------------------------------
 
    procedure Open
@@ -332,6 +392,93 @@ is
       Templates.Write (Template => Tmpl,
                        Filename => Dir_Name & "/skp-hardware.ads");
    end Write_Hardware;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_Interrupts
+     (Dir_Name : String;
+      Policy   : Policy_Type)
+   is
+      --  IRQ to host Vector offset.
+      Vector_Offset : constant := 32;
+
+      IRQ_Count, Current : Natural := 0;
+      Buffer             : Unbounded_String;
+
+      --  Calculate total number configured IRQs.
+      procedure Calc_IRQ_Count;
+
+      --  Write device IRQs to interrupts spec.
+      procedure Write_Device (Pos : Devices_Package.Cursor);
+
+      ----------------------------------------------------------------------
+
+      procedure Calc_IRQ_Count
+      is
+         Pos : Devices_Package.Cursor := Policy.Hardware.Devices.First;
+         Dev : Device_Type;
+      begin
+         while Devices_Package.Has_Element (Position => Pos) loop
+            Dev := Devices_Package.Element (Position => Pos);
+            if Dev.IRQ /= -1 and then not Dev.Owners.Is_Empty then
+               IRQ_Count := IRQ_Count + 1;
+            end if;
+            Devices_Package.Next (Position => Pos);
+         end loop;
+      end Calc_IRQ_Count;
+
+      ----------------------------------------------------------------------
+
+      procedure Write_Device (Pos : Devices_Package.Cursor)
+      is
+         CPU : Natural;
+         Dev : constant Device_Type := Devices_Package.Element
+           (Position => Pos);
+      begin
+         if Dev.Owners.Is_Empty or else Dev.IRQ = -1 then
+            return;
+         end if;
+
+         --  Lookup CPU on which subject is scheduled.
+
+         CPU := Get_Executing_CPU
+           (Subject_Id => Dev.Owners.First_Element,
+            Majors     => Policy.Scheduling.Major_Frames);
+         Current := Current + 1;
+
+         Buffer := Buffer & Indent & Indent
+           & Current'Img & " => IRQ_Route_Type'("
+           & ASCII.LF
+           & Indent & Indent & Indent & "CPU    =>" & CPU'Img
+           & "," & ASCII.LF
+           & Indent & Indent & Indent & "IRQ    =>" & Dev.IRQ'Img
+           & "," & ASCII.LF
+           & Indent & Indent & Indent & "Vector =>"
+           & Positive'Image (Vector_Offset + Dev.IRQ) & ")";
+
+         if Current /= IRQ_Count then
+            Buffer := Buffer & "," & ASCII.LF;
+         end if;
+      end Write_Device;
+
+      Tmpl : Templates.Template_Type;
+   begin
+      Calc_IRQ_Count;
+
+      Tmpl := Templates.Load (Filename => "skp-interrupts.ads");
+
+      Policy.Hardware.Devices.Iterate (Process => Write_Device'Access);
+
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__irq_range__",
+                         Content  => "1 .." & IRQ_Count'Img);
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__irq_routing_table__",
+                         Content  => To_String (Buffer));
+
+      Templates.Write (Template => Tmpl,
+                       Filename => Dir_Name & "/skp-interrupts.ads");
+   end Write_Interrupts;
 
    -------------------------------------------------------------------------
 

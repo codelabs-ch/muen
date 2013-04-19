@@ -1,0 +1,27 @@
+--# inherit Skp;
+package Skp.Interrupts is
+
+   type IRQ_Type    is range 0  .. 255;
+   type Vector_Type is range 32 .. 255;
+
+   type IRQ_Route_Type is record
+      CPU    : Skp.CPU_Range;
+      IRQ    : IRQ_Type;
+      Vector : Vector_Type;
+   end record;
+
+   type IRQ_Range is range 1 .. 2;
+
+   type IRQ_Routing_Array is array (IRQ_Range) of IRQ_Route_Type;
+
+   IRQ_Routing : constant IRQ_Routing_Array := IRQ_Routing_Array'(
+       1 => IRQ_Route_Type'(
+         CPU    => 1,
+         IRQ    => 12,
+         Vector => 44),
+       2 => IRQ_Route_Type'(
+         CPU    => 1,
+         IRQ    => 15,
+         Vector => 47));
+
+end Skp.Interrupts;

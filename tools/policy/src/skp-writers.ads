@@ -31,4 +31,9 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type);
 
+   --  Write interrupt policy to directory specified by name.
+   procedure Write_Interrupts
+     (Dir_Name : String;
+      Policy   : Policy_Type);
+
 end Skp.Writers;

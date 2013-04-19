@@ -255,7 +255,7 @@ is
 
          --  Hardware
 
-         Assert (Condition => P.Hardware.Devices.Length = 3,
+         Assert (Condition => P.Hardware.Devices.Length = 4,
                  Message   => "Device count mismatch");
 
          Assert (Condition => P.Hardware.Processor.Logical_CPUs = 2,
@@ -277,7 +277,7 @@ is
                     Message   => "Device ports mismatch");
             Assert (Condition => Dev1.IRQ = 12,
                     Message   => "Device IRQ mismatch (1)");
-            Assert (Condition => Dev1.Owners.Is_Empty,
+            Assert (Condition => Dev1.Owners.Length = 1,
                     Message   => "Device owners count mismatch (1)");
             Assert (Condition => Dev2.IRQ = -1,
                     Message   => "Device IRQ mismatch (2)");

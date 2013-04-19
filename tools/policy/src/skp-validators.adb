@@ -5,20 +5,39 @@ with SK.Utils;
 package body Skp.Validators
 is
 
+   use Ada.Strings.Unbounded;
    use type SK.Word64;
-
-   -------------------------------------------------------------------------
-
-   procedure Validate_Device (D : Device_Type)
-   is
-   begin
-      Validate_Mem_Layout (L => D.Memory_Layout);
-   end Validate_Device;
 
    -------------------------------------------------------------------------
 
    procedure Validate_Hardware (H : Hardware_Type)
    is
+      type IRQ_Array is array (Natural range 0 .. 255) of Boolean;
+
+      IRQs : IRQ_Array := (others => False);
+
+      --  Validate device specification.
+      procedure Validate_Device (D : Device_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Validate_Device (D : Device_Type)
+      is
+      begin
+         Validate_Mem_Layout (L => D.Memory_Layout);
+
+         if D.IRQ = -1 then
+            return;
+         end if;
+
+         if IRQs (D.IRQ) then
+            raise Validation_Error with "Device '" & To_String (D.Name)
+              & "' IRQ" & D.IRQ'Img & " is not unique";
+         else
+            IRQs (D.IRQ) := True;
+         end if;
+      end Validate_Device;
+
       Pos : Devices_Package.Cursor := H.Devices.First;
    begin
       while Devices_Package.Has_Element (Position => Pos) loop
@@ -183,8 +202,6 @@ is
 
       procedure Validate_Subject (Pos : Subjects_Package.Cursor)
       is
-         use Ada.Strings.Unbounded;
-
          S : constant Subject_Type := Subjects_Package.Element
            (Position => Pos);
       begin

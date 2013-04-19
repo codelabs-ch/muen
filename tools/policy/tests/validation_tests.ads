@@ -32,6 +32,9 @@ is
    --  Verify subject with invalid I/O bitmap address.
    procedure Invalid_Subj_IO_Bitmap_Addr;
 
+   --  Verify device with non-unique IRQ.
+   procedure Invalid_Device_IRQ;
+
    --  Validate policy.
    procedure Policy_Validation;
 

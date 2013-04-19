@@ -7,6 +7,7 @@ with Skp.Validators;
 package body Validation_Tests
 is
 
+   use Ada.Strings.Unbounded;
    use Ahven;
    use Skp;
 
@@ -41,9 +42,38 @@ is
         (Routine => Invalid_Subj_IO_Bitmap_Addr'Access,
          Name    => "Invalid subject I/O bitmap address");
       T.Add_Test_Routine
+        (Routine => Invalid_Device_IRQ'Access,
+         Name    => "Invalid device IRQ");
+      T.Add_Test_Routine
         (Routine => Policy_Validation'Access,
          Name    => "Validate policy");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Device_IRQ
+   is
+      Hw : Hardware_Type;
+   begin
+      Hw.Devices.Insert
+        (Key      => To_Unbounded_String ("d1"),
+         New_Item => (Name   => To_Unbounded_String ("d1"),
+                      IRQ    => 10,
+                      others => <>));
+      Hw.Devices.Insert
+        (Key      => To_Unbounded_String ("d2"),
+         New_Item => (Name   => To_Unbounded_String ("d2"),
+                      IRQ    => 10,
+                      others => <>));
+      Validators.Validate_Hardware (H => Hw);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Device 'd2' IRQ 10 is not unique",
+                 Message   => "Exception message mismatch");
+   end Invalid_Device_IRQ;
 
    -------------------------------------------------------------------------
 
@@ -164,8 +194,6 @@ is
 
    procedure Invalid_Subj_IO_Bitmap_Addr
    is
-      use Ada.Strings.Unbounded;
-
       P : Policy_Type;
    begin
       P.Subjects.Insert
@@ -188,8 +216,6 @@ is
 
    procedure Invalid_Subj_Pml4_Addr
    is
-      use Ada.Strings.Unbounded;
-
       P : Policy_Type;
    begin
       P.Subjects.Insert

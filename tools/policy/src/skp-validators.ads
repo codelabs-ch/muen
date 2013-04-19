@@ -7,9 +7,6 @@ is
    --  Validate memory layout.
    procedure Validate_Mem_Layout (L : Memory_Layout_Type);
 
-   --  Validate device specification.
-   procedure Validate_Device (D : Device_Type);
-
    --  Validate hardware specification.
    procedure Validate_Hardware (H : Hardware_Type);
 

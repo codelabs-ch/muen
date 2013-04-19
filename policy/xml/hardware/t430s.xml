@@ -3,7 +3,7 @@
 	<device name="serial">
 		<io_port start="50b0" end="50b5"/>
 	</device>
-	<device name="keyboard">
+	<device name="keyboard" irq="1">
 		<io_port start="0060"/>
 		<io_port start="0064"/>
 	</device>

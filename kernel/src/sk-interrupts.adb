@@ -1,7 +1,8 @@
 with System.Machine_Code;
 with System.Storage_Elements;
 
-with SK.Apic;
+with Skp.Interrupts;
+
 with SK.IO;
 with SK.IO_Apic;
 
@@ -64,10 +65,13 @@ is
    procedure Setup_IRQ_Routing
    is
    begin
-      IO_Apic.Route_IRQ (IRQ            => 1,
-                         Vector         => 32,
-                         Trigger_Mode   => IO_Apic.Edge,
-                         Destination_Id => Apic.Get_ID);
+      for I in Skp.Interrupts.IRQ_Range loop
+         IO_Apic.Route_IRQ
+           (IRQ            => SK.Byte (Skp.Interrupts.IRQ_Routing (I).IRQ),
+            Vector         => SK.Byte (Skp.Interrupts.IRQ_Routing (I).Vector),
+            Trigger_Mode   => IO_Apic.Edge,
+            Destination_Id => SK.Byte (Skp.Interrupts.IRQ_Routing (I).CPU));
+      end loop;
    end Setup_IRQ_Routing;
 
 begin

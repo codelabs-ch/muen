@@ -2,8 +2,8 @@ with SK.Descriptors;
 
 --# inherit
 --#    System,
+--#    Skp.Interrupts,
 --#    X86_64,
---#    SK.Apic,
 --#    SK.IO,
 --#    SK.IO_Apic,
 --#    SK.Descriptors;
@@ -39,9 +39,8 @@ is
    --  Setup I/O APIC IRQ routing.
    procedure Setup_IRQ_Routing;
    --# global
-   --#    in     X86_64.State;
    --#    in out IO_Apic.State;
    --# derives
-   --#    IO_Apic.State from *, X86_64.State;
+   --#    IO_Apic.State from *;
 
 end SK.Interrupts;

@@ -9,8 +9,7 @@ with SK.Apic;
 
 package body SK.Scheduler
 --# own
---#    State is in New_Major, Current_Major, Current_Minors, Scheduling_Plan,
---#             Interrupt_Count;
+--#    State is in New_Major, Current_Major, Current_Minors, Scheduling_Plan;
 is
 
    --  Dumper subject id.
@@ -38,11 +37,6 @@ is
      (others => Skp.Scheduling.Minor_Frame_Range'First);
 
    subtype Ext_Int_Type is SK.Byte range 32 .. 255;
-
-   type Interrupt_Counter_Array is array (Ext_Int_Type) of SK.Word32;
-
-   Interrupt_Count : Interrupt_Counter_Array
-     := Interrupt_Counter_Array'(others => 0);
 
    type Interrupt_Routing_Type is array (SK.Byte) of Skp.Subject_Id_Type;
 
@@ -240,16 +234,14 @@ is
    --  Handle external interrupt request with given vector.
    procedure Handle_Irq (Vector : SK.Byte)
    --# global
-   --#    in out Interrupt_Count;
    --#    in out X86_64.State;
    --#    in out Subjects.Descriptors;
    --# derives
-   --#    Interrupt_Count, Subjects.Descriptors from *, Vector &
-   --#    X86_64.State from *;
+   --#    Subjects.Descriptors from *, Vector &
+   --#    X86_64.State         from *;
    is
    begin
       if Vector >= Ext_Int_Type'First then
-         Interrupt_Count (Vector) := Interrupt_Count (Vector) + 1;
          Subjects.Set_Pending_Event
            (Id     => Int_Routing_Table (Vector),
             Vector => Vector);
@@ -320,7 +312,6 @@ is
    --#    in out Scheduling_Plan;
    --#    in out Current_Major;
    --#    in out Current_Minors;
-   --#    in out Interrupt_Count;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
@@ -339,7 +330,7 @@ is
    --#       Subject_Registers,
    --#       Subjects.Descriptors,
    --#       X86_64.State &
-   --#    Scheduling_Plan, Interrupt_Count from
+   --#    Scheduling_Plan from
    --#       *,
    --#       Scheduling_Plan,
    --#       Current_Major,

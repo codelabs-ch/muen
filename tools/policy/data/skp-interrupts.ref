@@ -11,6 +11,11 @@ package Skp.Interrupts is
       Vector : Vector_Type;
    end record;
 
+   Null_IRQ_Route : constant IRQ_Route_Type := IRQ_Route_Type'
+     (CPU    => 0,
+      IRQ    => 0,
+      Vector => 255);
+
    type IRQ_Range is range 1 .. 2;
 
    type IRQ_Routing_Array is array (IRQ_Range) of IRQ_Route_Type;

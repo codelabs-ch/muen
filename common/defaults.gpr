@@ -4,7 +4,8 @@ project Defaults is
 
    Common_Compiler_Switches :=
      ("-g",
-      "-gnata");
+      "-gnata",
+      "-gnatef");
 
    Spark_Compiler_Switches := Common_Compiler_Switches
      & ("-gnatygAdISux-s",

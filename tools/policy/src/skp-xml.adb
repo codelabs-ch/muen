@@ -463,6 +463,9 @@ is
 
          procedure Add_Binary (Node : DOM.Core.Node)
          is
+            Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "name");
             Path : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "path");
@@ -471,7 +474,8 @@ is
                Name => "physical_address");
          begin
             Policy.Binaries.Append
-              (New_Item => (Path             => To_Unbounded_String (Path),
+              (New_Item => (Name             => To_Unbounded_String (Name),
+                            Path             => To_Unbounded_String (Path),
                             Physical_Address => To_Word64 (Hex => Addr)));
          end Add_Binary;
       begin

@@ -300,6 +300,9 @@ is
 
          Assert (Condition => P.Binaries.Length = 3,
                  Message   => "Binary count mismatch");
+         Assert (Condition => P.Binaries.First_Element.Name
+                 = To_Unbounded_String ("tau0"),
+                 Message   => "Binary name mismatch");
          Assert (Condition => P.Binaries.First_Element.Path
                  = To_Unbounded_String ("subjects/tau0/obj/tau0"),
                  Message   => "Binary path mismatch");

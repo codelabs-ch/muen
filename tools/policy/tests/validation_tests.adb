@@ -207,8 +207,8 @@ is
    exception
       when E : others =>
          Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                 = "s1: Invalid I/O bitmap address 000000000000000f - address "
-                 &  "must be 4k aligned",
+                 = "Subject s1: Invalid I/O bitmap address 000000000000000f - "
+                 & "address must be 4k aligned",
                  Message   => "Exception message mismatch");
    end Invalid_Subj_IO_Bitmap_Addr;
 
@@ -228,8 +228,8 @@ is
    exception
       when E : others =>
          Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                 = "s1: Invalid PML4 address 000000000000000d - address must "
-                 & "be 4k aligned",
+                 = "Subject s1: Invalid PML4 address 000000000000000d - "
+                 & "address must be 4k aligned",
                  Message   => "Exception message mismatch");
    end Invalid_Subj_Pml4_Addr;
 

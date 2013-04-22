@@ -346,9 +346,28 @@ is
          Ports    : IO_Ports_Type;
          State    : Initial_State_Type;
          Subj_Mem : Memory_Layout_Type;
+         Subj_Bin : Binary_Ref_Type;
 
-         --  Add device ressources (memory and I/O ports) to subject.
+         --  Add device resources (memory and I/O ports) to subject.
          procedure Add_Device (Node : DOM.Core.Node);
+
+         --  Add binary resource to subject.
+         procedure Add_Binary (Node : DOM.Core.Node);
+
+         -------------------------------------------------------------------
+
+         procedure Add_Binary (Node : DOM.Core.Node)
+         is
+            Addr_Str : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "physical_address");
+         begin
+            Subj_Bin.Name := To_Unbounded_String
+              (DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "name"));
+            Subj_Bin.Physical_Address := To_Word64 (Hex => Addr_Str);
+         end Add_Binary;
 
          -------------------------------------------------------------------
 
@@ -392,6 +411,10 @@ is
               (Node      => Node,
                Tag_Name  => "initial_state",
                Attr_Name => "entry_point"));
+         Add_Binary (Node => Xml.Util.Get_Element_By_Tag_Name
+                     (Node     => Node,
+                      Tag_Name => "binary"));
+
          Policy.Subjects.Insert
            (New_Item =>
               (Id                => Id,
@@ -400,6 +423,7 @@ is
                IO_Bitmap_Address => To_Word64 (Hex => IOBM_Str),
                Init_State        => State,
                Memory_Layout     => Subj_Mem,
+               Binary            => Subj_Bin,
                IO_Ports          => Ports));
 
       exception

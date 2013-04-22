@@ -40,6 +40,11 @@ is
       Entry_Point   : SK.Word64;
    end record;
 
+   type Binary_Ref_Type is record
+      Name             : Ada.Strings.Unbounded.Unbounded_String;
+      Physical_Address : SK.Word64;
+   end record;
+
    type Subject_Type is record
       Id                : Natural;
       Name              : Subject_Name_Type;
@@ -47,6 +52,7 @@ is
       IO_Bitmap_Address : SK.Word64;
       Init_State        : Initial_State_Type;
       Memory_Layout     : Memory_Layout_Type;
+      Binary            : Binary_Ref_Type;
       IO_Ports          : IO_Ports_Type;
    end record;
 

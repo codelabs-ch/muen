@@ -13,6 +13,11 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:complexType name="binary_reference_type">
+		<xs:attribute name="name"             type="xs:string"    use="required"/>
+		<xs:attribute name="physical_address" type="address_type" use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="device_reference_type">
 		<xs:attribute name="name" type="device_name_type" use="required"/>
 	</xs:complexType>

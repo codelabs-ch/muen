@@ -17,6 +17,7 @@
 			<memory_layout>
 				<memory_region physical_address="240000" size="64k" alignment="4k" writable="true" executable="true"/>
 			</memory_layout>
+			<binary name="tau0" physical_address="216000"/>
 			<device name="nonexistent"/>
 		</subject>
 	</subjects>

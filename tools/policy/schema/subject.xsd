@@ -26,6 +26,7 @@
 		<xs:sequence>
 			<xs:element name="initial_state" type="initial_state_type"    minOccurs="1" maxOccurs="1"/>
 			<xs:element name="memory_layout" type="memory_layout_type"    minOccurs="1" maxOccurs="1"/>
+			<xs:element name="binary"        type="binary_reference_type" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="device"        type="device_reference_type" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="id"                type="xs:nonNegativeInteger" use="required"/>

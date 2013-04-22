@@ -30,6 +30,7 @@
 				<!-- τ0 => kernel interface page -->
 				<memory_region physical_address="1ff000" virtual_address="4000" size="4k" alignment="4k" writable="true"  executable="false"/>
 			</memory_layout>
+			<binary name="tau0" physical_address="216000"/>
 		</subject>
 		<subject id="1" name="dumper" pml4_address="220000" io_bitmap_address="224000">
 			&dumperinit;
@@ -38,6 +39,7 @@
 				<!-- subject state descriptors -->
 				<memory_region physical_address="1fe000" virtual_address="5000" size="4k" alignment="4k" writable="false" executable="false"/>
 			</memory_layout>
+			<binary name="dumper" physical_address="226000"/>
 			<device name="vga"/>
 		</subject>
 		<subject id="2" name="subject_a" pml4_address="230000" io_bitmap_address="234000">
@@ -45,6 +47,7 @@
 			<memory_layout>
 				&subjamem;
 			</memory_layout>
+			<binary name="subject_a" physical_address="236000"/>
 			<device name="vga"/>
 		</subject>
 		<subject id="3" name="subject_b" pml4_address="240000" io_bitmap_address="244000">
@@ -52,6 +55,7 @@
 			<memory_layout>
 				&subjbmem;
 			</memory_layout>
+			<binary name="subject_b" physical_address="246000"/>
 			<device name="vga"/>
 		</subject>
 		<subject id="4" name="subject_c" pml4_address="250000" io_bitmap_address="254000">
@@ -59,6 +63,7 @@
 			<memory_layout>
 				&subjcmem;
 			</memory_layout>
+			<binary name="subject_c" physical_address="256000"/>
 			<device name="vga"/>
 			<device name="keyboard"/>
 		</subject>
@@ -67,6 +72,7 @@
 			<memory_layout>
 				&idlemem;
 			</memory_layout>
+			<binary name="idle" physical_address="266000"/>
 		</subject>
 	</subjects>
 

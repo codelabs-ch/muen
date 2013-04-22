@@ -62,9 +62,8 @@ is
      (Element_Type => Subject_Type);
 
    type Binary_Type is record
-      Name             : Ada.Strings.Unbounded.Unbounded_String;
-      Path             : Ada.Strings.Unbounded.Unbounded_String;
-      Physical_Address : SK.Word64;
+      Name : Ada.Strings.Unbounded.Unbounded_String;
+      Path : Ada.Strings.Unbounded.Unbounded_String;
    end record;
 
    package Binary_Package is new Ada.Containers.Doubly_Linked_Lists

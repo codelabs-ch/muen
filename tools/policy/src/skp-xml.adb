@@ -493,14 +493,10 @@ is
             Path : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "path");
-            Addr : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => "physical_address");
          begin
             Policy.Binaries.Append
-              (New_Item => (Name             => To_Unbounded_String (Name),
-                            Path             => To_Unbounded_String (Path),
-                            Physical_Address => To_Word64 (Hex => Addr)));
+              (New_Item => (Name => To_Unbounded_String (Name),
+                            Path => To_Unbounded_String (Path)));
          end Add_Binary;
       begin
          Util.For_Each_Node (Node     => Bin_Node,

@@ -318,8 +318,7 @@ is
            & Indent & "   Path             => To_Unbounded_String ("""
            & To_String (Binary.Path) & """),"
            & ASCII.LF
-           & Indent & "   Physical_Address => 16#"
-           & SK.Utils.To_Hex (Item => Binary.Physical_Address) & "#)";
+           & Indent & "   Physical_Address => 16#0#)";
 
          Current := Current + 1;
          if Current /= B_Count then

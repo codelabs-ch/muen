@@ -306,9 +306,6 @@ is
          Assert (Condition => P.Binaries.First_Element.Path
                  = To_Unbounded_String ("subjects/tau0/obj/tau0"),
                  Message   => "Binary path mismatch");
-         Assert (Condition => P.Binaries.First_Element.Physical_Address
-                 = 16#216000#,
-                 Message   => "Binary address mismatch");
 
          --  Scheduling
 

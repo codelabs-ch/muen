@@ -296,41 +296,40 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type)
    is
-      B_Count : constant Positive := Positive (Policy.Binaries.Length);
+      S_Count : constant Positive := Positive (Policy.Subjects.Length);
       Current : Natural           := 0;
       Buffer  : Unbounded_String;
       Tmpl    : Templates.Template_Type;
 
       --  Write binary spec.
-      procedure Write_Binary_Spec (C : Binary_Package.Cursor);
+      procedure Write_Binary_Spec (C : Subjects_Package.Cursor);
 
       ----------------------------------------------------------------------
 
-      procedure Write_Binary_Spec (C : Binary_Package.Cursor)
+      procedure Write_Binary_Spec (C : Subjects_Package.Cursor)
       is
-         Bin_Name : constant String
-           := To_String (Binary_Package.Key (Position => C));
-         Bin_Path : constant String
-           := To_String (Binary_Package.Element (Position => C));
+         S : constant Subject_Type
+           := Subjects_Package.Element (Position => C);
       begin
          Buffer := Buffer & Indent
            & "  (Name             => To_Unbounded_String ("""
-           & Bin_Name & """),"
+           & S.Name & """),"
            & ASCII.LF
            & Indent & "   Path             => To_Unbounded_String ("""
-           & Bin_Path & """),"
+           & Policy.Binaries.Element (Key => S.Binary.Name) & """),"
            & ASCII.LF
-           & Indent & "   Physical_Address => 16#0#)";
+           & Indent & "   Physical_Address => 16#"
+           & SK.Utils.To_Hex (Item => S.Binary.Physical_Address) & "#)";
 
          Current := Current + 1;
-         if Current /= B_Count then
+         if Current /= S_Count then
             Buffer := Buffer & "," & ASCII.LF;
          end if;
       end Write_Binary_Spec;
    begin
       Tmpl := Templates.Load (Filename => "skp-binaries.ads");
 
-      Policy.Binaries.Iterate (Process => Write_Binary_Spec'Access);
+      Policy.Subjects.Iterate (Process => Write_Binary_Spec'Access);
 
       Templates.Replace (Template => Tmpl,
                          Pattern  => "__binaries__",

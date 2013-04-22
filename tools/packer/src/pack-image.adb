@@ -1,5 +1,3 @@
-with Ada.Directories;
-
 with SK.Utils;
 
 with Pack.OS;
@@ -14,9 +12,9 @@ is
    procedure Add_Section
      (Image    : String;
       Filename : String;
+      Name     : String;
       Address  : SK.Word64)
    is
-      Name : constant String := Ada.Directories.Base_Name (Name => Filename);
    begin
       OS.Execute
         (Command => Objcopy & " --add-section ." & Name & "=" & Filename & " "

@@ -23,6 +23,7 @@ is
 
       Image.Add_Section (Image    => Elf,
                          Filename => "data/obj2.o",
+                         Name     => "obj2",
                          Address  => 16#1000#);
       OS.Execute (Command => "objdump -h " & Elf & " > " & Dump);
       Assert (Condition => Test_Utils.Equal_Files

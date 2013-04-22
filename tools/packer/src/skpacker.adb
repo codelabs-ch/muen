@@ -49,6 +49,7 @@ begin
    Image.Add_Section
      (Image    => Knl_Elf,
       Filename => Policy_Dir & "/kernel_pt",
+      Name     => "kernel_pt",
       Address  => Kernel.PML4_Address);
    Ada.Text_IO.Put_Line
      (SK.Utils.To_Hex (Item => SK.Word64'(Kernel.PML4_Address))
@@ -60,7 +61,7 @@ begin
       declare
          Fn      : constant String := Top_Dir & "/" & To_String
            (Binary_Specs (S).Path);
-         Name    : constant String := Ada.Directories.Base_Name (Name => Fn);
+         Name    : constant String := To_String (Binary_Specs (S).Name);
          Raw_Bin : constant String := "obj/" & Name;
       begin
          Image.To_Binary (Src_Elf => Fn,
@@ -79,14 +80,17 @@ begin
          Image.Add_Section
            (Image    => Knl_Elf,
             Filename => Raw_Bin,
+            Name     => Name,
             Address  => Binary_Specs (S).Physical_Address);
          Image.Add_Section
            (Image    => Knl_Elf,
             Filename => Policy_Dir & "/" & Name & "_pt",
+            Name     => Name & "_pt",
             Address  => Subject_Specs (S).PML4_Address);
          Image.Add_Section
            (Image    => Knl_Elf,
             Filename => Policy_Dir & "/" & Name & "_iobm",
+            Name     => Name & "_iobm",
             Address  => Subject_Specs (S).IO_Bitmap_Address);
       end;
    end loop;

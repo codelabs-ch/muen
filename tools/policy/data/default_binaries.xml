@@ -1,5 +1,5 @@
 <binaries>
-	<binary name="tau0"     path="subjects/tau0/obj/tau0"     physical_address="216000"/>
-	<binary name="subject1" path="subjects/test/obj/subject1" physical_address="226000"/>
-	<binary name="subject2" path="subjects/test/obj/subject2" physical_address="236000"/>
+	<binary name="tau0"     path="subjects/tau0/obj/tau0"    />
+	<binary name="subject1" path="subjects/test/obj/subject1"/>
+	<binary name="subject2" path="subjects/test/obj/subject2"/>
 </binaries>

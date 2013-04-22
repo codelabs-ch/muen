@@ -1,8 +1,8 @@
 <binaries>
-	<binary name="tau0"      path="subjects/tau0/obj/tau0"      physical_address="216000"/>
-	<binary name="dumper"    path="subjects/dumper/obj/dumper"  physical_address="226000"/>
-	<binary name="subject_a" path="subjects/test/obj/subject_a" physical_address="236000"/>
-	<binary name="subject_b" path="subjects/test/obj/subject_b" physical_address="246000"/>
-	<binary name="subject_c" path="subjects/test/obj/subject_c" physical_address="256000"/>
-	<binary name="idle"      path="subjects/idle/obj/idle"      physical_address="266000"/>
+	<binary name="tau0"      path="subjects/tau0/obj/tau0"     />
+	<binary name="dumper"    path="subjects/dumper/obj/dumper" />
+	<binary name="subject_a" path="subjects/test/obj/subject_a"/>
+	<binary name="subject_b" path="subjects/test/obj/subject_b"/>
+	<binary name="subject_c" path="subjects/test/obj/subject_c"/>
+	<binary name="idle"      path="subjects/idle/obj/idle"     />
 </binaries>

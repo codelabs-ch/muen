@@ -2,9 +2,8 @@
 	<xs:include schemaLocation="./types.xsd"/>
 
 	<xs:complexType name="binary_type">
-		<xs:attribute name="name"             type="xs:string"    use="required"/>
-		<xs:attribute name="path"             type="xs:string"    use="required"/>
-		<xs:attribute name="physical_address" type="address_type" use="required"/>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="path" type="xs:string" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="binaries_type">

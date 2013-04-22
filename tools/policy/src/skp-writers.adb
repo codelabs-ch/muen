@@ -312,7 +312,10 @@ is
            (Position => C);
       begin
          Buffer := Buffer & Indent
-           & "  (Path             => To_Unbounded_String ("""
+           & "  (Name             => To_Unbounded_String ("""
+           & To_String (Binary.Name) & """),"
+           & ASCII.LF
+           & Indent & "   Path             => To_Unbounded_String ("""
            & To_String (Binary.Path) & """),"
            & ASCII.LF
            & Indent & "   Physical_Address => 16#"

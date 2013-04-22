@@ -4,6 +4,7 @@ with SK;
 package Skp.Binaries is
 
    type Binary_Spec_Type is record
+      Name             : Unbounded_String;
       Path             : Unbounded_String;
       Physical_Address : SK.Word64;
    end record;

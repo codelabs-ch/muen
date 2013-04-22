@@ -40,8 +40,6 @@ is
    Exit_Ctrl_Defaults  : constant SK.Word32 := Constants.VM_CTRL_IA32E_MODE
      or Constants.VM_CTRL_EXIT_ACK_INT;
 
-   subtype Alignment_Type is SK.Word16 range 1 .. SK.Word16'Last;
-
    --# accept Warning, 350, VMX_Exit_Address, "Imported from Linker";
    VMX_Exit_Address : SK.Word64;
    pragma Import (C, VMX_Exit_Address, "vmx_exit_handler_ptr");
@@ -57,18 +55,6 @@ is
    begin
       return SK.Word64 (Apic.Get_ID) * SK.Page_Size;
    end Get_CPU_Offset;
-
-   ---------------------------------------------------------------------------
-
-   --  Check alignment of given address.
-   function Is_Aligned
-     (Address   : SK.Word64;
-      Alignment : Alignment_Type)
-      return Boolean
-   is
-   begin
-      return (Address mod SK.Word64 (Alignment)) = 0;
-   end Is_Aligned;
 
    -------------------------------------------------------------------------
 
@@ -460,14 +446,6 @@ is
    begin
       Spec  := Skp.Subjects.Subject_Specs (Subject_Id);
       State := Subjects.Get_State (Id => Subject_Id);
-
-      Success := Is_Aligned
-        (Address   => Spec.VMCS_Address,
-         Alignment => SK.Page_Size);
-      if not Success then
-         pragma Debug (KC.Put_Line (Item => "VMCS region alignment invalid"));
-         CPU.Panic;
-      end if;
 
       CPU.VMCLEAR (Region  => Spec.VMCS_Address,
                    Success => Success);

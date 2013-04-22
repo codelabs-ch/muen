@@ -202,6 +202,8 @@ is
 
       procedure Validate_Subject (Pos : Subjects_Package.Cursor)
       is
+         use type Binary_Package.Cursor;
+
          S : constant Subject_Type := Subjects_Package.Element
            (Position => Pos);
       begin
@@ -219,6 +221,14 @@ is
          end if;
 
          Validate_Mem_Layout (L => S.Memory_Layout);
+
+         if P.Binaries.Find
+           (Key => S.Binary.Name) = Binary_Package.No_Element
+         then
+            raise Validation_Error with "Subject " & To_String (S.Name)
+              & ": Referenced binary '" & To_String (S.Binary.Name)
+              & "' not found in policy";
+         end if;
       end Validate_Subject;
    begin
       P.Subjects.Iterate (Process => Validate_Subject'Access);

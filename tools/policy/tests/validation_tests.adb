@@ -42,6 +42,9 @@ is
         (Routine => Invalid_Subj_IO_Bitmap_Addr'Access,
          Name    => "Invalid subject I/O bitmap address");
       T.Add_Test_Routine
+        (Routine => Invalid_Subj_Binary'Access,
+         Name    => "Invalid subject binary");
+      T.Add_Test_Routine
         (Routine => Invalid_Device_IRQ'Access,
          Name    => "Invalid device IRQ");
       T.Add_Test_Routine
@@ -189,6 +192,30 @@ is
                  & "differ",
                  Message   => "Exception message mismatch");
    end Invalid_Sched_CPU_Ticks;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Subj_Binary
+   is
+      P : Policy_Type;
+   begin
+      P.Subjects.Insert
+        (New_Item =>
+           (Name              => To_Unbounded_String ("s1"),
+            Pml4_Address      => 0,
+            IO_Bitmap_Address => 0,
+            Binary            => (Name   => To_Unbounded_String ("s2"),
+                                  others => 0),
+            others            => <>));
+      Validators.Validate_Subjects (P => P);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Subject s1: Referenced binary 's2' not found in policy",
+                 Message   => "Exception message mismatch");
+   end Invalid_Subj_Binary;
 
    -------------------------------------------------------------------------
 

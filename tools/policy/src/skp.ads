@@ -61,13 +61,13 @@ is
    package Subjects_Package is new Ada.Containers.Ordered_Sets
      (Element_Type => Subject_Type);
 
-   type Binary_Type is record
-      Name : Ada.Strings.Unbounded.Unbounded_String;
-      Path : Ada.Strings.Unbounded.Unbounded_String;
-   end record;
+   package Binary_Package is new Ada.Containers.Ordered_Maps
+     (Key_Type     => Ada.Strings.Unbounded.Unbounded_String,
+      Element_Type => Ada.Strings.Unbounded.Unbounded_String,
+      "<"          => Ada.Strings.Unbounded."<",
+      "="          => Ada.Strings.Unbounded."=");
 
-   package Binary_Package is new Ada.Containers.Doubly_Linked_Lists
-     (Element_Type => Binary_Type);
+   subtype Binaries_Type is Binary_Package.Map;
 
    type Kernel_Type is record
       Stack_Address : SK.Word64;
@@ -137,7 +137,7 @@ is
       Hardware           : Hardware_Type;
       Kernel             : Kernel_Type;
       Subjects           : Subjects_Package.Set;
-      Binaries           : Binary_Package.List;
+      Binaries           : Binaries_Type;
       Scheduling         : Scheduling_Type;
    end record;
 

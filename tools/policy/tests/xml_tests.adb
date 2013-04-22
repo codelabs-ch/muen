@@ -298,14 +298,16 @@ is
 
          --  Binaries
 
-         Assert (Condition => P.Binaries.Length = 3,
-                 Message   => "Binary count mismatch");
-         Assert (Condition => P.Binaries.First_Element.Name
-                 = To_Unbounded_String ("tau0"),
-                 Message   => "Binary name mismatch");
-         Assert (Condition => P.Binaries.First_Element.Path
-                 = To_Unbounded_String ("subjects/tau0/obj/tau0"),
-                 Message   => "Binary path mismatch");
+         declare
+            Name : constant Unbounded_String := To_Unbounded_String ("tau0");
+            Path : constant Unbounded_String := To_Unbounded_String
+              ("subjects/tau0/obj/tau0");
+         begin
+            Assert (Condition => P.Binaries.Length = 3,
+                    Message   => "Binary count mismatch");
+            Assert (Condition => P.Binaries.Element (Key => Name) = Path,
+                    Message   => "Binary path mismatch");
+         end;
 
          --  Scheduling
 

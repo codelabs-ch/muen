@@ -494,9 +494,9 @@ is
               (Elem => Node,
                Name => "path");
          begin
-            Policy.Binaries.Append
-              (New_Item => (Name => To_Unbounded_String (Name),
-                            Path => To_Unbounded_String (Path)));
+            Policy.Binaries.Insert
+              (Key      => To_Unbounded_String (Name),
+               New_Item => To_Unbounded_String (Path));
          end Add_Binary;
       begin
          Util.For_Each_Node (Node     => Bin_Node,

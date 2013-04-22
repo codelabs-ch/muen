@@ -308,15 +308,17 @@ is
 
       procedure Write_Binary_Spec (C : Binary_Package.Cursor)
       is
-         Binary : constant Binary_Type := Binary_Package.Element
-           (Position => C);
+         Bin_Name : constant String
+           := To_String (Binary_Package.Key (Position => C));
+         Bin_Path : constant String
+           := To_String (Binary_Package.Element (Position => C));
       begin
          Buffer := Buffer & Indent
            & "  (Name             => To_Unbounded_String ("""
-           & To_String (Binary.Name) & """),"
+           & Bin_Name & """),"
            & ASCII.LF
            & Indent & "   Path             => To_Unbounded_String ("""
-           & To_String (Binary.Path) & """),"
+           & Bin_Path & """),"
            & ASCII.LF
            & Indent & "   Physical_Address => 16#0#)";
 

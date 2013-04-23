@@ -44,7 +44,7 @@ is
 
          MP.Wait_For_All;
 
-         if Apic.Is_BSP then
+         if Is_Bsp then
             MP.Reset_Barrier;
          end if;
 

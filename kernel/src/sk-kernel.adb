@@ -17,21 +17,26 @@ is
       Success, Is_Bsp : Boolean;
    begin
       Interrupts.Load;
+      Is_Bsp := Apic.Is_BSP;
+
+      --# accept Flow, 10, "Initialize kernel console in debug mode";
+
+      if Is_Bsp then
+         pragma Debug (KC.Init);
+         pragma Debug (KC.Put_Line
+                       (Item => "Booting Separation Kernel ("
+                        & SK.Version.Version_String & ") ..."));
+         null;
+      end if;
 
       Success := System_State.Is_Valid;
       if Success then
 
          Apic.Enable;
 
-         Is_Bsp := Apic.Is_BSP;
          if Is_Bsp then
 
             --  BSP
-
-            pragma Debug (KC.Init);
-            pragma Debug (KC.Put_Line
-                          (Item => "Booting Separation Kernel ("
-                           & SK.Version.Version_String & ") ..."));
 
             Interrupts.Disable_Legacy_PIC;
             Interrupts.Setup_IRQ_Routing;

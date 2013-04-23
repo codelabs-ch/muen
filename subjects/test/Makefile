@@ -1,6 +1,6 @@
 include ../../Makeconf
 
-BUILD_OPTS += --RTS=zfp
+BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
 
 all: subjects
 

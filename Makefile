@@ -13,13 +13,16 @@ skpacker: policy
 skpolicy:
 	$(MAKE) $@ -C tools
 
+rts:
+	$(MAKE) -C $@
+
 policy: skpolicy
 	$(MAKE) -C $@
 
-subjects: skconfig policy
+subjects: skconfig policy rts
 	$(MAKE) -C $@
 
-kernel: policy
+kernel: policy rts
 	$(MAKE) -C $@
 
 pack: skpacker kernel subjects
@@ -39,5 +42,6 @@ clean:
 	$(MAKE) clean -C pack
 	$(MAKE) clean -C policy
 	$(MAKE) clean -C subjects
+	$(MAKE) clean -C rts
 
-.PHONY: deploy emulate kernel pack policy subjects
+.PHONY: deploy emulate kernel pack policy rts subjects

@@ -40,8 +40,6 @@ is
 
             Interrupts.Disable_Legacy_PIC;
             Interrupts.Setup_IRQ_Routing;
-
-            pragma Debug (KC.Put_Line (Item => "Starting AP processors"));
             Apic.Start_AP_Processors;
          end if;
 

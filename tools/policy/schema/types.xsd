@@ -67,4 +67,10 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="irq_type">
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 </xs:schema>

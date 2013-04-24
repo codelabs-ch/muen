@@ -503,7 +503,7 @@ is
 
       Policy.Hardware.Devices.Iterate (Process => Write_Device'Access);
       Vector_Buffer := Vector_Buffer & ","
-        & ASCII.LF & Indent (N => 2) & " others => Invalid_Subject";
+        & ASCII.LF & Indent (N => 2) & " others => Skp.Invalid_Subject";
 
       Templates.Replace (Template => Tmpl,
                          Pattern  => "__irq_range__",

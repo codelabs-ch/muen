@@ -4,6 +4,8 @@ package Skp is
 
    subtype Subject_Id_Type is Natural range 0 .. 2;
 
+   Invalid_Subject : constant := Subject_Id_Type'Last + 1;
+
    Vmxon_Address : constant := 16#0000000000000000#;
 
 end Skp;

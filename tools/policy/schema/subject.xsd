@@ -28,6 +28,7 @@
 			<xs:element name="memory_layout" type="memory_layout_type"    minOccurs="1" maxOccurs="1"/>
 			<xs:element name="binary"        type="binary_reference_type" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="device"        type="device_reference_type" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="trap_table"    type="trap_table_type"       minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute name="id"                type="xs:nonNegativeInteger" use="required"/>
 		<xs:attribute name="name"              type="subject_name_type"     use="required"/>

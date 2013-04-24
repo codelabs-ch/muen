@@ -5,6 +5,7 @@
 	<xs:include schemaLocation="./binary.xsd"/>
 	<xs:include schemaLocation="./subject.xsd"/>
 	<xs:include schemaLocation="./scheduling.xsd"/>
+	<xs:include schemaLocation="./traps.xsd"/>
 
 	<xs:complexType name="system_type">
 		<xs:sequence>

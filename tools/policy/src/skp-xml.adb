@@ -330,23 +330,24 @@ is
 
       procedure Add_Subject (Node : DOM.Core.Node)
       is
-         Name     : constant String  := DOM.Core.Elements.Get_Attribute
+         Name       : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "name");
-         Id_Str   : constant String  := DOM.Core.Elements.Get_Attribute
+         Id_Str     : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "id");
-         Id       : constant Natural := Natural'Value (Id_Str);
-         PML4_Str : constant String  := DOM.Core.Elements.Get_Attribute
+         Id         : constant Natural := Natural'Value (Id_Str);
+         PML4_Str   : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "pml4_address");
-         IOBM_Str : constant String  := DOM.Core.Elements.Get_Attribute
+         IOBM_Str   : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "io_bitmap_address");
-         Ports    : IO_Ports_Type;
-         State    : Initial_State_Type;
-         Subj_Mem : Memory_Layout_Type;
-         Subj_Bin : Binary_Ref_Type;
+         Ports      : IO_Ports_Type;
+         State      : Initial_State_Type;
+         Subj_Mem   : Memory_Layout_Type;
+         Subj_Bin   : Binary_Ref_Type;
+         Subj_Traps : Trap_Table_Type;
 
          --  Add device resources (memory and I/O ports) to subject.
          procedure Add_Device (Node : DOM.Core.Node);
@@ -424,7 +425,8 @@ is
                Init_State        => State,
                Memory_Layout     => Subj_Mem,
                Binary            => Subj_Bin,
-               IO_Ports          => Ports));
+               IO_Ports          => Ports,
+               Trap_Table        => Subj_Traps));
 
       exception
          when E : others =>

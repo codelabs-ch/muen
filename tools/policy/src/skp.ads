@@ -46,6 +46,22 @@ is
       Physical_Address : SK.Word64;
    end record;
 
+   type Trap_Type is
+     (Exception_Or_NMI,
+      External_Interrupt);
+
+   type Trap_Table_Entry_Type is record
+      Trap        : Trap_Type;
+      Dst_Subject : Ada.Strings.Unbounded.Unbounded_String;
+      Dst_Vector  : Integer := -1;
+   end record;
+
+   package Traps_Package is new Ada.Containers.Ordered_Maps
+     (Key_Type     => Trap_Type,
+      Element_Type => Trap_Table_Entry_Type);
+
+   subtype Trap_Table_Type is Traps_Package.Map;
+
    type Subject_Type is record
       Id                : Natural;
       Name              : Subject_Name_Type;
@@ -55,6 +71,7 @@ is
       Memory_Layout     : Memory_Layout_Type;
       Binary            : Binary_Ref_Type;
       IO_Ports          : IO_Ports_Type;
+      Trap_Table        : Trap_Table_Type;
    end record;
 
    function "<" (Left, Right : Subject_Type) return Boolean;

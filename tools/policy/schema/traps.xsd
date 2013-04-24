@@ -14,4 +14,10 @@
 		<xs:attribute name="dst_vector"  type="irq_type"          use="optional"/>
 	</xs:complexType>
 
+	<xs:complexType name="trap_table_type">
+		<xs:sequence>
+			<xs:element name="entry" type="entry_type" minOccurs="1" maxOccurs="52"/>
+		</xs:sequence>
+	</xs:complexType>
+
 </xs:schema>

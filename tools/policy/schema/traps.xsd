@@ -1,4 +1,5 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="./types.xsd"/>
 
 	<xs:simpleType name="trap_type">
 		<xs:restriction base="xs:string">
@@ -6,5 +7,11 @@
 			<xs:enumeration value="external_interrupt"/>
 		</xs:restriction>
 	</xs:simpleType>
+
+	<xs:complexType name="entry_type">
+		<xs:attribute name="trap"        type="trap_type"         use="required"/>
+		<xs:attribute name="dst_subject" type="subject_name_type" use="required"/>
+		<xs:attribute name="dst_vector"  type="irq_type"          use="optional"/>
+	</xs:complexType>
 
 </xs:schema>

@@ -184,10 +184,7 @@ is
 
       CPU.Set_Stack (Address => Skp.Kernel.Stack_Address + Get_CPU_Offset);
 
-      pragma Debug (KC.Put_String (Item => "Error resuming subject "));
-      pragma Debug (KC.Put_Byte (Item => Byte (Subject_Id)));
-      pragma Debug (KC.New_Line);
-
+      pragma Debug (KC.Put_Line (Item => "Error resuming subject"));
       VMX_Error;
    end Resume;
 
@@ -489,10 +486,7 @@ is
 
       CPU.Set_Stack (Address => Skp.Kernel.Stack_Address + Get_CPU_Offset);
 
-      pragma Debug (KC.Put_String (Item => "Error launching subject "));
-      pragma Debug (KC.Put_Byte (Item => Byte (Subject_Id)));
-      pragma Debug (KC.New_Line);
-
+      pragma Debug (KC.Put_Line (Item => "Error launching subject"));
       VMX_Error;
    end Launch;
 

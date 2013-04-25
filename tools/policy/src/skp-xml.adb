@@ -432,6 +432,11 @@ is
 
                Subj_Traps.Insert (Key      => Ent.Trap,
                                   New_Item => Ent);
+
+            exception
+               when Constraint_Error =>
+                  raise Processing_Error with "Duplicate trap entry for '"
+                    & Trap_Str & "'";
             end Add_Table_Entry;
          begin
             Util.For_Each_Node (Node     => Node,

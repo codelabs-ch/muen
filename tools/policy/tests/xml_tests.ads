@@ -26,6 +26,9 @@ is
    --  Try to load policy with invalid subject device reference.
    procedure Load_Invalid_Device;
 
+   --  Try to load policy with invalid subject trap table.
+   procedure Load_Invalid_Trap_Table;
+
    --  Load policy from XML file.
    procedure Load_Policy_Xml;
 

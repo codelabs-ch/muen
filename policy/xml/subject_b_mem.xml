@@ -1,4 +1,4 @@
-<memory_region physical_address="0000000000246000" virtual_address="0000000000000000" size="4k" alignment="4k" writable="false" executable="true"  />
-<memory_region physical_address="0000000000247000" virtual_address="0000000000001000" size="4k" alignment="4k" writable="false" executable="false" />
-<memory_region physical_address="0000000000248000" virtual_address="0000000000002000" size="4k" alignment="4k" writable="true"  executable="false" />
-<memory_region physical_address="0000000000249000" virtual_address="0000000000003000" size="4k" alignment="4k" writable="true"  executable="false" />
+<memory_region physical_address="0000000000276000" virtual_address="0000000000000000" size="4k" alignment="4k" writable="false" executable="true"  />
+<memory_region physical_address="0000000000277000" virtual_address="0000000000001000" size="4k" alignment="4k" writable="false" executable="false" />
+<memory_region physical_address="0000000000278000" virtual_address="0000000000002000" size="4k" alignment="4k" writable="true"  executable="false" />
+<memory_region physical_address="0000000000279000" virtual_address="0000000000003000" size="4k" alignment="4k" writable="true"  executable="false" />

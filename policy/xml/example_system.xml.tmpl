@@ -32,47 +32,52 @@
 			</memory_layout>
 			<binary name="tau0" physical_address="216000"/>
 		</subject>
-		<subject id="1" name="dumper" pml4_address="220000" io_bitmap_address="224000">
+
+		<subject id="1" name="dumper" pml4_address="230000" io_bitmap_address="234000">
 			&dumperinit;
 			<memory_layout>
 				&dumpermem;
 				<!-- subject state descriptors -->
 				<memory_region physical_address="1fe000" virtual_address="5000" size="4k" alignment="4k" writable="false" executable="false"/>
 			</memory_layout>
-			<binary name="dumper" physical_address="226000"/>
+			<binary name="dumper" physical_address="236000"/>
 			<device name="vga"/>
 		</subject>
-		<subject id="2" name="subject_a" pml4_address="230000" io_bitmap_address="234000">
+
+		<subject id="2" name="subject_a" pml4_address="250000" io_bitmap_address="254000">
 			&subjainit;
 			<memory_layout>
 				&subjamem;
 			</memory_layout>
-			<binary name="subject_a" physical_address="236000"/>
+			<binary name="subject_a" physical_address="256000"/>
 			<device name="vga"/>
 		</subject>
-		<subject id="3" name="subject_b" pml4_address="240000" io_bitmap_address="244000">
+
+		<subject id="3" name="subject_b" pml4_address="270000" io_bitmap_address="274000">
 			&subjbinit;
 			<memory_layout>
 				&subjbmem;
 			</memory_layout>
-			<binary name="subject_b" physical_address="246000"/>
+			<binary name="subject_b" physical_address="276000"/>
 			<device name="vga"/>
 		</subject>
-		<subject id="4" name="subject_c" pml4_address="250000" io_bitmap_address="254000">
+
+		<subject id="4" name="subject_c" pml4_address="290000" io_bitmap_address="294000">
 			&subjcinit;
 			<memory_layout>
 				&subjcmem;
 			</memory_layout>
-			<binary name="subject_c" physical_address="256000"/>
+			<binary name="subject_c" physical_address="296000"/>
 			<device name="vga"/>
 			<device name="keyboard"/>
 		</subject>
-		<subject id="5" name="idle" pml4_address="260000" io_bitmap_address="264000">
+
+		<subject id="5" name="idle" pml4_address="310000" io_bitmap_address="314000">
 			&idleinit;
 			<memory_layout>
 				&idlemem;
 			</memory_layout>
-			<binary name="idle" physical_address="266000"/>
+			<binary name="idle" physical_address="316000"/>
 		</subject>
 	</subjects>
 

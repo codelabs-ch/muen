@@ -8,7 +8,7 @@ dumper:
 	gprbuild $(BUILD_OPTS) -P$@
 
 specs: dumper
-	$(SKCONFIG) $(OBJ_DIR)/dumper 16#226000#
+	$(SKCONFIG) $(OBJ_DIR)/dumper 16#236000#
 
 clean:
 	rm -rf $(OBJ_DIR)

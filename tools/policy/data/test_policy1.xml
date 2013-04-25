@@ -22,7 +22,7 @@
 			<device name="serial"/>
 			<trap_table>
 				<entry trap="exception_or_nmi"   dst_subject="subject2"/>
-				<entry trap="external_interrupt" dst_subject="vmm" dst_vector="12"/>
+				<entry trap="external_interrupt" dst_subject="subject1" dst_vector="12"/>
 			</trap_table>
 		</subject>
 		<subject id="1" name="subject1" pml4_address="1f4000" io_bitmap_address="1b0000">

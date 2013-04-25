@@ -45,6 +45,12 @@ is
         (Routine => Invalid_Subj_Binary'Access,
          Name    => "Invalid subject binary");
       T.Add_Test_Routine
+        (Routine => Invalid_Subj_Trap_Self_Ref'Access,
+         Name    => "Invalid subject trap table self-reference");
+      T.Add_Test_Routine
+        (Routine => Invalid_Subj_Trap_Invalid_Dst'Access,
+         Name    => "Invalid subject trap table entry destination");
+      T.Add_Test_Routine
         (Routine => Invalid_Device_IRQ'Access,
          Name    => "Invalid device IRQ");
       T.Add_Test_Routine
@@ -259,6 +265,73 @@ is
                  & "address must be 4k aligned",
                  Message   => "Exception message mismatch");
    end Invalid_Subj_Pml4_Addr;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Subj_Trap_Invalid_Dst
+   is
+      T_Table : Trap_Table_Type;
+      P       : Policy_Type;
+   begin
+      T_Table.Insert (Key      => Exception_Or_NMI,
+                      New_Item => (Trap        => Exception_Or_NMI,
+                                   Dst_Subject => To_Unbounded_String ("xy"),
+                                   Dst_Vector  => 12));
+      P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
+                         New_Item => To_Unbounded_String ("path/to/s2"));
+
+      P.Subjects.Insert
+        (New_Item =>
+           (Name              => To_Unbounded_String ("s1"),
+            Pml4_Address      => 0,
+            IO_Bitmap_Address => 0,
+            Binary            => (Name   => To_Unbounded_String ("s2"),
+                                  others => 0),
+            Trap_Table        => T_Table,
+            others            => <>));
+      Validators.Validate_Subjects (P => P);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Subject s1: Unresolved destination subject 'xy' in trap"
+                 & " table",
+                 Message   => "Exception message mismatch");
+   end Invalid_Subj_Trap_Invalid_Dst;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Subj_Trap_Self_Ref
+   is
+      T_Table : Trap_Table_Type;
+      P       : Policy_Type;
+   begin
+      T_Table.Insert (Key      => Exception_Or_NMI,
+                      New_Item => (Trap        => Exception_Or_NMI,
+                                   Dst_Subject => To_Unbounded_String ("s1"),
+                                   Dst_Vector  => 12));
+      P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
+                         New_Item => To_Unbounded_String ("path/to/s2"));
+
+      P.Subjects.Insert
+        (New_Item =>
+           (Name              => To_Unbounded_String ("s1"),
+            Pml4_Address      => 0,
+            IO_Bitmap_Address => 0,
+            Binary            => (Name   => To_Unbounded_String ("s2"),
+                                  others => 0),
+            Trap_Table        => T_Table,
+            others            => <>));
+      Validators.Validate_Subjects (P => P);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Subject s1: Reference to self in trap table",
+                 Message   => "Exception message mismatch");
+   end Invalid_Subj_Trap_Self_Ref;
 
    -------------------------------------------------------------------------
 

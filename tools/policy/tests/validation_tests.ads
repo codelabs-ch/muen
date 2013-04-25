@@ -35,6 +35,12 @@ is
    --  Verify subject with invalid binary reference.
    procedure Invalid_Subj_Binary;
 
+   --  Verify subject with trap table entry self-reference.
+   procedure Invalid_Subj_Trap_Self_Ref;
+
+   --  Verify subject trap table entry with invalid destination subject.
+   procedure Invalid_Subj_Trap_Invalid_Dst;
+
    --  Verify device with non-unique IRQ.
    procedure Invalid_Device_IRQ;
 

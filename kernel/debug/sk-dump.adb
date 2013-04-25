@@ -3,6 +3,7 @@ with System.Machine_Code;
 with SK.KC;
 with SK.CPU;
 with SK.Apic;
+with SK.Locks;
 
 package body SK.Dump
 is
@@ -105,6 +106,7 @@ is
          Outputs  => (Word64'Asm_Output ("=r", CR4)),
          Volatile => True);
 
+      Locks.Spin_Lock;
       KC.New_Line;
       KC.Put_String (Item => "[CPU ");
       KC.Put_Byte   (Item => Apic.Get_ID);
@@ -127,6 +129,7 @@ is
                       CR2 => CR2,
                       CR3 => CR3,
                       CR4 => CR4);
+      Locks.Unlock;
 
       CPU.Hlt;
    end Print_State;

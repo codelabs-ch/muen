@@ -123,25 +123,33 @@ is
 
          if Data <= 86 then
             case Data is
-            when 1  =>
-               Text_IO.Init;
-            when 15 =>
-               Text_IO.Put_String ("    ");
-            when 28 =>
-               Text_IO.New_Line;
-            when 29 =>
-               Ctrl := True;
-            when 42 =>
-               --  Caps Lock or Shift pressed
-               null;
-            when 56 =>
-               --  Alt pressed
-               null;
-            when 58 =>
-               --  Ctrl pressed
-               Ctrl := not Ctrl;
-            when others =>
-               Text_IO.Put_Char (Item => Char_Map (Data));
+               when 1  =>
+                  Text_IO.Init;
+               when 15 =>
+                  Text_IO.Put_String ("    ");
+               when 28 =>
+                  Text_IO.New_Line;
+               when 29 =>
+                  Ctrl := True;
+               when 42 =>
+                  --  Caps Lock or Shift pressed
+                  null;
+               when 56 =>
+                  --  Alt pressed
+                  null;
+               when 58 =>
+                  --  Ctrl pressed
+                  Ctrl := not Ctrl;
+               when 59 =>
+                  Text_IO.Put_String (Item => " F1 ");
+               when 60 =>
+                  Text_IO.Put_String (Item => " F2 ");
+               when 61 =>
+                  Text_IO.Put_String (Item => " F3 ");
+               when 62 =>
+                  Text_IO.Put_String (Item => " F4 ");
+               when others =>
+                  Text_IO.Put_Char (Item => Char_Map (Data));
             end case;
          end if;
 

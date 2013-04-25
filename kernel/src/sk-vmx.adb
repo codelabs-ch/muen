@@ -130,66 +130,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Resume
-     (Subject_Id : Skp.Subject_Id_Type;
-      Time_Slice : Time_Type)
-   is
-      Success    : Boolean;
-      Spec       : Skp.Subjects.Subject_Spec_Type;
-      State      : SK.Subject_State_Type;
-      Intr_State : SK.Word64;
-   begin
-      Spec  := Skp.Subjects.Subject_Specs (Subject_Id);
-      State := Subjects.Get_State (Id => Subject_Id);
-
-      CPU.VMPTRLD (Region  => Spec.VMCS_Address,
-                   Success => Success);
-      if not Success then
-         pragma Debug (KC.Put_Line (Item => "Error loading VMCS pointer"));
-         CPU.Panic;
-      end if;
-
-      if State.Pending_Event > 0
-        and then SK.Bit_Test
-          (Value => State.RFLAGS,
-           Pos   => Constants.RFLAGS_IF_FLAG)
-      then
-
-         --  Check guest interruptibility state (see Intel SDM Vol. 3c, chapter
-         --  24.4.2).
-
-         VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,
-                    Value => Intr_State);
-
-         if Intr_State = 0 then
-            VMCS_Write
-              (Field => Constants.VM_ENTRY_INTERRUPT_INFO,
-               Value => Constants.VM_INTERRUPT_INFO_VALID +
-                 SK.Word64 (State.Pending_Event));
-
-            --  Clear pending event.
-
-            Subjects.Set_Pending_Event (Id     => Subject_Id,
-                                        Vector => 0);
-         end if;
-      end if;
-
-      VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                  Value => SK.Word64 (Time_Slice));
-
-      CPU.Restore_Registers (Regs => State.Regs);
-      CPU.VMRESUME;
-
-      --  VM resume failed.
-
-      CPU.Set_Stack (Address => Skp.Kernel.Stack_Address + Get_CPU_Offset);
-
-      pragma Debug (KC.Put_Line (Item => "Error resuming subject"));
-      VMX_Error;
-   end Resume;
-
-   -------------------------------------------------------------------------
-
    procedure VMCS_Setup_Control_Fields
      (IO_Bitmap_Address : SK.Word64;
       Ctls_Exec_Pin     : SK.Word32;
@@ -489,6 +429,66 @@ is
       pragma Debug (KC.Put_Line (Item => "Error launching subject"));
       VMX_Error;
    end Launch;
+
+   -------------------------------------------------------------------------
+
+   procedure Resume
+     (Subject_Id : Skp.Subject_Id_Type;
+      Time_Slice : Time_Type)
+   is
+      Success    : Boolean;
+      Spec       : Skp.Subjects.Subject_Spec_Type;
+      State      : SK.Subject_State_Type;
+      Intr_State : SK.Word64;
+   begin
+      Spec  := Skp.Subjects.Subject_Specs (Subject_Id);
+      State := Subjects.Get_State (Id => Subject_Id);
+
+      CPU.VMPTRLD (Region  => Spec.VMCS_Address,
+                   Success => Success);
+      if not Success then
+         pragma Debug (KC.Put_Line (Item => "Error loading VMCS pointer"));
+         CPU.Panic;
+      end if;
+
+      if State.Pending_Event > 0
+        and then SK.Bit_Test
+          (Value => State.RFLAGS,
+           Pos   => Constants.RFLAGS_IF_FLAG)
+      then
+
+         --  Check guest interruptibility state (see Intel SDM Vol. 3c, chapter
+         --  24.4.2).
+
+         VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,
+                    Value => Intr_State);
+
+         if Intr_State = 0 then
+            VMCS_Write
+              (Field => Constants.VM_ENTRY_INTERRUPT_INFO,
+               Value => Constants.VM_INTERRUPT_INFO_VALID +
+                 SK.Word64 (State.Pending_Event));
+
+            --  Clear pending event.
+
+            Subjects.Set_Pending_Event (Id     => Subject_Id,
+                                        Vector => 0);
+         end if;
+      end if;
+
+      VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
+                  Value => SK.Word64 (Time_Slice));
+
+      CPU.Restore_Registers (Regs => State.Regs);
+      CPU.VMRESUME;
+
+      --  VM resume failed.
+
+      CPU.Set_Stack (Address => Skp.Kernel.Stack_Address + Get_CPU_Offset);
+
+      pragma Debug (KC.Put_Line (Item => "Error resuming subject"));
+      VMX_Error;
+   end Resume;
 
    -------------------------------------------------------------------------
 

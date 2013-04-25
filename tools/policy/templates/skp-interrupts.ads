@@ -23,9 +23,7 @@ package Skp.Interrupts is
    IRQ_Routing : constant IRQ_Routing_Array := IRQ_Routing_Array'(
 __irq_routing_table__);
 
-   subtype Vector_Dst_Type is Natural range 0 .. Skp.Invalid_Subject;
-
-   type Vector_Routing_Array is array (Vector_Type) of Vector_Dst_Type;
+   type Vector_Routing_Array is array (Vector_Type) of Skp.Dst_Subject_Type;
 
    Vector_Routing : constant Vector_Routing_Array := Vector_Routing_Array'(
 __vector_routing_table__);

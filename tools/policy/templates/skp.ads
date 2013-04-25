@@ -6,6 +6,8 @@ package Skp is
 
    Invalid_Subject : constant := Subject_Id_Type'Last + 1;
 
+   subtype Dst_Subject_Type is Natural range 0 .. Invalid_Subject;
+
    Vmxon_Address : constant := 16#__vmxon_addr__#;
 
 end Skp;

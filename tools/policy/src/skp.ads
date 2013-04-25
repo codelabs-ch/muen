@@ -79,6 +79,8 @@ is
    package Subjects_Package is new Ada.Containers.Ordered_Sets
      (Element_Type => Subject_Type);
 
+   subtype Subjects_Type is Subjects_Package.Set;
+
    package Binary_Package is new Ada.Containers.Ordered_Maps
      (Key_Type     => Ada.Strings.Unbounded.Unbounded_String,
       Element_Type => Ada.Strings.Unbounded.Unbounded_String,
@@ -156,7 +158,7 @@ is
       Vmcs_Start_Address : SK.Word64;
       Hardware           : Hardware_Type;
       Kernel             : Kernel_Type;
-      Subjects           : Subjects_Package.Set;
+      Subjects           : Subjects_Type;
       Binaries           : Binaries_Type;
       Scheduling         : Scheduling_Type;
    end record;

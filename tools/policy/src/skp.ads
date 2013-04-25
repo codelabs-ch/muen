@@ -9,9 +9,6 @@ with SK;
 package Skp
 is
 
-   --  Subject name.
-   subtype Subject_Name_Type is Ada.Strings.Unbounded.Unbounded_String;
-
    type Memory_Region_Type is record
       Physical_Address : SK.Word64;
       Virtual_Address  : SK.Word64;
@@ -64,7 +61,7 @@ is
 
    type Subject_Type is record
       Id                : Natural;
-      Name              : Subject_Name_Type;
+      Name              : Ada.Strings.Unbounded.Unbounded_String;
       Pml4_Address      : SK.Word64;
       IO_Bitmap_Address : SK.Word64;
       Init_State        : Initial_State_Type;

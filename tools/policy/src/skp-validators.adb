@@ -216,28 +216,19 @@ is
          is
             Trap  : constant Trap_Table_Entry_Type := Traps_Package.Element
               (Position => Pos);
-            S_Pos : Subjects_Package.Cursor        := P.Subjects.First;
          begin
             if Trap.Dst_Subject = S.Name then
                raise Validation_Error with "Subject " & To_String (S.Name)
                  & ": Reference to self in trap table";
             end if;
 
-            while Subjects_Package.Has_Element (Position => S_Pos) loop
-               declare
-                  Subj : constant Subject_Type := Subjects_Package.Element
-                    (Position => S_Pos);
-               begin
-                  if Trap.Dst_Subject = Subj.Name then
-                     return;
-                  end if;
-               end;
-               Subjects_Package.Next (Position => S_Pos);
-            end loop;
-
-            raise Validation_Error with "Subject " & To_String (S.Name)
-              & ": Unresolved destination subject '"
-              & To_String (Trap.Dst_Subject) & "' in trap table";
+            if Get_Id (Subjects => P.Subjects,
+                       Name     => Trap.Dst_Subject) = -1
+            then
+               raise Validation_Error with "Subject " & To_String (S.Name)
+                 & ": Unresolved destination subject '"
+                 & To_String (Trap.Dst_Subject) & "' in trap table";
+            end if;
          end Validate_Trap_Entry;
       begin
          if S.Pml4_Address mod SK.Page_Size /= 0 then

@@ -78,6 +78,13 @@ is
 
    subtype Subjects_Type is Subjects_Package.Set;
 
+   --  Returns subject id of subject with given name. If no subject with
+   --  specified name exists, -1 is returned.
+   function Get_Id
+     (Subjects : Subjects_Type;
+      Name     : Ada.Strings.Unbounded.Unbounded_String)
+      return Integer;
+
    package Binary_Package is new Ada.Containers.Ordered_Maps
      (Key_Type     => Ada.Strings.Unbounded.Unbounded_String,
       Element_Type => Ada.Strings.Unbounded.Unbounded_String,

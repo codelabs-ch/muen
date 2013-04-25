@@ -50,7 +50,7 @@ is
    type Trap_Table_Entry_Type is record
       Trap        : Trap_Type;
       Dst_Subject : Ada.Strings.Unbounded.Unbounded_String;
-      Dst_Vector  : Integer := -1;
+      Dst_Vector  : Natural := 256;
    end record;
 
    package Traps_Package is new Ada.Containers.Ordered_Maps

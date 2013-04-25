@@ -400,7 +400,7 @@ is
          Assert (Condition => S.Trap_Table.First_Element.Dst_Subject
                  = To_Unbounded_String ("subject2"),
                  Message   => "Trap dst subject mismatch");
-         Assert (Condition => S.Trap_Table.First_Element.Dst_Vector = -1,
+         Assert (Condition => S.Trap_Table.First_Element.Dst_Vector = 256,
                  Message   => "Trap dst vector mismatch (1)");
          Assert (Condition => S.Trap_Table.Last_Element.Dst_Vector = 12,
                  Message   => "Trap dst vector mismatch (2)");

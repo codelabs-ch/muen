@@ -1,6 +1,8 @@
 with Skp.Scheduling;
+with Skp.Subjects;
 
 use type Skp.Scheduling.Minor_Frame_Range;
+use type Skp.Subjects.Trap_Entry_Type;
 
 --# inherit
 --#    Skp.Subjects,

@@ -1,6 +1,5 @@
 with System;
 
-with Skp.Subjects;
 with Skp.Interrupts;
 
 with SK.VMX;
@@ -337,6 +336,7 @@ is
       Current_Subject : Skp.Subject_Id_Type;
       Current_Minor   : CPU_Global.Active_Minor_Frame_Type;
       Timer_Value     : SK.Word64;
+      Trap_Entry      : Skp.Subjects.Trap_Entry_Type;
    begin
       Current_Minor := CPU_Global.Get_Current_Minor_Frame;
 
@@ -375,13 +375,24 @@ is
          Handle_Hypercall (Current_Subject => Current_Subject,
                            Subject_State   => State);
       elsif State.Exit_Reason /= Constants.VM_EXIT_TIMER_EXPIRY then
+         Trap_Entry := Skp.Subjects.Subject_Specs (Current_Subject).Trap_Table
+           (Skp.Subjects.Trap_Range (State.Exit_Reason));
 
-         --  Handover to trap handler subject.
+         if Trap_Entry = Skp.Subjects.Null_Trap then
+            pragma Debug (KC.Put_String (Item => "Subject "));
+            pragma Debug (KC.Put_Byte   (Item =>  Byte (Current_Subject)));
+            pragma Debug (KC.Put_String (Item => " no handler for trap "));
+            pragma Debug (KC.Put_Word16 (Item => Word16 (State.Exit_Reason)));
+            pragma Debug (KC.New_Line);
+            CPU.Panic;
+         else
 
-         CPU_Global.Swap_Subject
-           (Old_Id => Current_Subject,
-            New_Id => Skp.Subjects.Subject_Specs (Current_Subject).Trap_Table
-            (Skp.Subjects.Trap_Range (State.Exit_Reason)).Dst_Subject);
+            --  Handover to trap handler subject.
+
+            CPU_Global.Swap_Subject
+              (Old_Id => Current_Subject,
+               New_Id => Trap_Entry.Dst_Subject);
+         end if;
       end if;
 
       Subjects.Set_State (Id    => Current_Subject,

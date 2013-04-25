@@ -822,7 +822,9 @@ is
            & SK.Utils.To_Hex (Item => Subject.Init_State.Stack_Address) & "#,"
            & ASCII.LF
            & Indent & "    Entry_Point       => 16#"
-           & SK.Utils.To_Hex (Item => Subject.Init_State.Entry_Point) & "#)";
+           & SK.Utils.To_Hex (Item => Subject.Init_State.Entry_Point) & "#,"
+           & ASCII.LF
+           & Indent & "    Trap_Table        => Null_Trap_Table)";
 
          Current := Current + 1;
          if Current /= S_Count then

@@ -1,5 +1,6 @@
 with System;
 
+with Skp.Subjects;
 with Skp.Interrupts;
 
 with SK.VMX;
@@ -15,9 +16,6 @@ package body SK.Scheduler
 --# own
 --#    State is in New_Major, Current_Major;
 is
-
-   --  Dumper subject id.
-   Dumper_Id : constant := 1;
 
    Tau0_Kernel_Iface_Address : SK.Word64;
    pragma Import (C, Tau0_Kernel_Iface_Address, "tau0kernel_iface_ptr");
@@ -378,20 +376,12 @@ is
                            Subject_State   => State);
       elsif State.Exit_Reason /= Constants.VM_EXIT_TIMER_EXPIRY then
 
-         if Dumper_Id /= Current_Subject then
+         --  Handover to trap handler subject.
 
-            --  Abnormal subject exit, schedule dumper.
-
-            CPU_Global.Swap_Subject
-              (Old_Id => Current_Subject,
-               New_Id => Dumper_Id);
-         else
-            pragma Debug (KC.Put_String
-                          (Item => "Scheduling error: subject "));
-            pragma Debug (KC.Put_Byte (Item => Byte (Current_Subject)));
-            pragma Debug (KC.Put_Line (Item => " swap to self"));
-            CPU.Panic;
-         end if;
+         CPU_Global.Swap_Subject
+           (Old_Id => Current_Subject,
+            New_Id => Skp.Subjects.Subject_Specs (Current_Subject).Trap_Table
+            (Skp.Subjects.Trap_Range (State.Exit_Reason)).Dst_Subject);
       end if;
 
       Subjects.Set_State (Id    => Current_Subject,

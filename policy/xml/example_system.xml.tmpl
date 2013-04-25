@@ -63,6 +63,9 @@
 				<memory_region physical_address="280000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false"/>
 			</memory_layout>
 			<binary name="subject_b" physical_address="276000"/>
+			<trap_table>
+				<entry trap="exception_or_nmi" dst_subject="dumper"/>
+			</trap_table>
 		</subject>
 
 		<subject id="4" name="vt" pml4_address="290000" io_bitmap_address="294000">

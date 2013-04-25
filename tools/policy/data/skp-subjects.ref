@@ -41,7 +41,10 @@ package Skp.Subjects is
        IO_Bitmap_Address => 16#00000000001a0000#,
        Stack_Address     => 16#0000000000120000#,
        Entry_Point       => 16#0000000000000abc#,
-       Trap_Table        => Null_Trap_Table),
+       Trap_Table        => Trap_Table_Type'(
+          0 => Trap_Entry_Type'(Dst_Subject => 2, Dst_Vector => 256),
+          1 => Trap_Entry_Type'(Dst_Subject => 1, Dst_Vector => 12),
+          others => Null_Trap)),
       1 => Subject_Spec_Type'(
        PML4_Address      => 16#00000000001f4000#,
        VMCS_Address      => 16#0000000000002000#,

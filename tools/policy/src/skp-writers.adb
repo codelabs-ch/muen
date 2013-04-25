@@ -803,6 +803,30 @@ is
       is
          use type SK.Word64;
 
+         Cur_Trap : Natural := 0;
+
+         --  Add trap entry to output buffer.
+         procedure Add_Trap (Pos : Traps_Package.Cursor);
+
+         -------------------------------------------------------------------
+
+         procedure Add_Trap (Pos : Traps_Package.Cursor)
+         is
+            Trap : constant Trap_Table_Entry_Type := Traps_Package.Element
+              (Position => Pos);
+         begin
+            Buffer := Buffer & Indent & Indent & Indent & Cur_Trap'Img
+              & " => Trap_Entry_Type'(Dst_Subject =>"
+              & Get_Id (Subjects => Policy.Subjects,
+                        Name     => Trap.Dst_Subject)'Img
+              & ", Dst_Vector =>" & Trap.Dst_Vector'Img & ")";
+
+            Cur_Trap := Cur_Trap + 1;
+            if Cur_Trap /= Natural (Subject.Trap_Table.Length) then
+               Buffer := Buffer & "," & ASCII.LF;
+            end if;
+         end Add_Trap;
+
          VMCS_Address : constant SK.Word64
            := Policy.Vmcs_Start_Address + SK.Word64 (Current) * SK.Page_Size;
       begin
@@ -824,7 +848,16 @@ is
            & Indent & "    Entry_Point       => 16#"
            & SK.Utils.To_Hex (Item => Subject.Init_State.Entry_Point) & "#,"
            & ASCII.LF
-           & Indent & "    Trap_Table        => Null_Trap_Table)";
+           & Indent & "    Trap_Table        => ";
+
+         if Subject.Trap_Table.Is_Empty then
+            Buffer := Buffer & "Null_Trap_Table)";
+         else
+            Buffer := Buffer & "Trap_Table_Type'(" & ASCII.LF;
+            Subject.Trap_Table.Iterate (Process => Add_Trap'Access);
+            Buffer := Buffer & "," & ASCII.LF & Indent & Indent & Indent
+              & " others => Null_Trap))";
+         end if;
 
          Current := Current + 1;
          if Current /= S_Count then

@@ -379,6 +379,20 @@ is
 
       Store_Subject_Info (State => State);
 
+      if SK.Bit_Test (Value => State.Exit_Reason,
+                      Pos   => Constants.VM_EXIT_ENTRY_FAILURE)
+      then
+         pragma Debug (KC.Put_String (Item => "Subject "));
+         pragma Debug (KC.Put_Byte   (Item =>  Byte (Current_Subject)));
+         pragma Debug (KC.Put_String (Item => " VM-entry failure ("));
+         pragma Debug (KC.Put_Word16 (Item => Word16 (State.Exit_Reason)));
+         pragma Debug (KC.Put_String (Item => ":"));
+         pragma Debug (KC.Put_Word32
+                       (Item => Word32 (State.Exit_Qualification)));
+         pragma Debug (KC.New_Line);
+         CPU.Panic;
+      end if;
+
       if State.Exit_Reason = Constants.VM_EXIT_EXTERNAL_INT then
          Handle_Irq (Vector => SK.Byte'Mod (State.Interrupt_Info));
       elsif State.Exit_Reason = Constants.VM_EXIT_HYPERCALL then

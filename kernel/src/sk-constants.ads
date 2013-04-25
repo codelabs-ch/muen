@@ -149,4 +149,8 @@ is
    VM_EXIT_HYPERCALL        : constant := 18;
    VM_EXIT_TIMER_EXPIRY     : constant := 52;
 
+   --  VMX exit reason flags
+
+   VM_EXIT_ENTRY_FAILURE    : constant := 31;
+
 end SK.Constants;

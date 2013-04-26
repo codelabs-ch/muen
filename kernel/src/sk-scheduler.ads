@@ -3,6 +3,7 @@ with Skp.Subjects;
 
 use type Skp.Scheduling.Minor_Frame_Range;
 use type Skp.Subjects.Trap_Entry_Type;
+use type Skp.Subjects.Dst_Vector_Range;
 
 --# inherit
 --#    Skp.Subjects,

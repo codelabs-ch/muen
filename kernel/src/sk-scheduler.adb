@@ -386,6 +386,11 @@ is
             pragma Debug (KC.New_Line);
             CPU.Panic;
          else
+            if Trap_Entry.Dst_Vector /= Skp.Subjects.No_Vector then
+               Subjects.Set_Pending_Event
+                 (Id     => Trap_Entry.Dst_Subject,
+                  Vector => SK.Byte (Trap_Entry.Dst_Vector));
+            end if;
 
             --  Handover to trap handler subject.
 

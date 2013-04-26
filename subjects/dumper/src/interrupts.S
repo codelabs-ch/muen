@@ -1,3 +1,5 @@
+#include "policy.h"
+
 .data
 .global isrlist
 isrlist:
@@ -70,7 +72,7 @@ isrlist:
 
 .set cur_vector, 32
 // Add one entry per subject
-.rept 6
+.rept SUBJECT_COUNT
 	interrupt cur_vector
 .set cur_vector, cur_vector + 1
 .endr

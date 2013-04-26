@@ -48,63 +48,6 @@ is
 
    OUTPUT_BUFFER_STATUS : constant := 0;
 
-   type Scancode_Map is array (SK.Byte'Range) of Character;
-
-   Char_Map : constant Scancode_Map
-     := (2      => '1',
-         3      => '2',
-         4      => '3',
-         5      => '4',
-         6      => '5',
-         7      => '6',
-         8      => '7',
-         9      => '8',
-         10     => '9',
-         11     => '0',
-         12     => '-',
-         13     => '=',
-         16     => 'q',
-         17     => 'w',
-         18     => 'e',
-         19     => 'r',
-         20     => 't',
-         21     => 'z',
-         22     => 'u',
-         23     => 'i',
-         24     => 'o',
-         25     => 'p',
-         26     => '[',
-         27     => ']',
-         30     => 'a',
-         31     => 's',
-         32     => 'd',
-         33     => 'f',
-         34     => 'g',
-         35     => 'h',
-         36     => 'j',
-         37     => 'k',
-         38     => 'l',
-         39     => ';',
-         40     => ''',
-         41     => '`',
-         43     => ''',
-         44     => 'y',
-         45     => 'x',
-         46     => 'c',
-         47     => 'v',
-         48     => 'b',
-         49     => 'n',
-         50     => 'm',
-         51     => ',',
-         52     => '.',
-         53     => '-',
-         55     => '*',
-         57     => ' ',
-         86     => '<',
-         others => ' ');
-
-   Ctrl : Boolean := False;
-
    -------------------------------------------------------------------------
 
    procedure Handle_Interrupt
@@ -127,21 +70,6 @@ is
             case Data is
                when 1  =>
                   Text_IO.Init;
-               when 15 =>
-                  Text_IO.Put_String ("    ");
-               when 28 =>
-                  Text_IO.New_Line;
-               when 29 =>
-                  Ctrl := True;
-               when 42 =>
-                  --  Caps Lock or Shift pressed
-                  null;
-               when 56 =>
-                  --  Alt pressed
-                  null;
-               when 58 =>
-                  --  Ctrl pressed
-                  Ctrl := not Ctrl;
                when 59 =>
                   VGA_Output.Set (Slot => 1);
                   Text_IO.Put_Line ("Switching to VT 1");
@@ -155,19 +83,8 @@ is
                   VGA_Output.Set (Slot => 4);
                   Text_IO.Put_Line ("Switching to VT 4");
                when others =>
-                  Text_IO.Put_Char (Item => Char_Map (Data));
+                  null;
             end case;
-         end if;
-
-         if Data = 157 then
-            --  Ctrl released
-            Ctrl := False;
-         elsif Data = 170 then
-            --  Shift released
-            null;
-         elsif Data = 184 then
-            --  Alt released
-            null;
          end if;
       end loop;
    end Handle_Interrupt;

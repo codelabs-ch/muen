@@ -1,6 +1,6 @@
 project Dumper extends "../subject" is
 
-   for Languages use ("Ada");
+   for Languages use ("Ada", "Asm");
    for Source_Dirs use
      ("../../common/src",
       "../../common/debug",

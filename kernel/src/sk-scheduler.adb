@@ -251,6 +251,9 @@ is
    --#       *,
    --#       Current_Subject,
    --#       Subject_State;
+   --# pre
+   --#    Subject_State.Exit_Reason <= Sk.Word64
+   --#       (Skp.Subjects.Trap_Range'Last);
    is
       Trap_Entry : Skp.Subjects.Trap_Entry_Type;
    begin
@@ -418,8 +421,20 @@ is
          Handle_Hypercall (Current_Subject => Current_Subject,
                            Subject_State   => State);
       elsif State.Exit_Reason /= Constants.VM_EXIT_TIMER_EXPIRY then
-         Handle_Trap (Current_Subject => Current_Subject,
-                      Subject_State   => State);
+         if State.Exit_Reason <= SK.Word64 (Skp.Subjects.Trap_Range'Last) then
+            Handle_Trap (Current_Subject => Current_Subject,
+                         Subject_State   => State);
+         else
+            pragma Debug (KC.Put_String (Item => "Subject "));
+            pragma Debug (KC.Put_Byte   (Item =>  Byte (Current_Subject)));
+            pragma Debug (KC.Put_String (Item => " unhandled trap ("));
+            pragma Debug (KC.Put_Word16 (Item => Word16 (State.Exit_Reason)));
+            pragma Debug (KC.Put_String (Item => ":"));
+            pragma Debug (KC.Put_Word32
+                          (Item => Word32 (State.Exit_Qualification)));
+            pragma Debug (KC.Put_Line   (Item => ")"));
+            CPU.Panic;
+         end if;
       end if;
 
       Subjects.Set_State (Id    => Current_Subject,

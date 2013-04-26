@@ -48,9 +48,10 @@
 			&subjainit;
 			<memory_layout>
 				&subjamem;
+				<!-- virtual terminal console 1 -->
+				<memory_region physical_address="260000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false"/>
 			</memory_layout>
 			<binary name="subject_a" physical_address="256000"/>
-			<device name="vga"/>
 		</subject>
 
 		<subject id="3" name="subject_b" pml4_address="270000" io_bitmap_address="274000">

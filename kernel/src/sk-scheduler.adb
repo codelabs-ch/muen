@@ -411,7 +411,7 @@ is
          pragma Debug (KC.Put_String (Item => ":"));
          pragma Debug (KC.Put_Word32
                        (Item => Word32 (State.Exit_Qualification)));
-         pragma Debug (KC.New_Line);
+         pragma Debug (KC.Put_Line   (Item => ")"));
          CPU.Panic;
       end if;
 

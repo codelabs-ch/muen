@@ -9,14 +9,16 @@ is
    type Framebuffer_Type is array (1 .. SK.Page_Size) of SK.Byte;
    for Framebuffer_Type'Size use 32768;
 
-   --  Framebuffer base address.
-   Framebuffer_Base : constant := 16#10000#;
+   Framebuffers : array (Slot_Range) of Framebuffer_Type;
+   for Framebuffers'Address use System'To_Address (16#10000#);
+   for Framebuffers'Size use Slot_Range'Last * 32768;
 
    --  VGA output page.
    VGA_Out : Framebuffer_Type;
    for VGA_Out'Address use System'To_Address (16#000b_8000#);
 
    Current_Slot : Slot_Range := Slot_Range'First;
+   pragma Atomic (Current_Slot);
 
    -------------------------------------------------------------------------
 
@@ -33,17 +35,11 @@ is
       use type SK.Byte;
    begin
       loop
-         declare
-            Fb : Framebuffer_Type;
-            for Fb'Address use System'To_Address
-              (Framebuffer_Base + SK.Page_Size * Natural (Current_Slot - 1));
-         begin
-            for I in Fb'Range loop
-               if VGA_Out (I) /= Fb (I) then
-                  VGA_Out (I) := Fb (I);
-               end if;
-            end loop;
-         end;
+         for I in VGA_Out'Range loop
+            if VGA_Out (I) /= Framebuffers (Current_Slot) (I) then
+               VGA_Out (I) := Framebuffers (Current_Slot) (I);
+            end if;
+         end loop;
       end loop;
    end Sync;
 

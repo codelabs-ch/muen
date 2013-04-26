@@ -17,7 +17,7 @@ is
    package VGA is new SK.Console_VGA
      (Width_Type   => Width_Type,
       Height_Type  => Height_Type,
-      Base_Address => System'To_Address (16#000b_8000#));
+      Base_Address => System'To_Address (16#000b_9000#));
 
    package Text_IO is new SK.Console
      (Initialize      => VGA.Init,
@@ -144,12 +144,16 @@ is
                   Ctrl := not Ctrl;
                when 59 =>
                   VGA_Output.Set (Slot => 1);
+                  Text_IO.Put_Line ("Switching to VT 1");
                when 60 =>
                   VGA_Output.Set (Slot => 2);
+                  Text_IO.Put_Line ("Switching to VT 2");
                when 61 =>
                   VGA_Output.Set (Slot => 3);
+                  Text_IO.Put_Line ("Switching to VT 3");
                when 62 =>
-                  Text_IO.Put_String (Item => " F4 ");
+                  VGA_Output.Set (Slot => 4);
+                  Text_IO.Put_Line ("Switching to VT 4");
                when others =>
                   Text_IO.Put_Char (Item => Char_Map (Data));
             end case;
@@ -219,6 +223,7 @@ is
          Volatile => True);
 
       Text_IO.Init;
+      Text_IO.Put_Line ("VT subject running");
    end Initialize;
 
 end SubjC;

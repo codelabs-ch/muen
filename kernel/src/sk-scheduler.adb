@@ -266,6 +266,9 @@ is
          pragma Debug (KC.Put_String (Item => " no handler for trap "));
          pragma Debug (KC.Put_Word16 (Item => Word16
                                       (Subject_State.Exit_Reason)));
+         pragma Debug (KC.Put_String (Item => ":"));
+         pragma Debug (KC.Put_Word32 (Item => Word32
+                                      (Subject_State.Exit_Qualification)));
          pragma Debug (KC.New_Line);
          CPU.Panic;
       else

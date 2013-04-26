@@ -145,7 +145,7 @@ is
                when 59 =>
                   VGA_Output.Set (Slot => 1);
                when 60 =>
-                  Text_IO.Put_String (Item => " F2 ");
+                  VGA_Output.Set (Slot => 2);
                when 61 =>
                   Text_IO.Put_String (Item => " F3 ");
                when 62 =>

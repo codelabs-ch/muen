@@ -30,6 +30,7 @@ is
 
    procedure Sync
    is
+      use type SK.Byte;
    begin
       loop
          declare
@@ -38,7 +39,9 @@ is
               (Framebuffer_Base + SK.Page_Size * Natural (Current_Slot - 1));
          begin
             for I in Fb'Range loop
-               VGA_Out (I) := Fb (I);
+               if VGA_Out (I) /= Fb (I) then
+                  VGA_Out (I) := Fb (I);
+               end if;
             end loop;
          end;
       end loop;

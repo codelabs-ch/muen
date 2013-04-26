@@ -251,8 +251,4 @@ is
       end loop;
    end Update_Output;
 
-begin
-   System.Machine_Code.Asm
-     (Template => "cli",
-      Volatile => True);
 end SubjC;

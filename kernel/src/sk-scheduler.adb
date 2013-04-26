@@ -257,7 +257,7 @@ is
       Trap_Entry := Skp.Subjects.Subject_Specs (Current_Subject).Trap_Table
         (Skp.Subjects.Trap_Range (Subject_State.Exit_Reason));
 
-      if Trap_Entry = Skp.Subjects.Null_Trap then
+      if Trap_Entry.Dst_Subject = Skp.Invalid_Subject then
          pragma Debug (KC.Put_String (Item => "Subject "));
          pragma Debug (KC.Put_Byte   (Item =>  Byte (Current_Subject)));
          pragma Debug (KC.Put_String (Item => " no handler for trap "));

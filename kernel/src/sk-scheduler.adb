@@ -238,6 +238,50 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Handle trap using trap table of current subject.
+   procedure Handle_Trap
+     (Current_Subject : Skp.Subject_Id_Type;
+      Subject_State   : SK.Subject_State_Type)
+   --# global
+   --#    in out X86_64.State;
+   --#    in out Subjects.Descriptors;
+   --#    in out CPU_Global.Storage;
+   --# derives
+   --#    X86_64.State, Subjects.Descriptors, CPU_Global.Storage from
+   --#       *,
+   --#       Current_Subject,
+   --#       Subject_State;
+   is
+      Trap_Entry : Skp.Subjects.Trap_Entry_Type;
+   begin
+      Trap_Entry := Skp.Subjects.Subject_Specs (Current_Subject).Trap_Table
+        (Skp.Subjects.Trap_Range (Subject_State.Exit_Reason));
+
+      if Trap_Entry = Skp.Subjects.Null_Trap then
+         pragma Debug (KC.Put_String (Item => "Subject "));
+         pragma Debug (KC.Put_Byte   (Item =>  Byte (Current_Subject)));
+         pragma Debug (KC.Put_String (Item => " no handler for trap "));
+         pragma Debug (KC.Put_Word16 (Item => Word16
+                                      (Subject_State.Exit_Reason)));
+         pragma Debug (KC.New_Line);
+         CPU.Panic;
+      else
+         if Trap_Entry.Dst_Vector < Skp.Subjects.No_Vector then
+            Subjects.Set_Pending_Event
+              (Id     => Trap_Entry.Dst_Subject,
+               Vector => SK.Byte (Trap_Entry.Dst_Vector));
+         end if;
+
+         --  Handover to trap handler subject.
+
+         CPU_Global.Swap_Subject
+           (Old_Id => Current_Subject,
+            New_Id => Trap_Entry.Dst_Subject);
+      end if;
+   end Handle_Trap;
+
+   -------------------------------------------------------------------------
+
    procedure Schedule
    --# global
    --#    in     VMX.State;
@@ -336,7 +380,6 @@ is
       Current_Subject : Skp.Subject_Id_Type;
       Current_Minor   : CPU_Global.Active_Minor_Frame_Type;
       Timer_Value     : SK.Word64;
-      Trap_Entry      : Skp.Subjects.Trap_Entry_Type;
    begin
       Current_Minor := CPU_Global.Get_Current_Minor_Frame;
 
@@ -375,29 +418,8 @@ is
          Handle_Hypercall (Current_Subject => Current_Subject,
                            Subject_State   => State);
       elsif State.Exit_Reason /= Constants.VM_EXIT_TIMER_EXPIRY then
-         Trap_Entry := Skp.Subjects.Subject_Specs (Current_Subject).Trap_Table
-           (Skp.Subjects.Trap_Range (State.Exit_Reason));
-
-         if Trap_Entry = Skp.Subjects.Null_Trap then
-            pragma Debug (KC.Put_String (Item => "Subject "));
-            pragma Debug (KC.Put_Byte   (Item =>  Byte (Current_Subject)));
-            pragma Debug (KC.Put_String (Item => " no handler for trap "));
-            pragma Debug (KC.Put_Word16 (Item => Word16 (State.Exit_Reason)));
-            pragma Debug (KC.New_Line);
-            CPU.Panic;
-         else
-            if Trap_Entry.Dst_Vector < Skp.Subjects.No_Vector then
-               Subjects.Set_Pending_Event
-                 (Id     => Trap_Entry.Dst_Subject,
-                  Vector => SK.Byte (Trap_Entry.Dst_Vector));
-            end if;
-
-            --  Handover to trap handler subject.
-
-            CPU_Global.Swap_Subject
-              (Old_Id => Current_Subject,
-               New_Id => Trap_Entry.Dst_Subject);
-         end if;
+         Handle_Trap (Current_Subject => Current_Subject,
+                      Subject_State   => State);
       end if;
 
       Subjects.Set_State (Id    => Current_Subject,

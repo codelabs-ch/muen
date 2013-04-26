@@ -10,12 +10,12 @@ package body SubjC
 is
 
    subtype Width_Type  is Natural range 1 .. 80;
-   subtype Height_Type is Natural range 1 .. 7;
+   subtype Height_Type is Natural range 1 .. 25;
 
    package VGA is new SK.Console_VGA
      (Width_Type   => Width_Type,
       Height_Type  => Height_Type,
-      Base_Address => System'To_Address (16#000b_8b40#));
+      Base_Address => System'To_Address (16#000b_8000#));
 
    package Text_IO is new SK.Console
      (Initialize      => VGA.Init,

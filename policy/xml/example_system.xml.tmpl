@@ -67,6 +67,8 @@
 			&subjcinit;
 			<memory_layout>
 				&subjcmem;
+				<!-- virtual terminal consoles -->
+				<memory_region physical_address="260000" virtual_address="18000" size="4k" alignment="4k" writable="false" executable="false"/>
 			</memory_layout>
 			<binary name="subject_c" physical_address="296000"/>
 			<device name="vga"/>

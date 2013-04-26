@@ -10,6 +10,7 @@ project Subject is
    end Builder;
 
    package Compiler is
+      for Required_Switches ("Asm") use ("-x", "assembler-with-cpp");
       for Default_Switches ("Ada") use Defaults.Ada_Compiler_Switches
         & ("-gnatwale", "-Wstack-usage=4096", "-Werror");
    end Compiler;

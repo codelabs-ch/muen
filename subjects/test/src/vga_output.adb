@@ -10,7 +10,7 @@ is
    for Framebuffer_Type'Size use 32768;
 
    --  Framebuffer base address.
-   Framebuffer_Base : constant := 16#18000#;
+   Framebuffer_Base : constant := 16#10000#;
 
    --  VGA output page.
    VGA_Out : Framebuffer_Type;

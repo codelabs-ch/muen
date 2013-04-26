@@ -139,6 +139,7 @@ is
          Inputs   => (System.Address'Asm_Input ("r", IDT_Pointer'Address)),
          Volatile => True);
 
+      VGA.Disable_Cursor;
       Text_IO.Init;
       Text_IO.Put_Line ("VT subject running");
    end Initialize;

@@ -28,4 +28,7 @@ is
      (X : Width_Type;
       Y : Height_Type);
 
+   --  Disable position cursor.
+   procedure Disable_Cursor;
+
 end SK.Console_VGA;

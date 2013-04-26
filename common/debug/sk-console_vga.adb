@@ -65,9 +65,6 @@ is
    pragma Import (Ada, Screen);
    for Screen'Address use Base_Address;
 
-   --  Disable position cursor.
-   procedure Disable_Cursor;
-
    --  Scroll screen if current Y position is equal to the last row.
    procedure Scroll;
 
@@ -96,7 +93,6 @@ is
 
       Cur_X := Width_Type'First;
       Cur_Y := Height_Type'First;
-      Disable_Cursor;
    end Init;
 
    -------------------------------------------------------------------------

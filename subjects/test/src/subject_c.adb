@@ -1,6 +1,7 @@
 with System.Machine_Code;
 
 with SubjC;
+with VGA_Output;
 
 procedure Subject_C
 is
@@ -10,12 +11,6 @@ begin
    System.Machine_Code.Asm
      (Template => "sti",
       Volatile => True);
-   loop
 
-      --  All processing is done in the interrupt handler.
-
-      System.Machine_Code.Asm
-        (Template => "hlt",
-         Volatile => True);
-   end loop;
+   VGA_Output.Sync;
 end Subject_C;

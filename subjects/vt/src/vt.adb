@@ -1,16 +1,16 @@
 with System.Machine_Code;
 
-with SubjC;
+with Interrupts;
 with VGA_Output;
 
-procedure Subject_C
+procedure VT
 is
 begin
-   SubjC.Initialize;
+   Interrupts.Initialize;
 
    System.Machine_Code.Asm
      (Template => "sti",
       Volatile => True);
 
    VGA_Output.Sync;
-end Subject_C;
+end VT;

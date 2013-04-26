@@ -12,8 +12,8 @@
 <!ENTITY subjamem   SYSTEM "subject_a_mem.xml">
 <!ENTITY subjbinit  SYSTEM "subject_b.xml">
 <!ENTITY subjbmem   SYSTEM "subject_b_mem.xml">
-<!ENTITY subjcinit  SYSTEM "subject_c.xml">
-<!ENTITY subjcmem   SYSTEM "subject_c_mem.xml">
+<!ENTITY vtinit     SYSTEM "vt.xml">
+<!ENTITY vtmem      SYSTEM "vt_mem.xml">
 <!ENTITY idleinit   SYSTEM "idle.xml">
 <!ENTITY idlemem    SYSTEM "idle_mem.xml">
 ]>
@@ -65,10 +65,10 @@
 			<binary name="subject_b" physical_address="276000"/>
 		</subject>
 
-		<subject id="4" name="subject_c" pml4_address="290000" io_bitmap_address="294000">
-			&subjcinit;
+		<subject id="4" name="vt" pml4_address="290000" io_bitmap_address="294000">
+			&vtinit;
 			<memory_layout>
-				&subjcmem;
+				&vtmem;
 				<!-- virtual terminal console 4 -->
 				<memory_region physical_address="29d000" virtual_address="b9000" size="4k" alignment="4k" writable="true" executable="false"/>
 
@@ -78,7 +78,7 @@
 				<memory_region physical_address="23c000" virtual_address="12000" size="4k" alignment="4k" writable="false" executable="false"/>
 				<memory_region physical_address="29d000" virtual_address="13000" size="4k" alignment="4k" writable="false" executable="false"/>
 			</memory_layout>
-			<binary name="subject_c" physical_address="296000"/>
+			<binary name="vt" physical_address="296000"/>
 			<device name="vga"/>
 			<device name="keyboard"/>
 		</subject>

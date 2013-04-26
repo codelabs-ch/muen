@@ -1,4 +1,4 @@
-package SubjC
+package Interrupts
 is
 
    --  Interrupt handler.
@@ -8,4 +8,4 @@ is
    --  Install ISR, load IDT and initialize VGA console.
    procedure Initialize;
 
-end SubjC;
+end Interrupts;

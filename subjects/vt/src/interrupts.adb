@@ -8,7 +8,7 @@ with SK.Console_VGA;
 
 with VGA_Output;
 
-package body SubjC
+package body Interrupts
 is
 
    subtype Width_Type  is Natural range 1 .. 80;
@@ -226,4 +226,4 @@ is
       Text_IO.Put_Line ("VT subject running");
    end Initialize;
 
-end SubjC;
+end Interrupts;

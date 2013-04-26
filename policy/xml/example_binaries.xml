@@ -3,6 +3,6 @@
 	<binary name="dumper"    path="subjects/dumper/obj/dumper" />
 	<binary name="subject_a" path="subjects/test/obj/subject_a"/>
 	<binary name="subject_b" path="subjects/test/obj/subject_b"/>
-	<binary name="subject_c" path="subjects/test/obj/subject_c"/>
+	<binary name="vt"        path="subjects/vt/obj/vt"         />
 	<binary name="idle"      path="subjects/idle/obj/idle"     />
 </binaries>

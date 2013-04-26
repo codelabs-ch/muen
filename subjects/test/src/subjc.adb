@@ -103,6 +103,23 @@ is
 
    Ctrl : Boolean := False;
 
+   --  Virtual text console framebuffer.
+   type Framebuffer_Type is array (1 .. SK.Page_Size) of SK.Byte;
+   for Framebuffer_Type'Size use 32768;
+
+   --  Session slots.
+   type Slot_Range is range 1 .. 4;
+
+   --  Framebuffer base address.
+   Framebuffer_Base : constant := 16#18000#;
+
+   --  VGA output page.
+   VGA_Out : Framebuffer_Type;
+   for VGA_Out'Address use System'To_Address (16#000b_8000#);
+
+   --  Update VGA console using the given slot framebuffer.
+   procedure Update_Output (Slot : Slot_Range);
+
    -------------------------------------------------------------------------
 
    procedure Handle_Interrupt
@@ -141,7 +158,7 @@ is
                   --  Ctrl pressed
                   Ctrl := not Ctrl;
                when 59 =>
-                  Text_IO.Put_String (Item => " F1 ");
+                  Update_Output (Slot => 1);
                when 60 =>
                   Text_IO.Put_String (Item => " F2 ");
                when 61 =>
@@ -218,6 +235,21 @@ is
 
       Text_IO.Init;
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Update_Output (Slot : Slot_Range)
+   is
+      Fb : Framebuffer_Type;
+      for Fb'Address use System'To_Address
+        (Framebuffer_Base + SK.Page_Size * Natural (Slot - 1));
+   begin
+      loop
+         for I in Fb'Range loop
+            VGA_Out (I) := Fb (I);
+         end loop;
+      end loop;
+   end Update_Output;
 
 begin
    System.Machine_Code.Asm

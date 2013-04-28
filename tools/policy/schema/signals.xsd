@@ -1,0 +1,54 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="./types.xsd"/>
+
+	<xs:simpleType name="signal_kind_type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="asynchronous">
+				<xs:annotation><xs:documentation>
+					Send an asynchronous signal to the destination subject.
+				</xs:documentation></xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="synchronous">
+				<xs:annotation><xs:documentation>
+					Send a synchronous signal to the destination subject.
+					Trigger an IPI if target is running on a different core.
+				</xs:documentation></xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="handover">
+				<xs:annotation><xs:documentation>
+					Handover execution to the destination subject,
+					optionally injecting an interrupt with specified vector.
+				</xs:documentation></xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="signal_number_type">
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="31"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="dst_vector_type">
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:annotation><xs:documentation>
+				The value '256' designates "no vector".
+			</xs:documentation></xs:annotation>
+			<xs:maxInclusive value="256"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="signal_entry_type">
+		<xs:attribute name="type"        type="signal_kind_type"   use="required"/>
+		<xs:attribute name="signal"      type="signal_number_type" use="required"/>
+		<xs:attribute name="dst_subject" type="subject_name_type"  use="required"/>
+		<xs:attribute name="dst_vector"  type="dst_vector_type"    use="optional"/>
+	</xs:complexType>
+
+	<xs:complexType name="signal_table_type">
+		<xs:sequence>
+			<xs:element name="entry" type="signal_entry_type" minOccurs="1" maxOccurs="32"/>
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

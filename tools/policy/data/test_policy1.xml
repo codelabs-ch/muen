@@ -24,6 +24,10 @@
 				<entry trap="exception_or_nmi"   dst_subject="subject2"/>
 				<entry trap="external_interrupt" dst_subject="subject1" dst_vector="12"/>
 			</trap_table>
+			<signal_table>
+				<entry type="asynchronous" signal="17" dst_subject="subject1" dst_vector="32"/>
+				<entry type="handover"     signal="18" dst_subject="subject2"/>
+			</signal_table>
 		</subject>
 		<subject id="1" name="subject1" pml4_address="1f4000" io_bitmap_address="1b0000">
 			&subj_state;

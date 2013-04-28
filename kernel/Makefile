@@ -2,7 +2,7 @@ PACKAGE = kernel
 
 VERSION_SPEC = src/sk-version.ads
 VERSION      = $(GIT_REV)
-GIT_REV      = $(shell git describe --always)
+GIT_REV      = $(shell git describe --always --dirty="-UNCLEAN")
 
 include ../Makeconf
 include ../Makespark

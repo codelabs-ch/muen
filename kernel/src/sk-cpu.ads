@@ -22,6 +22,7 @@ is
    --#    X86_64.State;
    --# derives
    --#    EAX, EBX, ECX, EDX from X86_64.State, EAX, ECX;
+   pragma Inline_Always (CPUID);
 
    --  Halt the CPU.
    procedure Hlt;
@@ -29,6 +30,7 @@ is
    --#    X86_64.State;
    --# derives
    --#    X86_64.State from *;
+   pragma Inline_Always (Hlt);
 
    --  Panic.
    procedure Panic;
@@ -36,21 +38,25 @@ is
    --#    X86_64.State;
    --# derives
    --#    X86_64.State from *;
+   pragma Inline_Always (Panic);
 
    --  Return current value of CR0 register.
    function Get_CR0 return SK.Word64;
    --# global
    --#    X86_64.State;
+   pragma Inline_Always (Get_CR0);
 
    --  Return current value of CR4 register.
    function Get_CR4 return SK.Word64;
    --# global
    --#    X86_64.State;
+   pragma Inline_Always (Get_CR4);
 
    --  Return current value of CR3 register.
    function Get_CR3 return SK.Word64;
    --# global
    --#    X86_64.State;
+   pragma Inline_Always (Get_CR3);
 
    --  Set value of CR4.
    procedure Set_CR4 (Value : SK.Word64);
@@ -58,11 +64,13 @@ is
    --#    in out X86_64.State;
    --# derives
    --#    X86_64.State from *, Value;
+   pragma Inline_Always (Set_CR4);
 
    --  Return current value of given model specific register.
    function Get_MSR64 (Register : SK.Word32) return SK.Word64;
    --# global
    --#    X86_64.State;
+   pragma Inline_Always (Get_MSR64);
 
    --  Return value of given MSR as low/high doublewords.
    procedure Get_MSR
@@ -73,6 +81,7 @@ is
    --#    X86_64.State;
    --# derives
    --#    Low, High from X86_64.State, Register;
+   pragma Inline_Always (Get_MSR);
 
    --  Write specified quadword to given MSR.
    procedure Write_MSR64
@@ -82,6 +91,7 @@ is
    --#    in out X86_64.State;
    --# derives
    --#    X86_64.State from *, Register, Value;
+   pragma Inline_Always (Write_MSR64);
 
    --  Write specified low/high doublewords to given MSR.
    procedure Write_MSR
@@ -92,11 +102,13 @@ is
    --#    in out X86_64.State;
    --# derives
    --#    X86_64.State from *, Register, Low, High;
+   pragma Inline_Always (Write_MSR);
 
    --  Return current RFLAGS.
    function Get_RFLAGS return SK.Word64;
    --# global
    --#    X86_64.State;
+   pragma Inline_Always (Get_RFLAGS);
 
    --  Set CPU RSP and RBP registers to given address.
    procedure Set_Stack (Address : SK.Word64);
@@ -115,6 +127,7 @@ is
    --# derives
    --#    X86_64.State from *, Region &
    --#    Success      from X86_64.State, Region;
+   pragma Inline_Always (VMXON);
 
    --  Launch VM designated by current VMCS.
    procedure VMLAUNCH;
@@ -140,6 +153,7 @@ is
    --# derives
    --#    X86_64.State from *, Region &
    --#    Success      from X86_64.State, Region;
+   pragma Inline_Always (VMCLEAR);
 
    procedure VMPTRLD
      (Region  :     SK.Word64;
@@ -149,6 +163,7 @@ is
    --# derives
    --#    X86_64.State from *, Region &
    --#    Success      from X86_64.State, Region;
+   pragma Inline_Always (VMPTRLD);
 
    procedure VMREAD
      (Field   :     SK.Word64;
@@ -158,6 +173,7 @@ is
    --#    X86_64.State;
    --# derives
    --#    Value, Success from X86_64.State, Field;
+   pragma Inline_Always (VMREAD);
 
    procedure VMWRITE
      (Field   :     SK.Word64;
@@ -167,5 +183,6 @@ is
    --#    in out X86_64.State;
    --# derives
    --#    X86_64.State, Success from X86_64.State, Field, Value;
+   pragma Inline_Always (VMWRITE);
 
 end SK.CPU;

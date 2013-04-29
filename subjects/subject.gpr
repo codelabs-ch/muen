@@ -11,7 +11,7 @@ project Subject is
 
    package Compiler is
       for Default_Switches ("Ada") use Defaults.Ada_Compiler_Switches
-        & "-gnatwale";
+        & ("-gnatwale", "-Wstack-usage=4096", "-Werror");
    end Compiler;
 
    package Linker is

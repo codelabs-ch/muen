@@ -21,7 +21,7 @@ project Kernel is
    package Compiler is
       for Required_Switches ("Asm") use ("-x", "assembler-with-cpp");
       for Default_Switches ("Ada") use Defaults.Spark_Compiler_Switches
-        & "-gnatwale";
+        & ("-gnatwale", "-Wstack-usage=4096", "-Werror");
    end Compiler;
 
    package Linker is

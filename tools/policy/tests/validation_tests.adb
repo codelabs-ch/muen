@@ -370,8 +370,8 @@ is
    exception
       when E : Validators.Validation_Error =>
          Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                 = "Subject s1: Unresolved destination subject 'xy' in trap"
-                 & " table",
+                 = "Subject s1: Undefined destination subject 'xy' in trap "
+                 & "table entry EXCEPTION_OR_NMI",
                  Message   => "Exception message mismatch");
    end Invalid_Subj_Trap_Dst;
 
@@ -404,7 +404,8 @@ is
    exception
       when E : Validators.Validation_Error =>
          Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                 = "Subject s1: Reference to self in trap table",
+                 = "Subject s1: Reference to self in trap table entry "
+                 & "EXCEPTION_OR_NMI",
                  Message   => "Exception message mismatch");
    end Invalid_Subj_Trap_Self_Ref;
 

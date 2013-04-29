@@ -245,15 +245,16 @@ is
          begin
             if Trap.Dst_Subject = S.Name then
                raise Validation_Error with "Subject " & To_String (S.Name)
-                 & ": Reference to self in trap table";
+                 & ": Reference to self in trap table entry " & Trap.Trap'Img;
             end if;
 
             if Get_Id (Subjects => P.Subjects,
                        Name     => Trap.Dst_Subject) = -1
             then
                raise Validation_Error with "Subject " & To_String (S.Name)
-                 & ": Unresolved destination subject '"
-                 & To_String (Trap.Dst_Subject) & "' in trap table";
+                 & ": Undefined destination subject '"
+                 & To_String (Trap.Dst_Subject) & "' in trap table entry "
+                 & Trap.Trap'Img;
             end if;
          end Validate_Trap_Entry;
       begin

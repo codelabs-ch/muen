@@ -48,7 +48,7 @@ is
         (Routine => Invalid_Subj_Trap_Self_Ref'Access,
          Name    => "Invalid subject trap table self-reference");
       T.Add_Test_Routine
-        (Routine => Invalid_Subj_Trap_Invalid_Dst'Access,
+        (Routine => Invalid_Subj_Trap_Dst'Access,
          Name    => "Invalid subject trap table entry dst");
       T.Add_Test_Routine
         (Routine => Invalid_Subj_Signal_Self_Ref'Access,
@@ -343,7 +343,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Invalid_Subj_Trap_Invalid_Dst
+   procedure Invalid_Subj_Trap_Dst
    is
       T_Table : Trap_Table_Type;
       P       : Policy_Type;
@@ -373,7 +373,7 @@ is
                  = "Subject s1: Unresolved destination subject 'xy' in trap"
                  & " table",
                  Message   => "Exception message mismatch");
-   end Invalid_Subj_Trap_Invalid_Dst;
+   end Invalid_Subj_Trap_Dst;
 
    -------------------------------------------------------------------------
 

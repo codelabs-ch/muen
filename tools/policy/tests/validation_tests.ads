@@ -39,7 +39,7 @@ is
    procedure Invalid_Subj_Trap_Self_Ref;
 
    --  Verify subject trap table entry with invalid destination subject.
-   procedure Invalid_Subj_Trap_Invalid_Dst;
+   procedure Invalid_Subj_Trap_Dst;
 
    --  Verify subject with signal table entry self-reference.
    procedure Invalid_Subj_Signal_Self_Ref;

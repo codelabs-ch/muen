@@ -356,6 +356,9 @@ is
          --  Add trap table to subject.
          procedure Add_Traps (Node : DOM.Core.Node);
 
+         --  Add signal table to subject.
+         procedure Add_Signals (Node : DOM.Core.Node);
+
          --  Add binary resource to subject.
          procedure Add_Binary (Node : DOM.Core.Node);
 
@@ -399,6 +402,55 @@ is
                raise Processing_Error with "No hardware device with name '"
                  & To_String (Dev_Name) & "'";
          end Add_Device;
+
+         -------------------------------------------------------------------
+
+         procedure Add_Signals (Node : DOM.Core.Node)
+         is
+
+            --  Add signal table entry.
+            procedure Add_Table_Entry (Node : DOM.Core.Node);
+
+            ----------------------------------------------------------------
+
+            procedure Add_Table_Entry (Node : DOM.Core.Node)
+            is
+               Kind_Str : constant String := DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "type");
+               Signal   : constant String := DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "signal");
+               Dst_Vec  : constant String := DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "dst_vector");
+               Dst_Subj : constant Unbounded_String
+                 := To_Unbounded_String (DOM.Core.Elements.Get_Attribute
+                                         (Elem => Node,
+                                          Name => "dst_subject"));
+
+               Ent : Signal_Table_Entry_Type;
+            begin
+               Ent.Kind        := Signal_Kind'Value (Kind_Str);
+               Ent.Signal      := Natural'Value (Signal);
+               Ent.Dst_Subject := Dst_Subj;
+               if Dst_Vec'Length > 0 then
+                  Ent.Dst_Vector := Natural'Value (Dst_Vec);
+               end if;
+
+               Subj_Sigs.Insert (Key      => Ent.Signal,
+                                 New_Item => Ent);
+
+            exception
+               when Constraint_Error =>
+                  raise Processing_Error with "Duplicate entry for signal "
+                    & Signal;
+            end Add_Table_Entry;
+         begin
+            Util.For_Each_Node (Node     => Node,
+                                Tag_Name => "entry",
+                                Process  => Add_Table_Entry'Access);
+         end Add_Signals;
 
          -------------------------------------------------------------------
 
@@ -453,6 +505,9 @@ is
          Util.For_Each_Node (Node     => Node,
                              Tag_Name => "trap_table",
                              Process  => Add_Traps'Access);
+         Util.For_Each_Node (Node     => Node,
+                             Tag_Name => "signal_table",
+                             Process  => Add_Signals'Access);
 
          State.Stack_Address := To_Word64
            (Hex => Util.Get_Element_Attr_By_Tag_Name

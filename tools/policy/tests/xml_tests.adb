@@ -369,7 +369,7 @@ is
 
          Assert (Condition => S.Id = 0,
                  Message   => "Id mismatch");
-         Assert (Condition => S.Name = To_Unbounded_String (Source => "tau0"),
+         Assert (Condition => S.Name = "tau0",
                  Message   => "Name mismatch");
          Assert (Condition => S.Pml4_Address = 16#1f0000#,
                  Message   => "PML4 address mismatch");
@@ -423,12 +423,29 @@ is
                  = Exception_Or_NMI,
                  Message   => "Trap type mismatch");
          Assert (Condition => S.Trap_Table.First_Element.Dst_Subject
-                 = To_Unbounded_String ("subject2"),
+                 = "subject2",
                  Message   => "Trap dst subject mismatch");
          Assert (Condition => S.Trap_Table.First_Element.Dst_Vector = 256,
                  Message   => "Trap dst vector mismatch (1)");
          Assert (Condition => S.Trap_Table.Last_Element.Dst_Vector = 12,
                  Message   => "Trap dst vector mismatch (2)");
+
+         --  Subject signals
+
+         Assert (Condition => S.Signal_Table.Length = 2,
+                 Message   => "Signal count mismatch");
+         Assert (Condition => S.Signal_Table.First_Element.Kind
+                 = Asynchronous,
+                 Message   => "Signal kind mismatch");
+         Assert (Condition => S.Signal_Table.First_Element.Signal = 17,
+                 Message   => "Signal mismatch");
+         Assert (Condition => S.Signal_Table.First_Element.Dst_Subject
+                 = "subject1",
+                 Message   => "Signal dst subject mismatch");
+         Assert (Condition => S.Signal_Table.First_Element.Dst_Vector = 32,
+                 Message   => "Signal dst vector mismatch (1)");
+         Assert (Condition => S.Signal_Table.Last_Element.Dst_Vector = 256,
+                 Message   => "Signal dst vector mismatch (2)");
       end;
    end Xml_To_Policy;
 

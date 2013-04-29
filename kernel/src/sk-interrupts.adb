@@ -65,7 +65,7 @@ is
    procedure Setup_IRQ_Routing
    is
    begin
-      for I in Skp.Interrupts.IRQ_Range loop
+      for I in Skp.Interrupts.Routing_Range loop
          IO_Apic.Route_IRQ
            (IRQ            => Skp.Interrupts.IRQ_Routing (I).IRQ,
             Vector         => Skp.Interrupts.IRQ_Routing (I).Vector,

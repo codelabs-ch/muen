@@ -506,7 +506,7 @@ is
         & ASCII.LF & Indent (N => 2) & " others => Skp.Invalid_Subject";
 
       Templates.Replace (Template => Tmpl,
-                         Pattern  => "__irq_range__",
+                         Pattern  => "__routing_range__",
                          Content  => "1 .." & IRQ_Count'Img);
       Templates.Replace (Template => Tmpl,
                          Pattern  => "__irq_routing_table__",

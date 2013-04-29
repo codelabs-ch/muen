@@ -805,8 +805,36 @@ is
 
          Cur_Trap : Natural := 0;
 
+         --  Add signal entry to output buffer.
+         procedure Add_Signal (Pos : Signals_Package.Cursor);
+
          --  Add trap entry to output buffer.
          procedure Add_Trap (Pos : Traps_Package.Cursor);
+
+         -------------------------------------------------------------------
+
+         procedure Add_Signal (Pos : Signals_Package.Cursor)
+         is
+            use type Signals_Package.Cursor;
+
+            Sig : constant Signal_Table_Entry_Type
+              := Signals_Package.Element (Position => Pos);
+         begin
+            Buffer := Buffer & Indent (N => 3) & Sig.Signal'Img
+              & " => Signal_Entry_Type'("
+              & ASCII.LF
+              & Indent (N => 4) & "Kind        => " & Sig.Kind'Img & ","
+              & ASCII.LF
+              & Indent (N => 4) & "Dst_Subject =>"
+              & Get_Id (Subjects => Policy.Subjects,
+                        Name     => Sig.Dst_Subject)'Img & ","
+              & ASCII.LF
+              & Indent (N => 4) & "Dst_Vector  =>" & Sig.Dst_Vector'Img & ")";
+
+            if Pos /= Subject.Signal_Table.Last then
+               Buffer := Buffer & "," & ASCII.LF;
+            end if;
+         end Add_Signal;
 
          -------------------------------------------------------------------
 
@@ -815,7 +843,7 @@ is
             Trap : constant Trap_Table_Entry_Type := Traps_Package.Element
               (Position => Pos);
          begin
-            Buffer := Buffer & Indent & Indent & Indent & Cur_Trap'Img
+            Buffer := Buffer & Indent (N => 3) & Cur_Trap'Img
               & " => Trap_Entry_Type'(Dst_Subject =>"
               & Get_Id (Subjects => Policy.Subjects,
                         Name     => Trap.Dst_Subject)'Img
@@ -851,12 +879,28 @@ is
            & Indent & "    Trap_Table        => ";
 
          if Subject.Trap_Table.Is_Empty then
-            Buffer := Buffer & "Null_Trap_Table)";
+            Buffer := Buffer & "Null_Trap_Table,";
          else
             Buffer := Buffer & "Trap_Table_Type'(" & ASCII.LF;
             Subject.Trap_Table.Iterate (Process => Add_Trap'Access);
-            Buffer := Buffer & "," & ASCII.LF & Indent & Indent & Indent
-              & " others => Null_Trap))";
+            Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
+              & " others => Null_Trap),";
+         end if;
+
+         Buffer := Buffer & ASCII.LF
+           & Indent & "    Signal_Table      => ";
+
+         if Subject.Signal_Table.Is_Empty then
+            Buffer := Buffer & "Null_Signal_Table)";
+         else
+            Buffer := Buffer & "Signal_Table_Type'(" & ASCII.LF;
+            Subject.Signal_Table.Iterate (Process => Add_Signal'Access);
+
+            if Natural (Subject.Signal_Table.Length) /= 32 then
+               Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
+                 & " others => Null_Signal";
+            end if;
+            Buffer := Buffer & "))";
          end if;
 
          Current := Current + 1;

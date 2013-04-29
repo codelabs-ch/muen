@@ -24,14 +24,14 @@ SECTIONS
 		*(.data)
 	}
 
+	.bss 0x00111000 :
+	{
+		. += 0x4000;
+	}
+
 	.rodata :
 	{
 		*(.rodata)
-	}
-
-	.bss 0x00114000 :
-	{
-		. += 0x1000;
 	}
 
 	.interfaces 0x001ff000 :

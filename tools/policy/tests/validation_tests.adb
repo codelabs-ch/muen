@@ -57,6 +57,9 @@ is
         (Routine => Invalid_Subj_Signal_Dst'Access,
          Name    => "Invalid subject signal table entry dst");
       T.Add_Test_Routine
+        (Routine => Invalid_Subj_Signal_Dst_Vec'Access,
+         Name    => "Invalid subject signal entry dst vector");
+      T.Add_Test_Routine
         (Routine => Invalid_Device_IRQ'Access,
          Name    => "Invalid device IRQ");
       T.Add_Test_Routine
@@ -306,6 +309,51 @@ is
                  & "signal table entry 0",
                  Message   => "Exception message mismatch");
    end Invalid_Subj_Signal_Dst;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Subj_Signal_Dst_Vec
+   is
+      S_Table : Signal_Table_Type;
+      P       : Policy_Type;
+   begin
+      S_Table.Insert (Key      => 0,
+                      New_Item => (Kind        => Asynchronous,
+                                   Signal      => 0,
+                                   Dst_Subject => To_Unbounded_String ("s1"),
+                                   others      => <>));
+      P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
+                         New_Item => To_Unbounded_String ("path/to/s2"));
+
+      P.Subjects.Insert
+        (New_Item =>
+           (Id                => 1,
+            Name              => To_Unbounded_String ("s1"),
+            Pml4_Address      => 0,
+            IO_Bitmap_Address => 0,
+            Binary            => (Name   => To_Unbounded_String ("s2"),
+                                  others => 0),
+            others            => <>));
+      P.Subjects.Insert
+        (New_Item =>
+           (Id                => 12,
+            Name              => To_Unbounded_String ("s2"),
+            Pml4_Address      => 0,
+            IO_Bitmap_Address => 0,
+            Binary            => (Name   => To_Unbounded_String ("s2"),
+                                  others => 0),
+            Signal_Table      => S_Table,
+            others            => <>));
+      Validators.Validate_Subjects (P => P);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Subject s2: No destination vector given in signal table"
+                 & " entry 0",
+                 Message   => "Exception message mismatch");
+   end Invalid_Subj_Signal_Dst_Vec;
 
    -------------------------------------------------------------------------
 

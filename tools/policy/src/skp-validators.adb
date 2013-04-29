@@ -234,6 +234,12 @@ is
                  & To_String (Sig.Dst_Subject) & "' in signal table entry"
                  & Sig.Signal'Img;
             end if;
+
+            if Sig.Kind /= Handover and then Sig.Dst_Vector = 256 then
+               raise Validation_Error with "Subject " & To_String (S.Name)
+                 & ": No destination vector given in signal table entry"
+                 & Sig.Signal'Img;
+            end if;
          end Validate_Signal_Entry;
 
          -------------------------------------------------------------------

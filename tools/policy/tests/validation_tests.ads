@@ -47,6 +47,9 @@ is
    --  Verify subject signal table entry with invalid destination subject.
    procedure Invalid_Subj_Signal_Dst;
 
+   --  Verify subject signal table entry with invalid destination vector.
+   procedure Invalid_Subj_Signal_Dst_Vec;
+
    --  Verify device with non-unique IRQ.
    procedure Invalid_Device_IRQ;
 

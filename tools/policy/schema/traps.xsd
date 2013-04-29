@@ -11,7 +11,7 @@
 	<xs:complexType name="entry_type">
 		<xs:attribute name="trap"        type="trap_type"         use="required"/>
 		<xs:attribute name="dst_subject" type="subject_name_type" use="required"/>
-		<xs:attribute name="dst_vector"  type="irq_type"          use="optional"/>
+		<xs:attribute name="dst_vector"  type="vector_type"       use="optional"/>
 	</xs:complexType>
 
 	<xs:complexType name="trap_table_type">

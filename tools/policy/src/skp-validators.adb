@@ -210,6 +210,32 @@ is
          --  Validate given trap table entry.
          procedure Validate_Trap_Entry (Pos : Traps_Package.Cursor);
 
+         --  Validate given signal table entry.
+         procedure Validate_Signal_Entry (Pos : Signals_Package.Cursor);
+
+         -------------------------------------------------------------------
+
+         procedure Validate_Signal_Entry (Pos : Signals_Package.Cursor)
+         is
+            Sig : constant Signal_Table_Entry_Type
+              := Signals_Package.Element (Position => Pos);
+         begin
+            if Sig.Dst_Subject = S.Name then
+               raise Validation_Error with "Subject " & To_String (S.Name)
+                 & ": Reference to self in signal table entry"
+                 & Sig.Signal'Img;
+            end if;
+
+            if Get_Id (Subjects => P.Subjects,
+                       Name     => Sig.Dst_Subject) = -1
+            then
+               raise Validation_Error with "Subject " & To_String (S.Name)
+                 & ": Undefined destination subject '"
+                 & To_String (Sig.Dst_Subject) & "' in signal table entry"
+                 & Sig.Signal'Img;
+            end if;
+         end Validate_Signal_Entry;
+
          -------------------------------------------------------------------
 
          procedure Validate_Trap_Entry (Pos : Traps_Package.Cursor)
@@ -255,6 +281,7 @@ is
          end if;
 
          S.Trap_Table.Iterate (Process => Validate_Trap_Entry'Access);
+         S.Signal_Table.Iterate (Process => Validate_Signal_Entry'Access);
       end Validate_Subject;
    begin
       P.Subjects.Iterate (Process => Validate_Subject'Access);

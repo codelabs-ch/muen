@@ -41,6 +41,12 @@ is
    --  Verify subject trap table entry with invalid destination subject.
    procedure Invalid_Subj_Trap_Invalid_Dst;
 
+   --  Verify subject with signal table entry self-reference.
+   procedure Invalid_Subj_Signal_Self_Ref;
+
+   --  Verify subject signal table entry with invalid destination subject.
+   procedure Invalid_Subj_Signal_Dst;
+
    --  Verify device with non-unique IRQ.
    procedure Invalid_Device_IRQ;
 

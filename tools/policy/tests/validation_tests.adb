@@ -49,7 +49,13 @@ is
          Name    => "Invalid subject trap table self-reference");
       T.Add_Test_Routine
         (Routine => Invalid_Subj_Trap_Invalid_Dst'Access,
-         Name    => "Invalid subject trap table entry destination");
+         Name    => "Invalid subject trap table entry dst");
+      T.Add_Test_Routine
+        (Routine => Invalid_Subj_Signal_Self_Ref'Access,
+         Name    => "Invalid subject signal table self-reference");
+      T.Add_Test_Routine
+        (Routine => Invalid_Subj_Signal_Dst'Access,
+         Name    => "Invalid subject signal table entry dst");
       T.Add_Test_Routine
         (Routine => Invalid_Device_IRQ'Access,
          Name    => "Invalid device IRQ");
@@ -265,6 +271,75 @@ is
                  & "address must be 4k aligned",
                  Message   => "Exception message mismatch");
    end Invalid_Subj_Pml4_Addr;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Subj_Signal_Dst
+   is
+      S_Table : Signal_Table_Type;
+      P       : Policy_Type;
+   begin
+      S_Table.Insert (Key      => 0,
+                      New_Item => (Kind        => Asynchronous,
+                                   Signal      => 0,
+                                   Dst_Subject => To_Unbounded_String ("xy"),
+                                   Dst_Vector  => 12));
+      P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
+                         New_Item => To_Unbounded_String ("path/to/s2"));
+
+      P.Subjects.Insert
+        (New_Item =>
+           (Name              => To_Unbounded_String ("s1"),
+            Pml4_Address      => 0,
+            IO_Bitmap_Address => 0,
+            Binary            => (Name   => To_Unbounded_String ("s2"),
+                                  others => 0),
+            Signal_Table      => S_Table,
+            others            => <>));
+      Validators.Validate_Subjects (P => P);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Subject s1: Undefined destination subject 'xy' in "
+                 & "signal table entry 0",
+                 Message   => "Exception message mismatch");
+   end Invalid_Subj_Signal_Dst;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Subj_Signal_Self_Ref
+   is
+      S_Table : Signal_Table_Type;
+      P       : Policy_Type;
+   begin
+      S_Table.Insert (Key      => 0,
+                      New_Item => (Kind        => Asynchronous,
+                                   Signal      => 0,
+                                   Dst_Subject => To_Unbounded_String ("s1"),
+                                   Dst_Vector  => 12));
+      P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
+                         New_Item => To_Unbounded_String ("path/to/s2"));
+
+      P.Subjects.Insert
+        (New_Item =>
+           (Name              => To_Unbounded_String ("s1"),
+            Pml4_Address      => 0,
+            IO_Bitmap_Address => 0,
+            Binary            => (Name   => To_Unbounded_String ("s2"),
+                                  others => 0),
+            Signal_Table      => S_Table,
+            others            => <>));
+      Validators.Validate_Subjects (P => P);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Subject s1: Reference to self in signal table entry 0",
+                 Message   => "Exception message mismatch");
+   end Invalid_Subj_Signal_Self_Ref;
 
    -------------------------------------------------------------------------
 

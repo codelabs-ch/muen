@@ -48,7 +48,7 @@ is
       External_Interrupt);
 
    type Trap_Table_Entry_Type is record
-      Trap        : Trap_Type;
+      Kind        : Trap_Type;
       Dst_Subject : Ada.Strings.Unbounded.Unbounded_String;
       Dst_Vector  : Natural := 256;
    end record;

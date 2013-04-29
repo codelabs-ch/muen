@@ -477,13 +477,13 @@ is
 
                Ent : Trap_Table_Entry_Type;
             begin
-               Ent.Trap        := Trap_Type'Value (Trap_Str);
+               Ent.Kind        := Trap_Type'Value (Trap_Str);
                Ent.Dst_Subject := Dst_Subj;
                if Dst_Vec'Length > 0 then
                   Ent.Dst_Vector := Natural'Value (Dst_Vec);
                end if;
 
-               Subj_Traps.Insert (Key      => Ent.Trap,
+               Subj_Traps.Insert (Key      => Ent.Kind,
                                   New_Item => Ent);
 
             exception

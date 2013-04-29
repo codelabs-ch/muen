@@ -419,7 +419,7 @@ is
 
          Assert (Condition => S.Trap_Table.Length = 2,
                  Message   => "Trap count mismatch");
-         Assert (Condition => S.Trap_Table.First_Element.Trap
+         Assert (Condition => S.Trap_Table.First_Element.Kind
                  = Exception_Or_NMI,
                  Message   => "Trap type mismatch");
          Assert (Condition => S.Trap_Table.First_Element.Dst_Subject

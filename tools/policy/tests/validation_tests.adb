@@ -349,7 +349,7 @@ is
       P       : Policy_Type;
    begin
       T_Table.Insert (Key      => Exception_Or_NMI,
-                      New_Item => (Trap        => Exception_Or_NMI,
+                      New_Item => (Kind        => Exception_Or_NMI,
                                    Dst_Subject => To_Unbounded_String ("xy"),
                                    Dst_Vector  => 12));
       P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
@@ -383,7 +383,7 @@ is
       P       : Policy_Type;
    begin
       T_Table.Insert (Key      => Exception_Or_NMI,
-                      New_Item => (Trap        => Exception_Or_NMI,
+                      New_Item => (Kind        => Exception_Or_NMI,
                                    Dst_Subject => To_Unbounded_String ("s1"),
                                    Dst_Vector  => 12));
       P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),

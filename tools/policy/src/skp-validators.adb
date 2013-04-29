@@ -245,7 +245,7 @@ is
          begin
             if Trap.Dst_Subject = S.Name then
                raise Validation_Error with "Subject " & To_String (S.Name)
-                 & ": Reference to self in trap table entry " & Trap.Trap'Img;
+                 & ": Reference to self in trap table entry " & Trap.Kind'Img;
             end if;
 
             if Get_Id (Subjects => P.Subjects,
@@ -254,7 +254,7 @@ is
                raise Validation_Error with "Subject " & To_String (S.Name)
                  & ": Undefined destination subject '"
                  & To_String (Trap.Dst_Subject) & "' in trap table entry "
-                 & Trap.Trap'Img;
+                 & Trap.Kind'Img;
             end if;
          end Validate_Trap_Entry;
       begin

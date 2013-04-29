@@ -3,18 +3,14 @@ with SK;
 --# inherit SK, Skp;
 package Skp.Subjects is
 
-   No_Vector : constant := 256;
-
-   type Dst_Vector_Range is range 0 .. No_Vector;
-
    type Trap_Entry_Type is record
       Dst_Subject : Skp.Dst_Subject_Type;
-      Dst_Vector  : Dst_Vector_Range;
+      Dst_Vector  : Skp.Dst_Vector_Range;
    end record;
 
    Null_Trap : constant Trap_Entry_Type := Trap_Entry_Type'
      (Dst_Subject => Skp.Invalid_Subject,
-      Dst_Vector  => No_Vector);
+      Dst_Vector  => Skp.Invalid_Vector);
 
    type Trap_Range is range 0 .. 59;
 

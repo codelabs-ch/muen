@@ -27,6 +27,7 @@ SECTIONS
 	.bss 0x00111000 :
 	{
 		. += 0x4000;
+		*(.bss)
 	}
 
 	.rodata :

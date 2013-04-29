@@ -19,15 +19,10 @@ is
       Interrupts.Load;
       Is_Bsp := Apic.Is_BSP;
 
-      --# accept Flow, 10, "Initialize kernel console in debug mode";
-
-      if Is_Bsp then
-         pragma Debug (KC.Init);
-         pragma Debug (KC.Put_Line
-                       (Item => "Booting Separation Kernel ("
-                        & SK.Version.Version_String & ") ..."));
-         null;
-      end if;
+      pragma Debug (Is_Bsp, KC.Init);
+      pragma Debug (Is_Bsp, KC.Put_Line
+                    (Item => "Booting Separation Kernel ("
+                     & SK.Version.Version_String & ") ..."));
 
       Success := System_State.Is_Valid;
       if Success then
@@ -55,10 +50,10 @@ is
 
          VMX.Enable;
          Scheduler.Schedule;
-      else
-         pragma Debug (KC.Put_Line (Item => "System initialisation error"));
-         null;
       end if;
+
+      pragma Debug (not Success, KC.Put_Line
+                    (Item => "System initialisation error"));
       pragma Debug (KC.Put_Line (Item => "Terminating"));
    end Main;
 

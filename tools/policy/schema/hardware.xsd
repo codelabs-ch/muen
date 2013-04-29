@@ -1,6 +1,12 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 	<xs:include schemaLocation="./types.xsd"/>
 
+	<xs:simpleType name="irq_type">
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="223"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:complexType name="device_type">
 		<xs:choice>
 			<xs:sequence>
@@ -15,7 +21,7 @@
 			</xs:sequence>
 		</xs:choice>
 		<xs:attribute name="name" type="device_name_type" use="required"/>
-		<xs:attribute name="irq"  type="vector_type"      use="optional"/>
+		<xs:attribute name="irq"  type="irq_type"         use="optional"/>
 	</xs:complexType>
 
 	<xs:simpleType name="vmx_timer_rate_type">

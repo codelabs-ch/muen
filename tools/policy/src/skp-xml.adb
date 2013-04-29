@@ -348,6 +348,7 @@ is
          Subj_Mem   : Memory_Layout_Type;
          Subj_Bin   : Binary_Ref_Type;
          Subj_Traps : Trap_Table_Type;
+         Subj_Sigs  : Signal_Table_Type;
 
          --  Add device resources (memory and I/O ports) to subject.
          procedure Add_Device (Node : DOM.Core.Node);
@@ -477,7 +478,8 @@ is
                Memory_Layout     => Subj_Mem,
                Binary            => Subj_Bin,
                IO_Ports          => Ports,
-               Trap_Table        => Subj_Traps));
+               Trap_Table        => Subj_Traps,
+               Signal_Table      => Subj_Sigs));
 
       exception
          when E : others =>

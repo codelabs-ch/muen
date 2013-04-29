@@ -59,6 +59,24 @@ is
 
    subtype Trap_Table_Type is Traps_Package.Map;
 
+   type Signal_Kind is
+     (Asynchronous,
+      Synchronous,
+      Handover);
+
+   type Signal_Table_Entry_Type is record
+      Kind        : Signal_Kind;
+      Signal      : Natural;
+      Dst_Subject : Ada.Strings.Unbounded.Unbounded_String;
+      Dst_Vector  : Natural := 256;
+   end record;
+
+   package Signals_Package is new Ada.Containers.Ordered_Maps
+     (Key_Type     => Natural,
+      Element_Type => Signal_Table_Entry_Type);
+
+   subtype Signal_Table_Type is Signals_Package.Map;
+
    type Subject_Type is record
       Id                : Natural;
       Name              : Ada.Strings.Unbounded.Unbounded_String;
@@ -69,6 +87,7 @@ is
       Binary            : Binary_Ref_Type;
       IO_Ports          : IO_Ports_Type;
       Trap_Table        : Trap_Table_Type;
+      Signal_Table      : Signal_Table_Type;
    end record;
 
    function "<" (Left, Right : Subject_Type) return Boolean;

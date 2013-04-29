@@ -457,7 +457,7 @@ is
            Pos   => Constants.RFLAGS_IF_FLAG)
       then
 
-         --  Check guest interruptibility state (see Intel SDM Vol. 3c, chapter
+         --  Check guest interruptibility state (see Intel SDM Vol. 3C, chapter
          --  24.4.2).
 
          VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,

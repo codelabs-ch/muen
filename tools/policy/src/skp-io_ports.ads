@@ -3,7 +3,7 @@ with Ada.Streams;
 package Skp.IO_Ports
 is
 
-   --  I/O bitmap as specified by Intel SDM Vol. 3c, section 24.6.4. This type
+   --  I/O bitmap as specified by Intel SDM Vol. 3C, section 24.6.4. This type
    --  encompasses the whole IO port range (bitmap A & B).
    type IO_Bitmap_Type is private;
 

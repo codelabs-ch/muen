@@ -17,7 +17,6 @@ is
    use Ada.Strings.Unbounded;
 
    Policy_File : constant String := "policy.h";
-   Indent      : constant String := "   ";
 
    --  Create paging structures from given memory layout and write them to the
    --  specified file. The PML4 address parameter specifies the physical start
@@ -44,6 +43,9 @@ is
      (Subject_Id : Natural;
       Majors     : Major_Frames_Type)
       return Natural;
+
+   --  Return N number of indentation spaces.
+   function Indent (N : Positive := 1) return String;
 
    -------------------------------------------------------------------------
 
@@ -97,6 +99,20 @@ is
       Majors.Iterate (Process => Check_Major'Access);
       return CPU;
    end Get_Executing_CPU;
+
+   -------------------------------------------------------------------------
+
+   function Indent (N : Positive := 1) return String
+   is
+      Indent : constant String := "   ";
+      Result : Unbounded_String;
+   begin
+      for I in Positive range 1 .. N loop
+         Result := Result & Indent;
+      end loop;
+
+      return To_String (Result);
+   end Indent;
 
    -------------------------------------------------------------------------
 
@@ -451,19 +467,19 @@ is
 
          --  IRQ routing table.
 
-         IRQ_Buffer := IRQ_Buffer & Indent & Indent
+         IRQ_Buffer := IRQ_Buffer & Indent (N => 2)
            & Current'Img & " => IRQ_Route_Type'("
            & ASCII.LF
-           & Indent & Indent & Indent & "CPU    =>" & CPU'Img
+           & Indent (N => 3) & "CPU    =>" & CPU'Img
            & "," & ASCII.LF
-           & Indent & Indent & Indent & "IRQ    =>" & Dev.IRQ'Img
+           & Indent (N => 3) & "IRQ    =>" & Dev.IRQ'Img
            & "," & ASCII.LF
-           & Indent & Indent & Indent & "Vector =>"
+           & Indent (N => 3) & "Vector =>"
            & Positive'Image (Vector_Offset + Dev.IRQ) & ")";
 
          --  Vector -> subject routing table.
 
-         Vector_Buffer := Vector_Buffer & Indent & Indent
+         Vector_Buffer := Vector_Buffer & Indent (N => 2)
            & Positive'Image (Vector_Offset + Dev.IRQ) & " =>"
            & Dev.Owners.First_Element'Img;
 
@@ -481,7 +497,7 @@ is
 
       Policy.Hardware.Devices.Iterate (Process => Write_Device'Access);
       Vector_Buffer := Vector_Buffer & ","
-        & ASCII.LF & Indent & Indent & " others => Invalid_Subject";
+        & ASCII.LF & Indent (N => 2) & " others => Invalid_Subject";
 
       Templates.Replace (Template => Tmpl,
                          Pattern  => "__irq_range__",
@@ -621,9 +637,9 @@ is
 
             begin
                Ticks := Long_Integer (Minor.Ticks) * Timer_Factor;
-               Buffer := Buffer & Indent & Indent & Indent & Indent
-                 & Cur_Minor'Img & " => Minor_Frame_Type'(Subject_Id =>"
-                 & Minor.Subject_Id'Img & ", Ticks =>" & Ticks'Img & ")";
+               Buffer := Buffer & Indent (N => 4) & Cur_Minor'Img
+                 & " => Minor_Frame_Type'(Subject_Id =>" & Minor.Subject_Id'Img
+                 & ", Ticks =>" & Ticks'Img & ")";
 
                if Cur_Minor /= Minor_Count then
                   Buffer := Buffer & "," & ASCII.LF;
@@ -631,19 +647,18 @@ is
                Cur_Minor := Cur_Minor + 1;
             end Write_Minor_Frame;
          begin
-            Buffer := Buffer & ASCII.LF & Indent & Indent
+            Buffer := Buffer & ASCII.LF & Indent (N => 2)
               & Cur_CPU'Img & " => CPU_Type'"
-              & ASCII.LF & Indent & Indent & Indent
+              & ASCII.LF & Indent (N => 3)
               & "(Length       =>" & CPU.Length'Img & ","
-              & ASCII.LF
-              & Indent & Indent & Indent
+              & ASCII.LF & Indent (N => 3)
               & " Minor_Frames => Minor_Frame_Array'("
               & ASCII.LF;
 
             CPU.Iterate (Process => Write_Minor_Frame'Access);
 
             if Positive (CPU.Length) < Max_Minor_Count then
-               Buffer := Buffer & "," & ASCII.LF & Indent & Indent & Indent
+               Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
                  & Indent & " others => Null_Minor_Frame";
             end if;
 

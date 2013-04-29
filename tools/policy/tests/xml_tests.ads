@@ -29,6 +29,9 @@ is
    --  Try to load policy with invalid subject trap table.
    procedure Load_Invalid_Trap_Table;
 
+   --  Try to load policy with invalid subject signal table.
+   procedure Load_Invalid_Signal_Table;
+
    --  Load policy from XML file.
    procedure Load_Policy_Xml;
 

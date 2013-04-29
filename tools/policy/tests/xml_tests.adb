@@ -41,6 +41,9 @@ is
         (Routine => Load_Invalid_Trap_Table'Access,
          Name    => "Load invalid subject trap table");
       T.Add_Test_Routine
+        (Routine => Load_Invalid_Signal_Table'Access,
+         Name    => "Load invalid subject signal table");
+      T.Add_Test_Routine
         (Routine => Load_Policy_Xml'Access,
          Name    => "Load policy from XML");
       T.Add_Test_Routine
@@ -72,6 +75,28 @@ is
                  = "Subject tau0: No hardware device with name 'nonexistent'",
                  Message   => "Exception message mismatch");
    end Load_Invalid_Device;
+
+   -------------------------------------------------------------------------
+
+   procedure Load_Invalid_Signal_Table
+   is
+      D : Xml.XML_Data_Type;
+      P : Policy_Type;
+      pragma Unreferenced (P);
+   begin
+      Xml.Parse (Data   => D,
+                 File   => "data/invalid_signal_table_ref.xml",
+                 Schema => "schema/system.xsd");
+
+      P := Xml.To_Policy (Data => D);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Xml.Processing_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Subject tau0: Duplicate entry for signal 2",
+                 Message   => "Exception message mismatch");
+   end Load_Invalid_Signal_Table;
 
    -------------------------------------------------------------------------
 

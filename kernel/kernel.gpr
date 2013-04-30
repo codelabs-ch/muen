@@ -35,4 +35,8 @@ project Kernel is
       for Body_Suffix ("Asm") use ".S";
    end Naming;
 
+   package Spark is
+      for Output_Dir use "obj";
+   end Spark;
+
 end Kernel;

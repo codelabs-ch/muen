@@ -166,37 +166,55 @@ is
      (Current_Subject :        Skp.Subject_Id_Type;
       Subject_State   : in out SK.Subject_State_Type)
    --# global
-   --#    in out X86_64.State;
    --#    in out CPU_Global.Storage;
+   --#    in out Subjects.Descriptors;
    --# derives
-   --#    CPU_Global.Storage, X86_64.State from
+   --#    CPU_Global.Storage, Subjects.Descriptors from
    --#       *,
    --#       Current_Subject,
    --#       Subject_State &
-   --#    Subject_State from *, Current_Subject;
+   --#    Subject_State from *;
    is
-      New_Subject : Skp.Subject_Id_Type;
+      Signal    : Skp.Subjects.Signal_Range;
+      Sig_Entry : Skp.Subjects.Signal_Entry_Type;
+      Valid_Sig : Boolean;
    begin
-      if Subject_State.Regs.RAX <= SK.Word64 (Skp.Subject_Id_Type'Last) then
-         New_Subject := Skp.Subject_Id_Type (Subject_State.Regs.RAX);
+      Valid_Sig := Subject_State.Regs.RAX <= SK.Word64
+        (Skp.Subjects.Signal_Range'Last);
 
-         if Current_Subject = New_Subject then
-            pragma Debug (KC.Put_String
-                          (Item => "Scheduling error: subject "));
-            pragma Debug (KC.Put_Byte (Item => Byte (Current_Subject)));
-            pragma Debug (KC.Put_Line (Item => " handover to self"));
-            CPU.Panic;
-         else
-            CPU_Global.Swap_Subject
-              (Old_Id => Current_Subject,
-               New_Id => New_Subject);
-            Subject_State.RIP := Subject_State.RIP +
-              Subject_State.Instruction_Len;
+      if Valid_Sig then
+         Signal    := Skp.Subjects.Signal_Range (Subject_State.Regs.RAX);
+         Sig_Entry := Skp.Subjects.Subject_Specs
+           (Current_Subject).Signal_Table (Signal);
+
+         if Sig_Entry.Dst_Subject /= Skp.Invalid_Subject then
+            if Sig_Entry.Dst_Vector /= Skp.Invalid_Vector then
+               Subjects.Set_Pending_Event
+                 (Id     => Sig_Entry.Dst_Subject,
+                  Vector => SK.Byte (Sig_Entry.Dst_Vector));
+            end if;
+
+            if Sig_Entry.Kind = Skp.Subjects.Handover then
+               CPU_Global.Swap_Subject
+                 (Old_Id => Current_Subject,
+                  New_Id => Sig_Entry.Dst_Subject);
+            end if;
          end if;
-      else
-         pragma Debug (KC.Put_Line (Item => "Invalid hypercall parameter"));
-         CPU.Panic;
       end if;
+
+      pragma Debug (not Valid_Sig or Sig_Entry = Skp.Subjects.Null_Signal,
+                    KC.Put_String (Item => "Ignoring spurious signal "));
+      pragma Debug (not Valid_Sig or Sig_Entry = Skp.Subjects.Null_Signal,
+                    KC.Put_Byte   (Item => SK.Byte (Signal)));
+      pragma Debug (not Valid_Sig or Sig_Entry = Skp.Subjects.Null_Signal,
+                    KC.Put_String (Item => " from subject "));
+      pragma Debug (not Valid_Sig or Sig_Entry = Skp.Subjects.Null_Signal,
+                    KC.Put_Byte   (Item => SK.Byte (Current_Subject)));
+      pragma Debug (not Valid_Sig or Sig_Entry = Skp.Subjects.Null_Signal,
+                    KC.New_Line);
+
+      Subject_State.RIP := Subject_State.RIP +
+        Subject_State.Instruction_Len;
    end Handle_Hypercall;
 
    -------------------------------------------------------------------------

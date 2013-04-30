@@ -484,6 +484,8 @@ is
 
       VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
                   Value => SK.Word64 (Time_Slice));
+      VMCS_Write (Field => Constants.GUEST_RIP,
+                  Value => State.RIP);
 
       pragma Debug (CPU_Global.Set_Current_Subject (Id => Subject_Id));
 

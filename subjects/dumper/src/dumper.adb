@@ -38,11 +38,11 @@ begin
    System.Machine_Code.Asm
      (Template => "sti",
       Volatile => True);
+   System.Machine_Code.Asm
+     (Template => "hlt",
+      Volatile => True);
 
    loop
-      System.Machine_Code.Asm
-        (Template => "hlt",
-         Volatile => True);
       Id := Dump.Current_Subject;
 
       State := DKI.Get_Subject_State (Id => Id);

@@ -174,7 +174,7 @@ is
    --#       *,
    --#       Current_Subject,
    --#       Subject_State &
-   --#    Subject_State        from * &
+   --#    Subject_State        from *, Current_Subject &
    --#    Subjects.Descriptors from *, Subject_State;
    is
       New_Subject : Skp.Subject_Id_Type;
@@ -194,11 +194,11 @@ is
             CPU_Global.Swap_Subject
               (Old_Id => Current_Subject,
                New_Id => New_Subject);
+            Subject_State.RIP := Subject_State.RIP +
+              Subject_State.Instruction_Len;
          end if;
-
-         Subject_State := SK.Null_Subject_State;
       else
-         pragma Debug (KC.Put_String ("Invalid hypercall parameter"));
+         pragma Debug (KC.Put_Line (Item => "Invalid hypercall parameter"));
          CPU.Panic;
       end if;
    end Handle_Hypercall;

@@ -43,6 +43,9 @@
 				<memory_region physical_address="23f000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false"/>
 			</memory_layout>
 			<binary name="dumper" physical_address="236000"/>
+			<signal_table>
+				<entry type="handover" signal="3" dst_subject="subject_b"/>
+			</signal_table>
 		</subject>
 
 		<subject id="2" name="subject_a" pml4_address="250000" io_bitmap_address="254000">

@@ -43,9 +43,10 @@ begin
       Volatile => True);
 
    loop
-      Id := Dump.Current_Subject;
-
+      Id    := Dump.Current_Subject;
       State := DKI.Get_Subject_State (Id => Id);
+
+      Text_IO.New_Line;
       Text_IO.Put_String (Item => "Subject ");
       Text_IO.Put_Byte   (Item => SK.Byte (Id));
       Text_IO.Put_String (Item => " EXIT (");
@@ -115,7 +116,10 @@ begin
       Text_IO.Put_Word64 (Item => State.CR3);
       Text_IO.Put_String (Item => " CR4: ");
       Text_IO.Put_Word64 (Item => State.CR4);
+      Text_IO.New_Line;
 
+      DKI.Set_Subject_State (Id    => Id,
+                             State => SK.Null_Subject_State);
       SK.Hypercall.Swap_Relaunch (Subject_Id => SK.Byte (Id));
    end loop;
 end Dumper;

@@ -167,22 +167,18 @@ is
       Subject_State   : in out SK.Subject_State_Type)
    --# global
    --#    in out X86_64.State;
-   --#    in out Subjects.Descriptors;
    --#    in out CPU_Global.Storage;
    --# derives
    --#    CPU_Global.Storage, X86_64.State from
    --#       *,
    --#       Current_Subject,
    --#       Subject_State &
-   --#    Subject_State        from *, Current_Subject &
-   --#    Subjects.Descriptors from *, Subject_State;
+   --#    Subject_State from *, Current_Subject;
    is
       New_Subject : Skp.Subject_Id_Type;
    begin
       if Subject_State.Regs.RAX <= SK.Word64 (Skp.Subject_Id_Type'Last) then
          New_Subject := Skp.Subject_Id_Type (Subject_State.Regs.RAX);
-         Subjects.Set_State (Id    => New_Subject,
-                             State => SK.Null_Subject_State);
 
          if Current_Subject = New_Subject then
             pragma Debug (KC.Put_String

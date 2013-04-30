@@ -18,4 +18,14 @@ is
       return State;
    end Get_Subject_State;
 
+   -------------------------------------------------------------------------
+
+   procedure Set_Subject_State
+     (Id    : Skp.Subject_Id_Type;
+      State : SK.Subject_State_Type)
+   is
+   begin
+      Descriptors (Id) := State;
+   end Set_Subject_State;
+
 end Dumper_Kernel_Iface;

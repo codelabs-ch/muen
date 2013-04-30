@@ -69,6 +69,8 @@ is
                      Value => State.Exit_Qualification);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
                      Value => State.Interrupt_Info);
+      VMX.VMCS_Read (Field => Constants.VMX_EXIT_INSTRUCTION_LEN,
+                     Value => State.Instruction_Len);
 
       VMX.VMCS_Read (Field => Constants.GUEST_RIP,
                      Value => State.RIP);

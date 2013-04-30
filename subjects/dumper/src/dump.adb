@@ -1,14 +1,7 @@
 with System.Machine_Code;
 with System.Storage_Elements;
 
-with Skp;
-
 with SK.Descriptors;
-with SK.Console;
-with SK.Console_VGA;
-with SK.Hypercall;
-
-with Dumper_Kernel_Iface;
 
 package body Dump
 is
@@ -32,21 +25,6 @@ is
    --  Global descriptor table pointer, loaded into GDTR
    GDT_Pointer : SK.Descriptors.Pseudo_Descriptor_Type;
 
-   package DKI renames Dumper_Kernel_Iface;
-
-   subtype Width_Type  is Natural range 1 .. 80;
-   subtype Height_Type is Natural range 1 .. 25;
-
-   package VGA is new SK.Console_VGA
-     (Width_Type   => Width_Type,
-      Height_Type  => Height_Type,
-      Base_Address => System'To_Address (16#000b_8000#));
-
-   package Text_IO is new SK.Console
-     (Initialize      => VGA.Init,
-      Output_New_Line => VGA.New_Line,
-      Output_Char     => VGA.Put_Char);
-
    --  Load GDT with two entries (code & stack) and load it into GDT register.
    procedure Load_GDT;
 
@@ -62,89 +40,8 @@ is
 
    procedure Handle_Interrupt (Vector : SK.Byte)
    is
-      use SK;
-
-      Id    : constant Integer := Integer (Vector) - 32;
-      State : SK.Subject_State_Type;
    begin
-      if Id in Skp.Subject_Id_Type'Range then
-         State := DKI.Get_Subject_State (Id => Id);
-         Text_IO.Put_String (Item => "Subject ");
-         Text_IO.Put_Byte   (Item => Byte (Id));
-         Text_IO.Put_String (Item => " EXIT (");
-         Text_IO.Put_Word16 (Item => Word16 (State.Exit_Reason));
-         Text_IO.Put_String (Item => ":");
-         Text_IO.Put_Word32 (Item => Word32 (State.Exit_Qualification));
-         Text_IO.Put_String (Item => ":");
-         Text_IO.Put_Word32 (Item => Word32 (State.Interrupt_Info));
-         Text_IO.Put_Line   (Item => ")");
-
-         Text_IO.Put_String ("RIP: ");
-         Text_IO.Put_Word64 (Item => State.RIP);
-         Text_IO.Put_String (" CS : ");
-         Text_IO.Put_Word16 (Item => Word16 (State.CS));
-         Text_IO.Put_String (" RFLAGS: ");
-         Text_IO.Put_Word32 (Item => Word32 (State.RFLAGS));
-         Text_IO.New_Line;
-         Text_IO.Put_String ("RSP: ");
-         Text_IO.Put_Word64 (Item => State.RSP);
-         Text_IO.Put_String (" SS : ");
-         Text_IO.Put_Word16 (Item => Word16 (State.SS));
-         Text_IO.New_Line;
-
-         Text_IO.Put_String (Item => "RAX: ");
-         Text_IO.Put_Word64 (Item => State.Regs.RAX);
-         Text_IO.Put_String (Item => " RBX: ");
-         Text_IO.Put_Word64 (Item => State.Regs.RBX);
-         Text_IO.Put_String (Item => " RCX: ");
-         Text_IO.Put_Word64 (Item => State.Regs.RCX);
-         Text_IO.New_Line;
-
-         Text_IO.Put_String (Item => "RDX: ");
-         Text_IO.Put_Word64 (Item => State.Regs.RDX);
-         Text_IO.Put_String (Item => " RSI: ");
-         Text_IO.Put_Word64 (Item => State.Regs.RSI);
-         Text_IO.Put_String (Item => " RDI: ");
-         Text_IO.Put_Word64 (Item => State.Regs.RDI);
-         Text_IO.New_Line;
-
-         Text_IO.Put_String (Item => "RBP: ");
-         Text_IO.Put_Word64 (Item => State.Regs.RBP);
-         Text_IO.Put_String (Item => " R08: ");
-         Text_IO.Put_Word64 (Item => State.Regs.R08);
-         Text_IO.Put_String (Item => " R09: ");
-         Text_IO.Put_Word64 (Item => State.Regs.R09);
-         Text_IO.New_Line;
-
-         Text_IO.Put_String (Item => "R10: ");
-         Text_IO.Put_Word64 (Item => State.Regs.R10);
-         Text_IO.Put_String (Item => " R11: ");
-         Text_IO.Put_Word64 (Item => State.Regs.R11);
-         Text_IO.Put_String (Item => " R12: ");
-         Text_IO.Put_Word64 (Item => State.Regs.R12);
-         Text_IO.New_Line;
-
-         Text_IO.Put_String (Item => "R13: ");
-         Text_IO.Put_Word64 (Item => State.Regs.R13);
-         Text_IO.Put_String (Item => " R14: ");
-         Text_IO.Put_Word64 (Item => State.Regs.R14);
-         Text_IO.Put_String (Item => " R15: ");
-         Text_IO.Put_Word64 (Item => State.Regs.R15);
-         Text_IO.New_Line;
-
-         Text_IO.Put_String (Item => "CR0: ");
-         Text_IO.Put_Word64 (Item => State.CR0);
-         Text_IO.Put_String (Item => " CR3: ");
-         Text_IO.Put_Word64 (Item => State.CR3);
-         Text_IO.Put_String (Item => " CR4: ");
-         Text_IO.Put_Word64 (Item => State.CR4);
-
-         Hypercall.Swap_Relaunch (Subject_Id => Byte (Id));
-      else
-         Text_IO.Put_String (Item => "Dump requested for invalid subject id ");
-         Text_IO.Put_Byte  (Item => Vector);
-         Text_IO.New_Line;
-      end if;
+      Current_Subject := Integer (Vector) - 32;
    end Handle_Interrupt;
 
    -------------------------------------------------------------------------
@@ -156,8 +53,6 @@ is
                  IDT      => IDT);
       Load_IDT (IDT => IDT);
       Load_GDT;
-      Text_IO.Init;
-      Text_IO.Put_Line ("Dumper subject running");
    end Initialize;
 
    -------------------------------------------------------------------------

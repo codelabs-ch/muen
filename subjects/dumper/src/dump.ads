@@ -1,5 +1,7 @@
 with SK;
 
+with Skp;
+
 package Dump is
 
    --  Interrupt handler.
@@ -8,5 +10,8 @@ package Dump is
 
    --  Install and load the GDT as well as the IDT and enable interrupts.
    procedure Initialize;
+
+   Current_Subject : Skp.Subject_Id_Type;
+   pragma Atomic (Current_Subject);
 
 end Dump;

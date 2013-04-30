@@ -3,8 +3,7 @@
 package SK.Hypercall
 is
 
-   --  Swap caller subject id in scheduling plan with given id. Relaunch the
-   --  swapped subject by resetting its state.
-   procedure Swap_Relaunch (Subject_Id : SK.Byte);
+   --  Send signal with given number.
+   procedure Signal (Number : SK.Byte);
 
 end SK.Hypercall;

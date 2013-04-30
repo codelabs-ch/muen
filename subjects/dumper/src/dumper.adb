@@ -120,6 +120,6 @@ begin
 
       DKI.Set_Subject_State (Id    => Id,
                              State => SK.Null_Subject_State);
-      SK.Hypercall.Swap_Relaunch (Subject_Id => SK.Byte (Id));
+      SK.Hypercall.Signal (Number => SK.Byte (Id));
    end loop;
 end Dumper;

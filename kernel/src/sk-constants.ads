@@ -59,6 +59,7 @@ is
    VMX_INST_ERROR           : constant := 16#4400#;
    VMX_EXIT_REASON          : constant := 16#4402#;
    VMX_EXIT_INTR_INFO       : constant := 16#4404#;
+   VMX_EXIT_INSTRUCTION_LEN : constant := 16#440c#;
    CR0_MASK                 : constant := 16#6000#;
    CR4_MASK                 : constant := 16#6002#;
    CR0_READ_SHADOW          : constant := 16#6004#;

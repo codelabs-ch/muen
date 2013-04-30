@@ -847,7 +847,8 @@ is
             Trap : constant Trap_Table_Entry_Type := Traps_Package.Element
               (Position => Pos);
          begin
-            Buffer := Buffer & Indent (N => 3) & Cur_Trap'Img
+            Buffer := Buffer & Indent (N => 3)
+              & Trap_Type'Enum_Rep (Trap.Kind)'Img
               & " => Trap_Entry_Type'(Dst_Subject =>"
               & Get_Id (Subjects => Policy.Subjects,
                         Name     => Trap.Dst_Subject)'Img

@@ -2,6 +2,7 @@ with Skp.Kernel;
 with Skp.Subjects;
 
 with SK.CPU;
+with SK.CPU_Global;
 with SK.Interrupts;
 with SK.Descriptors;
 with SK.KC;
@@ -364,9 +365,11 @@ is
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
    --#    in     VMX_Exit_Address;
+   --#       out CPU_Global.Storage;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
+   --#    CPU_Global.Storage   from Subject_Id    &
    --#    Subjects.Descriptors from *, Subject_Id &
    --#    X86_64.State from
    --#       *,
@@ -418,6 +421,8 @@ is
       Subjects.Set_State (Id    => Subject_Id,
                           State => State);
 
+      CPU_Global.Set_Current_Subject (Id => Subject_Id);
+
       CPU.Restore_Registers
         (Regs => Subjects.Get_State (Id => Subject_Id).Regs);
       CPU.VMLAUNCH;
@@ -426,7 +431,10 @@ is
 
       CPU.Set_Stack (Address => Skp.Kernel.Stack_Address);
 
-      pragma Debug (KC.Put_Line (Item => "Error launching subject"));
+      pragma Debug (KC.Put_String (Item => "Error launching subject "));
+      pragma Debug (KC.Put_Byte
+                    (Item => SK.Byte (CPU_Global.Get_Current_Subject)));
+      pragma Debug (KC.New_Line);
       VMX_Error;
    end Launch;
 
@@ -479,6 +487,8 @@ is
       VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
                   Value => SK.Word64 (Time_Slice));
 
+      CPU_Global.Set_Current_Subject (Id => Subject_Id);
+
       CPU.Restore_Registers (Regs => State.Regs);
       CPU.VMRESUME;
 
@@ -486,7 +496,11 @@ is
 
       CPU.Set_Stack (Address => Skp.Kernel.Stack_Address);
 
-      pragma Debug (KC.Put_Line (Item => "Error resuming subject"));
+      pragma Debug (KC.Put_String (Item => "Error resuming subject "));
+      pragma Debug (KC.Put_Byte
+                    (Item => SK.Byte (CPU_Global.Get_Current_Subject)));
+      pragma Debug (KC.New_Line);
+
       VMX_Error;
    end Resume;
 

@@ -289,9 +289,16 @@ is
    --#    in     Current_Major;
    --#    in     Current_Minors;
    --#    in     Scheduling_Plan;
+   --#       out CPU_Global.Storage;
    --#    in out X86_64.State;
    --#    in out Subjects.Descriptors;
    --# derives
+   --#    CPU_Global.Storage from
+   --#       Current_Major,
+   --#       Current_Minors,
+   --#       Scheduling_Plan,
+   --#       Subjects.Descriptors,
+   --#       X86_64.State &
    --#    Subjects.Descriptors from
    --#       *,
    --#       Current_Major,
@@ -335,6 +342,7 @@ is
    --#    in     Interrupts.IDT_Pointer;
    --#    in     VMX.State;
    --#    in     New_Major;
+   --#       out CPU_Global.Storage;
    --#    in out Scheduling_Plan;
    --#    in out Current_Major;
    --#    in out Current_Minors;
@@ -342,6 +350,14 @@ is
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
+   --#    CPU_Global.Storage from
+   --#       New_Major,
+   --#       Current_Major,
+   --#       Current_Minors,
+   --#       Scheduling_Plan,
+   --#       Subject_Registers,
+   --#       Subjects.Descriptors,
+   --#       X86_64.State &
    --#    Current_Major from
    --#       *,
    --#       Current_Minors,

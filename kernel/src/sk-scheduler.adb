@@ -242,12 +242,14 @@ is
               (Id     => Skp.Interrupts.Vector_Routing (Vector),
                Vector => Vector);
          end if;
-      else
-         pragma Debug (KC.Put_String (Item => "IRQ with invalid vector "));
-         pragma Debug (KC.Put_Byte (Item => Vector));
-         pragma Debug (KC.New_Line);
-         null;
       end if;
+
+      pragma Debug (Vector < Ext_Int_Type'First,
+                    KC.Put_String (Item => "IRQ with invalid vector "));
+      pragma Debug (Vector < Ext_Int_Type'First,
+                    KC.Put_Byte (Item => Vector));
+      pragma Debug (Vector < Ext_Int_Type'First,
+                    KC.New_Line);
 
       Apic.EOI;
    end Handle_Irq;

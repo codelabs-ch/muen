@@ -293,7 +293,7 @@ is
                  Message   => "Kernel stack address mismatch");
          Assert (Condition => P.Kernel.Pml4_Address = 16#200000#,
                  Message   => "Kernel PML4 address mismatch");
-         Assert (Condition => P.Kernel.Memory_Layout.Length = 2,
+         Assert (Condition => P.Kernel.Memory_Layout.Length = 3,
                  Message   => "Kernel memory region count mismatch");
 
          --  Binaries

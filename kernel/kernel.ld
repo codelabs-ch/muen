@@ -34,6 +34,11 @@ SECTIONS
 		. += 0x4000;
 	}
 
+	.cpu_local 0x00117000 :
+	{
+		. += 0x4000;
+	}
+
 	.rodata :
 	{
 		*(.rodata)

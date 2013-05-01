@@ -577,12 +577,31 @@ is
       use type SK.Word64;
    begin
       for I in Natural range 0 .. CPU_Count - 1 loop
-         Write (Mem_Layout   => Kernel.Memory_Layout,
-                Pml4_Address => Kernel.Pml4_Address +
-                  SK.Word64 (I) * (4 * SK.Page_Size),
-                Filename     => Dir_Name & "/kernel_pt_"
-                & Ada.Strings.Fixed.Trim (Source => I'Img,
-                                          Side   => Ada.Strings.Left));
+         declare
+            Stack_Addr   : constant SK.Word64 := Kernel.Stack_Address
+                             - SK.Page_Size + SK.Word64 (I) * SK.Page_Size;
+            Mem_Layout   : Memory_Layout_Type := Kernel.Memory_Layout;
+            Stack_Region : constant Memory_Region_Type
+              := (Physical_Address => Stack_Addr,
+                  Virtual_Address  => Stack_Addr,
+                  Size             => 16#1000#,
+                  Alignment        => 16#1000#,
+                  Writable         => True,
+                  Executable       => False);
+         begin
+
+            --  Stack region takes precedence over already defined regions.
+
+            Mem_Layout.Insert (Before   => Mem_Layout.First,
+                               New_Item => Stack_Region);
+
+            Write (Mem_Layout   => Mem_Layout,
+                   Pml4_Address => Kernel.Pml4_Address +
+                     SK.Word64 (I) * (4 * SK.Page_Size),
+                   Filename     => Dir_Name & "/kernel_pt_"
+                   & Ada.Strings.Fixed.Trim (Source => I'Img,
+                                             Side   => Ada.Strings.Left));
+         end;
       end loop;
    end Write_Kernel_Pagetables;
 

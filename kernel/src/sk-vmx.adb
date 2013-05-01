@@ -274,8 +274,7 @@ is
                   Value => PD.Base);
 
       VMCS_Write (Field => Constants.HOST_RSP,
-                  Value => Skp.Kernel.Stack_Address +
-                    SK.Word64 (Apic.Get_ID) * SK.Page_Size);
+                  Value => Skp.Kernel.Stack_Address);
       VMCS_Write (Field => Constants.HOST_RIP,
                   Value => VMX_Exit_Address);
    end VMCS_Setup_Host_Fields;
@@ -425,7 +424,7 @@ is
 
       --  VM launch failed.
 
-      CPU.Set_Stack (Address => Skp.Kernel.Stack_Address + Get_CPU_Offset);
+      CPU.Set_Stack (Address => Skp.Kernel.Stack_Address);
 
       pragma Debug (KC.Put_Line (Item => "Error launching subject"));
       VMX_Error;
@@ -485,7 +484,7 @@ is
 
       --  VM resume failed.
 
-      CPU.Set_Stack (Address => Skp.Kernel.Stack_Address + Get_CPU_Offset);
+      CPU.Set_Stack (Address => Skp.Kernel.Stack_Address);
 
       pragma Debug (KC.Put_Line (Item => "Error resuming subject"));
       VMX_Error;

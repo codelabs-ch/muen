@@ -578,12 +578,15 @@ is
    begin
       for I in Natural range 0 .. CPU_Count - 1 loop
          declare
-            Stack_Addr   : constant SK.Word64 := Kernel.Stack_Address
-                             - SK.Page_Size + SK.Word64 (I) * SK.Page_Size;
-            Mem_Layout   : Memory_Layout_Type := Kernel.Memory_Layout;
-            Stack_Region : constant Memory_Region_Type
-              := (Physical_Address => Stack_Addr,
-                  Virtual_Address  => Stack_Addr,
+            Phys_Stack_Addr : constant SK.Word64
+              := Kernel.Stack_Address - SK.Page_Size
+                + SK.Word64 (I) * SK.Page_Size;
+            Virt_Stack_Addr : constant SK.Word64
+              := Kernel.Stack_Address - SK.Page_Size;
+            Mem_Layout      : Memory_Layout_Type := Kernel.Memory_Layout;
+            Stack_Region    : constant Memory_Region_Type
+              := (Physical_Address => Phys_Stack_Addr,
+                  Virtual_Address  => Virt_Stack_Addr,
                   Size             => 16#1000#,
                   Alignment        => 16#1000#,
                   Writable         => True,

@@ -589,19 +589,32 @@ is
             Virt_Stack_Addr : constant SK.Word64
               := Kernel.Stack_Address - SK.Page_Size;
             Mem_Layout      : Memory_Layout_Type := Kernel.Memory_Layout;
-            Stack_Region    : constant Memory_Region_Type
+            Stack_Page      : constant Memory_Region_Type
               := (Physical_Address => Phys_Stack_Addr,
                   Virtual_Address  => Virt_Stack_Addr,
                   Size             => 16#1000#,
                   Alignment        => 16#1000#,
                   Writable         => True,
                   Executable       => False);
+            CPU_Page        : constant Memory_Region_Type
+              := (Physical_Address => Kernel.CPU_Page_Address
+                  + SK.Word64 (I) * SK.Page_Size,
+                  Virtual_Address  => Kernel.CPU_Page_Address,
+                  Size             => 16#1000#,
+                  Alignment        => 16#1000#,
+                  Writable         => True,
+                  Executable       => False);
          begin
 
-            --  Stack region takes precedence over already defined regions.
+            --  Per-CPU stack page.
 
             Mem_Layout.Insert (Before   => Mem_Layout.First,
-                               New_Item => Stack_Region);
+                               New_Item => Stack_Page);
+
+            --  Per-CPU global storage page.
+
+            Mem_Layout.Insert (Before   => Mem_Layout.First,
+                               New_Item => CPU_Page);
 
             Write (Mem_Layout   => Mem_Layout,
                    Pml4_Address => Kernel.Pml4_Address +

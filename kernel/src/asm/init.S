@@ -78,10 +78,18 @@ ap_entry_point:
 	btsl $CR4_PAE_BIT, %eax
 	movl %eax, %cr4
 
-	// load CR3 with PML4
+	// get default APIC ID (CPUID.0BH:EDX[7:0])
 
-	movl $KERNEL_PML4, %eax
-	movl %eax, %cr3
+	mov $0xb, %eax
+	cpuid
+
+	// set up per-CPU paging
+
+	mov %dl, %al
+	mov $0x4000, %edx
+	mul %edx
+	add $KERNEL_PML4, %eax
+	mov %eax, %cr3
 
 	// enable IA-32e mode and execute-disable
 

@@ -24,6 +24,16 @@
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+		<xs:attribute name="cpu_page_address" type="address_type" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					Physical address of the page used to store per-CPU global data. On multicore
+					systems, this address is identity mapped into the kernel running on the BSP.
+					The per-CPU storage area of the kernels running on the APs will be mapped to
+					the identical virtual address while located in adjacent physical memory.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 	</xs:complexType>
 
 </xs:schema>

@@ -1,4 +1,4 @@
-<kernel stack_address="114000" pml4_address="200000">
+<kernel stack_address="114000" cpu_page_address="117000" pml4_address="200000">
 	<memory_layout>
 		<!-- kernel text, data and bss   -->
 		<memory_region physical_address="100000" size="76k" alignment="4k" writable="true" executable="true"/>

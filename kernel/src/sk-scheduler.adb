@@ -8,6 +8,7 @@ with SK.KC;
 with SK.CPU;
 with SK.Subjects;
 with SK.Apic;
+with SK.MP;
 
 package body SK.Scheduler
 --# own
@@ -147,10 +148,12 @@ is
    --#    in out Current_Major;
    --#    in out Current_Minors;
    --#    in out X86_64.State;
+   --#    in out MP.Barrier;
    --# derives
    --#    X86_64.State from * &
-   --#    Current_Minors from
-   --#       * ,
+   --#    Current_Minors, MP.Barrier from
+   --#       *,
+   --#       Current_Minors,
    --#       Current_Major,
    --#       Scheduling_Plan,
    --#       X86_64.State &
@@ -180,9 +183,11 @@ is
       else
          Current_Minors (CPU_ID) := Skp.Scheduling.Minor_Frame_Range'First;
 
+         MP.Wait_For_All;
          if Apic.Is_BSP then
             Current_Major := New_Major;
          end if;
+         MP.Wait_For_All;
       end if;
    end Update_Scheduling_Info;
 
@@ -317,6 +322,7 @@ is
    --#    in out Scheduling_Plan;
    --#    in out Current_Major;
    --#    in out Current_Minors;
+   --#    in out MP.Barrier;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
@@ -335,7 +341,7 @@ is
    --#       Subject_Registers,
    --#       Subjects.Descriptors,
    --#       X86_64.State &
-   --#    Scheduling_Plan from
+   --#    Scheduling_Plan, MP.Barrier from
    --#       *,
    --#       Scheduling_Plan,
    --#       Current_Major,

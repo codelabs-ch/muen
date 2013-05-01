@@ -13,7 +13,8 @@ use type Skp.Scheduling.Minor_Frame_Range;
 --#    SK.Interrupts,
 --#    SK.Subjects,
 --#    SK.VMX,
---#    SK.Apic;
+--#    SK.Apic,
+--#    SK.MP;
 package SK.Scheduler
 --# own
 --#       State,
@@ -50,11 +51,13 @@ private
    --#    in     Interrupts.IDT_Pointer;
    --#    in     VMX.State;
    --#    in out State;
+   --#    in out MP.Barrier;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    State from
+   --#    State, MP.Barrier from
    --#       *,
+   --#       State,
    --#       Subject_Registers,
    --#       Subjects.Descriptors,
    --#       X86_64.State &

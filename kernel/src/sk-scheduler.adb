@@ -32,12 +32,19 @@ is
    Current_Major : Skp.Scheduling.Major_Frame_Range
      := Skp.Scheduling.Major_Frame_Range'First;
 
+   type Active_Minor_Frame_Type is record
+      Id    : Skp.Scheduling.Minor_Frame_Range;
+      Ticks : SK.Word32;
+   end record;
+
    --  Current per-CPU minor frames.
    type Current_Minor_Array is array (Skp.CPU_Range)
-     of Skp.Scheduling.Minor_Frame_Range;
+     of Active_Minor_Frame_Type;
 
    Current_Minors : Current_Minor_Array := Current_Minor_Array'
-     (others => Skp.Scheduling.Minor_Frame_Range'First);
+     (others => Active_Minor_Frame_Type'
+        (Id    => Skp.Scheduling.Minor_Frame_Range'First,
+         Ticks => 0));
 
    subtype Ext_Int_Type is SK.Byte range 32 .. 255;
 
@@ -168,20 +175,27 @@ is
    begin
       Get_ID (ID => CPU_ID);
 
-      if Current_Minors (CPU_ID) < Scheduling_Plan
+      if Current_Minors (CPU_ID).Ticks = 0
+        and then Current_Minors (CPU_ID).Id < Scheduling_Plan
         (Current_Major).CPUs (CPU_ID).Length
       then
 
          --# assert
          --#    CPU_ID in Skp.CPU_Range and
-         --#    Current_Minors (CPU_ID) < Scheduling_Plan
+         --#    Current_Minors (CPU_ID).Id < Scheduling_Plan
          --#       (Current_Major).CPUs (CPU_ID).Length and
          --#    Scheduling_Plan (Current_Major).CPUs (CPU_ID).Length
          --#       <= Skp.Scheduling.Minor_Frame_Range'Last;
 
-         Current_Minors (CPU_ID) := Current_Minors (CPU_ID) + 1;
-      else
-         Current_Minors (CPU_ID) := Skp.Scheduling.Minor_Frame_Range'First;
+         Current_Minors (CPU_ID).Id    := Current_Minors (CPU_ID).Id + 1;
+         Current_Minors (CPU_ID).Ticks := Scheduling_Plan
+           (Current_Major).CPUs (CPU_ID).Minor_Frames
+           (Current_Minors (CPU_ID).Id).Ticks;
+      elsif Current_Minors (CPU_ID).Ticks = 0 then
+         Current_Minors (CPU_ID).Id := Skp.Scheduling.Minor_Frame_Range'First;
+         Current_Minors (CPU_ID).Ticks := Scheduling_Plan (Current_Major).CPUs
+           (CPU_ID).Minor_Frames
+           (Current_Minors (CPU_ID).Id).Ticks;
 
          MP.Wait_For_All;
          if Apic.Is_BSP then
@@ -295,19 +309,21 @@ is
    --#       Scheduling_Plan;
    is
       CPU_ID        : Skp.CPU_Range;
-      Current_Frame : Skp.Scheduling.Minor_Frame_Type;
+      Plan_Frame    : Skp.Scheduling.Minor_Frame_Type;
+      Current_Frame : Active_Minor_Frame_Type;
    begin
       Get_ID (ID => CPU_ID);
 
-      Current_Frame := Scheduling_Plan (Current_Major).CPUs
-        (CPU_ID).Minor_Frames (Current_Minors (CPU_ID));
+      Current_Frame := Current_Minors (CPU_ID);
+      Plan_Frame    := Scheduling_Plan (Current_Major).CPUs
+        (CPU_ID).Minor_Frames (Current_Frame.Id);
 
-      if Subjects.Get_State (Id => Current_Frame.Subject_Id).Launched then
-         VMX.Resume (Subject_Id => Current_Frame.Subject_Id,
+      if Subjects.Get_State (Id => Plan_Frame.Subject_Id).Launched then
+         VMX.Resume (Subject_Id => Plan_Frame.Subject_Id,
                      Time_Slice => Current_Frame.Ticks);
       else
-         VMX.Launch (Subject_Id => Current_Frame.Subject_Id,
-                     Time_Slice => Current_Frame.Ticks);
+         VMX.Launch (Subject_Id => Plan_Frame.Subject_Id,
+                     Time_Slice => Plan_Frame.Ticks);
       end if;
    end Schedule;
 
@@ -372,16 +388,20 @@ is
       CPU_ID          : Skp.CPU_Range;
       State           : SK.Subject_State_Type;
       Current_Subject : Skp.Subject_Id_Type;
+      Timer_Value     : SK.Word64;
    begin
       Get_ID (ID => CPU_ID);
 
       Current_Subject := Scheduling_Plan (Current_Major).CPUs
-        (CPU_ID).Minor_Frames (Current_Minors (CPU_ID)).Subject_Id;
+        (CPU_ID).Minor_Frames (Current_Minors (CPU_ID).Id).Subject_Id;
       State           := Subjects.Get_State (Id => Current_Subject);
       State.Regs      := Subject_Registers;
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => State.Exit_Reason);
+      VMX.VMCS_Read (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
+                     Value => Timer_Value);
+      Current_Minors (CPU_ID).Ticks := SK.Word32'Mod (Timer_Value);
 
       Store_Subject_Info (State => State);
 

@@ -5,7 +5,16 @@
 		<xs:sequence>
 			<xs:element name="memory_layout" type="memory_layout_type" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
-		<xs:attribute name="stack_address" type="address_type" use="required"/>
+		<xs:attribute name="stack_address" type="address_type" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					Physical address of the kernel stack. On multicore systems, this address is
+					identity mapped into the kernel running on the BSP. The stacks of the kernels
+					running on the APs will be mapped to the identical virtual address while
+					located in adjacent physical memory.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 		<xs:attribute name="pml4_address" type="address_type" use="required">
 			<xs:annotation>
 				<xs:documentation>

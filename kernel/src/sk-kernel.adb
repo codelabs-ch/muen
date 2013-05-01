@@ -42,10 +42,6 @@ is
 
          MP.Wait_For_All;
 
-         if Is_Bsp then
-            MP.Reset_Barrier;
-         end if;
-
          --  BSP & APs
 
          VMX.Enable;

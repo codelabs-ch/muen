@@ -2,49 +2,67 @@ with System.Machine_Code;
 
 with Skp;
 
+with SK.Apic;
+
 package body SK.MP
+--# own Barrier is Sense, CPU_Sense, Barrier_Count;
 is
 
-   Barrier : SK.Byte := 0;
-   pragma Atomic (Barrier);
+   type Sense_Array is array (Skp.CPU_Range) of Boolean;
+
+   Sense         : Boolean     := False;
+   CPU_Sense     : Sense_Array := Sense_Array'(others => True);
+   Barrier_Count : SK.Byte     := 0;
+   pragma Atomic (Barrier_Count);
 
    -------------------------------------------------------------------------
 
-   procedure Increment_Barrier
+   procedure Get_And_Increment_Barrier (Count : out SK.Byte)
    --# global
-   --#    in out Barrier;
+   --#    in out Barrier_Count;
    --# derives
-   --#    Barrier from *;
+   --#    Barrier_Count, Count from Barrier_Count;
    is
-      --# hide Increment_Barrier;
+      --# hide Get_And_Increment_Barrier;
    begin
+      Count := 1;
+
       System.Machine_Code.Asm
-        (Template => "lock incb %0",
-         Inputs   => (SK.Byte'Asm_Input ("m", Barrier)),
+        (Template => "lock xaddb %0, %1",
+         Inputs   => (SK.Byte'Asm_Input ("a", Count),
+                      SK.Byte'Asm_Input ("m", Barrier_Count)),
+         Outputs  => (SK.Byte'Asm_Output ("=a", Count),
+                      SK.Byte'Asm_Output ("=m", Barrier_Count)),
          Volatile => True);
-   end Increment_Barrier;
-
-   -------------------------------------------------------------------------
-
-   procedure Reset_Barrier
-   is
-   begin
-      Barrier := 0;
-   end Reset_Barrier;
+   end Get_And_Increment_Barrier;
 
    -------------------------------------------------------------------------
 
    procedure Wait_For_All
+   --# global
+   --#    in out Sense;
+   --#    in out CPU_Sense;
+   --#    in out Barrier_Count;
+   --# derives
+   --#    CPU_Sense     from *, Sense &
+   --#    Sense         from *, Barrier_Count &
+   --#    Barrier_Count from *;
    is
       --# hide Wait_For_All;
+      Count : SK.Byte;
+      Id    : constant Skp.CPU_Range := Skp.CPU_Range (Apic.Get_ID);
    begin
-      Increment_Barrier;
+      CPU_Sense (Id) := not Sense;
+      Get_And_Increment_Barrier (Count => Count);
 
-      --  Wait until all CPUs are blocked by the barrier.
-
-      while Barrier <= SK.Byte (Skp.CPU_Range'Last) loop
-         null;
-      end loop;
+      if Count = SK.Byte (Skp.CPU_Range'Last) then
+         Barrier_Count := 0;
+         Sense         := CPU_Sense (Id);
+      else
+         while Sense /= CPU_Sense (Id) loop
+            null;
+         end loop;
+      end if;
    end Wait_For_All;
 
 end SK.MP;

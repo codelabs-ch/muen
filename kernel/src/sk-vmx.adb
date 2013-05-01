@@ -38,7 +38,8 @@ is
    Exec_Proc2_Defaults : constant SK.Word32 := Constants.VM_CTRL_EXIT_WBINVD;
 
    Exit_Ctrl_Defaults  : constant SK.Word32 := Constants.VM_CTRL_IA32E_MODE
-     or Constants.VM_CTRL_EXIT_ACK_INT;
+     or Constants.VM_CTRL_EXIT_ACK_INT
+     or Constants.VM_CTRL_EXIT_SAVE_TIMER;
 
    --# accept Warning, 350, VMX_Exit_Address, "Imported from Linker";
    VMX_Exit_Address : SK.Word64;

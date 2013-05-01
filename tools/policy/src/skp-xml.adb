@@ -470,6 +470,11 @@ is
               (Node      => Root,
                Tag_Name  => "kernel",
                Attr_Name => "pml4_address"));
+         Policy.Kernel.CPU_Page_Address := To_Word64
+           (Hex => Util.Get_Element_Attr_By_Tag_Name
+              (Node      => Root,
+               Tag_Name  => "kernel",
+               Attr_Name => "cpu_page_address"));
          Policy.Kernel.Memory_Layout := Deserialize_Mem_Layout
            (Node => Kernel_Node);
       end;

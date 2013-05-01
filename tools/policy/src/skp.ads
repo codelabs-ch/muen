@@ -70,9 +70,10 @@ is
    subtype Binaries_Type is Binary_Package.Map;
 
    type Kernel_Type is record
-      Stack_Address : SK.Word64;
-      Pml4_Address  : SK.Word64;
-      Memory_Layout : Memory_Layout_Type;
+      Stack_Address    : SK.Word64;
+      Pml4_Address     : SK.Word64;
+      CPU_Page_Address : SK.Word64;
+      Memory_Layout    : Memory_Layout_Type;
    end record;
 
    package Owners_Package is new Ada.Containers.Doubly_Linked_Lists

@@ -2,6 +2,7 @@ with Ada.Text_IO;
 with Ada.Directories;
 with Ada.Strings.Unbounded;
 with Ada.Command_Line;
+with Ada.Strings.Fixed;
 
 with SK.Utils;
 
@@ -46,14 +47,29 @@ begin
    Ada.Directories.Copy_File
      (Source_Name => Ada.Command_Line.Argument (1),
       Target_Name => Knl_Elf);
-   Image.Add_Section
-     (Image    => Knl_Elf,
-      Filename => Policy_Dir & "/kernel_pt_0",
-      Name     => "kernel_pt",
-      Address  => Kernel.PML4_Address);
-   Ada.Text_IO.Put_Line
-     (SK.Utils.To_Hex (Item => SK.Word64'(Kernel.PML4_Address))
-      & " [PML4] kernel");
+
+   --  Per-CPU pagetables
+
+   for I in Skp.CPU_Range loop
+      declare
+         use type SK.Word64;
+
+         PML4_Addr : constant SK.Word64
+           := Kernel.PML4_Address + SK.Word64 (I) * (4 * SK.Page_Size);
+         CPU_Nr    : constant String
+           := Ada.Strings.Fixed.Trim (Source => I'Img,
+                                      Side   => Ada.Strings.Left);
+      begin
+         Image.Add_Section
+           (Image    => Knl_Elf,
+            Filename => Policy_Dir & "/kernel_pt_" & CPU_Nr,
+            Name     => "kernel_pt_" & CPU_Nr,
+            Address  => PML4_Addr);
+         Ada.Text_IO.Put_Line
+           (SK.Utils.To_Hex (Item => PML4_Addr)
+            & " [PML4] kernel (" & CPU_Nr & ")");
+      end;
+   end loop;
 
    --  Subjects
 

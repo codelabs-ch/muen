@@ -48,7 +48,7 @@ begin
       Target_Name => Knl_Elf);
    Image.Add_Section
      (Image    => Knl_Elf,
-      Filename => Policy_Dir & "/kernel_pt",
+      Filename => Policy_Dir & "/kernel_pt_0",
       Name     => "kernel_pt",
       Address  => Kernel.PML4_Address);
    Ada.Text_IO.Put_Line

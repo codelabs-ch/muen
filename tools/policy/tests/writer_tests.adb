@@ -116,7 +116,8 @@ is
 
    procedure Write_Kernel
    is
-      Knl_Pts  : constant String := "obj/kernel_pt";
+      Knl_Pt0  : constant String := "obj/kernel_pt_0";
+      Knl_Pt1  : constant String := "obj/kernel_pt_1";
       Knl_H    : constant String := "obj/policy.h";
       Knl_Spec : constant String := "obj/skp-kernel.ads";
       Data     : Xml.XML_Data_Type;
@@ -131,9 +132,13 @@ is
                             Policy   => Policy);
 
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => Knl_Pts,
-               Filename2 => "data/kernel_pt.ref"),
-              Message   => "Kernel pagetables mismatch");
+              (Filename1 => Knl_Pt0,
+               Filename2 => "data/kernel_pt_0.ref"),
+              Message   => "Kernel pagetables mismatch (0)");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Knl_Pt1,
+               Filename2 => "data/kernel_pt_1.ref"),
+              Message   => "Kernel pagetables mismatch (1)");
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => Knl_H,
                Filename2 => "data/policy.h.ref"),
@@ -143,7 +148,8 @@ is
                Filename2 => "data/skp-kernel.ref"),
               Message   => "Kernel spec mismatch");
 
-      Ada.Directories.Delete_File (Name => Knl_Pts);
+      Ada.Directories.Delete_File (Name => Knl_Pt0);
+      Ada.Directories.Delete_File (Name => Knl_Pt1);
       Ada.Directories.Delete_File (Name => Knl_H);
       Ada.Directories.Delete_File (Name => Knl_Spec);
    end Write_Kernel;

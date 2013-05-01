@@ -519,6 +519,8 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type)
    is
+      use type SK.Word64;
+
       Tmpl : Templates.Template_Type;
 
       --  Replace kernel stack and PML4 patterns with actual values.
@@ -555,9 +557,17 @@ is
       Templates.Write (Template => Tmpl,
                        Filename => Dir_Name & "/skp-kernel.ads");
 
-      Write (Mem_Layout   => Policy.Kernel.Memory_Layout,
-             Pml4_Address => Policy.Kernel.Pml4_Address,
-             Filename     => Dir_Name & "/kernel_pt");
+      --  Write per-CPU pagetable structure.
+
+      for I in Natural range 0 .. Policy.Hardware.Processor.Logical_CPUs - 1
+      loop
+         Write (Mem_Layout   => Policy.Kernel.Memory_Layout,
+                Pml4_Address => Policy.Kernel.Pml4_Address +
+                  SK.Word64 (I) * (4 * SK.Page_Size),
+                Filename     => Dir_Name & "/kernel_pt_"
+                & Ada.Strings.Fixed.Trim (Source => I'Img,
+                                          Side   => Ada.Strings.Left));
+      end loop;
    end Write_Kernel;
 
    -------------------------------------------------------------------------

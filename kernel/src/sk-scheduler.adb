@@ -229,19 +229,22 @@ is
    --#    X86_64.State         from *;
    is
    begin
-      if Vector >= Ext_Int_Type'First then
-         if Skp.Interrupts.Vector_Routing
-           (Vector) not in Skp.Subject_Id_Type
-         then
-            pragma Debug (KC.Put_String (Item => "Spurious IRQ vector "));
-            pragma Debug (KC.Put_Byte (Item => Vector));
-            pragma Debug (KC.New_Line);
-            null;
-         else
+      if Vector in Ext_Int_Type then
+         if Skp.Interrupts.Vector_Routing (Vector) in Skp.Subject_Id_Type then
             Subjects.Set_Pending_Event
               (Id     => Skp.Interrupts.Vector_Routing (Vector),
                Vector => Vector);
          end if;
+
+         pragma Debug
+           (Skp.Interrupts.Vector_Routing (Vector) not in Skp.Subject_Id_Type,
+            KC.Put_String (Item => "Spurious IRQ vector "));
+         pragma Debug
+           (Skp.Interrupts.Vector_Routing (Vector) not in Skp.Subject_Id_Type,
+            KC.Put_Byte (Item => Vector));
+         pragma Debug
+           (Skp.Interrupts.Vector_Routing (Vector) not in Skp.Subject_Id_Type,
+            KC.New_Line);
       end if;
 
       pragma Debug (Vector < Ext_Int_Type'First,

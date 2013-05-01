@@ -67,11 +67,11 @@ package Skp.Subjects is
           others => Null_Trap),
        Signal_Table      => Signal_Table_Type'(
           17 => Signal_Entry_Type'(
-            Kind        => ASYNCHRONOUS,
+            Kind        => Asynchronous,
             Dst_Subject => 1,
             Dst_Vector  => 32),
           18 => Signal_Entry_Type'(
-            Kind        => HANDOVER,
+            Kind        => Handover,
             Dst_Subject => 2,
             Dst_Vector  => 256),
           others => Null_Signal)),

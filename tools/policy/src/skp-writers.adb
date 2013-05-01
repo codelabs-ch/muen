@@ -819,11 +819,15 @@ is
 
             Sig : constant Signal_Table_Entry_Type
               := Signals_Package.Element (Position => Pos);
+            Kind_Str : String := Ada.Characters.Handling.To_Lower
+              (Item => Sig.Kind'Img);
          begin
+            Kind_Str (Kind_Str'First) := Ada.Characters.Handling.To_Upper
+              (Item => Kind_Str (Kind_Str'First));
             Buffer := Buffer & Indent (N => 3) & Sig.Signal'Img
               & " => Signal_Entry_Type'("
               & ASCII.LF
-              & Indent (N => 4) & "Kind        => " & Sig.Kind'Img & ","
+              & Indent (N => 4) & "Kind        => " & Kind_Str & ","
               & ASCII.LF
               & Indent (N => 4) & "Dst_Subject =>"
               & Get_Id (Subjects => Policy.Subjects,

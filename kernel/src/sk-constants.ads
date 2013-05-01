@@ -133,6 +133,7 @@ is
    VM_CTRL_EXIT_CR3_STORE   : constant := 16#0001_0000#;
    VM_CTRL_EXIT_CR8_LOAD    : constant := 16#0008_0000#;
    VM_CTRL_EXIT_CR8_STORE   : constant := 16#0010_0000#;
+   VM_CTRL_EXIT_SAVE_TIMER  : constant := 16#0040_0000#;
    VM_CTRL_EXIT_MOV_DR      : constant := 16#0080_0000#;
    VM_CTRL_IO_BITMAPS       : constant := 16#0200_0000#;
    VM_CTRL_EXIT_MONITOR     : constant := 16#2000_0000#;

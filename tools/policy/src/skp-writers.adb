@@ -31,6 +31,12 @@ is
      (Ports    : IO_Ports_Type;
       Filename : String);
 
+   --  Write per-CPU kernel pagetables to specified directory.
+   procedure Write_Kernel_Pagetables
+     (Dir_Name  : String;
+      CPU_Count : Positive;
+      Kernel    : Kernel_Type);
+
    --  Open file given by filename. Raises IO_Error if the file could not be
    --  opened.
    procedure Open
@@ -519,8 +525,6 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type)
    is
-      use type SK.Word64;
-
       Tmpl : Templates.Template_Type;
 
       --  Replace kernel stack and PML4 patterns with actual values.
@@ -557,18 +561,30 @@ is
       Templates.Write (Template => Tmpl,
                        Filename => Dir_Name & "/skp-kernel.ads");
 
-      --  Write per-CPU pagetable structure.
+      Write_Kernel_Pagetables
+        (Dir_Name  => Dir_Name,
+         CPU_Count => Policy.Hardware.Processor.Logical_CPUs,
+         Kernel    => Policy.Kernel);
+   end Write_Kernel;
 
-      for I in Natural range 0 .. Policy.Hardware.Processor.Logical_CPUs - 1
-      loop
-         Write (Mem_Layout   => Policy.Kernel.Memory_Layout,
-                Pml4_Address => Policy.Kernel.Pml4_Address +
+   -------------------------------------------------------------------------
+
+   procedure Write_Kernel_Pagetables
+     (Dir_Name  : String;
+      CPU_Count : Positive;
+      Kernel    : Kernel_Type)
+   is
+      use type SK.Word64;
+   begin
+      for I in Natural range 0 .. CPU_Count - 1 loop
+         Write (Mem_Layout   => Kernel.Memory_Layout,
+                Pml4_Address => Kernel.Pml4_Address +
                   SK.Word64 (I) * (4 * SK.Page_Size),
                 Filename     => Dir_Name & "/kernel_pt_"
                 & Ada.Strings.Fixed.Trim (Source => I'Img,
                                           Side   => Ada.Strings.Left));
       end loop;
-   end Write_Kernel;
+   end Write_Kernel_Pagetables;
 
    -------------------------------------------------------------------------
 

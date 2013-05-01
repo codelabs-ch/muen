@@ -20,8 +20,7 @@ package Skp.Subjects is
      (others => Null_Trap);
 
    type Signal_Kind is
-     (Invalid,
-      Asynchronous,
+     (Asynchronous,
       Synchronous,
       Handover);
 
@@ -32,7 +31,7 @@ package Skp.Subjects is
    end record;
 
    Null_Signal : constant Signal_Entry_Type := Signal_Entry_Type'
-     (Kind        => Invalid,
+     (Kind        => Asynchronous,
       Dst_Subject => Skp.Invalid_Subject,
       Dst_Vector  => Skp.Invalid_Vector);
 

@@ -43,7 +43,7 @@ is
       Physical_Address : SK.Word64;
    end record;
 
-   type Trap_Type is
+   type Trap_Kind is
      (Exception_Or_NMI,
       External_Interrupt,
       Triple_Fault,
@@ -102,7 +102,7 @@ is
       INVPCID,
       VMFUNC);
 
-   for Trap_Type use
+   for Trap_Kind use
      (Exception_Or_NMI                  => 0,
       External_Interrupt                => 1,
       Triple_Fault                      => 2,
@@ -162,13 +162,13 @@ is
       VMFUNC                            => 59);
 
    type Trap_Table_Entry_Type is record
-      Kind        : Trap_Type;
+      Kind        : Trap_Kind;
       Dst_Subject : Ada.Strings.Unbounded.Unbounded_String;
       Dst_Vector  : Natural := 256;
    end record;
 
    package Traps_Package is new Ada.Containers.Ordered_Maps
-     (Key_Type     => Trap_Type,
+     (Key_Type     => Trap_Kind,
       Element_Type => Trap_Table_Entry_Type);
 
    subtype Trap_Table_Type is Traps_Package.Map;

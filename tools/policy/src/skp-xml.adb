@@ -417,7 +417,7 @@ is
             is
                Kind_Str : constant String := DOM.Core.Elements.Get_Attribute
                  (Elem => Node,
-                  Name => "type");
+                  Name => "kind");
                Signal   : constant String := DOM.Core.Elements.Get_Attribute
                  (Elem => Node,
                   Name => "signal");
@@ -464,9 +464,9 @@ is
 
             procedure Add_Table_Entry (Node : DOM.Core.Node)
             is
-               Trap_Str : constant String := DOM.Core.Elements.Get_Attribute
+               Kind_Str : constant String := DOM.Core.Elements.Get_Attribute
                  (Elem => Node,
-                  Name => "trap");
+                  Name => "kind");
                Dst_Vec  : constant String := DOM.Core.Elements.Get_Attribute
                  (Elem => Node,
                   Name => "dst_vector");
@@ -477,7 +477,7 @@ is
 
                Ent : Trap_Table_Entry_Type;
             begin
-               Ent.Kind        := Trap_Type'Value (Trap_Str);
+               Ent.Kind        := Trap_Kind'Value (Kind_Str);
                Ent.Dst_Subject := Dst_Subj;
                if Dst_Vec'Length > 0 then
                   Ent.Dst_Vector := Natural'Value (Dst_Vec);
@@ -489,7 +489,7 @@ is
             exception
                when Constraint_Error =>
                   raise Processing_Error with "Duplicate trap entry for '"
-                    & Trap_Str & "'";
+                    & Kind_Str & "'";
             end Add_Table_Entry;
          begin
             Util.For_Each_Node (Node     => Node,

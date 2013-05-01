@@ -19,8 +19,8 @@
 			</memory_layout>
 			<binary name="tau0" physical_address="216000"/>
 			<trap_table>
-				<entry trap="exception_or_nmi" dst_subject="foo"/>
-				<entry trap="exception_or_nmi" dst_subject="foo"/>
+				<entry kind="exception_or_nmi" dst_subject="foo"/>
+				<entry kind="exception_or_nmi" dst_subject="foo"/>
 			</trap_table>
 		</subject>
 	</subjects>

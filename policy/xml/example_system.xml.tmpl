@@ -44,7 +44,7 @@
 			</memory_layout>
 			<binary name="dumper" physical_address="236000"/>
 			<signal_table>
-				<entry type="handover" signal="3" dst_subject="subject_b"/>
+				<entry kind="handover" signal="3" dst_subject="subject_b"/>
 			</signal_table>
 		</subject>
 
@@ -67,7 +67,7 @@
 			</memory_layout>
 			<binary name="subject_b" physical_address="276000"/>
 			<trap_table>
-				<entry trap="exception_or_nmi" dst_subject="dumper" dst_vector="35"/>
+				<entry kind="exception_or_nmi" dst_subject="dumper" dst_vector="35"/>
 			</trap_table>
 		</subject>
 

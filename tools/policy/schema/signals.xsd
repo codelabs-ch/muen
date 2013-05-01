@@ -39,7 +39,7 @@
 	</xs:simpleType>
 
 	<xs:complexType name="signal_entry_type">
-		<xs:attribute name="type"        type="signal_kind_type"   use="required"/>
+		<xs:attribute name="kind"        type="signal_kind_type"   use="required"/>
 		<xs:attribute name="signal"      type="signal_number_type" use="required"/>
 		<xs:attribute name="dst_subject" type="subject_name_type"  use="required"/>
 		<xs:attribute name="dst_vector"  type="dst_vector_type"    use="optional"/>

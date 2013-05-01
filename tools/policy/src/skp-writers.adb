@@ -261,9 +261,9 @@ is
                   Global        => False,
                   PAT           => True,
                   Exec_Disable  => not R.Executable);
-
-               Physical_Addr := Physical_Addr + SK.Page_Size;
             end if;
+
+            Physical_Addr := Physical_Addr + SK.Page_Size;
          end loop;
       end Add_Memory_Region;
    begin

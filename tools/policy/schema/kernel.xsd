@@ -6,7 +6,15 @@
 			<xs:element name="memory_layout" type="memory_layout_type" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute name="stack_address" type="address_type" use="required"/>
-		<xs:attribute name="pml4_address"  type="address_type" use="required"/>
+		<xs:attribute name="pml4_address" type="address_type" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					Physical address of the kernel pagetable structure. On multicore systems,
+					this address points to the pagetable of the first core. The pagetable
+					structures of the other cores will be placed successively.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 	</xs:complexType>
 
 </xs:schema>

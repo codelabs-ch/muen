@@ -36,4 +36,18 @@ is
    --# return
    --#    Storage.Current_Subject;
 
+   procedure Set_Current_Minor (Frame : Active_Minor_Frame_Type);
+   --# global
+   --#    in out Storage;
+   --# derives
+   --#    Storage from *, Frame;
+   --# post
+   --#    Storage.Current_Minor_Frame = Frame;
+
+   function Get_Current_Minor_Frame return Active_Minor_Frame_Type;
+   --# global
+   --#    Storage;
+   --# return
+   --#    Storage.Current_Minor_Frame;
+
 end SK.CPU_Global;

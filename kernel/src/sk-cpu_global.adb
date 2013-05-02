@@ -16,11 +16,11 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Current_Subject (Id : Skp.Subject_Id_Type)
+   function Get_Current_Minor_Frame return Active_Minor_Frame_Type
    is
    begin
-      Storage.Current_Subject := Id;
-   end Set_Current_Subject;
+      return Storage.Current_Minor_Frame;
+   end Get_Current_Minor_Frame;
 
    -------------------------------------------------------------------------
 
@@ -29,5 +29,21 @@ is
    begin
       return Storage.Current_Subject;
    end Get_Current_Subject;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Current_Minor (Frame : Active_Minor_Frame_Type)
+   is
+   begin
+      Storage.Current_Minor_Frame := Frame;
+   end Set_Current_Minor;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Current_Subject (Id : Skp.Subject_Id_Type)
+   is
+   begin
+      Storage.Current_Subject := Id;
+   end Set_Current_Subject;
 
 end SK.CPU_Global;

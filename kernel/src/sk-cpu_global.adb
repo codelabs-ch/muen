@@ -32,6 +32,30 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Major_Length
+     (Major_Id : Skp.Scheduling.Major_Frame_Range;
+      CPU_ID   : Skp.CPU_Range)
+      return Skp.Scheduling.Minor_Frame_Range
+   is
+   begin
+      return Storage.Scheduling_Plan (Major_Id).CPUs (CPU_ID).Length;
+   end Get_Major_Length;
+
+   -------------------------------------------------------------------------
+
+   function Get_Minor_Frame
+     (Major_Id : Skp.Scheduling.Major_Frame_Range;
+      Minor_Id : Skp.Scheduling.Minor_Frame_Range;
+      CPU_ID   : Skp.CPU_Range)
+      return Skp.Scheduling.Minor_Frame_Type
+   is
+   begin
+      return Storage.Scheduling_Plan (Major_Id).CPUs
+        (CPU_ID).Minor_Frames (Minor_Id);
+   end Get_Minor_Frame;
+
+   -------------------------------------------------------------------------
+
    procedure Init
    is
    begin
@@ -66,5 +90,25 @@ is
    begin
       Storage.Scheduling_Plan := Data;
    end Set_Scheduling_Plan;
+
+   -------------------------------------------------------------------------
+
+   procedure Swap_Subject
+     (Old_Id : Skp.Subject_Id_Type;
+      New_Id : Skp.Subject_Id_Type;
+      CPU_ID : Skp.CPU_Range)
+   is
+   begin
+      for I in Skp.Scheduling.Major_Frame_Range loop
+         for J in Skp.Scheduling.Minor_Frame_Range loop
+            if Storage.Scheduling_Plan (I).CPUs (CPU_ID).Minor_Frames
+              (J).Subject_Id = Old_Id
+            then
+               Storage.Scheduling_Plan (I).CPUs (CPU_ID).Minor_Frames
+                 (J).Subject_Id := New_Id;
+            end if;
+         end loop;
+      end loop;
+   end Swap_Subject;
 
 end SK.CPU_Global;

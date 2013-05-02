@@ -99,20 +99,13 @@ is
       New_Id : Skp.Subject_Id_Type;
       CPU_ID : Skp.CPU_Range)
    --# global
-   --#    in out X86_64.State;
    --#    in out Scheduling_Plan;
    --# derives
-   --#    X86_64.State    from *, Old_Id, New_Id &
    --#    Scheduling_Plan from *, CPU_ID, Old_Id, New_Id;
+   --# pre
+   --#    Old_Id /= New_Id;
    is
    begin
-      if Old_Id = New_Id then
-         pragma Debug (KC.Put_String (Item => "Scheduling error: subject "));
-         pragma Debug (KC.Put_Byte   (Item => Byte (Old_Id)));
-         pragma Debug (KC.Put_Line   (Item => " swap to self"));
-         CPU.Panic;
-      end if;
-
       for I in Skp.Scheduling.Major_Frame_Range loop
          for J in Skp.Scheduling.Minor_Frame_Range loop
             if Scheduling_Plan (I).CPUs (CPU_ID).Minor_Frames
@@ -267,10 +260,19 @@ is
          Subjects.Set_State (Id    => New_Subject,
                              State => SK.Null_Subject_State);
 
-         Swap_Subject
-           (Old_Id => Current_Subject,
-            New_Id => New_Subject,
-            CPU_ID => CPU_ID);
+         if Current_Subject = New_Subject then
+            pragma Debug (KC.Put_String
+                          (Item => "Scheduling error: subject "));
+            pragma Debug (KC.Put_Byte (Item => Byte (Current_Subject)));
+            pragma Debug (KC.Put_Line (Item => " handover to self"));
+            CPU.Panic;
+         else
+            Swap_Subject
+              (Old_Id => Current_Subject,
+               New_Id => New_Subject,
+               CPU_ID => CPU_ID);
+         end if;
+
          Subject_State := SK.Null_Subject_State;
       else
          pragma Debug (KC.Put_String ("Invalid hypercall parameter"));
@@ -474,11 +476,20 @@ is
                            Subject_State   => State);
       elsif State.Exit_Reason /= Constants.VM_EXIT_TIMER_EXPIRY then
 
-         --  Abnormal subject exit, schedule dumper.
+         if Dumper_Id /= Current_Subject then
 
-         Swap_Subject (Old_Id => Current_Subject,
-                       New_Id => Dumper_Id,
-                       CPU_ID => CPU_ID);
+            --  Abnormal subject exit, schedule dumper.
+
+            Swap_Subject (Old_Id => Current_Subject,
+                          New_Id => Dumper_Id,
+                          CPU_ID => CPU_ID);
+         else
+            pragma Debug (KC.Put_String
+                          (Item => "Scheduling error: subject "));
+            pragma Debug (KC.Put_Byte (Item => Byte (Current_Subject)));
+            pragma Debug (KC.Put_Line (Item => " swap to self"));
+            CPU.Panic;
+         end if;
       end if;
 
       Subjects.Set_State (Id    => Current_Subject,

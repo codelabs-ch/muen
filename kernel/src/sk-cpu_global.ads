@@ -55,4 +55,12 @@ is
    --# return
    --#    Storage.Current_Minor_Frame;
 
+   procedure Set_Scheduling_Plan (Data : Skp.Scheduling.Scheduling_Plan_Type);
+   --# global
+   --#    in out Storage;
+   --# derives
+   --#    Storage from *, Data;
+   --# post
+   --#    Storage.Scheduling_Plan = Data;
+
 end SK.CPU_Global;

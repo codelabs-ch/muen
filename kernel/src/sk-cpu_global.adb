@@ -59,4 +59,12 @@ is
       Storage.Current_Subject := Id;
    end Set_Current_Subject;
 
+   -------------------------------------------------------------------------
+
+   procedure Set_Scheduling_Plan (Data : Skp.Scheduling.Scheduling_Plan_Type)
+   is
+   begin
+      Storage.Scheduling_Plan := Data;
+   end Set_Scheduling_Plan;
+
 end SK.CPU_Global;

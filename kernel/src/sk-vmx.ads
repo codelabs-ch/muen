@@ -37,12 +37,11 @@ is
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
    --#    in     State;
-   --#       out CPU_Global.Storage;
+   --#    in out CPU_Global.Storage;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    CPU_Global.Storage   from Subject_Id    &
-   --#    Subjects.Descriptors from *, Subject_Id &
+   --#    Subjects.Descriptors, CPU_Global.Storage from *, Subject_Id &
    --#    X86_64.State from
    --#       *,
    --#       Interrupts.IDT_Pointer,
@@ -57,11 +56,11 @@ is
      (Subject_Id : Skp.Subject_Id_Type;
       Time_Slice : Time_Type);
    --# global
-   --#       out CPU_Global.Storage;
+   --#    in out CPU_Global.Storage;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    CPU_Global.Storage   from Subject_Id                  &
+   --#    CPU_Global.Storage   from *, Subject_Id               &
    --#    Subjects.Descriptors from *, Subject_Id, X86_64.State &
    --#    X86_64.State from *, Subject_Id, Subjects.Descriptors, Time_Slice;
 

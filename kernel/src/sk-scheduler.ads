@@ -31,12 +31,16 @@ is
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
    --#    in     State;
-   --#       out CPU_Global.Storage;
+   --#    in out CPU_Global.Storage;
    --#    in out X86_64.State;
    --#    in out Subjects.Descriptors;
    --# derives
-   --#    CPU_Global.Storage   from State, Subjects.Descriptors, X86_64.State &
-   --#    Subjects.Descriptors from *, State, X86_64.State                    &
+   --#    Subjects.Descriptors from *, State, X86_64.State &
+   --#    CPU_Global.Storage   from
+   --#       *,
+   --#       State,
+   --#       Subjects.Descriptors,
+   --#       X86_64.State &
    --#    X86_64.State         from
    --#       *,
    --#       VMX.State,
@@ -53,18 +57,13 @@ private
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
    --#    in     VMX.State;
-   --#       out CPU_Global.Storage;
+   --#    in out CPU_Global.Storage;
    --#    in out State;
    --#    in out MP.Barrier;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    CPU_Global.Storage from
-   --#       State,
-   --#       Subject_Registers,
-   --#       Subjects.Descriptors,
-   --#       X86_64.State &
-   --#    State, MP.Barrier from
+   --#    State, MP.Barrier, CPU_Global.Storage from
    --#       *,
    --#       State,
    --#       Subject_Registers,

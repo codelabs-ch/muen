@@ -365,12 +365,11 @@ is
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
    --#    in     VMX_Exit_Address;
-   --#       out CPU_Global.Storage;
+   --#    in out CPU_Global.Storage;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    CPU_Global.Storage   from Subject_Id    &
-   --#    Subjects.Descriptors from *, Subject_Id &
+   --#    Subjects.Descriptors, CPU_Global.Storage from *, Subject_Id &
    --#    X86_64.State from
    --#       *,
    --#       GDT.GDT_Pointer,

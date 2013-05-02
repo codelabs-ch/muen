@@ -6,8 +6,6 @@ with Skp.Scheduling;
 package SK.CPU_Global
 --# own
 --#    Storage : Storage_Type;
---# initializes
---#    Storage;
 is
 
    --  Currently active minor frame.
@@ -21,6 +19,12 @@ is
       Current_Subject     : Skp.Subject_Id_Type;
       Current_Minor_Frame : Active_Minor_Frame_Type;
    end record;
+
+   procedure Init;
+   --# global
+   --#    out Storage;
+   --# derives
+   --#    Storage from ;
 
    procedure Set_Current_Subject (Id : Skp.Subject_Id_Type);
    --# global

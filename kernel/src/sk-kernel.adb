@@ -6,6 +6,7 @@ with SK.VMX;
 with SK.Scheduler;
 with SK.Apic;
 with SK.MP;
+with SK.CPU_Global;
 
 package body SK.Kernel
 is
@@ -28,6 +29,7 @@ is
       if Success then
 
          Apic.Enable;
+         CPU_Global.Init;
 
          if Is_Bsp then
 

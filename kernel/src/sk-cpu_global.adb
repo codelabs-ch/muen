@@ -6,11 +6,7 @@ package body SK.CPU_Global
 is
 
    --# accept Warning, 396, Storage, "Not an external (stream) variable";
-   Storage : Storage_Type := Storage_Type'
-     (Current_Subject     => Skp.Subject_Id_Type'First,
-      Current_Minor_Frame => Active_Minor_Frame_Type'
-        (Id    => Skp.Scheduling.Minor_Frame_Range'First,
-         Ticks => 0));
+   Storage : Storage_Type;
    for Storage'Address use System'To_Address (Skp.Kernel.CPU_Store_Address);
    --# end accept;
 
@@ -29,6 +25,18 @@ is
    begin
       return Storage.Current_Subject;
    end Get_Current_Subject;
+
+   -------------------------------------------------------------------------
+
+   procedure Init
+   is
+   begin
+      Storage := Storage_Type'
+        (Current_Subject     => Skp.Subject_Id_Type'First,
+         Current_Minor_Frame => Active_Minor_Frame_Type'
+           (Id    => Skp.Scheduling.Minor_Frame_Range'First,
+            Ticks => 0));
+   end Init;
 
    -------------------------------------------------------------------------
 

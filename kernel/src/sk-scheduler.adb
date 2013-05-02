@@ -13,14 +13,11 @@ with SK.MP;
 
 package body SK.Scheduler
 --# own
---#    State is in New_Major, Current_Major, Scheduling_Plan;
+--#    State is in New_Major, Current_Major;
 is
 
    --  Dumper subject id.
    Dumper_Id : constant := 1;
-
-   --  Configured scheduling plan.
-   Scheduling_Plan : Skp.Scheduling.Scheduling_Plan_Type;
 
    Tau0_Kernel_Iface_Address : SK.Word64;
    pragma Import (C, Tau0_Kernel_Iface_Address, "tau0kernel_iface_ptr");
@@ -59,64 +56,6 @@ is
          ID := Skp.CPU_Range (Apic_ID);
       end if;
    end Get_ID;
-
-   -------------------------------------------------------------------------
-
-   --  Return number of minor frames in given major frame.
-   function Get_Major_Length
-     (Major_Id : Skp.Scheduling.Major_Frame_Range;
-      CPU_ID   : Skp.CPU_Range)
-      return Skp.Scheduling.Minor_Frame_Range
-   --# global
-   --#    Scheduling_Plan;
-   is
-   begin
-      return Scheduling_Plan (Major_Id).CPUs (CPU_ID).Length;
-   end Get_Major_Length;
-
-   -------------------------------------------------------------------------
-
-   --  Return minor frame indexed by major and minor id.
-   function Get_Minor_Frame
-     (Major_Id : Skp.Scheduling.Major_Frame_Range;
-      Minor_Id : Skp.Scheduling.Minor_Frame_Range;
-      CPU_ID   : Skp.CPU_Range)
-      return Skp.Scheduling.Minor_Frame_Type
-   --# global
-   --#    Scheduling_Plan;
-   is
-   begin
-      return Scheduling_Plan (Major_Id).CPUs
-        (CPU_ID).Minor_Frames (Minor_Id);
-   end Get_Minor_Frame;
-
-   -------------------------------------------------------------------------
-
-   --  Remove subject specified by Old_Id from the scheduling plan and replace
-   --  it with the subject given by New_Id.
-   procedure Swap_Subject
-     (Old_Id : Skp.Subject_Id_Type;
-      New_Id : Skp.Subject_Id_Type;
-      CPU_ID : Skp.CPU_Range)
-   --# global
-   --#    in out Scheduling_Plan;
-   --# derives
-   --#    Scheduling_Plan from *, CPU_ID, Old_Id, New_Id;
-   --# pre
-   --#    Old_Id /= New_Id;
-   is
-   begin
-      for I in Skp.Scheduling.Major_Frame_Range loop
-         for J in Skp.Scheduling.Minor_Frame_Range loop
-            if Scheduling_Plan (I).CPUs (CPU_ID).Minor_Frames
-              (J).Subject_Id = Old_Id
-            then
-               Scheduling_Plan (I).CPUs (CPU_ID).Minor_Frames
-                 (J).Subject_Id := New_Id;
-            end if;
-         end loop;
-      end loop;
-   end Swap_Subject;
 
    -------------------------------------------------------------------------
 
@@ -161,7 +100,6 @@ is
    procedure Update_Scheduling_Info
    --# global
    --#    in     New_Major;
-   --#    in     Scheduling_Plan;
    --#    in out Current_Major;
    --#    in out CPU_Global.Storage;
    --#    in out X86_64.State;
@@ -171,14 +109,12 @@ is
    --#    MP.Barrier   from
    --#       *,
    --#       Current_Major,
-   --#       Scheduling_Plan,
    --#       CPU_Global.Storage,
    --#       X86_64.State &
    --#    Current_Major, CPU_Global.Storage from
    --#       Current_Major,
    --#       CPU_Global.Storage,
    --#       New_Major,
-   --#       Scheduling_Plan,
    --#       X86_64.State;
    is
       CPU_ID      : Skp.CPU_Range;
@@ -191,7 +127,7 @@ is
 
          --  Minor frame ticks consumed, advance to next minor frame.
 
-         if Minor_Frame.Id < Get_Major_Length
+         if Minor_Frame.Id < CPU_Global.Get_Major_Length
            (Major_Id => Current_Major,
             CPU_ID   => CPU_ID)
          then
@@ -212,7 +148,7 @@ is
             MP.Wait_For_All;
          end if;
 
-         Minor_Frame.Ticks := Get_Minor_Frame
+         Minor_Frame.Ticks := CPU_Global.Get_Minor_Frame
            (Major_Id => Current_Major,
             Minor_Id => Minor_Frame.Id,
             CPU_ID   => CPU_ID).Ticks;
@@ -236,13 +172,9 @@ is
    --# global
    --#    in out X86_64.State;
    --#    in out Subjects.Descriptors;
-   --#    in out Scheduling_Plan;
+   --#    in out CPU_Global.Storage;
    --# derives
-   --#    X86_64.State from
-   --#       *,
-   --#       Current_Subject,
-   --#       Subject_State &
-   --#    Scheduling_Plan from
+   --#    CPU_Global.Storage, X86_64.State from
    --#       *,
    --#       Current_Subject,
    --#       Subject_State,
@@ -267,7 +199,7 @@ is
             pragma Debug (KC.Put_Line (Item => " handover to self"));
             CPU.Panic;
          else
-            Swap_Subject
+            CPU_Global.Swap_Subject
               (Old_Id => Current_Subject,
                New_Id => New_Subject,
                CPU_ID => CPU_ID);
@@ -323,7 +255,6 @@ is
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
    --#    in     Current_Major;
-   --#    in     Scheduling_Plan;
    --#    in out CPU_Global.Storage;
    --#    in out X86_64.State;
    --#    in out Subjects.Descriptors;
@@ -331,13 +262,11 @@ is
    --#    CPU_Global.Storage from
    --#       *,
    --#       Current_Major,
-   --#       Scheduling_Plan,
    --#       Subjects.Descriptors,
    --#       X86_64.State &
    --#    Subjects.Descriptors from
    --#       *,
    --#       Current_Major,
-   --#       Scheduling_Plan,
    --#       CPU_Global.Storage,
    --#       X86_64.State &
    --#    X86_64.State from
@@ -347,8 +276,7 @@ is
    --#       Interrupts.IDT_Pointer,
    --#       Subjects.Descriptors,
    --#       CPU_Global.Storage,
-   --#       Current_Major,
-   --#       Scheduling_Plan;
+   --#       Current_Major;
    is
       CPU_ID        : Skp.CPU_Range;
       Plan_Frame    : Skp.Scheduling.Minor_Frame_Type;
@@ -357,7 +285,7 @@ is
       Get_ID (ID => CPU_ID);
 
       Current_Frame := CPU_Global.Get_Current_Minor_Frame;
-      Plan_Frame    := Get_Minor_Frame
+      Plan_Frame    := CPU_Global.Get_Minor_Frame
         (Major_Id => Current_Major,
          Minor_Id => Current_Frame.Id,
          CPU_ID   => CPU_ID);
@@ -380,7 +308,6 @@ is
    --#    in     VMX.State;
    --#    in     New_Major;
    --#    in out CPU_Global.Storage;
-   --#    in out Scheduling_Plan;
    --#    in out Current_Major;
    --#    in out MP.Barrier;
    --#    in out Subjects.Descriptors;
@@ -390,21 +317,18 @@ is
    --#       *,
    --#       New_Major,
    --#       Current_Major,
-   --#       Scheduling_Plan,
    --#       Subject_Registers,
    --#       Subjects.Descriptors,
    --#       X86_64.State &
    --#    Current_Major from
    --#       *,
    --#       New_Major,
-   --#       Scheduling_Plan,
    --#       Subject_Registers,
    --#       Subjects.Descriptors,
    --#       CPU_Global.Storage,
    --#       X86_64.State &
-   --#    Scheduling_Plan, MP.Barrier from
+   --#    MP.Barrier from
    --#       *,
-   --#       Scheduling_Plan,
    --#       Current_Major,
    --#       Subject_Registers,
    --#       Subjects.Descriptors,
@@ -415,7 +339,6 @@ is
    --#       Subject_Registers,
    --#       New_Major,
    --#       Current_Major,
-   --#       Scheduling_Plan,
    --#       VMX.State,
    --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,
@@ -427,8 +350,7 @@ is
    --#       X86_64.State,
    --#       Subject_Registers,
    --#       New_Major,
-   --#       Current_Major,
-   --#       Scheduling_Plan;
+   --#       Current_Major;
    is
       CPU_ID          : Skp.CPU_Range;
       State           : SK.Subject_State_Type;
@@ -439,7 +361,7 @@ is
       Get_ID (ID => CPU_ID);
       Current_Minor := CPU_Global.Get_Current_Minor_Frame;
 
-      Current_Subject := Get_Minor_Frame
+      Current_Subject := CPU_Global.Get_Minor_Frame
         (Major_Id => Current_Major,
          Minor_Id => Current_Minor.Id,
          CPU_ID   => CPU_ID).Subject_Id;
@@ -480,9 +402,10 @@ is
 
             --  Abnormal subject exit, schedule dumper.
 
-            Swap_Subject (Old_Id => Current_Subject,
-                          New_Id => Dumper_Id,
-                          CPU_ID => CPU_ID);
+            CPU_Global.Swap_Subject
+              (Old_Id => Current_Subject,
+               New_Id => Dumper_Id,
+               CPU_ID => CPU_ID);
          else
             pragma Debug (KC.Put_String
                           (Item => "Scheduling error: subject "));
@@ -499,6 +422,4 @@ is
       Schedule;
    end Handle_Vmx_Exit;
 
-begin
-   Scheduling_Plan := Skp.Scheduling.Scheduling_Plans;
 end SK.Scheduler;

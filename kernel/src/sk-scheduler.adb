@@ -6,13 +6,14 @@ with SK.VMX;
 with SK.Constants;
 with SK.KC;
 with SK.CPU;
+with SK.CPU_Global;
 with SK.Subjects;
 with SK.Apic;
 with SK.MP;
 
 package body SK.Scheduler
 --# own
---#    State is in New_Major, Current_Major, Current_Minors, Scheduling_Plan;
+--#    State is in New_Major, Current_Major, Scheduling_Plan;
 is
 
    --  Dumper subject id.
@@ -31,20 +32,6 @@ is
    --  Current major.
    Current_Major : Skp.Scheduling.Major_Frame_Range
      := Skp.Scheduling.Major_Frame_Range'First;
-
-   type Active_Minor_Frame_Type is record
-      Id    : Skp.Scheduling.Minor_Frame_Range;
-      Ticks : SK.Word32;
-   end record;
-
-   --  Current per-CPU minor frames.
-   type Current_Minor_Array is array (Skp.CPU_Range)
-     of Active_Minor_Frame_Type;
-
-   Current_Minors : Current_Minor_Array := Current_Minor_Array'
-     (others => Active_Minor_Frame_Type'
-        (Id    => Skp.Scheduling.Minor_Frame_Range'First,
-         Ticks => 0));
 
    subtype Ext_Int_Type is SK.Byte range 32 .. 255;
 
@@ -153,55 +140,57 @@ is
    --#    in     New_Major;
    --#    in     Scheduling_Plan;
    --#    in out Current_Major;
-   --#    in out Current_Minors;
+   --#    in out CPU_Global.Storage;
    --#    in out X86_64.State;
    --#    in out MP.Barrier;
    --# derives
    --#    X86_64.State from * &
-   --#    Current_Minors, MP.Barrier from
+   --#    MP.Barrier   from
    --#       *,
-   --#       Current_Minors,
    --#       Current_Major,
    --#       Scheduling_Plan,
+   --#       CPU_Global.Storage,
    --#       X86_64.State &
-   --#    Current_Major from
-   --#       *,
-   --#       Current_Minors,
+   --#    Current_Major, CPU_Global.Storage from
+   --#       Current_Major,
+   --#       CPU_Global.Storage,
    --#       New_Major,
    --#       Scheduling_Plan,
    --#       X86_64.State;
    is
-      CPU_ID : Skp.CPU_Range;
+      CPU_ID      : Skp.CPU_Range;
+      Minor_Frame : CPU_Global.Active_Minor_Frame_Type;
    begin
       Get_ID (ID => CPU_ID);
+      Minor_Frame := CPU_Global.Get_Current_Minor_Frame;
 
-      if Current_Minors (CPU_ID).Ticks = 0
-        and then Current_Minors (CPU_ID).Id < Scheduling_Plan
-        (Current_Major).CPUs (CPU_ID).Length
-      then
+      if Minor_Frame.Ticks = 0 then
 
-         --# assert
-         --#    CPU_ID in Skp.CPU_Range and
-         --#    Current_Minors (CPU_ID).Id < Scheduling_Plan
-         --#       (Current_Major).CPUs (CPU_ID).Length and
-         --#    Scheduling_Plan (Current_Major).CPUs (CPU_ID).Length
-         --#       <= Skp.Scheduling.Minor_Frame_Range'Last;
+         --  Minor frame ticks consumed, advance to next minor frame.
 
-         Current_Minors (CPU_ID).Id    := Current_Minors (CPU_ID).Id + 1;
-         Current_Minors (CPU_ID).Ticks := Scheduling_Plan
-           (Current_Major).CPUs (CPU_ID).Minor_Frames
-           (Current_Minors (CPU_ID).Id).Ticks;
-      elsif Current_Minors (CPU_ID).Ticks = 0 then
-         Current_Minors (CPU_ID).Id := Skp.Scheduling.Minor_Frame_Range'First;
-         Current_Minors (CPU_ID).Ticks := Scheduling_Plan (Current_Major).CPUs
-           (CPU_ID).Minor_Frames
-           (Current_Minors (CPU_ID).Id).Ticks;
+         if Minor_Frame.Id < Scheduling_Plan
+           (Current_Major).CPUs (CPU_ID).Length
+         then
 
-         MP.Wait_For_All;
-         if Apic.Is_BSP then
-            Current_Major := New_Major;
+            --  Switch to next minor frame in current major frame.
+
+            Minor_Frame.Id := Minor_Frame.Id + 1;
+         else
+
+            --  Switch to first minor frame in next major frame.
+
+            Minor_Frame.Id := Skp.Scheduling.Minor_Frame_Range'First;
+
+            MP.Wait_For_All;
+            if Apic.Is_BSP then
+               Current_Major := New_Major;
+            end if;
+            MP.Wait_For_All;
          end if;
-         MP.Wait_For_All;
+
+         Minor_Frame.Ticks := Scheduling_Plan (Current_Major).CPUs
+           (CPU_ID).Minor_Frames (Minor_Frame.Id).Ticks;
+         CPU_Global.Set_Current_Minor (Frame => Minor_Frame);
       end if;
    end Update_Scheduling_Info;
 
@@ -287,7 +276,6 @@ is
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
    --#    in     Current_Major;
-   --#    in     Current_Minors;
    --#    in     Scheduling_Plan;
    --#    in out CPU_Global.Storage;
    --#    in out X86_64.State;
@@ -296,15 +284,14 @@ is
    --#    CPU_Global.Storage from
    --#       *,
    --#       Current_Major,
-   --#       Current_Minors,
    --#       Scheduling_Plan,
    --#       Subjects.Descriptors,
    --#       X86_64.State &
    --#    Subjects.Descriptors from
    --#       *,
    --#       Current_Major,
-   --#       Current_Minors,
    --#       Scheduling_Plan,
+   --#       CPU_Global.Storage,
    --#       X86_64.State &
    --#    X86_64.State from
    --#       *,
@@ -312,17 +299,17 @@ is
    --#       GDT.GDT_Pointer,
    --#       Interrupts.IDT_Pointer,
    --#       Subjects.Descriptors,
+   --#       CPU_Global.Storage,
    --#       Current_Major,
-   --#       Current_Minors,
    --#       Scheduling_Plan;
    is
       CPU_ID        : Skp.CPU_Range;
       Plan_Frame    : Skp.Scheduling.Minor_Frame_Type;
-      Current_Frame : Active_Minor_Frame_Type;
+      Current_Frame : CPU_Global.Active_Minor_Frame_Type;
    begin
       Get_ID (ID => CPU_ID);
 
-      Current_Frame := Current_Minors (CPU_ID);
+      Current_Frame := CPU_Global.Get_Current_Minor_Frame;
       Plan_Frame    := Scheduling_Plan (Current_Major).CPUs
         (CPU_ID).Minor_Frames (Current_Frame.Id);
 
@@ -346,7 +333,6 @@ is
    --#    in out CPU_Global.Storage;
    --#    in out Scheduling_Plan;
    --#    in out Current_Major;
-   --#    in out Current_Minors;
    --#    in out MP.Barrier;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
@@ -355,63 +341,57 @@ is
    --#       *,
    --#       New_Major,
    --#       Current_Major,
-   --#       Current_Minors,
    --#       Scheduling_Plan,
    --#       Subject_Registers,
    --#       Subjects.Descriptors,
    --#       X86_64.State &
    --#    Current_Major from
    --#       *,
-   --#       Current_Minors,
    --#       New_Major,
    --#       Scheduling_Plan,
    --#       Subject_Registers,
    --#       Subjects.Descriptors,
-   --#       X86_64.State  &
-   --#    Current_Minors from
-   --#       *,
-   --#       Current_Major,
-   --#       Scheduling_Plan,
-   --#       Subject_Registers,
-   --#       Subjects.Descriptors,
+   --#       CPU_Global.Storage,
    --#       X86_64.State &
    --#    Scheduling_Plan, MP.Barrier from
    --#       *,
    --#       Scheduling_Plan,
    --#       Current_Major,
-   --#       Current_Minors,
    --#       Subject_Registers,
    --#       Subjects.Descriptors,
+   --#       CPU_Global.Storage,
    --#       X86_64.State &
    --#    X86_64.State from
    --#       *,
    --#       Subject_Registers,
    --#       New_Major,
    --#       Current_Major,
-   --#       Current_Minors,
    --#       Scheduling_Plan,
    --#       VMX.State,
    --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,
+   --#       CPU_Global.Storage,
    --#       Subjects.Descriptors &
    --#    Subjects.Descriptors from
    --#       *,
+   --#       CPU_Global.Storage,
    --#       X86_64.State,
    --#       Subject_Registers,
    --#       New_Major,
    --#       Current_Major,
-   --#       Current_Minors,
    --#       Scheduling_Plan;
    is
       CPU_ID          : Skp.CPU_Range;
       State           : SK.Subject_State_Type;
       Current_Subject : Skp.Subject_Id_Type;
+      Current_Minor   : CPU_Global.Active_Minor_Frame_Type;
       Timer_Value     : SK.Word64;
    begin
       Get_ID (ID => CPU_ID);
+      Current_Minor := CPU_Global.Get_Current_Minor_Frame;
 
       Current_Subject := Scheduling_Plan (Current_Major).CPUs
-        (CPU_ID).Minor_Frames (Current_Minors (CPU_ID).Id).Subject_Id;
+        (CPU_ID).Minor_Frames (Current_Minor.Id).Subject_Id;
       State           := Subjects.Get_State (Id => Current_Subject);
       State.Regs      := Subject_Registers;
 
@@ -419,7 +399,8 @@ is
                      Value => State.Exit_Reason);
       VMX.VMCS_Read (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
                      Value => Timer_Value);
-      Current_Minors (CPU_ID).Ticks := SK.Word32'Mod (Timer_Value);
+      Current_Minor.Ticks := SK.Word32'Mod (Timer_Value);
+      CPU_Global.Set_Current_Minor (Frame => Current_Minor);
 
       Store_Subject_Info (State => State);
 

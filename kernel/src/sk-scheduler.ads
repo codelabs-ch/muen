@@ -35,18 +35,23 @@ is
    --#    in out X86_64.State;
    --#    in out Subjects.Descriptors;
    --# derives
-   --#    Subjects.Descriptors from *, State, X86_64.State &
-   --#    CPU_Global.Storage   from
+   --#    Subjects.Descriptors from
+   --#       *,
+   --#       State,
+   --#       CPU_Global.Storage,
+   --#       X86_64.State &
+   --#    CPU_Global.Storage from
    --#       *,
    --#       State,
    --#       Subjects.Descriptors,
    --#       X86_64.State &
-   --#    X86_64.State         from
+   --#    X86_64.State from
    --#       *,
    --#       VMX.State,
    --#       GDT.GDT_Pointer,
    --#       Interrupts.IDT_Pointer,
    --#       Subjects.Descriptors,
+   --#       CPU_Global.Storage,
    --#       State;
 
 private
@@ -68,16 +73,23 @@ private
    --#       State,
    --#       Subject_Registers,
    --#       Subjects.Descriptors,
+   --#       CPU_Global.Storage,
    --#       X86_64.State &
-   --#    Subjects.Descriptors from *, Subject_Registers, State, X86_64.State &
-   --#    X86_64.State         from
+   --#    Subjects.Descriptors from
+   --#       *,
+   --#       Subject_Registers,
+   --#       State,
+   --#       CPU_Global.Storage,
+   --#       X86_64.State &
+   --#    X86_64.State from
    --#       *,
    --#       Subject_Registers,
    --#       VMX.State,
    --#       State,
    --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,
-   --#       Subjects.Descriptors;
+   --#       Subjects.Descriptors,
+   --#       CPU_Global.Storage;
    pragma Export (C, Handle_Vmx_Exit, "handle_vmx_exit");
 
 end SK.Scheduler;

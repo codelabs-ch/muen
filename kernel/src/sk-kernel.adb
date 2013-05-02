@@ -22,8 +22,9 @@ is
 
       pragma Debug (Is_Bsp, KC.Init);
       pragma Debug (Is_Bsp, KC.Put_Line
-                    (Item => "Booting Separation Kernel ("
-                     & SK.Version.Version_String & ") ..."));
+                    (Item => "Booting Separation Kernel "
+                     & SK.Version.Version_String & " ("
+                     & Standard'Compiler_Version & ")"));
 
       Success := System_State.Is_Valid;
       if Success then

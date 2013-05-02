@@ -229,6 +229,14 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Init
+   is
+   begin
+      CPU_Global.Set_Scheduling_Plan (Data => Skp.Scheduling.Scheduling_Plans);
+   end Init;
+
+   -------------------------------------------------------------------------
+
    procedure Handle_Hypercall
      (Current_Subject :        Skp.Subject_Id_Type;
       Subject_State   : in out SK.Subject_State_Type)

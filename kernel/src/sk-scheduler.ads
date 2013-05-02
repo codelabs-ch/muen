@@ -24,6 +24,13 @@ package SK.Scheduler
 --#    State;
 is
 
+   --  Init scheduler.
+   procedure Init;
+   --# global
+   --#    in out CPU_Global.Storage;
+   --# derives
+   --#    CPU_Global.Storage from *;
+
    --  Schedule subject according to the current scheduling plan.
    procedure Schedule;
    --# global

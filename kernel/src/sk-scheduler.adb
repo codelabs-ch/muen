@@ -76,6 +76,22 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Return minor frame indexed by major and minor id.
+   function Get_Minor_Frame
+     (Major_Id : Skp.Scheduling.Major_Frame_Range;
+      Minor_Id : Skp.Scheduling.Minor_Frame_Range;
+      CPU_ID   : Skp.CPU_Range)
+      return Skp.Scheduling.Minor_Frame_Type
+   --# global
+   --#    Scheduling_Plan;
+   is
+   begin
+      return Scheduling_Plan (Major_Id).CPUs
+        (CPU_ID).Minor_Frames (Minor_Id);
+   end Get_Minor_Frame;
+
+   -------------------------------------------------------------------------
+
    --  Remove subject specified by Old_Id from the scheduling plan and replace
    --  it with the subject given by New_Id.
    procedure Swap_Subject (Old_Id, New_Id : Skp.Subject_Id_Type)
@@ -203,8 +219,10 @@ is
             MP.Wait_For_All;
          end if;
 
-         Minor_Frame.Ticks := Scheduling_Plan (Current_Major).CPUs
-           (CPU_ID).Minor_Frames (Minor_Frame.Id).Ticks;
+         Minor_Frame.Ticks := Get_Minor_Frame
+           (Major_Id => Current_Major,
+            Minor_Id => Minor_Frame.Id,
+            CPU_ID   => CPU_ID).Ticks;
          CPU_Global.Set_Current_Minor (Frame => Minor_Frame);
       end if;
    end Update_Scheduling_Info;
@@ -325,8 +343,10 @@ is
       Get_ID (ID => CPU_ID);
 
       Current_Frame := CPU_Global.Get_Current_Minor_Frame;
-      Plan_Frame    := Scheduling_Plan (Current_Major).CPUs
-        (CPU_ID).Minor_Frames (Current_Frame.Id);
+      Plan_Frame    := Get_Minor_Frame
+        (Major_Id => Current_Major,
+         Minor_Id => Current_Frame.Id,
+         CPU_ID   => CPU_ID);
 
       if Subjects.Get_State (Id => Plan_Frame.Subject_Id).Launched then
          VMX.Resume (Subject_Id => Plan_Frame.Subject_Id,
@@ -405,10 +425,12 @@ is
       Get_ID (ID => CPU_ID);
       Current_Minor := CPU_Global.Get_Current_Minor_Frame;
 
-      Current_Subject := Scheduling_Plan (Current_Major).CPUs
-        (CPU_ID).Minor_Frames (Current_Minor.Id).Subject_Id;
-      State           := Subjects.Get_State (Id => Current_Subject);
-      State.Regs      := Subject_Registers;
+      Current_Subject := Get_Minor_Frame
+        (Major_Id => Current_Major,
+         Minor_Id => Current_Minor.Id,
+         CPU_ID   => CPU_ID).Subject_Id;
+      State      := Subjects.Get_State (Id => Current_Subject);
+      State.Regs := Subject_Registers;
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => State.Exit_Reason);

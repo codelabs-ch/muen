@@ -62,6 +62,20 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Return number of minor frames in given major frame.
+   function Get_Major_Length
+     (Major_Id : Skp.Scheduling.Major_Frame_Range;
+      CPU_ID   : Skp.CPU_Range)
+      return Skp.Scheduling.Minor_Frame_Range
+   --# global
+   --#    Scheduling_Plan;
+   is
+   begin
+      return Scheduling_Plan (Major_Id).CPUs (CPU_ID).Length;
+   end Get_Major_Length;
+
+   -------------------------------------------------------------------------
+
    --  Remove subject specified by Old_Id from the scheduling plan and replace
    --  it with the subject given by New_Id.
    procedure Swap_Subject (Old_Id, New_Id : Skp.Subject_Id_Type)
@@ -168,8 +182,9 @@ is
 
          --  Minor frame ticks consumed, advance to next minor frame.
 
-         if Minor_Frame.Id < Scheduling_Plan
-           (Current_Major).CPUs (CPU_ID).Length
+         if Minor_Frame.Id < Get_Major_Length
+           (Major_Id => Current_Major,
+            CPU_ID   => CPU_ID)
          then
 
             --  Switch to next minor frame in current major frame.

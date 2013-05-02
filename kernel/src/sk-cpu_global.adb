@@ -10,6 +10,10 @@ is
    for Storage'Address use System'To_Address (Skp.Kernel.CPU_Store_Address);
    --# end accept;
 
+   pragma Warnings (Off, "* bits of ""Storage"" unused");
+   for Storage'Size use 8 * SK.Page_Size;
+   pragma Warnings (On,  "* bits of ""Storage"" unused");
+
    -------------------------------------------------------------------------
 
    function Get_Current_Minor_Frame return Active_Minor_Frame_Type

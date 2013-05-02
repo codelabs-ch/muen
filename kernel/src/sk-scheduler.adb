@@ -94,18 +94,18 @@ is
 
    --  Remove subject specified by Old_Id from the scheduling plan and replace
    --  it with the subject given by New_Id.
-   procedure Swap_Subject (Old_Id, New_Id : Skp.Subject_Id_Type)
+   procedure Swap_Subject
+     (Old_Id : Skp.Subject_Id_Type;
+      New_Id : Skp.Subject_Id_Type;
+      CPU_ID : Skp.CPU_Range)
    --# global
    --#    in out X86_64.State;
    --#    in out Scheduling_Plan;
    --# derives
    --#    X86_64.State    from *, Old_Id, New_Id &
-   --#    Scheduling_Plan from *, Old_Id, New_Id, X86_64.State;
+   --#    Scheduling_Plan from *, CPU_ID, Old_Id, New_Id;
    is
-      CPU_ID : Skp.CPU_Range;
    begin
-      Get_ID (ID => CPU_ID);
-
       if Old_Id = New_Id then
          pragma Debug (KC.Put_String (Item => "Scheduling error: subject "));
          pragma Debug (KC.Put_Byte   (Item => Byte (Old_Id)));
@@ -257,8 +257,11 @@ is
    --#    Subject_State        from * &
    --#    Subjects.Descriptors from *, Subject_State;
    is
+      CPU_ID      : Skp.CPU_Range;
       New_Subject : Skp.Subject_Id_Type;
    begin
+      Get_ID (ID => CPU_ID);
+
       if Subject_State.Regs.RAX <= SK.Word64 (Skp.Subject_Id_Type'Last) then
          New_Subject := Skp.Subject_Id_Type (Subject_State.Regs.RAX);
          Subjects.Set_State (Id    => New_Subject,
@@ -266,7 +269,8 @@ is
 
          Swap_Subject
            (Old_Id => Current_Subject,
-            New_Id => New_Subject);
+            New_Id => New_Subject,
+            CPU_ID => CPU_ID);
          Subject_State := SK.Null_Subject_State;
       else
          pragma Debug (KC.Put_String ("Invalid hypercall parameter"));
@@ -473,7 +477,8 @@ is
          --  Abnormal subject exit, schedule dumper.
 
          Swap_Subject (Old_Id => Current_Subject,
-                       New_Id => Dumper_Id);
+                       New_Id => Dumper_Id,
+                       CPU_ID => CPU_ID);
       end if;
 
       Subjects.Set_State (Id    => Current_Subject,

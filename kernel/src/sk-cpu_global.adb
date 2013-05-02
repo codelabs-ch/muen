@@ -36,7 +36,8 @@ is
    is
    begin
       Storage := Storage_Type'
-        (Current_Subject     => Skp.Subject_Id_Type'First,
+        (Scheduling_Plan     => Skp.Scheduling.Null_Scheduling_Plan,
+         Current_Subject     => Skp.Subject_Id_Type'First,
          Current_Minor_Frame => Active_Minor_Frame_Type'
            (Id    => Skp.Scheduling.Minor_Frame_Range'First,
             Ticks => 0));

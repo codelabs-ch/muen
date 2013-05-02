@@ -16,29 +16,22 @@ package Skp.Scheduling is
 
    type Minor_Frame_Array is array (Minor_Frame_Range) of Minor_Frame_Type;
 
-   type CPU_Type is record
+   type Major_Frame_Type is record
       Length       : Minor_Frame_Range;
       Minor_Frames : Minor_Frame_Array;
    end record;
 
-   type CPU_Array is array (Skp.CPU_Range) of CPU_Type;
-
-   type Major_Frame_Type is record
-      CPUs : CPU_Array;
-   end record;
-
    type Major_Frame_Range is range __major_range__;
 
-   type Scheduling_Plan_Type is array (Major_Frame_Range) of Major_Frame_Type;
+   type Major_Frame_Array is array (Major_Frame_Range) of Major_Frame_Type;
 
-   Null_Scheduling_Plan : constant Scheduling_Plan_Type
-     := Scheduling_Plan_Type'
-       (others => Major_Frame_Type'
-            (CPUs => CPU_Array'
-                 (others => CPU_Type'
-                      (Length       => Minor_Frame_Range'First,
-                       Minor_Frames => Minor_Frame_Array'
-                         (others => Null_Minor_Frame)))));
+   Null_Major_Frames : constant Major_Frame_Array := Major_Frame_Array'
+     (others => Major_Frame_Type'
+        (Length       => Minor_Frame_Range'First,
+         Minor_Frames => Minor_Frame_Array'
+           (others => Null_Minor_Frame)));
+
+   type Scheduling_Plan_Type is array (Skp.CPU_Range) of Major_Frame_Array;
 
    Scheduling_Plans : constant Scheduling_Plan_Type := Scheduling_Plan_Type'(
 __scheduling_plans__);

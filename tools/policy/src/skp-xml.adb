@@ -136,6 +136,11 @@ is
               (Elem => Node,
                Name => "executable"));
 
+         R.Memory_Type      := Memory_Type_Type'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "memory_type"));
+
          Mem_Layout.Append (New_Item => R);
       end Add_Mem_Region;
    begin

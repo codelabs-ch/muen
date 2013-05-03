@@ -160,8 +160,11 @@ is
 
    procedure Init
    is
+      CPU_ID : Skp.CPU_Range;
    begin
-      CPU_Global.Set_Scheduling_Plan (Data => Skp.Scheduling.Scheduling_Plans);
+      Get_ID (ID => CPU_ID);
+      CPU_Global.Set_Scheduling_Plan
+        (Data => Skp.Scheduling.Scheduling_Plans (CPU_ID));
    end Init;
 
    -------------------------------------------------------------------------

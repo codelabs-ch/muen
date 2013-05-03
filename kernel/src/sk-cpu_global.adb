@@ -38,7 +38,7 @@ is
       return Skp.Scheduling.Minor_Frame_Range
    is
    begin
-      return Storage.Scheduling_Plan (Major_Id).CPUs (CPU_ID).Length;
+      return Storage.Scheduling_Plan (Major_Id).Length;
    end Get_Major_Length;
 
    -------------------------------------------------------------------------
@@ -50,8 +50,7 @@ is
       return Skp.Scheduling.Minor_Frame_Type
    is
    begin
-      return Storage.Scheduling_Plan (Major_Id).CPUs
-        (CPU_ID).Minor_Frames (Minor_Id);
+      return Storage.Scheduling_Plan (Major_Id).Minor_Frames (Minor_Id);
    end Get_Minor_Frame;
 
    -------------------------------------------------------------------------
@@ -60,7 +59,7 @@ is
    is
    begin
       Storage := Storage_Type'
-        (Scheduling_Plan     => Skp.Scheduling.Null_Scheduling_Plan,
+        (Scheduling_Plan     => Skp.Scheduling.Null_Major_Frames,
          Current_Subject     => Skp.Subject_Id_Type'First,
          Current_Minor_Frame => Active_Minor_Frame_Type'
            (Id    => Skp.Scheduling.Minor_Frame_Range'First,
@@ -85,7 +84,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Scheduling_Plan (Data : Skp.Scheduling.Scheduling_Plan_Type)
+   procedure Set_Scheduling_Plan (Data : Skp.Scheduling.Major_Frame_Array)
    is
    begin
       Storage.Scheduling_Plan := Data;
@@ -101,10 +100,10 @@ is
    begin
       for I in Skp.Scheduling.Major_Frame_Range loop
          for J in Skp.Scheduling.Minor_Frame_Range loop
-            if Storage.Scheduling_Plan (I).CPUs (CPU_ID).Minor_Frames
+            if Storage.Scheduling_Plan (I).Minor_Frames
               (J).Subject_Id = Old_Id
             then
-               Storage.Scheduling_Plan (I).CPUs (CPU_ID).Minor_Frames
+               Storage.Scheduling_Plan (I).Minor_Frames
                  (J).Subject_Id := New_Id;
             end if;
          end loop;

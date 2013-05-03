@@ -59,6 +59,20 @@ is
    --  Return N number of indentation spaces.
    function Indent (N : Positive := 1) return String;
 
+   type PAT_Entry is record
+      PAT : Boolean;
+      PCD : Boolean;
+      PWT : Boolean;
+   end record;
+
+   --  Memory type to PAT entry mapping.
+   PAT_Mapping : constant array (Memory_Type_Type) of PAT_Entry :=
+     (UC => (PAT => False, PCD => False, PWT => False),
+      WC => (PAT => False, PCD => False, PWT => True),
+      WT => (PAT => False, PCD => True,  PWT => False),
+      WP => (PAT => False, PCD => True,  PWT => True),
+      WB => (PAT => True,  PCD => False, PWT => False));
+
    -------------------------------------------------------------------------
 
    function Get_Executing_CPU
@@ -262,10 +276,10 @@ is
                  (Address       => Physical_Addr,
                   Writable      => R.Writable,
                   User_Access   => True,
-                  Writethrough  => True,
-                  Cache_Disable => False,
+                  Writethrough  => PAT_Mapping (R.Memory_Type).PWT,
+                  Cache_Disable => PAT_Mapping (R.Memory_Type).PCD,
                   Global        => False,
-                  PAT           => True,
+                  PAT           => PAT_Mapping (R.Memory_Type).PAT,
                   Exec_Disable  => not R.Executable);
             end if;
 

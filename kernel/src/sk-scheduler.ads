@@ -27,9 +27,11 @@ is
    --  Init scheduler.
    procedure Init;
    --# global
+   --#    in out X86_64.State;
    --#    in out CPU_Global.Storage;
    --# derives
-   --#    CPU_Global.Storage from *;
+   --#    X86_64.State       from * &
+   --#    CPU_Global.Storage from *, X86_64.State;
 
    --  Schedule subject according to the current scheduling plan.
    procedure Schedule;
@@ -50,8 +52,7 @@ is
    --#    CPU_Global.Storage from
    --#       *,
    --#       State,
-   --#       Subjects.Descriptors,
-   --#       X86_64.State &
+   --#       Subjects.Descriptors &
    --#    X86_64.State from
    --#       *,
    --#       VMX.State,

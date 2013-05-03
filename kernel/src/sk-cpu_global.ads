@@ -65,8 +65,7 @@ is
 
    --  Return number of minor frames in given scheduling plan major frame.
    function Get_Major_Length
-     (Major_Id : Skp.Scheduling.Major_Frame_Range;
-      CPU_ID   : Skp.CPU_Range)
+     (Major_Id : Skp.Scheduling.Major_Frame_Range)
       return Skp.Scheduling.Minor_Frame_Range;
    --# global
    --#    Storage;
@@ -74,8 +73,7 @@ is
    --  Return scheduling minor frame indexed by major and minor id.
    function Get_Minor_Frame
      (Major_Id : Skp.Scheduling.Major_Frame_Range;
-      Minor_Id : Skp.Scheduling.Minor_Frame_Range;
-      CPU_ID   : Skp.CPU_Range)
+      Minor_Id : Skp.Scheduling.Minor_Frame_Range)
       return Skp.Scheduling.Minor_Frame_Type;
    --# global
    --#    Storage;
@@ -84,12 +82,11 @@ is
    --  it with the subject given by New_Id.
    procedure Swap_Subject
      (Old_Id : Skp.Subject_Id_Type;
-      New_Id : Skp.Subject_Id_Type;
-      CPU_ID : Skp.CPU_Range);
+      New_Id : Skp.Subject_Id_Type);
    --# global
    --#    in out Storage;
    --# derives
-   --#    Storage from *, CPU_ID, Old_Id, New_Id;
+   --#    Storage from *, Old_Id, New_Id;
    --# pre
    --#    Old_Id /= New_Id;
 

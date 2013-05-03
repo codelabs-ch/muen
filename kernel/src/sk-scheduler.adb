@@ -100,27 +100,23 @@ is
    procedure Update_Scheduling_Info
    --# global
    --#    in     New_Major;
+   --#    in     X86_64.State;
    --#    in out Current_Major;
    --#    in out CPU_Global.Storage;
-   --#    in out X86_64.State;
    --#    in out MP.Barrier;
    --# derives
-   --#    X86_64.State from * &
    --#    MP.Barrier   from
    --#       *,
    --#       Current_Major,
-   --#       CPU_Global.Storage,
-   --#       X86_64.State &
+   --#       CPU_Global.Storage &
    --#    Current_Major, CPU_Global.Storage from
    --#       Current_Major,
    --#       CPU_Global.Storage,
    --#       New_Major,
    --#       X86_64.State;
    is
-      CPU_ID      : Skp.CPU_Range;
       Minor_Frame : CPU_Global.Active_Minor_Frame_Type;
    begin
-      Get_ID (ID => CPU_ID);
       Minor_Frame := CPU_Global.Get_Current_Minor_Frame;
 
       if Minor_Frame.Ticks = 0 then
@@ -128,8 +124,7 @@ is
          --  Minor frame ticks consumed, advance to next minor frame.
 
          if Minor_Frame.Id < CPU_Global.Get_Major_Length
-           (Major_Id => Current_Major,
-            CPU_ID   => CPU_ID)
+           (Major_Id => Current_Major)
          then
 
             --  Switch to next minor frame in current major frame.
@@ -150,8 +145,7 @@ is
 
          Minor_Frame.Ticks := CPU_Global.Get_Minor_Frame
            (Major_Id => Current_Major,
-            Minor_Id => Minor_Frame.Id,
-            CPU_ID   => CPU_ID).Ticks;
+            Minor_Id => Minor_Frame.Id).Ticks;
          CPU_Global.Set_Current_Minor (Frame => Minor_Frame);
       end if;
    end Update_Scheduling_Info;
@@ -180,16 +174,12 @@ is
    --#    CPU_Global.Storage, X86_64.State from
    --#       *,
    --#       Current_Subject,
-   --#       Subject_State,
-   --#       X86_64.State &
+   --#       Subject_State &
    --#    Subject_State        from * &
    --#    Subjects.Descriptors from *, Subject_State;
    is
-      CPU_ID      : Skp.CPU_Range;
       New_Subject : Skp.Subject_Id_Type;
    begin
-      Get_ID (ID => CPU_ID);
-
       if Subject_State.Regs.RAX <= SK.Word64 (Skp.Subject_Id_Type'Last) then
          New_Subject := Skp.Subject_Id_Type (Subject_State.Regs.RAX);
          Subjects.Set_State (Id    => New_Subject,
@@ -204,8 +194,7 @@ is
          else
             CPU_Global.Swap_Subject
               (Old_Id => Current_Subject,
-               New_Id => New_Subject,
-               CPU_ID => CPU_ID);
+               New_Id => New_Subject);
          end if;
 
          Subject_State := SK.Null_Subject_State;
@@ -265,8 +254,7 @@ is
    --#    CPU_Global.Storage from
    --#       *,
    --#       Current_Major,
-   --#       Subjects.Descriptors,
-   --#       X86_64.State &
+   --#       Subjects.Descriptors &
    --#    Subjects.Descriptors from
    --#       *,
    --#       Current_Major,
@@ -281,17 +269,13 @@ is
    --#       CPU_Global.Storage,
    --#       Current_Major;
    is
-      CPU_ID        : Skp.CPU_Range;
       Plan_Frame    : Skp.Scheduling.Minor_Frame_Type;
       Current_Frame : CPU_Global.Active_Minor_Frame_Type;
    begin
-      Get_ID (ID => CPU_ID);
-
       Current_Frame := CPU_Global.Get_Current_Minor_Frame;
       Plan_Frame    := CPU_Global.Get_Minor_Frame
         (Major_Id => Current_Major,
-         Minor_Id => Current_Frame.Id,
-         CPU_ID   => CPU_ID);
+         Minor_Id => Current_Frame.Id);
 
       if Subjects.Get_State (Id => Plan_Frame.Subject_Id).Launched then
          VMX.Resume (Subject_Id => Plan_Frame.Subject_Id,
@@ -355,19 +339,16 @@ is
    --#       New_Major,
    --#       Current_Major;
    is
-      CPU_ID          : Skp.CPU_Range;
       State           : SK.Subject_State_Type;
       Current_Subject : Skp.Subject_Id_Type;
       Current_Minor   : CPU_Global.Active_Minor_Frame_Type;
       Timer_Value     : SK.Word64;
    begin
-      Get_ID (ID => CPU_ID);
       Current_Minor := CPU_Global.Get_Current_Minor_Frame;
 
       Current_Subject := CPU_Global.Get_Minor_Frame
         (Major_Id => Current_Major,
-         Minor_Id => Current_Minor.Id,
-         CPU_ID   => CPU_ID).Subject_Id;
+         Minor_Id => Current_Minor.Id).Subject_Id;
       State      := Subjects.Get_State (Id => Current_Subject);
       State.Regs := Subject_Registers;
 
@@ -407,8 +388,7 @@ is
 
             CPU_Global.Swap_Subject
               (Old_Id => Current_Subject,
-               New_Id => Dumper_Id,
-               CPU_ID => CPU_ID);
+               New_Id => Dumper_Id);
          else
             pragma Debug (KC.Put_String
                           (Item => "Scheduling error: subject "));

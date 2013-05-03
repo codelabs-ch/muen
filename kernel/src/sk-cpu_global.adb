@@ -33,8 +33,7 @@ is
    -------------------------------------------------------------------------
 
    function Get_Major_Length
-     (Major_Id : Skp.Scheduling.Major_Frame_Range;
-      CPU_ID   : Skp.CPU_Range)
+     (Major_Id : Skp.Scheduling.Major_Frame_Range)
       return Skp.Scheduling.Minor_Frame_Range
    is
    begin
@@ -45,8 +44,7 @@ is
 
    function Get_Minor_Frame
      (Major_Id : Skp.Scheduling.Major_Frame_Range;
-      Minor_Id : Skp.Scheduling.Minor_Frame_Range;
-      CPU_ID   : Skp.CPU_Range)
+      Minor_Id : Skp.Scheduling.Minor_Frame_Range)
       return Skp.Scheduling.Minor_Frame_Type
    is
    begin
@@ -94,8 +92,7 @@ is
 
    procedure Swap_Subject
      (Old_Id : Skp.Subject_Id_Type;
-      New_Id : Skp.Subject_Id_Type;
-      CPU_ID : Skp.CPU_Range)
+      New_Id : Skp.Subject_Id_Type)
    is
    begin
       for I in Skp.Scheduling.Major_Frame_Range loop

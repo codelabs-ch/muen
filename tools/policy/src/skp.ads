@@ -2,6 +2,7 @@ with Ada.Strings.Unbounded;
 with Ada.Containers.Ordered_Maps;
 with Ada.Containers.Ordered_Sets;
 with Ada.Containers.Doubly_Linked_Lists;
+with Ada.Containers.Vectors;
 
 with SK;
 
@@ -115,11 +116,12 @@ is
 
    subtype CPU_Type is Minor_Frames_Package.List;
 
-   package CPU_Package is new Ada.Containers.Doubly_Linked_Lists
-     (Element_Type => CPU_Type,
+   package CPU_Package is new Ada.Containers.Vectors
+     (Index_Type   => Natural,
+      Element_Type => CPU_Type,
       "="          => Minor_Frames_Package."=");
 
-   subtype Major_Frame_Type is CPU_Package.List;
+   subtype Major_Frame_Type is CPU_Package.Vector;
 
    package Major_Frames_Package is new Ada.Containers.Doubly_Linked_Lists
      (Element_Type => Major_Frame_Type,

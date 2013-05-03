@@ -25,6 +25,23 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="memory_type_type">
+		<xs:annotation>
+			<xs:documentation>
+				Memory type as specified by Intel SDM Vol. 3A, section 11.3.
+				A memory type specifies the caching behavior of the given memory
+				region.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="UC"/>
+			<xs:pattern value="WC"/>
+			<xs:pattern value="WT"/>
+			<xs:pattern value="WB"/>
+			<xs:pattern value="WP"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:simpleType name="port_address_type">
 		<xs:restriction base="hex_string">
 			<xs:length value="4"/>

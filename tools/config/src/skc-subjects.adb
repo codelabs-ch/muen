@@ -220,7 +220,7 @@ is
          end if;
 
          Put_Line (File => Mem_File,
-                   Item => "/>");
+                   Item => "memory_type=""WB""/>");
       end Write_Section;
    begin
       Open_Bfd_File (File => File,

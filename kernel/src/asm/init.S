@@ -5,6 +5,7 @@
 
 #define IA32_APIC_BASE 0x1b
 #define IA32_VMX_BASIC 0x480
+#define IA32_PAT       0x277
 #define IA32_EFER      0xc0000080
 
 #define CR0_NE_BIT   5
@@ -117,6 +118,13 @@ ap_entry_point:
 
 .code64
 start64: .align 4096
+
+	// set up Page-Attribute Table (PAT)
+
+	movl $IA32_PAT, %ecx
+	movl $PAT_LOW,  %eax
+	movl $PAT_HIGH, %edx
+	wrmsr
 
 	// set up kernel stack
 

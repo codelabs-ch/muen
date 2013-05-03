@@ -1,14 +1,14 @@
 <kernel stack_address="114000" cpu_page_address="117000" pml4_address="200000">
 	<memory_layout>
 		<!-- kernel text, data and bss   -->
-		<memory_region physical_address="100000" virtual_address="100000" size="76k" alignment="4k" writable="true" executable="true"/>
+		<memory_region physical_address="100000" virtual_address="100000" size="76k" alignment="4k" writable="true" executable="true" memory_type="WB"/>
 		<!-- kernel rodata               -->
-		<memory_region physical_address="11b000" virtual_address="11b000" size="40k" alignment="4k" writable="false" executable="false"/>
+		<memory_region physical_address="11b000" virtual_address="11b000" size="40k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
 		<!-- I/O APIC MMIO region        -->
-		<memory_region physical_address="fec00000" virtual_address="1fc000" size="4k" alignment="4k" writable="true" executable="false"/>
+		<memory_region physical_address="fec00000" virtual_address="1fc000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
 		<!-- subject state descriptors   -->
-		<memory_region physical_address="1fe000" virtual_address="1fe000" size="4k" alignment="4k" writable="true" executable="false"/>
+		<memory_region physical_address="1fe000" virtual_address="1fe000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
 		<!-- τ0 => kernel interface page -->
-		<memory_region physical_address="1ff000" virtual_address="1ff000" size="4k" alignment="4k" writable="false" executable="false"/>
+		<memory_region physical_address="1ff000" virtual_address="1ff000" size="4k" alignment="4k" writable="false" executable="false" memory_type="UC"/>
 	</memory_layout>
 </kernel>

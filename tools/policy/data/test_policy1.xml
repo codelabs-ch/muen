@@ -15,8 +15,8 @@
 		<subject id="0" name="tau0" pml4_address="1f0000" io_bitmap_address="1a0000" msr_bitmap_address="900000">
 			&subj_state;
 			<memory_layout>
-				<memory_region physical_address="240000" virtual_address="0"      size="64k" alignment="4k" writable="true"  executable="true"/>
-				<memory_region physical_address="100000" virtual_address="100000" size="4k"  alignment="4k" writable="false" executable="false"/>
+				<memory_region physical_address="240000" virtual_address="0"      size="64k" alignment="4k" writable="true"  executable="true" memory_type="UC"/>
+				<memory_region physical_address="100000" virtual_address="100000" size="4k"  alignment="4k" writable="false" executable="false" memory_type="WC"/>
 			</memory_layout>
 			<binary name="tau0" physical_address="216000"/>
 			<device name="serial"/>
@@ -34,7 +34,7 @@
 		<subject id="1" name="subject1" pml4_address="1f4000" io_bitmap_address="1b0000" msr_bitmap_address="910000">
 			&subj_state;
 			<memory_layout>
-				<memory_region physical_address="250000" virtual_address="0" size="12k" alignment="4k" writable="true" executable="true"/>
+				<memory_region physical_address="250000" virtual_address="0" size="12k" alignment="4k" writable="true" executable="true" memory_type="UC"/>
 			</memory_layout>
 			<binary name="subject1" physical_address="226000"/>
 			<device name="vga"/>
@@ -44,7 +44,7 @@
 		<subject id="2" name="subject2" pml4_address="1f8000" io_bitmap_address="1c0000" msr_bitmap_address="920000">
 			&subj_state;
 			<memory_layout>
-				<memory_region physical_address="260000" virtual_address="0" size="12k" alignment="4k" writable="true" executable="true"/>
+				<memory_region physical_address="260000" virtual_address="0" size="12k" alignment="4k" writable="true" executable="true" memory_type="UC"/>
 			</memory_layout>
 			<binary name="subject2" physical_address="236000"/>
 		</subject>

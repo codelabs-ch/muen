@@ -28,7 +28,7 @@
 			<memory_layout>
 				&tau0mem;
 				<!-- τ0 => kernel interface page -->
-				<memory_region physical_address="1ff000" virtual_address="4000" size="4k" alignment="4k" writable="true"  executable="false"/>
+				<memory_region physical_address="1ff000" virtual_address="4000" size="4k" alignment="4k" writable="true"  executable="false" memory_type="UC"/>
 			</memory_layout>
 			<binary name="tau0" physical_address="217000"/>
 		</subject>
@@ -38,9 +38,9 @@
 			<memory_layout>
 				&dumpermem;
 				<!-- subject state descriptors  -->
-				<memory_region physical_address="1fe000" virtual_address="1fe000" size="4k" alignment="4k" writable="true" executable="false"/>
+				<memory_region physical_address="1fe000" virtual_address="1fe000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
 				<!-- virtual terminal console 3 -->
-				<memory_region physical_address="23f000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false"/>
+				<memory_region physical_address="23f000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
 			</memory_layout>
 			<binary name="dumper" physical_address="237000"/>
 			<signal_table>
@@ -53,7 +53,7 @@
 			<memory_layout>
 				&subjamem;
 				<!-- virtual terminal console 1 -->
-				<memory_region physical_address="260000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false"/>
+				<memory_region physical_address="260000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
 			</memory_layout>
 			<binary name="subject_a" physical_address="257000"/>
 		</subject>
@@ -63,7 +63,7 @@
 			<memory_layout>
 				&subjbmem;
 				<!-- virtual terminal console 2 -->
-				<memory_region physical_address="280000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false"/>
+				<memory_region physical_address="280000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
 			</memory_layout>
 			<binary name="subject_b" physical_address="277000"/>
 			<trap_table>
@@ -76,13 +76,13 @@
 			<memory_layout>
 				&vtmem;
 				<!-- virtual terminal console 4 -->
-				<memory_region physical_address="29f000" virtual_address="b9000" size="4k" alignment="4k" writable="true" executable="false"/>
+				<memory_region physical_address="29f000" virtual_address="b9000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
 
 				<!-- virtual terminals 1-4      -->
-				<memory_region physical_address="260000" virtual_address="10000" size="4k" alignment="4k" writable="false" executable="false"/>
-				<memory_region physical_address="280000" virtual_address="11000" size="4k" alignment="4k" writable="false" executable="false"/>
-				<memory_region physical_address="23f000" virtual_address="12000" size="4k" alignment="4k" writable="false" executable="false"/>
-				<memory_region physical_address="29f000" virtual_address="13000" size="4k" alignment="4k" writable="false" executable="false"/>
+				<memory_region physical_address="260000" virtual_address="10000" size="4k" alignment="4k" writable="false" executable="false" memory_type="UC"/>
+				<memory_region physical_address="280000" virtual_address="11000" size="4k" alignment="4k" writable="false" executable="false" memory_type="UC"/>
+				<memory_region physical_address="23f000" virtual_address="12000" size="4k" alignment="4k" writable="false" executable="false" memory_type="UC"/>
+				<memory_region physical_address="29f000" virtual_address="13000" size="4k" alignment="4k" writable="false" executable="false" memory_type="UC"/>
 			</memory_layout>
 			<binary name="vt" physical_address="297000"/>
 			<device name="vga"/>

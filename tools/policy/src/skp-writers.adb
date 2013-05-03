@@ -634,7 +634,8 @@ is
                   Size             => 16#1000#,
                   Alignment        => 16#1000#,
                   Writable         => True,
-                  Executable       => False);
+                  Executable       => False,
+                  Memory_Type      => UC);
             CPU_Page        : constant Memory_Region_Type
               := (Physical_Address => Kernel.CPU_Page_Address
                   + SK.Word64 (I) * SK.Page_Size,
@@ -642,7 +643,8 @@ is
                   Size             => 16#1000#,
                   Alignment        => 16#1000#,
                   Writable         => True,
-                  Executable       => False);
+                  Executable       => False,
+                  Memory_Type      => UC);
          begin
 
             --  Per-CPU stack page.

@@ -9,6 +9,8 @@ with SK;
 package Skp
 is
 
+   type Memory_Type_Type is (UC, WC, WT, WB, WP);
+
    type Memory_Region_Type is record
       Physical_Address : SK.Word64;
       Virtual_Address  : SK.Word64;
@@ -16,6 +18,7 @@ is
       Alignment        : SK.Word64;
       Writable         : Boolean;
       Executable       : Boolean;
+      Memory_Type      : Memory_Type_Type;
    end record;
 
    package Memregion_Package is new Ada.Containers.Doubly_Linked_Lists

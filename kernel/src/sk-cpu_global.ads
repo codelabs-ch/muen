@@ -21,12 +21,14 @@ is
       Current_Minor_Frame : Active_Minor_Frame_Type;
    end record;
 
+   --  Initialize per-CPU storage.
    procedure Init;
    --# global
    --#    out Storage;
    --# derives
    --#    Storage from ;
 
+   --  Set current subject to specified id.
    procedure Set_Current_Subject (Id : Skp.Subject_Id_Type);
    --# global
    --#    in out Storage;
@@ -35,12 +37,14 @@ is
    --# post
    --#    Storage.Current_Subject = Id;
 
+   --  Returns the current subject id.
    function Get_Current_Subject return Skp.Subject_Id_Type;
    --# global
    --#    Storage;
    --# return
    --#    Storage.Current_Subject;
 
+   --  Set the currently active minor frame to specified frame.
    procedure Set_Current_Minor (Frame : Active_Minor_Frame_Type);
    --# global
    --#    in out Storage;
@@ -49,12 +53,14 @@ is
    --# post
    --#    Storage.Current_Minor_Frame = Frame;
 
+   --  Returns the currently active minor frame.
    function Get_Current_Minor_Frame return Active_Minor_Frame_Type;
    --# global
    --#    Storage;
    --# return
    --#    Storage.Current_Minor_Frame;
 
+   --  Set the per-CPU scheduling plan.
    procedure Set_Scheduling_Plan (Data : Skp.Scheduling.Major_Frame_Array);
    --# global
    --#    in out Storage;

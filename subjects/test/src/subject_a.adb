@@ -10,7 +10,7 @@ is
 
    --  Test subject console width and height.
    subtype Width_Type  is Natural range 1 .. 80;
-   subtype Height_Type is Natural range 1 .. 3;
+   subtype Height_Type is Natural range 1 .. 25;
 
    package VGA is new SK.Console_VGA
      (Width_Type   => Width_Type,

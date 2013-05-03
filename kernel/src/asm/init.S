@@ -10,6 +10,8 @@
 
 #define CR0_NE_BIT   5
 #define CR0_WP_BIT   16
+#define CR0_NW_BIT   29
+#define CR0_CD_BIT   30
 #define CR0_PG_BIT   31
 #define CR4_PAE_BIT  5
 #define EFER_LME_BIT 8
@@ -100,12 +102,14 @@ ap_entry_point:
 	btsl $EFER_NXE_BIT, %eax
 	wrmsr
 
-	// enable paging, write protection and native FPU error reporting
+	// enable paging, write protection, caching and native FPU error reporting
 
 	movl %cr0, %eax
 	btsl $CR0_PG_BIT, %eax
 	btsl $CR0_WP_BIT, %eax
 	btsl $CR0_NE_BIT, %eax
+	btrl $CR0_NW_BIT, %eax
+	btrl $CR0_CD_BIT, %eax
 	movl %eax, %cr0
 
 	// set up GDT

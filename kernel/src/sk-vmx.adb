@@ -365,11 +365,10 @@ is
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
    --#    in     VMX_Exit_Address;
-   --#    in out CPU_Global.Storage;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    Subjects.Descriptors, CPU_Global.Storage from *, Subject_Id &
+   --#    Subjects.Descriptors from *, Subject_Id &
    --#    X86_64.State from
    --#       *,
    --#       GDT.GDT_Pointer,
@@ -420,7 +419,7 @@ is
       Subjects.Set_State (Id    => Subject_Id,
                           State => State);
 
-      CPU_Global.Set_Current_Subject (Id => Subject_Id);
+      pragma Debug (CPU_Global.Set_Current_Subject (Id => Subject_Id));
 
       CPU.Restore_Registers
         (Regs => Subjects.Get_State (Id => Subject_Id).Regs);
@@ -486,7 +485,7 @@ is
       VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
                   Value => SK.Word64 (Time_Slice));
 
-      CPU_Global.Set_Current_Subject (Id => Subject_Id);
+      pragma Debug (CPU_Global.Set_Current_Subject (Id => Subject_Id));
 
       CPU.Restore_Registers (Regs => State.Regs);
       CPU.VMRESUME;

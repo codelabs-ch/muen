@@ -50,8 +50,6 @@ is
    --#       *,
    --#       Interrupts.IDT,
    --#       Interrupts.IDT_Pointer,
-   --#       Subjects.Descriptors,
-   --#       Scheduler.State,
    --#       X86_64.State;
    pragma Export (C, Main, "kmain");
 

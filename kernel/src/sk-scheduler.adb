@@ -247,14 +247,10 @@ is
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
    --#    in     Current_Major;
-   --#    in out CPU_Global.Storage;
+   --#    in     CPU_Global.Storage;
    --#    in out X86_64.State;
    --#    in out Subjects.Descriptors;
    --# derives
-   --#    CPU_Global.Storage from
-   --#       *,
-   --#       Current_Major,
-   --#       Subjects.Descriptors &
    --#    Subjects.Descriptors from
    --#       *,
    --#       Current_Major,

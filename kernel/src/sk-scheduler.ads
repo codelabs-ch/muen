@@ -40,7 +40,7 @@ is
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
    --#    in     State;
-   --#    in out CPU_Global.Storage;
+   --#    in     CPU_Global.Storage;
    --#    in out X86_64.State;
    --#    in out Subjects.Descriptors;
    --# derives
@@ -49,10 +49,6 @@ is
    --#       State,
    --#       CPU_Global.Storage,
    --#       X86_64.State &
-   --#    CPU_Global.Storage from
-   --#       *,
-   --#       State,
-   --#       Subjects.Descriptors &
    --#    X86_64.State from
    --#       *,
    --#       VMX.State,

@@ -27,8 +27,6 @@ is
    Current_Major : Skp.Scheduling.Major_Frame_Range
      := Skp.Scheduling.Major_Frame_Range'First;
 
-   subtype Ext_Int_Type is SK.Byte range 32 .. 255;
-
    -------------------------------------------------------------------------
 
    --  Return CPU scheduling ID.
@@ -229,7 +227,7 @@ is
    --#    X86_64.State         from *;
    is
    begin
-      if Vector in Ext_Int_Type then
+      if Vector in Skp.Interrupts.Remapped_Vector_Type then
          if Skp.Interrupts.Vector_Routing (Vector) in Skp.Subject_Id_Type then
             Subjects.Set_Pending_Event
               (Id     => Skp.Interrupts.Vector_Routing (Vector),
@@ -247,11 +245,11 @@ is
             KC.New_Line);
       end if;
 
-      pragma Debug (Vector < Ext_Int_Type'First,
+      pragma Debug (Vector not in Skp.Interrupts.Remapped_Vector_Type,
                     KC.Put_String (Item => "IRQ with invalid vector "));
-      pragma Debug (Vector < Ext_Int_Type'First,
+      pragma Debug (Vector not in Skp.Interrupts.Remapped_Vector_Type,
                     KC.Put_Byte (Item => Vector));
-      pragma Debug (Vector < Ext_Int_Type'First,
+      pragma Debug (Vector not in Skp.Interrupts.Remapped_Vector_Type,
                     KC.New_Line);
 
       Apic.EOI;

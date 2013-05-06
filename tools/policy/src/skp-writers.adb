@@ -163,7 +163,7 @@ is
       --  Add given memory region to pagetable.
       procedure Add_Memory_Region (C : Memregion_Package.Cursor);
 
-      -------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Add_Memory_Region (C : Memregion_Package.Cursor)
       is
@@ -290,7 +290,7 @@ is
       --  Add given I/O port range to I/O bitmap.
       procedure Add_Port_Range (C : Ports_Package.Cursor);
 
-      -------------------------------------------------------------------
+      ----------------------------------------------------------------------
 
       procedure Add_Port_Range (C : Ports_Package.Cursor)
       is

@@ -193,6 +193,11 @@ is
             end if;
 
             if Sig_Entry.Kind = Skp.Subjects.Handover then
+
+               --# accept Warning, 444, "Guaranteed by validated policy";
+               --# assume Current_Subject /= Sig_Entry.Dst_Subject;
+               --# end accept;
+
                CPU_Global.Swap_Subject
                  (Old_Id => Current_Subject,
                   New_Id => Sig_Entry.Dst_Subject);
@@ -298,6 +303,10 @@ is
          end if;
 
          --  Handover to trap handler subject.
+
+         --# accept Warning, 444, "Guaranteed by validated policy";
+         --# assume Current_Subject /= Trap_Entry.Dst_Subject;
+         --# end accept;
 
          CPU_Global.Swap_Subject
            (Old_Id => Current_Subject,

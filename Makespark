@@ -43,7 +43,7 @@ $(OBJ_DIR)/$(PACKAGE).rep: $(OBJ_DIR)/$(PACKAGE).idx $(OBJ_DIR)/target.cfg
 		-config_file=$(OBJ_DIR)/target.cfg    \
 		-output_directory=$(VC_DIR)           \
 		$(SPARK_FILES)
-	(cd $(VC_DIR) && sparksimp -l)
+	(cd $(VC_DIR) && sparksimp -l -p=$(NUM_CPUS))
 
 $(OBJ_DIR)/$(PACKAGE).idx: src/*.ad* $(TOP_DIR)/common/src/*.ad* $(POLICY_INC)/*.ad*
 	@sparkmake $(SPARKMAKE_OPTS)         \

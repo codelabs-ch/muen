@@ -76,13 +76,13 @@
 			<memory_layout>
 				&vtmem;
 				<!-- virtual terminal console 4 -->
-				<memory_region physical_address="29d000" virtual_address="b9000" size="4k" alignment="4k" writable="true" executable="false"/>
+				<memory_region physical_address="29e000" virtual_address="b9000" size="4k" alignment="4k" writable="true" executable="false"/>
 
 				<!-- virtual terminals 1-4      -->
 				<memory_region physical_address="260000" virtual_address="10000" size="4k" alignment="4k" writable="false" executable="false"/>
 				<memory_region physical_address="280000" virtual_address="11000" size="4k" alignment="4k" writable="false" executable="false"/>
 				<memory_region physical_address="23f000" virtual_address="12000" size="4k" alignment="4k" writable="false" executable="false"/>
-				<memory_region physical_address="29d000" virtual_address="13000" size="4k" alignment="4k" writable="false" executable="false"/>
+				<memory_region physical_address="29e000" virtual_address="13000" size="4k" alignment="4k" writable="false" executable="false"/>
 			</memory_layout>
 			<binary name="vt" physical_address="296000"/>
 			<device name="vga"/>

@@ -276,17 +276,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure VMRESUME
-   is
-      --# hide VMRESUME;
-   begin
-      System.Machine_Code.Asm
-        (Template => "vmresume",
-         Volatile => True);
-   end VMRESUME;
-
-   -------------------------------------------------------------------------
-
    procedure VMPTRLD
      (Region  :     SK.Word64;
       Success : out Boolean)
@@ -318,6 +307,17 @@ is
          Clobber  => "cc",
          Volatile => True);
    end VMREAD;
+
+   -------------------------------------------------------------------------
+
+   procedure VMRESUME
+   is
+   --# hide VMRESUME;
+   begin
+      System.Machine_Code.Asm
+        (Template => "vmresume",
+         Volatile => True);
+   end VMRESUME;
 
    -------------------------------------------------------------------------
 

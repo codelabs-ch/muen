@@ -127,6 +127,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Lidt (Address : SK.Word64)
+   is
+      --# hide Lidt;
+   begin
+      System.Machine_Code.Asm
+        (Template => "lidt (%0)",
+         Inputs   => (SK.Word64'Asm_Input ("r", Address)),
+         Volatile => True);
+   end Lidt;
+
+   -------------------------------------------------------------------------
+
    procedure Panic
    is
       --# hide Panic;

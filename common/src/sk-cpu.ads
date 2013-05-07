@@ -32,6 +32,14 @@ is
    --#    X86_64.State from *;
    pragma Inline_Always (Hlt);
 
+   --  Load Interrupt Descriptor Table (IDT) register.
+   procedure Lidt (Address : SK.Word64);
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *, Address;
+   pragma Inline_Always (Lidt);
+
    --  Panic.
    procedure Panic;
    --# global

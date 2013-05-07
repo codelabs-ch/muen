@@ -1,8 +1,8 @@
-with System.Machine_Code;
 with System.Storage_Elements;
 
 with Skp.Interrupts;
 
+with SK.CPU;
 with SK.IO;
 with SK.IO_Apic;
 
@@ -54,10 +54,8 @@ is
    is
       --# hide Load;
    begin
-      System.Machine_Code.Asm
-        (Template => "lidt (%0)",
-         Inputs   => (System.Address'Asm_Input ("r", IDT_Pointer'Address)),
-         Volatile => True);
+      CPU.Lidt (Address => SK.Word64 (System.Storage_Elements.To_Integer
+                (Value => IDT_Pointer'Address)));
    end Load;
 
    -------------------------------------------------------------------------

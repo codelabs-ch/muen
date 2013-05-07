@@ -1,4 +1,4 @@
-with "../../common/defaults";
+with "../../config/defaults";
 with "../../contrib/ada_bfd";
 
 project Skc_Tool is

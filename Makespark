@@ -10,7 +10,7 @@ SPARK_OPTS =                                      \
 	-vcg                                          \
 	-nosli                                        \
 	-nolistings                                   \
-	-warning_file=$(TOP_DIR)/common/warnings.conf \
+	-warning_file=$(TOP_DIR)/config/warnings.conf \
 	-error_explanations=first_occurrence          \
 	-language=2005                                \
 	-brief                                        \

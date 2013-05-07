@@ -1,4 +1,4 @@
-with "../common/defaults";
+with "../config/defaults";
 
 project Kernel is
 
@@ -15,7 +15,7 @@ project Kernel is
 
    package Builder is
       for Executable ("init.S") use "kernel";
-      for Global_Configuration_Pragmas use "../common/restrictions.adc";
+      for Global_Configuration_Pragmas use "../config/restrictions.adc";
    end Builder;
 
    package Compiler is

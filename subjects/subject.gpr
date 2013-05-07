@@ -1,4 +1,4 @@
-with "../common/defaults";
+with "../config/defaults";
 
 project Subject is
 
@@ -6,7 +6,7 @@ project Subject is
    for Source_Dirs use ("stubs");
 
    package Builder is
-      for Global_Configuration_Pragmas use "../common/restrictions.adc";
+      for Global_Configuration_Pragmas use "../config/restrictions.adc";
    end Builder;
 
    package Compiler is

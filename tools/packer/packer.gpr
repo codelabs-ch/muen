@@ -1,4 +1,4 @@
-with "../../common/defaults";
+with "../../config/defaults";
 
 project Packer is
 

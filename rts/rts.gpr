@@ -1,5 +1,3 @@
-with "../common/defaults.gpr";
-
 library project rts is
 
    for Languages use ("Ada");
@@ -7,7 +5,7 @@ library project rts is
    for Object_Dir use "obj";
 
    package Builder is
-      for Global_Configuration_Pragmas use "../common/restrictions.adc";
+      for Global_Configuration_Pragmas use "../config/restrictions.adc";
 	  for Default_Switches ("Ada") use ("-nostdlib", "-nostdinc");
    end Builder;
 

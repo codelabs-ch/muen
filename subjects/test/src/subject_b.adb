@@ -1,5 +1,6 @@
-with System.Machine_Code;
+with System;
 
+with SK.CPU;
 with SK.Console;
 with SK.Console_VGA;
 
@@ -56,8 +57,7 @@ begin
 
          --  Provoke exception to schedule dumper.
 
-         System.Machine_Code.Asm (Template => "ud2",
-                                  Volatile => True);
+         SK.CPU.Panic;
       end if;
    end loop;
 

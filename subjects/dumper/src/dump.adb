@@ -1,6 +1,7 @@
 with System.Machine_Code;
 with System.Storage_Elements;
 
+with SK.CPU;
 with SK.Descriptors;
 
 package body Dump
@@ -86,10 +87,10 @@ is
         (Limit => 16 * SK.Word16 (IDT'Last) - 1,
          Base  => SK.Word64
            (System.Storage_Elements.To_Integer (Value => IDT'Address)));
-      System.Machine_Code.Asm
-        (Template => "lidt (%0)",
-         Inputs   => (System.Address'Asm_Input ("r", IDT_Pointer'Address)),
-         Volatile => True);
+      SK.CPU.Lidt
+        (Address => SK.Word64
+           (System.Storage_Elements.To_Integer
+              (Value => IDT_Pointer'Address)));
    end Load_IDT;
 
    -------------------------------------------------------------------------

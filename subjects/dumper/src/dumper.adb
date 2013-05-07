@@ -1,6 +1,6 @@
 with System.Machine_Code;
 
-with SK;
+with SK.CPU;
 with SK.Console;
 with SK.Console_VGA;
 with SK.Hypercall;
@@ -38,9 +38,7 @@ begin
    System.Machine_Code.Asm
      (Template => "sti",
       Volatile => True);
-   System.Machine_Code.Asm
-     (Template => "hlt",
-      Volatile => True);
+   SK.CPU.Hlt;
 
    loop
       Id    := Dump.Current_Subject;

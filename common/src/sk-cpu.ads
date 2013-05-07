@@ -7,7 +7,7 @@ is
    --  Restore CPU register values.
    procedure Restore_Registers (Regs : SK.CPU_Registers_Type);
    --# global
-   --#    X86_64.State;
+   --#    in out X86_64.State;
    --# derives
    --#    X86_64.State from *, Regs;
    pragma Inline_Always (Restore_Registers);
@@ -19,7 +19,7 @@ is
       ECX : in out SK.Word32;
       EDX :    out SK.Word32);
    --# global
-   --#    X86_64.State;
+   --#    in X86_64.State;
    --# derives
    --#    EAX, EBX, ECX, EDX from X86_64.State, EAX, ECX;
    pragma Inline_Always (CPUID);
@@ -27,7 +27,7 @@ is
    --  Halt the CPU.
    procedure Hlt;
    --# global
-   --#    X86_64.State;
+   --#    in out X86_64.State;
    --# derives
    --#    X86_64.State from *;
    pragma Inline_Always (Hlt);
@@ -43,7 +43,7 @@ is
    --  Panic.
    procedure Panic;
    --# global
-   --#    X86_64.State;
+   --#    in out X86_64.State;
    --# derives
    --#    X86_64.State from *;
    pragma Inline_Always (Panic);
@@ -178,7 +178,7 @@ is
       Value   : out SK.Word64;
       Success : out Boolean);
    --# global
-   --#    X86_64.State;
+   --#    in X86_64.State;
    --# derives
    --#    Value, Success from X86_64.State, Field;
    pragma Inline_Always (VMREAD);

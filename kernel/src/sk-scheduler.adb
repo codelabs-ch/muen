@@ -116,35 +116,30 @@ is
    begin
       Minor_Frame := CPU_Global.Get_Current_Minor_Frame;
 
-      if Minor_Frame.Ticks = 0 then
+      if Minor_Frame.Id < CPU_Global.Get_Major_Length
+        (Major_Id => Current_Major)
+      then
 
-         --  Minor frame ticks consumed, advance to next minor frame.
+         --  Switch to next minor frame in current major frame.
 
-         if Minor_Frame.Id < CPU_Global.Get_Major_Length
-           (Major_Id => Current_Major)
-         then
+         Minor_Frame.Id := Minor_Frame.Id + 1;
+      else
 
-            --  Switch to next minor frame in current major frame.
+         --  Switch to first minor frame in next major frame.
 
-            Minor_Frame.Id := Minor_Frame.Id + 1;
-         else
+         Minor_Frame.Id := Skp.Scheduling.Minor_Frame_Range'First;
 
-            --  Switch to first minor frame in next major frame.
-
-            Minor_Frame.Id := Skp.Scheduling.Minor_Frame_Range'First;
-
-            MP.Wait_For_All;
-            if Apic.Is_BSP then
-               Current_Major := New_Major;
-            end if;
-            MP.Wait_For_All;
+         MP.Wait_For_All;
+         if Apic.Is_BSP then
+            Current_Major := New_Major;
          end if;
-
-         Minor_Frame.Ticks := CPU_Global.Get_Minor_Frame
-           (Major_Id => Current_Major,
-            Minor_Id => Minor_Frame.Id).Ticks;
-         CPU_Global.Set_Current_Minor (Frame => Minor_Frame);
+         MP.Wait_For_All;
       end if;
+
+      Minor_Frame.Ticks := CPU_Global.Get_Minor_Frame
+        (Major_Id => Current_Major,
+         Minor_Id => Minor_Frame.Id).Ticks;
+      CPU_Global.Set_Current_Minor (Frame => Minor_Frame);
    end Update_Scheduling_Info;
 
    -------------------------------------------------------------------------
@@ -451,7 +446,12 @@ is
       elsif State.Exit_Reason = Constants.VM_EXIT_HYPERCALL then
          Handle_Hypercall (Current_Subject => Current_Subject,
                            Subject_State   => State);
-      elsif State.Exit_Reason /= Constants.VM_EXIT_TIMER_EXPIRY then
+      elsif State.Exit_Reason = Constants.VM_EXIT_TIMER_EXPIRY then
+
+         --  Minor frame ticks consumed, update scheduling information.
+
+         Update_Scheduling_Info;
+      else
          if State.Exit_Reason <= SK.Word64 (Skp.Subjects.Trap_Range'Last) then
             Handle_Trap (Current_Subject => Current_Subject,
                          Subject_State   => State);
@@ -471,7 +471,6 @@ is
       Subjects.Set_State (Id    => Current_Subject,
                           State => State);
 
-      Update_Scheduling_Info;
       Schedule;
    end Handle_Vmx_Exit;
 

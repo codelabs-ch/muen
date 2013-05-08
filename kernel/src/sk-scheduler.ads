@@ -45,14 +45,12 @@ is
    --#    in     VMX.State;
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
-   --#    in     State;
    --#    in     CPU_Global.Storage;
    --#    in out X86_64.State;
    --#    in out Subjects.Descriptors;
    --# derives
    --#    Subjects.Descriptors from
    --#       *,
-   --#       State,
    --#       CPU_Global.Storage,
    --#       X86_64.State &
    --#    X86_64.State from
@@ -61,8 +59,7 @@ is
    --#       GDT.GDT_Pointer,
    --#       Interrupts.IDT_Pointer,
    --#       Subjects.Descriptors,
-   --#       CPU_Global.Storage,
-   --#       State;
+   --#       CPU_Global.Storage;
 
 private
 

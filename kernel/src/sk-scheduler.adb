@@ -337,41 +337,15 @@ is
    -------------------------------------------------------------------------
 
    procedure Schedule
-   --# global
-   --#    in     VMX.State;
-   --#    in     GDT.GDT_Pointer;
-   --#    in     Interrupts.IDT_Pointer;
-   --#    in     Current_Major;
-   --#    in     CPU_Global.Storage;
-   --#    in out X86_64.State;
-   --#    in out Subjects.Descriptors;
-   --# derives
-   --#    Subjects.Descriptors from
-   --#       *,
-   --#       Current_Major,
-   --#       CPU_Global.Storage,
-   --#       X86_64.State &
-   --#    X86_64.State from
-   --#       *,
-   --#       VMX.State,
-   --#       GDT.GDT_Pointer,
-   --#       Interrupts.IDT_Pointer,
-   --#       Subjects.Descriptors,
-   --#       CPU_Global.Storage,
-   --#       Current_Major;
    is
-      Plan_Frame    : Skp.Scheduling.Minor_Frame_Type;
-      Current_Frame : CPU_Global.Active_Minor_Frame_Type;
+      Subject_Id : Skp.Subject_Id_Type;
    begin
-      Current_Frame := CPU_Global.Get_Current_Minor_Frame;
-      Plan_Frame    := CPU_Global.Get_Minor_Frame
-        (Major_Id => Current_Major,
-         Minor_Id => Current_Frame.Minor_Id);
+      Subject_Id := CPU_Global.Get_Current_Minor_Frame.Subject_Id;
 
-      if Subjects.Get_State (Id => Plan_Frame.Subject_Id).Launched then
-         VMX.Resume (Subject_Id => Plan_Frame.Subject_Id);
+      if Subjects.Get_State (Id => Subject_Id).Launched then
+         VMX.Resume (Subject_Id => Subject_Id);
       else
-         VMX.Launch (Subject_Id => Plan_Frame.Subject_Id);
+         VMX.Launch (Subject_Id => Subject_Id);
       end if;
    end Schedule;
 

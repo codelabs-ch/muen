@@ -16,4 +16,9 @@ is
    --  Convert given word to hex string.
    function To_Hex (Item : Word16) return Word16_Hex_Str;
 
+   subtype Word32_Hex_Str is String (1 .. 8);
+
+   --  Convert given doubleword to hex string.
+   function To_Hex (Item : Word32) return Word32_Hex_Str;
+
 end SK.Utils;

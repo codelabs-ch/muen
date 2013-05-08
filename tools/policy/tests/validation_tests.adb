@@ -72,6 +72,9 @@ is
         (Routine => Invalid_Subj_MSR'Access,
          Name    => "Invalid subject MSR");
       T.Add_Test_Routine
+        (Routine => Invalid_Subj_MSR_Bitmap_Addr'Access,
+         Name    => "Invalid subject MSR bitmap address");
+      T.Add_Test_Routine
         (Routine => Invalid_Device_IRQ'Access,
          Name    => "Invalid device IRQ");
       T.Add_Test_Routine
@@ -384,6 +387,29 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Invalid_Subj_MSR_Bitmap_Addr
+   is
+      P : Policy_Type;
+   begin
+      P.Subjects.Insert
+        (New_Item => (Name               => To_Unbounded_String ("s1"),
+                      Pml4_Address       => 0,
+                      IO_Bitmap_Address  => 0,
+                      MSR_Bitmap_Address => 15,
+                      others             => <>));
+      Validators.Validate_Subjects (P => P);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : others =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Subject s1: Invalid MSR bitmap address 000000000000000f - "
+                 & "address must be 4k aligned",
+                 Message   => "Exception message mismatch");
+   end Invalid_Subj_MSR_Bitmap_Addr;
+
+   -------------------------------------------------------------------------
+
    procedure Invalid_Subj_Pml4_Addr
    is
       P : Policy_Type;
@@ -420,13 +446,14 @@ is
 
       P.Subjects.Insert
         (New_Item =>
-           (Name              => To_Unbounded_String ("s1"),
-            Pml4_Address      => 0,
-            IO_Bitmap_Address => 0,
-            Binary            => (Name   => To_Unbounded_String ("s2"),
-                                  others => 0),
-            Signal_Table      => S_Table,
-            others            => <>));
+           (Name               => To_Unbounded_String ("s1"),
+            Pml4_Address       => 0,
+            IO_Bitmap_Address  => 0,
+            MSR_Bitmap_Address => 0,
+            Binary             => (Name   => To_Unbounded_String ("s2"),
+                                   others => 0),
+            Signal_Table       => S_Table,
+            others             => <>));
       Validators.Validate_Subjects (P => P);
       Fail (Message => "Exception expected");
 
@@ -455,23 +482,25 @@ is
 
       P.Subjects.Insert
         (New_Item =>
-           (Id                => 1,
-            Name              => To_Unbounded_String ("s1"),
-            Pml4_Address      => 0,
-            IO_Bitmap_Address => 0,
-            Binary            => (Name   => To_Unbounded_String ("s2"),
-                                  others => 0),
-            others            => <>));
+           (Id                 => 1,
+            Name               => To_Unbounded_String ("s1"),
+            Pml4_Address       => 0,
+            IO_Bitmap_Address  => 0,
+            MSR_Bitmap_Address => 0,
+            Binary             => (Name   => To_Unbounded_String ("s2"),
+                                   others => 0),
+            others             => <>));
       P.Subjects.Insert
         (New_Item =>
-           (Id                => 12,
-            Name              => To_Unbounded_String ("s2"),
-            Pml4_Address      => 0,
-            IO_Bitmap_Address => 0,
-            Binary            => (Name   => To_Unbounded_String ("s2"),
-                                  others => 0),
-            Signal_Table      => S_Table,
-            others            => <>));
+           (Id                 => 12,
+            Name               => To_Unbounded_String ("s2"),
+            Pml4_Address       => 0,
+            IO_Bitmap_Address  => 0,
+            MSR_Bitmap_Address => 0,
+            Binary             => (Name   => To_Unbounded_String ("s2"),
+                                   others => 0),
+            Signal_Table       => S_Table,
+            others             => <>));
       Validators.Validate_Subjects (P => P);
       Fail (Message => "Exception expected");
 
@@ -500,13 +529,14 @@ is
 
       P.Subjects.Insert
         (New_Item =>
-           (Name              => To_Unbounded_String ("s1"),
-            Pml4_Address      => 0,
-            IO_Bitmap_Address => 0,
-            Binary            => (Name   => To_Unbounded_String ("s2"),
-                                  others => 0),
-            Signal_Table      => S_Table,
-            others            => <>));
+           (Name               => To_Unbounded_String ("s1"),
+            Pml4_Address       => 0,
+            IO_Bitmap_Address  => 0,
+            MSR_Bitmap_Address => 0,
+            Binary             => (Name   => To_Unbounded_String ("s2"),
+                                   others => 0),
+            Signal_Table       => S_Table,
+            others             => <>));
       Validators.Validate_Subjects (P => P);
       Fail (Message => "Exception expected");
 
@@ -533,13 +563,14 @@ is
 
       P.Subjects.Insert
         (New_Item =>
-           (Name              => To_Unbounded_String ("s1"),
-            Pml4_Address      => 0,
-            IO_Bitmap_Address => 0,
-            Binary            => (Name   => To_Unbounded_String ("s2"),
-                                  others => 0),
-            Trap_Table        => T_Table,
-            others            => <>));
+           (Name               => To_Unbounded_String ("s1"),
+            Pml4_Address       => 0,
+            IO_Bitmap_Address  => 0,
+            MSR_Bitmap_Address => 0,
+            Binary             => (Name   => To_Unbounded_String ("s2"),
+                                   others => 0),
+            Trap_Table         => T_Table,
+            others             => <>));
       Validators.Validate_Subjects (P => P);
       Fail (Message => "Exception expected");
 
@@ -567,13 +598,14 @@ is
 
       P.Subjects.Insert
         (New_Item =>
-           (Name              => To_Unbounded_String ("s1"),
-            Pml4_Address      => 0,
-            IO_Bitmap_Address => 0,
-            Binary            => (Name   => To_Unbounded_String ("s2"),
-                                  others => 0),
-            Trap_Table        => T_Table,
-            others            => <>));
+           (Name               => To_Unbounded_String ("s1"),
+            Pml4_Address       => 0,
+            IO_Bitmap_Address  => 0,
+            MSR_Bitmap_Address => 0,
+            Binary             => (Name   => To_Unbounded_String ("s2"),
+                                   others => 0),
+            Trap_Table         => T_Table,
+            others             => <>));
       Validators.Validate_Subjects (P => P);
       Fail (Message => "Exception expected");
 

@@ -346,6 +346,12 @@ is
               & SK.Utils.To_Hex (Item => S.IO_Bitmap_Address)
               & " - address must be 4k aligned";
          end if;
+         if S.MSR_Bitmap_Address mod SK.Page_Size /= 0 then
+            raise Validation_Error with "Subject " & To_String (S.Name)
+              & ": Invalid MSR bitmap address "
+              & SK.Utils.To_Hex (Item => S.MSR_Bitmap_Address)
+              & " - address must be 4k aligned";
+         end if;
 
          Validate_Mem_Layout (L => S.Memory_Layout);
          Validate_MSRs (M => S.MSRs);

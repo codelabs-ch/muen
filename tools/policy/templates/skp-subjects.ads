@@ -43,13 +43,14 @@ package Skp.Subjects is
      (others => Null_Signal);
 
    type Subject_Spec_Type is record
-      PML4_Address      : SK.Word64;
-      VMCS_Address      : SK.Word64;
-      IO_Bitmap_Address : SK.Word64;
-      Stack_Address     : SK.Word64;
-      Entry_Point       : SK.Word64;
-      Trap_Table        : Trap_Table_Type;
-      Signal_Table      : Signal_Table_Type;
+      PML4_Address       : SK.Word64;
+      VMCS_Address       : SK.Word64;
+      IO_Bitmap_Address  : SK.Word64;
+      MSR_Bitmap_Address : SK.Word64;
+      Stack_Address      : SK.Word64;
+      Entry_Point        : SK.Word64;
+      Trap_Table         : Trap_Table_Type;
+      Signal_Table       : Signal_Table_Type;
    end record;
 
    type Subject_Spec_Array is array (Skp.Subject_Id_Type) of Subject_Spec_Type;

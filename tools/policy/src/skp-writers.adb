@@ -909,22 +909,25 @@ is
          Buffer := Buffer & Indent & "  " & Subject.Id'Img
            & " => Subject_Spec_Type'("
            & ASCII.LF
-           & Indent & "    PML4_Address      => 16#"
+           & Indent & "    PML4_Address       => 16#"
            & SK.Utils.To_Hex (Item => Subject.Pml4_Address) & "#,"
            & ASCII.LF
-           & Indent & "    VMCS_Address      => 16#"
+           & Indent & "    VMCS_Address       => 16#"
            & SK.Utils.To_Hex (Item => VMCS_Address) & "#,"
            & ASCII.LF
-           & Indent & "    IO_Bitmap_Address => 16#"
+           & Indent & "    IO_Bitmap_Address  => 16#"
            & SK.Utils.To_Hex (Item => Subject.IO_Bitmap_Address) & "#,"
            & ASCII.LF
-           & Indent & "    Stack_Address     => 16#"
+           & Indent & "    MSR_Bitmap_Address => 16#"
+           & SK.Utils.To_Hex (Item => Subject.MSR_Bitmap_Address) & "#,"
+           & ASCII.LF
+           & Indent & "    Stack_Address      => 16#"
            & SK.Utils.To_Hex (Item => Subject.Init_State.Stack_Address) & "#,"
            & ASCII.LF
-           & Indent & "    Entry_Point       => 16#"
+           & Indent & "    Entry_Point        => 16#"
            & SK.Utils.To_Hex (Item => Subject.Init_State.Entry_Point) & "#,"
            & ASCII.LF
-           & Indent & "    Trap_Table        => ";
+           & Indent & "    Trap_Table         => ";
 
          if Subject.Trap_Table.Is_Empty then
             Buffer := Buffer & "Null_Trap_Table,";

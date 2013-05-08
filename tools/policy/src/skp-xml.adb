@@ -343,6 +343,9 @@ is
          IOBM_Str   : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "io_bitmap_address");
+         MSRBM_Str  : constant String  := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "msr_bitmap_address");
          Ports      : IO_Ports_Type;
          MSRs       : MSRs_Type;
          State      : Initial_State_Type;
@@ -564,7 +567,7 @@ is
                Name               => To_Unbounded_String (Name),
                Pml4_Address       => To_Word64 (Hex => PML4_Str),
                IO_Bitmap_Address  => To_Word64 (Hex => IOBM_Str),
-               MSR_Bitmap_Address => 0,
+               MSR_Bitmap_Address => To_Word64 (Hex => MSRBM_Str),
                Init_State         => State,
                Memory_Layout      => Subj_Mem,
                Binary             => Subj_Bin,

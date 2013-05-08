@@ -401,6 +401,8 @@ is
                  Message   => "PML4 address mismatch");
          Assert (Condition => S.IO_Bitmap_Address = 16#1a0000#,
                  Message   => "I/O bitmap address mismatch");
+         Assert (Condition => S.MSR_Bitmap_Address = 16#900000#,
+                 Message   => "MSR bitmap address mismatch");
 
          Assert (Condition => S.Init_State.Stack_Address = 16#120000#,
                  Message   => "Subject stack mismatch");

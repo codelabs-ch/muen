@@ -36,6 +36,27 @@
 		<xs:attribute name="end"   type="port_address_type" use="optional"/>
 	</xs:complexType>
 
+	<xs:simpleType name="msr_mode_type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="r"/>
+			<xs:enumeration value="w"/>
+			<xs:enumeration value="rw"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="msr_address_type">
+		<xs:restriction base="hex_string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="msr_type">
+		<xs:attribute name="start" type="msr_address_type" use="required"/>
+		<xs:attribute name="end"   type="msr_address_type" use="required"/>
+		<xs:attribute name="mode"  type="msr_mode_type"    use="required"/>
+	</xs:complexType>
+
 	<xs:complexType name="memory_region_type">
 		<xs:attribute name="physical_address" type="address_type"          use="required"/>
 		<xs:attribute name="size"             type="memory_size_type"      use="required"/>

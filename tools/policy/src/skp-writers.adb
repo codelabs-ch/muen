@@ -9,6 +9,7 @@ with SK.Utils;
 
 with Skp.Paging;
 with Skp.IO_Ports;
+with Skp.MSRs;
 with Skp.Templates;
 
 package body Skp.Writers
@@ -29,6 +30,11 @@ is
    --  Create I/O bitmap from given ports and write them to the specified file.
    procedure Write
      (Ports    : IO_Ports_Type;
+      Filename : String);
+
+   --  Create MSR bitmap from given MSRs and write them to the specified file.
+   procedure Write
+     (MSR_List : MSRs_Type;
       Filename : String);
 
    --  Write per-CPU kernel pagetables to specified directory.
@@ -309,6 +315,39 @@ is
             File     => File);
       Ada.Streams.Stream_IO.Write (File => File,
                                    Item => IO_Ports.To_Stream (B => Bitmap));
+      Ada.Streams.Stream_IO.Close (File => File);
+   end Write;
+
+   -------------------------------------------------------------------------
+
+   procedure Write
+     (MSR_List : MSRs_Type;
+      Filename : String)
+   is
+      File   : Ada.Streams.Stream_IO.File_Type;
+      Bitmap : MSRs.MSR_Bitmap_Type := MSRs.Null_MSR_Bitmap;
+
+      --  Add given MSR address range to bitmap.
+      procedure Add_MSR (C : MSRs_Package.Cursor);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_MSR (C : MSRs_Package.Cursor)
+      is
+         M : constant MSR_Type := MSRs_Package.Element (Position => C);
+      begin
+         MSRs.Allow_MSRs (Bitmap     => Bitmap,
+                          Start_Addr => M.Start_Addr,
+                          End_Addr   => M.End_Addr,
+                          Mode       => M.Mode);
+      end Add_MSR;
+   begin
+      MSR_List.Iterate (Process => Add_MSR'Access);
+
+      Open (Filename => Filename,
+            File     => File);
+      Ada.Streams.Stream_IO.Write (File => File,
+                                   Item => MSRs.To_Stream (Bitmap => Bitmap));
       Ada.Streams.Stream_IO.Close (File => File);
    end Write;
 
@@ -782,12 +821,14 @@ is
 
       procedure Write_Subject (C : Subjects_Package.Cursor)
       is
-         S       : constant Subject_Type := Subjects_Package.Element
-           (Position => C);
-         PT_File : constant String       := Dir_Name & "/" & To_String (S.Name)
+         S : constant Subject_Type := Subjects_Package.Element (Position => C);
+
+         PT_File  : constant String := Dir_Name & "/" & To_String (S.Name)
            & "_pt";
-         IO_File : constant String       := Dir_Name & "/" & To_String (S.Name)
+         IO_File  : constant String := Dir_Name & "/" & To_String (S.Name)
            & "_iobm";
+         MSR_File : constant String := Dir_Name & "/" & To_String (S.Name)
+           & "_msrbm";
       begin
          Write_Subject_Spec (Subject => S);
          Write (Mem_Layout   => S.Memory_Layout,
@@ -795,6 +836,8 @@ is
                 Filename     => PT_File);
          Write (Ports    => S.IO_Ports,
                 Filename => IO_File);
+         Write (MSR_List => S.MSRs,
+                Filename => MSR_File);
       end Write_Subject;
 
       ----------------------------------------------------------------------

@@ -186,9 +186,12 @@ is
       T0_Pts   : constant String := "obj/tau0_pt";
       S1_Pts   : constant String := "obj/subject1_pt";
       S2_Pts   : constant String := "obj/subject2_pt";
-      T0_Bm    : constant String := "obj/tau0_iobm";
-      S1_Bm    : constant String := "obj/subject1_iobm";
-      S2_Bm    : constant String := "obj/subject2_iobm";
+      T0_Ibm   : constant String := "obj/tau0_iobm";
+      T0_Mbm   : constant String := "obj/tau0_msrbm";
+      S1_Ibm   : constant String := "obj/subject1_iobm";
+      S1_Mbm   : constant String := "obj/subject1_msrbm";
+      S2_Ibm   : constant String := "obj/subject2_iobm";
+      S2_Mbm   : constant String := "obj/subject2_msrbm";
       Data     : Xml.XML_Data_Type;
       Policy   : Policy_Type;
    begin
@@ -226,21 +229,39 @@ is
       --  I/O bitmaps
 
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => T0_Bm,
+              (Filename1 => T0_Ibm,
                Filename2 => "data/tau0_iobm.ref"),
               Message   => "Tau0 I/O bitmap mismatch");
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => S1_Bm,
+              (Filename1 => S1_Ibm,
                Filename2 => "data/subject1_iobm.ref"),
               Message   => "Subject1 I/O bitmap mismatch");
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => S2_Bm,
+              (Filename1 => S2_Ibm,
                Filename2 => "data/subject2_iobm.ref"),
               Message   => "Subject2 I/O bitmap mismatch");
 
-      Ada.Directories.Delete_File (Name => T0_Bm);
-      Ada.Directories.Delete_File (Name => S1_Bm);
-      Ada.Directories.Delete_File (Name => S2_Bm);
+      --  MSR bitmaps
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => T0_Mbm,
+               Filename2 => "data/tau0_msrbm.ref"),
+              Message   => "Tau0 MSR bitmap mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => S1_Mbm,
+               Filename2 => "data/subject1_msrbm.ref"),
+              Message   => "Subject1 MSR bitmap mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => S2_Mbm,
+               Filename2 => "data/subject1_msrbm.ref"),
+              Message   => "Subject2 MSR bitmap mismatch");
+
+      Ada.Directories.Delete_File (Name => T0_Mbm);
+      Ada.Directories.Delete_File (Name => S1_Mbm);
+      Ada.Directories.Delete_File (Name => S2_Mbm);
+      Ada.Directories.Delete_File (Name => T0_Ibm);
+      Ada.Directories.Delete_File (Name => S1_Ibm);
+      Ada.Directories.Delete_File (Name => S2_Ibm);
       Ada.Directories.Delete_File (Name => T0_Pts);
       Ada.Directories.Delete_File (Name => S1_Pts);
       Ada.Directories.Delete_File (Name => S2_Pts);

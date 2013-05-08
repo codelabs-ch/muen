@@ -90,6 +90,7 @@ is
    GUEST_SEL_TR             : constant := 16#080e#;
    IO_BITMAP_A              : constant := 16#2000#;
    IO_BITMAP_B              : constant := 16#2002#;
+   MSR_BITMAP               : constant := 16#2004#;
    VMCS_LINK_POINTER        : constant := 16#2800#;
    GUEST_LIMIT_ES           : constant := 16#4800#;
    GUEST_LIMIT_CS           : constant := 16#4802#;
@@ -137,6 +138,7 @@ is
    VM_CTRL_EXIT_SAVE_TIMER  : constant := 16#0040_0000#;
    VM_CTRL_EXIT_MOV_DR      : constant := 16#0080_0000#;
    VM_CTRL_IO_BITMAPS       : constant := 16#0200_0000#;
+   VM_CTRL_MSR_BITMAPS      : constant := 16#1000_0000#;
    VM_CTRL_EXIT_MONITOR     : constant := 16#2000_0000#;
    VM_CTRL_SECONDARY_PROC   : constant := 16#8000_0000#;
 

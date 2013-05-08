@@ -33,6 +33,19 @@ is
 
    subtype IO_Ports_Type is Ports_Package.List;
 
+   type MSR_Mode_Type is (MSR_Read, MSR_Write, MSR_Read_Write);
+
+   type MSR_Type is record
+      Start_Addr : SK.Word32;
+      End_Addr   : SK.Word32;
+      Mode       : MSR_Mode_Type;
+   end record;
+
+   package MSRs_Package is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => MSR_Type);
+
+   subtype MSRs_Type is MSRs_Package.List;
+
    type Initial_State_Type is record
       Stack_Address : SK.Word64;
       Entry_Point   : SK.Word64;
@@ -200,6 +213,7 @@ is
       Memory_Layout     : Memory_Layout_Type;
       Binary            : Binary_Ref_Type;
       IO_Ports          : IO_Ports_Type;
+      MSRs              : MSRs_Type;
       Trap_Table        : Trap_Table_Type;
       Signal_Table      : Signal_Table_Type;
    end record;

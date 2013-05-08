@@ -344,6 +344,7 @@ is
            (Elem => Node,
             Name => "io_bitmap_address");
          Ports      : IO_Ports_Type;
+         MSRs       : MSRs_Type;
          State      : Initial_State_Type;
          Subj_Mem   : Memory_Layout_Type;
          Subj_Bin   : Binary_Ref_Type;
@@ -533,6 +534,7 @@ is
                Memory_Layout     => Subj_Mem,
                Binary            => Subj_Bin,
                IO_Ports          => Ports,
+               MSRs              => MSRs,
                Trap_Table        => Subj_Traps,
                Signal_Table      => Subj_Sigs));
 

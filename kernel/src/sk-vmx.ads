@@ -71,4 +71,14 @@ is
    --# derives
    --#    Value, X86_64.State from X86_64.State, Field;
 
+   --  Write given value to the specified field of the current, active VMCS. If
+   --  the operation fails, CPU.Panic is called.
+   procedure VMCS_Write
+     (Field : SK.Word16;
+      Value : SK.Word64);
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *, Field, Value;
+
 end SK.VMX;

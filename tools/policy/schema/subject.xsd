@@ -33,10 +33,11 @@
 			<xs:element name="signal_table"  type="signal_table_type"     minOccurs="0" maxOccurs="1"/>
 			<xs:element name="msr"           type="msr_type"              minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="id"                type="xs:nonNegativeInteger" use="required"/>
-		<xs:attribute name="name"              type="subject_name_type"     use="required"/>
-		<xs:attribute name="pml4_address"      type="address_type"          use="required"/>
-		<xs:attribute name="io_bitmap_address" type="address_type"          use="required"/>
+		<xs:attribute name="id"                 type="xs:nonNegativeInteger" use="required"/>
+		<xs:attribute name="name"               type="subject_name_type"     use="required"/>
+		<xs:attribute name="pml4_address"       type="address_type"          use="required"/>
+		<xs:attribute name="io_bitmap_address"  type="address_type"          use="required"/>
+		<xs:attribute name="msr_bitmap_address" type="address_type"          use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="subjects_type">

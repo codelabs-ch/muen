@@ -8,7 +8,7 @@ idle:
 	gprbuild $(BUILD_OPTS) -P$@
 
 specs: idle
-	$(SKCONFIG) $(OBJ_DIR)/idle 16#316000#
+	$(SKCONFIG) $(OBJ_DIR)/idle 16#317000#
 
 clean:
 	rm -rf $(OBJ_DIR)

@@ -9,7 +9,7 @@ $(OBJ_DIR)/$(PACKAGE):
 	gprbuild $(BUILD_OPTS) -P$(PACKAGE)
 
 specs: $(OBJ_DIR)/$(PACKAGE)
-	$(SKCONFIG) $< 16#216000#
+	$(SKCONFIG) $< 16#217000#
 
 clean:
 	rm -rf $(OBJ_DIR)

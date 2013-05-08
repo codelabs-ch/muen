@@ -30,7 +30,7 @@
 				<!-- τ0 => kernel interface page -->
 				<memory_region physical_address="1ff000" virtual_address="4000" size="4k" alignment="4k" writable="true"  executable="false"/>
 			</memory_layout>
-			<binary name="tau0" physical_address="216000"/>
+			<binary name="tau0" physical_address="217000"/>
 		</subject>
 
 		<subject id="1" name="dumper" pml4_address="230000" io_bitmap_address="234000">
@@ -42,7 +42,7 @@
 				<!-- virtual terminal console 3 -->
 				<memory_region physical_address="23f000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false"/>
 			</memory_layout>
-			<binary name="dumper" physical_address="236000"/>
+			<binary name="dumper" physical_address="237000"/>
 			<signal_table>
 				<entry kind="handover" signal="3" dst_subject="subject_b"/>
 			</signal_table>
@@ -55,7 +55,7 @@
 				<!-- virtual terminal console 1 -->
 				<memory_region physical_address="260000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false"/>
 			</memory_layout>
-			<binary name="subject_a" physical_address="256000"/>
+			<binary name="subject_a" physical_address="257000"/>
 		</subject>
 
 		<subject id="3" name="subject_b" pml4_address="270000" io_bitmap_address="274000">
@@ -65,7 +65,7 @@
 				<!-- virtual terminal console 2 -->
 				<memory_region physical_address="280000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false"/>
 			</memory_layout>
-			<binary name="subject_b" physical_address="276000"/>
+			<binary name="subject_b" physical_address="277000"/>
 			<trap_table>
 				<entry kind="exception_or_nmi" dst_subject="dumper" dst_vector="35"/>
 			</trap_table>
@@ -76,15 +76,15 @@
 			<memory_layout>
 				&vtmem;
 				<!-- virtual terminal console 4 -->
-				<memory_region physical_address="29e000" virtual_address="b9000" size="4k" alignment="4k" writable="true" executable="false"/>
+				<memory_region physical_address="29f000" virtual_address="b9000" size="4k" alignment="4k" writable="true" executable="false"/>
 
 				<!-- virtual terminals 1-4      -->
 				<memory_region physical_address="260000" virtual_address="10000" size="4k" alignment="4k" writable="false" executable="false"/>
 				<memory_region physical_address="280000" virtual_address="11000" size="4k" alignment="4k" writable="false" executable="false"/>
 				<memory_region physical_address="23f000" virtual_address="12000" size="4k" alignment="4k" writable="false" executable="false"/>
-				<memory_region physical_address="29e000" virtual_address="13000" size="4k" alignment="4k" writable="false" executable="false"/>
+				<memory_region physical_address="29f000" virtual_address="13000" size="4k" alignment="4k" writable="false" executable="false"/>
 			</memory_layout>
-			<binary name="vt" physical_address="296000"/>
+			<binary name="vt" physical_address="297000"/>
 			<device name="vga"/>
 			<device name="keyboard"/>
 		</subject>
@@ -94,7 +94,7 @@
 			<memory_layout>
 				&idlemem;
 			</memory_layout>
-			<binary name="idle" physical_address="316000"/>
+			<binary name="idle" physical_address="317000"/>
 		</subject>
 	</subjects>
 

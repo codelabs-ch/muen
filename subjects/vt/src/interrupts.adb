@@ -4,6 +4,7 @@ with System.Storage_Elements;
 with SK.CPU;
 with SK.Descriptors;
 with SK.IO;
+with SK.Apic;
 with SK.Console;
 with SK.Console_VGA;
 
@@ -142,7 +143,9 @@ is
 
       VGA.Disable_Cursor;
       Text_IO.Init;
-      Text_IO.Put_Line ("VT subject running");
+      Text_IO.Put_String (Item => "VT subject running on CPU ");
+      Text_IO.Put_Byte   (Item => SK.Apic.Get_ID);
+      Text_IO.New_Line;
    end Initialize;
 
 end Interrupts;

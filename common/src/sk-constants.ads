@@ -122,9 +122,11 @@ is
 
    VM_CTRL_EXIT_EXT_INT     : constant := 16#0000_0001#;
    VM_CTRL_EXIT_DT          : constant := 16#0000_0004#;
+   VM_CTRL_VIRT_X2APIC      : constant := 16#0000_0010#;
    VM_CTRL_EXIT_WBINVD      : constant := 16#0000_0040#;
    VM_CTRL_PREEMPT_TIMER    : constant := 16#0000_0040#;
    VM_CTRL_EXIT_HLT         : constant := 16#0000_0080#;
+   VM_CTRL_VIRT_APIC_REG    : constant := 16#0000_0100#;
    VM_CTRL_IA32E_MODE       : constant := 16#0000_0200#;
    VM_CTRL_EXIT_INVLPG      : constant := 16#0000_0200#;
    VM_CTRL_EXIT_MWAIT       : constant := 16#0000_0400#;

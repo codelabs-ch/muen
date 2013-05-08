@@ -35,6 +35,7 @@ is
      or Constants.VM_CTRL_EXIT_CR8_LOAD
      or Constants.VM_CTRL_EXIT_CR8_STORE
      or Constants.VM_CTRL_EXIT_MOV_DR
+     or Constants.VM_CTRL_MSR_BITMAPS
      or Constants.VM_CTRL_EXIT_MONITOR;
    Exec_Proc2_Defaults : constant SK.Word32 := Constants.VM_CTRL_EXIT_WBINVD;
 
@@ -133,10 +134,11 @@ is
    -------------------------------------------------------------------------
 
    procedure VMCS_Setup_Control_Fields
-     (IO_Bitmap_Address : SK.Word64;
-      Ctls_Exec_Pin     : SK.Word32;
-      Ctls_Exec_Proc    : SK.Word32;
-      Ctls_Exec_Proc2   : SK.Word32)
+     (IO_Bitmap_Address  : SK.Word64;
+      MSR_Bitmap_Address : SK.Word64;
+      Ctls_Exec_Pin      : SK.Word32;
+      Ctls_Exec_Proc     : SK.Word32;
+      Ctls_Exec_Proc2    : SK.Word32)
    --# global
    --#    in out X86_64.State;
    --# derives
@@ -145,7 +147,8 @@ is
    --#       Ctls_Exec_Pin,
    --#       Ctls_Exec_Proc,
    --#       Ctls_Exec_Proc2,
-   --#       IO_Bitmap_Address;
+   --#       IO_Bitmap_Address,
+   --#       MSR_Bitmap_Address;
    is
       Default0, Default1, Value : SK.Word32;
    begin
@@ -208,6 +211,11 @@ is
                   Value => IO_Bitmap_Address);
       VMCS_Write (Field => Constants.IO_BITMAP_B,
                   Value => IO_Bitmap_Address + SK.Page_Size);
+
+      --  MSR bitmaps.
+
+      VMCS_Write (Field => Constants.MSR_BITMAP,
+                  Value => MSR_Bitmap_Address);
 
       --  VM-exit controls.
 
@@ -402,10 +410,11 @@ is
       end if;
 
       VMCS_Setup_Control_Fields
-        (IO_Bitmap_Address => Spec.IO_Bitmap_Address,
-         Ctls_Exec_Pin     => Exec_Pin_Defaults,
-         Ctls_Exec_Proc    => Exec_Proc_Defaults,
-         Ctls_Exec_Proc2   => Exec_Proc2_Defaults);
+        (IO_Bitmap_Address  => Spec.IO_Bitmap_Address,
+         MSR_Bitmap_Address => Spec.MSR_Bitmap_Address,
+         Ctls_Exec_Pin      => Exec_Pin_Defaults,
+         Ctls_Exec_Proc     => Exec_Proc_Defaults,
+         Ctls_Exec_Proc2    => Exec_Proc2_Defaults);
       VMCS_Setup_Host_Fields;
       VMCS_Setup_Guest_Fields
         (Stack_Address => Spec.Stack_Address,

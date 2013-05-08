@@ -90,6 +90,9 @@ begin
            (SK.Utils.To_Hex (Item => Subject_Specs (S).IO_Bitmap_Address)
             & " [IOBM] " & Name);
          Ada.Text_IO.Put_Line
+           (SK.Utils.To_Hex (Item => Subject_Specs (S).MSR_Bitmap_Address)
+            & " [MSBM] " & Name);
+         Ada.Text_IO.Put_Line
            (SK.Utils.To_Hex (Item => Binary_Specs (S).Physical_Address)
             & " [BIN ] " & Name);
 
@@ -108,6 +111,11 @@ begin
             Filename => Policy_Dir & "/" & Name & "_iobm",
             Name     => Name & "_iobm",
             Address  => Subject_Specs (S).IO_Bitmap_Address);
+         Image.Add_Section
+           (Image    => Knl_Elf,
+            Filename => Policy_Dir & "/" & Name & "_msrbm",
+            Name     => Name & "_msrbm",
+            Address  => Subject_Specs (S).MSR_Bitmap_Address);
       end;
    end loop;
 

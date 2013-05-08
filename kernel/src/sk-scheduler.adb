@@ -410,7 +410,6 @@ is
       State           : SK.Subject_State_Type;
       Current_Subject : Skp.Subject_Id_Type;
       Current_Minor   : CPU_Global.Active_Minor_Frame_Type;
-      Timer_Value     : SK.Word64;
    begin
       Current_Minor := CPU_Global.Get_Current_Minor_Frame;
 
@@ -422,11 +421,6 @@ is
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => State.Exit_Reason);
-      VMX.VMCS_Read (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                     Value => Timer_Value);
-      Current_Minor.Ticks := SK.Word32'Mod (Timer_Value);
-      CPU_Global.Set_Current_Minor (Frame => Current_Minor);
-
       Store_Subject_Info (State => State);
 
       if SK.Bit_Test (Value => State.Exit_Reason,

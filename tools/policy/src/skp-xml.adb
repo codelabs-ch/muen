@@ -560,17 +560,18 @@ is
 
          Policy.Subjects.Insert
            (New_Item =>
-              (Id                => Id,
-               Name              => To_Unbounded_String (Name),
-               Pml4_Address      => To_Word64 (Hex => PML4_Str),
-               IO_Bitmap_Address => To_Word64 (Hex => IOBM_Str),
-               Init_State        => State,
-               Memory_Layout     => Subj_Mem,
-               Binary            => Subj_Bin,
-               IO_Ports          => Ports,
-               MSRs              => MSRs,
-               Trap_Table        => Subj_Traps,
-               Signal_Table      => Subj_Sigs));
+              (Id                 => Id,
+               Name               => To_Unbounded_String (Name),
+               Pml4_Address       => To_Word64 (Hex => PML4_Str),
+               IO_Bitmap_Address  => To_Word64 (Hex => IOBM_Str),
+               MSR_Bitmap_Address => 0,
+               Init_State         => State,
+               Memory_Layout      => Subj_Mem,
+               Binary             => Subj_Bin,
+               IO_Ports           => Ports,
+               MSRs               => MSRs,
+               Trap_Table         => Subj_Traps,
+               Signal_Table       => Subj_Sigs));
 
       exception
          when E : others =>

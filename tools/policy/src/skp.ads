@@ -208,17 +208,18 @@ is
    subtype Signal_Table_Type is Signals_Package.Map;
 
    type Subject_Type is record
-      Id                : Natural;
-      Name              : Ada.Strings.Unbounded.Unbounded_String;
-      Pml4_Address      : SK.Word64;
-      IO_Bitmap_Address : SK.Word64;
-      Init_State        : Initial_State_Type;
-      Memory_Layout     : Memory_Layout_Type;
-      Binary            : Binary_Ref_Type;
-      IO_Ports          : IO_Ports_Type;
-      MSRs              : MSRs_Type;
-      Trap_Table        : Trap_Table_Type;
-      Signal_Table      : Signal_Table_Type;
+      Id                 : Natural;
+      Name               : Ada.Strings.Unbounded.Unbounded_String;
+      Pml4_Address       : SK.Word64;
+      IO_Bitmap_Address  : SK.Word64;
+      MSR_Bitmap_Address : SK.Word64;
+      Init_State         : Initial_State_Type;
+      Memory_Layout      : Memory_Layout_Type;
+      Binary             : Binary_Ref_Type;
+      IO_Ports           : IO_Ports_Type;
+      MSRs               : MSRs_Type;
+      Trap_Table         : Trap_Table_Type;
+      Signal_Table       : Signal_Table_Type;
    end record;
 
    function "<" (Left, Right : Subject_Type) return Boolean;

@@ -289,6 +289,7 @@ is
 
       declare
          use type SK.Word16;
+         use type SK.Word32;
          use type SK.Word64;
 
          S  : constant Subject_Type := P.Subjects.First_Element;
@@ -439,6 +440,22 @@ is
                  Message   => "Port start mismatch");
          Assert (Condition => PR.End_Port = 16#50b0#,
                  Message   => "Port end mismatch");
+
+         --  Subject MSRs
+
+         Assert (Condition => S.MSRs.Length = 2,
+                 Message   => "MSR length mismatch");
+
+         declare
+            Msr : constant MSR_Type := S.MSRs.First_Element;
+         begin
+            Assert (Condition => Msr.Start_Addr = 16#800#,
+                    Message   => "MSR start address mismatch");
+            Assert (Condition => Msr.End_Addr = 16#802#,
+                    Message   => "MSR end address mismatch");
+            Assert (Condition => Msr.Mode = MSR_Read,
+                    Message   => "MSR mode mismatch");
+         end;
 
          --  Subject traps
 

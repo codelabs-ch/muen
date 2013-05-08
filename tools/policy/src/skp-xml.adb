@@ -354,6 +354,9 @@ is
          --  Add device resources (memory and I/O ports) to subject.
          procedure Add_Device (Node : DOM.Core.Node);
 
+         --  Add MSR resource to subject.
+         procedure Add_MSR (Node : DOM.Core.Node);
+
          --  Add trap table to subject.
          procedure Add_Traps (Node : DOM.Core.Node);
 
@@ -403,6 +406,34 @@ is
                raise Processing_Error with "No hardware device with name '"
                  & To_String (Dev_Name) & "'";
          end Add_Device;
+
+         -------------------------------------------------------------------
+
+         procedure Add_MSR (Node : DOM.Core.Node)
+         is
+            MSR       : MSR_Type;
+            Start_Str : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "start");
+            End_Str   : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "end");
+            Mode_Str  : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "mode");
+         begin
+            MSR.Start_Addr := SK.Word32 (To_Word64 (Hex => Start_Str));
+            MSR.End_Addr   := SK.Word32 (To_Word64 (Hex => End_Str));
+
+            if Mode_Str = "r" then
+               MSR.Mode := MSR_Read;
+            elsif Mode_Str = "w" then
+               MSR.Mode := MSR_Write;
+            else
+               MSR.Mode := MSR_Read_Write;
+            end if;
+            MSRs.Append (New_Item => MSR);
+         end Add_MSR;
 
          -------------------------------------------------------------------
 
@@ -503,6 +534,9 @@ is
          Util.For_Each_Node (Node     => Node,
                              Tag_Name => "device",
                              Process  => Add_Device'Access);
+         Util.For_Each_Node (Node     => Node,
+                             Tag_Name => "msr",
+                             Process  => Add_MSR'Access);
          Util.For_Each_Node (Node     => Node,
                              Tag_Name => "trap_table",
                              Process  => Add_Traps'Access);

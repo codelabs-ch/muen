@@ -60,8 +60,7 @@ is
         (Scheduling_Plan     => Skp.Scheduling.Null_Major_Frames,
          Current_Subject     => Skp.Subject_Id_Type'First,
          Current_Minor_Frame => Active_Minor_Frame_Type'
-           (Id    => Skp.Scheduling.Minor_Frame_Range'First,
-            Ticks => 0));
+           (Id => Skp.Scheduling.Minor_Frame_Range'First));
    end Init;
 
    -------------------------------------------------------------------------

@@ -360,9 +360,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Launch
-     (Subject_Id : Skp.Subject_Id_Type;
-      Time_Slice : Time_Type)
+   procedure Launch (Subject_Id : Skp.Subject_Id_Type)
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
@@ -377,8 +375,7 @@ is
    --#       Interrupts.IDT_Pointer,
    --#       VMX_Exit_Address,
    --#       Subjects.Descriptors,
-   --#       Subject_Id,
-   --#       Time_Slice;
+   --#       Subject_Id;
    is
       Success : Boolean;
       Spec    : Skp.Subjects.Subject_Spec_Type;
@@ -415,9 +412,6 @@ is
          PML4_Address  => Spec.PML4_Address,
          Entry_Point   => Spec.Entry_Point);
 
-      VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                  Value => SK.Word64 (Time_Slice));
-
       State.Launched := True;
       Subjects.Set_State (Id    => Subject_Id,
                           State => State);
@@ -441,9 +435,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Resume
-     (Subject_Id : Skp.Subject_Id_Type;
-      Time_Slice : Time_Type)
+   procedure Resume (Subject_Id : Skp.Subject_Id_Type)
    is
       Success    : Boolean;
       Spec       : Skp.Subjects.Subject_Spec_Type;
@@ -485,8 +477,6 @@ is
          end if;
       end if;
 
-      VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                  Value => SK.Word64 (Time_Slice));
       VMCS_Write (Field => Constants.GUEST_RIP,
                   Value => State.RIP);
       VMCS_Write (Field => Constants.GUEST_RSP,

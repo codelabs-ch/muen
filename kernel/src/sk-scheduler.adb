@@ -97,22 +97,23 @@ is
    procedure Update_Scheduling_Info
    --# global
    --#    in     New_Major;
-   --#    in     X86_64.State;
+   --#    in out X86_64.State;
    --#    in out Current_Major;
    --#    in out CPU_Global.Storage;
    --#    in out MP.Barrier;
    --# derives
-   --#    MP.Barrier   from
+   --#    MP.Barrier, CPU_Global.Storage from
    --#       *,
    --#       Current_Major,
    --#       CPU_Global.Storage &
-   --#    Current_Major, CPU_Global.Storage from
+   --#    Current_Major, X86_64.State from
    --#       Current_Major,
    --#       CPU_Global.Storage,
    --#       New_Major,
    --#       X86_64.State;
    is
       Minor_Frame : CPU_Global.Active_Minor_Frame_Type;
+      Plan_Frame  : Skp.Scheduling.Minor_Frame_Type;
    begin
       Minor_Frame := CPU_Global.Get_Current_Minor_Frame;
 
@@ -136,10 +137,14 @@ is
          MP.Wait_For_All;
       end if;
 
-      Minor_Frame.Ticks := CPU_Global.Get_Minor_Frame
-        (Major_Id => Current_Major,
-         Minor_Id => Minor_Frame.Id).Ticks;
+      --  Update preemption timer ticks in subject VMCS.
+
       CPU_Global.Set_Current_Minor (Frame => Minor_Frame);
+      Plan_Frame := CPU_Global.Get_Minor_Frame
+        (Major_Id => Current_Major,
+         Minor_Id => Minor_Frame.Id);
+      VMX.VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
+                      Value => SK.Word64 (Plan_Frame.Ticks));
    end Update_Scheduling_Info;
 
    -------------------------------------------------------------------------
@@ -344,11 +349,9 @@ is
          Minor_Id => Current_Frame.Id);
 
       if Subjects.Get_State (Id => Plan_Frame.Subject_Id).Launched then
-         VMX.Resume (Subject_Id => Plan_Frame.Subject_Id,
-                     Time_Slice => Current_Frame.Ticks);
+         VMX.Resume (Subject_Id => Plan_Frame.Subject_Id);
       else
-         VMX.Launch (Subject_Id => Plan_Frame.Subject_Id,
-                     Time_Slice => Plan_Frame.Ticks);
+         VMX.Launch (Subject_Id => Plan_Frame.Subject_Id);
       end if;
    end Schedule;
 
@@ -368,7 +371,6 @@ is
    --# derives
    --#    CPU_Global.Storage from
    --#       *,
-   --#       New_Major,
    --#       Current_Major,
    --#       Subject_Registers,
    --#       Subjects.Descriptors,

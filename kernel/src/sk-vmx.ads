@@ -29,10 +29,8 @@ is
    --# derives
    --#    X86_64.State from *;
 
-   --  Launch given subject for the specified VMX time.
-   procedure Launch
-     (Subject_Id : Skp.Subject_Id_Type;
-      Time_Slice : Time_Type);
+   --  Launch given subject.
+   procedure Launch (Subject_Id : Skp.Subject_Id_Type);
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Interrupts.IDT_Pointer;
@@ -47,19 +45,16 @@ is
    --#       GDT.GDT_Pointer,
    --#       Subjects.Descriptors,
    --#       Subject_Id,
-   --#       State,
-   --#       Time_Slice;
+   --#       State;
 
-   --  Resume given subject for the specified VMX time.
-   procedure Resume
-     (Subject_Id : Skp.Subject_Id_Type;
-      Time_Slice : Time_Type);
+   --  Resume given subject.
+   procedure Resume (Subject_Id : Skp.Subject_Id_Type);
    --# global
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
    --#    Subjects.Descriptors from *, Subject_Id, X86_64.State &
-   --#    X86_64.State from *, Subject_Id, Subjects.Descriptors, Time_Slice;
+   --#    X86_64.State from *, Subject_Id, Subjects.Descriptors;
 
    --  Read value from specified field of the current, active VMCS. If the
    --  operation fails, CPU.Panic is called.

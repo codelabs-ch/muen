@@ -115,9 +115,6 @@ is
    procedure Validate_MSR (M : MSR_Type)
    is
       use type SK.Word32;
-
-      subtype MSR_Low_Range  is SK.Word32 range 16#00000000# .. 16#00001fff#;
-      subtype MSR_High_Range is SK.Word32 range 16#c0000000# .. 16#c0001fff#;
    begin
       if M.Start_Addr > M.End_Addr then
          raise Validation_Error with "Invalid MSR - start address "

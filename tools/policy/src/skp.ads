@@ -46,6 +46,9 @@ is
 
    subtype MSRs_Type is MSRs_Package.List;
 
+   subtype MSR_Low_Range  is SK.Word32 range 16#00000000# .. 16#00001fff#;
+   subtype MSR_High_Range is SK.Word32 range 16#c0000000# .. 16#c0001fff#;
+
    type Initial_State_Type is record
       Stack_Address : SK.Word64;
       Entry_Point   : SK.Word64;

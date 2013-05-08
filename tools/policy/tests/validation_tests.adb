@@ -69,6 +69,9 @@ is
         (Routine => Invalid_Subj_Signal_Dst_Vec'Access,
          Name    => "Invalid subject signal entry dst vector");
       T.Add_Test_Routine
+        (Routine => Invalid_Subj_MSR'Access,
+         Name    => "Invalid subject MSR");
+      T.Add_Test_Routine
         (Routine => Invalid_Device_IRQ'Access,
          Name    => "Invalid device IRQ");
       T.Add_Test_Routine
@@ -316,6 +319,68 @@ is
                  & "address must be 4k aligned",
                  Message   => "Exception message mismatch");
    end Invalid_Subj_IO_Bitmap_Addr;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Subj_MSR
+   is
+   begin
+      begin
+         Validators.Validate_MSR (M => (Start_Addr => 16#12#,
+                                        End_Addr   => 16#1#,
+                                        Mode       => MSR_Read));
+         Fail (Message => "Exception expected (1)");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid MSR - start address 00000012 bigger than end "
+                    & "address 00000001",
+                    Message   => "Exception message mismatch (1)");
+      end;
+
+      begin
+         Validators.Validate_MSR (M => (Start_Addr => 16#2000#,
+                                        End_Addr   => 16#c0000000#,
+                                        Mode       => MSR_Read));
+         Fail (Message => "Exception expected (2)");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid MSR - start address 00002000 not in valid MSR"
+                    & " address range",
+                    Message   => "Exception message mismatch (2)");
+      end;
+
+      begin
+         Validators.Validate_MSR (M => (Start_Addr => 16#0#,
+                                        End_Addr   => 16#2000#,
+                                        Mode       => MSR_Read));
+         Fail (Message => "Exception expected (3)");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid MSR - end address 00002000 not in valid MSR"
+                    & " address range",
+                    Message   => "Exception message mismatch (3)");
+      end;
+
+      begin
+         Validators.Validate_MSR (M => (Start_Addr => 16#0#,
+                                        End_Addr   => 16#c0000000#,
+                                        Mode       => MSR_Read));
+         Fail (Message => "Exception expected (4)");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid MSR - start address 00000000 and end address "
+                    & "c0000000 not in same address range (low/high)",
+                    Message   => "Exception message mismatch (4)");
+      end;
+   end Invalid_Subj_MSR;
 
    -------------------------------------------------------------------------
 

@@ -7,6 +7,12 @@ is
    --  Validate memory layout.
    procedure Validate_Mem_Layout (L : Memory_Layout_Type);
 
+   --  Validate MSR.
+   procedure Validate_MSR (M : MSR_Type);
+
+   --  Validate MSRs.
+   procedure Validate_MSRs (M : MSRs_Type);
+
    --  Validate hardware specification.
    procedure Validate_Hardware (H : Hardware_Type);
 

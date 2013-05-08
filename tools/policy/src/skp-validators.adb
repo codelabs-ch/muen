@@ -112,6 +112,63 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Validate_MSR (M : MSR_Type)
+   is
+      use type SK.Word32;
+
+      subtype MSR_Low_Range  is SK.Word32 range 16#00000000# .. 16#00001fff#;
+      subtype MSR_High_Range is SK.Word32 range 16#c0000000# .. 16#c0001fff#;
+   begin
+      if M.Start_Addr > M.End_Addr then
+         raise Validation_Error with "Invalid MSR - start address "
+           & SK.Utils.To_Hex (Item => M.Start_Addr)
+           & " bigger than end address "
+           & SK.Utils.To_Hex (Item => M.End_Addr);
+      end if;
+
+      if M.Start_Addr not in MSR_Low_Range
+        and then M.Start_Addr not in MSR_High_Range
+      then
+         raise Validation_Error with "Invalid MSR - start address "
+           & SK.Utils.To_Hex (Item => M.Start_Addr)
+           & " not in valid MSR address range";
+      end if;
+
+      if M.End_Addr not in MSR_Low_Range
+        and then M.End_Addr not in MSR_High_Range
+      then
+         raise Validation_Error with "Invalid MSR - end address "
+           & SK.Utils.To_Hex (Item => M.End_Addr)
+           & " not in valid MSR address range";
+      end if;
+
+      if (M.Start_Addr in MSR_Low_Range
+          and then M.End_Addr not in MSR_Low_Range)
+        or
+          (M.Start_Addr in MSR_High_Range
+           and then M.End_Addr not in MSR_High_Range)
+      then
+         raise Validation_Error with "Invalid MSR - start address "
+           & SK.Utils.To_Hex (Item => M.Start_Addr) & " and end address "
+           & SK.Utils.To_Hex (Item => M.End_Addr)
+           & " not in same address range (low/high)";
+      end if;
+   end Validate_MSR;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_MSRs (M : MSRs_Type)
+   is
+      Pos : MSRs_Package.Cursor := M.First;
+   begin
+      while MSRs_Package.Has_Element (Position => Pos) loop
+         Validate_MSR (M => MSRs_Package.Element (Position => Pos));
+         MSRs_Package.Next (Position => Pos);
+      end loop;
+   end Validate_MSRs;
+
+   -------------------------------------------------------------------------
+
    procedure Validate_Policy (P : Policy_Type)
    is
       One_Megabyte   : constant SK.Word64 := 16#100000#;
@@ -294,6 +351,7 @@ is
          end if;
 
          Validate_Mem_Layout (L => S.Memory_Layout);
+         Validate_MSRs (M => S.MSRs);
 
          if P.Binaries.Find
            (Key => S.Binary.Name) = Binary_Package.No_Element

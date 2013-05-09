@@ -17,7 +17,6 @@ is
    --  Record used internally to store per-CPU global data.
    type Storage_Type is record
       Scheduling_Plan     : Skp.Scheduling.Major_Frame_Array;
-      Current_Subject     : Skp.Subject_Id_Type;
       Current_Minor_Frame : Active_Minor_Frame_Type;
    end record;
 

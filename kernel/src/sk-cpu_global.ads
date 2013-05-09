@@ -37,13 +37,6 @@ is
    --# post
    --#    Storage.Current_Subject = Id;
 
-   --  Returns the current subject id.
-   function Get_Current_Subject return Skp.Subject_Id_Type;
-   --# global
-   --#    Storage;
-   --# return
-   --#    Storage.Current_Subject;
-
    --  Set the currently active minor frame to specified frame.
    procedure Set_Current_Minor (Frame : Active_Minor_Frame_Type);
    --# global

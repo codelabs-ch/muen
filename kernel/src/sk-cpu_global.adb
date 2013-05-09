@@ -24,14 +24,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Current_Subject return Skp.Subject_Id_Type
-   is
-   begin
-      return Storage.Current_Subject;
-   end Get_Current_Subject;
-
-   -------------------------------------------------------------------------
-
    function Get_Major_Length
      (Major_Id : Skp.Scheduling.Major_Frame_Range)
       return Skp.Scheduling.Minor_Frame_Range

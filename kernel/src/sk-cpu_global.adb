@@ -105,6 +105,10 @@ is
             end if;
          end loop;
       end loop;
+
+      if Storage.Current_Minor_Frame.Subject_Id = Old_Id then
+         Storage.Current_Minor_Frame.Subject_Id := New_Id;
+      end if;
    end Swap_Subject;
 
 end SK.CPU_Global;

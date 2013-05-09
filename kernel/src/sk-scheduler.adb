@@ -102,11 +102,11 @@ is
    --#    in out CPU_Global.Storage;
    --#    in out MP.Barrier;
    --# derives
-   --#    MP.Barrier, CPU_Global.Storage from
+   --#    MP.Barrier from
    --#       *,
    --#       Current_Major,
    --#       CPU_Global.Storage &
-   --#    Current_Major, X86_64.State from
+   --#    Current_Major, CPU_Global.Storage, X86_64.State from
    --#       Current_Major,
    --#       CPU_Global.Storage,
    --#       New_Major,
@@ -137,12 +137,14 @@ is
          MP.Wait_For_All;
       end if;
 
-      --  Update preemption timer ticks in subject VMCS.
-
-      CPU_Global.Set_Current_Minor (Frame => Minor_Frame);
       Plan_Frame := CPU_Global.Get_Minor_Frame
         (Major_Id => Current_Major,
          Minor_Id => Minor_Frame.Minor_Id);
+      Minor_Frame.Subject_Id := Plan_Frame.Subject_Id;
+      CPU_Global.Set_Current_Minor (Frame => Minor_Frame);
+
+      --  Update preemption timer ticks in subject VMCS.
+
       VMX.VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
                       Value => SK.Word64 (Plan_Frame.Ticks));
    end Update_Scheduling_Info;
@@ -390,6 +392,7 @@ is
    --#    CPU_Global.Storage from
    --#       *,
    --#       Current_Major,
+   --#       New_Major,
    --#       Subject_Registers,
    --#       Subjects.Descriptors,
    --#       X86_64.State &

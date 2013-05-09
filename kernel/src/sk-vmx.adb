@@ -416,8 +416,6 @@ is
       Subjects.Set_State (Id    => Subject_Id,
                           State => State);
 
-      pragma Debug (CPU_Global.Set_Current_Subject (Id => Subject_Id));
-
       CPU.Restore_Registers
         (Regs => Subjects.Get_State (Id => Subject_Id).Regs);
       CPU.VMLAUNCH;
@@ -428,7 +426,8 @@ is
 
       pragma Debug (KC.Put_String (Item => "Error launching subject "));
       pragma Debug (KC.Put_Byte
-                    (Item => SK.Byte (CPU_Global.Get_Current_Subject)));
+                    (Item => SK.Byte
+                     (CPU_Global.Get_Current_Minor_Frame.Subject_Id)));
       pragma Debug (KC.New_Line);
       VMX_Error;
    end Launch;
@@ -482,8 +481,6 @@ is
       VMCS_Write (Field => Constants.GUEST_RSP,
                   Value => State.RSP);
 
-      pragma Debug (CPU_Global.Set_Current_Subject (Id => Subject_Id));
-
       CPU.Restore_Registers (Regs => State.Regs);
       CPU.VMRESUME;
 
@@ -493,7 +490,8 @@ is
 
       pragma Debug (KC.Put_String (Item => "Error resuming subject "));
       pragma Debug (KC.Put_Byte
-                    (Item => SK.Byte (CPU_Global.Get_Current_Subject)));
+                    (Item => SK.Byte
+                     (CPU_Global.Get_Current_Minor_Frame.Subject_Id)));
       pragma Debug (KC.New_Line);
 
       VMX_Error;

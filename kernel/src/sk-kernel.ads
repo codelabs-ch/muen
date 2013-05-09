@@ -32,7 +32,7 @@ is
    --#       X86_64.State,
    --#       Interrupts.IDT,
    --#       Interrupts.IDT_Pointer &
-   --#    Subjects.Descriptors from
+   --#    Subjects.Descriptors, CPU_Global.Storage from
    --#       *,
    --#       X86_64.State,
    --#       Scheduler.State,
@@ -45,12 +45,7 @@ is
    --#       Scheduler.State,
    --#       VMX.State,
    --#       Interrupts.IDT,
-   --#       Interrupts.IDT_Pointer &
-   --#    CPU_Global.Storage from
-   --#       *,
-   --#       Interrupts.IDT,
-   --#       Interrupts.IDT_Pointer,
-   --#       X86_64.State;
+   --#       Interrupts.IDT_Pointer;
    pragma Export (C, Main, "kmain");
 
 end SK.Kernel;

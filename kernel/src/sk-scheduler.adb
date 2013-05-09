@@ -150,12 +150,30 @@ is
    -------------------------------------------------------------------------
 
    procedure Init
+   --# global
+   --#    in     Current_Major;
+   --#    in out X86_64.State;
+   --#    in out CPU_Global.Storage;
+   --# derives
+   --#    X86_64.State       from * &
+   --#    CPU_Global.Storage from *, Current_Major, X86_64.State;
    is
-      CPU_ID : Skp.CPU_Range;
+      CPU_ID     : Skp.CPU_Range;
+      Plan_Frame : Skp.Scheduling.Minor_Frame_Type;
    begin
       Get_ID (ID => CPU_ID);
       CPU_Global.Set_Scheduling_Plan
         (Data => Skp.Scheduling.Scheduling_Plans (CPU_ID));
+
+      --  Set initial active minor frame.
+
+      Plan_Frame := CPU_Global.Get_Minor_Frame
+        (Major_Id => Current_Major,
+         Minor_Id => Skp.Scheduling.Minor_Frame_Range'First);
+      CPU_Global.Set_Current_Minor
+        (Frame => CPU_Global.Active_Minor_Frame_Type'
+           (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First,
+            Subject_Id => Plan_Frame.Subject_Id));
    end Init;
 
    -------------------------------------------------------------------------

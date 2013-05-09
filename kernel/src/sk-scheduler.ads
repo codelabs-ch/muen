@@ -32,11 +32,12 @@ is
    --  Init scheduler.
    procedure Init;
    --# global
+   --#    in     State;
    --#    in out X86_64.State;
    --#    in out CPU_Global.Storage;
    --# derives
    --#    X86_64.State       from * &
-   --#    CPU_Global.Storage from *, X86_64.State;
+   --#    CPU_Global.Storage from *, State, X86_64.State;
 
    --  Schedule subject according to the current scheduling plan.
    procedure Schedule;

@@ -66,14 +66,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Current_Subject (Id : Skp.Subject_Id_Type)
-   is
-   begin
-      Storage.Current_Subject := Id;
-   end Set_Current_Subject;
-
-   -------------------------------------------------------------------------
-
    procedure Set_Scheduling_Plan (Data : Skp.Scheduling.Major_Frame_Array)
    is
    begin

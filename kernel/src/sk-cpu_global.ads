@@ -28,15 +28,6 @@ is
    --# derives
    --#    Storage from ;
 
-   --  Set current subject to specified id.
-   procedure Set_Current_Subject (Id : Skp.Subject_Id_Type);
-   --# global
-   --#    in out Storage;
-   --# derives
-   --#    Storage from *, Id;
-   --# post
-   --#    Storage.Current_Subject = Id;
-
    --  Set the currently active minor frame to specified frame.
    procedure Set_Current_Minor (Frame : Active_Minor_Frame_Type);
    --# global

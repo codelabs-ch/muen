@@ -10,7 +10,7 @@ is
 
    --  Currently active minor frame.
    type Active_Minor_Frame_Type is record
-      Id : Skp.Scheduling.Minor_Frame_Range;
+      Minor_Id : Skp.Scheduling.Minor_Frame_Range;
    end record;
 
    --  Record used internally to store per-CPU global data.

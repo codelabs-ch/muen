@@ -117,18 +117,18 @@ is
    begin
       Minor_Frame := CPU_Global.Get_Current_Minor_Frame;
 
-      if Minor_Frame.Id < CPU_Global.Get_Major_Length
+      if Minor_Frame.Minor_Id < CPU_Global.Get_Major_Length
         (Major_Id => Current_Major)
       then
 
          --  Switch to next minor frame in current major frame.
 
-         Minor_Frame.Id := Minor_Frame.Id + 1;
+         Minor_Frame.Minor_Id := Minor_Frame.Minor_Id + 1;
       else
 
          --  Switch to first minor frame in next major frame.
 
-         Minor_Frame.Id := Skp.Scheduling.Minor_Frame_Range'First;
+         Minor_Frame.Minor_Id := Skp.Scheduling.Minor_Frame_Range'First;
 
          MP.Wait_For_All;
          if Apic.Is_BSP then
@@ -142,7 +142,7 @@ is
       CPU_Global.Set_Current_Minor (Frame => Minor_Frame);
       Plan_Frame := CPU_Global.Get_Minor_Frame
         (Major_Id => Current_Major,
-         Minor_Id => Minor_Frame.Id);
+         Minor_Id => Minor_Frame.Minor_Id);
       VMX.VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
                       Value => SK.Word64 (Plan_Frame.Ticks));
    end Update_Scheduling_Info;
@@ -346,7 +346,7 @@ is
       Current_Frame := CPU_Global.Get_Current_Minor_Frame;
       Plan_Frame    := CPU_Global.Get_Minor_Frame
         (Major_Id => Current_Major,
-         Minor_Id => Current_Frame.Id);
+         Minor_Id => Current_Frame.Minor_Id);
 
       if Subjects.Get_State (Id => Plan_Frame.Subject_Id).Launched then
          VMX.Resume (Subject_Id => Plan_Frame.Subject_Id);
@@ -415,7 +415,7 @@ is
 
       Current_Subject := CPU_Global.Get_Minor_Frame
         (Major_Id => Current_Major,
-         Minor_Id => Current_Minor.Id).Subject_Id;
+         Minor_Id => Current_Minor.Minor_Id).Subject_Id;
       State      := Subjects.Get_State (Id => Current_Subject);
       State.Regs := Subject_Registers;
 

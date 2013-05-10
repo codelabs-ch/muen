@@ -379,7 +379,7 @@ is
       Low_Dword, High_Dword : SK.Word32;
    begin
       Low_Dword  := SK.Word32'Mod (Value);
-      High_Dword := SK.Word32'Mod (Value / 2 ** 31);
+      High_Dword := SK.Word32'Mod (Value / 2 ** 32);
 
       Write_MSR (Register => Register,
                  Low      => Low_Dword,

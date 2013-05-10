@@ -34,6 +34,7 @@ is
      or Constants.VM_CTRL_EXIT_CR3_STORE
      or Constants.VM_CTRL_EXIT_CR8_LOAD
      or Constants.VM_CTRL_EXIT_CR8_STORE
+     or Constants.VM_CTRL_TPR_SHADOW
      or Constants.VM_CTRL_EXIT_MOV_DR
      or Constants.VM_CTRL_MSR_BITMAPS
      or Constants.VM_CTRL_EXIT_MONITOR;

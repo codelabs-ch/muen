@@ -95,7 +95,7 @@ is
       Get_MSR (Register => Register,
                Low      => Low_Dword,
                High     => High_Dword);
-      return 2 ** 31 * SK.Word64 (High_Dword) + SK.Word64 (Low_Dword);
+      return 2 ** 32 * SK.Word64 (High_Dword) + SK.Word64 (Low_Dword);
    end Get_MSR64;
 
    -------------------------------------------------------------------------

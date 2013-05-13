@@ -51,6 +51,12 @@ is
    procedure Validate_Kernel (K : Kernel_Type)
    is
    begin
+      if K.Pml4_Address mod SK.Page_Size /= 0 then
+         raise Validation_Error with "Invalid kernel PML4 address "
+           & SK.Utils.To_Hex (Item => K.Pml4_Address)
+           & " - address must be 4k aligned";
+      end if;
+
       Validate_Mem_Layout (L => K.Memory_Layout);
    end Validate_Kernel;
 

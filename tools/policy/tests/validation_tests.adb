@@ -30,6 +30,9 @@ is
         (Routine => Invalid_Vmcs_Addrs'Access,
          Name    => "Invalid VMCS addresses");
       T.Add_Test_Routine
+        (Routine => Invalid_Knl_Pml4_Addr'Access,
+         Name    => "Invalid kernel PML4 address");
+      T.Add_Test_Routine
         (Routine => Invalid_Sched_CPU_Ticks'Access,
          Name    => "Invalid CPU ticks in scheduling plan");
       T.Add_Test_Routine
@@ -92,6 +95,23 @@ is
                  = "Device 'd2' IRQ 10 is not unique",
                  Message   => "Exception message mismatch");
    end Invalid_Device_IRQ;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Knl_Pml4_Addr
+   is
+      K : constant Kernel_Type := (Pml4_Address => 13,
+                                   others       => <>);
+   begin
+      Validators.Validate_Kernel (K => K);
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Invalid kernel PML4 address 000000000000000d - address "
+                 & "must be 4k aligned",
+                 Message   => "Exception message mismatch");
+   end Invalid_Knl_Pml4_Addr;
 
    -------------------------------------------------------------------------
 

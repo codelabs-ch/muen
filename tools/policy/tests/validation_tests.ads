@@ -20,6 +20,9 @@ is
    --  Verify invalid VMCS addresses.
    procedure Invalid_Vmcs_Addrs;
 
+   --  Verify kernel with invalid PML4 address.
+   procedure Invalid_Knl_Pml4_Addr;
+
    --  Verify scheduling CPU elements with different total tick count.
    procedure Invalid_Sched_CPU_Ticks;
 

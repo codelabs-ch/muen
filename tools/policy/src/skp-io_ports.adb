@@ -31,17 +31,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Is_Allowed
-     (B    : IO_Bitmap_Type;
-      Port : SK.Word16)
-      return Boolean
-   is
-   begin
-      return B (Port) = Allowed;
-   end Is_Allowed;
-
-   -------------------------------------------------------------------------
-
    function To_Stream
      (B : IO_Bitmap_Type)
       return IO_Bitmap_Stream

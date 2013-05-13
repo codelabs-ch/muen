@@ -9,12 +9,6 @@ is
 
    Null_IO_Bitmap : constant IO_Bitmap_Type;
 
-   --  Returns True if access to the specified I/O port is allowed.
-   function Is_Allowed
-     (B    : IO_Bitmap_Type;
-      Port : SK.Word16)
-      return Boolean;
-
    --  Sets flag in I/O bitmap to allow access to port range specified by start
    --  and end port (inclusive).
    procedure Allow_Ports

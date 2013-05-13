@@ -1,3 +1,4 @@
+with Ada.Exceptions;
 with Ada.Strings.Unbounded;
 
 with SK.Utils;
@@ -291,24 +292,21 @@ is
               := Signals_Package.Element (Position => Pos);
          begin
             if Sig.Dst_Subject = S.Name then
-               raise Validation_Error with "Subject " & To_String (S.Name)
-                 & ": Reference to self in signal table entry"
-                 & Sig.Signal'Img;
+               raise Validation_Error with "Reference to self in signal table "
+                 & "entry" & Sig.Signal'Img;
             end if;
 
             if Get_Id (Subjects => P.Subjects,
                        Name     => Sig.Dst_Subject) = -1
             then
-               raise Validation_Error with "Subject " & To_String (S.Name)
-                 & ": Undefined destination subject '"
+               raise Validation_Error with "Undefined destination subject '"
                  & To_String (Sig.Dst_Subject) & "' in signal table entry"
                  & Sig.Signal'Img;
             end if;
 
             if Sig.Kind /= Handover and then Sig.Dst_Vector = 256 then
-               raise Validation_Error with "Subject " & To_String (S.Name)
-                 & ": No destination vector given in signal table entry"
-                 & Sig.Signal'Img;
+               raise Validation_Error with "No destination vector given in "
+                 & "signal table entry" & Sig.Signal'Img;
             end if;
          end Validate_Signal_Entry;
 
@@ -320,35 +318,31 @@ is
               (Position => Pos);
          begin
             if Trap.Dst_Subject = S.Name then
-               raise Validation_Error with "Subject " & To_String (S.Name)
-                 & ": Reference to self in trap table entry " & Trap.Kind'Img;
+               raise Validation_Error with "Reference to self in trap table "
+                 & "entry " & Trap.Kind'Img;
             end if;
 
             if Get_Id (Subjects => P.Subjects,
                        Name     => Trap.Dst_Subject) = -1
             then
-               raise Validation_Error with "Subject " & To_String (S.Name)
-                 & ": Undefined destination subject '"
+               raise Validation_Error with "Undefined destination subject '"
                  & To_String (Trap.Dst_Subject) & "' in trap table entry "
                  & Trap.Kind'Img;
             end if;
          end Validate_Trap_Entry;
       begin
          if S.Pml4_Address mod SK.Page_Size /= 0 then
-            raise Validation_Error with "Subject " & To_String (S.Name)
-              & ": Invalid PML4 address "
+            raise Validation_Error with "Invalid PML4 address "
               & SK.Utils.To_Hex (Item => S.Pml4_Address)
               & " - address must be 4k aligned";
          end if;
          if S.IO_Bitmap_Address mod SK.Page_Size /= 0 then
-            raise Validation_Error with "Subject " & To_String (S.Name)
-              & ": Invalid I/O bitmap address "
+            raise Validation_Error with "Invalid I/O bitmap address "
               & SK.Utils.To_Hex (Item => S.IO_Bitmap_Address)
               & " - address must be 4k aligned";
          end if;
          if S.MSR_Bitmap_Address mod SK.Page_Size /= 0 then
-            raise Validation_Error with "Subject " & To_String (S.Name)
-              & ": Invalid MSR bitmap address "
+            raise Validation_Error with "Invalid MSR bitmap address "
               & SK.Utils.To_Hex (Item => S.MSR_Bitmap_Address)
               & " - address must be 4k aligned";
          end if;
@@ -359,13 +353,17 @@ is
          if P.Binaries.Find
            (Key => S.Binary.Name) = Binary_Package.No_Element
          then
-            raise Validation_Error with "Subject " & To_String (S.Name)
-              & ": Referenced binary '" & To_String (S.Binary.Name)
-              & "' not found in policy";
+            raise Validation_Error with "Referenced binary '"
+              & To_String (S.Binary.Name) & "' not found in policy";
          end if;
 
          S.Trap_Table.Iterate (Process => Validate_Trap_Entry'Access);
          S.Signal_Table.Iterate (Process => Validate_Signal_Entry'Access);
+
+      exception
+         when E : Validation_Error =>
+            raise Validation_Error with "Subject " & To_String (S.Name) & ": "
+              & Ada.Exceptions.Exception_Message (X => E);
       end Validate_Subject;
    begin
       P.Subjects.Iterate (Process => Validate_Subject'Access);

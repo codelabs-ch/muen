@@ -1,22 +1,39 @@
 with System;
 
 package body SK.Subjects
+--# own Descriptors is Subject_Descs, Posted_Int_Descs;
 is
 
    subtype Descriptor_Array is SK.Subject_State_Array (Skp.Subject_Id_Type);
 
    --  Descriptors used to manage subject states.
-   --# accept Warning, 396, Descriptors, "Not an external variable";
-   Descriptors : Descriptor_Array;
-   for Descriptors'Address use System'To_Address (16#001fe000#);
+   --# accept Warning, 396, Subject_Descs, "Not an external variable";
+   Subject_Descs : Descriptor_Array;
+   for Subject_Descs'Address use System'To_Address (16#001fe000#);
    --# end accept;
+
+   --  Posted-Interrupt Descriptor, as specified in Intel SDM Vol. 3C, section
+   --  29.6.
+
+   type PID_Quadword_Range is range 1 .. 8;
+
+   type Posted_Int_Descriptor_Type is array (PID_Quadword_Range) of SK.Word64;
+   for Posted_Int_Descriptor_Type'Size use 512;
+   for Posted_Int_Descriptor_Type'Alignment use 512;
+
+   type Posted_Int_Descriptor_Array is array (Skp.Subject_Id_Type)
+     of Posted_Int_Descriptor_Type;
+
+   Posted_Int_Descs : Posted_Int_Descriptor_Array;
 
    -------------------------------------------------------------------------
 
    function Get_State (Id : Skp.Subject_Id_Type) return SK.Subject_State_Type
+   --# global
+   --#    Subject_Descs;
    is
    begin
-      return Descriptors (Id);
+      return Subject_Descs (Id);
    end Get_State;
 
    -------------------------------------------------------------------------
@@ -24,12 +41,16 @@ is
    procedure Set_State
      (Id    : Skp.Subject_Id_Type;
       State : SK.Subject_State_Type)
+   --# global
+   --#    Subject_Descs;
+   --# derives
+   --#    Subject_Descs from *, Id, State;
    is
       Vector : SK.Byte;
    begin
-      Vector := Descriptors (Id).Pending_Event;
-      Descriptors (Id) := State;
-      Descriptors (Id).Pending_Event := Vector;
+      Vector := Subject_Descs (Id).Pending_Event;
+      Subject_Descs (Id) := State;
+      Subject_Descs (Id).Pending_Event := Vector;
    end Set_State;
 
    -------------------------------------------------------------------------
@@ -37,13 +58,20 @@ is
    procedure Set_Pending_Event
      (Id     : Skp.Subject_Id_Type;
       Vector : SK.Byte)
+   --# global
+   --#    Subject_Descs;
+   --# derives
+   --#    Subject_Descs from *, Id, Vector;
    is
    begin
-      Descriptors (Id).Pending_Event := Vector;
+      Subject_Descs (Id).Pending_Event := Vector;
    end Set_Pending_Event;
 
 begin
-   Descriptors := Descriptor_Array'
+   Subject_Descs := Descriptor_Array'
      (others => SK.Subject_State_Type'
         (SK.Null_Subject_State));
+   Posted_Int_Descs := Posted_Int_Descriptor_Array'
+     (others => Posted_Int_Descriptor_Type'
+        (others => 0));
 end SK.Subjects;

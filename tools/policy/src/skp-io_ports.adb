@@ -18,19 +18,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Deny_Ports
-     (B          : in out IO_Bitmap_Type;
-      Start_Port :        SK.Word16;
-      End_Port   :        SK.Word16)
-   is
-   begin
-      for Port in SK.Word16 range Start_Port .. End_Port loop
-         B (Port) := Denied;
-      end loop;
-   end Deny_Ports;
-
-   -------------------------------------------------------------------------
-
    function To_Stream
      (B : IO_Bitmap_Type)
       return IO_Bitmap_Stream

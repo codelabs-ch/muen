@@ -16,13 +16,6 @@ is
       Start_Port :        SK.Word16;
       End_Port   :        SK.Word16);
 
-   --  Sets flags in I/O bitmap to deny access to port range specified by start
-   --  and end port (inclusive).
-   procedure Deny_Ports
-     (B          : in out IO_Bitmap_Type;
-      Start_Port :        SK.Word16;
-      End_Port   :        SK.Word16);
-
    use type Ada.Streams.Stream_Element_Offset;
 
    subtype IO_Bitmap_Stream is Ada.Streams.Stream_Element_Array

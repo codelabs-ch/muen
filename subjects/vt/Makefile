@@ -8,7 +8,7 @@ vt:
 	gprbuild $(BUILD_OPTS) -P$@
 
 specs: vt
-	$(SKCONFIG) $(OBJ_DIR)/vt 16#297000#
+	$(SKCONFIG) $(OBJ_DIR)/vt 16#29a000#
 
 clean:
 	@rm -rf $(OBJ_DIR)

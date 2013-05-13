@@ -38,6 +38,7 @@
 		<xs:attribute name="pml4_address"       type="address_type"          use="required"/>
 		<xs:attribute name="io_bitmap_address"  type="address_type"          use="required"/>
 		<xs:attribute name="msr_bitmap_address" type="address_type"          use="required"/>
+		<xs:attribute name="vapic_address"      type="address_type"          use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="subjects_type">

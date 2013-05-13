@@ -568,6 +568,7 @@ is
                Pml4_Address       => To_Word64 (Hex => PML4_Str),
                IO_Bitmap_Address  => To_Word64 (Hex => IOBM_Str),
                MSR_Bitmap_Address => To_Word64 (Hex => MSRBM_Str),
+               VAPIC_Address      => 0,
                Init_State         => State,
                Memory_Layout      => Subj_Mem,
                Binary             => Subj_Bin,

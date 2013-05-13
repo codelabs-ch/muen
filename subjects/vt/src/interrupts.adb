@@ -55,9 +55,21 @@ is
    procedure Handle_Interrupt
    is
       use type SK.Byte;
+      use type SK.Word64;
 
       Status, Data : SK.Byte;
+      IRR, ISR     : SK.Word64;
    begin
+      IRR := SK.CPU.Get_MSR64 (Register => 16#820#);
+      ISR := SK.CPU.Get_MSR64 (Register => 16#810#);
+
+      Text_IO.Put_String ("IRR: ");
+      Text_IO.Put_Word64 (IRR);
+      Text_IO.New_Line;
+      Text_IO.Put_String ("ISR: ");
+      Text_IO.Put_Word64 (ISR);
+      Text_IO.New_Line;
+
       loop
          SK.IO.Inb (Port  => Status_Register,
                     Value => Status);
@@ -145,6 +157,14 @@ is
       Text_IO.Init;
       Text_IO.Put_String (Item => "VT subject running on CPU ");
       Text_IO.Put_Byte   (Item => SK.Apic.Get_ID);
+      Text_IO.New_Line;
+
+      Text_IO.Put_String (Item => "VTPR: ");
+      Text_IO.Put_Word64 (Item => SK.CPU.Get_MSR64 (Register => 16#808#));
+      Text_IO.New_Line;
+
+      Text_IO.Put_String (Item => "VPPR: ");
+      Text_IO.Put_Word64 (Item => SK.CPU.Get_MSR64 (Register => 16#80A#));
       Text_IO.New_Line;
    end Initialize;
 

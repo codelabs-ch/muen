@@ -23,8 +23,7 @@ is
    SEL_TSS       : constant := 16#18#;
 
    Exec_Pin_Defaults   : constant SK.Word32 := Constants.VM_CTRL_EXIT_EXT_INT
-     or Constants.VM_CTRL_PREEMPT_TIMER
-     or Constants.VM_CTRL_PROC_POSTED_INT;
+     or Constants.VM_CTRL_PREEMPT_TIMER;
    Exec_Proc_Defaults  : constant SK.Word32 := Constants.VM_CTRL_IO_BITMAPS
      or Constants.VM_CTRL_SECONDARY_PROC
      or Constants.VM_CTRL_EXIT_INVLPG
@@ -33,8 +32,6 @@ is
      or Constants.VM_CTRL_EXIT_RDTSC
      or Constants.VM_CTRL_EXIT_CR3_LOAD
      or Constants.VM_CTRL_EXIT_CR3_STORE
-     or Constants.VM_CTRL_EXIT_CR8_LOAD
-     or Constants.VM_CTRL_EXIT_CR8_STORE
      or Constants.VM_CTRL_TPR_SHADOW
      or Constants.VM_CTRL_EXIT_MOV_DR
      or Constants.VM_CTRL_MSR_BITMAPS
@@ -141,7 +138,6 @@ is
      (IO_Bitmap_Address  : SK.Word64;
       MSR_Bitmap_Address : SK.Word64;
       VAPIC_Address      : SK.Word64;
-      PINT_Desc_Address  : SK.Word64;
       Ctls_Exec_Pin      : SK.Word32;
       Ctls_Exec_Proc     : SK.Word32;
       Ctls_Exec_Proc2    : SK.Word32)
@@ -155,7 +151,6 @@ is
    --#       Ctls_Exec_Proc2,
    --#       IO_Bitmap_Address,
    --#       MSR_Bitmap_Address,
-   --#       PINT_Desc_Address,
    --#       VAPIC_Address;
    is
       Default0, Default1, Value : SK.Word32;
@@ -229,8 +224,6 @@ is
 
       VMCS_Write (Field => Constants.VAPIC_ADDRESS,
                   Value => VAPIC_Address);
-      VMCS_Write (Field => Constants.POSTED_INTR_DESC_ADDRESS,
-                  Value => PINT_Desc_Address);
 
       --  VM-exit controls.
 
@@ -428,8 +421,6 @@ is
         (IO_Bitmap_Address  => Spec.IO_Bitmap_Address,
          MSR_Bitmap_Address => Spec.MSR_Bitmap_Address,
          VAPIC_Address      => Spec.VAPIC_Address,
-         PINT_Desc_Address  => Subjects.Get_Posted_Int_Descriptor_Addr
-           (Id => Subject_Id),
          Ctls_Exec_Pin      => Exec_Pin_Defaults,
          Ctls_Exec_Proc     => Exec_Proc_Defaults,
          Ctls_Exec_Proc2    => Exec_Proc2_Defaults);

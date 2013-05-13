@@ -88,6 +88,7 @@ is
    GUEST_SEL_SS             : constant := 16#0804#;
    GUEST_SEL_DS             : constant := 16#0806#;
    GUEST_SEL_TR             : constant := 16#080e#;
+   GUEST_INTERRUPT_STATUS   : constant := 16#0810#;
    IO_BITMAP_A              : constant := 16#2000#;
    IO_BITMAP_B              : constant := 16#2002#;
    MSR_BITMAP               : constant := 16#2004#;

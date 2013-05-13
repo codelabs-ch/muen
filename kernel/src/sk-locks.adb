@@ -25,7 +25,7 @@ is
    begin
       loop
          System.Machine_Code.Asm
-           (Template => "mov $1, %%eax; lock xchgl %%eax, (%%edx)",
+           (Template => "mov $1, %%eax; lock xchgl %%eax, (%%edx); pause",
             Outputs  => (SK.Byte'Asm_Output ("=a", Result)),
             Inputs   => (System.Address'Asm_Input ("d", Lock.Locked'Address)));
 

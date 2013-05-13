@@ -403,6 +403,8 @@ is
                  Message   => "I/O bitmap address mismatch");
          Assert (Condition => S.MSR_Bitmap_Address = 16#900000#,
                  Message   => "MSR bitmap address mismatch");
+         Assert (Condition => S.VAPIC_Address = 16#400000#,
+                 Message   => "VAPIC address mismatch");
 
          Assert (Condition => S.Init_State.Stack_Address = 16#120000#,
                  Message   => "Subject stack mismatch");

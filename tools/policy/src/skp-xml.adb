@@ -346,6 +346,9 @@ is
          MSRBM_Str  : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "msr_bitmap_address");
+         VAPIC_Str  : constant String  := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "vapic_address");
          Ports      : IO_Ports_Type;
          MSRs       : MSRs_Type;
          State      : Initial_State_Type;
@@ -568,7 +571,7 @@ is
                Pml4_Address       => To_Word64 (Hex => PML4_Str),
                IO_Bitmap_Address  => To_Word64 (Hex => IOBM_Str),
                MSR_Bitmap_Address => To_Word64 (Hex => MSRBM_Str),
-               VAPIC_Address      => 0,
+               VAPIC_Address      => To_Word64 (Hex => VAPIC_Str),
                Init_State         => State,
                Memory_Layout      => Subj_Mem,
                Binary             => Subj_Bin,

@@ -47,6 +47,7 @@ package Skp.Subjects is
       VMCS_Address       : SK.Word64;
       IO_Bitmap_Address  : SK.Word64;
       MSR_Bitmap_Address : SK.Word64;
+      VAPIC_Address      : SK.Word64;
       Stack_Address      : SK.Word64;
       Entry_Point        : SK.Word64;
       Trap_Table         : Trap_Table_Type;

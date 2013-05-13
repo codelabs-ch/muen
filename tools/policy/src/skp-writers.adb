@@ -921,6 +921,9 @@ is
            & Indent & "    MSR_Bitmap_Address => 16#"
            & SK.Utils.To_Hex (Item => Subject.MSR_Bitmap_Address) & "#,"
            & ASCII.LF
+           & Indent & "    VAPIC_Address      => 16#"
+           & SK.Utils.To_Hex (Item => Subject.VAPIC_Address) & "#,"
+           & ASCII.LF
            & Indent & "    Stack_Address      => 16#"
            & SK.Utils.To_Hex (Item => Subject.Init_State.Stack_Address) & "#,"
            & ASCII.LF

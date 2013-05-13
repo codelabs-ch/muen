@@ -33,4 +33,11 @@ is
    --# derives
    --#    Descriptors from *, Id, Vector;
 
+   --  Return address of Posted-Interrupt descriptor for given subject.
+   function Get_Posted_Int_Descriptor_Addr
+     (Id : Skp.Subject_Id_Type)
+      return SK.Word64;
+   --# global
+   --#    Descriptors;
+
 end SK.Subjects;

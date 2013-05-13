@@ -1,4 +1,4 @@
-with System;
+with System.Storage_Elements;
 
 package body SK.Subjects
 --# own Descriptors is Subject_Descs, Posted_Int_Descs;
@@ -25,6 +25,23 @@ is
      of Posted_Int_Descriptor_Type;
 
    Posted_Int_Descs : Posted_Int_Descriptor_Array;
+
+   -------------------------------------------------------------------------
+
+   function Get_Posted_Int_Descriptor_Addr
+     (Id : Skp.Subject_Id_Type)
+      return SK.Word64
+   --# global
+   --#    Posted_Int_Descs;
+   is
+      --# hide Get_Posted_Int_Descriptor_Addr;
+      Offset : SK.Word64;
+   begin
+      Offset := SK.Word64 (Id * Posted_Int_Descriptor_Type'Size);
+      return SK.Word64
+        (System.Storage_Elements.To_Integer
+           (Value => Posted_Int_Descs'Address)) + Offset;
+   end Get_Posted_Int_Descriptor_Addr;
 
    -------------------------------------------------------------------------
 

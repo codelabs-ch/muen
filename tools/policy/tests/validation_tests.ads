@@ -65,6 +65,9 @@ is
    --  Verify subject with invalid MSR bitmap address.
    procedure Invalid_Subj_MSR_Bitmap_Addr;
 
+   --  Verify subject with invalid Virtual-APIC address.
+   procedure Invalid_Subj_VAPIC_Addr;
+
    --  Verify device with non-unique IRQ.
    procedure Invalid_Device_IRQ;
 

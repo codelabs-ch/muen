@@ -75,6 +75,9 @@ is
         (Routine => Invalid_Subj_MSR_Bitmap_Addr'Access,
          Name    => "Invalid subject MSR bitmap address");
       T.Add_Test_Routine
+        (Routine => Invalid_Subj_VAPIC_Addr'Access,
+         Name    => "Invalid subject Virtual-APIC address");
+      T.Add_Test_Routine
         (Routine => Invalid_Device_IRQ'Access,
          Name    => "Invalid device IRQ");
       T.Add_Test_Routine
@@ -288,6 +291,7 @@ is
            (Name              => To_Unbounded_String ("s1"),
             Pml4_Address      => 0,
             IO_Bitmap_Address => 0,
+            VAPIC_Address     => 0,
             Binary            => (Name   => To_Unbounded_String ("s2"),
                                   others => 0),
             others            => <>));
@@ -450,6 +454,7 @@ is
             Pml4_Address       => 0,
             IO_Bitmap_Address  => 0,
             MSR_Bitmap_Address => 0,
+            VAPIC_Address      => 0,
             Binary             => (Name   => To_Unbounded_String ("s2"),
                                    others => 0),
             Signal_Table       => S_Table,
@@ -487,6 +492,7 @@ is
             Pml4_Address       => 0,
             IO_Bitmap_Address  => 0,
             MSR_Bitmap_Address => 0,
+            VAPIC_Address      => 0,
             Binary             => (Name   => To_Unbounded_String ("s2"),
                                    others => 0),
             others             => <>));
@@ -497,6 +503,7 @@ is
             Pml4_Address       => 0,
             IO_Bitmap_Address  => 0,
             MSR_Bitmap_Address => 0,
+            VAPIC_Address      => 0,
             Binary             => (Name   => To_Unbounded_String ("s2"),
                                    others => 0),
             Signal_Table       => S_Table,
@@ -533,6 +540,7 @@ is
             Pml4_Address       => 0,
             IO_Bitmap_Address  => 0,
             MSR_Bitmap_Address => 0,
+            VAPIC_Address      => 0,
             Binary             => (Name   => To_Unbounded_String ("s2"),
                                    others => 0),
             Signal_Table       => S_Table,
@@ -567,6 +575,7 @@ is
             Pml4_Address       => 0,
             IO_Bitmap_Address  => 0,
             MSR_Bitmap_Address => 0,
+            VAPIC_Address      => 0,
             Binary             => (Name   => To_Unbounded_String ("s2"),
                                    others => 0),
             Trap_Table         => T_Table,
@@ -602,6 +611,7 @@ is
             Pml4_Address       => 0,
             IO_Bitmap_Address  => 0,
             MSR_Bitmap_Address => 0,
+            VAPIC_Address      => 0,
             Binary             => (Name   => To_Unbounded_String ("s2"),
                                    others => 0),
             Trap_Table         => T_Table,
@@ -616,6 +626,30 @@ is
                  & "EXCEPTION_OR_NMI",
                  Message   => "Exception message mismatch");
    end Invalid_Subj_Trap_Self_Ref;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Subj_VAPIC_Addr
+   is
+      P : Policy_Type;
+   begin
+      P.Subjects.Insert
+        (New_Item => (Name               => To_Unbounded_String ("s1"),
+                      Pml4_Address       => 0,
+                      IO_Bitmap_Address  => 0,
+                      MSR_Bitmap_Address => 0,
+                      VAPIC_Address      => 15,
+                      others             => <>));
+      Validators.Validate_Subjects (P => P);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : others =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Subject s1: Invalid Virtual-APIC address 000000000000000f "
+                 & "- address must be 4k aligned",
+                 Message   => "Exception message mismatch");
+   end Invalid_Subj_VAPIC_Addr;
 
    -------------------------------------------------------------------------
 

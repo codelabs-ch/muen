@@ -24,79 +24,28 @@ is
    procedure IO_Bitmap_Handling
    is
       use type SK.Word16;
+      use type IO_Ports.IO_Bitmap_Stream;
 
-      Port1 : constant SK.Word16 := 16#50b0#;
-      Port2 : constant SK.Word16 := 16#03d4#;
-      Port3 : constant SK.Word16 := 16#03d5#;
-      B     : IO_Ports.IO_Bitmap_Type := IO_Ports.Null_IO_Bitmap;
+      B        : IO_Ports.IO_Bitmap_Type            := IO_Ports.Null_IO_Bitmap;
+      Null_Ref : constant IO_Ports.IO_Bitmap_Stream := (others => 16#ff#);
+      S_Ref    : IO_Ports.IO_Bitmap_Stream          := (2583   => 16#fe#,
+                                                        others => 16#ff#);
    begin
-      for P in SK.Word16 loop
-         Assert (Condition => not IO_Ports.Is_Allowed
-                 (B    => B,
-                  Port => P),
-                 Message   => "Null bitmap allows access");
-      end loop;
+      Assert (Condition => IO_Ports.To_Stream (B => B) = Null_Ref,
+              Message   => "Null bitmap allows access");
 
       IO_Ports.Allow_Ports (B          => B,
-                            Start_Port => Port1,
-                            End_Port   => Port1);
-      for P in SK.Word16 loop
-         if P = Port1 then
-            Assert (Condition => IO_Ports.Is_Allowed
-                    (B    => B,
-                     Port => P),
-                    Message   => "Error allowing single port (1)");
-         else
-            Assert (Condition => not IO_Ports.Is_Allowed
-                    (B    => B,
-                     Port => P),
-                    Message   => "Error allowing single port (2)");
-         end if;
-      end loop;
+                            Start_Port => 16#50b0#,
+                            End_Port   => 16#50b0#);
+      Assert (Condition => IO_Ports.To_Stream (B => B) = S_Ref,
+              Message   => "Error allowing single port");
 
       IO_Ports.Allow_Ports (B          => B,
-                            Start_Port => Port2,
-                            End_Port   => Port3);
-      for P in SK.Word16 loop
-         if P = Port1 or P in Port2 .. Port3 then
-            Assert (Condition => IO_Ports.Is_Allowed
-                    (B    => B,
-                     Port => P),
-                    Message   => "Error allowing ports (1)");
-         else
-            Assert (Condition => not IO_Ports.Is_Allowed
-                    (B    => B,
-                     Port => P),
-                    Message   => "Error allowing ports (2)");
-         end if;
-      end loop;
-
-      IO_Ports.Deny_Ports (B          => B,
-                           Start_Port => Port1,
-                           End_Port   => Port1);
-      for P in SK.Word16 loop
-         if P in Port2 .. Port3 then
-            Assert (Condition => IO_Ports.Is_Allowed
-                    (B    => B,
-                     Port => P),
-                    Message   => "Error denying port (1)");
-         else
-            Assert (Condition => not IO_Ports.Is_Allowed
-                    (B    => B,
-                     Port => P),
-                    Message   => "Error denying port (2)");
-         end if;
-      end loop;
-
-      IO_Ports.Deny_Ports (B          => B,
-                           Start_Port => Port2,
-                           End_Port   => Port3);
-      for P in SK.Word16 loop
-         Assert (Condition => not IO_Ports.Is_Allowed
-                 (B    => B,
-                  Port => P),
-                 Message   => "Error denying ports");
-      end loop;
+                            Start_Port => 16#03d4#,
+                            End_Port   => 16#03d5#);
+      S_Ref (123) := 16#cf#;
+      Assert (Condition => IO_Ports.To_Stream (B => B) = S_Ref,
+              Message   => "Error allowing ports");
    end IO_Bitmap_Handling;
 
 end IO_Port_Tests;

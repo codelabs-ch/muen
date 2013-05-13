@@ -44,13 +44,11 @@ is
    --#    Lock from *;
    is
       --# hide Unlock;
-
-      Result : SK.Byte;
    begin
       System.Machine_Code.Asm
-        (Template => "movq $0, %%rax; lock xchgl %%eax, (%%edx)",
-         Outputs  => (SK.Byte'Asm_Output ("=a", Result)),
-         Inputs   => (System.Address'Asm_Input ("d", Lock.Locked'Address)));
+        (Template => "movq $0, %0",
+         Outputs  => (SK.Byte'Asm_Output ("=m", Lock.Locked)),
+         Volatile => True);
    end Unlock;
 
 begin

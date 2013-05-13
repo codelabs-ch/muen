@@ -33,7 +33,7 @@
 
 	<xs:complexType name="io_port_type">
 		<xs:attribute name="start" type="port_address_type" use="required"/>
-		<xs:attribute name="end"   type="port_address_type" use="optional"/>
+		<xs:attribute name="end"   type="port_address_type" use="required"/>
 	</xs:complexType>
 
 	<xs:simpleType name="msr_mode_type">

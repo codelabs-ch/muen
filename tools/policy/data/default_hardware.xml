@@ -1,7 +1,7 @@
 <hardware>
 	<processor logical_cpus="2" speed="2900" vmx_timer_rate="5"/>
 	<device name="serial">
-		<io_port start="50b0"/>
+		<io_port start="50b0" end="50b0"/>
 	</device>
 	<device name="vga">
 		<memory_layout>
@@ -14,6 +14,6 @@
 		<io_port start="abcd" end="bcda"/>
 	</device>
 	<device name="testdevice" irq="15">
-		<io_port start="00ab"/>
+		<io_port start="00ab" end="00ab"/>
 	</device>
 </hardware>

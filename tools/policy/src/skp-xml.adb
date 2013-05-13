@@ -179,12 +179,7 @@ is
             Name => "end");
       begin
          P_Range.Start_Port := SK.Word16 (To_Word64 (Hex => Start_Port_Str));
-
-         if End_Port_Str'Length = 0 then
-            P_Range.End_Port := P_Range.Start_Port;
-         else
-            P_Range.End_Port := SK.Word16 (To_Word64 (Hex => End_Port_Str));
-         end if;
+         P_Range.End_Port   := SK.Word16 (To_Word64 (Hex => End_Port_Str));
 
          Ports.Append (New_Item => P_Range);
       end Add_Port_Range;

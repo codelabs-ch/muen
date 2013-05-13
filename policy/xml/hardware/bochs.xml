@@ -4,8 +4,8 @@
 		<io_port start="03f8" end="03fd"/>
 	</device>
 	<device name="keyboard" irq="1">
-		<io_port start="0060"/>
-		<io_port start="0064"/>
+		<io_port start="0060" end="0060"/>
+		<io_port start="0064" end="0064"/>
 	</device>
 	<device name="vga">
 		<memory_layout>

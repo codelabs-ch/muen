@@ -56,6 +56,11 @@ is
            & SK.Utils.To_Hex (Item => K.Pml4_Address)
            & " - address must be 4k aligned";
       end if;
+      if K.Stack_Address mod SK.Page_Size /= 0 then
+         raise Validation_Error with "Invalid kernel stack address "
+           & SK.Utils.To_Hex (Item => K.Stack_Address)
+           & " - address must be 4k aligned";
+      end if;
 
       Validate_Mem_Layout (L => K.Memory_Layout);
    end Validate_Kernel;

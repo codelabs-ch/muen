@@ -23,6 +23,9 @@ is
    --  Verify kernel with invalid PML4 address.
    procedure Invalid_Knl_Pml4_Addr;
 
+   --  Verify kernel with invalid stack address.
+   procedure Invalid_Knl_Stack_Addr;
+
    --  Verify scheduling CPU elements with different total tick count.
    procedure Invalid_Sched_CPU_Ticks;
 

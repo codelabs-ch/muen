@@ -33,6 +33,9 @@ is
         (Routine => Invalid_Knl_Pml4_Addr'Access,
          Name    => "Invalid kernel PML4 address");
       T.Add_Test_Routine
+        (Routine => Invalid_Knl_Stack_Addr'Access,
+         Name    => "Invalid kernel stack address");
+      T.Add_Test_Routine
         (Routine => Invalid_Sched_CPU_Ticks'Access,
          Name    => "Invalid CPU ticks in scheduling plan");
       T.Add_Test_Routine
@@ -112,6 +115,24 @@ is
                  & "must be 4k aligned",
                  Message   => "Exception message mismatch");
    end Invalid_Knl_Pml4_Addr;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Knl_Stack_Addr
+   is
+      K : constant Kernel_Type := (Pml4_Address  => 0,
+                                   Stack_Address => 13,
+                                   others        => <>);
+   begin
+      Validators.Validate_Kernel (K => K);
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Invalid kernel stack address 000000000000000d - address "
+                 & "must be 4k aligned",
+                 Message   => "Exception message mismatch");
+   end Invalid_Knl_Stack_Addr;
 
    -------------------------------------------------------------------------
 

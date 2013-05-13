@@ -109,40 +109,29 @@ is
 
       procedure Add_Mem_Region (Node : DOM.Core.Node)
       is
-         R      : Memory_Region_Type;
-         PM     : SK.Word64;
-         VM     : SK.Word64;
-         VM_Str : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Node,
-            Name => "virtual_address");
+         R : Memory_Region_Type;
       begin
-         PM := To_Word64
+         R.Physical_Address := To_Word64
            (Hex => DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "physical_address"));
-
-         if VM_Str'Length = 0 then
-            VM := PM;
-         else
-            VM := To_Word64 (Hex => VM_Str);
-         end if;
-
-         R.Physical_Address := PM;
-         R.Virtual_Address  := VM;
-         R.Size             := Util.To_Memory_Size
+         R.Virtual_Address := To_Word64
+           (Hex => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "virtual_address"));
+         R.Size := Util.To_Memory_Size
            (Str => DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "size"));
-         R.Alignment        := Util.To_Memory_Size
+         R.Alignment := Util.To_Memory_Size
            (Str => DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "alignment"));
-         R.Writable         := Boolean'Value
+         R.Writable := Boolean'Value
            (DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "writable"));
-
-         R.Executable       := Boolean'Value
+         R.Executable := Boolean'Value
            (DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "executable"));

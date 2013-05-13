@@ -41,7 +41,8 @@ is
      or Constants.VM_CTRL_EXIT_MONITOR;
    Exec_Proc2_Defaults : constant SK.Word32 := Constants.VM_CTRL_EXIT_WBINVD
      or Constants.VM_CTRL_VIRT_X2APIC
-     or Constants.VM_CTRL_VIRT_APIC_REG;
+     or Constants.VM_CTRL_VIRT_APIC_REG
+     or Constants.VM_CTRL_VIRT_INT_DELIVERY;
    Exit_Ctrl_Defaults  : constant SK.Word32 := Constants.VM_CTRL_IA32E_MODE
      or Constants.VM_CTRL_EXIT_ACK_INT
      or Constants.VM_CTRL_EXIT_SAVE_TIMER;

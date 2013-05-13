@@ -92,6 +92,7 @@ is
    IO_BITMAP_B              : constant := 16#2002#;
    MSR_BITMAP               : constant := 16#2004#;
    VAPIC_ADDRESS            : constant := 16#2012#;
+   POSTED_INTR_DESC_ADDRESS : constant := 16#2016#;
    VMCS_LINK_POINTER        : constant := 16#2800#;
    GUEST_LIMIT_ES           : constant := 16#4800#;
    GUEST_LIMIT_CS           : constant := 16#4802#;

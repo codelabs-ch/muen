@@ -23,7 +23,8 @@ is
    SEL_TSS       : constant := 16#18#;
 
    Exec_Pin_Defaults   : constant SK.Word32 := Constants.VM_CTRL_EXIT_EXT_INT
-     or Constants.VM_CTRL_PREEMPT_TIMER;
+     or Constants.VM_CTRL_PREEMPT_TIMER
+     or Constants.VM_CTRL_PROC_POSTED_INT;
    Exec_Proc_Defaults  : constant SK.Word32 := Constants.VM_CTRL_IO_BITMAPS
      or Constants.VM_CTRL_SECONDARY_PROC
      or Constants.VM_CTRL_EXIT_INVLPG

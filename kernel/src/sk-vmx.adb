@@ -138,6 +138,7 @@ is
    procedure VMCS_Setup_Control_Fields
      (IO_Bitmap_Address  : SK.Word64;
       MSR_Bitmap_Address : SK.Word64;
+      VAPIC_Address      : SK.Word64;
       Ctls_Exec_Pin      : SK.Word32;
       Ctls_Exec_Proc     : SK.Word32;
       Ctls_Exec_Proc2    : SK.Word32)
@@ -150,7 +151,8 @@ is
    --#       Ctls_Exec_Proc,
    --#       Ctls_Exec_Proc2,
    --#       IO_Bitmap_Address,
-   --#       MSR_Bitmap_Address;
+   --#       MSR_Bitmap_Address,
+   --#       VAPIC_Address;
    is
       Default0, Default1, Value : SK.Word32;
    begin
@@ -218,6 +220,11 @@ is
 
       VMCS_Write (Field => Constants.MSR_BITMAP,
                   Value => MSR_Bitmap_Address);
+
+      --  Virtual-APIC.
+
+      VMCS_Write (Field => Constants.VAPIC_ADDRESS,
+                  Value => VAPIC_Address);
 
       --  VM-exit controls.
 
@@ -414,6 +421,7 @@ is
       VMCS_Setup_Control_Fields
         (IO_Bitmap_Address  => Spec.IO_Bitmap_Address,
          MSR_Bitmap_Address => Spec.MSR_Bitmap_Address,
+         VAPIC_Address      => Spec.VAPIC_Address,
          Ctls_Exec_Pin      => Exec_Pin_Defaults,
          Ctls_Exec_Proc     => Exec_Proc_Defaults,
          Ctls_Exec_Proc2    => Exec_Proc2_Defaults);

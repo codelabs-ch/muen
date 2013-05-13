@@ -1,5 +1,3 @@
-with Ada.Streams;
-
 with Skp.MSRs;
 
 package body MSR_Tests
@@ -23,7 +21,7 @@ is
 
    procedure MSR_Bitmap_Handling
    is
-      use type Ada.Streams.Stream_Element_Array;
+      use type MSRs.MSR_Bitmap_Stream;
 
       B        : MSRs.MSR_Bitmap_Type := MSRs.Null_MSR_Bitmap;
       Null_Ref : constant MSRs.MSR_Bitmap_Stream := (others => 16#ff#);

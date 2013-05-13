@@ -44,18 +44,13 @@ is
 
    function To_Stream
      (B : IO_Bitmap_Type)
-      return Ada.Streams.Stream_Element_Array
+      return IO_Bitmap_Stream
    is
-      use type Ada.Streams.Stream_Element_Offset;
-
-      subtype IO_Bitmap_Stream is Ada.Streams.Stream_Element_Array
-        (1 .. 2 * SK.Page_Size);
-
-      function To_Stream_Convert is new Ada.Unchecked_Conversion
+      function Convert is new Ada.Unchecked_Conversion
         (Source => IO_Bitmap_Type,
          Target => IO_Bitmap_Stream);
    begin
-      return To_Stream_Convert (S => B);
+      return Convert (S => B);
    end To_Stream;
 
 end Skp.IO_Ports;

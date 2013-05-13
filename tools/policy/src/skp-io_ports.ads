@@ -29,10 +29,15 @@ is
       Start_Port :        SK.Word16;
       End_Port   :        SK.Word16);
 
+   use type Ada.Streams.Stream_Element_Offset;
+
+   subtype IO_Bitmap_Stream is Ada.Streams.Stream_Element_Array
+     (1 .. 2 * SK.Page_Size);
+
    --  Convert I/O bitmap to binary stream.
    function To_Stream
      (B : IO_Bitmap_Type)
-      return Ada.Streams.Stream_Element_Array;
+      return IO_Bitmap_Stream;
 
 private
 

@@ -5,7 +5,7 @@ with SK.Console;
 with SK.Console_VGA;
 with SK.Hypercall;
 
-with Skp;
+with Skp.Subjects;
 
 with Dump;
 
@@ -116,8 +116,11 @@ begin
       Text_IO.Put_Word64 (Item => State.CR4);
       Text_IO.New_Line;
 
+      State.Regs := SK.Null_CPU_Regs;
+      State.RIP  := Skp.Subjects.Subject_Specs (Id).Entry_Point;
+      State.RSP  := Skp.Subjects.Subject_Specs (Id).Stack_Address;
       DKI.Set_Subject_State (Id    => Id,
-                             State => SK.Null_Subject_State);
+                             State => State);
       SK.Hypercall.Signal (Number => SK.Byte (Id));
    end loop;
 end Dumper;

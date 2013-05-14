@@ -495,6 +495,8 @@ is
                   Value => SK.Word64 (Time_Slice));
       VMCS_Write (Field => Constants.GUEST_RIP,
                   Value => State.RIP);
+      VMCS_Write (Field => Constants.GUEST_RSP,
+                  Value => State.RSP);
 
       pragma Debug (CPU_Global.Set_Current_Subject (Id => Subject_Id));
 

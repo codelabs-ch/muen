@@ -18,9 +18,6 @@ package SK.VMX
 --#    State;
 is
 
-   --  VMX preemption timer value.
-   subtype Time_Type is SK.Word32;
-
    --  Enter VMX root operation.
    procedure Enable;
    --# global

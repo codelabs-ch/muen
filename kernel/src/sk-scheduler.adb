@@ -112,11 +112,16 @@ is
    -------------------------------------------------------------------------
 
    --  Perform subject handover from the old to the new subject.
-   procedure Subject_Handover (Old_Id, New_Id : Skp.Subject_Id_Type)
+   procedure Subject_Handover
+     (Old_Id   : Skp.Subject_Id_Type;
+      New_Id   : Skp.Subject_Id_Type;
+      New_VMCS : SK.Word64)
    --# global
    --#    in out CPU_Global.Storage;
+   --#    in out X86_64.State;
    --# derives
-   --#    CPU_Global.Storage from *, Old_Id, New_Id;
+   --#    CPU_Global.Storage from *, Old_Id, New_Id &
+   --#    X86_64.State       from *, New_VMCS;
    --# pre
    --#    Old_Id /= New_Id;
    is
@@ -124,6 +129,7 @@ is
       CPU_Global.Swap_Subject
         (Old_Id => Old_Id,
          New_Id => New_Id);
+      VMX.Load (VMCS_Address => New_VMCS);
    end Subject_Handover;
 
    -------------------------------------------------------------------------
@@ -260,8 +266,9 @@ is
    --# global
    --#    in out CPU_Global.Storage;
    --#    in out Subjects.Descriptors;
+   --#    in out X86_64.State;
    --# derives
-   --#    CPU_Global.Storage, Subjects.Descriptors from
+   --#    CPU_Global.Storage, Subjects.Descriptors, X86_64.State from
    --#       *,
    --#       Current_Subject,
    --#       Subject_State &
@@ -292,8 +299,11 @@ is
                --# assume Current_Subject /= Sig_Entry.Dst_Subject;
                --# end accept;
 
-               Subject_Handover (Old_Id => Current_Subject,
-                                 New_Id => Sig_Entry.Dst_Subject);
+               Subject_Handover
+                 (Old_Id   => Current_Subject,
+                  New_Id   => Sig_Entry.Dst_Subject,
+                  New_VMCS => Skp.Subjects.Subject_Specs
+                    (Sig_Entry.Dst_Subject).VMCS_Address);
             end if;
          end if;
       end if;
@@ -401,8 +411,11 @@ is
          --# assume Current_Subject /= Trap_Entry.Dst_Subject;
          --# end accept;
 
-         Subject_Handover (Old_Id => Current_Subject,
-                           New_Id => Trap_Entry.Dst_Subject);
+         Subject_Handover
+           (Old_Id   => Current_Subject,
+            New_Id   => Trap_Entry.Dst_Subject,
+            New_VMCS => Skp.Subjects.Subject_Specs
+              (Trap_Entry.Dst_Subject).VMCS_Address);
       end if;
    end Handle_Trap;
 

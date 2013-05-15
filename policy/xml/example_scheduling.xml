@@ -22,7 +22,14 @@
 			<minor_frame subject_id="4" ticks="80"/>
 		</cpu>
 		<cpu>
-			<minor_frame subject_id="2" ticks="80"/>
+			<minor_frame subject_id="2" ticks="10"/>
+			<minor_frame subject_id="2" ticks="10"/>
+			<minor_frame subject_id="2" ticks="10"/>
+			<minor_frame subject_id="5" ticks="10"/>
+			<minor_frame subject_id="5" ticks="10"/>
+			<minor_frame subject_id="5" ticks="10"/>
+			<minor_frame subject_id="2" ticks="10"/>
+			<minor_frame subject_id="2" ticks="10"/>
 		</cpu>
 		<cpu>
 			<minor_frame subject_id="3" ticks="80"/>

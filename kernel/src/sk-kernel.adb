@@ -41,14 +41,12 @@ is
             Apic.Start_AP_Processors;
          end if;
 
-         --  Synchronize all logical CPUs
-
-         MP.Wait_For_All;
-
-         --  BSP & APs
-
          VMX.Enable;
          Scheduler.Init;
+
+         --  Synchronize all logical CPUs.
+
+         MP.Wait_For_All;
          VMX.Run (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id);
       end if;
 

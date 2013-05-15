@@ -285,12 +285,14 @@ is
    begin
       P.Subjects.Insert
         (New_Item =>
-           (Name              => To_Unbounded_String ("s1"),
-            Pml4_Address      => 0,
-            IO_Bitmap_Address => 0,
-            Binary            => (Name   => To_Unbounded_String ("s2"),
-                                  others => 0),
-            others            => <>));
+           (Name               => To_Unbounded_String ("s1"),
+            CPU                => 0,
+            Pml4_Address       => 0,
+            IO_Bitmap_Address  => 0,
+            MSR_Bitmap_Address => 0,
+            Binary             => (Name   => To_Unbounded_String ("s2"),
+                                   others => 0),
+            others             => <>));
       Validators.Validate_Subjects (P => P);
       Fail (Message => "Exception expected");
 

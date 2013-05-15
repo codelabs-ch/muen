@@ -213,6 +213,7 @@ is
    type Subject_Type is record
       Id                 : Natural;
       Name               : Ada.Strings.Unbounded.Unbounded_String;
+      CPU                : Natural;
       Pml4_Address       : SK.Word64;
       IO_Bitmap_Address  : SK.Word64;
       MSR_Bitmap_Address : SK.Word64;

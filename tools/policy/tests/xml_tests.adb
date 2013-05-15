@@ -397,6 +397,8 @@ is
                  Message   => "Id mismatch");
          Assert (Condition => S.Name = "tau0",
                  Message   => "Name mismatch");
+         Assert (Condition => S.CPU = 0,
+                 Message   => "CPU mismatch");
          Assert (Condition => S.Pml4_Address = 16#1f0000#,
                  Message   => "PML4 address mismatch");
          Assert (Condition => S.IO_Bitmap_Address = 16#1a0000#,

@@ -325,6 +325,9 @@ is
          Id_Str     : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "id");
+         CPU_Str    : constant String  := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "cpu");
          Id         : constant Natural := Natural'Value (Id_Str);
          PML4_Str   : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
@@ -553,6 +556,7 @@ is
          Policy.Subjects.Insert
            (New_Item =>
               (Id                 => Id,
+               CPU                => Natural'Value (CPU_Str),
                Name               => To_Unbounded_String (Name),
                Pml4_Address       => To_Word64 (Hex => PML4_Str),
                IO_Bitmap_Address  => To_Word64 (Hex => IOBM_Str),

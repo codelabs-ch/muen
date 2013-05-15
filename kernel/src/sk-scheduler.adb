@@ -306,8 +306,9 @@ is
 
       if Valid_Sig then
          Signal    := Skp.Subjects.Signal_Range (Subject_State.Regs.RAX);
-         Sig_Entry := Skp.Subjects.Subject_Specs
-           (Current_Subject).Signal_Table (Signal);
+         Sig_Entry := Skp.Subjects.Get_Signal
+           (Subject_Id => Current_Subject,
+            Signal_Nr  => Signal);
 
          if Sig_Entry.Dst_Subject /= Skp.Invalid_Subject then
             if Sig_Entry.Dst_Vector /= Skp.Invalid_Vector then

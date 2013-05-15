@@ -228,10 +228,10 @@ is
    --#       VMX.State,
    --#       CPU_Global.Storage;
    is
-      CPU_Id       : Skp.CPU_Range;
-      Plan_Frame   : Skp.Scheduling.Minor_Frame_Type;
-      Spec         : Skp.Subjects.Subject_Spec_Type;
-      VMCS_Address : SK.Word64 := 0;
+      CPU_Id            : Skp.CPU_Range;
+      Plan_Frame        : Skp.Scheduling.Minor_Frame_Type;
+      Initial_VMCS_Addr : SK.Word64 := 0;
+      VMCS_Addr         : SK.Word64;
    begin
       Get_ID (ID => CPU_Id);
       CPU_Global.Set_Scheduling_Plan
@@ -250,29 +250,33 @@ is
       --  Setup VMCS of subjects running on this logical CPU.
 
       for I in Skp.Subject_Id_Type loop
-         if Skp.Subjects.Subject_Specs (I).CPU_Id = CPU_Id then
-            Spec := Skp.Subjects.Subject_Specs (I);
-            VMX.Clear (VMCS_Address => Spec.VMCS_Address);
-            VMX.Load  (VMCS_Address => Spec.VMCS_Address);
+         if Skp.Subjects.Get_CPU_Id (Subject_Id => I) = CPU_Id then
+            VMCS_Addr := Skp.Subjects.Get_VMCS_Address (Subject_Id => I);
+            VMX.Clear (VMCS_Address => VMCS_Addr);
+            VMX.Load  (VMCS_Address => VMCS_Addr);
             VMX.VMCS_Setup_Control_Fields
-              (IO_Bitmap_Address  => Spec.IO_Bitmap_Address,
-               MSR_Bitmap_Address => Spec.MSR_Bitmap_Address,
+              (IO_Bitmap_Address  => Skp.Subjects.Get_IO_Bitmap_Address
+                 (Subject_Id => I),
+               MSR_Bitmap_Address => Skp.Subjects.Get_MSR_Bitmap_Address
+                 (Subject_Id => I),
                Ctls_Exec_Pin      => Exec_Pin_Defaults,
                Ctls_Exec_Proc     => Exec_Proc_Defaults,
                Ctls_Exec_Proc2    => Exec_Proc2_Defaults,
                Ctls_Exit          => Exit_Ctrl_Defaults);
             VMX.VMCS_Setup_Host_Fields;
-            VMX.VMCS_Setup_Guest_Fields (PML4_Address => Spec.PML4_Address);
+            VMX.VMCS_Setup_Guest_Fields
+              (PML4_Address => Skp.Subjects.Get_PML4_Address
+                 (Subject_Id => I));
 
             if Plan_Frame.Subject_Id = I then
-               VMCS_Address := Spec.VMCS_Address;
+               Initial_VMCS_Addr := VMCS_Addr;
             end if;
          end if;
       end loop;
 
       --  Load first subject and set preemption timer ticks.
 
-      VMX.Load (VMCS_Address => VMCS_Address);
+      VMX.Load (VMCS_Address => Initial_VMCS_Addr);
       VMX.VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
                       Value => SK.Word64 (Plan_Frame.Ticks));
    end Init;

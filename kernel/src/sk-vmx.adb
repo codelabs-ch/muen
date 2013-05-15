@@ -254,10 +254,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure VMCS_Setup_Guest_Fields
-     (Stack_Address : SK.Word64;
-      PML4_Address  : SK.Word64;
-      Entry_Point   : SK.Word64)
+   procedure VMCS_Setup_Guest_Fields (PML4_Address : SK.Word64)
    is
    begin
       VMCS_Write (Field => Constants.VMCS_LINK_POINTER,
@@ -314,10 +311,6 @@ is
 
       VMCS_Write (Field => Constants.GUEST_RFLAGS,
                   Value => CPU.Get_RFLAGS);
-      VMCS_Write (Field => Constants.GUEST_RSP,
-                  Value => Stack_Address);
-      VMCS_Write (Field => Constants.GUEST_RIP,
-                  Value => Entry_Point);
    end VMCS_Setup_Guest_Fields;
 
    -------------------------------------------------------------------------

@@ -221,10 +221,7 @@ is
                Ctls_Exec_Proc2    => Exec_Proc2_Defaults,
                Ctls_Exit          => Exit_Ctrl_Defaults);
             VMX.VMCS_Setup_Host_Fields;
-            VMX.VMCS_Setup_Guest_Fields
-              (Stack_Address => Spec.Stack_Address,
-               PML4_Address  => Spec.PML4_Address,
-               Entry_Point   => Spec.Entry_Point);
+            VMX.VMCS_Setup_Guest_Fields (PML4_Address => Spec.PML4_Address);
          end if;
       end loop;
    end Init;

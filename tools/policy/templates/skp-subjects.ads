@@ -81,4 +81,10 @@ __subjects__);
    --# return
    --#    Subject_Specs (Subject_Id).IO_Bitmap_Address;
 
+   function Get_MSR_Bitmap_Address
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word64;
+   --# return
+   --#    Subject_Specs (Subject_Id).MSR_Bitmap_Address;
+
 end Skp.Subjects;

@@ -264,7 +264,11 @@ is
          end if;
       end loop;
 
+      --  Load first subject and set preemption timer ticks.
+
       VMX.Load (VMCS_Address => VMCS_Address);
+      VMX.VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
+                      Value => SK.Word64 (Plan_Frame.Ticks));
    end Init;
 
    -------------------------------------------------------------------------

@@ -63,6 +63,19 @@ package body Skp.Subjects is
 
    -------------------------------------------------------------------------
 
+   function Get_Stack_Address
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word64
+   is
+   begin
+      --# accept Warning, 444, "Stack_Address is Word64 (obviously)";
+      --# assume Subject_Specs (Subject_Id).Stack_Address in SK.Word64;
+      --# end accept;
+      return Subject_Specs (Subject_Id).Stack_Address;
+   end Get_Stack_Address;
+
+   -------------------------------------------------------------------------
+
    function Get_Trap
      (Subject_Id : Skp.Subject_Id_Type;
       Trap_Nr    : Trap_Range)

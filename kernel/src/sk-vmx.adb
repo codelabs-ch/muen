@@ -347,44 +347,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Launch (Subject_Id : Skp.Subject_Id_Type)
-   is
-      Spec  : Skp.Subjects.Subject_Spec_Type;
-      State : SK.Subject_State_Type;
-   begin
-      Spec  := Skp.Subjects.Subject_Specs (Subject_Id);
-      State := Subjects.Get_State (Id => Subject_Id);
-
-      Load  (VMCS_Address => Spec.VMCS_Address);
-
-      State.Launched := True;
-      Subjects.Set_State (Id    => Subject_Id,
-                          State => State);
-
-      VMCS_Write (Field => Constants.GUEST_RIP,
-                  Value => State.RIP);
-      VMCS_Write (Field => Constants.GUEST_RSP,
-                  Value => State.RSP);
-
-      CPU.Restore_Registers
-        (Regs => Subjects.Get_State (Id => Subject_Id).Regs);
-      CPU.VMLAUNCH;
-
-      --  VM launch failed.
-
-      CPU.Set_Stack (Address => Skp.Kernel.Stack_Address);
-
-      pragma Debug (KC.Put_String (Item => "Error launching subject "));
-      pragma Debug (KC.Put_Byte
-                    (Item => SK.Byte
-                     (CPU_Global.Get_Current_Minor_Frame.Subject_Id)));
-      pragma Debug (KC.New_Line);
-      VMX_Error;
-   end Launch;
-
-   -------------------------------------------------------------------------
-
-   procedure Resume (Subject_Id : Skp.Subject_Id_Type)
+   procedure Run (Subject_Id : Skp.Subject_Id_Type)
    is
       Spec       : Skp.Subjects.Subject_Spec_Type;
       State      : SK.Subject_State_Type;
@@ -425,21 +388,26 @@ is
       VMCS_Write (Field => Constants.GUEST_RSP,
                   Value => State.RSP);
 
-      CPU.Restore_Registers (Regs => State.Regs);
-      CPU.VMRESUME;
-
-      --  VM resume failed.
+      if State.Launched then
+         CPU.Restore_Registers (Regs => State.Regs);
+         CPU.VMRESUME;
+      else
+         State.Launched := True;
+         Subjects.Set_State (Id    => Subject_Id,
+                             State => State);
+         CPU.Restore_Registers (Regs => State.Regs);
+         CPU.VMLAUNCH;
+      end if;
 
       CPU.Set_Stack (Address => Skp.Kernel.Stack_Address);
 
-      pragma Debug (KC.Put_String (Item => "Error resuming subject "));
+      pragma Debug (KC.Put_String (Item => "Error running subject "));
       pragma Debug (KC.Put_Byte
                     (Item => SK.Byte
                      (CPU_Global.Get_Current_Minor_Frame.Subject_Id)));
       pragma Debug (KC.New_Line);
-
       VMX_Error;
-   end Resume;
+   end Run;
 
    -------------------------------------------------------------------------
 

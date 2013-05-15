@@ -43,23 +43,16 @@ is
    --# derives
    --#    X86_64.State from *, VMCS_Address;
 
-   --  Launch given subject.
-   procedure Launch (Subject_Id : Skp.Subject_Id_Type);
+   --  Run given subject.
+   procedure Run (Subject_Id : Skp.Subject_Id_Type);
    --# global
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    Subjects.Descriptors from *, Subject_Id &
-   --#    X86_64.State         from *, Subjects.Descriptors, Subject_Id;
-
-   --  Resume given subject.
-   procedure Resume (Subject_Id : Skp.Subject_Id_Type);
-   --# global
-   --#    in out Subjects.Descriptors;
-   --#    in out X86_64.State;
-   --# derives
-   --#    Subjects.Descriptors from *, Subject_Id, X86_64.State &
-   --#    X86_64.State from *, Subject_Id, Subjects.Descriptors;
+   --#    Subjects.Descriptors, X86_64.State from
+   --#       Subject_Id,
+   --#       Subjects.Descriptors,
+   --#       X86_64.State;
 
    --  Read value from specified field of the current, active VMCS. If the
    --  operation fails, CPU.Panic is called.

@@ -54,9 +54,8 @@ is
    --#    in out X86_64.State;
    --#    in out Subjects.Descriptors;
    --# derives
-   --#    X86_64.State from *, Subjects.Descriptors, CPU_Global.Storage &
-   --#    Subjects.Descriptors from
-   --#       *,
+   --#    Subjects.Descriptors, X86_64.State from
+   --#       Subjects.Descriptors,
    --#       CPU_Global.Storage,
    --#       X86_64.State;
 

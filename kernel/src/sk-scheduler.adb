@@ -386,15 +386,8 @@ is
 
    procedure Schedule
    is
-      Subject_Id : Skp.Subject_Id_Type;
    begin
-      Subject_Id := CPU_Global.Get_Current_Minor_Frame.Subject_Id;
-
-      if Subjects.Get_State (Id => Subject_Id).Launched then
-         VMX.Resume (Subject_Id => Subject_Id);
-      else
-         VMX.Launch (Subject_Id => Subject_Id);
-      end if;
+      VMX.Run (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id);
    end Schedule;
 
    -------------------------------------------------------------------------

@@ -75,4 +75,10 @@ __subjects__);
    --# return
    --#    Subject_Specs (Subject_Id).VMCS_Address;
 
+   function Get_IO_Bitmap_Address
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word64;
+   --# return
+   --#    Subject_Specs (Subject_Id).IO_Bitmap_Address;
+
 end Skp.Subjects;

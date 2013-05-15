@@ -90,4 +90,22 @@ is
    --# derives
    --#    X86_64.State from *, Field, Value;
 
+   --  Setup control fields of the currently active VMCS.
+   procedure VMCS_Setup_Control_Fields
+     (IO_Bitmap_Address  : SK.Word64;
+      MSR_Bitmap_Address : SK.Word64;
+      Ctls_Exec_Pin      : SK.Word32;
+      Ctls_Exec_Proc     : SK.Word32;
+      Ctls_Exec_Proc2    : SK.Word32);
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from
+   --#       *,
+   --#       Ctls_Exec_Pin,
+   --#       Ctls_Exec_Proc,
+   --#       Ctls_Exec_Proc2,
+   --#       IO_Bitmap_Address,
+   --#       MSR_Bitmap_Address;
+
 end SK.VMX;

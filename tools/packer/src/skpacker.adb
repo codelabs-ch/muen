@@ -73,7 +73,7 @@ begin
 
    --  Subjects
 
-   for S in Subject_Specs'Range loop
+   for S in Subject_Id_Type loop
       declare
          Fn      : constant String := Top_Dir & "/" & To_String
            (Binary_Specs (S).Path);
@@ -84,13 +84,13 @@ begin
                           Dst_Bin => Raw_Bin);
 
          Ada.Text_IO.Put_Line
-           (SK.Utils.To_Hex (Item => Subject_Specs (S).PML4_Address)
+           (SK.Utils.To_Hex (Item => Get_PML4_Address (Subject_Id => S))
             & " [PML4] " & Name);
          Ada.Text_IO.Put_Line
-           (SK.Utils.To_Hex (Item => Subject_Specs (S).IO_Bitmap_Address)
+           (SK.Utils.To_Hex (Item => Get_IO_Bitmap_Address (Subject_Id => S))
             & " [IOBM] " & Name);
          Ada.Text_IO.Put_Line
-           (SK.Utils.To_Hex (Item => Subject_Specs (S).MSR_Bitmap_Address)
+           (SK.Utils.To_Hex (Item => Get_MSR_Bitmap_Address (Subject_Id => S))
             & " [MSBM] " & Name);
          Ada.Text_IO.Put_Line
            (SK.Utils.To_Hex (Item => Binary_Specs (S).Physical_Address)
@@ -105,17 +105,17 @@ begin
            (Image    => Knl_Elf,
             Filename => Policy_Dir & "/" & Name & "_pt",
             Name     => Name & "_pt",
-            Address  => Subject_Specs (S).PML4_Address);
+            Address  => Get_PML4_Address (Subject_Id => S));
          Image.Add_Section
            (Image    => Knl_Elf,
             Filename => Policy_Dir & "/" & Name & "_iobm",
             Name     => Name & "_iobm",
-            Address  => Subject_Specs (S).IO_Bitmap_Address);
+            Address  => Get_IO_Bitmap_Address (Subject_Id => S));
          Image.Add_Section
            (Image    => Knl_Elf,
             Filename => Policy_Dir & "/" & Name & "_msrbm",
             Name     => Name & "_msrbm",
-            Address  => Subject_Specs (S).MSR_Bitmap_Address);
+            Address  => Get_MSR_Bitmap_Address (Subject_Id => S));
       end;
    end loop;
 

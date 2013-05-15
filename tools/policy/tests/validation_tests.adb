@@ -51,6 +51,9 @@ is
         (Routine => Invalid_Subj_IO_Bitmap_Addr'Access,
          Name    => "Invalid subject I/O bitmap address");
       T.Add_Test_Routine
+        (Routine => Invalid_Subj_CPU'Access,
+         Name    => "Invalid subject CPU number");
+      T.Add_Test_Routine
         (Routine => Invalid_Subj_Binary'Access,
          Name    => "Invalid subject binary");
       T.Add_Test_Routine
@@ -283,6 +286,7 @@ is
    is
       P : Policy_Type;
    begin
+      P.Hardware.Processor.Logical_CPUs := 1;
       P.Subjects.Insert
         (New_Item =>
            (Name               => To_Unbounded_String ("s1"),
@@ -302,6 +306,31 @@ is
                  = "Subject s1: Referenced binary 's2' not found in policy",
                  Message   => "Exception message mismatch");
    end Invalid_Subj_Binary;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Subj_CPU
+   is
+      P : Policy_Type;
+   begin
+      P.Hardware.Processor.Logical_CPUs := 3;
+      P.Subjects.Insert
+        (New_Item => (Name               => To_Unbounded_String ("s1"),
+                      CPU                => 3,
+                      Pml4_Address       => 0,
+                      IO_Bitmap_Address  => 0,
+                      MSR_Bitmap_Address => 0,
+                      others             => <>));
+      Validators.Validate_Subjects (P => P);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Subject s1: Invalid CPU specified - 3 given, must be in "
+                 & "range 0 .. 2",
+                 Message   => "Exception message mismatch");
+   end Invalid_Subj_CPU;
 
    -------------------------------------------------------------------------
 
@@ -446,9 +475,11 @@ is
       P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
                          New_Item => To_Unbounded_String ("path/to/s2"));
 
+      P.Hardware.Processor.Logical_CPUs := 1;
       P.Subjects.Insert
         (New_Item =>
            (Name               => To_Unbounded_String ("s1"),
+            CPU                => 0,
             Pml4_Address       => 0,
             IO_Bitmap_Address  => 0,
             MSR_Bitmap_Address => 0,
@@ -482,10 +513,12 @@ is
       P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
                          New_Item => To_Unbounded_String ("path/to/s2"));
 
+      P.Hardware.Processor.Logical_CPUs := 1;
       P.Subjects.Insert
         (New_Item =>
            (Id                 => 1,
             Name               => To_Unbounded_String ("s1"),
+            CPU                => 0,
             Pml4_Address       => 0,
             IO_Bitmap_Address  => 0,
             MSR_Bitmap_Address => 0,
@@ -529,9 +562,11 @@ is
       P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
                          New_Item => To_Unbounded_String ("path/to/s2"));
 
+      P.Hardware.Processor.Logical_CPUs := 1;
       P.Subjects.Insert
         (New_Item =>
            (Name               => To_Unbounded_String ("s1"),
+            CPU                => 0,
             Pml4_Address       => 0,
             IO_Bitmap_Address  => 0,
             MSR_Bitmap_Address => 0,
@@ -563,9 +598,11 @@ is
       P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
                          New_Item => To_Unbounded_String ("path/to/s2"));
 
+      P.Hardware.Processor.Logical_CPUs := 1;
       P.Subjects.Insert
         (New_Item =>
            (Name               => To_Unbounded_String ("s1"),
+            CPU                => 0,
             Pml4_Address       => 0,
             IO_Bitmap_Address  => 0,
             MSR_Bitmap_Address => 0,
@@ -598,9 +635,11 @@ is
       P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
                          New_Item => To_Unbounded_String ("path/to/s2"));
 
+      P.Hardware.Processor.Logical_CPUs := 1;
       P.Subjects.Insert
         (New_Item =>
            (Name               => To_Unbounded_String ("s1"),
+            CPU                => 0,
             Pml4_Address       => 0,
             IO_Bitmap_Address  => 0,
             MSR_Bitmap_Address => 0,

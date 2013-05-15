@@ -41,6 +41,9 @@ is
    --  Verify subject with invalid I/O bitmap address.
    procedure Invalid_Subj_IO_Bitmap_Addr;
 
+   --  Verify subject with invalid CPU number.
+   procedure Invalid_Subj_CPU;
+
    --  Verify subject with invalid binary reference.
    procedure Invalid_Subj_Binary;
 

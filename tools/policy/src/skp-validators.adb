@@ -347,6 +347,12 @@ is
               & " - address must be 4k aligned";
          end if;
 
+         if S.CPU >= P.Hardware.Processor.Logical_CPUs then
+            raise Validation_Error with "Invalid CPU specified -" & S.CPU'Img
+              & " given, must be in range 0 .."
+              & Positive'Image (P.Hardware.Processor.Logical_CPUs - 1);
+         end if;
+
          Validate_Mem_Layout (L => S.Memory_Layout);
          Validate_MSRs (M => S.MSRs);
 

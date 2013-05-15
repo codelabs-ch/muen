@@ -1,5 +1,4 @@
 with Skp.Kernel;
-with Skp.Subjects;
 
 with SK.CPU;
 with SK.CPU_Global;
@@ -349,14 +348,10 @@ is
 
    procedure Run (Subject_Id : Skp.Subject_Id_Type)
    is
-      Spec       : Skp.Subjects.Subject_Spec_Type;
       State      : SK.Subject_State_Type;
       Intr_State : SK.Word64;
    begin
-      Spec  := Skp.Subjects.Subject_Specs (Subject_Id);
       State := Subjects.Get_State (Id => Subject_Id);
-
-      Load (VMCS_Address => Spec.VMCS_Address);
 
       if State.Pending_Event > 0
         and then SK.Bit_Test

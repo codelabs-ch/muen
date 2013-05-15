@@ -368,6 +368,11 @@ is
       Subjects.Set_State (Id    => Subject_Id,
                           State => State);
 
+      VMCS_Write (Field => Constants.GUEST_RIP,
+                  Value => State.RIP);
+      VMCS_Write (Field => Constants.GUEST_RSP,
+                  Value => State.RSP);
+
       CPU.Restore_Registers
         (Regs => Subjects.Get_State (Id => Subject_Id).Regs);
       CPU.VMLAUNCH;

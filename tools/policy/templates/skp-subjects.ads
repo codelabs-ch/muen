@@ -63,6 +63,12 @@ __subjects__);
    --# return
    --#    Subject_Specs (Subject_Id).CPU_Id;
 
+   function Get_PML4_Address
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word64;
+   --# return
+   --#    Subject_Specs (Subject_Id).PML4_Address;
+
    function Get_VMCS_Address
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word64;

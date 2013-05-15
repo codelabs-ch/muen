@@ -13,6 +13,19 @@ package body Skp.Subjects is
 
    -------------------------------------------------------------------------
 
+   function Get_PML4_Address
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word64
+   is
+   begin
+      --# accept Warning, 444, "PML4_Address is Word64 (obviously)";
+      --# assume Subject_Specs (Subject_Id).PML4_Address in SK.Word64;
+      --# end accept;
+      return Subject_Specs (Subject_Id).PML4_Address;
+   end Get_PML4_Address;
+
+   -------------------------------------------------------------------------
+
    function Get_VMCS_Address
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word64

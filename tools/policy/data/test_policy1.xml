@@ -12,7 +12,7 @@
 	&binaries;
 
 	<subjects>
-		<subject id="0" name="tau0" pml4_address="1f0000" io_bitmap_address="1a0000" msr_bitmap_address="900000">
+		<subject id="0" name="tau0" cpu="0" pml4_address="1f0000" io_bitmap_address="1a0000" msr_bitmap_address="900000">
 			&subj_state;
 			<memory_layout>
 				<memory_region physical_address="240000" virtual_address="0"      size="64k" alignment="4k" writable="true"  executable="true" memory_type="UC"/>
@@ -31,7 +31,7 @@
 			<msr start="800" end="802" mode="r"/>
 			<msr start="805" end="805" mode="rw"/>
 		</subject>
-		<subject id="1" name="subject1" pml4_address="1f4000" io_bitmap_address="1b0000" msr_bitmap_address="910000">
+		<subject id="1" name="subject1" cpu="1" pml4_address="1f4000" io_bitmap_address="1b0000" msr_bitmap_address="910000">
 			&subj_state;
 			<memory_layout>
 				<memory_region physical_address="250000" virtual_address="0" size="12k" alignment="4k" writable="true" executable="true" memory_type="UC"/>
@@ -41,7 +41,7 @@
 			<device name="multiport"/>
 			<device name="testdevice"/>
 		</subject>
-		<subject id="2" name="subject2" pml4_address="1f8000" io_bitmap_address="1c0000" msr_bitmap_address="920000">
+		<subject id="2" name="subject2" cpu="0" pml4_address="1f8000" io_bitmap_address="1c0000" msr_bitmap_address="920000">
 			&subj_state;
 			<memory_layout>
 				<memory_region physical_address="260000" virtual_address="0" size="12k" alignment="4k" writable="true" executable="true" memory_type="UC"/>

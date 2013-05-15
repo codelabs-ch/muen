@@ -23,7 +23,7 @@
 	&binaries;
 
 	<subjects>
-		<subject id="0" name="tau0" pml4_address="210000" io_bitmap_address="214000" msr_bitmap_address="216000">
+		<subject id="0" name="tau0" cpu="3" pml4_address="210000" io_bitmap_address="214000" msr_bitmap_address="216000">
 			&tau0init;
 			<memory_layout>
 				&tau0mem;
@@ -33,7 +33,7 @@
 			<binary name="tau0" physical_address="217000"/>
 		</subject>
 
-		<subject id="1" name="dumper" pml4_address="230000" io_bitmap_address="234000" msr_bitmap_address="236000">
+		<subject id="1" name="dumper" cpu="2" pml4_address="230000" io_bitmap_address="234000" msr_bitmap_address="236000">
 			&dumperinit;
 			<memory_layout>
 				&dumpermem;
@@ -48,7 +48,7 @@
 			</signal_table>
 		</subject>
 
-		<subject id="2" name="subject_a" pml4_address="250000" io_bitmap_address="254000" msr_bitmap_address="256000">
+		<subject id="2" name="subject_a" cpu="1" pml4_address="250000" io_bitmap_address="254000" msr_bitmap_address="256000">
 			&subjainit;
 			<memory_layout>
 				&subjamem;
@@ -58,7 +58,7 @@
 			<binary name="subject_a" physical_address="257000"/>
 		</subject>
 
-		<subject id="3" name="subject_b" pml4_address="270000" io_bitmap_address="274000" msr_bitmap_address="276000">
+		<subject id="3" name="subject_b" cpu="2" pml4_address="270000" io_bitmap_address="274000" msr_bitmap_address="276000">
 			&subjbinit;
 			<memory_layout>
 				&subjbmem;
@@ -71,7 +71,7 @@
 			</trap_table>
 		</subject>
 
-		<subject id="4" name="vt" pml4_address="290000" io_bitmap_address="294000" msr_bitmap_address="296000">
+		<subject id="4" name="vt" cpu="0" pml4_address="290000" io_bitmap_address="294000" msr_bitmap_address="296000">
 			&vtinit;
 			<memory_layout>
 				&vtmem;
@@ -90,7 +90,7 @@
 			<msr start="802" end="802" mode="r"/>
 		</subject>
 
-		<subject id="5" name="idle" pml4_address="310000" io_bitmap_address="314000" msr_bitmap_address="316000">
+		<subject id="5" name="idle" cpu="1" pml4_address="310000" io_bitmap_address="314000" msr_bitmap_address="316000">
 			&idleinit;
 			<memory_layout>
 				&idlemem;

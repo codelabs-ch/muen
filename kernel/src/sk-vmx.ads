@@ -2,7 +2,6 @@ with Skp;
 
 --# inherit
 --#    Skp.Kernel,
---#    Skp.Subjects,
 --#    X86_64,
 --#    SK.CPU,
 --#    SK.CPU_Global,

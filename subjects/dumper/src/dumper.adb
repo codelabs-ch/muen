@@ -117,8 +117,8 @@ begin
       Text_IO.New_Line;
 
       State.Regs := SK.Null_CPU_Regs;
-      State.RIP  := Skp.Subjects.Subject_Specs (Id).Entry_Point;
-      State.RSP  := Skp.Subjects.Subject_Specs (Id).Stack_Address;
+      State.RIP  := Skp.Subjects.Get_Entry_Point   (Subject_Id => Id);
+      State.RSP  := Skp.Subjects.Get_Stack_Address (Subject_Id => Id);
       DKI.Set_Subject_State (Id    => Id,
                              State => State);
       SK.Hypercall.Signal (Number => SK.Byte (Id));

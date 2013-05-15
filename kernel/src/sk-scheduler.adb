@@ -184,13 +184,16 @@ is
    --#    CPU_Global.Storage from *, Current_Major, X86_64.State &
    --#    X86_64.State from
    --#       *,
+   --#       Current_Major,
    --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,
-   --#       VMX.State;
+   --#       VMX.State,
+   --#       CPU_Global.Storage;
    is
-      CPU_Id     : Skp.CPU_Range;
-      Plan_Frame : Skp.Scheduling.Minor_Frame_Type;
-      Spec       : Skp.Subjects.Subject_Spec_Type;
+      CPU_Id       : Skp.CPU_Range;
+      Plan_Frame   : Skp.Scheduling.Minor_Frame_Type;
+      Spec         : Skp.Subjects.Subject_Spec_Type;
+      VMCS_Address : SK.Word64 := 0;
    begin
       Get_ID (ID => CPU_Id);
       CPU_Global.Set_Scheduling_Plan
@@ -222,8 +225,14 @@ is
                Ctls_Exit          => Exit_Ctrl_Defaults);
             VMX.VMCS_Setup_Host_Fields;
             VMX.VMCS_Setup_Guest_Fields (PML4_Address => Spec.PML4_Address);
+
+            if Plan_Frame.Subject_Id = I then
+               VMCS_Address := Spec.VMCS_Address;
+            end if;
          end if;
       end loop;
+
+      VMX.Load (VMCS_Address => VMCS_Address);
    end Init;
 
    -------------------------------------------------------------------------

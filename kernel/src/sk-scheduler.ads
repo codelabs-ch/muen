@@ -43,9 +43,11 @@ is
    --#    CPU_Global.Storage from *, State, X86_64.State &
    --#    X86_64.State from
    --#       *,
+   --#       State,
    --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,
-   --#       VMX.State;
+   --#       VMX.State,
+   --#       CPU_Global.Storage;
 
 private
 

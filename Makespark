@@ -2,8 +2,9 @@ VC_DIR  = $(OBJ_DIR)/vc
 
 BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
 
-SPARK_FILES =        \
-	$(SRC_DIR)/*.ad* \
+SPARK_FILES =           \
+	$(SRC_DIR)/*.ad*    \
+	$(POLICY_INC)/*.ad* \
 	$(TOP_DIR)/common/src/*.ad*
 
 SPARK_BODIES = $(patsubst %.ad*,%.adb,$(SPARK_FILES))
@@ -47,7 +48,7 @@ $(OBJ_DIR)/$(PACKAGE).rep: $(OBJ_DIR)/$(PACKAGE).idx $(OBJ_DIR)/target.cfg
 		$(SPARK_BODIES)
 	(cd $(VC_DIR) && sparksimp -l -p=$(NUM_CPUS))
 
-$(OBJ_DIR)/$(PACKAGE).idx: $(SPARK_FILES) $(POLICY_INC)/*.ad*
+$(OBJ_DIR)/$(PACKAGE).idx: $(SPARK_FILES)
 	@sparkmake $(SPARKMAKE_OPTS)         \
 		-index=$(OBJ_DIR)/$(PACKAGE).idx \
 		-exclude=$(SRC_DIR)/debug/*      \

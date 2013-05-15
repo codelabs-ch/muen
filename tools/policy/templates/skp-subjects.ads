@@ -93,6 +93,12 @@ __subjects__);
    --# return
    --#    Subject_Specs (Subject_Id).Stack_Address;
 
+   function Get_Entry_Point
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word64;
+   --# return
+   --#    Subject_Specs (Subject_Id).Entry_Point;
+
    function Get_Trap
      (Subject_Id : Skp.Subject_Id_Type;
       Trap_Nr    : Trap_Range)

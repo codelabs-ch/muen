@@ -13,6 +13,19 @@ package body Skp.Subjects is
 
    -------------------------------------------------------------------------
 
+   function Get_Entry_Point
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word64
+   is
+   begin
+      --# accept Warning, 444, "Entry_Point is Word64 (obviously)";
+      --# assume Subject_Specs (Subject_Id).Entry_Point in SK.Word64;
+      --# end accept;
+      return Subject_Specs (Subject_Id).Entry_Point;
+   end Get_Entry_Point;
+
+   -------------------------------------------------------------------------
+
    function Get_IO_Bitmap_Address
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word64

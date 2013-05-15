@@ -1,5 +1,7 @@
 with System;
 
+with Skp.Subjects;
+
 package body SK.Subjects
 is
 
@@ -46,4 +48,9 @@ begin
    Descriptors := Descriptor_Array'
      (others => SK.Subject_State_Type'
         (SK.Null_Subject_State));
+
+   for I in Skp.Subject_Id_Type loop
+      Descriptors (I).RIP := Skp.Subjects.Subject_Specs (I).Entry_Point;
+      Descriptors (I).RSP := Skp.Subjects.Subject_Specs (I).Stack_Address;
+   end loop;
 end SK.Subjects;

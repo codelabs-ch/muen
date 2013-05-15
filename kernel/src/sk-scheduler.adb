@@ -408,8 +408,9 @@ is
    is
       Trap_Entry : Skp.Subjects.Trap_Entry_Type;
    begin
-      Trap_Entry := Skp.Subjects.Subject_Specs (Current_Subject).Trap_Table
-        (Skp.Subjects.Trap_Range (Subject_State.Exit_Reason));
+      Trap_Entry := Skp.Subjects.Get_Trap
+        (Subject_Id => Current_Subject,
+         Trap_Nr    => Skp.Subjects.Trap_Range (Subject_State.Exit_Reason));
 
       if Trap_Entry.Dst_Subject = Skp.Invalid_Subject then
          pragma Debug (KC.Put_String (Item => "Subject "));

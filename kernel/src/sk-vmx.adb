@@ -360,6 +360,22 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Load (VMCS_Address : SK.Word64)
+   is
+      Success : Boolean;
+   begin
+      CPU.VMPTRLD (Region  => VMCS_Address,
+                   Success => Success);
+      if not Success then
+         pragma Debug (KC.Put_String (Item => "Error loading VMCS pointer: "));
+         pragma Debug (KC.Put_Word64 (Item => VMCS_Address));
+         pragma Debug (KC.New_Line);
+         CPU.Panic;
+      end if;
+   end Load;
+
+   -------------------------------------------------------------------------
+
    procedure Launch (Subject_Id : Skp.Subject_Id_Type)
    --# global
    --#    in     GDT.GDT_Pointer;
@@ -391,14 +407,7 @@ is
          CPU.Panic;
       end if;
 
-      CPU.VMPTRLD (Region  => Spec.VMCS_Address,
-                   Success => Success);
-      if not Success then
-         pragma Debug (KC.Put_String (Item => "Error loading VMCS pointer: "));
-         pragma Debug (KC.Put_Word64 (Item => Spec.VMCS_Address));
-         pragma Debug (KC.New_Line);
-         CPU.Panic;
-      end if;
+      Load (VMCS_Address => Spec.VMCS_Address);
 
       VMCS_Setup_Control_Fields
         (IO_Bitmap_Address  => Spec.IO_Bitmap_Address,
@@ -436,7 +445,6 @@ is
 
    procedure Resume (Subject_Id : Skp.Subject_Id_Type)
    is
-      Success    : Boolean;
       Spec       : Skp.Subjects.Subject_Spec_Type;
       State      : SK.Subject_State_Type;
       Intr_State : SK.Word64;
@@ -444,12 +452,7 @@ is
       Spec  := Skp.Subjects.Subject_Specs (Subject_Id);
       State := Subjects.Get_State (Id => Subject_Id);
 
-      CPU.VMPTRLD (Region  => Spec.VMCS_Address,
-                   Success => Success);
-      if not Success then
-         pragma Debug (KC.Put_Line (Item => "Error loading VMCS pointer"));
-         CPU.Panic;
-      end if;
+      Load (VMCS_Address => Spec.VMCS_Address);
 
       if State.Pending_Event > 0
         and then SK.Bit_Test

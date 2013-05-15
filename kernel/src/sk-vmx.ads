@@ -29,6 +29,13 @@ is
    --# derives
    --#    X86_64.State from *;
 
+   --  Load VMCS with given address.
+   procedure Load (VMCS_Address : SK.Word64);
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *, VMCS_Address;
+
    --  Launch given subject.
    procedure Launch (Subject_Id : Skp.Subject_Id_Type);
    --# global

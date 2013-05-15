@@ -182,7 +182,7 @@ is
 
    procedure Write_Subjects
    is
-      Out_File : constant String := "obj/skp-subjects.ads";
+      Out_File : constant String := "obj/skp-subjects.adb";
       T0_Pts   : constant String := "obj/tau0_pt";
       S1_Pts   : constant String := "obj/subject1_pt";
       S2_Pts   : constant String := "obj/subject2_pt";

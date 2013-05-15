@@ -1,41 +1,10 @@
-with SK;
-
---# inherit SK, Skp;
-package Skp.Subjects is
-
-   type Trap_Entry_Type is record
-      Dst_Subject : Skp.Dst_Subject_Type;
-      Dst_Vector  : Skp.Dst_Vector_Range;
-   end record;
-
-   Null_Trap : constant Trap_Entry_Type := Trap_Entry_Type'
-     (Dst_Subject => Skp.Invalid_Subject,
-      Dst_Vector  => Skp.Invalid_Vector);
-
-   type Trap_Range is range 0 .. 59;
+package body Skp.Subjects
+is
 
    type Trap_Table_Type is array (Trap_Range) of Trap_Entry_Type;
 
    Null_Trap_Table : constant Trap_Table_Type := Trap_Table_Type'
      (others => Null_Trap);
-
-   type Signal_Kind is
-     (Asynchronous,
-      Synchronous,
-      Handover);
-
-   type Signal_Entry_Type is record
-      Kind        : Signal_Kind;
-      Dst_Subject : Skp.Dst_Subject_Type;
-      Dst_Vector  : Skp.Dst_Vector_Range;
-   end record;
-
-   Null_Signal : constant Signal_Entry_Type := Signal_Entry_Type'
-     (Kind        => Asynchronous,
-      Dst_Subject => Skp.Invalid_Subject,
-      Dst_Vector  => Skp.Invalid_Vector);
-
-   type Signal_Range is range 0 .. 31;
 
    type Signal_Table_Type is array (Signal_Range) of Signal_Entry_Type;
 
@@ -100,58 +69,115 @@ package Skp.Subjects is
        Trap_Table         => Null_Trap_Table,
        Signal_Table      => Null_Signal_Table));
 
-   function Get_CPU_Id (Subject_Id : Skp.Subject_Id_Type) return Skp.CPU_Range;
-   --# return
-   --#    Subject_Specs (Subject_Id).CPU_Id;
+   -------------------------------------------------------------------------
 
-   function Get_PML4_Address
-     (Subject_Id : Skp.Subject_Id_Type)
-      return SK.Word64;
-   --# return
-   --#    Subject_Specs (Subject_Id).PML4_Address;
+   function Get_CPU_Id (Subject_Id : Skp.Subject_Id_Type) return Skp.CPU_Range
+   is
+   begin
+      --# accept Warning, 444, "CPU_Id is in CPU_Range (obviously)";
+      --# assume Subject_Specs (Subject_Id).CPU_Id in Skp.CPU_Range;
+      --# end accept;
+      return Subject_Specs (Subject_Id).CPU_Id;
+   end Get_CPU_Id;
 
-   function Get_VMCS_Address
-     (Subject_Id : Skp.Subject_Id_Type)
-      return SK.Word64;
-   --# return
-   --#    Subject_Specs (Subject_Id).VMCS_Address;
-
-   function Get_IO_Bitmap_Address
-     (Subject_Id : Skp.Subject_Id_Type)
-      return SK.Word64;
-   --# return
-   --#    Subject_Specs (Subject_Id).IO_Bitmap_Address;
-
-   function Get_MSR_Bitmap_Address
-     (Subject_Id : Skp.Subject_Id_Type)
-      return SK.Word64;
-   --# return
-   --#    Subject_Specs (Subject_Id).MSR_Bitmap_Address;
-
-   function Get_Stack_Address
-     (Subject_Id : Skp.Subject_Id_Type)
-      return SK.Word64;
-   --# return
-   --#    Subject_Specs (Subject_Id).Stack_Address;
+   -------------------------------------------------------------------------
 
    function Get_Entry_Point
      (Subject_Id : Skp.Subject_Id_Type)
-      return SK.Word64;
-   --# return
-   --#    Subject_Specs (Subject_Id).Entry_Point;
+      return SK.Word64
+   is
+   begin
+      --# accept Warning, 444, "Entry_Point is Word64 (obviously)";
+      --# assume Subject_Specs (Subject_Id).Entry_Point in SK.Word64;
+      --# end accept;
+      return Subject_Specs (Subject_Id).Entry_Point;
+   end Get_Entry_Point;
 
-   function Get_Trap
-     (Subject_Id : Skp.Subject_Id_Type;
-      Trap_Nr    : Trap_Range)
-      return Trap_Entry_Type;
-   --# return
-   --#    Subject_Specs (Subject_Id).Trap_Table (Trap_Nr);
+   -------------------------------------------------------------------------
+
+   function Get_IO_Bitmap_Address
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word64
+   is
+   begin
+      --# accept Warning, 444, "IO_Bitmap_Address is Word64 (obviously)";
+      --# assume Subject_Specs (Subject_Id).IO_Bitmap_Address in SK.Word64;
+      --# end accept;
+      return Subject_Specs (Subject_Id).IO_Bitmap_Address;
+   end Get_IO_Bitmap_Address;
+
+   -------------------------------------------------------------------------
+
+   function Get_MSR_Bitmap_Address
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word64
+   is
+   begin
+      --# accept Warning, 444, "MSR_Bitmap_Address is Word64 (obviously)";
+      --# assume Subject_Specs (Subject_Id).MSR_Bitmap_Address in SK.Word64;
+      --# end accept;
+      return Subject_Specs (Subject_Id).MSR_Bitmap_Address;
+   end Get_MSR_Bitmap_Address;
+
+   -------------------------------------------------------------------------
+
+   function Get_PML4_Address
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word64
+   is
+   begin
+      --# accept Warning, 444, "PML4_Address is Word64 (obviously)";
+      --# assume Subject_Specs (Subject_Id).PML4_Address in SK.Word64;
+      --# end accept;
+      return Subject_Specs (Subject_Id).PML4_Address;
+   end Get_PML4_Address;
+
+   -------------------------------------------------------------------------
 
    function Get_Signal
      (Subject_Id : Skp.Subject_Id_Type;
       Signal_Nr  : Signal_Range)
-      return Signal_Entry_Type;
-   --# return
-   --#    Subject_Specs (Subject_Id).Signal_Table (Signal_Nr);
+      return Signal_Entry_Type
+   is
+   begin
+      return Subject_Specs (Subject_Id).Signal_Table (Signal_Nr);
+   end Get_Signal;
+
+   -------------------------------------------------------------------------
+
+   function Get_Stack_Address
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word64
+   is
+   begin
+      --# accept Warning, 444, "Stack_Address is Word64 (obviously)";
+      --# assume Subject_Specs (Subject_Id).Stack_Address in SK.Word64;
+      --# end accept;
+      return Subject_Specs (Subject_Id).Stack_Address;
+   end Get_Stack_Address;
+
+   -------------------------------------------------------------------------
+
+   function Get_Trap
+     (Subject_Id : Skp.Subject_Id_Type;
+      Trap_Nr    : Trap_Range)
+      return Trap_Entry_Type
+   is
+   begin
+      return Subject_Specs (Subject_Id).Trap_Table (Trap_Nr);
+   end Get_Trap;
+
+   -------------------------------------------------------------------------
+
+   function Get_VMCS_Address
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word64
+   is
+   begin
+      --# accept Warning, 444, "VMCS_Address is Word64 (obviously)";
+      --# assume Subject_Specs (Subject_Id).VMCS_Address in SK.Word64;
+      --# end accept;
+      return Subject_Specs (Subject_Id).VMCS_Address;
+   end Get_VMCS_Address;
 
 end Skp.Subjects;

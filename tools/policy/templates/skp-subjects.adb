@@ -1,4 +1,32 @@
-package body Skp.Subjects is
+package body Skp.Subjects
+is
+
+   type Trap_Table_Type is array (Trap_Range) of Trap_Entry_Type;
+
+   Null_Trap_Table : constant Trap_Table_Type := Trap_Table_Type'
+     (others => Null_Trap);
+
+   type Signal_Table_Type is array (Signal_Range) of Signal_Entry_Type;
+
+   Null_Signal_Table : constant Signal_Table_Type := Signal_Table_Type'
+     (others => Null_Signal);
+
+   type Subject_Spec_Type is record
+      CPU_Id             : Skp.CPU_Range;
+      PML4_Address       : SK.Word64;
+      VMCS_Address       : SK.Word64;
+      IO_Bitmap_Address  : SK.Word64;
+      MSR_Bitmap_Address : SK.Word64;
+      Stack_Address      : SK.Word64;
+      Entry_Point        : SK.Word64;
+      Trap_Table         : Trap_Table_Type;
+      Signal_Table       : Signal_Table_Type;
+   end record;
+
+   type Subject_Spec_Array is array (Skp.Subject_Id_Type) of Subject_Spec_Type;
+
+   Subject_Specs : constant Subject_Spec_Array := Subject_Spec_Array'(
+__subjects__);
 
    -------------------------------------------------------------------------
 

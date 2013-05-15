@@ -1,7 +1,8 @@
 with SK;
 
 --# inherit SK, Skp;
-package Skp.Subjects is
+package Skp.Subjects
+is
 
    type Trap_Entry_Type is record
       Dst_Subject : Skp.Dst_Subject_Type;
@@ -13,11 +14,6 @@ package Skp.Subjects is
       Dst_Vector  => Skp.Invalid_Vector);
 
    type Trap_Range is range 0 .. 59;
-
-   type Trap_Table_Type is array (Trap_Range) of Trap_Entry_Type;
-
-   Null_Trap_Table : constant Trap_Table_Type := Trap_Table_Type'
-     (others => Null_Trap);
 
    type Signal_Kind is
      (Asynchronous,
@@ -37,80 +33,40 @@ package Skp.Subjects is
 
    type Signal_Range is range 0 .. 31;
 
-   type Signal_Table_Type is array (Signal_Range) of Signal_Entry_Type;
-
-   Null_Signal_Table : constant Signal_Table_Type := Signal_Table_Type'
-     (others => Null_Signal);
-
-   type Subject_Spec_Type is record
-      CPU_Id             : Skp.CPU_Range;
-      PML4_Address       : SK.Word64;
-      VMCS_Address       : SK.Word64;
-      IO_Bitmap_Address  : SK.Word64;
-      MSR_Bitmap_Address : SK.Word64;
-      Stack_Address      : SK.Word64;
-      Entry_Point        : SK.Word64;
-      Trap_Table         : Trap_Table_Type;
-      Signal_Table       : Signal_Table_Type;
-   end record;
-
-   type Subject_Spec_Array is array (Skp.Subject_Id_Type) of Subject_Spec_Type;
-
-   Subject_Specs : constant Subject_Spec_Array := Subject_Spec_Array'(
-__subjects__);
-
    function Get_CPU_Id (Subject_Id : Skp.Subject_Id_Type) return Skp.CPU_Range;
-   --# return
-   --#    Subject_Specs (Subject_Id).CPU_Id;
 
    function Get_PML4_Address
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word64;
-   --# return
-   --#    Subject_Specs (Subject_Id).PML4_Address;
 
    function Get_VMCS_Address
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word64;
-   --# return
-   --#    Subject_Specs (Subject_Id).VMCS_Address;
 
    function Get_IO_Bitmap_Address
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word64;
-   --# return
-   --#    Subject_Specs (Subject_Id).IO_Bitmap_Address;
 
    function Get_MSR_Bitmap_Address
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word64;
-   --# return
-   --#    Subject_Specs (Subject_Id).MSR_Bitmap_Address;
 
    function Get_Stack_Address
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word64;
-   --# return
-   --#    Subject_Specs (Subject_Id).Stack_Address;
 
    function Get_Entry_Point
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word64;
-   --# return
-   --#    Subject_Specs (Subject_Id).Entry_Point;
 
    function Get_Trap
      (Subject_Id : Skp.Subject_Id_Type;
       Trap_Nr    : Trap_Range)
       return Trap_Entry_Type;
-   --# return
-   --#    Subject_Specs (Subject_Id).Trap_Table (Trap_Nr);
 
    function Get_Signal
      (Subject_Id : Skp.Subject_Id_Type;
       Signal_Nr  : Signal_Range)
       return Signal_Entry_Type;
-   --# return
-   --#    Subject_Specs (Subject_Id).Signal_Table (Signal_Nr);
 
 end Skp.Subjects;

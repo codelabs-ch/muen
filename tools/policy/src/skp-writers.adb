@@ -979,16 +979,14 @@ is
       end Write_Subject_Spec;
    begin
       Tmpl := Templates.Load (Filename => "skp-subjects.ads");
-
-      Policy.Subjects.Iterate (Process => Write_Subject'Access);
-
-      Templates.Replace (Template => Tmpl,
-                         Pattern  => "__subjects__",
-                         Content  => To_String (Buffer));
       Templates.Write (Template => Tmpl,
                        Filename => Dir_Name & "/skp-subjects.ads");
 
       Tmpl := Templates.Load (Filename => "skp-subjects.adb");
+      Policy.Subjects.Iterate (Process => Write_Subject'Access);
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__subjects__",
+                         Content  => To_String (Buffer));
       Templates.Write (Template => Tmpl,
                        Filename => Dir_Name & "/skp-subjects.adb");
    end Write_Subjects;

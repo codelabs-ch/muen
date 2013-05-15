@@ -37,10 +37,12 @@ is
    --#    in     Interrupts.IDT_Pointer;
    --#    in     GDT.GDT_Pointer;
    --#    in     VMX.State;
-   --#    in out X86_64.State;
+   --#    in out Subjects.Descriptors;
    --#    in out CPU_Global.Storage;
+   --#    in out X86_64.State;
    --# derives
-   --#    CPU_Global.Storage from *, State, X86_64.State &
+   --#    Subjects.Descriptors from *, X86_64.State        &
+   --#    CPU_Global.Storage   from *, X86_64.State, State &
    --#    X86_64.State from
    --#       *,
    --#       State,

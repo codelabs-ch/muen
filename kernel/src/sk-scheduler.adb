@@ -216,10 +216,12 @@ is
    --#    in     Interrupts.IDT_Pointer;
    --#    in     GDT.GDT_Pointer;
    --#    in     VMX.State;
-   --#    in out X86_64.State;
+   --#    in out Subjects.Descriptors;
    --#    in out CPU_Global.Storage;
+   --#    in out X86_64.State;
    --# derives
-   --#    CPU_Global.Storage from *, Current_Major, X86_64.State &
+   --#    Subjects.Descriptors from *, X86_64.State                &
+   --#    CPU_Global.Storage   from *, Current_Major, X86_64.State &
    --#    X86_64.State from
    --#       *,
    --#       Current_Major,
@@ -232,6 +234,7 @@ is
       Plan_Frame        : Skp.Scheduling.Minor_Frame_Type;
       Initial_VMCS_Addr : SK.Word64 := 0;
       VMCS_Addr         : SK.Word64;
+      State             : SK.Subject_State_Type := SK.Null_Subject_State;
    begin
       Get_ID (ID => CPU_Id);
       CPU_Global.Set_Scheduling_Plan
@@ -247,10 +250,13 @@ is
            (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First,
             Subject_Id => Plan_Frame.Subject_Id));
 
-      --  Setup VMCS of subjects running on this logical CPU.
+      --  Setup VMCS and state of subjects running on this logical CPU.
 
       for I in Skp.Subject_Id_Type loop
          if Skp.Subjects.Get_CPU_Id (Subject_Id => I) = CPU_Id then
+
+            --  VMCS
+
             VMCS_Addr := Skp.Subjects.Get_VMCS_Address (Subject_Id => I);
             VMX.Clear (VMCS_Address => VMCS_Addr);
             VMX.Load  (VMCS_Address => VMCS_Addr);
@@ -271,6 +277,13 @@ is
             if Plan_Frame.Subject_Id = I then
                Initial_VMCS_Addr := VMCS_Addr;
             end if;
+
+            --  State
+
+            State.RIP := Skp.Subjects.Get_Entry_Point   (Subject_Id => I);
+            State.RSP := Skp.Subjects.Get_Stack_Address (Subject_Id => I);
+            Subjects.Set_State (Id    => I,
+                                State => State);
          end if;
       end loop;
 

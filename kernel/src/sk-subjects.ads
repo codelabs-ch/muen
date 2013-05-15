@@ -1,7 +1,7 @@
 with Skp;
 
 --# inherit
---#    Skp.Subjects,
+--#    Skp,
 --#    SK.CPU;
 package SK.Subjects
 --# own

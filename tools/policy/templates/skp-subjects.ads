@@ -59,6 +59,10 @@ package Skp.Subjects is
    Subject_Specs : constant Subject_Spec_Array := Subject_Spec_Array'(
 __subjects__);
 
+   function Get_CPU_Id (Subject_Id : Skp.Subject_Id_Type) return Skp.CPU_Range;
+   --# return
+   --#    Subject_Specs (Subject_Id).CPU_Id;
+
    function Get_VMCS_Address
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word64;

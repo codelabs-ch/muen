@@ -100,6 +100,10 @@ package Skp.Subjects is
        Trap_Table         => Null_Trap_Table,
        Signal_Table      => Null_Signal_Table));
 
+   function Get_CPU_Id (Subject_Id : Skp.Subject_Id_Type) return Skp.CPU_Range;
+   --# return
+   --#    Subject_Specs (Subject_Id).CPU_Id;
+
    function Get_VMCS_Address
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word64;

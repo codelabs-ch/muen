@@ -108,6 +108,20 @@ is
    --#       IO_Bitmap_Address,
    --#       MSR_Bitmap_Address;
 
+   --  Setup host fields of the currently active VMCS.
+   procedure VMCS_Setup_Host_Fields;
+   --# global
+   --#    in     Interrupts.IDT_Pointer;
+   --#    in     GDT.GDT_Pointer;
+   --#    in     State;
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from
+   --#       *,
+   --#       Interrupts.IDT_Pointer,
+   --#       GDT.GDT_Pointer,
+   --#       State;
+
    --  Setup guest fields of the currently active VMCS.
    procedure VMCS_Setup_Guest_Fields
      (Stack_Address : SK.Word64;

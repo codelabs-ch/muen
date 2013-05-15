@@ -47,18 +47,6 @@ is
    --#       GDT.GDT_Pointer,
    --#       VMX.State;
 
-   --  Schedule subject according to the current scheduling plan.
-   procedure Schedule;
-   --# global
-   --#    in     CPU_Global.Storage;
-   --#    in out X86_64.State;
-   --#    in out Subjects.Descriptors;
-   --# derives
-   --#    Subjects.Descriptors, X86_64.State from
-   --#       Subjects.Descriptors,
-   --#       CPU_Global.Storage,
-   --#       X86_64.State;
-
 private
 
    --  VMX exit handler.

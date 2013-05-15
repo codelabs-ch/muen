@@ -49,7 +49,7 @@ is
 
          VMX.Enable;
          Scheduler.Init;
-         Scheduler.Schedule;
+         VMX.Run (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id);
       end if;
 
       pragma Debug (not Success, KC.Put_Line

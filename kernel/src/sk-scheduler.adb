@@ -384,14 +384,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Schedule
-   is
-   begin
-      VMX.Run (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id);
-   end Schedule;
-
-   -------------------------------------------------------------------------
-
    procedure Handle_Vmx_Exit (Subject_Registers : SK.CPU_Registers_Type)
    --# global
    --#    in     New_Major;
@@ -478,7 +470,7 @@ is
       Subjects.Set_State (Id    => Current_Subject,
                           State => State);
 
-      Schedule;
+      VMX.Run (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id);
    end Handle_Vmx_Exit;
 
 end SK.Scheduler;

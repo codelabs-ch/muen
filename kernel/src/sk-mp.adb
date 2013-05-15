@@ -60,7 +60,8 @@ is
          Sense         := CPU_Sense (Id);
       else
          while Sense /= CPU_Sense (Id) loop
-            null;
+            System.Machine_Code.Asm (Template => "pause",
+                                     Volatile => True);
          end loop;
       end if;
    end Wait_For_All;

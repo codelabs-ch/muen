@@ -22,27 +22,6 @@ is
    SEL_KERN_DATA : constant := 16#10#;
    SEL_TSS       : constant := 16#18#;
 
-   Exec_Pin_Defaults   : constant SK.Word32 := Constants.VM_CTRL_EXIT_EXT_INT
-     or Constants.VM_CTRL_PREEMPT_TIMER;
-   Exec_Proc_Defaults  : constant SK.Word32 := Constants.VM_CTRL_IO_BITMAPS
-     or Constants.VM_CTRL_SECONDARY_PROC
-     or Constants.VM_CTRL_EXIT_INVLPG
-     or Constants.VM_CTRL_EXIT_MWAIT
-     or Constants.VM_CTRL_EXIT_RDPMC
-     or Constants.VM_CTRL_EXIT_RDTSC
-     or Constants.VM_CTRL_EXIT_CR3_LOAD
-     or Constants.VM_CTRL_EXIT_CR3_STORE
-     or Constants.VM_CTRL_EXIT_CR8_LOAD
-     or Constants.VM_CTRL_EXIT_CR8_STORE
-     or Constants.VM_CTRL_EXIT_MOV_DR
-     or Constants.VM_CTRL_MSR_BITMAPS
-     or Constants.VM_CTRL_EXIT_MONITOR;
-   Exec_Proc2_Defaults : constant SK.Word32 := Constants.VM_CTRL_EXIT_WBINVD;
-
-   Exit_Ctrl_Defaults  : constant SK.Word32 := Constants.VM_CTRL_IA32E_MODE
-     or Constants.VM_CTRL_EXIT_ACK_INT
-     or Constants.VM_CTRL_EXIT_SAVE_TIMER;
-
    --# accept Warning, 350, VMX_Exit_Address, "Imported from Linker";
    VMX_Exit_Address : SK.Word64;
    pragma Import (C, VMX_Exit_Address, "vmx_exit_handler_ptr");
@@ -376,21 +355,6 @@ is
    -------------------------------------------------------------------------
 
    procedure Launch (Subject_Id : Skp.Subject_Id_Type)
-   --# global
-   --#    in     GDT.GDT_Pointer;
-   --#    in     Interrupts.IDT_Pointer;
-   --#    in     VMX_Exit_Address;
-   --#    in out Subjects.Descriptors;
-   --#    in out X86_64.State;
-   --# derives
-   --#    Subjects.Descriptors from *, Subject_Id &
-   --#    X86_64.State from
-   --#       *,
-   --#       GDT.GDT_Pointer,
-   --#       Interrupts.IDT_Pointer,
-   --#       VMX_Exit_Address,
-   --#       Subjects.Descriptors,
-   --#       Subject_Id;
    is
       Spec  : Skp.Subjects.Subject_Spec_Type;
       State : SK.Subject_State_Type;
@@ -398,21 +362,7 @@ is
       Spec  := Skp.Subjects.Subject_Specs (Subject_Id);
       State := Subjects.Get_State (Id => Subject_Id);
 
-      Clear (VMCS_Address => Spec.VMCS_Address);
       Load  (VMCS_Address => Spec.VMCS_Address);
-
-      VMCS_Setup_Control_Fields
-        (IO_Bitmap_Address  => Spec.IO_Bitmap_Address,
-         MSR_Bitmap_Address => Spec.MSR_Bitmap_Address,
-         Ctls_Exec_Pin      => Exec_Pin_Defaults,
-         Ctls_Exec_Proc     => Exec_Proc_Defaults,
-         Ctls_Exec_Proc2    => Exec_Proc2_Defaults,
-         Ctls_Exit          => Exit_Ctrl_Defaults);
-      VMCS_Setup_Host_Fields;
-      VMCS_Setup_Guest_Fields
-        (Stack_Address => Spec.Stack_Address,
-         PML4_Address  => Spec.PML4_Address,
-         Entry_Point   => Spec.Entry_Point);
 
       State.Launched := True;
       Subjects.Set_State (Id    => Subject_Id,

@@ -1,6 +1,7 @@
 with Skp.Scheduling;
 with Skp.Subjects;
 
+use type Skp.CPU_Range;
 use type Skp.Dst_Vector_Range;
 use type Skp.Scheduling.Minor_Frame_Range;
 use type Skp.Subjects.Trap_Entry_Type;
@@ -33,70 +34,51 @@ is
    procedure Init;
    --# global
    --#    in     State;
+   --#    in     Interrupts.IDT_Pointer;
+   --#    in     GDT.GDT_Pointer;
+   --#    in     VMX.State;
    --#    in out X86_64.State;
    --#    in out CPU_Global.Storage;
    --# derives
-   --#    X86_64.State       from * &
-   --#    CPU_Global.Storage from *, State, X86_64.State;
+   --#    CPU_Global.Storage from *, State, X86_64.State &
+   --#    X86_64.State from
+   --#       *,
+   --#       Interrupts.IDT_Pointer,
+   --#       GDT.GDT_Pointer,
+   --#       VMX.State;
 
    --  Schedule subject according to the current scheduling plan.
    procedure Schedule;
    --# global
-   --#    in     VMX.State;
-   --#    in     GDT.GDT_Pointer;
-   --#    in     Interrupts.IDT_Pointer;
    --#    in     CPU_Global.Storage;
    --#    in out X86_64.State;
    --#    in out Subjects.Descriptors;
    --# derives
+   --#    X86_64.State from *, Subjects.Descriptors, CPU_Global.Storage &
    --#    Subjects.Descriptors from
    --#       *,
    --#       CPU_Global.Storage,
-   --#       X86_64.State &
-   --#    X86_64.State from
-   --#       *,
-   --#       VMX.State,
-   --#       GDT.GDT_Pointer,
-   --#       Interrupts.IDT_Pointer,
-   --#       Subjects.Descriptors,
-   --#       CPU_Global.Storage;
+   --#       X86_64.State;
 
 private
 
    --  VMX exit handler.
    procedure Handle_Vmx_Exit (Subject_Registers : SK.CPU_Registers_Type);
    --# global
-   --#    in     GDT.GDT_Pointer;
-   --#    in     Interrupts.IDT_Pointer;
-   --#    in     VMX.State;
    --#    in out CPU_Global.Storage;
    --#    in out State;
    --#    in out MP.Barrier;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    State, MP.Barrier, CPU_Global.Storage from
-   --#       *,
-   --#       State,
-   --#       Subject_Registers,
-   --#       Subjects.Descriptors,
-   --#       CPU_Global.Storage,
-   --#       X86_64.State &
-   --#    Subjects.Descriptors from
-   --#       *,
-   --#       Subject_Registers,
-   --#       State,
-   --#       CPU_Global.Storage,
-   --#       X86_64.State &
+   --#    State, MP.Barrier, CPU_Global.Storage, Subjects.Descriptors,
    --#    X86_64.State from
    --#       *,
-   --#       Subject_Registers,
-   --#       VMX.State,
    --#       State,
-   --#       Interrupts.IDT_Pointer,
-   --#       GDT.GDT_Pointer,
+   --#       Subject_Registers,
    --#       Subjects.Descriptors,
-   --#       CPU_Global.Storage;
+   --#       CPU_Global.Storage,
+   --#       X86_64.State;
    pragma Export (C, Handle_Vmx_Exit, "handle_vmx_exit");
 
 end SK.Scheduler;

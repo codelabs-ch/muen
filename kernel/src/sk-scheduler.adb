@@ -16,6 +16,27 @@ package body SK.Scheduler
 --#    State is in New_Major, Current_Major;
 is
 
+   Exec_Pin_Defaults   : constant SK.Word32 := Constants.VM_CTRL_EXIT_EXT_INT
+     or Constants.VM_CTRL_PREEMPT_TIMER;
+   Exec_Proc_Defaults  : constant SK.Word32 := Constants.VM_CTRL_IO_BITMAPS
+     or Constants.VM_CTRL_SECONDARY_PROC
+     or Constants.VM_CTRL_EXIT_INVLPG
+     or Constants.VM_CTRL_EXIT_MWAIT
+     or Constants.VM_CTRL_EXIT_RDPMC
+     or Constants.VM_CTRL_EXIT_RDTSC
+     or Constants.VM_CTRL_EXIT_CR3_LOAD
+     or Constants.VM_CTRL_EXIT_CR3_STORE
+     or Constants.VM_CTRL_EXIT_CR8_LOAD
+     or Constants.VM_CTRL_EXIT_CR8_STORE
+     or Constants.VM_CTRL_EXIT_MOV_DR
+     or Constants.VM_CTRL_MSR_BITMAPS
+     or Constants.VM_CTRL_EXIT_MONITOR;
+   Exec_Proc2_Defaults : constant SK.Word32 := Constants.VM_CTRL_EXIT_WBINVD;
+
+   Exit_Ctrl_Defaults  : constant SK.Word32 := Constants.VM_CTRL_IA32E_MODE
+     or Constants.VM_CTRL_EXIT_ACK_INT
+     or Constants.VM_CTRL_EXIT_SAVE_TIMER;
+
    Tau0_Kernel_Iface_Address : SK.Word64;
    pragma Import (C, Tau0_Kernel_Iface_Address, "tau0kernel_iface_ptr");
 
@@ -154,18 +175,26 @@ is
    procedure Init
    --# global
    --#    in     Current_Major;
+   --#    in     Interrupts.IDT_Pointer;
+   --#    in     GDT.GDT_Pointer;
+   --#    in     VMX.State;
    --#    in out X86_64.State;
    --#    in out CPU_Global.Storage;
    --# derives
-   --#    X86_64.State       from * &
-   --#    CPU_Global.Storage from *, Current_Major, X86_64.State;
+   --#    CPU_Global.Storage from *, Current_Major, X86_64.State &
+   --#    X86_64.State from
+   --#       *,
+   --#       Interrupts.IDT_Pointer,
+   --#       GDT.GDT_Pointer,
+   --#       VMX.State;
    is
-      CPU_ID     : Skp.CPU_Range;
+      CPU_Id     : Skp.CPU_Range;
       Plan_Frame : Skp.Scheduling.Minor_Frame_Type;
+      Spec       : Skp.Subjects.Subject_Spec_Type;
    begin
-      Get_ID (ID => CPU_ID);
+      Get_ID (ID => CPU_Id);
       CPU_Global.Set_Scheduling_Plan
-        (Data => Skp.Scheduling.Scheduling_Plans (CPU_ID));
+        (Data => Skp.Scheduling.Scheduling_Plans (CPU_Id));
 
       --  Set initial active minor frame.
 
@@ -176,6 +205,28 @@ is
         (Frame => CPU_Global.Active_Minor_Frame_Type'
            (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First,
             Subject_Id => Plan_Frame.Subject_Id));
+
+      --  Setup VMCS of subjects running on this logical CPU.
+
+      for I in Skp.Subject_Id_Type loop
+         if Skp.Subjects.Subject_Specs (I).CPU_Id = CPU_Id then
+            Spec := Skp.Subjects.Subject_Specs (I);
+            VMX.Clear (VMCS_Address => Spec.VMCS_Address);
+            VMX.Load  (VMCS_Address => Spec.VMCS_Address);
+            VMX.VMCS_Setup_Control_Fields
+              (IO_Bitmap_Address  => Spec.IO_Bitmap_Address,
+               MSR_Bitmap_Address => Spec.MSR_Bitmap_Address,
+               Ctls_Exec_Pin      => Exec_Pin_Defaults,
+               Ctls_Exec_Proc     => Exec_Proc_Defaults,
+               Ctls_Exec_Proc2    => Exec_Proc2_Defaults,
+               Ctls_Exit          => Exit_Ctrl_Defaults);
+            VMX.VMCS_Setup_Host_Fields;
+            VMX.VMCS_Setup_Guest_Fields
+              (Stack_Address => Spec.Stack_Address,
+               PML4_Address  => Spec.PML4_Address,
+               Entry_Point   => Spec.Entry_Point);
+         end if;
+      end loop;
    end Init;
 
    -------------------------------------------------------------------------
@@ -353,9 +404,6 @@ is
 
    procedure Handle_Vmx_Exit (Subject_Registers : SK.CPU_Registers_Type)
    --# global
-   --#    in     GDT.GDT_Pointer;
-   --#    in     Interrupts.IDT_Pointer;
-   --#    in     VMX.State;
    --#    in     New_Major;
    --#    in out CPU_Global.Storage;
    --#    in out Current_Major;
@@ -363,15 +411,10 @@ is
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    CPU_Global.Storage from
+   --#    Current_Major, CPU_Global.Storage, X86_64.State,
+   --#    Subjects.Descriptors from
    --#       *,
    --#       Current_Major,
-   --#       New_Major,
-   --#       Subject_Registers,
-   --#       Subjects.Descriptors,
-   --#       X86_64.State &
-   --#    Current_Major from
-   --#       *,
    --#       New_Major,
    --#       Subject_Registers,
    --#       Subjects.Descriptors,
@@ -383,24 +426,7 @@ is
    --#       Subject_Registers,
    --#       Subjects.Descriptors,
    --#       CPU_Global.Storage,
-   --#       X86_64.State &
-   --#    X86_64.State from
-   --#       *,
-   --#       Subject_Registers,
-   --#       New_Major,
-   --#       Current_Major,
-   --#       VMX.State,
-   --#       Interrupts.IDT_Pointer,
-   --#       GDT.GDT_Pointer,
-   --#       CPU_Global.Storage,
-   --#       Subjects.Descriptors &
-   --#    Subjects.Descriptors from
-   --#       *,
-   --#       CPU_Global.Storage,
-   --#       X86_64.State,
-   --#       Subject_Registers,
-   --#       New_Major,
-   --#       Current_Major;
+   --#       X86_64.State;
    is
       State           : SK.Subject_State_Type;
       Current_Subject : Skp.Subject_Id_Type;

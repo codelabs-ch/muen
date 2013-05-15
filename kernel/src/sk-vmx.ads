@@ -46,20 +46,11 @@ is
    --  Launch given subject.
    procedure Launch (Subject_Id : Skp.Subject_Id_Type);
    --# global
-   --#    in     GDT.GDT_Pointer;
-   --#    in     Interrupts.IDT_Pointer;
-   --#    in     State;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
    --#    Subjects.Descriptors from *, Subject_Id &
-   --#    X86_64.State from
-   --#       *,
-   --#       Interrupts.IDT_Pointer,
-   --#       GDT.GDT_Pointer,
-   --#       Subjects.Descriptors,
-   --#       Subject_Id,
-   --#       State;
+   --#    X86_64.State         from *, Subjects.Descriptors, Subject_Id;
 
    --  Resume given subject.
    procedure Resume (Subject_Id : Skp.Subject_Id_Type);

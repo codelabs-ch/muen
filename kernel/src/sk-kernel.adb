@@ -31,7 +31,6 @@ is
 
          Apic.Enable;
          CPU_Global.Init;
-         Scheduler.Init;
 
          if Is_Bsp then
 
@@ -49,6 +48,7 @@ is
          --  BSP & APs
 
          VMX.Enable;
+         Scheduler.Init;
          Scheduler.Schedule;
       end if;
 

@@ -278,14 +278,6 @@ is
      (Stack_Address : SK.Word64;
       PML4_Address  : SK.Word64;
       Entry_Point   : SK.Word64)
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from
-   --#       *,
-   --#       Stack_Address,
-   --#       PML4_Address,
-   --#       Entry_Point;
    is
    begin
       VMCS_Write (Field => Constants.VMCS_LINK_POINTER,

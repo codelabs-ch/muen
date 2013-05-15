@@ -52,6 +52,17 @@ package body Skp.Subjects is
 
    -------------------------------------------------------------------------
 
+   function Get_Signal
+     (Subject_Id : Skp.Subject_Id_Type;
+      Signal_Nr  : Signal_Range)
+      return Signal_Entry_Type
+   is
+   begin
+      return Subject_Specs (Subject_Id).Signal_Table (Signal_Nr);
+   end Get_Signal;
+
+   -------------------------------------------------------------------------
+
    function Get_Trap
      (Subject_Id : Skp.Subject_Id_Type;
       Trap_Nr    : Trap_Range)

@@ -94,4 +94,11 @@ __subjects__);
    --# return
    --#    Subject_Specs (Subject_Id).Trap_Table (Trap_Nr);
 
+   function Get_Signal
+     (Subject_Id : Skp.Subject_Id_Type;
+      Signal_Nr  : Signal_Range)
+      return Signal_Entry_Type;
+   --# return
+   --#    Subject_Specs (Subject_Id).Signal_Table (Signal_Nr);
+
 end Skp.Subjects;

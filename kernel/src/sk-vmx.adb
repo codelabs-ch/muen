@@ -360,6 +360,22 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Clear (VMCS_Address : SK.Word64)
+   is
+      Success : Boolean;
+   begin
+      CPU.VMCLEAR (Region  => VMCS_Address,
+                   Success => Success);
+      if not Success then
+         pragma Debug (KC.Put_String (Item => "Error clearing VMCS: "));
+         pragma Debug (KC.Put_Word64 (Item => VMCS_Address));
+         pragma Debug (KC.New_Line);
+         CPU.Panic;
+      end if;
+   end Clear;
+
+   -------------------------------------------------------------------------
+
    procedure Load (VMCS_Address : SK.Word64)
    is
       Success : Boolean;
@@ -393,21 +409,14 @@ is
    --#       Subjects.Descriptors,
    --#       Subject_Id;
    is
-      Success : Boolean;
-      Spec    : Skp.Subjects.Subject_Spec_Type;
-      State   : SK.Subject_State_Type;
+      Spec  : Skp.Subjects.Subject_Spec_Type;
+      State : SK.Subject_State_Type;
    begin
       Spec  := Skp.Subjects.Subject_Specs (Subject_Id);
       State := Subjects.Get_State (Id => Subject_Id);
 
-      CPU.VMCLEAR (Region  => Spec.VMCS_Address,
-                   Success => Success);
-      if not Success then
-         pragma Debug (KC.Put_Line (Item => "Error clearing VMCS"));
-         CPU.Panic;
-      end if;
-
-      Load (VMCS_Address => Spec.VMCS_Address);
+      Clear (VMCS_Address => Spec.VMCS_Address);
+      Load  (VMCS_Address => Spec.VMCS_Address);
 
       VMCS_Setup_Control_Fields
         (IO_Bitmap_Address  => Spec.IO_Bitmap_Address,

@@ -111,6 +111,23 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Perform subject handover from the old to the new subject.
+   procedure Subject_Handover (Old_Id, New_Id : Skp.Subject_Id_Type)
+   --# global
+   --#    in out CPU_Global.Storage;
+   --# derives
+   --#    CPU_Global.Storage from *, Old_Id, New_Id;
+   --# pre
+   --#    Old_Id /= New_Id;
+   is
+   begin
+      CPU_Global.Swap_Subject
+        (Old_Id => Old_Id,
+         New_Id => New_Id);
+   end Subject_Handover;
+
+   -------------------------------------------------------------------------
+
    --  Update scheduling information. If the end of the current major frame is
    --  reached, the minor frame index is reset and the major frame is switched
    --  to the one set by Tau0. Otherwise the minor frame index is incremented
@@ -275,9 +292,8 @@ is
                --# assume Current_Subject /= Sig_Entry.Dst_Subject;
                --# end accept;
 
-               CPU_Global.Swap_Subject
-                 (Old_Id => Current_Subject,
-                  New_Id => Sig_Entry.Dst_Subject);
+               Subject_Handover (Old_Id => Current_Subject,
+                                 New_Id => Sig_Entry.Dst_Subject);
             end if;
          end if;
       end if;
@@ -385,9 +401,8 @@ is
          --# assume Current_Subject /= Trap_Entry.Dst_Subject;
          --# end accept;
 
-         CPU_Global.Swap_Subject
-           (Old_Id => Current_Subject,
-            New_Id => Trap_Entry.Dst_Subject);
+         Subject_Handover (Old_Id => Current_Subject,
+                           New_Id => Trap_Entry.Dst_Subject);
       end if;
    end Handle_Trap;
 

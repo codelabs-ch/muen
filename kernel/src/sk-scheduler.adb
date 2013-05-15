@@ -195,8 +195,8 @@ is
 
          --  New minor frame contains different subject -> Load VMCS.
 
-         VMX.Load (VMCS_Address => Skp.Subjects.Subject_Specs
-                   (Plan_Frame.Subject_Id).VMCS_Address);
+         VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
+                   (Subject_Id => Plan_Frame.Subject_Id));
       end if;
 
       Minor_Frame.Subject_Id := Plan_Frame.Subject_Id;
@@ -321,8 +321,8 @@ is
                Subject_Handover
                  (Old_Id   => Current_Subject,
                   New_Id   => Sig_Entry.Dst_Subject,
-                  New_VMCS => Skp.Subjects.Subject_Specs
-                    (Sig_Entry.Dst_Subject).VMCS_Address);
+                  New_VMCS => Skp.Subjects.Get_VMCS_Address
+                    (Subject_Id => Sig_Entry.Dst_Subject));
             end if;
          end if;
       end if;
@@ -433,8 +433,8 @@ is
          Subject_Handover
            (Old_Id   => Current_Subject,
             New_Id   => Trap_Entry.Dst_Subject,
-            New_VMCS => Skp.Subjects.Subject_Specs
-              (Trap_Entry.Dst_Subject).VMCS_Address);
+            New_VMCS => Skp.Subjects.Get_VMCS_Address
+              (Subject_Id => Trap_Entry.Dst_Subject));
       end if;
    end Handle_Trap;
 

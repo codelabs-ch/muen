@@ -43,6 +43,7 @@ package Skp.Subjects is
      (others => Null_Signal);
 
    type Subject_Spec_Type is record
+      CPU_Id             : Skp.CPU_Range;
       PML4_Address       : SK.Word64;
       VMCS_Address       : SK.Word64;
       IO_Bitmap_Address  : SK.Word64;
@@ -57,6 +58,7 @@ package Skp.Subjects is
 
    Subject_Specs : constant Subject_Spec_Array := Subject_Spec_Array'(
       0 => Subject_Spec_Type'(
+       CPU_Id             => 0,
        PML4_Address       => 16#00000000001f0000#,
        VMCS_Address       => 16#0000000000001000#,
        IO_Bitmap_Address  => 16#00000000001a0000#,
@@ -78,6 +80,7 @@ package Skp.Subjects is
             Dst_Vector  => 256),
           others => Null_Signal)),
       1 => Subject_Spec_Type'(
+       CPU_Id             => 1,
        PML4_Address       => 16#00000000001f4000#,
        VMCS_Address       => 16#0000000000002000#,
        IO_Bitmap_Address  => 16#00000000001b0000#,
@@ -87,6 +90,7 @@ package Skp.Subjects is
        Trap_Table         => Null_Trap_Table,
        Signal_Table      => Null_Signal_Table),
       2 => Subject_Spec_Type'(
+       CPU_Id             => 0,
        PML4_Address       => 16#00000000001f8000#,
        VMCS_Address       => 16#0000000000003000#,
        IO_Bitmap_Address  => 16#00000000001c0000#,

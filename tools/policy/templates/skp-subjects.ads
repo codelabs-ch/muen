@@ -43,6 +43,7 @@ package Skp.Subjects is
      (others => Null_Signal);
 
    type Subject_Spec_Type is record
+      CPU_Id             : Skp.CPU_Range;
       PML4_Address       : SK.Word64;
       VMCS_Address       : SK.Word64;
       IO_Bitmap_Address  : SK.Word64;

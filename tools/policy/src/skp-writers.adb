@@ -925,6 +925,8 @@ is
          Buffer := Buffer & Indent & "  " & Subject.Id'Img
            & " => Subject_Spec_Type'("
            & ASCII.LF
+           & Indent & "    CPU_Id             =>" & Subject.CPU'Img & ","
+           & ASCII.LF
            & Indent & "    PML4_Address       => 16#"
            & SK.Utils.To_Hex (Item => Subject.Pml4_Address) & "#,"
            & ASCII.LF

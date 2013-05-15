@@ -184,6 +184,15 @@ is
       Plan_Frame := CPU_Global.Get_Minor_Frame
         (Major_Id => Current_Major,
          Minor_Id => Minor_Frame.Minor_Id);
+
+      if Plan_Frame.Subject_Id /= Minor_Frame.Subject_Id then
+
+         --  New minor frame contains different subject -> Load VMCS.
+
+         VMX.Load (VMCS_Address => Skp.Subjects.Subject_Specs
+                   (Plan_Frame.Subject_Id).VMCS_Address);
+      end if;
+
       Minor_Frame.Subject_Id := Plan_Frame.Subject_Id;
       CPU_Global.Set_Current_Minor (Frame => Minor_Frame);
 

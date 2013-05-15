@@ -987,6 +987,10 @@ is
                          Content  => To_String (Buffer));
       Templates.Write (Template => Tmpl,
                        Filename => Dir_Name & "/skp-subjects.ads");
+
+      Tmpl := Templates.Load (Filename => "skp-subjects.adb");
+      Templates.Write (Template => Tmpl,
+                       Filename => Dir_Name & "/skp-subjects.adb");
    end Write_Subjects;
 
    -------------------------------------------------------------------------

@@ -100,4 +100,10 @@ package Skp.Subjects is
        Trap_Table         => Null_Trap_Table,
        Signal_Table      => Null_Signal_Table));
 
+   function Get_VMCS_Address
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word64;
+   --# return
+   --#    Subject_Specs (Subject_Id).VMCS_Address;
+
 end Skp.Subjects;

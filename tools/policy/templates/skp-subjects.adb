@@ -52,6 +52,17 @@ package body Skp.Subjects is
 
    -------------------------------------------------------------------------
 
+   function Get_Trap
+     (Subject_Id : Skp.Subject_Id_Type;
+      Trap_Nr    : Trap_Range)
+      return Trap_Entry_Type
+   is
+   begin
+      return Subject_Specs (Subject_Id).Trap_Table (Trap_Nr);
+   end Get_Trap;
+
+   -------------------------------------------------------------------------
+
    function Get_VMCS_Address
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word64

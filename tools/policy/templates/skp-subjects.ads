@@ -87,4 +87,11 @@ __subjects__);
    --# return
    --#    Subject_Specs (Subject_Id).MSR_Bitmap_Address;
 
+   function Get_Trap
+     (Subject_Id : Skp.Subject_Id_Type;
+      Trap_Nr    : Trap_Range)
+      return Trap_Entry_Type;
+   --# return
+   --#    Subject_Specs (Subject_Id).Trap_Table (Trap_Nr);
+
 end Skp.Subjects;

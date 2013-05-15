@@ -108,9 +108,7 @@ is
       Paging := SK.Bit_Test
         (Value => CPU.Get_CR0,
          Pos   => Constants.CR0_PG_FLAG);
-      pragma Debug
-        (not Paging,
-         KC.Put_Line (Item => "Paging not enabled"));
+      pragma Debug (not Paging, KC.Put_Line (Item => "Paging not enabled"));
 
       IA_32e_Mode := SK.Bit_Test
         (Value => CPU.Get_MSR64 (Register => Constants.IA32_EFER),
@@ -146,9 +144,7 @@ is
            (Register => Constants.IA32_VMX_CR4_FIXED0),
          Fixed1   => CPU.Get_MSR64
            (Register => Constants.IA32_VMX_CR4_FIXED1));
-      pragma Debug
-        (not CR4_Valid,
-         KC.Put_Line (Item => "CR4 is invalid"));
+      pragma Debug (not CR4_Valid, KC.Put_Line (Item => "CR4 is invalid"));
 
       Apic_Support := Has_X2_Apic;
       pragma Debug

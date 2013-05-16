@@ -267,7 +267,8 @@ is
                Ctls_Exec_Pin      => Controls.Exec_Pin,
                Ctls_Exec_Proc     => Controls.Exec_Proc,
                Ctls_Exec_Proc2    => Controls.Exec_Proc2,
-               Ctls_Exit          => Controls.Exit_Ctrls);
+               Ctls_Exit          => Controls.Exit_Ctrls,
+               Ctls_Entry         => Controls.Entry_Ctrls);
             VMX.VMCS_Setup_Host_Fields;
             VMX.VMCS_Setup_Guest_Fields
               (PML4_Address => Skp.Subjects.Get_PML4_Address

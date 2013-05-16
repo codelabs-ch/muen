@@ -111,7 +111,8 @@ is
       Ctls_Exec_Pin      : SK.Word32;
       Ctls_Exec_Proc     : SK.Word32;
       Ctls_Exec_Proc2    : SK.Word32;
-      Ctls_Exit          : SK.Word32)
+      Ctls_Exit          : SK.Word32;
+      Ctls_Entry         : SK.Word32)
    is
       Default0, Default1, Value : SK.Word32;
    begin
@@ -196,7 +197,7 @@ is
       CPU.Get_MSR (Register => Constants.IA32_VMX_ENTRY_CTLS,
                    Low      => Default0,
                    High     => Default1);
-      Value := Constants.VM_CTRL_IA32E_MODE;
+      Value := Ctls_Entry;
       Value := Value and Default1;
       Value := Value or  Default0;
       VMCS_Write (Field => Constants.VM_ENTRY_CONTROLS,

@@ -77,7 +77,8 @@ is
       Ctls_Exec_Pin      : SK.Word32;
       Ctls_Exec_Proc     : SK.Word32;
       Ctls_Exec_Proc2    : SK.Word32;
-      Ctls_Exit          : SK.Word32);
+      Ctls_Exit          : SK.Word32;
+      Ctls_Entry         : SK.Word32);
    --# global
    --#    in out X86_64.State;
    --# derives
@@ -87,6 +88,7 @@ is
    --#       Ctls_Exec_Proc,
    --#       Ctls_Exec_Proc2,
    --#       Ctls_Exit,
+   --#       Ctls_Entry,
    --#       IO_Bitmap_Address,
    --#       MSR_Bitmap_Address;
 

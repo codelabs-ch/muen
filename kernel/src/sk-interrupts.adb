@@ -104,7 +104,7 @@ begin
       end loop;
 
       IDT_Pointer := Descriptors.Pseudo_Descriptor_Type'
-        (Limit => 16 * SK.Word16 (IDT'Last) - 1,
+        (Limit => 16 * SK.Word16 (IDT'Length) - 1,
          Base  => SK.Word64
            (System.Storage_Elements.To_Integer (Value => IDT'Address)));
    end;

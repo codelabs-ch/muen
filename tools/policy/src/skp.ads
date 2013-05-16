@@ -210,9 +210,12 @@ is
 
    subtype Signal_Table_Type is Signals_Package.Map;
 
+   type Subject_Profile_Type is (Native);
+
    type Subject_Type is record
       Id                 : Natural;
       Name               : Ada.Strings.Unbounded.Unbounded_String;
+      Profile            : Subject_Profile_Type;
       CPU                : Natural;
       Pml4_Address       : SK.Word64;
       IO_Bitmap_Address  : SK.Word64;

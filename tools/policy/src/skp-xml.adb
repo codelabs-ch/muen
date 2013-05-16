@@ -556,8 +556,9 @@ is
          Policy.Subjects.Insert
            (New_Item =>
               (Id                 => Id,
-               CPU                => Natural'Value (CPU_Str),
                Name               => To_Unbounded_String (Name),
+               Profile            => Native,
+               CPU                => Natural'Value (CPU_Str),
                Pml4_Address       => To_Word64 (Hex => PML4_Str),
                IO_Bitmap_Address  => To_Word64 (Hex => IOBM_Str),
                MSR_Bitmap_Address => To_Word64 (Hex => MSRBM_Str),

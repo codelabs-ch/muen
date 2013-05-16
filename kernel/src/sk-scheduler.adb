@@ -34,27 +34,6 @@ is
         CR4                => 0,
         RFLAGS             => 0);
 
-   Exec_Pin_Defaults   : constant SK.Word32 := Constants.VM_CTRL_EXIT_EXT_INT
-     or Constants.VM_CTRL_PREEMPT_TIMER;
-   Exec_Proc_Defaults  : constant SK.Word32 := Constants.VM_CTRL_IO_BITMAPS
-     or Constants.VM_CTRL_SECONDARY_PROC
-     or Constants.VM_CTRL_EXIT_INVLPG
-     or Constants.VM_CTRL_EXIT_MWAIT
-     or Constants.VM_CTRL_EXIT_RDPMC
-     or Constants.VM_CTRL_EXIT_RDTSC
-     or Constants.VM_CTRL_EXIT_CR3_LOAD
-     or Constants.VM_CTRL_EXIT_CR3_STORE
-     or Constants.VM_CTRL_EXIT_CR8_LOAD
-     or Constants.VM_CTRL_EXIT_CR8_STORE
-     or Constants.VM_CTRL_EXIT_MOV_DR
-     or Constants.VM_CTRL_MSR_BITMAPS
-     or Constants.VM_CTRL_EXIT_MONITOR;
-   Exec_Proc2_Defaults : constant SK.Word32 := Constants.VM_CTRL_EXIT_WBINVD;
-
-   Exit_Ctrl_Defaults  : constant SK.Word32 := Constants.VM_CTRL_IA32E_MODE
-     or Constants.VM_CTRL_EXIT_ACK_INT
-     or Constants.VM_CTRL_EXIT_SAVE_TIMER;
-
    Tau0_Kernel_Iface_Address : SK.Word64;
    pragma Import (C, Tau0_Kernel_Iface_Address, "tau0kernel_iface_ptr");
 
@@ -251,6 +230,7 @@ is
       CPU_Id            : Skp.CPU_Range;
       Plan_Frame        : Skp.Scheduling.Minor_Frame_Type;
       Initial_VMCS_Addr : SK.Word64 := 0;
+      Controls          : Skp.Subjects.VMX_Controls_Type;
       VMCS_Addr         : SK.Word64;
    begin
       Get_ID (ID => CPU_Id);
@@ -275,6 +255,8 @@ is
             --  VMCS
 
             VMCS_Addr := Skp.Subjects.Get_VMCS_Address (Subject_Id => I);
+            Controls  := Skp.Subjects.Get_VMX_Controls (Subject_Id => I);
+
             VMX.Clear (VMCS_Address => VMCS_Addr);
             VMX.Load  (VMCS_Address => VMCS_Addr);
             VMX.VMCS_Setup_Control_Fields
@@ -282,10 +264,10 @@ is
                  (Subject_Id => I),
                MSR_Bitmap_Address => Skp.Subjects.Get_MSR_Bitmap_Address
                  (Subject_Id => I),
-               Ctls_Exec_Pin      => Exec_Pin_Defaults,
-               Ctls_Exec_Proc     => Exec_Proc_Defaults,
-               Ctls_Exec_Proc2    => Exec_Proc2_Defaults,
-               Ctls_Exit          => Exit_Ctrl_Defaults);
+               Ctls_Exec_Pin      => Controls.Exec_Pin,
+               Ctls_Exec_Proc     => Controls.Exec_Proc,
+               Ctls_Exec_Proc2    => Controls.Exec_Proc2,
+               Ctls_Exit          => Controls.Exit_Ctrls);
             VMX.VMCS_Setup_Host_Fields;
             VMX.VMCS_Setup_Guest_Fields
               (PML4_Address => Skp.Subjects.Get_PML4_Address

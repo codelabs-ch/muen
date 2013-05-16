@@ -387,8 +387,6 @@ is
          CPU.Restore_Registers (Regs => State.Regs);
          CPU.VMRESUME;
       else
-         Subjects.Set_Launched (Id    => Subject_Id,
-                                Value => True);
          CPU.Restore_Registers (Regs => State.Regs);
          CPU.VMLAUNCH;
       end if;

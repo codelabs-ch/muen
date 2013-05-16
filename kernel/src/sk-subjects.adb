@@ -3,8 +3,6 @@ with System;
 package body SK.Subjects
 is
 
-   subtype Descriptor_Array is SK.Subject_State_Array (Skp.Subject_Id_Type);
-
    --  Descriptors used to manage subject states.
    --# accept Warning, 396, Descriptors, "Not an external variable";
    Descriptors : Descriptor_Array;

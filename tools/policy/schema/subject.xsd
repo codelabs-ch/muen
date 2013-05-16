@@ -23,6 +23,13 @@
 		<xs:attribute name="name" type="device_name_type" use="required"/>
 	</xs:complexType>
 
+	<xs:simpleType name="subject_profile_type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="native"/>
+			<xs:enumeration value="linux"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:complexType name="subject_type">
 		<xs:sequence>
 			<xs:element name="initial_state" type="initial_state_type"    minOccurs="1" maxOccurs="1"/>
@@ -35,6 +42,7 @@
 		</xs:sequence>
 		<xs:attribute name="id"                 type="xs:nonNegativeInteger" use="required"/>
 		<xs:attribute name="name"               type="subject_name_type"     use="required"/>
+		<xs:attribute name="profile"            type="subject_profile_type"  use="required"/>
 		<xs:attribute name="cpu"                type="xs:nonNegativeInteger" use="required"/>
 		<xs:attribute name="pml4_address"       type="address_type"          use="required"/>
 		<xs:attribute name="io_bitmap_address"  type="address_type"          use="required"/>

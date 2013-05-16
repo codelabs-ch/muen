@@ -12,7 +12,7 @@
 	&binaries;
 
 	<subjects>
-		<subject id="0" name="tau0" cpu="0" pml4_address="1f0000" io_bitmap_address="12345678" msr_bitmap_address="283746000">
+		<subject id="0" name="tau0" profile="native" cpu="0" pml4_address="1f0000" io_bitmap_address="12345678" msr_bitmap_address="283746000">
 			&subj_state;
 			<memory_layout>
 				<memory_region physical_address="240000" virtual_address="240000" size="64k" alignment="4k" writable="true" executable="true" memory_type="UC"/>

@@ -80,27 +80,21 @@ begin
 
    --# hide SK.Interrupts;
 
-   declare
-      Temp : SK.Word64;
-   begin
-      for I in Exception_Range loop
-         Temp := ISR_List (I);
+   for I in Exception_Range loop
+      IDT (I) := Descriptors.Gate_Type'
+        (Offset_15_00     => SK.Word16
+           (ISR_List (I) and 16#0000_0000_0000_ffff#),
+         Segment_Selector => 16#0008#,
+         Flags            => 16#8e00#,
+         Offset_31_16     => SK.Word16
+           ((ISR_List (I) and 16#0000_0000_ffff_0000#) / 2 ** 16),
+         Offset_63_32     => SK.Word32
+           ((ISR_List (I) and 16#ffff_ffff_0000_0000#) / 2 ** 32),
+         Reserved         => 0);
+   end loop;
 
-         IDT (I) := Descriptors.Gate_Type'
-           (Offset_15_00     => SK.Word16
-              (Temp and 16#0000_0000_0000_ffff#),
-            Segment_Selector => 16#0008#,
-            Flags            => 16#8e00#,
-            Offset_31_16     => SK.Word16
-              ((Temp and 16#0000_0000_ffff_0000#) / 2 ** 16),
-            Offset_63_32     => SK.Word32
-              ((Temp and 16#ffff_ffff_0000_0000#) / 2 ** 32),
-            Reserved         => 0);
-      end loop;
-
-      IDT_Pointer := Descriptors.Pseudo_Descriptor_Type'
-        (Limit => 16 * SK.Word16 (IDT'Length) - 1,
-         Base  => SK.Word64
-           (System.Storage_Elements.To_Integer (Value => IDT'Address)));
-   end;
+   IDT_Pointer := Descriptors.Pseudo_Descriptor_Type'
+     (Limit => 16 * SK.Word16 (IDT'Length) - 1,
+      Base  => SK.Word64
+        (System.Storage_Elements.To_Integer (Value => IDT'Address)));
 end SK.Interrupts;

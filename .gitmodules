@@ -4,3 +4,6 @@
 [submodule "contrib/libsparkcrypto"]
 	path = contrib/libsparkcrypto
 	url = http://git.codelabs.ch/git/spark-crypto.git
+[submodule "subjects/linux/src"]
+	path = subjects/linux/src
+	url = https://github.com/codelabs-ch/linux.git

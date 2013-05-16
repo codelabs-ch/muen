@@ -21,6 +21,16 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Set_Launched
+     (Id    : Skp.Subject_Id_Type;
+      Value : Boolean)
+   is
+   begin
+      Descriptors (Id).Launched := Value;
+   end Set_Launched;
+
+   -------------------------------------------------------------------------
+
    procedure Set_State
      (Id    : Skp.Subject_Id_Type;
       State : SK.Subject_State_Type)

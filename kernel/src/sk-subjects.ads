@@ -33,4 +33,13 @@ is
    --# derives
    --#    Descriptors from *, Id, Vector;
 
+   --  Set launched flag of subject specified by id to given value.
+   procedure Set_Launched
+     (Id    : Skp.Subject_Id_Type;
+      Value : Boolean);
+   --# global
+   --#    Descriptors;
+   --# derives
+   --#    Descriptors from *, Id, Value;
+
 end SK.Subjects;

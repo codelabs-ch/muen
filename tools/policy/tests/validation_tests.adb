@@ -45,6 +45,12 @@ is
         (Routine => Invalid_Sched_CPU_Count'Access,
          Name    => "Invalid CPU elements in scheduling plan");
       T.Add_Test_Routine
+        (Routine => Invalid_Sched_Subject'Access,
+         Name    => "Invalid subject in scheduling plan");
+      T.Add_Test_Routine
+        (Routine => Invalid_Sched_Subject_CPU'Access,
+         Name    => "Invalid subject CPU in scheduling plan");
+      T.Add_Test_Routine
         (Routine => Invalid_Subj_Pml4_Addr'Access,
          Name    => "Invalid subject PML4 address");
       T.Add_Test_Routine
@@ -262,6 +268,18 @@ is
       CPU1, CPU2 : CPU_Type;
    begin
       Policy.Hardware.Processor.Logical_CPUs := 2;
+      Policy.Subjects.Insert
+        (New_Item =>
+           (Id     => 0,
+            Name   => To_Unbounded_String ("s1"),
+            CPU    => 0,
+            others => <>));
+      Policy.Subjects.Insert
+        (New_Item =>
+           (Id     => 2,
+            Name   => To_Unbounded_String ("s2"),
+            CPU    => 1,
+            others => <>));
 
       CPU1.Append (New_Item => (0, 100));
       CPU2.Append (New_Item => (2, 200));
@@ -279,6 +297,61 @@ is
                  & "differ",
                  Message   => "Exception message mismatch");
    end Invalid_Sched_CPU_Ticks;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Sched_Subject
+   is
+      Policy : Policy_Type;
+      Major  : Major_Frame_Type;
+      CPU    : CPU_Type;
+   begin
+      Policy.Hardware.Processor.Logical_CPUs := 1;
+
+      CPU.Append (New_Item => (0, 100));
+      Major.Append (New_Item => CPU);
+      Policy.Scheduling.Major_Frames.Append (New_Item => Major);
+
+      Validators.Validate_Scheduling (P => Policy);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Invalid scheduling plan: Reference to undefined subject 0",
+                 Message   => "Exception message mismatch");
+   end Invalid_Sched_Subject;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Sched_Subject_CPU
+   is
+      Policy : Policy_Type;
+      Major  : Major_Frame_Type;
+      CPU    : CPU_Type;
+   begin
+      Policy.Hardware.Processor.Logical_CPUs := 1;
+      Policy.Subjects.Insert
+        (New_Item =>
+           (Id     => 0,
+            Name   => To_Unbounded_String ("s1"),
+            CPU    => 1,
+            others => <>));
+
+      CPU.Append (New_Item => (0, 100));
+      Major.Append (New_Item => CPU);
+      Policy.Scheduling.Major_Frames.Append (New_Item => Major);
+
+      Validators.Validate_Scheduling (P => Policy);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Invalid scheduling plan: Subject 0 scheduled on wrong CPU "
+                 & "1, should be 0",
+                 Message   => "Exception message mismatch");
+   end Invalid_Sched_Subject_CPU;
 
    -------------------------------------------------------------------------
 

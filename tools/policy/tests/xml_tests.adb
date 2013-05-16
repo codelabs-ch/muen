@@ -385,7 +385,7 @@ is
                     Message   => "Minor frame subject id mismatch (1)");
             Assert (Condition => Minor_1.Ticks = 500,
                     Message   => "Minor frame ticks mismatch (1)");
-            Assert (Condition => Minor_2.Subject_Id = 4,
+            Assert (Condition => Minor_2.Subject_Id = 2,
                     Message   => "Minor frame subject id mismatch (2)");
             Assert (Condition => Minor_2.Ticks = 200,
                     Message   => "Minor frame ticks mismatch (2)");

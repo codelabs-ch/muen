@@ -227,13 +227,29 @@ is
          is
             CPU       : constant CPU_Type
               := CPU_Package.Element (Position => Pos);
-            Minor_Idx : Minor_Frames_Package.Cursor := CPU.First;
+            CPU_Idx   : Integer;
             Ticks     : Natural                     := 0;
+            Minor_Idx : Minor_Frames_Package.Cursor := CPU.First;
+            Minor     : Minor_Frame_Type;
          begin
             while Minor_Frames_Package.Has_Element (Position => Minor_Idx)
             loop
-               Ticks := Ticks + Minor_Frames_Package.Element
-                 (Position => Minor_Idx).Ticks;
+               Minor := Minor_Frames_Package.Element (Position => Minor_Idx);
+               Ticks := Ticks + Minor.Ticks;
+
+               CPU_Idx := Get_CPU (Subjects   => P.Subjects,
+                                   Subject_Id => Minor.Subject_Id);
+
+               if CPU_Idx = -1 then
+                  raise Validation_Error with "Invalid scheduling plan: "
+                    & "Reference to undefined subject" & Minor.Subject_Id'Img;
+               end if;
+               if CPU_Idx /= CPU_Package.To_Index (Position => Pos) then
+                  raise Validation_Error with "Invalid scheduling plan: "
+                    & "Subject" & Minor.Subject_Id'Img & " scheduled on wrong "
+                    & "CPU" & CPU_Idx'Img & ", should be"
+                    & CPU_Package.To_Index (Position => Pos)'Img;
+               end if;
                Minor_Frames_Package.Next (Position => Minor_Idx);
             end loop;
 

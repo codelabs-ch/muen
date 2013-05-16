@@ -45,8 +45,8 @@ package Skp.Scheduling is
           Minor_Frames => Minor_Frame_Array'(
              1 => Minor_Frame_Type'(Subject_Id => 0, Ticks => 45312500),
              2 => Minor_Frame_Type'(Subject_Id => 2, Ticks => 45312500),
-             3 => Minor_Frame_Type'(Subject_Id => 3, Ticks => 45312500),
-             4 => Minor_Frame_Type'(Subject_Id => 4, Ticks => 18125000)))),
+             3 => Minor_Frame_Type'(Subject_Id => 0, Ticks => 45312500),
+             4 => Minor_Frame_Type'(Subject_Id => 2, Ticks => 18125000)))),
      1 => Major_Frame_Array'(
        0 => Major_Frame_Type'
          (Length       => 1,
@@ -57,7 +57,7 @@ package Skp.Scheduling is
          (Length       => 2,
           Minor_Frames => Minor_Frame_Array'(
              1 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 90625000),
-             2 => Minor_Frame_Type'(Subject_Id => 2, Ticks => 63437500),
+             2 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 63437500),
              others => Null_Minor_Frame))));
 
 end Skp.Scheduling;

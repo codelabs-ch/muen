@@ -35,6 +35,12 @@ is
    --  Verify scheduling major frame with incorrect CPU element count.
    procedure Invalid_Sched_CPU_Count;
 
+   --  Verify scheduling plan with invalid subject.
+   procedure Invalid_Sched_Subject;
+
+   --  Verify scheduling plan with subject on wrong CPU.
+   procedure Invalid_Sched_Subject_CPU;
+
    --  Verify subject with invalid PML4 address.
    procedure Invalid_Subj_Pml4_Addr;
 

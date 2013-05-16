@@ -240,6 +240,13 @@ is
       Name     : Ada.Strings.Unbounded.Unbounded_String)
       return Integer;
 
+   --  Returns associated CPU number of subject given by id. If the subject is
+   --  not found, -1 is returned.
+   function Get_CPU
+     (Subjects   : Subjects_Type;
+      Subject_Id : Natural)
+      return Integer;
+
    package Binary_Package is new Ada.Containers.Ordered_Maps
      (Key_Type     => Ada.Strings.Unbounded.Unbounded_String,
       Element_Type => Ada.Strings.Unbounded.Unbounded_String,

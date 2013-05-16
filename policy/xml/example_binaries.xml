@@ -24,4 +24,5 @@
 	<binary name="sm"      path="subjects/sm/obj/sm"          />
 	<binary name="xv6"     path="subjects/xv6/src/kernelmemfs"/>
 	<binary name="crypter" path="subjects/crypter/obj/crypter"/>
+	<binary name="linux"   path="subjects/linux/src/vmlinux"  />
 </binaries>

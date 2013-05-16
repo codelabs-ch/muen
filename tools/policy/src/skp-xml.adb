@@ -319,25 +319,29 @@ is
 
       procedure Add_Subject (Node : DOM.Core.Node)
       is
-         Name       : constant String  := DOM.Core.Elements.Get_Attribute
+         Name        : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "name");
-         Id_Str     : constant String  := DOM.Core.Elements.Get_Attribute
+         Id_Str      : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "id");
-         CPU_Str    : constant String  := DOM.Core.Elements.Get_Attribute
+         CPU_Str     : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "cpu");
-         Id         : constant Natural := Natural'Value (Id_Str);
-         PML4_Str   : constant String  := DOM.Core.Elements.Get_Attribute
+         Profile_Str : constant String  := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "profile");
+         Id          : constant Natural := Natural'Value (Id_Str);
+         PML4_Str    : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "pml4_address");
-         IOBM_Str   : constant String  := DOM.Core.Elements.Get_Attribute
+         IOBM_Str    : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "io_bitmap_address");
-         MSRBM_Str  : constant String  := DOM.Core.Elements.Get_Attribute
+         MSRBM_Str   : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "msr_bitmap_address");
+
          Ports      : IO_Ports_Type;
          MSRs       : MSRs_Type;
          State      : Initial_State_Type;
@@ -557,7 +561,7 @@ is
            (New_Item =>
               (Id                 => Id,
                Name               => To_Unbounded_String (Name),
-               Profile            => Native,
+               Profile            => Subject_Profile_Type'Value (Profile_Str),
                CPU                => Natural'Value (CPU_Str),
                Pml4_Address       => To_Word64 (Hex => PML4_Str),
                IO_Bitmap_Address  => To_Word64 (Hex => IOBM_Str),

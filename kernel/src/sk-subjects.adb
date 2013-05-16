@@ -41,6 +41,16 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Set_RSP
+     (Id    : Skp.Subject_Id_Type;
+      Value : SK.Word64)
+   is
+   begin
+      Descriptors (Id).RSP := Value;
+   end Set_RSP;
+
+   -------------------------------------------------------------------------
+
    procedure Set_State
      (Id    : Skp.Subject_Id_Type;
       State : SK.Subject_State_Type)

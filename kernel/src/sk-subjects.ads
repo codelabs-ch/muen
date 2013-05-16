@@ -51,4 +51,13 @@ is
    --# derives
    --#    Descriptors from *, Id, Value;
 
+   --  Set RSP of subject specified by id to given value.
+   procedure Set_RSP
+     (Id    : Skp.Subject_Id_Type;
+      Value : SK.Word64);
+   --# global
+   --#    Descriptors;
+   --# derives
+   --#    Descriptors from *, Id, Value;
+
 end SK.Subjects;

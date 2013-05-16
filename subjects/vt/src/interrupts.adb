@@ -30,7 +30,9 @@ is
    ISR_Handler : SK.Word64;
    pragma Import (C, ISR_Handler, "isr_handler_ptr");
 
-   IDT : SK.Descriptors.IDT_Type;
+   subtype IDT_Type is SK.Descriptors.IDT_Type (0 .. 33);
+
+   IDT : IDT_Type;
 
    --  Interrupt table pointer, loaded into IDTR
    IDT_Pointer : SK.Descriptors.Pseudo_Descriptor_Type;
@@ -110,16 +112,7 @@ is
          Inputs   => (System.Address'Asm_Input ("r", GDT_Pointer'Address)),
          Volatile => True);
 
-      IDT := SK.Descriptors.IDT_Type'
-        (others => SK.Descriptors.Gate_Type'
-           (Offset_15_00     => 0,
-            Segment_Selector => 0,
-            Flags            => 0,
-            Offset_31_16     => 0,
-            Offset_63_32     => 0,
-            Reserved         => 0));
-
-      for I in SK.Descriptors.Vector_Type range IDT'Range loop
+      for I in IDT'Range loop
          IDT (I) := SK.Descriptors.Gate_Type'
            (Offset_15_00     => SK.Word16
               (ISR_Handler and 16#0000_0000_0000_ffff#),

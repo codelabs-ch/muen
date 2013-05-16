@@ -7,16 +7,23 @@ with SK.Descriptors;
 package body Dump
 is
 
+   use type Skp.Vector_Range;
+
+   subtype Interrupt_Range is Skp.Vector_Range range
+     0 .. 32 + Skp.Vector_Range (Skp.Subject_Id_Type'Last);
+
    --  ISR list type.
-   type ISR_List_Type is array (SK.Descriptors.Vector_Type) of SK.Word64;
+   type ISR_List_Type is array (Interrupt_Range) of SK.Word64;
 
    --  ISR trampoline list.
    ISRs : ISR_List_Type;
    pragma Import (C, ISRs, "isrlist");
    --# assert ISR_List'Always_Valid;
 
+   subtype IDT_Type is SK.Descriptors.IDT_Type (Interrupt_Range);
+
    --  IDT, see Intel SDM Vol. 3A, chapter 6.10.
-   IDT : SK.Descriptors.IDT_Type;
+   IDT : IDT_Type;
 
    type GDT_Type is array (1 .. 3) of SK.Word64;
 
@@ -103,16 +110,7 @@ is
 
       Temp : SK.Word64;
    begin
-      IDT := SK.Descriptors.IDT_Type'
-        (others => SK.Descriptors.Gate_Type'
-           (Offset_15_00     => 0,
-            Segment_Selector => 0,
-            Flags            => 0,
-            Offset_31_16     => 0,
-            Offset_63_32     => 0,
-            Reserved         => 0));
-
-      for I in SK.Descriptors.Vector_Type range IDT'Range loop
+      for I in Interrupt_Range loop
          Temp := ISR_List (I);
 
          IDT (I) := SK.Descriptors.Gate_Type'

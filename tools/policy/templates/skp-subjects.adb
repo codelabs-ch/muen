@@ -19,6 +19,7 @@ is
       MSR_Bitmap_Address : SK.Word64;
       Stack_Address      : SK.Word64;
       Entry_Point        : SK.Word64;
+      VMX_Controls       : VMX_Controls_Type;
       Trap_Table         : Trap_Table_Type;
       Signal_Table       : Signal_Table_Type;
    end record;
@@ -138,5 +139,15 @@ __subjects__);
       --# end accept;
       return Subject_Specs (Subject_Id).VMCS_Address;
    end Get_VMCS_Address;
+
+   -------------------------------------------------------------------------
+
+   function Get_VMX_Controls
+     (Subject_Id : Skp.Subject_Id_Type)
+      return VMX_Controls_Type
+   is
+   begin
+      return Subject_Specs (Subject_Id).VMX_Controls;
+   end Get_VMX_Controls;
 
 end Skp.Subjects;

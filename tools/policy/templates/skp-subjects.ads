@@ -33,6 +33,14 @@ is
 
    type Signal_Range is range 0 .. 31;
 
+   type VMX_Controls_Type is record
+      Exec_Pin    : SK.Word32;
+      Exec_Proc   : SK.Word32;
+      Exec_Proc2  : SK.Word32;
+      Exit_Ctrls  : SK.Word32;
+      Entry_Ctrls : SK.Word32;
+   end record;
+
    function Get_CPU_Id (Subject_Id : Skp.Subject_Id_Type) return Skp.CPU_Range;
 
    function Get_PML4_Address
@@ -68,5 +76,9 @@ is
      (Subject_Id : Skp.Subject_Id_Type;
       Signal_Nr  : Signal_Range)
       return Signal_Entry_Type;
+
+   function Get_VMX_Controls
+     (Subject_Id : Skp.Subject_Id_Type)
+      return VMX_Controls_Type;
 
 end Skp.Subjects;

@@ -11,11 +11,13 @@ with Skp.Paging;
 with Skp.IO_Ports;
 with Skp.MSRs;
 with Skp.Templates;
+with Skp.Constants;
 
 package body Skp.Writers
 is
 
    use Ada.Strings.Unbounded;
+   use type SK.Word32;
 
    Policy_File : constant String := "policy.h";
 
@@ -72,6 +74,37 @@ is
       WT => (PAT => False, PCD => True,  PWT => False),
       WP => (PAT => False, PCD => True,  PWT => True),
       WB => (PAT => True,  PCD => False, PWT => False));
+
+   type VMX_Controls_Type is record
+      Exec_Pin    : SK.Word32;
+      Exec_Proc   : SK.Word32;
+      Exec_Proc2  : SK.Word32;
+      Exit_Ctrls  : SK.Word32;
+      Entry_Ctrls : SK.Word32;
+   end record;
+
+   Profile_Mapping : constant array (Subject_Profile_Type) of VMX_Controls_Type
+     := (Native =>
+           (Exec_Pin    => Constants.VM_CTRL_EXT_INT_EXITING
+            or Constants.VM_CTRL_PREEMPT_TIMER,
+            Exec_Proc   => Constants.VM_CTRL_IO_BITMAPS
+            or Constants.VM_CTRL_SECONDARY_PROC
+            or Constants.VM_CTRL_EXIT_INVLPG
+            or Constants.VM_CTRL_EXIT_MWAIT
+            or Constants.VM_CTRL_EXIT_RDPMC
+            or Constants.VM_CTRL_EXIT_RDTSC
+            or Constants.VM_CTRL_EXIT_CR3_LOAD
+            or Constants.VM_CTRL_EXIT_CR3_STORE
+            or Constants.VM_CTRL_EXIT_CR8_LOAD
+            or Constants.VM_CTRL_EXIT_CR8_STORE
+            or Constants.VM_CTRL_EXIT_MOV_DR
+            or Constants.VM_CTRL_MSR_BITMAPS
+            or Constants.VM_CTRL_EXIT_MONITOR,
+            Exec_Proc2  => Constants.VM_CTRL_EXIT_WBINVD,
+            Exit_Ctrls  => Constants.VM_CTRL_EXIT_IA32E_MODE
+            or Constants.VM_CTRL_EXIT_ACK_INT
+            or Constants.VM_CTRL_EXIT_SAVE_TIMER,
+            Entry_Ctrls => Constants.VM_CTRL_ENTR_IA32E_MODE));
 
    -------------------------------------------------------------------------
 
@@ -863,6 +896,8 @@ is
          use type SK.Word64;
 
          Cur_Trap : Natural := 0;
+         Ctrls    : constant VMX_Controls_Type
+           := Profile_Mapping (Subject.Profile);
 
          --  Add signal entry to output buffer.
          procedure Add_Signal (Pos : Signals_Package.Cursor);
@@ -944,6 +979,18 @@ is
            & ASCII.LF
            & Indent & "    Entry_Point        => 16#"
            & SK.Utils.To_Hex (Item => Subject.Init_State.Entry_Point) & "#,"
+           & ASCII.LF
+           & Indent & "    VMX_Controls       => VMX_Controls_Type'("
+           & ASCII.LF
+           & Indent (N => 3) & " Exec_Pin    =>" & Ctrls.Exec_Pin'Img & ","
+           & ASCII.LF
+           & Indent (N => 3) & " Exec_Proc   =>" & Ctrls.Exec_Proc'Img & ","
+           & ASCII.LF
+           & Indent (N => 3) & " Exec_Proc2  =>" & Ctrls.Exec_Proc2'Img & ","
+           & ASCII.LF
+           & Indent (N => 3) & " Exit_Ctrls  =>" & Ctrls.Exit_Ctrls'Img & ","
+           & ASCII.LF
+           & Indent (N => 3) & " Entry_Ctrls =>" & Ctrls.Entry_Ctrls'Img & "),"
            & ASCII.LF
            & Indent & "    Trap_Table         => ";
 

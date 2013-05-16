@@ -469,38 +469,38 @@ is
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    Current_Major, CPU_Global.Storage, X86_64.State,
-   --#    Subjects.Descriptors from
+   --#    Current_Major, CPU_Global.Storage, Subjects.Descriptors from
    --#       *,
    --#       Current_Major,
    --#       New_Major,
    --#       Subject_Registers,
-   --#       Subjects.Descriptors,
    --#       CPU_Global.Storage,
    --#       X86_64.State &
+   --#    X86_64.State from
+   --#       *,
+   --#       Current_Major,
+   --#       New_Major,
+   --#       Subject_Registers,
+   --#       CPU_Global.Storage,
+   --#       Subjects.Descriptors &
    --#    MP.Barrier from
    --#       *,
    --#       Current_Major,
    --#       Subject_Registers,
-   --#       Subjects.Descriptors,
    --#       CPU_Global.Storage,
    --#       X86_64.State;
    is
-      State           : SK.Subject_State_Type;
       Current_Subject : Skp.Subject_Id_Type;
       Current_Minor   : CPU_Global.Active_Minor_Frame_Type;
+      State           : SK.Subject_State_Type := SK.Null_Subject_State;
    begin
-      Current_Minor := CPU_Global.Get_Current_Minor_Frame;
-
+      Current_Minor   := CPU_Global.Get_Current_Minor_Frame;
       Current_Subject := CPU_Global.Get_Minor_Frame
         (Major_Id => Current_Major,
          Minor_Id => Current_Minor.Minor_Id).Subject_Id;
-      State      := Subjects.Get_State (Id => Current_Subject);
-      State.Regs := Subject_Registers;
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => State.Exit_Reason);
-      Store_Subject_Info (State => State);
 
       if SK.Bit_Test (Value => State.Exit_Reason,
                       Pos   => Constants.VM_EXIT_ENTRY_FAILURE)
@@ -515,6 +515,10 @@ is
          pragma Debug (KC.Put_Line   (Item => ")"));
          CPU.Panic;
       end if;
+
+      State.Launched := True;
+      State.Regs     := Subject_Registers;
+      Store_Subject_Info (State => State);
 
       if State.Exit_Reason = Constants.VM_EXIT_EXTERNAL_INT then
          Handle_Irq (Vector => SK.Byte'Mod (State.Interrupt_Info));

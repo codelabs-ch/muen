@@ -62,14 +62,18 @@ private
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    State, MP.Barrier, CPU_Global.Storage, Subjects.Descriptors,
+   --#    State, MP.Barrier, CPU_Global.Storage, Subjects.Descriptors from
+   --#       *,
+   --#       State,
+   --#       Subject_Registers,
+   --#       CPU_Global.Storage,
+   --#       X86_64.State &
    --#    X86_64.State from
    --#       *,
    --#       State,
    --#       Subject_Registers,
-   --#       Subjects.Descriptors,
    --#       CPU_Global.Storage,
-   --#       X86_64.State;
+   --#       Subjects.Descriptors;
    pragma Export (C, Handle_Vmx_Exit, "handle_vmx_exit");
 
 end SK.Scheduler;

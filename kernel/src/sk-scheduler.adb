@@ -16,6 +16,24 @@ package body SK.Scheduler
 --#    State is in New_Major, Current_Major;
 is
 
+   Launched_Subject_State : constant SK.Subject_State_Type
+     := SK.Subject_State_Type'
+       (Launched           => True,
+        Regs               => SK.Null_CPU_Regs,
+        Exit_Reason        => 0,
+        Exit_Qualification => 0,
+        Pending_Event      => 0,
+        Interrupt_Info     => 0,
+        Instruction_Len    => 0,
+        RIP                => 0,
+        CS                 => 0,
+        RSP                => 0,
+        SS                 => 0,
+        CR0                => 0,
+        CR3                => 0,
+        CR4                => 0,
+        RFLAGS             => 0);
+
    Exec_Pin_Defaults   : constant SK.Word32 := Constants.VM_CTRL_EXIT_EXT_INT
      or Constants.VM_CTRL_PREEMPT_TIMER;
    Exec_Proc_Defaults  : constant SK.Word32 := Constants.VM_CTRL_IO_BITMAPS
@@ -492,7 +510,7 @@ is
    is
       Current_Subject : Skp.Subject_Id_Type;
       Current_Minor   : CPU_Global.Active_Minor_Frame_Type;
-      State           : SK.Subject_State_Type := SK.Null_Subject_State;
+      State           : SK.Subject_State_Type := Launched_Subject_State;
    begin
       Current_Minor   := CPU_Global.Get_Current_Minor_Frame;
       Current_Subject := CPU_Global.Get_Minor_Frame
@@ -516,8 +534,7 @@ is
          CPU.Panic;
       end if;
 
-      State.Launched := True;
-      State.Regs     := Subject_Registers;
+      State.Regs := Subject_Registers;
       Store_Subject_Info (State => State);
 
       if State.Exit_Reason = Constants.VM_EXIT_EXTERNAL_INT then

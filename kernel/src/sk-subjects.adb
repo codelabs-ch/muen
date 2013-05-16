@@ -21,16 +21,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Launched
-     (Id    : Skp.Subject_Id_Type;
-      Value : Boolean)
-   is
-   begin
-      Descriptors (Id).Launched := Value;
-   end Set_Launched;
-
-   -------------------------------------------------------------------------
-
    procedure Set_RIP
      (Id    : Skp.Subject_Id_Type;
       Value : SK.Word64)

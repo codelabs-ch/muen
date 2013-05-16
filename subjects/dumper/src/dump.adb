@@ -107,21 +107,17 @@ is
       IDT      : out SK.Descriptors.IDT_Type)
    is
       use type SK.Word64;
-
-      Temp : SK.Word64;
    begin
       for I in Interrupt_Range loop
-         Temp := ISR_List (I);
-
          IDT (I) := SK.Descriptors.Gate_Type'
            (Offset_15_00     => SK.Word16
-              (Temp and 16#0000_0000_0000_ffff#),
+              (ISR_List (I) and 16#0000_0000_0000_ffff#),
             Segment_Selector => 16#0008#,
             Flags            => 16#8e00#,
             Offset_31_16     => SK.Word16
-              ((Temp and 16#0000_0000_ffff_0000#) / 2 ** 16),
+              ((ISR_List (I) and 16#0000_0000_ffff_0000#) / 2 ** 16),
             Offset_63_32     => SK.Word32
-              ((Temp and 16#ffff_ffff_0000_0000#) / 2 ** 32),
+              ((ISR_List (I) and 16#ffff_ffff_0000_0000#) / 2 ** 32),
             Reserved         => 0);
       end loop;
    end Setup_IDT;

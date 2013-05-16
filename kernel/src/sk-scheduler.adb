@@ -234,7 +234,6 @@ is
       Plan_Frame        : Skp.Scheduling.Minor_Frame_Type;
       Initial_VMCS_Addr : SK.Word64 := 0;
       VMCS_Addr         : SK.Word64;
-      State             : SK.Subject_State_Type := SK.Null_Subject_State;
    begin
       Get_ID (ID => CPU_Id);
       CPU_Global.Set_Scheduling_Plan
@@ -280,10 +279,12 @@ is
 
             --  State
 
-            State.RIP := Skp.Subjects.Get_Entry_Point   (Subject_Id => I);
-            State.RSP := Skp.Subjects.Get_Stack_Address (Subject_Id => I);
-            Subjects.Set_State (Id    => I,
-                                State => State);
+            Subjects.Set_RIP
+              (Id    => I,
+               Value => Skp.Subjects.Get_Entry_Point (Subject_Id => I));
+            Subjects.Set_RSP
+              (Id    => I,
+               Value => Skp.Subjects.Get_Stack_Address (Subject_Id => I));
          end if;
       end loop;
 

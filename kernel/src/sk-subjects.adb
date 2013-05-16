@@ -31,6 +31,16 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Set_RIP
+     (Id    : Skp.Subject_Id_Type;
+      Value : SK.Word64)
+   is
+   begin
+      Descriptors (Id).RIP := Value;
+   end Set_RIP;
+
+   -------------------------------------------------------------------------
+
    procedure Set_State
      (Id    : Skp.Subject_Id_Type;
       State : SK.Subject_State_Type)

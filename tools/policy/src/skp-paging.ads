@@ -15,7 +15,7 @@ is
    type Table_Entry_Type is new SK.Word64;
 
    --  Page Map Level 4 table entry, see Intel SDM Vol. 3A, page 4-28.
-   subtype PML4_Entry_Type is Table_Entry_Type;
+   type PML4_Entry_Type is new Table_Entry_Type;
 
    --  Create a new PML4 entry with specified attributes.
    function Create_PML4_Entry

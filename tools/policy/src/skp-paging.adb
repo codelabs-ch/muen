@@ -185,7 +185,17 @@ is
       Writethrough  : Boolean;
       Cache_Disable : Boolean;
       Exec_Disable  : Boolean)
-      return PML4_Entry_Type renames Create_Entry;
+      return PML4_Entry_Type
+   is
+   begin
+      return PML4_Entry_Type
+        (Create_Entry (Address       => Address,
+                       Writable      => Writable,
+                       User_Access   => User_Access,
+                       Writethrough  => Writethrough,
+                       Cache_Disable => Cache_Disable,
+                       Exec_Disable  => Exec_Disable));
+   end Create_PML4_Entry;
 
    -------------------------------------------------------------------------
 
@@ -272,7 +282,10 @@ is
 
    function Get_PDPT_Address
      (E : PML4_Entry_Type) return SK.Word64
-      renames Get_Address;
+   is
+   begin
+      return Get_Address (E => Table_Entry_Type (E));
+   end Get_PDPT_Address;
 
    -------------------------------------------------------------------------
 

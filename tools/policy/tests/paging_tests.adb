@@ -64,6 +64,8 @@ is
 
    procedure Create_PML4_Entry
    is
+      use type Paging.PML4_Entry_Type;
+
       E     : Paging.PML4_Entry_Type;
       Addr  : constant SK.Word64              := 16#1f1000#;
       Ref_E : constant Paging.PML4_Entry_Type := 16#80000000001f100b#;

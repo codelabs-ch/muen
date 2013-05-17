@@ -43,6 +43,8 @@ is
       return Entry_Type;
 
    --  Create paging directory entry (PDPT or PD) with specified parameters.
+   generic
+      type Entry_Type is new Directory_Entry_Type;
    function Create_Directory_Entry
      (Address       : SK.Word64;
       Writable      : Boolean;
@@ -53,7 +55,7 @@ is
       Global        : Boolean;
       PAT           : Boolean;
       Exec_Disable  : Boolean)
-      return Directory_Entry_Type;
+      return Entry_Type;
 
    --  Returns the physical address the table entry is pointing to.
    function Get_Address (E : Table_Entry_Type) return SK.Word64;
@@ -70,7 +72,7 @@ is
       Global        : Boolean;
       PAT           : Boolean;
       Exec_Disable  : Boolean)
-      return Directory_Entry_Type
+      return Entry_Type
    is
       function Create_DE is new Create_Entry
         (Entry_Type => Directory_Entry_Type);
@@ -99,7 +101,7 @@ is
          end if;
       end if;
 
-      return DE;
+      return Entry_Type (DE);
    end Create_Directory_Entry;
 
    -------------------------------------------------------------------------
@@ -150,6 +152,8 @@ is
 
    -------------------------------------------------------------------------
 
+   function Create_PD is new Create_Directory_Entry
+     (Entry_Type => PD_Entry_Type);
    function Create_PD_Entry
      (Address       : SK.Word64;
       Writable      : Boolean;
@@ -160,23 +164,12 @@ is
       Global        : Boolean;
       PAT           : Boolean;
       Exec_Disable  : Boolean)
-      return PD_Entry_Type
-   is
-   begin
-      return PD_Entry_Type
-        (Create_Directory_Entry (Address       => Address,
-                                 Writable      => Writable,
-                                 User_Access   => User_Access,
-                                 Writethrough  => Writethrough,
-                                 Cache_Disable => Cache_Disable,
-                                 Map_Page      => Map_Page,
-                                 Global        => Global,
-                                 PAT           => PAT,
-                                 Exec_Disable  => Exec_Disable));
-   end Create_PD_Entry;
+      return PD_Entry_Type renames Create_PD;
 
    -------------------------------------------------------------------------
 
+   function Create_PDPT is new Create_Directory_Entry
+     (Entry_Type => PDPT_Entry_Type);
    function Create_PDPT_Entry
      (Address       : SK.Word64;
       Writable      : Boolean;
@@ -187,20 +180,7 @@ is
       Global        : Boolean;
       PAT           : Boolean;
       Exec_Disable  : Boolean)
-      return PDPT_Entry_Type
-   is
-   begin
-      return PDPT_Entry_Type
-        (Create_Directory_Entry (Address       => Address,
-                                 Writable      => Writable,
-                                 User_Access   => User_Access,
-                                 Writethrough  => Writethrough,
-                                 Cache_Disable => Cache_Disable,
-                                 Map_Page      => Map_Page,
-                                 Global        => Global,
-                                 PAT           => PAT,
-                                 Exec_Disable  => Exec_Disable));
-   end Create_PDPT_Entry;
+      return PDPT_Entry_Type renames Create_PDPT;
 
    -------------------------------------------------------------------------
 

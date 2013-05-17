@@ -31,6 +31,8 @@ is
    PT_Index_Mask : constant SK.Word64 := 16#00000000001ff000#;
 
    --  Create paging structure entry with specified parameters.
+   generic
+      type Entry_Type is new Table_Entry_Type;
    function Create_Entry
      (Address       : SK.Word64;
       Writable      : Boolean;
@@ -38,7 +40,7 @@ is
       Writethrough  : Boolean;
       Cache_Disable : Boolean;
       Exec_Disable  : Boolean)
-      return Table_Entry_Type;
+      return Entry_Type;
 
    --  Create paging directory entry (PDPT or PD) with specified parameters.
    function Create_Directory_Entry
@@ -68,16 +70,19 @@ is
       Global        : Boolean;
       PAT           : Boolean;
       Exec_Disable  : Boolean)
-      return Table_Entry_Type
+      return Directory_Entry_Type
    is
+      function Create_DE is new Create_Entry
+        (Entry_Type => Directory_Entry_Type);
+
       DE : Table_Entry_Type;
    begin
-      DE := Create_Entry (Address       => Address,
-                          Writable      => Writable,
-                          User_Access   => User_Access,
-                          Writethrough  => Writethrough,
-                          Cache_Disable => Cache_Disable,
-                          Exec_Disable  => Exec_Disable);
+      DE := Create_DE (Address       => Address,
+                       Writable      => Writable,
+                       User_Access   => User_Access,
+                       Writethrough  => Writethrough,
+                       Cache_Disable => Cache_Disable,
+                       Exec_Disable  => Exec_Disable);
 
       if Map_Page then
          Set_Flag (E    => DE,
@@ -106,7 +111,7 @@ is
       Writethrough  : Boolean;
       Cache_Disable : Boolean;
       Exec_Disable  : Boolean)
-      return Table_Entry_Type
+      return Entry_Type
    is
       New_Entry : Table_Entry_Type;
    begin
@@ -140,7 +145,7 @@ is
                    Flag => NXE_Flag);
       end if;
 
-      return New_Entry;
+      return Entry_Type (New_Entry);
    end Create_Entry;
 
    -------------------------------------------------------------------------
@@ -199,6 +204,7 @@ is
 
    -------------------------------------------------------------------------
 
+   function Create_PML4 is new Create_Entry (Entry_Type => PML4_Entry_Type);
    function Create_PML4_Entry
      (Address       : SK.Word64;
       Writable      : Boolean;
@@ -206,17 +212,7 @@ is
       Writethrough  : Boolean;
       Cache_Disable : Boolean;
       Exec_Disable  : Boolean)
-      return PML4_Entry_Type
-   is
-   begin
-      return PML4_Entry_Type
-        (Create_Entry (Address       => Address,
-                       Writable      => Writable,
-                       User_Access   => User_Access,
-                       Writethrough  => Writethrough,
-                       Cache_Disable => Cache_Disable,
-                       Exec_Disable  => Exec_Disable));
-   end Create_PML4_Entry;
+      return PML4_Entry_Type renames Create_PML4;
 
    -------------------------------------------------------------------------
 
@@ -231,15 +227,16 @@ is
       Exec_Disable  : Boolean)
       return PT_Entry_Type
    is
+      function Create_PT is new Create_Entry (Entry_Type => PT_Entry_Type);
+
       PTE : PT_Entry_Type;
    begin
-      PTE := PT_Entry_Type
-        (Create_Entry (Address       => Address,
-                       Writable      => Writable,
-                       User_Access   => User_Access,
-                       Writethrough  => Writethrough,
-                       Cache_Disable => Cache_Disable,
-                       Exec_Disable  => Exec_Disable));
+      PTE := Create_PT (Address       => Address,
+                        Writable      => Writable,
+                        User_Access   => User_Access,
+                        Writethrough  => Writethrough,
+                        Cache_Disable => Cache_Disable,
+                        Exec_Disable  => Exec_Disable);
 
       if PAT then
          Set_Flag (E    => Table_Entry_Type (PTE),
@@ -310,8 +307,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_PDPT_Address
-     (E : PML4_Entry_Type) return SK.Word64
+   function Get_PDPT_Address (E : PML4_Entry_Type) return SK.Word64
    is
    begin
       return Get_Address (E => Table_Entry_Type (E));

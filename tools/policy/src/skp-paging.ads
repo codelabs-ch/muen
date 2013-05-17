@@ -68,7 +68,7 @@ is
    Null_PDP_Table  : constant PDP_Table_Type;
 
    --  Page directory entry, see Intel SDM Vol. 3A, page 4-28.
-   subtype PD_Entry_Type is Directory_Entry_Type;
+   type PD_Entry_Type is new Table_Entry_Type;
 
    --  Create a new PD entry with specified attributes. The map page parameter
    --  specifies if the entry maps a 2 MB page.

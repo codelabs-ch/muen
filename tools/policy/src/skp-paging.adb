@@ -160,7 +160,20 @@ is
       Global        : Boolean;
       PAT           : Boolean;
       Exec_Disable  : Boolean)
-      return PD_Entry_Type renames Create_Directory_Entry;
+      return PD_Entry_Type
+   is
+   begin
+      return PD_Entry_Type
+        (Create_Directory_Entry (Address       => Address,
+                                 Writable      => Writable,
+                                 User_Access   => User_Access,
+                                 Writethrough  => Writethrough,
+                                 Cache_Disable => Cache_Disable,
+                                 Map_Page      => Map_Page,
+                                 Global        => Global,
+                                 PAT           => PAT,
+                                 Exec_Disable  => Exec_Disable));
+   end Create_PD_Entry;
 
    -------------------------------------------------------------------------
 
@@ -312,7 +325,7 @@ is
       then
          Address := SK.Word64 (E and PD_Address_Mask);
       else
-         Address := SK.Word64 (E and Address_Mask);
+         Address := SK.Word64 (Table_Entry_Type (E) and Address_Mask);
       end if;
 
       return Address;

@@ -45,6 +45,23 @@ is
 
    -------------------------------------------------------------------------
 
+   function Create_PDPT_Entry
+     (Address    : SK.Word64;
+      Readable   : Boolean;
+      Writable   : Boolean;
+      Executable : Boolean)
+      return PDPT_Entry_Type
+   is
+   begin
+      return PDPT_Entry_Type
+        (Create_Entry (Address    => Address,
+                       Readable   => Readable,
+                       Writable   => Writable,
+                       Executable => Executable));
+   end Create_PDPT_Entry;
+
+   -------------------------------------------------------------------------
+
    function Create_PML4_Entry
      (Address    : SK.Word64;
       Readable   : Boolean;

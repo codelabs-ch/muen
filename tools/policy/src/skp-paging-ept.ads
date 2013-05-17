@@ -13,4 +13,13 @@ is
       Executable : Boolean)
       return PML4_Entry_Type;
 
+   --  Create a new EPT PDPT entry with specified attributes, referencing a PD
+   --  located at the given physical address.
+   function Create_PDPT_Entry
+     (Address    : SK.Word64;
+      Readable   : Boolean;
+      Writable   : Boolean;
+      Executable : Boolean)
+      return PDPT_Entry_Type;
+
 end Skp.Paging.EPT;

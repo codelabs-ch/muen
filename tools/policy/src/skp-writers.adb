@@ -221,10 +221,10 @@ is
       procedure Add_Memory_Region (C : Memregion_Package.Cursor)
       is
          use type SK.Word64;
-         use type Paging.Table_Entry_Type;
          use type Paging.PML4_Entry_Type;
          use type Paging.PDPT_Entry_Type;
          use type Paging.PD_Entry_Type;
+         use type Paging.PT_Entry_Type;
 
          R : constant Memory_Region_Type := Memregion_Package.Element
            (Position => C);

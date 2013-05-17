@@ -95,7 +95,7 @@ is
    Null_PD_Table : constant PD_Table_Type;
 
    --  Page-table entry, see Intel SDM Vol. 3A, page 4-28.
-   subtype PT_Entry_Type is Table_Entry_Type;
+   type PT_Entry_Type is new Table_Entry_Type;
 
    --  Create a new PT entry with specified attributes.
    function Create_PT_Entry

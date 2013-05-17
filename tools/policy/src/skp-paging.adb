@@ -61,6 +61,9 @@ is
       Exec_Disable  : Boolean)
       return Directory_Entry_Type;
 
+   --  Returns the physical address the table entry is pointing to.
+   function Get_Address (E : Table_Entry_Type) return SK.Word64;
+
    -------------------------------------------------------------------------
 
    function Create_Directory_Entry
@@ -238,20 +241,21 @@ is
    is
       PTE : PT_Entry_Type;
    begin
-      PTE := Create_Entry (Address       => Address,
-                           Writable      => Writable,
-                           User_Access   => User_Access,
-                           Writethrough  => Writethrough,
-                           Cache_Disable => Cache_Disable,
-                           Exec_Disable  => Exec_Disable);
+      PTE := PT_Entry_Type
+        (Create_Entry (Address       => Address,
+                       Writable      => Writable,
+                       User_Access   => User_Access,
+                       Writethrough  => Writethrough,
+                       Cache_Disable => Cache_Disable,
+                       Exec_Disable  => Exec_Disable));
 
       if PAT then
-         Set_Flag (E    => PTE,
+         Set_Flag (E    => Table_Entry_Type (PTE),
                    Flag => PTE_PAT_Flag);
       end if;
 
       if Global then
-         Set_Flag (E    => PTE,
+         Set_Flag (E    => Table_Entry_Type (PTE),
                    Flag => Global_Flag);
       end if;
 
@@ -264,6 +268,14 @@ is
    is
    begin
       return SK.Word64 (E and Address_Mask);
+   end Get_Address;
+
+   -------------------------------------------------------------------------
+
+   function Get_Address (E : PT_Entry_Type) return SK.Word64
+   is
+   begin
+      return Get_Address (E => Table_Entry_Type (E));
    end Get_Address;
 
    -------------------------------------------------------------------------

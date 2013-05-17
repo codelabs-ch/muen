@@ -31,4 +31,15 @@ is
       Executable : Boolean)
       return PD_Entry_Type;
 
+   --  Create a new PT entry with specified attributes, mapping a 4 KB page of
+   --  memory at the given physical address.
+   function Create_PT_Entry
+     (Address     : SK.Word64;
+      Readable    : Boolean;
+      Writable    : Boolean;
+      Executable  : Boolean;
+      Ignore_PAT  : Boolean;
+      Memory_Type : Memory_Type_Type)
+      return PT_Entry_Type;
+
 end Skp.Paging.EPT;

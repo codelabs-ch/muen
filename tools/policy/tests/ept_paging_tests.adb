@@ -1,3 +1,5 @@
+with Ada.Text_IO;
+
 with SK;
 
 with Skp.Paging.EPT;
@@ -69,6 +71,28 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Create_PT_Entry
+   is
+      E     : PT_Entry_Type;
+      Addr  : constant SK.Word64     := 16#ab763fc00000#;
+      Ref_E : constant PT_Entry_Type := 16#ab763fc00072#;
+   begin
+      E := EPT.Create_PT_Entry (Address     => Addr,
+                                Readable    => False,
+                                Writable    => True,
+                                Executable  => False,
+                                Ignore_PAT  => True,
+                                Memory_Type => WB);
+      Ada.Text_IO.Put_Line (E'Img);
+
+      Assert (Condition => E = Ref_E,
+              Message   => "PT entry mismatch");
+      Assert (Condition => Get_Address (E => E) = Addr,
+              Message   => "Address mismatch");
+   end Create_PT_Entry;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -82,6 +106,9 @@ is
       T.Add_Test_Routine
         (Routine => Create_PD_Entry'Access,
          Name    => "PD entry creation");
+      T.Add_Test_Routine
+        (Routine => Create_PT_Entry'Access,
+         Name    => "PT entry creation");
    end Initialize;
 
 end EPT_Paging_Tests;

@@ -17,4 +17,7 @@ is
    --  EPT PD entry creation tests.
    procedure Create_PD_Entry;
 
+   --  EPT PT entry creation tests.
+   procedure Create_PT_Entry;
+
 end EPT_Paging_Tests;

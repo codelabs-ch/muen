@@ -45,6 +45,23 @@ is
 
    -------------------------------------------------------------------------
 
+   function Create_PD_Entry
+     (Address    : SK.Word64;
+      Readable   : Boolean;
+      Writable   : Boolean;
+      Executable : Boolean)
+      return PD_Entry_Type
+   is
+   begin
+      return PD_Entry_Type
+        (Create_Entry (Address    => Address,
+                       Readable   => Readable,
+                       Writable   => Writable,
+                       Executable => Executable));
+   end Create_PD_Entry;
+
+   -------------------------------------------------------------------------
+
    function Create_PDPT_Entry
      (Address    : SK.Word64;
       Readable   : Boolean;

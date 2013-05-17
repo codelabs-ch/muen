@@ -12,6 +12,25 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Create_PD_Entry
+   is
+      E     : PD_Entry_Type;
+      Addr  : constant SK.Word64     := 16#8fff10000#;
+      Ref_E : constant PD_Entry_Type := 16#8fff10002#;
+   begin
+      E := EPT.Create_PD_Entry (Address    => Addr,
+                                Readable   => False,
+                                Writable   => True,
+                                Executable => False);
+
+      Assert (Condition => E = Ref_E,
+              Message   => "PD entry mismatch");
+      Assert (Condition => Get_PT_Address (E => E) = Addr,
+              Message   => "Address mismatch");
+   end Create_PD_Entry;
+
+   -------------------------------------------------------------------------
+
    procedure Create_PDPT_Entry
    is
       E     : PDPT_Entry_Type;
@@ -60,6 +79,9 @@ is
       T.Add_Test_Routine
         (Routine => Create_PDPT_Entry'Access,
          Name    => "PDPT entry creation");
+      T.Add_Test_Routine
+        (Routine => Create_PD_Entry'Access,
+         Name    => "PD entry creation");
    end Initialize;
 
 end EPT_Paging_Tests;

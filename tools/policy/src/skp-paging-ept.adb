@@ -15,12 +15,15 @@ is
          WP => 16#28#,
          WB => 16#30#);
 
+   --  Create EPT paging structure entry with specified parameters.
+   generic
+      type Entry_Type is new Table_Entry_Type;
    function Create_Entry
      (Address    : SK.Word64;
       Readable   : Boolean;
       Writable   : Boolean;
       Executable : Boolean)
-      return Table_Entry_Type;
+      return Entry_Type;
 
    -------------------------------------------------------------------------
 
@@ -29,7 +32,7 @@ is
       Readable   : Boolean;
       Writable   : Boolean;
       Executable : Boolean)
-      return Table_Entry_Type
+      return Entry_Type
    is
       New_Entry : Table_Entry_Type;
    begin
@@ -50,59 +53,38 @@ is
                    Flag => Execute_Flag);
       end if;
 
-      return New_Entry;
+      return Entry_Type (New_Entry);
    end Create_Entry;
 
    -------------------------------------------------------------------------
 
+   function Create_PD is new Create_Entry (Entry_Type => PD_Entry_Type);
    function Create_PD_Entry
      (Address    : SK.Word64;
       Readable   : Boolean;
       Writable   : Boolean;
       Executable : Boolean)
-      return PD_Entry_Type
-   is
-   begin
-      return PD_Entry_Type
-        (Create_Entry (Address    => Address,
-                       Readable   => Readable,
-                       Writable   => Writable,
-                       Executable => Executable));
-   end Create_PD_Entry;
+      return PD_Entry_Type renames Create_PD;
 
    -------------------------------------------------------------------------
 
+   function Create_PDPT is new Create_Entry (Entry_Type => PDPT_Entry_Type);
    function Create_PDPT_Entry
      (Address    : SK.Word64;
       Readable   : Boolean;
       Writable   : Boolean;
       Executable : Boolean)
-      return PDPT_Entry_Type
-   is
-   begin
-      return PDPT_Entry_Type
-        (Create_Entry (Address    => Address,
-                       Readable   => Readable,
-                       Writable   => Writable,
-                       Executable => Executable));
-   end Create_PDPT_Entry;
+      return PDPT_Entry_Type renames Create_PDPT;
 
    -------------------------------------------------------------------------
 
+   function Create_PML4 is new Create_Entry (Entry_Type => PML4_Entry_Type);
    function Create_PML4_Entry
      (Address    : SK.Word64;
       Readable   : Boolean;
       Writable   : Boolean;
       Executable : Boolean)
-      return PML4_Entry_Type
-   is
-   begin
-      return PML4_Entry_Type
-        (Create_Entry (Address    => Address,
-                       Readable   => Readable,
-                       Writable   => Writable,
-                       Executable => Executable));
-   end Create_PML4_Entry;
+      return PML4_Entry_Type renames Create_PML4;
 
    -------------------------------------------------------------------------
 
@@ -115,13 +97,14 @@ is
       Memory_Type : Memory_Type_Type)
       return PT_Entry_Type
    is
+      function Create_PT is new Create_Entry (Entry_Type => PT_Entry_Type);
+
       New_Entry : PT_Entry_Type;
    begin
-      New_Entry := PT_Entry_Type
-        (Create_Entry (Address    => Address,
-                       Readable   => Readable,
-                       Writable   => Writable,
-                       Executable => Executable));
+      New_Entry := Create_PT (Address    => Address,
+                              Readable   => Readable,
+                              Writable   => Writable,
+                              Executable => Executable);
 
       if Ignore_PAT then
          Set_Flag (E    => Table_Entry_Type (New_Entry),

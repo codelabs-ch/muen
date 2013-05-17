@@ -73,9 +73,9 @@ is
       Global        : Boolean;
       PAT           : Boolean;
       Exec_Disable  : Boolean)
-      return Directory_Entry_Type
+      return Table_Entry_Type
    is
-      DE : Directory_Entry_Type;
+      DE : Table_Entry_Type;
    begin
       DE := Create_Entry (Address       => Address,
                           Writable      => Writable,
@@ -174,7 +174,20 @@ is
       Global        : Boolean;
       PAT           : Boolean;
       Exec_Disable  : Boolean)
-      return PDPT_Entry_Type renames Create_Directory_Entry;
+      return PDPT_Entry_Type
+   is
+   begin
+      return PDPT_Entry_Type
+        (Create_Directory_Entry (Address       => Address,
+                                 Writable      => Writable,
+                                 User_Access   => User_Access,
+                                 Writethrough  => Writethrough,
+                                 Cache_Disable => Cache_Disable,
+                                 Map_Page      => Map_Page,
+                                 Global        => Global,
+                                 PAT           => PAT,
+                                 Exec_Disable  => Exec_Disable));
+   end Create_PDPT_Entry;
 
    -------------------------------------------------------------------------
 
@@ -272,7 +285,7 @@ is
       then
          Address := SK.Word64 (E and PDPT_Address_Mask);
       else
-         Address := SK.Word64 (E and Address_Mask);
+         Address := SK.Word64 (Table_Entry_Type (E) and Address_Mask);
       end if;
 
       return Address;

@@ -41,7 +41,7 @@ is
    subtype Directory_Entry_Type is Table_Entry_Type;
 
    --  Page directory pointer table entry, see Intel SDM Vol. 3A, page 4-28.
-   subtype PDPT_Entry_Type is Directory_Entry_Type;
+   type PDPT_Entry_Type is new Table_Entry_Type;
 
    --  Create a new PDPT entry with specified attributes. The map page
    --  parameter specifies if the entry maps a 1 GB page.
@@ -82,7 +82,7 @@ is
       Global        : Boolean;
       PAT           : Boolean;
       Exec_Disable  : Boolean)
-      return PDPT_Entry_Type;
+      return PD_Entry_Type;
 
    --  Returns address pointed to by the given entry.
    function Get_PT_Address (E : PD_Entry_Type) return SK.Word64;

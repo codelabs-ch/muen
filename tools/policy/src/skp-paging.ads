@@ -134,6 +134,14 @@ is
 
 private
 
+   --  Set specified flag.
+   procedure Set_Flag
+     (E    : in out Table_Entry_Type;
+      Flag :        SK.Word64_Pos);
+
+   --  Table entry address range is bits 12 .. 47.
+   Address_Mask : constant Table_Entry_Type := 16#0000fffffffff000#;
+
    PML4_Null_Entry : constant PML4_Entry_Type := 0;
    PDPT_Null_Entry : constant PDPT_Entry_Type := 0;
    PD_Null_Entry   : constant PD_Entry_Type   := 0;

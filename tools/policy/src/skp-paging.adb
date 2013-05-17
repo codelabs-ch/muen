@@ -12,9 +12,6 @@ is
    PD_PAT_Flag    : constant := 12;
    NXE_Flag       : constant := 63;
 
-   --  Table entry address range is bits 12 .. 47.
-   Address_Mask : constant Table_Entry_Type := 16#0000fffffffff000#;
-
    --  PDPTE address range is bits 30 .. 47; entry maps a 1 GB page.
    PDPT_Address_Mask : constant PDPT_Entry_Type := 16#0000ffffc0000000#;
 
@@ -32,11 +29,6 @@ is
 
    --  PT index is bits 12 .. 20 of the linear address.
    PT_Index_Mask : constant SK.Word64 := 16#00000000001ff000#;
-
-   --  Set specified flag.
-   procedure Set_Flag
-     (E    : in out Table_Entry_Type;
-      Flag :        SK.Word64_Pos);
 
    --  Create paging structure entry with specified parameters.
    function Create_Entry

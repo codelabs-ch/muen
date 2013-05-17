@@ -7,6 +7,7 @@ is
 
    use Ahven;
    use Skp;
+   use type Skp.Paging.Table_Entry_Type;
 
    -------------------------------------------------------------------------
 
@@ -14,8 +15,9 @@ is
    is
       use type SK.Word64;
 
-      E    : Paging.PD_Entry_Type;
-      Addr : constant SK.Word64 := 16#fffc800f0000#;
+      E     : Paging.PD_Entry_Type;
+      Addr  : constant SK.Word64            := 16#fffc800f0000#;
+      Ref_E : constant Paging.PD_Entry_Type := 16#8000fffc800f000b#;
    begin
       E := Paging.Create_PD_Entry
         (Address       => Addr,
@@ -28,6 +30,8 @@ is
          PAT           => False,
          Exec_Disable  => True);
 
+      Assert (Condition => E = Ref_E,
+              Message   => "PD entry mismatch");
       Assert (Condition => Paging.Get_PT_Address (E => E) = Addr,
               Message   => "Address mismatch");
       Assert (Condition => Paging.Is_Present (E => E),
@@ -54,8 +58,9 @@ is
    is
       use type SK.Word64;
 
-      E    : Paging.PDPT_Entry_Type;
-      Addr : constant SK.Word64 := 16#2b3c004000#;
+      E     : Paging.PDPT_Entry_Type;
+      Addr  : constant SK.Word64              := 16#2b3c004000#;
+      Ref_E : constant Paging.PDPT_Entry_Type := 16#8000002b3c00400b#;
    begin
       E := Paging.Create_PDPT_Entry
         (Address       => Addr,
@@ -68,6 +73,8 @@ is
          PAT           => False,
          Exec_Disable  => True);
 
+      Assert (Condition => E = Ref_E,
+              Message   => "PDPT entry mismatch");
       Assert (Condition => Paging.Get_PD_Address (E => E) = Addr,
               Message   => "Address mismatch");
       Assert (Condition => Paging.Is_Present (E => E),
@@ -94,8 +101,9 @@ is
    is
       use type SK.Word64;
 
-      E    : Paging.PML4_Entry_Type;
-      Addr : constant SK.Word64 := 16#1f1000#;
+      E     : Paging.PML4_Entry_Type;
+      Addr  : constant SK.Word64              := 16#1f1000#;
+      Ref_E : constant Paging.PML4_Entry_Type := 16#80000000001f100b#;
    begin
       E := Paging.Create_PML4_Entry
         (Address       => Addr,
@@ -105,6 +113,8 @@ is
          Cache_Disable => False,
          Exec_Disable  => True);
 
+      Assert (Condition => E = Ref_E,
+              Message   => "PML4 entry mismatch");
       Assert (Condition => Paging.Get_PDPT_Address (E => E) = Addr,
               Message   => "Address mismatch");
       Assert (Condition => Paging.Is_Present (E => E),
@@ -127,8 +137,9 @@ is
    is
       use type SK.Word64;
 
-      E    : Paging.PT_Entry_Type;
-      Addr : constant SK.Word64 := 16#100043f000#;
+      E     : Paging.PT_Entry_Type;
+      Addr  : constant SK.Word64            := 16#100043f000#;
+      Ref_E : constant Paging.PT_Entry_Type := 16#100043f10b#;
    begin
       E := Paging.Create_PT_Entry
         (Address       => Addr,
@@ -140,6 +151,8 @@ is
          PAT           => False,
          Exec_Disable  => False);
 
+      Assert (Condition => E = Ref_E,
+              Message   => "PT entry mismatch");
       Assert (Condition => Paging.Get_Address (E => E) = Addr,
               Message   => "Address mismatch");
       Assert (Condition => Paging.Is_Present (E => E),

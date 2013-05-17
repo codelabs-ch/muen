@@ -12,7 +12,7 @@ is
    --  Table entry type. Used as basis for all other entry types since they all
    --  include the same fields but interpret some in a different way. See Intel
    --  SDM Vol. 3A, page 4-28.
-   type Table_Entry_Type is private;
+   type Table_Entry_Type is new SK.Word64;
 
    --  Returns True if entry is present in memory.
    function Is_Present (E : Table_Entry_Type) return Boolean;
@@ -173,8 +173,6 @@ is
       PT_Index   : out Table_Range);
 
 private
-
-   type Table_Entry_Type is new SK.Word64;
 
    PML4_Null_Entry : constant PML4_Entry_Type := 0;
    PDPT_Null_Entry : constant PDPT_Entry_Type := 0;

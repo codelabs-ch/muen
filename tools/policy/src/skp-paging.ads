@@ -14,28 +14,6 @@ is
    --  SDM Vol. 3A, page 4-28.
    type Table_Entry_Type is new SK.Word64;
 
-   --  Returns True if entry is present in memory.
-   function Is_Present (E : Table_Entry_Type) return Boolean;
-
-   --  Returns True if entry is writable.
-   function Is_Writable (E : Table_Entry_Type) return Boolean;
-
-   --  Returns True if entry allows user-mode access.
-   function Is_User_Accessible (E : Table_Entry_Type) return Boolean;
-
-   --  Returns True if page-level write-through is enabled.
-   function Is_Writethrough (E : Table_Entry_Type) return Boolean;
-
-   --  Returns True if page-level cache is disabled.
-   function Is_Cache_Disabled (E : Table_Entry_Type) return Boolean;
-
-   --  Returns True if entry has been used for linear-address translation.
-   function Was_Accessed (E : Table_Entry_Type) return Boolean;
-
-   --  Returns True if execute-disable (NXE) is set, meaning instruction
-   --  fetches are not allowed from the memory region controlled by this entry.
-   function Has_Execute_Disable (E : Table_Entry_Type) return Boolean;
-
    --  Page Map Level 4 table entry, see Intel SDM Vol. 3A, page 4-28.
    subtype PML4_Entry_Type is Table_Entry_Type;
 
@@ -61,13 +39,6 @@ is
 
    --  Directory entry type. Used as basis for all other directory entry types.
    subtype Directory_Entry_Type is Table_Entry_Type;
-
-   --  Returns True if given directory entry has page attribute tables
-   --  activated.
-   function Has_PAT (E : Directory_Entry_Type) return Boolean;
-
-   --  Returns True if given directory entry maps a physical page.
-   function Maps_Page (E : Directory_Entry_Type) return Boolean;
 
    --  Page directory pointer table entry, see Intel SDM Vol. 3A, page 4-28.
    subtype PDPT_Entry_Type is Directory_Entry_Type;
@@ -137,17 +108,6 @@ is
       PAT           : Boolean;
       Exec_Disable  : Boolean)
       return PT_Entry_Type;
-
-   --  Returns True if software has accessed the 4-KByte page referenced by the
-   --  given entry.
-   function Is_Dirty (E : PT_Entry_Type) return Boolean;
-
-   --  Returns True if address translations using this entry are cached
-   --  globally.
-   function Is_Global (E : PT_Entry_Type) return Boolean;
-
-   --  Returns True if given entry has corresponding page attribute table.
-   function PT_Has_PAT (E : PT_Entry_Type) return Boolean;
 
    --  Returns address pointed to by the given entry.
    function Get_Address (E : PT_Entry_Type) return SK.Word64;

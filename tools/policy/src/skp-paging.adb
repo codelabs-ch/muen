@@ -6,8 +6,6 @@ is
    US_Flag        : constant := 2;
    PWT_Flag       : constant := 3;
    PCD_Flag       : constant := 4;
-   Accessed_Flag  : constant := 5;
-   Dirty_Flag     : constant := 6;
    Page_Size_Flag : constant := 7;
    PTE_PAT_Flag   : constant := 7;
    Global_Flag    : constant := 8;
@@ -296,116 +294,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Has_Execute_Disable (E : Table_Entry_Type) return Boolean
-   is
-   begin
-      return SK.Bit_Test
-        (Value => SK.Word64 (E),
-         Pos   => NXE_Flag);
-   end Has_Execute_Disable;
-
-   -------------------------------------------------------------------------
-
-   function Has_PAT (E : Directory_Entry_Type) return Boolean
-   is
-   begin
-      return SK.Bit_Test
-        (Value => SK.Word64 (E),
-         Pos   => PD_PAT_Flag);
-   end Has_PAT;
-
-   -------------------------------------------------------------------------
-
-   function Is_Cache_Disabled (E : Table_Entry_Type) return Boolean
-   is
-   begin
-      return SK.Bit_Test
-        (Value => SK.Word64 (E),
-         Pos   => PCD_Flag);
-   end Is_Cache_Disabled;
-
-   -------------------------------------------------------------------------
-
-   function Is_Dirty (E : PT_Entry_Type) return Boolean
-   is
-   begin
-      return SK.Bit_Test
-        (Value => SK.Word64 (E),
-         Pos   => Dirty_Flag);
-   end Is_Dirty;
-
-   -------------------------------------------------------------------------
-
-   function Is_Global (E : PT_Entry_Type) return Boolean
-   is
-   begin
-      return SK.Bit_Test
-        (Value => SK.Word64 (E),
-         Pos   => Global_Flag);
-   end Is_Global;
-
-   -------------------------------------------------------------------------
-
-   function Is_Present (E : Table_Entry_Type) return Boolean
-   is
-   begin
-      return SK.Bit_Test
-        (Value => SK.Word64 (E),
-         Pos   => Present_Flag);
-   end Is_Present;
-
-   -------------------------------------------------------------------------
-
-   function Is_User_Accessible (E : Table_Entry_Type) return Boolean
-   is
-   begin
-      return SK.Bit_Test
-        (Value => SK.Word64 (E),
-         Pos   => US_Flag);
-   end Is_User_Accessible;
-
-   -------------------------------------------------------------------------
-
-   function Is_Writable (E : Table_Entry_Type) return Boolean
-   is
-   begin
-      return SK.Bit_Test
-        (Value => SK.Word64 (E),
-         Pos   => RW_Flag);
-   end Is_Writable;
-
-   -------------------------------------------------------------------------
-
-   function Is_Writethrough (E : Table_Entry_Type) return Boolean
-   is
-   begin
-      return SK.Bit_Test
-        (Value => SK.Word64 (E),
-         Pos   => PWT_Flag);
-   end Is_Writethrough;
-
-   -------------------------------------------------------------------------
-
-   function Maps_Page (E : Directory_Entry_Type) return Boolean
-   is
-   begin
-      return SK.Bit_Test
-        (Value => SK.Word64 (E),
-         Pos   => Page_Size_Flag);
-   end Maps_Page;
-
-   -------------------------------------------------------------------------
-
-   function PT_Has_PAT (E : PT_Entry_Type) return Boolean
-   is
-   begin
-      return SK.Bit_Test
-        (Value => SK.Word64 (E),
-         Pos   => PTE_PAT_Flag);
-   end PT_Has_PAT;
-
-   -------------------------------------------------------------------------
-
    procedure Set_Flag
      (E    : in out Table_Entry_Type;
       Flag :        SK.Word64_Pos)
@@ -415,15 +303,5 @@ is
         (SK.Bit_Set (Value => SK.Word64 (E),
                      Pos   => Flag));
    end Set_Flag;
-
-   -------------------------------------------------------------------------
-
-   function Was_Accessed (E : Table_Entry_Type) return Boolean
-   is
-   begin
-      return SK.Bit_Test
-        (Value => SK.Word64 (E),
-         Pos   => Accessed_Flag);
-   end Was_Accessed;
 
 end Skp.Paging;

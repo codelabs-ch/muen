@@ -34,22 +34,6 @@ is
               Message   => "PD entry mismatch");
       Assert (Condition => Paging.Get_PT_Address (E => E) = Addr,
               Message   => "Address mismatch");
-      Assert (Condition => Paging.Is_Present (E => E),
-              Message   => "Entry not marked present");
-      Assert (Condition => Paging.Is_Writable (E => E),
-              Message   => "Entry not writable");
-      Assert (Condition => not Paging.Is_User_Accessible (E => E),
-              Message   => "Entry user accessible");
-      Assert (Condition => Paging.Is_Writethrough (E => E),
-              Message   => "Entry not marked writethrough");
-      Assert (Condition => not Paging.Is_Cache_Disabled (E => E),
-              Message   => "Cache disabled");
-      Assert (Condition => not Paging.Maps_Page (E => E),
-              Message   => "Entry maps a page");
-      Assert (Condition => not Paging.Has_PAT (E => E),
-              Message   => "PAT enabled");
-      Assert (Condition => Paging.Has_Execute_Disable (E => E),
-              Message   => "Entry is executable");
    end Create_PD_Entry;
 
    -------------------------------------------------------------------------
@@ -77,22 +61,6 @@ is
               Message   => "PDPT entry mismatch");
       Assert (Condition => Paging.Get_PD_Address (E => E) = Addr,
               Message   => "Address mismatch");
-      Assert (Condition => Paging.Is_Present (E => E),
-              Message   => "Entry not marked present");
-      Assert (Condition => Paging.Is_Writable (E => E),
-              Message   => "Entry not writable");
-      Assert (Condition => not Paging.Is_User_Accessible (E => E),
-              Message   => "Entry user accessible");
-      Assert (Condition => Paging.Is_Writethrough (E => E),
-              Message   => "Entry not marked writethrough");
-      Assert (Condition => not Paging.Is_Cache_Disabled (E => E),
-              Message   => "Cache disabled");
-      Assert (Condition => not Paging.Maps_Page (E => E),
-              Message   => "Entry maps a page");
-      Assert (Condition => not Paging.Has_PAT (E => E),
-              Message   => "PAT enabled");
-      Assert (Condition => Paging.Has_Execute_Disable (E => E),
-              Message   => "Entry is executable");
    end Create_PDPT_Entry;
 
    -------------------------------------------------------------------------
@@ -117,18 +85,6 @@ is
               Message   => "PML4 entry mismatch");
       Assert (Condition => Paging.Get_PDPT_Address (E => E) = Addr,
               Message   => "Address mismatch");
-      Assert (Condition => Paging.Is_Present (E => E),
-              Message   => "Entry not marked present");
-      Assert (Condition => Paging.Is_Writable (E => E),
-              Message   => "Entry not writable");
-      Assert (Condition => not Paging.Is_User_Accessible (E => E),
-              Message   => "Entry user accessible");
-      Assert (Condition => Paging.Is_Writethrough (E => E),
-              Message   => "Entry not marked writethrough");
-      Assert (Condition => not Paging.Is_Cache_Disabled (E => E),
-              Message   => "Cache disabled");
-      Assert (Condition => Paging.Has_Execute_Disable (E => E),
-              Message   => "Entry is executable");
    end Create_PML4_Entry;
 
    -------------------------------------------------------------------------
@@ -155,24 +111,6 @@ is
               Message   => "PT entry mismatch");
       Assert (Condition => Paging.Get_Address (E => E) = Addr,
               Message   => "Address mismatch");
-      Assert (Condition => Paging.Is_Present (E => E),
-              Message   => "Entry not marked present");
-      Assert (Condition => Paging.Is_Writable (E => E),
-              Message   => "Entry not writable");
-      Assert (Condition => not Paging.Is_User_Accessible (E => E),
-              Message   => "Entry user accessible");
-      Assert (Condition => Paging.Is_Writethrough (E => E),
-              Message   => "Entry not marked writethrough");
-      Assert (Condition => not Paging.Is_Cache_Disabled (E => E),
-              Message   => "Cache disabled");
-      Assert (Condition => Paging.Is_Global (E => E),
-              Message   => "Entry not global");
-      Assert (Condition => not Paging.PT_Has_PAT (E => E),
-              Message   => "PAT enabled");
-      Assert (Condition => not Paging.Has_Execute_Disable (E => E),
-              Message   => "Entry is non-executable");
-      Assert (Condition => not Paging.Is_Dirty (E => E),
-              Message   => "Entry is dirty");
    end Create_PT_Entry;
 
    -------------------------------------------------------------------------

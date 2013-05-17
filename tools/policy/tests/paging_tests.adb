@@ -8,13 +8,12 @@ is
    use Ahven;
    use Skp;
    use type Skp.Paging.Table_Entry_Type;
+   use type SK.Word64;
 
    -------------------------------------------------------------------------
 
    procedure Create_PD_Entry
    is
-      use type SK.Word64;
-
       E     : Paging.PD_Entry_Type;
       Addr  : constant SK.Word64            := 16#fffc800f0000#;
       Ref_E : constant Paging.PD_Entry_Type := 16#8000fffc800f000b#;
@@ -40,8 +39,6 @@ is
 
    procedure Create_PDPT_Entry
    is
-      use type SK.Word64;
-
       E     : Paging.PDPT_Entry_Type;
       Addr  : constant SK.Word64              := 16#2b3c004000#;
       Ref_E : constant Paging.PDPT_Entry_Type := 16#8000002b3c00400b#;
@@ -67,8 +64,6 @@ is
 
    procedure Create_PML4_Entry
    is
-      use type SK.Word64;
-
       E     : Paging.PML4_Entry_Type;
       Addr  : constant SK.Word64              := 16#1f1000#;
       Ref_E : constant Paging.PML4_Entry_Type := 16#80000000001f100b#;
@@ -91,8 +86,6 @@ is
 
    procedure Create_PT_Entry
    is
-      use type SK.Word64;
-
       E     : Paging.PT_Entry_Type;
       Addr  : constant SK.Word64            := 16#100043f000#;
       Ref_E : constant Paging.PT_Entry_Type := 16#100043f10b#;
@@ -154,7 +147,7 @@ is
                           PDPT_Index => PDPT,
                           PD_Index   => PD,
                           PT_Index   => PT);
-            Assert (Condition => PML4 = 512,
+      Assert (Condition => PML4 = 512,
               Message   => "PML4 index mismatch (3)");
       Assert (Condition => PDPT = 289,
               Message   => "PDPT index mismatch (3)");

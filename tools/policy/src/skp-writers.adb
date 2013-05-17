@@ -221,6 +221,7 @@ is
       procedure Add_Memory_Region (C : Memregion_Package.Cursor)
       is
          use type SK.Word64;
+         use type Paging.Table_Entry_Type;
 
          R : constant Memory_Region_Type := Memregion_Package.Element
            (Position => C);
@@ -258,7 +259,7 @@ is
 
          for Idx in Paging.Table_Range range PML4_Idx_Start .. PML4_Idx_End
          loop
-            if not Paging.Is_Present (E => PML4 (Idx)) then
+            if PML4 (Idx) = Paging.PML4_Null_Entry then
                PML4 (Idx) := Paging.Create_PML4_Entry
                  (Address       => PDPT_Addr +
                     (SK.Word64 (Idx) - 1) * SK.Page_Size,
@@ -272,7 +273,7 @@ is
 
          for Idx in Paging.Table_Range range PDPT_Idx_Start .. PDPT_Idx_End
          loop
-            if not Paging.Is_Present (E => PDPT (Idx)) then
+            if PDPT (Idx) = Paging.PDPT_Null_Entry then
                PDPT (Idx) := Paging.Create_PDPT_Entry
                  (Address       => PD_Addr +
                     (SK.Word64 (Idx) - 1) * SK.Page_Size,
@@ -288,7 +289,7 @@ is
          end loop;
 
          for Idx in Paging.Table_Range range PD_Idx_Start .. PD_Idx_End loop
-            if not Paging.Is_Present (E => PD (Idx)) then
+            if PD (Idx) = Paging.PD_Null_Entry then
                PD (Idx) := Paging.Create_PD_Entry
                  (Address       => PT_Addr +
                     (SK.Word64 (Idx) - 1) * SK.Page_Size,
@@ -304,7 +305,7 @@ is
          end loop;
 
          for Idx in Paging.Table_Range range PT_Idx_Start .. PT_Idx_End loop
-            if not Paging.Is_Present (E => PT (Idx)) then
+            if PT (Idx) = Paging.PT_Null_Entry then
                PT (Idx) := Paging.Create_PT_Entry
                  (Address       => Physical_Addr,
                   Writable      => R.Writable,

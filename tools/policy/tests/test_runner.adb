@@ -4,6 +4,7 @@ with Ahven.Framework;
 with Xml_Tests;
 with Writer_Tests;
 with Paging_Tests;
+with EPT_Paging_Tests;
 with IO_Port_Tests;
 with MSR_Tests;
 with Validation_Tests;
@@ -21,6 +22,8 @@ begin
              T     => new Writer_Tests.Testcase);
    Add_Test (Suite => S.all,
              T     => new Paging_Tests.Testcase);
+   Add_Test (Suite => S.all,
+             T     => new EPT_Paging_Tests.Testcase);
    Add_Test (Suite => S.all,
              T     => new IO_Port_Tests.Testcase);
    Add_Test (Suite => S.all,

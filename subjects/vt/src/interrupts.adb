@@ -83,9 +83,9 @@ is
                when 61 =>
                   VGA_Output.Set (Slot => 3);
                   Text_IO.Put_Line ("Switching to VT 3");
-               when 62 =>
-                  VGA_Output.Set (Slot => 4);
-                  Text_IO.Put_Line ("Switching to VT 4");
+               when 64 =>
+                  VGA_Output.Set (Slot => 6);
+                  Text_IO.Put_Line ("Switching to VT 6");
                when others =>
                   null;
             end case;

@@ -2,7 +2,7 @@ package VGA_Output
 is
 
    --  Session slots.
-   type Slot_Range is range 1 .. 4;
+   type Slot_Range is range 1 .. 6;
 
    --  Set active session slot.
    procedure Set (Slot : Slot_Range);

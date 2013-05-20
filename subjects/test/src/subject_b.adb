@@ -37,7 +37,7 @@ begin
    end loop;
 
    loop
-      if Counter mod 2**20 = 0 then
+      if Counter mod 2 ** 19 = 0 then
          VGA.Set_Position (X => Integer (Idx - Dlt),
                            Y => 3);
          Text_IO.Put_Char (Item => Character'Val (176));
@@ -53,7 +53,7 @@ begin
       end if;
       Counter := Counter + 1;
 
-      if Counter mod 2 ** 23 = 0 then
+      if Counter mod 2 ** 22 = 0 then
 
          --  Provoke exception to schedule dumper.
 

@@ -271,8 +271,8 @@ is
                Ctls_Entry         => Controls.Entry_Ctrls);
             VMX.VMCS_Setup_Host_Fields;
             VMX.VMCS_Setup_Guest_Fields
-              (PML4_Address => Skp.Subjects.Get_PML4_Address
-                 (Subject_Id => I));
+              (PML4_Address => Skp.Subjects.Get_PML4_Address (Subject_Id => I),
+               EPT_Pointer  => Skp.Subjects.Get_EPT_Pointer (Subject_Id => I));
 
             if Plan_Frame.Subject_Id = I then
                Initial_VMCS_Addr := VMCS_Addr;

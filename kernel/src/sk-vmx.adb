@@ -254,7 +254,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure VMCS_Setup_Guest_Fields (PML4_Address : SK.Word64)
+   procedure VMCS_Setup_Guest_Fields
+     (PML4_Address : SK.Word64;
+      EPT_Pointer  : SK.Word64)
    is
    begin
       VMCS_Write (Field => Constants.VMCS_LINK_POINTER,
@@ -308,6 +310,9 @@ is
                   Value => PML4_Address);
       VMCS_Write (Field => Constants.GUEST_CR4,
                   Value => CPU.Get_CR4);
+
+      VMCS_Write (Field => Constants.EPT_POINTER,
+                  Value => EPT_Pointer);
 
       VMCS_Write (Field => Constants.GUEST_RFLAGS,
                   Value => CPU.Get_RFLAGS);

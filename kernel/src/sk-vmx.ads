@@ -107,10 +107,12 @@ is
    --#       State;
 
    --  Setup guest fields of the currently active VMCS.
-   procedure VMCS_Setup_Guest_Fields (PML4_Address : SK.Word64);
+   procedure VMCS_Setup_Guest_Fields
+     (PML4_Address : SK.Word64;
+      EPT_Pointer  : SK.Word64);
    --# global
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from *, PML4_Address;
+   --#    X86_64.State from *, PML4_Address, EPT_Pointer;
 
 end SK.VMX;

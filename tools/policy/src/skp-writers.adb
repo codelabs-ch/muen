@@ -104,6 +104,28 @@ is
             Exit_Ctrls  => Constants.VM_CTRL_EXIT_IA32E_MODE
             or Constants.VM_CTRL_EXIT_ACK_INT
             or Constants.VM_CTRL_EXIT_SAVE_TIMER,
+            Entry_Ctrls => Constants.VM_CTRL_ENTR_IA32E_MODE),
+         VM     =>
+           (Exec_Pin    => Constants.VM_CTRL_EXT_INT_EXITING
+            or Constants.VM_CTRL_PREEMPT_TIMER,
+            Exec_Proc   => Constants.VM_CTRL_IO_BITMAPS
+            or Constants.VM_CTRL_SECONDARY_PROC
+            or Constants.VM_CTRL_EXIT_INVLPG
+            or Constants.VM_CTRL_EXIT_MWAIT
+            or Constants.VM_CTRL_EXIT_RDPMC
+            or Constants.VM_CTRL_EXIT_RDTSC
+            or Constants.VM_CTRL_EXIT_CR3_LOAD
+            or Constants.VM_CTRL_EXIT_CR3_STORE
+            or Constants.VM_CTRL_EXIT_CR8_LOAD
+            or Constants.VM_CTRL_EXIT_CR8_STORE
+            or Constants.VM_CTRL_EXIT_MOV_DR
+            or Constants.VM_CTRL_MSR_BITMAPS
+            or Constants.VM_CTRL_EXIT_MONITOR,
+            Exec_Proc2  => Constants.VM_CTRL_ENABLE_EPT
+            or Constants.VM_CTRL_EXIT_WBINVD,
+            Exit_Ctrls  => Constants.VM_CTRL_EXIT_IA32E_MODE
+            or Constants.VM_CTRL_EXIT_ACK_INT
+            or Constants.VM_CTRL_EXIT_SAVE_TIMER,
             Entry_Ctrls => Constants.VM_CTRL_ENTR_IA32E_MODE));
 
    -------------------------------------------------------------------------

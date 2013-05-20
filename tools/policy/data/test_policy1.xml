@@ -31,7 +31,7 @@
 			<msr start="800" end="802" mode="r"/>
 			<msr start="805" end="805" mode="rw"/>
 		</subject>
-		<subject id="1" name="subject1" profile="native" cpu="1" pml4_address="1f4000" io_bitmap_address="1b0000" msr_bitmap_address="910000">
+		<subject id="1" name="subject1" profile="vm" cpu="1" pml4_address="1f4000" io_bitmap_address="1b0000" msr_bitmap_address="910000">
 			&subj_state;
 			<memory_layout>
 				<memory_region physical_address="250000" virtual_address="0" size="12k" alignment="4k" writable="true" executable="true" memory_type="UC"/>

@@ -14,6 +14,7 @@ is
    type Subject_Spec_Type is record
       CPU_Id             : Skp.CPU_Range;
       PML4_Address       : SK.Word64;
+      EPT_Pointer        : SK.Word64;
       VMCS_Address       : SK.Word64;
       IO_Bitmap_Address  : SK.Word64;
       MSR_Bitmap_Address : SK.Word64;
@@ -52,6 +53,19 @@ __subjects__);
       --# end accept;
       return Subject_Specs (Subject_Id).Entry_Point;
    end Get_Entry_Point;
+
+   -------------------------------------------------------------------------
+
+   function Get_EPT_Pointer
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word64
+   is
+   begin
+      --# accept Warning, 444, "EPT_Pointer is Word64 (obviously)";
+      --# assume Subject_Specs (Subject_Id).EPT_Pointer in SK.Word64;
+      --# end accept;
+      return Subject_Specs (Subject_Id).EPT_Pointer;
+   end Get_EPT_Pointer;
 
    -------------------------------------------------------------------------
 

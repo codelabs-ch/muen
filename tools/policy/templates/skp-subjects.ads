@@ -47,6 +47,10 @@ is
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word64;
 
+   function Get_EPT_Pointer
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word64;
+
    function Get_VMCS_Address
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word64;

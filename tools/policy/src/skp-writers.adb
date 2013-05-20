@@ -970,6 +970,9 @@ is
          Ctrls    : constant VMX_Controls_Type
            := Profile_Mapping (Subject.Profile);
 
+         --  EPT memory type WB, page-walk length 4
+         EPT_Flags : constant := 16#1e#;
+
          --  Add signal entry to output buffer.
          procedure Add_Signal (Pos : Signals_Package.Cursor);
 
@@ -1032,10 +1035,23 @@ is
            & " => Subject_Spec_Type'("
            & ASCII.LF
            & Indent & "    CPU_Id             =>" & Subject.CPU'Img & ","
-           & ASCII.LF
-           & Indent & "    PML4_Address       => 16#"
-           & SK.Utils.To_Hex (Item => Subject.Pml4_Address) & "#,"
-           & ASCII.LF
+           & ASCII.LF;
+
+         case Subject.Profile is
+            when Native => Buffer := Buffer
+                 & Indent & "    PML4_Address       => 16#"
+                 & SK.Utils.To_Hex (Item => Subject.Pml4_Address) & "#,"
+                 & ASCII.LF
+                 & Indent & "    EPT_Pointer        => 0,";
+            when VM     => Buffer := Buffer
+                 & Indent & "    PML4_Address       => 0,"
+                 & ASCII.LF
+                 & Indent & "    EPT_Pointer        => 16#"
+                 & SK.Utils.To_Hex
+                 (Item => Subject.Pml4_Address + EPT_Flags) & "#,";
+         end case;
+
+         Buffer := Buffer & ASCII.LF
            & Indent & "    VMCS_Address       => 16#"
            & SK.Utils.To_Hex (Item => VMCS_Address) & "#,"
            & ASCII.LF

@@ -116,8 +116,6 @@ is
             or Constants.VM_CTRL_EXIT_MWAIT
             or Constants.VM_CTRL_EXIT_RDPMC
             or Constants.VM_CTRL_EXIT_RDTSC
-            or Constants.VM_CTRL_EXIT_CR3_LOAD
-            or Constants.VM_CTRL_EXIT_CR3_STORE
             or Constants.VM_CTRL_EXIT_CR8_LOAD
             or Constants.VM_CTRL_EXIT_CR8_STORE
             or Constants.VM_CTRL_EXIT_MOV_DR

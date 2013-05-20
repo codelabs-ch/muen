@@ -7,7 +7,7 @@ with Ada.Exceptions;
 
 with SK.Utils;
 
-with Skp.Paging;
+with Skp.Paging.EPT;
 with Skp.IO_Ports;
 with Skp.MSRs;
 with Skp.Templates;
@@ -23,11 +23,13 @@ is
 
    --  Create paging structures from given memory layout and write them to the
    --  specified file. The PML4 address parameter specifies the physical start
-   --  address of the PML4 paging structure.
+   --  address of the PML4 paging structure. Depending on the given profile
+   --  IA32e or EPT page tables will be generated.
    procedure Write
      (Mem_Layout   : Memory_Layout_Type;
       Pml4_Address : SK.Word64;
-      Filename     : String);
+      Filename     : String;
+      Profile      : Subject_Profile_Type := Native);
 
    --  Create I/O bitmap from given ports and write them to the specified file.
    procedure Write
@@ -225,7 +227,8 @@ is
    procedure Write
      (Mem_Layout   : Memory_Layout_Type;
       Pml4_Address : SK.Word64;
-      Filename     : String)
+      Filename     : String;
+      Profile      : Subject_Profile_Type := Native)
    is
       use Ada.Streams.Stream_IO;
 
@@ -285,61 +288,102 @@ is
          for Idx in Paging.Table_Range range PML4_Idx_Start .. PML4_Idx_End
          loop
             if PML4 (Idx) = Paging.PML4_Null_Entry then
-               PML4 (Idx) := Paging.Create_PML4_Entry
-                 (Address       => PDPT_Addr +
-                    (SK.Word64 (Idx) - 1) * SK.Page_Size,
-                  Writable      => True,
-                  User_Access   => True,
-                  Writethrough  => True,
-                  Cache_Disable => False,
-                  Exec_Disable  => False);
+               case Profile is
+                  when Native =>
+                     PML4 (Idx) := Paging.Create_PML4_Entry
+                       (Address       => PDPT_Addr +
+                          (SK.Word64 (Idx) - 1) * SK.Page_Size,
+                        Writable      => True,
+                        User_Access   => True,
+                        Writethrough  => True,
+                        Cache_Disable => False,
+                        Exec_Disable  => False);
+                  when VM =>
+                     PML4 (Idx) := Paging.EPT.Create_PML4_Entry
+                       (Address    => PDPT_Addr +
+                          (SK.Word64 (Idx) - 1) * SK.Page_Size,
+                        Readable   => True,
+                        Writable   => True,
+                        Executable => True);
+               end case;
             end if;
          end loop;
 
          for Idx in Paging.Table_Range range PDPT_Idx_Start .. PDPT_Idx_End
          loop
             if PDPT (Idx) = Paging.PDPT_Null_Entry then
-               PDPT (Idx) := Paging.Create_PDPT_Entry
-                 (Address       => PD_Addr +
-                    (SK.Word64 (Idx) - 1) * SK.Page_Size,
-                  Writable      => True,
-                  User_Access   => True,
-                  Writethrough  => True,
-                  Cache_Disable => False,
-                  Map_Page      => False,
-                  Global        => False,
-                  PAT           => False,
-                  Exec_Disable  => False);
+               case Profile is
+                  when Native =>
+                     PDPT (Idx) := Paging.Create_PDPT_Entry
+                       (Address       => PD_Addr +
+                          (SK.Word64 (Idx) - 1) * SK.Page_Size,
+                        Writable      => True,
+                        User_Access   => True,
+                        Writethrough  => True,
+                        Cache_Disable => False,
+                        Map_Page      => False,
+                        Global        => False,
+                        PAT           => False,
+                        Exec_Disable  => False);
+                  when VM =>
+                     PDPT (Idx) := Paging.EPT.Create_PDPT_Entry
+                       (Address    => PD_Addr +
+                          (SK.Word64 (Idx) - 1) * SK.Page_Size,
+                        Readable   => True,
+                        Writable   => True,
+                        Executable => True);
+               end case;
             end if;
          end loop;
 
          for Idx in Paging.Table_Range range PD_Idx_Start .. PD_Idx_End loop
             if PD (Idx) = Paging.PD_Null_Entry then
-               PD (Idx) := Paging.Create_PD_Entry
-                 (Address       => PT_Addr +
-                    (SK.Word64 (Idx) - 1) * SK.Page_Size,
-                  Writable      => True,
-                  User_Access   => True,
-                  Writethrough  => True,
-                  Cache_Disable => False,
-                  Map_Page      => False,
-                  Global        => False,
-                  PAT           => False,
-                  Exec_Disable  => False);
+               case Profile is
+                  when Native =>
+                     PD (Idx) := Paging.Create_PD_Entry
+                       (Address       => PT_Addr +
+                          (SK.Word64 (Idx) - 1) * SK.Page_Size,
+                        Writable      => True,
+                        User_Access   => True,
+                        Writethrough  => True,
+                        Cache_Disable => False,
+                        Map_Page      => False,
+                        Global        => False,
+                        PAT           => False,
+                        Exec_Disable  => False);
+                  when VM =>
+                     PD (Idx) := Paging.EPT.Create_PD_Entry
+                       (Address    => PT_Addr +
+                          (SK.Word64 (Idx) - 1) * SK.Page_Size,
+                        Readable   => True,
+                        Writable   => True,
+                        Executable => True);
+               end case;
             end if;
          end loop;
 
          for Idx in Paging.Table_Range range PT_Idx_Start .. PT_Idx_End loop
             if PT (Idx) = Paging.PT_Null_Entry then
-               PT (Idx) := Paging.Create_PT_Entry
-                 (Address       => Physical_Addr,
-                  Writable      => R.Writable,
-                  User_Access   => True,
-                  Writethrough  => PAT_Mapping (R.Memory_Type).PWT,
-                  Cache_Disable => PAT_Mapping (R.Memory_Type).PCD,
-                  Global        => False,
-                  PAT           => PAT_Mapping (R.Memory_Type).PAT,
-                  Exec_Disable  => not R.Executable);
+               case Profile is
+                  when Native =>
+                     PT (Idx) := Paging.Create_PT_Entry
+                       (Address       => Physical_Addr,
+                        Writable      => R.Writable,
+                        User_Access   => True,
+                        Writethrough  => PAT_Mapping (R.Memory_Type).PWT,
+                        Cache_Disable => PAT_Mapping (R.Memory_Type).PCD,
+                        Global        => False,
+                        PAT           => PAT_Mapping (R.Memory_Type).PAT,
+                        Exec_Disable  => not R.Executable);
+                  when VM =>
+                     PT (Idx) := Paging.EPT.Create_PT_Entry
+                       (Address     => Physical_Addr,
+                        Readable    => True,
+                        Writable    => True,
+                        Executable  => True,
+                        Ignore_PAT  => True,
+                        Memory_Type => R.Memory_Type);
+               end case;
             end if;
 
             Physical_Addr := Physical_Addr + SK.Page_Size;
@@ -908,7 +952,8 @@ is
          Write_Subject_Spec (Subject => S);
          Write (Mem_Layout   => S.Memory_Layout,
                 Pml4_Address => S.Pml4_Address,
-                Filename     => PT_File);
+                Filename     => PT_File,
+                Profile      => S.Profile);
          Write (Ports    => S.IO_Ports,
                 Filename => IO_File);
          Write (MSR_List => S.MSRs,

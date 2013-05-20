@@ -5,4 +5,5 @@
 	<binary name="subject_b" path="subjects/test/obj/subject_b"/>
 	<binary name="vt"        path="subjects/vt/obj/vt"         />
 	<binary name="idle"      path="subjects/idle/obj/idle"     />
+	<binary name="sm"        path="subjects/sm/obj/sm"         />
 </binaries>

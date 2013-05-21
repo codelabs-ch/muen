@@ -317,7 +317,7 @@ is
                   Value => EPT_Pointer);
 
       VMCS_Write (Field => Constants.GUEST_RFLAGS,
-                  Value => CPU.Get_RFLAGS);
+                  Value => 2);
    end VMCS_Setup_Guest_Fields;
 
    -------------------------------------------------------------------------

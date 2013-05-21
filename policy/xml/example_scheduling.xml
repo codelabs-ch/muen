@@ -9,7 +9,7 @@
 			<minor_frame subject_id="3" ticks="40"/>
 		</cpu>
 		<cpu>
-			<minor_frame subject_id="5" ticks="80"/>
+			<minor_frame subject_id="7" ticks="80"/>
 		</cpu>
 		<cpu>
 			<minor_frame subject_id="0" ticks="40"/>
@@ -31,7 +31,7 @@
 			<minor_frame subject_id="2" ticks="10"/>
 		</cpu>
 		<cpu>
-			<minor_frame subject_id="5" ticks="80"/>
+			<minor_frame subject_id="7" ticks="80"/>
 		</cpu>
 		<cpu>
 			<minor_frame subject_id="0" ticks="80"/>

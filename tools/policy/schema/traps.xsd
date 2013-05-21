@@ -5,6 +5,8 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="exception_or_nmi"/>
 			<xs:enumeration value="external_interrupt"/>
+			<xs:enumeration value="control_register_access"/>
+			<xs:enumeration value="ept_violation"/>
 		</xs:restriction>
 	</xs:simpleType>
 

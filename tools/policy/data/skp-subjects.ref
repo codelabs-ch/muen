@@ -51,7 +51,7 @@ is
           0 => Trap_Entry_Type'(Dst_Subject => 2, Dst_Vector => 256),
           48 => Trap_Entry_Type'(Dst_Subject => 2, Dst_Vector => 12),
           others => Null_Trap),
-       Signal_Table      => Signal_Table_Type'(
+       Signal_Table       => Signal_Table_Type'(
           17 => Signal_Entry_Type'(
             Kind        => Asynchronous,
             Dst_Subject => 2,
@@ -79,7 +79,7 @@ is
           Exit_Ctrls  => 4227584,
           Entry_Ctrls => 0),
        Trap_Table         => Null_Trap_Table,
-       Signal_Table      => Null_Signal_Table),
+       Signal_Table       => Null_Signal_Table),
       2 => Subject_Spec_Type'(
        CPU_Id             => 0,
        PML4_Address       => 16#00000000001f8000#,
@@ -153,7 +153,7 @@ is
           58 => Trap_Entry_Type'(Dst_Subject => 0, Dst_Vector => 32),
           59 => Trap_Entry_Type'(Dst_Subject => 0, Dst_Vector => 32),
           others => Null_Trap),
-       Signal_Table      => Null_Signal_Table));
+       Signal_Table       => Null_Signal_Table));
 
    -------------------------------------------------------------------------
 

@@ -1116,7 +1116,7 @@ is
          end if;
 
          Buffer := Buffer & ASCII.LF
-           & Indent & "    Signal_Table      => ";
+           & Indent & "    Signal_Table       => ";
 
          if Subject.Signal_Table.Is_Empty then
             Buffer := Buffer & "Null_Signal_Table)";

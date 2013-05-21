@@ -34,10 +34,13 @@ is
 
    VM_CTRL_EXIT_IA32E_MODE : constant := 16#0000_0200#;
    VM_CTRL_EXIT_ACK_INT    : constant := 16#0000_8000#;
+   VM_CTRL_EXIT_SAVE_EFER  : constant := 16#0010_0000#;
+   VM_CTRL_EXIT_LOAD_EFER  : constant := 16#0020_0000#;
    VM_CTRL_EXIT_SAVE_TIMER : constant := 16#0040_0000#;
 
    --  VM-Entry Controls
 
    VM_CTRL_ENTR_IA32E_MODE : constant := 16#0000_0200#;
+   VM_CTRL_ENTR_LOAD_EFER  : constant := 16#0000_8000#;
 
 end Skp.Constants;

@@ -120,8 +120,10 @@ is
             or Constants.VM_CTRL_UNRESTRICTED,
             Exit_Ctrls  => Constants.VM_CTRL_EXIT_IA32E_MODE
             or Constants.VM_CTRL_EXIT_ACK_INT
+            or Constants.VM_CTRL_EXIT_SAVE_EFER
+            or Constants.VM_CTRL_EXIT_LOAD_EFER
             or Constants.VM_CTRL_EXIT_SAVE_TIMER,
-            Entry_Ctrls => 0,
+            Entry_Ctrls => Constants.VM_CTRL_ENTR_LOAD_EFER,
             CR0_Value   => 16#0000_0031#,
             CR4_Value   => 16#0000_2000#));
 

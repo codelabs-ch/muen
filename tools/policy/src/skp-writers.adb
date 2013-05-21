@@ -112,7 +112,8 @@ is
             or Constants.VM_CTRL_MSR_BITMAPS
             or Constants.VM_CTRL_EXIT_MONITOR,
             Exec_Proc2  => Constants.VM_CTRL_ENABLE_EPT
-            or Constants.VM_CTRL_EXIT_WBINVD,
+            or Constants.VM_CTRL_EXIT_WBINVD
+            or Constants.VM_CTRL_UNRESTRICTED,
             Exit_Ctrls  => Constants.VM_CTRL_EXIT_IA32E_MODE
             or Constants.VM_CTRL_EXIT_ACK_INT
             or Constants.VM_CTRL_EXIT_SAVE_TIMER,

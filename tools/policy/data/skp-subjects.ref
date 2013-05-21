@@ -69,7 +69,7 @@ is
        VMX_Controls       => VMX_Controls_Type'(
           Exec_Pin    => 65,
           Exec_Proc   => 2996313088,
-          Exec_Proc2  => 66,
+          Exec_Proc2  => 194,
           Exit_Ctrls  => 4227584,
           Entry_Ctrls => 0),
        Trap_Table         => Null_Trap_Table,

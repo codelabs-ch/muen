@@ -28,6 +28,7 @@ is
    VM_CTRL_ENABLE_EPT      : constant := 16#0000_0002#;
    VM_CTRL_EXIT_DT         : constant := 16#0000_0004#;
    VM_CTRL_EXIT_WBINVD     : constant := 16#0000_0040#;
+   VM_CTRL_UNRESTRICTED    : constant := 16#0000_0080#;
 
    --  VM-Exit Controls
 

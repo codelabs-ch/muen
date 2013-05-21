@@ -26,7 +26,7 @@
 	<xs:simpleType name="subject_profile_type">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="native"/>
-			<xs:enumeration value="linux"/>
+			<xs:enumeration value="vm"/>
 		</xs:restriction>
 	</xs:simpleType>
 

@@ -318,6 +318,8 @@ is
 
       VMCS_Write (Field => Constants.GUEST_RFLAGS,
                   Value => 2);
+      VMCS_Write (Field => Constants.GUEST_IA32_EFER,
+                  Value => 0);
    end VMCS_Setup_Guest_Fields;
 
    -------------------------------------------------------------------------

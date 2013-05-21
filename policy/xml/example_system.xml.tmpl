@@ -18,6 +18,8 @@
 <!ENTITY idlemem    SYSTEM "idle_mem.xml">
 <!ENTITY sminit     SYSTEM "sm.xml">
 <!ENTITY smmem      SYSTEM "sm_mem.xml">
+<!ENTITY xv6init    SYSTEM "xv6.xml">
+<!ENTITY xv6mem     SYSTEM "xv6_mem.xml">
 ]>
 <system vmxon_address="1000" vmcs_start_address="5000">
 	&hardware;
@@ -111,6 +113,14 @@
 				<memory_region physical_address="342000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
 			</memory_layout>
 			<binary name="sm" physical_address="337000"/>
+		</subject>
+
+		<subject id="7" name="xv6" profile="vm" cpu="2" pml4_address="500000" io_bitmap_address="504000" msr_bitmap_address="506000">
+			&xv6init;
+			<memory_layout>
+				&xv6mem;
+			</memory_layout>
+			<binary name="xv6" physical_address="507000"/>
 		</subject>
 	</subjects>
 

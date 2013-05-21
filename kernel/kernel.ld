@@ -49,7 +49,7 @@ SECTIONS
 		*(.interfaces)
 	}
 
-	. = 0x00400000;
+	. = 0x00600000;
 	image_end = .;
 
 	/DISCARD/ :

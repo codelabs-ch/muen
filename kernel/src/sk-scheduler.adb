@@ -272,7 +272,9 @@ is
             VMX.VMCS_Setup_Host_Fields;
             VMX.VMCS_Setup_Guest_Fields
               (PML4_Address => Skp.Subjects.Get_PML4_Address (Subject_Id => I),
-               EPT_Pointer  => Skp.Subjects.Get_EPT_Pointer (Subject_Id => I));
+               EPT_Pointer  => Skp.Subjects.Get_EPT_Pointer (Subject_Id => I),
+               CR0_Value    => Skp.Subjects.Get_CR0 (Subject_Id => I),
+               CR4_Value    => Skp.Subjects.Get_CR4 (Subject_Id => I));
 
             if Plan_Frame.Subject_Id = I then
                Initial_VMCS_Addr := VMCS_Addr;

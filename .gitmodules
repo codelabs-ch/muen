@@ -1,0 +1,3 @@
+[submodule "subjects/xv6/src"]
+	path = subjects/xv6/src
+	url = git://pdos.csail.mit.edu/xv6/xv6.git

@@ -49,7 +49,7 @@ is
           Entry_Ctrls => 512),
        Trap_Table         => Trap_Table_Type'(
           0 => Trap_Entry_Type'(Dst_Subject => 2, Dst_Vector => 256),
-          1 => Trap_Entry_Type'(Dst_Subject => 2, Dst_Vector => 12),
+          48 => Trap_Entry_Type'(Dst_Subject => 2, Dst_Vector => 12),
           others => Null_Trap),
        Signal_Table      => Signal_Table_Type'(
           17 => Signal_Entry_Type'(

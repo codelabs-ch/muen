@@ -21,8 +21,8 @@
 			<binary name="tau0" physical_address="216000"/>
 			<device name="serial"/>
 			<trap_table>
-				<entry kind="exception_or_nmi"   dst_subject="subject2"/>
-				<entry kind="external_interrupt" dst_subject="subject2" dst_vector="12"/>
+				<entry kind="exception_or_nmi" dst_subject="subject2"/>
+				<entry kind="ept_violation"    dst_subject="subject2" dst_vector="12"/>
 			</trap_table>
 			<signal_table>
 				<entry kind="asynchronous" signal="17" dst_subject="subject2" dst_vector="32"/>

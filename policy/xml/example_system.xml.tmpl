@@ -121,6 +121,9 @@
 				&xv6mem;
 			</memory_layout>
 			<binary name="xv6" physical_address="507000"/>
+			<trap_table>
+				<entry kind="*" dst_subject="sm" dst_vector="39"/>
+			</trap_table>
 		</subject>
 	</subjects>
 

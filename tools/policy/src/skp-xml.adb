@@ -508,12 +508,24 @@ is
 
                Ent : Trap_Table_Entry_Type;
             begin
-               Ent.Kind        := Trap_Kind'Value (Kind_Str);
                Ent.Dst_Subject := Dst_Subj;
                if Dst_Vec'Length > 0 then
                   Ent.Dst_Vector := Natural'Value (Dst_Vec);
                end if;
 
+               if Kind_Str = "*" then
+
+                  --  Catch-all trap: add all entries.
+
+                  for I in Trap_Kind loop
+                     Ent.Kind := I;
+                     Subj_Traps.Insert (Key      => Ent.Kind,
+                                        New_Item => Ent);
+                  end loop;
+                  return;
+               end if;
+
+               Ent.Kind := Trap_Kind'Value (Kind_Str);
                Subj_Traps.Insert (Key      => Ent.Kind,
                                   New_Item => Ent);
 

@@ -982,6 +982,7 @@ is
       procedure Write_Subject_Spec (Subject : Subject_Type)
       is
          use type SK.Word64;
+         use type Ada.Containers.Count_Type;
 
          Cur_Trap : Natural := 0;
          Conf     : constant Profile_Conf_Type
@@ -1109,6 +1110,7 @@ is
          else
             Buffer := Buffer & "Trap_Table_Type'(" & ASCII.LF;
             Subject.Trap_Table.Iterate (Process => Add_Trap'Access);
+
             Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
               & " others => Null_Trap),";
          end if;

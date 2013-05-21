@@ -29,9 +29,10 @@ is
         (Ada.Command_Line.Command_Name & " <kernel_elf> <image>");
    end Print_Usage;
 
-   Knl_Elf    : constant String := "obj/kernel.elf";
-   Top_Dir    : constant String := "..";
-   Policy_Dir : constant String := Top_Dir & "/policy/include";
+   Knl_Elf    : constant String    := "obj/kernel.elf";
+   Top_Dir    : constant String    := "..";
+   Policy_Dir : constant String    := Top_Dir & "/policy/include";
+   Addr_Mask  : constant SK.Word64 := 16#0000fffffffff000#;
 begin
    if Ada.Command_Line.Argument_Count /= 2 then
       Print_Usage;
@@ -75,17 +76,27 @@ begin
 
    for S in Subject_Id_Type loop
       declare
-         Fn      : constant String := Top_Dir & "/" & To_String
+         use type SK.Word64;
+
+         Fn        : constant String := Top_Dir & "/" & To_String
            (Binary_Specs (S).Path);
-         Name    : constant String := To_String (Binary_Specs (S).Name);
-         Raw_Bin : constant String := "obj/" & Name;
+         Name      : constant String := To_String (Binary_Specs (S).Name);
+         Raw_Bin   : constant String := "obj/" & Name;
+         PML4_Addr : SK.Word64       := Get_PML4_Address (Subject_Id => S);
       begin
          Image.To_Binary (Src_Elf => Fn,
                           Dst_Bin => Raw_Bin);
 
-         Ada.Text_IO.Put_Line
-           (SK.Utils.To_Hex (Item => Get_PML4_Address (Subject_Id => S))
-            & " [PML4] " & Name);
+         if PML4_Addr = 0 then
+            PML4_Addr := Get_EPT_Pointer (Subject_Id => S) and Addr_Mask;
+            Ada.Text_IO.Put_Line
+              (SK.Utils.To_Hex (Item => PML4_Addr) & " [PML4] " & Name
+               & " (EPT)");
+         else
+            Ada.Text_IO.Put_Line
+              (SK.Utils.To_Hex (Item => PML4_Addr) & " [PML4] " & Name);
+         end if;
+
          Ada.Text_IO.Put_Line
            (SK.Utils.To_Hex (Item => Get_IO_Bitmap_Address (Subject_Id => S))
             & " [IOBM] " & Name);
@@ -105,7 +116,7 @@ begin
            (Image    => Knl_Elf,
             Filename => Policy_Dir & "/" & Name & "_pt",
             Name     => Name & "_pt",
-            Address  => Get_PML4_Address (Subject_Id => S));
+            Address  => PML4_Addr);
          Image.Add_Section
            (Image    => Knl_Elf,
             Filename => Policy_Dir & "/" & Name & "_iobm",

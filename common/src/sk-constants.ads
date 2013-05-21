@@ -93,6 +93,7 @@ is
    MSR_BITMAP               : constant := 16#2004#;
    EPT_POINTER              : constant := 16#201a#;
    VMCS_LINK_POINTER        : constant := 16#2800#;
+   GUEST_IA32_EFER          : constant := 16#2806#;
    GUEST_LIMIT_ES           : constant := 16#4800#;
    GUEST_LIMIT_CS           : constant := 16#4802#;
    GUEST_LIMIT_SS           : constant := 16#4804#;

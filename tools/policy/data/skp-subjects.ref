@@ -71,7 +71,7 @@ is
           Exec_Proc   => 2996313088,
           Exec_Proc2  => 66,
           Exit_Ctrls  => 4227584,
-          Entry_Ctrls => 512),
+          Entry_Ctrls => 0),
        Trap_Table         => Null_Trap_Table,
        Signal_Table      => Null_Signal_Table),
       2 => Subject_Spec_Type'(

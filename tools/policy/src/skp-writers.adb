@@ -116,7 +116,7 @@ is
             Exit_Ctrls  => Constants.VM_CTRL_EXIT_IA32E_MODE
             or Constants.VM_CTRL_EXIT_ACK_INT
             or Constants.VM_CTRL_EXIT_SAVE_TIMER,
-            Entry_Ctrls => Constants.VM_CTRL_ENTR_IA32E_MODE));
+            Entry_Ctrls => 0));
 
    -------------------------------------------------------------------------
 

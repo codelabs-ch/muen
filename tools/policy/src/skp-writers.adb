@@ -1084,6 +1084,12 @@ is
            & Indent & "    Entry_Point        => 16#"
            & SK.Utils.To_Hex (Item => Subject.Init_State.Entry_Point) & "#,"
            & ASCII.LF
+           & Indent & "    CR0_Value          => 16#"
+           & SK.Utils.To_Hex (Item => Conf.CR0_Value) & "#,"
+           & ASCII.LF
+           & Indent & "    CR4_Value          => 16#"
+           & SK.Utils.To_Hex (Item => Conf.CR4_Value) & "#,"
+           & ASCII.LF
            & Indent & "    VMX_Controls       => VMX_Controls_Type'("
            & ASCII.LF
            & Indent (N => 3) & " Exec_Pin    =>" & Conf.Exec_Pin'Img & ","

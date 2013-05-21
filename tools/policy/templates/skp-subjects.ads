@@ -85,4 +85,8 @@ is
      (Subject_Id : Skp.Subject_Id_Type)
       return VMX_Controls_Type;
 
+   function Get_CR0 (Subject_Id : Skp.Subject_Id_Type) return SK.Word64;
+
+   function Get_CR4 (Subject_Id : Skp.Subject_Id_Type) return SK.Word64;
+
 end Skp.Subjects;

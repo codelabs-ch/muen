@@ -20,6 +20,8 @@ is
       MSR_Bitmap_Address : SK.Word64;
       Stack_Address      : SK.Word64;
       Entry_Point        : SK.Word64;
+      CR0_Value          : SK.Word64;
+      CR4_Value          : SK.Word64;
       VMX_Controls       : VMX_Controls_Type;
       Trap_Table         : Trap_Table_Type;
       Signal_Table       : Signal_Table_Type;
@@ -40,6 +42,28 @@ __subjects__);
       --# end accept;
       return Subject_Specs (Subject_Id).CPU_Id;
    end Get_CPU_Id;
+
+   -------------------------------------------------------------------------
+
+   function Get_CR0 (Subject_Id : Skp.Subject_Id_Type) return SK.Word64
+   is
+   begin
+      --# accept Warning, 444, "CR0_Value is Word64 (obviously)";
+      --# assume Subject_Specs (Subject_Id).CR0_Value in SK.Word64;
+      --# end accept;
+      return Subject_Specs (Subject_Id).CR0_Value;
+   end Get_CR0;
+
+   -------------------------------------------------------------------------
+
+   function Get_CR4 (Subject_Id : Skp.Subject_Id_Type) return SK.Word64
+   is
+   begin
+      --# accept Warning, 444, "CR4_Value is Word64 (obviously)";
+      --# assume Subject_Specs (Subject_Id).CR4_Value in SK.Word64;
+      --# end accept;
+      return Subject_Specs (Subject_Id).CR4_Value;
+   end Get_CR4;
 
    -------------------------------------------------------------------------
 

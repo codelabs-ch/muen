@@ -64,7 +64,6 @@ is
 
    type Trap_Kind is
      (Exception_Or_NMI,
-      External_Interrupt,
       Triple_Fault,
       INIT_Signal,
       Start_Up_IPI,
@@ -81,7 +80,6 @@ is
       RDPMC,
       RDTSC,
       RSM,
-      VMCALL,
       VMCLEAR,
       VMLAUNCH,
       VMPTRLD,
@@ -112,7 +110,6 @@ is
       EPT_Misconfiguration,
       INVEPT,
       RDTSCP,
-      VMX_Preemption_Timer_Expiry,
       INVVPID,
       WBINVD,
       XSETBV,
@@ -123,7 +120,6 @@ is
 
    for Trap_Kind use
      (Exception_Or_NMI                  => 0,
-      External_Interrupt                => 1,
       Triple_Fault                      => 2,
       INIT_Signal                       => 3,
       Start_Up_IPI                      => 4,
@@ -140,7 +136,6 @@ is
       RDPMC                             => 15,
       RDTSC                             => 16,
       RSM                               => 17,
-      VMCALL                            => 18,
       VMCLEAR                           => 19,
       VMLAUNCH                          => 20,
       VMPTRLD                           => 21,
@@ -171,7 +166,6 @@ is
       EPT_Misconfiguration              => 49,
       INVEPT                            => 50,
       RDTSCP                            => 51,
-      VMX_Preemption_Timer_Expiry       => 52,
       INVVPID                           => 53,
       WBINVD                            => 54,
       XSETBV                            => 55,

@@ -6,4 +6,5 @@
 	<binary name="vt"        path="subjects/vt/obj/vt"         />
 	<binary name="idle"      path="subjects/idle/obj/idle"     />
 	<binary name="sm"        path="subjects/sm/obj/sm"         />
+	<binary name="xv6"       path="subjects/xv6/src/kernel"    />
 </binaries>

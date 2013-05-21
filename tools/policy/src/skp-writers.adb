@@ -68,15 +68,17 @@ is
    --  Return N number of indentation spaces.
    function Indent (N : Positive := 1) return String;
 
-   type VMX_Controls_Type is record
+   type Profile_Conf_Type is record
       Exec_Pin    : SK.Word32;
       Exec_Proc   : SK.Word32;
       Exec_Proc2  : SK.Word32;
       Exit_Ctrls  : SK.Word32;
       Entry_Ctrls : SK.Word32;
+      CR0_Value   : SK.Word64;
+      CR4_Value   : SK.Word64;
    end record;
 
-   Profile_Mapping : constant array (Subject_Profile_Type) of VMX_Controls_Type
+   Profile_Mapping : constant array (Subject_Profile_Type) of Profile_Conf_Type
      := (Native =>
            (Exec_Pin    => Constants.VM_CTRL_EXT_INT_EXITING
             or Constants.VM_CTRL_PREEMPT_TIMER,
@@ -97,7 +99,9 @@ is
             Exit_Ctrls  => Constants.VM_CTRL_EXIT_IA32E_MODE
             or Constants.VM_CTRL_EXIT_ACK_INT
             or Constants.VM_CTRL_EXIT_SAVE_TIMER,
-            Entry_Ctrls => Constants.VM_CTRL_ENTR_IA32E_MODE),
+            Entry_Ctrls => Constants.VM_CTRL_ENTR_IA32E_MODE,
+            CR0_Value   => 16#8001_0031#,
+            CR4_Value   => 16#0000_2020#),
          VM     =>
            (Exec_Pin    => Constants.VM_CTRL_EXT_INT_EXITING
             or Constants.VM_CTRL_PREEMPT_TIMER,
@@ -117,7 +121,9 @@ is
             Exit_Ctrls  => Constants.VM_CTRL_EXIT_IA32E_MODE
             or Constants.VM_CTRL_EXIT_ACK_INT
             or Constants.VM_CTRL_EXIT_SAVE_TIMER,
-            Entry_Ctrls => 0));
+            Entry_Ctrls => 0,
+            CR0_Value   => 16#0000_0031#,
+            CR4_Value   => 16#0000_2000#));
 
    -------------------------------------------------------------------------
 
@@ -978,7 +984,7 @@ is
          use type SK.Word64;
 
          Cur_Trap : Natural := 0;
-         Ctrls    : constant VMX_Controls_Type
+         Conf     : constant Profile_Conf_Type
            := Profile_Mapping (Subject.Profile);
 
          --  EPT memory type WB, page-walk length 4
@@ -1080,15 +1086,15 @@ is
            & ASCII.LF
            & Indent & "    VMX_Controls       => VMX_Controls_Type'("
            & ASCII.LF
-           & Indent (N => 3) & " Exec_Pin    =>" & Ctrls.Exec_Pin'Img & ","
+           & Indent (N => 3) & " Exec_Pin    =>" & Conf.Exec_Pin'Img & ","
            & ASCII.LF
-           & Indent (N => 3) & " Exec_Proc   =>" & Ctrls.Exec_Proc'Img & ","
+           & Indent (N => 3) & " Exec_Proc   =>" & Conf.Exec_Proc'Img & ","
            & ASCII.LF
-           & Indent (N => 3) & " Exec_Proc2  =>" & Ctrls.Exec_Proc2'Img & ","
+           & Indent (N => 3) & " Exec_Proc2  =>" & Conf.Exec_Proc2'Img & ","
            & ASCII.LF
-           & Indent (N => 3) & " Exit_Ctrls  =>" & Ctrls.Exit_Ctrls'Img & ","
+           & Indent (N => 3) & " Exit_Ctrls  =>" & Conf.Exit_Ctrls'Img & ","
            & ASCII.LF
-           & Indent (N => 3) & " Entry_Ctrls =>" & Ctrls.Entry_Ctrls'Img & "),"
+           & Indent (N => 3) & " Entry_Ctrls =>" & Conf.Entry_Ctrls'Img & "),"
            & ASCII.LF
            & Indent & "    Trap_Table         => ";
 

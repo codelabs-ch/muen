@@ -250,6 +250,8 @@ is
                   Value => Skp.Kernel.Stack_Address);
       VMCS_Write (Field => Constants.HOST_RIP,
                   Value => VMX_Exit_Address);
+      VMCS_Write (Field => Constants.HOST_IA32_EFER,
+                  Value => CPU.Get_MSR64 (Register => Constants.IA32_EFER));
    end VMCS_Setup_Host_Fields;
 
    -------------------------------------------------------------------------

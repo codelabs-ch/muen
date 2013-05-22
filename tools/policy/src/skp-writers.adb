@@ -323,10 +323,13 @@ is
                         Exec_Disable => Is_PDPT_Page and not R.Executable);
                   when VM =>
                      PDPT (Idx) := Paging.EPT.Create_PDPT_Entry
-                       (Address    => PD_Addr,
-                        Readable   => True,
-                        Writable   => not Is_PDPT_Page or R.Writable,
-                        Executable => not Is_PDPT_Page or R.Executable);
+                       (Address     => PD_Addr,
+                        Readable    => True,
+                        Writable    => not Is_PDPT_Page or R.Writable,
+                        Executable  => not Is_PDPT_Page or R.Executable,
+                        Map_Page    => Is_PDPT_Page,
+                        Ignore_PAT  => True,
+                        Memory_Type => R.Memory_Type);
                end case;
             end if;
          end loop;
@@ -355,10 +358,13 @@ is
                         Exec_Disable => Is_PD_Page and not R.Executable);
                   when VM =>
                      PD (Idx) := Paging.EPT.Create_PD_Entry
-                       (Address    => PT_Addr,
-                        Readable   => True,
-                        Writable   => not Is_PD_Page or R.Writable,
-                        Executable => not Is_PD_Page or R.Executable);
+                       (Address     => PT_Addr,
+                        Readable    => True,
+                        Writable    => not Is_PD_Page or R.Writable,
+                        Executable  => not Is_PD_Page or R.Executable,
+                        Map_Page    => Is_PD_Page,
+                        Ignore_PAT  => True,
+                        Memory_Type => R.Memory_Type);
                end case;
             end if;
          end loop;
@@ -384,6 +390,7 @@ is
                         Readable    => True,
                         Writable    => True,
                         Executable  => True,
+                        Map_Page    => True,
                         Ignore_PAT  => True,
                         Memory_Type => R.Memory_Type);
                end case;

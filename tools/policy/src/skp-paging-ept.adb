@@ -5,10 +5,11 @@ is
    Write_Flag      : constant := 1;
    Execute_Flag    : constant := 2;
    Ignore_PAT_Flag : constant := 6;
+   Present_Flag    : constant := 7;
 
    --  Mapping of memory type to EPT memory type bits, see Intel SDM Vol. 3C,
    --  chapter 28.2.5.
-   EPT_MT_Mapping : constant array (Memory_Type_Type) of PT_Entry_Type
+   EPT_MT_Mapping : constant array (Memory_Type_Type) of Table_Entry_Type
      := (UC => 16#00#,
          WC => 16#08#,
          WT => 16#20#,
@@ -23,6 +24,20 @@ is
       Readable   : Boolean;
       Writable   : Boolean;
       Executable : Boolean)
+      return Entry_Type;
+
+   --  Create EPT paging structure entry that can map a page (PDPTE, PDE or
+   --  PTE) with specified parameters.
+   generic
+      type Entry_Type is new Table_Entry_Type;
+   function Create_Map_Entry
+     (Address     : SK.Word64;
+      Readable    : Boolean;
+      Writable    : Boolean;
+      Executable  : Boolean;
+      Map_Page    : Boolean;
+      Ignore_PAT  : Boolean;
+      Memory_Type : Memory_Type_Type)
       return Entry_Type;
 
    -------------------------------------------------------------------------
@@ -58,22 +73,65 @@ is
 
    -------------------------------------------------------------------------
 
-   function Create_PD is new Create_Entry (Entry_Type => PD_Entry_Type);
+   function Create_Map_Entry
+     (Address     : SK.Word64;
+      Readable    : Boolean;
+      Writable    : Boolean;
+      Executable  : Boolean;
+      Map_Page    : Boolean;
+      Ignore_PAT  : Boolean;
+      Memory_Type : Memory_Type_Type)
+      return Entry_Type
+   is
+      function Create is new Create_Entry (Entry_Type => Entry_Type);
+
+      New_Entry : Entry_Type;
+   begin
+      New_Entry := Create (Address    => Address,
+                           Readable   => Readable,
+                           Writable   => Writable,
+                           Executable => Executable);
+
+      if Map_Page then
+         if Ignore_PAT then
+            Set_Flag (E    => Table_Entry_Type (New_Entry),
+                      Flag => Ignore_PAT_Flag);
+         end if;
+
+         New_Entry := New_Entry or Entry_Type (EPT_MT_Mapping (Memory_Type));
+
+         Set_Flag (E    => Table_Entry_Type (New_Entry),
+                   Flag => Present_Flag);
+      end if;
+
+      return New_Entry;
+   end Create_Map_Entry;
+
+   -------------------------------------------------------------------------
+
+   function Create_PD is new Create_Map_Entry (Entry_Type => PD_Entry_Type);
    function Create_PD_Entry
-     (Address    : SK.Word64;
-      Readable   : Boolean;
-      Writable   : Boolean;
-      Executable : Boolean)
+     (Address     : SK.Word64;
+      Readable    : Boolean;
+      Writable    : Boolean;
+      Executable  : Boolean;
+      Map_Page    : Boolean;
+      Ignore_PAT  : Boolean;
+      Memory_Type : Memory_Type_Type)
       return PD_Entry_Type renames Create_PD;
 
    -------------------------------------------------------------------------
 
-   function Create_PDPT is new Create_Entry (Entry_Type => PDPT_Entry_Type);
+   function Create_PDPT is new Create_Map_Entry
+     (Entry_Type => PDPT_Entry_Type);
    function Create_PDPT_Entry
-     (Address    : SK.Word64;
-      Readable   : Boolean;
-      Writable   : Boolean;
-      Executable : Boolean)
+     (Address     : SK.Word64;
+      Readable    : Boolean;
+      Writable    : Boolean;
+      Executable  : Boolean;
+      Map_Page    : Boolean;
+      Ignore_PAT  : Boolean;
+      Memory_Type : Memory_Type_Type)
       return PDPT_Entry_Type renames Create_PDPT;
 
    -------------------------------------------------------------------------
@@ -88,32 +146,15 @@ is
 
    -------------------------------------------------------------------------
 
+   function Create_PT is new Create_Map_Entry (Entry_Type => PT_Entry_Type);
    function Create_PT_Entry
      (Address     : SK.Word64;
       Readable    : Boolean;
       Writable    : Boolean;
       Executable  : Boolean;
+      Map_Page    : Boolean;
       Ignore_PAT  : Boolean;
       Memory_Type : Memory_Type_Type)
-      return PT_Entry_Type
-   is
-      function Create_PT is new Create_Entry (Entry_Type => PT_Entry_Type);
-
-      New_Entry : PT_Entry_Type;
-   begin
-      New_Entry := Create_PT (Address    => Address,
-                              Readable   => Readable,
-                              Writable   => Writable,
-                              Executable => Executable);
-
-      if Ignore_PAT then
-         Set_Flag (E    => Table_Entry_Type (New_Entry),
-                   Flag => Ignore_PAT_Flag);
-      end if;
-
-      New_Entry := New_Entry or EPT_MT_Mapping (Memory_Type);
-
-      return New_Entry;
-   end Create_PT_Entry;
+      return PT_Entry_Type renames Create_PT;
 
 end Skp.Paging.EPT;

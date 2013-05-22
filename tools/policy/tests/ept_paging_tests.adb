@@ -20,10 +20,13 @@ is
       Addr  : constant SK.Word64     := 16#8fff10000#;
       Ref_E : constant PD_Entry_Type := 16#8fff10002#;
    begin
-      E := EPT.Create_PD_Entry (Address    => Addr,
-                                Readable   => False,
-                                Writable   => True,
-                                Executable => False);
+      E := EPT.Create_PD_Entry (Address     => Addr,
+                                Readable    => False,
+                                Writable    => True,
+                                Executable  => False,
+                                Map_Page    => False,
+                                Ignore_PAT  => False,
+                                Memory_Type => UC);
 
       Assert (Condition => E = Ref_E,
               Message   => "PD entry mismatch");
@@ -39,10 +42,13 @@ is
       Addr  : constant SK.Word64       := 16#d1324b000#;
       Ref_E : constant PDPT_Entry_Type := 16#d1324b006#;
    begin
-      E := EPT.Create_PDPT_Entry (Address    => Addr,
-                                  Readable   => False,
-                                  Writable   => True,
-                                  Executable => True);
+      E := EPT.Create_PDPT_Entry (Address     => Addr,
+                                  Readable    => False,
+                                  Writable    => True,
+                                  Executable  => True,
+                                  Map_Page    => False,
+                                  Ignore_PAT  => False,
+                                  Memory_Type => WC);
 
       Assert (Condition => E = Ref_E,
               Message   => "PDPT entry mismatch");
@@ -75,12 +81,13 @@ is
    is
       E     : PT_Entry_Type;
       Addr  : constant SK.Word64     := 16#ab763fc00000#;
-      Ref_E : constant PT_Entry_Type := 16#ab763fc00072#;
+      Ref_E : constant PT_Entry_Type := 16#ab763fc000f2#;
    begin
       E := EPT.Create_PT_Entry (Address     => Addr,
                                 Readable    => False,
                                 Writable    => True,
                                 Executable  => False,
+                                Map_Page    => True,
                                 Ignore_PAT  => True,
                                 Memory_Type => WB);
       Ada.Text_IO.Put_Line (E'Img);

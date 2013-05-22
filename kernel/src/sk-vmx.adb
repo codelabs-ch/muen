@@ -130,7 +130,7 @@ is
 
       --  Primary processor-based controls.
 
-      CPU.Get_MSR (Register => Constants.IA32_VMX_PROCBASED_CTLS,
+      CPU.Get_MSR (Register => Constants.IA32_VMX_TRUE_PROCBASED_CTLS,
                    Low      => Default0,
                    High     => Default1);
       Value := Ctls_Exec_Proc;

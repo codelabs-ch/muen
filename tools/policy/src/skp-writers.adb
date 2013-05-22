@@ -76,6 +76,7 @@ is
       Entry_Ctrls : SK.Word32;
       CR0_Value   : SK.Word64;
       CR4_Value   : SK.Word64;
+      CS_Access   : SK.Word32;
    end record;
 
    Profile_Mapping : constant array (Subject_Profile_Type) of Profile_Conf_Type
@@ -101,7 +102,8 @@ is
             or Constants.VM_CTRL_EXIT_SAVE_TIMER,
             Entry_Ctrls => Constants.VM_CTRL_ENTR_IA32E_MODE,
             CR0_Value   => 16#8001_0031#,
-            CR4_Value   => 16#0000_2020#),
+            CR4_Value   => 16#0000_2020#,
+            CS_Access   => 16#0000_a09b#),
          VM     =>
            (Exec_Pin    => Constants.VM_CTRL_EXT_INT_EXITING
             or Constants.VM_CTRL_PREEMPT_TIMER,
@@ -125,7 +127,8 @@ is
             or Constants.VM_CTRL_EXIT_SAVE_TIMER,
             Entry_Ctrls => Constants.VM_CTRL_ENTR_LOAD_EFER,
             CR0_Value   => 16#0000_0031#,
-            CR4_Value   => 16#0000_2000#));
+            CR4_Value   => 16#0000_2000#,
+            CS_Access   => 16#0000_c09b#));
 
    -------------------------------------------------------------------------
 

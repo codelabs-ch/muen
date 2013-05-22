@@ -43,6 +43,7 @@ is
    IA32_VMX_TRUE_PINBASED_CTLS  : constant := 16#48d#;
    IA32_VMX_TRUE_PROCBASED_CTLS : constant := 16#48e#;
    IA32_VMX_TRUE_EXIT_CTLS      : constant := 16#48f#;
+   IA32_VMX_TRUE_ENTRY_CTLS     : constant := 16#490#;
 
    ----------
    -- VMCS --

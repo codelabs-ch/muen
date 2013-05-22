@@ -194,7 +194,7 @@ is
 
       --  VM-entry controls.
 
-      CPU.Get_MSR (Register => Constants.IA32_VMX_ENTRY_CTLS,
+      CPU.Get_MSR (Register => Constants.IA32_VMX_TRUE_ENTRY_CTLS,
                    Low      => Default0,
                    High     => Default1);
       Value := Ctls_Entry;

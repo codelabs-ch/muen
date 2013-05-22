@@ -111,10 +111,17 @@ is
      (PML4_Address : SK.Word64;
       EPT_Pointer  : SK.Word64;
       CR0_Value    : SK.Word64;
-      CR4_Value    : SK.Word64);
+      CR4_Value    : SK.Word64;
+      CS_Access    : SK.Word32);
    --# global
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from *, PML4_Address, EPT_Pointer, CR0_Value, CR4_Value;
+   --#    X86_64.State from
+   --#       *,
+   --#       PML4_Address,
+   --#       EPT_Pointer,
+   --#       CR0_Value,
+   --#       CR4_Value,
+   --#       CS_Access;
 
 end SK.VMX;

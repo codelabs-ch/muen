@@ -260,7 +260,8 @@ is
      (PML4_Address : SK.Word64;
       EPT_Pointer  : SK.Word64;
       CR0_Value    : SK.Word64;
-      CR4_Value    : SK.Word64)
+      CR4_Value    : SK.Word64;
+      CS_Access    : SK.Word32)
    is
    begin
       VMCS_Write (Field => Constants.VMCS_LINK_POINTER,
@@ -289,7 +290,7 @@ is
                   Value => SK.Word64 (SK.Byte'Last));
 
       VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_CS,
-                  Value => 16#a09b#);
+                  Value => SK.Word64 (CS_Access));
       VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_DS,
                   Value => 16#c093#);
       VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_ES,

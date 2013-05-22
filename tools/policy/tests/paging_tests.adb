@@ -19,15 +19,13 @@ is
       Ref_E : constant PD_Entry_Type := 16#8000fffc800f000b#;
    begin
       E := Create_PD_Entry
-        (Address       => Addr,
-         Writable      => True,
-         User_Access   => False,
-         Writethrough  => True,
-         Cache_Disable => False,
-         Map_Page      => False,
-         Global        => False,
-         PAT           => False,
-         Exec_Disable  => True);
+        (Address      => Addr,
+         Writable     => True,
+         User_Access  => False,
+         Map_Page     => False,
+         Global       => False,
+         Memory_Type  => WC,
+         Exec_Disable => True);
 
       Assert (Condition => E = Ref_E,
               Message   => "PD entry mismatch");
@@ -44,15 +42,13 @@ is
       Ref_E : constant PDPT_Entry_Type := 16#8000002b3c00400b#;
    begin
       E := Create_PDPT_Entry
-        (Address       => Addr,
-         Writable      => True,
-         User_Access   => False,
-         Writethrough  => True,
-         Cache_Disable => False,
-         Map_Page      => False,
-         Global        => False,
-         PAT           => False,
-         Exec_Disable  => True);
+        (Address      => Addr,
+         Writable     => True,
+         User_Access  => False,
+         Map_Page     => False,
+         Global       => False,
+         Memory_Type  => WC,
+         Exec_Disable => True);
 
       Assert (Condition => E = Ref_E,
               Message   => "PDPT entry mismatch");
@@ -91,14 +87,12 @@ is
       Ref_E : constant PT_Entry_Type := 16#100043f10b#;
    begin
       E := Create_PT_Entry
-        (Address       => Addr,
-         Writable      => True,
-         User_Access   => False,
-         Writethrough  => True,
-         Cache_Disable => False,
-         Global        => True,
-         PAT           => False,
-         Exec_Disable  => False);
+        (Address      => Addr,
+         Writable     => True,
+         User_Access  => False,
+         Global       => True,
+         Memory_Type  => WC,
+         Exec_Disable => False);
 
       Assert (Condition => E = Ref_E,
               Message   => "PT entry mismatch");

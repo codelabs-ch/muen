@@ -46,15 +46,13 @@ is
    --  Create a new PDPT entry with specified attributes. The map page
    --  parameter specifies if the entry maps a 1 GB page.
    function Create_PDPT_Entry
-     (Address       : SK.Word64;
-      Writable      : Boolean;
-      User_Access   : Boolean;
-      Writethrough  : Boolean;
-      Cache_Disable : Boolean;
-      Map_Page      : Boolean;
-      Global        : Boolean;
-      PAT           : Boolean;
-      Exec_Disable  : Boolean)
+     (Address      : SK.Word64;
+      Writable     : Boolean;
+      User_Access  : Boolean;
+      Map_Page     : Boolean;
+      Global       : Boolean;
+      Memory_Type  : Memory_Type_Type;
+      Exec_Disable : Boolean)
       return PDPT_Entry_Type;
 
    --  Returns address pointed to by the given entry.
@@ -73,15 +71,13 @@ is
    --  Create a new PD entry with specified attributes. The map page parameter
    --  specifies if the entry maps a 2 MB page.
    function Create_PD_Entry
-     (Address       : SK.Word64;
-      Writable      : Boolean;
-      User_Access   : Boolean;
-      Writethrough  : Boolean;
-      Cache_Disable : Boolean;
-      Map_Page      : Boolean;
-      Global        : Boolean;
-      PAT           : Boolean;
-      Exec_Disable  : Boolean)
+     (Address      : SK.Word64;
+      Writable     : Boolean;
+      User_Access  : Boolean;
+      Map_Page     : Boolean;
+      Global       : Boolean;
+      Memory_Type  : Memory_Type_Type;
+      Exec_Disable : Boolean)
       return PD_Entry_Type;
 
    --  Returns address pointed to by the given entry.
@@ -99,14 +95,12 @@ is
 
    --  Create a new PT entry with specified attributes.
    function Create_PT_Entry
-     (Address       : SK.Word64;
-      Writable      : Boolean;
-      User_Access   : Boolean;
-      Writethrough  : Boolean;
-      Cache_Disable : Boolean;
-      Global        : Boolean;
-      PAT           : Boolean;
-      Exec_Disable  : Boolean)
+     (Address      : SK.Word64;
+      Writable     : Boolean;
+      User_Access  : Boolean;
+      Global       : Boolean;
+      Memory_Type  : Memory_Type_Type;
+      Exec_Disable : Boolean)
       return PT_Entry_Type;
 
    --  Returns address pointed to by the given entry.

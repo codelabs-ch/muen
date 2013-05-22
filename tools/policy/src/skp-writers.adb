@@ -63,20 +63,6 @@ is
    --  Return N number of indentation spaces.
    function Indent (N : Positive := 1) return String;
 
-   type PAT_Entry is record
-      PAT : Boolean;
-      PCD : Boolean;
-      PWT : Boolean;
-   end record;
-
-   --  Memory type to PAT entry mapping.
-   PAT_Mapping : constant array (Memory_Type_Type) of PAT_Entry :=
-     (UC => (PAT => False, PCD => False, PWT => False),
-      WC => (PAT => False, PCD => False, PWT => True),
-      WT => (PAT => False, PCD => True,  PWT => False),
-      WP => (PAT => False, PCD => True,  PWT => True),
-      WB => (PAT => True,  PCD => False, PWT => False));
-
    type VMX_Controls_Type is record
       Exec_Pin    : SK.Word32;
       Exec_Proc   : SK.Word32;
@@ -312,16 +298,14 @@ is
                case Profile is
                   when Native =>
                      PDPT (Idx) := Paging.Create_PDPT_Entry
-                       (Address       => PD_Addr +
+                       (Address      => PD_Addr +
                           (SK.Word64 (Idx) - 1) * SK.Page_Size,
-                        Writable      => True,
-                        User_Access   => True,
-                        Writethrough  => True,
-                        Cache_Disable => False,
-                        Map_Page      => False,
-                        Global        => False,
-                        PAT           => False,
-                        Exec_Disable  => False);
+                        Writable     => True,
+                        User_Access  => True,
+                        Map_Page     => False,
+                        Global       => False,
+                        Memory_Type  => R.Memory_Type,
+                        Exec_Disable => False);
                   when VM =>
                      PDPT (Idx) := Paging.EPT.Create_PDPT_Entry
                        (Address    => PD_Addr +
@@ -338,16 +322,14 @@ is
                case Profile is
                   when Native =>
                      PD (Idx) := Paging.Create_PD_Entry
-                       (Address       => PT_Addr +
+                       (Address      => PT_Addr +
                           (SK.Word64 (Idx) - 1) * SK.Page_Size,
-                        Writable      => True,
-                        User_Access   => True,
-                        Writethrough  => True,
-                        Cache_Disable => False,
-                        Map_Page      => False,
-                        Global        => False,
-                        PAT           => False,
-                        Exec_Disable  => False);
+                        Writable     => True,
+                        User_Access  => True,
+                        Map_Page     => False,
+                        Global       => False,
+                        Memory_Type  => R.Memory_Type,
+                        Exec_Disable => False);
                   when VM =>
                      PD (Idx) := Paging.EPT.Create_PD_Entry
                        (Address    => PT_Addr +
@@ -364,14 +346,12 @@ is
                case Profile is
                   when Native =>
                      PT (Idx) := Paging.Create_PT_Entry
-                       (Address       => Physical_Addr,
-                        Writable      => R.Writable,
-                        User_Access   => True,
-                        Writethrough  => PAT_Mapping (R.Memory_Type).PWT,
-                        Cache_Disable => PAT_Mapping (R.Memory_Type).PCD,
-                        Global        => False,
-                        PAT           => PAT_Mapping (R.Memory_Type).PAT,
-                        Exec_Disable  => not R.Executable);
+                       (Address      => Physical_Addr,
+                        Writable     => R.Writable,
+                        User_Access  => True,
+                        Global       => False,
+                        Memory_Type  => R.Memory_Type,
+                        Exec_Disable => not R.Executable);
                   when VM =>
                      PT (Idx) := Paging.EPT.Create_PT_Entry
                        (Address     => Physical_Addr,

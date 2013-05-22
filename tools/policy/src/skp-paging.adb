@@ -12,6 +12,20 @@ is
    PD_PAT_Flag    : constant := 12;
    NXE_Flag       : constant := 63;
 
+   type PAT_Entry is record
+      PAT : Boolean;
+      PCD : Boolean;
+      PWT : Boolean;
+   end record;
+
+   --  Memory type to PAT entry mapping.
+   PAT_Mapping : constant array (Memory_Type_Type) of PAT_Entry :=
+     (UC => (PAT => False, PCD => False, PWT => False),
+      WC => (PAT => False, PCD => False, PWT => True),
+      WT => (PAT => False, PCD => True,  PWT => False),
+      WP => (PAT => False, PCD => True,  PWT => True),
+      WB => (PAT => True,  PCD => False, PWT => False));
+
    --  PDPTE address range is bits 30 .. 47; entry maps a 1 GB page.
    PDPT_Address_Mask : constant PDPT_Entry_Type := 16#0000ffffc0000000#;
 
@@ -46,15 +60,13 @@ is
    generic
       type Entry_Type is new Directory_Entry_Type;
    function Create_Directory_Entry
-     (Address       : SK.Word64;
-      Writable      : Boolean;
-      User_Access   : Boolean;
-      Writethrough  : Boolean;
-      Cache_Disable : Boolean;
-      Map_Page      : Boolean;
-      Global        : Boolean;
-      PAT           : Boolean;
-      Exec_Disable  : Boolean)
+     (Address      : SK.Word64;
+      Writable     : Boolean;
+      User_Access  : Boolean;
+      Map_Page     : Boolean;
+      Global       : Boolean;
+      Memory_Type  : Memory_Type_Type;
+      Exec_Disable : Boolean)
       return Entry_Type;
 
    --  Returns the physical address the table entry is pointing to.
@@ -63,15 +75,13 @@ is
    -------------------------------------------------------------------------
 
    function Create_Directory_Entry
-     (Address       : SK.Word64;
-      Writable      : Boolean;
-      User_Access   : Boolean;
-      Writethrough  : Boolean;
-      Cache_Disable : Boolean;
-      Map_Page      : Boolean;
-      Global        : Boolean;
-      PAT           : Boolean;
-      Exec_Disable  : Boolean)
+     (Address      : SK.Word64;
+      Writable     : Boolean;
+      User_Access  : Boolean;
+      Map_Page     : Boolean;
+      Global       : Boolean;
+      Memory_Type  : Memory_Type_Type;
+      Exec_Disable : Boolean)
       return Entry_Type
    is
       function Create_DE is new Create_Entry
@@ -82,15 +92,15 @@ is
       DE := Create_DE (Address       => Address,
                        Writable      => Writable,
                        User_Access   => User_Access,
-                       Writethrough  => Writethrough,
-                       Cache_Disable => Cache_Disable,
+                       Writethrough  => PAT_Mapping (Memory_Type).PWT,
+                       Cache_Disable => PAT_Mapping (Memory_Type).PCD,
                        Exec_Disable  => Exec_Disable);
 
       if Map_Page then
          Set_Flag (E    => DE,
                    Flag => Page_Size_Flag);
 
-         if PAT then
+         if PAT_Mapping (Memory_Type).PAT then
             Set_Flag (E    => DE,
                       Flag => PD_PAT_Flag);
          end if;
@@ -155,15 +165,13 @@ is
    function Create_PD is new Create_Directory_Entry
      (Entry_Type => PD_Entry_Type);
    function Create_PD_Entry
-     (Address       : SK.Word64;
-      Writable      : Boolean;
-      User_Access   : Boolean;
-      Writethrough  : Boolean;
-      Cache_Disable : Boolean;
-      Map_Page      : Boolean;
-      Global        : Boolean;
-      PAT           : Boolean;
-      Exec_Disable  : Boolean)
+     (Address      : SK.Word64;
+      Writable     : Boolean;
+      User_Access  : Boolean;
+      Map_Page     : Boolean;
+      Global       : Boolean;
+      Memory_Type  : Memory_Type_Type;
+      Exec_Disable : Boolean)
       return PD_Entry_Type renames Create_PD;
 
    -------------------------------------------------------------------------
@@ -171,15 +179,13 @@ is
    function Create_PDPT is new Create_Directory_Entry
      (Entry_Type => PDPT_Entry_Type);
    function Create_PDPT_Entry
-     (Address       : SK.Word64;
-      Writable      : Boolean;
-      User_Access   : Boolean;
-      Writethrough  : Boolean;
-      Cache_Disable : Boolean;
-      Map_Page      : Boolean;
-      Global        : Boolean;
-      PAT           : Boolean;
-      Exec_Disable  : Boolean)
+     (Address      : SK.Word64;
+      Writable     : Boolean;
+      User_Access  : Boolean;
+      Map_Page     : Boolean;
+      Global       : Boolean;
+      Memory_Type  : Memory_Type_Type;
+      Exec_Disable : Boolean)
       return PDPT_Entry_Type renames Create_PDPT;
 
    -------------------------------------------------------------------------
@@ -197,14 +203,12 @@ is
    -------------------------------------------------------------------------
 
    function Create_PT_Entry
-     (Address       : SK.Word64;
-      Writable      : Boolean;
-      User_Access   : Boolean;
-      Writethrough  : Boolean;
-      Cache_Disable : Boolean;
-      Global        : Boolean;
-      PAT           : Boolean;
-      Exec_Disable  : Boolean)
+     (Address      : SK.Word64;
+      Writable     : Boolean;
+      User_Access  : Boolean;
+      Global       : Boolean;
+      Memory_Type  : Memory_Type_Type;
+      Exec_Disable : Boolean)
       return PT_Entry_Type
    is
       function Create_PT is new Create_Entry (Entry_Type => PT_Entry_Type);
@@ -214,11 +218,11 @@ is
       PTE := Create_PT (Address       => Address,
                         Writable      => Writable,
                         User_Access   => User_Access,
-                        Writethrough  => Writethrough,
-                        Cache_Disable => Cache_Disable,
+                        Writethrough  => PAT_Mapping (Memory_Type).PWT,
+                        Cache_Disable => PAT_Mapping (Memory_Type).PCD,
                         Exec_Disable  => Exec_Disable);
 
-      if PAT then
+      if PAT_Mapping (Memory_Type).PAT then
          Set_Flag (E    => Table_Entry_Type (PTE),
                    Flag => PTE_PAT_Flag);
       end if;

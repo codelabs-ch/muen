@@ -34,7 +34,7 @@
 		<subject id="1" name="subject1" profile="vm" cpu="1" pml4_address="1f4000" io_bitmap_address="1b0000" msr_bitmap_address="910000">
 			&subj_state;
 			<memory_layout>
-				<memory_region physical_address="250000" virtual_address="0" size="12k" alignment="4k" writable="true" executable="true" memory_type="UC"/>
+				<memory_region physical_address="40000000" virtual_address="0" size="4g" alignment="1g" writable="true" executable="true" memory_type="UC"/>
 			</memory_layout>
 			<binary name="subject1" physical_address="226000"/>
 			<device name="vga"/>

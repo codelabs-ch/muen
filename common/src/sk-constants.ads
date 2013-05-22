@@ -40,6 +40,7 @@ is
    IA32_VMX_CR4_FIXED0          : constant := 16#488#;
    IA32_VMX_CR4_FIXED1          : constant := 16#489#;
    IA32_VMX_PROCBASED_CTLS2     : constant := 16#48b#;
+   IA32_VMX_TRUE_PINBASED_CTLS  : constant := 16#48d#;
    IA32_VMX_TRUE_PROCBASED_CTLS : constant := 16#48e#;
 
    ----------

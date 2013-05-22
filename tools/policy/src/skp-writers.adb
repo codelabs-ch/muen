@@ -388,8 +388,8 @@ is
                      PT (Idx) := Paging.EPT.Create_PT_Entry
                        (Address     => Physical_Addr,
                         Readable    => True,
-                        Writable    => True,
-                        Executable  => True,
+                        Writable    => R.Writable,
+                        Executable  => R.Executable,
                         Map_Page    => True,
                         Ignore_PAT  => True,
                         Memory_Type => R.Memory_Type);

@@ -326,12 +326,17 @@ is
          end loop;
 
          for Idx in Paging.Table_Range range PD_Idx_Start .. PD_Idx_End loop
+            if Is_PD_Page then
+               PT_Addr := R.Physical_Address + SK.Word64 (Idx) * PD_Page_Size;
+            else
+               PT_Addr := PT_Addr            + SK.Word64 (Idx) * SK.Page_Size;
+            end if;
+
             if PD (Idx) = Paging.PD_Null_Entry then
                case Profile is
                   when Native =>
                      PD (Idx) := Paging.Create_PD_Entry
-                       (Address      => PT_Addr +
-                          SK.Word64 (Idx) * SK.Page_Size,
+                       (Address      => PT_Addr,
                         Writable     => not Is_PD_Page or R.Writable,
                         User_Access  => True,
                         Map_Page     => Is_PD_Page,
@@ -340,13 +345,17 @@ is
                         Exec_Disable => Is_PD_Page and not R.Executable);
                   when VM =>
                      PD (Idx) := Paging.EPT.Create_PD_Entry
-                       (Address    => PT_Addr + SK.Word64 (Idx) * SK.Page_Size,
+                       (Address    => PT_Addr,
                         Readable   => True,
                         Writable   => not Is_PD_Page or R.Writable,
                         Executable => not Is_PD_Page or R.Executable);
                end case;
             end if;
          end loop;
+
+         if Is_PD_Page then
+            return;
+         end if;
 
          for Idx in Paging.Table_Range range PT_Idx_Start .. PT_Idx_End loop
             if PT (Idx) = Paging.PT_Null_Entry then

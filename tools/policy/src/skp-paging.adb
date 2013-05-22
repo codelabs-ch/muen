@@ -262,13 +262,10 @@ is
    is
       use type SK.Word64;
    begin
-
-      --  Add 1 since the table range starts at 1 instead of 0.
-
-      PML4_Index := Table_Range ((Address and PML4_Index_Mask) / 2 ** 39 + 1);
-      PDPT_Index := Table_Range ((Address and PDPT_Index_Mask) / 2 ** 30 + 1);
-      PD_Index   := Table_Range ((Address and PD_Index_Mask) / 2 ** 21 + 1);
-      PT_Index   := Table_Range ((Address and PT_Index_Mask) / 2 ** 12 + 1);
+      PML4_Index := Table_Range ((Address and PML4_Index_Mask) / 2 ** 39);
+      PDPT_Index := Table_Range ((Address and PDPT_Index_Mask) / 2 ** 30);
+      PD_Index   := Table_Range ((Address and PD_Index_Mask) / 2 ** 21);
+      PT_Index   := Table_Range ((Address and PT_Index_Mask) / 2 ** 12);
    end Get_Indexes;
 
    -------------------------------------------------------------------------

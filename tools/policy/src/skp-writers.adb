@@ -271,9 +271,11 @@ is
                              PD_Index   => PD_Idx_End,
                              PT_Index   => PT_Idx_End);
 
-         PDPT_Addr := Pml4_Address + SK.Word64 (PML4_Idx_End) * SK.Page_Size;
-         PD_Addr   := PDPT_Addr    + SK.Word64 (PDPT_Idx_End) * SK.Page_Size;
-         PT_Addr   := PD_Addr      + SK.Word64 (PD_Idx_End)   * SK.Page_Size;
+         PDPT_Addr := Pml4_Address + (SK.Word64 (PML4_Idx_End) + 1)
+           * SK.Page_Size;
+         PD_Addr   := PDPT_Addr + (SK.Word64 (PDPT_Idx_End) + 1)
+           * SK.Page_Size;
+         PT_Addr   := PD_Addr + (SK.Word64 (PD_Idx_End) + 1) * SK.Page_Size;
 
          for Idx in Paging.Table_Range range PML4_Idx_Start .. PML4_Idx_End
          loop
@@ -282,7 +284,7 @@ is
                   when Native =>
                      PML4 (Idx) := Paging.Create_PML4_Entry
                        (Address       => PDPT_Addr +
-                          (SK.Word64 (Idx) - 1) * SK.Page_Size,
+                          SK.Word64 (Idx) * SK.Page_Size,
                         Writable      => True,
                         User_Access   => True,
                         Writethrough  => True,
@@ -291,7 +293,7 @@ is
                   when VM =>
                      PML4 (Idx) := Paging.EPT.Create_PML4_Entry
                        (Address    => PDPT_Addr +
-                          (SK.Word64 (Idx) - 1) * SK.Page_Size,
+                          SK.Word64 (Idx) * SK.Page_Size,
                         Readable   => True,
                         Writable   => True,
                         Executable => True);
@@ -306,7 +308,7 @@ is
                   when Native =>
                      PDPT (Idx) := Paging.Create_PDPT_Entry
                        (Address      => PD_Addr +
-                          (SK.Word64 (Idx) - 1) * SK.Page_Size,
+                          SK.Word64 (Idx) * SK.Page_Size,
                         Writable     => not Is_PDPT_Page or R.Writable,
                         User_Access  => True,
                         Map_Page     => Is_PDPT_Page,
@@ -315,8 +317,7 @@ is
                         Exec_Disable => Is_PDPT_Page and not R.Executable);
                   when VM =>
                      PDPT (Idx) := Paging.EPT.Create_PDPT_Entry
-                       (Address    => PD_Addr +
-                          (SK.Word64 (Idx) - 1) * SK.Page_Size,
+                       (Address    => PD_Addr + SK.Word64 (Idx) * SK.Page_Size,
                         Readable   => True,
                         Writable   => not Is_PDPT_Page or R.Writable,
                         Executable => not Is_PDPT_Page or R.Executable);
@@ -330,7 +331,7 @@ is
                   when Native =>
                      PD (Idx) := Paging.Create_PD_Entry
                        (Address      => PT_Addr +
-                          (SK.Word64 (Idx) - 1) * SK.Page_Size,
+                          SK.Word64 (Idx) * SK.Page_Size,
                         Writable     => not Is_PD_Page or R.Writable,
                         User_Access  => True,
                         Map_Page     => Is_PD_Page,
@@ -339,8 +340,7 @@ is
                         Exec_Disable => Is_PD_Page and not R.Executable);
                   when VM =>
                      PD (Idx) := Paging.EPT.Create_PD_Entry
-                       (Address    => PT_Addr +
-                          (SK.Word64 (Idx) - 1) * SK.Page_Size,
+                       (Address    => PT_Addr + SK.Word64 (Idx) * SK.Page_Size,
                         Readable   => True,
                         Writable   => not Is_PD_Page or R.Writable,
                         Executable => not Is_PD_Page or R.Executable);

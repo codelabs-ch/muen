@@ -111,13 +111,13 @@ is
                    PDPT_Index => PDPT,
                    PD_Index   => PD,
                    PT_Index   => PT);
-      Assert (Condition => PML4 = 1,
+      Assert (Condition => PML4 = 0,
               Message   => "PML4 index mismatch (1)");
-      Assert (Condition => PDPT = 1,
+      Assert (Condition => PDPT = 0,
               Message   => "PDPT index mismatch (1)");
-      Assert (Condition => PD = 1,
+      Assert (Condition => PD = 0,
               Message   => "PD index mismatch (1)");
-      Assert (Condition => PT = 1,
+      Assert (Condition => PT = 0,
               Message   => "PT index mismatch (1)");
 
       Get_Indexes (Address    => SK.Word64'Last,
@@ -139,13 +139,13 @@ is
                    PDPT_Index => PDPT,
                    PD_Index   => PD,
                    PT_Index   => PT);
-      Assert (Condition => PML4 = 512,
+      Assert (Condition => PML4 = 511,
               Message   => "PML4 index mismatch (3)");
-      Assert (Condition => PDPT = 289,
+      Assert (Condition => PDPT = 288,
               Message   => "PDPT index mismatch (3)");
-      Assert (Condition => PD = 17,
+      Assert (Condition => PD = 16,
               Message   => "PD index mismatch (3)");
-      Assert (Condition => PT = 16,
+      Assert (Condition => PT = 15,
               Message   => "PT index mismatch (3)");
    end Index_Calculation;
 

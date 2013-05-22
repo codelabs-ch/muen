@@ -7,7 +7,7 @@ is
    --  Vol. 3A, section 4.5.
 
    --  All paging structure types (PML4, PDPT, PD, PT) have 512 entries.
-   type Table_Range is range 1 .. 512;
+   type Table_Range is range 0 .. 511;
 
    --  Table entry type. Used as basis for all other entry types since they all
    --  include the same fields but interpret some in a different way. See Intel

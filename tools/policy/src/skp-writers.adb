@@ -1096,6 +1096,9 @@ is
            & Indent & "    CR4_Value          => 16#"
            & SK.Utils.To_Hex (Item => Conf.CR4_Value) & "#,"
            & ASCII.LF
+           & Indent & "    CS_Access          => 16#"
+           & SK.Utils.To_Hex (Item => Conf.CS_Access) & "#,"
+           & ASCII.LF
            & Indent & "    VMX_Controls       => VMX_Controls_Type'("
            & ASCII.LF
            & Indent (N => 3) & " Exec_Pin    =>" & Conf.Exec_Pin'Img & ","

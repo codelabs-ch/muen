@@ -22,6 +22,7 @@ is
       Entry_Point        : SK.Word64;
       CR0_Value          : SK.Word64;
       CR4_Value          : SK.Word64;
+      CS_Access          : SK.Word32;
       VMX_Controls       : VMX_Controls_Type;
       Trap_Table         : Trap_Table_Type;
       Signal_Table       : Signal_Table_Type;
@@ -41,6 +42,7 @@ is
        Entry_Point        => 16#0000000000000abc#,
        CR0_Value          => 16#0000000080010031#,
        CR4_Value          => 16#0000000000002020#,
+       CS_Access          => 16#0000a09b#,
        VMX_Controls       => VMX_Controls_Type'(
           Exec_Pin    => 65,
           Exec_Proc   => 2996411904,
@@ -72,6 +74,7 @@ is
        Entry_Point        => 16#0000000000000abc#,
        CR0_Value          => 16#0000000000000031#,
        CR4_Value          => 16#0000000000002000#,
+       CS_Access          => 16#0000c09b#,
        VMX_Controls       => VMX_Controls_Type'(
           Exec_Pin    => 65,
           Exec_Proc   => 2996313088,
@@ -91,6 +94,7 @@ is
        Entry_Point        => 16#0000000000000abc#,
        CR0_Value          => 16#0000000080010031#,
        CR4_Value          => 16#0000000000002020#,
+       CS_Access          => 16#0000a09b#,
        VMX_Controls       => VMX_Controls_Type'(
           Exec_Pin    => 65,
           Exec_Proc   => 2996411904,
@@ -187,6 +191,17 @@ is
       --# end accept;
       return Subject_Specs (Subject_Id).CR4_Value;
    end Get_CR4;
+
+   -------------------------------------------------------------------------
+
+   function Get_CS_Access (Subject_Id : Skp.Subject_Id_Type) return SK.Word32
+   is
+   begin
+      --# accept Warning, 444, "CS_Access is Word32 (obviously)";
+      --# assume Subject_Specs (Subject_Id).CS_Access in SK.Word32;
+      --# end accept;
+      return Subject_Specs (Subject_Id).CS_Access;
+   end Get_CS_Access;
 
    -------------------------------------------------------------------------
 

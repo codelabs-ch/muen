@@ -183,7 +183,7 @@ is
 
       --  VM-exit controls.
 
-      CPU.Get_MSR (Register => Constants.IA32_VMX_EXIT_CTLS,
+      CPU.Get_MSR (Register => Constants.IA32_VMX_TRUE_EXIT_CTLS,
                    Low      => Default0,
                    High     => Default1);
       Value := Ctls_Exit;

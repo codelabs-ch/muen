@@ -21,6 +21,11 @@ is
 
    Policy_File : constant String := "policy.h";
 
+   --  A PDPT entry maps a 1 GB page.
+   PDPT_Page_Size : constant := 1 * 2 ** 30;
+   --  A PD entry maps a 2 MB page.
+   PD_Page_Size   : constant := 2 * 2 ** 20;
+
    --  Create paging structures from given memory layout and write them to the
    --  specified file. The PML4 address parameter specifies the physical start
    --  address of the PML4 paging structure. Depending on the given profile
@@ -252,6 +257,8 @@ is
          Physical_Addr : SK.Word64          := R.Physical_Address;
          Virt_Start    : constant SK.Word64 := R.Virtual_Address;
          Virt_End      : constant SK.Word64 := Virt_Start + R.Size - 1;
+         Is_PDPT_Page  : constant Boolean   := R.Alignment = PDPT_Page_Size;
+         Is_PD_Page    : constant Boolean   := R.Alignment = PD_Page_Size;
       begin
          Paging.Get_Indexes (Address    => Virt_Start,
                              PML4_Index => PML4_Idx_Start,
@@ -300,19 +307,19 @@ is
                      PDPT (Idx) := Paging.Create_PDPT_Entry
                        (Address      => PD_Addr +
                           (SK.Word64 (Idx) - 1) * SK.Page_Size,
-                        Writable     => True,
+                        Writable     => not Is_PDPT_Page or R.Writable,
                         User_Access  => True,
-                        Map_Page     => False,
+                        Map_Page     => Is_PDPT_Page,
                         Global       => False,
                         Memory_Type  => R.Memory_Type,
-                        Exec_Disable => False);
+                        Exec_Disable => Is_PDPT_Page and not R.Executable);
                   when VM =>
                      PDPT (Idx) := Paging.EPT.Create_PDPT_Entry
                        (Address    => PD_Addr +
                           (SK.Word64 (Idx) - 1) * SK.Page_Size,
                         Readable   => True,
-                        Writable   => True,
-                        Executable => True);
+                        Writable   => not Is_PDPT_Page or R.Writable,
+                        Executable => not Is_PDPT_Page or R.Executable);
                end case;
             end if;
          end loop;
@@ -324,19 +331,19 @@ is
                      PD (Idx) := Paging.Create_PD_Entry
                        (Address      => PT_Addr +
                           (SK.Word64 (Idx) - 1) * SK.Page_Size,
-                        Writable     => True,
+                        Writable     => not Is_PD_Page or R.Writable,
                         User_Access  => True,
-                        Map_Page     => False,
+                        Map_Page     => Is_PD_Page,
                         Global       => False,
                         Memory_Type  => R.Memory_Type,
-                        Exec_Disable => False);
+                        Exec_Disable => Is_PD_Page and not R.Executable);
                   when VM =>
                      PD (Idx) := Paging.EPT.Create_PD_Entry
                        (Address    => PT_Addr +
                           (SK.Word64 (Idx) - 1) * SK.Page_Size,
                         Readable   => True,
-                        Writable   => True,
-                        Executable => True);
+                        Writable   => not Is_PD_Page or R.Writable,
+                        Executable => not Is_PD_Page or R.Executable);
                end case;
             end if;
          end loop;

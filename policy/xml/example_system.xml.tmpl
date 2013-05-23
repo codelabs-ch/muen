@@ -114,6 +114,9 @@
 				<memory_region physical_address="342000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
 			</memory_layout>
 			<binary name="sm" physical_address="337000"/>
+			<signal_table>
+				<entry kind="handover" signal="7" dst_subject="xv6"/>
+			</signal_table>
 		</subject>
 
 		<subject id="7" name="xv6" profile="vm" cpu="2" pml4_address="500000" io_bitmap_address="504000" msr_bitmap_address="506000">

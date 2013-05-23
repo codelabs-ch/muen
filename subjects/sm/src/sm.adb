@@ -3,6 +3,7 @@ with System.Machine_Code;
 with SK.CPU;
 with SK.Console;
 with SK.Console_VGA;
+with SK.Hypercall;
 
 with Skp;
 
@@ -12,6 +13,8 @@ with Sm_Kernel_Iface;
 
 procedure Sm
 is
+   use type SK.Word64;
+
    package SKI renames Sm_Kernel_Iface;
 
    subtype Width_Type  is Natural range 1 .. 80;
@@ -37,85 +40,103 @@ begin
    System.Machine_Code.Asm
      (Template => "sti",
       Volatile => True);
-   SK.CPU.Hlt;
-
-   Id    := Idt.Current_Subject;
-   State := SKI.Get_Subject_State (Id => Id);
-
-   Text_IO.New_Line;
-   Text_IO.Put_String (Item => "Subject ");
-   Text_IO.Put_Byte   (Item => SK.Byte (Id));
-   Text_IO.Put_String (Item => " EXIT (");
-   Text_IO.Put_Word16 (Item => SK.Word16 (State.Exit_Reason));
-   Text_IO.Put_String (Item => ":");
-   Text_IO.Put_Word32 (Item => SK.Word32 (State.Exit_Qualification));
-   Text_IO.Put_String (Item => ":");
-   Text_IO.Put_Word32 (Item => SK.Word32 (State.Interrupt_Info));
-   Text_IO.Put_Line   (Item => ")");
-
-   Text_IO.Put_String ("RIP: ");
-   Text_IO.Put_Word64 (Item => State.RIP);
-   Text_IO.Put_String (" CS : ");
-   Text_IO.Put_Word16 (Item => SK.Word16 (State.CS));
-   Text_IO.Put_String (" RFLAGS: ");
-   Text_IO.Put_Word32 (Item => SK.Word32 (State.RFLAGS));
-   Text_IO.New_Line;
-   Text_IO.Put_String ("RSP: ");
-   Text_IO.Put_Word64 (Item => State.RSP);
-   Text_IO.Put_String (" SS : ");
-   Text_IO.Put_Word16 (Item => SK.Word16 (State.SS));
-   Text_IO.New_Line;
-
-   Text_IO.Put_String (Item => "RAX: ");
-   Text_IO.Put_Word64 (Item => State.Regs.RAX);
-   Text_IO.Put_String (Item => " RBX: ");
-   Text_IO.Put_Word64 (Item => State.Regs.RBX);
-   Text_IO.Put_String (Item => " RCX: ");
-   Text_IO.Put_Word64 (Item => State.Regs.RCX);
-   Text_IO.New_Line;
-
-   Text_IO.Put_String (Item => "RDX: ");
-   Text_IO.Put_Word64 (Item => State.Regs.RDX);
-   Text_IO.Put_String (Item => " RSI: ");
-   Text_IO.Put_Word64 (Item => State.Regs.RSI);
-   Text_IO.Put_String (Item => " RDI: ");
-   Text_IO.Put_Word64 (Item => State.Regs.RDI);
-   Text_IO.New_Line;
-
-   Text_IO.Put_String (Item => "RBP: ");
-   Text_IO.Put_Word64 (Item => State.Regs.RBP);
-   Text_IO.Put_String (Item => " R08: ");
-   Text_IO.Put_Word64 (Item => State.Regs.R08);
-   Text_IO.Put_String (Item => " R09: ");
-   Text_IO.Put_Word64 (Item => State.Regs.R09);
-   Text_IO.New_Line;
-
-   Text_IO.Put_String (Item => "R10: ");
-   Text_IO.Put_Word64 (Item => State.Regs.R10);
-   Text_IO.Put_String (Item => " R11: ");
-   Text_IO.Put_Word64 (Item => State.Regs.R11);
-   Text_IO.Put_String (Item => " R12: ");
-   Text_IO.Put_Word64 (Item => State.Regs.R12);
-   Text_IO.New_Line;
-
-   Text_IO.Put_String (Item => "R13: ");
-   Text_IO.Put_Word64 (Item => State.Regs.R13);
-   Text_IO.Put_String (Item => " R14: ");
-   Text_IO.Put_Word64 (Item => State.Regs.R14);
-   Text_IO.Put_String (Item => " R15: ");
-   Text_IO.Put_Word64 (Item => State.Regs.R15);
-   Text_IO.New_Line;
-
-   Text_IO.Put_String (Item => "CR0: ");
-   Text_IO.Put_Word64 (Item => State.CR0);
-   Text_IO.Put_String (Item => " CR3: ");
-   Text_IO.Put_Word64 (Item => State.CR3);
-   Text_IO.Put_String (Item => " CR4: ");
-   Text_IO.Put_Word64 (Item => State.CR4);
-   Text_IO.New_Line;
 
    loop
       SK.CPU.Hlt;
-   end loop;
 
+      Id    := Idt.Current_Subject;
+      State := SKI.Get_Subject_State (Id => Id);
+
+      if State.Exit_Reason = 30 then
+         Text_IO.Put_String (Item => "Subject ");
+         Text_IO.Put_Byte   (Item => SK.Byte (Id));
+         Text_IO.Put_String (Item => ": I/O instruction on port ");
+         Text_IO.Put_Word16
+           (Item => SK.Word16 (State.Exit_Qualification / 2 ** 16));
+         Text_IO.New_Line;
+         State.RIP := State.RIP + State.Instruction_Len;
+         SKI.Set_Subject_State (Id    => Id,
+                                State => State);
+         SK.Hypercall.Signal (Number => SK.Byte (Id));
+      else
+         Text_IO.New_Line;
+         Text_IO.Put_String (Item => "Unhandled trap for subject ");
+         Text_IO.Put_Byte   (Item => SK.Byte (Id));
+         Text_IO.Put_String (Item => " EXIT (");
+         Text_IO.Put_Word16 (Item => SK.Word16 (State.Exit_Reason));
+         Text_IO.Put_String (Item => ":");
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.Exit_Qualification));
+         Text_IO.Put_String (Item => ":");
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.Interrupt_Info));
+         Text_IO.Put_Line   (Item => ")");
+
+         Text_IO.Put_String ("RIP: ");
+         Text_IO.Put_Word64 (Item => State.RIP);
+         Text_IO.Put_String (" CS : ");
+         Text_IO.Put_Word16 (Item => SK.Word16 (State.CS));
+         Text_IO.Put_String (" RFLAGS: ");
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.RFLAGS));
+         Text_IO.New_Line;
+         Text_IO.Put_String ("RSP: ");
+         Text_IO.Put_Word64 (Item => State.RSP);
+         Text_IO.Put_String (" SS : ");
+         Text_IO.Put_Word16 (Item => SK.Word16 (State.SS));
+         Text_IO.New_Line;
+
+         Text_IO.Put_String (Item => "RAX: ");
+         Text_IO.Put_Word64 (Item => State.Regs.RAX);
+         Text_IO.Put_String (Item => " RBX: ");
+         Text_IO.Put_Word64 (Item => State.Regs.RBX);
+         Text_IO.Put_String (Item => " RCX: ");
+         Text_IO.Put_Word64 (Item => State.Regs.RCX);
+         Text_IO.New_Line;
+
+         Text_IO.Put_String (Item => "RDX: ");
+         Text_IO.Put_Word64 (Item => State.Regs.RDX);
+         Text_IO.Put_String (Item => " RSI: ");
+         Text_IO.Put_Word64 (Item => State.Regs.RSI);
+         Text_IO.Put_String (Item => " RDI: ");
+         Text_IO.Put_Word64 (Item => State.Regs.RDI);
+         Text_IO.New_Line;
+
+         Text_IO.Put_String (Item => "RBP: ");
+         Text_IO.Put_Word64 (Item => State.Regs.RBP);
+         Text_IO.Put_String (Item => " R08: ");
+         Text_IO.Put_Word64 (Item => State.Regs.R08);
+         Text_IO.Put_String (Item => " R09: ");
+         Text_IO.Put_Word64 (Item => State.Regs.R09);
+         Text_IO.New_Line;
+
+         Text_IO.Put_String (Item => "R10: ");
+         Text_IO.Put_Word64 (Item => State.Regs.R10);
+         Text_IO.Put_String (Item => " R11: ");
+         Text_IO.Put_Word64 (Item => State.Regs.R11);
+         Text_IO.Put_String (Item => " R12: ");
+         Text_IO.Put_Word64 (Item => State.Regs.R12);
+         Text_IO.New_Line;
+
+         Text_IO.Put_String (Item => "R13: ");
+         Text_IO.Put_Word64 (Item => State.Regs.R13);
+         Text_IO.Put_String (Item => " R14: ");
+         Text_IO.Put_Word64 (Item => State.Regs.R14);
+         Text_IO.Put_String (Item => " R15: ");
+         Text_IO.Put_Word64 (Item => State.Regs.R15);
+         Text_IO.New_Line;
+
+         Text_IO.Put_String (Item => "CR0: ");
+         Text_IO.Put_Word64 (Item => State.CR0);
+         Text_IO.Put_String (Item => " CR3: ");
+         Text_IO.Put_Word64 (Item => State.CR3);
+         Text_IO.Put_String (Item => " CR4: ");
+         Text_IO.Put_Word64 (Item => State.CR4);
+         Text_IO.New_Line;
+
+         Text_IO.New_Line;
+         Text_IO.Put_Line (Item => "Halting execution");
+
+         loop
+            SK.CPU.Hlt;
+         end loop;
+      end if;
+   end loop;
 end Sm;

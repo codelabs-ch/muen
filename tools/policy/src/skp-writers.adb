@@ -75,6 +75,7 @@ is
       Exit_Ctrls  : SK.Word32;
       Entry_Ctrls : SK.Word32;
       CR0_Value   : SK.Word64;
+      CR0_Mask    : SK.Word64;
       CR4_Value   : SK.Word64;
       CS_Access   : SK.Word32;
    end record;
@@ -102,6 +103,7 @@ is
             or Constants.VM_CTRL_EXIT_SAVE_TIMER,
             Entry_Ctrls => Constants.VM_CTRL_ENTR_IA32E_MODE,
             CR0_Value   => 16#8001_0031#,
+            CR0_Mask    => 16#ffff_ffff#,
             CR4_Value   => 16#0000_2020#,
             CS_Access   => 16#0000_a09b#),
          VM     =>
@@ -127,6 +129,7 @@ is
             or Constants.VM_CTRL_EXIT_SAVE_TIMER,
             Entry_Ctrls => Constants.VM_CTRL_ENTR_LOAD_EFER,
             CR0_Value   => 16#0000_0031#,
+            CR0_Mask    => 16#7ffe_ffff#,
             CR4_Value   => 16#0000_2000#,
             CS_Access   => 16#0000_c09b#));
 

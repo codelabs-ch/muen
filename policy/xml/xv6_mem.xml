@@ -1,2 +1,2 @@
 <memory_region physical_address="0000000000507000" virtual_address="0000000000100000" size="1M" alignment="4k" writable="true" executable="true"  memory_type="WB"/>
-<memory_region physical_address="0000000000a00000" virtual_address="0000000000200000" size="512M" alignment="2M" writable="true" executable="true"  memory_type="WB"/>
+<memory_region physical_address="0000000000a00000" virtual_address="0000000000200000" size="256M" alignment="2M" writable="true" executable="true"  memory_type="WB"/>

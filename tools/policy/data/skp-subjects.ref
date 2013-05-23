@@ -21,6 +21,7 @@ is
       Stack_Address      : SK.Word64;
       Entry_Point        : SK.Word64;
       CR0_Value          : SK.Word64;
+      CR0_Mask           : SK.Word64;
       CR4_Value          : SK.Word64;
       CS_Access          : SK.Word32;
       VMX_Controls       : VMX_Controls_Type;
@@ -41,6 +42,7 @@ is
        Stack_Address      => 16#0000000000120000#,
        Entry_Point        => 16#0000000000000abc#,
        CR0_Value          => 16#0000000080010031#,
+       CR0_Mask           => 16#00000000ffffffff#,
        CR4_Value          => 16#0000000000002020#,
        CS_Access          => 16#0000a09b#,
        VMX_Controls       => VMX_Controls_Type'(
@@ -73,6 +75,7 @@ is
        Stack_Address      => 16#0000000000120000#,
        Entry_Point        => 16#0000000000000abc#,
        CR0_Value          => 16#0000000000000031#,
+       CR0_Mask           => 16#000000007ffeffff#,
        CR4_Value          => 16#0000000000002000#,
        CS_Access          => 16#0000c09b#,
        VMX_Controls       => VMX_Controls_Type'(
@@ -93,6 +96,7 @@ is
        Stack_Address      => 16#0000000000120000#,
        Entry_Point        => 16#0000000000000abc#,
        CR0_Value          => 16#0000000080010031#,
+       CR0_Mask           => 16#00000000ffffffff#,
        CR4_Value          => 16#0000000000002020#,
        CS_Access          => 16#0000a09b#,
        VMX_Controls       => VMX_Controls_Type'(
@@ -180,6 +184,17 @@ is
       --# end accept;
       return Subject_Specs (Subject_Id).CR0_Value;
    end Get_CR0;
+
+   -------------------------------------------------------------------------
+
+   function Get_CR0_Mask (Subject_Id : Skp.Subject_Id_Type) return SK.Word64
+   is
+   begin
+      --# accept Warning, 444, "CR0_Mask is Word64 (obviously)";
+      --# assume Subject_Specs (Subject_Id).CR0_Mask in SK.Word64;
+      --# end accept;
+      return Subject_Specs (Subject_Id).CR0_Mask;
+   end Get_CR0_Mask;
 
    -------------------------------------------------------------------------
 

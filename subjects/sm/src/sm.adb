@@ -70,65 +70,40 @@ begin
          Text_IO.Put_Word32 (Item => SK.Word32 (State.Interrupt_Info));
          Text_IO.Put_Line   (Item => ")");
 
-         Text_IO.Put_String ("RIP: ");
-         Text_IO.Put_Word64 (Item => State.RIP);
+         Text_IO.Put_String ("EIP: ");
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.RIP));
          Text_IO.Put_String (" CS : ");
          Text_IO.Put_Word16 (Item => SK.Word16 (State.CS));
-         Text_IO.Put_String (" RFLAGS: ");
+         Text_IO.Put_String (" EFLAGS: ");
          Text_IO.Put_Word32 (Item => SK.Word32 (State.RFLAGS));
          Text_IO.New_Line;
-         Text_IO.Put_String ("RSP: ");
-         Text_IO.Put_Word64 (Item => State.RSP);
+         Text_IO.Put_String ("ESP: ");
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.RSP));
          Text_IO.Put_String (" SS : ");
          Text_IO.Put_Word16 (Item => SK.Word16 (State.SS));
          Text_IO.New_Line;
 
-         Text_IO.Put_String (Item => "RAX: ");
-         Text_IO.Put_Word64 (Item => State.Regs.RAX);
-         Text_IO.Put_String (Item => " RBX: ");
-         Text_IO.Put_Word64 (Item => State.Regs.RBX);
-         Text_IO.Put_String (Item => " RCX: ");
-         Text_IO.Put_Word64 (Item => State.Regs.RCX);
+         Text_IO.Put_String (Item => "EAX: ");
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RAX));
+         Text_IO.Put_String (Item => " EBX: ");
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RBX));
+         Text_IO.Put_String (Item => " ECX: ");
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RCX));
+         Text_IO.Put_String (Item => " EDX: ");
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RDX));
+         Text_IO.Put_String (Item => " ESI: ");
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RSI));
          Text_IO.New_Line;
-
-         Text_IO.Put_String (Item => "RDX: ");
-         Text_IO.Put_Word64 (Item => State.Regs.RDX);
-         Text_IO.Put_String (Item => " RSI: ");
-         Text_IO.Put_Word64 (Item => State.Regs.RSI);
-         Text_IO.Put_String (Item => " RDI: ");
-         Text_IO.Put_Word64 (Item => State.Regs.RDI);
-         Text_IO.New_Line;
-
-         Text_IO.Put_String (Item => "RBP: ");
-         Text_IO.Put_Word64 (Item => State.Regs.RBP);
-         Text_IO.Put_String (Item => " R08: ");
-         Text_IO.Put_Word64 (Item => State.Regs.R08);
-         Text_IO.Put_String (Item => " R09: ");
-         Text_IO.Put_Word64 (Item => State.Regs.R09);
-         Text_IO.New_Line;
-
-         Text_IO.Put_String (Item => "R10: ");
-         Text_IO.Put_Word64 (Item => State.Regs.R10);
-         Text_IO.Put_String (Item => " R11: ");
-         Text_IO.Put_Word64 (Item => State.Regs.R11);
-         Text_IO.Put_String (Item => " R12: ");
-         Text_IO.Put_Word64 (Item => State.Regs.R12);
-         Text_IO.New_Line;
-
-         Text_IO.Put_String (Item => "R13: ");
-         Text_IO.Put_Word64 (Item => State.Regs.R13);
-         Text_IO.Put_String (Item => " R14: ");
-         Text_IO.Put_Word64 (Item => State.Regs.R14);
-         Text_IO.Put_String (Item => " R15: ");
-         Text_IO.Put_Word64 (Item => State.Regs.R15);
-         Text_IO.New_Line;
-
-         Text_IO.Put_String (Item => "CR0: ");
-         Text_IO.Put_Word64 (Item => State.CR0);
+         Text_IO.Put_String (Item => "EDI: ");
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RDI));
+         Text_IO.Put_String (Item => " EBP: ");
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RBP));
+         Text_IO.Put_String (Item => " CR0: ");
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.CR0));
          Text_IO.Put_String (Item => " CR3: ");
-         Text_IO.Put_Word64 (Item => State.CR3);
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.CR3));
          Text_IO.Put_String (Item => " CR4: ");
-         Text_IO.Put_Word64 (Item => State.CR4);
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.CR4));
          Text_IO.New_Line;
 
          Text_IO.New_Line;

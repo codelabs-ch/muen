@@ -1,9 +1,9 @@
 include ../../Makeconf
 
-all: src/kernel
+all: src/kernelmemfs
 
-src/kernel: src/*.c src/*.h src/*.S
-	@make -j$(NUM_CPUS) -C src
+src/kernelmemfs: src/*.c src/*.h src/*.S
+	@make -j$(NUM_CPUS) -C src kernelmemfs
 
 clean:
 	@make clean -C src

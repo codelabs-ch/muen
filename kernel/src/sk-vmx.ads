@@ -78,7 +78,8 @@ is
       Ctls_Exec_Proc     : SK.Word32;
       Ctls_Exec_Proc2    : SK.Word32;
       Ctls_Exit          : SK.Word32;
-      Ctls_Entry         : SK.Word32);
+      Ctls_Entry         : SK.Word32;
+      CR0_Mask           : SK.Word64);
    --# global
    --#    in out X86_64.State;
    --# derives
@@ -90,7 +91,8 @@ is
    --#       Ctls_Exit,
    --#       Ctls_Entry,
    --#       IO_Bitmap_Address,
-   --#       MSR_Bitmap_Address;
+   --#       MSR_Bitmap_Address,
+   --#       CR0_Mask;
 
    --  Setup host fields of the currently active VMCS.
    procedure VMCS_Setup_Host_Fields;

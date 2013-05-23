@@ -268,7 +268,9 @@ is
                Ctls_Exec_Proc     => Controls.Exec_Proc,
                Ctls_Exec_Proc2    => Controls.Exec_Proc2,
                Ctls_Exit          => Controls.Exit_Ctrls,
-               Ctls_Entry         => Controls.Entry_Ctrls);
+               Ctls_Entry         => Controls.Entry_Ctrls,
+               CR0_Mask           => Skp.Subjects.Get_CR0_Mask
+                 (Subject_Id => I));
             VMX.VMCS_Setup_Host_Fields;
             VMX.VMCS_Setup_Guest_Fields
               (PML4_Address => Skp.Subjects.Get_PML4_Address (Subject_Id => I),

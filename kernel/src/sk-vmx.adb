@@ -112,7 +112,8 @@ is
       Ctls_Exec_Proc     : SK.Word32;
       Ctls_Exec_Proc2    : SK.Word32;
       Ctls_Exit          : SK.Word32;
-      Ctls_Entry         : SK.Word32)
+      Ctls_Entry         : SK.Word32;
+      CR0_Mask           : SK.Word64)
    is
       Default0, Default1, Value : SK.Word32;
    begin
@@ -155,10 +156,10 @@ is
       VMCS_Write (Field => Constants.EXCEPTION_BITMAP,
                   Value => 16#ffff_ffff#);
 
-      --  Disallow write access to CR0/CR4.
+      --  Write access to CR0/CR4.
 
       VMCS_Write (Field => Constants.CR0_MASK,
-                  Value => 16#ffff_ffff#);
+                  Value => CR0_Mask);
       VMCS_Write (Field => Constants.CR4_MASK,
                   Value => 16#ffff_ffff#);
 

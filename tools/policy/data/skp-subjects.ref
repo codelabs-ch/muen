@@ -23,6 +23,7 @@ is
       CR0_Value          : SK.Word64;
       CR0_Mask           : SK.Word64;
       CR4_Value          : SK.Word64;
+      CR4_Mask           : SK.Word64;
       CS_Access          : SK.Word32;
       VMX_Controls       : VMX_Controls_Type;
       Trap_Table         : Trap_Table_Type;
@@ -44,6 +45,7 @@ is
        CR0_Value          => 16#0000000080010031#,
        CR0_Mask           => 16#00000000ffffffff#,
        CR4_Value          => 16#0000000000002020#,
+       CR4_Mask           => 16#00000000ffffffff#,
        CS_Access          => 16#0000a09b#,
        VMX_Controls       => VMX_Controls_Type'(
           Exec_Pin    => 65,
@@ -77,6 +79,7 @@ is
        CR0_Value          => 16#0000000000000031#,
        CR0_Mask           => 16#000000007ffeffff#,
        CR4_Value          => 16#0000000000002000#,
+       CR4_Mask           => 16#00000000ffffffef#,
        CS_Access          => 16#0000c09b#,
        VMX_Controls       => VMX_Controls_Type'(
           Exec_Pin    => 65,
@@ -98,6 +101,7 @@ is
        CR0_Value          => 16#0000000080010031#,
        CR0_Mask           => 16#00000000ffffffff#,
        CR4_Value          => 16#0000000000002020#,
+       CR4_Mask           => 16#00000000ffffffff#,
        CS_Access          => 16#0000a09b#,
        VMX_Controls       => VMX_Controls_Type'(
           Exec_Pin    => 65,
@@ -206,6 +210,17 @@ is
       --# end accept;
       return Subject_Specs (Subject_Id).CR4_Value;
    end Get_CR4;
+
+   -------------------------------------------------------------------------
+
+   function Get_CR4_Mask (Subject_Id : Skp.Subject_Id_Type) return SK.Word64
+   is
+   begin
+      --# accept Warning, 444, "CR4_Mask is Word64 (obviously)";
+      --# assume Subject_Specs (Subject_Id).CR4_Mask in SK.Word64;
+      --# end accept;
+      return Subject_Specs (Subject_Id).CR4_Mask;
+   end Get_CR4_Mask;
 
    -------------------------------------------------------------------------
 

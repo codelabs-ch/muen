@@ -91,6 +91,8 @@ is
 
    function Get_CR4 (Subject_Id : Skp.Subject_Id_Type) return SK.Word64;
 
+   function Get_CR4_Mask (Subject_Id : Skp.Subject_Id_Type) return SK.Word64;
+
    function Get_CS_Access (Subject_Id : Skp.Subject_Id_Type) return SK.Word32;
 
 end Skp.Subjects;

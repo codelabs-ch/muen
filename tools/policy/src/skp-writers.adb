@@ -1105,6 +1105,9 @@ is
            & Indent & "    CR4_Value          => 16#"
            & SK.Utils.To_Hex (Item => Conf.CR4_Value) & "#,"
            & ASCII.LF
+           & Indent & "    CR4_Mask           => 16#"
+           & SK.Utils.To_Hex (Item => Conf.CR4_Mask) & "#,"
+           & ASCII.LF
            & Indent & "    CS_Access          => 16#"
            & SK.Utils.To_Hex (Item => Conf.CS_Access) & "#,"
            & ASCII.LF

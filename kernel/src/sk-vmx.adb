@@ -113,7 +113,8 @@ is
       Ctls_Exec_Proc2    : SK.Word32;
       Ctls_Exit          : SK.Word32;
       Ctls_Entry         : SK.Word32;
-      CR0_Mask           : SK.Word64)
+      CR0_Mask           : SK.Word64;
+      CR4_Mask           : SK.Word64)
    is
       Default0, Default1, Value : SK.Word32;
    begin
@@ -161,7 +162,7 @@ is
       VMCS_Write (Field => Constants.CR0_MASK,
                   Value => CR0_Mask);
       VMCS_Write (Field => Constants.CR4_MASK,
-                  Value => 16#ffff_ffff#);
+                  Value => CR4_Mask);
 
       --  I/O bitmaps.
 

@@ -270,6 +270,8 @@ is
                Ctls_Exit          => Controls.Exit_Ctrls,
                Ctls_Entry         => Controls.Entry_Ctrls,
                CR0_Mask           => Skp.Subjects.Get_CR0_Mask
+                 (Subject_Id => I),
+               CR4_Mask           => Skp.Subjects.Get_CR4_Mask
                  (Subject_Id => I));
             VMX.VMCS_Setup_Host_Fields;
             VMX.VMCS_Setup_Guest_Fields

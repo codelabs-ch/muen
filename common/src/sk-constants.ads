@@ -133,6 +133,7 @@ is
 
    VM_EXIT_EXCEPTION_NMI        : constant := 0;
    VM_EXIT_EXTERNAL_INT         : constant := 1;
+   VM_EXIT_INTERRUPT_WINDOW     : constant := 7;
    VM_EXIT_HYPERCALL            : constant := 18;
    VM_EXIT_TIMER_EXPIRY         : constant := 52;
 

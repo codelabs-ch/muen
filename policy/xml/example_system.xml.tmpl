@@ -93,6 +93,9 @@
 			<binary name="vt" physical_address="297000"/>
 			<device name="vga"/>
 			<device name="keyboard"/>
+			<signal_table>
+				<entry kind="synchronous" signal="1" dst_subject="xv6" dst_vector="33"/>
+			</signal_table>
 			<msr start="802" end="802" mode="r"/>
 		</subject>
 

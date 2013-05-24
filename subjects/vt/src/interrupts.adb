@@ -67,6 +67,7 @@ is
    procedure Handle_Interrupt
    is
       use type SK.Byte;
+      use type VGA_Output.Slot_Range;
 
       Status, Data : SK.Byte;
    begin
@@ -102,8 +103,10 @@ is
                VGA_Output.Set (Slot => 6);
                Text_IO.Put_Line ("Switching to VT 6");
             when others =>
-               Kbd_Driver.Scancode := Data;
-               SK.Hypercall.Signal (Number => 1);
+               if VGA_Output.Get_Active_Slot = 4 then
+                  Kbd_Driver.Scancode := Data;
+                  SK.Hypercall.Signal (Number => 1);
+               end if;
          end case;
       end loop;
    end Handle_Interrupt;

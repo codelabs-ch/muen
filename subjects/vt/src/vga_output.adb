@@ -17,15 +17,23 @@ is
    VGA_Out : Framebuffer_Type;
    for VGA_Out'Address use System'To_Address (16#000b_8000#);
 
-   Current_Slot : Slot_Range := Slot_Range'First;
-   pragma Atomic (Current_Slot);
+   Active_Slot : Slot_Range := Slot_Range'First;
+   pragma Atomic (Active_Slot);
+
+   -------------------------------------------------------------------------
+
+   function Get_Active_Slot return Slot_Range
+   is
+   begin
+      return Active_Slot;
+   end Get_Active_Slot;
 
    -------------------------------------------------------------------------
 
    procedure Set (Slot : Slot_Range)
    is
    begin
-      Current_Slot := Slot;
+      Active_Slot := Slot;
    end Set;
 
    -------------------------------------------------------------------------
@@ -36,8 +44,8 @@ is
    begin
       loop
          for I in VGA_Out'Range loop
-            if VGA_Out (I) /= Framebuffers (Current_Slot) (I) then
-               VGA_Out (I) := Framebuffers (Current_Slot) (I);
+            if VGA_Out (I) /= Framebuffers (Active_Slot) (I) then
+               VGA_Out (I) := Framebuffers (Active_Slot) (I);
             end if;
          end loop;
       end loop;

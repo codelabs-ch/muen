@@ -40,10 +40,9 @@ begin
    System.Machine_Code.Asm
      (Template => "sti",
       Volatile => True);
+   SK.CPU.Hlt;
 
    loop
-      SK.CPU.Hlt;
-
       Id    := Idt.Current_Subject;
       State := SKI.Get_Subject_State (Id => Id);
 

@@ -554,6 +554,11 @@ is
          --  Minor frame ticks consumed, update scheduling information.
 
          Update_Scheduling_Info;
+      elsif State.Exit_Reason = Constants.VM_EXIT_INTERRUPT_WINDOW then
+
+         --  Resume subject to inject pending event.
+
+         VMX.VMCS_Set_Interrupt_Window (Value => False);
       else
          if State.Exit_Reason <= SK.Word64 (Skp.Subjects.Trap_Range'Last) then
             Handle_Trap (Current_Subject => Current_Subject,

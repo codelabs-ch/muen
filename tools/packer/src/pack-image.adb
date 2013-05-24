@@ -30,8 +30,8 @@ is
       Dst_Bin : String)
    is
    begin
-      OS.Execute (Command => Objcopy & " -O binary " & Src_Elf
-                  & " " & Dst_Bin);
+      OS.Execute (Command => Objcopy & " -O binary --set-section-flags "
+                  & ".bss=alloc,load,contents " & Src_Elf & " " & Dst_Bin);
    end To_Binary;
 
 end Pack.Image;

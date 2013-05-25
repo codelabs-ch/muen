@@ -16,6 +16,9 @@ package body SK.Scheduler
 --#    State is in New_Major, Current_Major;
 is
 
+   --  IRQ used for IPIs.
+   IPI_Vector : constant := 254;
+
    Launched_Subject_State : constant SK.Subject_State_Type
      := SK.Subject_State_Type'
        (Launched           => True,
@@ -321,6 +324,7 @@ is
    is
       Signal    : Skp.Subjects.Signal_Range;
       Sig_Entry : Skp.Subjects.Signal_Entry_Type;
+      Dst_CPU   : Skp.CPU_Range;
       Valid_Sig : Boolean;
    begin
       Valid_Sig := Subject_State.Regs.RAX <= SK.Word64
@@ -337,6 +341,13 @@ is
                Subjects.Set_Pending_Event
                  (Id     => Sig_Entry.Dst_Subject,
                   Vector => SK.Byte (Sig_Entry.Dst_Vector));
+
+               if Sig_Entry.Kind = Skp.Subjects.Synchronous then
+                  Dst_CPU := Skp.Subjects.Get_CPU_Id
+                    (Subject_Id => Sig_Entry.Dst_Subject);
+                  Apic.Send_IPI (Vector  => IPI_Vector,
+                                 Apic_Id => SK.Byte (Dst_CPU));
+               end if;
             end if;
 
             if Sig_Entry.Kind = Skp.Subjects.Handover then
@@ -389,13 +400,16 @@ is
          end if;
 
          pragma Debug
-           (Skp.Interrupts.Vector_Routing (Vector) not in Skp.Subject_Id_Type,
+           (Skp.Interrupts.Vector_Routing (Vector) not in Skp.Subject_Id_Type
+            and then Vector /= IPI_Vector,
             KC.Put_String (Item => "Spurious IRQ vector "));
          pragma Debug
-           (Skp.Interrupts.Vector_Routing (Vector) not in Skp.Subject_Id_Type,
+           (Skp.Interrupts.Vector_Routing (Vector) not in Skp.Subject_Id_Type
+            and then Vector /= IPI_Vector,
             KC.Put_Byte (Item => Vector));
          pragma Debug
-           (Skp.Interrupts.Vector_Routing (Vector) not in Skp.Subject_Id_Type,
+           (Skp.Interrupts.Vector_Routing (Vector) not in Skp.Subject_Id_Type
+            and then Vector /= IPI_Vector,
             KC.New_Line);
       end if;
 

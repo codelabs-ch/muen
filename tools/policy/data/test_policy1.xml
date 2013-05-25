@@ -25,8 +25,8 @@
 				<entry kind="external_interrupt" dst_subject="subject2" dst_vector="12"/>
 			</trap_table>
 			<signal_table>
-				<entry kind="asynchronous" signal="17" dst_subject="subject1" dst_vector="32"/>
-				<entry kind="handover"     signal="18" dst_subject="subject1"/>
+				<entry kind="asynchronous" signal="17" dst_subject="subject2" dst_vector="32"/>
+				<entry kind="handover"     signal="18" dst_subject="subject2"/>
 			</signal_table>
 			<msr start="800" end="802" mode="r"/>
 			<msr start="805" end="805" mode="rw"/>

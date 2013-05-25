@@ -48,11 +48,11 @@ is
        Signal_Table      => Signal_Table_Type'(
           17 => Signal_Entry_Type'(
             Kind        => Asynchronous,
-            Dst_Subject => 1,
+            Dst_Subject => 2,
             Dst_Vector  => 32),
           18 => Signal_Entry_Type'(
             Kind        => Handover,
-            Dst_Subject => 1,
+            Dst_Subject => 2,
             Dst_Vector  => 256),
           others => Null_Signal)),
       1 => Subject_Spec_Type'(

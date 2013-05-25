@@ -78,6 +78,9 @@ is
         (Routine => Invalid_Subj_Signal_Dst'Access,
          Name    => "Invalid subject signal table entry dst");
       T.Add_Test_Routine
+        (Routine => Invalid_Subj_Signal_Dst_CPU'Access,
+         Name    => "Invalid subject signal entry dst CPU");
+      T.Add_Test_Routine
         (Routine => Invalid_Subj_Signal_Dst_Vec'Access,
          Name    => "Invalid subject signal entry dst vector");
       T.Add_Test_Routine
@@ -573,6 +576,57 @@ is
                  & "signal table entry 0",
                  Message   => "Exception message mismatch");
    end Invalid_Subj_Signal_Dst;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Subj_Signal_Dst_CPU
+   is
+      S_Table : Signal_Table_Type;
+      P       : Policy_Type;
+   begin
+      S_Table.Insert (Key      => 0,
+                      New_Item => (Kind        => Handover,
+                                   Signal      => 0,
+                                   Dst_Subject => To_Unbounded_String ("s2"),
+                                   Dst_Vector  => 12));
+      P.Binaries.Insert (Key      => To_Unbounded_String ("bin"),
+                         New_Item => To_Unbounded_String ("path/to/bin"));
+
+      P.Hardware.Processor.Logical_CPUs := 1;
+      P.Subjects.Insert
+        (New_Item =>
+           (Id                 => 0,
+            Name               => To_Unbounded_String ("s1"),
+            CPU                => 0,
+            Pml4_Address       => 0,
+            IO_Bitmap_Address  => 0,
+            MSR_Bitmap_Address => 0,
+            Binary             => (Name   => To_Unbounded_String ("bin"),
+                                   others => 0),
+            Signal_Table       => S_Table,
+            others             => <>));
+      P.Subjects.Insert
+        (New_Item =>
+           (Id                 => 1,
+            Name               => To_Unbounded_String ("s2"),
+            CPU                => 1,
+            Pml4_Address       => 0,
+            IO_Bitmap_Address  => 0,
+            MSR_Bitmap_Address => 0,
+            Binary             => (Name   => To_Unbounded_String ("bin"),
+                                   others => 0),
+            Signal_Table       => S_Table,
+            others             => <>));
+      Validators.Validate_Subjects (P => P);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Subject s1: Invalid destination subject 's2' in handover "
+                 & "signal - runs on different CPU",
+                 Message   => "Exception message mismatch");
+   end Invalid_Subj_Signal_Dst_CPU;
 
    -------------------------------------------------------------------------
 

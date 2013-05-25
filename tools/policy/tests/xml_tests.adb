@@ -493,7 +493,7 @@ is
          Assert (Condition => S.Signal_Table.First_Element.Signal = 17,
                  Message   => "Signal mismatch");
          Assert (Condition => S.Signal_Table.First_Element.Dst_Subject
-                 = "subject1",
+                 = "subject2",
                  Message   => "Signal dst subject mismatch");
          Assert (Condition => S.Signal_Table.First_Element.Dst_Vector = 32,
                  Message   => "Signal dst vector mismatch (1)");

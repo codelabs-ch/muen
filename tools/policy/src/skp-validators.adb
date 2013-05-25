@@ -304,17 +304,18 @@ is
 
          procedure Validate_Signal_Entry (Pos : Signals_Package.Cursor)
          is
-            Sig : constant Signal_Table_Entry_Type
+            Sig    : constant Signal_Table_Entry_Type
               := Signals_Package.Element (Position => Pos);
+            Dst_Id : Integer;
          begin
             if Sig.Dst_Subject = S.Name then
                raise Validation_Error with "Reference to self in signal table "
                  & "entry" & Sig.Signal'Img;
             end if;
 
-            if Get_Id (Subjects => P.Subjects,
-                       Name     => Sig.Dst_Subject) = -1
-            then
+            Dst_Id := Get_Id (Subjects => P.Subjects,
+                              Name     => Sig.Dst_Subject);
+            if Dst_Id = -1 then
                raise Validation_Error with "Undefined destination subject '"
                  & To_String (Sig.Dst_Subject) & "' in signal table entry"
                  & Sig.Signal'Img;
@@ -323,6 +324,15 @@ is
             if Sig.Kind /= Handover and then Sig.Dst_Vector = 256 then
                raise Validation_Error with "No destination vector given in "
                  & "signal table entry" & Sig.Signal'Img;
+            end if;
+
+            if Sig.Kind = Handover and then S.CPU /= Get_CPU
+              (Subjects   => P.Subjects,
+               Subject_Id => Dst_Id)
+            then
+               raise Validation_Error with "Invalid destination subject '"
+                 & To_String (Sig.Dst_Subject) & "' in handover signal - runs"
+                 & " on different CPU";
             end if;
          end Validate_Signal_Entry;
 

@@ -19,6 +19,25 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Write given value to the ICR register of the local APIC.
+   procedure Write_ICR (Value : SK.Word64)
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *, Value;
+   is
+      Low_Dword, High_Dword : SK.Word32;
+   begin
+      Low_Dword  := SK.Word32'Mod (Value);
+      High_Dword := SK.Word32'Mod (Value / 2 ** 32);
+
+      CPU.Write_MSR (Register => MSR_X2APIC_ICR,
+                     Low      => Low_Dword,
+                     High     => High_Dword);
+   end Write_ICR;
+
+   -------------------------------------------------------------------------
+
    --  Busy-sleep for a given (scaled) period of time.
    procedure Sleep (Count : Positive)
    --# derives null from Count;
@@ -97,19 +116,13 @@ is
    procedure Start_AP_Processors
    is
    begin
-      CPU.Write_MSR (Register => MSR_X2APIC_ICR,
-                     Low      => Ipi_Init_Broadcast,
-                     High     => 0);
+      Write_ICR (Value => Ipi_Init_Broadcast);
       Sleep (Count => 10);
 
-      CPU.Write_MSR (Register => MSR_X2APIC_ICR,
-                     Low      => Ipi_Start_Broadcast,
-                     High     => 0);
+      Write_ICR (Value => Ipi_Start_Broadcast);
       Sleep (Count => 200);
 
-      CPU.Write_MSR (Register => MSR_X2APIC_ICR,
-                     Low      => Ipi_Start_Broadcast,
-                     High     => 0);
+      Write_ICR (Value => Ipi_Start_Broadcast);
       Sleep (Count => 200);
    end Start_AP_Processors;
 

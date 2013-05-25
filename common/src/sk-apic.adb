@@ -126,4 +126,17 @@ is
       Sleep (Count => 200);
    end Start_AP_Processors;
 
+   -------------------------------------------------------------------------
+
+   procedure Send_IPI
+     (Vector  : SK.Byte;
+      Apic_Id : SK.Byte)
+   is
+      ICR_Value : SK.Word64;
+   begin
+      ICR_Value := SK.Word64 (Apic_Id) * 2 ** 32;
+      ICR_Value := ICR_Value + SK.Word64 (Vector);
+      Write_ICR (Value => ICR_Value);
+   end Send_IPI;
+
 end SK.Apic;

@@ -38,4 +38,14 @@ is
    --# derives
    --#    X86_64.State from *;
 
+   --  Send Interprocessor Interrupt (IPI) with given vector to the CPU core
+   --  identified by APIC id.
+   procedure Send_IPI
+     (Vector  : SK.Byte;
+      Apic_Id : SK.Byte);
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *, Vector, Apic_Id;
+
 end SK.Apic;

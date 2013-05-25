@@ -330,20 +330,30 @@ is
 
          procedure Validate_Trap_Entry (Pos : Traps_Package.Cursor)
          is
-            Trap  : constant Trap_Table_Entry_Type := Traps_Package.Element
+            Trap   : constant Trap_Table_Entry_Type := Traps_Package.Element
               (Position => Pos);
+            Dst_Id : Integer;
          begin
             if Trap.Dst_Subject = S.Name then
                raise Validation_Error with "Reference to self in trap table "
                  & "entry " & Trap.Kind'Img;
             end if;
 
-            if Get_Id (Subjects => P.Subjects,
-                       Name     => Trap.Dst_Subject) = -1
-            then
+            Dst_Id := Get_Id (Subjects => P.Subjects,
+                              Name     => Trap.Dst_Subject);
+            if Dst_Id = -1 then
                raise Validation_Error with "Undefined destination subject '"
                  & To_String (Trap.Dst_Subject) & "' in trap table entry "
                  & Trap.Kind'Img;
+            end if;
+
+            if Get_CPU
+              (Subjects   => P.Subjects,
+               Subject_Id => Dst_Id) /= S.CPU
+            then
+               raise Validation_Error with "Invalid destination subject '"
+                 & To_String (Trap.Dst_Subject) & "' in trap table - runs on "
+                 & "different CPU";
             end if;
          end Validate_Trap_Entry;
       begin

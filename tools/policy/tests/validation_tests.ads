@@ -59,6 +59,9 @@ is
    --  Verify subject trap table entry with invalid destination subject.
    procedure Invalid_Subj_Trap_Dst;
 
+   --  Verify subject trap table entry with invalid destination subject CPU.
+   procedure Invalid_Subj_Trap_Dst_CPU;
+
    --  Verify subject with signal table entry self-reference.
    procedure Invalid_Subj_Signal_Self_Ref;
 

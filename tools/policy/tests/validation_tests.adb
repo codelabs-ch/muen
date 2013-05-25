@@ -69,6 +69,9 @@ is
         (Routine => Invalid_Subj_Trap_Dst'Access,
          Name    => "Invalid subject trap table entry dst");
       T.Add_Test_Routine
+        (Routine => Invalid_Subj_Trap_Dst_CPU'Access,
+         Name    => "Invalid subject trap table entry dst CPU");
+      T.Add_Test_Routine
         (Routine => Invalid_Subj_Signal_Self_Ref'Access,
          Name    => "Invalid subject signal table self-reference");
       T.Add_Test_Routine
@@ -693,6 +696,55 @@ is
                  & "table entry EXCEPTION_OR_NMI",
                  Message   => "Exception message mismatch");
    end Invalid_Subj_Trap_Dst;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Subj_Trap_Dst_CPU
+   is
+      T_Table : Trap_Table_Type;
+      P       : Policy_Type;
+   begin
+      T_Table.Insert (Key      => Exception_Or_NMI,
+                      New_Item => (Kind        => Exception_Or_NMI,
+                                   Dst_Subject => To_Unbounded_String ("s2"),
+                                   Dst_Vector  => 12));
+      P.Binaries.Insert (Key      => To_Unbounded_String ("bin"),
+                         New_Item => To_Unbounded_String ("path/to/bin"));
+
+      P.Hardware.Processor.Logical_CPUs := 1;
+      P.Subjects.Insert
+        (New_Item =>
+           (Id                 => 0,
+            Name               => To_Unbounded_String ("s1"),
+            CPU                => 0,
+            Pml4_Address       => 0,
+            IO_Bitmap_Address  => 0,
+            MSR_Bitmap_Address => 0,
+            Binary             => (Name   => To_Unbounded_String ("bin"),
+                                   others => 0),
+            Trap_Table         => T_Table,
+            others             => <>));
+      P.Subjects.Insert
+        (New_Item =>
+           (Id                 => 1,
+            Name               => To_Unbounded_String ("s2"),
+            CPU                => 1,
+            Pml4_Address       => 0,
+            IO_Bitmap_Address  => 0,
+            MSR_Bitmap_Address => 0,
+            Binary             => (Name   => To_Unbounded_String ("bin"),
+                                   others => 0),
+            others             => <>));
+      Validators.Validate_Subjects (P => P);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Subject s1: Invalid destination subject 's2' in trap table"
+                 & " - runs on different CPU",
+                 Message   => "Exception message mismatch");
+   end Invalid_Subj_Trap_Dst_CPU;
 
    -------------------------------------------------------------------------
 

@@ -71,6 +71,9 @@ is
    --  Verify subject signal table entry with invalid destination subject CPU.
    procedure Invalid_Subj_Signal_Dst_CPU;
 
+   --  Verify subject sync signal table entry with invalid destination CPU.
+   procedure Invalid_Subj_Sync_Signal_Dst_CPU;
+
    --  Verify subject signal table entry with invalid destination vector.
    procedure Invalid_Subj_Signal_Dst_Vec;
 

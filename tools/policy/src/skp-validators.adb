@@ -334,6 +334,15 @@ is
                  & To_String (Sig.Dst_Subject) & "' in handover signal - runs"
                  & " on different CPU";
             end if;
+
+            if Sig.Kind = Synchronous and then S.CPU = Get_CPU
+              (Subjects   => P.Subjects,
+               Subject_Id => Dst_Id)
+            then
+               raise Validation_Error with "Invalid destination subject '"
+                 & To_String (Sig.Dst_Subject) & "' in synchronous signal - "
+                 & "runs on same CPU";
+            end if;
          end Validate_Signal_Entry;
 
          -------------------------------------------------------------------

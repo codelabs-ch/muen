@@ -105,6 +105,29 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VMCS_Set_Interrupt_Window (Value : Boolean)
+   is
+      Interrupt_Window_Exit_Flag : constant SK.Word64_Pos := 2;
+
+      Cur_Flags : SK.Word64;
+   begin
+      VMCS_Read (Field => Constants.CPU_BASED_EXEC_CONTROL,
+                 Value => Cur_Flags);
+      if Value then
+         Cur_Flags := SK.Bit_Set
+           (Value => Cur_Flags,
+            Pos   => Interrupt_Window_Exit_Flag);
+      else
+         Cur_Flags := SK.Bit_Clear
+           (Value => Cur_Flags,
+            Pos   => Interrupt_Window_Exit_Flag);
+      end if;
+      VMCS_Write (Field => Constants.CPU_BASED_EXEC_CONTROL,
+                  Value => Cur_Flags);
+   end VMCS_Set_Interrupt_Window;
+
+   -------------------------------------------------------------------------
+
    procedure VMCS_Setup_Control_Fields
      (IO_Bitmap_Address  : SK.Word64;
       MSR_Bitmap_Address : SK.Word64;

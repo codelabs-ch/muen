@@ -128,4 +128,11 @@ is
    --#       CR4_Value,
    --#       CS_Access;
 
+   --  Enable/Disable interrupt-window exiting depending on the given value.
+   procedure VMCS_Set_Interrupt_Window (Value : Boolean);
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *, Value;
+
 end SK.VMX;

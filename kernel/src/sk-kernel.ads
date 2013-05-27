@@ -9,7 +9,8 @@
 --#    SK.VMX,
 --#    SK.MP,
 --#    SK.IO_Apic,
---#    SK.CPU_Global;
+--#    SK.CPU_Global,
+--#    SK.Locks;
 package SK.Kernel
 is
 
@@ -21,6 +22,7 @@ is
    --#    in out MP.Barrier;
    --#    in out IO_Apic.State;
    --#    in out CPU_Global.State;
+   --#    in out Locks.State;
    --#    in     GDT.GDT_Pointer;
    --#    in     Scheduler.State;
    --#    in     VMX.State;
@@ -38,7 +40,7 @@ is
    --#       Scheduler.State,
    --#       Interrupts.IDT,
    --#       Interrupts.IDT_Pointer &
-   --#    Subjects.State, X86_64.State from
+   --#    Subjects.State, Locks.State, X86_64.State from
    --#       *,
    --#       GDT.GDT_Pointer,
    --#       Subjects.State,

@@ -10,7 +10,8 @@ with Skp;
 --#    SK.Descriptors,
 --#    SK.Constants,
 --#    SK.Subjects,
---#    SK.Apic;
+--#    SK.Apic,
+--#    SK.Locks;
 package SK.VMX
 --# own
 --#    State;
@@ -43,9 +44,11 @@ is
    procedure Run (Subject_Id : Skp.Subject_Id_Type);
    --# global
    --#    in out Subjects.State;
+   --#    in out Locks.State;
    --#    in out X86_64.State;
    --# derives
-   --#    Subjects.State, X86_64.State from
+   --#    Subjects.State, Locks.State, X86_64.State from
+   --#       *,
    --#       Subject_Id,
    --#       Subjects.State,
    --#       X86_64.State;

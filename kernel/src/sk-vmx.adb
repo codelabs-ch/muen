@@ -384,9 +384,8 @@ is
       Event      : SK.Byte;
    begin
       State := Subjects.Get_State (Id => Subject_Id);
-      Event := Subjects.Get_Pending_Event (Id => Subject_Id);
 
-      if Event > 0 then
+      if Subjects.Has_Pending_Events (Id => Subject_Id) then
 
          --  Check guest interruptibility state (see Intel SDM Vol. 3C, chapter
          --  24.4.2).
@@ -399,14 +398,15 @@ is
              (Value => State.RFLAGS,
               Pos   => Constants.RFLAGS_IF_FLAG)
          then
+            Subjects.Get_Pending_Event (Id    => Subject_Id,
+                                        Event => Event);
             VMCS_Write
               (Field => Constants.VM_ENTRY_INTERRUPT_INFO,
                Value => Constants.VM_INTERRUPT_INFO_VALID + SK.Word64 (Event));
 
-            --  Clear pending event.
-
-            Subjects.Set_Pending_Event (Id     => Subject_Id,
-                                        Vector => 0);
+            if Subjects.Has_Pending_Events (Id => Subject_Id) then
+               VMCS_Set_Interrupt_Window (Value => True);
+            end if;
          else
             VMCS_Set_Interrupt_Window (Value => True);
          end if;

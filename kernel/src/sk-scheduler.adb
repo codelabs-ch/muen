@@ -313,9 +313,10 @@ is
    --# global
    --#    in out CPU_Global.State;
    --#    in out Subjects.State;
+   --#    in out Locks.State;
    --#    in out X86_64.State;
    --# derives
-   --#    CPU_Global.State, Subjects.State, X86_64.State from
+   --#    CPU_Global.State, Subjects.State, X86_64.State, Locks.State from
    --#       *,
    --#       Current_Subject,
    --#       Subject_State &
@@ -386,9 +387,10 @@ is
    --# global
    --#    in out X86_64.State;
    --#    in out Subjects.State;
+   --#    in out Locks.State;
    --# derives
-   --#    Subjects.State from *, Vector &
-   --#    X86_64.State   from *;
+   --#    Subjects.State, Locks.State from *, Vector &
+   --#    X86_64.State                from *;
    is
    begin
       if Vector in Skp.Interrupts.Remapped_Vector_Type then
@@ -432,8 +434,9 @@ is
    --#    in out X86_64.State;
    --#    in out Subjects.State;
    --#    in out CPU_Global.State;
+   --#    in out Locks.State;
    --# derives
-   --#    X86_64.State, Subjects.State, CPU_Global.State from
+   --#    X86_64.State, Subjects.State, CPU_Global.State, Locks.State from
    --#       *,
    --#       Current_Subject,
    --#       Subject_State;
@@ -491,6 +494,7 @@ is
    --#    in out Current_Major;
    --#    in out MP.Barrier;
    --#    in out Subjects.State;
+   --#    in out Locks.State;
    --#    in out X86_64.State;
    --# derives
    --#    Current_Major, CPU_Global.State, Subjects.State from
@@ -500,13 +504,14 @@ is
    --#       Subject_Registers,
    --#       CPU_Global.State,
    --#       X86_64.State &
-   --#    X86_64.State from
+   --#    Locks.State, X86_64.State from
    --#       *,
    --#       Current_Major,
    --#       New_Major,
    --#       Subject_Registers,
    --#       CPU_Global.State,
-   --#       Subjects.State &
+   --#       Subjects.State,
+   --#       X86_64.State &
    --#    MP.Barrier from
    --#       *,
    --#       Current_Major,

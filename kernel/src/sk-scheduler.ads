@@ -21,7 +21,8 @@ use type Skp.Subjects.Signal_Entry_Type;
 --#    SK.Subjects,
 --#    SK.VMX,
 --#    SK.Apic,
---#    SK.MP;
+--#    SK.MP,
+--#    SK.Locks;
 package SK.Scheduler
 --# own
 --#       State,
@@ -60,6 +61,7 @@ private
    --#    in out State;
    --#    in out MP.Barrier;
    --#    in out Subjects.State;
+   --#    in out Locks.State;
    --#    in out X86_64.State;
    --# derives
    --#    State, MP.Barrier, CPU_Global.State, Subjects.State from
@@ -68,12 +70,13 @@ private
    --#       Subject_Registers,
    --#       CPU_Global.State,
    --#       X86_64.State &
-   --#    X86_64.State from
+   --#    Locks.State, X86_64.State from
    --#       *,
    --#       State,
    --#       Subject_Registers,
    --#       CPU_Global.State,
-   --#       Subjects.State;
+   --#       Subjects.State,
+   --#       X86_64.State;
    pragma Export (C, Handle_Vmx_Exit, "handle_vmx_exit");
 
 end SK.Scheduler;

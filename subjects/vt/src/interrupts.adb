@@ -85,25 +85,32 @@ is
             when 1  =>
                Text_IO.Init;
             when 59 =>
+               VGA.Disable_Cursor;
                VGA_Output.Set (Slot => 1);
                Text_IO.Put_Line ("Switching to VT 1");
             when 60 =>
+               VGA.Disable_Cursor;
                VGA_Output.Set (Slot => 2);
                Text_IO.Put_Line ("Switching to VT 2");
             when 61 =>
+               VGA.Disable_Cursor;
                VGA_Output.Set (Slot => 3);
                Text_IO.Put_Line ("Switching to VT 3");
             when 62 =>
+               VGA.Disable_Cursor;
                VGA_Output.Set (Slot => 4);
                Text_IO.Put_Line ("Switching to VT 4");
             when 63 =>
+               VGA.Disable_Cursor;
                VGA_Output.Set (Slot => 5);
                Text_IO.Put_Line ("Switching to VT 5");
             when 64 =>
+               VGA.Disable_Cursor;
                VGA_Output.Set (Slot => 6);
                Text_IO.Put_Line ("Switching to VT 6");
             when others =>
                if VGA_Output.Get_Active_Slot = 4 then
+                  VGA.Enable_Cursor;
                   Kbd_Driver.Scancode := Data;
                   SK.Hypercall.Signal (Number => 1);
                end if;

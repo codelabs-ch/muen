@@ -571,6 +571,10 @@ is
          Dev_Name (Dev_Name'First) := Ada.Characters.Handling.To_Upper
            (Item => Dev_Name (Dev_Name'First));
 
+         if Dev.IO_Ports.Is_Empty then
+            return;
+         end if;
+
          Buffer := Buffer & ASCII.LF;
          for P in 1 .. Dev.IO_Ports.Length loop
             declare

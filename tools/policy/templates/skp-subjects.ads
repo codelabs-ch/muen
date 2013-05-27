@@ -95,4 +95,8 @@ is
 
    function Get_CS_Access (Subject_Id : Skp.Subject_Id_Type) return SK.Word32;
 
+   function Get_Exception_Bitmap
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word32;
+
 end Skp.Subjects;

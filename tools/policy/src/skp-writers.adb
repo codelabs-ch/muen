@@ -1114,6 +1114,9 @@ is
            & Indent & "    CS_Access          => 16#"
            & SK.Utils.To_Hex (Item => Conf.CS_Access) & "#,"
            & ASCII.LF
+           & Indent & "    Exception_Bitmap   => 16#"
+           & SK.Utils.To_Hex (Item => Conf.Exception_Bm) & "#,"
+           & ASCII.LF
            & Indent & "    VMX_Controls       => VMX_Controls_Type'("
            & ASCII.LF
            & Indent (N => 3) & " Exec_Pin    =>" & Conf.Exec_Pin'Img & ","

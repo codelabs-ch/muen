@@ -25,6 +25,7 @@ is
       CR4_Value          : SK.Word64;
       CR4_Mask           : SK.Word64;
       CS_Access          : SK.Word32;
+      Exception_Bitmap   : SK.Word32;
       VMX_Controls       : VMX_Controls_Type;
       Trap_Table         : Trap_Table_Type;
       Signal_Table       : Signal_Table_Type;
@@ -126,6 +127,19 @@ __subjects__);
       --# end accept;
       return Subject_Specs (Subject_Id).EPT_Pointer;
    end Get_EPT_Pointer;
+
+   -------------------------------------------------------------------------
+
+   function Get_Exception_Bitmap
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word32
+   is
+   begin
+      --# accept Warning, 444, "Exception_Bitmap is Word32 (obviously)";
+      --# assume Subject_Specs (Subject_Id).Exception_Bitmap in SK.Word32;
+      --# end accept;
+      return Subject_Specs (Subject_Id).Exception_Bitmap;
+   end Get_Exception_Bitmap;
 
    -------------------------------------------------------------------------
 

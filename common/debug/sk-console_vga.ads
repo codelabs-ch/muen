@@ -28,6 +28,9 @@ is
      (X : Width_Type;
       Y : Height_Type);
 
+   --  Enable position cursor.
+   procedure Enable_Cursor;
+
    --  Disable position cursor.
    procedure Disable_Cursor;
 

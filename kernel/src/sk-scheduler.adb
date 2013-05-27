@@ -25,7 +25,6 @@ is
         Regs               => SK.Null_CPU_Regs,
         Exit_Reason        => 0,
         Exit_Qualification => 0,
-        Pending_Event      => 0,
         Interrupt_Info     => 0,
         Instruction_Len    => 0,
         RIP                => 0,

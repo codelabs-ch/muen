@@ -2,7 +2,7 @@ with System;
 
 package body SK.Subjects
 --# own
---#    State is Descriptors;
+--#    State is Descriptors, Events;
 is
 
    subtype Descriptor_Array is SK.Subject_State_Array (Skp.Subject_Id_Type);
@@ -12,6 +12,22 @@ is
    Descriptors : Descriptor_Array;
    for Descriptors'Address use System'To_Address (16#001fe000#);
    --# end accept;
+
+   --  Subject events.
+   type Events_Array is array (Skp.Subject_Id_Type) of SK.Byte;
+   Events : Events_Array;
+
+   -------------------------------------------------------------------------
+
+   function Get_Pending_Event (Id : Skp.Subject_Id_Type) return SK.Byte
+   --# global
+   --#    Events;
+   --# return
+   --#    Events (Id);
+   is
+   begin
+      return Events (Id);
+   end Get_Pending_Event;
 
    -------------------------------------------------------------------------
 
@@ -67,28 +83,10 @@ is
    --# derives
    --#    Descriptors from *, Id, Subject_State;
    --# post
-   --#    Descriptors (Id) =  Descriptors (Id)
-   --#      [Launched           => Subject_State.Launched;
-   --#       Regs               => Subject_State.Regs;
-   --#       Exit_Reason        => Subject_State.Exit_Reason;
-   --#       Exit_Qualification => Subject_State.Exit_Qualification;
-   --#       Pending_Event      => Descriptors~ (Id).Pending_Event;
-   --#       Interrupt_Info     => Subject_State.Interrupt_Info;
-   --#       Instruction_Len    => Subject_State.Instruction_Len;
-   --#       RIP                => Subject_State.RIP;
-   --#       CS                 => Subject_State.CS;
-   --#       RSP                => Subject_State.RSP;
-   --#       SS                 => Subject_State.SS;
-   --#       CR0                => Subject_State.CR0;
-   --#       CR3                => Subject_State.CR3;
-   --#       CR4                => Subject_State.CR4;
-   --#       RFLAGS             => Subject_State.RFLAGS];
+   --#    Descriptors (Id) = Subject_State;
    is
-      Vector : SK.Byte;
    begin
-      Vector := Descriptors (Id).Pending_Event;
       Descriptors (Id) := Subject_State;
-      Descriptors (Id).Pending_Event := Vector;
    end Set_State;
 
    -------------------------------------------------------------------------
@@ -97,17 +95,18 @@ is
      (Id     : Skp.Subject_Id_Type;
       Vector : SK.Byte)
    --# global
-   --#    Descriptors;
+   --#    Events;
    --# derives
-   --#    Descriptors from *, Id, Vector;
+   --#    Events from *, Id, Vector;
    --# post
-   --#    Descriptors (Id).Pending_Event = Vector;
+   --#    Events (Id) = Vector;
    is
    begin
-      Descriptors (Id).Pending_Event := Vector;
+      Events (Id) := Vector;
    end Set_Pending_Event;
 
 begin
+   Events      := Events_Array'(others => 0);
    Descriptors := Descriptor_Array'
      (others => SK.Subject_State_Type'
         (SK.Null_Subject_State));

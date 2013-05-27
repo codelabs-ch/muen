@@ -33,6 +33,12 @@ is
    --# derives
    --#    State from *, Id, Vector;
 
+   --  Return pending event of subject identified by id. If no event is
+   --  pending, zero is returned.
+   function Get_Pending_Event (Id : Skp.Subject_Id_Type) return SK.Byte;
+   --# global
+   --#    State;
+
    --  Set RIP of subject specified by id to given value.
    procedure Set_RIP
      (Id    : Skp.Subject_Id_Type;

@@ -83,7 +83,8 @@ is
       Ctls_Exit          : SK.Word32;
       Ctls_Entry         : SK.Word32;
       CR0_Mask           : SK.Word64;
-      CR4_Mask           : SK.Word64);
+      CR4_Mask           : SK.Word64;
+      Exception_Bitmap   : SK.Word32);
    --# global
    --#    in out X86_64.State;
    --# derives
@@ -97,7 +98,8 @@ is
    --#       IO_Bitmap_Address,
    --#       MSR_Bitmap_Address,
    --#       CR0_Mask,
-   --#       CR4_Mask;
+   --#       CR4_Mask,
+   --#       Exception_Bitmap;
 
    --  Setup host fields of the currently active VMCS.
    procedure VMCS_Setup_Host_Fields;

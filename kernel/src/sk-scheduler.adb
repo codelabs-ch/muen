@@ -274,6 +274,8 @@ is
                CR0_Mask           => Skp.Subjects.Get_CR0_Mask
                  (Subject_Id => I),
                CR4_Mask           => Skp.Subjects.Get_CR4_Mask
+                 (Subject_Id => I),
+               Exception_Bitmap   => Skp.Subjects.Get_Exception_Bitmap
                  (Subject_Id => I));
             VMX.VMCS_Setup_Host_Fields;
             VMX.VMCS_Setup_Guest_Fields

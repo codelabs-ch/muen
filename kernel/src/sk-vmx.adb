@@ -137,7 +137,8 @@ is
       Ctls_Exit          : SK.Word32;
       Ctls_Entry         : SK.Word32;
       CR0_Mask           : SK.Word64;
-      CR4_Mask           : SK.Word64)
+      CR4_Mask           : SK.Word64;
+      Exception_Bitmap   : SK.Word32)
    is
       Default0, Default1, Value : SK.Word32;
    begin
@@ -178,7 +179,7 @@ is
       --  Exception bitmap.
 
       VMCS_Write (Field => Constants.EXCEPTION_BITMAP,
-                  Value => 16#ffff_ffff#);
+                  Value => SK.Word64 (Exception_Bitmap));
 
       --  Write access to CR0/CR4.
 

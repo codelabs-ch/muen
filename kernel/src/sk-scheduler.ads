@@ -37,12 +37,12 @@ is
    --#    in     Interrupts.IDT_Pointer;
    --#    in     GDT.GDT_Pointer;
    --#    in     VMX.State;
-   --#    in out Subjects.Descriptors;
+   --#    in out Subjects.State;
    --#    in out CPU_Global.State;
    --#    in out X86_64.State;
    --# derives
-   --#    Subjects.Descriptors from *, X86_64.State        &
-   --#    CPU_Global.State     from *, X86_64.State, State &
+   --#    Subjects.State   from *, X86_64.State        &
+   --#    CPU_Global.State from *, X86_64.State, State &
    --#    X86_64.State from
    --#       *,
    --#       State,
@@ -59,10 +59,10 @@ private
    --#    in out CPU_Global.State;
    --#    in out State;
    --#    in out MP.Barrier;
-   --#    in out Subjects.Descriptors;
+   --#    in out Subjects.State;
    --#    in out X86_64.State;
    --# derives
-   --#    State, MP.Barrier, CPU_Global.State, Subjects.Descriptors from
+   --#    State, MP.Barrier, CPU_Global.State, Subjects.State from
    --#       *,
    --#       State,
    --#       Subject_Registers,
@@ -73,7 +73,7 @@ private
    --#       State,
    --#       Subject_Registers,
    --#       CPU_Global.State,
-   --#       Subjects.Descriptors;
+   --#       Subjects.State;
    pragma Export (C, Handle_Vmx_Exit, "handle_vmx_exit");
 
 end SK.Scheduler;

@@ -42,12 +42,12 @@ is
    --  Run given subject.
    procedure Run (Subject_Id : Skp.Subject_Id_Type);
    --# global
-   --#    in out Subjects.Descriptors;
+   --#    in out Subjects.State;
    --#    in out X86_64.State;
    --# derives
-   --#    Subjects.Descriptors, X86_64.State from
+   --#    Subjects.State, X86_64.State from
    --#       Subject_Id,
-   --#       Subjects.Descriptors,
+   --#       Subjects.State,
    --#       X86_64.State;
 
    --  Read value from specified field of the current, active VMCS. If the

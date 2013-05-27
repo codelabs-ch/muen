@@ -216,12 +216,12 @@ is
    --#    in     Interrupts.IDT_Pointer;
    --#    in     GDT.GDT_Pointer;
    --#    in     VMX.State;
-   --#    in out Subjects.Descriptors;
+   --#    in out Subjects.State;
    --#    in out CPU_Global.State;
    --#    in out X86_64.State;
    --# derives
-   --#    Subjects.Descriptors from *, X86_64.State                &
-   --#    CPU_Global.State     from *, Current_Major, X86_64.State &
+   --#    Subjects.State   from *, X86_64.State                &
+   --#    CPU_Global.State from *, Current_Major, X86_64.State &
    --#    X86_64.State from
    --#       *,
    --#       Current_Major,
@@ -313,10 +313,10 @@ is
       Subject_State   : in out SK.Subject_State_Type)
    --# global
    --#    in out CPU_Global.State;
-   --#    in out Subjects.Descriptors;
+   --#    in out Subjects.State;
    --#    in out X86_64.State;
    --# derives
-   --#    CPU_Global.State, Subjects.Descriptors, X86_64.State from
+   --#    CPU_Global.State, Subjects.State, X86_64.State from
    --#       *,
    --#       Current_Subject,
    --#       Subject_State &
@@ -386,10 +386,10 @@ is
    procedure Handle_Irq (Vector : SK.Byte)
    --# global
    --#    in out X86_64.State;
-   --#    in out Subjects.Descriptors;
+   --#    in out Subjects.State;
    --# derives
-   --#    Subjects.Descriptors from *, Vector &
-   --#    X86_64.State         from *;
+   --#    Subjects.State from *, Vector &
+   --#    X86_64.State   from *;
    is
    begin
       if Vector in Skp.Interrupts.Remapped_Vector_Type then
@@ -431,10 +431,10 @@ is
       Subject_State   : SK.Subject_State_Type)
    --# global
    --#    in out X86_64.State;
-   --#    in out Subjects.Descriptors;
+   --#    in out Subjects.State;
    --#    in out CPU_Global.State;
    --# derives
-   --#    X86_64.State, Subjects.Descriptors, CPU_Global.State from
+   --#    X86_64.State, Subjects.State, CPU_Global.State from
    --#       *,
    --#       Current_Subject,
    --#       Subject_State;
@@ -491,10 +491,10 @@ is
    --#    in out CPU_Global.State;
    --#    in out Current_Major;
    --#    in out MP.Barrier;
-   --#    in out Subjects.Descriptors;
+   --#    in out Subjects.State;
    --#    in out X86_64.State;
    --# derives
-   --#    Current_Major, CPU_Global.State, Subjects.Descriptors from
+   --#    Current_Major, CPU_Global.State, Subjects.State from
    --#       *,
    --#       Current_Major,
    --#       New_Major,
@@ -507,7 +507,7 @@ is
    --#       New_Major,
    --#       Subject_Registers,
    --#       CPU_Global.State,
-   --#       Subjects.Descriptors &
+   --#       Subjects.State &
    --#    MP.Barrier from
    --#       *,
    --#       Current_Major,
@@ -579,8 +579,8 @@ is
          end if;
       end if;
 
-      Subjects.Set_State (Id    => Current_Subject,
-                          State => State);
+      Subjects.Set_State (Id            => Current_Subject,
+                          Subject_State => State);
 
       VMX.Run (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id);
    end Handle_Vmx_Exit;

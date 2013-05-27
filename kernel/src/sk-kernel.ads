@@ -17,7 +17,7 @@ is
    procedure Main;
    --# global
    --#    in out X86_64.State;
-   --#    in out Subjects.Descriptors;
+   --#    in out Subjects.State;
    --#    in out MP.Barrier;
    --#    in out IO_Apic.State;
    --#    in out CPU_Global.State;
@@ -38,10 +38,10 @@ is
    --#       Scheduler.State,
    --#       Interrupts.IDT,
    --#       Interrupts.IDT_Pointer &
-   --#    Subjects.Descriptors, X86_64.State from
+   --#    Subjects.State, X86_64.State from
    --#       *,
    --#       GDT.GDT_Pointer,
-   --#       Subjects.Descriptors,
+   --#       Subjects.State,
    --#       Scheduler.State,
    --#       VMX.State,
    --#       Interrupts.IDT,

@@ -69,23 +69,24 @@ is
    function Indent (N : Positive := 1) return String;
 
    type Profile_Conf_Type is record
-      Exec_Pin    : SK.Word32;
-      Exec_Proc   : SK.Word32;
-      Exec_Proc2  : SK.Word32;
-      Exit_Ctrls  : SK.Word32;
-      Entry_Ctrls : SK.Word32;
-      CR0_Value   : SK.Word64;
-      CR0_Mask    : SK.Word64;
-      CR4_Value   : SK.Word64;
-      CR4_Mask    : SK.Word64;
-      CS_Access   : SK.Word32;
+      Exec_Pin     : SK.Word32;
+      Exec_Proc    : SK.Word32;
+      Exec_Proc2   : SK.Word32;
+      Exit_Ctrls   : SK.Word32;
+      Entry_Ctrls  : SK.Word32;
+      CR0_Value    : SK.Word64;
+      CR0_Mask     : SK.Word64;
+      CR4_Value    : SK.Word64;
+      CR4_Mask     : SK.Word64;
+      CS_Access    : SK.Word32;
+      Exception_Bm : SK.Word32;
    end record;
 
    Profile_Mapping : constant array (Subject_Profile_Type) of Profile_Conf_Type
      := (Native =>
-           (Exec_Pin    => Constants.VM_CTRL_EXT_INT_EXITING
+           (Exec_Pin     => Constants.VM_CTRL_EXT_INT_EXITING
             or Constants.VM_CTRL_PREEMPT_TIMER,
-            Exec_Proc   => Constants.VM_CTRL_IO_BITMAPS
+            Exec_Proc    => Constants.VM_CTRL_IO_BITMAPS
             or Constants.VM_CTRL_SECONDARY_PROC
             or Constants.VM_CTRL_EXIT_INVLPG
             or Constants.VM_CTRL_EXIT_MWAIT
@@ -98,20 +99,21 @@ is
             or Constants.VM_CTRL_EXIT_MOV_DR
             or Constants.VM_CTRL_MSR_BITMAPS
             or Constants.VM_CTRL_EXIT_MONITOR,
-            Exec_Proc2  => Constants.VM_CTRL_EXIT_WBINVD,
-            Exit_Ctrls  => Constants.VM_CTRL_EXIT_IA32E_MODE
+            Exec_Proc2   => Constants.VM_CTRL_EXIT_WBINVD,
+            Exit_Ctrls   => Constants.VM_CTRL_EXIT_IA32E_MODE
             or Constants.VM_CTRL_EXIT_ACK_INT
             or Constants.VM_CTRL_EXIT_SAVE_TIMER,
-            Entry_Ctrls => Constants.VM_CTRL_ENTR_IA32E_MODE,
-            CR0_Value   => 16#8001_0031#,
-            CR0_Mask    => 16#ffff_ffff#,
-            CR4_Value   => 16#0000_2020#,
-            CR4_Mask    => 16#ffff_ffff#,
-            CS_Access   => 16#0000_a09b#),
+            Entry_Ctrls  => Constants.VM_CTRL_ENTR_IA32E_MODE,
+            CR0_Value    => 16#8001_0031#,
+            CR0_Mask     => 16#ffff_ffff#,
+            CR4_Value    => 16#0000_2020#,
+            CR4_Mask     => 16#ffff_ffff#,
+            CS_Access    => 16#0000_a09b#,
+            Exception_Bm => 16#ffff_ffff#),
          VM     =>
-           (Exec_Pin    => Constants.VM_CTRL_EXT_INT_EXITING
+           (Exec_Pin     => Constants.VM_CTRL_EXT_INT_EXITING
             or Constants.VM_CTRL_PREEMPT_TIMER,
-            Exec_Proc   => Constants.VM_CTRL_IO_BITMAPS
+            Exec_Proc    => Constants.VM_CTRL_IO_BITMAPS
             or Constants.VM_CTRL_SECONDARY_PROC
             or Constants.VM_CTRL_EXIT_MWAIT
             or Constants.VM_CTRL_EXIT_RDPMC
@@ -121,20 +123,21 @@ is
             or Constants.VM_CTRL_EXIT_MOV_DR
             or Constants.VM_CTRL_MSR_BITMAPS
             or Constants.VM_CTRL_EXIT_MONITOR,
-            Exec_Proc2  => Constants.VM_CTRL_ENABLE_EPT
+            Exec_Proc2   => Constants.VM_CTRL_ENABLE_EPT
             or Constants.VM_CTRL_EXIT_WBINVD
             or Constants.VM_CTRL_UNRESTRICTED,
-            Exit_Ctrls  => Constants.VM_CTRL_EXIT_IA32E_MODE
+            Exit_Ctrls   => Constants.VM_CTRL_EXIT_IA32E_MODE
             or Constants.VM_CTRL_EXIT_ACK_INT
             or Constants.VM_CTRL_EXIT_SAVE_EFER
             or Constants.VM_CTRL_EXIT_LOAD_EFER
             or Constants.VM_CTRL_EXIT_SAVE_TIMER,
-            Entry_Ctrls => Constants.VM_CTRL_ENTR_LOAD_EFER,
-            CR0_Value   => 16#0000_0031#,
-            CR0_Mask    => 16#7ffe_ffff#,
-            CR4_Value   => 16#0000_2000#,
-            CR4_Mask    => 16#ffff_ffef#,
-            CS_Access   => 16#0000_c09b#));
+            Entry_Ctrls  => Constants.VM_CTRL_ENTR_LOAD_EFER,
+            CR0_Value    => 16#0000_0031#,
+            CR0_Mask     => 16#7ffe_ffff#,
+            CR4_Value    => 16#0000_2000#,
+            CR4_Mask     => 16#ffff_ffef#,
+            CS_Access    => 16#0000_c09b#,
+            Exception_Bm => 16#0000_0000#));
 
    -------------------------------------------------------------------------
 

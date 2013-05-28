@@ -101,6 +101,7 @@ is
                      Value => State.SS);
       VMX.VMCS_Read (Field => Constants.GUEST_CR0,
                      Value => State.CR0);
+      State.CR2 := CPU.Get_CR2;
       VMX.VMCS_Read (Field => Constants.GUEST_CR3,
                      Value => State.CR3);
       VMX.VMCS_Read (Field => Constants.GUEST_CR4,

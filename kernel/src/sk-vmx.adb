@@ -418,6 +418,10 @@ is
       VMCS_Write (Field => Constants.GUEST_RSP,
                   Value => State.RSP);
 
+      if CPU.Get_CR2 /= State.CR2 then
+         CPU.Set_CR2 (Value => State.CR2);
+      end if;
+
       if State.Launched then
          CPU.Restore_Registers (Regs => State.Regs);
          CPU.VMRESUME;

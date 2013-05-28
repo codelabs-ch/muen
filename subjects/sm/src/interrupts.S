@@ -15,8 +15,6 @@ isrlist:
 	push %r10
 	push %r9
 	push %r8
-	push %rbp
-	push %rsp
 	push %rsi
 	push %rdi
 	push %rdx
@@ -32,8 +30,6 @@ isrlist:
 	pop %rdx
 	pop %rdi
 	pop %rsi
-	pop %rsp
-	pop %rbp
 	pop %r8
 	pop %r9
 	pop %r10

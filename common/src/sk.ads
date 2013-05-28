@@ -49,6 +49,7 @@ is
       RSP                : Word64;
       SS                 : Word64;
       CR0                : Word64;
+      CR2                : Word64;
       CR3                : Word64;
       CR4                : Word64;
       RFLAGS             : Word64;
@@ -112,6 +113,7 @@ private
         SS                 => 0,
         CR0                => 0,
         CR3                => 0,
+        CR2                => 0,
         CR4                => 0,
         RFLAGS             => 0);
 

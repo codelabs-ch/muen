@@ -41,6 +41,21 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_CR2 return SK.Word64
+   is
+      --# hide Get_CR2;
+
+      Result : SK.Word64;
+   begin
+      System.Machine_Code.Asm
+        (Template => "movq %%cr2, %0",
+         Outputs  => (SK.Word64'Asm_Output ("=r", Result)),
+         Volatile => True);
+      return Result;
+   end Get_CR2;
+
+   -------------------------------------------------------------------------
+
    function Get_CR3 return SK.Word64
    is
       --# hide Get_CR3;

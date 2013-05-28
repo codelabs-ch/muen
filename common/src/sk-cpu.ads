@@ -54,6 +54,12 @@ is
    --#    X86_64.State;
    pragma Inline_Always (Get_CR0);
 
+   --  Return current value of CR2 register.
+   function Get_CR2 return SK.Word64;
+   --# global
+   --#    X86_64.State;
+   pragma Inline_Always (Get_CR2);
+
    --  Return current value of CR4 register.
    function Get_CR4 return SK.Word64;
    --# global

@@ -240,6 +240,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Set_CR2 (Value : SK.Word64)
+   is
+      --# hide Set_CR2;
+   begin
+      System.Machine_Code.Asm
+        (Template => "movq %0, %%cr2",
+         Inputs   => (SK.Word64'Asm_Input ("r", Value)),
+         Volatile => True);
+   end Set_CR2;
+
+   -------------------------------------------------------------------------
+
    procedure Set_CR4 (Value : SK.Word64)
    is
       --# hide Set_CR4;

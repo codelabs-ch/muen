@@ -60,17 +60,25 @@ is
    --#    X86_64.State;
    pragma Inline_Always (Get_CR2);
 
+   --  Return current value of CR3 register.
+   function Get_CR3 return SK.Word64;
+   --# global
+   --#    X86_64.State;
+   pragma Inline_Always (Get_CR3);
+
    --  Return current value of CR4 register.
    function Get_CR4 return SK.Word64;
    --# global
    --#    X86_64.State;
    pragma Inline_Always (Get_CR4);
 
-   --  Return current value of CR3 register.
-   function Get_CR3 return SK.Word64;
+      --  Set value of CR2.
+   procedure Set_CR2 (Value : SK.Word64);
    --# global
-   --#    X86_64.State;
-   pragma Inline_Always (Get_CR3);
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *, Value;
+   pragma Inline_Always (Set_CR2);
 
    --  Set value of CR4.
    procedure Set_CR4 (Value : SK.Word64);

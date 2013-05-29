@@ -8,16 +8,17 @@ with SK.IO_Apic;
 
 package body SK.Interrupts
 --# own
---#    State is in ISR_List, IDT, IDT_Pointer;
+--#    State is ISR_List, IDT, IDT_Pointer;
 is
 
    subtype Exception_Range is Skp.Vector_Range range 0 .. 19;
 
    --  ISR trampolines.
    subtype ISR_List_Type is Descriptors.ISR_Array (Exception_Range);
+   --# accept Warning, 350, ISR_List, "Imported from Linker";
    ISR_List : ISR_List_Type;
    pragma Import (C, ISR_List, "isrlist");
-   --# assert ISR_List'Always_Valid;
+   --# end accept;
 
    subtype IDT_Type is Descriptors.IDT_Type (Exception_Range);
 
@@ -58,6 +59,20 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Init
+   --# global
+   --#    in     ISR_List;
+   --#    in out IDT;
+   --# derives
+   --#    IDT from *, ISR_List;
+   is
+   begin
+      Descriptors.Setup_IDT (ISRs => ISR_List,
+                             IDT  => IDT);
+   end Init;
+
+   -------------------------------------------------------------------------
+
    procedure Load
    --# global
    --#    in     IDT_Pointer;
@@ -88,9 +103,6 @@ is
 begin
 
    --# hide SK.Interrupts;
-
-   Descriptors.Setup_IDT (ISRs => ISR_List,
-                          IDT  => IDT);
 
    IDT_Pointer := Descriptors.Pseudo_Descriptor_Type'
      (Limit => 16 * SK.Word16 (IDT'Length) - 1,

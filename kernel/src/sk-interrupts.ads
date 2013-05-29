@@ -14,6 +14,13 @@ package SK.Interrupts
 --#    State;
 is
 
+   --  Initalize IDT structure.
+   procedure Init;
+   --# global
+   --#    in out State;
+   --# derives
+   --#    State from *;
+
    --  Load IDT into IDT register.
    procedure Load;
    --# global

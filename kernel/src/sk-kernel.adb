@@ -17,8 +17,12 @@ is
    is
       Success, Is_Bsp : Boolean;
    begin
-      Interrupts.Load;
       Is_Bsp := Apic.Is_BSP;
+
+      if Is_Bsp then
+         Interrupts.Init;
+      end if;
+      Interrupts.Load;
 
       pragma Debug (Is_Bsp, KC.Init);
       pragma Debug (Is_Bsp, KC.Put_Line

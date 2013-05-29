@@ -17,17 +17,18 @@ is
    --  Kernel entry point.
    procedure Main;
    --# global
-   --#    in out X86_64.State;
+   --#    in     GDT.GDT_Pointer;
+   --#    in     Scheduler.State;
+   --#    in     VMX.State;
+   --#    in out Interrupts.State;
    --#    in out Subjects.State;
    --#    in out MP.Barrier;
    --#    in out IO_Apic.State;
    --#    in out CPU_Global.State;
    --#    in out Locks.State;
-   --#    in     GDT.GDT_Pointer;
-   --#    in     Scheduler.State;
-   --#    in     VMX.State;
-   --#    in     Interrupts.State;
+   --#    in out X86_64.State;
    --# derives
+   --#    Interrupts.State from *, X86_64.State &
    --#    MP.Barrier, IO_Apic.State from
    --#       *,
    --#       X86_64.State,

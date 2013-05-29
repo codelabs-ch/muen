@@ -20,7 +20,7 @@ is
    --#    in out Subjects.Descriptors;
    --#    in out MP.Barrier;
    --#    in out IO_Apic.State;
-   --#    in out CPU_Global.Storage;
+   --#    in out CPU_Global.State;
    --#    in     GDT.GDT_Pointer;
    --#    in     Scheduler.State;
    --#    in     VMX.State;
@@ -32,7 +32,7 @@ is
    --#       X86_64.State,
    --#       Interrupts.IDT,
    --#       Interrupts.IDT_Pointer &
-   --#    CPU_Global.Storage from
+   --#    CPU_Global.State from
    --#       *,
    --#       X86_64.State,
    --#       Scheduler.State,

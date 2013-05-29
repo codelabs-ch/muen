@@ -3,7 +3,15 @@ with System;
 with Skp.Kernel;
 
 package body SK.CPU_Global
+--# own
+--#    State is Storage;
 is
+
+   --  Record used to store per-CPU global data.
+   type Storage_Type is record
+      Scheduling_Plan     : Skp.Scheduling.Major_Frame_Array;
+      Current_Minor_Frame : Active_Minor_Frame_Type;
+   end record;
 
    --# accept Warning, 396, Storage, "Not an external (stream) variable";
    Storage : Storage_Type;
@@ -17,6 +25,10 @@ is
    -------------------------------------------------------------------------
 
    function Get_Current_Minor_Frame return Active_Minor_Frame_Type
+   --# global
+   --#    Storage;
+   --# return
+   --#    Storage.Current_Minor_Frame;
    is
    begin
       return Storage.Current_Minor_Frame;
@@ -27,6 +39,8 @@ is
    function Get_Major_Length
      (Major_Id : Skp.Scheduling.Major_Frame_Range)
       return Skp.Scheduling.Minor_Frame_Range
+   --# global
+   --#    Storage;
    is
    begin
       return Storage.Scheduling_Plan (Major_Id).Length;
@@ -38,6 +52,8 @@ is
      (Major_Id : Skp.Scheduling.Major_Frame_Range;
       Minor_Id : Skp.Scheduling.Minor_Frame_Range)
       return Skp.Scheduling.Minor_Frame_Type
+   --# global
+   --#    Storage;
    is
    begin
       return Storage.Scheduling_Plan (Major_Id).Minor_Frames (Minor_Id);
@@ -46,6 +62,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Init
+   --# global
+   --#    out Storage;
+   --# derives
+   --#    Storage from ;
    is
    begin
       Storage := Storage_Type'
@@ -58,6 +78,12 @@ is
    -------------------------------------------------------------------------
 
    procedure Set_Current_Minor (Frame : Active_Minor_Frame_Type)
+   --# global
+   --#    in out Storage;
+   --# derives
+   --#    Storage from *, Frame;
+   --# post
+   --#    Storage.Current_Minor_Frame = Frame;
    is
    begin
       Storage.Current_Minor_Frame := Frame;
@@ -66,6 +92,12 @@ is
    -------------------------------------------------------------------------
 
    procedure Set_Scheduling_Plan (Data : Skp.Scheduling.Major_Frame_Array)
+   --# global
+   --#    in out Storage;
+   --# derives
+   --#    Storage from *, Data;
+   --# post
+   --#    Storage.Scheduling_Plan = Data;
    is
    begin
       Storage.Scheduling_Plan := Data;
@@ -76,6 +108,12 @@ is
    procedure Swap_Subject
      (Old_Id : Skp.Subject_Id_Type;
       New_Id : Skp.Subject_Id_Type)
+   --# global
+   --#    in out Storage;
+   --# derives
+   --#    Storage from *, Old_Id, New_Id;
+   --# pre
+   --#    Old_Id /= New_Id;
    is
    begin
       for I in Skp.Scheduling.Major_Frame_Range loop

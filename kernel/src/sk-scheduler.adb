@@ -114,11 +114,11 @@ is
       New_Id   : Skp.Subject_Id_Type;
       New_VMCS : SK.Word64)
    --# global
-   --#    in out CPU_Global.Storage;
+   --#    in out CPU_Global.State;
    --#    in out X86_64.State;
    --# derives
-   --#    CPU_Global.Storage from *, Old_Id, New_Id &
-   --#    X86_64.State       from *, New_VMCS;
+   --#    CPU_Global.State from *, Old_Id, New_Id &
+   --#    X86_64.State     from *, New_VMCS;
    --# pre
    --#    Old_Id /= New_Id;
    is
@@ -146,16 +146,16 @@ is
    --#    in     New_Major;
    --#    in out X86_64.State;
    --#    in out Current_Major;
-   --#    in out CPU_Global.Storage;
+   --#    in out CPU_Global.State;
    --#    in out MP.Barrier;
    --# derives
    --#    MP.Barrier from
    --#       *,
    --#       Current_Major,
-   --#       CPU_Global.Storage &
-   --#    Current_Major, CPU_Global.Storage, X86_64.State from
+   --#       CPU_Global.State &
+   --#    Current_Major, CPU_Global.State, X86_64.State from
    --#       Current_Major,
-   --#       CPU_Global.Storage,
+   --#       CPU_Global.State,
    --#       New_Major,
    --#       X86_64.State;
    is
@@ -214,18 +214,18 @@ is
    --#    in     GDT.GDT_Pointer;
    --#    in     VMX.State;
    --#    in out Subjects.Descriptors;
-   --#    in out CPU_Global.Storage;
+   --#    in out CPU_Global.State;
    --#    in out X86_64.State;
    --# derives
    --#    Subjects.Descriptors from *, X86_64.State                &
-   --#    CPU_Global.Storage   from *, Current_Major, X86_64.State &
+   --#    CPU_Global.State     from *, Current_Major, X86_64.State &
    --#    X86_64.State from
    --#       *,
    --#       Current_Major,
    --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,
    --#       VMX.State,
-   --#       CPU_Global.Storage;
+   --#       CPU_Global.State;
    is
       CPU_Id            : Skp.CPU_Range;
       Plan_Frame        : Skp.Scheduling.Minor_Frame_Type;
@@ -302,11 +302,11 @@ is
      (Current_Subject :        Skp.Subject_Id_Type;
       Subject_State   : in out SK.Subject_State_Type)
    --# global
-   --#    in out CPU_Global.Storage;
+   --#    in out CPU_Global.State;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    CPU_Global.Storage, Subjects.Descriptors, X86_64.State from
+   --#    CPU_Global.State, Subjects.Descriptors, X86_64.State from
    --#       *,
    --#       Current_Subject,
    --#       Subject_State &
@@ -411,9 +411,9 @@ is
    --# global
    --#    in out X86_64.State;
    --#    in out Subjects.Descriptors;
-   --#    in out CPU_Global.Storage;
+   --#    in out CPU_Global.State;
    --# derives
-   --#    X86_64.State, Subjects.Descriptors, CPU_Global.Storage from
+   --#    X86_64.State, Subjects.Descriptors, CPU_Global.State from
    --#       *,
    --#       Current_Subject,
    --#       Subject_State;
@@ -467,31 +467,31 @@ is
    procedure Handle_Vmx_Exit (Subject_Registers : SK.CPU_Registers_Type)
    --# global
    --#    in     New_Major;
-   --#    in out CPU_Global.Storage;
+   --#    in out CPU_Global.State;
    --#    in out Current_Major;
    --#    in out MP.Barrier;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    Current_Major, CPU_Global.Storage, Subjects.Descriptors from
+   --#    Current_Major, CPU_Global.State, Subjects.Descriptors from
    --#       *,
    --#       Current_Major,
    --#       New_Major,
    --#       Subject_Registers,
-   --#       CPU_Global.Storage,
+   --#       CPU_Global.State,
    --#       X86_64.State &
    --#    X86_64.State from
    --#       *,
    --#       Current_Major,
    --#       New_Major,
    --#       Subject_Registers,
-   --#       CPU_Global.Storage,
+   --#       CPU_Global.State,
    --#       Subjects.Descriptors &
    --#    MP.Barrier from
    --#       *,
    --#       Current_Major,
    --#       Subject_Registers,
-   --#       CPU_Global.Storage,
+   --#       CPU_Global.State,
    --#       X86_64.State;
    is
       Current_Subject : Skp.Subject_Id_Type;

@@ -38,41 +38,41 @@ is
    --#    in     GDT.GDT_Pointer;
    --#    in     VMX.State;
    --#    in out Subjects.Descriptors;
-   --#    in out CPU_Global.Storage;
+   --#    in out CPU_Global.State;
    --#    in out X86_64.State;
    --# derives
    --#    Subjects.Descriptors from *, X86_64.State        &
-   --#    CPU_Global.Storage   from *, X86_64.State, State &
+   --#    CPU_Global.State     from *, X86_64.State, State &
    --#    X86_64.State from
    --#       *,
    --#       State,
    --#       Interrupts.IDT_Pointer,
    --#       GDT.GDT_Pointer,
    --#       VMX.State,
-   --#       CPU_Global.Storage;
+   --#       CPU_Global.State;
 
 private
 
    --  VMX exit handler.
    procedure Handle_Vmx_Exit (Subject_Registers : SK.CPU_Registers_Type);
    --# global
-   --#    in out CPU_Global.Storage;
+   --#    in out CPU_Global.State;
    --#    in out State;
    --#    in out MP.Barrier;
    --#    in out Subjects.Descriptors;
    --#    in out X86_64.State;
    --# derives
-   --#    State, MP.Barrier, CPU_Global.Storage, Subjects.Descriptors from
+   --#    State, MP.Barrier, CPU_Global.State, Subjects.Descriptors from
    --#       *,
    --#       State,
    --#       Subject_Registers,
-   --#       CPU_Global.Storage,
+   --#       CPU_Global.State,
    --#       X86_64.State &
    --#    X86_64.State from
    --#       *,
    --#       State,
    --#       Subject_Registers,
-   --#       CPU_Global.Storage,
+   --#       CPU_Global.State,
    --#       Subjects.Descriptors;
    pragma Export (C, Handle_Vmx_Exit, "handle_vmx_exit");
 

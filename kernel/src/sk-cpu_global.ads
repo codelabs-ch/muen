@@ -5,7 +5,7 @@ with Skp.Scheduling;
 --#    SK;
 package SK.CPU_Global
 --# own
---#    Storage : Storage_Type;
+--#    State;
 is
 
    --  Currently active minor frame.
@@ -14,50 +14,38 @@ is
       Subject_Id : Skp.Subject_Id_Type;
    end record;
 
-   --  Record used internally to store per-CPU global data.
-   type Storage_Type is record
-      Scheduling_Plan     : Skp.Scheduling.Major_Frame_Array;
-      Current_Minor_Frame : Active_Minor_Frame_Type;
-   end record;
-
    --  Initialize per-CPU storage.
    procedure Init;
    --# global
-   --#    out Storage;
+   --#    out State;
    --# derives
-   --#    Storage from ;
+   --#    State from ;
 
    --  Set the currently active minor frame to specified frame.
    procedure Set_Current_Minor (Frame : Active_Minor_Frame_Type);
    --# global
-   --#    in out Storage;
+   --#    in out State;
    --# derives
-   --#    Storage from *, Frame;
-   --# post
-   --#    Storage.Current_Minor_Frame = Frame;
+   --#    State from *, Frame;
 
    --  Returns the currently active minor frame.
    function Get_Current_Minor_Frame return Active_Minor_Frame_Type;
    --# global
-   --#    Storage;
-   --# return
-   --#    Storage.Current_Minor_Frame;
+   --#    State;
 
    --  Set the per-CPU scheduling plan.
    procedure Set_Scheduling_Plan (Data : Skp.Scheduling.Major_Frame_Array);
    --# global
-   --#    in out Storage;
+   --#    in out State;
    --# derives
-   --#    Storage from *, Data;
-   --# post
-   --#    Storage.Scheduling_Plan = Data;
+   --#    State from *, Data;
 
    --  Return number of minor frames in given scheduling plan major frame.
    function Get_Major_Length
      (Major_Id : Skp.Scheduling.Major_Frame_Range)
       return Skp.Scheduling.Minor_Frame_Range;
    --# global
-   --#    Storage;
+   --#    State;
 
    --  Return scheduling minor frame indexed by major and minor id.
    function Get_Minor_Frame
@@ -65,7 +53,7 @@ is
       Minor_Id : Skp.Scheduling.Minor_Frame_Range)
       return Skp.Scheduling.Minor_Frame_Type;
    --# global
-   --#    Storage;
+   --#    State;
 
    --  Remove subject specified by Old_Id from the scheduling plan and replace
    --  it with the subject given by New_Id.
@@ -73,9 +61,9 @@ is
      (Old_Id : Skp.Subject_Id_Type;
       New_Id : Skp.Subject_Id_Type);
    --# global
-   --#    in out Storage;
+   --#    in out State;
    --# derives
-   --#    Storage from *, Old_Id, New_Id;
+   --#    State from *, Old_Id, New_Id;
    --# pre
    --#    Old_Id /= New_Id;
 

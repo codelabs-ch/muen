@@ -25,7 +25,6 @@ is
                     (Item => "Booting Separation Kernel "
                      & SK.Version.Version_String & " ("
                      & Standard'Compiler_Version & ")"));
-
       Success := System_State.Is_Valid;
       if Success then
 

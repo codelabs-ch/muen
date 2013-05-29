@@ -20,7 +20,7 @@ is
    subtype IDT_Type is Descriptors.IDT_Type (Exception_Range);
 
    --  IDT, see Intel SDM 3A, chapter 6.10.
-   IDT : IDT_Type;
+   IDT : IDT_Type := IDT_Type'(others => Descriptors.Null_Gate);
 
    --  Interrupt table pointer, loaded into IDTR
    IDT_Pointer : Descriptors.Pseudo_Descriptor_Type;
@@ -78,18 +78,8 @@ begin
 
    --# hide SK.Interrupts;
 
-   for I in Exception_Range loop
-      IDT (I) := Descriptors.Gate_Type'
-        (Offset_15_00     => SK.Word16
-           (ISR_List (I) and 16#0000_0000_0000_ffff#),
-         Segment_Selector => 16#0008#,
-         Flags            => 16#8e00#,
-         Offset_31_16     => SK.Word16
-           ((ISR_List (I) and 16#0000_0000_ffff_0000#) / 2 ** 16),
-         Offset_63_32     => SK.Word32
-           ((ISR_List (I) and 16#ffff_ffff_0000_0000#) / 2 ** 32),
-         Reserved         => 0);
-   end loop;
+   Descriptors.Setup_IDT (ISRs => ISR_List,
+                          IDT  => IDT);
 
    IDT_Pointer := Descriptors.Pseudo_Descriptor_Type'
      (Limit => 16 * SK.Word16 (IDT'Length) - 1,

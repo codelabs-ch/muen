@@ -19,7 +19,7 @@ is
    subtype IDT_Type is SK.Descriptors.IDT_Type (Interrupt_Range);
 
    --  IDT, see Intel SDM Vol. 3A, chapter 6.10.
-   IDT : IDT_Type;
+   IDT : IDT_Type := (others => SK.Descriptors.Null_Gate);
 
    type GDT_Type is array (1 .. 3) of SK.Word64;
 
@@ -35,11 +35,6 @@ is
    --  Load IDT into IDT register.
    procedure Load_IDT (IDT : SK.Descriptors.IDT_Type);
 
-   --  Setup IDT using the given ISR addresses.
-   procedure Setup_IDT
-     (ISRs :     ISR_Array;
-      IDT  : out SK.Descriptors.IDT_Type);
-
    -------------------------------------------------------------------------
 
    procedure Handle_Interrupt (Vector : SK.Byte)
@@ -53,8 +48,8 @@ is
    procedure Initialize
    is
    begin
-      Setup_IDT (ISRs => ISRs,
-                 IDT  => IDT);
+      SK.Descriptors.Setup_IDT (ISRs => ISRs,
+                                IDT  => IDT);
       Load_IDT (IDT => IDT);
       Load_GDT;
    end Initialize;
@@ -95,27 +90,5 @@ is
            (System.Storage_Elements.To_Integer
               (Value => IDT_Pointer'Address)));
    end Load_IDT;
-
-   -------------------------------------------------------------------------
-
-   procedure Setup_IDT
-     (ISRs :     ISR_Array;
-      IDT  : out SK.Descriptors.IDT_Type)
-   is
-      use type SK.Word64;
-   begin
-      for I in Interrupt_Range loop
-         IDT (I) := SK.Descriptors.Gate_Type'
-           (Offset_15_00     => SK.Word16
-              (ISRs (I) and 16#0000_0000_0000_ffff#),
-            Segment_Selector => 16#0008#,
-            Flags            => 16#8e00#,
-            Offset_31_16     => SK.Word16
-              ((ISRs (I) and 16#0000_0000_ffff_0000#) / 2 ** 16),
-            Offset_63_32     => SK.Word32
-              ((ISRs (I) and 16#ffff_ffff_0000_0000#) / 2 ** 32),
-            Reserved         => 0);
-      end loop;
-   end Setup_IDT;
 
 end Dump;

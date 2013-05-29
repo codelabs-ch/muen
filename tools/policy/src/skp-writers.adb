@@ -68,6 +68,10 @@ is
    --  Return N number of indentation spaces.
    function Indent (N : Positive := 1) return String;
 
+   --  Return capitalisation of the given string (first letter in uppercase and
+   --  the remaining letters in lowercase).
+   function Capitalize (Str : String) return String;
+
    type Profile_Conf_Type is record
       Exec_Pin     : SK.Word32;
       Exec_Proc    : SK.Word32;
@@ -138,6 +142,17 @@ is
             CR4_Mask     => 16#ffff_ffef#,
             CS_Access    => 16#0000_c09b#,
             Exception_Bm => 16#0000_0000#));
+
+   -------------------------------------------------------------------------
+
+   function Capitalize (Str : String) return String
+   is
+      Result : String := Ada.Characters.Handling.To_Lower (Item => Str);
+   begin
+      Result (Result'First) := Ada.Characters.Handling.To_Upper
+        (Item => Result (Result'First));
+      return Result;
+   end Capitalize;
 
    -------------------------------------------------------------------------
 
@@ -565,12 +580,10 @@ is
       is
          Dev      : constant Device_Type
            := Devices_Package.Element (Position => Pos);
-         Dev_Name : String               := To_String (Dev.Name);
          Port_Idx : Ports_Package.Cursor := Dev.IO_Ports.First;
+         Dev_Name : constant String      := Capitalize
+           (Str => To_String (Dev.Name));
       begin
-         Dev_Name (Dev_Name'First) := Ada.Characters.Handling.To_Upper
-           (Item => Dev_Name (Dev_Name'First));
-
          if Dev.IO_Ports.Is_Empty then
             return;
          end if;
@@ -1021,13 +1034,10 @@ is
          is
             use type Signals_Package.Cursor;
 
-            Sig : constant Signal_Table_Entry_Type
+            Sig      : constant Signal_Table_Entry_Type
               := Signals_Package.Element (Position => Pos);
-            Kind_Str : String := Ada.Characters.Handling.To_Lower
-              (Item => Sig.Kind'Img);
+            Kind_Str : constant String := Capitalize (Str => Sig.Kind'Img);
          begin
-            Kind_Str (Kind_Str'First) := Ada.Characters.Handling.To_Upper
-              (Item => Kind_Str (Kind_Str'First));
             Buffer := Buffer & Indent (N => 3) & Sig.Signal'Img
               & " => Signal_Entry_Type'("
               & ASCII.LF

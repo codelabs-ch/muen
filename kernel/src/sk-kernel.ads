@@ -26,28 +26,24 @@ is
    --#    in     GDT.GDT_Pointer;
    --#    in     Scheduler.State;
    --#    in     VMX.State;
-   --#    in     Interrupts.IDT;
-   --#    in     Interrupts.IDT_Pointer;
+   --#    in     Interrupts.State;
    --# derives
    --#    MP.Barrier, IO_Apic.State from
    --#       *,
    --#       X86_64.State,
-   --#       Interrupts.IDT,
-   --#       Interrupts.IDT_Pointer &
+   --#       Interrupts.State &
    --#    CPU_Global.State from
    --#       *,
    --#       X86_64.State,
    --#       Scheduler.State,
-   --#       Interrupts.IDT,
-   --#       Interrupts.IDT_Pointer &
+   --#       Interrupts.State &
    --#    Subjects.State, Locks.State, X86_64.State from
    --#       *,
    --#       GDT.GDT_Pointer,
    --#       Subjects.State,
    --#       Scheduler.State,
    --#       VMX.State,
-   --#       Interrupts.IDT,
-   --#       Interrupts.IDT_Pointer,
+   --#       Interrupts.State,
    --#       X86_64.State;
    pragma Export (C, Main, "kmain");
 

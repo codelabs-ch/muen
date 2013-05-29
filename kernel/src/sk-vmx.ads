@@ -104,14 +104,14 @@ is
    --  Setup host fields of the currently active VMCS.
    procedure VMCS_Setup_Host_Fields;
    --# global
-   --#    in     Interrupts.IDT_Pointer;
+   --#    in     Interrupts.State;
    --#    in     GDT.GDT_Pointer;
    --#    in     State;
    --#    in out X86_64.State;
    --# derives
    --#    X86_64.State from
    --#       *,
-   --#       Interrupts.IDT_Pointer,
+   --#       Interrupts.State,
    --#       GDT.GDT_Pointer,
    --#       State;
 

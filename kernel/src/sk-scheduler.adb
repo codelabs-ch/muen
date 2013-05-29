@@ -226,7 +226,7 @@ is
    procedure Init
    --# global
    --#    in     Current_Major;
-   --#    in     Interrupts.IDT_Pointer;
+   --#    in     Interrupts.State;
    --#    in     GDT.GDT_Pointer;
    --#    in     VMX.State;
    --#    in out Subjects.State;
@@ -238,7 +238,7 @@ is
    --#    X86_64.State from
    --#       *,
    --#       Current_Major,
-   --#       Interrupts.IDT_Pointer,
+   --#       Interrupts.State,
    --#       GDT.GDT_Pointer,
    --#       VMX.State,
    --#       CPU_Global.State;

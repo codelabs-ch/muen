@@ -7,6 +7,8 @@ with SK.IO;
 with SK.IO_Apic;
 
 package body SK.Interrupts
+--# own
+--#    State is in ISR_List, IDT, IDT_Pointer;
 is
 
    subtype Exception_Range is Skp.Vector_Range range 0 .. 19;
@@ -45,6 +47,10 @@ is
    -------------------------------------------------------------------------
 
    function Get_IDT_Pointer return Descriptors.Pseudo_Descriptor_Type
+   --# global
+   --#    IDT_Pointer;
+   --# return
+   --#    IDT_Pointer;
    is
    begin
       return IDT_Pointer;
@@ -53,6 +59,11 @@ is
    -------------------------------------------------------------------------
 
    procedure Load
+   --# global
+   --#    in     IDT_Pointer;
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *, IDT_Pointer;
    is
       --# hide Load;
    begin

@@ -9,25 +9,23 @@ with SK.Descriptors;
 --#    SK.Descriptors;
 package SK.Interrupts
 --# own
---#       IDT, IDT_Pointer;
---#    in ISR_List : ISR_List_Type;
+--#    State;
 --# initializes
---#    IDT, IDT_Pointer;
+--#    State;
 is
 
    --  Load IDT into IDT register.
    procedure Load;
    --# global
-   --#    in     IDT;
-   --#    in     IDT_Pointer;
+   --#    in     State;
    --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State from *, IDT, IDT_Pointer;
+   --#    X86_64.State from *, State;
 
    --  Return IDT pointer.
    function Get_IDT_Pointer return Descriptors.Pseudo_Descriptor_Type;
    --# global
-   --#    IDT_Pointer;
+   --#    State;
 
    --  Mask all interrupts in the legacy PIC.
    procedure Disable_Legacy_PIC;

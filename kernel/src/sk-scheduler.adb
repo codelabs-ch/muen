@@ -16,8 +16,9 @@ package body SK.Scheduler
 --#    State is in New_Major, Current_Major;
 is
 
-   --  IRQ used for IPIs.
-   IPI_Vector : constant := 254;
+   --  IRQ constants.
+   Timer_Vector : constant := 32;
+   IPI_Vector   : constant := 254;
 
    Launched_Subject_State : constant SK.Subject_State_Type
      := SK.Subject_State_Type'
@@ -152,12 +153,16 @@ is
    --#    in out Current_Major;
    --#    in out CPU_Global.State;
    --#    in out MP.Barrier;
+   --#    in out Subjects.State;
+   --#    in out Locks.State;
    --# derives
    --#    MP.Barrier from
    --#       *,
    --#       Current_Major,
    --#       CPU_Global.State &
-   --#    Current_Major, CPU_Global.State, X86_64.State from
+   --#    Current_Major, CPU_Global.State, Subjects.State, Locks.State,
+   --#    X86_64.State from
+   --#       *,
    --#       Current_Major,
    --#       CPU_Global.State,
    --#       New_Major,
@@ -202,6 +207,13 @@ is
 
       Minor_Frame.Subject_Id := Plan_Frame.Subject_Id;
       CPU_Global.Set_Current_Minor (Frame => Minor_Frame);
+
+      if Skp.Subjects.Get_Profile
+        (Subject_Id => Minor_Frame.Subject_Id) = Skp.Subjects.Vm
+      then
+         Subjects.Set_Pending_Event (Id     => Minor_Frame.Subject_Id,
+                                     Vector => Timer_Vector);
+      end if;
 
       --  Update preemption timer ticks in subject VMCS.
 

@@ -7,6 +7,7 @@ use type Skp.Scheduling.Minor_Frame_Range;
 use type Skp.Subjects.Trap_Entry_Type;
 use type Skp.Subjects.Signal_Kind;
 use type Skp.Subjects.Signal_Entry_Type;
+use type Skp.Subjects.Profile_Kind;
 
 --# inherit
 --#    Skp.Subjects,

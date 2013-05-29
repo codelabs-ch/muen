@@ -56,7 +56,7 @@ begin
          State.RIP := State.RIP + State.Instruction_Len;
          SKI.Set_Subject_State (Id    => Id,
                                 State => State);
-         SK.Hypercall.Signal (Number => SK.Byte (Id));
+         SK.Hypercall.Trigger_Event (Number => SK.Byte (Id));
       else
          Text_IO.New_Line;
          Text_IO.Put_String (Item => "Unhandled trap for subject ");

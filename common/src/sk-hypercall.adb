@@ -5,9 +5,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Signal (Number : SK.Byte)
+   procedure Trigger_Event (Number : SK.Byte)
    is
-      --# hide Signal;
+      --# hide Trigger_Event;
 
       Id : SK.Word64 := Word64 (Number);
    begin
@@ -15,6 +15,6 @@ is
         (Template => "movq %0, %%rax; vmcall",
          Inputs   => (Word64'Asm_Input ("m", Id)),
          Volatile => True);
-   end Signal;
+   end Trigger_Event;
 
 end SK.Hypercall;

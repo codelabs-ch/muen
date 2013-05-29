@@ -121,6 +121,6 @@ begin
       State.RSP  := Skp.Subjects.Get_Stack_Address (Subject_Id => Id);
       DKI.Set_Subject_State (Id    => Id,
                              State => State);
-      SK.Hypercall.Signal (Number => SK.Byte (Id));
+      SK.Hypercall.Trigger_Event (Number => SK.Byte (Id));
    end loop;
 end Dumper;

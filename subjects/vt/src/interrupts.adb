@@ -112,7 +112,7 @@ is
                if VGA_Output.Get_Active_Slot = 4 then
                   VGA.Enable_Cursor;
                   Kbd_Driver.Scancode := Data;
-                  SK.Hypercall.Signal (Number => 1);
+                  SK.Hypercall.Trigger_Event (Number => 1);
                end if;
          end case;
       end loop;

@@ -3,7 +3,7 @@
 package SK.Hypercall
 is
 
-   --  Send signal with given number.
-   procedure Signal (Number : SK.Byte);
+   --  Trigger event with given number.
+   procedure Trigger_Event (Number : SK.Byte);
 
 end SK.Hypercall;

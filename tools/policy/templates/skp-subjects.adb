@@ -13,6 +13,7 @@ is
 
    type Subject_Spec_Type is record
       CPU_Id             : Skp.CPU_Range;
+      Profile            : Profile_Kind;
       PML4_Address       : SK.Word64;
       EPT_Pointer        : SK.Word64;
       VMCS_Address       : SK.Word64;
@@ -179,6 +180,19 @@ __subjects__);
       --# end accept;
       return Subject_Specs (Subject_Id).PML4_Address;
    end Get_PML4_Address;
+
+   -------------------------------------------------------------------------
+
+   function Get_Profile
+     (Subject_Id : Skp.Subject_Id_Type)
+      return Profile_Kind
+   is
+   begin
+      --# accept Warning, 444, "Profile is Profile_Kind (obviously)";
+      --# assume Subject_Specs (Subject_Id).Profile in Profile_Kind;
+      --# end accept;
+      return Subject_Specs (Subject_Id).Profile;
+   end Get_Profile;
 
    -------------------------------------------------------------------------
 

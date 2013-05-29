@@ -204,7 +204,7 @@ is
 
    subtype Signal_Table_Type is Signals_Package.Map;
 
-   type Subject_Profile_Type is (Native, VM);
+   type Subject_Profile_Type is (Native, Vm);
 
    type Subject_Type is record
       Id                 : Natural;

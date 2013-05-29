@@ -114,7 +114,7 @@ is
             CR4_Mask     => 16#ffff_ffff#,
             CS_Access    => 16#0000_a09b#,
             Exception_Bm => 16#ffff_ffff#),
-         VM     =>
+         Vm     =>
            (Exec_Pin     => Constants.VM_CTRL_EXT_INT_EXITING
             or Constants.VM_CTRL_PREEMPT_TIMER,
             Exec_Proc    => Constants.VM_CTRL_IO_BITMAPS
@@ -326,7 +326,7 @@ is
                         Writethrough  => True,
                         Cache_Disable => False,
                         Exec_Disable  => False);
-                  when VM =>
+                  when Vm =>
                      PML4 (Idx) := Paging.EPT.Create_PML4_Entry
                        (Address    => PDPT_Addr +
                           SK.Word64 (Idx) * SK.Page_Size,
@@ -357,7 +357,7 @@ is
                         Global       => False,
                         Memory_Type  => R.Memory_Type,
                         Exec_Disable => Is_PDPT_Page and not R.Executable);
-                  when VM =>
+                  when Vm =>
                      PDPT (Idx) := Paging.EPT.Create_PDPT_Entry
                        (Address     => PD_Addr,
                         Readable    => True,
@@ -392,7 +392,7 @@ is
                         Global       => False,
                         Memory_Type  => R.Memory_Type,
                         Exec_Disable => Is_PD_Page and not R.Executable);
-                  when VM =>
+                  when Vm =>
                      PD (Idx) := Paging.EPT.Create_PD_Entry
                        (Address     => PT_Addr,
                         Readable    => True,
@@ -420,7 +420,7 @@ is
                         Global       => False,
                         Memory_Type  => R.Memory_Type,
                         Exec_Disable => not R.Executable);
-                  when VM =>
+                  when Vm =>
                      PT (Idx) := Paging.EPT.Create_PT_Entry
                        (Address     => Physical_Addr,
                         Readable    => True,
@@ -1081,6 +1081,9 @@ is
            & " => Subject_Spec_Type'("
            & ASCII.LF
            & Indent & "    CPU_Id             =>" & Subject.CPU'Img & ","
+           & ASCII.LF
+           & Indent & "    Profile            => "
+           & Capitalize (Str => Subject.Profile'Img) & ","
            & ASCII.LF;
 
          case Subject.Profile is
@@ -1089,7 +1092,7 @@ is
                  & SK.Utils.To_Hex (Item => Subject.Pml4_Address) & "#,"
                  & ASCII.LF
                  & Indent & "    EPT_Pointer        => 0,";
-            when VM     => Buffer := Buffer
+            when Vm     => Buffer := Buffer
                  & Indent & "    PML4_Address       => 0,"
                  & ASCII.LF
                  & Indent & "    EPT_Pointer        => 16#"

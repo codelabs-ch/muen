@@ -4,6 +4,8 @@ with SK;
 package Skp.Subjects
 is
 
+   type Profile_Kind is (Native, Vm);
+
    type Trap_Entry_Type is record
       Dst_Subject : Skp.Dst_Subject_Type;
       Dst_Vector  : Skp.Dst_Vector_Range;
@@ -98,5 +100,9 @@ is
    function Get_Exception_Bitmap
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word32;
+
+   function Get_Profile
+     (Subject_Id : Skp.Subject_Id_Type)
+      return Profile_Kind;
 
 end Skp.Subjects;

@@ -87,7 +87,7 @@ begin
          Image.To_Binary (Src_Elf => Fn,
                           Dst_Bin => Raw_Bin);
 
-         if PML4_Addr = 0 then
+         if Get_Profile (Subject_Id => S) = Vm then
             PML4_Addr := Get_EPT_Pointer (Subject_Id => S) and Addr_Mask;
             Ada.Text_IO.Put_Line
               (SK.Utils.To_Hex (Item => PML4_Addr) & " [PML4] " & Name

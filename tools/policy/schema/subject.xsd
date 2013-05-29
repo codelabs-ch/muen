@@ -1,6 +1,6 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 	<xs:include schemaLocation="./types.xsd"/>
-	<xs:include schemaLocation="./signals.xsd"/>
+	<xs:include schemaLocation="./events.xsd"/>
 
 	<xs:complexType name="initial_state_type">
 		<xs:attribute name="stack_address" type="address_type" use="required"/>
@@ -37,7 +37,7 @@
 			<xs:element name="binary"        type="binary_reference_type" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="device"        type="device_reference_type" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="trap_table"    type="trap_table_type"       minOccurs="0" maxOccurs="1"/>
-			<xs:element name="signal_table"  type="signal_table_type"     minOccurs="0" maxOccurs="1"/>
+			<xs:element name="event_table"   type="event_table_type"      minOccurs="0" maxOccurs="1"/>
 			<xs:element name="msr"           type="msr_type"              minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="id"                 type="xs:nonNegativeInteger" use="required"/>

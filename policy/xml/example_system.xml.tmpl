@@ -47,9 +47,9 @@
 				<memory_region physical_address="242000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
 			</memory_layout>
 			<binary name="dumper" physical_address="237000"/>
-			<signal_table>
-				<entry kind="handover" signal="3" dst_subject="subject_b"/>
-			</signal_table>
+			<event_table>
+				<handover event="3" dst_subject="subject_b"/>
+			</event_table>
 		</subject>
 
 		<subject id="2" name="subject_a" profile="native" cpu="1" pml4_address="250000" io_bitmap_address="254000" msr_bitmap_address="256000">
@@ -97,9 +97,9 @@
 			<device name="vga"/>
 			<device name="cursor"/>
 			<device name="keyboard"/>
-			<signal_table>
-				<entry kind="synchronous" signal="1" dst_subject="xv6" dst_vector="33"/>
-			</signal_table>
+			<event_table>
+				<interrupt event="1" dst_subject="xv6" dst_vector="33" send_ipi="true"/>
+			</event_table>
 			<msr start="802" end="802" mode="r"/>
 		</subject>
 
@@ -121,9 +121,9 @@
 				<memory_region physical_address="342000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
 			</memory_layout>
 			<binary name="sm" physical_address="337000"/>
-			<signal_table>
-				<entry kind="handover" signal="7" dst_subject="xv6"/>
-			</signal_table>
+			<event_table>
+				<handover event="7" dst_subject="xv6"/>
+			</event_table>
 		</subject>
 
 		<subject id="7" name="xv6" profile="vm" cpu="2" pml4_address="500000" io_bitmap_address="504000" msr_bitmap_address="506000">

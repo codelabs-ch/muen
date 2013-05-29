@@ -41,8 +41,8 @@ is
         (Routine => Load_Invalid_Trap_Table'Access,
          Name    => "Load invalid subject trap table");
       T.Add_Test_Routine
-        (Routine => Load_Invalid_Signal_Table'Access,
-         Name    => "Load invalid subject signal table");
+        (Routine => Load_Invalid_Event_Table'Access,
+         Name    => "Load invalid subject event table");
       T.Add_Test_Routine
         (Routine => Load_Policy_Xml'Access,
          Name    => "Load policy from XML");
@@ -78,14 +78,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Load_Invalid_Signal_Table
+   procedure Load_Invalid_Event_Table
    is
       D : Xml.XML_Data_Type;
       P : Policy_Type;
       pragma Unreferenced (P);
    begin
       Xml.Parse (Data   => D,
-                 File   => "data/invalid_signal_table_ref.xml",
+                 File   => "data/invalid_event_table_ref.xml",
                  Schema => "schema/system.xsd");
 
       P := Xml.To_Policy (Data => D);
@@ -94,9 +94,9 @@ is
    exception
       when E : Xml.Processing_Error =>
          Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                 = "Subject tau0: Duplicate entry for signal 2",
+                 = "Subject tau0: Duplicate entry for event 2",
                  Message   => "Exception message mismatch");
-   end Load_Invalid_Signal_Table;
+   end Load_Invalid_Event_Table;
 
    -------------------------------------------------------------------------
 
@@ -483,22 +483,27 @@ is
          Assert (Condition => S.Trap_Table.Last_Element.Dst_Vector = 12,
                  Message   => "Trap dst vector mismatch (2)");
 
-         --  Subject signals
+         --  Subject events
 
-         Assert (Condition => S.Signal_Table.Length = 2,
-                 Message   => "Signal count mismatch");
-         Assert (Condition => S.Signal_Table.First_Element.Kind
-                 = Asynchronous,
-                 Message   => "Signal kind mismatch");
-         Assert (Condition => S.Signal_Table.First_Element.Signal = 17,
-                 Message   => "Signal mismatch");
-         Assert (Condition => S.Signal_Table.First_Element.Dst_Subject
-                 = "subject2",
-                 Message   => "Signal dst subject mismatch");
-         Assert (Condition => S.Signal_Table.First_Element.Dst_Vector = 32,
-                 Message   => "Signal dst vector mismatch (1)");
-         Assert (Condition => S.Signal_Table.Last_Element.Dst_Vector = 256,
-                 Message   => "Signal dst vector mismatch (2)");
+         Assert (Condition => S.Event_Table.Length = 2,
+                 Message   => "Event count mismatch");
+         Assert (Condition => S.Event_Table.First_Element.Event_Nr = 17,
+                 Message   => "Event mismatch");
+         Assert (Condition => S.Event_Table.First_Element.Dst_Subject
+                 = "subject1",
+                 Message   => "Event dst subject mismatch");
+         Assert (Condition => not S.Event_Table.First_Element.Handover,
+                 Message   => "Event handover true");
+         Assert (Condition => S.Event_Table.First_Element.Send_IPI,
+                 Message   => "Event send IPI false");
+         Assert (Condition => S.Event_Table.First_Element.Dst_Vector = 32,
+                 Message   => "Event dst vector mismatch (1)");
+         Assert (Condition => S.Event_Table.Last_Element.Dst_Vector = 256,
+                 Message   => "Event dst vector mismatch (2)");
+         Assert (Condition => S.Event_Table.Last_Element.Handover,
+                 Message   => "Event handover false");
+         Assert (Condition => not S.Event_Table.Last_Element.Send_IPI,
+                 Message   => "Event send IPI true");
       end;
    end Xml_To_Policy;
 

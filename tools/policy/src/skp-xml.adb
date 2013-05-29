@@ -348,7 +348,7 @@ is
          Subj_Mem   : Memory_Layout_Type;
          Subj_Bin   : Binary_Ref_Type;
          Subj_Traps : Trap_Table_Type;
-         Subj_Sigs  : Signal_Table_Type;
+         Subj_Evts  : Event_Table_Type;
 
          --  Add device resources (memory and I/O ports) to subject.
          procedure Add_Device (Node : DOM.Core.Node);
@@ -359,8 +359,8 @@ is
          --  Add trap table to subject.
          procedure Add_Traps (Node : DOM.Core.Node);
 
-         --  Add signal table to subject.
-         procedure Add_Signals (Node : DOM.Core.Node);
+         --  Add event table to subject.
+         procedure Add_Events (Node : DOM.Core.Node);
 
          --  Add binary resource to subject.
          procedure Add_Binary (Node : DOM.Core.Node);
@@ -408,6 +408,107 @@ is
 
          -------------------------------------------------------------------
 
+         procedure Add_Events (Node : DOM.Core.Node)
+         is
+
+            --  Initialize common event fields.
+            procedure Set_Common_Fields
+              (Node  :        DOM.Core.Node;
+               Event : in out Event_Table_Entry_Type);
+
+            --  Add handover event table entry.
+            procedure Add_Handover_Entry (Node : DOM.Core.Node);
+
+            --  Add interrupt event table entry.
+            procedure Add_Interrupt_Entry (Node : DOM.Core.Node);
+
+            ----------------------------------------------------------------
+
+            procedure Add_Handover_Entry (Node : DOM.Core.Node)
+            is
+               Event   : Event_Table_Entry_Type;
+               Dst_Vec : constant String := DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "dst_vector");
+            begin
+               Set_Common_Fields (Node  => Node,
+                                  Event => Event);
+
+               if Dst_Vec'Length > 0 then
+                  Event.Dst_Vector := Natural'Value (Dst_Vec);
+               end if;
+               Event.Handover := True;
+               Event.Send_IPI := False;
+
+               Subj_Evts.Insert (Key      => Event.Event_Nr,
+                                 New_Item => Event);
+
+            exception
+               when Constraint_Error =>
+                  raise Processing_Error with "Duplicate entry for event"
+                    & Event.Event_Nr'Img;
+            end Add_Handover_Entry;
+
+            ----------------------------------------------------------------
+
+            procedure Add_Interrupt_Entry (Node : DOM.Core.Node)
+            is
+               Event    : Event_Table_Entry_Type;
+               Dst_Vec  : constant String := DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "dst_vector");
+               Send_IPI : constant String := DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "send_ipi");
+            begin
+               Set_Common_Fields (Node  => Node,
+                                  Event => Event);
+
+               Event.Dst_Vector := Natural'Value (Dst_Vec);
+               Event.Handover   := False;
+
+               Event.Send_IPI := False;
+               if Send_IPI'Length > 0 and then Boolean'Value (Send_IPI) then
+                  Event.Send_IPI := True;
+               end if;
+
+               Subj_Evts.Insert (Key      => Event.Event_Nr,
+                                 New_Item => Event);
+
+            exception
+               when Constraint_Error =>
+                  raise Processing_Error with "Duplicate entry for event"
+                    & Event.Event_Nr'Img;
+            end Add_Interrupt_Entry;
+
+            ----------------------------------------------------------------
+
+            procedure Set_Common_Fields
+              (Node  :        DOM.Core.Node;
+               Event : in out Event_Table_Entry_Type)
+            is
+               Event_Nr : constant String := DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "event");
+               Dst_Subj : constant Unbounded_String
+                 := To_Unbounded_String (DOM.Core.Elements.Get_Attribute
+                                         (Elem => Node,
+                                          Name => "dst_subject"));
+            begin
+               Event.Event_Nr    := Natural'Value (Event_Nr);
+               Event.Dst_Subject := Dst_Subj;
+            end Set_Common_Fields;
+         begin
+            Util.For_Each_Node (Node     => Node,
+                                Tag_Name => "handover",
+                                Process  => Add_Handover_Entry'Access);
+            Util.For_Each_Node (Node     => Node,
+                                Tag_Name => "interrupt",
+                                Process  => Add_Interrupt_Entry'Access);
+         end Add_Events;
+
+         -------------------------------------------------------------------
+
          procedure Add_MSR (Node : DOM.Core.Node)
          is
             MSR       : MSR_Type;
@@ -433,55 +534,6 @@ is
             end if;
             MSRs.Append (New_Item => MSR);
          end Add_MSR;
-
-         -------------------------------------------------------------------
-
-         procedure Add_Signals (Node : DOM.Core.Node)
-         is
-
-            --  Add signal table entry.
-            procedure Add_Table_Entry (Node : DOM.Core.Node);
-
-            ----------------------------------------------------------------
-
-            procedure Add_Table_Entry (Node : DOM.Core.Node)
-            is
-               Kind_Str : constant String := DOM.Core.Elements.Get_Attribute
-                 (Elem => Node,
-                  Name => "kind");
-               Signal   : constant String := DOM.Core.Elements.Get_Attribute
-                 (Elem => Node,
-                  Name => "signal");
-               Dst_Vec  : constant String := DOM.Core.Elements.Get_Attribute
-                 (Elem => Node,
-                  Name => "dst_vector");
-               Dst_Subj : constant Unbounded_String
-                 := To_Unbounded_String (DOM.Core.Elements.Get_Attribute
-                                         (Elem => Node,
-                                          Name => "dst_subject"));
-
-               Ent : Signal_Table_Entry_Type;
-            begin
-               Ent.Kind        := Signal_Kind'Value (Kind_Str);
-               Ent.Signal      := Natural'Value (Signal);
-               Ent.Dst_Subject := Dst_Subj;
-               if Dst_Vec'Length > 0 then
-                  Ent.Dst_Vector := Natural'Value (Dst_Vec);
-               end if;
-
-               Subj_Sigs.Insert (Key      => Ent.Signal,
-                                 New_Item => Ent);
-
-            exception
-               when Constraint_Error =>
-                  raise Processing_Error with "Duplicate entry for signal "
-                    & Signal;
-            end Add_Table_Entry;
-         begin
-            Util.For_Each_Node (Node     => Node,
-                                Tag_Name => "entry",
-                                Process  => Add_Table_Entry'Access);
-         end Add_Signals;
 
          -------------------------------------------------------------------
 
@@ -552,8 +604,8 @@ is
                              Tag_Name => "trap_table",
                              Process  => Add_Traps'Access);
          Util.For_Each_Node (Node     => Node,
-                             Tag_Name => "signal_table",
-                             Process  => Add_Signals'Access);
+                             Tag_Name => "event_table",
+                             Process  => Add_Events'Access);
 
          State.Stack_Address := To_Word64
            (Hex => Util.Get_Element_Attr_By_Tag_Name
@@ -584,7 +636,7 @@ is
                IO_Ports           => Ports,
                MSRs               => MSRs,
                Trap_Table         => Subj_Traps,
-               Signal_Table       => Subj_Sigs));
+               Event_Table        => Subj_Evts));
 
       exception
          when E : others =>

@@ -297,53 +297,48 @@ is
          --  Validate given trap table entry.
          procedure Validate_Trap_Entry (Pos : Traps_Package.Cursor);
 
-         --  Validate given signal table entry.
-         procedure Validate_Signal_Entry (Pos : Signals_Package.Cursor);
+         --  Validate given event table entry.
+         procedure Validate_Event_Entry (Pos : Events_Package.Cursor);
 
          -------------------------------------------------------------------
 
-         procedure Validate_Signal_Entry (Pos : Signals_Package.Cursor)
+         procedure Validate_Event_Entry (Pos : Events_Package.Cursor)
          is
-            Sig    : constant Signal_Table_Entry_Type
-              := Signals_Package.Element (Position => Pos);
+            Event  : constant Event_Table_Entry_Type
+              := Events_Package.Element (Position => Pos);
             Dst_Id : Integer;
          begin
-            if Sig.Dst_Subject = S.Name then
-               raise Validation_Error with "Reference to self in signal table "
-                 & "entry" & Sig.Signal'Img;
+            if Event.Dst_Subject = S.Name then
+               raise Validation_Error with "Reference to self in event table "
+                 & "entry" & Event.Event_Nr'Img;
             end if;
 
             Dst_Id := Get_Id (Subjects => P.Subjects,
-                              Name     => Sig.Dst_Subject);
+                              Name     => Event.Dst_Subject);
             if Dst_Id = -1 then
                raise Validation_Error with "Undefined destination subject '"
-                 & To_String (Sig.Dst_Subject) & "' in signal table entry"
-                 & Sig.Signal'Img;
+                 & To_String (Event.Dst_Subject) & "' in event table entry"
+                 & Event.Event_Nr'Img;
             end if;
 
-            if Sig.Kind /= Handover and then Sig.Dst_Vector = 256 then
-               raise Validation_Error with "No destination vector given in "
-                 & "signal table entry" & Sig.Signal'Img;
-            end if;
-
-            if Sig.Kind = Handover and then S.CPU /= Get_CPU
+            if Event.Handover and then S.CPU /= Get_CPU
               (Subjects   => P.Subjects,
                Subject_Id => Dst_Id)
             then
                raise Validation_Error with "Invalid destination subject '"
-                 & To_String (Sig.Dst_Subject) & "' in handover signal - runs"
+                 & To_String (Event.Dst_Subject) & "' in handover event - runs"
                  & " on different CPU";
             end if;
 
-            if Sig.Kind = Synchronous and then S.CPU = Get_CPU
+            if Event.Send_IPI and then S.CPU = Get_CPU
               (Subjects   => P.Subjects,
                Subject_Id => Dst_Id)
             then
                raise Validation_Error with "Invalid destination subject '"
-                 & To_String (Sig.Dst_Subject) & "' in synchronous signal - "
-                 & "runs on same CPU";
+                 & To_String (Event.Dst_Subject) & "' in interrupt event - "
+                 & "runs on same CPU, no IPI allowed";
             end if;
-         end Validate_Signal_Entry;
+         end Validate_Event_Entry;
 
          -------------------------------------------------------------------
 
@@ -408,8 +403,8 @@ is
               & To_String (S.Binary.Name) & "' not found in policy";
          end if;
 
-         S.Trap_Table.Iterate (Process => Validate_Trap_Entry'Access);
-         S.Signal_Table.Iterate (Process => Validate_Signal_Entry'Access);
+         S.Trap_Table.Iterate  (Process => Validate_Trap_Entry'Access);
+         S.Event_Table.Iterate (Process => Validate_Event_Entry'Access);
 
       exception
          when E : Validation_Error =>

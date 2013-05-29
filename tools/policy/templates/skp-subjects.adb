@@ -6,10 +6,10 @@ is
    Null_Trap_Table : constant Trap_Table_Type := Trap_Table_Type'
      (others => Null_Trap);
 
-   type Signal_Table_Type is array (Signal_Range) of Signal_Entry_Type;
+   type Event_Table_Type is array (Event_Range) of Event_Entry_Type;
 
-   Null_Signal_Table : constant Signal_Table_Type := Signal_Table_Type'
-     (others => Null_Signal);
+   Null_Event_Table : constant Event_Table_Type := Event_Table_Type'
+     (others => Null_Event);
 
    type Subject_Spec_Type is record
       CPU_Id             : Skp.CPU_Range;
@@ -29,7 +29,7 @@ is
       Exception_Bitmap   : SK.Word32;
       VMX_Controls       : VMX_Controls_Type;
       Trap_Table         : Trap_Table_Type;
-      Signal_Table       : Signal_Table_Type;
+      Event_Table        : Event_Table_Type;
    end record;
 
    type Subject_Spec_Array is array (Skp.Subject_Id_Type) of Subject_Spec_Type;
@@ -131,6 +131,17 @@ __subjects__);
 
    -------------------------------------------------------------------------
 
+   function Get_Event
+     (Subject_Id : Skp.Subject_Id_Type;
+      Event_Nr   : Event_Range)
+      return Event_Entry_Type
+   is
+   begin
+      return Subject_Specs (Subject_Id).Event_Table (Event_Nr);
+   end Get_Event;
+
+   -------------------------------------------------------------------------
+
    function Get_Exception_Bitmap
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word32
@@ -183,9 +194,7 @@ __subjects__);
 
    -------------------------------------------------------------------------
 
-   function Get_Profile
-     (Subject_Id : Skp.Subject_Id_Type)
-      return Profile_Kind
+   function Get_Profile (Subject_Id : Skp.Subject_Id_Type) return Profile_Kind
    is
    begin
       --# accept Warning, 444, "Profile is Profile_Kind (obviously)";
@@ -193,17 +202,6 @@ __subjects__);
       --# end accept;
       return Subject_Specs (Subject_Id).Profile;
    end Get_Profile;
-
-   -------------------------------------------------------------------------
-
-   function Get_Signal
-     (Subject_Id : Skp.Subject_Id_Type;
-      Signal_Nr  : Signal_Range)
-      return Signal_Entry_Type
-   is
-   begin
-      return Subject_Specs (Subject_Id).Signal_Table (Signal_Nr);
-   end Get_Signal;
 
    -------------------------------------------------------------------------
 

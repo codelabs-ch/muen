@@ -72,20 +72,17 @@ is
         (Routine => Invalid_Subj_Trap_Dst_CPU'Access,
          Name    => "Invalid subject trap table entry dst CPU");
       T.Add_Test_Routine
-        (Routine => Invalid_Subj_Signal_Self_Ref'Access,
-         Name    => "Invalid subject signal table self-reference");
+        (Routine => Invalid_Subj_Event_Self_Ref'Access,
+         Name    => "Invalid subject event table self-reference");
       T.Add_Test_Routine
-        (Routine => Invalid_Subj_Signal_Dst'Access,
-         Name    => "Invalid subject signal table entry dst");
+        (Routine => Invalid_Subj_Event_Dst'Access,
+         Name    => "Invalid subject event table entry dst");
       T.Add_Test_Routine
-        (Routine => Invalid_Subj_Signal_Dst_CPU'Access,
-         Name    => "Invalid subject signal entry dst CPU");
+        (Routine => Invalid_Subj_Event_Dst_CPU'Access,
+         Name    => "Invalid subject event entry dst CPU");
       T.Add_Test_Routine
-        (Routine => Invalid_Subj_Sync_Signal_Dst_CPU'Access,
-         Name    => "Invalid subject sync signal dst CPU");
-      T.Add_Test_Routine
-        (Routine => Invalid_Subj_Signal_Dst_Vec'Access,
-         Name    => "Invalid subject signal entry dst vector");
+        (Routine => Invalid_Subj_Event_IPI_Dst_CPU'Access,
+         Name    => "Invalid subject IPI event dst CPU");
       T.Add_Test_Routine
         (Routine => Invalid_Subj_MSR'Access,
          Name    => "Invalid subject MSR");
@@ -416,6 +413,186 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Invalid_Subj_Event_Dst
+   is
+      E_Table : Event_Table_Type;
+      P       : Policy_Type;
+   begin
+      E_Table.Insert (Key      => 0,
+                      New_Item => (Event_Nr    => 0,
+                                   Dst_Subject => To_Unbounded_String ("xy"),
+                                   Dst_Vector  => 12,
+                                   Handover    => True,
+                                   Send_IPI    => False));
+      P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
+                         New_Item => To_Unbounded_String ("path/to/s2"));
+
+      P.Hardware.Processor.Logical_CPUs := 1;
+      P.Subjects.Insert
+        (New_Item =>
+           (Name               => To_Unbounded_String ("s1"),
+            CPU                => 0,
+            Pml4_Address       => 0,
+            IO_Bitmap_Address  => 0,
+            MSR_Bitmap_Address => 0,
+            Binary             => (Name   => To_Unbounded_String ("s2"),
+                                   others => 0),
+            Event_Table        => E_Table,
+            others             => <>));
+      Validators.Validate_Subjects (P => P);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Subject s1: Undefined destination subject 'xy' in "
+                 & "event table entry 0",
+                 Message   => "Exception message mismatch");
+   end Invalid_Subj_Event_Dst;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Subj_Event_Dst_CPU
+   is
+      E_Table : Event_Table_Type;
+      P       : Policy_Type;
+   begin
+      E_Table.Insert (Key      => 0,
+                      New_Item => (Event_Nr    => 0,
+                                   Dst_Subject => To_Unbounded_String ("s2"),
+                                   Dst_Vector  => 12,
+                                   Handover    => True,
+                                   Send_IPI    => False));
+      P.Binaries.Insert (Key      => To_Unbounded_String ("bin"),
+                         New_Item => To_Unbounded_String ("path/to/bin"));
+
+      P.Hardware.Processor.Logical_CPUs := 1;
+      P.Subjects.Insert
+        (New_Item =>
+           (Id                 => 0,
+            Name               => To_Unbounded_String ("s1"),
+            CPU                => 0,
+            Pml4_Address       => 0,
+            IO_Bitmap_Address  => 0,
+            MSR_Bitmap_Address => 0,
+            Binary             => (Name   => To_Unbounded_String ("bin"),
+                                   others => 0),
+            Event_Table        => E_Table,
+            others             => <>));
+      P.Subjects.Insert
+        (New_Item =>
+           (Id                 => 1,
+            Name               => To_Unbounded_String ("s2"),
+            CPU                => 1,
+            Pml4_Address       => 0,
+            IO_Bitmap_Address  => 0,
+            MSR_Bitmap_Address => 0,
+            Binary             => (Name   => To_Unbounded_String ("bin"),
+                                   others => 0),
+            Event_Table        => E_Table,
+            others             => <>));
+      Validators.Validate_Subjects (P => P);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Subject s1: Invalid destination subject 's2' in handover "
+                 & "event - runs on different CPU",
+                 Message   => "Exception message mismatch");
+   end Invalid_Subj_Event_Dst_CPU;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Subj_Event_IPI_Dst_CPU
+   is
+      E_Table : Event_Table_Type;
+      P       : Policy_Type;
+   begin
+      E_Table.Insert (Key      => 0,
+                      New_Item => (Event_Nr    => 0,
+                                   Dst_Subject => To_Unbounded_String ("s2"),
+                                   Dst_Vector  => 42,
+                                   Handover    => False,
+                                   Send_IPI    => True));
+      P.Binaries.Insert (Key      => To_Unbounded_String ("bin"),
+                         New_Item => To_Unbounded_String ("path/to/bin"));
+
+      P.Hardware.Processor.Logical_CPUs := 1;
+      P.Subjects.Insert
+        (New_Item =>
+           (Id                 => 0,
+            Name               => To_Unbounded_String ("s1"),
+            CPU                => 0,
+            Pml4_Address       => 0,
+            IO_Bitmap_Address  => 0,
+            MSR_Bitmap_Address => 0,
+            Binary             => (Name   => To_Unbounded_String ("bin"),
+                                   others => 0),
+            Event_Table        => E_Table,
+            others             => <>));
+      P.Subjects.Insert
+        (New_Item =>
+           (Id                 => 1,
+            Name               => To_Unbounded_String ("s2"),
+            CPU                => 0,
+            Pml4_Address       => 0,
+            IO_Bitmap_Address  => 0,
+            MSR_Bitmap_Address => 0,
+            Binary             => (Name   => To_Unbounded_String ("bin"),
+                                   others => 0),
+            others             => <>));
+      Validators.Validate_Subjects (P => P);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Subject s1: Invalid destination subject 's2' in "
+                 & "interrupt event - runs on same CPU, no IPI allowed",
+                 Message   => "Exception message mismatch");
+   end Invalid_Subj_Event_IPI_Dst_CPU;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Subj_Event_Self_Ref
+   is
+      E_Table : Event_Table_Type;
+      P       : Policy_Type;
+   begin
+      E_Table.Insert (Key      => 0,
+                      New_Item => (Event_Nr    => 0,
+                                   Dst_Subject => To_Unbounded_String ("s1"),
+                                   Dst_Vector  => 12,
+                                   Handover    => True,
+                                   Send_IPI    => False));
+      P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
+                         New_Item => To_Unbounded_String ("path/to/s2"));
+
+      P.Hardware.Processor.Logical_CPUs := 1;
+      P.Subjects.Insert
+        (New_Item =>
+           (Name               => To_Unbounded_String ("s1"),
+            CPU                => 0,
+            Pml4_Address       => 0,
+            IO_Bitmap_Address  => 0,
+            MSR_Bitmap_Address => 0,
+            Binary             => (Name   => To_Unbounded_String ("s2"),
+                                   others => 0),
+            Event_Table        => E_Table,
+            others             => <>));
+      Validators.Validate_Subjects (P => P);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Validators.Validation_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Subject s1: Reference to self in event table entry 0",
+                 Message   => "Exception message mismatch");
+   end Invalid_Subj_Event_Self_Ref;
+
+   -------------------------------------------------------------------------
+
    procedure Invalid_Subj_IO_Bitmap_Addr
    is
       P : Policy_Type;
@@ -541,231 +718,6 @@ is
                  & "address must be 4k aligned",
                  Message   => "Exception message mismatch");
    end Invalid_Subj_Pml4_Addr;
-
-   -------------------------------------------------------------------------
-
-   procedure Invalid_Subj_Signal_Dst
-   is
-      S_Table : Signal_Table_Type;
-      P       : Policy_Type;
-   begin
-      S_Table.Insert (Key      => 0,
-                      New_Item => (Kind        => Asynchronous,
-                                   Signal      => 0,
-                                   Dst_Subject => To_Unbounded_String ("xy"),
-                                   Dst_Vector  => 12));
-      P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
-                         New_Item => To_Unbounded_String ("path/to/s2"));
-
-      P.Hardware.Processor.Logical_CPUs := 1;
-      P.Subjects.Insert
-        (New_Item =>
-           (Name               => To_Unbounded_String ("s1"),
-            CPU                => 0,
-            Pml4_Address       => 0,
-            IO_Bitmap_Address  => 0,
-            MSR_Bitmap_Address => 0,
-            Binary             => (Name   => To_Unbounded_String ("s2"),
-                                   others => 0),
-            Signal_Table       => S_Table,
-            others             => <>));
-      Validators.Validate_Subjects (P => P);
-      Fail (Message => "Exception expected");
-
-   exception
-      when E : Validators.Validation_Error =>
-         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                 = "Subject s1: Undefined destination subject 'xy' in "
-                 & "signal table entry 0",
-                 Message   => "Exception message mismatch");
-   end Invalid_Subj_Signal_Dst;
-
-   -------------------------------------------------------------------------
-
-   procedure Invalid_Subj_Signal_Dst_CPU
-   is
-      S_Table : Signal_Table_Type;
-      P       : Policy_Type;
-   begin
-      S_Table.Insert (Key      => 0,
-                      New_Item => (Kind        => Handover,
-                                   Signal      => 0,
-                                   Dst_Subject => To_Unbounded_String ("s2"),
-                                   Dst_Vector  => 12));
-      P.Binaries.Insert (Key      => To_Unbounded_String ("bin"),
-                         New_Item => To_Unbounded_String ("path/to/bin"));
-
-      P.Hardware.Processor.Logical_CPUs := 1;
-      P.Subjects.Insert
-        (New_Item =>
-           (Id                 => 0,
-            Name               => To_Unbounded_String ("s1"),
-            CPU                => 0,
-            Pml4_Address       => 0,
-            IO_Bitmap_Address  => 0,
-            MSR_Bitmap_Address => 0,
-            Binary             => (Name   => To_Unbounded_String ("bin"),
-                                   others => 0),
-            Signal_Table       => S_Table,
-            others             => <>));
-      P.Subjects.Insert
-        (New_Item =>
-           (Id                 => 1,
-            Name               => To_Unbounded_String ("s2"),
-            CPU                => 1,
-            Pml4_Address       => 0,
-            IO_Bitmap_Address  => 0,
-            MSR_Bitmap_Address => 0,
-            Binary             => (Name   => To_Unbounded_String ("bin"),
-                                   others => 0),
-            Signal_Table       => S_Table,
-            others             => <>));
-      Validators.Validate_Subjects (P => P);
-      Fail (Message => "Exception expected");
-
-   exception
-      when E : Validators.Validation_Error =>
-         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                 = "Subject s1: Invalid destination subject 's2' in handover "
-                 & "signal - runs on different CPU",
-                 Message   => "Exception message mismatch");
-   end Invalid_Subj_Signal_Dst_CPU;
-
-   -------------------------------------------------------------------------
-
-   procedure Invalid_Subj_Signal_Dst_Vec
-   is
-      S_Table : Signal_Table_Type;
-      P       : Policy_Type;
-   begin
-      S_Table.Insert (Key      => 0,
-                      New_Item => (Kind        => Asynchronous,
-                                   Signal      => 0,
-                                   Dst_Subject => To_Unbounded_String ("s1"),
-                                   others      => <>));
-      P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
-                         New_Item => To_Unbounded_String ("path/to/s2"));
-
-      P.Hardware.Processor.Logical_CPUs := 1;
-      P.Subjects.Insert
-        (New_Item =>
-           (Id                 => 1,
-            Name               => To_Unbounded_String ("s1"),
-            CPU                => 0,
-            Pml4_Address       => 0,
-            IO_Bitmap_Address  => 0,
-            MSR_Bitmap_Address => 0,
-            Binary             => (Name   => To_Unbounded_String ("s2"),
-                                   others => 0),
-            others             => <>));
-      P.Subjects.Insert
-        (New_Item =>
-           (Id                 => 12,
-            Name               => To_Unbounded_String ("s2"),
-            Pml4_Address       => 0,
-            IO_Bitmap_Address  => 0,
-            MSR_Bitmap_Address => 0,
-            Binary             => (Name   => To_Unbounded_String ("s2"),
-                                   others => 0),
-            Signal_Table       => S_Table,
-            others             => <>));
-      Validators.Validate_Subjects (P => P);
-      Fail (Message => "Exception expected");
-
-   exception
-      when E : Validators.Validation_Error =>
-         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                 = "Subject s2: No destination vector given in signal table"
-                 & " entry 0",
-                 Message   => "Exception message mismatch");
-   end Invalid_Subj_Signal_Dst_Vec;
-
-   -------------------------------------------------------------------------
-
-   procedure Invalid_Subj_Signal_Self_Ref
-   is
-      S_Table : Signal_Table_Type;
-      P       : Policy_Type;
-   begin
-      S_Table.Insert (Key      => 0,
-                      New_Item => (Kind        => Asynchronous,
-                                   Signal      => 0,
-                                   Dst_Subject => To_Unbounded_String ("s1"),
-                                   Dst_Vector  => 12));
-      P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
-                         New_Item => To_Unbounded_String ("path/to/s2"));
-
-      P.Hardware.Processor.Logical_CPUs := 1;
-      P.Subjects.Insert
-        (New_Item =>
-           (Name               => To_Unbounded_String ("s1"),
-            CPU                => 0,
-            Pml4_Address       => 0,
-            IO_Bitmap_Address  => 0,
-            MSR_Bitmap_Address => 0,
-            Binary             => (Name   => To_Unbounded_String ("s2"),
-                                   others => 0),
-            Signal_Table       => S_Table,
-            others             => <>));
-      Validators.Validate_Subjects (P => P);
-      Fail (Message => "Exception expected");
-
-   exception
-      when E : Validators.Validation_Error =>
-         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                 = "Subject s1: Reference to self in signal table entry 0",
-                 Message   => "Exception message mismatch");
-   end Invalid_Subj_Signal_Self_Ref;
-
-   -------------------------------------------------------------------------
-
-   procedure Invalid_Subj_Sync_Signal_Dst_CPU
-   is
-      S_Table : Signal_Table_Type;
-      P       : Policy_Type;
-   begin
-      S_Table.Insert (Key      => 0,
-                      New_Item => (Kind        => Synchronous,
-                                   Signal      => 0,
-                                   Dst_Subject => To_Unbounded_String ("s2"),
-                                   Dst_Vector  => 42));
-      P.Binaries.Insert (Key      => To_Unbounded_String ("bin"),
-                         New_Item => To_Unbounded_String ("path/to/bin"));
-
-      P.Hardware.Processor.Logical_CPUs := 1;
-      P.Subjects.Insert
-        (New_Item =>
-           (Id                 => 0,
-            Name               => To_Unbounded_String ("s1"),
-            CPU                => 0,
-            Pml4_Address       => 0,
-            IO_Bitmap_Address  => 0,
-            MSR_Bitmap_Address => 0,
-            Binary             => (Name   => To_Unbounded_String ("bin"),
-                                   others => 0),
-            Signal_Table       => S_Table,
-            others             => <>));
-      P.Subjects.Insert
-        (New_Item =>
-           (Id                 => 1,
-            Name               => To_Unbounded_String ("s2"),
-            CPU                => 0,
-            Pml4_Address       => 0,
-            IO_Bitmap_Address  => 0,
-            MSR_Bitmap_Address => 0,
-            Binary             => (Name   => To_Unbounded_String ("bin"),
-                                   others => 0),
-            others             => <>));
-      Validators.Validate_Subjects (P => P);
-      Fail (Message => "Exception expected");
-
-   exception
-      when E : Validators.Validation_Error =>
-         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                 = "Subject s1: Invalid destination subject 's2' in "
-                 & "synchronous signal - runs on same CPU",
-                 Message   => "Exception message mismatch");
-   end Invalid_Subj_Sync_Signal_Dst_CPU;
 
    -------------------------------------------------------------------------
 

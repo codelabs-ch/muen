@@ -186,23 +186,19 @@ is
 
    subtype Trap_Table_Type is Traps_Package.Map;
 
-   type Signal_Kind is
-     (Asynchronous,
-      Synchronous,
-      Handover);
-
-   type Signal_Table_Entry_Type is record
-      Kind        : Signal_Kind;
-      Signal      : Natural;
+   type Event_Table_Entry_Type is record
+      Event_Nr    : Natural;
       Dst_Subject : Ada.Strings.Unbounded.Unbounded_String;
       Dst_Vector  : Natural := 256;
+      Handover    : Boolean;
+      Send_IPI    : Boolean;
    end record;
 
-   package Signals_Package is new Ada.Containers.Ordered_Maps
+   package Events_Package is new Ada.Containers.Ordered_Maps
      (Key_Type     => Natural,
-      Element_Type => Signal_Table_Entry_Type);
+      Element_Type => Event_Table_Entry_Type);
 
-   subtype Signal_Table_Type is Signals_Package.Map;
+   subtype Event_Table_Type is Events_Package.Map;
 
    type Subject_Profile_Type is (Native, Vm);
 
@@ -220,7 +216,7 @@ is
       IO_Ports           : IO_Ports_Type;
       MSRs               : MSRs_Type;
       Trap_Table         : Trap_Table_Type;
-      Signal_Table       : Signal_Table_Type;
+      Event_Table        : Event_Table_Type;
    end record;
 
    function "<" (Left, Right : Subject_Type) return Boolean;

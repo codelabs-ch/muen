@@ -338,58 +338,56 @@ is
    --#       Subject_State &
    --#    Subject_State from *;
    is
-      Signal    : Skp.Subjects.Signal_Range;
-      Sig_Entry : Skp.Subjects.Signal_Entry_Type;
-      Dst_CPU   : Skp.CPU_Range;
-      Valid_Sig : Boolean;
+      Event       : Skp.Subjects.Event_Entry_Type;
+      Dst_CPU     : Skp.CPU_Range;
+      Valid_Event : Boolean;
    begin
-      Valid_Sig := Subject_State.Regs.RAX <= SK.Word64
-        (Skp.Subjects.Signal_Range'Last);
+      Valid_Event := Subject_State.Regs.RAX <= SK.Word64
+        (Skp.Subjects.Event_Range'Last);
 
-      if Valid_Sig then
-         Signal    := Skp.Subjects.Signal_Range (Subject_State.Regs.RAX);
-         Sig_Entry := Skp.Subjects.Get_Signal
+      if Valid_Event then
+         Event := Skp.Subjects.Get_Event
            (Subject_Id => Current_Subject,
-            Signal_Nr  => Signal);
+            Event_Nr   => Skp.Subjects.Event_Range (Subject_State.Regs.RAX));
 
-         if Sig_Entry.Dst_Subject /= Skp.Invalid_Subject then
-            if Sig_Entry.Dst_Vector /= Skp.Invalid_Vector then
+         if Event.Dst_Subject /= Skp.Invalid_Subject then
+            if Event.Dst_Vector /= Skp.Invalid_Vector then
                Subjects.Set_Pending_Event
-                 (Id     => Sig_Entry.Dst_Subject,
-                  Vector => SK.Byte (Sig_Entry.Dst_Vector));
+                 (Id     => Event.Dst_Subject,
+                  Vector => SK.Byte (Event.Dst_Vector));
 
-               if Sig_Entry.Kind = Skp.Subjects.Synchronous then
+               if Event.Send_IPI then
                   Dst_CPU := Skp.Subjects.Get_CPU_Id
-                    (Subject_Id => Sig_Entry.Dst_Subject);
+                    (Subject_Id => Event.Dst_Subject);
                   Apic.Send_IPI (Vector  => IPI_Vector,
                                  Apic_Id => SK.Byte (Dst_CPU));
                end if;
             end if;
 
-            if Sig_Entry.Kind = Skp.Subjects.Handover then
+            if Event.Handover then
 
                --# accept Warning, 444, "Guaranteed by validated policy";
-               --# assume Current_Subject /= Sig_Entry.Dst_Subject;
+               --# assume Current_Subject /= Event.Dst_Subject;
                --# end accept;
 
                Subject_Handover
                  (Old_Id   => Current_Subject,
-                  New_Id   => Sig_Entry.Dst_Subject,
+                  New_Id   => Event.Dst_Subject,
                   New_VMCS => Skp.Subjects.Get_VMCS_Address
-                    (Subject_Id => Sig_Entry.Dst_Subject));
+                    (Subject_Id => Event.Dst_Subject));
             end if;
          end if;
       end if;
 
-      pragma Debug (not Valid_Sig or Sig_Entry = Skp.Subjects.Null_Signal,
-                    KC.Put_String (Item => "Ignoring spurious signal "));
-      pragma Debug (not Valid_Sig or Sig_Entry = Skp.Subjects.Null_Signal,
-                    KC.Put_Byte   (Item => SK.Byte (Signal)));
-      pragma Debug (not Valid_Sig or Sig_Entry = Skp.Subjects.Null_Signal,
+      pragma Debug (not Valid_Event or Event = Skp.Subjects.Null_Event,
+                    KC.Put_String (Item => "Ignoring spurious event "));
+      pragma Debug (not Valid_Event or Event = Skp.Subjects.Null_Event,
+                    KC.Put_Byte   (Item => SK.Byte (Subject_State.Regs.RAX)));
+      pragma Debug (not Valid_Event or Event = Skp.Subjects.Null_Event,
                     KC.Put_String (Item => " from subject "));
-      pragma Debug (not Valid_Sig or Sig_Entry = Skp.Subjects.Null_Signal,
+      pragma Debug (not Valid_Event or Event = Skp.Subjects.Null_Event,
                     KC.Put_Byte   (Item => SK.Byte (Current_Subject)));
-      pragma Debug (not Valid_Sig or Sig_Entry = Skp.Subjects.Null_Signal,
+      pragma Debug (not Valid_Event or Event = Skp.Subjects.Null_Event,
                     KC.New_Line);
 
       Subject_State.RIP := Subject_State.RIP +

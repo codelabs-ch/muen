@@ -62,20 +62,17 @@ is
    --  Verify subject trap table entry with invalid destination subject CPU.
    procedure Invalid_Subj_Trap_Dst_CPU;
 
-   --  Verify subject with signal table entry self-reference.
-   procedure Invalid_Subj_Signal_Self_Ref;
+   --  Verify subject with event table entry self-reference.
+   procedure Invalid_Subj_Event_Self_Ref;
 
-   --  Verify subject signal table entry with invalid destination subject.
-   procedure Invalid_Subj_Signal_Dst;
+   --  Verify subject event table entry with invalid destination subject.
+   procedure Invalid_Subj_Event_Dst;
 
-   --  Verify subject signal table entry with invalid destination subject CPU.
-   procedure Invalid_Subj_Signal_Dst_CPU;
+   --  Verify subject event table entry with invalid destination subject CPU.
+   procedure Invalid_Subj_Event_Dst_CPU;
 
-   --  Verify subject sync signal table entry with invalid destination CPU.
-   procedure Invalid_Subj_Sync_Signal_Dst_CPU;
-
-   --  Verify subject signal table entry with invalid destination vector.
-   procedure Invalid_Subj_Signal_Dst_Vec;
+   --  Verify subject IPI event table entry with invalid destination CPU.
+   procedure Invalid_Subj_Event_IPI_Dst_CPU;
 
    --  Verify subject with invalid MSR.
    procedure Invalid_Subj_MSR;

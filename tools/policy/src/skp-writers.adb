@@ -1022,37 +1022,41 @@ is
          --  EPT memory type WB, page-walk length 4
          EPT_Flags : constant := 16#1e#;
 
-         --  Add signal entry to output buffer.
-         procedure Add_Signal (Pos : Signals_Package.Cursor);
+         --  Add event entry to output buffer.
+         procedure Add_Event (Pos : Events_Package.Cursor);
 
          --  Add trap entry to output buffer.
          procedure Add_Trap (Pos : Traps_Package.Cursor);
 
          -------------------------------------------------------------------
 
-         procedure Add_Signal (Pos : Signals_Package.Cursor)
+         procedure Add_Event (Pos : Events_Package.Cursor)
          is
-            use type Signals_Package.Cursor;
+            use type Events_Package.Cursor;
 
-            Sig      : constant Signal_Table_Entry_Type
-              := Signals_Package.Element (Position => Pos);
-            Kind_Str : constant String := Capitalize (Str => Sig.Kind'Img);
+            Event : constant Event_Table_Entry_Type
+              := Events_Package.Element (Position => Pos);
          begin
-            Buffer := Buffer & Indent (N => 3) & Sig.Signal'Img
-              & " => Signal_Entry_Type'("
-              & ASCII.LF
-              & Indent (N => 4) & "Kind        => " & Kind_Str & ","
+            Buffer := Buffer & Indent (N => 3) & Event.Event_Nr'Img
+              & " => Event_Entry_Type'("
               & ASCII.LF
               & Indent (N => 4) & "Dst_Subject =>"
               & Get_Id (Subjects => Policy.Subjects,
-                        Name     => Sig.Dst_Subject)'Img & ","
+                        Name     => Event.Dst_Subject)'Img & ","
               & ASCII.LF
-              & Indent (N => 4) & "Dst_Vector  =>" & Sig.Dst_Vector'Img & ")";
+              & Indent (N => 4) & "Dst_Vector  =>"
+              & Event.Dst_Vector'Img & ","
+              & ASCII.LF
+              & Indent (N => 4) & "Handover    => "
+              & Capitalize (Str => Event.Handover'Img) & ","
+              & ASCII.LF
+              & Indent (N => 4) & "Send_IPI    => "
+              & Capitalize (Str => Event.Send_IPI'Img) & ")";
 
-            if Pos /= Subject.Signal_Table.Last then
+            if Pos /= Subject.Event_Table.Last then
                Buffer := Buffer & "," & ASCII.LF;
             end if;
-         end Add_Signal;
+         end Add_Event;
 
          -------------------------------------------------------------------
 
@@ -1159,17 +1163,17 @@ is
          end if;
 
          Buffer := Buffer & ASCII.LF
-           & Indent & "    Signal_Table       => ";
+           & Indent & "    Event_Table        => ";
 
-         if Subject.Signal_Table.Is_Empty then
-            Buffer := Buffer & "Null_Signal_Table)";
+         if Subject.Event_Table.Is_Empty then
+            Buffer := Buffer & "Null_Event_Table)";
          else
-            Buffer := Buffer & "Signal_Table_Type'(" & ASCII.LF;
-            Subject.Signal_Table.Iterate (Process => Add_Signal'Access);
+            Buffer := Buffer & "Event_Table_Type'(" & ASCII.LF;
+            Subject.Event_Table.Iterate (Process => Add_Event'Access);
 
-            if Natural (Subject.Signal_Table.Length) /= 32 then
+            if Natural (Subject.Event_Table.Length) /= 32 then
                Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
-                 & " others => Null_Signal";
+                 & " others => Null_Event";
             end if;
             Buffer := Buffer & "))";
          end if;

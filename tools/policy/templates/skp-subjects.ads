@@ -17,23 +17,20 @@ is
 
    type Trap_Range is range 0 .. 59;
 
-   type Signal_Kind is
-     (Asynchronous,
-      Synchronous,
-      Handover);
-
-   type Signal_Entry_Type is record
-      Kind        : Signal_Kind;
+   type Event_Entry_Type is record
       Dst_Subject : Skp.Dst_Subject_Type;
       Dst_Vector  : Skp.Dst_Vector_Range;
+      Handover    : Boolean;
+      Send_IPI    : Boolean;
    end record;
 
-   Null_Signal : constant Signal_Entry_Type := Signal_Entry_Type'
-     (Kind        => Asynchronous,
-      Dst_Subject => Skp.Invalid_Subject,
-      Dst_Vector  => Skp.Invalid_Vector);
+   Null_Event : constant Event_Entry_Type := Event_Entry_Type'
+     (Dst_Subject => Skp.Invalid_Subject,
+      Dst_Vector  => Skp.Invalid_Vector,
+      Handover    => False,
+      Send_IPI    => False);
 
-   type Signal_Range is range 0 .. 31;
+   type Event_Range is range 0 .. 31;
 
    type VMX_Controls_Type is record
       Exec_Pin    : SK.Word32;
@@ -78,10 +75,10 @@ is
       Trap_Nr    : Trap_Range)
       return Trap_Entry_Type;
 
-   function Get_Signal
+   function Get_Event
      (Subject_Id : Skp.Subject_Id_Type;
-      Signal_Nr  : Signal_Range)
-      return Signal_Entry_Type;
+      Event_Nr   : Event_Range)
+      return Event_Entry_Type;
 
    function Get_VMX_Controls
      (Subject_Id : Skp.Subject_Id_Type)
@@ -101,8 +98,6 @@ is
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word32;
 
-   function Get_Profile
-     (Subject_Id : Skp.Subject_Id_Type)
-      return Profile_Kind;
+   function Get_Profile (Subject_Id : Skp.Subject_Id_Type) return Profile_Kind;
 
 end Skp.Subjects;

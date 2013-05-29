@@ -22,6 +22,9 @@ is
       Reserved         : SK.Word32;
    end record;
 
+   --  The ISR array type stores addresses of Interrupt Service Routines.
+   type ISR_Array is array (Skp.Vector_Range range <>) of SK.Word64;
+
    --  Interrupt descriptor table, see Intel SDM Vol. 3A, chapter 6.10.
    type IDT_Type is array (Skp.Vector_Range range <>) of Gate_Type;
 

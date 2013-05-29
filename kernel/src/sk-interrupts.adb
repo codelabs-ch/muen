@@ -11,10 +11,8 @@ is
 
    subtype Exception_Range is Skp.Vector_Range range 0 .. 19;
 
-   --  ISR list type.
-   type ISR_List_Type is array (Exception_Range) of SK.Word64;
-
-   --  ISR trampoline list.
+   --  ISR trampolines.
+   subtype ISR_List_Type is Descriptors.ISR_Array (Exception_Range);
    ISR_List : ISR_List_Type;
    pragma Import (C, ISR_List, "isrlist");
    --# assert ISR_List'Always_Valid;

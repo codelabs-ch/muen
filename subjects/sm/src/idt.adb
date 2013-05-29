@@ -12,13 +12,9 @@ is
    subtype Interrupt_Range is Skp.Vector_Range range
      0 .. 32 + Skp.Vector_Range (Skp.Subject_Id_Type'Last);
 
-   --  ISR list type.
-   type ISR_List_Type is array (Interrupt_Range) of SK.Word64;
-
-   --  ISR trampoline list.
-   ISRs : ISR_List_Type;
+   subtype ISR_Array is SK.Descriptors.ISR_Array (Interrupt_Range);
+   ISRs : ISR_Array;
    pragma Import (C, ISRs, "isrlist");
-   --# assert ISR_List'Always_Valid;
 
    subtype IDT_Type is SK.Descriptors.IDT_Type (Interrupt_Range);
 
@@ -39,10 +35,10 @@ is
    --  Load IDT into IDT register.
    procedure Load_IDT (IDT : SK.Descriptors.IDT_Type);
 
-   --  Setup IDT using the given ISR list.
+   --  Setup IDT using the given ISR addresses.
    procedure Setup_IDT
-     (ISR_List :     ISR_List_Type;
-      IDT      : out SK.Descriptors.IDT_Type);
+     (ISRs :     ISR_Array;
+      IDT  : out SK.Descriptors.IDT_Type);
 
    -------------------------------------------------------------------------
 
@@ -57,8 +53,8 @@ is
    procedure Initialize
    is
    begin
-      Setup_IDT (ISR_List => ISRs,
-                 IDT      => IDT);
+      Setup_IDT (ISRs => ISRs,
+                 IDT  => IDT);
       Load_IDT (IDT => IDT);
       Load_GDT;
    end Initialize;
@@ -103,21 +99,21 @@ is
    -------------------------------------------------------------------------
 
    procedure Setup_IDT
-     (ISR_List :     ISR_List_Type;
-      IDT      : out SK.Descriptors.IDT_Type)
+     (ISRs :     ISR_Array;
+      IDT  : out SK.Descriptors.IDT_Type)
    is
       use type SK.Word64;
    begin
       for I in Interrupt_Range loop
          IDT (I) := SK.Descriptors.Gate_Type'
            (Offset_15_00     => SK.Word16
-              (ISR_List (I) and 16#0000_0000_0000_ffff#),
+              (ISRs (I) and 16#0000_0000_0000_ffff#),
             Segment_Selector => 16#0008#,
             Flags            => 16#8e00#,
             Offset_31_16     => SK.Word16
-              ((ISR_List (I) and 16#0000_0000_ffff_0000#) / 2 ** 16),
+              ((ISRs (I) and 16#0000_0000_ffff_0000#) / 2 ** 16),
             Offset_63_32     => SK.Word32
-              ((ISR_List (I) and 16#ffff_ffff_0000_0000#) / 2 ** 32),
+              ((ISRs (I) and 16#ffff_ffff_0000_0000#) / 2 ** 32),
             Reserved         => 0);
       end loop;
    end Setup_IDT;

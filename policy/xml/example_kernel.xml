@@ -7,8 +7,8 @@
 		<!-- I/O APIC MMIO region        -->
 		<memory_region physical_address="fec00000" virtual_address="1fc000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
 		<!-- subject state descriptors   -->
-		<memory_region physical_address="1fe000" virtual_address="1fe000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
+		<memory_region physical_address="1fe000" virtual_address="1fe000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
 		<!-- τ0 => kernel interface page -->
-		<memory_region physical_address="1ff000" virtual_address="1ff000" size="4k" alignment="4k" writable="false" executable="false" memory_type="UC"/>
+		<memory_region physical_address="1ff000" virtual_address="1ff000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
 	</memory_layout>
 </kernel>

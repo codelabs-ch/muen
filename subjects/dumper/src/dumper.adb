@@ -111,9 +111,13 @@ begin
 
       Text_IO.Put_String (Item => "CR0: ");
       Text_IO.Put_Word64 (Item => State.CR0);
+      Text_IO.Put_String (Item => " CR2: ");
+      Text_IO.Put_Word64 (Item => State.CR2);
       Text_IO.Put_String (Item => " CR3: ");
       Text_IO.Put_Word64 (Item => State.CR3);
-      Text_IO.Put_String (Item => " CR4: ");
+      Text_IO.New_Line;
+
+      Text_IO.Put_String (Item => "CR4: ");
       Text_IO.Put_Word64 (Item => State.CR4);
       Text_IO.New_Line;
 

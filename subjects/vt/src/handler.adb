@@ -70,21 +70,9 @@ is
             when 1  =>
                Text_IO.Init;
             when 59 =>
-               VGA.Disable_Cursor;
+               VGA.Enable_Cursor;
                VGA_Output.Set (Slot => 1);
                Text_IO.Put_Line ("Switching to VT 1");
-            when 60 =>
-               VGA.Disable_Cursor;
-               VGA_Output.Set (Slot => 2);
-               Text_IO.Put_Line ("Switching to VT 2");
-            when 61 =>
-               VGA.Disable_Cursor;
-               VGA_Output.Set (Slot => 3);
-               Text_IO.Put_Line ("Switching to VT 3");
-            when 62 =>
-               VGA.Disable_Cursor;
-               VGA_Output.Set (Slot => 4);
-               Text_IO.Put_Line ("Switching to VT 4");
             when 63 =>
                VGA.Disable_Cursor;
                VGA_Output.Set (Slot => 5);
@@ -94,8 +82,7 @@ is
                VGA_Output.Set (Slot => 6);
                Text_IO.Put_Line ("Switching to VT 6");
             when others =>
-               if VGA_Output.Get_Active_Slot = 4 then
-                  VGA.Enable_Cursor;
+               if VGA_Output.Get_Active_Slot = 1 then
                   Kbd_Driver.Scancode := Data;
                   SK.Hypercall.Trigger_Event (Number => 1);
                end if;
@@ -108,7 +95,6 @@ is
    procedure Initialize
    is
    begin
-      VGA.Disable_Cursor;
       Text_IO.Init;
       Text_IO.Put_String (Item => "VT subject running on CPU ");
       Text_IO.Put_Byte   (Item => SK.Apic.Get_ID);

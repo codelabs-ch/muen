@@ -55,20 +55,24 @@ isrlist:
 
 .macro interrupt vector
 	isr_entry
+	push $\vector
+	jmp handle_all
+.endm
+
+handle_all:
 	save_regs
-	mov $\vector, %rdi
+	mov 0x70(%rsp), %rdi
 	call dispatch_interrupt
 	restore_regs
+	add $8, %rsp
 	iretq
-.endm
 
 .rept 32
 	reserved_entry
 .endr
 
 .set cur_vector, 32
-// Add one entry per subject
-.rept SUBJECT_COUNT
+.rept 224
 	interrupt cur_vector
 .set cur_vector, cur_vector + 1
 .endr

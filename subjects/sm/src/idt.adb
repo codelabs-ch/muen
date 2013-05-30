@@ -9,20 +9,14 @@ is
 
    use type Skp.Vector_Range;
 
-   subtype Interrupt_Range is Skp.Vector_Range range
-     0 .. 32 + Skp.Vector_Range (Skp.Subject_Id_Type'Last);
-
-   subtype ISR_Array is SK.Descriptors.ISR_Array (Interrupt_Range);
+   subtype ISR_Array is SK.Descriptors.ISR_Array (Skp.Vector_Range);
    ISRs : ISR_Array;
    pragma Import (C, ISRs, "isrlist");
 
-   subtype IDT_Type is SK.Descriptors.IDT_Type (Interrupt_Range);
-
-   --  IDT, see Intel SDM Vol. 3A, chapter 6.10.
+   subtype IDT_Type is SK.Descriptors.IDT_Type (Skp.Vector_Range);
    IDT : IDT_Type := (others => SK.Descriptors.Null_Gate);
 
    type GDT_Type is array (1 .. 3) of SK.Word64;
-
    GDT : GDT_Type;
    for GDT'Alignment use 8;
 

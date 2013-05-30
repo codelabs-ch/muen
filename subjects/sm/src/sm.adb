@@ -90,15 +90,20 @@ begin
          Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RCX));
          Text_IO.Put_String (Item => " EDX: ");
          Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RDX));
-         Text_IO.Put_String (Item => " ESI: ");
-         Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RSI));
          Text_IO.New_Line;
-         Text_IO.Put_String (Item => "EDI: ");
+
+         Text_IO.Put_String (Item => "ESI: ");
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RSI));
+         Text_IO.Put_String (Item => " EDI: ");
          Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RDI));
          Text_IO.Put_String (Item => " EBP: ");
          Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RBP));
-         Text_IO.Put_String (Item => " CR0: ");
+         Text_IO.New_Line;
+
+         Text_IO.Put_String (Item => "CR0: ");
          Text_IO.Put_Word32 (Item => SK.Word32 (State.CR0));
+         Text_IO.Put_String (Item => " CR2: ");
+         Text_IO.Put_Word32 (Item => SK.Word32 (State.CR2));
          Text_IO.Put_String (Item => " CR3: ");
          Text_IO.Put_Word32 (Item => SK.Word32 (State.CR3));
          Text_IO.Put_String (Item => " CR4: ");

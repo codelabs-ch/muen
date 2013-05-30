@@ -1,13 +1,13 @@
 with System.Machine_Code;
 with System.Storage_Elements;
 
+with Skp;
+
 with SK.CPU;
 with SK.Descriptors;
 
-package body Idt
+package body Interrupts
 is
-
-   use type Skp.Vector_Range;
 
    subtype ISR_Array is SK.Descriptors.ISR_Array (Skp.Vector_Range);
    ISRs : ISR_Array;
@@ -28,14 +28,6 @@ is
 
    --  Load IDT into IDT register.
    procedure Load_IDT (IDT : SK.Descriptors.IDT_Type);
-
-   -------------------------------------------------------------------------
-
-   procedure Handle_Interrupt (Vector : SK.Byte)
-   is
-   begin
-      Current_Subject := Integer (Vector) - 32;
-   end Handle_Interrupt;
 
    -------------------------------------------------------------------------
 
@@ -82,4 +74,4 @@ is
               (Value => IDT_Pointer'Address)));
    end Load_IDT;
 
-end Idt;
+end Interrupts;

@@ -1,5 +1,3 @@
-#include "policy.h"
-
 .data
 .global isrlist
 isrlist:

@@ -7,8 +7,8 @@ with SK.Hypercall;
 
 with Skp;
 
-with Idt;
-
+with Interrupts;
+with Handler;
 with Sm_Kernel_Iface;
 
 procedure Sm
@@ -35,7 +35,7 @@ is
 begin
    Text_IO.Init;
    Text_IO.Put_Line ("SM subject running");
-   Idt.Initialize;
+   Interrupts.Initialize;
 
    System.Machine_Code.Asm
      (Template => "sti",
@@ -43,7 +43,7 @@ begin
    SK.CPU.Hlt;
 
    loop
-      Id    := Idt.Current_Subject;
+      Id    := Handler.Current_Subject;
       State := SKI.Get_Subject_State (Id => Id);
 
       if State.Exit_Reason = 30 then

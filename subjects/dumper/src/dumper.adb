@@ -7,7 +7,8 @@ with SK.Hypercall;
 
 with Skp.Subjects;
 
-with Dump;
+with Interrupts;
+with Handler;
 
 with Dumper_Kernel_Iface;
 
@@ -31,7 +32,7 @@ is
    State : SK.Subject_State_Type;
    Id    : Skp.Subject_Id_Type;
 begin
-   Dump.Initialize;
+   Interrupts.Initialize;
    Text_IO.Init;
    Text_IO.Put_Line ("Dumper subject running");
 
@@ -41,7 +42,7 @@ begin
    SK.CPU.Hlt;
 
    loop
-      Id    := Dump.Current_Subject;
+      Id    := Handler.Current_Subject;
       State := DKI.Get_Subject_State (Id => Id);
 
       Text_IO.New_Line;

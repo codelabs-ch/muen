@@ -10,11 +10,11 @@ with Skp.Subjects;
 with Interrupts;
 with Handler;
 
-with Dumper_Kernel_Iface;
+with Knl_States_Interface;
 
 procedure Dumper
 is
-   package DKI renames Dumper_Kernel_Iface;
+   package KSI renames Knl_States_Interface;
 
    subtype Width_Type  is Natural range 1 .. 80;
    subtype Height_Type is Natural range 1 .. 25;
@@ -43,7 +43,7 @@ begin
 
    loop
       Id    := Handler.Current_Subject;
-      State := DKI.Get_Subject_State (Id => Id);
+      State := KSI.Get_Subject_State (Id => Id);
 
       Text_IO.New_Line;
       Text_IO.Put_String (Item => "Subject ");
@@ -124,7 +124,7 @@ begin
       State.Regs := SK.Null_CPU_Regs;
       State.RIP  := Skp.Subjects.Get_Entry_Point   (Subject_Id => Id);
       State.RSP  := Skp.Subjects.Get_Stack_Address (Subject_Id => Id);
-      DKI.Set_Subject_State (Id    => Id,
+      KSI.Set_Subject_State (Id    => Id,
                              State => State);
       SK.Hypercall.Trigger_Event (Number => SK.Byte (Id));
    end loop;

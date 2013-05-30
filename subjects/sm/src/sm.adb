@@ -9,13 +9,13 @@ with Skp;
 
 with Interrupts;
 with Handler;
-with Sm_Kernel_Iface;
+with Knl_States_Interface;
 
 procedure Sm
 is
    use type SK.Word64;
 
-   package SKI renames Sm_Kernel_Iface;
+   package KSI renames Knl_States_Interface;
 
    subtype Width_Type  is Natural range 1 .. 80;
    subtype Height_Type is Natural range 1 .. 25;
@@ -44,7 +44,7 @@ begin
 
    loop
       Id    := Handler.Current_Subject;
-      State := SKI.Get_Subject_State (Id => Id);
+      State := KSI.Get_Subject_State (Id => Id);
 
       if State.Exit_Reason = 30 then
          Text_IO.Put_String (Item => "Subject ");
@@ -54,7 +54,7 @@ begin
            (Item => SK.Word16 (State.Exit_Qualification / 2 ** 16));
          Text_IO.New_Line;
          State.RIP := State.RIP + State.Instruction_Len;
-         SKI.Set_Subject_State (Id    => Id,
+         KSI.Set_Subject_State (Id    => Id,
                                 State => State);
          SK.Hypercall.Trigger_Event (Number => SK.Byte (Id));
       else

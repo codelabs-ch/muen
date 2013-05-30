@@ -1,6 +1,6 @@
 with System;
 
-package body Dumper_Kernel_Iface
+package body Knl_States_Interface
 is
 
    Descriptors : SK.Subject_State_Array (Skp.Subject_Id_Type);
@@ -28,4 +28,4 @@ is
       Descriptors (Id) := State;
    end Set_Subject_State;
 
-end Dumper_Kernel_Iface;
+end Knl_States_Interface;

@@ -2,7 +2,7 @@ with Skp;
 
 with SK;
 
-package Dumper_Kernel_Iface
+package Knl_States_Interface
 is
 
    --  Return state of subject specified by id.
@@ -15,4 +15,4 @@ is
      (Id    : Skp.Subject_Id_Type;
       State : SK.Subject_State_Type);
 
-end Dumper_Kernel_Iface;
+end Knl_States_Interface;

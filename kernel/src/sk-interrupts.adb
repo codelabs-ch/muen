@@ -104,8 +104,8 @@ begin
 
    --# hide SK.Interrupts;
 
-   IDT_Pointer := Descriptors.Pseudo_Descriptor_Type'
-     (Limit => 16 * SK.Word16 (IDT'Length) - 1,
-      Base  => SK.Word64
-        (System.Storage_Elements.To_Integer (Value => IDT'Address)));
+   IDT_Pointer := Descriptors.Create_Descriptor
+     (Table_Address => SK.Word64
+        (System.Storage_Elements.To_Integer (Value => IDT'Address)),
+      Table_Length  => IDT'Length);
 end SK.Interrupts;

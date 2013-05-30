@@ -24,6 +24,9 @@ is
 
    Null_Gate : constant Gate_Type;
 
+   --  Range of descriptor table entries.
+   type Descriptor_Table_Range is range 1 .. 256;
+
    --  The ISR array type stores addresses of Interrupt Service Routines.
    type ISR_Array is array (Skp.Vector_Range range <>) of SK.Word64;
 
@@ -38,6 +41,12 @@ is
    --#    IDT from *, ISRs;
    --# pre
    --#    ISRs'First = IDT'First and ISRs'Last = IDT'Last;
+
+   --  Create pseudo-descriptor from given descriptor table address and length.
+   function Create_Descriptor
+     (Table_Address : SK.Word64;
+      Table_Length  : Descriptor_Table_Range)
+      return Pseudo_Descriptor_Type;
 
 private
 

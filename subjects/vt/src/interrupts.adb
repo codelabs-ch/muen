@@ -122,16 +122,15 @@ is
 
    procedure Initialize
    is
-      use type SK.Word16;
       use type SK.Word64;
    begin
       GDT := GDT_Type'(1 => 0,
                        2 => 16#20980000000000#,
                        3 => 16#20930000000000#);
-      GDT_Pointer := SK.Descriptors.Pseudo_Descriptor_Type'
-        (Limit => 16 * SK.Word16 (GDT'Last) - 1,
-         Base  => SK.Word64
-           (System.Storage_Elements.To_Integer (Value => GDT'Address)));
+      GDT_Pointer := SK.Descriptors.Create_Descriptor
+        (Table_Address => SK.Word64
+           (System.Storage_Elements.To_Integer (Value => GDT'Address)),
+         Table_Length  => GDT'Length);
       System.Machine_Code.Asm
         (Template => "lgdt (%0)",
          Inputs   => (System.Address'Asm_Input ("r", GDT_Pointer'Address)),
@@ -150,10 +149,10 @@ is
             Reserved         => 0);
       end loop;
 
-      IDT_Pointer := SK.Descriptors.Pseudo_Descriptor_Type'
-        (Limit => 16 * SK.Word16 (IDT'Length) - 1,
-         Base  => SK.Word64
-           (System.Storage_Elements.To_Integer (Value => IDT'Address)));
+      IDT_Pointer := SK.Descriptors.Create_Descriptor
+        (Table_Address => SK.Word64
+           (System.Storage_Elements.To_Integer (Value => IDT'Address)),
+         Table_Length  => IDT'Length);
       SK.CPU.Lidt
         (Address => SK.Word64
            (System.Storage_Elements.To_Integer

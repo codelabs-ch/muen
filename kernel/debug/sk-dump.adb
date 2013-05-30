@@ -1,5 +1,3 @@
-with System.Machine_Code;
-
 with SK.KC;
 with SK.CPU;
 with SK.Apic;
@@ -87,25 +85,7 @@ is
 
    procedure Print_State (Context : Isr_Context_Type)
    is
-      CR0, CR2, CR3, CR4 : Word64;
    begin
-      System.Machine_Code.Asm
-        (Template => "movq %%cr0, %0",
-         Outputs  => (Word64'Asm_Output ("=r", CR0)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%cr2, %0",
-         Outputs  => (Word64'Asm_Output ("=r", CR2)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%cr3, %0",
-         Outputs  => (Word64'Asm_Output ("=r", CR3)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %%cr4, %0",
-         Outputs  => (Word64'Asm_Output ("=r", CR4)),
-         Volatile => True);
-
       Locks.Spin_Lock;
       KC.New_Line;
       KC.Put_String (Item => "[CPU ");
@@ -125,10 +105,10 @@ is
                       RFL => Context.RFLAGS,
                       RSP => Context.RSP,
                       SS  => Context.SS,
-                      CR0 => CR0,
-                      CR2 => CR2,
-                      CR3 => CR3,
-                      CR4 => CR4);
+                      CR0 => CPU.Get_CR0,
+                      CR2 => CPU.Get_CR2,
+                      CR3 => CPU.Get_CR3,
+                      CR4 => CPU.Get_CR4);
       Locks.Unlock;
 
       CPU.Hlt;

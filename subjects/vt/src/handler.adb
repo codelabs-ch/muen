@@ -1,8 +1,5 @@
-with System.Machine_Code;
-with System.Storage_Elements;
+with System;
 
-with SK.CPU;
-with SK.Descriptors;
 with SK.IO;
 with SK.Apic;
 with SK.Console;
@@ -11,7 +8,7 @@ with SK.Hypercall;
 
 with VGA_Output;
 
-package body Interrupts
+package body Handler
 is
 
    subtype Width_Type  is Natural range 1 .. 80;
@@ -27,32 +24,13 @@ is
       Output_New_Line => VGA.New_Line,
       Output_Char     => VGA.Put_Char);
 
-   --  Assembly ISR.
-   ISR_Handler : SK.Word64;
-   pragma Import (C, ISR_Handler, "isr_handler_ptr");
-
-   subtype IDT_Type is SK.Descriptors.IDT_Type (0 .. 33);
-
-   IDT : IDT_Type;
-
-   --  Interrupt table pointer, loaded into IDTR
-   IDT_Pointer : SK.Descriptors.Pseudo_Descriptor_Type;
-
-   type GDT_Type is array (1 .. 3) of SK.Word64;
-
-   GDT : GDT_Type;
-   for GDT'Alignment use 8;
-
-   --  Global descriptor table pointer, loaded into GDTR
-   GDT_Pointer : SK.Descriptors.Pseudo_Descriptor_Type;
-
    type Kbd_Driver_Type is record
       Scancode : SK.Byte;
    end record;
 
    --  Xv6 driver page, currently used to forward keyboard scancodes.
    Kbd_Driver : Kbd_Driver_Type;
-   for Kbd_Driver'Address use System'To_Address (16#7000#);
+   for Kbd_Driver'Address use System'To_Address (16#20000#);
    pragma Volatile (Kbd_Driver);
 
    --  PS/2 constants.
@@ -64,13 +42,20 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Handle_Interrupt
+   procedure Handle_Interrupt (Vector : SK.Byte)
    is
       use type SK.Byte;
       use type VGA_Output.Slot_Range;
 
       Status, Data : SK.Byte;
    begin
+      if Vector /= 33 then
+         Text_IO.Put_String (Item => "Ignoring spurious interrupt ");
+         Text_IO.Put_Byte   (Item => Vector);
+         Text_IO.New_Line;
+         return;
+      end if;
+
       loop
          SK.IO.Inb (Port  => Status_Register,
                     Value => Status);
@@ -122,42 +107,7 @@ is
 
    procedure Initialize
    is
-      use type SK.Word64;
    begin
-      GDT := GDT_Type'(1 => 0,
-                       2 => 16#20980000000000#,
-                       3 => 16#20930000000000#);
-      GDT_Pointer := SK.Descriptors.Create_Descriptor
-        (Table_Address => SK.Word64
-           (System.Storage_Elements.To_Integer (Value => GDT'Address)),
-         Table_Length  => GDT'Length);
-      System.Machine_Code.Asm
-        (Template => "lgdt (%0)",
-         Inputs   => (System.Address'Asm_Input ("r", GDT_Pointer'Address)),
-         Volatile => True);
-
-      for I in IDT'Range loop
-         IDT (I) := SK.Descriptors.Gate_Type'
-           (Offset_15_00     => SK.Word16
-              (ISR_Handler and 16#0000_0000_0000_ffff#),
-            Segment_Selector => 16#0008#,
-            Flags            => 16#8e00#,
-            Offset_31_16     => SK.Word16
-              ((ISR_Handler and 16#0000_0000_ffff_0000#) / 2 ** 16),
-            Offset_63_32     => SK.Word32
-              ((ISR_Handler and 16#ffff_ffff_0000_0000#) / 2 ** 32),
-            Reserved         => 0);
-      end loop;
-
-      IDT_Pointer := SK.Descriptors.Create_Descriptor
-        (Table_Address => SK.Word64
-           (System.Storage_Elements.To_Integer (Value => IDT'Address)),
-         Table_Length  => IDT'Length);
-      SK.CPU.Lidt
-        (Address => SK.Word64
-           (System.Storage_Elements.To_Integer
-              (Value => IDT_Pointer'Address)));
-
       VGA.Disable_Cursor;
       Text_IO.Init;
       Text_IO.Put_String (Item => "VT subject running on CPU ");
@@ -165,4 +115,4 @@ is
       Text_IO.New_Line;
    end Initialize;
 
-end Interrupts;
+end Handler;

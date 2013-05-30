@@ -6,12 +6,6 @@
 <!ENTITY scheduling SYSTEM "example_scheduling.xml">
 <!ENTITY tau0init   SYSTEM "tau0.xml">
 <!ENTITY tau0mem    SYSTEM "tau0_mem.xml">
-<!ENTITY dumperinit SYSTEM "dumper.xml">
-<!ENTITY dumpermem  SYSTEM "dumper_mem.xml">
-<!ENTITY subjainit  SYSTEM "subject_a.xml">
-<!ENTITY subjamem   SYSTEM "subject_a_mem.xml">
-<!ENTITY subjbinit  SYSTEM "subject_b.xml">
-<!ENTITY subjbmem   SYSTEM "subject_b_mem.xml">
 <!ENTITY vtinit     SYSTEM "vt.xml">
 <!ENTITY vtmem      SYSTEM "vt_mem.xml">
 <!ENTITY idleinit   SYSTEM "idle.xml">
@@ -37,45 +31,7 @@
 			<binary name="tau0" physical_address="217000"/>
 		</subject>
 
-		<subject id="1" name="dumper" profile="native" cpu="1" pml4_address="230000" io_bitmap_address="234000" msr_bitmap_address="236000">
-			&dumperinit;
-			<memory_layout>
-				&dumpermem;
-				<!-- subject state descriptors  -->
-				<memory_region physical_address="1fe000" virtual_address="1fe000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
-				<!-- virtual terminal console 3 -->
-				<memory_region physical_address="242000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
-			</memory_layout>
-			<binary name="dumper" physical_address="237000"/>
-			<event_table>
-				<handover event="3" dst_subject="subject_b"/>
-			</event_table>
-		</subject>
-
-		<subject id="2" name="subject_a" profile="native" cpu="1" pml4_address="250000" io_bitmap_address="254000" msr_bitmap_address="256000">
-			&subjainit;
-			<memory_layout>
-				&subjamem;
-				<!-- virtual terminal console 1 -->
-				<memory_region physical_address="260000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
-			</memory_layout>
-			<binary name="subject_a" physical_address="257000"/>
-		</subject>
-
-		<subject id="3" name="subject_b" profile="native" cpu="1" pml4_address="270000" io_bitmap_address="274000" msr_bitmap_address="276000">
-			&subjbinit;
-			<memory_layout>
-				&subjbmem;
-				<!-- virtual terminal console 2 -->
-				<memory_region physical_address="280000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
-			</memory_layout>
-			<binary name="subject_b" physical_address="277000"/>
-			<trap_table>
-				<entry kind="exception_or_nmi" dst_subject="dumper" dst_vector="35"/>
-			</trap_table>
-		</subject>
-
-		<subject id="4" name="vt" profile="native" cpu="0" pml4_address="290000" io_bitmap_address="294000" msr_bitmap_address="296000">
+		<subject id="1" name="vt" profile="native" cpu="0" pml4_address="290000" io_bitmap_address="294000" msr_bitmap_address="296000">
 			&vtinit;
 			<memory_layout>
 				&vtmem;
@@ -103,7 +59,7 @@
 			<msr start="802" end="802" mode="r"/>
 		</subject>
 
-		<subject id="5" name="idle" profile="native" cpu="2" pml4_address="310000" io_bitmap_address="314000" msr_bitmap_address="316000">
+		<subject id="2" name="idle" profile="native" cpu="2" pml4_address="310000" io_bitmap_address="314000" msr_bitmap_address="316000">
 			&idleinit;
 			<memory_layout>
 				&idlemem;
@@ -111,7 +67,7 @@
 			<binary name="idle" physical_address="317000"/>
 		</subject>
 
-		<subject id="6" name="sm" profile="native" cpu="2" pml4_address="330000" io_bitmap_address="334000" msr_bitmap_address="336000">
+		<subject id="3" name="sm" profile="native" cpu="1" pml4_address="330000" io_bitmap_address="334000" msr_bitmap_address="336000">
 			&sminit;
 			<memory_layout>
 				&smmem;
@@ -122,11 +78,11 @@
 			</memory_layout>
 			<binary name="sm" physical_address="337000"/>
 			<event_table>
-				<handover event="7" dst_subject="xv6"/>
+				<handover event="4" dst_subject="xv6"/>
 			</event_table>
 		</subject>
 
-		<subject id="7" name="xv6" profile="vm" cpu="2" pml4_address="500000" io_bitmap_address="504000" msr_bitmap_address="506000">
+		<subject id="4" name="xv6" profile="vm" cpu="1" pml4_address="500000" io_bitmap_address="504000" msr_bitmap_address="506000">
 			&xv6init;
 			<memory_layout>
 				&xv6mem;
@@ -138,7 +94,7 @@
 			<binary name="xv6" physical_address="507000"/>
 			<device name="cursor"/>
 			<trap_table>
-				<entry kind="*" dst_subject="sm" dst_vector="39"/>
+				<entry kind="*" dst_subject="sm" dst_vector="36"/>
 			</trap_table>
 		</subject>
 	</subjects>

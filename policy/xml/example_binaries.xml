@@ -1,10 +1,7 @@
 <binaries>
-	<binary name="tau0"      path="subjects/tau0/obj/tau0"      />
-	<binary name="dumper"    path="subjects/dumper/obj/dumper"  />
-	<binary name="subject_a" path="subjects/test/obj/subject_a" />
-	<binary name="subject_b" path="subjects/test/obj/subject_b" />
-	<binary name="vt"        path="subjects/vt/obj/vt"          />
-	<binary name="idle"      path="subjects/idle/obj/idle"      />
-	<binary name="sm"        path="subjects/sm/obj/sm"          />
-	<binary name="xv6"       path="subjects/xv6/src/kernelmemfs"/>
+	<binary name="tau0" path="subjects/tau0/obj/tau0"      />
+	<binary name="vt"   path="subjects/vt/obj/vt"          />
+	<binary name="idle" path="subjects/idle/obj/idle"      />
+	<binary name="sm"   path="subjects/sm/obj/sm"          />
+	<binary name="xv6"  path="subjects/xv6/src/kernelmemfs"/>
 </binaries>

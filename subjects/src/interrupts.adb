@@ -16,18 +16,21 @@ is
    subtype IDT_Type is SK.Descriptors.IDT_Type (Skp.Vector_Range);
    IDT : IDT_Type := (others => SK.Descriptors.Null_Gate);
 
+   --  IDT descriptor, loaded into IDTR.
+   IDT_Descriptor : SK.Descriptors.Pseudo_Descriptor_Type;
+
    type GDT_Type is array (1 .. 3) of SK.Word64;
    GDT : GDT_Type;
    for GDT'Alignment use 8;
 
-   --  Global descriptor table pointer, loaded into GDTR
-   GDT_Pointer : SK.Descriptors.Pseudo_Descriptor_Type;
+   --  GDT descriptor, loaded into GDTR.
+   GDT_Descriptor : SK.Descriptors.Pseudo_Descriptor_Type;
 
-   --  Load GDT with two entries (code & stack) and load it into GDT register.
+   --  Setup GDT with two entries (code & stack) and load it into GDTR.
    procedure Load_GDT;
 
-   --  Load IDT into IDT register.
-   procedure Load_IDT (IDT : SK.Descriptors.IDT_Type);
+   --  Load IDT into IDTR.
+   procedure Load_IDT;
 
    -------------------------------------------------------------------------
 
@@ -36,8 +39,8 @@ is
    begin
       SK.Descriptors.Setup_IDT (ISRs => ISRs,
                                 IDT  => IDT);
-      Load_IDT (IDT => IDT);
       Load_GDT;
+      Load_IDT;
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -48,30 +51,29 @@ is
       GDT := GDT_Type'(1 => 0,
                        2 => 16#20980000000000#,
                        3 => 16#20930000000000#);
-      GDT_Pointer := SK.Descriptors.Create_Descriptor
+      GDT_Descriptor := SK.Descriptors.Create_Descriptor
         (Table_Address => SK.Word64
            (System.Storage_Elements.To_Integer (Value => GDT'Address)),
          Table_Length  => GDT'Length);
       System.Machine_Code.Asm
         (Template => "lgdt (%0)",
-         Inputs   => (System.Address'Asm_Input ("r", GDT_Pointer'Address)),
+         Inputs   => (System.Address'Asm_Input ("r", GDT_Descriptor'Address)),
          Volatile => True);
    end Load_GDT;
 
    -------------------------------------------------------------------------
 
-   procedure Load_IDT (IDT : SK.Descriptors.IDT_Type)
+   procedure Load_IDT
    is
-      IDT_Pointer : SK.Descriptors.Pseudo_Descriptor_Type;
    begin
-      IDT_Pointer := SK.Descriptors.Create_Descriptor
+      IDT_Descriptor := SK.Descriptors.Create_Descriptor
         (Table_Address => SK.Word64
            (System.Storage_Elements.To_Integer (Value => IDT'Address)),
          Table_Length  => IDT'Length);
       SK.CPU.Lidt
         (Address => SK.Word64
            (System.Storage_Elements.To_Integer
-              (Value => IDT_Pointer'Address)));
+              (Value => IDT_Descriptor'Address)));
    end Load_IDT;
 
 end Interrupts;

@@ -31,25 +31,25 @@
 			<binary name="tau0" physical_address="217000"/>
 		</subject>
 
-		<subject id="1" name="vt" profile="native" cpu="0" pml4_address="290000" io_bitmap_address="294000" msr_bitmap_address="296000">
+		<subject id="1" name="vt" profile="native" cpu="0" pml4_address="240000" io_bitmap_address="244000" msr_bitmap_address="246000">
 			&vtinit;
 			<memory_layout>
 				&vtmem;
 				<!-- virtual terminal console 6 -->
-				<memory_region physical_address="300000" virtual_address="b9000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
+				<memory_region physical_address="26f000" virtual_address="b9000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
 
 				<!-- virtual terminals 1-6      -->
-				<memory_region physical_address="517000" virtual_address="10000" size="4k" alignment="4k" writable="false" executable="false" memory_type="UC"/>
+				<memory_region physical_address="3d7000" virtual_address="10000" size="4k" alignment="4k" writable="false" executable="false" memory_type="UC"/>
 				<memory_region physical_address="300000" virtual_address="11000" size="4k" alignment="4k" writable="false" executable="false" memory_type="UC"/>
 				<memory_region physical_address="300000" virtual_address="12000" size="4k" alignment="4k" writable="false" executable="false" memory_type="UC"/>
 				<memory_region physical_address="300000" virtual_address="13000" size="4k" alignment="4k" writable="false" executable="false" memory_type="UC"/>
-				<memory_region physical_address="342000" virtual_address="14000" size="4k" alignment="4k" writable="false" executable="false" memory_type="UC"/>
-				<memory_region physical_address="300000" virtual_address="15000" size="4k" alignment="4k" writable="false" executable="false" memory_type="UC"/>
+				<memory_region physical_address="2cf000" virtual_address="14000" size="4k" alignment="4k" writable="false" executable="false" memory_type="UC"/>
+				<memory_region physical_address="26f000" virtual_address="15000" size="4k" alignment="4k" writable="false" executable="false" memory_type="UC"/>
 
 				<!-- Xv6 driver page            -->
-				<memory_region physical_address="518000" virtual_address="20000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
+				<memory_region physical_address="3d8000" virtual_address="20000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
 			</memory_layout>
-			<binary name="vt" physical_address="297000"/>
+			<binary name="vt" physical_address="247000"/>
 			<device name="vga"/>
 			<device name="cursor"/>
 			<device name="keyboard"/>
@@ -59,39 +59,39 @@
 			<msr start="802" end="802" mode="r"/>
 		</subject>
 
-		<subject id="2" name="idle" profile="native" cpu="2" pml4_address="310000" io_bitmap_address="314000" msr_bitmap_address="316000">
+		<subject id="2" name="idle" profile="native" cpu="2" pml4_address="270000" io_bitmap_address="274000" msr_bitmap_address="276000">
 			&idleinit;
 			<memory_layout>
 				&idlemem;
 			</memory_layout>
-			<binary name="idle" physical_address="317000"/>
+			<binary name="idle" physical_address="277000"/>
 		</subject>
 
-		<subject id="3" name="sm" profile="native" cpu="1" pml4_address="330000" io_bitmap_address="334000" msr_bitmap_address="336000">
+		<subject id="3" name="sm" profile="native" cpu="1" pml4_address="2a0000" io_bitmap_address="2a4000" msr_bitmap_address="2a6000">
 			&sminit;
 			<memory_layout>
 				&smmem;
 				<!-- subject state descriptors  -->
 				<memory_region physical_address="1fe000" virtual_address="1fe000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
 				<!-- virtual terminal console 5 -->
-				<memory_region physical_address="342000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
+				<memory_region physical_address="2cf000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
 			</memory_layout>
-			<binary name="sm" physical_address="337000"/>
+			<binary name="sm" physical_address="2a7000"/>
 			<event_table>
 				<handover event="4" dst_subject="xv6"/>
 			</event_table>
 		</subject>
 
-		<subject id="4" name="xv6" profile="vm" cpu="1" pml4_address="500000" io_bitmap_address="504000" msr_bitmap_address="506000">
+		<subject id="4" name="xv6" profile="vm" cpu="1" pml4_address="2d0000" io_bitmap_address="2d4000" msr_bitmap_address="2d6000">
 			&xv6init;
 			<memory_layout>
 				&xv6mem;
 				<!-- virtual terminal console 4         -->
-				<memory_region physical_address="517000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
+				<memory_region physical_address="3d7000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
 				<!-- driver page shared with vt subject -->
-				<memory_region physical_address="518000" virtual_address="90000" size="1M" alignment="4k" writable="true" executable="true" memory_type="WB"/>
+				<memory_region physical_address="3d8000" virtual_address="90000" size="1M" alignment="4k" writable="true" executable="true" memory_type="WB"/>
 			</memory_layout>
-			<binary name="xv6" physical_address="507000"/>
+			<binary name="xv6" physical_address="2d7000"/>
 			<device name="cursor"/>
 			<trap_table>
 				<entry kind="*" dst_subject="sm" dst_vector="36"/>

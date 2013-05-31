@@ -73,6 +73,10 @@ is
                VGA.Enable_Cursor;
                VGA_Output.Set (Slot => 1);
                Text_IO.Put_Line ("Switching to VT 1");
+            when 60 =>
+               VGA.Disable_Cursor;
+               VGA_Output.Set (Slot => 2);
+               Text_IO.Put_Line ("Switching to VT 2");
             when 63 =>
                VGA.Disable_Cursor;
                VGA_Output.Set (Slot => 5);

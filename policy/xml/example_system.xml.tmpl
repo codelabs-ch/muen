@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <!DOCTYPE system [
 <!ENTITY hardware   SYSTEM "hardware/__HARDWARE__.xml">
-<!ENTITY kernel     SYSTEM "example_kernel.xml">
-<!ENTITY binaries   SYSTEM "example_binaries.xml">
-<!ENTITY scheduling SYSTEM "example_scheduling.xml">
-<!ENTITY tau0init   SYSTEM "tau0.xml">
-<!ENTITY tau0mem    SYSTEM "tau0_mem.xml">
-<!ENTITY vtinit     SYSTEM "vt.xml">
-<!ENTITY vtmem      SYSTEM "vt_mem.xml">
-<!ENTITY idleinit   SYSTEM "idle.xml">
-<!ENTITY idlemem    SYSTEM "idle_mem.xml">
-<!ENTITY sminit     SYSTEM "sm.xml">
-<!ENTITY smmem      SYSTEM "sm_mem.xml">
-<!ENTITY xv6init    SYSTEM "xv6.xml">
-<!ENTITY xv6mem     SYSTEM "xv6_mem.xml">
+<!ENTITY kernel      SYSTEM "example_kernel.xml">
+<!ENTITY binaries    SYSTEM "example_binaries.xml">
+<!ENTITY scheduling  SYSTEM "example_scheduling.xml">
+<!ENTITY tau0init    SYSTEM "tau0.xml">
+<!ENTITY tau0mem     SYSTEM "tau0_mem.xml">
+<!ENTITY vtinit      SYSTEM "vt.xml">
+<!ENTITY vtmem       SYSTEM "vt_mem.xml">
+<!ENTITY crypterinit SYSTEM "crypter.xml">
+<!ENTITY cryptermem  SYSTEM "crypter_mem.xml">
+<!ENTITY sminit      SYSTEM "sm.xml">
+<!ENTITY smmem       SYSTEM "sm_mem.xml">
+<!ENTITY xv6init     SYSTEM "xv6.xml">
+<!ENTITY xv6mem      SYSTEM "xv6_mem.xml">
 ]>
 <system vmxon_address="1000" vmcs_start_address="5000">
 	&hardware;
@@ -40,7 +40,7 @@
 
 				<!-- virtual terminals 1-6      -->
 				<memory_region physical_address="3d7000" virtual_address="10000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
-				<memory_region physical_address="300000" virtual_address="11000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+				<memory_region physical_address="29f000" virtual_address="11000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
 				<memory_region physical_address="300000" virtual_address="12000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
 				<memory_region physical_address="300000" virtual_address="13000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
 				<memory_region physical_address="2cf000" virtual_address="14000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
@@ -59,12 +59,14 @@
 			<msr start="802" end="802" mode="r"/>
 		</subject>
 
-		<subject id="2" name="idle" profile="native" cpu="2" pml4_address="270000" io_bitmap_address="274000" msr_bitmap_address="276000">
-			&idleinit;
+		<subject id="2" name="crypter" profile="native" cpu="2" pml4_address="270000" io_bitmap_address="274000" msr_bitmap_address="276000">
+			&crypterinit;
 			<memory_layout>
-				&idlemem;
+				&cryptermem;
+				<!-- virtual terminal console 2 -->
+				<memory_region physical_address="29f000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
 			</memory_layout>
-			<binary name="idle" physical_address="277000"/>
+			<binary name="crypter" physical_address="277000"/>
 		</subject>
 
 		<subject id="3" name="sm" profile="native" cpu="1" pml4_address="2a0000" io_bitmap_address="2a4000" msr_bitmap_address="2a6000">

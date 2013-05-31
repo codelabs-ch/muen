@@ -63,8 +63,12 @@
 			&crypterinit;
 			<memory_layout>
 				&cryptermem;
+				<!-- crypter request  page      -->
+				<memory_region physical_address="29d000" virtual_address="10000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+				<!-- crypter response page      -->
+				<memory_region physical_address="29e000" virtual_address="20000" size="4k" alignment="4k" writable="true"  executable="false" memory_type="WB"/>
 				<!-- virtual terminal console 2 -->
-				<memory_region physical_address="29f000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
+				<memory_region physical_address="29f000" virtual_address="b8000" size="4k" alignment="4k" writable="true"  executable="false" memory_type="WB"/>
 			</memory_layout>
 			<binary name="crypter" physical_address="277000"/>
 		</subject>

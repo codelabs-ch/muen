@@ -109,6 +109,9 @@
 			<trap_table>
 				<entry kind="*" dst_subject="sm" dst_vector="36"/>
 			</trap_table>
+			<event_table>
+				<interrupt event="1" dst_subject="crypter" dst_vector="36" send_ipi="true"/>
+			</event_table>
 		</subject>
 	</subjects>
 

@@ -5,6 +5,7 @@ with Skp;
 with SK.CPU;
 with SK.Console;
 with SK.Console_VGA;
+with SK.Hypercall;
 
 with Interrupts;
 
@@ -41,6 +42,7 @@ begin
    System.Machine_Code.Asm
      (Template => "sti",
       Volatile => True);
+
    loop
       SK.CPU.Hlt;
       Client_Id := Handler.Requesting_Subject;
@@ -51,5 +53,7 @@ begin
       Crypt.Receiver.Receive (Req => Request);
       Response := Request;
       Crypt.Sender.Send (Res => Response);
+
+      SK.Hypercall.Trigger_Event (Number => SK.Byte (Client_Id));
    end loop;
 end Crypter;

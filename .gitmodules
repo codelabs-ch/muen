@@ -1,3 +1,6 @@
 [submodule "subjects/xv6/src"]
 	path = subjects/xv6/src
 	url = git@git.codelabs.ch:mirror/xv6.git
+[submodule "contrib/libsparkcrypto"]
+	path = contrib/libsparkcrypto
+	url = git@git.codelabs.ch:/spark-crypto.git

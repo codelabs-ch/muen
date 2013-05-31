@@ -11,11 +11,14 @@ with Interrupts;
 
 with Crypt.Receiver;
 with Crypt.Sender;
+with Crypt.Hasher;
 
 with Handler;
 
 procedure Crypter
 is
+
+   use type SK.Word16;
 
    subtype Width_Type  is Natural range 1 .. 80;
    subtype Height_Type is Natural range 1 .. 25;
@@ -50,10 +53,27 @@ begin
       Text_IO.Put_Byte   (Item => SK.Byte (Client_Id));
       Text_IO.New_Line;
 
+      Response := Crypt.Null_Message;
       Crypt.Receiver.Receive (Req => Request);
-      Response := Request;
-      Crypt.Sender.Send (Res => Response);
+      if Request.Size'Valid then
+         Text_IO.Put_String (Item => " Size : ");
+         Text_IO.Put_Word16 (Item => Request.Size);
+         Text_IO.New_Line;
+         Crypt.Hasher.SHA256_Hash (Input  => Request,
+                                   Output => Response);
 
+         Text_IO.Put_String (Item => " Hash : ");
+         for I in Crypt.Data_Range range 1 .. Response.Size loop
+            Text_IO.Put_Byte (Item => Response.Data (I));
+         end loop;
+         Text_IO.New_Line;
+      else
+         Text_IO.Put_String (Item => "Invalid request message size ");
+         Text_IO.Put_Word16 (Item => Request.Size);
+         Text_IO.New_Line;
+      end if;
+
+      Crypt.Sender.Send (Res => Response);
       SK.Hypercall.Trigger_Event (Number => SK.Byte (Client_Id));
    end loop;
 end Crypter;

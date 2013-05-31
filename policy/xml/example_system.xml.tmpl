@@ -97,6 +97,10 @@
 				&xv6mem;
 				<!-- virtual terminal console 4         -->
 				<memory_region physical_address="3d7000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
+				<!-- xv6 -> crypter request page        -->
+				<memory_region physical_address="29d000" virtual_address="70000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
+				<!-- xv6 -> crypter response page       -->
+				<memory_region physical_address="29e000" virtual_address="80000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
 				<!-- driver page shared with vt subject -->
 				<memory_region physical_address="3d8000" virtual_address="90000" size="1M" alignment="4k" writable="true" executable="true" memory_type="WB"/>
 			</memory_layout>

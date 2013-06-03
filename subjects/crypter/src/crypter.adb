@@ -13,7 +13,26 @@ with Crypt.Debug;
 
 with Handler;
 
+--# inherit
+--#    System,
+--#    Skp,
+--#    SK.CPU,
+--#    SK.Hypercall,
+--#    X86_64,
+--#    Interrupts,
+--#    Handler,
+--#    Crypt.Receiver,
+--#    Crypt.Sender,
+--#    Crypt.Hasher;
+
+--# main_program
 procedure Crypter
+--# global
+--#    in     Handler.Requesting_Subject;
+--#    in     Crypt.Receiver.State;
+--#       out Crypt.Sender.State;
+--#    in out Interrupts.State;
+--#    in out X86_64.State;
 is
    Client_Id : Skp.Subject_Id_Type;
    Request   : Crypt.Message_Type;

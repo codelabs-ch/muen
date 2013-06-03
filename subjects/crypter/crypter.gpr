@@ -7,7 +7,8 @@ project Crypter extends "../subject" is
      ("../../common/src",
       "../../common/debug",
       "../../policy/include/",
-      "src");
+      "src",
+      "debug");
    for Object_Dir use "obj";
 
    for Main use ("crypter");

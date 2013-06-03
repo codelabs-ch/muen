@@ -7,6 +7,9 @@ use type SK.Word16;
 package Crypt
 is
 
+   subtype Width_Type  is Natural range 1 .. 80;
+   subtype Height_Type is Natural range 1 .. 25;
+
    subtype Data_Range is SK.Word16 range 1 .. 2048;
 
    type Data_Array is array (Data_Range) of SK.Byte;

@@ -32,6 +32,14 @@ is
    --#    X86_64.State from *;
    pragma Inline_Always (Hlt);
 
+   --  Set Interrupt Flag.
+   procedure Sti;
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *;
+   pragma Inline_Always (Sti);
+
    --  Load Interrupt Descriptor Table (IDT) register.
    procedure Lidt (Address : SK.Word64);
    --# global

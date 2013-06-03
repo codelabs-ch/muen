@@ -1,4 +1,4 @@
-with System.Machine_Code;
+with System;
 
 with SK.CPU;
 with SK.Console;
@@ -37,9 +37,7 @@ begin
    Text_IO.Put_Line ("SM subject running");
    Interrupts.Initialize;
 
-   System.Machine_Code.Asm
-     (Template => "sti",
-      Volatile => True);
+   SK.CPU.Sti;
    SK.CPU.Hlt;
 
    loop

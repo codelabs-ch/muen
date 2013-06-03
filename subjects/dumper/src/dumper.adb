@@ -1,4 +1,4 @@
-with System.Machine_Code;
+with System;
 
 with SK.CPU;
 with SK.Console;
@@ -36,9 +36,7 @@ begin
    Text_IO.Init;
    Text_IO.Put_Line ("Dumper subject running");
 
-   System.Machine_Code.Asm
-     (Template => "sti",
-      Volatile => True);
+   SK.CPU.Sti;
    SK.CPU.Hlt;
 
    loop

@@ -1,4 +1,4 @@
-with System.Machine_Code;
+with System;
 
 with Skp;
 
@@ -42,9 +42,7 @@ begin
    Text_IO.Put_Line (Item => "Waiting for requests...");
    Interrupts.Initialize;
 
-   System.Machine_Code.Asm
-     (Template => "sti",
-      Volatile => True);
+   SK.CPU.Sti;
 
    loop
       SK.CPU.Hlt;

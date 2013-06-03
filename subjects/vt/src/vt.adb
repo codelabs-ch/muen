@@ -1,4 +1,4 @@
-with System.Machine_Code;
+with SK.CPU;
 
 with Interrupts;
 with Handler;
@@ -10,9 +10,7 @@ begin
    Interrupts.Initialize;
    Handler.Initialize;
 
-   System.Machine_Code.Asm
-     (Template => "sti",
-      Volatile => True);
+   SK.CPU.Sti;
 
    VGA_Output.Sync;
 end VT;

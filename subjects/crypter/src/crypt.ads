@@ -1,14 +1,16 @@
 with SK;
 
+use type SK.Word16;
+
+--# inherit
+--#    SK;
 package Crypt
 is
-
-   use type SK.Word16;
 
    subtype Data_Range is SK.Word16 range 1 .. 2048;
 
    type Data_Array is array (Data_Range) of SK.Byte;
-   for Data_Array'Size use Data_Range'Last * 8;
+   for Data_Array'Size use Integer (Data_Range'Last * 8);
 
    Null_Data : constant Data_Array;
 

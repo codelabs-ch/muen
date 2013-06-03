@@ -7,6 +7,10 @@ SPARK_FILES =           \
 	$(POLICY_INC)/*.ad* \
 	$(TOP_DIR)/common/src/*.ad*
 
+SPARK_DIRS =                         \
+	-directory=$(TOP_DIR)/common/src \
+	-directory=$(POLICY_INC)
+
 SPARK_BODIES = $(patsubst %.ad*,%.adb,$(SPARK_FILES))
 
 SPARK_OPTS =                                      \
@@ -53,8 +57,7 @@ $(OBJ_DIR)/$(PACKAGE).idx: $(SPARK_FILES)
 		-index=$(OBJ_DIR)/$(PACKAGE).idx \
 		-exclude=$(SRC_DIR)/debug/*      \
 		-exclude=$(OBJ_DIR)/*            \
-		-directory=$(TOP_DIR)/common/src \
-		-directory=$(POLICY_INC)
+		$(SPARK_DIRS)
 
 $(OBJ_DIR)/target.cfg: $(OBJ_DIR)/confgen
 	$< > $@

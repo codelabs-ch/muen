@@ -1,4 +1,4 @@
-with Crypt.Text_IO;
+with Subject.Text_IO;
 
 package body Handler
 is
@@ -17,9 +17,10 @@ is
       end if;
 
       pragma Debug (Vector < 32,
-                    Crypt.Text_IO.Put_String ("Ignoring spurious interrupt "));
-      pragma Debug (Vector < 32, Crypt.Text_IO.Put_Byte (Item => Vector));
-      pragma Debug (Vector < 32, Crypt.Text_IO.New_Line);
+                    Subject.Text_IO.Put_String
+                      ("Ignoring spurious interrupt "));
+      pragma Debug (Vector < 32, Subject.Text_IO.Put_Byte (Item => Vector));
+      pragma Debug (Vector < 32, Subject.Text_IO.New_Line);
    end Handle_Interrupt;
 
 end Handler;

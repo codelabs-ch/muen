@@ -1,4 +1,4 @@
-with Crypt.Text_IO;
+with Subject.Text_IO;
 
 package body Crypt.Debug
 is
@@ -9,7 +9,7 @@ is
    is
    begin
       for I in Crypt.Data_Range range 1 .. Item.Size loop
-         Crypt.Text_IO.Put_Byte (Item => Item.Data (I));
+         Subject.Text_IO.Put_Byte (Item => Item.Data (I));
       end loop;
    end Put_Message;
 

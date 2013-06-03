@@ -1,14 +1,23 @@
+PACKAGE = crypter
+
 include ../../Makeconf
+include ../../Makespark
 
-BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
+SPARK_FILES += $(TOP_DIR)/subjects/src/interrupts.ad*
 
-all: crypter
+SPARK_DIRS +=														\
+	-directory=$(TOP_DIR)/subjects/src								\
+	-directory=$(TOP_DIR)/contrib/libsparkcrypto/src/spark			\
+	-directory=$(TOP_DIR)/contrib/libsparkcrypto/src/shared/generic	\
+	-directory=$(TOP_DIR)/contrib/libsparkcrypto/src/shared/little_endian
 
-crypter:
-	gprbuild $(BUILD_OPTS) -P$@
+all: $(ALL)
 
-specs: crypter
-	$(SKCONFIG) $(OBJ_DIR)/crypter 16#277000#
+$(OBJ_DIR)/$(PACKAGE):
+	gprbuild $(BUILD_OPTS) -P$(PACKAGE)
+
+specs: $(OBJ_DIR)/$(PACKAGE)
+	$(SKCONFIG) $< 16#277000#
 
 clean:
 	rm -rf $(OBJ_DIR)

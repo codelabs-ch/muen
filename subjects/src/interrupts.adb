@@ -9,6 +9,8 @@ with SK.Descriptors;
 package body Interrupts
 is
 
+   --# hide Interrupts;
+
    subtype ISR_Array is SK.Descriptors.ISR_Array (Skp.Vector_Range);
    ISRs : ISR_Array;
    pragma Import (C, ISRs, "isrlist");

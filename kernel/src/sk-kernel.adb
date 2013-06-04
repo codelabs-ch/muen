@@ -26,7 +26,7 @@ is
 
       pragma Debug (Is_Bsp, KC.Init);
       pragma Debug (Is_Bsp, KC.Put_Line
-                    (Item => "Booting Separation Kernel "
+                    (Item => "Booting Muen kernel "
                      & SK.Version.Version_String & " ("
                      & Standard'Compiler_Version & ")"));
       Success := System_State.Is_Valid;

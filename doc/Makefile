@@ -1,4 +1,7 @@
-all: memlayout.pdf
+all: memlayout.pdf report.pdf
+
+report.pdf: report.tex
+	@pdflatex $<
 
 memlayout.pdf: memlayout.tex
 	@pdflatex $<

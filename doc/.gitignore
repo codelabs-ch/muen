@@ -1,3 +1,7 @@
 *.aux
 *.log
+*.nav
 *.pdf
+*.out
+*.snm
+*.toc

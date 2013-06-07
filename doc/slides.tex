@@ -1,0 +1,114 @@
+\documentclass{beamer}
+
+\usepackage{beamerthemesplit}
+\usepackage{graphicx}
+
+\setbeamercovered{transparent}
+\beamertemplatenavigationsymbolsempty
+
+\usetheme{Frankfurt}
+\useinnertheme{rectangles}
+
+\title[Muen Separation Kernel]{Muen - A high assurance separation kernel for the Intel x86 architecture}
+\author{Reto Buerki \and Adrian-Ken Rueegsegger}
+\institute[HSR]
+{
+	Institute for Internet Technologies and Applications\\
+	University of Applied Sciences Rapperswil
+}
+\titlegraphic{\includegraphics[scale=0.3]{images/muen.pdf}}
+
+\begin{document}
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}
+	\frametitle{Overview}\tableofcontents
+\end{frame}
+
+\section{Introduction}
+\subsection{Motivation}
+\begin{frame}\frametitle{Basic idea}
+\end{frame}
+
+\begin{frame}\frametitle{Current situation}
+\end{frame}
+
+\subsection{Goals}
+\begin{frame}\frametitle{Goals}
+\begin{itemize}
+	\item Opensource Separation Kernel
+	\item High assurance implementation
+	\item Enable formal verification
+\end{itemize}
+\end{frame}
+
+\section{Implementation}
+\subsection{Overview}
+\begin{frame}\frametitle{Project summary}
+\begin{block}{Statistic}
+	\begin{itemize}
+		\item Languages: SPARK 2005, Assembler\pause
+	\end{itemize}
+\end{block}
+\begin{block}{Components}
+	\begin{itemize}
+		\item Zero-Footpring Run-Time system (RTS)
+		\item Kernel
+		\item Subjects
+		\item Policy compilation tool (skpolicy)
+		\item Config generation tool (skconfig)
+		\item Packaging tool (skpacker)
+	\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}\frametitle{Architecture}
+\begin{center}
+	\includegraphics[scale=0.5]{images/architecture-overview.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}\frametitle{Example system}
+\begin{center}
+	\includegraphics[width=\textwidth]{images/architecture-example_system.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}\frametitle{Multicore}
+	\includegraphics[scale=0.5]{images/mp-overview.pdf}
+\end{frame}
+
+\begin{frame}\frametitle{Demo}
+	\begin{quote}
+		Lore ipsum
+	\end{quote}
+\end{frame}
+
+\section{Outlook}
+\begin{frame}\frametitle{Future work}
+\begin{block}{short/mid-term}
+\begin{itemize}
+	\item Linux virtualization
+	\item Hardware passthrough/PCIe virtualization
+	\item Extend $\tau$0
+	\end{itemize}
+\end{block}
+\begin{block}{long-term}
+	\begin{itemize}
+		\item MP subjects
+		\item Fully virtualized subjects
+		\item Formal verification
+	\end{itemize}
+\end{block}
+\end{frame}
+
+\section{Questions}
+\begin{frame}\frametitle{Q\&A}
+\begin{center}
+	Thank you for your attention!
+\end{center}
+\end{frame}
+
+\end{document}

@@ -1,13 +1,30 @@
-\documentclass{beamer}
+\documentclass[xcolor={dvipsnames}]{beamer}
 
 \usepackage{beamerthemesplit}
 \usepackage{graphicx}
+\usepackage{listings}
 
-\setbeamercovered{transparent}
 \beamertemplatenavigationsymbolsempty
 
 \usetheme{Frankfurt}
 \useinnertheme{rectangles}
+
+\lstset{
+	basicstyle={\ttfamily\scriptsize},
+	breakautoindent=true,
+	breaklines=true,
+	captionpos=b,
+	extendedchars=true,
+	frame=single,
+	numbers=left,
+	numberstyle={\tiny},
+	showspaces=false,
+	showstringspaces=false,
+	tabsize=2,
+	keywordstyle={\color{MidnightBlue}},
+	commentstyle={\color{Aquamarine}},
+	literate={~} {$\sim$}{1}
+}
 
 \title[Muen Separation Kernel]{Muen - A high assurance separation kernel for the Intel x86 architecture}
 \author{Reto Buerki \and Adrian-Ken Rueegsegger}
@@ -23,51 +40,144 @@
 	\titlepage
 \end{frame}
 
+\section*{Outline}
 \begin{frame}
-	\frametitle{Overview}\tableofcontents
+	\frametitle{Outline}\tableofcontents
 \end{frame}
 
 \section{Introduction}
-\subsection{Motivation}
-\begin{frame}\frametitle{Basic idea}
+\subsection{Background}
+\begin{frame}\frametitle{Intel virtualization technologies}
+\begin{itemize}
+	\item VT-x is Intel's technology for virtualization on the x86 platform
+	\item Virtual machine state stored in virtual-machine control structure (VMCS)
+	\item Virtual-machine extensions (VMX) provide CPU instructions to manage VMCS
+	\item Hypervisor runs in VMX root mode
+	\item Virtual machine runs in VMX non-root mode
+	\item All privileged operations cause a trap to hypervisor
+	\item Simplifies implementation of hypervisor
+\end{itemize}
 \end{frame}
 
-\begin{frame}\frametitle{Current situation}
+\begin{frame}[fragile]\frametitle{SPARK}
+\begin{itemize}
+	\item Formally-defined programming language based on Ada
+	\item Intended for writing high integrity and security software
+	\item Program and proof annotations as Ada comments
+	\item Allows proof of absence of runtime errors
+	\item Allows partial proof of correctness
+	\item Industrial usage in Avionics, Space, Medical Systems and Military
+\end{itemize}
+\begin{lstlisting}[language=Ada]
+type Color_Type is (Red, Green, Blue);
+
+procedure Exchange (X, Y: in out Color_Type);
+--# derives X from Y &
+--#         Y from X;
+--# post X = Y~ and Y = X~;
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}\frametitle{Separation Kernel}
+\begin{itemize}
+	\item Concept introduced by John Rushby (1981)
+	\item Create environment indistinguishable from a physically distributed system
+	\item Kernel must guarantee component separation
+	\item No channels for information flow between components other than those explicitly provided
+	\item Partitioning and isolation of resources (CPU, memory, devices, \textellipsis)
+	\item Static configuration during integration
+	\item Well suited for formal verification
+\end{itemize}
+\end{frame}
+
+\subsection{Motivation}
+\begin{frame}\frametitle{Motivation}
+\begin{itemize}
+	\item Increase confidence in security of commodity workstations
+	\item Currently available (monolithic) systems unsuitable (e.g. Linux)
+	\item Few commercial but no free/open-source SKs are available
+	\item Closed-source options mainly target Power PC platform not Intel x86
+	\item Commercial vendors do not provide technical documentation or code
+	\item Many advances in Intel hardware support for virtualization
+\end{itemize}
 \end{frame}
 
 \subsection{Goals}
 \begin{frame}\frametitle{Goals}
 \begin{itemize}
-	\item Opensource Separation Kernel
-	\item High assurance implementation
-	\item Enable formal verification
+	\item Open-source separation kernel (GPLv3+)
+	\item High assurance implementation using SPARK
+	\item Proof of absence of runtime errors
+	\item Minimal TCB ($\sim$5'000 LoC)
+	\item Leverage latest hardware features of Intel platform (VT-x, EPT, VT-d, \textellipsis)
+	\item Only allow intended data flows
+	\item Prevent or limit possible side-/covert channels
+	\item Target platform is 64-bit Intel
 \end{itemize}
 \end{frame}
 
 \section{Implementation}
 \subsection{Overview}
-\begin{frame}\frametitle{Project summary}
-\begin{block}{Statistic}
-	\begin{itemize}
-		\item Languages: SPARK 2005, Assembler\pause
-	\end{itemize}
-\end{block}
-\begin{block}{Components}
-	\begin{itemize}
-		\item Zero-Footpring Run-Time system (RTS)
-		\item Kernel
-		\item Subjects
-		\item Policy compilation tool (skpolicy)
-		\item Config generation tool (skconfig)
-		\item Packaging tool (skpacker)
-	\end{itemize}
-\end{block}
-\end{frame}
-
 \begin{frame}\frametitle{Architecture}
+\begin{itemize}
+	\item Kernel guarantees subject isolation
+	\item Spatial isolation by memory management, VT-x
+	\item Temporal isolation by scheduling
+\end{itemize}
 \begin{center}
 	\includegraphics[scale=0.5]{images/architecture-overview.pdf}
 \end{center}
+\end{frame}
+
+\subsection{Subsystems}
+\begin{frame}\frametitle{Scheduler}
+\begin{itemize}
+	\item Fixed cyclic scheduler
+	\item Use of VMX preemption timer
+	\item Major frame consisting of minor frames
+	\item Minor frames specify subject and time slice in ticks
+	\item Scheduling plan specifies minor frames per logical CPU
+	\item $\tau$0 subject can switch scheduling plan
+\end{itemize}
+\lstinputlisting[language=xml,linerange={1-6}]{../policy/xml/example_scheduling.xml}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Traps}
+\begin{itemize}
+	\item Transition to VMX root mode is called a trap
+	\item Policy specifies per-subject trap table
+	\item Trap causes subject handover according to policy
+	\item Trap may inject interrupt in destination subject
+	\item Reserved traps are handled differently
+		\begin{itemize}
+			\item VMX preemption timer
+			\item External interrupt
+			\item Interrupt window
+			\item Hypercall
+		\end{itemize}
+	\item Virtualization using "Trap and Emulate"
+\end{itemize}
+\begin{lstlisting}[language=xml]
+<trap_table>
+    <entry kind="*" dst_subject="sm" dst_vector="36"/>
+</trap_table>
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}\frametitle{External interrupts}
+\begin{itemize}
+	\item Policy assigns devices to subjects
+	\item Setup of interrupt routing according to policy
+\end{itemize}
+\begin{enumerate}
+	\item External interrupts cause traps on designated CPU
+	\item Kernel adds pending event to destination subject
+	\item Pending events are injected on resumption of subject
+	\item Subject handles injected event as interrupt
+\end{enumerate}
+\end{frame}
+
+\begin{frame}\frametitle{Event handling}
 \end{frame}
 
 \begin{frame}\frametitle{Example system}
@@ -86,26 +196,70 @@
 	\end{quote}
 \end{frame}
 
-\section{Outlook}
-\begin{frame}\frametitle{Future work}
-\begin{block}{short/mid-term}
+\section{Conclusion}
+\subsection{Results}
+\begin{frame}\frametitle{Results}
+\begin{block}{Separation Kernel}
 \begin{itemize}
-	\item Linux virtualization
-	\item Hardware passthrough/PCIe virtualization
-	\item Extend $\tau$0
+	\item Current LoC: Assembly, SPARK
+	\item Proof of absence of runtime errors
+	\item Multicore support
+	\item Static assignment of resources via policy
+	\item Support for native 64-bit subjects
+	\item Support for xv6
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}\frametitle{Results II}
+\begin{itemize}
+	\item Zero-Footprint Run-Time (RTS)
+	\item Kernel
+	\item Tools
+	\begin{itemize}
+		\item Policy compilation tool (skpolicy)
+		\item Config generation tool (skconfig)
+		\item Packaging tool (skpacker)
+	\end{itemize}
+	\item Subjects
+	\begin{itemize}
+		\item xv6 operating system
+		\item Subject monitor for xv6
+		\item Crypter
+		\item Virtual Terminal \& keyboard
+		\item Dumper
+	\end{itemize}
+	\item Documentation
+\end{itemize}
+\end{frame}
+
+\subsection{Future work}
+\begin{frame}\frametitle{Future work}
+\begin{block}{short-term}
+	\begin{itemize}
+		\item Linux virtualization
+		\item Hardware passthrough/PCIe virtualization
+		\item Extend $\tau$0
+	\end{itemize}
+\end{block}
+\begin{block}{mid-term}
+	\begin{itemize}
+		\item MP subjects
+		\item Covert/Side-Channel analysis
 	\end{itemize}
 \end{block}
 \begin{block}{long-term}
 	\begin{itemize}
-		\item MP subjects
 		\item Fully virtualized subjects
+		\item Power Management
+		\item Performance optimization
 		\item Formal verification
 	\end{itemize}
 \end{block}
 \end{frame}
 
-\section{Questions}
-\begin{frame}\frametitle{Q\&A}
+\subsection{Questions}
+\begin{frame}\frametitle{Questions?}
 \begin{center}
 	Thank you for your attention!
 \end{center}

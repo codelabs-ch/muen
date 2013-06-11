@@ -1,6 +1,7 @@
 \documentclass[a4paper,twoside]{report}
 \usepackage{graphicx}
 \usepackage{titlepic}
+\usepackage[nottoc]{tocbibind}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 
@@ -10,5 +11,25 @@
 
 \begin{document}
 \maketitle
-To be written ...
+
+University of Applied Sciences Rapperswil (HSR), Switzerland
+
+\begin{abstract}
+Abstract to be written...
+\end{abstract}
+
+\section*{Acknowledgments}
+We would like to thank
+
+\tableofcontents
+
+\include{introduction}
+\include{background}
+\include{design}
+\include{implementation}
+\include{conclusion}
+
+\bibliographystyle{plain}
+\bibliography{report}
+
 \end{document}

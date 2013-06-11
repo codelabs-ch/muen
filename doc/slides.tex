@@ -53,9 +53,8 @@
 	\item Virtual machine state stored in virtual-machine control structure (VMCS)
 	\item Virtual-machine extensions (VMX) provide CPU instructions to manage VMCS
 	\item Hypervisor runs in VMX root mode
-	\item Virtual machine runs in VMX non-root mode
-	\item All privileged operations cause a trap to hypervisor
-	\item Simplifies implementation of hypervisor
+	\item Virtual machines run in VMX non-root mode
+	\item Hardware assisted virtualization simplifies implementation of hypervisor
 \end{itemize}
 \end{frame}
 
@@ -83,9 +82,11 @@ procedure Exchange (X, Y: in out Color_Type);
 	\item Concept introduced by John Rushby (1981)
 	\item Create environment indistinguishable from a physically distributed system
 	\item Kernel must guarantee component separation
+	\item Ideal as basis for a component-based system
 	\item No channels for information flow between components other than those explicitly provided
-	\item Partitioning and isolation of resources (CPU, memory, devices, \textellipsis)
+	\item Partitioning and isolation of resources\\(CPU, memory, devices, \textellipsis)
 	\item Static configuration during integration
+	\item Only includes necessary features $\rightarrow$ small TCB
 	\item Well suited for formal verification
 \end{itemize}
 \end{frame}
@@ -109,10 +110,11 @@ procedure Exchange (X, Y: in out Color_Type);
 	\item High assurance implementation using SPARK
 	\item Proof of absence of runtime errors
 	\item Minimal TCB ($\sim$5'000 LoC)
-	\item Leverage latest hardware features of Intel platform (VT-x, EPT, VT-d, \textellipsis)
+	\item Extract non-timing critical operations to trusted subject $\tau$0
+	\item Leverage latest hardware features of Intel platform\\(VT-x, EPT, VT-d, \textellipsis)
+	\item Target platform is 64-bit Intel
 	\item Only allow intended data flows
 	\item Prevent or limit possible side-/covert channels
-	\item Target platform is 64-bit Intel
 \end{itemize}
 \end{frame}
 
@@ -129,8 +131,22 @@ procedure Exchange (X, Y: in out Color_Type);
 \end{center}
 \end{frame}
 
+\begin{frame}\frametitle{Policy}
+\begin{itemize}
+	\item Specifies system configuration
+	\begin{itemize}
+		\item Hardware of target platform
+		\item Kernel configuration
+		\item Subject configuration
+		\item Scheduling plans
+	\end{itemize}
+	\item skpolicy tool compiles XML to SPARK sources
+\end{itemize}
+\lstinputlisting[language=xml,linerange={62-67}]{../policy/xml/example_system.xml.tmpl}
+\end{frame}
+
 \subsection{Subsystems}
-\begin{frame}\frametitle{Scheduler}
+\begin{frame}\frametitle{Scheduler I}
 \begin{itemize}
 	\item Fixed cyclic scheduler
 	\item Use of VMX preemption timer
@@ -140,6 +156,12 @@ procedure Exchange (X, Y: in out Color_Type);
 	\item $\tau$0 subject can switch scheduling plan
 \end{itemize}
 \lstinputlisting[language=xml,linerange={1-6}]{../policy/xml/example_scheduling.xml}
+\end{frame}
+
+\begin{frame}\frametitle{Scheduler II}
+\begin{center}
+	\includegraphics[scale=0.6]{images/scheduler-overview.pdf}
+\end{center}
 \end{frame}
 
 \begin{frame}[fragile]\frametitle{Traps}
@@ -169,6 +191,9 @@ procedure Exchange (X, Y: in out Color_Type);
 	\item Policy assigns devices to subjects
 	\item Setup of interrupt routing according to policy
 \end{itemize}
+\begin{center}
+	\includegraphics[scale=0.41]{images/external-interrupt.pdf}
+\end{center}
 \begin{enumerate}
 	\item External interrupts cause traps on designated CPU
 	\item Kernel adds pending event to destination subject
@@ -177,43 +202,60 @@ procedure Exchange (X, Y: in out Color_Type);
 \end{enumerate}
 \end{frame}
 
-\begin{frame}\frametitle{Event handling}
+\begin{frame}[fragile]\frametitle{Event handling}
+\begin{itemize}
+	\item Event is a hypercall triggered by subject using VMCALL instruction
+	\item Policy specifies per-subject event table
+	\item Handover events transfers execution to destination subject optionally injecting an interrupt
+	\item Interrupt events inject interrupt in destination subject with optional IPI
+\end{itemize}
+\begin{lstlisting}[language=xml]
+<event_table>
+    <interrupt event="1" dst_subject="xv6" dst_vector="33" send_ipi="true"/>
+</event_table>
+\end{lstlisting}
 \end{frame}
 
-\begin{frame}\frametitle{Example system}
+\begin{frame}\frametitle{Multicore}
+\begin{itemize}
+	\item Kernel starts on bootstrap processor (BSP)
+	\item BSP starts application processors (APs)
+	\item All CPUs synchronize on major frame changes
+\end{itemize}
+	\hspace*{0.9cm}\includegraphics[scale=0.46]{images/mp-overview.pdf}
+\end{frame}
+
+\begin{frame}\frametitle{Inter-Core events}
+\begin{center}
+	\includegraphics[scale=0.5]{images/inter-core-events.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}\frametitle{Demo}
+\begin{itemize}
+	\item Untrusted VM subject running MIT's xv6 OS
+	\item Native VT subject provides virtual terminals and keyboard
+	\item Native subject monitor (SM) observes xv6 subject
+	\begin{itemize}
+		\item Emulates port I/O
+		\item Halts xv6 on maloperation
+	\end{itemize}
+	\item Native crypter provides hashing service
+	\begin{itemize}
+		\item Inter-subject communication using shared memory pages
+		\item Signalisation using event mechanism
+	\end{itemize}
+\end{itemize}
 \begin{center}
 	\includegraphics[width=\textwidth]{images/architecture-example_system.pdf}
 \end{center}
 \end{frame}
 
-\begin{frame}\frametitle{Multicore}
-	\includegraphics[scale=0.5]{images/mp-overview.pdf}
-\end{frame}
-
-\begin{frame}\frametitle{Demo}
-	\begin{quote}
-		Lore ipsum
-	\end{quote}
-\end{frame}
-
 \section{Conclusion}
 \subsection{Results}
 \begin{frame}\frametitle{Results}
-\begin{block}{Separation Kernel}
 \begin{itemize}
-	\item Current LoC: Assembly, SPARK
-	\item Proof of absence of runtime errors
-	\item Multicore support
-	\item Static assignment of resources via policy
-	\item Support for native 64-bit subjects
-	\item Support for xv6
-\end{itemize}
-\end{block}
-\end{frame}
-
-\begin{frame}\frametitle{Results II}
-\begin{itemize}
-	\item Zero-Footprint Run-Time (RTS)
+	\item Minimal Zero-Footprint Run-Time (RTS)
 	\item Kernel
 	\item Tools
 	\begin{itemize}
@@ -223,34 +265,47 @@ procedure Exchange (X, Y: in out Color_Type);
 	\end{itemize}
 	\item Subjects
 	\begin{itemize}
-		\item xv6 operating system
+		\item Initial $\tau$0 implementation
+		\item Virtual terminals \& keyboard
+		\item xv6 OS with minimal adjustments
 		\item Subject monitor for xv6
 		\item Crypter
-		\item Virtual Terminal \& keyboard
 		\item Dumper
 	\end{itemize}
-	\item Documentation
+\end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Results - Kernel}
+\begin{itemize}
+	\item Source code statistics:
+	\begin{itemize}
+		\item $\sim$260 lines of Assembly
+		\item $\sim$2670 lines of SPARK
+	\end{itemize}§
+	\item Proof of absence of runtime errors (All VCs discharged)
+	\item Static assignment of resources according to policy
+	\item Multicore support
+	\item EPT and memory typing (PAT)
+	\item Event mechanism
+	\item Support for native 64-bit subjects
+	\item Support for VM subjects
 \end{itemize}
 \end{frame}
 
 \subsection{Future work}
 \begin{frame}\frametitle{Future work}
-\begin{block}{short-term}
+\begin{block}{Mid-term}
 	\begin{itemize}
 		\item Linux virtualization
 		\item Hardware passthrough/PCIe virtualization
 		\item Extend $\tau$0
-	\end{itemize}
-\end{block}
-\begin{block}{mid-term}
-	\begin{itemize}
-		\item MP subjects
 		\item Covert/Side-Channel analysis
 	\end{itemize}
 \end{block}
-\begin{block}{long-term}
+\begin{block}{Long-term}
 	\begin{itemize}
-		\item Fully virtualized subjects
+		\item MP subjects
+		\item Fully virtualized subjects (Windows)
 		\item Power Management
 		\item Performance optimization
 		\item Formal verification

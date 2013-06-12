@@ -80,7 +80,7 @@ procedure Exchange (X, Y: in out Color_Type);
 \begin{frame}\frametitle{Separation Kernel}
 \begin{itemize}
 	\item Concept introduced by John Rushby (1981)
-	\item Create environment indistinguishable from a physically distributed system
+	\item Partition system into multiple subjects which behave as if they were running on dedicated hardware
 	\item Kernel must guarantee component separation
 	\item Ideal as basis for a component-based system
 	\item No channels for information flow between components other than those explicitly provided
@@ -97,8 +97,8 @@ procedure Exchange (X, Y: in out Color_Type);
 	\item Increase confidence in security of commodity workstations
 	\item Currently available (monolithic) systems unsuitable (e.g. Linux)
 	\item Few commercial but no free/open-source SKs are available
-	\item Closed-source options mainly target Power PC platform not Intel x86
-	\item Commercial vendors do not provide technical documentation or code
+	\item Lack of source hinders development
+	\item No detailed public documentation available
 	\item Many advances in Intel hardware support for virtualization
 \end{itemize}
 \end{frame}
@@ -238,7 +238,7 @@ procedure Exchange (X, Y: in out Color_Type);
 	\item Native subject monitor (SM) observes xv6 subject
 	\begin{itemize}
 		\item Emulates port I/O
-		\item Halts xv6 on maloperation
+		\item Halts xv6 on invalid operation
 	\end{itemize}
 	\item Native crypter provides hashing service
 	\begin{itemize}

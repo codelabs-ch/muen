@@ -1,5 +1,80 @@
 \chapter{Background}
 \section{SPARK}
+SPARK is a formally-define high-level programming language designed for writing
+high integrity systems. It is based on Ada, which is itself a programming
+language with a strong focus on security and safety.
+
+The SPARK language is a subset of Ada with additional features inserted as
+annotations by means of Ada comments. Since compilers ignore comments and SPARK
+is a true subset of Ada, any correct SPARK program is a correct Ada programm and
+can be compiled using existing Ada compilers, such as GNAT, which is part of the
+GNU compiler collection (GCC) TODO:ref. However, since annotations are an
+integral part of SPARK, it would be misleading to simply consider SPARK a
+constrained version of Ada. SPARK should be viewed as a programming language in
+its own right.
+
+The annotations are processed by SPARK tools. These tools perform static
+analysis of the source code. The annotations allow the tools to do data and
+information flow analysis as well as proof the absence of runtime errors. This
+means that SPARK tools allow to formally verify, that a given program is free
+of errors such as division by zero, out-of-bounds array access etc. The
+following program properties can be formally proven using SPARK:
+
+\begin{itemize}
+	\item TODO
+\end{itemize}
+
+On top of these properties, the usage of pre-/post-conditions and assertions
+allow to prove additional functional properties. A proof of (partial
+\footnote{Termination cannot be shown}) correctness of SPARK programs is
+achievable. This allows to formally show the correspondence of an implementation
+with its formal specification.
+
+It is also interesting to note, that has support for tasking in the form a
+profile called RavenSPARK TODO:Ref.
+
+SPARK is a mature technology and has garnered quite some interest since it has
+been used successfully in several industrial projects TODO:ref. It is primarily
+employed in the field of avionics, space, medical systems and in the defense
+industry.
+
+\subsection{Design rationale}
+The main driving factors behind the design of SPARK are shortly described here:
+
+\begin{description}
+	\item[Logical soundness] \hfill \\
+		The language must not contain any ambiguities and defined specified.
+	\item[Complexity of formal language definition] \hfill \\
+		The language must be simple to specify formally.
+	\item[Expressive power] \hfill \\
+		The language must have rich enough to implement real systems.
+	\item[Security] \hfill \\
+		All language rules must be statically checkable with reasonable effort
+		(within polynomial time).
+	\item[Verifiability] \hfill \\
+		Program verification must be tractable for industrial scale projects.
+	\item[Bounded space and time requirements] \hfill \\
+		Resource requirements must be determined statically.
+\end{description}
+
+\subsection{Example}
+The following listing illustrates how annotations are used to specify the
+contract of a subprogram.
+
+\begin{lstlisting}[language=Ada]
+type Color_Type is (Red, Green, Blue);
+
+procedure Exchange (X, Y: in out Color_Type);
+--# derives X from Y &
+--#         Y from X;
+--# post X = Y~ and Y = X~;
+\end{lstlisting}
+
+An in-depth discussion of the SPARK programming language can be found in
+\cite{BarnesSPARK}.
+
+\subsection{SPARK 2014}
+
 \section{Intel x86 Architecture}
 \section{Virtualization}
 \section{Motivation}

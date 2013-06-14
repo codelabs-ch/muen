@@ -2,8 +2,27 @@
 \usepackage{graphicx}
 \usepackage{titlepic}
 \usepackage[nottoc]{tocbibind}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{listings}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
+
+\lstset{
+	basicstyle={\ttfamily\scriptsize},
+	breakautoindent=true,
+	breaklines=true,
+	captionpos=b,
+	extendedchars=true,
+	frame=single,
+	numbers=left,
+	numberstyle={\tiny},
+	showspaces=false,
+	showstringspaces=false,
+	tabsize=2,
+	keywordstyle={\color{MidnightBlue}},
+	commentstyle={\color{Aquamarine}},
+	literate={~} {$\sim$}{1}
+}
 
 \title{Muen - A high assurance separation kernel for the Intel x86 architecture}
 \author{Reto Buerki \and Adrian-Ken Rueegsegger}

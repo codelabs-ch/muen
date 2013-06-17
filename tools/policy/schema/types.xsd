@@ -34,11 +34,7 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
-			<xs:pattern value="UC"/>
-			<xs:pattern value="WC"/>
-			<xs:pattern value="WT"/>
-			<xs:pattern value="WB"/>
-			<xs:pattern value="WP"/>
+			<xs:pattern value="UC|WC|WT|WB|WP"/>
 		</xs:restriction>
 	</xs:simpleType>
 

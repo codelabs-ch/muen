@@ -7,7 +7,8 @@ REPORT_SOURCES =       \
 	background.tex     \
 	design.tex         \
 	implementation.tex \
-	conclusion.tex
+	conclusion.tex     \
+	images/*
 
 all: memlayout.pdf report.pdf slides.pdf
 

@@ -2,11 +2,24 @@
 	<xs:include schemaLocation="./types.xsd"/>
 
 	<xs:complexType name="binary_type">
+		<xs:annotation>
+			<xs:documentation>
+				A binary is specified by its name and file path. The path is used during system
+				image packaging to locate the binary file. The path is relative to the projects
+				top-level directory.
+			</xs:documentation>
+		</xs:annotation>
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="path" type="xs:string" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="binaries_type">
+		<xs:annotation>
+			<xs:documentation>
+				The binaries section of the policy specifies all binary files that can be used as subject
+				binaries.
+			</xs:documentation>
+		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="binary" type="binary_type" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>

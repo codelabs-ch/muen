@@ -2,6 +2,11 @@
 	<xs:include schemaLocation="./types.xsd"/>
 
 	<xs:simpleType name="trap_kind_type">
+		<xs:annotation>
+			<xs:documentation>
+				A trap kind identifies the cause of a trap, see Intel SDM Vol. 3c, appendix C.
+			</xs:documentation>
+		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="*"/>
 			<xs:enumeration value="exception_or_nmi"/>
@@ -11,12 +16,23 @@
 	</xs:simpleType>
 
 	<xs:complexType name="entry_type">
+		<xs:annotation>
+			<xs:documentation>
+				A trap table entry specifies to which subject a given trap kind is forwarded and an
+				optional vector number if a interrupt is injected.
+			</xs:documentation>
+		</xs:annotation>
 		<xs:attribute name="kind"        type="trap_kind_type"    use="required"/>
 		<xs:attribute name="dst_subject" type="subject_name_type" use="required"/>
 		<xs:attribute name="dst_vector"  type="vector_type"       use="optional"/>
 	</xs:complexType>
 
 	<xs:complexType name="trap_table_type">
+		<xs:annotation>
+			<xs:documentation>
+				Table specifying how traps provoked by a subject are handled.
+			</xs:documentation>
+		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="entry" type="entry_type" minOccurs="1" maxOccurs="52"/>
 		</xs:sequence>

@@ -2,8 +2,21 @@
 	<xs:include schemaLocation="./types.xsd"/>
 
 	<xs:complexType name="kernel_type">
+		<xs:annotation>
+			<xs:documentation>
+				Kernel resources are specified by various physical addresses of management data structures
+				and a memory layout that specifies the kernel's address space.
+			</xs:documentation>
+		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="memory_layout" type="memory_layout_type" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="memory_layout" type="memory_layout_type" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						The memory layout specifies the kernel's address space including its physical location
+						and attributes.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="stack_address" type="address_type" use="required">
 			<xs:annotation>

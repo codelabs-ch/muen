@@ -1,9 +1,8 @@
 POLICY   = $(wildcard xml/*.xml)
 SYSTEM   = xml/example_system.xml
-TOOL_DIR = $(TOP_DIR)/tools/policy
-SCHEMAS  = $(TOOL_DIR)/schema/*.xsd
-SCHEMA   = $(TOOL_DIR)/schema/system.xsd
-TMPL_DIR = $(TOOL_DIR)/templates
+SCHEMAS  = $(SCHEMA_DIR)/schema/*.xsd
+SCHEMA   = $(SCHEMA_DIR)/system.xsd
+TMPL_DIR = $(TOP_DIR)/tools/policy/templates
 OUTPUT   = $(POLICY_INC)/skp.ads
 HWSTAMP  = $(POLICY_INC)/.$(HARDWARE).stamp
 

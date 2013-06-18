@@ -172,4 +172,30 @@ believe that now is a good time to start a separation kernel project which
 benefits from these latest advances.
 
 \section{Goals}
+The main goal of this project is to implement a freely-available, open-source
+separation kernel. The kernel sources will be licensed under the GNU General
+Public License (GPL\index{GPL}, REF).
+
+SPARK is used as main implementation language as this guarantees the
+availability of advanced and approved tools to write code for high assurance
+environments. The SPARK tools will be used to show certain properties of the
+kernel code, especially proof of absence of runtime errors is desired.
+
+The code of the kernel must be minimal to have a small TCB.
+
+Non-timing critical operations should be implemented in a special trusted
+subject written in SPARK. This subject is called $\tau$0 and is considered an
+integral part of the kernel. TODO: explain time-critical and real-time in this
+context. While keeping the main kernel as simple as possible, this allows for
+later adoption of more dynamic mechanisms for resource handling and scheduling.
+
+The target platform of the SK is 64-bit Intel. No abstraction layer will be
+provided to support other processor architectures. Such a layer, if ever needed,
+could be added later. Instead, the kernel should leverage the latest hardware
+features of the Intel platform.
+
+The main task of the SK is to separate subjects. This is why it must only allow
+intended data flows according to the policy and it should prevent or limit
+possible side- or covert-channels.
+
 \section{Related work}

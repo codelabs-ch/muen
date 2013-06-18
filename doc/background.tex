@@ -135,5 +135,41 @@ normal unprivileged mode but is allowed to interact with the kernel over a
 specialized interface.
 
 \section{Motivation}
+As outlined in the previous section, software must be simple to establish trust
+in the correct functioning of the code either through manual review or formal
+verification. Even though the tools to perform formal verification
+automatically are progressing fast, the constraints on the software to be
+verified are still severe. If the SLOC\footnote{Source lines of
+code}\index{SLOC} count of a software project exceeds a critical threshold, it
+is no longer possible to automatically proof integrity and security
+requirements or to perform a manual review, the code base is just too large.
+
+This is the reason why common operating system kernels are not suitable to be
+used as a foundation to create a high assurance system with a small TCB. The
+Linux\index{Linux} kernel currently has a SLOC count of over 14 million lines
+of code. While functionality can be loaded as modules, Linux is still a
+monolithic kernel at the architectural level with the complete code running in
+the same address space and privilege level. A crash or programming error in a
+device driver for example can be used to exploit the complete system.
+
+While commercial separation kernel products exist on the market, there is
+currently no open-source SK\index{SK} available. This is a major drawback for
+implementers of a high assurance system since they must trust the most
+fundamental building block, the kernel, without the possibility to review the
+code or the verification documents (if any). It is of course also impossible to
+adapt the kernel code to the specific needs of a customer, which may hinder
+development of the final system.
+
+The goal of this project is to provide a freely-available SK with a permissive
+licensing\index{license} model allowing to review and modify the source code.
+It should also be possible to re-apply all tools making the proofs
+reproducible. In the eyes of the authors, only this approach is viable in
+environments where high integrity and security is demanded.
+
+There have been many advances in hardware support for virtualization, allowing
+the design of a much simpler kernel than without those features. The authors
+believe that now is a good time to start a separation kernel project which
+benefits from these latest advances.
+
 \section{Goals}
 \section{Related work}

@@ -77,6 +77,63 @@ An in-depth discussion of the SPARK programming language can be found in
 
 \section{Intel x86 Architecture}
 \section{Virtualization}
+\section{Separation Kernel}
+In a system with high requirements on security, functions relevant
+to guarantee these requirements must be isolated from the rest of
+the system and consolidated in a Trusted Computing Base (TCB)\index{TCB}.
+To be trusted, this code must be as minimal as possible to allow formal
+verification of code correctness. Lampson et al.
+\cite{Lampson:1991:ADS:121133.121160} define the TCB of a computer system as:
+\begin{quote}
+	A small amount of software and hardware that security depends on and
+	that we distinguish from a much larger amount that can misbehave without
+	affecting security.
+\end{quote}
+
+A separation kernel\index{kernel} (SK\index{SK}) is therefore the fundamental
+part of the TCB as its main purpose is to enforce the separation of all other
+components making such a component-based system possible in the first place. The
+concept of separation kernels was introduced by John Rushby in a paper from 1981
+\cite{rushby1981}. While the original paper describes a distributed system, it
+is more illustrative to think of it as multiple components which behave as if
+they were running on dedicated hardware. The separation kernel must guarantee
+that the components can only interact according to a well-defined policy while
+running on the same physical hardware.
+
+A system policy dictates the partitioning of hardware resources like CPU, memory
+or devices to components. The kernel guarantees this isolation by emulating a
+suitable runtime environment for each component, creating the impression of
+multipe (virtual) machines. By using modern virtualization techniques, the
+kernel is able to delegate certain management tasks to the hardware. This allows
+the separation kernel code to be relatively simple, which is a precondition for
+formal verification of software.
+
+Because of the simplicity requirement, a system running on top of a separation
+kernel is relatively static. The system policy is compiled to a suitable format
+on system integration and can not change during runtime. This is is also the
+main difference between the separation kernel concept and microkernels which
+provide hardware abstraction layers and advanced mechanisms for inter-process
+communication (IPC\index{IPC}). A separation kernel does not implement such
+functionality, it's sole purpose is to guarantee component separation according
+to policy. Policy-writers must make sure that the system specification is sound
+and that only allowed communication channels are specified between components.
+Of course, this task can be simplified by providing support tools.
+
+\subsection{Subjects}
+The separation kernel isolates parts of the TCB into multiple
+components\index{component} interacting over well-defined interfaces. In this
+paper, such components are called subjects\index{subject}.
+
+As said, only the absolutely necessary features to guarantee subject separation
+are present in a separation kernel. Advanced features required to isolate a
+complex subject are implemented as dedicated non-privileged subjects. A complex
+subject could be a complete operating system like Linux\index{Linux}.
+
+To allow more flexibility, a separation kernel could also use a dedicated
+subject to offload management and policy decision tasks. Such a subject runs in
+normal unprivileged mode but is allowed to interact with the kernel over a
+specialized interface.
+
 \section{Motivation}
 \section{Goals}
 \section{Related work}

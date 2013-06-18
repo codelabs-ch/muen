@@ -14,6 +14,7 @@ all: memlayout.pdf report.pdf slides.pdf
 
 report.pdf: $(REPORT_SOURCES)
 	@pdflatex $<
+	@makeindex report
 	@bibtex report
 	@pdflatex $<
 	@pdflatex $<

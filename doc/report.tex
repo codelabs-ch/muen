@@ -6,6 +6,8 @@
 \usepackage{listings}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
+\usepackage{makeidx}
+\makeindex
 
 \lstset{
 	basicstyle={\ttfamily\scriptsize},
@@ -47,6 +49,8 @@ We would like to thank
 \include{design}
 \include{implementation}
 \include{conclusion}
+
+\printindex{}
 
 \bibliographystyle{plain}
 \bibliography{report}

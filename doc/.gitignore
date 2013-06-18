@@ -1,6 +1,9 @@
 *.aux
 *.blg
 *.bbl
+*.idx
+*.ilg
+*.ind
 *.log
 *.nav
 *.pdf

@@ -1,7 +1,13 @@
 PDFLATEX = for n in 1 2 3; do pdflatex $<; done
 XSLTPROC = xsltproc
 
-XSLT_FILES = types.tex
+XSLT_FILES =       \
+	binary.tex     \
+	hardware.tex   \
+	kernel.tex     \
+	scheduling.tex \
+	subject.tex    \
+	types.tex
 
 REPORT_SOURCES =       \
 	report.tex         \
@@ -30,8 +36,8 @@ slides.pdf: slides.tex
 memlayout.pdf: memlayout.tex
 	@$(PDFLATEX)
 
-types.tex: xsl/xsd2tex-types.xsl
-	$(XSLTPROC) -o $@ $< $(SCHEMA_DIR)/types.xsd
+%.tex: $(SCHEMA_DIR)/%.xsd xsl/xsd2tex-types.xsl
+	$(XSLTPROC) -o $@ xsl/xsd2tex-types.xsl $<
 
 clean:
 	@rm -f *.pdf *.aux *.lof *.log *.toc *.snm *.out *.nav *.vrb *.bbl *.blg

@@ -4,6 +4,7 @@
 *.idx
 *.ilg
 *.ind
+*.lof
 *.log
 *.nav
 *.pdf

@@ -34,5 +34,5 @@ types.tex: xsl/xsd2tex-types.xsl
 	$(XSLTPROC) -o $@ $< $(SCHEMA_DIR)/types.xsd
 
 clean:
-	@rm -f *.pdf *.aux *.log *.toc *.snm *.out *.nav *.vrb *.bbl *.blg
+	@rm -f *.pdf *.aux *.lof *.log *.toc *.snm *.out *.nav *.vrb *.bbl *.blg
 	@rm -f $(XSLT_FILES)

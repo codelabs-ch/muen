@@ -12,4 +12,9 @@
 *.snm
 *.toc
 *.vrb
+binary.tex
+hardware.tex
+kernel.tex
+scheduling.tex
+subject.tex
 types.tex

@@ -5,20 +5,14 @@
 	<xsl:output method="text" encoding="utf-8" indent="no"/>
 
 	<xsl:strip-space elements="*"/>
-	<xsl:template match="xs:schema">
-		<xsl:text>\begin{description}</xsl:text>
-		<xsl:for-each select="xs:simpleType|xs:complexType">
-			<xsl:call-template name="typeDescription"/>
-		</xsl:for-each>
-		<xsl:text>\end{description}</xsl:text>
-	</xsl:template>
+	<xsl:template match="xs:schema/*"/>
 
-	<xsl:template name="typeDescription">
-		<xsl:text>\item[</xsl:text>
+	<xsl:template match="xs:schema/xs:simpleType|xs:schema/xs:complexType">
+		<xsl:text>&#10;\subsubsection{</xsl:text>
 		<xsl:call-template name="texifyText">
 			<xsl:with-param name="text" select="@name"/>
 		</xsl:call-template>
-		<xsl:text>] \hfill \\&#10;</xsl:text>
+		<xsl:text>}&#10;</xsl:text>
 		<xsl:call-template name="texifyText">
 			<xsl:with-param name="text" select="xs:annotation/xs:documentation/text()"/>
 		</xsl:call-template>

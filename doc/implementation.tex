@@ -62,6 +62,50 @@ parts of the policy.
 \input{scheduling.tex}
 
 \section{Kernel}
+\subsection{Init}
+After reset of a x86 system, the processor begins executing code at physical
+address \texttt{ffff:0000}, which is mapped to the PC
+BIOS\index{BIOS}\footnote{Basic Input/Output System}. The BIOS first performs
+tests and initialization routines and then searches for a bootable storage
+media. If found, the BIOS copies the first sector of the storage media to
+physical address \texttt{0000:7C00} and jumps to this address (i.e. starts
+executing code at this address). This is where the system bootloader comes to
+live which is responsible to boot operating systems according to its
+configuration. Many bootloaders first load additional code from the storage
+media and then prepare the environment for OS execution.
+
+The Muen seperation kernel is compliant to the multiboot specification, version
+0.6.96 \cite{multiboot}. The multiboot standard is used to uniformly boot
+different operating system kernels by multiboot-aware bootloaders.
+The Muen kernel exports the required multiboot header within the first 8192
+bytes of the OS image. The bootloader loads the OS image into memory according
+to the information found in the header and jumps to the physical kernel entry
+point specified in this header.
+
+It is the bootloader's task to prepare the system state as demanded by the
+multiboot standard, see \cite{multiboot} section 3.2 for details. The system
+kernel can except the system to be in this state. After the Muen kernel comes to
+live, it performs additional steps before jumping into the main SPARK kernel.
+This initial startup code is written in Assembly and conducts the following
+tasks:
+\begin{enumerate}
+	\item Copy the AP trampoline to low-memory, see section
+		\ref{subsec:mp-support} \item Initialize per-CPU VMXON regions
+	\item Initialize subject VMCS regions
+	\item Enable PAE\index{PAE}\footnote{Physical Address Extension}
+	\item Initialize per-CPU kernel pagetables
+	\item Enable IA-32e mode and execute-disable (NX)
+	\item Enable paging, write protection, caching and native FPU error
+		reporting
+	\item Set up GDT\index{GDT}\footnote{Global Descriptor Table}
+	\item Set up Page-Attribute Table (PAT)
+	\item Set up kernel stack
+	\item Initialize Ada runtime
+	\item Jump into kernel main
+\end{enumerate}
+After this initial steps are executed, the system is in 64-bit IA-32e mode and
+all prerequisites are met to enable VMX root operation.
+
 \subsection{Scheduling}
 \begin{figure}[h]
 	\centering

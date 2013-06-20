@@ -23,6 +23,7 @@ parts of the policy.
 \input{types.tex}
 
 \subsection{Hardware}
+\label{subsec:hardware}
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=\textwidth]{images/xml_hardware.png}
@@ -62,7 +63,7 @@ parts of the policy.
 \input{scheduling.tex}
 
 \section{Kernel}
-\subsection{Init}
+\subsection{Init}\label{subsec:init}
 After reset of a x86 system, the processor begins executing code at physical
 address \texttt{ffff:0000}, which is mapped to the PC
 BIOS\index{BIOS}\footnote{Basic Input/Output System}. The BIOS first performs
@@ -97,7 +98,7 @@ tasks:
 	\item Enable IA-32e mode and execute-disable (NX)
 	\item Enable paging, write protection, caching and native FPU error
 		reporting
-	\item Set up GDT\index{GDT}\footnote{Global Descriptor Table}
+	\item Set up 64-bit GDT\index{GDT}\footnote{Global Descriptor Table}
 	\item Set up Page-Attribute Table (PAT)
 	\item Set up kernel stack
 	\item Initialize Ada runtime
@@ -123,13 +124,76 @@ all prerequisites are met to enable VMX root operation.
 	\label{fig:external-interrupt}
 \end{figure}
 
-\subsection{Multicore support}
+\subsection{Multicore support}\label{subsec:mp-support}
+The Muen separation kernel makes use of all logical processors available in a
+system. The processor count of a specific hardware platform is specified in the
+system policy, see section \ref{subsec:hardware}. This section describes how the
+multicore setup is done on kernel startup.
+
+Modern PC systems comply to the Intel MultiProcessor (MP\index{MP})
+specification. In short, the Intel MP specification is an open-standard
+describing enhancements to both operating systems and firmware to be able to
+init, boot and operate x86 multiprocessor systems. For more information see
+\cite{intel:mp}.
+
+After the hardware completed its part of the MP specification, one processor
+has been negotiated to be the bootstrap processor (BSP\index{BSP}). All other
+logical processors, called application processors (AP\index{AP}), halt until
+they receive a specific inter-processor interrupt (IPI\index{IPI}) sequence.
+
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.6]{images/mp-overview}
 	\caption{Multicore architecture}
 	\label{fig:mp-overview}
 \end{figure}
+
+The BSP starts executing code as describe in section \ref{subsec:init}. The
+init code initializes the system and jumps into the main SPARK kernel. The
+kernel running on the BSP is responsible to bootstrap the other application
+processors. It first enables its local APIC\index{APIC} to be able to send
+inter-processor interrupts to the halted AP processors. To wakeup the APs, the
+INIT-SIPI-SIPI IPI sequence must be sent to their APICs, as described in the MP
+specification. See also figure \ref{fig:mp-overview} for an illustration of
+this process. The SIPI IPI contains the physical address vector of the
+trampoline code copied to low-memory by the init code. The AP processors jump
+to this code after wakeup. The trampoline performs the following steps:
+
+\begin{enumerate}
+	\item Set up 32-bit GDT\index{GDT}
+	\item Switch CPU to protected mode
+	\item Initialize DS and SS segments
+	\item Jump to the AP entry point in the init code
+\end{enumerate}
+
+These steps initialize the APs to the same architectural state as the
+bootloader did for the BSP: 32-bit protected mode with paging disabled.
+Therefore, the final step is to let the AP processors jump to the identical
+init code described in section \ref{subsec:init}.
+
+\subsubsection{Per-kernel memory}
+The Muen kernels operate fully symmetrical, i.e. code running on the different
+logical processors is (binary) identical. Nevertheless, each kernel owns a
+distinct stack page and also a page to store per-CPU data. This however is fully
+transparent to the kernels as their virtual stack and global storage addresse
+values are the same. This is achieved by using different page table structures
+for each kernel. Page tables are created by the policy tool and setup on system
+startup by the init code. The main kernel has no access to these structures in
+memory and does not bother with memory management.
+
+\subsubsection{Synchronization} Since synchronization is error-prone and it is
+desirable to reduce inter-core dependencies as much as possible, the Muen
+kernel tries to avoid locks and other synchronization primitives. Nevertheless
+minimal synchronization is required at certain key points in the code. This
+section describes the spinlock and barrier mechanisms used by the kernel.
+
+\paragraph{Spinlock}
+\paragraph{Barrier}
+As described in section REF, to guarantee temporal separation, the scheduling
+plans on the different logical processors must be synchronized on major frame
+transition.
+
+This is achieved by ...
 
 \subsection{Events}
 \begin{figure}[h]

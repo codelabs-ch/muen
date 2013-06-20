@@ -1,37 +1,56 @@
 \chapter{Background}
 \section{SPARK}
-SPARK is a formally-define high-level programming language designed for writing
-high integrity systems. It is based on Ada, which is itself a programming
-language with a strong focus on security and safety.
+SPARK\footnote{Short for SPADE Ada Kernel} is a formally-defined high-level
+programming language designed for writing high integrity systems. It is based on
+Ada, which is itself a statically typed programming language with a strong focus
+on security and safety.
 
 The SPARK language is a subset of Ada with additional features inserted as
 annotations by means of Ada comments. Since compilers ignore comments and SPARK
 is a true subset of Ada, any correct SPARK program is a correct Ada programm and
 can be compiled using existing Ada compilers, such as GNAT, which is part of the
-GNU compiler collection (GCC) TODO:ref. However, since annotations are an
+GNU compiler collection (GCC) \cite{gcc}. However, since annotations are an
 integral part of SPARK, it would be misleading to simply consider SPARK a
 constrained version of Ada. SPARK should be viewed as a programming language in
-its own right.
+its own right. The following list summarizes the Ada restrictions imposed by
+SPARK:
+
+\begin{itemize}
+	\item No access types (pointers)
+	\item No recursion
+	\item No exceptions
+	\item No goto
+	\item No anonymous and aliased types
+	\item No functions with side-effects
+	\item No dynamic array bounds
+	\item No dynamic memory allocation
+	\item No dynamic dispatching
+\end{itemize}
 
 The annotations are processed by SPARK tools. These tools perform static
 analysis of the source code. The annotations allow the tools to do data and
 information flow analysis as well as proof the absence of runtime errors. This
 means that SPARK tools allow to formally verify, that a given program is free
 of errors such as division by zero, out-of-bounds array access etc. The
-following program properties can be formally proven using SPARK:
+following types of errors that can be proven to be absent using SPARK:
 
 \begin{itemize}
-	\item TODO
+	\item Incorrect indexing of arrays
+	\item Overflows
+	\item Division by zero
+	\item Type range violations
+	\item Memory exhaustion
+	\item Dangling pointers
 \end{itemize}
 
 On top of these properties, the usage of pre-/post-conditions and assertions
 allow to prove additional functional properties. A proof of (partial
 \footnote{Termination cannot be shown}) correctness of SPARK programs is
 achievable. This allows to formally show the correspondence of an implementation
-with its formal specification.
+with a formal specification.
 
-It is also interesting to note, that has support for tasking in the form a
-profile called RavenSPARK TODO:Ref.
+It is also interesting to note, that SPARK has support for tasking in the form a
+profile called RavenSPARK \cite{RavenSPARK}.
 
 SPARK is a mature technology and has garnered quite some interest since it has
 been used successfully in several industrial projects TODO:ref. It is primarily
@@ -70,10 +89,36 @@ procedure Exchange (X, Y: in out Color_Type);
 --# post X = Y~ and Y = X~;
 \end{lstlisting}
 
+The declaration of the \texttt{Exchange} procedure states that it has two
+parameters \texttt{X} and \texttt{Y} which are of mode \texttt{in out}. This
+means that the values of both parameters are imported (\texttt{in}) and exported
+(\texttt{out}).
+
+Since the specification does not contain a \texttt{global} annotation, no other
+state (e.g. global variables) is accessed. The \texttt{derives} annotations
+state the data flow: the value of X is derived from Y and vice versa.
+
+Lastly, the postconditions specify what the values of X and Y are after the
+procedure has been executed. An identifier decorated with the tilde symbol
+($\sim$) indicates the initial imported value of the variable. Thus the post
+annotation states, that X will be assigned the initial value of Y and likewise
+for Y.
+
+It should be noted, that the \texttt{Color\_Type} is a \emph{distinct}
+enumeration type which \emph{cannot} be mixed with other types.
+
 An in-depth discussion of the SPARK programming language can be found in
 \cite{BarnesSPARK}.
 
 \subsection{SPARK 2014}
+At the time of writing\footnote{June 2013} the SPARK language is undergoing a
+major transformation. The goal is to extend the subset of Ada included in SPARK,
+and to make use the new Ada 2012 specification features \cite{Ada2012}. The use
+Ada aspects will be used instead of the annotations in the form of special
+comments. It is expected to be released in 2014 \cite{SPARK2014:Announcement}.
+
+Since the development of SPARK 2014 is currently ongoing, the kernel is
+implemented using the existing SPARK 2005 language and tools.
 
 \section{Intel x86 Architecture}
 \section{Virtualization}

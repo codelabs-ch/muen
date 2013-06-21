@@ -1,6 +1,6 @@
 POLICY   = $(wildcard xml/*.xml)
 SYSTEM   = xml/example_system.xml
-SCHEMAS  = $(SCHEMA_DIR)/schema/*.xsd
+SCHEMAS  = $(SCHEMA_DIR)/*.xsd
 SCHEMA   = $(SCHEMA_DIR)/system.xsd
 TMPL_DIR = $(TOP_DIR)/tools/policy/templates
 OUTPUT   = $(POLICY_INC)/skp.ads

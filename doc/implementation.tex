@@ -128,10 +128,20 @@ minimal synchronization is required at certain key points in the code. This
 section describes the spinlock and barrier mechanisms used by the kernel.
 
 \paragraph{Spinlock}
+The spinlock implementation uses the \texttt{XCHG} processor instruction to
+atomically swap the value one with the contents of a lock variable in memory.
+If the result of the set operation is zero, no other core currently holds the
+lock and it is successfully acquired. If the result is one, the lock is
+currently busy and the core must spin and retry again.
+
+Inside the lock's busy loop the \texttt{PAUSE} instruction is used to improve
+performance and resource utilization on CPUs with hyper-threading
+(HTT\index{HTT}) enabled TODO:REF.
+
 \paragraph{Barrier}
-As described in section REF, to guarantee temporal separation, the scheduling
-plans on the different logical processors must be synchronized on major frame
-transition.
+As described in section \ref{subsec:scheduling}, to guarantee temporal
+separation, the scheduling plans on the different logical processors must be
+synchronized on major frame transition.
 
 This is achieved by ...
 

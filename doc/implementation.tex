@@ -236,8 +236,87 @@ the subject with no exact mapping of binary sections to memory access
 permissions (i.e. read, write, execute).
 
 \subsection{Image packaging}\label{subsec:image-packaging}
+The \texttt{skpacker} tool is responsible to assemble the final bootable system
+image from the parts produced in the previous build steps. Figure
+\ref{fig:image-packaging} illustrates the process. The tool includes the special
+packer source specification created from the system policy. This specification
+includes information about subject binaries and their physical address in the
+final image.
 
-\section{Example system}
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}
+		\node (knl) [bluebox]                              {Kernel binary};
+		\node (sub) [bluebox, left=of knl]                 {Subject binaries};
+		\node (pag) [bluebox, left=of sub]                 {Page tables};
+		\node (bit) [bluebox, right=of knl]                {Bitmaps};
+		\node (skp) [apribox, below=of knl, xshift=-1.5cm] {skpacker};
+		\node (spe) [bluebox, left=of skp]                 {Packer spec};
+		\node (sys) [greenbox, below=of skp]               {System image};
+
+		\draw[arrow] (pag) to (skp);
+		\draw[arrow] (sub) to (skp);
+		\draw[arrow] (knl) to (skp);
+		\draw[arrow] (bit) to (skp);
+		\draw[arrow] (skp) to (sys);
+		\draw[arrow] (spe) to (skp);
+	\end{tikzpicture}
+	\caption{System image packaging}
+	\label{fig:image-packaging}
+\end{figure}
+
+The remaining configuration is extracted from the source specification provided
+to the kernel. Listing \ref{lst:skpacker} shows the output of a
+\texttt{skpacker} run with the example system described in section
+\ref{sec:example-system}. The fist column in the output designate physical
+addresses in memory. The second column specifies the type of the packaged file
+at this specific memory location. The abbreviations have the following meaning:
+
+\begin{itemize}
+	\item \emph{PML4} The file at this address designates a page table
+		structure. It is either a page table for a kernel or for a subject. The
+		kernels running on the different logical processors have different page
+		tables to allow distinct stack and per-CPU storage pages transparently.
+	\item \emph{IOBM} The file is a subject I/O bitmap. Specifies which I/O
+		ports a subject is allowed to access.
+	\item \emph{MSBM} The file is a subject MSR bitmap. Specifies which MSRs a
+		subject is allowed to access.
+	\item \emph{BIN} The file is a subject (raw) binary.
+\end{itemize}
+
+\begin{lstlisting}[
+	caption=Example output of skpacker tool,
+	label=lst:skpacker,
+	frame=none,
+	numbers=none]
+         Packaging kernel image 'obj/kernel'
+         0000000000200000 [PML4] kernel (0)
+         0000000000204000 [PML4] kernel (1)
+         0000000000208000 [PML4] kernel (2)
+         000000000020c000 [PML4] kernel (3)
+         0000000000210000 [PML4] tau0
+         0000000000214000 [IOBM] tau0
+         0000000000216000 [MSBM] tau0
+         0000000000217000 [BIN ] tau0
+         0000000000240000 [PML4] vt
+         0000000000244000 [IOBM] vt
+         0000000000246000 [MSBM] vt
+         0000000000247000 [BIN ] vt
+         0000000000270000 [PML4] crypter
+         0000000000274000 [IOBM] crypter
+         0000000000276000 [MSBM] crypter
+         0000000000277000 [BIN ] crypter
+         00000000002a0000 [PML4] sm
+         00000000002a4000 [IOBM] sm
+         00000000002a6000 [MSBM] sm
+         00000000002a7000 [BIN ] sm
+         00000000002d0000 [PML4] xv6 (EPT)
+         00000000002d4000 [IOBM] xv6
+         00000000002d6000 [MSBM] xv6
+         00000000002d7000 [BIN ] xv6
+\end{lstlisting}
+
+\section{Example system}\label{sec:example-system}
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=\textwidth]{images/architecture-example_system}

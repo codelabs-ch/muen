@@ -152,7 +152,61 @@ This is achieved by ...
 	\caption{Inter-core events}
 	\label{fig:inter-core-events}
 \end{figure}
+
 \section{Build}
+\subsection{Policy compilation}
+The \texttt{skpolicy} tool compiles the system policy outlined in section
+\ref{sec:policy} to different output formats as shown in figure
+\ref{fig:policy-compilation}.
+
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}
+		\node (pol) [greenbox]                            {Policy};
+		\node (skp) [apribox, below=of pol]               {skpolicy};
+		\node (sou) [bluebox, below=of skp, xshift=1.5cm] {Source specs};
+		\node (pag) [bluebox, left=of sou]                {Page tables};
+		\node (iob) [bluebox, left=of pag]                {I/O bitmaps};
+		\node (msr) [bluebox, right=of sou]               {MSR bitmaps};
+
+		\draw[arrow] (pol) to (skp);
+		\draw[arrow] (skp) to (sou);
+		\draw[arrow] (skp) to (msr);
+		\draw[arrow] (skp) to (pag);
+		\draw[arrow] (skp) to (iob);
+	\end{tikzpicture}
+	\caption{Policy compilation}
+	\label{fig:policy-compilation}
+\end{figure}
+
+The generated subject page tables, I/O and MSR bitmaps are included in the final
+system image by the \texttt{skpacker} utility explained in the following section
+\ref{subsec:image-packaging}. These files are all in binary form and correspond
+to the format mandated by the respective Intel SDM chapters (TODO:REF). Page
+tables are generated for subjects as well as for the kernel itself.
+
+The generated SPARK and Assembly source specifications are included in the
+kernel directly. These specifications provide the kernel with the following
+information:
+
+\begin{itemize}
+	\item \emph{IRQ routing specification}\\
+		Used by the kernel to program the system's I/O APIC for interrupt
+		routing.
+	\item \emph{Kernel address constants}\\
+		Define kernel stack, page table and per-CPU storage memory addresses.
+	\item \emph{Scheduling plans for all CPU cores}\\
+		The scheduling plans are indexed by the logical processor's APIC ID.
+		Each kernel copies its associated scheduling plan to the per-CPU storage
+		area on initialization.
+	\item \emph{Subjects specification}\\
+		Defines all subjects and their parameters, see policy section
+		\ref{subsec:subjects}.
+\end{itemize}
+
+\subsection{Object binary analysis}\label{subsec:object-binary-analysis}
+\subsection{Image packaging}\label{subsec:image-packaging}
+
 \section{Example system}
 \begin{figure}[h]
 	\centering

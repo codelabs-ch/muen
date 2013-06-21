@@ -17,6 +17,7 @@ REPORT_SOURCES =       \
 	design.tex         \
 	implementation.tex \
 	impl_policy.tex    \
+	impl_subject.tex   \
 	conclusion.tex     \
 	images/*
 

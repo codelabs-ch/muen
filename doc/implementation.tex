@@ -154,8 +154,10 @@ This is achieved by ...
 \end{figure}
 
 \section{Build}
+TODO: explain the complete process, target dependencies and implemented tools.
+
 \subsection{Policy compilation}
-The \texttt{skpolicy} tool compiles the system policy outlined in section
+The \texttt{skpolicy} tool compiles the XML system policy outlined in section
 \ref{sec:policy} to different output formats as shown in figure
 \ref{fig:policy-compilation}.
 
@@ -202,15 +204,18 @@ information:
 	\item \emph{Subjects specification}\\
 		Defines all subjects and their parameters, see policy section
 		\ref{subsec:subjects}.
+	\item \emph{Packer specification}\\
+		Defines the configuration used for the \texttt{skpacker} tool outlined
+		in the following section \ref{subsec:image-packaging}.
 \end{itemize}
 
 \subsection{Subject binary analysis}\label{subsec:subject-binary-analysis}
 The \texttt{skconfig} tool uses the Binary File Descriptor (BFD\index{BFG})
-library to analyze subject binaries and create appropriate XML\index{XML} policy
-specifications from it, see figure \ref{fig:object-analysis}. This is useful to
-generate the initial state and the memory layout directly from a native subject
-binary instead of writing it by hand. The tool extracts stack address, entry
-point and memory layout from a subject binary.
+library to analyze subject binaries and creates appropriate XML\index{XML}
+policy specifications from it, see figure \ref{fig:object-analysis}. This is
+useful to generate the initial state and the memory layout directly from a
+native subject binary instead of writing it by hand. The tool extracts stack
+address, entry point and memory layout from a subject binary.
 
 \begin{figure}[h]
 	\centering

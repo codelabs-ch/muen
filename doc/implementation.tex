@@ -204,7 +204,37 @@ information:
 		\ref{subsec:subjects}.
 \end{itemize}
 
-\subsection{Object binary analysis}\label{subsec:object-binary-analysis}
+\subsection{Subject binary analysis}\label{subsec:subject-binary-analysis}
+The \texttt{skconfig} tool uses the Binary File Descriptor (BFD\index{BFG})
+library to analyze subject binaries and create appropriate XML\index{XML} policy
+specifications from it, see figure \ref{fig:object-analysis}. This is useful to
+generate the initial state and the memory layout directly from a native subject
+binary instead of writing it by hand. The tool extracts stack address, entry
+point and memory layout from a subject binary.
+
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}
+		\node (obj) [bluebox]                {Binary object};
+		\node (skc) [apribox,  below=of obj] {skconfig};
+		\node (xml) [greenbox, below=of skc] {XML specification};
+
+		\draw[arrow] (obj) to (skc);
+		\draw[arrow] (skc) to (xml);
+	\end{tikzpicture}
+	\caption{From binary object to XML specification}
+	\label{fig:object-analysis}
+\end{figure}
+
+The exctracted subject initial state and memory layout XML specifications can be
+included in the system policy before compilation by the \texttt{skpolicy} tool.
+The generated memory layout is only as permissive as required by the original
+subject binary. For example, the memory region mapped for executable code
+(the \texttt{.text} section) will be executable but non-writeable. This is in
+contrast to just providing a big enough memory region with all permissions to
+the subject with no exact mapping of binary sections to memory access
+permissions (i.e. read, write, execute).
+
 \subsection{Image packaging}\label{subsec:image-packaging}
 
 \section{Example system}

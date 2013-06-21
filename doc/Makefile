@@ -41,4 +41,5 @@ memlayout.pdf: memlayout.tex
 
 clean:
 	@rm -f *.pdf *.aux *.lof *.log *.toc *.snm *.out *.nav *.vrb *.bbl *.blg
+	@rm -f *.idx *.ilg *.ind
 	@rm -f $(XSLT_FILES)

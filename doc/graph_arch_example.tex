@@ -1,0 +1,12 @@
+\begin{tikzpicture}[node distance=0.33cm]
+	\node[redbox, text width=1.5cm, minimum width=2cm, minimum height=2cm] (vts) {VT Native};
+	\node[redbox, text width=1.5cm, minimum width=2cm, minimum height=2cm, left=of vts] (cry) {Crypter Native};
+	\node[redbox, text width=1.5cm, minimum width=2cm, minimum height=2cm, left=of cry] (smn) {Subject Monitor Native};
+	\node[blackbox, text width=1.5cm, minimum width=2cm, minimum height=2cm, left=of smn] (xv6) {xv6 VM};
+	\node[bluebox, minimum height=1cm, minimum width=9cm, text width=6cm] at (-3.5,-2.5) (mue) {Muen Separation Kernel};
+
+	\draw[gray!80] (-8,-2.25) to (1,-2.25);
+	\draw[gray!80] (-5.84,-2.25) to (-5.84,0);
+	\draw[gray!80] (-3.50,-2.25) to (-3.50,0);
+	\draw[gray!80] (-1.14,-2.25) to (-1.14,0);
+\end{tikzpicture}

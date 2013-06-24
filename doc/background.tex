@@ -141,14 +141,27 @@ two types see figure \ref{fig:vm-classification}.
 	\centering
 	\begin{subfigure}[b]{0.24\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{images/type-1-vmm}
+		\begin{tikzpicture}
+			\node (haw) [apribox]                     {Hardware};
+			\node (vmm) [bluebox, above=0.1cm of haw] {VMM};
+			\node (vim) [greenbox, above=of vmm]      {Virtual Machine};
+
+			\draw[arrow] (vmm) to (vim);
+		\end{tikzpicture}
 		\caption{\emph{Type I, native or bare metal VMM.} Runs directly on the
 		hardware in the most privileged processor mode.}
 	\end{subfigure}
 	\qquad
 	\begin{subfigure}[b]{0.24\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{images/type-2-vmm}
+		\begin{tikzpicture}
+			\node (haw) [apribox]                     {Hardware};
+			\node (hos) [apribox, above=0.1cm of haw] {Hosting OS};
+			\node (vmm) [bluebox, above=0.1cm of hos] {VMM};
+			\node (vim) [greenbox, above=of vmm]      {Virtual Machine};
+
+			\draw[arrow] (vmm) to (vim);
+		\end{tikzpicture}
 		\caption{\emph{Type II or hosted VMM.} The VMM runs on top of a
 		conventional operating system and uses OS services.}
 	\end{subfigure}

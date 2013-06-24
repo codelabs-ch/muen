@@ -19,6 +19,7 @@ REPORT_SOURCES =       \
 	impl_policy.tex    \
 	impl_subject.tex   \
 	conclusion.tex     \
+	tikzstyle.tex      \
 	images/*
 
 include ../Makeconf

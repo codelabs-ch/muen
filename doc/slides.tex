@@ -3,6 +3,8 @@
 \usepackage{beamerthemesplit}
 \usepackage{graphicx}
 \usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,shadows,arrows}
 
 \beamertemplatenavigationsymbolsempty
 
@@ -36,6 +38,8 @@
 \titlegraphic{\includegraphics[scale=0.3]{images/muen.pdf}}
 
 \begin{document}
+\input{tikzstyle}
+
 \begin{frame}
 	\titlepage
 \end{frame}
@@ -161,7 +165,7 @@ procedure Exchange (X, Y: in out Color_Type);
 
 \begin{frame}\frametitle{Scheduler II}
 \begin{center}
-	\includegraphics[scale=0.6]{images/scheduler-overview.pdf}
+	\input{graph_scheduler}
 \end{center}
 \end{frame}
 

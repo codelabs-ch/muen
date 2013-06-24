@@ -314,3 +314,73 @@ intended data flows according to the policy and it should prevent or limit
 possible side- or covert-channels.
 
 \section{Related work}
+This section presents similar and related projects. While they share many
+similarities with the Muen kernel, the main difference is ...TODO
+
+\subsection{seL4}
+seL4 is microkernel of the L4 \cite{Liedtke:1996:TRM:234215.234473} family which
+has been formally verified. It aims to provide high assurance of functional
+correctness by means of machine-checked formal proofs. Using the theorem prover
+Isabelle/HOL \cite{Nipkow-Paulson-Wenzel:2002}, it has been shown that the C
+implementation correctly implements an abstract specification.
+
+To our knowledge seL4 is the most advanced project in the field of formal
+verification combined with operating system research. Unfortunately its
+availability and use is rather limited by restrictive licensing. While parts of
+the seL4 project are available for non-commercial use, the source code of the
+kernel has not been published. Thus it is not possible to reproduce the formal
+proof.
+
+\subsection{XtratuM}
+XtratuM is a type 1 hypervisor specially designed for real-time embedded
+systems. It is developed by the Real-Time Systems group of the Universidad
+Politécnica de Valencia. It uses para-virtualization to provide one or more
+virtual execution environments for so called partitions. This means software
+running as partitions must be modified accordingly to run on top of XtratuM.
+
+The processor privilege mechanism (supervisor and user mode) is used to
+separate the hypervisor from partitions.
+
+The whole project is open-source and published under the GPL license. It is
+implemented in C and assembly. While it supports various platforms such as
+LEON2/3 (PowerPC) and Intel x86, it does not support Intel x86-64.
+
+\subsection{NOVA}
+NOVA is a recursive acronym and stands for NOVA OS Virtualization Architecture
+\cite{Steinberg:2010:NMS:1755913.1755935}. It applies microkernel construction
+principles to create a virtualization environment. Its authors have coined
+the term microhypervisor\index{microhypervisor} which is short for
+microkernelized hypervisor.
+
+NOVA has been developed from scratch with the goal to achieve a thin hypervisor
+layer, a users-level virtual-machine monitor (VMM) and additional unprivileged
+components to reduce the attack surface on the most privileged code and thus
+increase the overall system security. It runs on Intel and AMD x86 processors
+with support for hardware virtualization and is implemented in the C++
+programming language. The source code is publicly available TODO:Ref and has
+been released under the GPL open-source license.
+
+While NOVA is a very promising architecture it has some drawbacks: the choice of
+programming language (C++) and its dynamic nature, in general a very desirable
+property, increases the verification complexity to the point where it might be
+unfeasible.
+
+\subsection{Commercial separation kernels}
+There are several commercial offerings for separation kernels by various
+vendors:
+
+\begin{itemize}
+	\item INTEGRITY-178B by Green Hills Software, Inc. is a separation kernel
+		certified against the separation kernel protection profile (SKPP).
+	\item PikeOS by SYSGO AG is a microkernel based real-time OS.
+	\item LynxSecure by LynuxWorks Inc. is a type 1 embedded hypervisor for the
+		Intel x86 architecture.
+	\item VxWorks MILS Platform by WindRiver Inc. is a type 1 hypervisor–based,
+		SKPP-conformant MILS separation kernel–based platform.
+\end{itemize}
+
+None of these companies publish detailed technical documentation or provide
+access to source code. Thus there is not enough information available for a
+thorough technical analysis to asses the assurance provided by these kernels
+(e.g. if the kernels are suitable for formal verification and what kind of
+verification has been performed).

@@ -9,9 +9,10 @@ XSLT_FILES =       \
 	subject.tex    \
 	types.tex
 
-COMMON_SOURCES =        \
-	tikzstyle.tex       \
-	graph_scheduler.tex \
+COMMON_SOURCES =            \
+	tikzstyle.tex           \
+	graph_arch_overview.tex \
+	graph_scheduler.tex     \
 	images/*
 
 REPORT_SOURCES =       \

@@ -1,0 +1,26 @@
+\begin{tikzpicture}
+	\node[apribox, minimum width=3cm, minimum height=1.5cm, label={[yshift=-18pt]CPU}] (cpu) {};
+	\node[commonbox] (mmu) at (cpu.south) [above=5pt] {MMU};
+
+	\node[commonbox, minimum width=3cm, minimum height=1.5cm, label={[yshift=-18pt]MCH}] (mch) [below=1cm of cpu] {};
+	\node[commonbox] (iommu) at (mch.south) [above=5pt] {IOMMU};
+	\node[bluebox] (gfx) [left=of mch] {Graphics Adapter};
+	\node[bluebox] (ram) [right=of mch] {RAM};
+
+	\node[commonbox, minimum width=3cm, minimum height=1cm] (ich) [below=1cm of mch] {ICH};
+	\node[greenbox] (keyboard) [left=of ich] {Keyboard};
+	\node[greenbox] (usb) [below left=of ich] {USB};
+	\node[greenbox] (pci) [below=of ich] {PCI Express};
+	\node[greenbox] (bios) [below right=of ich] {BIOS};
+	\node[greenbox] (legacy) [right=of ich] {Legacy};
+
+	\draw[thick] (cpu) to node[auto] {System bus} (mch);
+	\draw[thick] (mch) -- (ich);
+	\draw[thick] (ich) -- (keyboard);
+	\draw[thick] (ich) -- (usb);
+	\draw[thick] (ich) -- (pci);
+	\draw[thick] (ich) -- (bios);
+	\draw[thick] (ich) -- (legacy);
+	\draw[thick] (mch) -- (gfx);
+	\draw[thick] (mch) -- (ram);
+\end{tikzpicture}

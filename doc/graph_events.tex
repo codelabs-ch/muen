@@ -1,0 +1,34 @@
+\begin{tikzpicture}
+	% SK 0
+	\node[graybox] (ha1) {Handle Hypercall};
+	\node[above=2mm of ha1] (mu1) {Muen SK};
+	\begin{pgfonlayer}{background}
+		\node[bluebox, minimum width=3cm, minimum height=1.7cm] (mb1) [fit = (ha1) (mu1)] {};
+	\end{pgfonlayer}
+
+	\node[apribox, minimum width=3cm, below=5mm of mb1] (cp1) {CPU0};
+	\node[greenbox, minimum width=3cm, minimum height=1.7cm, above=of mb1] (su1) {Subject};
+
+	\draw[arrow] (su1.225) to node[auto, swap] {\textbf{1}} (mb1.135);
+	\draw[arrow] (mb1.45) to node[auto, swap] {\textbf{4}} (su1.315);
+	\draw[<->, thick] (cp1) to node[auto] {LAPIC} (mb1);
+
+	% SK 1
+	\node[graybox, right=2.6cm of ha1] (ha2) {Handle Hypercall};
+	\node[above=2mm of ha2] (mu2) {Muen SK};
+	\begin{pgfonlayer}{background}
+		\node[bluebox, minimum width=3cm, minimum height=1.7cm] (mb2) [fit = (ha2) (mu2)] {};
+	\end{pgfonlayer}
+
+	\node[apribox, minimum width=3cm, below=5mm of mb2] (cp2) {CPU1};
+	\node[greenbox, minimum width=3cm, minimum height=1.7cm, above=of mb2] (su2) {Subject};
+
+	\draw[arrow] (mb2.135) to node[auto, swap] {\textbf{2}} (su2.225);
+	\draw[arrow] (su2.315) to node[auto, swap] {\textbf{3}} (mb2.45);
+	\draw[<->, thick] (cp2) to node[auto] {LAPIC} (mb2);
+
+	% Inter-core
+	\draw[<->, thick] (mb1) to node[auto] {IPI} (mb2);
+	\draw[vecarrow] (su1.15) to node[auto] {Request page} (su2.165);
+	\draw[vecarrow] (su2.195) to node[auto] {Response page} (su1.345);
+\end{tikzpicture}

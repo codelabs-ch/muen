@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+	\node[graybox] (han) {\textbf{3} Handle IRQ};
+	\node[above=2mm of han] (mue) {Muen SK};
+
+	\begin{pgfonlayer}{background}
+		\node[bluebox, minimum width=3cm, minimum height=1.7cm] (mub) [fit = (han) (mue)] {};
+	\end{pgfonlayer}
+
+	\node[greenbox, minimum width=3cm, minimum height=1.7cm, above=of mub] (sub) {Subject};
+	\node[apribox, left=15mm of mub] (irq) {Keyboard};
+
+	\draw[arrow] (irq) to node[auto] {\textbf{1} IRQ 1} (mub);
+	\draw[arrow] (sub.225) to node[auto, swap] {\textbf{2} VM exit} (mub.135);
+	\draw[arrow] (mub.45) to node[auto, swap] {\textbf{4} Inject event} (sub.315);
+\end{tikzpicture}

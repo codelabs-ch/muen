@@ -4,7 +4,7 @@
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{tikz}
-\usetikzlibrary{positioning,shapes,shadows,arrows}
+\usetikzlibrary{positioning,shapes,shadows,arrows,backgrounds,fit}
 
 \beamertemplatenavigationsymbolsempty
 
@@ -197,7 +197,7 @@ procedure Exchange (X, Y: in out Color_Type);
 	\item Setup of interrupt routing according to policy
 \end{itemize}
 \begin{center}
-	\includegraphics[scale=0.41]{images/external-interrupt.pdf}
+	\input{graph_external_interrupt}
 \end{center}
 \begin{enumerate}
 	\item External interrupts cause traps on designated CPU

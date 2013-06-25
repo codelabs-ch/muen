@@ -19,6 +19,7 @@ REPORT_SOURCES =       \
 	report.bib         \
 	introduction.tex   \
 	background.tex     \
+	back_intel.tex     \
 	design.tex         \
 	implementation.tex \
 	impl_policy.tex    \

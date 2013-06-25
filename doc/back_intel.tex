@@ -1,0 +1,76 @@
+\section{Intel x86 Architecture}
+Even though a more detailed familiarity with the subject is required for a full
+understanding of the design and implementation of the Muen kernel, this section
+only tries to give an short tour of the Intel x86 architecture. The interested
+reader is directed to the Intel Software Developer's Manuals \cite{IntelSDM},
+which contain a complete and in-depth description of the x86 architecture.
+
+The basic components of a modern Intel x86 computer are depicted in figure
+\ref{fig:intel-architecture}.
+
+\begin{figure}
+	\caption{Intel architecture}
+	\label{fig:intel-architecture}
+\end{figure}
+
+\subsection{Processor}
+The main processor of the system is called the central processing unit (CPU). On
+multi-processor systems a CPU can have multiple cores, which are termed
+\emph{logical CPUs}. Each logical CPU fetches and executes instructions, which
+change the state of the processor and the system.
+
+A modern CPU provides several operating modes of which one is called
+\emph{protected mode}. In this mode the processor provides different privilege
+levels also called rings. The rings are numbered from 0 to 3, with ring 0 having
+the most privileges. Due to common operating systems using only rings 0 and 3
+and disregarding other privilege levels, the 64-bit extension to the Intel
+architecture dropped support for rings 1 and 2.
+
+Privileged instructions such as switching memory management data structures are
+only executable in ring 0 also called supervisor mode. Operating systems such as
+Linux, usually execute user applications in the unprivileged ring 3, called user
+mode.
+
+Current processors support management of physical memory through means of
+segmentation and paging. Logical addresses are translated to linear addresses
+using the segmentation mechanism. In a second step, linear addresses are
+translated to physical addresses using paging.
+
+Memory management is done in hardware by the memory management unit (MMU)
+\index{MMU}. An operating system must set up certain data structures (descriptor
+tables and page tables) to instruct the MMU how logic and linear memory
+addresses map to physical memory. The MMU allows for partitioning and separation
+of system memory.
+
+A processor is connected to the memory controller hub via the system bus, which
+is also called front side bus (FSB)\index{FSB}.
+
+\subsection{Memory Controller Hub}
+The memory controller hub (MCH)\index{MCH}, also called \emph{Northbridge},
+connects the CPU to random access memory (RAM), the graphics card and
+southbridge (presented in the next section) of the system. The processor
+accesses these resources by sending memory requests via the system bus. The MCH
+decodes the requests and forwards them to RAM or the Southbridge, depending on
+the physical address. If for example a request contains an address of a
+memory-mapped device, the chipset of the MCH forwards the request to the
+Southbridge.
+
+\subsection{Input/Output Controller Hub}
+The input/ouput controller hub (ICH), also called \emph{Southbridge}, provides
+connections to most devices and platform peripherals, such as keyboards, USB
+connections and other buses such as PCI Express, USB etc. Newer models contain
+an I/O memory management unit (IOMMU), which provides address translation
+functionality similar to the MMU, but for accesses to system memory initiated by
+I/O devices. This is necessary since active components, such as PCI devices, can
+perform direct memory access (DMA)\index{DMA}, which bypasses the processor's
+MMU memory protection. Like the MMU, an operating system must initialize data
+structures and setup the IOMMU for proper separation of physical memory
+accessible by devices.
+
+\subsection{Platform Controller Hub}
+More recently, Intel has rearranged the presented hub architecture and has
+integrated much of the functionality provided by the Northbridge into the CPU.
+All remaining functions of the north bridge and south bridge have been combined
+and incorporated into a new component called the platform controller hub (PCH)
+\index{PCH}. The is new architecture avoids the bottleneck presented by the
+system bus connection between the CPU and the north bridge.

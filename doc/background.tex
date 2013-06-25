@@ -1,4 +1,12 @@
 \chapter{Background}
+This chapter introduces technologies and concepts which are necessary for the
+understanding of the design and the realisation of the Muen kernel.
+First we present SPARK, the programming language chosen for the implementation.
+After that, an overview of virtualization is given followed by a short
+description of the Intel/PC architecture. The concept of the separation kernel
+is presented and the main motivation and goals of this work is laid out. The
+chapter concludes with an overview of related projects.
+
 \section{SPARK}
 SPARK\footnote{Short for SPADE Ada Kernel} is a formally-defined high-level
 programming language designed for writing high integrity systems. It is based on
@@ -120,7 +128,8 @@ comments. It is expected to be released in 2014 \cite{SPARK2014:Announcement}.
 Since the development of SPARK 2014 is currently ongoing, the kernel is
 implemented using the existing SPARK 2005 language and tools.
 
-\section{Intel x86 Architecture}
+\input{back_intel}
+
 \section{Virtualization}
 Virtualization is an established architectural concept in computer science and
 has been in use since decades. Operating systems for example provide virtual

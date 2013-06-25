@@ -1,8 +1,90 @@
 \chapter{Design}
-\section{Scope}
+The design of the Muen kernel is inspired by the Common Criteria separation
+kernel protection profile (SKPP) \cite{SKPP}, which has been used in the
+certification of Green Hills' INTEGRITY-178B kernel (see section
+\ref{subsec:commercial-sks}). The protection profile has been sunset by the
+National Information Assurance Partnership (NIAP) in 2011. Nevertheless we
+believe the document can be used as a sound basis and guidance to derive
+requirements for a separation kernel appropriate for systems requiring high
+robustness.
+
+The separation kernel should allow the construction of systems, that are
+potentially exposed to attackers with high attack potential and deployed in the
+most difficult threat environment.
+
 \section{Threat model}
-\section{Security properties}
+The focus of this project is to design and implement a separation kernel, which
+guarantees strong separation of subjects and can thus serve as a basis for a
+component-based system. This section describes the capabilities of an attacker
+and enumerates the issues that are considered out of scope.
+
+\begin{itemize}
+	\item All code that is not part of the TCB can potentially be subverted.
+		This specifically includes \emph{all} untrusted subjects. Thus an
+		attacker can completely control all untrusted subjects.
+\end{itemize}
+
+The following issues, while very important in the context of constructing a
+high assurance system, are considered out of scope:
+
+\begin{description}
+	\item[System initialization] The kernel starts executing after the
+		bootloader hands over execution. It is assumed that the system is setup
+		and initialized properly. How the system is securely bootstrapped (e.g.
+		using a trusted boot process) and initialized and how the integrity of
+		the kernel is assured are not considered.
+	\item[Hardware] It is assumed, that hardware such as the CPU, memory
+		management unit and other devices are working correctly and according to
+		their specification. Problems due to buggy or even malicious hardware
+		are considered out of scope.
+	\item[Physical attacks] Issues predicated on an attacker having physical
+		access to the system are not considered.
+	\item[Firmware] A modern PC contains firmware and many embedded controllers,
+		that are only partly (if at all) controllable by an operating system
+		kernel. This includes technologies such as Intel AMT/ME, System
+		Management Mode (SMM) and the system BIOS, which have access to
+		sensitive system resources.
+	\item[Policy validity] The separation kernel provides the mechanisms to
+		enforce a given, user-defined policy. The focus is on the correct
+		implementation of a provided system configuration. The user is in charge
+		of assuring the correctness and consistency of the overall system
+		policy.
+	\item[Communication] The separation kernel must provide a
+		mechanism to establish directed communication channels between subjects.
+		It is however not the duty of the kernel to provide a inter-subject
+		communication abstraction such as message passing or a remote procedure
+		call (RPC) interface.
+	\item[Recovery] How a system can be restored to a secure state after a
+		compromise is out of scope.
+\end{description}
+
+These points must be considered and addressed when building a high assurance
+system based on the Muen separation kernel.
+
 \section{Requirements}
+
+The following properties specify the requirements of the separation kernel and
+the system's TCB:
+\begin{enumerate}
+	\item All resources must be protected from unauthorized access. This
+		includes devices and memory that has not been assigned to any subject.
+	\item System resources internal to the kernel, that are not exported to
+		subjects, must not be accessible.
+	\item Isolated subjects that do not share any resources must be completely
+		separated and not be able to exchange any information.
+	\item Information flows between subjects must only be present if explicitly
+		specified in the system policy.
+	\item Information flows between subjects must only be present if explicitly
+		specified in the system policy.
+	\item A subject must be able to only access its assigned resources. Access
+		to other resources must be prohibited.
+	\item Assignment of subject resources must be static. A malicious subject
+		must not be able to gain access to additional resources or even consume
+		all system resources.
+	\item All security critical operations must be NEAT: non-bypassable,
+		evaluatable, always-invoked and tamperproof.
+\end{enumerate}
+
 \section{Architecture}
 \begin{figure}[h]
 	\centering

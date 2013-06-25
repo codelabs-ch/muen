@@ -11,7 +11,7 @@
 
 	\draw[arrow] (su1.225) to node[auto, swap] {\textbf{1}} (mb1.135);
 	\draw[arrow] (mb1.45) to node[auto, swap] {\textbf{4}} (su1.315);
-	\draw[<->, thick] (cp1) to node[auto] {LAPIC} (mb1);
+	\draw[<->, thick, gray] (cp1) to node[auto, gray] {LAPIC} (mb1);
 
 	% SK 1
 	\node[graybox, right=2.6cm of ha1] (ha2) {Handle Hypercall};
@@ -25,10 +25,10 @@
 
 	\draw[arrow] (mb2.135) to node[auto, swap] {\textbf{2}} (su2.225);
 	\draw[arrow] (su2.315) to node[auto, swap] {\textbf{3}} (mb2.45);
-	\draw[<->, thick] (cp2) to node[auto] {LAPIC} (mb2);
+	\draw[<->, thick, gray] (cp2) to node[auto, gray] {LAPIC} (mb2);
 
 	% Inter-core
-	\draw[<->, thick] (mb1) to node[auto] {IPI} (mb2);
+	\draw[<->, thick, gray] (mb1) to node[auto, gray] {IPI} (mb2);
 	\draw[vecarrow] (su1.15) to node[auto] {Request page} (su2.165);
 	\draw[vecarrow] (su2.195) to node[auto] {Response page} (su1.345);
 \end{tikzpicture}

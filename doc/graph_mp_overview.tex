@@ -1,0 +1,30 @@
+\begin{tikzpicture}
+	\node[greenbox, minimum width=9cm] (mem) {System Memory};
+
+	% SK 0
+	\node[graybox, minimum width=2.8cm, below=1cm of mem.south west, anchor=north west] (pc1) {Per-CPU storage};
+	\node[graybox, minimum width=2.8cm, below=1mm of pc1] (st1) {Stack};
+	\node[above=2mm of pc1] (mu1) {Muen SK};
+	\begin{pgfonlayer}{background}
+		\node[bluebox, minimum width=3cm, minimum height=1.7cm] (mb1) [fit = (pc1) (st1) (mu1)] {};
+	\end{pgfonlayer}
+
+	\node[apribox, minimum width=3cm, below=5mm of mb1, label=below:\emph{BSP}] (cp1) {CPU0};
+
+	\draw[arrow, gray] (mb1) to node[auto, gray] {LAPIC} (cp1);
+
+	% SK 1
+	\node[graybox, minimum width=2.8cm, below=1cm of mem.south east, anchor=north east] (pc2) {Per-CPU storage};
+	\node[graybox, minimum width=2.8cm, below=1mm of pc2] (st2) {Stack};
+	\node[above=2mm of pc2] (mu2) {Muen SK};
+	\begin{pgfonlayer}{background}
+		\node[bluebox, minimum width=3cm, minimum height=1.7cm] (mb2) [fit = (pc2) (st2) (mu2)] {};
+	\end{pgfonlayer}
+
+	\node[apribox, minimum width=3cm, below=5mm of mb2, label=below:\emph{AP}] (cp2) {CPU1};
+
+	\draw[arrow, gray] (cp2) to node[auto, gray] {LAPIC} (mb2);
+
+	% Inter-core
+	\draw[arrow, gray] (mb1) to node[gray, auto] {INIT-SIPI-SIPI} (mb2);
+\end{tikzpicture}

@@ -1,5 +1,6 @@
 PDFLATEX = for n in 1 2 3; do pdflatex $<; done
 XSLTPROC = xsltproc
+INKSCAPE = inkscape
 
 XSLT_FILES =       \
 	binary.tex     \
@@ -31,11 +32,16 @@ SLIDES_SOURCES =      \
 	slides.tex        \
 	$(COMMON_SOURCES)
 
+UML_TARGETS = $(patsubst %.svg,%.pdf,$(wildcard images/xml_*.svg))
+
 include ../Makeconf
 
 all: memlayout.pdf report.pdf slides.pdf
 
-report.pdf: $(REPORT_SOURCES) $(XSLT_FILES)
+%.pdf: %.svg
+	$(INKSCAPE) --file=$< --export-area-drawing --without-gui --export-pdf=$@
+
+report.pdf: $(REPORT_SOURCES) $(XSLT_FILES) $(UML_TARGETS)
 	@pdflatex $<
 	@makeindex report
 	@bibtex report

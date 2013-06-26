@@ -22,16 +22,9 @@ change the state of the processor and the system.
 
 \subsubsection{Execution environment}
 A program executing on an processor is given access to resources to store
-information, such as code, data or state information. Figure
-\ref{fig:64bit-exec-env} illustrates the basic execution environment of a modern
-64-bit processor.
-
-\begin{figure}
-	\caption{64-bit execution environment}
-	\label{fig:64bit-exec-env}
-\end{figure}
-
-The various types of resources are described in the following list:
+information, such as code, data or state information. Various resources provided
+by a modern 64-bit processor constituting the basic execution environment are
+described in the following list:
 
 \begin{description}
 	\item[Address space] is used by a program to access system memory.
@@ -136,5 +129,5 @@ More recently, Intel has rearranged the presented hub architecture and has
 integrated much of the functionality provided by the Northbridge into the CPU
 \cite{IntelQPI}. All remaining functions of the Northbridge and Southbridge have
 been combined and incorporated into a new component called the platform
-controller hub (PCH) \index{PCH}. The is new architecture avoids the bottleneck
+controller hub (PCH)\index{PCH}. This new architecture avoids the bottleneck
 presented by the system bus connection between the CPU and the Northbridge.

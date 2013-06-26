@@ -12,7 +12,15 @@
 		<xsl:call-template name="texifyText">
 			<xsl:with-param name="text" select="@name"/>
 		</xsl:call-template>
-		<xsl:text>}&#10;</xsl:text>
+		<xsl:text>}&#10;\begin{figure}[!h]\centering</xsl:text>
+		<xsl:text>	\includegraphics[scale=0.48]{images/xml_</xsl:text>
+		<xsl:value-of select="@name"/>
+		<xsl:text>.png}&#10;</xsl:text>
+		<xsl:text>	\caption{</xsl:text>
+		<xsl:call-template name="texifyText">
+			<xsl:with-param name="text" select="@name"/>
+		</xsl:call-template>
+		<xsl:text>}&#10;\end{figure}&#10;</xsl:text>
 		<xsl:call-template name="texifyText">
 			<xsl:with-param name="text" select="xs:annotation/xs:documentation/text()"/>
 		</xsl:call-template>

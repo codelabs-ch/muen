@@ -16,11 +16,7 @@
 		<xsl:text>	\includegraphics[scale=0.48]{images/xml_</xsl:text>
 		<xsl:value-of select="@name"/>
 		<xsl:text>}&#10;</xsl:text>
-		<xsl:text>	\caption{</xsl:text>
-		<xsl:call-template name="texifyText">
-			<xsl:with-param name="text" select="@name"/>
-		</xsl:call-template>
-		<xsl:text>}&#10;\end{figure}&#10;</xsl:text>
+		<xsl:text>\end{figure}&#10;</xsl:text>
 		<xsl:call-template name="texifyText">
 			<xsl:with-param name="text" select="xs:annotation/xs:documentation/text()"/>
 		</xsl:call-template>

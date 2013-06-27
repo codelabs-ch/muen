@@ -74,8 +74,6 @@ the system's TCB:
 		separated and not be able to exchange any information.
 	\item Information flows between subjects must only be present if explicitly
 		specified in the system policy.
-	\item Information flows between subjects must only be present if explicitly
-		specified in the system policy.
 	\item A subject must be able to only access its assigned resources. Access
 		to other resources must be prohibited.
 	\item Assignment of subject resources must be static. A malicious subject
@@ -83,6 +81,12 @@ the system's TCB:
 		all system resources.
 	\item All security critical operations must be NEAT: non-bypassable,
 		evaluatable, always-invoked and tamperproof.
+	\item 64-bit programs must be supported to run as native subjects.
+	\item The kernel must support the Intel IA-32e/64-bit architecture and
+		system memory larger than 4GB.
+	\item The kernel must allow the implementation of small and simple
+		components and not impose unnecessary restrictions that would increase
+		subject complexity.
 \end{enumerate}
 
 \section{Architecture}

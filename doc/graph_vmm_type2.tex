@@ -1,0 +1,8 @@
+\begin{tikzpicture}[text width=2cm, minimum height=0.5cm]
+	\node (haw) [apribox]                     {Hardware};
+	\node (hos) [apribox, above=0.1cm of haw] {Hosting OS};
+	\node (vmm) [bluebox, above=0.1cm of hos] {VMM};
+	\node (vim) [greenbox, above=of vmm]      {Virtual Machine};
+
+	\draw[arrow] (vmm) to (vim);
+\end{tikzpicture}

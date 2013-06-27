@@ -165,20 +165,7 @@ The \texttt{skpolicy} tool compiles the XML system policy outlined in section
 
 \begin{figure}[h]
 	\centering
-	\begin{tikzpicture}
-		\node (pol) [greenbox]                            {Policy};
-		\node (skp) [apribox, below=of pol]               {skpolicy};
-		\node (sou) [bluebox, below=of skp, xshift=1.5cm] {Source specs};
-		\node (pag) [bluebox, left=of sou]                {Page tables};
-		\node (iob) [bluebox, left=of pag]                {I/O bitmaps};
-		\node (msr) [bluebox, right=of sou]               {MSR bitmaps};
-
-		\draw[arrow] (pol) to (skp);
-		\draw[arrow] (skp) to (sou);
-		\draw[arrow] (skp) to (msr);
-		\draw[arrow] (skp) to (pag);
-		\draw[arrow] (skp) to (iob);
-	\end{tikzpicture}
+	\input{graph_policy_compilation}
 	\caption{Policy compilation}
 	\label{fig:policy-compilation}
 \end{figure}
@@ -221,14 +208,7 @@ address, entry point and memory layout from a subject binary.
 
 \begin{figure}[h]
 	\centering
-	\begin{tikzpicture}
-		\node (obj) [bluebox]                {Binary object};
-		\node (skc) [apribox,  below=of obj] {skconfig};
-		\node (xml) [greenbox, below=of skc] {XML specification};
-
-		\draw[arrow] (obj) to (skc);
-		\draw[arrow] (skc) to (xml);
-	\end{tikzpicture}
+	\input{graph_object_analysis}
 	\caption{From binary object to XML specification}
 	\label{fig:object-analysis}
 \end{figure}
@@ -252,22 +232,7 @@ final image.
 
 \begin{figure}[h]
 	\centering
-	\begin{tikzpicture}
-		\node (knl) [bluebox]                              {Kernel binary};
-		\node (sub) [bluebox, left=of knl]                 {Subject binaries};
-		\node (pag) [bluebox, left=of sub]                 {Page tables};
-		\node (bit) [bluebox, right=of knl]                {Bitmaps};
-		\node (skp) [apribox, below=of knl, xshift=-1.5cm] {skpacker};
-		\node (spe) [bluebox, left=of skp]                 {Packer spec};
-		\node (sys) [greenbox, below=of skp]               {System image};
-
-		\draw[arrow] (pag) to (skp);
-		\draw[arrow] (sub) to (skp);
-		\draw[arrow] (knl) to (skp);
-		\draw[arrow] (bit) to (skp);
-		\draw[arrow] (skp) to (sys);
-		\draw[arrow] (spe) to (skp);
-	\end{tikzpicture}
+	\input{graph_image_packaging}
 	\caption{System image packaging}
 	\label{fig:image-packaging}
 \end{figure}

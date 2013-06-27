@@ -1,0 +1,14 @@
+\begin{tikzpicture}
+	\node (pol) [greenbox]                            {Policy};
+	\node (skp) [apribox, below=of pol]               {skpolicy};
+	\node (sou) [bluebox, below=of skp, xshift=1.5cm] {Source specs};
+	\node (pag) [bluebox, left=of sou]                {Page tables};
+	\node (iob) [bluebox, left=of pag]                {I/O bitmaps};
+	\node (msr) [bluebox, right=of sou]               {MSR bitmaps};
+
+	\draw[arrow] (pol) to (skp);
+	\draw[arrow] (skp) to (sou);
+	\draw[arrow] (skp) to (msr);
+	\draw[arrow] (skp) to (pag);
+	\draw[arrow] (skp) to (iob);
+\end{tikzpicture}

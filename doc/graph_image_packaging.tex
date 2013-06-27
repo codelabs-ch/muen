@@ -1,0 +1,16 @@
+\begin{tikzpicture}
+	\node (knl) [bluebox]                              {Kernel binary};
+	\node (sub) [bluebox, left=of knl]                 {Subject binaries};
+	\node (pag) [bluebox, left=of sub]                 {Page tables};
+	\node (bit) [bluebox, right=of knl]                {Bitmaps};
+	\node (skp) [apribox, below=of knl, xshift=-1.5cm] {skpacker};
+	\node (spe) [bluebox, left=of skp]                 {Packer spec};
+	\node (sys) [greenbox, below=of skp]               {System image};
+
+	\draw[arrow] (pag) to (skp);
+	\draw[arrow] (sub) to (skp);
+	\draw[arrow] (knl) to (skp);
+	\draw[arrow] (bit) to (skp);
+	\draw[arrow] (skp) to (sys);
+	\draw[arrow] (spe) to (skp);
+\end{tikzpicture}

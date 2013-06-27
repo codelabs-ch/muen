@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+	\node (obj) [bluebox]                {Binary object};
+	\node (skc) [apribox,  below=of obj] {skconfig};
+	\node (xml) [greenbox, below=of skc] {XML specification};
+
+	\draw[arrow] (obj) to (skc);
+	\draw[arrow] (skc) to (xml);
+\end{tikzpicture}

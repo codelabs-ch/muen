@@ -144,38 +144,25 @@ hardware that acts like real hardware. The virtualization is performed on the
 host machine by special software, called a hypervisor\index{hypervisor} or
 virtual machine monitor (VMM\index{VMM}). These two terms are synonyms, for
 consistency we will use VMM throughout this document. VMMs are classified into
-two types see figure \ref{fig:vm-classification}.
+two types see figure \ref{fig:vmm-classification}.
 
 \begin{figure}
 	\centering
 	\begin{subfigure}[b]{0.24\textwidth}
 		\centering
-		\begin{tikzpicture}[text width=2cm, minimum height=0.5cm]
-			\node (haw) [apribox]                     {Hardware};
-			\node (vmm) [bluebox, above=0.1cm of haw] {VMM};
-			\node (vim) [greenbox, above=of vmm]      {Virtual Machine};
-
-			\draw[arrow] (vmm) to (vim);
-		\end{tikzpicture}
+		\input{graph_vmm_type1}
 		\caption{\emph{Type I, native or bare metal VMM.} Runs directly on the
 		hardware in the most privileged processor mode.}
 	\end{subfigure}
 	\qquad
 	\begin{subfigure}[b]{0.24\textwidth}
 		\centering
-		\begin{tikzpicture}[text width=2cm, minimum height=0.5cm]
-			\node (haw) [apribox]                     {Hardware};
-			\node (hos) [apribox, above=0.1cm of haw] {Hosting OS};
-			\node (vmm) [bluebox, above=0.1cm of hos] {VMM};
-			\node (vim) [greenbox, above=of vmm]      {Virtual Machine};
-
-			\draw[arrow] (vmm) to (vim);
-		\end{tikzpicture}
+		\input{graph_vmm_type2}
 		\caption{\emph{Type II or hosted VMM.} The VMM runs on top of a
 		conventional operating system and uses OS services.}
 	\end{subfigure}
 	\caption{VMM classification}
-	\label{fig:vm-classification}
+	\label{fig:vmm-classification}
 \end{figure}
 
 Software that runs in a virtualized environment is called guest software. The

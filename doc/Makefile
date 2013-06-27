@@ -55,7 +55,7 @@ memlayout.pdf: memlayout.tex
 	@$(PDFLATEX)
 
 %.tex: $(SCHEMA_DIR)/%.xsd xsl/xsd2tex-types.xsl
-	$(XSLTPROC) -o $@ xsl/xsd2tex-types.xsl $<
+	$(XSLTPROC) --stringparam SCHEMADIR $(SCHEMA_DIR) -o $@ xsl/xsd2tex-types.xsl $<
 
 clean:
 	@rm -f *.pdf *.aux *.lof *.log *.toc *.snm *.out *.nav *.vrb *.bbl *.blg

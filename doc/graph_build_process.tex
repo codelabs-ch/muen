@@ -1,0 +1,18 @@
+\begin{tikzpicture}[minimum width=2.5cm, minimum height=0.6cm]
+	\node (too) [apribox]                {Build tools};
+	\node (rts) [apribox,  right=of too] {Build RTS};
+	\node (pol) [apribox,  below=of too] {Compile policy};
+	\node (knl) [bluebox,  right=of pol] {Build Kernel};
+	\node (sub) [apribox,  right=of knl] {Build Subjects};
+	\node (pak) [apribox,  below=of knl] {Package Image};
+	\node (img) [greenbox, below=of pak] {OS image};
+
+	\draw[arrow] (too) -- (pol);
+	\draw[arrow] (rts) -- (knl);
+	\draw[arrow] (rts) -| (sub);
+	\draw[arrow] (pol) -- (knl);
+	\draw[arrow] (pol) |- (pak);
+	\draw[arrow] (knl) -- (pak);
+	\draw[arrow] (sub) |- (pak);
+	\draw[arrow] (pak) -- (img);
+\end{tikzpicture}

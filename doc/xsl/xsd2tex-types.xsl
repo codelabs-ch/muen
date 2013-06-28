@@ -18,6 +18,8 @@
 		<xsl:call-template name="texifyText">
 			<xsl:with-param name="text" select="@name"/>
 		</xsl:call-template>
+		<xsl:text>}\label{subsec:</xsl:text>
+		<xsl:value-of select="@name"/>
 		<xsl:text>}&#10;\begin{figure}[!h]\centering</xsl:text>
 		<xsl:text>	\includegraphics[scale=0.48]{images/xml_</xsl:text>
 		<xsl:value-of select="@name"/>

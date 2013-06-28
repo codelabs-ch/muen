@@ -23,8 +23,7 @@ REPORT_SOURCES =       \
 	back_intel.tex     \
 	design.tex         \
 	implementation.tex \
-	impl_policy.tex    \
-	impl_subject.tex   \
+	impl_*             \
 	conclusion.tex     \
 	$(COMMON_SOURCES)
 

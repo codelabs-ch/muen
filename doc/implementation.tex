@@ -156,7 +156,11 @@ This is achieved by ...
 \end{figure}
 
 \section{Build}
-TODO: explain the complete process, target dependencies and implemented tools.
+This section outlines the different build steps required to produce the final
+system image containing the Muen separation kernel and all subjects as defined
+by the system policy. Figure \ref{fig:build-process} illustrates the build
+process.
+
 \begin{figure}[h]
 	\centering
 	\input{graph_build_process}
@@ -164,7 +168,25 @@ TODO: explain the complete process, target dependencies and implemented tools.
 	\label{fig:build-process}
 \end{figure}
 
-\subsection{Policy compilation}
+The first step is to build the tools. The \texttt{skconfig} helper tool can be
+used, as described in section \ref{subsec:subject-binary-analysis}, to create
+subject initial state and memory layout specifications in XML format from the
+subject binary. The generated XML files are included in the system policy before
+the policy compilation step.
+
+To compile the system policy, the \texttt{skpolicy} tool is required. The
+details about the policy compilation process is described in section
+\ref{subsec:policy-compilation}.  The Muen kernel and all subjects require the
+Ada ZFS runtime described in section TODO:ref to compile. Once the policy has
+been compiled and the ZFS runtime has been built, the kernel and all subjects
+are built.
+
+The final step is to package all object binaries (i.e. the kernel and all
+subjects) including all related files into a bootable OS image. This task is
+handled by the \texttt{skpacker} tool described in section
+\ref{subsec:image-packaging}.
+
+\subsection{Policy compilation}\label{subsec:policy-compilation}
 The \texttt{skpolicy} tool compiles the XML system policy outlined in section
 \ref{sec:policy} to different output formats as shown in figure
 \ref{fig:policy-compilation}.
@@ -179,8 +201,8 @@ The \texttt{skpolicy} tool compiles the XML system policy outlined in section
 The generated subject page tables, I/O and MSR bitmaps are included in the final
 system image by the \texttt{skpacker} utility explained in the following section
 \ref{subsec:image-packaging}. These files are all in binary form and correspond
-to the format mandated by the respective Intel SDM chapters (TODO:REF). Page
-tables are generated for subjects as well as for the kernel itself.
+to the format mandated by the respective Intel SDM chapters \cite{IntelSDM}.
+Page tables are generated for subjects as well as for the kernel itself.
 
 The generated SPARK and Assembly source specifications are included in the
 kernel directly. These specifications provide the kernel with the following
@@ -293,6 +315,9 @@ at this specific memory location. The abbreviations have the following meaning:
          00000000002d6000 [MSBM] xv6
          00000000002d7000 [BIN ] xv6
 \end{lstlisting}
+
+Once the packaging step is complete, the resulting OS image can be booted by any
+Multiboot \cite{multiboot} compliant bootloader.
 
 \section{Example system}\label{sec:example-system}
 \begin{figure}[h]

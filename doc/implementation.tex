@@ -59,8 +59,8 @@ all prerequisites are met to enable VMX root operation.
 	\label{fig:kernel-scheduler}
 \end{figure}
 
-\subsection{Traps}
-\subsection{Exceptions and Interrupts}
+\subsection{Traps}\label{subsec:traps}
+\subsection{Exceptions and Interrupts}\label{subsec:excp-and-ints}
 \begin{figure}[h]
 	\centering
 	\input{graph_external_interrupt}
@@ -149,14 +149,7 @@ synchronized on major frame transition.
 
 This is achieved by ...
 
-\subsection{Events}
-\begin{figure}[h]
-	\centering
-	\input{graph_events}
-	\caption{Inter-core events}
-	\label{fig:inter-core-events}
-\end{figure}
-
+\input{impl_events}
 \input{impl_build}
 
 \section{Example system}\label{sec:example-system}

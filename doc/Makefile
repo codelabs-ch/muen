@@ -13,6 +13,7 @@ XSLT_FILES =       \
 COMMON_SOURCES =  \
 	tikzstyle.tex \
 	graph_*.tex   \
+	lst_*.tex     \
 	images/*
 
 REPORT_SOURCES =       \

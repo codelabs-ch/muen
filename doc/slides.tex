@@ -214,11 +214,7 @@ procedure Exchange (X, Y: in out Color_Type);
 	\item Handover events transfers execution to destination subject optionally injecting an interrupt
 	\item Interrupt events inject interrupt in destination subject with optional IPI
 \end{itemize}
-\begin{lstlisting}[language=xml]
-<event_table>
-    <interrupt event="1" dst_subject="xv6" dst_vector="33" send_ipi="true"/>
-</event_table>
-\end{lstlisting}
+\input{lst_event_table}
 \end{frame}
 
 \begin{frame}\frametitle{Multicore}

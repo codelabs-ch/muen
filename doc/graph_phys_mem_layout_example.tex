@@ -1,0 +1,19 @@
+\begin{bytefield}{24}
+	\bitbox[]{10}{}
+	\bitbox[]{16}{$\vdots$}\\[1ex]
+	\begin{rightwordgroup}{$\tau0$}
+		\memsection{0021 6000}{0021 9fff}{2}{Code and data}\\
+		\memsection{0021 4000}{0021 5fff}{2}{I/O bitmap}\\
+		\memsection{0021 0000}{0021 3fff}{2}{Pagetable}
+	\end{rightwordgroup}\\
+	\memsection{0020 4000}{0020 ffff}{3}{\color{Gray}--  free --}\\
+	\begin{rightwordgroup}{Kernel}
+		\memsection{0020 0000}{0020 3fff}{2}{Kernel pagetable}\\
+		\memsection{001f f000}{001f ffff}{2}{$\tau0\rightarrow$kernel interface}\\
+		\memsection{001f e000}{001e ffff}{2}{Subject state descriptors}\\
+		\memsection{0011 c000}{001f dfff}{3}{\color{Gray}-- free --}\\
+		\memsection{0010 0000}{0011 bfff}{2}{Kernel code and data}
+	\end{rightwordgroup}\\
+	\bitbox[]{10}{}
+	\bitbox[]{16}{$\vdots$}
+\end{bytefield}

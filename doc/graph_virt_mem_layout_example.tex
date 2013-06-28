@@ -1,0 +1,22 @@
+\newcommand{\vmemsection}[6]{
+	\bytefieldsetup{bitheight=#5\baselineskip} % define the height of the memsection
+	\bitbox[]{8}{
+		\footnotesize\texttt{0x#2} % print virtual end address
+		\\ \vspace{#5\baselineskip} \vspace{-2\baselineskip} \vspace{-#5pt}
+		\footnotesize\texttt{0x#1} % print virtual start address
+	}
+	\bitbox{14}{#6} % print box with caption
+	\bitbox[]{8}{
+		\footnotesize\texttt{0x#4} % print physical end address
+		\\ \vspace{#5\baselineskip} \vspace{-2\baselineskip} \vspace{-#5pt}
+		\footnotesize\texttt{0x#3} % print physical start address
+	}
+}
+
+\begin{bytefield}{24}
+	\vmemsection{0010 0000}{0010 0fff}{001f f000}{001f ffff}{2}{Subject interface}\\
+	\vmemsection{0000 3000}{0000 3fff}{0021 9000}{0021 9fff}{2}{Stack}\\
+	\vmemsection{0000 2000}{0000 2fff}{0021 8000}{0021 8fff}{2}{Data}\\
+	\vmemsection{0000 1000}{0000 1fff}{0021 7000}{0021 7fff}{2}{Read-only data}\\
+	\vmemsection{0000 0000}{0000 0fff}{0021 6000}{0021 6fff}{2}{Program code}\\
+\end{bytefield}

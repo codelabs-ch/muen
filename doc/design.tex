@@ -98,6 +98,56 @@ the system's TCB:
 \end{figure}
 
 \subsection{Virtualization}
+The core mechanism used to separate subjects is Intel's hardware-assisted
+virtualization technology VT-x. The kernel executes in VMX root mode, which
+shields it from access by subjects.
+
+\subsubsection{Memory}
+All memory resources of a system are static and are explicitly specified in the
+system policy. There are no implicitly allocated data structures. This allows
+to specify the exact memory layout of the final system at integration time.
+
+The kernel and each subject specifies its memory layout. The memory layout
+defines, which physical memory ranges are accessible, their location in the
+virtual address space of the binary and additional attributes such as access
+rights. Since the layout is controlled by page tables, each subject has its own
+distinct set of memory management structures. To assure that a subject cannot
+alter the memory layout, it must not have access to any page tables, including
+its own.
+
+Figure \ref{fig:phys-mem-layout-example} illustrates the physical memory
+structure of an example system.
+
+\begin{figure}[h]
+	\centering
+	\input{graph_phys_mem_layout_example}
+	\caption{Physical memory layout example}
+	\label{fig:phys-mem-layout-example}
+\end{figure}
+
+The physical memory addresses given on the left side are hexadecimal values.
+The memory region containing kernel code and data starts at address 0x10000h
+(1 Megabyte (MB)) and has a size of 112 kilobyte (KB). It is followed by a gap of
+unallocated memory and then the "subject descriptors" and "$\tau0\rightarrow$
+kernel interface" regions which are 4 KB in size. Memory management data
+structures of the kernel start at address 0x20000h (2 MB) and expand over 16 KB.
+The memory layout of subject $\tau0$ encompasses three regions ranging from
+0x21000h to 0x021fffh.
+
+Whenever a subject is executed on the CPU, the MMU is directed to use the
+corresponding page tables. The hardware memory management mechanism then
+enforces the address translations specified by the paging structures, and thus
+restricts the subject to its virtual address space. Figure
+\ref{fig:virt-mem-layout-example} illustrates the memory layout of an example
+subject.
+
+\begin{figure}[h]
+	\centering
+	\input{graph_virt_mem_layout_example}
+	\caption{Virtual memory layout of example subject}
+	\label{fig:virt-mem-layout-example}
+\end{figure}
+
 \subsection{Scheduling}\label{subsec:scheduling}
 This section presents the design of the Muen kernel scheduler and the selected
 scheduling algorithm.

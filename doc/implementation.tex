@@ -51,7 +51,7 @@ tasks:
 After this initial steps are executed, the system is in 64-bit IA-32e mode and
 all prerequisites are met to enable VMX root operation.
 
-\subsection{Scheduling}
+\subsection{Scheduling}\label{subsec:scheduling}
 \begin{figure}[h]
 	\centering
 	\input{graph_scheduler}
@@ -59,7 +59,8 @@ all prerequisites are met to enable VMX root operation.
 	\label{fig:kernel-scheduler}
 \end{figure}
 
-\subsection{Traps}\label{subsec:traps}
+\input{impl_traps}
+
 \subsection{Exceptions and Interrupts}\label{subsec:excp-and-ints}
 \begin{figure}[h]
 	\centering

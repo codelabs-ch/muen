@@ -10,6 +10,8 @@ XSLT_FILES =       \
 	subject.tex    \
 	types.tex
 
+LARGE_GRAPHS = subject_type
+
 COMMON_SOURCES =  \
 	tikzstyle.tex \
 	graph_*.tex   \
@@ -55,7 +57,8 @@ memlayout.pdf: memlayout.tex
 	@$(PDFLATEX)
 
 %.tex: $(SCHEMA_DIR)/%.xsd xsl/xsd2tex-types.xsl
-	$(XSLTPROC) --stringparam SCHEMADIR $(SCHEMA_DIR) -o $@ xsl/xsd2tex-types.xsl $<
+	$(XSLTPROC) --stringparam SCHEMADIR $(SCHEMA_DIR) --stringparam LARGEGRAPHS $(LARGE_GRAPHS) \
+		-o $@ xsl/xsd2tex-types.xsl $<
 
 clean:
 	@rm -f *.pdf *.aux *.lof *.log *.toc *.snm *.out *.nav *.vrb *.bbl *.blg

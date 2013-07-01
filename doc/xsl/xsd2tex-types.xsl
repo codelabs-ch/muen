@@ -20,11 +20,23 @@
 		</xsl:call-template>
 		<xsl:text>}\label{subsec:</xsl:text>
 		<xsl:value-of select="@name"/>
-		<xsl:text>}&#10;\begin{figure}[!h]\centering</xsl:text>
-		<xsl:text>	\includegraphics[scale=0.7]{images/xml_</xsl:text>
+		<xsl:text>}&#10;\begin{</xsl:text>
+		<xsl:choose>
+			<xsl:when test="contains($LARGEGRAPHS,@name)">
+				<xsl:text>sidewaysfigure}[hp]\centering&#10;\includegraphics[width=\textwidth]</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>figure}[!h]\centering&#10;\includegraphics[scale=0.7]</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+		<xsl:text>{images/xml_</xsl:text>
 		<xsl:value-of select="@name"/>
 		<xsl:text>}&#10;</xsl:text>
-		<xsl:text>\end{figure}&#10;</xsl:text>
+		<xsl:text>\end{</xsl:text>
+		<xsl:if test="contains($LARGEGRAPHS,@name)">
+			<xsl:text>sideways</xsl:text>
+		</xsl:if>
+		<xsl:text>figure}&#10;</xsl:text>
 		<xsl:call-template name="texifyText">
 			<xsl:with-param name="text" select="xs:annotation/xs:documentation/text()"/>
 		</xsl:call-template>

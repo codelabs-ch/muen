@@ -21,7 +21,7 @@
 		<xsl:text>}\label{subsec:</xsl:text>
 		<xsl:value-of select="@name"/>
 		<xsl:text>}&#10;\begin{figure}[!h]\centering</xsl:text>
-		<xsl:text>	\includegraphics[scale=0.48]{images/xml_</xsl:text>
+		<xsl:text>	\includegraphics[scale=0.7]{images/xml_</xsl:text>
 		<xsl:value-of select="@name"/>
 		<xsl:text>}&#10;</xsl:text>
 		<xsl:text>\end{figure}&#10;</xsl:text>

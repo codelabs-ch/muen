@@ -1,0 +1,105 @@
+\section{Example system}\label{sec:example-system}
+The Muen project contains an example system that makes use of all the
+mechanisms described in the previous sections. Figure \ref{fig:example-system}
+shows a schematic overview of the system.
+
+\begin{figure}[h]
+	\centering
+	\input{graph_arch_example}
+	\caption{Example system}
+	\label{fig:example-system}
+\end{figure}
+
+The system is composed of the Muen kernel and four subjects, three of which are
+trusted and one xv6 subject is untrusted. The trusted subjects run in the native
+profile and are implemented in Ada/SPARK, the untrusted xv6 subject runs a teaching
+OS written in C inside the VM profile.
+
+The example system is meant to serve as demonstrator for a real-world use-case:
+An untrusted operating system is separated by the Muen kernel and accesses
+native, trusted services with minimal TCB. The trusted services might even be
+formally verified.
+
+The following subsection explains the different subjects composing the example
+system, while section \ref{subsec:use-cases} describes two use-cases in detail:
+keyboard handling and the hasher service.
+
+\subsection{Subjects}
+
+\subsubsection{VT}
+The VT subject manages virtual terminal consoles and owns the keyboard. The
+system policy therefore assigns the hardware devices shown by listing
+\ref{lst:hardware-devs} to the subject. This allows the VT subject to control
+the VGA cursor and the contents of the VGA memory. The kernel also programs the
+system's I/O APIC so that only the VT subject receives keyboard interrupts (IRQ
+1).
+
+\begin{lstlisting}[
+	language=xml,
+	label=lst:hardware-devs,
+	caption=Subject device assignment]
+<device name="keyboard" irq="1">
+    <io_port start="0060" end="0060"/>
+    <io_port start="0064" end="0064"/>
+</device>
+
+<device name="vga">
+    <memory_layout>
+        <memory_region physical_address="b8000" virtual_address="b8000" ...
+    </memory_layout>
+</device>
+
+<device name="cursor">
+    <io_port start="03d4" end="03d5"/>
+</device>
+\end{lstlisting}
+
+The other subjects of the example system have no direct access to the real VGA
+memory but write to a distinct page mapped to their (virtual) VGA memory
+address (\emph{0xb8000}). The subject virtual terminal pages are also mapped
+into the address space of the VT subject.
+
+If the user hits the special keys F1 to F6, the VT subjects updates the VGA
+memory with the contents of the active session slot's virtual terminal page.
+All other keyboard scancodes are copied to a driver page shared with the
+untrusted xv6 subject and an event is sent to inform it that keyboard data
+awaits processing by its virtual keyboard driver.
+
+\subsubsection{Crypter}
+The crypter subject uses the libsparkcrypto \cite{libsparkcrypto} library to
+provide trusted cryptographic services to clients. On startup, the subject
+enters the halted state until it receives an interrupt event to signal that a
+request is pending.
+
+The interrupt event resumes the subject and data contained in the subject's
+request page is copied for further processing. Currently, the crypter subject
+creates a SHA-256 REF message digest over the reveived data and then copies the
+hash to the service response page. An interrupt event is triggered to signal
+service completion.
+
+\subsubsection{xv6}
+Xv6\index{xv6} is a Version 6 Unix \cite{wiki:unix6} teaching operating system
+developed at MIT \cite{xv6}. While being simple, it implements many key
+concepts found in common operating systems, making it an ideal initial target
+for the VM profile. Xv6 is written in ANSI C.
+
+Minimal changes in the source code of xv6 were required to run it as VM subject
+on the Muen kernel:
+\begin{itemize}
+	\item Disable MP support
+	\item Ignore disallowed I/O operations (handled by the SM subject)
+\end{itemize}
+
+Since the xv6 subject has no direct access to the keyboard, a simple virtual
+keyboard driver has been implemented.
+
+\subsubsection{Subject Monitor}
+The subject monitor (SM\index{SM}) subject is used to monitor the untrusted xv6
+subject. It displays information about I/O operations and has complete access to
+the architectural state of the xv6 subject. Currently, no emulation is needed to
+run xv6. If an unexpected trap occurs, a state dump is output and the virtual
+CPU (VCPU\index{VCPU}) is halted.
+
+\subsection{Use-cases}\label{subsec:use-cases}
+\subsubsection{Keyboard handling}
+\subsubsection{Hasher service}

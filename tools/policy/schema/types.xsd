@@ -23,6 +23,72 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="device_name_type">
+		<xs:annotation>
+			<xs:documentation>
+				The name of a device is restricted to at most 128 characters.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="128"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="vector_type">
+		<xs:annotation>
+			<xs:documentation>
+				Interrupt vector numbers are restricted to the range 0 .. 255.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="irq_type">
+		<xs:annotation>
+			<xs:documentation>
+				Valid hardware interrupts are in the range of 0 .. 223.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="223"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="port_address_type">
+		<xs:annotation>
+			<xs:documentation>
+				Hexadecimal value specifying an I/O port address.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="hex_string">
+			<xs:length value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="io_port_type">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies an I/O port range from start .. end.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="start" type="port_address_type" use="required"/>
+		<xs:attribute name="end"   type="port_address_type" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="io_ports_type">
+		<xs:annotation>
+			<xs:documentation>
+				Grants access to the ranges of specified I/O ports.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="port_range" type="io_port_type" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
 	<xs:simpleType name="memory_size_type">
 		<xs:annotation>
 			<xs:documentation>
@@ -58,25 +124,33 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:simpleType name="port_address_type">
+	<xs:complexType name="memory_region_type">
 		<xs:annotation>
 			<xs:documentation>
-				Hexadecimal value specifying an I/O port address.
+				A memory region defines a block of memory of specified size which starts at the given physical
+				address. The size must be a multiple of the given alignment. The virtual address specifies the
+				location of the memory region in the virtual address space. Additional attributes define access
+				rights and memory caching behavior.
 			</xs:documentation>
 		</xs:annotation>
-		<xs:restriction base="hex_string">
-			<xs:length value="4"/>
-		</xs:restriction>
-	</xs:simpleType>
+		<xs:attribute name="physical_address" type="address_type"          use="required"/>
+		<xs:attribute name="size"             type="memory_size_type"      use="required"/>
+		<xs:attribute name="alignment"        type="memory_alignment_type" use="required"/>
+		<xs:attribute name="virtual_address"  type="address_type"          use="required"/>
+		<xs:attribute name="writable"         type="xs:boolean"            use="required"/>
+		<xs:attribute name="executable"       type="xs:boolean"            use="required"/>
+		<xs:attribute name="memory_type"      type="memory_type_type"      use="required"/>
+	</xs:complexType>
 
-	<xs:complexType name="io_port_type">
+	<xs:complexType name="memory_layout_type">
 		<xs:annotation>
 			<xs:documentation>
-				Specifies an I/O port range from start .. end.
+				A memory layout consists of a number of memory regions.
 			</xs:documentation>
 		</xs:annotation>
-		<xs:attribute name="start" type="port_address_type" use="required"/>
-		<xs:attribute name="end"   type="port_address_type" use="required"/>
+		<xs:sequence>
+			<xs:element name="memory_region" type="memory_region_type" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
 	</xs:complexType>
 
 	<xs:simpleType name="msr_mode_type">
@@ -114,68 +188,5 @@
 		<xs:attribute name="end"   type="msr_address_type" use="required"/>
 		<xs:attribute name="mode"  type="msr_mode_type"    use="required"/>
 	</xs:complexType>
-
-	<xs:complexType name="memory_region_type">
-		<xs:annotation>
-			<xs:documentation>
-				A memory region defines a block of memory of specified size which starts at the given physical
-				address. The size must be a multiple of the given alignment. The virtual address specifies the
-				location of the memory region in the virtual address space. Additional attributes define access
-				rights and memory caching behavior.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:attribute name="physical_address" type="address_type"          use="required"/>
-		<xs:attribute name="size"             type="memory_size_type"      use="required"/>
-		<xs:attribute name="alignment"        type="memory_alignment_type" use="required"/>
-		<xs:attribute name="virtual_address"  type="address_type"          use="required"/>
-		<xs:attribute name="writable"         type="xs:boolean"            use="required"/>
-		<xs:attribute name="executable"       type="xs:boolean"            use="required"/>
-		<xs:attribute name="memory_type"      type="memory_type_type"      use="required"/>
-	</xs:complexType>
-
-	<xs:complexType name="memory_layout_type">
-		<xs:annotation>
-			<xs:documentation>
-				A memory layout consists of a number of memory regions.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="memory_region" type="memory_region_type" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="io_ports_type">
-		<xs:annotation>
-			<xs:documentation>
-				Grants access to the ranges of specified I/O ports.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="port_range" type="io_port_type" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:simpleType name="device_name_type">
-		<xs:annotation>
-			<xs:documentation>
-				The name of a device is restricted to at most 128 characters.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:minLength value="1"/>
-			<xs:maxLength value="128"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="vector_type">
-		<xs:annotation>
-			<xs:documentation>
-				Interrupt vector numbers are restricted to the range 0 .. 255.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:nonNegativeInteger">
-			<xs:maxInclusive value="255"/>
-		</xs:restriction>
-	</xs:simpleType>
 
 </xs:schema>

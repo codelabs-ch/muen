@@ -1,19 +1,16 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 	<xs:include schemaLocation="./types.xsd"/>
 
-	<xs:simpleType name="trap_kind_type">
+	<xs:complexType name="trap_table_type">
 		<xs:annotation>
 			<xs:documentation>
-				A trap kind identifies the cause of a trap, see Intel SDM Vol. 3c, appendix C.
+				Table specifying how traps provoked by a subject are handled.
 			</xs:documentation>
 		</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="*"/>
-			<xs:enumeration value="exception_or_nmi"/>
-			<xs:enumeration value="control_register_access"/>
-			<xs:enumeration value="ept_violation"/>
-		</xs:restriction>
-	</xs:simpleType>
+		<xs:sequence>
+			<xs:element name="entry" type="entry_type" minOccurs="1" maxOccurs="52"/>
+		</xs:sequence>
+	</xs:complexType>
 
 	<xs:complexType name="entry_type">
 		<xs:annotation>
@@ -27,15 +24,18 @@
 		<xs:attribute name="dst_vector"  type="vector_type"       use="optional"/>
 	</xs:complexType>
 
-	<xs:complexType name="trap_table_type">
+	<xs:simpleType name="trap_kind_type">
 		<xs:annotation>
 			<xs:documentation>
-				Table specifying how traps provoked by a subject are handled.
+				A trap kind identifies the cause of a trap, see Intel SDM Vol. 3c, appendix C.
 			</xs:documentation>
 		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="entry" type="entry_type" minOccurs="1" maxOccurs="52"/>
-		</xs:sequence>
-	</xs:complexType>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="*"/>
+			<xs:enumeration value="exception_or_nmi"/>
+			<xs:enumeration value="control_register_access"/>
+			<xs:enumeration value="ept_violation"/>
+		</xs:restriction>
+	</xs:simpleType>
 
 </xs:schema>

@@ -1,6 +1,18 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 	<xs:include schemaLocation="./types.xsd"/>
 
+	<xs:complexType name="binaries_type">
+		<xs:annotation>
+			<xs:documentation>
+				The binaries section of the policy specifies all binary files that can be used as subject
+				binaries.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="binary" type="binary_type" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
 	<xs:complexType name="binary_type">
 		<xs:annotation>
 			<xs:documentation>
@@ -13,15 +25,4 @@
 		<xs:attribute name="path" type="xs:string" use="required"/>
 	</xs:complexType>
 
-	<xs:complexType name="binaries_type">
-		<xs:annotation>
-			<xs:documentation>
-				The binaries section of the policy specifies all binary files that can be used as subject
-				binaries.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="binary" type="binary_type" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
 </xs:schema>

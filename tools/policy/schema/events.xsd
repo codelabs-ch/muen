@@ -1,28 +1,18 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 	<xs:include schemaLocation="./types.xsd"/>
 
-	<xs:simpleType name="event_number_type">
+	<xs:complexType name="event_table_type">
 		<xs:annotation>
 			<xs:documentation>
-				Numeric value uniquely identifying an event.
+				Table specifying how events triggered by a subject are handled. Two kinds of events
+				can be specified: interrupt and handover events.
 			</xs:documentation>
 		</xs:annotation>
-		<xs:restriction base="xs:nonNegativeInteger">
-			<xs:maxInclusive value="31"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="dst_vector_type">
-		<xs:annotation>
-			<xs:documentation>
-				Numeric value identifying a destination vector. The value '256'
-				designates "no vector".
-			</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:nonNegativeInteger">
-			<xs:maxInclusive value="256"/>
-		</xs:restriction>
-	</xs:simpleType>
+		<xs:choice minOccurs="1" maxOccurs="32">
+			<xs:element name="handover"  type="event_handover_type"/>
+			<xs:element name="interrupt" type="event_interrupt_type"/>
+		</xs:choice>
+	</xs:complexType>
 
 	<xs:complexType name="event_handover_type">
 		<xs:annotation>
@@ -54,17 +44,27 @@
 		<xs:attribute name="send_ipi"    type="xs:boolean"        use="optional"/>
 	</xs:complexType>
 
-	<xs:complexType name="event_table_type">
+	<xs:simpleType name="event_number_type">
 		<xs:annotation>
 			<xs:documentation>
-				Table specifying how events triggered by a subject are handled. Two kinds of events
-				can be specified: interrupt and handover events.
+				Numeric value uniquely identifying an event.
 			</xs:documentation>
 		</xs:annotation>
-		<xs:choice minOccurs="1" maxOccurs="32">
-			<xs:element name="handover"  type="event_handover_type"/>
-			<xs:element name="interrupt" type="event_interrupt_type"/>
-		</xs:choice>
-	</xs:complexType>
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="31"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="dst_vector_type">
+		<xs:annotation>
+			<xs:documentation>
+				Numeric value identifying a destination vector. The value '256'
+				designates "no vector".
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="256"/>
+		</xs:restriction>
+	</xs:simpleType>
 
 </xs:schema>

@@ -1,16 +1,18 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 	<xs:include schemaLocation="./types.xsd"/>
 
-	<xs:simpleType name="irq_type">
+	<xs:complexType name="hardware_type">
 		<xs:annotation>
 			<xs:documentation>
-				Valid hardware interrupts are in the range of 0 .. 223.
+				The hardware section of the policy specifies the available hardware resources provided by the
+				platform. It consist of a processor specification and a number of devices.
 			</xs:documentation>
 		</xs:annotation>
-		<xs:restriction base="xs:nonNegativeInteger">
-			<xs:maxInclusive value="223"/>
-		</xs:restriction>
-	</xs:simpleType>
+		<xs:sequence>
+			<xs:element name="processor" type="processor_type" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="device"    type="device_type"    minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
 
 	<xs:complexType name="device_type">
 		<xs:annotation>
@@ -35,18 +37,6 @@
 		<xs:attribute name="irq"  type="irq_type"         use="optional"/>
 	</xs:complexType>
 
-	<xs:simpleType name="vmx_timer_rate_type">
-		<xs:annotation>
-			<xs:documentation>
-				Rate (power of two) at which the VMX preemption timer decreases compared to the
-				timestamp counter (TSC), see Intel SDM Vol. 3c, section 25.5.1.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:nonNegativeInteger">
-			<xs:maxInclusive value="31"/>
-		</xs:restriction>
-	</xs:simpleType>
-
 	<xs:complexType name="processor_type">
 		<xs:annotation>
 			<xs:documentation>
@@ -60,17 +50,16 @@
 		<xs:attribute name="vmx_timer_rate" type="vmx_timer_rate_type" use="required"/>
 	</xs:complexType>
 
-	<xs:complexType name="hardware_type">
+	<xs:simpleType name="vmx_timer_rate_type">
 		<xs:annotation>
 			<xs:documentation>
-				The hardware section of the policy specifies the available hardware resources provided by the
-				platform. It consist of a processor specification and a number of devices.
+				Rate (power of two) at which the VMX preemption timer decreases compared to the
+				timestamp counter (TSC), see Intel SDM Vol. 3c, section 25.5.1.
 			</xs:documentation>
 		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="processor" type="processor_type" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="device"    type="device_type"    minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="31"/>
+		</xs:restriction>
+	</xs:simpleType>
 
 </xs:schema>

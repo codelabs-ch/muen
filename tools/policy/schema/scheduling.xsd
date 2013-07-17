@@ -1,26 +1,16 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-	<xs:complexType name="minor_frame_type">
+	<xs:complexType name="scheduling_type">
 		<xs:annotation>
 			<xs:documentation>
-				A minor frame specifies a subject identified by id and a time slice in ticks. The
-				unit of ticks is specified by the scheduling policy's tick rate.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:attribute name="subject_id" type="xs:nonNegativeInteger" use="required"/>
-		<xs:attribute name="ticks"      type="xs:positiveInteger"    use="required"/>
-	</xs:complexType>
-
-	<xs:complexType name="cpu_type">
-		<xs:annotation>
-			<xs:documentation>
-				A scheduling CPU defines a number of minor frames which are executed in the
-				specified order	by the scheduler running on the given CPU.
+				A scheduling plan is defined by a number of major frames and a tick rate in hertz
+				[Hz]. All major frames must specify the same number of scheduling CPUs.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="minor_frame" type="minor_frame_type" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="major_frame" type="major_frame_type" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
+		<xs:attribute name="tick_rate" type="xs:positiveInteger" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="major_frame_type">
@@ -38,17 +28,27 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:complexType name="scheduling_type">
+	<xs:complexType name="cpu_type">
 		<xs:annotation>
 			<xs:documentation>
-				A scheduling plan is defined by a number of major frames and a tick rate in hertz
-				[Hz]. All major frames must specify the same number of scheduling CPUs.
+				A scheduling CPU defines a number of minor frames which are executed in the
+				specified order	by the scheduler running on the given CPU.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="major_frame" type="major_frame_type" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="minor_frame" type="minor_frame_type" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="tick_rate" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="minor_frame_type">
+		<xs:annotation>
+			<xs:documentation>
+				A minor frame specifies a subject identified by id and a time slice in ticks. The
+				unit of ticks is specified by the scheduling policy's tick rate.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="subject_id" type="xs:nonNegativeInteger" use="required"/>
+		<xs:attribute name="ticks"      type="xs:positiveInteger"    use="required"/>
 	</xs:complexType>
 
 </xs:schema>

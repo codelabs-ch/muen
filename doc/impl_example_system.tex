@@ -20,13 +20,14 @@ An untrusted operating system is separated by the Muen kernel and accesses
 native, trusted services with minimal TCB. The trusted services might even be
 formally verified.
 
-The following subsection explains the different subjects composing the example
-system, while section \ref{subsec:use-cases} describes two use-cases in detail:
-keyboard handling and the hasher service.
+The following section explains the different subjects composing the example
+system, while section \ref{subsec:keyboard-handling} describes the keyboard
+handling in detail to illustrate how the different mechanisms are tied
+together.
 
 \subsection{Subjects}
 
-\subsubsection{VT}
+\subsubsection{VT}\label{subsubsec:subject-vt}
 The VT subject manages virtual terminal consoles and owns the keyboard. The
 system policy therefore assigns the hardware devices shown by listing
 \ref{lst:hardware-devs} to the subject. This allows the VT subject to control
@@ -68,12 +69,12 @@ awaits processing by its virtual keyboard driver.
 \subsubsection{Crypter}
 The crypter subject uses the libsparkcrypto \cite{libsparkcrypto} library to
 provide trusted cryptographic services to clients. On startup, the subject
-enters the halted state until it receives an interrupt event to signal that a
-request is pending.
+enters the halted state until it receives an interrupt event indicating a
+pending request.
 
 The interrupt event resumes the subject and data contained in the subject's
 request page is copied for further processing. Currently, the crypter subject
-creates a SHA-256 REF message digest over the reveived data and then copies the
+creates a SHA-256 REF message digest over the received data and then copies the
 hash to the service response page. An interrupt event is triggered to signal
 service completion.
 
@@ -100,6 +101,63 @@ the architectural state of the xv6 subject. Currently, no emulation is needed to
 run xv6. If an unexpected trap occurs, a state dump is output and the virtual
 CPU (VCPU\index{VCPU}) is halted.
 
-\subsection{Use-cases}\label{subsec:use-cases}
-\subsubsection{Keyboard handling}
-\subsubsection{Hasher service}
+\subsection{Keyboard handling}\label{subsec:keyboard-handling}
+This section describes how the keyboard is handled in the example system using
+the mechanisms provided by the Muen kernel.
+
+When pressing a key on the keyboard, the keyboard controller raises an interrupt
+request (IRQ\index{IRQ}) with number 1 to signal new data. The system policy
+applied by the Muen kernel on startup enforces that this interrupt is routed to
+the appropriate processor running the VT subject. This is done using the IRQ
+routing specification generated during policy compilation and depends on the
+assignment of hardware devices to subjects. In this case, the keyboard is
+assigned to subject 1, which is the VT subject described in section
+\ref{subsubsec:subject-vt}. Listing \ref{lst:ex-irq-routing} shows the IRQ
+routing table of the example system.
+
+\begin{lstlisting}[
+	language=Ada,
+	label=lst:ex-irq-routing,
+	caption=Example system IRQ routing table]
+IRQ_Routing : constant IRQ_Routing_Array := IRQ_Routing_Array'(
+  1 => IRQ_Route_Type'(
+    CPU    => 0,
+    IRQ    => 1,
+    Vector => 33));
+\end{lstlisting}
+
+The routing table contains one entry which routes the keyboard IRQ 1 to the CPU
+with APIC ID 0. Furthermore, the IRQ is remapped to the interrupt vector 33 so
+that on each key press, CPU0 will be interrupted with an interrupt vector 33.
+
+The Muen kernel running on CPU0 handles the received interrupt in its
+\texttt{Handle\_Irq} procedure. It uses the vector routing table contained in
+the SPARK-compliant interrupt specification compiled by the \texttt{skpolicy}
+tool, see listing \ref{lst:ex-vector-routing}. The table instructs the kernel to
+inject interrupt vector 33 into the subject with ID 1 by using the event
+injection mechanism.
+\begin{lstlisting}[
+	language=Ada,
+	label=lst:ex-vector-routing,
+	caption=Example system CPU0 vector routing table]
+Vector_Routing : constant Vector_Routing_Array := Vector_Routing_Array'(
+  33     => 1,
+  others => Skp.Invalid_Subject);
+\end{lstlisting}
+
+The VT subject receives interrupt vector 33 in its interrupt handling routine
+and, because it is allowed to access the respective I/O ports, reads in the
+keyboard scancodes. If the received scancode is not related to the special keys
+F1 to F6 and the currently visible subject is xv6, the scancode data is copied
+into a memory page shared with the xv6 subject. The VT subject then triggers an
+event to inform the xv6 subject about new data to process. This is done using
+the Muen hypercall mechanism.
+
+The kernel running the VT subject forwards the interrupt event to the respective
+subject as defined by the policy. In this case, it is the xv6 subject.
+
+The xv6 subject's interrupt handler code runs unmodified and detects that a
+keyboard interrupt has occurred. The appropriate keyboard handling code is
+called, which has been slightly modified to read keyboard scancodes from a
+shared memory page instead of doing port I/O. The copied scancode data is then
+used to drive the terminal console.

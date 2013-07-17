@@ -7,6 +7,11 @@
 	<xsl:strip-space elements="*"/>
 	<xsl:template match="xs:schema/*"/>
 
+	<xsl:template match="xs:schema">
+		<xsl:apply-templates select="xs:simpleType|xs:complexType"/>
+		<xsl:apply-templates select="xs:include"/>
+	</xsl:template>
+
 	<xsl:template match="xs:schema/xs:include">
 		<xsl:if test="not(@schemaLocation='./types.xsd')">
 			<xsl:apply-templates select="document(concat($SCHEMADIR,'/',@schemaLocation))"/>

@@ -1,0 +1,72 @@
+\section{Virtualization}
+Virtualization is an established architectural concept in computer science and
+has been in use since decades. Operating systems for example provide virtual
+address spaces to application processes, giving them the illusion of unlimited,
+continuous memory. An application does not need to take care of complex memory
+management tasks and the operating system is able to optimize the usage of
+physical memory. Another common example is the virtualization of devices such as
+virtual CD-ROM drives directly using a file-based backend for data I/O
+\cite{CryptoCloud}.
+
+Hardware or platform virtualization is the process of creating virtual computer
+hardware that acts like real hardware. The virtualization is performed on the
+host machine by special software, called a hypervisor\index{hypervisor} or
+virtual machine monitor (VMM\index{VMM}). These two terms are synonyms, for
+consistency we will use VMM throughout this document. VMMs are classified into
+two types see figure \ref{fig:vmm-classification}.
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\input{graph_vmm_type1}
+		\caption{\emph{Type I, native or bare metal VMM.} Runs directly on the
+		hardware in the most privileged processor mode.}
+	\end{subfigure}
+	\qquad
+	\begin{subfigure}[b]{0.24\textwidth}
+		\centering
+		\input{graph_vmm_type2}
+		\caption{\emph{Type II or hosted VMM.} The VMM runs on top of a
+		conventional operating system and uses OS services.}
+	\end{subfigure}
+	\caption{VMM classification}
+	\label{fig:vmm-classification}
+\end{figure}
+
+Software that runs in a virtualized environment is called guest software. The
+words host and guest are used to distinguish the software that runs on the
+physical machine from the software that runs on the virtual machine
+\cite{wiki:virtualization}.
+
+By using virtualization and scheduling techniques, a VMM multiplexes the real
+hardware of a computer making it possible to run multiple guests in
+parallel\footnote{On multicore machines in parallel, on single-core machines
+pseudo-parallel} on one machine. This is the most common use-case for
+virtualization: The consolidation of operating system instances on one server to
+save power and to improve hardware-resource utilization.
+
+A guest program is separated from the real hardware of a machine, direct access
+is restricted and can be controlled by the host VMM. Since the VMM has complete
+control over the hardware of a system and all guest software, virtualization is
+also useful for separation purposes. The VMM can allow certain communication
+channels between guest software while restricting others. One guest could have
+access to the network card, while others share a page in memory but have no
+access to hardware devices.
+
+The principle idea of virtualization is to run guest code in the virtual machine
+and intercept privileged operations which access critical resources or system
+properties. A guest traps into the VMM if such an instruction is executed and
+the VMM acts according to the situation. This method is used to implement a
+technique called "trap and emulate". For example if a guest accesses a device
+which is emulated by the VMM, access to the virtual device causes a trap into
+the VMM. The VMM itself or a special monitor VM then emulates the requested
+operations of the guest software by directly modifying the state of the virtual
+processor or memory of the guest VM.
+
+A trap from the guest into the VMM is a costly operation. To reduce traps,
+mechanisms in modern processors have been introduced to support the VMM in
+creating a virtual machine environment. Processor features like Intel VT-x, EPT
+and VT-d not only improve the performance of a virtual machine by avoiding traps
+but also allow the VMM software code to be much simpler.
+

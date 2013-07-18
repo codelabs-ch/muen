@@ -59,10 +59,10 @@ subject from the state descriptor array into the processor. The initial state of
 a subject is always initialized to null. The timer ticks are written into the
 subject's VMCS region so that the subject is preempted automatically by the
 processor when the alloted time slice is over. The kernel then calls the
-\texttt{VMENTER} or \texttt{VMRESUME} (if the subject has already been started)
-VT-x instructions to enter VMX non-root operation, which lets the processor
-execute subject code. Figure \ref{fig:kernel-scheduler} illustrates this
-process.
+\texttt{VMLAUNCH} or \texttt{VMRESUME} (if the subject has already been
+launched) VT-x instructions to enter VMX non-root operation, which lets the
+processor execute subject code. Figure \ref{fig:kernel-scheduler} illustrates
+this process.
 
 On each subject exit, the subject state is saved. Depending on the scheduling
 plan and the exit reason, the state of another subject is loaded by the kernel

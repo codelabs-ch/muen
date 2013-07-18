@@ -1,0 +1,74 @@
+\subsection{Scheduling}\label{subsec:scheduling}
+After system initialization is complete, the kernels running on the different
+logical processors synchronize and start scheduling subjects. Which subject to
+schedule on which CPU is defined by the scheduling plan. A policy writer defines
+the system's scheduling plan in the XML policy file, see listing
+\ref{lst:xml-scheduling-plan} for an example.
+
+\begin{lstlisting}[
+	language=xml,
+	label=lst:xml-scheduling-plan,
+	caption=System scheduling plan in XML]
+<scheduling tick_rate="10000">
+	<major_frame>
+		<cpu>
+			<minor_frame subject_id="1" ticks="40"/>
+			<minor_frame subject_id="2" ticks="40"/>
+		</cpu>
+		<cpu>
+			<minor_frame subject_id="3" ticks="80"/>
+		</cpu>
+	</major_frame>
+	<major_frame>
+		<cpu>
+			<minor_frame subject_id="1" ticks="80"/>
+		</cpu>
+		<cpu>
+			<minor_frame subject_id="4" ticks="80"/>
+		</cpu>
+	</major_frame>
+</scheduling>
+\end{lstlisting}
+
+The example scheduling plan of listing \ref{lst:xml-scheduling-plan} contains
+four subjects which are scheduled on two logical processors. The Muen policy
+compiler explained in section \ref{subsec:policy-compilation} transforms the
+scheduling plan in XML format to SPARK specifications which are directly
+compiled into the kernel. The scheduling plan is therefore static at compilation
+time and cannot be modified at runtime.
+
+\begin{figure}[h]
+	\centering
+	\input{graph_scheduler}
+	\caption{Kernel scheduler}
+	\label{fig:kernel-scheduler}
+\end{figure}
+
+Each kernel stores the index of the active minor frame, which points into the
+current scheduling major frame, in its per-CPU local storage area. Initially,
+this value is set to one (\texttt{Minor\_Frame\_Range'First}), i.e. the first
+minor frame in the active major frame.
+
+The major frame index is global and therefore identical for all kernels. This
+index is managed by the privileged $\tau$0 subject and only read by the kernels.
+The minor/major frame index tuple forms the pointer into the scheduling plan.
+
+It points to a minor frame containing the subject ID and timer ticks for the
+next subject to schedule. The subject's ID is used to load the state of the
+subject from the state descriptor array into the processor. The initial state of
+a subject is always initialized to null. The timer ticks are written into the
+subject's VMCS region so that the subject is preempted automatically by the
+processor when the alloted time slice is over. The kernel then calls the
+\texttt{VMENTER} or \texttt{VMRESUME} (if the subject has already been started)
+VT-x instructions to enter VMX non-root operation, which lets the processor
+execute subject code. Figure \ref{fig:kernel-scheduler} illustrates this
+process.
+
+On each subject exit, the subject state is saved. Depending on the scheduling
+plan and the exit reason, the state of another subject is loaded by the kernel
+scheduler. If the exit occurred because the VMX preemption timer fired, the
+scheduler is aware that it must advance to the next minor frame in the current
+major frame. This is done by incrementing the current minor frame counter. If
+the minor frame index reaches the upper end of the allowed range
+(\texttt{Minor\_Frame\_Range'Last}), it is reset to the first value of the
+range.

@@ -48,17 +48,11 @@ tasks:
 	\item Initialize Ada runtime
 	\item Jump into kernel main
 \end{enumerate}
-After this initial steps are executed, the system is in 64-bit IA-32e mode and
-all prerequisites are met to enable VMX root operation.
 
-\subsection{Scheduling}\label{subsec:scheduling}
-\begin{figure}[h]
-	\centering
-	\input{graph_scheduler}
-	\caption{Kernel scheduler}
-	\label{fig:kernel-scheduler}
-\end{figure}
+The system is now in 64-bit IA-32e mode and each kernel calls the \texttt{VMXON}
+VT-x instruction to enter VMX root operation.
 
+\input{impl_scheduling}
 \input{impl_traps}
 
 \subsection{Exceptions and Interrupts}\label{subsec:excp-and-ints}

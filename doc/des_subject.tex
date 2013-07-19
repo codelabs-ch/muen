@@ -1,0 +1,89 @@
+\section{Subject concept}
+A subject is an untrusted software component that is executed by the separation
+kernel. Similar terms used in literature are partition or component. Besides the
+separation kernel itself, subjects constitute the majority of a system based on
+the Muen kernel.
+
+The main purpose of the kernel is to execute an arbitrary number of subjects,
+giving them access to assigned resources and only allowing communication between
+subjects via explicitly defined channels. The kernel treats all subjects equally.
+
+We categorize the information related to a subject into two distinct categories:
+
+\begin{description}
+	\item[Specification] encompasses all static configuration data, that is
+		constant and does not change during the runtime of the system, e.g.
+		assigned hardware devices.
+	\item[State] is made up of all transient values that are potentially modified
+		by the execution of a subject, e.g. CPU register values.
+\end{description}
+
+\subsection{Subject specification}
+The specification defines, what resources a subject is allowed to access, what
+environment the kernel must provide for the subject, the initial state of the
+execution environment and of course the subject binary itself.
+
+This information is part of the overall system specification and is fixed at
+integration time. It does not change during the execution of the system. The
+kernel keeps this information as part of the compiled system policy in read-only
+memory. Since subjects are unable to access kernel memory, the subject
+specifications cannot be tampered with and change.
+
+\subsection{Subject state}
+Running a subject changes the execution environment. The state of a subject
+encompasses all system elements that are visible to the subject and can contain
+different information depending on the current subject. In particular this
+encompasses the CPU registers, instruction and stack pointer as well as control
+register values.
+
+Since the kernel can pause and resume subject execution and potentially multiple
+subjects can be executed in arbitrary order the state of the system as viewed by
+the subject must be saved. The state must be restored accurately upon resumption
+otherwise the subject will not be able to execute seamlessly. Additionally, if a
+subject is not oblivious to the fact that the kernel is saving and loading its
+state, the isolation of the subject would be insufficient since this would be an
+unintended information flow.
+
+\subsection{Subject profile}
+Two types of subjects are distinguished:
+
+\begin{itemize}
+	\item Native applications
+	\item Virtual Machine (VM) subjects
+\end{itemize}
+
+Each of these types is captured by so called subject profiles. These profiles
+determine the execution environment and architectural features (e.g. memory
+management) the subject is allowed to use. The profiles are described in the
+following sections.
+
+\subsubsection{Native subject}
+A \emph{native} subject is an 64-bit application, that executes directly on the
+processor without any supporting operating system kernel or runtime environment.
+Such applications may also be called bare bones or bare metal.
+
+The execution environment of the native subject profile has the following main
+properties:
+
+\begin{itemize}
+	\item IA-32e/64-bit processor mode
+	\item No mode switching
+	\item No memory management/static paging structures
+	\item No exception handling
+	\item No control register access
+\end{itemize}
+
+\subsubsection{VM subject}
+A \emph{virtual machine} (VM) subject has more control over its execution
+environment and the VM profile is intended for running whole operating systems
+such as xv6 or Linux.
+
+The execution environment of the VM subject profile has the following main
+properties:
+
+\begin{itemize}
+	\item Switching between 32-bit and 64-bit modes
+	\item Memory management and page table management
+	\item Exception handling via IDT
+	\item Restricted control register access
+\end{itemize}

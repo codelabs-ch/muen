@@ -1,0 +1,31 @@
+\section{Requirements}
+
+The following properties specify the requirements of the separation kernel and
+the system's TCB:
+\begin{enumerate}
+	\item All resources must be protected from unauthorized access. This
+		includes devices and memory that has not been assigned to any subject.
+	\item System resources internal to the kernel, that are not exported to
+		subjects, must not be accessible.
+	\item Isolated subjects that do not share any resources must be completely
+		separated and not be able to exchange any information.
+	\item Information flows between subjects must only be present if explicitly
+		specified in the system policy.
+	\item It must be possible to specify directed information flows, where data
+		can be transfered from source to destination but not in the reverse
+		direction.
+	\item A subject must be able to only access its assigned resources. Access
+		to other resources must be prohibited.
+	\item Assignment of subject resources must be static. A malicious subject
+		must not be able to gain access to additional resources or even consume
+		all system resources.
+	\item All security critical operations must be NEAT: non-bypassable,
+		evaluatable, always-invoked and tamperproof.
+	\item 64-bit programs must be supported to run as native subjects.
+	\item The kernel must support the Intel IA-32e/64-bit architecture and
+		system memory larger than 4GB.
+	\item The kernel must allow the implementation of small and simple
+		components and not impose unnecessary restrictions that would increase
+		subject complexity.
+	\item Inter-subject signaling
+\end{enumerate}

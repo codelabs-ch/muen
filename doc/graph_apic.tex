@@ -1,0 +1,25 @@
+\begin{tikzpicture}
+	\node (du8) {};
+	\node[bluebox, minimum width=2cm, minimum height=1.4cm, label={[yshift=-18pt]CPU0}, left=5mm of du8] (cp0) {};
+	\node[graybox] (la0) at (cp0.south) [above=5pt] {LAPIC};
+	\node[bluebox, minimum width=2cm, minimum height=1.4cm, label={[yshift=-18pt]CPU1}, right=5mm of du8] (cp1) {};
+	\node[graybox] (la1) at (cp1.south) [above=5pt] {LAPIC};
+
+	\node[align=center, left=8mm of la0]  (li0) {Local\\Interrupts};
+	\node[align=center, right=8mm of la1] (li1) {Local\\Interrupts};
+
+	\node[inner sep=0, below=6mm of cp0] (du0) {};
+	\node[inner sep=0, below=6mm of cp1] (du1) {};
+
+	\draw[arrow] (li0) -- (la0);
+	\draw[arrow] (li1) -- (la1);
+	\draw[thick, <->] (cp0) -- (du0);
+	\draw[thick, <->] (cp1) -- (du1);
+	\draw[very thick] (du0) to node[auto, name=sys] {System Bus} (du1);
+
+	\node[apribox, below=6mm of sys]  (ioa) {I/O APIC};
+	\node[align=center, right=of ioa] (ext) {External\\Interrups};
+
+	\draw[thick, <->] (ioa) -- (sys);
+	\draw[arrow] (ext) -- (ioa);
+\end{tikzpicture}

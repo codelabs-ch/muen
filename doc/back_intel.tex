@@ -132,3 +132,45 @@ integrated much of the functionality provided by the Northbridge into the CPU
 been combined and incorporated into a new component called the platform
 controller hub (PCH)\index{PCH}. This new architecture avoids the bottleneck
 presented by the system bus connection between the CPU and the Northbridge.
+
+\subsection{Programmable Interrupt Controller}
+A Programmable Interrupt Controller (PIC\index{PIC}) is used to combine several
+sources of interrupts onto one CPU. Hardware devices raise interrupts to inform
+the associated CPU that some event occurred that needs attention.  For example
+a network card notifies the CPU that it received data which must be processed.
+One of the best known PIC was the Intel 8259A which was included in the
+original PC introduced in 1981.
+
+Early PC/XT ISA systems used one 8259 controller, allowing only eight interrupt
+input lines. Through cascading of controllers, more lines can be made available
+but nevertheless, a more flexible approach was needed with the advent of
+multiprocessor (MP\index{MP}) systems containing multiple processor cores. To
+have efficient interrupt routing on an MP system using PICs was an issue.
+
+Intel presented the Advanced Programmable Interrupt Controller
+(APIC\index{APIC}) concept with the introduction of the Pentium processor. It
+was one of several attempts to solve the interrupt routing efficiency problem
+on MP systems. The Intel APIC system is composed of two components: a local
+APIC (LAPIC\index{LAPIC}) in each CPU of the system and the I/O APIC.
+
+A LAPIC receives interrupts from internal sources (such as the timer interrupt)
+and from the I/O APIC or other external interrupt controllers. It sends these
+interrupts to the processor core for handling. In MP systems the LAPIC also
+sends and receives interprocessor interrupt messages (IPI\index{IPI}) from and
+to other logical processors on the system bus.
+
+The I/O APIC is used to receive external interrupts from the system and its
+associated devices and relay them to the local APICs. The routing of interrupts
+to the appropriate LAPICs is configured using a redirection table which must be
+setup by the operating system.
+
+\begin{figure}[h]
+	\centering
+	\input{graph_apic}
+	\caption{Local APICs and I/O APIC}
+	\label{fig:apic}
+\end{figure}
+
+Figure \ref{fig:apic} shows a schematic view of two logical processors, their
+LAPICs and the I/O APIC unit. For more information see chapter 10 in
+\cite{IntelSDM}.

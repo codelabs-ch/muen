@@ -74,6 +74,9 @@ the system's TCB:
 		separated and not be able to exchange any information.
 	\item Information flows between subjects must only be present if explicitly
 		specified in the system policy.
+	\item It must be possible to specify directed information flows, where data
+		can be transfered from source to destination but not in the reverse
+		direction.
 	\item A subject must be able to only access its assigned resources. Access
 		to other resources must be prohibited.
 	\item Assignment of subject resources must be static. A malicious subject
@@ -90,18 +93,15 @@ the system's TCB:
 	\item Inter-subject signaling
 \end{enumerate}
 
-\section{Architecture}
-\begin{figure}[h]
-	\centering
-	\input{graph_arch_overview}
-	\caption{Architecture overview}
-	\label{fig:architecture-overview}
-\end{figure}
+\section{Subject concept}
+A subject is an untrusted software component that is executed by the separation
+kernel. Similar terms used in literature are partition or component. Besides the
+separation kernel itself, subjects constitute the majority of a system based on
+the Muen kernel.
 
-\subsection{Virtualization}
-The core mechanism used to separate subjects is Intel's hardware-assisted
-virtualization technology VT-x. The kernel executes in VMX root mode, which
-shields it from access by subjects.
+The main purpose of the kernel is to execute an arbitrary number of subjects,
+giving them access to assigned resources and only allowing communication between
+subjects via explicitly defined channels. The kernel treats all subjects equally.
 
 We categorize the information related to a subject into two distinct categories:
 
@@ -113,26 +113,124 @@ We categorize the information related to a subject into two distinct categories:
 		by the execution of a subject, e.g. CPU register values.
 \end{description}
 
-\subsubsection{Subject specification}
+\subsection{Subject specification}
+The specification defines, what resources a subject is allowed to access, what
+environment the kernel must provide for the subject, the initial state of the
+execution environment and of course the subject binary itself.
 
-\subsubsection{Subject state}
+This information is part of the overall system specification and is fixed at
+integration time. It does not change during the execution of the system. The
+kernel keeps this information as part of the compiled system policy in read-only
+memory. Since subjects are unable to access kernel memory, the subject
+specifications cannot be tampered with and change.
+
+\subsection{Subject state}
+Running a subject changes the execution environment. The state of a subject
+encompasses all system elements that are visible to the subject and can contain
+different information depending on the current subject. In particular this
+encompasses the CPU registers, instruction and stack pointer as well as control
+register values.
+
+Since the kernel can pause and resume subject execution and potentially multiple
+subjects can be executed in arbitrary order the state of the system as viewed by
+the subject must be saved. The state must be restored accurately upon resumption
+otherwise the subject will not be able to execute seamlessly. Additionally, if a
+subject is not oblivious to the fact that the kernel is saving and loading its
+state, the isolation of the subject would be insufficient since this would be an
+unintended information flow.
+
+\subsection{Subject profile}
+Two types of subjects are distinguished:
+
+\begin{itemize}
+	\item Native applications
+	\item Virtual Machine (VM) subjects
+\end{itemize}
+
+Each of these types is captured by so called subject profiles. These profiles
+determine the execution environment and architectural features (e.g. memory
+management) the subject is allowed to use. The profiles are described in the
+following sections.
+
+\subsubsection{Native subject}
+A \emph{native} subject is an 64-bit application, that executes directly on the
+processor without any supporting operating system kernel or runtime environment.
+Such applications may also be called bare bones or bare metal.
+
+The execution environment of the native subject profile has the following main
+properties:
+
+\begin{itemize}
+	\item IA-32e/64-bit processor mode
+	\item No mode switching
+	\item No memory management/static paging structures
+	\item No exception handling
+	\item No control register access
+\end{itemize}
+
+\subsubsection{VM subject}
+A \emph{virtual machine} (VM) subject has more control over its execution
+environment and the VM profile is intended for running whole operating systems
+such as xv6 or Linux.
+
+The execution environment of the VM subject profile has the following main
+properties:
+
+\begin{itemize}
+	\item Switching between 32-bit and 64-bit modes
+	\item Memory management and page table management
+	\item Exception handling via IDT
+	\item Restricted control register access
+\end{itemize}
+
+\section{Architecture}
+The core mechanism used to separate subjects is Intel's hardware-assisted
+virtualization technology VT-x. The kernel executes in VMX root mode, while
+subjects run in VMX non-root mode. This shields the kernel from access by
+subjects. Figure \ref{fig:architecture-overview} illustrates the basic system
+architecture: the Muen kernel executes two isolated subjects that have no access
+to any kernel resources. The native subject is a bare bones application and the
+second subject is a virtual machine (VM) type subject, e.g. full operating
+system.
+
+\begin{figure}[h]
+	\centering
+	\input{graph_arch_overview}
+	\caption{Architecture overview}
+	\label{fig:architecture-overview}
+\end{figure}
+
+\subsection{Subject execution}
+The kernel runs a subject by setting up the environment and executing the binary
+code defined by the subject specification. Initially the subject state is set to
+the specified initial state. The subject starts running for a predefined period
+of time (see \ref{subsec:scheduling}). Once the time has passed, the current
+state of the subject is saved by the kernel for later resumption.
+
+The execution of subject code is preempted and the kernel is invoked by
+transitioning from VMX non-root to root mode. Such a transition is called a
+trap. TODO:(Move traps etc text from implementation chapter?)
+
+A subject is constrained to the environment specified by the subject profile and
+the resources assigned to it by the policy. If a subject performs an illegal
+resource access or performs an operation not allowed by the profile, a trap
+occurs and the kernel is invoked. The kernel can then determine the cause for
+the transition and handle the condition properly according to policy.
 
 \subsection{Policy}
 To best fulfill the requirements, a system using the Muen kernel uses static
-resource assignment. The main idea is to have a complete description of all
-system resources such as system memory or devices in the form of a policy. The
-defined resources can then be assigned to subjects. Since the resources and
-subjects are fixed at integration time, the policy can be analyzed and
-validated prior to execution.
+resource assignment and system specification. The main idea is to have a
+complete description of the system including all resources such as system
+memory, devices and subjects in the form of a policy. The defined resources can
+be assigned to subjects. Since the resources and subjects are fixed at
+integration time, the policy can be analyzed and validated prior to execution.
 
 The following list encompasses parts of a system policy:
 \begin{itemize}
 	\item Hardware resources
 	\item Subject specifications
-	\item Scheduling regime
+	\item Scheduling
 \end{itemize}
-
-Each of these items is presented in the following sections.
 
 \subsubsection{Memory}
 All memory resources of a system are static and are explicitly specified in the
@@ -212,18 +310,102 @@ policy, since the number of available logical CPUs for example is crucial for
 scheduling. This allows to verify the consistency of the scheduling plan with
 regards to the processor that the system is executing on.
 
-\subsection{Signaling}
-A signal is the delivery or injection of an interrupt to a specific destination
-subject. The subject triggering or sending the signal is called the source
-subject. Signals facilitate the implementation of a simple inter-subject
-notification mechanism and enable event-driven services such as the use case
-presented in section \ref{subsec:use-cases}.
+\subsection{Inter-subject communication}
+The Muen kernel provides two main mechanisms for information flow between
+subjects: shared memory and so caled events. The first mechanism can be used to
+share arbitrary data between subjects while events are method to pass
+notifications between subjects in the form of injected interrupts.
 
-Since signals are explicitly sent or triggered by a given source subject, they
-are part of the subject specification. The subject policy contains a list of
-signal entries that specify the destination subject and interrupt to inject for
-a given signal number. Thus all possible signalistation paths are static and
-verifiable at system integration time.
+All communication paths, be it shared memory regions or events, are specified as
+part of the subject specification in the system policy. This means that all
+channels that provide means for subjects to exchange information are explicit
+and cannot change during the runtime of the system. This allows to validate all
+inter-subject information flows prior to execution.
+
+\subsubsection{Shared memory}
+The main mechanism for subjects to exchange data is to specify a common shared
+memory region in the system policy. A memory region is shared, if two or more
+subject memory layouts specify a region that map the same physical memory range.
+
+Access rights for memory regions (e.g. write access) are part of the subject
+memory layout. This allows to specify a direction of information flow for memory
+regions, e.g. by granting write access to the source subject exclusively and
+giving the destination subject read access only.
+
+Since memory management is static and exclusively governed by the system policy,
+the kernel does not need to make special provisions. This avoids adding
+complexity to the kernel by (re-)using the already necessary memory management
+mechanisms.
+
+The kernel does not provide a higher level abstraction than shared memory.
+Subjects must implement their own protocol, such as message passing, based on
+the shared memory region and or events.
+
+\subsubsection{Events}
+An event is caused by a subject and leads to the delivery or injection of an
+interrupt to a specific destination subject. The subject triggering or sending
+the signal is called the source subject. Signals facilitate the implementation
+of a simple inter-subject notification mechanism and enable event-driven
+services such as the use case presented in section \ref{subsec:use-cases}. TODO
+
+Events are explicitly triggered by a given source subject and are part of the
+subject specification. The subject policy contains a list of event table entries
+that specify the event number, destination subject and interrupt number to
+inject.
+
+When a subject triggers an event, it invokes a hypercall passing an event number
+as parameter to the kernel. The kernel then consults the subject's event table
+to determine the destination subject and vector. If a valid entry is present, an
+interrupt with the specified interrupt number is injected into the destination
+subject. If the event number is invalid (e.g. not in the range of the subject's
+event table) the event is ignored.
+
+\subsection{Exceptions}
+We distinguish software exceptions that occur in VMX non-root mode, while
+executing a subject, and in VMX root mode when the kernel is operating.
+
+As the kernel is implemented in the SPARK programming language and the absence
+of runtime errors is proven, exceptions during regular operation in VMX
+root-mode should not happen. If for some unforseen reason (e.g. non-maskable
+interrupt NMI) an exception occurs, it indicates a serious error and the system
+is halted.
+
+In the cause of an exception being caused by the execution of a subject, the
+exception handling is different depending on the profile of the running subject.
+
+If a native subject causes an exception, a trap occurs with the exit reason
+indicating such a condition. Thus the kernel consults the subject's trap table
+to determine what subject is in charge of handling the trap and thus ultimately
+the exception raised by the source subject.
+
+VM subjects are able to perform their own exception handling. Thus if such a
+subject causes an exception, it is delivered to the subject's exception handler
+by means of its interrupt descriptor table (IDT) TODO:Ref. A trap occurs if the
+subject is somehow not able to handle the exception properly and a triple fault
+occurs (e.g. a nested exception occurs in the exception handler and the subject
+has not installed a double fault handler).
+The trap is then processed by the kernel like any other trap caused by the
+subject by using the trap table to schedule the destination subject according to
+the policy.
+
+\subsection{Interrupts}
+Devices can generate hardware interrupts that must be delivered to the subject
+that controls the device according to the policy. A device specification in the
+system policy defines what hardware interrupt it generates. Devices are assigned
+to subjects by means of device references in the subject specification part.
+
+Since resource allocation is static, a global mapping of hardware interrupt to
+destination subject can be compiled at integration time. The kernel then uses
+this mapping at runtime when a device raises a hardware interrupt to determine
+the destination subject, that constitutes the final recipient of the interrupt.
+
+Each subject has a list of pending interrupts. An interrupt is delivered to a
+subject by appending an entry to the interrupt list of the destination subject.
+When the execution of a subject is resumed, the kernel consults this list and
+injects the interrupt.
+
+Spurious or invalid interrupts that have not valid interrupt to subject mapping
+are ignored by the kernel.
 
 \subsection{Scheduling}\label{subsec:scheduling}
 This section presents the design of the Muen kernel scheduler and the selected

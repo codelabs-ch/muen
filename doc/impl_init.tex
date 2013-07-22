@@ -18,12 +18,35 @@ bytes of the OS image. The bootloader loads the OS image into memory according
 to the information found in the header and jumps to the physical kernel entry
 point specified in this header.
 
+\begin{figure}[h]
+	\centering
+	\input{graph_init_mem_layout_example}
+	\caption{Memory layout on system init (example)}
+	\label{fig:init-mem-layout-example}
+\end{figure}
+
+Figure \ref{fig:init-mem-layout-example} shows the physical memory layout of an
+example system. The kernel entry point of this system is at physical address
+\texttt{0x00100000}. The main kernel uses the memory region starting from this
+address to pysical address \texttt{0x00203fff} for code and data.
+
+Low-memory (the physical memory below 1 MB) is used for system data structures
+(colored in red). The AP\index{AP} trampoline\index{trampoline} is needed to
+bootstrap the system's application processors as described in section
+\ref{subsec:mp-support}. It initially resides in the kernel's text section and
+must be copied to low-memory by the init code (see below).
+
+To enable VMX operation using the \texttt{VMXON} instruction, one page per
+logical CPU is required. This region is called VMXON\index{VMXON} region. Each
+subject is managed using a VMCS\index{VMCS} data structure, so this memory is
+placed in low-memory as well.
+
 It is the bootloader's task to prepare the system state as demanded by the
 multiboot standard, see \cite{multiboot} section 3.2 for details. The system
-kernel can except the system to be in this state. After the Muen kernel comes to
-live, it performs additional steps before jumping into the main SPARK kernel.
-This initial startup code is written in Assembly and conducts the following
-tasks:
+kernel can except the system to be in this exact state. After the Muen kernel
+comes to live, it performs additional steps before jumping into the main SPARK
+kernel.  This initial startup code is written in Assembly and conducts the
+following tasks:
 \begin{enumerate}
 	\item Copy the AP trampoline to low-memory, see section
 		\ref{subsec:mp-support} \item Initialize per-CPU VMXON regions

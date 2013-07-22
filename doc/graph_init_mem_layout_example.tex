@@ -1,0 +1,11 @@
+\begin{bytefield}{24}
+	\bitbox[]{10}{}
+	\bitbox[]{16}{$\vdots$}\\[1ex]
+	\memsection{0010 0000}{0020 3fff}{6}{Kernel memory}\\
+	\memsection{0000 8000}{000f ffff}{3}{\color{Gray}-- free --}\\
+	\begin{rightwordgroup}{VMX regions}
+		\memsection{0000 5000}{0000 7fff}{2}{\color{Red}VMCS}\\
+		\memsection{0000 1000}{0000 4fff}{2}{\color{Red}VMXON}
+	\end{rightwordgroup}\\
+	\memsection{0000 0000}{0000 0fff}{2}{\color{Red}AP trampoline}
+\end{bytefield}

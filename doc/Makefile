@@ -38,7 +38,7 @@ UML_TARGETS = $(patsubst %.svg,%.pdf,$(wildcard images/xml_*.svg))
 
 include ../Makeconf
 
-all: memlayout.pdf report.pdf slides.pdf
+all: report.pdf slides.pdf
 
 %.pdf: %.svg
 	$(INKSCAPE) --file=$< --export-area-drawing --without-gui --export-pdf=$@
@@ -51,9 +51,6 @@ report.pdf: $(REPORT_SOURCES) $(XSLT_FILES) $(UML_TARGETS)
 	@pdflatex $<
 
 slides.pdf: $(SLIDES_SOURCES)
-	@$(PDFLATEX)
-
-memlayout.pdf: memlayout.tex
 	@$(PDFLATEX)
 
 %.tex: $(SCHEMA_DIR)/%.xsd xsl/xsd2tex-types.xsl

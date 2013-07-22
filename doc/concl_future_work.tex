@@ -1,2 +1,52 @@
 \section{Future work}
 
+The following list gives a somewhat ordered overview of possible future
+enhancements to the Muen separation kernel:
+
+\begin{itemize}
+	\item Covert/Side-Channel analysis
+	\item Linux virtualization
+	\item Hardware passthrough/PCIe virtualization
+	\item Dynamic resource management
+	\item Multicore subjects
+	\item Performance optimization
+	\item Power Management
+	\item Formal verification
+	\item Fully virtualized subjects
+\end{itemize}
+
+The following sections describe some of the more interesting items.
+
+\subsection{Covert/Side-channel analysis}
+
+\subsection{Linux subject}
+
+\subsection{PCIe virtualization}
+
+\subsection{Dynamic resource management}
+Currently, resource management is static and there is little flexibility.
+Switching between pre-defined scheduling plans is the only property
+configurable at runtime. While this allows to tightly control and validate a
+system via the policy, all assigned resources are indispensable even though some
+of them may not be in use during a particular period.
+
+For example, a system consisting of multiple different VM subjects with their
+respective operating systems need multiple gigabytes of memory when running.
+In a static system configuration, all the assigned memory is committed and
+reserved even though only one of the VMs might be in use. A system that would
+allow dynamic launching and stopping of subjects, only the resources of the
+currently active subjects would be in use.
+
+This can be achieved by introducing a trusted subject named $\tau$0. It is has
+the same trust-level as the kernel and forms part of the TCB. Via an appropriate
+interface it can update parts of the policy and instruct the kernel to perform
+the necessary actions to enforce the changes.
+
+\subsection{Formal verification}
+By implementing the kernel in SPARK and proving the absence of runtime errors,
+we have shown that the kernel is free from exceptions. While these proofs
+provide some evidence to the correctness claim of the implementation, the
+application of these particular formal methods do not provide any assurances
+beyond the error free execution of the kernel. Proving functional properties
+such as the correspondence of the scheduler to a given formal specification is
+necessary to further raise the confidence in systems based on the Muen kernel.

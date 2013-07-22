@@ -21,10 +21,10 @@ for the handover event. A subject may handle an interrupt event within its
 interrupt handling code and react accordingly.
 
 If the IPI option is enabled for an interrupt event, the Muen kernel sends an
-inter-processor interrupt to the logical CPU of the destination subject. The IPI
-causes the processor to trap into the destination kernel, which results in the
-preemption of the running subject and therefore the immediate delivery of the
-interrupt on next subject entry. The event IPI option is only valid if the
+inter-processor interrupt to the logical CPU of the destination subject. The
+IPI causes the processor to trap into the destination kernel, which results in
+the preemption of the running subject and therefore the immediate delivery of
+the interrupt on next subject entry. The event IPI option is only valid if the
 destination subject runs on a different logical CPU than the sending subject.
 This is enforced by the \texttt{skpolicy} tool.
 
@@ -41,14 +41,14 @@ using other mechanisms.
 The Muen kernel handles hypercall traps separately in its
 \texttt{Handle\_Hypercall} procedure, see section \ref{subsec:traps}. It
 performs a lookup in the sending subject's event table to find the associated
-event entry. If no such entry exists, the kernel logs an error message (in debug
-mode only) and ignores the event. If the event is valid and it is an event of
-type interrupt, it is injected using the VMX interrupt injection capabilities,
-see section \ref{subsec:excp-and-ints}. If the event is of type handover, the
-sending subject is replaced by the destination subject in the scheduling plan.
-The destination subject will be executed in place of the sending subject until
-it decides to yield the CPU for another subject. This method can be used to
-implement co-operative scheduling in subject groups.
+event entry. If no such entry exists, the kernel logs an error message (in
+debug mode only) and ignores the event. If the event is valid and it is an
+event of type interrupt, it is injected using the VMX interrupt injection
+capabilities, see section \ref{subsec:int-injection}. If the event is of type
+handover, the sending subject is replaced by the destination subject in the
+scheduling plan.  The destination subject will be executed in place of the
+sending subject until it decides to yield the CPU for another subject. This
+method can be used to implement co-operative scheduling in subject groups.
 
 \begin{figure}[h]
 	\centering
@@ -80,11 +80,11 @@ request-response design:
 		event is therefore immediately injected into the destination subject on
 		the next VMX entry.
 
-		The server subject is waiting for data so it might be in a halted state.
-		The injected interrupt resumes the server subject and it reads the
-		request data from the (read-only) request page and calculates the
-		result. It writes the result data into the response page shared with the
-		client subject.
+		The server subject is waiting for data so it might be in a halted
+		state.  The injected interrupt resumes the server subject and it reads
+		the request data from the (read-only) request page and calculates the
+		result. It writes the result data into the response page shared with
+		the client subject.
 	\item The server subject signals completion by triggering an event, which
 		again leads to a trap into the kernel. The kernel inserts the event in
 		the pending event list of the client subject and (if enabled) sends an

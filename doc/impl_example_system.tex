@@ -134,8 +134,9 @@ The Muen kernel running on CPU0 handles the received interrupt in its
 \texttt{Handle\_Irq} procedure. It uses the vector routing table contained in
 the SPARK-compliant interrupt specification compiled by the \texttt{skpolicy}
 tool, see listing \ref{lst:ex-vector-routing}. The table instructs the kernel to
-inject interrupt vector 33 into the subject with ID 1 by using the event
-injection mechanism.
+inject interrupt vector 33 into the subject with ID 1 by using the interrupt
+injection mechanism described in section \ref{subsec:int-injection}.
+
 \begin{lstlisting}[
 	language=Ada,
 	label=lst:ex-vector-routing,

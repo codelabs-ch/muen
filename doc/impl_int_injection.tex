@@ -1,0 +1,39 @@
+\subsection{Interrupt injection}\label{subsec:int-injection}
+The Muen kernel uses the Intel VT-x technology to provide a flexible interrupt
+injection mechanism. Interrupt injection is needed to inform a subject about an
+external interrupt or an inter-subject event.
+
+The kernel provides a per-subject array of size 32 to store pending interrupts
+for delivery.  Interrupts can only be delivered to a subject if it is ready to
+receive interrupts (i.e. the subject is in an "interruptible" state). This can
+be determined by reading the appropriate VMCS field (see Intel SDM
+\cite{IntelSDM} Vol. 3C, chapter 24.4.2). Furthermore the subject must have the
+IF bit in the FLAGS register set. If these two conditions are true, interrupts
+are injected by writing to the subject's VMCS interrupt information field.
+
+On the next VM entry, the virtual CPU (VCPU\index{VCPU}) executing subject code
+is interrupted. The handling of an injected interrupt is analogous to the
+handling of interrupts and exceptions on a physical CPU and must be performed by
+the subject (see \cite{IntelSDM}, chapter 6 for details on interrupt and
+exception handling). Native subjects written in Ada/SPARK may use the minimal
+interrupt handling packages provided by the Muen project, while VM subjects
+continue to use their interrupt handling code unmodified.
+
+To improve interrupt delivery speed and to decrease subject interrupt response
+latency, the VMX 'interrupt window exiting' feature is enabled in the subject
+VMCS if more events are pending after the delivery of one event, or if an event
+could not been delivered because the subject was not in the interruptible
+state. The feature causes a VM exit to happen as soon as the subject enters
+interruptible state, causing the immediate injection of the next pending
+interrupt.
+
+If the per-subject pending interrupt array runs full, the kernel displays an
+error message when running in debug mode. This state can happen if external
+interrupts or events arrive faster than they are being delivered to a subject.
+
+Upcoming Intel CPUs are expected to provide more advanced
+features\footnote{Process posted interrupts, APIC register emulation, Virtual
+interrupt delivery} that may simplify the current interrupt injection mechanism
+even further. Because these features were not widely available at the time of
+this master thesis, they are considered as future work and must be evaluated
+later.

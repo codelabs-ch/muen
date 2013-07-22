@@ -7,9 +7,9 @@
 	\end{pgfonlayer}
 
 	\node[greenbox, minimum width=3cm, minimum height=1.7cm, above=of mub] (sub) {Subject};
-	\node[apribox, left=15mm of mub] (irq) {Keyboard};
+	\node[apribox, left=15mm of mub] (irq) {Device};
 
-	\draw[arrow] (irq) to node[auto] {\textbf{1} IRQ 1} (mub);
+	\draw[arrow] (irq) to node[auto] {\textbf{1} IRQ} (mub);
 	\draw[arrow] (sub.225) to node[auto, swap] {\textbf{2} VM exit} (mub.135);
 	\draw[arrow] (mub.45) to node[auto, swap] {\textbf{4} Inject event} (sub.315);
 \end{tikzpicture}

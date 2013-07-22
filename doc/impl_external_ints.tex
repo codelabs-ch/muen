@@ -1,7 +1,50 @@
 \subsection{External interrupts}\label{subsec:external-ints}
+Figure \ref{fig:external-interrupt} shows a schematic overview of the external
+interrupt delivery mechanism provided by the Muen kernel. Interrupt requests
+(IRQ\index{IRQ}) emitted by a hardware device are routed to a subject through
+the kernels \texttt{Handle\_Irq} procedure.
+
 \begin{figure}[h]
 	\centering
 	\input{graph_external_interrupt}
 	\caption{External interrupt handling}
 	\label{fig:external-interrupt}
 \end{figure}
+
+To make external interrupt routing work, the kernel programs the system's I/O
+APIC (see section \ref{subsec:apic}) on startup. Since each logical CPU of the
+system runs an identical kernel, device IRQs must be forwarded to the LAPIC of
+the logical processor running the subject in question.
+
+Which device IRQ is routed to which subject is determined by the assignment of
+hardware devices to subjects in the system policy (see section
+\ref{subsec:subject_type}). The policy compilation tool uses this information to
+compile the interrupt routing tables. These tables are SPARK specifications
+which are compiled into the kernel during the build process.
+
+The first table contains the IRQ routing information, i.e. to which CPU's LAPIC
+the hardware IRQ must be forwarded to and the interrupt vector to use. Hardware
+interrupts are remapped by the I/O APIC to the interrupt vector range 32-255 to
+be distinct from exceptions. For example, the IRQ 0 of the system timer would
+be remapped to interrupt vector 32 before delivery to the assigned processor
+LAPIC.
+
+On reception of the interrupt message, the LAPIC hands the interrupt vector to
+the processor core for further processing. It is important to note that
+interrupts are not enabled when in VMX root mode (the interrupt flag
+IF\index{IF} is not set in the host's FLAGS register). This simplifies the
+kernel code and assures that the kernel is not interrupted by external
+interrupts.
+
+Instead, the VT-x external interrupt exiting feature is used to pass control to
+the kernel on interrupts. The activation of this feature leads to a VM exit
+into the kernel with the VM exit reason set to \emph{external interrupt} (1).
+The programming of the I/O APIC ensures that a CPU only receives interrupts
+destined for a subject scheduled on this particular core.
+
+If the VM exit reason indicates the occurrence of an external interrupt, the VM
+exit handler inside the kernel scheduler passes control to the
+\texttt{Handle\_Irq} procedure. This procedure uses the second generated
+interrupt routing table to determine the destination subject for this interrupt
+vector.  It then uses the interrupt injection mechanism described in section
+\ref{subsec:int-injection} to inject the interrupt into the subject.

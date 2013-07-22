@@ -27,5 +27,9 @@ the system's TCB:
 	\item The kernel must allow the implementation of small and simple
 		components and not impose unnecessary restrictions that would increase
 		subject complexity.
-	\item Inter-subject signaling
+	\item Subjects must be able to use hardware devices and process device
+		generated interrupts in particular.
+	\item A mechanism for inter-subject notifications must exist.
+	\item The kernel must be policy-free and only provide mechanisms to enforce
+		a given policy.
 \end{enumerate}

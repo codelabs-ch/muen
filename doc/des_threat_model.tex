@@ -32,14 +32,13 @@ high assurance system, are considered out of scope:
 		sensitive system resources.
 	\item[Policy validity] The separation kernel provides the mechanisms to
 		enforce a given, user-defined policy. The focus is on the correct
-		implementation of a provided system configuration. The user is in charge
-		of assuring the correctness and consistency of the overall system
-		policy.
-	\item[Communication] The separation kernel must provide a
-		mechanism to establish directed communication channels between subjects.
-		It is however not the duty of the kernel to provide a inter-subject
-		communication abstraction such as message passing or a remote procedure
-		call (RPC) interface.
+		enforcement of a provided system configuration. The user is in charge of
+		assuring the correctness and consistency of the overall system policy.
+	\item[Communication] The separation kernel must provide a mechanism to
+		establish directed communication channels between subjects.	It is
+		however not the duty of the kernel to provide a	communication
+		abstraction such as message passing or a remote procedure call (RPC)
+		interface.
 	\item[Recovery] How a system can be restored to a secure state after a
 		compromise is out of scope.
 \end{description}

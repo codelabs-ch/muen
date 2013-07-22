@@ -35,6 +35,16 @@ system.
 	\label{fig:architecture-overview}
 \end{figure}
 
+Resource management and assignment to subjects is static and done prior to the
+execution of the system. All available resources provided by a platform running
+the Muen kernel must be specified in a system policy. Similarly, all subjects
+running on the system and scheduling plans are part of the system policy.
+
+This relieves the kernel from dynamic resource management and avoids the
+associated complexity, which greatly simplifies the kernel implementation.
+
+The policy is described in detail in section \ref{subsec:policy}.
+
 \subsection{Subject execution}
 The kernel runs a subject by setting up the environment and executing the binary
 code defined by the subject specification. Initially the subject state is set to
@@ -52,7 +62,7 @@ resource access or performs an operation not allowed by the profile, a trap
 occurs and the kernel is invoked. The kernel can then determine the cause for
 the transition and handle the condition properly according to policy.
 
-\subsection{Policy}
+\subsection{Policy}\label{subsec:policy}
 To best fulfill the requirements, a system using the Muen kernel uses static
 resource assignment and system specification. The main idea is to have a
 complete description of the system including all resources such as system

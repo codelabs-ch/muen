@@ -1,0 +1,21 @@
+\subsection{Exceptions and Software-generated interrupts}
+As outlined in section \ref{subsec:design-exceptions}, exceptions in the kernel
+running in VMX root mode should not happen because it is implemented in SPARK
+and absence of runtime errors has been proven.  This section describes the
+handling of exceptions or Software-generated interrupts\footnote{As raised with
+the \texttt{int} instruction.} caused by subject code. The behavior on
+exceptions in VMX non-root mode is determined by the subject profile (VM or
+Native).
+
+For subjects running in the VM subject profile, the exception bitmap inside the
+VMCS structure is set to zero. This has the effect that exceptions and
+Software-generated interrupts do not result in a trap. VM subjects must
+implement their own exception handling, only a triple fault inside a subject
+leads to a trap into the kernel.
+
+For native subjects, the VMCS exception bitmap field is set to the value
+\texttt{0xffffffff} which causes a trap if an exception or Software-generated
+interrupt occurs in the subject. As described by section \ref{subsec:traps}, a
+trap is forwarded to a handler subject by configuring the subject trap table
+appropriately. A handler subject (or subject monitor) can react to the exception
+and resume the causing subject after the error condition has been removed.

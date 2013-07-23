@@ -1,4 +1,4 @@
-\section{Subject}
+\section{Subject}\label{sec:subject}
 Subjects are the main components that are executed on top of the kernel, as
 described in section TODO:Ref. They are represented using two main data
 structures: \emph{subject specification} and \emph{subject state}.
@@ -25,21 +25,53 @@ The system state related to a subject must encompass all resources, that it can
 control directly or indirectly. This is necessary to enable the scheduler to
 preempt a subject by preserving its state and seamlessly resume execution at a
 later stage by restoring the previously saved state.
+
 Additionally, separation of subjects demands that unintended information flows
 when switching between subjects must be prevented. This is only achievable if
 the subject state that is saved and restored encompasses every element of the
-systems environment that is accessible by more than one subject. Listing
-\ref{lst:sk-subject-state} shows the record type used by ther Kernel to maintain
-the state of a subject.
+systems environment that is accessible by more than one subject. While the Intel
+VMX extensions save and restore parts of the subject state automatically on VMX
+transition, others must be handled manually by the kernel. Listings
+\ref{lst:sk-subject-state} and \ref{lst:sk-cpu-registers} show the record types
+used by the Kernel to maintain the state of a subject.
 
 \lstinputlisting[
 	language=ada,
-	linerange={40-56},
+	linerange={39-56},
 	label=lst:sk-subject-state,
 	caption=SPARK subject state type]
 	{../common/src/sk.ads}
 
-A special monitoring subject called \emph{subject monitor}
-\index{subject monitor} (SM) may be given access to parts or the entire state of
-a given subject. This enables the SM to alter a subject's state given the right
-conditions and thus perform emulation.
+\lstinputlisting[
+	language=ada,
+	linerange={18-35},
+	label=lst:sk-cpu-registers,
+	caption=SPARK CPU registers type]
+	{../common/src/sk.ads}
+
+A special monitoring subject called \emph{subject monitor}\index{subject
+monitor} (SM\index{SM}) may be given access to parts or the entire state of a
+given subject. This enables the SM to alter a subject's state given the right
+conditions and thus perform emulation. Because a subject is not allowed to
+access the VMCS structure of another subject, the kernel also copies register
+values managed automatically by VMX\index{VMX} into the in-memory subject state
+to enable modification by the SM subject.
+
+During initial subject setup, the subject state is set to a pristine value. This
+is done by assigning the nil subject state constants shown by listings
+\ref{lst:sk-null-subject-state} and \ref{lst:sk-null-cpu-registers} to all
+subjects state variables.
+
+\lstinputlisting[
+	language=ada,
+	linerange={85-100},
+	label=lst:sk-null-subject-state,
+	caption=SPARK null subject state constant]
+	{../common/src/sk.ads}
+
+\lstinputlisting[
+	language=ada,
+	linerange={102-118},
+	label=lst:sk-null-cpu-registers,
+	caption=SPARK null CPU registers constant]
+	{../common/src/sk.ads}

@@ -27,6 +27,7 @@ REPORT_SOURCES =       \
 	design.tex         \
 	implementation.tex \
 	impl_*.tex         \
+	analysis.tex       \
 	conclusion.tex     \
 	$(COMMON_SOURCES)
 

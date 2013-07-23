@@ -1,0 +1,79 @@
+\chapter{Analysis}
+
+\section{Separation}
+
+\subsection{System resources}
+- Policy
+
+\subsubsection{Memory}
+- Static according to policy
+
+\subsubsection{Devices}
+- Memory
+- I/O bitmap
+- Interrupts
+
+\subsection{Execution environment}
+Two mechanisms provide isolation of subject execution environments: saving and
+restoring the architectural state or prohibiting access. An overview of the
+state of a logical processor is given in section \ref{subsubsec:exec-env} and
+specified in \cite{IntelSDM} volume 1, section 3.2.1 and volume 3A,
+section 8.7.1.
+
+\subsubsection{General purpose registers}
+RAX, RBX, RCX, RDX, RSI, RDI, RBP, RSP R8-15
+
+\subsubsection{Segment registers}
+CS, DS, SS, ES, FS, GS
+
+\subsubsection{Instruction pointer}
+RIP
+
+\subsubsection{Flag register}
+RFLAGS
+
+\subsubsection{Control registers}
+CR0, CR2, CR3, CR4, CR8
+
+\subsubsection{Descriptor table registers}
+GDTR, IDTR, LDTR, TR
+
+\subsubsection{Debug registers}
+
+\subsubsection{x87 FPU registers}
+R0-R7, ST...
+
+\subsubsection{MMX registers}
+MMX0-MMX7
+
+\subsubsection{XMM registers}
+XMM[0-15], MXCSR
+
+\subsubsection{Model-specific registers (MSRs)}
+- MSR bitmap
+
+\subsection{Temporal isolation}
+Fixed cyclic scheduling etc
+
+\section{Information flow}
+- Policy specifies shared memory regions
+- Policy defined event table
+- Policy defined trap table
+
+\section{Architecture support}
+- No additional restrictions on supported physical memory
+
+\subsection{Kernel}
+- IA32-e mode
+
+\subsection{Subject}
+- Native: IA32-e mode
+- VM: 32-bit
+
+\section{Implementation assurance}
+- Low sloc count
+- Implemented in SPARK -> clear structure due to packages etc
+- Proof of absence of runtime errors
+- Absolutely necessary functionality implemented in kernel, rest done by tools
+  and hardware
+- TDD for Tools

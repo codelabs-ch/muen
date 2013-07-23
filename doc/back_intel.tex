@@ -21,7 +21,7 @@ multi-processor systems a CPU can have multiple cores, which are termed
 \emph{logical CPUs}. Each logical CPU fetches and executes instructions, which
 change the state of the processor and the system.
 
-\subsubsection{Execution environment}
+\subsubsection{Execution environment}\label{subsubsec:exec-env}
 A program executing on an processor is given access to resources to store
 information, such as code, data or state information. Various resources provided
 by a modern 64-bit processor constituting the basic execution environment are
@@ -51,9 +51,10 @@ described in the following list:
 	\item[I/O ports] allow transfer of data to and from Input/Output ports.
 \end{description}
 
-All instructions provided by a processor are called an instruction set. The
-complete Intel instruction set architecture (ISA)\index{ISA} is specified in
-\cite{IntelSDM}, volumes 2a-c.
+Further details about the Intel processor execution environment can be found in
+\cite{IntelSDM}, volume 1, section 3.2.1. All instructions provided by a
+processor are called an instruction set. The complete Intel instruction set
+architecture (ISA)\index{ISA} is specified in \cite{IntelSDM}, volumes 2a-c.
 
 \subsubsection{Caches}
 The processor has numerous internal caches and buffers of varying sizes and

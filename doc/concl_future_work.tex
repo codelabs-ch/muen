@@ -5,6 +5,7 @@ enhancements to the Muen separation kernel:
 
 \begin{itemize}
 	\item Covert/Side-Channel analysis
+	\item Cache coloring
 	\item Linux virtualization
 	\item Hardware passthrough/PCIe virtualization
 	\item Dynamic resource management
@@ -18,10 +19,64 @@ enhancements to the Muen separation kernel:
 The following sections describe some of the more interesting items.
 
 \subsection{Covert/Side-channel analysis}
+Since the main purpose of a separation kernel is the isolation of subjects, any
+unintended channel that enables information flow must be prohibited or at least
+reduced to an acceptable data rate.
+
+The first step in preventing such flows is to identify potential covert and
+side-channels in the kernel. This includes a systematic and thorough analysis of
+the underlying hardware platform. Special care must be taken to evaluate the
+interaction of the kernel with the hardware since minor differences in
+interpretation of the specification can lead to unintended side-effects. A very
+deep knowledge and understanding of the Intel x86 architecture is required for
+such an analysis.
+TODO:Ref
+
+\subsubsection{Cache coloring}
+A well-known source of high-bandwith side-channels are processor caches. One
+method to prevent this channel is called \emph{cache coloring}. The main concept
+is to partition the cache into disjoint groups and assigning a color to each of
+the groups. TODO:Cache coloring ref
+
+In a second step each subject is associated with a color. All subjects of a
+given color share the same cache partition. In turn subjects of differing color
+do not, which means the cache cannot be used as a side-channel.
 
 \subsection{Linux subject}
+Porting the Linux kernel to run as a subject on the Muen separation kernel would
+enable the execution of a large number of Linux user-space applications. This
+would drastically increase the number of real world use-cases, that a system
+using the Muen kernel could be applied to.
 
-\subsection{PCIe virtualization}
+Leveraging the VM profile, which allows a subject to perform memory management
+via EPT (see section \ref{subsubsec:ept}), reduces the porting effort. Changes
+to the Linux boot process are needed, since it is quite involved. The Linux
+kernel implements an architecture-dependent boot protocol that is documented in
+TODO:Ref.
+
+Combined with the \emph{hardware passthrough} enhancement, Linux could be used
+to control virtually any PCI(e) device. This would add the abundant hardware
+support of the Linux kernel to systems based on the separation kernel, with a
+comparably small increase in kernel complexity.
+
+\subsection{Hardware pass-through/PCIe virtualization}
+Even though the separation kernel has support for resources, that can be
+accessed using port and memory-mapped I/O, newer hardware devices are attached
+to a PCI bus. Prior to their usage, such devices must be configured using a
+mechanism called the PCI configuration space. Since all PCI devices share the
+same configuration space, it represents a resource that must be managed by a
+trusted component.
+
+Additional measures need to be implemented to enable subject assignment and safe
+usage of PCI devices. Most PCI devices support Direct Memory Access (DMA), which
+allows them to directly access all data in physical memory. Secondly, a PCI
+device is not restricted to a specific hardware interrupt but can be instructed
+to trigger any interrupt. Intel's VT-d technology, as briefly mentioned in
+section \ref{subsubsec:vtd}, provides mechanisms to implement the necessary
+isolation functions.
+
+Implementing these enhancements using VT-d should keep the kernel complexity at
+an acceptable level.
 
 \subsection{Dynamic resource management}
 Currently, resource management is static and there is little flexibility.

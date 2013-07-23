@@ -137,7 +137,7 @@ For further information about the VMX processor extensions and VMCS, the reader
 is directed to the respective chapter in the Intel Software Developer
 Manual\index{Intel SDM} \cite{IntelSDM}, chapter 23.
 
-\subsubsection{Intel EPT}
+\subsubsection{Intel EPT}\label{subsubsec:ept}
 Extended Page Table (EPT\index{EPT}) is Intel's implementation of the Second
 Level Address Translation (SLAT\index{SLAT}) virtualization technology. It
 provides hardware-assisted translation of guest-physical memory addresses to
@@ -156,7 +156,7 @@ is on the VMM. This is a non-trivial task which is also inefficient. EPT removes
 the complexity of manual memory address translations from the VMM, making the
 code simpler while improving the virtualization speed.
 
-\subsubsection{Intel VT-d}
+\subsubsection{Intel VT-d}\label{subsubsec:vtd}
 Virtualization Technology for Directed I/O (VT-d\index{VT-d}) provides hardware
 support for I/O-device virtualization. While VT-x provides the support to
 virtualize the platform (i.e. the processor), VT-d is used to simplify the

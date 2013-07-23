@@ -59,6 +59,6 @@ slides.pdf: $(SLIDES_SOURCES)
 		-o $@ xsl/xsd2tex-types.xsl $<
 
 clean:
-	@rm -f *.pdf *.aux *.lof *.log *.toc *.snm *.out *.nav *.vrb *.bbl *.blg *.lol
+	@rm -f *.pdf *.aux *.lof *.log *.toc *.snm *.out *.nav *.vrb *.bbl *.blg *.lol *.lot
 	@rm -f *.idx *.ilg *.ind
 	@rm -f $(XSLT_FILES)

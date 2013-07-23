@@ -1,17 +1,58 @@
 \chapter{Analysis}
+Section \ref{sec:requirements} lists the requirements of the separation kernel
+concept presented in this master thesis. This chapter analyzes how the
+Muen kernel implementation meets these requirements.
 
 \section{Separation}
+The main requirement of a separation kernel is, as the name implies, to provide
+strong separation of components to allow the construction of a trusted
+high-assurance system. The following sections present how system resources and
+the state of the execution environment are separated using the Intel x86
+architecture and especially the VT-x virtualization technology.
+
+Separation is not only important for subjects, but the kernel resources must be
+protected from unauthorized access as well. This aspect is also discussed in
+this chapter.
 
 \subsection{System resources}
-- Policy
+System resources are assigned to subjects according to the system policy. The
+kernel does not by itself perform policy decisions, but instead only applies
+the linked in policy specifications and management data structures.
+
+This means that the policy writer must make sure that the system specification
+meets the requirements of a particular use-case.
 
 \subsubsection{Memory}
-- Static according to policy
+Memory is assigned to the kernel and subjects by adding memory regions to the
+concrete kernel or subject specifications. This is done at integration time and
+cannot be changed at runtime.
+
+If strict separation is desired, care must be taken that subject memory regions
+do not overlap except for cases where a communication channel is explicitly
+required. While the policy compiler performs sanity checks, it does not
+currently provide support to avoid unintended memory overlaps.
 
 \subsubsection{Devices}
-- Memory
-- I/O bitmap
-- Interrupts
+Devices are accessed using memory or port I/O. Interrupts are used to inform a
+native or VM subject about events that must be handled on a device.
+
+The assignment of a device to a subject automatically allows access to the
+resources provided by this device. The policy compiler does not prohibit
+assignment of one device to multiple subjects, as this could be a valid scenario
+(e.g.  multiple subjects are allowed to access the VGA console directly). Again,
+the policy writer must make sure that devices are assigned correctly.
+
+The kernel grants subject access to device resources as follows. Device memory
+access via memory I/O is allowed to the subject by mapping the corresponding
+device memory into the subject's address space. The appropriate page table is
+generated automatically by the policy compiler.
+
+Port I/O is allowed using the VMCS I/O bitmap field. The correct bitmap is again
+compiled from the system policy tool at integration time. The kernel only writes
+the prepared bitmap into the VMCS field during subject setup.
+
+Device interrupts are routed to the correct subject as outlined in section
+\ref{subsec:external-ints}.
 
 \subsection{Execution environment}
 Two mechanisms provide isolation of subject execution environments: saving and
@@ -20,8 +61,51 @@ state of a logical processor is given in section \ref{subsubsec:exec-env} and
 specified in \cite{IntelSDM} volume 1, section 3.2.1 and volume 3A,
 section 8.7.1.
 
+As mentioned in section \ref{sec:subject}, parts of the execution environment
+are saved and restored automaticall by the VMX extensions on VM entry or VM exit
+respectively, others must be handled manually. The following subsections
+discusses each component of the execution environment in detail. Table
+\ref{tab:exec-env-storage} shows which component is saved inside a VMCS field
+and which is stored manually into the in-memory subject state.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{l || c | c}
+		\textbf{Component} & \textbf{VMCS} & \textbf{State record} \\
+		\hline
+		General purpose registers  &   & X \\
+		Segment registers          & X &   \\
+		Instruction pointer        & X &   \\
+		Flag register              & X &   \\
+		CR0                        & X &   \\
+		CR2                        &   & X \\
+		CR3                        & X &   \\
+		CR4                        & X &   \\
+		CR8                        & ? & ? \\
+		Descriptor table registers & X &   \\
+		Debug registers            &   & X \\
+		x87 FPU registers          &   & X \\
+		MMX registers              &   & X \\
+		XMM registers              &   & X \\
+		MSRs                       & ? & ? \\
+		\hline
+	\end{tabular}
+	\caption{Execution environment components and storage location}
+	\label{tab:exec-env-storage}
+\end{table}
+
 \subsubsection{General purpose registers}
-RAX, RBX, RCX, RDX, RSI, RDI, RBP, RSP R8-15
+General purpose registers (GPR\index{GPR}) are handled manually by the SPARK CPU
+register type and the stack pointer field in the subject state record. See
+section \ref{sec:subject} for details about the structure of these two records.
+During initial subject setup, all GPR values are initialized to a pristine
+state. The \texttt{Restore\_Registers} procedure implemented in the kernel's
+\texttt{CPU} package restores the subject GPR values before a VM entry by
+copying them to the correct processor registers using inline assembly.
+
+On VM exit, the subject state in memory is first reset to a pristine state.
+Then, the VM exit reason is checked and if the exit is valid, the GPR values are
+copied from the processor registers into the subject state.
 
 \subsubsection{Segment registers}
 CS, DS, SS, ES, FS, GS

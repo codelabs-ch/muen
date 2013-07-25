@@ -1,14 +1,17 @@
 \chapter{Analysis}
 Section \ref{sec:requirements} lists the requirements of the separation kernel
 concept presented in this master thesis. This chapter analyzes how the
-Muen kernel implementation meets these requirements.
+Muen kernel implementation outlined in chapter \ref{chap:impl} meets these
+requirements.
 
 \section{Separation}
 The main requirement of a separation kernel is, as the name implies, to provide
 strong separation of components to allow the construction of a trusted
 high-assurance system. The following sections present how system resources and
-the state of the execution environment are separated using the Intel x86
-architecture and especially the VT-x virtualization technology.
+the state of the execution environment are separated using the Intel VT-x
+virtualization technology. Section \ref{subsec:vmx-controls} analyzes how the
+VMX configuration in the native and VM profiles ensures that subjects are not
+able to widen their permissions by modifying execution environment values.
 
 Separation is not only important for subjects, but the kernel resources must be
 protected from unauthorized access as well. This aspect is also discussed in
@@ -24,13 +27,14 @@ meets the requirements of a particular use-case.
 
 \subsubsection{Memory}
 Memory is assigned to the kernel and subjects by adding memory regions to the
-concrete kernel or subject specifications. This is done at integration time and
-cannot be changed at runtime.
+appropriate specifications in the system policy. Memory is assignment is
+therefore static and cannot be changed at runtime.
 
 If strict separation is desired, care must be taken that subject memory regions
 do not overlap except for cases where a communication channel is explicitly
-required. While the policy compiler performs sanity checks, it does not
-currently provide support to avoid unintended memory overlaps.
+required. The same holds true for unintended overlaps of kernel and subject
+memory.  While the policy compiler performs sanity checks, it does not currently
+provide support to avoid unintended memory overlaps.
 
 \subsubsection{Devices}
 Devices are accessed using memory or port I/O. Interrupts are used to inform a
@@ -39,20 +43,85 @@ native or VM subject about events that must be handled on a device.
 The assignment of a device to a subject automatically allows access to the
 resources provided by this device. The policy compiler does not prohibit
 assignment of one device to multiple subjects, as this could be a valid scenario
-(e.g.  multiple subjects are allowed to access the VGA console directly). Again,
-the policy writer must make sure that devices are assigned correctly.
+(e.g.  multiple subjects with the same trust level are allowed to access the VGA
+console directly). Again, the policy writer must make sure that devices are
+assigned correctly.
 
-The kernel grants subject access to device resources as follows. Device memory
-access via memory I/O is allowed to the subject by mapping the corresponding
-device memory into the subject's address space. The appropriate page table is
-generated automatically by the policy compiler.
+The kernel grants subject access to device resources as follows. Device access
+via memory I/O is allowed to the subject by mapping the corresponding device
+memory into the subject's address space. The page table for a subject containing
+a mapping for device memory is generated automatically by the policy compiler at
+system integration.
 
 Port I/O is allowed using the VMCS I/O bitmap field. The correct bitmap is again
-compiled from the system policy tool at integration time. The kernel only writes
-the prepared bitmap into the VMCS field during subject setup.
+compiled by the system policy tool at integration time. The kernel only assigns
+the bitmap o the VMCS field during subject setup.
 
 Device interrupts are routed to the correct subject as outlined in section
 \ref{subsec:external-ints}.
+
+\subsection{VMX controls}\label{subsec:vmx-controls}
+The instructions listed in section 25.1.2 of the Intel SDM volume 3A cause a VM
+exit unconditionally when executed in VMX non-root mode, i.e. they do not depend
+on VMX control settings in a subject VMCS. This section analyzes instructions
+and events leading to a VM exit or trap which depend on the settings of the VM
+execution, entry and exit controls in the VMCS.
+
+The VMX control settings are very restrictive to avoid side- or covert-channels.
+Furthermore a subject must not be allowed to alter execution state which makes
+it possible to access to resources not granted by policy.
+
+Table \ref{tab:profiles-cond-vm-exits} shows the instructions and events which
+conditionally lead to a VM exit depending on the VMX control settings for both
+profiles. The configuration is very similar, except that VM subjects are allowed
+to run their own memory management code, as described in the following section
+\ref{subsubsec:control-regs}. Also, exceptions must be handled by the operating
+system running in the VM subject profile. Only triple-faults resulting from
+unhandled double-faults lead to a VM exit in this profile.
+
+Access to I/O ports or MSRs\index{MSR} which are not granted by policy lead to a
+VM exit for both profiles.
+
+\begin{table}[h]
+	\centering
+	\begin{minipage}[c]{8cm}
+	\begin{tabular}{l|c|c}
+		\textbf{Event} & \textbf{Native} & \textbf{VM} \\
+		\hline
+		External interrupt   & \checkmark & \checkmark  \\
+		VMX preemption timer & \checkmark & \checkmark  \\
+		Execute \texttt{INVLPG}
+		\footnote{Invalidate TLB Entry}
+		& \checkmark & \checkmark \\
+		Execute \texttt{MONITOR}
+		\footnote{Set Up Monitor Address}
+		& \checkmark & \checkmark \\
+		Execute \texttt{MWAIT}\footnote{Monitor Wait}
+		& \checkmark & \checkmark \\
+		Execute \texttt{RDPMC}
+		\footnote{Read Performance-Monitoring Counters}
+		& \checkmark & \checkmark \\
+		Execute \texttt{RDTSC}
+		\footnote{Read Time-Stamp Counter}
+		& \checkmark & \checkmark \\
+		Execute \texttt{WBINVD}
+		\footnote{Write Back and Invalidate Cache}
+		& \checkmark & \checkmark \\
+		MOV to CR3                  & \checkmark & \\
+		MOV from CR3                & \checkmark & \\
+		MOV to CR8                  & \checkmark & \checkmark \\
+		MOV from CR8                & \checkmark & \checkmark \\
+		MOV to/from debug registers & \checkmark & \checkmark \\
+		\hline
+		I/O port access & \checkmark & \checkmark \\
+		MSR access      & \checkmark & \checkmark \\
+		Exceptions      & \checkmark & \\
+		\hline
+	\end{tabular}
+	\caption{Subject profile VM exit comparison}
+	\label{tab:profiles-cond-vm-exits}
+	\end{minipage}
+\end{table}
 
 \subsection{Execution environment}
 Two mechanisms provide isolation of subject execution environments: saving and
@@ -62,35 +131,40 @@ specified in \cite{IntelSDM} volume 1, section 3.2.1 and volume 3A,
 section 8.7.1.
 
 As mentioned in section \ref{sec:subject}, parts of the execution environment
-are saved and restored automaticall by the VMX extensions on VM entry or VM exit
-respectively, others must be handled manually. The following subsections
-discusses each component of the execution environment in detail. Table
-\ref{tab:exec-env-storage} shows which component is saved inside a VMCS field
-and which is stored manually into the in-memory subject state.
+are saved and restored automatically by the VMX extensions on VM entry or VM
+exit respectively, others must be handled manually. Table
+\ref{tab:exec-env-storage} gives an overview about the different components and
+the handling by VMX. Tickmarks in parenthesis show optional VMCS fields which
+are only active when configured by the appropriate VMX control.
+
+The following subsections discuss each component of the execution environment in
+detail.
 
 \begin{table}[h]
 	\centering
-	\begin{tabular}{l || c | c}
-		\textbf{Component} & \textbf{VMCS} & \textbf{State record} \\
+	\begin{tabular}{l|c}
+		\textbf{Component} & \textbf{VMCS} \\
 		\hline
-		General purpose registers  &   & X \\
-		Segment registers          & X &   \\
-		Instruction pointer        & X &   \\
-		Flag register              & X &   \\
-		CR0                        & X &   \\
-		CR2                        &   & X \\
-		CR3                        & X &   \\
-		CR4                        & X &   \\
-		CR8                        & ? & ? \\
-		Descriptor table registers & X &   \\
-		Debug registers            &   & X \\
-		x87 FPU registers          &   & X \\
-		MMX registers              &   & X \\
-		XMM registers              &   & X \\
-		MSRs                       & ? & ? \\
+		General purpose registers  & \\
+		Segment registers          & \checkmark \\
+		Instruction pointer        & \checkmark \\
+		Flag register              & \checkmark \\
+		CR0                        & \checkmark \\
+		CR2                        & \\
+		CR3                        & \checkmark \\
+		CR4                        & \checkmark \\
+		CR8                        & \\
+		Descriptor table registers & \checkmark \\
+		DR0-3                      & \\
+		DR6                        & \\
+		DR7                        & (\checkmark) \\
+		x87 FPU registers          & \\
+		MMX registers              & \\
+		XMM registers              & \\
+		MSRs                       & (\checkmark) \\
 		\hline
 	\end{tabular}
-	\caption{Execution environment components and storage location}
+	\caption{Execution environment and VMCS fields}
 	\label{tab:exec-env-storage}
 \end{table}
 
@@ -108,33 +182,187 @@ Then, the VM exit reason is checked and if the exit is valid, the GPR values are
 copied from the processor registers into the subject state.
 
 \subsubsection{Segment registers}
-CS, DS, SS, ES, FS, GS
+Segment registers are managed by VMX automatically inside the VMCS. The segment
+registers are initialized to the values shown by table
+\ref{tab:vmcs-segment-regs}.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{l|c}
+		\textbf{Register} & \textbf{Value} \\
+		\hline
+		CS & \texttt{0x08} \\
+		DS & \texttt{0x10} \\
+		ES & \texttt{0x10} \\
+		SS & \texttt{0x10} \\
+		TR & \texttt{0x18} \\
+		\hline
+	\end{tabular}
+	\caption{VMCS segment register fields}
+	\label{tab:vmcs-segment-regs}
+\end{table}
+
+Access to segment registers FS and GS is disabled by setting the VMCS access
+rights field for these registers to the value \texttt{0x10000}.
 
 \subsubsection{Instruction pointer}
-RIP
+The instruction pointer is managed by VMX and set to the subject's entry point
+initially. This value is red from the generated system policy.
+
+Because it must be possible to modify the instruction pointer for emulation, it
+is also copied to the in-memory subject state, which is accessible by a subject
+monitor (if granted by policy).
 
 \subsubsection{Flag register}
-RFLAGS
+The flag register (EFLAGS in 32-bit mode, RFLAGS in 64-bit mode) is managed in
+the VMCS region of the subject and set to the initial value 2 (only the reserved
+bit 1 is set, all other bits are cleared).
 
-\subsubsection{Control registers}
-CR0, CR2, CR3, CR4, CR8
+\subsubsection{Control registers}\label{subsubsec:control-regs}
+Control registers CR0 and CR4 are managed by VMX automatically and initialized
+to the values shown by table \ref{tab:vmcs-control-regs}. These values depend
+on the subject profile.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{l|c|c}
+		\textbf{Register} & \textbf{Native} & \textbf{VM} \\
+		\hline
+		CR0 & \texttt{0x80010035} & \texttt{0x00000035} \\
+		CR4 & \texttt{0x00002020} & \texttt{0x00002000} \\
+		\hline
+	\end{tabular}
+	\caption{VMCS control register fields}
+	\label{tab:vmcs-control-regs}
+\end{table}
+
+Since a VM subject is started in protected mode with paging disabled, bits 16
+and 31 are cleared, whereas they are set in the native profile. The CR0 mask
+field in the VMCS allows the VM subject to modify these two bits (bitmask value
+\texttt{0x7ffeffff}) without causing a VM exit when enabling paging. On the
+other hand, the bitmask value of \texttt{0xffffffff} disallows modification of
+any bit in CR0 for native subjects, paging is already enabled from the start.
+The remaining bits are identical. Bit 0 indicates protected mode and bit 2
+disables the x87 FPU for subjects. Bit 4 is reserved and must be set for both
+profiles. Bit 5 enables native FPU error reporting (see table 9-3 in Intel SDM
+\cite{IntelSDM}, section 9.2.2).
+
+Bit 13 (VMXE) in the CR4 control register is set for both profiles. This bit is
+a prerequisite for VMX operation not only for the host but also for the
+guest-state. Bit 5 (Physical Address Extension, PAE\index{PAE}) in the native
+profile is a prerequisite for IA-32e mode. While modifications of CR4 in a
+native subject leads to a trap, the VM profile allows the modification of bit 4
+(Page Size Extensions, PSE\index{PSE}). This allows 4 MB pages in 32-bit paging
+mode (used for example by the xv6 OS described in section \ref{subsubsec:xv6}).
+
+CR3 is also managed by VMX. Again, the handling depends on the subject profile.
+Native subjects are not allowed to change the value of CR3 since it points to
+the generated page table which confines the usable memory of a subject. The
+native subject profile enables both load and store VM execution controls for
+CR3, resulting in a trap if a native subject tries to tamper with the CR3 value
+(section \ref{subsec:vmx-controls} and Intel SDM \cite{IntelSDM}, 24.6.2). VM
+subjects are allowed to run their own memory management code within the
+boundaries set by the Intel EPT mechanism, see section \ref{subsubsec:ept}.  A
+value moved into the CR3 control register is treated as a guest-physical address
+and the instruction does not cause a VM exit.
+
+CR2 is not managed by VMX but copied manually from the subject state to the
+processor register and back. The initial value of CR2 is zero.
+
+Accessing control register CR8 leads to a trap for both profiles.
+
+For more information about the meaning of the bits in the control registers, see
+Intel SDM \cite{IntelSDM}, section 2.5.
 
 \subsubsection{Descriptor table registers}
-GDTR, IDTR, LDTR, TR
+Both subject profiles are allowed to manage the Global Descriptor Table
+(GDT\index{GDT}) and the Interrupt Descriptor Table (IDT\index{IDT}). The GDTR
+and IDTR registers are stored in the guest-state area in the VMCS and updated
+automatically by VMX.
+
+Access to the Local Descriptor Table Register (LDTR\index{LDTR}) is disabled by
+setting the corresponding access rights field in the VMCS to the value
+\texttt{10000}.
 
 \subsubsection{Debug registers}
+Debug registers are not handled by VMX and the kernel does not currently store
+them in the subject state. Instead, the 'MOV-DR exiting' VMX processor control
+(Intel SDM \cite{IntelSDM}, 24.6.2) is enabled for both subject profiles. This
+leads to a trap when moving data into or from debug registers.
 
 \subsubsection{x87 FPU registers}
-R0-R7, ST...
+The x87 FPU state is not handled by VMX. Currently, execution of a x87 FPU
+instruction generates a device-not-available exception (\#NM). This is due to
+the CR0.EM bit set in the subject control register (see Intel SDM sections 2.5
+and 9.1.4).
+
+Enabling the FPU would require the kernel to manage the complete FPU state of
+the processor. This is currently not implemented but the usage of the
+\texttt{XSAVE}, \texttt{XRSTOR} instructions and the appropriate configuration
+of the XCR0 register could be used in an upcoming project iteration to support
+x87 instructions for subjects.
+
+According to table 2-2 in \cite{IntelSDM}, section 2.5 the
+\texttt{WAIT}/\texttt{FWAIT} instruction does still execute even with the CR0.EM
+bit set. This is not considered problematic though because this instruction is
+used to wait for pending floating-point exceptions and cannot change FPU state.
 
 \subsubsection{MMX registers}
-MMX0-MMX7
+The MMX state is not handled by VMX and, as for the x87 FPU state, the kernel
+does not save its state manually. MMX instructions currently lead to a \#UD
+exception because the CR0.EM bit is set in the VMCS guest-state field (Intel SDM
+\cite{IntelSDM}, section 12.1).
 
 \subsubsection{XMM registers}
-XMM[0-15], MXCSR
+The Streaming SIMD\index{SIMD}\footnote{Single instruction, multiple data}
+Extensions (SSE\index{SSE}) provides an extended processor state with
+additional 16 XMM registers and one MXCSR register. The \texttt{XSAVE},
+\texttt{XRSTOR} instructions are provided for operating systems to save and
+restore processor state extensions according the configuration in the XCR0
+register. SSE/SSE2/SSE3/SSSE3/SSE4 extensions share the same state and
+experience the same set of numerical exception behavior.
+
+The XCR0\index{XCR0} (the XFEATURE\_ENABLED\_MASK register) is read with
+\texttt{XGETBV} and written with the \texttt{XSETBV} instruction. The
+modification of the XCR0 register with \texttt{XSETBV} from within VMX non-root
+mode causes a VM exit unconditionally, see Intel SDM \cite{IntelSDM}, 25.1.2.
+
+If an SSE/SSE2/SSE3/SSSE3/SSE4 instruction is executed inside a subject, an
+invalid opcode exception (\#UD) is generated and a trap occurs (see Intel SDM
+\cite{IntelSDM}, section 13.2). This is again due to the CR0.EM bit set for
+subjects.
+
+SSE/SSE2/SSE3/SSSE3/SSE4 instructions not affected by the EM flag include
+(\cite{IntelSDM}, 2.5):
+\begin{itemize}
+	\item PAUSE (\emph{Spin Loop Hint})
+	\item PREFETCHh (\emph{Prefetch Data Into Caches})
+	\item SFENCE, LFENCE, MFENCE (\emph{Used for memory ordering})
+	\item MOVNTI (\emph{Store Doubleword Using Non-Temporal Hint})
+	\item CLFLUSH (\emph{Flush Cache Line})
+	\item CRC32 (\emph{Accumulate CRC32 Value})
+	\item POPCNT (\emph{Return the Count of Number of Bits Set to 1})
+\end{itemize}
+
+Even though these instructions are provided by a SSE instruction set, they do
+not interact with the x87 FPU or extended processor states and are therefore
+considered uncritical.
+
+The Intel Advanced Vector Extensions (AVX\index{AVX}) increase the width of the
+SIMD registers from 128 bits to 256 bits and renames them from XMM0-XMM15 to
+YMM0-YMM15 (in IA-32e mode). In processors with AVX support, the legacy SSE
+instructions (which previously operated on 128-bit XMM registers) now operate on
+the lower 128 bits of the YMM registers. Execution of a AVX instruction leads to
+a \#UD exception because of the enabled CR0.EM bit.
 
 \subsubsection{Model-specific registers (MSRs)}
-- MSR bitmap
+Direct access to MSRs from subjects is allowed if granted by policy. Access can
+be read-only, read-write or both. The writer of the system policy must take care
+not to allow unintended access to MSRs.
+
+The VMCS MSR bitmap which governs access to MSRs is compiled from the policy by
+the policy compiler. The kernel initializes the VMCS MSR bitmap field during
+subject setup using the generated bitmap.
 
 \subsection{Temporal isolation}
 Fixed cyclic scheduling etc

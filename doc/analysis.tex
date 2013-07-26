@@ -365,7 +365,27 @@ the policy compiler. The kernel initializes the VMCS MSR bitmap field during
 subject setup using the generated bitmap.
 
 \subsection{Temporal isolation}
-Fixed cyclic scheduling etc
+The Muen kernel scheduler executes subjects according to a scheduling plan
+specified in the system policy. The scheduling plans have a fixed cyclic
+structure and are divided into major frames that are comprised of a number of
+minor frames. The skpolicy tool guarantees that all major frames of a given
+scheduling plan are of equal length which keeps multicore systems in sync.
+
+To avoid drift between the schedulers of kernels running on different cores, a
+global barrier is employed. At the beginning of a new major frame, all cores
+synchronize on the barrier. Once all cores are ready, the barrier is released
+and simultaneous execution of the first minor frame starts.
+
+Strict adherence to a given plan is implemented using the VMX preemption timer.
+Subjects are executed for the time slice mandated by the currently active minor
+frame. This means that the kernel is in absolute control and subjects have no
+way if influencing the system's scheduling behavior. Thus subjects are totally
+isolated from each other.
+
+It might be noted that the mechanism providing the rigor of temporal isolation
+is the VMX preemption timer. If for some reason the timer is not deemed to be
+precise enough for a given use case, additional timer sources could be used to
+rovide even higher timer resolution and thus scheduling accuracy.
 
 \section{Information flow}
 - Policy specifies shared memory regions

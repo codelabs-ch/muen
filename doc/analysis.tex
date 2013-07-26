@@ -454,14 +454,84 @@ TODO:Note: all traps that can be raised by a subject should be specified in the
 policy, otherwise DoS of scheduler. -> Policy correctness issue not kernel?
 
 \section{Architecture support}
-- No additional restrictions on supported physical memory
+This section reviews the hardware platforms the kernel is able to run on, as
+well as the architectures the kernel provides to subjects as an execution
+environment.
+
+The kernel allows the use of all available physical memory, since it does not
+add any restrictions to memory management. Thus all properties of the Intel
+IA-32e mode and 64-bit paging are preserved. This is also true for page
+attribute tables (PAT), which control caching behavior. PAT is supported via the
+ability to specify the memory type of memory regions in the system policy.
 
 \subsection{Kernel}
-- IA32-e mode
+As described in section \ref{subsec:init}, the kernel switches the processor to
+the IA-32e mode during system initialization. It executes in 64-bit protected
+mode with paging enabled.
+
+The kernel uses advanced Intel VT-x virtualization features, which are shown in
+the following list:
+
+\begin{itemize}
+	\item VMX preemption timer
+	\item EPT
+	\item Unrestricted guests
+\end{itemize}
+
+Since the kernel uses x2APIC to manage the CPU's local APIC, that feature must
+also be present in the processor.
+
+As a consequence the kernel requires a fairly recent 64-bit Intel processor of
+the \emph{Ivy Bridge} generation or newer. Even though AMD provides comparable
+hardware virtualization features, the kernel is not compatible with such
+processors. Adding support for multiple hardware virtualization extensions is
+possible but would significantly increase implementation effort and more
+importantly kernel complexity.
+
+The following list summarizes the kernel memory usage:
+
+\begin{itemize}
+	\item AP trampoline [4 KB]
+	\item VMXON region [4 KB per CPU]
+	\item VMCS region [4 KB per subject]
+	\item Kernel page tables [16 KB]
+	\item Kernel code \& data [36 KB]
+	\item Kernel per-CPU data  [4 KB per CPU]
+	\item Kernel per-CPU stack [4 KB per CPU]
+\end{itemize}
+
+Except for the AP trampoline, which is fixed at physical address 0x0, the
+location of all remaining memory regions can be controlled in the system policy.
+Additional memory is necessary depending on the number of subjects and their
+memory demands.
+
+The requirements can be met by any recent COTS\footnote{custom of the shelve}
+x86 hardware based on an Ivy Bridge Intel CPU, be it notebooks, workstations or
+server systems. It might be noted that with the advent of new Intel-based
+tablets TODO:ref that are powered by VT-x capable latest-gen Haswell processors,
+the Muen kernel should even be able to run on mobile devices.
 
 \subsection{Subject}
-- Native: IA32-e mode
-- VM: 32-bit
+Two kind of subjects are supported via so call profiles: native applications and
+VMs.
+
+Subjects that make use of the native profile must be compiled and statically
+linked 64-bit x86 binaries. They are executed by the kernel in IA-32e protected
+mode with paging enabled. Write access to the CR3 control register is disallowed
+which means native subjects have a static address space and are not allowed to
+manage their memory via the MMU.
+
+VM subjects start in 32-bit unpaged mode and are free to enable paging. They can
+install their own paging structures and have full access to the CR3 control
+register. EPT is used to confine VM subjects to the policy assigned memory. This
+means that while VM subjects can perform their own memory management, the
+address space is guaranteed to be static, which is identical to the native
+profile.
+
+Additionally VM subjects can perform exception handling by installing their
+interrupt descriptor table. If a subject raises an exception, it is vectored
+through the subject's IDT. Only a triple fault will cause a trap, that the
+kernel will process as usual.
 
 \section{Implementation assurance}
 - Low sloc count

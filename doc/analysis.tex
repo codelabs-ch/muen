@@ -388,9 +388,70 @@ precise enough for a given use case, additional timer sources could be used to
 rovide even higher timer resolution and thus scheduling accuracy.
 
 \section{Information flow}
-- Policy specifies shared memory regions
-- Policy defined event table
-- Policy defined trap table
+This section reviews the mechanisms provided by the Muen kernel to enable
+information flow between subjects.
+
+\subsection{Shared memory}
+Shared memory is the main method for subjects to share information. Such regions
+must be defined in the subject specification as part of the system policy. Using
+access attributes enables to define a directed flow, where data can only be
+transfered from source to destination.
+
+The memory layout is fixed at integration time and the skpolicy tool generates
+static page tables, which control the physically accessible memory of each
+subject. These page tables are packaged into the final system image. The
+physical memory where paging structures reside, is not accessible and thus they
+cannot be altered or changed at runtime.
+
+When running a subject, the kernel installs the corresponding paging structure
+which instruct the processor's MMU to enforce the subject's address space
+according the policy. This guarantees that shared memory regions, as well as all
+other memory resources for that matter, are only present if they are explicitly
+specified.
+
+\subsection{Events}
+A second mechanism how information can flow from one subject to another is the
+use of events. A subject can trigger an event, which ultimately leads to the
+injection of an interrupt to a specific subject.
+
+As with shared memory regions, events are defined as part of the subject
+specification and consist of the event number, destination subject id and
+destination interrupt vector. All events that a subject can trigger must be
+provided in the system policy.
+
+A subject has to specify the number of the event it wants to trigger. The
+subject basically selects one of the predefined events. If a malicious subject
+passes an invalid event number, the kernel ignores the request. Thus only events
+that are specified in the policy are valid and can be triggered.
+
+\subsection{Traps}
+The subject specification contains a trap table that specifies how each trap
+should be handled. A trap table entry specifies a destination subject, to which
+the kernel should hand over execution, if the source subject causes a VM exit
+with the given reason. If no entry for a given trap exists or if the trap is not
+in the range of valid exit reasons, the kernel and thus the CPU executing that
+subject is halted by invoking the kernel's panic handler.
+
+The traps that are reserved for internal kernel use, cannot be specified in the
+policy and take precedence over the subject trap table. The following exit
+reasons are reserved:
+
+\begin{itemize}
+	\item External interrupt
+	\item Hypercall (VMCALL instruction)
+	\item Interrupt window
+	\item VMX-preemption timer expiry
+\end{itemize}
+
+All valid traps are specified in \cite{IntelSDM}, volume 3A, appendix C.
+
+Since subject trap tables are part of the policy generated static information,
+they cannot change at runtime. This ensures that traps are handled according to
+policy and any unexpected trap will cause the kernel to panic and halt
+execution.
+
+TODO:Note: all traps that can be raised by a subject should be specified in the
+policy, otherwise DoS of scheduler. -> Policy correctness issue not kernel?
 
 \section{Architecture support}
 - No additional restrictions on supported physical memory

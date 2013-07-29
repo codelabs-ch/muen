@@ -7,6 +7,8 @@ GIT_REV      = $(shell git describe --always --dirty="-UNCLEAN")
 include ../Makeconf
 include ../Makespark
 
+SLOC_DIRS = $(SRC_DIR) $(TOP_DIR)/common/src $(TOP_DIR)/rts/src
+
 .git-rev: FORCE
 	@if [ -r $@ ]; then \
 		if [ "$$(cat $@)" != "$(GIT_REV)" ]; then \
@@ -28,6 +30,9 @@ $(OBJ_DIR)/$(PACKAGE): $(VERSION_SPEC)
 clean:
 	rm -rf $(OBJ_DIR)
 	rm -f .git-rev
+
+sloc:
+	find $(SLOC_DIRS) -type f -exec sloccount {} \+
 
 FORCE:
 

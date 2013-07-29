@@ -560,16 +560,24 @@ The kernel including the mininal zero-footprint runtime has a low SLOC
 statistics generated with the sloccount tool, version 2.26:
 
 \begin{itemize}
-	\item $\sim$260 lines of Assembly
-	\item $\sim$2670 lines of SPARK
+	\item 256 lines of Assembly
+	\item 2463 lines of SPARK
 \end{itemize}
 
-TODO:Update numbers when no more changes to kernel are expected
+Debugging code is not included, since all such statements\footnote{Currently
+spanning over 123 lines} are wrapped in \texttt{pragma Debug} statements. The
+compiler skips these parts of the source code completely, when building kernel
+with debugging disabled. Thus they are not included in the final release image
+of the Muen kernel.
 
-Debugging code is not included, since all such statements are wrapped in
-\texttt{pragma Debug} statements. The compiler skips these parts of the source
-code completely, when building kernel with debugging disabled. Thus they are not
-included in the final release image of the Muen kernel.
+Policy-generated files are also omitted since they are static data structures
+containing system specification information, which is not considered part of the
+kernel. They are a transformed view of the policy accessible to the kernel.
+
+The numbers show that the Muen kernel implementation is rather small,
+considering the fact that the Ada/SPARK language favor readability of the code
+over compactness. The size of the project allows for a complete review of the
+code base TCB with moderate effort.
 
 \subsection{Choice of programming language}
 The vast majority of the kernel has been implemented using the SPARK language,
@@ -628,3 +636,8 @@ this document.
 Verification of the TCB is tightly integrated into the automated build process.
 Given the correct installation of all necessary tools, building and verifying
 the Muen kernel is as simple as invoking the \texttt{make} command.
+
+The small size of the code base should make it suitable for further analysis, be
+it manual or automated. Having such a small kernel should lower the time and
+effort needed for full formal verification, even though such a task is still
+expected to be a substantial amount of work.

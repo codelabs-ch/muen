@@ -89,6 +89,7 @@ is
    Profile_Mapping : constant array (Subject_Profile_Type) of Profile_Conf_Type
      := (Native =>
            (Exec_Pin     => Constants.VM_CTRL_EXT_INT_EXITING
+            or Constants.VM_CTRL_NMI_EXITING
             or Constants.VM_CTRL_PREEMPT_TIMER,
             Exec_Proc    => Constants.VM_CTRL_IO_BITMAPS
             or Constants.VM_CTRL_SECONDARY_PROC
@@ -116,6 +117,7 @@ is
             Exception_Bm => 16#ffff_ffff#),
          Vm     =>
            (Exec_Pin     => Constants.VM_CTRL_EXT_INT_EXITING
+            or Constants.VM_CTRL_NMI_EXITING
             or Constants.VM_CTRL_PREEMPT_TIMER,
             Exec_Proc    => Constants.VM_CTRL_IO_BITMAPS
             or Constants.VM_CTRL_SECONDARY_PROC

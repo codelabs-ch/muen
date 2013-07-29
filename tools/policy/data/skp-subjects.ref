@@ -52,7 +52,7 @@ is
        CS_Access          => 16#0000a09b#,
        Exception_Bitmap   => 16#ffffffff#,
        VMX_Controls       => VMX_Controls_Type'(
-          Exec_Pin    => 65,
+          Exec_Pin    => 73,
           Exec_Proc   => 2996411904,
           Exec_Proc2  => 64,
           Exit_Ctrls  => 4227584,
@@ -90,7 +90,7 @@ is
        CS_Access          => 16#0000c09b#,
        Exception_Bitmap   => 16#00000000#,
        VMX_Controls       => VMX_Controls_Type'(
-          Exec_Pin    => 65,
+          Exec_Pin    => 73,
           Exec_Proc   => 2996313600,
           Exec_Proc2  => 194,
           Exit_Ctrls  => 7373312,
@@ -114,7 +114,7 @@ is
        CS_Access          => 16#0000a09b#,
        Exception_Bitmap   => 16#ffffffff#,
        VMX_Controls       => VMX_Controls_Type'(
-          Exec_Pin    => 65,
+          Exec_Pin    => 73,
           Exec_Proc   => 2996411904,
           Exec_Proc2  => 64,
           Exit_Ctrls  => 4227584,

@@ -4,6 +4,7 @@ is
    --  Pin-Base VM-Execution Controls
 
    VM_CTRL_EXT_INT_EXITING : constant := 16#0000_0001#;
+   VM_CTRL_NMI_EXITING     : constant := 16#0000_0008#;
    VM_CTRL_PREEMPT_TIMER   : constant := 16#0000_0040#;
 
    --  Primary Processor-Based VM-Execution Controls

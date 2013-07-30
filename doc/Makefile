@@ -25,6 +25,7 @@ REPORT_SOURCES =       \
 	background.tex     \
 	back_*.tex         \
 	design.tex         \
+	des_*.tex          \
 	implementation.tex \
 	impl_*.tex         \
 	analysis.tex       \

@@ -1,10 +1,11 @@
 \chapter{Analysis}
 Section \ref{sec:requirements} lists the requirements of the separation kernel
-concept presented in this master thesis. This chapter analyzes how the
-Muen kernel implementation outlined in chapter \ref{chap:impl} meets these
-requirements.
+concept presented in this document. This chapter analyzes how the Muen kernel
+implementation outlined in chapter \ref{chap:impl} meets these requirements.
 
 \section{Separation}
+TODO: Rewrite -> Mention all subsections
+
 The main requirement of a separation kernel is, as the name implies, to provide
 strong separation of components to allow the construction of a trusted
 high-assurance system. The following sections present how system resources and
@@ -27,8 +28,8 @@ meets the requirements of a particular use-case.
 
 \subsubsection{Memory}
 Memory is assigned to the kernel and subjects by adding memory regions to the
-appropriate specifications in the system policy. Memory is assignment is
-therefore static and cannot be changed at runtime.
+appropriate specifications in the system policy. Memory assignment is therefore
+static and cannot be changed at runtime.
 
 If strict separation is desired, care must be taken that subject memory regions
 do not overlap except for cases where a communication channel is explicitly
@@ -37,8 +38,8 @@ memory.  While the policy compiler performs sanity checks, it does not currently
 provide support to avoid unintended memory overlaps.
 
 \subsubsection{Devices}
-Devices are accessed using memory or port I/O. Interrupts are used to inform a
-native or VM subject about events that must be handled on a device.
+Devices are accessed using memory or port I/O. Interrupts are used to inform
+subjects about device related incidents.
 
 The assignment of a device to a subject automatically allows access to the
 resources provided by this device. The policy compiler does not prohibit
@@ -55,29 +56,29 @@ system integration.
 
 Port I/O is allowed using the VMCS I/O bitmap field. The correct bitmap is again
 compiled by the system policy tool at integration time. The kernel only assigns
-the bitmap o the VMCS field during subject setup.
+the bitmap to the VMCS field during subject setup.
 
 Device interrupts are routed to the correct subject as outlined in section
 \ref{subsec:external-ints}.
 
 \subsection{VMX controls}\label{subsec:vmx-controls}
-The instructions listed in section 25.1.2 of the Intel SDM volume 3A cause a VM
+The instructions listed in \cite{IntelSDM} volume 3A section 25.1.2 cause a VM
 exit unconditionally when executed in VMX non-root mode, i.e. they do not depend
 on VMX control settings in a subject VMCS. This section analyzes instructions
-and events leading to a VM exit or trap which depend on the settings of the VM
-execution, entry and exit controls in the VMCS.
+and events leading to a trap which depend on the settings of the VM execution,
+entry and exit controls in the VMCS.
 
 The VMX control settings are very restrictive to avoid side- or covert-channels.
-Furthermore a subject must not be allowed to alter execution state which makes
-it possible to access to resources not granted by policy.
+Furthermore a subject must not be allowed to alter execution state which would
+give access to resources not granted by policy.
 
 Table \ref{tab:profiles-cond-vm-exits} shows the instructions and events which
-conditionally lead to a VM exit depending on the VMX control settings for both
-profiles. The configuration is very similar, except that VM subjects are allowed
-to run their own memory management code, as described in the following section
-\ref{subsubsec:control-regs}. Also, exceptions must be handled by the operating
-system running in the VM subject profile. Only triple-faults resulting from
-unhandled double-faults lead to a VM exit in this profile.
+conditionally lead to a VM exit depending on the VMX control settings of the
+subject's profile. The configuration is very similar, except that VM subjects
+are allowed to run their own memory management code, as described in the
+following section \ref{subsubsec:control-regs}. Also, exceptions must be handled
+by the operating system running in the VM subject profile. Only triple-faults
+resulting from unhandled double-faults lead to a VM exit in this profile.
 
 Access to I/O ports or MSRs\index{MSR} which are not granted by policy lead to a
 VM exit for both profiles.
@@ -134,8 +135,10 @@ As mentioned in section \ref{sec:subject}, parts of the execution environment
 are saved and restored automatically by the VMX extensions on VM entry or VM
 exit respectively, others must be handled manually. Table
 \ref{tab:exec-env-storage} gives an overview about the different components and
-the handling by VMX. Tickmarks in parenthesis show optional VMCS fields which
-are only active when configured by the appropriate VMX control.
+the handling by VMX. Check marks in parenthesis indicate optional VMCS fields
+which are only active when configured by the appropriate VMX control. Components
+not handled by VMX must either be disallowed or saved manually to prohibit
+unintended data flows.
 
 The following subsections discuss each component of the execution environment in
 detail.
@@ -177,9 +180,9 @@ state. The \texttt{Restore\_Registers} procedure implemented in the kernel's
 \texttt{CPU} package restores the subject GPR values before a VM entry by
 copying them to the correct processor registers using inline assembly.
 
-On VM exit, the subject state in memory is first reset to a pristine state.
-Then, the VM exit reason is checked and if the exit is valid, the GPR values are
-copied from the processor registers into the subject state.
+On VM exit, the subject state in memory is reset to a pristine state. Then, the
+VM exit reason is checked and if it is valid, the GPR values are copied from the
+processor registers into the subject state.
 
 \subsubsection{Segment registers}
 Segment registers are managed by VMX automatically inside the VMCS. The segment
@@ -204,14 +207,15 @@ registers are initialized to the values shown by table
 
 Access to segment registers FS and GS is disabled by setting the VMCS access
 rights field for these registers to the value \texttt{0x10000}.
+TODO:cite
 
 \subsubsection{Instruction pointer}
-The instruction pointer is managed by VMX and set to the subject's entry point
-initially. This value is red from the generated system policy.
+The instruction pointer is managed by VMX and initially set to the subject's
+entry point. This value is read from the generated system policy.
 
 Because it must be possible to modify the instruction pointer for emulation, it
-is also copied to the in-memory subject state, which is accessible by a subject
-monitor (if granted by policy).
+is also copied to the in-memory subject state, which can be made accessible to a
+subject monitor (if granted by policy).
 
 \subsubsection{Flag register}
 The flag register (EFLAGS in 32-bit mode, RFLAGS in 64-bit mode) is managed in
@@ -239,13 +243,13 @@ on the subject profile.
 Since a VM subject is started in protected mode with paging disabled, bits 16
 and 31 are cleared, whereas they are set in the native profile. The CR0 mask
 field in the VMCS allows the VM subject to modify these two bits (bitmask value
-\texttt{0x7ffeffff}) without causing a VM exit when enabling paging. On the
-other hand, the bitmask value of \texttt{0xffffffff} disallows modification of
-any bit in CR0 for native subjects, paging is already enabled from the start.
-The remaining bits are identical. Bit 0 indicates protected mode and bit 2
-disables the x87 FPU for subjects. Bit 4 is reserved and must be set for both
-profiles. Bit 5 enables native FPU error reporting (see table 9-3 in Intel SDM
-\cite{IntelSDM}, section 9.2.2).
+\texttt{0x7ffeffff}) to enable paging without causing a VM exit. On the other
+hand, the bitmask value of \texttt{0xffffffff} disallows modification of any bit
+in CR0 for native subjects, paging is already enabled by default. The remaining
+bits are identical. Bit 0 indicates protected mode and bit 2 disables the x87
+FPU for subjects. Bit 4 is reserved and must be set for both profiles. Bit 5
+enables native FPU error reporting (see table 9-3 in \cite{IntelSDM}, volume 3A
+section 9.2.2).
 
 Bit 13 (VMXE) in the CR4 control register is set for both profiles. This bit is
 a prerequisite for VMX operation not only for the host but also for the
@@ -258,12 +262,12 @@ mode (used for example by the xv6 OS described in section \ref{subsubsec:xv6}).
 CR3 is also managed by VMX. Again, the handling depends on the subject profile.
 Native subjects are not allowed to change the value of CR3 since it points to
 the generated page table which confines the usable memory of a subject. The
-native subject profile enables both load and store VM execution controls for
-CR3, resulting in a trap if a native subject tries to tamper with the CR3 value
-(section \ref{subsec:vmx-controls} and Intel SDM \cite{IntelSDM}, 24.6.2). VM
-subjects are allowed to run their own memory management code within the
-boundaries set by the Intel EPT mechanism, see section \ref{subsubsec:ept}.  A
-value moved into the CR3 control register is treated as a guest-physical address
+native subject profile enables both load and store VM exit controls for CR3,
+resulting in a trap if a native subject tries to tamper with the CR3 value
+(section \ref{subsec:vmx-controls} and \cite{IntelSDM}, volume 3C section
+24.6.2). VM subjects are allowed to run their own memory management code within
+ithe boundaries set by the Intel EPT mechanism, see section \ref{subsubsec:ept}.
+A value moved into the CR3 control register is treated as a guest-physical address
 and the instruction does not cause a VM exit.
 
 CR2 is not managed by VMX but copied manually from the subject state to the
@@ -275,20 +279,21 @@ For more information about the meaning of the bits in the control registers, see
 Intel SDM \cite{IntelSDM}, section 2.5.
 
 \subsubsection{Descriptor table registers}
-Both subject profiles are allowed to manage the Global Descriptor Table
+Both subject profiles allow the management of the Global Descriptor Table
 (GDT\index{GDT}) and the Interrupt Descriptor Table (IDT\index{IDT}). The GDTR
 and IDTR registers are stored in the guest-state area in the VMCS and updated
 automatically by VMX.
 
 Access to the Local Descriptor Table Register (LDTR\index{LDTR}) is disabled by
 setting the corresponding access rights field in the VMCS to the value
-\texttt{10000}.
+\texttt{0x10000}.
 
 \subsubsection{Debug registers}
 Debug registers are not handled by VMX and the kernel does not currently store
-them in the subject state. Instead, the 'MOV-DR exiting' VMX processor control
-(Intel SDM \cite{IntelSDM}, 24.6.2) is enabled for both subject profiles. This
-leads to a trap when moving data into or from debug registers.
+them in the subject state. Instead, access is disallowed by setting the 'MOV-DR
+exiting' VMX processor control (\cite{IntelSDM}, volume 3C section 24.6.2) in
+both subject profiles. This leads to a trap when trying to move data into or
+from debug registers.
 
 \subsubsection{x87 FPU registers}
 The x87 FPU state is not handled by VMX. Currently, execution of a x87 FPU
@@ -302,35 +307,36 @@ the processor. This is currently not implemented but the usage of the
 of the XCR0 register could be used in an upcoming project iteration to support
 x87 instructions for subjects.
 
-According to table 2-2 in \cite{IntelSDM}, section 2.5 the
+According to table 2-2 in \cite{IntelSDM}, volume 3A section 2.5, the
 \texttt{WAIT}/\texttt{FWAIT} instruction does still execute even with the CR0.EM
-bit set. This is not considered problematic though because this instruction is
-used to wait for pending floating-point exceptions and cannot change FPU state.
+bit set. This is not considered problematic because the instruction is used to
+wait for pending floating-point exceptions.
 
 \subsubsection{MMX registers}
-The MMX state is not handled by VMX and, as for the x87 FPU state, the kernel
-does not save its state manually. MMX instructions currently lead to a \#UD
-exception because the CR0.EM bit is set in the VMCS guest-state field (Intel SDM
-\cite{IntelSDM}, section 12.1).
+The MMX state is not handled by VMX and, similar to the x87 FPU state, the
+kernel does not save its state manually. MMX instructions currently lead to a
+\#UD exception because the CR0.EM bit is set in the VMCS guest-state field
+(Intel SDM \cite{IntelSDM}, volume 3A section 12.1).
 
 \subsubsection{XMM registers}
 The Streaming SIMD\index{SIMD}\footnote{Single instruction, multiple data}
 Extensions (SSE\index{SSE}) provides an extended processor state with
-additional 16 XMM registers and one MXCSR register. The \texttt{XSAVE},
+16 additional XMM registers and one MXCSR register. The \texttt{XSAVE},
 \texttt{XRSTOR} instructions are provided for operating systems to save and
 restore processor state extensions according the configuration in the XCR0
 register. SSE/SSE2/SSE3/SSSE3/SSE4 extensions share the same state and
 experience the same set of numerical exception behavior.
 
-The XCR0\index{XCR0} (the XFEATURE\_ENABLED\_MASK register) is read with
+The XCR0\index{XCR0}\footnote{XFEATURE\_ENABLED\_MASK register} is read with
 \texttt{XGETBV} and written with the \texttt{XSETBV} instruction. The
 modification of the XCR0 register with \texttt{XSETBV} from within VMX non-root
-mode causes a VM exit unconditionally, see Intel SDM \cite{IntelSDM}, 25.1.2.
+mode causes a VM exit unconditionally, see Intel SDM \cite{IntelSDM}, volume 3C
+section 25.1.2.
 
-If an SSE/SSE2/SSE3/SSSE3/SSE4 instruction is executed inside a subject, an
-invalid opcode exception (\#UD) is generated and a trap occurs (see Intel SDM
-\cite{IntelSDM}, section 13.2). This is again due to the CR0.EM bit set for
-subjects.
+If an SSE/SSE2/SSE3/SSSE3/SSE4 instruction is executed by a subject, an invalid
+opcode exception (\#UD) is generated and a trap occurs (see Intel SDM
+\cite{IntelSDM}, volume 3A section 13.2). This is again due to the CR0.EM bit
+set for subjects.
 
 SSE/SSE2/SSE3/SSSE3/SSE4 instructions not affected by the EM flag include
 (\cite{IntelSDM}, 2.5):
@@ -349,18 +355,18 @@ not interact with the x87 FPU or extended processor states and are therefore
 considered uncritical.
 
 The Intel Advanced Vector Extensions (AVX\index{AVX}) increase the width of the
-SIMD registers from 128 bits to 256 bits and renames them from XMM0-XMM15 to
+SIMD registers from 128 bits to 256 bits and rename them from XMM0-XMM15 to
 YMM0-YMM15 (in IA-32e mode). In processors with AVX support, the legacy SSE
 instructions (which previously operated on 128-bit XMM registers) now operate on
-the lower 128 bits of the YMM registers. Execution of a AVX instruction leads to
-a \#UD exception because of the enabled CR0.EM bit.
+the lower 128 bits of the YMM registers. Execution of an AVX instruction leads
+to a \#UD exception because of the enabled CR0.EM bit.
 
 \subsubsection{Model-specific registers (MSRs)}
 Direct access to MSRs from subjects is allowed if granted by policy. Access can
 be read-only, read-write or both. The writer of the system policy must take care
 not to allow unintended access to MSRs.
 
-The VMCS MSR bitmap which governs access to MSRs is compiled from the policy by
+The VMCS MSR bitmap which governs access to MSRs is generated from the policy by
 the policy compiler. The kernel initializes the VMCS MSR bitmap field during
 subject setup using the generated bitmap.
 
@@ -368,24 +374,27 @@ subject setup using the generated bitmap.
 The Muen kernel scheduler executes subjects according to a scheduling plan
 specified in the system policy. The scheduling plans have a fixed cyclic
 structure and are divided into major frames that are comprised of a number of
-minor frames. The skpolicy tool guarantees that all major frames of a given
-scheduling plan are of equal length which keeps multicore systems in sync.
+minor frames. The \texttt{skpolicy} tool guarantees that the sum of all minor
+frame lengths per logical CPU for a given major frame are of equal length which
+keeps multicore systems in sync.
 
 To avoid drift between the schedulers of kernels running on different cores, a
 global barrier is employed. At the beginning of a new major frame, all cores
 synchronize on the barrier. Once all cores are ready, the barrier is released
 and simultaneous execution of the first minor frame starts.
 
+TODO: Guarantee of uniformity of major frame change
+
 Strict adherence to a given plan is implemented using the VMX preemption timer.
 Subjects are executed for the time slice mandated by the currently active minor
 frame. This means that the kernel is in absolute control and subjects have no
-way if influencing the system's scheduling behavior. Thus subjects are totally
-isolated from each other.
+way of influencing the system's scheduling behavior. As a consequence subjects
+are totally isolated from each other with regards to temporal effects.
 
 It might be noted that the mechanism providing the rigor of temporal isolation
 is the VMX preemption timer. If for some reason the timer is not deemed to be
-precise enough for a given use case, additional timer sources could be used to
-rovide even higher timer resolution and thus scheduling accuracy.
+precise enough for a particular use case, additional timer sources could be used
+to provide even higher timer resolution and thus scheduling accuracy.
 
 \section{Information flow}
 This section reviews the mechanisms provided by the Muen kernel to enable
@@ -397,17 +406,17 @@ must be defined in the subject specification as part of the system policy. Using
 access attributes enables to define a directed flow, where data can only be
 transfered from source to destination.
 
-The memory layout is fixed at integration time and the skpolicy tool generates
-static page tables, which control the physically accessible memory of each
-subject. These page tables are packaged into the final system image. The
+The memory layout is fixed at integration time and the \texttt{skpolicy} tool
+generates static page tables, which control the physically accessible memory of
+each subject. These page tables are packaged into the final system image. The
 physical memory where paging structures reside, is not accessible and thus they
 cannot be altered or changed at runtime.
 
 When running a subject, the kernel installs the corresponding paging structure
 which instruct the processor's MMU to enforce the subject's address space
-according the policy. This guarantees that shared memory regions, as well as all
-other memory resources for that matter, are only present if they are explicitly
-specified.
+according to the policy. This guarantees that shared memory regions, as well as
+all other memory resources for that matter, are only present if they are
+explicitly specified.
 
 \subsection{Events}
 A second mechanism how information can flow from one subject to another is the
@@ -424,26 +433,18 @@ subject basically selects one of the predefined events. If a malicious subject
 passes an invalid event number, the kernel ignores the request. Thus only events
 that are specified in the policy are valid and can be triggered.
 
+TODO: Consider handover events
+
 \subsection{Traps}
 The subject specification contains a trap table that specifies how each trap
-should be handled. A trap table entry specifies a destination subject, to which
+should be handled. A trap table entry specifies a destination subject to which
 the kernel should hand over execution, if the source subject causes a VM exit
 with the given reason. If no entry for a given trap exists or if the trap is not
 in the range of valid exit reasons, the kernel and thus the CPU executing that
 subject is halted by invoking the kernel's panic handler.
 
-The traps that are reserved for internal kernel use, cannot be specified in the
-policy and take precedence over the subject trap table. The following exit
-reasons are reserved:
-
-\begin{itemize}
-	\item External interrupt
-	\item Hypercall (VMCALL instruction)
-	\item Interrupt window
-	\item VMX-preemption timer expiry
-\end{itemize}
-
-All valid traps are specified in \cite{IntelSDM}, volume 3A, appendix C.
+The traps that are reserved for internal kernel use cannot be specified in the
+policy and take precedence over the subject trap table.
 
 Since subject trap tables are part of the policy generated static information,
 they cannot change at runtime. This ensures that traps are handled according to
@@ -451,7 +452,8 @@ policy and any unexpected trap will cause the kernel to panic and halt
 execution.
 
 TODO:Note: all traps that can be raised by a subject should be specified in the
-policy, otherwise DoS of scheduler. -> Policy correctness issue not kernel?
+policy, otherwise DoS of scheduler. -> Policy correctness issue not kernel? Should
+we mention panic at all?
 
 \section{Architecture support}
 This section reviews the hardware platforms the kernel is able to run on, as
@@ -462,7 +464,7 @@ The kernel allows the use of all available physical memory, since it does not
 add any restrictions to memory management. Thus all properties of the Intel
 IA-32e mode and 64-bit paging are preserved. This is also true for page
 attribute tables (PAT), which control caching behavior. PAT is supported via the
-ability to specify the memory type of memory regions in the system policy.
+system policy by the ability to specify the memory type of memory regions.
 
 \subsection{Kernel}
 As described in section \ref{subsec:init}, the kernel switches the processor to
@@ -481,7 +483,7 @@ the following list:
 Since the kernel uses x2APIC to manage the CPU's local APIC, that feature must
 also be present in the processor.
 
-As a consequence the kernel requires a fairly recent 64-bit Intel processor of
+As a consequence, the kernel requires a fairly recent 64-bit Intel processor of
 the \emph{Ivy Bridge} generation or newer. Even though AMD provides comparable
 hardware virtualization features, the kernel is not compatible with such
 processors. Adding support for multiple hardware virtualization extensions is
@@ -494,27 +496,24 @@ The following list summarizes the kernel memory usage:
 	\item AP trampoline [4 KB]
 	\item VMXON region [4 KB per CPU]
 	\item VMCS region [4 KB per subject]
-	\item Kernel page tables [16 KB]
+	\item Kernel page tables [16 KB per CPU]
 	\item Kernel code \& data [36 KB]
 	\item Kernel per-CPU data  [4 KB per CPU]
 	\item Kernel per-CPU stack [4 KB per CPU]
 \end{itemize}
 
 Except for the AP trampoline, which is fixed at physical address 0x0, the
-location of all remaining memory regions can be controlled in the system policy.
+location of all remaining memory regions can be controlled by the system policy.
 Additional memory is necessary depending on the number of subjects and their
 memory demands.
 
-The requirements can be met by any recent COTS\footnote{custom of the shelve}
-x86 hardware based on an Ivy Bridge Intel CPU, be it notebooks, workstations or
-server systems. It might be noted that with the advent of new Intel-based
-tablets TODO:ref that are powered by VT-x capable latest-gen Haswell processors,
-the Muen kernel should even be able to run on mobile devices.
+The hardware requirements can be met by any recent COTS\footnote{Custom Of The
+Shelve} x86 hardware based on an Ivy Bridge Intel CPU, be it notebooks,
+workstations or server systems. It might be noted that with the advent of new
+Intel-based tablets TODO:ref that are powered by VT-x capable latest-gen Haswell
+processors, the Muen kernel should even be able to run on mobile devices.
 
 \subsection{Subject}
-Two kind of subjects are supported via so call profiles: native applications and
-VMs.
-
 Subjects that make use of the native profile must be compiled and statically
 linked 64-bit x86 binaries. They are executed by the kernel in IA-32e protected
 mode with paging enabled. Write access to the CR3 control register is disallowed
@@ -528,25 +527,25 @@ means that while VM subjects can perform their own memory management, the
 address space is guaranteed to be static, which is identical to the native
 profile.
 
-Additionally VM subjects can perform exception handling by installing their
+Additionally VM subjects can perform exception handling by installing an
 interrupt descriptor table. If a subject raises an exception, it is vectored
 through the subject's IDT. Only a triple fault will cause a trap, that the
 kernel will process as usual.
 
 \section{Implementation assurance}
 This section summarizes the properties of the Muen kernel that make a compelling
-case to back up the high robustness and robustness claim of the implementation.
+case to back up the high robustness and assurance claim of the implementation.
 
 \subsection{Minimal implementation}
 The functionality implemented by the kernel has been stripped to the bare
 minimum. All mechanisms that must not absolutely be part of the kernel have been
-transfered to other components of the system, such as the policy compilation
+delegated to other components of the system, such as the policy compilation
 tool.
 
 A lot of responsibility rests with the correct policy specification, which is
-the duty the system integrator. The skpolicy tool transforms the policy into
-static data, that the kernel then uses to enforce the policy without having to
-understand the meaning of the compiled information. The kernel can thus be
+the duty the system integrator. The \texttt{skpolicy} tool transforms the policy
+into static data, that the kernel then uses to enforce the policy without having
+to understand the meaning of the compiled information. The kernel can thus be
 regarded as a policy enforcement engine.
 
 The emphasis put on use of advanced hardware features further reduces the scope
@@ -566,9 +565,9 @@ statistics generated with the sloccount tool, version 2.26:
 
 Debugging code is not included, since all such statements\footnote{Currently
 spanning over 123 lines} are wrapped in \texttt{pragma Debug} statements. The
-compiler skips these parts of the source code completely, when building kernel
-with debugging disabled. Thus they are not included in the final release image
-of the Muen kernel.
+compiler skips these parts of the source code completely, when building the
+kernel with debugging disabled. Thus they are not included in the final release
+image of the Muen kernel.
 
 Policy-generated files are also omitted since they are static data structures
 containing system specification information, which is not considered part of the
@@ -581,11 +580,11 @@ code base TCB with moderate effort.
 
 \subsection{Choice of programming language}
 The vast majority of the kernel has been implemented using the SPARK language,
-which is very well suited for the construction of high-integrity systems.
+which is very well suited for the construction of high integrity systems.
 
 Assembly is necessary for system initialization and direct interaction with the
 processor, e.g. to execute VT-x specific operations. The needed CPU instructions
-are implemented as inline assembly and make accessibly to SPARK via the SK.CPU
+are implemented as inline assembly and made accessibly to SPARK via the SK.CPU
 package. The assembly code was kept to the absolutely necessary minimum.
 
 The rest of the kernel is written in SPARK. The major benefits of the
@@ -615,12 +614,15 @@ as part of the build process.
 A total of 666 verification conditions are generated, which have all been
 discharged and thus proven correct. This means that all the SPARK code of the
 Muen kernel is free from runtime errors and will not raise an exception under
-any circumstance. Section lists all types of errors whose absence is proven.
+any circumstance. Section \ref{sec:spark} lists all types of errors whose
+absence is proven.
 
 \subsection{Tools}
-All supporting tools have been developed using the test-driven development
-process. Each tool implementation is accompanied by a test suite which provides
-comprehensive code coverage.
+All supporting tools have been developed following a strict test-driven
+development process. Each tool implementation is accompanied by a comprehensive
+test suite which provides wide code coverage.
+
+TODO: Implemented in Ada, Use of open-source libraries
 
 \subsection{Verifiability}
 The complete source code and documentation of this project are published online.

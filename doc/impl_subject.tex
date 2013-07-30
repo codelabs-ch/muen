@@ -4,12 +4,11 @@ described in section TODO:Ref. They are represented using two main data
 structures: \emph{subject specification} and \emph{subject state}.
 
 \subsection{Specification}
-A subjects is specified in the global system policy. As described in the
-previous section TODO:Ref, the XML specification precisely defines the execution
-environment and granted resources. The information that is relevant to the
-kernel is part of the compiled policy. Listing \ref{lst:skp-subjects} presents
-the SPARK type specification into which all relevant subject policy parts are
-transformed.
+A subject is specified in the global system policy. The XML specification
+precisely defines the execution environment and granted resources. The
+information that is relevant to the kernel is part of the compiled policy.
+Listing \ref{lst:skp-subjects} presents the SPARK type specification into which
+all relevant subject policy parts are transformed.
 
 \lstinputlisting[
 	language=ada,
@@ -21,19 +20,19 @@ transformed.
 The specification of a subject is static and cannot be changed at runtime.
 
 \subsection{State}
-The system state related to a subject must encompass all resources, that it can
+The system state related to a subject must encompass all resources that it can
 control directly or indirectly. This is necessary to enable the scheduler to
 preempt a subject by preserving its state and seamlessly resume execution at a
 later stage by restoring the previously saved state.
 
-Additionally, separation of subjects demands that unintended information flows
-when switching between subjects must be prevented. This is only achievable if
-the subject state that is saved and restored encompasses every element of the
+Additionally, separation of subjects demands that unintended information flow
+due to subject switching must be prevented. This is only achievable if the
+subject state that is saved and restored encompasses every element of the
 systems environment that is accessible by more than one subject. While the Intel
-VMX extensions save and restore parts of the subject state automatically on VMX
-transition, others must be handled manually by the kernel. Listings
-\ref{lst:sk-subject-state} and \ref{lst:sk-cpu-registers} show the record types
-used by the Kernel to maintain the state of a subject.
+VMX extensions save and restore parts of the subject state automatically to and
+from the associated VMCS on VMX transition, others must be handled manually by
+the kernel. Listings \ref{lst:sk-subject-state} and \ref{lst:sk-cpu-registers}
+show the record types used by the Kernel to maintain the state of a subject.
 
 \lstinputlisting[
 	language=ada,
@@ -51,16 +50,16 @@ used by the Kernel to maintain the state of a subject.
 
 A special monitoring subject called \emph{subject monitor}\index{subject
 monitor} (SM\index{SM}) may be given access to parts or the entire state of a
-given subject. This enables the SM to alter a subject's state given the right
-conditions and thus perform emulation. Because a subject is not allowed to
-access the VMCS structure of another subject, the kernel also copies register
-values managed automatically by VMX\index{VMX} into the in-memory subject state
-to enable modification by the SM subject.
+given subject. This enables the SM to alter a subject's state and thus perform
+emulation. Because a subject is not allowed to access the VMCS structure of
+another subject, the kernel also copies register values managed automatically by
+VMX\index{VMX} into the in-memory subject state to enable modification by the SM
+subject.
 
 During initial subject setup, the subject state is set to a pristine value. This
-is done by assigning the nil subject state constants shown by listings
+is done by assigning the \texttt{null} subject state constants shown by listings
 \ref{lst:sk-null-subject-state} and \ref{lst:sk-null-cpu-registers} to all
-subjects state variables.
+subject state variables.
 
 \lstinputlisting[
 	language=ada,
@@ -75,3 +74,5 @@ subjects state variables.
 	label=lst:sk-null-cpu-registers,
 	caption=SPARK null CPU registers constant]
 	{../common/src/sk.ads}
+
+TODO:Mention how initial subject state from policy compiled subject spec is used

@@ -14,8 +14,11 @@ implement their own exception handling, only a triple fault inside a subject
 leads to a trap into the kernel.
 
 For native subjects, the VMCS exception bitmap field is set to the value
-\texttt{0xffffffff} which causes a trap if an exception or Software-generated
-interrupt occurs in the subject. As described by section \ref{subsec:traps}, a
-trap is forwarded to a handler subject by configuring the subject trap table
+\texttt{0xffffffff} which causes a trap if any exception or Software-generated
+interrupt is caused by the subject. As described in section \ref{subsec:traps},
+a trap is forwarded to a handler subject by configuring the subject's trap table
 appropriately. A handler subject (or subject monitor) can react to the exception
 and resume the causing subject after the error condition has been removed.
+
+TODO:Briefly mention NMI exiting -> assures that NMIs are not handled by
+subjects but lead to a VM exit unconditionally

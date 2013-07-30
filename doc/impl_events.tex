@@ -12,7 +12,7 @@ events of different type to subjects \emph{s2} and \emph{s3} respectively. A
 handover event transfers execution to a destination subject, optionally
 injecting an interrupt.  Interrupt events inject an interrupt in a destination
 subject, emitting an optional inter-processor interrupt (IPI)\index{IPI} to
-speedup inter-core interrupt delivery.
+speed up inter-core interrupt delivery.
 
 Interrupts are injected into the destination subject by the Muen kernel to
 inform it about new pending events. In this example, interrupt vector 33 is
@@ -22,33 +22,32 @@ interrupt handling code and react accordingly.
 
 If the IPI option is enabled for an interrupt event, the Muen kernel sends an
 inter-processor interrupt to the logical CPU of the destination subject. The
-IPI causes the processor to trap into the destination kernel, which results in
-the preemption of the running subject and therefore the immediate delivery of
-the interrupt on next subject entry. The event IPI option is only valid if the
+IPI causes the target processor to trap into the kernel, which results in the
+preemption of the running subject and therefore the immediate delivery of the
+interrupt on next subject entry. The event IPI option is only valid if the
 destination subject runs on a different logical CPU than the sending subject.
 This is enforced by the \texttt{skpolicy} tool.
 
 To signal an event, subjects implemented in Ada or SPARK can use the
 \texttt{SK.Hypercall} package provided by Muen. The package contains the
-procedure \texttt{Trigger\_Event} which accepts the event number as the only
-argument. This procedure wraps the x86 \texttt{VMCALL} instruction, which
-results in a trap into the kernel when called from VMX non-root mode. This is
-used by the Muen kernel to implement a mechanism called hypercalls TODO:cite.
+procedure \texttt{Trigger\_Event} which accepts the event number as its sole
+argument. The procedure wraps the \texttt{VMCALL} VMX instruction, which causes
+a trap into the kernel when called from VMX non-root mode. This is used by the
+Muen kernel to implement a mechanism called hypercalls TODO:cite.
 With the Intel VMX extensions, a hypercall is a special trap with basic exit
-reason number \texttt{18}. Of course, hypercalls could also be implemented by
-using other mechanisms.
+reason number \texttt{18}.
 
-The Muen kernel handles hypercall traps separately in its
+The Muen kernel handles hypercall traps separately in the
 \texttt{Handle\_Hypercall} procedure, see section \ref{subsec:traps}. It
 performs a lookup in the sending subject's event table to find the associated
 event entry. If no such entry exists, the kernel logs an error message (in
-debug mode only) and ignores the event. If the event is valid and it is an
-event of type interrupt, it is injected using the VMX interrupt injection
-capabilities, see section \ref{subsec:int-injection}. If the event is of type
-handover, the sending subject is replaced by the destination subject in the
-scheduling plan.  The destination subject will be executed in place of the
-sending subject until it decides to yield the CPU for another subject. This
-method can be used to implement co-operative scheduling in subject groups.
+debug mode only) and ignores the event. Valid events of type interrupt are
+injected using the VMX interrupt injection capabilities, see section
+\ref{subsec:int-injection}. If the event is of type handover, the sending
+subject is replaced by the destination subject in the scheduling plan. The
+destination subject is then executed in place of the sending subject until it
+yields the CPU in favor of another subject. This method can be used to implement
+co-operative scheduling in subject groups.
 
 \begin{figure}[h]
 	\centering
@@ -59,15 +58,14 @@ method can be used to implement co-operative scheduling in subject groups.
 
 The event mechanism in general can be utilized to implement low-latency
 communication channels between subjects, as illustrated in figure
-\ref{fig:inter-core-events}. In this example, two subjects running on two
-different logical CPUs (\texttt{CPU0}, \texttt{CPU1}) implement a simple
-request-response design:
+\ref{fig:inter-core-events}. In this example, two subjects running on different
+logical CPUs (CPU0, CPU1) implement a simple request-response design:
 
 \begin{enumerate}
 	\item The requesting subject on the left (client) running on \texttt{CPU0}
 		writes the request data into a memory page shared with the service
-		provider subject on the right (server). It then signals completion to
-		the server subject by sending an event (i.e.  it calls the
+		provider subject on the right (server). It then signals a pending
+		request to the server subject by sending an event (i.e. it calls the
 		\texttt{Trigger\_Event} procedure).
 
 		The event lets the processor trap into the kernel. Since the subjects
@@ -75,16 +73,16 @@ request-response design:
 		this example. The \texttt{Handle\_Hypercall} procedure in the kernel
 		checks if the event is valid and inserts it into the destination
 		subject's pending event list. If the IPI option is enabled, the kernel
-		also sends an IPI to the target \texttt{CPU1} over its local APIC.
+		also sends an IPI to the target \texttt{CPU1}.
 	\item The IPI causes a trap on the destination \texttt{CPU1}. The interrupt
 		event is therefore immediately injected into the destination subject on
 		the next VMX entry.
 
-		The server subject is waiting for data so it might be in a halted
-		state.  The injected interrupt resumes the server subject and it reads
-		the request data from the (read-only) request page and calculates the
-		result. It writes the result data into the response page shared with
-		the client subject.
+		The server subject is waiting for data so it might be in a halted state.
+		The injected interrupt resumes the server subject which then reads the
+		request data from the (read-only) request page and calculates the
+		result. It writes the result data into the response page shared with the
+		client subject.
 	\item The server subject signals completion by triggering an event, which
 		again leads to a trap into the kernel. The kernel inserts the event in
 		the pending event list of the client subject and (if enabled) sends an

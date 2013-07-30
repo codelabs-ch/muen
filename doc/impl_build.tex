@@ -30,7 +30,7 @@ handled by the \texttt{skpacker} tool described in section
 \ref{subsec:image-packaging}.
 
 \subsection{Policy compilation}\label{subsec:policy-compilation}
-The \texttt{skpolicy} tool compiles the XML system policy outlined in section
+The \texttt{skpolicy} tool compiles the XML system policy specified in section
 \ref{sec:policy} to different output formats as shown in figure
 \ref{fig:policy-compilation}.
 
@@ -55,13 +55,16 @@ information:
 	\item \emph{IRQ routing specification}\\
 		Used by the kernel to program the system's I/O APIC for interrupt
 		routing.
+	\item \emph{Vector routing specification}\\
+		Used by the kernel to determine the destination subject of interrupt
+		vectors.
 	\item \emph{Kernel address constants}\\
 		Define kernel stack, page table and per-CPU storage memory addresses.
 	\item \emph{Scheduling plans for all CPU cores}\\
 		The scheduling plans are indexed by the logical processor's APIC ID.
 		Each kernel copies its associated scheduling plan to the per-CPU storage
 		area on initialization.
-	\item \emph{Subjects specification}\\
+	\item \emph{Subject specifications}\\
 		Defines all subjects and their parameters, see policy section
 		\ref{subsec:subjects}.
 	\item \emph{Packer specification}\\
@@ -84,21 +87,21 @@ address, entry point and memory layout from a subject binary.
 	\label{fig:object-analysis}
 \end{figure}
 
-The exctracted subject initial state and memory layout XML specifications can be
+The extracted subject initial state and memory layout XML specifications can be
 included in the system policy before compilation by the \texttt{skpolicy} tool.
 The generated memory layout is only as permissive as required by the original
 subject binary. For example, the memory region mapped for executable code
-(the \texttt{.text} section) will be executable but non-writeable. This is in
+(the \texttt{.text} section) will be executable but non-writable. This is in
 contrast to just providing a big enough memory region with all permissions to
 the subject with no exact mapping of binary sections to memory access
 permissions (i.e. read, write, execute).
 
 \subsection{Image packaging}\label{subsec:image-packaging}
 The \texttt{skpacker} tool is responsible to assemble the final bootable system
-image from the parts produced in the previous build steps. Figure
-\ref{fig:image-packaging} illustrates the process. The tool includes the special
-packer source specification created from the system policy. This specification
-includes information about subject binaries and their physical address in the
+image from the parts produced in the preceding build steps. Figure
+\ref{fig:image-packaging} illustrates the process. The tool includes the packer
+specific source specification created from the system policy. This specification
+provides information about subject binaries and their physical address in the
 final image.
 
 \begin{figure}[h]
@@ -108,10 +111,10 @@ final image.
 	\label{fig:image-packaging}
 \end{figure}
 
-The remaining configuration is extracted from the source specification provided
-to the kernel. Listing \ref{lst:skpacker} shows the output of a
-\texttt{skpacker} run with the example system described in section
-\ref{sec:example-system}. The fist column in the output designate physical
+The remaining configuration information is extracted from the source
+specification provided to the kernel. Listing \ref{lst:skpacker} shows the
+output of a \texttt{skpacker} run with the example system described in section
+\ref{sec:example-system}. The first column in the output designate physical
 addresses in memory. The second column specifies the type of the packaged file
 at this specific memory location. The abbreviations have the following meaning:
 
@@ -120,10 +123,10 @@ at this specific memory location. The abbreviations have the following meaning:
 		structure. It is either a page table for a kernel or for a subject. The
 		kernels running on the different logical processors have different page
 		tables to allow distinct stack and per-CPU storage pages transparently.
-	\item \emph{IOBM} The file is a subject I/O bitmap. Specifies which I/O
+	\item \emph{IOBM} The file is a subject I/O bitmap. It specifies which I/O
 		ports a subject is allowed to access.
-	\item \emph{MSBM} The file is a subject MSR bitmap. Specifies which MSRs a
-		subject is allowed to access.
+	\item \emph{MSBM} The file is a subject MSR bitmap. It specifies which MSRs
+		a subject is allowed to access.
 	\item \emph{BIN} The file is a subject (raw) binary.
 \end{itemize}
 
@@ -163,11 +166,11 @@ Once the packaging step is complete, the resulting OS image can be booted by any
 Multiboot \cite{multiboot} compliant bootloader.
 
 \subsection{Emulation}
-To ease kernel development, the Muen project makes heavy use of emulation using
-the Bochs IA-32 emulator. Bochs has support for multiple processors, APIC
-emulation and VMX extensions among others. This allows to run the Muen example
-system described in the following section \ref{sec:example-system} as
-illustrated by figure \ref{fig:bochs}.
+To ease kernel development, the Muen project makes heavy use of emulation by
+employing the Bochs IA-32 emulator. Bochs has support for multiple processors,
+APIC emulation and VMX extensions among many other features. Figure
+\ref{fig:bochs} illustrates how this allows to run the Muen example system
+described in section \ref{sec:example-system}.
 
 \begin{figure}[h]
 	\centering
@@ -176,6 +179,8 @@ illustrated by figure \ref{fig:bochs}.
 	\label{fig:bochs}
 \end{figure}
 
-Bochs writes detailed logs during emulation and also provides a debugger which
-allows to inspect the complete system state at any time. It has proven very
-helpful when implementing new low-level processor features.
+Bochs writes detailed logs during emulation and provides a debugger which allows
+to inspect the complete system state at any time. It has proven very helpful
+and was invaluable when implementing new low-level processor features.
+
+TODO:"The emulation can be used by "make"...

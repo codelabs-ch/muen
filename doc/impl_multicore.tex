@@ -7,8 +7,8 @@ multicore setup is done on kernel startup.
 Modern PC systems comply to the Intel MultiProcessor (MP\index{MP})
 specification. In short, the Intel MP specification is an open-standard
 describing enhancements to both operating systems and firmware to be able to
-init, boot and operate x86 multiprocessor systems. For more information see
-\cite{intel:mp}.
+inititialize, boot and operate x86 multiprocessor systems. For more information
+see \cite{intel:mp}.
 
 After the hardware completed its part of the MP specification, one processor
 has been negotiated to be the bootstrap processor (BSP\index{BSP}). All other
@@ -22,16 +22,17 @@ they receive a specific inter-processor interrupt (IPI\index{IPI}) sequence.
 	\label{fig:mp-overview}
 \end{figure}
 
-The BSP starts executing code as describe in section \ref{subsec:init}. The
+The BSP starts executing code as described in section \ref{subsec:init}. The
 init code initializes the system and jumps into the main SPARK kernel. The
 kernel running on the BSP is responsible to bootstrap the other application
 processors. It first enables its local APIC\index{APIC} to be able to send
-inter-processor interrupts to the halted AP processors. To wakeup the APs, the
-INIT-SIPI-SIPI IPI sequence must be sent to their APICs, as described in the MP
-specification. See also figure \ref{fig:mp-overview} for an illustration of
-this process. The SIPI IPI contains the physical address vector of the
-trampoline code copied to low-memory by the init code. The AP processors jump
-to this code after wakeup. The trampoline performs the following steps:
+inter-processor interrupts to the halted AP processors. According to the MP
+specification, in order to wakeup the APs, the INIT-SIPI-SIPI\footnote{SIPI is
+short for Startup IPI} IPI sequence must be sent to their APICs. See also figure
+\ref{fig:mp-overview} for an illustration of this process. The SIPI IPI contains
+the physical address vector 0x0 of the trampoline code copied to low-memory by
+the init code. The AP processors jump to this code after wakeup. The trampoline
+performs the following steps:
 
 \begin{enumerate}
 	\item Set up 32-bit GDT\index{GDT}
@@ -41,19 +42,19 @@ to this code after wakeup. The trampoline performs the following steps:
 \end{enumerate}
 
 These steps initialize the APs to the same architectural state as the
-bootloader did for the BSP: 32-bit protected mode with paging disabled.
-Therefore, the final step is to let the AP processors jump to the identical
-init code described in section \ref{subsec:init}.
+bootloader does for the BSP: 32-bit protected mode with paging disabled.
+Therefore, the final step is to let the AP processors jump to the common init
+code described in section \ref{subsec:init}.
 
 \subsubsection{Per-kernel memory}
 The Muen kernels operate fully symmetrical, i.e. code running on the different
 logical processors is (binary) identical. Nevertheless, each kernel owns a
 distinct stack page and also a page to store per-CPU data. This however is fully
-transparent to the kernels as their virtual stack and global storage addresse
+transparent to the kernels as their virtual stack and global storage address
 values are the same. This is achieved by using different page table structures
 for each kernel. Page tables are created by the policy tool and setup on system
 startup by the init code. The main kernel has no access to these structures in
-memory and does not bother with memory management.
+memory and does not concern itself with memory management.
 
 \subsubsection{Synchronization} Since synchronization is error-prone and it is
 desirable to reduce inter-core dependencies as much as possible, the Muen
@@ -78,4 +79,5 @@ separation, the scheduling plans on the different logical processors must be
 synchronized on major frame transition.
 
 This is achieved by ...
+TODO: Finish section
 

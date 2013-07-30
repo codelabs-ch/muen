@@ -3,14 +3,14 @@ After reset of a x86 system, the processor begins executing code at physical
 address \texttt{ffff:0000}, which is mapped to the PC
 BIOS\index{BIOS}\footnote{Basic Input/Output System}. The BIOS first performs
 tests and initialization routines and then searches for a bootable storage
-media. If found, the BIOS copies the first sector of the storage media to
+medium. If found, the BIOS copies the first sector of the storage media to
 physical address \texttt{0000:7C00} and jumps to this address (i.e. starts
 executing code at this address). This is where the system bootloader comes to
-live which is responsible to boot operating systems according to its
+life which is responsible to boot operating systems according to its
 configuration. Many bootloaders first load additional code from the storage
 media and then prepare the environment for OS execution.
 
-The Muen seperation kernel is compliant to the multiboot specification, version
+The Muen separation kernel is compliant to the multiboot specification, version
 0.6.96 \cite{multiboot}. The multiboot standard is used to uniformly boot
 different operating system kernels by multiboot-aware bootloaders.
 The Muen kernel exports the required multiboot header within the first 8192
@@ -27,26 +27,27 @@ point specified in this header.
 
 Figure \ref{fig:init-mem-layout-example} shows the physical memory layout of an
 example system. The kernel entry point of this system is at physical address
-\texttt{0x00100000}. The main kernel uses the memory region starting from this
-address to pysical address \texttt{0x00203fff} for code and data.
+\texttt{0x100000}. The kernel uses the memory region starting from this address
+to physical address \texttt{0x203fff} for code and data.
 
-Low-memory (the physical memory below 1 MB) is used for system data structures
+Physical memory below 1 MB called low-memory is used for system data structures
 (colored in red). The AP\index{AP} trampoline\index{trampoline} is needed to
-bootstrap the system's application processors as described in section
-\ref{subsec:mp-support}. It initially resides in the kernel's text section and
-must be copied to low-memory by the init code (see below).
+bootstrap the system's application processors as described in the following
+section. It initially resides in the kernel's text section and must be copied to
+low-memory by the init code.
 
 To enable VMX operation using the \texttt{VMXON} instruction, one page per
 logical CPU is required. This region is called VMXON\index{VMXON} region. Each
 subject is managed using a VMCS\index{VMCS} data structure, so this memory is
-placed in low-memory as well.
+placed in low-memory as well. The physical location of these regions is
+specified in the policy.
 
 It is the bootloader's task to prepare the system state as demanded by the
 multiboot standard, see \cite{multiboot} section 3.2 for details. The system
-kernel can except the system to be in this exact state. After the Muen kernel
-comes to live, it performs additional steps before jumping into the main SPARK
-kernel.  This initial startup code is written in Assembly and conducts the
-following tasks:
+kernel can expect the system to be in this exact state. Before the Muen kernel
+jumps into the main SPARK code, it performs additional preparatory steps. This
+initial startup code is written in Assembly and conducts the following tasks:
+
 \begin{enumerate}
 	\item Copy the AP trampoline to low-memory, see section
 		\ref{subsec:mp-support} \item Initialize per-CPU VMXON regions
@@ -60,7 +61,7 @@ following tasks:
 	\item Set up Page-Attribute Table (PAT)
 	\item Set up kernel stack
 	\item Initialize Ada runtime
-	\item Jump into kernel main
+	\item Jump into SPARK main procedure
 \end{enumerate}
 
 The system is now in 64-bit IA-32e mode and each kernel calls the \texttt{VMXON}

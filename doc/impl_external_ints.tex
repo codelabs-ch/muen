@@ -25,16 +25,14 @@ which are compiled into the kernel during the build process.
 The first table contains the IRQ routing information, i.e. to which CPU's LAPIC
 the hardware IRQ must be forwarded to and the interrupt vector to use. Hardware
 interrupts are remapped by the I/O APIC to the interrupt vector range 32-255 to
-be distinct from exceptions. For example, the IRQ 0 of the system timer would
-be remapped to interrupt vector 32 before delivery to the assigned processor
-LAPIC.
+be distinct from exceptions. For example, IRQ 1 used by the keyboard is remapped
+to interrupt vector 33 before delivery to the assigned processor LAPIC.
 
-On reception of the interrupt message, the LAPIC hands the interrupt vector to
-the processor core for further processing. It is important to note that
+On reception of the interrupt message, the LAPIC forwards the interrupt vector
+to the processor core for further processing. It is important to note that
 interrupts are not enabled when in VMX root mode (the interrupt flag
 IF\index{IF} is not set in the host's FLAGS register). This simplifies the
-kernel code and assures that the kernel is not interrupted by external
-interrupts.
+kernel code and assures that the kernel is not disrupted by external interrupts.
 
 Instead, the VT-x external interrupt exiting feature is used to pass control to
 the kernel on interrupts. The activation of this feature leads to a VM exit
@@ -43,8 +41,8 @@ The programming of the I/O APIC ensures that a CPU only receives interrupts
 destined for a subject scheduled on this particular core.
 
 If the VM exit reason indicates the occurrence of an external interrupt, the VM
-exit handler inside the kernel scheduler passes control to the
-\texttt{Handle\_Irq} procedure. This procedure uses the second generated
-interrupt routing table to determine the destination subject for this interrupt
-vector.  It then uses the interrupt injection mechanism described in section
-\ref{subsec:int-injection} to inject the interrupt into the subject.
+exit handler of the kernel scheduler invokes the \texttt{Handle\_Irq} procedure.
+The generated interrupt routing table is used to determine the destination
+subject for the given interrupt vector. The interrupt is delivered to the
+designated subject using the interrupt injection mechanism described in section
+\ref{subsec:int-injection}.

@@ -18,7 +18,7 @@
 		<xs:annotation>
 			<xs:documentation>
 				A device is defined by a unique name identifying the device and an optional hardware
-				interrupt. Additionally it can specify memory and/or I/O port resources.
+				interrupt. Additionally it consists of memory and/or I/O port resources.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:choice>
@@ -54,7 +54,7 @@
 		<xs:annotation>
 			<xs:documentation>
 				Rate (power of two) at which the VMX preemption timer decreases compared to the
-				timestamp counter (TSC), see Intel SDM Vol. 3c, section 25.5.1.
+				timestamp counter (TSC), see Intel SDM Vol. 3C, section 25.5.1.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:nonNegativeInteger">

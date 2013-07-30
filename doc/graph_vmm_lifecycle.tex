@@ -1,13 +1,13 @@
 \begin{tikzpicture}
 	\node[bluebox] (vmm) {VMM};
-	\node[left=2.5cm of vmm] (du1) {};
-	\node[right=2.5cm of vmm] (du2) {};
-	\node[gray!80, font=\scriptsize, above=2.7cm of vmm] (du3) {VMX non-root};
+	\node[left=2.2cm of vmm] (du1) {};
+	\node[right=2.2cm of vmm] (du2) {};
+	\node[gray!80, font=\scriptsize, above=2.2cm of vmm] (du3) {VMX non-root};
 
 	\node[gray!80, font=\scriptsize, below=2mm of vmm] {VMX root};
 
-	\node[greenbox, left=of du3]  (gu0) {Guest 0};
-	\node[greenbox, right=of du3] (gu1) {Guest 1};
+	\node[greenbox, left=3mm of du3]  (gu0) {Guest 0};
+	\node[greenbox, right=2mm of du3] (gu1) {Guest 1};
 
 	\draw[arrow] (du1) to node[auto] {VMXON}  (vmm);
 	\draw[arrow] (vmm) to node[auto] {VMXOFF} (du2);

@@ -38,7 +38,7 @@
 	<xs:simpleType name="vector_type">
 		<xs:annotation>
 			<xs:documentation>
-				Interrupt vector numbers are restricted to the range 0 .. 255.
+				Interrupt vector number that is restricted to the range 0 .. 255.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:nonNegativeInteger">
@@ -81,7 +81,7 @@
 	<xs:complexType name="io_ports_type">
 		<xs:annotation>
 			<xs:documentation>
-				Grants access to the ranges of specified I/O ports.
+				A set of I/O port ranges.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
@@ -115,7 +115,7 @@
 		<xs:annotation>
 			<xs:documentation>
 				Memory type as specified by Intel SDM Vol. 3A, section 11.3.
-				A memory type specifies the caching behavior of the given memory
+				A memory type specifies the caching behavior of the associated memory
 				region.
 			</xs:documentation>
 		</xs:annotation>

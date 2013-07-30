@@ -4,7 +4,7 @@
 	<xs:complexType name="trap_table_type">
 		<xs:annotation>
 			<xs:documentation>
-				Table specifying how traps provoked by a subject are handled.
+				Table specifying how traps caused by a subject are handled.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
@@ -15,8 +15,9 @@
 	<xs:complexType name="entry_type">
 		<xs:annotation>
 			<xs:documentation>
-				A trap table entry specifies to which subject a given trap kind is forwarded and an
-				optional vector number if a interrupt is injected.
+				A trap table entry specifies to which subject a given trap kind
+				is forwarded and an optional vector number if a interrupt is
+				injected.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:attribute name="kind"        type="trap_kind_type"    use="required"/>
@@ -27,7 +28,8 @@
 	<xs:simpleType name="trap_kind_type">
 		<xs:annotation>
 			<xs:documentation>
-				A trap kind identifies the cause of a trap, see Intel SDM Vol. 3c, appendix C.
+				A trap kind identifies the cause of a trap, see Intel SDM Vol.
+				3C, appendix C.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">

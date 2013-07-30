@@ -76,13 +76,13 @@ University of Applied Sciences Rapperswil (HSR), Switzerland
 Microkernels are well suited as a basis of systems with high demands on
 robustness. They are by definition small which is a precondition for rigorous
 verification of correctness. Additionally they lend themselves to construction
-of component-based systems where the misbehavior of one partition does not
-impact the whole system. In contrast attaining high assurance for today’s
+of component-based systems where the misbehavior of one partition must not
+impact the whole system. In contrast, attaining high assurance for today's
 monolithic operating systems is exceptionally hard since they tend to be large
-and have rich functionality. This fact is illustrated by regular security
+and have rich functionality. This fact is highlighted by regular security
 updates provided by operating system vendors.
 
-A separation kernel (SK) is a specialized microkernel which provides an
+A separation kernel (SK) is a specialized security kernel which provides an
 execution environment for multiple subjects which can only communicate according
 to a given policy and are otherwise isolated from each other. Hereby the
 isolation also includes the limitation of potential side- and covert channels.
@@ -91,15 +91,16 @@ possibility of kernel failure and should simplify the application of formal
 verification techniques.
 
 Even though the SK concept has garnered quite some attention from the research
-community over the last thirty years no freely available SK exists to this date.
-There are only a few commercial products but very little technical information
-and none of the implementations are publicly available. Recent addition of
-advanced hardware virtualization support (such as VT-x, VT-d and EPT) to the
-Intel x86 architecture have the potential of greatly simplifying the
+community over the last thirty years, no freely available SK exists to this
+date.  There are only a few commercial products but very little technical
+information and none of the implementations are publicly available. Recent
+addition of advanced hardware virtualization support (such as VT-x, VT-d and
+EPT) to the Intel x86 architecture have the potential of greatly simplifying the
 implementation of a separation kernel. This thesis presents a design of a
-separation kernel for the Intel x86 architecture using the latest hardware
-features. A SPARK based open-source prototype demonstrates the viability of the
-envisioned concept.
+separation kernel for the Intel x86 architecture using the latest Intel hardware
+features. An open-source prototype written in SPARK demonstrates the viability of the
+envisioned concept. TODO: Add sentence to highlight use of SPARK (safe
+programming language)
 \end{abstract}
 
 \section*{Acknowledgments}

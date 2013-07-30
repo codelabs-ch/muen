@@ -4,13 +4,15 @@ kernel protection profile (SKPP) \cite{SKPP}, which has been used in the
 certification of Green Hills' INTEGRITY-178B kernel (see section
 \ref{subsec:commercial-sks}). The protection profile has been sunset by the
 National Information Assurance Partnership (NIAP) in 2011. Nevertheless we
-believe the document can be used as a sound basis and guidance to derive
-requirements for a separation kernel appropriate for systems requiring high
-robustness.
+believe the document can be used as a sound basis and provide guidance to
+derive requirements for a separation kernel appropriate for systems requiring
+high robustness.
 
-The separation kernel should allow the construction of systems, that are
-potentially exposed to attackers with high attack potential and deployed in the
-most difficult threat environment.
+The separation kernel should allow the construction of systems, that could be
+exposed to attackers with high attack potential and deployed in the most
+difficult threat environment.
+
+TODO: Provide overview of the chapter structure.
 
 \input{des_threat_model}
 
@@ -23,10 +25,10 @@ The core mechanism used to separate subjects is Intel's hardware-assisted
 virtualization technology VT-x. The kernel executes in VMX root mode, while
 subjects run in VMX non-root mode. This shields the kernel from access by
 subjects. Figure \ref{fig:architecture-overview} illustrates the basic system
-architecture: the Muen kernel executes two isolated subjects that have no access
-to any kernel resources. The native subject is a bare bones application and the
-second subject is a virtual machine (VM) type subject, e.g. full operating
-system.
+architecture: the Muen kernel executes two isolated subjects that have no
+access to any kernel resources. The native subject is a bare bones application
+and the second subject is a virtual machine (VM) type subject, e.g. an
+operating system.
 
 \begin{figure}[h]
 	\centering
@@ -37,24 +39,22 @@ system.
 
 Resource management and assignment to subjects is static and done prior to the
 execution of the system. All available resources provided by a platform running
-the Muen kernel must be specified in a system policy. Similarly, all subjects
-running on the system and scheduling plans are part of the system policy.
+the Muen kernel must be specified in a system policy. Similarly, scheduling
+plans and all subjects running on the system are part of the policy.
 
 This relieves the kernel from dynamic resource management and avoids the
-associated complexity, which greatly simplifies the kernel implementation.
+associated complexity, which greatly simplifies the kernel design and in turn
+its implementation.
 
 The policy is described in detail in section \ref{subsec:policy}.
 
 \subsection{Subject execution}
-The kernel runs a subject by setting up the environment and executing the binary
-code defined by the subject specification. Initially the subject state is set to
-the specified initial state. The subject starts running for a predefined period
-of time (see \ref{subsec:scheduling}). Once the time has passed, the current
-state of the subject is saved by the kernel for later resumption.
-
-The execution of subject code is preempted and the kernel is invoked by
-transitioning from VMX non-root to root mode. Such a transition is called a
-trap. TODO:(Move traps etc text from implementation chapter?)
+The kernel runs a subject by setting up the environment and executing the
+binary code defined by the subject specification. Initially the subject state
+is set to the specified initial state. The subject starts running for a
+predefined period of time (see \ref{subsec:scheduling}). Once the time has
+passed, a trap into the kernel occurs and the current state of the subject is
+saved for later resumption.
 
 A subject is constrained to the environment specified by the subject profile and
 the resources assigned to it by the policy. If a subject performs an illegal
@@ -137,9 +137,9 @@ with regards to caching behavior are also configured via the policy.
 \subsubsection{Devices}
 A device can be modeled as a collection of system resources such as I/O ports,
 system memory for memory-mapped IO (MMIO) or hardware interrupts. A PS/2
-keyboard for example is composed of two I/O ports and a hardware interrupt.
-In order for subjects to use a device, it must be able to access the I/O ports
-and process the interrupts raised by the device. Thus a policy device
+keyboard for example is composed of two I/O ports and a hardware interrupt.  In
+order for subjects to interact with a device, it must be able to access the I/O
+ports and process the interrupts raised by the device. Thus a policy device
 specification links a device name with a set of hardware resources. Assignment
 to subjects is done via references to devices in the subject specification.
 Devices that are not allocated to a subject are not accessible during the
@@ -157,20 +157,21 @@ regards to the processor that the system is executing on.
 
 \subsection{Inter-subject communication}
 The Muen kernel provides two main mechanisms for information flow between
-subjects: shared memory and so caled events. The first mechanism can be used to
-share arbitrary data between subjects while events are method to pass
+subjects: shared memory and so called events. The first mechanism can be used
+to share arbitrary data between subjects while events are a method to pass
 notifications between subjects in the form of injected interrupts.
 
-All communication paths, be it shared memory regions or events, are specified as
+All communication paths, be it shared memory regions or events, are declared as
 part of the subject specification in the system policy. This means that all
-channels that provide means for subjects to exchange information are explicit
-and cannot change during the runtime of the system. This allows to validate all
-inter-subject information flows prior to execution.
+channels that provide a way for subjects to exchange information are explicit
+and cannot change during the runtime of the system. This allows the validation
+of inter-subject information flows prior to execution.
 
 \subsubsection{Shared memory}
 The main mechanism for subjects to exchange data is to specify a common shared
 memory region in the system policy. A memory region is shared, if two or more
-subject memory layouts specify a region that map the same physical memory range.
+subject memory layouts specify a region that map the same physical memory range
+into the respective address spaces.
 
 Access rights for memory regions (e.g. write access) are part of the subject
 memory layout. This allows to specify a direction of information flow for memory
@@ -184,19 +185,20 @@ mechanisms.
 
 The kernel does not provide a higher level abstraction than shared memory.
 Subjects must implement their own protocol, such as message passing, based on
-the shared memory region and or events.
+shared memory regions and the event mechanism.
 
 \subsubsection{Events}
-An event is caused by a subject and leads to the delivery or injection of an
-interrupt to a specific destination subject. The subject triggering or sending
-the signal is called the source subject. Signals facilitate the implementation
-of a simple inter-subject notification mechanism and enable event-driven
-services such as the use case presented in section \ref{subsec:use-cases}. TODO
+TODO: Explain event type (handover, interrupt), definition of handover.
+
+An event is caused by a subject and leads to the delivery of an interrupt to a
+specific destination subject. The subject triggering an event is called the
+source subject. This facilitate the implementation of a simple inter-subject
+notification mechanism and enables event-driven services.
 
 Events are explicitly triggered by a given source subject and are part of the
-subject specification. The subject policy contains a list of event table entries
-that specify the event number, destination subject and interrupt number to
-inject.
+subject specification. The subject policy contains a list of event table
+entries which state the event number, destination subject and interrupt number
+to inject.
 
 When a subject triggers an event, it invokes a hypercall passing an event number
 as parameter to the kernel. The kernel then consults the subject's event table
@@ -206,7 +208,7 @@ subject. If the event number is invalid (e.g. not in the range of the subject's
 event table) the event is ignored.
 
 \subsection{Exceptions}\label{subsec:design-exceptions}
-We distinguish software exceptions that occur in VMX non-root mode, while
+We distinguish hardware exceptions that occur in VMX non-root mode, while
 executing a subject, and in VMX root mode when the kernel is operating.
 
 As the kernel is implemented in the SPARK programming language and the absence
@@ -215,13 +217,12 @@ root-mode should not happen. If for some unforseen reason (e.g. non-maskable
 interrupt NMI) an exception occurs, it indicates a serious error and the system
 is halted.
 
-In the cause of an exception being caused by the execution of a subject, the
-exception handling is different depending on the profile of the running subject.
-
-If a native subject causes an exception, a trap occurs with the exit reason
-indicating such a condition. Thus the kernel consults the subject's trap table
-to determine what subject is in charge of handling the trap and thus ultimately
-the exception raised by the source subject.
+In the case of an exception being caused by the execution of a subject, the
+exception handling depends on the profile of the running subject. If a native
+subject raises an exception, a trap occurs with the exit reason indicating such
+a condition. Thus the kernel consults the subject's trap table to determine
+what subject is in charge of handling the trap and thus ultimately the
+exception raised by the source subject.
 
 VM subjects are able to perform their own exception handling. Thus if such a
 subject causes an exception, it is delivered to the subject's exception handler
@@ -236,20 +237,21 @@ the policy.
 \subsection{Interrupts}
 Devices can generate hardware interrupts that must be delivered to the subject
 that controls the device according to the policy. A device specification in the
-system policy defines what hardware interrupt it generates. Devices are assigned
-to subjects by means of device references in the subject specification part.
+system policy defines which hardware interrupt it generates. Devices are
+assigned to subjects by means of device references in the subject specification
+part.
 
 Since resource allocation is static, a global mapping of hardware interrupt to
 destination subject can be compiled at integration time. The kernel then uses
 this mapping at runtime when a device raises a hardware interrupt to determine
 the destination subject, that constitutes the final recipient of the interrupt.
 
-Each subject has a list of pending interrupts. An interrupt is delivered to a
+Each subject has a list of pending interrupts. An interrupt is forwarded to a
 subject by appending an entry to the interrupt list of the destination subject.
 When the execution of a subject is resumed, the kernel consults this list and
-injects the interrupt.
+injects the interrupt completing its delivery.
 
-Spurious or invalid interrupts that have not valid interrupt to subject mapping
+Spurious or invalid interrupts that have no valid interrupt to subject mapping
 are ignored by the kernel.
 
 \input{des_scheduling}

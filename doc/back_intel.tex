@@ -1,9 +1,10 @@
 \section{Intel x86 Architecture}
 Even though a more detailed familiarity with the subject is required for a full
 understanding of the design and implementation of the Muen kernel, this section
-only tries to give an short tour of the Intel x86 architecture. The interested
-reader is directed to the Intel Software Developer's Manuals \cite{IntelSDM},
-which contain a complete and in-depth description of the x86 architecture.
+tries to give a short tour of the Intel x86 architecture. The interested reader
+is directed to the Intel Software Developer's Manuals (SDM\index{SDM})
+\cite{IntelSDM}, which contain a complete and in-depth description of the x86
+architecture.
 
 The basic components of a modern Intel x86 computer are depicted in figure
 \ref{fig:intel-architecture}.
@@ -16,21 +17,23 @@ The basic components of a modern Intel x86 computer are depicted in figure
 \end{figure}
 
 \subsection{Processor}
-The main processor of the system is called the central processing unit (CPU). On
-multi-processor systems a CPU can have multiple cores, which are termed
-\emph{logical CPUs}. Each logical CPU fetches and executes instructions, which
-change the state of the processor and the system.
+The main processor of the system is called the central processing unit
+(CPU\index{CPU}). Multi-processor systems (MP\index{MP}) have multiple CPUs
+which in term can have multiple cores. Each core in each CPU is a so called
+\emph{logical CPU} which executes instructions. These instructions change the
+state of the logical CPU and the system as a whole.
 
 \subsubsection{Execution environment}\label{subsubsec:exec-env}
 A program executing on an processor is given access to resources to store
-information, such as code, data or state information. Various resources provided
-by a modern 64-bit processor constituting the basic execution environment are
+information, such as code, data or state information. Resources provided by a
+modern 64-bit processor constituting the basic execution environment are
 described in the following list:
 
 \begin{description}
 	\item[Address space] is used by a program to access system memory.
 	\item[Stack] is located in memory and facilitates subprogram calls and
-		parameter passing in conjunction with stack management resources.
+		parameter passing in conjunction with stack management resources of the
+		processor.
 	\item[Execution registers] constitute the core of the execution environment.
 		It consists of sixteen general-purpose, six segment and one flag
 		register as well as the instruction pointer.
@@ -46,7 +49,7 @@ described in the following list:
 	\item[XMM registers] offer support for SIMD operations on floating-point
 		numbers.
 	\item[Model-specific registers (MSRs)] provide control of various hardware
-		and software-related features. Their number and functionality differs
+		and software-related features. Their number and functionality varies
 		depending on the given processor implementation.
 	\item[I/O ports] allow transfer of data to and from Input/Output ports.
 \end{description}
@@ -54,7 +57,7 @@ described in the following list:
 Further details about the Intel processor execution environment can be found in
 \cite{IntelSDM}, volume 1, section 3.2.1. All instructions provided by a
 processor are called an instruction set. The complete Intel instruction set
-architecture (ISA)\index{ISA} is specified in \cite{IntelSDM}, volumes 2a-c.
+architecture (ISA)\index{ISA} is specified in \cite{IntelSDM}, volumes 2A-C.
 
 \subsubsection{Caches}
 The processor has numerous internal caches and buffers of varying sizes and
@@ -74,20 +77,20 @@ caches are outlined in the following list:
 Since caches are shared and because they can only be controlled to a limited
 degree, their state can be changed and observed by different parts of a system.
 Thus some of the caches can be used as side-/covert-channels and pose a
-challenge to component isolation.
+challenge to effective component isolation.
 
 \subsubsection{Protected mode}
 A modern CPU provides several operating modes of which one is called
 \emph{protected mode}. In this mode the processor provides different privilege
 levels also called rings. The rings are numbered from 0 to 3, with ring 0 having
 the most privileges. Due to common operating systems using only rings 0 and 3
-and disregarding other privilege levels, the 64-bit extension to the Intel
+while disregarding other privilege levels, the 64-bit extension to the Intel
 architecture dropped support for rings 1 and 2.
 
 Privileged instructions such as switching memory management data structures are
-only executable in ring 0 also called supervisor mode. Operating systems such as
-Linux, usually execute user applications in the unprivileged ring 3, called user
-mode.
+only executable in ring 0, also called supervisor mode. Operating systems such
+as Linux, usually execute user applications in the unprivileged ring 3, called
+user mode.
 
 \subsubsection{Memory management}
 Current processors support management of physical memory through means of
@@ -95,36 +98,39 @@ segmentation and paging. Logical addresses are translated to linear addresses
 using the segmentation mechanism. In a second step, linear addresses are
 translated to physical addresses using paging.
 
-Memory management is done in hardware by the memory management unit (MMU)\index{MMU}.
-An operating system must set up certain data structures (descriptor tables and
-page tables) to instruct the MMU how logic and linear memory addresses map to
-physical memory. The MMU allows for partitioning and separation of system
-memory.
+Memory management is done in hardware by the memory management unit
+(MMU)\index{MMU}.  An operating system must set up certain data structures
+(descriptor tables and page tables) to instruct the MMU how logic and linear
+memory addresses map to physical memory. The MMU allows for partitioning and
+separation of system memory.
 
 A processor is connected to the memory controller hub via the system bus, which
 is also called front side bus (FSB)\index{FSB}.
 
-\subsection{Memory Controller Hub}
-The memory controller hub (MCH)\index{MCH}, also called \emph{Northbridge},
-connects the CPU to random access memory (RAM), the graphics card and
-southbridge (presented in the next section) of the system. The processor
-accesses these resources by sending memory requests via the system bus. The MCH
-decodes the requests and forwards them to RAM or the Southbridge, depending on
-the physical address. If for example a request contains an address of a
-memory-mapped device, the chipset of the MCH forwards the request to the
-Southbridge.
+\subsubsection{Exceptions and interrupts}
+TODO: IDT handling etc
 
-\subsection{Input/Output Controller Hub}
-The input/ouput controller hub (ICH), also called \emph{Southbridge}, provides
-connections to most devices and platform peripherals, such as keyboards, USB
-connections and other buses such as PCI Express, USB etc. Newer models contain
-an I/O memory management unit (IOMMU), which provides address translation
-functionality similar to the MMU, but for accesses to system memory initiated by
-I/O devices. This is necessary since active components, such as PCI devices, can
-perform direct memory access (DMA)\index{DMA}, which bypasses the processor's
-MMU memory protection. Like the MMU, an operating system must initialize data
-structures and setup the IOMMU for proper separation of physical memory
-accessible by devices.
+\subsection{Memory Controller Hub}
+The memory controller hub (MCH)\index{MCH}, also called
+\emph{Northbridge}\index{northbridge}, connects the CPU to random access memory
+(RAM), the graphics card and southbridge (presented in the next section) of the
+system. The processor accesses these resources by sending memory requests via
+the system bus. The MCH decodes the requests and forwards them to RAM or the
+Southbridge, depending on the physical address. If for example a request
+contains an address of a memory-mapped device, the chipset of the MCH forwards
+the request to the Southbridge.
+
+\subsection{Input/Output Controller Hub}\label{subsec:ich}
+The input/ouput controller hub (ICH\index{ICH}), also called
+\emph{Southbridge}\index{southbridge}, provides connections to most devices and
+platform peripherals, such as keyboards, USB connections and other buses (PCI
+Express etc). Newer models contain an I/O memory management unit
+(IOMMU\index{IOMMU}), which provides address translation functionality similar
+to the MMU, but for accesses to system memory initiated by I/O devices.  This is
+necessary since PCI devices perform direct memory access (DMA)\index{DMA}, which
+bypasses the processor's MMU memory protection.  Like the MMU, an operating
+system must initialize data structures and setup the IOMMU for proper separation
+of physical memory accessible by devices.
 
 \subsection{Platform Controller Hub}
 More recently, Intel has rearranged the presented hub architecture and has
@@ -135,35 +141,26 @@ controller hub (PCH)\index{PCH}. This new architecture avoids the bottleneck
 presented by the system bus connection between the CPU and the Northbridge.
 
 \subsection{Programmable Interrupt Controller}\label{subsec:apic}
-A Programmable Interrupt Controller (PIC\index{PIC}) is used to combine several
-sources of interrupts onto one CPU. Hardware devices raise interrupts to inform
-the associated CPU that some event occurred that needs attention.  For example
-a network card notifies the CPU that it received data which must be processed.
-One of the best known PIC was the Intel 8259A which was included in the
-original PC introduced in 1981.
+A Programmable Interrupt Controller (PIC\index{PIC}) is used to connect several
+input sources to a CPU. Hardware devices raise interrupts to inform a CPU that
+some event occurred which must be handled. For example a network card notifies
+the CPU that it received data which must be processed. One of the best known PIC
+is the Intel 8259A which was part of the original PC\footnote{Personal
+computer}\index{PC} introduced in 1981.
 
-Early PC/XT ISA systems used one 8259 controller, allowing only eight interrupt
-input lines. Through cascading of controllers, more lines can be made available
-but nevertheless, a more flexible approach was needed with the advent of
-multiprocessor (MP\index{MP}) systems containing multiple processor cores. To
-have efficient interrupt routing on an MP system using PICs was an issue.
+Early PC/XT ISA\index{ISA} systems used one 8259 controller, allowing only eight
+interrupt input lines. By cascading multiple controllers, more lines can be made
+available but nevertheless, a more flexible approach was needed with the advent
+of multiprocessor (MP\index{MP}) systems containing multiple processor cores.
+Implementing efficient interrupt routing on an MP system using PICs was an
+issue.
 
 Intel presented the Advanced Programmable Interrupt Controller
 (APIC\index{APIC}) concept with the introduction of the Pentium processor. It
-was one of several attempts to solve the interrupt routing efficiency problem
-on MP systems. The Intel APIC system is composed of two components: a local
-APIC (LAPIC\index{LAPIC}) in each CPU of the system and the I/O APIC.
-
-A LAPIC receives interrupts from internal sources (such as the timer interrupt)
-and from the I/O APIC or other external interrupt controllers. It sends these
-interrupts to the processor core for handling. In MP systems the LAPIC also
-sends and receives interprocessor interrupt messages (IPI\index{IPI}) from and
-to other logical processors on the system bus.
-
-The I/O APIC is used to receive external interrupts from the system and its
-associated devices and relay them to the local APICs. The routing of interrupts
-to the appropriate LAPICs is configured using a redirection table which must be
-setup by the operating system.
+was one of several attempts to solve the interrupt routing efficiency problem.
+The Intel APIC system is composed of two components: a local APIC
+(LAPIC\index{LAPIC}) in each CPU of the system and the I/O APIC, see figure
+\ref{fig:apic} for a schematic view.
 
 \begin{figure}[h]
 	\centering
@@ -172,6 +169,15 @@ setup by the operating system.
 	\label{fig:apic}
 \end{figure}
 
-Figure \ref{fig:apic} shows a schematic view of two logical processors, their
-LAPICs and the I/O APIC unit. For more information see chapter 10 in
+A LAPIC receives interrupts from internal sources (such as the timer interrupt)
+and from the I/O APIC or other external interrupt controllers. It sends these
+interrupts to the processor core for handling. In MP systems the LAPIC also
+sends and receives inter-processor interrupt messages (IPI\index{IPI}) from and
+to other logical processors on the system bus.
+
+The I/O APIC is used to receive external interrupts from the system and its
+associated devices and relay them to the local APICs. The LAPICs are connected
+to the I/O APIC via system bus. The routing of interrupts to the appropriate
+LAPICs is configured using a redirection table which must be setup by the
+operating system. For more information about APIC and I/O APIC see chapter 10 in
 \cite{IntelSDM}.

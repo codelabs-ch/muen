@@ -1,19 +1,19 @@
 \section{Virtualization}
 Virtualization is an established architectural concept in computer science and
-has been in use since decades. Operating systems for example provide virtual
+has been in use for decades. Operating systems for example provide virtual
 address spaces to application processes, giving them the illusion of unlimited,
 continuous memory. An application does not need to take care of complex memory
 management tasks and the operating system is able to optimize the usage of
-physical memory. Another common example is the virtualization of devices such as
-virtual CD-ROM drives directly using a file-based backend for data I/O
+physical memory. Another common example is the virtualization of devices such
+as virtual CD-ROM drives directly using a file-based backend for data I/O
 \cite{CryptoCloud}.
 
 Hardware or platform virtualization is the process of creating virtual computer
-hardware that acts like real hardware. The virtualization is performed on the
-host machine by special software, called a hypervisor\index{hypervisor} or
-virtual machine monitor (VMM\index{VMM}). These two terms are synonyms, for
-consistency we will use VMM throughout this document. VMMs are classified into
-two types see figure \ref{fig:vmm-classification}.
+hardware that acts like real hardware. The virtualization is performed and
+controlled by special software, called a \emph{hypervisor}\index{hypervisor} or
+\emph{virtual machine monitor} (VMM\index{VMM}). These two terms are synonyms,
+for consistency we will use VMM throughout this document. VMMs are classified
+into two types, see figure \ref{fig:vmm-classification}.
 
 \begin{figure}
 	\centering
@@ -34,42 +34,57 @@ two types see figure \ref{fig:vmm-classification}.
 	\label{fig:vmm-classification}
 \end{figure}
 
-Software that runs in a virtualized environment is called guest software. The
-words host and guest are used to distinguish the software that runs on the
-physical machine from the software that runs on the virtual machine
+The VMM runs on the \emph{host} and software that runs in a virtualized
+environment is called \emph{guest} software. The words host and guest are
+generally used to distinguish the software that runs on the physical machine
+from the software that runs on the virtual machine (VM\index{VM})
 \cite{wiki:virtualization}.
 
-By using virtualization and scheduling techniques, a VMM multiplexes the real
-hardware of a computer making it possible to run multiple guests in
-parallel\footnote{On multicore machines in parallel, on single-core machines
-pseudo-parallel} on one machine. This is the most common use-case for
-virtualization: The consolidation of operating system instances on one server to
-save power and to improve hardware-resource utilization.
+By using virtualization and scheduling techniques, a VMM multiplexes the
+hardware of a computer making it possible to run multiple guests
+simultaneously\footnote{On multicore machines in parallel, on single-core
+machines in pseudo-parallel} on a single physical machine. This is the most
+common use-case for virtualization: the consolidation of operating system
+instances on one server to save power and to improve hardware-resource
+utilization.
 
-A guest program is separated from the real hardware of a machine, direct access
+A guest program is separated from the real hardware of a machine. Direct access
 is restricted and can be controlled by the host VMM. Since the VMM has complete
-control over the hardware of a system and all guest software, virtualization is
-also useful for separation purposes. The VMM can allow certain communication
+control over the hardware and guest software state, virtualization is also
+useful for separation purposes. The VMM is able allow certain communication
 channels between guest software while restricting others. One guest could have
 access to the network card, while others share a page in memory but have no
 access to hardware devices.
 
-The principle idea of virtualization is to run guest code in the virtual machine
-and intercept privileged operations which access critical resources or system
-properties. A guest traps into the VMM if such an instruction is executed and
-the VMM acts according to the situation. This method is used to implement a
-technique called "trap and emulate". For example if a guest accesses a device
-which is emulated by the VMM, access to the virtual device causes a trap into
-the VMM. The VMM itself or a special monitor VM then emulates the requested
-operations of the guest software by directly modifying the state of the virtual
-processor or memory of the guest VM.
+The principle idea of virtualization is to run guest code on a (virtual) CPU and
+only intercept privileged operations accessing resources or system properties
+for which direct access is prohibited or a different representation must be
+provided. Various techniques exist to intercept guest instructions, ranging from
+the inspection and modification of the guest software instruction stream (slow)
+to hardware-assisted virtualization (fast). This thesis focuses on the
+hardware-assisted approach, the reader is directed to TODO:REF more information
+about the other mechanisms.
+
+Independent of the chosen mechanism, an interception of the running guest leads
+to a so called \emph{trap}\index{trap} from the guest code into the VMM. The VMM
+then reacts by examining the \emph{exit reason} and acts accordingly by e.g.
+modifying the guest software state and then resuming the guest.
+
+This method is also used to implement a technique called "trap and emulate". For
+example if a guest accesses a device which is emulated by the VMM, access to the
+virtual device causes a trap into the VMM. The VMM itself or a special monitor
+VM then emulates the requested operations of the guest software by directly
+modifying the state of the virtual processor or memory of the guest VM.
+
+With hardware-assisted virtualization, traps are caused by the virtualization
+hardware automatically. The exact behavior is configurable by the VMM software.
 
 \subsection{Intel Virtualization Technology (VT)}
 A trap from the guest into the VMM is a costly operation. To reduce traps,
 mechanisms in modern processors have been introduced to support the VMM in
 creating a virtual machine environment. These features not only improve the
-performance of a virtual machine by avoiding traps, but also allow the VMM code
-to be much simpler.
+performance of a virtual machine by avoiding traps, but also greatly simplify
+the VMM implementation.
 
 Intel Virtualization Technology (VT\index{VT}) provides hardware-assisted
 virtualization mechanisms for Intel processors. Intel VT encompasses multiple
@@ -88,9 +103,7 @@ with the Virtual Machine Extensions (VMX\index{VMX}) CPU flag.
 The virtual machine architecture is implemented by a new form of processor
 operation called VMX operation. This mode is enabled by executing the
 \texttt{VMXON} instruction and, if successful, provides two operating modes:
-VMX root operation and VMX non-root operation. Figure \ref{fig:vmm-lifecycle}
-shows the life cycle of a VMM and the transitions between guest software and
-VMM.
+VMX root operation and VMX non-root operation.
 
 \begin{figure}[h]
 	\centering
@@ -99,10 +112,11 @@ VMM.
 	\label{fig:vmm-lifecycle}
 \end{figure}
 
-The VMX root operation mode is used for the VMM software while guest software
+The VMX root operation mode is used by the VMM software while guest software
 runs in VMX non-root operation mode. A transition from VMX root to VMX non-root
-is called a VM entry, while a transition from VMX non-root to VMX root is
-called a VM exit or trap.
+is called a VM entry, while a transition from VMX non-root to VMX root is called
+a VM exit or trap. Figure \ref{fig:vmm-lifecycle} shows the life cycle of a VMM
+and the transitions between guest software and the VMM.
 
 Processor behavior in VMX root mode is very similar to non-VMX operation.  The
 main difference is the extra instruction set provided by VMX, containing
@@ -117,25 +131,24 @@ emulate certain functionality.
 
 The VMM software initiates a VM entry into guest code by executing the
 \texttt{VMLAUNCH} and \texttt{VMRESUME} instructions. Only one guest can be
-active at any given time on a logical processor. The VMM regains control
-using the VM exit mechanism. If an exit occurs, the VMM analyzes the cause for
-the exit and acts accordingly. It may resume the guest software or allocate
+active on a logical processor at any given time. The VMM regains control using
+the VM exit mechanism. If an exit occurs, the VMM analyzes the cause for the
+exit and acts accordingly. It may resume the guest software or allocate
 processor time to another guest. The VMM exits VMX operation by calling the
 \texttt{VMXOFF} instruction.
 
 The Virtual-Machine Control Structure (VMCS\index{VMCS}) is used to control VMX
-non-root operation and VMX transitions. Each virtual machine has a VMCS
-assigned which allows fine-grained setup of processor behavior in VMX non-root
-mode. A VMCS contains fields which can be written by the
-\texttt{VMWRITE}\index{VMWRITE} instruction and read via
-\texttt{VMREAD}\index{VMREAD} in VMX root mode. The fields can be distinguished
-into host-state, guest-state, read-only data fields and control fields. On VM
-entry for example, the state of the host is saved into the subject VMCS and
-restored again on VM exit.
+non-root operation and VMX transitions. Each virtual machine has a VMCS assigned
+which allows fine-grained setup of processor behavior in VMX non-root mode. A
+VMCS contains fields which can be written by the \texttt{VMWRITE}\index{VMWRITE}
+instruction and read via \texttt{VMREAD}\index{VMREAD} in VMX root mode. The
+fields can be divided into host-state, guest-state, read-only data and control
+fields. On VM entry for example, the state of the host is saved into the subject
+VMCS and restored again on VM exit.
 
 For further information about the VMX processor extensions and VMCS, the reader
 is directed to the respective chapter in the Intel Software Developer
-Manual\index{Intel SDM} \cite{IntelSDM}, chapter 23.
+Manual\index{Intel SDM} \cite{IntelSDM}, volume 3C, chapter 23.
 
 \subsubsection{Intel EPT}\label{subsubsec:ept}
 Extended Page Table (EPT\index{EPT}) is Intel's implementation of the Second
@@ -145,24 +158,26 @@ host physical addresses. Guest-physical addresses are translated by traversing a
 set of EPT paging structures provided by the VMM to produce physical addresses
 that are used to access memory \cite{IntelSDM}.
 
-The EPT paging structure confines the host physical memory region one guest
+The EPT paging structure confines the host physical memory region a guest
 virtual machine is allowed to access, making it possible to safely run
 unmodified guest OS memory management code. Access to host physical memory
-outside of the allowed region will result in an EPT violation trap.
+outside of the allowed region will result in an EPT violation which causes trap.
 
 Without EPT, the burden of translating guest-physical addresses to host physical
 addresses while guaranteeing guest/vmm and guest/guest memory space separation
-is on the VMM. This is a non-trivial task which is also inefficient. EPT removes
-the complexity of manual memory address translations from the VMM, making the
-code simpler while improving the virtualization speed.
+lies with the VMM. This is a non-trivial task which is highly inefficient. EPT
+removes the complexity of manual memory address translations from the VMM,
+making the code simpler while improving virtualization speed. For more
+information about EPT see Intel SDM \cite{IntelSDM}, volume 3C, section 28.2.
 
 \subsubsection{Intel VT-d}\label{subsubsec:vtd}
 Virtualization Technology for Directed I/O (VT-d\index{VT-d}) provides hardware
 support for I/O-device virtualization. While VT-x provides the support to
 virtualize the platform (i.e. the processor), VT-d is used to simplify the
-secure assignment and virtualization of devices by providing direct memory
-access (DMA\index{DMA}) and device interrupt remapping functionality
-(IOMMU\index{IOMMU}).
+direct assignment of devices to virtual machines by providing direct memory
+access (DMA\index{DMA}) and device interrupt remapping functionality. VT-d
+provides an IOMMU\index{IOMMU} required to control device DMA (see also section
+\ref{subsec:ich}).
 
-VT-d is outside the scope of this master thesis, the reader is directed to
-\cite{IntelVTd} for a more in-depth discussion of VT-d.
+The VT-d technology is outside the scope of this master thesis, the reader is
+directed to \cite{IntelVTd} for a more in-depth discussion.

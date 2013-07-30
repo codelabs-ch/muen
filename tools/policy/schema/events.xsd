@@ -4,8 +4,9 @@
 	<xs:complexType name="event_table_type">
 		<xs:annotation>
 			<xs:documentation>
-				Table specifying how events triggered by a subject are handled. Two kinds of events
-				can be specified: interrupt and handover events.
+				Table specifying how events triggered by a subject are handled.
+				Two kinds of events can be specified: interrupt and handover
+				events.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:choice minOccurs="1" maxOccurs="32">
@@ -17,9 +18,10 @@
 	<xs:complexType name="event_handover_type">
 		<xs:annotation>
 			<xs:documentation>
-				A handover event transfers execution to a destination subject, optionally
-				injecting an interrupt with given vector number. The destination subject must
-				run on the same logical CPU as the triggering subject.
+				A handover event transfers execution to a destination subject,
+				optionally injecting an interrupt with given vector number. The
+				destination subject must run on the same logical CPU as the
+				triggering subject.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:attribute name="event"       type="event_number_type" use="required"/>
@@ -30,12 +32,14 @@
 	<xs:complexType name="event_interrupt_type">
 		<xs:annotation>
 			<xs:documentation>
-				An interrupt event injects an interrupt with specified vector to a destination
-				subject. If the send_ipi attribute is set to true, an inter-processor interrupt
-				(IPI) is sent to the logical CPU executing the destination subject. The IPI
-				mechanism leads to the immediate injection of the specified vector into the
-				destination subject. The destination subject for an interrupt event with IPI must
-				run on a different logical CPU than the triggering subject.
+				An interrupt event injects the specified vector into a
+				destination subject. If the send_ipi attribute is set to true,
+				an inter-processor interrupt (IPI) is sent to the logical CPU
+				executing the destination subject. The IPI mechanism leads to
+				the immediate injection of the specified vector into the
+				destination subject. The destination subject for an interrupt
+				event with IPI must run on a different logical CPU than the
+				triggering subject.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:attribute name="event"       type="event_number_type" use="required"/>

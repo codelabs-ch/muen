@@ -19,30 +19,21 @@ consumed. After a subject has been suspended, the scheduler executes the next
 subject for a given amount of time.
 
 The information of which subject runs for how long and the chronologic sequence
-of subjects is contained in a \emph{scheduling plan}\index{Scheduling plan}.
+of subjects is declared in a \emph{scheduling plan}\index{Scheduling plan}.
 Such a plan is part of the policy and specifies in what order subjects are
-executed in which logical CPU and for how long. The task of scheduler is then to
+executed on which logical CPU and for how long. The task of the scheduler is to
 enforce a given scheduling regime.
 
 A scheduling plan is specified in terms of frames. A \emph{major frame}
 \index{Major frame} consists of a sequence of minor frames. When the end of a
-major is reached, the scheduler starts over from the beginning and uses the
-first minor frame in a cyclic fashion. A \emph{minor frame}\index{Minor frame}
-specifies a subject and a precise amount of time. This information is directly
-applied by the scheduler.
+major frame is reached, the scheduler starts over from the beginning and uses
+the first minor frame in a cyclic fashion. This means that major frames are
+repetitive. A \emph{minor frame}\index{Minor frame} specifies a subject and a
+precise amount of time. This information is directly applied by the scheduler.
 
 An example scheduling plan is depicted in figure
-\ref{fig:example-scheduling-plan}. It illustrated a system with two logical CPUs
-that execute various subjects indicated by different colors. Since major frames
-are repeated, major frame one and two are identical. All CPUs of the system
-wait on a barrier at the beginning of a new major frame. This guarantees that
-all logical CPUs of a system are in-sync on major frame changes.
-
-CPU 0 is executing the same subject for the whole duration of the major frame.
-This could for example be the $\tau$0 subject executing on the bootstrap
-processor (BSP). The second CPU is executing two subjects (blue and green) in
-alternating order. As can be seen, subject green is granted more CPU cycles than
-subject blue.
+\ref{fig:example-scheduling-plan}. It illustrates a system with two logical CPUs
+that execute various subjects indicated by different colors.
 
 \begin{figure}[ht]
 	\begin{ganttchart}[
@@ -52,9 +43,9 @@ subject blue.
 		title label anchor/.style={below=-1.5ex}]{20}
 		\gantttitle{Major frame 1}{10}
 		\gantttitle{Major frame 2}{10} \\
-		\ganttbar[bar/.append style={fill=Apricot}]{CPU 0}{1}{10}
+		\ganttbar[bar/.append style={fill=Apricot}]{CPU0}{1}{10}
 		\ganttbar[bar/.append style={fill=Apricot}]{}{11}{20} \\
-		\ganttbar[bar/.append style={fill=CornflowerBlue}]{CPU 1}{1}{2}
+		\ganttbar[bar/.append style={fill=CornflowerBlue}]{CPU1}{1}{2}
 		\ganttbar[bar/.append style={fill=YellowGreen}]{}{3}{6}
 		\ganttbar[bar/.append style={fill=CornflowerBlue}]{}{7}{8}
 		\ganttbar[bar/.append style={fill=YellowGreen}]{}{9}{10}
@@ -67,16 +58,27 @@ subject blue.
 	\label{fig:example-scheduling-plan}
 \end{figure}
 
+CPU0 is executing the same subject for the whole duration of the major frame.
+This could for example be the $\tau$0 subject executing on the bootstrap
+processor (BSP). The second CPU is executing two subjects (blue and green) in
+alternating order. As can be seen, subject green is granted more CPU cycles
+than subject blue.
+
+Since major frames are repeated, major frame one and two are identical. All
+CPUs of the system wait on a barrier at the beginning of a new major frame.
+This guarantees that all logical CPUs of a system are in-sync when major frames
+change.
+
 On systems with multiple logical CPUs, a scheduling plan must specify a sequence
 of minor frames for each processor core. In order for the cores to not run out
 of sync, all major frames must be of equal length. This means that the sum of
 all minor frame time slices of all major frames of a given scheduling plan must
 amount to the same time duration.
 
-Figure \ref{fig:example-scheduling-plan-of-a-cpu} illustrates the scheduling
-plan for a specific CPU. The major frame consists of four minor frames. Minor
-frame two has twice the amount of ticks than the other minor frames, which have
-identical length.
+Figure \ref{fig:example-major-frame} illustrates the scheduling plan for a
+specific CPU. The major frame consists of four minor frames. Minor frame two
+has twice the amount of ticks than the other minor frames, which have identical
+length.
 
 When the major frame starts, subject one is scheduled for the length of minor
 frame one, followed by a switch to subject 2. After that the two subjects are
@@ -98,8 +100,8 @@ again scheduled in alternating fashion.
 		\ganttbar[bar/.append style={fill=YellowGreen}]{Subject 2}{5}{12}
 		\ganttbar[bar/.append style={fill=YellowGreen}]{}{17}{20}
 	\end{ganttchart}
-	\caption{Example scheduling plan of a CPU}
-	\label{fig:example-scheduling-plan-of-a-cpu}
+	\caption{Example major frame}
+	\label{fig:example-major-frame}
 \end{figure}
 
 Since a system performs diverse tasks with different resource requirements,

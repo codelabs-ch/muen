@@ -1,10 +1,10 @@
-\section{Zero Footprint Runtime}\label{sec:zfs-rts} To allow a minimal TCB for
-the kernel and subjects, a special stripped-down version of an Ada
-runtime\index{runtime} is provided by the Muen project. This runtime system
-(RTS\index{RTS}) only contains the minimal Ada packages required to compile Ada
-code for Muen. An Ada runtime system with such a minimal "footprint" is called
-Zero Footprint Runtime (ZFP\index{ZFP}). The following is a list of currently
-supported packages and functions:
+\section{Zero Footprint Runtime}\label{sec:zfs-rts}
+To allow a minimal TCB for the kernel and subjects, a special stripped-down
+version of an Ada runtime\index{runtime} is provided by the Muen project. This
+runtime system (RTS\index{RTS}) contains the minimal Ada packages required
+to compile Ada code for Muen. An Ada runtime system with such a minimal
+"footprint" is called Zero Footprint Runtime (ZFP\index{ZFP}). The following is
+a list of currently supported packages and functions:
 
 \begin{itemize}
 	\item function \texttt{Ada.Unchecked\_Conversion}
@@ -16,11 +16,11 @@ supported packages and functions:
 
 These files have been extracted from the latest sources of the GNU Compiler
 Collection (GCC\index{gcc}, \cite{gcc}) and are linked into a static library.
-The runtime is then used to compile the Muen kernel and all subjects running on
-the kernel.
+The runtime is then used to compile the Muen kernel and all native subjects
+running on the kernel.
 
-Since the ZFP runtime has only a very limited set of Ada features available,
-code using this runtime must be also very simple. Simple code is an important
+Since the ZFP runtime provides only a very limited set of Ada features, code
+using this runtime must be also very simple. Simple code is an important
 pre-condition for formal verification of code.
 
 The compliance of the Muen kernel to the SPARK\index{SPARK} language rules

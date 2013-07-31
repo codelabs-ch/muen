@@ -7,8 +7,8 @@ the system's TCB:
 		review and verification.
 	\item System resources internal to the kernel, that are not exported to
 		subjects, must not be accessible.
-	\item The kernel must be policy-free and only provide mechanisms to enforce
-		a given policy.
+	\item The kernel must provide mechanisms to enforce a given policy and not
+		perform autonomous policy decisions.
 	\item The kernel must support the Intel IA-32e/64-bit architecture and
 		system memory larger than 4GB.
 	\item The kernel must allow the implementation of small and simple
@@ -26,7 +26,7 @@ the system's TCB:
 	\item It must be possible to specify directed information flows, where data
 		can be transferred from source to destination but not in the reverse
 		direction.
-	\item 64-bit programs must be supported to run as native subjects.
+	\item 64-bit programs must be supported to run as subjects.
 	\item Subjects must be able to use hardware devices and process device
 		generated interrupts in particular.
 	\item A mechanism for inter-subject notifications must exist.

@@ -15,12 +15,12 @@ on security and safety.
 
 The SPARK language is a subset of Ada with additional features inserted as
 annotations by means of Ada comments. Since compilers ignore comments and SPARK
-is a true subset of Ada, any correct SPARK program is a correct Ada programm and
-can be compiled using existing Ada compilers. One such compiler is
-GNAT\footnote{}, which is part of the GNU compiler collection (GCC) \cite{gcc}.
-However, since annotations are an integral part of SPARK, it would be misleading
-to simply consider SPARK a constrained version of Ada. SPARK should be viewed as
-a programming language in its own right. The following list summarizes the Ada
+is a true subset of Ada, any correct SPARK program is a correct Ada program and
+can be compiled using existing Ada compilers. One such compiler is GNAT, which
+is part of the GNU compiler collection (GCC) \cite{gcc}. However, since
+annotations are an integral part of SPARK, it would be misleading to simply
+consider SPARK a constrained version of Ada. SPARK should be viewed as a
+programming language in its own right. The following list summarizes the Ada
 restrictions imposed by SPARK:
 
 \begin{itemize}
@@ -221,10 +221,10 @@ development of the overall system.
 
 The motivation of this project is to provide a freely-available SK with a
 permissive licensing\index{license} model allowing reviews and modification of
-the source code and design documents. It should also be possible to re-apply
-all tools making the proofs reproducible. In the eyes of the authors, only this
-approach is viable in environments where high integrity and security is
-demanded.
+the source code and design documents. It should be possible to independently
+reproduce verification artifacts such as automated proofs. In the eyes of the
+authors, only this approach is viable in environments where high integrity and
+security is demanded.
 
 There have been many advances in hardware support for virtualization, greatly
 simplifying the design and implementation of a security kernel. The authors
@@ -236,18 +236,18 @@ The main goal of this project is to implement a freely-available, open-source
 separation kernel. The kernel sources will be licensed under the GNU General
 Public License (GPL\index{GPL}, \cite{gpl}).
 
-SPARK is used as the main implementation language since this guarantees the
-availability of advanced and approved tools to write code for high assurance
-environments. The SPARK tools will be utilized  to show certain properties of
-the kernel code, especially proof of absence of runtime errors is desired. The
-code of the kernel must also be minimal to facilitate a small TCB.
+SPARK is chosen as the main implementation language since this guarantees the
+availability of advanced and approved tools to write high assurance code. The
+SPARK tools will be utilized to show certain properties of the kernel code,
+especially proof of absence of runtime errors is desired. The code of the kernel
+must also be minimal to facilitate a small TCB.
 
 Non-timing critical operations should be implemented in a special trusted
 subject written in SPARK. This subject is called $\tau$0 and is considered an
 integral part of the kernel. TODO: Shortly explain time-critical and real-time
-in this context. While keeping the main kernel as simple as possible, this
-allows for later adoption of more dynamic mechanisms for resource handling and
-scheduling.
+in this context. While keeping the kernel as simple as possible, this will
+allow for later adoption of more dynamic resource handling and scheduling
+mechanisms.
 
 The target platform of the SK is 64-bit Intel. No abstraction layer will be
 provided to support other processor architectures. Such a layer could be added

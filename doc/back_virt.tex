@@ -126,8 +126,8 @@ virtual machine control structures.
 In VMX non-root operation however, the execution environment is restricted to
 facilitate virtualization. Privileged or critical instructions cause VM exits
 instead of their normal behavior. This allows the VMM to regain control of
-processor resources if needed and, depending on the trapping instruction,
-emulate certain functionality.
+processor resources if needed and, depending on the trapping instruction, take
+appropriate action such as emulating certain functionality.
 
 The VMM software initiates a VM entry into guest code by executing the
 \texttt{VMLAUNCH} and \texttt{VMRESUME} instructions. Only one guest can be

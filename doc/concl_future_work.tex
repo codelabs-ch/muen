@@ -1,5 +1,4 @@
 \section{Future work}
-
 The following list gives a somewhat ordered overview of possible future
 enhancements to the Muen separation kernel:
 
@@ -67,9 +66,13 @@ comparably small increase in kernel complexity.
 Even though the separation kernel has support for resources, that can be
 accessed using port and memory-mapped I/O, newer hardware devices are attached
 to a PCI bus. Prior to their usage, such devices must be configured using a
-mechanism called the PCI configuration space. Since all PCI devices share the
-same configuration space, it represents a resource that must be managed by a
-trusted component.
+mechanism called the PCI configuration space. Since this ressource allows to
+(re-)configure PCI devices, the kernel must be in charge of device management
+like initial setup.
+
+Subjects performing device enumeration to discover the PCI topology would need
+a virtualized view of the PCI bus or be altered to not perform disallowed access
+to the PCI configuration space.
 
 Additional measures need to be implemented to enable subject assignment and safe
 usage of PCI devices. Most PCI devices support Direct Memory Access (DMA), which
@@ -110,5 +113,9 @@ application of these particular formal methods do not provide any assurances
 beyond the error free execution of the kernel. Proving functional properties
 such as the correspondence of the scheduler to a given formal specification is
 necessary to further raise the confidence in systems based on the Muen kernel.
-TODO: Extend by mentioning SPARK->Isabelle bridge, seL4 has shown viability of
-      Isabelle etc
+
+A link between the SPARK tool suite and the interactive proof assistant
+Isabelle/HOL exists in the form of the \emph{HOL-SPARK} verification
+environment \cite{berghofer:OASIcs:2012:3587}. Isabelle would allow to prove
+the formal correctness of the Muen separation kernel. The viability of this
+approach has been demonstrated by the seL4 project \cite{seL4}.

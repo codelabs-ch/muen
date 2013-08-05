@@ -26,7 +26,7 @@
 	<xs:simpleType name="device_name_type">
 		<xs:annotation>
 			<xs:documentation>
-				The name of a device is restricted to at most 128 characters.
+				String value uniquely identifying a hardware device.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">

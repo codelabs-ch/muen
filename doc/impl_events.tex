@@ -17,8 +17,7 @@ speed up inter-core interrupt delivery.
 Interrupts are injected into the destination subject by the Muen kernel to
 inform it about new pending events. In this example, interrupt vector 33 is
 injected into subject s2 for the interrupt event and no interrupt is injected
-for the handover event. A subject may handle an interrupt event within its
-interrupt handling code and react accordingly.
+for the handover event.
 
 If the IPI option is enabled for an interrupt event, the Muen kernel sends an
 inter-processor interrupt to the logical CPU of the destination subject. The
@@ -35,7 +34,7 @@ argument. The procedure wraps the \texttt{VMCALL} VMX instruction, which causes
 a trap into the kernel when called from VMX non-root mode. This is used by the
 Muen kernel to implement a mechanism called hypercalls TODO:cite.
 With the Intel VMX extensions, a hypercall is a special trap with basic exit
-reason number \texttt{18}.
+reason number 18.
 
 The Muen kernel handles hypercall traps separately in the
 \texttt{Handle\_Hypercall} procedure, see section \ref{subsec:traps}. It
@@ -62,10 +61,10 @@ communication channels between subjects, as illustrated in figure
 logical CPUs (CPU0, CPU1) implement a simple request-response design:
 
 \begin{enumerate}
-	\item The requesting subject on the left (client) running on \texttt{CPU0}
-		writes the request data into a memory page shared with the service
-		provider subject on the right (server). It then signals a pending
-		request to the server subject by sending an event (i.e. it calls the
+	\item The requesting subject on the left (client) running on CPU0 writes
+		the request data into a memory page shared with the service provider
+		subject on the right (server). It then signals a pending request to the
+		server subject by sending an event (i.e. it calls the
 		\texttt{Trigger\_Event} procedure).
 
 		The event lets the processor trap into the kernel. Since the subjects
@@ -73,20 +72,20 @@ logical CPUs (CPU0, CPU1) implement a simple request-response design:
 		this example. The \texttt{Handle\_Hypercall} procedure in the kernel
 		checks if the event is valid and inserts it into the destination
 		subject's pending event list. If the IPI option is enabled, the kernel
-		also sends an IPI to the target \texttt{CPU1}.
-	\item The IPI causes a trap on the destination \texttt{CPU1}. The interrupt
+		also sends an IPI to the target CPU1.
+	\item The IPI causes a trap on the destination CPU1. The interrupt
 		event is therefore immediately injected into the destination subject on
 		the next VMX entry.
 
-		The server subject is waiting for data so it might be in a halted state.
-		The injected interrupt resumes the server subject which then reads the
-		request data from the (read-only) request page and calculates the
-		result. It writes the result data into the response page shared with the
-		client subject.
+		The server subject is waiting for data so it might be in a halted
+		state.  The injected interrupt resumes the server subject which then
+		reads the request data from the (read-only) request page and calculates
+		the result. It writes the result data into the response page shared
+		with the client subject.
 	\item The server subject signals completion by triggering an event, which
 		again leads to a trap into the kernel. The kernel inserts the event in
 		the pending event list of the client subject and (if enabled) sends an
-		IPI to \texttt{CPU0}.
+		IPI to CPU0.
 	\item The pending event is injected into the client subject. The subject
 		might be in a halted state because it is waiting for the result. The
 		injected interrupt resumes the subject and the service result can be

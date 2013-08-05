@@ -53,17 +53,16 @@ The index designating the current major frame is global and therefore identical
 for all kernels. This index is managed by the privileged $\tau$0 subject and
 only read by the kernels.
 
-The minor/major frame index tuple points into the scheduling plan. It points to
-a minor frame containing the subject ID and timer ticks for the next subject to
-schedule. The subject ID is used to load the state of the corresponding subject
-from the state descriptor array into the processor. The initial state of a
-subject is always initialized to null. The timer ticks are written into the
-subject's VMCS region so that the subject is preempted automatically by the
-processor when the alloted time slice is over. The kernel then calls the
-\texttt{VMLAUNCH} or \texttt{VMRESUME} (if the subject has already been
-launched) VT-x instructions to enter VMX non-root operation, which lets the
-processor execute subject code. Figure \ref{fig:kernel-scheduler} illustrates
-this process.
+The minor/major frame tuple forms an index into the scheduling plan. It points
+to a minor frame containing the subject ID and timer ticks for the next subject
+to schedule. The subject ID is used to load the state of the corresponding
+subject from the state descriptor array into the processor. The timer ticks are
+written into the subject's VMCS region so that the subject is preempted
+automatically by the processor when the alloted time slice is over. The kernel
+then calls the \texttt{VMLAUNCH} or \texttt{VMRESUME} (if the subject has
+already been launched) VT-x instructions to enter VMX non-root operation, which
+lets the processor execute subject code. Figure \ref{fig:kernel-scheduler}
+illustrates this process.
 
 The subject state is saved on each VM exit. Depending on the scheduling plan and
 the exit reason, the state of another subject is loaded by the kernel scheduler.

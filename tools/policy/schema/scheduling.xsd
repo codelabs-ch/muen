@@ -21,9 +21,9 @@
 				first CPU entry specifies the major frame of CPU0, the second
 				of CPU1 etc. A major frame must contain as many CPU elements as
 				the number of logical CPUs defined in the hardware section of
-				the policy. All major frames must have equal length, meaning
-				that the sum of all minor frame ticks of each scheduling CPU
-				must be equal.
+				the policy. Major frames must have equal length on all CPUs,
+				meaning that the sum of all minor frame ticks of each
+				scheduling CPU must be equal.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>

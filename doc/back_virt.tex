@@ -138,13 +138,14 @@ processor time to another guest. The VMM exits VMX operation by calling the
 \texttt{VMXOFF} instruction.
 
 The Virtual-Machine Control Structure (VMCS\index{VMCS}) is used to control VMX
-non-root operation and VMX transitions. Each virtual machine has a VMCS assigned
-which allows fine-grained setup of processor behavior in VMX non-root mode. A
-VMCS contains fields which can be written by the \texttt{VMWRITE}\index{VMWRITE}
-instruction and read via \texttt{VMREAD}\index{VMREAD} in VMX root mode. The
-fields can be divided into host-state, guest-state, read-only data and control
-fields. On VM entry for example, the state of the host is saved into the subject
-VMCS and restored again on VM exit.
+non-root operation and VMX transitions. Each virtual machine has a VMCS
+assigned which allows fine-grained setup of processor behavior in VMX non-root
+mode. A VMCS contains fields which can be written by the
+\texttt{VMWRITE}\index{VMWRITE} instruction and read via
+\texttt{VMREAD}\index{VMREAD} in VMX root mode. The fields can be divided into
+host-state, guest-state, read-only data and control fields. On VM entry for
+example, the state of the host is saved into the subject VMCS and restored
+again on VM exit. The control fields in the VMCS govern VMX non-root operation.
 
 For further information about the VMX processor extensions and VMCS, the reader
 is directed to the respective chapter in the Intel Software Developer

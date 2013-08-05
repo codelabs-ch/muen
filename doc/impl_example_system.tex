@@ -155,8 +155,7 @@ the Muen event mechanism.
 The kernel running the VT subject forwards the interrupt event to the respective
 subject as defined by the policy. In this case, it is the xv6 subject.
 
-The xv6 subject's interrupt handler code runs unmodified and detects that a
-keyboard interrupt has occurred. The appropriate keyboard handling code is
-called, which has been changed to read keyboard scancodes from a shared memory
-page instead of doing port I/O. The copied scancode data is then used to drive
-the terminal console.
+The xv6 subject's interrupt handler code detects that a keyboard interrupt has
+occurred. The appropriate keyboard handling code is called, which has been
+changed to read keyboard scancodes from a shared memory page instead of doing
+port I/O. The copied scancode data is then used to drive the terminal console.

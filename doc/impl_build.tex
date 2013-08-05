@@ -29,49 +29,6 @@ subjects) including all related files into a bootable OS image. This task is
 handled by the \texttt{skpacker} tool described in section
 \ref{subsec:image-packaging}.
 
-\subsection{Policy compilation}\label{subsec:policy-compilation}
-The \texttt{skpolicy} tool compiles the XML system policy specified in section
-\ref{sec:policy} to different output formats as shown in figure
-\ref{fig:policy-compilation}.
-
-\begin{figure}[h]
-	\centering
-	\input{graph_policy_compilation}
-	\caption{Policy compilation}
-	\label{fig:policy-compilation}
-\end{figure}
-
-The generated subject page tables, I/O and MSR bitmaps are included in the final
-system image by the \texttt{skpacker} utility explained in the following section
-\ref{subsec:image-packaging}. These files are all in binary form and correspond
-to the format mandated by the respective Intel SDM chapters \cite{IntelSDM}.
-Page tables are generated for subjects as well as for the kernel itself.
-
-The generated SPARK and Assembly source specifications are included in the
-kernel directly. These specifications provide the kernel with the following
-information:
-
-\begin{itemize}
-	\item \emph{IRQ routing specification}\\
-		Used by the kernel to program the system's I/O APIC for interrupt
-		routing.
-	\item \emph{Vector routing specification}\\
-		Used by the kernel to determine the destination subject of interrupt
-		vectors.
-	\item \emph{Kernel address constants}\\
-		Define kernel stack, page table and per-CPU storage memory addresses.
-	\item \emph{Scheduling plans for all CPU cores}\\
-		The scheduling plans are indexed by the logical processor's APIC ID.
-		Each kernel copies its associated scheduling plan to the per-CPU storage
-		area on initialization.
-	\item \emph{Subject specifications}\\
-		Defines all subjects and their parameters, see policy section
-		\ref{subsec:subjects}.
-	\item \emph{Packer specification}\\
-		Defines the configuration used for the \texttt{skpacker} tool outlined
-		in the following section \ref{subsec:image-packaging}.
-\end{itemize}
-
 \subsection{Subject binary analysis}\label{subsec:subject-binary-analysis}
 The \texttt{skconfig} tool uses the Binary File Descriptor (BFD\index{BFG})
 library to analyze subject binaries and creates appropriate XML\index{XML}
@@ -95,6 +52,49 @@ subject binary. For example, the memory region mapped for executable code
 contrast to just providing a big enough memory region with all permissions to
 the subject with no exact mapping of binary sections to memory access
 permissions (i.e. read, write, execute).
+
+\subsection{Policy compilation}\label{subsec:policy-compilation}
+The \texttt{skpolicy} tool compiles the XML system policy to different output
+formats as shown in figure \ref{fig:policy-compilation}.
+
+\begin{figure}[h]
+	\centering
+	\input{graph_policy_compilation}
+	\caption{Policy compilation}
+	\label{fig:policy-compilation}
+\end{figure}
+
+The generated subject page tables, I/O and MSR bitmaps are included in the
+final system image by the \texttt{skpacker} utility. These files are all in
+binary form and correspond to the format mandated by the respective Intel SDM
+chapters \cite{IntelSDM}. Page tables are generated for subjects as well as
+for the kernel itself.
+
+The generated SPARK and Assembly source specifications are included in the
+kernel directly. These specifications provide the kernel with the following
+information:
+
+\begin{itemize}
+	\item \emph{IRQ routing specification}\\
+		Used by the kernel to program the system's I/O APIC for interrupt
+		routing.
+	\item \emph{Vector routing specification}\\
+		Used by the kernel to determine the destination subject of interrupt
+		vectors.
+	\item \emph{Kernel address constants}\\
+		Define kernel stack, page table and per-CPU storage memory addresses.
+	\item \emph{Scheduling plans for all CPU cores}\\
+		The scheduling plans are indexed by the logical processor's APIC ID.
+		Each kernel copies its associated scheduling plan to the per-CPU storage
+		area on initialization.
+	\item \emph{Subject specifications}\\
+		Defines all subjects and their parameters, see policy section
+		\ref{subsec:subjects}.
+	\item \emph{Packer specification}\\
+		Defines the configuration used for the \texttt{skpacker} tool.
+\end{itemize}
+
+TODO: Describe additional validity checks
 
 \subsection{Image packaging}\label{subsec:image-packaging}
 The \texttt{skpacker} tool is responsible to assemble the final bootable system

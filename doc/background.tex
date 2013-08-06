@@ -58,7 +58,8 @@ achievable. This allows to formally show the correspondence of an implementation
 with a formal specification.
 
 It is also interesting to note, that SPARK has support for tasking in the form
-of a language profile called RavenSPARK \cite{RavenSPARK}.
+of a language profile\footnote{Restricted subset of the programming language}
+called RavenSPARK \cite{RavenSPARK}.
 
 SPARK is a mature technology and has garnered quite some interest since it has
 been used successfully in several industrial projects TODO:ref. It is primarily
@@ -146,6 +147,10 @@ verification of code correctness. Lampson et al.
 	affecting security.
 \end{quote}
 
+Code that is part of the TCB is called \emph{trusted} while components that have
+no relevance to the guarantee of security properties are called
+\emph{untrusted}.
+
 A separation kernel\index{kernel} (SK\index{SK}) is therefore the fundamental
 part of a component-based system as its main purpose is to enforce the
 separation of all software components. The concept of separation kernels was
@@ -190,6 +195,23 @@ could be a complete operating system like Linux\index{Linux}.
 To allow more runtime flexibility, a separation kernel could employ a dedicated
 subject to offload management tasks. Such a subject runs in normal unprivileged
 mode but is allowed to interact with the kernel over a specialized interface.
+
+\subsubsection{Trust}
+In the larger context of a component-based system, subjects can be considered to
+be part of the TCB and must thus be trusted to operate according to their
+specification.
+
+As an example: a system where a subject is in charge of data encryption, passes
+the encrypted data to a second subject which provides network connectivity. A
+security property could be that information must always be encrypted when
+transmitted over the internet. To achieve this, the encryption subject must make
+sure that no unencrypted information flows to the network subject. Thus the
+encryption subject must be considered part of the TCB and is called a
+\emph{trusted} subject.
+
+On the other hand, the network subject is not security critical as long as the
+encryption subject works according to its specification. It is therefore not
+part of the TCB, which means it is an \emph{untrusted} subject.
 
 \section{Motivation}
 As outlined in the previous section, software must be simple to establish trust
@@ -260,7 +282,11 @@ possible side- or covert-channels.
 
 \section{Related work}
 This section presents similar and related projects. While they share many
-similarities with the Muen kernel, the main difference is ...TODO
+similarities with the Muen kernel, the main difference is that this project aims
+to combine various approaches: use of advanced Intel hardware virualization
+features, Intel x86 64-bit target platform, minimal code size, application of
+verification and proof techniques and making the source code and documentation
+freely available.
 
 \subsection{seL4}
 seL4 is a microkernel of the L4 \cite{Liedtke:1996:TRM:234215.234473} family

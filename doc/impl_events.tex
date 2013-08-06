@@ -32,9 +32,8 @@ To signal an event, subjects implemented in Ada or SPARK can use the
 procedure \texttt{Trigger\_Event} which accepts the event number as its sole
 argument. The procedure wraps the \texttt{VMCALL} VMX instruction, which causes
 a trap into the kernel when called from VMX non-root mode. This is used by the
-Muen kernel to implement a mechanism called hypercalls TODO:cite.
-With the Intel VMX extensions, a hypercall is a special trap with basic exit
-reason number 18.
+Muen kernel to implement the hypercall mechanism.  With the Intel VMX
+extensions, a hypercall is a special trap with basic exit reason number 18.
 
 The Muen kernel handles hypercall traps separately in the
 \texttt{Handle\_Hypercall} procedure, see section \ref{subsec:traps}. It

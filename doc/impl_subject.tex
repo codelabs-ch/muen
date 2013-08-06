@@ -1,14 +1,15 @@
-\section{Subject}\label{sec:subject}
+\section{Subject}\label{sec:impl-subject}
 Subjects are the main components that are executed on top of the kernel, as
-described in section TODO:Ref. They are represented using two main data
-structures: \emph{subject specification} and \emph{subject state}.
+described in section \ref{sec:design-subject}. They are represented using two
+main data structures: \emph{subject specification} and \emph{subject state}.
 
 \subsection{Specification}
 A subject is specified in the global system policy. The XML specification
 precisely defines the execution environment and granted resources. The
 information that is relevant to the kernel is part of the compiled policy.
 Listing \ref{lst:skp-subjects} presents the SPARK type specification into which
-all relevant subject policy parts are transformed.
+all subject specific policy parts are transformed. The specification of a
+subject is static and cannot be changed at runtime.
 
 \lstinputlisting[
 	language=ada,
@@ -16,8 +17,6 @@ all relevant subject policy parts are transformed.
 	label=lst:skp-subjects,
 	caption=SPARK subject spec type]
 	{../tools/policy/templates/skp-subjects.adb}
-
-The specification of a subject is static and cannot be changed at runtime.
 
 \subsection{State}
 The system state related to a subject must encompass all resources that it can
@@ -56,8 +55,8 @@ another subject, the kernel also copies register values managed automatically by
 VMX\index{VMX} into the in-memory subject state to enable modification by the SM
 subject.
 
-During initial subject setup, the subject state is set to a pristine value. This
-is done by assigning the \texttt{null} subject state constants shown by listings
+During subject setup, the state is first set to a pristine value. This is done
+by assigning the \texttt{null} subject state constants shown by listings
 \ref{lst:sk-null-subject-state} and \ref{lst:sk-null-cpu-registers} to all
 subject state variables.
 
@@ -75,4 +74,8 @@ subject state variables.
 	caption=SPARK null CPU registers constant]
 	{../common/src/sk.ads}
 
-TODO:Mention how initial subject state from policy compiled subject spec is used
+The initialization of the subject state is then completed by copying the entry
+point into the code and the address of the stack from the specification.  These
+values are declared in the system policy as part of the subject initial state
+and can be obtained automatically from a native subject binary by using the
+\texttt{skconfig} tool (see section \ref{subsec:subject-binary-analysis}).

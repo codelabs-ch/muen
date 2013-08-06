@@ -20,5 +20,8 @@ a trap is forwarded to a handler subject by configuring the subject's trap table
 appropriately. A handler subject (or subject monitor) can react to the exception
 and resume the causing subject after the error condition has been removed.
 
-TODO:Briefly mention NMI exiting -> assures that NMIs are not handled by
-subjects but lead to a VM exit unconditionally
+To make sure non-maskable interrupts\footnote{NMIs are (mostly) used to signal
+attention for non-recoverable hardware errors.} (NMI\index{NMI}) are not
+handled by subjects but lead to a VM exit unconditionally, the \emph{NMI
+exiting} VMX execution control is active in both subject profiles. On reception
+of an NMI, the kernel halts the CPU.

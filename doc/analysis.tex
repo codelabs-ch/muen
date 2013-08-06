@@ -133,14 +133,14 @@ state of a logical processor is given in section \ref{subsubsec:exec-env} and
 specified in \cite{IntelSDM} volume 1, section 3.2.1 and volume 3A,
 section 8.7.1.
 
-As mentioned in section \ref{sec:subject}, parts of the execution environment
-are saved and restored automatically by the VMX extensions on VM entry or VM
-exit respectively, others must be handled manually. Table
+As mentioned in section \ref{sec:impl-subject}, parts of the execution
+environment are saved and restored automatically by the VMX extensions on VM
+entry or VM exit respectively, others must be handled manually. Table
 \ref{tab:exec-env-storage} gives an overview about the different components and
 the handling by VMX. Check marks in parenthesis indicate optional VMCS fields
-which are only active when configured by the appropriate VMX control. Components
-not handled by VMX must either be disallowed or saved manually to prohibit
-unintended data flows.
+which are only active when configured by the appropriate VMX control.
+Components not handled by VMX must either be disallowed or saved manually to
+prohibit unintended data flows.
 
 The following subsections discuss each component of the execution environment in
 detail.
@@ -174,13 +174,13 @@ detail.
 \end{table}
 
 \subsubsection{General purpose registers}
-General purpose registers (GPR\index{GPR}) are handled manually by the SPARK CPU
-register type and the stack pointer field in the subject state record. See
-section \ref{sec:subject} for details about the structure of these two records.
-During initial subject setup, all GPR values are initialized to a pristine
-state. The \texttt{Restore\_Registers} procedure implemented in the kernel's
-\texttt{CPU} package restores the subject GPR values before a VM entry by
-copying them to the correct processor registers using inline assembly.
+General purpose registers (GPR\index{GPR}) are handled manually by the SPARK
+CPU register type and the stack pointer field in the subject state record. See
+section \ref{sec:impl-subject} for details about the structure of these two
+records.  During initial subject setup, all GPR values are initialized to a
+pristine state. The \texttt{Restore\_Registers} procedure implemented in the
+kernel's \texttt{CPU} package restores the subject GPR values before a VM entry
+by copying them to the correct processor registers using inline assembly.
 
 On VM exit, the subject state in memory is reset to a pristine state. Then, the
 VM exit reason is checked and if it is valid, the GPR values are copied from the

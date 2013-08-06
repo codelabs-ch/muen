@@ -70,14 +70,14 @@ lock and it is successfully acquired. If the result is one, the lock is
 currently busy and the core must spin and retry again.
 
 Inside the lock's busy loop the \texttt{PAUSE} instruction is used to improve
-performance and resource utilization on CPUs with hyper-threading
-(HTT\index{HTT}) enabled TODO:REF.
+performance and resource utilization (see Intel SDM \cite{IntelSDM}, volume 1,
+section 11.4.4.4).
 
 \paragraph{Barrier}
 As described in section \ref{subsec:scheduling}, to guarantee temporal
 separation, the scheduling plans on the different logical processors must be
-synchronized on major frame transition.
-
-This is achieved by ...
-TODO: Finish section
-
+synchronized on major frame transition. This is achieved by a SPARK
+implementation of a sense-reversing barrier as described in the book \emph{The
+Art of Multiprocessor Programming} by Maurice Herlihy and Nir Shavit
+\cite{Herlihy:2008:AMP:1734069}. This kind of barrier is safe for reuse without
+issues of CPUs overtaking each other.

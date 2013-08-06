@@ -1,12 +1,25 @@
 \chapter{Implementation}\label{chap:impl}
-TODO: Chapter intro
+The separation kernel design presented in chapter \ref{chap:design} has been
+implemented in a functional prototype. This chapter presents the implementation
+by first describing the system policy. The Ada Zero Footprint Runtime required
+to compile the Muen kernel and subjects implemented in SPARK/Ada is presented
+in section \ref{sec:zfp-rts}. Section \ref{sec:impl-subject} introduces the
+data types used to manage subject specifications and subject state in the Muen
+kernel. The kernel implementation is then presented in section
+\ref{sec:kernel}. In order to build the kernel and subjects, a build system
+with the appropriate toolchain is required. The build system implementation is
+presented in section \ref{sec:build}. The chapter concludes by presenting the
+Muen example system, which demonstrates the usability of the separation kernel
+implementation.
 
 \input{impl_policy}
 \input{impl_rts}
 \input{impl_subject}
 
-\section{Kernel}
-TODO: Intro
+\section{Kernel}\label{sec:kernel}
+The following sections outline the implementation of the Muen separation
+kernel.
+
 \input{impl_init}
 \input{impl_multicore}
 \input{impl_scheduling}

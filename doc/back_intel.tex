@@ -118,13 +118,86 @@ translated to physical addresses using paging.
 Memory management is done in hardware by the memory management unit
 (MMU)\index{MMU}.  An operating system must set up certain data structures
 (descriptor tables and page tables) to instruct the MMU how logic and linear
-memory addresses map to physical memory. The MMU allows for partitioning and
-separation of system memory.
+memory addresses map to physical memory.
+
+Processes running on a processor are provided with a virtual address space. The
+processes think they run alone on a system and have unrestricted access to
+system memory. Memory access of processes are translated by the MMU using the
+aforementioned paging structures.
+
+Logical addresses are transformed to linear addresses by adding an offset to the
+given virtual address. This mechanism is called segmentation. In IA-32e
+segmentation has effectively been dropped in favor of paging, creating a flat
+64-bit linear address space.
+
+Paging is the address translation process of mapping linear to physical
+addresses. Memory is organized in so called pages. A memory page is the unit
+used by the MMU to map addresses. IA-32e mode provides different page sizes
+such as 4 KB, 2 MB and 1 GB.
+
+\begin{figure}[h]
+	\centering
+	\input{graph_address_translation}
+	\caption{One-level address translation}
+	\label{fig:address-translation}
+\end{figure}
+TODO:Draw figure
+
+An exemplary one-level address translation process illustrated in
+figure \ref{fig:address-translation}. The MMU splits the linear address in
+distinct parts which are used as indexes into page tables. A page table entry
+specifies the address of a physical memory page called \emph{page frame}.
+Addition of the offset part of the input address to the page frame yields the
+effective physical address.
+
+Paging structures can be arranged hierarchically by letting page table entries
+reference other paging structures instead of physical memory pages. In fact,
+Intel's IA-32e mode uses four levels of address mapping which are presented in
+the following list:
+
+\begin{itemize}
+	\item Page map level 4 (PML4) references a page directory pointer table. The
+		address of the currently active PML4 is stored in the CPU's CR3 control
+		register.
+	\item Page directory pointer table (PDPT) references a page directory or a 1
+		GB page frame.
+	\item Page directory (PD) references a page table or a 2 MB page frame.
+	\item Page table (PT) references a 4 KB page frame.
+\end{itemize}
+
+A linear memory address is split into five parts, when all four levels of paging
+structures are used. The first element identifies the PML4 entry, the second
+references the PDPT entry and so on. The fifth part constitutes the offset added
+to the page frame address. Larger page sizes are supported by letting higher
+level paging structures reference physical memory pages. In such a case all
+remaining parts of the linear memory address are used as offset into the larger
+page frame.
+
+Additionally paging structure entries allow to specify properties and
+permissions such as write access or caching behavior for the referenced physical
+memory page. The permissions are checked and enforced by the MMU. This mechanism
+allows for fine-grained memory management on a per-process basis. The use of
+different paging structures depending on the currently executing process allows
+for partitioning and separation of system memory using the MMU. This can be
+achieved by changing the value of the processor's CR3 control whenever a process
+switch occurs.
+
+If a process tries to access a memory location that has no valid address
+translation the processor raises a page fault exception. The operating system's
+page fault handler is then in charge to correct the failure condition, e.g.
+dynamically allocating and mapping the requested memory region by changing the
+paging structures. It can then seamlessly resume the execution of the faulting
+process. This technique is used by many modern operating systems such as Linux
+to implement dynamic memory management.
 
 A processor is connected to the memory controller hub via the system bus, which
 is also called front side bus (FSB)\index{FSB}.
 
-\subsubsection{Exceptions and interrupts}
+For a more in-depth look at memory management and address translation the reader
+is referred to \cite{IntelSDM}, volume 3A sections 3 \& 4 and
+\cite{Drepper07whatevery}.
+
+\subsection{Exceptions and interrupts}
 TODO: IDT handling etc
 
 \subsection{Memory Controller Hub}

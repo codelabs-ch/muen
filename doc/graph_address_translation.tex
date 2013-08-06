@@ -1,0 +1,7 @@
+\begin{tikzpicture}
+	\node[bluebox] (pti) {Page table index};
+	\node[bluebox, right=of pti] (ofs) {Offset};
+	\node[greenbox, below=of pti] (pt) {Page table};
+
+	\draw[arrow] (pti) -- (pt);
+\end{tikzpicture}

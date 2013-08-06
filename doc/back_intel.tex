@@ -92,7 +92,24 @@ only executable in ring 0, also called supervisor mode. Operating systems such
 as Linux, usually execute user applications in the unprivileged ring 3, called
 user mode.
 
-\subsubsection{Memory management}
+\subsubsection{IA-32e mode}
+Intel 64 architecture runs in a processor mode named \emph{IA-32e} also known as
+\emph{long mode}. It has two submodes: compatibility and 64-bit mode. The first
+submode allows the execution of most 16 and 32-bit applications to run without
+re-compilation by essentially providing the same execution environment as 32-bit
+protected mode.
+
+The IA-32e 64-bit submode enables 64-bit kernels and operating systems to run
+applications making use of the full 64-bit linear address space. The execution
+environment is extended by additional general purpose registers and most
+register sizes are extended to 64-bit.
+
+In the context of this project, IA-32e mode generally refers to the 64-bit
+IA-32e submode if not stated differently. Additional information about this mode
+of operation and the provided execution environment can be found in
+\cite{IntelSDM}, volume 1 section 3.2.1.
+
+\subsection{Memory management}
 Current processors support management of physical memory through means of
 segmentation and paging. Logical addresses are translated to linear addresses
 using the segmentation mechanism. In a second step, linear addresses are

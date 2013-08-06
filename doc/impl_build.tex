@@ -11,23 +11,68 @@ process.
 	\label{fig:build-process}
 \end{figure}
 
-The first step is to build the tools. The \texttt{skconfig} helper tool can be
-used, as described in section \ref{subsec:subject-binary-analysis}, to create
+The first step is to build the tools. The \texttt{skconfig} helper tool
+outlined in section \ref{subsec:subject-binary-analysis} can be used to create
 subject initial state and memory layout specifications in XML format from the
-subject binary. The generated XML files are included in the system policy before
-the policy compilation step.
+subject binary. The generated XML files are included in the system policy
+before the policy compilation step.
 
 To compile the system policy, the \texttt{skpolicy} tool is required. The
 details about the policy compilation process is described in section
-\ref{subsec:policy-compilation}.  The Muen kernel and all subjects require the
-Ada ZFS runtime described in section \ref{sec:zfs-rts} to compile. Once the
-policy has been compiled and the ZFS runtime has been built, the kernel and all
-subjects are built.
+\ref{subsec:policy-compilation}. The Muen kernel and all subjects depend on the
+Ada ZFS runtime. Once the policy has been generated and the ZFS runtime has
+been compiled, the kernel and all subjects are built.
 
 The final step is to package all object binaries (i.e. the kernel and all
 subjects) including all related files into a bootable OS image. This task is
 handled by the \texttt{skpacker} tool described in section
 \ref{subsec:image-packaging}.
+
+To allow fast round-trips during kernel development, the Muen project uses
+an emulator to directly boot the generated OS image after the build process is
+complete. Section \ref{subsec:emulation} outlines the details about the
+emulation facility.
+
+The complete system build, deployment and emulation process is automated using
+GNU Make \cite{make}. The top-level project Makefile provides targets to
+perform the following tasks:
+
+\begin{itemize}
+	\item Compile all tools
+	\begin{itemize}
+		\item \texttt{make skconfig}
+		\item \texttt{make skpolicy}
+		\item \texttt{make skpacker}
+	\end{itemize}
+	\item Compile the Ada ZFP RTS
+	\begin{itemize}
+		\item \texttt{make rts}
+	\end{itemize}
+	\item Compile the policy
+	\begin{itemize}
+		\item \texttt{make policy}
+	\end{itemize}
+	\item Compile example system subjects
+	\begin{itemize}
+		\item \texttt{make subjects}
+	\end{itemize}
+	\item Compile Muen kernel
+	\begin{itemize}
+		\item \texttt{make kernel}
+	\end{itemize}
+	\item Package OS image
+	\begin{itemize}
+		\item \texttt{make pack}
+	\end{itemize}
+	\item Deploy OS image to actual hardware
+	\begin{itemize}
+		\item \texttt{make deploy}
+	\end{itemize}
+	\item Start emulation
+	\begin{itemize}
+		\item \texttt{make emulate}
+	\end{itemize}
+\end{itemize}
 
 \subsection{Subject binary analysis}\label{subsec:subject-binary-analysis}
 The \texttt{skconfig} tool uses the Binary File Descriptor (BFD\index{BFG})
@@ -94,7 +139,39 @@ information:
 		Defines the configuration used for the \texttt{skpacker} tool.
 \end{itemize}
 
-TODO: Describe additional validity checks
+\subsubsection{Validity checks}
+Before generating the source specifications, page tables and bitmaps, the policy
+compiler performs various sanity checks to assert the validity of the system
+policy. This is done in two steps. First, the policy is validated against the
+Muen system schema. If this step fails, no further processing is performed and
+the user is informed about the error. If the policy validates, the policy
+compiler performs additional validity checks in a second step:
+
+\begin{itemize}
+	\item Assert that all hardware device references are valid.
+	\item Assert that event table entries have an unique event number.
+	\item Assert that trap table entries have an unique exit reason.
+	\item Assert that hardware device IRQs are unique.
+	\item Assert that memory addresses used by the kernel are page aligned.
+	\item Assert alignment of all memory regions in the policy.
+	\item Assert that MSR address ranges are valid.
+	\item Assert that every subject referenced in the scheduling plan exists.
+	\item Assert that subjects are scheduled on the correct logical CPU.
+	\item Assert that the scheduling plan contains a major frame for each CPU.
+	\item Assert that a specific major frame has equal tick count on all logical
+		CPUs.
+	\item Disallow subject self-references in the event table.
+	\item Assert that every subject referenced in a subject's event table exists.
+	\item Assert that handover event destination subjects run on the same CPU.
+	\item Disallow IPI for interrupt events on the same CPU.
+	\item Disallow subject self-references in the trap table.
+	\item Assert that every subject referenced in a subject's trap table does
+		exist.
+	\item Assert that trap destination subjects run on the same CPU.
+	\item Assert that all memory addresses used to setup a subject are page
+		aligned.
+	\item Assert that subject binary references are valid.
+\end{itemize}
 
 \subsection{Image packaging}\label{subsec:image-packaging}
 The \texttt{skpacker} tool is responsible to assemble the final bootable system
@@ -165,11 +242,11 @@ at this specific memory location. The abbreviations have the following meaning:
 Once the packaging step is complete, the resulting OS image can be booted by any
 Multiboot \cite{multiboot} compliant bootloader.
 
-\subsection{Emulation}
+\subsection{Emulation}\label{subsec:emulation}
 To ease kernel development, the Muen project makes heavy use of emulation by
 employing the Bochs IA-32 emulator. Bochs has support for multiple processors,
 APIC emulation and VMX extensions among many other features. Figure
-\ref{fig:bochs} illustrates how this allows to run the Muen example system
+\ref{fig:bochs} shows the Bochs emulator running the Muen example system
 described in section \ref{sec:example-system}.
 
 \begin{figure}[h]
@@ -182,5 +259,3 @@ described in section \ref{sec:example-system}.
 Bochs writes detailed logs during emulation and provides a debugger which allows
 to inspect the complete system state at any time. It has proven very helpful
 and was invaluable when implementing new low-level processor features.
-
-TODO:"The emulation can be used by "make"...

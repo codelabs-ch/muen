@@ -319,15 +319,13 @@ is
       VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_TR,
                   Value => 16#8b#);
 
-      --  Disable fs and gs segments.
+      --  Disable fs, gs and ldt segments; they can be enabled by guest code
+      --  if needed.
 
       VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_FS,
                   Value => 16#10000#);
       VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_GS,
                   Value => 16#10000#);
-
-      --  Disable access to Local Descriptor Table.
-
       VMCS_Write (Field => Constants.GUEST_ACCESS_RIGHTS_LDTR,
                   Value => 16#10000#);
 

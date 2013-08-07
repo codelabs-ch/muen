@@ -1,67 +1,30 @@
 \chapter{Analysis}
-TODO: Rewrite introduction
-
 Section \ref{sec:requirements} lists the requirements of the separation kernel
 concept presented in this document. This chapter analyzes how the Muen kernel
 implementation outlined in chapter \ref{chap:impl} meets these requirements.
 
-\section{Separation}
-TODO: Rewrite -> Mention all subsections
+Section \ref{sec:separation} analyzes the separation properties of the kernel
+while section \ref{sec:information-flow} discusses the flow of information
+between subjects. The architecture support for the kernel as well as for
+subjects is described in section \ref{sec:arch-support}. Section
+\ref{sec:impl-assurance} examines the high robustness and assurance claims of
+the Muen kernel implementation and section \ref{sec:performance} analyzes the
+performance of the current implementation.
 
+\section{Separation}\label{sec:separation}
 The main requirement of a separation kernel is, as the name implies, to provide
 strong separation of components to allow the construction of a trusted
-high-assurance system. The following sections present how system resources and
-the state of the execution environment are separated using the Intel VT-x
-virtualization technology. Section \ref{subsec:vmx-controls} analyzes how the
-VMX configuration in the native and VM profiles ensures that subjects are not
-able to widen their permissions by modifying execution environment values.
+high-assurance system. Section \ref{subsec:vmx-controls} analyzes how the VMX
+configuration in the native and VM profiles ensures that subjects are not able
+to widen their permissions by modifying execution environment values. Sections
+\ref{subsec:system-resources} and \ref{subsec:exec-env-sep} examine how system
+resources and the state of the execution environment are separated in detail.
+The aspect of temporal isolation is explored separately in section
+\ref{subsec:temp-isolation}.
 
 Separation is not only important for subjects, but the kernel resources must be
 protected from unauthorized access as well. This aspect is also discussed in
-this chapter.
-
-\subsection{System resources}
-System resources are assigned to subjects according to the system policy. The
-kernel does not by itself perform policy decisions, but instead only applies
-the linked in policy specifications and management data structures.
-
-This means that the policy writer must make sure that the system specification
-meets the requirements of a particular use-case.
-
-\subsubsection{Memory}
-Memory is assigned to the kernel and subjects by adding memory regions to the
-appropriate specifications in the system policy. Memory assignment is therefore
-static and cannot be changed at runtime.
-
-If strict separation is desired, care must be taken that subject memory regions
-do not overlap except for cases where a communication channel is explicitly
-required. The same holds true for unintended overlaps of kernel and subject
-memory.  While the policy compiler performs sanity checks, it does not currently
-provide support to avoid unintended memory overlaps.
-
-\subsubsection{Devices}
-Devices are accessed using memory or port I/O. Interrupts are used to inform
-subjects about device related incidents.
-
-The assignment of a device to a subject automatically allows access to the
-resources provided by this device. The policy compiler does not prohibit
-assignment of one device to multiple subjects, as this could be a valid scenario
-(e.g.  multiple subjects with the same trust level are allowed to access the VGA
-console directly). Again, the policy writer must make sure that devices are
-assigned correctly.
-
-The kernel grants subject access to device resources as follows. Device access
-via memory I/O is allowed to the subject by mapping the corresponding device
-memory into the subject's address space. The page table for a subject containing
-a mapping for device memory is generated automatically by the policy compiler at
-system integration.
-
-Port I/O is allowed using the VMCS I/O bitmap field. The correct bitmap is again
-compiled by the system policy tool at integration time. The kernel only assigns
-the bitmap to the VMCS field during subject setup.
-
-Device interrupts are routed to the correct subject as outlined in section
-\ref{subsec:external-ints}.
+this section.
 
 \subsection{VMX controls}\label{subsec:vmx-controls}
 The instructions listed in \cite{IntelSDM} volume 3A section 25.1.2 cause a VM
@@ -119,14 +82,56 @@ VM exit for both profiles.
 		I/O port access & \checkmark & \checkmark \\
 		MSR access      & \checkmark & \checkmark \\
 		Exceptions      & \checkmark & \\
-		\hline
 	\end{tabular}
+	\end{minipage}
 	\caption{Subject profile VM exit comparison}
 	\label{tab:profiles-cond-vm-exits}
-	\end{minipage}
 \end{table}
 
-\subsection{Execution environment}
+\subsection{System resources}\label{subsec:system-resources}
+System resources are assigned to subjects according to the system policy. The
+kernel does not by itself perform policy decisions, but instead only applies
+the linked in policy specifications and management data structures.
+
+This means that the policy writer must make sure that the system specification
+meets the requirements of a particular use-case.
+
+\subsubsection{Memory}
+Memory is assigned to the kernel and subjects by adding memory regions to the
+appropriate specifications in the system policy. Memory assignment is therefore
+static and cannot be changed at runtime.
+
+If strict separation is desired, care must be taken that subject memory regions
+do not overlap except for cases where a communication channel is explicitly
+required. The same holds true for unintended overlaps of kernel and subject
+memory.  While the policy compiler performs sanity checks, it does not currently
+provide support to avoid unintended memory overlaps.
+
+\subsubsection{Devices}
+Devices are accessed using memory or port I/O. Interrupts are used to inform
+subjects about device related incidents.
+
+The assignment of a device to a subject automatically allows access to the
+resources provided by this device. The policy compiler does not prohibit
+assignment of one device to multiple subjects, as this could be a valid scenario
+(e.g.  multiple subjects with the same trust level are allowed to access the VGA
+console directly). Again, the policy writer must make sure that devices are
+assigned correctly.
+
+The kernel grants subject access to device resources as follows. Device access
+via memory I/O is allowed to the subject by mapping the corresponding device
+memory into the subject's address space. The page table for a subject containing
+a mapping for device memory is generated automatically by the policy compiler at
+system integration.
+
+Port I/O is allowed using the VMCS I/O bitmap field. The correct bitmap is again
+compiled by the system policy tool at integration time. The kernel only assigns
+the bitmap to the VMCS field during subject setup.
+
+Device interrupts are routed to the correct subject as outlined in section
+\ref{subsec:external-ints}.
+
+\subsection{Execution environment}\label{subsec:exec-env-sep}
 Two mechanisms provide isolation of subject execution environments: saving and
 restoring the architectural state or prohibiting access. An overview of the
 state of a logical processor is given in section \ref{subsubsec:exec-env} and
@@ -167,7 +172,6 @@ detail.
 		MMX registers              & \\
 		XMM registers              & \\
 		MSRs                       & (\checkmark) \\
-		\hline
 	\end{tabular}
 	\caption{Execution environment and VMCS fields}
 	\label{tab:exec-env-storage}
@@ -187,29 +191,50 @@ VM exit reason is checked and if it is valid, the GPR values are copied from the
 processor registers into the subject state.
 
 \subsubsection{Segment registers}
-Segment registers are managed by VMX automatically inside the VMCS. The segment
-registers are initialized to the values shown by table
-\ref{tab:vmcs-segment-regs}.
+Segment registers are managed by VMX automatically inside the VMCS. The subject
+VMCS both stores the visible segment selector\index{segment selector} as well as
+the hidden part composed of the base address, segment limit, and access rights
+values\footnote{The hidden part of a segment register is also called
+\emph{descriptor cache} or \emph{shadow register}.} (see Intel SDM
+\cite{IntelSDM}, volume 3A, section 3.4.3 and volume 3C, section 24.4.1). The
+kernel initializes the segment registers of a subject to the values shown by
+table \ref{tab:vmcs-segment-regs}. For an explanation of the access rights
+format see Intel SDM \cite{IntelSDM}, volume 3C, section 24.4.1.
+
+The segment registers FS and GS are disabled on subject setup by initializing
+the VMCS access rights field for these registers to the value
+\texttt{0x10000}\footnote{Unusable segment}.  A subject can enable them on
+demand by loading an appropriate segment descriptor.
 
 \begin{table}[h]
 	\centering
-	\begin{tabular}{l|c}
-		\textbf{Register} & \textbf{Value} \\
+	\begin{minipage}[c]{8cm}
+	\begin{tabular}{l|c|c|c}
+		\textbf{Register} & \textbf{Selector} & \textbf{Limit} & \textbf{AR} \\
 		\hline
-		CS & \texttt{0x08} \\
-		DS & \texttt{0x10} \\
-		ES & \texttt{0x10} \\
-		SS & \texttt{0x10} \\
-		TR & \texttt{0x18} \\
-		\hline
+		CS & \texttt{0x08} & \texttt{0xffffffff} &
+		\texttt{0xa09b}\footnote{Native subject profile} /
+		 \texttt{0xc09b}\footnote{VM subject profile} \\
+		DS & \texttt{0x10} & \texttt{0xffffffff} & \texttt{0x0c093} \\
+		ES & \texttt{0x10} & \texttt{0xffffffff} & \texttt{0x0c093} \\
+		FS & -             & -                   & \texttt{0x10000} \\
+		GS & -             & -                   & \texttt{0x10000} \\
+		SS & \texttt{0x10} & \texttt{0xffffffff} & \texttt{0x0c093} \\
+		TR & \texttt{0x18} & \texttt{0x000000ff} & \texttt{0x0008b} \\
 	\end{tabular}
+	\end{minipage}
 	\caption{VMCS segment register fields}
 	\label{tab:vmcs-segment-regs}
 \end{table}
 
-Access to segment registers FS and GS is disabled by setting the VMCS access
-rights field for these registers to the value \texttt{0x10000}.
-TODO:cite
+Even though both subject profiles allow the modification of segment registers
+and the associated descriptor tables, a subject is unable to access memory areas
+not granted by policy. For native subjects, paging with a page table generated
+from the policy is active and cannot be disabled (see the following section
+\ref{subsubsec:control-regs} about control registers). Access to an illegal
+memory region over a segment selector cannot bypass paging and results in a page
+fault. VM subjects are constrained by the Intel EPT mechanism, where access to
+disallowed memory results in an EPT violation trap.
 
 \subsubsection{Instruction pointer}
 The instruction pointer is managed by VMX and initially set to the subject's
@@ -236,7 +261,6 @@ on the subject profile.
 		\hline
 		CR0 & \texttt{0x80010035} & \texttt{0x00000035} \\
 		CR4 & \texttt{0x00002020} & \texttt{0x00002000} \\
-		\hline
 	\end{tabular}
 	\caption{VMCS control register fields}
 	\label{tab:vmcs-control-regs}
@@ -246,20 +270,21 @@ Since a VM subject is started in protected mode with paging disabled, bits 16
 and 31 are cleared, whereas they are set in the native profile. The CR0 mask
 field in the VMCS allows the VM subject to modify these two bits (bitmask value
 \texttt{0x7ffeffff}) to enable paging without causing a VM exit. On the other
-hand, the bitmask value of \texttt{0xffffffff} disallows modification of any bit
-in CR0 for native subjects, paging is already enabled by default. The remaining
-bits are identical. Bit 0 indicates protected mode and bit 2 disables the x87
-FPU for subjects. Bit 4 is reserved and must be set for both profiles. Bit 5
-enables native FPU error reporting (see table 9-3 in \cite{IntelSDM}, volume 3A
-section 9.2.2).
+hand, the bitmask value of \texttt{0xffffffff} disallows modification of any
+bit in CR0 for native subjects, paging is already enabled by default and cannot
+be disabled. The remaining bits are identical. Bit 0 indicates protected mode
+and bit 2 disables the x87 FPU for subjects. Bit 4 is reserved and must be set
+for both profiles. Bit 5 enables native FPU error reporting (see table 9-3 in
+\cite{IntelSDM}, volume 3A section 9.2.2).
 
 Bit 13 (VMXE) in the CR4 control register is set for both profiles. This bit is
-a prerequisite for VMX operation not only for the host but also for the
-guest-state. Bit 5 (Physical Address Extension, PAE\index{PAE}) in the native
-profile is a prerequisite for IA-32e mode. While modifications of CR4 in a
-native subject leads to a trap, the VM profile allows the modification of bit 4
-(Page Size Extensions, PSE\index{PSE}). This allows 4 MB pages in 32-bit paging
-mode (used for example by the xv6 OS described in section \ref{subsubsec:xv6}).
+a prerequisite for VMX operation not only for the host but also for the guest
+state. Bit 5 (Physical Address Extension, PAE\index{PAE}) in the native profile
+is a prerequisite for IA-32e mode. While modifications of CR4 in a native
+subject leads to a trap, the VM profile allows the modification of bit 4 (Page
+Size Extensions, PSE\index{PSE}). This allows 4 MB pages in 32-bit paging mode
+(used for example by the xv6 OS\index{OS} described in section
+\ref{subsubsec:xv6}).
 
 CR3 is also managed by VMX. Again, the handling depends on the subject profile.
 Native subjects are not allowed to change the value of CR3 since it points to
@@ -268,17 +293,15 @@ native subject profile enables both load and store VM exit controls for CR3,
 resulting in a trap if a native subject tries to tamper with the CR3 value
 (section \ref{subsec:vmx-controls} and \cite{IntelSDM}, volume 3C section
 24.6.2). VM subjects are allowed to run their own memory management code within
-ithe boundaries set by the Intel EPT mechanism, see section \ref{subsubsec:ept}.
-A value moved into the CR3 control register is treated as a guest-physical address
-and the instruction does not cause a VM exit.
+the boundaries set by the Intel EPT mechanism, see section \ref{subsubsec:ept}.
+A value moved into the CR3 control register is treated as a guest-physical
+address and the instruction does not cause a VM exit.
 
 CR2 is not managed by VMX but copied manually from the subject state to the
-processor register and back. The initial value of CR2 is zero.
-
-Accessing control register CR8 leads to a trap for both profiles.
-
-For more information about the meaning of the bits in the control registers, see
-Intel SDM \cite{IntelSDM}, section 2.5.
+processor register and back. The initial value of CR2 is zero. Accessing
+control register CR8 leads to a trap for both profiles. For more information
+about the meaning of the bits in the control registers, see Intel SDM
+\cite{IntelSDM}, section 2.5.
 
 \subsubsection{Descriptor table registers}
 Both subject profiles allow the management of the Global Descriptor Table
@@ -286,9 +309,10 @@ Both subject profiles allow the management of the Global Descriptor Table
 and IDTR registers are stored in the guest-state area in the VMCS and updated
 automatically by VMX.
 
-Access to the Local Descriptor Table Register (LDTR\index{LDTR}) is disabled by
-setting the corresponding access rights field in the VMCS to the value
-\texttt{0x10000}.
+The Local Descriptor Table Register (LDTR\index{LDTR}) is disabled by setting
+the corresponding access rights field in the VMCS to the value \texttt{0x10000}.
+It can be enabled by subjects if needed. The LDTR register is also managed by
+VMX automatically.
 
 \subsubsection{Debug registers}
 Debug registers are not handled by VMX and the kernel does not currently store
@@ -372,7 +396,7 @@ The VMCS MSR bitmap which governs access to MSRs is generated from the policy by
 the policy compiler. The kernel initializes the VMCS MSR bitmap field during
 subject setup using the generated bitmap.
 
-\subsection{Temporal isolation}
+\subsection{Temporal isolation}\label{subsec:temp-isolation}
 The Muen kernel scheduler executes subjects according to a scheduling plan
 specified in the system policy. The scheduling plans have a fixed cyclic
 structure and are divided into major frames that are comprised of a number of
@@ -385,8 +409,6 @@ global barrier is employed. At the beginning of a new major frame, all cores
 synchronize on the barrier. Once all cores are ready, the barrier is released
 and simultaneous execution of the first minor frame starts.
 
-TODO: Guarantee of uniformity of major frame change
-
 Strict adherence to a given plan is implemented using the VMX preemption timer.
 Subjects are executed for the time slice mandated by the currently active minor
 frame. This means that the kernel is in absolute control and subjects have no
@@ -398,7 +420,7 @@ is the VMX preemption timer. If for some reason the timer is not deemed to be
 precise enough for a particular use case, additional timer sources could be used
 to provide even higher timer resolution and thus scheduling accuracy.
 
-\section{Information flow}
+\section{Information flow}\label{sec:information-flow}
 This section reviews the mechanisms provided by the Muen kernel to enable
 information flow between subjects.
 
@@ -423,7 +445,7 @@ explicitly specified.
 \subsection{Events}
 A second mechanism how information can flow from one subject to another is the
 use of events. A subject can trigger an event, which ultimately leads to the
-injection of an interrupt to a specific subject.
+injection of an interrupt into a specific subject or a subject handover.
 
 As with shared memory regions, events are defined as part of the subject
 specification and consist of the event number, destination subject id and
@@ -434,8 +456,6 @@ A subject has to specify the number of the event it wants to trigger. The
 subject basically selects one of the predefined events. If a malicious subject
 passes an invalid event number, the kernel ignores the request. Thus only events
 that are specified in the policy are valid and can be triggered.
-
-TODO: Consider handover events
 
 \subsection{Traps}
 The subject specification contains a trap table that specifies how each trap
@@ -453,11 +473,7 @@ they cannot change at runtime. This ensures that traps are handled according to
 policy and any unexpected trap will cause the kernel to panic and halt
 execution.
 
-TODO:Note: all traps that can be raised by a subject should be specified in the
-policy, otherwise DoS of scheduler. -> Policy correctness issue not kernel? Should
-we mention panic at all?
-
-\section{Architecture support}
+\section{Architecture support}\label{sec:arch-support}
 This section reviews the hardware platforms the kernel is able to run on, as
 well as the architectures the kernel provides to subjects as an execution
 environment.
@@ -512,7 +528,7 @@ memory demands.
 The hardware requirements can be met by any recent COTS\footnote{Custom Of The
 Shelve} x86 hardware based on an Ivy Bridge Intel CPU, be it notebooks,
 workstations or server systems. It might be noted that with the advent of new
-Intel-based tablets TODO:ref that are powered by VT-x capable latest-gen Haswell
+Intel-based tablets that are powered by VT-x capable latest-gen Haswell
 processors, the Muen kernel should even be able to run on mobile devices.
 
 \subsection{Subject}
@@ -534,7 +550,7 @@ interrupt descriptor table. If a subject raises an exception, it is vectored
 through the subject's IDT. Only a triple fault will cause a trap, that the
 kernel will process as usual.
 
-\section{Implementation assurance}
+\section{Implementation assurance}\label{sec:impl-assurance}
 This section summarizes the properties of the Muen kernel that make a compelling
 case to back up the high robustness and assurance claim of the implementation.
 
@@ -620,11 +636,10 @@ any circumstance. Section \ref{sec:spark} lists all types of errors whose
 absence is proven.
 
 \subsection{Tools}
-All supporting tools have been developed following a strict test-driven
+All supporting tools have been developed in Ada following a strict test-driven
 development process. Each tool implementation is accompanied by a comprehensive
-test suite which provides wide code coverage.
-
-TODO: Implemented in Ada, Use of open-source libraries
+test suite which provides wide code coverage. The tools will be released under
+the GNU General Public License\index{GPL}.
 
 \subsection{Verifiability}
 The complete source code and documentation of this project are published online.
@@ -646,5 +661,5 @@ it manual or automated. Having such a small kernel should lower the time and
 effort needed for full formal verification, even though such a task is still
 expected to be a substantial amount of work.
 
-\section{Performance}
+\section{Performance}\label{sec:performance}
 TODO

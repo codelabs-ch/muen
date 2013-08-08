@@ -27,7 +27,7 @@ its implementation.
 The policy is described in detail in section \ref{subsec:policy}.
 
 \subsection{Subject execution}
-The kernel initializes the subject execution environment and state accoring to
+The kernel initializes the subject execution environment and state according to
 the subject specification. The execution is started from the subject entry point
 and continues for a predefined period of time (see \ref{subsec:scheduling}).
 Once the time has passed, a trap into the kernel occurs and the current state of
@@ -192,7 +192,7 @@ subject. The event table specifies how the kernel is supposed to handle the
 event.
 
 Both tables are part of the subject policy because the information is subject
-specifc. This allows to specify different reactions to traps depending on the
+specific. This allows to specify different reactions to traps depending on the
 subject causing the condition.
 
 \subsection{Inter-subject communication}
@@ -228,17 +228,31 @@ Subjects must implement their own protocol, such as message passing, based on
 shared memory regions and the event mechanism.
 
 \subsubsection{Events}\label{subsubsec:events}
-TODO: Explain event type (handover, interrupt), definition of handover.
+An event is caused by a subject and can be used to either deliver an interrupt
+or hand over execution to another subject. There are two kind of events:
+handover and interrupt events. The subject triggering an event is called the
+source subject while the target subject is called the destination subject.
+Events are the mechanism to facilitate the implementation of a simple
+inter-subject notification mechanism and enables event-driven services.
 
-An event is caused by a subject and leads to the delivery of an interrupt to a
-specific destination subject. The subject triggering an event is called the
-source subject. This facilitate the implementation of a simple inter-subject
-notification mechanism and enables event-driven services.
+Handover events allow voluntary transfer of execution control with optional
+interrupt deliver to a destination subject. The intended use for this event
+kind is to allow subject monitors to resume their monitored subject. A handover
+is achieved by replacing the source with the destination subject in the
+system's scheduling plan. The interrupt that is optionally injected, can be
+used as an indicator for the cause of the handover, which allows the
+destination subject to quickly react accordingly without having to inspect the
+triggering subject's state.
 
-Events are explicitly triggered by a given source subject and are part of the
-subject specification. The subject policy contains a list of event table
-entries which state the event number, destination subject and interrupt number
-to inject.
+Interrupt events simply allow to inject an interrupt to a destination subject
+without execution handover. This allows a subject to send a notification to a
+destination subject in the form of an interrupt.
+
+Events are explicitly triggered by a given source subject and are specified as
+part of the subject specification. The subject policy contains a list of event
+table entries which state the event number, destination subject and interrupt
+number to inject. Event numbers must be unique since they are used identify a
+specific event.
 
 When a subject triggers an event, it invokes a hypercall\footnote{A hypercall is
 a software trap from a subject to the VMM. It is initiated using the
@@ -255,7 +269,7 @@ executing a subject, and in VMX root mode when the kernel is operating.
 
 As the kernel is implemented in the SPARK programming language and the absence
 of runtime errors is proven, exceptions during regular operation in VMX
-root-mode should not happen. If for some unforseen reason (e.g. non-maskable
+root-mode should not happen. If for some unforeseen reason (e.g. non-maskable
 interrupt NMI) an exception occurs, it indicates a serious error and the system
 is halted.
 
@@ -297,8 +311,42 @@ Spurious or invalid interrupts that have no valid interrupt to subject mapping
 are ignored by the kernel.
 
 \subsection{Multicore}\label{subsec:multicore}
-TODO: synchronization, symmetric, per-cpu storage concept, major frame index
-consistency
+Modern computers have an increasing number of CPU cores per processor. To
+utilize the hardware to its full potential, the separation kernel must make use
+of all available cores. A CPU core is also called \emph{logical CPU}.
+
+At the basis of the multicore design is the symmetric execution of the kernel on
+every available logical CPUs. This means that all core executes exactly the same
+Muen kernel code. Global data is shared between all cores which necessitates
+some form of inter-core synchronization to guarantee data consistency. The
+synchronization primitives used by the separation kernel are spinlock and
+barrier.
+
+The spinlock facilitates the exclusive access of resources to a CPU holding the
+spinlock. Before using a shared resource, such as the debug console, a logical
+CPU has to acquire the lock and release it once it is finished.
+
+A barrier is used to guarantee, that all logical CPUs have reached a specific
+execution point and are waiting for the release of the barrier. This allows to
+synchronize all CPUs to simultaneously start executing instructions from a
+specific point the kernel code. It is used to arrange correct major frame
+changes and avoid any inter-processor drift with regards to scheduling plans.
+
+The stack and a memory region called per-cpu storage is private to each CPU
+core. That means that every CPU has its own CPU stack and a per-cpu area where
+CPU-specific data is stored, which is inaccessible by other CPU cores.
+
+One globally shared variable is the major frame index which is used to
+coordinate scheduling across all CPU cores. Its use and how a consistent view of
+the variable's value across all cores is guaranteed, is presented in the next
+section.
+
+An important aspect of Muen's multicore design is that subjects are pinned to a
+specific logical CPU. Subjects do not migrate between cores and are exclusively
+executed on the core defined by the associated subject specification in the
+system policy. This removes complexity from the kernel and the overall system by
+thwarting potential isolation issues which could be caused by the transfer of
+subjects and their state between cores.
 
 \subsection{Scheduling}\label{subsec:scheduling}
 This section presents the design of the Muen kernel scheduler and the selected
@@ -407,8 +455,28 @@ Since a system performs diverse tasks with different resource requirements,
 there is a need for some flexibility with regards to scheduling. To provide this
 degree of freedom while keeping the kernel complexity low, multiple scheduling
 plans can be specified in the system policy. The privileged subject $\tau$0 is
-then allowed to select and activate one of these scheduling plans. The kernel
-enforces the current plan designated by $\tau$0.
+allowed to select and activate one of the scheduling plans. A global variable
+termed \emph{major frame index} designates the currently active scheduling plan.
+Its value is exclusively written by the BSP while it is used by all cores to
+determine the currently active major frame. The following protocol ensures a
+consistent view of the major frame index variable across CPU cores:
+
+\begin{enumerate}
+	\item Each logical CPUs waits on the global barrier as soon as it has
+		reached the end of the current major frame. The barrier remains closed
+		until all system cores have reached that point.
+	\item The barrier is released and all cores except the BSP immediately wait
+		on the global barrier again.
+	\item The BSP determines the scheduling plan selected by $\tau$0 and updates
+		the major frame index value accordingly.
+	\item Then the BSP continues to the barrier thereby opening it.
+	\item All CPU cores including the BSP start executing after the barrier and
+		use the updated major frame index value.
+\end{enumerate}
+
+This process guarantees that all CPU cores have a consistent view of the current
+major frame index, simultaneous begin of a major frame cycle and that scheduling
+plan changes only occur on major frame boundaries.
 
 By defining a distinct plan for each anticipated workload in the policy, the
 scheduling regimes are fixed at integration time. This removes any runtime

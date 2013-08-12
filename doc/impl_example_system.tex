@@ -17,8 +17,8 @@ teaching OS written in C inside the VM profile.
 
 The example system is meant to serve as demonstrator for a real-world use-case:
 an untrusted operating system is separated by the Muen kernel and accesses
-native, trusted services with a minimal TCB. The trusted services might even be
-formally verified.
+native, trusted services with a minimal TCB. The trusted encrypter service is
+implemented completely in SPARK and proven to be free from runtime errors.
 
 The following section explains the different subjects composing the example
 system, while section \ref{subsec:keyboard-handling} describes the keyboard
@@ -59,10 +59,10 @@ memory but write to a distinct page mapped to their (virtual) VGA memory
 address (\texttt{0xb8000}). The subject virtual terminal pages are also mapped
 into the address space of the VT subject.
 
-If the user hits one of the special keys F1 to F6, the VT subjects updates the
+If the user hits one of the special keys F1 to F6, the VT subject updates the
 VGA memory with the contents of the active session slot's virtual terminal page.
 All other keyboard scancodes are copied to a driver page shared with the
-untrusted xv6 subject and an event is triggered to inform the virtual keyboard
+untrusted xv6 subject. An event is triggered to inform the virtual keyboard
 driver that keyboard data awaits processing.
 
 \subsubsection{Crypter}
@@ -71,11 +71,11 @@ provide trusted cryptographic services to clients. On startup, the subject
 enters the halted state until it receives an interrupt event indicating a
 pending request.
 
-The interrupt event resumes the subject and data contained in the subject's
-request page is copied for further processing. Currently, the crypter subject
-creates a SHA-256 REF message digest over the received data and then copies the
-hash to the service response page. An interrupt event is triggered to signal
-service completion.
+The interrupt resumes the subject and data contained in the subject's request
+page is copied for further processing. Currently, the crypter subject creates a
+HMAC-SHA-256 message digest over the received data and then copies the hash to
+the service response page. An interrupt event is triggered to signal service
+completion.
 
 \subsubsection{xv6}\label{subsubsec:xv6}
 Xv6\index{xv6} is a Version 6 Unix \cite{wiki:unix6} teaching operating system
@@ -83,8 +83,8 @@ developed at MIT \cite{xv6}. While being simple, it implements many key
 concepts found in common operating systems, making it an ideal initial target
 for the VM profile. Xv6 is written in ANSI C.
 
-Minimal changes in the source code of xv6 were required to run it as VM subject
-on the Muen kernel:
+Small changes to the xv6 source code and a minimal subject monitor were required
+to run it as VM subject on the Muen kernel:
 \begin{itemize}
 	\item Disable MP support
 	\item Ignore disallowed I/O operations (handled by the SM subject)
@@ -126,7 +126,8 @@ IRQ_Routing : constant IRQ_Routing_Array := IRQ_Routing_Array'(
 
 The routing table contains one entry which routes the keyboard IRQ 1 to the CPU
 with APIC ID 0. Furthermore, the IRQ is remapped to the interrupt vector 33 so
-that on each key press, an interrupt with vector 33 is delivered to CPU0.
+that on each key press, an interrupt with vector 33 is delivered to CPU0 via its
+LAPIC.
 
 The Muen kernel running on CPU0 handles the received interrupt in its
 \texttt{Handle\_Irq} procedure. It uses the vector routing table contained in

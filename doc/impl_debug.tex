@@ -1,9 +1,9 @@
 \subsection{Debug}\label{subsec:debug}
 When compiled in debug-mode\index{debug}, the kernel writes logging messages to
 the serial port configured in the system policy. The debug statements in the
-kernel code are wrapped into \texttt{pragma Debug}\index{pragma}, making it
-possible to remove these statements completely when compiling in production
-mode.
+kernel code are wrapped in \texttt{pragma Debug}\index{pragma} statements,
+making it possible to remove these lines completely when compiling for production
+usage.
 
 \begin{lstlisting}[language=Ada, label=lst:debug-statement, caption=Kernel debug
 statement]
@@ -17,5 +17,5 @@ statement]
 Listing \ref{lst:debug-statement} shows the kernel greeter message which is only
 output by the kernel running on the BSP\index{BSP}. The \texttt{KC}\index{KC}
 package implements the \emph{kernel console} which provides procedures to write
-text and unsigned integers to console. For more information about \texttt{pragma
-Debug} see \cite{GNAT:manual}.
+text and unsigned integers to the debug console. For more information about
+\texttt{pragma Debug} see \cite{GNAT:manual}.

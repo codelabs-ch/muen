@@ -13,9 +13,9 @@ process.
 
 The first step is to build the tools. The \texttt{skconfig} helper tool
 outlined in section \ref{subsec:subject-binary-analysis} can be used to create
-subject initial state and memory layout specifications in XML format from the
-subject binary. The generated XML files are included in the system policy
-before the policy compilation step.
+subject initial state and memory layout specifications in XML format based on
+the subject binary. The generated XML files are included in the system policy
+prior to the policy compilation step.
 
 To compile the system policy, the \texttt{skpolicy} tool is required. The
 details about the policy compilation process is described in section
@@ -94,8 +94,8 @@ included in the system policy before compilation by the \texttt{skpolicy} tool.
 The generated memory layout is only as permissive as required by the original
 subject binary. For example, the memory region mapped for executable code
 (the \texttt{.text} section) will be executable but non-writable. This is in
-contrast to just providing a big enough memory region with all permissions to
-the subject with no exact mapping of binary sections to memory access
+contrast to just providing a big enough memory region granting all permissions
+to the subject with no exact mapping of binary sections to memory access
 permissions (i.e. read, write, execute).
 
 \subsection{Policy compilation}\label{subsec:policy-compilation}
@@ -109,11 +109,11 @@ formats as shown in figure \ref{fig:policy-compilation}.
 	\label{fig:policy-compilation}
 \end{figure}
 
-The generated subject page tables, I/O and MSR bitmaps are included in the
-final system image by the \texttt{skpacker} utility. These files are all in
-binary form and correspond to the format mandated by the respective Intel SDM
-chapters \cite{IntelSDM}. Page tables are generated for subjects as well as
-for the kernel itself.
+The generated page tables, I/O and MSR bitmaps are included in the final system
+image by the \texttt{skpacker} utility. These files are all in binary form and
+correspond to the format mandated by the respective Intel SDM chapters
+\cite{IntelSDM}. Page tables are generated for subjects as well as for the
+kernel itself.
 
 The generated SPARK and Assembly source specifications are included in the
 kernel directly. These specifications provide the kernel with the following
@@ -177,7 +177,7 @@ compiler performs additional validity checks in a second step:
 The \texttt{skpacker} tool is responsible to assemble the final bootable system
 image from the parts produced in the preceding build steps. Figure
 \ref{fig:image-packaging} illustrates the process. The tool includes the packer
-specific source specification created from the system policy. This specification
+relevant source specification created from the system policy. This specification
 provides information about subject binaries and their physical address in the
 final image.
 
@@ -191,21 +191,22 @@ final image.
 The remaining configuration information is extracted from the source
 specification provided to the kernel. Listing \ref{lst:skpacker} shows the
 output of a \texttt{skpacker} run with the example system described in section
-\ref{sec:example-system}. The first column in the output designate physical
-addresses in memory. The second column specifies the type of the packaged file
-at this specific memory location. The abbreviations have the following meaning:
+\ref{sec:example-system}. The first column in the output designates physical
+memory addresses in hexadecimal form. The second column specifies the type of
+the packaged file at this specific memory location. The abbreviations have the
+following meaning:
 
-\begin{itemize}
-	\item \emph{PML4} The file at this address designates a page table
-		structure. It is either a page table for a kernel or for a subject. The
-		kernels running on the different logical processors have different page
-		tables to allow distinct stack and per-CPU storage pages transparently.
-	\item \emph{IOBM} The file is a subject I/O bitmap. It specifies which I/O
-		ports a subject is allowed to access.
-	\item \emph{MSBM} The file is a subject MSR bitmap. It specifies which MSRs
-		a subject is allowed to access.
-	\item \emph{BIN} The file is a subject (raw) binary.
-\end{itemize}
+\begin{description}
+	\item[PML4] The file at this address designates a page table structure. It
+		is either a page table for a kernel or for a subject. The kernels
+		running on the different logical processors have different page tables
+		to allow distinct stack and per-CPU storage pages transparently.
+	\item[IOBM] The file is a subject I/O bitmap. It specifies which I/O ports a
+		subject is allowed to access.
+	\item[MSBM] The file is a subject MSR bitmap. It specifies which MSRs a
+		subject is allowed to access.
+	\item[BIN] The file is a subject binary.
+\end{description}
 
 \begin{lstlisting}[
 	caption=Example output of skpacker tool,
@@ -243,11 +244,11 @@ Once the packaging step is complete, the resulting OS image can be booted by any
 Multiboot \cite{multiboot} compliant bootloader.
 
 \subsection{Emulation}\label{subsec:emulation}
-To ease kernel development, the Muen project makes heavy use of emulation by
-employing the Bochs IA-32 emulator. Bochs has support for multiple processors,
-APIC emulation and VMX extensions among many other features. Figure
-\ref{fig:bochs} shows the Bochs emulator running the Muen example system
-described in section \ref{sec:example-system}.
+To ease kernel development, the Muen project makes use of emulation by employing
+the Bochs IA-32 emulator. Among many other features, Bochs has support for
+multiple processors, APIC emulation and VMX extensions. Figure \ref{fig:bochs}
+shows the Bochs emulator running the Muen example system described in section
+\ref{sec:example-system}.
 
 \begin{figure}[h]
 	\centering

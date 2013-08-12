@@ -1,4 +1,29 @@
 \chapter{Conclusion}
+This chapter provides a summary of the contributions and an outlook on possible
+future work.
+
 \section{Contributions}
+The main results of this work are the separation kernel design and prototype as
+well as the accompanying proof artifacts. To our knowledge it is the first
+publicly and freely available separation kernel for the Intel x86 architecture.
+
+Use of the SPARK language and tools for the realization of the Muen kernel
+provides a high level of assurance in the implementation. Full absence of
+runtime errors and some additional properties have been proven. Since the SPARK
+tools are freely available, anyone can reproduce the proofs in their own
+environment.
+
+Focus on use of the latest Intel hardware virtualization features and emphasis
+on a simple design have resulted in a small code size. The kernel is thus well
+suited for review. It is a sound basis for further formal verification such as
+the application of the theorem prover Isabelle/HOL via the SPARK-Bridge tool.
+
+An example system modeled after a realistic component-based use-case has been
+implemented to demonstrate the viability of the design and the usability of the
+kernel prototype. Multicore support makes better use of modern processors that
+feature an increasing number of logical CPUs.
+
+The complete source code, build environment, supporting tools and documentation
+are provided, allowing independent review of the complete TCB.
 
 \input{concl_future_work}

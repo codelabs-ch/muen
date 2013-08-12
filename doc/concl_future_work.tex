@@ -1,16 +1,17 @@
 \section{Future work}
-The following list gives a somewhat ordered overview of possible future
-enhancements to the Muen separation kernel:
+The following list gives an overview of possible future enhancements to the
+Muen separation kernel:
 
 \begin{itemize}
 	\item Covert/Side-Channel analysis
 	\item Cache coloring
 	\item Linux virtualization
 	\item Hardware passthrough/PCIe virtualization
+	\item Policy support tools
 	\item Dynamic resource management
-	\item Multicore subjects
-	\item Performance optimization
+	\item Performance testing \& optimization
 	\item Power Management
+	\item Multicore subjects
 	\item Formal verification
 	\item Fully virtualized subjects/Windows virtualization
 \end{itemize}
@@ -23,29 +24,30 @@ unintended channel that enables information flow must be prohibited or at least
 reduced to an acceptable data rate.
 
 The first step in preventing such flows is to identify potential covert and
-side-channels in the kernel. This includes a systematic and thorough analysis of
-the underlying hardware platform. Special care must be taken to evaluate the
-interaction of the kernel with the hardware since minor differences in
-interpretation of the specification can lead to unintended side-effects. A very
-deep knowledge and understanding of the Intel x86 architecture is required for
-such an analysis.
+side-channels in the kernel to determine the strength of the isolation. This
+includes a systematic and thorough analysis of the scheduler and the underlying
+hardware platform. Special care must be taken to evaluate the interaction of the
+kernel with the hardware since minor differences in interpretation of the
+specification can lead to unintended side-effects. A very deep knowledge and
+understanding of the Intel x86 architecture is required for such an analysis.
 
 A guide to covert channel analysis was published as part of the
 \emph{Rainbow Series}, a set of computer security standards and guidelines,
 termed Light Pink Book \cite{LightPinkBook}.
 
 \subsubsection{Cache coloring}
-A well-known source of high-bandwidth side-channels are processor caches. One
-method to prevent this channel is called \emph{cache coloring}. The main concept
-is to partition the cache into disjoint groups and assigning a color to each of
-the groups. This mechanism has been presented in literature in the context of
-real-time systems for more than 15 years \cite{Mueller:1995:CSS:216633.216677}
+A well-known source of high-bandwidth side-channels are processor caches
+\cite{cryptoeprint:2005:271}. One method to prevent this channel is called
+\emph{cache coloring}. The main concept is to partition the cache into disjoint
+groups and assign a color to each of the groups. This mechanism has been
+presented in literature in the context of real-time systems for more than 15
+years \cite{Mueller:1995:CSS:216633.216677}
 \cite{Liedtke:1997:OCP:523983.828369}.
 
 In a second step each subject is associated with a color. All subjects of a
 given color share the same cache partition. In turn subjects of differing color
-have no access to the same cache locations, which means the cache cannot be used
-as a side-channel.
+have no access to identical cache locations, which means the cache cannot be
+used as a side-channel.
 
 This mechanism could be implemented by extending the policy compilation tool
 without changes to the kernel.
@@ -71,13 +73,13 @@ comparably small increase in kernel complexity.
 Even though the separation kernel has support for resources, that can be
 accessed using port and memory-mapped I/O, newer hardware devices are attached
 to a PCI bus. Prior to their usage, such devices must be configured using a
-mechanism called the PCI configuration space. Since this resource allows to
-(re-)configure PCI devices, the kernel must be in charge of device management
-like initial setup.
+mechanism called the \emph{PCI configuration space}. Since this resource allows
+to (re-)configure PCI devices, the kernel must be in charge of device
+management like initial setup.
 
 Subjects performing device enumeration to discover the PCI topology would need
 a virtualized view of the PCI bus or be altered to not perform disallowed access
-to the PCI configuration space.
+to PCI resources.
 
 Additional measures need to be implemented to enable subject assignment and safe
 usage of PCI devices. Most PCI devices support Direct Memory Access (DMA), which
@@ -101,14 +103,14 @@ during a particular period.
 For example, a system consisting of multiple different VM subjects with their
 respective operating systems need multiple gigabytes of memory when running.
 In a static system configuration, all the assigned memory is committed and
-reserved even though only one of the VMs might be in active use. A system that
+reserved even though only one of the VMs might be in operation. A system that
 would allow dynamic launching and stopping of subjects, only the resources of
 the effectively running subjects would be in use.
 
-This can be achieved by extending the trusted subject $\tau$0. It has the same
+This can be achieved by extending the trusted $\tau$0 subject. It has the same
 trust-level as the kernel and forms part of the TCB. Via an appropriate
-interface it can update parts of the policy and instruct the kernel to perform
-the necessary actions to enforce the changes.
+interface, it can update parts of the policy and instruct the kernel to enforce
+the changes.
 
 \subsection{Formal verification}
 By implementing the kernel in SPARK and proving the absence of runtime errors,

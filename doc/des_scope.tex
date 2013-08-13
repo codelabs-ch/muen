@@ -1,14 +1,14 @@
-\section{Threat model}
+\section{Scope}
 The focus of this project is to design and implement a separation kernel, which
 guarantees strong separation of subjects and can thus serve as a basis for a
-component-based system. This section describes the capabilities of an attacker
-and enumerates the issues that are considered out of scope.
+component-based system. This section describes the the issues that are
+considered out of scope.
 
-\begin{itemize}
-	\item All code that is not part of the TCB can potentially be subverted.
-		This specifically includes \emph{all} untrusted subjects. Thus an
-		attacker can completely control all untrusted subjects.
-\end{itemize}
+It is assumed, that all runtime code that is not part of the kernel, and thus
+the TCB, can potentially be subverted. This specifically includes \emph{all}
+untrusted subjects. The kernel is only concerned with the correct enforcement of
+a given system policy, by only allowing intended information flows between
+subjects and arbitrating ressource access.
 
 The following issues, while very important in the context of constructing a
 high assurance system, are considered out of scope:

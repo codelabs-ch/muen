@@ -1,27 +1,26 @@
 \subsection{Init}\label{subsec:init}
 After reset of a x86 system, the processor begins executing code at physical
-address \texttt{ffff:0000}, which is mapped to the PC
-BIOS\index{BIOS}\footnote{Basic Input/Output System}. The BIOS first performs
-tests and initialization routines and then searches for a bootable storage
-medium. If found, the BIOS copies the first sector of the storage media to
-physical address \texttt{0000:7C00} and jumps to this address (i.e. starts
-executing code at this address). This is where the system bootloader comes to
-life which is responsible to boot operating systems according to its
-configuration. Many bootloaders first load additional code from the storage
-media and then prepare the environment for OS execution.
+address \texttt{ffff:0000}, which is mapped to the PC BIOS\index{BIOS}. The
+BIOS first performs tests and initialization routines and then searches for a
+bootable storage medium. If found, the BIOS copies the first sector of the
+storage media to physical address \texttt{0000:7C00} and jumps to this address
+(i.e. starts executing code at this address). This is where the system
+bootloader comes to life which is responsible to boot operating systems
+according to its configuration. Many bootloaders first load additional code
+from the storage media and then prepare the environment for OS execution.
 
 The Muen separation kernel is compliant to the multiboot specification, version
 0.6.96 \cite{multiboot}. The multiboot standard is used to uniformly boot
-different operating system kernels by multiboot-aware bootloaders.
-The Muen kernel exports the required multiboot header within the first 8192
-bytes of the OS image. The bootloader loads the OS image into memory according
-to the information found in the header and jumps to the physical kernel entry
+different operating system kernels by multiboot-aware bootloaders.  The Muen
+kernel exports the required multiboot header within the first 8192 bytes of the
+OS image. The bootloader loads the OS image into memory according to the
+information contained in the header and jumps to the physical kernel entry
 point specified in this header.
 
 \begin{figure}[h]
 	\centering
 	\input{graph_init_mem_layout_example}
-	\caption{Memory layout on system init (example)}
+	\caption{Example memory layout on system init}
 	\label{fig:init-mem-layout-example}
 \end{figure}
 
@@ -30,11 +29,11 @@ example system. The kernel entry point of this system is at physical address
 \texttt{0x100000}. The kernel uses the memory region starting from this address
 to physical address \texttt{0x203fff} for code and data.
 
-Physical memory below 1 MB called low-memory is used for system data structures
-(colored in red). The AP\index{AP} trampoline\index{trampoline} is needed to
-bootstrap the system's application processors as described in the following
-section. It initially resides in the kernel's text section and must be copied to
-low-memory by the init code.
+Physical memory below 1 MB, called low-memory, is used for system data
+structures (colored in red). The AP\index{AP} trampoline\index{trampoline} is
+needed to bootstrap the system's application processors as described in the
+following section. It initially resides in the kernel's text section and must
+be copied to low-memory by the init code.
 
 To enable VMX operation using the \texttt{VMXON} instruction, one page per
 logical CPU is required. This region is called VMXON\index{VMXON} region. Each
@@ -42,22 +41,22 @@ subject is managed using a VMCS\index{VMCS} data structure, so this memory is
 placed in low-memory as well. The physical location of these regions is
 specified in the policy.
 
-It is the bootloader's task to prepare the system state as demanded by the
-multiboot standard, see \cite{multiboot} section 3.2 for details. The system
-kernel can expect the system to be in this exact state. Before the Muen kernel
-jumps into the main SPARK code, it performs additional preparatory steps. This
+It is the bootloader's task to prepare the system state as dictated by the
+multiboot standard, see \cite{multiboot} section 3.2 for details. The kernel
+can expect the system to be in this exact state. Before the Muen kernel jumps
+into the main SPARK code, it performs additional preparatory steps. This
 initial startup code is written in Assembly and conducts the following tasks:
 
 \begin{enumerate}
 	\item Copy the AP trampoline to low-memory, see section
 		\ref{subsec:mp-support} \item Initialize per-CPU VMXON regions
 	\item Initialize subject VMCS regions
-	\item Enable PAE\index{PAE}\footnote{Physical Address Extension}
+	\item Enable Physical Address Extensions (PAE\index{PAE})
 	\item Initialize per-CPU kernel pagetables
 	\item Enable IA-32e mode and execute-disable (NX)
 	\item Enable paging, write protection, caching and native FPU error
 		reporting
-	\item Set up 64-bit GDT\index{GDT}\footnote{Global Descriptor Table}
+	\item Set up 64-bit Global Descriptor Table (GDT\index{GDT})
 	\item Set up Page-Attribute Table (PAT)
 	\item Set up kernel stack
 	\item Initialize Ada runtime

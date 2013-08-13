@@ -16,10 +16,10 @@ the system's TCB:
 		subject complexity.
 	\item A subject must be able to only access its assigned resources. Access
 		to other resources must be prohibited. This includes devices and memory
-		that has not been assigned to any subject.
+		that has not been allocated to any subject.
 	\item Assignment of subject resources must be static. A malicious subject
-		must not be able to gain access to additional resources or even consume
-		all system resources.
+		must not be able to gain access to additional resources or consume all
+		system resources.
 	\item Isolated subjects must not be able to exchange any information.
 	\item Information flows between subjects must only be present if explicitly
 		specified in the system policy.
@@ -28,7 +28,7 @@ the system's TCB:
 		direction.
 	\item 64-bit programs must be supported to run as subjects.
 	\item Subjects must be able to use hardware devices and process device
-		generated interrupts in particular.
+		generated interrupts.
 	\item A mechanism for inter-subject notifications must exist.
 	\item The Muen kernel design, source code and documentation must be made
 		freely available to allow independent verification and analysis.

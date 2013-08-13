@@ -12,9 +12,9 @@ the kernels \texttt{Handle\_Irq} procedure.
 \end{figure}
 
 To make external interrupt routing work, the kernel programs the system's I/O
-APIC (see section \ref{subsec:apic}) on startup. Since each logical CPU of the
-system runs an identical kernel, device IRQs must be forwarded to the LAPIC of
-the logical processor running the subject in question.
+APIC on startup. Since each logical CPU of the system runs an identical kernel,
+device IRQs must be forwarded to the LAPIC of the logical processor running the
+subject in question.
 
 Which device IRQ is routed to which subject is determined by the assignment of
 hardware devices to subjects in the system policy (see section
@@ -36,8 +36,8 @@ kernel code and assures that the kernel is not disrupted by external interrupts.
 
 Instead, the VT-x external interrupt exiting feature is used to pass control to
 the kernel on interrupts. The activation of this feature leads to a VM exit
-into the kernel with the VM exit reason set to \emph{external interrupt} (1).
-The programming of the I/O APIC ensures that a CPU only receives interrupts
+into the kernel with the VM exit reason set to "external interrupt" (1).  The
+programming of the I/O APIC ensures that a CPU only receives interrupts
 destined for a subject scheduled on this particular core.
 
 If the VM exit reason indicates the occurrence of an external interrupt, the VM

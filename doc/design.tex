@@ -1,22 +1,22 @@
 \chapter{Design}\label{chap:design}
 The design of the Muen kernel is inspired by the Common Criteria separation
 kernel protection profile (SKPP) \cite{SKPP}, which has been used in the
-certification of Green Hills' INTEGRITY-178B kernel (see section
-\ref{subsec:commercial-sks}). The protection profile has been sunset by the
-National Information Assurance Partnership (NIAP) in 2011. Nevertheless we
-believe the document can be used as a sound basis and provide guidance to
-derive requirements for a separation kernel appropriate for systems requiring
-high robustness.
+certification of Green Hills' INTEGRITY-178B kernel. The protection profile has
+been sunset by the National Information Assurance Partnership (NIAP) in 2011.
+Nevertheless we believe the document can be used as a sound basis and provide
+guidance to derive requirements for a separation kernel appropriate for systems
+requiring high robustness.
 
-The separation kernel should allow the construction of systems, that could be
-exposed to attackers with high attack potential and deployed in the most
-difficult threat environment.
+The separation kernel should allow the construction of systems that could be
+exposed to attackers with high potential and deployed in the most difficult
+threat environments.
 
-In the first part of the chapter presents the threat model describing an
+The first part of the chapter presents the threat model describing an
 attacker's capabilities and what is considered out of scope in the context of
 this project. It is followed by the requirements that are at the core of the
 kernel design. After that the subject concept is introduced, which is in turn
-needed for the presentation of the overall system architecture.
+needed for the presentation of the overall system architecture and the design
+of the Muen kernel in section \ref{sec:architecture}.
 
 \input{des_threat_model}
 \input{des_requirements}

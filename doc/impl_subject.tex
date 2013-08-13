@@ -1,7 +1,7 @@
 \section{Subject}\label{sec:impl-subject}
 Subjects are the main components that are executed on top of the kernel, as
 described in section \ref{sec:design-subject}. They are represented using two
-main data structures: \emph{subject specification} and \emph{subject state}.
+main data structures: subject specification and subject state.
 
 \subsection{Specification}
 A subject is specified in the global system policy. The XML specification
@@ -47,18 +47,16 @@ show the record types used by the Kernel to maintain the state of a subject.
 	caption=SPARK CPU registers type]
 	{../common/src/sk.ads}
 
-A special monitoring subject called \emph{subject monitor}\index{subject
-monitor} (SM\index{SM}) may be given access to parts or the entire state of a
-given subject. This enables the SM to alter a subject's state and thus perform
-emulation. Because a subject is not allowed to access the VMCS structure of
-another subject, the kernel also copies register values managed automatically by
-VMX\index{VMX} into the in-memory subject state to enable modification by the SM
-subject.
+A SM\index{SM} subject may access the state of a given subject. This enables
+the SM to alter a subject's state and thus perform emulation. Because a subject
+is not allowed to access the VMCS structure of another subject, the kernel also
+copies register values managed automatically by VMX\index{VMX} into the
+in-memory subject state to enable modification by the SM subject.
 
 During subject setup, the state is first set to a pristine value. This is done
-by assigning the \texttt{null} subject state constants shown by listings
+by assigning the \texttt{Null} subject state constants shown by listings
 \ref{lst:sk-null-subject-state} and \ref{lst:sk-null-cpu-registers} to all
-subject state variables.
+state variables.
 
 \lstinputlisting[
 	language=ada,
@@ -74,8 +72,8 @@ subject state variables.
 	caption=SPARK null CPU registers constant]
 	{../common/src/sk.ads}
 
-The initialization of the subject state is then completed by copying the entry
-point into the code and the address of the stack from the specification.  These
-values are declared in the system policy as part of the subject initial state
-and can be obtained automatically from a native subject binary by using the
+The initialization of the subject state is then completed by copying the code
+entry point and the address of the stack from the specification.  These values
+are declared in the system policy as part of the subject initial state and can
+be obtained automatically from a native subject binary by using the
 \texttt{skconfig} tool (see section \ref{subsec:subject-binary-analysis}).

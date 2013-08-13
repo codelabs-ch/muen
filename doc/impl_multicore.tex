@@ -1,8 +1,8 @@
 \subsection{Multicore support}\label{subsec:mp-support}
 The Muen separation kernel makes use of all logical processors available in a
-system. The processor count of a specific hardware platform is specified in the
-system policy, see section \ref{subsec:hardware}. This section describes how the
-multicore setup is done on kernel startup.
+system. The processor count of a specific hardware platform is declared in the
+system policy, see section \ref{subsec:hardware}. This section describes how
+the multicore setup is done during kernel startup.
 
 Modern PC systems comply to the Intel MultiProcessor (MP\index{MP})
 specification. In short, the Intel MP specification is an open-standard
@@ -24,15 +24,16 @@ they receive a specific inter-processor interrupt (IPI\index{IPI}) sequence.
 
 The BSP starts executing code as described in section \ref{subsec:init}. The
 init code initializes the system and jumps into the main SPARK kernel. The
-kernel running on the BSP is responsible to bootstrap the other application
+kernel running on the BSP is responsible to bootstrap the application
 processors. It first enables its local APIC\index{APIC} to be able to send
-inter-processor interrupts to the halted AP processors. According to the MP
-specification, in order to wakeup the APs, the INIT-SIPI-SIPI\footnote{SIPI is
-short for Startup IPI} IPI sequence must be sent to their APICs. See also figure
-\ref{fig:mp-overview} for an illustration of this process. The SIPI IPI contains
-the physical address vector 0x0 of the trampoline code copied to low-memory by
-the init code. The AP processors jump to this code after wakeup. The trampoline
-performs the following steps:
+inter-processor interrupts to the halted AP processors. In order to wake them
+up, the INIT-SIPI-SIPI\footnote{SIPI is short for Startup
+IPI}\index{INIT}\index{SIPI}\index{IPI} IPI sequence must be sent to their
+APICs as dictated by the MP specification. See also figure
+\ref{fig:mp-overview} for an illustration of this process. The SIPI IPI
+contains the physical address vector 0x0 of the trampoline code copied to
+low-memory by the init code. The AP processors jump
+to this code after wakeup. The trampoline performs the following steps:
 
 \begin{enumerate}
 	\item Set up 32-bit GDT\index{GDT}

@@ -75,7 +75,7 @@ University of Applied Sciences Rapperswil (HSR), Switzerland
 
 \begin{abstract}
 Microkernels are well suited as a basis of systems with high demands on
-robustness. They are by definition small which is a precondition for rigorous
+robustness. They are by definition small, which is a precondition for rigorous
 verification of correctness. Additionally they lend themselves to construction
 of component-based systems where the misbehavior of one partition must not
 impact the whole system. In contrast, attaining high assurance for today's
@@ -84,31 +84,32 @@ and have rich functionality. This fact is highlighted by regular security
 updates provided by operating system vendors.
 
 A separation kernel (SK) is a specialized security kernel which provides an
-execution environment for multiple subjects which can only communicate according
-to a given policy and are otherwise isolated from each other. Hereby the
-isolation also includes the limitation of potential side- and covert channels.
-SKs are generally more static and smaller than microkernels which minimizes the
-possibility of kernel failure and should simplify the application of formal
-verification techniques.
+execution environment for multiple components that can only communicate
+according to a given policy and are otherwise isolated from each other. Hereby
+the isolation also includes the limitation of potential side- and covert
+channels. SKs are generally more static and smaller than microkernels, which
+minimizes the possibility of kernel failure and should simplify the application
+of formal verification techniques.
 
 Even though the SK concept has garnered quite some attention from the research
 community over the last thirty years, no freely available SK exists to this
-date.  There are only a few commercial products but very little technical
-information and none of the implementations are publicly available. Recent
-addition of advanced hardware virtualization support (such as VT-x, VT-d and
-EPT) to the Intel x86 architecture have the potential of greatly simplifying the
-implementation of a separation kernel. This thesis presents a design of a
-separation kernel for the Intel x86 architecture using the latest Intel hardware
-features. An open-source prototype written in SPARK demonstrates the viability of the
-envisioned concept. TODO: Add sentence to highlight use of SPARK (safe
-programming language)
+date. A few commercial products exist, but little technical information is
+publicly available.
+
+Recent addition of advanced hardware virtualization support to the Intel x86
+architecture have the potential of greatly simplifying the implementation of a
+separation kernel. This thesis presents a design of a separation kernel for the
+Intel x86 architecture using the latest Intel hardware features. An open-source
+prototype written in SPARK demonstrates the viability of the envisioned
+concept.  Application of SPARK's proof capabilities increases the assurance of
+the implementation.
 \end{abstract}
 
 \section*{Acknowledgments}
 Foremost, we would like to express our sincere gratitude to our advisor Prof.
-Dr. Andreas Steffen for the continuous support during our studies and for the
-guidance in writing this master thesis. His help and generosity allowed us to
-work in such an interesting field of research.
+Dr. Andreas Steffen for the continuous support in the course of our studies and
+for the guidance in writing this master thesis. His help and generosity allowed
+us to work in such an interesting field of research.
 
 Many thanks also to our colleagues and friends at secunet Security Networks AG
 in Germany, Alexander Senier, Robert Dorn and Stefan Berghofer for their
@@ -120,8 +121,8 @@ would not have been able to implement the Muen kernel in such short time.
 We also thank Prof. Dr. Endre Bangerter from the University of Applied Sciences
 in Bern for being our expert and reviewer.
 
-Last but not least, many thanks to our families and friends for the support and
-understanding during the writing of this master thesis.
+Last but not least, many thanks to our families and friends for their support
+and understanding throughout the writing of this master thesis.
 
 \tableofcontents
 \listoffigures

@@ -2,8 +2,8 @@
 The event\index{event} mechanism provided by the Muen kernel is used for
 inter-subject signalisation. A subject is allowed to send an event to another
 subject if this operation has been granted by an entry in the subject's policy
-event table, see section REF. The following listing is used as an example to
-illustrate the event mechanism.
+event table. The following listing is used as an example to illustrate the
+event mechanism.
 
 \input{lst_event_table}
 
@@ -25,7 +25,7 @@ IPI causes the target processor to trap into the kernel, which results in the
 preemption of the running subject and therefore the immediate delivery of the
 interrupt on next subject entry. The event IPI option is only valid if the
 destination subject runs on a different logical CPU than the sending subject.
-This is enforced by the \texttt{skpolicy} tool.
+This is enforced by the policy compiler.
 
 To signal an event, subjects implemented in Ada or SPARK can use the
 \texttt{SK.Hypercall} package provided by Muen. The package contains the
@@ -36,16 +36,17 @@ Muen kernel to implement the hypercall mechanism.  With the Intel VMX
 extensions, a hypercall is a special trap with basic exit reason number 18.
 
 The Muen kernel handles hypercall traps separately in the
-\texttt{Handle\_Hypercall} procedure, see section \ref{subsec:traps}. It
-performs a lookup in the sending subject's event table to find the associated
-event entry. If no such entry exists, the kernel logs an error message (in
-debug mode only) and ignores the event. Valid events of type interrupt are
-injected using the VMX interrupt injection capabilities, see section
-\ref{subsec:int-injection}. If the event is of type handover, the sending
-subject is replaced by the destination subject in the scheduling plan. The
-destination subject is then executed in place of the sending subject until it
-yields the CPU in favor of another subject. This method can be used to implement
-co-operative scheduling in subject groups.
+\texttt{Handle\_Hypercall} procedure. It performs a lookup in the sending
+subject's event table to find the associated event entry. If no such entry
+exists, the kernel logs an error message (in debug mode only) and ignores the
+event. Valid events of type interrupt are injected using the VMX interrupt
+injection capabilities.
+
+If the event is of type handover, the sending subject is replaced by the
+destination subject in the scheduling plan. The destination subject is then
+executed in place of the sending subject until it yields the CPU in favor of
+another subject. This method can be used to implement co-operative scheduling
+in subject groups.
 
 \begin{figure}[h]
 	\centering

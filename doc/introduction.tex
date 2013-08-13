@@ -4,25 +4,32 @@ TODO
 \section{Notation}
 This section presents the notational conventions used throughout this document.
 
-\subsection{Keywords}
+\paragraph{Keywords}
 Important terms and concepts that are introduced for the first time are
-presented in an italic style, e.g. \emph{subject specification}. Subsequent
-occurences of the same term have no special formatting.
+presented in \emph{italic style}. Subsequent occurences of the same term have
+no special formatting. The same style is also used to \emph{emphasize} words in
+the text.
 
-\subsection{Numbers}
+\paragraph{Numbers}
 Regular numbers that have no leading special character are expressed as decimal
 values. Hexadecimal numbers such as memory addresses are explicitly preceded by
 \texttt{0x}.
 
-Storage units such as kilo-, mega- and gigabyte are designated by the common
-abbreviations KB, MB and GB.
+\paragraph{Units}
+Storage units such as kilo-, mega- and gigabyte are designated by
+the common abbreviations KB, MB and GB.
+
+\paragraph{Tools and Procedures}
+References to subroutines and keywords of a programming language, as well as
+command line tools are formatted in \texttt{typewriter} style.
 
 \section{Related literature}
 Since the target hardware platform of the separation kernel is the Intel x86
 architecture, its specification called "Intel\textsuperscript{\textregistered}
-64 and IA-32 Architectures Software Developer's Manual" \cite{IntelSDM} is the
-main source of technical information about the hardware platform. The documents
-are commonly referred by their short name Intel SDM.
+64 and IA-32 Architectures Software Developer's Manual"
+\cite{IntelSDM}\index{Intel SDM} is the main source of technical information
+concerning the hardware platform. The documents are commonly referred to by
+their short name \emph{Intel SDM}.
 
 The books are available online and updated by Intel on a regular basis. This
 can lead to changes in the document structure. The chapter and section
@@ -30,8 +37,8 @@ citations given in this report refer to the Intel SDM revision 44, released in
 August 2012.
 
 \section{Provenance of project name}
-\emph{Muen} is Japanese and translates to 'unrelated/without relation'. It was
-chosen since it is a fitting allegory of the components executing on top of the
+\emph{Muen} is Japanese and translates to "unrelated/without relation". It was
+chosen since it is a fitting allegory of the components isolated by the
 separation kernel. Figure \ref{fig:muen} depicts the word in Japanese kanji
 characters.
 
@@ -42,6 +49,6 @@ characters.
 	\label{fig:muen}
 \end{figure}
 
-The root of the word Muen is 'Mu' which denotes a negative: the absence of
-something. It is a keyword in Chan and Zen Buddhism and also part of the Jargon
-File \cite{jargonfile}.
+The root of the word Muen is "Mu" which denotes a negative: the absence of
+everything. It is a keyword in Chan and Zen Buddhism and also mentioned in the
+Jargon File \cite{jargonfile}.

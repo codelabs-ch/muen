@@ -2,9 +2,8 @@
 Even though a more detailed familiarity with the subject is required for a full
 understanding of the design and implementation of the Muen kernel, this section
 tries to give a short tour of the Intel x86 architecture. The interested reader
-is directed to the Intel Software Developer's Manuals (SDM\index{SDM})
-\cite{IntelSDM}, which contain a complete and in-depth description of the x86
-architecture.
+is directed to the Intel SDM \cite{IntelSDM}, which contains a complete and
+in-depth description of the x86 architecture.
 
 The basic components of a modern Intel x86 computer are depicted in figure
 \ref{fig:intel-architecture}.
@@ -19,13 +18,13 @@ The basic components of a modern Intel x86 computer are depicted in figure
 \subsection{Processor}
 The main processor of the system is called the central processing unit
 (CPU\index{CPU}). Multi-processor systems (MP\index{MP}) have multiple CPUs
-which in term can have multiple cores. Each core in each CPU is a so called
+which again can have multiple cores. Each core in each CPU is a so called
 \emph{logical CPU} which executes instructions. These instructions change the
 state of the logical CPU and the system as a whole.
 
 \subsubsection{Execution environment}\label{subsubsec:exec-env}
-A program executing on an processor is given access to resources to store and
-retrive information, such as code or data. Resources provided by a modern
+A program executing on a processor is given access to resources to store and
+retrieve information, such as code or data. Resources provided by a modern
 64-bit processor constituting the basic execution environment are described in
 the following list:
 
@@ -51,7 +50,8 @@ the following list:
 	\item[Model-specific registers (MSRs)] provide control of various hardware
 		and software-related features. Their number and functionality varies
 		depending on the given processor implementation.
-	\item[I/O ports] allow transfer of data to and from Input/Output ports.
+	\item[I/O ports] allow transfer of data to and from Input/Output
+		(I/O\index{I/O}) ports.
 \end{description}
 
 Further details about the Intel processor execution environment can be found in
@@ -88,47 +88,45 @@ while disregarding other privilege levels, the 64-bit extension to the Intel
 architecture dropped support for rings 1 and 2.
 
 Privileged instructions such as switching memory management data structures are
-only executable in ring 0, also called supervisor mode. Operating systems such
-as Linux, usually execute user applications in the unprivileged ring 3, called
-user mode.
+only executable in ring 0, also called \emph{supervisor mode}. Operating systems
+such as Linux usually execute user applications in the unprivileged ring 3,
+called user mode.
 
 \subsubsection{IA-32e mode}
-Intel 64 architecture runs in a processor mode named \emph{IA-32e} also known as
-\emph{long mode}. It has two submodes: compatibility and 64-bit mode. The first
-submode allows the execution of most 16 and 32-bit applications to run without
-re-compilation by essentially providing the same execution environment as 32-bit
-protected mode.
+The Intel 64 architecture runs in a processor mode named \emph{IA-32e}, also
+known as \emph{long mode}. It has two submodes: compatibility and 64-bit mode.
+The first submode allows the execution of most 16 and 32-bit applications
+without re-compilation, by essentially providing the same execution environment
+as in 32-bit protected mode.
 
 The IA-32e 64-bit submode enables 64-bit kernels and operating systems to run
 applications making use of the full 64-bit linear address space. The execution
 environment is extended by additional general purpose registers and most
-register sizes are extended to 64-bit.
+register sizes are extended to 64 bits.
 
 In the context of this project, IA-32e mode generally refers to the 64-bit
 IA-32e submode if not stated differently. Additional information about this mode
 of operation and the provided execution environment can be found in
-\cite{IntelSDM}, volume 1 section 3.2.1.
+\cite{IntelSDM}, volume 1, section 3.2.1.
 
 \subsection{Memory management}
 Current processors support management of physical memory through means of
-segmentation and paging. Logical addresses are translated to linear addresses
-using the segmentation mechanism. In a second step, linear addresses are
-translated to physical addresses using paging.
+\emph{segmentation}\index{Segmentation} and \emph{paging}\index{Paging}.
+Application processes running on a processor are provided with a virtual
+address space. The processes are given the illusion that they run alone on a
+system and have unrestricted access to system memory. Memory access of
+processes are translated using the aforementioned segmentation and paging
+mechanisms.
 
 Memory management is done in hardware by the memory management unit
 (MMU)\index{MMU}.  An operating system must set up certain data structures
 (descriptor tables and page tables) to instruct the MMU how logic and linear
 memory addresses map to physical memory.
 
-Processes running on a processor are provided with a virtual address space. The
-processes think they run alone on a system and have unrestricted access to
-system memory. Memory access of processes are translated by the MMU using the
-aforementioned paging structures.
-
-Logical addresses are transformed to linear addresses by adding an offset to the
-given virtual address. This mechanism is called segmentation. In IA-32e
-segmentation has effectively been dropped in favor of paging, creating a flat
-64-bit linear address space.
+Logical addresses are transformed to linear addresses by adding an offset to
+the given virtual address. This mechanism is called segmentation. In IA-32e
+mode, segmentation has effectively been dropped in favor of paging, creating a
+flat 64-bit linear address space.
 
 Paging is the address translation process of mapping linear to physical
 addresses. Memory is organized in so called pages. A memory page is the unit
@@ -143,16 +141,16 @@ such as 4 KB, 2 MB and 1 GB.
 \end{figure}
 TODO:Draw figure
 
-An exemplary one-level address translation process illustrated in
-figure \ref{fig:address-translation}. The MMU splits the linear address in
-distinct parts which are used as indexes into page tables. A page table entry
-specifies the address of a physical memory page called \emph{page frame}.
-Addition of the offset part of the input address to the page frame yields the
-effective physical address.
+An exemplary one-level address translation process is illustrated in figure
+\ref{fig:address-translation}. The MMU splits the linear address in distinct
+parts which are used as indexes into page tables. A page table entry specifies
+the address of a physical memory page called \emph{page frame}.  Addition of the
+offset part of the input address to the page frame yields the effective physical
+address.
 
 Paging structures can be arranged hierarchically by letting page table entries
 reference other paging structures instead of physical memory pages. In fact,
-Intel's IA-32e mode uses four levels of address mapping which are presented in
+Intel's IA-32e mode uses four levels of address mapping, which are presented in
 the following list:
 
 \begin{itemize}
@@ -169,48 +167,46 @@ A linear memory address is split into five parts, when all four levels of paging
 structures are used. The first element identifies the PML4 entry, the second
 references the PDPT entry and so on. The fifth part constitutes the offset added
 to the page frame address. Larger page sizes are supported by letting higher
-level paging structures reference physical memory pages. In such a case all
+level paging structures reference physical memory pages. In such a case, all
 remaining parts of the linear memory address are used as offset into the larger
 page frame.
 
-Additionally paging structure entries allow to specify properties and
-permissions such as write access or caching behavior for the referenced physical
-memory page. The permissions are checked and enforced by the MMU. This mechanism
-allows for fine-grained memory management on a per-process basis. The use of
-different paging structures depending on the currently executing process allows
-for partitioning and separation of system memory using the MMU. This can be
-achieved by changing the value of the processor's CR3 control whenever a process
-switch occurs.
+Additionally, paging structure entries allow to specify properties and
+permissions such as write access or caching behavior for the referenced
+physical memory page. The permissions are checked and enforced by the MMU.
+
+The paging mechanism enables fine-grained memory management on a per-process
+basis. The use of different paging structures depending on the currently
+executing process allows for partitioning and separation of system memory using
+the MMU. This can be achieved by changing the value of the processor's CR3
+control whenever a process switch occurs.
 
 If a process tries to access a memory location that has no valid address
-translation the processor raises a page fault exception. The operating system's
-page fault handler is then in charge to correct the failure condition, e.g.
-dynamically allocating and mapping the requested memory region by changing the
-paging structures. It can then seamlessly resume the execution of the faulting
-process. This technique is used by many modern operating systems such as Linux
+translation, the processor raises a page fault exception. The operating system's
+page fault handler is then in charge to correct the failure condition. It can
+seamlessly resume the execution of the faulting process after handling the
+exception. This technique is used by many modern operating systems such as Linux
 to implement dynamic memory management.
-
-A processor is connected to the memory controller hub via the system bus, which
-is also called front side bus (FSB)\index{FSB}.
 
 For a more in-depth look at memory management and address translation the reader
 is referred to \cite{IntelSDM}, volume 3A sections 3 \& 4 and
 \cite{Drepper07whatevery}.
 
 \subsection{Exceptions and interrupts}\label{subsec:exceptions-interrupts}
-Exceptions and interrupts signal an event that occured in the system or the
+Exceptions and interrupts signal an event which occurred in the system or a
 processor that needs attention. They can occur at any time and are normally
-handled by preempting the currently running process and transfering execution to
-a special interrupt service routine (ISR).
+handled by preempting the currently running process and transferring execution
+to a special interrupt service routine (ISR).
 
-Each exception or interrupt has an associated number, in the range of 0 to 255,
+Each exception or interrupt has an associated number in the range of 0 to 255,
 which is called the interrupt vector. Numbers in the range of 0 to 31 are
-reserved for the Intel architecture. They are used to uniquely identify all
-specified exceptions, see \cite{IntelSDM}, volume 3A section 6.15. The remaining
-vectors can be freely used by hardware devices and the operating system.
+reserved for the Intel architecture. They are used to uniquely identify
+exceptions, see Intel SDM \cite{IntelSDM}, volume 3A, section 6.15.  The
+remaining vectors can be freely used by hardware devices and the operating
+system.
 
-Interrupts are caused by hardware devices to notify the processor that the
-device needs servicing. An example is a network card that generates an interrupt
+Interrupts are caused by hardware devices to notify the processor that a device
+needs servicing. An example is a network card that generates an interrupt
 whenever a data packet is received from the network. The interrupt handler
 responsible for servicing the network card is invoked upon recognition of the
 event and can then copy the data to system memory and acknowledge the successful
@@ -220,28 +216,28 @@ Exceptions are generated by the processor itself when it detects an error
 condition during instruction execution. Causes for exceptions are for example
 division by zero or page faults.
 
-Interrupts generated by external devices can be blocked by disabling the CR0.IF
-flag. When the flag is not set, such interrupts are not recognized by the
-processor until the flag is enabled again. Exceptions however are not affected
-by the CR0.IF flag and are processed as usual.
+Interrupts generated by external devices can be blocked by disabling the
+processor's IF flag in the FLAGS register. When the flag is not set, such
+interrupts are not recognized by the processor until the flag is enabled again.
+Exceptions however are not affected by the IF bit and are processed as usual.
 
 The main data structure which facilitates interrupt handling is the interrupt
 descriptor table (IDT)\index{IDT}. It is a list of entries which point to
 interrupt handler procedures. The IDT can be located anywhere in system memory
 and its physical address must be stored in the IDT registers (IDTR). When the
-processor receives and interrupt, it uses the interrupt vector as an index into
+processor receives an interrupt, it uses the interrupt vector as an index into
 the IDT to determine the associated handler. Execution control is then
-transfered by invoking the handler procedure.
+transferred by invoking the handler procedure.
 
 \subsection{Memory Controller Hub}
 The memory controller hub (MCH)\index{MCH}, also called
 \emph{Northbridge}\index{northbridge}, connects the CPU to random access memory
-(RAM), the graphics card and southbridge (presented in the next section) of the
+(RAM), the graphics card and Southbridge (presented in the next section) of the
 system. The processor accesses these resources by sending memory requests via
 the system bus. The MCH decodes the requests and forwards them to RAM or the
-Southbridge, depending on the physical address. If for example a request
-contains an address of a memory-mapped device, the chipset of the MCH forwards
-the request to the Southbridge.
+Southbridge, depending on the physical address. If a request contains an address
+of a memory-mapped device for example, the chipset of the MCH forwards the
+request to the Southbridge.
 
 \subsection{Input/Output Controller Hub}\label{subsec:ich}
 The input/ouput controller hub (ICH\index{ICH}), also called
@@ -250,40 +246,39 @@ platform peripherals, such as keyboards, USB connections and other buses (PCI
 Express etc). Newer models contain an I/O memory management unit
 (IOMMU\index{IOMMU}), which provides address translation functionality similar
 to the MMU, but for accesses to system memory initiated by I/O devices.  This is
-necessary since PCI devices perform direct memory access (DMA)\index{DMA}, which
-bypasses the processor's MMU memory protection.  Like the MMU, an operating
-system must initialize data structures and setup the IOMMU for proper separation
-of physical memory accessible by devices.
+necessary since PCI devices can perform direct memory access (DMA)\index{DMA},
+which bypasses the processor's MMU memory protection.  Like the MMU, an
+operating system must initialize data structures and setup the IOMMU for proper
+separation of physical memory accessible by devices.
 
 \subsection{Platform Controller Hub}
 More recently, Intel has rearranged the presented hub architecture and has
 integrated much of the functionality provided by the Northbridge into the CPU
 \cite{IntelQPI}. All remaining functions of the Northbridge and Southbridge have
-been combined and incorporated into a new component called the platform
-controller hub (PCH)\index{PCH}. This new architecture avoids the bottleneck
+been combined and incorporated into a new component called the \emph{platform
+controller hub} (PCH)\index{PCH}. This new architecture avoids the bottleneck
 presented by the system bus connection between the CPU and the Northbridge.
 
 \subsection{Programmable Interrupt Controller}\label{subsec:apic}
 A Programmable Interrupt Controller (PIC\index{PIC}) is used to connect several
 input sources to a CPU. Hardware devices raise interrupts to inform a CPU that
-some event occurred which must be handled. For example a network card notifies
-the CPU that it received data which must be processed. One of the best known PIC
-is the Intel 8259A which was part of the original PC\footnote{Personal
+some event occurred which must be handled. One of the best known PIC is the
+Intel 8259A which was part of the original PC\footnote{Personal
 computer}\index{PC} introduced in 1981.
 
 Early PC/XT ISA\index{ISA} systems used one 8259 controller, allowing only eight
 interrupt input lines. By cascading multiple controllers, more lines can be made
 available but nevertheless, a more flexible approach was needed with the advent
 of multiprocessor (MP\index{MP}) systems containing multiple processor cores.
-Implementing efficient interrupt routing on an MP system using PICs was an
-issue.
+Implementing efficient interrupt routing on an MP system using PICs was
+problematic.
 
 Intel presented the Advanced Programmable Interrupt Controller
 (APIC\index{APIC}) concept with the introduction of the Pentium processor. It
 was one of several attempts to solve the interrupt routing efficiency problem.
 The Intel APIC system is composed of two components: a local APIC
-(LAPIC\index{LAPIC}) in each CPU of the system and the I/O APIC, see figure
-\ref{fig:apic} for a schematic view.
+(LAPIC\index{LAPIC}) in each CPU of the system and the I/O APIC\index{I/O APIC},
+see figure \ref{fig:apic} for a schematic view.
 
 \begin{figure}[h]
 	\centering
@@ -294,13 +289,15 @@ The Intel APIC system is composed of two components: a local APIC
 
 A LAPIC receives interrupts from internal sources (such as the timer interrupt)
 and from the I/O APIC or other external interrupt controllers. It sends these
-interrupts to the processor core for handling. In MP systems the LAPIC also
+interrupts to the processor core for handling. In MP systems, the LAPIC also
 sends and receives inter-processor interrupt messages (IPI\index{IPI}) from and
-to other logical processors on the system bus.
+to other logical processors on the system bus. Each local APIC has an unique ID
+called APIC ID\index{APIC ID}. This ID is assigned by system hardware at power
+up.
 
 The I/O APIC is used to receive external interrupts from the system and its
-associated devices and relay them to the local APICs. The LAPICs are connected
-to the I/O APIC via system bus. The routing of interrupts to the appropriate
+associated devices and relays them to the local APICs. The LAPICs are connected
+to the I/O APIC via the system bus. The routing of interrupts to the appropriate
 LAPICs is configured using a redirection table which must be setup by the
-operating system. For more information about APIC and I/O APIC see chapter 10 in
-\cite{IntelSDM}.
+operating system. For more information about APIC and I/O APIC see Intel SDM
+\cite{IntelSDM}, volume 3A, chapter 10.

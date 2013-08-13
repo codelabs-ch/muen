@@ -7,20 +7,21 @@ The kernel provides a per-subject array of size 32 to store pending interrupts
 for delivery.  Interrupts can only be delivered to a subject if it is ready to
 receive interrupts (i.e. the subject is in an "interruptible" state). This can
 be determined by reading the appropriate VMCS field (see Intel SDM
-\cite{IntelSDM} Vol. 3C, chapter 24.4.2). Furthermore the subject must have the
-IF bit in the FLAGS register set. If these two conditions are true, interrupts
-are injected by writing to the subject's VMCS interrupt information field.
+\cite{IntelSDM} volume 3C, section 24.4.2). Furthermore the subject must have
+the IF bit in the FLAGS register set. If these two conditions are true,
+interrupts are injected by writing to the subject's VMCS interrupt information
+field.
 
 On the next VM entry, the virtual CPU (VCPU\index{VCPU}) executing subject code
 is interrupted. The handling of an injected interrupt is analogous to the
 handling of interrupts on a physical CPU and must be performed by the subject
-(see \cite{IntelSDM}, volume 3A chapter 6 for details on interrupt and exception
+(see \cite{IntelSDM}, volume 3A, chapter 6 for details on interrupt and exception
  handling). Native subjects written in Ada/SPARK may use the minimal interrupt
 handling packages provided by the Muen project, while VM subjects continue to
 use their unmodified interrupt handling code.
 
 To improve interrupt delivery speed and to decrease subject interrupt response
-latency, the VMX 'interrupt window exiting' feature is enabled in the subject's
+latency, the VMX "interrupt window exiting" feature is enabled in the subject's
 VMCS if multiple events are pending or if an event can not be delivered because
 the subject is not in an interruptible state. The feature causes a VM exit as
 soon as the subject is ready to process interrrupts again, causing the immediate

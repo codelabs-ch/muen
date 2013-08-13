@@ -18,18 +18,18 @@ high assurance system, are considered out of scope:
 		bootloader hands over execution. It is assumed that the system is setup
 		and initialized properly. How the system is securely bootstrapped (e.g.
 		using a trusted boot process) and initialized and how the integrity of
-		the kernel is assured are not considered.
-	\item[Hardware] It is assumed, that hardware such as the CPU, memory
-		management unit and other devices are working correctly according to
+		the kernel is assured is not considered.
+	\item[Hardware] It is assumed that hardware, such as the CPU, memory
+		management unit and other devices, are working correctly according to
 		their specification. Problems due to buggy or even malicious hardware
 		are considered out of scope.
 	\item[Physical attacks] Issues predicated on an attacker having physical
 		access to the system are not considered.
-	\item[Firmware] A modern PC contains firmware and many embedded controllers,
+	\item[Firmware] A modern PC contains firmware and many embedded controllers
 		that are only partly (if at all) controllable by an operating system
 		kernel. This includes technologies such as Intel AMT/ME, System
-		Management Mode (SMM) and the system BIOS, which have access to
-		sensitive system resources.
+		Management Mode (SMM) and the system BIOS\index{BIOS}\footnote{Basic
+		Input/Output System}, which have access to sensitive system resources.
 	\item[Policy validity] The separation kernel provides the mechanisms to
 		enforce a given, user-defined policy. The focus is on the correct
 		enforcement of a provided system configuration. The user is in charge of

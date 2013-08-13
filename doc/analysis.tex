@@ -431,7 +431,7 @@ information flow between subjects.
 Shared memory is the main method for subjects to share information. Such regions
 must be defined in the subject specification as part of the system policy. Use of
 access attributes enables the definition of directed flows, where data can only
-be transfered from source to destination.
+be transferred from source to destination.
 
 The memory layout is fixed at integration time and the \texttt{skpolicy} tool
 generates static page tables, which control the physically accessible memory of
@@ -669,6 +669,3 @@ The small size of the code base should make it suitable for further analysis, be
 it manual or automated. Having such a small kernel should lower the time and
 effort needed for full formal verification, even though such a task is still
 expected to be a substantial amount of work.
-
-\section{Performance}\label{sec:performance}
-TODO

@@ -32,9 +32,9 @@ kernel with the hardware since minor differences in interpretation of the
 specification can lead to unintended side-effects. A very deep knowledge and
 understanding of the Intel x86 architecture is required for such an analysis.
 
-A guide to covert channel analysis was published as part of the
-\emph{Rainbow Series}, a set of computer security standards and guidelines,
-termed Light Pink Book \cite{LightPinkBook}.
+A guide to covert channel analysis was published as part of the "Rainbow
+Series", a set of computer security standards and guidelines, termed Light Pink
+Book \cite{LightPinkBook}.
 
 \subsubsection{Cache coloring}
 A well-known source of high-bandwidth side-channels are processor caches
@@ -96,7 +96,7 @@ an acceptable level.
 \subsection{APIC virtualization}\label{subsec:apicv}
 Currently pending events that are to be injected into subjects are stored in
 per-subject data structures, that are protected by a spinlock. This is
-sub-optimal since having to acquire locks in interrupt context is not very
+sub-optimal since having to acquire locks when handling interrupts is not very
 efficient.
 
 Intel provides an advanced hardware virtualization feature called APIC
@@ -121,7 +121,7 @@ kernel simply enforces a given policy, the policy writer is responsible for the
 correctness of the system specification.
 
 Currently, to write a policy the system integrator has to edit an XML file
-directly. While \texttt{skpolicy} tool performs validation checks to catch
+directly. While the \texttt{skpolicy} tool performs validation checks to catch
 obvious configuration mistakes, it is an error-prone process.
 
 A graphical policy tool would greatly simplify this process by providing a more

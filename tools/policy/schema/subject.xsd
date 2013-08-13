@@ -44,7 +44,7 @@
 		<xs:attribute name="io_bitmap_address"  type="address_type"          use="required">
 			<xs:annotation>
 				<xs:documentation>
-					Physical memory address of the subject's I/O bitmap, see Intel SDM, volume 3c,
+					Physical memory address of the subject's I/O bitmap, see Intel SDM, volume 3C,
 					section 24.6.4.
 				</xs:documentation>
 			</xs:annotation>
@@ -52,7 +52,7 @@
 		<xs:attribute name="msr_bitmap_address" type="address_type"          use="required">
 			<xs:annotation>
 				<xs:documentation>
-					Physical memory address of the subject's MSR bitmap, see Intel SDM, volume 3c,
+					Physical memory address of the subject's MSR bitmap, see Intel SDM, volume 3C,
 					section 24.6.9.
 				</xs:documentation>
 			</xs:annotation>

@@ -1,12 +1,60 @@
 \chapter{Introduction}
-TODO
+As computer systems are entrusted with more and more sensitive and personal
+information, the need to effectively control who has access to the data becomes
+increasingly important. Recent revelations about very sophisticated and targeted
+attacks as well as broad, nation-wide surveillance programs seriously call the
+effectiveness of currently deployed security systems in question.
+
+A common defense strategy is to compartmentalize information and its processing.
+An example would be the usage of a dedicated computer for internet banking, that
+is only connected to the internet when needed. It is obvious that this approach
+does not scale well, since this would necessitate having a separate device for
+each task that should be performed in some form of isolation.
+
+A separation kernel (SK) is a specialized security kernel which provides an
+execution environment for multiple components that can only communicate ac-
+cording to a given policy and are otherwise isolated from each other. Hereby
+the isolation also includes the limitation of potential side- and covert channels.
+It can serve as a basis for the implementation of a component-based system.
+Unfortunately to our knowledge, no freely available SK exists to this date.
+
+Related problems can arise in cloud services, where multiple unaffiliated parties
+share the same physical machine but must be separated from each other to not
+(involuntarily) share any data. Recent attacks
+\cite{Wu:2012:WHH:2362793.2362802} have demonstrated that current solutions do
+not provide the necessary degree of isolation. Since the adoption of
+virtualization, especially in the field of cloud computing, has rapidly
+increased in the past years, chip manufacturers such as Intel are extending
+their processors with advanced hardware virtualization features.
+
+Another issue is the complexity associated with developing security systems that
+must exhibit very strong robustness and provide high assurance. Tools and
+methods such as formal verification exist but are rarely used. A small code base
+results in better verifiability since the complexity of the software should be
+manageable and the effort needed for review is greatly reduced.
+
+SPARK, which is a programming language, is used for the development of industrial
+high integrity projects. It provides means to proof certain properties of the
+code and its track record \cite{Chapman:2000:IES:369264.369270} shows, that it
+can be used to effectively implement real-world systems.
+
+All these recent developments provide a good setting for the design and
+implementation of an open-source separation kernel. Using hardware
+virtualization features for component separation and leveraging Intel's latest
+processor features should allow to implement a minimal kernel suitable for
+formal verification. Using SPARK as the programming language greatly increases
+the confidence in the implementation since it allows to completely eliminate
+complete categories of common programming errors, e.g. buffer overflows.
+
+This document presents the design and implementation of the Muen separation
+kernel, which was developed during the course of our master thesis.
 
 \section{Notation}
 This section presents the notational conventions used throughout this document.
 
 \paragraph{Keywords}
 Important terms and concepts that are introduced for the first time are
-presented in \emph{italic style}. Subsequent occurences of the same term have
+presented in \emph{italic style}. Subsequent occurrences of the same term have
 no special formatting. The same style is also used to \emph{emphasize} words in
 the text.
 

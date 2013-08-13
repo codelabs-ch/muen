@@ -1,7 +1,15 @@
-\begin{tikzpicture}
-	\node[bluebox] (pti) {Page table index};
-	\node[bluebox, right=of pti] (ofs) {Offset};
-	\node[greenbox, below=of pti] (pt) {Page table};
+\begin{tikzpicture}[minimum height=0.6cm]
+	\node[bluebox] (pti) {Index};
+	\node[bluebox, minimum width=3cm, right=1mm of pti] (ofs) {Offset};
+	\node[above=1mm of ofs, xshift=-0.5cm] (via) {Virtual address};
 
-	\draw[arrow] (pti) -- (pt);
+	\node[greenbox, minimum width=3.2cm, minimum height=1.5cm, label={[yshift=-18pt]Page table}, below=of ofs] (pta) {};
+	\node[graybox] (pte) at (pta.south) [above=5pt] {Page table entry};
+
+	\node[apribox, minimum width=3.2cm, minimum height=1.5cm, label={[yshift=-18pt]Page frame}, right=of pta, xshift=-0.5cm, yshift=1.5cm] (php) {};
+	\node[graybox] (paf) at (php.south) [above=5pt] {Physical address};
+
+	\draw[arrow] (pti) |- (pte);
+	\draw[arrow] (ofs) |- (paf);
+	\draw[arrow] (pte) -| (php);
 \end{tikzpicture}

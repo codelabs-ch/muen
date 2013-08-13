@@ -277,12 +277,11 @@ SPARK tools will be utilized to show certain properties of the kernel code,
 especially proof of absence of runtime errors is desired. The code of the kernel
 must also be minimal to facilitate a small TCB.
 
-Non-timing critical operations should be implemented in a special trusted
-subject written in SPARK. This subject is called $\tau$0 and is considered an
-integral part of the kernel. TODO: Shortly explain time-critical and real-time
-in this context. While keeping the kernel as simple as possible, this will
-allow for later adoption of more dynamic resource handling and scheduling
-mechanisms.
+Non-essential operations should be implemented in a special trusted subject
+written in SPARK. This subject is called $\tau$0 and is considered an
+integral part of the Muen TCB. While keeping the kernel as simple as possible,
+this will allow for later adoption of more dynamic resource handling and
+scheduling mechanisms.
 
 The target platform of the SK is 64-bit Intel. No abstraction layer will be
 provided to support other processor architectures. Such a layer could be added

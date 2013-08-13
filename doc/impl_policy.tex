@@ -15,9 +15,8 @@ be automatically verified against a schema. Furthermore, there is an existing
 Ada library called XML/Ada \cite{xmlada}, which is open source and freely
 available.
 
-Since XML processing is not done by any trusted part of the system, the policy
-contained in an XML file is transformed into SPARK source using the policy
-compilation tool \texttt{skpolicy}. This process is described in detail in
+The policy contained in the XML file is transformed into SPARK source by the
+policy compilation tool \texttt{skpolicy}. The process is described in detail in
 section \ref{subsec:policy-compilation}.
 
 Each of the main policy parts are presented in the following sections. Preceding
@@ -30,8 +29,8 @@ validation. Additional checks are implemented manually in the policy compiler.
 
 \subsection{Data types}
 This section describes basic data types that are used in the specification of
-the system policy. They are referenced in later chapters, illustrating different
-parts of the policy.
+the system policy. They are referenced in later chapters, as part of the
+definition of other XML schema elements.
 
 \input{types.tex}
 

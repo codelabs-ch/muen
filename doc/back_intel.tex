@@ -18,9 +18,11 @@ The basic components of a modern Intel x86 computer are depicted in figure
 \subsection{Processor}
 The main processor of the system is called the central processing unit
 (CPU\index{CPU}). Multi-processor systems (MP\index{MP}) have multiple CPUs
-which again can have multiple cores. Each core in each CPU is a so called
-\emph{logical CPU} which executes instructions. These instructions change the
-state of the logical CPU and the system as a whole.
+which in turn can have multiple cores. If Intel Hyper-Threading Technology (HTT)
+is supported, each core has two or more so called \emph{logical CPUs}.
+
+The logical CPUs run processes by executing instructions. These instructions
+change the state of the logical CPU and the system as a whole.
 
 \subsubsection{Execution environment}\label{subsubsec:exec-env}
 A program executing on a processor is given access to resources to store and
@@ -203,7 +205,11 @@ which is called the interrupt vector. Numbers in the range of 0 to 31 are
 reserved for the Intel architecture. They are used to uniquely identify
 exceptions, see Intel SDM \cite{IntelSDM}, volume 3A, section 6.15.  The
 remaining vectors can be freely used by hardware devices and the operating
-system.
+system. To avoid vector number clashes a method called
+\emph{interrupt remapping} is used: hardware interrupts are offset by 32 to move
+them out of the reserved range. As an example, the hardware interrupt 0 would be
+remapped to 32, 1 to 33 and so on. As a result the range of hardware interrupt
+numbers is restricted to 0 .. 223.
 
 Interrupts are caused by hardware devices to notify the processor that a device
 needs servicing. An example is a network card that generates an interrupt

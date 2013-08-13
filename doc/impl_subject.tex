@@ -8,8 +8,9 @@ A subject is specified in the global system policy. The XML specification
 precisely defines the execution environment and granted resources. The
 information that is relevant to the kernel is part of the compiled policy.
 Listing \ref{lst:skp-subjects} presents the SPARK type specification into which
-all subject specific policy parts are transformed. The specification of a
-subject is static and cannot be changed at runtime.
+all subject related policy parts are transformed. The specification of a subject
+is static and cannot be changed at runtime since it is declared as a constant
+data structure.
 
 \lstinputlisting[
 	language=ada,

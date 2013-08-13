@@ -312,12 +312,18 @@ equipped with Intel's Hyper-Threading Technology (HTT) have two or more
 \emph{logical CPUs} per cores. A logical CPU is a execution unit of the
 processor that runs an application or kernel process.
 
+In MP systems, one processor termed
+\emph{bootstrap processor}\index{Boostrap processor}(BSP) is responsible for
+system initialization, while the other processors, called
+\emph{application processors}\index{Application processor} (APs), wait for an
+initialization sequence as specified by the Intel, see \cite{intel:mp}.
+
 At the basis of the multicore design is the symmetric execution of the kernel on
 every available logical CPU. This means that all cores execute exactly the same
-Muen kernel code. Global data is shared between all cores which necessitates
-some form of inter-core synchronization to guarantee data consistency. The
-synchronization primitives used by the separation kernel are spinlock and
-barrier.
+Muen kernel code, apart from the system bring up code run exclusively by the
+BSP. Global data is shared between all cores which necessitates some form of
+inter-core synchronization to guarantee data consistency. The synchronization
+primitives used by the separation kernel are spinlock and barrier.
 
 The spinlock facilitates the exclusive access of resources to a CPU holding the
 spinlock. Before using a shared resource a logical CPU has to acquire the lock
@@ -382,7 +388,8 @@ precise amount of time. This information is directly applied by the scheduler.
 
 Figure \ref{fig:example-major-frame} illustrates the structure of a major frame.
 The major frame consists of four minor frames. Minor frame two has twice the
-amount of ticks than the other minor frames, which have identical length.
+amount of ticks than the other minor frames, which have identical length. Time
+progresses on the horizontal axis from left to right.
 
 When the major frame starts, subject one is scheduled for the length of minor
 frame one, followed by a switch to subject 2. After that the two subjects are
@@ -439,8 +446,7 @@ CPU0 is executing the same subject for the whole duration of the major frame.
 This could for example be the $\tau$0 subject executing on the bootstrap
 processor (BSP). The second CPU is executing two subjects (blue and green) in
 alternating order. As can be seen, subject green is granted more CPU cycles than
-subject blue. Since major frames are repeated, major frame one and two are
-identical. All CPUs of the system wait on a barrier at the beginning of a new
+subject blue. All CPUs of the system wait on a barrier at the beginning of a new
 major frame.  This guarantees that all logical CPUs of a system are in-sync when
 major frames change.
 
@@ -453,12 +459,17 @@ duration.
 Since a system performs diverse tasks with different resource requirements,
 there is a need for some flexibility with regards to scheduling. To provide this
 degree of freedom while keeping the kernel complexity low, multiple scheduling
-plans can be specified in the system policy. The privileged subject $\tau$0 is
-allowed to select and activate one of the scheduling plans. A global variable
-termed \emph{major frame index} designates the currently active scheduling plan.
-Its value is exclusively written by the BSP while it is used by all cores to
-determine the currently active major frame. The following protocol ensures a
-consistent view of the major frame index variable across CPU cores:
+plans can be specified in the system policy. By defining a distinct plan for
+each anticipated workload in the policy, the scheduling regimes are fixed at
+integration time. This removes any runtime uncertainty that might be introduced
+by this enhancement, since the scheduling plans cannot be altered at runtime.
+
+The privileged subject $\tau$0 is allowed to select and activate one of the
+scheduling plans. A global variable termed \emph{major frame index} designates
+the currently active scheduling plan. Its value is exclusively written by the
+BSP while it is used by all cores to determine the currently active major frame.
+The following protocol is employed to access the major frame index variable from
+multiplce CPUs:
 
 \begin{enumerate}
 	\item Each logical CPUs waits on the global barrier as soon as it has
@@ -477,7 +488,4 @@ This process guarantees that all CPU cores have a consistent view of the current
 major frame index, simultaneous begin of a major frame cycle and that scheduling
 plan changes only occur on major frame boundaries.
 
-By defining a distinct plan for each anticipated workload in the policy, the
-scheduling regimes are fixed at integration time. This removes any runtime
-uncertainty that might be introduced by this enhancement, since the scheduling
-plans cannot be altered at runtime.
+

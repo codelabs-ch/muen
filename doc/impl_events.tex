@@ -16,7 +16,7 @@ speed up inter-core interrupt delivery.
 
 Interrupts are injected into the destination subject by the Muen kernel to
 inform it about new pending events. In this example, interrupt vector 33 is
-injected into subject s2 for the interrupt event and no interrupt is injected
+injected into subject s2 for the interrupt event and no interrupt is delivered
 for the handover event.
 
 If the IPI option is enabled for an interrupt event, the Muen kernel sends an
@@ -33,7 +33,8 @@ procedure \texttt{Trigger\_Event} which accepts the event number as its sole
 argument. The procedure wraps the \texttt{VMCALL} VMX instruction, which causes
 a trap into the kernel when called from VMX non-root mode. This is used by the
 Muen kernel to implement the hypercall mechanism.  With the Intel VMX
-extensions, a hypercall is a special trap with basic exit reason number 18.
+extensions, a hypercall is a special trap with basic exit reason number 18. The
+event number call argument is passed via the RAX CPU register.
 
 The Muen kernel handles hypercall traps separately in the
 \texttt{Handle\_Hypercall} procedure. It performs a lookup in the sending
@@ -55,7 +56,7 @@ in subject groups.
 	\label{fig:inter-core-events}
 \end{figure}
 
-The event mechanism in general can be utilized to implement low-latency
+The event mechanism in general can be utilized to realize low-latency
 communication channels between subjects, as illustrated in figure
 \ref{fig:inter-core-events}. In this example, two subjects running on different
 logical CPUs (CPU0, CPU1) implement a simple request-response design:

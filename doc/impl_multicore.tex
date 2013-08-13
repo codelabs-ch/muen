@@ -45,7 +45,8 @@ to this code after wakeup. The trampoline performs the following steps:
 These steps initialize the APs to the same architectural state as the
 bootloader does for the BSP: 32-bit protected mode with paging disabled.
 Therefore, the final step is to let the AP processors jump to the common init
-code described in section \ref{subsec:init}.
+code described in section \ref{subsec:init}, starting by enabling PAE mode
+(task 4).
 
 \subsubsection{Per-kernel memory}
 The Muen kernels operate fully symmetrical, i.e. code running on the different
@@ -70,9 +71,10 @@ If the result of the set operation is zero, no other core currently holds the
 lock and it is successfully acquired. If the result is one, the lock is
 currently busy and the core must spin and retry again.
 
-Inside the lock's busy loop the \texttt{PAUSE} instruction is used to improve
-performance and resource utilization (see Intel SDM \cite{IntelSDM}, volume 1,
-section 11.4.4.4).
+The spinlock is implemented as recommended by Intel SDM, volume 3A, section
+8.10.6.1. Inside the lock's busy loop the \texttt{PAUSE} instruction is used to
+improve performance and resource utilization (see Intel SDM \cite{IntelSDM},
+volume 1, section 11.4.4.4).
 
 \paragraph{Barrier}
 As described in section \ref{subsec:design-scheduling}, to guarantee temporal

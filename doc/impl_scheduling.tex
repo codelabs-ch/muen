@@ -1,9 +1,9 @@
 \subsection{Scheduling}\label{subsec:scheduling}
 After system initialization is complete, the kernels running on the different
 logical processors synchronize and start scheduling subjects. Which subject to
-schedule on which CPU is defined by the scheduling plan. A policy writer defines
-the system's scheduling regime in the XML policy file, see listing
-\ref{lst:xml-scheduling-plan} for an example.
+schedule on what particular CPU is defined by the scheduling plan. A policy
+writer defines the system's scheduling regime in the XML policy file, see
+listing \ref{lst:xml-scheduling-plan} for an example.
 
 \begin{lstlisting}[
 	language=xml,
@@ -43,10 +43,10 @@ static at compilation time and cannot be modified at runtime.
 	\label{fig:kernel-scheduler}
 \end{figure}
 
-Each kernel stores the index of the active minor frame, which points into the
-current scheduling major frame. Initially, this value is set to one
-(\texttt{Minor\_Frame\_Range'First}), i.e. the first minor frame in the active
-major frame.
+Each kernel stores the index of the active minor frame in its per-CPU storage
+area. The index points into the current scheduling major frame. Initially, this
+value is set to one (\texttt{Minor\_Frame\_Range'First}), i.e. the first minor
+frame in the active major frame.
 
 The index designating the current major frame is global and therefore identical
 for all kernels. This index is managed by the privileged $\tau$0 subject and
@@ -55,13 +55,15 @@ only read by the kernels.
 The minor/major frame tuple forms an index into the scheduling plan. It points
 to a minor frame containing the subject ID and timer ticks for the next subject
 to schedule. The subject ID is used to load the state of the corresponding
-subject from the state descriptor array into the processor. The timer ticks are
-written into the subject's VMCS region so that the subject is preempted
-automatically by the processor when the alloted time slice is over. The kernel
-then calls the \texttt{VMLAUNCH} or \texttt{VMRESUME} (if the subject has
-already been launched) VT-x instructions to enter VMX non-root operation, which
-lets the processor execute subject code. Figure \ref{fig:kernel-scheduler}
-illustrates this process.
+subject from the state descriptor array into the processor.
+
+The mechanism used to keep track of time is the VMX preemption timer. Writing
+the timer ticks into the subject's VMCS region sets the timer. The kernel then
+calls the \texttt{VMLAUNCH} or \texttt{VMRESUME} (if the subject has already
+been launched) VT-x instructions to enter VMX non-root operation, which lets the
+processor execute subject code.  The subject is then automatically preempted by
+the processor when the alloted time slice is over. Figure
+\ref{fig:kernel-scheduler} illustrates this process.
 
 The subject state is saved on each VM exit. Depending on the scheduling plan and
 the exit reason, the state of another subject is loaded by the kernel scheduler.

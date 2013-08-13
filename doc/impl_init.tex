@@ -5,17 +5,18 @@ BIOS first performs tests and initialization routines and then searches for a
 bootable storage medium. If found, the BIOS copies the first sector of the
 storage media to physical address \texttt{0000:7C00} and jumps to this address
 (i.e. starts executing code at this address). This is where the system
-bootloader comes to life which is responsible to boot operating systems
-according to its configuration. Many bootloaders first load additional code
-from the storage media and then prepare the environment for OS execution.
+bootloader, responsible to boot operating systems according to its
+configuration, initially starts execution. Many bootloaders first load
+additional code from the storage media prior to preparing the system
+environment for OS execution.
 
 The Muen separation kernel is compliant to the multiboot specification, version
 0.6.96 \cite{multiboot}. The multiboot standard is used to uniformly boot
 different operating system kernels by multiboot-aware bootloaders.  The Muen
 kernel exports the required multiboot header within the first 8192 bytes of the
-OS image. The bootloader loads the OS image into memory according to the
-information contained in the header and jumps to the physical kernel entry
-point specified in this header.
+OS image. The bootloader loads the OS image into memory and jumps to the
+physical kernel entry point according to the information contained in the
+header.
 
 \begin{figure}[h]
 	\centering
@@ -51,12 +52,12 @@ initial startup code is written in Assembly and conducts the following tasks:
 	\item Copy the AP trampoline to low-memory, see section
 		\ref{subsec:mp-support} \item Initialize per-CPU VMXON regions
 	\item Initialize subject VMCS regions
-	\item Enable Physical Address Extensions (PAE\index{PAE})
+	\item Enable Physical Address Extensions\footnote{PAE is a prerequisite for enabling IA-32e mode} (PAE\index{PAE})
 	\item Initialize per-CPU kernel pagetables
 	\item Enable IA-32e mode and execute-disable (NX)
 	\item Enable paging, write protection, caching and native FPU error
 		reporting
-	\item Set up 64-bit Global Descriptor Table (GDT\index{GDT})
+	\item Set up 64-bit Global Descriptor Table\footnote{GDT is a data structure used to define memory segments and their properties} (GDT\index{GDT})
 	\item Set up Page-Attribute Table (PAT)
 	\item Set up kernel stack
 	\item Initialize Ada runtime

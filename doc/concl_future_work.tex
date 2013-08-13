@@ -7,7 +7,8 @@ Muen separation kernel:
 	\item Cache coloring
 	\item Linux virtualization
 	\item Hardware passthrough/PCIe virtualization
-	\item Policy support tools
+	\item APIC virtualization
+	\item Policy writer support tools
 	\item Dynamic resource management
 	\item Performance testing \& optimization
 	\item Power Management
@@ -91,6 +92,44 @@ isolation functions.
 
 Implementing these enhancements using VT-d should keep the kernel complexity at
 an acceptable level.
+
+\subsection{APIC virtualization}\label{subsec:apicv}
+Currently pending events that are to be injected into subjects are stored in
+per-subject data structures, that are protected by a spinlock. This is
+sub-optimal since having to acquire locks in interrupt context is not very
+efficient.
+
+Intel provides an advanced hardware virtualization feature called APIC
+virtualization (APICv) (see Intel SDM, volume 3C, chapter 29), that can greatly
+improve Muen's event handling.
+
+By giving subjects access to a virtualized APIC, VM exits related to interrupt
+processing are greatly reduced. The processor emulates access to the APIC by
+tracking the state of the virtual APIC, and delivering virtual interrupts all in
+VMX non-root mode without the need for a trap. The associated data structure,
+called posted-Interrupt descriptor, is accessed using atomic operations, which
+makes locks and the current pending events list unnecessary. This would further
+simplify interrupt processing in the Muen kernel.
+
+The current implementation of the separation kernel does not support APICv, due
+to the limited availability of hardware supporting this advanced processor
+feature.
+
+\subsection{Policy writer support tools}
+The policy of a Muen kernel based system plays a very important role. Since the
+kernel simply enforces a given policy, the policy writer is responsible for the
+correctness of the system specification.
+
+Currently, to write a policy the system integrator has to edit an XML file
+directly. While \texttt{skpolicy} tool performs validation checks to catch
+obvious configuration mistakes, it is an error-prone process.
+
+A graphical policy tool would greatly simplify this process by providing a more
+intuitive method for policy creation. Visualizing key parts of the policy would
+be very beneficial. The generation of flow charts representing the information
+flows between subjects based on their shared resources or graphical illustration
+of scheduling plans are two examples, how such a tool could assist a policy
+writer.
 
 \subsection{Dynamic resource management}
 Currently, resource management is static and there is little flexibility. All

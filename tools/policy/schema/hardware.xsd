@@ -54,7 +54,7 @@
 		<xs:annotation>
 			<xs:documentation>
 				Rate (power of two) at which the VMX preemption timer decreases compared to the
-				timestamp counter (TSC), see Intel SDM Vol. 3C, section 25.5.1.
+				timestamp counter (TSC), see Intel SDM, volume 3C, section 25.5.1.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:nonNegativeInteger">

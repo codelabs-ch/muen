@@ -16,7 +16,7 @@
 		<xs:annotation>
 			<xs:documentation>
 				A trap table entry specifies to which subject a given trap kind
-				is forwarded and an optional vector number if a interrupt is
+				is forwarded and an optional vector number if an interrupt is
 				injected.
 			</xs:documentation>
 		</xs:annotation>
@@ -28,8 +28,8 @@
 	<xs:simpleType name="trap_kind_type">
 		<xs:annotation>
 			<xs:documentation>
-				A trap kind identifies the cause of a trap, see Intel SDM Vol.
-				3C, appendix C.
+				A trap kind identifies the cause of a trap, see Intel SDM,
+				volume 3C, appendix C.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">

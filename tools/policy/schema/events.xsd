@@ -62,7 +62,7 @@
 	<xs:simpleType name="dst_vector_type">
 		<xs:annotation>
 			<xs:documentation>
-				Numeric value identifying a destination vector. The value '256'
+				Numeric value identifying a destination vector. The value "256"
 				designates "no vector".
 			</xs:documentation>
 		</xs:annotation>

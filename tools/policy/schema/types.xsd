@@ -49,7 +49,8 @@
 	<xs:simpleType name="irq_type">
 		<xs:annotation>
 			<xs:documentation>
-				Valid hardware interrupts are in the range of 0 .. 223.
+				Valid hardware interrupts are in the range of 0 .. 223. The upper bound is due to
+				interrupt remapping (adding an offset of 32) performed by the policy compilation tool.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:nonNegativeInteger">
@@ -71,7 +72,7 @@
 	<xs:complexType name="io_port_type">
 		<xs:annotation>
 			<xs:documentation>
-				Specifies an I/O port range from start .. end.
+				Specifies an I/O port range from start port to end port.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:attribute name="start" type="port_address_type" use="required"/>
@@ -103,7 +104,8 @@
 	<xs:simpleType name="memory_alignment_type">
 		<xs:annotation>
 			<xs:documentation>
-				Specifies alignment constraints for memory addresses.
+				Specifies alignment constraints for memory addresses. Memory addresses
+				must be a multiple of the alignment.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -114,7 +116,7 @@
 	<xs:simpleType name="memory_type_type">
 		<xs:annotation>
 			<xs:documentation>
-				Memory type as specified by Intel SDM Vol. 3A, section 11.3.
+				Memory type as specified by Intel SDM, volume 3A, section 11.3.
 				A memory type specifies the caching behavior of the associated memory
 				region.
 			</xs:documentation>
@@ -128,7 +130,7 @@
 		<xs:annotation>
 			<xs:documentation>
 				A memory region defines a block of memory of specified size which starts at the given physical
-				address. The size must be a multiple of the given alignment. The virtual address specifies the
+				address. The size must be a multiple of the defined alignment. The virtual address specifies the
 				location of the memory region in the virtual address space. Additional attributes define access
 				rights and memory caching behavior.
 			</xs:documentation>

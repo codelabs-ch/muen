@@ -261,8 +261,8 @@ is resumed.
 We distinguish hardware exceptions that occur in VMX non-root mode, while
 executing a subject, and in VMX root mode when the kernel is operating.
 
-As the kernel is implemented in the SPARK programming language and the absence
-of runtime errors is proven, exceptions during regular operation in VMX
+Use of the SPARK programming language and the intent to prove the absence of
+runtime errors means, that exceptions during regular operation in VMX
 root-mode should not happen. If for some unforeseen reason (e.g. non-maskable
 interrupt NMI) an exception occurs, it indicates a serious error and the system
 is halted.
@@ -306,7 +306,11 @@ are ignored by the kernel.
 \subsection{Multicore}\label{subsec:multicore}
 Modern computers have an increasing number of CPU cores per processor. To
 utilize the hardware to its full potential, the separation kernel must make use
-of all available cores. A CPU core is also called \emph{logical CPU}.
+of all available cores. In a multicore system, a physical CPU package provides
+more than one processor cores in a single package. Additionally, systems
+equipped with Intel's Hyper-Threading Technology (HTT) have two or more
+\emph{logical CPUs} per cores. A logical CPU is a execution unit of the
+processor that runs an application or kernel process.
 
 At the basis of the multicore design is the symmetric execution of the kernel on
 every available logical CPU. This means that all cores execute exactly the same
@@ -317,7 +321,10 @@ barrier.
 
 The spinlock facilitates the exclusive access of resources to a CPU holding the
 spinlock. Before using a shared resource a logical CPU has to acquire the lock
-and release it once it is finished.
+and release it once it is finished. The subject pending event lists and
+multi-line debug output statements are protected by the spinlock. Future
+improvements to the event and interrupt processing could remove the need for the
+event list and in turn the locking, see section \ref{subsec:apicv}.
 
 A barrier is used to guarantee, that all logical CPUs have reached a specific
 execution point and are waiting for the release of the barrier. This allows to
@@ -352,14 +359,14 @@ perform its task.
 
 A key objective of the scheduler is to provide temporal isolation of all
 subjects. In order to meet this requirement, the scheduler must prevent any
-interference between subjects. To achieve this, scheduling is done in a fixed,
+interference between guests. To achieve this, scheduling is done in a fixed,
 cyclic and preemptive manner.
 
-Subjects are executed for a fixed amount of time, before being preempted by the
-scheduler. Preemption means that regardless of what operations a subject is
-performing, its execution is suspended when the alloted time quantum has been
-consumed. After a subject has been suspended, the scheduler executes the next
-subject for a given amount of time.
+Subjects are executed for a fixed amount of time, before being forcefully
+preempted by the scheduler. Preemption means that regardless of what operations
+a subject is performing, its execution is suspended when the alloted time
+quantum has been consumed. After a subject has been suspended, the scheduler
+executes the next subject for a given amount of time.
 
 Scheduling information is declared in a \emph{scheduling plan}\index{Scheduling
 plan}. Such a plan is part of the policy and specifies in what order subjects

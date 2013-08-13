@@ -57,15 +57,14 @@ channels between guest software while restricting others. One guest could have
 access to the network card, while others share a page in memory but have no
 access to hardware devices.
 
-The principle idea of virtualization is to run guest code on a (virtual) CPU and
-only intercept privileged operations accessing resources or system properties
-for which direct access is prohibited or a different representation must be
-provided. Various techniques exist to intercept guest instructions, ranging from
-the inspection and modification of the guest software instruction stream (slow)
-to hardware-assisted virtualization (fast). This thesis focuses on the
-hardware-assisted approach, the reader is directed to
-\cite{VMware:virtualization} for further information about virtualization
-mechanisms.
+The principle idea of virtualization is to run guest code on a (virtual) CPU
+and only intercept privileged operations accessing resources or system
+properties for which direct access is prohibited. Various techniques exist to
+intercept guest instructions, ranging from the inspection and modification of
+the guest software instruction stream (slow) to hardware-assisted
+virtualization (fast). This thesis focuses on the hardware-assisted approach,
+the reader is directed to \cite{VMware:virtualization} for further information
+about virtualization mechanisms.
 
 Independent of the chosen mechanism, an interception of the running guest leads
 to a so called \emph{trap}\index{trap} from the guest code into the VMM. The
@@ -145,9 +144,13 @@ VMCS which allows fine-grained setup of processor behavior in VMX non-root
 mode. A VMCS contains fields which can be written by the
 \texttt{VMWRITE}\index{VMWRITE} instruction and read via
 \texttt{VMREAD}\index{VMREAD} in VMX root mode. The fields can be categorized
-into host-state, guest-state, read-only data and control fields. On VM entry
-for example, the state of the host is saved into the subject VMCS and restored
-again on VM exit. The control fields in the VMCS govern VMX non-root operation.
+into host-state, guest-state, read-only data and control fields.
+
+On VM entry for example, the state of the host is saved automatically into the
+subject VMCS by the VMX extensions and restored again on VM exit. On the other
+hand, the guest-state area is used to save and restore guest state on VM exit
+and VM entry respectively. The read-only data fields provide VMX status
+information and the control fields in the VMCS govern VMX non-root operation.
 
 For further information about the VMX processor extensions and VMCS, the reader
 is directed to the respective section in the Intel SDM \cite{IntelSDM}, volume

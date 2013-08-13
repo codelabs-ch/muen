@@ -155,12 +155,19 @@ no relevance to the guarantee of security properties are called
 A separation kernel\index{kernel} (SK\index{SK}) can be seen as the fundamental
 part of a component-based system as its main purpose is to enforce the
 separation of all software components. The concept of separation kernels was
-introduced by John Rushby in a paper published in 1981 \cite{rushby1981}. While
-the original paper describes a distributed system, it is more illustrative to
-think of it as multiple components which behave as if they were each running on
-dedicated hardware. The separation kernel must guarantee that the components
-can only interact according to a well-defined policy while running on the same
-physical hardware.
+introduced by John Rushby in a paper published in 1981 \cite{rushby1981}:
+
+\begin{quote}
+The task of a separation kernel is to create an environment which is
+indistinguishable from that provided by a physically distributed system: it
+must appear as if each regime is a separate, isolated machine and that
+information can only flow from one machine to another along known external
+communication lines.
+\end{quote}
+
+The separation kernel must therefore guarantee that the components can only
+interact according to a well-defined policy while running on the same physical
+hardware.
 
 A system policy dictates the partitioning of hardware resources like CPU,
 memory or assignment of devices to components. The kernel guarantees this
@@ -205,8 +212,8 @@ considered to be part of the TCB and must thus be trusted to operate according
 to their specification. Such subjects must be developed with the same diligence
 as the separation kernel itself.
 
-As an example: a system where a subject is in charge of data encryption, passes
-the encrypted data to a second subject which provides network connectivity. A
+As an example: a subject is in charge of data encryption and passes the
+encrypted data to a second subject which provides network connectivity. A
 security property could be that information must always be encrypted when
 transmitted over the internet. To achieve this, the encryption subject must
 make sure that no unencrypted information flows to the network subject. Thus
@@ -256,8 +263,8 @@ security is demanded.
 
 There have been many advances in hardware support for virtualization, greatly
 simplifying the design and implementation of a security kernel. The authors
-believe that now is a good time to start a separation kernel project which
-benefits from these latest hardware features.
+believe that now is the perfect time to launch a separation kernel project
+which benefits from these latest hardware features.
 
 \section{Goals}
 The main goal of this project is to implement a freely-available, open-source
@@ -356,7 +363,7 @@ vendors:
 	\item LynxSecure by LynuxWorks Inc. is a type 1 embedded hypervisor for the
 		Intel x86 architecture.
 	\item VxWorks MILS Platform by WindRiver Inc. is a type 1 hypervisor-based,
-		SKPP-conformant MILS separation kernel-based platform.
+		SKPP-conformant MILS separation kernel.
 	\item PolyXene by Bertin Technologies, is a microkernel-based hypervisor
 		EAL-5 certified against the Guest Operating System Hosting Framework
 		protection profile.

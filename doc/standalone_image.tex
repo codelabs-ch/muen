@@ -1,0 +1,10 @@
+% Compile with: pdflatex -shell-escape standalone_image
+
+\PassOptionsToPackage{dvipsnames}{xcolor}
+\documentclass[tikz,convert={size=2048,outext=.png}]{standalone}
+\usetikzlibrary{backgrounds,positioning,shapes,shadows,arrows,fit,decorations.markings}
+
+\begin{document}
+\input{tikzstyle}
+\include{graph_mp_overview}
+\end{document}

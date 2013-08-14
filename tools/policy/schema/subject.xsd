@@ -23,17 +23,6 @@
 	<xs:include schemaLocation="./events.xsd"/>
 	<xs:include schemaLocation="./traps.xsd"/>
 
-	<xs:complexType name="subjects_type">
-		<xs:annotation>
-			<xs:documentation>
-				The subject section of the policy defines all subjects that are part of a system specification.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="subject" type="subject_type" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
 	<xs:complexType name="subject_type">
 		<xs:annotation>
 			<xs:documentation>
@@ -77,6 +66,17 @@
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="subjects_type">
+		<xs:annotation>
+			<xs:documentation>
+				The subject section of the policy defines all subjects that are part of a system specification.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="subject" type="subject_type" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
 	</xs:complexType>
 
 	<xs:complexType name="initial_state_type">

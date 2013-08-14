@@ -25,27 +25,31 @@
 		</xsl:call-template>
 		<xsl:text>}\label{subsec:</xsl:text>
 		<xsl:value-of select="@name"/>
-		<xsl:text>}&#10;\begin{</xsl:text>
+		<xsl:text>}&#10;</xsl:text>
+		<xsl:text>\begin{minipage}{0.65\textwidth}\centering</xsl:text>
 		<xsl:choose>
 			<xsl:when test="contains($LARGEGRAPHS,@name)">
-				<xsl:text>sidewaysfigure}[hp]\centering&#10;\includegraphics[width=\textwidth]</xsl:text>
+				<xsl:text>\includegraphics[scale=0.65, angle=90]</xsl:text>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:text>figure}[!h]\centering&#10;\includegraphics[scale=0.7]</xsl:text>
+				<xsl:text>\includegraphics[scale=0.55]</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
 		<xsl:text>{images/xml_</xsl:text>
 		<xsl:value-of select="@name"/>
-		<xsl:text>}&#10;</xsl:text>
-		<xsl:text>\end{</xsl:text>
-		<xsl:if test="contains($LARGEGRAPHS,@name)">
-			<xsl:text>sideways</xsl:text>
-		</xsl:if>
-		<xsl:text>figure}&#10;</xsl:text>
+		<xsl:text>}</xsl:text>
+		<xsl:text>\end{minipage}</xsl:text>
+		<xsl:text>&#10;\begin{minipage}{0.35\textwidth}</xsl:text>
 		<xsl:call-template name="texifyText">
 			<xsl:with-param name="text" select="xs:annotation/xs:documentation/text()"/>
 		</xsl:call-template>
+		<xsl:text>\end{minipage}</xsl:text>
 		<xsl:text>&#10;</xsl:text>
+		<xsl:choose>
+			<xsl:when test="contains($LARGEGRAPHS,@name)">
+				<xsl:text>\clearpage</xsl:text>
+			</xsl:when>
+		</xsl:choose>
 	</xsl:template>
 
 </xsl:stylesheet>

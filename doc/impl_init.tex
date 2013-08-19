@@ -5,14 +5,14 @@ BIOS first performs tests and initialization routines and then searches for a
 bootable storage medium. If found, the BIOS copies the first sector of the
 storage media to physical address \texttt{0000:7C00} and jumps to this address
 (i.e. starts executing code at this address). This is where the system
-bootloader, responsible to boot operating systems according to its
-configuration, initially starts execution. Many bootloaders first load
-additional code from the storage media prior to preparing the system
-environment for OS execution.
+bootloader, responsible for booting operating systems according to its
+configuration initially starts execution. Many bootloaders first load additional
+code from the storage media prior to preparing the system environment for OS
+execution.
 
-The Muen separation kernel is compliant to the multiboot specification, version
-0.6.96 \cite{multiboot}. The multiboot standard is used to uniformly boot
-different operating system kernels by multiboot-aware bootloaders.  The Muen
+The Muen separation kernel is compliant with the multiboot specification,
+version 0.6.96 \cite{multiboot}. The multiboot standard is used to uniformly
+boot different operating system kernels by multiboot-aware bootloaders. The Muen
 kernel exports the required multiboot header within the first 8192 bytes of the
 OS image. The bootloader loads the OS image into memory and jumps to the
 physical kernel entry point according to the information contained in the
@@ -45,8 +45,8 @@ specified in the policy.
 It is the bootloader's task to prepare the system state as dictated by the
 multiboot standard, see \cite{multiboot} section 3.2 for details. The kernel
 can expect the system to be in this exact state. Before the Muen kernel jumps
-into the main SPARK code, it performs additional preparatory steps. This
-initial startup code is written in Assembly and conducts the following tasks:
+into the main SPARK code it performs additional preparatory steps. This initial
+startup code is written in Assembly and conducts the following tasks:
 
 \begin{enumerate}
 	\item Copy the AP trampoline to low-memory, see section

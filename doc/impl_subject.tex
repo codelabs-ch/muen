@@ -54,8 +54,8 @@ is not allowed to access the VMCS structure of another subject, the kernel also
 copies register values managed automatically by VMX\index{VMX} into the
 in-memory subject state to enable modification by the SM subject.
 
-During subject setup, the state is first set to a pristine value. This is done
-by assigning the \texttt{Null} subject state constants shown by listings
+During subject setup, the state is initialized to zero. This is done by
+assigning the \texttt{Null} subject state constants shown by listings
 \ref{lst:sk-null-subject-state} and \ref{lst:sk-null-cpu-registers} to all
 state variables.
 

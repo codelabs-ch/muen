@@ -2,7 +2,7 @@
 As outlined in section \ref{subsec:design-exceptions}, exceptions in the kernel
 running in VMX root mode should not happen because it is implemented in SPARK
 and absence of runtime errors has been proven.  This section describes the
-handling of exceptions or Software-generated interrupts\footnote{As raised by
+handling of exceptions or software-generated interrupts\footnote{As raised by
 the \texttt{int} instruction.} caused by subject code. The behavior on
 exceptions in VMX non-root mode is determined by the subject profile (VM or
 Native).

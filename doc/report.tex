@@ -71,18 +71,18 @@
 University of Applied Sciences Rapperswil (HSR), Switzerland
 
 \begin{abstract}
-Microkernels are well suited as a basis of systems with high demands on
+Microkernels are well suited as a basis for systems with high demands on
 robustness. They are by definition small, which is a precondition for rigorous
-verification of correctness. Additionally they lend themselves to construction
-of component-based systems where the misbehavior of one partition must not
-impact the whole system. In contrast, attaining high assurance for today's
-monolithic operating systems is exceptionally hard since they tend to be large
-and have rich functionality. This fact is highlighted by regular security
-updates provided by operating system vendors.
+verification of correctness. Additionally, they lend themselves to the
+construction of component-based systems where the incorrect behavior of one
+partition does not impact the whole system. In contrast, attaining high
+assurance for today's monolithic operating systems is exceptionally hard since
+they tend to be large and include complex functionality. This fact is
+highlighted by regular security updates provided by operating system vendors.
 
-A separation kernel (SK) is a specialized security kernel which provides an
+A separation kernel (SK) is a specialized security kernel that provides an
 execution environment for multiple components that can only communicate
-according to a given policy and are otherwise isolated from each other. Hereby
+according to a given policy and are otherwise isolated from each other. Hence,
 the isolation also includes the limitation of potential side- and covert
 channels. SKs are generally more static and smaller than microkernels, which
 minimizes the possibility of kernel failure and should simplify the application
@@ -90,16 +90,16 @@ of formal verification techniques.
 
 Even though the SK concept has garnered quite some attention from the research
 community over the last thirty years, no freely available SK exists to this
-date. A few commercial products exist, but little technical information is
+day. A few commercial products exist, but little technical information is
 publicly available.
 
-Recent addition of advanced hardware virtualization support to the Intel x86
-architecture have the potential of greatly simplifying the implementation of a
+Recent addition of advanced hardware virtualization support for the Intel x86
+architecture has the potential of greatly simplifying the implementation of a
 separation kernel. This thesis presents a design of a separation kernel for the
 Intel x86 architecture using the latest Intel hardware features. An open-source
 prototype written in SPARK demonstrates the viability of the envisioned
-concept.  Application of SPARK's proof capabilities increases the assurance of
-the implementation.
+concept and the application of SPARK's proof capabilities increases the
+assurance of the correctness of the implementation.
 \end{abstract}
 
 \section*{Acknowledgments}

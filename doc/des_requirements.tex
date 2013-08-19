@@ -3,33 +3,33 @@
 The following properties specify the requirements of the separation kernel and
 the system's TCB:
 \begin{enumerate}
-	\item The kernel implementation must be minimal and robust to allow thorough
-		review and verification.
+	\item The kernel implementation shall be minimal and robust to allow
+		thorough review and verification.
 	\item System resources internal to the kernel, that are not exported to
-		subjects, must not be accessible.
-	\item The kernel must provide mechanisms to enforce a given policy and not
+		subjects, shall not be accessible.
+	\item The kernel shall provide mechanisms to enforce a given policy and not
 		perform autonomous policy decisions.
-	\item The kernel must support the Intel IA-32e/64-bit architecture and
+	\item The kernel shall support the Intel IA-32e/64-bit architecture and
 		system memory larger than 4GB.
-	\item The kernel must allow the implementation of small and simple
+	\item The kernel shall allow the implementation of small and simple
 		components and not impose unnecessary restrictions that would increase
 		subject complexity.
-	\item A subject must be able to only use its assigned resources. Access to
-		other resources must be prohibited. This includes devices and memory
+	\item A subject shall be able to only use its assigned resources. Access to
+		other resources shall be prohibited. This includes devices and memory
 		that has not been allocated to any subject.
-	\item Assignment of subject resources must be static. A malicious subject
-		must not be able to gain access to additional resources or consume all
+	\item Assignment of subject resources shall be static. A malicious subject
+		shall not be able to gain access to additional resources or consume all
 		system resources.
-	\item Isolated subjects must not be able to exchange any information.
-	\item Information flows between subjects must only be present if explicitly
+	\item Isolated subjects shall not be able to exchange any information.
+	\item Information flows between subjects shall only be present if explicitly
 		specified in the system policy.
-	\item It must be possible to specify directed information flows, where data
+	\item It shall be possible to specify directed information flows, where data
 		can be transferred from source to destination but not in the reverse
 		direction.
-	\item 64-bit programs must be supported to run as subjects.
-	\item Subjects must be able to use hardware devices and process device
+	\item 64-bit programs shall be supported to run as subjects.
+	\item Subjects shall be able to use hardware devices and process device
 		generated interrupts.
-	\item A mechanism for inter-subject notifications must exist.
-	\item The Muen kernel design, source code and documentation must be made
+	\item A mechanism for inter-subject notifications shall exist.
+	\item The Muen kernel design, source code and documentation shall be made
 		freely available to allow independent verification and analysis.
 \end{enumerate}

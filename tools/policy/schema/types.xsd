@@ -149,7 +149,7 @@
 	<xs:complexType name="memory_region_type">
 		<xs:annotation>
 			<xs:documentation>
-				A memory region defines a block of memory of specified size which starts at the given physical
+				A memory region defines a block of memory of specified size that starts at the given physical
 				address. The size must be a multiple of the defined alignment. The virtual address specifies the
 				location of the memory region in the virtual address space. Additional attributes define access
 				rights and memory caching behavior.

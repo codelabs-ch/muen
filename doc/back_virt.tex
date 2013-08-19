@@ -2,9 +2,9 @@
 Virtualization is an established architectural concept in computer science and
 has been in use for decades. Operating systems for example provide virtual
 address spaces to application processes, giving them the illusion of unlimited,
-continuous memory. An application does not need to take care of complex memory
-management tasks and the operating system is able to optimize the usage of
-physical memory. Another common example is the virtualization of devices such
+continuous memory. Hence an application does not need to take care of complex
+memory management tasks and the operating system is able to optimize the usage
+of physical memory. Another common example is the virtualization of devices such
 as virtual CD-ROM drives directly using a file-based backend for data I/O
 \cite{CryptoCloud}.
 
@@ -12,8 +12,8 @@ Hardware or platform virtualization is the process of simulating virtual
 computer hardware that acts like real hardware. The virtualization is performed
 and controlled by special software, called a
 \emph{hypervisor}\index{hypervisor} or \emph{virtual machine monitor}
-(VMM\index{VMM}). These two terms are synonyms, for consistency we will use VMM
-throughout this document. VMMs are classified into two types, see figure
+(VMM\index{VMM}). These two terms are synonyms; for consistency we will use VMM
+throughout this document. VMMs are classified into two types, as shown in figure
 \ref{fig:vmm-classification}.
 
 \begin{figure}
@@ -60,32 +60,32 @@ access to hardware devices.
 The principle idea of virtualization is to run guest code on a (virtual) CPU
 and only intercept privileged operations accessing resources or system
 properties for which direct access is prohibited. Various techniques exist to
-intercept guest instructions, ranging from the inspection and modification of
-the guest software instruction stream (slow) to hardware-assisted
-virtualization (fast). This thesis focuses on the hardware-assisted approach,
-the reader is directed to \cite{VMware:virtualization} for further information
-about virtualization mechanisms.
+intercept guest instructions, ranging from inspection and modification of the
+guest software instruction stream (slow) to hardware-assisted virtualization
+(fast). This thesis focuses on the hardware-assisted approach. The reader is
+directed to \cite{VMware:virtualization} for further information about
+virtualization mechanisms.
 
-Independent of the chosen mechanism, an interception of the running guest leads
-to a so called \emph{trap}\index{trap} from the guest code into the VMM. The
-VMM then examines the \emph{exit reason} and reacts accordingly by e.g.
+Independent of the chosen mechanism, interception of the running guest leads to
+a so called \emph{trap}\index{trap} from the guest code into the VMM. The VMM
+then examines the \emph{exit reason} and reacts accordingly by for example
 modifying the guest software state and then resuming guest execution.
 
 This method is also used to implement a technique called "trap and emulate".
-For example if a guest accesses a device which is emulated by the VMM, a trap
-into the VMM occurs. The VMM itself or a special monitor VM then emulates the
+For example, if a guest accesses a device which is emulated by the VMM, a trap
+into the VMM occurs. The VMM itself or a specialized VM monitor emulates the
 requested operations of the guest software by directly modifying the state of
 the virtual processor or memory of the trapping VM.
 
-With hardware-assisted virtualization, traps are caused by the virtualization
+With hardware-assisted virtualization, traps are handled by the virtualization
 hardware automatically. The exact behavior is configurable by the VMM software.
 
 \subsection{Intel Virtualization Technology (VT)}
 A trap from the guest into the VMM is a costly operation. To reduce traps,
-mechanisms in modern processors have been introduced to support the VMM in
-creating a virtual machine environment. These features not only improve the
-performance of a virtual machine by avoiding traps, but also greatly simplify
-the VMM implementation.
+modern processors have introduced mechanisms to support the VMM in creating a
+virtual machine environment. These features not only improve the performance of
+a virtual machine by avoiding traps, but also greatly simplify the VMM
+implementation.
 
 Intel Virtualization Technology (VT\index{VT}) provides hardware-assisted
 virtualization mechanisms for Intel processors. Intel VT encompasses multiple
@@ -164,8 +164,8 @@ host-physical addresses. Guest-physical addresses are translated by traversing a
 set of EPT paging structures provided by the VMM to produce physical addresses
 that are used to access memory.
 
-The EPT paging structure confines the host-physical memory region a guest
-virtual machine is allowed to access, making it possible to safely run
+The EPT paging structure confines the host-physical memory region that a guest
+virtual machine is allowed to access, thereby making it possible to safely run
 unmodified guest OS memory management code. Access to host-physical memory
 outside of the allowed region results in an EPT violation trap.
 

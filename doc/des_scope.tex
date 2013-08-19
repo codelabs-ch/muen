@@ -1,17 +1,17 @@
 \section{Scope}
-The focus of this project is to design and implement a separation kernel, which
-guarantees strong separation of subjects and can thus serve as a basis for a
-component-based system. This section describes the the issues that are
-considered out of scope.
+The focus of this project is to design and implement a separation kernel, that
+guarantees strong separation between subjects and can thus serve as a basis for
+a component-based system. This section describes the issues that are considered
+out of scope but mentioned nevertheless for the sake of completeness.
 
 It is assumed, that all runtime code that is not part of the kernel, and thus
 the TCB, can potentially be subverted. This specifically includes \emph{all}
 untrusted subjects. The kernel is only concerned with the correct enforcement of
 a given system policy, by only allowing intended information flows between
-subjects and arbitrating ressource access.
+subjects and arbitrating resource access.
 
 The following issues, while very important in the context of constructing a
-high assurance system, are considered out of scope:
+high assurance system, are considered outside the scope of this thesis:
 
 \begin{description}
 	\item[System initialization] The kernel starts executing after the
@@ -31,9 +31,9 @@ high assurance system, are considered out of scope:
 		Management Mode (SMM) and the system BIOS\index{BIOS}\footnote{Basic
 		Input/Output System}, which have access to sensitive system resources.
 	\item[Policy validity] The separation kernel provides the mechanisms to
-		enforce a given, user-defined policy. The focus is on the correct
-		enforcement of a provided system configuration. The user is in charge of
-		assuring the correctness and consistency of the overall system policy.
+		enforce an user-defined policy. The focus is on the correct enforcement
+		of a provided system configuration. The user is in charge of assuring
+		the correctness and consistency of the overall system policy.
 	\item[Communication] The separation kernel must provide a mechanism to
 		establish directed communication channels between subjects.	It is
 		however not the duty of the kernel to provide a	communication

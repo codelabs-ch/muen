@@ -9,9 +9,9 @@ chapter concludes with an overview of related projects.
 
 \section{SPARK}\label{sec:spark}
 SPARK\footnote{Short for SPADE Ada Kernel} is a formally-defined high-level
-programming language designed for writing high integrity systems. It is based on
-Ada, which is itself a statically typed programming language with a strong focus
-on security and safety.
+programming language designed for implementing high integrity systems. It is
+based on Ada, which is itself a programming language with a strong focus on
+security and safety.
 
 The SPARK language is a subset of Ada with additional features inserted as
 annotations in the form of Ada comments. Since compilers ignore comments and
@@ -19,10 +19,10 @@ SPARK is a true subset of Ada, any correct SPARK program is a correct Ada
 program and can be compiled using existing Ada compilers. One such compiler is
 GNAT, which is part of the GNU compiler collection (GCC) \cite{gcc}.
 
-However, since annotations are an integral part of SPARK, it would be misleading
-to simply consider SPARK a constrained version of Ada. SPARK should be viewed as
-a programming language in its own right. The following list summarizes the Ada
-restrictions imposed by SPARK:
+However, since annotations are an integral part of SPARK, it would be
+misleading to simply consider SPARK a constrained version of Ada. SPARK should
+be viewed as a programming language in its own right. The following list
+summarizes the Ada restrictions imposed by SPARK:
 
 \begin{itemize}
 	\item No access types (pointers)
@@ -36,12 +36,12 @@ restrictions imposed by SPARK:
 	\item No dynamic dispatching
 \end{itemize}
 
-Annotations are processed by the SPARK tools. These tools perform static
-analysis of source code. The annotations allow the tools to do data and
-information flow analysis as well as proof the absence of runtime errors. This
-means that SPARK tools allow to formally verify, that a given program is free
-of errors such as division by zero, out-of-bounds array access etc. The
-following types of errors can be proven to be absent using SPARK:
+Annotations are processed by SPARK tools. These tools perform static analysis of
+source code. The annotations allow the tools to do data and information flow
+analysis as well as prove the absence of runtime errors. This means that SPARK
+tools allow one to formally verify that a given program is free of errors such
+as division by zero, out-of-bounds array access etc. By using SPARK the
+following types of errors can be proven to be absent from the code:
 
 \begin{itemize}
 	\item Incorrect indexing of arrays
@@ -55,8 +55,8 @@ following types of errors can be proven to be absent using SPARK:
 On top of these properties, the usage of pre-/post-conditions and assertions
 allow to prove additional functional properties. A proof of (partial
 \footnote{Termination cannot be shown}) correctness of SPARK programs is
-achievable. This allows to formally show the correspondence of an implementation
-with a formal specification.
+achievable. This allows one to formally show the correspondence of an
+implementation with a formal specification.
 
 It is also interesting to note, that SPARK has support for tasking in the form
 of a language profile\footnote{Restricted subset of the programming language}
@@ -68,7 +68,7 @@ been successfully used in several industrial projects
 avionics, space, medical systems and the defense industry.
 
 \subsection{Design rationale}
-The main driving factors behind the design of SPARK are shortly described here:
+The main driving factors behind the design of SPARK are briefly described here:
 
 \begin{description}
 	\item[Logical soundness] \hfill \\
@@ -77,7 +77,7 @@ The main driving factors behind the design of SPARK are shortly described here:
 	\item[Complexity of formal language definition] \hfill \\
 		The language must be simple to specify formally.
 	\item[Expressive power] \hfill \\
-		The language must be rich enough to implement complex systems.
+		The language must be expressive enough to implement complex systems.
 	\item[Security] \hfill \\
 		All language rules must be statically checkable with reasonable effort
 		(i.e. in polynomial time).
@@ -106,10 +106,10 @@ of both parameters are imported (\texttt{in}) and exported (\texttt{out}).
 
 Since the specification does not contain a \texttt{global} annotation, no other
 state (i.e. global variables) is accessed and the procedure is therefore free of
-side-effects. The \texttt{derives} annotations state the data flow: the value of
+side-effects. The \texttt{derives} annotation states the data flow: the value of
 X is derived from Y and vice versa.
 
-Lastly, the postconditions specify the values of X and Y after the procedure
+Lastly, the postcondition specifies the values of X and Y after the procedure
 has been executed. An identifier decorated with the tilde symbol ($\sim$)
 indicates the initial imported value of the variable. Thus the \texttt{post}
 annotation states that X will be assigned the initial value of Y and likewise
@@ -136,12 +136,12 @@ implemented using the existing SPARK 2005 language and tools.
 \input{back_virt}
 
 \section{Separation Kernel}
-In a system with high requirements on security, functions relevant
-to guarantee these requirements must be isolated from the rest of
-the system and consolidated in a Trusted Computing Base (TCB)\index{TCB}.
-To be trusted, this code must be as minimal as possible to allow formal
-verification of code correctness. Lampson et al.
-\cite{Lampson:1991:ADS:121133.121160} define the TCB of a computer system as:
+In a system with high requirements on security, functions needed to guarantee
+these requirements must be isolated from the rest of the system and consolidated
+in a Trusted Computing Base (TCB)\index{TCB}. To be trusted, this code must be
+as minimal as possible to allow formal verification of code correctness. Lampson
+et al. \cite{Lampson:1991:ADS:121133.121160} define the TCB of a computer system
+as:
 \begin{quote}
 	A small amount of software and hardware that security depends on and
 	that we distinguish from a much larger amount that can misbehave without
@@ -153,7 +153,7 @@ no relevance to the guarantee of security properties are called
 \emph{untrusted}.
 
 A separation kernel\index{kernel} (SK\index{SK}) can be seen as the fundamental
-part of a component-based system as its main purpose is to enforce the
+part of a component-based system since its main purpose is to enforce the
 separation of all software components. The concept of separation kernels was
 introduced by John Rushby in a paper published in 1981 \cite{rushby1981}:
 
@@ -172,29 +172,29 @@ hardware.
 A system policy dictates the partitioning of hardware resources like CPU,
 memory or assignment of devices to components. The kernel guarantees this
 isolation by emulating a suitable runtime environment for each component,
-creating the impression of multipe (virtual) machines. By using modern
+creating the impression of multiple (virtual) machines. By using modern
 virtualization techniques, the kernel is able to delegate certain management
 tasks to the hardware. This allows the separation kernel code to be relatively
 simple, which is a precondition for formal verification of software.
 
 Because of the simplicity requirement, a system running on top of a separation
 kernel is relatively static. The system policy is compiled to a suitable format
-on system integration and can not change during runtime. This is is also the
+at system integration time and cannot change during runtime. This is also the
 main difference between the separation kernel concept and microkernels which
 provide hardware abstraction layers, advanced mechanisms for inter-process
 communication (IPC\index{IPC}) and dynamic resource management. A separation
-kernel does not implement such functionality, its sole purpose is to guarantee
-component separation according to policy. Policy writers must make sure that
+kernel does not implement such functionality; its sole purpose is to guarantee
+component separation according to a policy. Policy authors must make sure that
 the system specification is sound and that only intended communication channels
 are specified between components.  Of course, this task can be simplified and
-aided by providing appropriate support tools.
+aided by applying appropriate support tools.
 
 \subsection{Subjects}
 The separation kernel isolates parts of the TCB into multiple
 components\index{component} interacting via well-defined interfaces. In this
 paper, such components are called \emph{subjects}\index{subject}.
 
-As previously mentioned, only the absolutely necessary features to guarantee
+As previously mentioned, only these features absolutely necessary to guarantee
 subject separation are present in a separation kernel. Advanced features
 required to isolate and virtualize a complex subject are implemented as
 dedicated non-privileged subjects, so called \emph{subject monitors}
@@ -203,48 +203,47 @@ Linux\index{Linux}.
 
 To allow more runtime flexibility, a separation kernel could also employ a
 dedicated subject to offload management tasks. Such a subject runs in normal
-unprivileged mode but is allowed to interact with the kernel over a specialized
+unprivileged mode but is allowed to interact with the SK over a specialized
 interface.
 
 \subsubsection{Trust}
 In the larger context of a component-based system, some subjects can be
-considered to be part of the TCB and must thus be trusted to operate according
-to their specification. Such subjects must be developed with the same diligence
-as the separation kernel itself.
+considered to be part of the TCB and must therefore be trusted to operate
+according to their specification. Such subjects must be developed with the same
+diligence as the separation kernel itself.
 
 As an example: a subject is in charge of data encryption and passes the
 encrypted data to a second subject which provides network connectivity. A
 security property could be that information must always be encrypted when
-transmitted over the internet. To achieve this, the encryption subject must
-make sure that no unencrypted information flows to the network subject. Thus
-the encryption subject must be considered part of the TCB and is called a
-\emph{trusted} subject since its failure would break the promised security
-guarantee.
+transmitted over the Internet. To achieve this, the encryption subject must
+ensure that no unencrypted information flows to the network subject. Thus the
+encryption subject must be considered part of the TCB and is called a
+\emph{trusted} subject since its failure would break the security guarantee.
 
 On the other hand, the network subject is not security critical as long as the
 encryption subject works according to its specification. It is therefore not
 part of the TCB, which means it is an \emph{untrusted} subject.
 
 \section{Motivation}
-As outlined in the previous section, software must be simple to establish trust
-in the correct functioning of the code either through manual review or formal
-verification. Even though the tools to perform formal verification
-automatically are progressing fast, the constraints on the software to be
+As stated in the previous section, software must be simple in order to
+establish trust in the correct functioning of the code, either through manual
+review or formal verification. Even though the tools to automate formal
+verification are progressing fast, the constraints on the software to be
 verified are still severe. If the SLOC\footnote{Source lines of
 code}\index{SLOC} count and thus complexity of a software project exceeds a
 critical threshold\footnote{Depends on the programming language and support
-tools}, it is no longer possible to automatically proof integrity and security
+tools}, it is no longer possible to automatically prove integrity and security
 requirements or to perform a manual review, because the required effort is just
 too big.
 
-This is the reason why common operating system kernels are not suitable to be
-used as a foundation for high assurance systems with a small TCB. The
+This is the reason why common operating system kernels are not suitable for use
+as a foundation for high assurance systems that employ a small TCB. The
 Linux\index{Linux} kernel currently has over 14 million lines of code. While
 functionality can be loaded as modules, Linux is still a
 monolithic\index{monolithic} kernel at the architectural level, with the
 complete code running in the same address space and privilege level. A
-programming error in a device driver for example can be used to take over the
-entire system.
+programming error in a device driver for example could compromise the integrity
+of the entire system.
 
 While commercial separation kernel products exist on the market, there is
 currently no open-source SK\index{SK} available. This is a major drawback for
@@ -254,17 +253,17 @@ code or the verification documents (if any). It is of course also impossible to
 adapt the kernel code to the specific needs of a customer, which may hinder
 development of the overall system.
 
-The motivation of this project is to provide a freely-available SK with a
-permissive licensing\index{license} model allowing reviews and modification of
+The motivation for this project is to provide a freely-available SK with a
+permissive licensing\index{license} model to allow reviews and modification of
 the source code and design documents. It should be possible to independently
 reproduce verification artifacts such as automated proofs. In the eyes of the
 authors, only this approach is viable in environments where high integrity and
 security is demanded.
 
-There have been many advances in hardware support for virtualization, greatly
-simplifying the design and implementation of a security kernel. The authors
-believe that now is the perfect time to launch a separation kernel project
-which benefits from these latest hardware features.
+There have been many recent advances in hardware support for virtualization
+that greatly simplify the design and implementation of a security kernel. The
+authors believe that now is the perfect time to launch a separation kernel
+project which benefits from these hardware capabilities.
 
 \section{Goals}
 The main goal of this project is to implement a freely-available, open-source
@@ -286,7 +285,7 @@ scheduling mechanisms.
 The target platform of the SK is 64-bit Intel. No abstraction layer will be
 provided to support other processor architectures. Such a layer could be added
 later as needed. Instead, the kernel must leverage the latest hardware features
-of the Intel platform to implement isolation while maintaining a small code
+of the Intel platform to implement the isolation while maintaining a small code
 base.
 
 The main task of the SK is to separate subjects. This is why it must only allow
@@ -338,7 +337,7 @@ the term microhypervisor\index{microhypervisor} which is short for
 microkernelized hypervisor.
 
 NOVA has been developed from scratch with the goal to achieve a thin hypervisor
-layer, a user-level virtual-machine monitor and additional unprivileged
+layer, an user-level virtual-machine monitor and additional unprivileged
 components to reduce the attack surface on the most privileged code and thus
 increase the overall system security. It runs on Intel and AMD x86 processors
 with support for hardware virtualization and is implemented in the C++
@@ -346,8 +345,8 @@ programming language. The source code is publicly available \cite{NOVA} and has
 been released under the GPL open-source license.
 
 While NOVA is a very promising architecture it has some drawbacks: the choice of
-programming language (C++) and its dynamic nature, in general a very desirable
-property, increases the verification complexity to the point where it might be
+programming language (C++) and its dynamic nature (in general a very desirable
+property) increases the verification complexity to the point where it might be
 infeasible.
 
 \subsection{Commercial separation kernels}\label{subsec:commercial-sks}
@@ -370,7 +369,7 @@ vendors:
 
 None of these companies publish detailed technical documentation or provide
 access to source code. Thus there is not enough information available for a
-thorough technical analysis to asses the assurance provided by these kernels
+thorough technical analysis to assess the assurance provided by these kernels
 (e.g. if the kernels are suitable for formal verification and what kind of
 verification has been performed). Simply put, there is not enough information
 to verify the high robustness claims made by the vendors.

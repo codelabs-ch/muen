@@ -23,13 +23,14 @@ compile the interrupt routing tables. These tables are SPARK specifications
 which are compiled into the kernel during the build process.
 
 The first table contains the IRQ routing information, i.e. to which CPU's LAPIC
-the hardware IRQ must be forwarded to and the interrupt vector to use. Hardware
-interrupts are remapped by the I/O APIC to the interrupt vector range 32-255 to
-be distinct from exceptions. For example, IRQ 1 used by the keyboard is remapped
-to interrupt vector 33 before delivery to the assigned processor LAPIC.
+the hardware IRQ must be forwarded to, and also the interrupt vector to use.
+Hardware interrupts are remapped by the I/O APIC to the interrupt vector range
+32-255 to be distinct from exceptions. For example, IRQ 1 used by the keyboard
+is remapped to interrupt vector 33 before delivery to the assigned processor
+LAPIC.
 
-On reception of the interrupt message, the LAPIC forwards the interrupt vector
-to the processor core for further processing. It is important to note that
+On receipt of the interrupt message, the LAPIC forwards the interrupt vector to
+the processor core for further processing. It is important to note that
 interrupts are not enabled when in VMX root mode (the interrupt flag
 IF\index{IF} is not set in the host's FLAGS register). This simplifies the
 kernel code and assures that the kernel is not disrupted by external interrupts.

@@ -40,8 +40,8 @@ occurs and the kernel is invoked. The kernel can then determine the cause for
 the transition and handle the condition according to policy.
 
 \subsubsection{Subject monitor}
-When a subject tries to access resources such as devices that must be emulated,
-a system component must perform the necessary actions and change the subject's
+When a subject tries to access resources such as devices that are emulated, a
+system component must perform the necessary actions and change the subject's
 system state accordingly. This is to give the subject the impression that it
 has unrestricted access to a device while in reality the necessary operations
 are effectively emulated by another component.
@@ -78,11 +78,11 @@ The following list encompasses the system policy:
 \end{itemize}
 
 \subsubsection{Memory}
-All memory resources of a system are static and are explicitly specified in the
+All memory resources of a system are static and explicitly specified in the
 system policy. Apart from a few special memory regions, such as the application
 processor trampoline (see section \ref{subsec:init}), there are no implicitly
-allocated data structures. This allows to determine the exact memory layout of
-the final system at integration time.
+allocated data structures. This allows one to determine the exact memory layout
+of the final system at integration time.
 
 The kernel and each subject specifies its memory layout. The memory layout
 defines which physical memory ranges are accessible, their location in the
@@ -151,17 +151,17 @@ shared resource.
 \subsubsection{Processor}
 Information about the processor of the system must also be specified in the
 policy, since the number of available logical CPUs for example is crucial for
-scheduling. This allows to verify the consistency of the scheduling plan with
-regards to the processor that the system is executing on.
+scheduling. This information is used to verify the consistency of the scheduling
+plan with regards to the processor that the system is executing on.
 
 \subsubsection{Subject specification}
 All subjects of a system must be specified as part of the policy. The subject
-specification defines the resources and properties of a subject. Each subject is
-identified by a unique ID and a name. The name is used for subject references in
-the policy, e.g. trap table entries specify a destination subjects which is
-given by name. Most subject data structures are organized in static arrays and
-the ID can be used as index to get the information associated with a specific
-subject.
+specification defines the resources and properties of a given subject. Each
+subject is identified by an unique ID and name. The name is used for subject
+references in the policy, e.g. trap table entries specify a destination subject
+which is given by name. Most subject data structures are organized in static
+arrays and the ID can be used as an index to get the information associated
+with a specific subject.
 
 The policy also defines what execution environment the kernel must provide by
 assigning a profile to each subject. Initial values for parts of the execution
@@ -180,17 +180,17 @@ are to be handled by the kernel: the trap and event tables.
 The \emph{trap table} designates which destination subject is in charge of
 handling a specific trap and what interrupt vector should be injected, if any.
 It defines to which target subject execution control is transferred when a trap
-occurs. The optional injection of an interrupt allows to indicate the trap kind
-to the destination subject, so it can distinguish different causes for traps.
+occurs. The optional injection of an interrupt indicates the trap kind to the
+destination subject, so it can distinguish different causes for traps.
 
 Events, which are described in section \ref{subsubsec:events}, are specified in
 the \emph{event table}. An event is a trap that is explicitly triggered by a
 subject. The event table specifies how the kernel is supposed to handle such
 events.
 
-Both tables are part of the subject policy because the information is subject
-specific. This allows to configure different reactions to traps depending on the
-subject causing the condition.
+Both tables are part of the subject policy because the information is
+subject-specific. This allows for the configuration of different reactions to
+traps depending on the subject causing the condition.
 
 \subsection{Inter-subject communication}
 The Muen kernel provides two main mechanisms for information flow between
@@ -211,9 +211,9 @@ subject memory layouts specify a region that maps the same physical memory range
 into the respective address spaces.
 
 Access rights for memory regions (e.g. write access) are part of the subject
-memory layout. This allows to specify a direction of information flow for memory
-regions, e.g. by granting write access to the source subject exclusively and
-giving the destination subject read access only.
+memory layout. This allows one to specify a direction of information flow for
+memory regions, e.g. by granting write access to the source subject exclusively
+and giving the destination subject read-only access.
 
 Since memory management is static and exclusively governed by the system policy,
 the kernel does not need to make special provisions. The kernel is oblivious to
@@ -241,34 +241,34 @@ as an indicator for the cause of the handover, which allows the destination
 subject to quickly react without having to inspect the triggering subject's
 state.
 
-\emph{Interrupt events} simply allow to inject an interrupt to a destination
-subject without execution handover. This allows a subject to send a notification
-to a destination subject in the form of an interrupt.
+\emph{Interrupt events} simply inject an interrupt to a destination subject
+without execution handover. This allows a subject to send a notification to a
+destination subject in the form of an interrupt.
 
-Events are explicitly triggered by a given source subject and are specified as
+Events are explicitly triggered by a given source subject and are declared as
 part of the subject specification. The subject policy contains a list of event
 table entries which state the event number, destination subject and interrupt
-number to inject. Event numbers must be unique since they are used identify a
+number to inject. Event numbers must be unique since they are used to identify a
 specific event.
 
-To trigger an event, a subject provokes a trap into the kernel, passing an
-event number as parameter. The kernel then consults the subject's event table
+To trigger an event, a subject provokes a trap into the kernel, passing the
+event number as a parameter. The kernel then consults the subject's event table
 to determine the destination subject. If the event number is invalid (e.g. not
-in the range of the subject's event table) the event is ignored and the subject
-is resumed.
+in the range of the subject's event table) the event is ignored and the
+execution of the subject is resumed.
 
 \subsection{Exceptions}\label{subsec:design-exceptions}
 We distinguish hardware exceptions that occur in VMX non-root mode, while
 executing a subject, and in VMX root mode when the kernel is operating.
 
-Use of the SPARK programming language and the intent to prove the absence of
-runtime errors means, that exceptions during regular operation in VMX
-root-mode should not happen. If for some unforeseen reason (e.g. non-maskable
+Use of the SPARK programming language with the ability to prove the absence of
+runtime errors means that exceptions during regular operation in VMX root-mode
+should not happen. If for some unforeseen reason (e.g. non-maskable
 interrupt NMI) an exception occurs, it indicates a serious error and the system
 is halted.
 
-In the case of an exception being caused by the execution of a subject, the
-exception handling depends on the profile of the running subject. If a native
+In the case of an exception being caused by the execution of a subject, the kind
+of exception handling depends on the profile of the running subject. If a native
 subject raises an exception, a transition to VMX root-mode occurs with the exit
 reason indicating the cause. The kernel then consults the subject's trap table
 to determine which subject is in charge of handling the condition.
@@ -309,42 +309,44 @@ utilize the hardware to its full potential, the separation kernel must make use
 of all available cores. In a multicore system, a physical CPU package provides
 more than one processor cores in a single package. Additionally, systems
 equipped with Intel's Hyper-Threading Technology (HTT) have two or more
-\emph{logical CPUs} per cores. A logical CPU is a execution unit of the
-processor that runs an application or kernel process.
+\emph{logical CPUs} per core. A logical CPU is an execution unit of the
+processor that runs an application or a kernel process.
 
-In MP systems, one processor termed
-\emph{bootstrap processor}\index{Boostrap processor}(BSP) is responsible for
-system initialization, while the other processors, called
-\emph{application processors}\index{Application processor} (APs), wait for an
-initialization sequence as specified by the Intel, see \cite{intel:mp}.
+In MP systems, one processor termed \emph{bootstrap processor}\index{Boostrap
+processor}(BSP) is responsible for system initialization, while the other
+processors, called \emph{application processors}\index{Application processor}
+(APs), wait for an initialization sequence as specified by Intel in
+\cite{intel:mp}.
 
 At the basis of the multicore design is the symmetric execution of the kernel on
 every available logical CPU. This means that all cores execute exactly the same
 Muen kernel code, apart from the system bring up code run exclusively by the
-BSP. Global data is shared between all cores which necessitates some form of
+BSP.
+
+Global data is shared between all cores which necessitates some form of
 inter-core synchronization to guarantee data consistency. The synchronization
 primitives used by the separation kernel are spinlock and barrier.
 
 The spinlock facilitates the exclusive access of resources to a CPU holding the
 spinlock. Before using a shared resource a logical CPU has to acquire the lock
-and release it once it is finished. The subject pending event lists and
+and release it once it is finished. The subject's pending event lists and
 multi-line debug output statements are protected by the spinlock. Future
 improvements to the event and interrupt processing could remove the need for the
 event list and in turn the locking, see section \ref{subsec:apicv}.
 
 A barrier is used to guarantee, that all logical CPUs have reached a specific
-execution point and are waiting for the release of the barrier. This allows to
-synchronize all CPUs to simultaneously start executing instructions from a
-specific point in the kernel code. It is used to arrange correct major frame
-changes and avoid any inter-processor drift with regards to scheduling plans.
+execution point and are waiting for the release of the barrier. This allows for
+synchronization of all CPUs to simultaneously start executing instructions from
+a specific point in the kernel code. This mechanism is used to manage major
+frame changes and avoid any inter-processor drift with regards to scheduling
+plans.
 
 The stack and a memory region called per-cpu storage is private to each CPU
-core. That means that every CPU has its own CPU stack and a per-cpu area where
-CPU-specific data is stored, which is inaccessible by other CPU cores.
+core. That means CPU stack and per-cpu data is inaccessible by other CPU cores.
 
 One globally shared variable is the major frame index which is used to
 coordinate scheduling across all CPU cores. Its use and how a consistent view of
-the variable's value across all cores is guaranteed, is presented in the next
+the variable's value across all cores is guaranteed is presented in the next
 section.
 
 An important aspect of Muen's multicore design is that subjects are pinned to a
@@ -387,12 +389,12 @@ repetitive. A \emph{minor frame}\index{Minor frame} specifies a subject and a
 precise amount of time. This information is directly applied by the scheduler.
 
 Figure \ref{fig:example-major-frame} illustrates the structure of a major frame.
-The major frame consists of four minor frames. Minor frame two has twice the
+The major frame consists of four minor frames. Minor frame 2 has twice the
 amount of ticks than the other minor frames, which have identical length. Time
 progresses on the horizontal axis from left to right.
 
-When the major frame starts, subject one is scheduled for the length of minor
-frame one, followed by a switch to subject 2. After that the two subjects are
+When the major frame starts, subject 1 is scheduled for the length of minor
+frame 1, followed by a switch to subject 2. After that the two subjects are
 again scheduled in alternating fashion.
 
 \begin{figure}[ht]
@@ -415,7 +417,7 @@ again scheduled in alternating fashion.
 	\label{fig:example-major-frame}
 \end{figure}
 
-An example scheduling plan for multiple logical CPUs is depicted in figure
+An example of a scheduling plan for multiple logical CPUs is depicted in figure
 \ref{fig:example-scheduling-plan}. It illustrates a system with two logical CPUs
 that execute various subjects indicated by different colors.
 
@@ -462,7 +464,7 @@ degree of freedom while keeping the kernel complexity low, multiple scheduling
 plans can be specified in the system policy. By defining a distinct plan for
 each anticipated workload in the policy, the scheduling regimes are fixed at
 integration time. This removes any runtime uncertainty that might be introduced
-by this enhancement, since the scheduling plans cannot be altered at runtime.
+by this enhancement since the scheduling plans cannot be altered at runtime.
 
 The privileged subject $\tau$0 is allowed to select and activate one of the
 scheduling plans. A global variable termed \emph{major frame index} designates
@@ -479,7 +481,7 @@ multiplce CPUs:
 		on the global barrier again.
 	\item The BSP determines the scheduling plan selected by $\tau$0 and updates
 		the major frame index value accordingly.
-	\item Then the BSP continues to the barrier thereby opening it.
+	\item The BSP continues to the barrier thereby opening it.
 	\item All CPU cores including the BSP start executing after the barrier and
 		use the updated major frame index value.
 \end{enumerate}

@@ -4,13 +4,13 @@ system. The processor count of a specific hardware platform is declared in the
 system policy, see section \ref{subsec:hardware}. This section describes how
 the multicore setup is done during kernel startup.
 
-Modern PC systems comply to the Intel MultiProcessor (MP\index{MP})
+Modern PC systems comply with the Intel MultiProcessor (MP\index{MP})
 specification. In short, the Intel MP specification is an open-standard
 describing enhancements to both operating systems and firmware to be able to
 inititialize, boot and operate x86 multi-processor systems. For more information
 see \cite{intel:mp}.
 
-After the hardware completed its part of the MP specification, one processor
+After the hardware completes its part of the MP specification, one processor
 has been negotiated to be the bootstrap processor (BSP\index{BSP}). All other
 logical processors, called application processors (AP\index{AP}), halt until
 they receive a specific inter-processor interrupt (IPI\index{IPI}) sequence.
@@ -24,16 +24,16 @@ they receive a specific inter-processor interrupt (IPI\index{IPI}) sequence.
 
 The BSP starts executing code as described in section \ref{subsec:init}. The
 init code initializes the system and jumps into the main SPARK kernel. The
-kernel running on the BSP is responsible to bootstrap the application
+kernel running on the BSP is responsible for bootstraping the application
 processors. It first enables its local APIC\index{APIC} to be able to send
-inter-processor interrupts to the halted AP processors. In order to wake them
+inter-processor interrupts to the waiting AP processors. In order to wake them
 up, the INIT-SIPI-SIPI\footnote{SIPI is short for Startup
 IPI}\index{INIT}\index{SIPI}\index{IPI} IPI sequence must be sent to their
 APICs as dictated by the MP specification. See also figure
 \ref{fig:mp-overview} for an illustration of this process. The SIPI IPI
 contains the physical address vector 0x0 of the trampoline code copied to
-low-memory by the init code. The AP processors jump
-to this code after wakeup. The trampoline performs the following steps:
+low-memory by the init code. The AP processors jump to this code after wakeup.
+The trampoline performs the following steps:
 
 \begin{enumerate}
 	\item Set up 32-bit GDT\index{GDT}
@@ -82,5 +82,5 @@ separation, the scheduling plans on the different logical processors must be
 synchronized on major frame transition. This is achieved by a SPARK
 implementation of a sense-reversing barrier as described in the book \emph{The
 Art of Multiprocessor Programming} by Maurice Herlihy and Nir Shavit
-\cite{Herlihy:2008:AMP:1734069}. This kind of barrier is safe for reuse without
-issues of CPUs overtaking each other.
+\cite{Herlihy:2008:AMP:1734069}. This kind of barrier is safe for reuse and free
+from issues of CPUs overtaking each other.

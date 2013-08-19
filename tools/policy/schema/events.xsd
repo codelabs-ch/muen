@@ -25,8 +25,7 @@
 		<xs:annotation>
 			<xs:documentation>
 				Table specifying how events triggered by a subject are handled.
-				Two kinds of events can be specified: interrupt and handover
-				events.
+				Two kinds of events can be specified: interrupt and handover.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:choice minOccurs="1" maxOccurs="32">

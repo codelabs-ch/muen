@@ -74,7 +74,7 @@ perform the following tasks:
 	\end{itemize}
 \end{itemize}
 
-\subsection{Subject binary analysis}\label{subsec:subject-binary-analysis}
+\subsection{Subject Binary Analysis}\label{subsec:subject-binary-analysis}
 The \texttt{skconfig} tool uses the Binary File Descriptor (BFD\index{BFG})
 library to analyze subject binaries and creates appropriate XML\index{XML}
 policy specifications from it, see figure \ref{fig:object-analysis}. This is
@@ -98,7 +98,7 @@ contrast to just providing a big enough memory region granting all permissions
 to the subject with no exact mapping of binary sections to memory access
 permissions (i.e. read, write, execute).
 
-\subsection{Policy compilation}\label{subsec:policy-compilation}
+\subsection{Policy Compilation}\label{subsec:policy-compilation}
 The \texttt{skpolicy} tool compiles the XML system policy to different output
 formats as shown in figure \ref{fig:policy-compilation}.
 
@@ -139,7 +139,7 @@ information:
 		Defines the configuration used for the \texttt{skpacker} tool.
 \end{itemize}
 
-\subsubsection{Validity checks}
+\subsubsection{Validity Checks}
 Before generating the source specifications, page tables and bitmaps, the policy
 compiler performs various sanity checks to assert the validity of the system
 policy. This is done in two steps. First, the policy is validated against the
@@ -173,7 +173,7 @@ compiler performs additional validity checks in a second step:
 	\item Assert that subject binary references are valid.
 \end{itemize}
 
-\subsection{Image packaging}\label{subsec:image-packaging}
+\subsection{Image Packaging}\label{subsec:image-packaging}
 The \texttt{skpacker} tool is responsible to assemble the final bootable system
 image from the parts produced in the preceding build steps. Figure
 \ref{fig:image-packaging} illustrates the process. The tool includes the packer

@@ -11,12 +11,11 @@ is only connected to the Internet when needed. However, this approach does not
 scale well, since this would necessitate having a separate device for each task
 that should be performed in some form of isolation.
 
-A separation kernel (SK) is a specialized security kernel which provides an
+A separation kernel (SK) is a specialized microkernel which provides an
 execution environment for components that can only communicate according to a
 given policy and are otherwise isolated from each other. This isolation also
 includes the limitation of potential side- and covert channels. A SK can serve
-as a basis for the implementation of a component-based system. Unfortunately no
-freely available SK currently exists.
+as a basis for the implementation of a component-based system.
 
 Related problems can arise in cloud services, where multiple unaffiliated parties
 share the same physical machine but are to be separated from each other so as to
@@ -42,9 +41,9 @@ can be used to effectively implement real-world systems.
 All these recent developments provide a good setting for the design and
 implementation of an open-source separation kernel. Using hardware
 virtualization features for component separation and leveraging Intel's latest
-processor features should allow to implement a minimal kernel suitable for
-formal verification. Using SPARK as the programming language greatly increases
-the confidence in the implementation since it eliminates complete categories of
+processor features should allow to implement a small kernel suitable for formal
+verification. Using SPARK as the programming language greatly increases the
+confidence in the implementation since it eliminates complete categories of
 common programming errors, e.g. buffer overflows. Making the source code and
 technical documentation publicly available enables third-party review.
 
@@ -73,7 +72,7 @@ the common abbreviations KB, MB and GB.
 References to subroutines and keywords of a programming language, as well as
 command line tools are formatted in \texttt{typewriter} style.
 
-\section{Related literature}
+\section{Related Literature}
 Since the target hardware platform of the separation kernel is the Intel x86
 architecture, its specification called "Intel\textsuperscript{\textregistered}
 64 and IA-32 Architectures Software Developer's Manual"
@@ -86,7 +85,7 @@ can lead to changes in the document structure. The chapter and section
 citations given in this report refer to the Intel SDM revision 44, released in
 August 2012.
 
-\section{Provenance of project name}
+\section{Provenance of Name}
 \emph{Muen} is Japanese and translates to "unrelated/without relation". It was
 chosen since it is a fitting allegory of the components isolated by the
 separation kernel. Figure \ref{fig:muen} depicts the word in Japanese kanji

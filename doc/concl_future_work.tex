@@ -1,4 +1,4 @@
-\section{Future work}
+\section{Future Work}
 The following list gives an overview of possible future enhancements to the
 Muen separation kernel:
 
@@ -19,7 +19,7 @@ Muen separation kernel:
 
 The following sections describe some of the more interesting items.
 
-\subsection{Covert/Side-channel analysis}
+\subsection{Covert/Side-Channel Analysis}
 Since the main purpose of a separation kernel is the isolation of subjects, any
 unintended channel that enables information flow must be prohibited or at least
 reduced to an acceptable data rate.
@@ -36,7 +36,7 @@ A guide to covert channel analysis was published as part of the "Rainbow
 Series", a set of computer security standards and guidelines, termed Light Pink
 Book \cite{LightPinkBook}.
 
-\subsubsection{Cache coloring}
+\subsubsection{Cache Coloring}
 A well-known source of high-bandwidth side-channels are processor caches
 \cite{cryptoeprint:2005:271}. One method to prevent this channel is called
 \emph{cache coloring}. The main concept is to partition the cache into disjoint
@@ -53,7 +53,7 @@ used as a side-channel.
 This mechanism could be implemented by extending the policy compilation tool
 without changes to the kernel.
 
-\subsection{Linux subject}
+\subsection{Linux Subject}
 Porting the Linux kernel to run as a subject on the Muen separation kernel would
 enable the execution of a large number of Linux user-space applications. This
 would drastically increase the number of real world use-cases, that a system
@@ -70,7 +70,7 @@ to control virtually any PCI(e) device. This would add the abundant hardware
 support of the Linux kernel to systems based on the separation kernel, with a
 comparably small increase in kernel complexity.
 
-\subsection{Hardware pass-through/PCIe virtualization}
+\subsection{Hardware Passthrough/PCIe Virtualization}
 Even though the separation kernel has support for resources, that can be
 accessed using port and memory-mapped I/O, newer hardware devices are attached
 to a PCI bus. Prior to their usage, such devices must be configured using a
@@ -93,7 +93,7 @@ isolation functions.
 Implementing these enhancements using VT-d should keep the kernel complexity at
 an acceptable level.
 
-\subsection{APIC virtualization}\label{subsec:apicv}
+\subsection{APIC Virtualization}\label{subsec:apicv}
 Currently pending events that are to be injected into subjects are stored in
 per-subject data structures, that are protected by a spinlock. This is
 sub-optimal since having to acquire locks when handling interrupts is not very
@@ -115,7 +115,7 @@ The current implementation of the separation kernel does not support APICv, due
 to the limited availability of hardware supporting this advanced processor
 feature.
 
-\subsection{Policy writer support tools}
+\subsection{Policy Writer Support Tools}
 The policy of a Muen kernel based system plays a very important role. Since the
 kernel simply enforces a given policy, the policy writer is responsible for the
 correctness of the system specification.
@@ -129,12 +129,12 @@ intuitive method for policy creation. Visualizing key parts of the policy would
 be very beneficial. The generation of flow charts representing the information
 flows between subjects based on their shared resources or graphical illustration
 of scheduling plans are two examples, how such a tool could assist a policy
-writer.
+author.
 
-\subsection{Dynamic resource management}
+\subsection{Dynamic Resource Management}
 Currently, resource management is static and there is little flexibility. All
 system parameters must be explicitly declared in the policy. Switching between
-pre-defined scheduling plans is the only property changeable at runtime. While
+predefined scheduling plans is the only property changeable at runtime. While
 this allows to tightly control and validate a system via the policy, all
 assigned resources are indispensable even though some of them may not be in use
 during a particular period.
@@ -151,7 +151,7 @@ trust-level as the kernel and forms part of the TCB. Via an appropriate
 interface, it can update parts of the policy and instruct the kernel to enforce
 the changes.
 
-\subsection{Formal verification}
+\subsection{Formal Verification}
 By implementing the kernel in SPARK and proving the absence of runtime errors,
 we have shown that the kernel is free from exceptions. While these proofs
 provide some evidence to the correctness claim of the implementation, the
@@ -161,7 +161,5 @@ such as the correspondence of the scheduler to a given formal specification is
 necessary to further raise the confidence in systems based on the Muen kernel.
 
 A link between the SPARK tool suite and the interactive proof assistant
-Isabelle/HOL exists in the form of the \emph{HOL-SPARK} verification
-environment \cite{berghofer:OASIcs:2012:3587}. Isabelle would allow to prove
-the formal correctness of the Muen separation kernel. The viability of this
-approach has been demonstrated by the seL4 project \cite{Klein_EHACDEEKNSTW_09}.
+Isabelle/HOL exists in the form of the HOL-SPARK tool. Isabelle would allow to
+prove the formal correctness of the Muen separation kernel.

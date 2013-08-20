@@ -26,7 +26,7 @@ Separation is not only important for subjects, but kernel resources must be
 protected from unauthorized access as well. This aspect is also discussed in
 this section.
 
-\subsection{VMX controls}\label{subsec:vmx-controls}
+\subsection{VMX Controls}\label{subsec:vmx-controls}
 The instructions listed in Intel SDM \cite{IntelSDM}, volume 3A, section 25.1.2
 cause a VM exit unconditionally when executed in VMX non-root mode, i.e. they
 do not depend on VMX control settings in a subject VMCS. This section analyzes
@@ -88,7 +88,7 @@ VM exit for both profiles.
 	\label{tab:profiles-cond-vm-exits}
 \end{table}
 
-\subsection{System resources}\label{subsec:system-resources}
+\subsection{System Resources}\label{subsec:system-resources}
 System resources are assigned to subjects according to the system policy. The
 kernel does not by itself perform policy decisions, but instead only applies
 the linked in policy specifications and management data structures.
@@ -131,7 +131,7 @@ the bitmap to the VMCS field during subject setup.
 Device interrupts are routed to the correct subject as outlined in section
 \ref{subsec:external-ints}.
 
-\subsection{Execution environment}\label{subsec:exec-env-sep}
+\subsection{Execution Environment}\label{subsec:exec-env-sep}
 Two mechanisms provide isolation of subject execution environments: saving and
 restoring the architectural state or prohibiting access. An overview of the
 state of a logical processor is given in section \ref{subsubsec:exec-env} and
@@ -177,7 +177,7 @@ detail.
 	\label{tab:exec-env-storage}
 \end{table}
 
-\subsubsection{General purpose registers}
+\subsubsection{General Purpose Registers}
 General purpose registers (GPR\index{GPR}) are handled manually by the SPARK
 CPU register type and the stack pointer field in the subject state record. See
 section \ref{sec:impl-subject} for details about the structure of these two
@@ -191,7 +191,7 @@ VM exit reason is checked and if it is valid, the GPR values are copied from the
 processor registers into the subject state. The kernel is halted on invalid exit
 reasons, since this indicates a serious error condition.
 
-\subsubsection{Segment registers}
+\subsubsection{Segment Registers}
 Segment registers are managed by VMX automatically inside the VMCS. The subject
 VMCS both stores the visible segment selector\index{segment selector} as well as
 the hidden part composed of the base address, segment limit, and access rights
@@ -239,7 +239,7 @@ memory region using a segment selector cannot bypass paging and results in a
 page fault. VM subjects are constrained by the Intel EPT mechanism, where
 access to disallowed memory results in an EPT violation trap.
 
-\subsubsection{Instruction pointer}
+\subsubsection{Instruction Pointer}
 The instruction pointer is managed by VMX and initially set to the subject's
 entry point. This value is read from the generated system policy.
 
@@ -247,12 +247,12 @@ Because it must be possible to modify the instruction pointer for emulation, it
 is also copied to the in-memory subject state, which can be made accessible to a
 subject monitor.
 
-\subsubsection{Flag register}
+\subsubsection{Flag Register}
 The flag register (EFLAGS in 32-bit mode, RFLAGS in 64-bit mode) is managed in
 the VMCS region of the subject and set to the initial value 2 (only the reserved
 bit 1 is set, all other bits are cleared).
 
-\subsubsection{Control registers}\label{subsubsec:control-regs}
+\subsubsection{Control Registers}\label{subsubsec:control-regs}
 Control registers CR0 and CR4 are managed by VMX automatically and initialized
 to the values shown by table \ref{tab:vmcs-control-regs}. These values depend
 on the subject profile.
@@ -307,7 +307,7 @@ control register CR8 leads to a trap for both profiles. For more information
 about the meaning of control register bits, see Intel SDM \cite{IntelSDM},
 volume 3C, section 2.5.
 
-\subsubsection{Descriptor table registers}
+\subsubsection{Descriptor Table Registers}
 Both subject profiles allow the management of the Global Descriptor Table
 (GDT\index{GDT}) and the Interrupt Descriptor Table (IDT\index{IDT}). The GDTR
 and IDTR registers are stored in the guest-state area in the VMCS and updated
@@ -318,14 +318,14 @@ the corresponding access rights field in the VMCS to the value \texttt{0x10000}.
 It can be enabled by subjects if needed. The LDTR register is also managed by
 VMX automatically.
 
-\subsubsection{Debug registers}
+\subsubsection{Debug Registers}
 Debug registers are not handled by VMX and the kernel does not currently store
 them in the subject state. Instead, access is disallowed by setting the "MOV-DR
 exiting" VMX processor control (Intel SDM \cite{IntelSDM}, volume 3C, section
 24.6.2) in both subject profiles. This leads to a trap when trying to move data
 into or from debug registers.
 
-\subsubsection{x87 FPU registers}
+\subsubsection{x87 FPU Registers}
 The x87 FPU state is not handled by VMX. Currently, execution of a x87 FPU
 instruction generates a device-not-available exception (\#NM). This is due to
 the CR0.EM bit set in the subject control register (see Intel SDM, volume 3A,
@@ -341,13 +341,13 @@ According to table 2-2 in \cite{IntelSDM}, volume 3A, section 2.5, the
 bit set. This is not considered problematic because the instruction is only used
 to wait for pending floating-point exceptions.
 
-\subsubsection{MMX registers}
+\subsubsection{MMX Registers}
 The MMX state is not handled by VMX and, similar to the x87 FPU state, the
 kernel does not save its state manually. MMX instructions currently lead to a
 \#UD exception because the CR0.EM bit is set in the VMCS guest-state field
 (Intel SDM \cite{IntelSDM}, volume 3A, section 12.1).
 
-\subsubsection{XMM registers}
+\subsubsection{XMM Registers}
 The Streaming SIMD\index{SIMD}\footnote{Single instruction, multiple data}
 Extensions (SSE\index{SSE}) provide an extended processor state with sixteen
 additional XMM registers and one MXCSR register. The \texttt{XSAVE},
@@ -390,7 +390,7 @@ instructions (which previously operated on 128-bit XMM registers) now operate on
 the lower 128 bits of the YMM registers. Execution of an AVX instruction leads
 to a \#UD exception because of the enabled CR0.EM bit.
 
-\subsubsection{Model-specific registers (MSRs)}
+\subsubsection{Model-specific Registers (MSRs)}
 Direct access to MSRs from subjects is allowed if granted by policy. Access can
 be read-only, write-only or read-write. The writer of the system policy must
 take care not to allow unintended access to MSRs.
@@ -399,7 +399,7 @@ The VMCS MSR bitmap which governs access to MSRs is generated from the policy by
 the policy compiler. The kernel initializes the VMCS MSR bitmap field during
 subject setup using the generated bitmap.
 
-\subsection{Temporal isolation}\label{subsec:temp-isolation}
+\subsection{Temporal Isolation}\label{subsec:temp-isolation}
 The Muen kernel scheduler executes subjects according to a scheduling plan
 specified in the system policy. The scheduling plans have a fixed cyclic
 structure and are divided into major frames that are comprised of a number of
@@ -423,11 +423,11 @@ is the VMX preemption timer. If for some reason the timer is not deemed to be
 precise enough for a particular use case, additional timer sources could be used
 to provide even higher timer resolution and thus scheduling accuracy.
 
-\section{Information flow}\label{sec:information-flow}
+\section{Information Flow}\label{sec:information-flow}
 This section reviews the mechanisms provided by the Muen kernel to enable
 information flow between subjects.
 
-\subsection{Shared memory}
+\subsection{Shared Memory}
 Shared memory is the main method for subjects to share information. Such regions
 must be defined in the subject specification as part of the system policy. Use of
 access attributes enables the definition of directed flows, where data can only
@@ -479,7 +479,7 @@ they cannot change at runtime. This ensures that traps are handled according to
 policy and any unexpected trap will cause the kernel to panic and halt
 execution.
 
-\section{Architecture support}\label{sec:arch-support}
+\section{Architecture Support}\label{sec:arch-support}
 This section reviews the hardware platforms the kernel is able to run on, as
 well as the architectures the kernel provides to subjects as execution
 environment.
@@ -531,11 +531,12 @@ location of all remaining memory regions can be controlled by the system policy.
 Additional memory is necessary depending on the number of subjects and their
 memory demands.
 
-The hardware requirements can be met by any recent COTS\footnote{Custom Of The
-Shelve} x86 hardware based on an Ivy Bridge Intel CPU, be it notebooks,
-workstations or server systems. It might be noted that with the advent of new
-Intel-based tablets that are powered by VT-x capable latest-gen Haswell
-processors, the Muen kernel should even be able to run on mobile devices.
+The hardware requirements can be met by any recent
+COTS\footnote{Commercial off-the-shelf} x86 hardware based on an Ivy Bridge
+Intel CPU, be it notebooks, workstations or server systems. It might be noted
+that with the advent of new Intel-based tablets that are powered by VT-x capable
+latest-gen Haswell processors, the Muen kernel should even be able to run on
+mobile devices.
 
 \subsection{Subject}
 Subjects that make use of the native profile must be compiled and statically
@@ -551,18 +552,18 @@ means that while VM subjects can perform their own memory management, the
 address space is guaranteed to be static, which is identical to the native
 profile.
 
-Additionally, VM subjects is expected to perform exception handling by
+Additionally, VM subjects are expected to perform exception handling by
 installing an interrupt descriptor table. If a subject raises an exception, it
 is vectored through the subject's IDT. Only a triple fault will cause a trap,
 that the kernel will process as usual.
 
-\section{Implementation assurance}\label{sec:impl-assurance}
+\section{Implementation Assurance}\label{sec:impl-assurance}
 This section summarizes the properties of the Muen kernel that make a compelling
 case to back up the high robustness and assurance claim of the implementation.
 
-\subsection{Minimal implementation}
-The functionality implemented by the kernel has been stripped to the bare
-minimum. All mechanisms that must not absolutely be part of the kernel have been
+\subsection{Lean Implementation}
+The implementation of the kernel has been reduced to essential functionality.
+All mechanisms that are not strictly required to be part of the kernel have been
 delegated to other components of the system, such as the policy compilation
 tool.
 
@@ -578,8 +579,8 @@ where the kernel's sole responsibility is to provide the pre-generated page
 tables to the MMU, which in turn enforces the memory layout specified by the
 policy.
 
-\subsection{Small size}
-The kernel including the mininal zero-footprint runtime has a low SLOC
+\subsection{Small Size}
+The kernel including the small zero-footprint runtime has a low SLOC
 \footnote{Source lines of code} count. The following list gives the source code
 statistics generated with the \texttt{sloccount} tool
 \footnote{http://www.dwheeler.com/sloccount/}, version 2.26:
@@ -599,19 +600,19 @@ Policy-generated files are also omitted since they are static data structures
 containing system specification information, which is not considered part of the
 kernel. They are a transformed view of the policy accessible to the kernel.
 
-The numbers show that the Muen kernel implementation is rather small,
-considering the fact that the Ada/SPARK language favors readability of the code
-over compactness. The size of the project allows for a complete review of the
-TCB with moderate effort.
+The numbers show that the Muen kernel implementation is quite small, considering
+the fact that the Ada/SPARK language favors readability of the code over
+compactness. The size of the project allows for a complete review of the TCB
+with moderate effort.
 
-\subsection{Choice of programming language}
+\subsection{Choice of Programming Language}
 The vast majority of the kernel has been implemented using the SPARK language,
 which is very well suited for the construction of high integrity systems.
 
 System initialization is performed in assembly. Necessary CPU instructions,
 e.g. to execute VT-x specific operations, are implemented as inline assembly
 and made accessibly to SPARK via the SK.CPU package. The assembly code was
-kept to the absolutely necessary minimum.
+kept to the necessary minimum.
 
 The rest of the kernel is written in SPARK. The major benefits of the
 programming language are presented in section \ref{sec:spark}. The kernel is
@@ -639,10 +640,9 @@ as part of the build process.
 
 A total of 666 verification conditions are generated, which have all been
 discharged and thus proven correct. This means that all the SPARK code of the
-Muen kernel is free from runtime errors and will not raise an exception under
-any circumstance. Few operations have been formally verified, proving additional
-functional properties through the use of post-conditions. Section
-\ref{sec:spark} lists all types of errors whose absence is proven.
+Muen kernel is free from runtime errors and will not raise an exception.
+Section \ref{sec:spark} lists all types of errors whose absence is proven. In
+addition some functional properties were stated as postconditions and proven.
 
 \subsection{Tools}
 All supporting tools have been developed in Ada following a strict test-driven
@@ -651,9 +651,9 @@ test suite which provides wide code coverage. The tools are released as part of
 the Muen project under the GNU General Public License\index{GPL}.
 
 \subsection{Verifiability}
-The complete source code and documentation of this project are published online.
-Anybody can download all artifacts and perform a manual review of the design and
-code.
+The complete source code and documentation of this project are published online
+at \url{http://muen.sk/}. Anybody can download all artifacts and perform a
+manual review of the design and code.
 
 Perhaps even more important is the fact that SPARK annotations are distributed
 as part of the source code. Combined with the free availability of the GNAT Ada

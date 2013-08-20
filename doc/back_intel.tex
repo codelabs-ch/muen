@@ -24,14 +24,14 @@ is supported, each core has two or more so called \emph{logical CPUs}.
 The logical CPUs run processes by executing instructions. These instructions
 change the state of the logical CPU and the system as a whole.
 
-\subsubsection{Execution environment}\label{subsubsec:exec-env}
+\subsubsection{Execution Environment}\label{subsubsec:exec-env}
 A program executing on a processor is given access to resources to store and
 retrieve information, such as code or data. Resources provided by a modern
 64-bit processor constituting the basic execution environment are described in
 the following list:
 
 \begin{description}
-	\item[Address space] is used by a program to access system memory.
+	\item[Memory address space] is used by a program to access RAM.
 	\item[Stack] is located in memory and facilitates subprogram calls and
 		parameter passing in conjunction with stack management resources of the
 		processor.
@@ -48,12 +48,13 @@ the following list:
 	\item[MMX registers] offer support for single-instruction, multiple-data
 		(SIMD) operations for integer numbers.
 	\item[XMM registers] offer support for SIMD operations on floating-point
-		numbers.
+		numbers\footnote{Processors may contain more advanced vector support
+		(e.g. YMM)}.
 	\item[Model-specific registers (MSRs)] provide control of various hardware
 		and software-related features. Their number and functionality varies
 		depending on the given processor implementation.
-	\item[I/O ports] allow transfer of data to and from Input/Output
-		(I/O\index{I/O}) ports.
+	\item[I/O ports] provide communication with devices on a different address
+		space.
 \end{description}
 
 Further details about the Intel processor execution environment can be found in
@@ -64,8 +65,8 @@ architecture (ISA)\index{ISA} is specified in \cite{IntelSDM}, volumes 2A-C.
 \subsubsection{Caches}
 The processor has numerous internal caches and buffers of varying sizes and
 properties. Their main purpose is to increase processor performance by
-optimizing accesses, e.g. reading data from system memory. The most important
-caches are outlined in the following list:
+hiding latencies of memory accesses, e.g. reading data from RAM. The most
+important caches are outlined in the following list:
 
 \begin{itemize}
 	\item Level 1 instruction cache
@@ -74,6 +75,7 @@ caches are outlined in the following list:
 	\item Translation lookaside buffers (TLB)
 	\item Store buffer
 	\item Write Combining buffer
+	\item Branch Prediction Cache (BPC)
 \end{itemize}
 
 Since caches are shared and because they can only be controlled to a limited
@@ -81,20 +83,19 @@ degree, their state can be changed and observed by different parts of a system.
 Thus, some of the caches can be used as side-/covert-channels and pose a
 challenge to effective component isolation.
 
-\subsubsection{Protected mode}
+\subsubsection{Protected Mode}
 A modern CPU provides several operating modes of which one is called
 \emph{protected mode}. In this mode the processor provides different privilege
 levels also called rings. The rings are numbered from 0 to 3, with ring 0 having
-the most privileges. Due to common operating systems using only rings 0 and 3
-while disregarding other privilege levels, the 64-bit extension to the Intel
-architecture dropped support for rings 1 and 2.
+the most privileges. Common operating systems use only rings 0 and 3 while
+disregarding other privilege levels.
 
 Privileged instructions such as switching memory management data structures are
 only executable in ring 0, also called \emph{supervisor mode}. Operating systems
 such as Linux usually execute user applications in the unprivileged ring 3,
 called user mode.
 
-\subsubsection{IA-32e mode}
+\subsubsection{IA-32e Mode}
 The Intel 64 architecture runs in a processor mode named \emph{IA-32e}, also
 known as \emph{long mode}. It has two submodes: compatibility and 64-bit mode.
 The first submode allows the execution of most 16 and 32-bit applications
@@ -111,7 +112,7 @@ IA-32e submode if not stated differently. Additional information about this mode
 of operation and the execution environment can be found in \cite{IntelSDM},
 volume 1, section 3.2.1.
 
-\subsection{Memory management}
+\subsection{Memory Management}
 Current processors support management of physical memory through means of
 \emph{segmentation}\index{Segmentation} and \emph{paging}\index{Paging}.
 Application processes running on a processor are provided with a virtual
@@ -193,7 +194,7 @@ For a more in-depth look at memory management and address translation the reader
 is referred to \cite{IntelSDM}, volume 3A sections 3 \& 4 and
 \cite{Drepper07whatevery}.
 
-\subsection{Exceptions and interrupts}\label{subsec:exceptions-interrupts}
+\subsection{Exceptions and Interrupts}\label{subsec:exceptions-interrupts}
 Exceptions and interrupts signal an event which occurred in the system or a
 processor that needs attention. They can occur at any time and are normally
 handled by preempting the currently running process and transferring execution
@@ -204,18 +205,17 @@ which is called the interrupt vector. Numbers in the range of 0 to 31 are
 reserved for the Intel architecture. They are used to uniquely identify
 exceptions, see Intel SDM \cite{IntelSDM}, volume 3A, section 6.15.  The
 remaining vectors can be freely used by hardware devices and the operating
-system. To avoid vector number clashes a method called
-\emph{interrupt remapping} is used: hardware interrupts are offset by 32 to move
-them out of the reserved range. As an example, the hardware interrupt 0 would be
-remapped to 32, 1 to 33 and so on. As a result the range of hardware interrupt
-numbers is restricted to 0 .. 223.
+system. To avoid vector number clashes hardware interrupts are offset by 32 to
+move them out of the reserved range. As an example, the hardware interrupt 0
+would be mapped to 32, 1 to 33 and so on. As a result the range of hardware
+interrupt numbers is restricted to 0 .. 223.
 
 Interrupts are caused by hardware devices to notify the processor that a device
 needs servicing. An example is a network card that generates an interrupt
 whenever a data packet is received from the network. The interrupt handler
 responsible for servicing the network card is invoked upon recognition of the
-event and copies the data to system memory before acknowledging the successful
-data transfer to the device.
+event which then acknowledges further processing of the received data to the
+device.
 
 Exceptions are generated by the processor itself when it detects an error
 condition during instruction execution. Causes for exceptions are for example

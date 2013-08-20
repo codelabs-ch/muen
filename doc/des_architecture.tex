@@ -26,7 +26,7 @@ its implementation.
 
 The policy is described in detail in section \ref{subsec:policy}.
 
-\subsection{Subject execution}
+\subsection{Subject Execution}
 The kernel initializes the subject execution environment and state according to
 the subject specification. The execution is started from the subject entry
 point and continues for a predefined period of time. Once the time has passed,
@@ -39,7 +39,7 @@ illegal resource access or an operation not allowed by the profile, a trap
 occurs and the kernel is invoked. The kernel can then determine the cause for
 the transition and handle the condition according to policy.
 
-\subsubsection{Subject monitor}
+\subsubsection{Subject Monitor}
 When a subject tries to access resources such as devices that are emulated, a
 system component must perform the necessary actions and change the subject's
 system state accordingly. This is to give the subject the impression that it
@@ -47,19 +47,19 @@ has unrestricted access to a device while in reality the necessary operations
 are effectively emulated by another component.
 
 In a system based on the Muen kernel, this monitoring function can be
-implemented by a subject termed \emph{subject monitor}. Such a monitoring
-subject can be given access to the state of another subject, effectively
-allowing it to change the system state of the monitored subject. A so called
-\emph{trap table}, which is part of the subject specification, allows to
-specify that execution should be handed over to a subject monitor when a trap
-occurs.
+implemented by a subject termed subject monitor. Such a monitoring subject can
+be given access to the state of another subject, effectively allowing it to
+change the system state of the monitored subject. A so called \emph{trap table},
+which is part of the subject specification, allows to specify that execution
+should be handed over to a subject monitor when a trap occurs.
 
 Historically this monitoring function has been implemented as part of the VMM
 of the virtualization system. Since emulation operations can be very involved
 and quickly grow in complexity, it is very desirable to extract this
 functionality from the separation kernel and thus from the TCB. Since subjects
 are confined by the separation kernel the subject monitor concept achieves this
-property.
+property. This approach has been pioneered by NOVA, see
+\cite{Steinberg:2010:NMS:1755913.1755935}.
 
 \subsection{Policy}\label{subsec:policy}
 To best fulfill the requirements, a system using the Muen kernel uses static
@@ -144,17 +144,13 @@ to subjects is done via references to devices in the subject specification.
 Devices that are not allocated to a subject are not accessible during the
 runtime of the system.
 
-Like any other resource, care must be taken if a device is shared by multiple
-subjects since it can be used to transfer information. This is true for any
-shared resource.
-
 \subsubsection{Processor}
 Information about the processor of the system must also be specified in the
 policy, since the number of available logical CPUs for example is crucial for
 scheduling. This information is used to verify the consistency of the scheduling
 plan with regards to the processor that the system is executing on.
 
-\subsubsection{Subject specification}
+\subsubsection{Subject Specification}
 All subjects of a system must be specified as part of the policy. The subject
 specification defines the resources and properties of a given subject. Each
 subject is identified by an unique ID and name. The name is used for subject
@@ -192,7 +188,7 @@ Both tables are part of the subject policy because the information is
 subject-specific. This allows for the configuration of different reactions to
 traps depending on the subject causing the condition.
 
-\subsection{Inter-subject communication}
+\subsection{Inter-Subject Communication}
 The Muen kernel provides two main mechanisms for information flow between
 subjects: shared memory and events. The first mechanism can be used to share
 arbitrary data between subjects while events are a method to pass notifications
@@ -204,7 +200,7 @@ channels that provide a way for subjects to exchange information are explicit
 and cannot change during the runtime of the system. This allows the validation
 of inter-subject information flows prior to execution.
 
-\subsubsection{Shared memory}
+\subsubsection{Shared Memory}
 The main mechanism for subjects to exchange data is to specify a common shared
 memory region in the system policy. A memory region is shared if two or more
 subject memory layouts specify a region that maps the same physical memory range
@@ -228,9 +224,9 @@ shared memory regions and the event mechanism.
 An event is caused by a subject and can be used to either deliver an interrupt
 or hand over execution to another subject. There are two kind of events:
 handover and interrupt events. The subject triggering an event is called the
-source subject while the target subject is called the destination subject.
-Events facilitate the implementation of a simple inter-subject notification
-mechanism and enable event-driven services.
+source subject while the receiver is called the destination subject. Events
+facilitate the implementation of a simple inter-subject notification mechanism
+and enable event-driven services.
 
 \emph{Handover events} allow voluntary transfer of execution control with
 optional interrupt delivery to a destination subject. The intended use for this
@@ -262,10 +258,9 @@ We distinguish hardware exceptions that occur in VMX non-root mode, while
 executing a subject, and in VMX root mode when the kernel is operating.
 
 Use of the SPARK programming language with the ability to prove the absence of
-runtime errors means that exceptions during regular operation in VMX root-mode
-should not happen. If for some unforeseen reason (e.g. non-maskable
-interrupt NMI) an exception occurs, it indicates a serious error and the system
-is halted.
+runtime errors means that exceptions are not expected during regular operation
+in VMX root-mode. If for some unforeseen reason (e.g. non-maskable interrupt
+NMI) an exception occurs, it indicates a serious error and the system is halted.
 
 In the case of an exception being caused by the execution of a subject, the kind
 of exception handling depends on the profile of the running subject. If a native
@@ -398,6 +393,7 @@ frame 1, followed by a switch to subject 2. After that the two subjects are
 again scheduled in alternating fashion.
 
 \begin{figure}[ht]
+	\centering
 	\begin{ganttchart}[
 		vgrid={*3{dotted},*1{dashed},*7{dotted},*1{dashed},*3{dotted},*1{dashed},*3{dotted}},
 		hgrid,
@@ -422,6 +418,7 @@ An example of a scheduling plan for multiple logical CPUs is depicted in figure
 that execute various subjects indicated by different colors.
 
 \begin{figure}[ht]
+	\centering
 	\begin{ganttchart}[
 		vgrid={*9{dotted},*1{dashed},*9{dotted}},
 		hgrid,
@@ -489,5 +486,3 @@ multiplce CPUs:
 This process guarantees that all CPU cores have a consistent view of the current
 major frame index, simultaneous begin of a major frame cycle and that scheduling
 plan changes only occur on major frame boundaries.
-
-

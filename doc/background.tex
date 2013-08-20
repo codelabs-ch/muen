@@ -8,10 +8,9 @@ presented and the main motivation and goals of this work is laid out. The
 chapter concludes with an overview of related projects.
 
 \section{SPARK}\label{sec:spark}
-SPARK\footnote{Short for SPADE Ada Kernel} is a formally-defined high-level
-programming language designed for implementing high integrity systems. It is
-based on Ada, which is itself a programming language with a strong focus on
-security and safety.
+SPARK is a precisely defined high-level programming language designed for
+implementing high integrity systems. It is based on Ada, which is itself a
+programming language with a strong focus on security and safety.
 
 The SPARK language is a subset of Ada with additional features inserted as
 annotations in the form of Ada comments. Since compilers ignore comments and
@@ -67,8 +66,9 @@ been successfully used in several industrial projects
 \cite{Chapman:2000:IES:369264.369270}. It is primarily employed in the field of
 avionics, space, medical systems and the defense industry.
 
-\subsection{Design rationale}
-The main driving factors behind the design of SPARK are briefly described here:
+\subsection{Design Rationale}
+The main driving factors behind the design of SPARK as stated by the language
+reference manual \cite{SPARK} are briefly described here:
 
 \begin{description}
 	\item[Logical soundness] \hfill \\
@@ -79,12 +79,13 @@ The main driving factors behind the design of SPARK are briefly described here:
 	\item[Expressive power] \hfill \\
 		The language must be expressive enough to implement complex systems.
 	\item[Security] \hfill \\
-		All language rules must be statically checkable with reasonable effort
-		(i.e. in polynomial time).
+		It must be possible to avoid entering error conditions or undefined
+		state at runtime by static program analysis with a reasonable effort.
 	\item[Verifiability] \hfill \\
-		Program verification must be tractable for industrial scale projects.
+		Program verification must be modular in order to be tractable for
+		industrial scale projects.
 	\item[Bounded space and time requirements] \hfill \\
-		Resource requirements must be determined statically.
+		It must be possible to statically determine resource requirements.
 \end{description}
 
 \subsection{Example}
@@ -137,11 +138,11 @@ implemented using the existing SPARK 2005 language and tools.
 
 \section{Separation Kernel}
 In a system with high requirements on security, functions needed to guarantee
-these requirements must be isolated from the rest of the system and consolidated
-in a Trusted Computing Base (TCB)\index{TCB}. To be trusted, this code must be
-as minimal as possible to allow formal verification of code correctness. Lampson
-et al. \cite{Lampson:1991:ADS:121133.121160} define the TCB of a computer system
-as:
+these requirements must be isolated from the rest of the system and are called
+the Trusted Computing Base (TCB)\index{TCB}. To be trusted, this code must be
+kept sufficiently small and straightforward to allow formal verification of code
+correctness. Lampson et al. \cite{Lampson:1991:ADS:121133.121160} define the TCB
+of a computer system as:
 \begin{quote}
 	A small amount of software and hardware that security depends on and
 	that we distinguish from a much larger amount that can misbehave without
@@ -149,13 +150,13 @@ as:
 \end{quote}
 
 Code that is part of the TCB is called \emph{trusted} while components that have
-no relevance to the guarantee of security properties are called
-\emph{untrusted}.
+no relevance to the guarantee of security properties are called \emph{untrusted}.
 
 A separation kernel\index{kernel} (SK\index{SK}) can be seen as the fundamental
 part of a component-based system since its main purpose is to enforce the
-separation of all software components. The concept of separation kernels was
-introduced by John Rushby in a paper published in 1981 \cite{rushby1981}:
+separation of all software components while reducing the size of the TCB. The
+concept of separation kernels was introduced by John Rushby in a paper published
+in 1981 \cite{rushby1981}:
 
 \begin{quote}
 The task of a separation kernel is to create an environment which is
@@ -180,13 +181,14 @@ simple, which is a precondition for formal verification of software.
 Because of the simplicity requirement, a system running on top of a separation
 kernel is relatively static. The system policy is compiled to a suitable format
 at system integration time and cannot change during runtime. This is also the
-main difference between the separation kernel concept and microkernels which
-provide hardware abstraction layers, advanced mechanisms for inter-process
-communication (IPC\index{IPC}) and dynamic resource management. A separation
-kernel does not implement such functionality; its sole purpose is to guarantee
-component separation according to a policy. Policy authors must make sure that
+main difference between the separation kernel concept and other forms of
+microkernels which provide hardware abstraction layers, advanced mechanisms for
+inter-process communication (IPC\index{IPC}) and dynamic resource management. A
+separation kernel does not implement such functionality; its sole purpose is to
+guarantee component separation according to a policy while maintaining a small
+TCB in terms of size as well as complexity. Policy authors must make sure that
 the system specification is sound and that only intended communication channels
-are specified between components.  Of course, this task can be simplified and
+are specified between components. Of course, this task can be simplified and
 aided by applying appropriate support tools.
 
 \subsection{Subjects}
@@ -231,10 +233,10 @@ review or formal verification. Even though the tools to automate formal
 verification are progressing fast, the constraints on the software to be
 verified are still severe. If the SLOC\footnote{Source lines of
 code}\index{SLOC} count and thus complexity of a software project exceeds a
-critical threshold\footnote{Depends on the programming language and support
-tools}, it is no longer possible to automatically prove integrity and security
-requirements or to perform a manual review, because the required effort is just
-too big.
+critical threshold\footnote{The threshold depends on the programming language
+and support tools}, it is no longer possible to automatically prove integrity
+and security requirements or to perform a manual review, because the required
+effort is just too big.
 
 This is the reason why common operating system kernels are not suitable for use
 as a foundation for high assurance systems that employ a small TCB. The
@@ -245,20 +247,12 @@ complete code running in the same address space and privilege level. A
 programming error in a device driver for example could compromise the integrity
 of the entire system.
 
-While commercial separation kernel products exist on the market, there is
-currently no open-source SK\index{SK} available. This is a major drawback for
-implementers of a high assurance system since they must trust the most
-fundamental building block, the kernel, without the possibility to review the
-code or the verification documents (if any). It is of course also impossible to
-adapt the kernel code to the specific needs of a customer, which may hinder
-development of the overall system.
-
 The motivation for this project is to provide a freely-available SK with a
 permissive licensing\index{license} model to allow reviews and modification of
 the source code and design documents. It should be possible to independently
 reproduce verification artifacts such as automated proofs. In the eyes of the
-authors, only this approach is viable in environments where high integrity and
-security is demanded.
+authors, this approach should ultimately result in a separation kernel that is
+applicable to environments where high integrity and security is demanded.
 
 There have been many recent advances in hardware support for virtualization
 that greatly simplify the design and implementation of a security kernel. The
@@ -274,7 +268,7 @@ SPARK is chosen as the main implementation language since this guarantees the
 availability of advanced and approved tools to write high assurance code. The
 SPARK tools will be utilized to show certain properties of the kernel code,
 especially proof of absence of runtime errors is desired. The code of the kernel
-must also be minimal to facilitate a small TCB.
+must also be as small as reasonable to facilitate a lean TCB.
 
 Non-essential operations should be implemented in a special trusted subject
 written in SPARK. This subject is called $\tau$0 and is considered an
@@ -283,21 +277,20 @@ this will allow for later adoption of more dynamic resource handling and
 scheduling mechanisms.
 
 The target platform of the SK is 64-bit Intel. No abstraction layer will be
-provided to support other processor architectures. Such a layer could be added
-later as needed. Instead, the kernel must leverage the latest hardware features
-of the Intel platform to implement the isolation while maintaining a small code
-base.
+provided to support other processor architectures. Instead, the kernel shall
+leverage the latest hardware features of the Intel platform to implement the
+isolation while maintaining a small code base.
 
 The main task of the SK is to separate subjects. This is why it must only allow
 intended data flows according to the policy and it should prevent or limit
 possible side- or covert-channels.
 
-\section{Related work}
+\section{Related Work}
 This section presents related projects. While they share many similarities, the
 main difference is that the Muen kernel aims to combine various approaches: use
 of advanced Intel hardware virualization features, Intel x86 64-bit target
-platform, minimal code size, application of verification and proof techniques
-and making the source code and documentation freely available.
+platform, small code size, application of verification and proof techniques and
+making the source code and documentation freely available.
 
 \subsection{seL4}
 seL4 is a microkernel of the L4 \cite{Liedtke:1996:TRM:234215.234473} family
@@ -327,7 +320,7 @@ separate the VMM from partitions.
 
 The whole project is open-source and published under the GPL license. It is
 implemented in C and Assembly. While it supports various platforms such as
-LEON2/3 (PowerPC) and Intel x86, it does not support IA32-e mode.
+LEON2/3 (PowerPC) and Intel x86, it does not support IA-32e mode.
 
 \subsection{NOVA}
 NOVA is a recursive acronym and stands for NOVA OS Virtualization Architecture
@@ -344,12 +337,12 @@ with support for hardware virtualization and is implemented in the C++
 programming language. The source code is publicly available \cite{NOVA} and has
 been released under the GPL open-source license.
 
-While NOVA is a very promising architecture it has some drawbacks: the choice of
-programming language (C++) and its dynamic nature (in general a very desirable
-property) increases the verification complexity to the point where it might be
-infeasible.
+While NOVA is a very promising architecture it is not a SK and provides
+insufficient temporal isolation. The choice of programming language (C++) and
+its dynamic nature (in general a very desirable property) increases the
+verification complexity to the point where it might be infeasible.
 
-\subsection{Commercial separation kernels}\label{subsec:commercial-sks}
+\subsection{Commercial Separation Kernels}\label{subsec:commercial-sks}
 There are several commercial offerings for separation kernels by various
 vendors:
 

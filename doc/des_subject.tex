@@ -1,6 +1,6 @@
 \section{Subject}\label{sec:design-subject}
 A subject is a software component executed by the separation kernel. Similar
-terms used in literature are partition, container or component. Subjects
+terms used in literature are partition, container, task or component. Subjects
 constitute the majority of a system based on the Muen kernel. They are intended
 to be used as the building blocks of a component-based security system.
 
@@ -19,7 +19,7 @@ Information related to a subject is divided into two distinct categories:
 		modified by the execution of a subject, e.g. CPU register values.
 \end{description}
 
-\subsection{Subject specification}
+\subsection{Subject Specification}
 The specification defines the resources that a subject is allowed to access,
 what execution environment the kernel must provide for the subject, the initial
 state and of course the subject binary itself. All resources that a subject can
@@ -32,7 +32,7 @@ kernel keeps this information as part of the compiled system policy in read-only
 memory. Since subjects are unable to access kernel memory, the subject
 specifications cannot be tampered with.
 
-\subsection{Subject state}
+\subsection{Subject State}
 Running a subject inevitable affects and changes the execution environment. The
 state of a subject encompasses all system elements that are visible to the
 subject. In particular this includes the CPU registers, instruction and stack
@@ -42,16 +42,12 @@ Since the kernel suspends and resumes subject execution and potentially
 multiple subjects can be executed in arbitrary order, the state of the system
 as viewed by the subject must be saved. The state must be restored accurately
 upon resumption, otherwise the subject will not be able to execute seamlessly.
-Additionally, if a subject is not oblivious to the fact that the kernel is
-pausing its execution by saving and loading its state, the isolation of the
-subject would be insufficient since this awareness would represent an unintended
-information flow.
 
 Subject management information used by the kernel during runtime is also
 considered part of the subject state. This includes a data structure for
 storing pending interrupts to be delivered to the subject.
 
-\subsection{Subject profile}
+\subsection{Subject Profile}
 Two types of subjects are distinguished:
 
 \begin{itemize}
@@ -65,10 +61,11 @@ environment and architectural features (e.g.  memory management) that the
 subject is allowed to use. Profiles are declared in the subject specification.
 The currently supported profiles are described in the following sections.
 
-\subsubsection{Native subject}
+\subsubsection{Native Subject}
 A \emph{native} subject is a 64-bit application, that executes directly on the
-processor without any supporting operating system kernel or runtime environment.
-Such applications are also known as bare bones, bare metal or bare machine.
+virtual processor without any supporting operating system kernel or runtime
+environment. Such applications are also known as bare bones, bare metal or bare
+machine.
 
 The execution environment of the native subject profile has the following main
 properties:
@@ -81,7 +78,7 @@ properties:
 	\item No control register access
 \end{itemize}
 
-\subsubsection{VM subject}
+\subsubsection{VM Subject}
 A \emph{virtual machine} (VM) subject has more control over its execution
 environment. The VM profile is intended for executing operating systems such as
 Linux.

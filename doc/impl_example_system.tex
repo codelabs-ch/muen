@@ -1,4 +1,4 @@
-\section{Example system}\label{sec:example-system}
+\section{Example System}\label{sec:example-system}
 The Muen project contains an example system that makes use of all the
 mechanisms described in the previous sections. Figure \ref{fig:example-system}
 shows a schematic overview of the system.
@@ -17,7 +17,7 @@ teaching OS written in C inside the VM profile.
 
 The example system is meant to serve as demonstrator for a real-world use-case:
 an untrusted operating system is separated by the Muen kernel and accesses
-native, trusted services with a minimal TCB. The trusted encrypter service is
+native, trusted services with a very small TCB. The trusted encrypter service is
 implemented completely in SPARK and proven to be free from runtime errors.
 
 The following section explains the different subjects composing the example
@@ -83,8 +83,8 @@ developed at MIT \cite{xv6}. While being simple, it implements many key
 concepts found in common operating systems, making it an ideal initial target
 for the VM profile. Xv6 is written in ANSI C.
 
-Small changes to the xv6 source code and a minimal subject monitor were required
-to run it as VM subject on the Muen kernel:
+Minimal changes to the xv6 source code and a small subject monitor were
+required to run it as VM subject on the Muen kernel:
 \begin{itemize}
 	\item Disable MP support
 	\item Ignore disallowed I/O operations (handled by the SM subject)
@@ -100,7 +100,7 @@ the architectural state of the xv6 subject. Currently, no emulation is needed to
 run xv6. If an unexpected trap occurs, a state dump is written to the SM's
 virtual terminal and further execution is suspended.
 
-\subsection{Keyboard handling}\label{subsec:keyboard-handling}
+\subsection{Keyboard Handling}\label{subsec:keyboard-handling}
 This section describes how the keyboard is handled in the example system using
 the mechanisms provided by the Muen kernel.
 

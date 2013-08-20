@@ -4,11 +4,10 @@ guarantees strong separation between subjects and can thus serve as a basis for
 a component-based system. This section describes the issues that are considered
 out of scope but mentioned nevertheless for the sake of completeness.
 
-It is assumed, that all runtime code that is not part of the kernel, and thus
-the TCB, can potentially be subverted. This specifically includes \emph{all}
-untrusted subjects. The kernel is only concerned with the correct enforcement of
-a given system policy, by only allowing intended information flows between
-subjects and arbitrating resource access.
+It is assumed that all untrusted subjects can potentially be subverted. The
+kernel is solely concerned with the correct enforcement of a given system
+policy, by only allowing intended information flows between subjects and
+arbitrating resource access.
 
 The following issues, while very important in the context of constructing a
 high assurance system, are considered outside the scope of this thesis:

@@ -1,8 +1,8 @@
-\documentclass[a4paper,twoside]{report}
+\documentclass[a4paper,twoside]{book}
+\usepackage[hmarginratio=1:1]{geometry}
 \setcounter{secnumdepth}{3}
 \usepackage{graphicx}
 \usepackage{titlepic}
-\usepackage[nottoc]{tocbibind}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{listings}
 \usepackage{url}
@@ -66,67 +66,20 @@
 \begin{document}
 \input{tikzstyle}
 
+\frontmatter
 \maketitle
 
 University of Applied Sciences Rapperswil (HSR), Switzerland
 
-\begin{abstract}
-Microkernels are well suited as a basis for systems with high demands on
-robustness. They are by definition small, which is a precondition for rigorous
-verification of correctness. Additionally, they lend themselves to the
-construction of component-based systems where the incorrect behavior of one
-partition does not impact the whole system. In contrast, attaining high
-assurance for today's monolithic operating systems is exceptionally hard since
-they tend to be large and include complex functionality. This fact is
-highlighted by regular security updates provided by operating system vendors.
-
-A separation kernel (SK) is a specialized security kernel that provides an
-execution environment for multiple components that can only communicate
-according to a given policy and are otherwise isolated from each other. Hence,
-the isolation also includes the limitation of potential side- and covert
-channels. SKs are generally more static and smaller than microkernels, which
-minimizes the possibility of kernel failure and should simplify the application
-of formal verification techniques.
-
-Even though the SK concept has garnered quite some attention from the research
-community over the last thirty years, no freely available SK exists to this
-day. A few commercial products exist, but little technical information is
-publicly available.
-
-Recent addition of advanced hardware virtualization support for the Intel x86
-architecture has the potential of greatly simplifying the implementation of a
-separation kernel. This thesis presents a design of a separation kernel for the
-Intel x86 architecture using the latest Intel hardware features. An open-source
-prototype written in SPARK demonstrates the viability of the envisioned
-concept and the application of SPARK's proof capabilities increases the
-assurance of the correctness of the implementation.
-\end{abstract}
-
-\section*{Acknowledgments}
-Foremost, we would like to express our sincere gratitude to our advisor Prof.
-Dr. Andreas Steffen for the continuous support in the course of our studies and
-for the guidance in writing this master thesis. His help and generosity allowed
-us to work in such an interesting field of research.
-
-Many thanks also to our colleagues and friends at secunet Security Networks AG
-in Germany, Alexander Senier, Robert Dorn and Stefan Berghofer for their
-tremendous assistance not only during this thesis, but also during the many
-projects we have realized together. We were able to learn a lot and without
-their support and immense knowledge in the area of high-security platforms we
-would not have been able to implement the Muen kernel in such short time.
-
-We thank Prof. Dr. Endre Bangerter from the University of Applied Sciences in
-Bern for being our expert and reviewer. Thanks also to Daniel Bigelow for
-proofreading the report.
-
-Last but not least, many thanks to our families and friends for their support
-and understanding throughout the writing of this master thesis.
+\include{abstract}
+\include{acknowledgments}
 
 \tableofcontents
 \listoffigures
 \listoftables
 \lstlistoflistings
 
+\mainmatter
 \include{introduction}
 \include{background}
 \include{design}
@@ -134,9 +87,14 @@ and understanding throughout the writing of this master thesis.
 \include{analysis}
 \include{conclusion}
 
-\printindex{}
+\backmatter
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Index}
+\printindex
 
 \bibliographystyle{plain}
 \bibliography{report}
+\addcontentsline{toc}{chapter}{Bibliography}
 
 \end{document}

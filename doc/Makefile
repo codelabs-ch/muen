@@ -18,18 +18,21 @@ COMMON_SOURCES =  \
 	lst_*.tex     \
 	images/*
 
-REPORT_SOURCES =       \
-	report.tex         \
-	report.bib         \
-	introduction.tex   \
-	background.tex     \
-	back_*.tex         \
-	design.tex         \
-	des_*.tex          \
-	implementation.tex \
-	impl_*.tex         \
-	analysis.tex       \
-	conclusion.tex     \
+REPORT_SOURCES =        \
+	report.tex          \
+	report.bib          \
+	abstract.tex        \
+	acknowledgments.tex \
+	introduction.tex    \
+	background.tex      \
+	back_*.tex          \
+	design.tex          \
+	des_*.tex           \
+	implementation.tex  \
+	impl_*.tex          \
+	analysis.tex        \
+	conclusion.tex      \
+	concl_*.tex         \
 	$(COMMON_SOURCES)
 
 SLIDES_SOURCES =      \

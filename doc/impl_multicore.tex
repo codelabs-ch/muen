@@ -1,4 +1,4 @@
-\subsection{Multicore support}\label{subsec:mp-support}
+\subsection{Multicore Support}\label{subsec:mp-support}
 The Muen separation kernel makes use of all logical processors available in a
 system. The processor count of a specific hardware platform is declared in the
 system policy, see section \ref{subsec:hardware}. This section describes how
@@ -48,7 +48,7 @@ Therefore, the final step is to let the AP processors jump to the common init
 code described in section \ref{subsec:init}, starting by enabling PAE mode
 (task 4).
 
-\subsubsection{Per-kernel memory}
+\subsubsection{Per-Kernel Memory}
 The Muen kernels operate fully symmetrical, i.e. code running on the different
 logical processors is (binary) identical. Nevertheless, each kernel owns a
 distinct stack page and also a page to store per-CPU data. This however is fully
@@ -58,11 +58,12 @@ for each kernel. Page tables are created by the policy tool and setup on system
 startup by the init code. The main kernel has no access to these structures in
 memory and does not concern itself with memory management.
 
-\subsubsection{Synchronization} Since synchronization is error-prone and it is
-desirable to reduce inter-core dependencies as much as possible, the Muen
-kernel tries to avoid locks and other synchronization primitives. Nevertheless
-minimal synchronization is required at certain key points in the code. This
-section describes the spinlock and barrier mechanisms used by the kernel.
+\subsubsection{Synchronization}
+Since synchronization is error-prone and it is desirable to reduce inter-core
+dependencies as much as possible, the Muen kernel tries to avoid locks and
+other synchronization primitives. Nevertheless some form of synchronization is
+required at certain key points in the code. This section describes the spinlock
+and barrier mechanisms used by the kernel.
 
 \paragraph{Spinlock}
 The spinlock implementation uses the \texttt{XCHG} processor instruction to

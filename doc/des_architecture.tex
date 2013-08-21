@@ -307,9 +307,9 @@ equipped with Intel's Hyper-Threading Technology (HTT) have two or more
 \emph{logical CPUs} per core. A logical CPU is an execution unit of the
 processor that runs an application or a kernel process.
 
-In MP systems, one processor termed \emph{bootstrap processor}\index{Bootstrap
+In MP systems, one processor termed \emph{bootstrap processor}\index{bootstrap
 processor}(BSP) is responsible for system initialization, while the other
-processors, called \emph{application processors}\index{Application processor}
+processors, called \emph{application processors}\index{application processor}
 (APs), wait for an initialization sequence as specified by Intel in
 \cite{intel:mp}.
 
@@ -371,16 +371,16 @@ a subject is performing, its execution is suspended when the allotted time
 quantum has been consumed. After a subject has been suspended, the scheduler
 executes the next subject for a given amount of time.
 
-Scheduling information is declared in a \emph{scheduling plan}\index{Scheduling
+Scheduling information is declared in a \emph{scheduling plan}\index{scheduling
 plan}. Such a plan is part of the policy and specifies in what order subjects
 are executed on which logical CPU and for how long. The task of the scheduler is
 to enforce a given scheduling regime.
 
 A scheduling plan is specified in terms of frames. A \emph{major frame}
-\index{Major frame} consists of a sequence of minor frames. When the end of a
+\index{major frame} consists of a sequence of minor frames. When the end of a
 major frame is reached, the scheduler starts over from the beginning and uses
 the first minor frame in a cyclic fashion. This means that major frames are
-repetitive. A \emph{minor frame}\index{Minor frame} specifies a subject and a
+repetitive. A \emph{minor frame}\index{minor frame} specifies a subject and a
 precise amount of time. This information is directly applied by the scheduler.
 
 Figure \ref{fig:example-major-frame} illustrates the structure of a major frame.

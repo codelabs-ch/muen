@@ -1,35 +1,37 @@
 \chapter*{Abstract}
 \addcontentsline{toc}{chapter}{Abstract}
-Computer systems are used to store and protect sensitive data. To effectively
-guard information, software running on these systems must conform to high
-quality standards to establish trust in the correct functioning. The effort
-invested by an attacker to obtain certain data directly depends on the
-information value and the available resources. Therefore, systems handling
-sensitive data must be developed with utter care and diligence.
+Computer systems are used to store and protect highly sensitive data. At the
+same time the resources and determination of attackers have increased
+significantly. Therefore, systems capable of safeguarding critical information
+must conform to rigorous quality standards to establish trust in the correct
+functioning.
 
 Attaining high assurance for today's monolithic operating systems is
 exceptionally hard since they tend to be large and include complex
 functionality. This fact is highlighted by regular security updates provided by
-operating system vendors.
+operating system vendors. Thus they are a weak foundation for building secure
+systems.
 
-In contrast, microkernels are well suited as a basis for systems with high
+In contrast, microkernels can be well suited as a basis for systems with high
 demands on robustness. They are by definition small, which is a precondition
 for rigorous verification of correctness. Additionally, they lend themselves to
 the construction of component-based systems where the incorrect behavior of one
 partition does not impact the whole system.
 
-A separation kernel (SK) is a specialized microkernel that provides an execution
-environment for multiple components that can only communicate according to a
-given policy and are otherwise isolated from each other. Hence, the isolation
-also includes the limitation of potential side- and covert channels. SKs are
-generally more static and smaller than microkernels, which minimizes the
-possibility of kernel failure and should simplify the application of formal
-verification techniques.
+A separation kernel (SK) is a specialized microkernel that provides an
+execution environment for multiple components that can only communicate
+according to a given policy and are otherwise isolated from each other. Hence,
+the isolation also includes the limitation of potential side- and covert
+channels. SKs are generally more static and smaller than highly dynamic
+microkernels, which minimizes the possibility of kernel failure and should
+simplify the application of formal verification techniques.
 
 Recent addition of advanced hardware virtualization support for the Intel x86
 architecture has the potential of greatly simplifying the implementation of a
-separation kernel. This thesis presents a design of a separation kernel for the
-Intel x86 architecture using the latest Intel hardware features. An open-source
-prototype written in SPARK demonstrates the viability of the envisioned concept
-and the application of SPARK's proof capabilities increases the assurance of the
+separation kernel which can support complex systems.
+
+This thesis presents a design of a separation kernel for the Intel x86
+architecture using the latest Intel hardware features. An open-source prototype
+written in SPARK demonstrates the viability of the envisioned concept and the
+application of SPARK's proof capabilities increases the assurance of the
 correctness of the implementation.

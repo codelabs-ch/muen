@@ -2,7 +2,7 @@
 Even though a more detailed familiarity with the subject is required for a full
 understanding of the design and implementation of the Muen kernel, this section
 tries to give a short tour of the Intel x86 architecture. The basic components
-of a modern Intel x86 computer are depicted in figure
+of a modern Intel x86\index{x86} computer are depicted in figure
 \ref{fig:intel-architecture}. The interested reader is directed to the Intel SDM
 \cite{IntelSDM}, which contains a complete and in-depth description of the x86
 architecture.
@@ -17,8 +17,9 @@ architecture.
 \subsection{Processor}
 The main processor of the system is called the central processing unit
 (CPU\index{CPU}). Multi-processor systems (MP\index{MP}) have multiple CPUs
-which in turn can have multiple cores. If Intel Hyper-Threading Technology (HTT)
-is supported, each core has two or more so called \emph{logical CPUs}.
+which in turn can have multiple cores. If Intel Hyper-Threading Technology
+(HTT\index{HTT}) is supported, each core has two or more so called
+\emph{logical CPUs}\index{logical CPU}.
 
 The logical CPUs run processes by executing instructions. These instructions
 change the state of the logical CPU and the system as a whole.
@@ -26,11 +27,11 @@ change the state of the logical CPU and the system as a whole.
 \subsubsection{Execution Environment}\label{subsubsec:exec-env}
 A program executing on a processor is given access to resources to store and
 retrieve information, such as code or data. Resources provided by a modern
-64-bit processor constituting the basic execution environment are described in
-the following list:
+64-bit processor constituting the basic execution environment\index{execution
+environment} are described in the following list:
 
 \begin{description}
-	\item[Memory address space] is used by a program to access RAM.
+	\item[Memory address space] is used by a program to access RAM\index{RAM}.
 	\item[Stack] is located in memory and facilitates subprogram calls and
 		parameter passing in conjunction with stack management resources of the
 		processor.
@@ -62,44 +63,46 @@ processor are called an instruction set. The complete Intel instruction set
 architecture (ISA)\index{ISA} is specified in \cite{IntelSDM}, volumes 2A-C.
 
 \subsubsection{Caches}
-The processor has numerous internal caches and buffers of varying sizes and
-properties. Their main purpose is to increase processor performance by
-hiding latencies of memory accesses, e.g. reading data from RAM. The most
+The processor has numerous internal caches\index{cache} and buffers of varying
+sizes and properties. Their main purpose is to increase processor performance
+by hiding latencies of memory accesses, e.g. reading data from RAM. The most
 important caches are outlined in the following list:
 
 \begin{itemize}
 	\item Level 1 instruction cache
 	\item Level 1 data cache
 	\item Level 2 \& 3 unified caches
-	\item Translation lookaside buffers (TLB)
+	\item Translation lookaside buffers (TLB\index{TLB})
 	\item Store buffer
 	\item Write Combining buffer
-	\item Branch Prediction Cache (BPC)
+	\item Branch Prediction Cache (BPC\index{BPC})
 \end{itemize}
 
 Since caches are shared and because they can only be controlled to a limited
 degree, their state can be changed and observed by different parts of a system.
-Thus, some of the caches can be used as side-/covert-channels and pose a
-challenge to effective component isolation.
+Thus, some of the caches can be used as side-/covert-channels\index{channels}
+and pose a challenge to effective component isolation.
 
 \subsubsection{Protected Mode}
 A modern CPU provides several operating modes of which one is called
-\emph{protected mode}. In this mode the processor provides different privilege
-levels also called rings. The rings are numbered from 0 to 3, with ring 0 having
-the most privileges. Common operating systems use only rings 0 and 3 while
-disregarding other privilege levels.
+\emph{protected mode}\index{protected mode}. In this mode the processor
+provides different privilege levels also called rings\index{rings}. The rings
+are numbered from 0 to 3, with ring 0 having the most privileges. Common
+operating systems use only rings 0 and 3 while disregarding other privilege
+levels.
 
 Privileged instructions such as switching memory management data structures are
-only executable in ring 0, also called \emph{supervisor mode}. Operating systems
-such as Linux usually execute user applications in the unprivileged ring 3,
-called user mode.
+only executable in ring 0, also called \emph{supervisor mode}\index{supervisor
+mode}. Operating systems such as Linux usually execute user applications in the
+unprivileged ring 3, called user mode.
 
 \subsubsection{IA-32e Mode}
-The Intel 64 architecture runs in a processor mode named \emph{IA-32e}, also
-known as \emph{long mode}. It has two submodes: compatibility and 64-bit mode.
-The first submode allows the execution of most 16 and 32-bit applications
-without re-compilation, by essentially providing the same execution environment
-as in 32-bit protected mode.
+The Intel 64 architecture runs in a processor mode named
+\emph{IA-32e}\index{IA-32e}, also known as \emph{long mode}\index{long mode}.
+It has two submodes: compatibility and 64-bit mode.  The first submode allows
+the execution of most 16 and 32-bit applications without re-compilation, by
+essentially providing the same execution environment as in 32-bit protected
+mode.
 
 The IA-32e 64-bit submode enables 64-bit kernels and operating systems to run
 applications making use of the full 64-bit linear address space. The execution
@@ -155,13 +158,14 @@ Intel's IA-32e mode uses four levels of address mapping, which are presented in
 the following list:
 
 \begin{itemize}
-	\item Page map level 4 (PML4) references a page directory pointer table. The
-		address of the currently active PML4 is stored in the CPU's CR3 control
-		register.
-	\item Page directory pointer table (PDPT) references a page directory or a 1
-		GB page frame.
-	\item Page directory (PD) references a page table or a 2 MB page frame.
-	\item Page table (PT) references a 4 KB page frame.
+	\item Page map level 4 (PML4)\index{PML4} references a page directory
+		pointer table. The address of the currently active PML4 is stored in
+		the CPU's CR3 control register.
+	\item Page directory pointer table (PDPT\index{PDPT}) references a page
+		directory or a 1 GB page frame.
+	\item Page directory (PD\index{PD}) references a page table or a 2 MB page
+		frame.
+	\item Page table (PT\index{PT}) references a 4 KB page frame.
 \end{itemize}
 
 A linear memory address is split into five parts, when all four levels of paging
@@ -194,44 +198,46 @@ is referred to \cite{IntelSDM}, volume 3A sections 3 \& 4 and
 \cite{Drepper07whatevery}.
 
 \subsection{Exceptions and Interrupts}\label{subsec:exceptions-interrupts}
-Exceptions and interrupts signal an event which occurred in the system or a
-processor that needs attention. They can occur at any time and are normally
-handled by preempting the currently running process and transferring execution
-to a special interrupt service routine (ISR).
+Exceptions\index{exceptions} and interrupts\index{interrupts} signal an event
+which occurred in the system or a processor that needs attention. They can
+occur at any time and are normally handled by preempting the currently running
+process and transferring execution to a special interrupt service routine
+(ISR\index{ISR}).
 
 Each exception or interrupt has an associated number in the range of 0 to 255,
-which is called the interrupt vector. Numbers in the range of 0 to 31 are
-reserved for the Intel architecture. They are used to uniquely identify
-exceptions, see Intel SDM \cite{IntelSDM}, volume 3A, section 6.15.  The
-remaining vectors can be freely used by hardware devices and the operating
-system. To avoid vector number clashes hardware interrupts are offset by 32 to
-move them out of the reserved range. As an example, the hardware interrupt 0
-would be mapped to 32, 1 to 33 and so on. As a result the range of hardware
-interrupt numbers is restricted to 0 .. 223.
+which is called the interrupt vector\index{interrupt vector}. Numbers in the
+range of 0 to 31 are reserved for the Intel architecture. They are used to
+uniquely identify exceptions, see Intel SDM \cite{IntelSDM}, volume 3A, section
+6.15.  The remaining vectors can be freely used by hardware devices and the
+operating system. To avoid vector number clashes hardware interrupts are offset
+by 32 to move them out of the reserved range. As an example, the hardware
+interrupt 0 would be mapped to 32, 1 to 33 and so on. As a result the range of
+hardware interrupt numbers is restricted to 0 .. 223.
 
-Interrupts are caused by hardware devices to notify the processor that a device
-needs servicing. An example is a network card that generates an interrupt
-whenever a data packet is received from the network. The interrupt handler
-responsible for servicing the network card is invoked upon recognition of the
-event which then acknowledges further processing of the received data to the
-device.
+Interrupts are caused by hardware devices\index{device} to notify the processor
+that a device needs servicing. An example is a network card that generates an
+interrupt whenever a data packet is received from the network. The interrupt
+handler responsible for servicing the network card is invoked upon recognition
+of the event which then acknowledges further processing of the received data to
+the device.
 
 Exceptions are generated by the processor itself when it detects an error
 condition during instruction execution. Causes for exceptions are for example
 division by zero or page faults.
 
 Interrupts generated by external devices can be blocked by disabling the
-processor's IF flag in the FLAGS register. When the flag is not set, such
-interrupts are not recognized by the processor until the flag is enabled again.
-Exceptions however are not affected by the IF bit and are processed as usual.
+processor's IF\index{IF} flag in the FLAGS\index{FLAGS} register. When the flag
+is not set, such interrupts are not recognized by the processor until the flag
+is enabled again.  Exceptions however are not affected by the IF bit and are
+processed as usual.
 
 The main data structure which facilitates interrupt handling is the interrupt
 descriptor table (IDT)\index{IDT}. It is a list of entries which point to
 interrupt handler procedures. The IDT can be located anywhere in system memory
-and its physical address must be stored in the IDT registers (IDTR). When the
-processor receives an interrupt, it uses the interrupt vector as an index into
-the IDT to determine the associated handler. Execution control is then
-transferred by invoking the handler procedure.
+and its physical address must be stored in the IDT registers
+(IDTR\index{IDTR}). When the processor receives an interrupt, it uses the
+interrupt vector as an index into the IDT to determine the associated handler.
+Execution control is then transferred by invoking the handler procedure.
 
 \subsection{Programmable Interrupt Controller}\label{subsec:apic}
 A Programmable Interrupt Controller (PIC\index{PIC}) is used to connect several
@@ -277,20 +283,21 @@ operating system. For more information about APIC and I/O APIC see Intel SDM
 
 \subsection{Chipset connectivity}
 With the advent of the Intel 5 Series computing architecture
-\cite{wiki:intel:5:series}, the CPU is directly connected to RAM and the
-graphics card. The memory controller is integrated straight into the processor,
-providing fast access to system memory. The memory controller arbitrates RAM
-access and forwards requests to other resources, e.g. memory-mapped devices to
-the platform controller hub (PCH), which is presented in the next section.
+\cite{wiki:intel:5:series}, the CPU\index{CPU} is directly connected to RAM and
+the graphics card. The memory controller is integrated straight into the
+processor, providing fast access to system memory. The memory controller
+arbitrates RAM access and forwards requests to other resources, e.g.
+memory-mapped devices to the platform controller hub (PCH), which is presented
+in the next section.
 
 Similarly, the display controller is either fully integrated into the processor
-or connected via PCIe lanes. The CPU and the PCH are linked via the Direct Media
-Interface (DMI).
+or connected via PCIe lanes. The CPU and the PCH are linked via the Direct
+Media Interface (DMI\index{DMI}).
 
 \subsubsection{Platform Controller Hub}
 The platform controller hub\index{PCH} provides connections to most devices and
 platform peripherals such as keyboards, network adapters, USB connections and
-other buses (PCI Express etc). It also features the system clock.
+other buses (PCI Express\index{PCIe} etc). It also features the system clock.
 
 Newer models contain an I/O memory management unit (IOMMU\index{IOMMU}) which
 provides address translation functionality similar to the MMU, but for accesses

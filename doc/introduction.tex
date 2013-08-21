@@ -11,32 +11,36 @@ is only connected to the Internet when needed. However, this approach does not
 scale well, since this would necessitate having a separate device for each task
 that should be performed in some form of isolation.
 
-A separation kernel (SK) is a specialized microkernel which provides an
-execution environment for components that can only communicate according to a
-given policy and are otherwise isolated from each other. This isolation also
-includes the limitation of potential side- and covert channels. A SK can serve
-as a basis for the implementation of a component-based system.
+A separation kernel (SK)\index{SK}\index{separation kernel} is a specialized
+microkernel\index{microkernel} which provides an execution environment for
+components that can only communicate according to a given policy and are
+otherwise isolated from each other. This isolation also includes the limitation
+of potential side- and covert channels. A SK can serve as a basis for the
+implementation of a component-based system.
 
 Related problems can arise in cloud services, where multiple unaffiliated parties
 share the same physical machine but are to be separated from each other so as to
 not (involuntarily) share any data. Recent attacks
 \cite{Wu:2012:WHH:2362793.2362802} have demonstrated that current solutions do
 not provide the necessary degree of isolation. Since the adoption of
-virtualization, especially in the field of cloud computing, has rapidly
-increased in the past years, chip manufacturers such as Intel are extending
-their processors with advanced hardware virtualization features.
+virtualization\index{virtualization}, especially in the field of cloud
+computing, has rapidly increased in the past years, chip manufacturers such as
+Intel are extending their processors with advanced hardware virtualization
+features.
 
 Another issue is the complexity associated with developing security systems
-that must exhibit very strong robustness and provide high assurance. Tools and
-methods such as formal verification exist, but are generally disregarded. A
+that must exhibit very strong robustness and provide high
+assurance\index{assurance}. Tools and methods such as formal
+verification\index{formal verification} exist, but are generally disregarded. A
 small code base results in better verifiability since the complexity of the
 software should be manageable and the effort needed for review is greatly
 reduced.
 
-The SPARK programming language is used for the development of industrial high
-integrity projects. It provides the means to prove certain properties of the
-code and its track record \cite{Chapman:2000:IES:369264.369270} shows that it
-can be used to effectively implement real-world systems.
+The SPARK\index{SPARK} programming language is used for the development of
+industrial high integrity projects. It provides the means to prove certain
+properties of the code and its track record
+\cite{Chapman:2000:IES:369264.369270} shows that it can be used to effectively
+implement real-world systems.
 
 All these recent developments provide a good setting for the design and
 implementation of an open-source separation kernel. Using hardware
@@ -86,10 +90,10 @@ citations given in this report refer to the Intel SDM revision 44, released in
 August 2012.
 
 \section{Provenance of Name}
-\emph{Muen} is Japanese and translates to "unrelated/without relation". It was
-chosen since it is a fitting allegory of the components isolated by the
-separation kernel. Figure \ref{fig:muen} depicts the word in Japanese kanji
-characters.
+\emph{Muen}\index{Muen} is Japanese and translates to "unrelated/without
+relation". It was chosen since it is a fitting allegory of the components
+isolated by the separation kernel. Figure \ref{fig:muen} depicts the word in
+Japanese kanji characters.
 
 \begin{figure}[h]
 	\centering

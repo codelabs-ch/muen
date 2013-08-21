@@ -1,12 +1,12 @@
 \section{Architecture}\label{sec:architecture}
 The core mechanism used to separate subjects is Intel's hardware-assisted
-virtualization technology VT-x. The kernel executes in VMX root mode, while
-subjects run in VMX non-root mode. This shields the kernel from access by
-subjects. Figure \ref{fig:architecture-overview} illustrates the basic system
-architecture: the Muen kernel executes two isolated subjects that have no
-access to any kernel resources. The native subject is a bare bones application
-and the second subject is a virtual machine (VM) type subject, e.g. an
-operating system.
+virtualization technology VT-x\index{VT-x}. The kernel executes in VMX root
+mode, while subjects run in VMX non-root mode. This shields the kernel from
+access by subjects. Figure \ref{fig:architecture-overview} illustrates the
+basic system architecture: the Muen kernel executes two isolated subjects that
+have no access to any kernel resources. The native subject is a bare bones
+application and the second subject is a virtual machine (VM\index{VM}) type
+subject, e.g. an operating system.
 
 \begin{figure}[h]
 	\centering
@@ -49,9 +49,9 @@ are effectively emulated by another component.
 In a system based on the Muen kernel, this monitoring function can be
 implemented by a subject termed subject monitor. Such a monitoring subject can
 be given access to the state of another subject, effectively allowing it to
-change the system state of the monitored subject. A so called \emph{trap table},
-which is part of the subject specification, allows to specify that execution
-should be handed over to a subject monitor when a trap occurs.
+change the system state of the monitored subject. A so called \emph{trap
+table}, which is part of the subject specification, allows to specify that
+execution should be handed over to a subject monitor when a trap occurs.
 
 Historically this monitoring function has been implemented as part of the VMM
 of the virtualization system. Since emulation operations can be very involved
@@ -65,9 +65,10 @@ property. This approach has been pioneered by NOVA, see
 To best fulfill the requirements, a system using the Muen kernel uses static
 resource assignment and system specification. The main idea is to have a
 complete description of the system including all resources such as system
-memory, devices and subjects in the form of a policy. The defined resources can
-be assigned to subjects. Since the resources and subjects are fixed at
-integration time, the policy can be analyzed and validated prior to execution.
+memory, devices and subjects in the form of a policy\index{policy}. The defined
+resources can be assigned to subjects. Since the resources and subjects are
+fixed at integration time, the policy can be analyzed and validated prior to
+execution.
 
 The following list encompasses the system policy:
 \begin{itemize}
@@ -80,9 +81,9 @@ The following list encompasses the system policy:
 \subsubsection{Memory}
 All memory resources of a system are static and explicitly specified in the
 system policy. Apart from a few special memory regions, such as the application
-processor trampoline (see section \ref{subsec:init}), there are no implicitly
-allocated data structures. This allows one to determine the exact memory layout
-of the final system at integration time.
+processor trampoline\index{trampoline} (see section \ref{subsec:init}), there
+are no implicitly allocated data structures. This allows one to determine the
+exact memory layout of the final system at integration time.
 
 The kernel and each subject specifies its memory layout. The memory layout
 defines which physical memory ranges are accessible, their location in the
@@ -135,29 +136,30 @@ addresses, the ones on the right are virtual addresses.
 
 \subsubsection{Devices}
 A device can be modeled as a collection of system resources such as I/O ports,
-system memory for memory-mapped IO (MMIO) or hardware interrupts. A PS/2
-keyboard for example is composed of two I/O ports and a hardware interrupt.  In
-order for subjects to interact with a device, it must be able to access the I/O
-ports and process the interrupts raised by the device. Thus a policy device
-specification links a device name with a set of hardware resources. Assignment
-to subjects is done via references to devices in the subject specification.
-Devices that are not allocated to a subject are not accessible during the
-runtime of the system.
+system memory for memory-mapped IO (MMIO\index{MMIO}) or hardware interrupts. A
+PS/2 keyboard for example is composed of two I/O ports and a hardware
+interrupt.  In order for subjects to interact with a device, it must be able to
+access the I/O ports and process the interrupts raised by the device. Thus a
+policy device specification links a device name with a set of hardware
+resources. Assignment to subjects is done via references to devices in the
+subject specification.  Devices that are not allocated to a subject are not
+accessible during the runtime of the system.
 
 \subsubsection{Processor}
 Information about the processor of the system must also be specified in the
-policy, since the number of available logical CPUs for example is crucial for
-scheduling. This information is used to verify the consistency of the scheduling
-plan with regards to the processor that the system is executing on.
+policy, since the number of available logical CPUs\index{logical CPU} for
+example is crucial for scheduling. This information is used to verify the
+consistency of the scheduling plan with regards to the processor that the
+system is executing on.
 
 \subsubsection{Subject Specification}
 All subjects of a system must be specified as part of the policy. The subject
-specification defines the resources and properties of a given subject. Each
-subject is identified by a unique ID and name. The name is used for subject
-references in the policy, e.g. trap table entries specify a destination subject
-which is given by name. Most subject data structures are organized in static
-arrays and the ID can be used as an index to get the information associated
-with a specific subject.
+specification\index{subject specification} defines the resources and properties
+of a given subject. Each subject is identified by a unique ID and name. The
+name is used for subject references in the policy, e.g. trap table entries
+specify a destination subject which is given by name. Most subject data
+structures are organized in static arrays and the ID can be used as an index to
+get the information associated with a specific subject.
 
 The policy also defines what execution environment the kernel must provide by
 assigning a profile to each subject. Initial values for parts of the execution
@@ -166,23 +168,25 @@ specification and also the binary file constituting the executable code of the
 subject and its memory location must be defined.
 
 Another important part is the assignment of resources. This includes the
-designation of the executing CPU, references to granted hardware devices and the
-memory layout of the virtual address space. Access to I/O ports and
-model-specific registers (MSRs) is part of the subject specification as well.
+designation of the executing CPU, references to granted hardware devices and
+the memory layout of the virtual address space. Access to I/O ports and
+model-specific registers (MSRs\index{MSR}) is part of the subject specification
+as well.
 
 There are two tables that specify how certain conditions caused by a subject
 are to be handled by the kernel: the trap and event tables.
 
-The \emph{trap table} designates which destination subject is in charge of
-handling a specific trap and what interrupt vector should be injected, if any.
-It defines to which target subject execution control is transferred when a trap
-occurs. The optional injection of an interrupt indicates the trap kind to the
-destination subject, so it can distinguish different causes for traps.
+The \emph{trap table}\index{trap table} designates which destination subject is
+in charge of handling a specific trap and what interrupt vector should be
+injected, if any.  It defines to which target subject execution control is
+transferred when a trap occurs. The optional injection of an interrupt
+indicates the trap kind to the destination subject, so it can distinguish
+different causes for traps.
 
 Events, which are described in section \ref{subsubsec:events}, are specified in
-the \emph{event table}. An event is a trap that is explicitly triggered by a
-subject. The event table specifies how the kernel is supposed to handle such
-events.
+the \emph{event table}\index{event table}. An event is a trap that is
+explicitly triggered by a subject. The event table specifies how the kernel is
+supposed to handle such events.
 
 Both tables are part of the subject policy because the information is
 subject-specific. This allows for the configuration of different reactions to
@@ -221,25 +225,25 @@ Subjects must implement their own protocol, such as message passing, based on
 shared memory regions and the event mechanism.
 
 \subsubsection{Events}\label{subsubsec:events}
-An event is caused by a subject and can be used to either deliver an interrupt
-or hand over execution to another subject. There are two kind of events:
-handover and interrupt events. The subject triggering an event is called the
-source subject while the receiver is called the destination subject. Events
-facilitate the implementation of a simple inter-subject notification mechanism
-and enable event-driven services.
+An event\index{event} is caused by a subject and can be used to either deliver
+an interrupt or hand over execution to another subject. There are two kind of
+events: handover and interrupt events. The subject triggering an event is
+called the source subject while the receiver is called the destination subject.
+Events facilitate the implementation of a simple inter-subject notification
+mechanism and enable event-driven services.
 
-\emph{Handover events} allow voluntary transfer of execution control with
-optional interrupt delivery to a destination subject. The intended use for this
-event kind is to allow subject monitors to resume their monitored subject. A
-handover is achieved by replacing the source with the destination subject in the
-system's scheduling plan. The interrupt that is optionally injected can be used
-as an indicator for the cause of the handover, which allows the destination
-subject to quickly react without having to inspect the triggering subject's
-state.
+\emph{Handover events}\index{handover event} allow voluntary transfer of
+execution control with optional interrupt delivery to a destination subject.
+The intended use for this event kind is to allow subject monitors to resume
+their monitored subject. A handover is achieved by replacing the source with
+the destination subject in the system's scheduling plan. The interrupt that is
+optionally injected can be used as an indicator for the cause of the handover,
+which allows the destination subject to quickly react without having to inspect
+the triggering subject's state.
 
-\emph{Interrupt events} simply inject an interrupt to a destination subject
-without execution handover. This allows a subject to send a notification to a
-destination subject in the form of an interrupt.
+\emph{Interrupt events}\index{interrupt event} simply inject an interrupt to a
+destination subject without execution handover. This allows a subject to send a
+notification to a destination subject in the form of an interrupt.
 
 Events are explicitly triggered by a given source subject and are declared as
 part of the subject specification. The subject policy contains a list of event
@@ -254,8 +258,9 @@ in the range of the subject's event table) the event is ignored and the
 execution of the subject is resumed.
 
 \subsection{Exceptions}\label{subsec:design-exceptions}
-We distinguish hardware exceptions that occur in VMX non-root mode, while
-executing a subject, and in VMX root mode when the kernel is operating.
+We distinguish hardware exceptions\index{exception} that occur in VMX non-root
+mode, while executing a subject, and in VMX root mode when the kernel is
+operating.
 
 Use of the SPARK programming language with the ability to prove the absence of
 runtime errors means that exceptions are not expected during regular operation
@@ -280,10 +285,11 @@ subject by using the trap table to schedule the destination subject according to
 the policy.
 
 \subsection{Interrupts}
-Devices can generate hardware interrupts that must be delivered to the subject
-that controls the device. A device specification in the system policy defines
-which hardware interrupt it generates. Devices are assigned to subjects by means
-of device references in the subject specification part.
+Devices can generate hardware interrupts\index{interrupts} that must be
+delivered to the subject that controls the device. A device specification in
+the system policy defines which hardware interrupt it generates. Devices are
+assigned to subjects by means of device references in the subject specification
+part.
 
 Since resource allocation is static, a global mapping of hardware interrupt to
 destination subject can be compiled at integration time. The kernel then uses
@@ -301,11 +307,12 @@ are ignored by the kernel.
 \subsection{Multicore}\label{subsec:multicore}
 Modern computers have an increasing number of CPU cores per processor. To
 utilize the hardware to its full potential, the separation kernel must make use
-of all available cores. In a multicore system, a physical CPU package provides
-more than one processor core in a single package. Additionally, systems
-equipped with Intel's Hyper-Threading Technology (HTT) have two or more
-\emph{logical CPUs} per core. A logical CPU is an execution unit of the
-processor that runs an application or a kernel process.
+of all available cores. In a multicore\index{multicore} system, a physical CPU
+package provides more than one processor core in a single package.
+Additionally, systems equipped with Intel's Hyper-Threading Technology
+(HTT\index{HTT}) have two or more \emph{logical CPUs} per core. A logical CPU
+is an execution unit of the processor that runs an application or a kernel
+process.
 
 In MP systems, one processor termed \emph{bootstrap processor}\index{bootstrap
 processor}(BSP) is responsible for system initialization, while the other
@@ -319,22 +326,24 @@ Muen kernel code, apart from the system bring up code run exclusively by the
 BSP.
 
 Global data is shared between all cores which necessitates some form of
-inter-core synchronization to guarantee data consistency. The synchronization
-primitives used by the separation kernel are spinlock and barrier.
+inter-core synchronization\index{synchronization} to guarantee data
+consistency. The synchronization primitives used by the separation kernel are
+spinlock and barrier.
 
-The spinlock facilitates the exclusive access of resources to a CPU holding the
-spinlock. Before using a shared resource a logical CPU has to acquire the lock
-and release it once it is finished. The subject's pending event lists and
-multi-line debug output statements are protected by the spinlock. Future
-improvements to the event and interrupt processing could remove the need for the
-event list and in turn the locking, see section \ref{subsec:apicv}.
+The spinlock\index{spinlock} facilitates the exclusive access of resources to a
+CPU holding the spinlock. Before using a shared resource a logical CPU has to
+acquire the lock and release it once it is finished. The subject's pending
+event lists and multi-line debug output statements are protected by the
+spinlock. Future improvements to the event and interrupt processing could
+remove the need for the event list and in turn the locking, see section
+\ref{subsec:apicv}.
 
-A barrier is used to guarantee, that all logical CPUs have reached a specific
-execution point and are waiting for the release of the barrier. This allows for
-synchronization of all CPUs to simultaneously start executing instructions from
-a specific point in the kernel code. This mechanism is used to manage major
-frame changes and avoid any inter-processor drift with regards to scheduling
-plans.
+A barrier\index{barrier} is used to guarantee, that all logical CPUs have
+reached a specific execution point and are waiting for the release of the
+barrier. This allows for synchronization of all CPUs to simultaneously start
+executing instructions from a specific point in the kernel code. This mechanism
+is used to manage major frame changes and avoid any inter-processor drift with
+regards to scheduling plans.
 
 The stack and a memory region called per-cpu storage is private to each CPU
 core. That means CPU stack and per-cpu data is inaccessible by other CPU cores.
@@ -352,18 +361,18 @@ thwarting potential isolation issues which could be caused by the transfer of
 subjects and their state between cores.
 
 \subsection{Scheduling}\label{subsec:design-scheduling}
-This section presents the design of the Muen kernel scheduler and the selected
-scheduling algorithm.
+This section presents the design of the Muen kernel scheduler\index{scheduler}
+and the selected scheduling algorithm.
 
 In the context of this work, scheduling is defined as the process of selecting
 a subject and giving it access to system resources for a certain amount of time.
 The main resource is processor time, which enables a subject to execute and
 perform its task.
 
-A key objective of the scheduler is to provide temporal isolation of all
-subjects. In order to meet this requirement, the scheduler must prevent any
-interference between guests. To achieve this, scheduling is done in a fixed,
-cyclic and preemptive manner.
+A key objective of the scheduler is to provide temporal
+isolation\index{temporal isolation} of all subjects. In order to meet this
+requirement, the scheduler must prevent any interference between guests. To
+achieve this, scheduling is done in a fixed, cyclic and preemptive manner.
 
 Subjects are executed for a fixed amount of time, before being forcefully
 preempted by the scheduler. Preemption means that regardless of what operations

@@ -57,19 +57,20 @@ channels between guest software while restricting others. One guest could have
 access to the network card, while others share a page in memory but have no
 access to hardware devices.
 
-The principle idea of virtualization is to run guest code on a (virtual) CPU
-and only intercept privileged operations accessing resources or system
-properties for which direct access is prohibited. Various techniques exist to
-intercept guest instructions, ranging from inspection and modification of the
-guest software instruction stream (slow) to hardware-assisted virtualization
-(fast). This thesis focuses on the hardware-assisted approach. The reader is
-directed to \cite{VMware:virtualization} for further information about
-virtualization mechanisms.
+The principle idea of virtualization is to run guest code on a (virtual)
+CPU\index{VCPU} and only intercept privileged operations accessing resources or
+system properties for which direct access is prohibited. Various techniques
+exist to intercept guest instructions, ranging from inspection and modification
+of the guest software instruction stream (slow) to hardware-assisted
+virtualization (fast). This thesis focuses on the hardware-assisted approach.
+The reader is directed to \cite{VMware:virtualization} for further information
+about virtualization mechanisms.
 
 Independent of the chosen mechanism, interception of the running guest leads to
 a so called \emph{trap}\index{trap} from the guest code into the VMM. The VMM
-then examines the \emph{exit reason} and reacts accordingly by for example
-modifying the guest software state and then resuming guest execution.
+then examines the \emph{exit reason}\index{exit reason} and reacts accordingly
+by for example modifying the guest software state and then resuming guest
+execution.
 
 This method is also used to implement a technique called "trap and emulate".
 For example, if a guest accesses a device which is emulated by the VMM, a trap
@@ -103,8 +104,8 @@ with the Virtual Machine Extensions (VMX\index{VMX}) CPU flag.
 
 The virtual machine architecture is implemented by a new form of processor
 operation called VMX operation. This mode is enabled by executing the
-\texttt{VMXON} instruction and provides two operating modes: VMX root operation
-and VMX non-root operation.
+\texttt{VMXON}\index{VMXON} instruction and provides two operating modes: VMX
+root operation and VMX non-root operation.
 
 \begin{figure}[h]
 	\centering
@@ -136,7 +137,7 @@ active on a logical processor at any given time. The VMM regains control using
 the VM exit mechanism. If an exit occurs, the VMM analyzes the cause of the
 exit and acts accordingly. It may resume the guest software or allocate
 processor time to a different guest. The VMM exits VMX operation by calling the
-\texttt{VMXOFF} instruction.
+\texttt{VMXOFF}\index{VMXOFF} instruction.
 
 The Virtual-Machine Control Structure (VMCS\index{VMCS}) is used to control VMX
 non-root operation and VMX transitions. Each virtual machine has an assigned

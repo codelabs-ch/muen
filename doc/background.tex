@@ -8,15 +8,16 @@ presented and the main motivation and goals of this work is laid out. The
 chapter concludes with an overview of related projects.
 
 \section{SPARK}\label{sec:spark}
-SPARK is a precisely defined high-level programming language designed for
-implementing high integrity systems. It is based on Ada, which is itself a
-programming language with a strong focus on security and safety.
+SPARK\index{SPARK} is a precisely defined high-level programming language
+designed for implementing high integrity systems. It is based on
+Ada\index{Ada}, which is itself a programming language with a strong focus on
+security and safety.
 
 The SPARK language is a subset of Ada with additional features inserted as
 annotations in the form of Ada comments. Since compilers ignore comments and
 SPARK is a true subset of Ada, any correct SPARK program is a correct Ada
 program and can be compiled using existing Ada compilers. One such compiler is
-GNAT, which is part of the GNU compiler collection (GCC) \cite{gcc}.
+GNAT, which is part of the GNU compiler collection (GCC\index{GCC}) \cite{gcc}.
 
 However, since annotations are an integral part of SPARK, it would be
 misleading to simply consider SPARK a constrained version of Ada. SPARK should
@@ -35,12 +36,13 @@ summarizes the Ada restrictions imposed by SPARK:
 	\item No dynamic dispatching
 \end{itemize}
 
-Annotations are processed by SPARK tools. These tools perform static analysis of
-source code. The annotations allow the tools to do data and information flow
-analysis as well as prove the absence of runtime errors. This means that SPARK
-tools allow one to formally verify that a given program is free of errors such
-as division by zero, out-of-bounds array access etc. By using SPARK the
-following types of errors can be proven to be absent from the code:
+Annotations are processed by SPARK tools. These tools perform static analysis
+of source code. The annotations allow the tools to do data and information flow
+analysis as well as prove the absence of runtime errors\index{runtime errors}.
+This means that SPARK tools allow one to formally verify that a given program
+is free of errors such as division by zero, out-of-bounds array access etc. By
+using SPARK the following types of errors can be proven to be absent from the
+code:
 
 \begin{itemize}
 	\item Incorrect indexing of arrays
@@ -152,11 +154,11 @@ of a computer system as:
 Code that is part of the TCB is called \emph{trusted} while components that have
 no relevance to the guarantee of security properties are called \emph{untrusted}.
 
-A separation kernel\index{kernel} (SK\index{SK}) can be seen as the fundamental
-part of a component-based system since its main purpose is to enforce the
-separation of all software components while reducing the size of the TCB. The
-concept of separation kernels was introduced by John Rushby in a paper published
-in 1981 \cite{rushby1981}:
+A separation kernel\index{separation kernel} (SK\index{SK}) can be seen as the
+fundamental part of a component-based system since its main purpose is to
+enforce the separation of all software components while reducing the size of
+the TCB. The concept of separation kernels was introduced by John Rushby in a
+paper published in 1981 \cite{rushby1981}:
 
 \begin{quote}
 The task of a separation kernel is to create an environment which is
@@ -167,16 +169,16 @@ communication lines.
 \end{quote}
 
 The separation kernel must therefore guarantee that the components can only
-interact according to a well-defined policy while running on the same physical
-hardware.
+interact according to a well-defined policy\index{policy} while running on the
+same physical hardware.
 
-A system policy dictates the partitioning of hardware resources like CPU,
-memory or assignment of devices to components. The kernel guarantees this
-isolation by emulating a suitable runtime environment for each component,
-creating the impression of multiple (virtual) machines. By using modern
-virtualization techniques, the kernel is able to delegate certain management
-tasks to the hardware. This allows the separation kernel code to be relatively
-simple, which is a precondition for formal verification of software.
+A system policy dictates the partitioning of hardware resources like
+CPU\index{CPU}, memory or assignment of devices to components. The kernel
+guarantees this isolation by emulating a suitable runtime environment for each
+component, creating the impression of multiple (virtual) machines. By using
+modern virtualization techniques, the kernel is able to delegate certain
+management tasks to the hardware. This allows the separation kernel code to be
+relatively simple, which is a precondition for formal verification of software.
 
 Because of the simplicity requirement, a system running on top of a separation
 kernel is relatively static. The system policy is compiled to a suitable format
@@ -292,12 +294,12 @@ platform, small code size, application of verification and proof techniques and
 making the source code and documentation freely available.
 
 \subsection{seL4}
-seL4 is a microkernel of the L4 \cite{Liedtke:1996:TRM:234215.234473} family
-which has been formally verified \cite{Klein_EHACDEEKNSTW_09}. It aims to
-provide high assurance of functional correctness by means of machine-checked
-formal proofs. Using the theorem prover Isabelle/HOL
-\cite{Nipkow-Paulson-Wenzel:2002}, it has been shown that the C implementation
-correctly implements an abstract specification.
+seL4 is a microkernel\index{microkernel} of the L4
+\cite{Liedtke:1996:TRM:234215.234473} family which has been formally verified
+\cite{Klein_EHACDEEKNSTW_09}. It aims to provide high assurance of functional
+correctness by means of machine-checked formal proofs. Using the theorem prover
+Isabelle/HOL \cite{Nipkow-Paulson-Wenzel:2002}, it has been shown that the C
+implementation correctly implements an abstract specification.
 
 To our knowledge seL4 is the most advanced project in the field of formal
 verification combined with operating system research. Unfortunately its
@@ -307,11 +309,12 @@ kernel has not been published. Thus it is not possible to reproduce the formal
 proofs.
 
 \subsection{XtratuM}
-XtratuM is a type 1 hypervisor specially designed for real-time embedded
-systems \cite{xtratum:2009a}. It is developed by the Real-Time Systems group of
-the Polytechnic University of Valencia. It uses para-virtualization to provide
-one or more virtual execution environments for partitions. This means software
-running as partitions must be modified accordingly to run on top of XtratuM.
+XtratuM is a type 1 hypervisor\index{hypervisor} specially designed for
+real-time embedded systems \cite{xtratum:2009a}. It is developed by the
+Real-Time Systems group of the Polytechnic University of Valencia. It uses
+para-virtualization to provide one or more virtual execution environments for
+partitions. This means software running as partitions must be modified
+accordingly to run on top of XtratuM.
 
 The processor privilege mechanism (supervisor and user mode) is used to
 separate the VMM from partitions.

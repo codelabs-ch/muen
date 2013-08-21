@@ -187,7 +187,7 @@ access (DMA\index{DMA}) and device interrupt remapping functionality. VT-d
 provides an I/O memory management unit (IOMMU\index{IOMMU}) required to control
 device DMA.
 
-The IOMMU provides address translation functionality similar to the MMU, but
+The IOMMU implements address translation functionality similar to the MMU, but
 for accesses to system memory initiated by I/O devices.  This is necessary
 since PCI devices can perform DMA which bypasses the processor's MMU memory
 protection. Like the MMU, an operating system must initialize data structures

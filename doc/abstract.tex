@@ -12,7 +12,7 @@ functionality. This fact is highlighted by regular security updates provided by
 operating system vendors. Thus they are a weak foundation for building secure
 systems.
 
-In contrast, microkernels can be well suited as a basis for systems with high
+In contrast, microkernels can be well suited as a basis for systems with strict
 demands on robustness. They are by definition small, which is a precondition
 for rigorous verification of correctness. Additionally, they lend themselves to
 the construction of component-based systems where the incorrect behavior of one
@@ -22,7 +22,7 @@ A separation kernel (SK) is a specialized microkernel that provides an
 execution environment for multiple components that can only communicate
 according to a given policy and are otherwise isolated from each other. Hence,
 the isolation also includes the limitation of potential side- and covert
-channels. SKs are generally more static and smaller than highly dynamic
+channels. SKs are generally more static and smaller than dynamic
 microkernels, which minimizes the possibility of kernel failure and should
 simplify the application of formal verification techniques.
 

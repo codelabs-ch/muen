@@ -1,12 +1,11 @@
 \section{Intel x86 Architecture}
 Even though a more detailed familiarity with the subject is required for a full
 understanding of the design and implementation of the Muen kernel, this section
-tries to give a short tour of the Intel x86 architecture. The interested reader
-is directed to the Intel SDM \cite{IntelSDM}, which contains a complete and
-in-depth description of the x86 architecture.
-
-The basic components of a modern Intel x86 computer are depicted in figure
-\ref{fig:intel-architecture}.
+tries to give a short tour of the Intel x86 architecture. The basic components
+of a modern Intel x86 computer are depicted in figure
+\ref{fig:intel-architecture}. The interested reader is directed to the Intel SDM
+\cite{IntelSDM}, which contains a complete and in-depth description of the x86
+architecture.
 
 \begin{figure}[h]
 	\centering
@@ -234,41 +233,11 @@ processor receives an interrupt, it uses the interrupt vector as an index into
 the IDT to determine the associated handler. Execution control is then
 transferred by invoking the handler procedure.
 
-\subsection{Memory Controller Hub}
-The memory controller hub (MCH)\index{MCH}, also called
-\emph{Northbridge}\index{northbridge}, connects the CPU to random access memory
-(RAM), the graphics card and Southbridge (presented in the next section) of the
-system. The processor accesses these resources by sending memory requests via
-the system bus. The MCH decodes the requests and forwards them to RAM or the
-Southbridge, depending on the physical address. If a request contains an address
-of a memory-mapped device for example, the chipset of the MCH forwards the
-request to the Southbridge.
-
-\subsection{Input/Output Controller Hub}\label{subsec:ich}
-The input/ouput controller hub (ICH\index{ICH}), also called
-\emph{Southbridge}\index{southbridge}, provides connections to most devices and
-platform peripherals such as keyboards, USB connections and other buses (PCI
-Express etc). Newer models contain an I/O memory management unit
-(IOMMU\index{IOMMU}) which provides address translation functionality similar
-to the MMU, but for accesses to system memory initiated by I/O devices.  This is
-necessary since PCI devices can perform direct memory access (DMA)\index{DMA}
-which bypasses the processor's MMU memory protection.  Like the MMU, an
-operating system must initialize data structures and setup the IOMMU for proper
-separation of physical memory accessible by devices.
-
-\subsection{Platform Controller Hub}
-More recently, Intel has rearranged the hub architecture and has integrated much
-of the functionality provided by the Northbridge into the CPU \cite{IntelQPI}.
-All remaining functions of the Northbridge and Southbridge have been combined
-and incorporated into a new component called the \emph{platform controller hub}
-(PCH)\index{PCH}. This new architecture avoids the bottleneck presented by the
-system bus connection between the CPU and the Northbridge.
-
 \subsection{Programmable Interrupt Controller}\label{subsec:apic}
 A Programmable Interrupt Controller (PIC\index{PIC}) is used to connect several
-input sources to a CPU. Hardware devices raise interrupts to inform a CPU that
-some event occurred which must be handled. One of the best known PIC is the
-Intel 8259A which was part of the original PC\footnote{Personal
+interrupt sources to a CPU. Hardware devices raise interrupts to inform a CPU
+that some event occurred which must be handled. One of the best known PIC is
+the Intel 8259A which was part of the original PC\footnote{Personal
 computer}\index{PC} introduced in 1981.
 
 Early PC/XT ISA\index{ISA} systems used one 8259 controller, allowing only eight
@@ -306,3 +275,28 @@ to the I/O APIC via the system bus. The routing of interrupts to the appropriate
 LAPICs is configured using a redirection table which must be setup by the
 operating system. For more information about APIC and I/O APIC see Intel SDM
 \cite{IntelSDM}, volume 3A, chapter 10.
+
+\subsection{Chipset connectivity}
+With the advent of the Intel 5 Series computing architecture
+\cite{wiki:intel:5:series}, the CPU is directly connected to RAM and the
+graphics card. The memory controller is integrated straight into the processor,
+providing fast access to system memory. The memory controller arbitrates RAM
+access and forwards requests to other resources, e.g. memory-mapped devices to
+the platform controller hub (PCH), which is presented in the next section.
+
+Similarly, the display controller is either fully integrated into the processor
+or connected via PCIe lanes. The CPU and the PCH are linked via the Direct Media
+Interface (DMI).
+
+\subsubsection{Platform Controller Hub}
+The platform controller hub\index{PCH} provides connections to most devices and
+platform peripherals such as keyboards, network adapters, USB connections and
+other buses (PCI Express etc). It also features the system clock.
+
+Newer models contain an I/O memory management unit (IOMMU\index{IOMMU}) which
+provides address translation functionality similar to the MMU, but for accesses
+to system memory initiated by I/O devices.  This is necessary since PCI devices
+can perform direct memory access (DMA)\index{DMA} which bypasses the processor's
+MMU memory protection. Like the MMU, an operating system must initialize data
+structures and setup the IOMMU for proper separation of physical memory
+accessible by devices.

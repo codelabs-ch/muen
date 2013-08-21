@@ -56,22 +56,17 @@ VM exit for both profiles.
 		\hline
 		External interrupt   & \checkmark & \checkmark  \\
 		VMX preemption timer & \checkmark & \checkmark  \\
-		Execute \texttt{INVLPG}
-		\footnote{Invalidate TLB Entry}
+		Execute \texttt{INVLPG}\footnote{Invalidate TLB Entry}
 		& \checkmark & \checkmark \\
-		Execute \texttt{MONITOR}
-		\footnote{Set Up Monitor Address}
+		Execute \texttt{MONITOR}\footnote{Set Up Monitor Address}
 		& \checkmark & \checkmark \\
 		Execute \texttt{MWAIT}\footnote{Monitor Wait}
 		& \checkmark & \checkmark \\
-		Execute \texttt{RDPMC}
-		\footnote{Read Performance-Monitoring Counters}
+		Execute \texttt{RDPMC}\footnote{Read Performance-Monitoring Counters}
 		& \checkmark & \checkmark \\
-		Execute \texttt{RDTSC}
-		\footnote{Read Time-Stamp Counter}
+		Execute \texttt{RDTSC}\footnote{Read Time-Stamp Counter}
 		& \checkmark & \checkmark \\
-		Execute \texttt{WBINVD}
-		\footnote{Write Back and Invalidate Cache}
+		Execute \texttt{WBINVD}\footnote{Write Back and Invalidate Cache}
 		& \checkmark & \checkmark \\
 		MOV to CR3                  & \checkmark & \\
 		MOV from CR3                & \checkmark & \\
@@ -580,10 +575,10 @@ tables to the MMU, which in turn enforces the memory layout specified by the
 policy.
 
 \subsection{Small Size}
-The kernel including the small zero-footprint runtime has a low SLOC
-\footnote{Source lines of code} count. The following list gives the source code
-statistics generated with the \texttt{sloccount} tool
-\footnote{http://www.dwheeler.com/sloccount/}, version 2.26:
+The kernel including the small zero-footprint runtime has a low
+SLOC\footnote{Source lines of code} count. The following list gives the source
+code statistics generated with the \texttt{sloccount}
+tool\footnote{\url{http://www.dwheeler.com/sloccount/}}, version 2.26:
 
 \begin{itemize}
 	\item 256 lines of Assembly

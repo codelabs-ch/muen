@@ -1,12 +1,10 @@
 \begin{tikzpicture}
-	\node[apribox, minimum width=3cm, minimum height=1.5cm, label={[yshift=-18pt]CPU}] (cpu) {};
-	\node[commonbox] (mmu) at (cpu.south) [above=5pt] {MMU};
+	\node[apribox, minimum width=3cm, minimum height=1cm] (cpu) {CPU};
 	\node[bluebox] (gfx) [left=of cpu] {PCIe/Graphics Adapter};
 	\node[bluebox] (ram) [right=of cpu] {RAM};
 
-	\node[commonbox, minimum width=3cm, minimum height=1.5cm, label={[yshift=-18pt]PCH}] (pch) [below=1cm of cpu] {};
-	\node[commonbox] (iommu) at (pch.south) [above=5pt] {IOMMU};
-	\node[greenbox] (keyboard) [left=of pch] {Keyboard};
+	\node[commonbox, minimum width=3cm, minimum height=1cm] (pch) [below=1cm of cpu] {PCH};
+	\node[greenbox] (network) [left=of pch] {Network};
 	\node[greenbox] (usb) [below left=of pch] {USB};
 	\node[greenbox] (pci) [below=of pch] {PCI Express};
 	\node[greenbox] (bios) [below right=of pch] {BIOS};
@@ -15,7 +13,7 @@
 	\draw[thick] (cpu) to node[auto] {DMI} (pch);
 	\draw[thick] (cpu) -- (gfx);
 	\draw[thick] (cpu) -- (ram);
-	\draw[thick] (pch) -- (keyboard);
+	\draw[thick] (pch) -- (network);
 	\draw[thick] (pch) -- (usb);
 	\draw[thick] (pch) -- (pci);
 	\draw[thick] (pch) -- (bios);

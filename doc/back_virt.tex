@@ -184,7 +184,15 @@ support for I/O-device virtualization. While VT-x provides the support to
 virtualize the platform (i.e. the processor), VT-d is used to simplify the
 direct assignment of devices to virtual machines by providing direct memory
 access (DMA\index{DMA}) and device interrupt remapping functionality. VT-d
-provides an IOMMU\index{IOMMU} required to control device DMA.
+provides an I/O memory management unit (IOMMU\index{IOMMU}) required to control
+device DMA.
+
+The IOMMU provides address translation functionality similar to the MMU, but
+for accesses to system memory initiated by I/O devices.  This is necessary
+since PCI devices can perform DMA which bypasses the processor's MMU memory
+protection. Like the MMU, an operating system must initialize data structures
+and setup the IOMMU for proper separation of physical memory accessible by
+devices.
 
 The VT-d technology is outside the scope of this master thesis, the reader is
 directed to \cite{IntelVTd} for a more in-depth discussion.

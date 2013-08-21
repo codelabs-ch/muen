@@ -284,25 +284,15 @@ operating system. For more information about APIC and I/O APIC see Intel SDM
 \subsection{Chipset connectivity}
 With the advent of the Intel 5 Series computing architecture
 \cite{wiki:intel:5:series}, the CPU\index{CPU} is directly connected to RAM and
-the graphics card. The memory controller is integrated straight into the
-processor, providing fast access to system memory. The memory controller
-arbitrates RAM access and forwards requests to other resources, e.g.
-memory-mapped devices to the platform controller hub (PCH), which is presented
-in the next section.
+some PCI Express (PCIe\index{PCIe}) devices. The memory controller is
+integrated straight into the processor, providing fast access to system memory.
+The memory controller arbitrates RAM access and forwards requests to other
+resources, e.g.  memory-mapped devices to the platform controller hub (PCH).
 
 Similarly, the display controller is either fully integrated into the processor
 or connected via PCIe lanes. The CPU and the PCH are linked via the Direct
 Media Interface (DMI\index{DMI}).
 
-\subsubsection{Platform Controller Hub}
 The platform controller hub\index{PCH} provides connections to most devices and
 platform peripherals such as keyboards, network adapters, USB connections and
-other buses (PCI Express\index{PCIe} etc). It also features the system clock.
-
-Newer models contain an I/O memory management unit (IOMMU\index{IOMMU}) which
-provides address translation functionality similar to the MMU, but for accesses
-to system memory initiated by I/O devices.  This is necessary since PCI devices
-can perform direct memory access (DMA)\index{DMA} which bypasses the processor's
-MMU memory protection. Like the MMU, an operating system must initialize data
-structures and setup the IOMMU for proper separation of physical memory
-accessible by devices.
+other buses (PCIe etc). It also features the system clock.

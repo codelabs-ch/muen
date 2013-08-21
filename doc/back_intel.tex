@@ -36,7 +36,7 @@ the following list:
 		processor.
 	\item[Execution registers] constitute the core of the execution environment.
 		It consists of sixteen general-purpose, six segment and one flag
-		register as well as the instruction pointer.
+		registers as well as the instruction pointer.
 	\item[Control registers] define the current processor operating mode and
 		other properties of the execution environment.
 	\item[Descriptor table registers] are used to store the location of memory
@@ -240,12 +240,11 @@ that some event occurred which must be handled. One of the best known PIC is
 the Intel 8259A which was part of the original PC\footnote{Personal
 computer}\index{PC} introduced in 1981.
 
-Early PC/XT ISA\index{ISA} systems used one 8259 controller, allowing only eight
-interrupt input lines. By cascading multiple controllers, more lines can be made
-available, but nevertheless, a more flexible approach was needed with the advent
-of multi-processor (MP\index{MP}) systems containing multiple cores.
-Implementing efficient interrupt routing on an MP system using PICs was
-problematic.
+Early PC/XT ISA\index{ISA} systems used one 8259 controller, allowing only
+eight interrupt input lines. By cascading multiple controllers, more lines can
+be made available, but a more flexible approach was needed with the advent of
+multi-processor (MP\index{MP}) systems containing multiple cores. Implementing
+efficient interrupt routing on an MP system using PICs was problematic.
 
 Intel presented the Advanced Programmable Interrupt Controller
 (APIC\index{APIC}) concept with the introduction of the Pentium processor. It
@@ -265,7 +264,7 @@ A LAPIC receives interrupts from internal sources (such as the timer interrupt)
 and from the I/O APIC or other external interrupt controllers. It sends these
 interrupts to the processor core for handling. In MP systems, the LAPIC also
 sends and receives inter-processor interrupt messages (IPI\index{IPI}) from and
-to other logical processors on the system bus. Each local APIC has an unique ID
+to other logical processors on the system bus. Each local APIC has a unique ID
 called APIC ID\index{APIC ID}. This ID is assigned by system hardware at power
 up.
 

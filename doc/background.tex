@@ -196,12 +196,11 @@ The separation kernel isolates parts of the TCB into multiple
 components\index{component} interacting via well-defined interfaces. In this
 paper, such components are called \emph{subjects}\index{subject}.
 
-As previously mentioned, only these features absolutely necessary to guarantee
-subject separation are present in a separation kernel. Advanced features
-required to isolate and virtualize a complex subject are implemented as
-dedicated non-privileged subjects, so called \emph{subject monitors}
-(SM\index{SM}). A complex subject could be a complete operating system like
-Linux\index{Linux}.
+As previously mentioned, only these features necessary to guarantee subject
+separation are present in a separation kernel. Advanced features required to
+isolate and virtualize a complex subject are implemented as dedicated
+non-privileged subjects, so called \emph{subject monitors} (SM\index{SM}). A
+complex subject could be a complete operating system like Linux\index{Linux}.
 
 To allow more runtime flexibility, a separation kernel could also employ a
 dedicated subject to offload management tasks. Such a subject runs in normal
@@ -288,7 +287,7 @@ possible side- or covert-channels.
 \section{Related Work}
 This section presents related projects. While they share many similarities, the
 main difference is that the Muen kernel aims to combine various approaches: use
-of advanced Intel hardware virualization features, Intel x86 64-bit target
+of advanced Intel hardware virtualization features, Intel x86 64-bit target
 platform, small code size, application of verification and proof techniques and
 making the source code and documentation freely available.
 
@@ -330,7 +329,7 @@ the term microhypervisor\index{microhypervisor} which is short for
 microkernelized hypervisor.
 
 NOVA has been developed from scratch with the goal to achieve a thin hypervisor
-layer, an user-level virtual-machine monitor and additional unprivileged
+layer, a user-level virtual-machine monitor and additional unprivileged
 components to reduce the attack surface on the most privileged code and thus
 increase the overall system security. It runs on Intel and AMD x86 processors
 with support for hardware virtualization and is implemented in the C++

@@ -24,7 +24,7 @@ To improve interrupt delivery speed and to decrease subject interrupt response
 latency, the VMX "interrupt window exiting" feature is enabled in the subject's
 VMCS if multiple events are pending or if an event can not be delivered because
 the subject is not in an interruptible state. The feature causes a VM exit as
-soon as the subject is ready to process interrrupts again, causing the immediate
+soon as the subject is ready to process interrupts again, causing the immediate
 injection of the next pending interrupt.
 
 If the per-subject pending interrupt array runs full, the kernel displays an

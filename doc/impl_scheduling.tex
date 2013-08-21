@@ -62,7 +62,7 @@ the timer ticks into the subject's VMCS region sets the timer. The kernel then
 calls the \texttt{VMLAUNCH} or \texttt{VMRESUME} (if the subject has already
 been launched) VT-x instructions to enter VMX non-root operation, which lets the
 processor execute subject code.  The subject is then automatically preempted by
-the processor when the alloted time slice is over. Figure
+the processor when the allotted time slice is over. Figure
 \ref{fig:kernel-scheduler} illustrates this process.
 
 The subject state is saved on each VM exit. Depending on the scheduling plan and

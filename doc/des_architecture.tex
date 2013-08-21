@@ -153,7 +153,7 @@ plan with regards to the processor that the system is executing on.
 \subsubsection{Subject Specification}
 All subjects of a system must be specified as part of the policy. The subject
 specification defines the resources and properties of a given subject. Each
-subject is identified by an unique ID and name. The name is used for subject
+subject is identified by a unique ID and name. The name is used for subject
 references in the policy, e.g. trap table entries specify a destination subject
 which is given by name. Most subject data structures are organized in static
 arrays and the ID can be used as an index to get the information associated
@@ -307,7 +307,7 @@ equipped with Intel's Hyper-Threading Technology (HTT) have two or more
 \emph{logical CPUs} per core. A logical CPU is an execution unit of the
 processor that runs an application or a kernel process.
 
-In MP systems, one processor termed \emph{bootstrap processor}\index{Boostrap
+In MP systems, one processor termed \emph{bootstrap processor}\index{Bootstrap
 processor}(BSP) is responsible for system initialization, while the other
 processors, called \emph{application processors}\index{Application processor}
 (APs), wait for an initialization sequence as specified by Intel in
@@ -367,7 +367,7 @@ cyclic and preemptive manner.
 
 Subjects are executed for a fixed amount of time, before being forcefully
 preempted by the scheduler. Preemption means that regardless of what operations
-a subject is performing, its execution is suspended when the alloted time
+a subject is performing, its execution is suspended when the allotted time
 quantum has been consumed. After a subject has been suspended, the scheduler
 executes the next subject for a given amount of time.
 
@@ -468,7 +468,7 @@ scheduling plans. A global variable termed \emph{major frame index} designates
 the currently active scheduling plan. Its value is exclusively written by the
 BSP while it is used by all cores to determine the currently active major frame.
 The following protocol is employed to access the major frame index variable from
-multiplce CPUs:
+multiple CPUs:
 
 \begin{enumerate}
 	\item Each logical CPUs waits on the global barrier as soon as it has

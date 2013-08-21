@@ -149,8 +149,8 @@ compiler performs additional validity checks in a second step:
 
 \begin{itemize}
 	\item Assert that all hardware device references are valid.
-	\item Assert that event table entries have an unique event number.
-	\item Assert that trap table entries have an unique exit reason.
+	\item Assert that event table entries have a unique event number.
+	\item Assert that trap table entries have a unique exit reason.
 	\item Assert that hardware device IRQs are unique.
 	\item Assert that memory addresses used by the kernel are page aligned.
 	\item Assert alignment of all memory regions in the policy.
@@ -168,7 +168,7 @@ compiler performs additional validity checks in a second step:
 	\item Assert that every subject referenced in a subject's trap table does
 		exist.
 	\item Assert that trap destination subjects run on the same CPU.
-	\item Assert that all memory addresses used to setup a subject are page
+	\item Assert that all memory addresses used to set up a subject are page
 		aligned.
 	\item Assert that subject binary references are valid.
 \end{itemize}

@@ -269,11 +269,11 @@ SPARK tools will be utilized to show certain properties of the kernel code,
 especially proof of absence of runtime errors is desired. The code of the kernel
 must also be as small as reasonable to facilitate a lean TCB.
 
-Non-essential operations should be implemented in a special trusted subject
-written in SPARK. This subject is called $\tau$0 and is considered an
-integral part of the Muen TCB. While keeping the kernel as simple as possible,
-this will allow for later adoption of more dynamic resource handling and
-scheduling mechanisms.
+Operations not strictly required in the kernel should be implemented in a
+special trusted subject written in SPARK. This subject is called $\tau$0 and is
+considered an integral part of the Muen TCB. While keeping the kernel as simple
+as possible, this will allow for later adoption of more dynamic resource
+handling and scheduling mechanisms.
 
 The target platform of the SK is 64-bit Intel. No abstraction layer will be
 provided to support other processor architectures. Instead, the kernel shall
@@ -309,10 +309,9 @@ proofs.
 \subsection{XtratuM}
 XtratuM is a type 1 hypervisor specially designed for real-time embedded
 systems \cite{xtratum:2009a}. It is developed by the Real-Time Systems group of
-the Universidad Politécnica de Valencia. It uses para-virtualization to provide
-one or more virtual execution environments for partitions. This means
-software running as partitions must be modified accordingly to run on top of
-XtratuM.
+the Polytechnic University of Valencia. It uses para-virtualization to provide
+one or more virtual execution environments for partitions. This means software
+running as partitions must be modified accordingly to run on top of XtratuM.
 
 The processor privilege mechanism (supervisor and user mode) is used to
 separate the VMM from partitions.

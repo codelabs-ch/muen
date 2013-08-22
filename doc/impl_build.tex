@@ -247,15 +247,7 @@ Multiboot \cite{multiboot} compliant bootloader.
 To ease kernel development, the Muen project makes use of emulation by
 employing the Bochs IA-32 emulator\index{emulator} \cite{bochs}. Among many
 other features, Bochs has support for multiple processors, APIC emulation and
-VMX extensions.  Figure \ref{fig:bochs} shows the Bochs emulator running the
-Muen example system described in section \ref{sec:example-system}.
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=\textwidth]{images/bochs}
-	\caption{Bochs running the Muen example system}
-	\label{fig:bochs}
-\end{figure}
+VMX extensions.
 
 Bochs writes detailed logs during emulation and provides a debugger which allows
 to inspect the complete system state at any time. It has proven very helpful

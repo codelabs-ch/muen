@@ -104,15 +104,6 @@ virtual terminal and further execution is suspended.
 This section describes how the keyboard is handled in the example system using
 the mechanisms provided by the Muen kernel.
 
-When pressing a key on the keyboard, the keyboard controller raises an interrupt
-request (IRQ\index{IRQ}) with number 1 to signal new data. The system policy
-applied by the Muen kernel on startup enforces that this interrupt is routed to
-the appropriate processor running the VT subject. This is done using the IRQ
-routing specification generated during policy compilation and depends on the
-assignment of hardware devices to subjects. In this case, the keyboard is
-assigned to subject 1, which is the VT subject. Listing \ref{lst:ex-irq-routing}
-shows the generated IRQ routing table of the example system.
-
 \begin{lstlisting}[
 	language=Ada,
 	label=lst:ex-irq-routing,
@@ -123,6 +114,15 @@ IRQ_Routing : constant IRQ_Routing_Array := IRQ_Routing_Array'(
     IRQ    => 1,
     Vector => 33));
 \end{lstlisting}
+
+When pressing a key on the keyboard, the keyboard controller raises an interrupt
+request (IRQ\index{IRQ}) with number 1 to signal new data. The system policy
+applied by the Muen kernel on startup enforces that this interrupt is routed to
+the appropriate processor running the VT subject. This is done using the IRQ
+routing specification generated during policy compilation and depends on the
+assignment of hardware devices to subjects. In this case, the keyboard is
+assigned to subject 1, which is the VT subject. Listing \ref{lst:ex-irq-routing}
+shows the generated IRQ routing table of the example system.
 
 The routing table contains one entry which routes the keyboard IRQ 1 to the CPU
 with APIC ID 0. Furthermore, the IRQ is remapped to the interrupt vector 33 so

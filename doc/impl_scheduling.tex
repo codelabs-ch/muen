@@ -5,6 +5,12 @@ schedule on what particular CPU is defined by the scheduling plan. A policy
 writer defines the system's scheduling regime in the XML policy file, see
 listing \ref{lst:xml-scheduling-plan} for an example.
 
+The example scheduling plan of listing \ref{lst:xml-scheduling-plan} contains
+four subjects which are scheduled on two logical processors. The Muen policy
+compiler transforms the scheduling plan in XML format to SPARK specifications
+which are directly compiled into the kernel. The scheduling plan is therefore
+static at compilation time and cannot be modified at runtime.
+
 \begin{lstlisting}[
 	language=xml,
 	label=lst:xml-scheduling-plan,
@@ -30,23 +36,10 @@ listing \ref{lst:xml-scheduling-plan} for an example.
 </scheduling>
 \end{lstlisting}
 
-The example scheduling plan of listing \ref{lst:xml-scheduling-plan} contains
-four subjects which are scheduled on two logical processors. The Muen policy
-compiler transforms the scheduling plan in XML format to SPARK specifications
-which are directly compiled into the kernel. The scheduling plan is therefore
-static at compilation time and cannot be modified at runtime.
-
-\begin{figure}[h]
-	\centering
-	\input{graph_scheduler}
-	\caption{Kernel scheduler}
-	\label{fig:kernel-scheduler}
-\end{figure}
-
 Each kernel stores the index of the active minor frame in its per-CPU storage
 area. The index points into the current scheduling major frame. Initially, this
-value is set to one (\texttt{Minor\_Frame\_Range'First}), i.e. the first minor
-frame in the active major frame.
+value is set to one\footnote{\texttt{Minor\_Frame\_Range'First}}, i.e. the
+first minor frame in the active major frame.
 
 The index designating the current major frame is global and therefore identical
 for all kernels. This index is managed by the privileged $\tau$0 subject and
@@ -64,6 +57,13 @@ been launched) VT-x instructions to enter VMX non-root operation, which lets the
 processor execute subject code.  The subject is then automatically preempted by
 the processor when the allotted time slice is over. Figure
 \ref{fig:kernel-scheduler} illustrates this process.
+
+\begin{figure}[h]
+	\centering
+	\input{graph_scheduler}
+	\caption{Kernel scheduler}
+	\label{fig:kernel-scheduler}
+\end{figure}
 
 The subject state is saved on each VM exit. Depending on the scheduling plan and
 the exit reason, the state of another subject is loaded by the kernel scheduler.

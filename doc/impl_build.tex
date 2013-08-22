@@ -174,12 +174,6 @@ compiler performs additional validity checks in a second step:
 \end{itemize}
 
 \subsection{Image Packaging}\label{subsec:image-packaging}
-The \texttt{skpacker} tool is responsible to assemble the final bootable system
-image from the parts produced in the preceding build steps. Figure
-\ref{fig:image-packaging} illustrates the process. The tool includes the packer
-relevant source specification created from the system policy. This specification
-provides information about subject binaries and their physical address in the
-final image.
 
 \begin{figure}[h]
 	\centering
@@ -187,6 +181,13 @@ final image.
 	\caption{System image packaging}
 	\label{fig:image-packaging}
 \end{figure}
+
+The \texttt{skpacker} tool is responsible to assemble the final bootable system
+image from the parts produced in the preceding build steps. Figure
+\ref{fig:image-packaging} illustrates the process. The tool includes the packer
+relevant source specification created from the system policy. This specification
+provides information about subject binaries and their physical address in the
+final image.
 
 The remaining configuration information is extracted from the source
 specification provided to the kernel. Listing \ref{lst:skpacker} shows the

@@ -3,8 +3,8 @@
 	\node (knl) [bluebox, left=of sch]   {Kernel Main};
 	\node (pln) [apribox, above=of sch]  {Scheduling Plan};
 	\node (sub) [greenbox, right=of sch] {Subject};
-	\node[gray!80, font=\scriptsize] at (0.8,2.3) {VMX root};
-	\node[gray!80, font=\scriptsize] at (2.6,2.3) {VMX non-root};
+	\node[gray, font=\scriptsize] at (0.8,2.3) {VMX root};
+	\node[gray, font=\scriptsize] at (2.6,2.3) {VMX non-root};
 
 	\draw[arrow] (knl) to (sch);
 	\draw[arrow] (pln) to (sch);

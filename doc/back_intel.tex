@@ -36,17 +36,17 @@ environment} are described in the following list:
 		parameter passing in conjunction with stack management resources of the
 		processor.
 	\item[Execution registers] constitute the core of the execution environment.
-		It consists of sixteen general-purpose, six segment and one flag
-		registers as well as the instruction pointer.
+		They consist of sixteen general-purpose, six segment and one flag
+		register as well as the instruction pointer.
 	\item[Control registers] define the current processor operating mode and
 		other properties of the execution environment.
 	\item[Descriptor table registers] are used to store the location of memory
 		management and interrupt handling data structures.
 	\item[Debug registers] allow a program to control and use the debugging
 		functionality of a processor.
-	\item[x87 FPU registers] offer support for floating point operations.
+	\item[x87 FPU registers] offer support for floating-point operations.
 	\item[MMX registers] offer support for single-instruction, multiple-data
-		(SIMD) operations for integer numbers.
+		(SIMD) operations on integer numbers.
 	\item[XMM registers] offer support for SIMD operations on floating-point
 		numbers\footnote{Processors may contain more advanced vector support
 		(e.g. YMM)}.
@@ -94,7 +94,7 @@ levels.
 Privileged instructions such as switching memory management data structures are
 only executable in ring 0, also called \emph{supervisor mode}\index{supervisor
 mode}. Operating systems such as Linux usually execute user applications in the
-unprivileged ring 3, called user mode.
+unprivileged ring 3, called \emph{user mode}\index{user mode}.
 
 \subsubsection{IA-32e Mode}
 The Intel 64 architecture runs in a processor mode named
@@ -184,7 +184,7 @@ The paging mechanism enables fine-grained memory management on a per-process
 basis. The use of different paging structures depending on the currently
 executing process allows for partitioning and separation of system memory using
 the MMU. This can be achieved by changing the value of the processor's CR3
-control whenever a process switch occurs.
+register whenever a process switch occurs.
 
 If a process tries to access a memory location that has no valid address
 translation, the processor raises a page fault exception. The operating system's
@@ -201,7 +201,7 @@ is referred to \cite{IntelSDM}, volume 3A sections 3 \& 4 and
 Exceptions\index{exceptions} and interrupts\index{interrupts} signal an event
 which occurred in the system or a processor that needs attention. They can
 occur at any time and are normally handled by preempting the currently running
-process and transferring execution to a special interrupt service routine
+process and transferring execution to a special \emph{interrupt service routine}
 (ISR\index{ISR}).
 
 Each exception or interrupt has an associated number in the range of 0 to 255,
@@ -211,8 +211,8 @@ uniquely identify exceptions, see Intel SDM \cite{IntelSDM}, volume 3A, section
 6.15.  The remaining vectors can be freely used by hardware devices and the
 operating system. To avoid vector number clashes hardware interrupts are offset
 by 32 to move them out of the reserved range. As an example, the hardware
-interrupt 0 would be mapped to 32, 1 to 33 and so on. As a result the range of
-hardware interrupt numbers is restricted to 0 .. 223.
+interrupt 0 (timer) would be mapped to 32, 1 (keyboard) to 33 and so on. As a
+result the range of hardware interrupt numbers is restricted to 0 .. 223.
 
 Interrupts are caused by hardware devices\index{device} to notify the processor
 that a device needs servicing. An example is a network card that generates an
@@ -231,10 +231,10 @@ is not set, such interrupts are not recognized by the processor until the flag
 is enabled again.  Exceptions however are not affected by the IF bit and are
 processed as usual.
 
-The main data structure which facilitates interrupt handling is the interrupt
-descriptor table (IDT)\index{IDT}. It is a list of entries which point to
-interrupt handler procedures. The IDT can be located anywhere in system memory
-and its physical address must be stored in the IDT registers
+The main data structure which facilitates interrupt handling is the
+\emph{interrupt descriptor table} (IDT)\index{IDT}. It is a list of entries
+which point to interrupt handler procedures. The IDT can be located anywhere in
+system memory and its physical address must be stored in the IDT register
 (IDTR\index{IDTR}). When the processor receives an interrupt, it uses the
 interrupt vector as an index into the IDT to determine the associated handler.
 Execution control is then transferred by invoking the handler procedure.
@@ -242,7 +242,7 @@ Execution control is then transferred by invoking the handler procedure.
 \subsection{Programmable Interrupt Controller}\label{subsec:apic}
 A Programmable Interrupt Controller (PIC\index{PIC}) is used to connect several
 interrupt sources to a CPU. Hardware devices raise interrupts to inform a CPU
-that some event occurred which must be handled. One of the best known PIC is
+that some event occurred which must be handled. One of the best known PICs is
 the Intel 8259A which was part of the original PC\footnote{Personal
 computer}\index{PC} introduced in 1981.
 
@@ -266,28 +266,30 @@ see figure \ref{fig:apic} for a schematic view.
 	\label{fig:apic}
 \end{figure}
 
-A LAPIC receives interrupts from internal sources (such as the timer interrupt)
-and from the I/O APIC or other external interrupt controllers. It sends these
-interrupts to the processor core for handling. In MP systems, the LAPIC also
-sends and receives inter-processor interrupt messages (IPI\index{IPI}) from and
-to other logical processors on the system bus. Each local APIC has a unique ID
+A LAPIC receives interrupts from internal sources (such as the timer) and from
+the I/O APIC or other external interrupt controllers. It sends these interrupts
+to the processor core for handling. In MP systems, the LAPIC also sends and
+receives \emph{inter-processor interrupt} messages (IPI\index{IPI}) from and to
+other logical processors on the system bus. Each local APIC has a unique ID
 called APIC ID\index{APIC ID}. This ID is assigned by system hardware at power
 up.
 
 The I/O APIC is used to receive external interrupts from the system and its
 associated devices and relays them to the local APICs. The LAPICs are connected
 to the I/O APIC via the system bus. The routing of interrupts to the appropriate
-LAPICs is configured using a redirection table which must be setup by the
+LAPICs is configured using a redirection table which must be set up by the
 operating system. For more information about APIC and I/O APIC see Intel SDM
 \cite{IntelSDM}, volume 3A, chapter 10.
 
 \subsection{Chipset connectivity}
-With the advent of the Intel 5 Series computing architecture
-\cite{wiki:intel:5:series}, the CPU\index{CPU} is directly connected to RAM and
-some PCI Express (PCIe\index{PCIe}) devices. The memory controller is
-integrated straight into the processor, providing fast access to system memory.
-The memory controller arbitrates RAM access and forwards requests to other
-resources, e.g.  memory-mapped devices to the platform controller hub (PCH).
+The Intel hardware architecture is constantly evolving. More and more
+functionality is moved into the CPU to increase performance. With the advent of
+the Intel 5 Series computing architecture \cite{wiki:intel:5:series}, the
+CPU\index{CPU} is directly connected to RAM and some PCI Express
+(PCIe\index{PCIe}) devices. The memory controller is integrated straight into
+the processor, providing fast access to system memory.  The memory controller
+arbitrates RAM access and forwards requests to other resources, e.g.
+memory-mapped devices to the platform controller hub (PCH).
 
 Similarly, the display controller is either fully integrated into the processor
 or connected via PCIe lanes. The CPU and the PCH are linked via the Direct

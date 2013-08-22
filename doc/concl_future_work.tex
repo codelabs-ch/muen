@@ -42,8 +42,8 @@ A well-known source of high-bandwidth side-channels are processor caches
 \emph{cache coloring}. The main concept is to partition the cache into disjoint
 groups and assign a color to each of the groups. This mechanism has been
 presented in literature in the context of real-time systems for more than 15
-years \cite{Mueller:1995:CSS:216633.216677}
-\cite{Liedtke:1997:OCP:523983.828369}.
+years \cite{Liedtke:1997:OCP:523983.828369}
+\cite{Mueller:1995:CSS:216633.216677}.
 
 In a second step each subject is associated with a color. All subjects of a
 given color share the same cache partition. In turn subjects of differing color
@@ -63,7 +63,8 @@ Leveraging the VM profile, which allows a subject to perform memory management
 via EPT (see section \ref{subsubsec:ept}), reduces the porting effort. Changes
 to the Linux boot process are needed, since it is quite involved. The Linux
 kernel implements an architecture-dependent boot protocol that is explained as
-part of the kernel documentation\footnote{see Documentation/x86/boot.txt}.
+part of the kernel documentation\footnote{See Linux sources:
+Documentation/x86/boot.txt}.
 
 Combined with the \emph{hardware passthrough} enhancement, Linux could be used
 to control virtually any PCI(e) device. This would add the abundant hardware
@@ -100,8 +101,8 @@ sub-optimal since having to acquire locks when handling interrupts is not very
 efficient.
 
 Intel provides an advanced hardware virtualization feature called APIC
-virtualization (APICv) (see Intel SDM, volume 3C, chapter 29), that can greatly
-improve Muen's event handling.
+virtualization (APICv\index{APICv}) that could greatly improve Muen's event
+handling, see Intel SDM, volume 3C, chapter 29.
 
 By giving subjects access to a virtualized APIC, VM exits related to interrupt
 processing are greatly reduced. The processor emulates access to the APIC by
@@ -124,12 +125,12 @@ Currently, to write a policy the system integrator has to edit an XML file
 directly. While the \texttt{skpolicy} tool performs validation checks to catch
 obvious configuration mistakes, it is an error-prone process.
 
-A graphical policy tool would greatly simplify this process by providing a more
-intuitive method for policy creation. Visualizing key parts of the policy would
-be very beneficial. The generation of flow charts representing the information
-flows between subjects based on their shared resources or graphical illustration
-of scheduling plans are two examples, how such a tool could assist a policy
-author.
+A graphical tool would greatly simplify this process by providing a more
+intuitive method for policy authoring. Visualizing key parts of the policy
+would be very beneficial. The generation of diagrams representing the
+information flows between subjects based on their shared resources or graphical
+illustration of scheduling plans are two examples, how such a tool could assist
+in policy validation.
 
 \subsection{Dynamic Resource Management}
 Currently, resource management is static and there is little flexibility. All
@@ -142,9 +143,9 @@ during a particular period.
 For example, a system consisting of multiple different VM subjects with their
 respective operating systems need multiple gigabytes of memory when running.
 In a static system configuration, all the assigned memory is committed and
-reserved even though only one of the VMs might be in operation. A system that
-would allow dynamic launching and stopping of subjects, only the resources of
-the effectively running subjects would be in use.
+reserved even though only one of the VMs might be in operation. A system
+providing dynamic resource management could greatly improve the usage of
+hardware resources.
 
 This can be achieved by extending the trusted $\tau$0 subject. It has the same
 trust-level as the kernel and forms part of the TCB. Via an appropriate

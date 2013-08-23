@@ -94,14 +94,7 @@ reference manual \cite{SPARK} are briefly described here:
 The following listing illustrates how annotations are used to specify the
 contract of a subprogram.
 
-\begin{lstlisting}[language=Ada]
-type Color_Type is (Red, Green, Blue);
-
-procedure Exchange (X, Y: in out Color_Type);
---# derives X from Y &
---#         Y from X;
---# post X = Y~ and Y = X~;
-\end{lstlisting}
+\input{lst_spark}
 
 The declaration of the \texttt{Exchange} procedure states that it has two
 parameters X and Y which are of mode \texttt{in out}. This means that the values

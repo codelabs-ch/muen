@@ -403,21 +403,7 @@ again scheduled in alternating fashion.
 
 \begin{figure}[ht]
 	\centering
-	\begin{ganttchart}[
-		vgrid={*3{dotted},*1{dashed},*7{dotted},*1{dashed},*3{dotted},*1{dashed},*3{dotted}},
-		hgrid,
-		y unit title=0.75cm,
-		title label anchor/.style={below=-1.5ex}]{20}
-		\gantttitle{Major frame}{20} \\
-		\gantttitle{Minor 1}{4}
-		\gantttitle{Minor 2}{8}
-		\gantttitle{Minor 3}{4}
-		\gantttitle{Minor 4}{4} \\
-		\ganttbar[bar/.append style={fill=CornflowerBlue}]{Subject 1}{1}{4}
-		\ganttbar[bar/.append style={fill=CornflowerBlue}]{}{13}{16} \\
-		\ganttbar[bar/.append style={fill=YellowGreen}]{Subject 2}{5}{12}
-		\ganttbar[bar/.append style={fill=YellowGreen}]{}{17}{20}
-	\end{ganttchart}
+	\input{graph_major_frame}
 	\caption{Example major frame}
 	\label{fig:example-major-frame}
 \end{figure}
@@ -428,24 +414,7 @@ that execute various subjects indicated by different colors.
 
 \begin{figure}[ht]
 	\centering
-	\begin{ganttchart}[
-		vgrid={*9{dotted},*1{dashed},*9{dotted}},
-		hgrid,
-		y unit title=0.75cm,
-		title label anchor/.style={below=-1.5ex}]{20}
-		\gantttitle{Major frame 1}{10}
-		\gantttitle{Major frame 2}{10} \\
-		\ganttbar[bar/.append style={fill=Apricot}]{CPU0}{1}{10}
-		\ganttbar[bar/.append style={fill=Apricot}]{}{11}{20} \\
-		\ganttbar[bar/.append style={fill=CornflowerBlue}]{CPU1}{1}{2}
-		\ganttbar[bar/.append style={fill=YellowGreen}]{}{3}{6}
-		\ganttbar[bar/.append style={fill=CornflowerBlue}]{}{7}{8}
-		\ganttbar[bar/.append style={fill=YellowGreen}]{}{9}{10}
-		\ganttbar[bar/.append style={fill=CornflowerBlue}]{}{11}{12}
-		\ganttbar[bar/.append style={fill=YellowGreen}]{}{13}{16}
-		\ganttbar[bar/.append style={fill=CornflowerBlue}]{}{17}{18}
-		\ganttbar[bar/.append style={fill=YellowGreen}]{}{19}{20}
-	\end{ganttchart}
+	\input{graph_scheduling_plan}
 	\caption{Example scheduling plan}
 	\label{fig:example-scheduling-plan}
 \end{figure}

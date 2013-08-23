@@ -1,0 +1,18 @@
+\begin{ganttchart}[
+	vgrid={*9{dotted},*1{dashed},*9{dotted}},
+	hgrid,
+	y unit title=0.75cm,
+	title label anchor/.style={below=-1.5ex}]{20}
+	\gantttitle{Major frame 1}{10}
+	\gantttitle{Major frame 2}{10} \\
+	\ganttbar[bar/.append style={fill=Apricot}]{CPU0}{1}{10}
+	\ganttbar[bar/.append style={fill=Apricot}]{}{11}{20} \\
+	\ganttbar[bar/.append style={fill=CornflowerBlue}]{CPU1}{1}{2}
+	\ganttbar[bar/.append style={fill=YellowGreen}]{}{3}{6}
+	\ganttbar[bar/.append style={fill=CornflowerBlue}]{}{7}{8}
+	\ganttbar[bar/.append style={fill=YellowGreen}]{}{9}{10}
+	\ganttbar[bar/.append style={fill=CornflowerBlue}]{}{11}{12}
+	\ganttbar[bar/.append style={fill=YellowGreen}]{}{13}{16}
+	\ganttbar[bar/.append style={fill=CornflowerBlue}]{}{17}{18}
+	\ganttbar[bar/.append style={fill=YellowGreen}]{}{19}{20}
+\end{ganttchart}

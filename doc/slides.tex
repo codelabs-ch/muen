@@ -3,6 +3,8 @@
 \usepackage{beamerthemesplit}
 \usepackage{graphicx}
 \usepackage{listings}
+\usepackage{pgfgantt}
+\usepackage{subcaption}
 \usepackage{tikz}
 \usetikzlibrary{positioning,shapes,shadows,arrows,backgrounds,fit,decorations.markings}
 
@@ -28,7 +30,7 @@
 	literate={~} {$\sim$}{1}
 }
 
-\title[Muen Separation Kernel]{Muen - A high assurance separation kernel for the Intel x86 architecture}
+\title[Muen Separation Kernel]{Muen - An x86/64 Separation Kernel for\\High Assurance}
 \author{Reto Buerki \and Adrian-Ken Rueegsegger}
 \institute[HSR]
 {
@@ -51,18 +53,41 @@
 
 \section{Introduction}
 \subsection{Background}
+\begin{frame}\frametitle{Virtualization}
+\begin{itemize}
+	\item Virtualization performed by \emph{virtual machine monitor} (VMM)
+\end{itemize}
+
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\input{graph_vmm_type1}
+		\caption{\emph{Type I, native or bare metal VMM.} Runs directly on the
+		hardware in the most privileged processor mode.}
+	\end{subfigure}
+	\qquad
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\input{graph_vmm_type2}
+		\caption{\emph{Type II or hosted VMM.} The VMM runs on top of a
+		conventional operating system and uses OS services.}
+	\end{subfigure}
+\end{figure}
+\end{frame}
+
 \begin{frame}\frametitle{Intel virtualization technologies}
 \begin{itemize}
 	\item VT-x is Intel's technology for virtualization on the x86 platform
 	\item Virtual machine state stored in virtual-machine control structure (VMCS)
 	\item Virtual-machine extensions (VMX) provide CPU instructions to manage VMCS
-	\item Hypervisor runs in VMX root mode
+	\item VMM runs in VMX root mode
 	\item Virtual machines run in VMX non-root mode
-	\item Hardware assisted virtualization simplifies implementation of hypervisor
+	\item Hardware assisted virtualization simplifies implementation of VMM
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]\frametitle{SPARK}
+\begin{frame}\frametitle{SPARK}
 \begin{itemize}
 	\item Formally-defined programming language based on Ada
 	\item Intended for writing high integrity and security software
@@ -93,10 +118,8 @@
 \begin{frame}\frametitle{Motivation}
 \begin{itemize}
 	\item Currently available (monolithic) systems unsuitable
-	\item Few commercial but no free/open-source SKs are available
-	\item Lack of source hinders development
-	\item No detailed public documentation available
-	\item Increase confidence in security of commodity workstations
+	\item Implementation suitable for high assurance systems
+	\item Increase confidence in systems built with COTS hardware
 	\item Public sources and documentation enable third-party review
 	\item Many advances in Intel hardware support for virtualization
 \end{itemize}
@@ -106,10 +129,10 @@
 \begin{frame}\frametitle{Goals}
 \begin{itemize}
 	\item Open-source separation kernel (GPLv3+)
-	\item High assurance implementation using SPARK
+	\item Implementation in SPARK
 	\item Proof of absence of runtime errors
-	\item Minimal TCB ($\sim$5'000 SLOC)
-	\item Extract non-timing critical operations to trusted subject $\tau$0
+	\item Small code size
+	\item Reduction to essential functionality
 	\item Leverage latest hardware features of Intel platform\\(VT-x, EPT, VT-d, \textellipsis)
 	\item Target platform is 64-bit Intel
 	\item Only allow intended data flows
@@ -141,7 +164,7 @@
 	\end{itemize}
 	\item skpolicy tool compiles XML to SPARK sources
 \end{itemize}
-\lstinputlisting[language=xml,linerange={62-67}]{../policy/xml/example_system.xml.tmpl}
+\lstinputlisting[language=xml, linerange={81-86}]{../policy/xml/example_system.xml.tmpl}
 \end{frame}
 
 \subsection{Subsystems}
@@ -149,21 +172,46 @@
 \begin{itemize}
 	\item Fixed cyclic scheduler
 	\item Use of VMX preemption timer
-	\item Major frame consisting of minor frames
-	\item Minor frames specify subject and time slice in ticks
-	\item Scheduling plan specifies minor frames per logical CPU
-	\item $\tau$0 subject can switch scheduling plan
 \end{itemize}
-\lstinputlisting[language=xml,linerange={1-6}]{../policy/xml/example_scheduling.xml}
-\end{frame}
-
-\begin{frame}\frametitle{Scheduler II}
 \begin{center}
 	\input{graph_scheduler}
 \end{center}
 \end{frame}
 
-\begin{frame}[fragile]\frametitle{Traps}
+\begin{frame}\frametitle{Scheduler II}
+\begin{itemize}
+	\item Major frame consisting of minor frames
+	\item Minor frames specify subject and time slice in ticks
+	\item Scheduling plan specifies minor frames per logical CPU
+	\item $\tau$0 subject can switch scheduling plan
+\end{itemize}
+
+\begin{center}
+	\noindent\resizebox{\textwidth}{!}{\input{graph_major_frame}}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Scheduler III}
+\begin{lstlisting}[language=xml]
+<major_frame>
+    <cpu>
+        <minor_frame subject_id="0" ticks="200"/>
+    </cpu>
+    <cpu>
+        <minor_frame subject_id="1" ticks="40"/>
+        <minor_frame subject_id="2" ticks="80"/>
+        <minor_frame subject_id="1" ticks="40"/>
+        <minor_frame subject_id="2" ticks="40"/>
+    </cpu>
+</major_frame>
+\end{lstlisting}
+
+\begin{center}
+	\noindent\resizebox{\textwidth}{!}{\input{graph_scheduling_plan}}
+\end{center}
+\end{frame}
+
+\begin{frame}\frametitle{Traps}
 \begin{itemize}
 	\item Transition to VMX root mode is called a trap
 	\item Policy specifies per-subject trap table
@@ -187,7 +235,7 @@
 	\item Setup of interrupt routing according to policy
 \end{itemize}
 \begin{center}
-	\input{graph_external_interrupt}
+	\noindent\resizebox{.55\textwidth}{!}{\input{graph_external_interrupt}}
 \end{center}
 \begin{enumerate}
 	\item External interrupts cause traps on designated CPU
@@ -197,7 +245,7 @@
 \end{enumerate}
 \end{frame}
 
-\begin{frame}[fragile]\frametitle{Event handling}
+\begin{frame}\frametitle{Event handling}
 \begin{itemize}
 	\item Event is a hypercall triggered by subject using VMCALL instruction
 	\item Policy specifies per-subject event table
@@ -213,7 +261,9 @@
 	\item BSP starts application processors (APs)
 	\item All CPUs synchronize on major frame changes
 \end{itemize}
+\begin{center}
 	\input{graph_mp_overview}
+\end{center}
 \end{frame}
 
 \begin{frame}\frametitle{Inter-Core events}
@@ -250,9 +300,9 @@
 	\item Kernel
 	\item Tools
 	\begin{itemize}
-		\item Policy compilation tool (skpolicy)
-		\item Config generation tool (skconfig)
-		\item Packaging tool (skpacker)
+		\item Policy compilation tool (\texttt{skpolicy})
+		\item Config generation tool (\texttt{skconfig})
+		\item Packaging tool (\texttt{skpacker})
 	\end{itemize}
 	\item Subjects
 	\begin{itemize}
@@ -263,6 +313,7 @@
 		\item Crypter
 		\item Dumper
 	\end{itemize}
+	\item Documentation
 \end{itemize}
 \end{frame}
 
@@ -271,7 +322,7 @@
 	\item Source code statistics:
 	\begin{itemize}
 		\item $\sim$260 lines of Assembly
-		\item $\sim$2670 lines of SPARK
+		\item $\sim$2470 lines of SPARK
 	\end{itemize}§
 	\item Proof of absence of runtime errors (All VCs discharged)
 	\item Static assignment of resources according to policy

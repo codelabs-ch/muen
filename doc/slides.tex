@@ -292,6 +292,102 @@
 \end{center}
 \end{frame}
 
+\section{Analysis}
+\subsection{Separation}
+\begin{frame}\frametitle{VMX Controls}
+
+\begin{small}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{l|c|c}
+		\textbf{Event} & \textbf{Native} & \textbf{VM} \\
+		\hline
+		External interrupt          & \checkmark & \checkmark  \\
+		VMX preemption timer        & \checkmark & \checkmark  \\
+		Execute \texttt{INVLPG}	    & \checkmark & \checkmark \\
+		Execute \texttt{MONITOR}    & \checkmark & \checkmark \\
+		Execute \texttt{MWAIT}      & \checkmark & \checkmark \\
+		Execute \texttt{RDPMC}      & \checkmark & \checkmark \\
+		Execute \texttt{RDTSC}      & \checkmark & \checkmark \\
+		Execute \texttt{WBINVD}     & \checkmark & \checkmark \\
+		MOV to CR3                  & \checkmark & \\
+		MOV from CR3                & \checkmark & \\
+		MOV to CR8                  & \checkmark & \checkmark \\
+		MOV from CR8                & \checkmark & \checkmark \\
+		MOV to/from debug registers & \checkmark & \checkmark \\
+		\hline
+		I/O port access & \checkmark & \checkmark \\
+		MSR access      & \checkmark & \checkmark \\
+		Exceptions      & \checkmark & \\
+	\end{tabular}
+\end{table}
+\end{small}
+\end{frame}
+
+\begin{frame}\frametitle{System Resources}
+\begin{itemize}
+	\item Assigned to subjects according to policy
+	\item Assignment is static at integration time
+\end{itemize}
+\begin{block}{Memory}
+	\begin{itemize}
+		\item Specified by memory regions in kernel/subjects spec
+		\item Policy compiler creates page tables
+	\end{itemize}
+\end{block}
+
+\begin{block}{Devices}
+	\begin{itemize}
+		\item Assignment to subject grants resources\\(memory, ports, interrupts)
+		\item Policy compiler
+		\begin{itemize}
+			\item Maps memory regions into subject's address space
+			\item Enables I/O port access via VMCS I/O bitmap
+			\item Creates interrupt routing table entry
+		\end{itemize}
+	\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}\frametitle{Execution Environment}
+\begin{footnotesize}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{l|c|c|c}
+		\textbf{Component} & \textbf{VMCS} & \textbf{State} & \textbf{Denied} \\
+		\hline
+		General purpose registers  & & \checkmark \\
+		Segment registers          & \checkmark & \\
+		Instruction pointer        & \checkmark & \\
+		Flag register              & \checkmark & \\
+		CR0                        & \checkmark & \\
+		CR2                        & & \checkmark \\
+		CR3                        & \checkmark & \\
+		CR4                        & \checkmark & \\
+		CR8                        & & & \checkmark \\
+		Descriptor table registers & \checkmark & \\
+		DR0-3                      & & & \checkmark \\
+		DR6                        & & & \checkmark \\
+		DR7                        & & & \checkmark \\
+		x87 FPU registers          & & & \checkmark \\
+		MMX registers              & & & \checkmark \\
+		XMM registers              & & & \checkmark \\
+		MSRs                       & & & (\checkmark) \\
+	\end{tabular}
+\end{table}
+\end{footnotesize}
+\end{frame}
+
+\begin{frame}\frametitle{Temporal Isolation}
+\begin{itemize}
+	\item Fixed cyclic scheduler
+	\item Static scheduling plan generated from policy
+	\item Subject preemption using VMX preemption timer
+	\item Sum of minor frame lengths per CPU/major frame are equal
+	\item Global barrier sync at beginning of major frame
+\end{itemize}
+\end{frame}
+
 \section{Conclusion}
 \subsection{Results}
 \begin{frame}\frametitle{Results}

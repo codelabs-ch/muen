@@ -10,7 +10,11 @@ allows the specification of a per-subject trap table, which defines what action
 to take when a trap occurs. Listing \ref{lst:trap-table} shows an example trap
 table.
 
-\input{lst_trap_table}
+\lstinputlisting[
+	language=xml,
+	label=lst:trap-table,
+	caption=Subject trap table]
+	{lst_trap_table}
 
 This single trap table entry defines that all configurable traps should result
 in an execution handover to a subject called \emph{sm} (Subject

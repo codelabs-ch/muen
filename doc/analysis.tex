@@ -409,14 +409,9 @@ first minor frame starts.
 
 Strict adherence to a given plan is implemented using the VMX preemption timer.
 Subjects are executed for the time slice mandated by the currently active minor
-frame. This means that the kernel is in absolute control and subjects have no
-way of influencing the system's scheduling behavior. As a consequence subjects
-are totally isolated from each other with regards to temporal effects.
-
-It might be noted that the mechanism providing the rigor of temporal isolation
-is the VMX preemption timer. If for some reason the timer is not deemed to be
-precise enough for a particular use case, additional timer sources could be used
-to provide even higher timer resolution and thus scheduling accuracy.
+frame. If for some reason the timer is not deemed to be precise enough for a
+particular use case, additional timer sources could be used to provide even
+higher timer resolution and thus scheduling accuracy.
 
 \section{Information Flow}\label{sec:information-flow}
 This section reviews the mechanisms provided by the Muen kernel to enable

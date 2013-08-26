@@ -5,7 +5,11 @@ subject if this operation has been granted by an entry in the subject's policy
 event table. The following listing is used as an example to illustrate the
 event mechanism.
 
-\input{lst_event_table}
+\lstinputlisting[
+	language=xml,
+	label=lst:event-table,
+	caption=Subject event table]
+	{lst_event_table}
 
 This event table in the system policy allows the associated subject to send two
 events of different type to subjects \emph{s2} and \emph{s3} respectively. A

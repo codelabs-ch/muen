@@ -129,7 +129,7 @@ is
                       CR4 => CPU.Get_CR4);
       Locks.Unlock;
 
-      CPU.Hlt;
+      CPU.Stop;
    end Print_State;
 
 end SK.Dump;

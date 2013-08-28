@@ -61,11 +61,10 @@ is
    --  Run given subject.
    procedure Run (Subject_Id : Skp.Subject_Id_Type);
    --# global
-   --#    in out Subjects.State;
-   --#    in out Locks.State;
+   --#    in     Subjects.State;
    --#    in out X86_64.State;
    --# derives
-   --#    Subjects.State, Locks.State, X86_64.State from
+   --#    X86_64.State from
    --#       *,
    --#       Subject_Id,
    --#       Subjects.State,
@@ -165,5 +164,18 @@ is
    --# derives
    --#    X86_64.State from *;
    pragma Export (C, VMX_Error, "vmx_error");
+
+   --  Inject pending event into subject identified by ID.
+   procedure Inject_Event (Subject_Id : Skp.Subject_Id_Type);
+   --# global
+   --#    in out Subjects.State;
+   --#    in out Locks.State;
+   --#    in out X86_64.State;
+   --# derives
+   --#    Subjects.State, Locks.State, X86_64.State from
+   --#       *,
+   --#       Subject_Id,
+   --#       Subjects.State,
+   --#       X86_64.State;
 
 end SK.VMX;

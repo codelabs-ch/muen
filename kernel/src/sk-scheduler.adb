@@ -618,6 +618,8 @@ is
       Subjects.Set_State (Id            => Current_Subject,
                           Subject_State => State);
 
+      VMX.Inject_Event
+        (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id);
       VMX.Run (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id);
    end Handle_Vmx_Exit;
 

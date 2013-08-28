@@ -399,7 +399,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Run (Subject_Id : Skp.Subject_Id_Type)
+   procedure Inject_Event (Subject_Id : Skp.Subject_Id_Type)
    is
       State      : SK.Subject_State_Type;
       Intr_State : SK.Word64;
@@ -433,7 +433,15 @@ is
             VMCS_Set_Interrupt_Window (Value => True);
          end if;
       end if;
+   end Inject_Event;
 
+   -------------------------------------------------------------------------
+
+   procedure Run (Subject_Id : Skp.Subject_Id_Type)
+   is
+      State : SK.Subject_State_Type;
+   begin
+      State := Subjects.Get_State (Id => Subject_Id);
       VMCS_Write (Field => Constants.GUEST_RIP,
                   Value => State.RIP);
       VMCS_Write (Field => Constants.GUEST_RSP,

@@ -79,11 +79,10 @@ is
          CPU.Restore_Registers (Regs => Regs);
          CPU.VMLAUNCH;
          VMX.VMX_Error;
+      else
+         pragma Debug (KC.Put_Line (Item => "System initialisation error"));
+         CPU.Stop;
       end if;
-
-      pragma Debug (not Success, KC.Put_Line
-                    (Item => "System initialisation error"));
-      pragma Debug (KC.Put_Line (Item => "Terminating"));
    end Initialize;
 
 end SK.Kernel;

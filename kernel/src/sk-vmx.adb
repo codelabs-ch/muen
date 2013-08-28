@@ -106,6 +106,12 @@ is
       Error   : SK.Word64;
       Success : Boolean;
    begin
+      pragma Debug (KC.Put_String (Item => "Error running subject "));
+      pragma Debug (KC.Put_Byte
+                    (Item => SK.Byte
+                     (CPU_Global.Get_Current_Minor_Frame.Subject_Id)));
+      pragma Debug (KC.New_Line);
+
       pragma Debug (CPU.VMREAD (Field   => Constants.VMX_INST_ERROR,
                                 Value   => Error,
                                 Success => Success));
@@ -450,12 +456,6 @@ is
       end if;
 
       CPU.Set_Stack (Address => Skp.Kernel.Stack_Address);
-
-      pragma Debug (KC.Put_String (Item => "Error running subject "));
-      pragma Debug (KC.Put_Byte
-                    (Item => SK.Byte
-                     (CPU_Global.Get_Current_Minor_Frame.Subject_Id)));
-      pragma Debug (KC.New_Line);
       VMX_Error;
    end Run;
 

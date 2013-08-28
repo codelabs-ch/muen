@@ -519,7 +519,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Handle_Vmx_Exit (Subject_Registers : SK.CPU_Registers_Type)
+   procedure Handle_Vmx_Exit (Subject_Registers : in out SK.CPU_Registers_Type)
    --# global
    --#    in     New_Major;
    --#    in out CPU_Global.State;
@@ -536,7 +536,7 @@ is
    --#       Subject_Registers,
    --#       CPU_Global.State,
    --#       X86_64.State &
-   --#    Locks.State, X86_64.State from
+   --#    Locks.State, X86_64.State, Subject_Registers from
    --#       *,
    --#       Current_Major,
    --#       New_Major,
@@ -620,7 +620,10 @@ is
 
       VMX.Inject_Event
         (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id);
-      VMX.Run (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id);
+
+      VMX.Restore_Guest_Regs
+        (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id,
+         Regs       => Subject_Registers);
    end Handle_Vmx_Exit;
 
 end SK.Scheduler;

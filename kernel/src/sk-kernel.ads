@@ -27,7 +27,8 @@
 --#    SK.VMX,
 --#    SK.MP,
 --#    SK.IO_Apic,
---#    SK.CPU_Global;
+--#    SK.CPU_Global,
+--#    SK.CPU;
 package SK.Kernel
 is
 

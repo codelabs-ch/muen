@@ -73,7 +73,8 @@ is
 private
 
    --  VMX exit handler.
-   procedure Handle_Vmx_Exit (Subject_Registers : SK.CPU_Registers_Type);
+   procedure Handle_Vmx_Exit
+     (Subject_Registers : in out SK.CPU_Registers_Type);
    --# global
    --#    in out CPU_Global.State;
    --#    in out State;
@@ -88,7 +89,7 @@ private
    --#       Subject_Registers,
    --#       CPU_Global.State,
    --#       X86_64.State &
-   --#    Locks.State, X86_64.State from
+   --#    Locks.State, X86_64.State, Subject_Registers from
    --#       *,
    --#       State,
    --#       Subject_Registers,

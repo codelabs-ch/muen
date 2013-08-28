@@ -25,6 +25,7 @@ with SK.Scheduler;
 with SK.Apic;
 with SK.MP;
 with SK.CPU_Global;
+with SK.CPU;
 
 package body SK.Kernel
 is
@@ -34,6 +35,7 @@ is
    procedure Main
    is
       Success, Is_Bsp : Boolean;
+      Regs            : SK.CPU_Registers_Type;
    begin
       Is_Bsp := Apic.Is_BSP;
 
@@ -68,7 +70,15 @@ is
          --  Synchronize all logical CPUs.
 
          MP.Wait_For_All;
-         VMX.Run (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id);
+         VMX.Restore_Guest_Regs
+           (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id,
+            Regs       => Regs);
+
+         --  TODO: Refactor
+
+         CPU.Restore_Registers (Regs => Regs);
+         CPU.VMLAUNCH;
+         VMX.VMX_Error;
       end if;
 
       pragma Debug (not Success, KC.Put_Line

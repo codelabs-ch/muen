@@ -58,8 +58,11 @@ is
    --# derives
    --#    X86_64.State from *, VMCS_Address;
 
-   --  Run given subject.
-   procedure Run (Subject_Id : Skp.Subject_Id_Type);
+   --  Restore non-GPR guest registers from subject state identified by ID.
+   --  GPRs are returned in Regs.
+   procedure Restore_Guest_Regs
+     (Subject_Id :     Skp.Subject_Id_Type;
+      Regs       : out SK.CPU_Registers_Type);
    --# global
    --#    in     Subjects.State;
    --#    in out X86_64.State;
@@ -68,7 +71,8 @@ is
    --#       *,
    --#       Subject_Id,
    --#       Subjects.State,
-   --#       X86_64.State;
+   --#       X86_64.State &
+   --#    Regs from Subjects.State, Subject_Id;
 
    --  Read value from specified field of the current, active VMCS. If the
    --  operation fails, CPU.Panic is called.

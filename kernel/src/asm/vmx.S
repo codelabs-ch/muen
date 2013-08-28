@@ -41,3 +41,24 @@ vmx_exit_handler:
 	push %rax
 	mov %rsp, %rdi
 	call handle_vmx_exit
+	pop %rax
+	pop %rbx
+	pop %rcx
+	pop %rdx
+	pop %rdi
+	pop %rsi
+	pop %rbp
+	pop %r8
+	pop %r9
+	pop %r10
+	pop %r11
+	pop %r12
+	pop %r13
+	pop %r14
+	pop %r15
+	vmresume
+	vmlaunch
+	call vmx_error
+
+1:	hlt
+	jmp 1b

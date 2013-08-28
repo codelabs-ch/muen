@@ -437,7 +437,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Run (Subject_Id : Skp.Subject_Id_Type)
+   procedure Restore_Guest_Regs
+     (Subject_Id :     Skp.Subject_Id_Type;
+      Regs       : out SK.CPU_Registers_Type)
    is
       State : SK.Subject_State_Type;
    begin
@@ -451,17 +453,8 @@ is
          CPU.Set_CR2 (Value => State.CR2);
       end if;
 
-      if State.Launched then
-         CPU.Restore_Registers (Regs => State.Regs);
-         CPU.VMRESUME;
-      else
-         CPU.Restore_Registers (Regs => State.Regs);
-         CPU.VMLAUNCH;
-      end if;
-
-      CPU.Set_Stack (Address => Skp.Kernel.Stack_Address);
-      VMX_Error;
-   end Run;
+      Regs := State.Regs;
+   end Restore_Guest_Regs;
 
    -------------------------------------------------------------------------
 

@@ -22,14 +22,6 @@
 package SK.CPU
 is
 
-   --  Restore CPU register values.
-   procedure Restore_Registers (Regs : SK.CPU_Registers_Type);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, Regs;
-   pragma Inline_Always (Restore_Registers);
-
    --  Execute CPUID instruction.
    procedure CPUID
      (EAX : in out SK.Word32;
@@ -184,22 +176,6 @@ is
    --#    X86_64.State from *, Region &
    --#    Success      from X86_64.State, Region;
    pragma Inline_Always (VMXON);
-
-   --  Launch VM designated by current VMCS.
-   procedure VMLAUNCH;
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *;
-   pragma Inline_Always (VMLAUNCH);
-
-   --  Resume VM designated by current VMCS.
-   procedure VMRESUME;
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *;
-   pragma Inline_Always (VMRESUME);
 
    procedure VMCLEAR
      (Region  :     SK.Word64;

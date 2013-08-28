@@ -183,81 +183,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Restore_Registers (Regs : SK.CPU_Registers_Type)
-   is
-      --# hide Restore_Registers;
-   begin
-      System.Machine_Code.Asm
-        (Template => "movq %0, %%rbx;",
-         Inputs   => (SK.Word64'Asm_Input ("a", Regs.RBX)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %0, %%rcx;",
-         Inputs   => (SK.Word64'Asm_Input ("a", Regs.RCX)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %0, %%rdx;",
-         Inputs   => (SK.Word64'Asm_Input ("a", Regs.RDX)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %0, %%rdi;",
-         Inputs   => (SK.Word64'Asm_Input ("a", Regs.RDI)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %0, %%rsi;",
-         Inputs   => (SK.Word64'Asm_Input ("a", Regs.RSI)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %0, %%r8;",
-         Inputs   => (SK.Word64'Asm_Input ("a", Regs.R08)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %0, %%r9;",
-         Inputs   => (SK.Word64'Asm_Input ("a", Regs.R09)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %0, %%r10;",
-         Inputs   => (SK.Word64'Asm_Input ("a", Regs.R10)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %0, %%r11;",
-         Inputs   => (SK.Word64'Asm_Input ("a", Regs.R11)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %0, %%r12;",
-         Inputs   => (SK.Word64'Asm_Input ("a", Regs.R12)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %0, %%r13;",
-         Inputs   => (SK.Word64'Asm_Input ("a", Regs.R13)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %0, %%r14;",
-         Inputs   => (SK.Word64'Asm_Input ("a", Regs.R14)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %0, %%r15;",
-         Inputs   => (SK.Word64'Asm_Input ("a", Regs.R15)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %0, %%rax; push %%rax",
-         Inputs   => (SK.Word64'Asm_Input ("m", Regs.RBP)),
-         Volatile => True);
-      System.Machine_Code.Asm
-        (Template => "movq %0, %%rax;",
-         Inputs   => (SK.Word64'Asm_Input ("a", Regs.RAX)),
-         Volatile => True);
-
-      --  The RBP register must be written as the final value since it will
-      --  break any RBP-relative adressing.
-
-      System.Machine_Code.Asm
-        (Template => "popq %%rbp;",
-         Volatile => True);
-   end Restore_Registers;
-
-   -------------------------------------------------------------------------
-
    procedure Set_CR2 (Value : SK.Word64)
    is
       --# hide Set_CR2;
@@ -332,17 +257,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure VMLAUNCH
-   is
-      --# hide VMLAUNCH;
-   begin
-      System.Machine_Code.Asm
-        (Template => "vmlaunch",
-         Volatile => True);
-   end VMLAUNCH;
-
-   -------------------------------------------------------------------------
-
    procedure VMPTRLD
      (Region  :     SK.Word64;
       Success : out Boolean)
@@ -374,17 +288,6 @@ is
          Clobber  => "cc",
          Volatile => True);
    end VMREAD;
-
-   -------------------------------------------------------------------------
-
-   procedure VMRESUME
-   is
-   --# hide VMRESUME;
-   begin
-      System.Machine_Code.Asm
-        (Template => "vmresume",
-         Volatile => True);
-   end VMRESUME;
 
    -------------------------------------------------------------------------
 

@@ -305,6 +305,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Stop
+   is
+      --# hide Stop;
+   begin
+      System.Machine_Code.Asm
+        (Template => "cli; 1: hlt; jmp 1b",
+         Volatile => True);
+   end Stop;
+
+   -------------------------------------------------------------------------
+
    procedure VMCLEAR
      (Region  :     SK.Word64;
       Success : out Boolean)

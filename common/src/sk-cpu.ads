@@ -74,6 +74,14 @@ is
    --#    X86_64.State from *;
    pragma Inline_Always (Panic);
 
+   --  Stop CPU.
+   procedure Stop;
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *;
+   pragma Inline_Always (Stop);
+
    --  Return current value of CR0 register.
    function Get_CR0 return SK.Word64;
    --# global

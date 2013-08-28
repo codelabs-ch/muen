@@ -166,14 +166,11 @@ start64: .align 4096
 	movl $IA32_APIC_BASE, %ecx
 	rdmsr
 	bt $APIC_BSP_BIT, %eax
-	jz kernel_main
+	jz kernel_init
 	call adainit
 
-kernel_main:
-
-	// call kernel main
-
-	call kmain
+kernel_init:
+	call sk_initialize
 
 	cli
 

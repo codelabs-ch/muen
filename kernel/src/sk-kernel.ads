@@ -33,7 +33,7 @@ package SK.Kernel
 is
 
    --  Kernel entry point.
-   procedure Main;
+   procedure Initialize;
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Scheduler.State;
@@ -67,6 +67,6 @@ is
    --#       VMX.State,
    --#       Interrupts.State,
    --#       X86_64.State;
-   pragma Export (C, Main, "kmain");
+   pragma Export (C, Initialize, "sk_initialize");
 
 end SK.Kernel;

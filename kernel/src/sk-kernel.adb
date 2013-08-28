@@ -32,7 +32,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Main
+   procedure Initialize
    is
       Success, Is_Bsp : Boolean;
       Regs            : SK.CPU_Registers_Type;
@@ -84,6 +84,6 @@ is
       pragma Debug (not Success, KC.Put_Line
                     (Item => "System initialisation error"));
       pragma Debug (KC.Put_Line (Item => "Terminating"));
-   end Main;
+   end Initialize;
 
 end SK.Kernel;

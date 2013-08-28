@@ -32,8 +32,8 @@
 package SK.Kernel
 is
 
-   --  Kernel entry point.
-   procedure Initialize;
+   --  Kernel initialization.
+   procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type);
    --# global
    --#    in     GDT.GDT_Pointer;
    --#    in     Scheduler.State;
@@ -65,6 +65,11 @@ is
    --#       Subjects.State,
    --#       Scheduler.State,
    --#       VMX.State,
+   --#       Interrupts.State,
+   --#       X86_64.State &
+   --#    Subject_Registers from
+   --#       Subjects.State,
+   --#       Scheduler.State,
    --#       Interrupts.State,
    --#       X86_64.State;
    pragma Export (C, Initialize, "sk_initialize");

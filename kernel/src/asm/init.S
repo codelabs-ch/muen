@@ -168,12 +168,4 @@ start64: .align 4096
 	bt $APIC_BSP_BIT, %eax
 	jz kernel_init
 	call adainit
-
-kernel_init:
-	call sk_initialize
-
-	cli
-
-freeze:
-	hlt
-	jmp freeze
+	jmp kernel_init

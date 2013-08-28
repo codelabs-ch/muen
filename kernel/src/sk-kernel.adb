@@ -32,10 +32,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Initialize
+   procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type)
    is
       Success, Is_Bsp : Boolean;
-      Regs            : SK.CPU_Registers_Type;
    begin
       Is_Bsp := Apic.Is_BSP;
 
@@ -72,17 +71,14 @@ is
          MP.Wait_For_All;
          VMX.Restore_Guest_Regs
            (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id,
-            Regs       => Regs);
-
-         --  TODO: Refactor
-
-         CPU.Restore_Registers (Regs => Regs);
-         CPU.VMLAUNCH;
-         VMX.VMX_Error;
+            Regs       => Subject_Registers);
       else
          pragma Debug (KC.Put_Line (Item => "System initialisation error"));
          CPU.Stop;
       end if;
+
+      --# accept F, 602, Subject_Registers, Subject_Registers,
+      --#        "Initialize does not return on error.";
    end Initialize;
 
 end SK.Kernel;

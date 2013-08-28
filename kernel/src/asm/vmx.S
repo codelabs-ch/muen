@@ -17,10 +17,13 @@
  */
 
 .global vmx_exit_handler_ptr
+.global kernel_init
 
 .data
 vmx_exit_handler_ptr:
 	.quad vmx_exit_handler
+
+#define CPU_REGS_SIZE 8 * 15
 
 .text
 vmx_exit_handler:
@@ -41,6 +44,8 @@ vmx_exit_handler:
 	push %rax
 	mov %rsp, %rdi
 	call handle_vmx_exit
+
+launch_subject:
 	pop %rax
 	pop %rbx
 	pop %rcx
@@ -62,3 +67,9 @@ vmx_exit_handler:
 
 1:	hlt
 	jmp 1b
+
+kernel_init:
+	sub $CPU_REGS_SIZE, %rsp
+	mov %rsp, %rdi
+	call sk_initialize
+	jmp launch_subject

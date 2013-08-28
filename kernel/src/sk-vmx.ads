@@ -158,4 +158,12 @@ is
    --# derives
    --#    X86_64.State from *, Value;
 
+   --  Report VMX launch/resume error and panic.
+   procedure VMX_Error;
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *;
+   pragma Export (C, VMX_Error, "vmx_error");
+
 end SK.VMX;

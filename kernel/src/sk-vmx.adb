@@ -98,10 +98,6 @@ is
    -------------------------------------------------------------------------
 
    procedure VMX_Error
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *;
    is
       Error   : SK.Word64;
       Success : Boolean;

@@ -46,7 +46,7 @@ is
    --#    in out X86_64.State;
    --# derives
    --#    Interrupts.State from *, X86_64.State &
-   --#    MP.Barrier, IO_Apic.State from
+   --#    MP.Barrier, IO_Apic.State, Subjects.State from
    --#       *,
    --#       X86_64.State,
    --#       Interrupts.State &
@@ -55,10 +55,6 @@ is
    --#       X86_64.State,
    --#       Scheduler.State,
    --#       Interrupts.State &
-   --#    Subjects.State from
-   --#       *,
-   --#       Interrupts.State,
-   --#       X86_64.State &
    --#    X86_64.State from
    --#       *,
    --#       GDT.GDT_Pointer,

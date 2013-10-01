@@ -28,6 +28,7 @@ with SK.CPU_Global;
 with SK.Subjects;
 with SK.Apic;
 with SK.MP;
+with SK.Events;
 
 package body SK.Scheduler
 --# own
@@ -171,15 +172,13 @@ is
    --#    in out Current_Major;
    --#    in out CPU_Global.State;
    --#    in out MP.Barrier;
-   --#    in out Subjects.State;
-   --#    in out Locks.State;
+   --#    in out Events.State;
    --# derives
    --#    MP.Barrier from
    --#       *,
    --#       Current_Major,
    --#       CPU_Global.State &
-   --#    Current_Major, CPU_Global.State, Subjects.State, Locks.State,
-   --#    X86_64.State from
+   --#    Current_Major, CPU_Global.State, Events.State, X86_64.State from
    --#       *,
    --#       Current_Major,
    --#       CPU_Global.State,
@@ -229,8 +228,8 @@ is
       if Skp.Subjects.Get_Profile
         (Subject_Id => Minor_Frame.Subject_Id) = Skp.Subjects.Vm
       then
-         Subjects.Set_Pending_Event (Id     => Minor_Frame.Subject_Id,
-                                     Vector => Timer_Vector);
+         Events.Insert_Event (Subject => Minor_Frame.Subject_Id,
+                              Event   => Timer_Vector);
       end if;
 
       --  Update preemption timer ticks in subject VMCS.
@@ -346,11 +345,11 @@ is
       Subject_State   : in out SK.Subject_State_Type)
    --# global
    --#    in out CPU_Global.State;
-   --#    in out Subjects.State;
-   --#    in out Locks.State;
+   --#    in out Events.State;
    --#    in out X86_64.State;
    --# derives
-   --#    CPU_Global.State, Subjects.State, X86_64.State, Locks.State from
+   --#    Events.State from *, Current_Subject, Subject_State &
+   --#    CPU_Global.State, X86_64.State from
    --#       *,
    --#       Current_Subject,
    --#       Subject_State &
@@ -370,9 +369,8 @@ is
 
          if Event.Dst_Subject /= Skp.Invalid_Subject then
             if Event.Dst_Vector /= Skp.Invalid_Vector then
-               Subjects.Set_Pending_Event
-                 (Id     => Event.Dst_Subject,
-                  Vector => SK.Byte (Event.Dst_Vector));
+               Events.Insert_Event (Subject => Event.Dst_Subject,
+                                    Event   => SK.Byte (Event.Dst_Vector));
 
                if Event.Send_IPI then
                   Dst_CPU := Skp.Subjects.Get_CPU_Id
@@ -417,19 +415,18 @@ is
    --  Handle external interrupt request with given vector.
    procedure Handle_Irq (Vector : SK.Byte)
    --# global
+   --#    in out Events.State;
    --#    in out X86_64.State;
-   --#    in out Subjects.State;
-   --#    in out Locks.State;
    --# derives
-   --#    Subjects.State, Locks.State from *, Vector &
-   --#    X86_64.State                from *;
+   --#    Events.State from *, Vector &
+   --#    X86_64.State from *;
    is
    begin
       if Vector in Skp.Interrupts.Remapped_Vector_Type then
          if Skp.Interrupts.Vector_Routing (Vector) in Skp.Subject_Id_Type then
-            Subjects.Set_Pending_Event
-              (Id     => Skp.Interrupts.Vector_Routing (Vector),
-               Vector => Vector);
+            Events.Insert_Event
+              (Subject => Skp.Interrupts.Vector_Routing (Vector),
+               Event   => Vector);
          end if;
 
          pragma Debug
@@ -463,12 +460,11 @@ is
      (Current_Subject : Skp.Subject_Id_Type;
       Subject_State   : SK.Subject_State_Type)
    --# global
-   --#    in out X86_64.State;
-   --#    in out Subjects.State;
    --#    in out CPU_Global.State;
-   --#    in out Locks.State;
+   --#    in out Events.State;
+   --#    in out X86_64.State;
    --# derives
-   --#    X86_64.State, Subjects.State, CPU_Global.State, Locks.State from
+   --#    CPU_Global.State, Events.State, X86_64.State from
    --#       *,
    --#       Current_Subject,
    --#       Subject_State;
@@ -498,9 +494,8 @@ is
          CPU.Panic;
       else
          if Trap_Entry.Dst_Vector < Skp.Invalid_Vector then
-            Subjects.Set_Pending_Event
-              (Id     => Trap_Entry.Dst_Subject,
-               Vector => SK.Byte (Trap_Entry.Dst_Vector));
+            Events.Insert_Event (Subject => Trap_Entry.Dst_Subject,
+                                 Event   => SK.Byte (Trap_Entry.Dst_Vector));
          end if;
 
          --  Handover to trap handler subject.
@@ -526,17 +521,17 @@ is
    --#    in out Current_Major;
    --#    in out MP.Barrier;
    --#    in out Subjects.State;
-   --#    in out Locks.State;
+   --#    in out Events.State;
    --#    in out X86_64.State;
    --# derives
-   --#    Current_Major, CPU_Global.State, Subjects.State from
+   --#    Current_Major, CPU_Global.State from
    --#       *,
    --#       Current_Major,
    --#       New_Major,
    --#       Subject_Registers,
    --#       CPU_Global.State,
    --#       X86_64.State &
-   --#    Locks.State, X86_64.State, Subject_Registers from
+   --#    Subject_Registers, Events.State from
    --#       *,
    --#       Current_Major,
    --#       New_Major,
@@ -544,7 +539,15 @@ is
    --#       CPU_Global.State,
    --#       Subjects.State,
    --#       X86_64.State &
-   --#    MP.Barrier from
+   --#    X86_64.State from
+   --#       *,
+   --#       Current_Major,
+   --#       New_Major,
+   --#       Subject_Registers,
+   --#       CPU_Global.State,
+   --#       Subjects.State,
+   --#       Events.State &
+   --#    MP.Barrier, Subjects.State from
    --#       *,
    --#       Current_Major,
    --#       Subject_Registers,

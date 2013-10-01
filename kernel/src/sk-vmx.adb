@@ -27,6 +27,7 @@ with SK.GDT;
 with SK.Constants;
 with SK.Subjects;
 with SK.Apic;
+with SK.Events;
 
 package body SK.VMX
 --# own
@@ -401,37 +402,37 @@ is
 
    procedure Inject_Event (Subject_Id : Skp.Subject_Id_Type)
    is
-      State      : SK.Subject_State_Type;
-      Intr_State : SK.Word64;
-      Event      : SK.Byte;
+      State         : SK.Subject_State_Type;
+      Intr_State    : SK.Word64;
+      Event         : SK.Byte;
+      Event_Present : Boolean;
    begin
       State := Subjects.Get_State (Id => Subject_Id);
 
-      if Subjects.Has_Pending_Events (Id => Subject_Id) then
+      --  Check guest interruptibility state (see Intel SDM Vol. 3C, chapter
+      --  24.4.2).
 
-         --  Check guest interruptibility state (see Intel SDM Vol. 3C, chapter
-         --  24.4.2).
+      VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,
+                 Value => Intr_State);
 
-         VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,
-                    Value => Intr_State);
+      if Intr_State = 0
+        and then SK.Bit_Test
+          (Value => State.RFLAGS,
+           Pos   => Constants.RFLAGS_IF_FLAG)
+      then
+         Events.Consume_Event (Subject => Subject_Id,
+                               Found   => Event_Present,
+                               Event   => Event);
 
-         if Intr_State = 0
-           and then SK.Bit_Test
-             (Value => State.RFLAGS,
-              Pos   => Constants.RFLAGS_IF_FLAG)
-         then
-            Subjects.Get_Pending_Event (Id    => Subject_Id,
-                                        Event => Event);
+         if Event_Present then
             VMCS_Write
               (Field => Constants.VM_ENTRY_INTERRUPT_INFO,
                Value => Constants.VM_INTERRUPT_INFO_VALID + SK.Word64 (Event));
-
-            if Subjects.Has_Pending_Events (Id => Subject_Id) then
-               VMCS_Set_Interrupt_Window (Value => True);
-            end if;
-         else
-            VMCS_Set_Interrupt_Window (Value => True);
          end if;
+      end if;
+
+      if Events.Has_Pending_Events (Subject => Subject_Id) then
+         VMCS_Set_Interrupt_Window (Value => True);
       end if;
    end Inject_Event;
 

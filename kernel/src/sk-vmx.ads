@@ -29,7 +29,7 @@ with Skp;
 --#    SK.Constants,
 --#    SK.Subjects,
 --#    SK.Apic,
---#    SK.Locks;
+--#    SK.Events;
 package SK.VMX
 --# own
 --#    State;
@@ -172,14 +172,15 @@ is
    --  Inject pending event into subject identified by ID.
    procedure Inject_Event (Subject_Id : Skp.Subject_Id_Type);
    --# global
-   --#    in out Subjects.State;
-   --#    in out Locks.State;
+   --#    in     Subjects.State;
+   --#    in out Events.State;
    --#    in out X86_64.State;
    --# derives
-   --#    Subjects.State, Locks.State, X86_64.State from
+   --#    Events.State, X86_64.State from
    --#       *,
    --#       Subject_Id,
    --#       Subjects.State,
+   --#       Events.State,
    --#       X86_64.State;
 
 end SK.VMX;

@@ -3,9 +3,6 @@ all: tau0 idle vt sm xv6 crypter
 tau0:
 	$(MAKE) -C $@
 
-dumper:
-	$(MAKE) -C $@
-
 idle:
 	$(MAKE) -C $@
 
@@ -29,4 +26,4 @@ clean:
 	$(MAKE) clean -C xv6
 	$(MAKE) clean -C crypter
 
-.PHONY: crypter dumper idle sm tau0 vt xv6
+.PHONY: crypter idle sm tau0 vt xv6

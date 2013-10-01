@@ -22,7 +22,7 @@ package body Knl_States_Interface
 is
 
    Descriptors : SK.Subject_State_Array (Skp.Subject_Id_Type);
-   for Descriptors'Address use System'To_Address (16#1fe000#);
+   for Descriptors'Address use System'To_Address (16#1e0000#);
 
    -------------------------------------------------------------------------
 

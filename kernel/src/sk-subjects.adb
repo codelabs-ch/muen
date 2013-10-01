@@ -23,12 +23,14 @@ package body SK.Subjects
 --#    State is Descriptors;
 is
 
+   pragma Warnings (Off, "*padded by * bits");
    subtype Descriptor_Array is SK.Subject_State_Array (Skp.Subject_Id_Type);
+   pragma Warnings (On, "*padded by * bits");
 
    --  Descriptors used to manage subject states.
    --# accept Warning, 396, Descriptors, "Not an external variable";
    Descriptors : Descriptor_Array;
-   for Descriptors'Address use System'To_Address (16#001fe000#);
+   for Descriptors'Address use System'To_Address (16#001e0000#);
    --# end accept;
 
    -------------------------------------------------------------------------
@@ -92,7 +94,10 @@ is
    end Set_State;
 
 begin
-   Descriptors := Descriptor_Array'
-     (others => SK.Subject_State_Type'
-        (SK.Null_Subject_State));
+
+   --# hide SK.Subjects;
+
+   for D in Skp.Subject_Id_Type range Descriptor_Array'Range loop
+      Descriptors (D) := SK.Null_Subject_State;
+   end loop;
 end SK.Subjects;

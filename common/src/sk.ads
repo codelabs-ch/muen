@@ -78,12 +78,6 @@ is
 
    Null_Subject_State : constant Subject_State_Type;
 
-   pragma Warnings (Off, "*padded by * bits");
-   type Subject_State_Array is array (Natural range <>) of Subject_State_Type;
-   for Subject_State_Array'Component_Size use Page_Size * 8;
-   for Subject_State_Array'Alignment use Page_Size;
-   pragma Warnings (On, "*padded by * bits");
-
    --  Test if bit at given position is set.
    function Bit_Test
      (Value : Word64;

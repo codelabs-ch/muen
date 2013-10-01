@@ -17,7 +17,7 @@ data structure.
 	linerange={32-51},
 	label=lst:skp-subjects,
 	caption=SPARK subject spec type]
-	{../tools/policy/templates/skp-subjects.adb}
+	{../../tools/policy/templates/skp-subjects.adb}
 
 \subsection{State}
 The system state related to a subject must encompass all resources that it can
@@ -39,14 +39,14 @@ show the record types used by the Kernel to maintain the state of a subject.
 	linerange={58-74},
 	label=lst:sk-subject-state,
 	caption=SPARK subject state type]
-	{../common/src/sk.ads}
+	{../../common/src/sk.ads}
 
 \lstinputlisting[
 	language=ada,
 	linerange={37-53},
 	label=lst:sk-cpu-registers,
 	caption=SPARK CPU registers type]
-	{../common/src/sk.ads}
+	{../../common/src/sk.ads}
 
 A SM\index{SM} subject may access the state of a given subject. This enables
 the SM to alter a subject's state and thus perform emulation. Because a subject
@@ -64,14 +64,14 @@ state variables.
 	linerange={120-136},
 	label=lst:sk-null-subject-state,
 	caption=SPARK null subject state constant]
-	{../common/src/sk.ads}
+	{../../common/src/sk.ads}
 
 \lstinputlisting[
 	language=ada,
 	linerange={103-118},
 	label=lst:sk-null-cpu-registers,
 	caption=SPARK null CPU registers constant]
-	{../common/src/sk.ads}
+	{../../common/src/sk.ads}
 
 The initialization of the subject state is then completed by copying the code
 entry point and the address of the stack from the specification.  These values

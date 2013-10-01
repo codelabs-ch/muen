@@ -41,7 +41,7 @@ SLIDES_SOURCES =      \
 
 UML_TARGETS = $(patsubst %.svg,%.pdf,$(wildcard images/xml_*.svg))
 
-include ../Makeconf
+include ../../Makeconf
 
 all: report.pdf slides.pdf
 

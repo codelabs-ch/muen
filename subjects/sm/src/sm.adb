@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with System;
+
 with SK.CPU;
 with SK.Hypercall;
 
@@ -25,16 +27,14 @@ with Subject.Text_IO;
 
 with Interrupts;
 with Handler;
-with Knl_States_Interface;
 
 procedure Sm
 is
    use type SK.Word64;
 
-   package KSI renames Knl_States_Interface;
-
-   State : SK.Subject_State_Type;
    Id    : Skp.Subject_Id_Type;
+   State : SK.Subject_State_Type;
+   for State'Address use System'To_Address (16#1e0000#);
 begin
    Subject.Text_IO.Init;
    Subject.Text_IO.Put_Line ("SM subject running");
@@ -44,8 +44,7 @@ begin
    SK.CPU.Hlt;
 
    loop
-      Id    := Handler.Current_Subject;
-      State := KSI.Get_Subject_State (Id => Id);
+      Id := Handler.Current_Subject;
 
       if State.Exit_Reason = 30 then
          Subject.Text_IO.Put_String (Item => "Subject ");
@@ -55,8 +54,6 @@ begin
            (Item => SK.Word16 (State.Exit_Qualification / 2 ** 16));
          Subject.Text_IO.New_Line;
          State.RIP := State.RIP + State.Instruction_Len;
-         KSI.Set_Subject_State (Id    => Id,
-                                State => State);
          SK.Hypercall.Trigger_Event (Number => SK.Byte (Id));
       else
          Subject.Text_IO.New_Line;

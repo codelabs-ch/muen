@@ -10,18 +10,20 @@ ASCIIDOC_OPTS = \
 	-a disable-javascript \
 	-o -
 
-all: $(DESTDIR)/asciidoc.css $(DESTDIR)/muen.png $(DESTDIR)/index.html
+SRC_FILES = \
+	$(wildcard *.png) \
+	asciidoc.css \
+	muen.ipxe \
+	set-feature-control-lock-bit.patch
+DST_FILES = $(addprefix $(DESTDIR)/, $(SRC_FILES))
 
-$(DESTDIR)/asciidoc.css: asciidoc.css
-	cp $< $@
+all: $(DESTDIR)/index.html $(DST_FILES)
 
-$(DESTDIR)/muen.png: muen.png
-	cp $< $@
+$(DESTDIR)/%: %
+	@cp $< $(DESTDIR)
 
 $(DESTDIR)/index.html: index page.conf ../../README
 	asciidoc $(ASCIIDOC_OPTS) $< > $@
 
 clean:
-	@rm -rf $(DESTDIR)/*.html
-	@rm -rf $(DESTDIR)/*.css
-	@rm -rf $(DESTDIR)/*.png
+	@rm -rf $(DESTDIR)/index.html $(DST_FILES)

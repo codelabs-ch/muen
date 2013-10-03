@@ -1,6 +1,194 @@
 Muen - Separation Kernel
 ========================
 
+Muen is a Separation Kernel (SK) for the Intel x86/64 architecture. It can be
+used to build high assurance systems. Muen is Japanese and translates to
+'unrelated/without relation'. The name was chosen since it is a fitting
+allegory of the components isolated by the separation kernel. The Muen SK is
+written in the SPARK programming language.
+
+An SK is a specialized microkernel that provides an execution environment for
+multiple components that can only communicate according to a given policy and
+are otherwise isolated from each other. SKs are generally more static and
+smaller than dynamic microkernels, which minimizes the possibility of kernel
+failure and should ease the application of formal verification techniques.
+
+image:arch.png[Example Architecture]
+
+Muen uses Intel's hardware-assisted virtualization technology VT-x as core
+mechanism to separate components. The kernel executes in VMX root mode, while
+user components, so called 'subjects', run in VMX non-root mode.
+
+NOTE: Muen is currently a prototype implementation. We do not yet consider it
+      to be fit for production use.
+
+Features
+--------
+- Minimal SK for the Intel x86/64 architecture written in SPARK
+- Full availability of source code and documentation
+- Proof of absence of runtime errors
+- Multicore support
+- EPT and memory typing (PAT)
+- Fixed cyclic scheduling using Intel VMX preemption timer
+- Static assignment of resources according to system policy
+- Event mechanism
+- Minimal Zero-Footprint Run-Time (RTS)
+- Support for 64-bit native and 32-bit VM subjects
+
+
+Documentation
+-------------
+The following detailed project documentation is available:
+
+* Muen project report:
+  http://muen.sk/muen-report.pdf
+
+* A presentation about the Muen SK:
+  http://muen.sk/muen-slides.pdf
+
+
+Download
+--------
+The Muen sources are available through its git repository:
+
+  $ git clone http://git.codelabs.ch/git/muen.git
+
+A browsable version of the repository is available here:
+http://git.codelabs.ch/?p=muen.git
+
+
+Development environment
+-----------------------
+The Muen SK has been developed and successfully tested using the development
+environment listed in the following table.
+
+[width="65%"]
+|===================================================================
+| Operating system     | Debian GNU/Linux 7 (wheezy), x86_64
+| Ada compiler         | GNAT GPL 2013 (20130314)
+| GCC version          | 4.7.4 20130416 for GNAT GPL 2013 (20130314)
+| SPARK version        | GPL 2012
+| Emulator             | Bochs from svn (>= r11708, patched)
+| Hardware             | Lenovo T430s with Intel Core i7 3520M
+| Intel AMT SoL client | amtterm (>= commit 0ece513...)
+|===================================================================
+
+Install the packages needed to build Muen:
+
+  $ sudo apt-get install binutils-dev git-core libc6-dev-i386 zlib1g-dev
+
+The GNAT GPL compiler and SPARK binaries must be present in the `PATH`:
+
+  $ export PATH=/opt/gnat/bin:/opt/spark/bin:$PATH
+
+Because the linker of GNAT GPL 2013 is not multiarch [1] aware, export the C
+run-time `LIBRARY_PATH`:
+
+  $ export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
+
+
+Build
+-----
+To build the Muen tools, RTS, kernel and example subjects on Debian wheezy
+issue the following commands:
+
+  $ git clone http://git.codelabs.ch/git/muen.git
+  $ cd muen
+  $ git submodule init
+  $ git submodule update
+  $ export SPARK_DIR=/opt/spark
+  $ make
+
+This will create an image containing the example system which can be booted by
+any Multiboot [2] compliant bootloader.
+
+
+Deployment
+----------
+The build system provides two targets to instantly deploy and test the created
+system image.
+
+Emulation
+~~~~~~~~~
+To ease kernel development, the Muen project makes use of emulation by employing
+the Bochs IA-32 emulator [3]. Among many other features, Bochs has support for
+multiple processors, APIC emulation and VMX extensions.
+
+Currently, Bochs must be patched to work with Muen. Issue the following commands
+to checkout, patch and install Bochs with '/usr/local' prefix:
+
+  $ svn checkout svn://svn.code.sf.net/p/bochs/code/trunk bochs-code
+  $ cd bochs-code/bochs
+  $ wget http://muen.sk/set-feature-control-lock-bit.patch
+  $ patch -p0 < set-feature-control-lock-bit.patch
+  $ ./configure           \
+      --prefix=/usr/local \
+      --enable-vmx=2      \
+      --enable-smp        \
+      --enable-cdrom      \
+      --enable-x86-64     \
+      --enable-avx        \
+      --with-sdl
+  $ make
+  $ sudo make install
+
+Issue the following command in the Muen project directory to start emulation:
+
+  $ make emulate
+
+The Bochs emulator output is located at `emulate/bochsout.txt`, the Muen kernel
+serial console output is written to `emulate/serial.out`.
+
+Hardware
+~~~~~~~~
+For efficient deployment of the Muen system image to real hardware, the iPXE [4]
+boot firmware installed on an USB-stick is used. To build and install iPXE with
+the Muen specific boot script issue the following commands:
+
+  $ git clone git://git.ipxe.org/ipxe.git
+  $ wget http://muen.sk/muen.ipxe
+  $ cd ipxe/src
+  $ make bin/ipxe.usb EMBED=../../muen.ipxe
+  $ sudo dd if=bin/ipxe.usb of=/dev/sdX
+
+The `/dev/sdX` device is the USB-stick. *All existing data will be erased*.
+
+When booting from the created stick the first NIC (net0) is configured as follows:
+
+  IP Address : 192.168.254.2
+  Netmask    : 255.255.255.0
+  Gateway    : 192.168.254.1
+
+After initialization of the network adapter iPXE tries to download and boot the
+kernel from the following URL:
+
+  http://192.168.254.1:8000/kernel
+
+The development machine must be connected to the target hardware via an
+interface with IP address 192.168.254.1. To actually serve the created system
+image to the bootloader, issue the following command in the top-level Muen
+directory:
+
+  $ export AMT_PASSWORD=<your AMT password>
+  $ make deploy
+
+To view the output of the Muen kernel debug console use the command:
+
+  $ amtterm 192.168.254.2
+
+Please refer to the amtterm [5] documentation on how to configure AMT on the
+target hardware.
+
+
+References
+----------
+- [1] Debian multiarch support, https://wiki.debian.org/Multiarch/
+- [2] Multiboot Specification, http://www.gnu.org/software/grub/manual/multiboot/
+- [3] Bochs IA-32 Emulator, http://bochs.sourceforge.net/
+- [4] iPXE boot firmware, http://ipxe.org/
+- [5] Intel AMT SoL client + tools, http://www.kraxel.org/cgit/amtterm/
+
+
 Licence
 -------
 --------------------------------------------------------------------------------

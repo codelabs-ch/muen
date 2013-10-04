@@ -77,7 +77,8 @@ Install the packages needed to build Muen:
 
   $ sudo apt-get install binutils-dev git-core libc6-dev-i386 zlib1g-dev
 
-The GNAT GPL compiler and SPARK binaries must be present in the `PATH`:
+The GNAT GPL compiler and SPARK binaries must be present in the `PATH`. It is
+assumed that they are installed below `/opt`:
 
   $ export PATH=/opt/gnat/bin:/opt/spark/bin:$PATH
 
@@ -90,8 +91,7 @@ run-time `LIBRARY_PATH`:
 Build
 -----
 To build the Muen tools, RTS, kernel and example subjects on Debian wheezy
-issue the following commands (assuming the SPARK distribution is installed
-at `/opt/spark`):
+issue the following commands:
 
   $ git clone http://git.codelabs.ch/git/muen.git
   $ cd muen

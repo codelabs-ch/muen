@@ -28,7 +28,7 @@ Features
 - Full availability of source code and documentation
 - Proof of absence of runtime errors
 - Multicore support
-- EPT and memory typing (PAT)
+- Nested paging (EPT) and memory typing (PAT)
 - Fixed cyclic scheduling using Intel VMX preemption timer
 - Static assignment of resources according to system policy
 - Event mechanism
@@ -90,7 +90,8 @@ run-time `LIBRARY_PATH`:
 Build
 -----
 To build the Muen tools, RTS, kernel and example subjects on Debian wheezy
-issue the following commands:
+issue the following commands (assuming the SPARK distribution is installed
+at `/opt/spark`):
 
   $ git clone http://git.codelabs.ch/git/muen.git
   $ cd muen
@@ -115,7 +116,7 @@ the Bochs IA-32 emulator [3]. Among many other features, Bochs has support for
 multiple processors, APIC emulation and VMX extensions.
 
 Currently, Bochs must be patched to work with Muen. Issue the following commands
-to checkout, patch and install Bochs with '/usr/local' prefix:
+to checkout, patch and install Bochs with `/usr/local` prefix:
 
   $ svn checkout svn://svn.code.sf.net/p/bochs/code/trunk bochs-code
   $ cd bochs-code/bochs

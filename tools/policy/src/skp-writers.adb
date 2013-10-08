@@ -295,6 +295,7 @@ is
          use type Paging.PDPT_Entry_Type;
          use type Paging.PD_Entry_Type;
          use type Paging.PT_Entry_Type;
+         use type Paging.Table_Range;
 
          R : constant Memory_Region_Type := Memregion_Package.Element
            (Position => C);
@@ -361,10 +362,11 @@ is
          for Idx in Paging.Table_Range range PDPT_Idx_Start .. PDPT_Idx_End
          loop
             if Is_PDPT_Page then
-               PD_Addr := R.Physical_Address + SK.Word64 (Idx)
-                 * PDPT_Page_Size;
+               PD_Addr := R.Physical_Address
+                 + SK.Word64 (Idx - PDPT_Idx_Start) * PDPT_Page_Size;
             else
-               PD_Addr := PD_Addr            + SK.Word64 (Idx) * SK.Page_Size;
+               PD_Addr := PD_Addr
+                 + SK.Word64 (Idx - PDPT_Idx_Start) * SK.Page_Size;
             end if;
 
             if PDPT (Idx) = Paging.PDPT_Null_Entry then
@@ -397,9 +399,11 @@ is
 
          for Idx in Paging.Table_Range range PD_Idx_Start .. PD_Idx_End loop
             if Is_PD_Page then
-               PT_Addr := R.Physical_Address + SK.Word64 (Idx) * PD_Page_Size;
+               PT_Addr := R.Physical_Address
+                 + SK.Word64 (Idx - PD_Idx_Start) * PD_Page_Size;
             else
-               PT_Addr := PT_Addr            + SK.Word64 (Idx) * SK.Page_Size;
+               PT_Addr := PT_Addr
+                 + SK.Word64 (Idx - PD_Idx_Start) * SK.Page_Size;
             end if;
 
             if PD (Idx) = Paging.PD_Null_Entry then

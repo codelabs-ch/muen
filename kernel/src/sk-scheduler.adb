@@ -29,6 +29,7 @@ with SK.Subjects;
 with SK.Apic;
 with SK.MP;
 with SK.Events;
+with SK.Dump;
 
 package body SK.Scheduler
 --# own
@@ -490,7 +491,18 @@ is
          pragma Debug (KC.Put_String (Item => ":"));
          pragma Debug (KC.Put_Word32 (Item => Word32
                                       (Subject_State.Interrupt_Info)));
+         pragma Debug (KC.Put_String (Item => " ==> "));
          pragma Debug (KC.New_Line);
+         pragma Debug (Dump.Print_Registers (GPR => Subject_State.Regs,
+                                             RIP => Subject_State.RIP,
+                                             CS  => Subject_State.CS,
+                                             RFL => Subject_State.RFLAGS,
+                                             RSP => Subject_State.RSP,
+                                             SS  => Subject_State.SS,
+                                             CR0 => Subject_State.CR0,
+                                             CR2 => Subject_State.CR2,
+                                             CR3 => Subject_State.CR3,
+                                             CR4 => Subject_State.CR4));
          CPU.Panic;
       else
          if Trap_Entry.Dst_Vector < Skp.Invalid_Vector then

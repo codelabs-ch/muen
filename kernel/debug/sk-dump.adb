@@ -26,7 +26,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Dump_Registers
+   procedure Print_Registers
      (GPR : CPU_Registers_Type;
       RIP : Word64; CS  : Word64; RFL : Word64; RSP : Word64; SS  : Word64;
       CR0 : Word64; CR2 : Word64; CR3 : Word64; CR4 : Word64)
@@ -96,8 +96,7 @@ is
       KC.Put_String (" EFL: ");
       KC.Put_Word32 (Item => Word32 (RFL));
       KC.New_Line;
-   end Dump_Registers;
-   pragma Inline_Always (Dump_Registers);
+   end Print_Registers;
 
    -------------------------------------------------------------------------
 
@@ -117,16 +116,16 @@ is
       KC.New_Line;
       KC.New_Line;
 
-      Dump_Registers (GPR => Context.GPR,
-                      RIP => Context.RIP,
-                      CS  => Context.CS,
-                      RFL => Context.RFLAGS,
-                      RSP => Context.RSP,
-                      SS  => Context.SS,
-                      CR0 => CPU.Get_CR0,
-                      CR2 => CPU.Get_CR2,
-                      CR3 => CPU.Get_CR3,
-                      CR4 => CPU.Get_CR4);
+      Print_Registers (GPR => Context.GPR,
+                       RIP => Context.RIP,
+                       CS  => Context.CS,
+                       RFL => Context.RFLAGS,
+                       RSP => Context.RSP,
+                       SS  => Context.SS,
+                       CR0 => CPU.Get_CR0,
+                       CR2 => CPU.Get_CR2,
+                       CR3 => CPU.Get_CR3,
+                       CR4 => CPU.Get_CR4);
       Locks.Unlock;
 
       CPU.Stop;

@@ -121,7 +121,7 @@
 				<!-- xv6 -> crypter response page       -->
 				<memory_region physical_address="29e000" virtual_address="80000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
 				<!-- driver page shared with vt subject -->
-				<memory_region physical_address="3d8000" virtual_address="90000" size="1M" alignment="4k" writable="true" executable="true" memory_type="WB"/>
+				<memory_region physical_address="3d8000" virtual_address="90000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
 			</memory_layout>
 			<binary name="xv6" physical_address="2d7000"/>
 			<device name="cursor"/>

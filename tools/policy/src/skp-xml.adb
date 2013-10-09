@@ -153,8 +153,7 @@ is
            (DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "executable"));
-
-         R.Memory_Type      := Memory_Type_Type'Value
+         R.Memory_Type := Memory_Type_Type'Value
            (DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "memory_type"));

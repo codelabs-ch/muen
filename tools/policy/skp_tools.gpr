@@ -17,6 +17,7 @@
 --
 
 with "xmlada";
+with "thin/binding";
 
 with "../../config/defaults";
 

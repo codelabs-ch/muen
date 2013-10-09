@@ -29,6 +29,7 @@ with Skp.IO_Ports;
 with Skp.MSRs;
 with Skp.Templates;
 with Skp.Constants;
+with Skp.Writers.Zero_Page;
 
 package body Skp.Writers
 is
@@ -1006,6 +1007,8 @@ is
 
       procedure Write_Subject (C : Subjects_Package.Cursor)
       is
+         use type SK.Word64;
+
          S : constant Subject_Type := Subjects_Package.Element (Position => C);
 
          PT_File  : constant String := Dir_Name & "/" & To_String (S.Name)
@@ -1024,6 +1027,17 @@ is
                 Filename => IO_File);
          Write (MSR_List => S.MSRs,
                 Filename => MSR_File);
+
+         --  Write zero page
+
+         if S.Profile = Vm and then S.ZP_Bitmap_Address > 0 then
+            declare
+               ZP_File : constant String
+                 := Dir_Name & "/" & To_String (S.Name) & "_zp";
+            begin
+               Zero_Page.Write (Filename => ZP_File);
+            end;
+         end if;
       end Write_Subject;
 
       ----------------------------------------------------------------------

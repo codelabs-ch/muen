@@ -228,6 +228,7 @@ is
       Pml4_Address       : SK.Word64;
       IO_Bitmap_Address  : SK.Word64;
       MSR_Bitmap_Address : SK.Word64;
+      ZP_Bitmap_Address  : SK.Word64;
       Init_State         : Initial_State_Type;
       Memory_Layout      : Memory_Layout_Type;
       Binary             : Binary_Ref_Type;

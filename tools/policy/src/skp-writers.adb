@@ -16,7 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Streams.Stream_IO;
 with Ada.Directories;
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
@@ -69,12 +68,6 @@ is
      (Dir_Name  : String;
       CPU_Count : Positive;
       Kernel    : Kernel_Type);
-
-   --  Open file given by filename. Raises IO_Error if the file could not be
-   --  opened.
-   procedure Open
-     (Filename :     String;
-      File     : out Ada.Streams.Stream_IO.File_Type);
 
    --  Returns ID of CPU which executes the given subject in specified major
    --  frames.

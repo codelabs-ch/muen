@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Streams.Stream_IO;
+
 package Skp.Writers
 is
 
@@ -53,5 +55,13 @@ is
    procedure Write_Interrupts
      (Dir_Name : String;
       Policy   : Policy_Type);
+
+private
+
+   --  Open file given by filename. Raises IO_Error if the file could not be
+   --  opened.
+   procedure Open
+     (Filename :     String;
+      File     : out Ada.Streams.Stream_IO.File_Type);
 
 end Skp.Writers;

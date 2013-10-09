@@ -58,11 +58,20 @@
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="msr_bitmap_address" type="address_type"          use="required">
+		<xs:attribute name="msr_bitmap_address" type="address_type" use="required">
 			<xs:annotation>
 				<xs:documentation>
 					Physical memory address of the subject's MSR bitmap, see Intel SDM, volume 3C,
 					section 24.6.9.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="zero_page_address" type="address_type" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					Host physical memory address of the bootparams page used by
+					Linux (also called 'zero page'), see the file
+					Documentation/x86/boot.txt in the Linux source tree.
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>

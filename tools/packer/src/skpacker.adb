@@ -121,6 +121,18 @@ begin
          Ada.Text_IO.Put_Line
            (SK.Utils.To_Hex (Item => Get_MSR_Bitmap_Address (Subject_Id => S))
             & " [MSBM] " & Name);
+
+         if Zero_Pages (S) /= 0 then
+            Ada.Text_IO.Put_Line
+              (SK.Utils.To_Hex (Item => Zero_Pages (S))
+               & " [ZERP] " & Name);
+            Image.Add_Section
+              (Image    => Knl_Elf,
+               Filename => Policy_Dir & "/" & Name & "_zp",
+               Name     => Name & "_zp",
+               Address  => Zero_Pages (S));
+         end if;
+
          Ada.Text_IO.Put_Line
            (SK.Utils.To_Hex (Item => Binary_Specs (S).Physical_Address)
             & " [BIN ] " & Name);

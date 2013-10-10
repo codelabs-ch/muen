@@ -35,8 +35,8 @@ is
    --  Write system policy files.
    procedure Write_System;
 
-   --  Write binary spec files.
-   procedure Write_Binaries;
+   --  Write packer config file.
+   procedure Write_Packer_Config;
 
    --  Write hardware spec file.
    procedure Write_Hardware;

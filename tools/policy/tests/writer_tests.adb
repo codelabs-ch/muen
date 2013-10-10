@@ -45,8 +45,8 @@ is
         (Routine => Write_System'Access,
          Name    => "Write system policy files");
       T.Add_Test_Routine
-        (Routine => Write_Binaries'Access,
-         Name    => "Write binary information files");
+        (Routine => Write_Packer_Config'Access,
+         Name    => "Write packer configuration");
       T.Add_Test_Routine
         (Routine => Write_Hardware'Access,
          Name    => "Write hardware policy files");
@@ -57,30 +57,6 @@ is
         (Routine => Write_Interrupts'Access,
          Name    => "Write interrupt policy files");
    end Initialize;
-
-   -------------------------------------------------------------------------
-
-   procedure Write_Binaries
-   is
-      Bin_Spec : constant String := "obj/skp-binaries.ads";
-      Data     : Xml.XML_Data_Type;
-      Policy   : Policy_Type;
-   begin
-      Xml.Parse (Data   => Data,
-                 File   => "data/test_policy1.xml",
-                 Schema => "schema/system.xsd");
-
-      Policy := Xml.To_Policy (Data => Data);
-      Writers.Write_Binaries (Dir_Name => "obj",
-                              Policy   => Policy);
-
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => Bin_Spec,
-               Filename2 => "data/skp-binaries.ref"),
-              Message   => "Binary spec mismatch");
-
-      Ada.Directories.Delete_File (Name => Bin_Spec);
-   end Write_Binaries;
 
    -------------------------------------------------------------------------
 
@@ -171,6 +147,30 @@ is
       Ada.Directories.Delete_File (Name => Knl_H);
       Ada.Directories.Delete_File (Name => Knl_Spec);
    end Write_Kernel;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_Packer_Config
+   is
+      Bin_Spec : constant String := "obj/skp-packer_config.ads";
+      Data     : Xml.XML_Data_Type;
+      Policy   : Policy_Type;
+   begin
+      Xml.Parse (Data   => Data,
+                 File   => "data/test_policy1.xml",
+                 Schema => "schema/system.xsd");
+
+      Policy := Xml.To_Policy (Data => Data);
+      Writers.Write_Packer_Config (Dir_Name => "obj",
+                                   Policy   => Policy);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Bin_Spec,
+               Filename2 => "data/skp-packer_config.ref"),
+              Message   => "Packer config mismatch");
+
+      Ada.Directories.Delete_File (Name => Bin_Spec);
+   end Write_Packer_Config;
 
    -------------------------------------------------------------------------
 

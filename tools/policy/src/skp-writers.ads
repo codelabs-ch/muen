@@ -31,8 +31,8 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type);
 
-   --  Write binary information files to directory specified by name.
-   procedure Write_Binaries
+   --  Write packer configuration to directory specified by name.
+   procedure Write_Packer_Config
      (Dir_Name : String;
       Policy   : Policy_Type);
 

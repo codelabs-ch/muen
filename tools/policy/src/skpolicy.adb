@@ -69,8 +69,8 @@ begin
                                  Policy   => Policy);
    Skp.Writers.Write_Interrupts (Dir_Name => Inc_Dir,
                                  Policy   => Policy);
-   Skp.Writers.Write_Binaries (Dir_Name => Pac_Dir,
-                               Policy   => Policy);
+   Skp.Writers.Write_Packer_Config (Dir_Name => Pac_Dir,
+                                    Policy   => Policy);
 
    Ada.Text_IO.Put_Line (Item => "Policy compilation successful");
    Ada.Text_IO.Put_Line (Item => "  * Include directory: " & Inc_Dir);

@@ -25,8 +25,8 @@ with Ada.Strings.Fixed;
 with SK.Utils;
 
 with Skp.Kernel;
-with Skp.Binaries;
 with Skp.Subjects;
+with Skp.Packer_Config;
 
 with Pack.Image;
 
@@ -36,7 +36,7 @@ is
    use Pack;
    use Skp;
    use Skp.Subjects;
-   use Skp.Binaries;
+   use Skp.Packer_Config;
 
    --  Print packer usage.
    procedure Print_Usage;

@@ -19,11 +19,11 @@
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with SK;
 
---  Generated binary definitions may be longer than 79 characters.
---  Switch off this check.
+--  Generated definitions may be longer than 79 characters. Switch off this
+--  check.
 pragma Style_Checks ("-m");
 
-package Skp.Binaries is
+package Skp.Packer_Config is
 
    type Binary_Spec_Type is record
       Name             : Unbounded_String;
@@ -34,14 +34,6 @@ package Skp.Binaries is
    type Binary_Spec_Array is array (Subject_Id_Type) of Binary_Spec_Type;
 
    Binary_Specs : constant Binary_Spec_Array := (
-     (Name             => To_Unbounded_String ("tau0"),
-      Path             => To_Unbounded_String ("subjects/tau0/obj/tau0"),
-      Physical_Address => 16#0000000000216000#),
-     (Name             => To_Unbounded_String ("subject1"),
-      Path             => To_Unbounded_String ("subjects/test/obj/subject1"),
-      Physical_Address => 16#0000000000226000#),
-     (Name             => To_Unbounded_String ("subject2"),
-      Path             => To_Unbounded_String ("subjects/test/obj/subject2"),
-      Physical_Address => 16#0000000000236000#));
+__binaries__);
 
-end Skp.Binaries;
+end Skp.Packer_Config;

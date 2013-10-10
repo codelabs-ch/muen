@@ -535,54 +535,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Write_Binaries
-     (Dir_Name : String;
-      Policy   : Policy_Type)
-   is
-      S_Count : constant Positive := Positive (Policy.Subjects.Length);
-      Current : Natural           := 0;
-      Buffer  : Unbounded_String;
-      Tmpl    : Templates.Template_Type;
-
-      --  Write binary spec.
-      procedure Write_Binary_Spec (C : Subjects_Package.Cursor);
-
-      ----------------------------------------------------------------------
-
-      procedure Write_Binary_Spec (C : Subjects_Package.Cursor)
-      is
-         S : constant Subject_Type
-           := Subjects_Package.Element (Position => C);
-      begin
-         Buffer := Buffer & Indent
-           & "  (Name             => To_Unbounded_String ("""
-           & S.Name & """),"
-           & ASCII.LF
-           & Indent & "   Path             => To_Unbounded_String ("""
-           & Policy.Binaries.Element (Key => S.Binary.Name) & """),"
-           & ASCII.LF
-           & Indent & "   Physical_Address => 16#"
-           & SK.Utils.To_Hex (Item => S.Binary.Physical_Address) & "#)";
-
-         Current := Current + 1;
-         if Current /= S_Count then
-            Buffer := Buffer & "," & ASCII.LF;
-         end if;
-      end Write_Binary_Spec;
-   begin
-      Tmpl := Templates.Load (Filename => "skp-binaries.ads");
-
-      Policy.Subjects.Iterate (Process => Write_Binary_Spec'Access);
-
-      Templates.Replace (Template => Tmpl,
-                         Pattern  => "__binaries__",
-                         Content  => To_String (Buffer));
-      Templates.Write (Template => Tmpl,
-                       Filename => Dir_Name & "/skp-binaries.ads");
-   end Write_Binaries;
-
-   -------------------------------------------------------------------------
-
    procedure Write_Hardware
      (Dir_Name : String;
       Policy   : Policy_Type)
@@ -850,6 +802,54 @@ is
          end;
       end loop;
    end Write_Kernel_Pagetables;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_Packer_Config
+     (Dir_Name : String;
+      Policy   : Policy_Type)
+   is
+      S_Count : constant Positive := Positive (Policy.Subjects.Length);
+      Current : Natural           := 0;
+      Buffer  : Unbounded_String;
+      Tmpl    : Templates.Template_Type;
+
+      --  Write binary spec.
+      procedure Write_Binary_Spec (C : Subjects_Package.Cursor);
+
+      ----------------------------------------------------------------------
+
+      procedure Write_Binary_Spec (C : Subjects_Package.Cursor)
+      is
+         S : constant Subject_Type
+           := Subjects_Package.Element (Position => C);
+      begin
+         Buffer := Buffer & Indent
+           & "  (Name             => To_Unbounded_String ("""
+           & S.Name & """),"
+           & ASCII.LF
+           & Indent & "   Path             => To_Unbounded_String ("""
+           & Policy.Binaries.Element (Key => S.Binary.Name) & """),"
+           & ASCII.LF
+           & Indent & "   Physical_Address => 16#"
+           & SK.Utils.To_Hex (Item => S.Binary.Physical_Address) & "#)";
+
+         Current := Current + 1;
+         if Current /= S_Count then
+            Buffer := Buffer & "," & ASCII.LF;
+         end if;
+      end Write_Binary_Spec;
+   begin
+      Tmpl := Templates.Load (Filename => "skp-packer_config.ads");
+
+      Policy.Subjects.Iterate (Process => Write_Binary_Spec'Access);
+
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__binaries__",
+                         Content  => To_String (Buffer));
+      Templates.Write (Template => Tmpl,
+                       Filename => Dir_Name & "/skp-packer_config.ads");
+   end Write_Packer_Config;
 
    -------------------------------------------------------------------------
 

@@ -91,12 +91,20 @@ begin
             SK.Hypercall.Trigger_Event (Number => SK.Byte (Id));
          end if;
 
+      elsif State.Exit_Reason = 14 or else State.Exit_Reason = 29 then
+
+         --  Ignore INVLPG and MOV DR for now.
+
+         State.RIP := State.RIP + State.Instruction_Len;
+         SK.Hypercall.Trigger_Event (Number => SK.Byte (Id));
+
       elsif State.Exit_Reason = 30 then
          Subject.Text_IO.Put_String (Item => "I/O instruction on port ");
          Subject.Text_IO.Put_Word16
            (Item => SK.Word16 (State.Exit_Qualification / 2 ** 16));
          Subject.Text_IO.New_Line;
          Dump_And_Halt := True;
+
       else
          Subject.Text_IO.Put_String (Item => "Unhandled trap for subject ");
          Subject.Text_IO.Put_Byte   (Item => SK.Byte (Id));

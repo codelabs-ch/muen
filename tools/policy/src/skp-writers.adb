@@ -152,7 +152,7 @@ is
             or Constants.VM_CTRL_EXIT_SAVE_TIMER,
             Entry_Ctrls  => Constants.VM_CTRL_ENTR_LOAD_EFER,
             CR0_Value    => 16#0000_0035#,
-            CR0_Mask     => 16#7ffe_ffff#,
+            CR0_Mask     => 16#7ffa_ffcc#,
             CR4_Value    => 16#0000_2000#,
             CR4_Mask     => 16#ffff_ffef#,
             CS_Access    => 16#0000_c09b#,

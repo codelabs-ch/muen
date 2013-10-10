@@ -25,6 +25,8 @@ pragma Style_Checks ("-m");
 
 package Skp.Packer_Config is
 
+   type Zero_Pages_Array is array (Subject_Id_Type) of SK.Word64;
+
    type Binary_Spec_Type is record
       Name             : Unbounded_String;
       Path             : Unbounded_String;
@@ -35,5 +37,8 @@ package Skp.Packer_Config is
 
    Binary_Specs : constant Binary_Spec_Array := (
 __binaries__);
+
+   Zero_Pages : constant Zero_Pages_Array := (
+__zero_pages__);
 
 end Skp.Packer_Config;

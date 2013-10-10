@@ -817,6 +817,9 @@ is
       --  Write binary spec.
       procedure Write_Binary_Spec (C : Subjects_Package.Cursor);
 
+      --  Write zero page array.
+      procedure Write_Zero_Pages (C : Subjects_Package.Cursor);
+
       ----------------------------------------------------------------------
 
       procedure Write_Binary_Spec (C : Subjects_Package.Cursor)
@@ -839,14 +842,39 @@ is
             Buffer := Buffer & "," & ASCII.LF;
          end if;
       end Write_Binary_Spec;
+
+      ----------------------------------------------------------------------
+
+      procedure Write_Zero_Pages (C : Subjects_Package.Cursor)
+      is
+         S : constant Subject_Type
+           := Subjects_Package.Element (Position => C);
+      begin
+         Buffer := Buffer & Indent (N => 2)
+           & "16#" & SK.Utils.To_Hex (Item => S.ZP_Bitmap_Address) & "#";
+
+         Current := Current + 1;
+         if Current /= S_Count then
+            Buffer := Buffer & "," & ASCII.LF;
+         end if;
+      end Write_Zero_Pages;
+
    begin
       Tmpl := Templates.Load (Filename => "skp-packer_config.ads");
 
       Policy.Subjects.Iterate (Process => Write_Binary_Spec'Access);
-
       Templates.Replace (Template => Tmpl,
                          Pattern  => "__binaries__",
                          Content  => To_String (Buffer));
+
+      Current := 0;
+      Buffer  := Null_Unbounded_String;
+
+      Policy.Subjects.Iterate (Process => Write_Zero_Pages'Access);
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__zero_pages__",
+                         Content  => To_String (Buffer));
+
       Templates.Write (Template => Tmpl,
                        Filename => Dir_Name & "/skp-packer_config.ads");
    end Write_Packer_Config;

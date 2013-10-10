@@ -3,7 +3,7 @@
 	url = https://github.com/codelabs-ch/xv6-muen.git
 [submodule "contrib/libsparkcrypto"]
 	path = contrib/libsparkcrypto
-	url = http://git.codelabs.ch/git/spark-crypto.git
+	url = ../spark-crypto.git
 [submodule "subjects/linux/src"]
 	path = subjects/linux/src
 	url = https://github.com/codelabs-ch/linux.git

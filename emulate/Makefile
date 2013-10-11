@@ -6,7 +6,7 @@ bootable.iso: ../pack/obj/kernel grub.cfg Makefile
 		boot/kernel.bin=../pack/obj/kernel
 
 .emulate: stop bootable.iso
-	@bochs -q >/dev/null 2>&1 & echo "$$!" > $@
+	@echo cont | bochs -q >/dev/null 2>&1 & echo "$$!" > $@
 
 stop:
 	@kill `cat .emulate 2>/dev/null` 2>/dev/null || true

@@ -19,17 +19,6 @@
 package body Skp.Paging
 is
 
-   Present_Flag   : constant := 0;
-   RW_Flag        : constant := 1;
-   US_Flag        : constant := 2;
-   PWT_Flag       : constant := 3;
-   PCD_Flag       : constant := 4;
-   Page_Size_Flag : constant := 7;
-   PTE_PAT_Flag   : constant := 7;
-   Global_Flag    : constant := 8;
-   PD_PAT_Flag    : constant := 12;
-   NXE_Flag       : constant := 63;
-
    type PAT_Entry is record
       PAT : Boolean;
       PCD : Boolean;

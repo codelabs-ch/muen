@@ -24,6 +24,18 @@ is
    --  Implementation of IA-32e paging structures, as specified by Intel SDM
    --  Vol. 3A, section 4.5.
 
+   --  Table entry flags.
+   Present_Flag   : constant := 0;
+   RW_Flag        : constant := 1;
+   US_Flag        : constant := 2;
+   PWT_Flag       : constant := 3;
+   PCD_Flag       : constant := 4;
+   Page_Size_Flag : constant := 7;
+   PTE_PAT_Flag   : constant := 7;
+   Global_Flag    : constant := 8;
+   PD_PAT_Flag    : constant := 12;
+   NXE_Flag       : constant := 63;
+
    --  All paging structure types (PML4, PDPT, PD, PT) have 512 entries.
    type Table_Range is range 0 .. 511;
 

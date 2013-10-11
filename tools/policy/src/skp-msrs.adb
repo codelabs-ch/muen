@@ -44,6 +44,7 @@ is
                         Start_Addr => Start_Addr,
                         End_Addr   => End_Addr,
                         Mode       => MSR_Write);
+            return;
          when MSR_Write =>
             Offset := 2048 * 8;
          when MSR_Read =>

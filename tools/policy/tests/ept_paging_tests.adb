@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Text_IO;
-
 with SK;
 
 with Skp.Paging.EPT;
@@ -108,7 +106,6 @@ is
                                 Map_Page    => True,
                                 Ignore_PAT  => True,
                                 Memory_Type => WB);
-      Ada.Text_IO.Put_Line (E'Img);
 
       Assert (Condition => E = Ref_E,
               Message   => "PT entry mismatch");

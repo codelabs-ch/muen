@@ -27,6 +27,7 @@ is
 
    --  Memory size in bytes.
    Memory_Size : constant := 256 * 1024 * 1024;
+   Memory_Size_High : constant := Memory_Size - 16#100000#;
 
    --  arch/x86/include/uapi/asm/e820.h.
    E820_RAM : constant := 1;
@@ -51,9 +52,12 @@ is
                 C => 0,
                 N => bootparam_h.boot_params'Object_Size / 8);
 
-      Params.e820_entries := 1;
+      Params.e820_entries := 2;
       Params.e820_map (0) := (addr   => 0,
-                              size   => Memory_Size,
+                              size   => 16#0a0000#,
+                              c_type => E820_RAM);
+      Params.e820_map (1) := (addr   => 16#100000#,
+                              size   => Memory_Size_High,
                               c_type => E820_RAM);
 
       Open (Filename => Filename,

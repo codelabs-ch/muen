@@ -23,7 +23,7 @@ project Skp_Tools is
 
    for Source_Dirs use ("src", "../../common/debug", "../../common/src");
    for Object_Dir use "obj/";
-   for Main use ("skpolicy.adb");
+   for Main use ("skpolicy", "skptt");
 
    package Compiler is
       for Default_Switches ("Ada") use Defaults.Ada_Compiler_Switches

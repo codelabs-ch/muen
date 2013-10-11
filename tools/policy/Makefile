@@ -1,9 +1,9 @@
-all: skp_tool
+all: skp_tools
 
 include ../../Makeconf
 include ../../Makecov
 
-skp_tool:
+skp_tools:
 	@LIBRARY_PATH=/usr/lib/x86_64-linux-gnu gprbuild $(BUILD_OPTS) -P$@
 
 tests: skp_tests

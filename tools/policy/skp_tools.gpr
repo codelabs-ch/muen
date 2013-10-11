@@ -19,7 +19,7 @@
 with "../../config/defaults";
 with "../../contrib/xmlada";
 
-project Skp_Tool is
+project Skp_Tools is
 
    for Source_Dirs use ("src", "../../common/debug", "../../common/src");
    for Object_Dir use "obj/";
@@ -34,4 +34,4 @@ project Skp_Tool is
       for Default_Switches ("Ada") use ("-E");
    end Binder;
 
-end Skp_Tool;
+end Skp_Tools;

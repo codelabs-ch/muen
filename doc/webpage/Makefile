@@ -11,10 +11,12 @@ ASCIIDOC_OPTS = \
 	-o -
 
 SRC_FILES = \
-	$(wildcard *.png) \
 	asciidoc.css \
+	muen.svg \
+	example.svg \
 	muen.ipxe \
 	set-feature-control-lock-bit.patch
+
 DST_FILES = $(addprefix $(DESTDIR)/, $(SRC_FILES))
 
 all: $(DESTDIR)/index.html $(DST_FILES)

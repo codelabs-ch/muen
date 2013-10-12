@@ -7,13 +7,13 @@ used to build high assurance systems. Muen is Japanese and translates to
 allegory of the components isolated by the separation kernel. The Muen SK is
 written in the SPARK programming language.
 
+image:example.svg[Example Architecture]
+
 An SK is a specialized microkernel that provides an execution environment for
 multiple components that can only communicate according to a given policy and
 are otherwise isolated from each other. SKs are generally more static and
 smaller than dynamic microkernels, which minimizes the possibility of kernel
 failure and should ease the application of formal verification techniques.
-
-image:arch.png[Example Architecture]
 
 Muen uses Intel's hardware-assisted virtualization technology VT-x as core
 mechanism to separate components. The kernel executes in VMX root mode, while

@@ -1,10 +1,10 @@
-Muen - Separation Kernel
-========================
+The Muen Separation Kernel
+==========================
 
-Muen is a Separation Kernel (SK) for the Intel x86/64 architecture. It can be
-used to build high assurance systems. Muen is Japanese and translates to
+Muen is a Separation Kernel (SK) for the Intel x86/64 architecture which can be
+used to build high-assurance systems. The term 'Muen' is Japanese and translates to
 'unrelated/without relation'. The name was chosen since it is a fitting
-allegory of the components isolated by the separation kernel. The Muen SK is
+allegory of the components isolated by the Separation Kernel. The Muen SK is
 written in the SPARK programming language.
 
 image:example.svg[Example Architecture]
@@ -57,7 +57,7 @@ A browsable version of the repository is available here:
 http://git.codelabs.ch/?p=muen.git
 
 
-Development environment
+Development Environment
 -----------------------
 The Muen SK has been developed and successfully tested using the development
 environment listed in the following table.

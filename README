@@ -62,7 +62,6 @@ Development environment
 The Muen SK has been developed and successfully tested using the development
 environment listed in the following table.
 
-[width="65%"]
 |===================================================================
 | Operating system     | Debian GNU/Linux 7 (wheezy), x86_64
 | Ada compiler         | GNAT GPL 2013 (20130314)

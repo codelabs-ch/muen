@@ -11,6 +11,7 @@ ASCIIDOC_OPTS = \
 	-o -
 
 SRC_FILES = \
+	bg.jpg \
 	asciidoc.css \
 	muen.svg \
 	example.svg \

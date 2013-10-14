@@ -1,7 +1,7 @@
 include ../../Makeconf
 
 CONFIG = 3.11
-CC     = gcc-4.7
+CC     = /usr/bin/gcc
 HOSTCC = $(CC)
 
 all: .built

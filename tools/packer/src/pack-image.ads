@@ -29,6 +29,11 @@ is
       Name     : String;
       Address  : SK.Word64);
 
+   --  Copy given raw binary.
+   procedure Copy_Binary
+     (Src_Bin : String;
+      Dst_Bin : String);
+
    --  Convert given source ELF binary to raw binary file.
    procedure To_Binary
      (Src_Elf : String;

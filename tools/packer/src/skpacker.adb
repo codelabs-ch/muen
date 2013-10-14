@@ -102,8 +102,14 @@ begin
          Raw_Bin   : constant String := "obj/" & Name;
          PML4_Addr : SK.Word64       := Get_PML4_Address (Subject_Id => S);
       begin
-         Image.To_Binary (Src_Elf => Fn,
-                          Dst_Bin => Raw_Bin);
+         case Binary_Specs (S).Format is
+            when Elf =>
+               Image.To_Binary (Src_Elf => Fn,
+                                Dst_Bin => Raw_Bin);
+            when Raw =>
+               Image.Copy_Binary (Src_Bin => Fn,
+                                  Dst_Bin => Raw_Bin);
+         end case;
 
          if Get_Profile (Subject_Id => S) = Vm then
             PML4_Addr := Get_EPT_Pointer (Subject_Id => S) and Addr_Mask;

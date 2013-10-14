@@ -43,6 +43,14 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Copy_Binary
+     (Src_Bin : String;
+      Dst_Bin : String)
+   is
+   begin
+      OS.Copy_File (Src_Bin, Dst_Bin);
+   end Copy_Binary;
+
    procedure To_Binary
      (Src_Elf : String;
       Dst_Bin : String)

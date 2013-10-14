@@ -25,6 +25,23 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Copy_File (Src : String; Dst : String)
+   is
+      Success : Boolean;
+   begin
+      GNAT.OS_Lib.Copy_File (Name     => Src,
+                             Pathname => Dst,
+                             Success  => Success,
+                             Mode     => GNAT.OS_Lib.Overwrite,
+                             Preserve => GNAT.OS_Lib.None);
+      if not Success then
+         raise Copy_Failed with
+            "Copying '" & Src & "' to '" & Dst & "' failed";
+      end if;
+   end Copy_File;
+
+   -------------------------------------------------------------------------
+
    procedure Execute (Command : String)
    is
       Status : Boolean;

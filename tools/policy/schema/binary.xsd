@@ -43,6 +43,19 @@
 		</xs:annotation>
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="path" type="xs:string" use="required"/>
+		<xs:attribute name="format" type="format_type" use="required"/>
 	</xs:complexType>
+
+	<xs:simpleType name="format_type">
+		<xs:annotation>
+			<xs:documentation>
+				Binaries should be either in ELF or raw binary format.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="elf"/>
+			<xs:enumeration value="raw"/>
+		</xs:restriction>
+	</xs:simpleType>
 
 </xs:schema>

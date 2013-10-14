@@ -27,9 +27,12 @@ package Skp.Packer_Config is
 
    type Zero_Pages_Array is array (Subject_Id_Type) of SK.Word64;
 
+   type Binary_Format is (Elf, Raw);
+
    type Binary_Spec_Type is record
       Name             : Unbounded_String;
       Path             : Unbounded_String;
+      Format           : Binary_Format;
       Physical_Address : SK.Word64;
    end record;
 

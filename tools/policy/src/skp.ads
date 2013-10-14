@@ -259,11 +259,17 @@ is
       Subject_Id : Natural)
       return Integer;
 
+   type Binary_Format is (Elf, Raw);
+
+   type Binary_Type is record
+      Path   : Ada.Strings.Unbounded.Unbounded_String;
+      Format : Binary_Format;
+   end record;
+
    package Binary_Package is new Ada.Containers.Ordered_Maps
      (Key_Type     => Ada.Strings.Unbounded.Unbounded_String,
-      Element_Type => Ada.Strings.Unbounded.Unbounded_String,
-      "<"          => Ada.Strings.Unbounded."<",
-      "="          => Ada.Strings.Unbounded."=");
+      Element_Type => Binary_Type,
+      "<"          => Ada.Strings.Unbounded."<");
 
    subtype Binaries_Type is Binary_Package.Map;
 

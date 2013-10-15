@@ -19,12 +19,6 @@
 package Pack.OS
 is
 
-   --  Copy the given Src file to Dst. Raises a Copy_Failed exception if
-   --  the underlying OS library call fails.
-   procedure Copy_File (Src : String; Dst : String);
-
-   Copy_Failed : exception;
-
    --  Execute given command. Raises a Command_Failed exception if the command
    --  exit status is non-zero or the command was not found.
    procedure Execute (Command : String);

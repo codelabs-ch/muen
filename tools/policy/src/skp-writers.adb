@@ -826,8 +826,6 @@ is
       is
          S : constant Subject_Type
            := Subjects_Package.Element (Position => C);
-         Formats : constant array (Binary_Format) of String (1 .. 3)
-           := (Elf => "Elf", Raw => "Raw");
       begin
          Buffer := Buffer & Indent
            & "  (Name             => To_Unbounded_String ("""
@@ -836,8 +834,9 @@ is
            & Indent & "   Path             => To_Unbounded_String ("""
            & Policy.Binaries.Element (Key => S.Binary.Name).Path & """),"
            & ASCII.LF
-           & Indent & "   Format           => " & Formats
-             (Policy.Binaries.Element (Key => S.Binary.Name).Format) & ","
+           & Indent & "   Format           => "
+           & Capitalize (Str => Policy.Binaries.Element
+                         (Key => S.Binary.Name).Format'Img) & ","
            & ASCII.LF
            & Indent & "   Physical_Address => 16#"
            & SK.Utils.To_Hex (Item => S.Binary.Physical_Address) & "#)";

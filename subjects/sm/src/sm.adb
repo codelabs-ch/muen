@@ -20,6 +20,7 @@ with System;
 
 with SK.CPU;
 with SK.Hypercall;
+with SK.Constants;
 
 with Skp;
 
@@ -47,7 +48,7 @@ begin
    loop
       Id := Handler.Current_Subject;
 
-      if State.Exit_Reason = 10 then
+      if State.Exit_Reason = SK.Constants.EXIT_REASON_CPUID then
 
          --  Minimal CPUID emulation. Code inspired by the emulation done by
          --  the lguest hypervisor in the Linux kernel
@@ -91,14 +92,16 @@ begin
             SK.Hypercall.Trigger_Event (Number => SK.Byte (Id));
          end if;
 
-      elsif State.Exit_Reason = 14 or else State.Exit_Reason = 29 then
+      elsif State.Exit_Reason = SK.Constants.EXIT_REASON_INVLPG
+        or else State.Exit_Reason = SK.Constants.EXIT_REASON_DR_ACCESS
+      then
 
          --  Ignore INVLPG and MOV DR for now.
 
          State.RIP := State.RIP + State.Instruction_Len;
          SK.Hypercall.Trigger_Event (Number => SK.Byte (Id));
 
-      elsif State.Exit_Reason = 30 then
+      elsif State.Exit_Reason = SK.Constants.EXIT_REASON_IO_INSTRUCTION then
          Subject.Text_IO.Put_String (Item => "I/O instruction on port ");
          Subject.Text_IO.Put_Word16
            (Item => SK.Word16 (State.Exit_Qualification / 2 ** 16));

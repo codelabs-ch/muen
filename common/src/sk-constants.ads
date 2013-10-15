@@ -155,7 +155,11 @@ is
    EXIT_REASON_EXCEPTION_NMI    : constant := 0;
    EXIT_REASON_EXTERNAL_INT     : constant := 1;
    EXIT_REASON_INTERRUPT_WINDOW : constant := 7;
+   EXIT_REASON_CPUID            : constant := 10;
+   EXIT_REASON_INVLPG           : constant := 14;
    EXIT_REASON_VMCALL           : constant := 18;
+   EXIT_REASON_DR_ACCESS        : constant := 29;
+   EXIT_REASON_IO_INSTRUCTION   : constant := 30;
    EXIT_REASON_TIMER_EXPIRY     : constant := 52;
 
    --  VMX exit reason flags

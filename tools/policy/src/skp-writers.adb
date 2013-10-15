@@ -77,10 +77,6 @@ is
       Majors     : Major_Frames_Type)
       return Natural;
 
-   --  Return capitalisation of the given string (first letter in uppercase and
-   --  the remaining letters in lowercase).
-   function Capitalize (Str : String) return String;
-
    type Profile_Conf_Type is record
       Exec_Pin     : SK.Word32;
       Exec_Proc    : SK.Word32;

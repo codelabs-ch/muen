@@ -58,6 +58,9 @@ is
 
 private
 
+   --  Return N number of indentation spaces.
+   function Indent (N : Positive := 1) return String;
+
    --  Open file given by filename. Raises IO_Error if the file could not be
    --  opened.
    procedure Open

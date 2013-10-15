@@ -77,9 +77,6 @@ is
       Majors     : Major_Frames_Type)
       return Natural;
 
-   --  Return N number of indentation spaces.
-   function Indent (N : Positive := 1) return String;
-
    --  Return capitalisation of the given string (first letter in uppercase and
    --  the remaining letters in lowercase).
    function Capitalize (Str : String) return String;

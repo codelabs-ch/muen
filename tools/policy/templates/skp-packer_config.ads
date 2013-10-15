@@ -25,23 +25,23 @@ pragma Style_Checks ("-m");
 
 package Skp.Packer_Config is
 
-   type Zero_Pages_Array is array (Subject_Id_Type) of SK.Word64;
+   type File_Kind is
+     (Elfbinary,
+      Iobitmap,
+      Msrbitmap,
+      Pagetable,
+      Rawbinary,
+      Zeropage);
 
-   type Binary_Format is (Elf, Raw);
-
-   type Binary_Spec_Type is record
-      Name             : Unbounded_String;
+   type File_Type is record
       Path             : Unbounded_String;
-      Format           : Binary_Format;
       Physical_Address : SK.Word64;
+      Kind             : File_Kind;
    end record;
 
-   type Binary_Spec_Array is array (Subject_Id_Type) of Binary_Spec_Type;
+   type File_Array is array (1 .. __file_count__) of File_Type;
 
-   Binary_Specs : constant Binary_Spec_Array := (
-__binaries__);
-
-   Zero_Pages : constant Zero_Pages_Array := (
-__zero_pages__);
+   Files : constant File_Array := (
+__files__);
 
 end Skp.Packer_Config;

@@ -24,8 +24,6 @@ with Ada.Strings.Fixed;
 
 with SK.Utils;
 
-with Skp.Kernel;
-with Skp.Subjects;
 with Skp.Packer_Config;
 
 with Pack.Image;
@@ -34,12 +32,49 @@ procedure Skpacker
 is
    use Ada.Strings.Unbounded;
    use Pack;
-   use Skp;
-   use Skp.Subjects;
    use Skp.Packer_Config;
+
+   --  Print file entry.
+   procedure Print_File
+     (Address : SK.Word64;
+      Kind    : File_Kind;
+      Path    : String);
+
+   --  Print table header.
+   procedure Print_Header;
 
    --  Print packer usage.
    procedure Print_Usage;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_File
+     (Address : SK.Word64;
+      Kind    : File_Kind;
+      Path    : String)
+   is
+   begin
+      Ada.Text_IO.Put (SK.Utils.To_Hex (Item => Address));
+      Ada.Text_IO.Set_Col (To => 19);
+      Ada.Text_IO.Put (Kind'Img);
+      Ada.Text_IO.Set_Col (To => 30);
+      Ada.Text_IO.Put_Line (Path);
+   end Print_File;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_Header
+   is
+   begin
+      Ada.Text_IO.Put ("PHYSICAL");
+      Ada.Text_IO.Set_Col (To => 19);
+      Ada.Text_IO.Put ("TYPE");
+      Ada.Text_IO.Set_Col (To => 30);
+      Ada.Text_IO.Put_Line ("PATH");
+   end Print_Header;
+
+   -------------------------------------------------------------------------
+
    procedure Print_Usage
    is
    begin
@@ -47,10 +82,8 @@ is
         (Ada.Command_Line.Command_Name & " <kernel_elf> <image>");
    end Print_Usage;
 
-   Knl_Elf    : constant String    := "obj/kernel.elf";
-   Top_Dir    : constant String    := "..";
-   Policy_Dir : constant String    := Top_Dir & "/policy/include";
-   Addr_Mask  : constant SK.Word64 := 16#0000fffffffff000#;
+   Knl_Elf : constant String := "obj/kernel.elf";
+   Top_Dir : constant String := "..";
 begin
    if Ada.Command_Line.Argument_Count /= 2 then
       Print_Usage;
@@ -61,108 +94,38 @@ begin
    Ada.Text_IO.Put_Line ("Packaging kernel image '"
                          & Ada.Command_Line.Argument (2) & "'");
 
-   --  Kernel
-
    Ada.Directories.Copy_File
      (Source_Name => Ada.Command_Line.Argument (1),
       Target_Name => Knl_Elf);
 
-   --  Per-CPU pagetables
+   Print_Header;
 
-   for I in Skp.CPU_Range loop
+   for F in Files'Range loop
       declare
-         use type SK.Word64;
-
-         PML4_Addr : constant SK.Word64
-           := Kernel.PML4_Address + SK.Word64 (I) * (4 * SK.Page_Size);
-         CPU_Nr    : constant String
-           := Ada.Strings.Fixed.Trim (Source => I'Img,
-                                      Side   => Ada.Strings.Left);
+         Path : constant String  := To_String (Files (F).Path);
+         Fn   : Unbounded_String := To_Unbounded_String (Top_Dir & "/" & Path);
+         Name : constant String  := Path
+           (Ada.Strings.Fixed.Index
+              (Source  => Path,
+               Pattern => "/",
+               Going   => Ada.Strings.Backward) + 1 .. Path'Last);
+         Raw  : constant String  := "obj/" & Name;
       begin
-         Image.Add_Section
-           (Image    => Knl_Elf,
-            Filename => Policy_Dir & "/kernel_pt_" & CPU_Nr,
-            Name     => "kernel_pt_" & CPU_Nr,
-            Address  => PML4_Addr);
-         Ada.Text_IO.Put_Line
-           (SK.Utils.To_Hex (Item => PML4_Addr)
-            & " [PML4] kernel (" & CPU_Nr & ")");
-      end;
-   end loop;
+         Print_File (Address => Files (F).Physical_Address,
+                     Kind    => Files (F).Kind,
+                     Path    => Path);
 
-   --  Subjects
-
-   for S in Subject_Id_Type loop
-      declare
-         use type SK.Word64;
-
-         Fn        : constant String := Top_Dir & "/" & To_String
-           (Binary_Specs (S).Path);
-         Name      : constant String := To_String (Binary_Specs (S).Name);
-         Raw_Bin   : constant String := "obj/" & Name;
-         PML4_Addr : SK.Word64       := Get_PML4_Address (Subject_Id => S);
-      begin
-         case Binary_Specs (S).Format is
-            when Elf =>
-               Image.To_Binary (Src_Elf => Fn,
-                                Dst_Bin => Raw_Bin);
-            when Raw =>
-               Image.Copy_Binary (Src_Bin => Fn,
-                                  Dst_Bin => Raw_Bin);
-         end case;
-
-         if Get_Profile (Subject_Id => S) = Vm then
-            PML4_Addr := Get_EPT_Pointer (Subject_Id => S) and Addr_Mask;
-            Ada.Text_IO.Put_Line
-              (SK.Utils.To_Hex (Item => PML4_Addr) & " [PML4] " & Name
-               & " (EPT)");
-         else
-            Ada.Text_IO.Put_Line
-              (SK.Utils.To_Hex (Item => PML4_Addr) & " [PML4] " & Name);
+         if Files (F).Kind = Elfbinary then
+            Image.To_Binary (Src_Elf => To_String (Fn),
+                             Dst_Bin => Raw);
+            Fn := To_Unbounded_String (Raw);
          end if;
-
-         Ada.Text_IO.Put_Line
-           (SK.Utils.To_Hex (Item => Get_IO_Bitmap_Address (Subject_Id => S))
-            & " [IOBM] " & Name);
-         Ada.Text_IO.Put_Line
-           (SK.Utils.To_Hex (Item => Get_MSR_Bitmap_Address (Subject_Id => S))
-            & " [MSBM] " & Name);
-
-         if Zero_Pages (S) /= 0 then
-            Ada.Text_IO.Put_Line
-              (SK.Utils.To_Hex (Item => Zero_Pages (S))
-               & " [ZERP] " & Name);
-            Image.Add_Section
-              (Image    => Knl_Elf,
-               Filename => Policy_Dir & "/" & Name & "_zp",
-               Name     => Name & "_zp",
-               Address  => Zero_Pages (S));
-         end if;
-
-         Ada.Text_IO.Put_Line
-           (SK.Utils.To_Hex (Item => Binary_Specs (S).Physical_Address)
-            & " [BIN ] " & Name);
 
          Image.Add_Section
            (Image    => Knl_Elf,
-            Filename => Raw_Bin,
+            Filename => To_String (Fn),
             Name     => Name,
-            Address  => Binary_Specs (S).Physical_Address);
-         Image.Add_Section
-           (Image    => Knl_Elf,
-            Filename => Policy_Dir & "/" & Name & "_pt",
-            Name     => Name & "_pt",
-            Address  => PML4_Addr);
-         Image.Add_Section
-           (Image    => Knl_Elf,
-            Filename => Policy_Dir & "/" & Name & "_iobm",
-            Name     => Name & "_iobm",
-            Address  => Get_IO_Bitmap_Address (Subject_Id => S));
-         Image.Add_Section
-           (Image    => Knl_Elf,
-            Filename => Policy_Dir & "/" & Name & "_msrbm",
-            Name     => Name & "_msrbm",
-            Address  => Get_MSR_Bitmap_Address (Subject_Id => S));
+            Address  => Files (F).Physical_Address);
       end;
    end loop;
 

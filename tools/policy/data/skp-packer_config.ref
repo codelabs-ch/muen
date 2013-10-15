@@ -25,36 +25,64 @@ pragma Style_Checks ("-m");
 
 package Skp.Packer_Config is
 
-   type Zero_Pages_Array is array (Subject_Id_Type) of SK.Word64;
+   type File_Kind is
+     (Elfbinary,
+      Iobitmap,
+      Msrbitmap,
+      Pagetable,
+      Rawbinary,
+      Zeropage);
 
-   type Binary_Format is (Elf, Raw);
-
-   type Binary_Spec_Type is record
-      Name             : Unbounded_String;
+   type File_Type is record
       Path             : Unbounded_String;
-      Format           : Binary_Format;
       Physical_Address : SK.Word64;
+      Kind             : File_Kind;
    end record;
 
-   type Binary_Spec_Array is array (Subject_Id_Type) of Binary_Spec_Type;
+   type File_Array is array (1 ..  14) of File_Type;
 
-   Binary_Specs : constant Binary_Spec_Array := (
-     (Name             => To_Unbounded_String ("tau0"),
-      Path             => To_Unbounded_String ("subjects/tau0/obj/tau0"),
-      Format           => Elf,
-      Physical_Address => 16#0000000000216000#),
-     (Name             => To_Unbounded_String ("subject1"),
-      Path             => To_Unbounded_String ("subjects/test/obj/subject1"),
-      Format           => Elf,
-      Physical_Address => 16#0000000000226000#),
-     (Name             => To_Unbounded_String ("subject2"),
-      Path             => To_Unbounded_String ("subjects/test/obj/subject2"),
-      Format           => Raw,
-      Physical_Address => 16#0000000000236000#));
-
-   Zero_Pages : constant Zero_Pages_Array := (
-      16#0000000000000000#,
-      16#0000000000000000#,
-      16#0000000000930000#);
+   Files : constant File_Array := (
+     (Path             => To_Unbounded_String ("policy/obj/tau0_iobm"),
+      Physical_Address => 16#00000000001a0000#,
+      Kind             => Iobitmap),
+     (Path             => To_Unbounded_String ("policy/obj/subject1_iobm"),
+      Physical_Address => 16#00000000001b0000#,
+      Kind             => Iobitmap),
+     (Path             => To_Unbounded_String ("policy/obj/subject2_iobm"),
+      Physical_Address => 16#00000000001c0000#,
+      Kind             => Iobitmap),
+     (Path             => To_Unbounded_String ("policy/obj/tau0_pt"),
+      Physical_Address => 16#00000000001f0000#,
+      Kind             => Pagetable),
+     (Path             => To_Unbounded_String ("policy/obj/subject1_pt"),
+      Physical_Address => 16#00000000001f4000#,
+      Kind             => Pagetable),
+     (Path             => To_Unbounded_String ("policy/obj/subject2_pt"),
+      Physical_Address => 16#00000000001f8000#,
+      Kind             => Pagetable),
+     (Path             => To_Unbounded_String ("policy/obj/kernel_pt_0"),
+      Physical_Address => 16#0000000000200000#,
+      Kind             => Pagetable),
+     (Path             => To_Unbounded_String ("policy/obj/kernel_pt_1"),
+      Physical_Address => 16#0000000000204000#,
+      Kind             => Pagetable),
+     (Path             => To_Unbounded_String ("subjects/tau0/obj/tau0"),
+      Physical_Address => 16#0000000000216000#,
+      Kind             => Elfbinary),
+     (Path             => To_Unbounded_String ("subjects/test/obj/subject1"),
+      Physical_Address => 16#0000000000226000#,
+      Kind             => Elfbinary),
+     (Path             => To_Unbounded_String ("subjects/test/obj/subject2"),
+      Physical_Address => 16#0000000000236000#,
+      Kind             => Rawbinary),
+     (Path             => To_Unbounded_String ("policy/obj/tau0_msrbm"),
+      Physical_Address => 16#0000000000900000#,
+      Kind             => Msrbitmap),
+     (Path             => To_Unbounded_String ("policy/obj/subject1_msrbm"),
+      Physical_Address => 16#0000000000910000#,
+      Kind             => Msrbitmap),
+     (Path             => To_Unbounded_String ("policy/obj/subject2_msrbm"),
+      Physical_Address => 16#0000000000920000#,
+      Kind             => Msrbitmap));
 
 end Skp.Packer_Config;

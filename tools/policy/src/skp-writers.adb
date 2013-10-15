@@ -29,6 +29,7 @@ with Skp.IO_Ports;
 with Skp.MSRs;
 with Skp.Templates;
 with Skp.Constants;
+with Skp.Writers.Packer_Config;
 with Skp.Writers.Zero_Page;
 
 package body Skp.Writers
@@ -37,7 +38,8 @@ is
    use Ada.Strings.Unbounded;
    use type SK.Word32;
 
-   Policy_File : constant String := "policy.h";
+   Policy_File   : constant String := "policy.h";
+   Policy_Topdir : constant String := "policy";
 
    --  A PDPT entry maps a 1 GB page.
    PDPT_Page_Size : constant := 1 * 2 ** 30;
@@ -748,6 +750,8 @@ is
       Kernel    : Kernel_Type)
    is
       use type SK.Word64;
+
+      Pml4_Address : SK.Word64;
    begin
       for I in Natural range 0 .. CPU_Count - 1 loop
          declare
@@ -774,6 +778,9 @@ is
                   Writable         => True,
                   Executable       => False,
                   Memory_Type      => UC);
+            CPU_Number      : constant String
+              := Ada.Strings.Fixed.Trim (Source => I'Img,
+                                         Side   => Ada.Strings.Left);
          begin
 
             --  Per-CPU stack page.
@@ -786,12 +793,16 @@ is
             Mem_Layout.Insert (Before   => Mem_Layout.First,
                                New_Item => CPU_Page);
 
+            Pml4_Address := Kernel.Pml4_Address
+              + SK.Word64 (I) * (4 * SK.Page_Size);
             Write (Mem_Layout   => Mem_Layout,
-                   Pml4_Address => Kernel.Pml4_Address +
-                     SK.Word64 (I) * (4 * SK.Page_Size),
-                   Filename     => Dir_Name & "/kernel_pt_"
-                   & Ada.Strings.Fixed.Trim (Source => I'Img,
-                                             Side   => Ada.Strings.Left));
+                   Pml4_Address => Pml4_Address,
+                   Filename     => Dir_Name & "/kernel_pt_" & CPU_Number);
+            Packer_Config.Add_File
+              (Filename => Policy_Topdir & "/" & Dir_Name & "/kernel_pt_"
+               & CPU_Number,
+               Address  => Pml4_Address,
+               Kind     => Packer_Config.Pagetable);
          end;
       end loop;
    end Write_Kernel_Pagetables;
@@ -802,78 +813,29 @@ is
      (Dir_Name : String;
       Policy   : Policy_Type)
    is
-      S_Count : constant Positive := Positive (Policy.Subjects.Length);
-      Current : Natural           := 0;
-      Buffer  : Unbounded_String;
-      Tmpl    : Templates.Template_Type;
+      Format_Map : constant array (Binary_Format) of Packer_Config.File_Kind
+        := (Elf => Packer_Config.Elfbinary,
+            Raw => Packer_Config.Rawbinary);
 
-      --  Write binary spec.
-      procedure Write_Binary_Spec (C : Subjects_Package.Cursor);
-
-      --  Write zero page array.
-      procedure Write_Zero_Pages (C : Subjects_Package.Cursor);
+      --  Add subject binary to packer config.
+      procedure Add_Subject_Bin (C : Subjects_Package.Cursor);
 
       ----------------------------------------------------------------------
 
-      procedure Write_Binary_Spec (C : Subjects_Package.Cursor)
+      procedure Add_Subject_Bin (C : Subjects_Package.Cursor)
       is
-         S : constant Subject_Type
-           := Subjects_Package.Element (Position => C);
+         S : constant Subject_Type := Subjects_Package.Element (Position => C);
+         B : constant Binary_Type  := Policy.Binaries.Element
+           (Key => S.Binary.Name);
       begin
-         Buffer := Buffer & Indent
-           & "  (Name             => To_Unbounded_String ("""
-           & S.Name & """),"
-           & ASCII.LF
-           & Indent & "   Path             => To_Unbounded_String ("""
-           & Policy.Binaries.Element (Key => S.Binary.Name).Path & """),"
-           & ASCII.LF
-           & Indent & "   Format           => "
-           & Capitalize (Str => Policy.Binaries.Element
-                         (Key => S.Binary.Name).Format'Img) & ","
-           & ASCII.LF
-           & Indent & "   Physical_Address => 16#"
-           & SK.Utils.To_Hex (Item => S.Binary.Physical_Address) & "#)";
-
-         Current := Current + 1;
-         if Current /= S_Count then
-            Buffer := Buffer & "," & ASCII.LF;
-         end if;
-      end Write_Binary_Spec;
-
-      ----------------------------------------------------------------------
-
-      procedure Write_Zero_Pages (C : Subjects_Package.Cursor)
-      is
-         S : constant Subject_Type
-           := Subjects_Package.Element (Position => C);
-      begin
-         Buffer := Buffer & Indent (N => 2)
-           & "16#" & SK.Utils.To_Hex (Item => S.ZP_Bitmap_Address) & "#";
-
-         Current := Current + 1;
-         if Current /= S_Count then
-            Buffer := Buffer & "," & ASCII.LF;
-         end if;
-      end Write_Zero_Pages;
-
+         Packer_Config.Add_File
+           (Filename => To_String (B.Path),
+            Address  => S.Binary.Physical_Address,
+            Kind     => Format_Map (B.Format));
+      end Add_Subject_Bin;
    begin
-      Tmpl := Templates.Load (Filename => "skp-packer_config.ads");
-
-      Policy.Subjects.Iterate (Process => Write_Binary_Spec'Access);
-      Templates.Replace (Template => Tmpl,
-                         Pattern  => "__binaries__",
-                         Content  => To_String (Buffer));
-
-      Current := 0;
-      Buffer  := Null_Unbounded_String;
-
-      Policy.Subjects.Iterate (Process => Write_Zero_Pages'Access);
-      Templates.Replace (Template => Tmpl,
-                         Pattern  => "__zero_pages__",
-                         Content  => To_String (Buffer));
-
-      Templates.Write (Template => Tmpl,
-                       Filename => Dir_Name & "/skp-packer_config.ads");
+      Policy.Subjects.Iterate (Process => Add_Subject_Bin'Access);
+      Packer_Config.Write (Dir_Name => Dir_Name);
    end Write_Packer_Config;
 
    -------------------------------------------------------------------------
@@ -1044,6 +1006,7 @@ is
            & "_msrbm";
       begin
          Write_Subject_Spec (Subject => S);
+
          Write (Mem_Layout   => S.Memory_Layout,
                 Pml4_Address => S.Pml4_Address,
                 Filename     => PT_File,
@@ -1061,8 +1024,25 @@ is
                  := Dir_Name & "/" & To_String (S.Name) & "_zp";
             begin
                Zero_Page.Write (Filename => ZP_File);
+               Packer_Config.Add_File
+                 (Filename => Policy_Topdir & "/" & ZP_File,
+                  Address  => S.ZP_Bitmap_Address,
+                  Kind     => Packer_Config.Zeropage);
             end;
          end if;
+
+         Packer_Config.Add_File
+           (Filename => Policy_Topdir & "/" &  PT_File,
+            Address  => S.Pml4_Address,
+            Kind     => Packer_Config.Pagetable);
+         Packer_Config.Add_File
+           (Filename => Policy_Topdir & "/" & IO_File,
+            Address  => S.IO_Bitmap_Address,
+            Kind     => Packer_Config.Iobitmap);
+         Packer_Config.Add_File
+           (Filename => Policy_Topdir & "/" & MSR_File,
+            Address  => S.MSR_Bitmap_Address,
+            Kind     => Packer_Config.Msrbitmap);
       end Write_Subject;
 
       ----------------------------------------------------------------------

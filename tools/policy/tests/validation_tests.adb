@@ -442,8 +442,10 @@ is
                                    Dst_Vector  => 12,
                                    Handover    => True,
                                    Send_IPI    => False));
-      P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
-                         New_Item => To_Unbounded_String ("path/to/s2"));
+      P.Binaries.Insert
+        (Key      => To_Unbounded_String ("s2"),
+         New_Item => (Path   => To_Unbounded_String ("path/to/s2"),
+                      Format => Elf));
 
       P.Hardware.Processor.Logical_CPUs := 1;
       P.Subjects.Insert
@@ -481,8 +483,10 @@ is
                                    Dst_Vector  => 12,
                                    Handover    => True,
                                    Send_IPI    => False));
-      P.Binaries.Insert (Key      => To_Unbounded_String ("bin"),
-                         New_Item => To_Unbounded_String ("path/to/bin"));
+      P.Binaries.Insert
+        (Key      => To_Unbounded_String ("bin"),
+         New_Item => (Path   => To_Unbounded_String ("path/to/bin"),
+                      Format => Elf));
 
       P.Hardware.Processor.Logical_CPUs := 1;
       P.Subjects.Insert
@@ -533,8 +537,10 @@ is
                                    Dst_Vector  => 42,
                                    Handover    => False,
                                    Send_IPI    => True));
-      P.Binaries.Insert (Key      => To_Unbounded_String ("bin"),
-                         New_Item => To_Unbounded_String ("path/to/bin"));
+      P.Binaries.Insert
+        (Key      => To_Unbounded_String ("bin"),
+         New_Item => (Path   => To_Unbounded_String ("path/to/bin"),
+                      Format => Elf));
 
       P.Hardware.Processor.Logical_CPUs := 1;
       P.Subjects.Insert
@@ -584,8 +590,10 @@ is
                                    Dst_Vector  => 12,
                                    Handover    => True,
                                    Send_IPI    => False));
-      P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
-                         New_Item => To_Unbounded_String ("path/to/s2"));
+      P.Binaries.Insert
+        (Key      => To_Unbounded_String ("s2"),
+         New_Item => (Path   => To_Unbounded_String ("path/to/s2"),
+                      Format => Elf));
 
       P.Hardware.Processor.Logical_CPUs := 1;
       P.Subjects.Insert
@@ -748,8 +756,10 @@ is
                       New_Item => (Kind        => Exception_Or_NMI,
                                    Dst_Subject => To_Unbounded_String ("xy"),
                                    Dst_Vector  => 12));
-      P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
-                         New_Item => To_Unbounded_String ("path/to/s2"));
+      P.Binaries.Insert
+        (Key      => To_Unbounded_String ("s2"),
+         New_Item => (Path   => To_Unbounded_String ("path/to/s2"),
+                      Format => Elf));
 
       P.Hardware.Processor.Logical_CPUs := 1;
       P.Subjects.Insert
@@ -785,8 +795,10 @@ is
                       New_Item => (Kind        => Exception_Or_NMI,
                                    Dst_Subject => To_Unbounded_String ("s2"),
                                    Dst_Vector  => 12));
-      P.Binaries.Insert (Key      => To_Unbounded_String ("bin"),
-                         New_Item => To_Unbounded_String ("path/to/bin"));
+      P.Binaries.Insert
+        (Key      => To_Unbounded_String ("bin"),
+         New_Item => (Path   => To_Unbounded_String ("path/to/bin"),
+                      Format => Elf));
 
       P.Hardware.Processor.Logical_CPUs := 1;
       P.Subjects.Insert
@@ -834,8 +846,10 @@ is
                       New_Item => (Kind        => Exception_Or_NMI,
                                    Dst_Subject => To_Unbounded_String ("s1"),
                                    Dst_Vector  => 12));
-      P.Binaries.Insert (Key      => To_Unbounded_String ("s2"),
-                         New_Item => To_Unbounded_String ("path/to/s2"));
+      P.Binaries.Insert
+        (Key      => To_Unbounded_String ("s2"),
+         New_Item => (Path   => To_Unbounded_String ("path/to/s2"),
+                      Format => Elf));
 
       P.Hardware.Processor.Logical_CPUs := 1;
       P.Subjects.Insert

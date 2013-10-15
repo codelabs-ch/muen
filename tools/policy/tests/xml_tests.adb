@@ -377,8 +377,13 @@ is
          begin
             Assert (Condition => P.Binaries.Length = 3,
                     Message   => "Binary count mismatch");
-            Assert (Condition => P.Binaries.Element (Key => Name) = Path,
+            Assert (Condition => P.Binaries.Element (Key => Name).Path = Path,
                     Message   => "Binary path mismatch");
+            Assert (Condition => P.Binaries.Element (Key => Name).Format = Elf,
+                    Message   => "Binary format mismatch (1)");
+            Assert (Condition => P.Binaries.Element
+                    (Key => To_Unbounded_String ("subject2")).Format = Raw,
+                    Message   => "Binary format mismatch (2)");
          end;
 
          --  Scheduling

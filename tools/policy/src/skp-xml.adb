@@ -730,27 +730,21 @@ is
 
          procedure Add_Binary (Node : DOM.Core.Node)
          is
-            Name : constant String := DOM.Core.Elements.Get_Attribute
+            Name   : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "name");
-            Path : constant String := DOM.Core.Elements.Get_Attribute
+            Path   : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "path");
             Format : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "format");
-            Bin_Format : Binary_Format;
          begin
-            if Format = "elf" then
-               Bin_Format := Elf;
-            else
-               Bin_Format := Raw;
-            end if;
             Policy.Binaries.Insert
               (Key      => To_Unbounded_String (Name),
                New_Item => Binary_Type'
                  (Path   => To_Unbounded_String (Path),
-                  Format => Bin_Format));
+                  Format => Binary_Format'Value (Format)));
          end Add_Binary;
       begin
          Util.For_Each_Node (Node     => Bin_Node,

@@ -152,11 +152,11 @@ is
 
    --  VMX basic exit reasons
 
-   VM_EXIT_EXCEPTION_NMI        : constant := 0;
-   VM_EXIT_EXTERNAL_INT         : constant := 1;
-   VM_EXIT_INTERRUPT_WINDOW     : constant := 7;
-   VM_EXIT_HYPERCALL            : constant := 18;
-   VM_EXIT_TIMER_EXPIRY         : constant := 52;
+   EXIT_REASON_EXCEPTION_NMI    : constant := 0;
+   EXIT_REASON_EXTERNAL_INT     : constant := 1;
+   EXIT_REASON_INTERRUPT_WINDOW : constant := 7;
+   EXIT_REASON_VMCALL           : constant := 18;
+   EXIT_REASON_TIMER_EXPIRY     : constant := 52;
 
    --  VMX exit reason flags
 

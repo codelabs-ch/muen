@@ -569,17 +569,17 @@ is
       State.Regs := Subject_Registers;
       Store_Subject_Info (State => State);
 
-      if State.Exit_Reason = Constants.VM_EXIT_EXTERNAL_INT then
+      if State.Exit_Reason = Constants.EXIT_REASON_EXTERNAL_INT then
          Handle_Irq (Vector => SK.Byte'Mod (State.Interrupt_Info));
-      elsif State.Exit_Reason = Constants.VM_EXIT_HYPERCALL then
+      elsif State.Exit_Reason = Constants.EXIT_REASON_VMCALL then
          Handle_Hypercall (Current_Subject => Current_Subject,
                            Subject_State   => State);
-      elsif State.Exit_Reason = Constants.VM_EXIT_TIMER_EXPIRY then
+      elsif State.Exit_Reason = Constants.EXIT_REASON_TIMER_EXPIRY then
 
          --  Minor frame ticks consumed, update scheduling information.
 
          Update_Scheduling_Info;
-      elsif State.Exit_Reason = Constants.VM_EXIT_INTERRUPT_WINDOW then
+      elsif State.Exit_Reason = Constants.EXIT_REASON_INTERRUPT_WINDOW then
 
          --  Resume subject to inject pending event.
 

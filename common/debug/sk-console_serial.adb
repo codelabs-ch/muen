@@ -86,11 +86,7 @@ is
    procedure New_Line
    is
    begin
-
-      --  Newline + Linefeed
-
       Put_Char (Item => Character'Val (10));
-      Put_Char (Item => Character'Val (12));
    end New_Line;
 
    -------------------------------------------------------------------------

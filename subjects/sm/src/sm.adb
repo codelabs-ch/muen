@@ -62,18 +62,22 @@ begin
                --  Get vendor ID.
 
                --  Return the vendor ID for a GenuineIntel processor and set
-               --  the highest valid CPUID number to 5.
+               --  the highest valid CPUID number to 1.
 
-               State.Regs.RAX := 5;
+               State.Regs.RAX := 1;
                State.Regs.RBX := 16#756e_6547#;
                State.Regs.RCX := 16#6c65_746e#;
                State.Regs.RDX := 16#4965_6e69#;
             when 1 =>
 
                --  Processor Info and Feature Bits.
+               --                    i486    SX
+               --                        \  /
+               State.Regs.RAX := 16#0000_0420#;
+               State.Regs.RBX := 16#0000_0000#;
+               State.Regs.RCX := 16#0000_0000#;
                --  We currently provide no features.
-
-               State.Regs.RDX := 0;
+               State.Regs.RDX := 16#0000_0000#;
             when 16#8000_0000# =>
 
                --  Get Highest Extended Function Supported.

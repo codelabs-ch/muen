@@ -20,7 +20,7 @@
 <hardware>
 	<processor logical_cpus="4" speed="50" vmx_timer_rate="0"/>
 	<device name="serial">
-		<io_port start="03f8" end="03fd"/>
+		<io_port start="03f8" end="03ff"/>
 	</device>
 	<device name="keyboard" irq="1">
 		<io_port start="0060" end="0060"/>

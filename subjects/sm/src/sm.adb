@@ -87,26 +87,114 @@ begin
                Dump_And_Halt := True;
          end case;
 
-         if not Dump_And_Halt then
-            State.RIP := State.RIP + State.Instruction_Len;
-            SK.Hypercall.Trigger_Event (Number => SK.Byte (Id));
-         end if;
-
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_INVLPG
         or else State.Exit_Reason = SK.Constants.EXIT_REASON_DR_ACCESS
       then
 
          --  Ignore INVLPG and MOV DR for now.
-
-         State.RIP := State.RIP + State.Instruction_Len;
-         SK.Hypercall.Trigger_Event (Number => SK.Byte (Id));
+         null;
 
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_IO_INSTRUCTION then
-         Subject.Text_IO.Put_String (Item => "I/O instruction on port ");
-         Subject.Text_IO.Put_Word16
-           (Item => SK.Word16 (State.Exit_Qualification / 2 ** 16));
-         Subject.Text_IO.New_Line;
-         Dump_And_Halt := True;
+         case State.Exit_Qualification / 2 ** 16 is
+            when 16#64# =>
+               null;
+            when others =>
+               Subject.Text_IO.Put_String (Item => "I/O instruction on port ");
+               Subject.Text_IO.Put_Word16
+                 (Item => SK.Word16 (State.Exit_Qualification / 2 ** 16));
+               Subject.Text_IO.New_Line;
+         end case;
+
+         if (State.Exit_Qualification and 48) /= 0 then
+            --  String and REP not supported
+            Dump_And_Halt := True;
+         else
+            case State.Exit_Qualification and 7 is --  Size of access
+               when 0 =>      --  1-byte
+                  case State.Exit_Qualification / 2 ** 16 is --  Port number
+                     --  Only handle these ports by now:
+                     when 16#21#  |    --  PIC_MASTER_IMR      (hardcoded)
+                          16#a1#  |    --  PIC_SLAVE_IMR       (hardcoded)
+                          16#40#  |    --  i8253/4 PIT_CH0     (hardcoded)
+                          16#43#  |    --  i8253/4 PIT_MODE    (hardcoded)
+                          16#60#  |    --  i8042 DATA          (configurable)
+                          16#64#  |    --  i8042 CMD/STATUS    (configurable)
+                          16#70#  |    --  RTC CMD             (hardcoded)
+                          16#71#  |    --  RTC DATA            (hardcoded)
+                          16#80#  |    --  PORT80              (hardcoded)
+                          16#2e9# |    --  COM 4               (configurable)
+                          16#2f9# |    --  COM 2               (configurable)
+                          16#2fa# |    --  82C710 C&T mouse port chip   (conf.)
+                          16#390# |    --  82C710 C&T mouse port chip   (conf.)
+                          16#391# |    --  82C710 C&T mouse port chip   (conf.)
+                          16#3e9# |    --  COM 3               (configurable)
+                          16#3f9# |    --  COM 1               (configurable)
+                          16#3fa# =>   --  82C710 C&T mouse port chip   (conf.)
+                        --  ignore writes, read 00/ff
+                        case State.Exit_Qualification / 2 ** 16 is
+                           when 16#21# =>
+                              Subject.Text_IO.Put_String
+                                ("i8259 PIC_MASTER_IMR ");
+                           when 16#a1# =>
+                              Subject.Text_IO.Put_String
+                                ("i8259 PIC_SLAVE_IMR ");
+                           when 16#40# =>
+                              Subject.Text_IO.Put_String ("i8253/4 PIT_CH0  ");
+                           when 16#43# =>
+                              Subject.Text_IO.Put_String ("i8253/4 PIT_MODE ");
+                           when 16#64# =>
+                              null;
+                           when 16#70# =>
+                              Subject.Text_IO.Put_String ("RTC CMD  ");
+                           when 16#71# =>
+                              Subject.Text_IO.Put_String ("RTC DATA ");
+                           when 16#80# =>
+                              Subject.Text_IO.Put_String ("PORT80 ");
+                           when others =>
+                              Subject.Text_IO.Put_String ("16#");
+                              Subject.Text_IO.Put_Word16 (SK.Word16
+                                ((State.Exit_Qualification / 2 ** 16) and
+                                 16#ffff#));
+                              Subject.Text_IO.Put_String ("# ");
+                        end case;
+                        if ((State.Exit_Qualification / 2 ** 3) and 1) = 1 then
+                           case State.Exit_Qualification / 2 ** 16 is
+                              when 16#64# =>
+                                 null;
+                              when others =>
+                                 Subject.Text_IO.Put_String ("read.");
+                           end case;
+                           case State.Exit_Qualification / 2 ** 16 is
+                              when 16#70# | 16#71# =>
+                                 State.Regs.RAX :=
+                                    State.Regs.RAX and not 16#ff#;
+                              when others =>
+                                    State.Regs.RAX := State.Regs.RAX or 16#ff#;
+                           end case;
+                        else
+                           case State.Exit_Qualification / 2 ** 16 is
+                              when 16#64# =>
+                                 null;
+                              when others =>
+                                 Subject.Text_IO.Put_String ("write: ");
+                                 Subject.Text_IO.Put_Byte
+                                   (Item => SK.Byte
+                                      (State.Regs.RAX and 16#ff#));
+                           end case;
+                        end if;
+                        Subject.Text_IO.New_Line;
+                     when others =>
+                        Dump_And_Halt := True;
+                  end case;
+               when 1 =>      --  2-byte
+                  Dump_And_Halt := True;
+               when 3 =>      --  4-byte
+                  Dump_And_Halt := True;
+               when others => --  not used
+                  Subject.Text_IO.Put_String ("Invalid access size");
+                  Dump_And_Halt := True;
+            end case;
+         end if;
 
       else
          Subject.Text_IO.Put_String (Item => "Unhandled trap for subject ");
@@ -123,7 +211,10 @@ begin
          Dump_And_Halt := True;
       end if;
 
-      if Dump_And_Halt then
+      if not Dump_And_Halt then
+         State.RIP := State.RIP + State.Instruction_Len;
+         SK.Hypercall.Trigger_Event (Number => SK.Byte (Id));
+      else
          Subject.Text_IO.Put_String ("EIP: ");
          Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.RIP));
          Subject.Text_IO.Put_String (" CS : ");

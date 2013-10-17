@@ -617,7 +617,7 @@ is
          else
             pragma Debug (KC.Put_String (Item => "Subject "));
             pragma Debug (KC.Put_Byte   (Item =>  Byte (Current_Subject)));
-            pragma Debug (KC.Put_String (Item => " unhandled trap ("));
+            pragma Debug (KC.Put_String (Item => " unknown trap ("));
             pragma Debug (KC.Put_Word16 (Item => Word16 (State.Exit_Reason)));
             pragma Debug (KC.Put_String (Item => ":"));
             pragma Debug (KC.Put_Word32

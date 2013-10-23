@@ -1,32 +1,34 @@
-@import url('http://fonts.googleapis.com/css?family=Lato:300');
+@import url('http://fonts.googleapis.com/css?family=Lato:700,300');
 @import url('http://fonts.googleapis.com/css?family=Source+Code+Pro');
 
-html {
-   height: 100%;
-   background: url("bg.jpg") repeat scroll 0% 0% white;
-   color: rgba(255, 255, 255, 0.8);
+html, body {
+   padding: 0px;
+   margin: 0px;
 }
 
 body {
-   box-shadow: 0px 0px 18.75em rgba(0, 0, 0, 0.5) inset;
-   background-color: rgba(255, 255, 255, 0.5);
-   font-family: 'Lato', sans-serif;
-   font-weight: 300;
+   background: url("bg.jpg") repeat scroll 0% 0% white;
    padding: 0px;
    margin: 0px;
+   color: rgba(0, 0, 0, 0.9);
+   box-shadow: 0px 0px 18.75em rgba(0, 0, 0, 0.5) inset;
+   font-family: 'Lato', sans-serif;
+   font-weight: 300;
 }
 
 h1 {
    font-weight: 300;
    font-size: 2.5em;
+   margin: 0px;
+   padding-left: 20px;
 }
 
 h2 {
    padding: 13px 20px;
    font-size: 1.5em;
-   border-radius: 0.5em 0.5em 0px 0px;
+   border-radius: 10px 10px 0px 0px;
    margin: 0px;
-   background-color: rgba(0, 0, 0, 0.4);
+   background: none repeat scroll 0% 0% rgba(255, 0, 0, 0.9);
 }
 
 .paragraph .image {
@@ -42,29 +44,28 @@ h2 {
    font-size: 1.4em;
 }
 
-.tableblock table {
+table {
    width: auto;
-   background: rgba(255, 255, 255, 0.3);
-   border-radius: 0.5em;
+   border-radius: 5px;
+   border-collapse: separate;
+   border-spacing: 0.3em;
    border-style: none;
-   box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.15) inset, 0px 0px 1.25em rgba(0, 0, 0, 0.5);
 }
 
-.tableblock table tr td {
+td {
    padding: 1em;
-   border-style: dotted;
-   border-radius: 0.5em;
+   border-style: none;
+   border-radius: 5px;
+   background-color: rgba(255, 0, 0, 0.1);
 }
 
 .admonitionblock {
-   background-color: rgba(255, 0, 0, 0.6);
-   position: relative;
+   background-color: rgba(255, 0, 0, 0.9);
    padding: 1em 1em;
    margin: 2em auto;
    max-width: 80%;
    box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.15) inset, 0px 0px 1.25em rgba(0, 0, 0, 0.5);
-   border-radius: 0.5em;
-   width: 100%;
+   border-radius: 10px;
 }
 
 
@@ -75,16 +76,25 @@ h2 {
    float: left;
 }
 
+.logo {
+   margin-left: 2em;
+   margin-right: 1.5em;
+   float: left;
+}
+
 .logo img {
-   height: 2.5em;
-   padding: 1em;
+   height: 4.5em;
+   vertical-align: middle;
 }
 
 .header, .footer {
-   background: none repeat scroll 0% 0% rgba(0, 30, 100, 0.6);
+   background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.8);
    box-shadow: 0px 0px 1.25em rgba(0, 0, 0, 0.8);
+   padding: 0px;
+   padding-top: 2em;
+   padding-bottom: 2em;
    width: 100%;
-   height: 4em;
+   min-width: 1000px;
 }
 
 .ulist ul li {
@@ -101,19 +111,23 @@ li.toc {
    padding-left: 0.8em;
    padding-right: 0.8em;
    border-top-style: solid;
-   border-color: rgba(0, 0, 0, 0.3);
+   border-color: rgb(255, 0, 0);
    border-width: 2px;
 }
 
 li.toc:hover {
-   background-color: rgba(0, 0, 0, 0.5);
+   background-color: rgb(255, 0, 0);
    text-decoration: none;
    border-radius: 0.3em;
 }
 
+li.toc a:link {
+   text-decoration: none;
+   color: rgba(0, 0, 0, 0.9);
+}
+
 a.toc {
-   color: rgba(255, 255, 255, 0.8);
-   display: block;
+   color: rgba(0, 0, 0, 0.8);
    text-decoration: none;
    background: none;
 }
@@ -121,10 +135,12 @@ a.toc {
 a.toc:hover {
    text-decoration: none;
    background: none;
+   color: white;
 }
 
 ul.toc {
    list-style-type: none;
+   padding-left: 20px;
 }
 
 #_references + .sectionbody .ulist ul {
@@ -132,15 +148,17 @@ ul.toc {
    margin-left: -2em;
 }
 
-a {
+a:link {
+   padding: 3px;
+   border-radius: 3px;
    display: inline-block;
    position: relative;
    text-decoration: underline;
-   color: rgba(0, 0, 0, 0.8);
+   color: rgba(0, 50, 120, 0.5);
 }
 
 a:hover {
-   background-color: rgba(255, 255, 255, 0.5);
+   background-color: rgba(0, 0, 0, 0.1);
 }
 
 a.anchor {
@@ -155,9 +173,9 @@ a.anchor:hover {
 .sect1, #preamble {
    text-align: justify;
    width: 1000px;
-   background: none repeat scroll 0% 0% rgba(0, 30, 100, 0.3);
+   background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.7);
    box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.15) inset, 0px 0px 1.25em rgba(0, 0, 0, 0.5);
-   border-radius: 0.5em;
+   border-radius: 10px;
    display: block;
    margin-left: auto;
    margin-right: auto;
@@ -175,14 +193,50 @@ a.anchor:hover {
 pre {
    font-family: 'Source Code Pro', monospace;
    line-height: 1.8;
-   background-color: rgba(255, 255, 255, 0.3);
+   background-color: rgba(255, 0, 0, 0.1);
    padding: 1em 1em;
    max-width: 95%;
-   box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.15) inset, 0px 0px 1.25em rgba(0, 0, 0, 0.5);
-   border-radius: 0.5em;
+   border-radius: 10px;
 }
 
 #footer-text {
+   padding: 1em;
    text-align: right;
-   color: rgba(255, 255, 255, 0.2);
+   color: rgba(0, 0, 0, 0.2);
+}
+
+.clear {
+   clear: both;
+}
+
+.logos {
+   float: right;
+   margin-right: 1em;
+}
+
+.logos .hsr, .logos .swissmade {
+   padding: 0.5em;
+   display: inline-block;
+}
+
+.logos .hsr a:hover {
+   background-color: rgba(255, 255, 255, 0.5);
+}
+
+.logos .swissmade a:hover {
+   background-color: rgba(255, 255, 255, 0.5);
+}
+
+.logos .hsr img, .logos .swissmade img {
+   height: 6em;
+}
+
+.subtitle {
+   color: rgb(255, 0, 0);
+   font-weight: 700;
+}
+
+a {
+   outline: 0;
+}
 }

@@ -239,4 +239,72 @@ pre {
 a {
    outline: 0;
 }
+
+@media print {
+
+   body {
+      background-color: transparent;
+      box-shadow: none;
+      font-size: 12pt;
+      color: black;
+   }
+
+   .header,
+   .footer,
+   .sect1,
+   #preamble {
+      box-shadow: none;
+   }
+
+   .header {
+      padding: 0px;
+      padding-bottom: 2px;
+   }
+
+   .admonitionblock {
+      box-shadow: none;
+      border-style: solid;
+      border-color: black;
+      border-width: 2px;
+   }
+
+   pre {
+      border-style: solid;
+      border-color: black;
+      border-width: 2px;
+   }
+
+   ul.toc {
+      list-style-type: decimal;
+      margin-top: 2em;
+      margin-left: 2em;
+   }
+
+   li.toc {
+      float: none;
+      padding: 0em;
+      border-top-style: none;
+   }
+
+   .sect1, #preamble {
+      margin: 0em;
+   }
+
+   a:link {
+      color: blue;
+   }
+
+   table {
+      border-radius: 0px;
+      border-collapse: none;
+      border-spacing: 0em;
+      border-width: 2px;
+   }
+
+   td {
+      border-radius: 0px;
+      border-style: solid;
+      border-width: 2px;
+   }
+
 }

@@ -8,13 +8,13 @@
   </xsl:copy>
 </xsl:template>
 
-<xsl:template match="td[@class='header']/div[@id='header']">
-<xsl:copy>
-   <xsl:apply-templates select="@*|node()"/>
-</xsl:copy>
-<ul class="toc">
-<xsl:apply-templates select="//h2" mode="toc"/>
-</ul>
+<xsl:template match="div[@class='toc']">
+<div class="toc">
+   <ul class="toc">
+      <xsl:apply-templates select="//h2" mode="toc"/>
+   </ul>
+</div>
+<div class="clear"></div>
 </xsl:template>
 
 <xsl:template match="h2" mode="toc">

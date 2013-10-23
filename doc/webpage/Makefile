@@ -13,6 +13,9 @@ ASCIIDOC_OPTS = \
 SRC_FILES = \
 	bg.jpg \
 	asciidoc.css \
+	HSR_Logo_CMYK.svg \
+	favicon.png \
+	swissmadesoftware-logo.png \
 	muen.svg \
 	example.svg \
 	muen.ipxe \

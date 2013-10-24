@@ -47,6 +47,7 @@ clean:
 	$(MAKE) clean -C policy
 	$(MAKE) clean -C subjects
 	$(MAKE) clean -C rts
+	rm -rf contrib/obj
 
 distclean: clean
 	$(MAKE) clean -C contrib

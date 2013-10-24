@@ -27,7 +27,8 @@ is
       Pagetable,
       Rawbinary,
       Zeropage,
-      Acpitable);
+      Acpitable,
+      Bzimagebinary);
 
    --  Add file to packer configuration.
    procedure Add_File

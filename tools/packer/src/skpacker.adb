@@ -121,6 +121,12 @@ begin
             Fn := To_Unbounded_String (Raw);
          end if;
 
+         if Files (F).Kind = Bzimagebinary then
+            Image.Parse_Bzimage (Src => To_String (Fn),
+                                 Dst_Bin => Raw);
+            Fn := To_Unbounded_String (Raw);
+         end if;
+
          Image.Add_Section
            (Image    => Knl_Elf,
             Filename => To_String (Fn),

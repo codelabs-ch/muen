@@ -19,6 +19,8 @@
 with SK.Utils;
 
 with Pack.OS;
+with Ada.Streams.Stream_IO;
+use Ada.Streams.Stream_IO;
 
 package body Pack.Image
 is
@@ -40,6 +42,41 @@ is
          & SK.Utils.To_Hex (Item => Address) & " --set-section-flags ."
          & Name & "=alloc 2>/dev/null");
    end Add_Section;
+
+   -------------------------------------------------------------------------
+
+   procedure Parse_Bzimage
+     (Src     : String;
+      Dst_Bin : String)
+   is
+      File_In  : Ada.Streams.Stream_IO.File_Type;
+      File_Out : Ada.Streams.Stream_IO.File_Type;
+
+      type Sector is array (0 .. 511) of SK.Byte;
+      pragma Pack (Sector);
+      S : Sector;
+      Setup_Sectors : Integer := 4;
+   begin
+      Open (Name => Src, File => File_In, Mode => In_File);
+      Create (Name => Dst_Bin, File => File_Out, Mode => Out_File);
+      Sector'Read (Stream (File => File_In), S);
+      if Natural (S (497)) > 0 then
+         Setup_Sectors := Natural (S (497)) + 1;
+      end if;
+      for I in Integer range 2 .. Setup_Sectors loop
+         Sector'Read (Stream (File => File_In), S);
+      end loop;
+      while not Ada.Streams.Stream_IO.End_Of_File (File_In) loop
+         begin
+            Sector'Read (Stream (File => File_In), S);
+         exception
+            when End_Error => null;
+         end;
+         Sector'Write (Stream (File => File_Out), S);
+      end loop;
+      Close (File => File_In);
+      Close (File => File_Out);
+   end Parse_Bzimage;
 
    -------------------------------------------------------------------------
 

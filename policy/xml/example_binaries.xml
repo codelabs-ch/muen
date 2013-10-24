@@ -24,6 +24,6 @@
 	<binary name="sm"      path="subjects/sm/obj/sm"           format="elf"/>
 	<binary name="xv6"     path="subjects/xv6/src/kernelmemfs" format="elf"/>
 	<binary name="crypter" path="subjects/crypter/obj/crypter" format="elf"/>
-	<binary name="linux"   path="subjects/linux/src/vmlinux"   format="elf"/>
+	<binary name="linux"   path="subjects/linux/src/arch/x86/boot/bzImage" format="bzimage"/>
 	<binary name="time"    path="subjects/time/obj/time"       format="elf"/>
 </binaries>

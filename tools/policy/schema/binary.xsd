@@ -49,12 +49,13 @@
 	<xs:simpleType name="format_type">
 		<xs:annotation>
 			<xs:documentation>
-				Binaries should be either in ELF or raw binary format.
+				Binaries should be either in ELF or raw binary format or bzImage (Linux).
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="elf"/>
 			<xs:enumeration value="raw"/>
+			<xs:enumeration value="bzimage"/>
 		</xs:restriction>
 	</xs:simpleType>
 

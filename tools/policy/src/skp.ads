@@ -260,7 +260,7 @@ is
       Subject_Id : Natural)
       return Integer;
 
-   type Binary_Format is (Elf, Raw);
+   type Binary_Format is (Elf, Raw, BzImage);
 
    type Binary_Type is record
       Path   : Ada.Strings.Unbounded.Unbounded_String;

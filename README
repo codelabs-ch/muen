@@ -1,30 +1,32 @@
 The Muen Separation Kernel
 ==========================
 
-Muen is a Separation Kernel (SK) for the Intel x86/64 architecture which can be
-used to build high-assurance systems. The term 'Muen' is Japanese and translates to
-'unrelated/without relation'. The name was chosen since it is a fitting
-allegory of the components isolated by the Separation Kernel. The Muen SK is
-written in the SPARK programming language.
+The Muen Separation Kernel is the world's first Open Source microkernel which
+has been formally proven to contain no runtime errors at the source code level.
+It is developed in Switzerland by the Institute for Internet Technologies and
+Applications (ITA) at the Hochschule fuer Technik Rapperswil (HSR). In close
+cooperation with the high-security industry the kernel was designed
+specifically to meet the requirements of high-assurance systems for the Intel
+x86/64 platform.
 
 image:example.svg[Example Architecture]
 
-An SK is a specialized microkernel that provides an execution environment for
-multiple components that can only communicate according to a given policy and
-are otherwise isolated from each other. SKs are generally more static and
-smaller than dynamic microkernels, which minimizes the possibility of kernel
-failure and should ease the application of formal verification techniques.
-
-Muen uses Intel's hardware-assisted virtualization technology VT-x as core
-mechanism to separate components. The kernel executes in VMX root mode, while
-user components, so called 'subjects', run in VMX non-root mode.
+A Separation Kernel (SK) is a specialized microkernel that provides an
+execution environment for multiple components that can only communicate
+according to a given policy and are otherwise isolated from each other. SKs are
+generally more static and smaller than dynamic microkernels, which minimizes
+the possibility of kernel failure and should ease the application of formal
+verification techniques. Muen uses Intel's hardware-assisted virtualization
+technology VT-x as core mechanism to separate components. The kernel executes
+in VMX root mode, while user components, so called 'subjects', run in VMX
+non-root mode.
 
 NOTE: Muen is currently a prototype implementation. We do not yet consider it
       to be fit for production use.
 
 Features
 --------
-- Minimal SK for the Intel x86/64 architecture written in SPARK
+- Minimal SK for the Intel x86/64 architecture written in the SPARK language
 - Full availability of source code and documentation
 - Proof of absence of runtime errors
 - Multicore support
@@ -57,8 +59,8 @@ A browsable version of the repository is available here:
 http://git.codelabs.ch/?p=muen.git
 
 
-Development Environment
------------------------
+Development
+-----------
 The Muen SK has been developed and successfully tested using the development
 environment listed in the following table.
 

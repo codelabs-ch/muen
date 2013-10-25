@@ -1,0 +1,37 @@
+#!/bin/sh
+
+PATH="/bin:/sbin:/usr/bin:/usr/sbin"
+
+echo "Entering initramfs"
+
+echo "Creating busybox symlinks"
+/bin/busybox mkdir -p /sbin /usr/bin /usr/sbin
+/bin/busybox --install -s
+
+for dir in proc sys tmp; do
+  mkdir -p $dir
+done
+
+echo "Mounting procfs"
+mount -t proc proc /proc
+
+echo "Mounting sysfs"
+mount -t sysfs sys /sys
+
+echo "Mounting /tmp"
+mount -t tmpfs tmp /tmp
+
+echo "Populating /dev"
+mount -t devtmpfs dev /dev
+echo -n /sbin/mdev >/proc/sys/kernel/hotplug
+mdev -s
+
+if grep -q console= /proc/cmdline; then
+  TTY=`sed -e 's/^.*console=\([^, ]\+\).*$/\1/' /proc/cmdline`
+else
+  TTY=/dev/tty1
+fi
+while [ ohhnoworktodo ]; do
+  echo "Starting getty on $TTY"
+  getty -Lnl /bin/sh 115200 $TTY vt100
+done

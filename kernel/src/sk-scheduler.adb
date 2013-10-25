@@ -37,7 +37,7 @@ package body SK.Scheduler
 is
 
    --  IRQ constants.
-   Timer_Vector : constant := 32;
+   Timer_Vector : constant := 48;
    IPI_Vector   : constant := 254;
 
    Launched_Subject_State : constant SK.Subject_State_Type

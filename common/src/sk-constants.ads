@@ -161,6 +161,8 @@ is
    EXIT_REASON_VMCALL           : constant := 18;
    EXIT_REASON_DR_ACCESS        : constant := 29;
    EXIT_REASON_IO_INSTRUCTION   : constant := 30;
+   EXIT_REASON_RDMSR            : constant := 31;
+   EXIT_REASON_WRMSR            : constant := 32;
    EXIT_REASON_TIMER_EXPIRY     : constant := 52;
 
    --  VMX exit reason flags

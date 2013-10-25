@@ -207,6 +207,51 @@ begin
             end case;
          end if;
 
+      elsif State.Exit_Reason = SK.Constants.EXIT_REASON_RDMSR then
+         case State.Regs.RCX and 16#ffff_ffff# is
+            when  16#8b# |
+                  16#c1# |
+                  16#c2# |
+                  16#c3# |
+                  16#c4# |
+                  16#c5# |
+                  16#c6# |
+                  16#c7# |
+                  16#c8# |
+                 16#186# |
+                 16#187# |
+                 16#188# |
+                 16#189# =>
+               Subject.Text_IO.Put_String (Item => "RDMSR 16#");
+               Subject.Text_IO.Put_Word32
+                 (Item => SK.Word32 (State.Regs.RCX and 16#ffff_ffff#));
+               Subject.Text_IO.Put_Line (Item => "#");
+               State.Regs.RAX := State.Regs.RAX and not 16#ffff_ffff#;
+               State.Regs.RDX := State.Regs.RDX and not 16#ffff_ffff#;
+            when others =>
+               Subject.Text_IO.Put_Line (Item => "RDMSR");
+               Dump_And_Halt := True;
+         end case;
+
+      elsif State.Exit_Reason = SK.Constants.EXIT_REASON_WRMSR then
+         case State.Regs.RCX and 16#ffff_ffff# is
+            when  16#8b# |
+                  16#c1# =>
+               Subject.Text_IO.Put_String (Item => "WRMSR 16#");
+               Subject.Text_IO.Put_Word32
+                 (Item => SK.Word32 (State.Regs.RCX and 16#ffff_ffff#));
+               Subject.Text_IO.Put_String (Item => "#: ");
+               Subject.Text_IO.Put_Word32
+                 (Item => SK.Word32 (State.Regs.RDX and 16#ffff_ffff#));
+               Subject.Text_IO.Put_String (Item => ":");
+               Subject.Text_IO.Put_Word32
+                 (Item => SK.Word32 (State.Regs.RAX and 16#ffff_ffff#));
+               Subject.Text_IO.New_Line;
+            when others =>
+               Subject.Text_IO.Put_Line (Item => "WRMSR");
+               Dump_And_Halt := True;
+         end case;
+
       else
          Subject.Text_IO.Put_String (Item => "Unhandled trap for subject ");
          Subject.Text_IO.Put_Byte   (Item => SK.Byte (Id));

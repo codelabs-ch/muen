@@ -157,6 +157,7 @@ is
    EXIT_REASON_INTERRUPT_WINDOW : constant := 7;
    EXIT_REASON_CPUID            : constant := 10;
    EXIT_REASON_INVLPG           : constant := 14;
+   EXIT_REASON_RDTSC            : constant := 16;
    EXIT_REASON_VMCALL           : constant := 18;
    EXIT_REASON_DR_ACCESS        : constant := 29;
    EXIT_REASON_IO_INSTRUCTION   : constant := 30;

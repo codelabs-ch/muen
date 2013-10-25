@@ -33,6 +33,8 @@ procedure Sm
 is
    use type SK.Word64;
 
+   TSC_Counter   : SK.Word64 := 0;
+
    Id            : Skp.Subject_Id_Type;
    Dump_And_Halt : Boolean := False;
    State         : SK.Subject_State_Type;
@@ -97,6 +99,11 @@ begin
 
          --  Ignore INVLPG and MOV DR for now.
          null;
+
+      elsif State.Exit_Reason = SK.Constants.EXIT_REASON_RDTSC then
+         State.Regs.RAX := TSC_Counter and 16#ffff_ffff#;
+         State.Regs.RDX := TSC_Counter / 2 ** 32;
+         TSC_Counter := TSC_Counter + 1;
 
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_IO_INSTRUCTION then
          case State.Exit_Qualification / 2 ** 16 is

@@ -124,8 +124,10 @@ begin
                when 0 =>      --  1-byte
                   case State.Exit_Qualification / 2 ** 16 is --  Port number
                      --  Only handle these ports by now:
-                     when 16#21#  |    --  PIC_MASTER_IMR      (hardcoded)
-                          16#a1#  |    --  PIC_SLAVE_IMR       (hardcoded)
+                     when 16#20#  |    --  PIC_MASTER_CMD      (hardcoded)
+                          16#21#  |    --  PIC_MASTER_DATA     (hardcoded)
+                          16#a0#  |    --  PIC_SLAVE_CMD       (hardcoded)
+                          16#a1#  |    --  PIC_SLAVE_DATA      (hardcoded)
                           16#40#  |    --  i8253/4 PIT_CH0     (hardcoded)
                           16#43#  |    --  i8253/4 PIT_MODE    (hardcoded)
                           16#60#  |    --  i8042 DATA          (configurable)
@@ -143,12 +145,6 @@ begin
                           16#3fa# =>   --  82C710 C&T mouse port chip   (conf.)
                         --  ignore writes, read 00/ff
                         case State.Exit_Qualification / 2 ** 16 is
-                           when 16#21# =>
-                              Subject.Text_IO.Put_String
-                                ("i8259 PIC_MASTER_IMR ");
-                           when 16#a1# =>
-                              Subject.Text_IO.Put_String
-                                ("i8259 PIC_SLAVE_IMR ");
                            when 16#40# =>
                               Subject.Text_IO.Put_String ("i8253/4 PIT_CH0  ");
                            when 16#43# =>

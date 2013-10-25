@@ -8,8 +8,8 @@
   </xsl:copy>
 </xsl:template>
 
-<xsl:template match="div[@class='toc']">
-<div class="toc">
+<xsl:template match="div[@class='toc_block']">
+<div class="toc_block">
    <ul class="toc">
       <xsl:apply-templates select="//h2" mode="toc"/>
    </ul>

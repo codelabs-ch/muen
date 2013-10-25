@@ -32,11 +32,10 @@ h2 {
 }
 
 .paragraph .image {
-   float: left;
    margin: 0.5em 0.5em 0.5em 0em;
-   width: -moz-min-content;
    padding-right: 0.9em;
    padding-bottom: 0.5em;
+   float: left;
 }
 
 .paragraph {
@@ -62,19 +61,27 @@ td {
 .admonitionblock {
    background-color: rgba(255, 0, 0, 0.9);
    padding: 1em 1em;
-   margin: 2em auto;
+   margin: 1em auto;
    max-width: 80%;
    box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.15) inset, 0px 0px 1.25em rgba(0, 0, 0, 0.5);
    border-radius: 10px;
 }
 
+.icon {
+   vertical-align: middle;
+}
 
 .icon .title {
    font-weight: 900;
    font-size: 1.3em;
-   padding-right: 1em;
-   float: left;
+   padding-right: 0.5em;
+   display: inline-block;
 }
+
+.icon .content {
+   display: inline-block;
+}
+
 
 .logo {
    margin-left: 2em;
@@ -90,9 +97,7 @@ td {
 .header, .footer {
    background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.8);
    box-shadow: 0px 0px 1.25em rgba(0, 0, 0, 0.8);
-   padding: 0px;
-   padding-top: 2em;
-   padding-bottom: 2em;
+   padding-top: 1em;
    width: 100%;
    min-width: 1000px;
 }
@@ -106,13 +111,11 @@ td {
 }
 
 li.toc {
-   float: left;
+   display: inline-block;
    padding: 0.5em;
    padding-left: 0.8em;
    padding-right: 0.8em;
-   border-top-style: solid;
-   border-color: rgb(255, 0, 0);
-   border-width: 2px;
+   border-radius: 0px;
 }
 
 li.toc:hover {
@@ -139,6 +142,8 @@ a.toc:hover {
 }
 
 ul.toc {
+   border-top-style: solid;
+   border-color: red;
    list-style-type: none;
    padding-left: 20px;
 }
@@ -228,7 +233,7 @@ pre {
 }
 
 .logos .hsr img, .logos .swissmade img {
-   height: 6em;
+   height: 4em;
 }
 
 .subtitle {
@@ -281,7 +286,7 @@ a {
    }
 
    li.toc {
-      float: none;
+      display: inline;
       padding: 0em;
       border-top-style: none;
    }

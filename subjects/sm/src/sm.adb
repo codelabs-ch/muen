@@ -73,13 +73,17 @@ begin
             when 1 =>
 
                --  Processor Info and Feature Bits.
-               --                    i486    SX
-               --                        \  /
-               State.Regs.RAX := 16#0000_0420#;
+               --                            Model 1
+               --                    i686   / Stepping 9
+               --                        \ | /
+               State.Regs.RAX := 16#0000_0619#;
                State.Regs.RBX := 16#0000_0000#;
                State.Regs.RCX := 16#0000_0000#;
-               --  We currently provide no features.
-               State.Regs.RDX := 16#0000_0000#;
+               --  Features:
+               --  Bit  8 -  CX8: CMPXCHG8B Instruction
+               --  Bit 11 -  SEP: SYSENTER/SYSEXIT Instructions
+               --  Bit 15 - CMOV: Conditional Move Instructions
+               State.Regs.RDX := 16#0000_8900#;
             when 16#8000_0000# =>
 
                --  Get Highest Extended Function Supported.

@@ -20,7 +20,8 @@ h1 {
    font-weight: 300;
    font-size: 2.5em;
    margin: 0px;
-   padding-left: 20px;
+   display: inline-block;
+   margin-left: 20px;
 }
 
 h2 {
@@ -54,7 +55,7 @@ table {
 td {
    padding: 1em;
    border-style: none;
-   border-radius: 5px;
+   border-bottom-radius: 5px;
    background-color: rgba(255, 0, 0, 0.1);
 }
 
@@ -86,12 +87,12 @@ td {
 .logo {
    margin-left: 2em;
    margin-right: 1.5em;
-   float: left;
 }
 
 .logo img {
    height: 4.5em;
    vertical-align: middle;
+   float: left;
 }
 
 .header, .footer {
@@ -121,7 +122,7 @@ li.toc {
 li.toc:hover {
    background-color: rgb(255, 0, 0);
    text-decoration: none;
-   border-radius: 0.3em;
+   border-radius: 0px 0px 0.3em 0.3em;
 }
 
 li.toc a:link {
@@ -146,6 +147,7 @@ ul.toc {
    border-color: red;
    list-style-type: none;
    padding-left: 20px;
+   width: 100%;
 }
 
 #_references + .sectionbody .ulist ul {
@@ -239,6 +241,11 @@ pre {
 .subtitle {
    color: rgb(255, 0, 0);
    font-weight: 700;
+   padding-left: 20px;
+}
+
+.titles {
+   display: inline-block;
 }
 
 a {

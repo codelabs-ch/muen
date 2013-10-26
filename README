@@ -47,10 +47,10 @@ Documentation
 The following detailed project documentation is available:
 
 * Muen project report:
-  http://muen.sk/muen-report.pdf
+  http://muen.codelabs.ch/muen-report.pdf
 
 * A presentation about the Muen SK:
-  http://muen.sk/muen-slides.pdf
+  http://muen.codelabs.ch/muen-slides.pdf
 
 
 Download
@@ -125,7 +125,7 @@ to checkout, patch and install Bochs with `/usr/local` prefix:
 
   $ svn checkout svn://svn.code.sf.net/p/bochs/code/trunk bochs-code
   $ cd bochs-code/bochs
-  $ wget http://muen.sk/set-feature-control-lock-bit.patch
+  $ wget http://muen.codelabs.ch/set-feature-control-lock-bit.patch
   $ patch -p0 < set-feature-control-lock-bit.patch
   $ ./configure           \
       --prefix=/usr/local \
@@ -148,11 +148,11 @@ serial console output is written to `emulate/serial.out`.
 Hardware
 ~~~~~~~~
 For efficient deployment of the Muen system image to real hardware, the iPXE [4]
-boot firmware installed on an USB-stick is used. To build and install iPXE with
+boot firmware installed on a USB-stick is used. To build and install iPXE with
 the Muen specific boot script issue the following commands:
 
   $ git clone git://git.ipxe.org/ipxe.git
-  $ wget http://muen.sk/muen.ipxe
+  $ wget http://muen.codelabs.ch/muen.ipxe
   $ cd ipxe/src
   $ make bin/ipxe.usb EMBED=../../muen.ipxe
   $ sudo dd if=bin/ipxe.usb of=/dev/sdX

@@ -1,25 +1,29 @@
 The Muen Separation Kernel
 ==========================
 
-The Muen Separation Kernel is the world's first Open Source microkernel which
+The Muen Separation Kernel is the world's first Open Source microkernel that
 has been formally proven to contain no runtime errors at the source code level.
 It is developed in Switzerland by the Institute for Internet Technologies and
-Applications (ITA) at the Hochschule fuer Technik Rapperswil (HSR). In close
-cooperation with the high-security industry the kernel was designed
-specifically to meet the requirements of high-assurance systems for the Intel
-x86/64 platform.
+Applications (ITA) at the Hochschule für Technik Rapperswil (HSR). Muen was
+designed specifically to meet the challenging requirements of high-assurance
+systems on the Intel x86/64 platform. To ensure Muen is suitable for highly
+critical systems and advanced national security platforms, HSR closely
+cooperated with the high-security specialist secunet Security Networks AG in
+Germany.
 
 image:example.svg[Example Architecture]
 
 A Separation Kernel (SK) is a specialized microkernel that provides an
-execution environment for multiple components that can only communicate
-according to a given policy and are otherwise isolated from each other. SKs are
-generally more static and smaller than dynamic microkernels, which minimizes
-the possibility of kernel failure and should ease the application of formal
-verification techniques. Muen uses Intel's hardware-assisted virtualization
-technology VT-x as core mechanism to separate components. The kernel executes
-in VMX root mode, while user components, so called 'subjects', run in VMX
-non-root mode.
+execution environment for components that exclusively communicate according to
+a given security policy and are otherwise strictly isolated from each other.
+The covert channel problem -- largely ignored by other platforms -- is
+addressed explicitly by these kernels. SKs are generally more static and
+smaller than dynamic microkernels, which minimizes the possibility of kernel
+failure, eases the application of formal verification techniques and eases the
+mitigation of covert channels. Muen uses Intel's hardware-assisted
+virtualization technology VT-x as core mechanism to separate components. The
+kernel executes in VMX root mode, while user components, so called 'subjects',
+run in VMX non-root mode.
 
 NOTE: Muen is currently a prototype implementation. We do not yet consider it
       to be fit for production use.

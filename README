@@ -59,7 +59,12 @@ The Muen sources are available through its git repository:
 
   $ git clone http://git.codelabs.ch/git/muen.git
 
+A ZIP archive of the current Muen sources can be downloaded here:
+
+http://git.codelabs.ch/?p=muen.git;a=snapshot;h=HEAD;sf=zip
+
 A browsable version of the repository is available here:
+
 http://git.codelabs.ch/?p=muen.git
 
 

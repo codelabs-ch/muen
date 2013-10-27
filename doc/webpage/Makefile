@@ -28,13 +28,13 @@ all: $(DESTDIR)/index.html $(DST_FILES)
 $(DESTDIR)/%: %
 	@cp $< $(DESTDIR)
 
-$(DESTDIR)/index.html: $(DESTDIR)/index.html.pre content.xsl
+$(DESTDIR)/index.html: index.html.pre content.xsl
 	xsltproc --html content.xsl $< > $@.tmp
 	mv $@.tmp $@
 
-$(DESTDIR)/index.html.pre: index page.conf ../../README
+index.html.pre: index page.conf ../../README
 	asciidoc $(ASCIIDOC_OPTS) $< > $@.tmp
 	mv $@.tmp $@
 
 clean:
-	@rm -rf $(DESTDIR)
+	@rm -rf $(DESTDIR) index.html.pre

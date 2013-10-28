@@ -114,29 +114,26 @@ td {
 }
 
 li.toc {
-   display: inline-block;
    padding: 0.5em;
    padding-left: 0.8em;
    padding-right: 0.8em;
    border-radius: 0px;
-   text-decoration: none;
    color: rgba(0, 0, 0, 0.9);
 }
 
 li.toc:hover {
    background-color: rgb(255, 0, 0);
-   text-decoration: none;
    border-radius: 0px 0px 0.3em 0.3em;
 }
 
 a.toc {
    color: rgba(0, 0, 0, 0.8);
-   text-decoration: none;
    background: none;
 }
 
 a:link.toc {
    padding: 0px;
+   text-decoration: none;
 }
 
 ul.toc {
@@ -282,19 +279,20 @@ a {
    }
 
    ul.toc {
+      border-top-style: none;
       list-style-type: decimal;
       margin-top: 2em;
       margin-left: 2em;
    }
 
-   li.toc {
-      display: inline;
-      padding: 0em;
-      border-top-style: none;
-   }
-
    .sect1, #preamble {
       margin: 0em;
+   }
+
+   a:link.toc {
+      display: block;
+      color: black;
+      text-decoration: none;
    }
 
    a:link {

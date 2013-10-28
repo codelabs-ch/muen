@@ -313,4 +313,11 @@ a {
       border-width: 2px;
    }
 
+   span.image img {
+      max-width: 80%;
+   }
+
+   .paragraph .image {
+      float: none;
+   }
 }

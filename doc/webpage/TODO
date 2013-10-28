@@ -20,12 +20,13 @@
 - General ------------------------------------------
 
 - Schwarzer Text auf rotem Grund ist auf Projektoren häufig unleserlich
+AS: Need to think about a style that is not ugly.
 
-- Die Schriftgröße des Textkörpers ist größer als die der Links der
-Titelleiste
+- Die Schriftgröße des Textkörpers ist größer als die der Links der Titelleiste
 
 - Alter Firefox, alter und neuer Konqueror: Keine SVG Unterstützung.
 --> Muen und ITA Grafiken in der Titelleiste sowie die example.svg im Text nicht sichtbar.
+AS: I tend to NOT fix that as there seems to be no good fall-back mechanism.
 
 - Alter Firefox, alter und neuer Konqueror: Fortgeschrittenes CSS wird nicht
   korrekt interpretiert. (Erwartet) Lesbarkeit bleibt jedoch erhalten.

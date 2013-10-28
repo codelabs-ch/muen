@@ -1,8 +1,5 @@
 - FF24 ------------------------------------------
 
-- FF24: Die Links werden rot umrahmt, wenn man in die Nähe kommt, sind
-jedoch nur durch direkten Klick auswählbar.
-
 - FF24: Bei Breiten zwischen 800 und 1100 Pixeln werden die Links auf zwei
   Zeilen verteilt. Der Umbruch erfolgt links von "swiss made software".
 

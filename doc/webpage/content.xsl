@@ -18,15 +18,15 @@
 </xsl:template>
 
 <xsl:template match="h2" mode="toc">
-   <li class="toc">
-      <a class="toc">
-         <xsl:attribute name="href">
-            <xsl:text>#sec</xsl:text>
-            <xsl:value-of select="@id"/>
-         </xsl:attribute>
+   <a class="toc">
+      <xsl:attribute name="href">
+        <xsl:text>#sec</xsl:text>
+         <xsl:value-of select="@id"/>
+      </xsl:attribute>
+      <li class="toc">
          <xsl:value-of select="."/>
-      </a>
-   </li>
+      </li>
+   </a>
 </xsl:template>
 
 </xsl:stylesheet>

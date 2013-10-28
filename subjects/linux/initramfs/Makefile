@@ -5,8 +5,16 @@ all: $(OBJ_DIR)/initramfs.cpio
 ##### Busybox
 
 BB_VERSION = 1.21.1
+BB_BINARY  = $(SRC_DIR)/busybox-i686
+#BB_BINARY  = $(OBJ_DIR)/busybox/busybox
 
 .PHONY: $(OBJ_DIR)/busybox/busybox src-clean
+
+$(SRC_DIR)/busybox-i686: $(SRC_DIR)/busybox-i686.sha1
+	@wget \
+	    http://busybox.net/downloads/binaries/$(BB_VERSION)/busybox-i686 \
+	    -O $@
+	@cd $(SRC_DIR) && sha1sum -c $< || (rm -f $@ && false)
 
 $(SRC_DIR)/busybox-$(BB_VERSION).tar.bz2:
 	@wget http://busybox.net/downloads/busybox-$(BB_VERSION).tar.bz2 -O $@
@@ -59,7 +67,7 @@ $(INITRAMFS_DIRS):
 
 $(INITRAMFS_FILES): $(INITRAMFS_DIRS)
 
-$(INITRAMFS_ROOT)/bin/busybox: $(OBJ_DIR)/busybox/busybox
+$(INITRAMFS_ROOT)/bin/busybox: $(BB_BINARY)
 	@install -m0755 $< $@
 
 $(INITRAMFS_ROOT)/bin/sh:

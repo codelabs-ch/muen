@@ -196,6 +196,7 @@ pre {
    padding: 1em 1em;
    max-width: 95%;
    border-radius: 10px;
+   overflow: hidden;
 }
 
 #footer-text {

@@ -28,7 +28,7 @@
 	</device>
 	<device name="vga">
 		<memory_layout>
-			<memory_region physical_address="b8000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WC"/>
+			<memory_region physical_address="b8000" virtual_address="b8000" size="32k" alignment="4k" writable="true" executable="false" memory_type="WC"/>
 		</memory_layout>
 	</device>
 	<device name="cursor">

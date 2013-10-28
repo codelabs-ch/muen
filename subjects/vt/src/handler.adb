@@ -35,7 +35,7 @@ is
    package VGA is new SK.Console_VGA
      (Width_Type   => Width_Type,
       Height_Type  => Height_Type,
-      Base_Address => System'To_Address (16#000b_9000#));
+      Base_Address => System'To_Address (16#001b_8000#));
 
    package Text_IO is new SK.Console
      (Initialize      => VGA.Init,
@@ -48,7 +48,7 @@ is
 
    --  Xv6 driver page, currently used to forward keyboard scancodes.
    Kbd_Driver : Kbd_Driver_Type;
-   for Kbd_Driver'Address use System'To_Address (16#20000#);
+   for Kbd_Driver'Address use System'To_Address (16#40000#);
    pragma Volatile (Kbd_Driver);
 
    --  PS/2 constants.

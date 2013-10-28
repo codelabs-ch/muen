@@ -321,3 +321,36 @@ a {
       float: none;
    }
 }
+
+@media only screen and (max-width: 600px) {
+   li.toc {
+      display: none;
+   }
+
+   .logos {
+      display: none;
+   }
+
+   .logo img {
+      height: 2em;
+   }
+
+   h1 {
+      font-size: 1.5em;
+   }
+
+   .subtitle {
+      font-size: 1em;
+      font-weight: 700;
+   }
+
+   .image img {
+      float: none;
+      width: 90%;
+      margin: auto 1em;
+   }
+
+   .sect1, #preamble {
+      width: 99%;
+   }
+}

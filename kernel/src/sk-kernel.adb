@@ -63,6 +63,8 @@ is
             Apic.Start_AP_Processors;
          end if;
 
+         System_State.Enable_VMX_Feature;
+
          VMX.Enter_Root_Mode;
          Scheduler.Init;
 

@@ -8,7 +8,7 @@ Applications (ITA) at the University of Applied Sciences Rapperswil (HSR). Muen
 was designed specifically to meet the challenging requirements of high-assurance
 systems on the Intel x86/64 platform. To ensure Muen is suitable for highly
 critical systems and advanced national security platforms, HSR closely
-cooperated with the high-security specialist secunet Security Networks AG in
+cooperates with the high-security specialist secunet Security Networks AG in
 Germany.
 
 image:example.svg[Example Architecture]

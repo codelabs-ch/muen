@@ -14,7 +14,7 @@ $(SRC_DIR)/busybox-i686: $(SRC_DIR)/busybox-i686.sha1
 	@wget \
 	    http://busybox.net/downloads/binaries/$(BB_VERSION)/busybox-i686 \
 	    -O $@
-	@cd $(SRC_DIR) && sha1sum -c $< || (rm -f $@ && false)
+	@cd $(SRC_DIR) && sha1sum -c $< && touch $@ || (rm -f $@ && false)
 
 $(SRC_DIR)/busybox-$(BB_VERSION).tar.bz2:
 	@wget http://busybox.net/downloads/busybox-$(BB_VERSION).tar.bz2 -O $@

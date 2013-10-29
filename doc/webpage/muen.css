@@ -98,9 +98,12 @@ td {
 .header, .footer {
    background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.8);
    box-shadow: 0px 0px 1.25em rgba(0, 0, 0, 0.8);
-   padding-top: 1em;
    width: 100%;
    min-width: 1000px;
+}
+
+.header {
+   padding-top: 1em;
 }
 
 .ulist ul li {

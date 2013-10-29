@@ -33,23 +33,26 @@ is
         (Register => Constants.IA32_FEATURE_CONTROL);
 
       if not SK.Bit_Test (Value => MSR_Feature_Control,
-                          Pos   => 0)
+                          Pos   => Constants.IA32_FCTRL_LOCKED_FLAG)
       then
 
          --  Explicitly disable 'VMX in SMX operation'.
 
-         MSR_Feature_Control := SK.Bit_Clear (Value => MSR_Feature_Control,
-                                              Pos   => 1);
+         MSR_Feature_Control := SK.Bit_Clear
+           (Value => MSR_Feature_Control,
+            Pos   => Constants.IA32_FCTRL_VMX_IN_SMX_FLAG);
 
          --  Enable 'VMX outside SMX operation'.
 
-         MSR_Feature_Control := SK.Bit_Set (Value => MSR_Feature_Control,
-                                            Pos   => 2);
+         MSR_Feature_Control := SK.Bit_Set
+           (Value => MSR_Feature_Control,
+            Pos   => Constants.IA32_FCTRL_VMX_FLAG);
 
          --  Lock MSR.
 
-         MSR_Feature_Control := SK.Bit_Set (Value => MSR_Feature_Control,
-                                            Pos   => 0);
+         MSR_Feature_Control := SK.Bit_Set
+           (Value => MSR_Feature_Control,
+            Pos   => Constants.IA32_FCTRL_LOCKED_FLAG);
 
          CPU.Write_MSR64 (Register => Constants.IA32_FEATURE_CONTROL,
                           Value    => MSR_Feature_Control);
@@ -148,9 +151,9 @@ is
         (Register => Constants.IA32_FEATURE_CONTROL);
       VMX_Disabled_Locked := SK.Bit_Test
         (Value => MSR_Feature_Control,
-         Pos   => 0) and then not SK.Bit_Test
+         Pos   => Constants.IA32_FCTRL_LOCKED_FLAG) and then not SK.Bit_Test
         (Value => MSR_Feature_Control,
-         Pos   => 2);
+         Pos   => Constants.IA32_FCTRL_VMX_FLAG);
       pragma Debug
         (VMX_Disabled_Locked,
          KC.Put_Line (Item => "VMX disabled by BIOS"));

@@ -11,7 +11,7 @@ body {
    padding: 0px;
    margin: 0px;
    color: rgba(0, 0, 0, 0.9);
-   box-shadow: 0px 0px 18.75em rgba(0, 0, 0, 0.2) inset;
+   box-shadow: 0px 0px 18.75em rgba(0, 0, 0, 0.6) inset;
    font-family: 'Lato', sans-serif;
    font-weight: 300;
    font-size: 80%;
@@ -30,7 +30,7 @@ h2 {
    font-size: 1.5em;
    border-radius: 10px 10px 0px 0px;
    margin: 0px;
-   background: none repeat scroll 0% 0% rgba(255, 0, 0, 0.9);
+   background: none repeat scroll 0% 0% rgb(85, 138, 188);
 }
 
 .paragraph .image {
@@ -57,11 +57,11 @@ td {
    padding: 1em;
    border-style: none;
    border-bottom-radius: 5px;
-   background-color: rgba(255, 0, 0, 0.1);
+   background-color: rgba(105, 180, 249, 0.3);
 }
 
 .admonitionblock {
-   background-color: rgba(255, 0, 0, 0.9);
+   background-color: rgba(105, 180, 249, 0.3);
    padding: 1em 1em;
    margin: 1em auto;
    max-width: 80%;
@@ -113,16 +113,20 @@ td {
    list-style: square;
 }
 
+.toc_block {
+   background-color: rgba(85, 138, 188, 0.6);
+}
+
 li.toc {
    padding: 0.5em;
    padding-left: 0.8em;
    padding-right: 0.8em;
    border-radius: 0px;
-   color: rgba(0, 0, 0, 0.9);
+   color: black;
 }
 
 li.toc:hover {
-   background-color: rgb(255, 0, 0);
+   background-color: rgb(85, 138, 188);
    border-radius: 0px 0px 0.3em 0.3em;
 }
 
@@ -139,7 +143,7 @@ a:link.toc {
 
 ul.toc {
    border-top-style: solid;
-   border-color: red;
+   border-color: rgb(85, 138, 188);
    list-style-type: none;
    padding-left: 20px;
 }
@@ -193,7 +197,7 @@ a.anchor:hover {
 pre {
    font-family: 'Source Code Pro', monospace;
    line-height: 1.8;
-   background-color: rgba(255, 0, 0, 0.1);
+   background-color: rgba(105, 180, 249, 0.3);
    padding: 1em 1em;
    max-width: 95%;
    border-radius: 10px;
@@ -362,7 +366,7 @@ a {
    }
 
    li.toc:hover {
-      background-color: rgb(255, 0, 0);
+      background-color: rgb(85, 138, 188);
       border-radius: 0.3em;
    }
 

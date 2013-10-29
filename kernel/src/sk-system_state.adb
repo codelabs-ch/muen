@@ -101,20 +101,26 @@ is
 
    function Is_Valid return Boolean
    is
-      VMX_Support, VMX_Locked, Protected_Mode            : Boolean;
-      Paging, IA_32e_Mode, Apic_Support                  : Boolean;
-      CR0_Valid, CR4_Valid, Not_Virtual_8086, Not_In_SMX : Boolean;
+      MSR_Feature_Control : SK.Word64;
+
+      VMX_Support, VMX_Disabled_Locked, Protected_Mode, Paging : Boolean;
+      IA_32e_Mode, Apic_Support, CR0_Valid, CR4_Valid          : Boolean;
+      Not_Virtual_8086, Not_In_SMX                             : Boolean;
    begin
       VMX_Support := Has_VMX_Support;
       pragma Debug
         (not VMX_Support, KC.Put_Line (Item => "VMX not supported"));
 
-      VMX_Locked := SK.Bit_Test
-        (Value => CPU.Get_MSR64 (Register => Constants.IA32_FEATURE_CONTROL),
-         Pos   => 0);
+      MSR_Feature_Control := CPU.Get_MSR64
+        (Register => Constants.IA32_FEATURE_CONTROL);
+      VMX_Disabled_Locked := SK.Bit_Test
+        (Value => MSR_Feature_Control,
+         Pos   => 0) and then not SK.Bit_Test
+        (Value => MSR_Feature_Control,
+         Pos   => 2);
       pragma Debug
-        (not VMX_Locked,
-         KC.Put_Line (Item => "IA32_FEATURE_CONTROL not locked"));
+        (VMX_Disabled_Locked,
+         KC.Put_Line (Item => "VMX disabled by BIOS"));
 
       Protected_Mode := SK.Bit_Test
         (Value => CPU.Get_CR0,
@@ -168,15 +174,15 @@ is
       pragma Debug
         (not Apic_Support, KC.Put_Line (Item => "Local x2APIC not present"));
 
-      return VMX_Support and
-        VMX_Locked       and
-        Protected_Mode   and
-        Paging           and
-        IA_32e_Mode      and
-        Not_Virtual_8086 and
-        Not_In_SMX       and
-        CR0_Valid        and
-        CR4_Valid        and
+      return VMX_Support        and
+        not VMX_Disabled_Locked and
+        Protected_Mode          and
+        Paging                  and
+        IA_32e_Mode             and
+        Not_Virtual_8086        and
+        Not_In_SMX              and
+        CR0_Valid               and
+        CR4_Valid               and
         Apic_Support;
    end Is_Valid;
 

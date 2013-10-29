@@ -323,25 +323,27 @@ a {
 }
 
 @media only screen and (max-width: 600px) {
-   li.toc {
-      display: none;
-   }
 
    .logos {
       display: none;
    }
 
-   .logo img {
-      height: 2em;
-   }
-
    h1 {
       font-size: 1.5em;
+      padding: 0px;
+      margin: 0px;
+   }
+
+   h2 {
+      padding: 10px 15px;
+      font-size: 1em;
+      border-radius: 10px 10px 0px 0px;
    }
 
    .subtitle {
       font-size: 1em;
       font-weight: 700;
+      padding-left: 0px;
    }
 
    .image img {
@@ -351,6 +353,30 @@ a {
    }
 
    .sect1, #preamble {
-      width: 99%;
+      width: 95%;
    }
+
+   a:link {
+      width: 50%;
+   }
+
+   li.toc:hover {
+      background-color: rgb(255, 0, 0);
+      border-radius: 0.3em;
+   }
+
+   ul.toc {
+      padding: 20px;
+   }
+
+   .titles {
+      height: 4em;
+      width: 75%;
+      margin-left: 2%;
+   }
+
+   .logo img {
+      height: 4em;
+   }
+
 }

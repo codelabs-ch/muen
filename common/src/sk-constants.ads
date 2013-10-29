@@ -40,6 +40,7 @@ is
 
    IA32_EFER_LMA_FLAG           : constant := 10;
    IA32_FCTRL_LOCKED_FLAG       : constant := 0;
+   IA32_FCTRL_VMX_IN_SMX_FLAG   : constant := 1;
    IA32_FCTRL_VMX_FLAG          : constant := 2;
 
    ----------

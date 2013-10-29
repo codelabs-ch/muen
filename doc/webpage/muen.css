@@ -85,14 +85,13 @@ td {
 
 
 .logo {
+   float: left;
    margin-left: 2em;
-   margin-right: 1.5em;
 }
 
 .logo img {
    height: 4.5em;
    vertical-align: middle;
-   float: left;
 }
 
 .header, .footer {

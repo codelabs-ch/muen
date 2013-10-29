@@ -63,7 +63,7 @@ is
             Apic.Start_AP_Processors;
          end if;
 
-         VMX.Enable;
+         VMX.Enter_Root_Mode;
          Scheduler.Init;
 
          --  Synchronize all logical CPUs.

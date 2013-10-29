@@ -459,7 +459,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Enable
+   procedure Enter_Root_Mode
    is
       Success : Boolean;
    begin
@@ -473,6 +473,6 @@ is
          pragma Debug (KC.Put_Line (Item => "Error enabling VMX"));
          CPU.Panic;
       end if;
-   end Enable;
+   end Enter_Root_Mode;
 
 end SK.VMX;

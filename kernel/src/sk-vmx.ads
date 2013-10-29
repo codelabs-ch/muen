@@ -38,7 +38,7 @@ package SK.VMX
 is
 
    --  Enter VMX root operation.
-   procedure Enable;
+   procedure Enter_Root_Mode;
    --# global
    --#    in out X86_64.State;
    --# derives

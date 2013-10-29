@@ -110,18 +110,9 @@ begin
          TSC_Counter := TSC_Counter + 1;
 
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_IO_INSTRUCTION then
-         case State.Exit_Qualification / 2 ** 16 is
-            when 16#64# =>
-               null;
-            when others =>
-               Subject.Text_IO.Put_String (Item => "I/O instruction on port ");
-               Subject.Text_IO.Put_Word16
-                 (Item => SK.Word16 (State.Exit_Qualification / 2 ** 16));
-               Subject.Text_IO.New_Line;
-         end case;
-
          if (State.Exit_Qualification and 48) /= 0 then
-            --  String and REP not supported
+            Subject.Text_IO.Put_Line
+              ("I/O instructions with string and REP not supported");
             Dump_And_Halt := True;
          else
             case State.Exit_Qualification and 7 is --  Size of access
@@ -150,28 +141,24 @@ begin
                         --  ignore writes, read 00/ff
                         case State.Exit_Qualification / 2 ** 16 is
                            when 16#40# =>
-                              Subject.Text_IO.Put_String ("i8253/4 PIT_CH0  ");
+                              Subject.Text_IO.Put_String
+                                ("(40) i8253/4 PIT_CH0  ");
                            when 16#43# =>
-                              Subject.Text_IO.Put_String ("i8253/4 PIT_MODE ");
-                           when 16#64# =>
-                              null;
+                              Subject.Text_IO.Put_String
+                                ("(43) i8253/4 PIT_MODE ");
                            when 16#70# =>
-                              Subject.Text_IO.Put_String ("RTC CMD  ");
+                              Subject.Text_IO.Put_String ("(70) RTC CMD  ");
                            when 16#71# =>
-                              Subject.Text_IO.Put_String ("RTC DATA ");
-                           when 16#80# =>
-                              Subject.Text_IO.Put_String ("PORT80 ");
+                              Subject.Text_IO.Put_String ("(71) RTC DATA ");
                            when others =>
-                              Subject.Text_IO.Put_String ("16#");
+                              Subject.Text_IO.Put_String (" ");
                               Subject.Text_IO.Put_Word16 (SK.Word16
                                 ((State.Exit_Qualification / 2 ** 16) and
                                  16#ffff#));
-                              Subject.Text_IO.Put_String ("# ");
+                              Subject.Text_IO.Put_String ("  ");
                         end case;
                         if ((State.Exit_Qualification / 2 ** 3) and 1) = 1 then
                            case State.Exit_Qualification / 2 ** 16 is
-                              when 16#64# =>
-                                 null;
                               when others =>
                                  Subject.Text_IO.Put_String ("read.");
                            end case;
@@ -184,8 +171,6 @@ begin
                            end case;
                         else
                            case State.Exit_Qualification / 2 ** 16 is
-                              when 16#64# =>
-                                 null;
                               when others =>
                                  Subject.Text_IO.Put_String ("write: ");
                                  Subject.Text_IO.Put_Byte
@@ -198,11 +183,16 @@ begin
                         Dump_And_Halt := True;
                   end case;
                when 1 =>      --  2-byte
+                  Subject.Text_IO.Put_Line
+                    ("I/O instructions with word access are not supported");
                   Dump_And_Halt := True;
                when 3 =>      --  4-byte
+                  Subject.Text_IO.Put_Line
+                    ("I/O instructions with long access are not supported");
                   Dump_And_Halt := True;
                when others => --  not used
-                  Subject.Text_IO.Put_String ("Invalid access size");
+                  Subject.Text_IO.Put_Line
+                    ("I/O instruction with invalid access size");
                   Dump_And_Halt := True;
             end case;
          end if;

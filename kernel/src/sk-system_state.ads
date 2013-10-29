@@ -28,4 +28,13 @@ is
    --# global
    --#    X86_64.State;
 
+   --  Enable VMX feature (if disabled). Call this procedure after checking the
+   --  validity of the overall system state to make sure the VMX feature
+   --  control MSR (IA32_FEATURE_CONTROL) is setup correctly.
+   procedure Enable_VMX_Feature;
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *;
+
 end SK.System_State;

@@ -25,6 +25,39 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Enable_VMX_Feature
+   is
+      MSR_Feature_Control : SK.Word64;
+   begin
+      MSR_Feature_Control := CPU.Get_MSR64
+        (Register => Constants.IA32_FEATURE_CONTROL);
+
+      if not SK.Bit_Test (Value => MSR_Feature_Control,
+                          Pos   => 0)
+      then
+
+         --  Explicitly disable 'VMX in SMX operation'.
+
+         MSR_Feature_Control := SK.Bit_Clear (Value => MSR_Feature_Control,
+                                              Pos   => 1);
+
+         --  Enable 'VMX outside SMX operation'.
+
+         MSR_Feature_Control := SK.Bit_Set (Value => MSR_Feature_Control,
+                                            Pos   => 2);
+
+         --  Lock MSR.
+
+         MSR_Feature_Control := SK.Bit_Set (Value => MSR_Feature_Control,
+                                            Pos   => 0);
+
+         CPU.Write_MSR64 (Register => Constants.IA32_FEATURE_CONTROL,
+                          Value    => MSR_Feature_Control);
+      end if;
+   end Enable_VMX_Feature;
+
+   -------------------------------------------------------------------------
+
    --  Check required VMX-fixed bits of given register, see Intel SDM 3C,
    --  appendix A.7 & A.8.
    function Fixed_Valid

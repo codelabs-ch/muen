@@ -32,6 +32,7 @@ is
    CR0_PG_FLAG                  : constant := 0;
 
    CR4_VMXE_FLAG                : constant := 13;
+   CR4_SMXE_FLAG                : constant := 14;
 
    CPUID_FEATURE_VMX_FLAG       : constant := 5;
    CPUID_FEATURE_LOCAL_APIC     : constant := 9;

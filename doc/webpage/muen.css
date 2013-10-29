@@ -128,6 +128,7 @@ li.toc:hover {
 a.toc {
    color: rgba(0, 0, 0, 0.8);
    background: none;
+   text-decoration: none;
 }
 
 a:link.toc {

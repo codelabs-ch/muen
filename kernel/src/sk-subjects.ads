@@ -42,6 +42,15 @@ is
    --# derives
    --#    State from *, Id, Subject_State;
 
+   --  Set CR0 of subject specified by id to given value.
+   procedure Set_CR0
+     (Id    : Skp.Subject_Id_Type;
+      Value : SK.Word64);
+   --# global
+   --#    State;
+   --# derives
+   --#    State from *, Id, Value;
+
    --  Set RIP of subject specified by id to given value.
    procedure Set_RIP
      (Id    : Skp.Subject_Id_Type;

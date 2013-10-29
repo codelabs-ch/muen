@@ -71,10 +71,18 @@ is
       RSP                : Word64;
       SS                 : Word64;
       CR0                : Word64;
+      SHADOW_CR0         : Word64;
       CR2                : Word64;
       CR3                : Word64;
       CR4                : Word64;
       RFLAGS             : Word64;
+      IA32_EFER          : Word64;
+      FS_BASE            : Word64;
+      GS_BASE            : Word64;
+      Kernel_GS_BASE     : Word64;
+      IA32_SYSENTER_CS   : Word64;
+      IA32_SYSENTER_EIP  : Word64;
+      IA32_SYSENTER_ESP  : Word64;
    end record;
 
    Null_Subject_State : constant Subject_State_Type;
@@ -130,9 +138,17 @@ private
         RSP                => 0,
         SS                 => 0,
         CR0                => 0,
+        SHADOW_CR0         => 0,
         CR3                => 0,
         CR2                => 0,
         CR4                => 0,
-        RFLAGS             => 0);
+        RFLAGS             => 0,
+        IA32_EFER          => 0,
+        IA32_SYSENTER_CS   => 0,
+        IA32_SYSENTER_EIP  => 0,
+        IA32_SYSENTER_ESP  => 0,
+        FS_BASE            => 0,
+        GS_BASE            => 0,
+        Kernel_GS_BASE     => 0);
 
 end SK;

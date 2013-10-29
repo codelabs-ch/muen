@@ -54,10 +54,18 @@ is
         RSP                => 0,
         SS                 => 0,
         CR0                => 0,
+        SHADOW_CR0         => 0,
         CR2                => 0,
         CR3                => 0,
         CR4                => 0,
-        RFLAGS             => 0);
+        RFLAGS             => 0,
+        FS_BASE            => 0,
+        GS_BASE            => 0,
+        Kernel_GS_BASE     => 0,
+        IA32_SYSENTER_CS   => 0,
+        IA32_SYSENTER_EIP  => 0,
+        IA32_SYSENTER_ESP  => 0,
+        IA32_EFER          => 0);
 
    Tau0_Kernel_Iface_Address : SK.Word64;
    pragma Import (C, Tau0_Kernel_Iface_Address, "tau0kernel_iface_ptr");
@@ -101,6 +109,18 @@ is
                      Value => State.SS);
       VMX.VMCS_Read (Field => Constants.GUEST_CR0,
                      Value => State.CR0);
+      VMX.VMCS_Read (Field => Constants.CR0_READ_SHADOW,
+                     Value => State.SHADOW_CR0);
+      VMX.VMCS_Read (Field => Constants.GUEST_FS_BASE,
+                     Value => State.FS_BASE);
+      VMX.VMCS_Read (Field => Constants.GUEST_GS_BASE,
+                     Value => State.GS_BASE);
+      VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_CS,
+                     Value => State.IA32_SYSENTER_CS);
+      VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_EIP,
+                     Value => State.IA32_SYSENTER_EIP);
+      VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_ESP,
+                     Value => State.IA32_SYSENTER_ESP);
       State.CR2 := CPU.Get_CR2;
       VMX.VMCS_Read (Field => Constants.GUEST_CR3,
                      Value => State.CR3);
@@ -108,6 +128,8 @@ is
                      Value => State.CR4);
       VMX.VMCS_Read (Field => Constants.GUEST_RFLAGS,
                      Value => State.RFLAGS);
+      VMX.VMCS_Read (Field => Constants.GUEST_IA32_EFER,
+                     Value => State.IA32_EFER);
    end Store_Subject_Info;
 
    -------------------------------------------------------------------------
@@ -307,6 +329,9 @@ is
             Subjects.Set_RSP
               (Id    => I,
                Value => Skp.Subjects.Get_Stack_Address (Subject_Id => I));
+            Subjects.Set_CR0
+              (Id    => I,
+               Value => Skp.Subjects.Get_CR0 (Subject_Id => I));
          end if;
       end loop;
 

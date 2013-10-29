@@ -76,6 +76,8 @@ is
       Params.the_screen_info.orig_video_lines   := 25;
       Params.the_screen_info.orig_video_points  := 16;
 
+      Params.hdr.kernel_alignment := 16#1000000#;
+
       Open (Filename => Filename,
             File     => File);
       bootparam_h.boot_params'Write (Stream (File => File), Params);

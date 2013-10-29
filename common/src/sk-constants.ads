@@ -137,15 +137,20 @@ is
    GUEST_ACCESS_RIGHTS_LDTR     : constant := 16#4820#;
    GUEST_ACCESS_RIGHTS_TR       : constant := 16#4822#;
    GUEST_INTERRUPTIBILITY       : constant := 16#4824#;
+   GUEST_SYSENTER_CS            : constant := 16#482a#;
    GUEST_VMX_PREEMPT_TIMER      : constant := 16#482e#;
    GUEST_CR0                    : constant := 16#6800#;
    GUEST_CR3                    : constant := 16#6802#;
    GUEST_CR4                    : constant := 16#6804#;
+   GUEST_FS_BASE                : constant := 16#680e#;
+   GUEST_GS_BASE                : constant := 16#6810#;
    GUEST_BASE_GDTR              : constant := 16#6816#;
    GUEST_BASE_IDTR              : constant := 16#6818#;
    GUEST_RSP                    : constant := 16#681c#;
    GUEST_RIP                    : constant := 16#681e#;
    GUEST_RFLAGS                 : constant := 16#6820#;
+   GUEST_SYSENTER_ESP           : constant := 16#6824#;
+   GUEST_SYSENTER_EIP           : constant := 16#6826#;
 
    --  VM entry/exit interruption-information flags
 
@@ -160,6 +165,7 @@ is
    EXIT_REASON_INVLPG           : constant := 14;
    EXIT_REASON_RDTSC            : constant := 16;
    EXIT_REASON_VMCALL           : constant := 18;
+   EXIT_REASON_CR_ACCESS        : constant := 28;
    EXIT_REASON_DR_ACCESS        : constant := 29;
    EXIT_REASON_IO_INSTRUCTION   : constant := 30;
    EXIT_REASON_RDMSR            : constant := 31;

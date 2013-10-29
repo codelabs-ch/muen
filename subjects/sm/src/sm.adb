@@ -39,6 +39,14 @@ is
    Dump_And_Halt : Boolean := False;
    State         : SK.Subject_State_Type;
    for State'Address use System'To_Address (16#1e0000#);
+
+   MSR_IA32_SYSENTER_CS  : constant := 16#174#;
+   MSR_IA32_SYSENTER_EIP : constant := 16#175#;
+   MSR_IA32_SYSENTER_ESP : constant := 16#176#;
+   MSR_FS_BASE           : constant := 16#c0000100#;
+   MSR_GS_BASE           : constant := 16#c0000101#;
+   MSR_KERNEL_GS_BASE    : constant := 16#c0000102#;
+
 begin
    Subject.Text_IO.Init;
    Subject.Text_IO.Put_Line ("SM subject running");
@@ -50,6 +58,11 @@ begin
    loop
       Id := Handler.Current_Subject;
 
+      Subject.Text_IO.Put_String (Item => "Exit due to ");
+      Subject.Text_IO.Put_Word64 (Item => State.Exit_Reason);
+      Subject.Text_IO.Put_String (Item => " for subject ");
+      Subject.Text_IO.Put_Word64 (Item => SK.Word64 (Id));
+      Subject.Text_IO.New_Line;
       if State.Exit_Reason = SK.Constants.EXIT_REASON_CPUID then
 
          --  Minimal CPUID emulation. Code inspired by the emulation done by
@@ -58,6 +71,9 @@ begin
          --  For reference values see e.g.
          --  http://www.cpu-world.com/cgi-bin/CPUID.pl?CPUID=26937&RAW_DATA=1
 
+         Subject.Text_IO.Put_String (Item => "CPUID function ");
+         Subject.Text_IO.Put_Word64 (Item => State.Regs.RAX);
+         Subject.Text_IO.New_Line;
          case State.Regs.RAX is
             when 0 =>
 
@@ -73,26 +89,38 @@ begin
             when 1 =>
 
                --  Processor Info and Feature Bits.
-               --                            Model 1
-               --                    i686   / Stepping 9
-               --                        \ | /
-               State.Regs.RAX := 16#0000_0619#;
+               --                            Model IVB
+               --                      IVB  / Stepping 9
+               --                      /-\ | /
+               State.Regs.RAX := 16#0003_06A9#;
                --     CFLUSH size (in 8B)
                --                        \
                State.Regs.RBX := 16#0000_0800#; --  FIXME use real CPU's value
+               --  Features:
                State.Regs.RCX := 16#0000_0000#;
                --  Features:
+               --  Bit  1 -   FPU: x87 enabled
+               --  Bit  5 -   MSR: RD/WR MSR
+               --  Bit  6 -   PAE: PAE and 64bit page tables
                --  Bit  8 -   CX8: CMPXCHG8B Instruction
                --  Bit 11 -   SEP: SYSENTER/SYSEXIT Instructions
                --  Bit 15 -  CMOV: Conditional Move Instructions
                --  Bit 19 - CLFSH: CLFLUSH Instruction
-               State.Regs.RDX := 16#0008_8900#;
+               --  Bit 24 -  FXSR: FX SAVE/RESTORE
+               --  Bit 25 -   SSE: SSE support
+               --  Bit 26 -  SSE2: SSE2 support
+               State.Regs.RDX := 16#0708_8961#;
             when 16#8000_0000# =>
 
                --  Get Highest Extended Function Supported.
-               --  Disabled for now.
 
-               State.Regs.RAX := 16#8000_0000#;
+               State.Regs.RAX := 16#8000_0001#;
+            when 16#8000_0001# =>
+
+               --  Get Extended CPU Features
+
+               --  Bit 29 -   LM: Long Mode
+               State.Regs.RDX := 16#2000_0000#;
             when others =>
                Subject.Text_IO.Put_String (Item => "Unknown CPUID function ");
                Subject.Text_IO.Put_Word64 (Item => State.Regs.RAX);
@@ -260,6 +288,22 @@ begin
                Subject.Text_IO.Put_Line (Item => "#");
                State.Regs.RAX := State.Regs.RAX and not 16#ffff_ffff#;
                State.Regs.RDX := State.Regs.RDX and not 16#ffff_ffff#;
+            when 16#1a0# =>
+               Subject.Text_IO.Put_Line (Item => "RDMSR 16#1a0#");
+               State.Regs.RAX := 16#1800#;
+               State.Regs.RDX := 0;
+            when MSR_FS_BASE =>
+               State.Regs.RAX := State.FS_BASE;
+            when MSR_GS_BASE =>
+               State.Regs.RAX := State.GS_BASE;
+            when MSR_KERNEL_GS_BASE =>
+               State.Regs.RAX := State.Kernel_GS_BASE;
+            when MSR_IA32_SYSENTER_CS =>
+               State.Regs.RAX := State.IA32_SYSENTER_CS;
+            when MSR_IA32_SYSENTER_EIP =>
+               State.Regs.RAX := State.IA32_SYSENTER_EIP;
+            when MSR_IA32_SYSENTER_ESP =>
+               State.Regs.RAX := State.IA32_SYSENTER_ESP;
             when others =>
                Subject.Text_IO.Put_Line (Item => "RDMSR");
                Dump_And_Halt := True;
@@ -279,10 +323,55 @@ begin
                Subject.Text_IO.Put_Word32
                  (Item => SK.Word32 (State.Regs.RAX and 16#ffff_ffff#));
                Subject.Text_IO.New_Line;
+            when MSR_FS_BASE =>
+               State.FS_BASE := State.Regs.RAX;
+            when MSR_GS_BASE =>
+               State.GS_BASE := State.Regs.RAX;
+            when MSR_KERNEL_GS_BASE =>
+               State.Kernel_GS_BASE := State.Regs.RAX;
+            when MSR_IA32_SYSENTER_CS =>
+               State.IA32_SYSENTER_CS := State.Regs.RAX;
+            when MSR_IA32_SYSENTER_EIP =>
+               State.IA32_SYSENTER_EIP := State.Regs.RAX;
+            when MSR_IA32_SYSENTER_ESP =>
+               State.IA32_SYSENTER_ESP := State.Regs.RAX;
             when others =>
                Subject.Text_IO.Put_Line (Item => "WRMSR");
                Dump_And_Halt := True;
          end case;
+
+      elsif State.Exit_Reason = SK.Constants.EXIT_REASON_CR_ACCESS then
+         if (State.Exit_Qualification and 16#30#) = 0 then
+            if (State.Exit_Qualification and 15) = 0 then
+               if (State.Exit_Qualification and 16#f00#) = 0 then
+                  State.SHADOW_CR0 := State.Regs.RAX;
+                  State.CR0 := State.SHADOW_CR0 or 16#20#; -- CR0_FIXED0
+                  Subject.Text_IO.Put_String
+                    (Item => "Accepting mov eax, cr0 at ");
+                  Subject.Text_IO.Put_Word64 (State.RIP);
+                  Subject.Text_IO.Put_String (Item => ". set to ");
+                  Subject.Text_IO.Put_Word64 (State.SHADOW_CR0);
+                  Subject.Text_IO.Put_String (Item => " and ");
+                  Subject.Text_IO.Put_Word64 (State.CR0);
+                  Subject.Text_IO.New_Line;
+               else
+                  Subject.Text_IO.Put_String
+                    (Item => "Unhandled MOV to CRx. unknown register #");
+                  Subject.Text_IO.Put_Word64
+                    (State.Exit_Qualification and 16#f00#);
+                  Subject.Text_IO.New_Line;
+                  Dump_And_Halt := True;
+               end if;
+            else
+               Subject.Text_IO.Put_String (Item => "Unhandled MOV to CRx");
+               Subject.Text_IO.New_Line;
+               Dump_And_Halt := True;
+            end if;
+         else
+            Subject.Text_IO.Put_String (Item => "Unhandled CR access method");
+            Subject.Text_IO.New_Line;
+            Dump_And_Halt := True;
+         end if;
 
       else
          Subject.Text_IO.Put_String (Item => "Unhandled trap for subject ");
@@ -300,49 +389,109 @@ begin
       end if;
 
       if not Dump_And_Halt then
+         Subject.Text_IO.Put_Line   (Item => "Done with Exit");
          State.RIP := State.RIP + State.Instruction_Len;
          SK.Hypercall.Trigger_Event (Number => SK.Byte (Id));
       else
-         Subject.Text_IO.Put_String ("EIP: ");
-         Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.RIP));
-         Subject.Text_IO.Put_String (" CS : ");
-         Subject.Text_IO.Put_Word16 (Item => SK.Word16 (State.CS));
-         Subject.Text_IO.Put_String (" EFLAGS: ");
-         Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.RFLAGS));
-         Subject.Text_IO.New_Line;
-         Subject.Text_IO.Put_String ("ESP: ");
-         Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.RSP));
-         Subject.Text_IO.Put_String (" SS : ");
-         Subject.Text_IO.Put_Word16 (Item => SK.Word16 (State.SS));
-         Subject.Text_IO.New_Line;
+         if (State.IA32_EFER and 16#400#) = 0 then
+            Subject.Text_IO.Put_String ("EIP: ");
+            Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.RIP));
+            Subject.Text_IO.Put_String (" CS : ");
+            Subject.Text_IO.Put_Word16 (Item => SK.Word16 (State.CS));
+            Subject.Text_IO.Put_String (" EFLAGS: ");
+            Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.RFLAGS));
+            Subject.Text_IO.New_Line;
+            Subject.Text_IO.Put_String ("ESP: ");
+            Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.RSP));
+            Subject.Text_IO.Put_String (" SS : ");
+            Subject.Text_IO.Put_Word16 (Item => SK.Word16 (State.SS));
+            Subject.Text_IO.New_Line;
 
-         Subject.Text_IO.Put_String (Item => "EAX: ");
-         Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RAX));
-         Subject.Text_IO.Put_String (Item => " EBX: ");
-         Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RBX));
-         Subject.Text_IO.Put_String (Item => " ECX: ");
-         Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RCX));
-         Subject.Text_IO.Put_String (Item => " EDX: ");
-         Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RDX));
-         Subject.Text_IO.New_Line;
+            Subject.Text_IO.Put_String (Item => "EAX: ");
+            Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RAX));
+            Subject.Text_IO.Put_String (Item => " EBX: ");
+            Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RBX));
+            Subject.Text_IO.Put_String (Item => " ECX: ");
+            Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RCX));
+            Subject.Text_IO.Put_String (Item => " EDX: ");
+            Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RDX));
+            Subject.Text_IO.New_Line;
 
-         Subject.Text_IO.Put_String (Item => "ESI: ");
-         Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RSI));
-         Subject.Text_IO.Put_String (Item => " EDI: ");
-         Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RDI));
-         Subject.Text_IO.Put_String (Item => " EBP: ");
-         Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RBP));
-         Subject.Text_IO.New_Line;
+            Subject.Text_IO.Put_String (Item => "ESI: ");
+            Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RSI));
+            Subject.Text_IO.Put_String (Item => " EDI: ");
+            Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RDI));
+            Subject.Text_IO.Put_String (Item => " EBP: ");
+            Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.Regs.RBP));
+            Subject.Text_IO.New_Line;
 
-         Subject.Text_IO.Put_String (Item => "CR0: ");
-         Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.CR0));
-         Subject.Text_IO.Put_String (Item => " CR2: ");
-         Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.CR2));
-         Subject.Text_IO.Put_String (Item => " CR3: ");
-         Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.CR3));
-         Subject.Text_IO.Put_String (Item => " CR4: ");
-         Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.CR4));
-         Subject.Text_IO.New_Line;
+            Subject.Text_IO.Put_String (Item => "CR0: ");
+            Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.CR0));
+            Subject.Text_IO.Put_String (Item => " CR2: ");
+            Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.CR2));
+            Subject.Text_IO.Put_String (Item => " CR3: ");
+            Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.CR3));
+            Subject.Text_IO.Put_String (Item => " CR4: ");
+            Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.CR4));
+            Subject.Text_IO.New_Line;
+            Subject.Text_IO.Put_String (Item => "Shadow CR0: ");
+            Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.SHADOW_CR0));
+            Subject.Text_IO.New_Line;
+
+            Subject.Text_IO.Put_String (Item => "IA32_EFER: ");
+            Subject.Text_IO.Put_Word64 (Item => State.IA32_EFER);
+            Subject.Text_IO.New_Line;
+         else
+            Subject.Text_IO.Put_String ("RIP: ");
+            Subject.Text_IO.Put_Word64 (Item => State.RIP);
+            Subject.Text_IO.Put_String (" CS : ");
+            Subject.Text_IO.Put_Word16 (Item => SK.Word16 (State.CS));
+            Subject.Text_IO.Put_String (" RFLAGS: ");
+            Subject.Text_IO.Put_Word64 (Item => State.RFLAGS);
+            Subject.Text_IO.New_Line;
+            Subject.Text_IO.Put_String ("RSP: ");
+            Subject.Text_IO.Put_Word64 (Item => State.RSP);
+            Subject.Text_IO.Put_String (" SS : ");
+            Subject.Text_IO.Put_Word16 (Item => SK.Word16 (State.SS));
+            Subject.Text_IO.New_Line;
+
+            Subject.Text_IO.Put_String (Item => "RAX: ");
+            Subject.Text_IO.Put_Word64 (Item => State.Regs.RAX);
+            Subject.Text_IO.Put_String (Item => " RBX: ");
+            Subject.Text_IO.Put_Word64 (Item => State.Regs.RBX);
+            Subject.Text_IO.New_Line;
+            Subject.Text_IO.Put_String (Item => " RCX: ");
+            Subject.Text_IO.Put_Word64 (Item => State.Regs.RCX);
+            Subject.Text_IO.Put_String (Item => " RDX: ");
+            Subject.Text_IO.Put_Word64 (Item => State.Regs.RDX);
+            Subject.Text_IO.New_Line;
+
+            Subject.Text_IO.Put_String (Item => "RSI: ");
+            Subject.Text_IO.Put_Word64 (Item => State.Regs.RSI);
+            Subject.Text_IO.Put_String (Item => " RDI: ");
+            Subject.Text_IO.Put_Word64 (Item => State.Regs.RDI);
+            Subject.Text_IO.Put_String (Item => " RBP: ");
+            Subject.Text_IO.Put_Word64 (Item => State.Regs.RBP);
+            Subject.Text_IO.New_Line;
+
+            Subject.Text_IO.Put_String (Item => "CR0: ");
+            Subject.Text_IO.Put_Word64 (Item => State.CR0);
+            Subject.Text_IO.Put_String (Item => " CR2: ");
+            Subject.Text_IO.Put_Word64 (Item => State.CR2);
+            Subject.Text_IO.New_Line;
+            Subject.Text_IO.Put_String (Item => "CR3: ");
+            Subject.Text_IO.Put_Word64 (Item => State.CR3);
+            Subject.Text_IO.Put_String (Item => " CR4: ");
+            Subject.Text_IO.Put_Word64 (Item => State.CR4);
+            Subject.Text_IO.New_Line;
+            Subject.Text_IO.Put_String (Item => "Shadow CR0: ");
+            Subject.Text_IO.Put_Word64 (Item => State.SHADOW_CR0);
+            Subject.Text_IO.New_Line;
+
+            Subject.Text_IO.Put_String (Item => "IA32_EFER: ");
+            Subject.Text_IO.Put_Word64 (Item => State.IA32_EFER);
+            Subject.Text_IO.New_Line;
+         end if;
 
          Subject.Text_IO.New_Line;
          Subject.Text_IO.Put_Line (Item => "Halting execution");

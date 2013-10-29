@@ -138,7 +138,7 @@ is
 
       VMX_Support, VMX_Disabled_Locked, Protected_Mode, Paging : Boolean;
       IA_32e_Mode, Apic_Support, CR0_Valid, CR4_Valid          : Boolean;
-      Not_Virtual_8086, Not_In_SMX                             : Boolean;
+      Not_Virtual_8086, In_SMX                                 : Boolean;
    begin
       VMX_Support := Has_VMX_Support;
       pragma Debug
@@ -180,10 +180,10 @@ is
         (not Not_Virtual_8086,
          KC.Put_Line (Item => "Virtual-8086 mode enabled"));
 
-      Not_In_SMX := SK.Bit_Test
-        (Value => CPU.Get_MSR64 (Register => Constants.IA32_FEATURE_CONTROL),
-         Pos   => Constants.IA32_FCTRL_SMX_FLAG);
-      pragma Debug (not Not_In_SMX, KC.Put_Line (Item => "SMX mode enabled"));
+      In_SMX := SK.Bit_Test
+        (Value => CPU.Get_CR4,
+         Pos   => Constants.CR4_SMXE_FLAG);
+      pragma Debug (In_SMX, KC.Put_Line (Item => "SMX mode enabled"));
 
       CR0_Valid := Fixed_Valid
         (Register => CPU.Get_CR0,
@@ -213,7 +213,7 @@ is
         Paging                  and
         IA_32e_Mode             and
         Not_Virtual_8086        and
-        Not_In_SMX              and
+        not In_SMX              and
         CR0_Valid               and
         CR4_Valid               and
         Apic_Support;

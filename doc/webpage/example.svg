@@ -24,9 +24,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.6651004"
-     inkscape:cx="307.24638"
-     inkscape:cy="97.185598"
+     inkscape:zoom="3.3302008"
+     inkscape:cx="30.747895"
+     inkscape:cy="124.27578"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -36,10 +36,10 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1366"
-     inkscape:window-height="723"
+     inkscape:window-width="1678"
+     inkscape:window-height="1029"
      inkscape:window-x="0"
-     inkscape:window-y="24"
+     inkscape:window-y="19"
      inkscape:window-maximized="1"
      showborder="true"
      borderlayer="false"
@@ -71,7 +71,7 @@
      id="layer1"
      transform="translate(-75.502113,-256.77792)">
     <rect
-       style="fill:#ff0000;stroke:#000000;stroke-width:3;stroke-miterlimit:4;stroke-opacity:0.78431373;stroke-dasharray:none"
+       style="fill:#ef2424;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-miterlimit:4;stroke-opacity:0.78431373000000004;stroke-dasharray:none"
        id="rect3826"
        width="129.94106"
        height="125.12843"
@@ -104,9 +104,10 @@
        style="fill:#ffffff;stroke:#000000;stroke-width:3;stroke-miterlimit:4;stroke-opacity:0.78431373;stroke-dasharray:none" />
     <path
        id="path4627"
-       style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.78431373999999998;stroke-dasharray:none;marker-start:none;opacity:1"
-       d="m 78.606322,403.05266 604.787408,0 m -148.38946,-144.77474 0,144.37896 m -157.21263,-144.37896 0,144.37896 m -157.21267,-144.37896 0,144.37896"
-       inkscape:connector-curvature="0" />
+       style="fill:none;stroke:#000000;stroke-width:3.00185633;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.78431373;stroke-dasharray:none;marker-start:none"
+       d="m 78.307264,403.00689 599.913516,0 m -142.6615,-144.6832 0,144.28767 m -157.50683,-144.28767 0,144.28767 m -157.50686,-144.28767 0,144.28767"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccccc" />
     <text
        xml:space="preserve"
        style="font-size:30px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;opacity:1;fill:#000000;fill-opacity:0.78431373999999998;stroke:none;font-family:Source Code Pro;-inkscape-font-specification:Source Code Pro"

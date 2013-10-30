@@ -75,6 +75,13 @@
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+		<xs:attribute name="acpi_tables_address" type="address_type" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					Host pysical memory address for ACPI tables.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 	</xs:complexType>
 
 	<xs:complexType name="subjects_type">

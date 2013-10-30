@@ -77,13 +77,16 @@ begin
                --                    i686   / Stepping 9
                --                        \ | /
                State.Regs.RAX := 16#0000_0619#;
-               State.Regs.RBX := 16#0000_0000#;
+               --     CFLUSH size (in 8B)
+               --                        \
+               State.Regs.RBX := 16#0000_0800#; --  FIXME use real CPU's value
                State.Regs.RCX := 16#0000_0000#;
                --  Features:
-               --  Bit  8 -  CX8: CMPXCHG8B Instruction
-               --  Bit 11 -  SEP: SYSENTER/SYSEXIT Instructions
-               --  Bit 15 - CMOV: Conditional Move Instructions
-               State.Regs.RDX := 16#0000_8900#;
+               --  Bit  8 -   CX8: CMPXCHG8B Instruction
+               --  Bit 11 -   SEP: SYSENTER/SYSEXIT Instructions
+               --  Bit 15 -  CMOV: Conditional Move Instructions
+               --  Bit 19 - CLFSH: CLFLUSH Instruction
+               State.Regs.RDX := 16#0008_8900#;
             when 16#8000_0000# =>
 
                --  Get Highest Extended Function Supported.

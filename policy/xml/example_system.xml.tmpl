@@ -110,6 +110,8 @@
 			&linuxinit;
 			<memory_layout>
 				&linuxmem;
+				<!-- Time page -->
+				<memory_region physical_address="29e000" virtual_address="00001000" size="4k" alignment="4k" writable="false"  executable="false" memory_type="WB"/>
 				<!-- virtual terminal console 1 -->
 				<memory_region physical_address="310000" virtual_address="b8000" size="32k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
 			</memory_layout>

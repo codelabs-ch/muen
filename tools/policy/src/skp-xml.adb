@@ -361,11 +361,15 @@ is
          ZPAGE_Str   : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "zero_page_address");
+         ACPIT_Str   : constant String  := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "acpi_tables_address");
 
          Ports      : IO_Ports_Type;
          MSRs       : MSRs_Type;
          State      : Initial_State_Type;
          ZP_Addr    : SK.Word64 := 0;
+         ACPI_Addr  : SK.Word64 := 0;
          Subj_Mem   : Memory_Layout_Type;
          Subj_Bin   : Binary_Ref_Type;
          Subj_Traps : Trap_Table_Type;
@@ -646,6 +650,10 @@ is
             ZP_Addr := To_Word64 (Hex => ZPAGE_Str);
          end if;
 
+         if ACPIT_Str'Length > 0 then
+            ACPI_Addr := To_Word64 (Hex => ACPIT_Str);
+         end if;
+
          Policy.Subjects.Insert
            (New_Item =>
               (Id                 => Id,
@@ -656,6 +664,7 @@ is
                IO_Bitmap_Address  => To_Word64 (Hex => IOBM_Str),
                MSR_Bitmap_Address => To_Word64 (Hex => MSRBM_Str),
                ZP_Bitmap_Address  => ZP_Addr,
+               ACPI_Base_Address  => ACPI_Addr,
                Init_State         => State,
                Memory_Layout      => Subj_Mem,
                Binary             => Subj_Bin,

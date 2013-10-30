@@ -433,8 +433,12 @@ is
                  Message   => "MSR bitmap address mismatch");
          Assert (Condition => S.ZP_Bitmap_Address = 0,
                  Message   => "Unexpected zero page address");
+         Assert (Condition => S.ACPI_Base_Address = 0,
+                 Message   => "Unexpected ACPI tables address");
          Assert (Condition => L.ZP_Bitmap_Address = 16#930000#,
                  Message   => "Zero page address mismatch");
+         Assert (Condition => L.ACPI_Base_Address = 16#931000#,
+                 Message   => "ACPI tables address mismatch");
 
          Assert (Condition => S.Init_State.Stack_Address = 16#120000#,
                  Message   => "Subject stack mismatch");

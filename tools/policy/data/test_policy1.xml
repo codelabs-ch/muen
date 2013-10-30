@@ -41,7 +41,7 @@
 			<device name="multiport"/>
 			<device name="testdevice"/>
 		</subject>
-		<subject id="2" name="subject2" profile="native" cpu="0" pml4_address="1f8000" io_bitmap_address="1c0000" msr_bitmap_address="920000" zero_page_address="930000">
+		<subject id="2" name="subject2" profile="native" cpu="0" pml4_address="1f8000" io_bitmap_address="1c0000" msr_bitmap_address="920000" zero_page_address="930000" acpi_tables_address="931000">
 			&subj_state;
 			<memory_layout>
 				<memory_region physical_address="400000" virtual_address="0" size="4m" alignment="2m" writable="true" executable="true" memory_type="UC"/>

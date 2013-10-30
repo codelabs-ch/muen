@@ -31,7 +31,8 @@ package Skp.Packer_Config is
       Msrbitmap,
       Pagetable,
       Rawbinary,
-      Zeropage);
+      Zeropage,
+      Acpitable);
 
    type File_Type is record
       Path             : Unbounded_String;

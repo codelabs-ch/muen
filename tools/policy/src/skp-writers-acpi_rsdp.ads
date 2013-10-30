@@ -1,7 +1,4 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
---
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
 --  the Free Software Foundation, either version 3 of the License, or
@@ -16,26 +13,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-private package Skp.Writers.Packer_Config
+private package Skp.Writers.ACPI_RSDP
 is
 
-   --  Supported file types.
-   type File_Kind is
-     (Elfbinary,
-      Iobitmap,
-      Msrbitmap,
-      Pagetable,
-      Rawbinary,
-      Zeropage,
-      Acpitable);
+   --  Write Root System Description Pointer to file given by filename.
+   procedure Write (ACPI_Tables_Base : SK.Word64; Filename : String);
 
-   --  Add file to packer configuration.
-   procedure Add_File
-     (Filename : String;
-      Address  : SK.Word64;
-      Kind     : File_Kind);
+   Not_Supported : exception;
 
-   --  Write packer config to given directory.
-   procedure Write (Dir_Name : String);
-
-end Skp.Writers.Packer_Config;
+end Skp.Writers.ACPI_RSDP;

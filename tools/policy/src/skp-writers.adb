@@ -31,6 +31,7 @@ with Skp.Templates;
 with Skp.Constants;
 with Skp.Writers.Packer_Config;
 with Skp.Writers.Zero_Page;
+with Skp.Writers.ACPI_RSDP;
 
 package body Skp.Writers
 is
@@ -1016,19 +1017,36 @@ is
          Write (MSR_List => S.MSRs,
                 Filename => MSR_File);
 
-         --  Write zero page
-
-         if S.Profile = Vm and then S.ZP_Bitmap_Address > 0 then
-            declare
-               ZP_File : constant String
-                 := Dir_Name & "/" & To_String (S.Name) & "_zp";
-            begin
-               Zero_Page.Write (Filename => ZP_File);
-               Packer_Config.Add_File
-                 (Filename => Policy_Topdir & "/" & ZP_File,
-                  Address  => S.ZP_Bitmap_Address,
-                  Kind     => Packer_Config.Zeropage);
-            end;
+         if S.Profile = Vm then
+            --  Write zero page
+            if S.ZP_Bitmap_Address > 0 then
+               declare
+                  ZP_File : constant String
+                    := Dir_Name & "/" & To_String (S.Name) & "_zp";
+               begin
+                  Zero_Page.Write (Filename => ZP_File);
+                  Packer_Config.Add_File
+                    (Filename => Policy_Topdir & "/" & ZP_File,
+                     Address  => S.ZP_Bitmap_Address,
+                     Kind     => Packer_Config.Zeropage);
+               end;
+            end if;
+            --  Write ACPI tables
+            if S.ACPI_Base_Address > 0 then
+               declare
+                  RSDP_File : constant String
+                    := Dir_Name & "/" & To_String (S.Name) & "_rsdp";
+               begin
+                  ACPI_RSDP.Write
+                    (S.ACPI_Base_Address - 16#0020_0000#, --  FIXME: Find guest
+                                                         --   physical address
+                     Filename => RSDP_File);
+                  Packer_Config.Add_File
+                    (Filename => Policy_Topdir & "/" & RSDP_File,
+                     Address  => S.ACPI_Base_Address,
+                     Kind     => Packer_Config.Acpitable);
+               end;
+            end if;
          end if;
 
          Packer_Config.Add_File

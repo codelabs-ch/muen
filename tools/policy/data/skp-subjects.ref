@@ -102,7 +102,7 @@ is
        Stack_Address      => 16#0000000000120000#,
        Entry_Point        => 16#0000000000000abc#,
        CR0_Value          => 16#0000000000000035#,
-       CR0_Mask           => 16#000000007ffaffcc#,
+       CR0_Mask           => 16#000000007ffaffc0#,
        CR4_Value          => 16#0000000000002000#,
        CR4_Mask           => 16#00000000ffffffef#,
        CS_Access          => 16#0000c09b#,

@@ -219,12 +219,8 @@ pre {
    display: inline-block;
 }
 
-.logos .hsr a:hover {
-   background-color: rgba(255, 255, 255, 0.5);
-}
-
-.logos .swissmade a:hover {
-   background-color: rgba(255, 255, 255, 0.5);
+.logos a:hover {
+   background-color: transparent;
 }
 
 .logos .hsr img, .logos .swissmade img {

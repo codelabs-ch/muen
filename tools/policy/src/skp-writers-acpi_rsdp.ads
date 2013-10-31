@@ -19,6 +19,4 @@ is
    --  Write Root System Description Pointer to file given by filename.
    procedure Write (ACPI_Tables_Base : SK.Word64; Filename : String);
 
-   Not_Supported : exception;
-
 end Skp.Writers.ACPI_RSDP;

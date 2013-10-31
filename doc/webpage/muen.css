@@ -228,7 +228,7 @@ pre {
 }
 
 .subtitle {
-   color: rgb(255, 0, 0);
+   color: gray;
    font-weight: 700;
    padding-left: 20px;
 }

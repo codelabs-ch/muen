@@ -109,7 +109,8 @@ td {
 }
 
 .toc_block {
-   background-color: rgba(85, 138, 188, 0.6);
+   background-color: rgb(85, 138, 188);
+   white-space: nowrap;
 }
 
 li.toc {
@@ -117,11 +118,11 @@ li.toc {
    padding-left: 0.8em;
    padding-right: 0.8em;
    border-radius: 0px;
-   color: black;
+   color: white;
 }
 
 li.toc:hover {
-   background-color: rgb(85, 138, 188);
+   background-color: rgba(105, 180, 249, 0.6);
    border-radius: 0px 0px 0.3em 0.3em;
 }
 

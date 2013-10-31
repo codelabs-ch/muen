@@ -138,7 +138,7 @@ a:link.toc {
 
 ul.toc {
    border-top-style: solid;
-   border-color: rgb(85, 138, 188);
+   border-color: gray;
    list-style-type: none;
    padding-left: 20px;
 }

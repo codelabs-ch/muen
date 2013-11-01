@@ -105,37 +105,28 @@ td {
 }
 
 .toc_block {
+   margin-top: 1em;
    background-color: rgb(85, 138, 188);
    white-space: nowrap;
 }
 
-li.toc {
-   padding: 0.5em;
-   border-radius: 0px;
-   color: white;
-}
-
-li.toc:hover {
-   background-color: rgba(105, 180, 249, 0.6);
-   border-radius: 0px 0px 0.3em 0.3em;
-}
-
-a.toc {
-   color: rgba(0, 0, 0, 0.8);
-   background: none;
-   text-decoration: none;
-}
-
-a:link.toc {
-   padding: 0px;
-   text-decoration: none;
-}
-
-ul.toc {
+.toc_entry {
+   display: inline-block;
    border-top-style: solid;
    border-color: gray;
-   list-style-type: none;
-   padding-left: 20px;
+   padding: 0.5em;
+}
+
+.toc_entry:hover {
+   background-color: rgba(105, 180, 249, 0.6);
+   border-radius: 0 0 0.3em 0.3em;
+}
+
+a.toc, a:link.toc {
+   padding: 0;
+   color: white;
+   background: none;
+   text-decoration: none;
 }
 
 #_references + .sectionbody .ulist ul {

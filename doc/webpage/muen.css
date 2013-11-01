@@ -100,6 +100,10 @@ td {
    padding-top: 1em;
 }
 
+.footer {
+   height: 50px;
+}
+
 .ulist ul {
    list-style: square;
 }
@@ -186,10 +190,17 @@ pre {
 }
 
 #footer-text {
-   padding: 1em;
-   text-align: right;
+   padding-right: 1em;
+   padding-top: 1.3em;
+   float: right;
    font-size: 80%;
    color: rgba(0, 0, 0, 0.5);
+}
+
+#footer-badges {
+   padding-top: 0.4em;
+   padding-left: 1em;
+   float: left;
 }
 
 .clear {

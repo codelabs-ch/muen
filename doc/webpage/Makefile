@@ -8,6 +8,8 @@ ASCIIDOC_OPTS = \
 	-a stylesdir=$(STYLEPATH) \
 	-a linkcss \
 	-a disable-javascript \
+	-a badges \
+	-a icons \
 	-o -
 
 SRC_FILES = \

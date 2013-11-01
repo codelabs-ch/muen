@@ -240,6 +240,10 @@ a {
    outline: 0;
 }
 
+strong {
+   font-weight: bold;
+}
+
 @media print {
 
    body {

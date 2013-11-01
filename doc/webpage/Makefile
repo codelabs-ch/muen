@@ -29,7 +29,7 @@ $(DESTDIR)/%: %
 	@cp $< $(DESTDIR)
 
 $(DESTDIR)/index.html: index.html.pre content.xsl
-	xsltproc --html content.xsl $< > $@.tmp
+	xsltproc content.xsl $< > $@.tmp
 	mv $@.tmp $@
 
 index.html.pre: index page.conf ../../README

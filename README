@@ -92,7 +92,7 @@ assumed that they are installed below `/opt`:
 
   $ export PATH=/opt/gnat/bin:/opt/spark/bin:$PATH
 
-Because the linker of GNAT GPL 2013 is not multiarch [1] aware, export the C
+Because the linker of GNAT GPL 2013 is not multiarch <<1>> aware, export the C
 run-time `LIBRARY_PATH`:
 
   $ export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
@@ -111,7 +111,7 @@ issue the following commands:
   $ make
 
 This will create an image containing the example system which can be booted by
-any Multiboot [2] compliant bootloader.
+any Multiboot <<2>> compliant bootloader.
 
 
 Deployment
@@ -122,7 +122,7 @@ system image.
 Emulation
 ~~~~~~~~~
 To ease kernel development, the Muen project makes use of emulation by employing
-the Bochs IA-32 emulator [3]. Among many other features, Bochs has support for
+the Bochs IA-32 emulator <<3>>. Among many other features, Bochs has support for
 multiple processors, APIC emulation and VMX extensions.
 
 Currently, Bochs must be patched to work with Muen. Issue the following commands
@@ -152,9 +152,9 @@ serial console output is written to `emulate/serial.out`.
 
 Hardware
 ~~~~~~~~
-For efficient deployment of the Muen system image to real hardware, the iPXE [4]
-boot firmware installed on a USB-stick is used. To build and install iPXE with
-the Muen specific boot script issue the following commands:
+For efficient deployment of the Muen system image to real hardware, the iPXE
+<<4>> boot firmware installed on a USB-stick is used. To build and install iPXE
+with the Muen specific boot script issue the following commands:
 
   $ git clone git://git.ipxe.org/ipxe.git
   $ wget http://muen.codelabs.ch/muen.ipxe
@@ -187,17 +187,17 @@ To view the output of the Muen kernel debug console use the command:
 
   $ amtterm 192.168.254.2
 
-Please refer to the amtterm [5] documentation on how to configure AMT on the
+Please refer to the amtterm <<5>> documentation on how to configure AMT on the
 target hardware.
 
 
 References
 ----------
-- [1] Debian multiarch support, https://wiki.debian.org/Multiarch/
-- [2] Multiboot Specification, http://www.gnu.org/software/grub/manual/multiboot/
-- [3] Bochs IA-32 Emulator, http://bochs.sourceforge.net/
-- [4] iPXE boot firmware, http://ipxe.org/
-- [5] Intel AMT SoL client + tools, http://www.kraxel.org/cgit/amtterm/
+- [[[1]]] Debian multiarch support, https://wiki.debian.org/Multiarch/
+- [[[2]]] Multiboot Specification, http://www.gnu.org/software/grub/manual/multiboot/
+- [[[3]]] Bochs IA-32 Emulator, http://bochs.sourceforge.net/
+- [[[4]]] iPXE boot firmware, http://ipxe.org/
+- [[[5]]] Intel AMT SoL client + tools, http://www.kraxel.org/cgit/amtterm/
 
 
 Licence

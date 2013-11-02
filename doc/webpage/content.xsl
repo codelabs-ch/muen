@@ -30,7 +30,6 @@
 		<div class="toc_block">
 			<xsl:call-template name="toc_entries"/>
 		</div>
-		<div class="clear"></div>
 	</xsl:template>
 
 	<xsl:template name="toc_entries">

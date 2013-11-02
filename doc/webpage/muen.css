@@ -8,10 +8,10 @@ html, body {
 
 body {
    background: url("bg.jpg") repeat scroll 0% 0% white;
-   padding: 0px;
-   margin: 0px;
+   padding: 0;
+   margin: 0;
    color: rgba(0, 0, 0, 0.9);
-   box-shadow: 0px 0px 6em rgba(0, 0, 0, 0.6) inset;
+   box-shadow: 0 0 6em rgba(0, 0, 0, 0.5) inset;
    font-family: 'Lato', sans-serif;
    font-weight: 300;
 }
@@ -162,7 +162,7 @@ a.anchor:hover {
 .sect1, #preamble {
    text-align: justify;
    width: 90%;
-   background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.7);
+   background: white;
    box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.15) inset, 0px 0px 1.25em rgba(0, 0, 0, 0.5);
    border-radius: 10px;
    display: block;

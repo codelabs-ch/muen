@@ -297,4 +297,8 @@ strong {
    .paragraph .image {
       float: none;
    }
+
+   #footer-badges {
+      display: none;
+   }
 }

@@ -151,15 +151,6 @@ a:hover {
    background-color: rgba(0, 0, 0, 0.1);
 }
 
-a.anchor {
-   text-decoration: none;
-}
-
-a.anchor:hover {
-   text-decoration: none;
-   background: none;
-}
-
 .sect1, #preamble {
    text-align: justify;
    width: 90%;
@@ -202,10 +193,6 @@ pre {
    padding-top: 0.4em;
    padding-left: 1em;
    float: left;
-}
-
-.clear {
-   clear: both;
 }
 
 .logos {
@@ -275,13 +262,6 @@ strong {
       border-style: solid;
       border-color: black;
       border-width: 2px;
-   }
-
-   ul.toc {
-      border-top-style: none;
-      list-style-type: decimal;
-      margin-top: 2em;
-      margin-left: 2em;
    }
 
    .sect1, #preamble {
@@ -355,15 +335,6 @@ strong {
 
    a:link {
       width: 50%;
-   }
-
-   li.toc:hover {
-      background-color: rgb(85, 138, 188);
-      border-radius: 0.3em;
-   }
-
-   ul.toc {
-      padding: 20px;
    }
 
    .titles {

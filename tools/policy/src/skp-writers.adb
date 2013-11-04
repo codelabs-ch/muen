@@ -31,7 +31,10 @@ with Skp.Templates;
 with Skp.Constants;
 with Skp.Writers.Packer_Config;
 with Skp.Writers.Zero_Page;
+with Skp.Writers.ACPI;
 with Skp.Writers.ACPI_RSDP;
+with Skp.Writers.ACPI_XSDT;
+with Skp.Writers.ACPI_FADT;
 
 package body Skp.Writers
 is
@@ -1036,6 +1039,12 @@ is
                declare
                   RSDP_File : constant String
                     := Dir_Name & "/" & To_String (S.Name) & "_rsdp";
+                  XSDT_File : constant String
+                    := Dir_Name & "/" & To_String (S.Name) & "_xsdt";
+                  FADT_File : constant String
+                    := Dir_Name & "/" & To_String (S.Name) & "_facp";
+                  DSDT_File : constant String
+                    := "../subjects/" & To_String (S.Name) & "/acpi/DSDT.aml";
                begin
                   ACPI_RSDP.Write
                     (S.ACPI_Base_Address - 16#0020_0000#, --  FIXME: Find guest
@@ -1044,6 +1053,24 @@ is
                   Packer_Config.Add_File
                     (Filename => Policy_Topdir & "/" & RSDP_File,
                      Address  => S.ACPI_Base_Address,
+                     Kind     => Packer_Config.Acpitable);
+                  ACPI_XSDT.Write
+                    (S.ACPI_Base_Address - 16#0020_0000#,
+                     Filename => XSDT_File);
+                  Packer_Config.Add_File
+                    (Filename => Policy_Topdir & "/" & XSDT_File,
+                     Address  => S.ACPI_Base_Address + ACPI.XSDT_Offset,
+                     Kind     => Packer_Config.Acpitable);
+                  ACPI_FADT.Write
+                    (S.ACPI_Base_Address - 16#0020_0000#,
+                     Filename => FADT_File);
+                  Packer_Config.Add_File
+                    (Filename => Policy_Topdir & "/" & FADT_File,
+                     Address  => S.ACPI_Base_Address + ACPI.FADT_Offset,
+                     Kind     => Packer_Config.Acpitable);
+                  Packer_Config.Add_File
+                    (Filename => Policy_Topdir & "/" & DSDT_File,
+                     Address  => S.ACPI_Base_Address + ACPI.DSDT_Offset,
                      Kind     => Packer_Config.Acpitable);
                end;
             end if;

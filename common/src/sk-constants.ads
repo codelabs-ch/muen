@@ -118,6 +118,7 @@ is
    IO_BITMAP_B                  : constant := 16#2002#;
    MSR_BITMAP                   : constant := 16#2004#;
    EPT_POINTER                  : constant := 16#201a#;
+   GUEST_PHYSICAL_ADDRESS       : constant := 16#2400#;
    VMCS_LINK_POINTER            : constant := 16#2800#;
    GUEST_IA32_EFER              : constant := 16#2806#;
    GUEST_LIMIT_ES               : constant := 16#4800#;

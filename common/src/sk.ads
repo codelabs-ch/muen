@@ -63,6 +63,7 @@ is
       Regs               : CPU_Registers_Type;
       Exit_Reason        : Word64;
       Exit_Qualification : Word64;
+      Guest_Phys_Addr    : Word64;
       Interrupt_Info     : Word64;
       Instruction_Len    : Word64;
       RIP                : Word64;
@@ -121,6 +122,7 @@ private
         Regs               => Null_CPU_Regs,
         Exit_Reason        => 0,
         Exit_Qualification => 0,
+        Guest_Phys_Addr    => 0,
         Interrupt_Info     => 0,
         Instruction_Len    => 0,
         RIP                => 0,

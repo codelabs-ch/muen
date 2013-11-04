@@ -46,6 +46,7 @@ is
         Regs               => SK.Null_CPU_Regs,
         Exit_Reason        => 0,
         Exit_Qualification => 0,
+        Guest_Phys_Addr    => 0,
         Interrupt_Info     => 0,
         Instruction_Len    => 0,
         RIP                => 0,
@@ -86,6 +87,9 @@ is
                      Value => State.Interrupt_Info);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_INSTRUCTION_LEN,
                      Value => State.Instruction_Len);
+
+      VMX.VMCS_Read (Field => Constants.GUEST_PHYSICAL_ADDRESS,
+                     Value => State.Guest_Phys_Addr);
 
       VMX.VMCS_Read (Field => Constants.GUEST_RIP,
                      Value => State.RIP);

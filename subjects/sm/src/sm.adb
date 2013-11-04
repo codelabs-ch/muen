@@ -141,6 +141,8 @@ begin
                           16#3e9# |    --  COM 3               (configurable)
                           16#3f9# |    --  COM 1               (configurable)
                           16#3fa# |    --  82C710 C&T mouse port chip   (conf.)
+                          16#4d0# |    --  PIC_ELCR1           (hardcoded,ACPI)
+                          16#4d1# |    --  PIC_ELCR2           (hardcoded,ACPI)
                           16#cf8# |    --  PCI Addr            (hardcoded)
                           16#cf9# |    --  PCI Addr            (hardcoded)
                           16#cfa# |    --  PCI Addr            (hardcoded)

@@ -19,7 +19,7 @@ a given security policy and are otherwise strictly isolated from each other.
 The covert channel problem -- largely ignored by other platforms -- is
 addressed explicitly by these kernels. SKs are generally more static and
 smaller than dynamic microkernels, which minimizes the possibility of kernel
-failure, eases the application of formal verification techniques and eases the
+failure, enables the application of formal verification techniques and the
 mitigation of covert channels. Muen uses Intel's hardware-assisted
 virtualization technology VT-x as core mechanism to separate components. The
 kernel executes in VMX root mode, while user components, so called 'subjects',

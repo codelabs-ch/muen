@@ -30,7 +30,8 @@ is
    Memory_Size_High : constant := Memory_Size - 16#100000#;
 
    --  arch/x86/include/uapi/asm/e820.h.
-   E820_RAM : constant := 1;
+   E820_RAM      : constant := 1;
+   E820_RESERVED : constant := 2;
 
    procedure C_Memset
      (S : System.Address;
@@ -52,13 +53,19 @@ is
                 C => 0,
                 N => bootparam_h.boot_params'Object_Size / 8);
 
-      Params.e820_entries := 2;
+      Params.e820_entries := 4;
       Params.e820_map (0) := (addr   => 0,
                               size   => 16#0a0000#,
                               c_type => E820_RAM);
-      Params.e820_map (1) := (addr   => 16#100000#,
+      Params.e820_map (1) := (addr   => 16#0a0000#,
+                              size   => 16#060000#,
+                              c_type => E820_RESERVED);
+      Params.e820_map (2) := (addr   => 16#100000#,
                               size   => Memory_Size_High,
                               c_type => E820_RAM);
+      Params.e820_map (3) := (addr   => 16#e000_0000#,
+                              size   => 16#0100_0000#,
+                              c_type => E820_RESERVED);
 
       Params.the_screen_info.orig_video_mode    := 3;
       Params.the_screen_info.orig_video_cols    := 80;

@@ -36,7 +36,11 @@ h2 {
    padding-right: 0.9em;
    padding-bottom: 0.5em;
    float: left;
-   width: 27em;
+}
+
+span.image img {
+   width: 460px;
+   height: 160px;
 }
 
 .paragraph {
@@ -209,7 +213,7 @@ pre {
 }
 
 .logos .hsr img, .logos .swissmade img {
-   height: 65px;
+   height: 60px;
 }
 
 .subtitle {

@@ -31,6 +31,13 @@ h2 {
    background: none repeat scroll 0% 0% rgb(85, 138, 188);
 }
 
+p {
+   -webkit-hyphens: auto;
+   -moz-hyphens: auto;
+   -ms-hyphens: auto;
+   hyphens: auto;
+}
+
 .paragraph .image {
    margin: 0.5em 0.5em 0.5em 0em;
    padding-right: 0.9em;

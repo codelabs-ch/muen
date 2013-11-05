@@ -235,19 +235,29 @@ strong {
    body {
       background-color: transparent;
       box-shadow: none;
-      font-size: 12pt;
       color: black;
+   }
+
+   h2 {
+      color: black;
+      padding: 0;
+      padding-top: 0.5em;
    }
 
    .header,
    .footer,
    .sect1,
    #preamble {
+      width: 95%;
       box-shadow: none;
    }
 
+   .sectionbody {
+      padding: 0;
+   }
+
    .header {
-      padding: 0px;
+      padding: 0;
       padding-bottom: 2px;
    }
 
@@ -255,17 +265,13 @@ strong {
       box-shadow: none;
       border-style: solid;
       border-color: black;
-      border-width: 2px;
+      border-width: thin;
    }
 
    pre {
       border-style: solid;
       border-color: black;
-      border-width: 2px;
-   }
-
-   .sect1, #preamble {
-      margin: 0em;
+      border-width: thin;
    }
 
    a:link.toc {
@@ -279,15 +285,13 @@ strong {
    }
 
    table {
-      border-radius: 0px;
-      border-spacing: 0em;
-      border-width: 2px;
+      margin: 0 auto;
+      width: 95%;
    }
 
    td {
-      border-radius: 0px;
       border-style: solid;
-      border-width: 2px;
+      border-width: thin;
    }
 
    span.image img {
@@ -299,6 +303,14 @@ strong {
    }
 
    #footer-badges {
+      display: none;
+   }
+
+   ul {
+      text-align: left;
+   }
+
+   .toc_block {
       display: none;
    }
 }

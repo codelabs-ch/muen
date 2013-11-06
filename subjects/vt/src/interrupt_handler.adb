@@ -61,19 +61,15 @@ is
             when 1  =>
                Log.Text_IO.Init;
             when 59 =>
-               Log.VGA.Enable_Cursor;
                Terminals.Set (Slot => 1);
                Log.Text_IO.Put_Line ("Switching to VT 1");
             when 60 =>
-               Log.VGA.Disable_Cursor;
                Terminals.Set (Slot => 2);
                Log.Text_IO.Put_Line ("Switching to VT 2");
             when 63 =>
-               Log.VGA.Disable_Cursor;
                Terminals.Set (Slot => 5);
                Log.Text_IO.Put_Line ("Switching to VT 5");
             when 64 =>
-               Log.VGA.Disable_Cursor;
                Terminals.Set (Slot => 6);
                Log.Text_IO.Put_Line ("Switching to VT 6");
             when others =>

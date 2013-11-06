@@ -22,7 +22,7 @@ with SK.IO;
 with SK.Hypercall;
 
 with Log;
-with VGA_Output;
+with Terminals;
 
 package body Interrupt_Handler
 is
@@ -48,7 +48,7 @@ is
    procedure Handle_Interrupt (Vector : SK.Byte)
    is
       use type SK.Byte;
-      use type VGA_Output.Slot_Range;
+      use type Terminals.Slot_Range;
 
       Status, Data : SK.Byte;
    begin
@@ -74,22 +74,22 @@ is
                Log.Text_IO.Init;
             when 59 =>
                Log.VGA.Enable_Cursor;
-               VGA_Output.Set (Slot => 1);
+               Terminals.Set (Slot => 1);
                Log.Text_IO.Put_Line ("Switching to VT 1");
             when 60 =>
                Log.VGA.Disable_Cursor;
-               VGA_Output.Set (Slot => 2);
+               Terminals.Set (Slot => 2);
                Log.Text_IO.Put_Line ("Switching to VT 2");
             when 63 =>
                Log.VGA.Disable_Cursor;
-               VGA_Output.Set (Slot => 5);
+               Terminals.Set (Slot => 5);
                Log.Text_IO.Put_Line ("Switching to VT 5");
             when 64 =>
                Log.VGA.Disable_Cursor;
-               VGA_Output.Set (Slot => 6);
+               Terminals.Set (Slot => 6);
                Log.Text_IO.Put_Line ("Switching to VT 6");
             when others =>
-               if VGA_Output.Get_Active_Slot = 1 then
+               if Terminals.Get_Active_Slot = 1 then
                   Kbd_Driver.Scancode := Data;
                   SK.Hypercall.Trigger_Event (Number => 1);
                end if;

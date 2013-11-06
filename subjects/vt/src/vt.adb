@@ -23,7 +23,7 @@ pragma Unreferenced (Interrupt_Handler);
 
 with Log;
 with Interrupts;
-with VGA_Output;
+with Terminals;
 
 procedure VT
 is
@@ -33,5 +33,5 @@ begin
 
    SK.CPU.Sti;
 
-   VGA_Output.Sync;
+   Terminals.Run;
 end VT;

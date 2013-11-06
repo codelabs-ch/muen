@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package VGA_Output
+package Terminals
 is
 
    --  Session slots.
@@ -29,6 +29,6 @@ is
    function Get_Active_Slot return Slot_Range;
 
    --  Synchronize VGA console with active session's framebuffer.
-   procedure Sync;
+   procedure Run;
 
-end VGA_Output;
+end Terminals;

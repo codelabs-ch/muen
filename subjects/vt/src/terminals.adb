@@ -20,7 +20,7 @@ with System;
 
 with SK;
 
-package body VGA_Output
+package body Terminals
 is
 
    --  Virtual text console framebuffer.
@@ -48,15 +48,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set (Slot : Slot_Range)
-   is
-   begin
-      Active_Slot := Slot;
-   end Set;
-
-   -------------------------------------------------------------------------
-
-   procedure Sync
+   procedure Run
    is
       use type SK.Byte;
    begin
@@ -67,6 +59,14 @@ is
             end if;
          end loop;
       end loop;
-   end Sync;
+   end Run;
 
-end VGA_Output;
+   -------------------------------------------------------------------------
+
+   procedure Set (Slot : Slot_Range)
+   is
+   begin
+      Active_Slot := Slot;
+   end Set;
+
+end Terminals;

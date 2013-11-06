@@ -18,7 +18,7 @@
 
 with SK;
 
-package Handler
+package Interrupt_Handler
 is
 
    --  Interrupt handler.
@@ -28,4 +28,4 @@ is
    --  Initialize interrupt handler.
    procedure Initialize;
 
-end Handler;
+end Interrupt_Handler;

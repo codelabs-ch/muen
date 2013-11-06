@@ -19,14 +19,14 @@
 with SK.CPU;
 
 with Interrupts;
-with Handler;
+with Interrupt_Handler;
 with VGA_Output;
 
 procedure VT
 is
 begin
    Interrupts.Initialize;
-   Handler.Initialize;
+   Interrupt_Handler.Initialize;
 
    SK.CPU.Sti;
 

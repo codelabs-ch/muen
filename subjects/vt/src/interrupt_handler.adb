@@ -26,7 +26,7 @@ with SK.Hypercall;
 
 with VGA_Output;
 
-package body Handler
+package body Interrupt_Handler
 is
 
    subtype Width_Type  is Natural range 1 .. 80;
@@ -123,4 +123,4 @@ is
       Text_IO.New_Line;
    end Initialize;
 
-end Handler;
+end Interrupt_Handler;

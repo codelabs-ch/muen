@@ -16,25 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
-
 with SK.IO;
-with SK.Hypercall;
 
 with Log;
 with Terminals;
 
 package body Interrupt_Handler
 is
-
-   type Kbd_Driver_Type is record
-      Scancode : SK.Byte;
-   end record;
-
-   --  Xv6 driver page, currently used to forward keyboard scancodes.
-   Kbd_Driver : Kbd_Driver_Type;
-   for Kbd_Driver'Address use System'To_Address (16#40000#);
-   pragma Volatile (Kbd_Driver);
 
    --  PS/2 constants.
 
@@ -89,10 +77,7 @@ is
                Terminals.Set (Slot => 6);
                Log.Text_IO.Put_Line ("Switching to VT 6");
             when others =>
-               if Terminals.Get_Active_Slot = 1 then
-                  Kbd_Driver.Scancode := Data;
-                  SK.Hypercall.Trigger_Event (Number => 1);
-               end if;
+               null;
          end case;
       end loop;
    end Handle_Interrupt;

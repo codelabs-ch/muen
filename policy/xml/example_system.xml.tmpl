@@ -66,16 +66,11 @@
 				<memory_region physical_address="350000" virtual_address="30000" size="32k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
 				<memory_region physical_address="360000" virtual_address="38000" size="32k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
 
-				<!-- Xv6 driver page            -->
-				<memory_region physical_address="300000" virtual_address="40000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
 			</memory_layout>
 			<binary name="vt" physical_address="247000"/>
 			<device name="vga"/>
 			<device name="cursor"/>
 			<device name="keyboard"/>
-			<event_table>
-				<interrupt event="1" dst_subject="linux" dst_vector="33" send_ipi="true"/>
-			</event_table>
 		</subject>
 
 		<subject id="2" name="time" profile="native" cpu="2" pml4_address="270000" io_bitmap_address="274000" msr_bitmap_address="276000">

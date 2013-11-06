@@ -16,22 +16,28 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.CPU;
+with System;
 
-with Interrupt_Handler;
-pragma Unreferenced (Interrupt_Handler);
+with SK.Console;
+with SK.Console_VGA;
 
-with Log;
-with Interrupts;
-with VGA_Output;
-
-procedure VT
+package Log
 is
-begin
-   Interrupts.Initialize;
-   Log.Initialize;
 
-   SK.CPU.Sti;
+   subtype Width_Type  is Natural range 1 .. 80;
+   subtype Height_Type is Natural range 1 .. 25;
 
-   VGA_Output.Sync;
-end VT;
+   package VGA is new SK.Console_VGA
+     (Width_Type   => Width_Type,
+      Height_Type  => Height_Type,
+      Base_Address => System'To_Address (16#001b_8000#));
+
+   package Text_IO is new SK.Console
+     (Initialize      => VGA.Init,
+      Output_New_Line => VGA.New_Line,
+      Output_Char     => VGA.Put_Char);
+
+   --  Initialize logging.
+   procedure Initialize;
+
+end Log;

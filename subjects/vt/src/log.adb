@@ -16,22 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.CPU;
-
-with Interrupt_Handler;
-pragma Unreferenced (Interrupt_Handler);
-
-with Log;
-with Interrupts;
-with VGA_Output;
-
-procedure VT
+package body Log
 is
-begin
-   Interrupts.Initialize;
-   Log.Initialize;
 
-   SK.CPU.Sti;
+   -------------------------------------------------------------------------
 
-   VGA_Output.Sync;
-end VT;
+   procedure Initialize
+   is
+   begin
+      Text_IO.Init;
+      Text_IO.Put_Line (Item => "VT subject running");
+   end Initialize;
+
+end Log;

@@ -63,6 +63,8 @@
 				<memory_region physical_address="304000" virtual_address="14000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
 				<memory_region physical_address="305000" virtual_address="15000" size="4k" alignment="4k" writable="true"  executable="false" memory_type="WB"/>
 
+				<!-- Linux HVC -> VT channel -->
+				<memory_region physical_address="306000" virtual_address="40000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
 			</memory_layout>
 			<binary name="vt" physical_address="247000"/>
 			<device name="vga"/>

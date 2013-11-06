@@ -54,12 +54,12 @@ is
                 N => bootparam_h.boot_params'Object_Size / 8);
 
       Params.e820_entries := 4;
-      --  Zero page, Time page
+      --  Zero page, Time page, HVC channel
       Params.e820_map (0) := (addr   => 16#000000#,
-                              size   => 16#002000#,
+                              size   => 16#003000#,
                               c_type => E820_RESERVED);
       --  Usable lower memory
-      Params.e820_map (1) := (addr   => 16#002000#,
+      Params.e820_map (1) := (addr   => 16#003000#,
                               size   => 16#09e000#,
                               c_type => E820_RAM);
       --  VGA memory, OPROMs, BIOS extension (ACPI tables), System BIOS

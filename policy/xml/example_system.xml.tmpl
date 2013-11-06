@@ -107,7 +107,9 @@
 				&linuxmem;
 				&linuxmmconf;
 				<!-- Time page -->
-				<memory_region physical_address="29e000" virtual_address="00001000" size="4k" alignment="4k" writable="false"  executable="false" memory_type="WB"/>
+				<memory_region physical_address="29e000" virtual_address="1000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+				<!-- Linux HVC -> VT channel -->
+				<memory_region physical_address="306000" virtual_address="2000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
 			</memory_layout>
 			<binary name="linux" physical_address="400000"/>
 			<device name="port80"/>

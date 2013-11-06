@@ -56,15 +56,15 @@
 			<memory_layout>
 				&vtmem;
 				<!-- virtual terminal console 6 -->
-				<memory_region physical_address="360000" virtual_address="1b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
+				<memory_region physical_address="305000" virtual_address="1b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
 
 				<!-- virtual terminals 1-6      -->
-				<memory_region physical_address="310000" virtual_address="10000" size="32k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
-				<memory_region physical_address="320000" virtual_address="18000" size="32k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
-				<memory_region physical_address="330000" virtual_address="20000" size="32k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
-				<memory_region physical_address="340000" virtual_address="28000" size="32k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
-				<memory_region physical_address="350000" virtual_address="30000" size="32k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
-				<memory_region physical_address="360000" virtual_address="38000" size="32k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+				<memory_region physical_address="300000" virtual_address="10000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+				<memory_region physical_address="301000" virtual_address="11000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+				<memory_region physical_address="302000" virtual_address="12000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+				<memory_region physical_address="303000" virtual_address="13000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+				<memory_region physical_address="304000" virtual_address="14000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+				<memory_region physical_address="305000" virtual_address="15000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
 
 			</memory_layout>
 			<binary name="vt" physical_address="247000"/>
@@ -80,7 +80,7 @@
 				<!-- Time page -->
 				<memory_region physical_address="29e000" virtual_address="20000" size="4k" alignment="4k" writable="true"  executable="false" memory_type="WB"/>
 				<!-- virtual terminal console 2 -->
-				<memory_region physical_address="320000" virtual_address="b8000" size="32k" alignment="4k" writable="true"  executable="false" memory_type="WB"/>
+				<memory_region physical_address="301000" virtual_address="b8000" size="4k" alignment="4k" writable="true"  executable="false" memory_type="WB"/>
 			</memory_layout>
 			<binary name="time" physical_address="277000"/>
 			<device name="port80"/>
@@ -93,7 +93,7 @@
 				<!-- Linux subject state descriptor -->
 				<memory_region physical_address="1e4000" virtual_address="1e0000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
 				<!-- virtual terminal console 5     -->
-				<memory_region physical_address="350000" virtual_address="b8000" size="32k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
+				<memory_region physical_address="304000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
 			</memory_layout>
 			<binary name="sm" physical_address="2a7000"/>
 			<event_table>

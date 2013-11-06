@@ -30,6 +30,7 @@ is
 begin
    Interrupts.Initialize;
    Log.Initialize;
+   Terminals.Initialize;
 
    SK.CPU.Sti;
 

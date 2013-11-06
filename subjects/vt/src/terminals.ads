@@ -28,7 +28,11 @@ is
    --  Get active session slot.
    function Get_Active_Slot return Slot_Range;
 
-   --  Synchronize VGA console with active session's framebuffer.
+   --  Initialize communication channels.
+   procedure Initialize;
+
+   --  Read data from channels and synchronize VGA output with active terminal
+   --  framebuffer.
    procedure Run;
 
 end Terminals;

@@ -37,6 +37,13 @@ is
       Output_New_Line => VGA.New_Line,
       Output_Char     => VGA.Put_Char);
 
+   type State_Type is
+     (State_Ground);
+
+   Current_State : constant State_Type := State_Ground;
+
+   subtype Printable_Range is Positive range 32 .. 127;
+
    -------------------------------------------------------------------------
 
    procedure Init
@@ -49,18 +56,17 @@ is
 
    procedure Update (Char : Character)
    is
+      Pos : constant Natural := Character'Pos (Char);
    begin
-      if Character'Pos (Char) >= 32 then
-
-         --  Printable character.
-
-         Text_IO.Put_Char (Item => Char);
-      else
-         case Char is
-            when ASCII.LF => Text_IO.New_Line;
-            when others   => null;
-         end case;
-      end if;
+      case Current_State
+      is
+         when State_Ground =>
+            if Pos in Printable_Range then
+               Text_IO.Put_Char (Item => Char);
+            elsif Pos = 10 then
+               Text_IO.New_Line;
+            end if;
+      end case;
    end Update;
 
 end Terminal_Screen_1;

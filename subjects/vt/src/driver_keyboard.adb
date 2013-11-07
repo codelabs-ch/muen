@@ -18,7 +18,6 @@
 
 with SK.IO;
 
-with Log;
 with Terminals;
 
 package body Driver_Keyboard
@@ -47,24 +46,7 @@ is
          SK.IO.Inb (Port  => Data_Port,
                     Value => Data);
 
-         case Data is
-            when 1  =>
-               Log.Text_IO.Init;
-            when 59 =>
-               Terminals.Set (Slot => 1);
-               Log.Text_IO.Put_Line ("Switching to VT 1");
-            when 60 =>
-               Terminals.Set (Slot => 2);
-               Log.Text_IO.Put_Line ("Switching to VT 2");
-            when 63 =>
-               Terminals.Set (Slot => 5);
-               Log.Text_IO.Put_Line ("Switching to VT 5");
-            when 64 =>
-               Terminals.Set (Slot => 6);
-               Log.Text_IO.Put_Line ("Switching to VT 6");
-            when others =>
-               Terminals.Process_Scancode (Data => Data);
-         end case;
+         Terminals.Process_Scancode (Data => Data);
       end loop;
    end Handle;
 

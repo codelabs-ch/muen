@@ -129,17 +129,34 @@ is
       end if;
    end Process_Char;
 
-      -------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Process_Scancode (Data : SK.Byte)
    is
    begin
-      if Active_Slot /= 1 then
-         return;
-      end if;
+      case Data is
+         when 1  =>
+            Log.Text_IO.Init;
+         when 59 =>
+            Terminals.Set (Slot => 1);
+            Log.Text_IO.Put_Line ("Switching to VT 1");
+         when 60 =>
+            Terminals.Set (Slot => 2);
+            Log.Text_IO.Put_Line ("Switching to VT 2");
+         when 63 =>
+            Terminals.Set (Slot => 5);
+            Log.Text_IO.Put_Line ("Switching to VT 5");
+         when 64 =>
+            Terminals.Set (Slot => 6);
+            Log.Text_IO.Put_Line ("Switching to VT 6");
+         when others =>
+            if Active_Slot /= 1 then
+               return;
+            end if;
 
-      VT_Channel_Wtr.Write (Channel => Channel_1_Out,
-                            Element => Character'Val (Data));
+            VT_Channel_Wtr.Write (Channel => Channel_1_Out,
+                                  Element => Character'Val (Data));
+      end case;
    end Process_Scancode;
 
    -------------------------------------------------------------------------

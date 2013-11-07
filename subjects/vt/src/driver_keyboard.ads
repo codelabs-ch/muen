@@ -16,28 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Log;
-with Terminals;
-with Driver_Keyboard;
-
-package body Interrupt_Handler
+package Driver_Keyboard
 is
 
-   -------------------------------------------------------------------------
+   --  Handle keyboard interrupt.
+   procedure Handle;
 
-   procedure Handle_Interrupt (Vector : SK.Byte)
-   is
-      use type SK.Byte;
-      use type Terminals.Slot_Range;
-   begin
-      if Vector /= 49 then
-         Log.Text_IO.Put_String (Item => "Ignoring spurious interrupt ");
-         Log.Text_IO.Put_Byte   (Item => Vector);
-         Log.Text_IO.New_Line;
-         return;
-      end if;
-
-      Driver_Keyboard.Handle;
-   end Handle_Interrupt;
-
-end Interrupt_Handler;
+end Driver_Keyboard;

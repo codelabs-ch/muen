@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK;
+
 package Terminals
 is
 
@@ -34,5 +36,8 @@ is
    --  Read data from channels and synchronize VGA output with active terminal
    --  framebuffer.
    procedure Run;
+
+   --  Process given keyboard scancode.
+   procedure Process_Scancode (Data : SK.Byte);
 
 end Terminals;

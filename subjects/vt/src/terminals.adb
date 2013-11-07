@@ -22,6 +22,7 @@ with SK.Console_VGA;
 with SK.Console;
 
 with Muchannel.Reader;
+with Muchannel.Writer;
 
 with Log;
 
@@ -48,11 +49,15 @@ is
       Elements     => 4032);
 
    package VT_Channel_Rdr is new VT_Channel.Reader (Protocol => 1);
+   package VT_Channel_Wtr is new VT_Channel.Writer (Protocol => 1);
 
    Channel_1_In : VT_Channel.Channel_Type;
    for Channel_1_In'Address use System'To_Address (16#40000#);
 
    Channel_1_Reader : VT_Channel_Rdr.Reader_Type;
+
+   Channel_1_Out : VT_Channel.Channel_Type;
+   for Channel_1_Out'Address use System'To_Address (16#50000#);
 
    subtype Width_Type  is Natural range 1 .. 80;
    subtype Height_Type is Natural range 1 .. 25;
@@ -91,6 +96,11 @@ is
    begin
       Terminal_1_IO.Init;
 
+      --  Initialize terminal 1 keyboard output channel.
+
+      VT_Channel_Wtr.Initialize (Channel => Channel_1_Out,
+                                 Epoch   => 1);
+
       Res := VT_Channel_Rdr.Inactive;
 
       loop
@@ -118,6 +128,19 @@ is
          end case;
       end if;
    end Process_Char;
+
+      -------------------------------------------------------------------------
+
+   procedure Process_Scancode (Data : SK.Byte)
+   is
+   begin
+      if Active_Slot /= 1 then
+         return;
+      end if;
+
+      VT_Channel_Wtr.Write (Channel => Channel_1_Out,
+                            Element => Character'Val (Data));
+   end Process_Scancode;
 
    -------------------------------------------------------------------------
 

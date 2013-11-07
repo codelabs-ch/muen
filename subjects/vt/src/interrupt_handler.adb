@@ -73,7 +73,7 @@ is
                Terminals.Set (Slot => 6);
                Log.Text_IO.Put_Line ("Switching to VT 6");
             when others =>
-               null;
+               Terminals.Process_Scancode (Data => Data);
          end case;
       end loop;
    end Handle_Interrupt;

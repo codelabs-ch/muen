@@ -18,13 +18,11 @@
 
 with System;
 
-with SK.Console_VGA;
-with SK.Console;
-
 with Muchannel.Reader;
 with Muchannel.Writer;
 
 with Log;
+with Terminal_Screen_1;
 
 package body Terminals
 is
@@ -59,24 +57,8 @@ is
    Channel_1_Out : VT_Channel.Channel_Type;
    for Channel_1_Out'Address use System'To_Address (16#50000#);
 
-   subtype Width_Type  is Natural range 1 .. 80;
-   subtype Height_Type is Natural range 1 .. 25;
-
-   package Terminal_1 is new SK.Console_VGA
-     (Width_Type   => Width_Type,
-      Height_Type  => Height_Type,
-      Base_Address => System'To_Address (16#10000#));
-
-   package Terminal_1_IO is new SK.Console
-     (Initialize      => Terminal_1.Init,
-      Output_New_Line => Terminal_1.New_Line,
-      Output_Char     => Terminal_1.Put_Char);
-
    --  Read data from input channels if new data is present.
    procedure Update_In_Channels;
-
-   --  Process given character.
-   procedure Process_Char (Data : Character);
 
    -------------------------------------------------------------------------
 
@@ -94,10 +76,10 @@ is
 
       Res : VT_Channel_Rdr.Result_Type;
    begin
-      Terminal_1_IO.Init;
 
-      --  Initialize terminal 1 keyboard output channel.
+      --  Initialize terminal screen 1 and associated channels.
 
+      Terminal_Screen_1.Init;
       VT_Channel_Wtr.Initialize (Channel => Channel_1_Out,
                                  Epoch   => 1);
 
@@ -110,24 +92,6 @@ is
          exit when Res /= VT_Channel_Rdr.Inactive;
       end loop;
    end Initialize;
-
-   -------------------------------------------------------------------------
-
-   procedure Process_Char (Data : Character)
-   is
-   begin
-      if Character'Pos (Data) >= 32 then
-
-         --  Printable character.
-
-         Terminal_1_IO.Put_Char (Item => Data);
-      else
-         case Data is
-            when ASCII.LF => Terminal_1_IO.New_Line;
-            when others   => null;
-         end case;
-      end if;
-   end Process_Char;
 
    -------------------------------------------------------------------------
 
@@ -218,7 +182,7 @@ is
             when VT_Channel_Rdr.Inactive =>
                Log.Text_IO.Put_Line ("Channel 1: Inactive");
             when VT_Channel_Rdr.Success =>
-               Process_Char (Data => Data);
+               Terminal_Screen_1.Update (Char => Data);
          end case;
 
          exit when Res /= VT_Channel_Rdr.Success;

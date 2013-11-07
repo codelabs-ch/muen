@@ -57,6 +57,63 @@ is
    Channel_1_Out : VT_Channel.Channel_Type;
    for Channel_1_Out'Address use System'To_Address (16#50000#);
 
+   type Scancode_Map is array (SK.Byte'Range) of Character;
+
+   Char_Map : constant Scancode_Map
+     := (2      => '1',
+         3      => '2',
+         4      => '3',
+         5      => '4',
+         6      => '5',
+         7      => '6',
+         8      => '7',
+         9      => '8',
+         10     => '9',
+         11     => '0',
+         12     => '-',
+         13     => '=',
+         14     => ASCII.BS,
+         16     => 'q',
+         17     => 'w',
+         18     => 'e',
+         19     => 'r',
+         20     => 't',
+         21     => 'z',
+         22     => 'u',
+         23     => 'i',
+         24     => 'o',
+         25     => 'p',
+         26     => '[',
+         27     => ']',
+         28     => ASCII.LF,
+         30     => 'a',
+         31     => 's',
+         32     => 'd',
+         33     => 'f',
+         34     => 'g',
+         35     => 'h',
+         36     => 'j',
+         37     => 'k',
+         38     => 'l',
+         39     => ';',
+         40     => ''',
+         41     => '`',
+         43     => ''',
+         44     => 'y',
+         45     => 'x',
+         46     => 'c',
+         47     => 'v',
+         48     => 'b',
+         49     => 'n',
+         50     => 'm',
+         51     => ',',
+         52     => '.',
+         53     => '-',
+         55     => '*',
+         57     => ' ',
+         86     => '<',
+         others => ' ');
+
    --  Read data from input channels if new data is present.
    procedure Update_In_Channels;
 
@@ -97,6 +154,7 @@ is
 
    procedure Process_Scancode (Data : SK.Byte)
    is
+      use type SK.Byte;
    begin
       case Data is
          when 1  =>
@@ -118,8 +176,10 @@ is
                return;
             end if;
 
-            VT_Channel_Wtr.Write (Channel => Channel_1_Out,
-                                  Element => Character'Val (Data));
+            if Data <= 86 then
+               VT_Channel_Wtr.Write (Channel => Channel_1_Out,
+                                     Element => Char_Map (Data));
+            end if;
       end case;
    end Process_Scancode;
 

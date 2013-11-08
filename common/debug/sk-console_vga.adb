@@ -88,6 +88,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Delete_Char
+   is
+   begin
+      Screen (Cur_Y) (Cur_X) := Screen_Cell_Type'
+        (Char     => ' ',
+         FG_Color => Light_Grey,
+         BG_Color => Black);
+   end Delete_Char;
+
+   -------------------------------------------------------------------------
+
    procedure Disable_Cursor
    is
    begin

@@ -44,6 +44,9 @@ is
    --  Move cursor to the left on the current line.
    procedure Line_Move_Left;
 
+   --  Delete character at current position.
+   procedure Delete_Char;
+
    --  Set cursor position.
    procedure Set_Position
      (X : Width_Type;

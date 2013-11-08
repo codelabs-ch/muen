@@ -53,14 +53,19 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Delete_Char
+   procedure Delete_Screen_From_Cursor
    is
    begin
-      Screen (Cur_Y) (Cur_X) := Screen_Cell_Type'
-        (Char     => ' ',
-         FG_Color => Black,
-         BG_Color => Black);
-   end Delete_Char;
+      for X in Cur_X .. Width_Type'Last loop
+         for Y in Cur_Y .. Height_Type'Last loop
+            Screen (Y) (X)
+              := Screen_Cell_Type'
+                (Char     => ' ',
+                 FG_Color => Black,
+                 BG_Color => Black);
+         end loop;
+      end loop;
+   end Delete_Screen_From_Cursor;
 
    -------------------------------------------------------------------------
 

@@ -126,7 +126,7 @@ is
 
             --  CSI J: Erase display
 
-            VGA.Delete_Char;
+            VGA.Delete_Screen_From_Cursor;
          when 16#6d# =>
 
             --  CSI n m: SGR - Select Graphic Rendition

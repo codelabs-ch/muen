@@ -63,8 +63,8 @@ is
    --  Move cursor to the left on the current line.
    procedure Line_Move_Left;
 
-   --  Delete character at current position.
-   procedure Delete_Char;
+   --  Delete screen from cursor to end of screen.
+   procedure Delete_Screen_From_Cursor;
 
    --  Set cursor position.
    procedure Set_Position

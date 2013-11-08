@@ -63,6 +63,12 @@ is
 
       case Char
       is
+         when 16#48# =>
+
+            --  CSI H: Cursor position
+
+            VGA.Set_Position (X => Width_Type'First,
+                              Y => Height_Type'First);
          when 16#4a# =>
 
             --  ED0

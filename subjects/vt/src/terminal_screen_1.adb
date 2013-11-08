@@ -42,15 +42,68 @@ is
    type State_Type is
      (State_Ground,
       State_Escape,
-      State_CSI_Entry);
+      State_CSI_Entry,
+      State_CSI_Param);
 
-   Current_State : State_Type := State_Ground;
+   type CSI_Param_Idx_Range is range 0 .. 16;
+
+   CSI_Empty_Params : constant CSI_Param_Idx_Range
+     := CSI_Param_Idx_Range'First;
+
+   subtype CSI_Param_Range is CSI_Param_Idx_Range range
+     1 .. CSI_Param_Idx_Range'Last;
+
+   type CSI_Param_Array is array (CSI_Param_Range) of SK.Byte;
+
+   type Terminal_State_Type is record
+      State         : State_Type;
+      CSI_Params    : CSI_Param_Array;
+      CSI_Param_Idx : CSI_Param_Idx_Range;
+   end record;
+
+   Null_State : constant Terminal_State_Type
+     := (State         => State_Ground,
+         CSI_Params    => (others => 0),
+         CSI_Param_Idx => CSI_Param_Idx_Range'First);
+
+   --  Terminal emulation state machine.
+   Fsm : Terminal_State_Type := Null_State;
+
+   Color_Table : constant array (SK.Byte range 0 .. 7) of
+     VGA.VGA_Color_Type
+       := (0 => VGA.Light_Grey,
+           1 => VGA.Red,
+           2 => VGA.Green,
+           3 => VGA.Yellow,
+           4 => VGA.Blue,
+           5 => VGA.Magenta,
+           6 => VGA.Cyan,
+           7 => VGA.Black);
 
    --  Print 'unknown character' message.
    procedure Print_Unknown (Char : SK.Byte);
 
    --  Execute CSI control function.
    procedure CSI_Dispatch (Char : SK.Byte);
+
+   --  CSI Select Graphic Rendition.
+   procedure CSI_Select_SGR;
+
+   --  Add CSI parameter to state.
+   procedure CSI_Add_Param (Char : SK.Byte);
+
+   -------------------------------------------------------------------------
+
+   procedure CSI_Add_Param (Char : SK.Byte)
+   is
+   begin
+      if Fsm.CSI_Param_Idx < CSI_Param_Range'Last then
+         Fsm.CSI_Param_Idx                  := Fsm.CSI_Param_Idx + 1;
+         Fsm.CSI_Params (Fsm.CSI_Param_Idx) := Char;
+      else
+         Log.Text_IO.Put_Line (Item => "!! CSI params overrun");
+      end if;
+   end CSI_Add_Param;
 
    -------------------------------------------------------------------------
 
@@ -71,13 +124,51 @@ is
                               Y => Height_Type'First);
          when 16#4a# =>
 
-            --  ED0
+            --  CSI J: Erase display
 
             VGA.Delete_Char;
+         when 16#6d# =>
+
+            --  CSI n m: SGR - Select Graphic Rendition
+
+            CSI_Select_SGR;
          when others =>
             Print_Unknown (Char => Char);
       end case;
    end CSI_Dispatch;
+
+   -------------------------------------------------------------------------
+
+   procedure CSI_Select_SGR
+   is
+      use type SK.Byte;
+   begin
+      Log.Text_IO.Put_Line (Item => "** CSI_Select_SGR ");
+
+      if Fsm.CSI_Param_Idx = CSI_Empty_Params then
+         Log.Text_IO.Put_Line ("!! Empty CSI params");
+         return;
+      end if;
+
+      for Idx in CSI_Param_Range'First .. Fsm.CSI_Param_Idx loop
+         declare
+            Param : constant SK.Byte := Fsm.CSI_Params (Idx);
+         begin
+            case Param
+            is
+               when 16#30# .. 16#37# =>
+                  VGA.Set_Text_Color
+                    (Color => Color_Table (Param and 16#7#));
+               when 16#3b# =>
+
+                  --  Semicolon, ignore
+                  null;
+               when others =>
+                  Print_Unknown (Char => Param);
+            end case;
+         end;
+      end loop;
+   end CSI_Select_SGR;
 
    -------------------------------------------------------------------------
 
@@ -108,9 +199,12 @@ is
 
       --  Video Terminal Parser, see http://vt100.net/emu/vt500_parser.png
 
-      case Current_State
+      case Fsm.State
       is
          when State_Ground =>
+
+            --  GROUND
+
             case Pos
             is
                when 16#20# .. 16#7f# =>
@@ -135,26 +229,56 @@ is
                   return;
                when 16#1b# =>
                   Log.Text_IO.Put_Line (Item => "-> Escape");
-                  Current_State := State_Escape;
+                  Fsm.State := State_Escape;
                when others =>
                   Print_Unknown (Char => Pos);
             end case;
          when State_Escape =>
+
+            --  ESCAPE
+
+            Fsm := Null_State;
+
             case Pos
             is
                when 16#5b# =>
                   Log.Text_IO.Put_Line (Item => "--> CSI entry");
-                  Current_State := State_CSI_Entry;
+                  Fsm.State := State_CSI_Entry;
                when others =>
                   Print_Unknown (Char => Pos);
             end case;
          when State_CSI_Entry =>
+
+            --  CSI entry
+
+            Fsm := Null_State;
+
             case Pos
             is
+               when 16#30# .. 16#39# | 16#3b# =>
+                  Log.Text_IO.Put_Line (Item => "---> CSI param ");
+                  Fsm.State := State_CSI_Param;
+
+                  CSI_Add_Param (Char => Pos);
                when 16#40# .. 16#7e# =>
                   CSI_Dispatch (Char => Pos);
                   Log.Text_IO.Put_Line (Item => "> Ground");
-                  Current_State := State_Ground;
+                  Fsm := Null_State;
+               when others =>
+                  Print_Unknown (Char => Pos);
+            end case;
+         when State_CSI_Param =>
+
+            --  CSI param
+
+            case Pos
+            is
+               when 16#30# .. 16#39# | 16#3b# =>
+                  CSI_Add_Param (Char => Pos);
+               when 16#40# .. 16#7e# =>
+                  CSI_Dispatch (Char => Pos);
+                  Log.Text_IO.Put_Line (Item => "> Ground");
+                  Fsm := Null_State;
                when others =>
                   Print_Unknown (Char => Pos);
             end case;

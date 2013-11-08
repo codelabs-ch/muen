@@ -40,8 +40,10 @@ is
    --  VGA screen.
    type Screen_Type is array (Height_Type) of Screen_Row_Type;
 
-   Cur_X  : Width_Type;
-   Cur_Y  : Height_Type;
+   Cur_X         : Width_Type;
+   Cur_Y         : Height_Type;
+   Cur_Txt_Color : VGA_Color_Type;
+
    Screen : Screen_Type;
    pragma Import (Ada, Screen);
    for Screen'Address use Base_Address;
@@ -56,7 +58,7 @@ is
    begin
       Screen (Cur_Y) (Cur_X) := Screen_Cell_Type'
         (Char     => ' ',
-         FG_Color => Light_Grey,
+         FG_Color => Black,
          BG_Color => Black);
    end Delete_Char;
 
@@ -94,8 +96,9 @@ is
                FG_Color => Light_Grey,
                BG_Color => Black)));
 
-      Cur_X := Width_Type'First;
-      Cur_Y := Height_Type'First;
+      Cur_X         := Width_Type'First;
+      Cur_Y         := Height_Type'First;
+      Cur_Txt_Color := Light_Grey;
    end Init;
 
    -------------------------------------------------------------------------
@@ -128,7 +131,7 @@ is
    begin
       Screen (Cur_Y) (Cur_X) := Screen_Cell_Type'
         (Char     => Item,
-         FG_Color => Light_Grey,
+         FG_Color => Cur_Txt_Color,
          BG_Color => Black);
 
       if Cur_X = Width_Type'Last then
@@ -167,5 +170,13 @@ is
       Cur_X := X;
       Cur_Y := Y;
    end Set_Position;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Text_Color (Color : VGA_Color_Type)
+   is
+   begin
+      Cur_Txt_Color := Color;
+   end Set_Text_Color;
 
 end SK.Console_VGA;

@@ -77,6 +77,9 @@ is
    --  Disable position cursor.
    procedure Disable_Cursor;
 
+   --  Set text color.
+   procedure Set_Text_Color (Color : VGA_Color_Type);
+
 private
 
    for VGA_Color_Type use

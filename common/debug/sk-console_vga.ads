@@ -41,6 +41,9 @@ is
    --  Print character at current cursor position.
    procedure Put_Char (Item : Character);
 
+   --  Move cursor to the left on the current line.
+   procedure Line_Move_Left;
+
    --  Set cursor position.
    procedure Set_Position
      (X : Width_Type;

@@ -126,6 +126,16 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Line_Move_Left
+   is
+   begin
+      if Cur_X > Width_Type'First then
+         Cur_X := Cur_X - 1;
+      end if;
+   end Line_Move_Left;
+
+   -------------------------------------------------------------------------
+
    procedure New_Line
    is
    begin

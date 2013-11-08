@@ -21,43 +21,6 @@ with SK.IO;
 package body SK.Console_VGA
 is
 
-   type VGA_Color_Type is
-     (Black,
-      Blue,
-      Green,
-      Cyan,
-      Red,
-      Magenta,
-      Brown,
-      Light_Grey,
-      Dark_Grey,
-      Light_Blue,
-      Light_Green,
-      Light_Cyan,
-      Light_Red,
-      Light_Magenta,
-      Yellow,
-      White);
-
-   for VGA_Color_Type use
-     (Black         => 16#0#,
-      Blue          => 16#1#,
-      Green         => 16#2#,
-      Cyan          => 16#3#,
-      Red           => 16#4#,
-      Magenta       => 16#5#,
-      Brown         => 16#6#,
-      Light_Grey    => 16#7#,
-      Dark_Grey     => 16#8#,
-      Light_Blue    => 16#9#,
-      Light_Green   => 16#a#,
-      Light_Cyan    => 16#b#,
-      Light_Red     => 16#c#,
-      Light_Magenta => 16#d#,
-      Yellow        => 16#e#,
-      White         => 16#f#);
-   for VGA_Color_Type'Size use 4;
-
    type Screen_Cell_Type is record
       Char     : Character;
       FG_Color : VGA_Color_Type;

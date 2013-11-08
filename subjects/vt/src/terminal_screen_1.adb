@@ -21,6 +21,8 @@ with System;
 with SK.Console_VGA;
 with SK.Console;
 
+with Log;
+
 package body Terminal_Screen_1
 is
 
@@ -38,11 +40,38 @@ is
       Output_Char     => VGA.Put_Char);
 
    type State_Type is
-     (State_Ground);
+     (State_Ground,
+      State_Escape,
+      State_CSI_Entry);
 
-   Current_State : constant State_Type := State_Ground;
+   Current_State : State_Type := State_Ground;
 
-   subtype Printable_Range is Positive range 32 .. 127;
+   --  Print 'unknown character' message.
+   procedure Print_Unknown (Char : SK.Byte);
+
+   --  Execute CSI control function.
+   procedure CSI_Dispatch (Char : SK.Byte);
+
+   -------------------------------------------------------------------------
+
+   procedure CSI_Dispatch (Char : SK.Byte)
+   is
+   begin
+      Log.Text_IO.Put_String (Item => "* CSI dispatch ");
+      Log.Text_IO.Put_Byte (Item => Char);
+      Log.Text_IO.New_Line;
+
+      case Char
+      is
+         when 16#4a# =>
+
+            --  ED0
+
+            VGA.Delete_Char;
+         when others =>
+            Print_Unknown (Char => Char);
+      end case;
+   end CSI_Dispatch;
 
    -------------------------------------------------------------------------
 
@@ -52,20 +81,77 @@ is
       Text_IO.Init;
    end Init;
 
+   ----------------------------------------------------------------------
+
+   procedure Print_Unknown (Char : SK.Byte)
+   is
+   begin
+      Log.Text_IO.Put_String (Item => "!! Unknown character ");
+      Log.Text_IO.Put_Byte   (Item => Char);
+      Log.Text_IO.New_Line;
+   end Print_Unknown;
+
    -------------------------------------------------------------------------
 
    procedure Update (Char : Character)
    is
-      Pos : constant Natural := Character'Pos (Char);
+      use type SK.Byte;
+
+      Pos : constant SK.Byte := SK.Byte (Character'Pos (Char));
    begin
+
+      --  Video Terminal Parser, see http://vt100.net/emu/vt500_parser.png
+
       case Current_State
       is
          when State_Ground =>
-            if Pos in Printable_Range then
-               Text_IO.Put_Char (Item => Char);
-            elsif Pos = 10 then
-               Text_IO.New_Line;
-            end if;
+            case Pos
+            is
+               when 16#20# .. 16#7f# =>
+
+                  --  Printable
+
+                  Text_IO.Put_Char (Item => Char);
+               when 16#08# =>
+
+                  --  BS
+
+                  VGA.Line_Move_Left;
+               when 16#0a# =>
+
+                  --  LF
+
+                  Text_IO.New_Line;
+               when 16#0d# =>
+
+                  --  CR, ignore
+
+                  return;
+               when 16#1b# =>
+                  Log.Text_IO.Put_Line (Item => "-> Escape");
+                  Current_State := State_Escape;
+               when others =>
+                  Print_Unknown (Char => Pos);
+            end case;
+         when State_Escape =>
+            case Pos
+            is
+               when 16#5b# =>
+                  Log.Text_IO.Put_Line (Item => "--> CSI entry");
+                  Current_State := State_CSI_Entry;
+               when others =>
+                  Print_Unknown (Char => Pos);
+            end case;
+         when State_CSI_Entry =>
+            case Pos
+            is
+               when 16#40# .. 16#7e# =>
+                  CSI_Dispatch (Char => Pos);
+                  Log.Text_IO.Put_Line (Item => "> Ground");
+                  Current_State := State_Ground;
+               when others =>
+                  Print_Unknown (Char => Pos);
+            end case;
       end case;
    end Update;
 

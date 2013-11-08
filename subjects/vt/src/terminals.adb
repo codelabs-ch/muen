@@ -217,10 +217,6 @@ is
       Data : Character;
       Res  : VT_Channel_Rdr.Result_Type;
    begin
-      if Active_Slot /= 1 then
-         return;
-      end if;
-
       loop
          VT_Channel_Rdr.Read (Channel => Channel_1_In,
                               Reader  => Channel_1_Reader,

@@ -128,8 +128,6 @@ td {
 
 .toc_entry {
    display: inline-block;
-   border-top-style: solid;
-   border-color: gray;
    padding: 0.5em;
 }
 

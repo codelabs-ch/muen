@@ -49,19 +49,20 @@ private
    SHMStream_Marker : constant := 16#4873_12b6_b79a_9b6d#;
 
    for Header_Field_Type'Size use 64;
-   pragma Atomic (Header_Field_Type);
 
    --  Channel header as specified by SHMStream v2 protocol.
    type Header_Type is record
-      Transport : Header_Field_Type;
-      Epoch     : Header_Field_Type;
+      Transport : Header_Field_Type with Atomic;
+      Epoch     : Header_Field_Type with Atomic;
       Protocol  : Header_Field_Type;
       Size      : Header_Field_Type;
       Elements  : Header_Field_Type;
       Reserved  : Header_Field_Type;
-      WSC       : Header_Field_Type;
-      WC        : Header_Field_Type;
-   end record;
+      WSC       : Header_Field_Type with Atomic;
+      WC        : Header_Field_Type with Atomic;
+   end record
+     with Alignment => 64,
+          Size      => 64 * 8;
 
    for Header_Type use record
       Transport at  0 range 0 .. 63;
@@ -73,23 +74,20 @@ private
       WSC       at 48 range 0 .. 63;
       WC        at 56 range 0 .. 63;
    end record;
-   for Header_Type'Alignment use 64;
-   for Header_Type'Size      use 8 * 64;
 
    Header_Size : constant Positive := Header_Type'Size / 8;
 
    --  Channel data stored as array of elements.
    type Data_Range is new Natural range 0 .. Elements - 1;
-   type Data_Type  is array (Data_Range) of Element_Type;
-   pragma Pack (Data_Type);
+   type Data_Type  is array (Data_Range) of Element_Type
+     with Pack;
 
    Data_Size : constant Positive := Data_Type'Size / 8;
 
    type Channel_Type is record
       Header : Header_Type;
       Data   : Data_Type;
-   end record;
-   pragma Pack (Channel_Type);
-   pragma Volatile (Channel_Type);
+   end record
+     with Volatile, Pack;
 
 end Muchannel;

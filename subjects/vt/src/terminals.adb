@@ -18,6 +18,8 @@
 
 with System;
 
+with SK.IO;
+
 with Muchannel.Reader;
 with Muchannel.Writer;
 
@@ -29,6 +31,11 @@ is
 
    Active_Slot : Slot_Range := Slot_Range'First;
    pragma Atomic (Active_Slot);
+
+   VGA_CRT_Register       : constant := 16#3d4#;
+   VGA_CRT_Data           : constant := 16#3d5#;
+   VGA_CRT_Idx_Start_High : constant := 16#0c#;
+   VGA_CRT_Idx_Start_Low  : constant := 16#0d#;
 
    package VT_Channel is new Muchannel
      (Element_Type => Character,
@@ -106,6 +113,10 @@ is
 
    --  Read data from input channels if new data is present.
    procedure Update_In_Channels;
+
+   --  Set VGA start address, see:
+   --  www.phatcode.net/res/224/files/html/ch23/23-04.html
+   procedure Set_VGA_Start (Address : SK.Word16);
 
    -------------------------------------------------------------------------
 
@@ -188,9 +199,27 @@ is
 
    procedure Set (Slot : Slot_Range)
    is
+      use type SK.Word16;
    begin
       Active_Slot := Slot;
+      Set_VGA_Start (Address => SK.Word16 (Slot - 1) * 16#800#);
    end Set;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_VGA_Start (Address : SK.Word16)
+   is
+      use type SK.Word16;
+   begin
+      SK.IO.Outb (Port  => VGA_CRT_Register,
+                  Value => VGA_CRT_Idx_Start_Low);
+      SK.IO.Outb (Port  => VGA_CRT_Data,
+                  Value => SK.Byte (Address));
+      SK.IO.Outb (Port  => VGA_CRT_Register,
+                  Value => VGA_CRT_Idx_Start_High);
+      SK.IO.Outb (Port  => VGA_CRT_Data,
+                  Value => SK.Byte (Address / 2 ** 8));
+   end Set_VGA_Start;
 
    -------------------------------------------------------------------------
 

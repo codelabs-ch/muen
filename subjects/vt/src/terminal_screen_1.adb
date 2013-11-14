@@ -32,7 +32,7 @@ is
    package VGA is new SK.Console_VGA
      (Width_Type   => Width_Type,
       Height_Type  => Height_Type,
-      Base_Address => System'To_Address (16#10000#));
+      Base_Address => System'To_Address (16#000b_8000#));
 
    package Text_IO is new SK.Console
      (Initialize      => VGA.Init,

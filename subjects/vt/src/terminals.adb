@@ -27,18 +27,6 @@ with Terminal_Screen_1;
 package body Terminals
 is
 
-   --  Virtual text console framebuffer.
-   type Framebuffer_Type is array (1 .. SK.Page_Size) of SK.Byte;
-   for Framebuffer_Type'Size use 8 * SK.Page_Size;
-
-   Framebuffers : array (Slot_Range) of Framebuffer_Type;
-   for Framebuffers'Address use System'To_Address (16#10000#);
-   for Framebuffers'Size use Slot_Range'Last * 8 * SK.Page_Size;
-
-   --  VGA output page.
-   VGA_Out : Framebuffer_Type;
-   for VGA_Out'Address use System'To_Address (16#000b_8000#);
-
    Active_Slot : Slot_Range := Slot_Range'First;
    pragma Atomic (Active_Slot);
 
@@ -192,13 +180,7 @@ is
       use type SK.Byte;
    begin
       loop
-         for I in VGA_Out'Range loop
-            Update_In_Channels;
-
-            if VGA_Out (I) /= Framebuffers (Active_Slot) (I) then
-               VGA_Out (I) := Framebuffers (Active_Slot) (I);
-            end if;
-         end loop;
+         Update_In_Channels;
       end loop;
    end Run;
 

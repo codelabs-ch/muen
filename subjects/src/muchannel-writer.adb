@@ -49,6 +49,10 @@ is
       Channel.Header.WSC       := 0;
       Channel.Header.WC        := 0;
 
+      --  Initialize channel data.
+
+      Channel.Data := Data_Type'(others => Null_Element);
+
       --  Initiate new epoch.
 
       Channel.Header.Epoch := Epoch;

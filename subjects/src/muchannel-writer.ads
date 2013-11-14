@@ -21,6 +21,9 @@ generic
    --  Protocol identifier.
    Protocol : Muchannel.Header_Field_Type;
 
+   --  Null element used for channel initialization.
+   Null_Element : Muchannel.Element_Type;
+
 package Muchannel.Writer
 is
 

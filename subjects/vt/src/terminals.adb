@@ -47,7 +47,9 @@ is
       Elements     => 4032);
 
    package VT_Channel_Rdr is new VT_Channel.Reader (Protocol => 1);
-   package VT_Channel_Wtr is new VT_Channel.Writer (Protocol => 1);
+   package VT_Channel_Wtr is new VT_Channel.Writer
+     (Protocol     => 1,
+      Null_Element => ASCII.NUL);
 
    Channel_1_In : VT_Channel.Channel_Type;
    for Channel_1_In'Address use System'To_Address (16#40000#);

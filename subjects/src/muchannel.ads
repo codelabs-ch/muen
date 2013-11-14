@@ -32,7 +32,7 @@ generic
 package Muchannel is
 
    --  Communication channel used by reader and writer.
-   type Channel_Type is private;
+   type Channel_Type is limited private;
 
    --  Type of channel header fields.
    type Header_Field_Type is mod 2**64;

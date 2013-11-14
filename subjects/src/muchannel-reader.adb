@@ -19,7 +19,7 @@
 package body Muchannel.Reader
 is
 
-   --  Returns True if the epoch of the channel and the reader differ.
+   --  Returns True if the epoch of the channel and the reader are out of sync.
    function Has_Epoch_Changed
      (Channel : Channel_Type;
       Reader  : Reader_Type)
@@ -68,7 +68,7 @@ is
    is
       Position : Data_Range;
    begin
-      if not Reader.Synchd then
+      if not Is_Active (Channel => Channel) then
          Result := Inactive;
       elsif Reader.RC >= Channel.Header.WC then
          Result := No_Data;
@@ -101,17 +101,14 @@ is
       Result  : out Result_Type)
    is
    begin
-      Reader.Synchd := False;
-
-      Reader.Epoch  := Channel.Header.Epoch;
-
-      if Reader.Epoch = 0 then
+      if not Is_Active (Channel => Channel) then
          Result := Inactive;
       else
+         Reader.Epoch    := Channel.Header.Epoch;
          Reader.Protocol := Channel.Header.Protocol;
          Reader.Size     := Channel.Header.Size;
          Reader.Elements := Channel.Header.Elements;
-         Reader.RC       := 0;
+         Reader.RC       := Header_Field_Type (Data_Range'First);
 
          if Channel.Header.Transport = SHMStream_Marker and then
            Is_Valid (Protocol     => Reader.Protocol,
@@ -125,8 +122,7 @@ is
             then
                Result := Epoch_Changed;
             else
-               Reader.Synchd := True;
-               Result        := Success;
+               Result := Success;
             end if;
          else
             Result := Incompatible_Interface;

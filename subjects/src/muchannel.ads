@@ -40,9 +40,12 @@ package Muchannel is
    --  Size of channel header in bytes.
    Header_Size : constant Positive;
 
+   --  Returns True if the channel is currently active.
+   function Is_Active (Channel : Channel_Type) return Boolean;
+
 private
 
-   --  SHMStream20
+   --  "SHMStream20=", base64-encoded.
    SHMStream_Marker : constant := 16#4873_12b6_b79a_9b6d#;
 
    for Header_Field_Type'Size use 64;

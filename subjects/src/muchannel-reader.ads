@@ -50,7 +50,6 @@ is
 private
 
    type Reader_Type is record
-      Synchd   : Boolean;
       Epoch    : Header_Field_Type;
       Protocol : Header_Field_Type;
       Size     : Header_Field_Type;

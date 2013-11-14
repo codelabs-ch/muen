@@ -35,6 +35,16 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Drain
+     (Channel :        Channel_Type;
+      Reader  : in out Reader_Type)
+   is
+   begin
+      Reader.RC := Channel.Header.WC;
+   end Drain;
+
+   -------------------------------------------------------------------------
+
    function Has_Epoch_Changed
      (Channel : Channel_Type;
       Reader  : Reader_Type)

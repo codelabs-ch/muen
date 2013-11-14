@@ -47,6 +47,11 @@ is
       Element :    out Element_Type;
       Result  :    out Result_Type);
 
+   --  Drain all current channel elements.
+   procedure Drain
+     (Channel :        Channel_Type;
+      Reader  : in out Reader_Type);
+
 private
 
    type Reader_Type is record

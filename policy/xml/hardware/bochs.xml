@@ -37,4 +37,9 @@
 	<device name="cursor">
 		<io_port start="03d4" end="03d5"/>
 	</device>
+	<device name="ohci" irq="11">
+		<memory_layout>
+			<memory_region physical_address="30000000" virtual_address="30000000" size="2M" alignment="2M" writable="true" executable="false" memory_type="UC"/>
+		</memory_layout>
+	</device>
 </hardware>

@@ -132,9 +132,9 @@ is
          when 61 =>
             Terminals.Set (Slot => 3);
             Log.Text_IO.Put_Line ("Switching to VT 3");
-         when 64 =>
-            Terminals.Set (Slot => 6);
-            Log.Text_IO.Put_Line ("Switching to VT 6");
+         when 62 =>
+            Terminals.Set (Slot => 4);
+            Log.Text_IO.Put_Line ("Switching to VT 4");
          when others =>
             if Active_Slot /= 1 then
                return;

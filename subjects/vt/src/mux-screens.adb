@@ -33,6 +33,12 @@ is
    package T2 renames Term2_Package;
    Screen_2 : T2.Screen_Type;
 
+   --  Terminal 3 screen.
+   package Term3_Package is new Terminal_Screen
+     (Base_Address => 16#000b_a000#);
+   package T3 renames Term3_Package;
+   Screen_3 : T3.Screen_Type;
+
    -------------------------------------------------------------------------
 
    procedure Init
@@ -40,6 +46,7 @@ is
    begin
       T1.Init;
       T2.Init;
+      T3.Init;
    end Init;
 
    -------------------------------------------------------------------------
@@ -57,7 +64,9 @@ is
          when 2 =>
             T2.Update (Screen => Screen_2,
                        Char   => Char);
-         when others => null;
+         when 3 =>
+            T3.Update (Screen => Screen_3,
+                       Char   => Char);
       end case;
    end Update;
 

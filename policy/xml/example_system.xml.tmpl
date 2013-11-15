@@ -55,8 +55,6 @@
 			&vtinit;
 			<memory_layout>
 				&vtmem;
-				<!-- VGA plane -->
-				<memory_region physical_address="bb000" virtual_address="bd000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WC"/>
 				<!-- Linux HVC -> VT channel -->
 				<memory_region physical_address="300000" virtual_address="40000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
 				<!-- Time subject -> VT channel -->

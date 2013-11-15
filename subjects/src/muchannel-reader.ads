@@ -52,6 +52,8 @@ is
      (Channel :        Channel_Type;
       Reader  : in out Reader_Type);
 
+   Null_Reader : constant Reader_Type;
+
 private
 
    type Reader_Type is record
@@ -61,5 +63,12 @@ private
       Elements : Header_Field_Type;
       RC       : Header_Field_Type;
    end record;
+
+   Null_Reader : constant Reader_Type
+     := Reader_Type'(Epoch    => Header_Field_Type'First,
+                     Protocol => Header_Field_Type'First,
+                     Size     => Header_Field_Type'First,
+                     Elements => Header_Field_Type'First,
+                     RC       => Header_Field_Type (Data_Range'First));
 
 end Muchannel.Reader;

@@ -126,16 +126,16 @@ is
          when 1  =>
             Log.Text_IO.Init;
          when 59 =>
-            Terminals.Set (Slot => 1);
+            Set (Slot => 1);
             Log.Text_IO.Put_Line ("Switching to VT 1");
          when 60 =>
-            Terminals.Set (Slot => 2);
+            Set (Slot => 2);
             Log.Text_IO.Put_Line ("Switching to VT 2");
          when 61 =>
-            Terminals.Set (Slot => 3);
+            Set (Slot => 3);
             Log.Text_IO.Put_Line ("Switching to VT 3");
          when 62 =>
-            Terminals.Set (Slot => 4);
+            Set (Slot => 4);
             Log.Text_IO.Put_Line ("Switching to VT 4");
          when others =>
             if Active_Slot /= 1 then

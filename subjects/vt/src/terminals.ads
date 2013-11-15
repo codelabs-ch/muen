@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
+with Input;
 
 package Terminals
 is
@@ -37,7 +37,7 @@ is
    --  framebuffer.
    procedure Run;
 
-   --  Process given keyboard scancode.
-   procedure Process_Scancode (Data : SK.Byte);
+   --  Process given key event.
+   procedure Process_Key (Event : Input.Key_Event_Type);
 
 end Terminals;

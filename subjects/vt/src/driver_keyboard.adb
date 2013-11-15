@@ -48,17 +48,20 @@ is
       Event : out Input.Key_Event_Type)
    is
       use type SK.Byte;
+
+      Idx : SK.Byte;
    begin
       if Code = 16#e0# or Code = 16#e1# then
          Escaped := True;
          Event   := Input.Null_Key_Event;
       end if;
 
+      Idx := Code mod 16#80#;
       if Escaped then
-         Event.Key := Scancodes.Escaped_Scancode_Map (Code);
+         Event.Key := Scancodes.Escaped_Scancode_Map (Idx);
          Escaped   := False;
       else
-         Event.Key := Scancodes.Scancode_Map (Code);
+         Event.Key := Scancodes.Scancode_Map (Idx);
       end if;
 
       Event.Pressed := (Code < 16#80#);
@@ -68,7 +71,10 @@ is
 
    procedure Handle
    is
+      use type Input.Key_Event_Type;
+
       Status, Data : SK.Byte;
+      Ev           : Input.Key_Event_Type;
    begin
       loop
          SK.IO.Inb (Port  => Status_Register,
@@ -80,7 +86,12 @@ is
          SK.IO.Inb (Port  => Data_Port,
                     Value => Data);
 
-         Terminals.Process_Scancode (Data => Data);
+         Convert_Scancode (Code  => Data,
+                           Event => Ev);
+
+         if Ev /= Input.Null_Key_Event then
+            Terminals.Process_Key (Event => Ev);
+         end if;
       end loop;
    end Handle;
 

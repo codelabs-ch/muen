@@ -35,63 +35,6 @@ is
    VGA_CRT_Idx_Start_High : constant := 16#0c#;
    VGA_CRT_Idx_Start_Low  : constant := 16#0d#;
 
-   type Scancode_Map is array (SK.Byte'Range) of Character;
-
-   Char_Map : constant Scancode_Map
-     := (2      => '1',
-         3      => '2',
-         4      => '3',
-         5      => '4',
-         6      => '5',
-         7      => '6',
-         8      => '7',
-         9      => '8',
-         10     => '9',
-         11     => '0',
-         12     => '-',
-         13     => '=',
-         14     => ASCII.BS,
-         16     => 'q',
-         17     => 'w',
-         18     => 'e',
-         19     => 'r',
-         20     => 't',
-         21     => 'z',
-         22     => 'u',
-         23     => 'i',
-         24     => 'o',
-         25     => 'p',
-         26     => '[',
-         27     => ']',
-         28     => ASCII.LF,
-         30     => 'a',
-         31     => 's',
-         32     => 'd',
-         33     => 'f',
-         34     => 'g',
-         35     => 'h',
-         36     => 'j',
-         37     => 'k',
-         38     => 'l',
-         39     => ';',
-         40     => ''',
-         41     => '`',
-         43     => ''',
-         44     => 'y',
-         45     => 'x',
-         46     => 'c',
-         47     => 'v',
-         48     => 'b',
-         49     => 'n',
-         50     => 'm',
-         51     => ',',
-         52     => '.',
-         53     => '-',
-         55     => '*',
-         57     => ' ',
-         86     => '<',
-         others => ' ');
-
    --  Read data from input channels if new data is present.
    procedure Update_In_Channels;
 
@@ -118,23 +61,23 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Process_Scancode (Data : SK.Byte)
+   procedure Process_Key (Event : Input.Key_Event_Type)
    is
-      use type SK.Byte;
+      use Input;
    begin
-      case Data is
-         when 1  =>
+      case Event.Key is
+         when KEY_ESC  =>
             Log.Text_IO.Init;
-         when 59 =>
+         when KEY_F1 =>
             Set (Slot => 1);
             Log.Text_IO.Put_Line ("Switching to VT 1");
-         when 60 =>
+         when KEY_F2 =>
             Set (Slot => 2);
             Log.Text_IO.Put_Line ("Switching to VT 2");
-         when 61 =>
+         when KEY_F3 =>
             Set (Slot => 3);
             Log.Text_IO.Put_Line ("Switching to VT 3");
-         when 62 =>
+         when KEY_F4 =>
             Set (Slot => 4);
             Log.Text_IO.Put_Line ("Switching to VT 4");
          when others =>
@@ -142,11 +85,9 @@ is
                return;
             end if;
 
-            if Data <= 86 then
-               Mux.Channels.Write (Char_Map (Data));
-            end if;
+            Mux.Channels.Write (Event);
       end case;
-   end Process_Scancode;
+   end Process_Key;
 
    -------------------------------------------------------------------------
 

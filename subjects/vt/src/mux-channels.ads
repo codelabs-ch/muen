@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Input;
 with VT_Channels;
 
 package Mux.Channels
@@ -31,6 +32,6 @@ is
       Result  : out VT_Channels.VT_Channel_Rdr.Result_Type);
 
    --  Write character to output channel.
-   procedure Write (Char : Character);
+   procedure Write (Event : Input.Key_Event_Type);
 
 end Mux.Channels;

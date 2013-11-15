@@ -37,11 +37,17 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Update (Char : Character)
+   procedure Update
+     (Screen : Input_Channel_Range;
+      Char   : Character)
    is
    begin
-      T1.Update (Screen => Screen_1,
-                 Char   => Char);
+      case Screen
+      is
+         when 1 =>
+            T1.Update (Screen => Screen_1,
+                       Char   => Char);
+      end case;
    end Update;
 
 end Mux.Screens;

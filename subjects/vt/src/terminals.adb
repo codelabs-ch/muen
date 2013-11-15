@@ -222,7 +222,9 @@ is
                   Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
                   Log.Text_IO.Put_Line   (Item => ": Inactive");
                when Channels.VT_Channel_Rdr.Success =>
-                  Screens.Update (Char => Data);
+                  Screens.Update
+                    (Screen => C,
+                     Char   => Data);
             end case;
 
             exit when Res /= Channels.VT_Channel_Rdr.Success;

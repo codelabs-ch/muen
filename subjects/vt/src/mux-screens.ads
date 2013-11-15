@@ -22,7 +22,10 @@ is
    --  Init terminal screens.
    procedure Init;
 
-   --  Update state of terminal screen.
-   procedure Update (Char : Character);
+   --  Update state of terminal screen associated with given input channel
+   --  index.
+   procedure Update
+     (Screen : Input_Channel_Range;
+      Char   : Character);
 
 end Mux.Screens;

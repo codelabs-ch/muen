@@ -599,7 +599,7 @@ is
       Policy   : Policy_Type)
    is
       --  IRQ to host Vector offset.
-      Vector_Offset : constant := 32;
+      Vector_Offset : constant := 48;
 
       IRQ_Count, Current        : Natural := 0;
       IRQ_Buffer, Vector_Buffer : Unbounded_String;

@@ -16,14 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
-
 with SK.Console_VGA;
 with SK.Console;
 
 with Log;
 
-package body Terminal_Screen_1
+package body Terminal_Screen
 is
 
    subtype Width_Type  is Natural range 1 .. 80;
@@ -32,42 +30,12 @@ is
    package VGA is new SK.Console_VGA
      (Width_Type   => Width_Type,
       Height_Type  => Height_Type,
-      Base_Address => System'To_Address (16#000b_8000#));
+      Base_Address => Base_Address);
 
    package Text_IO is new SK.Console
      (Initialize      => VGA.Init,
       Output_New_Line => VGA.New_Line,
       Output_Char     => VGA.Put_Char);
-
-   type State_Type is
-     (State_Ground,
-      State_Escape,
-      State_CSI_Entry,
-      State_CSI_Param);
-
-   type CSI_Param_Idx_Range is range 0 .. 16;
-
-   CSI_Empty_Params : constant CSI_Param_Idx_Range
-     := CSI_Param_Idx_Range'First;
-
-   subtype CSI_Param_Range is CSI_Param_Idx_Range range
-     1 .. CSI_Param_Idx_Range'Last;
-
-   type CSI_Param_Array is array (CSI_Param_Range) of SK.Byte;
-
-   type Terminal_State_Type is record
-      State         : State_Type;
-      CSI_Params    : CSI_Param_Array;
-      CSI_Param_Idx : CSI_Param_Idx_Range;
-   end record;
-
-   Null_State : constant Terminal_State_Type
-     := (State         => State_Ground,
-         CSI_Params    => (others => 0),
-         CSI_Param_Idx => CSI_Param_Idx_Range'First);
-
-   --  Terminal emulation state machine.
-   Fsm : Terminal_State_Type := Null_State;
 
    Color_Table : constant array (SK.Byte range 0 .. 7) of
      VGA.VGA_Color_Type
@@ -84,22 +52,28 @@ is
    procedure Print_Unknown (Char : SK.Byte);
 
    --  Execute CSI control function.
-   procedure CSI_Dispatch (Char : SK.Byte);
+   procedure CSI_Dispatch
+     (Screen : Screen_Type;
+      Char   : SK.Byte);
 
    --  CSI Select Graphic Rendition.
-   procedure CSI_Select_SGR;
+   procedure CSI_Select_SGR (Screen : Screen_Type);
 
-   --  Add CSI parameter to state.
-   procedure CSI_Add_Param (Char : SK.Byte);
+   --  Add CSI parameter to terminal state.
+   procedure CSI_Add_Param
+     (Screen : in out Screen_Type;
+      Char   :        SK.Byte);
 
    -------------------------------------------------------------------------
 
-   procedure CSI_Add_Param (Char : SK.Byte)
+   procedure CSI_Add_Param
+     (Screen : in out Screen_Type;
+      Char   :        SK.Byte)
    is
    begin
-      if Fsm.CSI_Param_Idx < CSI_Param_Range'Last then
-         Fsm.CSI_Param_Idx                  := Fsm.CSI_Param_Idx + 1;
-         Fsm.CSI_Params (Fsm.CSI_Param_Idx) := Char;
+      if Screen.Fsm.CSI_Param_Idx < CSI_Param_Range'Last then
+         Screen.Fsm.CSI_Param_Idx := Screen.Fsm.CSI_Param_Idx + 1;
+         Screen.Fsm.CSI_Params (Screen.Fsm.CSI_Param_Idx) := Char;
       else
          Log.Text_IO.Put_Line (Item => "!! CSI params overrun");
       end if;
@@ -107,7 +81,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure CSI_Dispatch (Char : SK.Byte)
+   procedure CSI_Dispatch
+     (Screen : Screen_Type;
+      Char   : SK.Byte)
    is
    begin
       Log.Text_IO.Put_String (Item => "* CSI dispatch ");
@@ -131,7 +107,7 @@ is
 
             --  CSI n m: SGR - Select Graphic Rendition
 
-            CSI_Select_SGR;
+            CSI_Select_SGR (Screen => Screen);
          when others =>
             Print_Unknown (Char => Char);
       end case;
@@ -139,20 +115,20 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure CSI_Select_SGR
+   procedure CSI_Select_SGR (Screen : Screen_Type)
    is
       use type SK.Byte;
    begin
       Log.Text_IO.Put_Line (Item => "** CSI_Select_SGR ");
 
-      if Fsm.CSI_Param_Idx = CSI_Empty_Params then
+      if Screen.Fsm.CSI_Param_Idx = CSI_Empty_Params then
          Log.Text_IO.Put_Line ("!! Empty CSI params");
          return;
       end if;
 
-      for Idx in CSI_Param_Range'First .. Fsm.CSI_Param_Idx loop
+      for Idx in CSI_Param_Range'First .. Screen.Fsm.CSI_Param_Idx loop
          declare
-            Param : constant SK.Byte := Fsm.CSI_Params (Idx);
+            Param : constant SK.Byte := Screen.Fsm.CSI_Params (Idx);
          begin
             case Param
             is
@@ -162,6 +138,7 @@ is
                when 16#3b# =>
 
                   --  Semicolon, ignore
+
                   null;
                when others =>
                   Print_Unknown (Char => Param);
@@ -190,7 +167,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Update (Char : Character)
+   procedure Update
+     (Screen : in out Screen_Type;
+      Char   :        Character)
    is
       use type SK.Byte;
 
@@ -199,7 +178,7 @@ is
 
       --  Video Terminal Parser, see http://vt100.net/emu/vt500_parser.png
 
-      case Fsm.State
+      case Screen.Fsm.State
       is
          when State_Ground =>
 
@@ -229,7 +208,7 @@ is
                   return;
                when 16#1b# =>
                   Log.Text_IO.Put_Line (Item => "-> Escape");
-                  Fsm.State := State_Escape;
+                  Screen.Fsm.State := State_Escape;
                when others =>
                   Print_Unknown (Char => Pos);
             end case;
@@ -237,13 +216,13 @@ is
 
             --  ESCAPE
 
-            Fsm := Null_State;
+            Screen.Fsm := Null_State;
 
             case Pos
             is
                when 16#5b# =>
                   Log.Text_IO.Put_Line (Item => "--> CSI entry");
-                  Fsm.State := State_CSI_Entry;
+                  Screen.Fsm.State := State_CSI_Entry;
                when others =>
                   Print_Unknown (Char => Pos);
             end case;
@@ -251,19 +230,23 @@ is
 
             --  CSI entry
 
-            Fsm := Null_State;
+            Screen.Fsm := Null_State;
 
             case Pos
             is
                when 16#30# .. 16#39# | 16#3b# =>
                   Log.Text_IO.Put_Line (Item => "---> CSI param ");
-                  Fsm.State := State_CSI_Param;
+                  Screen.Fsm.State := State_CSI_Param;
 
-                  CSI_Add_Param (Char => Pos);
+                  CSI_Add_Param
+                    (Screen => Screen,
+                     Char   => Pos);
                when 16#40# .. 16#7e# =>
-                  CSI_Dispatch (Char => Pos);
+                  CSI_Dispatch
+                    (Screen => Screen,
+                     Char   => Pos);
                   Log.Text_IO.Put_Line (Item => "> Ground");
-                  Fsm := Null_State;
+                  Screen.Fsm := Null_State;
                when others =>
                   Print_Unknown (Char => Pos);
             end case;
@@ -274,15 +257,19 @@ is
             case Pos
             is
                when 16#30# .. 16#39# | 16#3b# =>
-                  CSI_Add_Param (Char => Pos);
+                  CSI_Add_Param
+                    (Screen => Screen,
+                     Char   => Pos);
                when 16#40# .. 16#7e# =>
-                  CSI_Dispatch (Char => Pos);
+                  CSI_Dispatch
+                    (Screen => Screen,
+                     Char   => Pos);
                   Log.Text_IO.Put_Line (Item => "> Ground");
-                  Fsm := Null_State;
+                  Screen.Fsm := Null_State;
                when others =>
                   Print_Unknown (Char => Pos);
             end case;
       end case;
    end Update;
 
-end Terminal_Screen_1;
+end Terminal_Screen;

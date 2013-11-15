@@ -187,35 +187,46 @@ is
 
    procedure Update_In_Channels
    is
-      use Mux.Channels;
+      use Mux;
 
       use type Mux.Channels.VT_Channel_Rdr.Result_Type;
 
       Data : Character;
-      Res  : VT_Channel_Rdr.Result_Type;
+      Res  : Channels.VT_Channel_Rdr.Result_Type;
    begin
-      loop
-         Read (Char   => Data,
-               Result => Res);
+      for C in Mux.Input_Channel_Range loop
+         loop
+            Channels.Read (Channel => C,
+                           Char    => Data,
+                           Result  => Res);
 
-         case Res is
-            when VT_Channel_Rdr.Incompatible_Interface =>
-               Log.Text_IO.Put_Line
-                 ("Channel 1: Incompatible interface detected");
-            when VT_Channel_Rdr.Epoch_Changed =>
-               Log.Text_IO.Put_Line ("Channel 1: Epoch changed");
-               Synchronize;
-            when VT_Channel_Rdr.No_Data =>
-               null;
-            when VT_Channel_Rdr.Overrun_Detected =>
-               Log.Text_IO.Put_Line ("Channel 1: Overrun detected");
-            when VT_Channel_Rdr.Inactive =>
-               Log.Text_IO.Put_Line ("Channel 1: Inactive");
-            when VT_Channel_Rdr.Success =>
-               Mux.Screens.Update (Char => Data);
-         end case;
+            case Res is
+               when Channels.VT_Channel_Rdr.Incompatible_Interface =>
+                  Log.Text_IO.Put_String (Item => "Channel ");
+                  Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
+                  Log.Text_IO.Put_Line
+                    (Item => ": Incompatible interface detected");
+               when Channels.VT_Channel_Rdr.Epoch_Changed =>
+                  Log.Text_IO.Put_String (Item => "Channel ");
+                  Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
+                  Log.Text_IO.Put_Line   (Item => ": Epoch changed");
+                  Channels.Synchronize (Channel => C);
+               when Channels.VT_Channel_Rdr.No_Data =>
+                  null;
+               when Channels.VT_Channel_Rdr.Overrun_Detected =>
+                  Log.Text_IO.Put_String (Item => "Channel ");
+                  Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
+                  Log.Text_IO.Put_Line   (Item => ": Overrun detected");
+               when Channels.VT_Channel_Rdr.Inactive =>
+                  Log.Text_IO.Put_String (Item => "Channel ");
+                  Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
+                  Log.Text_IO.Put_Line   (Item => ": Inactive");
+               when Channels.VT_Channel_Rdr.Success =>
+                  Screens.Update (Char => Data);
+            end case;
 
-         exit when Res /= VT_Channel_Rdr.Success;
+            exit when Res /= Channels.VT_Channel_Rdr.Success;
+         end loop;
       end loop;
    end Update_In_Channels;
 

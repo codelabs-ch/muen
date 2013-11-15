@@ -34,13 +34,14 @@ is
    --  Init channels.
    procedure Init;
 
-   --  Read next character from input channel.
+   --  Read next character from input channel given by index.
    procedure Read
-     (Char   : out Character;
-      Result : out VT_Channel_Rdr.Result_Type);
+     (Channel :     Input_Channel_Range;
+      Char    : out Character;
+      Result  : out VT_Channel_Rdr.Result_Type);
 
-   --  Syncronize input channel.
-   procedure Synchronize;
+   --  Syncronize input channel given by index.
+   procedure Synchronize (Channel : Input_Channel_Range);
 
    --  Write character to output channel.
    procedure Write (Char : Character);

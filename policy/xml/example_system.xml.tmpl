@@ -55,12 +55,8 @@
 			&vtinit;
 			<memory_layout>
 				&vtmem;
-				<!-- Linux HVC -> VT channel -->
-				<memory_region physical_address="300000" virtual_address="40000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
-				<!-- Time subject -> VT channel -->
-				<memory_region physical_address="301000" virtual_address="41000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
-				<!-- SM subject -> VT channel -->
-				<memory_region physical_address="302000" virtual_address="42000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+				<!-- Input channels -->
+				<memory_region physical_address="300000" virtual_address="40000" size="12k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
 				<!-- Linux HVC <- VT channel -->
 				<memory_region physical_address="30c000" virtual_address="50000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
 			</memory_layout>

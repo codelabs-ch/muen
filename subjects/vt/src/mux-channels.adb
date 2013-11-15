@@ -18,6 +18,8 @@
 
 with System;
 
+with SK.Hypercall;
+
 package body Mux.Channels
 is
 
@@ -67,6 +69,7 @@ is
    begin
       VT_Channel_Wtr.Write (Channel => Channel_1_Out,
                             Element => Char);
+      SK.Hypercall.Trigger_Event (Number => 1);
    end Write;
 
 end Mux.Channels;

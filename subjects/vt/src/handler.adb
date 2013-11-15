@@ -67,7 +67,7 @@ is
 
       Status, Data : SK.Byte;
    begin
-      if Vector /= 33 then
+      if Vector /= 49 then
          Text_IO.Put_String (Item => "Ignoring spurious interrupt ");
          Text_IO.Put_Byte   (Item => Vector);
          Text_IO.New_Line;

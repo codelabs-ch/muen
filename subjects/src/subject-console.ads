@@ -18,9 +18,7 @@
 
 with System;
 
-with SK.Console_VGA;
+with SK.Console_Channel;
 
-package Subject.VGA is new SK.Console_VGA
-  (Width_Type   => Subject.Width_Type,
-   Height_Type  => Subject.Height_Type,
-   Base_Address => System'To_Address (16#000b_8000#));
+package Subject.Console is new SK.Console_Channel
+  (Channel_Address => System'To_Address (16#000b_8000#));

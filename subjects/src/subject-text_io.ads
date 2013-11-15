@@ -18,9 +18,9 @@
 
 with SK.Console;
 
-with Subject.VGA;
+with Subject.Console;
 
 package Subject.Text_IO is new SK.Console
-  (Initialize      => Subject.VGA.Init,
-   Output_New_Line => Subject.VGA.New_Line,
-   Output_Char     => Subject.VGA.Put_Char);
+  (Initialize      => Subject.Console.Init,
+   Output_New_Line => Subject.Console.New_Line,
+   Output_Char     => Subject.Console.Put_Char);

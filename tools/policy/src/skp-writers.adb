@@ -1044,7 +1044,7 @@ is
                   FADT_File : constant String
                     := Dir_Name & "/" & To_String (S.Name) & "_facp";
                   DSDT_File : constant String
-                    := "../subjects/" & To_String (S.Name) & "/acpi/DSDT.aml";
+                    := "acpi/DSDT.aml";
                begin
                   ACPI_RSDP.Write
                     (S.ACPI_Base_Address - 16#0020_0000#, --  FIXME: Find guest

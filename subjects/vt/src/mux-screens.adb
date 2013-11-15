@@ -57,6 +57,7 @@ is
          when 2 =>
             T2.Update (Screen => Screen_2,
                        Char   => Char);
+         when others => null;
       end case;
    end Update;
 

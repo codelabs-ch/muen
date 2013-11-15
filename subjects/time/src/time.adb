@@ -17,8 +17,6 @@ with System;
 
 with SK.IO;
 
-with Subject.Text_IO;
-
 procedure Time
 is
    --  Time page
@@ -28,9 +26,6 @@ is
 
    use type SK.Word64;
 begin
-   Subject.Text_IO.Init;
-   Subject.Text_IO.Put_Line (Item => "Time subject running");
-
    loop
       for J in 1 .. 998 loop
          SK.IO.Outb (Port  => 16#80#,

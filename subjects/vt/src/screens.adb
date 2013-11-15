@@ -16,18 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Terminal_Screen;
-
-package Screens
+package body Screens
 is
 
-   --  Terminal 1 screen.
-   package Term1_Package is new Terminal_Screen
-     (Base_Address => 16#000b_8000#);
-   package T1 renames Term1_Package;
-   Screen_1 : T1.Screen_Type;
+   -------------------------------------------------------------------------
 
-   --  Init terminal screens.
-   procedure Init;
+   procedure Init
+   is
+   begin
+      T1.Init;
+   end Init;
 
 end Screens;

@@ -112,7 +112,7 @@ is
    procedure Initialize
    is
    begin
-      Screens.T1.Init;
+      Screens.Init;
       Channels.Init;
    end Initialize;
 

@@ -17,6 +17,9 @@ with System;
 
 with SK.IO;
 
+with SK.Console;
+with SK.Console_Channel;
+
 procedure Time
 is
    --  Time page
@@ -24,8 +27,18 @@ is
    for Time'Address use System'To_Address (16#20000#);
    pragma Volatile (Time);
 
+   package Channel is new SK.Console_Channel
+     (Channel_Address => 16#21000#);
+   package Text_IO is new SK.Console
+     (Initialize      => Channel.Init,
+      Output_New_Line => Channel.New_Line,
+      Output_Char     => Channel.Put_Char);
+
    use type SK.Word64;
 begin
+   Text_IO.Init;
+   Text_IO.Put_Line (Item => "Time subject running");
+
    loop
       for J in 1 .. 998 loop
          SK.IO.Outb (Port  => 16#80#,

@@ -33,6 +33,7 @@
 <!ENTITY smmem       SYSTEM "sm_mem.xml">
 <!ENTITY linuxinit   SYSTEM "linux.xml">
 <!ENTITY linuxmem    SYSTEM "linux_mem.xml">
+<!ENTITY linuxmmconf SYSTEM "linux_mmconf.xml">
 ]>
 <system vmxon_address="1000" vmcs_start_address="5000">
 	&hardware;
@@ -110,6 +111,7 @@
 			&linuxinit;
 			<memory_layout>
 				&linuxmem;
+				&linuxmmconf;
 				<!-- Time page -->
 				<memory_region physical_address="29e000" virtual_address="00001000" size="4k" alignment="4k" writable="false"  executable="false" memory_type="WB"/>
 				<!-- virtual terminal console 1 -->

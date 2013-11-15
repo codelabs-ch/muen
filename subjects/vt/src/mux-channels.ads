@@ -30,9 +30,6 @@ is
       Char    : out Character;
       Result  : out VT_Channels.VT_Channel_Rdr.Result_Type);
 
-   --  Syncronize input channel given by index.
-   procedure Synchronize (Channel : Input_Channel_Range);
-
    --  Write character to output channel.
    procedure Write (Char : Character);
 

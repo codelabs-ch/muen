@@ -33,6 +33,12 @@ is
       Channel_Size : Header_Field_Type)
       return Boolean;
 
+   --  Synchronize reader with given channel.
+   procedure Synchronize
+     (Channel :     Channel_Type;
+      Reader  : out Reader_Type;
+      Result  : out Result_Type);
+
    -------------------------------------------------------------------------
 
    procedure Drain
@@ -80,25 +86,39 @@ is
    begin
       if not Is_Active (Channel => Channel) then
          Result := Inactive;
-      elsif Reader.RC >= Channel.Header.WC then
-         Result := No_Data;
       else
-         Position := Data_Range (Reader.RC mod Reader.Elements);
-         Element  := Channel.Data (Position);
-
-         --  Check for element overwrite by writer.
-
-         if Channel.Header.WSC > Reader.RC + Reader.Elements then
-            Result    := Overrun_Detected;
-            Reader.RC := Channel.Header.WC;
-         else
-            Result    := Success;
-            Reader.RC := Reader.RC + 1;
-         end if;
-         if Has_Epoch_Changed (Channel => Channel,
-                               Reader  => Reader)
+         if Reader.Epoch = 0 or else
+           Has_Epoch_Changed (Channel => Channel,
+                              Reader  => Reader)
          then
-            Result := Epoch_Changed;
+            Synchronize (Channel => Channel,
+                         Reader  => Reader,
+                         Result  => Result);
+            if Result /= Success then
+               return;
+            end if;
+         end if;
+
+         if Reader.RC >= Channel.Header.WC then
+            Result := No_Data;
+         else
+            Position := Data_Range (Reader.RC mod Reader.Elements);
+            Element  := Channel.Data (Position);
+
+            --  Check for element overwrite by writer.
+
+            if Channel.Header.WSC > Reader.RC + Reader.Elements then
+               Result    := Overrun_Detected;
+               Reader.RC := Channel.Header.WC;
+            else
+               Result    := Success;
+               Reader.RC := Reader.RC + 1;
+            end if;
+            if Has_Epoch_Changed (Channel => Channel,
+                                  Reader  => Reader)
+            then
+               Result := Epoch_Changed;
+            end if;
          end if;
       end if;
    end Read;

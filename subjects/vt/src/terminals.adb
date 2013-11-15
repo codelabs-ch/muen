@@ -213,7 +213,6 @@ is
                   Log.Text_IO.Put_String (Item => "Channel ");
                   Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
                   Log.Text_IO.Put_Line   (Item => ": Epoch changed");
-                  Channels.Synchronize (Channel => C);
                when VT_Channel_Rdr.No_Data =>
                   null;
                when VT_Channel_Rdr.Overrun_Detected =>

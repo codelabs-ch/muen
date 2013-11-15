@@ -32,7 +32,7 @@ is
    In_Channels : In_Channel_Array;
    for In_Channels'Address use (System'To_Address (16#40000#));
 
-   In_Readers : In_Reader_Array;
+   In_Readers : In_Reader_Array := (others => VT_Channel_Rdr.Null_Reader);
 
    Channel_1_Out : VT_Channel.Channel_Type;
    for Channel_1_Out'Address use System'To_Address (16#50000#);
@@ -41,23 +41,9 @@ is
 
    procedure Init
    is
-      use type VT_Channel_Rdr.Result_Type;
-
-      Res : VT_Channel_Rdr.Result_Type;
    begin
       VT_Channel_Wtr.Initialize (Channel => Channel_1_Out,
                                  Epoch   => 1);
-
-      for I in In_Channels'Range loop
-         Res := VT_Channel_Rdr.Inactive;
-
-         loop
-            VT_Channel_Rdr.Synchronize (Channel => In_Channels (I),
-                                        Reader  => In_Readers (I),
-                                        Result  => Res);
-            exit when Res /= VT_Channel_Rdr.Inactive;
-         end loop;
-      end loop;
    end Init;
 
    -------------------------------------------------------------------------
@@ -73,18 +59,6 @@ is
                            Element => Char,
                            Result  => Result);
    end Read;
-
-   -------------------------------------------------------------------------
-
-   procedure Synchronize (Channel : Input_Channel_Range)
-   is
-      Res : VT_Channel_Rdr.Result_Type;
-      pragma Unreferenced (Res);
-   begin
-      VT_Channel_Rdr.Synchronize (Channel => In_Channels (Channel),
-                                  Reader  => In_Readers (Channel),
-                                  Result  => Res);
-   end Synchronize;
 
    -------------------------------------------------------------------------
 

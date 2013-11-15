@@ -34,12 +34,6 @@ is
 
    type Reader_Type is private;
 
-   --  Synchronize reader with given channel.
-   procedure Synchronize
-     (Channel :     Channel_Type;
-      Reader  : out Reader_Type;
-      Result  : out Result_Type);
-
    --  Read next element from given channel.
    procedure Read
      (Channel :        Channel_Type;

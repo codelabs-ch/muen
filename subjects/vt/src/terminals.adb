@@ -19,8 +19,8 @@
 with SK.IO;
 
 with Log;
-with Screens;
-with Channels;
+with Mux.Screens;
+with Mux.Channels;
 
 package body Terminals
 is
@@ -110,8 +110,8 @@ is
    procedure Initialize
    is
    begin
-      Screens.Init;
-      Channels.Init;
+      Mux.Screens.Init;
+      Mux.Channels.Init;
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -141,7 +141,7 @@ is
             end if;
 
             if Data <= 86 then
-               Channels.Write (Char_Map (Data));
+               Mux.Channels.Write (Char_Map (Data));
             end if;
       end case;
    end Process_Scancode;
@@ -187,9 +187,9 @@ is
 
    procedure Update_In_Channels
    is
-      use Channels;
+      use Mux.Channels;
 
-      use type Channels.VT_Channel_Rdr.Result_Type;
+      use type Mux.Channels.VT_Channel_Rdr.Result_Type;
 
       Data : Character;
       Res  : VT_Channel_Rdr.Result_Type;
@@ -212,7 +212,7 @@ is
             when VT_Channel_Rdr.Inactive =>
                Log.Text_IO.Put_Line ("Channel 1: Inactive");
             when VT_Channel_Rdr.Success =>
-               Screens.Update (Char => Data);
+               Mux.Screens.Update (Char => Data);
          end case;
 
          exit when Res /= VT_Channel_Rdr.Success;

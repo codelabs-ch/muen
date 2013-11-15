@@ -18,7 +18,7 @@
 
 with Terminal_Screen;
 
-package body Screens
+package body Mux.Screens
 is
 
    --  Terminal 1 screen.
@@ -44,4 +44,4 @@ is
                  Char   => Char);
    end Update;
 
-end Screens;
+end Mux.Screens;

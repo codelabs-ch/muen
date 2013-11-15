@@ -16,13 +16,33 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package Screens
+with Muchannel.Reader;
+with Muchannel.Writer;
+
+package Mux.Channels
 is
 
-   --  Init terminal screens.
+   package VT_Channel is new Muchannel
+     (Element_Type => Character,
+      Elements     => 4032);
+
+   package VT_Channel_Rdr is new VT_Channel.Reader (Protocol => 1);
+   package VT_Channel_Wtr is new VT_Channel.Writer
+     (Protocol     => 1,
+      Null_Element => ASCII.NUL);
+
+   --  Init channels.
    procedure Init;
 
-   --  Update state of terminal screen.
-   procedure Update (Char : Character);
+   --  Read next character from input channel.
+   procedure Read
+     (Char   : out Character;
+      Result : out VT_Channel_Rdr.Result_Type);
 
-end Screens;
+   --  Syncronize input channel.
+   procedure Synchronize;
+
+   --  Write character to output channel.
+   procedure Write (Char : Character);
+
+end Mux.Channels;

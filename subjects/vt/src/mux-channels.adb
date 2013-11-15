@@ -18,7 +18,7 @@
 
 with System;
 
-package body Channels
+package body Mux.Channels
 is
 
    Channel_1_In : VT_Channel.Channel_Type;
@@ -84,4 +84,4 @@ is
                             Element => Char);
    end Write;
 
-end Channels;
+end Mux.Channels;

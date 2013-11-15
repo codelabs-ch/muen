@@ -22,7 +22,7 @@ package Terminals
 is
 
    --  Session slots.
-   type Slot_Range is range 1 .. 6;
+   type Slot_Range is range 1 .. 4;
 
    --  Set active session slot.
    procedure Set (Slot : Slot_Range);

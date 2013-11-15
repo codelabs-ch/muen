@@ -27,7 +27,7 @@ is
 
    --  Memory size in bytes.
    Memory_Size : constant := 256 * 1024 * 1024;
-   Memory_Size_High : constant := Memory_Size - 16#100000#;
+   Memory_Size_High : constant := Memory_Size - 16#400000#;
 
    --  arch/x86/include/uapi/asm/e820.h.
    E820_RAM      : constant := 1;
@@ -54,18 +54,22 @@ is
                 N => bootparam_h.boot_params'Object_Size / 8);
 
       Params.e820_entries := 4;
-      Params.e820_map (0) := (addr   => 0,
-                              size   => 16#0a0000#,
-                              c_type => E820_RAM);
-      Params.e820_map (1) := (addr   => 16#0a0000#,
-                              size   => 16#060000#,
+      --  Zero page, Time page
+      Params.e820_map (0) := (addr   => 16#000000#,
+                              size   => 16#002000#,
                               c_type => E820_RESERVED);
-      Params.e820_map (2) := (addr   => 16#100000#,
+      --  Usable lower memory
+      Params.e820_map (1) := (addr   => 16#002000#,
+                              size   => 16#09e000#,
+                              c_type => E820_RAM);
+      --  VGA memory, OPROMs, BIOS extension (ACPI tables), System BIOS
+      Params.e820_map (2) := (addr   => 16#0b8000#,
+                              size   => 16#048000#,
+                              c_type => E820_RESERVED);
+      --  High memory
+      Params.e820_map (3) := (addr   => 16#400000#,
                               size   => Memory_Size_High,
                               c_type => E820_RAM);
-      Params.e820_map (3) := (addr   => 16#e000_0000#,
-                              size   => 16#0100_0000#,
-                              c_type => E820_RESERVED);
 
       Params.the_screen_info.orig_video_mode    := 3;
       Params.the_screen_info.orig_video_cols    := 80;

@@ -59,6 +59,8 @@
 				<memory_region physical_address="bb000" virtual_address="bd000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WC"/>
 				<!-- Linux HVC -> VT channel -->
 				<memory_region physical_address="300000" virtual_address="40000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+				<!-- Time subject -> VT channel -->
+				<memory_region physical_address="301000" virtual_address="41000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
 				<!-- Linux HVC <- VT channel -->
 				<memory_region physical_address="30c000" virtual_address="50000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
 			</memory_layout>
@@ -76,6 +78,8 @@
 				<memory_region physical_address="b9000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WC"/>
 				<!-- Time page -->
 				<memory_region physical_address="29e000" virtual_address="20000" size="4k" alignment="4k" writable="true"  executable="false" memory_type="WB"/>
+				<!-- VT channel -->
+				<memory_region physical_address="301000" virtual_address="21000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
 			</memory_layout>
 			<binary name="time" physical_address="277000"/>
 			<device name="port80"/>

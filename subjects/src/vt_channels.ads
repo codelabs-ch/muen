@@ -19,6 +19,8 @@
 with Muchannel.Reader;
 with Muchannel.Writer;
 
+with Input;
+
 package VT_Channels
 is
 
@@ -30,5 +32,12 @@ is
    package VT_Channel_Wtr is new VT_Channel.Writer
      (Protocol     => 1,
       Null_Element => ASCII.NUL);
+
+   package Key_Channel is new Muchannel
+     (Element_Type => Input.Key_Event_Type,
+      Elements     => 2016);
+   package Key_Channel_Wtr is new Key_Channel.Writer
+     (Protocol     => 2,
+      Null_Element => Input.Null_Key_Event);
 
 end VT_Channels;

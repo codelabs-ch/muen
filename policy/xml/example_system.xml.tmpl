@@ -58,7 +58,7 @@
 				<!-- VGA plane -->
 				<memory_region physical_address="bb000" virtual_address="bd000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WC"/>
 				<!-- Linux HVC -> VT channel -->
-				<memory_region physical_address="306000" virtual_address="40000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+				<memory_region physical_address="300000" virtual_address="40000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
 				<!-- Linux HVC <- VT channel -->
 				<memory_region physical_address="307000" virtual_address="50000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
 			</memory_layout>
@@ -107,7 +107,7 @@
 				<!-- Time page -->
 				<memory_region physical_address="29e000" virtual_address="1000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
 				<!-- Linux HVC -> VT channel -->
-				<memory_region physical_address="306000" virtual_address="2000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
+				<memory_region physical_address="300000" virtual_address="2000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
 				<!-- Linux HVC <- VT channel -->
 				<memory_region physical_address="307000" virtual_address="3000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
 			</memory_layout>

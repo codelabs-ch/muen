@@ -16,18 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
-
 with SK.IO;
-
-with Muchannel.Reader;
-with Muchannel.Writer;
 
 with Log;
 with Screens;
+with Channels;
 
 package body Terminals
 is
+
+   use Channels;
 
    Active_Slot : Slot_Range := Slot_Range'First;
    pragma Atomic (Active_Slot);
@@ -36,23 +34,6 @@ is
    VGA_CRT_Data           : constant := 16#3d5#;
    VGA_CRT_Idx_Start_High : constant := 16#0c#;
    VGA_CRT_Idx_Start_Low  : constant := 16#0d#;
-
-   package VT_Channel is new Muchannel
-     (Element_Type => Character,
-      Elements     => 4032);
-
-   package VT_Channel_Rdr is new VT_Channel.Reader (Protocol => 1);
-   package VT_Channel_Wtr is new VT_Channel.Writer
-     (Protocol     => 1,
-      Null_Element => ASCII.NUL);
-
-   Channel_1_In : VT_Channel.Channel_Type;
-   for Channel_1_In'Address use System'To_Address (16#40000#);
-
-   Channel_1_Reader : VT_Channel_Rdr.Reader_Type;
-
-   Channel_1_Out : VT_Channel.Channel_Type;
-   for Channel_1_Out'Address use System'To_Address (16#50000#);
 
    type Scancode_Map is array (SK.Byte'Range) of Character;
 

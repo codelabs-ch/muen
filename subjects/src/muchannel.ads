@@ -90,4 +90,7 @@ private
    end record
      with Volatile, Pack;
 
+   --  Null epoch used for inactive/disabled channels.
+   Null_Epoch : constant Header_Field_Type := 0;
+
 end Muchannel;

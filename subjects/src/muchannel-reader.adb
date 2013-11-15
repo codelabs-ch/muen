@@ -87,7 +87,7 @@ is
       if not Is_Active (Channel => Channel) then
          Result := Inactive;
       else
-         if Reader.Epoch = 0 or else
+         if Reader.Epoch = Null_Epoch or else
            Has_Epoch_Changed (Channel => Channel,
                               Reader  => Reader)
          then

@@ -24,7 +24,7 @@ is
    procedure Deactivate (Channel : in out Channel_Type)
    is
    begin
-      Channel.Header.Epoch := 0;
+      Channel.Header.Epoch := Null_Epoch;
    end Deactivate;
 
    -------------------------------------------------------------------------

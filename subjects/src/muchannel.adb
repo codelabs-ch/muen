@@ -24,7 +24,7 @@ is
    function Is_Active (Channel : Channel_Type) return Boolean
    is
    begin
-      return Channel.Header.Epoch /= 0;
+      return Channel.Header.Epoch /= Null_Epoch;
    end Is_Active;
 
 end Muchannel;

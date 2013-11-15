@@ -59,7 +59,7 @@ private
    end record;
 
    Null_Reader : constant Reader_Type
-     := Reader_Type'(Epoch    => Header_Field_Type'First,
+     := Reader_Type'(Epoch    => Null_Epoch,
                      Protocol => Header_Field_Type'First,
                      Size     => Header_Field_Type'First,
                      Elements => Header_Field_Type'First,

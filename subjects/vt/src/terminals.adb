@@ -24,7 +24,7 @@ with Muchannel.Reader;
 with Muchannel.Writer;
 
 with Log;
-with Terminal_Screen;
+with Screens;
 
 package body Terminals
 is
@@ -53,11 +53,6 @@ is
 
    Channel_1_Out : VT_Channel.Channel_Type;
    for Channel_1_Out'Address use System'To_Address (16#50000#);
-
-   package Term1_Package is new Terminal_Screen
-     (Base_Address => 16#000b_8000#);
-   package T1 renames Term1_Package;
-   Screen_1 : T1.Screen_Type;
 
    type Scancode_Map is array (SK.Byte'Range) of Character;
 
@@ -142,7 +137,7 @@ is
 
       --  Initialize terminal screen 1 and associated channels.
 
-      T1.Init;
+      Screens.T1.Init;
       VT_Channel_Wtr.Initialize (Channel => Channel_1_Out,
                                  Epoch   => 1);
 
@@ -256,8 +251,8 @@ is
             when VT_Channel_Rdr.Inactive =>
                Log.Text_IO.Put_Line ("Channel 1: Inactive");
             when VT_Channel_Rdr.Success =>
-               T1.Update (Screen => Screen_1,
-                          Char   => Data);
+               Screens.T1.Update (Screen => Screens.Screen_1,
+                                  Char   => Data);
          end case;
 
          exit when Res /= VT_Channel_Rdr.Success;

@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
-
 with Muchannel.Reader;
 with Muchannel.Writer;
 
@@ -33,15 +31,18 @@ is
      (Protocol     => 1,
       Null_Element => ASCII.NUL);
 
-   Channel_1_In : VT_Channel.Channel_Type;
-   for Channel_1_In'Address use System'To_Address (16#40000#);
-
-   Channel_1_Reader : VT_Channel_Rdr.Reader_Type;
-
-   Channel_1_Out : VT_Channel.Channel_Type;
-   for Channel_1_Out'Address use System'To_Address (16#50000#);
-
    --  Init channels.
    procedure Init;
+
+   --  Read next character from input channel.
+   procedure Read
+     (Char   : out Character;
+      Result : out VT_Channel_Rdr.Result_Type);
+
+   --  Syncronize input channel.
+   procedure Synchronize;
+
+   --  Write character to output channel.
+   procedure Write (Char : Character);
 
 end Channels;

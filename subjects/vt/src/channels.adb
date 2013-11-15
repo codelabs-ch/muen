@@ -16,8 +16,18 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with System;
+
 package body Channels
 is
+
+   Channel_1_In : VT_Channel.Channel_Type;
+   for Channel_1_In'Address use System'To_Address (16#40000#);
+
+   Channel_1_Reader : VT_Channel_Rdr.Reader_Type;
+
+   Channel_1_Out : VT_Channel.Channel_Type;
+   for Channel_1_Out'Address use System'To_Address (16#50000#);
 
    -------------------------------------------------------------------------
 
@@ -39,5 +49,39 @@ is
          exit when Res /= VT_Channel_Rdr.Inactive;
       end loop;
    end Init;
+
+   -------------------------------------------------------------------------
+
+   procedure Read
+     (Char   : out Character;
+      Result : out VT_Channel_Rdr.Result_Type)
+   is
+   begin
+      VT_Channel_Rdr.Read (Channel => Channel_1_In,
+                           Reader  => Channel_1_Reader,
+                           Element => Char,
+                           Result  => Result);
+   end Read;
+
+   -------------------------------------------------------------------------
+
+   procedure Synchronize
+   is
+      Res : VT_Channel_Rdr.Result_Type;
+      pragma Unreferenced (Res);
+   begin
+      VT_Channel_Rdr.Synchronize (Channel => Channel_1_In,
+                                  Reader  => Channel_1_Reader,
+                                  Result  => Res);
+   end Synchronize;
+
+   -------------------------------------------------------------------------
+
+   procedure Write (Char : Character)
+   is
+   begin
+      VT_Channel_Wtr.Write (Channel => Channel_1_Out,
+                            Element => Char);
+   end Write;
 
 end Channels;

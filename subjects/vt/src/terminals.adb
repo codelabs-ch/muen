@@ -25,8 +25,6 @@ with Channels;
 package body Terminals
 is
 
-   use Channels;
-
    Active_Slot : Slot_Range := Slot_Range'First;
    pragma Atomic (Active_Slot);
 
@@ -143,8 +141,7 @@ is
             end if;
 
             if Data <= 86 then
-               VT_Channel_Wtr.Write (Channel => Channel_1_Out,
-                                     Element => Char_Map (Data));
+               Channels.Write (Char_Map (Data));
             end if;
       end case;
    end Process_Scancode;
@@ -190,25 +187,24 @@ is
 
    procedure Update_In_Channels
    is
-      use type VT_Channel_Rdr.Result_Type;
+      use Channels;
+
+      use type Channels.VT_Channel_Rdr.Result_Type;
 
       Data : Character;
       Res  : VT_Channel_Rdr.Result_Type;
    begin
       loop
-         VT_Channel_Rdr.Read (Channel => Channel_1_In,
-                              Reader  => Channel_1_Reader,
-                              Element => Data,
-                              Result  => Res);
+         Read (Char   => Data,
+               Result => Res);
+
          case Res is
             when VT_Channel_Rdr.Incompatible_Interface =>
                Log.Text_IO.Put_Line
                  ("Channel 1: Incompatible interface detected");
             when VT_Channel_Rdr.Epoch_Changed =>
                Log.Text_IO.Put_Line ("Channel 1: Epoch changed");
-               VT_Channel_Rdr.Synchronize (Channel => Channel_1_In,
-                                           Reader  => Channel_1_Reader,
-                                           Result  => Res);
+               Synchronize;
             when VT_Channel_Rdr.No_Data =>
                null;
             when VT_Channel_Rdr.Overrun_Detected =>

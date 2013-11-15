@@ -33,8 +33,6 @@
 		<memory_layout>
 			<memory_region physical_address="b8000" virtual_address="b8000" size="16k" alignment="4k" writable="true" executable="false" memory_type="WC"/>
 		</memory_layout>
-	</device>
-	<device name="cursor">
 		<io_port start="03d4" end="03d5"/>
 	</device>
 </hardware>

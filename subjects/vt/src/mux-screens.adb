@@ -47,6 +47,7 @@ is
          when 1 =>
             T1.Update (Screen => Screen_1,
                        Char   => Char);
+         when others => null;
       end case;
    end Update;
 

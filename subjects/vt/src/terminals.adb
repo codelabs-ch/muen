@@ -111,25 +111,9 @@ is
 
    procedure Initialize
    is
-      use type VT_Channel_Rdr.Result_Type;
-
-      Res : VT_Channel_Rdr.Result_Type;
    begin
-
-      --  Initialize terminal screen 1 and associated channels.
-
       Screens.T1.Init;
-      VT_Channel_Wtr.Initialize (Channel => Channel_1_Out,
-                                 Epoch   => 1);
-
-      Res := VT_Channel_Rdr.Inactive;
-
-      loop
-         VT_Channel_Rdr.Synchronize (Channel => Channel_1_In,
-                                     Reader  => Channel_1_Reader,
-                                     Result  => Res);
-         exit when Res /= VT_Channel_Rdr.Inactive;
-      end loop;
+      Channels.Init;
    end Initialize;
 
    -------------------------------------------------------------------------

@@ -16,32 +16,28 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
-
-with Muchannel.Reader;
-with Muchannel.Writer;
-
-package Channels
+package body Channels
 is
 
-   package VT_Channel is new Muchannel
-     (Element_Type => Character,
-      Elements     => 4032);
+   -------------------------------------------------------------------------
 
-   package VT_Channel_Rdr is new VT_Channel.Reader (Protocol => 1);
-   package VT_Channel_Wtr is new VT_Channel.Writer
-     (Protocol     => 1,
-      Null_Element => ASCII.NUL);
+   procedure Init
+   is
+      use type VT_Channel_Rdr.Result_Type;
 
-   Channel_1_In : VT_Channel.Channel_Type;
-   for Channel_1_In'Address use System'To_Address (16#40000#);
+      Res : VT_Channel_Rdr.Result_Type;
+   begin
+      VT_Channel_Wtr.Initialize (Channel => Channel_1_Out,
+                                 Epoch   => 1);
 
-   Channel_1_Reader : VT_Channel_Rdr.Reader_Type;
+      Res := VT_Channel_Rdr.Inactive;
 
-   Channel_1_Out : VT_Channel.Channel_Type;
-   for Channel_1_Out'Address use System'To_Address (16#50000#);
-
-   --  Init channels.
-   procedure Init;
+      loop
+         VT_Channel_Rdr.Synchronize (Channel => Channel_1_In,
+                                     Reader  => Channel_1_Reader,
+                                     Result  => Res);
+         exit when Res /= VT_Channel_Rdr.Inactive;
+      end loop;
+   end Init;
 
 end Channels;

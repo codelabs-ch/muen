@@ -129,9 +129,9 @@ is
          when 60 =>
             Terminals.Set (Slot => 2);
             Log.Text_IO.Put_Line ("Switching to VT 2");
-         when 63 =>
-            Terminals.Set (Slot => 5);
-            Log.Text_IO.Put_Line ("Switching to VT 5");
+         when 61 =>
+            Terminals.Set (Slot => 3);
+            Log.Text_IO.Put_Line ("Switching to VT 3");
          when 64 =>
             Terminals.Set (Slot => 6);
             Log.Text_IO.Put_Line ("Switching to VT 6");

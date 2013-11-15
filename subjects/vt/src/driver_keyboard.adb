@@ -18,7 +18,9 @@
 
 with SK.IO;
 
+with Input;
 with Terminals;
+with Driver_Keyboard.Scancodes;
 
 package body Driver_Keyboard
 is
@@ -29,6 +31,38 @@ is
    Status_Register : constant := 16#64#;
 
    OUTPUT_BUFFER_STATUS : constant := 0;
+
+   --  Flag to track the escape state of the current scancode sequence.
+   Escaped : Boolean := False;
+
+   --  Converts a given scancode to a key event. If the scancode is part of an
+   --  escaped sequence, Event is set to Null_Key_Event.
+   procedure Convert_Scancode
+     (Code  :     SK.Byte;
+      Event : out Input.Key_Event_Type);
+
+   -------------------------------------------------------------------------
+
+   procedure Convert_Scancode
+     (Code  :     SK.Byte;
+      Event : out Input.Key_Event_Type)
+   is
+      use type SK.Byte;
+   begin
+      if Code = 16#e0# or Code = 16#e1# then
+         Escaped := True;
+         Event   := Input.Null_Key_Event;
+      end if;
+
+      if Escaped then
+         Event.Key := Scancodes.Escaped_Scancode_Map (Code);
+         Escaped   := False;
+      else
+         Event.Key := Scancodes.Scancode_Map (Code);
+      end if;
+
+      Event.Pressed := (Code < 16#80#);
+   end Convert_Scancode;
 
    -------------------------------------------------------------------------
 

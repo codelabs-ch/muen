@@ -16,24 +16,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with VT_Channels;
+with Muchannel.Reader;
+with Muchannel.Writer;
 
-package Mux.Channels
+package VT_Channels
 is
 
-   --  Init channels.
-   procedure Init;
+   package VT_Channel is new Muchannel
+     (Element_Type => Character,
+      Elements     => 4032);
 
-   --  Read next character from input channel given by index.
-   procedure Read
-     (Channel :     Input_Channel_Range;
-      Char    : out Character;
-      Result  : out VT_Channels.VT_Channel_Rdr.Result_Type);
+   package VT_Channel_Rdr is new VT_Channel.Reader (Protocol => 1);
+   package VT_Channel_Wtr is new VT_Channel.Writer
+     (Protocol     => 1,
+      Null_Element => ASCII.NUL);
 
-   --  Syncronize input channel given by index.
-   procedure Synchronize (Channel : Input_Channel_Range);
-
-   --  Write character to output channel.
-   procedure Write (Char : Character);
-
-end Mux.Channels;
+end VT_Channels;

@@ -18,6 +18,8 @@
 
 with SK.IO;
 
+with VT_Channels;
+
 with Log;
 with Mux.Screens;
 with Mux.Channels;
@@ -188,11 +190,12 @@ is
    procedure Update_In_Channels
    is
       use Mux;
+      use VT_Channels;
 
-      use type Mux.Channels.VT_Channel_Rdr.Result_Type;
+      use type VT_Channels.VT_Channel_Rdr.Result_Type;
 
       Data : Character;
-      Res  : Channels.VT_Channel_Rdr.Result_Type;
+      Res  : VT_Channel_Rdr.Result_Type;
    begin
       for C in Mux.Input_Channel_Range loop
          loop
@@ -201,33 +204,33 @@ is
                            Result  => Res);
 
             case Res is
-               when Channels.VT_Channel_Rdr.Incompatible_Interface =>
+               when VT_Channel_Rdr.Incompatible_Interface =>
                   Log.Text_IO.Put_String (Item => "Channel ");
                   Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
                   Log.Text_IO.Put_Line
                     (Item => ": Incompatible interface detected");
-               when Channels.VT_Channel_Rdr.Epoch_Changed =>
+               when VT_Channel_Rdr.Epoch_Changed =>
                   Log.Text_IO.Put_String (Item => "Channel ");
                   Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
                   Log.Text_IO.Put_Line   (Item => ": Epoch changed");
                   Channels.Synchronize (Channel => C);
-               when Channels.VT_Channel_Rdr.No_Data =>
+               when VT_Channel_Rdr.No_Data =>
                   null;
-               when Channels.VT_Channel_Rdr.Overrun_Detected =>
+               when VT_Channel_Rdr.Overrun_Detected =>
                   Log.Text_IO.Put_String (Item => "Channel ");
                   Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
                   Log.Text_IO.Put_Line   (Item => ": Overrun detected");
-               when Channels.VT_Channel_Rdr.Inactive =>
+               when VT_Channel_Rdr.Inactive =>
                   Log.Text_IO.Put_String (Item => "Channel ");
                   Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
                   Log.Text_IO.Put_Line   (Item => ": Inactive");
-               when Channels.VT_Channel_Rdr.Success =>
+               when VT_Channel_Rdr.Success =>
                   Screens.Update
                     (Screen => C,
                      Char   => Data);
             end case;
 
-            exit when Res /= Channels.VT_Channel_Rdr.Success;
+            exit when Res /= VT_Channel_Rdr.Success;
          end loop;
       end loop;
    end Update_In_Channels;

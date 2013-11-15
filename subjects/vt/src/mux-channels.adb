@@ -21,6 +21,8 @@ with System;
 package body Mux.Channels
 is
 
+   use VT_Channels;
+
    type In_Channel_Array is array
      (Input_Channel_Range) of VT_Channel.Channel_Type;
 

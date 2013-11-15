@@ -216,8 +216,7 @@ is
             when VT_Channel_Rdr.Inactive =>
                Log.Text_IO.Put_Line ("Channel 1: Inactive");
             when VT_Channel_Rdr.Success =>
-               Screens.T1.Update (Screen => Screens.Screen_1,
-                                  Char   => Data);
+               Screens.Update (Char => Data);
          end case;
 
          exit when Res /= VT_Channel_Rdr.Success;

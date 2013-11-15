@@ -18,4 +18,8 @@
 
 package Mux
 is
+
+   --  Number of input channels.
+   type Input_Channel_Range is range 1 .. 1;
+
 end Mux;

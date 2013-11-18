@@ -28,15 +28,11 @@ generic
 package Terminal_Screen
 is
 
-   type Screen_Type is private;
-
    --  Initialize terminal screen.
    procedure Init;
 
    --  Update state of terminal screen.
-   procedure Update
-     (Screen : in out Screen_Type;
-      Char   :        Character);
+   procedure Update (Char : Character);
 
 private
 
@@ -67,8 +63,6 @@ private
          CSI_Params    => (others => 0),
          CSI_Param_Idx => CSI_Param_Idx_Range'First);
 
-   type Screen_Type is record
-      Fsm : Terminal_State_Type := Null_State;
-   end record;
+   Fsm : Terminal_State_Type := Null_State;
 
 end Terminal_Screen;

@@ -52,28 +52,22 @@ is
    procedure Print_Unknown (Char : SK.Byte);
 
    --  Execute CSI control function.
-   procedure CSI_Dispatch
-     (Screen : Screen_Type;
-      Char   : SK.Byte);
+   procedure CSI_Dispatch (Char : SK.Byte);
 
    --  CSI Select Graphic Rendition.
-   procedure CSI_Select_SGR (Screen : Screen_Type);
+   procedure CSI_Select_SGR;
 
    --  Add CSI parameter to terminal state.
-   procedure CSI_Add_Param
-     (Screen : in out Screen_Type;
-      Char   :        SK.Byte);
+   procedure CSI_Add_Param (Char : SK.Byte);
 
    -------------------------------------------------------------------------
 
-   procedure CSI_Add_Param
-     (Screen : in out Screen_Type;
-      Char   :        SK.Byte)
+   procedure CSI_Add_Param (Char : SK.Byte)
    is
    begin
-      if Screen.Fsm.CSI_Param_Idx < CSI_Param_Range'Last then
-         Screen.Fsm.CSI_Param_Idx := Screen.Fsm.CSI_Param_Idx + 1;
-         Screen.Fsm.CSI_Params (Screen.Fsm.CSI_Param_Idx) := Char;
+      if Fsm.CSI_Param_Idx < CSI_Param_Range'Last then
+         Fsm.CSI_Param_Idx := Fsm.CSI_Param_Idx + 1;
+         Fsm.CSI_Params (Fsm.CSI_Param_Idx) := Char;
       else
          Log.Text_IO.Put_Line (Item => "!! CSI params overrun");
       end if;
@@ -81,9 +75,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure CSI_Dispatch
-     (Screen : Screen_Type;
-      Char   : SK.Byte)
+   procedure CSI_Dispatch (Char : SK.Byte)
    is
    begin
       Log.Text_IO.Put_String (Item => "* CSI dispatch ");
@@ -107,7 +99,7 @@ is
 
             --  CSI n m: SGR - Select Graphic Rendition
 
-            CSI_Select_SGR (Screen => Screen);
+            CSI_Select_SGR;
          when others =>
             Print_Unknown (Char => Char);
       end case;
@@ -115,20 +107,20 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure CSI_Select_SGR (Screen : Screen_Type)
+   procedure CSI_Select_SGR
    is
       use type SK.Byte;
    begin
       Log.Text_IO.Put_Line (Item => "** CSI_Select_SGR ");
 
-      if Screen.Fsm.CSI_Param_Idx = CSI_Empty_Params then
+      if Fsm.CSI_Param_Idx = CSI_Empty_Params then
          Log.Text_IO.Put_Line ("!! Empty CSI params");
          return;
       end if;
 
-      for Idx in CSI_Param_Range'First .. Screen.Fsm.CSI_Param_Idx loop
+      for Idx in CSI_Param_Range'First .. Fsm.CSI_Param_Idx loop
          declare
-            Param : constant SK.Byte := Screen.Fsm.CSI_Params (Idx);
+            Param : constant SK.Byte := Fsm.CSI_Params (Idx);
          begin
             case Param
             is
@@ -167,9 +159,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Update
-     (Screen : in out Screen_Type;
-      Char   :        Character)
+   procedure Update (Char : Character)
    is
       use type SK.Byte;
 
@@ -178,7 +168,7 @@ is
 
       --  Video Terminal Parser, see http://vt100.net/emu/vt500_parser.png
 
-      case Screen.Fsm.State
+      case Fsm.State
       is
          when State_Ground =>
 
@@ -208,7 +198,7 @@ is
                   return;
                when 16#1b# =>
                   Log.Text_IO.Put_Line (Item => "-> Escape");
-                  Screen.Fsm.State := State_Escape;
+                  Fsm.State := State_Escape;
                when others =>
                   Print_Unknown (Char => Pos);
             end case;
@@ -216,13 +206,13 @@ is
 
             --  ESCAPE
 
-            Screen.Fsm := Null_State;
+            Fsm := Null_State;
 
             case Pos
             is
                when 16#5b# =>
                   Log.Text_IO.Put_Line (Item => "--> CSI entry");
-                  Screen.Fsm.State := State_CSI_Entry;
+                  Fsm.State := State_CSI_Entry;
                when others =>
                   Print_Unknown (Char => Pos);
             end case;
@@ -230,23 +220,19 @@ is
 
             --  CSI entry
 
-            Screen.Fsm := Null_State;
+            Fsm := Null_State;
 
             case Pos
             is
                when 16#30# .. 16#39# | 16#3b# =>
                   Log.Text_IO.Put_Line (Item => "---> CSI param ");
-                  Screen.Fsm.State := State_CSI_Param;
+                  Fsm.State := State_CSI_Param;
 
-                  CSI_Add_Param
-                    (Screen => Screen,
-                     Char   => Pos);
+                  CSI_Add_Param (Char => Pos);
                when 16#40# .. 16#7e# =>
-                  CSI_Dispatch
-                    (Screen => Screen,
-                     Char   => Pos);
+                  CSI_Dispatch (Char => Pos);
                   Log.Text_IO.Put_Line (Item => "> Ground");
-                  Screen.Fsm := Null_State;
+                  Fsm := Null_State;
                when others =>
                   Print_Unknown (Char => Pos);
             end case;
@@ -257,15 +243,11 @@ is
             case Pos
             is
                when 16#30# .. 16#39# | 16#3b# =>
-                  CSI_Add_Param
-                    (Screen => Screen,
-                     Char   => Pos);
+                  CSI_Add_Param (Char => Pos);
                when 16#40# .. 16#7e# =>
-                  CSI_Dispatch
-                    (Screen => Screen,
-                     Char   => Pos);
+                  CSI_Dispatch (Char => Pos);
                   Log.Text_IO.Put_Line (Item => "> Ground");
-                  Screen.Fsm := Null_State;
+                  Fsm := Null_State;
                when others =>
                   Print_Unknown (Char => Pos);
             end case;

@@ -21,23 +21,17 @@ with Terminal_Screen;
 package body Mux.Screens
 is
 
-   --  Terminal 1 screen.
    package Term1_Package is new Terminal_Screen
      (Base_Address => 16#000b_8000#);
    package T1 renames Term1_Package;
-   Screen_1 : T1.Screen_Type;
 
-   --  Terminal 2 screen.
    package Term2_Package is new Terminal_Screen
      (Base_Address => 16#000b_9000#);
    package T2 renames Term2_Package;
-   Screen_2 : T2.Screen_Type;
 
-   --  Terminal 3 screen.
    package Term3_Package is new Terminal_Screen
      (Base_Address => 16#000b_a000#);
    package T3 renames Term3_Package;
-   Screen_3 : T3.Screen_Type;
 
    -------------------------------------------------------------------------
 
@@ -58,15 +52,9 @@ is
    begin
       case Screen
       is
-         when 1 =>
-            T1.Update (Screen => Screen_1,
-                       Char   => Char);
-         when 2 =>
-            T2.Update (Screen => Screen_2,
-                       Char   => Char);
-         when 3 =>
-            T3.Update (Screen => Screen_3,
-                       Char   => Char);
+         when 1 => T1.Update (Char => Char);
+         when 2 => T2.Update (Char => Char);
+         when 3 => T3.Update (Char => Char);
       end case;
    end Update;
 

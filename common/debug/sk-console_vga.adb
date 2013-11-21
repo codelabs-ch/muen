@@ -172,8 +172,16 @@ is
       Y : Height_Type)
    is
    begin
-      Cur_X := X;
+      Set_Position (X => X);
       Cur_Y := Y;
+   end Set_Position;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Position (X : Width_Type)
+   is
+   begin
+      Cur_X := X;
    end Set_Position;
 
    -------------------------------------------------------------------------

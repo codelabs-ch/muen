@@ -71,6 +71,9 @@ is
      (X : Width_Type;
       Y : Height_Type);
 
+   --  Set current X position.
+   procedure Set_Position (X : Width_Type);
+
    --  Enable position cursor.
    procedure Enable_Cursor;
 

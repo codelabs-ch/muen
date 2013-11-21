@@ -199,9 +199,9 @@ is
                   Text_IO.New_Line;
                when 16#0d# =>
 
-                  --  CR, ignore
+                  --  CR
 
-                  return;
+                  VGA.Set_Position (X => Width_Type'First);
                when 16#1b# =>
                   Log.Text_IO.Put_Line (Item => "-> Escape");
                   Fsm.State := State_Escape;

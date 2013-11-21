@@ -77,6 +77,9 @@ is
    --  Enable position cursor.
    procedure Enable_Cursor;
 
+   --  Update cursor position.
+   procedure Update_Cursor;
+
    --  Disable position cursor.
    procedure Disable_Cursor;
 

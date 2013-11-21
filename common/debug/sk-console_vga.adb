@@ -48,6 +48,8 @@ is
    pragma Import (Ada, Screen);
    for Screen'Address use Base_Address;
 
+   Cursor_Enabled : constant Boolean := True;
+
    --  Scroll screen if current Y position is equal to the last row.
    procedure Scroll;
 
@@ -65,6 +67,7 @@ is
                  BG_Color => Black);
          end loop;
       end loop;
+      Update_Cursor;
    end Delete_Screen_From_Cursor;
 
    -------------------------------------------------------------------------
@@ -104,6 +107,7 @@ is
       Cur_X         := Width_Type'First;
       Cur_Y         := Height_Type'First;
       Cur_Txt_Color := Light_Grey;
+      Update_Cursor;
    end Init;
 
    -------------------------------------------------------------------------
@@ -114,6 +118,7 @@ is
       if Cur_X > Width_Type'First then
          Cur_X := Cur_X - 1;
       end if;
+      Update_Cursor;
    end Line_Move_Left;
 
    -------------------------------------------------------------------------
@@ -127,6 +132,7 @@ is
       else
          Cur_Y := Cur_Y + 1;
       end if;
+      Update_Cursor;
    end New_Line;
 
    -------------------------------------------------------------------------
@@ -144,6 +150,7 @@ is
       else
          Cur_X := Cur_X + 1;
       end if;
+      Update_Cursor;
    end Put_Char;
 
    -------------------------------------------------------------------------
@@ -163,6 +170,7 @@ is
            (Char     => ' ',
             FG_Color => White,
             BG_Color => Black));
+      Update_Cursor;
    end Scroll;
 
    -------------------------------------------------------------------------
@@ -174,6 +182,7 @@ is
    begin
       Set_Position (X => X);
       Cur_Y := Y;
+      Update_Cursor;
    end Set_Position;
 
    -------------------------------------------------------------------------
@@ -182,6 +191,7 @@ is
    is
    begin
       Cur_X := X;
+      Update_Cursor;
    end Set_Position;
 
    -------------------------------------------------------------------------
@@ -191,5 +201,33 @@ is
    begin
       Cur_Txt_Color := Color;
    end Set_Text_Color;
+
+   -------------------------------------------------------------------------
+
+   procedure Update_Cursor
+   is
+      Pos : Positive;
+   begin
+      if not Cursor_Enabled then
+         return;
+      end if;
+
+      Pos := Natural (Cur_Y - 1) * Natural (Width_Type'Last)
+        + Natural (Cur_X) - 1;
+
+      --  Set high cursor byte
+
+      IO.Outb (Port  => 16#3d4#,
+               Value => 16#0e#);
+      IO.Outb (Port  => 16#3d5#,
+               Value => Byte (Pos / 2 ** 8));
+
+      --  Set low cursor byte
+
+      IO.Outb (Port  => 16#3d4#,
+               Value => 16#0f#);
+      IO.Outb (Port  => 16#3d5#,
+               Value => Byte (Pos));
+   end Update_Cursor;
 
 end SK.Console_VGA;

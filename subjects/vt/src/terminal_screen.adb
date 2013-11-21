@@ -181,6 +181,12 @@ is
                   --  Printable
 
                   Text_IO.Put_Char (Item => Char);
+
+               when 16#07# =>
+
+                  --  BEL, ignore
+
+                  null;
                when 16#08# =>
 
                   --  BS

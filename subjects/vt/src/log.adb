@@ -24,8 +24,6 @@ is
    procedure Initialize
    is
    begin
-      VGA.Disable_Cursor;
-      Text_IO.Init;
       Text_IO.Put_Line (Item => "VT subject running");
    end Initialize;
 

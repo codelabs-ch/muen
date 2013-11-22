@@ -16,26 +16,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
-
 with SK.Console;
-with SK.Console_VGA;
+
+with Mux.Console_Local;
 
 package Log
 is
 
-   subtype Width_Type  is Natural range 1 .. 80;
-   subtype Height_Type is Natural range 1 .. 25;
-
-   package VGA is new SK.Console_VGA
-     (Width_Type   => Width_Type,
-      Height_Type  => Height_Type,
-      Base_Address => System'To_Address (16#000b_b000#));
+   package Console is new Mux.Console_Local (Assigned_Slot => 4);
 
    package Text_IO is new SK.Console
-     (Initialize      => VGA.Init,
-      Output_New_Line => VGA.New_Line,
-      Output_Char     => VGA.Put_Char);
+     (Initialize      => Console.Init,
+      Output_New_Line => Console.New_Line,
+      Output_Char     => Console.Put_Char);
 
    --  Initialize logging.
    procedure Initialize;

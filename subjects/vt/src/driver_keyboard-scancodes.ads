@@ -123,7 +123,11 @@ is
    Escaped_Scancode_Map : constant Scancode_Map_Type :=
      (16#1c# => KEY_KPENTER,
       16#1d# => KEY_RIGHTCTRL,
+      16#20# => KEY_MUTE,
+      16#2e# => KEY_VOLUMEDOWN,
+      16#30# => KEY_VOLUMEUP,
       16#35# => KEY_KPSLASH,
+      16#37# => KEY_SYSRQ,
       16#38# => KEY_RIGHTALT,
       16#47# => KEY_HOME,
       16#48# => KEY_UP,

@@ -49,8 +49,10 @@ is
            6 => VGA.Cyan,
            7 => VGA.Black);
 
-   --  Print 'unknown character' message.
-   procedure Print_Unknown (Char : SK.Byte);
+   --  Print 'unknown character' message for given FSM state.
+   procedure Print_Unknown
+     (State : String;
+      Char  : SK.Byte);
 
    --  Execute CSI control function.
    procedure CSI_Dispatch (Char : SK.Byte);
@@ -79,10 +81,6 @@ is
    procedure CSI_Dispatch (Char : SK.Byte)
    is
    begin
-      Log.Text_IO.Put_String (Item => "* CSI dispatch ");
-      Log.Text_IO.Put_Byte (Item => Char);
-      Log.Text_IO.New_Line;
-
       case Char
       is
          when 16#48# =>
@@ -102,7 +100,9 @@ is
 
             CSI_Select_SGR;
          when others =>
-            Print_Unknown (Char => Char);
+            Print_Unknown
+              (State => "CSI_Dispatch",
+               Char  => Char);
       end case;
    end CSI_Dispatch;
 
@@ -112,8 +112,6 @@ is
    is
       use type SK.Byte;
    begin
-      Log.Text_IO.Put_Line (Item => "** CSI_Select_SGR ");
-
       if Fsm.CSI_Param_Idx = CSI_Empty_Params then
          Log.Text_IO.Put_Line ("!! Empty CSI params");
          return;
@@ -134,7 +132,9 @@ is
 
                   null;
                when others =>
-                  Print_Unknown (Char => Param);
+                  Print_Unknown
+                    (State => "CSI_Select_SGR",
+                     Char  => Param);
             end case;
          end;
       end loop;
@@ -166,10 +166,13 @@ is
 
    ----------------------------------------------------------------------
 
-   procedure Print_Unknown (Char : SK.Byte)
+   procedure Print_Unknown
+     (State : String;
+      Char  : SK.Byte)
    is
    begin
-      Log.Text_IO.Put_String (Item => "!! Unknown character ");
+      Log.Text_IO.Put_String (Item => State);
+      Log.Text_IO.Put_String (Item => ": Unknown character ");
       Log.Text_IO.Put_Byte   (Item => Char);
       Log.Text_IO.New_Line;
    end Print_Unknown;
@@ -220,10 +223,11 @@ is
 
                   VGA.Set_Position (X => Width_Type'First);
                when 16#1b# =>
-                  Log.Text_IO.Put_Line (Item => "-> Escape");
                   Fsm.State := State_Escape;
                when others =>
-                  Print_Unknown (Char => Pos);
+                  Print_Unknown
+                    (State => "Ground",
+                     Char  => Pos);
             end case;
          when State_Escape =>
 
@@ -234,10 +238,11 @@ is
             case Pos
             is
                when 16#5b# =>
-                  Log.Text_IO.Put_Line (Item => "--> CSI entry");
                   Fsm.State := State_CSI_Entry;
                when others =>
-                  Print_Unknown (Char => Pos);
+                  Print_Unknown
+                    (State => "Escape",
+                     Char  => Pos);
             end case;
          when State_CSI_Entry =>
 
@@ -248,16 +253,16 @@ is
             case Pos
             is
                when 16#30# .. 16#39# | 16#3b# =>
-                  Log.Text_IO.Put_Line (Item => "---> CSI param ");
                   Fsm.State := State_CSI_Param;
 
                   CSI_Add_Param (Char => Pos);
                when 16#40# .. 16#7e# =>
                   CSI_Dispatch (Char => Pos);
-                  Log.Text_IO.Put_Line (Item => "> Ground");
                   Fsm := Null_State;
                when others =>
-                  Print_Unknown (Char => Pos);
+                  Print_Unknown
+                    (State => "CSI entry",
+                     Char  => Pos);
             end case;
          when State_CSI_Param =>
 
@@ -269,10 +274,11 @@ is
                   CSI_Add_Param (Char => Pos);
                when 16#40# .. 16#7e# =>
                   CSI_Dispatch (Char => Pos);
-                  Log.Text_IO.Put_Line (Item => "> Ground");
                   Fsm := Null_State;
                when others =>
-                  Print_Unknown (Char => Pos);
+                  Print_Unknown
+                    (State => "CSI param",
+                     Char  => Pos);
             end case;
       end case;
    end Update;

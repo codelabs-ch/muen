@@ -28,4 +28,7 @@ is
      (Screen : Slot_Range;
       Char   : Character);
 
+   --  Activate given terminal screen.
+   procedure Set_Active (Screen : Slot_Range);
+
 end Mux.Screens;

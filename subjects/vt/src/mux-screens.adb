@@ -54,6 +54,44 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Set_Active (Screen : Slot_Range)
+   is
+   begin
+      case Screen
+      is
+         when 1 =>
+            T2.Disable_Cursor_Update;
+            T3.Disable_Cursor_Update;
+            T4.Disable_Cursor_Update;
+
+            T1.Enable_Cursor_Update;
+            T1.Update_Cursor;
+         when 2 =>
+            T1.Disable_Cursor_Update;
+            T3.Disable_Cursor_Update;
+            T4.Disable_Cursor_Update;
+
+            T2.Enable_Cursor_Update;
+            T2.Update_Cursor;
+         when 3 =>
+            T1.Disable_Cursor_Update;
+            T2.Disable_Cursor_Update;
+            T4.Disable_Cursor_Update;
+
+            T3.Enable_Cursor_Update;
+            T3.Update_Cursor;
+         when 4 =>
+            T1.Disable_Cursor_Update;
+            T2.Disable_Cursor_Update;
+            T3.Disable_Cursor_Update;
+
+            T4.Enable_Cursor_Update;
+            T4.Update_Cursor;
+      end case;
+   end Set_Active;
+
+   -------------------------------------------------------------------------
+
    procedure Update
      (Screen : Slot_Range;
       Char   : Character)

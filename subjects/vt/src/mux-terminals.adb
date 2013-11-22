@@ -56,6 +56,7 @@ is
    is
    begin
       Mux.Screens.Init;
+      Mux.Screens.Set_Active (Screen => Active_Slot);
       Mux.Channels.Init;
    end Initialize;
 
@@ -107,6 +108,7 @@ is
       use type SK.Word16;
    begin
       Active_Slot := Slot;
+      Mux.Screens.Set_Active (Screen => Slot);
       Set_VGA_Start (Address => SK.Word16 (Slot - 1) * 16#800#);
    end Set;
 

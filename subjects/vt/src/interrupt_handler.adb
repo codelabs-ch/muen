@@ -18,6 +18,7 @@
 
 with Log;
 with Driver_Keyboard;
+with Mux.Terminals;
 
 package body Interrupt_Handler
 is
@@ -28,14 +29,15 @@ is
    is
       use type SK.Byte;
    begin
-      if Vector /= 49 then
+      if Vector = 34 then
+         Mux.Terminals.Queue_Request;
+      elsif Vector = 49 then
+         Driver_Keyboard.Handle;
+      else
          Log.Text_IO.Put_String (Item => "Ignoring spurious interrupt ");
          Log.Text_IO.Put_Byte   (Item => Vector);
          Log.Text_IO.New_Line;
-         return;
       end if;
-
-      Driver_Keyboard.Handle;
    end Handle_Interrupt;
 
 end Interrupt_Handler;

@@ -83,6 +83,9 @@ is
    --  Update cursor position.
    procedure Update_Cursor;
 
+   --  Disable cursor updates.
+   procedure Disable_Cursor_Update;
+
    --  Set text color.
    procedure Set_Text_Color (Color : VGA_Color_Type);
 

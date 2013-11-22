@@ -48,7 +48,7 @@ is
    pragma Import (Ada, Screen);
    for Screen'Address use Base_Address;
 
-   Cursor_Enabled : constant Boolean := True;
+   Update_Cursor_Position : Boolean := True;
 
    --  Scroll screen if current Y position is equal to the last row.
    procedure Scroll;
@@ -69,6 +69,14 @@ is
       end loop;
       Update_Cursor;
    end Delete_Screen_From_Cursor;
+
+   -------------------------------------------------------------------------
+
+   procedure Disable_Cursor_Update
+   is
+   begin
+      Update_Cursor_Position := False;
+   end Disable_Cursor_Update;
 
    -------------------------------------------------------------------------
 
@@ -208,7 +216,7 @@ is
    is
       Pos : Positive;
    begin
-      if not Cursor_Enabled then
+      if not Update_Cursor_Position then
          return;
       end if;
 

@@ -63,7 +63,7 @@ is
             Screen (Y) (X)
               := Screen_Cell_Type'
                 (Char     => ' ',
-                 FG_Color => Black,
+                 FG_Color => Light_Grey,
                  BG_Color => Black);
          end loop;
       end loop;

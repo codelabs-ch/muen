@@ -122,6 +122,9 @@
 			<trap_table>
 				<entry kind="*" dst_subject="sm" dst_vector="36"/>
 			</trap_table>
+			<event_table>
+				<interrupt event="1" dst_subject="vt" dst_vector="34" send_ipi="true"/>
+			</event_table>
 			<msr start="c0000080" end="c0000084" mode="rw"/>
 		</subject>
 	</subjects>

@@ -58,8 +58,21 @@ is
    procedure Delete_Screen_From_Cursor
    is
    begin
+
+      --  Delete current line from cursor position.
+
       for X in Cur_X .. Width_Type'Last loop
-         for Y in Cur_Y .. Height_Type'Last loop
+         Screen (Cur_Y) (X)
+           := Screen_Cell_Type'
+             (Char     => ' ',
+              FG_Color => Light_Grey,
+              BG_Color => Black);
+      end loop;
+
+      --  Clear remaining screen.
+
+      for Y in Cur_Y + 1 .. Height_Type'Last loop
+         for X in Width_Type'Range loop
             Screen (Y) (X)
               := Screen_Cell_Type'
                 (Char     => ' ',

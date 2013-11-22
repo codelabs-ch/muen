@@ -46,7 +46,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Update
-     (Screen : Input_Channel_Range;
+     (Screen : Slot_Range;
       Char   : Character)
    is
    begin
@@ -55,6 +55,7 @@ is
          when 1 => T1.Update (Char => Char);
          when 2 => T2.Update (Char => Char);
          when 3 => T3.Update (Char => Char);
+         when 4 => null;
       end case;
    end Update;
 

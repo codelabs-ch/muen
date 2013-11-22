@@ -166,7 +166,7 @@ is
                   Log.Text_IO.Put_Line   (Item => ": Inactive");
                when VT_Channel_Rdr.Success =>
                   Screens.Update
-                    (Screen => C,
+                    (Screen => Slot_Range (C),
                      Char   => Data);
             end case;
 

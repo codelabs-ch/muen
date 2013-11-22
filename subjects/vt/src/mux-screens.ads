@@ -25,7 +25,7 @@ is
    --  Update state of terminal screen associated with given input channel
    --  index.
    procedure Update
-     (Screen : Input_Channel_Range;
+     (Screen : Slot_Range;
       Char   : Character);
 
 end Mux.Screens;

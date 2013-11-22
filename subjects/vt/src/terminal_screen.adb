@@ -142,6 +142,22 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Disable_Cursor_Update
+   is
+   begin
+      VGA.Disable_Cursor_Update;
+   end Disable_Cursor_Update;
+
+   -------------------------------------------------------------------------
+
+   procedure Enable_Cursor_Update
+   is
+   begin
+      VGA.Enable_Cursor_Update;
+   end Enable_Cursor_Update;
+
+   -------------------------------------------------------------------------
+
    procedure Init
    is
    begin
@@ -260,5 +276,13 @@ is
             end case;
       end case;
    end Update;
+
+   -------------------------------------------------------------------------
+
+   procedure Update_Cursor
+   is
+   begin
+      VGA.Update_Cursor;
+   end Update_Cursor;
 
 end Terminal_Screen;

@@ -37,6 +37,15 @@ is
    --  Update state of terminal screen.
    procedure Update (Char : Character);
 
+   --  Update cursor position.
+   procedure Update_Cursor;
+
+   --  Enable cursor updates.
+   procedure Enable_Cursor_Update;
+
+   --  Disable cursor updates.
+   procedure Disable_Cursor_Update;
+
 private
 
    type State_Type is

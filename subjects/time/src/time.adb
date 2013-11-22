@@ -17,6 +17,7 @@ with System;
 
 with SK.IO;
 
+with Subject.Console;
 with Subject.Text_IO;
 
 procedure Time
@@ -28,6 +29,7 @@ is
 
    use type SK.Word64;
 begin
+   Subject.Console.Enable_Notification;
    Subject.Text_IO.Init;
    Subject.Text_IO.Put_Line (Item => "Time subject running");
 

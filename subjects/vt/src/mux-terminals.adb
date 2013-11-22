@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.CPU;
 with SK.IO;
 
 with VT_Channels;
@@ -109,6 +110,9 @@ is
       use type SK.Byte;
    begin
       loop
+         if Pending_Requests = 0 then
+            SK.CPU.Hlt;
+         end if;
          Update_In_Channels;
       end loop;
    end Run;
@@ -169,7 +173,7 @@ is
                   Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
                   Log.Text_IO.Put_Line   (Item => ": Epoch changed");
                when VT_Channel_Rdr.No_Data =>
-                  null;
+                  Pending_Requests := Pending_Requests - 1;
                when VT_Channel_Rdr.Overrun_Detected =>
                   Log.Text_IO.Put_String (Item => "Channel ");
                   Log.Text_IO.Put_Byte   (Item => SK.Byte (C));

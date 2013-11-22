@@ -24,7 +24,7 @@ with Log;
 with Mux.Screens;
 with Mux.Channels;
 
-package body Terminals
+package body Mux.Terminals
 is
 
    Active_Slot : Slot_Range := Slot_Range'First;
@@ -175,4 +175,4 @@ is
       end loop;
    end Update_In_Channels;
 
-end Terminals;
+end Mux.Terminals;

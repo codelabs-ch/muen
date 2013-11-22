@@ -18,7 +18,7 @@
 
 with Input;
 
-package Terminals
+package Mux.Terminals
 is
 
    --  Session slots.
@@ -40,4 +40,4 @@ is
    --  Process given key event.
    procedure Process_Key (Event : Input.Key_Event_Type);
 
-end Terminals;
+end Mux.Terminals;

@@ -23,16 +23,16 @@ pragma Unreferenced (Interrupt_Handler);
 
 with Log;
 with Interrupts;
-with Terminals;
+with Mux.Terminals;
 
 procedure VT
 is
 begin
    Interrupts.Initialize;
    Log.Initialize;
-   Terminals.Initialize;
+   Mux.Terminals.Initialize;
 
    SK.CPU.Sti;
 
-   Terminals.Run;
+   Mux.Terminals.Run;
 end VT;

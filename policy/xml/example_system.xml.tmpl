@@ -79,6 +79,9 @@
 			</memory_layout>
 			<binary name="time" physical_address="277000"/>
 			<device name="port80"/>
+			<event_table>
+				<interrupt event="1" dst_subject="vt" dst_vector="34" send_ipi="true"/>
+			</event_table>
 		</subject>
 
 		<subject id="3" name="sm" profile="native" cpu="1" pml4_address="2a0000" io_bitmap_address="2a4000" msr_bitmap_address="2a6000">

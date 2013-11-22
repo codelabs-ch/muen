@@ -34,4 +34,7 @@ is
    --  Write character.
    procedure Put_Char (Item : Character);
 
+   --  Enables notifications to console channel consumer.
+   procedure Enable_Notification;
+
 end SK.Console_Channel;

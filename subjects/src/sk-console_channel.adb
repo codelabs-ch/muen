@@ -17,6 +17,7 @@
 --
 
 with VT_Channels;
+with SK.Hypercall;
 
 package body SK.Console_Channel
 is
@@ -25,6 +26,16 @@ is
 
    Channel : VT_Channel.Channel_Type;
    for Channel'Address use Channel_Address;
+
+   Notify : Boolean := False;
+
+   -------------------------------------------------------------------------
+
+   procedure Enable_Notification
+   is
+   begin
+      Notify := True;
+   end Enable_Notification;
 
    -------------------------------------------------------------------------
 
@@ -42,6 +53,10 @@ is
    begin
       VT_Channel_Wtr.Write (Channel => Channel,
                             Element => ASCII.LF);
+
+      if Notify then
+         Hypercall.Trigger_Event (Number => 1);
+      end if;
    end New_Line;
 
    -------------------------------------------------------------------------

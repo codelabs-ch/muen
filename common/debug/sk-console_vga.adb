@@ -72,14 +72,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Disable_Cursor
+   procedure Hide_Cursor
    is
    begin
       IO.Outb (Port  => 16#3d4#,
                Value => 10);
       IO.Outb (Port  => 16#3d5#,
                Value => 16);
-   end Disable_Cursor;
+   end Hide_Cursor;
 
    -------------------------------------------------------------------------
 

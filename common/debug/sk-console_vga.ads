@@ -77,11 +77,11 @@ is
    --  Show cursor.
    procedure Show_Cursor;
 
+   --  Hide cursor.
+   procedure Hide_Cursor;
+
    --  Update cursor position.
    procedure Update_Cursor;
-
-   --  Disable position cursor.
-   procedure Disable_Cursor;
 
    --  Set text color.
    procedure Set_Text_Color (Color : VGA_Color_Type);

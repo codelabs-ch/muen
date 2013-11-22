@@ -212,6 +212,12 @@ is
                   --  BS
 
                   VGA.Line_Move_Left;
+
+               when 16#09# =>
+
+                  --  HT (Horizontal Tab)
+
+                  VGA.Put_Tab;
                when 16#0a# =>
 
                   --  LF

@@ -228,8 +228,8 @@ is
          return;
       end if;
 
-      Pos := Natural (Cur_Y - 1) * Natural (Width_Type'Last)
-        + Natural (Cur_X) - 1;
+      Pos := Cursor_Offset + (Natural (Cur_Y - 1) * Natural (Width_Type'Last)
+                              + Natural (Cur_X) - 1);
 
       --  Set high cursor byte
 

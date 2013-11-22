@@ -22,19 +22,23 @@ package body Mux.Screens
 is
 
    package Term1_Package is new Terminal_Screen
-     (Base_Address => 16#000b_8000#);
+     (Base_Address  => 16#000b_8000#,
+      Cursor_Offset => 0);
    package T1 renames Term1_Package;
 
    package Term2_Package is new Terminal_Screen
-     (Base_Address => 16#000b_9000#);
+     (Base_Address  => 16#000b_9000#,
+      Cursor_Offset => 16#0800#);
    package T2 renames Term2_Package;
 
    package Term3_Package is new Terminal_Screen
-     (Base_Address => 16#000b_a000#);
+     (Base_Address  => 16#000b_a000#,
+      Cursor_Offset => 16#1000#);
    package T3 renames Term3_Package;
 
    package Term4_Package is new Terminal_Screen
-     (Base_Address => 16#000b_b000#);
+     (Base_Address  => 16#000b_b000#,
+      Cursor_Offset => 16#1800#);
    package T4 renames Term4_Package;
 
    -------------------------------------------------------------------------

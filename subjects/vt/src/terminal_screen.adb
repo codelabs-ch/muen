@@ -28,9 +28,10 @@ is
    subtype Height_Type is Natural range 1 .. 25;
 
    package VGA is new SK.Console_VGA
-     (Width_Type   => Width_Type,
-      Height_Type  => Height_Type,
-      Base_Address => Base_Address);
+     (Width_Type    => Width_Type,
+      Height_Type   => Height_Type,
+      Base_Address  => Base_Address,
+      Cursor_Offset => Cursor_Offset);
 
    package Text_IO is new SK.Console
      (Initialize      => VGA.Init,

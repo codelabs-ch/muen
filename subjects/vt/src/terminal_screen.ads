@@ -25,6 +25,9 @@ generic
    --  Base address of video framebuffer.
    Base_Address : System.Address;
 
+   --  Hardware cursor offset (relative to given base address).
+   Cursor_Offset : Natural;
+
 package Terminal_Screen
 is
 

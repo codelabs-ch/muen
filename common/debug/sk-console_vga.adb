@@ -117,6 +117,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Put_Tab
+   is
+      Spaces : constant Width_Type := 4 - (Cur_X mod 4);
+   begin
+      for S in 1 .. Spaces loop
+         Put_Char (Item => ' ');
+      end loop;
+   end Put_Tab;
+
+   -------------------------------------------------------------------------
+
    procedure Line_Move_Left
    is
    begin

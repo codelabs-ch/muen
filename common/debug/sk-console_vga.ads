@@ -63,6 +63,9 @@ is
    --  Print character at current cursor position.
    procedure Put_Char (Item : Character);
 
+   --  Insert horizontal tab (4 spaces).
+   procedure Put_Tab;
+
    --  Move cursor to the left on the current line.
    procedure Line_Move_Left;
 

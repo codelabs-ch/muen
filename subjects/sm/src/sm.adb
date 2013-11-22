@@ -24,6 +24,7 @@ with SK.Constants;
 
 with Skp;
 
+with Subject.Console;
 with Subject.Text_IO;
 
 with Interrupts;
@@ -48,6 +49,7 @@ is
    MSR_KERNEL_GS_BASE    : constant := 16#c0000102#;
 
 begin
+   Subject.Console.Enable_Notification;
    Subject.Text_IO.Init;
    Subject.Text_IO.Put_Line ("SM subject running");
    Interrupts.Initialize;

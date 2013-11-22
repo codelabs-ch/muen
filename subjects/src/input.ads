@@ -105,6 +105,7 @@ is
       KEY_KP3,
       KEY_KP0,
       KEY_KPDOT,
+      KEY_UNASSIGNED_84,       --  84 is unassigned
       KEY_ZENKAKUHANKAKU,
       KEY_102ND,
       KEY_F11,
@@ -143,7 +144,6 @@ is
       KEY_SCALE,
       KEY_KPCOMMA,
       KEY_HANGEUL,
-      KEY_HANGUEL,
       KEY_HANJA,
       KEY_YEN,
       KEY_LEFTMETA,
@@ -173,7 +173,6 @@ is
       KEY_PROG2,
       KEY_WWW,
       KEY_MSDOS,
-      KEY_COFFEE,
       KEY_SCREENLOCK,
       KEY_DIRECTION,
       KEY_CYCLEWINDOWS,
@@ -217,6 +216,11 @@ is
       KEY_F22,
       KEY_F23,
       KEY_F24,
+      KEY_UNASSIGNED_195,      --  195 is unassigned
+      KEY_UNASSIGNED_196,      --  196 is unassigned
+      KEY_UNASSIGNED_197,      --  197 is unassigned
+      KEY_UNASSIGNED_198,      --  198 is unassigned
+      KEY_UNASSIGNED_199,      --  199 is unassigned
       KEY_PLAYCD,
       KEY_PAUSECD,
       KEY_PROG3,
@@ -286,7 +290,7 @@ private
    for Key_Event_Type'Size use 2 * 8;
 
    Null_Key_Event : constant Input.Key_Event_Type
-   := (Key     => Input.KEY_RESERVED,
-       Pressed => False);
+     := (Key     => Input.KEY_RESERVED,
+         Pressed => False);
 
 end Input;

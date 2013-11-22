@@ -54,6 +54,7 @@ is
       if Code = 16#e0# or Code = 16#e1# then
          Escaped := True;
          Event   := Input.Null_Key_Event;
+         return;
       end if;
 
       Idx := Code mod 16#80#;

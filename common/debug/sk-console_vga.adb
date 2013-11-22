@@ -80,6 +80,14 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Enable_Cursor_Update
+   is
+   begin
+      Update_Cursor_Position := True;
+   end Enable_Cursor_Update;
+
+   -------------------------------------------------------------------------
+
    procedure Hide_Cursor
    is
    begin

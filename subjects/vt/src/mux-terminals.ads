@@ -21,9 +21,6 @@ with Input;
 package Mux.Terminals
 is
 
-   --  Session slots.
-   type Slot_Range is range 1 .. 4;
-
    --  Set active session slot.
    procedure Set (Slot : Slot_Range);
 

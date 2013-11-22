@@ -19,7 +19,7 @@
 with SK.IO;
 
 with Input;
-with Terminals;
+with Mux.Terminals;
 with Driver_Keyboard.Scancodes;
 
 package body Driver_Keyboard
@@ -90,7 +90,7 @@ is
                            Event => Ev);
 
          if Ev /= Input.Null_Key_Event then
-            Terminals.Process_Key (Event => Ev);
+            Mux.Terminals.Process_Key (Event => Ev);
          end if;
       end loop;
    end Handle;

@@ -17,7 +17,7 @@
 --
 
 with Log;
-with Terminals;
+with Mux;
 with Driver_Keyboard;
 
 package body Interrupt_Handler
@@ -28,7 +28,7 @@ is
    procedure Handle_Interrupt (Vector : SK.Byte)
    is
       use type SK.Byte;
-      use type Terminals.Slot_Range;
+      use type Mux.Slot_Range;
    begin
       if Vector /= 49 then
          Log.Text_IO.Put_String (Item => "Ignoring spurious interrupt ");

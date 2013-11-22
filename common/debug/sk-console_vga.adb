@@ -83,17 +83,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Enable_Cursor
-   is
-   begin
-      IO.Outb (Port  => 16#3d4#,
-               Value => 10);
-      IO.Outb (Port  => 16#3d5#,
-               Value => 13);
-   end Enable_Cursor;
-
-   -------------------------------------------------------------------------
-
    procedure Init
    is
    begin
@@ -201,6 +190,17 @@ is
    begin
       Cur_Txt_Color := Color;
    end Set_Text_Color;
+
+   -------------------------------------------------------------------------
+
+   procedure Show_Cursor
+   is
+   begin
+      IO.Outb (Port  => 16#3d4#,
+               Value => 10);
+      IO.Outb (Port  => 16#3d5#,
+               Value => 13);
+   end Show_Cursor;
 
    -------------------------------------------------------------------------
 

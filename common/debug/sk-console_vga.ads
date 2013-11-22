@@ -74,8 +74,8 @@ is
    --  Set current X position.
    procedure Set_Position (X : Width_Type);
 
-   --  Enable position cursor.
-   procedure Enable_Cursor;
+   --  Show cursor.
+   procedure Show_Cursor;
 
    --  Update cursor position.
    procedure Update_Cursor;

@@ -37,4 +37,7 @@ is
    --  Process given key event.
    procedure Process_Key (Event : Input.Key_Event_Type);
 
+   --  Queue channel update request.
+   procedure Queue_Request;
+
 end Mux.Terminals;

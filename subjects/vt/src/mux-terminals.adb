@@ -35,6 +35,10 @@ is
    VGA_CRT_Idx_Start_High : constant := 16#0c#;
    VGA_CRT_Idx_Start_Low  : constant := 16#0d#;
 
+   --  Number of pending channel read requests.
+   Pending_Requests : Natural := 0;
+   pragma Atomic (Pending_Requests);
+
    --  Read data from input channels if new data is present.
    procedure Update_In_Channels;
 
@@ -89,6 +93,14 @@ is
             Mux.Channels.Write (Event);
       end case;
    end Process_Key;
+
+   -------------------------------------------------------------------------
+
+   procedure Queue_Request
+   is
+   begin
+      Pending_Requests := Pending_Requests + 1;
+   end Queue_Request;
 
    -------------------------------------------------------------------------
 

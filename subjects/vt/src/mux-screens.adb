@@ -33,6 +33,10 @@ is
      (Base_Address => 16#000b_a000#);
    package T3 renames Term3_Package;
 
+   package Term4_Package is new Terminal_Screen
+     (Base_Address => 16#000b_b000#);
+   package T4 renames Term4_Package;
+
    -------------------------------------------------------------------------
 
    procedure Init
@@ -41,6 +45,7 @@ is
       T1.Init;
       T2.Init;
       T3.Init;
+      T4.Init;
    end Init;
 
    -------------------------------------------------------------------------
@@ -55,7 +60,7 @@ is
          when 1 => T1.Update (Char => Char);
          when 2 => T2.Update (Char => Char);
          when 3 => T3.Update (Char => Char);
-         when 4 => null;
+         when 4 => T4.Update (Char => Char);
       end case;
    end Update;
 

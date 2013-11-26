@@ -21,6 +21,7 @@ with SK.Utils;
 with Pack.OS;
 with Ada.Streams.Stream_IO;
 use Ada.Streams.Stream_IO;
+use SK;
 
 package body Pack.Image
 is
@@ -56,6 +57,15 @@ is
       pragma Pack (Sector);
       S : Sector;
       Setup_Sectors : Integer := 4;
+
+      Match : Boolean;
+      bzImage64BitEntryPoint : constant array (0 .. 21) of SK.Byte :=
+          (16#fc#, 16#f6#, 16#86#, 16#11#,
+           16#02#, 16#00#, 16#00#, 16#40#,
+           16#75#, 16#0c#, 16#fa#, 16#b8#,
+           16#18#, 16#00#, 16#00#, 16#00#,
+           16#8e#, 16#d8#, 16#8e#, 16#c0#,
+           16#8e#, 16#d0#);
    begin
       Open (Name => Src, File => File_In, Mode => In_File);
       Create (Name => Dst_Bin, File => File_Out, Mode => Out_File);
@@ -66,6 +76,38 @@ is
       for I in Integer range 2 .. Setup_Sectors loop
          Sector'Read (Stream (File => File_In), S);
       end loop;
+
+      begin
+         Sector'Read (Stream (File => File_In), S);
+      exception
+         when End_Error => null;
+      end;
+
+      --  This is special handling for the bzImage entry point.
+      --  It tries to load segment selectors from the GDT, but
+      --  fails since Muen doesn't setup that table at all.
+      --  On the upside, it configures the segment selectors
+      --  properly, so we don't need this here.
+      --  Note: There's a Linux bootparams flag "KEEP_SEGMENTS"
+      --        that would work similarily. Unfortunately it
+      --        also disables later segment configuration code
+      --        that we _do_ need.
+      --  We assume that there are only two entry points, one
+      --  for each of 32bit and 64bit mode images.
+      Match := True;
+      for I in bzImage64BitEntryPoint'Range loop
+         if S (I) /= bzImage64BitEntryPoint (I) then
+            Match := False;
+         end if;
+      end loop;
+      if Match then
+         for I in bzImage64BitEntryPoint'Range loop
+            S (I) := 16#90#; --  overwrite with NOP
+         end loop;
+      end if;
+
+      Sector'Write (Stream (File => File_Out), S);
+
       while not Ada.Streams.Stream_IO.End_Of_File (File_In) loop
          begin
             Sector'Read (Stream (File => File_In), S);

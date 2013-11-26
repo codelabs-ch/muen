@@ -12,7 +12,7 @@ all: .built
 	@make CC=$(CC) HOSTCC=$(HOSTCC) -j$(NUM_CPUS) -C src
 	@touch $@
 
-src/.config: config/linux-$(CONFIG)
+src/.config: config/linux64-$(CONFIG)
 	@cp $< $@
 
 clean:

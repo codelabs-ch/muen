@@ -59,6 +59,14 @@ is
       Setup_Sectors : Integer := 4;
 
       Match : Boolean;
+      bzImage32BitEntryPoint : constant array (0 .. 25) of SK.Byte :=
+          (16#fc#, 16#f6#, 16#86#, 16#11#,
+           16#02#, 16#00#, 16#00#, 16#40#,
+           16#75#, 16#10#, 16#fa#, 16#b8#,
+           16#18#, 16#00#, 16#00#, 16#00#,
+           16#8e#, 16#d8#, 16#8e#, 16#c0#,
+           16#8e#, 16#e0#, 16#8e#, 16#e8#,
+           16#8e#, 16#d0#);
       bzImage64BitEntryPoint : constant array (0 .. 21) of SK.Byte :=
           (16#fc#, 16#f6#, 16#86#, 16#11#,
            16#02#, 16#00#, 16#00#, 16#40#,
@@ -94,6 +102,17 @@ is
       --        that we _do_ need.
       --  We assume that there are only two entry points, one
       --  for each of 32bit and 64bit mode images.
+      Match := True;
+      for I in bzImage32BitEntryPoint'Range loop
+         if S (I) /= bzImage32BitEntryPoint (I) then
+            Match := False;
+         end if;
+      end loop;
+      if Match then
+         for I in bzImage32BitEntryPoint'Range loop
+            S (I) := 16#90#; --  overwrite with NOP
+         end loop;
+      end if;
       Match := True;
       for I in bzImage64BitEntryPoint'Range loop
          if S (I) /= bzImage64BitEntryPoint (I) then

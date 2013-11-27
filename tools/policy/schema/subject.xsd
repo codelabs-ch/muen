@@ -82,6 +82,13 @@
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+		<xs:attribute name="cmdline" type="cmdline_type" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					Command line for Linux.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 	</xs:complexType>
 
 	<xs:complexType name="subjects_type">
@@ -189,5 +196,16 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-
+	<xs:simpleType name="cmdline_type">
+		<xs:annotation>
+			<xs:documentation>
+				Linux command line string, at most 4095 characters long.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="4095"/>
+			<xs:pattern value="[ -~]*"/>
+		</xs:restriction>
+	</xs:simpleType>
 </xs:schema>

@@ -364,6 +364,9 @@ is
          ACPIT_Str   : constant String  := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "acpi_tables_address");
+         CMDL_Str    : constant String  := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "cmdline");
 
          Ports      : IO_Ports_Type;
          MSRs       : MSRs_Type;
@@ -665,6 +668,7 @@ is
                MSR_Bitmap_Address => To_Word64 (Hex => MSRBM_Str),
                ZP_Bitmap_Address  => ZP_Addr,
                ACPI_Base_Address  => ACPI_Addr,
+               Command_Line       => To_Unbounded_String (CMDL_Str),
                Init_State         => State,
                Memory_Layout      => Subj_Mem,
                Binary             => Subj_Bin,

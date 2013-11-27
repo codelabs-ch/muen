@@ -230,6 +230,7 @@ is
       MSR_Bitmap_Address : SK.Word64;
       ZP_Bitmap_Address  : SK.Word64;
       ACPI_Base_Address  : SK.Word64;
+      Command_Line       : Ada.Strings.Unbounded.Unbounded_String;
       Init_State         : Initial_State_Type;
       Memory_Layout      : Memory_Layout_Type;
       Binary             : Binary_Ref_Type;

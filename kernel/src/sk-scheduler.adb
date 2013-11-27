@@ -60,7 +60,8 @@ is
         CR4                => 0,
         RFLAGS             => 0,
         Kernel_GS_BASE     => 0,
-        IA32_EFER          => 0);
+        IA32_EFER          => 0,
+        XSAVE_Area         => SK.XSAVE_Area_Type'(others => 0));
 
    Tau0_Kernel_Iface_Address : SK.Word64;
    pragma Import (C, Tau0_Kernel_Iface_Address, "tau0kernel_iface_ptr");
@@ -115,6 +116,7 @@ is
                      Value => State.RFLAGS);
       VMX.VMCS_Read (Field => Constants.GUEST_IA32_EFER,
                      Value => State.IA32_EFER);
+      CPU.XSAVE (Target => State.XSAVE_Area);
    end Store_Subject_Info;
 
    -------------------------------------------------------------------------

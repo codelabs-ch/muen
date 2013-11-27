@@ -57,6 +57,13 @@ is
    --  Size of one page (4k).
    Page_Size : constant := 4096;
 
+   XSAVE_Area_Size : constant := (512 + 64) + 256;
+
+   type XSAVE_Area_Range is range 0 .. XSAVE_Area_Size - 1;
+
+   type XSAVE_Area_Type is array (XSAVE_Area_Range) of Byte;
+   for XSAVE_Area_Type'Alignment use 64;
+
    --  Subject state.
    type Subject_State_Type is record
       Launched           : Boolean;
@@ -78,6 +85,7 @@ is
       RFLAGS             : Word64;
       IA32_EFER          : Word64;
       Kernel_GS_BASE     : Word64;
+      XSAVE_Area         : XSAVE_Area_Type;
    end record;
 
    Null_Subject_State : constant Subject_State_Type;
@@ -139,6 +147,7 @@ private
         CR4                => 0,
         RFLAGS             => 0,
         IA32_EFER          => 0,
-        Kernel_GS_BASE     => 0);
+        Kernel_GS_BASE     => 0,
+        XSAVE_Area         => XSAVE_Area_Type'(others => 0));
 
 end SK;

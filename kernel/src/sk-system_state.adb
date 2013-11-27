@@ -77,6 +77,30 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Returns True if possible and configured XSAVE area is
+   --  512 + 64 + 256 bytes (the size we expect) and EAX/EDX
+   --  report support for FPU, SSE, and AVX
+   function Has_Expected_XSAVE_Size return Boolean
+   --# global
+   --#    X86_64.State;
+   is
+      EAX, EBX, ECX, EDX : SK.Word32;
+   begin
+      EAX := 16#d#;
+      ECX := 0;
+
+      CPU.CPUID
+        (EAX => EAX,
+         EBX => EBX,
+         ECX => ECX,
+         EDX => EDX);
+
+      return (EAX = 7) and (EDX = 0) and
+        (EBX = SK.XSAVE_Area_Size) and (ECX = SK.XSAVE_Area_Size);
+   end Has_Expected_XSAVE_Size;
+
+   -------------------------------------------------------------------------
+
    --  Returns True if local APIC is present and supports x2APIC mode, see
    --  Intel SDM 3A, chapters 10.4.2 and 10.12.1.
    function Has_X2_Apic return Boolean
@@ -141,7 +165,7 @@ is
 
       VMX_Support, VMX_Disabled_Locked, Protected_Mode, Paging : Boolean;
       IA_32e_Mode, Apic_Support, CR0_Valid, CR4_Valid          : Boolean;
-      Not_Virtual_8086, In_SMX                                 : Boolean;
+      Not_Virtual_8086, In_SMX, XSAVE_Support                  : Boolean;
    begin
       VMX_Support := Has_VMX_Support;
       pragma Debug
@@ -210,6 +234,11 @@ is
       pragma Debug
         (not Apic_Support, KC.Put_Line (Item => "Local x2APIC not present"));
 
+      XSAVE_Support := Has_Expected_XSAVE_Size;
+      pragma Debug
+        (not XSAVE_Support, KC.Put_Line
+             (Item => "XSAVE not properly configured"));
+
       return VMX_Support        and
         not VMX_Disabled_Locked and
         Protected_Mode          and
@@ -219,7 +248,8 @@ is
         not In_SMX              and
         CR0_Valid               and
         CR4_Valid               and
-        Apic_Support;
+        Apic_Support            and
+        XSAVE_Support;
    end Is_Valid;
 
 end SK.System_State;

@@ -27,14 +27,15 @@
 #define IA32_PAT       0x277
 #define IA32_EFER      0xc0000080
 
-#define CR0_NE_BIT   5
-#define CR0_WP_BIT   16
-#define CR0_NW_BIT   29
-#define CR0_CD_BIT   30
-#define CR0_PG_BIT   31
-#define CR4_PAE_BIT  5
-#define EFER_LME_BIT 8
-#define EFER_NXE_BIT 11
+#define CR0_NE_BIT    5
+#define CR0_WP_BIT    16
+#define CR0_NW_BIT    29
+#define CR0_CD_BIT    30
+#define CR0_PG_BIT    31
+#define CR4_PAE_BIT   5
+#define CR4_XSAVE_BIT 18
+#define EFER_LME_BIT  8
+#define EFER_NXE_BIT  11
 
 // clear pagecount number of 4k memory starting at given address
 .macro clear address pagecount
@@ -97,7 +98,14 @@ ap_entry_point:
 
 	movl %cr4, %eax
 	btsl $CR4_PAE_BIT, %eax
+	btsl $CR4_XSAVE_BIT, %eax
 	movl %eax, %cr4
+
+	// configure XCR0 (for XSAVE/XRSTOR)
+	movl $0, %ecx // XCR0
+	movl $0, %edx
+	movl $7, %eax // bits 0-2: FPU, SSE, AVX
+	xsetbv
 
 	// get CPU ID and increment counter
 

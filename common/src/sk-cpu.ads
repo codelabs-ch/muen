@@ -217,4 +217,18 @@ is
    --#    X86_64.State, Success from X86_64.State, Field, Value;
    pragma Inline_Always (VMWRITE);
 
+   procedure XRSTOR (Source : SK.XSAVE_Area_Type);
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from X86_64.State, Source;
+   pragma Inline_Always (XRSTOR);
+
+   procedure XSAVE (Target : out SK.XSAVE_Area_Type);
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State, Target from X86_64.State;
+   pragma Inline_Always (XSAVE);
+
 end SK.CPU;

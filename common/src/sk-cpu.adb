@@ -356,4 +356,32 @@ is
                  High     => High_Dword);
    end Write_MSR64;
 
+   -------------------------------------------------------------------------
+
+   procedure XRSTOR (Source : SK.XSAVE_Area_Type)
+   is
+      --# hide XRSTOR;
+   begin
+      System.Machine_Code.Asm
+        (Template => "xrstor64 %2",
+         Inputs   => (SK.Word32'Asm_Input ("a", 7),
+                      SK.Word32'Asm_Input ("d", 0),
+                      SK.XSAVE_Area_Type'Asm_Input ("m", Source)),
+         Volatile => True);
+   end XRSTOR;
+
+   -------------------------------------------------------------------------
+
+   procedure XSAVE (Target : out SK.XSAVE_Area_Type)
+   is
+      --# hide XSAVE;
+   begin
+      System.Machine_Code.Asm
+        (Template => "xsave64 %0",
+         Inputs   => (SK.Word32'Asm_Input ("a", 7),
+                      SK.Word32'Asm_Input ("d", 0)),
+         Outputs  => (SK.XSAVE_Area_Type'Asm_Output ("=m", Target)),
+         Volatile => True);
+   end XSAVE;
+
 end SK.CPU;

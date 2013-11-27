@@ -1030,8 +1030,12 @@ is
                     := Dir_Name & "/" & To_String (S.Name) & "_zp";
                   CMDL_File : constant String
                     := Dir_Name & "/" & To_String (S.Name) & "_cmdl";
+                  CMDL_Address : constant := 16#0009_f000#; --  This shouldn't
+                                                            --  change.
                begin
-                  Zero_Page.Write (Filename => ZP_File);
+                  Zero_Page.Write
+                    (CMDL_Address => CMDL_Address,
+                     Filename     => ZP_File);
                   Packer_Config.Add_File
                     (Filename => Policy_Topdir & "/" & ZP_File,
                      Address  => S.ZP_Bitmap_Address,

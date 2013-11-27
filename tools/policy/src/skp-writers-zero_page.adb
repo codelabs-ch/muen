@@ -41,7 +41,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Write (Filename : String)
+   procedure Write (CMDL_Address : SK.Word32; Filename : String)
    is
       use Ada.Streams.Stream_IO;
       use type Interfaces.C.size_t;
@@ -76,7 +76,9 @@ is
       Params.the_screen_info.orig_video_lines   := 25;
       Params.the_screen_info.orig_video_points  := 16;
 
-      Params.hdr.kernel_alignment := 16#1000000#;
+      Params.hdr.cmd_line_ptr     := Interfaces.C.unsigned (CMDL_Address);
+      Params.hdr.cmdline_size     := 16#0000_0fff#;
+      Params.hdr.kernel_alignment := 16#0100_0000#;
 
       Open (Filename => Filename,
             File     => File);

@@ -20,6 +20,6 @@ private package Skp.Writers.Zero_Page
 is
 
    --  Write Linux bootparams structure to file given by filename.
-   procedure Write (Filename : String);
+   procedure Write (CMDL_Address : SK.Word32; Filename : String);
 
 end Skp.Writers.Zero_Page;

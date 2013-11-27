@@ -100,6 +100,7 @@ begin
                State.Regs.RCX := 16#0000_0000#;
                --  Features:
                --  Bit  1 -   FPU: x87 enabled
+               --  Bit  3 -   PSE: Page Size Extensions
                --  Bit  5 -   MSR: RD/WR MSR
                --  Bit  6 -   PAE: PAE and 64bit page tables
                --  Bit  8 -   CX8: CMPXCHG8B Instruction
@@ -109,7 +110,7 @@ begin
                --  Bit 24 -  FXSR: FX SAVE/RESTORE
                --  Bit 25 -   SSE: SSE support
                --  Bit 26 -  SSE2: SSE2 support
-               State.Regs.RDX := 16#0708_8961#;
+               State.Regs.RDX := 16#0708_8969#;
             when 16#8000_0000# =>
 
                --  Get Highest Extended Function Supported.

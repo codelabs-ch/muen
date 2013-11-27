@@ -31,6 +31,7 @@ with Skp.Templates;
 with Skp.Constants;
 with Skp.Writers.Packer_Config;
 with Skp.Writers.Zero_Page;
+with Skp.Writers.Cmd_Line;
 with Skp.Writers.ACPI;
 with Skp.Writers.ACPI_RSDP;
 with Skp.Writers.ACPI_XSDT;
@@ -1027,11 +1028,20 @@ is
                declare
                   ZP_File : constant String
                     := Dir_Name & "/" & To_String (S.Name) & "_zp";
+                  CMDL_File : constant String
+                    := Dir_Name & "/" & To_String (S.Name) & "_cmdl";
                begin
                   Zero_Page.Write (Filename => ZP_File);
                   Packer_Config.Add_File
                     (Filename => Policy_Topdir & "/" & ZP_File,
                      Address  => S.ZP_Bitmap_Address,
+                     Kind     => Packer_Config.Zeropage);
+                  Cmd_Line.Write
+                    (Cmdline  => To_String (S.Command_Line),
+                     Filename => CMDL_File);
+                  Packer_Config.Add_File
+                    (Filename => Policy_Topdir & "/" & CMDL_File,
+                     Address  => S.ZP_Bitmap_Address + 16#1000#,
                      Kind     => Packer_Config.Zeropage);
                end;
             end if;

@@ -1060,25 +1060,26 @@ is
                     := Dir_Name & "/" & To_String (S.Name) & "_facp";
                   DSDT_File : constant String
                     := "acpi/DSDT.aml";
+                  Base_Address : constant := 16#000e_0000#; --  This shouldn't
+                                                            --  change.
                begin
                   ACPI_RSDP.Write
-                    (S.ACPI_Base_Address - 16#0020_0000#, --  FIXME: Find guest
-                                                         --   physical address
-                     Filename => RSDP_File);
+                    (ACPI_Tables_Base => Base_Address,
+                     Filename         => RSDP_File);
                   Packer_Config.Add_File
                     (Filename => Policy_Topdir & "/" & RSDP_File,
                      Address  => S.ACPI_Base_Address,
                      Kind     => Packer_Config.Acpitable);
                   ACPI_XSDT.Write
-                    (S.ACPI_Base_Address - 16#0020_0000#,
-                     Filename => XSDT_File);
+                    (ACPI_Tables_Base => Base_Address,
+                     Filename         => XSDT_File);
                   Packer_Config.Add_File
                     (Filename => Policy_Topdir & "/" & XSDT_File,
                      Address  => S.ACPI_Base_Address + ACPI.XSDT_Offset,
                      Kind     => Packer_Config.Acpitable);
                   ACPI_FADT.Write
-                    (S.ACPI_Base_Address - 16#0020_0000#,
-                     Filename => FADT_File);
+                    (ACPI_Tables_Base => Base_Address,
+                     Filename         => FADT_File);
                   Packer_Config.Add_File
                     (Filename => Policy_Topdir & "/" & FADT_File,
                      Address  => S.ACPI_Base_Address + ACPI.FADT_Offset,

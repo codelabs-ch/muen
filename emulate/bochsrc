@@ -6,6 +6,7 @@ cpu: cpuid_limit_winnt=0
 
 cpuid: x86_64=1, vmx=2, apic=x2apic
 cpuid: family=6, model=0x1a, stepping=5
+cpuid: simd=avx, xsave=1
 
 megs: 512
 

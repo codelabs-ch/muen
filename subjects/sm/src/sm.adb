@@ -41,8 +41,6 @@ is
    State         : SK.Subject_State_Type;
    for State'Address use System'To_Address (16#1e0000#);
 
-   MSR_FS_BASE        : constant := 16#c0000100#;
-   MSR_GS_BASE        : constant := 16#c0000101#;
    MSR_KERNEL_GS_BASE : constant := 16#c0000102#;
 
 begin
@@ -292,10 +290,6 @@ begin
                Subject.Text_IO.Put_Line (Item => "RDMSR 16#1a0#");
                State.Regs.RAX := 16#1800#;
                State.Regs.RDX := 0;
-            when MSR_FS_BASE =>
-               State.Regs.RAX := State.FS_BASE;
-            when MSR_GS_BASE =>
-               State.Regs.RAX := State.GS_BASE;
             when MSR_KERNEL_GS_BASE =>
                State.Regs.RAX := State.Kernel_GS_BASE;
             when others =>
@@ -317,10 +311,6 @@ begin
                Subject.Text_IO.Put_Word32
                  (Item => SK.Word32 (State.Regs.RAX and 16#ffff_ffff#));
                Subject.Text_IO.New_Line;
-            when MSR_FS_BASE =>
-               State.FS_BASE := State.Regs.RAX;
-            when MSR_GS_BASE =>
-               State.GS_BASE := State.Regs.RAX;
             when MSR_KERNEL_GS_BASE =>
                State.Kernel_GS_BASE := State.Regs.RAX;
             when others =>

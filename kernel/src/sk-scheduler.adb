@@ -59,8 +59,6 @@ is
         CR3                => 0,
         CR4                => 0,
         RFLAGS             => 0,
-        FS_BASE            => 0,
-        GS_BASE            => 0,
         Kernel_GS_BASE     => 0,
         IA32_EFER          => 0);
 
@@ -108,10 +106,6 @@ is
                      Value => State.CR0);
       VMX.VMCS_Read (Field => Constants.CR0_READ_SHADOW,
                      Value => State.SHADOW_CR0);
-      VMX.VMCS_Read (Field => Constants.GUEST_FS_BASE,
-                     Value => State.FS_BASE);
-      VMX.VMCS_Read (Field => Constants.GUEST_GS_BASE,
-                     Value => State.GS_BASE);
       State.CR2 := CPU.Get_CR2;
       VMX.VMCS_Read (Field => Constants.GUEST_CR3,
                      Value => State.CR3);

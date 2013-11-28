@@ -452,10 +452,6 @@ is
                   Value => State.CR0);
       VMCS_Write (Field => Constants.CR0_READ_SHADOW,
                   Value => State.SHADOW_CR0);
-      VMCS_Write (Field => Constants.GUEST_FS_BASE,
-                  Value => State.FS_BASE);
-      VMCS_Write (Field => Constants.GUEST_GS_BASE,
-                  Value => State.GS_BASE);
 
       if CPU.Get_CR2 /= State.CR2 then
          CPU.Set_CR2 (Value => State.CR2);

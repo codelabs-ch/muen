@@ -190,10 +190,11 @@ is
 
    -------------------------------------------------------------------------
 
-   XSDT_Offset : SK.Word64 := Root_System_Description_Pointer'Size / 8;
-   FADT_Offset : SK.Word64 := XSDT_Offset +
-                              Extended_System_Description_Table'Size / 8;
-   DSDT_Offset : SK.Word64 := FADT_Offset +
-                              Fixed_ACPI_Description_Table'Size / 8;
+   XSDT_Offset : constant SK.Word64
+     := Root_System_Description_Pointer'Size / 8;
+   FADT_Offset : constant SK.Word64
+     := XSDT_Offset + Extended_System_Description_Table'Size / 8;
+   DSDT_Offset : constant SK.Word64
+     := FADT_Offset + Fixed_ACPI_Description_Table'Size / 8;
 
 end Skp.Writers.ACPI;

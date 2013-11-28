@@ -42,18 +42,18 @@ package Skp.Interrupts is
        1 => IRQ_Route_Type'(
          CPU    => 1,
          IRQ    => 12,
-         Vector => 44),
+         Vector => 60),
        2 => IRQ_Route_Type'(
          CPU    => 1,
          IRQ    => 15,
-         Vector => 47));
+         Vector => 63));
 
    type Vector_Routing_Array is array (Remapped_Vector_Type)
      of Skp.Dst_Subject_Type;
 
    Vector_Routing : constant Vector_Routing_Array := Vector_Routing_Array'(
-       44 => 1,
-       47 => 1,
+       60 => 1,
+       63 => 1,
        others => Skp.Invalid_Subject);
 
 end Skp.Interrupts;

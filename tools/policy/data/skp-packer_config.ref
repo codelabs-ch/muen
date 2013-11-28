@@ -32,7 +32,8 @@ package Skp.Packer_Config is
       Pagetable,
       Rawbinary,
       Zeropage,
-      Acpitable);
+      Acpitable,
+      Bzimagebinary);
 
    type File_Type is record
       Path             : Unbounded_String;

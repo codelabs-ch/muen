@@ -41,12 +41,9 @@ is
    State         : SK.Subject_State_Type;
    for State'Address use System'To_Address (16#1e0000#);
 
-   MSR_IA32_SYSENTER_CS  : constant := 16#174#;
-   MSR_IA32_SYSENTER_EIP : constant := 16#175#;
-   MSR_IA32_SYSENTER_ESP : constant := 16#176#;
-   MSR_FS_BASE           : constant := 16#c0000100#;
-   MSR_GS_BASE           : constant := 16#c0000101#;
-   MSR_KERNEL_GS_BASE    : constant := 16#c0000102#;
+   MSR_FS_BASE        : constant := 16#c0000100#;
+   MSR_GS_BASE        : constant := 16#c0000101#;
+   MSR_KERNEL_GS_BASE : constant := 16#c0000102#;
 
 begin
    Subject.Console.Enable_Notification;
@@ -301,12 +298,6 @@ begin
                State.Regs.RAX := State.GS_BASE;
             when MSR_KERNEL_GS_BASE =>
                State.Regs.RAX := State.Kernel_GS_BASE;
-            when MSR_IA32_SYSENTER_CS =>
-               State.Regs.RAX := State.IA32_SYSENTER_CS;
-            when MSR_IA32_SYSENTER_EIP =>
-               State.Regs.RAX := State.IA32_SYSENTER_EIP;
-            when MSR_IA32_SYSENTER_ESP =>
-               State.Regs.RAX := State.IA32_SYSENTER_ESP;
             when others =>
                Subject.Text_IO.Put_Line (Item => "RDMSR");
                Dump_And_Halt := True;
@@ -332,12 +323,6 @@ begin
                State.GS_BASE := State.Regs.RAX;
             when MSR_KERNEL_GS_BASE =>
                State.Kernel_GS_BASE := State.Regs.RAX;
-            when MSR_IA32_SYSENTER_CS =>
-               State.IA32_SYSENTER_CS := State.Regs.RAX;
-            when MSR_IA32_SYSENTER_EIP =>
-               State.IA32_SYSENTER_EIP := State.Regs.RAX;
-            when MSR_IA32_SYSENTER_ESP =>
-               State.IA32_SYSENTER_ESP := State.Regs.RAX;
             when others =>
                Subject.Text_IO.Put_Line (Item => "WRMSR");
                Dump_And_Halt := True;

@@ -62,9 +62,6 @@ is
         FS_BASE            => 0,
         GS_BASE            => 0,
         Kernel_GS_BASE     => 0,
-        IA32_SYSENTER_CS   => 0,
-        IA32_SYSENTER_EIP  => 0,
-        IA32_SYSENTER_ESP  => 0,
         IA32_EFER          => 0);
 
    Tau0_Kernel_Iface_Address : SK.Word64;
@@ -115,12 +112,6 @@ is
                      Value => State.FS_BASE);
       VMX.VMCS_Read (Field => Constants.GUEST_GS_BASE,
                      Value => State.GS_BASE);
-      VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_CS,
-                     Value => State.IA32_SYSENTER_CS);
-      VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_EIP,
-                     Value => State.IA32_SYSENTER_EIP);
-      VMX.VMCS_Read (Field => Constants.GUEST_SYSENTER_ESP,
-                     Value => State.IA32_SYSENTER_ESP);
       State.CR2 := CPU.Get_CR2;
       VMX.VMCS_Read (Field => Constants.GUEST_CR3,
                      Value => State.CR3);

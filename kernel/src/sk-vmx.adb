@@ -456,12 +456,6 @@ is
                   Value => State.FS_BASE);
       VMCS_Write (Field => Constants.GUEST_GS_BASE,
                   Value => State.GS_BASE);
-      VMCS_Write (Field => Constants.GUEST_SYSENTER_CS,
-                  Value => State.IA32_SYSENTER_CS);
-      VMCS_Write (Field => Constants.GUEST_SYSENTER_EIP,
-                  Value => State.IA32_SYSENTER_EIP);
-      VMCS_Write (Field => Constants.GUEST_SYSENTER_ESP,
-                  Value => State.IA32_SYSENTER_ESP);
 
       if CPU.Get_CR2 /= State.CR2 then
          CPU.Set_CR2 (Value => State.CR2);

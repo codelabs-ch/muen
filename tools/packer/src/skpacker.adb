@@ -122,7 +122,7 @@ begin
          end if;
 
          if Files (F).Kind = Bzimagebinary then
-            Image.Parse_Bzimage (Src => To_String (Fn),
+            Image.Parse_Bzimage (Src     => To_String (Fn),
                                  Dst_Bin => Raw);
             Fn := To_Unbounded_String (Raw);
          end if;

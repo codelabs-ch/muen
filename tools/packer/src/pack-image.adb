@@ -16,12 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Streams.Stream_IO;
+
 with SK.Utils;
 
 with Pack.OS;
-with Ada.Streams.Stream_IO;
-use Ada.Streams.Stream_IO;
-use SK;
 
 package body Pack.Image
 is
@@ -50,15 +49,12 @@ is
      (Src     : String;
       Dst_Bin : String)
    is
-      File_In  : Ada.Streams.Stream_IO.File_Type;
-      File_Out : Ada.Streams.Stream_IO.File_Type;
+      use Ada.Streams.Stream_IO;
+      use type SK.Byte;
 
       type Sector is array (0 .. 511) of SK.Byte;
       pragma Pack (Sector);
-      S : Sector;
-      Setup_Sectors : Integer := 4;
 
-      Match : Boolean;
       bzImage32BitEntryPoint : constant array (0 .. 25) of SK.Byte :=
           (16#fc#, 16#f6#, 16#86#, 16#11#,
            16#02#, 16#00#, 16#00#, 16#40#,
@@ -74,9 +70,21 @@ is
            16#18#, 16#00#, 16#00#, 16#00#,
            16#8e#, 16#d8#, 16#8e#, 16#c0#,
            16#8e#, 16#d0#);
+
+      File_In  : File_Type;
+      File_Out : File_Type;
+
+      S             : Sector;
+      Match         : Boolean;
+      Setup_Sectors : Integer := 4;
    begin
-      Open (Name => Src, File => File_In, Mode => In_File);
-      Create (Name => Dst_Bin, File => File_Out, Mode => Out_File);
+      Open (Name => Src,
+            File => File_In,
+            Mode => In_File);
+      Create (Name => Dst_Bin,
+              File => File_Out,
+              Mode => Out_File);
+
       Sector'Read (Stream (File => File_In), S);
       if Natural (S (497)) > 0 then
          Setup_Sectors := Natural (S (497)) + 1;
@@ -91,17 +99,16 @@ is
          when End_Error => null;
       end;
 
-      --  This is special handling for the bzImage entry point.
-      --  It tries to load segment selectors from the GDT, but
-      --  fails since Muen doesn't setup that table at all.
-      --  On the upside, it configures the segment selectors
-      --  properly, so we don't need this here.
-      --  Note: There's a Linux bootparams flag "KEEP_SEGMENTS"
-      --        that would work similarily. Unfortunately it
-      --        also disables later segment configuration code
-      --        that we _do_ need.
-      --  We assume that there are only two entry points, one
-      --  for each of 32bit and 64bit mode images.
+      --  This is special handling for the bzImage entry point. It tries to
+      --  load segment selectors from the GDT, but fails since Muen doesn't
+      --  setup that table at all.
+      --  On the upside, it configures the segment selectors properly, so we
+      --  don't need this here.
+      --  Note: There's a Linux bootparams flag "KEEP_SEGMENTS" that would work
+      --        similarily. Unfortunately it also disables later segment
+      --        configuration code that we _do_ need.
+      --  We assume that there are only two entry points, one for each of 32bit
+      --  and 64bit mode images.
       Match := True;
       for I in bzImage32BitEntryPoint'Range loop
          if S (I) /= bzImage32BitEntryPoint (I) then

@@ -52,10 +52,12 @@ is
       use Ada.Streams.Stream_IO;
       use type SK.Byte;
 
-      type Sector is array (0 .. 511) of SK.Byte;
-      pragma Pack (Sector);
+      type Byte_Array is array (Natural range <>) of SK.Byte;
+      pragma Pack (Byte_Array);
 
-      bzImage32BitEntryPoint : constant array (0 .. 25) of SK.Byte :=
+      subtype Sector is Byte_Array (0 .. 511);
+
+      bzImage32BitEntryPoint : constant Byte_Array (0 .. 25) :=
           (16#fc#, 16#f6#, 16#86#, 16#11#,
            16#02#, 16#00#, 16#00#, 16#40#,
            16#75#, 16#10#, 16#fa#, 16#b8#,
@@ -63,7 +65,7 @@ is
            16#8e#, 16#d8#, 16#8e#, 16#c0#,
            16#8e#, 16#e0#, 16#8e#, 16#e8#,
            16#8e#, 16#d0#);
-      bzImage64BitEntryPoint : constant array (0 .. 21) of SK.Byte :=
+      bzImage64BitEntryPoint : constant Byte_Array (0 .. 21) :=
           (16#fc#, 16#f6#, 16#86#, 16#11#,
            16#02#, 16#00#, 16#00#, 16#40#,
            16#75#, 16#0c#, 16#fa#, 16#b8#,
@@ -75,7 +77,6 @@ is
       File_Out : File_Type;
 
       S             : Sector;
-      Match         : Boolean;
       Setup_Sectors : Integer := 4;
    begin
       Open (Name => Src,
@@ -109,27 +110,17 @@ is
       --        configuration code that we _do_ need.
       --  We assume that there are only two entry points, one for each of 32bit
       --  and 64bit mode images.
-      Match := True;
-      for I in bzImage32BitEntryPoint'Range loop
-         if S (I) /= bzImage32BitEntryPoint (I) then
-            Match := False;
-         end if;
-      end loop;
-      if Match then
-         for I in bzImage32BitEntryPoint'Range loop
-            S (I) := 16#90#; --  overwrite with NOP
-         end loop;
-      end if;
-      Match := True;
-      for I in bzImage64BitEntryPoint'Range loop
-         if S (I) /= bzImage64BitEntryPoint (I) then
-            Match := False;
-         end if;
-      end loop;
-      if Match then
-         for I in bzImage64BitEntryPoint'Range loop
-            S (I) := 16#90#; --  overwrite with NOP
-         end loop;
+
+      if S (bzImage32BitEntryPoint'Range) = bzImage32BitEntryPoint then
+
+         --  Overwrite start of 32-bit bzImage entry point with NOP.
+
+         S (bzImage32BitEntryPoint'Range) := (others => 16#90#);
+      elsif S (bzImage64BitEntryPoint'Range) = bzImage64BitEntryPoint then
+
+         --  Overwrite start of 64-bit bzImage entry point with NOP.
+
+         S (bzImage64BitEntryPoint'Range) := (others => 16#90#);
       end if;
 
       Sector'Write (Stream (File => File_Out), S);

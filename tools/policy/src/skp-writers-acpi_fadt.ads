@@ -17,6 +17,8 @@ private package Skp.Writers.ACPI_FADT
 is
 
    --  Write Fixed ACPI Description Table to file given by filename.
-   procedure Write (ACPI_Tables_Base : SK.Word64; Filename : String);
+   procedure Write
+     (ACPI_Tables_Base : SK.Word64;
+      Filename         : String);
 
 end Skp.Writers.ACPI_FADT;

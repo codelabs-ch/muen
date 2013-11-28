@@ -19,22 +19,29 @@ package body Skp.Writers.ACPI is
 
    use type SK.Byte;
 
+   -------------------------------------------------------------------------
+
    function Checksum (Table : Table_T) return SK.Byte
    is
-      function FL_Checksum is
-         new Fixed_Length_Checksum (Table_T'Size / 8, Table_T);
+      function FL_Checksum is new Fixed_Length_Checksum
+        (Length  => Table_T'Size / 8,
+         Table_T => Table_T);
    begin
-      return FL_Checksum (Table);
+      return FL_Checksum (Table => Table);
    end Checksum;
+
+   -------------------------------------------------------------------------
 
    function Fixed_Length_Checksum (Table : Table_T) return SK.Byte
    is
       type Table_Bytes_T is array (1 .. Table_T'Size / 8) of SK.Byte;
-      function Table_Bytes is
-         new Ada.Unchecked_Conversion (Table_T, Table_Bytes_T);
+      function Table_Bytes is new Ada.Unchecked_Conversion
+        (Source => Table_T,
+         Target => Table_Bytes_T);
+
+      BA : constant Table_Bytes_T := Table_Bytes (S => Table);
 
       Sum : SK.Byte := 16#00#;
-      BA  : constant Table_Bytes_T := Table_Bytes (Table);
    begin
       for I in 1 .. Length loop
          Sum := Sum + BA (I);
@@ -44,30 +51,49 @@ package body Skp.Writers.ACPI is
 
    -------------------------------------------------------------------------
 
+   --  Create byte array ID of specified length from given string.
    generic
       type Idx is range <>;
       type ID_T is array (Idx) of SK.Byte;
    function To_ID_x (Str : String) return ID_T;
 
-   function To_ID_4 (Str : String) return ID_4 is
-      function To_ID is new To_ID_x (Range_4, ID_4);
+   -------------------------------------------------------------------------
+
+   function To_ID_4 (Str : String) return ID_4
+   is
+      function To_ID is new To_ID_x
+        (Idx  => Range_4,
+         ID_T => ID_4);
    begin
-      return To_ID (Str);
+      return To_ID (Str => Str);
    end To_ID_4;
 
-   function To_ID_6 (Str : String) return ID_6 is
-      function To_ID is new To_ID_x (Range_6, ID_6);
+   -------------------------------------------------------------------------
+
+   function To_ID_6 (Str : String) return ID_6
+   is
+      function To_ID is new To_ID_x
+        (Idx  => Range_6,
+         ID_T => ID_6);
    begin
-      return To_ID (Str);
+      return To_ID (Str => Str);
    end To_ID_6;
 
-   function To_ID_8 (Str : String) return ID_8 is
-      function To_ID is new To_ID_x (Range_8, ID_8);
+   -------------------------------------------------------------------------
+
+   function To_ID_8 (Str : String) return ID_8
+   is
+      function To_ID is new To_ID_x
+        (Idx  => Range_8,
+         ID_T => ID_8);
    begin
-      return To_ID (Str);
+      return To_ID (Str => Str);
    end To_ID_8;
 
-   function To_ID_x (Str : String) return ID_T is
+   -------------------------------------------------------------------------
+
+   function To_ID_x (Str : String) return ID_T
+   is
       ID : ID_T;
       Copy_Last : constant Idx := Idx
         (Integer'Min (Integer (ID'Last),

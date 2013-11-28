@@ -16,7 +16,9 @@
 package body Skp.Writers.Cmd_Line
 is
 
-   procedure Write (Cmdline : String; Filename : String)
+   procedure Write
+     (Cmdline  : String;
+      Filename : String)
    is
       use Ada.Streams.Stream_IO;
 

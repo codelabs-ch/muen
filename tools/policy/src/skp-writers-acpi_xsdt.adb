@@ -18,15 +18,17 @@ with Skp.Writers.ACPI;
 package body Skp.Writers.ACPI_XSDT
 is
 
-   procedure Write (ACPI_Tables_Base : SK.Word64; Filename : String)
+   procedure Write
+     (ACPI_Tables_Base : SK.Word64;
+      Filename         : String)
    is
       use Ada.Streams.Stream_IO;
       use type SK.Word64;
       use type SK.Word32;
       use type SK.Byte;
 
-      function XSDT_Checksum is
-         new ACPI.Checksum (ACPI.Extended_System_Description_Table);
+      function XSDT_Checksum is new ACPI.Checksum
+        (Table_T => ACPI.Extended_System_Description_Table);
 
       File : Ada.Streams.Stream_IO.File_Type;
       XSDT : ACPI.Extended_System_Description_Table;
@@ -45,7 +47,7 @@ is
          Entries  => ACPI.XSDT_Entries'
            (1 => ACPI_Tables_Base + ACPI.FADT_Offset));
 
-      XSDT.Header.Checksum := XSDT_Checksum (XSDT);
+      XSDT.Header.Checksum := XSDT_Checksum (Table => XSDT);
 
       Open (Filename => Filename,
             File     => File);

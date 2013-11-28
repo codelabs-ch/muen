@@ -18,7 +18,9 @@ with Skp.Writers.ACPI;
 package body Skp.Writers.ACPI_FADT
 is
 
-   procedure Write (ACPI_Tables_Base : SK.Word64; Filename : String)
+   procedure Write
+     (ACPI_Tables_Base : SK.Word64;
+      Filename         : String)
    is
       use Ada.Streams.Stream_IO;
       use type SK.Word64;
@@ -26,23 +28,23 @@ is
       use type SK.Word16;
       use type SK.Byte;
 
-      function FADT_Checksum is
-         new ACPI.Checksum (ACPI.Fixed_ACPI_Description_Table);
+      function FADT_Checksum is new ACPI.Checksum
+        (Table_T => ACPI.Fixed_ACPI_Description_Table);
 
       File : Ada.Streams.Stream_IO.File_Type;
       FADT : ACPI.Fixed_ACPI_Description_Table;
    begin
       FADT := ACPI.Fixed_ACPI_Description_Table'
         (Header => ACPI.System_Description_Table_Header'
-           (Signature         => ACPI.To_ID_4 ("FACP"),
-            Length            => FADT'Size / 8,
-            Revision          => 5,
-            Checksum          => 16#00#,
-            OEMID             => ACPI.To_ID_6 ("Muen"),
-            OEM_Table_ID      => ACPI.To_ID_8 (" first "),
-            OEM_Revision      => 0,
-            Creator_ID        => ACPI.To_ID_4 ("SKP"),
-            Creator_Revision  => ACPI.To_ID_4 ("DRTY")),
+           (Signature        => ACPI.To_ID_4 ("FACP"),
+            Length           => FADT'Size / 8,
+            Revision         => 5,
+            Checksum         => 16#00#,
+            OEMID            => ACPI.To_ID_6 ("Muen"),
+            OEM_Table_ID     => ACPI.To_ID_8 (" first "),
+            OEM_Revision     => 0,
+            Creator_ID       => ACPI.To_ID_4 ("SKP"),
+            Creator_Revision => ACPI.To_ID_4 ("DRTY")),
          FIRMWARE_CTRL        => 16#0000_0000#,
          DSDT                 => 16#0000_0000#,
          Reserved_1           => 16#00#,
@@ -95,7 +97,7 @@ is
          X_DSDT               => ACPI_Tables_Base + ACPI.DSDT_Offset,
          others               => ACPI.Null_Generic_Address);
 
-      FADT.Header.Checksum := FADT_Checksum (FADT);
+      FADT.Header.Checksum := FADT_Checksum (Table => FADT);
 
       Open (Filename => Filename,
             File     => File);

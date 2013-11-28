@@ -17,6 +17,8 @@ private package Skp.Writers.Cmd_Line
 is
 
    --  Write Linux command line to file given by filename.
-   procedure Write (Cmdline : String; Filename : String);
+   procedure Write
+     (Cmdline  : String;
+      Filename : String);
 
 end Skp.Writers.Cmd_Line;

@@ -26,7 +26,7 @@ package body Skp.Writers.Zero_Page
 is
 
    --  Memory size in bytes.
-   Memory_Size : constant := 256 * 1024 * 1024;
+   Memory_Size      : constant := 256 * 1024 * 1024;
    Memory_Size_High : constant := Memory_Size - 16#400000#;
 
    --  arch/x86/include/uapi/asm/e820.h.
@@ -41,7 +41,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Write (CMDL_Address : SK.Word32; Filename : String)
+   procedure Write
+     (CMDL_Address : SK.Word32;
+      Filename     : String)
    is
       use Ada.Streams.Stream_IO;
       use type Interfaces.C.size_t;

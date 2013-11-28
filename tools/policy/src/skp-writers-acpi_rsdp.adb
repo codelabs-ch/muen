@@ -18,17 +18,19 @@ with Skp.Writers.ACPI;
 package body Skp.Writers.ACPI_RSDP
 is
 
-   procedure Write (ACPI_Tables_Base : SK.Word64; Filename : String)
+   procedure Write
+     (ACPI_Tables_Base : SK.Word64;
+      Filename         : String)
    is
       use Ada.Streams.Stream_IO;
       use type SK.Word64;
       use type SK.Byte;
 
-      function RSDP_Checksum is
-         new ACPI.Fixed_Length_Checksum
-           (20, ACPI.Root_System_Description_Pointer);
-      function RSDP_Extended_Checksum is
-         new ACPI.Checksum (ACPI.Root_System_Description_Pointer);
+      function RSDP_Checksum is new ACPI.Fixed_Length_Checksum
+        (Length  => 20,
+         Table_T => ACPI.Root_System_Description_Pointer);
+      function RSDP_Extended_Checksum is new ACPI.Checksum
+        (Table_T => ACPI.Root_System_Description_Pointer);
 
       File : Ada.Streams.Stream_IO.File_Type;
       RSDP : ACPI.Root_System_Description_Pointer;
@@ -44,8 +46,8 @@ is
          Extended_Checksum => 16#00#,
          Reserved          => (others => 16#00#));
 
-      RSDP.Checksum           := RSDP_Checksum (RSDP);
-      RSDP.Extended_Checksum  := RSDP_Extended_Checksum (RSDP);
+      RSDP.Checksum          := RSDP_Checksum (Table => RSDP);
+      RSDP.Extended_Checksum := RSDP_Extended_Checksum (Table => RSDP);
 
       Open (Filename => Filename,
             File     => File);

@@ -17,6 +17,8 @@ private package Skp.Writers.ACPI_RSDP
 is
 
    --  Write Root System Description Pointer to file given by filename.
-   procedure Write (ACPI_Tables_Base : SK.Word64; Filename : String);
+   procedure Write
+     (ACPI_Tables_Base : SK.Word64;
+      Filename         : String);
 
 end Skp.Writers.ACPI_RSDP;

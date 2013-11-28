@@ -89,37 +89,37 @@ is
 
    -------------------------------------------------------------------------
 
-   IAPC_LEGACY_DEVICES        : constant := 16#0001#;          --  Revision 2
-   IAPC_8042                  : constant := 16#0002#;          --  Revision 3
-   IAPC_VGA_Not_Present       : constant := 16#0004#;          --  Revision 4
-   IAPC_MSI_Not_Supported     : constant := 16#0008#;          --  Revision 4
-   IAPC_PCIe_ASPM_Controls    : constant := 16#0010#;          --  Revision 4
-   IAPC_CMOS_RTC_Not_Present  : constant := 16#0020#;          --  Revision 5
+   IAPC_LEGACY_DEVICES       : constant := 16#0001#;      --  Revision 2
+   IAPC_8042                 : constant := 16#0002#;      --  Revision 3
+   IAPC_VGA_Not_Present      : constant := 16#0004#;      --  Revision 4
+   IAPC_MSI_Not_Supported    : constant := 16#0008#;      --  Revision 4
+   IAPC_PCIe_ASPM_Controls   : constant := 16#0010#;      --  Revision 4
+   IAPC_CMOS_RTC_Not_Present : constant := 16#0020#;      --  Revision 5
 
-   FADT_WBINVD                : constant := 16#0000_0001#;     --  Revision 1
-   FADT_WBINVD_FLUSH          : constant := 16#0000_0002#;     --  Revision 1
-   FADT_C1_SUPPORTED          : constant := 16#0000_0004#;     --  Revision 1
-   FADT_C2_MP_SUPPORTED       : constant := 16#0000_0008#;     --  Revision 1
-   FADT_POWER_BUTTON          : constant := 16#0000_0010#;     --  Revision 1
-   FADT_SLEEP_BUTTON          : constant := 16#0000_0020#;     --  Revision 1
-   FADT_FIXED_RTC             : constant := 16#0000_0040#;     --  Revision 1
-   FADT_S4_RTC_WAKE           : constant := 16#0000_0080#;     --  Revision 1
-   FADT_32BIT_TIMER           : constant := 16#0000_0100#;     --  Revision 1
-   FADT_DOCKING_SUPPORTED     : constant := 16#0000_0200#;     --  Revision 1
-   FADT_RESET_REGISTER        : constant := 16#0000_0400#;     --  Revision 2
-   FADT_SEALED_CASE           : constant := 16#0000_0800#;     --  Revision 3
-   FADT_HEADLESS              : constant := 16#0000_1000#;     --  Revision 3
-   FADT_SLEEP_TYPE            : constant := 16#0000_2000#;     --  Revision 3
-   FADT_PCI_EXPRESS_WAKE      : constant := 16#0000_4000#;     --  Revision 4
-   FADT_PLATFORM_CLOCK        : constant := 16#0000_8000#;     --  Revision 4
-   FADT_S4_RTC_VALID          : constant := 16#0001_0000#;     --  Revision 4
-   FADT_REMOTE_POWER_ON       : constant := 16#0002_0000#;     --  Revision 4
-   FADT_APIC_CLUSTER          : constant := 16#0004_0000#;     --  Revision 4
-   FADT_APIC_PHYSICAL         : constant := 16#0008_0000#;     --  Revision 4
-   FADT_HW_REDUCED            : constant := 16#0010_0000#;     --  Revision 5
-   FADT_LOW_POWER_S0          : constant := 16#0020_0000#;     --  Revision 5
+   FADT_WBINVD               : constant := 16#0000_0001#; --  Revision 1
+   FADT_WBINVD_FLUSH         : constant := 16#0000_0002#; --  Revision 1
+   FADT_C1_SUPPORTED         : constant := 16#0000_0004#; --  Revision 1
+   FADT_C2_MP_SUPPORTED      : constant := 16#0000_0008#; --  Revision 1
+   FADT_POWER_BUTTON         : constant := 16#0000_0010#; --  Revision 1
+   FADT_SLEEP_BUTTON         : constant := 16#0000_0020#; --  Revision 1
+   FADT_FIXED_RTC            : constant := 16#0000_0040#; --  Revision 1
+   FADT_S4_RTC_WAKE          : constant := 16#0000_0080#; --  Revision 1
+   FADT_32BIT_TIMER          : constant := 16#0000_0100#; --  Revision 1
+   FADT_DOCKING_SUPPORTED    : constant := 16#0000_0200#; --  Revision 1
+   FADT_RESET_REGISTER       : constant := 16#0000_0400#; --  Revision 2
+   FADT_SEALED_CASE          : constant := 16#0000_0800#; --  Revision 3
+   FADT_HEADLESS             : constant := 16#0000_1000#; --  Revision 3
+   FADT_SLEEP_TYPE           : constant := 16#0000_2000#; --  Revision 3
+   FADT_PCI_EXPRESS_WAKE     : constant := 16#0000_4000#; --  Revision 4
+   FADT_PLATFORM_CLOCK       : constant := 16#0000_8000#; --  Revision 4
+   FADT_S4_RTC_VALID         : constant := 16#0001_0000#; --  Revision 4
+   FADT_REMOTE_POWER_ON      : constant := 16#0002_0000#; --  Revision 4
+   FADT_APIC_CLUSTER         : constant := 16#0004_0000#; --  Revision 4
+   FADT_APIC_PHYSICAL        : constant := 16#0008_0000#; --  Revision 4
+   FADT_HW_REDUCED           : constant := 16#0010_0000#; --  Revision 5
+   FADT_LOW_POWER_S0         : constant := 16#0020_0000#; --  Revision 5
 
-   type Fixed_ACPI_Description_Table is record                 --  Revision 5
+   type Fixed_ACPI_Description_Table is record --  Revision 5
       Header               : System_Description_Table_Header;
       FIRMWARE_CTRL        : SK.Word32;
       DSDT                 : SK.Word32;

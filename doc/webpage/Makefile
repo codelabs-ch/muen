@@ -20,8 +20,7 @@ SRC_FILES = \
 	swissmadesoftware-logo.png \
 	muen.svg \
 	example.svg \
-	muen.ipxe \
-	set-feature-control-lock-bit.patch
+	muen.ipxe
 
 DST_FILES = $(addprefix $(DESTDIR)/, $(SRC_FILES))
 

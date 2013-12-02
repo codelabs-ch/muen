@@ -78,7 +78,7 @@ environment listed in the following table.
 | Ada compiler         | GNAT GPL 2013 (20130314)
 | GCC version          | 4.7.4 20130416 for GNAT GPL 2013 (20130314)
 | SPARK version        | GPL 2012
-| Emulator             | Bochs from svn (>= r11708, patched)
+| Emulator             | Bochs from svn (>= r11908)
 | Hardware             | Lenovo T430s with Intel Core i7 3520M
 | Intel AMT SoL client | amtterm (>= commit 0ece513...)
 |===================================================================
@@ -125,13 +125,12 @@ To ease kernel development, the Muen project makes use of emulation by
 employing the Bochs IA-32 emulator <<bochs>>. Among many other features, Bochs
 has support for multiple processors, APIC emulation and VMX extensions.
 
-Currently, Bochs must be patched to work with Muen. Issue the following commands
-to checkout, patch and install Bochs with `/usr/local` prefix:
+Muen needs a recent Bochs version from the project's subversion repository.
+Issue the following commands to checkout, build and install Bochs with
+`/usr/local` prefix:
 
   $ svn checkout svn://svn.code.sf.net/p/bochs/code/trunk bochs-code
   $ cd bochs-code/bochs
-  $ wget http://muen.codelabs.ch/set-feature-control-lock-bit.patch
-  $ patch -p0 < set-feature-control-lock-bit.patch
   $ ./configure           \
       --prefix=/usr/local \
       --enable-vmx=2      \

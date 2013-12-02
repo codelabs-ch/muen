@@ -28,7 +28,7 @@ h2 {
    padding: 6px 12px;
    border-radius: 10px 10px 0px 0px;
    margin: 0px;
-   background: none repeat scroll 0% 0% rgb(85, 138, 188);
+   background: none repeat scroll 0% 0% rgb(34, 128, 177);
 }
 
 p {
@@ -122,7 +122,7 @@ td {
 
 .toc_block {
    margin-top: 1em;
-   background-color: rgb(85, 138, 188);
+   background-color: rgb(34, 128, 177);
    white-space: nowrap;
 }
 

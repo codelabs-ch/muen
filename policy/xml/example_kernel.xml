@@ -17,12 +17,12 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<kernel stack_address="114000" cpu_page_address="117000" pml4_address="200000">
+<kernel stack_address="115000" cpu_page_address="11b000" pml4_address="200000">
 	<memory_layout>
 		<!-- kernel text, data and bss   -->
 		<memory_region physical_address="100000" virtual_address="100000" size="76k" alignment="4k" writable="true" executable="true" memory_type="WB"/>
 		<!-- kernel rodata               -->
-		<memory_region physical_address="11b000" virtual_address="11b000" size="40k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+		<memory_region physical_address="11f000" virtual_address="11f000" size="40k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
 		<!-- I/O APIC MMIO region        -->
 		<memory_region physical_address="fec00000" virtual_address="1fc000" size="4k" alignment="4k" writable="true" executable="false" memory_type="UC"/>
 		<!-- subject state descriptors   -->

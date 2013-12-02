@@ -28,6 +28,7 @@ run in VMX non-root mode.
 NOTE: Muen is currently a prototype implementation. We do not yet consider it
       to be fit for production use.
 
+
 Features
 --------
 - Minimal SK for the Intel x86/64 architecture written in the SPARK language
@@ -42,8 +43,11 @@ Features
 - Support for 64-bit native and 32-bit VM subjects
 
 
+Resources
+---------
+
 Documentation
--------------
+~~~~~~~~~~~~~
 The following detailed project documentation is available:
 
 * Muen project report:
@@ -51,6 +55,16 @@ The following detailed project documentation is available:
 
 * A presentation about the Muen SK:
   http://muen.codelabs.ch/muen-slides.pdf
+
+Mailing list
+~~~~~~~~~~~~
+The muen-dev@googlegroups.com mailing list is used for project announcements and
+discussions regarding the Muen separation kernel.
+
+* To subscribe to the list, send a (blank) mail to muen-dev+subscribe@googlegroups.com.
+  Note: A Google account is *not* required, any email address should work.
+* To post a message to the list write an email to muen-dev@googlegroups.com.
+* The list has a Google Groups web interface: https://groups.google.com/group/muen-dev.
 
 
 Download

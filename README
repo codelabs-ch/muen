@@ -68,8 +68,8 @@ A browsable version of the repository is available here:
 http://git.codelabs.ch/?p=muen.git
 
 
-Development
------------
+Build
+-----
 The Muen SK has been developed and successfully tested using the development
 environment listed in the following table.
 
@@ -97,9 +97,6 @@ the C run-time `LIBRARY_PATH`:
 
   $ export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
 
-
-Build
------
 To build the Muen tools, RTS, kernel and example subjects on Debian wheezy
 issue the following commands:
 
@@ -114,8 +111,8 @@ This will create an image containing the example system which can be booted by
 any Multiboot <<mboot>> compliant bootloader.
 
 
-Deployment
-----------
+Deploy
+------
 The build system provides two targets to instantly deploy and test the created
 system image.
 

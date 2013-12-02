@@ -33,7 +33,7 @@
 	</xsl:template>
 
 	<xsl:template name="toc_entries">
-		<xsl:for-each select="//html:h2">
+		<xsl:for-each select="//html:span[@class='anchor']">
 			<div class="toc_entry">
 				<a class="toc">
 					<xsl:attribute name="href">

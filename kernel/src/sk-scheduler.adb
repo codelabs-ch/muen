@@ -474,29 +474,9 @@ is
          Trap_Nr    => Skp.Subjects.Trap_Range (Subject_State.Exit_Reason));
 
       if Trap_Entry.Dst_Subject = Skp.Invalid_Subject then
-         pragma Debug (KC.Put_String (Item => "Subject "));
-         pragma Debug (KC.Put_Byte   (Item =>  Byte (Current_Subject)));
-         pragma Debug (KC.Put_String (Item => " no handler for trap "));
-         pragma Debug (KC.Put_Word16 (Item => Word16
-                                      (Subject_State.Exit_Reason)));
-         pragma Debug (KC.Put_String (Item => ":"));
-         pragma Debug (KC.Put_Word32 (Item => Word32
-                                      (Subject_State.Exit_Qualification)));
-         pragma Debug (KC.Put_String (Item => ":"));
-         pragma Debug (KC.Put_Word32 (Item => Word32
-                                      (Subject_State.Interrupt_Info)));
-         pragma Debug (KC.Put_String (Item => " ==> "));
-         pragma Debug (KC.New_Line);
-         pragma Debug (Dump.Print_Registers (GPR => Subject_State.Regs,
-                                             RIP => Subject_State.RIP,
-                                             CS  => Subject_State.CS,
-                                             RFL => Subject_State.RFLAGS,
-                                             RSP => Subject_State.RSP,
-                                             SS  => Subject_State.SS,
-                                             CR0 => Subject_State.CR0,
-                                             CR2 => Subject_State.CR2,
-                                             CR3 => Subject_State.CR3,
-                                             CR4 => Subject_State.CR4));
+         pragma Debug (KC.Put_Line (Item => ">>> No handler for trap <<<"));
+         pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject,
+                                           Dump_State => True));
          CPU.Panic;
       else
          if Trap_Entry.Dst_Vector < Skp.Invalid_Vector then
@@ -611,17 +591,11 @@ is
             Handle_Trap (Current_Subject => Current_Subject,
                          Subject_State   => State);
          else
-            pragma Debug (KC.Put_String (Item => "Subject "));
-            pragma Debug (KC.Put_Byte   (Item =>  Byte (Current_Subject)));
-            pragma Debug (KC.Put_String (Item => " unknown trap ("));
+            pragma Debug (KC.Put_String (Item => ">>> Unknown trap "));
             pragma Debug (KC.Put_Word16 (Item => Word16 (State.Exit_Reason)));
-            pragma Debug (KC.Put_String (Item => ":"));
-            pragma Debug (KC.Put_Word32
-                          (Item => Word32 (State.Exit_Qualification)));
-            pragma Debug (KC.Put_String (Item => ":"));
-            pragma Debug (KC.Put_Word32 (Item => Word32
-                                         (State.Interrupt_Info)));
-            pragma Debug (KC.Put_Line   (Item => ")"));
+            pragma Debug (KC.Put_Line (Item => " <<<"));
+            pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject,
+                                              Dump_State => False));
             CPU.Panic;
          end if;
       end if;

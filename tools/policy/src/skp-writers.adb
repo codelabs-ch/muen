@@ -760,7 +760,7 @@ is
    begin
       for I in Natural range 0 .. CPU_Count - 1 loop
          declare
-            Stack_Size : constant := 2 * SK.Page_Size;
+            Stack_Size      : constant := 2 * SK.Page_Size;
             Phys_Stack_Addr : constant SK.Word64
               := Kernel.Stack_Address - Stack_Size
                 + SK.Word64 (I) * Stack_Size;
@@ -774,7 +774,7 @@ is
                   Alignment        => 16#1000#,
                   Writable         => True,
                   Executable       => False,
-                  Memory_Type      => UC);
+                  Memory_Type      => WB);
             CPU_Page        : constant Memory_Region_Type
               := (Physical_Address => Kernel.CPU_Page_Address
                   + SK.Word64 (I) * SK.Page_Size,
@@ -783,7 +783,7 @@ is
                   Alignment        => 16#1000#,
                   Writable         => True,
                   Executable       => False,
-                  Memory_Type      => UC);
+                  Memory_Type      => WB);
             CPU_Number      : constant String
               := Ada.Strings.Fixed.Trim (Source => I'Img,
                                          Side   => Ada.Strings.Left);

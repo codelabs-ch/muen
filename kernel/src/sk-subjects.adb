@@ -50,6 +50,18 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_RIP (Id : Skp.Subject_Id_Type) return SK.Word64
+   --# global
+   --#    Descriptors;
+   --# return
+   --#    Descriptors (Id).RIP;
+   is
+   begin
+      return Descriptors (Id).RIP;
+   end Get_RIP;
+
+   -------------------------------------------------------------------------
+
    function Get_State (Id : Skp.Subject_Id_Type) return SK.Subject_State_Type
    --# global
    --#    Descriptors;

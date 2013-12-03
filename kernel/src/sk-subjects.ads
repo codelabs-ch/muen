@@ -56,6 +56,11 @@ is
    --# derives
    --#    State from *, Id, Value;
 
+   --  Get RIP of subject with given ID.
+   function Get_RIP (Id : Skp.Subject_Id_Type) return SK.Word64;
+   --# global
+   --#    State;
+
    --  Set RIP of subject specified by id to given value.
    procedure Set_RIP
      (Id    : Skp.Subject_Id_Type;

@@ -33,6 +33,9 @@
 	</xsl:template>
 
 	<xsl:template name="toc_entries">
+		<div class="toc_entry">
+			<a class="toc" href="index.html">Home</a>
+		</div>
 		<xsl:for-each select="//html:span[@class='anchor']">
 			<div class="toc_entry">
 				<a class="toc">

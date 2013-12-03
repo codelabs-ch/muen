@@ -14,7 +14,6 @@ body {
    color: rgba(0, 0, 0, 0.9);
    box-shadow: 0 0 6em rgba(0, 0, 0, 0.5) inset;
    font-family: 'Lato', sans-serif;
-   font-weight: 300;
 }
 
 h1 {
@@ -26,6 +25,7 @@ h1 {
 h2 {
    color: white;
    font-weight: normal;
+   font-size: 125%;
    padding: 6px 12px;
    border-radius: 10px 10px 0px 0px;
    margin: 0px;
@@ -144,6 +144,7 @@ td {
 .toc_entry {
    display: inline-block;
    padding: 0.5em;
+   font-size: 105%;
 }
 
 .toc_entry:hover {

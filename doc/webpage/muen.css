@@ -159,11 +159,6 @@ a.toc, a:link.toc {
    text-decoration: none;
 }
 
-#_references + .sectionbody .ulist ul {
-   list-style: none;
-   margin-left: -2em;
-}
-
 a:link {
    padding: 3px;
    border-radius: 3px;

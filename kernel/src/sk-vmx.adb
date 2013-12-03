@@ -401,12 +401,12 @@ is
 
    procedure Inject_Event (Subject_Id : Skp.Subject_Id_Type)
    is
-      State         : SK.Subject_State_Type;
+      RFLAGS        : SK.Word64;
       Intr_State    : SK.Word64;
       Event         : SK.Byte;
       Event_Present : Boolean;
    begin
-      State := Subjects.Get_State (Id => Subject_Id);
+      RFLAGS := Subjects.Get_RFLAGS (Id => Subject_Id);
 
       --  Check guest interruptibility state (see Intel SDM Vol. 3C, chapter
       --  24.4.2).
@@ -416,7 +416,7 @@ is
 
       if Intr_State = 0
         and then SK.Bit_Test
-          (Value => State.RFLAGS,
+          (Value => RFLAGS,
            Pos   => Constants.RFLAGS_IF_FLAG)
       then
          Events.Consume_Event (Subject => Subject_Id,

@@ -38,6 +38,18 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Instruction_Length (Id : Skp.Subject_Id_Type) return SK.Word64
+   --# global
+   --#    Descriptors;
+   --# return
+   --#    Descriptors (Id).Instruction_Len;
+   is
+   begin
+      return Descriptors (Id).Instruction_Len;
+   end Get_Instruction_Length;
+
+   -------------------------------------------------------------------------
+
    function Get_RFLAGS (Id : Skp.Subject_Id_Type) return SK.Word64
    --# global
    --#    Descriptors;

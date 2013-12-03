@@ -79,4 +79,9 @@ is
    --# derives
    --#    State from *, Id, Value;
 
+   --  Get instruction length of subject with given ID.
+   function Get_Instruction_Length (Id : Skp.Subject_Id_Type) return SK.Word64;
+   --# global
+   --#    State;
+
 end SK.Subjects;

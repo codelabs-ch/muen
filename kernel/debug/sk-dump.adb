@@ -21,6 +21,7 @@ with SK.CPU;
 with SK.Apic;
 with SK.Locks;
 with SK.CPU_Global;
+with SK.Subjects;
 
 package body SK.Dump
 is
@@ -133,5 +134,40 @@ is
 
       CPU.Stop;
    end Print_State;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_Subject
+     (Subject_Id : Skp.Subject_Id_Type;
+      Dump_State : Boolean)
+   is
+      State : SK.Subject_State_Type;
+   begin
+      State := Subjects.Get_State (Id => Subject_Id);
+      KC.Put_String (Item => "Subject ");
+      KC.Put_Byte   (Item =>  Byte (Subject_Id));
+      KC.Put_String (Item => ", Exit info ");
+      KC.Put_Word16 (Item => Word16 (State.Exit_Reason));
+      KC.Put_String (Item => ":");
+      KC.Put_Word32 (Item => Word32 (State.Exit_Qualification));
+      KC.Put_String (Item => ":");
+      KC.Put_Word32 (Item => Word32 (State.Interrupt_Info));
+
+      if Dump_State then
+         KC.New_Line;
+         Print_Registers (GPR => State.Regs,
+                          RIP => State.RIP,
+                          CS  => State.CS,
+                          RFL => State.RFLAGS,
+                          RSP => State.RSP,
+                          SS  => State.SS,
+                          CR0 => State.CR0,
+                          CR2 => State.CR2,
+                          CR3 => State.CR3,
+                          CR4 => State.CR4);
+      end if;
+   end Print_Subject;
+
+   -------------------------------------------------------------------------
 
 end SK.Dump;

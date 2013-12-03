@@ -42,6 +42,11 @@ is
    --# derives
    --#    State from *, Id, Subject_State;
 
+   --  Get RFLAGS of subject with given ID.
+   function Get_RFLAGS (Id : Skp.Subject_Id_Type) return SK.Word64;
+   --# global
+   --#    State;
+
    --  Set CR0 of subject specified by id to given value.
    procedure Set_CR0
      (Id    : Skp.Subject_Id_Type;

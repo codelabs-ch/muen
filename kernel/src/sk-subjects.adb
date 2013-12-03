@@ -144,8 +144,11 @@ is
    --# post
    --#    Descriptors (Id) = Subject_State;
    is
+      RIP : SK.Word64;
    begin
+      RIP := Descriptors (Id).RIP;
       Descriptors (Id) := Subject_State;
+      Descriptors (Id).RIP := RIP;
    end Set_State;
 
 begin

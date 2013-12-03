@@ -331,32 +331,34 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Handle hypercall with given event number.
    procedure Handle_Hypercall
-     (Current_Subject :        Skp.Subject_Id_Type;
-      Subject_State   : in out SK.Subject_State_Type)
+     (Current_Subject : Skp.Subject_Id_Type;
+      Event_Nr        : SK.Word64)
    --# global
    --#    in out CPU_Global.State;
    --#    in out Events.State;
+   --#    in out Subjects.State;
    --#    in out X86_64.State;
    --# derives
-   --#    Events.State from *, Current_Subject, Subject_State &
+   --#    Events.State from *, Current_Subject, Event_Nr &
    --#    CPU_Global.State, X86_64.State from
    --#       *,
    --#       Current_Subject,
-   --#       Subject_State &
-   --#    Subject_State from *;
+   --#       Event_Nr &
+   --#    Subjects.State from *, Current_Subject;
    is
       Event       : Skp.Subjects.Event_Entry_Type;
       Dst_CPU     : Skp.CPU_Range;
       Valid_Event : Boolean;
+      RIP         : SK.Word64;
    begin
-      Valid_Event := Subject_State.Regs.RAX <= SK.Word64
-        (Skp.Subjects.Event_Range'Last);
+      Valid_Event := Event_Nr <= SK.Word64 (Skp.Subjects.Event_Range'Last);
 
       if Valid_Event then
          Event := Skp.Subjects.Get_Event
            (Subject_Id => Current_Subject,
-            Event_Nr   => Skp.Subjects.Event_Range (Subject_State.Regs.RAX));
+            Event_Nr   => Skp.Subjects.Event_Range (Event_Nr));
 
          if Event.Dst_Subject /= Skp.Invalid_Subject then
             if Event.Dst_Vector /= Skp.Invalid_Vector then
@@ -389,7 +391,7 @@ is
       pragma Debug (not Valid_Event or Event = Skp.Subjects.Null_Event,
                     KC.Put_String (Item => "Ignoring spurious event "));
       pragma Debug (not Valid_Event or Event = Skp.Subjects.Null_Event,
-                    KC.Put_Byte   (Item => SK.Byte (Subject_State.Regs.RAX)));
+                    KC.Put_Byte   (Item => SK.Byte (Event_Nr)));
       pragma Debug (not Valid_Event or Event = Skp.Subjects.Null_Event,
                     KC.Put_String (Item => " from subject "));
       pragma Debug (not Valid_Event or Event = Skp.Subjects.Null_Event,
@@ -397,8 +399,10 @@ is
       pragma Debug (not Valid_Event or Event = Skp.Subjects.Null_Event,
                     KC.New_Line);
 
-      Subject_State.RIP := Subject_State.RIP +
-        Subject_State.Instruction_Len;
+      RIP := Subjects.Get_RIP (Id => Current_Subject);
+      RIP := RIP + Subjects.Get_Instruction_Length (Id => Current_Subject);
+      Subjects.Set_RIP (Id    => Current_Subject,
+                        Value => RIP);
    end Handle_Hypercall;
 
    -------------------------------------------------------------------------
@@ -584,12 +588,14 @@ is
 
       State.Regs := Subject_Registers;
       Store_Subject_Info (State => State);
+      Subjects.Set_RIP (Id    => Current_Subject,
+                        Value => State.RIP);
 
       if State.Exit_Reason = Constants.EXIT_REASON_EXTERNAL_INT then
          Handle_Irq (Vector => SK.Byte'Mod (State.Interrupt_Info));
       elsif State.Exit_Reason = Constants.EXIT_REASON_VMCALL then
          Handle_Hypercall (Current_Subject => Current_Subject,
-                           Subject_State   => State);
+                           Event_Nr        => Subject_Registers.RAX);
       elsif State.Exit_Reason = Constants.EXIT_REASON_TIMER_EXPIRY then
 
          --  Minor frame ticks consumed, update scheduling information.

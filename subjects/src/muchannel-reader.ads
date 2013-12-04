@@ -34,6 +34,12 @@ is
 
    type Reader_Type is private;
 
+   --  Returns True if the channel is active and has pending data to be read.
+   function Has_Pending_Data
+     (Channel : Channel_Type;
+      Reader  : Reader_Type)
+      return Boolean;
+
    --  Read next element from given channel.
    procedure Read
      (Channel :        Channel_Type;

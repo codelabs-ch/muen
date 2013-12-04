@@ -62,6 +62,20 @@ is
 
    -------------------------------------------------------------------------
 
+   function Has_Pending_Data
+     (Channel : Channel_Type;
+      Reader  : Reader_Type)
+      return Boolean
+   is
+   begin
+      return Is_Active (Channel => Channel) and then
+        Reader.RC < Channel.Header.WC and then
+        not Has_Epoch_Changed (Channel => Channel,
+                               Reader  => Reader);
+   end Has_Pending_Data;
+
+   -------------------------------------------------------------------------
+
    function Is_Valid
      (Protocol     : Header_Field_Type;
       Size         : Header_Field_Type;

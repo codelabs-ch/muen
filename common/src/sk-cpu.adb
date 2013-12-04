@@ -23,6 +23,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Cli
+   is
+      --# hide Cli;
+   begin
+      System.Machine_Code.Asm
+        (Template => "cli",
+         Volatile => True);
+   end Cli;
+
+   -------------------------------------------------------------------------
+
    procedure CPUID
      (EAX : in out SK.Word32;
       EBX :    out SK.Word32;

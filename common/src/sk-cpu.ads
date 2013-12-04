@@ -22,6 +22,14 @@
 package SK.CPU
 is
 
+   --  Clear Interrupt Flag.
+   procedure Cli;
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *;
+   pragma Inline_Always (Cli);
+
    --  Execute CPUID instruction.
    procedure CPUID
      (EAX : in out SK.Word32;

@@ -21,14 +21,14 @@ is
 
    --  Supported file types.
    type File_Kind is
-     (Elfbinary,
+     (Elfbin,
       Iobitmap,
       Msrbitmap,
       Pagetable,
-      Rawbinary,
+      Rawbin,
       Zeropage,
       Acpitable,
-      Bzimagebinary);
+      Bzimagebin);
 
    --  Add file to packer configuration.
    procedure Add_File

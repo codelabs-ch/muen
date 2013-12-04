@@ -26,14 +26,14 @@ pragma Style_Checks ("-m");
 package Skp.Packer_Config is
 
    type File_Kind is
-     (Elfbinary,
+     (Elfbin,
       Iobitmap,
       Msrbitmap,
       Pagetable,
-      Rawbinary,
+      Rawbin,
       Zeropage,
       Acpitable,
-      Bzimagebinary);
+      Bzimagebin);
 
    type File_Type is record
       Path             : Unbounded_String;

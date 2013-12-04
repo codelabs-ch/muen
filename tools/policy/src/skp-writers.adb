@@ -820,9 +820,9 @@ is
       Policy   : Policy_Type)
    is
       Format_Map : constant array (Binary_Format) of Packer_Config.File_Kind
-        := (Elf     => Packer_Config.Elfbinary,
-            Raw     => Packer_Config.Rawbinary,
-            BzImage => Packer_Config.Bzimagebinary);
+        := (Elf     => Packer_Config.Elfbin,
+            Raw     => Packer_Config.Rawbin,
+            BzImage => Packer_Config.Bzimagebin);
 
       --  Add subject binary to packer config.
       procedure Add_Subject_Bin (C : Subjects_Package.Cursor);

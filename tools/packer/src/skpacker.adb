@@ -57,7 +57,7 @@ is
       Ada.Text_IO.Put (SK.Utils.To_Hex (Item => Address));
       Ada.Text_IO.Set_Col (To => 19);
       Ada.Text_IO.Put (Kind'Img);
-      Ada.Text_IO.Set_Col (To => 30);
+      Ada.Text_IO.Set_Col (To => 31);
       Ada.Text_IO.Put_Line (Path);
    end Print_File;
 
@@ -69,7 +69,7 @@ is
       Ada.Text_IO.Put ("PHYSICAL");
       Ada.Text_IO.Set_Col (To => 19);
       Ada.Text_IO.Put ("TYPE");
-      Ada.Text_IO.Set_Col (To => 30);
+      Ada.Text_IO.Set_Col (To => 31);
       Ada.Text_IO.Put_Line ("PATH");
    end Print_Header;
 
@@ -115,11 +115,11 @@ begin
                      Kind    => Files (F).Kind,
                      Path    => Path);
 
-         if Files (F).Kind = Elfbinary then
+         if Files (F).Kind = Elfbin then
             Image.To_Binary (Src_Elf => To_String (Fn),
                              Dst_Bin => Raw);
             Fn := To_Unbounded_String (Raw);
-         elsif Files (F).Kind = Bzimagebinary then
+         elsif Files (F).Kind = Bzimagebin then
             Image.Parse_Bzimage (Src     => To_String (Fn),
                                  Dst_Bin => Raw);
             Fn := To_Unbounded_String (Raw);

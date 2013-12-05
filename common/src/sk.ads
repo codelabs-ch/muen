@@ -66,7 +66,6 @@ is
 
    --  Subject state.
    type Subject_State_Type is record
-      Launched           : Boolean;
       Regs               : CPU_Registers_Type;
       Exit_Reason        : Word64;
       Exit_Qualification : Word64;
@@ -129,8 +128,7 @@ private
 
    Null_Subject_State : constant Subject_State_Type
      := Subject_State_Type'
-       (Launched           => False,
-        Regs               => Null_CPU_Regs,
+       (Regs               => Null_CPU_Regs,
         Exit_Reason        => 0,
         Exit_Qualification => 0,
         Guest_Phys_Addr    => 0,

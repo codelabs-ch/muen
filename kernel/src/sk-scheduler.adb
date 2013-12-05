@@ -76,6 +76,56 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Inject pending event into subject identified by ID.
+   procedure Inject_Event (Subject_Id : Skp.Subject_Id_Type)
+   --# global
+   --#    in     Subjects.State;
+   --#    in out Events.State;
+   --#    in out X86_64.State;
+   --# derives
+   --#    Events.State, X86_64.State from
+   --#       *,
+   --#       Subject_Id,
+   --#       Subjects.State,
+   --#       Events.State,
+   --#       X86_64.State;
+   is
+      RFLAGS        : SK.Word64;
+      Intr_State    : SK.Word64;
+      Event         : SK.Byte;
+      Event_Present : Boolean;
+   begin
+      RFLAGS := Subjects.Get_RFLAGS (Id => Subject_Id);
+
+      --  Check guest interruptibility state (see Intel SDM Vol. 3C, chapter
+      --  24.4.2).
+
+      VMX.VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,
+                 Value => Intr_State);
+
+      if Intr_State = 0
+        and then SK.Bit_Test
+          (Value => RFLAGS,
+           Pos   => Constants.RFLAGS_IF_FLAG)
+      then
+         Events.Consume_Event (Subject => Subject_Id,
+                               Found   => Event_Present,
+                               Event   => Event);
+
+         if Event_Present then
+            VMX.VMCS_Write
+              (Field => Constants.VM_ENTRY_INTERRUPT_INFO,
+               Value => Constants.VM_INTERRUPT_INFO_VALID + SK.Word64 (Event));
+         end if;
+      end if;
+
+      if Events.Has_Pending_Events (Subject => Subject_Id) then
+         VMX.VMCS_Set_Interrupt_Window (Value => True);
+      end if;
+   end Inject_Event;
+
+   -------------------------------------------------------------------------
+
    --  Read VMCS fields and store them in the given subject state.
    procedure Store_Subject_Info (State : in out SK.Subject_State_Type)
    --# global
@@ -601,7 +651,7 @@ is
       Subjects.Set_State (Id            => Current_Subject,
                           Subject_State => State);
 
-      VMX.Inject_Event
+      Inject_Event
         (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id);
 
       VMX.Restore_Guest_Regs

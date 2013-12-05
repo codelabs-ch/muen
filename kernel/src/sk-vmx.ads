@@ -27,8 +27,7 @@ with Skp;
 --#    SK.GDT,
 --#    SK.Descriptors,
 --#    SK.Constants,
---#    SK.Subjects,
---#    SK.Events;
+--#    SK.Subjects;
 package SK.VMX
 --# own
 --#    State;
@@ -167,19 +166,5 @@ is
    --# derives
    --#    X86_64.State from *;
    pragma Export (C, VMX_Error, "vmx_error");
-
-   --  Inject pending event into subject identified by ID.
-   procedure Inject_Event (Subject_Id : Skp.Subject_Id_Type);
-   --# global
-   --#    in     Subjects.State;
-   --#    in out Events.State;
-   --#    in out X86_64.State;
-   --# derives
-   --#    Events.State, X86_64.State from
-   --#       *,
-   --#       Subject_Id,
-   --#       Subjects.State,
-   --#       Events.State,
-   --#       X86_64.State;
 
 end SK.VMX;

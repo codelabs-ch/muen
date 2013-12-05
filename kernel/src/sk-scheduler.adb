@@ -644,7 +644,8 @@ is
                         Value => State.RIP);
 
       if Exit_Reason = Constants.EXIT_REASON_EXTERNAL_INT then
-         Handle_Irq (Vector => SK.Byte'Mod (State.Interrupt_Info));
+         Handle_Irq (Vector => SK.Byte'Mod (Subjects.Get_Interrupt_Info
+                     (Id => Current_Subject)));
       elsif Exit_Reason = Constants.EXIT_REASON_VMCALL then
          Handle_Hypercall (Current_Subject => Current_Subject,
                            Event_Nr        => Subject_Registers.RAX);

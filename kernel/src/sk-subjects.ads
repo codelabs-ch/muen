@@ -102,4 +102,20 @@ is
    --#       State &
    --#    GPRs from State, Id;
 
+   --  Save GPRs and VMCS guest data to the state of the subject identified by
+   --  ID.
+   procedure Save_State
+     (Id   : Skp.Subject_Id_Type;
+      GPRs : SK.CPU_Registers_Type);
+   --# global
+   --#    in out X86_64.State;
+   --#    in out State;
+   --# derives
+   --#    State from
+   --#       *,
+   --#       Id,
+   --#       GPRs,
+   --#       X86_64.State &
+   --#    X86_64.State from *;
+
 end SK.Subjects;

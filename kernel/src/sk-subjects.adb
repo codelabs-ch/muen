@@ -126,6 +126,61 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Save_State
+     (Id   : Skp.Subject_Id_Type;
+      GPRs : SK.CPU_Registers_Type)
+   --# global
+   --#    in out X86_64.State;
+   --#    in out Descriptors;
+   --# derives
+   --#    Descriptors from
+   --#       *,
+   --#       Id,
+   --#       GPRs,
+   --#       X86_64.State &
+   --#    X86_64.State from *;
+   is
+   begin
+      Descriptors (Id).Regs := GPRs;
+
+      VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
+                     Value => Descriptors (Id).Exit_Reason);
+      VMX.VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
+                     Value => Descriptors (Id).Exit_Qualification);
+      VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
+                     Value => Descriptors (Id).Interrupt_Info);
+      VMX.VMCS_Read (Field => Constants.VMX_EXIT_INSTRUCTION_LEN,
+                     Value => Descriptors (Id).Instruction_Len);
+
+      VMX.VMCS_Read (Field => Constants.GUEST_PHYSICAL_ADDRESS,
+                     Value => Descriptors (Id).Guest_Phys_Addr);
+
+      VMX.VMCS_Read (Field => Constants.GUEST_RIP,
+                     Value => Descriptors (Id).RIP);
+      VMX.VMCS_Read (Field => Constants.GUEST_SEL_CS,
+                     Value => Descriptors (Id).CS);
+      VMX.VMCS_Read (Field => Constants.GUEST_RSP,
+                     Value => Descriptors (Id).RSP);
+      VMX.VMCS_Read (Field => Constants.GUEST_SEL_SS,
+                     Value => Descriptors (Id).SS);
+      VMX.VMCS_Read (Field => Constants.GUEST_CR0,
+                     Value => Descriptors (Id).CR0);
+      VMX.VMCS_Read (Field => Constants.CR0_READ_SHADOW,
+                     Value => Descriptors (Id).SHADOW_CR0);
+      Descriptors (Id).CR2 := CPU.Get_CR2;
+      VMX.VMCS_Read (Field => Constants.GUEST_CR3,
+                     Value => Descriptors (Id).CR3);
+      VMX.VMCS_Read (Field => Constants.GUEST_CR4,
+                     Value => Descriptors (Id).CR4);
+      VMX.VMCS_Read (Field => Constants.GUEST_RFLAGS,
+                     Value => Descriptors (Id).RFLAGS);
+      VMX.VMCS_Read (Field => Constants.GUEST_IA32_EFER,
+                     Value => Descriptors (Id).IA32_EFER);
+      CPU.XSAVE (Target => Descriptors (Id).XSAVE_Area);
+   end Save_State;
+
+   -------------------------------------------------------------------------
+
    procedure Set_CR0
      (Id    : Skp.Subject_Id_Type;
       Value : SK.Word64)

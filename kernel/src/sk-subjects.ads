@@ -87,6 +87,11 @@ is
    --# global
    --#    State;
 
+   --  Get interrupt information of subject with given ID.
+   function Get_Interrupt_Info (Id : Skp.Subject_Id_Type) return SK.Word64;
+   --# global
+   --#    State;
+
    --  Restore non-GPR guest registers from the subject state identified by ID.
    --  GPRs are returned in Regs.
    procedure Restore_State

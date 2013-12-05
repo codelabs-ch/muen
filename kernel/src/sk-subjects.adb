@@ -54,6 +54,18 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Interrupt_Info (Id : Skp.Subject_Id_Type) return SK.Word64
+   --# global
+   --#    Descriptors;
+   --# return
+   --#    Descriptors (Id).Interrupt_Info;
+   is
+   begin
+      return Descriptors (Id).Interrupt_Info;
+   end Get_Interrupt_Info;
+
+   -------------------------------------------------------------------------
+
    function Get_RFLAGS (Id : Skp.Subject_Id_Type) return SK.Word64
    --# global
    --#    Descriptors;

@@ -450,10 +450,10 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Handle trap using trap table of current subject.
+   --  Handle trap with given number using trap table of current subject.
    procedure Handle_Trap
      (Current_Subject : Skp.Subject_Id_Type;
-      Subject_State   : SK.Subject_State_Type)
+      Trap_Nr         : SK.Word64)
    --# global
    --#    in out CPU_Global.State;
    --#    in out Events.State;
@@ -462,16 +462,14 @@ is
    --#    CPU_Global.State, Events.State, X86_64.State from
    --#       *,
    --#       Current_Subject,
-   --#       Subject_State;
+   --#       Trap_Nr;
    is
       Trap_Entry : Skp.Subjects.Trap_Entry_Type;
    begin
-      if Subject_State.Exit_Reason <= SK.Word64
-        (Skp.Subjects.Trap_Range'Last)
-      then
+      if Trap_Nr <= SK.Word64 (Skp.Subjects.Trap_Range'Last) then
          Trap_Entry := Skp.Subjects.Get_Trap
            (Subject_Id => Current_Subject,
-            Trap_Nr    => Skp.Subjects.Trap_Range (Subject_State.Exit_Reason));
+            Trap_Nr    => Skp.Subjects.Trap_Range (Trap_Nr));
 
          if Trap_Entry.Dst_Subject = Skp.Invalid_Subject then
             pragma Debug (KC.Put_Line (Item => ">>> No handler for trap <<<"));
@@ -499,8 +497,7 @@ is
          end if;
       else
          pragma Debug (KC.Put_String (Item => ">>> Unknown trap "));
-         pragma Debug (KC.Put_Word16
-                       (Item => Word16 (Subject_State.Exit_Reason)));
+         pragma Debug (KC.Put_Word16 (Item => Word16 (Trap_Nr)));
          pragma Debug (KC.Put_Line (Item => " <<<"));
          pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject,
                                            Dump_State => False));
@@ -598,7 +595,7 @@ is
          VMX.VMCS_Set_Interrupt_Window (Value => False);
       else
          Handle_Trap (Current_Subject => Current_Subject,
-                      Subject_State   => State);
+                      Trap_Nr         => State.Exit_Reason);
       end if;
 
       Subjects.Set_State (Id            => Current_Subject,

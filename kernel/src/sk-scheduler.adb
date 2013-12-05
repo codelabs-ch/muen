@@ -608,6 +608,7 @@ is
    --#       X86_64.State;
    is
       Exit_Reason     : SK.Word64;
+      Exit_Quali      : SK.Word64;
       Current_Subject : Skp.Subject_Id_Type;
       Current_Minor   : CPU_Global.Active_Minor_Frame_Type;
       State           : SK.Subject_State_Type := Launched_Subject_State;
@@ -619,6 +620,8 @@ is
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => Exit_Reason);
+      VMX.VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
+                     Value => Exit_Quali);
 
       if SK.Bit_Test (Value => Exit_Reason,
                       Pos   => Constants.VM_EXIT_ENTRY_FAILURE)
@@ -628,14 +631,14 @@ is
          pragma Debug (KC.Put_String (Item => " VM-entry failure ("));
          pragma Debug (KC.Put_Word16 (Item => Word16 (Exit_Reason)));
          pragma Debug (KC.Put_String (Item => ":"));
-         pragma Debug (KC.Put_Word32
-                       (Item => Word32 (State.Exit_Qualification)));
+         pragma Debug (KC.Put_Word32 (Item => Word32 (Exit_Quali)));
          pragma Debug (KC.Put_Line   (Item => ")"));
          CPU.Panic;
       end if;
 
-      State.Exit_Reason := Exit_Reason;
-      State.Regs        := Subject_Registers;
+      State.Exit_Reason        := Exit_Reason;
+      State.Exit_Qualification := Exit_Quali;
+      State.Regs               := Subject_Registers;
       Store_Subject_Info (State => State);
       Subjects.Set_RIP (Id    => Current_Subject,
                         Value => State.RIP);

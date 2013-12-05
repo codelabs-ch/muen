@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp;
-
 --# inherit
 --#    Skp.Kernel,
 --#    X86_64,
@@ -26,8 +24,7 @@ with Skp;
 --#    SK.Interrupts,
 --#    SK.GDT,
 --#    SK.Descriptors,
---#    SK.Constants,
---#    SK.Subjects;
+--#    SK.Constants;
 package SK.VMX
 --# own
 --#    State;
@@ -55,22 +52,6 @@ is
    --#    in out X86_64.State;
    --# derives
    --#    X86_64.State from *, VMCS_Address;
-
-   --  Restore non-GPR guest registers from subject state identified by ID.
-   --  GPRs are returned in Regs.
-   procedure Restore_State
-     (Subject_Id :     Skp.Subject_Id_Type;
-      Regs       : out SK.CPU_Registers_Type);
-   --# global
-   --#    in     Subjects.State;
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from
-   --#       *,
-   --#       Subject_Id,
-   --#       Subjects.State,
-   --#       X86_64.State &
-   --#    Regs from Subjects.State, Subject_Id;
 
    --  Read value from specified field of the current, active VMCS. If the
    --  operation fails, CPU.Panic is called.

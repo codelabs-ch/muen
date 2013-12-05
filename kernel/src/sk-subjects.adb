@@ -18,6 +18,10 @@
 
 with System;
 
+with SK.VMX;
+with SK.CPU;
+with SK.Constants;
+
 package body SK.Subjects
 --# own
 --#    State is Descriptors;
@@ -83,6 +87,40 @@ is
    begin
       return Descriptors (Id);
    end Get_State;
+
+   -------------------------------------------------------------------------
+
+   procedure Restore_State
+     (Id   :     Skp.Subject_Id_Type;
+      GPRs : out SK.CPU_Registers_Type)
+   --# global
+   --#    in     Descriptors;
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from
+   --#       *,
+   --#       Id,
+   --#       Descriptors,
+   --#       X86_64.State &
+   --#    GPRs from Descriptors, Id;
+   is
+   begin
+      VMX.VMCS_Write (Field => Constants.GUEST_RIP,
+                      Value => Descriptors (Id).RIP);
+      VMX.VMCS_Write (Field => Constants.GUEST_RSP,
+                      Value => Descriptors (Id).RSP);
+      VMX.VMCS_Write (Field => Constants.GUEST_CR0,
+                      Value => Descriptors (Id).CR0);
+      VMX.VMCS_Write (Field => Constants.CR0_READ_SHADOW,
+                      Value => Descriptors (Id).SHADOW_CR0);
+      CPU.XRSTOR (Source => Descriptors (Id).XSAVE_Area);
+
+      if CPU.Get_CR2 /= Descriptors (Id).CR2 then
+         CPU.Set_CR2 (Value => Descriptors (Id).CR2);
+      end if;
+
+      GPRs := Descriptors (Id).Regs;
+   end Restore_State;
 
    -------------------------------------------------------------------------
 

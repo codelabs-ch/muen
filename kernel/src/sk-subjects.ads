@@ -20,7 +20,10 @@ with Skp;
 
 --# inherit
 --#    Skp,
---#    SK.CPU;
+--#    SK.Constants,
+--#    SK.CPU,
+--#    SK.VMX,
+--#    X86_64;
 package SK.Subjects
 --# own
 --#    State;
@@ -83,5 +86,20 @@ is
    function Get_Instruction_Length (Id : Skp.Subject_Id_Type) return SK.Word64;
    --# global
    --#    State;
+
+   --  Restore non-GPR guest registers from the subject state identified by ID.
+   --  GPRs are returned in Regs.
+   procedure Restore_State
+     (Id   :     Skp.Subject_Id_Type;
+      GPRs : out SK.CPU_Registers_Type);
+   --# global
+   --#    in     State;
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from
+   --#       *,
+   --#       Id,
+   --#       State &
+   --#    GPRs from State, Id;
 
 end SK.Subjects;

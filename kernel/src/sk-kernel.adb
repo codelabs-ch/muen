@@ -26,6 +26,7 @@ with SK.Apic;
 with SK.MP;
 with SK.CPU_Global;
 with SK.CPU;
+with SK.Subjects;
 
 package body SK.Kernel
 is
@@ -75,9 +76,9 @@ is
          --  Synchronize all logical CPUs.
 
          MP.Wait_For_All;
-         VMX.Restore_State
-           (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id,
-            Regs       => Subject_Registers);
+         Subjects.Restore_State
+           (Id   => CPU_Global.Get_Current_Minor_Frame.Subject_Id,
+            GPRs => Subject_Registers);
       else
          pragma Debug (KC.Put_Line (Item => "System initialisation error"));
          CPU.Stop;

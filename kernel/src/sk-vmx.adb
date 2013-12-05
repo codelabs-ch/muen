@@ -25,7 +25,6 @@ with SK.Descriptors;
 with SK.KC;
 with SK.GDT;
 with SK.Constants;
-with SK.Subjects;
 
 package body SK.VMX
 --# own
@@ -395,32 +394,6 @@ is
          CPU.Panic;
       end if;
    end Load;
-
-   -------------------------------------------------------------------------
-
-   procedure Restore_State
-     (Subject_Id :     Skp.Subject_Id_Type;
-      Regs       : out SK.CPU_Registers_Type)
-   is
-      State : SK.Subject_State_Type;
-   begin
-      State := Subjects.Get_State (Id => Subject_Id);
-      VMCS_Write (Field => Constants.GUEST_RIP,
-                  Value => State.RIP);
-      VMCS_Write (Field => Constants.GUEST_RSP,
-                  Value => State.RSP);
-      VMCS_Write (Field => Constants.GUEST_CR0,
-                  Value => State.CR0);
-      VMCS_Write (Field => Constants.CR0_READ_SHADOW,
-                  Value => State.SHADOW_CR0);
-      CPU.XRSTOR (Source => State.XSAVE_Area);
-
-      if CPU.Get_CR2 /= State.CR2 then
-         CPU.Set_CR2 (Value => State.CR2);
-      end if;
-
-      Regs := State.Regs;
-   end Restore_State;
 
    -------------------------------------------------------------------------
 

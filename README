@@ -163,8 +163,12 @@ serial console output is written to `emulate/serial.out`.
 Hardware
 ~~~~~~~~
 For efficient deployment of the Muen system image to real hardware, the iPXE
-<<ipxe>> boot firmware installed on a USB-stick is used. To build and install
-iPXE with the Muen specific boot script issue the following commands:
+<<ipxe>> boot firmware installed on a USB-stick in conjuction with Intel Active
+Management Technology (AMT) is used. Please refer to the amtterm <<amt>>
+documentation on how to configure AMT on the target hardware.
+
+To build and install iPXE with the Muen specific boot script issue the
+following commands:
 
   $ git clone git://git.ipxe.org/ipxe.git
   $ wget http://muen.codelabs.ch/muen.ipxe
@@ -196,9 +200,6 @@ directory:
 To view the output of the Muen kernel debug console use the command:
 
   $ amtterm 192.168.254.2
-
-Please refer to the amtterm <<amt>> documentation on how to configure AMT on
-the target hardware.
 
 
 References

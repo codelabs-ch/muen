@@ -44,11 +44,8 @@ is
    procedure Print_State (Context : Isr_Context_Type);
    pragma Export (C, Print_State, "dispatch_interrupt");
 
-   --  Print subject exit information. If Dump_State is True, the whole subject
-   --  state is printed.
-   procedure Print_Subject
-     (Subject_Id : Skp.Subject_Id_Type;
-      Dump_State : Boolean);
+   --  Print subject exit information including the whole subject state.
+   procedure Print_Subject (Subject_Id : Skp.Subject_Id_Type);
    pragma Inline_Always (Print_Subject);
 
 end SK.Dump;

@@ -137,9 +137,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_Subject
-     (Subject_Id : Skp.Subject_Id_Type;
-      Dump_State : Boolean)
+   procedure Print_Subject (Subject_Id : Skp.Subject_Id_Type)
    is
       State : SK.Subject_State_Type;
    begin
@@ -152,20 +150,17 @@ is
       KC.Put_Word32 (Item => Word32 (State.Exit_Qualification));
       KC.Put_String (Item => ":");
       KC.Put_Word32 (Item => Word32 (State.Interrupt_Info));
-
-      if Dump_State then
-         KC.New_Line;
-         Print_Registers (GPR => State.Regs,
-                          RIP => State.RIP,
-                          CS  => State.CS,
-                          RFL => State.RFLAGS,
-                          RSP => State.RSP,
-                          SS  => State.SS,
-                          CR0 => State.CR0,
-                          CR2 => State.CR2,
-                          CR3 => State.CR3,
-                          CR4 => State.CR4);
-      end if;
+      KC.New_Line;
+      Print_Registers (GPR => State.Regs,
+                       RIP => State.RIP,
+                       CS  => State.CS,
+                       RFL => State.RFLAGS,
+                       RSP => State.RSP,
+                       SS  => State.SS,
+                       CR0 => State.CR0,
+                       CR2 => State.CR2,
+                       CR3 => State.CR3,
+                       CR4 => State.CR4);
    end Print_Subject;
 
    -------------------------------------------------------------------------

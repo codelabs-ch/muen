@@ -457,8 +457,7 @@ is
             pragma Debug (KC.Put_String (Item => ">>> No handler for trap "));
             pragma Debug (KC.Put_Word16 (Item => Word16 (Trap_Nr)));
             pragma Debug (KC.Put_Line   (Item => " <<<"));
-            pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject,
-                                              Dump_State => True));
+            pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject));
             CPU.Panic;
          else
             if Trap_Entry.Dst_Vector < Skp.Invalid_Vector then
@@ -483,8 +482,7 @@ is
          pragma Debug (KC.Put_String (Item => ">>> Unknown trap "));
          pragma Debug (KC.Put_Word16 (Item => Word16 (Trap_Nr)));
          pragma Debug (KC.Put_Line (Item => " <<<"));
-         pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject,
-                                           Dump_State => False));
+         pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject));
          CPU.Panic;
       end if;
    end Handle_Trap;

@@ -463,38 +463,48 @@ is
    --#       *,
    --#       Current_Subject,
    --#       Subject_State;
-   --# pre
-   --#    Subject_State.Exit_Reason <= Sk.Word64
-   --#       (Skp.Subjects.Trap_Range'Last);
    is
       Trap_Entry : Skp.Subjects.Trap_Entry_Type;
    begin
-      Trap_Entry := Skp.Subjects.Get_Trap
-        (Subject_Id => Current_Subject,
-         Trap_Nr    => Skp.Subjects.Trap_Range (Subject_State.Exit_Reason));
+      if Subject_State.Exit_Reason <= SK.Word64
+        (Skp.Subjects.Trap_Range'Last)
+      then
+         Trap_Entry := Skp.Subjects.Get_Trap
+           (Subject_Id => Current_Subject,
+            Trap_Nr    => Skp.Subjects.Trap_Range (Subject_State.Exit_Reason));
 
-      if Trap_Entry.Dst_Subject = Skp.Invalid_Subject then
-         pragma Debug (KC.Put_Line (Item => ">>> No handler for trap <<<"));
-         pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject,
-                                           Dump_State => True));
-         CPU.Panic;
-      else
-         if Trap_Entry.Dst_Vector < Skp.Invalid_Vector then
-            Events.Insert_Event (Subject => Trap_Entry.Dst_Subject,
-                                 Event   => SK.Byte (Trap_Entry.Dst_Vector));
+         if Trap_Entry.Dst_Subject = Skp.Invalid_Subject then
+            pragma Debug (KC.Put_Line (Item => ">>> No handler for trap <<<"));
+            pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject,
+                                              Dump_State => True));
+            CPU.Panic;
+         else
+            if Trap_Entry.Dst_Vector < Skp.Invalid_Vector then
+               Events.Insert_Event
+                 (Subject => Trap_Entry.Dst_Subject,
+                  Event   => SK.Byte (Trap_Entry.Dst_Vector));
+            end if;
+
+            --  Handover to trap handler subject.
+
+            --# accept Warning, 444, "Guaranteed by validated policy";
+            --# assume Current_Subject /= Trap_Entry.Dst_Subject;
+            --# end accept;
+
+            Subject_Handover
+              (Old_Id   => Current_Subject,
+               New_Id   => Trap_Entry.Dst_Subject,
+               New_VMCS => Skp.Subjects.Get_VMCS_Address
+                 (Subject_Id => Trap_Entry.Dst_Subject));
          end if;
-
-         --  Handover to trap handler subject.
-
-         --# accept Warning, 444, "Guaranteed by validated policy";
-         --# assume Current_Subject /= Trap_Entry.Dst_Subject;
-         --# end accept;
-
-         Subject_Handover
-           (Old_Id   => Current_Subject,
-            New_Id   => Trap_Entry.Dst_Subject,
-            New_VMCS => Skp.Subjects.Get_VMCS_Address
-              (Subject_Id => Trap_Entry.Dst_Subject));
+      else
+         pragma Debug (KC.Put_String (Item => ">>> Unknown trap "));
+         pragma Debug (KC.Put_Word16
+                       (Item => Word16 (Subject_State.Exit_Reason)));
+         pragma Debug (KC.Put_Line (Item => " <<<"));
+         pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject,
+                                           Dump_State => False));
+         CPU.Panic;
       end if;
    end Handle_Trap;
 
@@ -587,17 +597,8 @@ is
 
          VMX.VMCS_Set_Interrupt_Window (Value => False);
       else
-         if State.Exit_Reason <= SK.Word64 (Skp.Subjects.Trap_Range'Last) then
-            Handle_Trap (Current_Subject => Current_Subject,
-                         Subject_State   => State);
-         else
-            pragma Debug (KC.Put_String (Item => ">>> Unknown trap "));
-            pragma Debug (KC.Put_Word16 (Item => Word16 (State.Exit_Reason)));
-            pragma Debug (KC.Put_Line (Item => " <<<"));
-            pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject,
-                                              Dump_State => False));
-            CPU.Panic;
-         end if;
+         Handle_Trap (Current_Subject => Current_Subject,
+                      Subject_State   => State);
       end if;
 
       Subjects.Set_State (Id            => Current_Subject,

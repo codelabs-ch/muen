@@ -239,25 +239,6 @@ is
       Descriptors (Id).RSP := Value;
    end Set_RSP;
 
-   -------------------------------------------------------------------------
-
-   procedure Set_State
-     (Id            : Skp.Subject_Id_Type;
-      Subject_State : SK.Subject_State_Type)
-   --# global
-   --#    Descriptors;
-   --# derives
-   --#    Descriptors from *, Id, Subject_State;
-   --# post
-   --#    Descriptors (Id) = Subject_State;
-   is
-      RIP : SK.Word64;
-   begin
-      RIP := Descriptors (Id).RIP;
-      Descriptors (Id) := Subject_State;
-      Descriptors (Id).RIP := RIP;
-   end Set_State;
-
 begin
 
    --# hide SK.Subjects;

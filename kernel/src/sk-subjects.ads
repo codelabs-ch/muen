@@ -36,15 +36,6 @@ is
    --# global
    --#    State;
 
-   --  Set state of subject identified by ID.
-   procedure Set_State
-     (Id            : Skp.Subject_Id_Type;
-      Subject_State : SK.Subject_State_Type);
-   --# global
-   --#    State;
-   --# derives
-   --#    State from *, Id, Subject_State;
-
    --  Get RFLAGS of subject with given ID.
    function Get_RFLAGS (Id : Skp.Subject_Id_Type) return SK.Word64;
    --# global

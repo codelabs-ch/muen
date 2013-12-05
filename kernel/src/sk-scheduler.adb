@@ -40,29 +40,6 @@ is
    Timer_Vector : constant := 48;
    IPI_Vector   : constant := 254;
 
-   Launched_Subject_State : constant SK.Subject_State_Type
-     := SK.Subject_State_Type'
-       (Launched           => True,
-        Regs               => SK.Null_CPU_Regs,
-        Exit_Reason        => 0,
-        Exit_Qualification => 0,
-        Guest_Phys_Addr    => 0,
-        Interrupt_Info     => 0,
-        Instruction_Len    => 0,
-        RIP                => 0,
-        CS                 => 0,
-        RSP                => 0,
-        SS                 => 0,
-        CR0                => 0,
-        SHADOW_CR0         => 0,
-        CR2                => 0,
-        CR3                => 0,
-        CR4                => 0,
-        RFLAGS             => 0,
-        Kernel_GS_BASE     => 0,
-        IA32_EFER          => 0,
-        XSAVE_Area         => SK.XSAVE_Area_Type'(others => 0));
-
    Tau0_Kernel_Iface_Address : SK.Word64;
    pragma Import (C, Tau0_Kernel_Iface_Address, "tau0kernel_iface_ptr");
 
@@ -123,51 +100,6 @@ is
          VMX.VMCS_Set_Interrupt_Window (Value => True);
       end if;
    end Inject_Event;
-
-   -------------------------------------------------------------------------
-
-   --  Read VMCS fields and store them in the given subject state.
-   procedure Store_Subject_Info (State : in out SK.Subject_State_Type)
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from * &
-   --#    State        from *, X86_64.State;
-   is
-   begin
-      VMX.VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
-                     Value => State.Exit_Qualification);
-      VMX.VMCS_Read (Field => Constants.VMX_EXIT_INTR_INFO,
-                     Value => State.Interrupt_Info);
-      VMX.VMCS_Read (Field => Constants.VMX_EXIT_INSTRUCTION_LEN,
-                     Value => State.Instruction_Len);
-
-      VMX.VMCS_Read (Field => Constants.GUEST_PHYSICAL_ADDRESS,
-                     Value => State.Guest_Phys_Addr);
-
-      VMX.VMCS_Read (Field => Constants.GUEST_RIP,
-                     Value => State.RIP);
-      VMX.VMCS_Read (Field => Constants.GUEST_SEL_CS,
-                     Value => State.CS);
-      VMX.VMCS_Read (Field => Constants.GUEST_RSP,
-                     Value => State.RSP);
-      VMX.VMCS_Read (Field => Constants.GUEST_SEL_SS,
-                     Value => State.SS);
-      VMX.VMCS_Read (Field => Constants.GUEST_CR0,
-                     Value => State.CR0);
-      VMX.VMCS_Read (Field => Constants.CR0_READ_SHADOW,
-                     Value => State.SHADOW_CR0);
-      State.CR2 := CPU.Get_CR2;
-      VMX.VMCS_Read (Field => Constants.GUEST_CR3,
-                     Value => State.CR3);
-      VMX.VMCS_Read (Field => Constants.GUEST_CR4,
-                     Value => State.CR4);
-      VMX.VMCS_Read (Field => Constants.GUEST_RFLAGS,
-                     Value => State.RFLAGS);
-      VMX.VMCS_Read (Field => Constants.GUEST_IA32_EFER,
-                     Value => State.IA32_EFER);
-      CPU.XSAVE (Target => State.XSAVE_Area);
-   end Store_Subject_Info;
 
    -------------------------------------------------------------------------
 
@@ -608,10 +540,8 @@ is
    --#       X86_64.State;
    is
       Exit_Status     : SK.Word64;
-      Exit_Quali      : SK.Word64;
       Current_Subject : Skp.Subject_Id_Type;
       Current_Minor   : CPU_Global.Active_Minor_Frame_Type;
-      State           : SK.Subject_State_Type := Launched_Subject_State;
    begin
       Current_Minor   := CPU_Global.Get_Current_Minor_Frame;
       Current_Subject := CPU_Global.Get_Minor_Frame
@@ -638,12 +568,8 @@ is
          CPU.Panic;
       end if;
 
-      State.Exit_Reason        := Exit_Status;
-      State.Exit_Qualification := Exit_Quali;
-      State.Regs               := Subject_Registers;
-      Store_Subject_Info (State => State);
-      Subjects.Set_RIP (Id    => Current_Subject,
-                        Value => State.RIP);
+      Subjects.Save_State (Id   => Current_Subject,
+                           GPRs => Subject_Registers);
 
       if Exit_Status = Constants.EXIT_REASON_EXTERNAL_INT then
          Handle_Irq (Vector => SK.Byte'Mod (Subjects.Get_Interrupt_Info
@@ -665,9 +591,6 @@ is
          Handle_Trap (Current_Subject => Current_Subject,
                       Trap_Nr         => Exit_Status);
       end if;
-
-      Subjects.Set_State (Id            => Current_Subject,
-                          Subject_State => State);
 
       Inject_Event
         (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id);

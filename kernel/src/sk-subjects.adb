@@ -151,6 +151,8 @@ is
    --#       GPRs,
    --#       X86_64.State &
    --#    X86_64.State from *;
+   --# post
+   --#    Descriptors (Id).Regs = GPRs;
    is
    begin
       Descriptors (Id).Regs := GPRs;

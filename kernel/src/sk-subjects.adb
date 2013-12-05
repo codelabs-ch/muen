@@ -103,6 +103,8 @@ is
    --#       Descriptors,
    --#       X86_64.State &
    --#    GPRs from Descriptors, Id;
+   --# post
+   --#    GPRs = Descriptors (Id).Regs;
    is
    begin
       VMX.VMCS_Write (Field => Constants.GUEST_RIP,

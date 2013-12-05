@@ -58,7 +58,7 @@ is
 
    --  Restore non-GPR guest registers from subject state identified by ID.
    --  GPRs are returned in Regs.
-   procedure Restore_Guest_Regs
+   procedure Restore_State
      (Subject_Id :     Skp.Subject_Id_Type;
       Regs       : out SK.CPU_Registers_Type);
    --# global

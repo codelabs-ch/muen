@@ -398,7 +398,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Restore_Guest_Regs
+   procedure Restore_State
      (Subject_Id :     Skp.Subject_Id_Type;
       Regs       : out SK.CPU_Registers_Type)
    is
@@ -420,7 +420,7 @@ is
       end if;
 
       Regs := State.Regs;
-   end Restore_Guest_Regs;
+   end Restore_State;
 
    -------------------------------------------------------------------------
 

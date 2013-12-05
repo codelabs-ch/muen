@@ -654,7 +654,7 @@ is
       Inject_Event
         (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id);
 
-      VMX.Restore_Guest_Regs
+      VMX.Restore_State
         (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id,
          Regs       => Subject_Registers);
    end Handle_Vmx_Exit;

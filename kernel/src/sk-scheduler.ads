@@ -83,7 +83,7 @@ private
    --#    in out Events.State;
    --#    in out X86_64.State;
    --# derives
-   --#    State, MP.Barrier, CPU_Global.State, Subjects.State from
+   --#    CPU_Global.State, Subjects.State from
    --#       *,
    --#       State,
    --#       Subject_Registers,
@@ -95,6 +95,11 @@ private
    --#       Subject_Registers,
    --#       CPU_Global.State,
    --#       Subjects.State,
+   --#       X86_64.State &
+   --#    MP.Barrier, State from
+   --#       *,
+   --#       State,
+   --#       CPU_Global.State,
    --#       X86_64.State &
    --#    X86_64.State from
    --#       *,

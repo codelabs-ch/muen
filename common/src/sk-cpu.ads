@@ -226,9 +226,9 @@ is
 
    procedure XSAVE (Target : out SK.XSAVE_Area_Type);
    --# global
-   --#    in out X86_64.State;
+   --#    in X86_64.State;
    --# derives
-   --#    X86_64.State, Target from X86_64.State;
+   --#    Target from X86_64.State;
    pragma Inline_Always (XSAVE);
 
 end SK.CPU;

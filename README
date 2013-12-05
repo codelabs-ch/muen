@@ -69,7 +69,7 @@ discussions regarding the Muen separation kernel.
 
 Download
 --------
-The Muen sources are available through its git repository:
+The Muen sources are available through the following git repository:
 
   $ git clone http://git.codelabs.ch/git/muen.git
 

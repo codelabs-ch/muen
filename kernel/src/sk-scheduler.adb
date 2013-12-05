@@ -607,7 +607,7 @@ is
    --#       CPU_Global.State,
    --#       X86_64.State;
    is
-      Exit_Reason     : SK.Word64;
+      Exit_Status     : SK.Word64;
       Exit_Quali      : SK.Word64;
       Current_Subject : Skp.Subject_Id_Type;
       Current_Minor   : CPU_Global.Active_Minor_Frame_Type;
@@ -619,49 +619,51 @@ is
          Minor_Id => Current_Minor.Minor_Id).Subject_Id;
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
-                     Value => Exit_Reason);
-      VMX.VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
-                     Value => Exit_Quali);
+                     Value => Exit_Status);
 
-      if SK.Bit_Test (Value => Exit_Reason,
+      if SK.Bit_Test (Value => Exit_Status,
                       Pos   => Constants.VM_EXIT_ENTRY_FAILURE)
       then
          pragma Debug (KC.Put_String (Item => "Subject "));
-         pragma Debug (KC.Put_Byte   (Item =>  Byte (Current_Subject)));
+         pragma Debug (KC.Put_Byte   (Item => Byte (Current_Subject)));
          pragma Debug (KC.Put_String (Item => " VM-entry failure ("));
-         pragma Debug (KC.Put_Word16 (Item => Word16 (Exit_Reason)));
+         pragma Debug (KC.Put_Word16 (Item => Word16 (Exit_Status)));
          pragma Debug (KC.Put_String (Item => ":"));
-         pragma Debug (KC.Put_Word32 (Item => Word32 (Exit_Quali)));
+         pragma Debug (VMX.VMCS_Read
+                       (Field => Constants.VMX_EXIT_QUALIFICATION,
+                        Value => Exit_Status));
+
+         pragma Debug (KC.Put_Word32 (Item => Word32 (Exit_Status)));
          pragma Debug (KC.Put_Line   (Item => ")"));
          CPU.Panic;
       end if;
 
-      State.Exit_Reason        := Exit_Reason;
+      State.Exit_Reason        := Exit_Status;
       State.Exit_Qualification := Exit_Quali;
       State.Regs               := Subject_Registers;
       Store_Subject_Info (State => State);
       Subjects.Set_RIP (Id    => Current_Subject,
                         Value => State.RIP);
 
-      if Exit_Reason = Constants.EXIT_REASON_EXTERNAL_INT then
+      if Exit_Status = Constants.EXIT_REASON_EXTERNAL_INT then
          Handle_Irq (Vector => SK.Byte'Mod (Subjects.Get_Interrupt_Info
                      (Id => Current_Subject)));
-      elsif Exit_Reason = Constants.EXIT_REASON_VMCALL then
+      elsif Exit_Status = Constants.EXIT_REASON_VMCALL then
          Handle_Hypercall (Current_Subject => Current_Subject,
                            Event_Nr        => Subject_Registers.RAX);
-      elsif Exit_Reason = Constants.EXIT_REASON_TIMER_EXPIRY then
+      elsif Exit_Status = Constants.EXIT_REASON_TIMER_EXPIRY then
 
          --  Minor frame ticks consumed, update scheduling information.
 
          Update_Scheduling_Info;
-      elsif Exit_Reason = Constants.EXIT_REASON_INTERRUPT_WINDOW then
+      elsif Exit_Status = Constants.EXIT_REASON_INTERRUPT_WINDOW then
 
          --  Resume subject to inject pending event.
 
          VMX.VMCS_Set_Interrupt_Window (Value => False);
       else
          Handle_Trap (Current_Subject => Current_Subject,
-                      Trap_Nr         => Exit_Reason);
+                      Trap_Nr         => Exit_Status);
       end if;
 
       Subjects.Set_State (Id            => Current_Subject,

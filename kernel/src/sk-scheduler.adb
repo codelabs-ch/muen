@@ -454,7 +454,9 @@ is
             Trap_Nr    => Skp.Subjects.Trap_Range (Trap_Nr));
 
          if Trap_Entry.Dst_Subject = Skp.Invalid_Subject then
-            pragma Debug (KC.Put_Line (Item => ">>> No handler for trap <<<"));
+            pragma Debug (KC.Put_String (Item => ">>> No handler for trap "));
+            pragma Debug (KC.Put_Word16 (Item => Word16 (Trap_Nr)));
+            pragma Debug (KC.Put_Line   (Item => " <<<"));
             pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject,
                                               Dump_State => True));
             CPU.Panic;

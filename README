@@ -112,10 +112,8 @@ the C run-time `LIBRARY_PATH`:
   $ export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
 
 To build the Muen tools, RTS, kernel and example subjects on Debian wheezy
-issue the following commands:
+change to the Muen source directory and issue the following commands:
 
-  $ git clone http://git.codelabs.ch/git/muen.git
-  $ cd muen
   $ git submodule init
   $ git submodule update
   $ export SPARK_DIR=/opt/spark

@@ -73,13 +73,16 @@ The Muen sources are available through the following git repository:
 
   $ git clone http://git.codelabs.ch/git/muen.git
 
+A browsable version of the repository is available here:
+
+http://git.codelabs.ch/?p=muen.git
+
 A ZIP archive of the current Muen sources can be downloaded here:
 
 http://git.codelabs.ch/?p=muen.git;a=snapshot;h=HEAD;sf=zip
 
-A browsable version of the repository is available here:
-
-http://git.codelabs.ch/?p=muen.git
+NOTE: The ZIP archive cannot be used to build the example system since it does
+      not contain all sub-projects.
 
 
 Build

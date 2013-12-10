@@ -51,7 +51,9 @@ is
 
       --  Initialize channel data.
 
-      Channel.Data := Data_Type'(others => Null_Element);
+      for I in Data_Type'Range loop
+         Channel.Data (I) := Null_Element;
+      end loop;
 
       --  Initiate new epoch.
 

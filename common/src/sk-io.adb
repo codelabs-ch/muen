@@ -51,4 +51,19 @@ is
          Volatile => True);
    end Outb;
 
+   -------------------------------------------------------------------------
+
+   procedure Outw
+     (Port  : SK.Word16;
+      Value : SK.Word16)
+   is
+      --# hide Outw;
+   begin
+      System.Machine_Code.Asm
+        (Template => "outw %0, %1",
+         Inputs   => (Word16'Asm_Input ("a", Value),
+                      Word16'Asm_Input ("d", Port)),
+         Volatile => True);
+   end Outw;
+
 end SK.IO;

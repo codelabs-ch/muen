@@ -40,4 +40,13 @@ is
    --# derives
    --#    X86_64.State from *, Port, Value;
 
+   --  Send 16-bit word to given port.
+   procedure Outw
+     (Port  : SK.Word16;
+      Value : SK.Word16);
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from *, Port, Value;
+
 end SK.IO;

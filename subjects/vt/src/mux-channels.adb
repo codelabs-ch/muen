@@ -41,6 +41,16 @@ is
 
    -------------------------------------------------------------------------
 
+   function Has_Pending_Data (Channel : Input_Channel_Range) return Boolean
+   is
+   begin
+      return VT_Channel_Rdr.Has_Pending_Data
+        (Channel => In_Channels (Channel),
+         Reader  => In_Readers (Channel));
+   end Has_Pending_Data;
+
+   -------------------------------------------------------------------------
+
    procedure Init
    is
    begin

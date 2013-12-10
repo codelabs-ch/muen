@@ -34,4 +34,7 @@ is
    --  Write character to output channel.
    procedure Write (Event : Input.Key_Event_Type);
 
+   --  Returns True if input channel given by index has pending data.
+   function Has_Pending_Data (Channel : Input_Channel_Range) return Boolean;
+
 end Mux.Channels;

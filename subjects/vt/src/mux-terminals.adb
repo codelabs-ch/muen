@@ -32,7 +32,6 @@ is
    pragma Atomic (Active_Slot);
 
    VGA_CRT_Register       : constant := 16#3d4#;
-   VGA_CRT_Data           : constant := 16#3d5#;
    VGA_CRT_Idx_Start_High : constant := 16#0c#;
    VGA_CRT_Idx_Start_Low  : constant := 16#0d#;
 
@@ -134,14 +133,12 @@ is
    is
       use type SK.Word16;
    begin
-      SK.IO.Outb (Port  => VGA_CRT_Register,
-                  Value => VGA_CRT_Idx_Start_Low);
-      SK.IO.Outb (Port  => VGA_CRT_Data,
-                  Value => SK.Byte (Address));
-      SK.IO.Outb (Port  => VGA_CRT_Register,
-                  Value => VGA_CRT_Idx_Start_High);
-      SK.IO.Outb (Port  => VGA_CRT_Data,
-                  Value => SK.Byte (Address / 2 ** 8));
+      SK.IO.Outw
+        (Port  => VGA_CRT_Register,
+         Value => VGA_CRT_Idx_Start_High + (Address and 16#ff00#));
+      SK.IO.Outw
+        (Port  => VGA_CRT_Register,
+         Value => VGA_CRT_Idx_Start_Low + ((Address * 2 ** 8) and 16#ff00#));
    end Set_VGA_Start;
 
    -------------------------------------------------------------------------

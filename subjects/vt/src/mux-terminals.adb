@@ -35,9 +35,10 @@ is
    VGA_CRT_Idx_Start_High : constant := 16#0c#;
    VGA_CRT_Idx_Start_Low  : constant := 16#0d#;
 
-   --  Number of pending channel read requests.
-   Pending_Requests : Natural := 0;
-   pragma Atomic (Pending_Requests);
+   type Flags_Type is array (Input_Channel_Range) of Boolean;
+
+   --  Pending data flags per channel.
+   Pending_Data : Flags_Type := (others => False);
 
    --  Read data from input channels if new data is present.
    procedure Update_In_Channels;
@@ -46,6 +47,9 @@ is
    --  www.phatcode.net/res/224/files/html/ch23/23-04.html
    procedure Set_VGA_Start (Address : SK.Word16);
 
+   --  Returns True if one of the channels has data to consume.
+   function Has_Pending_Data return Boolean;
+
    -------------------------------------------------------------------------
 
    function Get_Active_Slot return Slot_Range
@@ -53,6 +57,20 @@ is
    begin
       return Active_Slot;
    end Get_Active_Slot;
+
+   -------------------------------------------------------------------------
+
+   function Has_Pending_Data return Boolean
+   is
+   begin
+      for I in Pending_Data'Range loop
+         if Pending_Data (I) then
+            return True;
+         end if;
+      end loop;
+
+      return False;
+   end Has_Pending_Data;
 
    -------------------------------------------------------------------------
 
@@ -96,21 +114,17 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Queue_Request
-   is
-   begin
-      Pending_Requests := Pending_Requests + 1;
-   end Queue_Request;
-
-   -------------------------------------------------------------------------
-
    procedure Run
    is
       use type SK.Byte;
    begin
       loop
-         if Pending_Requests = 0 then
+         SK.CPU.Cli;
+         if not Has_Pending_Data then
+            SK.CPU.Sti;
             SK.CPU.Hlt;
+         else
+            SK.CPU.Sti;
          end if;
          Update_In_Channels;
       end loop;
@@ -126,6 +140,14 @@ is
       Mux.Screens.Set_Active (Screen => Slot);
       Set_VGA_Start (Address => SK.Word16 (Slot - 1) * 16#800#);
    end Set;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Pending_Flag (Channel_Nr : Input_Channel_Range)
+   is
+   begin
+      Pending_Data (Channel_Nr) := True;
+   end Set_Pending_Flag;
 
    -------------------------------------------------------------------------
 
@@ -152,41 +174,53 @@ is
 
       Data : Character;
       Res  : VT_Channel_Rdr.Result_Type;
+      C    : Input_Channel_Range := Input_Channel_Range'Last;
    begin
-      for C in Mux.Input_Channel_Range loop
-         loop
-            Channels.Read (Channel => C,
-                           Char    => Data,
-                           Result  => Res);
+      while Has_Pending_Data loop
+         if Pending_Data (C) then
+            for I in Positive range 1 .. 80 loop
+               Channels.Read (Channel => C,
+                              Char    => Data,
+                              Result  => Res);
 
-            case Res is
-               when VT_Channel_Rdr.Incompatible_Interface =>
-                  Log.Text_IO.Put_String (Item => "Channel ");
-                  Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
-                  Log.Text_IO.Put_Line
-                    (Item => ": Incompatible interface detected");
-               when VT_Channel_Rdr.Epoch_Changed =>
-                  Log.Text_IO.Put_String (Item => "Channel ");
-                  Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
-                  Log.Text_IO.Put_Line   (Item => ": Epoch changed");
-               when VT_Channel_Rdr.No_Data =>
-                  Pending_Requests := Pending_Requests - 1;
-               when VT_Channel_Rdr.Overrun_Detected =>
-                  Log.Text_IO.Put_String (Item => "Channel ");
-                  Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
-                  Log.Text_IO.Put_Line   (Item => ": Overrun detected");
-               when VT_Channel_Rdr.Inactive =>
-                  Log.Text_IO.Put_String (Item => "Channel ");
-                  Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
-                  Log.Text_IO.Put_Line   (Item => ": Inactive");
-               when VT_Channel_Rdr.Success =>
-                  Screens.Update
-                    (Screen => Slot_Range (C),
-                     Char   => Data);
-            end case;
+               case Res is
+                  when VT_Channel_Rdr.Incompatible_Interface =>
+                     Log.Text_IO.Put_String (Item => "Channel ");
+                     Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
+                     Log.Text_IO.Put_Line
+                       (Item => ": Incompatible interface detected");
+                  when VT_Channel_Rdr.Epoch_Changed =>
+                     Log.Text_IO.Put_String (Item => "Channel ");
+                     Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
+                     Log.Text_IO.Put_Line   (Item => ": Epoch changed");
+                  when VT_Channel_Rdr.No_Data =>
+                     SK.CPU.Cli;
+                     Pending_Data (C) := Channels.Has_Pending_Data
+                       (Channel => C);
+                     SK.CPU.Sti;
+                  when VT_Channel_Rdr.Overrun_Detected =>
+                     Log.Text_IO.Put_String (Item => "Channel ");
+                     Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
+                     Log.Text_IO.Put_Line   (Item => ": Overrun detected");
+                  when VT_Channel_Rdr.Inactive =>
+                     Log.Text_IO.Put_String (Item => "Channel ");
+                     Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
+                     Log.Text_IO.Put_Line   (Item => ": Inactive");
+                  when VT_Channel_Rdr.Success =>
+                     Screens.Update
+                       (Screen => Slot_Range (C),
+                        Char   => Data);
+               end case;
 
-            exit when Res /= VT_Channel_Rdr.Success;
-         end loop;
+               exit when Res /= VT_Channel_Rdr.Success;
+            end loop;
+         end if;
+
+         if C = Input_Channel_Range'First then
+            C := Input_Channel_Range'Last;
+         else
+            C := C - 1;
+         end if;
       end loop;
    end Update_In_Channels;
 

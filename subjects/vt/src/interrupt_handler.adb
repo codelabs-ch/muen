@@ -30,7 +30,8 @@ is
       use type SK.Byte;
    begin
       if Vector >= 34 and then Vector <= 36 then
-         Mux.Terminals.Queue_Request;
+         Mux.Terminals.Set_Pending_Flag
+           (Channel_Nr => Mux.Input_Channel_Range (Vector - 33));
       elsif Vector = 49 then
          Driver_Keyboard.Handle;
       else

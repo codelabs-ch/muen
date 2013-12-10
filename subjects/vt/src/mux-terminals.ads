@@ -37,7 +37,7 @@ is
    --  Process given key event.
    procedure Process_Key (Event : Input.Key_Event_Type);
 
-   --  Queue channel update request.
-   procedure Queue_Request;
+   --  Set pending data flag for given channel.
+   procedure Set_Pending_Flag (Channel_Nr : Input_Channel_Range);
 
 end Mux.Terminals;

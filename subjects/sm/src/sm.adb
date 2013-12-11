@@ -68,9 +68,6 @@ begin
          --  For reference values see e.g.
          --  http://www.cpu-world.com/cgi-bin/CPUID.pl?CPUID=26937&RAW_DATA=1
 
-         Subject.Text_IO.Put_String (Item => "CPUID function ");
-         Subject.Text_IO.Put_Word64 (Item => State.Regs.RAX);
-         Subject.Text_IO.New_Line;
          case State.Regs.RAX is
             when 0 =>
 

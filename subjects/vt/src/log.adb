@@ -21,6 +21,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Clear
+   is
+      CUHOME : constant String := ASCII.ESC & "[H";
+      ED0    : constant String := ASCII.ESC & "[J";
+   begin
+      Text_IO.Put_String (Item => CUHOME);
+      Text_IO.Put_String (Item => ED0);
+   end Clear;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize
    is
    begin

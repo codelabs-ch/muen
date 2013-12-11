@@ -33,4 +33,7 @@ is
    --  Initialize logging.
    procedure Initialize;
 
+   --  Clear log.
+   procedure Clear;
+
 end Log;

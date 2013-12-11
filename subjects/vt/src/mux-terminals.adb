@@ -90,7 +90,7 @@ is
    begin
       case Event.Key is
          when KEY_ESC  =>
-            Log.Text_IO.Init;
+            Log.Clear;
          when KEY_F1 =>
             Set (Slot => 1);
             Log.Text_IO.Put_Line ("Switching to VT 1");

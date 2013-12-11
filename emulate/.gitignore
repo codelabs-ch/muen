@@ -4,3 +4,4 @@ bootable.iso
 debugger.out
 iso/boot/kernel.bin
 serial.out
+snapshot.txt

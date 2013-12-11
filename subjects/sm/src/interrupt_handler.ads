@@ -20,7 +20,7 @@ with SK;
 
 with Skp;
 
-package Handler
+package Interrupt_Handler
 is
 
    --  Interrupt handler.
@@ -30,4 +30,4 @@ is
    Current_Subject : Skp.Subject_Id_Type;
    pragma Atomic (Current_Subject);
 
-end Handler;
+end Interrupt_Handler;

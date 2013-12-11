@@ -28,7 +28,7 @@ with Subject.Console;
 with Subject.Text_IO;
 
 with Interrupts;
-with Handler;
+with Interrupt_Handler;
 
 procedure Sm
 is
@@ -53,7 +53,7 @@ begin
    SK.CPU.Hlt;
 
    loop
-      Id := Handler.Current_Subject;
+      Id := Interrupt_Handler.Current_Subject;
 
       Subject.Text_IO.Put_String (Item => "Exit due to ");
       Subject.Text_IO.Put_Word64 (Item => State.Exit_Reason);

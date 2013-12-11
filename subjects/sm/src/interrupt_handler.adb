@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package body Handler
+package body Interrupt_Handler
 is
 
    -------------------------------------------------------------------------
@@ -27,4 +27,4 @@ is
       Current_Subject := Integer (Vector) - 32;
    end Handle_Interrupt;
 
-end Handler;
+end Interrupt_Handler;

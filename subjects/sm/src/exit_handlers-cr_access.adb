@@ -123,14 +123,17 @@ is
                Subject.Text_IO.Put_Word64 (State.CR0);
                Subject.Text_IO.New_Line;
             else
+               Subject.Text_IO.Put_String (Item => ">>> MOV to CR ");
+               Subject.Text_IO.Put_Byte   (Item => SK.Byte (Info.CR_Number));
+               Subject.Text_IO.Put_String (Item => " from ");
                Subject.Text_IO.Put_String
-                 (Item => "Unhandled MOV to CRx. unknown register #");
-               Subject.Text_IO.Put_Byte (Item => SK.Byte (Info.CR_Number));
-               Subject.Text_IO.New_Line;
+                 (Item => To_String (Reg => (Info.Data_Register)));
+               Subject.Text_IO.Put_Line   (Item => " not implemented <<<");
                Halt := True;
             end if;
          else
-            Subject.Text_IO.Put_String (Item => "Unhandled MOV to CRx");
+            Subject.Text_IO.Put_String (Item => "Unhandled MOV to CR ");
+            Subject.Text_IO.Put_Byte   (Item => SK.Byte (Info.CR_Number));
             Subject.Text_IO.New_Line;
             Halt := True;
          end if;

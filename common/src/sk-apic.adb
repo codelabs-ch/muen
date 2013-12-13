@@ -60,11 +60,13 @@ is
    procedure Sleep (Count : Positive)
    --# derives null from Count;
    is
-      --# hide Sleep;
    begin
+      --# accept Flow, 10, "Passing time by busy looping";
       for I in Integer range 1 .. Count * (2 ** 8) loop
          null;
       end loop;
+      --# end accept;
+      --# accept Flow, 35, Count, "Count controls wait time";
    end Sleep;
 
    -------------------------------------------------------------------------

@@ -55,11 +55,6 @@ begin
    loop
       Id := Interrupt_Handler.Current_Subject;
 
-      Subject.Text_IO.Put_String (Item => "Exit due to ");
-      Subject.Text_IO.Put_Word64 (Item => State.Exit_Reason);
-      Subject.Text_IO.Put_String (Item => " for subject ");
-      Subject.Text_IO.Put_Word64 (Item => SK.Word64 (Id));
-      Subject.Text_IO.New_Line;
       if State.Exit_Reason = SK.Constants.EXIT_REASON_CPUID then
 
          --  Minimal CPUID emulation. Code inspired by the emulation done by
@@ -364,7 +359,6 @@ begin
       end if;
 
       if not Dump_And_Halt then
-         Subject.Text_IO.Put_Line   (Item => "Done with Exit");
          State.RIP := State.RIP + State.Instruction_Len;
          SK.Hypercall.Trigger_Event (Number => SK.Byte (Id));
       else

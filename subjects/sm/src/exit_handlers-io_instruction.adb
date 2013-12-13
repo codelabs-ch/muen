@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Unchecked_Conversion;
+
 with SK;
 
 with Subject.Text_IO;
@@ -26,6 +28,46 @@ package body Exit_Handlers.IO_Instruction
 is
 
    use Subject_Info;
+
+   --  Types related to I/O instruction specific exit qualification.
+
+   type Access_Size_Type is mod 2 ** 3
+     with Size => 3;
+
+   type Direction_Type is (Dir_Out, Dir_In)
+     with Size => 1;
+   for Direction_Type use
+     (Dir_Out => 0,
+      Dir_In  => 1);
+
+   type Operand_Encoding_Type is (DX, Immediate)
+     with Size => 1;
+   for Operand_Encoding_Type use
+     (DX        => 0,
+      Immediate => 1);
+
+   type IO_Info_Type is record
+      Size         : Access_Size_Type;
+      Direction    : Direction_Type;
+      String_Instr : Boolean;
+      REP_Prefixed : Boolean;
+      Op_Encoding  : Operand_Encoding_Type;
+      Port_Number  : SK.Word16;
+   end record
+     with Size => 64;
+
+   for IO_Info_Type use record
+      Size         at 0 range  0 ..  2;
+      Direction    at 0 range  3 ..  3;
+      String_Instr at 0 range  4 ..  4;
+      REP_Prefixed at 0 range  5 ..  5;
+      Op_Encoding  at 0 range  6 ..  6;
+      Port_Number  at 0 range 16 .. 31;
+   end record;
+
+   --  Return I/O instruction information from exit qualification, as specified
+   --  by Intel SDM Vol. 3C, section 27.2.1, table 27-5.
+   function To_IO_Info (Qualification : SK.Word64) return IO_Info_Type;
 
    -------------------------------------------------------------------------
 
@@ -164,5 +206,16 @@ is
          end case;
       end if;
    end Process;
+
+   -------------------------------------------------------------------------
+
+   function To_IO_Info (Qualification : SK.Word64) return IO_Info_Type
+   is
+      function To_IO_Information is new Ada.Unchecked_Conversion
+        (Source => SK.Word64,
+         Target => IO_Info_Type);
+   begin
+      return To_IO_Information (Qualification);
+   end To_IO_Info;
 
 end Exit_Handlers.IO_Instruction;

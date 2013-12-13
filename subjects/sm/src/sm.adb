@@ -30,6 +30,7 @@ with Interrupt_Handler;
 with Subject_Info;
 with Exit_Handlers.CPUID;
 with Exit_Handlers.IO_Instruction;
+with Exit_Handlers.RDMSR;
 
 procedure Sm
 is
@@ -69,37 +70,7 @@ begin
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_IO_INSTRUCTION then
          Exit_Handlers.IO_Instruction.Process (Halt => Dump_And_Halt);
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_RDMSR then
-         case State.Regs.RCX and 16#ffff_ffff# is
-            when  16#8b# |
-                  16#c1# |
-                  16#c2# |
-                  16#c3# |
-                  16#c4# |
-                  16#c5# |
-                  16#c6# |
-                  16#c7# |
-                  16#c8# |
-                 16#186# |
-                 16#187# |
-                 16#188# |
-                 16#189# =>
-               Subject.Text_IO.Put_String (Item => "RDMSR 16#");
-               Subject.Text_IO.Put_Word32
-                 (Item => SK.Word32 (State.Regs.RCX and 16#ffff_ffff#));
-               Subject.Text_IO.Put_Line (Item => "#");
-               State.Regs.RAX := State.Regs.RAX and not 16#ffff_ffff#;
-               State.Regs.RDX := State.Regs.RDX and not 16#ffff_ffff#;
-            when 16#1a0# =>
-               Subject.Text_IO.Put_Line (Item => "RDMSR 16#1a0#");
-               State.Regs.RAX := 16#1800#;
-               State.Regs.RDX := 0;
-            when SK.Constants.IA32_KERNEL_GSBASE =>
-               State.Regs.RAX := State.Kernel_GS_BASE;
-            when others =>
-               Subject.Text_IO.Put_Line (Item => "RDMSR");
-               Dump_And_Halt := True;
-         end case;
-
+         Exit_Handlers.RDMSR.Process (Halt => Dump_And_Halt);
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_WRMSR then
          case State.Regs.RCX and 16#ffff_ffff# is
             when  16#8b# |

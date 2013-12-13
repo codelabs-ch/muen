@@ -140,20 +140,21 @@ is
                            Subject.Text_IO.Put_Word16 (Info.Port_Number);
                            Subject.Text_IO.Put_String ("  ");
                      end case;
-                     if ((State.Exit_Qualification / 2 ** 3) and 1) = 1 then
-                        Subject.Text_IO.Put_String ("read.");
-                        case Info.Port_Number is
+                     case Info.Direction is
+                        when Dir_In =>
+                           Subject.Text_IO.Put_String ("read.");
+                           case Info.Port_Number is
                            when 16#70# | 16#71# =>
                               State.Regs.RAX :=
                                 State.Regs.RAX and not 16#ff#;
                            when others =>
                               State.Regs.RAX := State.Regs.RAX or 16#ff#;
-                        end case;
-                     else
-                        Subject.Text_IO.Put_String ("write: ");
-                        Subject.Text_IO.Put_Byte
-                          (Item => SK.Byte (State.Regs.RAX and 16#ff#));
-                     end if;
+                           end case;
+                        when Dir_Out =>
+                           Subject.Text_IO.Put_String ("write: ");
+                           Subject.Text_IO.Put_Byte
+                             (Item => SK.Byte (State.Regs.RAX and 16#ff#));
+                     end case;
                      Subject.Text_IO.New_Line;
                   when others =>
                      Halt := True;
@@ -168,14 +169,15 @@ is
                      Subject.Text_IO.Put_String (" ");
                      Subject.Text_IO.Put_Word16 (Info.Port_Number);
                      Subject.Text_IO.Put_String ("  ");
-                     if ((State.Exit_Qualification / 2 ** 3) and 1) = 1 then
-                        Subject.Text_IO.Put_String ("read.");
-                        State.Regs.RAX := State.Regs.RAX or 16#ffff#;
-                     else
-                        Subject.Text_IO.Put_String ("write: ");
-                        Subject.Text_IO.Put_Word16
-                          (Item => SK.Word16 (State.Regs.RAX and 16#ffff#));
-                     end if;
+                     case Info.Direction is
+                        when Dir_In =>
+                           Subject.Text_IO.Put_String ("read.");
+                           State.Regs.RAX := State.Regs.RAX or 16#ffff#;
+                        when Dir_Out =>
+                           Subject.Text_IO.Put_String ("write: ");
+                           Subject.Text_IO.Put_Word16
+                             (Item => SK.Word16 (State.Regs.RAX and 16#ffff#));
+                     end case;
                      Subject.Text_IO.New_Line;
                   when others =>
                      Halt := True;
@@ -188,15 +190,16 @@ is
                      Subject.Text_IO.Put_String (" ");
                      Subject.Text_IO.Put_Word16 (Info.Port_Number);
                      Subject.Text_IO.Put_String ("  ");
-                     if ((State.Exit_Qualification / 2 ** 3) and 1) = 1 then
-                        Subject.Text_IO.Put_String ("read.");
-                        State.Regs.RAX := State.Regs.RAX or 16#ffff_ffff#;
-                     else
-                        Subject.Text_IO.Put_String ("write: ");
-                        Subject.Text_IO.Put_Word32
-                          (Item => SK.Word32
-                             (State.Regs.RAX and 16#ffff_ffff#));
-                     end if;
+                     case Info.Direction is
+                        when Dir_In =>
+                           Subject.Text_IO.Put_String ("read.");
+                           State.Regs.RAX := State.Regs.RAX or 16#ffff_ffff#;
+                        when Dir_Out =>
+                           Subject.Text_IO.Put_String ("write: ");
+                           Subject.Text_IO.Put_Word32
+                             (Item => SK.Word32
+                                (State.Regs.RAX and 16#ffff_ffff#));
+                     end case;
                      Subject.Text_IO.New_Line;
                   when others =>
                      Halt := True;

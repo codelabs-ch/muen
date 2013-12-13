@@ -57,7 +57,10 @@ is
             State.Regs.RAX := State.Regs.RAX and not 16#ffff_ffff#;
             State.Regs.RDX := State.Regs.RDX and not 16#ffff_ffff#;
          when IA32_MISC_ENABLE =>
-            Subject.Text_IO.Put_Line (Item => "RDMSR 16#1a0#");
+
+            --  Bit 11: Branch Trace Storage Unavailable
+            --  Bit 12: Precise Event Based Sampling (PEBS) Unavailable
+
             State.Regs.RAX := 16#1800#;
             State.Regs.RDX := 0;
          when SK.Constants.IA32_KERNEL_GSBASE =>

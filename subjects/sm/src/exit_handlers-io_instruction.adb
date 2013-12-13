@@ -34,6 +34,10 @@ is
    type Access_Size_Type is mod 2 ** 3
      with Size => 3;
 
+   One_Byte  : constant Access_Size_Type := 0;
+   Two_Byte  : constant Access_Size_Type := 1;
+   Four_Byte : constant Access_Size_Type := 3;
+
    type Direction_Type is (Dir_Out, Dir_In)
      with Size => 1;
    for Direction_Type use
@@ -87,7 +91,7 @@ is
          Halt := True;
       else
          case Info.Size is
-            when 0 =>      --  1-byte
+            when One_Byte =>
                case Info.Port_Number is
                   --  Only handle these ports by now:
                   when 16#20#  |    --  PIC_MASTER_CMD      (hardcoded)
@@ -154,7 +158,7 @@ is
                   when others =>
                      Halt := True;
                end case;
-            when 1 =>      --  2-byte
+            when Two_Byte =>
                case Info.Port_Number is
                   --  Only handle these ports by now:
                   when 16#0cf8# |   --  PCI Addr            (hardcoded)
@@ -176,7 +180,7 @@ is
                   when others =>
                      Halt := True;
                end case;
-            when 3 =>      --  4-byte
+            when Four_Byte =>
                case Info.Port_Number is
                   --  Only handle these ports by now:
                   when 16#0cf8# |   --  PCI Addr            (hardcoded)

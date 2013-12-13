@@ -93,6 +93,12 @@ is
    --  Intel SDM Vol. 3C, section 27.2.1, table 27-3.
    function To_CR_Info (Qualification : SK.Word64) return CR_Info_Type;
 
+   --  Register string representation type.
+   subtype Reg_String is String (1 .. 3);
+
+   --  Return string representation of given register.
+   function To_String (Reg : Data_Register_Type) return Reg_String;
+
    -------------------------------------------------------------------------
 
    procedure Process (Halt : out Boolean)
@@ -145,5 +151,30 @@ is
    begin
       return To_CR_Information (Qualification);
    end To_CR_Info;
+
+   -------------------------------------------------------------------------
+
+   function To_String (Reg : Data_Register_Type) return Reg_String
+   is
+      Reg_Map : constant array (Data_Register_Type) of Reg_String
+        := (RAX => "RAX",
+            RBX => "RBX",
+            RCX => "RCX",
+            RDX => "RDX",
+            RSP => "RSP",
+            RBP => "RBP",
+            RSI => "RSI",
+            RDI => "RDI",
+            R8  => " R8",
+            R9  => " R9",
+            R10 => "R10",
+            R11 => "R11",
+            R12 => "R12",
+            R13 => "R13",
+            R14 => "R14",
+            R15 => "R15");
+   begin
+      return Reg_Map (Reg);
+   end To_String;
 
 end Exit_Handlers.CR_Access;

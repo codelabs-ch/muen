@@ -32,6 +32,7 @@ with Exit_Handlers.CPUID;
 with Exit_Handlers.IO_Instruction;
 with Exit_Handlers.RDMSR;
 with Exit_Handlers.WRMSR;
+with Exit_Handlers.CR_Access;
 
 procedure Sm
 is
@@ -75,38 +76,7 @@ begin
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_WRMSR then
          Exit_Handlers.WRMSR.Process (Halt => Dump_And_Halt);
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_CR_ACCESS then
-         if (State.Exit_Qualification and 16#30#) = 0 then
-            if (State.Exit_Qualification and 15) = 0 then
-               if (State.Exit_Qualification and 16#f00#) = 0 then
-                  State.SHADOW_CR0 := State.Regs.RAX;
-                  State.CR0 := State.SHADOW_CR0 or 16#20#; -- CR0_FIXED0
-                  Subject.Text_IO.Put_String
-                    (Item => "Accepting mov eax, cr0 at ");
-                  Subject.Text_IO.Put_Word64 (State.RIP);
-                  Subject.Text_IO.Put_String (Item => ". set to ");
-                  Subject.Text_IO.Put_Word64 (State.SHADOW_CR0);
-                  Subject.Text_IO.Put_String (Item => " and ");
-                  Subject.Text_IO.Put_Word64 (State.CR0);
-                  Subject.Text_IO.New_Line;
-               else
-                  Subject.Text_IO.Put_String
-                    (Item => "Unhandled MOV to CRx. unknown register #");
-                  Subject.Text_IO.Put_Word64
-                    (State.Exit_Qualification and 16#f00#);
-                  Subject.Text_IO.New_Line;
-                  Dump_And_Halt := True;
-               end if;
-            else
-               Subject.Text_IO.Put_String (Item => "Unhandled MOV to CRx");
-               Subject.Text_IO.New_Line;
-               Dump_And_Halt := True;
-            end if;
-         else
-            Subject.Text_IO.Put_String (Item => "Unhandled CR access method");
-            Subject.Text_IO.New_Line;
-            Dump_And_Halt := True;
-         end if;
-
+         Exit_Handlers.CR_Access.Process (Halt => Dump_And_Halt);
       else
          Subject.Text_IO.Put_String (Item => "Unhandled trap for subject ");
          Subject.Text_IO.Put_Byte   (Item => SK.Byte (Id));

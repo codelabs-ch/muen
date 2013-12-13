@@ -40,9 +40,6 @@ is
 
    Id            : Skp.Subject_Id_Type;
    Dump_And_Halt : Boolean := False;
-
-   MSR_KERNEL_GS_BASE : constant := 16#c0000102#;
-
 begin
    Subject.Console.Enable_Notification;
    Subject.Text_IO.Init;
@@ -96,7 +93,7 @@ begin
                Subject.Text_IO.Put_Line (Item => "RDMSR 16#1a0#");
                State.Regs.RAX := 16#1800#;
                State.Regs.RDX := 0;
-            when MSR_KERNEL_GS_BASE =>
+            when SK.Constants.IA32_KERNEL_GSBASE =>
                State.Regs.RAX := State.Kernel_GS_BASE;
             when others =>
                Subject.Text_IO.Put_Line (Item => "RDMSR");
@@ -117,7 +114,7 @@ begin
                Subject.Text_IO.Put_Word32
                  (Item => SK.Word32 (State.Regs.RAX and 16#ffff_ffff#));
                Subject.Text_IO.New_Line;
-            when MSR_KERNEL_GS_BASE =>
+            when SK.Constants.IA32_KERNEL_GSBASE =>
                State.Kernel_GS_BASE := State.Regs.RAX;
             when others =>
                Subject.Text_IO.Put_Line (Item => "WRMSR");

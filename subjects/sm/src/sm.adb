@@ -28,6 +28,7 @@ with Subject.Text_IO;
 with Interrupts;
 with Interrupt_Handler;
 with Subject_Info;
+with Exit_Handlers.CPUID;
 
 procedure Sm
 is
@@ -54,68 +55,7 @@ begin
       Id := Interrupt_Handler.Current_Subject;
 
       if State.Exit_Reason = SK.Constants.EXIT_REASON_CPUID then
-
-         --  Minimal CPUID emulation. Code inspired by the emulation done by
-         --  the lguest hypervisor in the Linux kernel
-         --  (see arch/x86/lguest/boot.c, lguest_cpuid function).
-         --  For reference values see e.g.
-         --  http://www.cpu-world.com/cgi-bin/CPUID.pl?CPUID=26937&RAW_DATA=1
-
-         case State.Regs.RAX is
-            when 0 =>
-
-               --  Get vendor ID.
-
-               --  Return the vendor ID for a GenuineIntel processor and set
-               --  the highest valid CPUID number to 1.
-
-               State.Regs.RAX := 1;
-               State.Regs.RBX := 16#756e_6547#;
-               State.Regs.RCX := 16#6c65_746e#;
-               State.Regs.RDX := 16#4965_6e69#;
-            when 1 =>
-
-               --  Processor Info and Feature Bits.
-               --                            Model IVB
-               --                      IVB  / Stepping 9
-               --                      /-\ | /
-               State.Regs.RAX := 16#0003_06A9#;
-               --     CFLUSH size (in 8B)
-               --                        \
-               State.Regs.RBX := 16#0000_0800#; --  FIXME use real CPU's value
-               --  Features:
-               State.Regs.RCX := 16#0000_0000#;
-               --  Features:
-               --  Bit  1 -   FPU: x87 enabled
-               --  Bit  3 -   PSE: Page Size Extensions
-               --  Bit  5 -   MSR: RD/WR MSR
-               --  Bit  6 -   PAE: PAE and 64bit page tables
-               --  Bit  8 -   CX8: CMPXCHG8B Instruction
-               --  Bit 11 -   SEP: SYSENTER/SYSEXIT Instructions
-               --  Bit 15 -  CMOV: Conditional Move Instructions
-               --  Bit 19 - CLFSH: CLFLUSH Instruction
-               --  Bit 24 -  FXSR: FX SAVE/RESTORE
-               --  Bit 25 -   SSE: SSE support
-               --  Bit 26 -  SSE2: SSE2 support
-               State.Regs.RDX := 16#0708_8969#;
-            when 16#8000_0000# =>
-
-               --  Get Highest Extended Function Supported.
-
-               State.Regs.RAX := 16#8000_0001#;
-            when 16#8000_0001# =>
-
-               --  Get Extended CPU Features
-
-               --  Bit 29 -   LM: Long Mode
-               State.Regs.RDX := 16#2000_0000#;
-            when others =>
-               Subject.Text_IO.Put_String (Item => "Unknown CPUID function ");
-               Subject.Text_IO.Put_Word64 (Item => State.Regs.RAX);
-               Subject.Text_IO.New_Line;
-               Dump_And_Halt := True;
-         end case;
-
+         Exit_Handlers.CPUID.Process (Halt => Dump_And_Halt);
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_INVLPG
         or else State.Exit_Reason = SK.Constants.EXIT_REASON_DR_ACCESS
       then

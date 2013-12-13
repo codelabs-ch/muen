@@ -201,9 +201,11 @@ is
                   when others =>
                      Halt := True;
                end case;
-            when others => --  not used
-               Subject.Text_IO.Put_Line
-                 ("I/O instruction with invalid access size");
+            when others =>
+               Subject.Text_IO.Put_String
+                 ("I/O instruction with invalid access size 16#");
+               Subject.Text_IO.Put_Byte (Item => SK.Byte (Info.Size));
+               Subject.Text_IO.Put_Line (Item => "#");
                Halt := True;
          end case;
       end if;

@@ -25,6 +25,7 @@ with Subject_Info;
 package body Exit_Handlers.WRMSR
 is
 
+   use SK.Constants;
    use Subject_Info;
 
    -------------------------------------------------------------------------
@@ -36,8 +37,8 @@ is
       Halt := False;
 
       case State.Regs.RCX and 16#ffff_ffff# is
-         when 16#8b# |
-              16#c1# =>
+         when IA32_BIOS_SIGN_ID |
+              IA32_PMC0         =>
             Subject.Text_IO.Put_String (Item => "WRMSR 16#");
             Subject.Text_IO.Put_Word32
               (Item => SK.Word32 (State.Regs.RCX and 16#ffff_ffff#));

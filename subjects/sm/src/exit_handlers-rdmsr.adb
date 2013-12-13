@@ -25,6 +25,7 @@ with Subject_Info;
 package body Exit_Handlers.RDMSR
 is
 
+   use SK.Constants;
    use Subject_Info;
 
    -------------------------------------------------------------------------
@@ -36,26 +37,26 @@ is
       Halt := False;
 
       case State.Regs.RCX and 16#ffff_ffff# is
-         when  16#8b# |
-              16#c1# |
-              16#c2# |
-              16#c3# |
-              16#c4# |
-              16#c5# |
-              16#c6# |
-              16#c7# |
-              16#c8# |
-              16#186# |
-              16#187# |
-              16#188# |
-              16#189# =>
+         when IA32_BIOS_SIGN_ID |
+              IA32_PMC0         |
+              IA32_PMC1         |
+              IA32_PMC2         |
+              IA32_PMC3         |
+              IA32_PMC4         |
+              IA32_PMC5         |
+              IA32_PMC6         |
+              IA32_PMC7         |
+              IA32_PERFEVTSEL0  |
+              IA32_PERFEVTSEL1  |
+              IA32_PERFEVTSEL2  |
+              IA32_PERFEVTSEL3  =>
             Subject.Text_IO.Put_String (Item => "RDMSR 16#");
             Subject.Text_IO.Put_Word32
               (Item => SK.Word32 (State.Regs.RCX and 16#ffff_ffff#));
             Subject.Text_IO.Put_Line (Item => "#");
             State.Regs.RAX := State.Regs.RAX and not 16#ffff_ffff#;
             State.Regs.RDX := State.Regs.RDX and not 16#ffff_ffff#;
-         when 16#1a0# =>
+         when IA32_MISC_ENABLE =>
             Subject.Text_IO.Put_Line (Item => "RDMSR 16#1a0#");
             State.Regs.RAX := 16#1800#;
             State.Regs.RDX := 0;

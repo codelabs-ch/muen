@@ -50,6 +50,7 @@ is
    IA32_APIC_BASE               : constant := 16#1b#;
    IA32_FEATURE_CONTROL         : constant := 16#3a#;
    IA32_EFER                    : constant := 16#c000_0080#;
+   IA32_KERNEL_GSBASE           : constant := 16#c000_0102#;
 
    IA32_VMX_BASIC               : constant := 16#480#;
    IA32_VMX_PINBASED_CTLS       : constant := 16#481#;

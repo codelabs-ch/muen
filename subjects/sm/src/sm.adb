@@ -33,13 +33,12 @@ with Exit_Handlers.IO_Instruction;
 with Exit_Handlers.RDMSR;
 with Exit_Handlers.WRMSR;
 with Exit_Handlers.CR_Access;
+with Exit_Handlers.RDTSC;
 
 procedure Sm
 is
    use type SK.Word64;
    use Subject_Info;
-
-   TSC_Counter   : SK.Word64 := 0;
 
    Id            : Skp.Subject_Id_Type;
    Dump_And_Halt : Boolean := False;
@@ -65,10 +64,7 @@ begin
          null;
 
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_RDTSC then
-         State.Regs.RAX := TSC_Counter and 16#ffff_ffff#;
-         State.Regs.RDX := TSC_Counter / 2 ** 32;
-         TSC_Counter := TSC_Counter + 1;
-
+         Exit_Handlers.RDTSC.Process (Halt => Dump_And_Halt);
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_IO_INSTRUCTION then
          Exit_Handlers.IO_Instruction.Process (Halt => Dump_And_Halt);
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_RDMSR then

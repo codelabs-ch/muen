@@ -74,17 +74,21 @@ is
    procedure Process (Halt : out Boolean)
    is
       use type SK.Word64;
+
+      Info : IO_Info_Type;
    begin
       Halt := False;
 
-      if (State.Exit_Qualification and 48) /= 0 then
+      Info := To_IO_Info (Qualification => State.Exit_Qualification);
+
+      if Info.String_Instr or Info.REP_Prefixed then
          Subject.Text_IO.Put_Line
            ("I/O instructions with string and REP not supported");
          Halt := True;
       else
-         case State.Exit_Qualification and 7 is --  Size of access
+         case Info.Size is
             when 0 =>      --  1-byte
-               case State.Exit_Qualification / 2 ** 16 is --  Port number
+               case Info.Port_Number is
                   --  Only handle these ports by now:
                   when 16#20#  |    --  PIC_MASTER_CMD      (hardcoded)
                        16#21#  |    --  PIC_MASTER_DATA     (hardcoded)
@@ -116,7 +120,7 @@ is
                        16#cfe# |    --  PCI Data            (hardcoded)
                        16#cff# =>   --  PCI Data            (hardcoded)
                      --  ignore writes, read 00/ff
-                     case State.Exit_Qualification / 2 ** 16 is
+                     case Info.Port_Number is
                         when 16#40# =>
                            Subject.Text_IO.Put_String
                              ("(40) i8253/4 PIT_CH0  ");
@@ -129,14 +133,12 @@ is
                            Subject.Text_IO.Put_String ("(71) RTC DATA ");
                         when others =>
                            Subject.Text_IO.Put_String (" ");
-                           Subject.Text_IO.Put_Word16
-                             (SK.Word16 ((State.Exit_Qualification / 2 ** 16)
-                              and 16#ffff#));
+                           Subject.Text_IO.Put_Word16 (Info.Port_Number);
                            Subject.Text_IO.Put_String ("  ");
                      end case;
                      if ((State.Exit_Qualification / 2 ** 3) and 1) = 1 then
                         Subject.Text_IO.Put_String ("read.");
-                        case State.Exit_Qualification / 2 ** 16 is
+                        case Info.Port_Number is
                            when 16#70# | 16#71# =>
                               State.Regs.RAX :=
                                 State.Regs.RAX and not 16#ff#;
@@ -153,16 +155,14 @@ is
                      Halt := True;
                end case;
             when 1 =>      --  2-byte
-               case State.Exit_Qualification / 2 ** 16 is --  Port number
+               case Info.Port_Number is
                   --  Only handle these ports by now:
                   when 16#0cf8# |   --  PCI Addr            (hardcoded)
                        16#0cfa# |   --  PCI Addr            (hardcoded)
                        16#0cfc# |   --  PCI Data            (hardcoded)
                        16#0cfe# =>  --  PCI Data            (hardcoded)
                      Subject.Text_IO.Put_String (" ");
-                     Subject.Text_IO.Put_Word16
-                       (SK.Word16 ((State.Exit_Qualification / 2 ** 16) and
-                          16#ffff#));
+                     Subject.Text_IO.Put_Word16 (Info.Port_Number);
                      Subject.Text_IO.Put_String ("  ");
                      if ((State.Exit_Qualification / 2 ** 3) and 1) = 1 then
                         Subject.Text_IO.Put_String ("read.");
@@ -177,14 +177,12 @@ is
                      Halt := True;
                end case;
             when 3 =>      --  4-byte
-               case State.Exit_Qualification / 2 ** 16 is --  Port number
+               case Info.Port_Number is
                   --  Only handle these ports by now:
                   when 16#0cf8# |   --  PCI Addr            (hardcoded)
                        16#0cfc# =>  --  PCI Data            (hardcoded)
                      Subject.Text_IO.Put_String (" ");
-                     Subject.Text_IO.Put_Word16
-                       (SK.Word16 ((State.Exit_Qualification / 2 ** 16) and
-                          16#ffff#));
+                     Subject.Text_IO.Put_Word16 (Info.Port_Number);
                      Subject.Text_IO.Put_String ("  ");
                      if ((State.Exit_Qualification / 2 ** 3) and 1) = 1 then
                         Subject.Text_IO.Put_String ("read.");

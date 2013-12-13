@@ -59,6 +59,8 @@ is
    --  Busy-sleep for a given (scaled) period of time.
    procedure Sleep (Count : Positive)
    --# derives null from Count;
+   --# pre
+   --#    Count < Integer'Last / 2 ** 8;
    is
    begin
       --# accept Flow, 10, "Passing time by busy looping";

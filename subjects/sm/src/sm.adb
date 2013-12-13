@@ -31,6 +31,7 @@ with Subject_Info;
 with Exit_Handlers.CPUID;
 with Exit_Handlers.IO_Instruction;
 with Exit_Handlers.RDMSR;
+with Exit_Handlers.WRMSR;
 
 procedure Sm
 is
@@ -72,26 +73,7 @@ begin
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_RDMSR then
          Exit_Handlers.RDMSR.Process (Halt => Dump_And_Halt);
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_WRMSR then
-         case State.Regs.RCX and 16#ffff_ffff# is
-            when  16#8b# |
-                  16#c1# =>
-               Subject.Text_IO.Put_String (Item => "WRMSR 16#");
-               Subject.Text_IO.Put_Word32
-                 (Item => SK.Word32 (State.Regs.RCX and 16#ffff_ffff#));
-               Subject.Text_IO.Put_String (Item => "#: ");
-               Subject.Text_IO.Put_Word32
-                 (Item => SK.Word32 (State.Regs.RDX and 16#ffff_ffff#));
-               Subject.Text_IO.Put_String (Item => ":");
-               Subject.Text_IO.Put_Word32
-                 (Item => SK.Word32 (State.Regs.RAX and 16#ffff_ffff#));
-               Subject.Text_IO.New_Line;
-            when SK.Constants.IA32_KERNEL_GSBASE =>
-               State.Kernel_GS_BASE := State.Regs.RAX;
-            when others =>
-               Subject.Text_IO.Put_Line (Item => "WRMSR");
-               Dump_And_Halt := True;
-         end case;
-
+         Exit_Handlers.WRMSR.Process (Halt => Dump_And_Halt);
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_CR_ACCESS then
          if (State.Exit_Qualification and 16#30#) = 0 then
             if (State.Exit_Qualification and 15) = 0 then

@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
-
 with SK.CPU;
 with SK.Hypercall;
 with SK.Constants;
@@ -29,17 +27,17 @@ with Subject.Text_IO;
 
 with Interrupts;
 with Interrupt_Handler;
+with Subject_Info;
 
 procedure Sm
 is
    use type SK.Word64;
+   use Subject_Info;
 
    TSC_Counter   : SK.Word64 := 0;
 
    Id            : Skp.Subject_Id_Type;
    Dump_And_Halt : Boolean := False;
-   State         : SK.Subject_State_Type;
-   for State'Address use System'To_Address (16#1e0000#);
 
    MSR_KERNEL_GS_BASE : constant := 16#c0000102#;
 

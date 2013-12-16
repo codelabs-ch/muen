@@ -155,8 +155,6 @@ is
    --#    Descriptors (Id).Regs = GPRs;
    is
    begin
-      Descriptors (Id).Regs := GPRs;
-
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => Descriptors (Id).Exit_Reason);
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_QUALIFICATION,
@@ -191,6 +189,8 @@ is
       VMX.VMCS_Read (Field => Constants.GUEST_IA32_EFER,
                      Value => Descriptors (Id).IA32_EFER);
       CPU.XSAVE (Target => Descriptors (Id).XSAVE_Area);
+
+      Descriptors (Id).Regs := GPRs;
    end Save_State;
 
    -------------------------------------------------------------------------

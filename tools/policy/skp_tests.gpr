@@ -16,9 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../../config/defaults";
-with "../../contrib/ahven";
-with "../../contrib/xmlada";
+with "defaults";
+with "ahven";
+with "xmlada";
 
 project Skp_Tests is
 

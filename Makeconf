@@ -16,3 +16,6 @@ SKPACKER = $(TOP_DIR)/tools/packer/obj/skpacker
 SKPOLICY = $(TOP_DIR)/tools/policy/obj/skpolicy
 
 HARDWARE ?= bochs
+
+export ADA_PROJECT_PATH = \
+	$(TOP_DIR)/config:$(TOP_DIR)/contrib

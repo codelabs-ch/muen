@@ -16,9 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../../config/defaults";
-with "../../contrib/ada_bfd";
-with "../../contrib/ahven";
+with "defaults";
+with "ada_bfd";
+with "ahven";
 
 project Skc_Tests is
 

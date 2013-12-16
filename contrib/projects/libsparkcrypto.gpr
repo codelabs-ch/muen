@@ -1,0 +1,11 @@
+project Libsparkcrypto is
+
+   for Source_Dirs use
+     ("../libsparkcrypto/src/ada/x86_64",
+      "../libsparkcrypto/src/ada/generic",
+      "../libsparkcrypto/src/ada/nullio",
+      "../libsparkcrypto/src/shared/generic",
+      "../libsparkcrypto/src/shared/little_endian");
+   for Object_Dir use "../build/libsparkcrypto";
+
+end Libsparkcrypto;

@@ -1,5 +1,6 @@
-RECIPES = \
-	ada-bfd
+RECIPES =   \
+	ada-bfd \
+	ahven
 
 all: build_recipes
 

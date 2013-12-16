@@ -1,1 +1,17 @@
 BUILDDIR = $(CURDIR)/../build
+
+TMP = $(CURDIR)/tmp
+WRK = $(TMP)/$(PKG)
+
+DUMMY := $(shell mkdir -p $(TMP))
+
+STAMP_COMMON    = $(TMP)/.$(PKG)
+STAMP_BUILD     = $(STAMP_COMMON)-build
+STAMP_INSTALL   = $(STAMP_COMMON)-install
+STAMP_CONFIGURE = $(STAMP_COMMON)-configure
+STAMP_UNPACK    = $(STAMP_COMMON)-unpack
+
+all: $(STAMP_INSTALL)
+
+clean:
+	@rm -rf $(TMP)

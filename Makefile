@@ -2,7 +2,10 @@ include Makeconf
 
 export HARDWARE
 
-all: pack
+all: contrib pack
+
+contrib:
+	$(MAKE) -C $@
 
 skconfig:
 	$(MAKE) $@ -C tools
@@ -44,4 +47,7 @@ clean:
 	$(MAKE) clean -C subjects
 	$(MAKE) clean -C rts
 
-.PHONY: deploy emulate kernel pack policy rts subjects
+distclean: clean
+	$(MAKE) clean -C contrib
+
+.PHONY: contrib deploy emulate kernel pack policy rts subjects

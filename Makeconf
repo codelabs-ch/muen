@@ -17,5 +17,8 @@ SKPOLICY = $(TOP_DIR)/tools/policy/obj/skpolicy
 
 HARDWARE ?= bochs
 
+CONT_DIR = $(TOP_DIR)/contrib
+CONB_DIR = $(CONT_DIR)/build
+
 export ADA_PROJECT_PATH = \
-	$(TOP_DIR)/config:$(TOP_DIR)/contrib
+	$(TOP_DIR)/config:$(CONT_DIR):$(CONB_DIR)/share/ada/adainclude

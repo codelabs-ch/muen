@@ -17,7 +17,7 @@
 --
 
 with "defaults";
-with "ada_bfd";
+with "bfdada";
 with "ahven";
 
 project Skc_Tests is

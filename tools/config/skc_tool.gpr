@@ -17,7 +17,7 @@
 --
 
 with "defaults";
-with "ada_bfd";
+with "bfdada";
 
 project Skc_Tool is
 

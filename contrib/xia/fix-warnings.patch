@@ -1,0 +1,24 @@
+diff -Naur xia-1.00/mckae-xml-xpath-query_handling.adb xia-1.00.new/mckae-xml-xpath-query_handling.adb
+--- xia-1.00/mckae-xml-xpath-query_handling.adb	2005-03-05 14:49:26.000000000 +0100
++++ xia-1.00.new/mckae-xml-xpath-query_handling.adb	2013-12-17 16:24:44.166338768 +0100
+@@ -55,7 +55,7 @@
+ 
+       Path := Locations.Get_Path;
+ 
+-      Path.Absolute := Xpath_Query(1) = '/';
++      Path.Absolute := Xpath_Query(Xpath_Query'First) = '/';
+       Path.Path(Path.Steps).Output_Step := True;
+ 
+       return Path;
+diff -Naur xia-1.00/mckae-xml-xpath-xia.ads xia-1.00.new/mckae-xml-xpath-xia.ads
+--- xia-1.00/mckae-xml-xpath-xia.ads	2005-03-05 14:49:26.000000000 +0100
++++ xia-1.00.new/mckae-xml-xpath-xia.ads	2013-12-17 16:24:44.166338768 +0100
+@@ -39,7 +39,7 @@
+ 
+ with Dom.Core;
+ 
+-package Mckae.XML.XPath.XIA is
++package McKae.XML.XPath.XIA is
+ 
+    function XPath_Query
+      (N     : Dom.Core.Node;

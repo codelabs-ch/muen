@@ -1,0 +1,17 @@
+with "xmlada";
+
+project Xia is
+
+   for Source_Dirs use ("../xia/src", "../xia/src/booch4xia");
+   for Object_Dir use "../build/xia";
+
+   Compiler_Switches := ("-gnat05",
+                         "-fstack-check",
+                         "-gnato",
+                         "-g");
+
+   package Compiler is
+      for Default_Switches ("Ada") use Compiler_Switches;
+   end Compiler;
+
+end Xia;

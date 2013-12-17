@@ -4,19 +4,12 @@ ARC = $(PKG).tar.gz
 SRC = http://sf.net/projects/ahven/files/ahven/Ahven%20$(PV)/$(ARC)/download
 DLA = $(WRK).tar.gz
 
-include ../Makeconf
-
-$(DLA):
+define CMD_DL
 	@wget $(SRC) -O $@
+endef
 
-$(STAMP_UNPACK): $(DLA)
-	@tar xfz $^ -C $(TMP)
-	@touch $@
-
-$(STAMP_BUILD): $(STAMP_UNPACK)
-	@$(MAKE) -C $(WRK)
-	@touch $@
-
-$(STAMP_INSTALL): $(STAMP_BUILD)
+define CMD_INSTALL
 	@$(MAKE) -C $(WRK) PREFIX=$(BUILDDIR) install_lib
-	@touch $@
+endef
+
+include ../Makeconf

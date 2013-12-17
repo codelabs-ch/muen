@@ -7,23 +7,8 @@ DLA = $(WRK).tar.gz
 CONFIG_OPTS = \
 	--prefix=$(BUILDDIR)
 
-include ../Makeconf
-
-$(DLA):
-	@cd $(TMP) && wget $(SRC)
-
-$(STAMP_UNPACK): $(DLA)
-	@tar xfz $^ -C $(TMP)
-	@touch $@
-
-$(STAMP_CONFIGURE): $(STAMP_UNPACK)
+define CMD_CONFIGURE
 	@cd $(WRK) && ./configure $(CONFIG_OPTS)
-	@touch $@
+endef
 
-$(STAMP_BUILD): $(STAMP_CONFIGURE)
-	@$(MAKE) -C $(WRK)
-	@touch $@
-
-$(STAMP_INSTALL): $(STAMP_BUILD)
-	@$(MAKE) -C $(WRK) install_static
-	@touch $@
+include ../Makeconf

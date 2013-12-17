@@ -37,3 +37,4 @@ $(STAMP_INSTALL): $(STAMP_BUILD)
 
 clean:
 	@rm -rf $(TMP)
+	$(CMD_CLEAN_EXTRA)

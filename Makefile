@@ -2,10 +2,11 @@ include Makeconf
 
 export HARDWARE
 
-all: contrib pack
+ifeq (,$(filter $(MAKECMDGOALS),clean distclean))
+CONTRIB := $(shell $(MAKE) -C contrib)
+endif
 
-contrib:
-	$(MAKE) -C $@
+all: pack
 
 skconfig:
 	$(MAKE) $@ -C tools
@@ -50,4 +51,4 @@ clean:
 distclean: clean
 	$(MAKE) clean -C contrib
 
-.PHONY: contrib deploy emulate kernel pack policy rts subjects
+.PHONY: deploy emulate kernel pack policy rts subjects

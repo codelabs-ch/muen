@@ -1,6 +1,0 @@
---  This project file is used for the sanity checking of XML/Ada.
-
-with "xmlada";
-project Sanity is
-   for Main use ("testxml.adb");
-end Sanity;

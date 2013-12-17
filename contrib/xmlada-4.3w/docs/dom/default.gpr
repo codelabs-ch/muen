@@ -1,5 +1,0 @@
-with "../../dom/dom";
-with "../../schema/schema";
-project Default is
-   for Main use ("domexample.adb", "domexample2.adb", "domschemaexample.adb");
-end Default;

@@ -1,4 +1,0 @@
-with "@exec_prefix@/xmlada.gpr";
-project Default is
-   for Main use ("testxml.adb");
-end Default;

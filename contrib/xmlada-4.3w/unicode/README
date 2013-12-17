@@ -1,6 +1,0 @@
-
-See the file unicode.ads for a general explanation on Unicode encoding
-and character sets.
-
-See the files unicode-ccs.ads and unicode-ces.ads for more information on
-Coded Character Sets and Character Encoding Schemes

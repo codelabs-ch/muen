@@ -11,4 +11,4 @@ define CMD_CONFIGURE
 	@cd $(WRK) && ./configure $(CONFIG_OPTS)
 endef
 
-include ../Makeconf
+include ../contrib.archive.mk

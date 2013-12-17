@@ -63,6 +63,6 @@ $(OBJ_DIR)/target.cfg: $(OBJ_DIR)/confgen
 	$< > $@
 
 $(OBJ_DIR)/confgen: $(SPARK_DIR)/lib/spark/confgen.adb
-	LIBRARY_PATH=/usr/lib/x86_64-linux-gnu gnatmake -D $(OBJ_DIR) -o $@ $<
+	gnatmake -D $(OBJ_DIR) -o $@ $<
 
 .PHONY: $(OBJ_DIR)/$(PACKAGE)

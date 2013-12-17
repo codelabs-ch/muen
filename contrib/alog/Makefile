@@ -6,4 +6,6 @@ BUILD_OPTS = LIBRARY_KIND=static
 
 INSTALL_OPTS = $(BUILD_OPTS) PREFIX=$(BUILDDIR)
 
+all: install_default
+
 include ../contrib.git.mk

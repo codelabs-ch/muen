@@ -18,8 +18,6 @@ define CMD_INSTALL
 endef
 endif
 
-all: $(STAMP_INSTALL)
-
 $(STAMP_CONFIGURE): $(WRK)
 	$(CMD_CONFIGURE)
 	@touch $@
@@ -32,6 +30,7 @@ endif
 	@$(CMD_BUILD)
 	@touch $@
 
+install_default: $(STAMP_INSTALL)
 $(STAMP_INSTALL): $(STAMP_BUILD)
 	$(CMD_INSTALL)
 	@touch $@

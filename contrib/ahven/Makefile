@@ -12,4 +12,6 @@ define CMD_INSTALL
 	@$(MAKE) -C $(WRK) PREFIX=$(BUILDDIR) install_lib
 endef
 
+all: install_default
+
 include ../contrib.archive.mk

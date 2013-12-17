@@ -11,4 +11,6 @@ define CMD_CONFIGURE
 	@cd $(WRK) && ./configure $(CONFIG_OPTS)
 endef
 
+all: install_default
+
 include ../contrib.archive.mk

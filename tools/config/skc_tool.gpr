@@ -16,8 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "defaults";
-with "bfdada";
+with "../../config/defaults";
+with "../../contrib/projects/bfdada";
 
 project Skc_Tool is
 

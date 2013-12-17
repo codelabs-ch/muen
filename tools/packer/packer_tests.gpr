@@ -16,8 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "defaults";
-with "ahven";
+with "../../config/defaults";
+with "../../contrib/projects/ahven";
 
 project Packer_Tests is
 

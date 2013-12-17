@@ -16,9 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "defaults";
-with "bfdada";
-with "ahven";
+with "../../config/defaults";
+with "../../contrib/projects/bfdada";
+with "../../contrib/projects/ahven";
 
 project Skc_Tests is
 

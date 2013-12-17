@@ -1,0 +1,7 @@
+library project Alog is
+   for Source_Dirs use ("../build/include/alog");
+   for Library_Name use "alog";
+   for Library_Dir use "../build/lib/alog";
+   for Library_Kind use "static";
+   for Externally_Built use "true";
+end Alog;

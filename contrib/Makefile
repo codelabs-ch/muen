@@ -1,6 +1,7 @@
 RECIPES =   \
 	ada-bfd \
-	ahven
+	ahven   \
+	alog
 
 all: build_recipes
 

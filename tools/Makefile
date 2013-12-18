@@ -1,4 +1,4 @@
-all: skconfig skpacker skpolicy
+all: skconfig skpacker skpolicy mutools
 
 skconfig:
 	$(MAKE) -C config
@@ -9,12 +9,16 @@ skpacker:
 skpolicy:
 	$(MAKE) -C policy
 
+mutools:
+	@gprbuild -p -Pprojects/$@
+
 tests:
-	$(MAKE) tests -C config
-	$(MAKE) tests -C packer
-	$(MAKE) tests -C policy
+	$(MAKE) $@ -C config
+	$(MAKE) $@ -C packer
+	$(MAKE) $@ -C policy
 
 clean:
-	$(MAKE) clean -C config
-	$(MAKE) clean -C packer
-	$(MAKE) clean -C policy
+	$(MAKE) $@ -C config
+	$(MAKE) $@ -C packer
+	$(MAKE) $@ -C policy
+	@rm -rf bin lib obj

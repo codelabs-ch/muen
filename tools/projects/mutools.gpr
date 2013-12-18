@@ -1,0 +1,3 @@
+aggregate project Mutools is
+   for Project_Files use ("muptgen.gpr", "muzpgen.gpr");
+end Mutools;

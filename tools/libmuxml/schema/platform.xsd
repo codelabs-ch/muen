@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="./types.xsd"/>
+
+	<xs:complexType name="platformType">
+		<xs:sequence>
+			<xs:element name="processor" type="processorType"      minOccurs="1" maxOccurs="1"/>
+			<xs:element name="memory"    type="physicalMemoryType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="device"    type="deviceType"         minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="physicalMemoryType">
+		<xs:sequence>
+			<xs:element name="memoryBlock" type="memoryBlockType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="deviceType">
+		<xs:sequence>
+			<xs:element name="irq"    type="irqType"         minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="memory" type="memoryBlockType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="ioPort" type="ioPortType"      minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name"   type="nameType"   use="required"/>
+		<xs:attribute name="shared" type="xs:boolean" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="processorType">
+		<xs:attribute name="logicalCpus"  type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="speed"        type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="vmxTimerRate" type="vmxTimerRateType"   use="required"/>
+	</xs:complexType>
+
+	<xs:simpleType name="vmxTimerRateType">
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="31"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+</xs:schema>

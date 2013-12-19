@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="./types.xsd"/>
+
+	<xs:complexType name="eventsType">
+		<xs:sequence>
+			<xs:element name="event" type="eventType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="eventSourceType">
+		<xs:sequence>
+			<xs:element name="group" type="eventGroupType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="eventGroupType">
+		<xs:sequence>
+			<xs:element name="event" type="eventEntryType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="eventGroupNameType" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="eventTargetType">
+		<xs:sequence>
+			<xs:element name="event" type="interruptEntryType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="eventGroupNameType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="vmx_exit"/>
+			<xs:enumeration value="vmcall"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="eventType">
+		<xs:attribute name="name" type="nameType"      use="required"/>
+		<xs:attribute name="mode" type="eventModeType" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="eventEntryType">
+		<xs:sequence>
+			<xs:element name="notify" type="eventNotifyType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="id"      type="xs:nonNegativeInteger" use="required"/>
+		<xs:attribute name="logical" type="nameType"              use="required"/>
+		<xs:attribute name="action"  type="eventActionType"       use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="eventNotifyType">
+		<xs:attribute name="physical" type="nameType"           use="required"/>
+		<xs:attribute name="subject"  type="nameType"           use="required"/>
+		<xs:attribute name="vector"   type="optionalVectorType" use="required"/>
+		<xs:attribute name="mode"     type="eventModeType"      use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="interruptEntryType">
+		<xs:attribute name="physical" type="nameType"           use="required"/>
+		<xs:attribute name="logical"  type="nameType"           use="required"/>
+		<xs:attribute name="vector"   type="optionalVectorType" use="required"/>
+	</xs:complexType>
+
+	<xs:simpleType name="eventActionType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="continue"/>      <!-- continue execution -->
+			<xs:enumeration value="yield"/>         <!-- continue execution when an event occurs or on the next minor frame -->
+			<xs:enumeration value="sleep"/>         <!-- continue execution when an event occurs -->
+			<xs:enumeration value="halt"/>          <!-- permanently disable execution of the subject -->
+			<xs:enumeration value="system_panic"/>  <!-- bring down the system immediately -->
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="optionalVectorType">
+		<xs:union memberTypes="vectorType noneType"/>
+	</xs:simpleType>
+
+	<xs:simpleType name="noneType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="eventModeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="async"/>
+			<xs:enumeration value="ipi"/>
+			<xs:enumeration value="switch"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+</xs:schema>

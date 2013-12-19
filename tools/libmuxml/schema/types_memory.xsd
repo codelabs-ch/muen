@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+	<xs:simpleType name="memorySizeType">
+		<xs:restriction base="word64Type"/>
+	</xs:simpleType>
+
+	<xs:simpleType name="cachingType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="UC|WC|WT|WB|WP"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="fileFormatType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="elf"/>
+			<xs:enumeration value="pt"/>
+			<xs:enumeration value="iobm"/>
+			<xs:enumeration value="msrbm"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="memoryBlockType">
+		<xs:attribute name="name"            type="nameType"       use="required"/>
+		<xs:attribute name="physicalAddress" type="word64Type"     use="required"/>
+		<xs:attribute name="size"            type="memorySizeType" use="required"/>
+		<xs:attribute name="caching"         type="cachingType"    use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="fileContentType">
+		<xs:attribute name="format"   type="fileFormatType" use="required"/>
+		<xs:attribute name="filename" type="xs:string"      use="required"/>
+		<xs:attribute name="offset"   type="word64Type"     use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="fillContentType">
+		<xs:attribute name="pattern" type="xs:string" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="memRegionsType">
+		<xs:sequence>
+			<xs:element name="memory" type="memoryType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="memoryType">
+		<xs:choice minOccurs="0" maxOccurs="1">
+			<xs:element name="file" type="fileContentType"/>
+			<xs:element name="fill" type="fillContentType"/>
+		</xs:choice>
+		<xs:attribute name="name"            type="nameType"       use="required"/>
+		<xs:attribute name="size"            type="memorySizeType" use="required"/>
+		<xs:attribute name="physicalAddress" type="word64Type"     use="required"/>
+		<xs:attribute name="caching"         type="cachingType"    use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="memoryRefsType">
+		<xs:sequence>
+			<xs:element name="memory" type="memRefType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="memSingleRefType">
+		<xs:attribute name="logical"        type="nameType"   use="required"/>
+		<xs:attribute name="physical"       type="nameType"   use="required"/>
+		<xs:attribute name="virtualAddress" type="word64Type" use="required"/>
+		<xs:attribute name="writable"       type="xs:boolean" use="required"/>
+		<xs:attribute name="executable"     type="xs:boolean" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="memRefType">
+		<xs:sequence>
+			<xs:element name="physical" type="physmemReferenceType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="logical"        type="nameType"   use="required"/>
+		<xs:attribute name="virtualAddress" type="word64Type" use="required"/>
+		<xs:attribute name="writable"       type="xs:boolean" use="required"/>
+		<xs:attribute name="executable"     type="xs:boolean" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="physmemReferenceType">
+		<xs:attribute name="name" type="nameType" use="required"/>
+	</xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<system>
+	<platform>
+		<processor logicalCpus="1" speed="2900" vmxTimerRate="5"/>
+		<memory>
+			<memoryBlock name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#" caching="WB"/>
+		</memory>
+		<device name="debugconsole" shared="false">
+			<ioPort name="serial" start="16#50b0#" end="16#50b8#"/>
+		</device>
+	</platform>
+
+	<memory>
+		<memory name="trampoline" size="16#1000#" physicalAddress="16#0000#" caching="WB"/>
+	</memory>
+
+	<events>
+		<event name="xv6_keyboard" mode="ipi"/>
+	</events>
+
+	<kernel>
+		<memory>
+			<cpu id="0">
+				<memory logical="kernel_text" writable="false" executable="true" virtualAddress="16#0010_0000#">
+					<physical name="kernel_text"/>
+				</memory>
+			</cpu>
+		</memory>
+		<devices>
+			<device logical="log" physical="debugconsole">
+				<ioPort logical="ports" physical="serial" start="16#50b0#" end="16#50b8#"/>
+			</device>
+		</devices>
+	</kernel>
+
+	<subjects>
+		<subject id="0" name="tau0">
+			<vcpu>
+				<vmx>
+					<controls>
+						<pin>
+							<ExternalInterruptExiting>1</ExternalInterruptExiting>
+							<NMIExiting>1</NMIExiting>
+							<VirtualNMIs>0</VirtualNMIs>
+							<ActivateVMXTimer>1</ActivateVMXTimer>
+							<!-- All pin controls must be specified -->
+						</pin>
+						<proc>
+							<INVLPGExiting>1</INVLPGExiting>
+							<MWAITExiting>1</MWAITExiting>
+							<!-- All proc controls must be specified -->
+						</proc>
+						<proc2>
+							<WBINVDExiting>1</WBINVDExiting>
+							<!-- All proc2 controls must be specified -->
+						</proc2>
+						<entry>
+							<IA32eModeGuest>1</IA32eModeGuest>
+							<!-- All entry controls must be specified -->
+						</entry>
+						<exit>
+							<IA32eMode>1</IA32eMode>
+							<!-- All exit controls must be specified -->
+						</exit>
+					</controls>
+					<masks>
+						<exception>
+							<DivideError>1</DivideError>
+							<RESERVED>1</RESERVED>
+							<!-- All 20bits must be specified -->
+						</exception>
+						<cr0>
+							<ProtectionEnable>1</ProtectionEnable>
+							<MonitorCoprocessor>0</MonitorCoprocessor>
+							<!-- All 11bits must be specified -->
+						</cr0>
+						<cr4>
+							<Virtual8086>0</Virtual8086>
+							<PhysicalAddressExtension>1</PhysicalAddressExtension>
+							<!-- All 17bits must be specified -->
+						</cr4>
+					</masks>
+				</vmx>
+				<registers>
+					<gpr>
+						<rip>16#0000#</rip>
+						<rsp>16#9000#</rsp>
+						<!-- All GPRs have a value -->
+					</gpr>
+					<cr0>
+						<ProtectionEnable>1</ProtectionEnable>
+						<MonitorCoprocessor>0</MonitorCoprocessor>
+						<!-- All bits must be specified -->
+					</cr0>
+					<cr4>
+						<Virtual8086>0</Virtual8086>
+						<PhysicalAddressExtension>1</PhysicalAddressExtension>
+						<!-- All bits must be specified -->
+					</cr4>
+					<msrs>
+						<msr start="16#0802#" end="16#0802#" mode="r"/>
+					</msrs>
+				</registers>
+				<segments>
+					<cs selector="16#0008#" base="16#0000#" limit="16#ffff#" access="16#a09b#"/>
+					<ds selector="16#0010#" base="16#0000#" limit="16#ffff#" access="16#c093#"/>
+					<!-- All segments must be specified -->
+				</segments>
+			</vcpu>
+			<bootparams/>
+			<memory>
+				<memory logical="text" writable="false" executable="true" virtualAddress="16#0000#">
+					<physical name="tau0-text"/>
+				</memory>
+			</memory>
+			<devices/>
+			<events/>
+		</subject>
+	</subjects>
+
+	<scheduling tickRate="10000">
+		<majorFrame>
+			<cpu>
+				<minorFrame subject="tau0" ticks="40"/>
+				<minorFrame subject="tau0" ticks="40"/>
+			</cpu>
+		</majorFrame>
+		<majorFrame>
+			<cpu>
+				<minorFrame subject="tau0" ticks="80"/>
+			</cpu>
+		</majorFrame>
+	</scheduling>
+
+</system>

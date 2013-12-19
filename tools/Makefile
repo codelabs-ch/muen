@@ -17,6 +17,7 @@ tests:
 	$(MAKE) $@ -C config
 	$(MAKE) $@ -C packer
 	$(MAKE) $@ -C policy
+	$(MAKE) $@ -C libmuxml
 
 clean:
 	$(MAKE) $@ -C config

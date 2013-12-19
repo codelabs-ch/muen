@@ -1,4 +1,4 @@
-all: skconfig skpacker skpolicy mutools
+all: skconfig skpacker skpolicy tools
 
 skconfig:
 	$(MAKE) -C config
@@ -9,8 +9,9 @@ skpacker:
 skpolicy:
 	$(MAKE) -C policy
 
-mutools:
-	@gprbuild -p -Pprojects/$@
+tools:
+	$(MAKE) -C muptgen
+	$(MAKE) -C muzpgen
 
 tests:
 	$(MAKE) $@ -C config
@@ -21,4 +22,6 @@ clean:
 	$(MAKE) $@ -C config
 	$(MAKE) $@ -C packer
 	$(MAKE) $@ -C policy
-	@rm -rf bin lib obj
+	$(MAKE) $@ -C libmulog
+	$(MAKE) $@ -C muptgen
+	$(MAKE) $@ -C muzpgen

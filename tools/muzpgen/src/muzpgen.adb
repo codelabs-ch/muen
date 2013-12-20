@@ -29,7 +29,8 @@ is
    procedure Print_Usage
    is
    begin
-      Mulog.Log (Msg => Ada.Command_Line.Command_Name & " <policy>");
+      Mulog.Log
+        (Msg => "Usage: " & Ada.Command_Line.Command_Name & " <policy>");
    end Print_Usage;
 
 begin

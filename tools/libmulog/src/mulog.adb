@@ -16,17 +16,51 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Text_IO;
+with Ada.Strings.Fixed;
+with Ada.Strings.Unbounded;
+with Ada.Command_Line;
+
+with Alog.Logger;
+with Alog.Facilities.File_Descriptor;
 
 package body Mulog
 is
 
+   use Ada.Strings.Unbounded;
+
+   Name     : Unbounded_String;
+   Instance : Alog.Logger.Instance (Init => True);
+
+   Level_Map : constant array (Log_Level) of Alog.Log_Level
+     := (Debug     => Alog.Debug,
+         Info      => Alog.Info,
+         Notice    => Alog.Notice,
+         Warning   => Alog.Warning,
+         Error     => Alog.Error,
+         Critical  => Alog.Critical,
+         Alert     => Alog.Alert,
+         Emergency => Alog.Emergency);
+
    -------------------------------------------------------------------------
 
-   procedure Log (Msg : String)
+   procedure Log
+     (Level : Log_Level := Info;
+      Msg   : String)
    is
    begin
-      Ada.Text_IO.Put_Line (Item => Msg);
+      Instance.Log_Message (Source => To_String (Name),
+                            Level  => Level_Map (Level),
+                            Msg    => Msg);
    end Log;
 
+begin
+   declare
+      Cmd : constant String   := Ada.Command_Line.Command_Name;
+      Sep : constant Positive := Ada.Strings.Fixed.Index
+        (Source  => Cmd,
+         Pattern => "/",
+         Going   => Ada.Strings.Backward);
+   begin
+      Name := To_Unbounded_String (Cmd (Sep + 1 .. Cmd'Last));
+   end;
 end Mulog;

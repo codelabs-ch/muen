@@ -19,7 +19,19 @@
 package Mulog
 is
 
-   --  Log given string.
-   procedure Log (Msg : String);
+   type Log_Level is
+     (Debug,
+      Info,
+      Notice,
+      Warning,
+      Error,
+      Critical,
+      Alert,
+      Emergency);
+
+   --  Log the specified message with given loglevel.
+   procedure Log
+     (Level : Log_Level := Info;
+      Msg   : String);
 
 end Mulog;

@@ -36,7 +36,7 @@ project Skc_Tests is
          for Object_Dir use "obj";
 
       when "coverage" =>
-         for Object_Dir use "obj/cov";
+         for Object_Dir use "obj/coverage";
          Compiler_Switches := Compiler_Switches
            & Defaults.Cov_Compiler_Switches;
          Linker_Switches   := Linker_Switches

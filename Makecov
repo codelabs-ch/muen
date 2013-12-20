@@ -1,4 +1,4 @@
-COV_DIR = $(OBJ_DIR)/cov
+COV_DIR = $(OBJ_DIR)/coverage
 
 clean_cov:
 	@rm -f $(COV_DIR)/*.gcda

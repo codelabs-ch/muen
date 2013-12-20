@@ -1,7 +1,3 @@
-all: muzpgen
+TOOL = muzpgen
 
-muzpgen:
-	@gprbuild -p -P$@
-
-clean:
-	@rm -rf bin obj
+include ../tools.mk

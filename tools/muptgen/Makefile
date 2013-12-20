@@ -1,7 +1,3 @@
-all: muptgen
+TOOL = muptgen
 
-muptgen:
-	@gprbuild -p -P$@
-
-clean:
-	@rm -rf bin obj
+include ../tools.mk

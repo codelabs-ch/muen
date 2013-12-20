@@ -26,12 +26,6 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
-   --  Try to load nonexistent XSD file.
-   procedure Load_Nonexistent_Xsd;
-
-   --  Try to load an invalid XSD file.
-   procedure Load_Invalid_Xsd;
-
    --  Try to load nonexistent XML file.
    procedure Load_Nonexistent_Xml;
 

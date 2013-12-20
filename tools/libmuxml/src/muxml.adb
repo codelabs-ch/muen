@@ -43,14 +43,13 @@ is
    -------------------------------------------------------------------------
 
    procedure Parse
-     (Data   : out XML_Data_Type;
-      File   :     String;
-      Schema :     String)
+     (Data : out XML_Data_Type;
+      File :     String)
    is
       Reader     : DR.Tree_Reader;
       File_Input : Input_Sources.File.File_Input;
    begin
-      Reader.Set_Grammar (Grammar => Grammar.Get_Grammar (File => Schema));
+      Reader.Set_Grammar (Grammar => Grammar.Get_Grammar);
       Reader.Set_Feature (Name  => Sax.Readers.Schema_Validation_Feature,
                           Value => True);
 

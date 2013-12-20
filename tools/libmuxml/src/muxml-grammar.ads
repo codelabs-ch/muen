@@ -21,7 +21,7 @@ with Schema.Validators;
 package Muxml.Grammar
 is
 
-   --  Load grammar from given XML schema file.
-   function Get_Grammar (File : String) return Schema.Validators.XML_Grammar;
+   --  Return built-in system policy grammar.
+   function Get_Grammar return Schema.Validators.XML_Grammar;
 
 end Muxml.Grammar;

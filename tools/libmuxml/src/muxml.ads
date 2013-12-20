@@ -28,11 +28,10 @@ is
    end record;
 
    --  Parse the contents of given file into the DOM data structure. The XML
-   --  data is validated against the given XML schema.
+   --  data is validated against the built-in system policy XML schema.
    procedure Parse
-     (Data   : out XML_Data_Type;
-      File   :     String;
-      Schema :     String);
+     (Data : out XML_Data_Type;
+      File :     String);
 
    Processing_Error : exception;
 

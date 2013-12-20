@@ -18,8 +18,11 @@
 
 with Ada.Exceptions;
 
-with Input_Sources.File;
+with Input_Sources.Strings;
 with Schema.Schema_Readers;
+with Unicode.CES.Utf8;
+
+with Muxml.Schemas;
 
 package body Muxml.Grammar
 is
@@ -29,30 +32,33 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Grammar (File : String) return Schema.Validators.XML_Grammar
+   function Get_Grammar return Schema.Validators.XML_Grammar
    is
       use type Schema.Validators.XML_Grammar;
 
-      Reader     : Schema.Schema_Readers.Schema_Reader;
-      File_Input : Input_Sources.File.File_Input;
+      Reader    : Schema.Schema_Readers.Schema_Reader;
+      Str_Input : Input_Sources.Strings.String_Input;
    begin
       if Current_Grammar = Schema.Validators.No_Grammar then
-         Input_Sources.File.Open (Filename => File,
-                                  Input    => File_Input);
+         Str_Input.Set_Public_Id (Id => Schemas.XSD_Id);
+         Input_Sources.Strings.Open
+           (Str      => Schemas.XSD,
+            Encoding => Unicode.CES.Utf8.Utf8_Encoding,
+            Input    => Str_Input);
 
          begin
             Schema.Schema_Readers.Parse
               (Parser => Reader,
-               Input  => File_Input);
+               Input  => Str_Input);
 
          exception
             when others =>
-               Input_Sources.File.Close (Input => File_Input);
+               Input_Sources.Strings.Close (Input => Str_Input);
                Reader.Free;
                raise;
          end;
 
-         Input_Sources.File.Close (Input => File_Input);
+         Input_Sources.Strings.Close (Input => Str_Input);
          Current_Grammar := Reader.Get_Grammar;
       end if;
 
@@ -63,8 +69,9 @@ is
          raise Processing_Error with "XML validation error - "
            & Reader.Get_Error_Message;
       when E : others =>
-         raise Processing_Error with "Error reading XSD file '" & File
-           & "' - " & Ada.Exceptions.Exception_Message (X => E);
+         raise Processing_Error with "Error reading XSD schema '"
+           & Schemas.XSD_Id & "' - "
+           & Ada.Exceptions.Exception_Message (X => E);
    end Get_Grammar;
 
 end Muxml.Grammar;

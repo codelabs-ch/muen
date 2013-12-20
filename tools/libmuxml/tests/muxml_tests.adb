@@ -33,12 +33,6 @@ is
    begin
       T.Set_Name (Name => "Load XML files");
       T.Add_Test_Routine
-        (Routine => Load_Nonexistent_Xsd'Access,
-         Name    => "Load nonexistent XSD");
-      T.Add_Test_Routine
-        (Routine => Load_Invalid_Xsd'Access,
-         Name    => "Load invalid XSD");
-      T.Add_Test_Routine
         (Routine => Load_Nonexistent_Xml'Access,
          Name    => "Load nonexistent XML");
       T.Add_Test_Routine
@@ -59,35 +53,13 @@ is
       Data : XML_Data_Type;
       pragma Unreferenced (Data);
    begin
-      Parse (Data   => Data,
-             File   => "data/invalid.xml",
-             Schema => "schema/system.xsd");
+      Parse (Data => Data,
+             File => "data/invalid.xml");
       Fail (Message => "Exception expected");
 
    exception
       when Processing_Error => null;
    end Load_Invalid_Xml;
-
-   -------------------------------------------------------------------------
-
-   procedure Load_Invalid_Xsd
-   is
-      Ref_Msg : constant String := "Error reading XSD file 'data/invalid' - "
-        & "data/invalid:1:1: Non-white space found at top level";
-      Data    : XML_Data_Type;
-      pragma Unreferenced (Data);
-   begin
-      Parse (Data   => Data,
-             File   => "examples/test_policy.xml",
-             Schema => "data/invalid");
-      Fail (Message => "Exception expected");
-
-   exception
-      when E : Processing_Error =>
-         Assert (Condition => Ada.Exceptions.Exception_Message
-                 (X => E) = Ref_Msg,
-                 Message   => "Exception message mismatch");
-   end Load_Invalid_Xsd;
 
    -------------------------------------------------------------------------
 
@@ -98,9 +70,8 @@ is
       Data    : XML_Data_Type;
       pragma Unreferenced (Data);
    begin
-      Parse (Data   => Data,
-             File   => "data/invalid",
-             Schema => "schema/system.xsd");
+      Parse (Data => Data,
+             File => "data/invalid");
       Fail (Message => "Exception expected");
 
    exception
@@ -119,9 +90,8 @@ is
       Data    : XML_Data_Type;
       pragma Unreferenced (Data);
    begin
-      Parse (Data   => Data,
-             File   => "nonexistent",
-             Schema => "schema/system.xsd");
+      Parse (Data => Data,
+             File => "nonexistent");
       Fail (Message => "Exception expected");
 
    exception
@@ -133,35 +103,13 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Load_Nonexistent_Xsd
-   is
-      Ref_Msg : constant String
-        := "Error reading XSD file 'nonexistent' - Could not open nonexistent";
-      Data    : XML_Data_Type;
-      pragma Unreferenced (Data);
-   begin
-      Parse (Data   => Data,
-             File   => "examples/test_policy.xml",
-             Schema => "nonexistent");
-      Fail (Message => "Exception expected");
-
-   exception
-      when E : Processing_Error =>
-         Assert (Condition => Ada.Exceptions.Exception_Message
-                 (X => E) = Ref_Msg,
-                 Message   => "Exception message mismatch");
-   end Load_Nonexistent_Xsd;
-
-   -------------------------------------------------------------------------
-
    procedure Load_Policy_Xml
    is
       Data : XML_Data_Type;
       pragma Unreferenced (Data);
    begin
-      Parse (Data   => Data,
-             File   => "data/test_policy.xml",
-             Schema => "schema/system.xsd");
+      Parse (Data => Data,
+             File => "data/test_policy.xml");
 
       --  Must not raise an exception.
 

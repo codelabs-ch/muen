@@ -5,6 +5,7 @@ RESOLVE_XSL = schema/resolve.xsl
 all: schema-spec
 
 include ../../Makeconf
+include ../../Makecov
 
 DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
@@ -26,7 +27,10 @@ tests: test_libmuxml
 	@obj/tests/test_runner
 
 test_libmuxml: schema-spec
-	@gprbuild $(BUILD_OPTS) -P$@
+	@gprbuild $(BUILD_OPTS) -P$@ -XBUILD=tests
+
+build_cov: schema-spec
+	@gprbuild $(BUILD_OPTS) -Ptest_libmuxml -XBUILD=coverage
 
 clean:
 	@rm -rf lib obj

@@ -23,14 +23,29 @@ with "libmuxml";
 
 project Test_Libmuxml is
 
+   Compiler_Switches := Defaults.Ada_Compiler_Switches & "-gnat12" & "-gnatwal";
+   Linker_Switches   := ();
+
    for Source_Dirs use ("tests");
-   for Object_Dir use "obj/tests";
    for Main use ("test_runner.adb");
+   for Object_Dir use "obj/" & Defaults.Build;
+
+   case Defaults.Build is
+      when "debug" | "tests" => null;
+      when "coverage"        =>
+         Compiler_Switches := Compiler_Switches
+           & Defaults.Cov_Compiler_Switches;
+         Linker_Switches   := Linker_Switches
+           & Defaults.Cov_Linker_Switches;
+   end case;
 
    package Compiler is
-      for Default_Switches ("Ada") use Defaults.Ada_Compiler_Switches
-        & "-gnat12" & "-gnatwal";
+      for Default_Switches ("Ada") use Compiler_Switches;
    end Compiler;
+
+   package Linker is
+      for Default_Switches ("Ada") use Linker_Switches;
+   end Linker;
 
    package Binder is
       for Default_Switches ("Ada") use ("-E");

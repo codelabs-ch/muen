@@ -21,6 +21,7 @@ with "xmlada";
 with "../../config/defaults";
 with "../../contrib/projects/xia";
 with "../libmulog/libmulog";
+with "../libmugen/libmugen";
 
 project Muzpgen is
 

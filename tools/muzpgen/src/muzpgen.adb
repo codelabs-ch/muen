@@ -16,23 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Command_Line;
-
 with Mulog;
+
+with Mugen.Command_Line;
 
 procedure Muzpgen
 is
-
-   --  Print tool usage.
-   procedure Print_Usage;
-
-   procedure Print_Usage
-   is
-   begin
-      Mulog.Log
-        (Msg => "Usage: " & Ada.Command_Line.Command_Name & " <policy>");
-   end Print_Usage;
-
 begin
-   Print_Usage;
+   Mugen.Command_Line.Init
+     (Description => "Generate Linux zero-page structures according to given "
+      & "system policy");
+
+   Mulog.Log (Msg => "Processing policy '"
+              & Mugen.Command_Line.Get_Policy & "'");
 end Muzpgen;

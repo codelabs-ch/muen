@@ -7,13 +7,13 @@ skc_tool:
 	@gprbuild $(BUILD_OPTS) -P$@
 
 tests: build_tests
-	@$(OBJ_DIR)/test_runner
+	@$(OBJ_DIR)/tests/test_runner
 
 build_tests:
-	@gprbuild $(BUILD_OPTS) -Pskc_tests
+	@gprbuild $(BUILD_OPTS) -Pskc_tests -XBUILD=tests
 
 build_cov:
-	@gprbuild $(BUILD_OPTS) -Pskc_tests -XBUILD="coverage"
+	@gprbuild $(BUILD_OPTS) -Pskc_tests -XBUILD=coverage
 
 clean:
 	@rm -rf $(OBJ_DIR)

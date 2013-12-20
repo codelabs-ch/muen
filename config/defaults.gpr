@@ -20,6 +20,9 @@ abstract project Defaults is
 
    for Languages use ();
 
+   type Build_Type is ("debug", "tests", "coverage");
+   Build : Build_Type := external ("BUILD", "debug");
+
    Common_Compiler_Switches :=
      ("-g",
       "-gnata",

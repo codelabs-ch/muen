@@ -17,6 +17,7 @@
 --
 
 with Ada.Command_Line;
+with Ada.Finalization;
 
 with GNAT.OS_Lib;
 with GNAT.Command_Line;
@@ -25,6 +26,22 @@ package body Mugen.Command_Line
 is
 
    Policy : constant String := GNAT.Command_Line.Get_Argument;
+
+   type Config_Type is new
+     Ada.Finalization.Limited_Controlled with record
+      Data : GNAT.Command_Line.Command_Line_Configuration;
+   end record;
+
+   overriding
+   procedure Finalize (Config : in out Config_Type);
+
+   -------------------------------------------------------------------------
+
+   procedure Finalize (Config : in out Config_Type)
+   is
+   begin
+      GNAT.Command_Line.Free (Config => Config.Data);
+   end Finalize;
 
    -------------------------------------------------------------------------
 
@@ -38,35 +55,31 @@ is
 
    procedure Init (Description : String)
    is
-      Cmdline : GNAT.Command_Line.Command_Line_Configuration;
+      Cmdline : Config_Type;
    begin
       GNAT.Command_Line.Set_Usage
-        (Config => Cmdline,
+        (Config => Cmdline.Data,
          Usage  => "<policy>",
          Help   => Description);
       GNAT.Command_Line.Define_Switch
-        (Config      => Cmdline,
+        (Config      => Cmdline.Data,
          Switch      => "-h",
          Long_Switch => "--help",
          Help        => "Display usage and exit");
 
       begin
-         GNAT.Command_Line.Getopt (Config => Cmdline);
+         GNAT.Command_Line.Getopt (Config => Cmdline.Data);
 
       exception
          when GNAT.Command_Line.Invalid_Switch |
               GNAT.Command_Line.Exit_From_Command_Line =>
-            GNAT.Command_Line.Free (Config => Cmdline);
-            GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));
+            GNAT.Command_Line.Free (Config => Cmdline.Data);
       end;
 
       if Policy'Length = 0 then
-         GNAT.Command_Line.Display_Help (Config => Cmdline);
-         GNAT.Command_Line.Free (Config => Cmdline);
+         GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
          GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));
       end if;
-
-      GNAT.Command_Line.Free (Config => Cmdline);
    end Init;
 
 end Mugen.Command_Line;

@@ -18,8 +18,8 @@
 
 with "xmlada";
 
-with "../../config/defaults";
 with "../../contrib/projects/xia";
+with "../../config/shared";
 with "../libmulog/libmulog";
 with "../libmugen/libmugen";
 
@@ -31,7 +31,7 @@ project Muptgen is
    for Main use ("muptgen.adb");
 
    package Compiler is
-      for Default_Switches ("Ada") use Defaults.Ada_Compiler_Switches
+      for Default_Switches ("Ada") use Shared.Ada_Compiler_Switches
         & "-gnat05" & "-gnatwale";
    end Compiler;
 

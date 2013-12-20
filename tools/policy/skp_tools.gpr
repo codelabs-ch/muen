@@ -17,9 +17,10 @@
 --
 
 with "xmlada";
-with "thin/binding";
 
-with "../../config/defaults";
+with "../../config/shared";
+
+with "thin/binding";
 
 project Skp_Tools is
 
@@ -28,7 +29,7 @@ project Skp_Tools is
    for Main use ("skpolicy", "skptt");
 
    package Compiler is
-      for Default_Switches ("Ada") use Defaults.Ada_Compiler_Switches
+      for Default_Switches ("Ada") use Shared.Ada_Compiler_Switches
         & "-gnat05" & "-gnatwale";
    end Compiler;
 

@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-abstract project Defaults is
+abstract project Shared is
 
    for Languages use ();
 
@@ -43,4 +43,4 @@ abstract project Defaults is
 
    Cov_Linker_Switches := ("-fprofile-generate");
 
-end Defaults;
+end Shared;

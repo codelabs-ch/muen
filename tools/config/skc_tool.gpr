@@ -16,8 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../../config/defaults";
 with "../../contrib/projects/bfdada";
+with "../../config/shared";
 
 project Skc_Tool is
 
@@ -26,7 +26,7 @@ project Skc_Tool is
    for Main use ("skconfig.adb");
 
    package Compiler is
-      for Default_Switches ("Ada") use Defaults.Ada_Compiler_Switches
+      for Default_Switches ("Ada") use Shared.Ada_Compiler_Switches
         & "-gnat05" & "-gnatwale";
    end Compiler;
 

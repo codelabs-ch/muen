@@ -25,4 +25,7 @@ is
    --  Return policy filename.
    function Get_Policy return String;
 
+   --  Return output directory.
+   function Get_Output_Dir return String;
+
 end Mugen.Command_Line;

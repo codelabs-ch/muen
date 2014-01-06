@@ -18,14 +18,21 @@
 
 with Ada.Command_Line;
 with Ada.Finalization;
+with Ada.Directories;
+with Ada.Strings.Unbounded;
 
 with GNAT.OS_Lib;
+with GNAT.Strings;
 with GNAT.Command_Line;
 
 package body Mugen.Command_Line
 is
 
-   Policy : constant String := GNAT.Command_Line.Get_Argument;
+   use Ada.Strings.Unbounded;
+
+   Policy     : Unbounded_String;
+   Output_Dir : Unbounded_String := To_Unbounded_String
+     (Ada.Directories.Current_Directory);
 
    type Config_Type is new
      Ada.Finalization.Limited_Controlled with record
@@ -45,10 +52,18 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Output_Dir return String
+   is
+   begin
+      return To_String (Output_Dir);
+   end Get_Output_Dir;
+
+   -------------------------------------------------------------------------
+
    function Get_Policy return String
    is
    begin
-      return Policy;
+      return To_String (Policy);
    end Get_Policy;
 
    -------------------------------------------------------------------------
@@ -56,11 +71,18 @@ is
    procedure Init (Description : String)
    is
       Cmdline : Config_Type;
+      Out_Dir : aliased GNAT.Strings.String_Access;
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
-         Usage  => "<policy>",
+         Usage  => "[options] <policy>",
          Help   => Description);
+      GNAT.Command_Line.Define_Switch
+        (Config      => Cmdline.Data,
+         Output      => Out_Dir'Access,
+         Switch      => "-o:",
+         Long_Switch => "--output-directory:",
+         Help        => "Output directory, default is the current directory");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Switch      => "-h",
@@ -69,14 +91,22 @@ is
 
       begin
          GNAT.Command_Line.Getopt (Config => Cmdline.Data);
+         if Out_Dir'Length /= 0 then
+            Output_Dir := To_Unbounded_String (Out_Dir.all);
+         end if;
+         GNAT.Strings.Free (X => Out_Dir);
 
       exception
          when GNAT.Command_Line.Invalid_Switch |
               GNAT.Command_Line.Exit_From_Command_Line =>
-            GNAT.Command_Line.Free (Config => Cmdline.Data);
+            GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));
+         when GNAT.Command_Line.Invalid_Parameter =>
+            GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
+            GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));
       end;
 
-      if Policy'Length = 0 then
+      Policy := To_Unbounded_String (GNAT.Command_Line.Get_Argument);
+      if Policy = Null_Unbounded_String then
          GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
          GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));
       end if;

@@ -27,6 +27,8 @@ begin
      (Description => "Generate Linux zero-page structures according to given "
       & "system policy");
 
+   Mulog.Log (Msg => "Using output directory '"
+              & Mugen.Command_Line.Get_Output_Dir & "'");
    Mulog.Log (Msg => "Processing policy '"
               & Mugen.Command_Line.Get_Policy & "'");
 end Muzpgen;

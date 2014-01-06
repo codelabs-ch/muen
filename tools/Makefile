@@ -19,6 +19,7 @@ tests:
 	$(MAKE) $@ -C packer
 	$(MAKE) $@ -C policy
 	$(MAKE) $@ -C libmuxml
+	$(MAKE) $@ -C muzpgen
 
 clean:
 	$(MAKE) $@ -C config

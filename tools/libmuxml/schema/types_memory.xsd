@@ -17,6 +17,7 @@
 			<xs:enumeration value="pt"/>
 			<xs:enumeration value="iobm"/>
 			<xs:enumeration value="msrbm"/>
+			<xs:enumeration value="zp"/>
 		</xs:restriction>
 	</xs:simpleType>
 

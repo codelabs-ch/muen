@@ -18,6 +18,7 @@
 
 with "../../contrib/projects/ahven";
 with "../../config/shared";
+with "../libtest/libtest";
 
 with "muptgen";
 

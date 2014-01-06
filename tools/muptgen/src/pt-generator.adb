@@ -16,27 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Text_Runner;
-with Ahven.Framework;
-
-with Paging_Tests;
-with EPT_Paging_Tests;
-with Generator_Tests;
-
-procedure Test_Runner
+package body Pt.Generator
 is
-   use Ahven.Framework;
 
-   S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Muptgen tests");
-begin
-   Add_Test (Suite => S.all,
-             T     => new Paging_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new EPT_Paging_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Generator_Tests.Testcase);
+   -------------------------------------------------------------------------
 
-   Ahven.Text_Runner.Run (Suite => S);
-   Release_Suite (T => S);
-end Test_Runner;
+   procedure Write
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type)
+   is
+   begin
+      null;
+   end Write;
+
+end Pt.Generator;

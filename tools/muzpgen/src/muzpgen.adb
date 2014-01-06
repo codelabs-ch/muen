@@ -16,9 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mulog;
+with Ada.Exceptions;
+with Ada.Command_Line;
 
 with Mugen.Command_Line;
+
+with Muxml;
+with Mulog;
+
+with Zp;
 
 procedure Muzpgen
 is
@@ -27,8 +33,20 @@ begin
      (Description => "Generate Linux zero-page structures according to given "
       & "system policy");
 
-   Mulog.Log (Msg => "Using output directory '"
-              & Mugen.Command_Line.Get_Output_Dir & "'");
-   Mulog.Log (Msg => "Processing policy '"
-              & Mugen.Command_Line.Get_Policy & "'");
+   Zp.Process (Policy     => Mugen.Command_Line.Get_Policy,
+               Output_Dir => Mugen.Command_Line.Get_Output_Dir);
+
+exception
+   when E : Muxml.Processing_Error =>
+      Mulog.Log (Level => Mulog.Error,
+                 Msg   => "Processing failed, aborting");
+      Mulog.Log (Level => Mulog.Error,
+                 Msg   => Ada.Exceptions.Exception_Message (X => E));
+      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
+   when E : others =>
+      Mulog.Log (Level => Mulog.Error,
+                 Msg   => "Unexpected exception");
+      Mulog.Log (Level => Mulog.Error,
+                 Msg   => Ada.Exceptions.Exception_Information (X => E));
+      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
 end Muzpgen;

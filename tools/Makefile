@@ -24,6 +24,7 @@ clean:
 	$(MAKE) $@ -C packer
 	$(MAKE) $@ -C policy
 	$(MAKE) $@ -C libmulog
+	$(MAKE) $@ -C libmuxml
 	$(MAKE) $@ -C libtest
 	$(MAKE) $@ -C muptgen
 	$(MAKE) $@ -C muzpgen

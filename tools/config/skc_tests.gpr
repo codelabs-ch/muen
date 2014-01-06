@@ -19,6 +19,7 @@
 with "../../contrib/projects/bfdada";
 with "../../contrib/projects/ahven";
 with "../../config/shared";
+with "../libtest/libtest";
 
 project Skc_Tests is
 

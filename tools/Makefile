@@ -10,6 +10,7 @@ skpolicy:
 	$(MAKE) -C policy
 
 tools:
+	$(MAKE) -C libmuxml
 	$(MAKE) -C muptgen
 	$(MAKE) -C muzpgen
 

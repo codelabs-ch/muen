@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,24 +16,26 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Text_Runner;
 with Ahven.Framework;
 
-with Paging_Tests;
-with EPT_Paging_Tests;
-
-procedure Test_Runner
+package EPT_Paging_Tests
 is
-   use Ahven.Framework;
 
-   S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Muptgen tests");
-begin
-   Add_Test (Suite => S.all,
-             T     => new Paging_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new EPT_Paging_Tests.Testcase);
+   type Testcase is new Ahven.Framework.Test_Case with null record;
 
-   Ahven.Text_Runner.Run (Suite => S);
-   Release_Suite (T => S);
-end Test_Runner;
+   --  Initialize testcase.
+   procedure Initialize (T : in out Testcase);
+
+   --  EPT PML4 entry creation tests.
+   procedure Create_PML4_Entry;
+
+   --  EPT PDPT entry creation tests.
+   procedure Create_PDPT_Entry;
+
+   --  EPT PD entry creation tests.
+   procedure Create_PD_Entry;
+
+   --  EPT PT entry creation tests.
+   procedure Create_PT_Entry;
+
+end EPT_Paging_Tests;

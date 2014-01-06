@@ -22,10 +22,16 @@ package Pt.Paging
 is
 
    --  Memory caching type, see Intel SDM Vol. 3A, section 11.3.
-   type Caching_Type is (UC, WC, WT, WB, WP);
+   type Caching_Type is (UC, WC, WT, WP, WB);
 
    --  Implementation of IA-32e paging structures, as specified by Intel SDM
    --  Vol. 3A, section 4.5.
+
+   --  A PDPT entry maps a 1 GB page.
+   PDPT_Page_Size : constant := 1 * 2 ** 30;
+
+   --  A PD entry maps a 2 MB page.
+   PD_Page_Size   : constant := 2 * 2 ** 20;
 
    --  Table entry flags.
    Present_Flag   : constant := 0;

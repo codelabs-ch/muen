@@ -20,9 +20,7 @@ with "xmlada";
 
 with "../../contrib/projects/xia";
 with "../../config/shared";
-with "../libmulog/libmulog";
 with "../libmugen/libmugen";
-with "../libmuxml/libmuxml";
 
 project Mumsrbmgen is
 

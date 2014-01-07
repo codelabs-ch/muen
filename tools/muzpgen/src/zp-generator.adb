@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Exceptions;
-with Ada.Directories;
 with Ada.Streams.Stream_IO;
 
 with System;
@@ -25,6 +23,7 @@ with System;
 with Interfaces.C;
 
 with Mulog;
+with Mugen.Files;
 
 with bootparam_h;
 
@@ -44,37 +43,6 @@ is
       C : Interfaces.C.int;
       N : Interfaces.C.size_t);
    pragma Import (C, C_Memset, "memset");
-
-   --  Open file given by filename. Raises IO_Error if the file could not be
-   --  opened.
-   procedure Open
-     (Filename :     String;
-      File     : out Ada.Streams.Stream_IO.File_Type);
-
-   -------------------------------------------------------------------------
-
-   procedure Open
-     (Filename :     String;
-      File     : out Ada.Streams.Stream_IO.File_Type)
-   is
-   begin
-      if Ada.Directories.Exists (Name => Filename) then
-         Ada.Streams.Stream_IO.Open
-           (File => File,
-            Mode => Ada.Streams.Stream_IO.Out_File,
-            Name => Filename);
-      else
-         Ada.Streams.Stream_IO.Create
-           (File => File,
-            Mode => Ada.Streams.Stream_IO.Out_File,
-            Name => Filename);
-      end if;
-
-   exception
-      when E : others =>
-         raise IO_Error with "Unable to open file '" & Filename & "' - "
-           & Ada.Exceptions.Exception_Message (X => E);
-   end Open;
 
    -------------------------------------------------------------------------
 
@@ -126,8 +94,8 @@ is
       Params.hdr.cmdline_size     := 16#0000_0fff#;
       Params.hdr.kernel_alignment := 16#0100_0000#;
 
-      Open (Filename => Filename,
-            File     => File);
+      Mugen.Files.Open (Filename => Filename,
+                        File     => File);
       bootparam_h.boot_params'Write (Stream (File => File), Params);
 
       --  Write command line

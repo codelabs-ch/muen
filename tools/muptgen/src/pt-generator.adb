@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Directories;
-with Ada.Exceptions;
 with Ada.Streams.Stream_IO;
 with Ada.Strings.Unbounded;
 
@@ -27,6 +25,7 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Mugen.Files;
 
 with SK;
 
@@ -59,37 +58,6 @@ is
       Pml4_Address : SK.Word64;
       Filename     : String;
       PT_Type      : Paging_Type := IA32e);
-
-   --  Open file given by filename. Raises IO_Error if the file could not be
-   --  opened.
-   procedure Open
-     (Filename :     String;
-      File     : out Ada.Streams.Stream_IO.File_Type);
-
-   -------------------------------------------------------------------------
-
-   procedure Open
-     (Filename :     String;
-      File     : out Ada.Streams.Stream_IO.File_Type)
-   is
-   begin
-      if Ada.Directories.Exists (Name => Filename) then
-         Ada.Streams.Stream_IO.Open
-           (File => File,
-            Mode => Ada.Streams.Stream_IO.Out_File,
-            Name => Filename);
-      else
-         Ada.Streams.Stream_IO.Create
-           (File => File,
-            Mode => Ada.Streams.Stream_IO.Out_File,
-            Name => Filename);
-      end if;
-
-   exception
-      when E : others =>
-         raise IO_Error with "Unable to open file '" & Filename & "' - "
-           & Ada.Exceptions.Exception_Message (X => E);
-   end Open;
 
    -------------------------------------------------------------------------
 
@@ -420,8 +388,8 @@ is
          end;
       end loop;
 
-      Open (Filename => Filename,
-            File     => File);
+      Mugen.Files.Open (Filename => Filename,
+                        File     => File);
       Paging.PML4_Table_Type'Write (Stream (File => File), PML4);
       Paging.PDP_Table_Type'Write  (Stream (File => File), PDPT);
       Paging.PD_Table_Type'Write   (Stream (File => File), PD);

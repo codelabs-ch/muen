@@ -28,6 +28,4 @@ is
       Cmdline          : String;
       Physical_Address : Natural);
 
-   IO_Error : exception;
-
 end Zp.Generator;

@@ -20,6 +20,7 @@ tests:
 	$(MAKE) $@ -C policy
 	$(MAKE) $@ -C libmuxml
 	$(MAKE) $@ -C muzpgen
+	$(MAKE) $@ -C muptgen
 
 clean:
 	$(MAKE) $@ -C config

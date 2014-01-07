@@ -16,11 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
 with Ada.Streams.Stream_IO;
 
 with System;
 
 with Interfaces.C;
+
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+
+with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Mugen.Files;
@@ -44,9 +50,134 @@ is
       N : Interfaces.C.size_t);
    pragma Import (C, C_Memset, "memset");
 
+   --  Return bootparams of subject associated with memory element given by
+   --  name.
+   function Get_Bootparams
+     (XML_Data    : Muxml.XML_Data_Type;
+      Memory_Name : String)
+      return String;
+
+   --  Return zero-page guest-physical address extracted from mapping of
+   --  physical memory with given name.
+   function Get_Guest_Physical
+     (XML_Data    : Muxml.XML_Data_Type;
+      Memory_Name : String)
+      return String;
+
+   --  Extract subject name from given string.
+   function To_Subject_Name (Str : String) return String;
+
+   --  Write Linux bootparams structure and specified command line to file
+   --  given by filename. The size of the generated file is 4k + length (cmdl).
+   --  The physical address argument designates the physical address of the
+   --  zero-page in guest memory.
+   procedure Write_ZP_File
+     (Filename         : String;
+      Cmdline          : String;
+      Physical_Address : Natural);
+
+   -------------------------------------------------------------------------
+
+   function Get_Bootparams
+     (XML_Data    : Muxml.XML_Data_Type;
+      Memory_Name : String)
+      return String
+   is
+      use type DOM.Core.Node;
+
+      Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+        (List  => McKae.XML.XPath.XIA.XPath_Query
+           (N     => XML_Data.Doc,
+            XPath => "/system/subjects/subject[@name='"
+            & To_Subject_Name (Str => Memory_Name) & "']/bootparams/text()"),
+         Index => 0);
+   begin
+      if Node /= null then
+         return DOM.Core.Nodes.Node_Value (N => Node);
+      else
+         return "";
+      end if;
+   end Get_Bootparams;
+
+   -------------------------------------------------------------------------
+
+   function Get_Guest_Physical
+     (XML_Data    : Muxml.XML_Data_Type;
+      Memory_Name : String)
+      return String
+   is
+      use type DOM.Core.Node;
+
+      Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+        (List  => McKae.XML.XPath.XIA.XPath_Query
+           (N     => XML_Data.Doc,
+            XPath => "/system/subjects/subject/memory/memory/physical[@name='"
+            & Memory_Name & "']/../@virtualAddress"),
+         Index => 0);
+   begin
+      return DOM.Core.Nodes.Node_Value (N => Node);
+   end Get_Guest_Physical;
+
+   -------------------------------------------------------------------------
+
+   function To_Subject_Name (Str : String) return String
+   is
+      Udrl_Idx : constant Natural := Ada.Strings.Fixed.Index
+        (Source  => Str,
+         Pattern => "|");
+   begin
+      return Str (Str'First .. Udrl_Idx - 1);
+   end To_Subject_Name;
+
    -------------------------------------------------------------------------
 
    procedure Write
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type)
+   is
+      Zps : DOM.Core.Node_List;
+   begin
+      Zps := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Policy.Doc,
+         XPath => "/system/memory/memory/file[@format='zp']");
+
+      Mulog.Log (Msg => "Found" & DOM.Core.Nodes.Length (List => Zps)'Img
+                 & " zero-page file(s)");
+
+      for I in 1 .. DOM.Core.Nodes.Length (List => Zps) loop
+         declare
+            Node     : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Zps,
+                                      Index => I - 1);
+            Filename : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Node,
+                 Name => "filename");
+            Memname  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+                 Name => "name");
+            Physaddr : constant String
+              := Get_Guest_Physical
+                (XML_Data    => Policy,
+                 Memory_Name => Memname);
+         begin
+            Mulog.Log (Msg => "Guest-physical address of " & Memname
+                       & " zero-page is " & Physaddr);
+            Write_ZP_File
+              (Filename         => Output_Dir & "/" & Filename,
+               Cmdline          => Get_Bootparams
+                 (XML_Data    => Policy,
+                  Memory_Name => Memname),
+               Physical_Address => Natural'Value (Physaddr));
+         end;
+      end loop;
+
+   end Write;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_ZP_File
      (Filename         : String;
       Cmdline          : String;
       Physical_Address : Natural)
@@ -106,6 +237,6 @@ is
       Character'Write (Stream (File => File), Character'Val (0));
 
       Close (File => File);
-   end Write;
+   end Write_ZP_File;
 
 end Zp.Generator;

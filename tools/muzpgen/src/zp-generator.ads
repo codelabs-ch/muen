@@ -16,16 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Muxml;
+
 package Zp.Generator
 is
 
-   --  Write Linux bootparams structure and specified command line to file
-   --  given by filename. The size of the generated file is 4k + length (cmdl).
-   --  The physical address argument designates the physical address of the
-   --  zero-page in guest memory.
+   --  Write zero-pages for subjects to given output directory as specified by
+   --  policy.
    procedure Write
-     (Filename         : String;
-      Cmdline          : String;
-      Physical_Address : Natural);
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type);
 
 end Zp.Generator;

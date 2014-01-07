@@ -133,11 +133,13 @@ begin
             Subject.Text_IO.Put_String (Item => " CR4: ");
             Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.CR4));
             Subject.Text_IO.New_Line;
+            Subject.Text_IO.New_Line;
+
             Subject.Text_IO.Put_String (Item => "Shadow CR0: ");
             Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.SHADOW_CR0));
             Subject.Text_IO.New_Line;
 
-            Subject.Text_IO.Put_String (Item => "IA32_EFER: ");
+            Subject.Text_IO.Put_String (Item => "IA32_EFER : ");
             Subject.Text_IO.Put_Word64 (Item => State.IA32_EFER);
             Subject.Text_IO.New_Line;
          else

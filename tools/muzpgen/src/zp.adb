@@ -109,6 +109,9 @@ is
       Zps := XPath_Query (N     => Data.Doc,
                           XPath => "/system/memory/memory/file[@format='zp']");
 
+      Mulog.Log (Msg => "Found" & DOM.Core.Nodes.Length (List => Zps)'Img
+                 & " zero-page file(s)");
+
       for I in 1 .. DOM.Core.Nodes.Length (List => Zps) loop
          declare
             Node     : constant DOM.Core.Node
@@ -127,8 +130,8 @@ is
                 (XML_Data    => Data,
                  Memory_Name => Memname);
          begin
-            Mulog.Log (Msg => "Guest-physical address of zero-page is "
-                       & Physaddr);
+            Mulog.Log (Msg => "Guest-physical address of " & Memname
+                       & " zero-page is " & Physaddr);
             Zp.Generator.Write
               (Filename         => Output_Dir & "/" & Filename,
                Cmdline          => Get_Bootparams

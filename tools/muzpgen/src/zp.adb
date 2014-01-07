@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
@@ -29,14 +31,48 @@ with Zp.Generator;
 package body Zp
 is
 
+   use McKae.XML.XPath.XIA;
+
+   --  Extract subject name from given string. Raises a processing error
+   --  exception on failure.
+   function To_Subject_Name (Str : String) return String;
+
+   --  Return bootparams of subject associated with memory element given by
+   --  name.
+   function Get_Bootparams
+     (XML_Data    : Muxml.XML_Data_Type;
+      Memory_Name : String)
+      return String;
+
+   -------------------------------------------------------------------------
+
+   function Get_Bootparams
+     (XML_Data    : Muxml.XML_Data_Type;
+      Memory_Name : String)
+      return String
+   is
+      use type DOM.Core.Node;
+
+      Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+        (List  => XPath_Query
+           (N     => XML_Data.Doc,
+            XPath => "*/subjects/subject[@name='"
+            & To_Subject_Name (Str => Memory_Name) & "']/bootparams/text()"),
+         Index => 0);
+   begin
+      if Node /= null then
+         return DOM.Core.Nodes.Node_Value (N => Node);
+      else
+         return "";
+      end if;
+   end Get_Bootparams;
+
    -------------------------------------------------------------------------
 
    procedure Process
      (Policy     : String;
       Output_Dir : String)
    is
-      use McKae.XML.XPath.XIA;
-
       Zps  : DOM.Core.Node_List;
       Data : Muxml.XML_Data_Type;
    begin
@@ -49,20 +85,36 @@ is
 
       for I in 1 .. DOM.Core.Nodes.Length (List => Zps) loop
          declare
-            Node : constant DOM.Core.Node
+            Node     : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Zps,
                                       Index => I - 1);
-            Fn   : constant String
+            Filename : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Node,
                  Name => "filename");
+            Memname  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+                 Name => "name");
          begin
             Zp.Generator.Write
-              (Filename => Output_Dir & "/" & Fn,
-               Cmdline  => "lpj=10000 earlyprintk=serial console=hvc0 "
-               & "console=ttyS0,115200 pci=noearly notsc");
+              (Filename => Output_Dir & "/" & Filename,
+               Cmdline  => Get_Bootparams
+                 (XML_Data    => Data,
+                  Memory_Name => Memname));
          end;
       end loop;
    end Process;
+
+   -------------------------------------------------------------------------
+
+   function To_Subject_Name (Str : String) return String
+   is
+      Udrl_Idx : constant Natural := Ada.Strings.Fixed.Index
+        (Source  => Str,
+         Pattern => "|");
+   begin
+      return Str (Str'First .. Udrl_Idx - 1);
+   end To_Subject_Name;
 
 end Zp;

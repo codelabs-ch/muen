@@ -18,11 +18,4 @@
 
 package Pt
 is
-
-   --  Start processing of given policy file. Write output to specified
-   --  directory.
-   procedure Process
-     (Policy     : String;
-      Output_Dir : String);
-
 end Pt;

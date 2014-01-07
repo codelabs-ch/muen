@@ -16,7 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Muxml;
 with Mulog;
+
+with Msrbm.Generator;
 
 package body Msrbm
 is
@@ -27,9 +30,14 @@ is
      (Policy     : String;
       Output_Dir : String)
    is
+      Data : Muxml.XML_Data_Type;
    begin
       Mulog.Log (Msg => "Using output directory '" & Output_Dir & "'");
       Mulog.Log (Msg => "Processing policy '" & Policy & "'");
+      Muxml.Parse (Data => Data,
+                   File => Policy);
+      Msrbm.Generator.Write (Output_Dir => Output_Dir,
+                             Policy     => Data);
    end Process;
 
 end Msrbm;

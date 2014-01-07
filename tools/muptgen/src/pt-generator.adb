@@ -44,6 +44,11 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
+   --  Write pagetable files for all subjects as specified by the policy.
+   procedure Write_Subject_Pagetable
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type);
+
    --  Create paging structures from given memory regions and write them to the
    --  specified file. The PML4 address parameter specifies the physical start
    --  adddress of the PML4 paging structure. Depending on the given pagetable
@@ -95,6 +100,8 @@ is
    begin
       Write_Kernel_Pagetable (Output_Dir => Output_Dir,
                               Policy     => Policy);
+      Write_Subject_Pagetable (Output_Dir => Output_Dir,
+                               Policy     => Policy);
    end Write;
 
    -------------------------------------------------------------------------
@@ -421,5 +428,78 @@ is
       Paging.Page_Table_Type'Write (Stream (File => File), PT);
       Close (File => File);
    end Write_Pagetable;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_Subject_Pagetable
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type)
+   is
+      Subjects : DOM.Core.Node_List;
+   begin
+      Subjects := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Policy.Doc,
+         XPath => "/system/subjects/subject");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => DOM.Core.Nodes.Item (List  => Subjects,
+                                            Index => I),
+               Name => "name");
+
+            Nodes     : DOM.Core.Node_List;
+            Filename  : Unbounded_String;
+            PML4_Addr : SK.Word64;
+            Paging    : Paging_Type;
+         begin
+            Nodes := McKae.XML.XPath.XIA.XPath_Query
+              (N     => DOM.Core.Nodes.Item (List  => Subjects,
+                                             Index => I),
+               XPath => "vcpu/vmx/controls/proc2/EnableEPT/text()");
+            if DOM.Core.Nodes.Node_Value
+              (N => DOM.Core.Nodes.Item (List  => Nodes,
+                                         Index => 0)) = "1"
+            then
+               Paging := EPT;
+            else
+               Paging := IA32e;
+            end if;
+
+            Nodes := McKae.XML.XPath.XIA.XPath_Query
+              (N     => Policy.Doc,
+               XPath => "/system/memory/memory[@name='" & Name & "|pt']/"
+               & "file[@format='pt']/@filename");
+            Filename := To_Unbounded_String
+              (DOM.Core.Nodes.Node_Value
+                 (N => DOM.Core.Nodes.Item (List  => Nodes,
+                                            Index => 0)));
+
+            Nodes := McKae.XML.XPath.XIA.XPath_Query
+              (N     => Policy.Doc,
+               XPath => "/system/memory/memory[@name='" & Name & "|pt']/"
+               & "@physicalAddress");
+            PML4_Addr := SK.Word64'Value
+              (DOM.Core.Nodes.Node_Value
+                 (N => DOM.Core.Nodes.Item (List  => Nodes,
+                                            Index => 0)));
+
+            Nodes := McKae.XML.XPath.XIA.XPath_Query
+              (N     => DOM.Core.Nodes.Item (List  => Subjects,
+                                         Index => I),
+               XPath => "memory/memory");
+
+            Mulog.Log (Msg => "Writing " & Paging'Img & " pagetable of "
+                       & Name & " to '"
+                       & Output_Dir & "/" & To_String (Filename) & "'");
+            Write_Pagetable
+              (Policy       => Policy,
+               Memory       => Nodes,
+               Pml4_Address => PML4_Addr,
+               Filename     => Output_Dir & "/" & To_String (Filename),
+               PT_Type      => Paging);
+         end;
+      end loop;
+   end Write_Subject_Pagetable;
 
 end Pt.Generator;

@@ -465,7 +465,7 @@ is
                  Message   => "Memory type mismatch (1)");
 
          R := S.Memory_Layout.Last_Element;
-         Assert (Condition => R.Physical_Address = 16#100000#,
+         Assert (Condition => R.Physical_Address = 16#1ff000#,
                  Message   => "Physical address mismatch (2)");
          Assert (Condition => R.Virtual_Address = 16#100000#,
                  Message   => "Virtual address mismatch (2)");
@@ -475,7 +475,7 @@ is
                  Message   => "Writable mismatch (2)");
          Assert (Condition => not R.Executable,
                  Message   => "Executable mismatch (2)");
-         Assert (Condition => R.Memory_Type = WC,
+         Assert (Condition => R.Memory_Type = UC,
                  Message   => "Memory type mismatch (2)");
 
          PR := S.IO_Ports.First_Element;

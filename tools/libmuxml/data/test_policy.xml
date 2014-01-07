@@ -51,6 +51,7 @@
 							<!-- All proc controls must be specified -->
 						</proc>
 						<proc2>
+							<EnableEPT>0</EnableEPT>
 							<WBINVDExiting>1</WBINVDExiting>
 							<!-- All proc2 controls must be specified -->
 						</proc2>

@@ -52,6 +52,7 @@
 
 	<xs:complexType name="proc2CtrlType">
 		<xs:sequence>
+			<xs:element name="EnableEPT"     type="bitValueType" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="WBINVDExiting" type="bitValueType" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>

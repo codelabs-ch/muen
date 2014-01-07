@@ -16,13 +16,28 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package Pt
+with Muxml;
+with Mulog;
+
+with Pt.Generator;
+
+package body Pt
 is
 
-   --  Start processing of given policy file. Write output to specified
-   --  directory.
+   -------------------------------------------------------------------------
+
    procedure Process
      (Policy     : String;
-      Output_Dir : String);
+      Output_Dir : String)
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Mulog.Log (Msg => "Using output directory '" & Output_Dir & "'");
+      Mulog.Log (Msg => "Processing policy '" & Policy & "'");
+      Muxml.Parse (Data => Data,
+                   File => Policy);
+      Pt.Generator.Write (Output_Dir => Output_Dir,
+                          Policy     => Data);
+   end Process;
 
 end Pt;

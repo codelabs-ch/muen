@@ -27,4 +27,6 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
+   IO_Error : exception;
+
 end Pt.Generator;

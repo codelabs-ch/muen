@@ -16,8 +16,30 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+with Ada.Streams.Stream_IO;
+
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+
+with McKae.XML.XPath.XIA;
+
+with SK;
+
+with Mulog;
+with Mugen.Files;
+
+with Msrbm.MSRs;
+
 package body Msrbm.Generator
 is
+
+   use Ada.Strings.Unbounded;
+
+   --  Write MSR bitmap for given registers and write to specified file.
+   procedure Write_MSR_Bitmap
+     (Registers : DOM.Core.Node_List;
+      Filename  : String);
 
    -------------------------------------------------------------------------
 
@@ -25,8 +47,88 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
+      Subjects  : DOM.Core.Node_List;
+
    begin
-      null;
+      Subjects := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Policy.Doc,
+         XPath => "/system/subjects/subject");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Cur_Subj  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Name      : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Cur_Subj,
+                 Name => "name");
+            Registers : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Cur_Subj,
+                 XPath => "vcpu/registers/msrs/msr");
+
+            Filename  : Unbounded_String;
+            Nodes     : DOM.Core.Node_List;
+         begin
+            Nodes := McKae.XML.XPath.XIA.XPath_Query
+              (N     => Policy.Doc,
+               XPath => "/system/memory/memory[@name='" & Name & "|msrbm']/"
+               & "file[@format='msrbm']/@filename");
+            Filename := To_Unbounded_String
+              (DOM.Core.Nodes.Node_Value
+                 (N => DOM.Core.Nodes.Item (List  => Nodes,
+                                            Index => 0)));
+
+            Mulog.Log (Msg => "Writing MSR bitmap of " & Name & " to '"
+                       & Output_Dir & "/" & To_String (Filename) & "'");
+
+            Write_MSR_Bitmap (Registers => Registers,
+                              Filename  => Output_Dir & "/"
+                              & To_String (Filename));
+         end;
+      end loop;
    end Write;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_MSR_Bitmap
+     (Registers : DOM.Core.Node_List;
+      Filename  : String)
+   is
+      File   : Ada.Streams.Stream_IO.File_Type;
+      Bitmap : MSRs.MSR_Bitmap_Type := MSRs.Null_MSR_Bitmap;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Registers) - 1 loop
+         declare
+            Cur_MSR     : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Registers,
+               Index => I);
+            Start_Addr  : constant SK.Word32     := SK.Word32'Value
+              (DOM.Core.Elements.Get_Attribute (Elem => Cur_MSR,
+                                                Name => "start"));
+            End_Addr    : constant SK.Word32     := SK.Word32'Value
+              (DOM.Core.Elements.Get_Attribute (Elem => Cur_MSR,
+                                                Name => "end"));
+            Access_Mode : constant MSRs.MSR_Mode_Type
+              := MSRs.MSR_Mode_Type'Value
+                (DOM.Core.Elements.Get_Attribute
+                     (Elem => Cur_MSR,
+                      Name => "mode"));
+         begin
+            MSRs.Allow_MSRs (Bitmap     => Bitmap,
+                             Start_Addr => Start_Addr,
+                             End_Addr   => End_Addr,
+                             Mode       => Access_Mode);
+         end;
+      end loop;
+
+      Mugen.Files.Open (Filename => Filename,
+                        File     => File);
+      Ada.Streams.Stream_IO.Write (File => File,
+                                   Item => MSRs.To_Stream (Bitmap => Bitmap));
+      Ada.Streams.Stream_IO.Close (File => File);
+   end Write_MSR_Bitmap;
 
 end Msrbm.Generator;

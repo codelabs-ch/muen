@@ -18,8 +18,8 @@
 
 package Skp.Kernel is
 
-   Stack_Address     : constant := 16#0000000000112000#;
+   Stack_Address     : constant := 16#0000000000114000#;
    PML4_Address      : constant := 16#0000000000200000#;
-   CPU_Store_Address : constant := 16#0000000000114000#;
+   CPU_Store_Address : constant := 16#0000000000116000#;
 
 end Skp.Kernel;

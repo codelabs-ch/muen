@@ -13,6 +13,7 @@ tools:
 	$(MAKE) -C libmuxml
 	$(MAKE) -C muptgen
 	$(MAKE) -C muzpgen
+	$(MAKE) -C mumsrbmgen
 
 tests:
 	$(MAKE) $@ -C config
@@ -21,6 +22,7 @@ tests:
 	$(MAKE) $@ -C libmuxml
 	$(MAKE) $@ -C muzpgen
 	$(MAKE) $@ -C muptgen
+	$(MAKE) $@ -C mumsrbmgen
 
 clean:
 	$(MAKE) $@ -C config

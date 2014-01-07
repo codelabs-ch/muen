@@ -47,8 +47,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Write
-     (Filename : String;
-      Cmdline  : String)
+     (Filename         : String;
+      Cmdline          : String;
+      Physical_Address : Natural)
    is
       use Ada.Streams.Stream_IO;
       use type Interfaces.C.size_t;
@@ -90,9 +91,10 @@ is
                               size   => Memory_Size_High,
                               c_type => E820_RAM);
 
-      Params.hdr.cmd_line_ptr     := 16#1000#;
       Params.hdr.cmdline_size     := 16#0000_0fff#;
       Params.hdr.kernel_alignment := 16#0100_0000#;
+      Params.hdr.cmd_line_ptr     := Interfaces.C.unsigned
+        (Physical_Address) + 16#1000#;
 
       Mugen.Files.Open (Filename => Filename,
                         File     => File);

@@ -21,9 +21,12 @@ is
 
    --  Write Linux bootparams structure and specified command line to file
    --  given by filename. The size of the generated file is 4k + length (cmdl).
+   --  The physical address argument designates the physical address of the
+   --  zero-page in guest memory.
    procedure Write
-     (Filename : String;
-      Cmdline  : String);
+     (Filename         : String;
+      Cmdline          : String;
+      Physical_Address : Natural);
 
    IO_Error : exception;
 

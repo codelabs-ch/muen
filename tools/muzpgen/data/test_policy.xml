@@ -110,8 +110,11 @@
 			</vcpu>
 			<bootparams>lpj=10000 console=ttyS12</bootparams>
 			<memory>
-				<memory logical="text" writable="false" executable="true" virtualAddress="16#0000#">
-					<physical name="lnx-text"/>
+				<memory logical="text" writable="false" executable="true" virtualAddress="16#3000#">
+					<physical name="lnx|text"/>
+				</memory>
+				<memory logical="zp" writable="true" executable="false" virtualAddress="16#1000#">
+					<physical name="lnx|zp"/>
 				</memory>
 			</memory>
 			<devices/>

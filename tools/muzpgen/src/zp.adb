@@ -44,6 +44,13 @@ is
       Memory_Name : String)
       return String;
 
+   --  Return zero-page guest-physical address extracted from mapping of
+   --  physical memory with given name.
+   function Get_Guest_Physical
+     (XML_Data    : Muxml.XML_Data_Type;
+      Memory_Name : String)
+      return String;
+
    -------------------------------------------------------------------------
 
    function Get_Bootparams
@@ -56,7 +63,7 @@ is
       Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
         (List  => XPath_Query
            (N     => XML_Data.Doc,
-            XPath => "*/subjects/subject[@name='"
+            XPath => "/system/subjects/subject[@name='"
             & To_Subject_Name (Str => Memory_Name) & "']/bootparams/text()"),
          Index => 0);
    begin
@@ -66,6 +73,25 @@ is
          return "";
       end if;
    end Get_Bootparams;
+
+   -------------------------------------------------------------------------
+
+   function Get_Guest_Physical
+     (XML_Data    : Muxml.XML_Data_Type;
+      Memory_Name : String)
+      return String
+   is
+      use type DOM.Core.Node;
+
+      Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+        (List  => XPath_Query
+           (N     => XML_Data.Doc,
+            XPath => "/system/subjects/subject/memory/memory/physical[@name='"
+            & Memory_Name & "']/../@virtualAddress"),
+         Index => 0);
+   begin
+      return DOM.Core.Nodes.Node_Value (N => Node);
+   end Get_Guest_Physical;
 
    -------------------------------------------------------------------------
 
@@ -81,7 +107,7 @@ is
       Muxml.Parse (Data => Data,
                    File => Policy);
       Zps := XPath_Query (N     => Data.Doc,
-                          XPath => "*/memory/memory/file[@format='zp']");
+                          XPath => "/system/memory/memory/file[@format='zp']");
 
       for I in 1 .. DOM.Core.Nodes.Length (List => Zps) loop
          declare
@@ -96,12 +122,19 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
                  Name => "name");
+            Physaddr : constant String
+              := Get_Guest_Physical
+                (XML_Data    => Data,
+                 Memory_Name => Memname);
          begin
+            Mulog.Log (Msg => "Guest-physical address of zero-page is "
+                       & Physaddr);
             Zp.Generator.Write
-              (Filename => Output_Dir & "/" & Filename,
-               Cmdline  => Get_Bootparams
+              (Filename         => Output_Dir & "/" & Filename,
+               Cmdline          => Get_Bootparams
                  (XML_Data    => Data,
-                  Memory_Name => Memname));
+                  Memory_Name => Memname),
+               Physical_Address => Natural'Value (Physaddr));
          end;
       end loop;
    end Process;

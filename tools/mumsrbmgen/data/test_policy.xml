@@ -1,0 +1,413 @@
+<?xml version="1.0"?>
+<system>
+	<platform>
+		<processor logicalCpus="2" speed="2900" vmxTimerRate="5"/>
+		<memory>
+			<memoryBlock name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#" caching="WB"/>
+		</memory>
+		<device name="serial" shared="false">
+			<ioPort name="serial" start="16#50b0#" end="16#50b0#"/>
+		</device>
+		<device name="vga" shared="true">
+			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#1000#" caching="WC"/>
+			<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
+		</device>
+		<device name="multiport" shared="false">
+			<irq name="irq" number="12"/>
+			<ioPort name="ports1" start="16#03f8#" end="16#03fd#"/>
+			<ioPort name="ports2" start="16#abcd#" end="16#bcda#"/>
+		</device>
+		<device name="testdevice" shared="false">
+			<irq name="irq" number="15"/>
+			<ioPort name="fooport" start="16#00ab#" end="16#00ab#"/>
+		</device>
+	</platform>
+
+	<memory>
+		<memory name="trampoline"     physicalAddress="16#0000#"      size="16#1000#"      caching="WB"/>
+		<memory name="vmxon0"         physicalAddress="16#1000#"      size="16#1000#"      caching="WB"/>
+		<memory name="vmxon1"         physicalAddress="16#2000#"      size="16#1000#"      caching="WB"/>
+
+		<memory name="vga"            physicalAddress="16#000b_8000#" size="16#1000#"      caching="WC"/>
+
+		<memory name="kernel_text"    physicalAddress="16#0010_0000#" size="16#0001_2000#" caching="UC"/>
+		<memory name="kernel_stack_0" physicalAddress="16#0011_2000#" size="16#2000#"      caching="WB"/>
+		<memory name="kernel_stack_1" physicalAddress="16#0011_4000#" size="16#2000#"      caching="WB"/>
+		<memory name="kernel_store_0" physicalAddress="16#0011_6000#" size="16#1000#"      caching="WB"/>
+		<memory name="kernel_store_1" physicalAddress="16#0011_7000#" size="16#1000#"      caching="WB"/>
+		<memory name="kernel_data"    physicalAddress="16#0011_8000#" size="16#6000#"      caching="UC"/>
+		<memory name="sys_interface"  physicalAddress="16#001f_f000#" size="16#1000#"      caching="UC"/>
+		<memory name="kernel_pt_0"    physicalAddress="16#0020_0000#" size="16#4000#"      caching="WB">
+			<file format="pt" filename="kernel_pt_0" offset="16#0000#"/>
+		</memory>
+		<memory name="kernel_pt_1"    physicalAddress="16#0020_4000#" size="16#4000#"      caching="WB">
+			<file format="pt" filename="kernel_pt_1" offset="16#0000#"/>
+		</memory>
+
+		<memory name="tau0"           physicalAddress="16#0024_0000#" size="16#0001_0000#" caching="UC">
+			<file format="elf" filename="tau0-bin" offset="16#0000#"/>
+		</memory>
+		<memory name="tau0_pt"        physicalAddress="16#001f_0000#" size="16#4000#"      caching="WB">
+			<file format="pt" filename="tau0_pt" offset="16#0000#"/>
+		</memory>
+		<memory name="tau0_iobm"      physicalAddress="16#001a_0000#" size="16#2000#"      caching="WB">
+			<file format="iobm" filename="tau0_iobm" offset="16#0000#"/>
+		</memory>
+		<memory name="tau0|msrbm"     physicalAddress="16#0090_0000#" size="16#1000#"      caching="WB">
+			<file format="msrbm" filename="tau0_msrbm" offset="16#0000#"/>
+		</memory>
+
+		<memory name="subject1"       physicalAddress="16#4000_0000#" size="16#0001_0000_0000#" caching="UC">
+			<file format="elf" filename="subject1-bin" offset="16#0000#"/>
+		</memory>
+		<memory name="subject1_pt"    physicalAddress="16#001f_4000#" size="16#4000#"      caching="WB">
+			<file format="pt" filename="subject1_pt" offset="16#0000#"/>
+		</memory>
+		<memory name="subject1_iobm"  physicalAddress="16#001b_0000#" size="16#2000#"      caching="WB">
+			<file format="iobm" filename="subject1_iobm" offset="16#0000#"/>
+		</memory>
+		<memory name="subject1|msrbm" physicalAddress="16#0091_0000#" size="16#1000#"      caching="WB">
+			<file format="msrbm" filename="subject1_msrbm" offset="16#0000#"/>
+		</memory>
+
+		<memory name="subject2"       physicalAddress="16#0040_0000#" size="16#0040_0000#" caching="UC">
+			<file format="elf" filename="subject2-bin" offset="16#0000#"/>
+		</memory>
+		<memory name="subject2_pt"    physicalAddress="16#001f_8000#" size="16#4000#"      caching="WB">
+			<file format="pt" filename="subject2_pt" offset="16#0000#"/>
+		</memory>
+		<memory name="subject2_iobm"  physicalAddress="16#001c_0000#" size="16#2000#"      caching="WB">
+			<file format="iobm" filename="subject2_iobm" offset="16#0000#"/>
+		</memory>
+		<memory name="subject2|msrbm" physicalAddress="16#0092_0000#" size="16#1000#"      caching="WB">
+			<file format="msrbm" filename="subject2_msrbm" offset="16#0000#"/>
+		</memory>
+	</memory>
+
+	<events>
+		<event name="xv6_keyboard" mode="ipi"/>
+	</events>
+
+	<kernel>
+		<memory>
+			<cpu id="0">
+				<memory logical="text" writable="true" executable="true" virtualAddress="16#0010_0000#">
+					<physical name="kernel_text"/>
+				</memory>
+				<memory logical="stack" writable="true" executable="false" virtualAddress="16#0011_2000#">
+					<physical name="kernel_stack_0"/>
+				</memory>
+				<memory logical="store" writable="true" executable="false" virtualAddress="16#0011_6000#">
+					<physical name="kernel_store_0"/>
+				</memory>
+				<memory logical="data" writable="true" executable="true" virtualAddress="16#0011_8000#">
+					<physical name="kernel_data"/>
+				</memory>
+				<memory logical="tau0_interface" writable="false" executable="false" virtualAddress="16#001f_f000#">
+					<physical name="sys_interface"/>
+				</memory>
+			</cpu>
+			<cpu id="1">
+				<memory logical="text" writable="true" executable="true" virtualAddress="16#0010_0000#">
+					<physical name="kernel_text"/>
+				</memory>
+				<memory logical="stack" writable="true" executable="false" virtualAddress="16#0011_2000#">
+					<physical name="kernel_stack_1"/>
+				</memory>
+				<memory logical="store" writable="true" executable="false" virtualAddress="16#0011_6000#">
+					<physical name="kernel_store_1"/>
+				</memory>
+				<memory logical="data" writable="true" executable="true" virtualAddress="16#0011_8000#">
+					<physical name="kernel_data"/>
+				</memory>
+				<memory logical="tau0_interface" writable="false" executable="false" virtualAddress="16#001f_f000#">
+					<physical name="sys_interface"/>
+				</memory>
+			</cpu>
+		</memory>
+		<devices>
+			<device logical="log" physical="debugconsole">
+				<ioPort logical="ports" physical="serial" start="16#50b0#" end="16#50b8#"/>
+			</device>
+		</devices>
+	</kernel>
+
+	<subjects>
+		<subject id="0" name="tau0">
+			<vcpu>
+				<vmx>
+					<controls>
+						<pin>
+							<ExternalInterruptExiting>1</ExternalInterruptExiting>
+							<NMIExiting>1</NMIExiting>
+							<VirtualNMIs>0</VirtualNMIs>
+							<ActivateVMXTimer>1</ActivateVMXTimer>
+							<!-- All pin controls must be specified -->
+						</pin>
+						<proc>
+							<INVLPGExiting>1</INVLPGExiting>
+							<MWAITExiting>1</MWAITExiting>
+							<!-- All proc controls must be specified -->
+						</proc>
+						<proc2>
+							<EnableEPT>0</EnableEPT>
+							<WBINVDExiting>1</WBINVDExiting>
+							<!-- All proc2 controls must be specified -->
+						</proc2>
+						<entry>
+							<IA32eModeGuest>1</IA32eModeGuest>
+							<!-- All entry controls must be specified -->
+						</entry>
+						<exit>
+							<IA32eMode>1</IA32eMode>
+							<!-- All exit controls must be specified -->
+						</exit>
+					</controls>
+					<masks>
+						<exception>
+							<DivideError>1</DivideError>
+							<RESERVED>1</RESERVED>
+							<!-- All 20bits must be specified -->
+						</exception>
+						<cr0>
+							<ProtectionEnable>1</ProtectionEnable>
+							<MonitorCoprocessor>0</MonitorCoprocessor>
+							<!-- All 11bits must be specified -->
+						</cr0>
+						<cr4>
+							<Virtual8086>0</Virtual8086>
+							<PhysicalAddressExtension>1</PhysicalAddressExtension>
+							<!-- All 17bits must be specified -->
+						</cr4>
+					</masks>
+				</vmx>
+				<registers>
+					<gpr>
+						<rip>16#0000#</rip>
+						<rsp>16#9000#</rsp>
+						<!-- All GPRs have a value -->
+					</gpr>
+					<cr0>
+						<ProtectionEnable>1</ProtectionEnable>
+						<MonitorCoprocessor>0</MonitorCoprocessor>
+						<!-- All bits must be specified -->
+					</cr0>
+					<cr4>
+						<Virtual8086>0</Virtual8086>
+						<PhysicalAddressExtension>1</PhysicalAddressExtension>
+						<!-- All bits must be specified -->
+					</cr4>
+					<msrs>
+						<msr start="16#0800#" end="16#0802#" mode="r"/>
+						<msr start="16#0805#" end="16#0805#" mode="rw"/>
+					</msrs>
+				</registers>
+				<segments>
+					<cs selector="16#0008#" base="16#0000#" limit="16#ffff#" access="16#a09b#"/>
+					<ds selector="16#0010#" base="16#0000#" limit="16#ffff#" access="16#c093#"/>
+					<!-- All segments must be specified -->
+				</segments>
+			</vcpu>
+			<bootparams/>
+			<memory>
+				<memory logical="text" virtualAddress="16#0000#" writable="true" executable="true">
+					<physical name="tau0"/>
+				</memory>
+				<memory logical="sys_interface" virtualAddress="16#0010_0000#" writable="false" executable="false">
+					<physical name="sys_interface"/>
+				</memory>
+			</memory>
+			<devices/>
+			<events/>
+		</subject>
+
+		<subject id="1" name="subject1">
+			<vcpu>
+				<vmx>
+					<controls>
+						<pin>
+							<ExternalInterruptExiting>1</ExternalInterruptExiting>
+							<NMIExiting>1</NMIExiting>
+							<VirtualNMIs>0</VirtualNMIs>
+							<ActivateVMXTimer>1</ActivateVMXTimer>
+							<!-- All pin controls must be specified -->
+						</pin>
+						<proc>
+							<INVLPGExiting>1</INVLPGExiting>
+							<MWAITExiting>1</MWAITExiting>
+							<!-- All proc controls must be specified -->
+						</proc>
+						<proc2>
+							<EnableEPT>1</EnableEPT>
+							<WBINVDExiting>1</WBINVDExiting>
+							<!-- All proc2 controls must be specified -->
+						</proc2>
+						<entry>
+							<IA32eModeGuest>1</IA32eModeGuest>
+							<!-- All entry controls must be specified -->
+						</entry>
+						<exit>
+							<IA32eMode>1</IA32eMode>
+							<!-- All exit controls must be specified -->
+						</exit>
+					</controls>
+					<masks>
+						<exception>
+							<DivideError>1</DivideError>
+							<RESERVED>1</RESERVED>
+							<!-- All 20bits must be specified -->
+						</exception>
+						<cr0>
+							<ProtectionEnable>1</ProtectionEnable>
+							<MonitorCoprocessor>0</MonitorCoprocessor>
+							<!-- All 11bits must be specified -->
+						</cr0>
+						<cr4>
+							<Virtual8086>0</Virtual8086>
+							<PhysicalAddressExtension>1</PhysicalAddressExtension>
+							<!-- All 17bits must be specified -->
+						</cr4>
+					</masks>
+				</vmx>
+				<registers>
+					<gpr>
+						<rip>16#0000#</rip>
+						<rsp>16#9000#</rsp>
+						<!-- All GPRs have a value -->
+					</gpr>
+					<cr0>
+						<ProtectionEnable>1</ProtectionEnable>
+						<MonitorCoprocessor>0</MonitorCoprocessor>
+						<!-- All bits must be specified -->
+					</cr0>
+					<cr4>
+						<Virtual8086>0</Virtual8086>
+						<PhysicalAddressExtension>1</PhysicalAddressExtension>
+						<!-- All bits must be specified -->
+					</cr4>
+				</registers>
+				<segments>
+					<cs selector="16#0008#" base="16#0000#" limit="16#ffff#" access="16#a09b#"/>
+					<ds selector="16#0010#" base="16#0000#" limit="16#ffff#" access="16#c093#"/>
+					<!-- All segments must be specified -->
+				</segments>
+			</vcpu>
+			<bootparams/>
+			<memory>
+				<memory logical="mem" virtualAddress="16#0000#" writable="true" executable="true">
+					<physical name="subject1"/>
+				</memory>
+				<memory logical="video" virtualAddress="16#000b_8000#" writable="true" executable="false">
+					<physical name="vga"/>
+				</memory>
+			</memory>
+			<devices/>
+			<events/>
+		</subject>
+
+		<subject id="2" name="subject2">
+			<vcpu>
+				<vmx>
+					<controls>
+						<pin>
+							<ExternalInterruptExiting>1</ExternalInterruptExiting>
+							<NMIExiting>1</NMIExiting>
+							<VirtualNMIs>0</VirtualNMIs>
+							<ActivateVMXTimer>1</ActivateVMXTimer>
+							<!-- All pin controls must be specified -->
+						</pin>
+						<proc>
+							<INVLPGExiting>1</INVLPGExiting>
+							<MWAITExiting>1</MWAITExiting>
+							<!-- All proc controls must be specified -->
+						</proc>
+						<proc2>
+							<EnableEPT>0</EnableEPT>
+							<WBINVDExiting>1</WBINVDExiting>
+							<!-- All proc2 controls must be specified -->
+						</proc2>
+						<entry>
+							<IA32eModeGuest>1</IA32eModeGuest>
+							<!-- All entry controls must be specified -->
+						</entry>
+						<exit>
+							<IA32eMode>1</IA32eMode>
+							<!-- All exit controls must be specified -->
+						</exit>
+					</controls>
+					<masks>
+						<exception>
+							<DivideError>1</DivideError>
+							<RESERVED>1</RESERVED>
+							<!-- All 20bits must be specified -->
+						</exception>
+						<cr0>
+							<ProtectionEnable>1</ProtectionEnable>
+							<MonitorCoprocessor>0</MonitorCoprocessor>
+							<!-- All 11bits must be specified -->
+						</cr0>
+						<cr4>
+							<Virtual8086>0</Virtual8086>
+							<PhysicalAddressExtension>1</PhysicalAddressExtension>
+							<!-- All 17bits must be specified -->
+						</cr4>
+					</masks>
+				</vmx>
+				<registers>
+					<gpr>
+						<rip>16#0000#</rip>
+						<rsp>16#9000#</rsp>
+						<!-- All GPRs have a value -->
+					</gpr>
+					<cr0>
+						<ProtectionEnable>1</ProtectionEnable>
+						<MonitorCoprocessor>0</MonitorCoprocessor>
+						<!-- All bits must be specified -->
+					</cr0>
+					<cr4>
+						<Virtual8086>0</Virtual8086>
+						<PhysicalAddressExtension>1</PhysicalAddressExtension>
+						<!-- All bits must be specified -->
+					</cr4>
+				</registers>
+				<segments>
+					<cs selector="16#0008#" base="16#0000#" limit="16#ffff#" access="16#a09b#"/>
+					<ds selector="16#0010#" base="16#0000#" limit="16#ffff#" access="16#c093#"/>
+					<!-- All segments must be specified -->
+				</segments>
+			</vcpu>
+			<bootparams/>
+			<memory>
+				<memory logical="mem" virtualAddress="16#0000#" writable="true" executable="true">
+					<physical name="subject2"/>
+				</memory>
+			</memory>
+			<devices/>
+			<events/>
+		</subject>
+	</subjects>
+
+	<scheduling tickRate="10000">
+		<majorFrame>
+			<cpu>
+				<minorFrame subject="tau0" ticks="1700"/>
+			</cpu>
+			<cpu>
+				<minorFrame subject="subject1" ticks="1700"/>
+			</cpu>
+		</majorFrame>
+		<majorFrame>
+			<cpu>
+				<minorFrame subject="tau0"     ticks="500"/>
+				<minorFrame subject="subject2" ticks="500"/>
+				<minorFrame subject="tau0"     ticks="500"/>
+				<minorFrame subject="subject2" ticks="200"/>
+			</cpu>
+			<cpu>
+				<minorFrame subject="subject1" ticks="1000"/>
+				<minorFrame subject="subject1" ticks="700"/>
+			</cpu>
+		</majorFrame>
+	</scheduling>
+
+</system>

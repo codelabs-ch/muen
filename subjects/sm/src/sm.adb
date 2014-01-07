@@ -158,19 +158,40 @@ begin
             Subject.Text_IO.Put_Word64 (Item => State.Regs.RAX);
             Subject.Text_IO.Put_String (Item => " RBX: ");
             Subject.Text_IO.Put_Word64 (Item => State.Regs.RBX);
-            Subject.Text_IO.New_Line;
             Subject.Text_IO.Put_String (Item => " RCX: ");
             Subject.Text_IO.Put_Word64 (Item => State.Regs.RCX);
-            Subject.Text_IO.Put_String (Item => " RDX: ");
-            Subject.Text_IO.Put_Word64 (Item => State.Regs.RDX);
             Subject.Text_IO.New_Line;
 
-            Subject.Text_IO.Put_String (Item => "RSI: ");
+            Subject.Text_IO.Put_String (Item => "RDX: ");
+            Subject.Text_IO.Put_Word64 (Item => State.Regs.RDX);
+            Subject.Text_IO.Put_String (Item => " RSI: ");
             Subject.Text_IO.Put_Word64 (Item => State.Regs.RSI);
             Subject.Text_IO.Put_String (Item => " RDI: ");
             Subject.Text_IO.Put_Word64 (Item => State.Regs.RDI);
-            Subject.Text_IO.Put_String (Item => " RBP: ");
+            Subject.Text_IO.New_Line;
+
+            Subject.Text_IO.Put_String (Item => "RBP: ");
             Subject.Text_IO.Put_Word64 (Item => State.Regs.RBP);
+            Subject.Text_IO.Put_String (Item => " R08: ");
+            Subject.Text_IO.Put_Word64 (Item => State.Regs.R08);
+            Subject.Text_IO.Put_String (Item => " R09: ");
+            Subject.Text_IO.Put_Word64 (Item => State.Regs.R09);
+            Subject.Text_IO.New_Line;
+
+            Subject.Text_IO.Put_String (Item => "R10: ");
+            Subject.Text_IO.Put_Word64 (Item => State.Regs.R10);
+            Subject.Text_IO.Put_String (Item => " R11: ");
+            Subject.Text_IO.Put_Word64 (Item => State.Regs.R11);
+            Subject.Text_IO.Put_String (Item => " R12: ");
+            Subject.Text_IO.Put_Word64 (Item => State.Regs.R12);
+            Subject.Text_IO.New_Line;
+
+            Subject.Text_IO.Put_String (Item => "R13: ");
+            Subject.Text_IO.Put_Word64 (Item => State.Regs.R13);
+            Subject.Text_IO.Put_String (Item => " R14: ");
+            Subject.Text_IO.Put_Word64 (Item => State.Regs.R14);
+            Subject.Text_IO.Put_String (Item => " R15: ");
+            Subject.Text_IO.Put_Word64 (Item => State.Regs.R15);
             Subject.Text_IO.New_Line;
 
             Subject.Text_IO.Put_String (Item => "CR0: ");
@@ -183,11 +204,13 @@ begin
             Subject.Text_IO.Put_String (Item => " CR4: ");
             Subject.Text_IO.Put_Word64 (Item => State.CR4);
             Subject.Text_IO.New_Line;
+            Subject.Text_IO.New_Line;
+
             Subject.Text_IO.Put_String (Item => "Shadow CR0: ");
             Subject.Text_IO.Put_Word64 (Item => State.SHADOW_CR0);
             Subject.Text_IO.New_Line;
 
-            Subject.Text_IO.Put_String (Item => "IA32_EFER: ");
+            Subject.Text_IO.Put_String (Item => "IA32_EFER : ");
             Subject.Text_IO.Put_Word64 (Item => State.IA32_EFER);
             Subject.Text_IO.New_Line;
          end if;

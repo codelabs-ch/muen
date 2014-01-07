@@ -16,21 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Text_Runner;
 with Ahven.Framework;
 
-with Generator_Tests;
-
-procedure Test_Runner
+package Generator_Tests
 is
-   use Ahven.Framework;
 
-   S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Mumsrbmgen tests");
-begin
-   Add_Test (Suite => S.all,
-             T     => new Generator_Tests.Testcase);
+   type Testcase is new Ahven.Framework.Test_Case with null record;
 
-   Ahven.Text_Runner.Run (Suite => S);
-   Release_Suite (T => S);
-end Test_Runner;
+   --  Initialize testcase.
+   procedure Initialize (T : in out Testcase);
+
+   --  Write subject MSR bitmaps.
+   procedure Write_MSR_Bitmaps;
+
+end Generator_Tests;

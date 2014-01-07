@@ -16,21 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Text_Runner;
-with Ahven.Framework;
+with Muxml;
 
-with Generator_Tests;
-
-procedure Test_Runner
+package Msrbm.Generator
 is
-   use Ahven.Framework;
 
-   S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Mumsrbmgen tests");
-begin
-   Add_Test (Suite => S.all,
-             T     => new Generator_Tests.Testcase);
+   --  Write MSR bitmaps for subjects to given output directory as specified by
+   --  policy.
+   procedure Write
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type);
 
-   Ahven.Text_Runner.Run (Suite => S);
-   Release_Suite (T => S);
-end Test_Runner;
+end Msrbm.Generator;

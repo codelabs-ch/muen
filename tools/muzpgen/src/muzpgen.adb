@@ -19,12 +19,13 @@
 with Ada.Exceptions;
 with Ada.Command_Line;
 
+with Mugen.Generators;
 with Mugen.Command_Line;
 
 with Muxml;
 with Mulog;
 
-with Zp;
+with Zp.Generator;
 
 procedure Muzpgen
 is
@@ -32,9 +33,7 @@ begin
    Mugen.Command_Line.Init
      (Description => "Generate Linux zero-page structures according to given "
       & "system policy");
-
-   Zp.Process (Policy     => Mugen.Command_Line.Get_Policy,
-               Output_Dir => Mugen.Command_Line.Get_Output_Dir);
+   Mugen.Generators.Run (Process => Zp.Generator.Write'Access);
 
 exception
    when E : Muxml.Processing_Error =>

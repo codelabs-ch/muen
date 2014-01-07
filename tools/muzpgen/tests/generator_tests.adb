@@ -18,7 +18,9 @@
 
 with Ada.Directories;
 
-with Zp;
+with Muxml;
+
+with Zp.Generator;
 
 with Test_Utils;
 
@@ -42,9 +44,13 @@ is
 
    procedure Write_Zp
    is
+      Policy : Muxml.XML_Data_Type;
    begin
-      Zp.Process (Policy     => "data/test_policy.xml",
-                  Output_Dir => "obj");
+      Muxml.Parse (Data => Policy,
+                   File => "data/test_policy.xml");
+
+      Zp.Generator.Write (Output_Dir => "obj",
+                          Policy     => Policy);
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/lnx.zp.ref",
                Filename2 => "obj/lnx.zp"),

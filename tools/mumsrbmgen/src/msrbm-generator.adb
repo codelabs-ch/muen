@@ -47,8 +47,7 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Subjects  : DOM.Core.Node_List;
-
+      Subjects : DOM.Core.Node_List;
    begin
       Subjects := McKae.XML.XPath.XIA.XPath_Query
         (N     => Policy.Doc,

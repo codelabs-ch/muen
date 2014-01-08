@@ -14,6 +14,7 @@ tools:
 	$(MAKE) -C muptgen
 	$(MAKE) -C muzpgen
 	$(MAKE) -C mumsrbmgen
+	$(MAKE) -C muiobmgen
 
 tests:
 	$(MAKE) $@ -C config
@@ -23,6 +24,7 @@ tests:
 	$(MAKE) $@ -C muzpgen
 	$(MAKE) $@ -C muptgen
 	$(MAKE) $@ -C mumsrbmgen
+	$(MAKE) $@ -C muiobmgen
 
 clean:
 	$(MAKE) $@ -C config

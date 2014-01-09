@@ -46,6 +46,7 @@ is
       Policy : Muxml.XML_Data_Type;
 
       Sched_Spec : constant String := "obj/skp-scheduling.ads";
+      Intr_Spec  : constant String := "obj/skp-interrupts.ads";
    begin
       Muxml.Parse (Data => Policy,
                    File => "data/test_policy.xml");
@@ -57,6 +58,10 @@ is
               (Filename1 => "data/skp-scheduling.ref",
                Filename2 => Sched_Spec),
               Message => "Scheduling spec mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Intr_Spec,
+               Filename2 => "data/skp-interrupts.ref"),
+              Message   => "Interrupt spec mismatch");
    end Write_Specs;
 
 end Generator_Tests;

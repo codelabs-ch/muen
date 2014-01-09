@@ -8,85 +8,23 @@
 		<device name="serial" shared="false">
 			<ioPort name="serial" start="16#50b0#" end="16#50b0#"/>
 		</device>
-		<device name="vga" shared="true">
-			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#1000#" caching="WC"/>
-			<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
-		</device>
-		<device name="multiport" shared="false">
-			<irq name="irq" number="12"/>
-			<ioPort name="ports1" start="16#03f8#" end="16#03fd#"/>
-			<ioPort name="ports2" start="16#abcd#" end="16#bcda#"/>
-		</device>
-		<device name="testdevice" shared="false">
-			<irq name="irq" number="15"/>
-			<ioPort name="fooport" start="16#00ab#" end="16#00ab#"/>
-		</device>
 	</platform>
 
 	<memory>
-		<memory name="trampoline"     physicalAddress="16#0000#"      size="16#1000#"      caching="WB"/>
-		<memory name="vmxon0"         physicalAddress="16#1000#"      size="16#1000#"      caching="WB"/>
-		<memory name="vmxon1"         physicalAddress="16#2000#"      size="16#1000#"      caching="WB"/>
-
-		<memory name="vga"            physicalAddress="16#000b_8000#" size="16#1000#"      caching="WC"/>
-
-		<memory name="kernel_text"    physicalAddress="16#0010_0000#" size="16#0001_2000#" caching="UC"/>
-		<memory name="kernel_stack_0" physicalAddress="16#0011_2000#" size="16#2000#"      caching="WB"/>
-		<memory name="kernel_stack_1" physicalAddress="16#0011_4000#" size="16#2000#"      caching="WB"/>
-		<memory name="kernel_store_0" physicalAddress="16#0011_6000#" size="16#1000#"      caching="WB"/>
-		<memory name="kernel_store_1" physicalAddress="16#0011_7000#" size="16#1000#"      caching="WB"/>
-		<memory name="kernel_data"    physicalAddress="16#0011_8000#" size="16#6000#"      caching="UC"/>
-		<memory name="sys_interface"  physicalAddress="16#001f_f000#" size="16#1000#"      caching="UC"/>
-		<memory name="kernel_pt_0"    physicalAddress="16#0020_0000#" size="16#4000#"      caching="WB">
-			<file format="pt" filename="kernel_pt_0" offset="16#0000#"/>
-		</memory>
-		<memory name="kernel_pt_1"    physicalAddress="16#0020_4000#" size="16#4000#"      caching="WB">
-			<file format="pt" filename="kernel_pt_1" offset="16#0000#"/>
-		</memory>
-
-		<memory name="tau0"           physicalAddress="16#0024_0000#" size="16#0001_0000#" caching="UC">
-			<file format="elf" filename="tau0-bin" offset="16#0000#"/>
-		</memory>
-		<memory name="tau0_pt"        physicalAddress="16#001f_0000#" size="16#4000#"      caching="WB">
-			<file format="pt" filename="tau0_pt" offset="16#0000#"/>
-		</memory>
-		<memory name="tau0_iobm"      physicalAddress="16#001a_0000#" size="16#2000#"      caching="WB">
-			<file format="iobm" filename="tau0_iobm" offset="16#0000#"/>
-		</memory>
 		<memory name="tau0|msrbm"     physicalAddress="16#0090_0000#" size="16#1000#"      caching="WB">
 			<file format="msrbm" filename="tau0_msrbm" offset="16#0000#"/>
 		</memory>
 
-		<memory name="subject1"       physicalAddress="16#4000_0000#" size="16#0001_0000_0000#" caching="UC">
-			<file format="elf" filename="subject1-bin" offset="16#0000#"/>
-		</memory>
-		<memory name="subject1_pt"    physicalAddress="16#001f_4000#" size="16#4000#"      caching="WB">
-			<file format="pt" filename="subject1_pt" offset="16#0000#"/>
-		</memory>
-		<memory name="subject1_iobm"  physicalAddress="16#001b_0000#" size="16#2000#"      caching="WB">
-			<file format="iobm" filename="subject1_iobm" offset="16#0000#"/>
-		</memory>
 		<memory name="subject1|msrbm" physicalAddress="16#0091_0000#" size="16#1000#"      caching="WB">
 			<file format="msrbm" filename="subject1_msrbm" offset="16#0000#"/>
 		</memory>
 
-		<memory name="subject2"       physicalAddress="16#0040_0000#" size="16#0040_0000#" caching="UC">
-			<file format="elf" filename="subject2-bin" offset="16#0000#"/>
-		</memory>
-		<memory name="subject2_pt"    physicalAddress="16#001f_8000#" size="16#4000#"      caching="WB">
-			<file format="pt" filename="subject2_pt" offset="16#0000#"/>
-		</memory>
-		<memory name="subject2_iobm"  physicalAddress="16#001c_0000#" size="16#2000#"      caching="WB">
-			<file format="iobm" filename="subject2_iobm" offset="16#0000#"/>
-		</memory>
 		<memory name="subject2|msrbm" physicalAddress="16#0092_0000#" size="16#1000#"      caching="WB">
 			<file format="msrbm" filename="subject2_msrbm" offset="16#0000#"/>
 		</memory>
 	</memory>
 
-	<events>
-		<event name="xv6_keyboard" mode="ipi"/>
-	</events>
+	<events/>
 
 	<kernel>
 		<memory>
@@ -94,42 +32,9 @@
 				<memory logical="text" writable="true" executable="true" virtualAddress="16#0010_0000#">
 					<physical name="kernel_text"/>
 				</memory>
-				<memory logical="stack" writable="true" executable="false" virtualAddress="16#0011_2000#">
-					<physical name="kernel_stack_0"/>
-				</memory>
-				<memory logical="store" writable="true" executable="false" virtualAddress="16#0011_6000#">
-					<physical name="kernel_store_0"/>
-				</memory>
-				<memory logical="data" writable="true" executable="true" virtualAddress="16#0011_8000#">
-					<physical name="kernel_data"/>
-				</memory>
-				<memory logical="tau0_interface" writable="false" executable="false" virtualAddress="16#001f_f000#">
-					<physical name="sys_interface"/>
-				</memory>
-			</cpu>
-			<cpu id="1">
-				<memory logical="text" writable="true" executable="true" virtualAddress="16#0010_0000#">
-					<physical name="kernel_text"/>
-				</memory>
-				<memory logical="stack" writable="true" executable="false" virtualAddress="16#0011_2000#">
-					<physical name="kernel_stack_1"/>
-				</memory>
-				<memory logical="store" writable="true" executable="false" virtualAddress="16#0011_6000#">
-					<physical name="kernel_store_1"/>
-				</memory>
-				<memory logical="data" writable="true" executable="true" virtualAddress="16#0011_8000#">
-					<physical name="kernel_data"/>
-				</memory>
-				<memory logical="tau0_interface" writable="false" executable="false" virtualAddress="16#001f_f000#">
-					<physical name="sys_interface"/>
-				</memory>
 			</cpu>
 		</memory>
-		<devices>
-			<device logical="log" physical="debugconsole">
-				<ioPort logical="ports" physical="serial" start="16#50b0#" end="16#50b8#"/>
-			</device>
-		</devices>
+		<devices/>
 	</kernel>
 
 	<subjects>
@@ -213,9 +118,6 @@
 				<memory logical="text" virtualAddress="16#0000#" writable="true" executable="true">
 					<physical name="tau0"/>
 				</memory>
-				<memory logical="sys_interface" virtualAddress="16#0010_0000#" writable="false" executable="false">
-					<physical name="sys_interface"/>
-				</memory>
 			</memory>
 			<devices/>
 			<events/>
@@ -296,9 +198,6 @@
 			<memory>
 				<memory logical="mem" virtualAddress="16#0000#" writable="true" executable="true">
 					<physical name="subject1"/>
-				</memory>
-				<memory logical="video" virtualAddress="16#000b_8000#" writable="true" executable="false">
-					<physical name="vga"/>
 				</memory>
 			</memory>
 			<devices/>

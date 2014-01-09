@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+<system>
+	<platform>
+		<processor logicalCpus="1" speed="2900" vmxTimerRate="5"/>
+		<memory>
+			<memoryBlock name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#" caching="WB"/>
+		</memory>
+		<device name="serial" shared="false">
+			<ioPort name="serial" start="16#50b0#" end="16#50b0#"/>
+		</device>
+	</platform>
+
+	<memory>
+		<memory name="linux|acpi_rsdp" physicalAddress="16#002e_0000#" size="16#0024#" caching="WB">
+			<file format="acpi_rsdp" filename="linux_rsdp" offset="16#0000#"/>
+		</memory>
+		<memory name="linux|acpi_xsdt" physicalAddress="16#002e_0024#" size="16#002c#" caching="WB">
+			<file format="acpi_xsdt" filename="linux_xsdt" offset="16#0000#"/>
+		</memory>
+		<memory name="linux|acpi_facp" physicalAddress="16#002e_0050#" size="16#010c#" caching="WB">
+			<file format="acpi_facp" filename="linux_facp" offset="16#0000#"/>
+		</memory>
+		<memory name="linux|acpi_dsdt" physicalAddress="16#002e_015c#" size="16#1000#" caching="WB">
+			<file format="acpi_dsdt" filename="linux_dsdt" offset="16#0000#"/>
+		</memory>
+	</memory>
+
+	<events/>
+
+	<kernel>
+		<memory>
+			<cpu id="0">
+				<memory logical="text" writable="true" executable="true" virtualAddress="16#0010_0000#">
+					<physical name="kernel_text"/>
+				</memory>
+				<memory logical="stack" writable="true" executable="false" virtualAddress="16#0011_2000#">
+					<physical name="kernel_stack_0"/>
+				</memory>
+				<memory logical="store" writable="true" executable="false" virtualAddress="16#0011_6000#">
+					<physical name="kernel_store_0"/>
+				</memory>
+				<memory logical="data" writable="true" executable="true" virtualAddress="16#0011_8000#">
+					<physical name="kernel_data"/>
+				</memory>
+				<memory logical="tau0_interface" writable="false" executable="false" virtualAddress="16#001f_f000#">
+					<physical name="sys_interface"/>
+				</memory>
+			</cpu>
+		</memory>
+		<devices>
+			<device logical="log" physical="debugconsole">
+				<ioPort logical="ports" physical="serial" start="16#50b0#" end="16#50b8#"/>
+			</device>
+		</devices>
+	</kernel>
+
+	<subjects>
+		<subject id="0" name="linux">
+			<vcpu>
+				<vmx>
+					<controls>
+						<pin>
+							<ExternalInterruptExiting>1</ExternalInterruptExiting>
+							<NMIExiting>1</NMIExiting>
+							<VirtualNMIs>0</VirtualNMIs>
+							<ActivateVMXTimer>1</ActivateVMXTimer>
+							<!-- All pin controls must be specified -->
+						</pin>
+						<proc>
+							<INVLPGExiting>1</INVLPGExiting>
+							<MWAITExiting>1</MWAITExiting>
+							<!-- All proc controls must be specified -->
+						</proc>
+						<proc2>
+							<EnableEPT>1</EnableEPT>
+							<WBINVDExiting>1</WBINVDExiting>
+							<!-- All proc2 controls must be specified -->
+						</proc2>
+						<entry>
+							<IA32eModeGuest>1</IA32eModeGuest>
+							<!-- All entry controls must be specified -->
+						</entry>
+						<exit>
+							<IA32eMode>1</IA32eMode>
+							<!-- All exit controls must be specified -->
+						</exit>
+					</controls>
+					<masks>
+						<exception>
+							<DivideError>1</DivideError>
+							<RESERVED>1</RESERVED>
+							<!-- All 20bits must be specified -->
+						</exception>
+						<cr0>
+							<ProtectionEnable>1</ProtectionEnable>
+							<MonitorCoprocessor>0</MonitorCoprocessor>
+							<!-- All 11bits must be specified -->
+						</cr0>
+						<cr4>
+							<Virtual8086>0</Virtual8086>
+							<PhysicalAddressExtension>1</PhysicalAddressExtension>
+							<!-- All 17bits must be specified -->
+						</cr4>
+					</masks>
+				</vmx>
+				<registers>
+					<gpr>
+						<rip>16#0000#</rip>
+						<rsp>16#9000#</rsp>
+						<!-- All GPRs have a value -->
+					</gpr>
+					<cr0>
+						<ProtectionEnable>1</ProtectionEnable>
+						<MonitorCoprocessor>0</MonitorCoprocessor>
+						<!-- All bits must be specified -->
+					</cr0>
+					<cr4>
+						<Virtual8086>0</Virtual8086>
+						<PhysicalAddressExtension>1</PhysicalAddressExtension>
+						<!-- All bits must be specified -->
+					</cr4>
+				</registers>
+				<segments>
+					<cs selector="16#0008#" base="16#0000#" limit="16#ffff#" access="16#a09b#"/>
+					<ds selector="16#0010#" base="16#0000#" limit="16#ffff#" access="16#c093#"/>
+					<!-- All segments must be specified -->
+				</segments>
+			</vcpu>
+			<bootparams/>
+			<memory>
+				<memory logical="acpi_rsdp" virtualAddress="16#000e_0000#" writable="false" executable="false">
+					<physical name="linux|acpi_rsdp"/>
+				</memory>
+				<memory logical="acpi_xsdt" virtualAddress="16#000e_0024#" writable="false" executable="false">
+					<physical name="linux|acpi_xsdp"/>
+				</memory>
+				<memory logical="acpi_facp" virtualAddress="16#000e_0050#" writable="false" executable="false">
+					<physical name="linux|acpi_facp"/>
+				</memory>
+				<memory logical="acpi_dsdt" virtualAddress="16#000e_015c#" writable="false" executable="false">
+					<physical name="linux|acpi_dsdt"/>
+				</memory>
+			</memory>
+			<devices>
+				<device logical="console" physical="vga">
+					<ioPort logical="consoleports" physical="ports" start="16#03d4#" end="16#03d5#"/>
+				</device>
+				<device logical="multiport" physical="multiport">
+					<ioPort logical="ports1" physical="ports1" start="16#03f8#" end="16#03fd#"/>
+					<ioPort logical="ports2" physical="ports2" start="16#abcd#" end="16#bcda#"/>
+				</device>
+				<device logical="testdevice" physical="testdevice">
+					<ioPort logical="fooport" physical="fooport" start="16#00ab#" end="16#00ab#"/>
+				</device>
+			</devices>
+			<events/>
+		</subject>
+
+		<subject id="1" name="subject1">
+			<vcpu>
+				<vmx>
+					<controls>
+						<pin>
+							<ExternalInterruptExiting>1</ExternalInterruptExiting>
+							<NMIExiting>1</NMIExiting>
+							<VirtualNMIs>0</VirtualNMIs>
+							<ActivateVMXTimer>1</ActivateVMXTimer>
+							<!-- All pin controls must be specified -->
+						</pin>
+						<proc>
+							<INVLPGExiting>1</INVLPGExiting>
+							<MWAITExiting>1</MWAITExiting>
+							<!-- All proc controls must be specified -->
+						</proc>
+						<proc2>
+							<EnableEPT>0</EnableEPT>
+							<WBINVDExiting>1</WBINVDExiting>
+							<!-- All proc2 controls must be specified -->
+						</proc2>
+						<entry>
+							<IA32eModeGuest>1</IA32eModeGuest>
+							<!-- All entry controls must be specified -->
+						</entry>
+						<exit>
+							<IA32eMode>1</IA32eMode>
+							<!-- All exit controls must be specified -->
+						</exit>
+					</controls>
+					<masks>
+						<exception>
+							<DivideError>1</DivideError>
+							<RESERVED>1</RESERVED>
+							<!-- All 20bits must be specified -->
+						</exception>
+						<cr0>
+							<ProtectionEnable>1</ProtectionEnable>
+							<MonitorCoprocessor>0</MonitorCoprocessor>
+							<!-- All 11bits must be specified -->
+						</cr0>
+						<cr4>
+							<Virtual8086>0</Virtual8086>
+							<PhysicalAddressExtension>1</PhysicalAddressExtension>
+							<!-- All 17bits must be specified -->
+						</cr4>
+					</masks>
+				</vmx>
+				<registers>
+					<gpr>
+						<rip>16#0000#</rip>
+						<rsp>16#9000#</rsp>
+						<!-- All GPRs have a value -->
+					</gpr>
+					<cr0>
+						<ProtectionEnable>1</ProtectionEnable>
+						<MonitorCoprocessor>0</MonitorCoprocessor>
+						<!-- All bits must be specified -->
+					</cr0>
+					<cr4>
+						<Virtual8086>0</Virtual8086>
+						<PhysicalAddressExtension>1</PhysicalAddressExtension>
+						<!-- All bits must be specified -->
+					</cr4>
+				</registers>
+				<segments>
+					<cs selector="16#0008#" base="16#0000#" limit="16#ffff#" access="16#a09b#"/>
+					<ds selector="16#0010#" base="16#0000#" limit="16#ffff#" access="16#c093#"/>
+					<!-- All segments must be specified -->
+				</segments>
+			</vcpu>
+			<bootparams/>
+			<memory>
+				<memory logical="mem" virtualAddress="16#0000#" writable="true" executable="true">
+					<physical name="subject1"/>
+				</memory>
+			</memory>
+			<devices/>
+			<events/>
+		</subject>
+	</subjects>
+
+	<scheduling tickRate="10000">
+		<majorFrame>
+			<cpu>
+				<minorFrame subject="linux" ticks="1700"/>
+			</cpu>
+		</majorFrame>
+	</scheduling>
+
+</system>

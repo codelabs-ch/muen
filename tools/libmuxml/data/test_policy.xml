@@ -34,7 +34,7 @@
 	</kernel>
 
 	<subjects>
-		<subject id="0" name="tau0">
+		<subject id="0" name="tau0" cpu="0">
 			<vcpu>
 				<vmx>
 					<controls>

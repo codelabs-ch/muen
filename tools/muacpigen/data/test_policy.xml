@@ -55,7 +55,7 @@
 	</kernel>
 
 	<subjects>
-		<subject id="0" name="linux">
+		<subject id="0" name="linux" cpu="0">
 			<vcpu>
 				<vmx>
 					<controls>
@@ -156,7 +156,7 @@
 			<events/>
 		</subject>
 
-		<subject id="1" name="subject1">
+		<subject id="1" name="subject1" cpu="1">
 			<vcpu>
 				<vmx>
 					<controls>

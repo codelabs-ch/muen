@@ -38,7 +38,7 @@
 	</kernel>
 
 	<subjects>
-		<subject id="0" name="tau0">
+		<subject id="0" name="tau0" cpu="0">
 			<vcpu>
 				<vmx>
 					<controls>
@@ -123,7 +123,7 @@
 			<events/>
 		</subject>
 
-		<subject id="1" name="subject1">
+		<subject id="1" name="subject1" cpu="1">
 			<vcpu>
 				<vmx>
 					<controls>
@@ -204,7 +204,7 @@
 			<events/>
 		</subject>
 
-		<subject id="2" name="subject2">
+		<subject id="2" name="subject2" cpu="0">
 			<vcpu>
 				<vmx>
 					<controls>

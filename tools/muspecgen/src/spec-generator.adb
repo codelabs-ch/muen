@@ -34,6 +34,11 @@ is
    --  Return N number of indentation spaces.
    function Indent (N : Positive := 1) return String;
 
+   --  Write interrupt policy file to specified output directory.
+   procedure Write_Interrupts
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type);
+
    --  Write scheduling-related policy file to specified output directory.
    procedure Write_Scheduling
      (Output_Dir : String;
@@ -62,7 +67,125 @@ is
    begin
       Write_Scheduling (Output_Dir => Output_Dir,
                         Policy     => Policy);
+      Write_Interrupts (Output_Dir => Output_Dir,
+                        Policy     => Policy);
    end Write;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_Interrupts
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type)
+   is
+
+      --  IRQ to host Vector offset.
+      Vector_Offset : constant := 48;
+
+      Subjects  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/subjects/subject[count(devices/device/irq)>0]");
+      IRQ_Count : constant Natural := DOM.Core.Nodes.Length
+        (List => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Policy.Doc,
+            XPath => "/system/subjects/subject/devices/device/irq"));
+
+      Cur_IRQ : Positive := 1;
+
+      IRQ_Buffer, Vector_Buffer : Unbounded_String;
+
+      --  Write IRQ information to interrupts spec.
+      procedure Write_Interrupt
+        (IRQ   : DOM.Core.Node;
+         Owner : DOM.Core.Node;
+         Index : Natural);
+
+      ----------------------------------------------------------------------
+
+      procedure Write_Interrupt
+        (IRQ   : DOM.Core.Node;
+         Owner : DOM.Core.Node;
+         Index : Natural)
+      is
+         IRQ_Nr : constant Natural := Natural'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => IRQ,
+               Name => "number"));
+         CPU    : constant Natural := Natural'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Owner,
+               Name => "cpu"));
+      begin
+
+         --  IRQ routing table.
+
+         IRQ_Buffer := IRQ_Buffer & Indent (N => 2)
+           & Index'Img & " => IRQ_Route_Type'("
+           & ASCII.LF
+           & Indent (N => 3) & "CPU    =>" & CPU'Img
+           & "," & ASCII.LF
+           & Indent (N => 3) & "IRQ    =>" & IRQ_Nr'Img
+           & "," & ASCII.LF
+           & Indent (N => 3) & "Vector =>"
+           & Positive'Image (Vector_Offset + IRQ_Nr) & ")";
+
+         --  Vector -> subject routing table.
+
+         Vector_Buffer := Vector_Buffer & Indent (N => 2)
+           & Positive'Image (Vector_Offset + IRQ_Nr) & " => "
+           & DOM.Core.Elements.Get_Attribute (Elem => Owner,
+                                              Name => "id");
+      end Write_Interrupt;
+
+      Tmpl : Templates.Template_Type;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subject : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Subjects,
+               Index => I);
+            IRQs    : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subject,
+                 XPath => "devices/device/irq");
+         begin
+            for IRQ in 1 .. DOM.Core.Nodes.Length (List => IRQs) loop
+               Write_Interrupt
+                 (IRQ   => DOM.Core.Nodes.Item (List  => IRQs,
+                                                Index => IRQ - 1),
+                  Owner => Subject,
+                  Index => Cur_IRQ);
+
+               if Cur_IRQ /= IRQ_Count then
+                  IRQ_Buffer    := IRQ_Buffer    & "," & ASCII.LF;
+                  Vector_Buffer := Vector_Buffer & "," & ASCII.LF;
+               end if;
+
+               Cur_IRQ := Cur_IRQ + 1;
+            end loop;
+         end;
+      end loop;
+
+      Vector_Buffer := Vector_Buffer & ","
+        & ASCII.LF & Indent (N => 2) & " others => Skp.Invalid_Subject";
+
+      Tmpl := Templates.Load (Filename => "skp-interrupts.ads");
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__routing_range__",
+                         Content  => "1 .." & IRQ_Count'Img);
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__irq_routing_table__",
+                         Content  => To_String (IRQ_Buffer));
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__vector_routing_table__",
+                         Content  => To_String (Vector_Buffer));
+
+      Mulog.Log (Msg => "Writing interrupt routing spec to '"
+                 & Output_Dir & "/skp-interrupts.ads'");
+
+      Templates.Write (Template => Tmpl,
+                       Filename => Output_Dir & "/skp-interrupts.ads");
+   end Write_Interrupts;
 
    -------------------------------------------------------------------------
 

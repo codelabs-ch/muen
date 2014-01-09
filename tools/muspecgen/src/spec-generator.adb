@@ -16,7 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
+with Ada.Long_Long_Integer_Text_IO;
 
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
@@ -36,6 +38,11 @@ is
 
    --  Write interrupt policy file to specified output directory.
    procedure Write_Interrupts
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type);
+
+   --  Write kernel-related policy files to specified output directory.
+   procedure Write_Kernel
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
@@ -69,6 +76,8 @@ is
                         Policy     => Policy);
       Write_Interrupts (Output_Dir => Output_Dir,
                         Policy     => Policy);
+      Write_Kernel (Output_Dir => Output_Dir,
+                    Policy     => Policy);
    end Write;
 
    -------------------------------------------------------------------------
@@ -186,6 +195,68 @@ is
       Templates.Write (Template => Tmpl,
                        Filename => Output_Dir & "/skp-interrupts.ads");
    end Write_Interrupts;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_Kernel
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type)
+   is
+      Stack_Size : constant Long_Long_Integer := 2 * 4096;
+
+      Stack      : constant DOM.Core.Node := DOM.Core.Nodes.Item
+        (List  => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Policy.Doc,
+            XPath => "/system/kernel/memory/cpu[@id='0']/"
+            & "memory[@logical='stack']"),
+         Index => 0);
+      Stack_Addr : constant Long_Long_Integer := Long_Long_Integer'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Stack,
+            Name => "virtualAddress")) + Stack_Size;
+
+      CPU_Store      : constant DOM.Core.Node := DOM.Core.Nodes.Item
+        (List  => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Policy.Doc,
+            XPath => "/system/kernel/memory/cpu[@id='0']/"
+            & "memory[@logical='store']"),
+         Index => 0);
+      CPU_Store_Addr : constant Long_Long_Integer := Long_Long_Integer'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => CPU_Store,
+            Name => "virtualAddress"));
+
+      Addr_Str : String (1 .. 20);
+      Tmpl     : Templates.Template_Type;
+   begin
+      Tmpl := Templates.Load (Filename => "skp-kernel.ads");
+
+      Ada.Long_Long_Integer_Text_IO.Put
+        (To   => Addr_Str,
+         Item => Stack_Addr,
+         Base => 16);
+      Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__stack_addr__",
+         Content  => Ada.Strings.Fixed.Trim (Source => Addr_Str,
+                                             Side   => Ada.Strings.Left));
+
+      Ada.Long_Long_Integer_Text_IO.Put
+        (To   => Addr_Str,
+         Item => CPU_Store_Addr,
+         Base => 16);
+      Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__cpu_store_addr__",
+         Content  => Ada.Strings.Fixed.Trim (Source => Addr_Str,
+                                             Side   => Ada.Strings.Left));
+
+      Mulog.Log (Msg => "Writing kernel spec to '"
+                 & Output_Dir & "/skp-kernel.ads'");
+
+      Templates.Write (Template => Tmpl,
+                       Filename => Output_Dir & "/skp-kernel.ads");
+   end Write_Kernel;
 
    -------------------------------------------------------------------------
 

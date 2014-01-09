@@ -135,12 +135,11 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Zps : DOM.Core.Node_List;
+      Zps : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory/file[@format='zp']");
    begin
-      Zps := McKae.XML.XPath.XIA.XPath_Query
-        (N     => Policy.Doc,
-         XPath => "/system/memory/memory/file[@format='zp']");
-
       Mulog.Log (Msg => "Found" & DOM.Core.Nodes.Length (List => Zps)'Img
                  & " zero-page file(s)");
 

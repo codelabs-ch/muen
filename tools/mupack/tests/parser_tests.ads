@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,27 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Text_Runner;
 with Ahven.Framework;
 
-with OS_Tests;
-with Image_Tests;
-with Parser_Tests;
-
-procedure Test_Runner
+package Parser_Tests
 is
-   use Ahven.Framework;
 
-   S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Mupack tests");
-begin
-   Add_Test (Suite => S.all,
-             T     => new OS_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Image_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Parser_Tests.Testcase);
+   type Testcase is new Ahven.Framework.Test_Case with null record;
 
-   Ahven.Text_Runner.Run (Suite => S);
-   Release_Suite (T => S);
-end Test_Runner;
+   --  Initialize testcase.
+   procedure Initialize (T : in out Testcase);
+
+   --  Extract file information from policy.
+   procedure Extract_Files;
+
+end Parser_Tests;

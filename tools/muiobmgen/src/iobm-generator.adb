@@ -47,12 +47,11 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Subjects : DOM.Core.Node_List;
+      Subjects : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/subjects/subject");
    begin
-      Subjects := McKae.XML.XPath.XIA.XPath_Query
-        (N     => Policy.Doc,
-         XPath => "/system/subjects/subject");
-
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
             Cur_Subj : constant DOM.Core.Node

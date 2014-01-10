@@ -88,8 +88,22 @@
 						</cr0>
 						<cr4>
 							<Virtual8086>0</Virtual8086>
+							<ProtectedVirtualInts>0</ProtectedVirtualInts>
+							<TimeStampDisable>0</TimeStampDisable>
+							<DebuggingExtensions>0</DebuggingExtensions>
+							<PageSizeExtensions>0</PageSizeExtensions>
 							<PhysicalAddressExtension>1</PhysicalAddressExtension>
-							<!-- All 17bits must be specified -->
+							<MachineCheckEnable>0</MachineCheckEnable>
+							<PageGlobalEnable>0</PageGlobalEnable>
+							<PerfCounterEnable>0</PerfCounterEnable>
+							<OSSupportFXSAVE>0</OSSupportFXSAVE>
+							<OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
+							<VMXEnable>0</VMXEnable>
+							<SMXEnable>0</SMXEnable>
+							<FSGSBASEEnable>0</FSGSBASEEnable>
+							<PCIDEnable>0</PCIDEnable>
+							<XSAVEEnable>0</XSAVEEnable>
+							<SMEPEnable>0</SMEPEnable>
 						</cr4>
 					</masks>
 				</vmx>
@@ -114,8 +128,22 @@
 					</cr0>
 					<cr4>
 						<Virtual8086>0</Virtual8086>
+						<ProtectedVirtualInts>0</ProtectedVirtualInts>
+						<TimeStampDisable>0</TimeStampDisable>
+						<DebuggingExtensions>0</DebuggingExtensions>
+						<PageSizeExtensions>0</PageSizeExtensions>
 						<PhysicalAddressExtension>1</PhysicalAddressExtension>
-						<!-- All bits must be specified -->
+						<MachineCheckEnable>0</MachineCheckEnable>
+						<PageGlobalEnable>0</PageGlobalEnable>
+						<PerfCounterEnable>0</PerfCounterEnable>
+						<OSSupportFXSAVE>0</OSSupportFXSAVE>
+						<OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
+						<VMXEnable>0</VMXEnable>
+						<SMXEnable>0</SMXEnable>
+						<FSGSBASEEnable>0</FSGSBASEEnable>
+						<PCIDEnable>0</PCIDEnable>
+						<XSAVEEnable>0</XSAVEEnable>
+						<SMEPEnable>0</SMEPEnable>
 					</cr4>
 				</registers>
 				<segments>

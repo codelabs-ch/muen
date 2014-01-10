@@ -89,7 +89,22 @@
 	<xs:complexType name="cr4Type">
 		<xs:sequence>
 			<xs:element name="Virtual8086"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="ProtectedVirtualInts"     type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="TimeStampDisable"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="DebuggingExtensions"      type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="PageSizeExtensions"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="PhysicalAddressExtension" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="MachineCheckEnable"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="PageGlobalEnable"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="PerfCounterEnable"        type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="OSSupportFXSAVE"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="OSSupportSIMDExceptions"  type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="VMXEnable"                type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SMXEnable"                type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="FSGSBASEEnable"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="PCIDEnable"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="XSAVEEnable"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SMEPEnable"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 

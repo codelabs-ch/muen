@@ -21,6 +21,11 @@ with Ada.Strings.Unbounded;
 package Pack
 is
 
+   --  Start the packaging process.
+   procedure Run;
+
+   Pack_Error : exception;
+
 private
 
    function U

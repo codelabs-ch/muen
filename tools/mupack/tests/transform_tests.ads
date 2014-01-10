@@ -16,34 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
+with Ahven.Framework;
 
-package Pack.Parser
+package Transform_Tests
 is
 
-   type File_Format_Type is
-     (Acpi_Rsdp,
-      Acpi_Xsdt,
-      Acpi_Facp,
-      Acpi_Dsdt,
-      Elf,
-      Pt,
-      Iobm,
-      Msrbm,
-      Zp);
+   type Testcase is new Ahven.Framework.Test_Case with null record;
 
-   type File_Entry_Type is record
-      Name    : Ada.Strings.Unbounded.Unbounded_String;
-      Path    : Ada.Strings.Unbounded.Unbounded_String;
-      Address : SK.Word64;
-      Size    : SK.Word64;
-      Offset  : SK.Word64;
-      Format  : File_Format_Type;
-   end record;
+   --  Initialize testcase.
+   procedure Initialize (T : in out Testcase);
 
-   type File_Array is array (Natural range <>) of aliased File_Entry_Type;
+   --  Default transform.
+   procedure Default_Transform;
 
-   --  Parse given policy and return list of files to pack.
-   function Parse (Policy : String) return File_Array;
-
-end Pack.Parser;
+end Transform_Tests;

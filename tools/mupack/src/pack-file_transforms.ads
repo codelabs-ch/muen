@@ -16,34 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
+with Pack.Parser;
 
-package Pack.Parser
+package Pack.File_Transforms
 is
 
-   type File_Format_Type is
-     (Acpi_Rsdp,
-      Acpi_Xsdt,
-      Acpi_Facp,
-      Acpi_Dsdt,
-      Elf,
-      Pt,
-      Iobm,
-      Msrbm,
-      Zp);
+   --  Transform files given by file array.
+   procedure Process (Files : in out Parser.File_Array);
 
-   type File_Entry_Type is record
-      Name    : Ada.Strings.Unbounded.Unbounded_String;
-      Path    : Ada.Strings.Unbounded.Unbounded_String;
-      Address : SK.Word64;
-      Size    : SK.Word64;
-      Offset  : SK.Word64;
-      Format  : File_Format_Type;
-   end record;
-
-   type File_Array is array (Natural range <>) of aliased File_Entry_Type;
-
-   --  Parse given policy and return list of files to pack.
-   function Parse (Policy : String) return File_Array;
-
-end Pack.Parser;
+end Pack.File_Transforms;

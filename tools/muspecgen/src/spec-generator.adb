@@ -265,28 +265,19 @@ is
       Policy     : Muxml.XML_Data_Type)
    is
       Stack_Size : constant Long_Long_Integer := 2 * 4096;
-
-      Stack      : constant DOM.Core.Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Policy.Doc,
-            XPath => "/system/kernel/memory/cpu[@id='0']/"
-            & "memory[@logical='stack']"),
-         Index => 0);
       Stack_Addr : constant Long_Long_Integer := Long_Long_Integer'Value
-        (DOM.Core.Elements.Get_Attribute
-           (Elem => Stack,
-            Name => "virtualAddress")) + Stack_Size;
-
-      CPU_Store      : constant DOM.Core.Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Policy.Doc,
+        (Get_Attribute
+           (Doc   => Policy.Doc,
             XPath => "/system/kernel/memory/cpu[@id='0']/"
-            & "memory[@logical='store']"),
-         Index => 0);
+            & "memory[@logical='stack']",
+            Name  => "virtualAddress")) + Stack_Size;
+
       CPU_Store_Addr : constant Long_Long_Integer := Long_Long_Integer'Value
-        (DOM.Core.Elements.Get_Attribute
-           (Elem => CPU_Store,
-            Name => "virtualAddress"));
+        (Get_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/kernel/memory/cpu[@id='0']/"
+            & "memory[@logical='store']",
+            Name  => "virtualAddress"));
 
       Addr_Str : String (1 .. 20);
       Tmpl     : Templates.Template_Type;
@@ -418,13 +409,10 @@ is
             Subject    : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Minor,
                Name => "subject");
-            Subject_Id : constant String := DOM.Core.Nodes.Node_Value
-              (N => DOM.Core.Nodes.Item
-                 (List  => McKae.XML.XPath.XIA.XPath_Query
-                    (N     => Policy.Doc,
-                     XPath => "/system/subjects/subject[@name='" & Subject
-                     & "']/@id"),
-                  Index => 0));
+            Subject_Id : constant String := Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/subjects/subject[@name='" & Subject & "']",
+               Name  => "id");
          begin
             Buffer := Buffer & Indent (N => 4) & Index'Img
               & " => Minor_Frame_Type'(Subject_Id => " & Subject_Id

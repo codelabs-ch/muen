@@ -279,36 +279,122 @@ is
             & "memory[@logical='store']",
             Name  => "virtualAddress"));
 
-      Addr_Str : String (1 .. 20);
-      Tmpl     : Templates.Template_Type;
+      --  Write C header for kernel to specified output directory.
+      procedure Write_Kernel_Header
+        (Output_Dir : String;
+         Policy     : Muxml.XML_Data_Type);
+
+      --  Write SPARK specification for kernel to specified output directory.
+      procedure Write_Kernel_Spec
+        (Output_Dir : String;
+         Policy     : Muxml.XML_Data_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Write_Kernel_Header
+        (Output_Dir : String;
+         Policy     : Muxml.XML_Data_Type)
+      is
+         Filename : constant String := "policy.h";
+
+         Subject_Count : constant Natural := DOM.Core.Nodes.Length
+           (List => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Policy.Doc,
+               XPath => "/system/subjects/subject"));
+         CPU_Count     : constant String := Get_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/platform/processor",
+            Name  => "logicalCpus");
+         PML4_Addr     : constant Long_Long_Integer := Long_Long_Integer'Value
+           (Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/memory/memory[@name='kernel_0|pt']",
+               Name  => "physicalAddress"));
+         VMXON_Addr    : constant Long_Long_Integer := Long_Long_Integer'Value
+           (Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/memory/memory[@name='kernel_0|vmxon']",
+               Name  => "physicalAddress"));
+         VMCS_Addr     : constant Long_Long_Integer := Long_Long_Integer'Value
+           (Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/memory/memory[@name='tau0|vmcs']",
+               Name  => "physicalAddress"));
+
+         Tmpl : Templates.Template_Type;
+      begin
+         Tmpl := Templates.Load (Filename => Filename);
+         Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__subj_count__",
+            Content  => Ada.Strings.Fixed.Trim
+              (Source => Subject_Count'Img,
+               Side   => Ada.Strings.Left));
+         Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__stack_addr__",
+            Content  => To_Hex (Number => Stack_Addr,
+                                Prefix => False));
+         Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__kpml4_addr__",
+            Content  => To_Hex (Number => PML4_Addr,
+                                Prefix => False));
+         Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__cpu_count__",
+            Content  => CPU_Count);
+         Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__vmxon_addr__",
+            Content  => To_Hex (Number => VMXON_Addr,
+                                Prefix => False));
+         Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__vmcs_addr__",
+            Content  => To_Hex (Number => VMCS_Addr,
+                                Prefix => False));
+
+         Mulog.Log (Msg => "Writing kernel header file to '"
+                    & Output_Dir & "/" & Filename & "'");
+
+         Templates.Write (Template => Tmpl,
+                          Filename => Output_Dir & "/" & Filename);
+      end Write_Kernel_Header;
+
+      ----------------------------------------------------------------------
+
+      procedure Write_Kernel_Spec
+        (Output_Dir : String;
+         Policy     : Muxml.XML_Data_Type)
+      is
+         pragma Unreferenced (Policy);
+
+         Filename : constant String := "skp-kernel.ads";
+
+         Tmpl : Templates.Template_Type;
+      begin
+         Tmpl := Templates.Load (Filename => Filename);
+         Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__stack_addr__",
+            Content  => To_Hex (Number => Stack_Addr));
+         Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__cpu_store_addr__",
+            Content  => To_Hex (Number => CPU_Store_Addr));
+
+         Mulog.Log (Msg => "Writing kernel spec to '"
+                    & Output_Dir & "/" & Filename & "'");
+
+         Templates.Write (Template => Tmpl,
+                          Filename => Output_Dir & "/" & Filename);
+      end Write_Kernel_Spec;
    begin
-      Tmpl := Templates.Load (Filename => "skp-kernel.ads");
-
-      Ada.Long_Long_Integer_Text_IO.Put
-        (To   => Addr_Str,
-         Item => Stack_Addr,
-         Base => 16);
-      Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__stack_addr__",
-         Content  => Ada.Strings.Fixed.Trim (Source => Addr_Str,
-                                             Side   => Ada.Strings.Left));
-
-      Ada.Long_Long_Integer_Text_IO.Put
-        (To   => Addr_Str,
-         Item => CPU_Store_Addr,
-         Base => 16);
-      Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__cpu_store_addr__",
-         Content  => Ada.Strings.Fixed.Trim (Source => Addr_Str,
-                                             Side   => Ada.Strings.Left));
-
-      Mulog.Log (Msg => "Writing kernel spec to '"
-                 & Output_Dir & "/skp-kernel.ads'");
-
-      Templates.Write (Template => Tmpl,
-                       Filename => Output_Dir & "/skp-kernel.ads");
+      Write_Kernel_Spec (Output_Dir => Output_Dir,
+                         Policy     => Policy);
+      Write_Kernel_Header (Output_Dir => Output_Dir,
+                         Policy     => Policy);
    end Write_Kernel;
 
    -------------------------------------------------------------------------

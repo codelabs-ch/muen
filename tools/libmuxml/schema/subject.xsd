@@ -73,8 +73,20 @@
 
 	<xs:complexType name="proc2CtrlType">
 		<xs:sequence>
-			<xs:element name="EnableEPT"     type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="WBINVDExiting" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="VirtualAPICAccesses"        type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="EnableEPT"                  type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="DescriptorTableExiting"     type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="EnableRDTSCP"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Virtualizex2APICMode"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="EnableVPID"                 type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="WBINVDExiting"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="UnrestrictedGuest"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="APICRegisterVirtualization" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="VirtualInterruptDelivery"   type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="PAUSELoopExiting"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="RDRANDExiting"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="EnableINVPCID"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="EnableVMFunctions"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 

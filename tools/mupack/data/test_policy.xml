@@ -72,9 +72,20 @@
 							<Activate2ndaryControls>1</Activate2ndaryControls>
 						</proc>
 						<proc2>
-							<EnableEPT>1</EnableEPT>
+							<VirtualAPICAccesses>0</VirtualAPICAccesses>
+							<EnableEPT>0</EnableEPT>
+							<DescriptorTableExiting>0</DescriptorTableExiting>
+							<EnableRDTSCP>0</EnableRDTSCP>
+							<Virtualizex2APICMode>0</Virtualizex2APICMode>
+							<EnableVPID>0</EnableVPID>
 							<WBINVDExiting>1</WBINVDExiting>
-							<!-- All proc2 controls must be specified -->
+							<UnrestrictedGuest>0</UnrestrictedGuest>
+							<APICRegisterVirtualization>0</APICRegisterVirtualization>
+							<VirtualInterruptDelivery>0</VirtualInterruptDelivery>
+							<PAUSELoopExiting>0</PAUSELoopExiting>
+							<RDRANDExiting>0</RDRANDExiting>
+							<EnableINVPCID>0</EnableINVPCID>
+							<EnableVMFunctions>0</EnableVMFunctions>
 						</proc2>
 						<entry>
 							<IA32eModeGuest>1</IA32eModeGuest>

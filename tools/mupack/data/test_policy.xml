@@ -46,7 +46,7 @@
 							<NMIExiting>1</NMIExiting>
 							<VirtualNMIs>0</VirtualNMIs>
 							<ActivateVMXTimer>1</ActivateVMXTimer>
-							<!-- All pin controls must be specified -->
+							<ProcessPostedInterrupts>0</ProcessPostedInterrupts>
 						</pin>
 						<proc>
 							<INVLPGExiting>1</INVLPGExiting>

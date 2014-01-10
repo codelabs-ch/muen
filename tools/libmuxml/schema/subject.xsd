@@ -41,6 +41,7 @@
 			<xs:element name="NMIExiting"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="VirtualNMIs"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="ActivateVMXTimer"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="ProcessPostedInterrupts"  type="bitValueType" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 

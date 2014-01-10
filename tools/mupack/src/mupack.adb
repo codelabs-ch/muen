@@ -22,13 +22,19 @@ with Ada.Exceptions;
 with Mulog;
 with Muxml;
 
+with Pack.OS;
+with Pack.Command_Line;
+
 procedure Mupack
 is
 begin
-   null;
+   Pack.Command_Line.Init (Description => "Muen system image packager");
+   Pack.Run;
 
 exception
-   when E : Muxml.Processing_Error =>
+   when E : Muxml.Processing_Error
+      | Pack.Pack_Error
+      | Pack.OS.Command_Failed =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Processing failed, aborting");
       Mulog.Log (Level => Mulog.Error,

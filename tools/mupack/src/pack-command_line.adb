@@ -26,9 +26,7 @@ with GNAT.Command_Line;
 package body Pack.Command_Line
 is
 
-   use Ada.Strings.Unbounded;
-
-   Policy, Kernel_Filename : Unbounded_String;
+   Policy, Kernel_Filename : Ada.Strings.Unbounded.Unbounded_String;
 
    type Config_Type is new
      Ada.Finalization.Limited_Controlled with record
@@ -51,7 +49,7 @@ is
    function Get_Input_Dir return String
    is
    begin
-      return To_String (Input_Dir);
+      return S (Input_Dir);
    end Get_Input_Dir;
 
    -------------------------------------------------------------------------
@@ -59,7 +57,7 @@ is
    function Get_Kernel_Filename return String
    is
    begin
-      return To_String (Kernel_Filename);
+      return S (Kernel_Filename);
    end Get_Kernel_Filename;
 
    -------------------------------------------------------------------------
@@ -67,7 +65,7 @@ is
    function Get_Output_Dir return String
    is
    begin
-      return To_String (Output_Dir);
+      return S (Output_Dir);
    end Get_Output_Dir;
 
    -------------------------------------------------------------------------
@@ -75,13 +73,15 @@ is
    function Get_Policy return String
    is
    begin
-      return To_String (Policy);
+      return S (Policy);
    end Get_Policy;
 
    -------------------------------------------------------------------------
 
    procedure Init (Description : String)
    is
+      use Ada.Strings.Unbounded;
+
       Cmdline                   : Config_Type;
       Out_Dir, In_Dir, Knl_File : aliased GNAT.Strings.String_Access;
    begin
@@ -117,13 +117,13 @@ is
       begin
          GNAT.Command_Line.Getopt (Config => Cmdline.Data);
          if Out_Dir'Length /= 0 then
-            Output_Dir := To_Unbounded_String (Out_Dir.all);
+            Output_Dir := U (Out_Dir.all);
          end if;
          if In_Dir'Length /= 0 then
-            Input_Dir := To_Unbounded_String (In_Dir.all);
+            Input_Dir := U (In_Dir.all);
          end if;
          if Knl_File'Length /= 0 then
-            Kernel_Filename := To_Unbounded_String (Knl_File.all);
+            Kernel_Filename := U (Knl_File.all);
          end if;
          GNAT.Strings.Free (X => Out_Dir);
          GNAT.Strings.Free (X => In_Dir);
@@ -138,7 +138,7 @@ is
             GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));
       end;
 
-      Policy := To_Unbounded_String (GNAT.Command_Line.Get_Argument);
+      Policy := U (GNAT.Command_Line.Get_Argument);
       if Policy = Null_Unbounded_String
         or else Kernel_Filename = Null_Unbounded_String
       then

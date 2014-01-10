@@ -26,8 +26,6 @@ with GNAT.Command_Line;
 package body Pack.Command_Line
 is
 
-   Policy, Kernel_Filename : Ada.Strings.Unbounded.Unbounded_String;
-
    type Config_Type is new
      Ada.Finalization.Limited_Controlled with record
       Data : GNAT.Command_Line.Command_Line_Configuration;

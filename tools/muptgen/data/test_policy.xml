@@ -154,8 +154,15 @@
 							<LoadIA32EFER>0</LoadIA32EFER>
 						</entry>
 						<exit>
-							<IA32eMode>1</IA32eMode>
-							<!-- All exit controls must be specified -->
+							<SaveDebugControls>0</SaveDebugControls>
+							<HostAddressspaceSize>0</HostAddressspaceSize>
+							<LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
+							<AckInterruptOnExit>1</AckInterruptOnExit>
+							<SaveIA32PAT>0</SaveIA32PAT>
+							<LoadIA32PAT>0</LoadIA32PAT>
+							<SaveIA32EFER>0</SaveIA32EFER>
+							<LoadIA32EFER>0</LoadIA32EFER>
+							<SaveVMXTimerValue>1</SaveVMXTimerValue>
 						</exit>
 					</controls>
 					<masks>
@@ -320,8 +327,15 @@
 							<LoadIA32EFER>0</LoadIA32EFER>
 						</entry>
 						<exit>
-							<IA32eMode>1</IA32eMode>
-							<!-- All exit controls must be specified -->
+							<SaveDebugControls>0</SaveDebugControls>
+							<HostAddressspaceSize>0</HostAddressspaceSize>
+							<LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
+							<AckInterruptOnExit>1</AckInterruptOnExit>
+							<SaveIA32PAT>0</SaveIA32PAT>
+							<LoadIA32PAT>0</LoadIA32PAT>
+							<SaveIA32EFER>0</SaveIA32EFER>
+							<LoadIA32EFER>0</LoadIA32EFER>
+							<SaveVMXTimerValue>1</SaveVMXTimerValue>
 						</exit>
 					</controls>
 					<masks>
@@ -482,8 +496,15 @@
 							<LoadIA32EFER>0</LoadIA32EFER>
 						</entry>
 						<exit>
-							<IA32eMode>1</IA32eMode>
-							<!-- All exit controls must be specified -->
+							<SaveDebugControls>0</SaveDebugControls>
+							<HostAddressspaceSize>0</HostAddressspaceSize>
+							<LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
+							<AckInterruptOnExit>1</AckInterruptOnExit>
+							<SaveIA32PAT>0</SaveIA32PAT>
+							<LoadIA32PAT>0</LoadIA32PAT>
+							<SaveIA32EFER>0</SaveIA32EFER>
+							<LoadIA32EFER>0</LoadIA32EFER>
+							<SaveVMXTimerValue>1</SaveVMXTimerValue>
 						</exit>
 					</controls>
 					<masks>

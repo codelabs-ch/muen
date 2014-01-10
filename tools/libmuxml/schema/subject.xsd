@@ -104,7 +104,15 @@
 
 	<xs:complexType name="vmExitCtrlType">
 		<xs:sequence>
-			<xs:element name="IA32eMode" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SaveDebugControls"      type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="HostAddressspaceSize"   type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="LoadIA32PERFGLOBALCTRL" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="AckInterruptOnExit"     type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SaveIA32PAT"            type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="LoadIA32PAT"            type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SaveIA32EFER"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="LoadIA32EFER"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SaveVMXTimerValue"      type="bitValueType" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 

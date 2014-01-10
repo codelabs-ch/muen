@@ -19,10 +19,16 @@
 package Pack.Command_Line.Test
 is
 
+   --  Set policy file.
+   procedure Set_Policy (Path : String);
+
    --  Set given output directory.
    procedure Set_Output_Dir (Path : String);
 
    --  Set given input directory.
    procedure Set_Input_Dir (Path : String);
+
+   --  Set kernel filename.
+   procedure Set_Kernel_Filename (Path : String);
 
 end Pack.Command_Line.Test;

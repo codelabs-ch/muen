@@ -29,10 +29,26 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Set_Kernel_Filename (Path : String)
+   is
+   begin
+      Kernel_Filename := U (Path);
+   end Set_Kernel_Filename;
+
+   -------------------------------------------------------------------------
+
    procedure Set_Output_Dir (Path : String)
    is
    begin
       Output_Dir := U (Path);
    end Set_Output_Dir;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Policy (Path : String)
+   is
+   begin
+      Policy := U (Path);
+   end Set_Policy;
 
 end Pack.Command_Line.Test;

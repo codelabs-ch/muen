@@ -76,7 +76,15 @@
 						<cr0>
 							<ProtectionEnable>1</ProtectionEnable>
 							<MonitorCoprocessor>0</MonitorCoprocessor>
-							<!-- All 11bits must be specified -->
+							<Emulation>0</Emulation>
+							<TaskSwitched>0</TaskSwitched>
+							<ExtensionType>0</ExtensionType>
+							<NumericError>0</NumericError>
+							<WriteProtect>0</WriteProtect>
+							<AlignmentMask>0</AlignmentMask>
+							<NotWritethrough>0</NotWritethrough>
+							<CacheDisable>0</CacheDisable>
+							<Paging>0</Paging>
 						</cr0>
 						<cr4>
 							<Virtual8086>0</Virtual8086>
@@ -94,7 +102,15 @@
 					<cr0>
 						<ProtectionEnable>1</ProtectionEnable>
 						<MonitorCoprocessor>0</MonitorCoprocessor>
-						<!-- All bits must be specified -->
+						<Emulation>0</Emulation>
+						<TaskSwitched>0</TaskSwitched>
+						<ExtensionType>0</ExtensionType>
+						<NumericError>0</NumericError>
+						<WriteProtect>0</WriteProtect>
+						<AlignmentMask>0</AlignmentMask>
+						<NotWritethrough>0</NotWritethrough>
+						<CacheDisable>0</CacheDisable>
+						<Paging>0</Paging>
 					</cr0>
 					<cr4>
 						<Virtual8086>0</Virtual8086>

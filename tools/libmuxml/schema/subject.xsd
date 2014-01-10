@@ -74,6 +74,15 @@
 		<xs:sequence>
 			<xs:element name="ProtectionEnable"   type="bitValueType" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="MonitorCoprocessor" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Emulation"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="TaskSwitched"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="ExtensionType"      type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="NumericError"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="WriteProtect"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="AlignmentMask"      type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="NotWritethrough"    type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="CacheDisable"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Paging"             type="bitValueType" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 

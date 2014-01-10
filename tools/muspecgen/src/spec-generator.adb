@@ -45,6 +45,13 @@ is
    --  Return N number of indentation spaces.
    function Indent (N : Positive := 1) return String;
 
+   --  Return hexadecimal representation of given number. If prefix is True,
+   --  the returned string includes the base (16#..#).
+   function To_Hex
+     (Number : Long_Long_Integer;
+      Prefix : Boolean := True)
+      return String;
+
    --  Write interrupt policy file to specified output directory.
    procedure Write_Interrupts
      (Output_Dir : String;
@@ -92,6 +99,33 @@ is
 
       return To_String (Result);
    end Indent;
+
+   -------------------------------------------------------------------------
+
+   function To_Hex
+     (Number : Long_Long_Integer;
+      Prefix : Boolean := True)
+      return String
+   is
+      Num_Str : String (1 .. 20);
+   begin
+      Ada.Long_Long_Integer_Text_IO.Put
+        (To   => Num_Str,
+         Item => Number,
+         Base => 16);
+
+      declare
+         Trimmed : constant String := Ada.Strings.Fixed.Trim
+           (Source => Num_Str,
+            Side   => Ada.Strings.Left);
+      begin
+         if Prefix then
+            return Trimmed;
+         else
+            return Trimmed (Trimmed'First + 3 .. Trimmed'Last - 1);
+         end if;
+      end;
+   end To_Hex;
 
    -------------------------------------------------------------------------
 

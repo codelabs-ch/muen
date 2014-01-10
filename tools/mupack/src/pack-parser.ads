@@ -18,8 +18,6 @@
 
 with SK;
 
-with Ada.Strings.Unbounded;
-
 package Pack.Parser
 is
 

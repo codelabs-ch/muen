@@ -16,7 +16,21 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+
 package Pack
 is
+
+private
+
+   function U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
+
+   function S
+     (Source : Ada.Strings.Unbounded.Unbounded_String)
+      return String
+      renames Ada.Strings.Unbounded.To_String;
 
 end Pack;

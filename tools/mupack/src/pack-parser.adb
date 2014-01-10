@@ -26,11 +26,6 @@ with Muxml;
 package body Pack.Parser
 is
 
-   function U
-     (Source : String)
-      return Ada.Strings.Unbounded.Unbounded_String
-      renames Ada.Strings.Unbounded.To_Unbounded_String;
-
    -------------------------------------------------------------------------
 
    function Parse (Policy : String) return File_Array

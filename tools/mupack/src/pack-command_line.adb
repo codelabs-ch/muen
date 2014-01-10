@@ -18,7 +18,6 @@
 
 with Ada.Command_Line;
 with Ada.Finalization;
-with Ada.Directories;
 
 with GNAT.OS_Lib;
 with GNAT.Strings;
@@ -30,8 +29,6 @@ is
    use Ada.Strings.Unbounded;
 
    Policy, Kernel_Filename : Unbounded_String;
-   Output_Dir, Input_Dir   : Unbounded_String := To_Unbounded_String
-     (Ada.Directories.Current_Directory);
 
    type Config_Type is new
      Ada.Finalization.Limited_Controlled with record

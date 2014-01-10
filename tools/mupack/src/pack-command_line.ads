@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Directories;
+
 package Pack.Command_Line
 is
 
@@ -33,5 +35,11 @@ is
 
    --  Return kernel filename.
    function Get_Kernel_Filename return String;
+
+private
+
+   Output_Dir, Input_Dir : Ada.Strings.Unbounded.Unbounded_String
+     := Ada.Strings.Unbounded.To_Unbounded_String
+       (Ada.Directories.Current_Directory);
 
 end Pack.Command_Line;

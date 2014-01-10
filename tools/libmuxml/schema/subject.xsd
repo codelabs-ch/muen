@@ -47,8 +47,27 @@
 
 	<xs:complexType name="procCtrlType">
 		<xs:sequence>
-			<xs:element name="INVLPGExiting" type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="MWAITExiting"  type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="InterruptWindowExiting" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="UseTSCOffsetting"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="HLTExiting"             type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="INVLPGExiting"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="MWAITExiting"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="RDPMCExiting"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="RDTSCExiting"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="CR3LoadExiting"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="CR3StoreExiting"        type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="CR8LoadExiting"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="CR8StoreExiting"        type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="UseTPRShadow"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="NMIWindowExiting"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="MOVDRExiting"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="UnconditionalIOExiting" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="UseIOBitmaps"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="MonitorTrapFlag"        type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="UseMSRBitmaps"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="MONITORExiting"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="PAUSEExiting"           type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Activate2ndaryControls" type="bitValueType" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 

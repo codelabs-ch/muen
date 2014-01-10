@@ -46,9 +46,27 @@
 							<ProcessPostedInterrupts>0</ProcessPostedInterrupts>
 						</pin>
 						<proc>
-							<INVLPGExiting>1</INVLPGExiting>
-							<MWAITExiting>1</MWAITExiting>
-							<!-- All proc controls must be specified -->
+							<InterruptWindowExiting>0</InterruptWindowExiting>
+							<UseTSCOffsetting>0</UseTSCOffsetting>
+							<HLTExiting>0</HLTExiting>
+							<INVLPGExiting>0</INVLPGExiting>
+							<MWAITExiting>0</MWAITExiting>
+							<RDPMCExiting>0</RDPMCExiting>
+							<RDTSCExiting>0</RDTSCExiting>
+							<CR3LoadExiting>0</CR3LoadExiting>
+							<CR3StoreExiting>0</CR3StoreExiting>
+							<CR8LoadExiting>0</CR8LoadExiting>
+							<CR8StoreExiting>0</CR8StoreExiting>
+							<UseTPRShadow>0</UseTPRShadow>
+							<NMIWindowExiting>0</NMIWindowExiting>
+							<MOVDRExiting>0</MOVDRExiting>
+							<UnconditionalIOExiting>0</UnconditionalIOExiting>
+							<UseIOBitmaps>1</UseIOBitmaps>
+							<MonitorTrapFlag>0</MonitorTrapFlag>
+							<UseMSRBitmaps>1</UseMSRBitmaps>
+							<MONITORExiting>0</MONITORExiting>
+							<PAUSEExiting>0</PAUSEExiting>
+							<Activate2ndaryControls>0</Activate2ndaryControls>
 						</proc>
 						<proc2>
 							<EnableEPT>1</EnableEPT>

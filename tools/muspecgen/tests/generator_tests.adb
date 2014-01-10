@@ -48,6 +48,7 @@ is
       Sched_Spec  : constant String := "obj/skp-scheduling.ads";
       Intr_Spec   : constant String := "obj/skp-interrupts.ads";
       Kernel_Spec : constant String := "obj/skp-kernel.ads";
+      Kernel_H    : constant String := "obj/policy.h";
    begin
       Muxml.Parse (Data => Policy,
                    File => "data/test_policy.xml");
@@ -67,6 +68,10 @@ is
               (Filename1 => Kernel_Spec,
                Filename2 => "data/skp-kernel.ref"),
               Message   => "Kernel spec mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Kernel_H,
+               Filename2 => "data/policy.h.ref"),
+              Message   => "Kernel header file mismatch");
    end Write_Specs;
 
 end Generator_Tests;

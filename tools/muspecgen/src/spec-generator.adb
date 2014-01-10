@@ -33,6 +33,15 @@ is
 
    use Ada.Strings.Unbounded;
 
+   --  Searches the element specified by an XPath in the given document and
+   --  returns the attribute given by name as string. If no such attribute or
+   --  element exists, an empty string is returned.
+   function Get_Attribute
+     (Doc   : DOM.Core.Node;
+      XPath : String;
+      Name  : String)
+      return String;
+
    --  Return N number of indentation spaces.
    function Indent (N : Positive := 1) return String;
 
@@ -50,6 +59,25 @@ is
    procedure Write_Scheduling
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
+
+   -------------------------------------------------------------------------
+
+   function Get_Attribute
+     (Doc   : DOM.Core.Node;
+      XPath : String;
+      Name  : String)
+      return String
+   is
+      Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+        (List  => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Doc,
+            XPath => XPath),
+         Index => 0);
+   begin
+      return DOM.Core.Elements.Get_Attribute
+        (Elem => Node,
+         Name => Name);
+   end Get_Attribute;
 
    -------------------------------------------------------------------------
 

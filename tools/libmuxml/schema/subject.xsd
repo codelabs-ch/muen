@@ -92,7 +92,13 @@
 
 	<xs:complexType name="vmEntryCtrlType">
 		<xs:sequence>
-			<xs:element name="IA32eModeGuest" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="LoadDebugControls"            type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="IA32eModeGuest"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="EntryToSMM"                   type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="DeactiveDualMonitorTreatment" type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="LoadIA32PERFGLOBALCTRL"       type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="LoadIA32PAT"                  type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="LoadIA32EFER"                 type="bitValueType" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 

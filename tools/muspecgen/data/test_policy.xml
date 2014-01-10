@@ -188,8 +188,13 @@
 							<EnableVMFunctions>0</EnableVMFunctions>
 						</proc2>
 						<entry>
+							<LoadDebugControls>0</LoadDebugControls>
 							<IA32eModeGuest>1</IA32eModeGuest>
-							<!-- All entry controls must be specified -->
+							<EntryToSMM>0</EntryToSMM>
+							<DeactiveDualMonitorTreatment>0</DeactiveDualMonitorTreatment>
+							<LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
+							<LoadIA32PAT>0</LoadIA32PAT>
+							<LoadIA32EFER>0</LoadIA32EFER>
 						</entry>
 						<exit>
 							<IA32eMode>1</IA32eMode>
@@ -349,8 +354,13 @@
 							<EnableVMFunctions>0</EnableVMFunctions>
 						</proc2>
 						<entry>
-							<IA32eModeGuest>1</IA32eModeGuest>
-							<!-- All entry controls must be specified -->
+							<LoadDebugControls>0</LoadDebugControls>
+							<IA32eModeGuest>0</IA32eModeGuest>
+							<EntryToSMM>0</EntryToSMM>
+							<DeactiveDualMonitorTreatment>0</DeactiveDualMonitorTreatment>
+							<LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
+							<LoadIA32PAT>0</LoadIA32PAT>
+							<LoadIA32EFER>1</LoadIA32EFER>
 						</entry>
 						<exit>
 							<IA32eMode>1</IA32eMode>
@@ -516,8 +526,13 @@
 							<EnableVMFunctions>0</EnableVMFunctions>
 						</proc2>
 						<entry>
+							<LoadDebugControls>0</LoadDebugControls>
 							<IA32eModeGuest>1</IA32eModeGuest>
-							<!-- All entry controls must be specified -->
+							<EntryToSMM>0</EntryToSMM>
+							<DeactiveDualMonitorTreatment>0</DeactiveDualMonitorTreatment>
+							<LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
+							<LoadIA32PAT>0</LoadIA32PAT>
+							<LoadIA32EFER>0</LoadIA32EFER>
 						</entry>
 						<exit>
 							<IA32eMode>1</IA32eMode>

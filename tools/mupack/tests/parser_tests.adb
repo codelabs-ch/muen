@@ -38,14 +38,14 @@ is
       use type Parser.File_Array;
 
       Ref_Files : constant Parser.File_Array
-        := (1 => (Name    => U ("kernel|text"),
-                  Path    => U ("kernel-bin"),
+        := (1 => (Name    => U ("linux|acpi_rsdp"),
+                  Path    => U ("sections.ref"),
                   Address => 16#0010_0000#,
                   Size    => 16#0001_3000#,
                   Offset  => 0,
-                  Format  => Parser.Elf),
-            2 => (Name    => U ("kernel|ro"),
-                  Path    => U ("kernel-bin"),
+                  Format  => Parser.Acpi_Rsdp),
+            2 => (Name    => U ("linux|bin"),
+                  Path    => U ("obj1.o"),
                   Address => 16#0011_3000#,
                   Size    => 16#0001_3000#,
                   Offset  => 16#0001_b000#,

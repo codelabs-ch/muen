@@ -156,8 +156,24 @@
 
 	<xs:complexType name="exceptionType">
 		<xs:sequence>
-			<xs:element name="DivideError" type="bitValueType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="RESERVED"    type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="DivideError"                type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="NMI"                        type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Breakpoint"                 type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Overflow"                   type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="BOUNDRangeExceeded"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="InvalidOpcode"              type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="DeviceNotAvailable"         type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="DoubleFault"                type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="CoprocessorSegmentOverrun"  type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="InvalidTSS"                 type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SegmentNotPresent"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="StackSegmentFault"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="GeneralProtection"          type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="PageFault"                  type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="x87FPUFloatingPointError"   type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="AlignmentCheck"             type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="MachineCheck"               type="bitValueType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SIMDFloatingPointException" type="bitValueType" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 

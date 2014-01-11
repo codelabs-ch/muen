@@ -211,8 +211,23 @@
 					<masks>
 						<exception>
 							<DivideError>1</DivideError>
-							<RESERVED>1</RESERVED>
-							<!-- All 20bits must be specified -->
+							<NMI>1</NMI>
+							<Breakpoint>1</Breakpoint>
+							<Overflow>1</Overflow>
+							<BOUNDRangeExceeded>1</BOUNDRangeExceeded>
+							<InvalidOpcode>1</InvalidOpcode>
+							<DeviceNotAvailable>1</DeviceNotAvailable>
+							<DoubleFault>1</DoubleFault>
+							<CoprocessorSegmentOverrun>1</CoprocessorSegmentOverrun>
+							<InvalidTSS>1</InvalidTSS>
+							<SegmentNotPresent>1</SegmentNotPresent>
+							<StackSegmentFault>1</StackSegmentFault>
+							<GeneralProtection>1</GeneralProtection>
+							<PageFault>1</PageFault>
+							<x87FPUFloatingPointError>1</x87FPUFloatingPointError>
+							<AlignmentCheck>1</AlignmentCheck>
+							<MachineCheck>1</MachineCheck>
+							<SIMDFloatingPointException>1</SIMDFloatingPointException>
 						</exception>
 						<cr0>
 							<ProtectionEnable>1</ProtectionEnable>
@@ -383,9 +398,24 @@
 					</controls>
 					<masks>
 						<exception>
-							<DivideError>1</DivideError>
-							<RESERVED>1</RESERVED>
-							<!-- All 20bits must be specified -->
+							<DivideError>0</DivideError>
+							<NMI>0</NMI>
+							<Breakpoint>0</Breakpoint>
+							<Overflow>0</Overflow>
+							<BOUNDRangeExceeded>0</BOUNDRangeExceeded>
+							<InvalidOpcode>0</InvalidOpcode>
+							<DeviceNotAvailable>0</DeviceNotAvailable>
+							<DoubleFault>0</DoubleFault>
+							<CoprocessorSegmentOverrun>0</CoprocessorSegmentOverrun>
+							<InvalidTSS>0</InvalidTSS>
+							<SegmentNotPresent>0</SegmentNotPresent>
+							<StackSegmentFault>0</StackSegmentFault>
+							<GeneralProtection>0</GeneralProtection>
+							<PageFault>0</PageFault>
+							<x87FPUFloatingPointError>0</x87FPUFloatingPointError>
+							<AlignmentCheck>0</AlignmentCheck>
+							<MachineCheck>0</MachineCheck>
+							<SIMDFloatingPointException>0</SIMDFloatingPointException>
 						</exception>
 						<cr0>
 							<ProtectionEnable>0</ProtectionEnable>
@@ -563,8 +593,23 @@
 					<masks>
 						<exception>
 							<DivideError>1</DivideError>
-							<RESERVED>1</RESERVED>
-							<!-- All 20bits must be specified -->
+							<NMI>1</NMI>
+							<Breakpoint>1</Breakpoint>
+							<Overflow>1</Overflow>
+							<BOUNDRangeExceeded>1</BOUNDRangeExceeded>
+							<InvalidOpcode>1</InvalidOpcode>
+							<DeviceNotAvailable>1</DeviceNotAvailable>
+							<DoubleFault>1</DoubleFault>
+							<CoprocessorSegmentOverrun>1</CoprocessorSegmentOverrun>
+							<InvalidTSS>1</InvalidTSS>
+							<SegmentNotPresent>1</SegmentNotPresent>
+							<StackSegmentFault>1</StackSegmentFault>
+							<GeneralProtection>1</GeneralProtection>
+							<PageFault>1</PageFault>
+							<x87FPUFloatingPointError>1</x87FPUFloatingPointError>
+							<AlignmentCheck>1</AlignmentCheck>
+							<MachineCheck>1</MachineCheck>
+							<SIMDFloatingPointException>1</SIMDFloatingPointException>
 						</exception>
 						<cr0>
 							<ProtectionEnable>1</ProtectionEnable>

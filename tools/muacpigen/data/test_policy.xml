@@ -128,9 +128,24 @@
 					</controls>
 					<masks>
 						<exception>
-							<DivideError>1</DivideError>
-							<RESERVED>1</RESERVED>
-							<!-- All 20bits must be specified -->
+							<DivideError>0</DivideError>
+							<NMI>0</NMI>
+							<Breakpoint>0</Breakpoint>
+							<Overflow>0</Overflow>
+							<BOUNDRangeExceeded>0</BOUNDRangeExceeded>
+							<InvalidOpcode>0</InvalidOpcode>
+							<DeviceNotAvailable>0</DeviceNotAvailable>
+							<DoubleFault>0</DoubleFault>
+							<CoprocessorSegmentOverrun>0</CoprocessorSegmentOverrun>
+							<InvalidTSS>0</InvalidTSS>
+							<SegmentNotPresent>0</SegmentNotPresent>
+							<StackSegmentFault>0</StackSegmentFault>
+							<GeneralProtection>0</GeneralProtection>
+							<PageFault>0</PageFault>
+							<x87FPUFloatingPointError>0</x87FPUFloatingPointError>
+							<AlignmentCheck>0</AlignmentCheck>
+							<MachineCheck>0</MachineCheck>
+							<SIMDFloatingPointException>0</SIMDFloatingPointException>
 						</exception>
 						<cr0>
 							<ProtectionEnable>1</ProtectionEnable>
@@ -314,9 +329,24 @@
 					</controls>
 					<masks>
 						<exception>
-							<DivideError>1</DivideError>
-							<RESERVED>1</RESERVED>
-							<!-- All 20bits must be specified -->
+							<DivideError>0</DivideError>
+							<NMI>0</NMI>
+							<Breakpoint>0</Breakpoint>
+							<Overflow>0</Overflow>
+							<BOUNDRangeExceeded>0</BOUNDRangeExceeded>
+							<InvalidOpcode>0</InvalidOpcode>
+							<DeviceNotAvailable>0</DeviceNotAvailable>
+							<DoubleFault>0</DoubleFault>
+							<CoprocessorSegmentOverrun>0</CoprocessorSegmentOverrun>
+							<InvalidTSS>0</InvalidTSS>
+							<SegmentNotPresent>0</SegmentNotPresent>
+							<StackSegmentFault>0</StackSegmentFault>
+							<GeneralProtection>0</GeneralProtection>
+							<PageFault>0</PageFault>
+							<x87FPUFloatingPointError>0</x87FPUFloatingPointError>
+							<AlignmentCheck>0</AlignmentCheck>
+							<MachineCheck>0</MachineCheck>
+							<SIMDFloatingPointException>0</SIMDFloatingPointException>
 						</exception>
 						<cr0>
 							<ProtectionEnable>1</ProtectionEnable>

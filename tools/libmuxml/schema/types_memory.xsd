@@ -17,6 +17,7 @@
 			<xs:enumeration value="acpi_xsdt"/>
 			<xs:enumeration value="acpi_facp"/>
 			<xs:enumeration value="acpi_dsdt"/>
+			<xs:enumeration value="bzimage"/>
 			<xs:enumeration value="elf"/>
 			<xs:enumeration value="pt"/>
 			<xs:enumeration value="iobm"/>

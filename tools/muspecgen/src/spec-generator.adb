@@ -933,6 +933,11 @@ is
       Buffer : Unbounded_String;
       Tmpl   : Templates.Template_Type;
 
+      --  Add event entry to template buffer.
+      procedure Add_Event
+        (Policy : Muxml.XML_Data_Type;
+         Event  : DOM.Core.Node);
+
       --  Add trap entry to template buffer.
       procedure Add_Trap
         (Policy : Muxml.XML_Data_Type;
@@ -942,6 +947,60 @@ is
       procedure Write_Subject_Spec
         (Subject : DOM.Core.Node;
          Policy  : Muxml.XML_Data_Type);
+
+      -------------------------------------------------------------------
+
+      procedure Add_Event
+        (Policy : Muxml.XML_Data_Type;
+         Event  : DOM.Core.Node)
+      is
+         Event_Id    : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Event,
+            Name => "id");
+         Dst_Subject : constant String := Get_Attribute
+           (Doc   => Event,
+            XPath => "notify",
+            Name  => "subject");
+         Dst_Id      : constant String := Get_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/subjects/subject[@name='" & Dst_Subject & "']",
+            Name  => "id");
+         Dst_Vector  : constant String := Get_Attribute
+           (Doc   => Event,
+            XPath => "notify",
+            Name  => "vector");
+         Notify_Mode : constant String := Get_Attribute
+           (Doc   => Event,
+            XPath => "notify",
+            Name  => "mode");
+      begin
+         Buffer := Buffer & Indent (N => 3)  & " "
+           & Event_Id & " => Event_Entry_Type'("
+           & ASCII.LF
+           & Indent (N => 4) & "Dst_Subject => " & Dst_Id & ","
+           & ASCII.LF
+           & Indent (N => 4) & "Dst_Vector  => ";
+
+         if Dst_Vector = "none" then
+            Buffer := Buffer & "Skp.Invalid_Vector,";
+         else
+            Buffer := Buffer & Dst_Vector & ",";
+         end if;
+
+         Buffer := Buffer & ASCII.LF & Indent (N => 4) & "Handover    => ";
+         if Notify_Mode = "switch" then
+            Buffer := Buffer & "True,";
+         else
+            Buffer := Buffer & "False,";
+         end if;
+
+         Buffer := Buffer & ASCII.LF & Indent (N => 4) & "Send_IPI    => ";
+         if Notify_Mode = "ipi" then
+            Buffer := Buffer & "True)";
+         else
+            Buffer := Buffer & "False)";
+         end if;
+      end Add_Event;
 
       -------------------------------------------------------------------
 
@@ -1075,6 +1134,12 @@ is
               XPath => "events/source/group[@name='vmx_exit']/*");
          Trap_Count  : constant Natural := DOM.Core.Nodes.Length
            (List => Traps);
+         Events      : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Subject,
+              XPath => "events/source/group[@name='vmcall']/*");
+         Event_Count : constant Natural := DOM.Core.Nodes.Length
+           (List => Events);
       begin
          Buffer := Buffer & Indent (N => 2) & Subj_Id
            & " => Subject_Spec_Type'("
@@ -1180,9 +1245,30 @@ is
               & " others => Null_Trap),";
          end if;
 
-         Buffer := Buffer
-           & ASCII.LF
-           & Indent & "    Event_Table        => Null_Event_Table)";
+         Buffer := Buffer & ASCII.LF
+           & Indent & "    Event_Table        => ";
+
+         if Event_Count = 0 then
+            Buffer := Buffer & "Null_Event_Table)";
+         else
+            Buffer := Buffer & "Event_Table_Type'(" & ASCII.LF;
+            for I in 0 .. Event_Count - 1 loop
+               Add_Event (Policy => Policy,
+                          Event  => DOM.Core.Nodes.Item
+                            (List  => Events,
+                             Index => I));
+
+               if I < Event_Count - 1 then
+                  Buffer := Buffer & "," & ASCII.LF;
+               end if;
+            end loop;
+
+            if Event_Count /= 32 then
+               Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
+                 & " others => Null_Event";
+            end if;
+            Buffer := Buffer & "))";
+         end if;
       end Write_Subject_Spec;
    begin
       Tmpl := Templates.Load (Filename => "skp-subjects.ads");

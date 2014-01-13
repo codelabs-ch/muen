@@ -230,6 +230,38 @@ is
          LoadIA32EFER           => 21,
          SaveVMXTimerValue      => 22));
 
+   type CR0_Flags_Type is
+     (ProtectionEnable,
+      MonitorCoprocessor,
+      Emulation,
+      TaskSwitched,
+      ExtensionType,
+      NumericError,
+      WriteProtect,
+      AlignmentMask,
+      NotWritethrough,
+      CacheDisable,
+      Paging);
+
+   type CR0_Flags_Map_Type is array (CR0_Flags_Type) of Natural;
+
+   --  CR0 flag bit positions as specified by Intel SDM Vol. 3A, section 2.5.
+   function Get_CR0 is new Utils.To_Number
+     (Bitfield_Type => CR0_Flags_Type,
+      Mapping_Type  => CR0_Flags_Map_Type,
+      Map           =>
+        (ProtectionEnable   => 0,
+         MonitorCoprocessor => 1,
+         Emulation          => 2,
+         TaskSwitched       => 3,
+         ExtensionType      => 4,
+         NumericError       => 5,
+         WriteProtect       => 16,
+         AlignmentMask      => 18,
+         NotWritethrough    => 29,
+         CacheDisable       => 30,
+         Paging             => 31));
+
    --  Write interrupt policy file to specified output directory.
    procedure Write_Interrupts
      (Output_Dir : String;
@@ -889,6 +921,14 @@ is
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
               XPath => "vcpu/vmx/controls/exit/*");
+         CR0_Value   : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Subject,
+              XPath => "vcpu/registers/cr0/*");
+         CR0_Mask    : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Subject,
+              XPath => "vcpu/vmx/masks/cr0/*");
       begin
          Buffer := Buffer & Indent (N => 2) & Subj_Id
            & " => Subject_Spec_Type'("
@@ -939,9 +979,11 @@ is
            & Indent & "    Entry_Point        => "
            & To_Hex (Number => Entry_Addr) & ","
            & ASCII.LF
-           & Indent & "    CR0_Value          => ,"
+           & Indent & "    CR0_Value          => "
+           & To_Hex (Number => Get_CR0 (Fields => CR0_Value)) & ","
            & ASCII.LF
-           & Indent & "    CR0_Mask           => ,"
+           & Indent & "    CR0_Mask           => "
+           & To_Hex (Number => Get_CR0 (Fields => CR0_Mask)) & ","
            & ASCII.LF
            & Indent & "    CR4_Value          => ,"
            & ASCII.LF

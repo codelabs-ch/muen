@@ -201,6 +201,35 @@ is
          LoadIA32PAT                  => 14,
          LoadIA32EFER                 => 15));
 
+   type Exit_Ctrl_Type is
+     (SaveDebugControls,
+      HostAddressspaceSize,
+      LoadIA32PERFGLOBALCTRL,
+      AckInterruptOnExit,
+      SaveIA32PAT,
+      LoadIA32PAT,
+      SaveIA32EFER,
+      LoadIA32EFER,
+      SaveVMXTimerValue);
+
+   type Exit_Ctrl_Map_Type is array (Exit_Ctrl_Type) of Natural;
+
+   --  VM-Exit control bit positions as specified by Intel SDM Vol. 3C,
+   --  table 24-10.
+   function Get_Exit_Controls is new Utils.To_Number
+     (Bitfield_Type => Exit_Ctrl_Type,
+      Mapping_Type  => Exit_Ctrl_Map_Type,
+      Map           =>
+        (SaveDebugControls      => 2,
+         HostAddressspaceSize   => 9,
+         LoadIA32PERFGLOBALCTRL => 12,
+         AckInterruptOnExit     => 15,
+         SaveIA32PAT            => 18,
+         LoadIA32PAT            => 19,
+         SaveIA32EFER           => 20,
+         LoadIA32EFER           => 21,
+         SaveVMXTimerValue      => 22));
+
    --  Write interrupt policy file to specified output directory.
    procedure Write_Interrupts
      (Output_Dir : String;
@@ -856,6 +885,10 @@ is
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
               XPath => "vcpu/vmx/controls/entry/*");
+         Exit_Ctrls  : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Subject,
+              XPath => "vcpu/vmx/controls/exit/*");
       begin
          Buffer := Buffer & Indent (N => 2) & Subj_Id
            & " => Subject_Spec_Type'("
@@ -929,7 +962,8 @@ is
            & Indent (N => 3) & " Exec_Proc2  =>"
            & Get_Proc2_Controls (Fields => Proc2_Ctrls)'Img  & ","
            & ASCII.LF
-           & Indent (N => 3) & " Exit_Ctrls  => ,"
+           & Indent (N => 3) & " Exit_Ctrls  =>"
+           & Get_Exit_Controls (Fields => Exit_Ctrls)'Img  & ","
            & ASCII.LF
            & Indent (N => 3) & " Entry_Ctrls =>"
            & Get_Entry_Controls (Fields => Entry_Ctrls)'Img  & "),"

@@ -306,6 +306,52 @@ is
          XSAVEEnable              => 18,
          SMEPEnable               => 20));
 
+   type Exceptions_Type is
+     (DivideError,
+      NMI,
+      Breakpoint,
+      Overflow,
+      BOUNDRangeExceeded,
+      InvalidOpcode,
+      DeviceNotAvailable,
+      DoubleFault,
+      CoprocessorSegmentOverrun,
+      InvalidTSS,
+      SegmentNotPresent,
+      StackSegmentFault,
+      GeneralProtection,
+      PageFault,
+      x87FPUFloatingPointError,
+      AlignmentCheck,
+      MachineCheck,
+      SIMDFloatingPointException);
+
+   type Exceptions_Map_Type is array (Exceptions_Type) of Natural;
+
+   --  Exceptions bit positions as specified by Intel SDM Vol. 3A, table 6.3.1.
+   function Get_Exceptions is new Utils.To_Number
+     (Bitfield_Type => Exceptions_Type,
+      Mapping_Type  => Exceptions_Map_Type,
+      Map           =>
+        (DivideError                => 0,
+         NMI                        => 2,
+         Breakpoint                 => 3,
+         Overflow                   => 4,
+         BOUNDRangeExceeded         => 5,
+         InvalidOpcode              => 6,
+         DeviceNotAvailable         => 7,
+         DoubleFault                => 8,
+         CoprocessorSegmentOverrun  => 9,
+         InvalidTSS                 => 10,
+         SegmentNotPresent          => 11,
+         StackSegmentFault          => 12,
+         GeneralProtection          => 13,
+         PageFault                  => 14,
+         x87FPUFloatingPointError   => 16,
+         AlignmentCheck             => 17,
+         MachineCheck               => 18,
+         SIMDFloatingPointException => 19));
+
    --  Write interrupt policy file to specified output directory.
    procedure Write_Interrupts
      (Output_Dir : String;
@@ -981,6 +1027,10 @@ is
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
               XPath => "vcpu/vmx/masks/cr4/*");
+         Exceptions  : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Subject,
+              XPath => "vcpu/vmx/masks/exception/*");
       begin
          Buffer := Buffer & Indent (N => 2) & Subj_Id
            & " => Subject_Spec_Type'("
@@ -1045,7 +1095,8 @@ is
            & ASCII.LF
            & Indent & "    CS_Access          => " & CS_Access & ","
            & ASCII.LF
-           & Indent & "    Exception_Bitmap   => ,"
+           & Indent & "    Exception_Bitmap   => "
+           & To_Hex (Number => Get_Exceptions (Fields => Exceptions)) & ","
            & ASCII.LF
            & Indent & "    VMX_Controls       => VMX_Controls_Type'("
            & ASCII.LF

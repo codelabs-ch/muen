@@ -27,7 +27,7 @@ with McKae.XML.XPath.XIA;
 with SK;
 
 with Mulog;
-with Mugen.Files;
+with Mutools.Files;
 
 with Msrbm.MSRs;
 
@@ -123,8 +123,8 @@ is
          end;
       end loop;
 
-      Mugen.Files.Open (Filename => Filename,
-                        File     => File);
+      Mutools.Files.Open (Filename => Filename,
+                          File     => File);
       Ada.Streams.Stream_IO.Write (File => File,
                                    Item => MSRs.To_Stream (Bitmap => Bitmap));
       Ada.Streams.Stream_IO.Close (File => File);

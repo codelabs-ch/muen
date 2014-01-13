@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Exceptions;
 with Ada.Directories;
 with Ada.Strings.Unbounded;
 
@@ -87,6 +88,55 @@ is
       T.Add_Test_Routine
         (Routine => Default_Transform'Access,
          Name    => "Default transform");
+      T.Add_Test_Routine
+        (Routine => Invalid_Bzimage'Access,
+         Name    => "Invalid Linux bzImage");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Invalid_Bzimage
+   is
+   begin
+      Command_Line.Test.Set_Input_Dir  (Path => "data");
+      Command_Line.Test.Set_Output_Dir (Path => "obj");
+
+      declare
+         Files : Parser.File_Array
+           := (1 => (Name    => U ("bzImage"),
+                     Path    => U ("invalid_bzimage"),
+                     Address => 16#0010_0000#,
+                     Size    => 16#0001_3000#,
+                     Offset  => 16#0010#,
+                     Format  => Parser.Bzimage));
+      begin
+         File_Transforms.Process (Files => Files);
+
+      exception
+         when E : File_Transforms.Transform_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to find entry point in bzImage "
+                    & "'data/invalid_bzimage'",
+                    Message   => "Exception mismatch (1)");
+      end;
+
+      declare
+         Files : Parser.File_Array
+           := (1 => (Name    => U ("bzImage"),
+                     Path    => U ("obj1.o"),
+                     Address => 16#0010_0000#,
+                     Size    => 16#0001_3000#,
+                     Offset  => 16#0010#,
+                     Format  => Parser.Bzimage));
+      begin
+         File_Transforms.Process (Files => Files);
+
+      exception
+         when E : File_Transforms.Transform_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unexpected file layout in bzImage 'data/obj1.o'",
+                    Message   => "Exception mismatch (2)");
+      end;
+   end Invalid_Bzimage;
 
 end Transform_Tests;

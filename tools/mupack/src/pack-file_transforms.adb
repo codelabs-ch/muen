@@ -20,6 +20,7 @@ with Ada.Strings.Maps;
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 with Ada.Streams.Stream_IO;
+with Ada.IO_Exceptions;
 
 with SK;
 
@@ -119,17 +120,21 @@ is
       Open (Name => S (File.Path),
             File => File_In,
             Mode => In_File);
-      Create (Name => Filename_Out,
-              File => File_Out,
-              Mode => Out_File);
 
-      Sector_Type'Read (Stream (File => File_In), Sector);
-      if Natural (Sector (497)) > 0 then
-         Setup_Sectors := Natural (Sector (497)) + 1;
-      end if;
-      for I in Integer range 2 .. Setup_Sectors loop
+      begin
          Sector_Type'Read (Stream (File => File_In), Sector);
-      end loop;
+         if Natural (Sector (497)) > 0 then
+            Setup_Sectors := Natural (Sector (497)) + 1;
+         end if;
+         for I in Integer range 2 .. Setup_Sectors loop
+            Sector_Type'Read (Stream (File => File_In), Sector);
+         end loop;
+
+      exception
+         when Ada.IO_Exceptions.End_Error =>
+            raise Transform_Error with "Unexpected file layout in bzImage '"
+              &  S (File.Path) & "'";
+      end;
 
       begin
          Sector_Type'Read (Stream (File => File_In), Sector);
@@ -162,8 +167,14 @@ is
          Mulog.Log (Msg => "Patching 64-bit entry point in '"
                     & Filename_Out & "'");
          Sector (bzImage64BitEntryPoint'Range) := (others => 16#90#);
+      else
+         raise Transform_Error with "Unable to find entry point in bzImage '"
+           & S (File.Path) & "'";
       end if;
 
+      Create (Name => Filename_Out,
+              File => File_Out,
+              Mode => Out_File);
       Sector_Type'Write (Stream (File => File_Out), Sector);
 
       while not Ada.Streams.Stream_IO.End_Of_File (File_In) loop

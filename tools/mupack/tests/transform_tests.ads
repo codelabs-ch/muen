@@ -29,4 +29,7 @@ is
    --  Default transform.
    procedure Default_Transform;
 
+   --  Try to patch an invalid Linux bzImage.
+   procedure Invalid_Bzimage;
+
 end Transform_Tests;

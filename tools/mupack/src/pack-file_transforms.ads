@@ -24,4 +24,6 @@ is
    --  Transform files given by file array.
    procedure Process (Files : in out Parser.File_Array);
 
+   Transform_Error : exception;
+
 end Pack.File_Transforms;

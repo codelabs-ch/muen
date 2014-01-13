@@ -25,6 +25,7 @@ with Ada.IO_Exceptions;
 with SK;
 
 with Mulog;
+with Mutools.Files;
 
 with Pack.Image;
 with Pack.Command_Line;
@@ -172,9 +173,8 @@ is
            & S (File.Path) & "'";
       end if;
 
-      Create (Name => Filename_Out,
-              File => File_Out,
-              Mode => Out_File);
+      Mutools.Files.Open (Filename => Filename_Out,
+                          File     => File_Out);
       Sector_Type'Write (Stream (File => File_Out), Sector);
 
       while not Ada.Streams.Stream_IO.End_Of_File (File_In) loop

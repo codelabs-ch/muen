@@ -23,6 +23,7 @@ with "../../config/shared";
 
 with "../libmulog/libmulog";
 with "../libmuxml/libmuxml";
+with "../libmutools/libmutools";
 
 project Mupack is
 

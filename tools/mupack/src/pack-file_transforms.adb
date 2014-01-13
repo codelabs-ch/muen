@@ -39,12 +39,16 @@ is
    --  implementations first.
    procedure Default_Transform (File : access Parser.File_Entry_Type);
 
+   --  Patch Linux bzImage.
+   procedure Patch_Bzimage (File : access Parser.File_Entry_Type);
+
    --  Convert given ELF binary to raw object format.
    procedure To_Raw_Binary (File : access Parser.File_Entry_Type);
 
    Transforms : constant array (Parser.File_Format_Type) of Transform_Procedure
-     := (Parser.Elf => To_Raw_Binary'Access,
-         others     => Default_Transform'Access);
+     := (Parser.Bzimage => Patch_Bzimage'Access,
+         Parser.Elf     => To_Raw_Binary'Access,
+         others         => Default_Transform'Access);
 
    -------------------------------------------------------------------------
 
@@ -68,6 +72,14 @@ is
         (Source  => Name,
          Mapping => Charmap);
    end Normalize;
+
+   -------------------------------------------------------------------------
+
+   procedure Patch_Bzimage (File : access Parser.File_Entry_Type)
+   is
+   begin
+      Default_Transform (File => File);
+   end Patch_Bzimage;
 
    -------------------------------------------------------------------------
 

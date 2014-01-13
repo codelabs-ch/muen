@@ -25,6 +25,8 @@ with Pack.File_Transforms;
 
 with Pack.Command_Line.Test;
 
+with Test_Utils;
+
 package body Transform_Tests
 is
 
@@ -89,6 +91,9 @@ is
         (Routine => Default_Transform'Access,
          Name    => "Default transform");
       T.Add_Test_Routine
+        (Routine => Patch_Bzimage'Access,
+         Name    => "Patch Linux bzImage");
+      T.Add_Test_Routine
         (Routine => Invalid_Bzimage'Access,
          Name    => "Invalid Linux bzImage");
    end Initialize;
@@ -138,5 +143,50 @@ is
                     Message   => "Exception mismatch (2)");
       end;
    end Invalid_Bzimage;
+
+   -------------------------------------------------------------------------
+
+   procedure Patch_Bzimage
+   is
+   begin
+      Command_Line.Test.Set_Input_Dir  (Path => "data");
+      Command_Line.Test.Set_Output_Dir (Path => "obj");
+
+      declare
+         Files : Parser.File_Array
+           := (1 => (Name    => U ("bzImage-32"),
+                     Path    => U ("bzimage.32"),
+                     Address => 16#0010_0000#,
+                     Size    => 16#0001_3000#,
+                     Offset  => 16#0010#,
+                     Format  => Parser.Bzimage));
+
+      begin
+         File_Transforms.Process (Files => Files);
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/bzimage.32.ref",
+                  Filename2 => "obj/bzimage.32.patched"),
+                 Message   => "Mismatch in 32-bit image");
+         Ada.Directories.Delete_File (Name => "obj/bzimage.32.patched");
+      end;
+
+      declare
+         Files : Parser.File_Array
+           := (1 => (Name    => U ("bzImage-64"),
+                     Path    => U ("bzimage.64"),
+                     Address => 16#0010_0000#,
+                     Size    => 16#0001_3000#,
+                     Offset  => 16#0010#,
+                     Format  => Parser.Bzimage));
+
+      begin
+         File_Transforms.Process (Files => Files);
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/bzimage.64.ref",
+                  Filename2 => "obj/bzimage.64.patched"),
+                 Message   => "Mismatch in 64-bit image");
+         Ada.Directories.Delete_File (Name => "obj/bzimage.64.patched");
+      end;
+   end Patch_Bzimage;
 
 end Transform_Tests;

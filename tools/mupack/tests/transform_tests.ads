@@ -29,6 +29,9 @@ is
    --  Default transform.
    procedure Default_Transform;
 
+   --  Test patching of 32/64-bit bzImage entry points.
+   procedure Patch_Bzimage;
+
    --  Try to patch an invalid Linux bzImage.
    procedure Invalid_Bzimage;
 

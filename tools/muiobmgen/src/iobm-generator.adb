@@ -27,7 +27,7 @@ with McKae.XML.XPath.XIA;
 with SK;
 
 with Mulog;
-with Mugen.Files;
+with Mutools.Files;
 
 with Iobm.IO_Ports;
 
@@ -122,8 +122,8 @@ is
          end;
       end loop;
 
-      Mugen.Files.Open (Filename => Filename,
-                        File     => File);
+      Mutools.Files.Open (Filename => Filename,
+                          File     => File);
       Ada.Streams.Stream_IO.Write (File => File,
                                    Item => Iobm.IO_Ports.To_Stream
                                      (B => Bitmap));

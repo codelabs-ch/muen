@@ -21,6 +21,7 @@ with "xmlada";
 with "../../contrib/projects/xia";
 with "../../config/shared";
 with "../libmugen/libmugen";
+with "../libmutools/libmutools";
 
 project Muiobmgen is
 

@@ -29,7 +29,7 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
-with Mugen.Files;
+with Mutools.Files;
 
 with bootparam_h;
 
@@ -226,8 +226,8 @@ is
       Params.hdr.cmd_line_ptr     := Interfaces.C.unsigned
         (Physical_Address) + 16#1000#;
 
-      Mugen.Files.Open (Filename => Filename,
-                        File     => File);
+      Mutools.Files.Open (Filename => Filename,
+                          File     => File);
       bootparam_h.boot_params'Write (Stream (File => File), Params);
 
       --  Write command line

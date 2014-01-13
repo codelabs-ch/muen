@@ -137,6 +137,45 @@ is
          PAUSEExiting           => 30,
          Activate2ndaryControls => 31));
 
+   type Proc2_Ctrl_Type is
+     (VirtualAPICAccesses,
+      EnableEPT,
+      DescriptorTableExiting,
+      EnableRDTSCP,
+      Virtualizex2APICMode,
+      EnableVPID,
+      WBINVDExiting,
+      UnrestrictedGuest,
+      APICRegisterVirtualization,
+      VirtualInterruptDelivery,
+      PAUSELoopExiting,
+      RDRANDExiting,
+      EnableINVPCID,
+      EnableVMFunctions);
+
+   type Proc2_Ctrl_Map_Type is array (Proc2_Ctrl_Type) of Natural;
+
+   --  Secondary proc control bit positions as specified by Intel SDM Vol. 3C,
+   --  table 24-7.
+   function Get_Proc2_Controls is new Utils.To_Number
+     (Bitfield_Type => Proc2_Ctrl_Type,
+      Mapping_Type  => Proc2_Ctrl_Map_Type,
+      Map           =>
+        (VirtualAPICAccesses        => 0,
+         EnableEPT                  => 1,
+         DescriptorTableExiting     => 2,
+         EnableRDTSCP               => 3,
+         Virtualizex2APICMode       => 4,
+         EnableVPID                 => 5,
+         WBINVDExiting              => 6,
+         UnrestrictedGuest          => 7,
+         APICRegisterVirtualization => 8,
+         VirtualInterruptDelivery   => 9,
+         PAUSELoopExiting           => 10,
+         RDRANDExiting              => 11,
+         EnableINVPCID              => 12,
+         EnableVMFunctions          => 13));
+
    --  Write interrupt policy file to specified output directory.
    procedure Write_Interrupts
      (Output_Dir : String;
@@ -776,14 +815,18 @@ is
             XPath => "vcpu/segments/cs",
             Name  => "access");
 
-         Pin_Ctrls : constant DOM.Core.Node_List
+         Pin_Ctrls   : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
               XPath => "vcpu/vmx/controls/pin/*");
-         Proc_Ctrls : constant DOM.Core.Node_List
+         Proc_Ctrls  : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
               XPath => "vcpu/vmx/controls/proc/*");
+         Proc2_Ctrls : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Subject,
+              XPath => "vcpu/vmx/controls/proc2/*");
       begin
          Buffer := Buffer & Indent (N => 2) & Subj_Id
            & " => Subject_Spec_Type'("
@@ -854,7 +897,8 @@ is
            & Indent (N => 3) & " Exec_Proc   =>"
            & Get_Proc_Controls (Fields => Proc_Ctrls)'Img  & ","
            & ASCII.LF
-           & Indent (N => 3) & " Exec_Proc2  => ,"
+           & Indent (N => 3) & " Exec_Proc2  =>"
+           & Get_Proc2_Controls (Fields => Proc2_Ctrls)'Img  & ","
            & ASCII.LF
            & Indent (N => 3) & " Exit_Ctrls  => ,"
            & ASCII.LF

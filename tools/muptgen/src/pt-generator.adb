@@ -25,7 +25,7 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
-with Mugen.Files;
+with Mutools.Files;
 
 with SK;
 
@@ -388,8 +388,8 @@ is
          end;
       end loop;
 
-      Mugen.Files.Open (Filename => Filename,
-                        File     => File);
+      Mutools.Files.Open (Filename => Filename,
+                          File     => File);
       Paging.PML4_Table_Type'Write (Stream (File => File), PML4);
       Paging.PDP_Table_Type'Write  (Stream (File => File), PDPT);
       Paging.PD_Table_Type'Write   (Stream (File => File), PD);

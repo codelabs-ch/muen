@@ -17,6 +17,7 @@ tools:
 	$(MAKE) -C muiobmgen
 	$(MAKE) -C muacpigen
 	$(MAKE) -C mupack
+	$(MAKE) -C muspecgen
 
 tests:
 	$(MAKE) $@ -C config
@@ -29,6 +30,7 @@ tests:
 	$(MAKE) $@ -C muiobmgen
 	$(MAKE) $@ -C muacpigen
 	$(MAKE) $@ -C mupack
+	$(MAKE) $@ -C muspecgen
 
 clean:
 	$(MAKE) $@ -C config
@@ -39,3 +41,4 @@ clean:
 	$(MAKE) $@ -C libtest
 	$(MAKE) $@ -C muptgen
 	$(MAKE) $@ -C muzpgen
+	$(MAKE) $@ -C muspecgen

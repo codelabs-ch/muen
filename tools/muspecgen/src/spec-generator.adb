@@ -176,6 +176,31 @@ is
          EnableINVPCID              => 12,
          EnableVMFunctions          => 13));
 
+   type Entry_Ctrl_Type is
+     (LoadDebugControls,
+      IA32eModeGuest,
+      EntryToSMM,
+      DeactiveDualMonitorTreatment,
+      LoadIA32PERFGLOBALCTRL,
+      LoadIA32PAT,
+      LoadIA32EFER);
+
+   type Entry_Ctrl_Map_Type is array (Entry_Ctrl_Type) of Natural;
+
+   --  VM-Entry control bit positions as specified by Intel SDM Vol. 3C,
+   --  table 24-12.
+   function Get_Entry_Controls is new Utils.To_Number
+     (Bitfield_Type => Entry_Ctrl_Type,
+      Mapping_Type  => Entry_Ctrl_Map_Type,
+      Map           =>
+        (LoadDebugControls            => 2,
+         IA32eModeGuest               => 9,
+         EntryToSMM                   => 10,
+         DeactiveDualMonitorTreatment => 11,
+         LoadIA32PERFGLOBALCTRL       => 13,
+         LoadIA32PAT                  => 14,
+         LoadIA32EFER                 => 15));
+
    --  Write interrupt policy file to specified output directory.
    procedure Write_Interrupts
      (Output_Dir : String;
@@ -827,6 +852,10 @@ is
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
               XPath => "vcpu/vmx/controls/proc2/*");
+         Entry_Ctrls : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Subject,
+              XPath => "vcpu/vmx/controls/entry/*");
       begin
          Buffer := Buffer & Indent (N => 2) & Subj_Id
            & " => Subject_Spec_Type'("
@@ -902,7 +931,8 @@ is
            & ASCII.LF
            & Indent (N => 3) & " Exit_Ctrls  => ,"
            & ASCII.LF
-           & Indent (N => 3) & " Entry_Ctrls => ),"
+           & Indent (N => 3) & " Entry_Ctrls =>"
+           & Get_Entry_Controls (Fields => Entry_Ctrls)'Img  & "),"
            & ASCII.LF
            & Indent & "    Trap_Table         => Null_Trap_Table,"
            & ASCII.LF

@@ -75,6 +75,11 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
+   --  Write subject-related policy file to specified output directory.
+   procedure Write_Subject
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type);
+
    -------------------------------------------------------------------------
 
    function Get_Attribute
@@ -164,6 +169,8 @@ is
                         Policy     => Policy);
       Write_Kernel (Output_Dir => Output_Dir,
                     Policy     => Policy);
+      Write_Subject (Output_Dir => Output_Dir,
+                     Policy     => Policy);
    end Write;
 
    -------------------------------------------------------------------------
@@ -617,5 +624,185 @@ is
       Templates.Write (Template => Tmpl,
                        Filename => Output_Dir & "/skp-scheduling.ads");
    end Write_Scheduling;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_Subject
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type)
+   is
+      Subjects   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/subjects/subject");
+      Subj_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Subjects);
+
+      Buffer : Unbounded_String;
+      Tmpl   : Templates.Template_Type;
+
+      --  Append SPARK specification of given subject to template buffer.
+      procedure Write_Subject_Spec
+        (Subject : DOM.Core.Node;
+         Policy  : Muxml.XML_Data_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Write_Subject_Spec
+        (Subject : DOM.Core.Node;
+         Policy  : Muxml.XML_Data_Type)
+      is
+         --  EPT memory type WB, page-walk length 4
+         EPT_Flags : constant := 16#1e#;
+
+         Name    : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Subject,
+            Name => "name");
+         Subj_Id : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Subject,
+            Name => "id");
+         CPU_Id  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Subject,
+            Name => "cpu");
+
+         PML4_Addr  : constant Long_Long_Integer := Long_Long_Integer'Value
+           (Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/memory/memory[@name='" &  Name & "|pt']",
+               Name  => "physicalAddress"));
+         Entry_Addr : constant Long_Long_Integer := Long_Long_Integer'Value
+           (Get_Element_Value
+              (Doc   => Subject,
+               XPath => "vcpu/registers/gpr/rip"));
+         Stack_Addr : constant Long_Long_Integer := Long_Long_Integer'Value
+           (Get_Element_Value
+              (Doc   => Subject,
+               XPath => "vcpu/registers/gpr/rsp"));
+         VMCS_Addr  : constant Long_Long_Integer := Long_Long_Integer'Value
+           (Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/memory/memory[@name='" & Name & "|vmcs']",
+               Name  => "physicalAddress"));
+         IOBM_Addr  : constant Long_Long_Integer := Long_Long_Integer'Value
+           (Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/memory/memory[@name='" & Name & "|iobm']",
+               Name  => "physicalAddress"));
+         MSRBM_Addr : constant Long_Long_Integer := Long_Long_Integer'Value
+           (Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/memory/memory[@name='" & Name & "|msrbm']",
+               Name  => "physicalAddress"));
+
+         CS_Access : constant String := Get_Attribute
+           (Doc   => Subject,
+            XPath => "vcpu/segments/cs",
+            Name  => "access");
+      begin
+         Buffer := Buffer & Indent (N => 2) & Subj_Id
+           & " => Subject_Spec_Type'("
+           & ASCII.LF
+           & Indent & "    CPU_Id             => " & CPU_Id & ","
+           & ASCII.LF
+           & Indent & "    Profile            => ";
+
+         if Get_Element_Value
+           (Doc   => Subject,
+            XPath => "vcpu/vmx/controls/proc2/UnrestrictedGuest") = "1"
+         then
+            Buffer := Buffer & "Vm," & ASCII.LF;
+         else
+            Buffer := Buffer & "Native," & ASCII.LF;
+         end if;
+
+         if Get_Element_Value
+           (Doc   => Subject,
+            XPath => "vcpu/vmx/controls/proc2/EnableEPT") = "1"
+         then
+            Buffer := Buffer
+                 & Indent & "    PML4_Address       => 0,"
+                 & ASCII.LF
+                 & Indent & "    EPT_Pointer        => "
+                 & To_Hex (Number => PML4_Addr + EPT_Flags) & ",";
+         else
+            Buffer := Buffer
+              & Indent & "    PML4_Address       => "
+              & To_Hex (Number => PML4_Addr) & ","
+              & ASCII.LF
+              & Indent & "    EPT_Pointer        => 0,";
+         end if;
+
+         Buffer := Buffer & ASCII.LF
+           & Indent & "    VMCS_Address       => "
+           & To_Hex (Number => VMCS_Addr) & ","
+           & ASCII.LF
+           & Indent & "    IO_Bitmap_Address  => "
+           & To_Hex (Number => IOBM_Addr) & ","
+           & ASCII.LF
+           & Indent & "    MSR_Bitmap_Address => "
+           & To_Hex (Number => MSRBM_Addr) & ","
+           & ASCII.LF
+           & Indent & "    Stack_Address      => "
+           & To_Hex (Number => Stack_Addr) & ","
+           & ASCII.LF
+           & Indent & "    Entry_Point        => "
+           & To_Hex (Number => Entry_Addr) & ","
+           & ASCII.LF
+           & Indent & "    CR0_Value          => ,"
+           & ASCII.LF
+           & Indent & "    CR0_Mask           => ,"
+           & ASCII.LF
+           & Indent & "    CR4_Value          => ,"
+           & ASCII.LF
+           & Indent & "    CR4_Mask           => ,"
+           & ASCII.LF
+           & Indent & "    CS_Access          => " & CS_Access & ","
+           & ASCII.LF
+           & Indent & "    Exception_Bitmap   => ,"
+           & ASCII.LF
+           & Indent & "    VMX_Controls       => VMX_Controls_Type'("
+           & ASCII.LF
+           & Indent (N => 3) & " Exec_Pin    => ,"
+           & ASCII.LF
+           & Indent (N => 3) & " Exec_Proc   => ,"
+           & ASCII.LF
+           & Indent (N => 3) & " Exec_Proc2  => ,"
+           & ASCII.LF
+           & Indent (N => 3) & " Exit_Ctrls  => ,"
+           & ASCII.LF
+           & Indent (N => 3) & " Entry_Ctrls => ),"
+           & ASCII.LF
+           & Indent & "    Trap_Table         => Null_Trap_Table,"
+           & ASCII.LF
+           & Indent & "    Event_Table        => Null_Event_Table)";
+      end Write_Subject_Spec;
+   begin
+      Tmpl := Templates.Load (Filename => "skp-subjects.ads");
+      Templates.Write (Template => Tmpl,
+                       Filename => Output_Dir & "/skp-subjects.ads");
+
+      Tmpl := Templates.Load (Filename => "skp-subjects.adb");
+
+      for I in 0 .. Subj_Count - 1 loop
+         Write_Subject_Spec
+           (Subject => DOM.Core.Nodes.Item (List  => Subjects,
+                                            Index => I),
+            Policy  => Policy);
+
+         if I < Subj_Count - 1 then
+            Buffer := Buffer & "," & ASCII.LF;
+         end if;
+      end loop;
+
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__subjects__",
+                         Content  => To_String (Buffer));
+
+      Mulog.Log (Msg => "Writing subject spec to '"
+                 & Output_Dir & "/skp-subjects.adb'");
+
+      Templates.Write (Template => Tmpl,
+                       Filename => Output_Dir & "/skp-subjects.adb");
+   end Write_Subject;
 
 end Spec.Generator;

@@ -933,10 +933,48 @@ is
       Buffer : Unbounded_String;
       Tmpl   : Templates.Template_Type;
 
+      --  Add trap entry to template buffer.
+      procedure Add_Trap
+        (Policy : Muxml.XML_Data_Type;
+         Trap   : DOM.Core.Node);
+
       --  Append SPARK specification of given subject to template buffer.
       procedure Write_Subject_Spec
         (Subject : DOM.Core.Node;
          Policy  : Muxml.XML_Data_Type);
+
+      -------------------------------------------------------------------
+
+      procedure Add_Trap
+        (Policy : Muxml.XML_Data_Type;
+         Trap   : DOM.Core.Node)
+      is
+         Trap_Id     : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Trap,
+            Name => "id");
+         Dst_Subject : constant String := Get_Attribute
+           (Doc   => Trap,
+            XPath => "notify",
+            Name  => "subject");
+         Dst_Id      : constant String := Get_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/subjects/subject[@name='" & Dst_Subject & "']",
+           Name  => "id");
+         Dst_Vector  : constant String := Get_Attribute
+           (Doc   => Trap,
+            XPath => "notify",
+            Name  => "vector");
+      begin
+         Buffer := Buffer & Indent (N => 3) & " "
+           & Trap_Id & " => Trap_Entry_Type'(Dst_Subject => " & Dst_Id
+           & ", Dst_Vector => ";
+
+         if Dst_Vector = "none" then
+            Buffer := Buffer & "Skp.Invalid_Vector)";
+         else
+            Buffer := Buffer & Dst_Vector & ")";
+         end if;
+      end Add_Trap;
 
       ----------------------------------------------------------------------
 
@@ -1031,6 +1069,12 @@ is
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
               XPath => "vcpu/vmx/masks/exception/*");
+         Traps       : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Subject,
+              XPath => "events/source/group[@name='vmx_exit']/*");
+         Trap_Count  : constant Natural := DOM.Core.Nodes.Length
+           (List => Traps);
       begin
          Buffer := Buffer & Indent (N => 2) & Subj_Id
            & " => Subject_Spec_Type'("
@@ -1115,7 +1159,28 @@ is
            & Indent (N => 3) & " Entry_Ctrls =>"
            & Get_Entry_Controls (Fields => Entry_Ctrls)'Img  & "),"
            & ASCII.LF
-           & Indent & "    Trap_Table         => Null_Trap_Table,"
+           & Indent & "    Trap_Table         => ";
+
+         if Trap_Count = 0 then
+            Buffer := Buffer & "Null_Trap_Table,";
+         else
+            Buffer := Buffer & "Trap_Table_Type'(" & ASCII.LF;
+            for I in 0 .. Trap_Count - 1 loop
+               Add_Trap (Policy => Policy,
+                         Trap   => DOM.Core.Nodes.Item
+                           (List  => Traps,
+                            Index => I));
+
+               if I < Trap_Count - 1 then
+                  Buffer := Buffer & "," & ASCII.LF;
+               end if;
+            end loop;
+
+            Buffer := Buffer & "," & ASCII.LF & Indent (N => 3)
+              & " others => Null_Trap),";
+         end if;
+
+         Buffer := Buffer
            & ASCII.LF
            & Indent & "    Event_Table        => Null_Event_Table)";
       end Write_Subject_Spec;

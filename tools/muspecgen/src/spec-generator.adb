@@ -25,8 +25,12 @@ with DOM.Core.Nodes;
 
 with McKae.XML.XPath.XIA;
 
-with Spec.Templates;
 with Mulog;
+
+with Spec.Templates;
+with Spec.Utils;
+
+pragma Elaborate_All (Spec.Utils);
 
 package body Spec.Generator
 is
@@ -59,6 +63,26 @@ is
      (Number : Long_Long_Integer;
       Prefix : Boolean := True)
       return String;
+
+   type Pin_Ctrl_Type is
+     (ExternalInterruptExiting,
+      NMIExiting,
+      VirtualNMIs,
+      ActivateVMXTimer,
+      ProcessPostedInterrupts);
+
+   type Pin_Ctrl_Map_Type is array (Pin_Ctrl_Type) of Natural;
+
+   --  Pin control bit positions as specified by Intel SDM Vol. 3C, table 24-5.
+   function Get_Pin_Controls is new Utils.To_Number
+     (Bitfield_Type => Pin_Ctrl_Type,
+      Mapping_Type  => Pin_Ctrl_Map_Type,
+      Map           =>
+        (ExternalInterruptExiting => 0,
+         NMIExiting               => 3,
+         VirtualNMIs              => 5,
+         ActivateVMXTimer         => 6,
+         ProcessPostedInterrupts  => 7));
 
    --  Write interrupt policy file to specified output directory.
    procedure Write_Interrupts
@@ -698,6 +722,11 @@ is
            (Doc   => Subject,
             XPath => "vcpu/segments/cs",
             Name  => "access");
+
+         Pin_Ctrls : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Subject,
+              XPath => "vcpu/vmx/controls/pin/*");
       begin
          Buffer := Buffer & Indent (N => 2) & Subj_Id
            & " => Subject_Spec_Type'("
@@ -762,7 +791,8 @@ is
            & ASCII.LF
            & Indent & "    VMX_Controls       => VMX_Controls_Type'("
            & ASCII.LF
-           & Indent (N => 3) & " Exec_Pin    => ,"
+           & Indent (N => 3) & " Exec_Pin    =>"
+           & Get_Pin_Controls (Fields => Pin_Ctrls)'Img  & ","
            & ASCII.LF
            & Indent (N => 3) & " Exec_Proc   => ,"
            & ASCII.LF

@@ -15,7 +15,7 @@
 
 with Ada.Streams.Stream_IO;
 
-with Mugen.Files;
+with Mutools.Files;
 
 package body Acpi.FADT
 is
@@ -102,8 +102,8 @@ is
 
       FADT.Header.Checksum := FADT_Checksum (Table => FADT);
 
-      Mugen.Files.Open (Filename => Filename,
-                        File     => File);
+      Mutools.Files.Open (Filename => Filename,
+                          File     => File);
       Fixed_ACPI_Description_Table'Write
         (Stream (File => File), FADT);
       Close (File => File);

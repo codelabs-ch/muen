@@ -15,7 +15,7 @@
 
 with Ada.Streams.Stream_IO;
 
-with Mugen.Files;
+with Mutools.Files;
 
 package body Acpi.XSDT
 is
@@ -52,8 +52,8 @@ is
 
       XSDT.Header.Checksum := XSDT_Checksum (Table => XSDT);
 
-      Mugen.Files.Open (Filename => Filename,
-                        File     => File);
+      Mutools.Files.Open (Filename => Filename,
+                          File     => File);
       Extended_System_Description_Table'Write
         (Stream (File => File), XSDT);
       Close (File => File);

@@ -15,7 +15,7 @@
 
 with Ada.Streams.Stream_IO;
 
-with Mugen.Files;
+with Mutools.Files;
 
 package body Acpi.RSDP
 is
@@ -52,8 +52,8 @@ is
       RSDP.Checksum          := RSDP_Checksum (Table => RSDP);
       RSDP.Extended_Checksum := RSDP_Extended_Checksum (Table => RSDP);
 
-      Mugen.Files.Open (Filename => Filename,
-                        File     => File);
+      Mutools.Files.Open (Filename => Filename,
+                          File     => File);
       Root_System_Description_Pointer'Write (Stream (File => File), RSDP);
       Close (File => File);
    end Write;

@@ -262,6 +262,50 @@ is
          CacheDisable       => 30,
          Paging             => 31));
 
+   type CR4_Flags_Type is
+     (Virtual8086,
+      ProtectedVirtualInts,
+      TimeStampDisable,
+      DebuggingExtensions,
+      PageSizeExtensions,
+      PhysicalAddressExtension,
+      MachineCheckEnable,
+      PageGlobalEnable,
+      PerfCounterEnable,
+      OSSupportFXSAVE,
+      OSSupportSIMDExceptions,
+      VMXEnable,
+      SMXEnable,
+      FSGSBASEEnable,
+      PCIDEnable,
+      XSAVEEnable,
+      SMEPEnable);
+
+   type CR4_Flags_Map_Type is array (CR4_Flags_Type) of Natural;
+
+   --  CR4 flag bit positions as specified by Intel SDM Vol. 3A, section 2.5.
+   function Get_CR4 is new Utils.To_Number
+     (Bitfield_Type => CR4_Flags_Type,
+      Mapping_Type  => CR4_Flags_Map_Type,
+      Map           =>
+        (Virtual8086              => 0,
+         ProtectedVirtualInts     => 1,
+         TimeStampDisable         => 2,
+         DebuggingExtensions      => 3,
+         PageSizeExtensions       => 4,
+         PhysicalAddressExtension => 5,
+         MachineCheckEnable       => 6,
+         PageGlobalEnable         => 7,
+         PerfCounterEnable        => 8,
+         OSSupportFXSAVE          => 9,
+         OSSupportSIMDExceptions  => 10,
+         VMXEnable                => 13,
+         SMXEnable                => 14,
+         FSGSBASEEnable           => 16,
+         PCIDEnable               => 17,
+         XSAVEEnable              => 18,
+         SMEPEnable               => 20));
+
    --  Write interrupt policy file to specified output directory.
    procedure Write_Interrupts
      (Output_Dir : String;
@@ -929,6 +973,14 @@ is
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
               XPath => "vcpu/vmx/masks/cr0/*");
+         CR4_Value   : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Subject,
+              XPath => "vcpu/registers/cr4/*");
+         CR4_Mask    : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Subject,
+              XPath => "vcpu/vmx/masks/cr4/*");
       begin
          Buffer := Buffer & Indent (N => 2) & Subj_Id
            & " => Subject_Spec_Type'("
@@ -985,9 +1037,11 @@ is
            & Indent & "    CR0_Mask           => "
            & To_Hex (Number => Get_CR0 (Fields => CR0_Mask)) & ","
            & ASCII.LF
-           & Indent & "    CR4_Value          => ,"
+           & Indent & "    CR4_Value          => "
+           & To_Hex (Number => Get_CR4 (Fields => CR4_Value)) & ","
            & ASCII.LF
-           & Indent & "    CR4_Mask           => ,"
+           & Indent & "    CR4_Mask           => "
+           & To_Hex (Number => Get_CR4 (Fields => CR4_Mask)) & ","
            & ASCII.LF
            & Indent & "    CS_Access          => " & CS_Access & ","
            & ASCII.LF

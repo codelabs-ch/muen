@@ -1,3 +1,29 @@
+# Tool dependencies and tool projects
+TOOLS =        \
+	libmuxml   \
+	libmutools \
+	muacpigen  \
+	muiobmgen  \
+	mumsrbmgen \
+	mupack     \
+	muptgen    \
+	muspecgen  \
+	muzpgen
+
+# Implicitly built libraries
+LIBS =       \
+	libmugen \
+	libmulog \
+	libtest
+
+# Projects to clean
+CLEAN =      \
+	$(TOOLS) \
+	$(LIBS)  \
+	config   \
+	packer   \
+	policy   \
+
 all: skconfig skpacker skpolicy tools
 
 skconfig:
@@ -10,41 +36,10 @@ skpolicy:
 	$(MAKE) -C policy
 
 tools:
-	$(MAKE) -C libmuxml
-	$(MAKE) -C muptgen
-	$(MAKE) -C muzpgen
-	$(MAKE) -C mumsrbmgen
-	$(MAKE) -C muiobmgen
-	$(MAKE) -C muacpigen
-	$(MAKE) -C mupack
-	$(MAKE) -C muspecgen
+	@for prj in $(TOOLS); do $(MAKE) -C $$prj || exit 1; done
 
 tests:
-	$(MAKE) $@ -C config
-	$(MAKE) $@ -C packer
-	$(MAKE) $@ -C policy
-	$(MAKE) $@ -C libmuxml
-	$(MAKE) $@ -C libmutools
-	$(MAKE) $@ -C muzpgen
-	$(MAKE) $@ -C muptgen
-	$(MAKE) $@ -C mumsrbmgen
-	$(MAKE) $@ -C muiobmgen
-	$(MAKE) $@ -C muacpigen
-	$(MAKE) $@ -C mupack
-	$(MAKE) $@ -C muspecgen
+	@for prj in $(TOOLS); do $(MAKE) $@ -C $$prj || exit 1; done
 
 clean:
-	$(MAKE) $@ -C config
-	$(MAKE) $@ -C packer
-	$(MAKE) $@ -C policy
-	$(MAKE) $@ -C libmulog
-	$(MAKE) $@ -C libmuxml
-	$(MAKE) $@ -C libmutools
-	$(MAKE) $@ -C libtest
-	$(MAKE) $@ -C muzpgen
-	$(MAKE) $@ -C muptgen
-	$(MAKE) $@ -C mumsrbmgen
-	$(MAKE) $@ -C muiobmgen
-	$(MAKE) $@ -C muacpigen
-	$(MAKE) $@ -C mupack
-	$(MAKE) $@ -C muspecgen
+	@for prj in $(CLEAN); do $(MAKE) $@ -C $$prj || exit 1; done

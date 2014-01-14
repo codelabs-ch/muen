@@ -29,4 +29,7 @@ is
    --  Unsigned_64 to hex string conversion.
    procedure To_Hex;
 
+   --  Set and test bits in Unsigned_64 numbers.
+   procedure Bit_Ops;
+
 end Utils_Tests;

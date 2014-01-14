@@ -28,6 +28,38 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Bit_Ops
+   is
+      use type Interfaces.Unsigned_64;
+
+      Ref_Num_1 : constant Interfaces.Unsigned_64 := 16#800000#;
+      Ref_Num_2 : constant Interfaces.Unsigned_64 := 16#A000800000#;
+      Number    : Interfaces.Unsigned_64 := 0;
+   begin
+      for I in Utils.Unsigned_64_Pos'Range loop
+         Assert (Condition => not Utils.Bit_Test (Value => Number,
+                                              Pos   => I),
+                 Message   => "Bit" & I'Img & " set");
+      end loop;
+
+      Number := Utils.Bit_Set (Value => Number,
+                               Pos   => 23);
+      Assert (Condition => Number = Ref_Num_1,
+              Message   => "Number mismatch (1)");
+      Assert (Condition => Utils.Bit_Test (Value => Number,
+                                           Pos   => 23),
+              Message   => "Bit 23 not set");
+
+      Number := Utils.Bit_Set (Value => Number,
+                               Pos   => 37);
+      Number := Utils.Bit_Set (Value => Number,
+                               Pos   => 39);
+      Assert (Condition => Number = Ref_Num_2,
+              Message   => "Number mismatch (2)");
+   end Bit_Ops;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -35,6 +67,9 @@ is
       T.Add_Test_Routine
         (Routine => To_Hex'Access,
          Name    => "Unsigned_64 to Hex conversion");
+      T.Add_Test_Routine
+        (Routine => Bit_Ops'Access,
+         Name    => "Unsigned_64 bit set/test operations");
    end Initialize;
 
    -------------------------------------------------------------------------

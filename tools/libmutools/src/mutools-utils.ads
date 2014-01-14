@@ -21,6 +21,20 @@ with Interfaces;
 package Mutools.Utils
 is
 
+   type Unsigned_64_Pos is range 0 .. 63;
+
+   --  Test if bit at given position is set.
+   function Bit_Test
+     (Value : Interfaces.Unsigned_64;
+      Pos   : Unsigned_64_Pos)
+      return Boolean;
+
+   --  Set bit at given position.
+   function Bit_Set
+     (Value : Interfaces.Unsigned_64;
+      Pos   : Unsigned_64_Pos)
+      return Interfaces.Unsigned_64;
+
    --  Return hexadecimal representation of given number. If prefix is True,
    --  the returned string includes the base (16#..#).
    function To_Hex

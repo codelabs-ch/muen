@@ -22,8 +22,32 @@ with Ada.Text_IO;
 package body Mutools.Utils
 is
 
+   use type Interfaces.Unsigned_64;
+
    package U64_IO is new Ada.Text_IO.Modular_IO
      (Num => Interfaces.Unsigned_64);
+
+   -------------------------------------------------------------------------
+
+   function Bit_Set
+     (Value : Interfaces.Unsigned_64;
+      Pos   : Unsigned_64_Pos)
+      return Interfaces.Unsigned_64
+   is
+   begin
+      return (Value or 2 ** Natural (Pos));
+   end Bit_Set;
+
+   -------------------------------------------------------------------------
+
+   function Bit_Test
+     (Value : Interfaces.Unsigned_64;
+      Pos   : Unsigned_64_Pos)
+      return Boolean
+   is
+   begin
+      return (Value and 2 ** Natural (Pos)) /= 0;
+   end Bit_Test;
 
    -------------------------------------------------------------------------
 

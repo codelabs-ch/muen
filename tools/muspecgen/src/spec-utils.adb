@@ -23,9 +23,11 @@ is
 
    -------------------------------------------------------------------------
 
-   function To_Number (Fields : DOM.Core.Node_List) return Long_Long_Integer
+   function To_Number
+     (Fields : DOM.Core.Node_List)
+      return Interfaces.Unsigned_64
    is
-      Result : Long_Long_Integer := 0;
+      Result : Interfaces.Unsigned_64 := 0;
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Fields) - 1 loop
          declare
@@ -38,7 +40,9 @@ is
               (N => DOM.Core.Nodes.First_Child (N => Flag_Node));
          begin
             if Flag_Value = "1" then
-               Result := Result + 2 ** Map (Flag_Name);
+               Result := Mutools.Utils.Bit_Set
+                 (Value => Result,
+                  Pos   => Map (Flag_Name));
             end if;
          end;
       end loop;

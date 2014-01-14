@@ -16,7 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with DOM.Core;
+
+with Mutools.Utils;
 
 package Spec.Utils
 is
@@ -26,10 +30,13 @@ is
       --  Enumration type specifying all bitfields.
       type Bitfield_Type is (<>);
 
-      type Mapping_Type is array (Bitfield_Type) of Natural;
+      type Mapping_Type is array (Bitfield_Type)
+        of Mutools.Utils.Unsigned_64_Pos;
 
       --  Mapping of fields to bit position.
       Map : Mapping_Type;
-   function To_Number (Fields : DOM.Core.Node_List) return Long_Long_Integer;
+   function To_Number
+     (Fields : DOM.Core.Node_List)
+      return Interfaces.Unsigned_64;
 
 end Spec.Utils;

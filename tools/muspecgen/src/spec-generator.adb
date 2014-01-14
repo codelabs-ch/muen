@@ -18,7 +18,8 @@
 
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
-with Ada.Long_Long_Integer_Text_IO;
+
+with Interfaces;
 
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
@@ -26,6 +27,7 @@ with DOM.Core.Nodes;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Mutools.Utils;
 
 with Spec.Templates;
 with Spec.Utils;
@@ -36,6 +38,7 @@ package body Spec.Generator
 is
 
    use Ada.Strings.Unbounded;
+   use Interfaces;
 
    --  Searches the element specified by an XPath in the given document and
    --  returns the attribute given by name as string. If no such attribute or
@@ -57,13 +60,6 @@ is
    --  Return N number of indentation spaces.
    function Indent (N : Positive := 1) return String;
 
-   --  Return hexadecimal representation of given number. If prefix is True,
-   --  the returned string includes the base (16#..#).
-   function To_Hex
-     (Number : Long_Long_Integer;
-      Prefix : Boolean := True)
-      return String;
-
    type Pin_Ctrl_Type is
      (ExternalInterruptExiting,
       NMIExiting,
@@ -71,7 +67,8 @@ is
       ActivateVMXTimer,
       ProcessPostedInterrupts);
 
-   type Pin_Ctrl_Map_Type is array (Pin_Ctrl_Type) of Natural;
+   type Pin_Ctrl_Map_Type is array (Pin_Ctrl_Type)
+     of Mutools.Utils.Unsigned_64_Pos;
 
    --  Pin control bit positions as specified by Intel SDM Vol. 3C, table 24-5.
    function Get_Pin_Controls is new Utils.To_Number
@@ -107,7 +104,8 @@ is
       PAUSEExiting,
       Activate2ndaryControls);
 
-   type Proc_Ctrl_Map_Type is array (Proc_Ctrl_Type) of Natural;
+   type Proc_Ctrl_Map_Type is array (Proc_Ctrl_Type)
+     of Mutools.Utils.Unsigned_64_Pos;
 
    --  Proc control bit positions as specified by Intel SDM Vol. 3C, table
    --  24-6.
@@ -153,7 +151,8 @@ is
       EnableINVPCID,
       EnableVMFunctions);
 
-   type Proc2_Ctrl_Map_Type is array (Proc2_Ctrl_Type) of Natural;
+   type Proc2_Ctrl_Map_Type is array (Proc2_Ctrl_Type)
+     of Mutools.Utils.Unsigned_64_Pos;
 
    --  Secondary proc control bit positions as specified by Intel SDM Vol. 3C,
    --  table 24-7.
@@ -185,7 +184,8 @@ is
       LoadIA32PAT,
       LoadIA32EFER);
 
-   type Entry_Ctrl_Map_Type is array (Entry_Ctrl_Type) of Natural;
+   type Entry_Ctrl_Map_Type is array (Entry_Ctrl_Type)
+     of Mutools.Utils.Unsigned_64_Pos;
 
    --  VM-Entry control bit positions as specified by Intel SDM Vol. 3C,
    --  table 24-12.
@@ -212,7 +212,8 @@ is
       LoadIA32EFER,
       SaveVMXTimerValue);
 
-   type Exit_Ctrl_Map_Type is array (Exit_Ctrl_Type) of Natural;
+   type Exit_Ctrl_Map_Type is array (Exit_Ctrl_Type)
+     of Mutools.Utils.Unsigned_64_Pos;
 
    --  VM-Exit control bit positions as specified by Intel SDM Vol. 3C,
    --  table 24-10.
@@ -243,8 +244,8 @@ is
       CacheDisable,
       Paging);
 
-   type CR0_Flags_Map_Type is array (CR0_Flags_Type) of Natural;
-
+   type CR0_Flags_Map_Type is array (CR0_Flags_Type)
+     of Mutools.Utils.Unsigned_64_Pos;
    --  CR0 flag bit positions as specified by Intel SDM Vol. 3A, section 2.5.
    function Get_CR0 is new Utils.To_Number
      (Bitfield_Type => CR0_Flags_Type,
@@ -281,7 +282,8 @@ is
       XSAVEEnable,
       SMEPEnable);
 
-   type CR4_Flags_Map_Type is array (CR4_Flags_Type) of Natural;
+   type CR4_Flags_Map_Type is array (CR4_Flags_Type)
+     of Mutools.Utils.Unsigned_64_Pos;
 
    --  CR4 flag bit positions as specified by Intel SDM Vol. 3A, section 2.5.
    function Get_CR4 is new Utils.To_Number
@@ -326,7 +328,8 @@ is
       MachineCheck,
       SIMDFloatingPointException);
 
-   type Exceptions_Map_Type is array (Exceptions_Type) of Natural;
+   type Exceptions_Map_Type is array (Exceptions_Type)
+     of Mutools.Utils.Unsigned_64_Pos;
 
    --  Exceptions bit positions as specified by Intel SDM Vol. 3A, table 6.3.1.
    function Get_Exceptions is new Utils.To_Number
@@ -420,33 +423,6 @@ is
 
       return To_String (Result);
    end Indent;
-
-   -------------------------------------------------------------------------
-
-   function To_Hex
-     (Number : Long_Long_Integer;
-      Prefix : Boolean := True)
-      return String
-   is
-      Num_Str : String (1 .. 20);
-   begin
-      Ada.Long_Long_Integer_Text_IO.Put
-        (To   => Num_Str,
-         Item => Number,
-         Base => 16);
-
-      declare
-         Trimmed : constant String := Ada.Strings.Fixed.Trim
-           (Source => Num_Str,
-            Side   => Ada.Strings.Left);
-      begin
-         if Prefix then
-            return Trimmed;
-         else
-            return Trimmed (Trimmed'First + 3 .. Trimmed'Last - 1);
-         end if;
-      end;
-   end To_Hex;
 
    -------------------------------------------------------------------------
 
@@ -587,15 +563,15 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Stack_Size : constant Long_Long_Integer := 2 * 4096;
-      Stack_Addr : constant Long_Long_Integer := Long_Long_Integer'Value
+      Stack_Size : constant Unsigned_64 := 2 * 4096;
+      Stack_Addr : constant Unsigned_64 := Unsigned_64'Value
         (Get_Attribute
            (Doc   => Policy.Doc,
             XPath => "/system/kernel/memory/cpu[@id='0']/"
             & "memory[@logical='stack']",
             Name  => "virtualAddress")) + Stack_Size;
 
-      CPU_Store_Addr : constant Long_Long_Integer := Long_Long_Integer'Value
+      CPU_Store_Addr : constant Unsigned_64 := Unsigned_64'Value
         (Get_Attribute
            (Doc   => Policy.Doc,
             XPath => "/system/kernel/memory/cpu[@id='0']/"
@@ -628,17 +604,17 @@ is
            (Doc   => Policy.Doc,
             XPath => "/system/platform/processor",
             Name  => "logicalCpus");
-         PML4_Addr     : constant Long_Long_Integer := Long_Long_Integer'Value
+         PML4_Addr     : constant Unsigned_64 := Unsigned_64'Value
            (Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/memory/memory[@name='kernel_0|pt']",
                Name  => "physicalAddress"));
-         VMXON_Addr    : constant Long_Long_Integer := Long_Long_Integer'Value
+         VMXON_Addr    : constant Unsigned_64 := Unsigned_64'Value
            (Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/memory/memory[@name='kernel_0|vmxon']",
                Name  => "physicalAddress"));
-         VMCS_Addr     : constant Long_Long_Integer := Long_Long_Integer'Value
+         VMCS_Addr     : constant Unsigned_64 := Unsigned_64'Value
            (Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/memory/memory[@name='tau0|vmcs']",
@@ -656,13 +632,15 @@ is
          Templates.Replace
            (Template => Tmpl,
             Pattern  => "__stack_addr__",
-            Content  => To_Hex (Number => Stack_Addr,
-                                Prefix => False));
+            Content  => Mutools.Utils.To_Hex
+              (Number => Stack_Addr,
+               Prefix => False));
          Templates.Replace
            (Template => Tmpl,
             Pattern  => "__kpml4_addr__",
-            Content  => To_Hex (Number => PML4_Addr,
-                                Prefix => False));
+            Content  => Mutools.Utils.To_Hex
+              (Number => PML4_Addr,
+               Prefix => False));
          Templates.Replace
            (Template => Tmpl,
             Pattern  => "__cpu_count__",
@@ -670,13 +648,15 @@ is
          Templates.Replace
            (Template => Tmpl,
             Pattern  => "__vmxon_addr__",
-            Content  => To_Hex (Number => VMXON_Addr,
-                                Prefix => False));
+            Content  => Mutools.Utils.To_Hex
+              (Number => VMXON_Addr,
+               Prefix => False));
          Templates.Replace
            (Template => Tmpl,
             Pattern  => "__vmcs_addr__",
-            Content  => To_Hex (Number => VMCS_Addr,
-                                Prefix => False));
+            Content  => Mutools.Utils.To_Hex
+              (Number => VMCS_Addr,
+               Prefix => False));
 
          Mulog.Log (Msg => "Writing kernel header file to '"
                     & Output_Dir & "/" & Filename & "'");
@@ -701,11 +681,11 @@ is
          Templates.Replace
            (Template => Tmpl,
             Pattern  => "__stack_addr__",
-            Content  => To_Hex (Number => Stack_Addr));
+            Content  => Mutools.Utils.To_Hex (Number => Stack_Addr));
          Templates.Replace
            (Template => Tmpl,
             Pattern  => "__cpu_store_addr__",
-            Content  => To_Hex (Number => CPU_Store_Addr));
+            Content  => Mutools.Utils.To_Hex (Number => CPU_Store_Addr));
 
          Mulog.Log (Msg => "Writing kernel spec to '"
                     & Output_Dir & "/" & Filename & "'");
@@ -1054,30 +1034,30 @@ is
            (Elem => Subject,
             Name => "cpu");
 
-         PML4_Addr  : constant Long_Long_Integer := Long_Long_Integer'Value
+         PML4_Addr  : constant Unsigned_64 := Unsigned_64'Value
            (Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/memory/memory[@name='" &  Name & "|pt']",
                Name  => "physicalAddress"));
-         Entry_Addr : constant Long_Long_Integer := Long_Long_Integer'Value
+         Entry_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Get_Element_Value
               (Doc   => Subject,
                XPath => "vcpu/registers/gpr/rip"));
-         Stack_Addr : constant Long_Long_Integer := Long_Long_Integer'Value
+         Stack_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Get_Element_Value
               (Doc   => Subject,
                XPath => "vcpu/registers/gpr/rsp"));
-         VMCS_Addr  : constant Long_Long_Integer := Long_Long_Integer'Value
+         VMCS_Addr  : constant Unsigned_64 := Unsigned_64'Value
            (Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/memory/memory[@name='" & Name & "|vmcs']",
                Name  => "physicalAddress"));
-         IOBM_Addr  : constant Long_Long_Integer := Long_Long_Integer'Value
+         IOBM_Addr  : constant Unsigned_64 := Unsigned_64'Value
            (Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/memory/memory[@name='" & Name & "|iobm']",
                Name  => "physicalAddress"));
-         MSRBM_Addr : constant Long_Long_Integer := Long_Long_Integer'Value
+         MSRBM_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/memory/memory[@name='" & Name & "|msrbm']",
@@ -1165,47 +1145,49 @@ is
                  & Indent & "    PML4_Address       => 0,"
                  & ASCII.LF
                  & Indent & "    EPT_Pointer        => "
-                 & To_Hex (Number => PML4_Addr + EPT_Flags) & ",";
+              & Mutools.Utils.To_Hex (Number => PML4_Addr + EPT_Flags)
+              & ",";
          else
             Buffer := Buffer
               & Indent & "    PML4_Address       => "
-              & To_Hex (Number => PML4_Addr) & ","
+              & Mutools.Utils.To_Hex (Number => PML4_Addr) & ","
               & ASCII.LF
               & Indent & "    EPT_Pointer        => 0,";
          end if;
 
          Buffer := Buffer & ASCII.LF
            & Indent & "    VMCS_Address       => "
-           & To_Hex (Number => VMCS_Addr) & ","
+           & Mutools.Utils.To_Hex (Number => VMCS_Addr) & ","
            & ASCII.LF
            & Indent & "    IO_Bitmap_Address  => "
-           & To_Hex (Number => IOBM_Addr) & ","
+           & Mutools.Utils.To_Hex (Number => IOBM_Addr) & ","
            & ASCII.LF
            & Indent & "    MSR_Bitmap_Address => "
-           & To_Hex (Number => MSRBM_Addr) & ","
+           & Mutools.Utils.To_Hex (Number => MSRBM_Addr) & ","
            & ASCII.LF
            & Indent & "    Stack_Address      => "
-           & To_Hex (Number => Stack_Addr) & ","
+           & Mutools.Utils.To_Hex (Number => Stack_Addr) & ","
            & ASCII.LF
            & Indent & "    Entry_Point        => "
-           & To_Hex (Number => Entry_Addr) & ","
+           & Mutools.Utils.To_Hex (Number => Entry_Addr) & ","
            & ASCII.LF
            & Indent & "    CR0_Value          => "
-           & To_Hex (Number => Get_CR0 (Fields => CR0_Value)) & ","
-           & ASCII.LF
+           & Mutools.Utils.To_Hex (Number => Get_CR0 (Fields => CR0_Value))
+           & "," & ASCII.LF
            & Indent & "    CR0_Mask           => "
-           & To_Hex (Number => Get_CR0 (Fields => CR0_Mask)) & ","
-           & ASCII.LF
+           & Mutools.Utils.To_Hex (Number => Get_CR0 (Fields => CR0_Mask))
+           & "," & ASCII.LF
            & Indent & "    CR4_Value          => "
-           & To_Hex (Number => Get_CR4 (Fields => CR4_Value)) & ","
-           & ASCII.LF
+           & Mutools.Utils.To_Hex (Number => Get_CR4 (Fields => CR4_Value))
+           & "," & ASCII.LF
            & Indent & "    CR4_Mask           => "
-           & To_Hex (Number => Get_CR4 (Fields => CR4_Mask)) & ","
-           & ASCII.LF
+           & Mutools.Utils.To_Hex (Number => Get_CR4 (Fields => CR4_Mask))
+           & "," & ASCII.LF
            & Indent & "    CS_Access          => " & CS_Access & ","
            & ASCII.LF
            & Indent & "    Exception_Bitmap   => "
-           & To_Hex (Number => Get_Exceptions (Fields => Exceptions)) & ","
+           & Mutools.Utils.To_Hex
+           (Number => Get_Exceptions (Fields => Exceptions)) & ","
            & ASCII.LF
            & Indent & "    VMX_Controls       => VMX_Controls_Type'("
            & ASCII.LF

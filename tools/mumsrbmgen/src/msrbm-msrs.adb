@@ -25,11 +25,11 @@ is
 
    procedure Allow_MSRs
      (Bitmap     : in out MSR_Bitmap_Type;
-      Start_Addr :        SK.Word32;
-      End_Addr   :        SK.Word32;
+      Start_Addr :        Interfaces.Unsigned_32;
+      End_Addr   :        Interfaces.Unsigned_32;
       Mode       :        MSR_Mode_Type)
    is
-      use type SK.Word32;
+      use type Interfaces.Unsigned_32;
 
       Mask   : constant := 16#1fff#;
       Offset : Natural;
@@ -55,7 +55,7 @@ is
          Offset := Offset + 1024 * 8;
       end if;
 
-      for Addr in SK.Word32 range Start_Addr .. End_Addr loop
+      for Addr in Interfaces.Unsigned_32 range Start_Addr .. End_Addr loop
          Bitmap (Natural (Addr and Mask) + Offset) := Allowed;
       end loop;
    end Allow_MSRs;

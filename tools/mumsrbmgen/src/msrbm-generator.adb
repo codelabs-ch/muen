@@ -24,7 +24,7 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
-with SK;
+with Interfaces;
 
 with Mulog;
 with Mutools.Files;
@@ -104,12 +104,14 @@ is
             Cur_MSR     : constant DOM.Core.Node := DOM.Core.Nodes.Item
               (List  => Registers,
                Index => I);
-            Start_Addr  : constant SK.Word32     := SK.Word32'Value
-              (DOM.Core.Elements.Get_Attribute (Elem => Cur_MSR,
-                                                Name => "start"));
-            End_Addr    : constant SK.Word32     := SK.Word32'Value
-              (DOM.Core.Elements.Get_Attribute (Elem => Cur_MSR,
-                                                Name => "end"));
+            Start_Addr  : constant Interfaces.Unsigned_32
+              := Interfaces.Unsigned_32'Value
+                (DOM.Core.Elements.Get_Attribute (Elem => Cur_MSR,
+                                                  Name => "start"));
+            End_Addr    : constant Interfaces.Unsigned_32
+              := Interfaces.Unsigned_32'Value
+                (DOM.Core.Elements.Get_Attribute (Elem => Cur_MSR,
+                                                  Name => "end"));
             Access_Mode : constant MSRs.MSR_Mode_Type
               := MSRs.MSR_Mode_Type'Value
                 (DOM.Core.Elements.Get_Attribute

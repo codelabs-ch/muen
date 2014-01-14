@@ -23,11 +23,11 @@ is
    -------------------------------------------------------------------------
 
    procedure Write
-     (ACPI_Tables_Base : SK.Word64;
+     (ACPI_Tables_Base : Interfaces.Unsigned_64;
       Filename         : String)
    is
       use Ada.Streams.Stream_IO;
-      use type SK.Byte;
+      use type Interfaces.Unsigned_8;
 
       function RSDP_Checksum is new Fixed_Length_Checksum
         (Length  => 20,

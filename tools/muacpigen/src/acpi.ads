@@ -16,21 +16,21 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
+with Interfaces;
 
 package Acpi
 is
 
-   use type SK.Word64;
+   use type Interfaces.Unsigned_64;
 
    type Range_3 is range 1 .. 3;
    type Range_4 is range 1 .. 4;
    type Range_6 is range 1 .. 6;
    type Range_8 is range 1 .. 8;
-   type ID_3 is array (Range_3) of SK.Byte;
-   type ID_4 is array (Range_4) of SK.Byte;
-   type ID_6 is array (Range_6) of SK.Byte;
-   type ID_8 is array (Range_8) of SK.Byte;
+   type ID_3 is array (Range_3) of Interfaces.Unsigned_8;
+   type ID_4 is array (Range_4) of Interfaces.Unsigned_8;
+   type ID_6 is array (Range_6) of Interfaces.Unsigned_8;
+   type ID_8 is array (Range_8) of Interfaces.Unsigned_8;
 
    function To_ID_4 (Str : String) return ID_4;
    function To_ID_6 (Str : String) return ID_6;
@@ -38,12 +38,12 @@ is
 
    type System_Description_Table_Header is record
       Signature        : ID_4;
-      Length           : SK.Word32;
-      Revision         : SK.Byte;
-      Checksum         : SK.Byte;
+      Length           : Interfaces.Unsigned_32;
+      Revision         : Interfaces.Unsigned_8;
+      Checksum         : Interfaces.Unsigned_8;
       OEMID            : ID_6;
       OEM_Table_ID     : ID_8;
-      OEM_Revision     : SK.Word32;
+      OEM_Revision     : Interfaces.Unsigned_32;
       Creator_ID       : ID_4;
       Creator_Revision : ID_4;
    end record;
@@ -52,11 +52,11 @@ is
    -------------------------------------------------------------------------
 
    type Generic_Address_Structure is record
-      Address_Space_ID    : SK.Byte;
-      Register_Bit_Width  : SK.Byte;
-      Register_Bit_Offset : SK.Byte;
-      Access_Size         : SK.Byte;
-      Address             : SK.Word64;
+      Address_Space_ID    : Interfaces.Unsigned_8;
+      Register_Bit_Width  : Interfaces.Unsigned_8;
+      Register_Bit_Offset : Interfaces.Unsigned_8;
+      Access_Size         : Interfaces.Unsigned_8;
+      Address             : Interfaces.Unsigned_64;
    end record;
    pragma Pack (Generic_Address_Structure);
 
@@ -71,20 +71,20 @@ is
 
    type Root_System_Description_Pointer is record             --  Revision 2
       Signature         : ID_8;
-      Checksum          : SK.Byte;
+      Checksum          : Interfaces.Unsigned_8;
       OEMID             : ID_6;
-      Revision          : SK.Byte;
-      RsdtAddress       : SK.Word32;
-      Length            : SK.Word32;
-      XsdtAddress       : SK.Word64;
-      Extended_Checksum : SK.Byte;
+      Revision          : Interfaces.Unsigned_8;
+      RsdtAddress       : Interfaces.Unsigned_32;
+      Length            : Interfaces.Unsigned_32;
+      XsdtAddress       : Interfaces.Unsigned_64;
+      Extended_Checksum : Interfaces.Unsigned_8;
       Reserved          : ID_3;
    end record;
    pragma Pack (Root_System_Description_Pointer);
 
    -------------------------------------------------------------------------
 
-   type XSDT_Entries is array (1 .. 1) of SK.Word64;
+   type XSDT_Entries is array (1 .. 1) of Interfaces.Unsigned_64;
 
    type Extended_System_Description_Table is record           --  Revision 1
       Header  : System_Description_Table_Header;
@@ -126,49 +126,49 @@ is
 
    type Fixed_ACPI_Description_Table is record                --  Revision 5
       Header               : System_Description_Table_Header;
-      FIRMWARE_CTRL        : SK.Word32;
-      DSDT                 : SK.Word32;
-      Reserved_1           : SK.Byte;
-      Preferred_PM_Profile : SK.Byte;
-      SCI_INT              : SK.Word16;
-      SMI_CMD              : SK.Word32;
-      ACPI_ENABLE          : SK.Byte;
-      ACPI_DISABLE         : SK.Byte;
-      S4BIOS_REQ           : SK.Byte;
-      PSTATE_CNT           : SK.Byte;
-      PM1a_EVT_BLK         : SK.Word32;
-      PM1b_EVT_BLK         : SK.Word32;
-      PM1a_CNT_BLK         : SK.Word32;
-      PM1b_CNT_BLK         : SK.Word32;
-      PM2_CNT_BLK          : SK.Word32;
-      PM_TMR_BLK           : SK.Word32;
-      GPE0_BLK             : SK.Word32;
-      GPE1_BLK             : SK.Word32;
-      PM1_EVT_LEN          : SK.Byte;
-      PM1_CNT_LEN          : SK.Byte;
-      PM2_CNT_LEN          : SK.Byte;
-      PM_TMR_LEN           : SK.Byte;
-      GPE0_BLK_LEN         : SK.Byte;
-      GPE1_BLK_LEN         : SK.Byte;
-      GPE1_BASE            : SK.Byte;
-      CST_CNT              : SK.Byte;
-      P_LVL2_LAT           : SK.Word16;
-      P_LVL3_LAT           : SK.Word16;
-      FLUSH_SIZE           : SK.Word16;
-      FLUSH_STRIDE         : SK.Word16;
-      DUTY_OFFSET          : SK.Byte;
-      DUTY_WIDTH           : SK.Byte;
-      DAY_ALRM             : SK.Byte;
-      MON_ALRM             : SK.Byte;
-      CENTURY              : SK.Byte;
-      IAPC_BOOT_ARCH       : SK.Word16;
-      Reserved_2           : SK.Byte;
-      Flags                : SK.Word32;
+      FIRMWARE_CTRL        : Interfaces.Unsigned_32;
+      DSDT                 : Interfaces.Unsigned_32;
+      Reserved_1           : Interfaces.Unsigned_8;
+      Preferred_PM_Profile : Interfaces.Unsigned_8;
+      SCI_INT              : Interfaces.Unsigned_16;
+      SMI_CMD              : Interfaces.Unsigned_32;
+      ACPI_ENABLE          : Interfaces.Unsigned_8;
+      ACPI_DISABLE         : Interfaces.Unsigned_8;
+      S4BIOS_REQ           : Interfaces.Unsigned_8;
+      PSTATE_CNT           : Interfaces.Unsigned_8;
+      PM1a_EVT_BLK         : Interfaces.Unsigned_32;
+      PM1b_EVT_BLK         : Interfaces.Unsigned_32;
+      PM1a_CNT_BLK         : Interfaces.Unsigned_32;
+      PM1b_CNT_BLK         : Interfaces.Unsigned_32;
+      PM2_CNT_BLK          : Interfaces.Unsigned_32;
+      PM_TMR_BLK           : Interfaces.Unsigned_32;
+      GPE0_BLK             : Interfaces.Unsigned_32;
+      GPE1_BLK             : Interfaces.Unsigned_32;
+      PM1_EVT_LEN          : Interfaces.Unsigned_8;
+      PM1_CNT_LEN          : Interfaces.Unsigned_8;
+      PM2_CNT_LEN          : Interfaces.Unsigned_8;
+      PM_TMR_LEN           : Interfaces.Unsigned_8;
+      GPE0_BLK_LEN         : Interfaces.Unsigned_8;
+      GPE1_BLK_LEN         : Interfaces.Unsigned_8;
+      GPE1_BASE            : Interfaces.Unsigned_8;
+      CST_CNT              : Interfaces.Unsigned_8;
+      P_LVL2_LAT           : Interfaces.Unsigned_16;
+      P_LVL3_LAT           : Interfaces.Unsigned_16;
+      FLUSH_SIZE           : Interfaces.Unsigned_16;
+      FLUSH_STRIDE         : Interfaces.Unsigned_16;
+      DUTY_OFFSET          : Interfaces.Unsigned_8;
+      DUTY_WIDTH           : Interfaces.Unsigned_8;
+      DAY_ALRM             : Interfaces.Unsigned_8;
+      MON_ALRM             : Interfaces.Unsigned_8;
+      CENTURY              : Interfaces.Unsigned_8;
+      IAPC_BOOT_ARCH       : Interfaces.Unsigned_16;
+      Reserved_2           : Interfaces.Unsigned_8;
+      Flags                : Interfaces.Unsigned_32;
       RESET_REG            : Generic_Address_Structure;
-      RESET_VALUE          : SK.Byte;
+      RESET_VALUE          : Interfaces.Unsigned_8;
       Reserved_3           : ID_3;
-      X_FIRMWARE_CTRL      : SK.Word64;
-      X_DSDT               : SK.Word64;
+      X_FIRMWARE_CTRL      : Interfaces.Unsigned_64;
+      X_DSDT               : Interfaces.Unsigned_64;
       X_PM1a_EVT_BLK       : Generic_Address_Structure;
       X_PM1b_EVT_BLK       : Generic_Address_Structure;
       X_PM1a_CNT_BLK       : Generic_Address_Structure;
@@ -187,19 +187,21 @@ is
    generic
       Length : Positive;
       type Table_T is private;
-   function Fixed_Length_Checksum (Table : Table_T) return SK.Byte;
+   function Fixed_Length_Checksum
+     (Table : Table_T)
+      return Interfaces.Unsigned_8;
 
    generic
       type Table_T is private;
-   function Checksum (Table : Table_T) return SK.Byte;
+   function Checksum (Table : Table_T) return Interfaces.Unsigned_8;
 
    -------------------------------------------------------------------------
 
-   XSDT_Offset : constant SK.Word64
+   XSDT_Offset : constant Interfaces.Unsigned_64
      := Root_System_Description_Pointer'Size / 8;
-   FADT_Offset : constant SK.Word64
+   FADT_Offset : constant Interfaces.Unsigned_64
      := XSDT_Offset + Extended_System_Description_Table'Size / 8;
-   DSDT_Offset : constant SK.Word64
+   DSDT_Offset : constant Interfaces.Unsigned_64
      := FADT_Offset + Fixed_ACPI_Description_Table'Size / 8;
 
 end Acpi;

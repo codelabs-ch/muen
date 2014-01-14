@@ -17,11 +17,11 @@ with Ada.Unchecked_Conversion;
 
 package body Acpi is
 
-   use type SK.Byte;
+   use Interfaces;
 
    -------------------------------------------------------------------------
 
-   function Checksum (Table : Table_T) return SK.Byte
+   function Checksum (Table : Table_T) return Unsigned_8
    is
       function FL_Checksum is new Fixed_Length_Checksum
         (Length  => Table_T'Size / 8,
@@ -32,14 +32,14 @@ package body Acpi is
 
    -------------------------------------------------------------------------
 
-   function Fixed_Length_Checksum (Table : Table_T) return SK.Byte
+   function Fixed_Length_Checksum (Table : Table_T) return Unsigned_8
    is
-      type Table_Bytes_T is array (1 .. Table_T'Size / 8) of SK.Byte;
+      type Table_Bytes_T is array (1 .. Table_T'Size / 8) of Unsigned_8;
       function Table_Bytes is new Ada.Unchecked_Conversion
         (Source => Table_T,
          Target => Table_Bytes_T);
 
-      Sum : SK.Byte                := 16#00#;
+      Sum : Unsigned_8             := 16#00#;
       BA  : constant Table_Bytes_T := Table_Bytes (S => Table);
    begin
       for I in 1 .. Length loop
@@ -53,7 +53,7 @@ package body Acpi is
    --  Create byte array ID of specified length from given string.
    generic
       type Idx is range <>;
-      type ID_T is array (Idx) of SK.Byte;
+      type ID_T is array (Idx) of Unsigned_8;
    function To_ID_x (Str : String) return ID_T;
 
    -------------------------------------------------------------------------

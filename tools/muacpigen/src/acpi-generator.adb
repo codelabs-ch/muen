@@ -21,7 +21,7 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
-with SK;
+with Interfaces;
 
 with Mulog;
 
@@ -72,8 +72,8 @@ is
                                  XPath => "memory/memory/physical[@name='"
                                  & RSDP_Name & "']/../@virtualAddress"),
                             Index => 0));
-                  Base_Addr     : constant SK.Word64
-                    := SK.Word64'Value (Addrstr);
+                  Base_Addr     : constant Interfaces.Unsigned_64
+                    := Interfaces.Unsigned_64'Value (Addrstr);
                   RSDP_Filename : constant String
                     := Output_Dir & "/" & DOM.Core.Nodes.Node_Value
                       (N => DOM.Core.Nodes.Item

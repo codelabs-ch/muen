@@ -22,7 +22,7 @@ with Ada.Strings.Unbounded;
 with Ada.Streams.Stream_IO;
 with Ada.IO_Exceptions;
 
-with SK;
+with Interfaces;
 
 with Mulog;
 with Mutools.Files;
@@ -83,9 +83,8 @@ is
    procedure Patch_Bzimage (File : access Parser.File_Entry_Type)
    is
       use Ada.Streams.Stream_IO;
-      use type SK.Byte;
 
-      type Byte_Array is array (Natural range <>) of SK.Byte;
+      type Byte_Array is array (Natural range <>) of Interfaces.Unsigned_8;
       pragma Pack (Byte_Array);
 
       subtype Sector_Type is Byte_Array (0 .. 511);

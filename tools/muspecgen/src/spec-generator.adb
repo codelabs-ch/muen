@@ -375,6 +375,11 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
+   --  Write toplevel system-related policy file to specified output directory.
+   procedure Write_System
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type);
+
    -------------------------------------------------------------------------
 
    function Get_Attribute
@@ -439,6 +444,8 @@ is
                     Policy     => Policy);
       Write_Subject (Output_Dir => Output_Dir,
                      Policy     => Policy);
+      Write_System (Output_Dir => Output_Dir,
+                      Policy     => Policy);
    end Write;
 
    -------------------------------------------------------------------------
@@ -1280,5 +1287,44 @@ is
       Templates.Write (Template => Tmpl,
                        Filename => Output_Dir & "/skp-subjects.adb");
    end Write_Subject;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_System
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type)
+   is
+      S_Count    : constant Natural     := DOM.Core.Nodes.Length
+        (List => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Policy.Doc,
+            XPath => "/system/subjects/subject"));
+      CPU_Count  : constant Natural     := Natural'Value
+        (Get_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/platform/processor",
+            Name  => "logicalCpus"));
+      VMXON_Addr : constant Unsigned_64 := Unsigned_64'Value
+        (Get_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/memory/memory[@name='kernel_0|vmxon']",
+            Name  => "physicalAddress"));
+
+      Tmpl : Templates.Template_Type;
+   begin
+      Tmpl := Templates.Load (Filename => "skp.ads");
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__cpu_range__",
+                         Content  => "0 .." & Natural'Image
+                           (CPU_Count - 1));
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__subj_range__",
+                         Content  => "0 .."  & Positive'Image (S_Count - 1));
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__vmxon_addr__",
+                         Content  => Mutools.Utils.To_Hex
+                           (Number => VMXON_Addr));
+      Templates.Write (Template => Tmpl,
+                       Filename => Output_Dir & "/skp.ads");
+   end Write_System;
 
 end Spec.Generator;

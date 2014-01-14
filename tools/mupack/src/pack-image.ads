@@ -34,9 +34,4 @@ is
      (Src_Elf : String;
       Dst_Bin : String);
 
-   --  Convert given source bzImage to raw binary file.
-   procedure Parse_Bzimage
-     (Src     : String;
-      Dst_Bin : String);
-
 end Pack.Image;

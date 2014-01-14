@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
+with Interfaces;
 
 package Pack.Image
 is
@@ -27,7 +27,7 @@ is
      (Image    : String;
       Filename : String;
       Name     : String;
-      Address  : SK.Word64);
+      Address  : Interfaces.Unsigned_64);
 
    --  Convert given source ELF binary to raw binary file.
    procedure To_Binary

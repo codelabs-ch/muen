@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.Utils;
+with Mutools.Utils;
 
 with Pack.OS;
 
@@ -31,13 +31,15 @@ is
      (Image    : String;
       Filename : String;
       Name     : String;
-      Address  : SK.Word64)
+      Address  : Interfaces.Unsigned_64)
    is
    begin
       OS.Execute
         (Command => Objcopy & " --add-section ." & Name & "=" & Filename & " "
          & Image & " --change-section-address ." & Name & "=0x"
-         & SK.Utils.To_Hex (Item => Address) & " --set-section-flags ."
+         & Mutools.Utils.To_Hex (Number => Address,
+                                 Prefix => False)
+         & " --set-section-flags ."
          & Name & "=alloc 2>/dev/null");
    end Add_Section;
 

@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
+with Interfaces;
 
 package Pack.Parser
 is
@@ -36,9 +36,9 @@ is
    type File_Entry_Type is record
       Name    : Ada.Strings.Unbounded.Unbounded_String;
       Path    : Ada.Strings.Unbounded.Unbounded_String;
-      Address : SK.Word64;
-      Size    : SK.Word64;
-      Offset  : SK.Word64;
+      Address : Interfaces.Unsigned_64;
+      Size    : Interfaces.Unsigned_64;
+      Offset  : Interfaces.Unsigned_64;
       Format  : File_Format_Type;
    end record;
 

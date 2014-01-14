@@ -18,9 +18,8 @@
 
 with Ada.Directories;
 
-with SK.Utils;
-
 with Mulog;
+with Mutools.Utils;
 
 with Pack.Image;
 with Pack.Parser;
@@ -59,11 +58,13 @@ is
       Mulog.Log (Msg => "PHYSICAL          TYPE       PATH");
       for I in Files'Range loop
          declare
-            Fmt : constant String := Files (I).Format'Img;
+            Fmt  : constant String := Files (I).Format'Img;
+            Addr : constant String := Mutools.Utils.To_Hex
+              (Number => Files (I).Address);
          begin
-            Mulog.Log (Msg => SK.Utils.To_Hex (Item => Files (I).Address)
+            Mulog.Log (Msg => Addr
                        & Indent
-                         (Count => 2,
+                         (Count => (16 - Addr'Length) + 2,
                           Str   => Files (I).Format'Img)
                        & Indent
                          (Count => 11 - Fmt'Length,

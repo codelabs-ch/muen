@@ -60,7 +60,7 @@ is
                  (DOM.Core.Elements.Get_Attribute
                     (Elem => File,
                      Name => "format"));
-               Files (I).Offset := SK.Word64'Value
+               Files (I).Offset := Interfaces.Unsigned_64'Value
                  (DOM.Core.Elements.Get_Attribute
                     (Elem => File,
                      Name => "offset"));
@@ -69,11 +69,11 @@ is
                  (DOM.Core.Elements.Get_Attribute
                     (Elem => Memory,
                      Name => "name"));
-               Files (I).Address := SK.Word64'Value
+               Files (I).Address := Interfaces.Unsigned_64'Value
                  (DOM.Core.Elements.Get_Attribute
                     (Elem => Memory,
                      Name => "physicalAddress"));
-               Files (I).Size    := SK.Word64'Value
+               Files (I).Size    := Interfaces.Unsigned_64'Value
                  (DOM.Core.Elements.Get_Attribute
                     (Elem => Memory,
                      Name => "size"));

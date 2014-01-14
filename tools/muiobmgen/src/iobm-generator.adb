@@ -24,7 +24,7 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
-with SK;
+with Interfaces;
 
 with Mulog;
 with Mutools.Files;
@@ -104,13 +104,13 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Ports,
                  Index => I);
-            Start_Port : constant SK.Word16
-              := SK.Word16'Value
+            Start_Port : constant Interfaces.Unsigned_16
+              := Interfaces.Unsigned_16'Value
                 (DOM.Core.Elements.Get_Attribute
                      (Elem => Cur_Node,
                       Name => "start"));
-            End_Port   : constant SK.Word16
-              := SK.Word16'Value
+            End_Port   : constant Interfaces.Unsigned_16
+              := Interfaces.Unsigned_16'Value
                 (DOM.Core.Elements.Get_Attribute
                      (Elem => Cur_Node,
                       Name => "end"));

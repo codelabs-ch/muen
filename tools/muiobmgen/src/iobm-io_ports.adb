@@ -25,11 +25,11 @@ is
 
    procedure Allow_Ports
      (B          : in out IO_Bitmap_Type;
-      Start_Port :        SK.Word16;
-      End_Port   :        SK.Word16)
+      Start_Port :        Interfaces.Unsigned_16;
+      End_Port   :        Interfaces.Unsigned_16)
    is
    begin
-      for Port in SK.Word16 range Start_Port .. End_Port loop
+      for Port in Interfaces.Unsigned_16 range Start_Port .. End_Port loop
          B (Port) := Allowed;
       end loop;
    end Allow_Ports;

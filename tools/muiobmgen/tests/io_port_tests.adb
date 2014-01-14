@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
+with Interfaces;
 
 with Iobm.IO_Ports;
 
@@ -41,7 +41,7 @@ is
 
    procedure IO_Bitmap_Handling
    is
-      use type SK.Word16;
+      use type Interfaces.Unsigned_16;
       use type IO_Ports.IO_Bitmap_Stream;
 
       B        : IO_Ports.IO_Bitmap_Type            := IO_Ports.Null_IO_Bitmap;

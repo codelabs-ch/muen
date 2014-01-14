@@ -18,7 +18,9 @@
 
 with Ada.Streams;
 
-with SK;
+with Interfaces;
+
+with Mutools.Constants;
 
 package Iobm.IO_Ports
 is
@@ -33,13 +35,13 @@ is
    --  and end port (inclusive).
    procedure Allow_Ports
      (B          : in out IO_Bitmap_Type;
-      Start_Port :        SK.Word16;
-      End_Port   :        SK.Word16);
+      Start_Port :        Interfaces.Unsigned_16;
+      End_Port   :        Interfaces.Unsigned_16);
 
    use type Ada.Streams.Stream_Element_Offset;
 
    subtype IO_Bitmap_Stream is Ada.Streams.Stream_Element_Array
-     (1 .. 2 * SK.Page_Size);
+     (1 .. 2 * Mutools.Constants.Page_Size);
 
    --  Convert I/O bitmap to binary stream.
    function To_Stream
@@ -54,10 +56,10 @@ private
    Allowed : constant Port_Flag := 0;
    Denied  : constant Port_Flag := 1;
 
-   type IO_Bitmap_Type is array (SK.Word16'Range) of Port_Flag;
+   type IO_Bitmap_Type is array (Interfaces.Unsigned_16'Range) of Port_Flag;
    pragma Pack (IO_Bitmap_Type);
 
-   for IO_Bitmap_Type'Size use 2 * SK.Page_Size * 8;
+   for IO_Bitmap_Type'Size use 2 * Mutools.Constants.Page_Size * 8;
 
    Null_IO_Bitmap : constant IO_Bitmap_Type :=
      IO_Bitmap_Type'(others => Denied);

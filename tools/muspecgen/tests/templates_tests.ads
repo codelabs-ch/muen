@@ -29,6 +29,9 @@ is
    --  Load template from file.
    procedure Load_Template;
 
+   --  Create template from string.
+   procedure Create_Template;
+
    --  Replace patterns in template.
    procedure Replace_Patterns;
 

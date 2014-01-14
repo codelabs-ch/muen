@@ -31,6 +31,9 @@ is
       Use_Store : Boolean := True)
       return Template_Type;
 
+   --  Create template from given string.
+   function Create (Content  : String) return Template_Type;
+
    --  Returns the current size of the template buffer.
    function Get_Size (Template : Template_Type) return Natural;
 

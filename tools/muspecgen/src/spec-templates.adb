@@ -29,6 +29,16 @@ is
 
    -------------------------------------------------------------------------
 
+   function Create (Content : String) return Template_Type
+   is
+   begin
+      return T : Template_Type do
+         T.Data := To_Unbounded_String (Content);
+      end return;
+   end Create;
+
+   -------------------------------------------------------------------------
+
    function Get_Size (Template : Template_Type) return Natural
    is
    begin

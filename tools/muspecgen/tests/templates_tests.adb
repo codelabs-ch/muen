@@ -28,6 +28,19 @@ is
    use Ahven;
    use Spec;
 
+   Tmpl : constant String := "This is a PATTERN1 template PATTERN2" & ASCII.LF;
+
+   -------------------------------------------------------------------------
+
+   procedure Create_Template
+   is
+      T : Templates.Template_Type;
+   begin
+      T := Templates.Create (Content => Tmpl);
+      Assert (Condition => Templates.Get_Size (Template => T) = 37,
+              Message   => "Template size mismatch");
+   end Create_Template;
+
    -------------------------------------------------------------------------
 
    procedure Initialize (T : in out Testcase)
@@ -37,6 +50,9 @@ is
       T.Add_Test_Routine
         (Routine => Load_Template'Access,
          Name    => "Load template");
+      T.Add_Test_Routine
+        (Routine => Create_Template'Access,
+         Name    => "Create template");
       T.Add_Test_Routine
         (Routine => Replace_Patterns'Access,
          Name    => "Replace patterns");

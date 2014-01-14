@@ -15,4 +15,12 @@ SKCONFIG = $(TOP_DIR)/tools/config/obj/skconfig
 SKPACKER = $(TOP_DIR)/tools/packer/obj/skpacker
 SKPOLICY = $(TOP_DIR)/tools/policy/obj/skpolicy
 
+MUACPIGEN  = $(TOP_DIR)/tools/muacpigen/bin/muacpigen
+MUIOBMGEN  = $(TOP_DIR)/tools/muiobmgen/bin/muiobmgen
+MUMSRBMGEN = $(TOP_DIR)/tools/mumsrbmgen/bin/mumsrbmgen
+MUPACK     = $(TOP_DIR)/tools/mupack/bin/mupack
+MUPTGEN    = $(TOP_DIR)/tools/muptgen/bin/muptgen
+MUSPECGEN  = $(TOP_DIR)/tools/muspecgen/bin/muspecgen
+MUZPGEN    = $(TOP_DIR)/tools/muzpgen/bin/muzpgen
+
 HARDWARE ?= bochs

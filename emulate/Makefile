@@ -1,9 +1,11 @@
 all: .emulate
 
-bootable.iso: ../pack/obj/kernel grub.cfg Makefile
+IMAGE = ../pack/obj/kernel
+
+bootable.iso: $(IMAGE) grub.cfg Makefile
 	grub-mkrescue -o $@ -graft-points \
 		boot/grub/grub.cfg=grub.cfg \
-		boot/kernel.bin=../pack/obj/kernel
+		boot/kernel.bin=$(IMAGE)
 
 .emulate: stop bootable.iso
 	@echo cont | bochs -q >/dev/null 2>&1 & echo "$$!" > $@

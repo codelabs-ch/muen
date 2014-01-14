@@ -24,6 +24,7 @@ tests:
 	$(MAKE) $@ -C packer
 	$(MAKE) $@ -C policy
 	$(MAKE) $@ -C libmuxml
+	$(MAKE) $@ -C libmutools
 	$(MAKE) $@ -C muzpgen
 	$(MAKE) $@ -C muptgen
 	$(MAKE) $@ -C mumsrbmgen
@@ -38,6 +39,7 @@ clean:
 	$(MAKE) $@ -C policy
 	$(MAKE) $@ -C libmulog
 	$(MAKE) $@ -C libmuxml
+	$(MAKE) $@ -C libmutools
 	$(MAKE) $@ -C libtest
 	$(MAKE) $@ -C muzpgen
 	$(MAKE) $@ -C muptgen

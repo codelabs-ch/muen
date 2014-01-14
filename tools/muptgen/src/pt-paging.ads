@@ -16,7 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
+with Interfaces;
+
+with Mutools.Utils;
 
 package Pt.Paging
 is
@@ -51,14 +53,14 @@ is
    --  Table entry type. Used as basis for all other entry types since they all
    --  include the same fields but interpret some in a different way. See Intel
    --  SDM Vol. 3A, page 4-28.
-   type Table_Entry_Type is new SK.Word64;
+   type Table_Entry_Type is new Interfaces.Unsigned_64;
 
    --  Page Map Level 4 table entry, see Intel SDM Vol. 3A, page 4-28.
    type PML4_Entry_Type is new Table_Entry_Type;
 
    --  Create a new PML4 entry with specified attributes.
    function Create_PML4_Entry
-     (Address       : SK.Word64;
+     (Address       : Interfaces.Unsigned_64;
       Writable      : Boolean;
       User_Access   : Boolean;
       Writethrough  : Boolean;
@@ -67,7 +69,9 @@ is
       return PML4_Entry_Type;
 
    --  Returns address pointed to by the given entry.
-   function Get_PDPT_Address (E : PML4_Entry_Type) return SK.Word64;
+   function Get_PDPT_Address
+     (E : PML4_Entry_Type)
+      return Interfaces.Unsigned_64;
 
    --  A Page Map Level 4 table comprises 512 64-bit entries (PML4Es), see
    --  Intel SDM Vol. 3A, page 4-22.
@@ -85,7 +89,7 @@ is
    --  Create a new PDPT entry with specified attributes. The map page
    --  parameter specifies if the entry maps a 1 GB page.
    function Create_PDPT_Entry
-     (Address      : SK.Word64;
+     (Address      : Interfaces.Unsigned_64;
       Writable     : Boolean;
       User_Access  : Boolean;
       Map_Page     : Boolean;
@@ -95,7 +99,7 @@ is
       return PDPT_Entry_Type;
 
    --  Returns address pointed to by the given entry.
-   function Get_PD_Address (E : PDPT_Entry_Type) return SK.Word64;
+   function Get_PD_Address (E : PDPT_Entry_Type) return Interfaces.Unsigned_64;
 
    --  A page-directory pointer table comprises 512 64-bit entries (PDPTEs),
    --  see Intel SDM Vol. 3A, page 4-22.
@@ -110,7 +114,7 @@ is
    --  Create a new PD entry with specified attributes. The map page parameter
    --  specifies if the entry maps a 2 MB page.
    function Create_PD_Entry
-     (Address      : SK.Word64;
+     (Address      : Interfaces.Unsigned_64;
       Writable     : Boolean;
       User_Access  : Boolean;
       Map_Page     : Boolean;
@@ -120,7 +124,7 @@ is
       return PD_Entry_Type;
 
    --  Returns address pointed to by the given entry.
-   function Get_PT_Address (E : PD_Entry_Type) return SK.Word64;
+   function Get_PT_Address (E : PD_Entry_Type) return Interfaces.Unsigned_64;
 
    --  A page directory comprises 512 64-bit entries (PDEs), see Intel SDM
    --  Vol. 3A, 4 - 22.
@@ -134,7 +138,7 @@ is
 
    --  Create a new PT entry with specified attributes.
    function Create_PT_Entry
-     (Address      : SK.Word64;
+     (Address      : Interfaces.Unsigned_64;
       Writable     : Boolean;
       User_Access  : Boolean;
       Global       : Boolean;
@@ -143,7 +147,7 @@ is
       return PT_Entry_Type;
 
    --  Returns address pointed to by the given entry.
-   function Get_Address (E : PT_Entry_Type) return SK.Word64;
+   function Get_Address (E : PT_Entry_Type) return Interfaces.Unsigned_64;
 
    --  A page table comprises 512 64-bit entries (PTEs), see Intel SDM Vol.
    --  3A, page 4-22.
@@ -159,7 +163,7 @@ is
    --   * PD   index is formed by bits 21 .. 29
    --   * PT   index is formed by bits 12 .. 20
    procedure Get_Indexes
-     (Address    :     SK.Word64;
+     (Address    :     Interfaces.Unsigned_64;
       PML4_Index : out Table_Range;
       PDPT_Index : out Table_Range;
       PD_Index   : out Table_Range;
@@ -170,7 +174,7 @@ private
    --  Set specified flag.
    procedure Set_Flag
      (E    : in out Table_Entry_Type;
-      Flag :        SK.Word64_Pos);
+      Flag :        Mutools.Utils.Unsigned_64_Pos);
 
    --  Table entry address range is bits 12 .. 47.
    Address_Mask : constant Table_Entry_Type := 16#0000fffffffff000#;

@@ -26,8 +26,9 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Mutools.Files;
+with Mutools.Constants;
 
-with SK;
+with Interfaces;
 
 with Pt.Paging.EPT;
 
@@ -55,7 +56,7 @@ is
    procedure Write_Pagetable
      (Policy       : Muxml.XML_Data_Type;
       Memory       : DOM.Core.Node_List;
-      Pml4_Address : SK.Word64;
+      Pml4_Address : Interfaces.Unsigned_64;
       Filename     : String;
       PT_Type      : Paging_Type := IA32e);
 
@@ -90,7 +91,7 @@ is
 
             Nodes     : DOM.Core.Node_List;
             Filename  : Unbounded_String;
-            PML4_Addr : SK.Word64;
+            PML4_Addr : Interfaces.Unsigned_64;
          begin
             Nodes := McKae.XML.XPath.XIA.XPath_Query
               (N     => Policy.Doc,
@@ -105,7 +106,7 @@ is
               (N     => Policy.Doc,
                XPath => "/system/memory/memory[@name='kernel_" & ID_Str & "|pt"
                & "']/@physicalAddress");
-            PML4_Addr := SK.Word64'Value
+            PML4_Addr := Interfaces.Unsigned_64'Value
               (DOM.Core.Nodes.Node_Value
                  (N => DOM.Core.Nodes.Item (List  => Nodes,
                                             Index => 0)));
@@ -133,7 +134,7 @@ is
    procedure Write_Pagetable
      (Policy       : Muxml.XML_Data_Type;
       Memory       : DOM.Core.Node_List;
-      Pml4_Address : SK.Word64;
+      Pml4_Address : Interfaces.Unsigned_64;
       Filename     : String;
       PT_Type      : Paging_Type := IA32e)
    is
@@ -151,9 +152,9 @@ is
 
       --  Add memory region with given attributes to pagetable.
       procedure Add_Memory_Region
-        (Physical_Address : SK.Word64;
-         Virtual_Address  : SK.Word64;
-         Size             : SK.Word64;
+        (Physical_Address : Interfaces.Unsigned_64;
+         Virtual_Address  : Interfaces.Unsigned_64;
+         Size             : Interfaces.Unsigned_64;
          Caching_Type     : Paging.Caching_Type;
          Writable         : Boolean;
          Executable       : Boolean);
@@ -161,14 +162,14 @@ is
       ----------------------------------------------------------------------
 
       procedure Add_Memory_Region
-        (Physical_Address : SK.Word64;
-         Virtual_Address  : SK.Word64;
-         Size             : SK.Word64;
+        (Physical_Address : Interfaces.Unsigned_64;
+         Virtual_Address  : Interfaces.Unsigned_64;
+         Size             : Interfaces.Unsigned_64;
          Caching_Type     : Paging.Caching_Type;
          Writable         : Boolean;
          Executable       : Boolean)
       is
-         use type SK.Word64;
+         use type Interfaces.Unsigned_64;
          use type Paging.PML4_Entry_Type;
          use type Paging.PDPT_Entry_Type;
          use type Paging.PD_Entry_Type;
@@ -181,15 +182,16 @@ is
          PT_Idx_Start, PT_Idx_End     : Paging.Table_Range;
 
          --  Physical start address of PDPT paging structure(s).
-         PDPT_Addr : SK.Word64;
+         PDPT_Addr : Interfaces.Unsigned_64;
          --  Physical start address of PD paging structure(s).
-         PD_Addr   : SK.Word64;
+         PD_Addr   : Interfaces.Unsigned_64;
          --  Physical start address of PT paging structure(s).
-         PT_Addr   : SK.Word64;
+         PT_Addr   : Interfaces.Unsigned_64;
 
-         Physical_Addr : SK.Word64          := Physical_Address;
-         Virt_Start    : constant SK.Word64 := Virtual_Address;
-         Virt_End      : constant SK.Word64 := Virt_Start + Size - 1;
+         Physical_Addr : Interfaces.Unsigned_64          := Physical_Address;
+         Virt_Start    : constant Interfaces.Unsigned_64 := Virtual_Address;
+         Virt_End      : constant Interfaces.Unsigned_64
+           := Virt_Start + Size - 1;
 
          Is_PDPT_Page : constant Boolean := Size mod Paging.PDPT_Page_Size = 0;
          Is_PD_Page   : constant Boolean := Size mod Paging.PD_Page_Size = 0;
@@ -205,11 +207,15 @@ is
                              PD_Index   => PD_Idx_End,
                              PT_Index   => PT_Idx_End);
 
-         PDPT_Addr := Pml4_Address + (SK.Word64 (PML4_Idx_End) + 1)
-           * SK.Page_Size;
-         PD_Addr   := PDPT_Addr + (SK.Word64 (PDPT_Idx_End) + 1)
-           * SK.Page_Size;
-         PT_Addr   := PD_Addr + (SK.Word64 (PD_Idx_End) + 1) * SK.Page_Size;
+         PDPT_Addr := Pml4_Address +
+           (Interfaces.Unsigned_64
+              (PML4_Idx_End) + 1) * Mutools.Constants.Page_Size;
+         PD_Addr   := PDPT_Addr +
+           (Interfaces.Unsigned_64
+              (PDPT_Idx_End) + 1) * Mutools.Constants.Page_Size;
+         PT_Addr   := PD_Addr +
+           (Interfaces.Unsigned_64
+              (PD_Idx_End) + 1) * Mutools.Constants.Page_Size;
 
          for Idx in Paging.Table_Range range PML4_Idx_Start .. PML4_Idx_End
          loop
@@ -218,7 +224,8 @@ is
                   when IA32e =>
                      PML4 (Idx) := Paging.Create_PML4_Entry
                        (Address       => PDPT_Addr +
-                          SK.Word64 (Idx) * SK.Page_Size,
+                          Interfaces.Unsigned_64
+                            (Idx) * Mutools.Constants.Page_Size,
                         Writable      => True,
                         User_Access   => True,
                         Writethrough  => True,
@@ -227,7 +234,8 @@ is
                   when EPT =>
                      PML4 (Idx) := Paging.EPT.Create_PML4_Entry
                        (Address    => PDPT_Addr +
-                          SK.Word64 (Idx) * SK.Page_Size,
+                          Interfaces.Unsigned_64
+                            (Idx) * Mutools.Constants.Page_Size,
                         Readable   => True,
                         Writable   => True,
                         Executable => True);
@@ -238,11 +246,13 @@ is
          for Idx in Paging.Table_Range range PDPT_Idx_Start .. PDPT_Idx_End
          loop
             if Is_PDPT_Page then
-               PD_Addr := Physical_Addr
-                 + SK.Word64 (Idx - PDPT_Idx_Start) * Paging.PDPT_Page_Size;
+               PD_Addr := Physical_Addr +
+                 Interfaces.Unsigned_64
+                   (Idx - PDPT_Idx_Start) * Paging.PDPT_Page_Size;
             else
-               PD_Addr := PD_Addr
-                 + SK.Word64 (Idx - PDPT_Idx_Start) * SK.Page_Size;
+               PD_Addr := PD_Addr +
+                 Interfaces.Unsigned_64
+                   (Idx - PDPT_Idx_Start) * Mutools.Constants.Page_Size;
             end if;
 
             if PDPT (Idx) = Paging.PDPT_Null_Entry then
@@ -275,11 +285,13 @@ is
 
          for Idx in Paging.Table_Range range PD_Idx_Start .. PD_Idx_End loop
             if Is_PD_Page then
-               PT_Addr := Physical_Addr
-                 + SK.Word64 (Idx - PD_Idx_Start) * Paging.PD_Page_Size;
+               PT_Addr := Physical_Addr +
+                 Interfaces.Unsigned_64
+                   (Idx - PD_Idx_Start) * Paging.PD_Page_Size;
             else
-               PT_Addr := PT_Addr
-                 + SK.Word64 (Idx - PD_Idx_Start) * SK.Page_Size;
+               PT_Addr := PT_Addr +
+                 Interfaces.Unsigned_64
+                   (Idx - PD_Idx_Start) * Mutools.Constants.Page_Size;
             end if;
 
             if PD (Idx) = Paging.PD_Null_Entry then
@@ -333,7 +345,7 @@ is
                end case;
             end if;
 
-            Physical_Addr := Physical_Addr + SK.Page_Size;
+            Physical_Addr := Physical_Addr + Mutools.Constants.Page_Size;
          end loop;
       end Add_Memory_Region;
    begin
@@ -356,24 +368,36 @@ is
             Index => 0);
 
          declare
-            PMA  : constant SK.Word64 := SK.Word64'Value
-                (DOM.Core.Elements.Get_Attribute (Elem => Physical_Mem,
-                                                  Name => "physicalAddress"));
-            VMA  : constant SK.Word64 := SK.Word64'Value
-                (DOM.Core.Elements.Get_Attribute (Elem => Logical_Mem,
-                                                  Name => "virtualAddress"));
-            Size : constant SK.Word64 := SK.Word64'Value
-                (DOM.Core.Elements.Get_Attribute (Elem => Physical_Mem,
-                                                  Name => "size"));
-            Write   : constant Boolean := Boolean'Value
-              (DOM.Core.Elements.Get_Attribute (Elem => Logical_Mem,
-                                                Name => "writable"));
-            Execute : constant Boolean := Boolean'Value
-              (DOM.Core.Elements.Get_Attribute (Elem => Logical_Mem,
-                                                Name => "executable"));
-            Caching : constant Paging.Caching_Type := Paging.Caching_Type'Value
-              (DOM.Core.Elements.Get_Attribute (Elem => Physical_Mem,
-                                                Name => "caching"));
+            PMA     : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                     (Elem => Physical_Mem,
+                      Name => "physicalAddress"));
+            VMA     : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                     (Elem => Logical_Mem,
+                      Name => "virtualAddress"));
+            Size    : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                     (Elem => Physical_Mem,
+                      Name => "size"));
+            Write   : constant Boolean
+              := Boolean'Value
+                (DOM.Core.Elements.Get_Attribute
+                     (Elem => Logical_Mem,
+                      Name => "writable"));
+            Execute : constant Boolean
+              := Boolean'Value
+                (DOM.Core.Elements.Get_Attribute
+                     (Elem => Logical_Mem,
+                      Name => "executable"));
+            Caching : constant Paging.Caching_Type
+              := Paging.Caching_Type'Value
+                (DOM.Core.Elements.Get_Attribute
+                     (Elem => Physical_Mem,
+                      Name => "caching"));
          begin
             Mulog.Log (Msg => " Adding region "
                        & DOM.Core.Elements.Get_Attribute (Elem => Logical_Mem,
@@ -418,7 +442,7 @@ is
 
             Nodes     : DOM.Core.Node_List;
             Filename  : Unbounded_String;
-            PML4_Addr : SK.Word64;
+            PML4_Addr : Interfaces.Unsigned_64;
             Paging    : Paging_Type;
          begin
             Nodes := McKae.XML.XPath.XIA.XPath_Query
@@ -447,7 +471,7 @@ is
               (N     => Policy.Doc,
                XPath => "/system/memory/memory[@name='" & Name & "|pt']/"
                & "@physicalAddress");
-            PML4_Addr := SK.Word64'Value
+            PML4_Addr := Interfaces.Unsigned_64'Value
               (DOM.Core.Nodes.Node_Value
                  (N => DOM.Core.Nodes.Item (List  => Nodes,
                                             Index => 0)));

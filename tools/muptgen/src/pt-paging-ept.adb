@@ -38,7 +38,7 @@ is
    generic
       type Entry_Type is new Table_Entry_Type;
    function Create_Entry
-     (Address    : SK.Word64;
+     (Address    : Interfaces.Unsigned_64;
       Readable   : Boolean;
       Writable   : Boolean;
       Executable : Boolean)
@@ -49,7 +49,7 @@ is
    generic
       type Entry_Type is new Table_Entry_Type;
    function Create_Map_Entry
-     (Address     : SK.Word64;
+     (Address     : Interfaces.Unsigned_64;
       Readable    : Boolean;
       Writable    : Boolean;
       Executable  : Boolean;
@@ -61,7 +61,7 @@ is
    -------------------------------------------------------------------------
 
    function Create_Entry
-     (Address    : SK.Word64;
+     (Address    : Interfaces.Unsigned_64;
       Readable   : Boolean;
       Writable   : Boolean;
       Executable : Boolean)
@@ -92,7 +92,7 @@ is
    -------------------------------------------------------------------------
 
    function Create_Map_Entry
-     (Address     : SK.Word64;
+     (Address     : Interfaces.Unsigned_64;
       Readable    : Boolean;
       Writable    : Boolean;
       Executable  : Boolean;
@@ -129,7 +129,7 @@ is
 
    function Create_PD is new Create_Map_Entry (Entry_Type => PD_Entry_Type);
    function Create_PD_Entry
-     (Address     : SK.Word64;
+     (Address     : Interfaces.Unsigned_64;
       Readable    : Boolean;
       Writable    : Boolean;
       Executable  : Boolean;
@@ -143,7 +143,7 @@ is
    function Create_PDPT is new Create_Map_Entry
      (Entry_Type => PDPT_Entry_Type);
    function Create_PDPT_Entry
-     (Address     : SK.Word64;
+     (Address     : Interfaces.Unsigned_64;
       Readable    : Boolean;
       Writable    : Boolean;
       Executable  : Boolean;
@@ -156,7 +156,7 @@ is
 
    function Create_PML4 is new Create_Entry (Entry_Type => PML4_Entry_Type);
    function Create_PML4_Entry
-     (Address    : SK.Word64;
+     (Address    : Interfaces.Unsigned_64;
       Readable   : Boolean;
       Writable   : Boolean;
       Executable : Boolean)
@@ -166,7 +166,7 @@ is
 
    function Create_PT is new Create_Map_Entry (Entry_Type => PT_Entry_Type);
    function Create_PT_Entry
-     (Address     : SK.Word64;
+     (Address     : Interfaces.Unsigned_64;
       Readable    : Boolean;
       Writable    : Boolean;
       Executable  : Boolean;

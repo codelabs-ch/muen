@@ -25,7 +25,7 @@ is
    --  Create a new EPT PML4 entry with specified attributes, referencing a
    --  PDPT located at the given physical address.
    function Create_PML4_Entry
-     (Address    : SK.Word64;
+     (Address    : Interfaces.Unsigned_64;
       Readable   : Boolean;
       Writable   : Boolean;
       Executable : Boolean)
@@ -35,7 +35,7 @@ is
    --  parameter specifies if the entry maps a 1 GB page or references a PD
    --  located at the given physical address.
    function Create_PDPT_Entry
-     (Address     : SK.Word64;
+     (Address     : Interfaces.Unsigned_64;
       Readable    : Boolean;
       Writable    : Boolean;
       Executable  : Boolean;
@@ -48,7 +48,7 @@ is
    --  parameter specifies if the entry maps a 2 MB page or references a PT
    --  located at the given physical address.
    function Create_PD_Entry
-     (Address     : SK.Word64;
+     (Address     : Interfaces.Unsigned_64;
       Readable    : Boolean;
       Writable    : Boolean;
       Executable  : Boolean;
@@ -60,7 +60,7 @@ is
    --  Create a new PT entry with specified attributes, mapping a 4 KB page of
    --  memory at the given physical address.
    function Create_PT_Entry
-     (Address     : SK.Word64;
+     (Address     : Interfaces.Unsigned_64;
       Readable    : Boolean;
       Writable    : Boolean;
       Executable  : Boolean;

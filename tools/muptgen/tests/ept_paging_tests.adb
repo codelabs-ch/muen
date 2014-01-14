@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
+with Interfaces;
 
 with Pt.Paging.EPT;
 
@@ -25,15 +25,15 @@ is
 
    use Ahven;
    use Pt.Paging;
-   use type SK.Word64;
+   use type Interfaces.Unsigned_64;
 
    -------------------------------------------------------------------------
 
    procedure Create_PD_Entry
    is
       E     : PD_Entry_Type;
-      Addr  : constant SK.Word64     := 16#8fff10000#;
-      Ref_E : constant PD_Entry_Type := 16#8fff10002#;
+      Addr  : constant Interfaces.Unsigned_64 := 16#8fff10000#;
+      Ref_E : constant PD_Entry_Type          := 16#8fff10002#;
    begin
       E := EPT.Create_PD_Entry (Address     => Addr,
                                 Readable    => False,
@@ -54,8 +54,8 @@ is
    procedure Create_PDPT_Entry
    is
       E     : PDPT_Entry_Type;
-      Addr  : constant SK.Word64       := 16#d1324b000#;
-      Ref_E : constant PDPT_Entry_Type := 16#d1324b006#;
+      Addr  : constant Interfaces.Unsigned_64 := 16#d1324b000#;
+      Ref_E : constant PDPT_Entry_Type        := 16#d1324b006#;
    begin
       E := EPT.Create_PDPT_Entry (Address     => Addr,
                                   Readable    => False,
@@ -76,8 +76,8 @@ is
    procedure Create_PML4_Entry
    is
       E     : PML4_Entry_Type;
-      Addr  : constant SK.Word64       := 16#1f1000#;
-      Ref_E : constant PML4_Entry_Type := 16#1f1003#;
+      Addr  : constant Interfaces.Unsigned_64 := 16#1f1000#;
+      Ref_E : constant PML4_Entry_Type        := 16#1f1003#;
    begin
       E := EPT.Create_PML4_Entry (Address    => Addr,
                                   Readable   => True,
@@ -95,8 +95,8 @@ is
    procedure Create_PT_Entry
    is
       E     : PT_Entry_Type;
-      Addr  : constant SK.Word64     := 16#ab763fc00000#;
-      Ref_E : constant PT_Entry_Type := 16#ab763fc000f2#;
+      Addr  : constant Interfaces.Unsigned_64 := 16#ab763fc00000#;
+      Ref_E : constant PT_Entry_Type          := 16#ab763fc000f2#;
    begin
       E := EPT.Create_PT_Entry (Address     => Addr,
                                 Readable    => False,

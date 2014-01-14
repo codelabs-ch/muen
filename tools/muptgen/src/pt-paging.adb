@@ -40,22 +40,22 @@ is
    PD_Address_Mask : constant PD_Entry_Type := 16#0000ffffffe00000#;
 
    --  PML4 index is bits 39 .. 47 of the linear address.
-   PML4_Index_Mask : constant SK.Word64 := 16#0000ff8000000000#;
+   PML4_Index_Mask : constant Interfaces.Unsigned_64 := 16#0000ff8000000000#;
 
    --  PDPT index is bits 30 .. 38 of the linear address.
-   PDPT_Index_Mask : constant SK.Word64 := 16#0000007fc0000000#;
+   PDPT_Index_Mask : constant Interfaces.Unsigned_64 := 16#0000007fc0000000#;
 
    --  PD index is bits 21 .. 29 of the linear address.
-   PD_Index_Mask : constant SK.Word64 := 16#000000003fe00000#;
+   PD_Index_Mask : constant Interfaces.Unsigned_64 := 16#000000003fe00000#;
 
    --  PT index is bits 12 .. 20 of the linear address.
-   PT_Index_Mask : constant SK.Word64 := 16#00000000001ff000#;
+   PT_Index_Mask : constant Interfaces.Unsigned_64 := 16#00000000001ff000#;
 
    --  Create paging structure entry with specified parameters.
    generic
       type Entry_Type is new Table_Entry_Type;
    function Create_Entry
-     (Address       : SK.Word64;
+     (Address       : Interfaces.Unsigned_64;
       Writable      : Boolean;
       User_Access   : Boolean;
       Writethrough  : Boolean;
@@ -67,7 +67,7 @@ is
    generic
       type Entry_Type is new Directory_Entry_Type;
    function Create_Directory_Entry
-     (Address      : SK.Word64;
+     (Address      : Interfaces.Unsigned_64;
       Writable     : Boolean;
       User_Access  : Boolean;
       Map_Page     : Boolean;
@@ -77,12 +77,12 @@ is
       return Entry_Type;
 
    --  Returns the physical address the table entry is pointing to.
-   function Get_Address (E : Table_Entry_Type) return SK.Word64;
+   function Get_Address (E : Table_Entry_Type) return Interfaces.Unsigned_64;
 
    -------------------------------------------------------------------------
 
    function Create_Directory_Entry
-     (Address      : SK.Word64;
+     (Address      : Interfaces.Unsigned_64;
       Writable     : Boolean;
       User_Access  : Boolean;
       Map_Page     : Boolean;
@@ -124,7 +124,7 @@ is
    -------------------------------------------------------------------------
 
    function Create_Entry
-     (Address       : SK.Word64;
+     (Address       : Interfaces.Unsigned_64;
       Writable      : Boolean;
       User_Access   : Boolean;
       Writethrough  : Boolean;
@@ -172,7 +172,7 @@ is
    function Create_PD is new Create_Directory_Entry
      (Entry_Type => PD_Entry_Type);
    function Create_PD_Entry
-     (Address      : SK.Word64;
+     (Address      : Interfaces.Unsigned_64;
       Writable     : Boolean;
       User_Access  : Boolean;
       Map_Page     : Boolean;
@@ -186,7 +186,7 @@ is
    function Create_PDPT is new Create_Directory_Entry
      (Entry_Type => PDPT_Entry_Type);
    function Create_PDPT_Entry
-     (Address      : SK.Word64;
+     (Address      : Interfaces.Unsigned_64;
       Writable     : Boolean;
       User_Access  : Boolean;
       Map_Page     : Boolean;
@@ -199,7 +199,7 @@ is
 
    function Create_PML4 is new Create_Entry (Entry_Type => PML4_Entry_Type);
    function Create_PML4_Entry
-     (Address       : SK.Word64;
+     (Address       : Interfaces.Unsigned_64;
       Writable      : Boolean;
       User_Access   : Boolean;
       Writethrough  : Boolean;
@@ -210,7 +210,7 @@ is
    -------------------------------------------------------------------------
 
    function Create_PT_Entry
-     (Address      : SK.Word64;
+     (Address      : Interfaces.Unsigned_64;
       Writable     : Boolean;
       User_Access  : Boolean;
       Global       : Boolean;
@@ -244,15 +244,15 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Address (E : Table_Entry_Type) return SK.Word64
+   function Get_Address (E : Table_Entry_Type) return Interfaces.Unsigned_64
    is
    begin
-      return SK.Word64 (E and Address_Mask);
+      return Interfaces.Unsigned_64 (E and Address_Mask);
    end Get_Address;
 
    -------------------------------------------------------------------------
 
-   function Get_Address (E : PT_Entry_Type) return SK.Word64
+   function Get_Address (E : PT_Entry_Type) return Interfaces.Unsigned_64
    is
    begin
       return Get_Address (E => Table_Entry_Type (E));
@@ -261,13 +261,13 @@ is
    -------------------------------------------------------------------------
 
    procedure Get_Indexes
-     (Address    :     SK.Word64;
+     (Address    :     Interfaces.Unsigned_64;
       PML4_Index : out Table_Range;
       PDPT_Index : out Table_Range;
       PD_Index   : out Table_Range;
       PT_Index   : out Table_Range)
    is
-      use type SK.Word64;
+      use type Interfaces.Unsigned_64;
    begin
       PML4_Index := Table_Range ((Address and PML4_Index_Mask) / 2 ** 39);
       PDPT_Index := Table_Range ((Address and PDPT_Index_Mask) / 2 ** 30);
@@ -277,17 +277,18 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_PD_Address (E : PDPT_Entry_Type) return SK.Word64
+   function Get_PD_Address (E : PDPT_Entry_Type) return Interfaces.Unsigned_64
    is
-      Address : SK.Word64;
+      Address : Interfaces.Unsigned_64;
    begin
-      if SK.Bit_Test
-        (Value => SK.Word64 (E),
+      if Mutools.Utils.Bit_Test
+        (Value => Interfaces.Unsigned_64 (E),
          Pos   => Page_Size_Flag)
       then
-         Address := SK.Word64 (E and PDPT_Address_Mask);
+         Address := Interfaces.Unsigned_64 (E and PDPT_Address_Mask);
       else
-         Address := SK.Word64 (Table_Entry_Type (E) and Address_Mask);
+         Address := Interfaces.Unsigned_64 (Table_Entry_Type (E)
+                                            and Address_Mask);
       end if;
 
       return Address;
@@ -295,7 +296,9 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_PDPT_Address (E : PML4_Entry_Type) return SK.Word64
+   function Get_PDPT_Address
+     (E : PML4_Entry_Type)
+      return Interfaces.Unsigned_64
    is
    begin
       return Get_Address (E => Table_Entry_Type (E));
@@ -303,17 +306,18 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_PT_Address (E : PD_Entry_Type) return SK.Word64
+   function Get_PT_Address (E : PD_Entry_Type) return Interfaces.Unsigned_64
    is
-      Address : SK.Word64;
+      Address : Interfaces.Unsigned_64;
    begin
-      if SK.Bit_Test
-        (Value => SK.Word64 (E),
+      if Mutools.Utils.Bit_Test
+        (Value => Interfaces.Unsigned_64 (E),
          Pos   => Page_Size_Flag)
       then
-         Address := SK.Word64 (E and PD_Address_Mask);
+         Address := Interfaces.Unsigned_64 (E and PD_Address_Mask);
       else
-         Address := SK.Word64 (Table_Entry_Type (E) and Address_Mask);
+         Address := Interfaces.Unsigned_64
+           (Table_Entry_Type (E) and Address_Mask);
       end if;
 
       return Address;
@@ -323,12 +327,12 @@ is
 
    procedure Set_Flag
      (E    : in out Table_Entry_Type;
-      Flag :        SK.Word64_Pos)
+      Flag :        Mutools.Utils.Unsigned_64_Pos)
    is
    begin
       E := Table_Entry_Type
-        (SK.Bit_Set (Value => SK.Word64 (E),
-                     Pos   => Flag));
+        (Mutools.Utils.Bit_Set (Value => Interfaces.Unsigned_64 (E),
+                                Pos   => Flag));
    end Set_Flag;
 
 end Pt.Paging;

@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
+with Interfaces;
 
 with Pt.Paging;
 
@@ -25,15 +25,15 @@ is
 
    use Ahven;
    use Pt.Paging;
-   use type SK.Word64;
+   use type Interfaces.Unsigned_64;
 
    -------------------------------------------------------------------------
 
    procedure Create_PD_Entry
    is
       E     : PD_Entry_Type;
-      Addr  : constant SK.Word64     := 16#fffc800f0000#;
-      Ref_E : constant PD_Entry_Type := 16#8000fffc800f000b#;
+      Addr  : constant Interfaces.Unsigned_64 := 16#fffc800f0000#;
+      Ref_E : constant PD_Entry_Type          := 16#8000fffc800f000b#;
    begin
       E := Create_PD_Entry
         (Address      => Addr,
@@ -55,8 +55,8 @@ is
    procedure Create_PDPT_Entry
    is
       E     : PDPT_Entry_Type;
-      Addr  : constant SK.Word64       := 16#2b3c004000#;
-      Ref_E : constant PDPT_Entry_Type := 16#8000002b3c00400b#;
+      Addr  : constant Interfaces.Unsigned_64 := 16#2b3c004000#;
+      Ref_E : constant PDPT_Entry_Type        := 16#8000002b3c00400b#;
    begin
       E := Create_PDPT_Entry
         (Address      => Addr,
@@ -78,8 +78,8 @@ is
    procedure Create_PML4_Entry
    is
       E     : PML4_Entry_Type;
-      Addr  : constant SK.Word64       := 16#1f1000#;
-      Ref_E : constant PML4_Entry_Type := 16#80000000001f100b#;
+      Addr  : constant Interfaces.Unsigned_64 := 16#1f1000#;
+      Ref_E : constant PML4_Entry_Type        := 16#80000000001f100b#;
    begin
       E := Create_PML4_Entry
         (Address       => Addr,
@@ -100,8 +100,8 @@ is
    procedure Create_PT_Entry
    is
       E     : PT_Entry_Type;
-      Addr  : constant SK.Word64     := 16#100043f000#;
-      Ref_E : constant PT_Entry_Type := 16#100043f10b#;
+      Addr  : constant Interfaces.Unsigned_64 := 16#100043f000#;
+      Ref_E : constant PT_Entry_Type          := 16#100043f10b#;
    begin
       E := Create_PT_Entry
         (Address      => Addr,
@@ -137,7 +137,7 @@ is
       Assert (Condition => PT = 0,
               Message   => "PT index mismatch (1)");
 
-      Get_Indexes (Address    => SK.Word64'Last,
+      Get_Indexes (Address    => Interfaces.Unsigned_64'Last,
                    PML4_Index => PML4,
                    PDPT_Index => PDPT,
                    PD_Index   => PD,

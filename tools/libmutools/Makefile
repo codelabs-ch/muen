@@ -1,4 +1,13 @@
-all:
+LIBRARY = libmutools
+
+include ../../Makeconf
+include ../../Makecov
+
+tests: test_$(LIBRARY)
+	@obj/tests/test_runner
+
+test_$(LIBRARY):
+	@gprbuild $(BUILD_OPTS) -P$@ -XBUILD=tests
 
 clean:
 	@rm -rf lib obj

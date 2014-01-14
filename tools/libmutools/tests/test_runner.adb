@@ -16,12 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../../config/shared";
+with Ahven.Text_Runner;
+with Ahven.Framework;
 
-library project Libmutools is
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Shared.Build;
-   for Library_Dir use "lib";
-   for Library_Name use "mutools";
-   for Library_Kind use "static";
-end Libmutools;
+procedure Test_Runner
+is
+   use Ahven.Framework;
+
+   S : constant Test_Suite_Access := Create_Suite
+     (Suite_Name => "Libmutools tests");
+begin
+   Ahven.Text_Runner.Run (Suite => S);
+   Release_Suite (T => S);
+end Test_Runner;

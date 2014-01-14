@@ -399,7 +399,7 @@ is
                      (Elem => Physical_Mem,
                       Name => "caching"));
          begin
-            Mulog.Log (Msg => " Adding region "
+            Mulog.Log (Msg => "Adding region "
                        & DOM.Core.Elements.Get_Attribute (Elem => Logical_Mem,
                                                           Name => "logical")
                        & "[" & To_String (Physical_Name) & "]");

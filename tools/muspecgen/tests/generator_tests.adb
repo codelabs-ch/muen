@@ -51,6 +51,7 @@ is
       Kernel_H    : constant String := "obj/policy.h";
       Subj_Spec   : constant String := "obj/skp-subjects.adb";
       Skp_Spec    : constant String := "obj/skp.ads";
+      HW_Spec     : constant String := "obj/skp-hardware.ads";
    begin
       Muxml.Parse (Data => Policy,
                    File => "data/test_policy.xml");
@@ -82,6 +83,10 @@ is
               (Filename1 => Skp_Spec,
                Filename2 => "data/skp.ref"),
               Message   => "Skp spec mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => HW_Spec,
+               Filename2 => "data/skp-hardware.ref"),
+              Message   => "Hardware spec mismatch");
    end Write_Specs;
 
 end Generator_Tests;

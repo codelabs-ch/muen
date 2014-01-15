@@ -32,6 +32,8 @@ with Mutools.Utils;
 with Spec.Templates;
 with Spec.Utils;
 
+with String_Templates;
+
 pragma Elaborate_All (Spec.Utils);
 
 package body Spec.Generator
@@ -546,7 +548,8 @@ is
       Vector_Buffer := Vector_Buffer & ","
         & ASCII.LF & Indent (N => 2) & " others => Skp.Invalid_Subject";
 
-      Tmpl := Templates.Load (Filename => "skp-interrupts.ads");
+      Tmpl := Templates.Create
+        (Content => String_Templates.skp_interrupts_ads);
       Templates.Replace (Template => Tmpl,
                          Pattern  => "__routing_range__",
                          Content  => "1 .." & IRQ_Count'Img);
@@ -601,8 +604,6 @@ is
         (Output_Dir : String;
          Policy     : Muxml.XML_Data_Type)
       is
-         Filename : constant String := "policy.h";
-
          Subject_Count : constant Natural := DOM.Core.Nodes.Length
            (List => McKae.XML.XPath.XIA.XPath_Query
               (N     => Policy.Doc,
@@ -629,7 +630,7 @@ is
 
          Tmpl : Templates.Template_Type;
       begin
-         Tmpl := Templates.Load (Filename => Filename);
+         Tmpl := Templates.Create (Content => String_Templates.policy_h);
          Templates.Replace
            (Template => Tmpl,
             Pattern  => "__subj_count__",
@@ -666,10 +667,10 @@ is
                Prefix => False));
 
          Mulog.Log (Msg => "Writing kernel header file to '"
-                    & Output_Dir & "/" & Filename & "'");
+                    & Output_Dir & "/policy.h'");
 
          Templates.Write (Template => Tmpl,
-                          Filename => Output_Dir & "/" & Filename);
+                          Filename => Output_Dir & "/policy.h");
       end Write_Kernel_Header;
 
       ----------------------------------------------------------------------
@@ -680,11 +681,9 @@ is
       is
          pragma Unreferenced (Policy);
 
-         Filename : constant String := "skp-kernel.ads";
-
          Tmpl : Templates.Template_Type;
       begin
-         Tmpl := Templates.Load (Filename => Filename);
+         Tmpl := Templates.Create (Content => String_Templates.skp_kernel_ads);
          Templates.Replace
            (Template => Tmpl,
             Pattern  => "__stack_addr__",
@@ -695,10 +694,10 @@ is
             Content  => Mutools.Utils.To_Hex (Number => CPU_Store_Addr));
 
          Mulog.Log (Msg => "Writing kernel spec to '"
-                    & Output_Dir & "/" & Filename & "'");
+                    & Output_Dir & "/skp-kernel.ads'");
 
          Templates.Write (Template => Tmpl,
-                          Filename => Output_Dir & "/" & Filename);
+                          Filename => Output_Dir & "/skp-kernel.ads");
       end Write_Kernel_Spec;
    begin
       Write_Kernel_Spec (Output_Dir => Output_Dir,
@@ -886,7 +885,8 @@ is
          end if;
       end loop;
 
-      Tmpl := Templates.Load (Filename  => "skp-scheduling.ads");
+      Tmpl := Templates.Create
+        (Content => String_Templates.skp_scheduling_ads);
       Templates.Replace (Template => Tmpl,
                          Pattern  => "__minor_range__",
                          Content  => "1 .." & Max_Minor_Count'Img);
@@ -1260,11 +1260,11 @@ is
          end if;
       end Write_Subject_Spec;
    begin
-      Tmpl := Templates.Load (Filename => "skp-subjects.ads");
+      Tmpl := Templates.Create (Content => String_Templates.skp_subjects_ads);
       Templates.Write (Template => Tmpl,
                        Filename => Output_Dir & "/skp-subjects.ads");
 
-      Tmpl := Templates.Load (Filename => "skp-subjects.adb");
+      Tmpl := Templates.Create (Content => String_Templates.skp_subjects_adb);
 
       for I in 0 .. Subj_Count - 1 loop
          Write_Subject_Spec
@@ -1311,7 +1311,7 @@ is
 
       Tmpl : Templates.Template_Type;
    begin
-      Tmpl := Templates.Load (Filename => "skp.ads");
+      Tmpl := Templates.Create (Content => String_Templates.skp_ads);
       Templates.Replace (Template => Tmpl,
                          Pattern  => "__cpu_range__",
                          Content  => "0 .." & Natural'Image

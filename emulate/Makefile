@@ -1,6 +1,6 @@
 all: .emulate
 
-IMAGE = ../pack/obj/kernel
+IMAGE ?= ../pack/obj/kernel
 
 bootable.iso: $(IMAGE) grub.cfg Makefile
 	grub-mkrescue -o $@ -graft-points \

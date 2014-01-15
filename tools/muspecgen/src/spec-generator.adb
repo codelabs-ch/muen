@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Characters.Handling;
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
@@ -41,6 +42,10 @@ is
 
    use Ada.Strings.Unbounded;
    use Interfaces;
+
+   --  Return capitalisation of the given string (first letter in uppercase and
+   --  the remaining letters in lowercase).
+   function Capitalize (Str : String) return String;
 
    --  Searches the element specified by an XPath in the given document and
    --  returns the attribute given by name as string. If no such attribute or
@@ -357,6 +362,11 @@ is
          MachineCheck               => 18,
          SIMDFloatingPointException => 19));
 
+   --  Write hardware-related policy file to specified output directory.
+   procedure Write_Hardware
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type);
+
    --  Write interrupt policy file to specified output directory.
    procedure Write_Interrupts
      (Output_Dir : String;
@@ -381,6 +391,17 @@ is
    procedure Write_System
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
+
+   -------------------------------------------------------------------------
+
+   function Capitalize (Str : String) return String
+   is
+      Result : String := Ada.Characters.Handling.To_Lower (Item => Str);
+   begin
+      Result (Result'First) := Ada.Characters.Handling.To_Upper
+        (Item => Result (Result'First));
+      return Result;
+   end Capitalize;
 
    -------------------------------------------------------------------------
 
@@ -447,8 +468,95 @@ is
       Write_Subject (Output_Dir => Output_Dir,
                      Policy     => Policy);
       Write_System (Output_Dir => Output_Dir,
+                    Policy     => Policy);
+      Write_Hardware (Output_Dir => Output_Dir,
                       Policy     => Policy);
    end Write;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_Hardware
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type)
+   is
+      Buffer : Unbounded_String;
+      Tmpl   : Templates.Template_Type;
+
+      Devices : constant DOM.Core.Node_List := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Policy.Doc,
+         XPath => "/system/platform/device");
+
+      --  Write device constants to hardware spec.
+      procedure Write_Device (Dev : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Write_Device (Dev : DOM.Core.Node)
+      is
+         Dev_Name : constant String
+           := Capitalize
+             (Str => DOM.Core.Elements.Get_Attribute
+                  (Elem => Dev,
+                   Name => "name"));
+         Ports    : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Dev,
+              XPath => "ioPort");
+         P_Count  : constant Natural := DOM.Core.Nodes.Length (List => Ports);
+      begin
+         if P_Count = 0 then
+            return;
+         end if;
+
+         Buffer := Buffer & ASCII.LF;
+         for P in 0 .. P_Count - 1 loop
+            declare
+               Port       : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => Ports,
+                    Index => P);
+               Name       : constant String
+                 := Capitalize
+                   (Str => DOM.Core.Elements.Get_Attribute
+                        (Elem => Port,
+                         Name => "name"));
+               Start_Addr : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Port,
+                    Name => "start");
+               End_Addr   : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Port,
+                    Name => "end");
+            begin
+               Buffer := Buffer & Indent & Dev_Name & "_" & Name
+                 & "_Start : constant := " & Start_Addr & ";"
+                 & ASCII.LF
+                 & Indent & Dev_Name & "_" & Name
+                 & "_End   : constant := " & End_Addr & ";"
+                 & ASCII.LF;
+            end;
+         end loop;
+      end Write_Device;
+   begin
+      Tmpl := Templates.Create (Content => String_Templates.skp_hardware_ads);
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
+         Write_Device (Dev => DOM.Core.Nodes.Item
+                       (List  => Devices,
+                        Index => I));
+      end loop;
+
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__devices__",
+                         Content  => To_String (Buffer));
+
+      Mulog.Log (Msg => "Writing hardware spec to '"
+                 & Output_Dir & "/skp-hardware.ads'");
+
+      Templates.Write (Template => Tmpl,
+                       Filename => Output_Dir & "/skp-hardware.ads");
+   end Write_Hardware;
 
    -------------------------------------------------------------------------
 

@@ -200,6 +200,7 @@
 					</cr4>
 					<msrs>
 						<msr start="16#0802#" end="16#0802#" mode="r"/>
+						<msr start="16#0000_0804#" end="16#0000_0804#" mode="r"/>
 					</msrs>
 				</registers>
 				<segments>

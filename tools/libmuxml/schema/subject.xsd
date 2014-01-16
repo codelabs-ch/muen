@@ -187,7 +187,7 @@
 
 	<xs:simpleType name="msrAddressType">
 		<xs:restriction base="xs:string">
-			<xs:pattern value="16#([cC]000_)?[01]([0-9a-fA-F]{3})#"/>
+			<xs:pattern value="16#([cC0]000_)?[01]([0-9a-fA-F]{3})#"/>
 		</xs:restriction>
 	</xs:simpleType>
 

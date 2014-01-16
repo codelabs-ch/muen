@@ -23,7 +23,7 @@ with "libmuxml";
 
 project Test_Libmuxml is
 
-   Compiler_Switches := Shared.Ada_Compiler_Switches & "-gnat12" & "-gnatwal";
+   Compiler_Switches := Shared.Ada_Compiler_Switches & "-gnat12";
    Linker_Switches   := ();
 
    for Source_Dirs use ("tests");
@@ -31,10 +31,12 @@ project Test_Libmuxml is
    for Object_Dir use "obj/" & Shared.Build;
 
    case Shared.Build is
-      when "debug" | "tests" => null;
-      when "coverage"        =>
-         Compiler_Switches := Compiler_Switches & Shared.Cov_Compiler_Switches;
-         Linker_Switches   := Linker_Switches   & Shared.Cov_Linker_Switches;
+      when "debug"    => Compiler_Switches := Compiler_Switches & "-gnatwale";
+      when "tests"    => Compiler_Switches := Compiler_Switches & "-gnatwal";
+      when "coverage" =>
+         Compiler_Switches := Compiler_Switches  & "-gnatwal"
+           & Shared.Cov_Compiler_Switches;
+         Linker_Switches := Linker_Switches & Shared.Cov_Linker_Switches;
    end case;
 
    package Compiler is

@@ -54,6 +54,7 @@ is
    procedure Write_Pagetable
      (Policy       : Muxml.XML_Data_Type;
       Memory       : DOM.Core.Node_List;
+      Devices      : DOM.Core.Node_List;
       Pml4_Address : Interfaces.Unsigned_64;
       Filename     : String;
       PT_Type      : Paging_Type := IA32e);
@@ -104,12 +105,17 @@ is
                 (N     => Policy.Doc,
                  XPath => "/system/kernel/memory/cpu[@id='" & ID_Str
                  & "']/memory");
+            Devices   : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Policy.Doc,
+                 XPath => "/system/kernel/devices/device[count(memory)>0]");
          begin
             Mulog.Log (Msg => "Writing kernel pagetable of CPU" & I'Img
                        & " to '" & Output_Dir & "/" & Filename & "'");
             Write_Pagetable
               (Policy       => Policy,
                Memory       => Nodes,
+               Devices      => Devices,
                Pml4_Address => PML4_Addr,
                Filename     => Output_Dir & "/" & Filename,
                PT_Type      => IA32e);
@@ -122,6 +128,7 @@ is
    procedure Write_Pagetable
      (Policy       : Muxml.XML_Data_Type;
       Memory       : DOM.Core.Node_List;
+      Devices      : DOM.Core.Node_List;
       Pml4_Address : Interfaces.Unsigned_64;
       Filename     : String;
       PT_Type      : Paging_Type := IA32e)
@@ -383,6 +390,53 @@ is
          end;
       end loop;
 
+      for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
+         declare
+            Device   : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Devices,
+                 Index => I);
+            Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Device,
+               Name => "physical");
+            Dev_Mem  : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Device,
+                 XPath => "memory");
+         begin
+            for D in 0 .. DOM.Core.Nodes.Length (List => Dev_Mem) - 1 loop
+               declare
+                  Logical_Mem   : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Dev_Mem,
+                       Index => I);
+                  Logical_Name  : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Logical_Mem,
+                       Name => "logical");
+                  Physical_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Logical_Mem,
+                       Name => "physical");
+                  Physical_Mem  : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => McKae.XML.XPath.XIA.XPath_Query
+                           (N     => Policy.Doc,
+                            XPath => "/system/platform/device[@name='"
+                            & Dev_Name & "']/memory[@name='" & Physical_Name
+                            & "']"),
+                       Index => 0);
+               begin
+                  Mulog.Log (Msg => "Adding region " & Logical_Name
+                             & "[" & Physical_Name & "] of device "
+                             & Dev_Name);
+                  Add_Memory_Region (Physical_Mem => Physical_Mem,
+                                     Logical_Mem  => Logical_Mem);
+               end;
+            end loop;
+         end;
+      end loop;
+
       Mutools.Files.Open (Filename => Filename,
                           File     => File);
       Paging.PML4_Table_Type'Write (Stream (File => File), PML4);
@@ -428,6 +482,12 @@ is
                      (List  => Subjects,
                       Index => I),
                  XPath => "memory/memory");
+            Devices   : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => DOM.Core.Nodes.Item
+                     (List  => Subjects,
+                      Index => I),
+                 XPath => "devices/device[count(memory)>0]");
 
             Paging : Paging_Type;
          begin
@@ -446,6 +506,7 @@ is
             Write_Pagetable
               (Policy       => Policy,
                Memory       => Nodes,
+               Devices      => Devices,
                Pml4_Address => PML4_Addr,
                Filename     => Output_Dir & "/" & Filename,
                PT_Type      => Paging);

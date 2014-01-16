@@ -8,6 +8,10 @@
 		<device name="serial" shared="false">
 			<ioPort name="serial" start="16#50b0#" end="16#50b0#"/>
 		</device>
+		<device name="vga" shared="false">
+			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#1000#" caching="WC"/>
+			<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
+		</device>
 	</platform>
 
 	<memory>
@@ -458,11 +462,12 @@
 				<memory logical="mem" virtualAddress="16#0000#" writable="true" executable="true">
 					<physical name="subject1"/>
 				</memory>
-				<memory logical="video" virtualAddress="16#000b_8000#" writable="true" executable="false">
-					<physical name="vga"/>
-				</memory>
 			</memory>
-			<devices/>
+			<devices>
+				<device logical="vga" physical="vga">
+					<memory logical="video" physical="buffer" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
+				</device>
+			</devices>
 			<events/>
 		</subject>
 

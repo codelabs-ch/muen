@@ -17,7 +17,6 @@
 --
 
 with Ada.Streams.Stream_IO;
-with Ada.Strings.Unbounded;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
@@ -27,6 +26,7 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Mutools.Files;
 with Mutools.Constants;
+with Muxml.Utils;
 
 with Interfaces;
 
@@ -34,8 +34,6 @@ with Pt.Paging.EPT;
 
 package body Pt.Generator
 is
-
-   use Ada.Strings.Unbounded;
 
    type Paging_Type is (IA32e, EPT);
 
@@ -89,41 +87,31 @@ is
          declare
             ID_Str : constant String := I'Img (I'Img'First + 1 .. I'Img'Last);
 
-            Nodes     : DOM.Core.Node_List;
-            Filename  : Unbounded_String;
-            PML4_Addr : Interfaces.Unsigned_64;
+            Filename  : constant String := Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/memory/memory[@name='kernel_" & ID_Str
+               & "|pt']/file[@format='pt']",
+               Name  => "filename");
+            PML4_Addr : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (Muxml.Utils.Get_Attribute
+                     (Doc   => Policy.Doc,
+                      XPath => "/system/memory/memory[@name='kernel_" & ID_Str
+                      & "|pt']",
+                      Name  => "physicalAddress"));
+            Nodes     : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Policy.Doc,
+                 XPath => "/system/kernel/memory/cpu[@id='" & ID_Str
+                 & "']/memory");
          begin
-            Nodes := McKae.XML.XPath.XIA.XPath_Query
-              (N     => Policy.Doc,
-               XPath => "/system/memory/memory[@name='kernel_" & ID_Str & "|pt"
-               & "']/file[@format='pt']/@filename");
-            Filename := To_Unbounded_String
-              (DOM.Core.Nodes.Node_Value
-                 (N => DOM.Core.Nodes.Item (List  => Nodes,
-                                            Index => 0)));
-
-            Nodes := McKae.XML.XPath.XIA.XPath_Query
-              (N     => Policy.Doc,
-               XPath => "/system/memory/memory[@name='kernel_" & ID_Str & "|pt"
-               & "']/@physicalAddress");
-            PML4_Addr := Interfaces.Unsigned_64'Value
-              (DOM.Core.Nodes.Node_Value
-                 (N => DOM.Core.Nodes.Item (List  => Nodes,
-                                            Index => 0)));
-
-            Nodes := McKae.XML.XPath.XIA.XPath_Query
-              (N     => Policy.Doc,
-               XPath => "/system/kernel/memory/cpu[@id='" & ID_Str
-               & "']/memory");
-
             Mulog.Log (Msg => "Writing kernel pagetable of CPU" & I'Img
-                       & " to '" & Output_Dir
-                       & "/" & To_String (Filename) & "'");
+                       & " to '" & Output_Dir & "/" & Filename & "'");
             Write_Pagetable
               (Policy       => Policy,
                Memory       => Nodes,
                Pml4_Address => PML4_Addr,
-               Filename     => Output_Dir & "/" & To_String (Filename),
+               Filename     => Output_Dir & "/" & Filename,
                PT_Type      => IA32e);
          end;
       end loop;
@@ -146,9 +134,7 @@ is
       PD   : Paging.PD_Table_Type   := Paging.Null_PD_Table;
       PT   : Paging.Page_Table_Type := Paging.Null_Page_Table;
 
-      Logical_Mem   : DOM.Core.Node;
-      Physical_Mem  : DOM.Core.Node;
-      Physical_Name : Unbounded_String;
+      Logical_Mem : DOM.Core.Node;
 
       --  Add memory region with given attributes to pagetable.
       procedure Add_Memory_Region
@@ -351,23 +337,23 @@ is
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
          Logical_Mem := DOM.Core.Nodes.Item
-              (List  => Memory,
-               Index => I);
-         Physical_Name := To_Unbounded_String (DOM.Core.Elements.Get_Attribute
-           (Elem => DOM.Core.Nodes.Item
-              (List  => DOM.Core.Elements.Get_Elements_By_Tag_Name
-                 (Elem => Logical_Mem,
-                  Name => "physical"),
-               Index => 0),
-            Name => "name"));
-         Physical_Mem := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Policy.Doc,
-               XPath => "/system/memory/memory[@name='"
-               & To_String (Physical_Name) & "']"),
-            Index => 0);
+           (List  => Memory,
+            Index => I);
 
          declare
+            Physical_Name : constant String
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Logical_Mem,
+                 XPath => "physical",
+                 Name  => "name");
+            Physical_Mem  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => McKae.XML.XPath.XIA.XPath_Query
+                     (N     => Policy.Doc,
+                      XPath => "/system/memory/memory[@name='" & Physical_Name
+                      & "']"),
+                 Index => 0);
+
             PMA     : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
                 (DOM.Core.Elements.Get_Attribute
@@ -400,9 +386,10 @@ is
                       Name => "caching"));
          begin
             Mulog.Log (Msg => "Adding region "
-                       & DOM.Core.Elements.Get_Attribute (Elem => Logical_Mem,
-                                                          Name => "logical")
-                       & "[" & To_String (Physical_Name) & "]");
+                       & DOM.Core.Elements.Get_Attribute
+                         (Elem => Logical_Mem,
+                          Name => "logical")
+                       & "[" & Physical_Name & "]");
             Add_Memory_Region (Physical_Address => PMA,
                                Virtual_Address  => VMA,
                                Size             => Size,
@@ -435,60 +422,48 @@ is
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
-            Name : constant String := DOM.Core.Elements.Get_Attribute
+            Name      : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => DOM.Core.Nodes.Item (List  => Subjects,
                                             Index => I),
                Name => "name");
+            Filename  : constant String := Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/memory/memory[@name='" & Name & "|pt']/"
+               & "file[@format='pt']",
+               Name  => "filename");
+            PML4_Addr : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (Muxml.Utils.Get_Attribute
+                     (Doc   => Policy.Doc,
+                      XPath => "/system/memory/memory[@name='" & Name
+                      & "|pt']",
+                      Name  => "physicalAddress"));
+            Nodes     : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => DOM.Core.Nodes.Item
+                     (List  => Subjects,
+                      Index => I),
+                 XPath => "memory/memory");
 
-            Nodes     : DOM.Core.Node_List;
-            Filename  : Unbounded_String;
-            PML4_Addr : Interfaces.Unsigned_64;
-            Paging    : Paging_Type;
+            Paging : Paging_Type;
          begin
-            Nodes := McKae.XML.XPath.XIA.XPath_Query
-              (N     => DOM.Core.Nodes.Item (List  => Subjects,
+            if Muxml.Utils.Get_Element_Value
+              (Doc   => DOM.Core.Nodes.Item (List  => Subjects,
                                              Index => I),
-               XPath => "vcpu/vmx/controls/proc2/EnableEPT/text()");
-            if DOM.Core.Nodes.Node_Value
-              (N => DOM.Core.Nodes.Item (List  => Nodes,
-                                         Index => 0)) = "1"
+               XPath => "vcpu/vmx/controls/proc2/EnableEPT") = "1"
             then
                Paging := EPT;
             else
                Paging := IA32e;
             end if;
 
-            Nodes := McKae.XML.XPath.XIA.XPath_Query
-              (N     => Policy.Doc,
-               XPath => "/system/memory/memory[@name='" & Name & "|pt']/"
-               & "file[@format='pt']/@filename");
-            Filename := To_Unbounded_String
-              (DOM.Core.Nodes.Node_Value
-                 (N => DOM.Core.Nodes.Item (List  => Nodes,
-                                            Index => 0)));
-
-            Nodes := McKae.XML.XPath.XIA.XPath_Query
-              (N     => Policy.Doc,
-               XPath => "/system/memory/memory[@name='" & Name & "|pt']/"
-               & "@physicalAddress");
-            PML4_Addr := Interfaces.Unsigned_64'Value
-              (DOM.Core.Nodes.Node_Value
-                 (N => DOM.Core.Nodes.Item (List  => Nodes,
-                                            Index => 0)));
-
-            Nodes := McKae.XML.XPath.XIA.XPath_Query
-              (N     => DOM.Core.Nodes.Item (List  => Subjects,
-                                         Index => I),
-               XPath => "memory/memory");
-
             Mulog.Log (Msg => "Writing " & Paging'Img & " pagetable of "
-                       & Name & " to '"
-                       & Output_Dir & "/" & To_String (Filename) & "'");
+                       & Name & " to '" & Output_Dir & "/" & Filename & "'");
             Write_Pagetable
               (Policy       => Policy,
                Memory       => Nodes,
                Pml4_Address => PML4_Addr,
-               Filename     => Output_Dir & "/" & To_String (Filename),
+               Filename     => Output_Dir & "/" & Filename,
                PT_Type      => Paging);
          end;
       end loop;

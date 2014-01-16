@@ -89,7 +89,6 @@ td {
    display: inline-block;
 }
 
-
 .logo {
    float: left;
    margin-left: 1.5em;
@@ -196,7 +195,6 @@ pre {
    line-height: 1.8;
    background-color: rgba(105, 180, 249, 0.3);
    padding: 1em 1em;
-   max-width: 95%;
    border-radius: 10px;
    overflow: hidden;
 }

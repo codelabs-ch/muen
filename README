@@ -100,12 +100,15 @@ environment listed in the following table.
 | Intel AMT SoL client | amtterm (>= commit 0ece513...)
 |===================================================================
 
-Install the packages needed to build Muen:
+Install the Debian packages needed to build Muen:
 
   $ sudo apt-get install binutils-dev git-core libc6-dev-i386 xorriso zlib1g-dev
 
-The GNAT GPL compiler and SPARK binaries must be present in the `PATH`. It is
-assumed that they are installed below `/opt`:
+The Ada and SPARK packages currently available in Debian wheezy are too old to
+build Muen. GNAT GPL 2013 and SPARK 2012 from AdaCore's <<libre>> site must be
+installed instead. Extend your `PATH` to make the GPL compiler and tools
+visible to the Muen build system (assuming that they are installed below
+`/opt`):
 
   $ export PATH=/opt/gnat/bin:/opt/spark/bin:$PATH
 
@@ -211,6 +214,7 @@ References
 - [[[bochs]]] Bochs IA-32 Emulator, http://bochs.sourceforge.net/
 - [[[ipxe]]]  iPXE boot firmware, http://ipxe.org/
 - [[[amt]]]   Intel AMT SoL client + tools, http://www.kraxel.org/cgit/amtterm/
+- [[[libre]]] AdaCore Libre, http://libre.adacore.com/download/
 
 
 License

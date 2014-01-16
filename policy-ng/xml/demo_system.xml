@@ -1,0 +1,540 @@
+<?xml version="1.0"?>
+<system>
+	<platform>
+		<processor logicalCpus="2" speed="50" vmxTimerRate="0"/>
+		<memory>
+			<memoryBlock name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#" caching="WB"/>
+		</memory>
+		<device name="serial" shared="false">
+			<ioPort name="port1" start="16#03f8#" end="16#03ff#"/>
+		</device>
+		<device name="vga" shared="false">
+			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#1000#" caching="WC"/>
+			<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
+		</device>
+		<device name="port80" shared="true">
+			<ioPort name="ports" start="16#0080#" end="16#0080#"/>
+		</device>
+	</platform>
+
+	<memory>
+		<memory name="ioapic" physicalAddress="16#fec0_0000#" size="16#1000#" caching="UC"/>
+		<memory name="vga" physicalAddress="16#000b_8000#" size="16#1000#" caching="WC"/>
+
+		<memory name="trampoline" physicalAddress="16#0000#" size="16#1000#" caching="WB"/>
+		<memory name="kernel_0|vmxon" physicalAddress="16#1000#" size="16#1000#" caching="WB"/>
+		<memory name="kernel_1|vmxon" physicalAddress="16#2000#" size="16#1000#" caching="WB"/>
+
+		<memory name="tau0|vmcs" physicalAddress="16#5000#" size="16#1000#" caching="WB"/>
+		<memory name="time|vmcs" physicalAddress="16#6000#" size="16#1000#" caching="WB"/>
+
+		<memory name="subject_states" physicalAddress="16#001e_0000#" size="16#5000#" caching="WB"/>
+
+		<memory name="kernel_text_data" physicalAddress="16#0010_0000#" size="16#0001_3000#" caching="WB"/>
+		<memory name="kernel_ro" physicalAddress="16#0011_f000#" size="16#a000#" caching="WB"/>
+		<memory name="kernel_stack_0" physicalAddress="16#0011_3000#" size="16#2000#" caching="WB"/>
+		<memory name="kernel_stack_1" physicalAddress="16#0011_5000#" size="16#2000#" caching="WB"/>
+		<memory name="kernel_store_0" physicalAddress="16#0011_b000#" size="16#1000#" caching="WB"/>
+		<memory name="kernel_store_1" physicalAddress="16#0011_c000#" size="16#1000#" caching="WB"/>
+		<memory name="sys_interface" physicalAddress="16#001f_f000#" size="16#1000#" caching="WB"/>
+		<memory name="kernel_0|pt" physicalAddress="16#0020_0000#" size="16#4000#" caching="WB">
+			<file format="pt" filename="kernel_pt_0" offset="16#0000#"/>
+		</memory>
+		<memory name="kernel_1|pt" physicalAddress="16#0020_4000#" size="16#4000#" caching="WB">
+			<file format="pt" filename="kernel_pt_1" offset="16#0000#"/>
+		</memory>
+
+		<!-- tau0 subject -->
+		<memory name="tau0|pt" physicalAddress="16#0021_0000#" size="16#4000#" caching="WB">
+			<file format="pt" filename="tau0_pt" offset="16#0000#"/>
+		</memory>
+		<memory name="tau0|iobm" physicalAddress="16#0021_4000#" size="16#2000#" caching="WB">
+			<file format="iobm" filename="tau0_iobm" offset="16#0000#"/>
+		</memory>
+		<memory name="tau0|msrbm" physicalAddress="16#0021_6000#" size="16#1000#" caching="WB">
+			<file format="msrbm" filename="tau0_msrbm" offset="16#0000#"/>
+		</memory>
+		<memory name="tau0|bin" physicalAddress="16#0021_7000#" size="16#0001_4000#" caching="WB">
+			<file format="elf" filename="tau0" offset="16#0000#"/>
+		</memory>
+
+		<!-- time subject -->
+		<memory name="time|pt" physicalAddress="16#0027_0000#" size="16#4000#" caching="WB">
+			<file format="pt" filename="time_pt" offset="16#0000#"/>
+		</memory>
+		<memory name="time|iobm" physicalAddress="16#0027_4000#" size="16#2000#" caching="WB">
+			<file format="iobm" filename="time_iobm" offset="16#0000#"/>
+		</memory>
+		<memory name="time|msrbm" physicalAddress="16#0027_6000#" size="16#1000#" caching="WB">
+			<file format="msrbm" filename="time_msrbm" offset="16#0000#"/>
+		</memory>
+		<memory name="time|bin" physicalAddress="16#0027_7000#" size="16#0001_4000#" caching="WB">
+			<file format="elf" filename="time" offset="16#0000#"/>
+		</memory>
+
+		<!-- channels -->
+		<memory name="time_channel" physicalAddress="16#0029_e000#" size="16#1000#" caching="WB"/>
+		<memory name="time_output" physicalAddress="16#0030_1000#" size="16#1000#" caching="WB"/>
+	</memory>
+
+	<events/>
+
+	<kernel>
+		<memory>
+			<cpu id="0">
+				<memory logical="ioapic" writable="true" executable="false" virtualAddress="16#001f_c000#">
+					<physical name="ioapic"/>
+				</memory>
+
+				<memory logical="text" writable="true" executable="true" virtualAddress="16#0010_0000#">
+					<physical name="kernel_text_data"/>
+				</memory>
+				<memory logical="ro" writable="false" executable="false" virtualAddress="16#0011_f000#">
+					<physical name="kernel_ro"/>
+				</memory>
+				<memory logical="stack" writable="true" executable="false" virtualAddress="16#0011_3000#">
+					<physical name="kernel_stack_0"/>
+				</memory>
+				<memory logical="store" writable="true" executable="false" virtualAddress="16#0011_6000#">
+					<physical name="kernel_store_0"/>
+				</memory>
+				<memory logical="subject_states" writable="true" executable="false" virtualAddress="16#001e_0000#">
+					<physical name="subject_states"/>
+				</memory>
+				<memory logical="tau0_interface" writable="false" executable="false" virtualAddress="16#001f_f000#">
+					<physical name="sys_interface"/>
+				</memory>
+			</cpu>
+			<cpu id="1">
+				<memory logical="ioapic" writable="true" executable="false" virtualAddress="16#001f_c000#">
+					<physical name="ioapic"/>
+				</memory>
+
+				<memory logical="text" writable="true" executable="true" virtualAddress="16#0010_0000#">
+					<physical name="kernel_text_data"/>
+				</memory>
+				<memory logical="ro" writable="false" executable="false" virtualAddress="16#0011_f000#">
+					<physical name="kernel_ro"/>
+				</memory>
+				<memory logical="stack" writable="true" executable="false" virtualAddress="16#0011_3000#">
+					<physical name="kernel_stack_1"/>
+				</memory>
+				<memory logical="store" writable="true" executable="false" virtualAddress="16#0011_6000#">
+					<physical name="kernel_store_1"/>
+				</memory>
+				<memory logical="subject_states" writable="true" executable="false" virtualAddress="16#001e_0000#">
+					<physical name="subject_states"/>
+				</memory>
+				<memory logical="tau0_interface" writable="false" executable="false" virtualAddress="16#001f_f000#">
+					<physical name="sys_interface"/>
+				</memory>
+			</cpu>
+		</memory>
+		<devices>
+			<device logical="log" physical="debugconsole">
+				<ioPort logical="ports" physical="serial" start="16#50b0#" end="16#50b8#"/>
+			</device>
+		</devices>
+	</kernel>
+
+	<subjects>
+		<subject id="0" name="tau0" cpu="0">
+			<vcpu>
+				<vmx>
+					<controls>
+						<pin>
+							<ExternalInterruptExiting>1</ExternalInterruptExiting>
+							<NMIExiting>1</NMIExiting>
+							<VirtualNMIs>0</VirtualNMIs>
+							<ActivateVMXTimer>1</ActivateVMXTimer>
+							<ProcessPostedInterrupts>0</ProcessPostedInterrupts>
+						</pin>
+						<proc>
+							<InterruptWindowExiting>0</InterruptWindowExiting>
+							<UseTSCOffsetting>0</UseTSCOffsetting>
+							<HLTExiting>0</HLTExiting>
+							<INVLPGExiting>1</INVLPGExiting>
+							<MWAITExiting>1</MWAITExiting>
+							<RDPMCExiting>1</RDPMCExiting>
+							<RDTSCExiting>1</RDTSCExiting>
+							<CR3LoadExiting>1</CR3LoadExiting>
+							<CR3StoreExiting>1</CR3StoreExiting>
+							<CR8LoadExiting>1</CR8LoadExiting>
+							<CR8StoreExiting>1</CR8StoreExiting>
+							<UseTPRShadow>0</UseTPRShadow>
+							<NMIWindowExiting>0</NMIWindowExiting>
+							<MOVDRExiting>1</MOVDRExiting>
+							<UnconditionalIOExiting>0</UnconditionalIOExiting>
+							<UseIOBitmaps>1</UseIOBitmaps>
+							<MonitorTrapFlag>0</MonitorTrapFlag>
+							<UseMSRBitmaps>1</UseMSRBitmaps>
+							<MONITORExiting>1</MONITORExiting>
+							<PAUSEExiting>0</PAUSEExiting>
+							<Activate2ndaryControls>1</Activate2ndaryControls>
+						</proc>
+						<proc2>
+							<VirtualAPICAccesses>0</VirtualAPICAccesses>
+							<EnableEPT>0</EnableEPT>
+							<DescriptorTableExiting>0</DescriptorTableExiting>
+							<EnableRDTSCP>0</EnableRDTSCP>
+							<Virtualizex2APICMode>0</Virtualizex2APICMode>
+							<EnableVPID>0</EnableVPID>
+							<WBINVDExiting>1</WBINVDExiting>
+							<UnrestrictedGuest>0</UnrestrictedGuest>
+							<APICRegisterVirtualization>0</APICRegisterVirtualization>
+							<VirtualInterruptDelivery>0</VirtualInterruptDelivery>
+							<PAUSELoopExiting>0</PAUSELoopExiting>
+							<RDRANDExiting>0</RDRANDExiting>
+							<EnableINVPCID>0</EnableINVPCID>
+							<EnableVMFunctions>0</EnableVMFunctions>
+						</proc2>
+						<entry>
+							<LoadDebugControls>0</LoadDebugControls>
+							<IA32eModeGuest>1</IA32eModeGuest>
+							<EntryToSMM>0</EntryToSMM>
+							<DeactiveDualMonitorTreatment>0</DeactiveDualMonitorTreatment>
+							<LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
+							<LoadIA32PAT>0</LoadIA32PAT>
+							<LoadIA32EFER>0</LoadIA32EFER>
+						</entry>
+						<exit>
+							<SaveDebugControls>0</SaveDebugControls>
+							<HostAddressspaceSize>1</HostAddressspaceSize>
+							<LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
+							<AckInterruptOnExit>1</AckInterruptOnExit>
+							<SaveIA32PAT>0</SaveIA32PAT>
+							<LoadIA32PAT>0</LoadIA32PAT>
+							<SaveIA32EFER>0</SaveIA32EFER>
+							<LoadIA32EFER>0</LoadIA32EFER>
+							<SaveVMXTimerValue>1</SaveVMXTimerValue>
+						</exit>
+					</controls>
+					<masks>
+						<exception>
+							<DivideError>1</DivideError>
+							<NMI>1</NMI>
+							<Breakpoint>1</Breakpoint>
+							<Overflow>1</Overflow>
+							<BOUNDRangeExceeded>1</BOUNDRangeExceeded>
+							<InvalidOpcode>1</InvalidOpcode>
+							<DeviceNotAvailable>1</DeviceNotAvailable>
+							<DoubleFault>1</DoubleFault>
+							<CoprocessorSegmentOverrun>1</CoprocessorSegmentOverrun>
+							<InvalidTSS>1</InvalidTSS>
+							<SegmentNotPresent>1</SegmentNotPresent>
+							<StackSegmentFault>1</StackSegmentFault>
+							<GeneralProtection>1</GeneralProtection>
+							<PageFault>1</PageFault>
+							<x87FPUFloatingPointError>1</x87FPUFloatingPointError>
+							<AlignmentCheck>1</AlignmentCheck>
+							<MachineCheck>1</MachineCheck>
+							<SIMDFloatingPointException>1</SIMDFloatingPointException>
+						</exception>
+						<cr0>
+							<ProtectionEnable>1</ProtectionEnable>
+							<MonitorCoprocessor>1</MonitorCoprocessor>
+							<Emulation>1</Emulation>
+							<TaskSwitched>1</TaskSwitched>
+							<ExtensionType>1</ExtensionType>
+							<NumericError>1</NumericError>
+							<WriteProtect>1</WriteProtect>
+							<AlignmentMask>1</AlignmentMask>
+							<NotWritethrough>1</NotWritethrough>
+							<CacheDisable>1</CacheDisable>
+							<Paging>1</Paging>
+						</cr0>
+						<cr4>
+							<Virtual8086>1</Virtual8086>
+							<ProtectedVirtualInts>1</ProtectedVirtualInts>
+							<TimeStampDisable>1</TimeStampDisable>
+							<DebuggingExtensions>1</DebuggingExtensions>
+							<PageSizeExtensions>1</PageSizeExtensions>
+							<PhysicalAddressExtension>1</PhysicalAddressExtension>
+							<MachineCheckEnable>1</MachineCheckEnable>
+							<PageGlobalEnable>1</PageGlobalEnable>
+							<PerfCounterEnable>1</PerfCounterEnable>
+							<OSSupportFXSAVE>1</OSSupportFXSAVE>
+							<OSSupportSIMDExceptions>1</OSSupportSIMDExceptions>
+							<VMXEnable>1</VMXEnable>
+							<SMXEnable>1</SMXEnable>
+							<FSGSBASEEnable>1</FSGSBASEEnable>
+							<PCIDEnable>1</PCIDEnable>
+							<XSAVEEnable>1</XSAVEEnable>
+							<SMEPEnable>1</SMEPEnable>
+						</cr4>
+					</masks>
+				</vmx>
+				<registers>
+					<gpr>
+						<rip>16#0000#</rip>
+						<rsp>16#5000#</rsp>
+						<!-- All GPRs have a value -->
+					</gpr>
+					<cr0>
+						<ProtectionEnable>1</ProtectionEnable>
+						<MonitorCoprocessor>0</MonitorCoprocessor>
+						<Emulation>1</Emulation>
+						<TaskSwitched>0</TaskSwitched>
+						<ExtensionType>1</ExtensionType>
+						<NumericError>1</NumericError>
+						<WriteProtect>1</WriteProtect>
+						<AlignmentMask>0</AlignmentMask>
+						<NotWritethrough>0</NotWritethrough>
+						<CacheDisable>0</CacheDisable>
+						<Paging>1</Paging>
+					</cr0>
+					<cr4>
+						<Virtual8086>0</Virtual8086>
+						<ProtectedVirtualInts>0</ProtectedVirtualInts>
+						<TimeStampDisable>0</TimeStampDisable>
+						<DebuggingExtensions>0</DebuggingExtensions>
+						<PageSizeExtensions>0</PageSizeExtensions>
+						<PhysicalAddressExtension>1</PhysicalAddressExtension>
+						<MachineCheckEnable>0</MachineCheckEnable>
+						<PageGlobalEnable>0</PageGlobalEnable>
+						<PerfCounterEnable>0</PerfCounterEnable>
+						<OSSupportFXSAVE>0</OSSupportFXSAVE>
+						<OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
+						<VMXEnable>1</VMXEnable>
+						<SMXEnable>0</SMXEnable>
+						<FSGSBASEEnable>0</FSGSBASEEnable>
+						<PCIDEnable>0</PCIDEnable>
+						<XSAVEEnable>0</XSAVEEnable>
+						<SMEPEnable>0</SMEPEnable>
+					</cr4>
+				</registers>
+				<segments>
+					<cs selector="16#0008#" base="16#0000#" limit="16#ffff#" access="16#a09b#"/>
+					<ds selector="16#0010#" base="16#0000#" limit="16#ffff#" access="16#c093#"/>
+					<!-- All segments must be specified -->
+				</segments>
+			</vcpu>
+			<bootparams/>
+			<memory>
+				<memory logical="text" virtualAddress="16#0000#" writable="true" executable="true">
+					<physical name="tau0|bin"/>
+				</memory>
+				<memory logical="sys_interface" virtualAddress="16#001f_f000#" writable="true" executable="false">
+					<physical name="sys_interface"/>
+				</memory>
+			</memory>
+			<devices>
+				<device logical="foodevice" physical="multiport">
+					<irq logical="dummy_remove_me" physical="irq" number="12"/>
+				</device>
+			</devices>
+			<events/>
+		</subject>
+
+		<subject id="1" name="time" cpu="1">
+			<vcpu>
+				<vmx>
+					<controls>
+						<pin>
+							<ExternalInterruptExiting>1</ExternalInterruptExiting>
+							<NMIExiting>1</NMIExiting>
+							<VirtualNMIs>0</VirtualNMIs>
+							<ActivateVMXTimer>1</ActivateVMXTimer>
+							<ProcessPostedInterrupts>0</ProcessPostedInterrupts>
+						</pin>
+						<proc>
+							<InterruptWindowExiting>0</InterruptWindowExiting>
+							<UseTSCOffsetting>0</UseTSCOffsetting>
+							<HLTExiting>0</HLTExiting>
+							<INVLPGExiting>1</INVLPGExiting>
+							<MWAITExiting>1</MWAITExiting>
+							<RDPMCExiting>1</RDPMCExiting>
+							<RDTSCExiting>1</RDTSCExiting>
+							<CR3LoadExiting>1</CR3LoadExiting>
+							<CR3StoreExiting>1</CR3StoreExiting>
+							<CR8LoadExiting>1</CR8LoadExiting>
+							<CR8StoreExiting>1</CR8StoreExiting>
+							<UseTPRShadow>0</UseTPRShadow>
+							<NMIWindowExiting>0</NMIWindowExiting>
+							<MOVDRExiting>1</MOVDRExiting>
+							<UnconditionalIOExiting>0</UnconditionalIOExiting>
+							<UseIOBitmaps>1</UseIOBitmaps>
+							<MonitorTrapFlag>0</MonitorTrapFlag>
+							<UseMSRBitmaps>1</UseMSRBitmaps>
+							<MONITORExiting>1</MONITORExiting>
+							<PAUSEExiting>0</PAUSEExiting>
+							<Activate2ndaryControls>1</Activate2ndaryControls>
+						</proc>
+						<proc2>
+							<VirtualAPICAccesses>0</VirtualAPICAccesses>
+							<EnableEPT>0</EnableEPT>
+							<DescriptorTableExiting>0</DescriptorTableExiting>
+							<EnableRDTSCP>0</EnableRDTSCP>
+							<Virtualizex2APICMode>0</Virtualizex2APICMode>
+							<EnableVPID>0</EnableVPID>
+							<WBINVDExiting>1</WBINVDExiting>
+							<UnrestrictedGuest>0</UnrestrictedGuest>
+							<APICRegisterVirtualization>0</APICRegisterVirtualization>
+							<VirtualInterruptDelivery>0</VirtualInterruptDelivery>
+							<PAUSELoopExiting>0</PAUSELoopExiting>
+							<RDRANDExiting>0</RDRANDExiting>
+							<EnableINVPCID>0</EnableINVPCID>
+							<EnableVMFunctions>0</EnableVMFunctions>
+						</proc2>
+						<entry>
+							<LoadDebugControls>0</LoadDebugControls>
+							<IA32eModeGuest>1</IA32eModeGuest>
+							<EntryToSMM>0</EntryToSMM>
+							<DeactiveDualMonitorTreatment>0</DeactiveDualMonitorTreatment>
+							<LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
+							<LoadIA32PAT>0</LoadIA32PAT>
+							<LoadIA32EFER>0</LoadIA32EFER>
+						</entry>
+						<exit>
+							<SaveDebugControls>0</SaveDebugControls>
+							<HostAddressspaceSize>1</HostAddressspaceSize>
+							<LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
+							<AckInterruptOnExit>1</AckInterruptOnExit>
+							<SaveIA32PAT>0</SaveIA32PAT>
+							<LoadIA32PAT>0</LoadIA32PAT>
+							<SaveIA32EFER>0</SaveIA32EFER>
+							<LoadIA32EFER>0</LoadIA32EFER>
+							<SaveVMXTimerValue>1</SaveVMXTimerValue>
+						</exit>
+					</controls>
+					<masks>
+						<exception>
+							<DivideError>1</DivideError>
+							<NMI>1</NMI>
+							<Breakpoint>1</Breakpoint>
+							<Overflow>1</Overflow>
+							<BOUNDRangeExceeded>1</BOUNDRangeExceeded>
+							<InvalidOpcode>1</InvalidOpcode>
+							<DeviceNotAvailable>1</DeviceNotAvailable>
+							<DoubleFault>1</DoubleFault>
+							<CoprocessorSegmentOverrun>1</CoprocessorSegmentOverrun>
+							<InvalidTSS>1</InvalidTSS>
+							<SegmentNotPresent>1</SegmentNotPresent>
+							<StackSegmentFault>1</StackSegmentFault>
+							<GeneralProtection>1</GeneralProtection>
+							<PageFault>1</PageFault>
+							<x87FPUFloatingPointError>1</x87FPUFloatingPointError>
+							<AlignmentCheck>1</AlignmentCheck>
+							<MachineCheck>1</MachineCheck>
+							<SIMDFloatingPointException>1</SIMDFloatingPointException>
+						</exception>
+						<cr0>
+							<ProtectionEnable>1</ProtectionEnable>
+							<MonitorCoprocessor>1</MonitorCoprocessor>
+							<Emulation>1</Emulation>
+							<TaskSwitched>1</TaskSwitched>
+							<ExtensionType>1</ExtensionType>
+							<NumericError>1</NumericError>
+							<WriteProtect>1</WriteProtect>
+							<AlignmentMask>1</AlignmentMask>
+							<NotWritethrough>1</NotWritethrough>
+							<CacheDisable>1</CacheDisable>
+							<Paging>1</Paging>
+						</cr0>
+						<cr4>
+							<Virtual8086>1</Virtual8086>
+							<ProtectedVirtualInts>1</ProtectedVirtualInts>
+							<TimeStampDisable>1</TimeStampDisable>
+							<DebuggingExtensions>1</DebuggingExtensions>
+							<PageSizeExtensions>1</PageSizeExtensions>
+							<PhysicalAddressExtension>1</PhysicalAddressExtension>
+							<MachineCheckEnable>1</MachineCheckEnable>
+							<PageGlobalEnable>1</PageGlobalEnable>
+							<PerfCounterEnable>1</PerfCounterEnable>
+							<OSSupportFXSAVE>1</OSSupportFXSAVE>
+							<OSSupportSIMDExceptions>1</OSSupportSIMDExceptions>
+							<VMXEnable>1</VMXEnable>
+							<SMXEnable>1</SMXEnable>
+							<FSGSBASEEnable>1</FSGSBASEEnable>
+							<PCIDEnable>1</PCIDEnable>
+							<XSAVEEnable>1</XSAVEEnable>
+							<SMEPEnable>1</SMEPEnable>
+						</cr4>
+					</masks>
+				</vmx>
+				<registers>
+					<gpr>
+						<rip>16#0000#</rip>
+						<rsp>16#5000#</rsp>
+						<!-- All GPRs have a value -->
+					</gpr>
+					<cr0>
+						<ProtectionEnable>1</ProtectionEnable>
+						<MonitorCoprocessor>0</MonitorCoprocessor>
+						<Emulation>1</Emulation>
+						<TaskSwitched>0</TaskSwitched>
+						<ExtensionType>1</ExtensionType>
+						<NumericError>1</NumericError>
+						<WriteProtect>1</WriteProtect>
+						<AlignmentMask>0</AlignmentMask>
+						<NotWritethrough>0</NotWritethrough>
+						<CacheDisable>0</CacheDisable>
+						<Paging>1</Paging>
+					</cr0>
+					<cr4>
+						<Virtual8086>0</Virtual8086>
+						<ProtectedVirtualInts>0</ProtectedVirtualInts>
+						<TimeStampDisable>0</TimeStampDisable>
+						<DebuggingExtensions>0</DebuggingExtensions>
+						<PageSizeExtensions>0</PageSizeExtensions>
+						<PhysicalAddressExtension>1</PhysicalAddressExtension>
+						<MachineCheckEnable>0</MachineCheckEnable>
+						<PageGlobalEnable>0</PageGlobalEnable>
+						<PerfCounterEnable>0</PerfCounterEnable>
+						<OSSupportFXSAVE>0</OSSupportFXSAVE>
+						<OSSupportSIMDExceptions>0</OSSupportSIMDExceptions>
+						<VMXEnable>1</VMXEnable>
+						<SMXEnable>0</SMXEnable>
+						<FSGSBASEEnable>0</FSGSBASEEnable>
+						<PCIDEnable>0</PCIDEnable>
+						<XSAVEEnable>0</XSAVEEnable>
+						<SMEPEnable>0</SMEPEnable>
+					</cr4>
+				</registers>
+				<segments>
+					<cs selector="16#0008#" base="16#0000#" limit="16#ffff#" access="16#a09b#"/>
+					<ds selector="16#0010#" base="16#0000#" limit="16#ffff#" access="16#c093#"/>
+					<!-- All segments must be specified -->
+				</segments>
+			</vcpu>
+			<bootparams/>
+			<memory>
+				<memory logical="text" virtualAddress="16#0000#" writable="true" executable="true">
+					<physical name="time|bin"/>
+				</memory>
+				<memory logical="time_channel" virtualAddress="16#0002_0000#" writable="true" executable="false">
+					<physical name="time_channel"/>
+				</memory>
+				<memory logical="time_output" virtualAddress="16#000b_8000#" writable="true" executable="false">
+					<physical name="time_output"/>
+				</memory>
+			</memory>
+			<devices>
+				<device logical="port80" physical="port80">
+					<ioPort logical="ports" physical="ports" start="16#0080#" end="16#0080#"/>
+				</device>
+			</devices>
+			<events/>
+		</subject>
+	</subjects>
+
+	<scheduling tickRate="10000">
+		<majorFrame>
+			<cpu>
+				<minorFrame subject="tau0" ticks="80"/>
+			</cpu>
+			<cpu>
+				<minorFrame subject="time" ticks="80"/>
+			</cpu>
+		</majorFrame>
+		<majorFrame>
+			<cpu>
+				<minorFrame subject="tau0" ticks="80"/>
+			</cpu>
+			<cpu>
+				<minorFrame subject="time" ticks="80"/>
+			</cpu>
+		</majorFrame>
+	</scheduling>
+
+</system>

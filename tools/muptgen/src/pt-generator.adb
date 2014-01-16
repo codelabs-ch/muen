@@ -134,26 +134,16 @@ is
       PD   : Paging.PD_Table_Type   := Paging.Null_PD_Table;
       PT   : Paging.Page_Table_Type := Paging.Null_Page_Table;
 
-      Logical_Mem : DOM.Core.Node;
-
-      --  Add memory region with given attributes to pagetable.
+      --  Add mapping of given logical to physical memory region to pagetable.
       procedure Add_Memory_Region
-        (Physical_Address : Interfaces.Unsigned_64;
-         Virtual_Address  : Interfaces.Unsigned_64;
-         Size             : Interfaces.Unsigned_64;
-         Caching_Type     : Paging.Caching_Type;
-         Writable         : Boolean;
-         Executable       : Boolean);
+        (Physical_Mem : DOM.Core.Node;
+         Logical_Mem  : DOM.Core.Node);
 
       ----------------------------------------------------------------------
 
       procedure Add_Memory_Region
-        (Physical_Address : Interfaces.Unsigned_64;
-         Virtual_Address  : Interfaces.Unsigned_64;
-         Size             : Interfaces.Unsigned_64;
-         Caching_Type     : Paging.Caching_Type;
-         Writable         : Boolean;
-         Executable       : Boolean)
+        (Physical_Mem : DOM.Core.Node;
+         Logical_Mem  : DOM.Core.Node)
       is
          use type Interfaces.Unsigned_64;
          use type Paging.PML4_Entry_Type;
@@ -161,6 +151,42 @@ is
          use type Paging.PD_Entry_Type;
          use type Paging.PT_Entry_Type;
          use type Paging.Table_Range;
+
+         Size          : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                  (Elem => Physical_Mem,
+                   Name => "size"));
+         Physical_Addr : Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                  (Elem => Physical_Mem,
+                   Name => "physicalAddress"));
+         Virt_Start    : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                  (Elem => Logical_Mem,
+                   Name => "virtualAddress"));
+         Virt_End      : constant Interfaces.Unsigned_64
+           := Virt_Start + Size - 1;
+         Writable      : constant Boolean
+           := Boolean'Value
+             (DOM.Core.Elements.Get_Attribute
+                  (Elem => Logical_Mem,
+                   Name => "writable"));
+         Executable    : constant Boolean
+           := Boolean'Value
+             (DOM.Core.Elements.Get_Attribute
+                  (Elem => Logical_Mem,
+                   Name => "executable"));
+         Caching       : constant Paging.Caching_Type
+           := Paging.Caching_Type'Value
+             (DOM.Core.Elements.Get_Attribute
+                  (Elem => Physical_Mem,
+                   Name => "caching"));
+
+         Is_PDPT_Page : constant Boolean := Size mod Paging.PDPT_Page_Size = 0;
+         Is_PD_Page   : constant Boolean := Size mod Paging.PD_Page_Size = 0;
 
          PML4_Idx_Start, PML4_Idx_End : Paging.Table_Range;
          PDPT_Idx_Start, PDPT_Idx_End : Paging.Table_Range;
@@ -173,14 +199,6 @@ is
          PD_Addr   : Interfaces.Unsigned_64;
          --  Physical start address of PT paging structure(s).
          PT_Addr   : Interfaces.Unsigned_64;
-
-         Physical_Addr : Interfaces.Unsigned_64          := Physical_Address;
-         Virt_Start    : constant Interfaces.Unsigned_64 := Virtual_Address;
-         Virt_End      : constant Interfaces.Unsigned_64
-           := Virt_Start + Size - 1;
-
-         Is_PDPT_Page : constant Boolean := Size mod Paging.PDPT_Page_Size = 0;
-         Is_PD_Page   : constant Boolean := Size mod Paging.PD_Page_Size = 0;
       begin
          Paging.Get_Indexes (Address    => Virt_Start,
                              PML4_Index => PML4_Idx_Start,
@@ -250,7 +268,7 @@ is
                         User_Access  => True,
                         Map_Page     => Is_PDPT_Page,
                         Global       => False,
-                        Memory_Type  => Caching_Type,
+                        Memory_Type  => Caching,
                         Exec_Disable => Is_PDPT_Page and not Executable);
                   when EPT =>
                      PDPT (Idx) := Paging.EPT.Create_PDPT_Entry
@@ -260,7 +278,7 @@ is
                         Executable  => not Is_PDPT_Page or Executable,
                         Map_Page    => Is_PDPT_Page,
                         Ignore_PAT  => True,
-                        Memory_Type => Caching_Type);
+                        Memory_Type => Caching);
                end case;
             end if;
          end loop;
@@ -289,7 +307,7 @@ is
                         User_Access  => True,
                         Map_Page     => Is_PD_Page,
                         Global       => False,
-                        Memory_Type  => Caching_Type,
+                        Memory_Type  => Caching,
                         Exec_Disable => Is_PD_Page and not Executable);
                   when EPT =>
                      PD (Idx) := Paging.EPT.Create_PD_Entry
@@ -299,7 +317,7 @@ is
                         Executable  => not Is_PD_Page or Executable,
                         Map_Page    => Is_PD_Page,
                         Ignore_PAT  => True,
-                        Memory_Type => Caching_Type);
+                        Memory_Type => Caching);
                end case;
             end if;
          end loop;
@@ -317,7 +335,7 @@ is
                         Writable     => Writable,
                         User_Access  => True,
                         Global       => False,
-                        Memory_Type  => Caching_Type,
+                        Memory_Type  => Caching,
                         Exec_Disable => not Executable);
                   when EPT =>
                      PT (Idx) := Paging.EPT.Create_PT_Entry
@@ -327,7 +345,7 @@ is
                         Executable  => Executable,
                         Map_Page    => True,
                         Ignore_PAT  => True,
-                        Memory_Type => Caching_Type);
+                        Memory_Type => Caching);
                end case;
             end if;
 
@@ -336,11 +354,15 @@ is
       end Add_Memory_Region;
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
-         Logical_Mem := DOM.Core.Nodes.Item
-           (List  => Memory,
-            Index => I);
-
          declare
+            Logical_Mem   : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Memory,
+                 Index => I);
+            Logical_Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Logical_Mem,
+                 Name => "logical");
             Physical_Name : constant String
               := Muxml.Utils.Get_Attribute
                 (Doc   => Logical_Mem,
@@ -353,49 +375,11 @@ is
                       XPath => "/system/memory/memory[@name='" & Physical_Name
                       & "']"),
                  Index => 0);
-
-            PMA     : constant Interfaces.Unsigned_64
-              := Interfaces.Unsigned_64'Value
-                (DOM.Core.Elements.Get_Attribute
-                     (Elem => Physical_Mem,
-                      Name => "physicalAddress"));
-            VMA     : constant Interfaces.Unsigned_64
-              := Interfaces.Unsigned_64'Value
-                (DOM.Core.Elements.Get_Attribute
-                     (Elem => Logical_Mem,
-                      Name => "virtualAddress"));
-            Size    : constant Interfaces.Unsigned_64
-              := Interfaces.Unsigned_64'Value
-                (DOM.Core.Elements.Get_Attribute
-                     (Elem => Physical_Mem,
-                      Name => "size"));
-            Write   : constant Boolean
-              := Boolean'Value
-                (DOM.Core.Elements.Get_Attribute
-                     (Elem => Logical_Mem,
-                      Name => "writable"));
-            Execute : constant Boolean
-              := Boolean'Value
-                (DOM.Core.Elements.Get_Attribute
-                     (Elem => Logical_Mem,
-                      Name => "executable"));
-            Caching : constant Paging.Caching_Type
-              := Paging.Caching_Type'Value
-                (DOM.Core.Elements.Get_Attribute
-                     (Elem => Physical_Mem,
-                      Name => "caching"));
          begin
-            Mulog.Log (Msg => "Adding region "
-                       & DOM.Core.Elements.Get_Attribute
-                         (Elem => Logical_Mem,
-                          Name => "logical")
+            Mulog.Log (Msg => "Adding region " & Logical_Name
                        & "[" & Physical_Name & "]");
-            Add_Memory_Region (Physical_Address => PMA,
-                               Virtual_Address  => VMA,
-                               Size             => Size,
-                               Caching_Type     => Caching,
-                               Writable         => Write,
-                               Executable       => Execute);
+            Add_Memory_Region (Physical_Mem => Physical_Mem,
+                               Logical_Mem  => Logical_Mem);
          end;
       end loop;
 

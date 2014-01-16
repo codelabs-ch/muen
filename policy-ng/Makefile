@@ -5,7 +5,8 @@ BINS =                                \
 	$(TOP_DIR)/kernel/obj/kernel      \
 	$(TOP_DIR)/subjects/tau0/obj/tau0 \
 	$(TOP_DIR)/subjects/vt/obj/vt     \
-	$(TOP_DIR)/subjects/time/obj/time
+	$(TOP_DIR)/subjects/time/obj/time \
+	$(TOP_DIR)/subjects/sm/obj/sm
 
 GENS =            \
 	$(MUACPIGEN)  \

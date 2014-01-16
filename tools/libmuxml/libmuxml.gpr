@@ -18,6 +18,7 @@
 
 with "xmlada";
 
+with "../../contrib/projects/xia";
 with "../../config/shared";
 
 library project Libmuxml is

@@ -21,7 +21,7 @@ with Ada.Strings.Unbounded;
 with Ada.Command_Line;
 
 with Alog.Logger;
-with Alog.Facilities.File_Descriptor;
+pragma Elaborate_All (Alog.Logger);
 
 package body Mulog
 is

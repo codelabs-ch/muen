@@ -22,34 +22,10 @@ with "../libtest/libtest";
 
 with "muptgen";
 
-project Test_Muptgen is
-
-   Compiler_Switches := Shared.Ada_Compiler_Switches & "-gnat12";
-   Linker_Switches   := ();
+project Test_Muptgen extends "../tools.gpr" is
 
    for Source_Dirs use ("tests");
    for Object_Dir use "obj/" & Shared.Build;
    for Main use ("test_runner.adb");
-
-   case Shared.Build is
-      when "debug"    => Compiler_Switches := Compiler_Switches & "-gnatwale";
-      when "tests"    => Compiler_Switches := Compiler_Switches & "-gnatwal";
-      when "coverage" =>
-         Compiler_Switches := Compiler_Switches  & "-gnatwal"
-           & Shared.Cov_Compiler_Switches;
-         Linker_Switches := Linker_Switches & Shared.Cov_Linker_Switches;
-   end case;
-
-   package Compiler is
-      for Default_Switches ("Ada") use Compiler_Switches;
-   end Compiler;
-
-   package Linker is
-      for Default_Switches ("Ada") use Linker_Switches;
-   end Linker;
-
-   package Binder is
-      for Default_Switches ("Ada") use ("-E");
-   end Binder;
 
 end Test_Muptgen;

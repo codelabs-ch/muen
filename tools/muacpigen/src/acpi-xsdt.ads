@@ -18,7 +18,7 @@ is
 
    --  Write Extended System Description Table to file given by filename.
    procedure Write
-     (ACPI_Tables_Base : Interfaces.Unsigned_64;
-      Filename         : String);
+     (FADT_Address : Interfaces.Unsigned_64;
+      Filename     : String);
 
 end Acpi.XSDT;

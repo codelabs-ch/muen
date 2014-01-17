@@ -232,13 +232,13 @@
 				<memory logical="acpi_rsdp" virtualAddress="16#000e_0000#" writable="false" executable="false">
 					<physical name="linux|acpi_rsdp"/>
 				</memory>
-				<memory logical="acpi_xsdt" virtualAddress="16#000e_0024#" writable="false" executable="false">
-					<physical name="linux|acpi_xsdp"/>
+				<memory logical="acpi_xsdt" virtualAddress="16#000e_1000#" writable="false" executable="false">
+					<physical name="linux|acpi_xsdt"/>
 				</memory>
-				<memory logical="acpi_facp" virtualAddress="16#000e_0050#" writable="false" executable="false">
+				<memory logical="acpi_facp" virtualAddress="16#000e_2000#" writable="false" executable="false">
 					<physical name="linux|acpi_facp"/>
 				</memory>
-				<memory logical="acpi_dsdt" virtualAddress="16#000e_015c#" writable="false" executable="false">
+				<memory logical="acpi_dsdt" virtualAddress="16#000e_3000#" writable="false" executable="false">
 					<physical name="linux|acpi_dsdt"/>
 				</memory>
 			</memory>

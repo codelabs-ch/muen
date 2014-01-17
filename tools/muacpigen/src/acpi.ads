@@ -195,13 +195,4 @@ is
       type Table_T is private;
    function Checksum (Table : Table_T) return Interfaces.Unsigned_8;
 
-   -------------------------------------------------------------------------
-
-   XSDT_Offset : constant Interfaces.Unsigned_64
-     := Root_System_Description_Pointer'Size / 8;
-   FADT_Offset : constant Interfaces.Unsigned_64
-     := XSDT_Offset + Extended_System_Description_Table'Size / 8;
-   DSDT_Offset : constant Interfaces.Unsigned_64
-     := FADT_Offset + Fixed_ACPI_Description_Table'Size / 8;
-
 end Acpi;

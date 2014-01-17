@@ -23,8 +23,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Write
-     (ACPI_Tables_Base : Interfaces.Unsigned_64;
-      Filename         : String)
+     (XSDT_Address : Interfaces.Unsigned_64;
+      Filename     : String)
    is
       use Ada.Streams.Stream_IO;
       use type Interfaces.Unsigned_8;
@@ -45,7 +45,7 @@ is
          Revision          => 2,
          RsdtAddress       => 16#0000_0000#,
          Length            => 16#0000_0024#,
-         XsdtAddress       => ACPI_Tables_Base + XSDT_Offset,
+         XsdtAddress       => XSDT_Address,
          Extended_Checksum => 16#00#,
          Reserved          => (others => 16#00#));
 

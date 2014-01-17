@@ -64,20 +64,23 @@ is
                Mulog.Log (Msg => "Generating ACPI tables of subject '"
                           & Name & "'");
                declare
-                  Addrstr       : constant String
+                  XSDT_Name : constant String := Name & "|acpi_xsdt";
+                  FADT_Name : constant String := Name & "|acpi_facp";
+                  DSDT_Name : constant String := Name & "|acpi_dsdt";
+
+                  RSDP_Filename : constant String
+                    := Output_Dir & "/" & DOM.Core.Nodes.Node_Value
+                      (N => DOM.Core.Nodes.Item
+                           (List  => RSDP_File,
+                            Index => 0));
+
+                  XSDT_Addr     : constant String
                     := DOM.Core.Nodes.Node_Value
                       (N => DOM.Core.Nodes.Item
                            (List  => McKae.XML.XPath.XIA.XPath_Query
                                 (N     => Cur_Subj,
                                  XPath => "memory/memory/physical[@name='"
-                                 & RSDP_Name & "']/../@virtualAddress"),
-                            Index => 0));
-                  Base_Addr     : constant Interfaces.Unsigned_64
-                    := Interfaces.Unsigned_64'Value (Addrstr);
-                  RSDP_Filename : constant String
-                    := Output_Dir & "/" & DOM.Core.Nodes.Node_Value
-                      (N => DOM.Core.Nodes.Item
-                           (List  => RSDP_File,
+                                 & XSDT_Name & "']/../@virtualAddress"),
                             Index => 0));
                   XSDT_Filename : constant String
                     := Output_Dir & "/" & DOM.Core.Nodes.Node_Value
@@ -85,34 +88,57 @@ is
                            (List  => McKae.XML.XPath.XIA.XPath_Query
                                 (N     => Policy.Doc,
                                  XPath => "/system/memory/memory[@name='"
-                                 & Name & "|acpi_xsdt']/file[@format='"
+                                 & XSDT_Name & "']/file[@format='"
                                  & "acpi_xsdt']/@filename"),
                             Index => 0));
-                  FACP_Filename : constant String
+
+                  FADT_Addr     : constant String
+                    := DOM.Core.Nodes.Node_Value
+                      (N => DOM.Core.Nodes.Item
+                           (List  => McKae.XML.XPath.XIA.XPath_Query
+                                (N     => Cur_Subj,
+                                 XPath => "memory/memory/physical[@name='"
+                                 & FADT_Name & "']/../@virtualAddress"),
+                            Index => 0));
+                  FADT_Filename : constant String
                     := Output_Dir & "/" & DOM.Core.Nodes.Node_Value
                       (N => DOM.Core.Nodes.Item
                            (List  => McKae.XML.XPath.XIA.XPath_Query
                                 (N     => Policy.Doc,
                                  XPath => "/system/memory/memory[@name='"
-                                 & Name & "|acpi_facp']/file[@format='"
+                                 & FADT_Name & "']/file[@format='"
                                  & "acpi_facp']/@filename"),
                             Index => 0));
+
+                  DSDT_Addr : constant String
+                    := DOM.Core.Nodes.Node_Value
+                      (N => DOM.Core.Nodes.Item
+                           (List  => McKae.XML.XPath.XIA.XPath_Query
+                                (N     => Cur_Subj,
+                                 XPath => "memory/memory/physical[@name='"
+                                 & DSDT_Name & "']/../@virtualAddress"),
+                            Index => 0));
                begin
-                  Mulog.Log (Msg => "Writing RSDP with guest-physical address "
-                             & Addrstr & " to '" & RSDP_Filename & "'");
+                  Mulog.Log (Msg => "Writing RSDP with XSDT "
+                             & "guest-physical address " & XSDT_Addr
+                             & " to '" & RSDP_Filename & "'");
                   Acpi.RSDP.Write
-                    (ACPI_Tables_Base => Base_Addr,
-                     Filename         => RSDP_Filename);
+                    (XSDT_Address => Interfaces.Unsigned_64'Value (XSDT_Addr),
+                     Filename     => RSDP_Filename);
 
-                  Mulog.Log (Msg => "Writing XSDT to '" & XSDT_Filename & "'");
+                  Mulog.Log (Msg => "Writing XSDT table with FADT "
+                             & "guest-physical address " & FADT_Addr
+                             & " to '" & XSDT_Filename & "'");
                   Acpi.XSDT.Write
-                    (ACPI_Tables_Base => Base_Addr,
-                     Filename         => XSDT_Filename);
+                    (FADT_Address => Interfaces.Unsigned_64'Value (FADT_Addr),
+                     Filename     => XSDT_Filename);
 
-                  Mulog.Log (Msg => "Writing FACP to '" & FACP_Filename & "'");
+                  Mulog.Log (Msg => "Writing FADT table with DSDT "
+                             & "guest-physical address " & DSDT_Addr
+                             & " to '" & FADT_Filename & "'");
                   Acpi.FADT.Write
-                    (ACPI_Tables_Base => Base_Addr,
-                     Filename         => FACP_Filename);
+                    (DSDT_Address => Interfaces.Unsigned_64'Value (DSDT_Addr),
+                     Filename     => FADT_Filename);
                end;
             end if;
          end;

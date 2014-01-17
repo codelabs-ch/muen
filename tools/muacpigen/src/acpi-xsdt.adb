@@ -23,8 +23,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Write
-     (ACPI_Tables_Base : Interfaces.Unsigned_64;
-      Filename         : String)
+     (FADT_Address : Interfaces.Unsigned_64;
+      Filename     : String)
    is
       use Ada.Streams.Stream_IO;
       use type Interfaces.Unsigned_32;
@@ -47,8 +47,7 @@ is
             OEM_Revision     => 0,
             Creator_ID       => To_ID_4 ("SKP"),
             Creator_Revision => To_ID_4 ("DRTY")),
-         Entries => XSDT_Entries'
-           (1 => ACPI_Tables_Base + FADT_Offset));
+         Entries => XSDT_Entries'(1 => FADT_Address));
 
       XSDT.Header.Checksum := XSDT_Checksum (Table => XSDT);
 

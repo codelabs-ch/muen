@@ -23,8 +23,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Write
-     (ACPI_Tables_Base : Interfaces.Unsigned_64;
-      Filename         : String)
+     (DSDT_Address : Interfaces.Unsigned_64;
+      Filename     : String)
    is
       use Ada.Streams.Stream_IO;
       use type Interfaces.Unsigned_32;
@@ -97,7 +97,7 @@ is
          RESET_VALUE          => 16#00#,
          Reserved_3           => (others => 16#00#),
          X_FIRMWARE_CTRL      => 16#0000_0000_0000_0000#,
-         X_DSDT               => ACPI_Tables_Base + DSDT_Offset,
+         X_DSDT               => DSDT_Address,
          others               => Null_Generic_Address);
 
       FADT.Header.Checksum := FADT_Checksum (Table => FADT);

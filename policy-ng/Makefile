@@ -6,7 +6,8 @@ BINS =                                \
 	$(TOP_DIR)/subjects/tau0/obj/tau0 \
 	$(TOP_DIR)/subjects/vt/obj/vt     \
 	$(TOP_DIR)/subjects/time/obj/time \
-	$(TOP_DIR)/subjects/sm/obj/sm
+	$(TOP_DIR)/subjects/sm/obj/sm     \
+	$(TOP_DIR)/subjects/linux/src/arch/x86/boot/bzImage
 
 GENS =            \
 	$(MUACPIGEN)  \

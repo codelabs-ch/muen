@@ -31,6 +31,6 @@ multiboot_header:
 	.long MBOOT_CHECKSUM
 	.long multiboot_header
 	.long image_start
-	.long image_end
+	.long 0
 	.long 0
 	.long _start

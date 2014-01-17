@@ -141,16 +141,74 @@ is
       PD   : Paging.PD_Table_Type   := Paging.Null_PD_Table;
       PT   : Paging.Page_Table_Type := Paging.Null_Page_Table;
 
-      --  Add mapping of given logical to physical memory region to pagetable.
+      --  Add mapping of given logical to physical memory.
+      procedure Add_Mapping
+        (Physical : DOM.Core.Node;
+         Logical  : DOM.Core.Node);
+
+      --  Add memory region with given attributes to pagetables.
       procedure Add_Memory_Region
-        (Physical_Mem : DOM.Core.Node;
-         Logical_Mem  : DOM.Core.Node);
+        (Physical_Address : Interfaces.Unsigned_64;
+         Virtual_Address  : Interfaces.Unsigned_64;
+         Size             : Interfaces.Unsigned_64;
+         Caching          : Paging.Caching_Type;
+         Writable         : Boolean;
+         Executable       : Boolean);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Mapping
+        (Physical : DOM.Core.Node;
+         Logical  : DOM.Core.Node)
+      is
+         Size    : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                  (Elem => Physical,
+                   Name => "size"));
+         PMA     : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                  (Elem => Physical,
+                   Name => "physicalAddress"));
+         VMA     : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                  (Elem => Logical,
+                   Name => "virtualAddress"));
+         Write   : constant Boolean
+           := Boolean'Value
+             (DOM.Core.Elements.Get_Attribute
+                  (Elem => Logical,
+                   Name => "writable"));
+         Exec    : constant Boolean
+           := Boolean'Value
+             (DOM.Core.Elements.Get_Attribute
+                  (Elem => Logical,
+                   Name => "executable"));
+         Caching : constant Paging.Caching_Type
+           := Paging.Caching_Type'Value
+             (DOM.Core.Elements.Get_Attribute
+                  (Elem => Physical,
+                   Name => "caching"));
+      begin
+         Add_Memory_Region (Physical_Address => PMA,
+                            Virtual_Address  => VMA,
+                            Size             => Size,
+                            Caching          => Caching,
+                            Writable         => Write,
+                            Executable       => Exec);
+      end Add_Mapping;
 
       ----------------------------------------------------------------------
 
       procedure Add_Memory_Region
-        (Physical_Mem : DOM.Core.Node;
-         Logical_Mem  : DOM.Core.Node)
+        (Physical_Address : Interfaces.Unsigned_64;
+         Virtual_Address  : Interfaces.Unsigned_64;
+         Size             : Interfaces.Unsigned_64;
+         Caching          : Paging.Caching_Type;
+         Writable         : Boolean;
+         Executable       : Boolean)
       is
          use type Interfaces.Unsigned_64;
          use type Paging.PML4_Entry_Type;
@@ -159,41 +217,10 @@ is
          use type Paging.PT_Entry_Type;
          use type Paging.Table_Range;
 
-         Size          : constant Interfaces.Unsigned_64
-           := Interfaces.Unsigned_64'Value
-             (DOM.Core.Elements.Get_Attribute
-                  (Elem => Physical_Mem,
-                   Name => "size"));
-         Physical_Addr : Interfaces.Unsigned_64
-           := Interfaces.Unsigned_64'Value
-             (DOM.Core.Elements.Get_Attribute
-                  (Elem => Physical_Mem,
-                   Name => "physicalAddress"));
-         Virt_Start    : constant Interfaces.Unsigned_64
-           := Interfaces.Unsigned_64'Value
-             (DOM.Core.Elements.Get_Attribute
-                  (Elem => Logical_Mem,
-                   Name => "virtualAddress"));
-         Virt_End      : constant Interfaces.Unsigned_64
-           := Virt_Start + Size - 1;
-         Writable      : constant Boolean
-           := Boolean'Value
-             (DOM.Core.Elements.Get_Attribute
-                  (Elem => Logical_Mem,
-                   Name => "writable"));
-         Executable    : constant Boolean
-           := Boolean'Value
-             (DOM.Core.Elements.Get_Attribute
-                  (Elem => Logical_Mem,
-                   Name => "executable"));
-         Caching       : constant Paging.Caching_Type
-           := Paging.Caching_Type'Value
-             (DOM.Core.Elements.Get_Attribute
-                  (Elem => Physical_Mem,
-                   Name => "caching"));
-
          Is_PDPT_Page : constant Boolean := Size mod Paging.PDPT_Page_Size = 0;
          Is_PD_Page   : constant Boolean := Size mod Paging.PD_Page_Size = 0;
+         Virt_End     : constant Interfaces.Unsigned_64
+           := Virtual_Address + Size - 1;
 
          PML4_Idx_Start, PML4_Idx_End : Paging.Table_Range;
          PDPT_Idx_Start, PDPT_Idx_End : Paging.Table_Range;
@@ -206,8 +233,10 @@ is
          PD_Addr   : Interfaces.Unsigned_64;
          --  Physical start address of PT paging structure(s).
          PT_Addr   : Interfaces.Unsigned_64;
+
+         Physical_Addr : Interfaces.Unsigned_64 := Physical_Address;
       begin
-         Paging.Get_Indexes (Address    => Virt_Start,
+         Paging.Get_Indexes (Address    => Virtual_Address,
                              PML4_Index => PML4_Idx_Start,
                              PDPT_Index => PDPT_Idx_Start,
                              PD_Index   => PD_Idx_Start,
@@ -385,8 +414,8 @@ is
          begin
             Mulog.Log (Msg => "Adding region " & Logical_Name
                        & "[" & Physical_Name & "]");
-            Add_Memory_Region (Physical_Mem => Physical_Mem,
-                               Logical_Mem  => Logical_Mem);
+            Add_Mapping (Physical => Physical_Mem,
+                               Logical  => Logical_Mem);
          end;
       end loop;
 
@@ -430,8 +459,8 @@ is
                   Mulog.Log (Msg => "Adding region " & Logical_Name
                              & "[" & Physical_Name & "] of device "
                              & Dev_Name);
-                  Add_Memory_Region (Physical_Mem => Physical_Mem,
-                                     Logical_Mem  => Logical_Mem);
+                  Add_Mapping (Physical => Physical_Mem,
+                               Logical  => Logical_Mem);
                end;
             end loop;
          end;

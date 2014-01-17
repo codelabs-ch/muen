@@ -24,7 +24,7 @@ is
    type File_Format_Type is
      (Acpi_Rsdp,
       Acpi_Xsdt,
-      Acpi_Facp,
+      Acpi_Fadt,
       Acpi_Dsdt,
       Bzimage,
       Elf,

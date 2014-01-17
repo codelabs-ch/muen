@@ -49,7 +49,7 @@ is
 
       Linux_RSDP : constant String := "obj/linux_rsdp";
       Linux_XSDT : constant String := "obj/linux_xsdt";
-      Linux_FACP : constant String := "obj/linux_facp";
+      Linux_FADT : constant String := "obj/linux_fadt";
    begin
       Muxml.Parse (Data => Policy,
                    File => "data/test_policy.xml");
@@ -66,13 +66,13 @@ is
                Filename2 => Linux_XSDT),
               Message => "XSDT table mismatch");
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/linux_facp.ref",
-               Filename2 => Linux_FACP),
+              (Filename1 => "data/linux_fadt.ref",
+               Filename2 => Linux_FADT),
               Message => "FACP table mismatch");
 
       Ada.Directories.Delete_File (Name => Linux_RSDP);
       Ada.Directories.Delete_File (Name => Linux_XSDT);
-      Ada.Directories.Delete_File (Name => Linux_FACP);
+      Ada.Directories.Delete_File (Name => Linux_FADT);
    end Write_ACPI_Tables;
 
 end Generator_Tests;

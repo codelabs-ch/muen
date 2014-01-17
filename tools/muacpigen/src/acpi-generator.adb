@@ -65,7 +65,7 @@ is
                           & Name & "'");
                declare
                   XSDT_Name : constant String := Name & "|acpi_xsdt";
-                  FADT_Name : constant String := Name & "|acpi_facp";
+                  FADT_Name : constant String := Name & "|acpi_fadt";
                   DSDT_Name : constant String := Name & "|acpi_dsdt";
 
                   RSDP_Filename : constant String
@@ -107,7 +107,7 @@ is
                                 (N     => Policy.Doc,
                                  XPath => "/system/memory/memory[@name='"
                                  & FADT_Name & "']/file[@format='"
-                                 & "acpi_facp']/@filename"),
+                                 & "acpi_fadt']/@filename"),
                             Index => 0));
 
                   DSDT_Addr : constant String

@@ -17,8 +17,8 @@
 		<memory name="linux|acpi_xsdt" physicalAddress="16#002e_0024#" size="16#002c#" caching="WB">
 			<file format="acpi_xsdt" filename="linux_xsdt" offset="16#0000#"/>
 		</memory>
-		<memory name="linux|acpi_facp" physicalAddress="16#002e_0050#" size="16#010c#" caching="WB">
-			<file format="acpi_facp" filename="linux_facp" offset="16#0000#"/>
+		<memory name="linux|acpi_fadt" physicalAddress="16#002e_0050#" size="16#010c#" caching="WB">
+			<file format="acpi_fadt" filename="linux_fadt" offset="16#0000#"/>
 		</memory>
 		<memory name="linux|acpi_dsdt" physicalAddress="16#002e_015c#" size="16#1000#" caching="WB">
 			<file format="acpi_dsdt" filename="linux_dsdt" offset="16#0000#"/>
@@ -235,8 +235,8 @@
 				<memory logical="acpi_xsdt" virtualAddress="16#000e_1000#" writable="false" executable="false">
 					<physical name="linux|acpi_xsdt"/>
 				</memory>
-				<memory logical="acpi_facp" virtualAddress="16#000e_2000#" writable="false" executable="false">
-					<physical name="linux|acpi_facp"/>
+				<memory logical="acpi_fadt" virtualAddress="16#000e_2000#" writable="false" executable="false">
+					<physical name="linux|acpi_fadt"/>
 				</memory>
 				<memory logical="acpi_dsdt" virtualAddress="16#000e_3000#" writable="false" executable="false">
 					<physical name="linux|acpi_dsdt"/>

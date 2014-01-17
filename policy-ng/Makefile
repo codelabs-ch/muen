@@ -1,12 +1,13 @@
 POLICY   = xml/demo_system.xml
 KNL_NAME = kernel
 
-BINS =                                \
+FILES =                               \
 	$(TOP_DIR)/kernel/obj/kernel      \
 	$(TOP_DIR)/subjects/tau0/obj/tau0 \
 	$(TOP_DIR)/subjects/vt/obj/vt     \
 	$(TOP_DIR)/subjects/time/obj/time \
 	$(TOP_DIR)/subjects/sm/obj/sm     \
+	$(TOP_DIR)/policy/acpi/DSDT.aml   \
 	$(TOP_DIR)/subjects/linux/src/arch/x86/boot/bzImage
 
 GENS =            \
@@ -26,8 +27,8 @@ all: clean $(OBJ_DIR) run
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
-copy_bins:
-	@for bin in $(BINS); do cp $$bin $(OBJ_DIR) || exit 1; done
+copy_files:
+	@for file in $(FILES); do cp $$file $(OBJ_DIR) || exit 1; done
 
 run_gens:
 	@for gen in $(GENS); do $$gen $(GEN_OPTS) || exit 1; done
@@ -42,7 +43,7 @@ build_subj:
 	@make clean -C ../subjects/tau0
 	@make -C ../subjects
 
-build_image: run_gens build_knl build_subj copy_bins
+build_image: run_gens build_knl build_subj copy_files
 	@$(MUPACK) -k $(KNL_NAME) -i $(OBJ_DIR) -o $(OBJ_DIR) $(POLICY)
 
 run: build_image

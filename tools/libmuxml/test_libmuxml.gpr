@@ -17,7 +17,7 @@
 --
 
 with "../../contrib/projects/ahven";
-with "../../config/shared";
+with "../shared_tools";
 
 with "libmuxml";
 
@@ -25,6 +25,6 @@ project Test_Libmuxml extends "../tools.gpr" is
 
    for Source_Dirs use ("tests");
    for Main use ("test_runner.adb");
-   for Object_Dir use "obj/" & Shared.Build;
+   for Object_Dir use "obj/" & Shared_Tools.Build;
 
 end Test_Libmuxml;

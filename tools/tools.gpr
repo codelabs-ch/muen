@@ -17,13 +17,14 @@
 --
 
 with "../../config/shared";
+with "shared_tools.gpr";
 
 abstract project Tools is
 
    Compiler_Switches := Shared.Ada_Compiler_Switches & "-gnat12";
    Linker_Switches   := ();
 
-   case Shared.Build is
+   case Shared_Tools.Build is
       when "debug"    => Compiler_Switches := Compiler_Switches & "-gnatwale";
       when "tests"    => Compiler_Switches := Compiler_Switches & "-gnatwal";
       when "coverage" =>

@@ -17,15 +17,15 @@
 --
 
 with "../../contrib/projects/ahven";
-with "../../config/shared";
 with "../libtest/libtest";
+with "../shared_tools";
 
 with "muzpgen";
 
 project Test_Muzpgen extends "../tools.gpr" is
 
    for Source_Dirs use ("tests");
-   for Object_Dir use "obj/" & Shared.Build;
+   for Object_Dir use "obj/" & Shared_Tools.Build;
    for Main use ("test_runner.adb");
 
 end Test_Muzpgen;

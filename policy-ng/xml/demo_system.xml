@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <system>
 	<platform>
-		<processor logicalCpus="2" speed="50" vmxTimerRate="0"/>
+		<processor logicalCpus="4" speed="50" vmxTimerRate="0"/>
 		<memory>
 			<memoryBlock name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#" caching="WB"/>
 		</memory>
@@ -29,6 +29,8 @@
 		<memory name="trampoline" physicalAddress="16#0000#" size="16#1000#" caching="WB"/>
 		<memory name="kernel_0|vmxon" physicalAddress="16#1000#" size="16#1000#" caching="WB"/>
 		<memory name="kernel_1|vmxon" physicalAddress="16#2000#" size="16#1000#" caching="WB"/>
+		<memory name="kernel_2|vmxon" physicalAddress="16#3000#" size="16#1000#" caching="WB"/>
+		<memory name="kernel_3|vmxon" physicalAddress="16#4000#" size="16#1000#" caching="WB"/>
 
 		<memory name="tau0|vmcs" physicalAddress="16#5000#" size="16#1000#" caching="WB"/>
 		<memory name="vt|vmcs" physicalAddress="16#6000#" size="16#1000#" caching="WB"/>
@@ -46,14 +48,24 @@
 		<memory name="kernel_ro" physicalAddress="16#0011_f000#" size="16#a000#" caching="WB"/>
 		<memory name="kernel_stack_0" physicalAddress="16#0011_3000#" size="16#2000#" caching="WB"/>
 		<memory name="kernel_stack_1" physicalAddress="16#0011_5000#" size="16#2000#" caching="WB"/>
+		<memory name="kernel_stack_2" physicalAddress="16#0011_7000#" size="16#2000#" caching="WB"/>
+		<memory name="kernel_stack_3" physicalAddress="16#0011_9000#" size="16#2000#" caching="WB"/>
 		<memory name="kernel_store_0" physicalAddress="16#0011_b000#" size="16#1000#" caching="WB"/>
 		<memory name="kernel_store_1" physicalAddress="16#0011_c000#" size="16#1000#" caching="WB"/>
+		<memory name="kernel_store_2" physicalAddress="16#0011_d000#" size="16#1000#" caching="WB"/>
+		<memory name="kernel_store_3" physicalAddress="16#0011_e000#" size="16#1000#" caching="WB"/>
 		<memory name="sys_interface" physicalAddress="16#001f_f000#" size="16#1000#" caching="WB"/>
 		<memory name="kernel_0|pt" physicalAddress="16#0020_0000#" size="16#4000#" caching="WB">
 			<file format="pt" filename="kernel_pt_0" offset="16#0000#"/>
 		</memory>
 		<memory name="kernel_1|pt" physicalAddress="16#0020_4000#" size="16#4000#" caching="WB">
 			<file format="pt" filename="kernel_pt_1" offset="16#0000#"/>
+		</memory>
+		<memory name="kernel_2|pt" physicalAddress="16#0020_8000#" size="16#4000#" caching="WB">
+			<file format="pt" filename="kernel_pt_2" offset="16#0000#"/>
+		</memory>
+		<memory name="kernel_3|pt" physicalAddress="16#0020_c000#" size="16#4000#" caching="WB">
+			<file format="pt" filename="kernel_pt_3" offset="16#0000#"/>
 		</memory>
 
 		<!-- tau0 subject -->
@@ -234,10 +246,75 @@
 				<memory logical="linux_state" writable="true" executable="false" virtualAddress="16#001e_4000#">
 					<physical name="linux_state"/>
 				</memory>
+			</cpu>
+			<cpu id="2">
+				<memory logical="ioapic" writable="true" executable="false" virtualAddress="16#001f_c000#">
+					<physical name="ioapic"/>
+				</memory>
 
-				<!-- tau0/knl interface -->
-				<memory logical="tau0_interface" writable="false" executable="false" virtualAddress="16#001f_f000#">
-					<physical name="sys_interface"/>
+				<memory logical="text" writable="true" executable="true" virtualAddress="16#0010_0000#">
+					<physical name="kernel_text_data"/>
+				</memory>
+				<memory logical="ro" writable="false" executable="false" virtualAddress="16#0011_f000#">
+					<physical name="kernel_ro"/>
+				</memory>
+				<memory logical="stack" writable="true" executable="false" virtualAddress="16#0011_3000#">
+					<physical name="kernel_stack_2"/>
+				</memory>
+				<memory logical="store" writable="true" executable="false" virtualAddress="16#0011_6000#">
+					<physical name="kernel_store_2"/>
+				</memory>
+
+				<!-- subject states -->
+				<memory logical="tau0_state" writable="true" executable="false" virtualAddress="16#001e_0000#">
+					<physical name="tau0_state"/>
+				</memory>
+				<memory logical="vt_state" writable="true" executable="false" virtualAddress="16#001e_1000#">
+					<physical name="vt_state"/>
+				</memory>
+				<memory logical="time_state" writable="true" executable="false" virtualAddress="16#001e_2000#">
+					<physical name="time_state"/>
+				</memory>
+				<memory logical="sm_state" writable="true" executable="false" virtualAddress="16#001e_3000#">
+					<physical name="sm_state"/>
+				</memory>
+				<memory logical="linux_state" writable="true" executable="false" virtualAddress="16#001e_4000#">
+					<physical name="linux_state"/>
+				</memory>
+			</cpu>
+			<cpu id="3">
+				<memory logical="ioapic" writable="true" executable="false" virtualAddress="16#001f_c000#">
+					<physical name="ioapic"/>
+				</memory>
+
+				<memory logical="text" writable="true" executable="true" virtualAddress="16#0010_0000#">
+					<physical name="kernel_text_data"/>
+				</memory>
+				<memory logical="ro" writable="false" executable="false" virtualAddress="16#0011_f000#">
+					<physical name="kernel_ro"/>
+				</memory>
+				<memory logical="stack" writable="true" executable="false" virtualAddress="16#0011_3000#">
+					<physical name="kernel_stack_3"/>
+				</memory>
+				<memory logical="store" writable="true" executable="false" virtualAddress="16#0011_6000#">
+					<physical name="kernel_store_3"/>
+				</memory>
+
+				<!-- subject states -->
+				<memory logical="tau0_state" writable="true" executable="false" virtualAddress="16#001e_0000#">
+					<physical name="tau0_state"/>
+				</memory>
+				<memory logical="vt_state" writable="true" executable="false" virtualAddress="16#001e_1000#">
+					<physical name="vt_state"/>
+				</memory>
+				<memory logical="time_state" writable="true" executable="false" virtualAddress="16#001e_2000#">
+					<physical name="time_state"/>
+				</memory>
+				<memory logical="sm_state" writable="true" executable="false" virtualAddress="16#001e_3000#">
+					<physical name="sm_state"/>
+				</memory>
+				<memory logical="linux_state" writable="true" executable="false" virtualAddress="16#001e_4000#">
+					<physical name="linux_state"/>
 				</memory>
 			</cpu>
 		</memory>
@@ -249,7 +326,7 @@
 	</kernel>
 
 	<subjects>
-		<subject id="0" name="tau0" cpu="1">
+		<subject id="0" name="tau0" cpu="3">
 			<vcpu>
 				<vmx>
 					<controls>
@@ -651,7 +728,7 @@
 			</events>
 		</subject>
 
-		<subject id="2" name="time" cpu="1">
+		<subject id="2" name="time" cpu="2">
 			<vcpu>
 				<vmx>
 					<controls>
@@ -1467,13 +1544,17 @@
 	<scheduling tickRate="10000">
 		<majorFrame>
 			<cpu>
-				<minorFrame subject="vt" ticks="120"/>
+				<minorFrame subject="vt" ticks="60"/>
+				<minorFrame subject="vt" ticks="60"/>
 			</cpu>
 			<cpu>
-				<minorFrame subject="tau0" ticks="30"/>
-				<minorFrame subject="time" ticks="30"/>
-				<minorFrame subject="sm" ticks="30"/>
-				<minorFrame subject="linux" ticks="30"/>
+				<minorFrame subject="linux" ticks="120"/>
+			</cpu>
+			<cpu>
+				<minorFrame subject="time" ticks="120"/>
+			</cpu>
+			<cpu>
+				<minorFrame subject="tau0" ticks="120"/>
 			</cpu>
 		</majorFrame>
 		<majorFrame>
@@ -1481,10 +1562,13 @@
 				<minorFrame subject="vt" ticks="120"/>
 			</cpu>
 			<cpu>
-				<minorFrame subject="time" ticks="30"/>
-				<minorFrame subject="tau0" ticks="30"/>
-				<minorFrame subject="sm" ticks="30"/>
-				<minorFrame subject="linux" ticks="30"/>
+				<minorFrame subject="linux" ticks="120"/>
+			</cpu>
+			<cpu>
+				<minorFrame subject="time" ticks="120"/>
+			</cpu>
+			<cpu>
+				<minorFrame subject="tau0" ticks="120"/>
 			</cpu>
 		</majorFrame>
 	</scheduling>

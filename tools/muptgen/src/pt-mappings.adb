@@ -16,36 +16,30 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
+with Ada.Streams.Stream_IO;
 
-with Pt.Paging;
+with Mutools.Files;
 
-package Pt.Mappings
+package body Pt.Mappings
 is
 
-   type Paging_Type is (IA32e, EPT);
+   -------------------------------------------------------------------------
 
-   --  A memory layout type is a collection of logical to physical memory
-   --  mappings.
-   type Memory_Layout_Type
-     (PT_Type      : Paging_Type;
-      PML4_Address : Interfaces.Unsigned_64) is private;
-
-   --  Write pagetables of the given memory layout to the specified file.
    procedure Write_Pagetables
      (Mem_Layout : Memory_Layout_Type;
-      Filename   : String);
+      Filename   : String)
+   is
+      use Ada.Streams.Stream_IO;
 
-private
-
-   type Memory_Layout_Type
-     (PT_Type      : Paging_Type;
-      PML4_Address : Interfaces.Unsigned_64)
-   is record
-      PML4 : Paging.PML4_Table_Type := Paging.Null_PML4_Table;
-      PDPT : Paging.PDP_Table_Type  := Paging.Null_PDP_Table;
-      PD   : Paging.PD_Table_Type   := Paging.Null_PD_Table;
-      PT   : Paging.Page_Table_Type := Paging.Null_Page_Table;
-   end record;
+      File : File_Type;
+   begin
+      Mutools.Files.Open (Filename => Filename,
+                          File     => File);
+      Paging.PML4_Table_Type'Write (Stream (File => File), Mem_Layout.PML4);
+      Paging.PDP_Table_Type'Write  (Stream (File => File), Mem_Layout.PDPT);
+      Paging.PD_Table_Type'Write   (Stream (File => File), Mem_Layout.PD);
+      Paging.Page_Table_Type'Write (Stream (File => File), Mem_Layout.PT);
+      Close (File => File);
+   end Write_Pagetables;
 
 end Pt.Mappings;

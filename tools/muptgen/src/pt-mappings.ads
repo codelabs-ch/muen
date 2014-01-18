@@ -31,6 +31,16 @@ is
      (PT_Type      : Paging_Type;
       PML4_Address : Interfaces.Unsigned_64) is private;
 
+   --  Add memory region with specified attributes to given address space.
+   procedure Add_Memory_Region
+     (Mem_Layout       : in out Memory_Layout_Type;
+      Physical_Address :        Interfaces.Unsigned_64;
+      Virtual_Address  :        Interfaces.Unsigned_64;
+      Size             :        Interfaces.Unsigned_64;
+      Caching          :        Paging.Caching_Type;
+      Writable         :        Boolean;
+      Executable       :        Boolean);
+
    --  Write pagetables of the given memory layout to the specified file.
    procedure Write_Pagetables
      (Mem_Layout : Memory_Layout_Type;

@@ -43,7 +43,10 @@ build_subj:
 	@make clean -C ../subjects/tau0
 	@make -C ../subjects
 
-build_image: run_gens build_knl build_subj copy_files
+build_tools:
+	@make -C ../tools
+
+build_image: build_tools run_gens build_knl build_subj copy_files
 	@$(MUPACK) -k $(KNL_NAME) -i $(OBJ_DIR) -o $(OBJ_DIR) $(POLICY)
 
 run: build_image

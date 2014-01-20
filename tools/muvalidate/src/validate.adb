@@ -16,12 +16,27 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Containers.Doubly_Linked_Lists;
+
 with Mulog;
 
 with Validate.Command_Line;
 
 package body Validate
 is
+
+   package Validator_Package is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => Validation_Procedure);
+
+   Validators : Validator_Package.List;
+
+   -------------------------------------------------------------------------
+
+   procedure Register (Validator : Validation_Procedure)
+   is
+   begin
+      Validators.Append (New_Item => Validator);
+   end Register;
 
    -------------------------------------------------------------------------
 

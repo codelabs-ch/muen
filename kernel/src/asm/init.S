@@ -34,7 +34,6 @@
 #define CR4_PAE_BIT  5
 #define EFER_LME_BIT 8
 #define EFER_NXE_BIT 11
-#define APIC_BSP_BIT 8
 
 // clear pagecount number of 4k memory starting at given address
 .macro clear address pagecount

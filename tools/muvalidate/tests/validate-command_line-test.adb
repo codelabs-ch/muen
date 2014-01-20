@@ -16,24 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Text_Runner;
-with Ahven.Framework;
+with Ada.Strings.Unbounded;
 
-with Memory_Tests;
-with Validate_Tests;
-
-procedure Test_Runner
+package body Validate.Command_Line.Test
 is
-   use Ahven.Framework;
 
-   S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Muvalidate tests");
-begin
-   Add_Test (Suite => S.all,
-             T     => new Memory_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Validate_Tests.Testcase);
+   -------------------------------------------------------------------------
 
-   Ahven.Text_Runner.Run (Suite => S);
-   Release_Suite (T => S);
-end Test_Runner;
+   procedure Set_Policy (Path : String)
+   is
+   begin
+      Policy := Ada.Strings.Unbounded.To_Unbounded_String (Path);
+   end Set_Policy;
+
+end Validate.Command_Line.Test;

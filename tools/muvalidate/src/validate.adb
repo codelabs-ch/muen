@@ -42,9 +42,21 @@ is
 
    procedure Run
    is
-      Policy_File : constant String := Command_Line.Get_Policy;
+      Data        : Muxml.XML_Data_Type;
+      Pos         : Validator_Package.Cursor := Validators.First;
+      Policy_File : constant String          := Command_Line.Get_Policy;
    begin
       Mulog.Log (Msg => "Validating policy '" & Policy_File & "'");
+      Mulog.Log (Msg => "Registered validators" & Validators.Length'Img);
+
+      Muxml.Parse (Data => Data,
+                   File => Policy_File);
+      while Validator_Package.Has_Element (Position => Pos) loop
+         Validator_Package.Element (Position => Pos) (XML_Data => Data);
+         Validator_Package.Next (Position => Pos);
+      end loop;
+
+      Mulog.Log (Msg => "Successfully validated policy '" & Policy_File & "'");
    end Run;
 
 end Validate;

@@ -15,10 +15,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Muxml;
+with Alloc.Allocator;
+
 package body Allocation_Tests
 is
-
    use Ahven;
+   use Alloc;
 
    -------------------------------------------------------------------------
 
@@ -35,9 +38,17 @@ is
 
    procedure Overlapping_Physical_Memory
    is
+      Policy : Muxml.XML_Data_Type;
    begin
-      Assert (Condition => False,
-              Message   => "N/I");
+      Muxml.Parse (Data => Policy,
+                   File => "data/overlapping.xml");
+
+      Allocator.Write (Output_Dir => "obj",
+                       Policy     => Policy);
+   exception
+      --  Should raise an exception.
+      when Alloc.Allocator.Overlapping_Physical_Memory => null;
+      when others => Fail ("Overlap undetected");
    end Overlapping_Physical_Memory;
 
 end Allocation_Tests;

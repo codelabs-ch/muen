@@ -1,0 +1,115 @@
+--
+--  Copyright (C) 2014  Alexander Senier <mail@senier.net>
+--
+--  This program is free software: you can redistribute it and/or modify
+--  it under the terms of the GNU General Public License as published by
+--  the Free Software Foundation, either version 3 of the License, or
+--  (at your option) any later version.
+--
+--  This program is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+--  You should have received a copy of the GNU General Public License
+--  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+
+with Alloc.Map;
+
+package body Map_Tests
+is
+   procedure Initialize (T : in out Testcase)
+   is
+   begin
+      T.Set_Name (Name => "Memory map tests");
+      T.Add_Test_Routine
+        (Routine => Overlapping_Empty_Left'Access,
+         Name    => "Overlapping, left side");
+      T.Add_Test_Routine
+        (Routine => Overlapping_Empty_Right'Access,
+         Name    => "Overlapping, right side");
+      T.Add_Test_Routine
+        (Routine => Overlapping_Empty_Included'Access,
+         Name    => "Overlapping, included");
+      T.Add_Test_Routine
+        (Routine => Overlapping_Empty_Encompassing'Access,
+         Name    => "Overlapping, encompassing");
+      T.Add_Test_Routine
+        (Routine => Non_Overlapping'Access,
+         Name    => "Non-overlapping");
+   end Initialize;
+
+   ----------------------------------------------------------------------------
+
+   procedure Non_Overlapping
+   is
+      use Alloc.Map;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0,    1000);
+      M.Insert_Empty_Region (1001, 2000);
+      M.Insert_Empty_Region (5000, 10000);
+   end Non_Overlapping;
+
+   ----------------------------------------------------------------------------
+
+   procedure Overlapping_Empty_Encompassing
+   is
+      use Ahven;
+      use Alloc.Map;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (100,  900);
+      M.Insert_Empty_Region (0,   1000);
+      Fail ("Overlap undetected");
+   exception
+      when Overlapping_Empty_Region => null;
+   end Overlapping_Empty_Encompassing;
+
+   ----------------------------------------------------------------------------
+
+   procedure Overlapping_Empty_Included
+   is
+      use Ahven;
+      use Alloc.Map;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0,   1000);
+      M.Insert_Empty_Region (100,  900);
+      Fail ("Overlap undetected");
+   exception
+      when Overlapping_Empty_Region => null;
+   end Overlapping_Empty_Included;
+
+   ----------------------------------------------------------------------------
+
+   procedure Overlapping_Empty_Left
+   is
+      use Ahven;
+      use Alloc.Map;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0,   1000);
+      M.Insert_Empty_Region (900, 2000);
+      Fail ("Overlap undetected");
+   exception
+      when Overlapping_Empty_Region => null;
+   end Overlapping_Empty_Left;
+
+   ----------------------------------------------------------------------------
+
+   procedure Overlapping_Empty_Right
+   is
+      use Ahven;
+      use Alloc.Map;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (900, 2000);
+      M.Insert_Empty_Region (0,   1000);
+      Fail ("Overlap undetected");
+   exception
+      when Overlapping_Empty_Region => null;
+   end Overlapping_Empty_Right;
+
+end Map_Tests;

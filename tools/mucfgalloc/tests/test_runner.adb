@@ -19,6 +19,7 @@ with Ahven.Text_Runner;
 with Ahven.Framework;
 
 with Allocation_Tests;
+with Map_Tests;
 
 procedure Test_Runner
 is
@@ -29,6 +30,9 @@ is
 begin
    Add_Test (Suite => S.all,
              T     => new Allocation_Tests.Testcase);
+
+   Add_Test (Suite => S.all,
+             T     => new Map_Tests.Testcase);
 
    Ahven.Text_Runner.Run (Suite => S);
    Release_Suite (T => S);

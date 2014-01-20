@@ -15,16 +15,53 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+with McKae.XML.XPath.XIA;
+with Alloc.Map;
+with Interfaces;
+
 package body Alloc.Allocator
 is
+
    Not_Implemented : exception;
 
    procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
+      Physical_Map           : DOM.Core.Node_List;
+      Map                    : Alloc.Map.Map_Type;
+      Physical_Address, Size : Interfaces.Unsigned_64;
+
+      pragma Unreferenced (Output_Dir);
+      use DOM.Core.Elements;
+      use DOM.Core.Nodes;
+      use type Interfaces.Unsigned_64;
    begin
-      raise Not_Implemented with "Not implemented";
+      Physical_Map := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Policy.Doc,
+         XPath => "/system/platform/memory/memoryBlock");
+
+      if Length (Physical_Map) = 0 then
+         raise Internal_Error with "No physical memory found";
+      end if;
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Physical_Map) - 1
+      loop
+         Physical_Address := Interfaces.Unsigned_64'Value
+            (Get_Attribute (Item (Physical_Map, I), "physicalAddress"));
+         Size := Interfaces.Unsigned_64'Value
+            (Get_Attribute (Item (Physical_Map, I), "size"));
+         Map.Insert_Empty_Region
+            (First_Address => Physical_Address,
+             Last_Address  => Physical_Address + Size - 1);
+      end loop;
+
+      raise Not_Implemented;
+   exception
+      when Alloc.Map.Overlapping_Empty_Region =>
+         raise Overlapping_Physical_Memory;
    end Write;
 
 end Alloc.Allocator;

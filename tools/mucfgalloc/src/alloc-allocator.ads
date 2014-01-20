@@ -24,4 +24,10 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
+   --  Physical memory regions in the config overlapped each other.
+   Overlapping_Physical_Memory : exception;
+
+   --  Internal error (e.g. malformed XML input)
+   Internal_Error : exception;
+
 end Alloc.Allocator;

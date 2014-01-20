@@ -17,7 +17,7 @@
 
 with Ahven.Framework;
 
-package Allocation_Tests
+package Map_Tests
 is
 
    type Testcase is new Ahven.Framework.Test_Case with null record;
@@ -25,7 +25,27 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
-   --  Detect overlapping physical memory
-   procedure Overlapping_Physical_Memory;
+   --  Independent empty regions
+   procedure Non_Overlapping;
 
-end Allocation_Tests;
+   --  Detect overlapping empty regions, overlapping left
+   --      [existing region]
+   --  [new region]
+   procedure Overlapping_Empty_Left;
+
+   --  Detect overlapping empty regions, overlapping right
+   --      [existing region]
+   --                  [new region]
+   procedure Overlapping_Empty_Right;
+
+   --  Detect overlapping empty regions, included
+   --      [existing region]
+   --         [new region]
+   procedure Overlapping_Empty_Included;
+
+   --  Detect overlapping empty regions, encompassing
+   --      [existing region]
+   --    [.....new region.....]
+   procedure Overlapping_Empty_Encompassing;
+
+end Map_Tests;

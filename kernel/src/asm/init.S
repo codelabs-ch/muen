@@ -104,6 +104,11 @@ ap_entry_point:
 	mov $1, %eax
 	lock xadd %eax, cpu_counter
 
+	// deactivate excess CPUs
+
+	cmp $CPU_COUNT, %eax
+	jae deactivate
+
 	// store local CPU ID in esi register until it can be saved to per-cpu area
 
 	mov %eax, %esi
@@ -140,6 +145,11 @@ ap_entry_point:
 	// indirect long jump to 64-bit code
 
 	ljmp $8, $start64
+
+deactivate:
+	cli
+	hlt
+	jmp deactivate
 
 .code64
 start64: .align 4096

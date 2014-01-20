@@ -96,6 +96,14 @@ is
 
    -------------------------------------------------------------------------
 
+   function Is_BSP return Boolean
+   is
+   begin
+      return CPU_ID = Skp.CPU_Range'First;
+   end Is_BSP;
+
+   -------------------------------------------------------------------------
+
    procedure Set_Current_Minor (Frame : Active_Minor_Frame_Type)
    --# global
    --#    in out Storage;

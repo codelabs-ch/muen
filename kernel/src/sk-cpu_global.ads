@@ -18,6 +18,8 @@
 
 with Skp.Scheduling;
 
+use type Skp.CPU_Range;
+
 --# inherit
 --#    Skp.Scheduling,
 --#    SK;
@@ -28,6 +30,11 @@ is
 
    --  ID of the local CPU.
    CPU_ID : constant Skp.CPU_Range;
+
+   --  Returns True if the local CPU is the bootstrap processor.
+   function Is_BSP return Boolean;
+   --# return
+   --#    CPU_ID = Skp.CPU_Range'First;
 
    --  Currently active minor frame.
    type Active_Minor_Frame_Type is record

@@ -22,7 +22,6 @@
 .global ap_entry_point
 .global cpu_counter
 
-#define IA32_APIC_BASE 0x1b
 #define IA32_VMX_BASIC 0x480
 #define IA32_PAT       0x277
 #define IA32_EFER      0xc0000080
@@ -172,10 +171,8 @@ start64: .align 4096
 
 	// initialize Ada runtime (BSP only)
 
-	movl $IA32_APIC_BASE, %ecx
-	rdmsr
-	bt $APIC_BSP_BIT, %eax
-	jz kernel_init
+	cmp $0x0, %rsi
+	jne kernel_init
 	call adainit
 	jmp kernel_init
 

@@ -183,8 +183,7 @@ is
    --#       *,
    --#       Current_Major,
    --#       CPU_Global.State,
-   --#       New_Major,
-   --#       X86_64.State;
+   --#       New_Major;
    is
       Minor_Frame : CPU_Global.Active_Minor_Frame_Type;
       Plan_Frame  : Skp.Scheduling.Minor_Frame_Type;
@@ -205,7 +204,9 @@ is
          Minor_Frame.Minor_Id := Skp.Scheduling.Minor_Frame_Range'First;
 
          MP.Wait_For_All;
-         if Apic.Is_BSP then
+         --# accept Flow, 22, "CPU ID differs per logical CPU";
+         if CPU_Global.CPU_ID = Skp.CPU_Range'First then
+         --# end accept;
             Current_Major := New_Major;
          end if;
          MP.Wait_For_All;
@@ -251,8 +252,8 @@ is
    --#    in out CPU_Global.State;
    --#    in out X86_64.State;
    --# derives
-   --#    Subjects.State   from *, X86_64.State                &
-   --#    CPU_Global.State from *, Current_Major, X86_64.State &
+   --#    Subjects.State   from * &
+   --#    CPU_Global.State from *, Current_Major    &
    --#    X86_64.State from
    --#       *,
    --#       Current_Major,
@@ -261,15 +262,13 @@ is
    --#       VMX.State,
    --#       CPU_Global.State;
    is
-      CPU_Id            : Skp.CPU_Range;
       Plan_Frame        : Skp.Scheduling.Minor_Frame_Type;
       Initial_VMCS_Addr : SK.Word64 := 0;
       Controls          : Skp.Subjects.VMX_Controls_Type;
       VMCS_Addr         : SK.Word64;
    begin
-      Get_ID (ID => CPU_Id);
       CPU_Global.Set_Scheduling_Plan
-        (Data => Skp.Scheduling.Scheduling_Plans (CPU_Id));
+        (Data => Skp.Scheduling.Scheduling_Plans (CPU_Global.CPU_ID));
 
       --  Set initial active minor frame.
 
@@ -284,7 +283,7 @@ is
       --  Setup VMCS and state of subjects running on this logical CPU.
 
       for I in Skp.Subject_Id_Type loop
-         if Skp.Subjects.Get_CPU_Id (Subject_Id => I) = CPU_Id then
+         if Skp.Subjects.Get_CPU_Id (Subject_Id => I) = CPU_Global.CPU_ID then
 
             --  VMCS
 

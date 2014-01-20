@@ -60,8 +60,8 @@ is
    --#    in out CPU_Global.State;
    --#    in out X86_64.State;
    --# derives
-   --#    Subjects.State   from *, X86_64.State        &
-   --#    CPU_Global.State from *, X86_64.State, State &
+   --#    Subjects.State   from * &
+   --#    CPU_Global.State from *, State &
    --#    X86_64.State from
    --#       *,
    --#       State,

@@ -772,6 +772,11 @@ is
            (Template => Tmpl,
             Pattern  => "__kpml4_addr__",
             Content  => SK.Utils.To_Hex (Item => Policy.Kernel.Pml4_Address));
+         Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__cpu_store_addr__",
+            Content  => SK.Utils.To_Hex
+              (Item => Policy.Kernel.CPU_Page_Address));
       end Replace_Kernel_Patterns;
    begin
       Tmpl := Templates.Load (Filename => Policy_File);
@@ -787,11 +792,6 @@ is
 
       Tmpl := Templates.Load (Filename => "skp-kernel.ads");
       Replace_Kernel_Patterns;
-      Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__cpu_store_addr__",
-         Content  => SK.Utils.To_Hex
-           (Item => Policy.Kernel.CPU_Page_Address));
       Templates.Write (Template => Tmpl,
                        Filename => Dir_Name & "/skp-kernel.ads");
 

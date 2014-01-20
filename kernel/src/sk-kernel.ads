@@ -45,7 +45,7 @@ is
    --#    in out CPU_Global.State;
    --#    in out X86_64.State;
    --# derives
-   --#    Interrupts.State from *, X86_64.State &
+   --#    Interrupts.State from * &
    --#    MP.Barrier, IO_Apic.State, Subjects.State from
    --#       *,
    --#       X86_64.State,

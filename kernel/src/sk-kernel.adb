@@ -36,9 +36,11 @@ is
    is
       Success, Is_Bsp : Boolean;
    begin
-      Is_Bsp := Apic.Is_BSP;
+      Is_Bsp := CPU_Global.Is_BSP;
 
+      --# accept Flow, 22, "CPU ID differs per logical CPU";
       if Is_Bsp then
+      --# end accept;
          Interrupts.Init;
       end if;
       Interrupts.Load;
@@ -54,7 +56,9 @@ is
          Apic.Enable;
          CPU_Global.Init;
 
+         --# accept Flow, 22, "CPU ID differs per logical CPU";
          if Is_Bsp then
+         --# end accept;
 
             --  BSP
 

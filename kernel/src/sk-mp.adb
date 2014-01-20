@@ -20,7 +20,7 @@ with System.Machine_Code;
 
 with Skp;
 
-with SK.Apic;
+with SK.CPU_Global;
 
 package body SK.MP
 --# own Barrier is Sense, CPU_Sense, Barrier_Count;
@@ -68,16 +68,15 @@ is
    is
       --# hide Wait_For_All;
       Count : SK.Byte;
-      Id    : constant Skp.CPU_Range := Skp.CPU_Range (Apic.Get_ID);
    begin
-      CPU_Sense (Id) := not Sense;
+      CPU_Sense (CPU_Global.CPU_ID) := not Sense;
       Get_And_Increment_Barrier (Count => Count);
 
       if Count = SK.Byte (Skp.CPU_Range'Last) then
          Barrier_Count := 0;
-         Sense         := CPU_Sense (Id);
+         Sense         := CPU_Sense (CPU_Global.CPU_ID);
       else
-         while Sense /= CPU_Sense (Id) loop
+         while Sense /= CPU_Sense (CPU_Global.CPU_ID) loop
             System.Machine_Code.Asm (Template => "pause",
                                      Volatile => True);
          end loop;

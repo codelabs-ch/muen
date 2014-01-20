@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,20 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Text_Runner;
 with Ahven.Framework;
 
-with Paging_Tests;
-
-procedure Test_Runner
+package Paging_Tests
 is
-   use Ahven.Framework;
 
-   S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Libpaging tests");
-begin
-   Add_Test (Suite => S.all,
-             T     => new Paging_Tests.Testcase);
-   Ahven.Text_Runner.Run (Suite => S);
-   Release_Suite (T => S);
-end Test_Runner;
+   type Testcase is new Ahven.Framework.Test_Case with null record;
+
+   --  Initialize testcase.
+   procedure Initialize (T : in out Testcase);
+
+   --  Verify page table entry index calculation.
+   procedure Index_Calculation;
+
+end Paging_Tests;

@@ -71,31 +71,6 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Return CPU scheduling ID.
-   procedure Get_ID (ID : out Skp.CPU_Range)
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from * &
-   --#    ID           from X86_64.State;
-   is
-      Apic_ID : SK.Byte;
-   begin
-      ID      := 0;
-      Apic_ID := Apic.Get_ID;
-
-      if Apic_ID > SK.Byte (Skp.CPU_Range'Last) then
-         pragma Debug (KC.Put_String (Item => "CPU ID not in range: "));
-         pragma Debug (KC.Put_Byte   (Item => Apic_ID));
-         pragma Debug (KC.New_Line);
-         CPU.Panic;
-      else
-         ID := Skp.CPU_Range (Apic_ID);
-      end if;
-   end Get_ID;
-
-   -------------------------------------------------------------------------
-
    --  Read VMCS fields and store them in the given subject state.
    procedure Store_Subject_Info (State : in out SK.Subject_State_Type)
    --# global

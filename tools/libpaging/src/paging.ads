@@ -18,4 +18,23 @@
 
 package Paging
 is
+
+   --  Memory caching type, see Intel SDM Vol. 3A, section 11.3.
+   type Caching_Type is (UC, WC, WT, WP, WB);
+
+   --  Supported paging modes.
+   type Paging_Mode_Type is (IA32e_Mode, EPT_Mode);
+
+   --  All paging structure types (PML4, PDPT, PD, PT) have 512 entries.
+   type Table_Range is range 0 .. 511;
+
+   --  A PDPT entry maps a 1 GB page.
+   PDPT_Page_Size : constant := 2 ** 31;
+
+   --  A PD entry maps a 2 MB page.
+   PD_Page_Size   : constant := 2 ** 21;
+
+   --  A PT entry maps a 4 KB page.
+   Page_Size      : constant := 2 ** 12;
+
 end Paging;

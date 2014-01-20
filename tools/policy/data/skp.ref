@@ -19,6 +19,7 @@
 package Skp is
 
    type CPU_Range is range 0 .. 1;
+   for CPU_Range'Size use 8;
 
    subtype Subject_Id_Type is Natural range 0 .. 2;
 

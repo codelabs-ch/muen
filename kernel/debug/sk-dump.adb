@@ -20,6 +20,7 @@ with SK.KC;
 with SK.CPU;
 with SK.Apic;
 with SK.Locks;
+with SK.CPU_Global;
 
 package body SK.Dump
 is
@@ -106,6 +107,8 @@ is
       Locks.Spin_Lock;
       KC.New_Line;
       KC.Put_String (Item => "[CPU ");
+      KC.Put_Byte   (Item => Byte (CPU_Global.CPU_ID));
+      KC.Put_String (Item => ":");
       KC.Put_Byte   (Item => Apic.Get_ID);
       KC.Put_Line   (Item => " KERNEL PANIC]");
 

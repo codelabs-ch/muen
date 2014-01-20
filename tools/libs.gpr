@@ -16,8 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../../config/shared";
-with "../shared_tools";
+with "../config/shared";
+with "shared_tools";
 
 abstract project Libs is
 

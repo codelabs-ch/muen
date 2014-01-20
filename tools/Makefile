@@ -8,6 +8,7 @@ TOOLS =        \
 	mupack     \
 	muptgen    \
 	muspecgen  \
+	muvalidate \
 	muzpgen
 
 # Implicitly built libraries

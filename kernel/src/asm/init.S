@@ -20,6 +20,7 @@
 
 .global _start
 .global ap_entry_point
+.global cpu_counter
 
 #define IA32_APIC_BASE 0x1b
 #define IA32_VMX_BASIC 0x480
@@ -99,14 +100,17 @@ ap_entry_point:
 	btsl $CR4_PAE_BIT, %eax
 	movl %eax, %cr4
 
-	// get default APIC ID (CPUID.0BH:EDX[7:0])
+	// get CPU ID and increment counter
 
-	mov $0xb, %eax
-	cpuid
+	mov $1, %eax
+	lock xadd %eax, cpu_counter
+
+	// store local CPU ID in esi register until it can be saved to per-cpu area
+
+	mov %eax, %esi
 
 	// set up per-CPU paging
 
-	mov %dl, %al
 	mov $0x4000, %edx
 	mul %edx
 	add $KERNEL_PML4, %eax
@@ -152,6 +156,11 @@ start64: .align 4096
 
 	mov $KERNEL_STACK, %rsp
 
+	// set CPU ID variable located at start of per-CPU store
+
+	mov %rsi, %rax
+	movb %al, PERCPU_STORE
+
 	// set up kernel segment selectors
 
 	mov $0x10, %ecx
@@ -169,3 +178,8 @@ start64: .align 4096
 	jz kernel_init
 	call adainit
 	jmp kernel_init
+
+.data
+	.align 4
+cpu_counter:
+	.long 0

@@ -39,11 +39,6 @@ is
    --# derives
    --#    X86_64.State from *;
 
-   --  Returns True if processor is BSP.
-   function Is_BSP return Boolean;
-   --# global
-   --#    X86_64.State;
-
    --  Return local APIC ID.
    function Get_ID return SK.Byte;
    --# global

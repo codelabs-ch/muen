@@ -25,8 +25,6 @@ is
    ENABLE_APIC         : constant := 8;
    ENABLE_X2_MODE_FLAG : constant := 10;
 
-   APIC_BSP_FLAG : constant := 8;
-
    MSR_X2APIC_ID  : constant := 16#802#;
    MSR_X2APIC_EOI : constant := 16#80b#;
    MSR_X2APIC_SVR : constant := 16#80f#;
@@ -121,17 +119,6 @@ is
 
       return SK.Byte'Mod (ID);
    end Get_ID;
-
-   -------------------------------------------------------------------------
-
-   function Is_BSP return Boolean
-   is
-      Base : SK.Word64;
-   begin
-      Base := CPU.Get_MSR64 (Register => Constants.IA32_APIC_BASE);
-      return SK.Bit_Test (Value => Base,
-                          Pos   => APIC_BSP_FLAG);
-   end Is_BSP;
 
    -------------------------------------------------------------------------
 

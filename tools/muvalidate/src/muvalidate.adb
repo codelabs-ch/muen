@@ -23,11 +23,18 @@ with Mulog;
 with Muxml;
 
 with Validate.Command_Line;
+with Validate.Memory;
 
 procedure Muvalidate
 is
 begin
    Validate.Command_Line.Init (Description => "Muen policy validator");
+
+   --  Register validators.
+
+   Validate.Register
+     (Validator => Validate.Memory.Physical_Memory_References'Access);
+
    Validate.Run;
 
 exception

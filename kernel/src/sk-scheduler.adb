@@ -180,7 +180,7 @@ is
 
          MP.Wait_For_All;
          --# accept Flow, 22, "CPU ID differs per logical CPU";
-         if CPU_Global.CPU_ID = Skp.CPU_Range'First then
+         if CPU_Global.Is_BSP then
          --# end accept;
             Current_Major := New_Major;
          end if;

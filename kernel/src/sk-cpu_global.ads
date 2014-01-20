@@ -26,6 +26,9 @@ package SK.CPU_Global
 --#    State;
 is
 
+   --  ID of the local CPU.
+   CPU_ID : constant Skp.CPU_Range;
+
    --  Currently active minor frame.
    type Active_Minor_Frame_Type is record
       Minor_Id   : Skp.Scheduling.Minor_Frame_Range;
@@ -84,5 +87,11 @@ is
    --#    State from *, Old_Id, New_Id;
    --# pre
    --#    Old_Id /= New_Id;
+
+private
+
+   --# hide SK.CPU_Global;
+
+   pragma Import (C, CPU_ID, "cpu_id");
 
 end SK.CPU_Global;

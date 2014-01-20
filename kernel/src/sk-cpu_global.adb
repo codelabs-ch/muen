@@ -33,11 +33,12 @@ is
 
    --# accept Warning, 396, Storage, "Not an external (stream) variable";
    Storage : Storage_Type;
-   for Storage'Address use System'To_Address (Skp.Kernel.CPU_Store_Address);
+   for Storage'Address use System'To_Address
+     (Skp.Kernel.CPU_Store_Address + 8);
    --# end accept;
 
    pragma Warnings (Off, "* bits of ""Storage"" unused");
-   for Storage'Size use 8 * SK.Page_Size;
+   for Storage'Size use 8 * (SK.Page_Size - 8);
    pragma Warnings (On,  "* bits of ""Storage"" unused");
 
    -------------------------------------------------------------------------

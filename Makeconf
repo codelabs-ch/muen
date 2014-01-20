@@ -21,6 +21,7 @@ MUMSRBMGEN = $(TOP_DIR)/tools/mumsrbmgen/bin/mumsrbmgen
 MUPACK     = $(TOP_DIR)/tools/mupack/bin/mupack
 MUPTGEN    = $(TOP_DIR)/tools/muptgen/bin/muptgen
 MUSPECGEN  = $(TOP_DIR)/tools/muspecgen/bin/muspecgen
+MUVALIDATE = $(TOP_DIR)/tools/muvalidate/bin/muvalidate
 MUZPGEN    = $(TOP_DIR)/tools/muzpgen/bin/muzpgen
 
 HARDWARE ?= bochs

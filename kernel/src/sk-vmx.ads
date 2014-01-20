@@ -28,7 +28,6 @@ with Skp;
 --#    SK.Descriptors,
 --#    SK.Constants,
 --#    SK.Subjects,
---#    SK.Apic,
 --#    SK.Events;
 package SK.VMX
 --# own

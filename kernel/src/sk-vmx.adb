@@ -26,7 +26,6 @@ with SK.KC;
 with SK.GDT;
 with SK.Constants;
 with SK.Subjects;
-with SK.Apic;
 with SK.Events;
 
 package body SK.VMX
@@ -49,11 +48,9 @@ is
 
    --  Return per-CPU memory offset.
    function Get_CPU_Offset return SK.Word64
-   --# global
-   --#    X86_64.State;
    is
    begin
-      return SK.Word64 (Apic.Get_ID) * SK.Page_Size;
+      return SK.Word64 (CPU_Global.CPU_ID) * SK.Page_Size;
    end Get_CPU_Offset;
 
    -------------------------------------------------------------------------

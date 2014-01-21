@@ -40,6 +40,9 @@ is
         (Routine => Validate_Physirq_Uniqueness'Access,
          Name    => "Validate physical IRQ uniqueness");
       T.Add_Test_Routine
+        (Routine => Validate_Physirq_Refs'Access,
+         Name    => "Validate physical IRQ references");
+      T.Add_Test_Routine
         (Routine => Validate_IO_Port_Start_Smaller_End'Access,
          Name    => "Validate I/O ports start <= end");
    end Initialize;
@@ -87,6 +90,28 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Physdev_Refs;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Physirq_Refs
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Device.Physical_IRQ_References (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Physical IRQ 'nonexistent' referenced by logical IRQ"
+                    & " 'irq' of logical device 'console' not found",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Physirq_Refs;
 
    -------------------------------------------------------------------------
 

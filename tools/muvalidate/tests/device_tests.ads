@@ -32,6 +32,9 @@ is
    --  Validate uniqueness of physical device IRQs.
    procedure Validate_Physirq_Uniqueness;
 
+   --  Validate physical device IRQ references.
+   procedure Validate_Physirq_Refs;
+
    --  Validate that IO start ports are smaller than end ports.
    procedure Validate_IO_Port_Start_Smaller_End;
 

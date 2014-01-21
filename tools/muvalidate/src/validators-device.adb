@@ -88,7 +88,8 @@ is
         (N     => XML_Data.Doc,
          XPath => "//ioPort");
    begin
-      Mulog.Log (Msg => "Checking I/O start ports <= end");
+      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " I/O port range(s) for start <= end");
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare

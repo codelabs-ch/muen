@@ -45,7 +45,8 @@ is
         (N     => XML_Data.Doc,
          XPath => "//msr");
    begin
-      Mulog.Log (Msg => "Checking MSR ranges low/high");
+      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length (List => Nodes)'Img
+                 & " MSR range(s) for low/high consistency");
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
@@ -91,7 +92,8 @@ is
         (N     => XML_Data.Doc,
          XPath => "//msr");
    begin
-      Mulog.Log (Msg => "Checking MSR start addresses <= end");
+      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length (List => Nodes)'Img
+                 & " MSR range(s) for start <= end");
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare

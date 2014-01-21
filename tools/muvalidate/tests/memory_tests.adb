@@ -36,6 +36,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Physmem_Refs'Access,
          Name    => "Validate physical memory references");
+      T.Add_Test_Routine
+        (Routine => Validate_VMXON_Presence'Access,
+         Name    => "Validate presence of VMXON regions");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -45,7 +48,7 @@ is
       Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
-                   File => "data/validate_physmem_refs.xml");
+                   File => "data/validators.xml");
 
       begin
          Validators.Memory.Physical_Memory_References (XML_Data => Data);
@@ -58,5 +61,26 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Physmem_Refs;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_VMXON_Presence
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Memory.VMXON_Presence (XML_Data => Data);
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMXON region 'kernel_0|vmxon' for logical CPU 0 not "
+                    & "found",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_VMXON_Presence;
 
 end Memory_Tests;

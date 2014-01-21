@@ -16,12 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Muxml.Utils;
 
 package body Validators.Memory
 is
@@ -64,5 +67,38 @@ is
          end;
       end loop;
    end Physical_Memory_References;
+
+   -------------------------------------------------------------------------
+
+   procedure VMXON_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+      CPU_Count : constant Positive := Positive'Value
+        (Muxml.Utils.Get_Attribute
+           (Doc   => XML_Data.Doc,
+            XPath => "/system/platform/processor",
+            Name  => "logicalCpus"));
+      Mem_Node  : DOM.Core.Node_List;
+   begin
+      Mulog.Log (Msg => "Checking presence of VMXON regions");
+
+      for I in 0 .. CPU_Count - 1 loop
+         declare
+            CPU_Str  : constant String
+              := Ada.Strings.Fixed.Trim
+                (Source => I'Img,
+                 Side   => Ada.Strings.Left);
+            Mem_Name : constant String
+              := "kernel_" & CPU_Str & "|vmxon";
+         begin
+            Mem_Node := XPath_Query
+              (N     => XML_Data.Doc,
+               XPath => "/system/memory/memory[@name='" & Mem_Name & "']");
+            if DOM.Core.Nodes.Length (List => Mem_Node) = 0 then
+               raise Validation_Error with "VMXON region '" & Mem_Name
+                 & "' for logical CPU " & CPU_Str & " not found";
+            end if;
+         end;
+      end loop;
+   end VMXON_Presence;
 
 end Validators.Memory;

@@ -34,6 +34,8 @@ begin
 
    Validate.Register
      (Validator => Validators.Memory.Physical_Memory_References'Access);
+   Validate.Register
+     (Validator => Validators.Memory.VMXON_Presence'Access);
 
    Validate.Run;
 

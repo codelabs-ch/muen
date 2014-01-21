@@ -29,4 +29,7 @@ is
    --  Validate physical memory references.
    procedure Validate_Physmem_Refs;
 
+   --  Validate presence of VMXON regions.
+   procedure Validate_VMXON_Presence;
+
 end Memory_Tests;

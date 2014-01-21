@@ -44,7 +44,8 @@ is
         (N     => XML_Data.Doc,
          XPath => "//*[@physicalAddress]");
    begin
-      Mulog.Log (Msg => "Checking alignment of physical addresses");
+      Mulog.Log (Msg => "Checking alignment of" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " physical addresses");
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
@@ -76,7 +77,8 @@ is
         (N     => XML_Data.Doc,
          XPath => "//physical");
    begin
-      Mulog.Log (Msg => "Checking physical memory references");
+      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length (List => Nodes)'Img
+                 & " physical memory references");
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
@@ -115,7 +117,8 @@ is
         (N     => XML_Data.Doc,
          XPath => "//*[@size]");
    begin
-      Mulog.Log (Msg => "Checking memory region sizes");
+      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " memory region sizes");
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
@@ -150,7 +153,8 @@ is
         (N     => XML_Data.Doc,
          XPath => "//*[@virtualAddress]");
    begin
-      Mulog.Log (Msg => "Checking alignment of virtual addresses");
+      Mulog.Log (Msg => "Checking alignment of" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " virtual addresses");
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
@@ -185,7 +189,8 @@ is
             Name  => "logicalCpus"));
       Mem_Node  : DOM.Core.Node_List;
    begin
-      Mulog.Log (Msg => "Checking presence of VMXON regions");
+      Mulog.Log (Msg => "Checking presence of" & CPU_Count'Img
+                 & " VMXON region(s)");
 
       for I in 0 .. CPU_Count - 1 loop
          declare

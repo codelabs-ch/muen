@@ -35,4 +35,7 @@ is
    --  Validate physical memory address alignment.
    procedure Validate_Physaddr_Alignment;
 
+   --  Validate virtual memory address alignment.
+   procedure Validate_Virtaddr_Alignment;
+
 end Memory_Tests;

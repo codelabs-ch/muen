@@ -107,6 +107,40 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Virtual_Address_Alignment (XML_Data : Muxml.XML_Data_Type)
+   is
+      use type Interfaces.Unsigned_64;
+
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "//*[@virtualAddress]");
+   begin
+      Mulog.Log (Msg => "Checking alignment of virtual addresses");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Node     : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Name     : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "logical");
+            Addr_Str : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "virtualAddress");
+            Address  : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value (Addr_Str);
+         begin
+            if Address mod Mutools.Constants.Page_Size /= 0 then
+               raise Validation_Error with "Virtual address " & Addr_Str
+                 & " of '" & Name & "' not page aligned";
+            end if;
+         end;
+      end loop;
+   end Virtual_Address_Alignment;
+
+   -------------------------------------------------------------------------
+
    procedure VMXON_Presence (XML_Data : Muxml.XML_Data_Type)
    is
       CPU_Count : constant Positive := Positive'Value

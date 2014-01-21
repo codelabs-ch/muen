@@ -30,4 +30,7 @@ is
    --  Validate that all physical memory addresses are page aligned.
    procedure Physical_Address_Alignment (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that all virtual memory addresses are page aligned.
+   procedure Virtual_Address_Alignment (XML_Data : Muxml.XML_Data_Type);
+
 end Validators.Memory;

@@ -38,6 +38,8 @@ begin
      (Validator => Validators.Memory.VMXON_Presence'Access);
    Validate.Register
      (Validator => Validators.Memory.Physical_Address_Alignment'Access);
+   Validate.Register
+     (Validator => Validators.Memory.Virtual_Address_Alignment'Access);
 
    Validate.Run;
 

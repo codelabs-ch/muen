@@ -208,7 +208,7 @@
 			</vcpu>
 			<bootparams/>
 			<memory>
-				<memory logical="linux" virtualAddress="16#000e_0000#" writable="false" executable="false">
+				<memory logical="linux" virtualAddress="16#000e_0500#" writable="false" executable="false">
 					<physical name="lnx_mem"/>
 				</memory>
 			</memory>

@@ -171,7 +171,8 @@ is
         (N     => XML_Data.Doc,
          XPath => "//irq[@logical]");
    begin
-      Mulog.Log (Msg => "Checking physical IRQ references");
+      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length (List => Nodes)'Img
+                 & " device IRQ reference(s)");
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare

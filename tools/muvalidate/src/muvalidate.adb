@@ -40,6 +40,8 @@ begin
      (Validator => Validators.Memory.Physical_Address_Alignment'Access);
    Validate.Register
      (Validator => Validators.Memory.Virtual_Address_Alignment'Access);
+   Validate.Register
+     (Validator => Validators.Memory.Region_Size'Access);
 
    Validate.Run;
 

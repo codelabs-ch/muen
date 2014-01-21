@@ -33,4 +33,7 @@ is
    --  Validate that all virtual memory addresses are page aligned.
    procedure Virtual_Address_Alignment (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that all memory region sizes are multiples of page size.
+   procedure Region_Size (XML_Data : Muxml.XML_Data_Type);
+
 end Validators.Memory;

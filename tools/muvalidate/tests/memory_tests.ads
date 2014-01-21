@@ -38,4 +38,7 @@ is
    --  Validate virtual memory address alignment.
    procedure Validate_Virtaddr_Alignment;
 
+   --  Validate memory region size.
+   procedure Validate_Region_Size;
+
 end Memory_Tests;

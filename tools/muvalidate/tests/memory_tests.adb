@@ -45,6 +45,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Virtaddr_Alignment'Access,
          Name    => "Validate virtual memory address alignment");
+      T.Add_Test_Routine
+        (Routine => Validate_Region_Size'Access,
+         Name    => "Validate memory region size");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -89,6 +92,28 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Physmem_Refs;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Region_Size
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Memory.Region_Size (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Size 16#8000_0042# of memory region 'ram_1' not"
+                    & " multiple of page size (4K)",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Region_Size;
 
    -------------------------------------------------------------------------
 

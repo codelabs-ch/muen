@@ -38,4 +38,7 @@ is
    --  Validate that IO start ports are smaller than end ports.
    procedure Validate_IO_Port_Start_Smaller_End;
 
+   --  Validate physical device I/O port references.
+   procedure Validate_IO_Port_Refs;
+
 end Device_Tests;

@@ -45,7 +45,32 @@ is
       T.Add_Test_Routine
         (Routine => Validate_IO_Port_Start_Smaller_End'Access,
          Name    => "Validate I/O ports start <= end");
+      T.Add_Test_Routine
+        (Routine => Validate_IO_Port_Refs'Access,
+         Name    => "Validate I/O port references");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_IO_Port_Refs
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Device.IO_Port_References (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Physical I/O port 'serial' referenced by logical I/O"
+                    & " port 'ports' of logical device 'log' not found",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_IO_Port_Refs;
 
    -------------------------------------------------------------------------
 

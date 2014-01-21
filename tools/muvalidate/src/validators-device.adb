@@ -35,6 +35,51 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure IO_Port_References (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "//ioPort[@logical]");
+   begin
+      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " I/O port reference(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Node          : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Log_Dev_Name  : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+               Name => "logical");
+            Phys_Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+               Name => "physical");
+            Logical_Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Node,
+                 Name => "logical");
+            Phys_Name     : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Node,
+                 Name => "physical");
+            Physical      : constant DOM.Core.Node_List
+              := XPath_Query
+                (N     => XML_Data.Doc,
+                 XPath => "/system/platform/device[@name='" & Phys_Dev_Name
+                 & "']/ioPort[@name='" & Phys_Name & "']");
+         begin
+            if DOM.Core.Nodes.Length (List => Physical) = 0 then
+               raise Validation_Error with "Physical I/O port '" & Phys_Name
+                 & "' referenced by logical I/O port '" & Logical_Name
+                 & "' of logical device '" & Log_Dev_Name & "' not found";
+            end if;
+         end;
+      end loop;
+   end IO_Port_References;
+
+   -------------------------------------------------------------------------
+
    procedure IO_Port_Start_Smaller_End (XML_Data : Muxml.XML_Data_Type)
    is
       use type Interfaces.Unsigned_32;
@@ -47,18 +92,18 @@ is
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
-            Node     : constant DOM.Core.Node
+            Node       : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Nodes,
                                       Index => I);
             S_Addr_Str : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "start");
-            S_Addr : constant Interfaces.Unsigned_32
+            S_Addr     : constant Interfaces.Unsigned_32
               := Interfaces.Unsigned_32'Value (S_Addr_Str);
             E_Addr_Str : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "end");
-            E_Addr : constant Interfaces.Unsigned_32
+            E_Addr     : constant Interfaces.Unsigned_32
               := Interfaces.Unsigned_32'Value (E_Addr_Str);
 
             --  Either name or logical attribute exists.
@@ -141,11 +186,11 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Node,
                  Name => "logical");
-            Phys_Name    : constant String
+            Phys_Name     : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Node,
                  Name => "physical");
-            Physical     : constant DOM.Core.Node_List
+            Physical      : constant DOM.Core.Node_List
               := XPath_Query
                 (N     => XML_Data.Doc,
                  XPath => "/system/platform/device[@name='" & Phys_Dev_Name
@@ -181,11 +226,11 @@ is
             Node         : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Nodes,
                                       Index => I);
-            Irq_Number : constant IRQ_Range := IRQ_Range'Value
+            Irq_Number   : constant IRQ_Range := IRQ_Range'Value
               (DOM.Core.Elements.Get_Attribute
                  (Elem => Node,
                   Name => "number"));
-            Dev_Name   : constant String
+            Dev_Name     : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
                  Name => "name");

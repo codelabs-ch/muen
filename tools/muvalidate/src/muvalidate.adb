@@ -62,6 +62,8 @@ begin
      (Validator => Validators.Device.Physical_IRQ_References'Access);
    Validate.Register
      (Validator => Validators.Device.IO_Port_Start_Smaller_End'Access);
+   Validate.Register
+     (Validator => Validators.Device.IO_Port_References'Access);
 
    Validate.Run;
 

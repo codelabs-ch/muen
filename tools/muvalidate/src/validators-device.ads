@@ -33,4 +33,7 @@ is
    --  Validate that all IO start ports are smaller than end ports.
    procedure IO_Port_Start_Smaller_End (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that physical I/O ports referenced by logical I/O ports exists.
+   procedure IO_Port_References (XML_Data : Muxml.XML_Data_Type);
+
 end Validators.Device;

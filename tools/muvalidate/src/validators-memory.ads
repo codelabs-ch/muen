@@ -27,6 +27,9 @@ is
    --  Validate size of VMXON regions.
    procedure VMXON_Region_Size (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that a VMCS region exists for each declared subject.
+   procedure VMCS_Region_Presence (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that physical memory referenced by logical memory exists.
    procedure Physical_Memory_References (XML_Data : Muxml.XML_Data_Type);
 

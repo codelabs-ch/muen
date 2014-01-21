@@ -39,6 +39,8 @@ begin
    Validate.Register
      (Validator => Validators.Memory.VMXON_Region_Size'Access);
    Validate.Register
+     (Validator => Validators.Memory.VMCS_Region_Presence'Access);
+   Validate.Register
      (Validator => Validators.Memory.Physical_Address_Alignment'Access);
    Validate.Register
      (Validator => Validators.Memory.Virtual_Address_Alignment'Access);

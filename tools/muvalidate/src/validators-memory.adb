@@ -180,6 +180,38 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VMCS_Region_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+      Subjects : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject/@name");
+      Mem_Node : DOM.Core.Node_List;
+   begin
+      Mulog.Log (Msg => "Checking presence of" & DOM.Core.Nodes.Length
+                 (List => Subjects)'Img & " VMCS region(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Name : constant String
+              := DOM.Core.Nodes.Node_Value
+                (DOM.Core.Nodes.Item
+                     (List  => Subjects,
+                      Index => I));
+            Mem_Name  : constant String := Subj_Name & "|vmcs";
+         begin
+            Mem_Node := XPath_Query
+              (N     => XML_Data.Doc,
+               XPath => "/system/memory/memory[@name='" & Mem_Name & "']");
+            if DOM.Core.Nodes.Length (List => Mem_Node) = 0 then
+               raise Validation_Error with "VMCS region '" & Mem_Name
+                 & "' for subject " & Subj_Name & " not found";
+            end if;
+         end;
+      end loop;
+   end VMCS_Region_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure VMXON_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
       CPU_Count : constant Positive := Positive'Value

@@ -222,7 +222,8 @@ is
         (N     => XML_Data.Doc,
          XPath => "/system/platform/device/irq");
    begin
-      Mulog.Log (Msg => "Checking physical IRQ uniqueness");
+      Mulog.Log (Msg => "Checking uniqueness of" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img& " device IRQ(s)");
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare

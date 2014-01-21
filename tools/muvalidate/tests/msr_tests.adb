@@ -36,7 +36,32 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Start_Smaller_End'Access,
          Name    => "Validate MSR range start <= end");
+      T.Add_Test_Routine
+        (Routine => Validate_Low_High'Access,
+         Name    => "Validate MSR range low/high");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Low_High
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.MSR.Low_Or_High (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "MSR start 16#1f00# and end 16#c000_0800# in different"
+                    & " low/high range (Subject 'linux')",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Low_High;
 
    -------------------------------------------------------------------------
 

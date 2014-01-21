@@ -29,4 +29,7 @@ is
    --  Validate that MSR start are smaller than end addresses.
    procedure Validate_Start_Smaller_End;
 
+   --  Validate that MSR start and end addresses are either low or high.
+   procedure Validate_Low_High;
+
 end MSR_Tests;

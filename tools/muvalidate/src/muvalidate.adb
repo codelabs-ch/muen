@@ -51,6 +51,8 @@ begin
      (Validator => Validators.Memory.Region_Size'Access);
    Validate.Register
      (Validator => Validators.MSR.Start_Smaller_End'Access);
+   Validate.Register
+     (Validator => Validators.MSR.Low_Or_High'Access);
 
    Validate.Run;
 

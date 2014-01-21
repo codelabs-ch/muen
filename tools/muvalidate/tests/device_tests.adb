@@ -36,6 +36,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Physdev_Refs'Access,
          Name    => "Validate physical device references");
+      T.Add_Test_Routine
+        (Routine => Validate_Physirq_Uniqueness'Access,
+         Name    => "Validate physical IRQ uniqueness");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -59,5 +62,26 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Physdev_Refs;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Physirq_Uniqueness
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Device.Physical_IRQ_Uniqueness (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Devices 'keyboard' and 'serial' share IRQ 1",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Physirq_Uniqueness;
 
 end Device_Tests;

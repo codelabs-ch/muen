@@ -56,6 +56,8 @@ begin
      (Validator => Validators.MSR.Low_Or_High'Access);
    Validate.Register
      (Validator => Validators.Device.Physical_Device_References'Access);
+   Validate.Register
+     (Validator => Validators.Device.Physical_IRQ_Uniqueness'Access);
 
    Validate.Run;
 

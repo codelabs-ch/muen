@@ -6,7 +6,14 @@
 			<memoryBlock name="ram_1" physicalAddress="16#0000#" size="16#8000_0042#" caching="WB"/>
 		</memory>
 		<device name="serial" shared="false">
+			<irq name="bar" number="1"/>
+			<irq name="cmd" number="23"/>
 			<ioPort name="serial" start="16#50b0#" end="16#50b0#"/>
+		</device>
+		<device name="keyboard" shared="false">
+			<irq name="foo" number="1"/>
+			<ioPort name="port_60" start="16#0060#" end="16#0060#"/>
+			<ioPort name="port_64" start="16#0064#" end="16#0064#"/>
 		</device>
 	</platform>
 

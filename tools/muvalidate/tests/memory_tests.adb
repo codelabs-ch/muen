@@ -40,6 +40,9 @@ is
         (Routine => Validate_VMXON_Presence'Access,
          Name    => "Validate presence of VMXON regions");
       T.Add_Test_Routine
+        (Routine => Validate_VMXON_Size'Access,
+         Name    => "Validate size of VMXON regions");
+      T.Add_Test_Routine
         (Routine => Validate_Physaddr_Alignment'Access,
          Name    => "Validate physical memory address alignment");
       T.Add_Test_Routine
@@ -159,5 +162,27 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_VMXON_Presence;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_VMXON_Size
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Memory.VMXON_Region_Size (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Size 16#0001_0012# of VMXON memory region "
+                    & "'invalid_0|vmxon' not 4K",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_VMXON_Size;
 
 end Memory_Tests;

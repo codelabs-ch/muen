@@ -212,4 +212,41 @@ is
       end loop;
    end VMXON_Region_Presence;
 
+   -------------------------------------------------------------------------
+
+   procedure VMXON_Region_Size (XML_Data : Muxml.XML_Data_Type)
+   is
+      use type Interfaces.Unsigned_64;
+
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/memory/memory[contains(string(@name), '|vmxon')]");
+   begin
+      Mulog.Log (Msg => "Checking size of" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " VMXON region(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Node     : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Name     : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Node,
+                 Name => "name");
+            Size_Str : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Node,
+                 Name => "size");
+            Size     : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value (Size_Str);
+         begin
+            if Size /= Mutools.Constants.Page_Size then
+               raise Validation_Error with "Size " & Size_Str
+                 & " of VMXON memory region '" & Name & "' not 4K";
+            end if;
+         end;
+      end loop;
+   end VMXON_Region_Size;
+
 end Validators.Memory;

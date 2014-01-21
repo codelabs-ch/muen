@@ -25,6 +25,7 @@ with Muxml;
 with Validate.Command_Line;
 with Validators.Memory;
 with Validators.MSR;
+with Validators.Device;
 
 procedure Muvalidate
 is
@@ -53,6 +54,8 @@ begin
      (Validator => Validators.MSR.Start_Smaller_End'Access);
    Validate.Register
      (Validator => Validators.MSR.Low_Or_High'Access);
+   Validate.Register
+     (Validator => Validators.Device.Physical_Device_References'Access);
 
    Validate.Run;
 

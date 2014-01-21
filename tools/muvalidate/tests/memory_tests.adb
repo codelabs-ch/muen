@@ -147,7 +147,7 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Memory.VMXON_Presence (XML_Data => Data);
+         Validators.Memory.VMXON_Region_Presence (XML_Data => Data);
 
       exception
          when E : Validators.Validation_Error =>

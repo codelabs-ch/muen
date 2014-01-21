@@ -22,7 +22,7 @@ package Validators.Memory
 is
 
    --  Validate that a VMXON region exists for every specified kernel.
-   procedure VMXON_Presence (XML_Data : Muxml.XML_Data_Type);
+   procedure VMXON_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that physical memory referenced by logical memory exists.
    procedure Physical_Memory_References (XML_Data : Muxml.XML_Data_Type);

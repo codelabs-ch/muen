@@ -318,11 +318,7 @@
 				</memory>
 			</cpu>
 		</memory>
-		<devices>
-			<device logical="log" physical="debugconsole">
-				<ioPort logical="ports" physical="port1" start="16#03f8#" end="16#03ff#"/>
-			</device>
-		</devices>
+		<devices/>
 	</kernel>
 
 	<subjects>

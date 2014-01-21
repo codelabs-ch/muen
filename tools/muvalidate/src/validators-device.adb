@@ -132,7 +132,8 @@ is
         (N     => XML_Data.Doc,
          XPath => "//device[@physical]");
    begin
-      Mulog.Log (Msg => "Checking physical device references");
+      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length (List => Nodes)'Img
+                 & " physical device reference(s)");
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare

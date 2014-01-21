@@ -39,7 +39,32 @@ is
       T.Add_Test_Routine
         (Routine => Validate_VMXON_Presence'Access,
          Name    => "Validate presence of VMXON regions");
+      T.Add_Test_Routine
+        (Routine => Validate_Physaddr_Alignment'Access,
+         Name    => "Validate physical memory address alignment");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Physaddr_Alignment
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Memory.Physical_Address_Alignment (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Physical address 16#0010_0023# of 'kernel_text' not"
+                    & " page aligned",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Physaddr_Alignment;
 
    -------------------------------------------------------------------------
 

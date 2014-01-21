@@ -11,7 +11,7 @@
 	</platform>
 
 	<memory>
-		<memory name="kernel_text" size="16#0001_0000#" physicalAddress="16#0010_0000#" caching="WB">
+		<memory name="kernel_text" size="16#0001_0000#" physicalAddress="16#0010_0023#" caching="WB">
 			<file format="elf" filename="kernel" offset="16#0000#"/>
 		</memory>
 	</memory>

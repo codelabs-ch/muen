@@ -32,4 +32,7 @@ is
    --  Validate presence of VMXON regions.
    procedure Validate_VMXON_Presence;
 
+   --  Validate physical memory address alignment.
+   procedure Validate_Physaddr_Alignment;
+
 end Memory_Tests;

@@ -27,4 +27,7 @@ is
    --  Validate that physical memory referenced by logical memory exists.
    procedure Physical_Memory_References (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that all physical memory addresses are page aligned.
+   procedure Physical_Address_Alignment (XML_Data : Muxml.XML_Data_Type);
+
 end Validators.Memory;

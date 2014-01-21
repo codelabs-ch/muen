@@ -12,6 +12,7 @@
 
 	<memory>
 		<memory name="invalid_0|vmxon" size="16#0001_0012#" physicalAddress="16#0010_0000#" caching="WB"/>
+		<memory name="invalid|vmcs" size="16#0001_0013#" physicalAddress="16#0010_0000#" caching="WB"/>
 		<memory name="kernel_text" size="16#0001_0000#" physicalAddress="16#0010_0023#" caching="WB">
 			<file format="elf" filename="kernel" offset="16#0000#"/>
 		</memory>

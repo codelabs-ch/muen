@@ -46,6 +46,9 @@ is
         (Routine => Validate_VMCS_Presence'Access,
          Name    => "Validate presence of VMCS regions");
       T.Add_Test_Routine
+        (Routine => Validate_VMCS_Size'Access,
+         Name    => "Validate size of VMCS regions");
+      T.Add_Test_Routine
         (Routine => Validate_Physaddr_Alignment'Access,
          Name    => "Validate physical memory address alignment");
       T.Add_Test_Routine
@@ -164,6 +167,28 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_VMCS_Presence;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_VMCS_Size
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Memory.VMCS_Region_Size (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Size 16#0001_0013# of VMCS memory region 'invalid|vmcs'"
+                    & " not 4K",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_VMCS_Size;
 
    -------------------------------------------------------------------------
 

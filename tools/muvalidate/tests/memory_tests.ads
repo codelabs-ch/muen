@@ -38,6 +38,9 @@ is
    --  Validate presence of VMCS regions.
    procedure Validate_VMCS_Presence;
 
+   --  Validate size of VMCS regions.
+   procedure Validate_VMCS_Size;
+
    --  Validate physical memory address alignment.
    procedure Validate_Physaddr_Alignment;
 

@@ -20,7 +20,7 @@ with Ada.Exceptions;
 
 with Muxml;
 
-with Validate.Memory;
+with Validators.Memory;
 
 package body Memory_Tests
 is
@@ -48,10 +48,10 @@ is
                    File => "data/validate_physmem_refs.xml");
 
       begin
-         Validate.Memory.Physical_Memory_References (XML_Data => Data);
+         Validators.Memory.Physical_Memory_References (XML_Data => Data);
 
       exception
-         when E : Validate.Validation_Error =>
+         when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Physical memory 'lnx_mem' referenced by logical memory"
                     & " 'linux' not found",

@@ -16,18 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muxml;
-
-package Validate
+package Validators
 is
 
-   type Validation_Procedure is not null access procedure
-     (XML_Data : Muxml.XML_Data_Type);
+   Validation_Error : exception;
 
-   --  Register validator.
-   procedure Register (Validator : Validation_Procedure);
-
-   --  Start the validation process.
-   procedure Run;
-
-end Validate;
+end Validators;

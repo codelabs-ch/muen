@@ -23,7 +23,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 
-package body Validate.Memory
+package body Validators.Memory
 is
 
    use McKae.XML.XPath.XIA;
@@ -65,4 +65,4 @@ is
       end loop;
    end Physical_Memory_References;
 
-end Validate.Memory;
+end Validators.Memory;

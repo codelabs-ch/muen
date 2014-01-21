@@ -16,8 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Validate.Memory;
 with Validate.Command_Line.Test;
+with Validators.Memory;
 
 package body Validate_Tests
 is
@@ -32,7 +32,7 @@ is
       Validate.Command_Line.Test.Set_Policy (Path => "data/test_policy.xml");
 
       Validate.Register
-        (Validator => Validate.Memory.Physical_Memory_References'Access);
+        (Validator => Validators.Memory.Physical_Memory_References'Access);
 
       Validate.Run;
 

@@ -23,7 +23,7 @@ with Mulog;
 with Muxml;
 
 with Validate.Command_Line;
-with Validate.Memory;
+with Validators.Memory;
 
 procedure Muvalidate
 is
@@ -33,13 +33,13 @@ begin
    --  Register validators.
 
    Validate.Register
-     (Validator => Validate.Memory.Physical_Memory_References'Access);
+     (Validator => Validators.Memory.Physical_Memory_References'Access);
 
    Validate.Run;
 
 exception
    when E : Muxml.Processing_Error |
-      Validate.Validation_Error =>
+      Validators.Validation_Error =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Validation failed, aborting");
       Mulog.Log (Level => Mulog.Error,

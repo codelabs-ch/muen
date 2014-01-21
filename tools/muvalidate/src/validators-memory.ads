@@ -16,10 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package Validate.Memory
+with Muxml;
+
+package Validators.Memory
 is
 
    --  Validate that physical memory referenced by logical memory exists.
    procedure Physical_Memory_References (XML_Data : Muxml.XML_Data_Type);
 
-end Validate.Memory;
+end Validators.Memory;

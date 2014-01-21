@@ -83,6 +83,7 @@ is
 
       begin
          Validators.Memory.Physical_Memory_References (XML_Data => Data);
+         Fail (Message => "Exception expected");
 
       exception
          when E : Validators.Validation_Error =>
@@ -148,6 +149,7 @@ is
 
       begin
          Validators.Memory.VMXON_Region_Presence (XML_Data => Data);
+         Fail (Message => "Exception expected");
 
       exception
          when E : Validators.Validation_Error =>

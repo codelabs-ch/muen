@@ -27,4 +27,7 @@ is
    --  Validate that all physical IRQs are unique.
    procedure Physical_IRQ_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that all IO start ports are smaller than end ports.
+   procedure IO_Port_Start_Smaller_End (XML_Data : Muxml.XML_Data_Type);
+
 end Validators.Device;

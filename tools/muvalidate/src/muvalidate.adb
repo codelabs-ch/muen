@@ -58,6 +58,8 @@ begin
      (Validator => Validators.Device.Physical_Device_References'Access);
    Validate.Register
      (Validator => Validators.Device.Physical_IRQ_Uniqueness'Access);
+   Validate.Register
+     (Validator => Validators.Device.IO_Port_Start_Smaller_End'Access);
 
    Validate.Run;
 

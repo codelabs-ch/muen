@@ -226,7 +226,7 @@
 			</memory>
 			<devices>
 				<device logical="console" physical="vga">
-					<ioPort logical="consoleports" physical="ports" start="16#03d4#" end="16#03d5#"/>
+					<ioPort logical="consoleports" physical="ports" start="16#03d5#" end="16#03d4#"/>
 				</device>
 			</devices>
 			<events/>

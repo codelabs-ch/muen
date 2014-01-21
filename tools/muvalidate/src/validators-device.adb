@@ -18,6 +18,8 @@
 
 with Ada.Strings.Unbounded;
 
+with Interfaces;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
@@ -30,6 +32,51 @@ is
 
    use Ada.Strings.Unbounded;
    use McKae.XML.XPath.XIA;
+
+   -------------------------------------------------------------------------
+
+   procedure IO_Port_Start_Smaller_End (XML_Data : Muxml.XML_Data_Type)
+   is
+      use type Interfaces.Unsigned_32;
+
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "//ioPort");
+   begin
+      Mulog.Log (Msg => "Checking I/O start ports <= end");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Node     : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            S_Addr_Str : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "start");
+            S_Addr : constant Interfaces.Unsigned_32
+              := Interfaces.Unsigned_32'Value (S_Addr_Str);
+            E_Addr_Str : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "end");
+            E_Addr : constant Interfaces.Unsigned_32
+              := Interfaces.Unsigned_32'Value (E_Addr_Str);
+
+            --  Either name or logical attribute exists.
+
+            Name       : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "name");
+            Logical_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "logical");
+         begin
+            if S_Addr > E_Addr then
+               raise Validation_Error with "I/O port '" & Name & Logical_Name
+                 & "' start " & S_Addr_Str & " larger than end " & E_Addr_Str;
+            end if;
+         end;
+      end loop;
+   end IO_Port_Start_Smaller_End;
 
    -------------------------------------------------------------------------
 

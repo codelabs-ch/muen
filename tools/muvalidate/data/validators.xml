@@ -200,7 +200,9 @@
 						<XSAVEEnable>0</XSAVEEnable>
 						<SMEPEnable>0</SMEPEnable>
 					</cr4>
-					<msrs/>
+					<msrs>
+						<msr start="16#0902#" end="16#0800#" mode="rw"/>
+					</msrs>
 				</registers>
 				<segments>
 					<cs selector="16#0008#" base="16#0000#" limit="16#ffff#" access="16#a09b#"/>

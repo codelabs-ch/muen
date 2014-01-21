@@ -24,6 +24,7 @@ with Muxml;
 
 with Validate.Command_Line;
 with Validators.Memory;
+with Validators.MSR;
 
 procedure Muvalidate
 is
@@ -48,6 +49,8 @@ begin
      (Validator => Validators.Memory.Virtual_Address_Alignment'Access);
    Validate.Register
      (Validator => Validators.Memory.Region_Size'Access);
+   Validate.Register
+     (Validator => Validators.MSR.Start_Smaller_End'Access);
 
    Validate.Run;
 

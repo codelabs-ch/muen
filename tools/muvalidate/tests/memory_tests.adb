@@ -122,8 +122,8 @@ is
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Size 16#8000_0042# of physical memory region 'ram_1' "
-                    & "not multiple of page size (4K)",
+                    = "Attribute size 16#8000_0042# of physical memory region "
+                    & "'ram_1' not multiple of page size (4K)",
                     Message   => "Exception mismatch");
       end;
    end Validate_Region_Size;
@@ -187,8 +187,8 @@ is
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Size 16#0001_0013# of VMCS memory region 'invalid|vmcs'"
-                    & " not 4K",
+                    = "Attribute size 16#0001_0013# of VMCS memory region "
+                    & "'invalid|vmcs' not 4K",
                     Message   => "Exception mismatch");
       end;
    end Validate_VMCS_Size;
@@ -253,7 +253,7 @@ is
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Size 16#0001_0012# of VMXON memory region "
+                    = "Attribute size 16#0001_0012# of VMXON memory region "
                     & "'invalid_0|vmxon' not 4K",
                     Message   => "Exception mismatch");
       end;

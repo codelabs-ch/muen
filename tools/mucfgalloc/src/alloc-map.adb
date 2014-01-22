@@ -48,4 +48,22 @@ is
 
    end Insert_Empty_Region;
 
+   ----------------------------------------------------------------------------
+
+   procedure Iterate
+      (Map     : Map_Type;
+       Process : not null access procedure (Region : Region_Type))
+   is
+      use Region_List_Package;
+
+      procedure P (Position : Cursor);
+      procedure P (Position : Cursor)
+      is
+      begin
+         Process (Element (Position));
+      end P;
+   begin
+      Iterate (Map.Data, P'Access);
+   end Iterate;
+
 end Alloc.Map;

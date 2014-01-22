@@ -24,17 +24,6 @@ is
 
    type Map_Type is tagged private;
 
-   --  Insert an empty region to memory map
-   procedure Insert_Empty_Region
-      (Map           : in out Map_Type;
-       First_Address :        Interfaces.Unsigned_64;
-       Last_Address  :        Interfaces.Unsigned_64) with
-      Pre => First_Address < Last_Address;
-
-   Overlapping_Empty_Region : exception;
-
-private
-
    type Region_Kind is (Empty, Allocated);
 
    type Region_Type is
@@ -43,6 +32,22 @@ private
       First_Address : Interfaces.Unsigned_64;
       Last_Address  : Interfaces.Unsigned_64;
    end record;
+
+   --  Insert an empty region to memory map
+   procedure Insert_Empty_Region
+      (Map           : in out Map_Type;
+       First_Address :        Interfaces.Unsigned_64;
+       Last_Address  :        Interfaces.Unsigned_64) with
+      Pre => First_Address < Last_Address;
+
+   --  Insert an empty region to memory map
+   procedure Iterate
+      (Map     : Map_Type;
+       Process : not null access procedure (Region : Region_Type));
+
+   Overlapping_Empty_Region : exception;
+
+private
 
    package Region_List_Package is new
       Ada.Containers.Doubly_Linked_Lists (Element_Type => Region_Type);

@@ -44,12 +44,58 @@ is
    --  Returns True if A = B.
    function Equals (A, B : Interfaces.Unsigned_64) return Boolean;
 
-   --  Common region size check function.
+   --  Returns True if A < B.
+   function Less_Than (A, B : Interfaces.Unsigned_64) return Boolean;
+
+   --  Common region size check procedure.
    procedure Common_Region_Size
      (Nodes     : DOM.Core.Node_List;
       Test      : Test_Function;
       Memtype   : String;
       Error_Msg : String);
+
+   --  Common physical address check procedure.
+   procedure Common_Physical_Address
+     (Nodes     : DOM.Core.Node_List;
+      Test      : Test_Function;
+      B         : Interfaces.Unsigned_64;
+      Memtype   : String;
+      Error_Msg : String);
+
+   -------------------------------------------------------------------------
+
+   procedure Common_Physical_Address
+     (Nodes     : DOM.Core.Node_List;
+      Test      : Test_Function;
+      B         : Interfaces.Unsigned_64;
+      Memtype   : String;
+      Error_Msg : String)
+   is
+   begin
+      Mulog.Log (Msg => "Checking address of" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " " & Memtype & " memory region(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Node        : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Mem_Name    : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "name");
+            Address_Str : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "physicalAddress");
+            Address     : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value (Address_Str);
+         begin
+            if not Test (Address, B) then
+               raise Validation_Error with "Address " & Address_Str & " of "
+                 & Memtype & " memory region '" & Mem_Name & "' " & Error_Msg;
+            end if;
+         end;
+      end loop;
+   end Common_Physical_Address;
 
    -------------------------------------------------------------------------
 
@@ -97,6 +143,15 @@ is
 
    -------------------------------------------------------------------------
 
+   function Less_Than (A, B : Interfaces.Unsigned_64) return Boolean
+   is
+      use type Interfaces.Unsigned_64;
+   begin
+      return A < B;
+   end Less_Than;
+
+   -------------------------------------------------------------------------
+
    function Mod_Equal_Zero (A, B : Interfaces.Unsigned_64) return Boolean
    is
       use type Interfaces.Unsigned_64;
@@ -108,35 +163,15 @@ is
 
    procedure Physical_Address_Alignment (XML_Data : Muxml.XML_Data_Type)
    is
-      use type Interfaces.Unsigned_64;
-
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "//*[@physicalAddress]");
    begin
-      Mulog.Log (Msg => "Checking alignment of" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img & " physical addresses");
-
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
-         declare
-            Node     : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => Nodes,
-                                      Index => I);
-            Name     : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => "name");
-            Addr_Str : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => "physicalAddress");
-            Address  : constant Interfaces.Unsigned_64
-              := Interfaces.Unsigned_64'Value (Addr_Str);
-         begin
-            if Address mod Mutools.Constants.Page_Size /= 0 then
-               raise Validation_Error with "Physical address " & Addr_Str
-                 & " of '" & Name & "' not page aligned";
-            end if;
-         end;
-      end loop;
+      Common_Physical_Address (Nodes     => Nodes,
+                               Test      => Mod_Equal_Zero'Access,
+                               B         => Mutools.Constants.Page_Size,
+                               Memtype   => "physical",
+                               Error_Msg => "not page aligned");
    end Physical_Address_Alignment;
 
    -------------------------------------------------------------------------
@@ -284,30 +319,12 @@ is
         (N     => XML_Data.Doc,
          XPath => "/system/memory/memory[contains(string(@name), '|vmxon')]");
    begin
-      Mulog.Log (Msg => "Checking physical address of" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img & " VMXON region(s)");
-
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
-         declare
-            Node        : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => Nodes,
-                                      Index => I);
-            Mem_Name    : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => "name");
-            Address_Str : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => "physicalAddress");
-            Address     : constant Interfaces.Unsigned_64
-              := Interfaces.Unsigned_64'Value (Address_Str);
-         begin
-            if Address > (One_Megabyte - Mutools.Constants.Page_Size) then
-               raise Validation_Error with "Invalid physical address "
-                 & Address_Str & " in VMXON memory region '" & Mem_Name
-                 & "' - must be below 1 MiB";
-            end if;
-         end;
-      end loop;
+      Common_Physical_Address
+        (Nodes     => Nodes,
+         Test      => Less_Than'Access,
+         B         => One_Megabyte - Mutools.Constants.Page_Size,
+         Memtype   => "VMXON",
+         Error_Msg => "not below 1 MiB");
    end VMXON_In_Lowmem;
 
    -------------------------------------------------------------------------

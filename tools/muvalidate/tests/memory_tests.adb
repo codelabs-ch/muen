@@ -78,8 +78,8 @@ is
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical address 16#0010_0023# of 'kernel_text' not"
-                    & " page aligned",
+                    = "Address 16#0010_0023# of physical memory region "
+                    & "'kernel_text' not page aligned",
                     Message   => "Exception mismatch");
       end;
    end Validate_Physaddr_Alignment;
@@ -209,8 +209,8 @@ is
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Invalid physical address 16#0010_0000# in VMXON memory "
-                    & "region 'invalid_0|vmxon' - must be below 1 MiB",
+                    = "Address 16#0010_0000# of VMXON memory region "
+                    & "'invalid_0|vmxon' not below 1 MiB",
                     Message   => "Exception mismatch");
       end;
    end Validate_VMXON_In_Lowmem;

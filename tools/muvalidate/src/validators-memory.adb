@@ -209,29 +209,13 @@ is
         (N     => XML_Data.Doc,
          XPath => "//*[@virtualAddress]");
    begin
-      Mulog.Log (Msg => "Checking alignment of" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img & " virtual addresses");
-
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
-         declare
-            Node     : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => Nodes,
-                                      Index => I);
-            Name     : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => "logical");
-            Addr_Str : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => "virtualAddress");
-            Address  : constant Interfaces.Unsigned_64
-              := Interfaces.Unsigned_64'Value (Addr_Str);
-         begin
-            if Address mod Mutools.Constants.Page_Size /= 0 then
-               raise Validation_Error with "Virtual address " & Addr_Str
-                 & " of '" & Name & "' not page aligned";
-            end if;
-         end;
-      end loop;
+      Check_Memory_Attribute (Nodes     => Nodes,
+                              Attr      => "virtualAddress",
+                              Name_Attr => "logical",
+                              Test      => Mod_Equal_Zero'Access,
+                              Right     => Mutools.Constants.Page_Size,
+                              Memtype   => "virtual",
+                              Error_Msg => "not page aligned");
    end Virtual_Address_Alignment;
 
    -------------------------------------------------------------------------

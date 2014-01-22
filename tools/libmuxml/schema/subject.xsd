@@ -14,13 +14,6 @@
 		<xs:attribute name="cpu"  type="xs:nonNegativeInteger" use="required"/>
 	</xs:complexType>
 
-	<xs:complexType name="subjectResourcesType">
-		<xs:choice minOccurs="1" maxOccurs="unbounded">
-			<xs:element name="irq"    type="irqType"/>
-			<xs:element name="ioPort" type="ioPortType"/>
-		</xs:choice>
-	</xs:complexType>
-
 	<xs:complexType name="subjectEventsType">
 		<xs:sequence>
 			<xs:element name="source" type="eventSourceType" minOccurs="0" maxOccurs="1"/>

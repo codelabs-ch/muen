@@ -18,6 +18,11 @@
 
 with Ada.Exceptions;
 
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+
+with McKae.XML.XPath.XIA;
+
 with Muxml;
 
 with Validators.Device;
@@ -59,15 +64,29 @@ is
       Muxml.Parse (Data => Data,
                    File => "data/validators.xml");
 
+      declare
+         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Data.Doc,
+               XPath => "/system/kernel/devices/device/ioPort"),
+            Index => 0);
       begin
+
+         --  Set invalid I/O port reference.
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "physical",
+            Value => "nonexistent");
+
          Validators.Device.IO_Port_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical I/O port 'serial' referenced by logical I/O"
-                    & " port 'ports' of logical device 'log' not found",
+                    = "Physical I/O port 'nonexistent' referenced by logical"
+                    & " I/O port 'ports' of logical device 'log' not found",
                     Message   => "Exception mismatch");
       end;
    end Validate_IO_Port_Refs;
@@ -81,15 +100,29 @@ is
       Muxml.Parse (Data => Data,
                    File => "data/validators.xml");
 
+      declare
+         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Data.Doc,
+               XPath => "/system/kernel/devices/device/ioPort"),
+            Index => 0);
       begin
+
+         --  Set invalid port range.
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "start",
+            Value => "16#ffff#");
+
          Validators.Device.IO_Port_Start_Smaller_End (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "I/O port 'consoleports' start 16#03d5# larger than "
-                    & "end 16#03d4#",
+                    = "I/O port 'ports' start 16#ffff# larger than "
+                    & "end 16#50b8#",
                     Message   => "Exception mismatch");
       end;
    end Validate_IO_Port_Start_Smaller_End;
@@ -103,14 +136,28 @@ is
       Muxml.Parse (Data => Data,
                    File => "data/validators.xml");
 
+      declare
+         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Data.Doc,
+               XPath => "/system/kernel/devices/device"),
+            Index => 0);
       begin
+
+         --  Set invalid device reference.
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "physical",
+            Value => "nonexistent");
+
          Validators.Device.Physical_Device_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical device 'debugconsole' referenced by logical"
+                    = "Physical device 'nonexistent' referenced by logical"
                     & " device 'log' not found",
                     Message   => "Exception mismatch");
       end;

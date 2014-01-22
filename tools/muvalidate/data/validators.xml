@@ -36,7 +36,7 @@
 			</cpu>
 		</memory>
 		<devices>
-			<device logical="log" physical="debugconsole">
+			<device logical="log" physical="serial">
 				<ioPort logical="ports" physical="serial" start="16#50b0#" end="16#50b8#"/>
 			</device>
 		</devices>
@@ -225,9 +225,9 @@
 				</memory>
 			</memory>
 			<devices>
-				<device logical="console" physical="vga">
+				<device logical="console" physical="serial">
 					<irq logical="irq" physical="nonexistent" number="5"/>
-					<ioPort logical="consoleports" physical="ports" start="16#03d5#" end="16#03d4#"/>
+					<ioPort logical="consoleports" physical="serial" start="16#50b0#" end="16#50b0#"/>
 				</device>
 			</devices>
 			<events/>

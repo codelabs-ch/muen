@@ -60,6 +60,8 @@ is
       Validate.Register
         (Validator => Device.Physical_IRQ_References'Access);
       Validate.Register
+        (Validator => Device.IRQ_Number_Equality'Access);
+      Validate.Register
         (Validator => Device.IO_Port_Start_Smaller_End'Access);
       Validate.Register
         (Validator => Device.IO_Port_References'Access);

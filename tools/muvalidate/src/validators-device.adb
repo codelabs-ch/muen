@@ -195,6 +195,61 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure IRQ_Number_Equality (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "//irq[@logical]");
+   begin
+      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " device IRQ(s) for equality");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Node          : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Log_IRQ_Str   : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "number");
+            Logical_IRQ   : constant Natural := Natural'Value (Log_IRQ_Str);
+            Log_Dev_Name  : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+               Name => "logical");
+            Phys_Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+               Name => "physical");
+            Logical_Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Node,
+                 Name => "logical");
+            Phys_Name     : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Node,
+                 Name => "physical");
+
+            Physical     : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => XPath_Query
+                 (N     => XML_Data.Doc,
+                  XPath => "/system/platform/device[@name='" & Phys_Dev_Name
+                  & "']/irq[@name='" & Phys_Name & "']"),
+               Index => 0);
+            Phys_IRQ_Str : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Physical,
+               Name => "number");
+            Physical_IRQ : constant Natural := Natural'Value (Phys_IRQ_Str);
+         begin
+            if Logical_IRQ /= Physical_IRQ then
+               raise Validation_Error with "Physical IRQ '" & Phys_Name
+                 & "' and logical IRQ '" & Logical_Name
+                 & "' of logical device '" & Log_Dev_Name & "' differ";
+            end if;
+         end;
+      end loop;
+   end IRQ_Number_Equality;
+
+   -------------------------------------------------------------------------
+
    procedure Physical_Device_References (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query

@@ -49,11 +49,13 @@ is
    --  Returns True if Left < Right.
    function Less_Than (Left, Right : Interfaces.Unsigned_64) return Boolean;
 
-   --  Check memory attributes with given name using the specified test
-   --  function and parameter B.
+   --  Check memory attribute value 'Attr' using the specified test function
+   --  and function parameter 'Right'. 'Name_Attr' defines the attribute used
+   --  to query the name of a specific memory region.
    procedure Check_Memory_Attribute
      (Nodes     : DOM.Core.Node_List;
-      Attribute : String;
+      Attr      : String;
+      Name_Attr : String;
       Test      : Test_Function;
       Right     : Interfaces.Unsigned_64;
       Memtype   : String;
@@ -63,14 +65,15 @@ is
 
    procedure Check_Memory_Attribute
      (Nodes     : DOM.Core.Node_List;
-      Attribute : String;
+      Attr      : String;
+      Name_Attr : String;
       Test      : Test_Function;
       Right     : Interfaces.Unsigned_64;
       Memtype   : String;
       Error_Msg : String)
    is
    begin
-      Mulog.Log (Msg => "Checking " & Attribute & " of" & DOM.Core.Nodes.Length
+      Mulog.Log (Msg => "Checking " & Attr & " of" & DOM.Core.Nodes.Length
                  (List => Nodes)'Img & " " & Memtype & " memory region(s)");
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
@@ -80,15 +83,15 @@ is
                                       Index => I);
             Mem_Name   : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Node,
-               Name => "name");
+               Name => Name_Attr);
             Attr_Str   : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Node,
-               Name => Attribute);
+               Name => Attr);
             Attr_Value : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value (Attr_Str);
          begin
             if not Test (Attr_Value, Right) then
-               raise Validation_Error with "Attribute " & Attribute & " "
+               raise Validation_Error with "Attribute " & Attr & " "
                  & Attr_Str & " of " & Memtype & " memory region '" & Mem_Name
                  & "' " & Error_Msg;
             end if;
@@ -133,7 +136,8 @@ is
          XPath => "//*[@physicalAddress]");
    begin
       Check_Memory_Attribute (Nodes     => Nodes,
-                              Attribute => "physicalAddress",
+                              Attr      => "physicalAddress",
+                              Name_Attr => "name",
                               Test      => Mod_Equal_Zero'Access,
                               Right     => Mutools.Constants.Page_Size,
                               Memtype   => "physical",
@@ -187,7 +191,8 @@ is
          XPath => "//*[@size]");
    begin
       Check_Memory_Attribute (Nodes     => Nodes,
-                              Attribute => "size",
+                              Attr      => "size",
+                              Name_Attr => "name",
                               Test      => Mod_Equal_Zero'Access,
                               Right     => Mutools.Constants.Page_Size,
                               Memtype   => "physical",
@@ -270,7 +275,8 @@ is
          XPath => "/system/memory/memory[contains(string(@name), '|vmcs')]");
    begin
       Check_Memory_Attribute (Nodes     => Nodes,
-                              Attribute => "size",
+                              Attr      => "size",
+                              Name_Attr => "name",
                               Test      => Equals'Access,
                               Right     => Mutools.Constants.Page_Size,
                               Memtype   => "VMCS",
@@ -291,7 +297,8 @@ is
    begin
       Check_Memory_Attribute
         (Nodes     => Nodes,
-         Attribute => "physicalAddress",
+         Attr      => "physicalAddress",
+         Name_Attr => "name",
          Test      => Less_Than'Access,
          Right     => One_Megabyte - Mutools.Constants.Page_Size,
          Memtype   => "VMXON",
@@ -341,7 +348,8 @@ is
          XPath => "/system/memory/memory[contains(string(@name), '|vmxon')]");
    begin
       Check_Memory_Attribute (Nodes     => Nodes,
-                              Attribute => "size",
+                              Attr      => "size",
+                              Name_Attr => "name",
                               Test      => Equals'Access,
                               Right     => Mutools.Constants.Page_Size,
                               Memtype   => "VMXON",

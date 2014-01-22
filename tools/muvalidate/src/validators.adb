@@ -42,6 +42,8 @@ is
       Validate.Register
         (Validator => Memory.VMCS_Region_Size'Access);
       Validate.Register
+        (Validator => Memory.VMCS_In_Lowmem'Access);
+      Validate.Register
         (Validator => Memory.Physical_Address_Alignment'Access);
       Validate.Register
         (Validator => Memory.Virtual_Address_Alignment'Access);

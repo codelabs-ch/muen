@@ -52,6 +52,9 @@ is
         (Routine => Validate_VMCS_Size'Access,
          Name    => "Validate size of VMCS regions");
       T.Add_Test_Routine
+        (Routine => Validate_VMCS_In_Lowmem'Access,
+         Name    => "Validate physical address of VMCS regions");
+      T.Add_Test_Routine
         (Routine => Validate_Physaddr_Alignment'Access,
          Name    => "Validate physical memory address alignment");
       T.Add_Test_Routine
@@ -149,6 +152,28 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Virtaddr_Alignment;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_VMCS_In_Lowmem
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Memory.VMCS_In_Lowmem (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Attribute physicalAddress 16#0010_0000# of VMCS memory "
+                    & "region 'invalid|vmcs' not below 1 MiB",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_VMCS_In_Lowmem;
 
    -------------------------------------------------------------------------
 

@@ -36,6 +36,9 @@ is
    --  Validate size of VMCS regions.
    procedure VMCS_Region_Size (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that VMCS regions are in low-mem.
+   procedure VMCS_In_Lowmem (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that physical memory referenced by logical memory exists.
    procedure Physical_Memory_References (XML_Data : Muxml.XML_Data_Type);
 

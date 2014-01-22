@@ -44,6 +44,9 @@ is
    --  Validate size of VMCS regions.
    procedure Validate_VMCS_Size;
 
+   --  Validate VMCS physical address (lowmem).
+   procedure Validate_VMCS_In_Lowmem;
+
    --  Validate physical memory address alignment.
    procedure Validate_Physaddr_Alignment;
 

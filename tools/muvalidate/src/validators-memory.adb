@@ -61,6 +61,8 @@ is
       Memtype   : String;
       Error_Msg : String);
 
+   One_Megabyte : constant := 16#100000#;
+
    -------------------------------------------------------------------------
 
    procedure Check_Memory_Attribute
@@ -220,6 +222,26 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VMCS_In_Lowmem (XML_Data : Muxml.XML_Data_Type)
+   is
+      use type Interfaces.Unsigned_64;
+
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/memory/memory[contains(string(@name), '|vmcs')]");
+   begin
+      Check_Memory_Attribute
+        (Nodes     => Nodes,
+         Attr      => "physicalAddress",
+         Name_Attr => "name",
+         Test      => Less_Than'Access,
+         Right     => One_Megabyte - Mutools.Constants.Page_Size,
+         Memtype   => "VMCS",
+         Error_Msg => "not below 1 MiB");
+   end VMCS_In_Lowmem;
+
+   -------------------------------------------------------------------------
+
    procedure VMCS_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
       Subjects : constant DOM.Core.Node_List := XPath_Query
@@ -272,8 +294,6 @@ is
    procedure VMXON_In_Lowmem (XML_Data : Muxml.XML_Data_Type)
    is
       use type Interfaces.Unsigned_64;
-
-      One_Megabyte : constant := 16#100000#;
 
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,

@@ -24,7 +24,7 @@ abstract project Shared is
       "-gnatef");
 
    Spark_Compiler_Switches := Common_Compiler_Switches
-     & ("-gnatygAdISux-s",
+     & ("-gnatygAdISux-st",
         "-gnatp");
 
    Ada_Compiler_Switches := Common_Compiler_Switches

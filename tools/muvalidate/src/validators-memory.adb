@@ -38,14 +38,16 @@ is
    type Test_Function is not null access function
      (A, B : Interfaces.Unsigned_64) return Boolean;
 
-   --  Returns True if A mod B = 0.
-   function Mod_Equal_Zero (A, B : Interfaces.Unsigned_64) return Boolean;
+   --  Returns True if Left mod Right = 0.
+   function Mod_Equal_Zero
+     (Left, Right : Interfaces.Unsigned_64)
+      return Boolean;
 
-   --  Returns True if A = B.
-   function Equals (A, B : Interfaces.Unsigned_64) return Boolean;
+   --  Returns True if Left = Right.
+   function Equals (Left, Right : Interfaces.Unsigned_64) return Boolean;
 
-   --  Returns True if A < B.
-   function Less_Than (A, B : Interfaces.Unsigned_64) return Boolean;
+   --  Returns True if Left < Right.
+   function Less_Than (Left, Right : Interfaces.Unsigned_64) return Boolean;
 
    --  Check memory attributes with given name using the specified test
    --  function and parameter B.
@@ -53,7 +55,7 @@ is
      (Nodes     : DOM.Core.Node_List;
       Attribute : String;
       Test      : Test_Function;
-      B         : Interfaces.Unsigned_64;
+      Right     : Interfaces.Unsigned_64;
       Memtype   : String;
       Error_Msg : String);
 
@@ -70,7 +72,7 @@ is
      (Nodes     : DOM.Core.Node_List;
       Attribute : String;
       Test      : Test_Function;
-      B         : Interfaces.Unsigned_64;
+      Right     : Interfaces.Unsigned_64;
       Memtype   : String;
       Error_Msg : String)
    is
@@ -92,7 +94,7 @@ is
             Attr_Value : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value (Attr_Str);
          begin
-            if not Test (Attr_Value, B) then
+            if not Test (Attr_Value, Right) then
                raise Validation_Error with "Attribute " & Attribute & " "
                  & Attr_Str & " of " & Memtype & " memory region '" & Mem_Name
                  & "' " & Error_Msg;
@@ -138,29 +140,30 @@ is
 
    -------------------------------------------------------------------------
 
-   function Equals (A, B : Interfaces.Unsigned_64) return Boolean
+   function Equals (Left, Right : Interfaces.Unsigned_64) return Boolean
    is
       use type Interfaces.Unsigned_64;
    begin
-      return A = B;
+      return Left = Right;
    end Equals;
 
    -------------------------------------------------------------------------
 
-   function Less_Than (A, B : Interfaces.Unsigned_64) return Boolean
+   function Less_Than (Left, Right : Interfaces.Unsigned_64) return Boolean
    is
       use type Interfaces.Unsigned_64;
    begin
-      return A < B;
+      return Left < Right;
    end Less_Than;
 
    -------------------------------------------------------------------------
 
-   function Mod_Equal_Zero (A, B : Interfaces.Unsigned_64) return Boolean
+   function Mod_Equal_Zero (Left, Right : Interfaces.Unsigned_64)
+                            return Boolean
    is
       use type Interfaces.Unsigned_64;
    begin
-      return A mod B = 0;
+      return Left mod Right = 0;
    end Mod_Equal_Zero;
 
    -------------------------------------------------------------------------
@@ -174,7 +177,7 @@ is
       Check_Memory_Attribute (Nodes     => Nodes,
                               Attribute => "physicalAddress",
                               Test      => Mod_Equal_Zero'Access,
-                              B         => Mutools.Constants.Page_Size,
+                              Right     => Mutools.Constants.Page_Size,
                               Memtype   => "physical",
                               Error_Msg => "not page aligned");
    end Physical_Address_Alignment;
@@ -328,7 +331,7 @@ is
         (Nodes     => Nodes,
          Attribute => "physicalAddress",
          Test      => Less_Than'Access,
-         B         => One_Megabyte - Mutools.Constants.Page_Size,
+         Right     => One_Megabyte - Mutools.Constants.Page_Size,
          Memtype   => "VMXON",
          Error_Msg => "not below 1 MiB");
    end VMXON_In_Lowmem;

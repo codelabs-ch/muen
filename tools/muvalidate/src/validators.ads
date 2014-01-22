@@ -19,6 +19,9 @@
 package Validators
 is
 
+   --  Register all known validators.
+   procedure Register_All;
+
    Validation_Error : exception;
 
 end Validators;

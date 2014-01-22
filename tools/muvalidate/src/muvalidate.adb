@@ -23,48 +23,14 @@ with Mulog;
 with Muxml;
 
 with Validate.Command_Line;
-with Validators.Memory;
-with Validators.MSR;
-with Validators.Device;
+with Validators;
 
 procedure Muvalidate
 is
 begin
    Validate.Command_Line.Init (Description => "Muen policy validator");
 
-   --  Register validators.
-
-   Validate.Register
-     (Validator => Validators.Memory.Physical_Memory_References'Access);
-   Validate.Register
-     (Validator => Validators.Memory.VMXON_Region_Presence'Access);
-   Validate.Register
-     (Validator => Validators.Memory.VMXON_Region_Size'Access);
-   Validate.Register
-     (Validator => Validators.Memory.VMCS_Region_Presence'Access);
-   Validate.Register
-     (Validator => Validators.Memory.VMCS_Region_Size'Access);
-   Validate.Register
-     (Validator => Validators.Memory.Physical_Address_Alignment'Access);
-   Validate.Register
-     (Validator => Validators.Memory.Virtual_Address_Alignment'Access);
-   Validate.Register
-     (Validator => Validators.Memory.Region_Size'Access);
-   Validate.Register
-     (Validator => Validators.MSR.Start_Smaller_End'Access);
-   Validate.Register
-     (Validator => Validators.MSR.Low_Or_High'Access);
-   Validate.Register
-     (Validator => Validators.Device.Physical_Device_References'Access);
-   Validate.Register
-     (Validator => Validators.Device.Physical_IRQ_Uniqueness'Access);
-   Validate.Register
-     (Validator => Validators.Device.Physical_IRQ_References'Access);
-   Validate.Register
-     (Validator => Validators.Device.IO_Port_Start_Smaller_End'Access);
-   Validate.Register
-     (Validator => Validators.Device.IO_Port_References'Access);
-
+   Validators.Register_All;
    Validate.Run;
 
 exception

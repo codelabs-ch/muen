@@ -53,7 +53,32 @@ is
       T.Add_Test_Routine
         (Routine => Validate_IO_Port_Refs'Access,
          Name    => "Validate I/O port references");
+      T.Add_Test_Routine
+        (Routine => Validate_IO_Port_Range_Eq'Access,
+         Name    => "Validate I/O port range equality");
    end Initialize;
+
+      -------------------------------------------------------------------------
+
+   procedure Validate_IO_Port_Range_Eq
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Device.IO_Port_Range_Equality (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "I/O port ranges of physical 'serial' and logical I/O "
+                    & "port 'ports' of logical device 'log' differ",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_IO_Port_Range_Eq;
 
    -------------------------------------------------------------------------
 

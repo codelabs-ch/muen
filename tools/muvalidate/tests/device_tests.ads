@@ -41,4 +41,7 @@ is
    --  Validate physical device I/O port references.
    procedure Validate_IO_Port_Refs;
 
+   --  Validate physical and logical I/O port range equality.
+   procedure Validate_IO_Port_Range_Eq;
+
 end Device_Tests;

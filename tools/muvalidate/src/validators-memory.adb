@@ -150,33 +150,52 @@ is
 
    procedure Physical_Memory_References (XML_Data : Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List := XPath_Query
+      References     : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "//physical");
+      Physical_Nodes : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory");
    begin
-      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length (List => Nodes)'Img
-                 & " physical memory references");
+      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
+                 (List => References)'Img & " physical memory references");
 
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+      for I in 0 .. DOM.Core.Nodes.Length (List => References) - 1 loop
          declare
             Node         : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => Nodes,
+              := DOM.Core.Nodes.Item (List  => References,
                                       Index => I);
             Logical_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
                  Name => "logical");
-            Phys_Name    : constant String
+            Refname      : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Node,
                  Name => "name");
-            Physical     : constant DOM.Core.Node_List
-              := XPath_Query
-                (N     => XML_Data.Doc,
-                 XPath => "/system/memory/memory[@name='" & Phys_Name & "']");
+
+            Match_Found : Boolean := False;
          begin
-            if DOM.Core.Nodes.Length (List => Physical) = 0 then
-               raise Validation_Error with "Physical memory '" & Phys_Name
+            Find_Match :
+            for J in 0 .. DOM.Core.Nodes.Length (List => Physical_Nodes) - 1
+            loop
+               declare
+                  Physname : constant String := DOM.Core.Elements.Get_Attribute
+                    (Elem => DOM.Core.Nodes.Item
+                       (List  => Physical_Nodes,
+                        Index => J),
+                     Name => "name");
+               begin
+                  if Physname = Refname then
+                     Match_Found := True;
+                     exit Find_Match;
+                  end if;
+               end;
+            end loop Find_Match;
+
+            if not Match_Found then
+               raise Validation_Error with "Physical memory '" & Refname
                  & "' referenced by logical memory '" & Logical_Name
                  & "' not found";
             end if;

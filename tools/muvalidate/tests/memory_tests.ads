@@ -35,6 +35,9 @@ is
    --  Validate size of VMXON regions.
    procedure Validate_VMXON_Size;
 
+   --  Validate VMXON physical address (lowmem).
+   procedure Validate_VMXON_In_Lowmem;
+
    --  Validate presence of VMCS regions.
    procedure Validate_VMCS_Presence;
 

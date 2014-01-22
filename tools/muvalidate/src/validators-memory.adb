@@ -274,6 +274,44 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VMXON_In_Lowmem (XML_Data : Muxml.XML_Data_Type)
+   is
+      use type Interfaces.Unsigned_64;
+
+      One_Megabyte : constant := 16#100000#;
+
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/memory/memory[contains(string(@name), '|vmxon')]");
+   begin
+      Mulog.Log (Msg => "Checking physical address of" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " VMXON region(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Node        : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Mem_Name    : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "name");
+            Address_Str : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "physicalAddress");
+            Address     : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value (Address_Str);
+         begin
+            if Address > (One_Megabyte - Mutools.Constants.Page_Size) then
+               raise Validation_Error with "Invalid physical address "
+                 & Address_Str & " in VMXON memory region '" & Mem_Name
+                 & "' - must be below 1 MiB";
+            end if;
+         end;
+      end loop;
+   end VMXON_In_Lowmem;
+
+   -------------------------------------------------------------------------
+
    procedure VMXON_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
       CPU_Count : constant Positive := Positive'Value

@@ -36,6 +36,8 @@ is
       Validate.Register
         (Validator => Memory.VMXON_Region_Size'Access);
       Validate.Register
+        (Validator => Memory.VMXON_In_Lowmem'Access);
+      Validate.Register
         (Validator => Memory.VMCS_Region_Presence'Access);
       Validate.Register
         (Validator => Memory.VMCS_Region_Size'Access);

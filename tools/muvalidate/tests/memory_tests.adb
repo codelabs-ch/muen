@@ -43,6 +43,9 @@ is
         (Routine => Validate_VMXON_Size'Access,
          Name    => "Validate size of VMXON regions");
       T.Add_Test_Routine
+        (Routine => Validate_VMXON_In_Lowmem'Access,
+         Name    => "Validate physical address of VMXON regions");
+      T.Add_Test_Routine
         (Routine => Validate_VMCS_Presence'Access,
          Name    => "Validate presence of VMCS regions");
       T.Add_Test_Routine
@@ -189,6 +192,28 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_VMCS_Size;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_VMXON_In_Lowmem
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Memory.VMXON_In_Lowmem (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid physical address 16#0010_0000# in VMXON memory "
+                    & "region 'invalid_0|vmxon' - must be below 1 MiB",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_VMXON_In_Lowmem;
 
    -------------------------------------------------------------------------
 

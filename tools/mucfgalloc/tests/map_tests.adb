@@ -15,7 +15,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Test_Utils;
 with Alloc.Map;
+with Ada.Text_IO;
 
 package body Map_Tests
 is
@@ -45,11 +47,34 @@ is
    procedure Non_Overlapping
    is
       use Alloc.Map;
-      M : Map_Type;
+      use Ada.Text_IO;
+
+      M           : Map_Type;
+      Output_File : File_Type;
+
+      procedure Write_Region (R : Region_Type);
+      procedure Write_Region (R : Region_Type)
+      is
+      begin
+         Put_Line
+            (Output_File,
+             R.Kind'Img &
+             R.First_Address'Img &
+             R.Last_Address'Img);
+      end Write_Region;
+
+      use Ahven;
    begin
       M.Insert_Empty_Region (0,    1000);
       M.Insert_Empty_Region (1001, 2000);
       M.Insert_Empty_Region (5000, 10000);
+      Create (Output_File, Out_File, "obj/non_overlapping1.txt");
+      M.Iterate (Write_Region'Access);
+      Close (Output_File);
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/non_overlapping1.txt",
+                   Filename2 => "obj/non_overlapping1.txt"),
+              Message => "Memory map missmatch");
    end Non_Overlapping;
 
    ----------------------------------------------------------------------------

@@ -17,7 +17,7 @@
 --
 
 with Validate.Command_Line.Test;
-with Validators.Memory;
+with Validators;
 
 package body Validate_Tests
 is
@@ -31,9 +31,7 @@ is
    begin
       Validate.Command_Line.Test.Set_Policy (Path => "data/test_policy.xml");
 
-      Validate.Register
-        (Validator => Validators.Memory.Physical_Memory_References'Access);
-
+      Validators.Register_All;
       Validate.Run;
 
       --  Positive test, no exceptions must occur.

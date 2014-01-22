@@ -5,12 +5,18 @@
 		<memory>
 			<memoryBlock name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#" caching="WB"/>
 		</memory>
-		<device name="serial" shared="false">
+		<device name="debugconsole" shared="false">
 			<ioPort name="serial" start="16#50b0#" end="16#50b0#"/>
+		</device>
+		<device name="vga" shared="false">
+			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
+			<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
 		</device>
 	</platform>
 
 	<memory>
+		<memory name="kernel_0|vmxon" size="16#0000_1000#" physicalAddress="16#0000_1000#" caching="WB"/>
+		<memory name="linux|vmcs" size="16#0000_1000#" physicalAddress="16#0000_3000#" caching="WB"/>
 		<memory name="kernel_text" size="16#0001_0000#" physicalAddress="16#0010_0000#" caching="WB">
 			<file format="elf" filename="kernel" offset="16#0000#"/>
 		</memory>

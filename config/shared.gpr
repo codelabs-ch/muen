@@ -20,7 +20,6 @@ abstract project Shared is
 
    Common_Compiler_Switches :=
      ("-g",
-      "-gnata",
       "-gnatef");
 
    Spark_Compiler_Switches := Common_Compiler_Switches
@@ -29,6 +28,7 @@ abstract project Shared is
 
    Ada_Compiler_Switches := Common_Compiler_Switches
      & ("-gnatyyBdgIoSux",
+        "-gnata",
         "-gnatVa",
         "-gnatf",
         "-gnato");

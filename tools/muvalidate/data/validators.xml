@@ -226,7 +226,7 @@
 			</memory>
 			<devices>
 				<device logical="console" physical="serial">
-					<irq logical="irq" physical="nonexistent" number="5"/>
+					<irq logical="irq" physical="cmd" number="5"/>
 					<ioPort logical="consoleports" physical="serial" start="16#50b0#" end="16#50b0#"/>
 				</device>
 			</devices>

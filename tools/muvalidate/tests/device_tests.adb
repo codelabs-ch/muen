@@ -197,7 +197,22 @@ is
       Muxml.Parse (Data => Data,
                    File => "data/validators.xml");
 
+      declare
+         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Data.Doc,
+               XPath => "/system/subjects/subject/devices/device/irq"
+               & "[@physical='cmd']"),
+            Index => 0);
       begin
+
+         --  Set invalid IRQ number.
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "physical",
+            Value => "nonexistent");
+
          Validators.Device.Physical_IRQ_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 

@@ -105,7 +105,6 @@ is
 
    function Equals (Left, Right : Interfaces.Unsigned_64) return Boolean
    is
-      use type Interfaces.Unsigned_64;
    begin
       return Left = Right;
    end Equals;
@@ -114,7 +113,6 @@ is
 
    function Less_Than (Left, Right : Interfaces.Unsigned_64) return Boolean
    is
-      use type Interfaces.Unsigned_64;
    begin
       return Left < Right;
    end Less_Than;
@@ -124,7 +122,6 @@ is
    function Mod_Equal_Zero (Left, Right : Interfaces.Unsigned_64)
                             return Boolean
    is
-      use type Interfaces.Unsigned_64;
    begin
       return Left mod Right = 0;
    end Mod_Equal_Zero;
@@ -224,8 +221,6 @@ is
 
    procedure Virtual_Address_Alignment (XML_Data : Muxml.XML_Data_Type)
    is
-      use type Interfaces.Unsigned_64;
-
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "//*[@virtualAddress]");
@@ -243,8 +238,6 @@ is
 
    procedure VMCS_In_Lowmem (XML_Data : Muxml.XML_Data_Type)
    is
-      use type Interfaces.Unsigned_64;
-
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "/system/memory/memory[contains(string(@name), '|vmcs')]");
@@ -312,8 +305,6 @@ is
 
    procedure VMXON_In_Lowmem (XML_Data : Muxml.XML_Data_Type)
    is
-      use type Interfaces.Unsigned_64;
-
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "/system/memory/memory[contains(string(@name), '|vmxon')]");

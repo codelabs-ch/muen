@@ -16,14 +16,59 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+
+with Mulog;
+
 with Validate;
 with Validators.Memory;
 with Validators.MSR;
 with Validators.Device;
 with Validators.Scheduling;
+with Validators.Subjects;
 
 package body Validators
 is
+
+   -------------------------------------------------------------------------
+
+   procedure Check_Attribute
+     (Nodes     : DOM.Core.Node_List;
+      Node_Type : String;
+      Attr      : String;
+      Name_Attr : String;
+      Test      : Test_Function;
+      Right     : Interfaces.Unsigned_64;
+      Error_Msg : String)
+   is
+   begin
+      Mulog.Log (Msg => "Checking attribute '" & Attr & "' of"
+                 & DOM.Core.Nodes.Length (List => Nodes)'Img & " "
+                 & Node_Type & " element(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Node       : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Name       : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => Name_Attr);
+            Attr_Str   : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => Attr);
+            Attr_Value : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value (Attr_Str);
+         begin
+            if not Test (Attr_Value, Right) then
+               raise Validation_Error with "Attribute '" & Attr & " => "
+                 & Attr_Str & "' of '" & Name & "' " & Node_Type  & " element "
+                 & Error_Msg;
+            end if;
+         end;
+      end loop;
+   end Check_Attribute;
 
    -------------------------------------------------------------------------
 

@@ -16,6 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core;
+
+with Interfaces;
+
 package Validators
 is
 
@@ -23,5 +27,45 @@ is
    procedure Register_All;
 
    Validation_Error : exception;
+
+private
+
+   use type Interfaces.Unsigned_64;
+
+   type Test_Function is not null access function
+     (A, B : Interfaces.Unsigned_64) return Boolean;
+
+   function Equals
+     (Left, Right : Interfaces.Unsigned_64)
+      return Boolean
+   is (Left = Right);
+
+   function Less_Than
+     (Left, Right : Interfaces.Unsigned_64)
+      return Boolean
+   is (Left < Right);
+
+   function Less_Or_Equal
+     (Left, Right : Interfaces.Unsigned_64)
+      return Boolean
+   is (Left <= Right);
+
+   function Mod_Equal_Zero
+     (Left, Right : Interfaces.Unsigned_64)
+      return Boolean
+   is (Left mod Right = 0);
+
+   --  Check attribute value 'Attr' of given 'Node_Type' nodes using the
+   --  specified test function and function parameter 'Right'. 'Name_Attr'
+   --  defines the attribute used to query the name of a specific node. If the
+   --  test fails, an exception with the given 'Error_Msg' string is raised.
+   procedure Check_Attribute
+     (Nodes     : DOM.Core.Node_List;
+      Node_Type : String;
+      Attr      : String;
+      Name_Attr : String;
+      Test      : Test_Function;
+      Right     : Interfaces.Unsigned_64;
+      Error_Msg : String);
 
 end Validators;

@@ -61,7 +61,7 @@ is
          Name    => "Validate I/O port range equality");
    end Initialize;
 
-      -------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Validate_IO_Port_Range_Eq
    is

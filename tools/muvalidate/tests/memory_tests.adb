@@ -81,8 +81,8 @@ is
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute physicalAddress 16#0010_0023# of physical "
-                    & "memory region 'kernel_text' not page aligned",
+                    = "Attribute 'physicalAddress => 16#0010_0023#' of "
+                    & "'kernel_text' physical memory element not page aligned",
                     Message   => "Exception mismatch");
       end;
    end Validate_Physaddr_Alignment;

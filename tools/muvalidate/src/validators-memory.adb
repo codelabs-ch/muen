@@ -134,13 +134,13 @@ is
         (N     => XML_Data.Doc,
          XPath => "//*[@physicalAddress]");
    begin
-      Check_Memory_Attribute (Nodes     => Nodes,
-                              Attr      => "physicalAddress",
-                              Name_Attr => "name",
-                              Test      => Mod_Equal_Zero'Access,
-                              Right     => Mutools.Constants.Page_Size,
-                              Memtype   => "physical",
-                              Error_Msg => "not page aligned");
+      Check_Attribute (Nodes     => Nodes,
+                       Node_Type => "physical memory",
+                       Attr      => "physicalAddress",
+                       Name_Attr => "name",
+                       Test      => Mod_Equal_Zero'Access,
+                       Right     => Mutools.Constants.Page_Size,
+                       Error_Msg => "not page aligned");
    end Physical_Address_Alignment;
 
    -------------------------------------------------------------------------

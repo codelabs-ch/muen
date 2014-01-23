@@ -123,6 +123,8 @@ is
         (Validator => Scheduling.Major_Frame_Ticks'Access);
       Validate.Register
         (Validator => Subject.CPU_ID'Access);
+      Validate.Register
+        (Validator => Subject.Event_Self_References'Access);
    end Register_All;
 
 end Validators;

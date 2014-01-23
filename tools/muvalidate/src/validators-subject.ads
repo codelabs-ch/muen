@@ -24,4 +24,8 @@ is
    --  Validate subject CPU ID.
    procedure CPU_ID (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that there are no self-references in subject's event
+   --  notification entries.
+   procedure Event_Self_References (XML_Data : Muxml.XML_Data_Type);
+
 end Validators.Subject;

@@ -41,6 +41,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_CPU_IDs'Access,
          Name    => "Validate CPU IDs");
+      T.Add_Test_Routine
+        (Routine => Validate_Event_Self_References'Access,
+         Name    => "Validate event table self-references");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -77,5 +80,27 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_CPU_IDs;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Event_Self_References
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Subject.Event_Self_References (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Reference to self in event table entry "
+                    & "'forward_keyboard' of subject 'linux'",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Event_Self_References;
 
 end Subject_Tests;

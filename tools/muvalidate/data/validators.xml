@@ -230,7 +230,15 @@
 					<ioPort logical="consoleports" physical="serial" start="16#50b0#" end="16#50b0#"/>
 				</device>
 			</devices>
-			<events/>
+			<events>
+				<source>
+					<group name="vmcall">
+						<event id="1" logical="forward_keyboard" action="continue">
+							<notify physical="linux_keyboard_forward" subject="linux" vector="49" mode="ipi"/>
+						</event>
+					</group>
+				</source>
+			</events>
 		</subject>
 	</subjects>
 

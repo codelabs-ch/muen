@@ -29,4 +29,7 @@ is
    --  Validate subject CPU IDs.
    procedure Validate_CPU_IDs;
 
+   --  Validate event table self-references.
+   procedure Validate_Event_Self_References;
+
 end Subject_Tests;

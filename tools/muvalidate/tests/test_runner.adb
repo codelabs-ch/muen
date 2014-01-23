@@ -24,6 +24,7 @@ with MSR_Tests;
 with Device_Tests;
 with Scheduling_Tests;
 with Validate_Tests;
+with Subject_Tests;
 
 procedure Test_Runner
 is
@@ -40,6 +41,9 @@ begin
              T     => new Device_Tests.Testcase);
    Add_Test (Suite => S.all,
              T     => new Scheduling_Tests.Testcase);
+   Add_Test (Suite => S.all,
+             T     => new Subject_Tests.Testcase);
+
    Add_Test (Suite => S.all,
              T     => new Validate_Tests.Testcase);
 

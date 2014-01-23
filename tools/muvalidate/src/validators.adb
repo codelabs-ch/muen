@@ -26,7 +26,7 @@ with Validators.Memory;
 with Validators.MSR;
 with Validators.Device;
 with Validators.Scheduling;
-with Validators.Subjects;
+with Validators.Subject;
 
 package body Validators
 is
@@ -121,6 +121,8 @@ is
         (Validator => Scheduling.Subject_CPU_Affinity'Access);
       Validate.Register
         (Validator => Scheduling.Major_Frame_Ticks'Access);
+      Validate.Register
+        (Validator => Subject.CPU_ID'Access);
    end Register_All;
 
 end Validators;

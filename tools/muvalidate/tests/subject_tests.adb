@@ -1,0 +1,81 @@
+--
+--  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--
+--  This program is free software: you can redistribute it and/or modify
+--  it under the terms of the GNU General Public License as published by
+--  the Free Software Foundation, either version 3 of the License, or
+--  (at your option) any later version.
+--
+--  This program is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+--  You should have received a copy of the GNU General Public License
+--  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+
+with Ada.Exceptions;
+
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+
+with McKae.XML.XPath.XIA;
+
+with Muxml;
+
+with Validators.Subject;
+
+package body Subject_Tests
+is
+
+   use Ahven;
+
+   -------------------------------------------------------------------------
+
+   procedure Initialize (T : in out Testcase)
+   is
+   begin
+      T.Set_Name (Name => "Subject validator tests");
+      T.Add_Test_Routine
+        (Routine => Validate_CPU_IDs'Access,
+         Name    => "Validate CPU IDs");
+   end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_CPU_IDs
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+      declare
+         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Data.Doc,
+               XPath => "//subjects/subject"),
+            Index => 0);
+      begin
+
+         --  Set invalid CPU ID.
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "cpu",
+            Value => "7");
+
+         Validators.Subject.CPU_ID (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Attribute 'cpu => 7' of 'linux' subject element not in "
+                    & "valid range 0 .. 0",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_CPU_IDs;
+
+end Subject_Tests;

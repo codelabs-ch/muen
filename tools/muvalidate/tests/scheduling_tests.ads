@@ -29,4 +29,7 @@ is
    --  Validate CPU element count in major frames.
    procedure Validate_CPU_Element_Count;
 
+   --  Validate subject references.
+   procedure Validate_Subj_References;
+
 end Scheduling_Tests;

@@ -36,6 +36,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_CPU_Element_Count'Access,
          Name    => "Validate CPU elements in major frame");
+      T.Add_Test_Routine
+        (Routine => Validate_Subj_References'Access,
+         Name    => "Validate subject references");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -59,5 +62,27 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_CPU_Element_Count;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Subj_References
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Scheduling.Subject_References (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'nonexistent' referenced in scheduling plan not"
+                    & " found",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Subj_References;
 
 end Scheduling_Tests;

@@ -62,4 +62,35 @@ is
       end loop;
    end CPU_Element_Count;
 
+   -------------------------------------------------------------------------
+
+   procedure Subject_References (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := XPath_Query (N     => XML_Data.Doc,
+                        XPath => "//minorFrame/@subject");
+   begin
+      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " subject reference(s) in scheduling "
+                 & "plan");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Subj_Name : constant String
+              := DOM.Core.Nodes.Node_Value
+                (N => DOM.Core.Nodes.Item
+                     (List  => Nodes,
+                      Index => I));
+            Subjects  : constant DOM.Core.Node_List
+              := XPath_Query (N     => XML_Data.Doc,
+                              XPath => "//subject[@name='" & Subj_Name & "']");
+         begin
+            if DOM.Core.Nodes.Length (List => Subjects) = 0 then
+               raise Validation_Error with "Subject '" & Subj_Name
+                 & "' referenced in scheduling plan not found";
+            end if;
+         end;
+      end loop;
+   end Subject_References;
+
 end Validators.Scheduling;

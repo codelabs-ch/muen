@@ -25,4 +25,7 @@ is
    --  frame.
    procedure CPU_Element_Count (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate subject references.
+   procedure Subject_References (XML_Data : Muxml.XML_Data_Type);
+
 end Validators.Scheduling;

@@ -39,6 +39,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Subj_References'Access,
          Name    => "Validate subject references");
+      T.Add_Test_Routine
+        (Routine => Validate_Subj_CPU_Affinity'Access,
+         Name    => "Validate subject CPU affinity");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -62,6 +65,27 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_CPU_Element_Count;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Subj_CPU_Affinity
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Scheduling.Subject_CPU_Affinity (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'linux' scheduled on wrong CPU 1, should be 0",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Subj_CPU_Affinity;
 
    -------------------------------------------------------------------------
 

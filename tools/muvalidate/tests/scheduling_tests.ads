@@ -32,4 +32,7 @@ is
    --  Validate subject references.
    procedure Validate_Subj_References;
 
+   --  Validate subject CPU affinity.
+   procedure Validate_Subj_CPU_Affinity;
+
 end Scheduling_Tests;

@@ -28,4 +28,7 @@ is
    --  Validate subject references.
    procedure Subject_References (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that subjects are scheduled on the correct logical CPU.
+   procedure Subject_CPU_Affinity (XML_Data : Muxml.XML_Data_Type);
+
 end Validators.Scheduling;

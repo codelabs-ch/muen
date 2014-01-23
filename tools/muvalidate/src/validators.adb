@@ -72,6 +72,8 @@ is
         (Validator => Scheduling.CPU_Element_Count'Access);
       Validate.Register
         (Validator => Scheduling.Subject_References'Access);
+      Validate.Register
+        (Validator => Scheduling.Subject_CPU_Affinity'Access);
    end Register_All;
 
 end Validators;

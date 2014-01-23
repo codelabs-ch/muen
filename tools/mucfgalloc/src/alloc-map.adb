@@ -23,18 +23,23 @@ is
        Last_Address  :        Interfaces.Unsigned_64)
    is
       use Region_List_Package;
+      Prev_First, Prev_Last : Interfaces.Unsigned_64 := 0;
       Position : Cursor;
-      Previous : Interfaces.Unsigned_64 := 0;
    begin
       Position := First (Map.Data);
       while Position /= No_Element
       loop
-         Previous := Element (Position).Last_Address;
-         exit when Last_Address > Element (Position).First_Address;
-         Position := Next (Position);
+         Prev_First := Element (Position).First_Address;
+         Prev_Last := Element (Position).Last_Address;
+         Next (Position);
+         exit when Prev_First > First_Address;
       end loop;
 
-      if First_Address < Previous then
+      if (Position  = No_Element and
+          First_Address < Prev_Last) or
+         (Position /= No_Element and then
+          Last_Address > Element (Position).First_Address)
+      then
          raise Overlapping_Empty_Region;
       end if;
 

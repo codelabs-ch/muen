@@ -68,6 +68,8 @@ is
       M.Insert_Empty_Region (0,    1000);
       M.Insert_Empty_Region (1001, 2000);
       M.Insert_Empty_Region (5000, 10000);
+      M.Insert_Empty_Region (11000, 15000);
+      M.Insert_Empty_Region (16000, 30000);
       Create (Output_File, Out_File, "obj/non_overlapping1.txt");
       M.Iterate (Write_Region'Access);
       Close (Output_File);

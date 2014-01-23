@@ -18,8 +18,6 @@
 
 with Ada.Strings.Fixed;
 
-with Interfaces;
-
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
@@ -34,97 +32,7 @@ is
 
    use McKae.XML.XPath.XIA;
 
-   --  Memory size test function.
-   type Test_Function is not null access function
-     (A, B : Interfaces.Unsigned_64) return Boolean;
-
-   --  Returns True if Left mod Right = 0.
-   function Mod_Equal_Zero
-     (Left, Right : Interfaces.Unsigned_64)
-      return Boolean;
-
-   --  Returns True if Left = Right.
-   function Equals (Left, Right : Interfaces.Unsigned_64) return Boolean;
-
-   --  Returns True if Left < Right.
-   function Less_Than (Left, Right : Interfaces.Unsigned_64) return Boolean;
-
-   --  Check memory attribute value 'Attr' using the specified test function
-   --  and function parameter 'Right'. 'Name_Attr' defines the attribute used
-   --  to query the name of a specific memory region.
-   procedure Check_Memory_Attribute
-     (Nodes     : DOM.Core.Node_List;
-      Attr      : String;
-      Name_Attr : String;
-      Test      : Test_Function;
-      Right     : Interfaces.Unsigned_64;
-      Memtype   : String;
-      Error_Msg : String);
-
    One_Megabyte : constant := 16#100000#;
-
-   -------------------------------------------------------------------------
-
-   procedure Check_Memory_Attribute
-     (Nodes     : DOM.Core.Node_List;
-      Attr      : String;
-      Name_Attr : String;
-      Test      : Test_Function;
-      Right     : Interfaces.Unsigned_64;
-      Memtype   : String;
-      Error_Msg : String)
-   is
-   begin
-      Mulog.Log (Msg => "Checking " & Attr & " of" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img & " " & Memtype & " memory region(s)");
-
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
-         declare
-            Node       : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => Nodes,
-                                      Index => I);
-            Mem_Name   : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => Name_Attr);
-            Attr_Str   : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => Attr);
-            Attr_Value : constant Interfaces.Unsigned_64
-              := Interfaces.Unsigned_64'Value (Attr_Str);
-         begin
-            if not Test (Attr_Value, Right) then
-               raise Validation_Error with "Attribute " & Attr & " "
-                 & Attr_Str & " of " & Memtype & " memory region '" & Mem_Name
-                 & "' " & Error_Msg;
-            end if;
-         end;
-      end loop;
-   end Check_Memory_Attribute;
-
-   -------------------------------------------------------------------------
-
-   function Equals (Left, Right : Interfaces.Unsigned_64) return Boolean
-   is
-   begin
-      return Left = Right;
-   end Equals;
-
-   -------------------------------------------------------------------------
-
-   function Less_Than (Left, Right : Interfaces.Unsigned_64) return Boolean
-   is
-   begin
-      return Left < Right;
-   end Less_Than;
-
-   -------------------------------------------------------------------------
-
-   function Mod_Equal_Zero (Left, Right : Interfaces.Unsigned_64)
-                            return Boolean
-   is
-   begin
-      return Left mod Right = 0;
-   end Mod_Equal_Zero;
 
    -------------------------------------------------------------------------
 

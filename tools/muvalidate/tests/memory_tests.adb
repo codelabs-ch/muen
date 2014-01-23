@@ -125,8 +125,8 @@ is
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute size 16#8000_0042# of physical memory region "
-                    & "'ram_1' not multiple of page size (4K)",
+                    = "Attribute 'size => 16#8000_0042#' of 'ram_1' physical "
+                    & "memory element not multiple of page size (4K)",
                     Message   => "Exception mismatch");
       end;
    end Validate_Region_Size;

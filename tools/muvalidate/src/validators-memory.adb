@@ -208,13 +208,13 @@ is
         (N     => XML_Data.Doc,
          XPath => "//*[@size]");
    begin
-      Check_Memory_Attribute (Nodes     => Nodes,
-                              Attr      => "size",
-                              Name_Attr => "name",
-                              Test      => Mod_Equal_Zero'Access,
-                              Right     => Mutools.Constants.Page_Size,
-                              Memtype   => "physical",
-                              Error_Msg => "not multiple of page size (4K)");
+      Check_Attribute (Nodes     => Nodes,
+                       Node_Type => "physical memory",
+                       Attr      => "size",
+                       Name_Attr => "name",
+                       Test      => Mod_Equal_Zero'Access,
+                       Right     => Mutools.Constants.Page_Size,
+                       Error_Msg => "not multiple of page size (4K)");
    end Region_Size;
 
    -------------------------------------------------------------------------

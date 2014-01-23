@@ -49,6 +49,12 @@ is
       PD_Count   : out Natural;
       PT_Count   : out Natural);
 
+   --  Returns True if a PML4 entry with given index exists.
+   function Exists
+     (Mem_Layout : Memory_Layout_Type;
+      PML4_Index : Table_Range)
+      return Boolean;
+
 private
 
    use Tables.PDPT;

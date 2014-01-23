@@ -182,6 +182,19 @@ is
 
    -------------------------------------------------------------------------
 
+   function Exists
+     (Mem_Layout : Memory_Layout_Type;
+      PML4_Index : Table_Range)
+      return Boolean
+   is
+   begin
+      return Tables.PML4.Contains
+        (Table => Mem_Layout.PML4,
+         Index => PML4_Index);
+   end Exists;
+
+   -------------------------------------------------------------------------
+
    function Get_Address
      (Mem_Layout : Memory_Layout_Type)
       return Interfaces.Unsigned_64

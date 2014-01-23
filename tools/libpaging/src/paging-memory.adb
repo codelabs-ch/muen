@@ -234,6 +234,86 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Serialize
+     (Stream         : not null access Ada.Streams.Root_Stream_Type'Class;
+      Mem_Layout     : Memory_Layout_Type;
+      Serialize_PML4 : not null access procedure
+        (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+         PML4   : Tables.PML4.Page_Table_Type);
+      Serialize_PDPT : not null access procedure
+        (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+         PDPT   : Tables.PDPT.Page_Table_Type);
+      Serialize_PD   : not null access procedure
+        (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+         PD     : Tables.PD.Page_Table_Type);
+      Serialize_PT   : not null access procedure
+        (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+         PT     : Tables.PT.Page_Table_Type))
+   is
+      --  Call serialize procedure for given PDPT.
+      procedure Handle_PDPT
+        (Table_Number : Table_Range;
+         Table        : Tables.PDPT.Page_Table_Type);
+
+      --  Call serialize procedure for given PD.
+      procedure Handle_PD
+        (Table_Number : Table_Range;
+         Table        : Tables.PD.Page_Table_Type);
+
+      --  Call serialize procedure for given PT.
+      procedure Handle_PT
+        (Table_Number : Table_Range;
+         Table        : Tables.PT.Page_Table_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Handle_PD
+        (Table_Number : Table_Range;
+         Table        : Tables.PD.Page_Table_Type)
+      is
+         pragma Unreferenced (Table_Number);
+      begin
+         Serialize_PD (Stream => Stream,
+                       PD     => Table);
+      end Handle_PD;
+
+      ----------------------------------------------------------------------
+
+      procedure Handle_PDPT
+        (Table_Number : Table_Range;
+         Table        : Tables.PDPT.Page_Table_Type)
+      is
+         pragma Unreferenced (Table_Number);
+      begin
+         Serialize_PDPT (Stream => Stream,
+                         PDPT   => Table);
+      end Handle_PDPT;
+
+      ----------------------------------------------------------------------
+
+      procedure Handle_PT
+        (Table_Number : Table_Range;
+         Table        : Tables.PT.Page_Table_Type)
+      is
+         pragma Unreferenced (Table_Number);
+      begin
+         Serialize_PT (Stream => Stream,
+                       PT     => Table);
+      end Handle_PT;
+   begin
+      Serialize_PML4 (Stream => Stream,
+                      PML4   => Mem_Layout.PML4);
+
+      Tables.PDPT.Iterate (Map     => Mem_Layout.PDPTs,
+                           Process => Handle_PDPT'Access);
+      Tables.PD.Iterate (Map     => Mem_Layout.PDs,
+                         Process => Handle_PD'Access);
+      Tables.PT.Iterate (Map     => Mem_Layout.PTs,
+                         Process => Handle_PT'Access);
+   end Serialize;
+
+   -------------------------------------------------------------------------
+
    procedure Set_Address
      (Mem_Layout : in out Memory_Layout_Type;
       Address    :        Interfaces.Unsigned_64)

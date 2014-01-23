@@ -16,9 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Streams;
+
 with Interfaces;
 
-private with Paging.Tables;
+with Paging.Tables;
 
 package Paging.Memory
 is
@@ -65,6 +67,25 @@ is
 
    --  Calculate physical addresses of pagetables.
    procedure Set_Table_Addresses (Mem_Layout : in out Memory_Layout_Type);
+
+   --  Serialze paging structures of given memory layout. Pagetables are
+   --  processed in decreasing level order (PML4->PDPT->PD->PT) using the
+   --  specified serialization procedures.
+   procedure Serialize
+     (Stream         : not null access Ada.Streams.Root_Stream_Type'Class;
+      Mem_Layout     : Memory_Layout_Type;
+      Serialize_PML4 : not null access procedure
+        (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+         PML4   : Tables.PML4.Page_Table_Type);
+      Serialize_PDPT : not null access procedure
+        (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+         PDPT   : Tables.PDPT.Page_Table_Type);
+      Serialize_PD   : not null access procedure
+        (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+         PD     : Tables.PD.Page_Table_Type);
+      Serialize_PT   : not null access procedure
+        (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+         PT     : Tables.PT.Page_Table_Type));
 
 private
 

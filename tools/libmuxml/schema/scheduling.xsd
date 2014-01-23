@@ -18,6 +18,7 @@
 		<xs:sequence>
 			<xs:element name="minorFrame" type="minorFrameType" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
+		<xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="minorFrameType">

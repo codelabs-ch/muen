@@ -236,16 +236,16 @@
 
 	<scheduling tickRate="10000">
 		<majorFrame>
-			<cpu>
+			<cpu id="0">
 				<minorFrame subject="linux" ticks="1700"/>
 			</cpu>
 		</majorFrame>
 		<majorFrame>
-			<cpu>
-				<minorFrame subject="linux" ticks="1700"/>
-			</cpu>
-			<cpu>
+			<cpu id="0">
 				<minorFrame subject="nonexistent" ticks="1700"/>
+			</cpu>
+			<cpu id="1">
+				<minorFrame subject="linux" ticks="1700"/>
 			</cpu>
 		</majorFrame>
 	</scheduling>

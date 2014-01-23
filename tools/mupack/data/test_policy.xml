@@ -227,7 +227,7 @@
 
 	<scheduling tickRate="10000">
 		<majorFrame>
-			<cpu>
+			<cpu id="1">
 				<minorFrame subject="linux" ticks="1700"/>
 			</cpu>
 		</majorFrame>

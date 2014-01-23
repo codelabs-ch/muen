@@ -224,13 +224,13 @@
 
 	<scheduling tickRate="10000">
 		<majorFrame>
-			<cpu>
+			<cpu id="0">
 				<minorFrame subject="lnx" ticks="40"/>
 				<minorFrame subject="lnx" ticks="40"/>
 			</cpu>
 		</majorFrame>
 		<majorFrame>
-			<cpu>
+			<cpu id="0">
 				<minorFrame subject="lnx" ticks="80"/>
 			</cpu>
 		</majorFrame>

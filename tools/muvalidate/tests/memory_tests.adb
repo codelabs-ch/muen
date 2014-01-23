@@ -212,8 +212,8 @@ is
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute size 16#0001_0013# of VMCS memory region "
-                    & "'invalid|vmcs' not 4K",
+                    = "Attribute 'size => 16#0001_0013#' of 'invalid|vmcs' "
+                    & "VMCS memory element not 4K",
                     Message   => "Exception mismatch");
       end;
    end Validate_VMCS_Size;

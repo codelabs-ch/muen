@@ -110,4 +110,14 @@ is
       return E.Maps_Page;
    end Maps_Page;
 
+   -------------------------------------------------------------------------
+
+   procedure Set_Dst_Address
+     (E       : in out Table_Entry_Type;
+      Address :        Interfaces.Unsigned_64)
+   is
+   begin
+      E.Dst_Address := Address;
+   end Set_Dst_Address;
+
 end Paging.Entries;

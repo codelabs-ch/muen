@@ -45,6 +45,11 @@ is
      (E : Table_Entry_Type)
       return Interfaces.Unsigned_64;
 
+   --  Set the address pointed to by this table entry.
+   procedure Set_Dst_Address
+     (E       : in out Table_Entry_Type;
+      Address :        Interfaces.Unsigned_64);
+
    --  Returns True if the table entry allows user access to the mapped memory
    --  region.
    function Is_Readable (E : Table_Entry_Type) return Boolean;

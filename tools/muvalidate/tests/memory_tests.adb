@@ -278,8 +278,8 @@ is
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute size 16#0001_0012# of VMXON memory region "
-                    & "'invalid_0|vmxon' not 4K",
+                    = "Attribute 'size => 16#0001_0012#' of 'invalid_0|vmxon' "
+                    & "VMXON memory element not 4K",
                     Message   => "Exception mismatch");
       end;
    end Validate_VMXON_Size;

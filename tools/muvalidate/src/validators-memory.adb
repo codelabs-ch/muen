@@ -361,13 +361,13 @@ is
         (N     => XML_Data.Doc,
          XPath => "/system/memory/memory[contains(string(@name), '|vmxon')]");
    begin
-      Check_Memory_Attribute (Nodes     => Nodes,
-                              Attr      => "size",
-                              Name_Attr => "name",
-                              Test      => Equals'Access,
-                              Right     => Mutools.Constants.Page_Size,
-                              Memtype   => "VMXON",
-                              Error_Msg => "not 4K");
+      Check_Attribute (Nodes     => Nodes,
+                       Node_Type => "VMXON memory",
+                       Attr      => "size",
+                       Name_Attr => "name",
+                       Test      => Equals'Access,
+                       Right     => Mutools.Constants.Page_Size,
+                       Error_Msg => "not 4K");
    end VMXON_Region_Size;
 
 end Validators.Memory;

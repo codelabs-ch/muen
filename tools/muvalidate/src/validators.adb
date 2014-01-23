@@ -20,6 +20,7 @@ with Validate;
 with Validators.Memory;
 with Validators.MSR;
 with Validators.Device;
+with Validators.Scheduling;
 
 package body Validators
 is
@@ -67,6 +68,8 @@ is
         (Validator => Device.IO_Port_References'Access);
       Validate.Register
         (Validator => Device.IO_Port_Range_Equality'Access);
+      Validate.Register
+        (Validator => Scheduling.CPU_Element_Count'Access);
    end Register_All;
 
 end Validators;

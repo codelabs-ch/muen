@@ -240,6 +240,14 @@
 				<minorFrame subject="linux" ticks="1700"/>
 			</cpu>
 		</majorFrame>
+		<majorFrame>
+			<cpu>
+				<minorFrame subject="linux" ticks="1700"/>
+			</cpu>
+			<cpu>
+				<minorFrame subject="linux" ticks="1700"/>
+			</cpu>
+		</majorFrame>
 	</scheduling>
 
 </system>

@@ -16,33 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Text_Runner;
-with Ahven.Framework;
+with Muxml;
 
-with Memory_Tests;
-with MSR_Tests;
-with Device_Tests;
-with Scheduling_Tests;
-with Validate_Tests;
-
-procedure Test_Runner
+package Validators.Scheduling
 is
-   use Ahven.Framework;
 
-   S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Muvalidate tests");
-begin
-   Add_Test (Suite => S.all,
-             T     => new Memory_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new MSR_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Device_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Scheduling_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Validate_Tests.Testcase);
+   --  Validate that a CPU element for each logical CPU exists in a major
+   --  frame.
+   procedure CPU_Element_Count (XML_Data : Muxml.XML_Data_Type);
 
-   Ahven.Text_Runner.Run (Suite => S);
-   Release_Suite (T => S);
-end Test_Runner;
+end Validators.Scheduling;

@@ -76,6 +76,16 @@ is
       Entry_Index  : Table_Range)
       return Boolean;
 
+   --  Add memory region with specified attributes to given memory layout.
+   procedure Add_Memory_Region
+     (Mem_Layout       : in out Memory_Layout_Type;
+      Physical_Address :        Interfaces.Unsigned_64;
+      Virtual_Address  :        Interfaces.Unsigned_64;
+      Size             :        Interfaces.Unsigned_64;
+      Caching          :        Caching_Type;
+      Writable         :        Boolean;
+      Executable       :        Boolean);
+
 private
 
    use Tables.PDPT;

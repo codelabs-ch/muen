@@ -225,13 +225,13 @@ is
         (N     => XML_Data.Doc,
          XPath => "//*[@virtualAddress]");
    begin
-      Check_Memory_Attribute (Nodes     => Nodes,
-                              Attr      => "virtualAddress",
-                              Name_Attr => "logical",
-                              Test      => Mod_Equal_Zero'Access,
-                              Right     => Mutools.Constants.Page_Size,
-                              Memtype   => "virtual",
-                              Error_Msg => "not page aligned");
+      Check_Attribute (Nodes     => Nodes,
+                       Node_Type => "logical memory",
+                       Attr      => "virtualAddress",
+                       Name_Attr => "logical",
+                       Test      => Mod_Equal_Zero'Access,
+                       Right     => Mutools.Constants.Page_Size,
+                       Error_Msg => "not page aligned");
    end Virtual_Address_Alignment;
 
    -------------------------------------------------------------------------

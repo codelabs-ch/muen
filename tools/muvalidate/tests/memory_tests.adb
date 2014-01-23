@@ -147,8 +147,8 @@ is
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute virtualAddress 16#000e_0500# of virtual "
-                    & "memory region 'linux' not page aligned",
+                    = "Attribute 'virtualAddress => 16#000e_0500#' of 'linux' "
+                    & "logical memory element not page aligned",
                     Message   => "Exception mismatch");
       end;
    end Validate_Virtaddr_Alignment;

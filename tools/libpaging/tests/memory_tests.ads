@@ -29,4 +29,7 @@ is
    --  Memory layout address setter/getter.
    procedure Layout_Address_Handling;
 
+   --  Add memory layout to region.
+   procedure Layout_Add_Region;
+
 end Memory_Tests;

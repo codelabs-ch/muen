@@ -36,7 +36,61 @@ is
       T.Add_Test_Routine
         (Routine => Layout_Address_Handling'Access,
          Name    => "Memory layout address handling");
+      T.Add_Test_Routine
+        (Routine => Layout_Add_Region'Access,
+         Name    => "Add memory region to layout");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Layout_Add_Region
+   is
+      Layout : Memory_Layout_Type := Null_Layout;
+
+      PML4s, PDPTs, PDs, PTs : Natural;
+   begin
+      Get_Table_Count (Mem_Layout => Layout,
+                       PML4_Count => PML4s,
+                       PDPT_Count => PDPTs,
+                       PD_Count   => PDs,
+                       PT_Count   => PTs);
+      Assert (Condition => PML4s = 0,
+              Message   => "PML4 count not 0");
+      Assert (Condition => PDPTs = 0,
+              Message   => "PDPT count not 0");
+      Assert (Condition => PDs = 0,
+              Message   => "PD count not 0");
+      Assert (Condition => PTs = 0,
+              Message   => "PT count not 0");
+
+      Add_Memory_Region
+        (Mem_Layout       => Layout,
+         Physical_Address => 16#1000#,
+         Virtual_Address  => 16#deafbeef000#,
+         Size             => Page_Size,
+         Caching          => WB,
+         Writable         => True,
+         Executable       => False);
+
+      Assert (Condition => Exists (Mem_Layout => Layout,
+                                   PML4_Index => 27),
+              Message   => "PML4 entry not created");
+      Assert (Condition => Contains_PDPTE
+              (Mem_Layout   => Layout,
+               Table_Number => 0,
+               Entry_Index  => 427),
+              Message   => "PDPT entry not created");
+      Assert (Condition => Contains_PDE
+              (Mem_Layout   => Layout,
+               Table_Number => 0,
+               Entry_Index  => 479),
+              Message   => "PD entry not created");
+      Assert (Condition => Contains_PTE
+              (Mem_Layout   => Layout,
+               Table_Number => 0,
+               Entry_Index  => 239),
+              Message   => "PT entry not created");
+   end Layout_Add_Region;
 
    -------------------------------------------------------------------------
 

@@ -42,6 +42,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Subj_CPU_Affinity'Access,
          Name    => "Validate subject CPU affinity");
+      T.Add_Test_Routine
+        (Routine => Validate_Major_Ticks'Access,
+         Name    => "Validate major frame ticks");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -65,6 +68,28 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_CPU_Element_Count;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Major_Ticks
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Scheduling.Major_Frame_Ticks (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid CPU elements in scheduling plan, tick counts "
+                    & "differ",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Major_Ticks;
 
    -------------------------------------------------------------------------
 

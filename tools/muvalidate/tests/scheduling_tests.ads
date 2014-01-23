@@ -35,4 +35,7 @@ is
    --  Validate subject CPU affinity.
    procedure Validate_Subj_CPU_Affinity;
 
+   --  Validate major frame tick count.
+   procedure Validate_Major_Ticks;
+
 end Scheduling_Tests;

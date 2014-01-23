@@ -65,6 +65,59 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Major_Frame_Ticks (XML_Data : Muxml.XML_Data_Type)
+   is
+      Ref_Ticks : Natural;
+      Majors    : constant DOM.Core.Node_List
+        := XPath_Query (N     => XML_Data.Doc,
+                        XPath => "//majorFrame");
+   begin
+      Mulog.Log (Msg => "Checking tick count in" & DOM.Core.Nodes.Length
+                 (List => Majors)'Img & " scheduling major frame(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Majors) - 1 loop
+         Ref_Ticks := 0;
+
+         declare
+            CPU_Ticks : Natural;
+            CPUs      : constant DOM.Core.Node_List
+              := XPath_Query (N     => DOM.Core.Nodes.Item
+                              (List  => Majors,
+                               Index => I),
+                              XPath => "cpu");
+         begin
+            for J in 0 .. DOM.Core.Nodes.Length (List => CPUs) - 1 loop
+               CPU_Ticks := 0;
+
+               declare
+                  Minors : constant DOM.Core.Node_List
+                    := XPath_Query (N     => DOM.Core.Nodes.Item
+                                    (List  => CPUs,
+                                     Index => J),
+                                    XPath => "minorFrame/@ticks");
+               begin
+                  for K in 0 .. DOM.Core.Nodes.Length (List => Minors) - 1 loop
+                     CPU_Ticks := CPU_Ticks + Positive'Value
+                       (DOM.Core.Nodes.Node_Value
+                          (N => DOM.Core.Nodes.Item
+                             (List  => Minors,
+                              Index => K)));
+                  end loop;
+               end;
+
+               if Ref_Ticks = 0 then
+                  Ref_Ticks := CPU_Ticks;
+               elsif Ref_Ticks /= CPU_Ticks then
+                  raise Validation_Error with "Invalid CPU elements in "
+                    & "scheduling plan, tick counts differ";
+               end if;
+            end loop;
+         end;
+      end loop;
+   end Major_Frame_Ticks;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_CPU_Affinity (XML_Data : Muxml.XML_Data_Type)
    is
       Frames   : constant DOM.Core.Node_List

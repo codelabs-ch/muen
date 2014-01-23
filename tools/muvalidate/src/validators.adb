@@ -74,6 +74,8 @@ is
         (Validator => Scheduling.Subject_References'Access);
       Validate.Register
         (Validator => Scheduling.Subject_CPU_Affinity'Access);
+      Validate.Register
+        (Validator => Scheduling.Major_Frame_Ticks'Access);
    end Register_All;
 
 end Validators;

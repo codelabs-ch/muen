@@ -31,4 +31,7 @@ is
    --  Validate that subjects are scheduled on the correct logical CPU.
    procedure Subject_CPU_Affinity (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate tick counts in major frame.
+   procedure Major_Frame_Ticks (XML_Data : Muxml.XML_Data_Type);
+
 end Validators.Scheduling;

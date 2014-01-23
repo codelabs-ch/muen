@@ -29,6 +29,9 @@ is
    --  Validate subject CPU IDs.
    procedure Validate_CPU_IDs;
 
+   --  Validate event table subject references.
+   procedure Validate_Event_Subject_References;
+
    --  Validate event table self-references.
    procedure Validate_Event_Self_References;
 

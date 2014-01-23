@@ -124,6 +124,8 @@ is
       Validate.Register
         (Validator => Subject.CPU_ID'Access);
       Validate.Register
+        (Validator => Subject.Event_Subject_References'Access);
+      Validate.Register
         (Validator => Subject.Event_Self_References'Access);
    end Register_All;
 

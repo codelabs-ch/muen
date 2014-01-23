@@ -98,4 +98,46 @@ is
       end loop;
    end Event_Self_References;
 
+   -------------------------------------------------------------------------
+
+   procedure Event_Subject_References (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := XPath_Query (N     => XML_Data.Doc,
+                        XPath => "//notify");
+   begin
+      Mulog.Log (Msg => "Checking subject references in"
+                 & DOM.Core.Nodes.Length (List => Nodes)'Img
+                 & " event notification(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Notify_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Nodes,
+                 Index => I);
+            Subj_Ref    : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Notify_Node,
+                 Name => "subject");
+            Subjects    : constant DOM.Core.Node_List
+              := XPath_Query (N     => XML_Data.Doc,
+                              XPath => "//subjects/subject[@name='"
+                              & Subj_Ref & "']");
+         begin
+            if DOM.Core.Nodes.Length (List => Subjects) = 0 then
+               declare
+                  Event_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => DOM.Core.Nodes.Parent_Node (N => Notify_Node),
+                       Name => "logical");
+               begin
+                  raise Validation_Error with "Reference to unknown subject '"
+                    & Subj_Ref & "' in event '" & Event_Name & "'";
+               end;
+            end if;
+         end;
+      end loop;
+   end Event_Subject_References;
+
 end Validators.Subject;

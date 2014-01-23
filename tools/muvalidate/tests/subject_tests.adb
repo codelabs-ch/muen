@@ -42,6 +42,9 @@ is
         (Routine => Validate_CPU_IDs'Access,
          Name    => "Validate CPU IDs");
       T.Add_Test_Routine
+        (Routine => Validate_Event_Subject_References'Access,
+         Name    => "Validate event table subject references");
+      T.Add_Test_Routine
         (Routine => Validate_Event_Self_References'Access,
          Name    => "Validate event table self-references");
    end Initialize;
@@ -102,5 +105,27 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Event_Self_References;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Event_Subject_References
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Subject.Event_Subject_References (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Reference to unknown subject 'nonexistent' in event "
+                    & "'invalid_subject'",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Event_Subject_References;
 
 end Subject_Tests;

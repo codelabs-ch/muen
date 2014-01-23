@@ -55,6 +55,27 @@ is
       PML4_Index : Table_Range)
       return Boolean;
 
+   --  Returns True if the specified PDPT contains an entry with given index.
+   function Contains_PDPTE
+     (Mem_Layout   : Memory_Layout_Type;
+      Table_Number : Table_Range;
+      Entry_Index  : Table_Range)
+      return Boolean;
+
+   --  Returns True if the specified PD contains an entry with given index.
+   function Contains_PDE
+     (Mem_Layout   : Memory_Layout_Type;
+      Table_Number : Table_Range;
+      Entry_Index  : Table_Range)
+      return Boolean;
+
+   --  Returns True if the specified PT contains an entry with given index.
+   function Contains_PTE
+     (Mem_Layout   : Memory_Layout_Type;
+      Table_Number : Table_Range;
+      Entry_Index  : Table_Range)
+      return Boolean;
+
 private
 
    use Tables.PDPT;

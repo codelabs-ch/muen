@@ -182,6 +182,51 @@ is
 
    -------------------------------------------------------------------------
 
+   function Contains_PDE
+     (Mem_Layout   : Memory_Layout_Type;
+      Table_Number : Table_Range;
+      Entry_Index  : Table_Range)
+      return Boolean
+   is
+   begin
+      return Mem_Layout.PDs.Contains (Key => Table_Number)
+        and then Tables.PD.Contains
+          (Table => Mem_Layout.PDs.Element (Key => Table_Number),
+           Index => Entry_Index);
+   end Contains_PDE;
+
+   -------------------------------------------------------------------------
+
+   function Contains_PDPTE
+     (Mem_Layout   : Memory_Layout_Type;
+      Table_Number : Table_Range;
+      Entry_Index  : Table_Range)
+      return Boolean
+   is
+   begin
+      return Mem_Layout.PDPTs.Contains (Key => Table_Number)
+        and then Tables.PDPT.Contains
+          (Table => Mem_Layout.PDPTs.Element (Key => Table_Number),
+           Index => Entry_Index);
+   end Contains_PDPTE;
+
+   -------------------------------------------------------------------------
+
+   function Contains_PTE
+     (Mem_Layout   : Memory_Layout_Type;
+      Table_Number : Table_Range;
+      Entry_Index  : Table_Range)
+      return Boolean
+   is
+   begin
+      return Mem_Layout.PTs.Contains (Key => Table_Number)
+        and then Tables.PT.Contains
+          (Table => Mem_Layout.PTs.Element (Key => Table_Number),
+           Index => Entry_Index);
+   end Contains_PTE;
+
+   -------------------------------------------------------------------------
+
    function Exists
      (Mem_Layout : Memory_Layout_Type;
       PML4_Index : Table_Range)

@@ -169,8 +169,8 @@ is
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute physicalAddress 16#0010_0000# of VMCS memory "
-                    & "region 'invalid|vmcs' not below 1 MiB",
+                    = "Attribute 'physicalAddress => 16#0010_0000#' of "
+                    & "'invalid|vmcs' VMCS memory element not below 1 MiB",
                     Message   => "Exception mismatch");
       end;
    end Validate_VMCS_In_Lowmem;

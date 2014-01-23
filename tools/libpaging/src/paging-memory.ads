@@ -41,6 +41,14 @@ is
      (Mem_Layout : Memory_Layout_Type)
       return Interfaces.Unsigned_64;
 
+   --  Returns the number of pagetables per level.
+   procedure Get_Table_Count
+     (Mem_Layout :     Memory_Layout_Type;
+      PML4_Count : out Natural;
+      PDPT_Count : out Natural;
+      PD_Count   : out Natural;
+      PT_Count   : out Natural);
+
 private
 
    use Tables.PDPT;

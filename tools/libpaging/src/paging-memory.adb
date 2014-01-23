@@ -31,6 +31,30 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Get_Table_Count
+     (Mem_Layout :     Memory_Layout_Type;
+      PML4_Count : out Natural;
+      PDPT_Count : out Natural;
+      PD_Count   : out Natural;
+      PT_Count   : out Natural)
+   is
+   begin
+
+      --  There is max. one PML4 table.
+
+      if Tables.PML4.Count (Table => Mem_Layout.PML4) > 0 then
+         PML4_Count := 1;
+      else
+         PML4_Count := 0;
+      end if;
+
+      PDPT_Count := Natural (Mem_Layout.PDPTs.Length);
+      PD_Count   := Natural (Mem_Layout.PDs.Length);
+      PT_Count   := Natural (Mem_Layout.PTs.Length);
+   end Get_Table_Count;
+
+   -------------------------------------------------------------------------
+
    procedure Set_Address
      (Mem_Layout : in out Memory_Layout_Type;
       Address    :        Interfaces.Unsigned_64)

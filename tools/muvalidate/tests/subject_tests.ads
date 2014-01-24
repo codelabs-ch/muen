@@ -35,4 +35,7 @@ is
    --  Validate event table self-references.
    procedure Validate_Event_Self_References;
 
+   --  Validate event switch notification destinations.
+   procedure Validate_Event_Switch_Destination;
+
 end Subject_Tests;

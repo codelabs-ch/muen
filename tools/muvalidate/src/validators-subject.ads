@@ -31,4 +31,8 @@ is
    --  notification entries.
    procedure Event_Self_References (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that notification entries switch to a subject running on the
+   --  same core.
+   procedure Event_Switch_Same_Core (XML_Data : Muxml.XML_Data_Type);
+
 end Validators.Subject;

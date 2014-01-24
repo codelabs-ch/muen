@@ -47,6 +47,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Event_Self_References'Access,
          Name    => "Validate event table self-references");
+      T.Add_Test_Routine
+        (Routine => Validate_Event_Switch_Destination'Access,
+         Name    => "Validate event switch destination");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -127,5 +130,28 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Event_Subject_References;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Event_Switch_Destination
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Subject.Event_Switch_Same_Core (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Destination subject 'linux' in subject's 'subject1' "
+                    & "switch notification 'linux_switch' runs on different "
+                    & "CPU 0 (instead of 1)",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Event_Switch_Destination;
 
 end Subject_Tests;

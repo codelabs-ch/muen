@@ -127,6 +127,8 @@ is
         (Validator => Subject.Event_Subject_References'Access);
       Validate.Register
         (Validator => Subject.Event_Self_References'Access);
+      Validate.Register
+        (Validator => Subject.Event_Switch_Same_Core'Access);
    end Register_All;
 
 end Validators;

@@ -25,8 +25,14 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
-   --  Independent empty regions
-   procedure Non_Overlapping;
+   --  Independent empty regions, inserted in increasing order
+   procedure Non_Overlapping_Sorted;
+
+   --  Independent empty regions, inserted in random order
+   procedure Non_Overlapping_Random;
+
+   --  Independent empty regions, inserted in decreasing order
+   procedure Non_Overlapping_Reversed;
 
    --  Detect overlapping empty regions, overlapping left
    --      [existing region]

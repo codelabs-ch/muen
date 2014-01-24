@@ -21,6 +21,10 @@ with Ada.Text_IO;
 
 package body Map_Tests
 is
+   Output_File : Ada.Text_IO.File_Type;
+
+   procedure Write_Region (R : Alloc.Map.Region_Type);
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -38,73 +42,87 @@ is
         (Routine => Overlapping_Empty_Encompassing'Access,
          Name    => "Overlapping, encompassing");
       T.Add_Test_Routine
-        (Routine => Non_Overlapping'Access,
-         Name    => "Non-overlapping");
+        (Routine => Non_Overlapping_Sorted'Access,
+         Name    => "Non-overlapping (sorted)");
+      T.Add_Test_Routine
+        (Routine => Non_Overlapping_Random'Access,
+         Name    => "Non-overlapping (random)");
+      T.Add_Test_Routine
+        (Routine => Non_Overlapping_Reversed'Access,
+         Name    => "Non-overlapping (reversed)");
    end Initialize;
 
    ----------------------------------------------------------------------------
 
-   procedure Non_Overlapping
+   procedure Non_Overlapping_Random
    is
+      use Ahven;
       use Alloc.Map;
       use Ada.Text_IO;
 
-      M1, M2, M3  : Map_Type;
-      Output_File : File_Type;
-
-      procedure Write_Region (R : Region_Type);
-      procedure Write_Region (R : Region_Type)
-      is
-      begin
-         Put_Line
-            (Output_File,
-             R.Kind'Img &
-             R.First_Address'Img &
-             R.Last_Address'Img);
-      end Write_Region;
-
-      use Ahven;
+      M : Map_Type;
    begin
-      M1.Insert_Empty_Region (0,    1000);
-      M1.Insert_Empty_Region (1001, 2000);
-      M1.Insert_Empty_Region (5000, 10000);
-      M1.Insert_Empty_Region (11000, 15000);
-      M1.Insert_Empty_Region (16000, 30000);
-      Create (Output_File, Out_File, "obj/non_overlapping1a.txt");
-      M1.Iterate (Write_Region'Access);
-      Close (Output_File);
-      Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/non_overlapping1.txt",
-                   Filename2 => "obj/non_overlapping1a.txt"),
-              Message => "Memory map missmatch (sorted)");
-
-      M2.Insert_Empty_Region (11000, 15000);
-      M2.Insert_Empty_Region (1001, 2000);
-      M2.Insert_Empty_Region (5000, 10000);
-      M2.Insert_Empty_Region (0,    1000);
-      M2.Insert_Empty_Region (16000, 30000);
+      M.Insert_Empty_Region (11000, 15000);
+      M.Insert_Empty_Region (1001, 2000);
+      M.Insert_Empty_Region (5000, 10000);
+      M.Insert_Empty_Region (0,    1000);
+      M.Insert_Empty_Region (16000, 30000);
       Create (Output_File, Out_File, "obj/non_overlapping1b.txt");
-      M2.Iterate (Write_Region'Access);
+      M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
                   (Filename1 => "data/non_overlapping1.txt",
                    Filename2 => "obj/non_overlapping1b.txt"),
               Message => "Memory map missmatch (random)");
+   end Non_Overlapping_Random;
 
-      M3.Insert_Empty_Region (16000, 30000);
-      M3.Insert_Empty_Region (11000, 15000);
-      M3.Insert_Empty_Region (5000, 10000);
-      M3.Insert_Empty_Region (1001, 2000);
-      M3.Insert_Empty_Region (0,    1000);
+   ----------------------------------------------------------------------------
+
+   procedure Non_Overlapping_Reversed
+   is
+      use Ahven;
+      use Alloc.Map;
+      use Ada.Text_IO;
+
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (16000, 30000);
+      M.Insert_Empty_Region (11000, 15000);
+      M.Insert_Empty_Region (5000, 10000);
+      M.Insert_Empty_Region (1001, 2000);
+      M.Insert_Empty_Region (0,    1000);
       Create (Output_File, Out_File, "obj/non_overlapping1c.txt");
-      M3.Iterate (Write_Region'Access);
+      M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
                   (Filename1 => "data/non_overlapping1.txt",
                    Filename2 => "obj/non_overlapping1c.txt"),
               Message => "Memory map missmatch (reversed)");
+   end Non_Overlapping_Reversed;
 
-   end Non_Overlapping;
+   ----------------------------------------------------------------------------
+
+   procedure Non_Overlapping_Sorted
+   is
+      use Ahven;
+      use Alloc.Map;
+      use Ada.Text_IO;
+
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0,    1000);
+      M.Insert_Empty_Region (1001, 2000);
+      M.Insert_Empty_Region (5000, 10000);
+      M.Insert_Empty_Region (11000, 15000);
+      M.Insert_Empty_Region (16000, 30000);
+      Create (Output_File, Out_File, "obj/non_overlapping1a.txt");
+      M.Iterate (Write_Region'Access);
+      Close (Output_File);
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/non_overlapping1.txt",
+                   Filename2 => "obj/non_overlapping1a.txt"),
+              Message => "Memory map missmatch (sorted)");
+   end Non_Overlapping_Sorted;
 
    ----------------------------------------------------------------------------
 
@@ -165,5 +183,18 @@ is
    exception
       when Overlapping_Empty_Region => null;
    end Overlapping_Empty_Right;
+
+   ----------------------------------------------------------------------------
+
+   procedure Write_Region (R : Alloc.Map.Region_Type)
+   is
+      use Ada.Text_IO;
+   begin
+      Put_Line
+         (Output_File,
+          R.Kind'Img &
+          R.First_Address'Img &
+          R.Last_Address'Img);
+   end Write_Region;
 
 end Map_Tests;

@@ -57,6 +57,9 @@ is
       T.Add_Test_Routine
         (Routine => PML4_Serialization'Access,
          Name    => "PML4 serialization");
+      T.Add_Test_Routine
+        (Routine => PDPT_Serialization'Access,
+         Name    => "PDPT serialization");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -77,6 +80,46 @@ is
       Assert (Condition => To_Unsigned64 (E => PDE) = Ref,
               Message   => "PD entry unsigned 64 value mismatch");
    end PDE_To_Unsigned64;
+
+   -------------------------------------------------------------------------
+
+   procedure PDPT_Serialization
+   is
+      PDPT : Tables.PDPT.Page_Table_Type := Tables.PDPT.Create_Table
+        (Number => 0);
+   begin
+      Tables.PDPT.Set_Physical_Address (Table   => PDPT,
+                                        Address => 16#1f1000#);
+      Tables.PDPT.Add_Entry (Table => PDPT,
+                             Index => 0,
+                             E     => Entries.Create
+                               (Dst_Offset  => 0,
+                                Dst_Address => 16#1f2000#,
+                                Readable    => True,
+                                Writable    => True,
+                                Executable  => True,
+                                Maps_Page   => False,
+                                Global      => False,
+                                Caching     => UC));
+
+      declare
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/ia32e_pdpt",
+                             File     => File);
+
+         Serialize (Stream => Stream (File => File),
+                    PDPT   => PDPT);
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/ia32e_pdpt.ref",
+               Filename2 => "obj/ia32e_pdpt"),
+              Message   => "IA-32e PDP table mismatch");
+   end PDPT_Serialization;
 
    -------------------------------------------------------------------------
 

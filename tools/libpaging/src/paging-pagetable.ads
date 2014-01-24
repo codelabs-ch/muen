@@ -103,6 +103,14 @@ is
         (Table_Number :        Table_Range;
          Table        : in out Page_Table_Type));
 
+   --  Iterate over given page table map and call given process procedure for
+   --  each entry.
+   procedure Iterate
+     (Map     : Page_Table_Map;
+      Process : not null access procedure
+        (Table_Number : Table_Range;
+         Table        : Page_Table_Type));
+
    Duplicate_Entry : exception;
 
 private

@@ -28,10 +28,41 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Table_Entry
+   is
+      Table : PT.Page_Table_Type := PT.Create_Table (Number => 0);
+   begin
+      Assert (Condition => PT.Count (Table => Table) = 0,
+              Message   => "Table not empty");
+
+      PT.Add_Entry (Table => Table,
+                    Index => 42,
+                    E     => Entries.Create
+                      (Dst_Offset  => 0,
+                       Dst_Address => 0,
+                       Readable    => True,
+                       Writable    => False,
+                       Executable  => True,
+                       Maps_Page   => True,
+                       Global      => True,
+                       Caching     => Paging.WB));
+
+      Assert (Condition => PT.Count (Table => Table) = 1,
+              Message   => "Entry not added");
+      Assert (Condition => PT.Contains (Table => Table,
+                                        Index => 42),
+              Message   => "Entry not added with correct index");
+   end Add_Table_Entry;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
       T.Set_Name (Name => "Pagetable tests");
+      T.Add_Test_Routine
+        (Routine => Add_Table_Entry'Access,
+         Name    => "Add entry to table");
       T.Add_Test_Routine
         (Routine => Iteration'Access,
          Name    => "Table iteration");

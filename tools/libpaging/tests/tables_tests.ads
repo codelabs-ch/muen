@@ -26,6 +26,9 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
+   --  Add entry to table.
+   procedure Add_Table_Entry;
+
    --  Table iteration.
    procedure Iteration;
 

@@ -20,7 +20,14 @@ ENTRY(main)
 
 SECTIONS
 {
-	.text :
+	.bss :
+	{
+		. += 0x2000;
+		stack = .;
+		*(.bss)
+	}
+
+	.text 0x3000 :
 	{
 		stub.o(.stub)
 		*(.text)
@@ -35,12 +42,6 @@ SECTIONS
 	.data :	{ *(.data) }
 
 	. = ALIGN (4096);
-
-	.bss :
-	{
-		. += 0x2000;
-		stack = .;
-	}
 
 	/DISCARD/ :
 	{

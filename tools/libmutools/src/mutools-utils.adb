@@ -51,6 +51,17 @@ is
 
    -------------------------------------------------------------------------
 
+   function Decode_Entity_Name (Encoded_Str : String) return String
+   is
+      Udrl_Idx : constant Natural := Ada.Strings.Fixed.Index
+        (Source  => Encoded_Str,
+         Pattern => "|");
+   begin
+      return Encoded_Str (Encoded_Str'First .. Udrl_Idx - 1);
+   end Decode_Entity_Name;
+
+   -------------------------------------------------------------------------
+
    function To_Hex
      (Number : Interfaces.Unsigned_64;
       Prefix : Boolean := True)

@@ -60,6 +60,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Decode_Entity_Name
+   is
+      Str : constant String := "linux|zp";
+   begin
+      Assert (Condition => Utils.Decode_Entity_Name
+              (Encoded_Str => Str) = "linux",
+              Message   => "Entity name mismatch");
+   end Decode_Entity_Name;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -70,6 +81,9 @@ is
       T.Add_Test_Routine
         (Routine => Bit_Ops'Access,
          Name    => "Unsigned_64 bit set/test operations");
+      T.Add_Test_Routine
+        (Routine => Decode_Entity_Name'Access,
+         Name    => "Decode entity name");
    end Initialize;
 
    -------------------------------------------------------------------------

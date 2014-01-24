@@ -32,4 +32,7 @@ is
    --  Set and test bits in Unsigned_64 numbers.
    procedure Bit_Ops;
 
+   --  Extract entity name from encoded string.
+   procedure Decode_Entity_Name;
+
 end Utils_Tests;

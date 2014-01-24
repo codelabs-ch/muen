@@ -42,4 +42,8 @@ is
       Prefix : Boolean := True)
       return String;
 
+   --  Extract entity name from given encoded string (e.g. 'linux|zp' or
+   --  'kernel_0|vmxon').
+   function Decode_Entity_Name (Encoded_Str : String) return String;
+
 end Mutools.Utils;

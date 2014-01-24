@@ -44,6 +44,9 @@ is
       T.Add_Test_Routine
         (Routine => PDE_To_Unsigned64'Access,
          Name    => "PD to unsigned 64");
+      T.Add_Test_Routine
+        (Routine => PTE_To_Unsigned64'Access,
+         Name    => "PT to unsigned 64");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -102,5 +105,24 @@ is
       Assert (Condition => To_Unsigned64 (E => PML4E) = Ref,
               Message   => "PML4 entry unsigned 64 value mismatch");
    end PML4E_To_Unsigned64;
+
+   -------------------------------------------------------------------------
+
+   procedure PTE_To_Unsigned64
+   is
+      Ref : constant Interfaces.Unsigned_64 := 16#100043f10b#;
+      PTE : constant Entries.PT_Entry_Type  := Entries.Create
+        (Dst_Offset  => 0,
+         Dst_Address => 16#100043f000#,
+         Readable    => False,
+         Writable    => True,
+         Executable  => True,
+         Maps_Page   => False,
+         Global      => True,
+         Caching     => WC);
+   begin
+      Assert (Condition => To_Unsigned64 (E => PTE) = Ref,
+              Message   => "PT entry unsigned 64 value mismatch");
+   end PTE_To_Unsigned64;
 
 end IA32e_Tests;

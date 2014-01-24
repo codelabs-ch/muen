@@ -75,17 +75,22 @@ is
 
    procedure Iterate
      (Table   : Page_Table_Type;
-      Process : not null access procedure (TEntry : Entry_Type))
+      Process : not null access procedure
+        (Index  : Table_Range;
+         TEntry : Entry_Type))
    is
       --  Perform process operation for given element.
       procedure Call_Process (Position : Entries_Map_Package.Cursor);
 
       procedure Call_Process (Position : Entries_Map_Package.Cursor)
       is
-         TEntry : constant Entry_Type := Entries_Map_Package.Element
+         Index  : constant Table_Range := Entries_Map_Package.Key
+           (Position => Position);
+         TEntry : constant Entry_Type  := Entries_Map_Package.Element
            (Position => Position);
       begin
-         Process (TEntry => TEntry);
+         Process (Index  => Index,
+                  TEntry => TEntry);
       end Call_Process;
    begin
       Table.Data.Iterate (Process => Call_Process'Access);

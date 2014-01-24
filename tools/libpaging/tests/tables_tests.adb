@@ -55,14 +55,20 @@ is
       Counter : Natural := 0;
 
       --  Increment counter.
-      procedure Inc_Counter (TEntry : Entries.PT_Entry_Type);
+      procedure Inc_Counter
+        (Index  : Table_Range;
+         TEntry : Entries.PT_Entry_Type);
 
       ----------------------------------------------------------------------
 
-      procedure Inc_Counter (TEntry : Entries.PT_Entry_Type)
+      procedure Inc_Counter
+        (Index  : Table_Range;
+         TEntry : Entries.PT_Entry_Type)
       is
          use type Entries.PT_Entry_Type;
       begin
+         Assert (Condition => Index = 12 or Index = 13,
+                 Message   => "Invalid index");
          Assert (Condition => TEntry = Ref_Entry,
                  Message   => "Table entry mismatch");
          Counter := Counter + 1;

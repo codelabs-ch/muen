@@ -69,7 +69,9 @@ is
    --  entry.
    procedure Iterate
      (Table   : Page_Table_Type;
-      Process : not null access procedure (TEntry : Entry_Type));
+      Process : not null access procedure
+        (Index  : Table_Range;
+         TEntry : Entry_Type));
 
 private
 

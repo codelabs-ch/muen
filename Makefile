@@ -8,28 +8,22 @@ endif
 
 all: pack
 
-skconfig:
-	$(MAKE) $@ -C tools
-
-skpacker: policy
-	$(MAKE) $@ -C tools
-
-skpolicy:
-	$(MAKE) $@ -C tools
-
 rts:
 	$(MAKE) -C $@
 
-policy: skpolicy
+policy: tools
 	$(MAKE) -C $@
 
-subjects: skconfig policy rts
+subjects: policy rts
 	$(MAKE) -C $@
 
 kernel: policy rts
 	$(MAKE) -C $@
 
-pack: skpacker kernel subjects
+pack: policy kernel subjects
+	$(MAKE) -C $@
+
+tools:
 	$(MAKE) -C $@
 
 deploy: HARDWARE=t430s
@@ -52,4 +46,4 @@ clean:
 distclean: clean
 	$(MAKE) clean -C contrib
 
-.PHONY: deploy emulate kernel pack policy rts subjects
+.PHONY: deploy emulate kernel pack policy rts subjects tools

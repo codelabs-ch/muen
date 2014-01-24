@@ -1,15 +1,18 @@
-KERNEL = $(TOP_DIR)/kernel/obj/kernel
+KNL_NAME = kernel
+KNL_FILE = $(TOP_DIR)/kernel/obj/$(KNL_NAME)
+IMAGE    = $(OBJ_DIR)/kernel
 
 include ../Makeconf
 
 DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
-all: $(OBJ_DIR)/kernel
+all: $(IMAGE)
 
-$(OBJ_DIR)/kernel: $(KERNEL)
-	$(SKPACKER) $(KERNEL) $@
+$(IMAGE): $(KNL_FILE)
+	cp $^ $@
+	$(MUPACK) -k $(KNL_NAME) -i $(POLICY_INC) -o $(OBJ_DIR) $(POLICY)
 
 clean:
 	@rm -rf $(OBJ_DIR)
 
-.PHONY: $(OBJ_DIR)/kernel
+.PHONY: $(IMAGE)

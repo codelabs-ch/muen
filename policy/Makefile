@@ -1,34 +1,34 @@
-POLICY   = $(wildcard xml/*.xml)
-SYSTEM   = xml/example_system.xml
-DSDT     = acpi/DSDT.aml
-SCHEMAS  = $(SCHEMA_DIR)/*.xsd
-SCHEMA   = $(SCHEMA_DIR)/system.xsd
-TMPL_DIR = $(TOP_DIR)/tools/policy/templates
-OUTPUT   = $(POLICY_INC)/skp.ads
-HWSTAMP  = $(POLICY_INC)/.$(HARDWARE).stamp
+DSDT   = $(OBJ_DIR)/DSDT.aml
+OUTPUT = $(POLICY_INC)/skp.ads
 
-TEMPLATES = $(wildcard $(TMPL_DIR)/*)
+GENERATORS =      \
+	$(MUACPIGEN)  \
+	$(MUIOBMGEN)  \
+	$(MUMSRBMGEN) \
+	$(MUPTGEN)    \
+	$(MUSPECGEN)  \
+	$(MUZPGEN)
+
+GENERATOR_OPTS = -o $(OBJ_DIR) $(POLICY)
 
 include ../Makeconf
 
-DUMMY := $(shell mkdir -p $(POLICY_INC) $(POLICY_PAC))
+DUMMY := $(shell mkdir -p $(POLICY_INC))
 
-all: $(OUTPUT) $(DSDT)
+all: .validated $(OUTPUT) $(DSDT)
 
-$(SYSTEM): $(SYSTEM).tmpl $(HWSTAMP)
-	@sed 's/__HARDWARE__/$(HARDWARE)/g' $< > $@
-
-$(DSDT): acpi/$(HARDWARE).dsdt.dsl
-	@iasl -ta $<
-
-$(HWSTAMP): xml/hardware/$(HARDWARE).xml
-	@rm -f $(POLICY_INC)/.*.stamp
+.validated: $(POLICY)
+	@$(MUVALIDATE) $(POLICY)
 	@touch $@
 
-$(OUTPUT): $(SKPOLICY) $(POLICY) $(SYSTEM) $(SCHEMAS) $(TEMPLATES)
-	$(SKPOLICY) $(SCHEMA) $(TMPL_DIR) $(SYSTEM)
+$(DSDT): acpi/$(HARDWARE).dsdt.dsl
+	@cp $^ $(OBJ_DIR)
+	@iasl -ta $(OBJ_DIR)/$(HARDWARE).dsdt.dsl
+
+$(OUTPUT): $(GENERATORS) $(POLICY)
+	@for gen in $(GENERATORS); do $$gen $(GENERATOR_OPTS) || exit 1; done
 
 clean:
-	@rm -rf $(POLICY_INC) $(POLICY_PAC) $(DSDT) $(SYSTEM)
+	@rm -rf $(POLICY_INC) $(DSDT) .validated
 
 .PHONY: clean

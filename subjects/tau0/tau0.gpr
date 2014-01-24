@@ -19,7 +19,7 @@
 project Tau0 extends "../subject" is
 
    for Languages use ("Ada");
-   for Source_Dirs use ("../../common/src", "../../policy/include/", "src");
+   for Source_Dirs use ("../../common/src", "../../policy/obj", "src");
    for Object_Dir use "obj";
 
    for Main use ("tau0");

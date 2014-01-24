@@ -20,21 +20,9 @@ LIBS =       \
 # Projects to clean
 CLEAN =      \
 	$(TOOLS) \
-	$(LIBS)  \
-	config   \
-	packer   \
-	policy   \
+	$(LIBS)
 
-all: skconfig skpacker skpolicy tools
-
-skconfig:
-	$(MAKE) -C config
-
-skpacker:
-	$(MAKE) -C packer
-
-skpolicy:
-	$(MAKE) -C policy
+all: tools
 
 tools:
 	@for prj in $(TOOLS); do $(MAKE) -C $$prj || exit 1; done

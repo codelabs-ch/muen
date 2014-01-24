@@ -26,6 +26,7 @@ with Mutools.Files;
 
 with Paging.Tables;
 with Paging.Entries;
+with Paging.Memory;
 with Paging.EPT;
 
 package body EPT_Tests
@@ -35,6 +36,50 @@ is
    use Paging;
    use Paging.EPT;
    use type Interfaces.Unsigned_64;
+
+   -------------------------------------------------------------------------
+
+   procedure Generate_Paging_Structures
+   is
+      Layout : Memory.Memory_Layout_Type := Memory.Null_Layout;
+   begin
+      Memory.Set_Address (Mem_Layout => Layout,
+                          Address    => 16#001f_4000#);
+
+      --  Mem
+      Memory.Add_Memory_Region
+        (Mem_Layout       => Layout,
+         Physical_Address => 16#4000_0000#,
+         Virtual_Address  => 16#0#,
+         Size             => 16#1_0000_0000#,
+         Caching          => UC,
+         Writable         => True,
+         Executable       => True);
+
+      declare
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/ept",
+                             File     => File);
+
+         Memory.Serialize
+           (Stream         => Stream (File => File),
+            Mem_Layout     => Layout,
+            Serialize_PML4 => EPT.Serialize'Access,
+            Serialize_PDPT => EPT.Serialize'Access,
+            Serialize_PD   => EPT.Serialize'Access,
+            Serialize_PT   => EPT.Serialize'Access);
+
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/ept.ref",
+               Filename2 => "obj/ept"),
+              Message   => "EPT paging structures mismatch");
+   end Generate_Paging_Structures;
 
    -------------------------------------------------------------------------
 
@@ -54,6 +99,9 @@ is
       T.Add_Test_Routine
         (Routine => PT_Serialization'Access,
          Name    => "PT serialization");
+      T.Add_Test_Routine
+        (Routine => Generate_Paging_Structures'Access,
+         Name    => "Paging structure generation");
    end Initialize;
 
    -------------------------------------------------------------------------

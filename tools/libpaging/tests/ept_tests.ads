@@ -38,4 +38,7 @@ is
    --  Test PT serialization.
    procedure PT_Serialization;
 
+   --  Test EPT paging structure generation.
+   procedure Generate_Paging_Structures;
+
 end EPT_Tests;

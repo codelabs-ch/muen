@@ -51,6 +51,12 @@ is
      (E : Entries.PD_Entry_Type)
       return Interfaces.Unsigned_64;
 
+   --  A page directory comprises 512 64-bit entries (PDEs), see Intel SDM Vol.
+   --  3A, page 4-22.
+   procedure Serialize
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      PD     : Tables.PD.Page_Table_Type);
+
    --  Page-table entry, see Intel SDM Vol. 3A, page 4-28.
    function To_Unsigned64
      (E : Entries.PT_Entry_Type)

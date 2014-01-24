@@ -23,29 +23,30 @@ is
        Last_Address  :        Interfaces.Unsigned_64)
    is
       use Region_List_Package;
-      Prev_First, Prev_Last : Interfaces.Unsigned_64 := 0;
-      Position : Cursor;
+      Curr, Prev : Cursor;
    begin
-      Position := First (Map.Data);
-      while Position /= No_Element
+      Curr := First (Map.Data);
+      while Curr /= No_Element and then
+            First_Address > Element (Curr).Last_Address
       loop
-         Prev_First := Element (Position).First_Address;
-         Prev_Last := Element (Position).Last_Address;
-         Next (Position);
-         exit when Prev_First > First_Address;
+         Prev := Curr;
+         Curr := Next (Curr);
+
+         exit when
+            Element (Prev).Last_Address < First_Address and
+            (Curr = No_Element or else
+             Last_Address < Element (Curr).First_Address);
       end loop;
 
-      if (Position  = No_Element and
-          First_Address < Prev_Last) or
-         (Position /= No_Element and then
-          Last_Address > Element (Position).First_Address)
+      if Curr /= No_Element and then
+         Element (Curr).First_Address <= Last_Address
       then
          raise Overlapping_Empty_Region;
       end if;
 
       Insert
          (Container => Map.Data,
-          Before    => Position,
+          Before    => Curr,
           New_Item  => Region_Type'
                         (Kind          => Empty,
                          First_Address => First_Address,

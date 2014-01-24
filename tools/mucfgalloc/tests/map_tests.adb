@@ -49,7 +49,7 @@ is
       use Alloc.Map;
       use Ada.Text_IO;
 
-      M           : Map_Type;
+      M1, M2, M3  : Map_Type;
       Output_File : File_Type;
 
       procedure Write_Region (R : Region_Type);
@@ -65,18 +65,45 @@ is
 
       use Ahven;
    begin
-      M.Insert_Empty_Region (0,    1000);
-      M.Insert_Empty_Region (1001, 2000);
-      M.Insert_Empty_Region (5000, 10000);
-      M.Insert_Empty_Region (11000, 15000);
-      M.Insert_Empty_Region (16000, 30000);
-      Create (Output_File, Out_File, "obj/non_overlapping1.txt");
-      M.Iterate (Write_Region'Access);
+      M1.Insert_Empty_Region (0,    1000);
+      M1.Insert_Empty_Region (1001, 2000);
+      M1.Insert_Empty_Region (5000, 10000);
+      M1.Insert_Empty_Region (11000, 15000);
+      M1.Insert_Empty_Region (16000, 30000);
+      Create (Output_File, Out_File, "obj/non_overlapping1a.txt");
+      M1.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
                   (Filename1 => "data/non_overlapping1.txt",
-                   Filename2 => "obj/non_overlapping1.txt"),
-              Message => "Memory map missmatch");
+                   Filename2 => "obj/non_overlapping1a.txt"),
+              Message => "Memory map missmatch (sorted)");
+
+      M2.Insert_Empty_Region (11000, 15000);
+      M2.Insert_Empty_Region (1001, 2000);
+      M2.Insert_Empty_Region (5000, 10000);
+      M2.Insert_Empty_Region (0,    1000);
+      M2.Insert_Empty_Region (16000, 30000);
+      Create (Output_File, Out_File, "obj/non_overlapping1b.txt");
+      M2.Iterate (Write_Region'Access);
+      Close (Output_File);
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/non_overlapping1.txt",
+                   Filename2 => "obj/non_overlapping1b.txt"),
+              Message => "Memory map missmatch (random)");
+
+      M3.Insert_Empty_Region (16000, 30000);
+      M3.Insert_Empty_Region (11000, 15000);
+      M3.Insert_Empty_Region (5000, 10000);
+      M3.Insert_Empty_Region (1001, 2000);
+      M3.Insert_Empty_Region (0,    1000);
+      Create (Output_File, Out_File, "obj/non_overlapping1c.txt");
+      M3.Iterate (Write_Region'Access);
+      Close (Output_File);
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/non_overlapping1.txt",
+                   Filename2 => "obj/non_overlapping1c.txt"),
+              Message => "Memory map missmatch (reversed)");
+
    end Non_Overlapping;
 
    ----------------------------------------------------------------------------

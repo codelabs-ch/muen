@@ -35,4 +35,7 @@ is
    --  Test PD serialization.
    procedure PD_Serialization;
 
+   --  Test PT serialization.
+   procedure PT_Serialization;
+
 end EPT_Tests;

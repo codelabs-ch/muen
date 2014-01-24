@@ -51,6 +51,9 @@ is
       T.Add_Test_Routine
         (Routine => PD_Serialization'Access,
          Name    => "PD serialization");
+      T.Add_Test_Routine
+        (Routine => PT_Serialization'Access,
+         Name    => "PT serialization");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -202,5 +205,44 @@ is
                Filename2 => "obj/ept_pml4"),
               Message   => "EPT PML4 table mismatch");
    end PML4_Serialization;
+
+   -------------------------------------------------------------------------
+
+   procedure PT_Serialization
+   is
+      PT : Tables.PT.Page_Table_Type;
+   begin
+      Tables.PT.Set_Physical_Address (Table   => PT,
+                                      Address => 16#1f7000#);
+      Tables.PT.Add_Entry (Table => PT,
+                           Index => 184,
+                           E     => Entries.Create
+                             (Dst_Offset  => 0,
+                              Dst_Address => 16#000b_8000#,
+                              Readable    => True,
+                              Writable    => True,
+                              Executable  => False,
+                              Maps_Page   => True,
+                              Global      => False,
+                              Caching     => WC));
+
+      declare
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/ept_pt",
+                             File     => File);
+
+         Serialize (Stream => Stream (File => File),
+                    PT     => PT);
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/ept_pt.ref",
+               Filename2 => "obj/ept_pt"),
+              Message   => "EPT page table mismatch");
+   end PT_Serialization;
 
 end EPT_Tests;

@@ -38,4 +38,8 @@ is
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
       PD     : Tables.PD.Page_Table_Type);
 
+   procedure Serialize
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      PT     : Tables.PT.Page_Table_Type);
+
 end Paging.EPT;

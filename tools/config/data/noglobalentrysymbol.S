@@ -1,2 +1,0 @@
-.text
-subject_entry:

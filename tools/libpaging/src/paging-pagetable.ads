@@ -96,6 +96,14 @@ is
    --  Returns the number of tables in the map.
    function Length (Map : Page_Table_Map) return Natural;
 
+   --  Iterate over given page table map and call given process procedure for
+   --  each entry. The table is modifiable.
+   procedure Iterate
+     (Map     : in out Page_Table_Map;
+      Process : not null access procedure
+        (Table_Number :        Table_Range;
+         Table        : in out Page_Table_Type));
+
    Duplicate_Entry : exception;
 
 private

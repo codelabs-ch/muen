@@ -18,6 +18,11 @@
 
 with Ada.Exceptions;
 
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+
+with McKae.XML.XPath.XIA;
+
 with Muxml;
 
 with Validators.Memory;
@@ -63,7 +68,71 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Region_Size'Access,
          Name    => "Validate memory region size");
+      T.Add_Test_Routine
+        (Routine => Validate_Entity_Name_Encoding'Access,
+         Name    => "Validate entity name encoding");
+      T.Add_Test_Routine
+        (Routine => Validate_CPU_Entity_Name_Encoding'Access,
+         Name    => "Validate CPU entity name encoding");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_CPU_Entity_Name_Encoding
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      declare
+         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Data.Doc,
+               XPath => "/system/memory/memory[@name='invalid_0|vmxon']"),
+            Index => 0);
+      begin
+
+         --  Set invalid CPU number in entity reference.
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "name",
+            Value => "kernel_1|vmxon");
+
+         Validators.Memory.Entity_Name_Encoding (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Entity 'kernel_1' encoded in memory region "
+                    & "'kernel_1|vmxon' does not exist or is invalid",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_CPU_Entity_Name_Encoding;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Entity_Name_Encoding
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Memory.Entity_Name_Encoding (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Entity 'invalid_0' encoded in memory region "
+                    & "'invalid_0|vmxon' does not exist or is invalid",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Entity_Name_Encoding;
 
    -------------------------------------------------------------------------
 

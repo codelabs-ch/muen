@@ -56,4 +56,10 @@ is
    --  Validate memory region size.
    procedure Validate_Region_Size;
 
+   --  Validate entity name encoding.
+   procedure Validate_Entity_Name_Encoding;
+
+   --  Validate entity name encoding.
+   procedure Validate_CPU_Entity_Name_Encoding;
+
 end Memory_Tests;

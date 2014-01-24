@@ -18,6 +18,8 @@
 
 with Ada.Strings.Fixed;
 
+with GNAT.Regpat;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
@@ -26,6 +28,7 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Muxml.Utils;
 with Mutools.Constants;
+with Mutools.Utils;
 
 package body Validators.Memory
 is
@@ -33,6 +36,72 @@ is
    use McKae.XML.XPath.XIA;
 
    One_Megabyte : constant := 16#100000#;
+
+   -------------------------------------------------------------------------
+
+   procedure Entity_Name_Encoding (XML_Data : Muxml.XML_Data_Type)
+   is
+      Last_CPU     : constant Natural := Natural'Value
+        (Muxml.Utils.Get_Attribute
+           (Doc   => XML_Data.Doc,
+            XPath => "/system/platform/processor",
+            Name  => "logicalCpus")) - 1;
+      Last_CPU_Str : constant String := Ada.Strings.Fixed.Trim
+        (Source => Last_CPU'Img,
+         Side   => Ada.Strings.Left);
+      Nodes        : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/memory/memory[contains(string(@name), '|')]");
+
+      --  Return True if given name is a valid kernel entity.
+      function Is_Valid_Kernel_Entity (Name : String) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Is_Valid_Kernel_Entity (Name : String) return Boolean
+      is
+         use type GNAT.Regpat.Match_Location;
+
+         Matches   : GNAT.Regpat.Match_Array (0 .. 1);
+         Knl_Regex : constant GNAT.Regpat.Pattern_Matcher
+           := GNAT.Regpat.Compile (Expression => "^kernel_[0-"
+                                   & Last_CPU_Str & "]$");
+      begin
+         GNAT.Regpat.Match (Self    => Knl_Regex,
+                            Data    => Name,
+                            Matches => Matches);
+
+         return Matches (0) /= GNAT.Regpat.No_Match;
+      end Is_Valid_Kernel_Entity;
+   begin
+      Mulog.Log (Msg => "Checking encoded entities in" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " physical memory region(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Ref_Name    : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Item
+                     (List  => Nodes,
+                      Index => I),
+                 Name => "name");
+            Entity_Name : constant String
+              := Mutools.Utils.Decode_Entity_Name (Encoded_Str => Ref_Name);
+            Subjects    : constant DOM.Core.Node_List
+              := XPath_Query
+                (N     => XML_Data.Doc,
+                 XPath => "//subjects/subject[@name='" & Entity_Name & "']");
+         begin
+            if not Is_Valid_Kernel_Entity (Name => Entity_Name)
+              and then DOM.Core.Nodes.Length (List => Subjects) /= 1
+            then
+               raise Validation_Error with "Entity '" & Entity_Name & "' "
+                 & "encoded in memory region '" & Ref_Name & "' does not "
+                 & "exist or is invalid";
+            end if;
+         end;
+      end loop;
+   end Entity_Name_Encoding;
 
    -------------------------------------------------------------------------
 

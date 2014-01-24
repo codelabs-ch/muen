@@ -51,4 +51,8 @@ is
    --  Validate that all memory region sizes are multiples of page size.
    procedure Region_Size (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate kernel or subject entities encoded in physical memory names
+   --  (e.g. 'linux|zp' or 'kernel_0|vmxon').
+   procedure Entity_Name_Encoding (XML_Data : Muxml.XML_Data_Type);
+
 end Validators.Memory;

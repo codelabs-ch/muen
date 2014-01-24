@@ -40,6 +40,11 @@ private
       return Boolean
    is (Left = Right);
 
+   function Not_Equals
+     (Left, Right : Interfaces.Unsigned_64)
+      return Boolean
+   is (Left /= Right);
+
    function Less_Than
      (Left, Right : Interfaces.Unsigned_64)
       return Boolean

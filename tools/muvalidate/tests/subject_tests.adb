@@ -50,6 +50,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Event_Switch_Destination'Access,
          Name    => "Validate event switch destination");
+      T.Add_Test_Routine
+        (Routine => Validate_Event_IPI_Destination'Access,
+         Name    => "Validate event IPI destination");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -86,6 +89,29 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_CPU_IDs;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Event_IPI_Destination
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Subject.Event_IPI_Different_Core (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Destination subject 'linux' (CPU 0) in subject's "
+                    & "'linux' (CPU 0) ipi notification 'forward_keyboard' "
+                    & "invalid - no IPI allowed",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Event_IPI_Destination;
 
    -------------------------------------------------------------------------
 
@@ -147,9 +173,9 @@ is
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Destination subject 'linux' in subject's 'subject1' "
-                    & "switch notification 'linux_switch' runs on different "
-                    & "CPU 0 (instead of 1)",
+                    = "Destination subject 'linux' (CPU 0) in subject's "
+                    & "'subject1' (CPU 1) switch notification 'linux_switch' "
+                    & "invalid - must run on the same CPU",
                     Message   => "Exception mismatch");
       end;
    end Validate_Event_Switch_Destination;

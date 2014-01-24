@@ -38,4 +38,7 @@ is
    --  Validate event switch notification destinations.
    procedure Validate_Event_Switch_Destination;
 
+   --  Validate event IPI notification destinations.
+   procedure Validate_Event_IPI_Destination;
+
 end Subject_Tests;

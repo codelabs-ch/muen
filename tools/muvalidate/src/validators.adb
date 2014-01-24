@@ -129,6 +129,8 @@ is
         (Validator => Subject.Event_Self_References'Access);
       Validate.Register
         (Validator => Subject.Event_Switch_Same_Core'Access);
+      Validate.Register
+        (Validator => Subject.Event_IPI_Different_Core'Access);
    end Register_All;
 
 end Validators;

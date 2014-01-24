@@ -35,4 +35,8 @@ is
    --  same core.
    procedure Event_Switch_Same_Core (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that target subjects of IPI notification entries run on
+   --  different logical CPUs.
+   procedure Event_IPI_Different_Core (XML_Data : Muxml.XML_Data_Type);
+
 end Validators.Subject;

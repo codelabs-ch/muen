@@ -40,9 +40,6 @@ is
 
    Null_Table : constant Page_Table_Type;
 
-   --  Create new page table with given table number.
-   function Create_Table (Number : Table_Range) return Page_Table_Type;
-
    --  Add given entry to pagetable.
    procedure Add_Entry
      (Table : in out Page_Table_Type;
@@ -115,7 +112,6 @@ private
       Element_Type => Entry_Type);
 
    type Page_Table_Type is record
-      Number  : Table_Range;
       Address : Interfaces.Unsigned_64;
       Data    : Entries_Map_Package.Map;
    end record;

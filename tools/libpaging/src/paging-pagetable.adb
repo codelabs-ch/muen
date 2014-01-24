@@ -52,7 +52,7 @@ is
       if Pos = Tables_Map_Package.No_Element then
          Map.Tables.Insert
            (Key      => Table_Number,
-            New_Item => Create_Table (Number => Table_Number),
+            New_Item => Null_Table,
             Position => Pos,
             Inserted => Ins);
       end if;
@@ -113,16 +113,6 @@ is
    begin
       return Table_Range (Table.Data.Length);
    end Count;
-
-   -------------------------------------------------------------------------
-
-   function Create_Table (Number : Table_Range) return Page_Table_Type
-   is
-   begin
-      return Page_Table_Type'
-        (Number => Number,
-         others => <>);
-   end Create_Table;
 
    -------------------------------------------------------------------------
 

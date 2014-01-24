@@ -30,7 +30,7 @@ is
 
    procedure Add_Table_Entry
    is
-      Table : PT.Page_Table_Type := PT.Create_Table (Number => 0);
+      Table : PT.Page_Table_Type := PT.Null_Table;
    begin
       Assert (Condition => PT.Count (Table => Table) = 0,
               Message   => "Table not empty");

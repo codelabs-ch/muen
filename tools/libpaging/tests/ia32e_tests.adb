@@ -72,7 +72,7 @@ is
 
    procedure PD_Serialization
    is
-      PD : Tables.PD.Page_Table_Type := Tables.PD.Create_Table (Number => 0);
+      PD : Tables.PD.Page_Table_Type;
    begin
       Tables.PD.Set_Physical_Address (Table   => PD,
                                       Address => 16#1f2000#);
@@ -130,8 +130,7 @@ is
 
    procedure PDPT_Serialization
    is
-      PDPT : Tables.PDPT.Page_Table_Type := Tables.PDPT.Create_Table
-        (Number => 0);
+      PDPT : Tables.PDPT.Page_Table_Type;
    begin
       Tables.PDPT.Set_Physical_Address (Table   => PDPT,
                                         Address => 16#1f1000#);
@@ -189,8 +188,7 @@ is
 
    procedure PML4_Serialization
    is
-      PML4 : Tables.PML4.Page_Table_Type := Tables.PML4.Create_Table
-        (Number => 0);
+      PML4 : Tables.PML4.Page_Table_Type;
    begin
       Tables.PML4.Set_Physical_Address (Table   => PML4,
                                         Address => 16#1f0000#);
@@ -248,7 +246,7 @@ is
 
    procedure PT_Serialization
    is
-      PT : Tables.PT.Page_Table_Type := Tables.PT.Create_Table (Number => 0);
+      PT : Tables.PT.Page_Table_Type;
    begin
       Tables.PT.Set_Physical_Address (Table   => PT,
                                       Address => 16#1f3000#);

@@ -62,4 +62,10 @@ is
      (E : Entries.PT_Entry_Type)
       return Interfaces.Unsigned_64;
 
+   --  A page table comprises 512 64-bit entries (PDEs), see Intel SDM Vol. 3A,
+   --  page 4-22.
+   procedure Serialize
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      PT     : Tables.PT.Page_Table_Type);
+
 end Paging.IA32e;

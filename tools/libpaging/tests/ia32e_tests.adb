@@ -63,6 +63,9 @@ is
       T.Add_Test_Routine
         (Routine => PD_Serialization'Access,
          Name    => "PD serialization");
+      T.Add_Test_Routine
+        (Routine => PT_Serialization'Access,
+         Name    => "PT serialization");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -240,6 +243,56 @@ is
       Assert (Condition => To_Unsigned64 (E => PML4E) = Ref,
               Message   => "PML4 entry unsigned 64 value mismatch");
    end PML4E_To_Unsigned64;
+
+   -------------------------------------------------------------------------
+
+   procedure PT_Serialization
+   is
+      PT : Tables.PT.Page_Table_Type := Tables.PT.Create_Table (Number => 0);
+   begin
+      Tables.PT.Set_Physical_Address (Table   => PT,
+                                      Address => 16#1f3000#);
+      Tables.PT.Add_Entry (Table => PT,
+                           Index => 0,
+                           E     => Entries.Create
+                             (Dst_Offset  => 0,
+                              Dst_Address => 16#240000#,
+                              Readable    => True,
+                              Writable    => True,
+                              Executable  => True,
+                              Maps_Page   => False,
+                              Global      => False,
+                              Caching     => WB));
+      Tables.PT.Add_Entry (Table => PT,
+                           Index => 256,
+                           E     => Entries.Create
+                             (Dst_Offset  => 0,
+                              Dst_Address => 16#1ff000#,
+                              Readable    => True,
+                              Writable    => False,
+                              Executable  => False,
+                              Maps_Page   => False,
+                              Global      => False,
+                              Caching     => UC));
+
+      declare
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/ia32e_pt",
+                             File     => File);
+
+         Serialize (Stream => Stream (File => File),
+                    PT     => PT);
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/ia32e_pt.ref",
+               Filename2 => "obj/ia32e_pt"),
+              Message   => "IA-32e page table mismatch");
+   end PT_Serialization;
 
    -------------------------------------------------------------------------
 

@@ -237,6 +237,34 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Serialize
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      PT     : Tables.PT.Page_Table_Type)
+   is
+      Raw_Table : Raw_Table_Type := (others => 0);
+
+      --  Add given table entry to raw table.
+      procedure Add_To_Raw_Table
+        (Index  : Table_Range;
+         TEntry : Entries.PT_Entry_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_To_Raw_Table
+        (Index  : Table_Range;
+         TEntry : Entries.PT_Entry_Type)
+      is
+      begin
+         Raw_Table (Index) := To_Unsigned64 (E => TEntry);
+      end Add_To_Raw_Table;
+   begin
+      Tables.PT.Iterate (Table   => PT,
+                         Process => Add_To_Raw_Table'Access);
+      Raw_Table_Type'Write (Stream, Raw_Table);
+   end Serialize;
+
+   -------------------------------------------------------------------------
+
    function To_Unsigned64
      (E : Entries.PML4_Entry_Type)
       return Interfaces.Unsigned_64

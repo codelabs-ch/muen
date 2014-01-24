@@ -16,7 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Strings.Fixed;
 with Ada.Streams.Stream_IO;
 
 with System;
@@ -30,6 +29,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Mutools.Files;
+with Mutools.Utils;
 
 with bootparam_h;
 
@@ -64,9 +64,6 @@ is
       Memory_Name : String)
       return String;
 
-   --  Extract subject name from given string.
-   function To_Subject_Name (Str : String) return String;
-
    --  Write Linux bootparams structure and specified command line to file
    --  given by filename. The size of the generated file is 4k + length (cmdl).
    --  The physical address argument designates the physical address of the
@@ -89,7 +86,8 @@ is
         (List  => McKae.XML.XPath.XIA.XPath_Query
            (N     => XML_Data.Doc,
             XPath => "/system/subjects/subject[@name='"
-            & To_Subject_Name (Str => Memory_Name) & "']/bootparams/text()"),
+            & Mutools.Utils.Decode_Entity_Name (Encoded_Str => Memory_Name)
+            & "']/bootparams/text()"),
          Index => 0);
    begin
       if Node /= null then
@@ -117,17 +115,6 @@ is
    begin
       return DOM.Core.Nodes.Node_Value (N => Node);
    end Get_Guest_Physical;
-
-   -------------------------------------------------------------------------
-
-   function To_Subject_Name (Str : String) return String
-   is
-      Udrl_Idx : constant Natural := Ada.Strings.Fixed.Index
-        (Source  => Str,
-         Pattern => "|");
-   begin
-      return Str (Str'First .. Udrl_Idx - 1);
-   end To_Subject_Name;
 
    -------------------------------------------------------------------------
 

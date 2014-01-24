@@ -27,6 +27,11 @@ is
       E     :        Entry_Type)
    is
    begin
+      if Table.Data.Contains (Key => Index) then
+         raise Duplicate_Entry with "Table entry with index" & Index'Img
+           & " already exists";
+      end if;
+
       Table.Data.Insert
         (Key      => Index,
          New_Item => E);

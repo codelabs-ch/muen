@@ -73,6 +73,8 @@ is
         (Index  : Table_Range;
          TEntry : Entry_Type));
 
+   Duplicate_Entry : exception;
+
 private
 
    package Entries_Map_Package is new Ada.Containers.Indefinite_Ordered_Maps

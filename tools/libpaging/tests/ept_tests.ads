@@ -29,4 +29,7 @@ is
    --  Test PML4 serialization.
    procedure PML4_Serialization;
 
+   --  Test PDPT serialization.
+   procedure PDPT_Serialization;
+
 end EPT_Tests;

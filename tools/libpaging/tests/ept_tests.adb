@@ -45,7 +45,82 @@ is
       T.Add_Test_Routine
         (Routine => PML4_Serialization'Access,
          Name    => "PML4 serialization");
+      T.Add_Test_Routine
+        (Routine => PDPT_Serialization'Access,
+         Name    => "PDPT serialization");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure PDPT_Serialization
+   is
+      PDPT : Tables.PDPT.Page_Table_Type;
+   begin
+      Tables.PDPT.Set_Physical_Address (Table   => PDPT,
+                                        Address => 16#1f5000#);
+      Tables.PDPT.Add_Entry (Table => PDPT,
+                             Index => 0,
+                             E     => Entries.Create
+                               (Dst_Offset  => 0,
+                                Dst_Address => 16#4000_0000#,
+                                Readable    => True,
+                                Writable    => True,
+                                Executable  => True,
+                                Maps_Page   => True,
+                                Global      => False,
+                                Caching     => UC));
+      Tables.PDPT.Add_Entry (Table => PDPT,
+                             Index => 1,
+                             E     => Entries.Create
+                               (Dst_Offset  => 0,
+                                Dst_Address => 16#8000_0000#,
+                                Readable    => True,
+                                Writable    => True,
+                                Executable  => True,
+                                Maps_Page   => True,
+                                Global      => False,
+                                Caching     => UC));
+      Tables.PDPT.Add_Entry (Table => PDPT,
+                             Index => 2,
+                             E     => Entries.Create
+                               (Dst_Offset  => 0,
+                                Dst_Address => 16#c000_0000#,
+                                Readable    => True,
+                                Writable    => True,
+                                Executable  => True,
+                                Maps_Page   => True,
+                                Global      => False,
+                                Caching     => UC));
+      Tables.PDPT.Add_Entry (Table => PDPT,
+                             Index => 3,
+                             E     => Entries.Create
+                               (Dst_Offset  => 0,
+                                Dst_Address => 16#1_0000_0000#,
+                                Readable    => True,
+                                Writable    => True,
+                                Executable  => True,
+                                Maps_Page   => True,
+                                Global      => False,
+                                Caching     => UC));
+
+      declare
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/ept_pdpt",
+                             File     => File);
+
+         Serialize (Stream => Stream (File => File),
+                    PDPT   => PDPT);
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/ept_pdpt.ref",
+               Filename2 => "obj/ept_pdpt"),
+              Message   => "EPT PDPT table mismatch");
+   end PDPT_Serialization;
 
    -------------------------------------------------------------------------
 

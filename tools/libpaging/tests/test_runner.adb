@@ -24,6 +24,7 @@ with Entries_Tests;
 with Tables_Tests;
 with Memory_Tests;
 with IA32e_Tests;
+with EPT_Tests;
 
 procedure Test_Runner
 is
@@ -42,6 +43,8 @@ begin
              T     => new Memory_Tests.Testcase);
    Add_Test (Suite => S.all,
              T     => new IA32e_Tests.Testcase);
+   Add_Test (Suite => S.all,
+             T     => new EPT_Tests.Testcase);
 
    Ahven.Text_Runner.Run (Suite => S);
    Release_Suite (T => S);

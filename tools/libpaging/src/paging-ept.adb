@@ -1,0 +1,165 @@
+--
+--  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--
+--  This program is free software: you can redistribute it and/or modify
+--  it under the terms of the GNU General Public License as published by
+--  the Free Software Foundation, either version 3 of the License, or
+--  (at your option) any later version.
+--
+--  This program is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+--  You should have received a copy of the GNU General Public License
+--  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+
+with Paging.Entries;
+
+package body Paging.EPT
+is
+
+   type Raw_Table_Type is array (Table_Range) of Interfaces.Unsigned_64;
+
+   --  EPT paging structure entry layout, see Intel SDM Vol. 3C, figure 28-1.
+
+   Read_Flag       : constant := 0;
+   Write_Flag      : constant := 1;
+   Execute_Flag    : constant := 2;
+   Ignore_PAT_Flag : constant := 6;
+   Present_Flag    : constant := 7;
+
+   --  Mapping of memory type to EPT memory type bits, see Intel SDM Vol. 3C,
+   --  chapter 28.2.5.
+   EPT_MT_Mapping : constant array (Caching_Type) of Interfaces.Unsigned_64
+     := (UC => 16#00#,
+         WC => 16#08#,
+         WT => 16#20#,
+         WP => 16#28#,
+         WB => 16#30#);
+
+   --  EPT Table entry address range is bits 12 .. 47.
+   Address_Mask : constant Interfaces.Unsigned_64 := 16#0000fffffffff000#;
+
+   --  Create page table entry.
+   function Create_Entry
+     (Address    : Interfaces.Unsigned_64;
+      Readable   : Boolean;
+      Writable   : Boolean;
+      Executable : Boolean)
+      return Interfaces.Unsigned_64;
+
+   --  Create mapping entry with given parameters.
+   function Create_Map_Entry
+     (Address     : Interfaces.Unsigned_64;
+      Readable    : Boolean;
+      Writable    : Boolean;
+      Executable  : Boolean;
+      Map_Page    : Boolean;
+      Ignore_PAT  : Boolean;
+      Memory_Type : Caching_Type)
+      return Interfaces.Unsigned_64;
+
+   -------------------------------------------------------------------------
+
+   function Create_Entry
+     (Address    : Interfaces.Unsigned_64;
+      Readable   : Boolean;
+      Writable   : Boolean;
+      Executable : Boolean)
+      return Interfaces.Unsigned_64
+   is
+      use type Interfaces.Unsigned_64;
+
+      Result : Interfaces.Unsigned_64;
+   begin
+      Result := Address and Address_Mask;
+
+      if Readable then
+         Result := Result or 2 ** Read_Flag;
+      end if;
+
+      if Writable then
+         Result := Result or 2 ** Write_Flag;
+      end if;
+
+      if Executable then
+         Result := Result or 2 ** Execute_Flag;
+      end if;
+
+      return Result;
+   end Create_Entry;
+
+   -------------------------------------------------------------------------
+
+   function Create_Map_Entry
+     (Address     : Interfaces.Unsigned_64;
+      Readable    : Boolean;
+      Writable    : Boolean;
+      Executable  : Boolean;
+      Map_Page    : Boolean;
+      Ignore_PAT  : Boolean;
+      Memory_Type : Caching_Type)
+      return Interfaces.Unsigned_64
+   is
+      use type Interfaces.Unsigned_64;
+
+      Result : Interfaces.Unsigned_64;
+   begin
+      Result := Create_Entry
+        (Address    => Address,
+         Readable   => Readable,
+         Writable   => Writable,
+         Executable => Executable);
+
+      if Map_Page then
+         if Ignore_PAT then
+            Result := Result or 2 ** Ignore_PAT_Flag;
+         end if;
+
+         Result := Result or EPT_MT_Mapping (Memory_Type);
+
+         Result := Result or 2 ** Present_Flag;
+      end if;
+
+      return Result;
+   end Create_Map_Entry;
+
+   -------------------------------------------------------------------------
+
+   procedure Serialize
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      PML4   : Tables.PML4.Page_Table_Type)
+   is
+      Raw_Table : Raw_Table_Type := (others => 0);
+
+      --  Add given table entry to raw table.
+      procedure Add_To_Raw_Table
+        (Index  : Table_Range;
+         TEntry : Entries.PML4_Entry_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_To_Raw_Table
+        (Index  : Table_Range;
+         TEntry : Entries.PML4_Entry_Type)
+      is
+      begin
+         Raw_Table (Index) := Create_Entry
+           (Address     => TEntry.Get_Dst_Address,
+            Readable    => TEntry.Is_Readable,
+            Writable    => TEntry.Is_Writable,
+            Executable  => TEntry.Is_Executable,
+            Map_Page    => TEntry.Maps_Page,
+            Ignore_PAT  => True,
+            Memory_Type => TEntry.Get_Caching);
+      end Add_To_Raw_Table;
+   begin
+      Tables.PML4.Iterate (Table   => PML4,
+                           Process => Add_To_Raw_Table'Access);
+      Raw_Table_Type'Write (Stream, Raw_Table);
+   end Serialize;
+
+end Paging.EPT;

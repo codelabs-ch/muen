@@ -48,7 +48,49 @@ is
       T.Add_Test_Routine
         (Routine => PDPT_Serialization'Access,
          Name    => "PDPT serialization");
+      T.Add_Test_Routine
+        (Routine => PD_Serialization'Access,
+         Name    => "PD serialization");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure PD_Serialization
+   is
+      PD : Tables.PD.Page_Table_Type;
+   begin
+      Tables.PD.Set_Physical_Address (Table   => PD,
+                                      Address => 16#1f6000#);
+      Tables.PD.Add_Entry (Table => PD,
+                           Index => 0,
+                           E     => Entries.Create
+                             (Dst_Offset  => 0,
+                              Dst_Address => 16#1f7000#,
+                              Readable    => True,
+                              Writable    => True,
+                              Executable  => True,
+                              Maps_Page   => False,
+                              Global      => False,
+                              Caching     => WC));
+
+      declare
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/ept_pd",
+                             File     => File);
+
+         Serialize (Stream => Stream (File => File),
+                    PD     => PD);
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/ept_pd.ref",
+               Filename2 => "obj/ept_pd"),
+              Message   => "EPT page directory mismatch");
+   end PD_Serialization;
 
    -------------------------------------------------------------------------
 

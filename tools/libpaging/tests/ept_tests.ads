@@ -32,4 +32,7 @@ is
    --  Test PDPT serialization.
    procedure PDPT_Serialization;
 
+   --  Test PD serialization.
+   procedure PD_Serialization;
+
 end EPT_Tests;

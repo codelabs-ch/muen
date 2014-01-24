@@ -307,12 +307,12 @@ is
          Phys_Addr := Phys_Addr + Page_Size;
       end Set_PT_Address;
    begin
-      Tables.PDPT.Iterate (Map     => Mem_Layout.PDPTs,
-                           Process => Set_PDPT_Address'Access);
-      Tables.PD.Iterate (Map     => Mem_Layout.PDs,
-                         Process => Set_PD_Address'Access);
-      Tables.PT.Iterate (Map     => Mem_Layout.PTs,
-                         Process => Set_PT_Address'Access);
+      Tables.PDPT.Update (Map     => Mem_Layout.PDPTs,
+                          Process => Set_PDPT_Address'Access);
+      Tables.PD.Update (Map     => Mem_Layout.PDs,
+                        Process => Set_PD_Address'Access);
+      Tables.PT.Update (Map     => Mem_Layout.PTs,
+                        Process => Set_PT_Address'Access);
    end Set_Table_Addresses;
 
 end Paging.Memory;

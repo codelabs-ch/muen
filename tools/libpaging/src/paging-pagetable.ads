@@ -97,7 +97,7 @@ is
 
    --  Iterate over given page table map and call given process procedure for
    --  each entry. The table is modifiable.
-   procedure Iterate
+   procedure Update
      (Map     : in out Page_Table_Map;
       Process : not null access procedure
         (Table_Number :        Table_Range;

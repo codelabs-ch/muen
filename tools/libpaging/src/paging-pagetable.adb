@@ -127,27 +127,6 @@ is
    -------------------------------------------------------------------------
 
    procedure Iterate
-     (Map     : in out Page_Table_Map;
-      Process : not null access procedure
-        (Table_Number :        Table_Range;
-         Table        : in out Page_Table_Type))
-   is
-      --  Process the given page table.
-      procedure Call_Process (Pos : Tables_Map_Package.Cursor);
-
-      procedure Call_Process (Pos : Tables_Map_Package.Cursor)
-      is
-      begin
-         Map.Tables.Update_Element (Position => Pos,
-                                    Process  => Process);
-      end Call_Process;
-   begin
-      Map.Tables.Iterate (Process => Call_Process'Access);
-   end Iterate;
-
-   -------------------------------------------------------------------------
-
-   procedure Iterate
      (Table   : Page_Table_Type;
       Process : not null access procedure
         (Index  : Table_Range;
@@ -187,5 +166,26 @@ is
    begin
       Table.Address := Address;
    end Set_Physical_Address;
+
+   -------------------------------------------------------------------------
+
+   procedure Update
+     (Map     : in out Page_Table_Map;
+      Process : not null access procedure
+        (Table_Number :        Table_Range;
+         Table        : in out Page_Table_Type))
+   is
+      --  Process the given page table.
+      procedure Call_Process (Pos : Tables_Map_Package.Cursor);
+
+      procedure Call_Process (Pos : Tables_Map_Package.Cursor)
+      is
+      begin
+         Map.Tables.Update_Element (Position => Pos,
+                                    Process  => Process);
+      end Call_Process;
+   begin
+      Map.Tables.Iterate (Process => Call_Process'Access);
+   end Update;
 
 end Paging.Pagetable;

@@ -1,14 +1,11 @@
 include ../Makeconf
 
 SUBJECTS =  \
-	crypter \
-	idle    \
 	linux   \
 	sm      \
 	tau0    \
 	time    \
-	vt      \
-	xv6
+	vt
 
 all: $(SUBJECTS)
 

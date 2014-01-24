@@ -38,6 +38,8 @@ is
    --  Page table storing up to 512 entries.
    type Page_Table_Type is private;
 
+   Null_Table : constant Page_Table_Type;
+
    --  Create new page table with given table number.
    function Create_Table (Number : Table_Range) return Page_Table_Type;
 
@@ -117,6 +119,10 @@ private
       Address : Interfaces.Unsigned_64;
       Data    : Entries_Map_Package.Map;
    end record;
+
+   Null_Table : constant Page_Table_Type
+     := (Address => 0,
+         Data    => Entries_Map_Package.Empty_Map);
 
    package Tables_Map_Package is new Ada.Containers.Ordered_Maps
      (Key_Type     => Table_Range,

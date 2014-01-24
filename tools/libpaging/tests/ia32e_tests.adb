@@ -16,8 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Streams.Stream_IO;
+
 with Interfaces;
 
+with Test_Utils;
+
+with Mutools.Files;
+
+with Paging.Tables;
 with Paging.Entries;
 with Paging.IA32e;
 
@@ -47,6 +54,9 @@ is
       T.Add_Test_Routine
         (Routine => PTE_To_Unsigned64'Access,
          Name    => "PT to unsigned 64");
+      T.Add_Test_Routine
+        (Routine => PML4_Serialization'Access,
+         Name    => "PML4 serialization");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -86,6 +96,46 @@ is
       Assert (Condition => To_Unsigned64 (E => PDPTE) = Ref,
               Message   => "PDPT entry unsigned 64 value mismatch");
    end PDPTE_To_Unsigned64;
+
+   -------------------------------------------------------------------------
+
+   procedure PML4_Serialization
+   is
+      PML4 : Tables.PML4.Page_Table_Type := Tables.PML4.Create_Table
+        (Number => 0);
+   begin
+      Tables.PML4.Set_Physical_Address (Table   => PML4,
+                                        Address => 16#1f0000#);
+      Tables.PML4.Add_Entry (Table => PML4,
+                             Index => 0,
+                             E     => Entries.Create
+                               (Dst_Offset  => 0,
+                                Dst_Address => 16#1f1000#,
+                                Readable    => True,
+                                Writable    => True,
+                                Executable  => True,
+                                Maps_Page   => False,
+                                Global      => False,
+                                Caching     => WC));
+
+      declare
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/ia32e_pml4",
+                             File     => File);
+
+         Serialize (Stream => Stream (File => File),
+                    PML4   => PML4);
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/ia32e_pml4.ref",
+               Filename2 => "obj/ia32e_pml4"),
+              Message   => "IA-32e PML4 table mismatch");
+   end PML4_Serialization;
 
    -------------------------------------------------------------------------
 

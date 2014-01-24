@@ -38,4 +38,7 @@ is
    --  Test conversion of PT entry to unsigned 64 value.
    procedure PTE_To_Unsigned64;
 
+   --  Test PML4 serialization.
+   procedure PML4_Serialization;
+
 end IA32e_Tests;

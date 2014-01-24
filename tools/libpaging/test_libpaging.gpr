@@ -18,6 +18,8 @@
 
 with "../../contrib/projects/ahven";
 with "../shared_tools";
+with "../libmutools/libmutools";
+with "../libtest/libtest";
 
 with "libpaging";
 

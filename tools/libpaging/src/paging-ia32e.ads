@@ -16,7 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Streams;
+
 with Paging.Entries;
+with Paging.Tables;
 
 package Paging.IA32e
 is
@@ -25,6 +28,12 @@ is
    function To_Unsigned64
      (E : Entries.PML4_Entry_Type)
       return Interfaces.Unsigned_64;
+
+   --  A Page Map Level 4 table comprises 512 64-bit entries (PML4Es), see
+   --  Intel SDM Vol. 3A, page 4-22.
+   procedure Serialize
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      PML4   : Tables.PML4.Page_Table_Type);
 
    --  Page directory pointer table entry, see Intel SDM Vol. 3A, page 4-28.
    function To_Unsigned64

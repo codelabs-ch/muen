@@ -50,6 +50,9 @@ is
       T.Add_Test_Routine
         (Routine => Non_Overlapping_Reversed'Access,
          Name    => "Non-overlapping (reversed)");
+      T.Add_Test_Routine
+        (Routine => Region_Merge'Access,
+         Name    => "Merging consecutive regions");
    end Initialize;
 
    ----------------------------------------------------------------------------
@@ -183,6 +186,30 @@ is
    exception
       when Overlapping_Empty_Region => null;
    end Overlapping_Empty_Right;
+
+   ----------------------------------------------------------------------------
+
+   procedure Region_Merge
+   is
+      use Ahven;
+      use Alloc.Map;
+      use Ada.Text_IO;
+
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (1000, 2000);
+      M.Insert_Empty_Region (2001, 3000);
+      M.Insert_Empty_Region (4000, 10000);
+      M.Insert_Empty_Region (11000, 12000);
+      M.Insert_Empty_Region (12001, 15000);
+      Create (Output_File, Out_File, "obj/merge.txt");
+      M.Iterate (Write_Region'Access);
+      Close (Output_File);
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/merge.txt",
+                   Filename2 => "obj/merge.txt"),
+              Message => "Region merge failed");
+   end Region_Merge;
 
    ----------------------------------------------------------------------------
 

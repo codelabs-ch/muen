@@ -54,4 +54,7 @@ is
    --    [.....new region.....]
    procedure Overlapping_Empty_Encompassing;
 
+   --  Test if consecutive regions are merged into one
+   procedure Region_Merge;
+
 end Map_Tests;

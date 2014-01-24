@@ -1,0 +1,231 @@
+--
+--  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--
+--  This program is free software: you can redistribute it and/or modify
+--  it under the terms of the GNU General Public License as published by
+--  the Free Software Foundation, either version 3 of the License, or
+--  (at your option) any later version.
+--
+--  This program is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+--  You should have received a copy of the GNU General Public License
+--  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+
+package body Paging.IA32e
+is
+
+   use type Interfaces.Unsigned_64;
+
+   --  Table entry flags.
+   Present_Flag   : constant := 0;
+   RW_Flag        : constant := 1;
+   US_Flag        : constant := 2;
+   PWT_Flag       : constant := 3;
+   PCD_Flag       : constant := 4;
+   Page_Size_Flag : constant := 7;
+   PTE_PAT_Flag   : constant := 7;
+   Global_Flag    : constant := 8;
+   PD_PAT_Flag    : constant := 12;
+   NXE_Flag       : constant := 63;
+
+   type PAT_Entry is record
+      PAT : Boolean;
+      PCD : Boolean;
+      PWT : Boolean;
+   end record;
+
+   --  Memory type to PAT entry mapping.
+   PAT_Mapping : constant array (Caching_Type) of PAT_Entry :=
+     (UC => (PAT => False, PCD => False, PWT => False),
+      WC => (PAT => False, PCD => False, PWT => True),
+      WT => (PAT => False, PCD => True,  PWT => False),
+      WP => (PAT => False, PCD => True,  PWT => True),
+      WB => (PAT => True,  PCD => False, PWT => False));
+
+   --  Table entry address range is bits 12 .. 47.
+   Address_Mask : constant Interfaces.Unsigned_64 := 16#0000fffffffff000#;
+
+   --  Create table entry with given parameters.
+   function Create_Entry
+     (Address       : Interfaces.Unsigned_64;
+      Writable      : Boolean;
+      User_Access   : Boolean;
+      Writethrough  : Boolean;
+      Cache_Disable : Boolean;
+      Exec_Disable  : Boolean)
+      return Interfaces.Unsigned_64;
+
+   --  Create paging directory entry with given parameters.
+   function Create_Dir_Entry
+     (Address      : Interfaces.Unsigned_64;
+      Writable     : Boolean;
+      User_Access  : Boolean;
+      Map_Page     : Boolean;
+      Global       : Boolean;
+      Caching      : Caching_Type;
+      Exec_Disable : Boolean)
+      return Interfaces.Unsigned_64;
+
+   -------------------------------------------------------------------------
+
+   function Create_Dir_Entry
+     (Address      : Interfaces.Unsigned_64;
+      Writable     : Boolean;
+      User_Access  : Boolean;
+      Map_Page     : Boolean;
+      Global       : Boolean;
+      Caching      : Caching_Type;
+      Exec_Disable : Boolean)
+      return Interfaces.Unsigned_64
+   is
+      PAT    : constant PAT_Entry := PAT_Mapping (Caching);
+      Result : Interfaces.Unsigned_64;
+   begin
+      Result := Create_Entry
+        (Address       => Address,
+         Writable      => Writable,
+         User_Access   => User_Access,
+         Writethrough  => PAT.PWT,
+         Cache_Disable => PAT.PCD,
+         Exec_Disable  => Exec_Disable);
+
+      if Map_Page then
+         Result := Result or 2 ** Page_Size_Flag;
+
+         if PAT.PAT then
+            Result := Result or 2 ** PD_PAT_Flag;
+         end if;
+
+         if Global then
+            Result := Result or 2 ** Global_Flag;
+         end if;
+      end if;
+
+      return Result;
+   end Create_Dir_Entry;
+
+   -------------------------------------------------------------------------
+
+   function Create_Entry
+     (Address       : Interfaces.Unsigned_64;
+      Writable      : Boolean;
+      User_Access   : Boolean;
+      Writethrough  : Boolean;
+      Cache_Disable : Boolean;
+      Exec_Disable  : Boolean)
+      return Interfaces.Unsigned_64
+   is
+      Result : Interfaces.Unsigned_64 := 0;
+   begin
+      Result := Address and Address_Mask;
+
+      Result := Result or 2 ** Present_Flag;
+
+      if Writable then
+         Result := Result or 2 ** RW_Flag;
+      end if;
+
+      if User_Access then
+         Result := Result or 2 ** US_Flag;
+      end if;
+
+      if Writethrough then
+         Result := Result or 2 ** PWT_Flag;
+      end if;
+
+      if Cache_Disable then
+         Result := Result or 2 ** PCD_Flag;
+      end if;
+
+      if Exec_Disable then
+         Result := Result or 2 ** NXE_Flag;
+      end if;
+
+      return Result;
+   end Create_Entry;
+
+   -------------------------------------------------------------------------
+
+   function To_Unsigned64
+     (E : Entries.PML4_Entry_Type)
+      return Interfaces.Unsigned_64
+   is
+      PAT : constant PAT_Entry := PAT_Mapping (E.Get_Caching);
+   begin
+      return Create_Entry
+        (Address       => E.Get_Dst_Address,
+         Writable      => E.Is_Writable,
+         User_Access   => E.Is_Readable,
+         Writethrough  => PAT.PWT,
+         Cache_Disable => PAT.PCD,
+         Exec_Disable  => not E.Is_Executable);
+   end To_Unsigned64;
+
+   -------------------------------------------------------------------------
+
+   function To_Unsigned64
+     (E : Entries.PD_Entry_Type)
+      return Interfaces.Unsigned_64
+   is
+   begin
+      return Create_Dir_Entry
+        (Address      => E.Get_Dst_Address,
+         Writable     => E.Is_Writable,
+         User_Access  => E.Is_Readable,
+         Map_Page     => E.Maps_Page,
+         Global       => E.Is_Global,
+         Caching      => E.Get_Caching,
+         Exec_Disable => not E.Is_Executable);
+   end To_Unsigned64;
+
+   -------------------------------------------------------------------------
+
+   function To_Unsigned64
+     (E : Entries.PDPT_Entry_Type)
+      return Interfaces.Unsigned_64
+   is
+   begin
+      return Create_Dir_Entry
+        (Address      => E.Get_Dst_Address,
+         Writable     => E.Is_Writable,
+         User_Access  => E.Is_Readable,
+         Map_Page     => E.Maps_Page,
+         Global       => E.Is_Global,
+         Caching      => E.Get_Caching,
+         Exec_Disable => not E.Is_Executable);
+   end To_Unsigned64;
+
+   -------------------------------------------------------------------------
+
+   function To_Unsigned64
+     (E : Entries.PT_Entry_Type)
+      return Interfaces.Unsigned_64
+   is
+      PAT    : constant PAT_Entry := PAT_Mapping (E.Get_Caching);
+      Result : Interfaces.Unsigned_64;
+   begin
+      Result := Create_Entry
+        (Address       => E.Get_Dst_Address,
+         Writable      => E.Is_Writable,
+         User_Access   => E.Is_Readable,
+         Writethrough  => PAT.PWT,
+         Cache_Disable => PAT.PCD,
+         Exec_Disable  => not E.Is_Executable);
+
+      if PAT.PAT then
+         Result := Result or 2 ** PTE_PAT_Flag;
+      end if;
+
+      if E.Is_Global then
+         Result := Result or 2 ** Global_Flag;
+      end if;
+
+      return Result;
+   end To_Unsigned64;
+
+end Paging.IA32e;

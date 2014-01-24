@@ -7,6 +7,8 @@ GIT_REV      = $(shell git describe --always --dirty="-UNCLEAN")
 include ../Makeconf
 include ../Makespark
 
+all: $(ALL) install
+
 SLOC_DIRS = $(SRC_DIR) $(TOP_DIR)/common/src $(TOP_DIR)/rts/src
 
 .git-rev: FORCE
@@ -26,6 +28,9 @@ $(VERSION_SPEC): .git-rev
 
 $(OBJ_DIR)/$(PACKAGE): $(VERSION_SPEC)
 	gprbuild $(BUILD_OPTS) -P$(PACKAGE)
+
+install: $(OBJ_DIR)/$(PACKAGE)
+	@cp $^ $(POLICY_INC)
 
 clean:
 	rm -rf $(OBJ_DIR)

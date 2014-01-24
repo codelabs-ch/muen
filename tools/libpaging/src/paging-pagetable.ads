@@ -19,6 +19,7 @@
 with Interfaces;
 
 private with Ada.Containers.Indefinite_Ordered_Maps;
+private with Ada.Containers.Ordered_Maps;
 
 with Paging.Entries;
 
@@ -73,6 +74,28 @@ is
         (Index  : Table_Range;
          TEntry : Entry_Type));
 
+   --  A page table container.
+   type Page_Table_Map is private;
+
+   --  Returns True if the map contains a table with specified number, which in
+   --  turn contains an entry with given index.
+   function Contains
+     (Map          : Page_Table_Map;
+      Table_Number : Table_Range;
+      Entry_Index  : Table_Range)
+      return Boolean;
+
+   --  Add entry with given index to table specified by number. If the entry is
+   --  already present an exception is raised.
+   procedure Add_Entry
+     (Map          : in out Page_Table_Map;
+      Table_Number :        Table_Range;
+      Entry_Index  :        Table_Range;
+      Table_Entry  :        Entry_Type);
+
+   --  Returns the number of tables in the map.
+   function Length (Map : Page_Table_Map) return Natural;
+
    Duplicate_Entry : exception;
 
 private
@@ -85,6 +108,14 @@ private
       Number  : Table_Range;
       Address : Interfaces.Unsigned_64;
       Data    : Entries_Map_Package.Map;
+   end record;
+
+   package Tables_Map_Package is new Ada.Containers.Ordered_Maps
+     (Key_Type     => Table_Range,
+      Element_Type => Page_Table_Type);
+
+   type Page_Table_Map is record
+      Tables : Tables_Map_Package.Map;
    end record;
 
 end Paging.Pagetable;

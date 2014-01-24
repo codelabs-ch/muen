@@ -22,6 +22,49 @@ is
    -------------------------------------------------------------------------
 
    procedure Add_Entry
+     (Map          : in out Page_Table_Map;
+      Table_Number :        Table_Range;
+      Entry_Index  :        Table_Range;
+      Table_Entry  :        Entry_Type)
+   is
+      use type Tables_Map_Package.Cursor;
+
+      --  Add entry to given table.
+      procedure Add_Entry
+        (Number :        Table_Range;
+         Table  : in out Page_Table_Type);
+
+      procedure Add_Entry
+        (Number :        Table_Range;
+         Table  : in out Page_Table_Type)
+      is
+         pragma Unreferenced (Number);
+      begin
+         Add_Entry (Table => Table,
+                    Index => Entry_Index,
+                    E     => Table_Entry);
+      end Add_Entry;
+
+      Pos : Tables_Map_Package.Cursor := Map.Tables.Find (Key => Table_Number);
+      Ins : Boolean;
+   begin
+
+      if Pos = Tables_Map_Package.No_Element then
+         Map.Tables.Insert
+           (Key      => Table_Number,
+            New_Item => Create_Table (Number => Table_Number),
+            Position => Pos,
+            Inserted => Ins);
+      end if;
+
+      Map.Tables.Update_Element
+        (Position => Pos,
+         Process  => Add_Entry'Access);
+   end Add_Entry;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Entry
      (Table : in out Page_Table_Type;
       Index :        Table_Range;
       E     :        Entry_Type)
@@ -46,6 +89,21 @@ is
    is
    begin
       return Table.Data.Contains (Key => Index);
+   end Contains;
+
+   -------------------------------------------------------------------------
+
+   function Contains
+     (Map          : Page_Table_Map;
+      Table_Number : Table_Range;
+      Entry_Index  : Table_Range)
+      return Boolean
+   is
+   begin
+      return Map.Tables.Contains (Key => Table_Number)
+        and then Contains
+          (Table => Map.Tables.Element (Key => Table_Number),
+           Index => Entry_Index);
    end Contains;
 
    -------------------------------------------------------------------------
@@ -100,6 +158,14 @@ is
    begin
       Table.Data.Iterate (Process => Call_Process'Access);
    end Iterate;
+
+   -------------------------------------------------------------------------
+
+   function Length (Map : Page_Table_Map) return Natural
+   is
+   begin
+      return Natural (Map.Tables.Length);
+   end Length;
 
    -------------------------------------------------------------------------
 

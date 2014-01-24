@@ -50,4 +50,7 @@ is
    --  Test PT serialization.
    procedure PT_Serialization;
 
+   --  Test IA-32e paging structure generation.
+   procedure Generate_Paging_Structures;
+
 end IA32e_Tests;

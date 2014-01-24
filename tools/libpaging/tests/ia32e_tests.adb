@@ -26,6 +26,7 @@ with Mutools.Files;
 
 with Paging.Tables;
 with Paging.Entries;
+with Paging.Memory;
 with Paging.IA32e;
 
 package body IA32e_Tests
@@ -35,6 +36,90 @@ is
    use Paging;
    use Paging.IA32e;
    use type Interfaces.Unsigned_64;
+
+   -------------------------------------------------------------------------
+
+   procedure Generate_Paging_Structures
+   is
+      Layout : Memory.Memory_Layout_Type := Memory.Null_Layout;
+   begin
+      Memory.Set_Address (Mem_Layout => Layout,
+                          Address    => 16#20_0000#);
+
+      --  Text
+      Memory.Add_Memory_Region
+        (Mem_Layout       => Layout,
+         Physical_Address => 16#0010_0000#,
+         Virtual_Address  => 16#0010_0000#,
+         Size             => 16#0001_2000#,
+         Caching          => UC,
+         Writable         => True,
+         Executable       => True);
+
+      --  Stack
+      Memory.Add_Memory_Region
+        (Mem_Layout       => Layout,
+         Physical_Address => 16#0011_2000#,
+         Virtual_Address  => 16#0011_2000#,
+         Size             => 16#2000#,
+         Caching          => WB,
+         Writable         => True,
+         Executable       => False);
+
+      --  Store
+      Memory.Add_Memory_Region
+        (Mem_Layout       => Layout,
+         Physical_Address => 16#0011_6000#,
+         Virtual_Address  => 16#0011_6000#,
+         Size             => 16#1000#,
+         Caching          => WB,
+         Writable         => True,
+         Executable       => False);
+
+      --  Data
+      Memory.Add_Memory_Region
+        (Mem_Layout       => Layout,
+         Physical_Address => 16#0011_8000#,
+         Virtual_Address  => 16#0011_8000#,
+         Size             => 16#6000#,
+         Caching          => UC,
+         Writable         => True,
+         Executable       => True);
+
+      --  Tau0 interface
+      Memory.Add_Memory_Region
+        (Mem_Layout       => Layout,
+         Physical_Address => 16#001f_f000#,
+         Virtual_Address  => 16#001f_f000#,
+         Size             => 16#1000#,
+         Caching          => UC,
+         Writable         => False,
+         Executable       => False);
+
+      declare
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/ia32e",
+                             File     => File);
+
+         Memory.Serialize
+           (Stream         => Stream (File => File),
+            Mem_Layout     => Layout,
+            Serialize_PML4 => IA32e.Serialize'Access,
+            Serialize_PDPT => IA32e.Serialize'Access,
+            Serialize_PD   => IA32e.Serialize'Access,
+            Serialize_PT   => IA32e.Serialize'Access);
+
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/ia32e.ref",
+               Filename2 => "obj/ia32e"),
+              Message   => "IA-32e paging structures mismatch");
+   end Generate_Paging_Structures;
 
    -------------------------------------------------------------------------
 
@@ -66,6 +151,9 @@ is
       T.Add_Test_Routine
         (Routine => PT_Serialization'Access,
          Name    => "PT serialization");
+      T.Add_Test_Routine
+        (Routine => Generate_Paging_Structures'Access,
+         Name    => "Paging structure generation");
    end Initialize;
 
    -------------------------------------------------------------------------

@@ -41,7 +41,29 @@ is
       T.Add_Test_Routine
         (Routine => PDPTE_To_Unsigned64'Access,
          Name    => "PDPTE to unsigned 64");
+      T.Add_Test_Routine
+        (Routine => PDE_To_Unsigned64'Access,
+         Name    => "PD to unsigned 64");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure PDE_To_Unsigned64
+   is
+      Ref : constant Interfaces.Unsigned_64 := 16#8000fffc800f000b#;
+      PDE : constant Entries.PD_Entry_Type  := Entries.Create
+        (Dst_Offset  => 0,
+         Dst_Address => 16#fffc800f0000#,
+         Readable    => False,
+         Writable    => True,
+         Executable  => False,
+         Maps_Page   => False,
+         Global      => False,
+         Caching     => WC);
+   begin
+      Assert (Condition => To_Unsigned64 (E => PDE) = Ref,
+              Message   => "PD entry unsigned 64 value mismatch");
+   end PDE_To_Unsigned64;
 
    -------------------------------------------------------------------------
 

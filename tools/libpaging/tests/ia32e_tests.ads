@@ -32,4 +32,7 @@ is
    --  Test conversion of PDPT entry to unsigned 64 value.
    procedure PDPTE_To_Unsigned64;
 
+   --  Test conversion of PD entry to unsigned 64 value.
+   procedure PDE_To_Unsigned64;
+
 end IA32e_Tests;

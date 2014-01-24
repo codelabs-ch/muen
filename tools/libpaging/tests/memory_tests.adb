@@ -72,24 +72,19 @@ is
          Writable         => True,
          Executable       => False);
 
-      Assert (Condition => Exists (Mem_Layout => Layout,
-                                   PML4_Index => 27),
-              Message   => "PML4 entry not created");
-      Assert (Condition => Contains_PDPTE
-              (Mem_Layout   => Layout,
-               Table_Number => 0,
-               Entry_Index  => 427),
-              Message   => "PDPT entry not created");
-      Assert (Condition => Contains_PDE
-              (Mem_Layout   => Layout,
-               Table_Number => 0,
-               Entry_Index  => 479),
-              Message   => "PD entry not created");
-      Assert (Condition => Contains_PTE
-              (Mem_Layout   => Layout,
-               Table_Number => 0,
-               Entry_Index  => 239),
-              Message   => "PT entry not created");
+      Get_Table_Count (Mem_Layout => Layout,
+                       PML4_Count => PML4s,
+                       PDPT_Count => PDPTs,
+                       PD_Count   => PDs,
+                       PT_Count   => PTs);
+      Assert (Condition => PML4s = 1,
+              Message   => "PML4 count not 1");
+      Assert (Condition => PDPTs = 1,
+              Message   => "PDPT count not 1");
+      Assert (Condition => PDs = 1,
+              Message   => "PD count not 1");
+      Assert (Condition => PTs = 1,
+              Message   => "PT count not 1");
    end Layout_Add_Region;
 
    -------------------------------------------------------------------------

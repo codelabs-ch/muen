@@ -18,8 +18,6 @@
 
 with Interfaces;
 
-private with Ada.Containers.Ordered_Maps;
-
 private with Paging.Tables;
 
 package Paging.Memory
@@ -55,27 +53,6 @@ is
       PML4_Index : Table_Range)
       return Boolean;
 
-   --  Returns True if the specified PDPT contains an entry with given index.
-   function Contains_PDPTE
-     (Mem_Layout   : Memory_Layout_Type;
-      Table_Number : Table_Range;
-      Entry_Index  : Table_Range)
-      return Boolean;
-
-   --  Returns True if the specified PD contains an entry with given index.
-   function Contains_PDE
-     (Mem_Layout   : Memory_Layout_Type;
-      Table_Number : Table_Range;
-      Entry_Index  : Table_Range)
-      return Boolean;
-
-   --  Returns True if the specified PT contains an entry with given index.
-   function Contains_PTE
-     (Mem_Layout   : Memory_Layout_Type;
-      Table_Number : Table_Range;
-      Entry_Index  : Table_Range)
-      return Boolean;
-
    --  Add memory region with specified attributes to given memory layout.
    procedure Add_Memory_Region
      (Mem_Layout       : in out Memory_Layout_Type;
@@ -88,25 +65,11 @@ is
 
 private
 
-   use Tables.PDPT;
-   use Tables.PD;
-   use Tables.PT;
-
-   package PDPT_Map_Package is new Ada.Containers.Ordered_Maps
-     (Key_Type     => Table_Range,
-      Element_Type => Tables.PDPT.Page_Table_Type);
-   package PD_Map_Package is new Ada.Containers.Ordered_Maps
-     (Key_Type     => Table_Range,
-      Element_Type => Tables.PD.Page_Table_Type);
-   package PT_Map_Package is new Ada.Containers.Ordered_Maps
-     (Key_Type     => Table_Range,
-      Element_Type => Tables.PT.Page_Table_Type);
-
    type Memory_Layout_Type is record
       PML4  : Tables.PML4.Page_Table_Type;
-      PDPTs : PDPT_Map_Package.Map;
-      PDs   : PD_Map_Package.Map;
-      PTs   : PT_Map_Package.Map;
+      PDPTs : Tables.PDPT.Page_Table_Map;
+      PDs   : Tables.PD.Page_Table_Map;
+      PTs   : Tables.PT.Page_Table_Map;
    end record;
 
    Null_Layout : constant Memory_Layout_Type := (others => <>);

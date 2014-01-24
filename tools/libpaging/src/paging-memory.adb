@@ -21,27 +21,6 @@ with Paging.Entries;
 package body Paging.Memory
 is
 
-   --  Add entry with given index to page directory specified by number.
-   procedure Add_PD_Entry
-     (Mem_Layout  : in out Memory_Layout_Type;
-      Table_Nr    :        Table_Range;
-      Entry_Index :        Table_Range;
-      TEntry      :        Entries.PD_Entry_Type);
-
-   --  Add entry with given index to PDP table specified by number.
-   procedure Add_PDPT_Entry
-     (Mem_Layout  : in out Memory_Layout_Type;
-      Table_Nr    :        Table_Range;
-      Entry_Index :        Table_Range;
-      TEntry      :        Entries.PDPT_Entry_Type);
-
-   --  Add entry with given index to page table specified by table number.
-   procedure Add_PT_Entry
-     (Mem_Layout  : in out Memory_Layout_Type;
-      Table_Nr    :        Table_Range;
-      Entry_Index :        Table_Range;
-      TEntry      :        Entries.PT_Entry_Type);
-
    ----------------------------------------------------------------------
 
    procedure Add_Memory_Region
@@ -122,16 +101,16 @@ is
               (PDPT_Idx - PDPT_Idx_Start) * Page_Size;
          end if;
 
-         if not Contains_PDPTE
-           (Mem_Layout   => Mem_Layout,
+         if not PDPT.Contains
+           (Map          => Mem_Layout.PDPTs,
             Table_Number => 0,
             Entry_Index  => PDPT_Idx)
          then
-            Add_PDPT_Entry
-              (Mem_Layout  => Mem_Layout,
-               Table_Nr    => 0,
-               Entry_Index => PDPT_Idx,
-               TEntry      => Entries.Create
+            PDPT.Add_Entry
+              (Map          => Mem_Layout.PDPTs,
+               Table_Number => 0,
+               Entry_Index  => PDPT_Idx,
+               Table_Entry  => Entries.Create
                  (Dst_Offset  => PDPT_Idx,
                   Dst_Address => PD_Addr,
                   Readable    => True,
@@ -156,16 +135,16 @@ is
               (PD_Idx - PD_Idx_Start) * Page_Size;
          end if;
 
-         if not Contains_PDE
-           (Mem_Layout   => Mem_Layout,
+         if not PD.Contains
+           (Map          => Mem_Layout.PDs,
             Table_Number => 0,
             Entry_Index  => PD_Idx)
          then
-            Add_PD_Entry
-              (Mem_Layout  => Mem_Layout,
-               Table_Nr    => 0,
-               Entry_Index => PD_Idx,
-               TEntry      => Entries.Create
+            PD.Add_Entry
+              (Map          => Mem_Layout.PDs,
+               Table_Number => 0,
+               Entry_Index  => PD_Idx,
+               Table_Entry  => Entries.Create
                  (Dst_Offset  => PD_Idx,
                   Dst_Address => PT_Addr,
                   Readable    => True,
@@ -182,16 +161,16 @@ is
       end if;
 
       for PT_Idx in Table_Range range PT_Idx_Start .. PT_Idx_End loop
-         if not Contains_PTE
-           (Mem_Layout   => Mem_Layout,
+         if not PT.Contains
+           (Map          => Mem_Layout.PTs,
             Table_Number => 0,
             Entry_Index  => PT_Idx)
          then
-            Add_PT_Entry
-              (Mem_Layout  => Mem_Layout,
-               Table_Nr    => 0,
-               Entry_Index => PT_Idx,
-               TEntry      => Entries.Create
+            PT.Add_Entry
+              (Map          => Mem_Layout.PTs,
+               Table_Number => 0,
+               Entry_Index  => PT_Idx,
+               Table_Entry  => Entries.Create
                  (Dst_Offset  => PT_Idx,
                   Dst_Address => Physical_Addr,
                   Readable    => True,
@@ -205,189 +184,6 @@ is
          Physical_Addr := Physical_Addr + Page_Size;
       end loop;
    end Add_Memory_Region;
-
-   -------------------------------------------------------------------------
-
-   procedure Add_PD_Entry
-     (Mem_Layout  : in out Memory_Layout_Type;
-      Table_Nr    :        Table_Range;
-      Entry_Index :        Table_Range;
-      TEntry      :        Entries.PD_Entry_Type)
-   is
-      use type PD_Map_Package.Cursor;
-
-      --  Add entry to given table.
-      procedure Add_Entry
-        (Number :        Table_Range;
-         Table  : in out Tables.PD.Page_Table_Type);
-
-      ----------------------------------------------------------------------
-
-      procedure Add_Entry
-        (Number :        Table_Range;
-         Table  : in out Tables.PD.Page_Table_Type)
-      is
-         pragma Unreferenced (Number);
-      begin
-         Tables.PD.Add_Entry
-           (Table => Table,
-            Index => Entry_Index,
-            E     => TEntry);
-      end Add_Entry;
-
-      Pos : PD_Map_Package.Cursor := Mem_Layout.PDs.Find (Key => Table_Nr);
-      Ins : Boolean;
-   begin
-
-      if Pos = PD_Map_Package.No_Element then
-         Mem_Layout.PDs.Insert
-           (Key      => Table_Nr,
-            New_Item => Tables.PD.Create_Table (Number => Table_Nr),
-            Position => Pos,
-            Inserted => Ins);
-      end if;
-
-      Mem_Layout.PDs.Update_Element
-        (Position => Pos,
-         Process  => Add_Entry'Access);
-   end Add_PD_Entry;
-
-   -------------------------------------------------------------------------
-
-   procedure Add_PDPT_Entry
-     (Mem_Layout  : in out Memory_Layout_Type;
-      Table_Nr    :        Table_Range;
-      Entry_Index :        Table_Range;
-      TEntry      :        Entries.PDPT_Entry_Type)
-   is
-      use type PDPT_Map_Package.Cursor;
-
-      --  Add entry to given table.
-      procedure Add_Entry
-        (Number :        Table_Range;
-         Table  : in out Tables.PDPT.Page_Table_Type);
-
-      ----------------------------------------------------------------------
-
-      procedure Add_Entry
-        (Number :        Table_Range;
-         Table  : in out Tables.PDPT.Page_Table_Type)
-      is
-         pragma Unreferenced (Number);
-      begin
-         Tables.PDPT.Add_Entry
-           (Table => Table,
-            Index => Entry_Index,
-            E     => TEntry);
-      end Add_Entry;
-
-      Pos : PDPT_Map_Package.Cursor := Mem_Layout.PDPTs.Find (Key => Table_Nr);
-      Ins : Boolean;
-   begin
-
-      if Pos = PDPT_Map_Package.No_Element then
-         Mem_Layout.PDPTs.Insert
-           (Key      => Table_Nr,
-            New_Item => Tables.PDPT.Create_Table (Number => Table_Nr),
-            Position => Pos,
-            Inserted => Ins);
-      end if;
-
-      Mem_Layout.PDPTs.Update_Element
-        (Position => Pos,
-         Process  => Add_Entry'Access);
-   end Add_PDPT_Entry;
-
-   -------------------------------------------------------------------------
-
-   procedure Add_PT_Entry
-     (Mem_Layout  : in out Memory_Layout_Type;
-      Table_Nr    :        Table_Range;
-      Entry_Index :        Table_Range;
-      TEntry      :        Entries.PT_Entry_Type)
-   is
-      use type PT_Map_Package.Cursor;
-
-      --  Add entry to given table.
-      procedure Add_Entry
-        (Number :        Table_Range;
-         Table  : in out Tables.PT.Page_Table_Type);
-
-      ----------------------------------------------------------------------
-
-      procedure Add_Entry
-        (Number :        Table_Range;
-         Table  : in out Tables.PT.Page_Table_Type)
-      is
-         pragma Unreferenced (Number);
-      begin
-         Tables.PT.Add_Entry
-           (Table => Table,
-            Index => Entry_Index,
-            E     => TEntry);
-      end Add_Entry;
-
-      Pos : PT_Map_Package.Cursor := Mem_Layout.PTs.Find (Key => Table_Nr);
-      Ins : Boolean;
-   begin
-
-      if Pos = PT_Map_Package.No_Element then
-         Mem_Layout.PTs.Insert
-           (Key      => Table_Nr,
-            New_Item => Tables.PT.Create_Table (Number => Table_Nr),
-            Position => Pos,
-            Inserted => Ins);
-      end if;
-
-      Mem_Layout.PTs.Update_Element
-        (Position => Pos,
-         Process  => Add_Entry'Access);
-   end Add_PT_Entry;
-
-   -------------------------------------------------------------------------
-
-   function Contains_PDE
-     (Mem_Layout   : Memory_Layout_Type;
-      Table_Number : Table_Range;
-      Entry_Index  : Table_Range)
-      return Boolean
-   is
-   begin
-      return Mem_Layout.PDs.Contains (Key => Table_Number)
-        and then Tables.PD.Contains
-          (Table => Mem_Layout.PDs.Element (Key => Table_Number),
-           Index => Entry_Index);
-   end Contains_PDE;
-
-   -------------------------------------------------------------------------
-
-   function Contains_PDPTE
-     (Mem_Layout   : Memory_Layout_Type;
-      Table_Number : Table_Range;
-      Entry_Index  : Table_Range)
-      return Boolean
-   is
-   begin
-      return Mem_Layout.PDPTs.Contains (Key => Table_Number)
-        and then Tables.PDPT.Contains
-          (Table => Mem_Layout.PDPTs.Element (Key => Table_Number),
-           Index => Entry_Index);
-   end Contains_PDPTE;
-
-   -------------------------------------------------------------------------
-
-   function Contains_PTE
-     (Mem_Layout   : Memory_Layout_Type;
-      Table_Number : Table_Range;
-      Entry_Index  : Table_Range)
-      return Boolean
-   is
-   begin
-      return Mem_Layout.PTs.Contains (Key => Table_Number)
-        and then Tables.PT.Contains
-          (Table => Mem_Layout.PTs.Element (Key => Table_Number),
-           Index => Entry_Index);
-   end Contains_PTE;
 
    -------------------------------------------------------------------------
 
@@ -431,9 +227,9 @@ is
          PML4_Count := 0;
       end if;
 
-      PDPT_Count := Natural (Mem_Layout.PDPTs.Length);
-      PD_Count   := Natural (Mem_Layout.PDs.Length);
-      PT_Count   := Natural (Mem_Layout.PTs.Length);
+      PDPT_Count := Tables.PDPT.Length (Map => Mem_Layout.PDPTs);
+      PD_Count   := Tables.PD.Length (Map => Mem_Layout.PDs);
+      PT_Count   := Tables.PT.Length (Map => Mem_Layout.PTs);
    end Get_Table_Count;
 
    -------------------------------------------------------------------------

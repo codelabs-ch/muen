@@ -1,5 +1,4 @@
 RECIPES =   \
-	ada-bfd \
 	ahven   \
 	alog    \
 	xia

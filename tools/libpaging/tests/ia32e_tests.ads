@@ -16,33 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Text_Runner;
 with Ahven.Framework;
 
-with Paging_Tests;
-with Entries_Tests;
-with Tables_Tests;
-with Memory_Tests;
-with IA32e_Tests;
-
-procedure Test_Runner
+package IA32e_Tests
 is
-   use Ahven.Framework;
 
-   S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Libpaging tests");
-begin
-   Add_Test (Suite => S.all,
-             T     => new Paging_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Entries_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Tables_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Memory_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new IA32e_Tests.Testcase);
+   type Testcase is new Ahven.Framework.Test_Case with null record;
 
-   Ahven.Text_Runner.Run (Suite => S);
-   Release_Suite (T => S);
-end Test_Runner;
+   --  Initialize testcase.
+   procedure Initialize (T : in out Testcase);
+
+   --  Test conversion of PML4 entry to unsigned 64 value.
+   procedure PML4E_To_Unsigned64;
+
+end IA32e_Tests;

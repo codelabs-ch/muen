@@ -40,6 +40,13 @@ is
        Last_Address  :        Interfaces.Unsigned_64) with
       Pre => First_Address < Last_Address;
 
+   --  Allocat a fixed region
+   procedure Allocate_Fixed
+      (Map           : in out Map_Type;
+       First_Address :        Interfaces.Unsigned_64;
+       Last_Address  :        Interfaces.Unsigned_64) with
+      Pre => First_Address < Last_Address;
+
    --  Insert an empty region to memory map
    procedure Iterate
       (Map     : Map_Type;

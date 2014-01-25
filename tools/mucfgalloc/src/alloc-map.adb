@@ -17,6 +17,18 @@
 
 package body Alloc.Map
 is
+   procedure Allocate_Fixed
+      (Map           : in out Map_Type;
+       First_Address :        Interfaces.Unsigned_64;
+       Last_Address  :        Interfaces.Unsigned_64)
+   is
+      pragma Unreferenced (Map, First_Address, Last_Address);
+   begin
+      null;
+   end Allocate_Fixed;
+
+   ----------------------------------------------------------------------------
+
    procedure Insert_Empty_Region
       (Map           : in out Map_Type;
        First_Address :        Interfaces.Unsigned_64;

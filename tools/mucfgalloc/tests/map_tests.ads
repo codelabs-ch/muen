@@ -66,4 +66,8 @@ is
    --  order
    procedure Region_Merge_Sorted;
 
+   --  Allocate a fixed region (i.e. start and end address is known) inside the
+   --  region map that equals one complete empty in that map
+   procedure Allocate_Fixed_Full_Empty_Region;
+
 end Map_Tests;

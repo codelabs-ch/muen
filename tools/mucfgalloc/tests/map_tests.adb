@@ -22,8 +22,32 @@ with Ada.Text_IO;
 package body Map_Tests
 is
    Output_File : Ada.Text_IO.File_Type;
-
    procedure Write_Region (R : Alloc.Map.Region_Type);
+
+   ----------------------------------------------------------------------------
+
+   procedure Allocate_Fixed_Full_Empty_Region
+   is
+      use Ahven;
+      use Alloc.Map;
+      use Ada.Text_IO;
+
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0,    1000);
+      M.Insert_Empty_Region (1002, 2000);
+      M.Insert_Empty_Region (11000, 15000);
+      M.Allocate_Fixed (1002, 2000);
+      Create (Output_File, Out_File, "obj/alloc_fixed_full_empty_region.txt");
+      M.Iterate (Write_Region'Access);
+      Close (Output_File);
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/alloc_fixed_full_empty_region.txt",
+                   Filename2 => "obj/alloc_fixed_full_empty_region.txt"),
+              Message => "Fixed allocation of full empty region");
+   end Allocate_Fixed_Full_Empty_Region;
+
+   ----------------------------------------------------------------------------
 
    procedure Initialize (T : in out Testcase)
    is
@@ -59,6 +83,9 @@ is
       T.Add_Test_Routine
         (Routine => Region_Merge_Sorted'Access,
          Name    => "Merging consecutive regions (sorted)");
+      T.Add_Test_Routine
+        (Routine => Allocate_Fixed_Full_Empty_Region'Access,
+         Name    => "Fixed allocation of full empty region");
    end Initialize;
 
    ----------------------------------------------------------------------------

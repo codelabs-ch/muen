@@ -70,4 +70,36 @@ is
    --  region map that equals one complete empty in that map
    procedure Allocate_Fixed_Full_Empty_Region;
 
+   --  Allocate a fixed region that spans the left part of an empty region
+   procedure Allocate_Fixed_Partial_Left;
+
+   --  Allocate a fixed region that spans the right part of an empty region
+   procedure Allocate_Fixed_Partial_Right;
+
+   --  Allocate a fixed region that spans the middle part of an empty region
+   procedure Allocate_Fixed_Partial_Middle;
+
+   --  Try to allocate a region that lies completely outside empty regions
+   procedure Allocate_Fixed_Invalid_Outside_Empty;
+
+   --  Try to allocate a region that lies outside empty regions on the left
+   procedure Allocate_Fixed_Invalid_Left;
+
+   --  Try to allocate a region that lies outside empty regions on the right
+   procedure Allocate_Fixed_Invalid_Right;
+
+   --  Try to allocate a region that exceeds the empty region
+   procedure Allocate_Fixed_Invalid_Exceed;
+
+   --  Try to allocate a region that spans multiple empty regions (empty
+   --  regions are always non-continous, as adjacent regions are merged when
+   --  adding them!)
+   procedure Allocate_Fixed_Invalid_Multiple;
+
+   --  Try to allocate a region inside an aleady allocated region
+   procedure Allocate_Fixed_Invalid_Double;
+
+   --  Try to allocate a region partially inside an aleady allocated region
+   procedure Allocate_Fixed_Invalid_Partial_Double;
+
 end Map_Tests;

@@ -37,7 +37,7 @@ is
       use Region_List_Package;
       Curr, Prev : Cursor;
 
-      --  Update the First_Address field of an region with First_Address
+      --  Update the First_Address field of a region with First_Address
       procedure Set_First_Address (Element : in out Region_Type);
       procedure Set_First_Address (Element : in out Region_Type)
       is

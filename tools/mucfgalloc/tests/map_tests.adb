@@ -44,8 +44,201 @@ is
       Assert (Condition => Test_Utils.Equal_Files
                   (Filename1 => "data/alloc_fixed_full_empty_region.txt",
                    Filename2 => "obj/alloc_fixed_full_empty_region.txt"),
-              Message => "Fixed allocation of full empty region");
+              Message => "Alloc of full empty region");
    end Allocate_Fixed_Full_Empty_Region;
+
+   ----------------------------------------------------------------------------
+
+   procedure Allocate_Fixed_Invalid_Double
+   is
+      use Ahven;
+      use Alloc.Map;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0,    1000);
+      M.Insert_Empty_Region (1002, 2000);
+      M.Insert_Empty_Region (5000, 10000);
+      M.Allocate_Fixed (1002, 2000);
+      M.Allocate_Fixed (1002, 2000);
+      Fail ("Double allocation undetected");
+   exception
+      when Alloc.Map.Invalid_Fixed_Allocation => null;
+   end Allocate_Fixed_Invalid_Double;
+
+   ----------------------------------------------------------------------------
+
+   procedure Allocate_Fixed_Invalid_Exceed
+   is
+      use Ahven;
+      use Alloc.Map;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0,    1000);
+      M.Insert_Empty_Region (1200, 2000);
+      M.Insert_Empty_Region (5000, 10000);
+      M.Allocate_Fixed (1000, 3000);
+      Fail ("Invalid fixed alloc undetected (exceeding)");
+   exception
+      when Alloc.Map.Invalid_Fixed_Allocation => null;
+   end Allocate_Fixed_Invalid_Exceed;
+
+   ----------------------------------------------------------------------------
+
+   procedure Allocate_Fixed_Invalid_Left
+   is
+      use Ahven;
+      use Alloc.Map;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0,    1000);
+      M.Insert_Empty_Region (1200, 2000);
+      M.Insert_Empty_Region (5000, 10000);
+      M.Allocate_Fixed (1100, 1500);
+      Fail ("Invalid fixed alloc undetected (left)");
+   exception
+      when Alloc.Map.Invalid_Fixed_Allocation => null;
+   end Allocate_Fixed_Invalid_Left;
+
+   ----------------------------------------------------------------------------
+
+   procedure Allocate_Fixed_Invalid_Multiple
+   is
+      use Ahven;
+      use Alloc.Map;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0,    1000);
+      M.Insert_Empty_Region (1500, 2000);
+      M.Insert_Empty_Region (2500, 3000);
+      M.Insert_Empty_Region (5000, 10000);
+      M.Allocate_Fixed (1700, 2800);
+      Fail ("Invalid fixed alloc of multiple empty regions");
+   exception
+      when Alloc.Map.Invalid_Fixed_Allocation => null;
+   end Allocate_Fixed_Invalid_Multiple;
+
+   ----------------------------------------------------------------------------
+
+   procedure Allocate_Fixed_Invalid_Outside_Empty
+   is
+      use Ahven;
+      use Alloc.Map;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0,    1000);
+      M.Insert_Empty_Region (1500, 2000);
+      M.Insert_Empty_Region (2500, 3000);
+      M.Insert_Empty_Region (5000, 10000);
+      M.Allocate_Fixed (2200, 2300);
+      Fail ("Invalid fixed alloc outside empty regions");
+   exception
+      when Alloc.Map.Invalid_Fixed_Allocation => null;
+   end Allocate_Fixed_Invalid_Outside_Empty;
+
+   ----------------------------------------------------------------------------
+
+   procedure Allocate_Fixed_Invalid_Partial_Double
+   is
+      use Ahven;
+      use Alloc.Map;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0,    1000);
+      M.Insert_Empty_Region (1200, 2000);
+      M.Insert_Empty_Region (5000, 10000);
+      M.Allocate_Fixed (1250, 1800);
+      M.Allocate_Fixed (1300, 1700);
+      Fail ("Invalid fixed double-allocation undetected");
+   exception
+      when Alloc.Map.Invalid_Fixed_Allocation => null;
+   end Allocate_Fixed_Invalid_Partial_Double;
+
+   ----------------------------------------------------------------------------
+
+   procedure Allocate_Fixed_Invalid_Right
+   is
+      use Ahven;
+      use Alloc.Map;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0,    1000);
+      M.Insert_Empty_Region (1500, 2000);
+      M.Insert_Empty_Region (2500, 3000);
+      M.Insert_Empty_Region (5000, 10000);
+      M.Allocate_Fixed (1600, 2300);
+      Fail ("Invalid fixed alloc outside empty regions (right)");
+   exception
+      when Alloc.Map.Invalid_Fixed_Allocation => null;
+   end Allocate_Fixed_Invalid_Right;
+
+   ----------------------------------------------------------------------------
+
+   procedure Allocate_Fixed_Partial_Left
+   is
+      use Ahven;
+      use Alloc.Map;
+      use Ada.Text_IO;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0,    1000);
+      M.Insert_Empty_Region (1500, 2000);
+      M.Insert_Empty_Region (2500, 3000);
+      M.Insert_Empty_Region (5000, 10000);
+      M.Allocate_Fixed (2500, 2800);
+      Create (Output_File, Out_File, "obj/alloc_fixed_partial_left.txt");
+      M.Iterate (Write_Region'Access);
+      Close (Output_File);
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/alloc_fixed_partial_left.txt",
+                   Filename2 => "obj/alloc_fixed_partial_left.txt"),
+              Message => "Partial allocation of empty region (left)");
+   end Allocate_Fixed_Partial_Left;
+
+   ----------------------------------------------------------------------------
+
+   procedure Allocate_Fixed_Partial_Middle
+   is
+      use Ahven;
+      use Alloc.Map;
+      use Ada.Text_IO;
+
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0,    1000);
+      M.Insert_Empty_Region (1002, 2000);
+      M.Insert_Empty_Region (11000, 15000);
+      M.Allocate_Fixed (1500, 1800);
+      Create (Output_File, Out_File, "obj/alloc_fixed_partial_middle.txt");
+      M.Iterate (Write_Region'Access);
+      Close (Output_File);
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/alloc_fixed_partial_middle.txt",
+                   Filename2 => "obj/alloc_fixed_partial_middle.txt"),
+              Message => "Partial allocation of full empty region");
+   end Allocate_Fixed_Partial_Middle;
+
+   ----------------------------------------------------------------------------
+
+   procedure Allocate_Fixed_Partial_Right
+   is
+      use Ahven;
+      use Alloc.Map;
+      use Ada.Text_IO;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0,    1000);
+      M.Insert_Empty_Region (1500, 2000);
+      M.Insert_Empty_Region (2500, 3000);
+      M.Insert_Empty_Region (5000, 10000);
+      M.Allocate_Fixed (2800, 3000);
+      Create (Output_File, Out_File, "obj/alloc_fixed_partial_right.txt");
+      M.Iterate (Write_Region'Access);
+      Close (Output_File);
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/alloc_fixed_partial_right.txt",
+                   Filename2 => "obj/alloc_fixed_partial_right.txt"),
+              Message => "Partial allocation of empty region (right)");
+   end Allocate_Fixed_Partial_Right;
 
    ----------------------------------------------------------------------------
 
@@ -85,7 +278,37 @@ is
          Name    => "Merging consecutive regions (sorted)");
       T.Add_Test_Routine
         (Routine => Allocate_Fixed_Full_Empty_Region'Access,
-         Name    => "Fixed allocation of full empty region");
+         Name    => "Alloc of full empty region");
+      T.Add_Test_Routine
+        (Routine => Allocate_Fixed_Partial_Left'Access,
+         Name    => "Partial fixed alloc of empty region (left)");
+      T.Add_Test_Routine
+        (Routine => Allocate_Fixed_Partial_Right'Access,
+         Name    => "Partial fixed alloc of empty region (right)");
+      T.Add_Test_Routine
+        (Routine => Allocate_Fixed_Partial_Middle'Access,
+         Name    => "Partial fixed alloc of empty region (middle)");
+      T.Add_Test_Routine
+        (Routine => Allocate_Fixed_Invalid_Outside_Empty'Access,
+         Name    => "Detect fixed alloc of memory hole");
+      T.Add_Test_Routine
+        (Routine => Allocate_Fixed_Invalid_Left'Access,
+         Name    => "Alloc partially outside empty region (left)");
+      T.Add_Test_Routine
+        (Routine => Allocate_Fixed_Invalid_Right'Access,
+         Name    => "Alloc partially outside empty region (right)");
+      T.Add_Test_Routine
+        (Routine => Allocate_Fixed_Invalid_Exceed'Access,
+         Name    => "Alloc exceeding empty region");
+      T.Add_Test_Routine
+        (Routine => Allocate_Fixed_Invalid_Double'Access,
+         Name    => "Double allocation");
+      T.Add_Test_Routine
+        (Routine => Allocate_Fixed_Invalid_Multiple'Access,
+         Name    => "Alloc spanning multiple empty regions");
+      T.Add_Test_Routine
+        (Routine => Allocate_Fixed_Invalid_Partial_Double'Access,
+         Name    => "Alloc of allocated memory");
    end Initialize;
 
    ----------------------------------------------------------------------------

@@ -53,6 +53,7 @@ is
        Process : not null access procedure (Region : Region_Type));
 
    Overlapping_Empty_Region : exception;
+   Invalid_Fixed_Allocation : exception;
 
 private
 

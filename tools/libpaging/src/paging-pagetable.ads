@@ -73,6 +73,14 @@ is
         (Index  : Table_Range;
          TEntry : Entry_Type));
 
+   --  Iterate over specified page table and call given process procedure for
+   --  each entry. The table entry is modifiable.
+   procedure Update
+     (Table   : in out Page_Table_Type;
+      Process : not null access procedure
+        (Index  :        Table_Range;
+         TEntry : in out Entry_Type));
+
    --  A page table container.
    type Page_Table_Map is private;
 

@@ -192,6 +192,27 @@ is
    -------------------------------------------------------------------------
 
    procedure Update
+     (Table   : in out Page_Table_Type;
+      Process : not null access procedure
+        (Index  :        Table_Range;
+         TEntry : in out Entry_Type))
+   is
+      --  Process the given page table entry.
+      procedure Call_Process (Pos : Entries_Map_Package.Cursor);
+
+      procedure Call_Process (Pos : Entries_Map_Package.Cursor)
+      is
+      begin
+         Table.Data.Update_Element (Position => Pos,
+                                    Process  => Process);
+      end Call_Process;
+   begin
+      Table.Data.Iterate (Process => Call_Process'Access);
+   end Update;
+
+   -------------------------------------------------------------------------
+
+   procedure Update
      (Map     : in out Page_Table_Map;
       Process : not null access procedure
         (Table_Number :        Table_Range;

@@ -54,7 +54,16 @@ is
    --    [.....new region.....]
    procedure Overlapping_Empty_Encompassing;
 
-   --  Test if consecutive regions are merged into one
-   procedure Region_Merge;
+   --  Test if consecutive regions are merged into one, inserted in random
+   --  order
+   procedure Region_Merge_Random;
+
+   --  Test if consecutive regions are merged into one, inserted in decreasing
+   --  order
+   procedure Region_Merge_Reversed;
+
+   --  Test if consecutive regions are merged into one, inserted in increasing
+   --  order
+   procedure Region_Merge_Sorted;
 
 end Map_Tests;

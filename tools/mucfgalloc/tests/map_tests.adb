@@ -51,8 +51,14 @@ is
         (Routine => Non_Overlapping_Reversed'Access,
          Name    => "Non-overlapping (reversed)");
       T.Add_Test_Routine
-        (Routine => Region_Merge'Access,
-         Name    => "Merging consecutive regions");
+        (Routine => Region_Merge_Random'Access,
+         Name    => "Merging consecutive regions (random)");
+      T.Add_Test_Routine
+        (Routine => Region_Merge_Reversed'Access,
+         Name    => "Merging consecutive regions (reversed)");
+      T.Add_Test_Routine
+        (Routine => Region_Merge_Sorted'Access,
+         Name    => "Merging consecutive regions (sorted)");
    end Initialize;
 
    ----------------------------------------------------------------------------
@@ -189,7 +195,55 @@ is
 
    ----------------------------------------------------------------------------
 
-   procedure Region_Merge
+   procedure Region_Merge_Random
+   is
+      use Ahven;
+      use Alloc.Map;
+      use Ada.Text_IO;
+
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (12001, 15000);
+      M.Insert_Empty_Region (1000, 2000);
+      M.Insert_Empty_Region (4000, 10000);
+      M.Insert_Empty_Region (11000, 12000);
+      M.Insert_Empty_Region (2001, 3000);
+      Create (Output_File, Out_File, "obj/merge_random.txt");
+      M.Iterate (Write_Region'Access);
+      Close (Output_File);
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/merge.txt",
+                   Filename2 => "obj/merge_random.txt"),
+              Message => "Region merge failed (random)");
+   end Region_Merge_Random;
+
+   ----------------------------------------------------------------------------
+
+   procedure Region_Merge_Reversed
+   is
+      use Ahven;
+      use Alloc.Map;
+      use Ada.Text_IO;
+
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (12001, 15000);
+      M.Insert_Empty_Region (11000, 12000);
+      M.Insert_Empty_Region (4000, 10000);
+      M.Insert_Empty_Region (2001, 3000);
+      M.Insert_Empty_Region (1000, 2000);
+      Create (Output_File, Out_File, "obj/merge_reversed.txt");
+      M.Iterate (Write_Region'Access);
+      Close (Output_File);
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/merge.txt",
+                   Filename2 => "obj/merge_reversed.txt"),
+              Message => "Region merge failed (reversed)");
+   end Region_Merge_Reversed;
+
+   ----------------------------------------------------------------------------
+
+   procedure Region_Merge_Sorted
    is
       use Ahven;
       use Alloc.Map;
@@ -202,14 +256,14 @@ is
       M.Insert_Empty_Region (4000, 10000);
       M.Insert_Empty_Region (11000, 12000);
       M.Insert_Empty_Region (12001, 15000);
-      Create (Output_File, Out_File, "obj/merge.txt");
+      Create (Output_File, Out_File, "obj/merge_sorted.txt");
       M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
                   (Filename1 => "data/merge.txt",
-                   Filename2 => "obj/merge.txt"),
-              Message => "Region merge failed");
-   end Region_Merge;
+                   Filename2 => "obj/merge_sorted.txt"),
+              Message => "Region merge failed (sorted)");
+   end Region_Merge_Sorted;
 
    ----------------------------------------------------------------------------
 

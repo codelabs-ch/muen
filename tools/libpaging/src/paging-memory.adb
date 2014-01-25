@@ -395,4 +395,129 @@ is
                         Process => Set_PT_Address'Access);
    end Set_Table_Addresses;
 
+   -------------------------------------------------------------------------
+
+   procedure Update_References (Mem_Layout : in out Memory_Layout_Type)
+   is
+
+      --  Adjust destination address of given PML4 entry.
+      procedure Adjust_PML4
+        (Index  :        Table_Range;
+         TEntry : in out Entries.PML4_Entry_Type);
+
+      --  Adjust destination address of each PDPT entry.
+      procedure Adjust_PDPT
+        (Table_Number :        Table_Range;
+         Table        : in out Tables.PDPT.Page_Table_Type);
+
+      --  Adjust destination address of each PD entry.
+      procedure Adjust_PD
+        (Table_Number :        Table_Range;
+         Table        : in out Tables.PD.Page_Table_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Adjust_PD
+        (Table_Number :        Table_Range;
+         Table        : in out Tables.PD.Page_Table_Type)
+      is
+         pragma Unreferenced (Table_Number);
+
+         --  Adjust destination address of given PD entry.
+         procedure Adjust_PD_Entry
+           (Index  :        Table_Range;
+            TEntry : in out Entries.PD_Entry_Type);
+
+         -------------------------------------------------------------------
+
+         procedure Adjust_PD_Entry
+           (Index  :        Table_Range;
+            TEntry : in out Entries.PD_Entry_Type)
+         is
+            pragma Unreferenced (Index);
+
+            Dst_Idx : Table_Range;
+            Address : Interfaces.Unsigned_64;
+         begin
+            if TEntry.Maps_Page then
+               return;
+            end if;
+
+            Dst_Idx := TEntry.Get_Dst_Offset;
+            Address := Tables.PT.Get_Table_Address
+              (Map          => Mem_Layout.PTs,
+               Table_Number => Dst_Idx);
+
+            TEntry.Set_Dst_Address (Address => Address);
+         end Adjust_PD_Entry;
+      begin
+         Tables.PD.Update (Table   => Table,
+                           Process => Adjust_PD_Entry'Access);
+      end Adjust_PD;
+
+      ----------------------------------------------------------------------
+
+      procedure Adjust_PDPT
+        (Table_Number :        Table_Range;
+         Table        : in out Tables.PDPT.Page_Table_Type)
+      is
+         pragma Unreferenced (Table_Number);
+
+         --  Adjust destination address of given PDPT entry.
+         procedure Adjust_PDPT_Entry
+           (Index  :        Table_Range;
+            TEntry : in out Entries.PDPT_Entry_Type);
+
+         -------------------------------------------------------------------
+
+         procedure Adjust_PDPT_Entry
+           (Index  :        Table_Range;
+            TEntry : in out Entries.PDPT_Entry_Type)
+         is
+            pragma Unreferenced (Index);
+
+            Dst_Idx : Table_Range;
+            Address : Interfaces.Unsigned_64;
+         begin
+            if TEntry.Maps_Page then
+               return;
+            end if;
+
+            Dst_Idx := TEntry.Get_Dst_Offset;
+            Address := Tables.PD.Get_Table_Address
+              (Map          => Mem_Layout.PDs,
+               Table_Number => Dst_Idx);
+
+            TEntry.Set_Dst_Address (Address => Address);
+         end Adjust_PDPT_Entry;
+      begin
+         Tables.PDPT.Update (Table   => Table,
+                             Process => Adjust_PDPT_Entry'Access);
+      end Adjust_PDPT;
+
+      ----------------------------------------------------------------------
+
+      procedure Adjust_PML4
+        (Index  :        Table_Range;
+         TEntry : in out Entries.PML4_Entry_Type)
+      is
+         pragma Unreferenced (Index);
+
+         Dst_Idx : constant Table_Range := TEntry.Get_Dst_Offset;
+         Address : constant Interfaces.Unsigned_64
+           := Tables.PDPT.Get_Table_Address
+             (Map          => Mem_Layout.PDPTs,
+              Table_Number => Dst_Idx);
+      begin
+         TEntry.Set_Dst_Address (Address => Address);
+      end Adjust_PML4;
+   begin
+      Tables.PML4.Update (Table   => Mem_Layout.PML4,
+                          Process => Adjust_PML4'Access);
+      Tables.PDPT.Update (Map     => Mem_Layout.PDPTs,
+                          Process => Adjust_PDPT'Access);
+      Tables.PD.Update (Map     => Mem_Layout.PDs,
+                        Process => Adjust_PD'Access);
+   end Update_References;
+
 end Paging.Memory;

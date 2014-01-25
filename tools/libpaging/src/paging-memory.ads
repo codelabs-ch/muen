@@ -68,6 +68,10 @@ is
    --  Calculate physical addresses of pagetables.
    procedure Set_Table_Addresses (Mem_Layout : in out Memory_Layout_Type);
 
+   --  Update destination addresses of table entries referencing other paging
+   --  structures.
+   procedure Update_References (Mem_Layout : in out Memory_Layout_Type);
+
    --  Serialze paging structures of given memory layout. Pagetables are
    --  processed in decreasing level order (PML4->PDPT->PD->PT) using the
    --  specified serialization procedures.

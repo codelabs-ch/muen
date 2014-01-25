@@ -100,6 +100,12 @@ is
       Entry_Index  :        Table_Range;
       Table_Entry  :        Entry_Type);
 
+   --  Returns the physical address of the table specified by number.
+   function Get_Table_Address
+     (Map          : Page_Table_Map;
+      Table_Number : Table_Range)
+      return Interfaces.Unsigned_64;
+
    --  Returns the number of tables in the map.
    function Length (Map : Page_Table_Map) return Natural;
 

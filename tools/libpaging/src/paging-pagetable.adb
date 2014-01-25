@@ -126,6 +126,17 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Table_Address
+     (Map          : Page_Table_Map;
+      Table_Number : Table_Range)
+      return Interfaces.Unsigned_64
+   is
+   begin
+      return Map.Tables.Element (Key => Table_Number).Address;
+   end Get_Table_Address;
+
+   -------------------------------------------------------------------------
+
    procedure Iterate
      (Map     : Page_Table_Map;
       Process : not null access procedure

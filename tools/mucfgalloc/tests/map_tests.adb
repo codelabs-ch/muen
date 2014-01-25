@@ -70,12 +70,12 @@ is
       M.Insert_Empty_Region (5000, 10000);
       M.Insert_Empty_Region (0,    1000);
       M.Insert_Empty_Region (16000, 30000);
-      Create (Output_File, Out_File, "obj/non_overlapping1b.txt");
+      Create (Output_File, Out_File, "obj/non_overlapping_random.txt");
       M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
                   (Filename1 => "data/non_overlapping1.txt",
-                   Filename2 => "obj/non_overlapping1b.txt"),
+                   Filename2 => "obj/non_overlapping_random.txt"),
               Message => "Memory map missmatch (random)");
    end Non_Overlapping_Random;
 
@@ -94,12 +94,12 @@ is
       M.Insert_Empty_Region (5000, 10000);
       M.Insert_Empty_Region (1001, 2000);
       M.Insert_Empty_Region (0,    1000);
-      Create (Output_File, Out_File, "obj/non_overlapping1c.txt");
+      Create (Output_File, Out_File, "obj/non_overlapping_reversed.txt");
       M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
                   (Filename1 => "data/non_overlapping1.txt",
-                   Filename2 => "obj/non_overlapping1c.txt"),
+                   Filename2 => "obj/non_overlapping_reversed.txt"),
               Message => "Memory map missmatch (reversed)");
    end Non_Overlapping_Reversed;
 
@@ -118,12 +118,12 @@ is
       M.Insert_Empty_Region (5000, 10000);
       M.Insert_Empty_Region (11000, 15000);
       M.Insert_Empty_Region (16000, 30000);
-      Create (Output_File, Out_File, "obj/non_overlapping1a.txt");
+      Create (Output_File, Out_File, "obj/non_overlapping_sorted.txt");
       M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
                   (Filename1 => "data/non_overlapping1.txt",
-                   Filename2 => "obj/non_overlapping1a.txt"),
+                   Filename2 => "obj/non_overlapping_sorted.txt"),
               Message => "Memory map missmatch (sorted)");
    end Non_Overlapping_Sorted;
 

@@ -45,13 +45,6 @@ is
       PD_Idx_Start, PD_Idx_End     : Table_Range;
       PT_Idx_Start, PT_Idx_End     : Table_Range;
 
-      --  Physical start address of PDPT paging structure(s).
-      PDPT_Addr : Interfaces.Unsigned_64;
-      --  Physical start address of PD paging structure(s).
-      PD_Addr   : Interfaces.Unsigned_64;
-      --  Physical start address of PT paging structure(s).
-      PT_Addr   : Interfaces.Unsigned_64;
-
       Physical_Addr : Interfaces.Unsigned_64 := Physical_Address;
    begin
       Get_Indexes (Address    => Virtual_Address,
@@ -65,13 +58,6 @@ is
                    PD_Index   => PD_Idx_End,
                    PT_Index   => PT_Idx_End);
 
-      PDPT_Addr := PML4.Get_Physical_Address (Table => Mem_Layout.PML4) +
-        (Interfaces.Unsigned_64 (PML4_Idx_End) + 1) * Page_Size;
-      PD_Addr   := PDPT_Addr +
-        (Interfaces.Unsigned_64 (PDPT_Idx_End) + 1) * Page_Size;
-      PT_Addr   := PD_Addr +
-        (Interfaces.Unsigned_64 (PD_Idx_End) + 1) * Page_Size;
-
       for PML4_Idx in Table_Range range PML4_Idx_Start .. PML4_Idx_End loop
          if not Tables.PML4.Contains (Table => Mem_Layout.PML4,
                                       Index => PML4_Idx)
@@ -81,8 +67,7 @@ is
                Index => PML4_Idx,
                E     => Entries.Create
                  (Dst_Offset  => PML4_Idx,
-                  Dst_Address => PDPT_Addr +
-                    Interfaces.Unsigned_64 (PML4_Idx) * Page_Size,
+                  Dst_Address => 0,
                   Readable    => True,
                   Writable    => True,
                   Executable  => True,
@@ -93,14 +78,6 @@ is
       end loop;
 
       for PDPT_Idx in Table_Range range PDPT_Idx_Start .. PDPT_Idx_End loop
-         if Is_PDPT_Page then
-            PD_Addr := Physical_Addr + Interfaces.Unsigned_64
-              (PDPT_Idx - PDPT_Idx_Start) * PDPT_Page_Size;
-         else
-            PD_Addr := PD_Addr + Interfaces.Unsigned_64
-              (PDPT_Idx - PDPT_Idx_Start) * Page_Size;
-         end if;
-
          if not PDPT.Contains
            (Map          => Mem_Layout.PDPTs,
             Table_Number => 0,
@@ -112,13 +89,17 @@ is
                Entry_Index  => PDPT_Idx,
                Table_Entry  => Entries.Create
                  (Dst_Offset  => PDPT_Idx,
-                  Dst_Address => PD_Addr,
+                  Dst_Address => (if Is_PDPT_Page then Physical_Addr else 0),
                   Readable    => True,
                   Writable    => not Is_PDPT_Page or Writable,
                   Executable  => not Is_PDPT_Page or Executable,
                   Maps_Page   => Is_PDPT_Page,
                   Global      => False,
                   Caching     => Caching));
+         end if;
+
+         if Is_PDPT_Page then
+            Physical_Addr := Physical_Addr + PDPT_Page_Size;
          end if;
       end loop;
 
@@ -127,14 +108,6 @@ is
       end if;
 
       for PD_Idx in Table_Range range PD_Idx_Start .. PD_Idx_End loop
-         if Is_PD_Page then
-            PT_Addr := Physical_Addr + Interfaces.Unsigned_64
-              (PD_Idx - PD_Idx_Start) * PD_Page_Size;
-         else
-            PT_Addr := PT_Addr + Interfaces.Unsigned_64
-              (PD_Idx - PD_Idx_Start) * Page_Size;
-         end if;
-
          if not PD.Contains
            (Map          => Mem_Layout.PDs,
             Table_Number => 0,
@@ -146,13 +119,17 @@ is
                Entry_Index  => PD_Idx,
                Table_Entry  => Entries.Create
                  (Dst_Offset  => PD_Idx,
-                  Dst_Address => PT_Addr,
+                  Dst_Address => (if Is_PD_Page then Physical_Addr else 0),
                   Readable    => True,
                   Writable    => not Is_PD_Page or Writable,
                   Executable  => not Is_PD_Page or Executable,
                   Maps_Page   => Is_PDPT_Page,
                   Global      => False,
                   Caching     => Caching));
+         end if;
+
+         if Is_PD_Page then
+            Physical_Addr := Physical_Addr + PD_Page_Size;
          end if;
       end loop;
 

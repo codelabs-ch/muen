@@ -72,7 +72,7 @@ is
       M : Map_Type;
    begin
       M.Insert_Empty_Region (11000, 15000);
-      M.Insert_Empty_Region (1001, 2000);
+      M.Insert_Empty_Region (1002, 2000);
       M.Insert_Empty_Region (5000, 10000);
       M.Insert_Empty_Region (0,    1000);
       M.Insert_Empty_Region (16000, 30000);
@@ -96,9 +96,9 @@ is
       M : Map_Type;
    begin
       M.Insert_Empty_Region (16000, 30000);
+      M.Insert_Empty_Region (1002, 2000);
       M.Insert_Empty_Region (11000, 15000);
       M.Insert_Empty_Region (5000, 10000);
-      M.Insert_Empty_Region (1001, 2000);
       M.Insert_Empty_Region (0,    1000);
       Create (Output_File, Out_File, "obj/non_overlapping_reversed.txt");
       M.Iterate (Write_Region'Access);
@@ -120,7 +120,7 @@ is
       M : Map_Type;
    begin
       M.Insert_Empty_Region (0,    1000);
-      M.Insert_Empty_Region (1001, 2000);
+      M.Insert_Empty_Region (1002, 2000);
       M.Insert_Empty_Region (5000, 10000);
       M.Insert_Empty_Region (11000, 15000);
       M.Insert_Empty_Region (16000, 30000);

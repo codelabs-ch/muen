@@ -56,6 +56,9 @@ is
          Writable         => True,
          Executable       => True);
 
+      Memory.Set_Table_Addresses (Mem_Layout => Layout);
+      Memory.Update_References (Mem_Layout => Layout);
+
       declare
          use Ada.Streams.Stream_IO;
 

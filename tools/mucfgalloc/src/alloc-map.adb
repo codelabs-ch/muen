@@ -51,11 +51,29 @@ is
    procedure Allocate_Variable
       (Map       : in out Map_Type;
        Size      :        Interfaces.Unsigned_64;
-       Alignment :        Interfaces.Unsigned_64)
+       Alignment :        Interfaces.Unsigned_64 := 1)
    is
-      pragma Unreferenced (Map, Size, Alignment);
+      use Region_List_Package;
+      Curr            : Cursor := First (Map.Data);
+      First_Multiple  : Interfaces.Unsigned_64;
    begin
-      null;
+      while Curr /= No_Element
+      loop
+         First_Multiple :=
+            ((Element (Curr).First_Address + Alignment - 1) /
+             Alignment) * Alignment;
+
+         exit when Element (Curr).Kind = Empty and
+                   First_Multiple + Size - 1 <= Element (Curr).Last_Address;
+         Next (Curr);
+      end loop;
+
+      if Curr = No_Element then
+         raise Out_Of_Memory;
+      end if;
+
+      Reserve (Map, Curr, First_Multiple, First_Multiple + Size - 1);
+
    end Allocate_Variable;
 
    ----------------------------------------------------------------------------

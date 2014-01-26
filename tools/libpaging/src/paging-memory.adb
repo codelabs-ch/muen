@@ -130,35 +130,31 @@ is
 
          if Is_PD_Page then
             Physical_Addr := Physical_Addr + PD_Page_Size;
+         else
+            for PT_Idx in Table_Range range PT_Idx_Start .. PT_Idx_End loop
+               if not PT.Contains
+                 (Map          => Mem_Layout.PTs,
+                  Table_Number => 0,
+                  Entry_Index  => PT_Idx)
+               then
+                  PT.Add_Entry
+                    (Map          => Mem_Layout.PTs,
+                     Table_Number => PD_Idx,
+                     Entry_Index  => PT_Idx,
+                     Table_Entry  => Entries.Create
+                       (Dst_Offset  => PT_Idx,
+                        Dst_Address => Physical_Addr,
+                        Readable    => True,
+                        Writable    => Writable,
+                        Executable  => Executable,
+                        Maps_Page   => True,
+                        Global      => False,
+                        Caching     => Caching));
+               end if;
+
+               Physical_Addr := Physical_Addr + Page_Size;
+            end loop;
          end if;
-      end loop;
-
-      if Is_PD_Page then
-         return;
-      end if;
-
-      for PT_Idx in Table_Range range PT_Idx_Start .. PT_Idx_End loop
-         if not PT.Contains
-           (Map          => Mem_Layout.PTs,
-            Table_Number => 0,
-            Entry_Index  => PT_Idx)
-         then
-            PT.Add_Entry
-              (Map          => Mem_Layout.PTs,
-               Table_Number => 0,
-               Entry_Index  => PT_Idx,
-               Table_Entry  => Entries.Create
-                 (Dst_Offset  => PT_Idx,
-                  Dst_Address => Physical_Addr,
-                  Readable    => True,
-                  Writable    => Writable,
-                  Executable  => Executable,
-                  Maps_Page   => True,
-                  Global      => False,
-                  Caching     => Caching));
-         end if;
-
-         Physical_Addr := Physical_Addr + Page_Size;
       end loop;
    end Add_Memory_Region;
 

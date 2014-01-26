@@ -709,6 +709,12 @@ is
                Prefix => False));
          Templates.Replace
            (Template => Tmpl,
+            Pattern  => "__cpu_store_addr__",
+            Content  => Mutools.Utils.To_Hex
+              (Number => CPU_Store_Addr,
+               Prefix => False));
+         Templates.Replace
+           (Template => Tmpl,
             Pattern  => "__cpu_count__",
             Content  => CPU_Count);
          Templates.Replace
@@ -907,7 +913,7 @@ is
       Max_Minor_Count := Get_Max_Minor_Count (Schedule => Scheduling);
 
       for CPU in 0 .. CPU_Count - 1 loop
-         Buffer    := Buffer & Indent
+         Buffer := Buffer & Indent
            & " " & CPU'Img & " => Major_Frame_Array'("
            & ASCII.LF;
 

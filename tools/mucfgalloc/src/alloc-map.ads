@@ -73,4 +73,10 @@ private
       Data : Region_List_Package.List;
    end record;
 
+   procedure Reserve
+      (Map           : in out Map_Type;
+       Curr          :        Region_List_Package.Cursor;
+       First_Address :        Interfaces.Unsigned_64;
+       Last_Address  :        Interfaces.Unsigned_64);
+
 end Alloc.Map;

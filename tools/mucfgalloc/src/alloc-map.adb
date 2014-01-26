@@ -26,38 +26,6 @@ is
       use Region_List_Package;
       Curr : Cursor := First (Map.Data);
 
-      --  Update the Kind field with 'Allocated'
-      procedure Allocate (Element : in out Region_Type);
-      procedure Allocate (Element : in out Region_Type)
-      is
-      begin
-         Element.Kind := Allocated;
-      end Allocate;
-
-      --  Update the First_Address field of a region with Last_Address + 1
-      procedure Set_First_After_Last (Element : in out Region_Type);
-      procedure Set_First_After_Last (Element : in out Region_Type)
-      is
-      begin
-         Element.First_Address := Last_Address + 1;
-      end Set_First_After_Last;
-
-      --  Update the First_Address field of a region with Last_Address + 1
-      procedure Set_First_Past_Last (Element : in out Region_Type);
-      procedure Set_First_Past_Last (Element : in out Region_Type)
-      is
-      begin
-         Element.First_Address := Last_Address + 1;
-      end Set_First_Past_Last;
-
-      --  Update the First_Address field of a region with First_Address - 1
-      procedure Set_First_To_First (Element : in out Region_Type);
-      procedure Set_First_To_First (Element : in out Region_Type)
-      is
-      begin
-         Element.First_Address := First_Address;
-      end Set_First_To_First;
-
    begin
       while Curr /= No_Element
       loop
@@ -74,72 +42,7 @@ is
          raise Invalid_Fixed_Allocation;
       end if;
 
-      --  Right empty region found, allocate (part of) it.
-      --
-      --  (1) Curr.First_Address = First_Address and
-      --      Curr.Last_Address = Last_Address =>
-      --      Curr.Kind := Allocated;
-      --  (2) Curr.First_Address = First_Address =>
-      --      Curr.First_Address := Last_Address + 1;
-      --      Insert (First_Address, Last_Address, Allocated) before Curr
-      --  (3) Curr.Last_Address = Last_Address =>
-      --      Insert (Curr.First_Address, First_Address - 1, Empty) before Curr
-      --      Curr.First_Address := First_Address;
-      --      Curr.Kind := Allocated;
-      --  (4) Otherwise =>
-      --      Insert (Curr.First_Address, First_Address - 1, Empty) before Curr
-      --      Insert (First_Address, Last_Address, Allocated) before Curr
-      --      Curr.First_Address := Last_Address + 1
-
-      declare
-         Match_First : constant Boolean :=
-            Element (Curr).First_Address = First_Address;
-         Match_Last : constant Boolean :=
-            Element (Curr).Last_Address = Last_Address;
-      begin
-         if Match_First and Match_Last then
-            --  (1)
-            Update_Element (Map.Data, Curr, Allocate'Access);
-         elsif Match_First then
-            --  (2)
-            Update_Element (Map.Data, Curr, Set_First_After_Last'Access);
-            Insert
-               (Container => Map.Data,
-                Before    => Curr,
-                New_Item  => Region_Type'
-                  (First_Address => First_Address,
-                   Last_Address  => Last_Address,
-                   Kind          => Allocated));
-         elsif Match_Last then
-            --  (3)
-            Insert
-               (Container => Map.Data,
-                Before    => Curr,
-                New_Item  => Region_Type'
-                  (First_Address => Element (Curr).First_Address,
-                   Last_Address  => First_Address - 1,
-                   Kind          => Empty));
-            Update_Element (Map.Data, Curr, Set_First_To_First'Access);
-            Update_Element (Map.Data, Curr, Allocate'Access);
-         else
-            --  (4)
-            Insert
-               (Container => Map.Data,
-                Before    => Curr,
-                New_Item  => Region_Type'
-                  (First_Address => Element (Curr).First_Address,
-                   Last_Address  => First_Address - 1,
-                   Kind          => Empty));
-            Insert
-               (Container => Map.Data,
-                Before    => Curr,
-                New_Item  => Region_Type'
-                  (First_Address => First_Address,
-                   Last_Address  => Last_Address,
-                   Kind          => Allocated));
-            Update_Element (Map.Data, Curr, Set_First_Past_Last'Access);
-         end if;
-      end;
+      Reserve (Map, Curr, First_Address, Last_Address);
 
    end Allocate_Fixed;
 
@@ -260,5 +163,116 @@ is
    begin
       Iterate (Map.Data, P'Access);
    end Iterate;
+
+   ----------------------------------------------------------------------------
+
+   procedure Reserve
+      (Map           : in out Map_Type;
+       Curr          :        Region_List_Package.Cursor;
+       First_Address :        Interfaces.Unsigned_64;
+       Last_Address  :        Interfaces.Unsigned_64)
+   is
+      use Region_List_Package;
+
+      Match_First : constant Boolean :=
+         Element (Curr).First_Address = First_Address;
+      Match_Last : constant Boolean :=
+         Element (Curr).Last_Address = Last_Address;
+
+      --  Update the Kind field with 'Allocated'
+      procedure Allocate (Element : in out Region_Type);
+      procedure Allocate (Element : in out Region_Type)
+      is
+      begin
+         Element.Kind := Allocated;
+      end Allocate;
+
+      --  Update the First_Address field of a region with Last_Address + 1
+      procedure Set_First_After_Last (Element : in out Region_Type);
+      procedure Set_First_After_Last (Element : in out Region_Type)
+      is
+      begin
+         Element.First_Address := Last_Address + 1;
+      end Set_First_After_Last;
+
+      --  Update the First_Address field of a region with Last_Address + 1
+      procedure Set_First_Past_Last (Element : in out Region_Type);
+      procedure Set_First_Past_Last (Element : in out Region_Type)
+      is
+      begin
+         Element.First_Address := Last_Address + 1;
+      end Set_First_Past_Last;
+
+      --  Update the First_Address field of a region with First_Address - 1
+      procedure Set_First_To_First (Element : in out Region_Type);
+      procedure Set_First_To_First (Element : in out Region_Type)
+      is
+      begin
+         Element.First_Address := First_Address;
+      end Set_First_To_First;
+
+   begin
+
+      --  Allocate part of a given empty region
+      --
+      --  (1) Curr.First_Address = First_Address and
+      --      Curr.Last_Address = Last_Address =>
+      --      Curr.Kind := Allocated;
+      --  (2) Curr.First_Address = First_Address =>
+      --      Curr.First_Address := Last_Address + 1;
+      --      Insert (First_Address, Last_Address, Allocated) before Curr
+      --  (3) Curr.Last_Address = Last_Address =>
+      --      Insert (Curr.First_Address, First_Address - 1, Empty) before Curr
+      --      Curr.First_Address := First_Address;
+      --      Curr.Kind := Allocated;
+      --  (4) Otherwise =>
+      --      Insert (Curr.First_Address, First_Address - 1, Empty) before Curr
+      --      Insert (First_Address, Last_Address, Allocated) before Curr
+      --      Curr.First_Address := Last_Address + 1
+
+      if Match_First and Match_Last then
+         --  (1)
+         Update_Element (Map.Data, Curr, Allocate'Access);
+      elsif Match_First then
+         --  (2)
+         Update_Element (Map.Data, Curr, Set_First_After_Last'Access);
+         Insert
+            (Container => Map.Data,
+             Before    => Curr,
+             New_Item  => Region_Type'
+               (First_Address => First_Address,
+                Last_Address  => Last_Address,
+                Kind          => Allocated));
+      elsif Match_Last then
+         --  (3)
+         Insert
+            (Container => Map.Data,
+             Before    => Curr,
+             New_Item  => Region_Type'
+               (First_Address => Element (Curr).First_Address,
+                Last_Address  => First_Address - 1,
+                Kind          => Empty));
+         Update_Element (Map.Data, Curr, Set_First_To_First'Access);
+         Update_Element (Map.Data, Curr, Allocate'Access);
+      else
+         --  (4)
+         Insert
+            (Container => Map.Data,
+             Before    => Curr,
+             New_Item  => Region_Type'
+               (First_Address => Element (Curr).First_Address,
+                Last_Address  => First_Address - 1,
+                Kind          => Empty));
+         Insert
+            (Container => Map.Data,
+             Before    => Curr,
+             New_Item  => Region_Type'
+               (First_Address => First_Address,
+                Last_Address  => Last_Address,
+                Kind          => Allocated));
+         Update_Element (Map.Data, Curr, Set_First_Past_Last'Access);
+      end if;
+
+   end Reserve;
 
 end Alloc.Map;

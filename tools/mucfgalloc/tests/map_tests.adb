@@ -242,6 +242,104 @@ is
 
    ----------------------------------------------------------------------------
 
+   procedure Allocate_Variable_Aligned
+   is
+      use Ahven;
+      use Alloc.Map;
+      use Ada.Text_IO;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (100,    1000);
+      M.Allocate_Variable (Size => 400, Alignment => 500);
+      Create (Output_File, Out_File, "obj/alloc_variable_alignment.txt");
+      M.Iterate (Write_Region'Access);
+      Close (Output_File);
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/alloc_variable_alignment.txt",
+                   Filename2 => "obj/alloc_variable_alignment.txt"),
+              Message => "Variable allocation (aligned)");
+   end Allocate_Variable_Aligned;
+
+   ----------------------------------------------------------------------------
+
+   procedure Allocate_Variable_Exact
+   is
+      use Ahven;
+      use Alloc.Map;
+      use Ada.Text_IO;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0,    1000);
+      M.Insert_Empty_Region (1500, 2000);
+      M.Insert_Empty_Region (2500, 3000);
+      M.Insert_Empty_Region (5000, 10000);
+      M.Allocate_Variable (Size => 1500);
+      Create (Output_File, Out_File, "obj/alloc_variable_exact.txt");
+      M.Iterate (Write_Region'Access);
+      Close (Output_File);
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/alloc_variable_exact.txt",
+                   Filename2 => "obj/alloc_variable_exact.txt"),
+              Message => "Variable allocation (exact)");
+   end Allocate_Variable_Exact;
+
+   ----------------------------------------------------------------------------
+
+   procedure Allocate_Variable_OOM
+   is
+      use Ahven;
+      use Alloc.Map;
+      use Ada.Text_IO;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0,    1000);
+      M.Allocate_Variable (Size => 1500);
+      Fail ("Out-of-memory undetected");
+   exception
+      when Alloc.Map.Out_Of_Memory => null;
+   end Allocate_Variable_OOM;
+
+   ----------------------------------------------------------------------------
+
+   procedure Allocate_Variable_OOM_Alignment
+   is
+      use Ahven;
+      use Alloc.Map;
+      use Ada.Text_IO;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (1,    1000);
+      M.Insert_Empty_Region (2001, 3000);
+      M.Insert_Empty_Region (4001, 5000);
+      M.Allocate_Variable (Size => 1000, Alignment => 123);
+      Fail ("Out-of-memory undetected");
+   exception
+      when Alloc.Map.Out_Of_Memory => null;
+   end Allocate_Variable_OOM_Alignment;
+
+   ----------------------------------------------------------------------------
+
+   procedure Allocate_Variable_OOM_Fragmentation
+   is
+      use Ahven;
+      use Alloc.Map;
+      use Ada.Text_IO;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0,    1000);
+      M.Insert_Empty_Region (2000, 3000);
+      M.Insert_Empty_Region (4000, 5000);
+      M.Allocate_Variable (Size => 800);
+      M.Allocate_Variable (Size => 800);
+      M.Allocate_Variable (Size => 800);
+      M.Allocate_Variable (Size => 300);
+      Fail ("Out-of-memory undetected");
+   exception
+      when Alloc.Map.Out_Of_Memory => null;
+   end Allocate_Variable_OOM_Fragmentation;
+
+   ----------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -308,7 +406,22 @@ is
          Name    => "Alloc spanning multiple empty regions");
       T.Add_Test_Routine
         (Routine => Allocate_Fixed_Invalid_Partial_Double'Access,
-         Name    => "Alloc of allocated memory");
+         Name    => "Alloc of already allocated memory");
+      T.Add_Test_Routine
+        (Routine => Allocate_Variable_Aligned'Access,
+         Name    => "Variable allocation (aligned)");
+      T.Add_Test_Routine
+        (Routine => Allocate_Variable_Exact'Access,
+         Name    => "Variable allocation (exact)");
+      T.Add_Test_Routine
+        (Routine => Allocate_Variable_OOM'Access,
+         Name    => "Out-of-memory");
+      T.Add_Test_Routine
+        (Routine => Allocate_Variable_OOM_Fragmentation'Access,
+         Name    => "Fragmentation");
+      T.Add_Test_Routine
+        (Routine => Allocate_Variable_OOM_Alignment'Access,
+         Name    => "Alignment");
    end Initialize;
 
    ----------------------------------------------------------------------------

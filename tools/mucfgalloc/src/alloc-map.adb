@@ -17,6 +17,7 @@
 
 package body Alloc.Map
 is
+
    procedure Allocate_Fixed
       (Map           : in out Map_Type;
        First_Address :        Interfaces.Unsigned_64;
@@ -141,6 +142,18 @@ is
       end;
 
    end Allocate_Fixed;
+
+   ----------------------------------------------------------------------------
+
+   procedure Allocate_Variable
+      (Map       : in out Map_Type;
+       Size      :        Interfaces.Unsigned_64;
+       Alignment :        Interfaces.Unsigned_64)
+   is
+      pragma Unreferenced (Map, Size, Alignment);
+   begin
+      null;
+   end Allocate_Variable;
 
    ----------------------------------------------------------------------------
 

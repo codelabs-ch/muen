@@ -102,4 +102,22 @@ is
    --  Try to allocate a region partially inside an aleady allocated region
    procedure Allocate_Fixed_Invalid_Partial_Double;
 
+   --  Allocate a region that has a special alignment
+   procedure Allocate_Variable_Aligned;
+
+   --  Allocate a region based on size and alignment, such that an empty
+   --  region is used completely
+   procedure Allocate_Variable_Exact;
+
+   --  Try to allocate a region that is too large
+   procedure Allocate_Variable_OOM;
+
+   --  Try to allocate a region which does not fit into empty memory due to
+   --  fragmentation
+   procedure Allocate_Variable_OOM_Fragmentation;
+
+   --  Try to allocate a region which does not fit into empty memory due to
+   --  alginment constraints
+   procedure Allocate_Variable_OOM_Alignment;
+
 end Map_Tests;

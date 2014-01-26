@@ -47,6 +47,13 @@ is
        Last_Address  :        Interfaces.Unsigned_64) with
       Pre => First_Address < Last_Address;
 
+   --  Allocate region using size and alignment
+   procedure Allocate_Variable
+      (Map       : in out Map_Type;
+       Size      :        Interfaces.Unsigned_64;
+       Alignment :        Interfaces.Unsigned_64 := 1) with
+      Pre => 0 < Size and 0 < Alignment;
+
    --  Insert an empty region to memory map
    procedure Iterate
       (Map     : Map_Type;
@@ -54,6 +61,7 @@ is
 
    Overlapping_Empty_Region : exception;
    Invalid_Fixed_Allocation : exception;
+   Out_Of_Memory            : exception;
 
 private
 

@@ -17,6 +17,7 @@
 --
 
 with Ada.Exceptions;
+with Ada.Text_IO.Text_Streams;
 
 with DOM.Core.Nodes;
 with Schema.Dom_Readers;
@@ -80,5 +81,24 @@ is
               & "' - " & Ada.Exceptions.Exception_Message (X => E);
       end;
    end Parse;
+
+   -------------------------------------------------------------------------
+
+   procedure Write
+     (Data : XML_Data_Type;
+      File : String)
+   is
+      use Ada.Text_IO;
+      use Ada.Text_IO.Text_Streams;
+
+      Output_File   : File_Type;
+   begin
+      Create (Output_File, Out_File, File);
+      DOM.Core.Nodes.Write
+         (Stream       => Stream (Output_File),
+          N            => Data.Doc,
+          Pretty_Print => True);
+      Close (Output_File);
+   end Write;
 
 end Muxml;

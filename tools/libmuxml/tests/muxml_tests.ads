@@ -38,4 +38,7 @@ is
    --  Load policy from XML file.
    procedure Load_Policy_Xml;
 
+   --  Load a policy from XML and store it back to XML.
+   procedure Load_And_Store;
+
 end Muxml_Tests;

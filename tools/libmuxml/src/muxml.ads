@@ -33,6 +33,11 @@ is
      (Data : out XML_Data_Type;
       File :     String);
 
+   --  Write the given DOM data structure to an XML file.
+   procedure Write
+     (Data : XML_Data_Type;
+      File : String);
+
    Processing_Error : exception;
 
 private

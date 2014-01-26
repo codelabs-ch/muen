@@ -19,6 +19,7 @@
 with Ada.Exceptions;
 
 with Muxml;
+with Test_Utils;
 
 package body Muxml_Tests
 is
@@ -44,7 +45,26 @@ is
       T.Add_Test_Routine
         (Routine => Load_Policy_Xml'Access,
          Name    => "Load policy from XML");
+      T.Add_Test_Routine
+        (Routine => Load_And_Store'Access,
+         Name    => "Load and store XML");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Load_And_Store
+   is
+      Data : XML_Data_Type;
+   begin
+      Parse (Data => Data,
+             File => "data/load_and_store.xml");
+      Write (Data => Data,
+             File => "obj/load_and_store.xml");
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/load_and_store.xml",
+                   Filename2 => "obj/load_and_store.xml"),
+              Message => "Stored XML differs from loaded one");
+   end Load_And_Store;
 
    -------------------------------------------------------------------------
 

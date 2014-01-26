@@ -39,6 +39,73 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Generate_Multiple_PTs
+   is
+      Layout : Memory.Memory_Layout_Type := Memory.Null_Layout;
+   begin
+      Memory.Set_Address (Mem_Layout => Layout,
+                          Address    => 16#20_0000#);
+
+      --  Entry 0 in PT 0.
+      Memory.Add_Memory_Region
+        (Mem_Layout       => Layout,
+         Physical_Address => 16#0000#,
+         Virtual_Address  => 16#0000#,
+         Size             => 16#1000#,
+         Caching          => WB,
+         Writable         => True,
+         Executable       => False);
+
+      --  Entry 50 in PT 53.
+      Memory.Add_Memory_Region
+        (Mem_Layout       => Layout,
+         Physical_Address => 16#06a8_0000#,
+         Virtual_Address  => 16#06a8_0000#,
+         Size             => 16#1000#,
+         Caching          => WC,
+         Writable         => True,
+         Executable       => True);
+
+      --  Entry 511 in PT 511.
+      Memory.Add_Memory_Region
+        (Mem_Layout       => Layout,
+         Physical_Address => 16#3fff_f000#,
+         Virtual_Address  => 16#3fff_f000#,
+         Size             => 16#1000#,
+         Caching          => UC,
+         Writable         => False,
+         Executable       => True);
+
+      Memory.Set_Table_Addresses (Mem_Layout => Layout);
+      Memory.Update_References (Mem_Layout => Layout);
+
+      declare
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/ia32e_multi_pt",
+                             File     => File);
+
+         Memory.Serialize
+           (Stream         => Stream (File => File),
+            Mem_Layout     => Layout,
+            Serialize_PML4 => IA32e.Serialize'Access,
+            Serialize_PDPT => IA32e.Serialize'Access,
+            Serialize_PD   => IA32e.Serialize'Access,
+            Serialize_PT   => IA32e.Serialize'Access);
+
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/ia32e_multi_pt.ref",
+               Filename2 => "obj/ia32e_multi_pt"),
+              Message   => "IA-32e multiple PTs mismatch");
+   end Generate_Multiple_PTs;
+
+   -------------------------------------------------------------------------
+
    procedure Generate_Paging_Structures
    is
       Layout : Memory.Memory_Layout_Type := Memory.Null_Layout;
@@ -157,6 +224,9 @@ is
       T.Add_Test_Routine
         (Routine => Generate_Paging_Structures'Access,
          Name    => "Paging structure generation");
+      T.Add_Test_Routine
+        (Routine => Generate_Multiple_PTs'Access,
+         Name    => "Multiple PT generation");
    end Initialize;
 
    -------------------------------------------------------------------------

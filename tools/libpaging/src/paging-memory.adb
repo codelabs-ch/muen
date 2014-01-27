@@ -47,128 +47,46 @@ is
       Executable       :        Boolean)
    is
       use type Interfaces.Unsigned_64;
-      use Paging.Tables;
 
-      Is_PDPT_Page : constant Boolean := Size mod PDPT_Page_Size = 0;
-      Is_PD_Page   : constant Boolean := Size mod PD_Page_Size   = 0;
-      Virt_End     : constant Interfaces.Unsigned_64
-        := Virtual_Address + Size - 1;
-
-      PML4_Idx_Start, PML4_Idx_End : Table_Range;
-      PDPT_Idx_Start, PDPT_Idx_End : Table_Range;
-      PD_Idx_Start, PD_Idx_End     : Table_Range;
-      PT_Idx_Start, PT_Idx_End     : Table_Range;
+      Physical_End : constant Interfaces.Unsigned_64
+        := Physical_Address + Size;
 
       Physical_Addr : Interfaces.Unsigned_64 := Physical_Address;
+      Virtual_Addr  : Interfaces.Unsigned_64 := Virtual_Address;
+      Offset        : Interfaces.Unsigned_64 := 0;
+      Page          : Paging_Level;
    begin
-      Get_Indexes (Address    => Virtual_Address,
-                   PML4_Index => PML4_Idx_Start,
-                   PDPT_Index => PDPT_Idx_Start,
-                   PD_Index   => PD_Idx_Start,
-                   PT_Index   => PT_Idx_Start);
-      Get_Indexes (Address    => Virt_End,
-                   PML4_Index => PML4_Idx_End,
-                   PDPT_Index => PDPT_Idx_End,
-                   PD_Index   => PD_Idx_End,
-                   PT_Index   => PT_Idx_End);
-
-      for PML4_Idx in Table_Range range PML4_Idx_Start .. PML4_Idx_End loop
-         if not Tables.PML4.Contains (Table => Mem_Layout.PML4,
-                                      Index => PML4_Idx)
+      while Physical_Addr /= Physical_End loop
+         if Physical_Addr + PDPT_Page_Size <= Physical_End
+           and then Physical_Addr mod PDPT_Page_Size = 0
+           and then Virtual_Addr mod PDPT_Page_Size = 0
          then
-            Tables.PML4.Add_Entry
-              (Table => Mem_Layout.PML4,
-               Index => PML4_Idx,
-               E     => Entries.Create
-                 (Dst_Offset  => PML4_Idx,
-                  Dst_Address => 0,
-                  Readable    => True,
-                  Writable    => True,
-                  Executable  => True,
-                  Maps_Page   => False,
-                  Global      => False,
-                  Caching     => WC));
-         end if;
-      end loop;
-
-      for PDPT_Idx in Table_Range range PDPT_Idx_Start .. PDPT_Idx_End loop
-         if not PDPT.Contains
-           (Map          => Mem_Layout.PDPTs,
-            Table_Number => 0,
-            Entry_Index  => PDPT_Idx)
+            Page := PDPT_Page;
+         elsif Physical_Addr + PD_Page_Size <= Physical_End
+           and then Physical_Addr mod PD_Page_Size = 0
+           and then Virtual_Addr mod PD_Page_Size = 0
          then
-            PDPT.Add_Entry
-              (Map          => Mem_Layout.PDPTs,
-               Table_Number => 0,
-               Entry_Index  => PDPT_Idx,
-               Table_Entry  => Entries.Create
-                 (Dst_Offset  => PDPT_Idx,
-                  Dst_Address => (if Is_PDPT_Page then Physical_Addr else 0),
-                  Readable    => True,
-                  Writable    => not Is_PDPT_Page or Writable,
-                  Executable  => not Is_PDPT_Page or Executable,
-                  Maps_Page   => Is_PDPT_Page,
-                  Global      => False,
-                  Caching     => Caching));
-         end if;
-
-         if Is_PDPT_Page then
-            Physical_Addr := Physical_Addr + PDPT_Page_Size;
-         end if;
-      end loop;
-
-      if Is_PDPT_Page then
-         return;
-      end if;
-
-      for PD_Idx in Table_Range range PD_Idx_Start .. PD_Idx_End loop
-         if not PD.Contains
-           (Map          => Mem_Layout.PDs,
-            Table_Number => 0,
-            Entry_Index  => PD_Idx)
-         then
-            PD.Add_Entry
-              (Map          => Mem_Layout.PDs,
-               Table_Number => 0,
-               Entry_Index  => PD_Idx,
-               Table_Entry  => Entries.Create
-                 (Dst_Offset  => PD_Idx,
-                  Dst_Address => (if Is_PD_Page then Physical_Addr else 0),
-                  Readable    => True,
-                  Writable    => not Is_PD_Page or Writable,
-                  Executable  => not Is_PD_Page or Executable,
-                  Maps_Page   => Is_PDPT_Page,
-                  Global      => False,
-                  Caching     => Caching));
-         end if;
-
-         if Is_PD_Page then
-            Physical_Addr := Physical_Addr + PD_Page_Size;
+            Page := PD_Page;
          else
-            for PT_Idx in Table_Range range PT_Idx_Start .. PT_Idx_End loop
-               if not PT.Contains
-                 (Map          => Mem_Layout.PTs,
-                  Table_Number => 0,
-                  Entry_Index  => PT_Idx)
-               then
-                  PT.Add_Entry
-                    (Map          => Mem_Layout.PTs,
-                     Table_Number => PD_Idx,
-                     Entry_Index  => PT_Idx,
-                     Table_Entry  => Entries.Create
-                       (Dst_Offset  => PT_Idx,
-                        Dst_Address => Physical_Addr,
-                        Readable    => True,
-                        Writable    => Writable,
-                        Executable  => Executable,
-                        Maps_Page   => True,
-                        Global      => False,
-                        Caching     => Caching));
-               end if;
-
-               Physical_Addr := Physical_Addr + Page_Size;
-            end loop;
+            Page := PT_Page;
          end if;
+
+         Map_Page (Mem_Layout       => Mem_Layout,
+                   Level            => Page,
+                   Physical_Address => Physical_Addr,
+                   Virtual_Address  => Virtual_Addr,
+                   Caching          => Caching,
+                   Writable         => Writable,
+                   Executable       => Executable);
+
+         case Page is
+            when PDPT_Page => Offset := PDPT_Page_Size;
+            when PD_Page   => Offset := PD_Page_Size;
+            when PT_Page   => Offset := Page_Size;
+         end case;
+
+         Physical_Addr := Physical_Addr + Offset;
+         Virtual_Addr  := Virtual_Addr + Offset;
       end loop;
    end Add_Memory_Region;
 

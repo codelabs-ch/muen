@@ -49,12 +49,6 @@ is
       PD_Count   : out Natural;
       PT_Count   : out Natural);
 
-   --  Returns True if a PML4 entry with given index exists.
-   function Exists
-     (Mem_Layout : Memory_Layout_Type;
-      PML4_Index : Table_Range)
-      return Boolean;
-
    --  Add memory region with specified attributes to given memory layout.
    procedure Add_Memory_Region
      (Mem_Layout       : in out Memory_Layout_Type;

@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Paging.Entries;
+
 package body Paging.IA32e
 is
 
@@ -275,41 +277,31 @@ is
         (Index  : Table_Range;
          TEntry : Entries.PT_Entry_Type)
       is
+         PAT    : constant PAT_Entry := PAT_Mapping (TEntry.Get_Caching);
+         Result : Interfaces.Unsigned_64;
       begin
-         Raw_Table (Index) := To_Unsigned64 (E => TEntry);
+         Result := Create_Entry
+           (Address       => TEntry.Get_Dst_Address,
+            Writable      => TEntry.Is_Writable,
+            User_Access   => TEntry.Is_Readable,
+            Writethrough  => PAT.PWT,
+            Cache_Disable => PAT.PCD,
+            Exec_Disable  => not TEntry.Is_Executable);
+
+         if PAT.PAT then
+            Result := Result or 2 ** PTE_PAT_Flag;
+         end if;
+
+         if TEntry.Is_Global then
+            Result := Result or 2 ** Global_Flag;
+         end if;
+
+         Raw_Table (Index) := Result;
       end Add_To_Raw_Table;
    begin
       Tables.PT.Iterate (Table   => PT,
                          Process => Add_To_Raw_Table'Access);
       Raw_Table_Type'Write (Stream, Raw_Table);
    end Serialize;
-
-   -------------------------------------------------------------------------
-
-   function To_Unsigned64
-     (E : Entries.PT_Entry_Type)
-      return Interfaces.Unsigned_64
-   is
-      PAT    : constant PAT_Entry := PAT_Mapping (E.Get_Caching);
-      Result : Interfaces.Unsigned_64;
-   begin
-      Result := Create_Entry
-        (Address       => E.Get_Dst_Address,
-         Writable      => E.Is_Writable,
-         User_Access   => E.Is_Readable,
-         Writethrough  => PAT.PWT,
-         Cache_Disable => PAT.PCD,
-         Exec_Disable  => not E.Is_Executable);
-
-      if PAT.PAT then
-         Result := Result or 2 ** PTE_PAT_Flag;
-      end if;
-
-      if E.Is_Global then
-         Result := Result or 2 ** Global_Flag;
-      end if;
-
-      return Result;
-   end To_Unsigned64;
 
 end Paging.IA32e;

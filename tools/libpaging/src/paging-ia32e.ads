@@ -18,7 +18,6 @@
 
 with Ada.Streams;
 
-with Paging.Entries;
 with Paging.Tables;
 
 package Paging.IA32e
@@ -41,11 +40,6 @@ is
    procedure Serialize
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
       PD     : Tables.PD.Page_Table_Type);
-
-   --  Page-table entry, see Intel SDM Vol. 3A, page 4-28.
-   function To_Unsigned64
-     (E : Entries.PT_Entry_Type)
-      return Interfaces.Unsigned_64;
 
    --  A page table comprises 512 64-bit entries (PDEs), see Intel SDM Vol. 3A,
    --  page 4-22.

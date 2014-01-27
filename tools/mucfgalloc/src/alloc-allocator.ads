@@ -21,8 +21,8 @@ package Alloc.Allocator
 is
    --  Write fully allocated configuration to given output directory.
    procedure Write
-     (Output_Dir : String;
-      Policy     : Muxml.XML_Data_Type);
+     (Output_File : String;
+      Policy      : Muxml.XML_Data_Type);
 
    --  Physical memory regions in the config overlapped each other.
    Overlapping_Physical_Memory : exception;

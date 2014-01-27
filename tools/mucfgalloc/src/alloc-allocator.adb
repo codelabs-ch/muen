@@ -27,14 +27,13 @@ is
    Not_Implemented : exception;
 
    procedure Write
-     (Output_Dir : String;
-      Policy     : Muxml.XML_Data_Type)
+     (Output_File : String;
+      Policy      : Muxml.XML_Data_Type)
    is
       Physical_Map           : DOM.Core.Node_List;
       Map                    : Alloc.Map.Map_Type;
       Physical_Address, Size : Interfaces.Unsigned_64;
 
-      pragma Unreferenced (Output_Dir);
       use DOM.Core.Elements;
       use DOM.Core.Nodes;
       use type Interfaces.Unsigned_64;
@@ -57,6 +56,10 @@ is
             (First_Address => Physical_Address,
              Last_Address  => Physical_Address + Size - 1);
       end loop;
+
+      Muxml.Write
+         (File => Output_File,
+          Data => Policy);
 
       raise Not_Implemented;
    exception

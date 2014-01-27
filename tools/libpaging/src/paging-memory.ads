@@ -67,7 +67,7 @@ is
    procedure Update_References (Mem_Layout : in out Memory_Layout_Type);
 
    --  Serialze paging structures of given memory layout. Pagetables are
-   --  processed in decreasing level order (PML4->PDPT->PD->PT) using the
+   --  processed in the order PML4 -> PTs -> PDs -> PDPTs using the
    --  specified serialization procedures.
    procedure Serialize
      (Stream         : not null access Ada.Streams.Root_Stream_Type'Class;

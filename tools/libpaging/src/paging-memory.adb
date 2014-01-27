@@ -309,13 +309,12 @@ is
    begin
       Serialize_PML4 (Stream => Stream,
                       PML4   => Mem_Layout.PML4);
-
-      Tables.PDPT.Iterate (Map     => Mem_Layout.PDPTs,
-                           Process => Handle_PDPT'Access);
-      Tables.PD.Iterate (Map     => Mem_Layout.PDs,
-                         Process => Handle_PD'Access);
       Tables.PT.Iterate (Map     => Mem_Layout.PTs,
                          Process => Handle_PT'Access);
+      Tables.PD.Iterate (Map     => Mem_Layout.PDs,
+                         Process => Handle_PD'Access);
+      Tables.PDPT.Iterate (Map     => Mem_Layout.PDPTs,
+                           Process => Handle_PDPT'Access);
    end Serialize;
 
    -------------------------------------------------------------------------
@@ -393,12 +392,12 @@ is
          Phys_Addr := Phys_Addr + Page_Size;
       end Set_PT_Address;
    begin
-      Tables.PDPT.Update (Map     => Mem_Layout.PDPTs,
-                          Process => Set_PDPT_Address'Access);
-      Tables.PD.Update (Map     => Mem_Layout.PDs,
-                        Process => Set_PD_Address'Access);
       Tables.PT.Update (Map     => Mem_Layout.PTs,
                         Process => Set_PT_Address'Access);
+      Tables.PD.Update (Map     => Mem_Layout.PDs,
+                        Process => Set_PD_Address'Access);
+      Tables.PDPT.Update (Map     => Mem_Layout.PDPTs,
+                          Process => Set_PDPT_Address'Access);
    end Set_Table_Addresses;
 
    -------------------------------------------------------------------------

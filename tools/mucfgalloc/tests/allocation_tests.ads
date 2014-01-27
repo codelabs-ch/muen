@@ -28,4 +28,7 @@ is
    --  Detect overlapping physical memory
    procedure Overlapping_Physical_Memory;
 
+   --  Perform automatic allocation from Format A XML
+   procedure Automatic_Allocation;
+
 end Allocation_Tests;

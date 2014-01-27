@@ -17,11 +17,31 @@
 
 with Muxml;
 with Alloc.Allocator;
+with Test_Utils;
 
 package body Allocation_Tests
 is
    use Ahven;
    use Alloc;
+   use Test_Utils;
+
+   -------------------------------------------------------------------------
+
+   procedure Automatic_Allocation
+   is
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   File => "data/automatic_allocation.in.xml");
+
+      Allocator.Write (Output_File => "obj/automatic_allocation.out.xml",
+                       Policy      => Policy);
+
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/automatic_allocation.ref.xml",
+                   Filename2 => "obj/automatic_allocation.out.xml"),
+              Message => "Automatic allocation");
+   end Automatic_Allocation;
 
    -------------------------------------------------------------------------
 
@@ -32,6 +52,9 @@ is
       T.Add_Test_Routine
         (Routine => Overlapping_Physical_Memory'Access,
          Name    => "Overlap detection");
+      T.Add_Test_Routine
+        (Routine => Automatic_Allocation'Access,
+         Name    => "Automatic allocation");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -39,12 +62,10 @@ is
    procedure Overlapping_Physical_Memory
    is
       Policy : Muxml.XML_Data_Type;
+      pragma Unreferenced (Policy);
    begin
       Muxml.Parse (Data => Policy,
                    File => "data/overlapping.xml");
-
-      Allocator.Write (Output_Dir => "obj",
-                       Policy     => Policy);
    exception
       --  Should raise an exception.
       when Alloc.Allocator.Overlapping_Physical_Memory => null;

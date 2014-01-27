@@ -12,9 +12,10 @@ TOOLS =        \
 	muzpgen
 
 # Implicitly built libraries
-LIBS =       \
-	libmugen \
-	libmulog \
+LIBS =        \
+	libmugen  \
+	libmulog  \
+	libpaging \
 	libtest
 
 # Projects to clean

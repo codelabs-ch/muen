@@ -32,8 +32,6 @@ with Interfaces;
 with Paging.EPT;
 with Paging.IA32e;
 with Paging.Memory;
-with Pt.Paging;
-with Pt.Mappings;
 
 package body Pt.Generator
 is
@@ -58,7 +56,7 @@ is
       Devices      : DOM.Core.Node_List;
       Pml4_Address : Interfaces.Unsigned_64;
       Filename     : String;
-      PT_Type      : Mappings.Paging_Type := Mappings.IA32e);
+      PT_Type      : Paging.Paging_Mode_Type := Paging.IA32e_Mode);
 
    --  Write memory layout of with specified paging mode to file specified by
    --  name.
@@ -126,7 +124,7 @@ is
                Devices      => Devices,
                Pml4_Address => PML4_Addr,
                Filename     => Output_Dir & "/" & Filename,
-               PT_Type      => Mappings.IA32e);
+               PT_Type      => Paging.IA32e_Mode);
          end;
       end loop;
    end Write_Kernel_Pagetable;
@@ -139,11 +137,9 @@ is
       Devices      : DOM.Core.Node_List;
       Pml4_Address : Interfaces.Unsigned_64;
       Filename     : String;
-      PT_Type      : Mappings.Paging_Type := Mappings.IA32e)
+      PT_Type      : Paging.Paging_Mode_Type := Paging.IA32e_Mode)
    is
-      Vmem : Mappings.Memory_Layout_Type
-        (PT_Type      => PT_Type,
-         PML4_Address => Pml4_Address);
+      Vmem : Paging.Memory.Memory_Layout_Type;
 
       --  Add mapping of given logical to physical memory.
       procedure Add_Mapping
@@ -187,8 +183,8 @@ is
                   (Elem => Physical,
                    Name => "caching"));
       begin
-         Mappings.Add_Memory_Region
-           (Mem_Layout       =>  Vmem,
+         Paging.Memory.Add_Memory_Region
+           (Mem_Layout       => Vmem,
             Physical_Address => PMA,
             Virtual_Address  => VMA,
             Size             => Size,
@@ -197,6 +193,9 @@ is
             Executable       => Exec);
       end Add_Mapping;
    begin
+      Paging.Memory.Set_Address (Mem_Layout => Vmem,
+                                 Address    => Pml4_Address);
+
       for I in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
          declare
             Logical_Mem   : constant DOM.Core.Node
@@ -223,7 +222,7 @@ is
             Mulog.Log (Msg => "Adding region " & Logical_Name
                        & "[" & Physical_Name & "]");
             Add_Mapping (Physical => Physical_Mem,
-                               Logical  => Logical_Mem);
+                         Logical  => Logical_Mem);
          end;
       end loop;
 
@@ -274,8 +273,12 @@ is
          end;
       end loop;
 
-      Mappings.Write_Pagetables (Mem_Layout => Vmem,
-                                 Filename   => Filename);
+      Paging.Memory.Set_Table_Addresses (Mem_Layout => Vmem);
+      Paging.Memory.Update_References (Mem_Layout => Vmem);
+
+      Write_To_File (Mem_Layout => Vmem,
+                     PT_Type    => PT_Type,
+                     Filename   => Filename);
    end Write_Pagetable;
 
    -------------------------------------------------------------------------
@@ -321,19 +324,19 @@ is
                       Index => I),
                  XPath => "devices/device[count(memory)>0]");
 
-            Paging : Mappings.Paging_Type;
+            Paging_Mode : Paging.Paging_Mode_Type;
          begin
             if Muxml.Utils.Get_Element_Value
               (Doc   => DOM.Core.Nodes.Item (List  => Subjects,
                                              Index => I),
                XPath => "vcpu/vmx/controls/proc2/EnableEPT") = "1"
             then
-               Paging := Mappings.EPT;
+               Paging_Mode := Paging.EPT_Mode;
             else
-               Paging := Mappings.IA32e;
+               Paging_Mode := Paging.IA32e_Mode;
             end if;
 
-            Mulog.Log (Msg => "Writing " & Paging'Img & " pagetable of "
+            Mulog.Log (Msg => "Writing " & Paging_Mode'Img & " pagetable of "
                        & Name & " to '" & Output_Dir & "/" & Filename & "'");
             Write_Pagetable
               (Policy       => Policy,
@@ -341,7 +344,7 @@ is
                Devices      => Devices,
                Pml4_Address => PML4_Addr,
                Filename     => Output_Dir & "/" & Filename,
-               PT_Type      => Paging);
+               PT_Type      => Paging_Mode);
          end;
       end loop;
    end Write_Subject_Pagetable;

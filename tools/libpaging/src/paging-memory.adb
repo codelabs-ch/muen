@@ -404,21 +404,32 @@ is
 
    procedure Update_References (Mem_Layout : in out Memory_Layout_Type)
    is
+      use type Interfaces.Unsigned_64;
 
-      --  Adjust destination address of given PML4 entry.
+      Phys_Addr : Interfaces.Unsigned_64 := Tables.PML4.Get_Physical_Address
+        (Table => Mem_Layout.PML4) + Page_Size;
+
+      --  Adjust destination address of references to PDPTs.
       procedure Adjust_PML4
         (Index  :        Table_Range;
          TEntry : in out Entries.PML4_Entry_Type);
 
-      --  Adjust destination address of each PDPT entry.
+      --  Set physical address of each PDPT and adjust destination address of
+      --  each PDPT entry that references a PD.
       procedure Adjust_PDPT
         (Table_Number :        Table_Range;
          Table        : in out Tables.PDPT.Page_Table_Type);
 
-      --  Adjust destination address of each PD entry.
+      --  Set physical address of each PD and adjust destination address of
+      --  each PD entry that references a PT.
       procedure Adjust_PD
         (Table_Number :        Table_Range;
          Table        : in out Tables.PD.Page_Table_Type);
+
+      --  Set physical address of each PT.
+      procedure Adjust_PT
+        (Table_Number :        Table_Range;
+         Table        : in out Tables.PT.Page_Table_Type);
 
       ----------------------------------------------------------------------
 
@@ -458,6 +469,9 @@ is
       begin
          Tables.PD.Update (Table   => Table,
                            Process => Adjust_PD_Entry'Access);
+         Tables.PD.Set_Physical_Address (Table   => Table,
+                                         Address => Phys_Addr);
+         Phys_Addr := Phys_Addr + Page_Size;
       end Adjust_PD;
 
       ----------------------------------------------------------------------
@@ -498,6 +512,9 @@ is
       begin
          Tables.PDPT.Update (Table   => Table,
                              Process => Adjust_PDPT_Entry'Access);
+         Tables.PDPT.Set_Physical_Address (Table   => Table,
+                                           Address => Phys_Addr);
+         Phys_Addr := Phys_Addr + Page_Size;
       end Adjust_PDPT;
 
       ----------------------------------------------------------------------
@@ -516,13 +533,28 @@ is
       begin
          TEntry.Set_Dst_Address (Address => Address);
       end Adjust_PML4;
+
+      ----------------------------------------------------------------------
+
+      procedure Adjust_PT
+        (Table_Number :        Table_Range;
+         Table        : in out Tables.PT.Page_Table_Type)
+      is
+         pragma Unreferenced (Table_Number);
+      begin
+         Tables.PT.Set_Physical_Address (Table   => Table,
+                                         Address => Phys_Addr);
+         Phys_Addr := Phys_Addr + Page_Size;
+      end Adjust_PT;
    begin
-      Tables.PML4.Update (Table   => Mem_Layout.PML4,
-                          Process => Adjust_PML4'Access);
-      Tables.PDPT.Update (Map     => Mem_Layout.PDPTs,
-                          Process => Adjust_PDPT'Access);
+      Tables.PT.Update (Map     => Mem_Layout.PTs,
+                        Process => Adjust_PT'Access);
       Tables.PD.Update (Map     => Mem_Layout.PDs,
                         Process => Adjust_PD'Access);
+      Tables.PDPT.Update (Map     => Mem_Layout.PDPTs,
+                          Process => Adjust_PDPT'Access);
+      Tables.PML4.Update (Table   => Mem_Layout.PML4,
+                          Process => Adjust_PML4'Access);
    end Update_References;
 
 end Paging.Memory;

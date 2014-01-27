@@ -19,10 +19,7 @@
 with Ahven.Text_Runner;
 with Ahven.Framework;
 
-with Paging_Tests;
-with EPT_Paging_Tests;
 with Generator_Tests;
-with Mappings_Tests;
 
 procedure Test_Runner
 is
@@ -32,13 +29,7 @@ is
      (Suite_Name => "Muptgen tests");
 begin
    Add_Test (Suite => S.all,
-             T     => new Paging_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new EPT_Paging_Tests.Testcase);
-   Add_Test (Suite => S.all,
              T     => new Generator_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Mappings_Tests.Testcase);
 
    Ahven.Text_Runner.Run (Suite => S);
    Release_Suite (T => S);

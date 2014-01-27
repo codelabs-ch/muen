@@ -26,9 +26,6 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
-   --  Test conversion of PD entry to unsigned 64 value.
-   procedure PDE_To_Unsigned64;
-
    --  Test conversion of PT entry to unsigned 64 value.
    procedure PTE_To_Unsigned64;
 

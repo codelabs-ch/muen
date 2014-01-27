@@ -253,9 +253,6 @@ is
    begin
       T.Set_Name (Name => "IA-32e paging tests");
       T.Add_Test_Routine
-        (Routine => PDPTE_To_Unsigned64'Access,
-         Name    => "PDPTE to unsigned 64");
-      T.Add_Test_Routine
         (Routine => PDE_To_Unsigned64'Access,
          Name    => "PD to unsigned 64");
       T.Add_Test_Routine
@@ -380,25 +377,6 @@ is
                Filename2 => "obj/ia32e_pdpt"),
               Message   => "IA-32e PDP table mismatch");
    end PDPT_Serialization;
-
-   -------------------------------------------------------------------------
-
-   procedure PDPTE_To_Unsigned64
-   is
-      Ref   : constant Interfaces.Unsigned_64  := 16#8000002b3c00400b#;
-      PDPTE : constant Entries.PDPT_Entry_Type := Entries.Create
-        (Dst_Offset  => 0,
-         Dst_Address => 16#2b3c004000#,
-         Readable    => False,
-         Writable    => True,
-         Executable  => False,
-         Maps_Page   => False,
-         Global      => False,
-         Caching     => WC);
-   begin
-      Assert (Condition => To_Unsigned64 (E => PDPTE) = Ref,
-              Message   => "PDPT entry unsigned 64 value mismatch");
-   end PDPTE_To_Unsigned64;
 
    -------------------------------------------------------------------------
 

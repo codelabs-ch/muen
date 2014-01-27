@@ -199,7 +199,14 @@ is
          TEntry : Entries.PDPT_Entry_Type)
       is
       begin
-         Raw_Table (Index) := To_Unsigned64 (E => TEntry);
+         Raw_Table (Index) := Create_Dir_Entry
+           (Address      => TEntry.Get_Dst_Address,
+            Writable     => TEntry.Is_Writable,
+            User_Access  => TEntry.Is_Readable,
+            Map_Page     => TEntry.Maps_Page,
+            Global       => TEntry.Is_Global,
+            Caching      => TEntry.Get_Caching,
+            Exec_Disable => not TEntry.Is_Executable);
       end Add_To_Raw_Table;
    begin
       Tables.PDPT.Iterate (Table   => PDPT,
@@ -274,23 +281,6 @@ is
 
    function To_Unsigned64
      (E : Entries.PD_Entry_Type)
-      return Interfaces.Unsigned_64
-   is
-   begin
-      return Create_Dir_Entry
-        (Address      => E.Get_Dst_Address,
-         Writable     => E.Is_Writable,
-         User_Access  => E.Is_Readable,
-         Map_Page     => E.Maps_Page,
-         Global       => E.Is_Global,
-         Caching      => E.Get_Caching,
-         Exec_Disable => not E.Is_Executable);
-   end To_Unsigned64;
-
-   -------------------------------------------------------------------------
-
-   function To_Unsigned64
-     (E : Entries.PDPT_Entry_Type)
       return Interfaces.Unsigned_64
    is
    begin

@@ -30,11 +30,6 @@ is
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
       PML4   : Tables.PML4.Page_Table_Type);
 
-   --  Page directory pointer table entry, see Intel SDM Vol. 3A, page 4-28.
-   function To_Unsigned64
-     (E : Entries.PDPT_Entry_Type)
-      return Interfaces.Unsigned_64;
-
    --  A page directory pointer table comprises 512 64-bit entries (PDPTEs),
    --  see Intel SDM Vol. 3A, page 4-22.
    procedure Serialize

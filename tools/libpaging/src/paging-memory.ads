@@ -59,9 +59,6 @@ is
       Writable         :        Boolean;
       Executable       :        Boolean);
 
-   --  Calculate physical addresses of pagetables.
-   procedure Set_Table_Addresses (Mem_Layout : in out Memory_Layout_Type);
-
    --  Set physical addresses of all paging structures and update destination
    --  addresses of table entries referencing other paging structures.
    procedure Update_References (Mem_Layout : in out Memory_Layout_Type);

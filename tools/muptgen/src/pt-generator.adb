@@ -273,7 +273,6 @@ is
          end;
       end loop;
 
-      Paging.Memory.Set_Table_Addresses (Mem_Layout => Vmem);
       Paging.Memory.Update_References (Mem_Layout => Vmem);
 
       Write_To_File (Mem_Layout => Vmem,

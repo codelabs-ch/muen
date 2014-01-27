@@ -184,12 +184,12 @@ is
 
       if not PDPT.Contains
         (Map          => Mem_Layout.PDPTs,
-         Table_Number => 0,
+         Table_Number => PML4_Idx,
          Entry_Index  => PDPT_Idx)
       then
          PDPT.Add_Entry
            (Map          => Mem_Layout.PDPTs,
-            Table_Number => 0,
+            Table_Number => PML4_Idx,
             Entry_Index  => PDPT_Idx,
             Table_Entry  => Entries.Create
               (Dst_Offset  => PDPT_Idx,
@@ -208,12 +208,12 @@ is
 
       if not PD.Contains
         (Map          => Mem_Layout.PDs,
-         Table_Number => 0,
+         Table_Number => PDPT_Idx,
          Entry_Index  => PD_Idx)
       then
          PD.Add_Entry
            (Map          => Mem_Layout.PDs,
-            Table_Number => 0,
+            Table_Number => PDPT_Idx,
             Entry_Index  => PD_Idx,
             Table_Entry  => Entries.Create
               (Dst_Offset  => PD_Idx,

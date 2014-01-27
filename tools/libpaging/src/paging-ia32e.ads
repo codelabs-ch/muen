@@ -24,11 +24,6 @@ with Paging.Tables;
 package Paging.IA32e
 is
 
-   --  Page Map Level 4 entry, see Intel SDM Vol. 3A, page 4-28.
-   function To_Unsigned64
-     (E : Entries.PML4_Entry_Type)
-      return Interfaces.Unsigned_64;
-
    --  A Page Map Level 4 table comprises 512 64-bit entries (PML4Es), see
    --  Intel SDM Vol. 3A, page 4-22.
    procedure Serialize

@@ -226,8 +226,15 @@ is
         (Index  : Table_Range;
          TEntry : Entries.PML4_Entry_Type)
       is
+         PAT : constant PAT_Entry := PAT_Mapping (TEntry.Get_Caching);
       begin
-         Raw_Table (Index) := To_Unsigned64 (E => TEntry);
+         Raw_Table (Index) := Create_Entry
+           (Address       => TEntry.Get_Dst_Address,
+            Writable      => TEntry.Is_Writable,
+            User_Access   => TEntry.Is_Readable,
+            Writethrough  => PAT.PWT,
+            Cache_Disable => PAT.PCD,
+            Exec_Disable  => not TEntry.Is_Executable);
       end Add_To_Raw_Table;
    begin
       Tables.PML4.Iterate (Table   => PML4,
@@ -262,23 +269,6 @@ is
                          Process => Add_To_Raw_Table'Access);
       Raw_Table_Type'Write (Stream, Raw_Table);
    end Serialize;
-
-   -------------------------------------------------------------------------
-
-   function To_Unsigned64
-     (E : Entries.PML4_Entry_Type)
-      return Interfaces.Unsigned_64
-   is
-      PAT : constant PAT_Entry := PAT_Mapping (E.Get_Caching);
-   begin
-      return Create_Entry
-        (Address       => E.Get_Dst_Address,
-         Writable      => E.Is_Writable,
-         User_Access   => E.Is_Readable,
-         Writethrough  => PAT.PWT,
-         Cache_Disable => PAT.PCD,
-         Exec_Disable  => not E.Is_Executable);
-   end To_Unsigned64;
 
    -------------------------------------------------------------------------
 

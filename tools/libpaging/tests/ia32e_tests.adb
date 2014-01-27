@@ -253,9 +253,6 @@ is
    begin
       T.Set_Name (Name => "IA-32e paging tests");
       T.Add_Test_Routine
-        (Routine => PML4E_To_Unsigned64'Access,
-         Name    => "PML4E to unsigned 64");
-      T.Add_Test_Routine
         (Routine => PDPTE_To_Unsigned64'Access,
          Name    => "PDPTE to unsigned 64");
       T.Add_Test_Routine
@@ -441,25 +438,6 @@ is
                Filename2 => "obj/ia32e_pml4"),
               Message   => "IA-32e PML4 table mismatch");
    end PML4_Serialization;
-
-   -------------------------------------------------------------------------
-
-   procedure PML4E_To_Unsigned64
-   is
-      Ref   : constant Interfaces.Unsigned_64  := 16#80000000001f100b#;
-      PML4E : constant Entries.PML4_Entry_Type := Entries.Create
-        (Dst_Offset  => 0,
-         Dst_Address => 16#1f1000#,
-         Readable    => False,
-         Writable    => True,
-         Executable  => False,
-         Maps_Page   => False,
-         Global      => True,
-         Caching     => WC);
-   begin
-      Assert (Condition => To_Unsigned64 (E => PML4E) = Ref,
-              Message   => "PML4 entry unsigned 64 value mismatch");
-   end PML4E_To_Unsigned64;
 
    -------------------------------------------------------------------------
 

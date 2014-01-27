@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Streams.Stream_IO;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
@@ -23,9 +25,13 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Files;
 
 with Interfaces;
 
+with Paging.EPT;
+with Paging.IA32e;
+with Paging.Memory;
 with Pt.Paging;
 with Pt.Mappings;
 
@@ -53,6 +59,13 @@ is
       Pml4_Address : Interfaces.Unsigned_64;
       Filename     : String;
       PT_Type      : Mappings.Paging_Type := Mappings.IA32e);
+
+   --  Write memory layout of with specified paging mode to file specified by
+   --  name.
+   procedure Write_To_File
+     (Mem_Layout : Paging.Memory.Memory_Layout_Type;
+      PT_Type    : Paging.Paging_Mode_Type;
+      Filename   : String);
 
    -------------------------------------------------------------------------
 
@@ -332,5 +345,41 @@ is
          end;
       end loop;
    end Write_Subject_Pagetable;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_To_File
+     (Mem_Layout : Paging.Memory.Memory_Layout_Type;
+      PT_Type    : Paging.Paging_Mode_Type;
+      Filename   : String)
+   is
+      use Ada.Streams.Stream_IO;
+
+      File : File_Type;
+   begin
+      Mutools.Files.Open (Filename => Filename,
+                          File     => File);
+
+      case PT_Type is
+         when Paging.IA32e_Mode =>
+            Paging.Memory.Serialize
+              (Stream         => Stream (File),
+               Mem_Layout     => Mem_Layout,
+               Serialize_PML4 => Paging.IA32e.Serialize'Access,
+               Serialize_PDPT => Paging.IA32e.Serialize'Access,
+               Serialize_PD   => Paging.IA32e.Serialize'Access,
+               Serialize_PT   => Paging.IA32e.Serialize'Access);
+         when Paging.EPT_Mode =>
+            Paging.Memory.Serialize
+              (Stream         => Stream (File),
+               Mem_Layout     => Mem_Layout,
+               Serialize_PML4 => Paging.EPT.Serialize'Access,
+               Serialize_PDPT => Paging.EPT.Serialize'Access,
+               Serialize_PD   => Paging.EPT.Serialize'Access,
+               Serialize_PT   => Paging.EPT.Serialize'Access);
+      end case;
+
+      Close (File => File);
+   end Write_To_File;
 
 end Pt.Generator;

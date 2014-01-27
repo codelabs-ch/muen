@@ -21,6 +21,20 @@ with Paging.Entries;
 package body Paging.Memory
 is
 
+   --  Paging structure levels, that can map a page frame.
+   type Paging_Level is (PDPT_Page, PD_Page, PT_Page);
+
+   --  Map page at specified paging level by creating all necessary paging
+   --  structure entries.
+   procedure Map_Page
+     (Mem_Layout       : in out Memory_Layout_Type;
+      Level            :        Paging_Level;
+      Physical_Address :        Interfaces.Unsigned_64;
+      Virtual_Address  :        Interfaces.Unsigned_64;
+      Caching          :        Caching_Type;
+      Writable         :        Boolean;
+      Executable       :        Boolean);
+
    ----------------------------------------------------------------------
 
    procedure Add_Memory_Region
@@ -204,6 +218,120 @@ is
       PD_Count   := Tables.PD.Length (Map => Mem_Layout.PDs);
       PT_Count   := Tables.PT.Length (Map => Mem_Layout.PTs);
    end Get_Table_Count;
+
+   -------------------------------------------------------------------------
+
+   procedure Map_Page
+     (Mem_Layout       : in out Memory_Layout_Type;
+      Level            :        Paging_Level;
+      Physical_Address :        Interfaces.Unsigned_64;
+      Virtual_Address  :        Interfaces.Unsigned_64;
+      Caching          :        Caching_Type;
+      Writable         :        Boolean;
+      Executable       :        Boolean)
+   is
+      use Paging.Tables;
+
+      Is_PDPT_Page : constant Boolean := Level = PDPT_Page;
+      Is_PD_Page   : constant Boolean := Level = PD_Page;
+
+      PML4_Idx : Table_Range;
+      PDPT_Idx : Table_Range;
+      PD_Idx   : Table_Range;
+      PT_Idx   : Table_Range;
+   begin
+      Get_Indexes (Address    => Virtual_Address,
+                   PML4_Index => PML4_Idx,
+                   PDPT_Index => PDPT_Idx,
+                   PD_Index   => PD_Idx,
+                   PT_Index   => PT_Idx);
+
+      if not Tables.PML4.Contains
+        (Table => Mem_Layout.PML4,
+         Index => PML4_Idx)
+      then
+         Tables.PML4.Add_Entry
+           (Table => Mem_Layout.PML4,
+            Index => PML4_Idx,
+            E     => Entries.Create
+              (Dst_Offset  => PML4_Idx,
+               Dst_Address => 0,
+               Readable    => True,
+               Writable    => True,
+               Executable  => True,
+               Maps_Page   => False,
+               Global      => False,
+               Caching     => WC));
+      end if;
+
+      if not PDPT.Contains
+        (Map          => Mem_Layout.PDPTs,
+         Table_Number => 0,
+         Entry_Index  => PDPT_Idx)
+      then
+         PDPT.Add_Entry
+           (Map          => Mem_Layout.PDPTs,
+            Table_Number => 0,
+            Entry_Index  => PDPT_Idx,
+            Table_Entry  => Entries.Create
+              (Dst_Offset  => PDPT_Idx,
+               Dst_Address => (if Is_PDPT_Page then Physical_Address else 0),
+               Readable    => True,
+               Writable    => not Is_PDPT_Page or Writable,
+               Executable  => not Is_PDPT_Page or Executable,
+               Maps_Page   => Is_PDPT_Page,
+               Global      => False,
+               Caching     => Caching));
+      end if;
+
+      if Is_PDPT_Page then
+         return;
+      end if;
+
+      if not PD.Contains
+        (Map          => Mem_Layout.PDs,
+         Table_Number => 0,
+         Entry_Index  => PD_Idx)
+      then
+         PD.Add_Entry
+           (Map          => Mem_Layout.PDs,
+            Table_Number => 0,
+            Entry_Index  => PD_Idx,
+            Table_Entry  => Entries.Create
+              (Dst_Offset  => PD_Idx,
+               Dst_Address => (if Is_PD_Page then Physical_Address else 0),
+               Readable    => True,
+               Writable    => not Is_PD_Page or Writable,
+               Executable  => not Is_PD_Page or Executable,
+               Maps_Page   => Is_PD_Page,
+               Global      => False,
+               Caching     => Caching));
+      end if;
+
+      if Is_PD_Page then
+         return;
+      end if;
+
+      if not PT.Contains
+        (Map          => Mem_Layout.PTs,
+         Table_Number => PD_Idx,
+         Entry_Index  => PT_Idx)
+      then
+         PT.Add_Entry
+           (Map          => Mem_Layout.PTs,
+            Table_Number => PD_Idx,
+            Entry_Index  => PT_Idx,
+            Table_Entry  => Entries.Create
+              (Dst_Offset  => PT_Idx,
+               Dst_Address => Physical_Address,
+               Readable    => True,
+               Writable    => Writable,
+               Executable  => Executable,
+               Maps_Page   => True,
+               Global      => False,
+               Caching     => Caching));
+      end if;
+   end Map_Page;
 
    -------------------------------------------------------------------------
 

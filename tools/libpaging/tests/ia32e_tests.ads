@@ -56,4 +56,7 @@ is
    --  Test IA-32e Multi-PT generation.
    procedure Generate_Multiple_PTs;
 
+   --  Test IA-32e multi paging structure generation.
+   procedure Generate_Multiple_Structures;
+
 end IA32e_Tests;

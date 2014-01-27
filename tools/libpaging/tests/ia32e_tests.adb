@@ -106,6 +106,61 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Generate_Multiple_Structures
+   is
+      Layout : Memory.Memory_Layout_Type := Memory.Null_Layout;
+   begin
+      Memory.Set_Address (Mem_Layout => Layout,
+                          Address    => 16#1_0000#);
+
+      Memory.Add_Memory_Region
+        (Mem_Layout       => Layout,
+         Physical_Address => 16#001f_f000#,
+         Virtual_Address  => 16#001f_f000#,
+         Size             => 16#0040_2000#,
+         Caching          => WB,
+         Writable         => True,
+         Executable       => False);
+
+      Memory.Add_Memory_Region
+        (Mem_Layout       => Layout,
+         Physical_Address => 16#4000_0000#,
+         Virtual_Address  => 16#4000_0000#,
+         Size             => 16#4000_0000#,
+         Caching          => UC,
+         Writable         => False,
+         Executable       => True);
+
+      Memory.Set_Table_Addresses (Mem_Layout => Layout);
+      Memory.Update_References (Mem_Layout => Layout);
+
+      declare
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/ia32e_multi",
+                             File     => File);
+
+         Memory.Serialize
+           (Stream         => Stream (File => File),
+            Mem_Layout     => Layout,
+            Serialize_PML4 => IA32e.Serialize'Access,
+            Serialize_PDPT => IA32e.Serialize'Access,
+            Serialize_PD   => IA32e.Serialize'Access,
+            Serialize_PT   => IA32e.Serialize'Access);
+
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/ia32e_multi.ref",
+               Filename2 => "obj/ia32e_multi"),
+              Message   => "IA-32e multiple paging structures mismatch");
+   end Generate_Multiple_Structures;
+
+   -------------------------------------------------------------------------
+
    procedure Generate_Paging_Structures
    is
       Layout : Memory.Memory_Layout_Type := Memory.Null_Layout;
@@ -227,6 +282,9 @@ is
       T.Add_Test_Routine
         (Routine => Generate_Multiple_PTs'Access,
          Name    => "Multiple PT generation");
+      T.Add_Test_Routine
+        (Routine => Generate_Multiple_Structures'Access,
+         Name    => "Multiple Paging structure generation");
    end Initialize;
 
    -------------------------------------------------------------------------

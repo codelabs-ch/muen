@@ -131,8 +131,17 @@ is
       Table_Number : Table_Range)
       return Interfaces.Unsigned_64
    is
+      use type Tables_Map_Package.Cursor;
+
+      Pos : constant Tables_Map_Package.Cursor := Map.Tables.Find
+        (Key => Table_Number);
    begin
-      return Map.Tables.Element (Key => Table_Number).Address;
+      if Pos = Tables_Map_Package.No_Element then
+         raise Missing_Table with "Table with number" & Table_Number'Img
+           & " not in map";
+      end if;
+
+      return Tables_Map_Package.Element (Position => Pos).Address;
    end Get_Table_Address;
 
    -------------------------------------------------------------------------

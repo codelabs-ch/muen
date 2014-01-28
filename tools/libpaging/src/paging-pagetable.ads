@@ -126,6 +126,7 @@ is
          Table        : Page_Table_Type));
 
    Duplicate_Entry : exception;
+   Missing_Table   : exception;
 
 private
 

@@ -684,10 +684,6 @@
 				<memory logical="text" virtualAddress="16#0000#" writable="true" executable="true">
 					<physical name="vt|bin"/>
 				</memory>
-
-				<memory logical="text" virtualAddress="16#0000#" writable="true" executable="true">
-					<physical name="vt|bin"/>
-				</memory>
 				<memory logical="linux_output" virtualAddress="16#0004_0000#" writable="false" executable="false">
 					<physical name="linux_output"/>
 				</memory>

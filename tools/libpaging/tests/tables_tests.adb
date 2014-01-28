@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Exceptions;
+
 with Paging.Entries;
 with Paging.Tables;
 
@@ -25,6 +27,37 @@ is
    use Ahven;
    use Paging;
    use Paging.Tables;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Duplicate_Table_Entry
+   is
+      E : constant Entries.PT_Entry_Type := Entries.Create
+        (Dst_Offset  => 0,
+         Dst_Address => 0,
+         Readable    => True,
+         Writable    => False,
+         Executable  => True,
+         Maps_Page   => True,
+         Global      => True,
+         Caching     => Paging.WB);
+
+      Table : PT.Page_Table_Type := PT.Null_Table;
+   begin
+      PT.Add_Entry (Table => Table,
+                    Index => 0,
+                    E     => E);
+      PT.Add_Entry (Table => Table,
+                    Index => 0,
+                    E     => E);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : PT.Duplicate_Entry =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Table entry with index 0 already exists",
+                 Message   => "Exception mismatch");
+   end Add_Duplicate_Table_Entry;
 
    -------------------------------------------------------------------------
 
@@ -63,6 +96,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_Table_Entry'Access,
          Name    => "Add entry to table");
+      T.Add_Test_Routine
+        (Routine => Add_Duplicate_Table_Entry'Access,
+         Name    => "Add duplicate entry to table");
       T.Add_Test_Routine
         (Routine => Iteration'Access,
          Name    => "Table iteration");

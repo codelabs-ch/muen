@@ -29,6 +29,9 @@ is
    --  Add entry to table.
    procedure Add_Table_Entry;
 
+   --  Try to add duplicate entry to table.
+   procedure Add_Duplicate_Table_Entry;
+
    --  Table iteration.
    procedure Iteration;
 

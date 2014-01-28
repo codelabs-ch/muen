@@ -37,6 +37,26 @@ is
    use Paging.IA32e;
    use type Interfaces.Unsigned_64;
 
+   use Ada.Streams;
+
+   --  Stream type that serializes to memory buffer.
+   type Memory_Stream_Type is new Root_Stream_Type with record
+      Buffer    : Stream_Element_Array (1 .. 1) := (others => 0);
+      Write_Idx : Stream_Element_Offset         := 1;
+      Read_Idx  : Stream_Element_Offset         := 1;
+   end record;
+
+   overriding
+   procedure Read
+     (Stream : in out Memory_Stream_Type;
+      Item   :    out Ada.Streams.Stream_Element_Array;
+      Last   :    out Ada.Streams.Stream_Element_Offset) is null;
+
+   overriding
+   procedure Write
+     (Stream : in out Memory_Stream_Type;
+      Item   :        Ada.Streams.Stream_Element_Array);
+
    -------------------------------------------------------------------------
 
    procedure Generate_Multiple_PTs
@@ -262,6 +282,9 @@ is
         (Routine => PT_Serialization'Access,
          Name    => "PT serialization");
       T.Add_Test_Routine
+        (Routine => Serialize_Empty_Layout'Access,
+         Name    => "Empty layout serialization");
+      T.Add_Test_Routine
         (Routine => Generate_Paging_Structures'Access,
          Name    => "Paging structure generation");
       T.Add_Test_Routine
@@ -438,5 +461,44 @@ is
                Filename2 => "obj/ia32e_pt"),
               Message   => "IA-32e page table mismatch");
    end PT_Serialization;
+
+   -------------------------------------------------------------------------
+
+   procedure Serialize_Empty_Layout
+   is
+      Mem_Stream : aliased Memory_Stream_Type;
+   begin
+      Memory.Serialize
+        (Stream         => Mem_Stream'Access,
+         Mem_Layout     => Memory.Null_Layout,
+         Serialize_PML4 => IA32e.Serialize'Access,
+         Serialize_PDPT => IA32e.Serialize'Access,
+         Serialize_PD   => IA32e.Serialize'Access,
+         Serialize_PT   => IA32e.Serialize'Access);
+
+      --  Serializing an empty layout should not generate any output.
+
+      Assert (Condition => Mem_Stream.Write_Idx = 1,
+              Message   => "Serialized null layout mismatch");
+   end Serialize_Empty_Layout;
+
+   -------------------------------------------------------------------------
+
+   procedure Write
+     (Stream : in out Memory_Stream_Type;
+      Item   :        Ada.Streams.Stream_Element_Array)
+   is
+      End_Idx : constant Stream_Element_Offset
+        := Stream.Write_Idx + (Item'Length - 1);
+   begin
+      if End_Idx > Stream.Buffer'Last then
+         raise Constraint_Error with "Stream buffer too small for object, "
+           & "increase size (offset" & End_Idx'Img & " requested, max is"
+           & Stream.Buffer'Last'Img & ")";
+      end if;
+
+      Stream.Buffer (Stream.Write_Idx .. End_Idx) := Item;
+      Stream.Write_Idx                            := End_Idx + 1;
+   end Write;
 
 end IA32e_Tests;

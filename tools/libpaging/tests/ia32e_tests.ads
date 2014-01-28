@@ -47,4 +47,7 @@ is
    --  Test IA-32e multi paging structure generation.
    procedure Generate_Multiple_Structures;
 
+   --  Test serialization of empty memory layout.
+   procedure Serialize_Empty_Layout;
+
 end IA32e_Tests;

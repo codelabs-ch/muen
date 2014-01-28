@@ -166,7 +166,7 @@ is
                Executable  => True,
                Maps_Page   => False,
                Global      => False,
-               Caching     => WC));
+               Caching     => WB));
       end if;
 
       if not PDPT.Contains
@@ -186,7 +186,7 @@ is
                Executable  => not Is_PDPT_Page or Executable,
                Maps_Page   => Is_PDPT_Page,
                Global      => False,
-               Caching     => Caching));
+               Caching     => (if Is_PDPT_Page then Caching else WB)));
       end if;
 
       if Is_PDPT_Page then
@@ -210,7 +210,7 @@ is
                Executable  => not Is_PD_Page or Executable,
                Maps_Page   => Is_PD_Page,
                Global      => False,
-               Caching     => Caching));
+               Caching     => (if Is_PD_Page then Caching else WB)));
       end if;
 
       if Is_PD_Page then

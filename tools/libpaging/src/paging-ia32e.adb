@@ -45,11 +45,11 @@ is
 
    --  Memory type to PAT entry mapping.
    PAT_Mapping : constant array (Caching_Type) of PAT_Entry :=
-     (UC => (PAT => False, PCD => False, PWT => False),
-      WC => (PAT => False, PCD => False, PWT => True),
-      WT => (PAT => False, PCD => True,  PWT => False),
-      WP => (PAT => False, PCD => True,  PWT => True),
-      WB => (PAT => True,  PCD => False, PWT => False));
+     (WB => (PAT => False, PCD => False, PWT => False),
+      WT => (PAT => False, PCD => False, PWT => True),
+      WC => (PAT => False, PCD => True,  PWT => False),
+      UC => (PAT => False, PCD => True,  PWT => True),
+      WP => (PAT => True,  PCD => False, PWT => False));
 
    --  Table entry address range is bits 12 .. 47.
    Address_Mask : constant Interfaces.Unsigned_64 := 16#0000fffffffff000#;

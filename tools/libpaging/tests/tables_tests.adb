@@ -18,6 +18,8 @@
 
 with Ada.Exceptions;
 
+with Interfaces;
+
 with Paging.Entries;
 with Paging.Tables;
 
@@ -102,6 +104,9 @@ is
       T.Add_Test_Routine
         (Routine => Iteration'Access,
          Name    => "Table iteration");
+      T.Add_Test_Routine
+        (Routine => Nonexistent_Table_Address'Access,
+         Name    => "Get table address (nonexistent)");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -154,5 +159,25 @@ is
       Assert (Condition => Counter = 2,
               Message   => "Iteration counter mismatch");
    end Iteration;
+
+   -------------------------------------------------------------------------
+
+   procedure Nonexistent_Table_Address
+   is
+      Map : Tables.PT.Page_Table_Map;
+      Tmp : Interfaces.Unsigned_64;
+      pragma Unreferenced (Tmp);
+   begin
+      Tmp := Tables.PT.Get_Table_Address
+        (Map          => Map,
+         Table_Number => 0);
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Tables.PT.Missing_Table =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Table with number 0 not in map",
+                 Message   => "Exception mismatch");
+   end Nonexistent_Table_Address;
 
 end Tables_Tests;

@@ -35,4 +35,7 @@ is
    --  Table iteration.
    procedure Iteration;
 
+   --  Try getting address of nonexistent table.
+   procedure Nonexistent_Table_Address;
+
 end Tables_Tests;

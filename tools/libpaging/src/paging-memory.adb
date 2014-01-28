@@ -307,6 +307,10 @@ is
                        PT     => Table);
       end Handle_PT;
    begin
+      if Tables.PML4.Count (Table => Mem_Layout.PML4) = 0 then
+         return;
+      end if;
+
       Serialize_PML4 (Stream => Stream,
                       PML4   => Mem_Layout.PML4);
       Tables.PT.Iterate (Map     => Mem_Layout.PTs,

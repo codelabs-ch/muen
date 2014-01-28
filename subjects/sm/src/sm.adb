@@ -76,14 +76,7 @@ begin
       else
          Subject.Text_IO.Put_String (Item => "Unhandled trap for subject ");
          Subject.Text_IO.Put_Byte   (Item => SK.Byte (Id));
-         Subject.Text_IO.Put_String (Item => " EXIT (");
-         Subject.Text_IO.Put_Word16 (Item => SK.Word16 (State.Exit_Reason));
-         Subject.Text_IO.Put_String (Item => ":");
-         Subject.Text_IO.Put_Word32
-           (Item => SK.Word32 (State.Exit_Qualification));
-         Subject.Text_IO.Put_String (Item => ":");
-         Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.Interrupt_Info));
-         Subject.Text_IO.Put_Line   (Item => ")");
+         Subject.Text_IO.New_Line;
 
          Dump_And_Halt := True;
       end if;
@@ -92,6 +85,17 @@ begin
          State.RIP := State.RIP + State.Instruction_Len;
          SK.Hypercall.Trigger_Event (Number => SK.Byte (Id));
       else
+         Subject.Text_IO.Put_String (Item => "Halting subject ");
+         Subject.Text_IO.Put_Byte   (Item => SK.Byte (Id));
+         Subject.Text_IO.Put_String (Item => " after EXIT (");
+         Subject.Text_IO.Put_Word16 (Item => SK.Word16 (State.Exit_Reason));
+         Subject.Text_IO.Put_String (Item => ":");
+         Subject.Text_IO.Put_Word32
+           (Item => SK.Word32 (State.Exit_Qualification));
+         Subject.Text_IO.Put_String (Item => ":");
+         Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.Interrupt_Info));
+         Subject.Text_IO.Put_Line   (Item => ")");
+
          if (State.IA32_EFER and 16#400#) = 0 then
             Subject.Text_IO.Put_String ("EIP: ");
             Subject.Text_IO.Put_Word32 (Item => SK.Word32 (State.RIP));
@@ -216,9 +220,6 @@ begin
             Subject.Text_IO.Put_Word64 (Item => State.IA32_EFER);
             Subject.Text_IO.New_Line;
          end if;
-
-         Subject.Text_IO.New_Line;
-         Subject.Text_IO.Put_Line (Item => "Halting execution");
 
          loop
             SK.CPU.Hlt;

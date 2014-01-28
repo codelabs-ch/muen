@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -87,7 +87,7 @@ is
 
       if Info.String_Instr or Info.REP_Prefixed then
          Subject.Text_IO.Put_Line
-           ("I/O instructions with string and REP not supported");
+           (Item => "I/O instructions with string and REP not supported");
          Halt := True;
       else
          case Info.Size is
@@ -127,22 +127,25 @@ is
                      case Info.Port_Number is
                         when 16#40# =>
                            Subject.Text_IO.Put_String
-                             ("(40) i8253/4 PIT_CH0  ");
+                             (Item => "(40) i8253/4 PIT_CH0  ");
                         when 16#43# =>
                            Subject.Text_IO.Put_String
-                             ("(43) i8253/4 PIT_MODE ");
+                             (Item => "(43) i8253/4 PIT_MODE ");
                         when 16#70# =>
-                           Subject.Text_IO.Put_String ("(70) RTC CMD  ");
+                           Subject.Text_IO.Put_String
+                             (Item => "(70) RTC CMD  ");
                         when 16#71# =>
-                           Subject.Text_IO.Put_String ("(71) RTC DATA ");
+                           Subject.Text_IO.Put_String
+                             (Item => "(71) RTC DATA ");
                         when others =>
-                           Subject.Text_IO.Put_String (" ");
-                           Subject.Text_IO.Put_Word16 (Info.Port_Number);
-                           Subject.Text_IO.Put_String ("  ");
+                           Subject.Text_IO.Put_String (Item => " ");
+                           Subject.Text_IO.Put_Word16
+                             (Item => Info.Port_Number);
+                           Subject.Text_IO.Put_String (Item => "  ");
                      end case;
                      case Info.Direction is
                         when Dir_In =>
-                           Subject.Text_IO.Put_String ("read.");
+                           Subject.Text_IO.Put_String (Item => "read.");
                            case Info.Port_Number is
                               when 16#70# | 16#71# =>
                                  State.Regs.RAX :=
@@ -151,12 +154,16 @@ is
                                  State.Regs.RAX := State.Regs.RAX or 16#ff#;
                            end case;
                         when Dir_Out =>
-                           Subject.Text_IO.Put_String ("write: ");
+                           Subject.Text_IO.Put_String (Item => "write: ");
                            Subject.Text_IO.Put_Byte
                              (Item => SK.Byte (State.Regs.RAX and 16#ff#));
                      end case;
                      Subject.Text_IO.New_Line;
                   when others =>
+                     Subject.Text_IO.Put_String
+                       (Item => "Unhandled byte access to I/O port ");
+                     Subject.Text_IO.Put_Word16 (Item => Info.Port_Number);
+                     Subject.Text_IO.New_Line;
                      Halt := True;
                end case;
             when Two_Byte =>
@@ -166,20 +173,24 @@ is
                        16#0cfa# |   --  PCI Addr            (hardcoded)
                        16#0cfc# |   --  PCI Data            (hardcoded)
                        16#0cfe# =>  --  PCI Data            (hardcoded)
-                     Subject.Text_IO.Put_String (" ");
-                     Subject.Text_IO.Put_Word16 (Info.Port_Number);
-                     Subject.Text_IO.Put_String ("  ");
+                     Subject.Text_IO.Put_String (Item => " ");
+                     Subject.Text_IO.Put_Word16 (Item => Info.Port_Number);
+                     Subject.Text_IO.Put_String (Item => "  ");
                      case Info.Direction is
                         when Dir_In =>
-                           Subject.Text_IO.Put_String ("read.");
+                           Subject.Text_IO.Put_String (Item => "read.");
                            State.Regs.RAX := State.Regs.RAX or 16#ffff#;
                         when Dir_Out =>
-                           Subject.Text_IO.Put_String ("write: ");
+                           Subject.Text_IO.Put_String (Item => "write: ");
                            Subject.Text_IO.Put_Word16
                              (Item => SK.Word16 (State.Regs.RAX and 16#ffff#));
                      end case;
                      Subject.Text_IO.New_Line;
                   when others =>
+                     Subject.Text_IO.Put_String
+                       (Item => "Unhandled word16 access to I/O port ");
+                     Subject.Text_IO.Put_Word16 (Item => Info.Port_Number);
+                     Subject.Text_IO.New_Line;
                      Halt := True;
                end case;
             when Four_Byte =>
@@ -187,26 +198,30 @@ is
                   --  Only handle these ports by now:
                   when 16#0cf8# |   --  PCI Addr            (hardcoded)
                        16#0cfc# =>  --  PCI Data            (hardcoded)
-                     Subject.Text_IO.Put_String (" ");
-                     Subject.Text_IO.Put_Word16 (Info.Port_Number);
-                     Subject.Text_IO.Put_String ("  ");
+                     Subject.Text_IO.Put_String (Item => " ");
+                     Subject.Text_IO.Put_Word16 (Item => Info.Port_Number);
+                     Subject.Text_IO.Put_String (Item => "  ");
                      case Info.Direction is
                         when Dir_In =>
-                           Subject.Text_IO.Put_String ("read.");
+                           Subject.Text_IO.Put_String (Item => "read.");
                            State.Regs.RAX := State.Regs.RAX or 16#ffff_ffff#;
                         when Dir_Out =>
-                           Subject.Text_IO.Put_String ("write: ");
+                           Subject.Text_IO.Put_String (Item => "write: ");
                            Subject.Text_IO.Put_Word32
                              (Item => SK.Word32
                                 (State.Regs.RAX and 16#ffff_ffff#));
                      end case;
                      Subject.Text_IO.New_Line;
                   when others =>
+                     Subject.Text_IO.Put_String
+                       (Item => "Unhandled word32 access to I/O port ");
+                     Subject.Text_IO.Put_Word16 (Item => Info.Port_Number);
+                     Subject.Text_IO.New_Line;
                      Halt := True;
                end case;
             when others =>
                Subject.Text_IO.Put_String
-                 ("I/O instruction with invalid access size 16#");
+                 (Item => "I/O instruction with invalid access size 16#");
                Subject.Text_IO.Put_Byte (Item => SK.Byte (Info.Size));
                Subject.Text_IO.Put_Line (Item => "#");
                Halt := True;

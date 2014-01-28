@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -123,12 +123,12 @@ is
                Subject.Text_IO.Put_Word64 (State.CR0);
                Subject.Text_IO.New_Line;
             else
-               Subject.Text_IO.Put_String (Item => ">>> MOV to CR ");
+               Subject.Text_IO.Put_String (Item => "MOV to CR ");
                Subject.Text_IO.Put_Byte   (Item => SK.Byte (Info.CR_Number));
                Subject.Text_IO.Put_String (Item => " from ");
                Subject.Text_IO.Put_String
                  (Item => To_String (Reg => (Info.Data_Register)));
-               Subject.Text_IO.Put_Line   (Item => " not implemented <<<");
+               Subject.Text_IO.Put_Line   (Item => " not implemented");
                Halt := True;
             end if;
          else

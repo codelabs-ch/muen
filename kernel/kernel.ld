@@ -54,7 +54,6 @@ SECTIONS
 
 	.cpu_local 0x00117000 :
 	{
-		cpu_id = .;
 		. += 0x4000;
 	}
 

@@ -21,6 +21,7 @@
 .global _start
 .global ap_entry_point
 .global cpu_counter
+.global cpu_id
 
 #define IA32_VMX_BASIC 0x480
 #define IA32_PAT       0x277
@@ -167,7 +168,7 @@ start64: .align 4096
 	// set CPU ID variable located at start of per-CPU store
 
 	mov %rsi, %rax
-	movb %al, PERCPU_STORE
+	movb %al, cpu_id
 
 	// set up kernel segment selectors
 
@@ -189,3 +190,5 @@ start64: .align 4096
 	.align 4
 cpu_counter:
 	.long 0
+
+.set cpu_id, PERCPU_STORE

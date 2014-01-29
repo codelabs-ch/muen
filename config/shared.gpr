@@ -31,7 +31,6 @@ abstract project Shared is
      & ("-gnatygAdISuxo",
         "-gnatVa",
         "-gnatf",
-        "-fstack-check",
         "-gnato");
 
    Cov_Compiler_Switches := ("-ftest-coverage", "-fprofile-arcs");

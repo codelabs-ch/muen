@@ -78,7 +78,7 @@ is
       --  24.4.2).
 
       VMX.VMCS_Read (Field => Constants.GUEST_INTERRUPTIBILITY,
-                 Value => Intr_State);
+                     Value => Intr_State);
 
       if Intr_State = 0
         and then SK.Bit_Test

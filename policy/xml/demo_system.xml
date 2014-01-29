@@ -450,8 +450,8 @@
 				</vmx>
 				<registers>
 					<gpr>
-						<rip>16#3000#</rip>
-						<rsp>16#2000#</rsp>
+						<rip>16#4000#</rip>
+						<rsp>16#3000#</rsp>
 						<!-- All GPRs have a value -->
 					</gpr>
 					<cr0>
@@ -496,7 +496,8 @@
 			</vcpu>
 			<bootparams/>
 			<memory>
-				<memory logical="text" virtualAddress="16#0000#" writable="true" executable="true">
+				<!-- Page at 0x0: Stack guard page ==> DO NOT MAP -->
+				<memory logical="text" virtualAddress="16#1000#" writable="true" executable="true">
 					<physical name="tau0|bin"/>
 				</memory>
 				<memory logical="sys_interface" virtualAddress="16#001f_f000#" writable="true" executable="false">
@@ -635,8 +636,8 @@
 				</vmx>
 				<registers>
 					<gpr>
-						<rip>16#3000#</rip>
-						<rsp>16#2000#</rsp>
+						<rip>16#4000#</rip>
+						<rsp>16#3000#</rsp>
 						<!-- All GPRs have a value -->
 					</gpr>
 					<cr0>
@@ -681,7 +682,8 @@
 			</vcpu>
 			<bootparams/>
 			<memory>
-				<memory logical="text" virtualAddress="16#0000#" writable="true" executable="true">
+				<!-- Page at 0x0: Stack guard page ==> DO NOT MAP -->
+				<memory logical="text" virtualAddress="16#1000#" writable="true" executable="true">
 					<physical name="vt|bin"/>
 				</memory>
 				<memory logical="linux_output" virtualAddress="16#0004_0000#" writable="false" executable="false">
@@ -848,8 +850,8 @@
 				</vmx>
 				<registers>
 					<gpr>
-						<rip>16#3000#</rip>
-						<rsp>16#2000#</rsp>
+						<rip>16#4000#</rip>
+						<rsp>16#3000#</rsp>
 						<!-- All GPRs have a value -->
 					</gpr>
 					<cr0>
@@ -894,7 +896,8 @@
 			</vcpu>
 			<bootparams/>
 			<memory>
-				<memory logical="text" virtualAddress="16#0000#" writable="true" executable="true">
+				<!-- Page at 0x0: Stack guard page ==> DO NOT MAP -->
+				<memory logical="text" virtualAddress="16#1000#" writable="true" executable="true">
 					<physical name="time|bin"/>
 				</memory>
 				<memory logical="time_channel" virtualAddress="16#0002_0000#" writable="true" executable="false">
@@ -1048,8 +1051,8 @@
 				</vmx>
 				<registers>
 					<gpr>
-						<rip>16#3000#</rip>
-						<rsp>16#2000#</rsp>
+						<rip>16#4000#</rip>
+						<rsp>16#3000#</rsp>
 						<!-- All GPRs have a value -->
 					</gpr>
 					<cr0>
@@ -1094,7 +1097,8 @@
 			</vcpu>
 			<bootparams/>
 			<memory>
-				<memory logical="text" virtualAddress="16#0000#" writable="true" executable="true">
+				<!-- Page at 0x0: Stack guard page ==> DO NOT MAP -->
+				<memory logical="text" virtualAddress="16#1000#" writable="true" executable="true">
 					<physical name="sm|bin"/>
 				</memory>
 				<memory logical="sm_output" virtualAddress="16#000b_8000#" writable="true" executable="false">

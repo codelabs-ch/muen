@@ -20,14 +20,16 @@ ENTRY(main)
 
 SECTIONS
 {
-	.bss :
+	/* first page is used as stack guard page */
+
+	.bss 0x1000 :
 	{
 		. += 0x2000;
 		stack = .;
 		*(.bss)
 	}
 
-	.text 0x3000 :
+	.text 0x4000 :
 	{
 		stub.o(.stub)
 		*(.text)

@@ -21,9 +21,9 @@ all: .validated $(OUTPUT) $(DSDT)
 	@$(MUVALIDATE) $(POLICY)
 	@touch $@
 
-$(DSDT): acpi/$(HARDWARE).dsdt.dsl
+$(DSDT): acpi/dsdt.dsl
 	@cp $^ $(OBJ_DIR)
-	@iasl -ta $(OBJ_DIR)/$(HARDWARE).dsdt.dsl
+	@iasl -ta $(OBJ_DIR)/dsdt.dsl
 
 $(OUTPUT): $(GENERATORS) $(POLICY)
 	@for gen in $(GENERATORS); do $$gen $(GENERATOR_OPTS) || exit 1; done

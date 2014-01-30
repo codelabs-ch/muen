@@ -199,7 +199,7 @@ is
          Set_Attribute
             (Item (N, 0),
              "physicalAddress",
-             To_Hex (Region.First_Address));
+             To_Hex (Number => Region.First_Address, Normalize => True));
       end Update_DOM;
 
    begin

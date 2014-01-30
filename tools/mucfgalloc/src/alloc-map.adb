@@ -44,6 +44,7 @@ is
 
       Reserve
          (Map           => Map,
+          Kind          => Fixed,
           Curr          => Curr,
           Name          => Ada.Strings.Unbounded.Null_Unbounded_String,
           First_Address => First_Address,
@@ -80,6 +81,7 @@ is
 
       Reserve
          (Map           => Map,
+          Kind          => Allocated,
           Curr          => Curr,
           Name          => Name,
           First_Address => First_Multiple,
@@ -181,7 +183,8 @@ is
 
    procedure Iterate
       (Map     : Map_Type;
-       Process : not null access procedure (Region : Region_Type))
+       Process : not null access procedure (Region : Region_Type);
+       Filter  : Region_Kind := Any)
    is
       use Region_List_Package;
 
@@ -189,7 +192,9 @@ is
       procedure P (Position : Cursor)
       is
       begin
-         Process (Element (Position));
+         if Filter = Any or Element (Position).Kind = Filter then
+            Process (Element (Position));
+         end if;
       end P;
    begin
       Iterate (Map.Data, P'Access);
@@ -199,6 +204,7 @@ is
 
    procedure Reserve
       (Map           : in out Map_Type;
+       Kind          :        Region_Kind;
        Curr          :        Region_List_Package.Cursor;
        Name          :        Ada.Strings.Unbounded.Unbounded_String;
        First_Address :        Interfaces.Unsigned_64;
@@ -211,12 +217,12 @@ is
       Match_Last : constant Boolean :=
          Element (Curr).Last_Address = Last_Address;
 
-      --  Update the Kind field with 'Allocated'
+      --  Update the Kind field with Kind argument
       procedure Allocate (Element : in out Region_Type);
       procedure Allocate (Element : in out Region_Type)
       is
       begin
-         Element.Kind := Allocated;
+         Element.Kind := Kind;
       end Allocate;
 
       --  Update the First_Address field of a region with Last_Address + 1
@@ -257,17 +263,17 @@ is
       --
       --  (1) Curr.First_Address = First_Address and
       --      Curr.Last_Address = Last_Address =>
-      --      Curr.Kind := Allocated;
+      --      Curr.Kind := Kind;
       --  (2) Curr.First_Address = First_Address =>
       --      Curr.First_Address := Last_Address + 1;
-      --      Insert (First_Address, Last_Address, Allocated) before Curr
+      --      Insert (First_Address, Last_Address, Kind) before Curr
       --  (3) Curr.Last_Address = Last_Address =>
       --      Insert (Curr.First_Address, First_Address - 1, Empty) before Curr
       --      Curr.First_Address := First_Address;
-      --      Curr.Kind := Allocated;
+      --      Curr.Kind := Kind;
       --  (4) Otherwise =>
       --      Insert (Curr.First_Address, First_Address - 1, Empty) before Curr
-      --      Insert (First_Address, Last_Address, Allocated) before Curr
+      --      Insert (First_Address, Last_Address, Kind) before Curr
       --      Curr.First_Address := Last_Address + 1
 
       if Match_First and Match_Last then
@@ -284,7 +290,7 @@ is
                (First_Address => First_Address,
                 Last_Address  => Last_Address,
                 Name          => Name,
-                Kind          => Allocated));
+                Kind          => Kind));
       elsif Match_Last then
          --  (3)
          Insert
@@ -315,7 +321,7 @@ is
                (First_Address => First_Address,
                 Last_Address  => Last_Address,
                 Name          => Name,
-                Kind          => Allocated));
+                Kind          => Kind));
          Update_Element (Map.Data, Curr, Set_First_Past_Last'Access);
       end if;
 

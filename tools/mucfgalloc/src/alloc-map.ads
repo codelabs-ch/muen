@@ -25,7 +25,7 @@ is
 
    type Map_Type is tagged private;
 
-   type Region_Kind is (Empty, Allocated);
+   type Region_Kind is (Any, Empty, Fixed, Allocated);
 
    type Region_Type is
    record
@@ -61,7 +61,8 @@ is
    --  Insert an empty region to memory map
    procedure Iterate
       (Map     : Map_Type;
-       Process : not null access procedure (Region : Region_Type));
+       Process : not null access procedure (Region : Region_Type);
+       Filter  : Region_Kind := Any);
 
    Overlapping_Empty_Region : exception;
    Invalid_Fixed_Allocation : exception;
@@ -79,6 +80,7 @@ private
 
    procedure Reserve
       (Map           : in out Map_Type;
+       Kind          :        Region_Kind;
        Curr          :        Region_List_Package.Cursor;
        Name          :        Ada.Strings.Unbounded.Unbounded_String;
        First_Address :        Interfaces.Unsigned_64;

@@ -1,6 +1,7 @@
 DSDT       = $(OBJ_DIR)/DSDT.aml
 OUTPUT     = $(POLICY_INC)/skp.ads
-POLICY_OUT = $(POLICY_INC)/system.xml
+POLICY_OUT = $(OBJ_DIR)/$(notdir $(POLICY))
+LAST_HW    = $(shell cat $(OBJ_DIR)/.hw 2>/dev/null)
 
 GENERATORS =      \
 	$(MUACPIGEN)  \
@@ -16,10 +17,20 @@ include ../Makeconf
 
 DUMMY := $(shell mkdir -p $(POLICY_INC))
 
-all: .validated $(OUTPUT) $(DSDT)
+all: hwchange .validated $(OUTPUT) $(DSDT)
 
+hwchange:
+	@$(if $(findstring $(HARDWARE),$(LAST_HW)),,rm -f $(POLICY_OUT); \
+		echo $(HARDWARE) > $(OBJ_DIR)/.hw)
+
+ifeq ($(HARDWARE), bochs)
 $(POLICY_OUT): $(POLICY)
-	@cp $^ $@
+	@cp $< $@
+else
+$(POLICY_OUT): $(POLICY) hardware/$(HARDWARE).patch
+	@cp $< $@
+	@cd $(OBJ_DIR) && patch -p3 < ../hardware/$(HARDWARE).patch >/dev/null
+endif
 
 .validated: $(POLICY_OUT)
 	@$(MUVALIDATE) $(POLICY_OUT)
@@ -35,4 +46,4 @@ $(OUTPUT): $(GENERATORS) $(POLICY_OUT)
 clean:
 	@rm -rf $(POLICY_INC) $(DSDT) .validated
 
-.PHONY: clean
+.PHONY: prepare

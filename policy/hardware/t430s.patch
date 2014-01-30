@@ -1,0 +1,31 @@
+diff --git a/policy/xml/demo_system.xml b/policy/xml/demo_system.xml
+index 5c5c885..278efbf 100644
+--- a/policy/xml/demo_system.xml
++++ b/policy/xml/demo_system.xml
+@@ -6,7 +6,7 @@
+ 			<memoryBlock name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#" caching="WB"/>
+ 		</memory>
+ 		<device name="serial" shared="false">
+-			<ioPort name="port1" start="16#03f8#" end="16#03ff#"/>
++			<ioPort name="port1" start="16#50b0#" end="16#50b7#"/>
+ 		</device>
+ 		<device name="vga" shared="false">
+ 			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
+@@ -1299,7 +1299,7 @@
+ 					<!-- All segments must be specified -->
+ 				</segments>
+ 			</vcpu>
+-			<bootparams>lpj=10000 earlyprintk=serial console=hvc console=ttyS0,115200 pci=noearly notsc</bootparams>
++			<bootparams>lpj=10000 earlyprintk=serial,0x50b0 console=hvc pci=noearly notsc</bootparams>
+ 			<memory>
+ 				<memory logical="zero_page" virtualAddress="16#0000#" writable="true" executable="false">
+ 					<physical name="linux|zp"/>
+@@ -1348,7 +1348,7 @@
+ 			</memory>
+ 			<devices>
+ 				<device logical="ttyS0" physical="serial">
+-					<ioPort logical="port1" physical="port1" start="16#03f8#" end="16#03ff#"/>
++					<ioPort logical="port1" physical="port1" start="16#50b0#" end="16#50b7#"/>
+ 				</device>
+ 				<device logical="port80" physical="port80">
+ 					<ioPort logical="ports" physical="ports" start="16#0080#" end="16#0080#"/>

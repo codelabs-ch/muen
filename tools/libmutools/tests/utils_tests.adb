@@ -1,6 +1,7 @@
 --
 --  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
 --  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014  Alexander Senier <mail@senier.net>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -100,6 +101,11 @@ is
       Ref_Last   : constant String                 := "16#FFFFFFFFFFFFFFFF#";
       Ref_Number : constant String                 := "DEADCAFEBEEFBEEF";
       Number     : constant Interfaces.Unsigned_64 := 16#deadcafebeefbeef#;
+      Number2    : constant Interfaces.Unsigned_64 := 16#deadbeefbe#;
+      Norm_First : constant String                 := "16#0000#";
+      Norm_Last  : constant String := "16#FFFF_FFFF_FFFF_FFFF#";
+      Norm_Num   : constant String := "16#DEAD_CAFE_BEEF_BEEF#";
+      Norm_Num2  : constant String := "16#00DE_ADBE_EFBE#";
    begin
       Assert (Condition => Utils.To_Hex
               (Number => Interfaces.Unsigned_64'First) = Ref_First,
@@ -111,6 +117,26 @@ is
               (Number => Number,
                Prefix => False) = Ref_Number,
               Message   => "Hex string without prefix mismatch");
+      Assert (Condition => Utils.To_Hex
+              (Number    => Interfaces.Unsigned_64'First,
+               Prefix    => True,
+               Normalize => True) = Norm_First,
+              Message => "Normalized Unsigned_64'First hex string mismatch");
+      Assert (Condition => Utils.To_Hex
+              (Number    => Interfaces.Unsigned_64'Last,
+               Prefix    => True,
+               Normalize => True) = Norm_Last,
+              Message => "Normalized Unsigned_64'Last hex string mismatch");
+      Assert (Condition => Utils.To_Hex
+              (Number    => 16#DEAD_CAFE_BEEF_BEEF#,
+               Prefix    => True,
+               Normalize => True) = Norm_Num,
+              Message => "Normalized " & Norm_Num & " hex string mismatch");
+      Assert (Condition => Utils.To_Hex
+              (Number    => 16#DE_ADBE_EFBE#,
+               Prefix    => True,
+               Normalize => True) = Norm_Num2,
+              Message => "Normalized " & Norm_Num2 & " hex string mismatch");
    end To_Hex;
 
 end Utils_Tests;

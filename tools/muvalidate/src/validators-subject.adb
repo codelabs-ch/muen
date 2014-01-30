@@ -77,7 +77,7 @@ is
                   Event_Node    : constant DOM.Core.Node
                     := DOM.Core.Nodes.Item
                       (List  => Events,
-                       Index => 0);
+                       Index => J);
                   Event_Name    : constant String
                     := DOM.Core.Elements.Get_Attribute
                       (Elem => DOM.Core.Nodes.Parent_Node (N => Event_Node),

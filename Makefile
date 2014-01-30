@@ -26,7 +26,7 @@ pack: policy kernel subjects
 tools:
 	$(MAKE) -C $@
 
-deploy: HARDWARE=t430s
+deploy: HARDWARE=lenovo-t430s
 deploy: pack
 	$(MAKE) -C $@
 

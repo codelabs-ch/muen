@@ -1362,7 +1362,7 @@
 						</event>
 						<!-- external_interrupt : reserved -->
 						<event id="02" logical="triple_fault" action="continue">
-							<notify physical="sm_handover" subject="tau0" vector="36" mode="switch"/>
+							<notify physical="sm_handover" subject="sm" vector="36" mode="switch"/>
 						</event>
 						<event id="03" logical="init_signal" action="continue">
 							<notify physical="sm_handover" subject="sm" vector="36" mode="switch"/>

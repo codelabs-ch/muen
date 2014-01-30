@@ -73,6 +73,21 @@ is
    --  by Intel SDM Vol. 3C, section 27.2.1, table 27-5.
    function To_IO_Info (Qualification : SK.Word64) return IO_Info_Type;
 
+   --  Returns True if the I/O operation is a reboot request.
+   function Is_Reboot_Request (Info : IO_Info_Type) return Boolean;
+
+   -------------------------------------------------------------------------
+
+   function Is_Reboot_Request (Info : IO_Info_Type) return Boolean
+   is
+      use type SK.Byte;
+      use type SK.Word16;
+   begin
+      return Info.Port_Number = 16#64#
+        and then Info.Direction = Dir_Out
+        and then SK.Byte'Mod (State.Regs.RAX) = 16#fe#;
+   end Is_Reboot_Request;
+
    -------------------------------------------------------------------------
 
    procedure Process (Halt : out Boolean)
@@ -226,6 +241,12 @@ is
                Subject.Text_IO.Put_Line (Item => "#");
                Halt := True;
          end case;
+
+         if Is_Reboot_Request (Info => Info) then
+            Subject.Text_IO.Put_Line
+              (Item => "Reboot requested via pulse of CPU RESET pin");
+            Halt := True;
+         end if;
       end if;
    end Process;
 

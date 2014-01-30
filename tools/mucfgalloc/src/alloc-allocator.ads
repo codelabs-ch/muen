@@ -16,6 +16,9 @@
 --
 
 with Muxml;
+private with Alloc.Map;
+private with Interfaces;
+private with Ada.Strings.Unbounded;
 
 package Alloc.Allocator
 is
@@ -29,5 +32,28 @@ is
 
    --  Internal error (e.g. malformed XML input)
    Internal_Error : exception;
+
+private
+
+   procedure Add_Empty_Regions
+      (Policy      :        Muxml.XML_Data_Type;
+       Map         : in out Alloc.Map.Map_Type);
+
+   procedure Add_Fixed_Regions
+      (Policy      :        Muxml.XML_Data_Type;
+       Map         : in out Alloc.Map.Map_Type);
+
+   procedure Allocate_Variable_Regions
+      (Policy      :        Muxml.XML_Data_Type;
+       Map         : in out Alloc.Map.Map_Type);
+
+   type Region_Type is
+   record
+      Alignment : Interfaces.Unsigned_64;
+      Size      : Interfaces.Unsigned_64;
+      Name      : Ada.Strings.Unbounded.Unbounded_String;
+   end record;
+
+   function "<" (Left, Right : Region_Type) return Boolean;
 
 end Alloc.Allocator;

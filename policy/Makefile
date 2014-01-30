@@ -32,7 +32,7 @@ $(POLICY_OUT): $(POLICY) hardware/$(HARDWARE).patch
 	@cd $(OBJ_DIR) && patch -p3 < ../hardware/$(HARDWARE).patch >/dev/null
 endif
 
-.validated: $(POLICY_OUT)
+.validated: $(POLICY_OUT) $(MUVALIDATE)
 	@$(MUVALIDATE) $(POLICY_OUT)
 	@touch $@
 

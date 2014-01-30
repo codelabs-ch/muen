@@ -18,11 +18,15 @@
 with Test_Utils;
 with Alloc.Map;
 with Ada.Text_IO;
+with Ada.Strings.Unbounded;
 
 package body Map_Tests
 is
    Output_File : Ada.Text_IO.File_Type;
    procedure Write_Region (R : Alloc.Map.Region_Type);
+
+   function U (S : String) return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
 
    ----------------------------------------------------------------------------
 
@@ -250,7 +254,7 @@ is
       M : Map_Type;
    begin
       M.Insert_Empty_Region (100,    1000);
-      M.Allocate_Variable (Size => 400, Alignment => 500);
+      M.Allocate_Variable (Size => 400, Alignment => 500, Name => U ("mem1"));
       Create (Output_File, Out_File, "obj/alloc_variable_alignment.txt");
       M.Iterate (Write_Region'Access);
       Close (Output_File);
@@ -273,7 +277,7 @@ is
       M.Insert_Empty_Region (1500, 2000);
       M.Insert_Empty_Region (2500, 3000);
       M.Insert_Empty_Region (5000, 10000);
-      M.Allocate_Variable (Size => 1500);
+      M.Allocate_Variable (Size => 1500, Name => U ("mem1"));
       Create (Output_File, Out_File, "obj/alloc_variable_exact.txt");
       M.Iterate (Write_Region'Access);
       Close (Output_File);
@@ -293,7 +297,7 @@ is
       M : Map_Type;
    begin
       M.Insert_Empty_Region (0,    1000);
-      M.Allocate_Variable (Size => 1500);
+      M.Allocate_Variable (Size => 1500, Name => U ("mem1"));
       Fail ("Out-of-memory undetected");
    exception
       when Alloc.Map.Out_Of_Memory => null;
@@ -311,7 +315,7 @@ is
       M.Insert_Empty_Region (1,    1000);
       M.Insert_Empty_Region (2001, 3000);
       M.Insert_Empty_Region (4001, 5000);
-      M.Allocate_Variable (Size => 1000, Alignment => 123);
+      M.Allocate_Variable (Size => 1000, Alignment => 123, Name => U ("mem1"));
       Fail ("Out-of-memory undetected");
    exception
       when Alloc.Map.Out_Of_Memory => null;
@@ -329,10 +333,10 @@ is
       M.Insert_Empty_Region (0,    1000);
       M.Insert_Empty_Region (2000, 3000);
       M.Insert_Empty_Region (4000, 5000);
-      M.Allocate_Variable (Size => 800);
-      M.Allocate_Variable (Size => 800);
-      M.Allocate_Variable (Size => 800);
-      M.Allocate_Variable (Size => 300);
+      M.Allocate_Variable (Size => 800, Name => U ("mem1"));
+      M.Allocate_Variable (Size => 800, Name => U ("mem2"));
+      M.Allocate_Variable (Size => 800, Name => U ("mem3"));
+      M.Allocate_Variable (Size => 300, Name => U ("mem4"));
       Fail ("Out-of-memory undetected");
    exception
       when Alloc.Map.Out_Of_Memory => null;

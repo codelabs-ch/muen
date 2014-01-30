@@ -42,7 +42,12 @@ is
          raise Invalid_Fixed_Allocation;
       end if;
 
-      Reserve (Map, Curr, First_Address, Last_Address);
+      Reserve
+         (Map           => Map,
+          Curr          => Curr,
+          Name          => Ada.Strings.Unbounded.Null_Unbounded_String,
+          First_Address => First_Address,
+          Last_Address  => Last_Address);
 
    end Allocate_Fixed;
 
@@ -50,6 +55,7 @@ is
 
    procedure Allocate_Variable
       (Map       : in out Map_Type;
+       Name      :        Ada.Strings.Unbounded.Unbounded_String;
        Size      :        Interfaces.Unsigned_64;
        Alignment :        Interfaces.Unsigned_64 := 1)
    is
@@ -72,7 +78,12 @@ is
          raise Out_Of_Memory;
       end if;
 
-      Reserve (Map, Curr, First_Multiple, First_Multiple + Size - 1);
+      Reserve
+         (Map           => Map,
+          Curr          => Curr,
+          Name          => Name,
+          First_Address => First_Multiple,
+          Last_Address  => First_Multiple + Size - 1);
 
    end Allocate_Variable;
 
@@ -157,6 +168,8 @@ is
                 Before    => Curr,
                 New_Item  => Region_Type'
                               (Kind          => Empty,
+                               Name          =>
+                                  Ada.Strings.Unbounded.Null_Unbounded_String,
                                First_Address => First_Address,
                                Last_Address  => Last_Address));
          end if;
@@ -187,6 +200,7 @@ is
    procedure Reserve
       (Map           : in out Map_Type;
        Curr          :        Region_List_Package.Cursor;
+       Name          :        Ada.Strings.Unbounded.Unbounded_String;
        First_Address :        Interfaces.Unsigned_64;
        Last_Address  :        Interfaces.Unsigned_64)
    is
@@ -229,6 +243,14 @@ is
          Element.First_Address := First_Address;
       end Set_First_To_First;
 
+      --  Update the Name field of a region
+      procedure Set_Name (Element : in out Region_Type);
+      procedure Set_Name (Element : in out Region_Type)
+      is
+      begin
+         Element.Name := Name;
+      end Set_Name;
+
    begin
 
       --  Allocate part of a given empty region
@@ -251,6 +273,7 @@ is
       if Match_First and Match_Last then
          --  (1)
          Update_Element (Map.Data, Curr, Allocate'Access);
+         Update_Element (Map.Data, Curr, Set_Name'Access);
       elsif Match_First then
          --  (2)
          Update_Element (Map.Data, Curr, Set_First_After_Last'Access);
@@ -260,6 +283,7 @@ is
              New_Item  => Region_Type'
                (First_Address => First_Address,
                 Last_Address  => Last_Address,
+                Name          => Name,
                 Kind          => Allocated));
       elsif Match_Last then
          --  (3)
@@ -269,8 +293,10 @@ is
              New_Item  => Region_Type'
                (First_Address => Element (Curr).First_Address,
                 Last_Address  => First_Address - 1,
+                Name          => Ada.Strings.Unbounded.Null_Unbounded_String,
                 Kind          => Empty));
          Update_Element (Map.Data, Curr, Set_First_To_First'Access);
+         Update_Element (Map.Data, Curr, Set_Name'Access);
          Update_Element (Map.Data, Curr, Allocate'Access);
       else
          --  (4)
@@ -280,6 +306,7 @@ is
              New_Item  => Region_Type'
                (First_Address => Element (Curr).First_Address,
                 Last_Address  => First_Address - 1,
+                Name          => Ada.Strings.Unbounded.Null_Unbounded_String,
                 Kind          => Empty));
          Insert
             (Container => Map.Data,
@@ -287,6 +314,7 @@ is
              New_Item  => Region_Type'
                (First_Address => First_Address,
                 Last_Address  => Last_Address,
+                Name          => Name,
                 Kind          => Allocated));
          Update_Element (Map.Data, Curr, Set_First_Past_Last'Access);
       end if;

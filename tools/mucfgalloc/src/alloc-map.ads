@@ -17,6 +17,7 @@
 
 with Interfaces;
 with Ada.Containers.Doubly_Linked_Lists;
+with Ada.Strings.Unbounded;
 use type Interfaces.Unsigned_64;
 
 package Alloc.Map
@@ -31,6 +32,8 @@ is
       Kind          : Region_Kind;
       First_Address : Interfaces.Unsigned_64;
       Last_Address  : Interfaces.Unsigned_64;
+      Name          : Ada.Strings.Unbounded.Unbounded_String :=
+         Ada.Strings.Unbounded.Null_Unbounded_String;
    end record;
 
    --  Insert an empty region to memory map
@@ -50,6 +53,7 @@ is
    --  Allocate region using size and alignment
    procedure Allocate_Variable
       (Map       : in out Map_Type;
+       Name      :        Ada.Strings.Unbounded.Unbounded_String;
        Size      :        Interfaces.Unsigned_64;
        Alignment :        Interfaces.Unsigned_64 := 1) with
       Pre => 0 < Size and 0 < Alignment;
@@ -76,6 +80,7 @@ private
    procedure Reserve
       (Map           : in out Map_Type;
        Curr          :        Region_List_Package.Cursor;
+       Name          :        Ada.Strings.Unbounded.Unbounded_String;
        First_Address :        Interfaces.Unsigned_64;
        Last_Address  :        Interfaces.Unsigned_64);
 

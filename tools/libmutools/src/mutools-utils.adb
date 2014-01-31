@@ -29,6 +29,17 @@ is
 
    -------------------------------------------------------------------------
 
+   function Bit_Clear
+     (Value : Interfaces.Unsigned_64;
+      Pos   : Unsigned_64_Pos)
+      return Interfaces.Unsigned_64
+   is
+   begin
+      return Value and not (2 ** Natural (Pos));
+   end Bit_Clear;
+
+   -------------------------------------------------------------------------
+
    function Bit_Set
      (Value : Interfaces.Unsigned_64;
       Pos   : Unsigned_64_Pos)

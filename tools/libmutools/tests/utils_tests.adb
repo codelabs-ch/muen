@@ -34,6 +34,7 @@ is
 
       Ref_Num_1 : constant Interfaces.Unsigned_64 := 16#800000#;
       Ref_Num_2 : constant Interfaces.Unsigned_64 := 16#A000800000#;
+      Ref_Num_3 : constant Interfaces.Unsigned_64 := 16#A000000000#;
       Number    : Interfaces.Unsigned_64 := 0;
    begin
       for I in Utils.Unsigned_64_Pos'Range loop
@@ -56,6 +57,11 @@ is
                                Pos   => 39);
       Assert (Condition => Number = Ref_Num_2,
               Message   => "Number mismatch (2)");
+
+      Number := Utils.Bit_Clear (Value => Number,
+                                 Pos   => 23);
+      Assert (Condition => Number = Ref_Num_3,
+              Message   => "Number mismatch (3)");
    end Bit_Ops;
 
    -------------------------------------------------------------------------
@@ -80,7 +86,7 @@ is
          Name    => "Unsigned_64 to Hex conversion");
       T.Add_Test_Routine
         (Routine => Bit_Ops'Access,
-         Name    => "Unsigned_64 bit set/test operations");
+         Name    => "Unsigned_64 bit operations");
       T.Add_Test_Routine
         (Routine => Decode_Entity_Name'Access,
          Name    => "Decode entity name");

@@ -35,6 +35,12 @@ is
       Pos   : Unsigned_64_Pos)
       return Interfaces.Unsigned_64;
 
+   --  Clear bit at given position.
+   function Bit_Clear
+     (Value : Interfaces.Unsigned_64;
+      Pos   : Unsigned_64_Pos)
+      return Interfaces.Unsigned_64;
+
    --  Return hexadecimal representation of given number. If prefix is True,
    --  the returned string includes the base (16#..#).
    function To_Hex

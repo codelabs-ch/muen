@@ -767,7 +767,7 @@ is
       Write_Kernel_Spec (Output_Dir => Output_Dir,
                          Policy     => Policy);
       Write_Kernel_Header (Output_Dir => Output_Dir,
-                         Policy     => Policy);
+                           Policy     => Policy);
    end Write_Kernel;
 
    -------------------------------------------------------------------------
@@ -777,12 +777,12 @@ is
       Policy     : Muxml.XML_Data_Type)
    is
       Scheduling   : constant DOM.Core.Node := DOM.Core.Nodes.Item
-        (List => McKae.XML.XPath.XIA.XPath_Query
+        (List  => McKae.XML.XPath.XIA.XPath_Query
            (N     => Policy.Doc,
             XPath => "/system/scheduling"),
          Index => 0);
       Processor    : constant DOM.Core.Node := DOM.Core.Nodes.Item
-        (List => McKae.XML.XPath.XIA.XPath_Query
+        (List  => McKae.XML.XPath.XIA.XPath_Query
            (N     => Policy.Doc,
             XPath => "/system/platform/processor"),
          Index => 0);
@@ -1069,7 +1069,7 @@ is
          Dst_Id      : constant String := Get_Attribute
            (Doc   => Policy.Doc,
             XPath => "/system/subjects/subject[@name='" & Dst_Subject & "']",
-           Name  => "id");
+            Name  => "id");
          Dst_Vector  : constant String := Get_Attribute
            (Doc   => Trap,
             XPath => "notify",
@@ -1213,9 +1213,9 @@ is
             XPath => "vcpu/vmx/controls/proc2/EnableEPT") = "1"
          then
             Buffer := Buffer
-                 & Indent & "    PML4_Address       => 0,"
-                 & ASCII.LF
-                 & Indent & "    EPT_Pointer        => "
+              & Indent & "    PML4_Address       => 0,"
+              & ASCII.LF
+              & Indent & "    EPT_Pointer        => "
               & Mutools.Utils.To_Hex (Number => PML4_Addr + EPT_Flags)
               & ",";
          else

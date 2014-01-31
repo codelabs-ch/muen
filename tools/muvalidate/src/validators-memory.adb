@@ -124,68 +124,13 @@ is
 
    procedure Physical_Memory_Overlap (XML_Data : Muxml.XML_Data_Type)
    is
-      use Interfaces;
-
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "/system/memory/memory");
    begin
-      Mulog.Log (Msg => "Checking overlap of" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img & " physical memory region(s)");
-
-      if DOM.Core.Nodes.Length (List => Nodes) < 2 then
-         return;
-      end if;
-
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 2 loop
-         declare
-            Cur_Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-              (List  => Nodes,
-               Index => I);
-            Cur_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Cur_Node,
-                 Name => "name");
-            Cur_Addr : constant Unsigned_64 := Unsigned_64'Value
-              (DOM.Core.Elements.Get_Attribute
-                 (Elem => Cur_Node,
-                  Name => "physicalAddress"));
-            Cur_Size : constant Unsigned_64 := Unsigned_64'Value
-              (DOM.Core.Elements.Get_Attribute
-                 (Elem => Cur_Node,
-                  Name => "size"));
-         begin
-            for J in I + 1 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
-               declare
-                  Other_Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-                    (List  => Nodes,
-                     Index => J);
-                  Other_Name : constant String
-                    := DOM.Core.Elements.Get_Attribute
-                      (Elem => Other_Node,
-                       Name => "name");
-                  Other_Addr : constant Unsigned_64 := Unsigned_64'Value
-                    (DOM.Core.Elements.Get_Attribute
-                       (Elem => Other_Node,
-                        Name => "physicalAddress"));
-                  Other_Size : constant Unsigned_64 := Unsigned_64'Value
-                    (DOM.Core.Elements.Get_Attribute
-                       (Elem => Other_Node,
-                        Name => "size"));
-               begin
-                  if (Cur_Addr <= Other_Addr
-                      and then Cur_Addr + Cur_Size > Other_Addr)
-                    or
-                      (Other_Addr < Cur_Addr
-                       and then Other_Addr + Other_Size > Cur_Addr)
-                  then
-                     raise Validation_Error with "Overlap of physical memory "
-                       & "region '" & Cur_Name & "' and '" & Other_Name & "'";
-                  end if;
-               end;
-            end loop;
-         end;
-      end loop;
+      Check_Memory_Overlap (Nodes        => Nodes,
+                            Region_Type  => "physical memory region",
+                            Address_Attr => "physicalAddress");
    end Physical_Memory_Overlap;
 
    -------------------------------------------------------------------------

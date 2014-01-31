@@ -27,6 +27,7 @@ with Validators.MSR;
 with Validators.Device;
 with Validators.Scheduling;
 with Validators.Subject;
+with Validators.Platform;
 
 package body Validators
 is
@@ -135,6 +136,8 @@ is
         (Validator => Subject.Event_Switch_Same_Core'Access);
       Validate.Register
         (Validator => Subject.Event_IPI_Different_Core'Access);
+      Validate.Register
+        (Validator => Platform.Memory_Space'Access);
    end Register_All;
 
 end Validators;

@@ -16,7 +16,8 @@ COMMON_SOURCES =  \
 	tikzstyle.tex \
 	graph_*.tex   \
 	lst_*.tex     \
-	images/*
+	images/*      \
+	files/*
 
 REPORT_SOURCES =        \
 	report.tex          \

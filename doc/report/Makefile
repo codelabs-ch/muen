@@ -2,6 +2,8 @@ PDFLATEX = for n in 1 2 3; do pdflatex $<; done
 XSLTPROC = xsltproc
 INKSCAPE = inkscape
 
+SCHEMA_DIR = $(CURDIR)/files
+
 XSLT_FILES =       \
 	binary.tex     \
 	hardware.tex   \
@@ -41,8 +43,6 @@ SLIDES_SOURCES =      \
 	$(COMMON_SOURCES)
 
 UML_TARGETS = $(patsubst %.svg,%.pdf,$(wildcard images/xml_*.svg))
-
-include ../../Makeconf
 
 all: report.pdf slides.pdf
 

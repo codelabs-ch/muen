@@ -50,7 +50,7 @@ is
        CR4_Value          => 16#2020#,
        CR4_Mask           => 16#1767FF#,
        CS_Access          => 16#a09b#,
-       Exception_Bitmap   => 16#F7FFD#,
+       Exception_Bitmap   => 16#FFFFFFFF#,
        VMX_Controls       => VMX_Controls_Type'(
           Exec_Pin    => 73,
           Exec_Proc   => 2996411904,
@@ -88,7 +88,7 @@ is
        CR4_Value          => 16#2020#,
        CR4_Mask           => 16#2000#,
        CS_Access          => 16#c09b#,
-       Exception_Bitmap   => 16#0#,
+       Exception_Bitmap   => 16#FFF08002#,
        VMX_Controls       => VMX_Controls_Type'(
           Exec_Pin    => 73,
           Exec_Proc   => 2996313600,
@@ -112,7 +112,7 @@ is
        CR4_Value          => 16#2020#,
        CR4_Mask           => 16#1767FF#,
        CS_Access          => 16#a09b#,
-       Exception_Bitmap   => 16#F7FFD#,
+       Exception_Bitmap   => 16#FFFFFFFF#,
        VMX_Controls       => VMX_Controls_Type'(
           Exec_Pin    => 73,
           Exec_Proc   => 2996411904,

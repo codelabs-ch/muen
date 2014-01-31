@@ -1258,7 +1258,8 @@ is
            & ASCII.LF
            & Indent & "    Exception_Bitmap   => "
            & Mutools.Utils.To_Hex
-           (Number => Get_Exceptions (Fields => Exceptions)) & ","
+           (Number => Get_Exceptions (Fields => Exceptions,
+                                      Default => 16#ffff_ffff#)) & ","
            & ASCII.LF
            & Indent & "    VMX_Controls       => VMX_Controls_Type'("
            & ASCII.LF

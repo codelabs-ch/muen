@@ -603,8 +603,12 @@ is
          end;
       end loop;
 
-      Vector_Buffer := Vector_Buffer & ","
-        & ASCII.LF & Indent (N => 2) & " others => Skp.Invalid_Subject";
+      if IRQ_Count > 0 then
+         Vector_Buffer := Vector_Buffer & "," & ASCII.LF;
+      end if;
+
+      Vector_Buffer := Vector_Buffer & Indent (N => 2)
+        & " others => Skp.Invalid_Subject";
 
       Tmpl := Templates.Create
         (Content => String_Templates.skp_interrupts_ads);

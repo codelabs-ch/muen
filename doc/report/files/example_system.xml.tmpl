@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<!--
+
+	Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
+	Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<!DOCTYPE system [
+<!ENTITY hardware   SYSTEM "hardware/__HARDWARE__.xml">
+<!ENTITY kernel      SYSTEM "example_kernel.xml">
+<!ENTITY binaries    SYSTEM "example_binaries.xml">
+<!ENTITY scheduling  SYSTEM "example_scheduling.xml">
+<!ENTITY tau0init    SYSTEM "tau0.xml">
+<!ENTITY tau0mem     SYSTEM "tau0_mem.xml">
+<!ENTITY vtinit      SYSTEM "vt.xml">
+<!ENTITY vtmem       SYSTEM "vt_mem.xml">
+<!ENTITY crypterinit SYSTEM "crypter.xml">
+<!ENTITY cryptermem  SYSTEM "crypter_mem.xml">
+<!ENTITY sminit      SYSTEM "sm.xml">
+<!ENTITY smmem       SYSTEM "sm_mem.xml">
+<!ENTITY xv6init     SYSTEM "xv6.xml">
+<!ENTITY xv6mem      SYSTEM "xv6_mem.xml">
+]>
+<system vmxon_address="1000" vmcs_start_address="5000">
+	&hardware;
+	&kernel;
+	&binaries;
+
+	<subjects>
+		<subject id="0" name="tau0" profile="native" cpu="3" pml4_address="210000" io_bitmap_address="214000" msr_bitmap_address="216000">
+			&tau0init;
+			<memory_layout>
+				&tau0mem;
+				<!-- τ0 => kernel interface page -->
+				<memory_region physical_address="1ff000" virtual_address="4000" size="4k" alignment="4k" writable="true"  executable="false" memory_type="WB"/>
+			</memory_layout>
+			<binary name="tau0" physical_address="217000"/>
+		</subject>
+
+		<subject id="1" name="vt" profile="native" cpu="0" pml4_address="240000" io_bitmap_address="244000" msr_bitmap_address="246000">
+			&vtinit;
+			<memory_layout>
+				&vtmem;
+				<!-- virtual terminal console 6 -->
+				<memory_region physical_address="26f000" virtual_address="b9000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
+
+				<!-- virtual terminals 1-6      -->
+				<memory_region physical_address="3d7000" virtual_address="10000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+				<memory_region physical_address="29f000" virtual_address="11000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+				<memory_region physical_address="300000" virtual_address="12000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+				<memory_region physical_address="300000" virtual_address="13000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+				<memory_region physical_address="2cf000" virtual_address="14000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+				<memory_region physical_address="26f000" virtual_address="15000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+
+				<!-- Xv6 driver page            -->
+				<memory_region physical_address="3d8000" virtual_address="20000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
+			</memory_layout>
+			<binary name="vt" physical_address="247000"/>
+			<device name="vga"/>
+			<device name="cursor"/>
+			<device name="keyboard"/>
+			<event_table>
+				<interrupt event="1" dst_subject="xv6" dst_vector="33" send_ipi="true"/>
+			</event_table>
+			<msr start="802" end="802" mode="r"/>
+		</subject>
+
+		<subject id="2" name="crypter" profile="native" cpu="2" pml4_address="270000" io_bitmap_address="274000" msr_bitmap_address="276000">
+			&crypterinit;
+			<memory_layout>
+				&cryptermem;
+				<!-- crypter request  page      -->
+				<memory_region physical_address="29d000" virtual_address="10000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+				<!-- crypter response page      -->
+				<memory_region physical_address="29e000" virtual_address="20000" size="4k" alignment="4k" writable="true"  executable="false" memory_type="WB"/>
+				<!-- virtual terminal console 2 -->
+				<memory_region physical_address="29f000" virtual_address="b8000" size="4k" alignment="4k" writable="true"  executable="false" memory_type="WB"/>
+			</memory_layout>
+			<binary name="crypter" physical_address="277000"/>
+			<event_table>
+				<interrupt event="4" dst_subject="xv6" dst_vector="200" send_ipi="true"/>
+			</event_table>
+		</subject>
+
+		<subject id="3" name="sm" profile="native" cpu="1" pml4_address="2a0000" io_bitmap_address="2a4000" msr_bitmap_address="2a6000">
+			&sminit;
+			<memory_layout>
+				&smmem;
+				<!-- subject state descriptors  -->
+				<memory_region physical_address="1fe000" virtual_address="1fe000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
+				<!-- virtual terminal console 5 -->
+				<memory_region physical_address="2cf000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
+			</memory_layout>
+			<binary name="sm" physical_address="2a7000"/>
+			<event_table>
+				<handover event="4" dst_subject="xv6"/>
+			</event_table>
+		</subject>
+
+		<subject id="4" name="xv6" profile="vm" cpu="1" pml4_address="2d0000" io_bitmap_address="2d4000" msr_bitmap_address="2d6000">
+			&xv6init;
+			<memory_layout>
+				&xv6mem;
+				<!-- virtual terminal console 1         -->
+				<memory_region physical_address="3d7000" virtual_address="b8000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
+				<!-- xv6 -> crypter request page        -->
+				<memory_region physical_address="29d000" virtual_address="70000" size="4k" alignment="4k" writable="true" executable="false" memory_type="WB"/>
+				<!-- xv6 -> crypter response page       -->
+				<memory_region physical_address="29e000" virtual_address="80000" size="4k" alignment="4k" writable="false" executable="false" memory_type="WB"/>
+				<!-- driver page shared with vt subject -->
+				<memory_region physical_address="3d8000" virtual_address="90000" size="1M" alignment="4k" writable="true" executable="true" memory_type="WB"/>
+			</memory_layout>
+			<binary name="xv6" physical_address="2d7000"/>
+			<device name="cursor"/>
+			<trap_table>
+				<entry kind="*" dst_subject="sm" dst_vector="36"/>
+			</trap_table>
+			<event_table>
+				<interrupt event="1" dst_subject="crypter" dst_vector="36" send_ipi="true"/>
+			</event_table>
+		</subject>
+	</subjects>
+
+	&scheduling;
+</system>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+	Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
+	Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+	<xs:complexType name="scheduling_type">
+		<xs:annotation>
+			<xs:documentation>
+				A scheduling plan is defined by a number of major frames and a
+				tick rate in hertz [Hz]. All major frames must specify the same
+				number of scheduling CPUs.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="major_frame" type="major_frame_type" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="tick_rate" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="major_frame_type">
+		<xs:annotation>
+			<xs:documentation>
+				A major frame specifies a number of CPU scheduling units. The
+				first CPU entry specifies the major frame of CPU0, the second
+				of CPU1 etc. A major frame must contain as many CPU elements as
+				the number of logical CPUs defined in the hardware section of
+				the policy. Major frames must have equal length on all CPUs,
+				meaning that the sum of all minor frame ticks of each
+				scheduling CPU must be equal.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="cpu" type="cpu_type" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="cpu_type">
+		<xs:annotation>
+			<xs:documentation>
+				A scheduling CPU defines a number of minor frames which are
+				executed in the specified order	by the scheduler running on the
+				given CPU.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="minor_frame" type="minor_frame_type" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="minor_frame_type">
+		<xs:annotation>
+			<xs:documentation>
+				A minor frame specifies a subject identified by id and a time
+				slice in ticks. The unit of ticks is specified by the
+				scheduling policy's tick rate.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="subject_id" type="xs:nonNegativeInteger" use="required"/>
+		<xs:attribute name="ticks"      type="xs:positiveInteger"    use="required"/>
+	</xs:complexType>
+
+</xs:schema>

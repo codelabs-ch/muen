@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+	Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
+	Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+	<xs:simpleType name="hex_string">
+		<xs:annotation>
+			<xs:documentation>
+				Hexadecimal string of arbitrary length.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9a-fA-F]+"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="address_type">
+		<xs:annotation>
+			<xs:documentation>
+				Hexadecimal value specifying a 64-bit memory address.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="hex_string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="device_name_type">
+		<xs:annotation>
+			<xs:documentation>
+				String value uniquely identifying a hardware device.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="128"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="vector_type">
+		<xs:annotation>
+			<xs:documentation>
+				Interrupt vector number that is restricted to the range 0 .. 255.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="irq_type">
+		<xs:annotation>
+			<xs:documentation>
+				Valid hardware interrupts are in the range of 0 .. 223. The upper bound is due to
+				interrupt remapping (adding an offset of 32) performed by the policy compilation tool.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="223"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="port_address_type">
+		<xs:annotation>
+			<xs:documentation>
+				Hexadecimal value specifying an I/O port address.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="hex_string">
+			<xs:length value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="io_port_type">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies an I/O port range from start port to end port.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="start" type="port_address_type" use="required"/>
+		<xs:attribute name="end"   type="port_address_type" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="io_ports_type">
+		<xs:annotation>
+			<xs:documentation>
+				A set of I/O port ranges.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="port_range" type="io_port_type" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="memory_size_type">
+		<xs:annotation>
+			<xs:documentation>
+				Memory size expressed in kilo, mega or gigabytes.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]+[kKmMgG]"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="memory_alignment_type">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies alignment constraints for memory addresses. Memory addresses
+				must be a multiple of the alignment.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="4[kK]|2[mM]|1[gG]"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="memory_type_type">
+		<xs:annotation>
+			<xs:documentation>
+				Memory type as specified by Intel SDM, volume 3A, section 11.3.
+				A memory type specifies the caching behavior of the associated memory
+				region.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="UC|WC|WT|WB|WP"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="memory_region_type">
+		<xs:annotation>
+			<xs:documentation>
+				A memory region defines a block of memory of specified size that starts at the given physical
+				address. The size must be a multiple of the defined alignment. The virtual address specifies the
+				location of the memory region in the virtual address space. Additional attributes define access
+				rights and memory caching behavior.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="physical_address" type="address_type"          use="required"/>
+		<xs:attribute name="size"             type="memory_size_type"      use="required"/>
+		<xs:attribute name="alignment"        type="memory_alignment_type" use="required"/>
+		<xs:attribute name="virtual_address"  type="address_type"          use="required"/>
+		<xs:attribute name="writable"         type="xs:boolean"            use="required"/>
+		<xs:attribute name="executable"       type="xs:boolean"            use="required"/>
+		<xs:attribute name="memory_type"      type="memory_type_type"      use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="memory_layout_type">
+		<xs:annotation>
+			<xs:documentation>
+				A memory layout consists of a number of memory regions.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="memory_region" type="memory_region_type" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="msr_mode_type">
+		<xs:annotation>
+			<xs:documentation>
+				Access mode for model-specific register (MSR).
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="r"/>
+			<xs:enumeration value="w"/>
+			<xs:enumeration value="rw"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="msr_address_type">
+		<xs:annotation>
+			<xs:documentation>
+				Hexadecimal value specifying an MSR address.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="hex_string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="msr_type">
+		<xs:annotation>
+			<xs:documentation>
+				Grants access of given mode to the range of model-specific registers specified by start and end address (inclusive).
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="start" type="msr_address_type" use="required"/>
+		<xs:attribute name="end"   type="msr_address_type" use="required"/>
+		<xs:attribute name="mode"  type="msr_mode_type"    use="required"/>
+	</xs:complexType>
+
+</xs:schema>

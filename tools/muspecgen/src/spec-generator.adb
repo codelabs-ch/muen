@@ -526,6 +526,7 @@ is
         (List => McKae.XML.XPath.XIA.XPath_Query
            (N     => Policy.Doc,
             XPath => "/system/subjects/subject/devices/device/irq"));
+      Has_IRQs  : constant Boolean := IRQ_Count > 0;
 
       Cur_IRQ : Positive := 1;
 
@@ -603,7 +604,10 @@ is
          end;
       end loop;
 
-      if IRQ_Count > 0 then
+      if not Has_IRQs then
+         IRQ_Buffer := IRQ_Buffer & Indent (N => 2)
+           & " others => Null_IRQ_Route";
+      else
          Vector_Buffer := Vector_Buffer & "," & ASCII.LF;
       end if;
 
@@ -614,7 +618,7 @@ is
         (Content => String_Templates.skp_interrupts_ads);
       Templates.Replace (Template => Tmpl,
                          Pattern  => "__routing_range__",
-                         Content  => "1 .." & IRQ_Count'Img);
+                         Content  => "1 .." & Natural'Max (1, IRQ_Count)'Img);
       Templates.Replace (Template => Tmpl,
                          Pattern  => "__irq_routing_table__",
                          Content  => To_String (IRQ_Buffer));

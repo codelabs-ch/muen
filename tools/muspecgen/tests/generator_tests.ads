@@ -29,4 +29,7 @@ is
    --  Write SPARK spec and C header files.
    procedure Write_Specs;
 
+   --  Verify generation of SPARK specs if no IRQ routing is needed.
+   procedure Write_No_IRQs;
+
 end Generator_Tests;

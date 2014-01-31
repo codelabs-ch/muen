@@ -16,6 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core.Nodes;
+
+with McKae.XML.XPath.XIA;
+
 with Test_Utils;
 
 with Muxml;
@@ -37,7 +41,49 @@ is
       T.Add_Test_Routine
         (Routine => Write_Specs'Access,
          Name    => "Write spec files");
+      T.Add_Test_Routine
+        (Routine => Write_No_IRQs'Access,
+         Name    => "Write empty IRQ routing spec file");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_No_IRQs
+   is
+      Intr_Spec : constant String := "obj/skp-interrupts.ads";
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   File => "data/test_policy.xml");
+
+      declare
+         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Policy.Doc,
+               XPath => "/system/subjects/subject[@name='subject1']/devices"),
+            Index => 0);
+         Tmp : DOM.Core.Node;
+         pragma Unreferenced (Tmp);
+      begin
+
+         --  Remove all devices with IRQs.
+
+         while DOM.Core.Nodes.Has_Child_Nodes (N => Node) loop
+            Tmp := DOM.Core.Nodes.Remove_Child
+              (N         => Node,
+               Old_Child => DOM.Core.Nodes.First_Child (N => Node));
+         end loop;
+
+         Generator.Write (Output_Dir => "obj",
+                          Policy     => Policy);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Intr_Spec,
+                  Filename2 => "data/skp-interrupts_noirq.ref"),
+                 Message   => "Interrupt spec mismatch");
+      end;
+   end Write_No_IRQs;
 
    -------------------------------------------------------------------------
 

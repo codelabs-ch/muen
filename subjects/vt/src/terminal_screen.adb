@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@ with Log;
 
 package body Terminal_Screen
 is
+
+   Semicolon : constant := 16#3b#;
 
    subtype Width_Type  is Natural range 1 .. 80;
    subtype Height_Type is Natural range 1 .. 25;
@@ -126,12 +128,8 @@ is
                when 16#30# .. 16#37# =>
                   VGA.Set_Text_Color
                     (Color => Color_Table (Param and 16#7#));
-               when 16#3b# =>
-
-                  --  Semicolon, ignore
-
-                  null;
-               when others =>
+               when Semicolon => null;
+               when others    =>
                   Print_Unknown
                     (State => "CSI_Select_SGR",
                      Char  => Param);
@@ -258,7 +256,7 @@ is
 
             case Pos
             is
-               when 16#30# .. 16#39# | 16#3b# =>
+               when 16#30# .. 16#39# | Semicolon =>
                   Fsm.State := State_CSI_Param;
 
                   CSI_Add_Param (Char => Pos);
@@ -276,7 +274,7 @@ is
 
             case Pos
             is
-               when 16#30# .. 16#39# | 16#3b# =>
+               when 16#30# .. 16#39# | Semicolon =>
                   CSI_Add_Param (Char => Pos);
                when 16#40# .. 16#7e# =>
                   CSI_Dispatch (Char => Pos);

@@ -99,6 +99,8 @@ is
       Validate.Register
         (Validator => Memory.Entity_Name_Encoding'Access);
       Validate.Register
+        (Validator => Memory.Physical_Memory_Overlap'Access);
+      Validate.Register
         (Validator => MSR.Start_Smaller_End'Access);
       Validate.Register
         (Validator => MSR.Low_Or_High'Access);

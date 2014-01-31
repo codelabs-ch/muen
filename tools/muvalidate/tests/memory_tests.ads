@@ -59,7 +59,10 @@ is
    --  Validate entity name encoding.
    procedure Validate_Entity_Name_Encoding;
 
-   --  Validate entity name encoding.
+   --  Validate CPU entity name encoding.
    procedure Validate_CPU_Entity_Name_Encoding;
+
+   --  Validate physical memory region overlap.
+   procedure Validate_Physmem_Overlap;
 
 end Memory_Tests;

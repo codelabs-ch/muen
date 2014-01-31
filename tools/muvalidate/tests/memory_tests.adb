@@ -74,6 +74,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_CPU_Entity_Name_Encoding'Access,
          Name    => "Validate CPU entity name encoding");
+      T.Add_Test_Routine
+        (Routine => Validate_Physmem_Overlap'Access,
+         Name    => "Validate physical memory region overlap");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -155,6 +158,28 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Physaddr_Alignment;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Physmem_Overlap
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Memory.Physical_Memory_Overlap (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Overlap of physical memory region 'invalid_0|vmxon'"
+                    & " and 'invalid|vmcs'",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Physmem_Overlap;
 
    -------------------------------------------------------------------------
 

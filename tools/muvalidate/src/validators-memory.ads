@@ -55,4 +55,7 @@ is
    --  (e.g. 'linux|zp' or 'kernel_0|vmxon').
    procedure Entity_Name_Encoding (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that no physical memory regions overlap.
+   procedure Physical_Memory_Overlap (XML_Data : Muxml.XML_Data_Type);
+
 end Validators.Memory;

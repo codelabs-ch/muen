@@ -41,4 +41,7 @@ is
    --  Validate event IPI notification destinations.
    procedure Validate_Event_IPI_Destination;
 
+   --  Validate subject name uniqueness.
+   procedure Validate_Name_Uniqueness;
+
 end Subject_Tests;

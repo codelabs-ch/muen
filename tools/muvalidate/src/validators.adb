@@ -124,6 +124,8 @@ is
       Validate.Register
         (Validator => Scheduling.Major_Frame_Ticks'Access);
       Validate.Register
+        (Validator => Subject.Name_Uniqueness'Access);
+      Validate.Register
         (Validator => Subject.CPU_ID'Access);
       Validate.Register
         (Validator => Subject.Event_Subject_References'Access);

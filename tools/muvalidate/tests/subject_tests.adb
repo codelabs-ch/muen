@@ -53,6 +53,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Event_IPI_Destination'Access,
          Name    => "Validate event IPI destination");
+      T.Add_Test_Routine
+        (Routine => Validate_Name_Uniqueness'Access,
+         Name    => "Validate name uniqueness");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -179,5 +182,39 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Event_Switch_Destination;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Name_Uniqueness
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+      declare
+         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Data.Doc,
+               XPath => "/system/subjects/subject[@name='subject1']"),
+            Index => 0);
+      begin
+
+         --  Set duplicate subject name.
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "name",
+            Value => "linux");
+
+         Validators.Subject.Name_Uniqueness (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subjects with id 0 and 1 have identical name 'linux'",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Name_Uniqueness;
 
 end Subject_Tests;

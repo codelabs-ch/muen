@@ -21,6 +21,9 @@ with Muxml;
 package Validators.Subject
 is
 
+   --  Validate subject name uniqueness
+   procedure Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate subject CPU ID.
    procedure CPU_ID (XML_Data : Muxml.XML_Data_Type);
 

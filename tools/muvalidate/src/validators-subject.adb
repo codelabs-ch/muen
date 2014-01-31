@@ -242,4 +242,56 @@ is
                                Error_Msg => "must run on the same CPU");
    end Event_Switch_Same_Core;
 
+   -------------------------------------------------------------------------
+
+   procedure Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+      Subjects : constant DOM.Core.Node_List
+        := XPath_Query (N     => XML_Data.Doc,
+                        XPath => "/system/subjects/subject");
+   begin
+      Mulog.Log (Msg => "Checking uniqueness of" & DOM.Core.Nodes.Length
+                 (List => Subjects)'Img & " subject name(s)");
+
+      if DOM.Core.Nodes.Length (List => Subjects) < 2 then
+         return;
+      end if;
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 2 loop
+         declare
+            Cur_Subj : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Subjects,
+               Index => I);
+            Cur_Id   : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Cur_Subj,
+               Name => "id");
+            Cur_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Cur_Subj,
+               Name => "name");
+         begin
+            for J in I + 1 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+               declare
+                  Other_Subj : constant DOM.Core.Node := DOM.Core.Nodes.Item
+                    (List  => Subjects,
+                     Index => J);
+                  Other_Id   : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Other_Subj,
+                       Name => "id");
+                  Other_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Other_Subj,
+                       Name => "name");
+               begin
+                  if Cur_Name = Other_Name then
+                     raise Validation_Error with "Subjects with id " & Cur_Id
+                       & " and " & Other_Id & " have identical name '"
+                       & Cur_Name & "'";
+                  end if;
+               end;
+            end loop;
+         end;
+      end loop;
+   end Name_Uniqueness;
+
 end Validators.Subject;

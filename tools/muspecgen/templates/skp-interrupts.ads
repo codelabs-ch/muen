@@ -3,7 +3,10 @@ with SK;
 --# inherit SK, Skp;
 package Skp.Interrupts is
 
-   subtype Remapped_Vector_Type is SK.Byte range 32 .. 255;
+   Remap_Offset : constant := 32;
+
+   subtype Remapped_Vector_Type is Skp.Dst_Vector_Range range
+     Remap_Offset .. Skp.Dst_Vector_Range'Last;
 
    type IRQ_Route_Type is record
       CPU    : Skp.CPU_Range;
@@ -14,7 +17,7 @@ package Skp.Interrupts is
    Null_IRQ_Route : constant IRQ_Route_Type := IRQ_Route_Type'
      (CPU    => 0,
       IRQ    => 0,
-      Vector => 255);
+      Vector => Skp.Invalid_Vector);
 
    type Routing_Range is range __routing_range__;
 

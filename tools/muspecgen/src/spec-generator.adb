@@ -814,6 +814,11 @@ is
         (Index  : Natural;
          Minors : DOM.Core.Node_List);
 
+      --  Write minor frame with given index to buffer.
+      procedure Write_Minor_Frame
+        (Minor : DOM.Core.Node;
+         Index : Natural);
+
       ----------------------------------------------------------------------
 
       function Get_Max_Minor_Count (Schedule : DOM.Core.Node) return Positive
@@ -848,35 +853,6 @@ is
       is
          Minor_Count : constant Positive := DOM.Core.Nodes.Length
            (List => Minors);
-
-         --  Write minor frame with given index to buffer.
-         procedure Write_Minor_Frame
-           (Minor : DOM.Core.Node;
-            Index : Natural);
-
-         -------------------------------------------------------------------
-
-         procedure Write_Minor_Frame
-           (Minor : DOM.Core.Node;
-            Index : Natural)
-         is
-            Ticks : constant Long_Integer := Timer_Factor * Long_Integer'Value
-              (DOM.Core.Elements.Get_Attribute
-                 (Elem => Minor,
-                  Name => "ticks"));
-
-            Subject    : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Minor,
-               Name => "subject");
-            Subject_Id : constant String := Get_Attribute
-              (Doc   => Policy.Doc,
-               XPath => "/system/subjects/subject[@name='" & Subject & "']",
-               Name  => "id");
-         begin
-            Buffer := Buffer & Indent (N => 4) & Index'Img
-              & " => Minor_Frame_Type'(Subject_Id => " & Subject_Id
-              & ", Ticks =>" & Ticks'Img & ")";
-         end Write_Minor_Frame;
       begin
          Buffer := Buffer & Indent (N => 2)
            & Index'Img & " => Major_Frame_Type'"
@@ -904,6 +880,30 @@ is
 
          Buffer := Buffer & "))";
       end Write_Major_Frame;
+
+      ----------------------------------------------------------------------
+
+      procedure Write_Minor_Frame
+        (Minor : DOM.Core.Node;
+         Index : Natural)
+      is
+         Ticks : constant Long_Integer := Timer_Factor * Long_Integer'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Minor,
+               Name => "ticks"));
+
+         Subject    : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Minor,
+            Name => "subject");
+         Subject_Id : constant String := Get_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/subjects/subject[@name='" & Subject & "']",
+            Name  => "id");
+      begin
+         Buffer := Buffer & Indent (N => 4) & Index'Img
+           & " => Minor_Frame_Type'(Subject_Id => " & Subject_Id
+           & ", Ticks =>" & Ticks'Img & ")";
+      end Write_Minor_Frame;
    begin
       Majors := McKae.XML.XPath.XIA.XPath_Query
         (N     => Scheduling,

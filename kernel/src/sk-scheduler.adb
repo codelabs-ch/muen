@@ -398,33 +398,35 @@ is
    --#    Events.State from *, Vector &
    --#    X86_64.State from *;
    is
+      Vect_Nr : Skp.Interrupts.Remapped_Vector_Type;
    begin
-      if Vector in Skp.Interrupts.Remapped_Vector_Type then
-         if Skp.Interrupts.Vector_Routing (Vector) in Skp.Subject_Id_Type then
+      if Vector >= Skp.Interrupts.Remap_Offset then
+         Vect_Nr := Skp.Interrupts.Remapped_Vector_Type (Vector);
+         if Skp.Interrupts.Vector_Routing (Vect_Nr) in Skp.Subject_Id_Type then
             Events.Insert_Event
-              (Subject => Skp.Interrupts.Vector_Routing (Vector),
+              (Subject => Skp.Interrupts.Vector_Routing (Vect_Nr),
                Event   => Vector);
          end if;
 
          pragma Debug
-           (Skp.Interrupts.Vector_Routing (Vector) not in Skp.Subject_Id_Type
+           (Skp.Interrupts.Vector_Routing (Vect_Nr) not in Skp.Subject_Id_Type
             and then Vector /= IPI_Vector,
             KC.Put_String (Item => "Spurious IRQ vector "));
          pragma Debug
-           (Skp.Interrupts.Vector_Routing (Vector) not in Skp.Subject_Id_Type
+           (Skp.Interrupts.Vector_Routing (Vect_Nr) not in Skp.Subject_Id_Type
             and then Vector /= IPI_Vector,
             KC.Put_Byte (Item => Vector));
          pragma Debug
-           (Skp.Interrupts.Vector_Routing (Vector) not in Skp.Subject_Id_Type
+           (Skp.Interrupts.Vector_Routing (Vect_Nr) not in Skp.Subject_Id_Type
             and then Vector /= IPI_Vector,
             KC.New_Line);
       end if;
 
-      pragma Debug (Vector not in Skp.Interrupts.Remapped_Vector_Type,
+      pragma Debug (Vector < Skp.Interrupts.Remap_Offset,
                     KC.Put_String (Item => "IRQ with invalid vector "));
-      pragma Debug (Vector not in Skp.Interrupts.Remapped_Vector_Type,
+      pragma Debug (Vector < Skp.Interrupts.Remap_Offset,
                     KC.Put_Byte (Item => Vector));
-      pragma Debug (Vector not in Skp.Interrupts.Remapped_Vector_Type,
+      pragma Debug (Vector < Skp.Interrupts.Remap_Offset,
                     KC.New_Line);
 
       Apic.EOI;

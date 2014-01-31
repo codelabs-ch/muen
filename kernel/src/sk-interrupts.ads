@@ -16,7 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp;
+
 with SK.Descriptors;
+
+use type Skp.Dst_Vector_Range;
 
 --# inherit
 --#    System,

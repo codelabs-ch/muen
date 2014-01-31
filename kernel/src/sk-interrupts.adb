@@ -110,11 +110,14 @@ is
    is
    begin
       for I in Skp.Interrupts.Routing_Range loop
-         IO_Apic.Route_IRQ
-           (IRQ            => Skp.Interrupts.IRQ_Routing (I).IRQ,
-            Vector         => Skp.Interrupts.IRQ_Routing (I).Vector,
-            Trigger_Mode   => IO_Apic.Edge,
-            Destination_Id => SK.Byte (Skp.Interrupts.IRQ_Routing (I).CPU));
+         if Skp.Interrupts.IRQ_Routing (I).Vector /= Skp.Invalid_Vector then
+            IO_Apic.Route_IRQ
+              (IRQ            => Skp.Interrupts.IRQ_Routing (I).IRQ,
+               Vector         =>
+                 SK.Byte (Skp.Interrupts.IRQ_Routing (I).Vector),
+               Trigger_Mode   => IO_Apic.Edge,
+               Destination_Id => SK.Byte (Skp.Interrupts.IRQ_Routing (I).CPU));
+         end if;
       end loop;
    end Setup_IRQ_Routing;
 

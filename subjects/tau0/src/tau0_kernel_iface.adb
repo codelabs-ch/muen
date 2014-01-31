@@ -45,11 +45,16 @@ is
    --#    Active_Major from Cur_Major;
    is
    begin
+
+      --  A warning is issued for a scheduling plan with only one major frame.
+
+      pragma Warnings (Off);
       if Cur_Major = Skp.Scheduling.Major_Frame_Range'Last then
          Cur_Major := Skp.Scheduling.Major_Frame_Range'First;
       else
          Cur_Major := Cur_Major + 1;
       end if;
+      pragma Warnings (On);
 
       Active_Major := Cur_Major;
    end Switch_Major_Frame;

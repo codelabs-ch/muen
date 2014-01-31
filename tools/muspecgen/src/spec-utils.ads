@@ -26,6 +26,7 @@ package Spec.Utils
 is
 
    --  Converts a given list of bitfields to their corresponding numeric value.
+   --  The result is initialized to the given default value.
    generic
       --  Enumration type specifying all bitfields.
       type Bitfield_Type is (<>);
@@ -36,7 +37,8 @@ is
       --  Mapping of fields to bit position.
       Map : Mapping_Type;
    function To_Number
-     (Fields : DOM.Core.Node_List)
+     (Fields  : DOM.Core.Node_List;
+      Default : Interfaces.Unsigned_64 := 0)
       return Interfaces.Unsigned_64;
 
 end Spec.Utils;

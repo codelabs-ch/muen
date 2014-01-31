@@ -29,4 +29,7 @@ is
    --  Convert flag type to number.
    procedure To_Number;
 
+   --  Convert flag type to number with default value.
+   procedure To_Number_Default;
+
 end Utils_Tests;

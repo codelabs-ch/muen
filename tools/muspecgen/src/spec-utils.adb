@@ -24,10 +24,11 @@ is
    -------------------------------------------------------------------------
 
    function To_Number
-     (Fields : DOM.Core.Node_List)
+     (Fields  : DOM.Core.Node_List;
+      Default : Interfaces.Unsigned_64 := 0)
       return Interfaces.Unsigned_64
    is
-      Result : Interfaces.Unsigned_64 := 0;
+      Result : Interfaces.Unsigned_64 := Default;
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Fields) - 1 loop
          declare
@@ -41,6 +42,10 @@ is
          begin
             if Flag_Value = "1" then
                Result := Mutools.Utils.Bit_Set
+                 (Value => Result,
+                  Pos   => Map (Flag_Name));
+            else
+               Result := Mutools.Utils.Bit_Clear
                  (Value => Result,
                   Pos   => Map (Flag_Name));
             end if;

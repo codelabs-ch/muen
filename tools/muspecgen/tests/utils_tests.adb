@@ -89,6 +89,9 @@ is
       T.Add_Test_Routine
         (Routine => To_Number'Access,
          Name    => "Convert flags to number");
+      T.Add_Test_Routine
+        (Routine => To_Number_Default'Access,
+         Name    => "Convert flags to number with default set");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -110,5 +113,37 @@ is
       Assert (Condition => Get_Exceptions (Fields => Exceptions) = 0,
               Message   => "Result mismatch");
    end To_Number;
+
+   -------------------------------------------------------------------------
+
+   procedure To_Number_Default
+   is
+      use type Interfaces.Unsigned_64;
+
+      Policy     : Muxml.XML_Data_Type;
+      Exceptions : DOM.Core.Node_List;
+   begin
+      Muxml.Parse (Data => Policy,
+                   File => "data/test_policy.xml");
+      Exceptions := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='tau0']"
+         & "/vcpu/vmx/masks/exception/*");
+
+      Assert (Condition => Get_Exceptions
+              (Fields  => Exceptions,
+               Default => 16#ffffffff#) = 16#ffffffff#,
+              Message   => "Result mismatch (1)");
+
+      Exceptions := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject1']"
+         & "/vcpu/vmx/masks/exception/*");
+
+      Assert (Condition => Get_Exceptions
+              (Fields  => Exceptions,
+               Default => 16#ffffffff#) = 16#fff08002#,
+              Message   => "Result mismatch (2)");
+   end To_Number_Default;
 
 end Utils_Tests;

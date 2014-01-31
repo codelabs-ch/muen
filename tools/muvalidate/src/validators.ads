@@ -73,4 +73,12 @@ private
       Right     : Interfaces.Unsigned_64;
       Error_Msg : String);
 
+   --  Check memory overlap of given 'Region_Type' nodes. 'Address_Attr'
+   --  specifies the attribute used to query the start address of a given
+   --  region node.
+   procedure Check_Memory_Overlap
+     (Nodes        : DOM.Core.Node_List;
+      Region_Type  : String;
+      Address_Attr : String);
+
 end Validators;

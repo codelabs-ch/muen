@@ -93,9 +93,14 @@ is
                               Y => Height_Type'First);
          when 16#4a# =>
 
-            --  CSI J: Erase display
+            --  CSI J: ED - Erase Display
 
             VGA.Delete_Screen_From_Cursor;
+         when 16#4b# =>
+
+            --  CSI K: EL - Erase in Line
+
+            VGA.Delete_Line_From_Cursor;
          when 16#6d# =>
 
             --  CSI n m: SGR - Select Graphic Rendition

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
+	<xs:include_format schemaLocation="memory.xsd"/>
+
 	<xs:simpleType name="memorySizeType">
 		<xs:restriction base="word64Type"/>
 	</xs:simpleType>
@@ -30,7 +32,6 @@
 		<xs:attribute name="name"            type="nameType"       use="required"/>
 		<xs:attribute name="physicalAddress" type="word64Type"     use="required"/>
 		<xs:attribute name="size"            type="memorySizeType" use="required"/>
-		<xs:attribute name="caching"         type="cachingType"    use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="fileContentType">
@@ -47,17 +48,6 @@
 		<xs:sequence>
 			<xs:element name="memory" type="memoryType" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="memoryType">
-		<xs:choice minOccurs="0" maxOccurs="1">
-			<xs:element name="file" type="fileContentType"/>
-			<xs:element name="fill" type="fillContentType"/>
-		</xs:choice>
-		<xs:attribute name="name"            type="nameType"       use="required"/>
-		<xs:attribute name="size"            type="memorySizeType" use="required"/>
-		<xs:attribute name="physicalAddress" type="word64Type"     use="required"/>
-		<xs:attribute name="caching"         type="cachingType"    use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="memoryRefsType">

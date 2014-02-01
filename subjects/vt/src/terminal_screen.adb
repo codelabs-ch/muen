@@ -107,10 +107,20 @@ is
       is
          when 16#48# =>
 
-            --  CSI H: Cursor position
+            --  CSI n ; m H: CUP - Cursor position
 
-            VGA.Set_Position (X => Width_Type'First,
-                              Y => Height_Type'First);
+            if Fsm.CSI_Param_Idx = CSI_Empty_Params then
+               VGA.Set_Position (X => Width_Type'First,
+                                 Y => Height_Type'First);
+            elsif Fsm.CSI_Param_Idx = 2 then
+               VGA.Set_Position (X => Width_Type (Fsm.CSI_Params (2)),
+                                 Y => Height_Type (Fsm.CSI_Params (1)));
+            else
+               Log.Text_IO.Put_String
+                 (Item => "!! Unsupported parameter count 16#");
+               Log.Text_IO.Put_Byte (Item => SK.Byte (Fsm.CSI_Param_Idx));
+               Log.Text_IO.Put_Line (Item => "# in CSI H");
+            end if;
          when 16#4a# =>
 
             --  CSI J: ED - Erase Display

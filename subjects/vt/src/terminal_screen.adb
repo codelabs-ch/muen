@@ -135,6 +135,10 @@ is
             CSI_Get_Param (N    => N,
                            Name => "CSI C");
             VGA.Cursor_Forward (N => N);
+         when 16#44# =>  --  CSI n D: CUB - Cursor Back
+            CSI_Get_Param (N    => N,
+                           Name => "CSI D");
+            VGA.Cursor_Back (N => N);
          when 16#48# =>  --  CSI n ; m H: CUP - Cursor position
             CSI_Get_Params (N    => N,
                             M    => M,

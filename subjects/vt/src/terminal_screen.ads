@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -62,7 +62,9 @@ private
    subtype CSI_Param_Range is CSI_Param_Idx_Range range
      1 .. CSI_Param_Idx_Range'Last;
 
-   type CSI_Param_Array is array (CSI_Param_Range) of SK.Byte;
+   type CSI_Param_Value_Type is range 0 .. 16383;
+
+   type CSI_Param_Array is array (CSI_Param_Range) of CSI_Param_Value_Type;
 
    type Terminal_State_Type is record
       State         : State_Type;

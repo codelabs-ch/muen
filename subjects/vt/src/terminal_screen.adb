@@ -69,13 +69,33 @@ is
 
    procedure CSI_Add_Param (Char : SK.Byte)
    is
+      use type SK.Byte;
    begin
-      if Fsm.CSI_Param_Idx < CSI_Param_Range'Last then
-         Fsm.CSI_Param_Idx := Fsm.CSI_Param_Idx + 1;
-         Fsm.CSI_Params (Fsm.CSI_Param_Idx) := Char;
-      else
-         Log.Text_IO.Put_Line (Item => "!! CSI params overrun");
+      if Char = Semicolon then
+         if Fsm.CSI_Param_Idx = CSI_Param_Range'Last then
+            Log.Text_IO.Put_Line (Item => "!! Ignoring extra CSI parameter");
+         else
+            Fsm.CSI_Param_Idx := Fsm.CSI_Param_Idx + 1;
+         end if;
+         return;
       end if;
+
+      declare
+         Value : Natural := Natural (Char and 16#f#);
+      begin
+         if Fsm.CSI_Param_Idx = CSI_Empty_Params then
+            Fsm.CSI_Param_Idx := Fsm.CSI_Param_Idx + 1;
+            Fsm.CSI_Params (Fsm.CSI_Param_Idx) := CSI_Param_Value_Type (Value);
+         else
+            Value := Natural (Fsm.CSI_Params (Fsm.CSI_Param_Idx)) * 10 + Value;
+            if Value <= Natural (CSI_Param_Value_Type'Last) then
+               Fsm.CSI_Params (Fsm.CSI_Param_Idx) := CSI_Param_Value_Type
+                 (Value);
+            else
+               Log.Text_IO.Put_Line (Item => "!! Overflow in CSI_Add_Param");
+            end if;
+         end if;
+      end;
    end CSI_Add_Param;
 
    -------------------------------------------------------------------------
@@ -125,24 +145,27 @@ is
       use type SK.Byte;
    begin
       if Fsm.CSI_Param_Idx = CSI_Empty_Params then
-         Log.Text_IO.Put_Line ("!! Empty CSI params");
+         Log.Text_IO.Put_Line (Item => "!! Empty CSI params");
          return;
       end if;
 
       for Idx in CSI_Param_Range'First .. Fsm.CSI_Param_Idx loop
          declare
-            Param : constant SK.Byte := Fsm.CSI_Params (Idx);
+            Param : constant CSI_Param_Value_Type := Fsm.CSI_Params (Idx);
          begin
             case Param
             is
-               when 16#30# .. 16#37# =>
+               when 0 =>
                   VGA.Set_Text_Color
-                    (Color => Color_Table (Param and 16#7#));
-               when Semicolon => null;
+                    (Color => Color_Table (Color_Table'First));
+               when 1 => null;
+               when 31 .. 37 =>
+                  VGA.Set_Text_Color
+                    (Color => Color_Table (SK. Byte (Param) - 30));
                when others    =>
                   Print_Unknown
                     (State => "CSI_Select_SGR",
-                     Char  => Param);
+                     Char  => SK.Byte (Param));
             end case;
          end;
       end loop;

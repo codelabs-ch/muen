@@ -320,9 +320,9 @@ is
                   --  Printable
 
                   Text_IO.Put_Char (Item => Char);
-               when 16#07# =>
+               when 16#00# | 16#07# =>
 
-                  --  BEL, ignore
+                  --  NUL, BEL -> ignore
 
                   null;
                when 16#08# =>

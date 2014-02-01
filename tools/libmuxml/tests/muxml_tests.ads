@@ -41,4 +41,10 @@ is
    --  Load a policy from XML and store it back to XML.
    procedure Load_And_Store;
 
+   --  Try to load a policy from an XML with invalid format
+   procedure Load_Invalid_Format;
+
+   --  Try to store a policy with invalid format to XML
+   procedure Store_Invalid_Format;
+
 end Muxml_Tests;

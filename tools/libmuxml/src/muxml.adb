@@ -87,12 +87,14 @@ is
 
    procedure Write
      (Data : XML_Data_Type;
+      Kind : Schema_Kind;
       File : String)
    is
       use Ada.Text_IO;
       use Ada.Text_IO.Text_Streams;
 
       Output_File   : File_Type;
+      pragma Unreferenced (Kind);
    begin
       Create (Output_File, Out_File, File);
       DOM.Core.Nodes.Write

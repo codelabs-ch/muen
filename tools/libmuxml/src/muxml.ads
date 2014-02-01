@@ -38,6 +38,7 @@ is
    --  Write the given DOM data structure to an XML file.
    procedure Write
      (Data : XML_Data_Type;
+      Kind : Schema_Kind;
       File : String);
 
    Processing_Error : exception;

@@ -1,6 +1,7 @@
 --
 --  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
 --  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014  Alexander Senier <mail@senier.net>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -48,6 +49,12 @@ is
       T.Add_Test_Routine
         (Routine => Load_And_Store'Access,
          Name    => "Load and store XML");
+      T.Add_Test_Routine
+        (Routine => Load_Invalid_Format'Access,
+         Name    => "Load XML with invalid format");
+      T.Add_Test_Routine
+        (Routine => Store_Invalid_Format'Access,
+         Name    => "Store XML with invalid format");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -60,12 +67,29 @@ is
              Kind => Muxml.Format_B,
              File => "data/load_and_store.xml");
       Write (Data => Data,
+             Kind => Muxml.Format_B,
              File => "obj/load_and_store.xml");
       Assert (Condition => Test_Utils.Equal_Files
                   (Filename1 => "data/load_and_store.xml",
                    Filename2 => "obj/load_and_store.xml"),
               Message => "Stored XML differs from loaded one");
    end Load_And_Store;
+
+   -------------------------------------------------------------------------
+
+   procedure Load_Invalid_Format
+   is
+      Data : XML_Data_Type;
+      pragma Unreferenced (Data);
+   begin
+      Parse (Data => Data,
+             Kind => Muxml.Format_B,
+             File => "data/test_policy_a.xml");
+      Fail (Message => "Exception expected");
+
+   exception
+      when Processing_Error => null;
+   end Load_Invalid_Format;
 
    -------------------------------------------------------------------------
 
@@ -139,5 +163,21 @@ is
       --  Must not raise an exception.
 
    end Load_Policy_Xml;
+
+   -------------------------------------------------------------------------
+
+   procedure Store_Invalid_Format
+   is
+      Data : XML_Data_Type;
+   begin
+      Parse (Data => Data,
+             Kind => Muxml.Format_A,
+             File => "data/test_policy_a.xml");
+
+      Write (Data => Data,
+             Kind => Muxml.Format_B,
+             File => "obj/test_policy_b.xml");
+      Fail (Message => "Exception expected");
+   end Store_Invalid_Format;
 
 end Muxml_Tests;

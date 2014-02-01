@@ -66,8 +66,9 @@ is
    --  Insert horizontal tab (4 spaces).
    procedure Put_Tab;
 
-   --  Move cursor to the left on the current line.
-   procedure Line_Move_Left;
+   --  Moves the cursor one cell to the left on the current line. If the cursor
+   --  is already at the edge of the screen, this has no effect.
+   procedure Cursor_Back;
 
    --  Delete screen from cursor to end of screen.
    procedure Delete_Screen_From_Cursor;

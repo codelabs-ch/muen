@@ -56,6 +56,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Cursor_Back
+   is
+   begin
+      if Cur_X > Width_Type'First then
+         Cur_X := Cur_X - 1;
+      end if;
+      Update_Cursor;
+   end Cursor_Back;
+
+   -------------------------------------------------------------------------
+
    procedure Delete_Line_From_Cursor
    is
    begin
@@ -148,17 +159,6 @@ is
          Put_Char (Item => ' ');
       end loop;
    end Put_Tab;
-
-   -------------------------------------------------------------------------
-
-   procedure Line_Move_Left
-   is
-   begin
-      if Cur_X > Width_Type'First then
-         Cur_X := Cur_X - 1;
-      end if;
-      Update_Cursor;
-   end Line_Move_Left;
 
    -------------------------------------------------------------------------
 

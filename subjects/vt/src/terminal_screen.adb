@@ -280,7 +280,7 @@ is
 
                   --  BS
 
-                  VGA.Line_Move_Left;
+                  VGA.Cursor_Back;
                when 16#09# =>
 
                   --  HT (Horizontal Tab)

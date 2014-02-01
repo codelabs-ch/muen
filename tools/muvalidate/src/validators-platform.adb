@@ -32,6 +32,19 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Memory_Block_Overlap (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/platform/memory/memoryBlock");
+   begin
+      Check_Memory_Overlap (Nodes        => Nodes,
+                            Region_Type  => "platform memory block",
+                            Address_Attr => "physicalAddress");
+   end Memory_Block_Overlap;
+
+   -------------------------------------------------------------------------
+
    procedure Memory_Space (XML_Data : Muxml.XML_Data_Type)
    is
       Blocks    : constant DOM.Core.Node_List := XPath_Query

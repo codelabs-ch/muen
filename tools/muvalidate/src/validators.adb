@@ -207,6 +207,8 @@ is
         (Validator => Subject.Event_IPI_Different_Core'Access);
       Validate.Register
         (Validator => Platform.Memory_Space'Access);
+      Validate.Register
+        (Validator => Platform.Memory_Block_Overlap'Access);
    end Register_All;
 
 end Validators;

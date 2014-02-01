@@ -24,4 +24,7 @@ is
    --  Validate that memory regions fit into available platform memory.
    procedure Memory_Space (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that no memory blocks overlap.
+   procedure Memory_Block_Overlap (XML_Data : Muxml.XML_Data_Type);
+
 end Validators.Platform;

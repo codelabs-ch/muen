@@ -36,7 +36,31 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Memory_Space'Access,
          Name    => "Validate memory space");
+      T.Add_Test_Routine
+        (Routine => Validate_Memblock_Overlap'Access,
+         Name    => "Validate memory block overlap");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Memblock_Overlap
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Platform.Memory_Block_Overlap (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Overlap of platform memory block 'ram_1' and 'ram_2'",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Memblock_Overlap;
 
    -------------------------------------------------------------------------
 

@@ -29,4 +29,7 @@ is
    --  Validate platform memory space.
    procedure Validate_Memory_Space;
 
+   --  Validate platform memory block overlap.
+   procedure Validate_Memblock_Overlap;
+
 end Platform_Tests;

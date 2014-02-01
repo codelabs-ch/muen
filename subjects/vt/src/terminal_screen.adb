@@ -24,6 +24,9 @@ with Log;
 package body Terminal_Screen
 is
 
+   --  Debug flag.
+   D : constant Boolean := False;
+
    Semicolon : constant := 16#3b#;
 
    subtype Width_Type  is Natural range 1 .. 80;
@@ -106,6 +109,11 @@ is
    procedure CSI_Dispatch (Char : SK.Byte)
    is
    begin
+      pragma Debug (D, Log.Text_IO.Put_String (Item => "* CSI_Dispatch "));
+      pragma Debug (D, Log.Text_IO.Put_Byte   (Item => Char));
+      pragma Debug (D, Log.Text_IO.New_Line);
+      pragma Debug (D, Print_CSI_Params);
+
       case Char
       is
          when 16#48# =>

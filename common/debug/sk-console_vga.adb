@@ -43,6 +43,7 @@ is
    Cur_X         : Width_Type;
    Cur_Y         : Height_Type;
    Cur_Txt_Color : VGA_Color_Type;
+   Cur_Bkg_Color : VGA_Color_Type;
 
    Screen : Screen_Type;
    pragma Import (Ada, Screen);
@@ -133,6 +134,7 @@ is
       Cur_X         := Width_Type'First;
       Cur_Y         := Height_Type'First;
       Cur_Txt_Color := Light_Grey;
+      Cur_Bkg_Color := Black;
       Update_Cursor;
    end Init;
 
@@ -180,7 +182,7 @@ is
       Screen (Cur_Y) (Cur_X) := Screen_Cell_Type'
         (Char     => Item,
          FG_Color => Cur_Txt_Color,
-         BG_Color => Black);
+         BG_Color => Cur_Bkg_Color);
 
       if Cur_X = Width_Type'Last then
          New_Line;
@@ -205,10 +207,18 @@ is
       Screen (Height_Type'Last) := Screen_Row_Type'
         (others => Screen_Cell_Type'
            (Char     => ' ',
-            FG_Color => White,
-            BG_Color => Black));
+            FG_Color => Cur_Txt_Color,
+            BG_Color => Cur_Bkg_Color));
       Update_Cursor;
    end Scroll;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Bkg_Color (Color : VGA_Color_Type)
+   is
+   begin
+      Cur_Bkg_Color := Color;
+   end Set_Bkg_Color;
 
    -------------------------------------------------------------------------
 

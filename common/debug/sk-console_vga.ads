@@ -101,6 +101,9 @@ is
    --  Set text color.
    procedure Set_Text_Color (Color : VGA_Color_Type);
 
+   --  Set background color.
+   procedure Set_Bkg_Color (Color : VGA_Color_Type);
+
 private
 
    for VGA_Color_Type use

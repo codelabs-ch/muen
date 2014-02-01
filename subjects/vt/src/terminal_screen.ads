@@ -66,12 +66,14 @@ private
 
    type Terminal_State_Type is record
       State         : State_Type;
+      CSI_Collect   : SK.Byte;
       CSI_Params    : CSI_Param_Array;
       CSI_Param_Idx : CSI_Param_Idx_Range;
    end record;
 
    Null_State : constant Terminal_State_Type
      := (State         => State_Ground,
+         CSI_Collect   => 0,
          CSI_Params    => (others => 0),
          CSI_Param_Idx => CSI_Param_Idx_Range'First);
 

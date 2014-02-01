@@ -258,8 +258,10 @@ is
             is
                when 16#30# .. 16#39# | Semicolon =>
                   Fsm.State := State_CSI_Param;
-
                   CSI_Add_Param (Char => Pos);
+               when 16#3c# .. 16#3f# =>
+                  Fsm.State := State_CSI_Param;
+                  Fsm.CSI_Collect := Pos;
                when 16#40# .. 16#7e# =>
                   CSI_Dispatch (Char => Pos);
                   Fsm := Null_State;

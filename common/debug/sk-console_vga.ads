@@ -104,6 +104,9 @@ is
    --  Set background color.
    procedure Set_Bkg_Color (Color : VGA_Color_Type);
 
+   --  Swap text color with background color.
+   procedure Swap_Text_With_Bkg_Color;
+
 private
 
    for VGA_Color_Type use

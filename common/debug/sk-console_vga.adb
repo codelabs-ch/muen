@@ -262,6 +262,16 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Swap_Text_With_Bkg_Color
+   is
+      Tmp : constant VGA_Color_Type := Cur_Txt_Color;
+   begin
+      Cur_Txt_Color := Cur_Bkg_Color;
+      Cur_Bkg_Color := Tmp;
+   end Swap_Text_With_Bkg_Color;
+
+   -------------------------------------------------------------------------
+
    procedure Update_Cursor
    is
       Pos : Positive;

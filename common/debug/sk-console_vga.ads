@@ -70,6 +70,18 @@ is
    --  is already at the edge of the screen, this has no effect.
    procedure Cursor_Back;
 
+   --  Moves the cursor one cell to the right. If the cursor is already at the
+   --  edge of the screen, this has no effect.
+   procedure Cursor_Forward;
+
+   --  Moves the cursor one cell up. If the cursor is already at the edge of
+   --  the screen, this has no effect.
+   procedure Cursor_Up;
+
+   --  Moves the cursor one cell down. If the cursor is already at the edge of
+   --  the screen, this has no effect.
+   procedure Cursor_Down;
+
    --  Delete screen from cursor to end of screen.
    procedure Delete_Screen_From_Cursor;
 

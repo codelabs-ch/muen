@@ -67,6 +67,39 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Cursor_Down
+   is
+   begin
+      if Cur_Y < Height_Type'Last then
+         Cur_Y := Cur_Y + 1;
+      end if;
+      Update_Cursor;
+   end Cursor_Down;
+
+   -------------------------------------------------------------------------
+
+   procedure Cursor_Forward
+   is
+   begin
+      if Cur_X < Width_Type'Last then
+         Cur_X := Cur_X + 1;
+      end if;
+      Update_Cursor;
+   end Cursor_Forward;
+
+   -------------------------------------------------------------------------
+
+   procedure Cursor_Up
+   is
+   begin
+      if Cur_Y > Height_Type'First then
+         Cur_Y := Cur_Y - 1;
+      end if;
+      Update_Cursor;
+   end Cursor_Up;
+
+   -------------------------------------------------------------------------
+
    procedure Delete_Line_From_Cursor
    is
    begin

@@ -215,6 +215,7 @@ is
       --  Write output file
       Muxml.Write
          (File => Output_File,
+          Kind => Muxml.Format_B,
           Data => Policy);
 
    exception

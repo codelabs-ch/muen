@@ -93,8 +93,9 @@ is
       use Ada.Text_IO;
       use Ada.Text_IO.Text_Streams;
 
-      Output_File   : File_Type;
-      pragma Unreferenced (Kind);
+      Reader      : DR.Tree_Reader;
+      File_Input  : Input_Sources.File.File_Input;
+      Output_File : File_Type;
    begin
       Create (Output_File, Out_File, File);
       DOM.Core.Nodes.Write
@@ -102,6 +103,25 @@ is
           N            => Data.Doc,
           Pretty_Print => True);
       Close (Output_File);
+
+      Reader.Set_Grammar (Grammar => Grammar.Get_Grammar (Kind));
+      Reader.Set_Feature (Name  => Sax.Readers.Schema_Validation_Feature,
+                          Value => True);
+
+      begin
+         Input_Sources.File.Open (Filename => File,
+                                  Input    => File_Input);
+         Reader.Parse (Input => File_Input);
+         Input_Sources.File.Close (Input => File_Input);
+         Reader.Free;
+      exception
+         when SV.XML_Validation_Error =>
+            raise Processing_Error with "XML processing error - "
+              & Reader.Get_Error_Message;
+         when E : others =>
+            raise Processing_Error with "Error reading XML file '" & File
+              & "' - " & Ada.Exceptions.Exception_Message (X => E);
+      end;
    end Write;
 
 end Muxml;

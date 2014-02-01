@@ -178,6 +178,8 @@ is
              Kind => Muxml.Format_B,
              File => "obj/test_policy_b.xml");
       Fail (Message => "Exception expected");
+   exception
+      when Processing_Error => null;
    end Store_Invalid_Format;
 
 end Muxml_Tests;

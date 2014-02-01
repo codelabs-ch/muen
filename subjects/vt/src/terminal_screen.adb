@@ -56,6 +56,9 @@ is
      (State : String;
       Char  : SK.Byte);
 
+   --  Print stored CSI parameters.
+   procedure Print_CSI_Params;
+
    --  Execute CSI control function.
    procedure CSI_Dispatch (Char : SK.Byte);
 
@@ -204,6 +207,23 @@ is
    begin
       Text_IO.Init;
    end Init;
+
+   ----------------------------------------------------------------------
+
+   procedure Print_CSI_Params
+   is
+   begin
+      if Fsm.CSI_Param_Idx = CSI_Empty_Params then
+         return;
+      end if;
+
+      Log.Text_IO.Put_String (Item => "CSI params ");
+      for I in CSI_Param_Range'First .. Fsm.CSI_Param_Idx loop
+         Log.Text_IO.Put_Word16 (Item => SK.Word16 (Fsm.CSI_Params (I)));
+         Log.Text_IO.Put_Char (Item => ' ');
+      end loop;
+      Log.Text_IO.New_Line;
+   end Print_CSI_Params;
 
    ----------------------------------------------------------------------
 

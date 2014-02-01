@@ -121,8 +121,8 @@ is
 
    procedure CSI_Dispatch (Char : SK.Byte)
    is
-      N : Height_Type;
-      M : Width_Type;
+      N : Height_Type := Height_Type'First;
+      M : Width_Type  := Width_Type'First;
    begin
       pragma Debug (D, Log.Text_IO.Put_String (Item => "* CSI_Dispatch "));
       pragma Debug (D, Log.Text_IO.Put_Byte   (Item => Char));
@@ -131,34 +131,23 @@ is
 
       case Char
       is
-         when 16#48# =>
-
-            --  CSI n ; m H: CUP - Cursor position
-
+         when 16#43# =>  --  CSI n C: CUF - Cursor Forward
+            CSI_Get_Param (N    => N,
+                           Name => "CSI C");
+            VGA.Cursor_Forward (N => N);
+         when 16#48# =>  --  CSI n ; m H: CUP - Cursor position
             CSI_Get_Params (N    => N,
                             M    => M,
                             Name => "CSI H");
             VGA.Set_Position (X => M,
                               Y => N);
-         when 16#4a# =>
-
-            --  CSI J: ED - Erase Display
-
+         when 16#4a# =>  --  CSI J: ED - Erase Display
             VGA.Delete_Screen_From_Cursor;
-         when 16#4b# =>
-
-            --  CSI K: EL - Erase in Line
-
+         when 16#4b# =>  --  CSI K: EL - Erase in Line
             VGA.Delete_Line_From_Cursor;
-         when 16#68# =>
-
-            --  CSI h: Set mode - ignore
-
+         when 16#68# =>  --  CSI h: Set mode - ignore
             null;
-         when 16#6d# =>
-
-            --  CSI n m: SGR - Select Graphic Rendition
-
+         when 16#6d# =>  --  CSI n m: SGR - Select Graphic Rendition
             CSI_Select_SGR;
          when others =>
             Print_Unknown

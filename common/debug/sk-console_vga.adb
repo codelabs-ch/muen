@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -55,12 +55,9 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Delete_Screen_From_Cursor
+   procedure Delete_Line_From_Cursor
    is
    begin
-
-      --  Delete current line from cursor position.
-
       for X in Cur_X .. Width_Type'Last loop
          Screen (Cur_Y) (X)
            := Screen_Cell_Type'
@@ -68,6 +65,17 @@ is
               FG_Color => Light_Grey,
               BG_Color => Black);
       end loop;
+   end Delete_Line_From_Cursor;
+
+   -------------------------------------------------------------------------
+
+   procedure Delete_Screen_From_Cursor
+   is
+   begin
+
+      --  Delete current line from cursor position.
+
+      Delete_Line_From_Cursor;
 
       --  Clear remaining screen.
 

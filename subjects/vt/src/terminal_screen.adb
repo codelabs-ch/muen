@@ -78,6 +78,12 @@ is
       M    : out Width_Type;
       Name :     String);
 
+   --  Return collected N parameter. Display error message with given CSI
+   --  sequence name if parameter count does not match.
+   procedure CSI_Get_Param
+     (N    : out Height_Type;
+      Name :     String);
+
    -------------------------------------------------------------------------
 
    procedure CSI_Add_Param (Char : SK.Byte)
@@ -160,6 +166,25 @@ is
                Char  => Char);
       end case;
    end CSI_Dispatch;
+
+   -------------------------------------------------------------------------
+
+   procedure CSI_Get_Param
+     (N    : out Height_Type;
+      Name :     String)
+   is
+   begin
+      N := Height_Type'First;
+
+      if Fsm.CSI_Param_Idx = 1 then
+         N := Height_Type (Fsm.CSI_Params (1));
+      elsif Fsm.CSI_Param_Idx /= CSI_Empty_Params then
+         Log.Text_IO.Put_String (Item => "!! Unsupported parameter count 16#");
+         Log.Text_IO.Put_Byte   (Item => SK.Byte (Fsm.CSI_Param_Idx));
+         Log.Text_IO.Put_String (Item => "# in ");
+         Log.Text_IO.Put_Line   (Item => Name);
+      end if;
+   end CSI_Get_Param;
 
    -------------------------------------------------------------------------
 

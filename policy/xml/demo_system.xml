@@ -106,7 +106,7 @@
 		<memory name="vt|msrbm" physicalAddress="16#0024_6000#" size="16#1000#" caching="WB">
 			<file format="msrbm" filename="vt_msrbm" offset="16#0000#"/>
 		</memory>
-		<memory name="vt|bin" physicalAddress="16#0024_7000#" size="16#0001_4000#" caching="WB">
+		<memory name="vt|bin" physicalAddress="16#0024_7000#" size="16#0002_4000#" caching="WB">
 			<file format="elf" filename="vt" offset="16#0000#"/>
 		</memory>
 

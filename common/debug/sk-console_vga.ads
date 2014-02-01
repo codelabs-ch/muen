@@ -66,21 +66,21 @@ is
    --  Insert horizontal tab (4 spaces).
    procedure Put_Tab;
 
-   --  Moves the cursor one cell to the left on the current line. If the cursor
+   --  Moves the cursor N cells to the left on the current line. If the cursor
    --  is already at the edge of the screen, this has no effect.
-   procedure Cursor_Back;
+   procedure Cursor_Back (N : Width_Type := Width_Type'First);
 
-   --  Moves the cursor one cell to the right. If the cursor is already at the
+   --  Moves the cursor N cells to the right. If the cursor is already at the
    --  edge of the screen, this has no effect.
-   procedure Cursor_Forward;
+   procedure Cursor_Forward (N : Width_Type := Width_Type'First);
 
-   --  Moves the cursor one cell up. If the cursor is already at the edge of
-   --  the screen, this has no effect.
-   procedure Cursor_Up;
+   --  Moves the cursor N cells up. If the cursor is already at the edge of the
+   --  screen, this has no effect.
+   procedure Cursor_Up (N : Height_Type := Height_Type'First);
 
    --  Moves the cursor one cell down. If the cursor is already at the edge of
    --  the screen, this has no effect.
-   procedure Cursor_Down;
+   procedure Cursor_Down (N : Height_Type := Height_Type'First);
 
    --  Delete screen from cursor to end of screen.
    procedure Delete_Screen_From_Cursor;

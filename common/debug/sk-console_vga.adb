@@ -56,44 +56,52 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Cursor_Back
+   procedure Cursor_Back (N : Width_Type := Width_Type'First)
    is
    begin
-      if Cur_X > Width_Type'First then
-         Cur_X := Cur_X - 1;
+      if Cur_X - N > Width_Type'First then
+         Cur_X := Cur_X - N;
+      else
+         Cur_X := Width_Type'First;
       end if;
       Update_Cursor;
    end Cursor_Back;
 
    -------------------------------------------------------------------------
 
-   procedure Cursor_Down
+   procedure Cursor_Down (N : Height_Type := Height_Type'First)
    is
    begin
-      if Cur_Y < Height_Type'Last then
-         Cur_Y := Cur_Y + 1;
+      if Cur_Y + N < Height_Type'Last then
+         Cur_Y := Cur_Y + N;
+      else
+         Cur_Y := Height_Type'Last;
       end if;
       Update_Cursor;
    end Cursor_Down;
 
    -------------------------------------------------------------------------
 
-   procedure Cursor_Forward
+   procedure Cursor_Forward (N : Width_Type := Width_Type'First)
    is
    begin
-      if Cur_X < Width_Type'Last then
-         Cur_X := Cur_X + 1;
+      if Cur_X + N < Width_Type'Last then
+         Cur_X := Cur_X + N;
+      else
+         Cur_X := Width_Type'Last;
       end if;
       Update_Cursor;
    end Cursor_Forward;
 
    -------------------------------------------------------------------------
 
-   procedure Cursor_Up
+   procedure Cursor_Up (N : Height_Type := Height_Type'First)
    is
    begin
-      if Cur_Y > Height_Type'First then
+      if Cur_Y - N > Height_Type'First then
          Cur_Y := Cur_Y - 1;
+      else
+         Cur_Y := Height_Type'First;
       end if;
       Update_Cursor;
    end Cursor_Up;

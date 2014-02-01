@@ -176,11 +176,12 @@ is
          begin
             case Param
             is
-               when 0 =>
-                  VGA.Set_Text_Color
-                    (Color => Color_Table (Color_Table'First));
-               when 1 => null;
-               when 31 .. 37 =>
+               when 0 =>                                         --  Reset
+                  VGA.Set_Text_Color (Color => VGA.Light_Grey);
+                  VGA.Set_Bkg_Color  (Color => VGA.Black);
+               when 1 => null;                                   --  Bold
+               when 7 => VGA.Swap_Text_With_Bkg_Color;           --  Negative
+               when 31 .. 37 =>                                  --  Text color
                   VGA.Set_Text_Color
                     (Color => Color_Table (SK. Byte (Param) - 30));
                when others    =>

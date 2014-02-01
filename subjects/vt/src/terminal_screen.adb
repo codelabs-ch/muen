@@ -131,6 +131,10 @@ is
 
       case Char
       is
+         when 16#42# =>  --  CSI n B: CUD - Cursor Down
+            CSI_Get_Param (N    => N,
+                           Name => "CSI B");
+            VGA.Cursor_Down (N => N);
          when 16#43# =>  --  CSI n C: CUF - Cursor Forward
             CSI_Get_Param (N    => N,
                            Name => "CSI C");

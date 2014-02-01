@@ -209,7 +209,6 @@ is
                   --  Printable
 
                   Text_IO.Put_Char (Item => Char);
-
                when 16#07# =>
 
                   --  BEL, ignore
@@ -220,7 +219,6 @@ is
                   --  BS
 
                   VGA.Line_Move_Left;
-
                when 16#09# =>
 
                   --  HT (Horizontal Tab)

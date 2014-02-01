@@ -1,32 +1,35 @@
-SCHEMA_FILE = muxml-schemas.ads
-XSD_FILES   = $(wildcard schema/*.xsd)
-RESOLVE_XSL = schema/resolve.xsl
+SCHEMA_FILES = \
+   obj/muxml-format_a_schema.ads \
+   obj/muxml-format_b_schema.ads \
+   obj/muxml-format_src_schema.ads
 
-all: schema-spec
+XSD_FILES    = $(wildcard schema/*.xsd)
+RESOLVE_XSL  = schema/resolve.xsl
+
+all: $(SCHEMA_FILES)
 
 include ../../Makeconf
 include ../../Makecov
 
 DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
-schema-spec: src/$(SCHEMA_FILE)
-
-src/$(SCHEMA_FILE): $(XSD_FILES) $(RESOLVE_XSL)
-	@xsltproc $(RESOLVE_XSL) schema/system.xsd | tidy -q -i -xml --hide-comments yes -o $(OBJ_DIR)/schema.pretty
-	@echo -n > $@
-	@echo -n '--  Auto-generated, '                             >> $@
-	@date --iso=seconds                                         >> $@
-	@echo 'package Muxml.Schemas is'                            >> $@
-	@echo '   XSD_Id : constant String := "schema/system.xsd";' >> $@
-	@echo '   XSD    : constant String := ""'                   >> $@
-	@sed -e 's/\t/ /g;s/"/""/g;s/^\(.*\)$$/\& "\1"/g' $(OBJ_DIR)/schema.pretty >> $@
-	@echo '& "";'                                               >> $@
-	@echo 'end Muxml.Schemas;'                                  >> $@
+obj/muxml-format_%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL)
+	@xsltproc --stringparam format format_$* $(RESOLVE_XSL) schema/system.xsd | tidy -q -i -xml --hide-comments yes -o $(OBJ_DIR)/schema.pretty
+	@echo -n > $@.tmp
+	@echo -n '--  Auto-generated, '                             >> $@.tmp
+	@date --iso=seconds                                         >> $@.tmp
+	@echo 'package Muxml.Format_$*_Schema is'                   >> $@.tmp
+	@echo '   XSD_Id : constant String := "schema/system.xsd";' >> $@.tmp
+	@echo '   XSD    : constant String := ""'                   >> $@.tmp
+	@sed -e 's/\t/ /g;s/"/""/g;s/^\(.*\)$$/\& "\1"/g' $(OBJ_DIR)/schema.pretty >> $@.tmp
+	@echo '& "";'                                               >> $@.tmp
+	@echo 'end Muxml.Format_$*_Schema;'                         >> $@.tmp
+	@mv $@.tmp $@
 
 tests: test_libmuxml
 	@obj/tests/test_runner
 
-test_libmuxml: schema-spec
+test_libmuxml: $(SCHEMA_FILES)
 	@gprbuild $(BUILD_OPTS) -P$@ -XBUILD=tests
 
 build_cov: schema-spec
@@ -34,4 +37,6 @@ build_cov: schema-spec
 
 clean:
 	@rm -rf lib obj
-	@rm -f src/$(SCHEMA_FILE)
+	@rm -f src/muxml-format_?.ads
+
+.PHONY: all

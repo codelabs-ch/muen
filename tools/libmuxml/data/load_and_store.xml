@@ -3,7 +3,7 @@
  <platform>
   <processor logicalCpus="1" speed="2900" vmxTimerRate="5"/>
   <memory>
-   <memoryBlock caching="WB" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
+   <memoryBlock name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
   </memory>
   <device name="debugconsole" shared="false">
    <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>

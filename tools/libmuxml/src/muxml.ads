@@ -21,6 +21,7 @@ with Ada.Finalization;
 
 package Muxml
 is
+   type Schema_Kind is (Format_A, Format_B, Format_Src);
 
    --  DOM tree of XML document.
    type XML_Data_Type is new Ada.Finalization.Limited_Controlled with record
@@ -31,6 +32,7 @@ is
    --  data is validated against the built-in system policy XML schema.
    procedure Parse
      (Data : out XML_Data_Type;
+      Kind :     Schema_Kind;
       File :     String);
 
    --  Write the given DOM data structure to an XML file.

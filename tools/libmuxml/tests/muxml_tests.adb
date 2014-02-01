@@ -57,6 +57,7 @@ is
       Data : XML_Data_Type;
    begin
       Parse (Data => Data,
+             Kind => Muxml.Format_B,
              File => "data/load_and_store.xml");
       Write (Data => Data,
              File => "obj/load_and_store.xml");
@@ -74,6 +75,7 @@ is
       pragma Unreferenced (Data);
    begin
       Parse (Data => Data,
+             Kind => Muxml.Format_B,
              File => "data/invalid.xml");
       Fail (Message => "Exception expected");
 
@@ -91,6 +93,7 @@ is
       pragma Unreferenced (Data);
    begin
       Parse (Data => Data,
+             Kind => Muxml.Format_B,
              File => "data/invalid");
       Fail (Message => "Exception expected");
 
@@ -111,6 +114,7 @@ is
       pragma Unreferenced (Data);
    begin
       Parse (Data => Data,
+             Kind => Muxml.Format_B,
              File => "nonexistent");
       Fail (Message => "Exception expected");
 
@@ -129,6 +133,7 @@ is
       pragma Unreferenced (Data);
    begin
       Parse (Data => Data,
+             Kind => Muxml.Format_B,
              File => "data/test_policy.xml");
 
       --  Must not raise an exception.

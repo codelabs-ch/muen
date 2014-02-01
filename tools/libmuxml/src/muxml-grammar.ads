@@ -22,6 +22,7 @@ package Muxml.Grammar
 is
 
    --  Return built-in system policy grammar.
-   function Get_Grammar return Schema.Validators.XML_Grammar;
+   function Get_Grammar (Kind : Muxml.Schema_Kind)
+      return Schema.Validators.XML_Grammar;
 
 end Muxml.Grammar;

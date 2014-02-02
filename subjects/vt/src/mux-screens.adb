@@ -46,10 +46,13 @@ is
    procedure Init
    is
    begin
+
+      --  TODO: Read this from configuration.
+
       T1.Init;
-      T2.Init;
-      T3.Init;
-      T4.Init;
+      T2.Init (Label => "Time");
+      T3.Init (Label => "Subject Monitor (SM)");
+      T4.Init (Label => "Virtual Terminals (VT)");
    end Init;
 
    -------------------------------------------------------------------------

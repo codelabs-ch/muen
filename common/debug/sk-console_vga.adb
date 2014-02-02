@@ -53,7 +53,7 @@ is
 
    Update_Cursor_Position : Boolean := True;
 
-   --  Scroll screen if current Y position is equal to the last row.
+   --  Scroll screen if current Y position is equal to the bottom margin.
    procedure Scroll;
 
    -------------------------------------------------------------------------
@@ -209,7 +209,7 @@ is
    is
    begin
       Cur_X := Width_Type'First;
-      if Cur_Y = Height_Type'Last then
+      if Cur_Y = Margin_Bottom then
          Scroll;
       else
          Cur_Y := Cur_Y + 1;
@@ -239,15 +239,14 @@ is
 
    procedure Scroll
    is
-      subtype Console_To_Last_Row is Height_Type range
-        Height_Type'First .. Height_Type'Last - 1;
+      subtype Scrolling_Region is Height_Type range
+        Margin_Top .. Margin_Bottom - 1;
    begin
-      for Y in Console_To_Last_Row
-      loop
+      for Y in Scrolling_Region loop
          Screen (Y) := Screen (Y + 1);
       end loop;
 
-      Screen (Height_Type'Last) := Screen_Row_Type'
+      Screen (Margin_Bottom) := Screen_Row_Type'
         (others => Screen_Cell_Type'
            (Char     => ' ',
             FG_Color => Cur_Txt_Color,

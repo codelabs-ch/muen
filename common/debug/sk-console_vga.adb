@@ -44,6 +44,8 @@ is
    Cur_Y         : Height_Type;
    Cur_Txt_Color : VGA_Color_Type;
    Cur_Bkg_Color : VGA_Color_Type;
+   Margin_Top    : Height_Type := Height_Type'First;
+   Margin_Bottom : Height_Type := Height_Type'Last;
 
    Screen : Screen_Type;
    pragma Import (Ada, Screen);
@@ -281,6 +283,17 @@ is
       Cur_X := X;
       Update_Cursor;
    end Set_Position;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Scrolling_Margins
+     (Top    : Height_Type;
+      Bottom : Height_Type)
+   is
+   begin
+      Margin_Top    := Top;
+      Margin_Bottom := Bottom;
+   end Set_Scrolling_Margins;
 
    -------------------------------------------------------------------------
 

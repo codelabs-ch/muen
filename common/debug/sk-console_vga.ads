@@ -120,6 +120,11 @@ is
    --  Swap text color with background color.
    procedure Swap_Text_With_Bkg_Color;
 
+   --  Set the top and bottom margins to define the scrolling region.
+   procedure Set_Scrolling_Margins
+     (Top    : Height_Type;
+      Bottom : Height_Type);
+
 private
 
    for VGA_Color_Type use

@@ -19,7 +19,6 @@ with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 with Ada.Containers.Ordered_Sets;
-with Ada.Text_IO;
 with Mutools.Utils;
 
 package body Alloc.Allocator
@@ -147,10 +146,6 @@ is
          Size := Interfaces.Unsigned_64'Value
             (Get_Attribute (Item (Nodes, I), "size"));
 
-         Ada.Text_IO.Put_Line
-            ("R: " & Get_Attribute (Item (Nodes, I), "name") &
-             " S:" & Size'Img & " A:" & Alignment'Img);
-
          Insert
             (Container => Region_Set,
              New_Item  => Region_Type'
@@ -187,8 +182,6 @@ is
            (N     => Policy.Doc,
             XPath => "/system/memory/*[@name='" &
                To_String (Region.Name) & "']");
-
-         Ada.Text_IO.Put_Line ("Update_DOM: " & To_String (Region.Name));
 
          if Length (N) /= 1 then
             raise Internal_Error with

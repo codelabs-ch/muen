@@ -387,6 +387,9 @@ is
 
             case Pos
             is
+               when 16#20# .. 16#2f# =>
+                  Fsm.State       := State_Escape_Intermediate;
+                  Fsm.ESC_Collect := Pos;
                when 16#30# .. 16#4f#
                   | 16#51# .. 16#57#
                   | 16#59#
@@ -400,6 +403,21 @@ is
                when others =>
                   Print_Unknown
                     (State => "Escape",
+                     Char  => Pos);
+            end case;
+         when State_Escape_Intermediate =>
+
+            --  ESCAPE intermediate
+
+            case Pos
+            is
+               when 16#30# .. 16#7e# =>
+                  ESC_Dispatch (Char => Pos);
+                  Fsm := Null_State;
+               when 16#7f# => null;
+               when others =>
+                  Print_Unknown
+                    (State => "Escape intermediate",
                      Char  => Pos);
             end case;
          when State_CSI_Entry =>

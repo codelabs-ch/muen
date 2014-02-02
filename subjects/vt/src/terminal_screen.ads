@@ -51,6 +51,7 @@ private
    type State_Type is
      (State_Ground,
       State_Escape,
+      State_Escape_Intermediate,
       State_CSI_Entry,
       State_CSI_Param);
 
@@ -71,13 +72,15 @@ private
       CSI_Collect   : SK.Byte;
       CSI_Params    : CSI_Param_Array;
       CSI_Param_Idx : CSI_Param_Idx_Range;
+      ESC_Collect   : SK.Byte;
    end record;
 
    Null_State : constant Terminal_State_Type
      := (State         => State_Ground,
          CSI_Collect   => 0,
          CSI_Params    => (others => 0),
-         CSI_Param_Idx => CSI_Param_Idx_Range'First);
+         CSI_Param_Idx => CSI_Param_Idx_Range'First,
+         ESC_Collect   => 0);
 
    Fsm : Terminal_State_Type := Null_State;
 

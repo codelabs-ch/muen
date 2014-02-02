@@ -47,6 +47,7 @@ is
       Policy : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
       Zp.Generator.Write (Output_Dir => "obj",

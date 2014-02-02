@@ -32,6 +32,7 @@ is
       Policy : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_A,
                    File => "data/automatic_allocation.in.xml");
 
       Allocator.Write (Output_File => "obj/automatic_allocation.out.xml",

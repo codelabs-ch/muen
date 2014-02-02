@@ -104,6 +104,7 @@ is
       Exceptions : DOM.Core.Node_List;
    begin
       Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
       Exceptions := McKae.XML.XPath.XIA.XPath_Query
         (N     => Policy.Doc,
@@ -124,6 +125,7 @@ is
       Exceptions : DOM.Core.Node_List;
    begin
       Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
       Exceptions := McKae.XML.XPath.XIA.XPath_Query
         (N     => Policy.Doc,

@@ -65,6 +65,7 @@ is
       Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
                    File => "data/validators.xml");
       declare
          Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
@@ -100,6 +101,7 @@ is
       Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
                    File => "data/validators.xml");
 
       begin
@@ -123,6 +125,7 @@ is
       Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
                    File => "data/validators.xml");
 
       begin
@@ -145,6 +148,7 @@ is
       Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
                    File => "data/validators.xml");
 
       begin
@@ -167,6 +171,7 @@ is
       Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
                    File => "data/validators.xml");
 
       begin
@@ -190,6 +195,7 @@ is
       Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
                    File => "data/validators.xml");
       declare
          Node : constant DOM.Core.Node := DOM.Core.Nodes.Item

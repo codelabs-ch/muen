@@ -52,6 +52,7 @@ is
       Linux_FADT : constant String := "obj/linux_fadt";
    begin
       Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
       Generator.Write (Output_Dir => "obj",

@@ -52,6 +52,7 @@ is
       Sub2_Iobm : constant String := "obj/subject2_iobm";
    begin
       Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
       Generator.Write (Output_Dir => "obj",

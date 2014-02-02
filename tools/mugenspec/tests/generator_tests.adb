@@ -55,6 +55,7 @@ is
       Policy : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
       declare
@@ -100,6 +101,7 @@ is
       HW_Spec     : constant String := "obj/skp-hardware.ads";
    begin
       Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
       Generator.Write (Output_Dir => "obj",

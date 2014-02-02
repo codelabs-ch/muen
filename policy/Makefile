@@ -1,5 +1,5 @@
 OUTPUT     = $(POLICY_INC)/skp.ads
-POLICY_OUT = $(OBJ_DIR)/$(notdir $(POLICY))
+POLICY_OUT = $(OBJ_DIR)/system.xml
 LAST_HW    = $(shell cat $(OBJ_DIR)/.hw 2>/dev/null)
 DSDT_SRC   = acpi/dsdt.dsl
 DSDT_OBJ   = $(OBJ_DIR)/dsdt.dsl
@@ -28,11 +28,11 @@ hwchange:
 
 ifeq ($(HARDWARE), bochs)
 $(DSDT_OBJ) $(POLICY_OUT): $(POLICY) $(DSDT_SRC)
-	@cp $(POLICY) $(POLICY_OUT)
+	@$(MUCFGALLOC) -o $(POLICY_OUT) $(POLICY)
 	@cp $(DSDT_SRC) $(DSDT_OBJ)
 else
 $(DSDT_OBJ) $(POLICY_OUT): $(POLICY) $(DSDT_SRC) $(PATCH)
-	@cp $(POLICY) $(POLICY_OUT)
+	@$(MUCFGALLOC) -o $(POLICY_OUT) $(POLICY)
 	@cp $(DSDT_SRC) $(DSDT_OBJ)
 	@cd $(OBJ_DIR) && patch -p3 < ../$(PATCH) >/dev/null
 endif

@@ -17,9 +17,9 @@
 
 	<xs:complexType name="deviceType">
 		<xs:sequence>
-			<xs:element name="irq"    type="irqType"         minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="memory" type="memoryBlockType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="ioPort" type="ioPortType"      minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="irq"    type="irqType"          minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="memory" type="deviceMemoryType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="ioPort" type="ioPortType"       minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name"   type="nameType"   use="required"/>
 		<xs:attribute name="shared" type="xs:boolean" use="required"/>

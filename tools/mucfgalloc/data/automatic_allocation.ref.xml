@@ -3,8 +3,8 @@
  <platform>
   <processor logicalCpus="1" speed="1" vmxTimerRate="0"/>
   <memory>
-   <memoryBlock caching="WB" name="ram_1" physicalAddress="16#0000_0000#" size="16#0001_0000#"/>
-   <memoryBlock caching="WB" name="ram_2" physicalAddress="16#0010_0000#" size="16#0020_0000#"/>
+   <memoryBlock name="ram_1" physicalAddress="16#0000_0000#" size="16#0001_0000#"/>
+   <memoryBlock name="ram_2" physicalAddress="16#0010_0000#" size="16#0020_0000#"/>
   </memory>
   <device name="dev_1" shared="false"/>
  </platform>

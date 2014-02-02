@@ -32,7 +32,9 @@ begin
    Mugen.Command_Line.Init
      (Description => "Assign physical addresses to all global memory " &
         "elements");
-   Mugen.Generators.Run (Process => Alloc.Allocator.Write'Access);
+   Mugen.Generators.Run
+      (Kind    => Muxml.Format_A,
+       Process => Alloc.Allocator.Write'Access);
 
 exception
    when E : Muxml.Processing_Error =>

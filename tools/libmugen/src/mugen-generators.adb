@@ -26,7 +26,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Run
-     (Process : not null access procedure
+     (Kind    : Muxml.Schema_Kind;
+      Process : not null access procedure
         (Output_Dir : String;
          Policy     : Muxml.XML_Data_Type))
    is
@@ -37,7 +38,7 @@ is
       Mulog.Log (Msg => "Using output directory '" & Out_Dir & "'");
       Mulog.Log (Msg => "Processing policy '" & Policy_File & "'");
       Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
+                   Kind => Kind,
                    File => Policy_File);
       Process (Output_Dir => Out_Dir,
                Policy     => Data);

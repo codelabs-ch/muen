@@ -26,7 +26,8 @@ is
    --  passes the output directory and XML data on to the given generator
    --  procedure.
    procedure Run
-     (Process : not null access procedure
+     (Kind    : Muxml.Schema_Kind;
+      Process : not null access procedure
         (Output_Dir : String;
          Policy     : Muxml.XML_Data_Type));
 

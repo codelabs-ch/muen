@@ -33,7 +33,9 @@ begin
    Mugen.Command_Line.Init
      (Description => "Generate page table structures according to given " &
         "system policy");
-   Mugen.Generators.Run (Process => Pt.Generator.Write'Access);
+   Mugen.Generators.Run
+      (Kind    => Muxml.Format_B,
+       Process => Pt.Generator.Write'Access);
 
 exception
    when E : Muxml.Processing_Error =>

@@ -33,7 +33,9 @@ begin
    Mugen.Command_Line.Init
      (Description => "Generate source specifications according to given"
       & " system policy");
-   Mugen.Generators.Run (Process => Spec.Generator.Write'Access);
+   Mugen.Generators.Run
+      (Kind    => Muxml.Format_B,
+       Process => Spec.Generator.Write'Access);
 
 exception
    when E : Muxml.Processing_Error =>

@@ -32,7 +32,9 @@ is
 begin
    Mugen.Command_Line.Init
      (Description => "Generate MSR bitmaps according to given system policy");
-   Mugen.Generators.Run (Process => Msrbm.Generator.Write'Access);
+   Mugen.Generators.Run
+      (Kind    => Muxml.Format_B,
+       Process => Msrbm.Generator.Write'Access);
 
 exception
    when E : Muxml.Processing_Error =>

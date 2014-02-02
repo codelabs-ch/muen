@@ -33,7 +33,9 @@ begin
    Mugen.Command_Line.Init
      (Description => "Generate Linux zero-page structures according to given "
       & "system policy");
-   Mugen.Generators.Run (Process => Zp.Generator.Write'Access);
+   Mugen.Generators.Run
+      (Kind    => Muxml.Format_B,
+       Process => Zp.Generator.Write'Access);
 
 exception
    when E : Muxml.Processing_Error =>

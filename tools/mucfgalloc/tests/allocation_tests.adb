@@ -65,11 +65,14 @@ is
       pragma Unreferenced (Policy);
    begin
       Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_A,
                    File => "data/overlapping.xml");
+      Allocator.Write (Policy      => Policy,
+                       Output_File => "obj/overlapping.xml");
+      Fail ("Overlap undetected");
    exception
       --  Should raise an exception.
       when Alloc.Allocator.Overlapping_Physical_Memory => null;
-      when others => Fail ("Overlap undetected");
    end Overlapping_Physical_Memory;
 
 end Allocation_Tests;

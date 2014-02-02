@@ -15,6 +15,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Mutools.Utils;
+
 package body Alloc.Map
 is
 
@@ -26,11 +28,26 @@ is
       use Region_List_Package;
       Curr : Cursor := First (Map.Data);
 
+      function Range_Image
+         (First_Address : Interfaces.Unsigned_64;
+          Last_Address  : Interfaces.Unsigned_64) return String;
+      function Range_Image
+         (First_Address : Interfaces.Unsigned_64;
+          Last_Address  : Interfaces.Unsigned_64) return String
+      is
+         use Mutools.Utils;
+      begin
+         return
+            "(" & To_Hex (Number => First_Address, Normalize => True) &
+            " - " & To_Hex (Number => Last_Address, Normalize => True) & ")";
+      end Range_Image;
    begin
       while Curr /= No_Element
       loop
          if Element (Curr).First_Address > Last_Address then
-            raise Invalid_Fixed_Allocation;
+            raise Invalid_Fixed_Allocation with
+               "Allocation outside empty regions " &
+               Range_Image (First_Address, Last_Address);
          end if;
          exit when Element (Curr).Kind = Empty and
                    Element (Curr).First_Address <= First_Address and
@@ -39,7 +56,9 @@ is
       end loop;
 
       if Curr = No_Element then
-         raise Invalid_Fixed_Allocation;
+         raise Invalid_Fixed_Allocation with
+            "Allocation beyond empty regions " &
+            Range_Image (First_Address, Last_Address);
       end if;
 
       Reserve

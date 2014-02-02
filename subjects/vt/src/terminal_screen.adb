@@ -231,9 +231,12 @@ is
                   VGA.Set_Bkg_Color  (Color => VGA.Black);
                when 1 => null;                                   --  Bold
                when 7 => VGA.Swap_Text_With_Bkg_Color;           --  Negative
-               when 31 .. 37 =>                                  --  Text color
+               when 30 .. 37 =>                                  --  Text color
                   VGA.Set_Text_Color
                     (Color => Color_Table (SK. Byte (Param) - 30));
+               when 40 .. 47 =>                                  --  Bkg color
+                  VGA.Set_Bkg_Color
+                    (Color => Color_Table (SK. Byte (Param) - 40));
                when others    =>
                   Print_Unknown
                     (State => "CSI_Select_SGR",

@@ -84,6 +84,9 @@ is
      (N    : out Height_Type;
       Name :     String);
 
+   --  Execute ESC sequence.
+   procedure ESC_Dispatch (Char : SK.Byte);
+
    -------------------------------------------------------------------------
 
    procedure CSI_Add_Param (Char : SK.Byte)
@@ -264,6 +267,26 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure ESC_Dispatch (Char : SK.Byte)
+   is
+   begin
+      pragma Debug (D, Log.Text_IO.Put_String (Item => "* ESC_Dispatch "));
+      pragma Debug (D, Log.Text_IO.Put_Byte   (Item => Char));
+      pragma Debug (D, Log.Text_IO.Put_String (Item => ", intermediate "));
+      pragma Debug (D, Log.Text_IO.Put_Byte   (Item => Fsm.ESC_Collect));
+      pragma Debug (D, Log.Text_IO.New_Line);
+
+      case Char
+      is
+         when others =>
+            Print_Unknown
+              (State => "ESC_Dispatch",
+               Char  => Char);
+      end case;
+   end ESC_Dispatch;
+
+   -------------------------------------------------------------------------
+
    procedure Init
    is
    begin
@@ -364,6 +387,14 @@ is
 
             case Pos
             is
+               when 16#30# .. 16#4f#
+                  | 16#51# .. 16#57#
+                  | 16#59#
+                  | 16#5a#
+                  | 16#5c#
+                  | 16#60# .. 16#7e# =>
+                  ESC_Dispatch (Char => Pos);
+                  Fsm := Null_State;
                when 16#5b# =>
                   Fsm.State := State_CSI_Entry;
                when others =>

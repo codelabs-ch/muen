@@ -280,6 +280,8 @@ is
 
       case Char
       is
+         when 16#3d# =>  --  DECKPAM - ignore
+            null;
          when others =>
             Print_Unknown
               (State => "ESC_Dispatch",

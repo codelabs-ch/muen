@@ -117,8 +117,8 @@ is
          Screen (Cur_Y) (X)
            := Screen_Cell_Type'
              (Char     => ' ',
-              FG_Color => Light_Grey,
-              BG_Color => Black);
+              FG_Color => Cur_Txt_Color,
+              BG_Color => Cur_Bkg_Color);
       end loop;
    end Delete_Line_From_Cursor;
 
@@ -139,8 +139,8 @@ is
             Screen (Y) (X)
               := Screen_Cell_Type'
                 (Char     => ' ',
-                 FG_Color => Light_Grey,
-                 BG_Color => Black);
+                 FG_Color => Cur_Txt_Color,
+                 BG_Color => Cur_Bkg_Color);
          end loop;
       end loop;
       Update_Cursor;

@@ -313,10 +313,21 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Init
+   procedure Init (Label : String := "")
    is
    begin
       Text_IO.Init;
+      if Label'Length > 0 then
+         VGA.Set_Bkg_Color (Color => VGA.Red);
+         VGA.Set_Text_Color (Color => VGA.White);
+         Text_IO.Put_String (Item => Label);
+         VGA.Delete_Line_From_Cursor;
+         VGA.New_Line;
+         VGA.Set_Scrolling_Margins (Top    => Height_Type'First + 1,
+                                    Bottom => Height_Type'Last);
+         VGA.Set_Bkg_Color (Color => VGA.Black);
+         VGA.Set_Text_Color (Color => VGA.Light_Grey);
+      end if;
    end Init;
 
    ----------------------------------------------------------------------

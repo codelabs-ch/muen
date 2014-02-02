@@ -31,8 +31,9 @@ generic
 package Terminal_Screen
 is
 
-   --  Initialize terminal screen.
-   procedure Init;
+   --  Initialize terminal screen. If a Label is specified, it is displayed on
+   --  the first line of the screen.
+   procedure Init (Label : String := "");
 
    --  Update state of terminal screen.
    procedure Update (Char : Character);

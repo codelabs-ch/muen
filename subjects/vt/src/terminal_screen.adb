@@ -162,6 +162,8 @@ is
             VGA.Delete_Line_From_Cursor;
          when 16#68# =>  --  CSI h: Set mode - ignore
             null;
+         when 16#6c# =>  --  CSI l: Reset mode - ignore
+            null;
          when 16#6d# =>  --  CSI n m: SGR - Select Graphic Rendition
             CSI_Select_SGR;
          when others =>

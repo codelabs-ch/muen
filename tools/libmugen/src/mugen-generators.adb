@@ -37,6 +37,7 @@ is
       Mulog.Log (Msg => "Using output directory '" & Out_Dir & "'");
       Mulog.Log (Msg => "Processing policy '" & Policy_File & "'");
       Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
                    File => Policy_File);
       Process (Output_Dir => Out_Dir,
                Policy     => Data);

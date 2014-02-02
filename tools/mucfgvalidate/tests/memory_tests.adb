@@ -194,6 +194,7 @@ is
       Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
                    File => "data/validators.xml");
 
       begin
@@ -260,6 +261,7 @@ is
       Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
                    File => "data/validators.xml");
 
       declare
@@ -362,6 +364,7 @@ is
       Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
                    File => "data/validators.xml");
 
       declare
@@ -398,6 +401,7 @@ is
       Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
                    File => "data/validators.xml");
 
       declare

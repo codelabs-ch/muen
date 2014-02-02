@@ -50,6 +50,7 @@ is
       Mulog.Log (Msg => "Registered validators" & Validators.Length'Img);
 
       Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
                    File => Policy_File);
       while Validator_Package.Has_Element (Position => Pos) loop
          Validator_Package.Element (Position => Pos) (XML_Data => Data);

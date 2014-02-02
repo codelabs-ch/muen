@@ -34,6 +34,7 @@ is
       File_Nodes : DOM.Core.Node_List;
    begin
       Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
                    File => Policy);
 
       File_Nodes := McKae.XML.XPath.XIA.XPath_Query

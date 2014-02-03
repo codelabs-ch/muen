@@ -84,6 +84,12 @@ is
      (N    : out Height_Type;
       Name :     String);
 
+   --  Return collected N parameter. Display error message with given CSI
+   --  sequence name if parameter count does not match.
+   procedure CSI_Get_Param_W
+     (N    : out Width_Type;
+      Name :     String);
+
    --  Convert given CSI parameter to console height. Returns Height_Type'First
    --  if the conversion fails.
    function To_Height (Param : CSI_Param_Value_Type) return Height_Type;
@@ -199,6 +205,25 @@ is
          Log.Text_IO.Put_Line   (Item => Name);
       end if;
    end CSI_Get_Param;
+
+   -------------------------------------------------------------------------
+
+   procedure CSI_Get_Param_W
+     (N    : out Width_Type;
+      Name :     String)
+   is
+   begin
+      N := Width_Type'First;
+
+      if Fsm.CSI_Param_Idx = 1 then
+         N := To_Width (Param => Fsm.CSI_Params (1));
+      elsif Fsm.CSI_Param_Idx /= CSI_Empty_Params then
+         Log.Text_IO.Put_String (Item => "!! Unsupported parameter count 16#");
+         Log.Text_IO.Put_Byte   (Item => SK.Byte (Fsm.CSI_Param_Idx));
+         Log.Text_IO.Put_String (Item => "# in ");
+         Log.Text_IO.Put_Line   (Item => Name);
+      end if;
+   end CSI_Get_Param_W;
 
    -------------------------------------------------------------------------
 

@@ -46,5 +46,3 @@ $(OUTPUT): $(GENERATORS) $(POLICY_OUT)
 
 clean:
 	@rm -rf $(POLICY_INC) $(DSDT) .validated
-
-.PHONY: prepare

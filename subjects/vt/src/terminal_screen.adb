@@ -71,9 +71,9 @@ is
    --  Add CSI parameter to terminal state.
    procedure CSI_Add_Param (Char : SK.Byte);
 
-   --  Return collected N, M parameters. Display error message with given CSI
-   --  sequence name if parameter count does not match.
-   procedure CSI_Get_Params
+   --  Return collected N, M height/width parameters. Display error message
+   --  with given CSI sequence name if parameter count does not match.
+   procedure CSI_Get_Height_Width
      (N    : out Height_Type;
       M    : out Width_Type;
       Name :     String);
@@ -165,9 +165,9 @@ is
                            Name => "CSI D");
             VGA.Cursor_Back (N => N);
          when 16#48# =>  --  CSI n ; m H: CUP - Cursor position
-            CSI_Get_Params (N    => N,
-                            M    => M,
-                            Name => "CSI H");
+            CSI_Get_Height_Width (N    => N,
+                                  M    => M,
+                                  Name => "CSI H");
             VGA.Set_Position (X => M,
                               Y => N);
          when 16#4a# =>  --  CSI J: ED - Erase Display
@@ -186,6 +186,28 @@ is
                Char  => Char);
       end case;
    end CSI_Dispatch;
+
+   -------------------------------------------------------------------------
+
+   procedure CSI_Get_Height_Width
+     (N    : out Height_Type;
+      M    : out Width_Type;
+      Name :     String)
+   is
+   begin
+      N := Height_Type'First;
+      M := Width_Type'First;
+
+      if Fsm.CSI_Param_Idx = 2 then
+         N := To_Height (Param => Fsm.CSI_Params (1));
+         M := To_Width  (Param => Fsm.CSI_Params (2));
+      elsif Fsm.CSI_Param_Idx /= CSI_Empty_Params then
+         Log.Text_IO.Put_String (Item => "!! Unsupported parameter count 16#");
+         Log.Text_IO.Put_Byte   (Item => SK.Byte (Fsm.CSI_Param_Idx));
+         Log.Text_IO.Put_String (Item => "# in ");
+         Log.Text_IO.Put_Line   (Item => Name);
+      end if;
+   end CSI_Get_Height_Width;
 
    -------------------------------------------------------------------------
 
@@ -224,28 +246,6 @@ is
          Log.Text_IO.Put_Line   (Item => Name);
       end if;
    end CSI_Get_Param_W;
-
-   -------------------------------------------------------------------------
-
-   procedure CSI_Get_Params
-     (N    : out Height_Type;
-      M    : out Width_Type;
-      Name :     String)
-   is
-   begin
-      N := Height_Type'First;
-      M := Width_Type'First;
-
-      if Fsm.CSI_Param_Idx = 2 then
-         N := To_Height (Param => Fsm.CSI_Params (1));
-         M := To_Width  (Param => Fsm.CSI_Params (2));
-      elsif Fsm.CSI_Param_Idx /= CSI_Empty_Params then
-         Log.Text_IO.Put_String (Item => "!! Unsupported parameter count 16#");
-         Log.Text_IO.Put_Byte   (Item => SK.Byte (Fsm.CSI_Param_Idx));
-         Log.Text_IO.Put_String (Item => "# in ");
-         Log.Text_IO.Put_Line   (Item => Name);
-      end if;
-   end CSI_Get_Params;
 
    -------------------------------------------------------------------------
 

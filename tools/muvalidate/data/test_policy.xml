@@ -21,6 +21,9 @@
 		<memory name="kernel_text" size="16#0001_0000#" physicalAddress="16#0010_0000#" caching="WB">
 			<file format="elf" filename="kernel" offset="16#0000#"/>
 		</memory>
+		<memory name="kernel_data" size="16#0001_0000#" physicalAddress="16#0020_0000#" caching="WB">
+			<file format="elf" filename="kernel" offset="16#0001_0000#"/>
+		</memory>
 		<memory name="linux|acpi_rsdp" size="16#0001_3000#" physicalAddress="16#0011_0000#" caching="WB">
 			<file format="acpi_rsdp" filename="sections.ref" offset="16#0000#"/>
 		</memory>
@@ -33,6 +36,9 @@
 			<cpu id="0">
 				<memory logical="text" writable="true" executable="true" virtualAddress="16#0010_0000#">
 					<physical name="kernel_text"/>
+				</memory>
+				<memory logical="data" writable="true" executable="false" virtualAddress="16#0011_0000#">
+					<physical name="kernel_data"/>
 				</memory>
 			</cpu>
 		</memory>

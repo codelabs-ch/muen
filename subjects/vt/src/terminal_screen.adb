@@ -191,7 +191,7 @@ is
       N := Height_Type'First;
 
       if Fsm.CSI_Param_Idx = 1 then
-         N := Height_Type (Fsm.CSI_Params (1));
+         N := To_Height (Param => Fsm.CSI_Params (1));
       elsif Fsm.CSI_Param_Idx /= CSI_Empty_Params then
          Log.Text_IO.Put_String (Item => "!! Unsupported parameter count 16#");
          Log.Text_IO.Put_Byte   (Item => SK.Byte (Fsm.CSI_Param_Idx));

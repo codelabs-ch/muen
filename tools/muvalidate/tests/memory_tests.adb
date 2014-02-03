@@ -19,6 +19,7 @@
 with Ada.Exceptions;
 
 with DOM.Core.Nodes;
+with DOM.Core.Documents;
 with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
@@ -77,6 +78,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Physmem_Overlap'Access,
          Name    => "Validate physical memory region overlap");
+      T.Add_Test_Routine
+        (Routine => Validate_Virtmem_Overlap_Kernel'Access,
+         Name    => "Validate kernel virtual memory region overlap");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -246,6 +250,61 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Virtaddr_Alignment;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Virtmem_Overlap_Kernel
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      declare
+         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Data.Doc,
+               XPath => "/system/kernel/memory/cpu[@id='0']"),
+            Index => 0);
+         Mem  : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "memory");
+         Phy  : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "physical");
+      begin
+
+         --  Add overlapping/duplicate memory region to CPU 0 address space.
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => DOM.Core.Nodes.Append_Child
+              (N         => Mem,
+               New_Child => Phy),
+            Name  => "name",
+            Value => "kernel_text");
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem      => DOM.Core.Nodes.Append_Child
+              (N         => Node,
+               New_Child => Mem),
+            Name      => "virtualAddress",
+            Value     => "16#0010_0000#");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Mem,
+            Name  => "logical",
+            Value => "testregion");
+
+         Validators.Memory.Virtual_Memory_Overlap (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Overlap of virtual memory region 'text' and "
+                    & "'testregion' of kernel running on CPU 0",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Virtmem_Overlap_Kernel;
 
    -------------------------------------------------------------------------
 

@@ -58,4 +58,7 @@ is
    --  Validate that no physical memory regions overlap.
    procedure Physical_Memory_Overlap (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that no virtual memory regions of a subject overlap.
+   procedure Virtual_Memory_Overlap (XML_Data : Muxml.XML_Data_Type);
+
 end Validators.Memory;

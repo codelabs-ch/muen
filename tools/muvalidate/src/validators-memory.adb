@@ -264,6 +264,85 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Virtual_Memory_Overlap (XML_Data : Muxml.XML_Data_Type)
+   is
+      use Interfaces;
+
+      Subjects : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject");
+      CPUs     : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/kernel/memory/cpu");
+   begin
+      Check_CPUs :
+      for I in 0 .. DOM.Core.Nodes.Length (List => CPUs) - 1 loop
+         declare
+            CPU    : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => CPUs,
+               Index => I);
+            CPU_Id : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => CPU,
+                 Name => "id");
+            Memory : constant DOM.Core.Node_List
+              := XPath_Query (N     => CPU,
+                              XPath => "memory");
+         begin
+            if DOM.Core.Nodes.Length (List => Memory) > 1 then
+               for J in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
+                  Set_Size
+                    (Virtual_Mem_Node => DOM.Core.Nodes.Item
+                       (List  => Memory,
+                        Index => J),
+                     XML_Data         => XML_Data);
+               end loop;
+
+               Check_Memory_Overlap
+                 (Nodes        => Memory,
+                  Region_Type  => "virtual memory region",
+                  Address_Attr => "virtualAddress",
+                  Name_Attr    => "logical",
+                  Add_Msg      => " of kernel running on CPU " & CPU_Id);
+            end if;
+         end;
+      end loop Check_CPUs;
+
+      Check_Subjects :
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subject   : constant DOM.Core.Node      := DOM.Core.Nodes.Item
+              (List  => Subjects,
+               Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute (Elem => Subject,
+                                                  Name => "name");
+            Memory    : constant DOM.Core.Node_List := XPath_Query
+              (N     => Subject,
+               XPath => "memory/memory");
+         begin
+            if DOM.Core.Nodes.Length (List => Memory) > 1 then
+               for J in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
+                  Set_Size
+                    (Virtual_Mem_Node => DOM.Core.Nodes.Item
+                       (List  => Memory,
+                        Index => J),
+                     XML_Data         => XML_Data);
+               end loop;
+
+               Check_Memory_Overlap
+                 (Nodes        => Memory,
+                  Region_Type  => "virtual memory region",
+                  Address_Attr => "virtualAddress",
+                  Name_Attr    => "logical",
+                  Add_Msg      => " of subject '" & Subj_Name & "'");
+            end if;
+         end;
+      end loop Check_Subjects;
+   end Virtual_Memory_Overlap;
+
+   -------------------------------------------------------------------------
+
    procedure VMCS_In_Lowmem (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query

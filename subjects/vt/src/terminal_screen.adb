@@ -29,8 +29,8 @@ is
 
    Semicolon : constant := 16#3b#;
 
-   subtype Width_Type  is Natural range 1 .. 80;
-   subtype Height_Type is Natural range 1 .. 25;
+   type Width_Type  is range 1 .. 80;
+   type Height_Type is range 1 .. 25;
 
    package VGA is new SK.Console_VGA
      (Width_Type    => Width_Type,

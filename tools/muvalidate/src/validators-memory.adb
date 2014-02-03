@@ -37,6 +37,12 @@ is
 
    One_Megabyte : constant := 16#100000#;
 
+   --  Set size attribute of given virtual memory node to the value of
+   --  the associated physical memory region.
+   procedure Set_Size
+     (Virtual_Mem_Node : DOM.Core.Node;
+      XML_Data         : Muxml.XML_Data_Type);
+
    -------------------------------------------------------------------------
 
    procedure Entity_Name_Encoding (XML_Data : Muxml.XML_Data_Type)
@@ -206,6 +212,38 @@ is
                        Right     => Mutools.Constants.Page_Size,
                        Error_Msg => "not multiple of page size (4K)");
    end Region_Size;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Size
+     (Virtual_Mem_Node : DOM.Core.Node;
+      XML_Data         : Muxml.XML_Data_Type)
+   is
+      Ref_Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+        (List  => XPath_Query
+           (N     => Virtual_Mem_Node,
+            XPath => "physical"),
+         Index => 0);
+      Phy_Name : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Ref_Node,
+           Name => "name");
+      Phy_Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+        (List  => XPath_Query
+           (N     => XML_Data.Doc,
+            XPath => "/system/memory/memory[@name='" & Phy_Name
+            & "']"),
+         Index => 0);
+      Cur_Size : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Phy_Node,
+           Name => "size");
+   begin
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Virtual_Mem_Node,
+         Name  => "size",
+         Value => Cur_Size);
+   end Set_Size;
 
    -------------------------------------------------------------------------
 

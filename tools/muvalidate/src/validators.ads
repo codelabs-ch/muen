@@ -73,12 +73,15 @@ private
       Right     : Interfaces.Unsigned_64;
       Error_Msg : String);
 
-   --  Check memory overlap of given 'Region_Type' nodes. 'Address_Attr'
-   --  specifies the attribute used to query the start address of a given
-   --  region node.
+   --  Check memory overlap of given 'Region_Type' nodes. 'Name_Attr' specifies
+   --  the name and 'Address_Attr' the address attribute of a given region
+   --  node.  If two memory regions overlap, an exception is raised with the
+   --  given 'Add_Msg' string appended to log and error messages.
    procedure Check_Memory_Overlap
      (Nodes        : DOM.Core.Node_List;
       Region_Type  : String;
-      Address_Attr : String);
+      Address_Attr : String;
+      Name_Attr    : String := "name";
+      Add_Msg      : String := "");
 
 end Validators;

@@ -76,12 +76,14 @@ is
    procedure Check_Memory_Overlap
      (Nodes        : DOM.Core.Node_List;
       Region_Type  : String;
-      Address_Attr : String)
+      Address_Attr : String;
+      Name_Attr    : String := "name";
+      Add_Msg      : String := "")
    is
       use Interfaces;
    begin
       Mulog.Log (Msg => "Checking overlap of" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img & " " & Region_Type & "(s)");
+                 (List => Nodes)'Img & " " & Region_Type & "(s)" & Add_Msg);
 
       if DOM.Core.Nodes.Length (List => Nodes) < 2 then
          return;
@@ -95,7 +97,7 @@ is
             Cur_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Cur_Node,
-                 Name => "name");
+                 Name => Name_Attr);
             Cur_Addr : constant Unsigned_64 := Unsigned_64'Value
               (DOM.Core.Elements.Get_Attribute
                  (Elem => Cur_Node,
@@ -113,7 +115,7 @@ is
                   Other_Name : constant String
                     := DOM.Core.Elements.Get_Attribute
                       (Elem => Other_Node,
-                       Name => "name");
+                       Name => Name_Attr);
                   Other_Addr : constant Unsigned_64 := Unsigned_64'Value
                     (DOM.Core.Elements.Get_Attribute
                        (Elem => Other_Node,
@@ -130,7 +132,8 @@ is
                        and then Other_Addr + Other_Size > Cur_Addr)
                   then
                      raise Validation_Error with "Overlap of " & Region_Type
-                       & " '" & Cur_Name & "' and '" & Other_Name & "'";
+                       & " '" & Cur_Name & "' and '" & Other_Name & "'"
+                       & Add_Msg;
                   end if;
                end;
             end loop;

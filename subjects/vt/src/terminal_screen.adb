@@ -207,34 +207,13 @@ is
       M    : out Width_Type;
       Name :     String)
    is
-      N_Value, M_Value : CSI_Param_Value_Type;
    begin
       N := Height_Type'First;
       M := Width_Type'First;
 
       if Fsm.CSI_Param_Idx = 2 then
-         N_Value := Fsm.CSI_Params (1);
-         M_Value := Fsm.CSI_Params (2);
-
-         if N_Value not in CSI_Param_Value_Type (Height_Type'First)
-           .. CSI_Param_Value_Type (Height_Type'Last)
-         then
-            Log.Text_IO.Put_Line
-              (Item => "!! N parameter overflow in CSI_Get_Params");
-            return;
-         else
-            N := Height_Type (N_Value);
-         end if;
-
-         if M_Value not in CSI_Param_Value_Type (Width_Type'First)
-           .. CSI_Param_Value_Type (Width_Type'Last)
-         then
-            Log.Text_IO.Put_Line
-              (Item => "!! M parameter overflow in CSI_Get_Params");
-            return;
-         else
-            M := Width_Type (M_Value);
-         end if;
+         N := To_Height (Param => Fsm.CSI_Params (1));
+         M := To_Width  (Param => Fsm.CSI_Params (2));
       elsif Fsm.CSI_Param_Idx /= CSI_Empty_Params then
          Log.Text_IO.Put_String (Item => "!! Unsupported parameter count 16#");
          Log.Text_IO.Put_Byte   (Item => SK.Byte (Fsm.CSI_Param_Idx));

@@ -1,7 +1,8 @@
-DSDT       = $(OBJ_DIR)/DSDT.aml
 OUTPUT     = $(POLICY_INC)/skp.ads
 POLICY_OUT = $(OBJ_DIR)/$(notdir $(POLICY))
 LAST_HW    = $(shell cat $(OBJ_DIR)/.hw 2>/dev/null)
+DSDT_SRC   = acpi/dsdt.dsl
+DSDT       = $(OBJ_DIR)/DSDT.aml
 
 GENERATORS =      \
 	$(MUACPIGEN)  \
@@ -36,7 +37,7 @@ endif
 	@$(MUVALIDATE) $(POLICY_OUT)
 	@touch $@
 
-$(DSDT): acpi/dsdt.dsl
+$(DSDT): $(DSDT_SRC)
 	@cp $^ $(OBJ_DIR)
 	@iasl -ta $(OBJ_DIR)/dsdt.dsl
 

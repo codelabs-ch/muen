@@ -78,15 +78,15 @@ is
       M    : out Width_Type;
       Name :     String);
 
-   --  Return collected N parameter. Display error message with given CSI
+   --  Return collected height parameter. Display error message with given CSI
    --  sequence name if parameter count does not match.
-   procedure CSI_Get_Param
+   procedure CSI_Get_Height
      (N    : out Height_Type;
       Name :     String);
 
-   --  Return collected N parameter. Display error message with given CSI
+   --  Return collected width parameter. Display error message with given CSI
    --  sequence name if parameter count does not match.
-   procedure CSI_Get_Param_W
+   procedure CSI_Get_Width
      (N    : out Width_Type;
       Name :     String);
 
@@ -150,32 +150,32 @@ is
             declare
                N : Height_Type := Height_Type'First;
             begin
-               CSI_Get_Param (N    => N,
-                              Name => "CSI A");
+               CSI_Get_Height (N    => N,
+                               Name => "CSI A");
                VGA.Cursor_Down (N => N);
             end;
          when 16#42# =>  --  CSI n B: CUD - Cursor Down
             declare
                N : Height_Type := Height_Type'First;
             begin
-               CSI_Get_Param (N    => N,
-                              Name => "CSI B");
+               CSI_Get_Height (N    => N,
+                               Name => "CSI B");
                VGA.Cursor_Down (N => N);
             end;
          when 16#43# =>  --  CSI n C: CUF - Cursor Forward
             declare
                N : Width_Type := Width_Type'First;
             begin
-               CSI_Get_Param_W (N    => N,
-                                Name => "CSI C");
+               CSI_Get_Width (N    => N,
+                              Name => "CSI C");
                VGA.Cursor_Forward (N => N);
             end;
          when 16#44# =>  --  CSI n D: CUB - Cursor Back
             declare
                N : Width_Type := Width_Type'First;
             begin
-               CSI_Get_Param_W (N    => N,
-                                Name => "CSI D");
+               CSI_Get_Width (N    => N,
+                              Name => "CSI D");
                VGA.Cursor_Back (N => N);
             end;
          when 16#48# =>  --  CSI n ; m H: CUP - Cursor position
@@ -208,6 +208,25 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure CSI_Get_Height
+     (N    : out Height_Type;
+      Name :     String)
+   is
+   begin
+      N := Height_Type'First;
+
+      if Fsm.CSI_Param_Idx = 1 then
+         N := To_Height (Param => Fsm.CSI_Params (1));
+      elsif Fsm.CSI_Param_Idx /= CSI_Empty_Params then
+         Log.Text_IO.Put_String (Item => "!! Unsupported parameter count 16#");
+         Log.Text_IO.Put_Byte   (Item => SK.Byte (Fsm.CSI_Param_Idx));
+         Log.Text_IO.Put_String (Item => "# in ");
+         Log.Text_IO.Put_Line   (Item => Name);
+      end if;
+   end CSI_Get_Height;
+
+   -------------------------------------------------------------------------
+
    procedure CSI_Get_Height_Width
      (N    : out Height_Type;
       M    : out Width_Type;
@@ -230,26 +249,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure CSI_Get_Param
-     (N    : out Height_Type;
-      Name :     String)
-   is
-   begin
-      N := Height_Type'First;
-
-      if Fsm.CSI_Param_Idx = 1 then
-         N := To_Height (Param => Fsm.CSI_Params (1));
-      elsif Fsm.CSI_Param_Idx /= CSI_Empty_Params then
-         Log.Text_IO.Put_String (Item => "!! Unsupported parameter count 16#");
-         Log.Text_IO.Put_Byte   (Item => SK.Byte (Fsm.CSI_Param_Idx));
-         Log.Text_IO.Put_String (Item => "# in ");
-         Log.Text_IO.Put_Line   (Item => Name);
-      end if;
-   end CSI_Get_Param;
-
-   -------------------------------------------------------------------------
-
-   procedure CSI_Get_Param_W
+   procedure CSI_Get_Width
      (N    : out Width_Type;
       Name :     String)
    is
@@ -264,7 +264,7 @@ is
          Log.Text_IO.Put_String (Item => "# in ");
          Log.Text_IO.Put_Line   (Item => Name);
       end if;
-   end CSI_Get_Param_W;
+   end CSI_Get_Width;
 
    -------------------------------------------------------------------------
 

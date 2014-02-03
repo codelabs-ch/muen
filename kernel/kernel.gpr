@@ -20,19 +20,25 @@ with "../config/shared";
 
 project Kernel is
 
-   type Build_Type is ("debug", "release");
+   type Build_Type is ("debug", "release", "prove");
    Build_Mode : Build_Type := external ("build", "release");
 
    Extra_Dirs := ();
+   Extra_Languages := ();
 
    case Build_Mode is
       when "debug" =>
          Extra_Dirs := ("../common/" & Build_Mode, Build_Mode);
+         Extra_Languages := ("Asm");
       when "release" =>
          Extra_Dirs := (Build_Mode);
+         Extra_Languages := ("Asm");
+      when "prove" =>
+         Extra_Dirs := ("release", "spark");
     end case;
 
-   for Languages use ("Ada", "Asm");
+   for Languages use ("Ada") & Extra_Languages;
+
    for Source_Dirs use
      ("../common/src",
       "../policy/obj",

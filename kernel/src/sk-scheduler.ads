@@ -70,7 +70,7 @@ is
    --#       VMX.State,
    --#       CPU_Global.State;
 
-private
+   --  Handle_Vmx_Exit could be private if spark/init.adb did not need access.
 
    --  VMX exit handler.
    procedure Handle_Vmx_Exit

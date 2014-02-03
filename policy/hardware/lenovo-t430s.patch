@@ -1,5 +1,18 @@
+diff --git a/policy/acpi/dsdt.dsl b/policy/acpi/dsdt.dsl
+index a39a390..c53ab3c 100644
+--- a/policy/acpi/dsdt.dsl
++++ b/policy/acpi/dsdt.dsl
+@@ -173,7 +173,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
+                     Method (_CRS)
+                     {
+                         Return (ResourceTemplate () {
+-                            IO (Decode16, 0x3f8, 0x3f8, 0x08, 0x08,)
++                            IO (Decode16, 0x50b0, 0x50b0, 0x08, 0x08,)
+                             IRQNoFlags () { 0 }
+                         })
+                     }
 diff --git a/policy/xml/demo_system.xml b/policy/xml/demo_system.xml
-index 5c5c885..278efbf 100644
+index 840a0b7..e60cab7 100644
 --- a/policy/xml/demo_system.xml
 +++ b/policy/xml/demo_system.xml
 @@ -6,7 +6,7 @@
@@ -16,7 +29,7 @@ index 5c5c885..278efbf 100644
  				</segments>
  			</vcpu>
 -			<bootparams>lpj=10000 earlyprintk=serial console=hvc console=ttyS0,115200 pci=noearly notsc</bootparams>
-+			<bootparams>lpj=10000 earlyprintk=serial,0x50b0 console=hvc pci=noearly notsc</bootparams>
++			<bootparams>lpj=10000 earlyprintk=serial,0x50b0 console=hvc console=serial,0x50b0 pci=noearly notsc</bootparams>
  			<memory>
  				<memory logical="zero_page" virtualAddress="16#0000#" writable="true" executable="false">
  					<physical name="linux|zp"/>

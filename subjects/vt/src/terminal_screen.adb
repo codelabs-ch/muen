@@ -88,6 +88,10 @@ is
    --  if the conversion fails.
    function To_Height (Param : CSI_Param_Value_Type) return Height_Type;
 
+   --  Convert given CSI parameter to console width. Returns Width_Type'First
+   --  if the conversion fails.
+   function To_Width (Param : CSI_Param_Value_Type) return Width_Type;
+
    --  Execute ESC sequence.
    procedure ESC_Dispatch (Char : SK.Byte);
 
@@ -369,6 +373,24 @@ is
 
       return Height_Type (Param);
    end To_Height;
+
+   -------------------------------------------------------------------------
+
+   function To_Width (Param : CSI_Param_Value_Type) return Width_Type
+   is
+   begin
+      if Param not in CSI_Param_Value_Type (Width_Type'First)
+        .. CSI_Param_Value_Type (Width_Type'Last)
+      then
+         Log.Text_IO.Put_String
+           (Item => "!! Parameter overflow in To_Width ");
+         Log.Text_IO.Put_Word16 (Item => SK.Word16 (Param));
+         Log.Text_IO.New_Line;
+         return Width_Type'First;
+      end if;
+
+      return Width_Type (Param);
+   end To_Width;
 
    -------------------------------------------------------------------------
 

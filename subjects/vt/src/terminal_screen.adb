@@ -80,9 +80,7 @@ is
 
    --  Return collected height parameter. Display error message with given CSI
    --  sequence name if parameter count does not match.
-   procedure CSI_Get_Height
-     (N    : out Height_Type;
-      Name :     String);
+   function CSI_Get_Height (Name : String) return Height_Type;
 
    --  Return collected width parameter. Display error message with given CSI
    --  sequence name if parameter count does not match.
@@ -147,21 +145,9 @@ is
       case Char
       is
          when 16#41# =>  --  CSI n A: CUU - Cursor Up
-            declare
-               N : Height_Type := Height_Type'First;
-            begin
-               CSI_Get_Height (N    => N,
-                               Name => "CSI A");
-               VGA.Cursor_Down (N => N);
-            end;
+            VGA.Cursor_Down (N => CSI_Get_Height (Name => "CSI A"));
          when 16#42# =>  --  CSI n B: CUD - Cursor Down
-            declare
-               N : Height_Type := Height_Type'First;
-            begin
-               CSI_Get_Height (N    => N,
-                               Name => "CSI B");
-               VGA.Cursor_Down (N => N);
-            end;
+            VGA.Cursor_Down (N => CSI_Get_Height (Name => "CSI B"));
          when 16#43# =>  --  CSI n C: CUF - Cursor Forward
             declare
                N : Width_Type := Width_Type'First;
@@ -208,21 +194,20 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure CSI_Get_Height
-     (N    : out Height_Type;
-      Name :     String)
+   function CSI_Get_Height (Name : String) return Height_Type
    is
+      Result : Height_Type := Height_Type'First;
    begin
-      N := Height_Type'First;
-
       if Fsm.CSI_Param_Idx = 1 then
-         N := To_Height (Param => Fsm.CSI_Params (1));
+         Result := To_Height (Param => Fsm.CSI_Params (1));
       elsif Fsm.CSI_Param_Idx /= CSI_Empty_Params then
          Log.Text_IO.Put_String (Item => "!! Unsupported parameter count 16#");
          Log.Text_IO.Put_Byte   (Item => SK.Byte (Fsm.CSI_Param_Idx));
          Log.Text_IO.Put_String (Item => "# in ");
          Log.Text_IO.Put_Line   (Item => Name);
       end if;
+
+      return Result;
    end CSI_Get_Height;
 
    -------------------------------------------------------------------------

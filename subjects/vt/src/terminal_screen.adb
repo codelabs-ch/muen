@@ -84,6 +84,10 @@ is
      (N    : out Height_Type;
       Name :     String);
 
+   --  Convert given CSI parameter to console height. Returns Height_Type'First
+   --  if the conversion fails.
+   function To_Height (Param : CSI_Param_Value_Type) return Height_Type;
+
    --  Execute ESC sequence.
    procedure ESC_Dispatch (Char : SK.Byte);
 
@@ -347,6 +351,24 @@ is
       Log.Text_IO.Put_Byte   (Item => Char);
       Log.Text_IO.New_Line;
    end Print_Unknown;
+
+   -------------------------------------------------------------------------
+
+   function To_Height (Param : CSI_Param_Value_Type) return Height_Type
+   is
+   begin
+      if Param not in CSI_Param_Value_Type (Height_Type'First)
+        .. CSI_Param_Value_Type (Height_Type'Last)
+      then
+         Log.Text_IO.Put_String
+           (Item => "!! Parameter overflow in To_Height ");
+         Log.Text_IO.Put_Word16 (Item => SK.Word16 (Param));
+         Log.Text_IO.New_Line;
+         return Height_Type'First;
+      end if;
+
+      return Height_Type (Param);
+   end To_Height;
 
    -------------------------------------------------------------------------
 

@@ -138,8 +138,6 @@ is
 
    procedure CSI_Dispatch (Char : SK.Byte)
    is
-      N : Height_Type := Height_Type'First;
-      M : Width_Type  := Width_Type'First;
    begin
       pragma Debug (D, Log.Text_IO.Put_String (Item => "* CSI_Dispatch "));
       pragma Debug (D, Log.Text_IO.Put_Byte   (Item => Char));
@@ -149,27 +147,48 @@ is
       case Char
       is
          when 16#41# =>  --  CSI n A: CUU - Cursor Up
-            CSI_Get_Param (N    => N,
-                           Name => "CSI A");
-            VGA.Cursor_Down (N => N);
+            declare
+               N : Height_Type := Height_Type'First;
+            begin
+               CSI_Get_Param (N    => N,
+                              Name => "CSI A");
+               VGA.Cursor_Down (N => N);
+            end;
          when 16#42# =>  --  CSI n B: CUD - Cursor Down
-            CSI_Get_Param (N    => N,
-                           Name => "CSI B");
-            VGA.Cursor_Down (N => N);
+            declare
+               N : Height_Type := Height_Type'First;
+            begin
+               CSI_Get_Param (N    => N,
+                              Name => "CSI B");
+               VGA.Cursor_Down (N => N);
+            end;
          when 16#43# =>  --  CSI n C: CUF - Cursor Forward
-            CSI_Get_Param (N    => N,
-                           Name => "CSI C");
-            VGA.Cursor_Forward (N => N);
+            declare
+               N : Width_Type := Width_Type'First;
+            begin
+               CSI_Get_Param_W (N    => N,
+                                Name => "CSI C");
+               VGA.Cursor_Forward (N => N);
+            end;
          when 16#44# =>  --  CSI n D: CUB - Cursor Back
-            CSI_Get_Param (N    => N,
-                           Name => "CSI D");
-            VGA.Cursor_Back (N => N);
+            declare
+               N : Width_Type := Width_Type'First;
+            begin
+               CSI_Get_Param_W (N    => N,
+                                Name => "CSI D");
+               VGA.Cursor_Back (N => N);
+            end;
          when 16#48# =>  --  CSI n ; m H: CUP - Cursor position
-            CSI_Get_Height_Width (N    => N,
-                                  M    => M,
-                                  Name => "CSI H");
-            VGA.Set_Position (X => M,
-                              Y => N);
+            declare
+               N : Height_Type := Height_Type'First;
+               M : Width_Type  := Width_Type'First;
+            begin
+               CSI_Get_Height_Width (N    => N,
+                                     M    => M,
+                                     Name => "CSI H");
+               VGA.Set_Position (X => M,
+                                 Y => N);
+            end;
          when 16#4a# =>  --  CSI J: ED - Erase Display
             VGA.Delete_Screen_From_Cursor;
          when 16#4b# =>  --  CSI K: EL - Erase in Line

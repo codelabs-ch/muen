@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core.Append_Node;
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
@@ -23,6 +24,23 @@ with McKae.XML.XPath.XIA;
 
 package body Muxml.Utils
 is
+
+   -------------------------------------------------------------------------
+
+   procedure Append
+     (Left  : in out DOM.Core.Node_List;
+      Right :        DOM.Core.Node_List)
+   is
+
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Right) - 1 loop
+         DOM.Core.Append_Node
+           (List => Left,
+            N    => DOM.Core.Nodes.Item
+              (List  => Right,
+               Index => I));
+      end loop;
+   end Append;
 
    -------------------------------------------------------------------------
 

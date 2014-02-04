@@ -36,4 +36,9 @@ is
       XPath : String)
       return String;
 
+   --  Append all nodes of 'Right' to specified node list 'Left'.
+   procedure Append
+     (Left  : in out DOM.Core.Node_List;
+      Right :        DOM.Core.Node_List);
+
 end Muxml.Utils;

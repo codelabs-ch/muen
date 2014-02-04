@@ -25,6 +25,5 @@ com1: enabled=1, mode=file, dev=serial.out
 debugger_log: debugger.out
 magic_break: enabled=1
 
-pci: enabled=1, chipset=i440fx, slot1=usb_ohci
-
-usb_ohci: enabled=1, port2=mouse
+#pci: enabled=1, chipset=i440fx, slot1=usb_ohci
+#usb_ohci: enabled=1, port2=mouse

@@ -161,11 +161,11 @@
 		<!-- channels -->
 		<memory name="time_channel" physicalAddress="16#0029_e000#" size="16#1000#" caching="WB"/>
 
+		<memory name="linux_keyboard" physicalAddress="16#0029_f000#" size="16#1000#" caching="WB"/>
+
 		<memory name="linux_output" physicalAddress="16#0030_0000#" size="16#1000#" caching="WB"/>
 		<memory name="time_output" physicalAddress="16#0030_1000#" size="16#1000#" caching="WB"/>
 		<memory name="sm_output" physicalAddress="16#0030_2000#" size="16#1000#" caching="WB"/>
-
-		<memory name="linux_keyboard" physicalAddress="16#0030_c000#" size="16#1000#" caching="WB"/>
 	</memory>
 
 	<events/>

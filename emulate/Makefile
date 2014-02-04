@@ -7,7 +7,7 @@ bootable.iso: $(IMAGE) grub.cfg Makefile
 		boot/grub/grub.cfg=grub.cfg \
 		boot/kernel.bin=$(IMAGE)
 
-.emulate: stop bootable.iso
+.emulate: clean bootable.iso
 	@echo cont | bochs -q >emulate.out 2>&1 & echo "$$!" > $@
 
 stop:

@@ -32,7 +32,7 @@ is
      (Input_Channel_Range) of VT_Channel_Rdr.Reader_Type;
 
    In_Channels : In_Channel_Array;
-   for In_Channels'Address use System'To_Address (16#40000#);
+   for In_Channels'Address use System'To_Address (16#100000#);
 
    In_Readers : In_Reader_Array := (others => VT_Channel_Rdr.Null_Reader);
 

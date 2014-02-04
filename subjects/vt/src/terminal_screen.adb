@@ -45,14 +45,14 @@ is
 
    Color_Table : constant array (SK.Byte range 0 .. 7) of
      VGA.VGA_Color_Type
-       := (0 => VGA.Light_Grey,
+       := (0 => VGA.Black,
            1 => VGA.Red,
            2 => VGA.Green,
            3 => VGA.Yellow,
            4 => VGA.Blue,
            5 => VGA.Magenta,
            6 => VGA.Cyan,
-           7 => VGA.Black);
+           7 => VGA.White);
 
    --  Print 'unknown character' message for given FSM state.
    procedure Print_Unknown

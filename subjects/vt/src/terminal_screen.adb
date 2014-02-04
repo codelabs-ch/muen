@@ -405,17 +405,14 @@ is
    function To_Width (Param : CSI_Param_Value_Type) return Width_Type
    is
    begin
-      if Param not in CSI_Param_Value_Type (Width_Type'First)
-        .. CSI_Param_Value_Type (Width_Type'Last)
-      then
-         Log.Text_IO.Put_String
-           (Item => "!! Parameter overflow in To_Width ");
-         Log.Text_IO.Put_Word16 (Item => SK.Word16 (Param));
-         Log.Text_IO.New_Line;
-         return Width_Type'First;
-      end if;
-
-      return Width_Type (Param);
+      case Param
+      is
+         when 0 => return Width_Type'First;
+         when CSI_Param_Value_Type (Width_Type'First) ..
+              CSI_Param_Value_Type (Width_Type'Last) =>
+            return Width_Type (Param);
+         when others => return Width_Type'Last;
+      end case;
    end To_Width;
 
    -------------------------------------------------------------------------

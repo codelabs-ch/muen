@@ -318,18 +318,26 @@ is
          begin
             case Param
             is
-               when 0 =>                                         --  Reset
+               --  SGR (Select Graphic Rendition) parameters,
+               --  see http://en.wikipedia.org/wiki/ANSI_escape_code.
+
+               when 0  =>
                   VGA.Set_Text_Color (Color => VGA.Light_Grey);
                   VGA.Set_Bkg_Color  (Color => VGA.Black);
-               when 1 => null;                                   --  Bold
-               when 7 => VGA.Swap_Text_With_Bkg_Color;           --  Negative
-               when 30 .. 37 =>                                  --  Text color
+               when 7  => VGA.Swap_Text_With_Bkg_Color;
+               when 27 => VGA.Swap_Text_With_Bkg_Color;
+               when 30 .. 37 =>
                   VGA.Set_Text_Color
                     (Color => Color_Table (SK. Byte (Param) - 30));
-               when 40 .. 47 =>                                  --  Bkg color
+               when 39 =>
+                  VGA.Set_Text_Color (Color => VGA.Light_Grey);
+               when 40 .. 47 =>
                   VGA.Set_Bkg_Color
                     (Color => Color_Table (SK. Byte (Param) - 40));
-               when others    =>
+               when 49 =>
+                  VGA.Set_Bkg_Color (Color => VGA.Black);
+               when 1 | 10 => null;
+               when others =>
                   Print_Unknown
                     (State => "CSI_Select_SGR",
                      Char  => SK.Byte (Param));

@@ -74,10 +74,10 @@ is
    procedure Cursor_Down (N : Height_Type := Height_Type'First)
    is
    begin
-      if Cur_Y + N < Height_Type'Last then
+      if Cur_Y + N < Margin_Bottom then
          Cur_Y := Cur_Y + N;
       else
-         Cur_Y := Height_Type'Last;
+         Cur_Y := Margin_Bottom;
       end if;
       Update_Cursor;
    end Cursor_Down;
@@ -100,10 +100,10 @@ is
    procedure Cursor_Up (N : Height_Type := Height_Type'First)
    is
    begin
-      if Cur_Y - N > Height_Type'First then
-         Cur_Y := Cur_Y - 1;
+      if Cur_Y - N > Margin_Top then
+         Cur_Y := Cur_Y - N;
       else
-         Cur_Y := Height_Type'First;
+         Cur_Y := Margin_Top;
       end if;
       Update_Cursor;
    end Cursor_Up;

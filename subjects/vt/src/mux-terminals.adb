@@ -35,6 +35,16 @@ is
    VGA_CRT_Idx_Start_High : constant := 16#0c#;
    VGA_CRT_Idx_Start_Low  : constant := 16#0d#;
 
+   type Slot_Mapping is array (Input.Keysym_Type) of Slot_Range;
+
+   --  Key to session slot mapping
+   Slot_Map : constant Slot_Mapping :=
+     (Input.KEY_F1 => 1,
+      Input.KEY_F2 => 2,
+      Input.KEY_F3 => 3,
+      Input.KEY_F4 => 4,
+      others       => Slot_Range'Last);
+
    type Flags_Type is array (Input_Channel_Range) of Boolean;
 
    --  Pending data flags per channel.
@@ -90,16 +100,16 @@ is
    begin
       case Event.Key is
          when KEY_F1 =>
-            Set (Slot => 1);
+            Set (Slot => Slot_Map (Event.Key));
             Log.Text_IO.Put_Line ("Switching to VT 1");
          when KEY_F2 =>
-            Set (Slot => 2);
+            Set (Slot => Slot_Map (Event.Key));
             Log.Text_IO.Put_Line ("Switching to VT 2");
          when KEY_F3 =>
-            Set (Slot => 3);
+            Set (Slot => Slot_Map (Event.Key));
             Log.Text_IO.Put_Line ("Switching to VT 3");
          when KEY_F4 =>
-            Set (Slot => 4);
+            Set (Slot => Slot_Map (Event.Key));
             Log.Text_IO.Put_Line ("Switching to VT 4");
          when others =>
             if Active_Slot /= 1 then

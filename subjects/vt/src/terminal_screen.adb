@@ -390,17 +390,14 @@ is
    function To_Height (Param : CSI_Param_Value_Type) return Height_Type
    is
    begin
-      if Param not in CSI_Param_Value_Type (Height_Type'First)
-        .. CSI_Param_Value_Type (Height_Type'Last)
-      then
-         Log.Text_IO.Put_String
-           (Item => "!! Parameter overflow in To_Height ");
-         Log.Text_IO.Put_Word16 (Item => SK.Word16 (Param));
-         Log.Text_IO.New_Line;
-         return Height_Type'First;
-      end if;
-
-      return Height_Type (Param);
+      case Param
+      is
+         when 0 => return Height_Type'First;
+         when CSI_Param_Value_Type (Height_Type'First) ..
+              CSI_Param_Value_Type (Height_Type'Last) =>
+            return Height_Type (Param);
+         when others => return Height_Type'Last;
+      end case;
    end To_Height;
 
    -------------------------------------------------------------------------

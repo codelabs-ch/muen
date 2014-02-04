@@ -100,10 +100,14 @@ is
    begin
       case Event.Key is
          when KEY_F1 | KEY_F2 | KEY_F3 | KEY_F4 =>
-            Set (Slot => Slot_Map (Event.Key));
-            Log.Text_IO.Put_String (Item => "Switching to VT ");
-            Log.Text_IO.Put_Byte (Item => SK.Byte (Slot_Map (Event.Key)));
-            Log.Text_IO.New_Line;
+            if Event.Pressed and then
+              Active_Slot /= Slot_Map (Event.Key)
+            then
+               Set (Slot => Slot_Map (Event.Key));
+               Log.Text_IO.Put_String (Item => "Switching to VT ");
+               Log.Text_IO.Put_Byte (Item => SK.Byte (Slot_Map (Event.Key)));
+               Log.Text_IO.New_Line;
+            end if;
          when others =>
             if Active_Slot /= 1 then
                return;

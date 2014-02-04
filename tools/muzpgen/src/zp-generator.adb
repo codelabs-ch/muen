@@ -187,13 +187,13 @@ is
       --  Zero page incl. cmdl (8k), Time page, HVC and kbd channels
 
       Params.e820_map (0) := (addr   => 16#000000#,
-                              size   => 16#005000#,
+                              size   => 16#014000#,
                               c_type => E820_RESERVED);
 
       --  Usable lower memory
 
-      Params.e820_map (1) := (addr   => 16#005000#,
-                              size   => 16#09e000#,
+      Params.e820_map (1) := (addr   => 16#014000#,
+                              size   => 16#08f000#,
                               c_type => E820_RAM);
 
       --  VGA memory, OPROMs, BIOS extension (ACPI tables), System BIOS

@@ -1313,7 +1313,7 @@
 				<memory logical="linux_output" virtualAddress="16#4000#" writable="true" executable="false">
 					<physical name="linux_output"/>
 				</memory>
-				<memory logical="lowmem" virtualAddress="16#5000#" writable="true" executable="false">
+				<memory logical="lowmem" virtualAddress="16#0001_4000#" writable="true" executable="false">
 					<physical name="linux|lowmem"/>
 				</memory>
 				<memory logical="bios" virtualAddress="16#000c_0000#" writable="false" executable="false">

@@ -68,4 +68,7 @@ is
    --  Validate kernel virtual memory region overlap.
    procedure Validate_Virtmem_Overlap_Kernel;
 
+   --  Validate subject virtual memory region overlap.
+   procedure Validate_Virtmem_Overlap_Subject;
+
 end Memory_Tests;

@@ -153,7 +153,7 @@ is
       case Char
       is
          when 16#41# =>  --  CSI n A: CUU - Cursor Up
-            VGA.Cursor_Down (N => CSI_Get_Height (Name => "CSI A"));
+            VGA.Cursor_Up (N => CSI_Get_Height (Name => "CSI A"));
          when 16#42# =>  --  CSI n B: CUD - Cursor Down
             VGA.Cursor_Down (N => CSI_Get_Height (Name => "CSI B"));
          when 16#43# =>  --  CSI n C: CUF - Cursor Forward

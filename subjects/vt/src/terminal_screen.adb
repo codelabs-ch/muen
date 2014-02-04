@@ -165,6 +165,8 @@ is
             VGA.Delete_Screen_From_Cursor;
          when 16#4b# =>  --  CSI K: EL - Erase in Line
             VGA.Delete_Line_From_Cursor;
+         when 16#63# =>  --  CSI c: RIS - Reset To Initial State
+            Init;        --  Label omitted for now
          when 16#68# =>  --  CSI h: Set mode - ignore
             null;
          when 16#6c# =>  --  CSI l: Reset mode - ignore

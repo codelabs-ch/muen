@@ -150,7 +150,7 @@ is
             VGA.Cursor_Forward (N => CSI_Get_Width (Name => "CSI C"));
          when 16#44# =>  --  CSI n D: CUB - Cursor Back
             VGA.Cursor_Back (N => CSI_Get_Width (Name => "CSI D"));
-         when 16#48# =>  --  CSI n ; m H: CUP - Cursor position
+         when 16#48# | 16#66# =>  --  CSI n ; m H|f: CUP - Cursor position
             declare
                N : Height_Type := Height_Type'First;
                M : Width_Type  := Width_Type'First;

@@ -30,7 +30,8 @@ is
       use type Ada.Strings.Unbounded.Unbounded_String;
    begin
       return Left.Size < Right.Size or else
-         (Left.Size = Right.Size and Left.Alignment < Right.Alignment);
+         ((Left.Size = Right.Size and Left.Alignment < Right.Alignment) or else
+             Left.Name < Right.Name);
    end "<";
 
    package Ordered_Regions_Package is new

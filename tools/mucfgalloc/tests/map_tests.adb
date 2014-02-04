@@ -426,6 +426,9 @@ is
       T.Add_Test_Routine
         (Routine => Allocate_Variable_OOM_Alignment'Access,
          Name    => "Alignment");
+      T.Add_Test_Routine
+        (Routine => Ordering'Access,
+         Name    => "Ordering of allocated regions");
    end Initialize;
 
    ----------------------------------------------------------------------------
@@ -499,6 +502,31 @@ is
                    Filename2 => "obj/non_overlapping_sorted.txt"),
               Message => "Memory map missmatch (sorted)");
    end Non_Overlapping_Sorted;
+
+   ----------------------------------------------------------------------------
+
+   procedure Ordering
+   is
+      use Ahven;
+      use Alloc.Map;
+      use Ada.Text_IO;
+
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0, 999);
+
+      --  Only name differs
+      M.Allocate_Variable (Size => 500, Alignment => 100, Name => U ("mem1"));
+      M.Allocate_Variable (Size => 500, Alignment => 100, Name => U ("mem2"));
+      Create (Output_File, Out_File, "obj/ordering.txt");
+      M.Iterate (Write_Region'Access);
+      Close (Output_File);
+
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/ordering.txt",
+                   Filename2 => "obj/ordering.txt"),
+              Message => "Wrong ordering");
+   end Ordering;
 
    ----------------------------------------------------------------------------
 

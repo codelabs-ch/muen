@@ -63,13 +63,13 @@ is
    procedure Overlapping_Physical_Memory
    is
       Policy : Muxml.XML_Data_Type;
-      pragma Unreferenced (Policy);
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_A,
                    File => "data/overlapping.xml");
       Allocator.Write (Policy      => Policy,
                        Output_File => "obj/overlapping.xml");
+      pragma Unreferenced (Policy);
       Fail ("Overlap undetected");
    exception
       --  Should raise an exception.

@@ -120,4 +120,7 @@ is
    --  alginment constraints
    procedure Allocate_Variable_OOM_Alignment;
 
+   --  Check whether ordering of elements is as intended
+   --  (Size first, Alignment second, Name third)
+   procedure Ordering;
 end Map_Tests;

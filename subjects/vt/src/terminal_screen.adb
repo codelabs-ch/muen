@@ -81,6 +81,13 @@ is
       M    : out Width_Type;
       Name :     String);
 
+   --  Return collected N, M height parameters. Display error message with
+   --  given CSI sequence name if parameter count does not match.
+   procedure CSI_Get_Height
+     (N    : out Height_Type;
+      M    : out Height_Type;
+      Name :     String);
+
    --  Return collected height parameter. Display error message with given CSI
    --  sequence name if parameter count does not match.
    function CSI_Get_Height (Name : String) return Height_Type;
@@ -176,6 +183,17 @@ is
             null;
          when 16#6d# =>  --  CSI n m: SGR - Select Graphic Rendition
             CSI_Select_SGR;
+         when 16#72# =>  --  CSI n m r: DECSTBM - Set Top and Bottom Margins
+            declare
+               N : Height_Type := Height_Type'First;
+               M : Height_Type := Height_Type'First;
+            begin
+               CSI_Get_Height (N    => N,
+                               M    => M,
+                               Name => "CSI r");
+               VGA.Set_Scrolling_Margins (Top    => N,
+                                          Bottom => M);
+            end;
          when others =>
             Print_Unknown
               (State => "CSI_Dispatch",
@@ -219,6 +237,28 @@ is
       end if;
 
       return Result;
+   end CSI_Get_Height;
+
+   -------------------------------------------------------------------------
+
+   procedure CSI_Get_Height
+     (N    : out Height_Type;
+      M    : out Height_Type;
+      Name :     String)
+   is
+   begin
+      N := Height_Type'First;
+      M := Height_Type'First;
+
+      if Fsm.CSI_Param_Idx = 2 then
+         N := To_Height (Param => Fsm.CSI_Params (1));
+         M := To_Height (Param => Fsm.CSI_Params (2));
+      elsif Fsm.CSI_Param_Idx /= CSI_Empty_Params then
+         Log.Text_IO.Put_String (Item => "!! Unsupported parameter count 16#");
+         Log.Text_IO.Put_Byte   (Item => SK.Byte (Fsm.CSI_Param_Idx));
+         Log.Text_IO.Put_String (Item => "# in ");
+         Log.Text_IO.Put_Line   (Item => Name);
+      end if;
    end CSI_Get_Height;
 
    -------------------------------------------------------------------------

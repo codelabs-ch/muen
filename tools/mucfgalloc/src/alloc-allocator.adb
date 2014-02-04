@@ -146,13 +146,20 @@ is
          Size := Interfaces.Unsigned_64'Value
             (Get_Attribute (Item (Nodes, I), "size"));
 
-         Insert
-            (Container => Region_Set,
-             New_Item  => Region_Type'
-               (Size      => Size,
-                Alignment => Alignment,
-                Name      => Ada.Strings.Unbounded.To_Unbounded_String
-                  (Get_Attribute (Item (Nodes, I), "name"))));
+         begin
+            Insert
+               (Container => Region_Set,
+                New_Item  => Region_Type'
+                  (Size      => Size,
+                   Alignment => Alignment,
+                   Name      => Ada.Strings.Unbounded.To_Unbounded_String
+                     (Get_Attribute (Item (Nodes, I), "name"))));
+         exception
+            when Constraint_Error => raise Duplicate_Region with
+               "Region '" & Get_Attribute (Item (Nodes, I), "name") &
+               "' (Size" & Size'Img & ", Alignment" & Alignment'Img &
+               ") inserted twice";
+         end;
 
       end loop;
 

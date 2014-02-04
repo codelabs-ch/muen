@@ -33,6 +33,9 @@ is
    --  Internal error (e.g. malformed XML input)
    Internal_Error : exception;
 
+   --  Tried to allocate region twice
+   Duplicate_Region : exception;
+
 private
 
    procedure Add_Empty_Regions

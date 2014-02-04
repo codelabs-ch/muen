@@ -639,7 +639,17 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Stack_Size : constant Unsigned_64 := 2 * 4096;
+      Stack_Ref  : constant String
+        := Get_Attribute
+          (Doc   => Policy.Doc,
+           XPath => "/system/kernel/memory/cpu[@id='0']/"
+           & "memory[@logical='stack']/physical",
+           Name  => "name");
+      Stack_Size : constant Unsigned_64 := Unsigned_64'Value
+        (Get_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/memory/memory[@name='" & Stack_Ref & "']",
+            Name  => "size"));
       Stack_Addr : constant Unsigned_64 := Unsigned_64'Value
         (Get_Attribute
            (Doc   => Policy.Doc,

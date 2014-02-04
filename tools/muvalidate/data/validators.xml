@@ -44,6 +44,10 @@
 			<device logical="log" physical="serial">
 				<ioPort logical="ports" physical="serial" start="16#50b0#" end="16#50b8#"/>
 			</device>
+			<device logical="gfx" physical="vga">
+				<memory logical="vga_buffer" physical="buffer" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
+				<ioPort logical="ports" physical="ports" start="16#03d4#" end="16#03d5#"/>
+			</device>
 		</devices>
 	</kernel>
 

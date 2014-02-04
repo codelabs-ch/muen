@@ -99,18 +99,11 @@ is
       use Input;
    begin
       case Event.Key is
-         when KEY_F1 =>
+         when KEY_F1 | KEY_F2 | KEY_F3 | KEY_F4 =>
             Set (Slot => Slot_Map (Event.Key));
-            Log.Text_IO.Put_Line ("Switching to VT 1");
-         when KEY_F2 =>
-            Set (Slot => Slot_Map (Event.Key));
-            Log.Text_IO.Put_Line ("Switching to VT 2");
-         when KEY_F3 =>
-            Set (Slot => Slot_Map (Event.Key));
-            Log.Text_IO.Put_Line ("Switching to VT 3");
-         when KEY_F4 =>
-            Set (Slot => Slot_Map (Event.Key));
-            Log.Text_IO.Put_Line ("Switching to VT 4");
+            Log.Text_IO.Put_String (Item => "Switching to VT ");
+            Log.Text_IO.Put_Byte (Item => SK.Byte (Slot_Map (Event.Key)));
+            Log.Text_IO.New_Line;
          when others =>
             if Active_Slot /= 1 then
                return;

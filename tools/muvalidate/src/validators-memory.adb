@@ -271,13 +271,38 @@ is
    is
       use Interfaces;
 
-      Subjects : constant DOM.Core.Node_List := XPath_Query
+      Subjects       : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "/system/subjects/subject");
-      CPUs     : constant DOM.Core.Node_List := XPath_Query
+      CPUs           : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "/system/kernel/memory/cpu");
+      Kernel_Dev_Mem : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/kernel/devices/device/memory");
+      KDev_Mem_Count : constant Natural := DOM.Core.Nodes.Length
+        (List => Kernel_Dev_Mem);
    begin
+      for I in 0 .. KDev_Mem_Count - 1 loop
+         declare
+            Cur_Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Kernel_Dev_Mem,
+               Index => I);
+            Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => DOM.Core.Nodes.Parent_Node (N => Cur_Node),
+               Name => "physical");
+         begin
+            Set_Size
+              (Virtual_Mem_Node => DOM.Core.Nodes.Item
+                 (List  => Kernel_Dev_Mem,
+                  Index => I),
+               Ref_Name_Path    => "@physical",
+               Ref_Nodes_Path   => "/system/platform/device[@name='" & Dev_Name
+               & "']/memory",
+               XML_Data         => XML_Data);
+         end;
+      end loop;
+
       Check_CPUs :
       for I in 0 .. DOM.Core.Nodes.Length (List => CPUs) - 1 loop
          declare
@@ -288,11 +313,11 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => CPU,
                  Name => "id");
-            Memory : constant DOM.Core.Node_List
+            Memory : DOM.Core.Node_List
               := XPath_Query (N     => CPU,
                               XPath => "memory");
          begin
-            if DOM.Core.Nodes.Length (List => Memory) > 1 then
+            if DOM.Core.Nodes.Length (List => Memory) + KDev_Mem_Count > 1 then
                for J in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
                   Set_Size
                     (Virtual_Mem_Node => DOM.Core.Nodes.Item
@@ -302,6 +327,9 @@ is
                      Ref_Nodes_Path   => "/system/memory/memory",
                      XML_Data         => XML_Data);
                end loop;
+
+               Muxml.Utils.Append (Left  => Memory,
+                                   Right => Kernel_Dev_Mem);
 
                Check_Memory_Overlap
                  (Nodes        => Memory,

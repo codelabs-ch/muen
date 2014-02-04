@@ -68,6 +68,9 @@ is
    --  CSI Select Graphic Rendition.
    procedure CSI_Select_SGR;
 
+   --  CSI Erase Display.
+   procedure CSI_Erase_Display;
+
    --  Add CSI parameter to terminal state.
    procedure CSI_Add_Param (Char : SK.Byte);
 
@@ -162,7 +165,7 @@ is
                                  Y => N);
             end;
          when 16#4a# =>  --  CSI J: ED - Erase Display
-            VGA.Delete_Screen_From_Cursor;
+            CSI_Erase_Display;
          when 16#4b# =>  --  CSI K: EL - Erase in Line
             VGA.Delete_Line_From_Cursor;
          when 16#63# =>  --  CSI c: RIS - Reset To Initial State
@@ -179,6 +182,26 @@ is
                Char  => Char);
       end case;
    end CSI_Dispatch;
+
+   -------------------------------------------------------------------------
+
+   procedure CSI_Erase_Display
+   is
+   begin
+      if Fsm.CSI_Param_Idx = CSI_Empty_Params then
+         VGA.Delete_Screen_From_Cursor;
+      end if;
+
+      case Fsm.CSI_Params (1)
+      is
+         when 0      => VGA.Delete_Screen_From_Cursor;
+         when 2      => VGA.Init;
+         when others =>
+            Log.Text_IO.Put_String (Item => "!! Unsupported param ");
+            Log.Text_IO.Put_Byte   (Item => SK.Byte (Fsm.CSI_Params (1)));
+            Log.Text_IO.Put_Line   (Item => " in CSI J");
+      end case;
+   end CSI_Erase_Display;
 
    -------------------------------------------------------------------------
 

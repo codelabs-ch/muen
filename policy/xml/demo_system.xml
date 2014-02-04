@@ -163,9 +163,9 @@
 
 		<memory name="linux_keyboard" physicalAddress="16#0029_f000#" size="16#1000#" caching="WB"/>
 
-		<memory name="linux_output" physicalAddress="16#0030_0000#" size="16#1000#" caching="WB"/>
-		<memory name="time_output" physicalAddress="16#0030_1000#" size="16#1000#" caching="WB"/>
-		<memory name="sm_output" physicalAddress="16#0030_2000#" size="16#1000#" caching="WB"/>
+		<memory name="linux_output" physicalAddress="16#0030_0000#" size="16#0001_0000#" caching="WB"/>
+		<memory name="time_output" physicalAddress="16#0031_0000#" size="16#0001_0000#" caching="WB"/>
+		<memory name="sm_output" physicalAddress="16#0032_0000#" size="16#0001_0000#" caching="WB"/>
 	</memory>
 
 	<events/>
@@ -689,10 +689,10 @@
 				<memory logical="linux_output" virtualAddress="16#0010_0000#" writable="false" executable="false">
 					<physical name="linux_output"/>
 				</memory>
-				<memory logical="time_output" virtualAddress="16#0010_1000#" writable="false" executable="false">
+				<memory logical="time_output" virtualAddress="16#0011_0000#" writable="false" executable="false">
 					<physical name="time_output"/>
 				</memory>
-				<memory logical="sm_output" virtualAddress="16#0010_2000#" writable="false" executable="false">
+				<memory logical="sm_output" virtualAddress="16#0012_0000#" writable="false" executable="false">
 					<physical name="sm_output"/>
 				</memory>
 

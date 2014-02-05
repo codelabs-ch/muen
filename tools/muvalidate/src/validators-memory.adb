@@ -344,17 +344,24 @@ is
       Check_Subjects :
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
-            Subject   : constant DOM.Core.Node      := DOM.Core.Nodes.Item
-              (List  => Subjects,
-               Index => I);
-            Subj_Name : constant String
-              := DOM.Core.Elements.Get_Attribute (Elem => Subject,
-                                                  Name => "name");
-            Memory    : constant DOM.Core.Node_List := XPath_Query
+            Subject       : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name     : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subject,
+                 Name => "name");
+            Memory        : DOM.Core.Node_List          := XPath_Query
               (N     => Subject,
                XPath => "memory/memory");
+            Dev_Memory    : constant DOM.Core.Node_List := XPath_Query
+              (N     => Subject,
+               XPath => "devices/device/memory");
+            Dev_Mem_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => Dev_Memory);
          begin
-            if DOM.Core.Nodes.Length (List => Memory) > 1 then
+            if DOM.Core.Nodes.Length (List => Memory) + Dev_Mem_Count > 1 then
                for J in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
                   Set_Size
                     (Virtual_Mem_Node => DOM.Core.Nodes.Item
@@ -364,6 +371,30 @@ is
                      Ref_Nodes_Path   => "/system/memory/memory",
                      XML_Data         => XML_Data);
                end loop;
+
+               for K in 0 .. Dev_Mem_Count - 1 loop
+                  declare
+                     Cur_Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+                       (List  => Dev_Memory,
+                        Index => K);
+                     Dev_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => DOM.Core.Nodes.Parent_Node (N => Cur_Node),
+                          Name => "physical");
+                  begin
+                     Set_Size
+                       (Virtual_Mem_Node => DOM.Core.Nodes.Item
+                          (List  => Dev_Memory,
+                           Index => K),
+                        Ref_Name_Path    => "@physical",
+                        Ref_Nodes_Path   => "/system/platform/device[@name='"
+                        & Dev_Name & "']/memory",
+                        XML_Data         => XML_Data);
+                  end;
+               end loop;
+
+               Muxml.Utils.Append (Left  => Memory,
+                                   Right => Dev_Memory);
 
                Check_Memory_Overlap
                  (Nodes        => Memory,

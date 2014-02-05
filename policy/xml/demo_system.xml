@@ -1356,6 +1356,9 @@
 				<device logical="port80" physical="port80">
 					<ioPort logical="ports" physical="ports" start="16#0080#" end="16#0080#"/>
 				</device>
+				<device logical="cmos_rtc" physical="cmos_rtc">
+					<ioPort logical="ports" physical="ports" start="16#0070#" end="16#0071#"/>
+				</device>
 			</devices>
 			<events>
 				<source>

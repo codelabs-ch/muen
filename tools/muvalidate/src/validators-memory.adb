@@ -135,13 +135,19 @@ is
 
    procedure Physical_Memory_Overlap (XML_Data : Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List := XPath_Query
+      Nodes   : DOM.Core.Node_List          := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "/system/memory/memory");
+      Dev_Mem : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/platform/device/memory");
    begin
-      Check_Memory_Overlap (Nodes        => Nodes,
-                            Region_Type  => "physical memory region",
-                            Address_Attr => "physicalAddress");
+      Muxml.Utils.Append (Left  => Nodes,
+                          Right => Dev_Mem);
+      Check_Memory_Overlap
+        (Nodes        => Nodes,
+         Region_Type  => "physical or device memory region",
+         Address_Attr => "physicalAddress");
    end Physical_Memory_Overlap;
 
    -------------------------------------------------------------------------

@@ -191,8 +191,8 @@ is
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Overlap of physical memory region 'invalid_0|vmxon'"
-                    & " and 'invalid|vmcs'",
+                    = "Overlap of physical or device memory region "
+                    & "'invalid_0|vmxon' and 'invalid|vmcs'",
                     Message   => "Exception mismatch");
       end;
    end Validate_Physmem_Overlap;

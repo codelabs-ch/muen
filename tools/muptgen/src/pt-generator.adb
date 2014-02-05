@@ -207,10 +207,9 @@ is
                 (Elem => Logical_Mem,
                  Name => "logical");
             Physical_Name : constant String
-              := Muxml.Utils.Get_Attribute
-                (Doc   => Logical_Mem,
-                 XPath => "physical",
-                 Name  => "name");
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Logical_Mem,
+                 Name => "physical");
             Physical_Mem  : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => McKae.XML.XPath.XIA.XPath_Query
@@ -228,8 +227,7 @@ is
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
          declare
-            Device   : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
+            Device   : constant DOM.Core.Node := DOM.Core.Nodes.Item
                 (List  => Devices,
                  Index => I);
             Dev_Name : constant String := DOM.Core.Elements.Get_Attribute

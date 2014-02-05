@@ -79,6 +79,9 @@ is
         (Routine => Validate_Physmem_Overlap'Access,
          Name    => "Validate physical memory region overlap");
       T.Add_Test_Routine
+        (Routine => Validate_Physmem_Overlap_Device'Access,
+         Name    => "Validate physical device memory region overlap");
+      T.Add_Test_Routine
         (Routine => Validate_Virtmem_Overlap_Kernel'Access,
          Name    => "Validate kernel virtual memory region overlap");
       T.Add_Test_Routine
@@ -193,6 +196,42 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Physmem_Overlap;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Physmem_Overlap_Device
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      declare
+         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Data.Doc,
+               XPath => "/system/memory/memory[@name='invalid_0|vmxon']"),
+            Index => 0);
+      begin
+
+         --  Let existing region overlap with device memory.
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "physicalAddress",
+            Value => "16#000b_7000#");
+
+         Validators.Memory.Physical_Memory_Overlap (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Overlap of physical or device memory region "
+                    & "'invalid_0|vmxon' and 'videobuffer'",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Physmem_Overlap_Device;
 
    -------------------------------------------------------------------------
 

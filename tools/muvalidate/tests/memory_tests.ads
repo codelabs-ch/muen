@@ -65,6 +65,9 @@ is
    --  Validate physical memory region overlap.
    procedure Validate_Physmem_Overlap;
 
+   --  Validate physical memory and device region overlap.
+   procedure Validate_Physmem_Overlap_Device;
+
    --  Validate kernel virtual memory region overlap.
    procedure Validate_Virtmem_Overlap_Kernel;
 

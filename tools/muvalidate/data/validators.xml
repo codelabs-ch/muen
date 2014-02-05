@@ -17,7 +17,7 @@
 			<ioPort name="port_64" start="16#0064#" end="16#0064#"/>
 		</device>
 		<device name="vga" shared="false">
-			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
+			<memory name="videobuffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
 			<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
 		</device>
 	</platform>
@@ -45,7 +45,7 @@
 				<ioPort logical="ports" physical="serial" start="16#50b0#" end="16#50b8#"/>
 			</device>
 			<device logical="gfx" physical="vga">
-				<memory logical="vga_buffer" physical="buffer" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
+				<memory logical="vga_buffer" physical="videobuffer" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
 				<ioPort logical="ports" physical="ports" start="16#03d4#" end="16#03d5#"/>
 			</device>
 		</devices>
@@ -239,7 +239,7 @@
 					<ioPort logical="consoleports" physical="serial" start="16#50b0#" end="16#50b0#"/>
 				</device>
 				<device logical="gfx" physical="vga">
-					<memory logical="vga_buffer" physical="buffer" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
+					<memory logical="vga_buffer" physical="videobuffer" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
 					<ioPort logical="ports" physical="ports" start="16#03d4#" end="16#03d5#"/>
 				</device>
 			</devices>

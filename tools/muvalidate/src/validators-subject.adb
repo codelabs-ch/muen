@@ -249,49 +249,38 @@ is
       Subjects : constant DOM.Core.Node_List
         := XPath_Query (N     => XML_Data.Doc,
                         XPath => "/system/subjects/subject");
+
+      --  Check that names of Left and Right differ.
+      procedure Check_Name_Inequality (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Name_Inequality (Left, Right : DOM.Core.Node)
+      is
+         Left_Id   : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "id");
+         Left_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "name");
+         Right_Id   : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "id");
+         Right_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         if Left_Name = Right_Name then
+            raise Validation_Error with "Subjects with id " & Left_Id & " and "
+              & Right_Id & " have identical name '" & Left_Name & "'";
+         end if;
+      end Check_Name_Inequality;
    begin
       Mulog.Log (Msg => "Checking uniqueness of" & DOM.Core.Nodes.Length
                  (List => Subjects)'Img & " subject name(s)");
 
-      if DOM.Core.Nodes.Length (List => Subjects) < 2 then
-         return;
-      end if;
-
-      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 2 loop
-         declare
-            Cur_Subj : constant DOM.Core.Node := DOM.Core.Nodes.Item
-              (List  => Subjects,
-               Index => I);
-            Cur_Id   : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Cur_Subj,
-               Name => "id");
-            Cur_Name : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Cur_Subj,
-               Name => "name");
-         begin
-            for J in I + 1 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
-               declare
-                  Other_Subj : constant DOM.Core.Node := DOM.Core.Nodes.Item
-                    (List  => Subjects,
-                     Index => J);
-                  Other_Id   : constant String
-                    := DOM.Core.Elements.Get_Attribute
-                      (Elem => Other_Subj,
-                       Name => "id");
-                  Other_Name : constant String
-                    := DOM.Core.Elements.Get_Attribute
-                      (Elem => Other_Subj,
-                       Name => "name");
-               begin
-                  if Cur_Name = Other_Name then
-                     raise Validation_Error with "Subjects with id " & Cur_Id
-                       & " and " & Other_Id & " have identical name '"
-                       & Cur_Name & "'";
-                  end if;
-               end;
-            end loop;
-         end;
-      end loop;
+      Compare_All (Nodes      => Subjects,
+                   Comparator => Check_Name_Inequality'Access);
    end Name_Uniqueness;
 
 end Validators.Subject;

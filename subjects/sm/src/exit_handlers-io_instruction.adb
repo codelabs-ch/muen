@@ -117,8 +117,6 @@ is
                        16#43#  |    --  i8253/4 PIT_MODE    (hardcoded)
                        16#60#  |    --  i8042 DATA          (configurable)
                        16#64#  |    --  i8042 CMD/STATUS    (configurable)
-                       16#70#  |    --  RTC CMD             (hardcoded)
-                       16#71#  |    --  RTC DATA            (hardcoded)
                        16#80#  |    --  PORT80              (hardcoded)
                        16#2e9# |    --  COM 4               (configurable)
                        16#2f9# |    --  COM 2               (configurable)
@@ -146,12 +144,6 @@ is
                         when 16#43# =>
                            Subject.Text_IO.Put_String
                              (Item => "(43) i8253/4 PIT_MODE ");
-                        when 16#70# =>
-                           Subject.Text_IO.Put_String
-                             (Item => "(70) RTC CMD  ");
-                        when 16#71# =>
-                           Subject.Text_IO.Put_String
-                             (Item => "(71) RTC DATA ");
                         when others =>
                            Subject.Text_IO.Put_String (Item => " ");
                            Subject.Text_IO.Put_Word16

@@ -131,7 +131,7 @@ any Multiboot <<mboot>> compliant bootloader.
 
 Deploy
 ------
-The build system provides two targets to instantly deploy and test the created
+The build system provides two ways to instantly deploy and test the created
 system image.
 
 Emulation
@@ -167,8 +167,32 @@ serial console output is written to `emulate/serial.out`.
 
 Hardware
 ~~~~~~~~
-For efficient deployment of the Muen system image to real hardware, the iPXE
-<<ipxe>> boot firmware installed on a USB-stick in conjuction with Intel Active
+The top-level Makefile provides two convenient targets to deploy Muen to real
+hardware: `iso` and `deploy`. The first creates a bootable ISO image which can
+be burned on a CD-ROM or dumped on a USB stick, the second uses network boot to
+shorten round-trips during development.
+
+USB Stick
+^^^^^^^^^
+To create a bootable USB stick containing the Muen system, enter the following
+commands in the top-level directory:
+
+  $ make iso
+  $ sudo cat emulate/muen.iso > /dev/sdX
+  $ sync
+
+The `/dev/sdX` device is the USB stick (e.g. `/dev/sdc`, without partition
+number). *All existing data will be erased*.
+
+If your hardware differs from the default configuration, additionally specify
+the `HARDWARE` variable:
+
+  $ make iso HARDWARE=lenovo-t430s
+
+Network Boot
+^^^^^^^^^^^^
+For fast deployment of the Muen system image to real hardware, the iPXE
+<<ipxe>> boot firmware installed on a USB stick in conjuction with Intel Active
 Management Technology (AMT) is used. Please refer to the amtterm <<amt>>
 documentation on how to configure AMT on the target hardware.
 
@@ -181,7 +205,8 @@ following commands:
   $ make bin/ipxe.usb EMBED=../../muen.ipxe
   $ sudo dd if=bin/ipxe.usb of=/dev/sdX
 
-The `/dev/sdX` device is the USB-stick. *All existing data will be erased*.
+The `/dev/sdX` device is the USB stick (e.g. `/dev/sdc`, without partition
+number). *All existing data will be erased*.
 
 When booting from the created stick the first NIC (net0) is configured as follows:
 
@@ -206,6 +231,10 @@ To view the output of the Muen kernel debug console use the command:
 
   $ amtterm 192.168.254.2
 
+If your hardware differs from the default configuration, additionally specify
+the `HARDWARE` variable:
+
+  $ make deploy HARDWARE=lenovo-t430s
 
 References
 ----------

@@ -33,6 +33,9 @@ deploy: pack
 emulate: pack
 	$(MAKE) -C $@
 
+iso: pack
+	$(MAKE) -C emulate $@
+
 clean:
 	$(MAKE) clean -C deploy
 	$(MAKE) clean -C tools

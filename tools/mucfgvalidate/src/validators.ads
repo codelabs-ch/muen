@@ -20,6 +20,8 @@ with DOM.Core;
 
 with Interfaces;
 
+with Muxml;
+
 package Validators
 is
 
@@ -89,5 +91,19 @@ private
    procedure Compare_All
      (Nodes      : DOM.Core.Node_List;
       Comparator : not null access procedure (Left, Right : DOM.Core.Node));
+
+   --  For each element specified by 'Source_XPath', try to find a match in the
+   --  nodes specified by 'Ref_XPath' using the given 'Match' function. The
+   --  given message is appended to the log message. If no match is found, an
+   --  exception with the message returned by the 'Error' function is raised.
+   procedure For_Each_Match
+     (XML_Data     : Muxml.XML_Data_Type;
+      Source_XPath : String;
+      Ref_XPath    : String;
+      Log_Message  : String;
+      Error        : not null access function
+        (Node : DOM.Core.Node) return String;
+      Match        : not null access function
+        (Left, Right : DOM.Core.Node) return Boolean);
 
 end Validators;

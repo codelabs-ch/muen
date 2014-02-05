@@ -19,6 +19,8 @@
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
+with McKae.XML.XPath.XIA;
+
 with Mulog;
 
 with Validate;
@@ -162,6 +164,58 @@ is
          end;
       end loop;
    end Compare_All;
+
+   -------------------------------------------------------------------------
+
+   procedure For_Each_Match
+     (XML_Data     : Muxml.XML_Data_Type;
+      Source_XPath : String;
+      Ref_XPath    : String;
+      Log_Message  : String;
+      Error        : not null access function
+        (Node : DOM.Core.Node) return String;
+      Match        : not null access function
+        (Left, Right : DOM.Core.Node) return Boolean)
+   is
+      use McKae.XML.XPath.XIA;
+
+      Ref_Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => Ref_XPath);
+      Nodes     : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => Source_XPath);
+   begin
+      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length (List => Nodes)'Img
+                 & " " & Log_Message);
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Nodes,
+               Index => I);
+
+            Match_Found : Boolean := False;
+         begin
+            Find_Match :
+            for J in 0 .. DOM.Core.Nodes.Length (List => Ref_Nodes) - 1 loop
+               if Match
+                 (Left  => DOM.Core.Nodes.Item (List  => Nodes,
+                                                Index => I),
+                  Right => DOM.Core.Nodes.Item (List  => Ref_Nodes,
+                                                Index => J))
+               then
+                  Match_Found := True;
+                  exit Find_Match;
+               end if;
+            end loop Find_Match;
+
+            if not Match_Found then
+               raise Validation_Error with Error (Node => Node);
+            end if;
+         end;
+      end loop;
+   end For_Each_Match;
 
    -------------------------------------------------------------------------
 

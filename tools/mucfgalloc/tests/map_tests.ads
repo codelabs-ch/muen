@@ -123,4 +123,9 @@ is
    --  Check whether ordering of elements is as intended
    --  (Size first, Alignment second, Name third)
    procedure Ordering;
+
+   --  Try to allocate a region which has an upper limit specified, but
+   --  cannot be placed
+   procedure Allocate_Variable_Below_OOM;
+
 end Map_Tests;

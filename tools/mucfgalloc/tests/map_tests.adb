@@ -266,6 +266,26 @@ is
 
    ----------------------------------------------------------------------------
 
+   procedure Allocate_Variable_Below_OOM
+   is
+      use Ahven;
+      use Alloc.Map;
+      use Ada.Text_IO;
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (0,     499);
+      M.Insert_Empty_Region (1500, 1999);
+      M.Insert_Empty_Region (2500, 2999);
+      M.Insert_Empty_Region (5000, 10000);
+      M.Allocate_Variable
+         (Size => 1000, Name => U ("mem1"), Upper_Limit => 3000);
+      Fail ("Invalid constraints undetected");
+   exception
+      when Alloc.Map.Limit_Exceeded => null;
+   end Allocate_Variable_Below_OOM;
+
+   ----------------------------------------------------------------------------
+
    procedure Allocate_Variable_Exact
    is
       use Ahven;
@@ -429,6 +449,9 @@ is
       T.Add_Test_Routine
         (Routine => Ordering'Access,
          Name    => "Ordering of allocated regions");
+      T.Add_Test_Routine
+        (Routine => Allocate_Variable_Below_OOM'Access,
+         Name    => "Invalid upper limits");
    end Initialize;
 
    ----------------------------------------------------------------------------

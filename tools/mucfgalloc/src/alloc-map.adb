@@ -74,12 +74,16 @@ is
    ----------------------------------------------------------------------------
 
    procedure Allocate_Variable
-      (Map       : in out Map_Type;
-       Name      :        Ada.Strings.Unbounded.Unbounded_String;
-       Size      :        Interfaces.Unsigned_64;
-       Alignment :        Interfaces.Unsigned_64 := 1)
+      (Map         : in out Map_Type;
+       Name        :        Ada.Strings.Unbounded.Unbounded_String;
+       Size        :        Interfaces.Unsigned_64;
+       Upper_Limit :        Interfaces.Unsigned_64 :=
+                              Interfaces.Unsigned_64'Last;
+       Alignment   :        Interfaces.Unsigned_64 := 1)
    is
+      use Ada.Strings.Unbounded;
       use Region_List_Package;
+      use Mutools.Utils;
       Curr            : Cursor := First (Map.Data);
       First_Multiple  : Interfaces.Unsigned_64;
    begin
@@ -96,6 +100,13 @@ is
 
       if Curr = No_Element then
          raise Out_Of_Memory;
+      end if;
+
+      if First_Multiple + Size - 1 > Upper_Limit then
+         raise Limit_Exceeded with
+            "Region '" & To_String (Name) & "' cannot be placed below " &
+            To_Hex (Number => Upper_Limit, Normalize => True) &
+            " (Start:" & To_Hex (First_Multiple, Normalize => True) & ")";
       end if;
 
       Reserve

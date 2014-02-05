@@ -31,4 +31,7 @@ is
    --  Perform automatic allocation from Format A XML
    procedure Automatic_Allocation;
 
+   --  Allocate regions which have an upper limit specified
+   procedure Limited_Allocation;
+
 end Allocation_Tests;

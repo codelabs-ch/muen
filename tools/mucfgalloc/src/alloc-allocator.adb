@@ -29,9 +29,24 @@ is
       use type Interfaces.Unsigned_64;
       use type Ada.Strings.Unbounded.Unbounded_String;
    begin
-      return Left.Size < Right.Size or else
-         ((Left.Size = Right.Size and Left.Alignment < Right.Alignment) or else
-             Left.Name < Right.Name);
+      if Left.Upper_Limit > Right.Upper_Limit then
+         return True;
+      elsif Left.Upper_Limit = Right.Upper_Limit then
+         if Left.Size < Right.Size then
+            return True;
+         elsif Left.Size = Right.Size then
+            if Left.Alignment < Right.Alignment then
+               return True;
+            elsif Left.Alignment = Right.Alignment then
+               if Left.Name > Right.Name then
+                  return True;
+               end if;
+            end if;
+         end if;
+      end if;
+
+      return False;
+
    end "<";
 
    package Ordered_Regions_Package is new
@@ -106,8 +121,8 @@ is
       (Policy      :        Muxml.XML_Data_Type;
        Map         : in out Alloc.Map.Map_Type)
    is
-      Nodes           : DOM.Core.Node_List;
-      Alignment, Size : Interfaces.Unsigned_64;
+      Nodes                  : DOM.Core.Node_List;
+      Alignment, Size, Below : Interfaces.Unsigned_64;
 
       use DOM.Core.Elements;
       use DOM.Core.Nodes;
@@ -121,9 +136,10 @@ is
          R : constant Region_Type := Element (Position);
       begin
          Map.Allocate_Variable
-            (Name      => R.Name,
-             Size      => R.Size,
-             Alignment => R.Alignment);
+            (Name        => R.Name,
+             Size        => R.Size,
+             Upper_Limit => R.Upper_Limit,
+             Alignment   => R.Alignment);
       end Allocate;
 
    begin
@@ -144,6 +160,13 @@ is
             Alignment := 4096;
          end if;
 
+         if Get_Attribute (Item (Nodes, I), "below") /= "" then
+            Below := Interfaces.Unsigned_64'Value
+               (Get_Attribute (Item (Nodes, I), "below"));
+         else
+            Below := Interfaces.Unsigned_64'Last;
+         end if;
+
          Size := Interfaces.Unsigned_64'Value
             (Get_Attribute (Item (Nodes, I), "size"));
 
@@ -151,15 +174,16 @@ is
             Insert
                (Container => Region_Set,
                 New_Item  => Region_Type'
-                  (Size      => Size,
-                   Alignment => Alignment,
-                   Name      => Ada.Strings.Unbounded.To_Unbounded_String
+                  (Size        => Size,
+                   Upper_Limit => Below,
+                   Alignment   => Alignment,
+                   Name        => Ada.Strings.Unbounded.To_Unbounded_String
                      (Get_Attribute (Item (Nodes, I), "name"))));
          exception
             when Constraint_Error => raise Duplicate_Region with
                "Region '" & Get_Attribute (Item (Nodes, I), "name") &
                "' (Size" & Size'Img & ", Alignment" & Alignment'Img &
-               ") inserted twice";
+               ", Below" & Below'Img & ") inserted twice";
          end;
 
       end loop;

@@ -56,7 +56,29 @@ is
       T.Add_Test_Routine
         (Routine => Automatic_Allocation'Access,
          Name    => "Automatic allocation");
+      T.Add_Test_Routine
+        (Routine => Limited_Allocation'Access,
+         Name    => "Limited allocation");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Limited_Allocation
+   is
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_A,
+                   File => "data/limited_allocation.in.xml");
+
+      Allocator.Write (Output_File => "obj/limited_allocation.out.xml",
+                       Policy      => Policy);
+
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/limited_allocation.ref.xml",
+                   Filename2 => "obj/limited_allocation.out.xml"),
+              Message => "Limited allocation");
+   end Limited_Allocation;
 
    -------------------------------------------------------------------------
 

@@ -19,6 +19,7 @@ with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 with Ada.Containers.Ordered_Sets;
+with Ada.Text_IO;
 with Mutools.Utils;
 
 package body Alloc.Allocator
@@ -199,7 +200,24 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Map : Alloc.Map.Map_Type;
+      use Ada.Text_IO;
+      Map             : Alloc.Map.Map_Type;
+      Memory_Map_File : File_Type;
+
+      procedure Dump_Memory_Map (Region : Alloc.Map.Region_Type);
+      procedure Dump_Memory_Map (Region : Alloc.Map.Region_Type)
+      is
+         use Ada.Strings.Unbounded;
+         use Mutools.Utils;
+      begin
+         Put_Line
+            (Memory_Map_File,
+             To_Hex (Region.First_Address, Normalize => True) &
+             " " &
+             To_Hex (Region.Last_Address, Normalize => True) &
+             " " &
+             Region.Kind'Img & " " & To_String (Region.Name));
+      end Dump_Memory_Map;
 
       procedure Update_DOM (Region : Alloc.Map.Region_Type);
       procedure Update_DOM (Region : Alloc.Map.Region_Type)
@@ -236,6 +254,11 @@ is
 
       --  Update DOM tree
       Map.Iterate (Update_DOM'Access, Alloc.Map.Allocated);
+
+      --  Create a memory map file
+      Create (Memory_Map_File, Out_File, Output_Dir & "/system.map");
+      Map.Iterate (Dump_Memory_Map'Access, Alloc.Map.Any);
+      Close (Memory_Map_File);
 
       --  Write output file
       Muxml.Write

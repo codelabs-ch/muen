@@ -233,6 +233,7 @@
 			</memory>
 			<devices>
 				<device logical="console" physical="vga">
+					<memory logical="framebuffer" physical="buffer" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
 					<ioPort logical="consoleports" physical="ports" start="16#03d4#" end="16#03d5#"/>
 				</device>
 			</devices>

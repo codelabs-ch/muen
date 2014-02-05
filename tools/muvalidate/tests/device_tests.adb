@@ -266,7 +266,7 @@ is
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Devices 'keyboard' and 'serial' share IRQ 1",
+                    = "Devices 'serial' and 'keyboard' share IRQ 1",
                     Message   => "Exception mismatch");
       end;
    end Validate_Physirq_Uniqueness;

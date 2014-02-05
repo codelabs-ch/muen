@@ -38,13 +38,10 @@ is
    One_Megabyte : constant := 16#100000#;
 
    --  Set size attribute of given virtual memory node to the value of
-   --  the associated physical memory region. The 'Ref_Name_Path' XPath is
-   --  relative to the virtual memory node and specifies the name of the
-   --  referenced physical memory region. 'Ref_Nodes_Path' is the XPath used to
-   --  select the reference nodes.
+   --  the associated physical memory region. 'Ref_Nodes_Path' is the XPath
+   --  used to select the reference nodes.
    procedure Set_Size
      (Virtual_Mem_Node : DOM.Core.Node;
-      Ref_Name_Path    : String;
       Ref_Nodes_Path   : String;
       XML_Data         : Muxml.XML_Data_Type);
 
@@ -228,16 +225,13 @@ is
 
    procedure Set_Size
      (Virtual_Mem_Node : DOM.Core.Node;
-      Ref_Name_Path    : String;
       Ref_Nodes_Path   : String;
       XML_Data         : Muxml.XML_Data_Type)
    is
-      Phy_Name : constant String := DOM.Core.Nodes.Node_Value
-        (N => DOM.Core.Nodes.Item
-           (List  => XPath_Query
-              (N     => Virtual_Mem_Node,
-               XPath => Ref_Name_Path),
-            Index => 0));
+      Phy_Name : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Virtual_Mem_Node,
+           Name => "physical");
       Phy_Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
         (List  => XPath_Query
            (N     => XML_Data.Doc,
@@ -302,7 +296,6 @@ is
               (Virtual_Mem_Node => DOM.Core.Nodes.Item
                  (List  => Kernel_Dev_Mem,
                   Index => I),
-               Ref_Name_Path    => "@physical",
                Ref_Nodes_Path   => "/system/platform/device[@name='" & Dev_Name
                & "']/memory",
                XML_Data         => XML_Data);
@@ -329,7 +322,6 @@ is
                     (Virtual_Mem_Node => DOM.Core.Nodes.Item
                        (List  => Memory,
                         Index => J),
-                     Ref_Name_Path    => "@physical",
                      Ref_Nodes_Path   => "/system/memory/memory",
                      XML_Data         => XML_Data);
                end loop;
@@ -373,7 +365,6 @@ is
                     (Virtual_Mem_Node => DOM.Core.Nodes.Item
                        (List  => Memory,
                         Index => J),
-                     Ref_Name_Path    => "@physical",
                      Ref_Nodes_Path   => "/system/memory/memory",
                      XML_Data         => XML_Data);
                end loop;
@@ -392,7 +383,6 @@ is
                        (Virtual_Mem_Node => DOM.Core.Nodes.Item
                           (List  => Dev_Memory,
                            Index => K),
-                        Ref_Name_Path    => "@physical",
                         Ref_Nodes_Path   => "/system/platform/device[@name='"
                         & Dev_Name & "']/memory",
                         XML_Data         => XML_Data);

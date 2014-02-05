@@ -81,64 +81,54 @@ is
       Add_Msg      : String := "")
    is
       use Interfaces;
+
+      --  Check if left and right memory region overlap.
+      procedure Check_Overlap (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Overlap (Left, Right : DOM.Core.Node)
+      is
+         Left_Name  : constant String      := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => Name_Attr);
+         Left_Addr  : constant Unsigned_64 := Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Left,
+               Name => Address_Attr));
+         Left_Size  : constant Unsigned_64 := Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Left,
+               Name => "size"));
+         Right_Name : constant String      := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => Name_Attr);
+         Right_Addr : constant Unsigned_64 := Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Right,
+               Name => Address_Attr));
+         Right_Size : constant Unsigned_64 := Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Right,
+               Name => "size"));
+      begin
+         if (Left_Addr <= Right_Addr
+             and then Left_Addr + Left_Size > Right_Addr)
+           or
+             (Right_Addr < Left_Addr
+              and then Right_Addr + Right_Size > Left_Addr)
+         then
+            raise Validation_Error with "Overlap of " & Region_Type
+              & " '" & Left_Name & "' and '" & Right_Name & "'"
+              & Add_Msg;
+         end if;
+      end Check_Overlap;
    begin
       Mulog.Log (Msg => "Checking overlap of" & DOM.Core.Nodes.Length
                  (List => Nodes)'Img & " " & Region_Type & "(s)" & Add_Msg);
 
-      if DOM.Core.Nodes.Length (List => Nodes) < 2 then
-         return;
-      end if;
-
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 2 loop
-         declare
-            Cur_Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-              (List  => Nodes,
-               Index => I);
-            Cur_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Cur_Node,
-                 Name => Name_Attr);
-            Cur_Addr : constant Unsigned_64 := Unsigned_64'Value
-              (DOM.Core.Elements.Get_Attribute
-                 (Elem => Cur_Node,
-                  Name => Address_Attr));
-            Cur_Size : constant Unsigned_64 := Unsigned_64'Value
-              (DOM.Core.Elements.Get_Attribute
-                 (Elem => Cur_Node,
-                  Name => "size"));
-         begin
-            for J in I + 1 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
-               declare
-                  Other_Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-                    (List  => Nodes,
-                     Index => J);
-                  Other_Name : constant String
-                    := DOM.Core.Elements.Get_Attribute
-                      (Elem => Other_Node,
-                       Name => Name_Attr);
-                  Other_Addr : constant Unsigned_64 := Unsigned_64'Value
-                    (DOM.Core.Elements.Get_Attribute
-                       (Elem => Other_Node,
-                        Name => Address_Attr));
-                  Other_Size : constant Unsigned_64 := Unsigned_64'Value
-                    (DOM.Core.Elements.Get_Attribute
-                       (Elem => Other_Node,
-                        Name => "size"));
-               begin
-                  if (Cur_Addr <= Other_Addr
-                      and then Cur_Addr + Cur_Size > Other_Addr)
-                    or
-                      (Other_Addr < Cur_Addr
-                       and then Other_Addr + Other_Size > Cur_Addr)
-                  then
-                     raise Validation_Error with "Overlap of " & Region_Type
-                       & " '" & Cur_Name & "' and '" & Other_Name & "'"
-                       & Add_Msg;
-                  end if;
-               end;
-            end loop;
-         end;
-      end loop;
+      Compare_All (Nodes      => Nodes,
+                   Comparator => Check_Overlap'Access);
    end Check_Memory_Overlap;
 
    -------------------------------------------------------------------------

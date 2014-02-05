@@ -196,8 +196,13 @@ is
 
    procedure Put_Tab
    is
-      Spaces : constant Width_Type := 4 - (Cur_X mod 4);
+      X_Mod_8 : constant Natural := Natural (Cur_X - 1) mod 8;
+      Spaces  : Natural          := 8;
    begin
+      if X_Mod_8 /= 0 then
+         Spaces := 8 - X_Mod_8;
+      end if;
+
       for S in 1 .. Spaces loop
          Put_Char (Item => ' ');
       end loop;

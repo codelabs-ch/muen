@@ -151,57 +151,50 @@ is
 
    procedure Physical_Memory_References (XML_Data : Muxml.XML_Data_Type)
    is
-      References     : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => "//memory[@virtualAddress]");
-      Physical_Nodes : constant DOM.Core.Node_List
-        := XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => "//memory[@physicalAddress]");
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      --  Returns True if the physical and reference name match.
+      function Match_Name (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Logical_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "logical");
+         Refname      : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "physical");
+      begin
+         return "Physical memory '" & Refname
+           & "' referenced by logical memory '" & Logical_Name
+           & "' not found";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Match_Name (Left, Right : DOM.Core.Node) return Boolean
+      is
+         Refname : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Left,
+              Name => "physical");
+         Phyname : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Right,
+              Name => "name");
+      begin
+         return Refname = Phyname;
+      end Match_Name;
    begin
-      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
-                 (List => References)'Img & " physical memory references");
-
-      for I in 0 .. DOM.Core.Nodes.Length (List => References) - 1 loop
-         declare
-            Node         : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => References,
-                                      Index => I);
-            Logical_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Node,
-                 Name => "logical");
-            Refname      : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Node,
-                 Name => "physical");
-
-            Match_Found : Boolean := False;
-         begin
-            Find_Match :
-            for J in 0 .. DOM.Core.Nodes.Length (List => Physical_Nodes) - 1
-            loop
-               declare
-                  Physname : constant String := DOM.Core.Elements.Get_Attribute
-                    (Elem => DOM.Core.Nodes.Item
-                       (List  => Physical_Nodes,
-                        Index => J),
-                     Name => "name");
-               begin
-                  if Physname = Refname then
-                     Match_Found := True;
-                     exit Find_Match;
-                  end if;
-               end;
-            end loop Find_Match;
-
-            if not Match_Found then
-               raise Validation_Error with "Physical memory '" & Refname
-                 & "' referenced by logical memory '" & Logical_Name
-                 & "' not found";
-            end if;
-         end;
-      end loop;
+      For_Each_Match (XML_Data     => XML_Data,
+                      Source_XPath => "//memory[@virtualAddress]",
+                      Ref_XPath    => "//memory[@physicalAddress]",
+                      Log_Message  => "physical memory references",
+                      Error        => Error_Msg'Access,
+                      Match        => Match_Name'Access);
    end Physical_Memory_References;
 
    -------------------------------------------------------------------------

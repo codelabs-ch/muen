@@ -1,6 +1,5 @@
 .emulate
 bochsout.txt
-bootable.iso
+*.iso
 *.out
-iso/boot/kernel.bin
 snapshot.txt

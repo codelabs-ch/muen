@@ -11,7 +11,7 @@ cpuid: simd=avx, xsave=1
 megs: 512
 
 ata0: enabled=1, ioaddr1=0x1f0, ioaddr2=0x3f0, irq=14
-ata0-master: type=cdrom, path=bootable.iso, status=inserted
+ata0-master: type=cdrom, path=muen.iso, status=inserted
 boot: cdrom
 
 log: bochsout.txt

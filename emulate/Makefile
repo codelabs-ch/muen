@@ -1,7 +1,7 @@
 all: .emulate
 
 IMAGE ?= ../pack/obj/kernel
-ISOFILE = bootable.iso
+ISOFILE = muen.iso
 ISOPATH = $(CURDIR)/$(ISOFILE)
 
 iso: $(ISOFILE)

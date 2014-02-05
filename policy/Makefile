@@ -28,11 +28,11 @@ hwchange:
 
 ifeq ($(HARDWARE), bochs)
 $(DSDT_OBJ) $(POLICY_OUT): $(POLICY) $(DSDT_SRC)
-	@$(MUCFGALLOC) -o $(POLICY_OUT) $(POLICY)
+	@$(MUCFGALLOC) -o $(POLICY_INC) $(POLICY)
 	@cp $(DSDT_SRC) $(DSDT_OBJ)
 else
 $(DSDT_OBJ) $(POLICY_OUT): $(POLICY) $(DSDT_SRC) $(PATCH)
-	@$(MUCFGALLOC) -o $(POLICY_OUT) $(POLICY)
+	@$(MUCFGALLOC) -o $(POLICY_INC) $(POLICY)
 	@cp $(DSDT_SRC) $(DSDT_OBJ)
 	@cd $(OBJ_DIR) && patch -p3 < ../$(PATCH) >/dev/null
 endif

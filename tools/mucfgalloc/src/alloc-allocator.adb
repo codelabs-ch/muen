@@ -196,8 +196,8 @@ is
    ----------------------------------------------------------------------------
 
    procedure Write
-     (Output_File : String;
-      Policy      : Muxml.XML_Data_Type)
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type)
    is
       Map : Alloc.Map.Map_Type;
 
@@ -239,7 +239,7 @@ is
 
       --  Write output file
       Muxml.Write
-         (File => Output_File,
+         (File => Output_Dir & "/system.xml",
           Kind => Muxml.Format_B,
           Data => Policy);
 

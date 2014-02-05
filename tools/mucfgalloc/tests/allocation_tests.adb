@@ -35,12 +35,12 @@ is
                    Kind => Muxml.Format_A,
                    File => "data/automatic_allocation.in.xml");
 
-      Allocator.Write (Output_File => "obj/automatic_allocation.out.xml",
+      Allocator.Write (Output_Dir => "obj",
                        Policy      => Policy);
 
       Assert (Condition => Test_Utils.Equal_Files
                   (Filename1 => "data/automatic_allocation.ref.xml",
-                   Filename2 => "obj/automatic_allocation.out.xml"),
+                   Filename2 => "obj/system.xml"),
               Message => "Automatic allocation");
    end Automatic_Allocation;
 
@@ -71,12 +71,12 @@ is
                    Kind => Muxml.Format_A,
                    File => "data/limited_allocation.in.xml");
 
-      Allocator.Write (Output_File => "obj/limited_allocation.out.xml",
-                       Policy      => Policy);
+      Allocator.Write (Output_Dir => "obj",
+                       Policy     => Policy);
 
       Assert (Condition => Test_Utils.Equal_Files
                   (Filename1 => "data/limited_allocation.ref.xml",
-                   Filename2 => "obj/limited_allocation.out.xml"),
+                   Filename2 => "obj/system.xml"),
               Message => "Limited allocation");
    end Limited_Allocation;
 
@@ -89,8 +89,8 @@ is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_A,
                    File => "data/overlapping.xml");
-      Allocator.Write (Policy      => Policy,
-                       Output_File => "obj/overlapping.xml");
+      Allocator.Write (Policy     => Policy,
+                       Output_Dir => "obj");
       pragma Unreferenced (Policy);
       Fail ("Overlap undetected");
    exception

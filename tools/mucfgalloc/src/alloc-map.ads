@@ -32,13 +32,13 @@ is
       Kind          : Region_Kind;
       First_Address : Interfaces.Unsigned_64;
       Last_Address  : Interfaces.Unsigned_64;
-      Name          : Ada.Strings.Unbounded.Unbounded_String :=
-         Ada.Strings.Unbounded.Null_Unbounded_String;
+      Name          : Ada.Strings.Unbounded.Unbounded_String;
    end record;
 
    --  Insert an empty region to memory map
    procedure Insert_Empty_Region
       (Map           : in out Map_Type;
+       Name          :        Ada.Strings.Unbounded.Unbounded_String;
        First_Address :        Interfaces.Unsigned_64;
        Last_Address  :        Interfaces.Unsigned_64) with
       Pre => First_Address < Last_Address;
@@ -46,6 +46,7 @@ is
    --  Allocat a fixed region
    procedure Allocate_Fixed
       (Map           : in out Map_Type;
+       Name          :        Ada.Strings.Unbounded.Unbounded_String;
        First_Address :        Interfaces.Unsigned_64;
        Last_Address  :        Interfaces.Unsigned_64) with
       Pre => First_Address < Last_Address;

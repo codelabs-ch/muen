@@ -22,6 +22,7 @@ is
 
    procedure Allocate_Fixed
       (Map           : in out Map_Type;
+       Name          :        Ada.Strings.Unbounded.Unbounded_String;
        First_Address :        Interfaces.Unsigned_64;
        Last_Address  :        Interfaces.Unsigned_64)
    is
@@ -65,7 +66,7 @@ is
          (Map           => Map,
           Kind          => Fixed,
           Curr          => Curr,
-          Name          => Ada.Strings.Unbounded.Null_Unbounded_String,
+          Name          => Name,
           First_Address => First_Address,
           Last_Address  => Last_Address);
 
@@ -123,6 +124,7 @@ is
 
    procedure Insert_Empty_Region
       (Map           : in out Map_Type;
+       Name          :        Ada.Strings.Unbounded.Unbounded_String;
        First_Address :        Interfaces.Unsigned_64;
        Last_Address  :        Interfaces.Unsigned_64)
    is
@@ -200,8 +202,7 @@ is
                 Before    => Curr,
                 New_Item  => Region_Type'
                               (Kind          => Empty,
-                               Name          =>
-                                  Ada.Strings.Unbounded.Null_Unbounded_String,
+                               Name          => Name,
                                First_Address => First_Address,
                                Last_Address  => Last_Address));
          end if;
@@ -329,7 +330,7 @@ is
              New_Item  => Region_Type'
                (First_Address => Element (Curr).First_Address,
                 Last_Address  => First_Address - 1,
-                Name          => Ada.Strings.Unbounded.Null_Unbounded_String,
+                Name          => Element (Curr).Name,
                 Kind          => Empty));
          Update_Element (Map.Data, Curr, Set_First_To_First'Access);
          Update_Element (Map.Data, Curr, Set_Name'Access);
@@ -342,7 +343,7 @@ is
              New_Item  => Region_Type'
                (First_Address => Element (Curr).First_Address,
                 Last_Address  => First_Address - 1,
-                Name          => Ada.Strings.Unbounded.Null_Unbounded_String,
+                Name          => Element (Curr).Name,
                 Kind          => Empty));
          Insert
             (Container => Map.Data,

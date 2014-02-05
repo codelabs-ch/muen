@@ -82,7 +82,9 @@ is
          Size := Interfaces.Unsigned_64'Value
             (Get_Attribute (Item (Nodes, I), "size"));
          Map.Insert_Empty_Region
-            (First_Address => Physical_Address,
+            (Name          => Ada.Strings.Unbounded.To_Unbounded_String
+                                 (Get_Attribute (Item (Nodes, I), "name")),
+             First_Address => Physical_Address,
              Last_Address  => Physical_Address + Size - 1);
       end loop;
    end Add_Empty_Regions;
@@ -111,7 +113,9 @@ is
          Size := Interfaces.Unsigned_64'Value
             (Get_Attribute (Item (Nodes, I), "size"));
          Map.Allocate_Fixed
-            (First_Address => Physical_Address,
+            (Name          => Ada.Strings.Unbounded.To_Unbounded_String
+                                 (Get_Attribute (Item (Nodes, I), "name")),
+             First_Address => Physical_Address,
              Last_Address  => Physical_Address + Size - 1);
       end loop;
    end Add_Fixed_Regions;

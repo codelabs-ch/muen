@@ -30,6 +30,7 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Mutools.Files;
 with Mutools.Utils;
+with Muxml.Utils;
 
 with bootparam_h;
 
@@ -53,13 +54,6 @@ is
    --  Return bootparams of subject associated with memory element given by
    --  name.
    function Get_Bootparams
-     (XML_Data    : Muxml.XML_Data_Type;
-      Memory_Name : String)
-      return String;
-
-   --  Return zero-page guest-physical address extracted from mapping of
-   --  physical memory with given name.
-   function Get_Guest_Physical
      (XML_Data    : Muxml.XML_Data_Type;
       Memory_Name : String)
       return String;
@@ -99,25 +93,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Guest_Physical
-     (XML_Data    : Muxml.XML_Data_Type;
-      Memory_Name : String)
-      return String
-   is
-      use type DOM.Core.Node;
-
-      Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => XML_Data.Doc,
-            XPath => "/system/subjects/subject/memory/memory/physical[@name='"
-            & Memory_Name & "']/../@virtualAddress"),
-         Index => 0);
-   begin
-      return DOM.Core.Nodes.Node_Value (N => Node);
-   end Get_Guest_Physical;
-
-   -------------------------------------------------------------------------
-
    procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
@@ -144,9 +119,11 @@ is
                 (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
                  Name => "name");
             Physaddr : constant String
-              := Get_Guest_Physical
-                (XML_Data    => Policy,
-                 Memory_Name => Memname);
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Policy.Doc,
+                 XPath => "/system/subjects/subject/memory/"
+                 & "memory[@physical='" & Memname & "']",
+                 Name  => "virtualAddress");
          begin
             Mulog.Log (Msg => "Guest-physical address of " & Memname
                        & " zero-page is " & Physaddr);

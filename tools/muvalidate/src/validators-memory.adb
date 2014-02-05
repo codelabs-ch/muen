@@ -156,11 +156,11 @@ is
    is
       References     : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "//physical");
+         XPath => "//memory[@virtualAddress]");
       Physical_Nodes : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/memory/memory");
+           XPath => "//memory[@physicalAddress]");
    begin
       Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
                  (List => References)'Img & " physical memory references");
@@ -172,12 +172,12 @@ is
                                       Index => I);
             Logical_Name : constant String
               := DOM.Core.Elements.Get_Attribute
-                (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+                (Elem => Node,
                  Name => "logical");
             Refname      : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Node,
-                 Name => "name");
+                 Name => "physical");
 
             Match_Found : Boolean := False;
          begin
@@ -329,7 +329,7 @@ is
                     (Virtual_Mem_Node => DOM.Core.Nodes.Item
                        (List  => Memory,
                         Index => J),
-                     Ref_Name_Path    => "physical/@name",
+                     Ref_Name_Path    => "@physical",
                      Ref_Nodes_Path   => "/system/memory/memory",
                      XML_Data         => XML_Data);
                end loop;
@@ -373,7 +373,7 @@ is
                     (Virtual_Mem_Node => DOM.Core.Nodes.Item
                        (List  => Memory,
                         Index => J),
-                     Ref_Name_Path    => "physical/@name",
+                     Ref_Name_Path    => "@physical",
                      Ref_Nodes_Path   => "/system/memory/memory",
                      XML_Data         => XML_Data);
                end loop;

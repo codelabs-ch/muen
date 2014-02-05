@@ -87,6 +87,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Virtmem_Overlap_Device_Kernel'Access,
          Name    => "Validate kernel device memory overlap");
+      T.Add_Test_Routine
+        (Routine => Validate_Virtmem_Overlap_Device_Subject'Access,
+         Name    => "Validate subject device memory overlap");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -292,6 +295,55 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Virtmem_Overlap_Device_Kernel;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Virtmem_Overlap_Device_Subject
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      declare
+         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Data.Doc,
+               XPath => "/system/subjects/subject[@name='linux']"
+               & "/memory/memory"),
+            Index => 0);
+         Lnx_Mem :  constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Node,
+               XPath => "physical"),
+            Index => 0);
+      begin
+
+         --  Fix reference of existing memory region.
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Lnx_Mem,
+            Name  => "name",
+            Value => "kernel_text");
+
+         --  Let existing region overlap with device memory.
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "virtualAddress",
+            Value => "16#000b_7000#");
+
+         Validators.Memory.Virtual_Memory_Overlap (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Overlap of virtual memory region 'linux' and "
+                    & "'vga_buffer' of subject 'linux'",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Virtmem_Overlap_Device_Subject;
 
    -------------------------------------------------------------------------
 

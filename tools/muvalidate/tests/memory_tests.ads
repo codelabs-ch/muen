@@ -74,4 +74,7 @@ is
    --  Validate kernel virtual and device memory region overlap.
    procedure Validate_Virtmem_Overlap_Device_Kernel;
 
+   --  Validate subject virtual and device  memory region overlap.
+   procedure Validate_Virtmem_Overlap_Device_Subject;
+
 end Memory_Tests;

@@ -101,7 +101,6 @@ is
       Ref_Last   : constant String                 := "16#FFFFFFFFFFFFFFFF#";
       Ref_Number : constant String                 := "DEADCAFEBEEFBEEF";
       Number     : constant Interfaces.Unsigned_64 := 16#deadcafebeefbeef#;
-      Number2    : constant Interfaces.Unsigned_64 := 16#deadbeefbe#;
       Norm_First : constant String                 := "16#0000#";
       Norm_Last  : constant String := "16#FFFF_FFFF_FFFF_FFFF#";
       Norm_Num   : constant String := "16#DEAD_CAFE_BEEF_BEEF#";

@@ -84,4 +84,10 @@ private
       Name_Attr    : String := "name";
       Add_Msg      : String := "");
 
+   --  Compare all elements in a node list against each other using the
+   --  provided comparator procedure.
+   procedure Compare_All
+     (Nodes      : DOM.Core.Node_List;
+      Comparator : not null access procedure (Left, Right : DOM.Core.Node));
+
 end Validators;

@@ -143,6 +143,38 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Compare_All
+     (Nodes      : DOM.Core.Node_List;
+      Comparator : not null access procedure (Left, Right : DOM.Core.Node))
+   is
+      Node_Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
+   begin
+      if Node_Count < 2 then
+         return;
+      end if;
+
+      for I in 0 .. Node_Count - 2 loop
+         declare
+            Left : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Nodes,
+               Index => I);
+         begin
+            for J in I + 1 .. Node_Count - 1 loop
+               declare
+                  Right : constant DOM.Core.Node := DOM.Core.Nodes.Item
+                    (List  => Nodes,
+                     Index => J);
+               begin
+                  Comparator (Left  => Left,
+                              Right => Right);
+               end;
+            end loop;
+         end;
+      end loop;
+   end Compare_All;
+
+   -------------------------------------------------------------------------
+
    procedure Register_All
    is
    begin

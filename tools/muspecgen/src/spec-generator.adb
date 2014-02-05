@@ -639,23 +639,24 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Stack_Ref  : constant String
-        := Get_Attribute
-          (Doc   => Policy.Doc,
-           XPath => "/system/kernel/memory/cpu[@id='0']/"
-           & "memory[@logical='stack']/physical",
-           Name  => "name");
-      Stack_Size : constant Unsigned_64 := Unsigned_64'Value
+      Stack_Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+        (List  => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Policy.Doc,
+            XPath => "/system/kernel/memory/cpu[@id='0']/"
+            & "memory[@logical='stack']"),
+         Index => 0);
+      Stack_Ref  : constant String        := DOM.Core.Elements.Get_Attribute
+        (Elem => Stack_Node,
+         Name => "physical");
+      Stack_Size : constant Unsigned_64   := Unsigned_64'Value
         (Get_Attribute
            (Doc   => Policy.Doc,
             XPath => "/system/memory/memory[@name='" & Stack_Ref & "']",
             Name  => "size"));
-      Stack_Addr : constant Unsigned_64 := Unsigned_64'Value
-        (Get_Attribute
-           (Doc   => Policy.Doc,
-            XPath => "/system/kernel/memory/cpu[@id='0']/"
-            & "memory[@logical='stack']",
-            Name  => "virtualAddress")) + Stack_Size;
+      Stack_Addr : constant Unsigned_64   := Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Stack_Node,
+            Name => "virtualAddress")) + Stack_Size;
 
       CPU_Store_Addr : constant Unsigned_64 := Unsigned_64'Value
         (Get_Attribute

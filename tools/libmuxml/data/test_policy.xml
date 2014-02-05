@@ -21,9 +21,7 @@
 	<kernel>
 		<memory>
 			<cpu id="0">
-				<memory logical="kernel_text" writable="false" executable="true" virtualAddress="16#0010_0000#">
-					<physical name="kernel_text"/>
-				</memory>
+				<memory logical="kernel_text" physical="kernel_text" writable="false" executable="true" virtualAddress="16#0010_0000#"/>
 			</cpu>
 		</memory>
 		<devices>
@@ -211,9 +209,7 @@
 			</vcpu>
 			<bootparams/>
 			<memory>
-				<memory logical="text" writable="false" executable="true" virtualAddress="16#0000#">
-					<physical name="tau0-text"/>
-				</memory>
+				<memory logical="text" physical="tau0-text" writable="false" executable="true" virtualAddress="16#0000#"/>
 			</memory>
 			<devices/>
 			<events/>

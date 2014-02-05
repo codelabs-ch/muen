@@ -34,12 +34,8 @@
 	<kernel>
 		<memory>
 			<cpu id="0">
-				<memory logical="text" writable="true" executable="true" virtualAddress="16#0010_0000#">
-					<physical name="kernel_text"/>
-				</memory>
-				<memory logical="data" writable="true" executable="false" virtualAddress="16#0011_0000#">
-					<physical name="kernel_data"/>
-				</memory>
+				<memory logical="text" physical="kernel_text" writable="true" executable="true" virtualAddress="16#0010_0000#"/>
+				<memory logical="data" physical="kernel_data" writable="true" executable="false" virtualAddress="16#0011_0000#"/>
 			</cpu>
 		</memory>
 		<devices>
@@ -227,9 +223,7 @@
 			</vcpu>
 			<bootparams/>
 			<memory>
-				<memory logical="acpi_rsdp" virtualAddress="16#000e_0000#" writable="false" executable="false">
-					<physical name="linux|acpi_rsdp"/>
-				</memory>
+				<memory logical="acpi_rsdp" physical="linux|acpi_rsdp" virtualAddress="16#000e_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="console" physical="vga">

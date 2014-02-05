@@ -30,21 +30,11 @@
 	<kernel>
 		<memory>
 			<cpu id="0">
-				<memory logical="text" writable="true" executable="true" virtualAddress="16#0010_0000#">
-					<physical name="kernel_text"/>
-				</memory>
-				<memory logical="stack" writable="true" executable="false" virtualAddress="16#0011_2000#">
-					<physical name="kernel_stack_0"/>
-				</memory>
-				<memory logical="store" writable="true" executable="false" virtualAddress="16#0011_6000#">
-					<physical name="kernel_store_0"/>
-				</memory>
-				<memory logical="data" writable="true" executable="true" virtualAddress="16#0011_8000#">
-					<physical name="kernel_data"/>
-				</memory>
-				<memory logical="tau0_interface" writable="false" executable="false" virtualAddress="16#001f_f000#">
-					<physical name="sys_interface"/>
-				</memory>
+				<memory logical="text" physical="kernel_text" writable="true" executable="true" virtualAddress="16#0010_0000#"/>
+				<memory logical="stack" physical="kernel_stack_0" writable="true" executable="false" virtualAddress="16#0011_2000#"/>
+				<memory logical="store" physical="kernel_store_0" writable="true" executable="false" virtualAddress="16#0011_6000#"/>
+				<memory logical="data" physical="kernel_data" writable="true" executable="true" virtualAddress="16#0011_8000#"/>
+				<memory logical="tau0_interface" physical="sys_interface" writable="false" executable="false" virtualAddress="16#001f_f000#"/>
 			</cpu>
 		</memory>
 		<devices>
@@ -229,18 +219,10 @@
 			</vcpu>
 			<bootparams/>
 			<memory>
-				<memory logical="acpi_rsdp" virtualAddress="16#000e_0000#" writable="false" executable="false">
-					<physical name="linux|acpi_rsdp"/>
-				</memory>
-				<memory logical="acpi_xsdt" virtualAddress="16#000e_1000#" writable="false" executable="false">
-					<physical name="linux|acpi_xsdt"/>
-				</memory>
-				<memory logical="acpi_fadt" virtualAddress="16#000e_2000#" writable="false" executable="false">
-					<physical name="linux|acpi_fadt"/>
-				</memory>
-				<memory logical="acpi_dsdt" virtualAddress="16#000e_3000#" writable="false" executable="false">
-					<physical name="linux|acpi_dsdt"/>
-				</memory>
+				<memory logical="acpi_rsdp" physical="linux|acpi_rsdp" virtualAddress="16#000e_0000#" writable="false" executable="false"/>
+				<memory logical="acpi_xsdt" physical="linux|acpi_xsdt" virtualAddress="16#000e_1000#" writable="false" executable="false"/>
+				<memory logical="acpi_fadt" physical="linux|acpi_fadt" virtualAddress="16#000e_2000#" writable="false" executable="false"/>
+				<memory logical="acpi_dsdt" physical="linux|acpi_dsdt" virtualAddress="16#000e_3000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="console" physical="vga">
@@ -431,9 +413,7 @@
 			</vcpu>
 			<bootparams/>
 			<memory>
-				<memory logical="mem" virtualAddress="16#0000#" writable="true" executable="true">
-					<physical name="subject1"/>
-				</memory>
+				<memory logical="mem" physical="subject1" virtualAddress="16#0000#" writable="true" executable="true"/>
 			</memory>
 			<devices/>
 			<events/>

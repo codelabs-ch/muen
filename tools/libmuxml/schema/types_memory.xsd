@@ -66,26 +66,12 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:complexType name="memSingleRefType">
+	<xs:complexType name="memRefType">
 		<xs:attribute name="logical"        type="nameType"   use="required"/>
 		<xs:attribute name="physical"       type="nameType"   use="required"/>
 		<xs:attribute name="virtualAddress" type="word64Type" use="required"/>
 		<xs:attribute name="writable"       type="xs:boolean" use="required"/>
 		<xs:attribute name="executable"     type="xs:boolean" use="required"/>
-	</xs:complexType>
-
-	<xs:complexType name="memRefType">
-		<xs:sequence>
-			<xs:element name="physical" type="physmemReferenceType" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="logical"        type="nameType"   use="required"/>
-		<xs:attribute name="virtualAddress" type="word64Type" use="required"/>
-		<xs:attribute name="writable"       type="xs:boolean" use="required"/>
-		<xs:attribute name="executable"     type="xs:boolean" use="required"/>
-	</xs:complexType>
-
-	<xs:complexType name="physmemReferenceType">
-		<xs:attribute name="name" type="nameType" use="required"/>
 	</xs:complexType>
 
 </xs:schema>

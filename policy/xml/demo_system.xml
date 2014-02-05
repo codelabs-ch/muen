@@ -175,149 +175,67 @@
 	<kernel>
 		<memory>
 			<cpu id="0">
-				<memory logical="ioapic" writable="true" executable="false" virtualAddress="16#001f_c000#">
-					<physical name="ioapic"/>
-				</memory>
+				<memory logical="ioapic" physical="ioapic" writable="true" executable="false" virtualAddress="16#001f_c000#"/>
 
-				<memory logical="text" writable="true" executable="true" virtualAddress="16#0010_0000#">
-					<physical name="kernel_text_data"/>
-				</memory>
-				<memory logical="ro" writable="false" executable="false" virtualAddress="16#0011_f000#">
-					<physical name="kernel_ro"/>
-				</memory>
-				<memory logical="stack" writable="true" executable="false" virtualAddress="16#0011_3000#">
-					<physical name="kernel_stack_0"/>
-				</memory>
-				<memory logical="store" writable="true" executable="false" virtualAddress="16#0011_6000#">
-					<physical name="kernel_store_0"/>
-				</memory>
+				<memory logical="text" physical="kernel_text_data" writable="true" executable="true" virtualAddress="16#0010_0000#"/>
+				<memory logical="ro" physical="kernel_ro" writable="false" executable="false" virtualAddress="16#0011_f000#"/>
+				<memory logical="stack" physical="kernel_stack_0" writable="true" executable="false" virtualAddress="16#0011_3000#"/>
+				<memory logical="store" physical="kernel_store_0" writable="true" executable="false" virtualAddress="16#0011_6000#"/>
 
 				<!-- subject states -->
-				<memory logical="tau0_state" writable="true" executable="false" virtualAddress="16#001e_0000#">
-					<physical name="tau0_state"/>
-				</memory>
-				<memory logical="vt_state" writable="true" executable="false" virtualAddress="16#001e_1000#">
-					<physical name="vt_state"/>
-				</memory>
-				<memory logical="time_state" writable="true" executable="false" virtualAddress="16#001e_2000#">
-					<physical name="time_state"/>
-				</memory>
-				<memory logical="sm_state" writable="true" executable="false" virtualAddress="16#001e_3000#">
-					<physical name="sm_state"/>
-				</memory>
-				<memory logical="linux_state" writable="true" executable="false" virtualAddress="16#001e_4000#">
-					<physical name="linux_state"/>
-				</memory>
+				<memory logical="tau0_state" physical="tau0_state" writable="true" executable="false" virtualAddress="16#001e_0000#"/>
+				<memory logical="vt_state" physical="vt_state" writable="true" executable="false" virtualAddress="16#001e_1000#"/>
+				<memory logical="time_state" physical="time_state" writable="true" executable="false" virtualAddress="16#001e_2000#"/>
+				<memory logical="sm_state" physical="sm_state" writable="true" executable="false" virtualAddress="16#001e_3000#"/>
+				<memory logical="linux_state" physical="linux_state" writable="true" executable="false" virtualAddress="16#001e_4000#"/>
 
 				<!-- tau0/knl interface -->
-				<memory logical="tau0_interface" writable="false" executable="false" virtualAddress="16#001f_f000#">
-					<physical name="sys_interface"/>
-				</memory>
+				<memory logical="tau0_interface" physical="sys_interface" writable="false" executable="false" virtualAddress="16#001f_f000#"/>
 			</cpu>
 			<cpu id="1">
-				<memory logical="ioapic" writable="true" executable="false" virtualAddress="16#001f_c000#">
-					<physical name="ioapic"/>
-				</memory>
+				<memory logical="ioapic" physical="ioapic" writable="true" executable="false" virtualAddress="16#001f_c000#"/>
 
-				<memory logical="text" writable="true" executable="true" virtualAddress="16#0010_0000#">
-					<physical name="kernel_text_data"/>
-				</memory>
-				<memory logical="ro" writable="false" executable="false" virtualAddress="16#0011_f000#">
-					<physical name="kernel_ro"/>
-				</memory>
-				<memory logical="stack" writable="true" executable="false" virtualAddress="16#0011_3000#">
-					<physical name="kernel_stack_1"/>
-				</memory>
-				<memory logical="store" writable="true" executable="false" virtualAddress="16#0011_6000#">
-					<physical name="kernel_store_1"/>
-				</memory>
+				<memory logical="text" physical="kernel_text_data" writable="true" executable="true" virtualAddress="16#0010_0000#"/>
+				<memory logical="ro" physical="kernel_ro" writable="false" executable="false" virtualAddress="16#0011_f000#"/>
+				<memory logical="stack" physical="kernel_stack_1" writable="true" executable="false" virtualAddress="16#0011_3000#"/>
+				<memory logical="store" physical="kernel_store_1" writable="true" executable="false" virtualAddress="16#0011_6000#"/>
 
 				<!-- subject states -->
-				<memory logical="tau0_state" writable="true" executable="false" virtualAddress="16#001e_0000#">
-					<physical name="tau0_state"/>
-				</memory>
-				<memory logical="vt_state" writable="true" executable="false" virtualAddress="16#001e_1000#">
-					<physical name="vt_state"/>
-				</memory>
-				<memory logical="time_state" writable="true" executable="false" virtualAddress="16#001e_2000#">
-					<physical name="time_state"/>
-				</memory>
-				<memory logical="sm_state" writable="true" executable="false" virtualAddress="16#001e_3000#">
-					<physical name="sm_state"/>
-				</memory>
-				<memory logical="linux_state" writable="true" executable="false" virtualAddress="16#001e_4000#">
-					<physical name="linux_state"/>
-				</memory>
+				<memory logical="tau0_state" physical="tau0_state" writable="true" executable="false" virtualAddress="16#001e_0000#"/>
+				<memory logical="vt_state" physical="vt_state" writable="true" executable="false" virtualAddress="16#001e_1000#"/>
+				<memory logical="time_state" physical="time_state" writable="true" executable="false" virtualAddress="16#001e_2000#"/>
+				<memory logical="sm_state" physical="sm_state" writable="true" executable="false" virtualAddress="16#001e_3000#"/>
+				<memory logical="linux_state" physical="linux_state" writable="true" executable="false" virtualAddress="16#001e_4000#"/>
 			</cpu>
 			<cpu id="2">
-				<memory logical="ioapic" writable="true" executable="false" virtualAddress="16#001f_c000#">
-					<physical name="ioapic"/>
-				</memory>
+				<memory logical="ioapic" physical="ioapic" writable="true" executable="false" virtualAddress="16#001f_c000#"/>
 
-				<memory logical="text" writable="true" executable="true" virtualAddress="16#0010_0000#">
-					<physical name="kernel_text_data"/>
-				</memory>
-				<memory logical="ro" writable="false" executable="false" virtualAddress="16#0011_f000#">
-					<physical name="kernel_ro"/>
-				</memory>
-				<memory logical="stack" writable="true" executable="false" virtualAddress="16#0011_3000#">
-					<physical name="kernel_stack_2"/>
-				</memory>
-				<memory logical="store" writable="true" executable="false" virtualAddress="16#0011_6000#">
-					<physical name="kernel_store_2"/>
-				</memory>
+				<memory logical="text" physical="kernel_text_data" writable="true" executable="true" virtualAddress="16#0010_0000#"/>
+				<memory logical="ro" physical="kernel_ro" writable="false" executable="false" virtualAddress="16#0011_f000#"/>
+				<memory logical="stack" physical="kernel_stack_2" writable="true" executable="false" virtualAddress="16#0011_3000#"/>
+				<memory logical="store" physical="kernel_store_2" writable="true" executable="false" virtualAddress="16#0011_6000#"/>
 
 				<!-- subject states -->
-				<memory logical="tau0_state" writable="true" executable="false" virtualAddress="16#001e_0000#">
-					<physical name="tau0_state"/>
-				</memory>
-				<memory logical="vt_state" writable="true" executable="false" virtualAddress="16#001e_1000#">
-					<physical name="vt_state"/>
-				</memory>
-				<memory logical="time_state" writable="true" executable="false" virtualAddress="16#001e_2000#">
-					<physical name="time_state"/>
-				</memory>
-				<memory logical="sm_state" writable="true" executable="false" virtualAddress="16#001e_3000#">
-					<physical name="sm_state"/>
-				</memory>
-				<memory logical="linux_state" writable="true" executable="false" virtualAddress="16#001e_4000#">
-					<physical name="linux_state"/>
-				</memory>
+				<memory logical="tau0_state" physical="tau0_state" writable="true" executable="false" virtualAddress="16#001e_0000#"/>
+				<memory logical="vt_state" physical="vt_state" writable="true" executable="false" virtualAddress="16#001e_1000#"/>
+				<memory logical="time_state" physical="time_state" writable="true" executable="false" virtualAddress="16#001e_2000#"/>
+				<memory logical="sm_state" physical="sm_state" writable="true" executable="false" virtualAddress="16#001e_3000#"/>
+				<memory logical="linux_state" physical="linux_state" writable="true" executable="false" virtualAddress="16#001e_4000#"/>
 			</cpu>
 			<cpu id="3">
-				<memory logical="ioapic" writable="true" executable="false" virtualAddress="16#001f_c000#">
-					<physical name="ioapic"/>
-				</memory>
+				<memory logical="ioapic" physical="ioapic" writable="true" executable="false" virtualAddress="16#001f_c000#"/>
 
-				<memory logical="text" writable="true" executable="true" virtualAddress="16#0010_0000#">
-					<physical name="kernel_text_data"/>
-				</memory>
-				<memory logical="ro" writable="false" executable="false" virtualAddress="16#0011_f000#">
-					<physical name="kernel_ro"/>
-				</memory>
-				<memory logical="stack" writable="true" executable="false" virtualAddress="16#0011_3000#">
-					<physical name="kernel_stack_3"/>
-				</memory>
-				<memory logical="store" writable="true" executable="false" virtualAddress="16#0011_6000#">
-					<physical name="kernel_store_3"/>
-				</memory>
+				<memory logical="text" physical="kernel_text_data" writable="true" executable="true" virtualAddress="16#0010_0000#"/>
+				<memory logical="ro" physical="kernel_ro" writable="false" executable="false" virtualAddress="16#0011_f000#"/>
+				<memory logical="stack" physical="kernel_stack_3" writable="true" executable="false" virtualAddress="16#0011_3000#"/>
+				<memory logical="store" physical="kernel_store_3" writable="true" executable="false" virtualAddress="16#0011_6000#"/>
 
 				<!-- subject states -->
-				<memory logical="tau0_state" writable="true" executable="false" virtualAddress="16#001e_0000#">
-					<physical name="tau0_state"/>
-				</memory>
-				<memory logical="vt_state" writable="true" executable="false" virtualAddress="16#001e_1000#">
-					<physical name="vt_state"/>
-				</memory>
-				<memory logical="time_state" writable="true" executable="false" virtualAddress="16#001e_2000#">
-					<physical name="time_state"/>
-				</memory>
-				<memory logical="sm_state" writable="true" executable="false" virtualAddress="16#001e_3000#">
-					<physical name="sm_state"/>
-				</memory>
-				<memory logical="linux_state" writable="true" executable="false" virtualAddress="16#001e_4000#">
-					<physical name="linux_state"/>
-				</memory>
+				<memory logical="tau0_state" physical="tau0_state" writable="true" executable="false" virtualAddress="16#001e_0000#"/>
+				<memory logical="vt_state" physical="vt_state" writable="true" executable="false" virtualAddress="16#001e_1000#"/>
+				<memory logical="time_state" physical="time_state" writable="true" executable="false" virtualAddress="16#001e_2000#"/>
+				<memory logical="sm_state" physical="sm_state" writable="true" executable="false" virtualAddress="16#001e_3000#"/>
+				<memory logical="linux_state" physical="linux_state" writable="true" executable="false" virtualAddress="16#001e_4000#"/>
 			</cpu>
 		</memory>
 		<devices/>
@@ -499,12 +417,8 @@
 			<bootparams/>
 			<memory>
 				<!-- Page at 0x0: Stack guard page ==> DO NOT MAP -->
-				<memory logical="text" virtualAddress="16#1000#" writable="true" executable="true">
-					<physical name="tau0|bin"/>
-				</memory>
-				<memory logical="sys_interface" virtualAddress="16#001f_f000#" writable="true" executable="false">
-					<physical name="sys_interface"/>
-				</memory>
+				<memory logical="text" physical="tau0|bin" virtualAddress="16#1000#" writable="true" executable="true"/>
+				<memory logical="sys_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="true" executable="false"/>
 			</memory>
 			<devices/>
 			<events/>
@@ -685,22 +599,12 @@
 			<bootparams/>
 			<memory>
 				<!-- Page at 0x0: Stack guard page ==> DO NOT MAP -->
-				<memory logical="text" virtualAddress="16#1000#" writable="true" executable="true">
-					<physical name="vt|bin"/>
-				</memory>
-				<memory logical="linux_output" virtualAddress="16#0010_0000#" writable="false" executable="false">
-					<physical name="linux_output"/>
-				</memory>
-				<memory logical="time_output" virtualAddress="16#0011_0000#" writable="false" executable="false">
-					<physical name="time_output"/>
-				</memory>
-				<memory logical="sm_output" virtualAddress="16#0012_0000#" writable="false" executable="false">
-					<physical name="sm_output"/>
-				</memory>
+				<memory logical="text" physical="vt|bin" virtualAddress="16#1000#" writable="true" executable="true"/>
+				<memory logical="linux_output" physical="linux_output" virtualAddress="16#0010_0000#" writable="false" executable="false"/>
+				<memory logical="time_output" physical="time_output" virtualAddress="16#0011_0000#" writable="false" executable="false"/>
+				<memory logical="sm_output" physical="sm_output" virtualAddress="16#0012_0000#" writable="false" executable="false"/>
 
-				<memory logical="linux_keyboard" virtualAddress="16#0005_0000#" writable="true" executable="false">
-					<physical name="linux_keyboard"/>
-				</memory>
+				<memory logical="linux_keyboard" physical="linux_keyboard" virtualAddress="16#0005_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="vga" physical="vga">
@@ -899,15 +803,9 @@
 			<bootparams/>
 			<memory>
 				<!-- Page at 0x0: Stack guard page ==> DO NOT MAP -->
-				<memory logical="text" virtualAddress="16#1000#" writable="true" executable="true">
-					<physical name="time|bin"/>
-				</memory>
-				<memory logical="time_channel" virtualAddress="16#0002_0000#" writable="true" executable="false">
-					<physical name="time_channel"/>
-				</memory>
-				<memory logical="time_output" virtualAddress="16#000b_8000#" writable="true" executable="false">
-					<physical name="time_output"/>
-				</memory>
+				<memory logical="text" physical="time|bin" virtualAddress="16#1000#" writable="true" executable="true"/>
+				<memory logical="time_channel" physical="time_channel" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
+				<memory logical="time_output" physical="time_output" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="port80" physical="port80">
@@ -1100,15 +998,9 @@
 			<bootparams/>
 			<memory>
 				<!-- Page at 0x0: Stack guard page ==> DO NOT MAP -->
-				<memory logical="text" virtualAddress="16#1000#" writable="true" executable="true">
-					<physical name="sm|bin"/>
-				</memory>
-				<memory logical="sm_output" virtualAddress="16#000b_8000#" writable="true" executable="false">
-					<physical name="sm_output"/>
-				</memory>
-				<memory logical="linux_state" virtualAddress="16#001e_0000#" writable="true" executable="false">
-					<physical name="linux_state"/>
-				</memory>
+				<memory logical="text" physical="sm|bin" virtualAddress="16#1000#" writable="true" executable="true"/>
+				<memory logical="sm_output" physical="sm_output" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
+				<memory logical="linux_state" physical="linux_state" virtualAddress="16#001e_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices/>
 			<events>
@@ -1303,50 +1195,22 @@
 			</vcpu>
 			<bootparams>lpj=10000 earlyprintk=serial console=ttyS0,115200 console=hvc pci=noearly notsc</bootparams>
 			<memory>
-				<memory logical="zero_page" virtualAddress="16#0000#" writable="true" executable="false">
-					<physical name="linux|zp"/>
-				</memory>
-				<memory logical="time_channel" virtualAddress="16#2000#" writable="false" executable="false">
-					<physical name="time_channel"/>
-				</memory>
-				<memory logical="linux_keyboard" virtualAddress="16#3000#" writable="true" executable="false">
-					<physical name="linux_keyboard"/>
-				</memory>
-				<memory logical="linux_output" virtualAddress="16#4000#" writable="true" executable="false">
-					<physical name="linux_output"/>
-				</memory>
-				<memory logical="lowmem" virtualAddress="16#0001_4000#" writable="true" executable="false">
-					<physical name="linux|lowmem"/>
-				</memory>
-				<memory logical="bios" virtualAddress="16#000c_0000#" writable="false" executable="false">
-					<physical name="linux|bios"/>
-				</memory>
-				<memory logical="bios" virtualAddress="16#000d_0000#" writable="false" executable="false">
-					<physical name="linux|bios"/>
-				</memory>
+				<memory logical="zero_page" physical="linux|zp" virtualAddress="16#0000#" writable="true" executable="false"/>
+				<memory logical="time_channel" physical="time_channel" virtualAddress="16#2000#" writable="false" executable="false"/>
+				<memory logical="linux_keyboard" physical="linux_keyboard" virtualAddress="16#3000#" writable="true" executable="false"/>
+				<memory logical="linux_output" physical="linux_output" virtualAddress="16#4000#" writable="true" executable="false"/>
+				<memory logical="lowmem" physical="linux|lowmem" virtualAddress="16#0001_4000#" writable="true" executable="false"/>
+				<memory logical="bios" physical="linux|bios" virtualAddress="16#000c_0000#" writable="false" executable="false"/>
+				<memory logical="bios" physical="linux|bios" virtualAddress="16#000d_0000#" writable="false" executable="false"/>
 
-				<memory logical="acpi_rsdp" virtualAddress="16#000e_0000#" writable="false" executable="false">
-					<physical name="linux|acpi_rsdp"/>
-				</memory>
-				<memory logical="acpi_xsdt" virtualAddress="16#000e_1000#" writable="false" executable="false">
-					<physical name="linux|acpi_xsdt"/>
-				</memory>
-				<memory logical="acpi_fadt" virtualAddress="16#000e_2000#" writable="false" executable="false">
-					<physical name="linux|acpi_fadt"/>
-				</memory>
-				<memory logical="acpi_dsdt" virtualAddress="16#000e_3000#" writable="false" executable="false">
-					<physical name="linux|acpi_dsdt"/>
-				</memory>
-				<memory logical="acpi_free" virtualAddress="16#000e_4000#" writable="false" executable="false">
-					<physical name="linux|acpi_empty"/>
-				</memory>
+				<memory logical="acpi_rsdp" physical="linux|acpi_rsdp" virtualAddress="16#000e_0000#" writable="false" executable="false"/>
+				<memory logical="acpi_xsdt" physical="linux|acpi_xsdt" virtualAddress="16#000e_1000#" writable="false" executable="false"/>
+				<memory logical="acpi_fadt" physical="linux|acpi_fadt" virtualAddress="16#000e_2000#" writable="false" executable="false"/>
+				<memory logical="acpi_dsdt" physical="linux|acpi_dsdt" virtualAddress="16#000e_3000#" writable="false" executable="false"/>
+				<memory logical="acpi_free" physical="linux|acpi_empty" virtualAddress="16#000e_4000#" writable="false" executable="false"/>
 
-				<memory logical="bios" virtualAddress="16#000f_0000#" writable="false" executable="false">
-					<physical name="linux|bios"/>
-				</memory>
-				<memory logical="text" virtualAddress="16#0040_0000#" writable="true" executable="true">
-					<physical name="linux|bin"/>
-				</memory>
+				<memory logical="bios" physical="linux|bios" virtualAddress="16#000f_0000#" writable="false" executable="false"/>
+				<memory logical="text" physical="linux|bin" virtualAddress="16#0040_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
 				<device logical="ttyS0" physical="serial">

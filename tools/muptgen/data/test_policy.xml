@@ -60,38 +60,18 @@
 	<kernel>
 		<memory>
 			<cpu id="0">
-				<memory logical="text" writable="true" executable="true" virtualAddress="16#0010_0000#">
-					<physical name="kernel_text"/>
-				</memory>
-				<memory logical="stack" writable="true" executable="false" virtualAddress="16#0011_2000#">
-					<physical name="kernel_stack_0"/>
-				</memory>
-				<memory logical="store" writable="true" executable="false" virtualAddress="16#0011_6000#">
-					<physical name="kernel_store_0"/>
-				</memory>
-				<memory logical="data" writable="true" executable="true" virtualAddress="16#0011_8000#">
-					<physical name="kernel_data"/>
-				</memory>
-				<memory logical="tau0_interface" writable="false" executable="false" virtualAddress="16#001f_f000#">
-					<physical name="sys_interface"/>
-				</memory>
+				<memory logical="text" physical="kernel_text" writable="true" executable="true" virtualAddress="16#0010_0000#"/>
+				<memory logical="stack" physical="kernel_stack_0" writable="true" executable="false" virtualAddress="16#0011_2000#"/>
+				<memory logical="store" physical="kernel_store_0" writable="true" executable="false" virtualAddress="16#0011_6000#"/>
+				<memory logical="data" physical="kernel_data" writable="true" executable="true" virtualAddress="16#0011_8000#"/>
+				<memory logical="tau0_interface" physical="sys_interface" writable="false" executable="false" virtualAddress="16#001f_f000#"/>
 			</cpu>
 			<cpu id="1">
-				<memory logical="text" writable="true" executable="true" virtualAddress="16#0010_0000#">
-					<physical name="kernel_text"/>
-				</memory>
-				<memory logical="stack" writable="true" executable="false" virtualAddress="16#0011_2000#">
-					<physical name="kernel_stack_1"/>
-				</memory>
-				<memory logical="store" writable="true" executable="false" virtualAddress="16#0011_6000#">
-					<physical name="kernel_store_1"/>
-				</memory>
-				<memory logical="data" writable="true" executable="true" virtualAddress="16#0011_8000#">
-					<physical name="kernel_data"/>
-				</memory>
-				<memory logical="tau0_interface" writable="false" executable="false" virtualAddress="16#001f_f000#">
-					<physical name="sys_interface"/>
-				</memory>
+				<memory logical="text" physical="kernel_text" writable="true" executable="true" virtualAddress="16#0010_0000#"/>
+				<memory logical="stack" physical="kernel_stack_1" writable="true" executable="false" virtualAddress="16#0011_2000#"/>
+				<memory logical="store" physical="kernel_store_1" writable="true" executable="false" virtualAddress="16#0011_6000#"/>
+				<memory logical="data" physical="kernel_data" writable="true" executable="true" virtualAddress="16#0011_8000#"/>
+				<memory logical="tau0_interface" physical="sys_interface" writable="false" executable="false" virtualAddress="16#001f_f000#"/>
 			</cpu>
 		</memory>
 		<devices/>
@@ -275,12 +255,8 @@
 			</vcpu>
 			<bootparams/>
 			<memory>
-				<memory logical="text" virtualAddress="16#0000#" writable="true" executable="true">
-					<physical name="tau0"/>
-				</memory>
-				<memory logical="sys_interface" virtualAddress="16#0010_0000#" writable="false" executable="false">
-					<physical name="sys_interface"/>
-				</memory>
+				<memory logical="text" physical="tau0" virtualAddress="16#0000#" writable="true" executable="true"/>
+				<memory logical="sys_interface" physical="sys_interface" virtualAddress="16#0010_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices/>
 			<events/>
@@ -460,9 +436,7 @@
 			</vcpu>
 			<bootparams/>
 			<memory>
-				<memory logical="mem" virtualAddress="16#0000#" writable="true" executable="true">
-					<physical name="subject1"/>
-				</memory>
+				<memory logical="mem" physical="subject1" virtualAddress="16#0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
 				<device logical="vga" physical="vga">
@@ -646,9 +620,7 @@
 			</vcpu>
 			<bootparams/>
 			<memory>
-				<memory logical="mem" virtualAddress="16#0000#" writable="true" executable="true">
-					<physical name="subject2"/>
-				</memory>
+				<memory logical="mem" physical="subject2" virtualAddress="16#0000#" writable="true" executable="true"/>
 			</memory>
 			<devices/>
 			<events/>

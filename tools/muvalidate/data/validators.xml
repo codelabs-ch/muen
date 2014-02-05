@@ -35,9 +35,7 @@
 	<kernel>
 		<memory>
 			<cpu id="0">
-				<memory logical="text" writable="true" executable="true" virtualAddress="16#0010_0000#">
-					<physical name="kernel_text"/>
-				</memory>
+				<memory logical="text" physical="kernel_text" writable="true" executable="true" virtualAddress="16#0010_0000#"/>
 			</cpu>
 		</memory>
 		<devices>
@@ -229,9 +227,7 @@
 			</vcpu>
 			<bootparams/>
 			<memory>
-				<memory logical="linux" virtualAddress="16#000e_0500#" writable="false" executable="false">
-					<physical name="lnx_mem"/>
-				</memory>
+				<memory logical="linux" physical="lnx_mem" virtualAddress="16#000e_0500#" writable="false" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="console" physical="serial">
@@ -433,9 +429,7 @@
 			</vcpu>
 			<bootparams/>
 			<memory>
-				<memory logical="subject1" virtualAddress="16#000e_0500#" writable="false" executable="false">
-					<physical name="subject1_mem"/>
-				</memory>
+				<memory logical="subject1" physical="subject1_mem" virtualAddress="16#000e_0500#" writable="false" executable="false"/>
 			</memory>
 			<devices/>
 			<events>

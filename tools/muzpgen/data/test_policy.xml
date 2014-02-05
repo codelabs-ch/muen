@@ -21,9 +21,7 @@
 	<kernel>
 		<memory>
 			<cpu id="0">
-				<memory logical="kernel_text" writable="false" executable="true" virtualAddress="16#0010_0000#">
-					<physical name="kernel_text"/>
-				</memory>
+				<memory logical="kernel_text" physical="kernel_text" writable="false" executable="true" virtualAddress="16#0010_0000#"/>
 			</cpu>
 		</memory>
 		<devices>
@@ -210,12 +208,8 @@
 			</vcpu>
 			<bootparams>lpj=10000 console=ttyS12</bootparams>
 			<memory>
-				<memory logical="text" writable="false" executable="true" virtualAddress="16#3000#">
-					<physical name="lnx|text"/>
-				</memory>
-				<memory logical="zp" writable="true" executable="false" virtualAddress="16#1000#">
-					<physical name="lnx|zp"/>
-				</memory>
+				<memory logical="text" physical="lnx|text" writable="false" executable="true" virtualAddress="16#3000#"/>
+				<memory logical="zp" physical="lnx|zp" writable="true" executable="false" virtualAddress="16#1000#"/>
 			</memory>
 			<devices/>
 			<events/>

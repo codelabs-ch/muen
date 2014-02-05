@@ -24,6 +24,7 @@ with McKae.XML.XPath.XIA;
 with Interfaces;
 
 with Mulog;
+with Muxml.Utils;
 
 with Acpi.FADT;
 with Acpi.RSDP;
@@ -74,14 +75,10 @@ is
                            (List  => RSDP_File,
                             Index => 0));
 
-                  XSDT_Addr     : constant String
-                    := DOM.Core.Nodes.Node_Value
-                      (N => DOM.Core.Nodes.Item
-                           (List  => McKae.XML.XPath.XIA.XPath_Query
-                                (N     => Cur_Subj,
-                                 XPath => "memory/memory/physical[@name='"
-                                 & XSDT_Name & "']/../@virtualAddress"),
-                            Index => 0));
+                  XSDT_Addr     : constant String := Muxml.Utils.Get_Attribute
+                    (Doc   => Cur_Subj,
+                     XPath => "memory/memory[@physical='" & XSDT_Name & "']",
+                     Name  => "virtualAddress");
                   XSDT_Filename : constant String
                     := Output_Dir & "/" & DOM.Core.Nodes.Node_Value
                       (N => DOM.Core.Nodes.Item
@@ -92,14 +89,10 @@ is
                                  & "acpi_xsdt']/@filename"),
                             Index => 0));
 
-                  FADT_Addr     : constant String
-                    := DOM.Core.Nodes.Node_Value
-                      (N => DOM.Core.Nodes.Item
-                           (List  => McKae.XML.XPath.XIA.XPath_Query
-                                (N     => Cur_Subj,
-                                 XPath => "memory/memory/physical[@name='"
-                                 & FADT_Name & "']/../@virtualAddress"),
-                            Index => 0));
+                  FADT_Addr     : constant String := Muxml.Utils.Get_Attribute
+                    (Doc   => Cur_Subj,
+                     XPath => "memory/memory[@physical='" & FADT_Name & "']",
+                     Name  => "virtualAddress");
                   FADT_Filename : constant String
                     := Output_Dir & "/" & DOM.Core.Nodes.Node_Value
                       (N => DOM.Core.Nodes.Item
@@ -110,14 +103,10 @@ is
                                  & "acpi_fadt']/@filename"),
                             Index => 0));
 
-                  DSDT_Addr : constant String
-                    := DOM.Core.Nodes.Node_Value
-                      (N => DOM.Core.Nodes.Item
-                           (List  => McKae.XML.XPath.XIA.XPath_Query
-                                (N     => Cur_Subj,
-                                 XPath => "memory/memory/physical[@name='"
-                                 & DSDT_Name & "']/../@virtualAddress"),
-                            Index => 0));
+                  DSDT_Addr     : constant String := Muxml.Utils.Get_Attribute
+                    (Doc   => Cur_Subj,
+                     XPath => "memory/memory[@physical='" & DSDT_Name & "']",
+                     Name  => "virtualAddress");
                begin
                   Mulog.Log (Msg => "Writing RSDP with XSDT "
                              & "guest-physical address " & XSDT_Addr

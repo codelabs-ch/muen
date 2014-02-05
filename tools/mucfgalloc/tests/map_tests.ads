@@ -128,4 +128,11 @@ is
    --  cannot be placed
    procedure Allocate_Variable_Below_OOM;
 
+   --  Create a device region and place a fixed region into it
+   procedure Allocate_Device;
+
+   --  Check that device regions are not merged with other device regions or
+   --  regular empty regions
+   procedure Device_Regions_Not_Merged;
+
 end Map_Tests;

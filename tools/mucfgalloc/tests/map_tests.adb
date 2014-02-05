@@ -30,6 +30,31 @@ is
 
    ----------------------------------------------------------------------------
 
+   procedure Allocate_Device
+   is
+      use Ahven;
+      use Alloc.Map;
+      use Ada.Text_IO;
+
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region  (U ("RAM1"),     0,  999);
+      M.Insert_Empty_Region  (U ("RAM2"),  1000, 1999);
+      M.Insert_Device_Region (U ("DEV1"), 11000, 15000);
+      M.Allocate_Fixed (U ("APP1"), 500, 799);
+      M.Allocate_Fixed (U ("D1"), 11000, 15000);
+      Create (Output_File, Out_File, "obj/allocate_device.txt");
+      M.Iterate (Write_Region'Access);
+      Close (Output_File);
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/allocate_device.txt",
+                   Filename2 => "obj/allocate_device.txt"),
+              Message => "Device allocation failed");
+
+   end Allocate_Device;
+
+   ----------------------------------------------------------------------------
+
    procedure Allocate_Fixed_Full_Empty_Region
    is
       use Ahven;
@@ -364,6 +389,31 @@ is
 
    ----------------------------------------------------------------------------
 
+   procedure Device_Regions_Not_Merged
+   is
+      use Ahven;
+      use Alloc.Map;
+      use Ada.Text_IO;
+
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (U ("EMPTY1"), 1001, 2000);
+      M.Insert_Empty_Region (U ("EMPTY2"), 2001, 3000);
+      M.Insert_Device_Region (U ("DEVICE1"), 3001, 4000);
+      M.Insert_Empty_Region (U ("EMPTY3"), 4001, 5000);
+      M.Insert_Device_Region (U ("DEVICE2"), 6001, 7000);
+      M.Insert_Device_Region (U ("DEVICE3"), 7001, 9000);
+      Create (Output_File, Out_File, "obj/device_regions_not_merged.txt");
+      M.Iterate (Write_Region'Access);
+      Close (Output_File);
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/device_regions_not_merged.txt",
+                   Filename2 => "obj/device_regions_not_merged.txt"),
+              Message => "Device regions being merged");
+   end Device_Regions_Not_Merged;
+
+   ----------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -452,6 +502,12 @@ is
       T.Add_Test_Routine
         (Routine => Allocate_Variable_Below_OOM'Access,
          Name    => "Invalid upper limits");
+      T.Add_Test_Routine
+        (Routine => Allocate_Device'Access,
+         Name    => "Allocate device region");
+      T.Add_Test_Routine
+        (Routine => Device_Regions_Not_Merged'Access,
+         Name    => "Merging of device regions");
    end Initialize;
 
    ----------------------------------------------------------------------------

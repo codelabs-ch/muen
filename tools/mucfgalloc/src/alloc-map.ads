@@ -25,7 +25,7 @@ is
 
    type Map_Type is tagged private;
 
-   type Region_Kind is (Any, Empty, Fixed, Allocated);
+   type Region_Kind is (Any, Empty, Fixed, Allocated, Device);
 
    type Region_Type is
    record
@@ -34,6 +34,14 @@ is
       Last_Address  : Interfaces.Unsigned_64;
       Name          : Ada.Strings.Unbounded.Unbounded_String;
    end record;
+
+   --  Insert a device region to memory map
+   procedure Insert_Device_Region
+      (Map           : in out Map_Type;
+       Name          :        Ada.Strings.Unbounded.Unbounded_String;
+       First_Address :        Interfaces.Unsigned_64;
+       Last_Address  :        Interfaces.Unsigned_64) with
+      Pre => First_Address < Last_Address;
 
    --  Insert an empty region to memory map
    procedure Insert_Empty_Region
@@ -87,6 +95,13 @@ private
        Kind          :        Region_Kind;
        Curr          :        Region_List_Package.Cursor;
        Name          :        Ada.Strings.Unbounded.Unbounded_String;
+       First_Address :        Interfaces.Unsigned_64;
+       Last_Address  :        Interfaces.Unsigned_64);
+
+   procedure Insert_New_Region
+      (Map           : in out Map_Type;
+       Name          :        Ada.Strings.Unbounded.Unbounded_String;
+       Kind          :        Region_Kind;
        First_Address :        Interfaces.Unsigned_64;
        Last_Address  :        Interfaces.Unsigned_64);
 

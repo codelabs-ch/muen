@@ -50,7 +50,8 @@ is
                "Allocation outside empty regions " &
                Range_Image (First_Address, Last_Address);
          end if;
-         exit when Element (Curr).Kind = Empty and
+         exit when (Element (Curr).Kind = Empty or
+                    Element (Curr).Kind = Device) and
                    Element (Curr).First_Address <= First_Address and
                    Last_Address <= Element (Curr).Last_Address;
          Next (Curr);
@@ -122,9 +123,44 @@ is
 
    ----------------------------------------------------------------------------
 
+   procedure Insert_Device_Region
+      (Map           : in out Map_Type;
+       Name          :        Ada.Strings.Unbounded.Unbounded_String;
+       First_Address :        Interfaces.Unsigned_64;
+       Last_Address  :        Interfaces.Unsigned_64)
+   is
+   begin
+      Insert_New_Region
+         (Map           => Map,
+          Name          => Name,
+          Kind          => Device,
+          First_Address => First_Address,
+          Last_Address  => Last_Address);
+   end Insert_Device_Region;
+
+   ----------------------------------------------------------------------------
+
    procedure Insert_Empty_Region
       (Map           : in out Map_Type;
        Name          :        Ada.Strings.Unbounded.Unbounded_String;
+       First_Address :        Interfaces.Unsigned_64;
+       Last_Address  :        Interfaces.Unsigned_64)
+   is
+   begin
+      Insert_New_Region
+         (Map           => Map,
+          Name          => Name,
+          Kind          => Empty,
+          First_Address => First_Address,
+          Last_Address  => Last_Address);
+   end Insert_Empty_Region;
+
+   ----------------------------------------------------------------------------
+
+   procedure Insert_New_Region
+      (Map           : in out Map_Type;
+       Name          :        Ada.Strings.Unbounded.Unbounded_String;
+       Kind          :        Region_Kind;
        First_Address :        Interfaces.Unsigned_64;
        Last_Address  :        Interfaces.Unsigned_64)
    is
@@ -181,9 +217,11 @@ is
 
       declare
          Adjacent_Right : constant Boolean := Curr /= No_Element and then
-            Last_Address + 1 = Element (Curr).First_Address;
+            (Element (Curr).Kind /= Device and Kind /= Device and
+             Last_Address + 1 = Element (Curr).First_Address);
          Adjacent_Left : constant Boolean := Prev /= No_Element and then
-            Element (Prev).Last_Address + 1 = First_Address;
+            (Element (Prev).Kind /= Device and Kind /= Device and
+             Element (Prev).Last_Address + 1 = First_Address);
       begin
          if Adjacent_Right and Adjacent_Left then
             --  (1)
@@ -201,14 +239,14 @@ is
                (Container => Map.Data,
                 Before    => Curr,
                 New_Item  => Region_Type'
-                              (Kind          => Empty,
+                              (Kind          => Kind,
                                Name          => Name,
                                First_Address => First_Address,
                                Last_Address  => Last_Address));
          end if;
       end;
 
-   end Insert_Empty_Region;
+   end Insert_New_Region;
 
    ----------------------------------------------------------------------------
 

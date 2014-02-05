@@ -418,32 +418,48 @@ is
 
    procedure VMCS_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      Subjects : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => "/system/subjects/subject/@name");
-      Mem_Node : DOM.Core.Node_List;
-   begin
-      Mulog.Log (Msg => "Checking presence of" & DOM.Core.Nodes.Length
-                 (List => Subjects)'Img & " VMCS region(s)");
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
 
-      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
-         declare
-            Subj_Name : constant String
-              := DOM.Core.Nodes.Node_Value
-                (DOM.Core.Nodes.Item
-                     (List  => Subjects,
-                      Index => I));
-            Mem_Name  : constant String := Subj_Name & "|vmcs";
-         begin
-            Mem_Node := XPath_Query
-              (N     => XML_Data.Doc,
-               XPath => "/system/memory/memory[@name='" & Mem_Name & "']");
-            if DOM.Core.Nodes.Length (List => Mem_Node) = 0 then
-               raise Validation_Error with "VMCS region '" & Mem_Name
-                 & "' for subject " & Subj_Name & " not found";
-            end if;
-         end;
-      end loop;
+      --  Returns True if the physical memory region name matches.
+      function Match_Region_Name (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Subj_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Node,
+              Name => "name");
+         Ref_Name  : constant String := Subj_Name & "|vmcs";
+      begin
+         return "VMCS region '" & Ref_Name & "' for subject " & Subj_Name
+           & " not found";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Match_Region_Name (Left, Right : DOM.Core.Node) return Boolean
+      is
+         Subj_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Left,
+              Name => "name");
+         Ref_Name  : constant String := Subj_Name & "|vmcs";
+         Mem_Name  : constant String := DOM.Core.Elements.Get_Attribute
+             (Elem => Right,
+              Name => "name");
+      begin
+         return Ref_Name = Mem_Name;
+      end Match_Region_Name;
+   begin
+      For_Each_Match (XML_Data     => XML_Data,
+                      Source_XPath => "/system/subjects/subject",
+                      Ref_XPath    => "/system/memory/memory",
+                      Log_Message  => "VMCS region(s) for presence",
+                      Error        => Error_Msg'Access,
+                      Match        => Match_Region_Name'Access);
    end VMCS_Region_Presence;
 
    -------------------------------------------------------------------------

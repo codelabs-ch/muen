@@ -279,45 +279,34 @@ is
 
    procedure Physical_IRQ_References (XML_Data : Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => "//irq[@logical]");
-   begin
-      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length (List => Nodes)'Img
-                 & " device IRQ reference(s)");
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
 
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
-         declare
-            Node          : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => Nodes,
-                                      Index => I);
-            Log_Dev_Name  : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
-               Name => "logical");
-            Phys_Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
-               Name => "physical");
-            Logical_Name  : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Node,
-                 Name => "logical");
-            Phys_Name     : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Node,
-                 Name => "physical");
-            Physical      : constant DOM.Core.Node_List
-              := XPath_Query
-                (N     => XML_Data.Doc,
-                 XPath => "/system/platform/device[@name='" & Phys_Dev_Name
-                 & "']/irq[@name='" & Phys_Name & "']");
-         begin
-            if DOM.Core.Nodes.Length (List => Physical) = 0 then
-               raise Validation_Error with "Physical IRQ '" & Phys_Name
-                 & "' referenced by logical IRQ '" & Logical_Name
-                 & "' of logical device '" & Log_Dev_Name & "' not found";
-            end if;
-         end;
-      end loop;
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Log_Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+            Name => "logical");
+         Logical_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "logical");
+         Phys_Name    : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "physical");
+      begin
+         return "Physical IRQ '" & Phys_Name & "' referenced by logical IRQ '"
+           & Logical_Name & "' of logical device '" & Log_Dev_Name
+           & "' not found";
+      end Error_Msg;
+   begin
+      For_Each_Match (XML_Data     => XML_Data,
+                      Source_XPath => "//irq[@logical]",
+                      Ref_XPath    => "/system/platform/device/irq",
+                      Log_Message  => "device IRQ reference(s)",
+                      Error        => Error_Msg'Access,
+                      Match        => Is_Valid_Resource_Ref'Access);
    end Physical_IRQ_References;
 
    -------------------------------------------------------------------------

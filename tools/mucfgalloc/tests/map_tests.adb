@@ -490,7 +490,7 @@ is
       Assert (Condition => Test_Utils.Equal_Files
                   (Filename1 => "data/non_overlapping1.txt",
                    Filename2 => "obj/non_overlapping_random.txt"),
-              Message => "Memory map missmatch (random)");
+              Message => "Memory map mismatch (random)");
    end Non_Overlapping_Random;
 
    -------------------------------------------------------------------------
@@ -510,7 +510,7 @@ is
       Assert (Condition => Test_Utils.Equal_Files
                   (Filename1 => "data/non_overlapping1.txt",
                    Filename2 => "obj/non_overlapping_reversed.txt"),
-              Message => "Memory map missmatch (reversed)");
+              Message => "Memory map mismatch (reversed)");
    end Non_Overlapping_Reversed;
 
    -------------------------------------------------------------------------
@@ -530,7 +530,7 @@ is
       Assert (Condition => Test_Utils.Equal_Files
                   (Filename1 => "data/non_overlapping1.txt",
                    Filename2 => "obj/non_overlapping_sorted.txt"),
-              Message => "Memory map missmatch (sorted)");
+              Message => "Memory map mismatch (sorted)");
    end Non_Overlapping_Sorted;
 
    -------------------------------------------------------------------------

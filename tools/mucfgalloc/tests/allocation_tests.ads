@@ -38,4 +38,13 @@ is
    --  e.g. not used for allocation
    procedure Allocation_With_Devices;
 
+   --  Check if overlaps between RAM an devices are handled
+   procedure Overlapping_Devices;
+
+   --  Check if overlaps between memory of different devices are handled
+   procedure Overlap_Between_Devices;
+
+   --  Check if overlaps between memory regions of the same device are handled
+   procedure Overlap_Between_Device_Memory;
+
 end Allocation_Tests;

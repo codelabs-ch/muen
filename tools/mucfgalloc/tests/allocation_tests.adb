@@ -81,6 +81,15 @@ is
       T.Add_Test_Routine
         (Routine => Allocation_With_Devices'Access,
          Name    => "Allocation with devices");
+      T.Add_Test_Routine
+        (Routine => Overlapping_Devices'Access,
+         Name    => "Overlap between device and RAM");
+      T.Add_Test_Routine
+        (Routine => Overlap_Between_Devices'Access,
+         Name    => "Overlap between different devices");
+      T.Add_Test_Routine
+        (Routine => Overlap_Between_Device_Memory'Access,
+         Name    => "Overlap between memory of one device");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -101,6 +110,57 @@ is
                    Filename2 => "obj/system.xml"),
               Message => "Limited allocation");
    end Limited_Allocation;
+
+   -------------------------------------------------------------------------
+
+   procedure Overlap_Between_Device_Memory
+   is
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_A,
+                   File => "data/overlap_between_device_memory.xml");
+      Allocator.Write (Policy     => Policy,
+                       Output_Dir => "obj");
+      pragma Unreferenced (Policy);
+      Fail ("Overlap undetected");
+   exception
+      when Alloc.Allocator.Overlapping_Physical_Memory => null;
+   end Overlap_Between_Device_Memory;
+
+   -------------------------------------------------------------------------
+
+   procedure Overlap_Between_Devices
+   is
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_A,
+                   File => "data/overlap_between_devices.xml");
+      Allocator.Write (Policy     => Policy,
+                       Output_Dir => "obj");
+      pragma Unreferenced (Policy);
+      Fail ("Overlap undetected");
+   exception
+      when Alloc.Allocator.Overlapping_Physical_Memory => null;
+   end Overlap_Between_Devices;
+
+   -------------------------------------------------------------------------
+
+   procedure Overlapping_Devices
+   is
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_A,
+                   File => "data/overlapping_device.xml");
+      Allocator.Write (Policy     => Policy,
+                       Output_Dir => "obj");
+      pragma Unreferenced (Policy);
+      Fail ("Overlap undetected");
+   exception
+      when Alloc.Allocator.Overlapping_Physical_Memory => null;
+   end Overlapping_Devices;
 
    -------------------------------------------------------------------------
 

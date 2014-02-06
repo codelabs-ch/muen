@@ -237,6 +237,8 @@ is
    is
    begin
       Validate.Register
+        (Validator => Memory.Physical_Memory_Name_Uniqueness'Access);
+      Validate.Register
         (Validator => Memory.Physical_Memory_References'Access);
       Validate.Register
         (Validator => Memory.VMXON_Region_Presence'Access);

@@ -24,6 +24,26 @@ is
 
    use type Interfaces.Unsigned_64;
 
+   type Hex_Digits_Range is range 16#0# .. 16#f#;
+
+   Digits_To_Char : constant array (Hex_Digits_Range) of Character
+     := (16#0# => '0',
+         16#1# => '1',
+         16#2# => '2',
+         16#3# => '3',
+         16#4# => '4',
+         16#5# => '5',
+         16#6# => '6',
+         16#7# => '7',
+         16#8# => '8',
+         16#9# => '9',
+         16#a# => 'A',
+         16#b# => 'B',
+         16#c# => 'C',
+         16#d# => 'D',
+         16#e# => 'E',
+         16#f# => 'F');
+
    -------------------------------------------------------------------------
 
    function Bit_Clear
@@ -81,32 +101,16 @@ is
       Tmp     : Interfaces.Unsigned_64 := Number;
       Digit   : Natural := 0;
 
+      --  Convert given hex digit to character.
       function To_Hex_Digit (N : Interfaces.Unsigned_64) return Character
          with pre => N <= 16#F#;
 
+      ----------------------------------------------------------------------
+
       function To_Hex_Digit (N : Interfaces.Unsigned_64) return Character
       is
-         Internal_Error : exception;
       begin
-         case N is
-            when 16#0# => return '0';
-            when 16#1# => return '1';
-            when 16#2# => return '2';
-            when 16#3# => return '3';
-            when 16#4# => return '4';
-            when 16#5# => return '5';
-            when 16#6# => return '6';
-            when 16#7# => return '7';
-            when 16#8# => return '8';
-            when 16#9# => return '9';
-            when 16#A# => return 'A';
-            when 16#B# => return 'B';
-            when 16#C# => return 'C';
-            when 16#D# => return 'D';
-            when 16#E# => return 'E';
-            when 16#F# => return 'F';
-            when others => raise Internal_Error;
-         end case;
+         return Digits_To_Char (Hex_Digits_Range (N));
       end To_Hex_Digit;
    begin
       if Normalize or Prefix then

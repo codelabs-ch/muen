@@ -27,6 +27,25 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Allocation_With_Devices
+   is
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_A,
+                   File => "data/allocation_with_devices.in.xml");
+
+      Allocator.Write (Output_Dir => "obj",
+                       Policy      => Policy);
+
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/allocation_with_devices.ref.xml",
+                   Filename2 => "obj/system.xml"),
+              Message => "Invalid allocation involving devices");
+   end Allocation_With_Devices;
+
+   -------------------------------------------------------------------------
+
    procedure Automatic_Allocation
    is
       Policy : Muxml.XML_Data_Type;
@@ -59,6 +78,9 @@ is
       T.Add_Test_Routine
         (Routine => Limited_Allocation'Access,
          Name    => "Limited allocation");
+      T.Add_Test_Routine
+        (Routine => Allocation_With_Devices'Access,
+         Name    => "Allocation with devices");
    end Initialize;
 
    -------------------------------------------------------------------------

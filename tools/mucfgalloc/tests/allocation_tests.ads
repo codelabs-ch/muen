@@ -34,4 +34,8 @@ is
    --  Allocate regions which have an upper limit specified
    procedure Limited_Allocation;
 
+   --  Check whether device memory is treated correctly
+   --  e.g. not used for allocation
+   procedure Allocation_With_Devices;
+
 end Allocation_Tests;

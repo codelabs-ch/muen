@@ -5,7 +5,7 @@ TOOLS =           \
 	mucfgvalidate \
 	mugenacpi     \
 	mugeniobm     \
-	mumsrbmgen    \
+	mugenmsrbm    \
 	mupack        \
 	muptgen       \
 	muspecgen     \

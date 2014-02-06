@@ -9,7 +9,7 @@ PATCH      = hardware/$(HARDWARE).patch
 GENERATORS =      \
 	$(MUGENACPI)  \
 	$(MUGENIOBM)  \
-	$(MUMSRBMGEN) \
+	$(MUGENMSRBM) \
 	$(MUPTGEN)    \
 	$(MUSPECGEN)  \
 	$(MUZPGEN)

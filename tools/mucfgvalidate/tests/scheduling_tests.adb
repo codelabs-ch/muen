@@ -107,7 +107,8 @@ is
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'linux' scheduled on wrong CPU 1, should be 0",
+                    = "Subject 'subject1' scheduled on wrong CPU 0,"
+                    & " should be 1",
                     Message   => "Exception mismatch");
       end;
    end Validate_Subj_CPU_Affinity;

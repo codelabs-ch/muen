@@ -3,8 +3,8 @@ SCHEMA_FILES = \
    obj/muxml-format_b_schema.ads \
    obj/muxml-format_src_schema.ads
 
-XSD_FILES    = $(wildcard schema/*.xsd)
-RESOLVE_XSL  = schema/resolve.xsl
+XSD_FILES   = $(wildcard schema/*.xsd)
+RESOLVE_XSL = schema/resolve.xsl
 
 all: $(SCHEMA_FILES)
 
@@ -37,6 +37,5 @@ build_cov: schema-spec
 
 clean:
 	@rm -rf lib obj
-	@rm -f src/muxml-format_?.ads
 
 .PHONY: all

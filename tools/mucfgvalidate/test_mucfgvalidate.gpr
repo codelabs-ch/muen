@@ -16,20 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "xmlada";
-
-with "../../contrib/projects/xia";
-
-with "../libmulog/libmulog";
-with "../libmuxml/libmuxml";
-with "../libmutools/libmutools";
+with "../../contrib/projects/ahven";
+with "../libtest/libtest";
 with "../shared_tools";
 
-project Muvalidate extends "../tools.gpr" is
+with "mucfgvalidate";
 
-   for Source_Dirs use ("src");
+project Test_Mucfgvalidate extends "../tools.gpr" is
+
+   for Source_Dirs use ("tests");
    for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Exec_Dir use "bin";
-   for Main use ("muvalidate.adb");
+   for Main use ("test_runner.adb");
 
-end Muvalidate;
+end Test_Mucfgvalidate;

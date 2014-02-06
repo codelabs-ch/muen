@@ -25,7 +25,7 @@ with Muxml;
 with Validate.Command_Line;
 with Validators;
 
-procedure Muvalidate
+procedure Mucfgvalidate
 is
 begin
    Validate.Command_Line.Init (Description => "Muen policy validator");
@@ -47,4 +47,4 @@ exception
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Information (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
-end Muvalidate;
+end Mucfgvalidate;

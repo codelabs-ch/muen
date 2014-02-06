@@ -9,13 +9,13 @@ POLICY_DIR = $(TOP_DIR)/policy
 POLICY     = $(POLICY_DIR)/xml/demo_system.xml
 POLICY_INC = $(POLICY_DIR)/obj
 
-MUACPIGEN  = $(TOP_DIR)/tools/muacpigen/bin/muacpigen
-MUIOBMGEN  = $(TOP_DIR)/tools/muiobmgen/bin/muiobmgen
-MUMSRBMGEN = $(TOP_DIR)/tools/mumsrbmgen/bin/mumsrbmgen
-MUPACK     = $(TOP_DIR)/tools/mupack/bin/mupack
-MUPTGEN    = $(TOP_DIR)/tools/muptgen/bin/muptgen
-MUSPECGEN  = $(TOP_DIR)/tools/muspecgen/bin/muspecgen
-MUVALIDATE = $(TOP_DIR)/tools/muvalidate/bin/muvalidate
-MUZPGEN    = $(TOP_DIR)/tools/muzpgen/bin/muzpgen
+MUACPIGEN     = $(TOP_DIR)/tools/muacpigen/bin/muacpigen
+MUCFGVALIDATE = $(TOP_DIR)/tools/mucfgvalidate/bin/mucfgvalidate
+MUIOBMGEN     = $(TOP_DIR)/tools/muiobmgen/bin/muiobmgen
+MUMSRBMGEN    = $(TOP_DIR)/tools/mumsrbmgen/bin/mumsrbmgen
+MUPACK        = $(TOP_DIR)/tools/mupack/bin/mupack
+MUPTGEN       = $(TOP_DIR)/tools/muptgen/bin/muptgen
+MUSPECGEN     = $(TOP_DIR)/tools/muspecgen/bin/muspecgen
+MUZPGEN       = $(TOP_DIR)/tools/muzpgen/bin/muzpgen
 
 HARDWARE ?= bochs

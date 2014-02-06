@@ -1,4 +1,4 @@
-TOOL = muvalidate
+TOOL = mucfgvalidate
 
 include ../tools.mk
 include ../../Makecov

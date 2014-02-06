@@ -37,8 +37,8 @@ $(DSDT_OBJ) $(POLICY_OUT): $(POLICY) $(DSDT_SRC) $(PATCH)
 	@cd $(OBJ_DIR) && patch -p3 < ../$(PATCH) >/dev/null
 endif
 
-.validated: $(POLICY_OUT) $(MUVALIDATE)
-	@$(MUVALIDATE) $(POLICY_OUT)
+.validated: $(POLICY_OUT) $(MUCFGVALIDATE)
+	@$(MUCFGVALIDATE) $(POLICY_OUT)
 	@touch $@
 
 $(DSDT): $(DSDT_OBJ)

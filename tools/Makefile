@@ -1,14 +1,14 @@
 # Tool dependencies and tool projects
-TOOLS =        \
-	libmuxml   \
-	libmutools \
-	muacpigen  \
-	muiobmgen  \
-	mumsrbmgen \
-	mupack     \
-	muptgen    \
-	muspecgen  \
-	muvalidate \
+TOOLS =           \
+	libmuxml      \
+	libmutools    \
+	muacpigen     \
+	mucfgvalidate \
+	muiobmgen     \
+	mumsrbmgen    \
+	mupack        \
+	muptgen       \
+	muspecgen     \
 	muzpgen
 
 # Implicitly built libraries

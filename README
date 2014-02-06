@@ -39,8 +39,9 @@ Features
 - Fixed cyclic scheduling using Intel VMX preemption timer
 - Static assignment of resources according to system policy
 - Event mechanism
+- Shared memory channels for inter-subject communication
 - Minimal Zero-Footprint Run-Time (RTS)
-- Support for 64-bit native and 32-bit VM subjects
+- Support for 64-bit native and 32/64-bit VM subjects
 
 
 Resources

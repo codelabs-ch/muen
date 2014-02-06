@@ -37,69 +37,65 @@ is
 
    procedure IO_Port_Range_Equality (XML_Data : Muxml.XML_Data_Type)
    is
-      use type Interfaces.Unsigned_32;
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
 
-      Nodes : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => "//ioPort[@logical]");
+      --  Returns True if the device I/O port range matches.
+      function Match_Port_Range (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Log_Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+            Name => "logical");
+         Logical_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "logical");
+         Phys_Name    : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "physical");
+      begin
+         return "I/O port ranges of physical '" & Phys_Name & "' and logical"
+           & " I/O port '" & Logical_Name & "' of logical device '"
+           & Log_Dev_Name & "' differ";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Match_Port_Range (Left, Right : DOM.Core.Node) return Boolean
+      is
+         use Interfaces;
+
+         L_Start_Addr : constant Unsigned_32 := Unsigned_32'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Left,
+               Name => "start"));
+         L_End_Addr   : constant Unsigned_32 := Unsigned_32'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Left,
+               Name => "end"));
+         P_Start_Addr : constant Unsigned_32 := Unsigned_32'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Right,
+               Name => "start"));
+         P_End_Addr   : constant Unsigned_32 := Unsigned_32'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Right,
+               Name => "end"));
+      begin
+         return L_Start_Addr = P_Start_Addr and then L_End_Addr = P_End_Addr
+           and then Is_Valid_Resource_Ref (Left  => Left,
+                                           Right => Right);
+      end Match_Port_Range;
    begin
-      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img & " I/O port range(s) for equality");
-
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
-         declare
-            Node          : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => Nodes,
-                                      Index => I);
-            L_Start_Str   : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => "start");
-            L_Start_Addr  : constant Interfaces.Unsigned_32
-              := Interfaces.Unsigned_32'Value (L_Start_Str);
-            L_End_Str     : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Node,
-               Name => "end");
-            L_End_Addr    : constant Interfaces.Unsigned_32
-              := Interfaces.Unsigned_32'Value (L_End_Str);
-            Log_Dev_Name  : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
-               Name => "logical");
-            Phys_Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
-               Name => "physical");
-            Logical_Name  : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Node,
-                 Name => "logical");
-            Phys_Name     : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Node,
-                 Name => "physical");
-
-            Physical     : constant DOM.Core.Node := DOM.Core.Nodes.Item
-              (List  => XPath_Query
-                 (N     => XML_Data.Doc,
-                  XPath => "/system/platform/device[@name='" & Phys_Dev_Name
-                  & "']/ioPort[@name='" & Phys_Name & "']"),
-               Index => 0);
-            P_Start_Str  : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Physical,
-               Name => "start");
-            P_Start_Addr : constant Interfaces.Unsigned_32
-              := Interfaces.Unsigned_32'Value (P_Start_Str);
-            P_End_Str    : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Physical,
-               Name => "end");
-            P_End_Addr   : constant Interfaces.Unsigned_32
-              := Interfaces.Unsigned_32'Value (P_End_Str);
-         begin
-            if L_Start_Addr /= P_Start_Addr or L_End_Addr /= P_End_Addr then
-               raise Validation_Error with "I/O port ranges of physical '"
-                 & Phys_Name & "' and logical I/O port '" & Logical_Name
-                 & "' of logical device '" & Log_Dev_Name & "' differ";
-            end if;
-         end;
-      end loop;
+      For_Each_Match (XML_Data     => XML_Data,
+                      Source_XPath => "//ioPort[@logical]",
+                      Ref_XPath    => "/system/platform/device/ioPort",
+                      Log_Message  => "I/O port range(s) for equality",
+                      Error        => Error_Msg'Access,
+                      Match        => Match_Port_Range'Access);
    end IO_Port_Range_Equality;
 
    -------------------------------------------------------------------------

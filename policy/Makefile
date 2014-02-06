@@ -12,7 +12,7 @@ GENERATORS =      \
 	$(MUGENMSRBM) \
 	$(MUGENPT)    \
 	$(MUGENSPEC)  \
-	$(MUZPGEN)
+	$(MUGENZP)
 
 GENERATOR_OPTS = -o $(OBJ_DIR) $(POLICY_OUT)
 

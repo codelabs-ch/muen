@@ -8,8 +8,8 @@ TOOLS =           \
 	mugenmsrbm    \
 	mugenpt       \
 	mugenspec     \
-	mupack        \
-	muzpgen
+	mugenzp       \
+	mupack
 
 # Implicitly built libraries
 LIBS =        \

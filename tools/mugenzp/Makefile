@@ -1,4 +1,4 @@
-TOOL = muzpgen
+TOOL = mugenzp
 
 include ../tools.mk
 include ../../Makecov

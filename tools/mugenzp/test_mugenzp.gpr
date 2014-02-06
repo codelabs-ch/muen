@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,20 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "xmlada";
-
-with "../../contrib/projects/xia";
-with "../libmugen/libmugen";
-with "../libmutools/libmutools";
+with "../../contrib/projects/ahven";
+with "../libtest/libtest";
 with "../shared_tools";
 
-with "thin/binding";
+with "mugenzp";
 
-project Muzpgen extends "../tools.gpr" is
+project Test_Mugenzp extends "../tools.gpr" is
 
-   for Source_Dirs use ("src");
+   for Source_Dirs use ("tests");
    for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Exec_Dir use "bin";
-   for Main use ("muzpgen.adb");
+   for Main use ("test_runner.adb");
 
-end Muzpgen;
+end Test_Mugenzp;

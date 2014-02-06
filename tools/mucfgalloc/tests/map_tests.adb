@@ -22,7 +22,13 @@ with Ada.Strings.Unbounded;
 
 package body Map_Tests
 is
+
+   use Ahven;
+   use Alloc.Map;
+   use Ada.Text_IO;
+
    Output_File : Ada.Text_IO.File_Type;
+
    procedure Write_Region (R : Alloc.Map.Region_Type);
 
    function U (S : String) return Ada.Strings.Unbounded.Unbounded_String
@@ -57,10 +63,6 @@ is
 
    procedure Allocate_Fixed_Full_Empty_Region
    is
-      use Ahven;
-      use Alloc.Map;
-      use Ada.Text_IO;
-
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
@@ -80,8 +82,6 @@ is
 
    procedure Allocate_Fixed_Invalid_Double
    is
-      use Ahven;
-      use Alloc.Map;
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
@@ -98,8 +98,6 @@ is
 
    procedure Allocate_Fixed_Invalid_Exceed
    is
-      use Ahven;
-      use Alloc.Map;
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
@@ -115,8 +113,6 @@ is
 
    procedure Allocate_Fixed_Invalid_Left
    is
-      use Ahven;
-      use Alloc.Map;
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
@@ -132,8 +128,6 @@ is
 
    procedure Allocate_Fixed_Invalid_Multiple
    is
-      use Ahven;
-      use Alloc.Map;
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
@@ -150,8 +144,6 @@ is
 
    procedure Allocate_Fixed_Invalid_Outside_Empty
    is
-      use Ahven;
-      use Alloc.Map;
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
@@ -168,8 +160,6 @@ is
 
    procedure Allocate_Fixed_Invalid_Partial_Double
    is
-      use Ahven;
-      use Alloc.Map;
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
@@ -186,8 +176,6 @@ is
 
    procedure Allocate_Fixed_Invalid_Right
    is
-      use Ahven;
-      use Alloc.Map;
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
@@ -204,9 +192,6 @@ is
 
    procedure Allocate_Fixed_Partial_Left
    is
-      use Ahven;
-      use Alloc.Map;
-      use Ada.Text_IO;
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
@@ -227,10 +212,6 @@ is
 
    procedure Allocate_Fixed_Partial_Middle
    is
-      use Ahven;
-      use Alloc.Map;
-      use Ada.Text_IO;
-
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
@@ -250,9 +231,6 @@ is
 
    procedure Allocate_Fixed_Partial_Right
    is
-      use Ahven;
-      use Alloc.Map;
-      use Ada.Text_IO;
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
@@ -273,9 +251,6 @@ is
 
    procedure Allocate_Variable_Aligned
    is
-      use Ahven;
-      use Alloc.Map;
-      use Ada.Text_IO;
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 100,    1000);
@@ -313,9 +288,6 @@ is
 
    procedure Allocate_Variable_Exact
    is
-      use Ahven;
-      use Alloc.Map;
-      use Ada.Text_IO;
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
@@ -336,9 +308,6 @@ is
 
    procedure Allocate_Variable_OOM
    is
-      use Ahven;
-      use Alloc.Map;
-      use Ada.Text_IO;
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
@@ -352,9 +321,6 @@ is
 
    procedure Allocate_Variable_OOM_Alignment
    is
-      use Ahven;
-      use Alloc.Map;
-      use Ada.Text_IO;
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 1,    1000);
@@ -370,9 +336,6 @@ is
 
    procedure Allocate_Variable_OOM_Fragmentation
    is
-      use Ahven;
-      use Alloc.Map;
-      use Ada.Text_IO;
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
@@ -514,10 +477,6 @@ is
 
    procedure Non_Overlapping_Random
    is
-      use Ahven;
-      use Alloc.Map;
-      use Ada.Text_IO;
-
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 11000, 15000);
@@ -538,10 +497,6 @@ is
 
    procedure Non_Overlapping_Reversed
    is
-      use Ahven;
-      use Alloc.Map;
-      use Ada.Text_IO;
-
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 16000, 30000);
@@ -562,10 +517,6 @@ is
 
    procedure Non_Overlapping_Sorted
    is
-      use Ahven;
-      use Alloc.Map;
-      use Ada.Text_IO;
-
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
@@ -586,10 +537,6 @@ is
 
    procedure Ordering
    is
-      use Ahven;
-      use Alloc.Map;
-      use Ada.Text_IO;
-
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 0, 999);
@@ -611,8 +558,6 @@ is
 
    procedure Overlapping_Empty_Encompassing
    is
-      use Ahven;
-      use Alloc.Map;
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 100,  900);
@@ -626,8 +571,6 @@ is
 
    procedure Overlapping_Empty_Included
    is
-      use Ahven;
-      use Alloc.Map;
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 0,   1000);
@@ -641,8 +584,6 @@ is
 
    procedure Overlapping_Empty_Left
    is
-      use Ahven;
-      use Alloc.Map;
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 0,   1000);
@@ -656,8 +597,6 @@ is
 
    procedure Overlapping_Empty_Right
    is
-      use Ahven;
-      use Alloc.Map;
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 900, 2000);
@@ -671,10 +610,6 @@ is
 
    procedure Region_Merge_Random
    is
-      use Ahven;
-      use Alloc.Map;
-      use Ada.Text_IO;
-
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 12001, 15000);
@@ -695,10 +630,6 @@ is
 
    procedure Region_Merge_Reversed
    is
-      use Ahven;
-      use Alloc.Map;
-      use Ada.Text_IO;
-
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 12001, 15000);
@@ -719,10 +650,6 @@ is
 
    procedure Region_Merge_Sorted
    is
-      use Ahven;
-      use Alloc.Map;
-      use Ada.Text_IO;
-
       M : Map_Type;
    begin
       M.Insert_Empty_Region (U ("EMPTY1"), 1000, 2000);
@@ -743,7 +670,6 @@ is
 
    procedure Write_Region (R : Alloc.Map.Region_Type)
    is
-      use Ada.Text_IO;
    begin
       Put_Line
          (Output_File,

@@ -130,6 +130,41 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Physical_Memory_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/memory/memory");
+
+      --  Check inequality of memory region names.
+      procedure Check_Inequality (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Inequality (Left, Right : DOM.Core.Node)
+      is
+         Left_Name  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "name");
+         Right_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         if Left_Name = Right_Name then
+            raise Validation_Error with "Multiple physical memory regions with"
+              & " name '" & Left_Name & "'";
+         end if;
+      end Check_Inequality;
+   begin
+      Mulog.Log (Msg => "Checking uniqueness of" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img& " physical memory region name(s)");
+
+      Compare_All (Nodes      => Nodes,
+                   Comparator => Check_Inequality'Access);
+   end Physical_Memory_Name_Uniqueness;
+
+   -------------------------------------------------------------------------
+
    procedure Physical_Memory_Overlap (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes   : DOM.Core.Node_List          := XPath_Query

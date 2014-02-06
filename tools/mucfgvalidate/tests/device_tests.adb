@@ -42,6 +42,9 @@ is
         (Routine => Validate_Physdev_Refs'Access,
          Name    => "Validate physical device references");
       T.Add_Test_Routine
+        (Routine => Validate_Physdev_Name_Uniqueness'Access,
+         Name    => "Validate physical device name uniqueness");
+      T.Add_Test_Routine
         (Routine => Validate_Physirq_Uniqueness'Access,
          Name    => "Validate physical IRQ uniqueness");
       T.Add_Test_Routine
@@ -176,6 +179,27 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_IRQ_Number_Eq;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Physdev_Name_Uniqueness
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Device.Physical_Device_Name_Uniqueness (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Multiple physical devices with name 'vga'",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Physdev_Name_Uniqueness;
 
    -------------------------------------------------------------------------
 

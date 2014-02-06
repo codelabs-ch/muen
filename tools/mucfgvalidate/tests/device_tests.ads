@@ -29,6 +29,9 @@ is
    --  Validate physical device references.
    procedure Validate_Physdev_Refs;
 
+   --  Validate physical device name uniqueness.
+   procedure Validate_Physdev_Name_Uniqueness;
+
    --  Validate uniqueness of physical device IRQs.
    procedure Validate_Physirq_Uniqueness;
 

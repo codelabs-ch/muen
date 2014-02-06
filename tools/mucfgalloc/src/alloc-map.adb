@@ -399,7 +399,6 @@ is
                 Kind          => Kind));
          Update_Element (Map.Data, Curr, Set_First_Past_Last'Access);
       end if;
-
    end Reserve;
 
 end Alloc.Map;

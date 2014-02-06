@@ -99,8 +99,8 @@ is
    ----------------------------------------------------------------------------
 
    procedure Add_Empty_Regions
-      (Policy      :        Muxml.XML_Data_Type;
-       Map         : in out Alloc.Map.Map_Type)
+      (Policy :        Muxml.XML_Data_Type;
+       Map    : in out Alloc.Map.Map_Type)
    is
       Nodes                  : DOM.Core.Node_List;
       Physical_Address, Size : Interfaces.Unsigned_64;
@@ -134,8 +134,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Add_Fixed_Regions
-      (Policy      :        Muxml.XML_Data_Type;
-       Map         : in out Alloc.Map.Map_Type)
+      (Policy :        Muxml.XML_Data_Type;
+       Map    : in out Alloc.Map.Map_Type)
    is
       Nodes                  : DOM.Core.Node_List;
       Physical_Address, Size : Interfaces.Unsigned_64;
@@ -165,8 +165,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Allocate_Variable_Regions
-      (Policy      :        Muxml.XML_Data_Type;
-       Map         : in out Alloc.Map.Map_Type)
+      (Policy :        Muxml.XML_Data_Type;
+       Map    : in out Alloc.Map.Map_Type)
    is
       Nodes                  : DOM.Core.Node_List;
       Alignment, Size, Below : Interfaces.Unsigned_64;

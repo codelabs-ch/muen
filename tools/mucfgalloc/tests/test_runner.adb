@@ -30,7 +30,6 @@ is
 begin
    Add_Test (Suite => S.all,
              T     => new Allocation_Tests.Testcase);
-
    Add_Test (Suite => S.all,
              T     => new Map_Tests.Testcase);
 

@@ -22,6 +22,7 @@ private with Ada.Strings.Unbounded;
 
 package Alloc.Allocator
 is
+
    --  Write fully allocated configuration to given output directory.
    procedure Write
      (Output_Dir : String;
@@ -43,16 +44,16 @@ private
        Map         : in out Alloc.Map.Map_Type);
 
    procedure Add_Empty_Regions
-      (Policy      :        Muxml.XML_Data_Type;
-       Map         : in out Alloc.Map.Map_Type);
+      (Policy :        Muxml.XML_Data_Type;
+       Map    : in out Alloc.Map.Map_Type);
 
    procedure Add_Fixed_Regions
-      (Policy      :        Muxml.XML_Data_Type;
-       Map         : in out Alloc.Map.Map_Type);
+      (Policy :        Muxml.XML_Data_Type;
+       Map    : in out Alloc.Map.Map_Type);
 
    procedure Allocate_Variable_Regions
-      (Policy      :        Muxml.XML_Data_Type;
-       Map         : in out Alloc.Map.Map_Type);
+      (Policy :        Muxml.XML_Data_Type;
+       Map    : in out Alloc.Map.Map_Type);
 
    type Region_Type is
    record

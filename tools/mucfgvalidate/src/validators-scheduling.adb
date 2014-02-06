@@ -29,6 +29,9 @@ is
 
    use McKae.XML.XPath.XIA;
 
+   --  Returns True if the minor frame subject name matches.
+   function Match_Subject_Name (Left, Right : DOM.Core.Node) return Boolean;
+
    -------------------------------------------------------------------------
 
    procedure CPU_Element_Count (XML_Data : Muxml.XML_Data_Type)
@@ -118,59 +121,77 @@ is
 
    -------------------------------------------------------------------------
 
+   function Match_Subject_Name (Left, Right : DOM.Core.Node) return Boolean
+   is
+      Frame_Name   : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Left,
+         Name => "subject");
+      Subject_Name : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Right,
+         Name => "name");
+   begin
+      return Frame_Name = Subject_Name;
+   end Match_Subject_Name;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_CPU_Affinity (XML_Data : Muxml.XML_Data_Type)
    is
-      Frames   : constant DOM.Core.Node_List
-        := XPath_Query (N     => XML_Data.Doc,
-                        XPath => "//minorFrame");
-      Subjects : constant DOM.Core.Node_List
-        := XPath_Query (N     => XML_Data.Doc,
-                        XPath => "//subjects/subject");
-   begin
-      Mulog.Log (Msg => "Checking CPU affinity of subjects in"
-                 & DOM.Core.Nodes.Length (List => Frames)'Img
-                 & " minor frame(s)");
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
 
-      for I in 0 .. DOM.Core.Nodes.Length (List => Frames) - 1 loop
-         declare
-            Frame_Node      : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => Frames,
-                                      Index => I);
-            Frame_Subj_Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Frame_Node,
-                 Name => "subject");
-            Frame_CPU_ID    : constant Natural
-              := Natural'Value
-                (DOM.Core.Elements.Get_Attribute
-                     (Elem => DOM.Core.Nodes.Parent_Node (N => Frame_Node),
-                      Name => "id"));
-         begin
-            for J in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
-               declare
-                  Subj_Node : constant DOM.Core.Node
-                    := DOM.Core.Nodes.Item (List  => Subjects,
-                                            Index => J);
-                  Subj_Name : constant String
-                    := DOM.Core.Elements.Get_Attribute
-                      (Elem => Subj_Node,
-                       Name => "name");
-                  CPU_ID    : constant Natural
-                    := Natural'Value (DOM.Core.Elements.Get_Attribute
-                                      (Elem => Subj_Node,
-                                       Name => "cpu"));
-               begin
-                  if Frame_Subj_Name = Subj_Name
-                    and then Frame_CPU_ID /= CPU_ID
-                  then
-                     raise Validation_Error with "Subject '" & Subj_Name
-                       & "' scheduled on wrong CPU" & Frame_CPU_ID'Img
-                       & ", should be" & CPU_ID'Img;
-                  end if;
-               end;
-            end loop;
-         end;
-      end loop;
+      --  Returns True if the minor frame CPU id matches.
+      function Match_CPU_ID (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Frame_CPU_ID : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+               Name => "id");
+         Subj_Name    : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "subject");
+         Subject      : constant DOM.Core.Node := DOM.Core.Nodes.Item
+             (List  => XPath_Query
+                  (N     => XML_Data.Doc,
+                   XPath => "/system/subjects/subject[@name='" & Subj_Name
+                   & "']"),
+              Index => 0);
+         Subj_CPU_ID  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Subject,
+            Name => "cpu");
+      begin
+         return "Subject '" & Subj_Name & "' scheduled on wrong CPU "
+           & Frame_CPU_ID & ", should be " & Subj_CPU_ID;
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Match_CPU_ID (Left, Right : DOM.Core.Node) return Boolean
+      is
+         Frame_CPU_ID   : constant Natural := Natural'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => DOM.Core.Nodes.Parent_Node (N => Left),
+               Name => "id"));
+         Subject_CPU_ID : constant Natural := Natural'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Right,
+               Name => "cpu"));
+      begin
+         return Frame_CPU_ID = Subject_CPU_ID and then
+           Match_Subject_Name (Left  => Left,
+                               Right => Right);
+      end Match_CPU_ID;
+   begin
+      For_Each_Match (XML_Data     => XML_Data,
+                      Source_XPath => "//minorFrame",
+                      Ref_XPath    => "/system/subjects/subject",
+                      Log_Message  => "minor frame(s) for subject CPU"
+                      & " affinity",
+                      Error        => Error_Msg'Access,
+                      Match        => Match_CPU_ID'Access);
    end Subject_CPU_Affinity;
 
    -------------------------------------------------------------------------
@@ -179,9 +200,6 @@ is
    is
       --  Returns the error message for a given reference node.
       function Error_Msg (Node : DOM.Core.Node) return String;
-
-      --  Returns True if the minor frame subject name matches.
-      function Match_Subject_Name (Left, Right : DOM.Core.Node) return Boolean;
 
       ----------------------------------------------------------------------
 
@@ -194,20 +212,6 @@ is
          return "Subject '" & Subj_Name
            & "' referenced in scheduling plan not found";
       end Error_Msg;
-
-      ----------------------------------------------------------------------
-
-      function Match_Subject_Name (Left, Right : DOM.Core.Node) return Boolean
-      is
-         Frame_Name   : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Left,
-            Name => "subject");
-         Subject_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Right,
-            Name => "name");
-      begin
-         return Frame_Name = Subject_Name;
-      end Match_Subject_Name;
    begin
       For_Each_Match (XML_Data     => XML_Data,
                       Source_XPath => "//minorFrame",

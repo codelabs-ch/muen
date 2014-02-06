@@ -1,4 +1,4 @@
-TOOL = muacpigen
+TOOL = mugenacpi
 
 include ../tools.mk
 include ../../Makecov

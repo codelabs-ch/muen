@@ -20,12 +20,12 @@ with "../../contrib/projects/ahven";
 with "../libtest/libtest";
 with "../shared_tools";
 
-with "muacpigen";
+with "mugenacpi";
 
-project Test_Muacpigen extends "../tools.gpr" is
+project Test_Mugenacpi extends "../tools.gpr" is
 
    for Source_Dirs use ("tests");
    for Object_Dir use "obj/" & Shared_Tools.Build;
    for Main use ("test_runner.adb");
 
-end Test_Muacpigen;
+end Test_Mugenacpi;

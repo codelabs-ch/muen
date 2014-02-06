@@ -7,7 +7,7 @@ DSDT       = $(OBJ_DIR)/DSDT.aml
 PATCH      = hardware/$(HARDWARE).patch
 
 GENERATORS =      \
-	$(MUACPIGEN)  \
+	$(MUGENACPI)  \
 	$(MUIOBMGEN)  \
 	$(MUMSRBMGEN) \
 	$(MUPTGEN)    \

@@ -2,8 +2,8 @@
 TOOLS =           \
 	libmuxml      \
 	libmutools    \
-	muacpigen     \
 	mucfgvalidate \
+	mugenacpi     \
 	muiobmgen     \
 	mumsrbmgen    \
 	mupack        \

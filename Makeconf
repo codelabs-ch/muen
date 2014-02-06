@@ -9,8 +9,8 @@ POLICY_DIR = $(TOP_DIR)/policy
 POLICY     = $(POLICY_DIR)/xml/demo_system.xml
 POLICY_INC = $(POLICY_DIR)/obj
 
-MUACPIGEN     = $(TOP_DIR)/tools/muacpigen/bin/muacpigen
 MUCFGVALIDATE = $(TOP_DIR)/tools/mucfgvalidate/bin/mucfgvalidate
+MUGENACPI     = $(TOP_DIR)/tools/mugenacpi/bin/mugenacpi
 MUIOBMGEN     = $(TOP_DIR)/tools/muiobmgen/bin/muiobmgen
 MUMSRBMGEN    = $(TOP_DIR)/tools/mumsrbmgen/bin/mumsrbmgen
 MUPACK        = $(TOP_DIR)/tools/mupack/bin/mupack

@@ -177,31 +177,45 @@ is
 
    procedure Subject_References (XML_Data : Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List
-        := XPath_Query (N     => XML_Data.Doc,
-                        XPath => "//minorFrame/@subject");
-   begin
-      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img & " subject reference(s) in scheduling "
-                 & "plan");
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
 
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
-         declare
-            Subj_Name : constant String
-              := DOM.Core.Nodes.Node_Value
-                (N => DOM.Core.Nodes.Item
-                     (List  => Nodes,
-                      Index => I));
-            Subjects  : constant DOM.Core.Node_List
-              := XPath_Query (N     => XML_Data.Doc,
-                              XPath => "//subject[@name='" & Subj_Name & "']");
-         begin
-            if DOM.Core.Nodes.Length (List => Subjects) = 0 then
-               raise Validation_Error with "Subject '" & Subj_Name
-                 & "' referenced in scheduling plan not found";
-            end if;
-         end;
-      end loop;
+      --  Returns True if the minor frame subject name matches.
+      function Match_Subject_Name (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "subject");
+      begin
+         return "Subject '" & Subj_Name
+           & "' referenced in scheduling plan not found";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Match_Subject_Name (Left, Right : DOM.Core.Node) return Boolean
+      is
+         Frame_Name   : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "subject");
+         Subject_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         return Frame_Name = Subject_Name;
+      end Match_Subject_Name;
+   begin
+      For_Each_Match (XML_Data     => XML_Data,
+                      Source_XPath => "//minorFrame",
+                      Ref_XPath    => "/system/subjects/subject",
+                      Log_Message  => "subject reference(s) in scheduling "
+                      & "plan",
+                      Error        => Error_Msg'Access,
+                      Match        => Match_Subject_Name'Access);
    end Subject_References;
 
 end Validators.Scheduling;

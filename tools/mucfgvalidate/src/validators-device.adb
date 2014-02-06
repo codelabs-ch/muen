@@ -103,45 +103,57 @@ is
 
    procedure IO_Port_References (XML_Data : Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => "//ioPort[@logical]");
-   begin
-      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img & " I/O port reference(s)");
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
 
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
-         declare
-            Node          : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => Nodes,
-                                      Index => I);
-            Log_Dev_Name  : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
-               Name => "logical");
-            Phys_Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
-               Name => "physical");
-            Logical_Name  : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Node,
-                 Name => "logical");
-            Phys_Name     : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Node,
-                 Name => "physical");
-            Physical      : constant DOM.Core.Node_List
-              := XPath_Query
-                (N     => XML_Data.Doc,
-                 XPath => "/system/platform/device[@name='" & Phys_Dev_Name
-                 & "']/ioPort[@name='" & Phys_Name & "']");
-         begin
-            if DOM.Core.Nodes.Length (List => Physical) = 0 then
-               raise Validation_Error with "Physical I/O port '" & Phys_Name
-                 & "' referenced by logical I/O port '" & Logical_Name
-                 & "' of logical device '" & Log_Dev_Name & "' not found";
-            end if;
-         end;
-      end loop;
+      --  Returns True if the device I/O port name matches.
+      function Match_Port_Name (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Log_Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+            Name => "logical");
+         Logical_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "logical");
+         Phys_Name    : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "physical");
+      begin
+         return "Physical I/O port '" & Phys_Name
+           & "' referenced by logical I/O port '" & Logical_Name
+           & "' of logical device '" & Log_Dev_Name & "' not found";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Match_Port_Name (Left, Right : DOM.Core.Node) return Boolean
+      is
+         Ref_Dev_Name  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Left),
+            Name => "physical");
+         Ref_Port_Name : constant String := DOM.Core.Elements.Get_Attribute
+             (Elem => Left,
+              Name => "physical");
+         Phy_Dev_Name  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Right),
+            Name => "name");
+         Phy_Port_Name : constant String := DOM.Core.Elements.Get_Attribute
+             (Elem => Right,
+              Name => "name");
+      begin
+         return Ref_Dev_Name = Phy_Dev_Name and Ref_Port_Name = Phy_Port_Name;
+      end Match_Port_Name;
+   begin
+      For_Each_Match (XML_Data     => XML_Data,
+                      Source_XPath => "//ioPort[@logical]",
+                      Ref_XPath    => "/system/platform/device/ioPort",
+                      Log_Message  => "I/O port reference(s)",
+                      Error        => Error_Msg'Access,
+                      Match        => Match_Port_Name'Access);
    end IO_Port_References;
 
    -------------------------------------------------------------------------

@@ -219,6 +219,20 @@ is
 
    -------------------------------------------------------------------------
 
+   function Is_Valid_Reference (Left, Right : DOM.Core.Node) return Boolean
+   is
+      Ref_Name : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Left,
+         Name => "physical");
+      Phy_Name : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Right,
+         Name => "name");
+   begin
+      return Ref_Name = Phy_Name;
+   end Is_Valid_Reference;
+
+   -------------------------------------------------------------------------
+
    procedure Register_All
    is
    begin

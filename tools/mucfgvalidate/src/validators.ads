@@ -106,4 +106,8 @@ private
       Match        : not null access function
         (Left, Right : DOM.Core.Node) return Boolean);
 
+   --  Returns True if the left node's 'physical' attribute matches the 'name'
+   --  attribute of the right node.
+   function Is_Valid_Reference (Left, Right : DOM.Core.Node) return Boolean;
+
 end Validators;

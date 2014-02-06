@@ -16,6 +16,10 @@
 			<ioPort name="port_60" start="16#0060#" end="16#0060#"/>
 			<ioPort name="port_64" start="16#0064#" end="16#0064#"/>
 		</device>
+		<device name="vga" shared="false">
+			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
+			<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
+		</device>
 	</platform>
 
 	<memory>
@@ -229,6 +233,10 @@
 				<device logical="console" physical="serial">
 					<irq logical="irq" physical="cmd" number="5"/>
 					<ioPort logical="consoleports" physical="serial" start="16#50b0#" end="16#50b0#"/>
+				</device>
+				<device logical="gfx" physical="vga">
+					<memory logical="vga_buffer" physical="buffer" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
+					<ioPort logical="ports" physical="ports" start="16#03d4#" end="16#03d5#"/>
 				</device>
 			</devices>
 			<events>

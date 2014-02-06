@@ -84,6 +84,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Virtmem_Overlap_Subject'Access,
          Name    => "Validate subject virtual memory region overlap");
+      T.Add_Test_Routine
+        (Routine => Validate_Virtmem_Overlap_Device_Kernel'Access,
+         Name    => "Validate kernel device memory overlap");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -253,6 +256,42 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Virtaddr_Alignment;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Virtmem_Overlap_Device_Kernel
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      declare
+         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Data.Doc,
+               XPath => "/system/kernel/memory/cpu[@id='0']/memory"),
+            Index => 0);
+      begin
+
+         --  Let existing region overlap with device memory.
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "virtualAddress",
+            Value => "16#000b_7000#");
+
+         Validators.Memory.Virtual_Memory_Overlap (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Overlap of virtual memory region 'text' and "
+                    & "'vga_buffer' of kernel running on CPU 0",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Virtmem_Overlap_Device_Kernel;
 
    -------------------------------------------------------------------------
 

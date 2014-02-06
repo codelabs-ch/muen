@@ -182,6 +182,8 @@ is
       begin
          Element.Last_Address := Last_Address;
       end Set_Last_Address;
+
+      use Ada.Strings.Unbounded;
    begin
       Curr := First (Map.Data);
       while Curr /= No_Element and then
@@ -200,7 +202,9 @@ is
       if Curr /= No_Element and then
          Element (Curr).First_Address <= Last_Address
       then
-         raise Overlapping_Empty_Region;
+         raise Overlapping_Empty_Region with
+            "Region '" & To_String (Name) & "' overlaps with region '" &
+            To_String (Element (Curr).Name) & "'";
       end if;
 
       --  Check for adjacent areas and merge them. There can be 4 scenarios:

@@ -20,6 +20,7 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 with Ada.Containers.Ordered_Sets;
 with Ada.Text_IO;
+with Ada.Exceptions;
 with Mutools.Utils;
 
 package body Alloc.Allocator
@@ -311,8 +312,9 @@ is
           Data => Policy);
 
    exception
-      when Alloc.Map.Overlapping_Empty_Region =>
-         raise Overlapping_Physical_Memory;
+      when E : Alloc.Map.Overlapping_Empty_Region =>
+         raise Overlapping_Physical_Memory with
+            Ada.Exceptions.Exception_Message (E);
    end Write;
 
 end Alloc.Allocator;

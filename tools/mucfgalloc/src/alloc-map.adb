@@ -20,6 +20,8 @@ with Mutools.Utils;
 package body Alloc.Map
 is
 
+   -------------------------------------------------------------------------
+
    procedure Allocate_Fixed
       (Map           : in out Map_Type;
        Name          :        Ada.Strings.Unbounded.Unbounded_String;

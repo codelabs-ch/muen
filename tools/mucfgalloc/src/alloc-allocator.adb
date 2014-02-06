@@ -26,6 +26,8 @@ with Mutools.Utils;
 package body Alloc.Allocator
 is
 
+   -------------------------------------------------------------------------
+
    function "<" (Left, Right : Region_Type) return Boolean
    is
       use type Interfaces.Unsigned_64;

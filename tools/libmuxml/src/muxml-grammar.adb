@@ -29,9 +29,11 @@ with Muxml.Format_b_Schema;
 
 package body Muxml.Grammar
 is
+
    -------------------------------------------------------------------------
 
-   function Get_Grammar (Kind : Schema_Kind)
+   function Get_Grammar
+     (Kind : Schema_Kind)
       return Schema.Validators.XML_Grammar
    is
       use type Schema.Validators.XML_Grammar;

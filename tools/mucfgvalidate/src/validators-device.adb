@@ -237,21 +237,12 @@ is
 
    function Is_Valid_Resource_Ref (Left, Right : DOM.Core.Node) return Boolean
    is
-      Ref_Device_Name   : constant String := DOM.Core.Elements.Get_Attribute
-        (Elem => DOM.Core.Nodes.Parent_Node (N => Left),
-         Name => "physical");
-      Ref_Resource_Name : constant String := DOM.Core.Elements.Get_Attribute
-        (Elem => Left,
-         Name => "physical");
-      Phy_Device_Name   : constant String := DOM.Core.Elements.Get_Attribute
-        (Elem => DOM.Core.Nodes.Parent_Node (N => Right),
-         Name => "name");
-      Phy_Resource_Name : constant String := DOM.Core.Elements.Get_Attribute
-        (Elem => Right,
-         Name => "name");
    begin
-      return Ref_Device_Name = Phy_Device_Name and then
-        Ref_Resource_Name = Phy_Resource_Name;
+      return Is_Valid_Reference (Left  => Left,
+                                 Right => Right)
+        and then Is_Valid_Reference
+          (Left  => DOM.Core.Nodes.Parent_Node (N => Left),
+           Right => DOM.Core.Nodes.Parent_Node (N => Right));
    end Is_Valid_Resource_Ref;
 
    -------------------------------------------------------------------------

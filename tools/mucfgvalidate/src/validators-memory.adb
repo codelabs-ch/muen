@@ -154,9 +154,6 @@ is
       --  Returns the error message for a given reference node.
       function Error_Msg (Node : DOM.Core.Node) return String;
 
-      --  Returns True if the physical and reference name match.
-      function Match_Name (Left, Right : DOM.Core.Node) return Boolean;
-
       ----------------------------------------------------------------------
 
       function Error_Msg (Node : DOM.Core.Node) return String
@@ -172,29 +169,13 @@ is
            & "' referenced by logical memory '" & Logical_Name
            & "' not found";
       end Error_Msg;
-
-      ----------------------------------------------------------------------
-
-      function Match_Name (Left, Right : DOM.Core.Node) return Boolean
-      is
-         Refname : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Left,
-              Name => "physical");
-         Phyname : constant String
-           := DOM.Core.Elements.Get_Attribute
-             (Elem => Right,
-              Name => "name");
-      begin
-         return Refname = Phyname;
-      end Match_Name;
    begin
       For_Each_Match (XML_Data     => XML_Data,
                       Source_XPath => "//memory[@virtualAddress]",
                       Ref_XPath    => "//memory[@physicalAddress]",
                       Log_Message  => "physical memory references",
                       Error        => Error_Msg'Access,
-                      Match        => Match_Name'Access);
+                      Match        => Is_Valid_Reference'Access);
    end Physical_Memory_References;
 
    -------------------------------------------------------------------------

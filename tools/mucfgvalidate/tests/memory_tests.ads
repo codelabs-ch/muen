@@ -26,6 +26,9 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
+   --  Validate physical memory name uniqueness.
+   procedure Validate_Physmem_Name_Uniqueness;
+
    --  Validate physical memory references.
    procedure Validate_Physmem_Refs;
 

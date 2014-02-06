@@ -43,6 +43,9 @@ is
         (Routine => Validate_Physmem_Refs'Access,
          Name    => "Validate physical memory references");
       T.Add_Test_Routine
+        (Routine => Validate_Physmem_Name_Uniqueness'Access,
+         Name    => "Validate physical memory name uniqueness");
+      T.Add_Test_Routine
         (Routine => Validate_VMXON_Presence'Access,
          Name    => "Validate presence of VMXON regions");
       T.Add_Test_Routine
@@ -174,6 +177,28 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Physaddr_Alignment;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Physmem_Name_Uniqueness
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Memory.Physical_Memory_Name_Uniqueness (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Multiple physical memory regions with name"
+                    & " 'kernel_text'",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Physmem_Name_Uniqueness;
 
    -------------------------------------------------------------------------
 

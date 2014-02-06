@@ -4,7 +4,7 @@ TOOLS =           \
 	libmutools    \
 	mucfgvalidate \
 	mugenacpi     \
-	muiobmgen     \
+	mugeniobm     \
 	mumsrbmgen    \
 	mupack        \
 	muptgen       \

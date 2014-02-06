@@ -11,7 +11,7 @@ POLICY_INC = $(POLICY_DIR)/obj
 
 MUCFGVALIDATE = $(TOP_DIR)/tools/mucfgvalidate/bin/mucfgvalidate
 MUGENACPI     = $(TOP_DIR)/tools/mugenacpi/bin/mugenacpi
-MUIOBMGEN     = $(TOP_DIR)/tools/muiobmgen/bin/muiobmgen
+MUGENIOBM     = $(TOP_DIR)/tools/mugeniobm/bin/mugeniobm
 MUMSRBMGEN    = $(TOP_DIR)/tools/mumsrbmgen/bin/mumsrbmgen
 MUPACK        = $(TOP_DIR)/tools/mupack/bin/mupack
 MUPTGEN       = $(TOP_DIR)/tools/muptgen/bin/muptgen

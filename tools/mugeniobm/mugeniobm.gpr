@@ -23,11 +23,11 @@ with "../libmugen/libmugen";
 with "../libmutools/libmutools";
 with "../shared_tools";
 
-project Muiobmgen extends "../tools.gpr" is
+project Mugeniobm extends "../tools.gpr" is
 
    for Source_Dirs use ("src");
    for Object_Dir use "obj/" & Shared_Tools.Build;
    for Exec_Dir use "bin";
-   for Main use ("muiobmgen.adb");
+   for Main use ("mugeniobm.adb");
 
-end Muiobmgen;
+end Mugeniobm;

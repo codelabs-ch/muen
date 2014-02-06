@@ -1,4 +1,4 @@
-TOOL = muiobmgen
+TOOL = mugeniobm
 
 include ../tools.mk
 include ../../Makecov

@@ -30,6 +30,9 @@ is
 
    use McKae.XML.XPath.XIA;
 
+   --  Returns True if the device and resource reference names match.
+   function Is_Valid_Resource_Ref (Left, Right : DOM.Core.Node) return Boolean;
+
    -------------------------------------------------------------------------
 
    procedure IO_Port_Range_Equality (XML_Data : Muxml.XML_Data_Type)
@@ -106,9 +109,6 @@ is
       --  Returns the error message for a given reference node.
       function Error_Msg (Node : DOM.Core.Node) return String;
 
-      --  Returns True if the device I/O port name matches.
-      function Match_Port_Name (Left, Right : DOM.Core.Node) return Boolean;
-
       ----------------------------------------------------------------------
 
       function Error_Msg (Node : DOM.Core.Node) return String
@@ -127,33 +127,13 @@ is
            & "' referenced by logical I/O port '" & Logical_Name
            & "' of logical device '" & Log_Dev_Name & "' not found";
       end Error_Msg;
-
-      ----------------------------------------------------------------------
-
-      function Match_Port_Name (Left, Right : DOM.Core.Node) return Boolean
-      is
-         Ref_Dev_Name  : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => DOM.Core.Nodes.Parent_Node (N => Left),
-            Name => "physical");
-         Ref_Port_Name : constant String := DOM.Core.Elements.Get_Attribute
-             (Elem => Left,
-              Name => "physical");
-         Phy_Dev_Name  : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => DOM.Core.Nodes.Parent_Node (N => Right),
-            Name => "name");
-         Phy_Port_Name : constant String := DOM.Core.Elements.Get_Attribute
-             (Elem => Right,
-              Name => "name");
-      begin
-         return Ref_Dev_Name = Phy_Dev_Name and Ref_Port_Name = Phy_Port_Name;
-      end Match_Port_Name;
    begin
       For_Each_Match (XML_Data     => XML_Data,
                       Source_XPath => "//ioPort[@logical]",
                       Ref_XPath    => "/system/platform/device/ioPort",
                       Log_Message  => "I/O port reference(s)",
                       Error        => Error_Msg'Access,
-                      Match        => Match_Port_Name'Access);
+                      Match        => Is_Valid_Resource_Ref'Access);
    end IO_Port_References;
 
    -------------------------------------------------------------------------
@@ -256,6 +236,27 @@ is
          end;
       end loop;
    end IRQ_Number_Equality;
+
+   -------------------------------------------------------------------------
+
+   function Is_Valid_Resource_Ref (Left, Right : DOM.Core.Node) return Boolean
+   is
+      Ref_Device_Name   : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => DOM.Core.Nodes.Parent_Node (N => Left),
+         Name => "physical");
+      Ref_Resource_Name : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Left,
+         Name => "physical");
+      Phy_Device_Name   : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => DOM.Core.Nodes.Parent_Node (N => Right),
+         Name => "name");
+      Phy_Resource_Name : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Right,
+         Name => "name");
+   begin
+      return Ref_Device_Name = Phy_Device_Name and then
+        Ref_Resource_Name = Phy_Resource_Name;
+   end Is_Valid_Resource_Ref;
 
    -------------------------------------------------------------------------
 

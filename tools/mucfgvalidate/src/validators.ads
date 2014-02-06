@@ -77,7 +77,7 @@ private
 
    --  Check memory overlap of given 'Region_Type' nodes. 'Name_Attr' specifies
    --  the name and 'Address_Attr' the address attribute of a given region
-   --  node.  If two memory regions overlap, an exception is raised with the
+   --  node. If two memory regions overlap, an exception is raised with the
    --  given 'Add_Msg' string appended to log and error messages.
    procedure Check_Memory_Overlap
      (Nodes        : DOM.Core.Node_List;

@@ -56,6 +56,45 @@ is
 
    ----------------------------------------------------------------------------
 
+   procedure Add_Device_Regions
+      (Policy      :        Muxml.XML_Data_Type;
+       Map         : in out Alloc.Map.Map_Type)
+   is
+      Devices, Regions       : DOM.Core.Node_List;
+      Physical_Address, Size : Interfaces.Unsigned_64;
+
+      use Ada.Strings.Unbounded;
+      use DOM.Core.Elements;
+      use DOM.Core.Nodes;
+      use type Interfaces.Unsigned_64;
+   begin
+      Devices := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Policy.Doc,
+         XPath => "/system/platform/device");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1
+      loop
+         Regions := McKae.XML.XPath.XIA.XPath_Query
+           (N     => Item (Devices, I),
+            XPath => "memory");
+         for J in 0 .. DOM.Core.Nodes.Length (List => Regions) - 1
+         loop
+            Physical_Address := Interfaces.Unsigned_64'Value
+               (Get_Attribute (Item (Regions, J), "physicalAddress"));
+            Size := Interfaces.Unsigned_64'Value
+               (Get_Attribute (Item (Regions, J), "size"));
+            Map.Insert_Device_Region
+               (Name          => To_Unbounded_String
+                   (Get_Attribute (Item (Devices, I), "name") & "." &
+                    Get_Attribute (Item (Regions, J), "name")),
+                First_Address => Physical_Address,
+                Last_Address  => Physical_Address + Size - 1);
+         end loop;
+      end loop;
+   end Add_Device_Regions;
+
+   ----------------------------------------------------------------------------
+
    procedure Add_Empty_Regions
       (Policy      :        Muxml.XML_Data_Type;
        Map         : in out Alloc.Map.Map_Type)
@@ -253,6 +292,7 @@ is
 
       --  Add data from policy to memory map
       Add_Empty_Regions (Policy, Map);
+      Add_Device_Regions (Policy, Map);
       Add_Fixed_Regions (Policy, Map);
       Allocate_Variable_Regions (Policy, Map);
 

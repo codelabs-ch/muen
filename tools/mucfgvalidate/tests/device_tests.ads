@@ -50,4 +50,7 @@ is
    --  Validate physical and logical I/O port range equality.
    procedure Validate_IO_Port_Range_Eq;
 
+   --  Validate device memory name uniqueness.
+   procedure Validate_Devmem_Name_Uniqueness;
+
 end Device_Tests;

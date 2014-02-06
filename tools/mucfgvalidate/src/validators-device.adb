@@ -35,6 +35,64 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Device_Memory_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+      Devices : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/platform/device");
+
+      --  Check device memory names.
+      procedure Check_Names (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Names (Left, Right : DOM.Core.Node)
+      is
+         Dev_Name   : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Left),
+            Name => "name");
+         Left_Name  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "name");
+         Right_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         if Left_Name = Right_Name then
+            raise Validation_Error with "Device '" & Dev_Name & "' has"
+              & " multiple memory regions with name '" & Left_Name & "'";
+         end if;
+      end Check_Names;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
+         declare
+            Cur_Dev   : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Devices,
+                 Index => I);
+            Dev_Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Cur_Dev,
+                 Name => "name");
+            Memory    : constant DOM.Core.Node_List := XPath_Query
+              (N     => Cur_Dev,
+               XPath => "memory");
+            Mem_Count : constant Natural := DOM.Core.Nodes.Length
+              (List => Memory);
+         begin
+            if Mem_Count > 1 then
+               Mulog.Log (Msg => "Checking uniqueness of" & Mem_Count'Img
+                          & " memory region name(s) of device '"
+                          & Dev_Name & "'");
+               Compare_All (Nodes      => Memory,
+                            Comparator => Check_Names'Access);
+            end if;
+         end;
+      end loop;
+   end Device_Memory_Name_Uniqueness;
+
+   -------------------------------------------------------------------------
+
    procedure IO_Port_Range_Equality (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.

@@ -285,6 +285,8 @@ is
       Validate.Register
         (Validator => Device.IO_Port_Range_Equality'Access);
       Validate.Register
+        (Validator => Device.Device_Memory_Name_Uniqueness'Access);
+      Validate.Register
         (Validator => Scheduling.CPU_Element_Count'Access);
       Validate.Register
         (Validator => Scheduling.Subject_References'Access);

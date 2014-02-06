@@ -28,7 +28,7 @@ is
    function U (S : String) return Ada.Strings.Unbounded.Unbounded_String
       renames Ada.Strings.Unbounded.To_Unbounded_String;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Allocate_Device
    is
@@ -76,7 +76,7 @@ is
               Message => "Alloc of full empty region");
    end Allocate_Fixed_Full_Empty_Region;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Allocate_Fixed_Invalid_Double
    is
@@ -94,7 +94,7 @@ is
       when Alloc.Map.Invalid_Fixed_Allocation => null;
    end Allocate_Fixed_Invalid_Double;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Allocate_Fixed_Invalid_Exceed
    is
@@ -111,7 +111,7 @@ is
       when Alloc.Map.Invalid_Fixed_Allocation => null;
    end Allocate_Fixed_Invalid_Exceed;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Allocate_Fixed_Invalid_Left
    is
@@ -128,7 +128,7 @@ is
       when Alloc.Map.Invalid_Fixed_Allocation => null;
    end Allocate_Fixed_Invalid_Left;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Allocate_Fixed_Invalid_Multiple
    is
@@ -146,7 +146,7 @@ is
       when Alloc.Map.Invalid_Fixed_Allocation => null;
    end Allocate_Fixed_Invalid_Multiple;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Allocate_Fixed_Invalid_Outside_Empty
    is
@@ -164,7 +164,7 @@ is
       when Alloc.Map.Invalid_Fixed_Allocation => null;
    end Allocate_Fixed_Invalid_Outside_Empty;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Allocate_Fixed_Invalid_Partial_Double
    is
@@ -182,7 +182,7 @@ is
       when Alloc.Map.Invalid_Fixed_Allocation => null;
    end Allocate_Fixed_Invalid_Partial_Double;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Allocate_Fixed_Invalid_Right
    is
@@ -200,7 +200,7 @@ is
       when Alloc.Map.Invalid_Fixed_Allocation => null;
    end Allocate_Fixed_Invalid_Right;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Allocate_Fixed_Partial_Left
    is
@@ -223,7 +223,7 @@ is
               Message => "Partial allocation of empty region (left)");
    end Allocate_Fixed_Partial_Left;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Allocate_Fixed_Partial_Middle
    is
@@ -246,7 +246,7 @@ is
               Message => "Partial allocation of full empty region");
    end Allocate_Fixed_Partial_Middle;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Allocate_Fixed_Partial_Right
    is
@@ -269,7 +269,7 @@ is
               Message => "Partial allocation of empty region (right)");
    end Allocate_Fixed_Partial_Right;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Allocate_Variable_Aligned
    is
@@ -289,7 +289,7 @@ is
               Message => "Variable allocation (aligned)");
    end Allocate_Variable_Aligned;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Allocate_Variable_Below_OOM
    is
@@ -332,7 +332,7 @@ is
               Message => "Variable allocation (exact)");
    end Allocate_Variable_Exact;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Allocate_Variable_OOM
    is
@@ -348,7 +348,7 @@ is
       when Alloc.Map.Out_Of_Memory => null;
    end Allocate_Variable_OOM;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Allocate_Variable_OOM_Alignment
    is
@@ -366,7 +366,7 @@ is
       when Alloc.Map.Out_Of_Memory => null;
    end Allocate_Variable_OOM_Alignment;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Allocate_Variable_OOM_Fragmentation
    is
@@ -387,7 +387,7 @@ is
       when Alloc.Map.Out_Of_Memory => null;
    end Allocate_Variable_OOM_Fragmentation;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Device_Regions_Not_Merged
    is
@@ -510,7 +510,7 @@ is
          Name    => "Merging of device regions");
    end Initialize;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Non_Overlapping_Random
    is
@@ -534,7 +534,7 @@ is
               Message => "Memory map missmatch (random)");
    end Non_Overlapping_Random;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Non_Overlapping_Reversed
    is
@@ -558,7 +558,7 @@ is
               Message => "Memory map missmatch (reversed)");
    end Non_Overlapping_Reversed;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Non_Overlapping_Sorted
    is
@@ -582,7 +582,7 @@ is
               Message => "Memory map missmatch (sorted)");
    end Non_Overlapping_Sorted;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Ordering
    is
@@ -607,7 +607,7 @@ is
               Message => "Wrong ordering");
    end Ordering;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Overlapping_Empty_Encompassing
    is
@@ -622,7 +622,7 @@ is
       when Overlapping_Empty_Region => null;
    end Overlapping_Empty_Encompassing;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Overlapping_Empty_Included
    is
@@ -637,7 +637,7 @@ is
       when Overlapping_Empty_Region => null;
    end Overlapping_Empty_Included;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Overlapping_Empty_Left
    is
@@ -652,7 +652,7 @@ is
       when Overlapping_Empty_Region => null;
    end Overlapping_Empty_Left;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Overlapping_Empty_Right
    is
@@ -667,7 +667,7 @@ is
       when Overlapping_Empty_Region => null;
    end Overlapping_Empty_Right;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Region_Merge_Random
    is
@@ -691,7 +691,7 @@ is
               Message => "Region merge failed (random)");
    end Region_Merge_Random;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Region_Merge_Reversed
    is
@@ -715,7 +715,7 @@ is
               Message => "Region merge failed (reversed)");
    end Region_Merge_Reversed;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Region_Merge_Sorted
    is
@@ -739,7 +739,7 @@ is
               Message => "Region merge failed (sorted)");
    end Region_Merge_Sorted;
 
-   ----------------------------------------------------------------------------
+   -------------------------------------------------------------------------
 
    procedure Write_Region (R : Alloc.Map.Region_Type)
    is

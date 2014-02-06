@@ -6,8 +6,8 @@ TOOLS =           \
 	mugenacpi     \
 	mugeniobm     \
 	mugenmsrbm    \
+	mugenpt       \
 	mupack        \
-	muptgen       \
 	muspecgen     \
 	muzpgen
 

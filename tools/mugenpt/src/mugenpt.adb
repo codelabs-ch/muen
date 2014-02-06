@@ -27,7 +27,7 @@ with Muxml;
 
 with Pt.Generator;
 
-procedure Muptgen
+procedure Mugenpt
 is
 begin
    Mugen.Command_Line.Init
@@ -48,4 +48,4 @@ exception
       Mulog.Log (Level => Mulog.Error,
                  Msg   => Ada.Exceptions.Exception_Information (X => E));
       Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
-end Muptgen;
+end Mugenpt;

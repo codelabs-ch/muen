@@ -10,7 +10,7 @@ GENERATORS =      \
 	$(MUGENACPI)  \
 	$(MUGENIOBM)  \
 	$(MUGENMSRBM) \
-	$(MUPTGEN)    \
+	$(MUGENPT)    \
 	$(MUSPECGEN)  \
 	$(MUZPGEN)
 

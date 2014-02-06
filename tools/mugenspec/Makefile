@@ -1,4 +1,4 @@
-TOOL = muspecgen
+TOOL = mugenspec
 
 TEMPLATES = src/string_templates.ads
 TMPL_SRCS = $(wildcard templates/*)

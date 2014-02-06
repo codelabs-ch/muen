@@ -14,8 +14,8 @@ MUGENACPI     = $(TOP_DIR)/tools/mugenacpi/bin/mugenacpi
 MUGENIOBM     = $(TOP_DIR)/tools/mugeniobm/bin/mugeniobm
 MUGENMSRBM    = $(TOP_DIR)/tools/mugenmsrbm/bin/mugenmsrbm
 MUGENPT       = $(TOP_DIR)/tools/mugenpt/bin/mugenpt
+MUGENSPEC     = $(TOP_DIR)/tools/mugenspec/bin/mugenspec
 MUPACK        = $(TOP_DIR)/tools/mupack/bin/mupack
-MUSPECGEN     = $(TOP_DIR)/tools/muspecgen/bin/muspecgen
 MUZPGEN       = $(TOP_DIR)/tools/muzpgen/bin/muzpgen
 
 HARDWARE ?= bochs

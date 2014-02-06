@@ -7,8 +7,8 @@ TOOLS =           \
 	mugeniobm     \
 	mugenmsrbm    \
 	mugenpt       \
+	mugenspec     \
 	mupack        \
-	muspecgen     \
 	muzpgen
 
 # Implicitly built libraries

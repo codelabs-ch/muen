@@ -2,16 +2,11 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
 	<xs:complexType name="memoryType">
-		<xs:choice minOccurs="0" maxOccurs="1">
-			<xs:element name="file" type="fileContentType"/>
-			<xs:element name="fill" type="fillContentType"/>
-		</xs:choice>
-		<xs:attribute name="name"            type="nameType"       use="required"/>
-		<xs:attribute name="size"            type="memorySizeType" use="required"/>
-		<xs:attribute name="physicalAddress" type="word64Type"     use="required"/>
-		<xs:attribute name="alignment"       type="word64Type"     use="optional"/>
-		<xs:attribute name="below"           type="word64Type"     use="optional"/>
-		<xs:attribute name="caching"         type="cachingType"    use="required"/>
+		<xs:complexContent>
+			<xs:extension base="memoryBaseType">
+		      <xs:attribute name="physicalAddress" type="word64Type" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 
 </xs:schema>

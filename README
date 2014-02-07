@@ -62,10 +62,12 @@ Mailing list
 The muen-dev@googlegroups.com mailing list is used for project announcements and
 discussions regarding the Muen separation kernel.
 
-* To subscribe to the list, send a (blank) mail to muen-dev+subscribe@googlegroups.com.
+* To subscribe to the list, send a (blank) mail to
+  mailto:muen-dev+\subscribe@googlegroups.com[].
   Note: A Google account is *not* required, any email address should work.
 * To post a message to the list write an email to muen-dev@googlegroups.com.
-* The list has a Google Groups web interface: https://groups.google.com/group/muen-dev.
+* The list has a Google Groups web interface:
+  https://groups.google.com/group/muen-dev.
 
 
 Download

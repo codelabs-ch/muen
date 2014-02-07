@@ -63,6 +63,9 @@ is
         (Routine => Validate_IO_Port_Refs'Access,
          Name    => "Validate I/O port references");
       T.Add_Test_Routine
+        (Routine => Validate_IO_Port_Name_Uniqueness'Access,
+         Name    => "Validate per-device I/O port name uniqueness");
+      T.Add_Test_Routine
         (Routine => Validate_IO_Port_Range_Eq'Access,
          Name    => "Validate I/O port range equality");
       T.Add_Test_Routine
@@ -91,6 +94,27 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Devmem_Name_Uniqueness;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_IO_Port_Name_Uniqueness
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Device.Device_IO_Port_Name_Uniqueness (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Device 'vga' has multiple I/O ports with name 'port'",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_IO_Port_Name_Uniqueness;
 
    -------------------------------------------------------------------------
 

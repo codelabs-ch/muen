@@ -50,6 +50,9 @@ is
    --  Validate physical device I/O port references.
    procedure Validate_IO_Port_Refs;
 
+   --  Validate device I/O port name uniqueness.
+   procedure Validate_IO_Port_Name_Uniqueness;
+
    --  Validate physical and logical I/O port range equality.
    procedure Validate_IO_Port_Range_Eq;
 

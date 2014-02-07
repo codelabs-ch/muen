@@ -20,7 +20,7 @@
 		<device name="cmos_rtc" shared="false">
 			<ioPort name="ports" start="16#0070#" end="16#0071#"/>
 		</device>
-		<device name="port80" shared="true">
+		<device name="port80" shared="false">
 			<ioPort name="ports" start="16#0080#" end="16#0080#"/>
 		</device>
 	</platform>
@@ -1215,9 +1215,6 @@
 			<devices>
 				<device logical="ttyS0" physical="serial">
 					<ioPort logical="port1" physical="port1" start="16#03f8#" end="16#03ff#"/>
-				</device>
-				<device logical="port80" physical="port80">
-					<ioPort logical="ports" physical="ports" start="16#0080#" end="16#0080#"/>
 				</device>
 				<device logical="cmos_rtc" physical="cmos_rtc">
 					<ioPort logical="ports" physical="ports" start="16#0070#" end="16#0071#"/>

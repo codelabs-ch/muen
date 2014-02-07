@@ -29,7 +29,6 @@
 	</platform>
 
 	<memory>
-		<memory name="vga" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
 		<memory name="trampoline" physicalAddress="16#0000#" size="16#1000#" caching="WB"/>
 		<memory name="kernel_0|vmxon" size="16#1000#" below="16#0010_0000#" caching="WB"/>
 		<memory name="kernel_1|vmxon" size="16#1000#" below="16#0010_0000#" caching="WB"/>

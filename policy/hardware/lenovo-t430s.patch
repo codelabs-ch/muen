@@ -12,7 +12,7 @@ index a39a390..c53ab3c 100644
                          })
                      }
 diff --git a/policy/xml/demo_system.xml b/policy/xml/demo_system.xml
-index 840a0b7..e60cab7 100644
+index a2bf7ee..d87ac12 100644
 --- a/policy/xml/demo_system.xml
 +++ b/policy/xml/demo_system.xml
 @@ -6,7 +6,7 @@
@@ -24,16 +24,16 @@ index 840a0b7..e60cab7 100644
  		</device>
  		<device name="vga" shared="false">
  			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
-@@ -1299,7 +1299,7 @@
+@@ -1193,7 +1193,7 @@
  					<!-- All segments must be specified -->
  				</segments>
  			</vcpu>
--			<bootparams>lpj=10000 earlyprintk=serial console=hvc console=ttyS0,115200 pci=noearly notsc</bootparams>
-+			<bootparams>lpj=10000 earlyprintk=serial,0x50b0 console=hvc console=serial,0x50b0 pci=noearly notsc</bootparams>
+-			<bootparams>lpj=10000 earlyprintk=serial console=ttyS0,115200 console=hvc pci=noearly notsc</bootparams>
++			<bootparams>lpj=10000 earlyprintk=serial,0x50b0 console=serial,0x50b0 console=hvc pci=noearly notsc</bootparams>
  			<memory>
- 				<memory logical="zero_page" virtualAddress="16#0000#" writable="true" executable="false">
- 					<physical name="linux|zp"/>
-@@ -1348,7 +1348,7 @@
+ 				<memory logical="zero_page" physical="linux|zp" virtualAddress="16#0000#" writable="true" executable="false"/>
+ 				<memory logical="time_channel" physical="time_channel" virtualAddress="16#2000#" writable="false" executable="false"/>
+@@ -1214,7 +1214,7 @@
  			</memory>
  			<devices>
  				<device logical="ttyS0" physical="serial">

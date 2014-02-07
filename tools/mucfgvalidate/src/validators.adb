@@ -275,6 +275,8 @@ is
       Validate.Register
         (Validator => Device.Physical_IRQ_Uniqueness'Access);
       Validate.Register
+        (Validator => Device.Device_IRQ_Name_Uniqueness'Access);
+      Validate.Register
         (Validator => Device.Physical_IRQ_References'Access);
       Validate.Register
         (Validator => Device.IRQ_Number_Equality'Access);

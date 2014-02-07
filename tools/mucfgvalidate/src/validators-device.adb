@@ -104,6 +104,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Device_IRQ_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Device_Resource_Name_Uniqueness
+        (XML_Data      => XML_Data,
+         Resource_Type => "IRQ",
+         Element_Name  => "irq");
+   end Device_IRQ_Name_Uniqueness;
+
+   -------------------------------------------------------------------------
+
    procedure Device_Memory_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
    is
    begin

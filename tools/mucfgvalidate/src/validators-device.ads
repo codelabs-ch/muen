@@ -33,6 +33,9 @@ is
    --  Validate that physical device IRQs referenced by logical IRQs exists.
    procedure Physical_IRQ_References (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that physical IRQ names are unique per device.
+   procedure Device_IRQ_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that logical and physical device IRQ numbers are equal.
    procedure IRQ_Number_Equality (XML_Data : Muxml.XML_Data_Type);
 

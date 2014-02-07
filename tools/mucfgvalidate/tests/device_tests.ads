@@ -38,6 +38,9 @@ is
    --  Validate physical device IRQ references.
    procedure Validate_Physirq_Refs;
 
+   --  Validate physical device IRQ uniqueness.
+   procedure Validate_Physirq_Name_Uniqueness;
+
    --  Validate physical and logical IRQ equality.
    procedure Validate_IRQ_Number_Eq;
 

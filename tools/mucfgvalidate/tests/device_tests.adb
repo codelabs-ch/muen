@@ -51,6 +51,9 @@ is
         (Routine => Validate_Physirq_Refs'Access,
          Name    => "Validate physical IRQ references");
       T.Add_Test_Routine
+        (Routine => Validate_Physirq_Name_Uniqueness'Access,
+         Name    => "Validate per-device IRQ name uniqueness");
+      T.Add_Test_Routine
         (Routine => Validate_IRQ_Number_Eq'Access,
          Name    => "Validate IRQ number equality");
       T.Add_Test_Routine
@@ -261,6 +264,27 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Physdev_Refs;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Physirq_Name_Uniqueness
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Device.Device_IRQ_Name_Uniqueness (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Device 'vga' has multiple IRQs with name 'bar'",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Physirq_Name_Uniqueness;
 
    -------------------------------------------------------------------------
 

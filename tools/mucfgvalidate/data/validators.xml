@@ -22,6 +22,7 @@
 		</device>
 		<device name="vga" shared="false">
 			<irq name="bar" number="7"/>
+			<irq name="bar" number="8"/>
 			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
 			<memory name="buffer" physicalAddress="16#000c_8000#" size="16#4000#" caching="WC"/>
 		</device>

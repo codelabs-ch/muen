@@ -203,7 +203,7 @@ is
             Alignment := Interfaces.Unsigned_64'Value
                (Get_Attribute (Item (Nodes, I), "alignment"));
          else
-            --  Regions without alignement are assumed to be 4k-aligned
+            --  Regions without alignment are assumed to be 4k-aligned
             Alignment := 4096;
          end if;
 

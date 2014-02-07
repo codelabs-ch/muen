@@ -92,14 +92,14 @@ is
    procedure Allocate_Fixed_Invalid_Exceed;
 
    --  Try to allocate a region that spans multiple empty regions (empty
-   --  regions are always non-continous, as adjacent regions are merged when
+   --  regions are always non-continuous, as adjacent regions are merged when
    --  adding them!)
    procedure Allocate_Fixed_Invalid_Multiple;
 
-   --  Try to allocate a region inside an aleady allocated region
+   --  Try to allocate a region inside an already allocated region
    procedure Allocate_Fixed_Invalid_Double;
 
-   --  Try to allocate a region partially inside an aleady allocated region
+   --  Try to allocate a region partially inside an already allocated region
    procedure Allocate_Fixed_Invalid_Partial_Double;
 
    --  Allocate a region that has a special alignment
@@ -117,7 +117,7 @@ is
    procedure Allocate_Variable_OOM_Fragmentation;
 
    --  Try to allocate a region which does not fit into empty memory due to
-   --  alginment constraints
+   --  alignment constraints
    procedure Allocate_Variable_OOM_Alignment;
 
    --  Check whether ordering of elements is as intended

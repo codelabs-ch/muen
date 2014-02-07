@@ -51,7 +51,7 @@ is
        Last_Address  :        Interfaces.Unsigned_64) with
       Pre => First_Address < Last_Address;
 
-   --  Allocat a fixed region
+   --  Allocate a fixed region
    procedure Allocate_Fixed
       (Map           : in out Map_Type;
        Name          :        Ada.Strings.Unbounded.Unbounded_String;

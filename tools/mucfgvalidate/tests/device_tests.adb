@@ -71,7 +71,32 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Devmem_Name_Uniqueness'Access,
          Name    => "Validate device memory name uniqueness");
+      T.Add_Test_Routine
+        (Routine => Validate_Device_Shareability'Access,
+         Name    => "Validate device shareability");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Device_Shareability
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Device.Device_Sharing (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Non-shareable device 'serial' is referenced by multiple"
+                    & " logical devices 'kernel->log', 'linux->console'",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Device_Shareability;
 
    -------------------------------------------------------------------------
 

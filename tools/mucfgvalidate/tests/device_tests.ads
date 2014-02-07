@@ -59,4 +59,7 @@ is
    --  Validate device memory name uniqueness.
    procedure Validate_Devmem_Name_Uniqueness;
 
+   --  Validate device shareability.
+   procedure Validate_Device_Shareability;
+
 end Device_Tests;

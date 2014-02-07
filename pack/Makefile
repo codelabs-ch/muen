@@ -10,7 +10,7 @@ all: $(IMAGE)
 
 $(IMAGE): $(KNL_FILE)
 	cp $^ $@
-	$(MUPACK) -k $(KNL_NAME) -i $(POLICY_INC) -o $(OBJ_DIR) $(POLICY)
+	$(MUPACK) -k $(KNL_NAME) -i $(POLICY_INC) -o $(OBJ_DIR) $(POLICY_INC)/system.xml
 
 clean:
 	@rm -rf $(OBJ_DIR)

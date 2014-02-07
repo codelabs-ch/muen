@@ -33,15 +33,25 @@ is
    --  Returns True if the device and resource reference names match.
    function Is_Valid_Resource_Ref (Left, Right : DOM.Core.Node) return Boolean;
 
+   --  Check that the names of specified 'Resource_Type' are unique per device.
+   --  'Element_Name' specifies the name of the resource XML element.
+   procedure Check_Device_Resource_Name_Uniqueness
+     (XML_Data      : Muxml.XML_Data_Type;
+      Resource_Type : String;
+      Element_Name  : String);
+
    -------------------------------------------------------------------------
 
-   procedure Device_Memory_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   procedure Check_Device_Resource_Name_Uniqueness
+     (XML_Data      : Muxml.XML_Data_Type;
+      Resource_Type : String;
+      Element_Name  : String)
    is
       Devices : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "/system/platform/device");
 
-      --  Check device memory names.
+      --  Check device resource names.
       procedure Check_Names (Left, Right : DOM.Core.Node);
 
       ----------------------------------------------------------------------
@@ -60,7 +70,8 @@ is
       begin
          if Left_Name = Right_Name then
             raise Validation_Error with "Device '" & Dev_Name & "' has"
-              & " multiple memory regions with name '" & Left_Name & "'";
+              & " multiple " & Resource_Type & "s with name '"
+              & Left_Name & "'";
          end if;
       end Check_Names;
    begin
@@ -74,21 +85,32 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Cur_Dev,
                  Name => "name");
-            Memory    : constant DOM.Core.Node_List := XPath_Query
+            Resources : constant DOM.Core.Node_List := XPath_Query
               (N     => Cur_Dev,
-               XPath => "memory");
-            Mem_Count : constant Natural := DOM.Core.Nodes.Length
-              (List => Memory);
+               XPath => Element_Name);
+            Res_Count : constant Natural := DOM.Core.Nodes.Length
+              (List => Resources);
          begin
-            if Mem_Count > 1 then
-               Mulog.Log (Msg => "Checking uniqueness of" & Mem_Count'Img
-                          & " memory region name(s) of device '"
+            if Res_Count > 1 then
+               Mulog.Log (Msg => "Checking uniqueness of" & Res_Count'Img
+                          & " " & Resource_Type & " name(s) of device '"
                           & Dev_Name & "'");
-               Compare_All (Nodes      => Memory,
+               Compare_All (Nodes      => Resources,
                             Comparator => Check_Names'Access);
             end if;
          end;
       end loop;
+   end Check_Device_Resource_Name_Uniqueness;
+
+   -------------------------------------------------------------------------
+
+   procedure Device_Memory_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Device_Resource_Name_Uniqueness
+        (XML_Data      => XML_Data,
+         Resource_Type => "memory region",
+         Element_Name  => "memory");
    end Device_Memory_Name_Uniqueness;
 
    -------------------------------------------------------------------------

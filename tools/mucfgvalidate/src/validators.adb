@@ -283,6 +283,8 @@ is
       Validate.Register
         (Validator => Device.IO_Port_Start_Smaller_End'Access);
       Validate.Register
+        (Validator => Device.Device_IO_Port_Name_Uniqueness'Access);
+      Validate.Register
         (Validator => Device.IO_Port_References'Access);
       Validate.Register
         (Validator => Device.IO_Port_Range_Equality'Access);

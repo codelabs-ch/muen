@@ -104,6 +104,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Device_IO_Port_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Device_Resource_Name_Uniqueness
+        (XML_Data      => XML_Data,
+         Resource_Type => "I/O port",
+         Element_Name  => "ioPort");
+   end Device_IO_Port_Name_Uniqueness;
+
+   -------------------------------------------------------------------------
+
    procedure Device_IRQ_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
    is
    begin

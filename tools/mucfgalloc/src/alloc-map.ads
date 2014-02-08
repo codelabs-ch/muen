@@ -69,7 +69,9 @@ is
        Alignment   :        Interfaces.Unsigned_64 := 1) with
       Pre => 0 < Size and 0 < Alignment;
 
-   --  Insert an empty region to memory map
+   --  Invoke Process on all regions in Map matching Filter. If Filter is set
+   --  to 'Any', all regions are matched. The specified kind is matched
+   --  otherwise.
    procedure Iterate
       (Map     : Map_Type;
        Process : not null access procedure (Region : Region_Type);

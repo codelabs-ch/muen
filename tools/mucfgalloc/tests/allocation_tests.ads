@@ -47,4 +47,9 @@ is
    --  Check if overlaps between memory regions of the same device are handled
    procedure Overlap_Between_Device_Memory;
 
+private
+
+   --  Create a directory if not present
+   procedure Make_Directory (Name : String);
+
 end Allocation_Tests;

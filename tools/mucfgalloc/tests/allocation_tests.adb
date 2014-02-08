@@ -15,6 +15,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Directories;
 with Muxml;
 with Alloc.Allocator;
 with Test_Utils;
@@ -35,12 +36,13 @@ is
                    Kind => Muxml.Format_A,
                    File => "data/allocation_with_devices.in.xml");
 
-      Allocator.Write (Output_Dir => "obj",
+      Make_Directory ("obj/allocation_with_devices");
+      Allocator.Write (Output_Dir => "obj/allocation_with_devices",
                        Policy      => Policy);
 
       Assert (Condition => Test_Utils.Equal_Files
                   (Filename1 => "data/allocation_with_devices.ref.xml",
-                   Filename2 => "obj/system.xml"),
+                   Filename2 => "obj/allocation_with_devices/system.xml"),
               Message => "Invalid allocation involving devices");
    end Allocation_With_Devices;
 
@@ -54,12 +56,13 @@ is
                    Kind => Muxml.Format_A,
                    File => "data/automatic_allocation.in.xml");
 
-      Allocator.Write (Output_Dir => "obj",
+      Make_Directory ("obj/automatic_allocation");
+      Allocator.Write (Output_Dir => "obj/automatic_allocation",
                        Policy      => Policy);
 
       Assert (Condition => Test_Utils.Equal_Files
                   (Filename1 => "data/automatic_allocation.ref.xml",
-                   Filename2 => "obj/system.xml"),
+                   Filename2 => "obj/automatic_allocation/system.xml"),
               Message => "Automatic allocation");
    end Automatic_Allocation;
 
@@ -102,14 +105,25 @@ is
                    Kind => Muxml.Format_A,
                    File => "data/limited_allocation.in.xml");
 
-      Allocator.Write (Output_Dir => "obj",
+      Make_Directory ("obj/limited_allocation");
+      Allocator.Write (Output_Dir => "obj/limited_allocation",
                        Policy     => Policy);
 
       Assert (Condition => Test_Utils.Equal_Files
                   (Filename1 => "data/limited_allocation.ref.xml",
-                   Filename2 => "obj/system.xml"),
+                   Filename2 => "obj/limited_allocation/system.xml"),
               Message => "Limited allocation");
    end Limited_Allocation;
+
+   -------------------------------------------------------------------------
+
+   procedure Make_Directory (Name : String)
+   is
+   begin
+      if not Ada.Directories.Exists (Name) then
+         Ada.Directories.Create_Directory (Name);
+      end if;
+   end Make_Directory;
 
    -------------------------------------------------------------------------
 
@@ -120,8 +134,9 @@ is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_A,
                    File => "data/overlap_between_device_memory.xml");
+      Make_Directory ("obj/overlap_between_device_memory");
       Allocator.Write (Policy     => Policy,
-                       Output_Dir => "obj");
+                       Output_Dir => "obj/overlap_between_device_memory");
       pragma Unreferenced (Policy);
       Fail ("Overlap undetected");
    exception
@@ -137,8 +152,9 @@ is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_A,
                    File => "data/overlap_between_devices.xml");
+      Make_Directory ("obj/overlap_between_devices");
       Allocator.Write (Policy     => Policy,
-                       Output_Dir => "obj");
+                       Output_Dir => "obj/overlap_between_devices");
       pragma Unreferenced (Policy);
       Fail ("Overlap undetected");
    exception
@@ -154,8 +170,9 @@ is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_A,
                    File => "data/overlapping_device.xml");
+      Make_Directory ("obj/overlapping_devices");
       Allocator.Write (Policy     => Policy,
-                       Output_Dir => "obj");
+                       Output_Dir => "obj/overlapping_devices");
       pragma Unreferenced (Policy);
       Fail ("Overlap undetected");
    exception
@@ -171,8 +188,9 @@ is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_A,
                    File => "data/overlapping.xml");
+      Make_Directory ("obj/overlapping_physical_memory");
       Allocator.Write (Policy     => Policy,
-                       Output_Dir => "obj");
+                       Output_Dir => "obj/overlapping_physical_memory");
       pragma Unreferenced (Policy);
       Fail ("Overlap undetected");
    exception

@@ -317,6 +317,9 @@ is
       when E : Alloc.Map.Overlapping_Empty_Region =>
          raise Overlapping_Physical_Memory with
             Ada.Exceptions.Exception_Message (E);
+      when E : Alloc.Map.Limit_Exceeded =>
+         raise Out_Of_Memory with
+            Ada.Exceptions.Exception_Message (E);
    end Write;
 
 end Alloc.Allocator;

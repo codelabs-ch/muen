@@ -110,7 +110,7 @@ is
          raise Limit_Exceeded with
             "Region '" & To_String (Name) & "' cannot be placed below " &
             To_Hex (Number => Upper_Limit, Normalize => True) &
-            " (Start:" & To_Hex (First_Multiple, Normalize => True) & ")";
+            " (Start: " & To_Hex (First_Multiple, Normalize => True) & ")";
       end if;
 
       Reserve

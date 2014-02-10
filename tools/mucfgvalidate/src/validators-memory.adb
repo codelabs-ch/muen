@@ -497,6 +497,73 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VMXON_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
+   is
+      XPath : constant String
+        := "/system/memory/memory[contains(string(@name), '|vmxon')]";
+
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => XPath);
+
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      --  Returns True if the left and right memory regions are adjacent.
+      function Is_Adjacent_Region (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "name");
+      begin
+         return "Memory region '" & Name & "' not adjacent to other VMXON"
+           & " regions";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Is_Adjacent_Region (Left, Right : DOM.Core.Node) return Boolean
+      is
+         use Interfaces;
+
+         L_Addr : constant Unsigned_64 := Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Left,
+               Name => "physicalAddress"));
+         L_Size : constant Unsigned_64 := Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Left,
+               Name => "size"));
+         R_Addr : constant Unsigned_64 := Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Right,
+               Name => "physicalAddress"));
+         R_Size : constant Unsigned_64 := Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Right,
+               Name => "size"));
+      begin
+         return L_Addr + L_Size = R_Addr or R_Addr + R_Size = L_Addr;
+      end Is_Adjacent_Region;
+   begin
+      if DOM.Core.Nodes.Length (List => Nodes) < 2 then
+         return;
+      end if;
+
+      For_Each_Match (XML_Data     => XML_Data,
+                      Source_XPath => XPath,
+                      Ref_XPath    => XPath,
+                      Log_Message  => "VMXON region(s) for consecutiveness",
+                      Error        => Error_Msg'Access,
+                      Match        => Is_Adjacent_Region'Access);
+   end VMXON_Consecutiveness;
+
+   -------------------------------------------------------------------------
+
    procedure VMXON_In_Lowmem (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query

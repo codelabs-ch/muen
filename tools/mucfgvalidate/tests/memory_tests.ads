@@ -53,6 +53,9 @@ is
    --  Validate VMCS physical address (lowmem).
    procedure Validate_VMCS_In_Lowmem;
 
+   --  Validate VMCS region consecutiveness.
+   procedure Validate_VMCS_Consecutiveness;
+
    --  Validate physical memory address alignment.
    procedure Validate_Physaddr_Alignment;
 

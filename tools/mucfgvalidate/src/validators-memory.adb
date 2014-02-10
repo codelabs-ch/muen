@@ -45,6 +45,9 @@ is
       Ref_Nodes_Path   : String;
       XML_Data         : Muxml.XML_Data_Type);
 
+   --  Returns True if the left and right memory regions are adjacent.
+   function Is_Adjacent_Region (Left, Right : DOM.Core.Node) return Boolean;
+
    -------------------------------------------------------------------------
 
    procedure Entity_Name_Encoding (XML_Data : Muxml.XML_Data_Type)
@@ -110,6 +113,32 @@ is
          end;
       end loop;
    end Entity_Name_Encoding;
+
+   -------------------------------------------------------------------------
+
+   function Is_Adjacent_Region (Left, Right : DOM.Core.Node) return Boolean
+   is
+      use Interfaces;
+
+      L_Addr : constant Unsigned_64 := Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "physicalAddress"));
+      L_Size : constant Unsigned_64 := Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "size"));
+      R_Addr : constant Unsigned_64 := Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "physicalAddress"));
+      R_Size : constant Unsigned_64 := Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "size"));
+   begin
+      return L_Addr + L_Size = R_Addr or R_Addr + R_Size = L_Addr;
+   end Is_Adjacent_Region;
 
    -------------------------------------------------------------------------
 
@@ -509,9 +538,6 @@ is
       --  Returns the error message for a given reference node.
       function Error_Msg (Node : DOM.Core.Node) return String;
 
-      --  Returns True if the left and right memory regions are adjacent.
-      function Is_Adjacent_Region (Left, Right : DOM.Core.Node) return Boolean;
-
       ----------------------------------------------------------------------
 
       function Error_Msg (Node : DOM.Core.Node) return String
@@ -523,32 +549,6 @@ is
          return "Memory region '" & Name & "' not adjacent to other VMXON"
            & " regions";
       end Error_Msg;
-
-      ----------------------------------------------------------------------
-
-      function Is_Adjacent_Region (Left, Right : DOM.Core.Node) return Boolean
-      is
-         use Interfaces;
-
-         L_Addr : constant Unsigned_64 := Unsigned_64'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => Left,
-               Name => "physicalAddress"));
-         L_Size : constant Unsigned_64 := Unsigned_64'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => Left,
-               Name => "size"));
-         R_Addr : constant Unsigned_64 := Unsigned_64'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => Right,
-               Name => "physicalAddress"));
-         R_Size : constant Unsigned_64 := Unsigned_64'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => Right,
-               Name => "size"));
-      begin
-         return L_Addr + L_Size = R_Addr or R_Addr + R_Size = L_Addr;
-      end Is_Adjacent_Region;
    begin
       if DOM.Core.Nodes.Length (List => Nodes) < 2 then
          return;

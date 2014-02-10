@@ -41,6 +41,9 @@ is
    --  Validate VMXON physical address (lowmem).
    procedure Validate_VMXON_In_Lowmem;
 
+   --  Validate VMXON region consecutiveness.
+   procedure Validate_VMXON_Consecutiveness;
+
    --  Validate presence of VMCS regions.
    procedure Validate_VMCS_Presence;
 

@@ -55,6 +55,9 @@ is
         (Routine => Validate_VMXON_In_Lowmem'Access,
          Name    => "Validate physical address of VMXON regions");
       T.Add_Test_Routine
+        (Routine => Validate_VMXON_Consecutiveness'Access,
+         Name    => "Validate consecutiveness of VMXON regions");
+      T.Add_Test_Routine
         (Routine => Validate_VMCS_Presence'Access,
          Name    => "Validate presence of VMCS regions");
       T.Add_Test_Routine
@@ -578,6 +581,28 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_VMCS_Size;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_VMXON_Consecutiveness
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Memory.VMXON_Consecutiveness (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Memory region 'invalid_0|vmxon' not adjacent to other"
+                    & " VMXON regions",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_VMXON_Consecutiveness;
 
    -------------------------------------------------------------------------
 

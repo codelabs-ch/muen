@@ -98,7 +98,7 @@ environment listed in the following table.
 | Ada compiler         | GNAT GPL 2013 (20130314)
 | GCC version          | 4.7.4 20130416 for GNAT GPL 2013 (20130314)
 | SPARK version        | GPL 2012
-| Emulator             | Bochs from svn (>= r11908)
+| Emulator             | Bochs from svn (>= r12175)
 | Hardware             | Lenovo T430s with Intel Core i7 3520M
 | Intel AMT SoL client | amtterm (>= commit 0ece513...)
 |===================================================================

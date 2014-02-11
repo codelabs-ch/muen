@@ -56,6 +56,15 @@ private
 
    procedure Allocate_Variable_Regions
       (Policy :        Muxml.XML_Data_Type;
+       Path   :        String;
+       Map    : in out Alloc.Map.Map_Type);
+
+   procedure Allocate_Variable_Empty_Regions
+      (Policy :        Muxml.XML_Data_Type;
+       Map    : in out Alloc.Map.Map_Type);
+
+   procedure Allocate_Variable_File_Regions
+      (Policy :        Muxml.XML_Data_Type;
        Map    : in out Alloc.Map.Map_Type);
 
    type Region_Type is

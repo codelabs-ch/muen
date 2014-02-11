@@ -164,8 +164,36 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Allocate_Variable_Empty_Regions
+      (Policy :        Muxml.XML_Data_Type;
+       Map    : in out Alloc.Map.Map_Type)
+   is
+   begin
+      Allocate_Variable_Regions
+         (Policy => Policy,
+          Path   =>
+            "/system/memory/*[not (@physicalAddress) and not (file)]",
+          Map    => Map);
+   end Allocate_Variable_Empty_Regions;
+
+   -------------------------------------------------------------------------
+
+   procedure Allocate_Variable_File_Regions
+      (Policy :        Muxml.XML_Data_Type;
+       Map    : in out Alloc.Map.Map_Type)
+   is
+   begin
+      Allocate_Variable_Regions
+         (Policy => Policy,
+          Path   => "/system/memory/*[not (@physicalAddress) and (file)]",
+          Map    => Map);
+   end Allocate_Variable_File_Regions;
+
+   -------------------------------------------------------------------------
+
    procedure Allocate_Variable_Regions
       (Policy :        Muxml.XML_Data_Type;
+       Path   :        String;
        Map    : in out Alloc.Map.Map_Type)
    is
       Nodes                  : DOM.Core.Node_List;
@@ -195,7 +223,7 @@ is
 
       Nodes := McKae.XML.XPath.XIA.XPath_Query
         (N     => Policy.Doc,
-         XPath => "/system/memory/*[not (@physicalAddress)]");
+         XPath => Path);
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1
       loop
@@ -297,7 +325,8 @@ is
       Add_Empty_Regions (Policy, Map);
       Add_Device_Regions (Policy, Map);
       Add_Fixed_Regions (Policy, Map);
-      Allocate_Variable_Regions (Policy, Map);
+      Allocate_Variable_File_Regions (Policy, Map);
+      Allocate_Variable_Empty_Regions (Policy, Map);
 
       --  Update DOM tree
       Map.Iterate (Update_DOM'Access, Alloc.Map.Allocated);

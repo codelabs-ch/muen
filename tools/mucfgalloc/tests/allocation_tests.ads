@@ -47,6 +47,9 @@ is
    --  Check if overlaps between memory regions of the same device are handled
    procedure Overlap_Between_Device_Memory;
 
+   --  Check whether file-backed regions are allocated first
+   procedure File_Backed_First;
+
 private
 
    --  Create a directory if not present

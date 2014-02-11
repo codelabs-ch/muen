@@ -68,6 +68,26 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure File_Backed_First
+   is
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_A,
+                   File => "data/file_backed_first.in.xml");
+
+      Make_Directory ("obj/file_backed_first");
+      Allocator.Write (Output_Dir => "obj/file_backed_first",
+                       Policy      => Policy);
+
+      Assert (Condition => Test_Utils.Equal_Files
+                  (Filename1 => "data/file_backed_first.ref.xml",
+                   Filename2 => "obj/file_backed_first/system.xml"),
+              Message => "File-backed first");
+   end File_Backed_First;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -93,6 +113,9 @@ is
       T.Add_Test_Routine
         (Routine => Overlap_Between_Device_Memory'Access,
          Name    => "Overlap between memory of one device");
+      T.Add_Test_Routine
+        (Routine => File_Backed_First'Access,
+         Name    => "Invalid allocation of file-backed regions");
    end Initialize;
 
    -------------------------------------------------------------------------

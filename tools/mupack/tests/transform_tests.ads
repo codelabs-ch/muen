@@ -29,6 +29,9 @@ is
    --  Default transform.
    procedure Default_Transform;
 
+   --  Default transform: nonexistent file.
+   procedure Default_Transform_Nonexistent;
+
    --  Test patching of 32/64-bit bzImage entry points.
    procedure Patch_Bzimage;
 

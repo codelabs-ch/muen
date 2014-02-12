@@ -52,7 +52,7 @@ is
                   Offset  => 16#0010#,
                   Format  => Parser.Elf),
             2 => (Name    => U ("linux|acpi_rsdp"),
-                  Path    => U ("linux_rsdp"),
+                  Path    => U ("obj2.o"),
                   Address => 16#0011_3000#,
                   Size    => 16#0001_3000#,
                   Offset  => 16#0001_b000#,
@@ -65,7 +65,7 @@ is
                   Offset  => 16#0010#,
                   Format  => Parser.Elf),
             2 => (Name    => U ("linux_acpi_rsdp"),
-                  Path    => U ("data/linux_rsdp"),
+                  Path    => U ("data/obj2.o"),
                   Address => 16#0011_3000#,
                   Size    => 16#0001_3000#,
                   Offset  => 16#0001_b000#,
@@ -83,6 +83,29 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Default_Transform_Nonexistent
+   is
+      use type Parser.File_Array;
+
+      Files : Parser.File_Array
+        := (1 => (Name    => U ("nonexistent"),
+                  Path    => U ("nonexistent.o"),
+                  Address => 16#0010_0000#,
+                  Size    => 16#0001_3000#,
+                  Offset  => 16#0010#,
+                  Format  => Parser.Iobm));
+   begin
+      Command_Line.Test.Set_Input_Dir  (Path => "data");
+
+      File_Transforms.Process (Files => Files);
+      Fail (Message => "Exception expected");
+
+   exception
+      when Pack.Pack_Error => null;
+   end Default_Transform_Nonexistent;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -90,6 +113,9 @@ is
       T.Add_Test_Routine
         (Routine => Default_Transform'Access,
          Name    => "Default transform");
+      T.Add_Test_Routine
+        (Routine => Default_Transform_Nonexistent'Access,
+         Name    => "Default transform (nonexistent file)");
       T.Add_Test_Routine
         (Routine => Patch_Bzimage'Access,
          Name    => "Patch Linux bzImage");

@@ -21,6 +21,7 @@ with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 with Ada.Streams.Stream_IO;
 with Ada.IO_Exceptions;
+with Ada.Directories;
 
 with Interfaces;
 
@@ -40,8 +41,8 @@ is
    function Normalize (Name : String) return String;
 
    --  Default transform: prepend input directory to file path and normalize
-   --  names. This transform must be called from the other transform
-   --  implementations first.
+   --  names. Also check that the file exists. This transform must be called
+   --  from the other transform implementations first.
    procedure Default_Transform (File : access Parser.File_Entry_Type);
 
    --  Patch Linux bzImage.
@@ -60,7 +61,14 @@ is
    procedure Default_Transform (File : access Parser.File_Entry_Type)
    is
       use type Ada.Strings.Unbounded.Unbounded_String;
+
+      Path : constant String := Command_Line.Get_Input_Dir & "/"
+        & S (File.Path);
    begin
+      if not Ada.Directories.Exists (Name => Path) then
+         raise Pack_Error with "File '" & Path & "' does not exist";
+      end if;
+
       File.Path := Command_Line.Get_Input_Dir & "/" & File.Path;
       File.Name := U (Normalize (Name => S (File.Name)));
    end Default_Transform;

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,10 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Streams;
+
 with Interfaces;
 
 package Pack.Image
 is
+
+   --  System image.
+   type Image_Type
+     (End_Address : Ada.Streams.Stream_Element_Offset) is private;
 
    --  Add file to kernel image. The file is added as new section with
    --  the specified physical address and name.
@@ -33,5 +39,14 @@ is
    procedure To_Binary
      (Src_Elf : String;
       Dst_Bin : String);
+
+private
+
+   use type Ada.Streams.Stream_Element_Offset;
+
+   type Image_Type (End_Address : Ada.Streams.Stream_Element_Offset) is record
+      Data : Ada.Streams.Stream_Element_Array (0 .. End_Address)
+        := (others => 0);
+   end record;
 
 end Pack.Image;

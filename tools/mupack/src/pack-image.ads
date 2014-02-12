@@ -27,6 +27,11 @@ is
    type Image_Type
      (End_Address : Ada.Streams.Stream_Element_Offset) is private;
 
+   --  Write system image content to file given by filename.
+   procedure Write
+     (Image    : Image_Type;
+      Filename : String);
+
    --  Add file to kernel image. The file is added as new section with
    --  the specified physical address and name.
    procedure Add_Section

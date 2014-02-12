@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -53,5 +53,20 @@ is
       OS.Execute (Command => Objcopy & " -O binary --set-section-flags "
                   & ".bss=alloc,load,contents " & Src_Elf & " " & Dst_Bin);
    end To_Binary;
+
+   -------------------------------------------------------------------------
+
+   procedure Write
+     (Image    : Image_Type;
+      Filename : String)
+   is
+      File : Ada.Streams.Stream_IO.File_Type;
+   begin
+      Mutools.Files.Open (Filename => Filename,
+                          File     => File);
+      Ada.Streams.Stream_IO.Write (File => File,
+                                   Item => Image.Data);
+      Ada.Streams.Stream_IO.Close (File => File);
+   end Write;
 
 end Pack.Image;

@@ -47,4 +47,7 @@ is
    --  Parse given policy and return list of files to pack.
    function Parse (Policy : String) return File_Array;
 
+   --  Return size of resulting image in bytes.
+   function Get_Image_Size (Files : File_Array) return Interfaces.Unsigned_64;
+
 end Pack.Parser;

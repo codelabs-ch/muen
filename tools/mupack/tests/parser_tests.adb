@@ -18,6 +18,8 @@
 
 with Ada.Strings.Unbounded;
 
+with Interfaces;
+
 with Pack.Parser;
 
 package body Parser_Tests
@@ -64,6 +66,33 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Image_Size
+   is
+      use type Interfaces.Unsigned_64;
+
+      Empty : constant Parser.File_Array (1 .. 0) := (others => <>);
+      Files : constant Parser.File_Array
+        := (1 => (Name    => U ("linux|acpi_rsdp"),
+                  Path    => U ("sections.ref"),
+                  Address => 16#0000_4000#,
+                  Size    => 16#0000_3000#,
+                  Offset  => 0,
+                  Format  => Parser.Acpi_Rsdp),
+            2 => (Name    => U ("linux|bin"),
+                  Path    => U ("obj1.o"),
+                  Address => 16#0000_1000#,
+                  Size    => 16#0000_7000#,
+                  Offset  => 16#0001_b000#,
+                  Format  => Parser.Elf));
+   begin
+      Assert (Condition => Parser.Get_Image_Size (Files => Empty) = 0,
+              Message   => "Zero expected");
+      Assert (Condition => Parser.Get_Image_Size (Files => Files) = 16#8000#,
+              Message   => "Image size mismatch");
+   end Image_Size;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -71,6 +100,9 @@ is
       T.Add_Test_Routine
         (Routine => Extract_Files'Access,
          Name    => "Extract file information");
+      T.Add_Test_Routine
+        (Routine => Image_Size'Access,
+         Name    => "Calculate image size");
    end Initialize;
 
 end Parser_Tests;

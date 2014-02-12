@@ -29,4 +29,7 @@ is
    --  Extract file information from policy.
    procedure Extract_Files;
 
+   --  Calculate image size.
+   procedure Image_Size;
+
 end Parser_Tests;

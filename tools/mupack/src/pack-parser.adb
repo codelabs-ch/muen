@@ -28,6 +28,23 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Image_Size (Files : File_Array) return Interfaces.Unsigned_64
+   is
+      use type Interfaces.Unsigned_64;
+
+      Size : Interfaces.Unsigned_64 := 0;
+   begin
+      for I in Files'Range loop
+         if Files (I).Address + Files (I).Size > Size then
+            Size := Files (I).Address + Files (I).Size;
+         end if;
+      end loop;
+
+      return Size;
+   end Get_Image_Size;
+
+   -------------------------------------------------------------------------
+
    function Parse (Policy : String) return File_Array
    is
       Data       : Muxml.XML_Data_Type;

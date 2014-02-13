@@ -20,12 +20,19 @@ with Ada.Streams;
 
 with Interfaces;
 
+with Pack.Parser;
+
 package Pack.Image
 is
 
    --  System image.
    type Image_Type
      (End_Address : Ada.Streams.Stream_Element_Offset) is private;
+
+   --  Add given file to system image.
+   procedure Add_File
+     (Image : in out Image_Type;
+      File  :        Parser.File_Entry_Type);
 
    --  Write system image content to file given by filename.
    procedure Write

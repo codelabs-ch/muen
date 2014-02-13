@@ -16,7 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Streams.Stream_IO;
+
 with Mutools.Utils;
+with Mutools.Files;
 
 with Pack.OS;
 
@@ -24,6 +27,48 @@ package body Pack.Image
 is
 
    Objcopy : constant String := "/usr/bin/objcopy";
+
+   -------------------------------------------------------------------------
+
+   procedure Add_File
+     (Image : in out Image_Type;
+      File  :        Parser.File_Entry_Type)
+   is
+      use Ada.Streams;
+      use type Interfaces.Unsigned_64;
+
+      Max_Size : constant Stream_Element_Offset
+        := Stream_Element_Offset (File.Size);
+      Fd       : Stream_IO.File_Type;
+      Last     : Stream_Element_Offset;
+      Buffer   : Stream_Element_Array (0 .. Max_Size - 1);
+   begin
+      Stream_IO.Open (File => Fd,
+                      Mode => Stream_IO.In_File,
+                      Name => S (File.Path));
+      Stream_IO.Read (File => Fd,
+                      Item => Buffer,
+                      Last => Last);
+
+      declare
+         File_Start : constant Stream_Element_Offset
+           := Stream_Element_Offset (File.Address);
+         File_End   : constant Stream_Element_Offset
+           := Stream_Element_Offset (File.Address) + Last;
+      begin
+         if File_End > Image.Data'Last then
+            Stream_IO.Close (File => Fd);
+            raise Pack_Error with "Image end address " & Mutools.Utils.To_Hex
+              (Number => Interfaces.Unsigned_64 (Image.Data'Last))
+              & " below file end address " & Mutools.Utils.To_Hex
+              (Number => Interfaces.Unsigned_64 (File_End));
+         end if;
+
+         Image.Data (File_Start .. File_End) := Buffer (Buffer'First .. Last);
+      end;
+
+      Stream_IO.Close (File => Fd);
+   end Add_File;
 
    -------------------------------------------------------------------------
 

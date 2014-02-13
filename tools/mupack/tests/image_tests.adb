@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,18 +16,71 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Exceptions;
 with Ada.Directories;
+with Ada.Strings.Unbounded;
 
 with Test_Utils;
 
 with Pack.OS;
 with Pack.Image;
+with Pack.Parser;
 
 package body Image_Tests
 is
 
    use Ahven;
    use Pack;
+
+   function U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_File_To_Image
+   is
+      Img   : Image.Image_Type (End_Address => 16#2d#);
+      Fname : constant String := "obj/test.img";
+   begin
+      Image.Add_File (Image => Img,
+                      File  => (Name    => U ("testfile"),
+                                Path    => U ("data/pattern"),
+                                Address => 16#0010#,
+                                Size    => 16#0020#,
+                                Offset  => 0,
+                                Format  => Parser.Elf));
+      Image.Write (Image    => Img,
+                   Filename => Fname);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Fname,
+               Filename2 => "data/img.ref"),
+              Message   => "Image mismatch");
+      Ada.Directories.Delete_File (Name => Fname);
+   end Add_File_To_Image;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_File_To_Image_Small
+   is
+      Img : Image.Image_Type (End_Address => 10);
+   begin
+      Image.Add_File (Image => Img,
+                      File  => (Name    => U ("testfile"),
+                                Path    => U ("data/pattern"),
+                                Address => 16#0000#,
+                                Size    => 16#001c#,
+                                Offset  => 0,
+                                Format  => Parser.Elf));
+      Fail (Message => "Exception expected");
+
+   exception
+      when E : Pack_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Image end address 16#A# below file end address 16#1B#",
+                 Message   => "Exception mismatch");
+   end Add_File_To_Image_Small;
 
    -------------------------------------------------------------------------
 
@@ -62,6 +115,12 @@ is
       T.Add_Test_Routine
         (Routine => Add_Section_To_Elf'Access,
          Name    => "Add section to ELF");
+      T.Add_Test_Routine
+        (Routine => Add_File_To_Image'Access,
+         Name    => "Add file to system image");
+      T.Add_Test_Routine
+        (Routine => Add_File_To_Image_Small'Access,
+         Name    => "Add file to system image (too small)");
    end Initialize;
 
 end Image_Tests;

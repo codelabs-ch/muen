@@ -104,6 +104,7 @@ is
    is
       Nodes                  : DOM.Core.Node_List;
       Physical_Address, Size : Interfaces.Unsigned_64;
+      Allocatable            : Boolean;
 
       use DOM.Core.Elements;
       use DOM.Core.Nodes;
@@ -119,6 +120,14 @@ is
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1
       loop
+         --  @Allocatable is True if unset
+         if Get_Attribute (Item (Nodes, I), "allocatable") = "" then
+            Allocatable := True;
+         else
+            Allocatable := Boolean'Value
+               (Get_Attribute (Item (Nodes, I), "allocatable"));
+         end if;
+
          Physical_Address := Interfaces.Unsigned_64'Value
             (Get_Attribute (Item (Nodes, I), "physicalAddress"));
          Size := Interfaces.Unsigned_64'Value
@@ -126,6 +135,7 @@ is
          Map.Insert_Empty_Region
             (Name          => Ada.Strings.Unbounded.To_Unbounded_String
                                  (Get_Attribute (Item (Nodes, I), "name")),
+             Allocatable   => Allocatable,
              First_Address => Physical_Address,
              Last_Address  => Physical_Address + Size - 1);
       end loop;
@@ -290,7 +300,8 @@ is
              " " &
              To_Hex (Region.Last_Address, Normalize => True) &
              " " &
-             Region.Kind'Img & " " & To_String (Region.Name));
+             Region.Kind'Img & " " & To_String (Region.Name) &
+             " ALLOCATABLE: " & Region.Allocatable'Img);
       end Dump_Memory_Map;
 
       procedure Update_DOM (Region : Alloc.Map.Region_Type);

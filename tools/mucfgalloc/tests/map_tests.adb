@@ -40,8 +40,8 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region  (U ("RAM1"),     0,  999);
-      M.Insert_Empty_Region  (U ("RAM2"),  1000, 1999);
+      M.Insert_Empty_Region  (U ("RAM1"), True,    0,  999);
+      M.Insert_Empty_Region  (U ("RAM2"), True, 1000, 1999);
       M.Insert_Device_Region (U ("DEV1"), 11000, 15000);
       M.Allocate_Fixed (U ("APP1"), 500, 799);
       M.Allocate_Fixed (U ("D1"), 11000, 15000);
@@ -61,9 +61,9 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 1002, 2000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 11000, 15000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 0,    1000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 1002, 2000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 11000, 15000);
       M.Allocate_Fixed (U ("FIXED1"), 1002, 2000);
       Create (Output_File, Out_File, "obj/alloc_fixed_full_empty_region.txt");
       M.Iterate (Write_Region'Access);
@@ -80,9 +80,9 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 1002, 2000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 5000, 10000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 0,    1000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 1002, 2000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 5000, 10000);
       M.Allocate_Fixed (U ("FIXED1"), 1002, 2000);
       M.Allocate_Fixed (U ("FIXED2"), 1002, 2000);
       Fail ("Double allocation undetected");
@@ -96,9 +96,9 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 1200, 2000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 5000, 10000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 0,    1000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 1200, 2000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 5000, 10000);
       M.Allocate_Fixed (U ("FIXED1"), 1000, 3000);
       Fail ("Invalid fixed allocation undetected (exceeding)");
    exception
@@ -111,9 +111,9 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 1200, 2000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 5000, 10000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 0,    1000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 1200, 2000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 5000, 10000);
       M.Allocate_Fixed (U ("FIXED1"), 1100, 1500);
       Fail ("Invalid fixed allocation undetected (left)");
    exception
@@ -126,10 +126,10 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 1500, 2000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 2500, 3000);
-      M.Insert_Empty_Region (U ("EMPTY4"), 5000, 10000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 0,    1000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 1500, 2000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 2500, 3000);
+      M.Insert_Empty_Region (U ("EMPTY4"), True, 5000, 10000);
       M.Allocate_Fixed (U ("FIXED1"), 1700, 2800);
       Fail ("Invalid fixed allocation of multiple empty regions");
    exception
@@ -142,10 +142,10 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 1500, 2000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 2500, 3000);
-      M.Insert_Empty_Region (U ("EMPTY4"), 5000, 10000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 0,    1000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 1500, 2000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 2500, 3000);
+      M.Insert_Empty_Region (U ("EMPTY4"), True, 5000, 10000);
       M.Allocate_Fixed (U ("FIXED1"), 2200, 2300);
       Fail ("Invalid fixed allocation outside empty regions");
    exception
@@ -158,9 +158,9 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 1200, 2000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 5000, 10000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 0,    1000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 1200, 2000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 5000, 10000);
       M.Allocate_Fixed (U ("FIXED1"), 1250, 1800);
       M.Allocate_Fixed (U ("FIXED2"), 1300, 1700);
       Fail ("Invalid fixed double-allocation undetected");
@@ -174,10 +174,10 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 1500, 2000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 2500, 3000);
-      M.Insert_Empty_Region (U ("EMPTY4"), 5000, 10000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 0,    1000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 1500, 2000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 2500, 3000);
+      M.Insert_Empty_Region (U ("EMPTY4"), True, 5000, 10000);
       M.Allocate_Fixed (U ("FIXED1"), 1600, 2300);
       Fail ("Invalid fixed allocation outside empty regions (right)");
    exception
@@ -190,10 +190,10 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 1500, 2000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 2500, 3000);
-      M.Insert_Empty_Region (U ("EMPTY4"), 5000, 10000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 0,    1000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 1500, 2000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 2500, 3000);
+      M.Insert_Empty_Region (U ("EMPTY4"), True, 5000, 10000);
       M.Allocate_Fixed (U ("FIXED1"), 2500, 2800);
       Create (Output_File, Out_File, "obj/alloc_fixed_partial_left.txt");
       M.Iterate (Write_Region'Access);
@@ -210,9 +210,9 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 1002, 2000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 11000, 15000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 0,    1000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 1002, 2000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 11000, 15000);
       M.Allocate_Fixed (U ("FIXED"), 1500, 1800);
       Create (Output_File, Out_File, "obj/alloc_fixed_partial_middle.txt");
       M.Iterate (Write_Region'Access);
@@ -229,10 +229,10 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 1500, 2000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 2500, 3000);
-      M.Insert_Empty_Region (U ("EMPTY4"), 5000, 10000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 0,    1000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 1500, 2000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 2500, 3000);
+      M.Insert_Empty_Region (U ("EMPTY4"), True, 5000, 10000);
       M.Allocate_Fixed (U ("FIXED1"), 2800, 3000);
       Create (Output_File, Out_File, "obj/alloc_fixed_partial_right.txt");
       M.Iterate (Write_Region'Access);
@@ -249,7 +249,7 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 100,    1000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 100,    1000);
       M.Allocate_Variable (Size => 400, Alignment => 500, Name => U ("mem1"));
       Create (Output_File, Out_File, "obj/alloc_variable_alignment.txt");
       M.Iterate (Write_Region'Access);
@@ -266,10 +266,10 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 0,     499);
-      M.Insert_Empty_Region (U ("EMPTY2"), 1500, 1999);
-      M.Insert_Empty_Region (U ("EMPTY3"), 2500, 2999);
-      M.Insert_Empty_Region (U ("EMPTY4"), 5000, 10000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 0,     499);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 1500, 1999);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 2500, 2999);
+      M.Insert_Empty_Region (U ("EMPTY4"), True, 5000, 10000);
       M.Allocate_Variable
          (Size => 1000, Name => U ("mem1"), Upper_Limit => 3000);
       Fail ("Invalid constraints undetected");
@@ -283,10 +283,10 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 1500, 2000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 2500, 3000);
-      M.Insert_Empty_Region (U ("EMPTY4"), 5000, 10000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 0,    1000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 1500, 2000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 2500, 3000);
+      M.Insert_Empty_Region (U ("EMPTY4"), True, 5000, 10000);
       M.Allocate_Variable (Size => 1500, Name => U ("mem1"));
       Create (Output_File, Out_File, "obj/alloc_variable_exact.txt");
       M.Iterate (Write_Region'Access);
@@ -303,7 +303,7 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 0,    1000);
       M.Allocate_Variable (Size => 1500, Name => U ("mem1"));
       Fail ("Out-of-memory undetected");
    exception
@@ -316,9 +316,9 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 1,    1000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 2001, 3000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 4001, 5000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 1,    1000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 2001, 3000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 4001, 5000);
       M.Allocate_Variable (Size => 1000, Alignment => 123, Name => U ("mem1"));
       Fail ("Out-of-memory undetected");
    exception
@@ -331,9 +331,9 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 2000, 3000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 4000, 5000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 0,    1000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 2000, 3000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 4000, 5000);
       M.Allocate_Variable (Size => 800, Name => U ("mem1"));
       M.Allocate_Variable (Size => 800, Name => U ("mem2"));
       M.Allocate_Variable (Size => 800, Name => U ("mem3"));
@@ -349,10 +349,10 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 1001, 2000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 2001, 3000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 1001, 2000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 2001, 3000);
       M.Insert_Device_Region (U ("DEVICE1"), 3001, 4000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 4001, 5000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 4001, 5000);
       M.Insert_Device_Region (U ("DEVICE2"), 6001, 7000);
       M.Insert_Device_Region (U ("DEVICE3"), 7001, 9000);
       Create (Output_File, Out_File, "obj/device_regions_not_merged.txt");
@@ -468,11 +468,11 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 11000, 15000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 1002, 2000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 5000, 10000);
-      M.Insert_Empty_Region (U ("EMPTY4"), 0,    1000);
-      M.Insert_Empty_Region (U ("EMPTY5"), 16000, 30000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 11000, 15000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 1002, 2000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 5000, 10000);
+      M.Insert_Empty_Region (U ("EMPTY4"), True, 0,    1000);
+      M.Insert_Empty_Region (U ("EMPTY5"), True, 16000, 30000);
       Create (Output_File, Out_File, "obj/non_overlapping_random.txt");
       M.Iterate (Write_Region'Access);
       Close (Output_File);
@@ -488,11 +488,11 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 16000, 30000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 1002, 2000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 11000, 15000);
-      M.Insert_Empty_Region (U ("EMPTY4"), 5000, 10000);
-      M.Insert_Empty_Region (U ("EMPTY5"), 0,    1000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 16000, 30000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 1002, 2000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 11000, 15000);
+      M.Insert_Empty_Region (U ("EMPTY4"), True, 5000, 10000);
+      M.Insert_Empty_Region (U ("EMPTY5"), True, 0,    1000);
       Create (Output_File, Out_File, "obj/non_overlapping_reversed.txt");
       M.Iterate (Write_Region'Access);
       Close (Output_File);
@@ -508,11 +508,11 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 0,    1000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 1002, 2000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 5000, 10000);
-      M.Insert_Empty_Region (U ("EMPTY4"), 11000, 15000);
-      M.Insert_Empty_Region (U ("EMPTY5"), 16000, 30000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 0,    1000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 1002, 2000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 5000, 10000);
+      M.Insert_Empty_Region (U ("EMPTY4"), True, 11000, 15000);
+      M.Insert_Empty_Region (U ("EMPTY5"), True, 16000, 30000);
       Create (Output_File, Out_File, "obj/non_overlapping_sorted.txt");
       M.Iterate (Write_Region'Access);
       Close (Output_File);
@@ -528,7 +528,7 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 0, 999);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 0, 999);
 
       --  Only name differs
       M.Allocate_Variable (Size => 500, Alignment => 100, Name => U ("mem1"));
@@ -549,8 +549,8 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 100,  900);
-      M.Insert_Empty_Region (U ("EMPTY2"), 0,   1000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 100,  900);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 0,   1000);
       Fail ("Overlap undetected");
    exception
       when Overlapping_Empty_Region => null;
@@ -562,8 +562,8 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 0,   1000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 100,  900);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 0,   1000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 100,  900);
       Fail ("Overlap undetected");
    exception
       when Overlapping_Empty_Region => null;
@@ -575,8 +575,8 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 0,   1000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 900, 2000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 0,   1000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 900, 2000);
       Fail ("Overlap undetected");
    exception
       when Overlapping_Empty_Region => null;
@@ -588,8 +588,8 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 900, 2000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 0,   1000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 900, 2000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 0,   1000);
       Fail ("Overlap undetected");
    exception
       when Overlapping_Empty_Region => null;
@@ -601,11 +601,11 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 12001, 15000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 1000, 2000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 4000, 10000);
-      M.Insert_Empty_Region (U ("EMPTY4"), 11000, 12000);
-      M.Insert_Empty_Region (U ("EMPTY5"), 2001, 3000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 12001, 15000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 1000, 2000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 4000, 10000);
+      M.Insert_Empty_Region (U ("EMPTY4"), True, 11000, 12000);
+      M.Insert_Empty_Region (U ("EMPTY5"), True, 2001, 3000);
       Create (Output_File, Out_File, "obj/merge_random.txt");
       M.Iterate (Write_Region'Access);
       Close (Output_File);
@@ -621,11 +621,11 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 12001, 15000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 11000, 12000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 4000, 10000);
-      M.Insert_Empty_Region (U ("EMPTY4"), 2001, 3000);
-      M.Insert_Empty_Region (U ("EMPTY5"), 1000, 2000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 12001, 15000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 11000, 12000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 4000, 10000);
+      M.Insert_Empty_Region (U ("EMPTY4"), True, 2001, 3000);
+      M.Insert_Empty_Region (U ("EMPTY5"), True, 1000, 2000);
       Create (Output_File, Out_File, "obj/merge_reversed.txt");
       M.Iterate (Write_Region'Access);
       Close (Output_File);
@@ -641,11 +641,11 @@ is
    is
       M : Map_Type;
    begin
-      M.Insert_Empty_Region (U ("EMPTY1"), 1000, 2000);
-      M.Insert_Empty_Region (U ("EMPTY2"), 2001, 3000);
-      M.Insert_Empty_Region (U ("EMPTY3"), 4000, 10000);
-      M.Insert_Empty_Region (U ("EMPTY4"), 11000, 12000);
-      M.Insert_Empty_Region (U ("EMPTY5"), 12001, 15000);
+      M.Insert_Empty_Region (U ("EMPTY1"), True, 1000, 2000);
+      M.Insert_Empty_Region (U ("EMPTY2"), True, 2001, 3000);
+      M.Insert_Empty_Region (U ("EMPTY3"), True, 4000, 10000);
+      M.Insert_Empty_Region (U ("EMPTY4"), True, 11000, 12000);
+      M.Insert_Empty_Region (U ("EMPTY5"), True, 12001, 15000);
       Create (Output_File, Out_File, "obj/merge_sorted.txt");
       M.Iterate (Write_Region'Access);
       Close (Output_File);

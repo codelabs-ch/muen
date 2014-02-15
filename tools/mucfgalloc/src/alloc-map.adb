@@ -97,7 +97,8 @@ is
             ((Element (Curr).First_Address + Alignment - 1) /
              Alignment) * Alignment;
 
-         exit when Element (Curr).Kind = Empty and
+         exit when Element (Curr).Allocatable and
+                   Element (Curr).Kind = Empty and
                    First_Multiple + Size - 1 <= Element (Curr).Last_Address;
          Next (Curr);
       end loop;
@@ -135,6 +136,7 @@ is
       Insert_New_Region
          (Map           => Map,
           Name          => Name,
+          Allocatable   => False,
           Kind          => Device,
           First_Address => First_Address,
           Last_Address  => Last_Address);
@@ -145,6 +147,7 @@ is
    procedure Insert_Empty_Region
       (Map           : in out Map_Type;
        Name          :        Ada.Strings.Unbounded.Unbounded_String;
+       Allocatable   :        Boolean;
        First_Address :        Interfaces.Unsigned_64;
        Last_Address  :        Interfaces.Unsigned_64)
    is
@@ -152,6 +155,7 @@ is
       Insert_New_Region
          (Map           => Map,
           Name          => Name,
+          Allocatable   => Allocatable,
           Kind          => Empty,
           First_Address => First_Address,
           Last_Address  => Last_Address);
@@ -162,12 +166,13 @@ is
    procedure Insert_New_Region
       (Map           : in out Map_Type;
        Name          :        Ada.Strings.Unbounded.Unbounded_String;
+       Allocatable   :        Boolean;
        Kind          :        Region_Kind;
        First_Address :        Interfaces.Unsigned_64;
        Last_Address  :        Interfaces.Unsigned_64)
    is
       use Region_List_Package;
-      Curr, Prev : Cursor;
+      Right, Left : Cursor;
 
       --  Update the First_Address field of a region with First_Address
       procedure Set_First_Address (Element : in out Region_Type);
@@ -187,66 +192,93 @@ is
 
       use Ada.Strings.Unbounded;
    begin
-      Curr := First (Map.Data);
-      while Curr /= No_Element and then
-            First_Address > Element (Curr).Last_Address
+      Right := First (Map.Data);
+      while Right /= No_Element and then
+            First_Address > Element (Right).Last_Address
       loop
-         Prev := Curr;
-         Curr := Next (Curr);
+         Left := Right;
+         Right := Next (Right);
 
          exit when
-            Element (Prev).Last_Address < First_Address and
-            (Curr = No_Element or else
-             Last_Address < Element (Curr).First_Address);
+            Element (Left).Last_Address < First_Address and
+            (Right = No_Element or else
+             Last_Address < Element (Right).First_Address);
       end loop;
 
       --  Overlap check
-      if Curr /= No_Element and then
-         Element (Curr).First_Address <= Last_Address
+      if Right /= No_Element and then
+         Element (Right).First_Address <= Last_Address
       then
          raise Overlapping_Empty_Region with
             "Region '" & To_String (Name) & "' overlaps with region '" &
-            To_String (Element (Curr).Name) & "'";
+            To_String (Element (Right).Name) & "'";
       end if;
 
-      --  Check for adjacent areas and merge them. There can be 4 scenarios:
+      --  Check for adjacent areas and merge them if possible.
       --
-      --    (1) Last_Address + 1 = Curr.First_Address and
-      --        Prev.Last_Address + 1 = First_Address =>
-      --        Prev.Last_Address := Curr.Last_Address, Remove Curr.
-      --    (2) Last_Address + 1 = Curr.First_Address =>
-      --        Curr.First_Address := First_Address
-      --    (3) Prev.Last_Address + 1 = First_Address =>
-      --        Prev.Last_Address := Last_Address
+      --  A new area is adjacent to the Left (i.e. the next lower) area if:
+      --
+      --    (I) Adjacent_Left:
+      --       (a) A Left area exists (Left /= No_Element)
+      --       (b) Both, the new area and the Left area are of kind Empty
+      --       (c) Both, the new area and the Left area are Allocatable
+      --       (d) The last element of the Left is exactly one smaller than the
+      --           first element of the new area
+      --
+      --  A new area is adjacent to the Right (i.e. the next higher) area if:
+      --
+      --    (II) Adjacent_Right:
+      --       (a) A Right area exists (Right /= No_Element)
+      --       (b) Both, the new area and the Right area are of kind Empty
+      --       (c) Both, the new area and the Right area are Allocatable
+      --       (d) The last element of the new area is exactly one smaller
+      --           than the first element of the Right area
+      --
+      --  For a new area there are 4 options:
+      --
+      --    (1) Adjacent_Left and Adjacent_Right =>
+      --        - Update the last element of the Left area with the last
+      --          element of the Right area
+      --        - Remove the Right area from the map
+      --    (2) Adjacent_Left =>
+      --        - Update the last element of the Left area with the last
+      --          element of the new area
+      --    (3) Adjacent_Right =>
+      --        - Update the first element of the Right area with the first
+      --          element of the new area
       --    (4) Otherwise =>
-      --        Insert new element before Curr
+      --        - Insert new area before right area
 
       declare
-         Adjacent_Right : constant Boolean := Curr /= No_Element and then
-            (Element (Curr).Kind /= Device and Kind /= Device and
-             Last_Address + 1 = Element (Curr).First_Address);
-         Adjacent_Left : constant Boolean := Prev /= No_Element and then
-            (Element (Prev).Kind /= Device and Kind /= Device and
-             Element (Prev).Last_Address + 1 = First_Address);
+         --  (I)
+         Adjacent_Left : constant Boolean :=
+             Left /= No_Element and then                       --  (I.a)
+            (Kind = Empty and Element (Left).Kind = Empty and  --  (I.b)
+             Allocatable and Element (Left).Allocatable and    --  (I.c)
+             Element (Left).Last_Address + 1 = First_Address); --  (I.d)
+
+         --  (II)
+         Adjacent_Right : constant Boolean :=
+             Right /= No_Element and then                       --  (II.a)
+            (Kind = Empty and Element (Right).Kind = Empty and  --  (II.b)
+             Allocatable and Element (Right).Allocatable and    --  (II.c)
+             Last_Address + 1 = Element (Right).First_Address); --  (II.d)
       begin
-         if Adjacent_Right and Adjacent_Left then
-            --  (1)
-            Update_Element (Map.Data, Prev, Set_Last_Address'Access);
-            Delete (Map.Data, Curr);
-         elsif Adjacent_Right then
-            --  (2)
-            Update_Element (Map.Data, Curr, Set_First_Address'Access);
-         elsif Adjacent_Left then
-            --  (3)
-            Update_Element (Map.Data, Prev, Set_Last_Address'Access);
-         else
-            --  (4)
+         if Adjacent_Right and Adjacent_Left then                      --  (1)
+            Update_Element (Map.Data, Left, Set_Last_Address'Access);
+            Delete (Map.Data, Right);
+         elsif Adjacent_Left then                                      --  (2)
+            Update_Element (Map.Data, Left, Set_Last_Address'Access);
+         elsif Adjacent_Right then                                     --  (3)
+            Update_Element (Map.Data, Right, Set_First_Address'Access);
+         else                                                          --  (4)
             Insert
                (Container => Map.Data,
-                Before    => Curr,
+                Before    => Right,
                 New_Item  => Region_Type'
                               (Kind          => Kind,
                                Name          => Name,
+                               Allocatable   => Allocatable,
                                First_Address => First_Address,
                                Last_Address  => Last_Address));
          end if;
@@ -287,17 +319,13 @@ is
    is
       use Region_List_Package;
 
-      Match_First : constant Boolean :=
-         Element (Curr).First_Address = First_Address;
-      Match_Last : constant Boolean :=
-         Element (Curr).Last_Address = Last_Address;
-
       --  Update the Kind field with Kind argument
       procedure Allocate (Element : in out Region_Type);
       procedure Allocate (Element : in out Region_Type)
       is
       begin
          Element.Kind := Kind;
+         Element.Allocatable := False;
       end Allocate;
 
       --  Update the First_Address field of a region with Last_Address + 1
@@ -332,24 +360,52 @@ is
          Element.Name := Name;
       end Set_Name;
 
-   begin
-
-      --  Allocate part of a given empty region
+      --  Allocate a part or all of the current area (i.e. the matching empty
+      --  area that has been found). The allocated area may have common
+      --  addresses with the current area:
       --
-      --  (1) Curr.First_Address = First_Address and
-      --      Curr.Last_Address = Last_Address =>
-      --      Curr.Kind := Kind;
-      --  (2) Curr.First_Address = First_Address =>
-      --      Curr.First_Address := Last_Address + 1;
-      --      Insert (First_Address, Last_Address, Kind) before Curr
-      --  (3) Curr.Last_Address = Last_Address =>
-      --      Insert (Curr.First_Address, First_Address - 1, Empty) before Curr
-      --      Curr.First_Address := First_Address;
-      --      Curr.Kind := Kind;
+      --  (I) Match_First:
+      --       - The first element of the allocated area matches the first
+      --         element of the current area
+      --  (II) Match_Last:
+      --       - The last element of the allocated area matches the first
+      --         element of the current area
+      --
+      --  There are 4 options:
+      --
+      --  (1) Match_First and Match_Last =>
+      --      - Set the Kind of the current area to that of the allocated area
+      --      - Set Allocatable of current area to False
+      --  (2) Match_First =>
+      --      - Set the first element of current area to the element after
+      --        the last element of the allocated area
+      --      - Insert a new area with the parameters of the allocated area
+      --        before the current area
+      --  (3) Match_Last =>
+      --      - Insert a new empty area before the current area, with a
+      --        first element matching the original first element of the
+      --        current area and the last element one below the first element
+      --        of the allocated area, Kind is empty, Allocatable is true
+      --      - Set the Kind of the current area to that of the allocated area
+      --      - Set the Allocatable attribute of the current area to True
+      --      - Set the first element of the current area to that of the
+      --        allocated area
       --  (4) Otherwise =>
-      --      Insert (Curr.First_Address, First_Address - 1, Empty) before Curr
-      --      Insert (First_Address, Last_Address, Kind) before Curr
-      --      Curr.First_Address := Last_Address + 1
+      --      - Insert a new empty area before the current current area,
+      --        ranging from the current areas first element to the element
+      --        before the allocated areas first element, kind empty,
+      --        allocatable
+      --      - Insert another new area before the current area with the
+      --        parameters of the allocated area
+      --      - Update the first element of the current area to the element
+      --        after the last element of the allocated area
+
+      Match_First : constant Boolean :=
+         Element (Curr).First_Address = First_Address;
+      Match_Last : constant Boolean :=
+         Element (Curr).Last_Address = Last_Address;
+
+   begin
 
       if Match_First and Match_Last then
          --  (1)
@@ -365,6 +421,7 @@ is
                (First_Address => First_Address,
                 Last_Address  => Last_Address,
                 Name          => Name,
+                Allocatable   => False,
                 Kind          => Kind));
       elsif Match_Last then
          --  (3)
@@ -375,10 +432,11 @@ is
                (First_Address => Element (Curr).First_Address,
                 Last_Address  => First_Address - 1,
                 Name          => Element (Curr).Name,
+                Allocatable   => Element (Curr).Allocatable,
                 Kind          => Empty));
+         Update_Element (Map.Data, Curr, Allocate'Access);
          Update_Element (Map.Data, Curr, Set_First_To_First'Access);
          Update_Element (Map.Data, Curr, Set_Name'Access);
-         Update_Element (Map.Data, Curr, Allocate'Access);
       else
          --  (4)
          Insert
@@ -388,6 +446,7 @@ is
                (First_Address => Element (Curr).First_Address,
                 Last_Address  => First_Address - 1,
                 Name          => Element (Curr).Name,
+                Allocatable   => Element (Curr).Allocatable,
                 Kind          => Empty));
          Insert
             (Container => Map.Data,
@@ -396,6 +455,7 @@ is
                (First_Address => First_Address,
                 Last_Address  => Last_Address,
                 Name          => Name,
+                Allocatable   => False,
                 Kind          => Kind));
          Update_Element (Map.Data, Curr, Set_First_Past_Last'Access);
       end if;

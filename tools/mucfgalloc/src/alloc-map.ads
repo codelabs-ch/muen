@@ -33,6 +33,7 @@ is
       First_Address : Interfaces.Unsigned_64;
       Last_Address  : Interfaces.Unsigned_64;
       Name          : Ada.Strings.Unbounded.Unbounded_String;
+      Allocatable   : Boolean;
    end record;
 
    --  Insert a device region to memory map
@@ -47,6 +48,7 @@ is
    procedure Insert_Empty_Region
       (Map           : in out Map_Type;
        Name          :        Ada.Strings.Unbounded.Unbounded_String;
+       Allocatable   :        Boolean;
        First_Address :        Interfaces.Unsigned_64;
        Last_Address  :        Interfaces.Unsigned_64) with
       Pre => First_Address < Last_Address;
@@ -103,6 +105,7 @@ private
    procedure Insert_New_Region
       (Map           : in out Map_Type;
        Name          :        Ada.Strings.Unbounded.Unbounded_String;
+       Allocatable   :        Boolean;
        Kind          :        Region_Kind;
        First_Address :        Interfaces.Unsigned_64;
        Last_Address  :        Interfaces.Unsigned_64);

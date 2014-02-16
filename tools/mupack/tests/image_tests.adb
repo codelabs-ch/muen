@@ -62,6 +62,29 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_File_To_Image_Offset
+   is
+      Img   : Image.Image_Type (End_Address => 16#9#);
+      Fname : constant String := "obj/test.img";
+   begin
+      Image.Add_File (Image => Img,
+                      File  => (Name    => U ("testfile"),
+                                Path    => U ("data/pattern"),
+                                Address => 0,
+                                Size    => 16#0a#,
+                                Offset  => 16#0a#,
+                                Format  => Parser.Elf));
+      Image.Write (Image    => Img,
+                   Filename => Fname);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Fname,
+               Filename2 => "data/img.offset.ref"),
+              Message   => "Image mismatch");
+      Ada.Directories.Delete_File (Name => Fname);
+   end Add_File_To_Image_Offset;
+
+   -------------------------------------------------------------------------
+
    procedure Add_File_To_Image_Small
    is
       Img : Image.Image_Type (End_Address => 10);
@@ -118,6 +141,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_File_To_Image'Access,
          Name    => "Add file to system image");
+      T.Add_Test_Routine
+        (Routine => Add_File_To_Image_Offset'Access,
+         Name    => "Add file to system image (offset)");
       T.Add_Test_Routine
         (Routine => Add_File_To_Image_Small'Access,
          Name    => "Add file to system image (too small)");

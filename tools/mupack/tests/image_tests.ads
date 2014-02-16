@@ -32,6 +32,9 @@ is
    --  Add file to system image.
    procedure Add_File_To_Image;
 
+   --  Add file content at given offset to system image.
+   procedure Add_File_To_Image_Offset;
+
    --  Add file to an image which is too small.
    procedure Add_File_To_Image_Small;
 

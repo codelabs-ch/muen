@@ -46,6 +46,15 @@ is
       Stream_IO.Open (File => Fd,
                       Mode => Stream_IO.In_File,
                       Name => S (File.Path));
+
+      if File.Offset > 0 then
+
+         --  Stream_IO Index starts at 1, our offset at 0 -> add one.
+
+         Stream_IO.Set_Index (File => Fd,
+                              To   => Stream_IO.Count (File.Offset + 1));
+      end if;
+
       Stream_IO.Read (File => Fd,
                       Item => Buffer,
                       Last => Last);

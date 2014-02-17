@@ -1,6 +1,6 @@
 all: .emulate
 
-IMAGE ?= ../pack/obj/kernel
+IMAGE ?= ../pack/obj/muen.img
 ISOFILE = muen.iso
 ISOPATH = $(CURDIR)/$(ISOFILE)
 

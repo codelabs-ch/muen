@@ -48,8 +48,17 @@
 		<memory name="sm_state" size="16#1000#" caching="WB"/>
 		<memory name="linux_state" size="16#1000#" caching="WB"/>
 
-		<memory name="kernel_text_data" physicalAddress="16#0010_0000#" size="16#0001_3000#" caching="WB"/>
-		<memory name="kernel_ro" physicalAddress="16#0011_f000#" size="16#a000#" caching="WB"/>
+		<!-- kernel binary -->
+		<memory name="kernel_text" physicalAddress="16#0010_0000#" size="16#0001_0000#" caching="WB">
+			<file format="elf" filename="kernel" offset="16#0000#"/>
+		</memory>
+		<memory name="kernel_data" physicalAddress="16#0011_0000#" size="16#1000#" caching="WB">
+			<file format="elf" filename="kernel" offset="16#0001_0000#"/>
+		</memory>
+		<memory name="kernel_bss" physicalAddress="16#0011_1000#" size="16#1000#" caching="WB"/>
+		<memory name="kernel_ro" physicalAddress="16#0011_f000#" size="16#4000#" caching="WB">
+			<file format="elf" filename="kernel" offset="16#0001_f000#"/>
+		</memory>
 
 		<memory name="kernel_stack_0" size="16#2000#" caching="WB"/>
 		<memory name="kernel_stack_1" size="16#2000#" caching="WB"/>
@@ -181,8 +190,9 @@
 	<kernel>
 		<memory>
 			<cpu id="0">
-
-				<memory logical="text" physical="kernel_text_data" writable="true" executable="true" virtualAddress="16#0010_0000#"/>
+				<memory logical="text" physical="kernel_text" writable="false" executable="true" virtualAddress="16#0010_0000#"/>
+				<memory logical="data" physical="kernel_data" writable="true" executable="false" virtualAddress="16#0011_0000#"/>
+				<memory logical="bss" physical="kernel_bss" writable="true" executable="false" virtualAddress="16#0011_1000#"/>
 				<memory logical="ro" physical="kernel_ro" writable="false" executable="false" virtualAddress="16#0011_f000#"/>
 				<memory logical="stack" physical="kernel_stack_0" writable="true" executable="false" virtualAddress="16#0011_3000#"/>
 				<memory logical="store" physical="kernel_store_0" writable="true" executable="false" virtualAddress="16#0011_6000#"/>
@@ -198,8 +208,9 @@
 				<memory logical="tau0_interface" physical="sys_interface" writable="false" executable="false" virtualAddress="16#001f_f000#"/>
 			</cpu>
 			<cpu id="1">
-
-				<memory logical="text" physical="kernel_text_data" writable="true" executable="true" virtualAddress="16#0010_0000#"/>
+				<memory logical="text" physical="kernel_text" writable="false" executable="true" virtualAddress="16#0010_0000#"/>
+				<memory logical="data" physical="kernel_data" writable="true" executable="false" virtualAddress="16#0011_0000#"/>
+				<memory logical="bss" physical="kernel_bss" writable="true" executable="false" virtualAddress="16#0011_1000#"/>
 				<memory logical="ro" physical="kernel_ro" writable="false" executable="false" virtualAddress="16#0011_f000#"/>
 				<memory logical="stack" physical="kernel_stack_1" writable="true" executable="false" virtualAddress="16#0011_3000#"/>
 				<memory logical="store" physical="kernel_store_1" writable="true" executable="false" virtualAddress="16#0011_6000#"/>
@@ -212,8 +223,9 @@
 				<memory logical="linux_state" physical="linux_state" writable="true" executable="false" virtualAddress="16#001e_4000#"/>
 			</cpu>
 			<cpu id="2">
-
-				<memory logical="text" physical="kernel_text_data" writable="true" executable="true" virtualAddress="16#0010_0000#"/>
+				<memory logical="text" physical="kernel_text" writable="false" executable="true" virtualAddress="16#0010_0000#"/>
+				<memory logical="data" physical="kernel_data" writable="true" executable="false" virtualAddress="16#0011_0000#"/>
+				<memory logical="bss" physical="kernel_bss" writable="true" executable="false" virtualAddress="16#0011_1000#"/>
 				<memory logical="ro" physical="kernel_ro" writable="false" executable="false" virtualAddress="16#0011_f000#"/>
 				<memory logical="stack" physical="kernel_stack_2" writable="true" executable="false" virtualAddress="16#0011_3000#"/>
 				<memory logical="store" physical="kernel_store_2" writable="true" executable="false" virtualAddress="16#0011_6000#"/>
@@ -226,8 +238,9 @@
 				<memory logical="linux_state" physical="linux_state" writable="true" executable="false" virtualAddress="16#001e_4000#"/>
 			</cpu>
 			<cpu id="3">
-
-				<memory logical="text" physical="kernel_text_data" writable="true" executable="true" virtualAddress="16#0010_0000#"/>
+				<memory logical="text" physical="kernel_text" writable="false" executable="true" virtualAddress="16#0010_0000#"/>
+				<memory logical="data" physical="kernel_data" writable="true" executable="false" virtualAddress="16#0011_0000#"/>
+				<memory logical="bss" physical="kernel_bss" writable="true" executable="false" virtualAddress="16#0011_1000#"/>
 				<memory logical="ro" physical="kernel_ro" writable="false" executable="false" virtualAddress="16#0011_f000#"/>
 				<memory logical="stack" physical="kernel_stack_3" writable="true" executable="false" virtualAddress="16#0011_3000#"/>
 				<memory logical="store" physical="kernel_store_3" writable="true" executable="false" virtualAddress="16#0011_6000#"/>

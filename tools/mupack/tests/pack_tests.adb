@@ -31,30 +31,23 @@ is
    procedure Execute_Run
    is
       Obj_Dir : constant String := "obj";
-      Knl_Src : constant String := "obj1.o";
-      Knl_Cpy : constant String := "obj1.o.elf";
       Knl_Bin : constant String := "obj1.o.bin";
    begin
-      Command_Line.Test.Set_Input_Dir       (Path => "data");
-      Command_Line.Test.Set_Output_Dir      (Path => Obj_Dir);
-      Command_Line.Test.Set_Kernel_Filename (Path => Knl_Src);
-      Command_Line.Test.Set_Policy          (Path => "data/test_policy.xml");
+      Command_Line.Test.Set_Input_Dir  (Path => "data");
+      Command_Line.Test.Set_Output_Dir (Path => Obj_Dir);
+      Command_Line.Test.Set_Policy     (Path => "data/test_policy.xml");
 
       Pack.Run;
 
       Assert (Condition => Ada.Directories.Exists
-              (Name => Obj_Dir & "/" & Knl_Cpy),
-              Message   => "ELF kernel not found");
-      Assert (Condition => Ada.Directories.Exists
               (Name => Obj_Dir & "/" & Knl_Bin),
               Message   => "Binary kernel not found");
       Assert (Condition => Ada.Directories.Exists
-              (Name => Obj_Dir & "/" & Knl_Src),
+              (Name => Obj_Dir & "/muen.img"),
               Message   => "System image not found");
 
       Ada.Directories.Delete_File (Name => Obj_Dir & "/" & Knl_Bin);
-      Ada.Directories.Delete_File (Name => Obj_Dir & "/" & Knl_Cpy);
-      Ada.Directories.Delete_File (Name => Obj_Dir & "/" & Knl_Src);
+      Ada.Directories.Delete_File (Name => Obj_Dir & "/muen.img");
    end Execute_Run;
 
    -------------------------------------------------------------------------

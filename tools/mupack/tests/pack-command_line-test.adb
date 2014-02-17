@@ -29,14 +29,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Kernel_Filename (Path : String)
-   is
-   begin
-      Kernel_Filename := U (Path);
-   end Set_Kernel_Filename;
-
-   -------------------------------------------------------------------------
-
    procedure Set_Output_Dir (Path : String)
    is
    begin

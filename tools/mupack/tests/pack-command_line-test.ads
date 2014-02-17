@@ -28,7 +28,4 @@ is
    --  Set given input directory.
    procedure Set_Input_Dir (Path : String);
 
-   --  Set kernel filename.
-   procedure Set_Kernel_Filename (Path : String);
-
 end Pack.Command_Line.Test;

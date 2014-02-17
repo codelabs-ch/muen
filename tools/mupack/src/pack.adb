@@ -16,8 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Directories;
 with Ada.Text_IO;
+with Ada.Streams;
+
+with Interfaces;
 
 with Mulog;
 with Mutools.Utils;
@@ -84,7 +86,6 @@ is
       Out_Dir     : constant String := Command_Line.Get_Output_Dir;
       In_Dir      : constant String := Command_Line.Get_Input_Dir;
       Policy_File : constant String := Command_Line.Get_Policy;
-      Kernel_File : constant String := Command_Line.Get_Kernel_Filename;
       Mmap        : constant String := Out_Dir & "/mmap";
    begin
       Mulog.Log (Msg => "Looking for input files in '" & In_Dir & "'");
@@ -101,32 +102,22 @@ is
 
          Pack_Image :
          declare
-            Sysimg  : constant String := Out_Dir & "/" & Kernel_File;
-            Knl_Elf : constant String := Sysimg & ".elf";
-            Knl_Src : constant String := In_Dir & "/" & Kernel_File;
+            Size    : constant Interfaces.Unsigned_64
+              := Parser.Get_Image_Size (Files => Files);
+            Img     : Pack.Image.Image_Type
+              (End_Address => Ada.Streams.Stream_Element_Offset (Size));
+            Sysimg  : constant String := Out_Dir & "/muen.img";
          begin
-            Mulog.Log (Msg => "Creating system image '" & Sysimg & "'");
-            Mulog.Log (Msg => "Using '" & Knl_Elf & "' as kernel file");
-
-            if not Ada.Directories.Exists (Name => Knl_Src) then
-               raise Pack_Error with "Kernel file '" & Kernel_File
-                 & "' not found in input directory '" & In_Dir & "'";
-            end if;
-
-            Ada.Directories.Copy_File
-              (Source_Name => In_Dir & "/" & Kernel_File,
-               Target_Name => Knl_Elf);
+            Mulog.Log (Msg => "Creating system image '" & Sysimg & "' of size "
+                       & Mutools.Utils.To_Hex (Number => Size) & " bytes");
 
             for I in Files'Range loop
-               Image.Add_Section
-                 (Image    => Knl_Elf,
-                  Filename => S (Files (I).Path),
-                  Name     => S (Files (I).Name),
-                  Address  => Files (I).Address);
+               Image.Add_File (Image => Img,
+                               File  => Files (I));
             end loop;
 
-            Image.To_Binary (Src_Elf => Knl_Elf,
-                             Dst_Bin => Sysimg);
+            Image.Write (Image    => Img,
+                         Filename => Sysimg);
             Mulog.Log (Msg => "Successfully created system image '"
                        & Sysimg & "'");
             Print_Layout (File    => Mmap,

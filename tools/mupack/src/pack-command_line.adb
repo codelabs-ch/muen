@@ -52,14 +52,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Kernel_Filename return String
-   is
-   begin
-      return S (Kernel_Filename);
-   end Get_Kernel_Filename;
-
-   -------------------------------------------------------------------------
-
    function Get_Output_Dir return String
    is
    begin
@@ -80,19 +72,13 @@ is
    is
       use Ada.Strings.Unbounded;
 
-      Cmdline                   : Config_Type;
-      Out_Dir, In_Dir, Knl_File : aliased GNAT.Strings.String_Access;
+      Cmdline         : Config_Type;
+      Out_Dir, In_Dir : aliased GNAT.Strings.String_Access;
    begin
       GNAT.Command_Line.Set_Usage
         (Config => Cmdline.Data,
          Usage  => "[options] <policy>",
          Help   => Description);
-      GNAT.Command_Line.Define_Switch
-        (Config      => Cmdline.Data,
-         Output      => Knl_File'Access,
-         Switch      => "-k:",
-         Long_Switch => "--kernel-filename:",
-         Help        => "Filename of the ELF kernel to pack");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Output      => Out_Dir'Access,
@@ -120,12 +106,8 @@ is
          if In_Dir'Length /= 0 then
             Input_Dir := U (In_Dir.all);
          end if;
-         if Knl_File'Length /= 0 then
-            Kernel_Filename := U (Knl_File.all);
-         end if;
          GNAT.Strings.Free (X => Out_Dir);
          GNAT.Strings.Free (X => In_Dir);
-         GNAT.Strings.Free (X => Knl_File);
 
       exception
          when GNAT.Command_Line.Invalid_Switch |
@@ -137,9 +119,7 @@ is
       end;
 
       Policy := U (GNAT.Command_Line.Get_Argument);
-      if Policy = Null_Unbounded_String
-        or else Kernel_Filename = Null_Unbounded_String
-      then
+      if Policy = Null_Unbounded_String then
          GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
          GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));
       end if;

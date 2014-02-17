@@ -139,7 +139,7 @@
 		<memory name="linux|msrbm" size="16#1000#" caching="WB">
 			<file format="msrbm" filename="linux_msrbm" offset="16#0000#"/>
 		</memory>
-		<memory name="linux|bin" size="16#0fc0_0000#" caching="WB">
+		<memory name="linux|bin" size="16#0050_0000#" caching="WB">
 			<file format="bzimage" filename="bzImage" offset="16#0000#"/>
 		</memory>
 		<memory name="linux|zp" size="16#2000#" caching="WB">
@@ -160,8 +160,9 @@
 		</memory>
 		<memory name="linux|acpi_empty" size="16#c000#" caching="WB"/>
 
-		<memory name="linux|lowmem" physicalAddress="16#1020_2000#" size="16#0009_b000#" caching="WB"/>
+		<memory name="linux|lowmem" size="16#0009_b000#" caching="WB"/>
 		<memory name="linux|bios" size="16#0001_0000#" caching="WB"/>
+		<memory name="linux|ram" size="16#0f70_0000#" caching="WB"/>
 
 		<!-- channels -->
 		<memory name="time_channel" size="16#1000#" caching="WB"/>
@@ -1214,6 +1215,7 @@
 
 				<memory logical="bios" physical="linux|bios" virtualAddress="16#000f_0000#" writable="false" executable="false"/>
 				<memory logical="text" physical="linux|bin" virtualAddress="16#0040_0000#" writable="true" executable="true"/>
+				<memory logical="ram" physical="linux|ram" virtualAddress="16#0090_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
 				<device logical="ttyS0" physical="serial">

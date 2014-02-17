@@ -49,26 +49,26 @@ is
                   Path    => U ("obj1.o"),
                   Address => 16#0010_0000#,
                   Size    => 16#0001_3000#,
-                  Offset  => 16#0010#,
+                  Offset  => 0,
                   Format  => Parser.Elf),
             2 => (Name    => U ("linux|acpi_rsdp"),
                   Path    => U ("obj2.o"),
                   Address => 16#0011_3000#,
                   Size    => 16#0001_3000#,
-                  Offset  => 16#0001_b000#,
+                  Offset  => 0,
                   Format  => Parser.Acpi_Rsdp));
       Ref_Files : constant Parser.File_Array
         := (1 => (Name    => U ("kernel_text"),
                   Path    => U ("obj/obj1.o.bin"),
                   Address => 16#0010_0000#,
                   Size    => 16#0001_3000#,
-                  Offset  => 16#0010#,
+                  Offset  => 0,
                   Format  => Parser.Elf),
             2 => (Name    => U ("linux_acpi_rsdp"),
                   Path    => U ("data/obj2.o"),
                   Address => 16#0011_3000#,
                   Size    => 16#0001_3000#,
-                  Offset  => 16#0001_b000#,
+                  Offset  => 0,
                   Format  => Parser.Acpi_Rsdp));
    begin
       Command_Line.Test.Set_Input_Dir  (Path => "data");
@@ -92,7 +92,7 @@ is
                   Path    => U ("nonexistent.o"),
                   Address => 16#0010_0000#,
                   Size    => 16#0001_3000#,
-                  Offset  => 16#0010#,
+                  Offset  => 0,
                   Format  => Parser.Iobm));
    begin
       Command_Line.Test.Set_Input_Dir  (Path => "data");
@@ -138,7 +138,7 @@ is
                      Path    => U ("invalid_bzimage"),
                      Address => 16#0010_0000#,
                      Size    => 16#0001_3000#,
-                     Offset  => 16#0010#,
+                     Offset  => 0,
                      Format  => Parser.Bzimage));
       begin
          File_Transforms.Process (Files => Files);
@@ -157,7 +157,7 @@ is
                      Path    => U ("obj1.o"),
                      Address => 16#0010_0000#,
                      Size    => 16#0001_3000#,
-                     Offset  => 16#0010#,
+                     Offset  => 0,
                      Format  => Parser.Bzimage));
       begin
          File_Transforms.Process (Files => Files);
@@ -184,7 +184,7 @@ is
                      Path    => U ("bzimage.32"),
                      Address => 16#0010_0000#,
                      Size    => 16#0001_3000#,
-                     Offset  => 16#0010#,
+                     Offset  => 0,
                      Format  => Parser.Bzimage));
 
       begin
@@ -202,7 +202,7 @@ is
                      Path    => U ("bzimage.64"),
                      Address => 16#0010_0000#,
                      Size    => 16#0001_3000#,
-                     Offset  => 16#0010#,
+                     Offset  => 0,
                      Format  => Parser.Bzimage));
 
       begin

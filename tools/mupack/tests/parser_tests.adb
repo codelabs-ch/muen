@@ -50,7 +50,7 @@ is
                   Path    => U ("obj1.o"),
                   Address => 16#0011_3000#,
                   Size    => 16#0001_3000#,
-                  Offset  => 16#0001_b000#,
+                  Offset  => 4,
                   Format  => Parser.Elf));
    begin
       declare

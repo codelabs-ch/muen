@@ -134,7 +134,7 @@ is
    procedure Initialize (T : in out Testcase)
    is
    begin
-      T.Set_Name (Name => "Image package tests");
+      T.Set_Name (Name => "Image tests");
       T.Add_Test_Routine
         (Routine => Add_Section_To_Elf'Access,
          Name    => "Add section to ELF");
@@ -147,6 +147,22 @@ is
       T.Add_Test_Routine
         (Routine => Add_File_To_Image_Small'Access,
          Name    => "Add file to system image (too small)");
+      T.Add_Test_Routine
+        (Routine => Write_Empty_Image'Access,
+         Name    => "Write empty image");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_Empty_Image
+   is
+      Img : Image.Image_Type (End_Address => 12);
+   begin
+      Image.Write (Image    => Img,
+                   Filename => "file");
+
+   exception
+      when Image.Write_Error => null;
+   end Write_Empty_Image;
 
 end Image_Tests;

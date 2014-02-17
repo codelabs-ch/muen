@@ -115,12 +115,38 @@ is
       Filename : String)
    is
       File : Ada.Streams.Stream_IO.File_Type;
+
+      --  Return offset of first non-zero element. The function can be used to
+      --  strip leading zeros. If all elements are zero, an exception is
+      --  raised.
+      function Get_Non_Zero return Ada.Streams.Stream_Element_Offset;
+
+      ----------------------------------------------------------------------
+
+      function Get_Non_Zero return Ada.Streams.Stream_Element_Offset
+      is
+         use type Ada.Streams.Stream_Element;
+      begin
+         for I in Image.Data'Range loop
+            if Image.Data (I) > 0 then
+               return I;
+            end if;
+         end loop;
+
+         raise Write_Error with "Unable to write image '" & Filename
+           & "' - no valid image data found";
+      end Get_Non_Zero;
+
+      Start_Idx : constant Ada.Streams.Stream_Element_Offset := Get_Non_Zero;
    begin
-      Mutools.Files.Open (Filename => Filename,
-                          File     => File);
-      Ada.Streams.Stream_IO.Write (File => File,
-                                   Item => Image.Data);
-      Ada.Streams.Stream_IO.Close (File => File);
+      Mutools.Files.Open
+        (Filename => Filename,
+         File     => File);
+      Ada.Streams.Stream_IO.Write
+        (File => File,
+         Item => Image.Data (Start_Idx .. Image.Data'Last));
+      Ada.Streams.Stream_IO.Close
+        (File => File);
    end Write;
 
 end Pack.Image;

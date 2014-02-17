@@ -38,4 +38,7 @@ is
    --  Add file to an image which is too small.
    procedure Add_File_To_Image_Small;
 
+   --  Try to write an empty image.
+   procedure Write_Empty_Image;
+
 end Image_Tests;

@@ -52,6 +52,8 @@ is
      (Src_Elf : String;
       Dst_Bin : String);
 
+   Write_Error : exception;
+
 private
 
    use type Ada.Streams.Stream_Element_Offset;

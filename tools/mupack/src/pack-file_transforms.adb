@@ -35,7 +35,7 @@ package body Pack.File_Transforms
 is
 
    type Transform_Procedure is not null access procedure
-     (File : access Parser.File_Entry_Type);
+     (File : not null access Parser.File_Entry_Type);
 
    --  Normalize name field of file entry.
    function Normalize (Name : String) return String;
@@ -43,13 +43,13 @@ is
    --  Default transform: prepend input directory to file path and normalize
    --  names. Also check that the file exists. This transform must be called
    --  from the other transform implementations first.
-   procedure Default_Transform (File : access Parser.File_Entry_Type);
+   procedure Default_Transform (File : not null access Parser.File_Entry_Type);
 
    --  Patch Linux bzImage.
-   procedure Patch_Bzimage (File : access Parser.File_Entry_Type);
+   procedure Patch_Bzimage (File : not null access Parser.File_Entry_Type);
 
    --  Convert given ELF binary to raw object format.
-   procedure To_Raw_Binary (File : access Parser.File_Entry_Type);
+   procedure To_Raw_Binary (File : not null access Parser.File_Entry_Type);
 
    Transforms : constant array (Parser.File_Format_Type) of Transform_Procedure
      := (Parser.Bzimage => Patch_Bzimage'Access,
@@ -58,7 +58,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Default_Transform (File : access Parser.File_Entry_Type)
+   procedure Default_Transform (File : not null access Parser.File_Entry_Type)
    is
       use type Ada.Strings.Unbounded.Unbounded_String;
 
@@ -88,7 +88,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Patch_Bzimage (File : access Parser.File_Entry_Type)
+   procedure Patch_Bzimage (File : not null access Parser.File_Entry_Type)
    is
       use Ada.Streams.Stream_IO;
 
@@ -212,7 +212,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure To_Raw_Binary (File : access Parser.File_Entry_Type)
+   procedure To_Raw_Binary (File : not null access Parser.File_Entry_Type)
    is
       use type Ada.Strings.Unbounded.Unbounded_String;
 

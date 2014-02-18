@@ -50,14 +50,15 @@
 
 		<memory name="kernel_text_data" physicalAddress="16#0010_0000#" size="16#0001_3000#" caching="WB"/>
 		<memory name="kernel_ro" physicalAddress="16#0011_f000#" size="16#a000#" caching="WB"/>
-		<memory name="kernel_stack_0" physicalAddress="16#0011_3000#" size="16#2000#" caching="WB"/>
-		<memory name="kernel_stack_1" physicalAddress="16#0011_5000#" size="16#2000#" caching="WB"/>
-		<memory name="kernel_stack_2" physicalAddress="16#0011_7000#" size="16#2000#" caching="WB"/>
-		<memory name="kernel_stack_3" physicalAddress="16#0011_9000#" size="16#2000#" caching="WB"/>
-		<memory name="kernel_store_0" physicalAddress="16#0011_b000#" size="16#1000#" caching="WB"/>
-		<memory name="kernel_store_1" physicalAddress="16#0011_c000#" size="16#1000#" caching="WB"/>
-		<memory name="kernel_store_2" physicalAddress="16#0011_d000#" size="16#1000#" caching="WB"/>
-		<memory name="kernel_store_3" physicalAddress="16#0011_e000#" size="16#1000#" caching="WB"/>
+
+		<memory name="kernel_stack_0" size="16#2000#" caching="WB"/>
+		<memory name="kernel_stack_1" size="16#2000#" caching="WB"/>
+		<memory name="kernel_stack_2" size="16#2000#" caching="WB"/>
+		<memory name="kernel_stack_3" size="16#2000#" caching="WB"/>
+		<memory name="kernel_store_0" size="16#1000#" caching="WB"/>
+		<memory name="kernel_store_1" size="16#1000#" caching="WB"/>
+		<memory name="kernel_store_2" size="16#1000#" caching="WB"/>
+		<memory name="kernel_store_3" size="16#1000#" caching="WB"/>
 
 		<memory name="sys_interface" size="16#1000#" caching="WB"/>
 		<memory name="kernel_0|pt" size="16#4000#" caching="WB">

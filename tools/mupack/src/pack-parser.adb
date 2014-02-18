@@ -83,10 +83,6 @@ is
                     (Elem => File,
                      Name => "offset"));
 
-               Files (I).Name    := U
-                 (DOM.Core.Elements.Get_Attribute
-                    (Elem => Memory,
-                     Name => "name"));
                Files (I).Address := Interfaces.Unsigned_64'Value
                  (DOM.Core.Elements.Get_Attribute
                     (Elem => Memory,

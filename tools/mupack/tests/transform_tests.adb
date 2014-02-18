@@ -45,27 +45,23 @@ is
       use type Parser.File_Array;
 
       Files : Parser.File_Array
-        := (1 => (Name    => U ("kernel|text"),
-                  Path    => U ("obj1.o"),
+        := (1 => (Path    => U ("obj1.o"),
                   Address => 16#0010_0000#,
                   Size    => 16#0001_3000#,
                   Offset  => 0,
                   Format  => Parser.Elf),
-            2 => (Name    => U ("linux|acpi_rsdp"),
-                  Path    => U ("obj2.o"),
+            2 => (Path    => U ("obj2.o"),
                   Address => 16#0011_3000#,
                   Size    => 16#0001_3000#,
                   Offset  => 0,
                   Format  => Parser.Acpi_Rsdp));
       Ref_Files : constant Parser.File_Array
-        := (1 => (Name    => U ("kernel_text"),
-                  Path    => U ("obj/obj1.o.bin"),
+        := (1 => (Path    => U ("obj/obj1.o.bin"),
                   Address => 16#0010_0000#,
                   Size    => 16#0001_3000#,
                   Offset  => 0,
                   Format  => Parser.Elf),
-            2 => (Name    => U ("linux_acpi_rsdp"),
-                  Path    => U ("data/obj2.o"),
+            2 => (Path    => U ("data/obj2.o"),
                   Address => 16#0011_3000#,
                   Size    => 16#0001_3000#,
                   Offset  => 0,
@@ -88,8 +84,7 @@ is
       use type Parser.File_Array;
 
       Files : Parser.File_Array
-        := (1 => (Name    => U ("nonexistent"),
-                  Path    => U ("nonexistent.o"),
+        := (1 => (Path    => U ("nonexistent.o"),
                   Address => 16#0010_0000#,
                   Size    => 16#0001_3000#,
                   Offset  => 0,
@@ -134,8 +129,7 @@ is
 
       declare
          Files : Parser.File_Array
-           := (1 => (Name    => U ("bzImage"),
-                     Path    => U ("invalid_bzimage"),
+           := (1 => (Path    => U ("invalid_bzimage"),
                      Address => 16#0010_0000#,
                      Size    => 16#0001_3000#,
                      Offset  => 0,
@@ -153,8 +147,7 @@ is
 
       declare
          Files : Parser.File_Array
-           := (1 => (Name    => U ("bzImage"),
-                     Path    => U ("obj1.o"),
+           := (1 => (Path    => U ("obj1.o"),
                      Address => 16#0010_0000#,
                      Size    => 16#0001_3000#,
                      Offset  => 0,
@@ -180,8 +173,7 @@ is
 
       declare
          Files : Parser.File_Array
-           := (1 => (Name    => U ("bzImage-32"),
-                     Path    => U ("bzimage.32"),
+           := (1 => (Path    => U ("bzimage.32"),
                      Address => 16#0010_0000#,
                      Size    => 16#0001_3000#,
                      Offset  => 0,
@@ -198,8 +190,7 @@ is
 
       declare
          Files : Parser.File_Array
-           := (1 => (Name    => U ("bzImage-64"),
-                     Path    => U ("bzimage.64"),
+           := (1 => (Path    => U ("bzimage.64"),
                      Address => 16#0010_0000#,
                      Size    => 16#0001_3000#,
                      Offset  => 0,

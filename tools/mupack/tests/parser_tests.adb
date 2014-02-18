@@ -40,14 +40,12 @@ is
       use type Parser.File_Array;
 
       Ref_Files : constant Parser.File_Array
-        := (1 => (Name    => U ("linux|acpi_rsdp"),
-                  Path    => U ("sections.ref"),
+        := (1 => (Path    => U ("sections.ref"),
                   Address => 16#0010_0000#,
                   Size    => 16#0001_3000#,
                   Offset  => 0,
                   Format  => Parser.Acpi_Rsdp),
-            2 => (Name    => U ("linux|bin"),
-                  Path    => U ("obj1.o"),
+            2 => (Path    => U ("obj1.o"),
                   Address => 16#0011_3000#,
                   Size    => 16#0001_3000#,
                   Offset  => 4,
@@ -72,14 +70,12 @@ is
 
       Empty : constant Parser.File_Array (1 .. 0) := (others => <>);
       Files : constant Parser.File_Array
-        := (1 => (Name    => U ("linux|acpi_rsdp"),
-                  Path    => U ("sections.ref"),
+        := (1 => (Path    => U ("sections.ref"),
                   Address => 16#0000_4000#,
                   Size    => 16#0000_3000#,
                   Offset  => 0,
                   Format  => Parser.Acpi_Rsdp),
-            2 => (Name    => U ("linux|bin"),
-                  Path    => U ("obj1.o"),
+            2 => (Path    => U ("obj1.o"),
                   Address => 16#0000_1000#,
                   Size    => 16#0000_7000#,
                   Offset  => 16#0001_b000#,

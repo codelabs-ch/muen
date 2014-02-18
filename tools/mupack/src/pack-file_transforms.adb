@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Strings.Maps;
-with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 with Ada.Streams.Stream_IO;
 with Ada.IO_Exceptions;
@@ -36,9 +34,6 @@ is
 
    type Transform_Procedure is not null access procedure
      (File : not null access Parser.File_Entry_Type);
-
-   --  Normalize name field of file entry.
-   function Normalize (Name : String) return String;
 
    --  Default transform: prepend input directory to file path and normalize
    --  names. Also check that the file exists. This transform must be called
@@ -70,21 +65,7 @@ is
       end if;
 
       File.Path := Command_Line.Get_Input_Dir & "/" & File.Path;
-      File.Name := U (Normalize (Name => S (File.Name)));
    end Default_Transform;
-
-   -------------------------------------------------------------------------
-
-   function Normalize (Name : String) return String
-   is
-      Charmap : constant Ada.Strings.Maps.Character_Mapping
-        := Ada.Strings.Maps.To_Mapping (From => "|",
-                                        To   => "_");
-   begin
-      return Ada.Strings.Fixed.Translate
-        (Source  => Name,
-         Mapping => Charmap);
-   end Normalize;
 
    -------------------------------------------------------------------------
 

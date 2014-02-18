@@ -34,7 +34,6 @@ is
       Zp);
 
    type File_Entry_Type is record
-      Name    : Ada.Strings.Unbounded.Unbounded_String;
       Path    : Ada.Strings.Unbounded.Unbounded_String;
       Address : Interfaces.Unsigned_64;
       Size    : Interfaces.Unsigned_64;

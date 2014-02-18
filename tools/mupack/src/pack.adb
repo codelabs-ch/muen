@@ -17,6 +17,7 @@
 --
 
 with Ada.Directories;
+with Ada.Text_IO;
 
 with Mulog;
 with Mutools.Utils;
@@ -29,48 +30,56 @@ with Pack.File_Transforms;
 package body Pack
 is
 
-   --  Output file entry information.
-   procedure Print_Layout (Files : Parser.File_Array);
+   --  Write memory map to given file.
+   procedure Print_Layout
+     (File    : String;
+      Entries : Parser.File_Array);
 
    -------------------------------------------------------------------------
 
-   procedure Print_Layout (Files : Parser.File_Array)
+   procedure Print_Layout
+     (File    : String;
+      Entries : Parser.File_Array)
    is
-      --  Add count whitespaces to given string and return result.
-      function Indent
-        (Count : Positive;
-         Str   : String)
-         return String;
-
-      ----------------------------------------------------------------------
-
-      function Indent
-        (Count : Positive;
-         Str   : String)
-         return String
-      is
-         Result : String (1 .. Count + Str'Length) := (others => ' ');
-      begin
-         Result (Count + 1 .. Result'Length) := Str;
-         return Result;
-      end Indent;
+      Fd : Ada.Text_IO.File_Type;
    begin
-      Mulog.Log (Msg => "PHYSICAL          TYPE       PATH");
-      for I in Files'Range loop
+      Ada.Text_IO.Create (File => Fd,
+                          Mode => Ada.Text_IO.Out_File,
+                          Name => File);
+      Ada.Text_IO.Put (File => Fd,
+                       Item => "PHYSICAL");
+      Ada.Text_IO.Set_Col (File => Fd,
+                           To   => 15);
+      Ada.Text_IO.Put (File => Fd,
+                       Item => "TYPE");
+      Ada.Text_IO.Set_Col (File => Fd,
+                           To   => 26);
+      Ada.Text_IO.Put (File => Fd,
+                       Item => "PATH");
+      Ada.Text_IO.New_Line (File => Fd);
+
+      for I in Entries'Range loop
          declare
-            Fmt  : constant String := Files (I).Format'Img;
             Addr : constant String := Mutools.Utils.To_Hex
-              (Number => Files (I).Address);
+              (Number => Entries (I).Address);
          begin
-            Mulog.Log (Msg => Addr
-                       & Indent
-                         (Count => (16 - Addr'Length) + 2,
-                          Str   => Files (I).Format'Img)
-                       & Indent
-                         (Count => 11 - Fmt'Length,
-                          Str   => S (Files (I).Path)));
+            Ada.Text_IO.Set_Col (File => Fd,
+                                 To   => 1);
+            Ada.Text_IO.Put (File => Fd,
+                             Item => Addr);
+            Ada.Text_IO.Set_Col (File => Fd,
+                                 To   => 15);
+            Ada.Text_IO.Put (File => Fd,
+                             Item => Entries (I).Format'Img);
+            Ada.Text_IO.Set_Col (File => Fd,
+                                 To   => 26);
+            Ada.Text_IO.Put (File => Fd,
+                             Item => S (Entries (I).Path));
+            Ada.Text_IO.New_Line (Fd);
          end;
       end loop;
+
+      Ada.Text_IO.Close (File => Fd);
    end Print_Layout;
 
    -------------------------------------------------------------------------
@@ -81,6 +90,7 @@ is
       In_Dir      : constant String := Command_Line.Get_Input_Dir;
       Policy_File : constant String := Command_Line.Get_Policy;
       Kernel_File : constant String := Command_Line.Get_Kernel_Filename;
+      Mmap        : constant String := Out_Dir & "/mmap";
    begin
       Mulog.Log (Msg => "Looking for input files in '" & In_Dir & "'");
       Mulog.Log (Msg => "Using output directory '" & Out_Dir & "'");
@@ -122,7 +132,9 @@ is
                              Dst_Bin => Sysimg);
             Mulog.Log (Msg => "Successfully created system image '"
                        & Sysimg & "'");
-            Print_Layout (Files => Files);
+            Print_Layout (File    => Mmap,
+                          Entries => Files);
+            Mulog.Log (Msg => "Memory map written to file '" & Mmap & "'");
          end Pack_Image;
       end;
    end Run;

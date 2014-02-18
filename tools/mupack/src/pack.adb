@@ -51,32 +51,37 @@ is
       Ada.Text_IO.Set_Col (File => Fd,
                            To   => 15);
       Ada.Text_IO.Put (File => Fd,
-                       Item => "TYPE");
+                       Item => "OFFSET");
       Ada.Text_IO.Set_Col (File => Fd,
                            To   => 26);
+      Ada.Text_IO.Put (File => Fd,
+                       Item => "TYPE");
+      Ada.Text_IO.Set_Col (File => Fd,
+                           To   => 36);
       Ada.Text_IO.Put (File => Fd,
                        Item => "PATH");
       Ada.Text_IO.New_Line (File => Fd);
 
       for I in Entries'Range loop
-         declare
-            Addr : constant String := Mutools.Utils.To_Hex
-              (Number => Entries (I).Address);
-         begin
-            Ada.Text_IO.Set_Col (File => Fd,
-                                 To   => 1);
-            Ada.Text_IO.Put (File => Fd,
-                             Item => Addr);
-            Ada.Text_IO.Set_Col (File => Fd,
-                                 To   => 15);
-            Ada.Text_IO.Put (File => Fd,
-                             Item => Entries (I).Format'Img);
-            Ada.Text_IO.Set_Col (File => Fd,
-                                 To   => 26);
-            Ada.Text_IO.Put (File => Fd,
-                             Item => S (Entries (I).Path));
-            Ada.Text_IO.New_Line (Fd);
-         end;
+         Ada.Text_IO.Set_Col (File => Fd,
+                              To   => 1);
+         Ada.Text_IO.Put (File => Fd,
+                          Item => Mutools.Utils.To_Hex
+                            (Number => Entries (I).Address));
+         Ada.Text_IO.Set_Col (File => Fd,
+                              To   => 15);
+         Ada.Text_IO.Put (File => Fd,
+                          Item => Mutools.Utils.To_Hex
+                            (Number => Entries (I).Offset));
+         Ada.Text_IO.Set_Col (File => Fd,
+                              To   => 26);
+         Ada.Text_IO.Put (File => Fd,
+                          Item => Entries (I).Format'Img);
+         Ada.Text_IO.Set_Col (File => Fd,
+                              To   => 36);
+         Ada.Text_IO.Put (File => Fd,
+                          Item => S (Entries (I).Path));
+         Ada.Text_IO.New_Line (Fd);
       end loop;
 
       Ada.Text_IO.Close (File => Fd);

@@ -35,9 +35,11 @@ is
    type Transform_Procedure is not null access procedure
      (File : not null access Parser.File_Entry_Type);
 
+   procedure Null_Transform
+     (File : not null access Parser.File_Entry_Type) is null;
+
    --  Default transform: prepend input directory to file path and normalize
-   --  names. Also check that the file exists. This transform must be called
-   --  from the other transform implementations first.
+   --  names. Also check that the file exists.
    procedure Default_Transform (File : not null access Parser.File_Entry_Type);
 
    --  Patch Linux bzImage.
@@ -49,7 +51,7 @@ is
    Transforms : constant array (Parser.File_Format_Type) of Transform_Procedure
      := (Parser.Bzimage => Patch_Bzimage'Access,
          Parser.Elf     => To_Raw_Binary'Access,
-         others         => Default_Transform'Access);
+         others         => Null_Transform'Access);
 
    -------------------------------------------------------------------------
 
@@ -101,8 +103,6 @@ is
       Filepath_Out  : constant String
         := Command_Line.Get_Output_Dir & "/" & Filename_Out;
    begin
-      Default_Transform (File => File);
-
       Mulog.Log (Msg => "Processing Linux bzImage '" & Filepath_In & "' --> '"
                  & Filepath_Out & "'");
 
@@ -188,6 +188,7 @@ is
    is
    begin
       for I in Files'Range loop
+         Default_Transform (File => Files (I)'Access);
          Transforms (Files (I).Format) (File => Files (I)'Access);
       end loop;
    end Process;
@@ -204,8 +205,6 @@ is
       Output_Path  : constant String := Command_Line.Get_Output_Dir & "/"
         & Output_Fname;
    begin
-      Default_Transform (File => File);
-
       Mulog.Log (Msg => "Converting file '" & Input_Path & "' from ELF to raw "
                  & "binary '" & Output_Path & "'");
       Image.To_Binary (Src_Elf => Input_Path,

@@ -57,14 +57,11 @@ is
    is
       use type Ada.Strings.Unbounded.Unbounded_String;
 
-      Filepath : constant String
-        := Command_Line.Get_Input_Dir & "/" & S (File.Filename);
+      Filepath : constant String := S (File.Path) & "/" & S (File.Filename);
    begin
       if not Ada.Directories.Exists (Name => Filepath) then
          raise Pack_Error with "File '" & Filepath & "' does not exist";
       end if;
-
-      File.Path := U (Command_Line.Get_Input_Dir);
    end Default_Transform;
 
    -------------------------------------------------------------------------
@@ -200,27 +197,24 @@ is
    procedure To_Raw_Binary (File : not null access Parser.File_Entry_Type)
    is
       use type Ada.Strings.Unbounded.Unbounded_String;
+
+      Input_Path   : constant String := S (File.Path) & "/"
+        & S (File.Filename);
+      Output_Fname : constant String := S (File.Filename) & ".bin";
+      Output_Path  : constant String := Command_Line.Get_Output_Dir & "/"
+        & Output_Fname;
    begin
       Default_Transform (File => File);
 
-      declare
-         Input_Path   : constant String := S (File.Path) & "/"
-           & S (File.Filename);
-         Output_Fname : constant String := S (File.Filename) & ".bin";
-         Output_Path  : constant String := Command_Line.Get_Output_Dir & "/"
-           & Output_Fname;
-      begin
+      Mulog.Log (Msg => "Converting file '" & Input_Path & "' from ELF to raw "
+                 & "binary '" & Output_Path & "'");
+      Image.To_Binary (Src_Elf => Input_Path,
+                       Dst_Bin => Output_Path);
 
-         Mulog.Log (Msg => "Converting file '" & Input_Path & "' from ELF to "
-                    & "raw binary '" & Output_Path & "'");
-         Image.To_Binary (Src_Elf => Input_Path,
-                          Dst_Bin => Output_Path);
+      --  Update file reference.
 
-         --  Update file reference.
-
-         File.Filename := U (Output_Fname);
-         File.Path     := U (Command_Line.Get_Output_Dir);
-      end;
+      File.Filename := U (Output_Fname);
+      File.Path     := U (Command_Line.Get_Output_Dir);
    end To_Raw_Binary;
 
 end Pack.File_Transforms;

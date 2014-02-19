@@ -35,6 +35,9 @@ is
      (File    : String;
       Entries : Parser.File_Array);
 
+   --  Initialize file paths.
+   procedure Set_Initial_Filepath (Files : in out Parser.File_Array);
+
    -------------------------------------------------------------------------
 
    procedure Print_Layout
@@ -91,6 +94,8 @@ is
       declare
          Files : Parser.File_Array := Parser.Parse (Policy => Policy_File);
       begin
+         Set_Initial_Filepath (Files => Files);
+
          Mulog.Log (Msg => "Found" & Files'Length'Img & " file(s) to process");
          File_Transforms.Process (Files => Files);
 
@@ -130,5 +135,15 @@ is
          end Pack_Image;
       end;
    end Run;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Initial_Filepath (Files : in out Parser.File_Array)
+   is
+   begin
+      for I in Files'Range loop
+         Files (I).Path := U (Command_Line.Get_Input_Dir);
+      end loop;
+   end Set_Initial_Filepath;
 
 end Pack;

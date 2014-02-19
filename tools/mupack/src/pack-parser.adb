@@ -70,7 +70,7 @@ is
                Memory : constant DOM.Core.Node
                  := DOM.Core.Nodes.Parent_Node (N => File);
             begin
-               Files (I).Path   := U
+               Files (I).Filename := U
                  (DOM.Core.Elements.Get_Attribute
                     (Elem => File,
                      Name => "filename"));

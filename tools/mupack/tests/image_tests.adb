@@ -45,11 +45,12 @@ is
       Fname : constant String := "obj/test.img";
    begin
       Image.Add_File (Image => Img,
-                      File  => (Path    => U ("data/pattern"),
-                                Address => 16#0010#,
-                                Size    => 16#0020#,
-                                Offset  => 0,
-                                Format  => Parser.Elf));
+                      File  => (Filename => U ("pattern"),
+                                Path     => U ("data"),
+                                Address  => 16#0010#,
+                                Size     => 16#0020#,
+                                Offset   => 0,
+                                Format   => Parser.Elf));
       Image.Write (Image    => Img,
                    Filename => Fname);
       Assert (Condition => Test_Utils.Equal_Files
@@ -67,11 +68,12 @@ is
       Fname : constant String := "obj/test.img";
    begin
       Image.Add_File (Image => Img,
-                      File  => (Path    => U ("data/pattern"),
-                                Address => 0,
-                                Size    => 16#0a#,
-                                Offset  => 16#0a#,
-                                Format  => Parser.Elf));
+                      File  => (Filename => U ("pattern"),
+                                Path     => U ("data"),
+                                Address  => 0,
+                                Size     => 16#0a#,
+                                Offset   => 16#0a#,
+                                Format   => Parser.Elf));
       Image.Write (Image    => Img,
                    Filename => Fname);
       Assert (Condition => Test_Utils.Equal_Files
@@ -88,11 +90,12 @@ is
       Img : Image.Image_Type (End_Address => 10);
    begin
       Image.Add_File (Image => Img,
-                      File  => (Path    => U ("data/pattern"),
-                                Address => 16#0000#,
-                                Size    => 16#001c#,
-                                Offset  => 0,
-                                Format  => Parser.Elf));
+                      File  => (Filename => U ("pattern"),
+                                Path     => U ("data"),
+                                Address  => 16#0000#,
+                                Size     => 16#001c#,
+                                Offset   => 0,
+                                Format   => Parser.Elf));
       Fail (Message => "Exception expected");
 
    exception

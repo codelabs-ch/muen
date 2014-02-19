@@ -45,27 +45,31 @@ is
       use type Parser.File_Array;
 
       Files : Parser.File_Array
-        := (1 => (Path    => U ("obj1.o"),
-                  Address => 16#0010_0000#,
-                  Size    => 16#0001_3000#,
-                  Offset  => 0,
-                  Format  => Parser.Elf),
-            2 => (Path    => U ("obj2.o"),
-                  Address => 16#0011_3000#,
-                  Size    => 16#0001_3000#,
-                  Offset  => 0,
-                  Format  => Parser.Acpi_Rsdp));
+        := (1 => (Filename => U ("obj1.o"),
+                  Path     => U ("data"),
+                  Address  => 16#0010_0000#,
+                  Size     => 16#0001_3000#,
+                  Offset   => 0,
+                  Format   => Parser.Elf),
+            2 => (Filename => U ("obj2.o"),
+                  Path     => U ("data"),
+                  Address  => 16#0011_3000#,
+                  Size     => 16#0001_3000#,
+                  Offset   => 0,
+                  Format   => Parser.Acpi_Rsdp));
       Ref_Files : constant Parser.File_Array
-        := (1 => (Path    => U ("obj/obj1.o.bin"),
-                  Address => 16#0010_0000#,
-                  Size    => 16#0001_3000#,
-                  Offset  => 0,
-                  Format  => Parser.Elf),
-            2 => (Path    => U ("data/obj2.o"),
-                  Address => 16#0011_3000#,
-                  Size    => 16#0001_3000#,
-                  Offset  => 0,
-                  Format  => Parser.Acpi_Rsdp));
+        := (1 => (Filename => U ("obj1.o.bin"),
+                  Path     => U ("obj"),
+                  Address  => 16#0010_0000#,
+                  Size     => 16#0001_3000#,
+                  Offset   => 0,
+                  Format   => Parser.Elf),
+            2 => (Filename => U ("obj2.o"),
+                  Path     => U ("data"),
+                  Address  => 16#0011_3000#,
+                  Size     => 16#0001_3000#,
+                  Offset   => 0,
+                  Format   => Parser.Acpi_Rsdp));
    begin
       Command_Line.Test.Set_Input_Dir  (Path => "data");
       Command_Line.Test.Set_Output_Dir (Path => "obj");
@@ -84,11 +88,12 @@ is
       use type Parser.File_Array;
 
       Files : Parser.File_Array
-        := (1 => (Path    => U ("nonexistent.o"),
-                  Address => 16#0010_0000#,
-                  Size    => 16#0001_3000#,
-                  Offset  => 0,
-                  Format  => Parser.Iobm));
+        := (1 => (Filename => U ("nonexistent.o"),
+                  Path     => U ("nonexistent.o"),
+                  Address  => 16#0010_0000#,
+                  Size     => 16#0001_3000#,
+                  Offset   => 0,
+                  Format   => Parser.Iobm));
    begin
       Command_Line.Test.Set_Input_Dir  (Path => "data");
 
@@ -129,11 +134,12 @@ is
 
       declare
          Files : Parser.File_Array
-           := (1 => (Path    => U ("invalid_bzimage"),
-                     Address => 16#0010_0000#,
-                     Size    => 16#0001_3000#,
-                     Offset  => 0,
-                     Format  => Parser.Bzimage));
+           := (1 => (Filename => U ("invalid_bzimage"),
+                     Path     => U ("data"),
+                     Address  => 16#0010_0000#,
+                     Size     => 16#0001_3000#,
+                     Offset   => 0,
+                     Format   => Parser.Bzimage));
       begin
          File_Transforms.Process (Files => Files);
 
@@ -147,11 +153,12 @@ is
 
       declare
          Files : Parser.File_Array
-           := (1 => (Path    => U ("obj1.o"),
-                     Address => 16#0010_0000#,
-                     Size    => 16#0001_3000#,
-                     Offset  => 0,
-                     Format  => Parser.Bzimage));
+           := (1 => (Filename => U ("obj1.o"),
+                     Path     => U ("data"),
+                     Address  => 16#0010_0000#,
+                     Size     => 16#0001_3000#,
+                     Offset   => 0,
+                     Format   => Parser.Bzimage));
       begin
          File_Transforms.Process (Files => Files);
 
@@ -173,11 +180,12 @@ is
 
       declare
          Files : Parser.File_Array
-           := (1 => (Path    => U ("bzimage.32"),
-                     Address => 16#0010_0000#,
-                     Size    => 16#0001_3000#,
-                     Offset  => 0,
-                     Format  => Parser.Bzimage));
+           := (1 => (Filename => U ("bzimage.32"),
+                     Path     => U ("data"),
+                     Address  => 16#0010_0000#,
+                     Size     => 16#0001_3000#,
+                     Offset   => 0,
+                     Format   => Parser.Bzimage));
 
       begin
          File_Transforms.Process (Files => Files);
@@ -190,11 +198,12 @@ is
 
       declare
          Files : Parser.File_Array
-           := (1 => (Path    => U ("bzimage.64"),
-                     Address => 16#0010_0000#,
-                     Size    => 16#0001_3000#,
-                     Offset  => 0,
-                     Format  => Parser.Bzimage));
+           := (1 => (Filename => U ("bzimage.64"),
+                     Path     => U ("data"),
+                     Address  => 16#0010_0000#,
+                     Size     => 16#0001_3000#,
+                     Offset   => 0,
+                     Format   => Parser.Bzimage));
 
       begin
          File_Transforms.Process (Files => Files);

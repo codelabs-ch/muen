@@ -57,14 +57,14 @@ is
    is
       use type Ada.Strings.Unbounded.Unbounded_String;
 
-      Path : constant String := Command_Line.Get_Input_Dir & "/"
-        & S (File.Path);
+      Filepath : constant String
+        := Command_Line.Get_Input_Dir & "/" & S (File.Filename);
    begin
-      if not Ada.Directories.Exists (Name => Path) then
-         raise Pack_Error with "File '" & Path & "' does not exist";
+      if not Ada.Directories.Exists (Name => Filepath) then
+         raise Pack_Error with "File '" & Filepath & "' does not exist";
       end if;
 
-      File.Path := Command_Line.Get_Input_Dir & "/" & File.Path;
+      File.Path := U (Command_Line.Get_Input_Dir);
    end Default_Transform;
 
    -------------------------------------------------------------------------
@@ -98,15 +98,18 @@ is
       Setup_Sectors : Integer := 4;
       File_In       : File_Type;
       File_Out      : File_Type;
-      Filename_Out  : constant String
-        := Command_Line.Get_Output_Dir & "/" & S (File.Path) & ".patched";
+      Filepath_In   : constant String
+        := S (File.Path) & "/" & S (File.Filename);
+      Filename_Out  : constant String := S (File.Filename) & ".patched";
+      Filepath_Out  : constant String
+        := Command_Line.Get_Output_Dir & "/" & Filename_Out;
    begin
       Default_Transform (File => File);
 
-      Mulog.Log (Msg => "Processing Linux bzImage '" & S (File.Path)
-                 & "' --> '" & Filename_Out & "'");
+      Mulog.Log (Msg => "Processing Linux bzImage '" & Filepath_In & "' --> '"
+                 & Filepath_Out & "'");
 
-      Open (Name => S (File.Path),
+      Open (Name => Filepath_In,
             File => File_In,
             Mode => In_File);
 
@@ -122,7 +125,7 @@ is
       exception
          when Ada.IO_Exceptions.End_Error =>
             raise Transform_Error with "Unexpected file layout in bzImage '"
-              &  S (File.Path) & "'";
+              & Filepath_In & "'";
       end;
 
       begin
@@ -147,21 +150,21 @@ is
          --  Overwrite start of 32-bit bzImage entry point with NOP.
 
          Mulog.Log (Msg => "Patching 32-bit entry point in '"
-                    & Filename_Out & "'");
+                    & Filepath_Out & "'");
          Sector (bzImage32BitEntryPoint'Range) := (others => 16#90#);
       elsif Sector (bzImage64BitEntryPoint'Range) = bzImage64BitEntryPoint then
 
          --  Overwrite start of 64-bit bzImage entry point with NOP.
 
          Mulog.Log (Msg => "Patching 64-bit entry point in '"
-                    & Filename_Out & "'");
+                    & Filepath_Out & "'");
          Sector (bzImage64BitEntryPoint'Range) := (others => 16#90#);
       else
          raise Transform_Error with "Unable to find entry point in bzImage '"
-           & S (File.Path) & "'";
+           & Filepath_In & "'";
       end if;
 
-      Mutools.Files.Open (Filename => Filename_Out,
+      Mutools.Files.Open (Filename => Filepath_Out,
                           File     => File_Out);
       Sector_Type'Write (Stream (File => File_Out), Sector);
 
@@ -176,9 +179,10 @@ is
       Close (File => File_In);
       Close (File => File_Out);
 
-      --  Update path.
+      --  Update file reference.
 
-      File.Path := U (Filename_Out);
+      File.Filename := U (Filename_Out);
+      File.Path     := U (Command_Line.Get_Output_Dir);
    end Patch_Bzimage;
 
    -------------------------------------------------------------------------
@@ -196,20 +200,27 @@ is
    procedure To_Raw_Binary (File : not null access Parser.File_Entry_Type)
    is
       use type Ada.Strings.Unbounded.Unbounded_String;
-
-      Output : constant String := Command_Line.Get_Output_Dir & "/"
-        & S (File.Path) & ".bin";
    begin
       Default_Transform (File => File);
 
-      Mulog.Log (Msg => "Converting file '" & S (File.Path) & "' from ELF to "
-                 & "raw binary '" & Output & "'");
-      Image.To_Binary (Src_Elf => S (File.Path),
-                       Dst_Bin => Output);
+      declare
+         Input_Path   : constant String := S (File.Path) & "/"
+           & S (File.Filename);
+         Output_Fname : constant String := S (File.Filename) & ".bin";
+         Output_Path  : constant String := Command_Line.Get_Output_Dir & "/"
+           & Output_Fname;
+      begin
 
-      --  Update path.
+         Mulog.Log (Msg => "Converting file '" & Input_Path & "' from ELF to "
+                    & "raw binary '" & Output_Path & "'");
+         Image.To_Binary (Src_Elf => Input_Path,
+                          Dst_Bin => Output_Path);
 
-      File.Path := U (Output);
+         --  Update file reference.
+
+         File.Filename := U (Output_Fname);
+         File.Path     := U (Command_Line.Get_Output_Dir);
+      end;
    end To_Raw_Binary;
 
 end Pack.File_Transforms;

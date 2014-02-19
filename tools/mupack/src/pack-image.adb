@@ -45,7 +45,7 @@ is
    begin
       Stream_IO.Open (File => Fd,
                       Mode => Stream_IO.In_File,
-                      Name => S (File.Path));
+                      Name => S (File.Path) & "/" & S (File.Filename));
 
       if File.Offset > 0 then
 

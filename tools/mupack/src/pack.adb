@@ -65,8 +65,9 @@ is
                           Item => Entries (I).Format'Img);
          Ada.Text_IO.Set_Col (File => Fd,
                               To   => 46);
-         Ada.Text_IO.Put (File => Fd,
-                          Item => S (Entries (I).Path));
+         Ada.Text_IO.Put
+           (File => Fd,
+            Item => S (Entries (I).Path) & "/" & S (Entries (I).Filename));
          Ada.Text_IO.New_Line (Fd);
       end loop;
 

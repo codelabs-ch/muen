@@ -40,16 +40,18 @@ is
       use type Parser.File_Array;
 
       Ref_Files : constant Parser.File_Array
-        := (1 => (Path    => U ("sections.ref"),
-                  Address => 16#0010_0000#,
-                  Size    => 16#0001_3000#,
-                  Offset  => 0,
-                  Format  => Parser.Acpi_Rsdp),
-            2 => (Path    => U ("obj1.o"),
-                  Address => 16#0011_3000#,
-                  Size    => 16#0001_3000#,
-                  Offset  => 4,
-                  Format  => Parser.Elf));
+        := (1 => (Filename => U ("sections.ref"),
+                  Path     => Ada.Strings.Unbounded.Null_Unbounded_String,
+                  Address  => 16#0010_0000#,
+                  Size     => 16#0001_3000#,
+                  Offset   => 0,
+                  Format   => Parser.Acpi_Rsdp),
+            2 => (Filename => U ("obj1.o"),
+                  Path     => Ada.Strings.Unbounded.Null_Unbounded_String,
+                  Address  => 16#0011_3000#,
+                  Size     => 16#0001_3000#,
+                  Offset   => 4,
+                  Format   => Parser.Elf));
    begin
       declare
          Files : constant Parser.File_Array
@@ -70,16 +72,18 @@ is
 
       Empty : constant Parser.File_Array (1 .. 0) := (others => <>);
       Files : constant Parser.File_Array
-        := (1 => (Path    => U ("sections.ref"),
-                  Address => 16#0000_4000#,
-                  Size    => 16#0000_3000#,
-                  Offset  => 0,
-                  Format  => Parser.Acpi_Rsdp),
-            2 => (Path    => U ("obj1.o"),
-                  Address => 16#0000_1000#,
-                  Size    => 16#0000_7000#,
-                  Offset  => 16#0001_b000#,
-                  Format  => Parser.Elf));
+        := (1 => (Filename => U ("sections.ref"),
+                  Path     => U ("data"),
+                  Address  => 16#0000_4000#,
+                  Size     => 16#0000_3000#,
+                  Offset   => 0,
+                  Format   => Parser.Acpi_Rsdp),
+            2 => (Filename => U ("obj1.o"),
+                  Path     => U ("data"),
+                  Address  => 16#0000_1000#,
+                  Size     => 16#0000_7000#,
+                  Offset   => 16#0001_b000#,
+                  Format   => Parser.Elf));
    begin
       Assert (Condition => Parser.Get_Image_Size (Files => Empty) = 0,
               Message   => "Zero expected");

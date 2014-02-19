@@ -26,6 +26,7 @@ is
       Acpi_Xsdt,
       Acpi_Fadt,
       Acpi_Dsdt,
+      Bin_Raw,
       Bzimage,
       Elf,
       Pt,

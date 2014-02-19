@@ -214,6 +214,7 @@ is
 
       File.Filename := U (Output_Fname);
       File.Path     := U (Command_Line.Get_Output_Dir);
+      File.Format   := Parser.Bin_Raw;
    end To_Raw_Binary;
 
 end Pack.File_Transforms;

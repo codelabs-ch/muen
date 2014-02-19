@@ -63,7 +63,7 @@ is
                   Address  => 16#0010_0000#,
                   Size     => 16#0001_3000#,
                   Offset   => 0,
-                  Format   => Parser.Elf),
+                  Format   => Parser.Bin_Raw),
             2 => (Filename => U ("obj2.o"),
                   Path     => U ("data"),
                   Address  => 16#0011_3000#,

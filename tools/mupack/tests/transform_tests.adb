@@ -40,49 +40,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Default_Transform
-   is
-      use type Parser.File_Array;
-
-      Files : Parser.File_Array
-        := (1 => (Filename => U ("obj1.o"),
-                  Path     => U ("data"),
-                  Address  => 16#0010_0000#,
-                  Size     => 16#0001_3000#,
-                  Offset   => 0,
-                  Format   => Parser.Elf),
-            2 => (Filename => U ("obj2.o"),
-                  Path     => U ("data"),
-                  Address  => 16#0011_3000#,
-                  Size     => 16#0001_3000#,
-                  Offset   => 0,
-                  Format   => Parser.Acpi_Rsdp));
-      Ref_Files : constant Parser.File_Array
-        := (1 => (Filename => U ("obj1.o.bin"),
-                  Path     => U ("obj"),
-                  Address  => 16#0010_0000#,
-                  Size     => 16#0001_3000#,
-                  Offset   => 0,
-                  Format   => Parser.Bin_Raw),
-            2 => (Filename => U ("obj2.o"),
-                  Path     => U ("data"),
-                  Address  => 16#0011_3000#,
-                  Size     => 16#0001_3000#,
-                  Offset   => 0,
-                  Format   => Parser.Acpi_Rsdp));
-   begin
-      Command_Line.Test.Set_Input_Dir  (Path => "data");
-      Command_Line.Test.Set_Output_Dir (Path => "obj");
-
-      File_Transforms.Process (Files => Files);
-      Assert (Condition => Ref_Files = Files,
-              Message   => "Transformed files mismatch");
-
-      Ada.Directories.Delete_File (Name => "obj/obj1.o.bin");
-   end Default_Transform;
-
-   -------------------------------------------------------------------------
-
    procedure Default_Transform_Nonexistent
    is
       use type Parser.File_Array;
@@ -111,8 +68,8 @@ is
    begin
       T.Set_Name (Name => "File transform tests");
       T.Add_Test_Routine
-        (Routine => Default_Transform'Access,
-         Name    => "Default transform");
+        (Routine => Run_Process'Access,
+         Name    => "Process files");
       T.Add_Test_Routine
         (Routine => Default_Transform_Nonexistent'Access,
          Name    => "Default transform (nonexistent file)");
@@ -214,5 +171,48 @@ is
          Ada.Directories.Delete_File (Name => "obj/bzimage.64.patched");
       end;
    end Patch_Bzimage;
+
+   -------------------------------------------------------------------------
+
+   procedure Run_Process
+   is
+      use type Parser.File_Array;
+
+      Files : Parser.File_Array
+        := (1 => (Filename => U ("obj1.o"),
+                  Path     => U ("data"),
+                  Address  => 16#0010_0000#,
+                  Size     => 16#0001_3000#,
+                  Offset   => 0,
+                  Format   => Parser.Elf),
+            2 => (Filename => U ("obj2.o"),
+                  Path     => U ("data"),
+                  Address  => 16#0011_3000#,
+                  Size     => 16#0001_3000#,
+                  Offset   => 0,
+                  Format   => Parser.Acpi_Rsdp));
+      Ref_Files : constant Parser.File_Array
+        := (1 => (Filename => U ("obj1.o.bin"),
+                  Path     => U ("obj"),
+                  Address  => 16#0010_0000#,
+                  Size     => 16#0001_3000#,
+                  Offset   => 0,
+                  Format   => Parser.Bin_Raw),
+            2 => (Filename => U ("obj2.o"),
+                  Path     => U ("data"),
+                  Address  => 16#0011_3000#,
+                  Size     => 16#0001_3000#,
+                  Offset   => 0,
+                  Format   => Parser.Acpi_Rsdp));
+   begin
+      Command_Line.Test.Set_Input_Dir  (Path => "data");
+      Command_Line.Test.Set_Output_Dir (Path => "obj");
+
+      File_Transforms.Process (Files => Files);
+      Assert (Condition => Ref_Files = Files,
+              Message   => "Transformed files mismatch");
+
+      Ada.Directories.Delete_File (Name => "obj/obj1.o.bin");
+   end Run_Process;
 
 end Transform_Tests;

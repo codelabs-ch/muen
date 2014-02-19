@@ -26,8 +26,8 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
-   --  Default transform.
-   procedure Default_Transform;
+   --  Call Process procedure.
+   procedure Run_Process;
 
    --  Default transform: nonexistent file.
    procedure Default_Transform_Nonexistent;

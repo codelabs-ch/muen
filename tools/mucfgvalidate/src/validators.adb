@@ -269,6 +269,8 @@ is
       Validate.Register
         (Validator => Memory.Virtual_Memory_Overlap'Access);
       Validate.Register
+        (Validator => Memory.Kernel_PT_Consecutiveness'Access);
+      Validate.Register
         (Validator => MSR.Start_Smaller_End'Access);
       Validate.Register
         (Validator => MSR.Low_Or_High'Access);

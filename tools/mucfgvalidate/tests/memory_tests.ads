@@ -89,4 +89,7 @@ is
    --  Validate subject virtual and device  memory region overlap.
    procedure Validate_Virtmem_Overlap_Device_Subject;
 
+   --  Validate kernel PT region consecutiveness.
+   procedure Validate_Kernel_PT_Consecutiveness;
+
 end Memory_Tests;

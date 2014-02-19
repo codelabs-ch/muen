@@ -102,6 +102,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Virtmem_Overlap_Device_Subject'Access,
          Name    => "Validate subject device memory overlap");
+      T.Add_Test_Routine
+        (Routine => Validate_Kernel_PT_Consecutiveness'Access,
+         Name    => "Validate consecutiveness of kernel PT regions");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -161,6 +164,28 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Entity_Name_Encoding;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Kernel_PT_Consecutiveness
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Memory.Kernel_PT_Consecutiveness (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Kernel PT memory region 'kernel_0|pt' not adjacent to "
+                    & "other PT regions",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Kernel_PT_Consecutiveness;
 
    -------------------------------------------------------------------------
 

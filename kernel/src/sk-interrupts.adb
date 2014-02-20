@@ -21,8 +21,10 @@ with System.Storage_Elements;
 with Skp.Interrupts;
 
 with SK.CPU;
+with SK.CPU_Registry;
 with SK.IO;
 with SK.IO_Apic;
+with SK.KC;
 
 package body SK.Interrupts
 --# own
@@ -108,15 +110,30 @@ is
 
    procedure Setup_IRQ_Routing
    is
+      Route   : Skp.Interrupts.IRQ_Route_Type;
+      APIC_ID : SK.Byte;
    begin
       for I in Skp.Interrupts.Routing_Range loop
+         Route   := Skp.Interrupts.IRQ_Routing (I);
+         APIC_ID := CPU_Registry.Get_APIC_ID (CPU_ID => Route.CPU);
+
+         pragma Debug (KC.Put_String (Item => "Routing IRQ "));
+         pragma Debug (KC.Put_Byte   (Item => Route.IRQ));
+         pragma Debug (KC.Put_String (Item => " as vector "));
+         pragma Debug (KC.Put_Byte   (Item => SK.Byte (Route.Vector)));
+         pragma Debug (KC.Put_String (Item => " to CPU "));
+         pragma Debug (KC.Put_Byte   (Item => SK.Byte (Route.CPU)));
+         pragma Debug (KC.Put_String (Item => " with APIC ID "));
+         pragma Debug (KC.Put_Byte   (Item => APIC_ID));
+         pragma Debug (KC.New_Line);
+
          if Skp.Interrupts.IRQ_Routing (I).Vector /= Skp.Invalid_Vector then
             IO_Apic.Route_IRQ
               (IRQ            => Skp.Interrupts.IRQ_Routing (I).IRQ,
                Vector         =>
                  SK.Byte (Skp.Interrupts.IRQ_Routing (I).Vector),
                Trigger_Mode   => IO_Apic.Edge,
-               Destination_Id => SK.Byte (Skp.Interrupts.IRQ_Routing (I).CPU));
+               Destination_Id => APIC_ID);
          end if;
       end loop;
    end Setup_IRQ_Routing;

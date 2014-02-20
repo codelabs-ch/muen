@@ -28,7 +28,8 @@ use type Skp.Dst_Vector_Range;
 --#    X86_64,
 --#    SK.IO,
 --#    SK.IO_Apic,
---#    SK.Descriptors;
+--#    SK.Descriptors,
+--#    SK.CPU_Registry;
 package SK.Interrupts
 --# own
 --#    State;
@@ -66,8 +67,9 @@ is
    --  Setup I/O APIC IRQ routing.
    procedure Setup_IRQ_Routing;
    --# global
+   --#    in     CPU_Registry.State;
    --#    in out IO_Apic.State;
    --# derives
-   --#    IO_Apic.State from *;
+   --#    IO_Apic.State from *, CPU_Registry.State;
 
 end SK.Interrupts;

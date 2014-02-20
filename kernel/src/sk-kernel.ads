@@ -48,10 +48,15 @@ is
    --#    in out X86_64.State;
    --# derives
    --#    Interrupts.State from * &
-   --#    MP.Barrier, IO_Apic.State, Subjects.State, CPU_Registry.State from
+   --#    MP.Barrier, Subjects.State, CPU_Registry.State from
    --#       *,
    --#       X86_64.State,
    --#       Interrupts.State &
+   --#    IO_Apic.State from
+   --#       *,
+   --#       X86_64.State,
+   --#       Interrupts.State,
+   --#       CPU_Registry.State &
    --#    CPU_Global.State from
    --#       *,
    --#       X86_64.State,

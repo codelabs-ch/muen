@@ -61,16 +61,16 @@
 		<memory name="kernel_store_3" size="16#1000#" caching="WB"/>
 
 		<memory name="sys_interface" size="16#1000#" caching="WB"/>
-		<memory name="kernel_0|pt" size="16#4000#" caching="WB">
+		<memory name="kernel_0|pt" physicalAddress="16#0012_9000#" size="16#4000#" caching="WB">
 			<file format="pt" filename="kernel_pt_0" offset="16#0000#"/>
 		</memory>
-		<memory name="kernel_1|pt" size="16#4000#" caching="WB">
+		<memory name="kernel_1|pt" physicalAddress="16#0012_d000#" size="16#4000#" caching="WB">
 			<file format="pt" filename="kernel_pt_1" offset="16#0000#"/>
 		</memory>
-		<memory name="kernel_2|pt" size="16#4000#" caching="WB">
+		<memory name="kernel_2|pt" physicalAddress="16#0013_1000#" size="16#4000#" caching="WB">
 			<file format="pt" filename="kernel_pt_2" offset="16#0000#"/>
 		</memory>
-		<memory name="kernel_3|pt" size="16#4000#" caching="WB">
+		<memory name="kernel_3|pt" physicalAddress="16#0013_5000#" size="16#4000#" caching="WB">
 			<file format="pt" filename="kernel_pt_3" offset="16#0000#"/>
 		</memory>
 

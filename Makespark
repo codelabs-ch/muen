@@ -21,6 +21,7 @@ SPARK_OPTS =                                      \
 	-error_explanations=first_occurrence          \
 	-language=2005                                \
 	-brief=fullpath                               \
+	-casing=si                                    \
 	-rules=all
 
 SPARKMAKE_OPTS =           \

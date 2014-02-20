@@ -20,7 +20,7 @@ SPARK_OPTS =                                      \
 	-warning_file=$(TOP_DIR)/config/warnings.conf \
 	-error_explanations=first_occurrence          \
 	-language=2005                                \
-	-brief                                        \
+	-brief=fullpath                               \
 	-rules=all
 
 SPARKMAKE_OPTS =           \

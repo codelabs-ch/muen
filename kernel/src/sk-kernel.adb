@@ -24,8 +24,9 @@ with SK.VMX;
 with SK.Scheduler;
 with SK.Apic;
 with SK.MP;
-with SK.CPU_Global;
 with SK.CPU;
+with SK.CPU_Global;
+with SK.CPU_Registry;
 with SK.Subjects;
 
 package body SK.Kernel
@@ -57,15 +58,25 @@ is
          Apic.Enable;
          CPU_Global.Init;
 
+         --  Register CPU ID -> local APIC ID mapping and make sure all CPUs
+         --  are registered before programming the IRQ routing.
+
+         CPU_Registry.Register (CPU_ID  => CPU_Global.CPU_ID,
+                                APIC_ID => Apic.Get_ID);
+
          --# accept Flow, 22, "CPU ID differs per logical CPU";
          if Is_Bsp then
          --# end accept;
+            Apic.Start_AP_Processors;
+         end if;
 
-            --  BSP
+         MP.Wait_For_All;
 
+         --# accept Flow, 22, "CPU ID differs per logical CPU";
+         if Is_Bsp then
+         --# end accept;
             Interrupts.Disable_Legacy_PIC;
             Interrupts.Setup_IRQ_Routing;
-            Apic.Start_AP_Processors;
          end if;
 
          System_State.Enable_VMX_Feature;

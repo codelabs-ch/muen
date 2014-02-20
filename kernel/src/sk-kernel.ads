@@ -27,8 +27,9 @@
 --#    SK.VMX,
 --#    SK.MP,
 --#    SK.IO_Apic,
+--#    SK.CPU,
 --#    SK.CPU_Global,
---#    SK.CPU;
+--#    SK.CPU_Registry;
 package SK.Kernel
 is
 
@@ -43,10 +44,11 @@ is
    --#    in out MP.Barrier;
    --#    in out IO_Apic.State;
    --#    in out CPU_Global.State;
+   --#    in out CPU_Registry.State;
    --#    in out X86_64.State;
    --# derives
    --#    Interrupts.State from * &
-   --#    MP.Barrier, IO_Apic.State, Subjects.State from
+   --#    MP.Barrier, IO_Apic.State, Subjects.State, CPU_Registry.State from
    --#       *,
    --#       X86_64.State,
    --#       Interrupts.State &

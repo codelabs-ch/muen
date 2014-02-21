@@ -10,6 +10,7 @@
 		</device>
 		<device name="vga" shared="false">
 			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#1000#" caching="WC"/>
+			<memory name="region2" physicalAddress="16#000b_a000#" size="16#1000#" caching="WC"/>
 			<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
 		</device>
 	</platform>
@@ -441,6 +442,7 @@
 			<devices>
 				<device logical="vga" physical="vga">
 					<memory logical="video" physical="buffer" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
+					<memory logical="reg2" physical="region2" virtualAddress="16#000b_a000#" writable="true" executable="false"/>
 				</device>
 			</devices>
 			<events/>

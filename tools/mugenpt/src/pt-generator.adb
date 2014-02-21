@@ -243,7 +243,7 @@ is
                   Logical_Mem   : constant DOM.Core.Node
                     := DOM.Core.Nodes.Item
                       (List  => Dev_Mem,
-                       Index => I);
+                       Index => D);
                   Logical_Name  : constant String
                     := DOM.Core.Elements.Get_Attribute
                       (Elem => Logical_Mem,

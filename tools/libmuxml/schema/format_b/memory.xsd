@@ -4,7 +4,7 @@
 	<xs:complexType name="memoryType">
 		<xs:complexContent>
 			<xs:extension base="memoryBaseType">
-		      <xs:attribute name="physicalAddress" type="word64Type" use="required"/>
+				<xs:attribute name="physicalAddress" type="word64Type" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -16,4 +16,5 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+
 </xs:schema>

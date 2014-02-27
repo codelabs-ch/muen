@@ -405,22 +405,22 @@ is
          Name    => "Allocation of full empty region");
       T.Add_Test_Routine
         (Routine => Allocate_Fixed_Partial_Left'Access,
-         Name    => "Partial fixed allocation of empty region (left)");
+         Name    => "Partial fixed alloc of empty region (left)");
       T.Add_Test_Routine
         (Routine => Allocate_Fixed_Partial_Right'Access,
-         Name    => "Partial fixed allocation of empty region (right)");
+         Name    => "Partial fixed alloc of empty region (right)");
       T.Add_Test_Routine
         (Routine => Allocate_Fixed_Partial_Middle'Access,
-         Name    => "Partial fixed allocation of empty region (middle)");
+         Name    => "Partial fixed alloc of empty region (middle)");
       T.Add_Test_Routine
         (Routine => Allocate_Fixed_Invalid_Outside_Empty'Access,
          Name    => "Detect fixed allocation of memory hole");
       T.Add_Test_Routine
         (Routine => Allocate_Fixed_Invalid_Left'Access,
-         Name    => "Allocation partially outside empty region (left)");
+         Name    => "Alloc partially outside empty region (left)");
       T.Add_Test_Routine
         (Routine => Allocate_Fixed_Invalid_Right'Access,
-         Name    => "Allocation partially outside empty region (right)");
+         Name    => "Alloc partially outside empty region (right)");
       T.Add_Test_Routine
         (Routine => Allocate_Fixed_Invalid_Exceed'Access,
          Name    => "Allocation exceeding empty region");

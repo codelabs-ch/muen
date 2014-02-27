@@ -36,13 +36,13 @@ is
                    Kind => Muxml.Format_A,
                    File => "data/allocation_with_devices.in.xml");
 
-      Make_Directory ("obj/allocation_with_devices");
+      Make_Directory (Name => "obj/allocation_with_devices");
       Allocator.Write (Output_Dir => "obj/allocation_with_devices",
-                       Policy      => Policy);
+                       Policy     => Policy);
 
       Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/allocation_with_devices.ref.xml",
-                   Filename2 => "obj/allocation_with_devices/system.xml"),
+              (Filename1 => "data/allocation_with_devices.ref.xml",
+               Filename2 => "obj/allocation_with_devices/system.xml"),
               Message => "Invalid allocation involving devices");
    end Allocation_With_Devices;
 
@@ -56,13 +56,13 @@ is
                    Kind => Muxml.Format_A,
                    File => "data/automatic_allocation.in.xml");
 
-      Make_Directory ("obj/automatic_allocation");
+      Make_Directory (Name => "obj/automatic_allocation");
       Allocator.Write (Output_Dir => "obj/automatic_allocation",
-                       Policy      => Policy);
+                       Policy     => Policy);
 
       Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/automatic_allocation.ref.xml",
-                   Filename2 => "obj/automatic_allocation/system.xml"),
+              (Filename1 => "data/automatic_allocation.ref.xml",
+               Filename2 => "obj/automatic_allocation/system.xml"),
               Message => "Automatic allocation");
    end Automatic_Allocation;
 
@@ -76,13 +76,13 @@ is
                    Kind => Muxml.Format_A,
                    File => "data/file_backed_first.in.xml");
 
-      Make_Directory ("obj/file_backed_first");
+      Make_Directory (Name => "obj/file_backed_first");
       Allocator.Write (Output_Dir => "obj/file_backed_first",
-                       Policy      => Policy);
+                       Policy     => Policy);
 
       Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/file_backed_first.ref.xml",
-                   Filename2 => "obj/file_backed_first/system.xml"),
+              (Filename1 => "data/file_backed_first.ref.xml",
+               Filename2 => "obj/file_backed_first/system.xml"),
               Message => "File-backed first");
    end File_Backed_First;
 
@@ -128,13 +128,13 @@ is
                    Kind => Muxml.Format_A,
                    File => "data/limited_allocation.in.xml");
 
-      Make_Directory ("obj/limited_allocation");
+      Make_Directory (Name => "obj/limited_allocation");
       Allocator.Write (Output_Dir => "obj/limited_allocation",
                        Policy     => Policy);
 
       Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/limited_allocation.ref.xml",
-                   Filename2 => "obj/limited_allocation/system.xml"),
+              (Filename1 => "data/limited_allocation.ref.xml",
+               Filename2 => "obj/limited_allocation/system.xml"),
               Message => "Limited allocation");
    end Limited_Allocation;
 

@@ -17,10 +17,14 @@
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
+
 with McKae.XML.XPath.XIA;
+
 with Ada.Containers.Ordered_Sets;
 with Ada.Text_IO;
 with Ada.Exceptions;
+
+with Mulog;
 with Mutools.Utils;
 
 package body Alloc.Allocator
@@ -346,12 +350,16 @@ is
       Create (Memory_Map_File, Out_File, Output_Dir & "/system.map");
       Map.Iterate (Dump_Memory_Map'Access, Alloc.Map.Any);
       Close (Memory_Map_File);
+      Mulog.Log (Msg => "Memory map written to '" & Output_Dir
+                 & "/system.map'");
 
       --  Write output file
       Muxml.Write
          (File => Output_Dir & "/system.xml",
           Kind => Muxml.Format_B,
           Data => Policy);
+      Mulog.Log (Msg => "Created allocated policy '" & Output_Dir
+                 & "/system.xml'");
 
    exception
       when E : Alloc.Map.Overlapping_Empty_Region =>

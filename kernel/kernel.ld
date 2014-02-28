@@ -57,9 +57,6 @@ SECTIONS
 		*(.interfaces)
 	}
 
-	. = 0x02000000;
-	image_end = .;
-
 	/DISCARD/ :
 	{
 		*(.comment)

@@ -26,6 +26,7 @@ with Scheduling_Tests;
 with Validate_Tests;
 with Subject_Tests;
 with Platform_Tests;
+with Kernel_Tests;
 
 procedure Test_Runner
 is
@@ -46,6 +47,8 @@ begin
              T     => new Subject_Tests.Testcase);
    Add_Test (Suite => S.all,
              T     => new Platform_Tests.Testcase);
+   Add_Test (Suite => S.all,
+             T     => new Kernel_Tests.Testcase);
 
    Add_Test (Suite => S.all,
              T     => new Validate_Tests.Testcase);

@@ -28,6 +28,7 @@ with Validators.Memory;
 with Validators.MSR;
 with Validators.Device;
 with Validators.Scheduling;
+with Validators.Kernel;
 with Validators.Subject;
 with Validators.Platform;
 
@@ -306,6 +307,8 @@ is
         (Validator => Scheduling.Subject_CPU_Affinity'Access);
       Validate.Register
         (Validator => Scheduling.Major_Frame_Ticks'Access);
+      Validate.Register
+        (Validator => Kernel.CPU_Store_Address_Equality'Access);
       Validate.Register
         (Validator => Subject.Name_Uniqueness'Access);
       Validate.Register

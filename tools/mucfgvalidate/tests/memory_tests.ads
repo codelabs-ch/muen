@@ -98,4 +98,7 @@ is
    --  Validate kernel store region presence.
    procedure Validate_Kernel_Store_Region_Presence;
 
+   --  Validate kernel store region presence.
+   procedure Validate_Kernel_PT_Region_Presence;
+
 end Memory_Tests;

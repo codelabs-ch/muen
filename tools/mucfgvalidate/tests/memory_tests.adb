@@ -111,6 +111,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Kernel_Store_Region_Presence'Access,
          Name    => "Validate kernel store region presence");
+      T.Add_Test_Routine
+        (Routine => Validate_Kernel_PT_Region_Presence'Access,
+         Name    => "Validate kernel PT region presence");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -195,6 +198,42 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Kernel_PT_Consecutiveness;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Kernel_PT_Region_Presence
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/validators.xml");
+
+      declare
+         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Data.Doc,
+               XPath => "/system/memory/memory[@name='kernel_0|pt']"),
+            Index => 0);
+      begin
+
+         --  Rename existing kernel PT region.
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "name",
+            Value => "foobar");
+         Validators.Memory.Kernel_PT_Region_Presence (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Kernel PT region 'kernel_0|pt' for logical CPU 0"
+                    & " not found",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Kernel_PT_Region_Presence;
 
    -------------------------------------------------------------------------
 

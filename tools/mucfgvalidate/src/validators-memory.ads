@@ -79,4 +79,7 @@ is
    --  Validate that a kernel store region exists for every CPU.
    procedure Kernel_Store_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that a kernel PT region exists for every CPU.
+   procedure Kernel_PT_Region_Presence (XML_Data : Muxml.XML_Data_Type);
+
 end Validators.Memory;

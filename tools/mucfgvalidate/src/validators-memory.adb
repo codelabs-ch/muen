@@ -182,6 +182,14 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Kernel_PT_Region_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      null;
+   end Kernel_PT_Region_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure Kernel_Stack_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
       CPU_Count : constant Positive := Positive'Value

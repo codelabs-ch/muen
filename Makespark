@@ -4,12 +4,12 @@ BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
 
 SPARK_FILES =           \
 	$(SRC_DIR)/*.ad*    \
-	$(POLICY_INC)/*.ad* \
+	$(POLICY_DIR)/*.ad* \
 	$(TOP_DIR)/common/src/*.ad*
 
 SPARK_DIRS =                         \
 	-directory=$(TOP_DIR)/common/src \
-	-directory=$(POLICY_INC)
+	-directory=$(POLICY_DIR)
 
 SPARK_BODIES = $(patsubst %.ad*,%.adb,$(SPARK_FILES))
 

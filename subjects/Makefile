@@ -17,9 +17,9 @@ $(SUBJECTS):
 
 install:
 	@for bin in $(BINARIES); do \
-		cp $$bin/obj/$$bin $(POLICY_INC) || exit 1; \
+		cp $$bin/obj/$$bin $(POLICY_DIR) || exit 1; \
 	done
-	@cp linux/src/arch/x86/boot/bzImage $(POLICY_INC)
+	@cp linux/src/arch/x86/boot/bzImage $(POLICY_DIR)
 
 clean:
 	@for subj in $(SUBJECTS); do make clean -C $$subj; done

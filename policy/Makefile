@@ -5,8 +5,8 @@ DSDT_OBJ = $(OBJ_DIR)/dsdt.dsl
 DSDT     = $(OBJ_DIR)/DSDT.aml
 PATCH    = hardware/$(HARDWARE).patch
 
-POLICY     = xml/demo_system.xml
-POLICY_OUT = $(OBJ_DIR)/system.xml
+POLICY   = xml/demo_system.xml
+POLICY_B = $(OBJ_DIR)/system.xml
 
 GENERATORS =      \
 	$(MUGENACPI)  \
@@ -16,7 +16,7 @@ GENERATORS =      \
 	$(MUGENSPEC)  \
 	$(MUGENZP)
 
-GENERATOR_OPTS = -o $(OBJ_DIR) $(POLICY_OUT)
+GENERATOR_OPTS = -o $(OBJ_DIR) $(POLICY_B)
 
 include ../Makeconf
 
@@ -25,28 +25,28 @@ DUMMY := $(shell mkdir -p $(OBJ_DIR))
 all: hwchange .validated $(OUTPUT) $(DSDT)
 
 hwchange:
-	@$(if $(findstring $(HARDWARE),$(LAST_HW)),,rm -f $(POLICY_OUT) $(DSDT_OBJ); \
+	@$(if $(findstring $(HARDWARE),$(LAST_HW)),,rm -f $(POLICY_B) $(DSDT_OBJ); \
 		echo $(HARDWARE) > $(OBJ_DIR)/.hw)
 
 ifeq ($(HARDWARE), bochs)
-$(DSDT_OBJ) $(POLICY_OUT): $(POLICY) $(DSDT_SRC)
+$(DSDT_OBJ) $(POLICY_B): $(POLICY) $(DSDT_SRC)
 	@$(MUCFGALLOC) -o $(OBJ_DIR) $(POLICY)
 	@cp $(DSDT_SRC) $(DSDT_OBJ)
 else
-$(DSDT_OBJ) $(POLICY_OUT): $(POLICY) $(DSDT_SRC) $(PATCH)
+$(DSDT_OBJ) $(POLICY_B): $(POLICY) $(DSDT_SRC) $(PATCH)
 	@$(MUCFGALLOC) -o $(OBJ_DIR) $(POLICY)
 	@cp $(DSDT_SRC) $(DSDT_OBJ)
 	@cd $(OBJ_DIR) && patch -p3 < ../$(PATCH) >/dev/null
 endif
 
-.validated: $(POLICY_OUT) $(MUCFGVALIDATE)
-	@$(MUCFGVALIDATE) $(POLICY_OUT)
+.validated: $(POLICY_B) $(MUCFGVALIDATE)
+	@$(MUCFGVALIDATE) $(POLICY_B)
 	@touch $@
 
 $(DSDT): $(DSDT_OBJ)
 	@iasl -ta $(OBJ_DIR)/dsdt.dsl
 
-$(OUTPUT): $(GENERATORS) $(POLICY_OUT)
+$(OUTPUT): $(GENERATORS) $(POLICY_B)
 	@for gen in $(GENERATORS); do $$gen $(GENERATOR_OPTS) || exit 1; done
 
 clean:

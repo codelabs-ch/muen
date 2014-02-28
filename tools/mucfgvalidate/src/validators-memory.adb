@@ -218,8 +218,34 @@ is
 
    procedure Kernel_Store_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
+      CPU_Count : constant Positive := Positive'Value
+        (Muxml.Utils.Get_Attribute
+           (Doc   => XML_Data.Doc,
+            XPath => "/system/platform/processor",
+            Name  => "logicalCpus"));
+      Mem_Node  : DOM.Core.Node_List;
    begin
-      null;
+      Mulog.Log (Msg => "Checking presence of" & CPU_Count'Img
+                 & " kernel store region(s)");
+
+      for I in 0 .. CPU_Count - 1 loop
+         declare
+            CPU_Str  : constant String
+              := Ada.Strings.Fixed.Trim
+                (Source => I'Img,
+                 Side   => Ada.Strings.Left);
+            Mem_Name : constant String
+              := "kernel_store_" & CPU_Str;
+         begin
+            Mem_Node := XPath_Query
+              (N     => XML_Data.Doc,
+               XPath => "/system/memory/memory[@name='" & Mem_Name & "']");
+            if DOM.Core.Nodes.Length (List => Mem_Node) = 0 then
+               raise Validation_Error with "Kernel store region '" & Mem_Name
+                 & "' for logical CPU " & CPU_Str & " not found";
+            end if;
+         end;
+      end loop;
    end Kernel_Store_Region_Presence;
 
    -------------------------------------------------------------------------

@@ -80,7 +80,7 @@ is
       exception
          when E : Validators.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Allocated 237605 bytes of physical memory but only 4162"
+                    = "Allocated 253989 bytes of physical memory but only 4162"
                     & " bytes available by the platform",
                     Message   => "Exception mismatch");
       end;

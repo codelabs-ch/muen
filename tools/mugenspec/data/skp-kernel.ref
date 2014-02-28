@@ -1,6 +1,7 @@
 package Skp.Kernel is
 
-   Stack_Address     : constant := 16#114000#;
-   CPU_Store_Address : constant := 16#116000#;
+   Stack_Address      : constant := 16#114000#;
+   CPU_Store_Address  : constant := 16#116000#;
+   Tau0_Iface_Address : constant := 16#1FF000#;
 
 end Skp.Kernel;

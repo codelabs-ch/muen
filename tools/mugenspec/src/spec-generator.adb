@@ -665,6 +665,13 @@ is
             & "memory[@logical='store']",
             Name  => "virtualAddress"));
 
+      Tau0_Iface_Addr : constant Unsigned_64 := Unsigned_64'Value
+        (Get_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/kernel/memory/cpu[@id='0']/"
+            & "memory[@logical='tau0_interface']",
+            Name  => "virtualAddress"));
+
       --  Write C header for kernel to specified output directory.
       procedure Write_Kernel_Header
         (Output_Dir : String;
@@ -775,6 +782,10 @@ is
            (Template => Tmpl,
             Pattern  => "__cpu_store_addr__",
             Content  => Mutools.Utils.To_Hex (Number => CPU_Store_Addr));
+         Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__tau0_iface_addr__",
+            Content  => Mutools.Utils.To_Hex (Number => Tau0_Iface_Addr));
 
          Mulog.Log (Msg => "Writing kernel spec to '"
                     & Output_Dir & "/skp-kernel.ads'");

@@ -27,6 +27,7 @@ use type Skp.Subjects.Event_Entry_Type;
 use type Skp.Subjects.Profile_Kind;
 
 --# inherit
+--#    Skp.Kernel,
 --#    Skp.Subjects,
 --#    Skp.Scheduling,
 --#    Skp.Interrupts,
@@ -43,8 +44,7 @@ use type Skp.Subjects.Profile_Kind;
 --#    SK.Events;
 package SK.Scheduler
 --# own
---#       State,
---#    in Tau0_Kernel_Iface_Address;
+--#    State;
 --# initializes
 --#    State;
 is

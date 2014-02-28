@@ -18,6 +18,7 @@
 
 with System;
 
+with Skp.Kernel;
 with Skp.Interrupts;
 
 with SK.VMX;
@@ -40,11 +41,8 @@ is
    Timer_Vector : constant := 48;
    IPI_Vector   : constant := 254;
 
-   Tau0_Kernel_Iface_Address : SK.Word64;
-   pragma Import (C, Tau0_Kernel_Iface_Address, "tau0kernel_iface_ptr");
-
    New_Major : Skp.Scheduling.Major_Frame_Range;
-   for New_Major'Address use System'To_Address (Tau0_Kernel_Iface_Address);
+   for New_Major'Address use System'To_Address (Skp.Kernel.Tau0_Iface_Address);
    --# assert New_Major'Always_Valid;
 
    --  Current major.

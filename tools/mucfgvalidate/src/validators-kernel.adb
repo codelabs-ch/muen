@@ -51,8 +51,23 @@ is
 
    procedure Stack_Address_Equality (XML_Data : Muxml.XML_Data_Type)
    is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/kernel/memory/cpu/memory[@logical='stack']");
+      Addr  : constant Interfaces.Unsigned_64 := Interfaces.Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Item (List  => Nodes,
+                                         Index => 0),
+            Name => "virtualAddress"));
    begin
-      null;
+      Check_Attribute (Nodes     => Nodes,
+                       Node_Type => "kernel stack memory",
+                       Attr      => "virtualAddress",
+                       Name_Attr => "physical",
+                       Test      => Equals'Access,
+                       Right     => Addr,
+                       Error_Msg => "differs");
    end Stack_Address_Equality;
 
 end Validators.Kernel;

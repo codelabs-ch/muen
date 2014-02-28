@@ -310,6 +310,8 @@ is
       Validate.Register
         (Validator => Kernel.CPU_Store_Address_Equality'Access);
       Validate.Register
+        (Validator => Kernel.Stack_Address_Equality'Access);
+      Validate.Register
         (Validator => Subject.Name_Uniqueness'Access);
       Validate.Register
         (Validator => Subject.CPU_ID'Access);

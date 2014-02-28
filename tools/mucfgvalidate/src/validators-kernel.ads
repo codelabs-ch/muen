@@ -24,4 +24,7 @@ is
    --  Validate that all CPU store virtual addresses are equal.
    procedure CPU_Store_Address_Equality (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that all stack virtual addresses are equal.
+   procedure Stack_Address_Equality (XML_Data : Muxml.XML_Data_Type);
+
 end Validators.Kernel;

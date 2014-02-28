@@ -36,6 +36,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_CPU_Store_Address_Equality'Access,
          Name    => "Validate CPU Store address equality");
+      T.Add_Test_Routine
+        (Routine => Validate_Stack_Address_Equality'Access,
+         Name    => "Validate stack address equality");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -60,5 +63,28 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_CPU_Store_Address_Equality;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Stack_Address_Equality
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/validators.xml");
+
+      begin
+         Validators.Kernel.Stack_Address_Equality (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Attribute 'virtualAddress => 16#0031_0000#' of "
+                    & "'kernel_stack_1' kernel stack memory element differs",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Stack_Address_Equality;
 
 end Kernel_Tests;

@@ -47,4 +47,12 @@ is
                        Error_Msg => "differs");
    end CPU_Store_Address_Equality;
 
+   -------------------------------------------------------------------------
+
+   procedure Stack_Address_Equality (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      null;
+   end Stack_Address_Equality;
+
 end Validators.Kernel;

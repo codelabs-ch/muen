@@ -29,4 +29,7 @@ is
    --  Validate that all CPU store virtual addresses are equal.
    procedure Validate_CPU_Store_Address_Equality;
 
+   --  Validate that all stack virtual addresses are equal.
+   procedure Validate_Stack_Address_Equality;
+
 end Kernel_Tests;

@@ -52,11 +52,6 @@ SECTIONS
 		*(.rodata)
 	}
 
-	.interfaces 0x001ff000 :
-	{
-		*(.interfaces)
-	}
-
 	/DISCARD/ :
 	{
 		*(.comment)

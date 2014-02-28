@@ -1,10 +1,12 @@
-OUTPUT     = $(POLICY_INC)/skp.ads
+OUTPUT   = $(OBJ_DIR)/skp.ads
+LAST_HW  = $(shell cat $(OBJ_DIR)/.hw 2>/dev/null)
+DSDT_SRC = acpi/dsdt.dsl
+DSDT_OBJ = $(OBJ_DIR)/dsdt.dsl
+DSDT     = $(OBJ_DIR)/DSDT.aml
+PATCH    = hardware/$(HARDWARE).patch
+
+POLICY     = xml/demo_system.xml
 POLICY_OUT = $(OBJ_DIR)/system.xml
-LAST_HW    = $(shell cat $(OBJ_DIR)/.hw 2>/dev/null)
-DSDT_SRC   = acpi/dsdt.dsl
-DSDT_OBJ   = $(OBJ_DIR)/dsdt.dsl
-DSDT       = $(OBJ_DIR)/DSDT.aml
-PATCH      = hardware/$(HARDWARE).patch
 
 GENERATORS =      \
 	$(MUGENACPI)  \
@@ -18,7 +20,7 @@ GENERATOR_OPTS = -o $(OBJ_DIR) $(POLICY_OUT)
 
 include ../Makeconf
 
-DUMMY := $(shell mkdir -p $(POLICY_INC))
+DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
 all: hwchange .validated $(OUTPUT) $(DSDT)
 
@@ -28,11 +30,11 @@ hwchange:
 
 ifeq ($(HARDWARE), bochs)
 $(DSDT_OBJ) $(POLICY_OUT): $(POLICY) $(DSDT_SRC)
-	@$(MUCFGALLOC) -o $(POLICY_INC) $(POLICY)
+	@$(MUCFGALLOC) -o $(OBJ_DIR) $(POLICY)
 	@cp $(DSDT_SRC) $(DSDT_OBJ)
 else
 $(DSDT_OBJ) $(POLICY_OUT): $(POLICY) $(DSDT_SRC) $(PATCH)
-	@$(MUCFGALLOC) -o $(POLICY_INC) $(POLICY)
+	@$(MUCFGALLOC) -o $(OBJ_DIR) $(POLICY)
 	@cp $(DSDT_SRC) $(DSDT_OBJ)
 	@cd $(OBJ_DIR) && patch -p3 < ../$(PATCH) >/dev/null
 endif
@@ -48,4 +50,4 @@ $(OUTPUT): $(GENERATORS) $(POLICY_OUT)
 	@for gen in $(GENERATORS); do $$gen $(GENERATOR_OPTS) || exit 1; done
 
 clean:
-	@rm -rf $(POLICY_INC) .validated
+	@rm -rf $(OBJ_DIR) .validated

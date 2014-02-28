@@ -270,11 +270,13 @@ is
       Validate.Register
         (Validator => Memory.Virtual_Memory_Overlap'Access);
       Validate.Register
-        (Validator => Memory.Kernel_PT_Consecutiveness'Access);
-      Validate.Register
         (Validator => Memory.Kernel_Stack_Region_Presence'Access);
       Validate.Register
         (Validator => Memory.Kernel_Store_Region_Presence'Access);
+      Validate.Register
+        (Validator => Memory.Kernel_PT_Region_Presence'Access);
+      Validate.Register
+        (Validator => Memory.Kernel_PT_Consecutiveness'Access);
       Validate.Register
         (Validator => MSR.Start_Smaller_End'Access);
       Validate.Register

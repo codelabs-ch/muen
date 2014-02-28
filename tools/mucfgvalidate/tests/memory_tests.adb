@@ -105,6 +105,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Kernel_PT_Consecutiveness'Access,
          Name    => "Validate consecutiveness of kernel PT regions");
+      T.Add_Test_Routine
+        (Routine => Validate_Kernel_Stack_Region_Presence'Access,
+         Name    => "Validate kernel stack region presence");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -189,6 +192,43 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Kernel_PT_Consecutiveness;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Kernel_Stack_Region_Presence
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/validators.xml");
+
+      declare
+         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Data.Doc,
+               XPath => "/system/memory/memory[@name='kernel_stack_0']"),
+            Index => 0);
+      begin
+
+         --  Rename existing kernel stack region.
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "name",
+            Value => "foobar");
+
+         Validators.Memory.Kernel_Stack_Region_Presence (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Kernel stack region 'kernel_stack_0' for logical CPU 0"
+                    & " not found",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Kernel_Stack_Region_Presence;
 
    -------------------------------------------------------------------------
 

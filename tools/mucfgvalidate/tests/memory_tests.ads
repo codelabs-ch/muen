@@ -92,4 +92,7 @@ is
    --  Validate kernel PT region consecutiveness.
    procedure Validate_Kernel_PT_Consecutiveness;
 
+   --  Validate kernel stack region presence.
+   procedure Validate_Kernel_Stack_Region_Presence;
+
 end Memory_Tests;

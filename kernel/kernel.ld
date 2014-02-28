@@ -57,7 +57,7 @@ SECTIONS
 		. += 0x4000;
 	}
 
-	.rodata :
+	.rodata 0x0011f000 :
 	{
 		*(.rodata)
 	}

@@ -47,16 +47,6 @@ SECTIONS
 		*(.bss)
 	}
 
-	.stack 0x00113000 :
-	{
-		. += 0x8000;
-	}
-
-	.cpu_local 0x0011b000 :
-	{
-		. += 0x4000;
-	}
-
 	.rodata 0x0011f000 :
 	{
 		*(.rodata)

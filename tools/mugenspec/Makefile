@@ -3,9 +3,12 @@ TOOL = mugenspec
 TEMPLATES = src/string_templates.ads
 TMPL_SRCS = $(wildcard templates/*)
 
-all: $(TOOL)
+TOOL_DEPS = $(TEMPLATES)
+TEST_DEPS = $(TEMPLATES)
 
-include ../../Makeconf
+ADDITIONAL_CLEAN = $(TEMPLATES)
+
+include ../tools.mk
 include ../../Makecov
 
 $(TEMPLATES): $(TMPL_SRCS)
@@ -23,18 +26,5 @@ $(TEMPLATES): $(TMPL_SRCS)
 	done
 	@echo 'end String_Templates;' >> $@
 
-$(TOOL): $(TEMPLATES)
-	@gprbuild $(BUILD_OPTS) -P$@
-
-tests: test_$(TOOL)
-	@obj/tests/test_runner
-
-test_$(TOOL): $(TEMPLATES)
-	@gprbuild $(BUILD_OPTS) -P$@ -XBUILD=tests
-
 build_cov: $(TEMPLATES)
 	@gprbuild $(BUILD_OPTS) -Ptest_$(TOOL) -XBUILD=coverage
-
-clean:
-	@rm -rf bin obj
-	@rm -f $(TEMPLATES)

@@ -35,7 +35,7 @@ is
       T.Set_Name (Name => "MSR validator tests");
       T.Add_Test_Routine
         (Routine => Validate_Start_Smaller_End'Access,
-         Name    => "Validate MSR range start <= end");
+         Name    => "Validate MSR range start less or equal end");
       T.Add_Test_Routine
         (Routine => Validate_Low_High'Access,
          Name    => "Validate MSR range low/high");

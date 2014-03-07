@@ -58,7 +58,7 @@ is
          Name    => "Validate IRQ number equality");
       T.Add_Test_Routine
         (Routine => Validate_IO_Port_Start_Smaller_End'Access,
-         Name    => "Validate I/O ports start <= end");
+         Name    => "Validate I/O port start less or equal end");
       T.Add_Test_Routine
         (Routine => Validate_IO_Port_Refs'Access,
          Name    => "Validate I/O port references");

@@ -32,7 +32,7 @@ tests: test_libmuxml
 test_libmuxml: $(SCHEMA_FILES)
 	@gprbuild $(BUILD_OPTS) -P$@ -XBUILD=tests
 
-build_cov: schema-spec
+build_cov: $(SCHEMA_FILES)
 	@gprbuild $(BUILD_OPTS) -Ptest_libmuxml -XBUILD=coverage
 
 clean:

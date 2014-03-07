@@ -1,6 +1,6 @@
-TOOL = mucfgalloc
+COMPONENT = mucfgalloc
 
-include ../tools.mk
+include ../component.mk
 include ../../Makecov
 
 build_cov:

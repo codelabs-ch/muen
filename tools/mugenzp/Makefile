@@ -1,7 +1,7 @@
-TOOL = mugenzp
+COMPONENT = mugenzp
 
-include ../tools.mk
+include ../component.mk
 include ../../Makecov
 
 build_cov:
-	@gprbuild $(BUILD_OPTS) -Ptest_$(TOOL) -XBUILD=coverage
+	@gprbuild $(BUILD_OPTS) -Ptest_$(COMPONENT) -XBUILD=coverage

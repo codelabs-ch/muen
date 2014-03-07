@@ -1,3 +1,3 @@
-TOOL = mupack
+COMPONENT = mupack
 
-include ../tools.mk
+include ../component.mk

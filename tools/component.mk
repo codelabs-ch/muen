@@ -1,14 +1,14 @@
 include ../../Makeconf
 
-all: $(TOOL)
+all: $(COMPONENT)
 
-tests: test_$(TOOL)
+tests: test_$(COMPONENT)
 	@obj/tests/test_runner
 
-$(TOOL): $(TOOL_DEPS)
+$(COMPONENT): $(COMPONENT_DEPS)
 	@gprbuild $(BUILD_OPTS) -P$@
 
-test_$(TOOL): $(TEST_DEPS)
+test_$(COMPONENT): $(TEST_DEPS)
 	@gprbuild $(BUILD_OPTS) -P$@ -XBUILD=tests
 
 clean:

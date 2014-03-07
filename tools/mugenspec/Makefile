@@ -1,14 +1,14 @@
-TOOL = mugenspec
+COMPONENT = mugenspec
 
 TEMPLATES = src/string_templates.ads
 TMPL_SRCS = $(wildcard templates/*)
 
-TOOL_DEPS = $(TEMPLATES)
-TEST_DEPS = $(TEMPLATES)
+COMPONENT_DEPS = $(TEMPLATES)
+TEST_DEPS      = $(COMPONENT_DEPS)
 
 ADDITIONAL_CLEAN = $(TEMPLATES)
 
-include ../tools.mk
+include ../component.mk
 include ../../Makecov
 
 $(TEMPLATES): $(TMPL_SRCS)
@@ -27,4 +27,4 @@ $(TEMPLATES): $(TMPL_SRCS)
 	@echo 'end String_Templates;' >> $@
 
 build_cov: $(TEMPLATES)
-	@gprbuild $(BUILD_OPTS) -Ptest_$(TOOL) -XBUILD=coverage
+	@gprbuild $(BUILD_OPTS) -Ptest_$(COMPONENT) -XBUILD=coverage

@@ -1,3 +1,5 @@
+COMPONENT = libmuxml
+
 SCHEMA_FILES = \
    obj/muxml-format_a_schema.ads \
    obj/muxml-format_b_schema.ads \
@@ -6,9 +8,12 @@ SCHEMA_FILES = \
 XSD_FILES   = $(wildcard schema/*.xsd)
 RESOLVE_XSL = schema/resolve.xsl
 
-all: $(SCHEMA_FILES)
+COMPONENT_DEPS = $(SCHEMA_FILES)
+TEST_DEPS      = $(COMPONENT_DEPS)
 
-include ../../Makeconf
+ADDITIONAL_CLEAN = $(SCHEMA_FILES)
+
+include ../component.mk
 include ../../Makecov
 
 DUMMY := $(shell mkdir -p $(OBJ_DIR))
@@ -26,16 +31,7 @@ obj/muxml-format_%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL)
 	@echo 'end Muxml.Format_$*_Schema;'                         >> $@.tmp
 	@mv $@.tmp $@
 
-tests: test_libmuxml
-	@obj/tests/test_runner
-
-test_libmuxml: $(SCHEMA_FILES)
-	@gprbuild $(BUILD_OPTS) -P$@ -XBUILD=tests
-
 build_cov: $(SCHEMA_FILES)
 	@gprbuild $(BUILD_OPTS) -Ptest_libmuxml -XBUILD=coverage
-
-clean:
-	@rm -rf lib obj
 
 .PHONY: all

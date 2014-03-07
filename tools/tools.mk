@@ -5,10 +5,10 @@ all: $(TOOL)
 tests: test_$(TOOL)
 	@obj/tests/test_runner
 
-$(TOOL):
+$(TOOL): $(TOOL_DEPS)
 	@gprbuild $(BUILD_OPTS) -P$@
 
-test_$(TOOL):
+test_$(TOOL): $(TEST_DEPS)
 	@gprbuild $(BUILD_OPTS) -P$@ -XBUILD=tests
 
 clean:

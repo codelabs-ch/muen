@@ -12,4 +12,4 @@ test_$(TOOL):
 	@gprbuild $(BUILD_OPTS) -P$@ -XBUILD=tests
 
 clean:
-	@rm -rf bin obj
+	@rm -rf bin obj $(ADDITIONAL_CLEAN)

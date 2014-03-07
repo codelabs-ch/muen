@@ -45,7 +45,8 @@ is
       Fname : constant String := "obj/test.img";
    begin
       Image.Add_File (Image => Img,
-                      File  => (Filename => U ("pattern"),
+                      File  => (Mem_Name => U ("test"),
+                                Filename => U ("pattern"),
                                 Path     => U ("data"),
                                 Address  => 16#0010#,
                                 Size     => 16#0020#,
@@ -68,7 +69,8 @@ is
       Fname : constant String := "obj/test.img";
    begin
       Image.Add_File (Image => Img,
-                      File  => (Filename => U ("pattern"),
+                      File  => (Mem_Name => U ("test"),
+                                Filename => U ("pattern"),
                                 Path     => U ("data"),
                                 Address  => 0,
                                 Size     => 16#0a#,
@@ -90,7 +92,8 @@ is
       Img : Image.Image_Type (End_Address => 10);
    begin
       Image.Add_File (Image => Img,
-                      File  => (Filename => U ("pattern"),
+                      File  => (Mem_Name => U ("test"),
+                                Filename => U ("pattern"),
                                 Path     => U ("data"),
                                 Address  => 16#0000#,
                                 Size     => 16#001c#,

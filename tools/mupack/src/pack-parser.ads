@@ -35,12 +35,13 @@ is
       Zp);
 
    type File_Entry_Type is record
-      Filename : Ada.Strings.Unbounded.Unbounded_String;
-      Path     : Ada.Strings.Unbounded.Unbounded_String;
-      Address  : Interfaces.Unsigned_64;
-      Size     : Interfaces.Unsigned_64;
-      Offset   : Interfaces.Unsigned_64;
-      Format   : File_Format_Type;
+      Mem_Name  : Ada.Strings.Unbounded.Unbounded_String;
+      Filename  : Ada.Strings.Unbounded.Unbounded_String;
+      Path      : Ada.Strings.Unbounded.Unbounded_String;
+      Address   : Interfaces.Unsigned_64;
+      Size      : Interfaces.Unsigned_64;
+      Offset    : Interfaces.Unsigned_64;
+      Format    : File_Format_Type;
    end record;
 
    type File_Array is array (Natural range <>) of aliased File_Entry_Type;

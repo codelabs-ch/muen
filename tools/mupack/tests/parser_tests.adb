@@ -40,13 +40,15 @@ is
       use type Parser.File_Array;
 
       Ref_Files : constant Parser.File_Array
-        := (1 => (Filename => U ("sections.ref"),
+        := (1 => (Mem_Name => U ("linux|acpi_rsdp"),
+                  Filename => U ("sections.ref"),
                   Path     => Ada.Strings.Unbounded.Null_Unbounded_String,
                   Address  => 16#0010_0000#,
                   Size     => 16#0001_3000#,
                   Offset   => 0,
                   Format   => Parser.Acpi_Rsdp),
-            2 => (Filename => U ("obj1.o"),
+            2 => (Mem_Name => U ("linux|bin"),
+                  Filename => U ("obj1.o"),
                   Path     => Ada.Strings.Unbounded.Null_Unbounded_String,
                   Address  => 16#0011_3000#,
                   Size     => 16#0001_3000#,
@@ -72,13 +74,15 @@ is
 
       Empty : constant Parser.File_Array (1 .. 0) := (others => <>);
       Files : constant Parser.File_Array
-        := (1 => (Filename => U ("sections.ref"),
+        := (1 => (Mem_Name => U ("test1"),
+                  Filename => U ("sections.ref"),
                   Path     => U ("data"),
                   Address  => 16#0000_4000#,
                   Size     => 16#0000_3000#,
                   Offset   => 0,
                   Format   => Parser.Acpi_Rsdp),
-            2 => (Filename => U ("obj1.o"),
+            2 => (Mem_Name => U ("test2"),
+                  Filename => U ("obj1.o"),
                   Path     => U ("data"),
                   Address  => 16#0000_1000#,
                   Size     => 16#0000_7000#,

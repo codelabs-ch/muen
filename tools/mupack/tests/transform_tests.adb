@@ -45,7 +45,8 @@ is
       use type Parser.File_Array;
 
       Files : Parser.File_Array
-        := (1 => (Filename => U ("nonexistent.o"),
+        := (1 => (Mem_Name => U ("test"),
+                  Filename => U ("nonexistent.o"),
                   Path     => U ("nonexistent.o"),
                   Address  => 16#0010_0000#,
                   Size     => 16#0001_3000#,
@@ -91,7 +92,8 @@ is
 
       declare
          Files : Parser.File_Array
-           := (1 => (Filename => U ("invalid_bzimage"),
+           := (1 => (Mem_Name => U ("test1"),
+                     Filename => U ("invalid_bzimage"),
                      Path     => U ("data"),
                      Address  => 16#0010_0000#,
                      Size     => 16#0001_3000#,
@@ -110,7 +112,8 @@ is
 
       declare
          Files : Parser.File_Array
-           := (1 => (Filename => U ("obj1.o"),
+           := (1 => (Mem_Name => U ("test"),
+                     Filename => U ("obj1.o"),
                      Path     => U ("data"),
                      Address  => 16#0010_0000#,
                      Size     => 16#0001_3000#,
@@ -137,7 +140,8 @@ is
 
       declare
          Files : Parser.File_Array
-           := (1 => (Filename => U ("bzimage.32"),
+           := (1 => (Mem_Name => U ("test"),
+                     Filename => U ("bzimage.32"),
                      Path     => U ("data"),
                      Address  => 16#0010_0000#,
                      Size     => 16#0001_3000#,
@@ -155,7 +159,8 @@ is
 
       declare
          Files : Parser.File_Array
-           := (1 => (Filename => U ("bzimage.64"),
+           := (1 => (Mem_Name => U ("test"),
+                     Filename => U ("bzimage.64"),
                      Path     => U ("data"),
                      Address  => 16#0010_0000#,
                      Size     => 16#0001_3000#,
@@ -179,26 +184,30 @@ is
       use type Parser.File_Array;
 
       Files : Parser.File_Array
-        := (1 => (Filename => U ("obj1.o"),
+        := (1 => (Mem_Name => U ("test1"),
+                  Filename => U ("obj1.o"),
                   Path     => U ("data"),
                   Address  => 16#0010_0000#,
                   Size     => 16#0001_3000#,
                   Offset   => 0,
                   Format   => Parser.Elf),
-            2 => (Filename => U ("obj2.o"),
+            2 => (Mem_Name => U ("test2"),
+                  Filename => U ("obj2.o"),
                   Path     => U ("data"),
                   Address  => 16#0011_3000#,
                   Size     => 16#0001_3000#,
                   Offset   => 0,
                   Format   => Parser.Acpi_Rsdp));
       Ref_Files : constant Parser.File_Array
-        := (1 => (Filename => U ("obj1.o.bin"),
+        := (1 => (Mem_Name => U ("test1"),
+                  Filename => U ("obj1.o.bin"),
                   Path     => U ("obj"),
                   Address  => 16#0010_0000#,
                   Size     => 16#0001_3000#,
                   Offset   => 0,
                   Format   => Parser.Bin_Raw),
-            2 => (Filename => U ("obj2.o"),
+            2 => (Mem_Name => U ("test2"),
+                  Filename => U ("obj2.o"),
                   Path     => U ("data"),
                   Address  => 16#0011_3000#,
                   Size     => 16#0001_3000#,

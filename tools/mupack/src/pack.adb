@@ -53,10 +53,12 @@ is
                           Name => File);
       Ada.Text_IO.Put_Line
         (File => Fd,
-         Item => "[PhysicalAddress;Offset;Size;Type  Path]");
+         Item => "[Name;PhysicalAddress;Offset;Size;Type  Path]");
       for I in Entries'Range loop
          Ada.Text_IO.Set_Col (File => Fd,
                               To   => 1);
+         Ada.Text_IO.Put (File => Fd,
+                          Item => S (Entries (I).Mem_Name) & ";");
          Ada.Text_IO.Put (File => Fd,
                           Item => Mutools.Utils.To_Hex
                             (Number => Entries (I).Address) & ";");
@@ -69,7 +71,7 @@ is
          Ada.Text_IO.Put (File => Fd,
                           Item => Entries (I).Format'Img);
          Ada.Text_IO.Set_Col (File => Fd,
-                              To   => 46);
+                              To   => 60);
          Ada.Text_IO.Put
            (File => Fd,
             Item => S (Entries (I).Path) & "/" & S (Entries (I).Filename));

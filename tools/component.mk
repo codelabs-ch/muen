@@ -3,7 +3,7 @@ include ../../Makeconf
 all: $(COMPONENT)
 
 tests: test_$(COMPONENT)
-	@obj/tests/test_runner
+	@obj/tests/test_runner $(TEST_OPTS)
 
 $(COMPONENT): $(COMPONENT_DEPS)
 	@gprbuild $(BUILD_OPTS) -P$@

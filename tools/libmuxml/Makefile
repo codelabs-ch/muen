@@ -10,6 +10,7 @@ RESOLVE_XSL = schema/resolve.xsl
 
 COMPONENT_DEPS = $(SCHEMA_FILES)
 TEST_DEPS      = $(COMPONENT_DEPS)
+COV_DEPS       = $(COMPONENT_DEPS)
 
 ADDITIONAL_CLEAN = $(SCHEMA_FILES)
 
@@ -30,8 +31,5 @@ obj/muxml-format_%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL)
 	@echo '& "";'                                               >> $@.tmp
 	@echo 'end Muxml.Format_$*_Schema;'                         >> $@.tmp
 	@mv $@.tmp $@
-
-build_cov: $(SCHEMA_FILES)
-	@gprbuild $(BUILD_OPTS) -Ptest_libmuxml -XBUILD=coverage
 
 .PHONY: all

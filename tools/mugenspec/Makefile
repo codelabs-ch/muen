@@ -5,6 +5,7 @@ TMPL_SRCS = $(wildcard templates/*)
 
 COMPONENT_DEPS = $(TEMPLATES)
 TEST_DEPS      = $(COMPONENT_DEPS)
+COV_DEPS       = $(COMPONENT_DEPS)
 
 ADDITIONAL_CLEAN = $(TEMPLATES)
 
@@ -25,6 +26,3 @@ $(TEMPLATES): $(TMPL_SRCS)
 		echo '& "";'                                               >> $@; \
 	done
 	@echo 'end String_Templates;' >> $@
-
-build_cov: $(TEMPLATES)
-	@gprbuild $(BUILD_OPTS) -Ptest_$(COMPONENT) -XBUILD=coverage

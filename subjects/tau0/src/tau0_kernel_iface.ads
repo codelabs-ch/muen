@@ -17,6 +17,7 @@
 --
 
 --# inherit
+--#    Skp.Kernel,
 --#    Skp.Scheduling;
 package Tau0_Kernel_Iface
 --# own

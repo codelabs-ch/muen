@@ -18,6 +18,7 @@
 
 with System;
 
+with Skp.Kernel;
 with Skp.Scheduling;
 
 use type Skp.Scheduling.Major_Frame_Range;
@@ -31,7 +32,8 @@ is
      := Skp.Scheduling.Major_Frame_Range'First;
 
    Active_Major : Skp.Scheduling.Major_Frame_Range;
-   for Active_Major'Address use System'To_Address (16#1ff000#);
+   for Active_Major'Address use System'To_Address
+     (Skp.Kernel.Tau0_Iface_Address);
    pragma Atomic (Active_Major);
 
    -------------------------------------------------------------------------

@@ -17,7 +17,7 @@ $(SUBJECTS):
 
 install:
 	@for bin in $(BINARIES); do \
-		cp $$bin/obj/$$bin $(POLICY_DIR) || exit 1; \
+		$(TO_RAW_CMD) $$bin/obj/$$bin $(POLICY_DIR)/$$bin || exit 1; \
 	done
 	@cp linux/src/arch/x86/boot/bzImage $(POLICY_DIR)
 

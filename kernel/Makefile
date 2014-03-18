@@ -30,7 +30,7 @@ $(OBJ_DIR)/$(PACKAGE): $(VERSION_SPEC)
 	gprbuild $(BUILD_OPTS) -P$(PACKAGE)
 
 install: $(OBJ_DIR)/$(PACKAGE)
-	@cp $^ $(POLICY_DIR)
+	@$(TO_RAW_CMD) $^ $(POLICY_DIR)/$(PACKAGE)
 
 clean:
 	rm -rf $(OBJ_DIR)

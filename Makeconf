@@ -17,4 +17,7 @@ MUGENSPEC     = $(TOP_DIR)/tools/mugenspec/bin/mugenspec
 MUGENZP       = $(TOP_DIR)/tools/mugenzp/bin/mugenzp
 MUPACK        = $(TOP_DIR)/tools/mupack/bin/mupack
 
+TO_RAW_OPTS = -O binary --set-section-flags .bss=alloc,load,contents
+TO_RAW_CMD  = objcopy $(TO_RAW_OPTS)
+
 HARDWARE ?= bochs

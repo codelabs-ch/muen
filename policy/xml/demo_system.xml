@@ -50,14 +50,14 @@
 
 		<!-- kernel binary -->
 		<memory name="kernel_text" physicalAddress="16#0010_0000#" size="16#0001_0000#" caching="WB">
-			<file format="elf" filename="kernel" offset="16#0000#"/>
+			<file format="bin_raw" filename="kernel" offset="16#0000#"/>
 		</memory>
 		<memory name="kernel_data" physicalAddress="16#0011_0000#" size="16#1000#" caching="WB">
-			<file format="elf" filename="kernel" offset="16#0001_0000#"/>
+			<file format="bin_raw" filename="kernel" offset="16#0001_0000#"/>
 		</memory>
 		<memory name="kernel_bss" physicalAddress="16#0011_1000#" size="16#1000#" caching="WB"/>
 		<memory name="kernel_ro" physicalAddress="16#0011_f000#" size="16#4000#" caching="WB">
-			<file format="elf" filename="kernel" offset="16#0001_f000#"/>
+			<file format="bin_raw" filename="kernel" offset="16#0001_f000#"/>
 		</memory>
 
 		<memory name="kernel_stack_0" size="16#2000#" caching="WB"/>
@@ -94,7 +94,7 @@
 			<file format="msrbm" filename="tau0_msrbm" offset="16#0000#"/>
 		</memory>
 		<memory name="tau0|bin" size="16#0001_4000#" caching="WB">
-			<file format="elf" filename="tau0" offset="16#0000#"/>
+			<file format="bin_raw" filename="tau0" offset="16#0000#"/>
 		</memory>
 
 		<!-- time subject -->
@@ -108,7 +108,7 @@
 			<file format="msrbm" filename="time_msrbm" offset="16#0000#"/>
 		</memory>
 		<memory name="time|bin" size="16#0001_4000#" caching="WB">
-			<file format="elf" filename="time" offset="16#0000#"/>
+			<file format="bin_raw" filename="time" offset="16#0000#"/>
 		</memory>
 
 		<!-- vt subject -->
@@ -122,7 +122,7 @@
 			<file format="msrbm" filename="vt_msrbm" offset="16#0000#"/>
 		</memory>
 		<memory name="vt|bin" size="16#0002_4000#" caching="WB">
-			<file format="elf" filename="vt" offset="16#0000#"/>
+			<file format="bin_raw" filename="vt" offset="16#0000#"/>
 		</memory>
 
 		<!-- sm subject -->
@@ -136,7 +136,7 @@
 			<file format="msrbm" filename="sm_msrbm" offset="16#0000#"/>
 		</memory>
 		<memory name="sm|bin" size="16#0001_4000#" caching="WB">
-			<file format="elf" filename="sm" offset="16#0000#"/>
+			<file format="bin_raw" filename="sm" offset="16#0000#"/>
 		</memory>
 
 		<!-- Linux subject -->

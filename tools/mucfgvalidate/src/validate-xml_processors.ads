@@ -16,37 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Validate.XML_Processors;
-with Validate.Command_Line.Test;
+with Muxml;
+with Mutools.Processors;
 
-package body Validate_Tests
-is
+pragma Elaborate_All (Mutools.Processors);
 
-   use Ahven;
-
-   -------------------------------------------------------------------------
-
-   procedure Execute_Run
-   is
-   begin
-      Validate.Command_Line.Test.Set_Policy (Path => "data/test_policy.xml");
-
-      Validate.Run;
-
-      --  Positive test, no exceptions must occur.
-
-      Validate.XML_Processors.Clear;
-   end Execute_Run;
-
-   -------------------------------------------------------------------------
-
-   procedure Initialize (T : in out Testcase)
-   is
-   begin
-      T.Set_Name (Name => "Validate tests");
-      T.Add_Test_Routine
-        (Routine => Execute_Run'Access,
-         Name    => "Run validation process");
-   end Initialize;
-
-end Validate_Tests;
+package Validate.XML_Processors is new
+  Mutools.Processors (Param_Type => Muxml.XML_Data_Type);

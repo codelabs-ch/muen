@@ -16,46 +16,33 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Containers.Doubly_Linked_Lists;
-
 with Mulog;
+with Muxml;
 
+with Validate.XML_Processors;
 with Validate.Command_Line;
+with Validators;
 
 package body Validate
 is
-
-   package Validator_Package is new Ada.Containers.Doubly_Linked_Lists
-     (Element_Type => Validation_Procedure);
-
-   Validators : Validator_Package.List;
-
-   -------------------------------------------------------------------------
-
-   procedure Register (Validator : Validation_Procedure)
-   is
-   begin
-      Validators.Append (New_Item => Validator);
-   end Register;
 
    -------------------------------------------------------------------------
 
    procedure Run
    is
       Data        : Muxml.XML_Data_Type;
-      Pos         : Validator_Package.Cursor := Validators.First;
-      Policy_File : constant String          := Command_Line.Get_Policy;
+      Policy_File : constant String := Command_Line.Get_Policy;
    begin
       Mulog.Log (Msg => "Validating policy '" & Policy_File & "'");
-      Mulog.Log (Msg => "Registered validators" & Validators.Length'Img);
+
+      Validators.Register_All;
+      Mulog.Log
+        (Msg => "Registered validators" &  XML_Processors.Get_Count'Img);
 
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => Policy_File);
-      while Validator_Package.Has_Element (Position => Pos) loop
-         Validator_Package.Element (Position => Pos) (XML_Data => Data);
-         Validator_Package.Next (Position => Pos);
-      end loop;
+      XML_Processors.Run (Data => Data);
 
       Mulog.Log (Msg => "Successfully validated policy '" & Policy_File & "'");
    end Run;

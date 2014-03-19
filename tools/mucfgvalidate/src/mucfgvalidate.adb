@@ -29,8 +29,6 @@ procedure Mucfgvalidate
 is
 begin
    Validate.Command_Line.Init (Description => "Muen policy validator");
-
-   Validators.Register_All;
    Validate.Run;
 
 exception

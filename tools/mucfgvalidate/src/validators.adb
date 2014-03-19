@@ -23,7 +23,8 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 
-with Validate;
+with Validate.XML_Processors;
+
 with Validators.Memory;
 with Validators.MSR;
 with Validators.Device;
@@ -237,102 +238,102 @@ is
    procedure Register_All
    is
    begin
-      Validate.Register
-        (Validator => Memory.Physical_Memory_Name_Uniqueness'Access);
-      Validate.Register
-        (Validator => Memory.Physical_Memory_References'Access);
-      Validate.Register
-        (Validator => Memory.VMXON_Region_Presence'Access);
-      Validate.Register
-        (Validator => Memory.VMXON_Region_Size'Access);
-      Validate.Register
-        (Validator => Memory.VMXON_In_Lowmem'Access);
-      Validate.Register
-        (Validator => Memory.VMXON_Consecutiveness'Access);
-      Validate.Register
-        (Validator => Memory.VMCS_Region_Presence'Access);
-      Validate.Register
-        (Validator => Memory.VMCS_Region_Size'Access);
-      Validate.Register
-        (Validator => Memory.VMCS_In_Lowmem'Access);
-      Validate.Register
-        (Validator => Memory.VMCS_Consecutiveness'Access);
-      Validate.Register
-        (Validator => Memory.Physical_Address_Alignment'Access);
-      Validate.Register
-        (Validator => Memory.Virtual_Address_Alignment'Access);
-      Validate.Register
-        (Validator => Memory.Region_Size'Access);
-      Validate.Register
-        (Validator => Memory.Entity_Name_Encoding'Access);
-      Validate.Register
-        (Validator => Memory.Physical_Memory_Overlap'Access);
-      Validate.Register
-        (Validator => Memory.Virtual_Memory_Overlap'Access);
-      Validate.Register
-        (Validator => Memory.Kernel_Stack_Region_Presence'Access);
-      Validate.Register
-        (Validator => Memory.Kernel_Store_Region_Presence'Access);
-      Validate.Register
-        (Validator => Memory.Kernel_PT_Region_Presence'Access);
-      Validate.Register
-        (Validator => Memory.Kernel_PT_Consecutiveness'Access);
-      Validate.Register
-        (Validator => MSR.Start_Smaller_End'Access);
-      Validate.Register
-        (Validator => MSR.Low_Or_High'Access);
-      Validate.Register
-        (Validator => Device.Physical_Device_Name_Uniqueness'Access);
-      Validate.Register
-        (Validator => Device.Physical_Device_References'Access);
-      Validate.Register
-        (Validator => Device.Physical_IRQ_Uniqueness'Access);
-      Validate.Register
-        (Validator => Device.Device_IRQ_Name_Uniqueness'Access);
-      Validate.Register
-        (Validator => Device.Physical_IRQ_References'Access);
-      Validate.Register
-        (Validator => Device.IRQ_Number_Equality'Access);
-      Validate.Register
-        (Validator => Device.IO_Port_Start_Smaller_End'Access);
-      Validate.Register
-        (Validator => Device.Device_IO_Port_Name_Uniqueness'Access);
-      Validate.Register
-        (Validator => Device.IO_Port_References'Access);
-      Validate.Register
-        (Validator => Device.IO_Port_Range_Equality'Access);
-      Validate.Register
-        (Validator => Device.Device_Memory_Name_Uniqueness'Access);
-      Validate.Register
-        (Validator => Device.Device_Sharing'Access);
-      Validate.Register
-        (Validator => Scheduling.CPU_Element_Count'Access);
-      Validate.Register
-        (Validator => Scheduling.Subject_References'Access);
-      Validate.Register
-        (Validator => Scheduling.Subject_CPU_Affinity'Access);
-      Validate.Register
-        (Validator => Scheduling.Major_Frame_Ticks'Access);
-      Validate.Register
-        (Validator => Kernel.CPU_Store_Address_Equality'Access);
-      Validate.Register
-        (Validator => Kernel.Stack_Address_Equality'Access);
-      Validate.Register
-        (Validator => Subject.Name_Uniqueness'Access);
-      Validate.Register
-        (Validator => Subject.CPU_ID'Access);
-      Validate.Register
-        (Validator => Subject.Event_Subject_References'Access);
-      Validate.Register
-        (Validator => Subject.Event_Self_References'Access);
-      Validate.Register
-        (Validator => Subject.Event_Switch_Same_Core'Access);
-      Validate.Register
-        (Validator => Subject.Event_IPI_Different_Core'Access);
-      Validate.Register
-        (Validator => Platform.Memory_Space'Access);
-      Validate.Register
-        (Validator => Platform.Memory_Block_Overlap'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.Physical_Memory_Name_Uniqueness'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.Physical_Memory_References'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.VMXON_Region_Presence'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.VMXON_Region_Size'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.VMXON_In_Lowmem'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.VMXON_Consecutiveness'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.VMCS_Region_Presence'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.VMCS_Region_Size'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.VMCS_In_Lowmem'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.VMCS_Consecutiveness'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.Physical_Address_Alignment'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.Virtual_Address_Alignment'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.Region_Size'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.Entity_Name_Encoding'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.Physical_Memory_Overlap'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.Virtual_Memory_Overlap'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.Kernel_Stack_Region_Presence'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.Kernel_Store_Region_Presence'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.Kernel_PT_Region_Presence'Access);
+      Validate.XML_Processors.Register
+        (Process => Memory.Kernel_PT_Consecutiveness'Access);
+      Validate.XML_Processors.Register
+        (Process => MSR.Start_Smaller_End'Access);
+      Validate.XML_Processors.Register
+        (Process => MSR.Low_Or_High'Access);
+      Validate.XML_Processors.Register
+        (Process => Device.Physical_Device_Name_Uniqueness'Access);
+      Validate.XML_Processors.Register
+        (Process => Device.Physical_Device_References'Access);
+      Validate.XML_Processors.Register
+        (Process => Device.Physical_IRQ_Uniqueness'Access);
+      Validate.XML_Processors.Register
+        (Process => Device.Device_IRQ_Name_Uniqueness'Access);
+      Validate.XML_Processors.Register
+        (Process => Device.Physical_IRQ_References'Access);
+      Validate.XML_Processors.Register
+        (Process => Device.IRQ_Number_Equality'Access);
+      Validate.XML_Processors.Register
+        (Process => Device.IO_Port_Start_Smaller_End'Access);
+      Validate.XML_Processors.Register
+        (Process => Device.Device_IO_Port_Name_Uniqueness'Access);
+      Validate.XML_Processors.Register
+        (Process => Device.IO_Port_References'Access);
+      Validate.XML_Processors.Register
+        (Process => Device.IO_Port_Range_Equality'Access);
+      Validate.XML_Processors.Register
+        (Process => Device.Device_Memory_Name_Uniqueness'Access);
+      Validate.XML_Processors.Register
+        (Process => Device.Device_Sharing'Access);
+      Validate.XML_Processors.Register
+        (Process => Scheduling.CPU_Element_Count'Access);
+      Validate.XML_Processors.Register
+        (Process => Scheduling.Subject_References'Access);
+      Validate.XML_Processors.Register
+        (Process => Scheduling.Subject_CPU_Affinity'Access);
+      Validate.XML_Processors.Register
+        (Process => Scheduling.Major_Frame_Ticks'Access);
+      Validate.XML_Processors.Register
+        (Process => Kernel.CPU_Store_Address_Equality'Access);
+      Validate.XML_Processors.Register
+        (Process => Kernel.Stack_Address_Equality'Access);
+      Validate.XML_Processors.Register
+        (Process => Subject.Name_Uniqueness'Access);
+      Validate.XML_Processors.Register
+        (Process => Subject.CPU_ID'Access);
+      Validate.XML_Processors.Register
+        (Process => Subject.Event_Subject_References'Access);
+      Validate.XML_Processors.Register
+        (Process => Subject.Event_Self_References'Access);
+      Validate.XML_Processors.Register
+        (Process => Subject.Event_Switch_Same_Core'Access);
+      Validate.XML_Processors.Register
+        (Process => Subject.Event_IPI_Different_Core'Access);
+      Validate.XML_Processors.Register
+        (Process => Platform.Memory_Space'Access);
+      Validate.XML_Processors.Register
+        (Process => Platform.Memory_Block_Overlap'Access);
    end Register_All;
 
 end Validators;

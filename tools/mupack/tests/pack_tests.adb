@@ -30,24 +30,17 @@ is
 
    procedure Execute_Run
    is
-      Obj_Dir : constant String := "obj";
-      Knl_Bin : constant String := "obj1.o.bin";
    begin
       Command_Line.Test.Set_Input_Dir  (Path => "data");
-      Command_Line.Test.Set_Output_Dir (Path => Obj_Dir);
+      Command_Line.Test.Set_Output_Dir (Path => "obj");
       Command_Line.Test.Set_Policy     (Path => "data/test_policy.xml");
 
       Pack.Run;
 
-      Assert (Condition => Ada.Directories.Exists
-              (Name => Obj_Dir & "/" & Knl_Bin),
-              Message   => "Binary kernel not found");
-      Assert (Condition => Ada.Directories.Exists
-              (Name => Obj_Dir & "/muen.img"),
+      Assert (Condition => Ada.Directories.Exists (Name => "obj/muen.img"),
               Message   => "System image not found");
 
-      Ada.Directories.Delete_File (Name => Obj_Dir & "/" & Knl_Bin);
-      Ada.Directories.Delete_File (Name => Obj_Dir & "/muen.img");
+      Ada.Directories.Delete_File (Name => "obj/muen.img");
    end Execute_Run;
 
    -------------------------------------------------------------------------

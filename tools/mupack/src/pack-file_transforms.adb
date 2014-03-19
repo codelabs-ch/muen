@@ -26,7 +26,6 @@ with Interfaces;
 with Mulog;
 with Mutools.Files;
 
-with Pack.Image;
 with Pack.Command_Line;
 
 package body Pack.File_Transforms
@@ -45,12 +44,8 @@ is
    --  Patch Linux bzImage.
    procedure Patch_Bzimage (File : not null access Parser.File_Entry_Type);
 
-   --  Convert given ELF binary to raw object format.
-   procedure To_Raw_Binary (File : not null access Parser.File_Entry_Type);
-
    Transforms : constant array (Parser.File_Format_Type) of Transform_Procedure
      := (Parser.Bzimage => Patch_Bzimage'Access,
-         Parser.Elf     => To_Raw_Binary'Access,
          others         => Null_Transform'Access);
 
    -------------------------------------------------------------------------
@@ -194,29 +189,5 @@ is
          Transforms (Files (I).Format) (File => Files (I)'Access);
       end loop;
    end Process;
-
-   -------------------------------------------------------------------------
-
-   procedure To_Raw_Binary (File : not null access Parser.File_Entry_Type)
-   is
-      use type Ada.Strings.Unbounded.Unbounded_String;
-
-      Input_Path   : constant String := S (File.Path) & "/"
-        & S (File.Filename);
-      Output_Fname : constant String := S (File.Filename) & ".bin";
-      Output_Path  : constant String := Command_Line.Get_Output_Dir & "/"
-        & Output_Fname;
-   begin
-      Mulog.Log (Msg => "Converting file '" & Input_Path & "' from ELF to raw "
-                 & "binary '" & Output_Path & "'");
-      Image.To_Binary (Src_Elf => Input_Path,
-                       Dst_Bin => Output_Path);
-
-      --  Update file reference.
-
-      File.Filename := U (Output_Fname);
-      File.Path     := U (Command_Line.Get_Output_Dir);
-      File.Format   := Parser.Bin_Raw;
-   end To_Raw_Binary;
 
 end Pack.File_Transforms;

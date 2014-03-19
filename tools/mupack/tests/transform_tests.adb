@@ -190,7 +190,7 @@ is
                   Address  => 16#0010_0000#,
                   Size     => 16#0001_3000#,
                   Offset   => 0,
-                  Format   => Parser.Elf),
+                  Format   => Parser.Bin_Raw),
             2 => (Mem_Name => U ("test2"),
                   Filename => U ("obj2.o"),
                   Path     => U ("data"),
@@ -200,8 +200,8 @@ is
                   Format   => Parser.Acpi_Rsdp));
       Ref_Files : constant Parser.File_Array
         := (1 => (Mem_Name => U ("test1"),
-                  Filename => U ("obj1.o.bin"),
-                  Path     => U ("obj"),
+                  Filename => U ("obj1.o"),
+                  Path     => U ("data"),
                   Address  => 16#0010_0000#,
                   Size     => 16#0001_3000#,
                   Offset   => 0,
@@ -220,8 +220,6 @@ is
       File_Transforms.Process (Files => Files);
       Assert (Condition => Ref_Files = Files,
               Message   => "Transformed files mismatch");
-
-      Ada.Directories.Delete_File (Name => "obj/obj1.o.bin");
    end Run_Process;
 
 end Transform_Tests;

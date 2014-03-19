@@ -26,7 +26,7 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
-   --  Register data processor.
-   procedure Register_Processor;
+   --  Register immutable data processor.
+   procedure Register_Immutable_Processor;
 
 end Processors_Tests;

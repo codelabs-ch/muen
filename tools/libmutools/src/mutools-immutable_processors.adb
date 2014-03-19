@@ -18,7 +18,7 @@
 
 with Ada.Containers.Doubly_Linked_Lists;
 
-package body Mutools.Processors
+package body Mutools.Immutable_Processors
 is
 
    package Processor_Package is new Ada.Containers.Doubly_Linked_Lists
@@ -62,4 +62,4 @@ is
       end loop;
    end Run;
 
-end Mutools.Processors;
+end Mutools.Immutable_Processors;

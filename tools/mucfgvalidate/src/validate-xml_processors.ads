@@ -17,9 +17,9 @@
 --
 
 with Muxml;
-with Mutools.Processors;
+with Mutools.Immutable_Processors;
 
-pragma Elaborate_All (Mutools.Processors);
+pragma Elaborate_All (Mutools.Immutable_Processors);
 
 package Validate.XML_Processors is new
-  Mutools.Processors (Param_Type => Muxml.XML_Data_Type);
+  Mutools.Immutable_Processors (Param_Type => Muxml.XML_Data_Type);

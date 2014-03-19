@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mutools.Processors;
+with Mutools.Immutable_Processors;
 
 package body Processors_Tests
 is
@@ -45,15 +45,15 @@ is
    begin
       T.Set_Name (Name => "Processors  tests");
       T.Add_Test_Routine
-        (Routine => Register_Processor'Access,
-         Name    => "Register data processor");
+        (Routine => Register_Immutable_Processor'Access,
+         Name    => "Register immutable data processor");
    end Initialize;
 
    -------------------------------------------------------------------------
 
-   procedure Register_Processor
+   procedure Register_Immutable_Processor
    is
-      package Proc_Package is new Processors (Param_Type => Natural);
+      package Proc_Package is new Immutable_Processors (Param_Type => Natural);
 
       Data : constant Natural := 0;
    begin
@@ -81,6 +81,6 @@ is
          Proc_Package.Clear;
          Test_Counter := 0;
          raise;
-   end Register_Processor;
+   end Register_Immutable_Processor;
 
 end Processors_Tests;

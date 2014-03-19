@@ -19,7 +19,7 @@
 generic
    --  Parameter passed to processors.
    type Param_Type (<>) is limited private;
-package Mutools.Processors
+package Mutools.Immutable_Processors
 is
 
    type Process_Procedure is not null access procedure (Data : Param_Type);
@@ -36,4 +36,4 @@ is
    --  Clear all registered processors.
    procedure Clear;
 
-end Mutools.Processors;
+end Mutools.Immutable_Processors;

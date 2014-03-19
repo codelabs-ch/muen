@@ -16,20 +16,25 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Framework;
-
-package Processors_Tests
+generic
+   --  Parameter passed to processors.
+   type Param_Type (<>) is limited private;
+package Mutools.Processors
 is
 
-   type Testcase is new Ahven.Framework.Test_Case with null record;
+   type Process_Procedure is not null access procedure
+     (Data : in out Param_Type);
 
-   --  Initialize testcase.
-   procedure Initialize (T : in out Testcase);
+   --  Register policy processor.
+   procedure Register (Process : Process_Procedure);
 
-   --  Register immutable data processor.
-   procedure Register_Immutable_Processor;
+   --  Run all registered policy processors.
+   procedure Run (Data : in out Param_Type);
 
-   --  Register mutable data processor.
-   procedure Register_Mutable_Processor;
+   --  Returns the number of registered processors.
+   function Get_Count return Natural;
 
-end Processors_Tests;
+   --  Clear all registered processors.
+   procedure Clear;
+
+end Mutools.Processors;

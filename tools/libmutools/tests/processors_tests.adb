@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Mutools.Processors;
 with Mutools.Immutable_Processors;
 
 package body Processors_Tests
@@ -28,6 +29,17 @@ is
 
    --  Increment test counter variable.
    procedure Inc_Counter (Data : Natural);
+
+   --  Increment given counter variable.
+   procedure Inc (Counter : in out Natural);
+
+   -------------------------------------------------------------------------
+
+   procedure Inc (Counter : in out Natural)
+   is
+   begin
+      Counter := Counter + 1;
+   end Inc;
 
    -------------------------------------------------------------------------
 
@@ -47,6 +59,9 @@ is
       T.Add_Test_Routine
         (Routine => Register_Immutable_Processor'Access,
          Name    => "Register immutable data processor");
+      T.Add_Test_Routine
+        (Routine => Register_Mutable_Processor'Access,
+         Name    => "Register mutable data processor");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -82,5 +97,36 @@ is
          Test_Counter := 0;
          raise;
    end Register_Immutable_Processor;
+
+   -------------------------------------------------------------------------
+
+   procedure Register_Mutable_Processor
+   is
+      package Proc_Package is new Processors (Param_Type => Natural);
+
+      Counter : Natural := 0;
+   begin
+      Assert (Condition => Proc_Package.Get_Count = 0,
+              Message   => "Processors not empty");
+
+      Proc_Package.Register (Process => Inc'Access);
+      Proc_Package.Register (Process => Inc'Access);
+
+      Assert (Condition => Proc_Package.Get_Count = 2,
+              Message   => "Processor count not 2");
+
+      Proc_Package.Run (Data => Counter);
+      Assert (Condition => Counter = 2,
+              Message   => "Test counter not 2");
+
+      Proc_Package.Clear;
+      Assert (Condition => Proc_Package.Get_Count = 0,
+              Message   => "Processor count not 0");
+
+   exception
+      when others =>
+         Proc_Package.Clear;
+         raise;
+   end Register_Mutable_Processor;
 
 end Processors_Tests;

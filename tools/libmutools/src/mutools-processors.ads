@@ -16,24 +16,24 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Text_Runner;
-with Ahven.Framework;
-
-with Utils_Tests;
-with Processors_Tests;
-
-procedure Test_Runner
+generic
+   --  Parameter passed to processors.
+   type Param_Type (<>) is limited private;
+package Mutools.Processors
 is
-   use Ahven.Framework;
 
-   S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Libmutools tests");
-begin
-   Add_Test (Suite => S.all,
-             T     => new Utils_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Processors_Tests.Testcase);
+   type Process_Procedure is not null access procedure (Data : Param_Type);
 
-   Ahven.Text_Runner.Run (Suite => S);
-   Release_Suite (T => S);
-end Test_Runner;
+   --  Register policy processor.
+   procedure Register (Process : Process_Procedure);
+
+   --  Run all registered policy processors.
+   procedure Run (Data : Param_Type);
+
+   --  Returns the number of registered processors.
+   function Get_Count return Natural;
+
+   --  Clear all registered processors.
+   procedure Clear;
+
+end Mutools.Processors;

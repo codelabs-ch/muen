@@ -21,7 +21,6 @@ with Ahven.Framework;
 
 with Image_Tests;
 with Parser_Tests;
-with Transform_Tests;
 with Pack_Tests;
 
 procedure Test_Runner
@@ -35,8 +34,6 @@ begin
              T     => new Image_Tests.Testcase);
    Add_Test (Suite => S.all,
              T     => new Parser_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Transform_Tests.Testcase);
    Add_Test (Suite => S.all,
              T     => new Pack_Tests.Testcase);
 

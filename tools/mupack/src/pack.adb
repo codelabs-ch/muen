@@ -27,7 +27,6 @@ with Mutools.Utils;
 with Pack.Image;
 with Pack.Parser;
 with Pack.Command_Line;
-with Pack.File_Transforms;
 
 package body Pack
 is
@@ -100,7 +99,6 @@ is
          Set_Initial_Filepath (Files => Files);
 
          Mulog.Log (Msg => "Found" & Files'Length'Img & " file(s) to process");
-         File_Transforms.Process (Files => Files);
 
          Pack_Image :
          declare

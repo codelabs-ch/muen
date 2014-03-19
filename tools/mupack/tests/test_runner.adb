@@ -19,7 +19,6 @@
 with Ahven.Text_Runner;
 with Ahven.Framework;
 
-with OS_Tests;
 with Image_Tests;
 with Parser_Tests;
 with Transform_Tests;
@@ -32,8 +31,6 @@ is
    S : constant Test_Suite_Access := Create_Suite
      (Suite_Name => "Mupack tests");
 begin
-   Add_Test (Suite => S.all,
-             T     => new OS_Tests.Testcase);
    Add_Test (Suite => S.all,
              T     => new Image_Tests.Testcase);
    Add_Test (Suite => S.all,

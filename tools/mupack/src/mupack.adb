@@ -22,7 +22,6 @@ with Ada.Exceptions;
 with Mulog;
 with Muxml;
 
-with Pack.OS;
 with Pack.Command_Line;
 with Pack.File_Transforms;
 
@@ -35,7 +34,6 @@ begin
 exception
    when E : Muxml.Processing_Error
       | Pack.Pack_Error
-      | Pack.OS.Command_Failed
       | Pack.File_Transforms.Transform_Error =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Processing failed, aborting");

@@ -121,6 +121,7 @@ is
 
       exception
          when Ada.IO_Exceptions.End_Error =>
+            Close (File => File_In);
             raise Transform_Error with "Unexpected file layout in bzImage '"
               & Filepath_In & "'";
       end;
@@ -157,6 +158,7 @@ is
                     & Filepath_Out & "'");
          Sector (bzImage64BitEntryPoint'Range) := (others => 16#90#);
       else
+         Close (File => File_In);
          raise Transform_Error with "Unable to find entry point in bzImage '"
            & Filepath_In & "'";
       end if;

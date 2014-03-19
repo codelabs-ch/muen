@@ -18,23 +18,16 @@
 
 with Ada.Exceptions;
 with Ada.Directories;
-with Ada.Strings.Unbounded;
 
 with Test_Utils;
 
 with Pack.Image;
-with Pack.Parser;
 
 package body Image_Tests
 is
 
    use Ahven;
    use Pack;
-
-   function U
-     (Source : String)
-      return Ada.Strings.Unbounded.Unbounded_String
-      renames Ada.Strings.Unbounded.To_Unbounded_String;
 
    -------------------------------------------------------------------------
 
@@ -43,14 +36,11 @@ is
       Img   : Image.Image_Type (End_Address => 16#2d#);
       Fname : constant String := "obj/test.img";
    begin
-      Image.Add_File (Image => Img,
-                      File  => (Mem_Name => U ("test"),
-                                Filename => U ("pattern"),
-                                Path     => U ("data"),
-                                Address  => 16#0010#,
-                                Size     => 16#0020#,
-                                Offset   => 0,
-                                Format   => Parser.Bin_Raw));
+      Image.Add_File (Image   => Img,
+                      Path    => "data/pattern",
+                      Address => 16#0010#,
+                      Size    => 16#0020#,
+                      Offset  => 0);
       Image.Write (Image    => Img,
                    Filename => Fname);
       Assert (Condition => Test_Utils.Equal_Files
@@ -67,14 +57,11 @@ is
       Img   : Image.Image_Type (End_Address => 16#9#);
       Fname : constant String := "obj/test.img";
    begin
-      Image.Add_File (Image => Img,
-                      File  => (Mem_Name => U ("test"),
-                                Filename => U ("pattern"),
-                                Path     => U ("data"),
-                                Address  => 0,
-                                Size     => 16#0a#,
-                                Offset   => 16#0a#,
-                                Format   => Parser.Bin_Raw));
+      Image.Add_File (Image   => Img,
+                      Path    => "data/pattern",
+                      Address => 0,
+                      Size    => 16#0a#,
+                      Offset  => 16#0a#);
       Image.Write (Image    => Img,
                    Filename => Fname);
       Assert (Condition => Test_Utils.Equal_Files
@@ -90,14 +77,11 @@ is
    is
       Img : Image.Image_Type (End_Address => 10);
    begin
-      Image.Add_File (Image => Img,
-                      File  => (Mem_Name => U ("test"),
-                                Filename => U ("pattern"),
-                                Path     => U ("data"),
-                                Address  => 16#0000#,
-                                Size     => 16#001c#,
-                                Offset   => 0,
-                                Format   => Parser.Bin_Raw));
+      Image.Add_File (Image   => Img,
+                      Path    => "data/pattern",
+                      Address => 16#0000#,
+                      Size    => 16#001c#,
+                      Offset  => 0);
       Fail (Message => "Exception expected");
 
    exception

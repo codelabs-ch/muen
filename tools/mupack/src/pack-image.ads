@@ -18,7 +18,7 @@
 
 with Ada.Streams;
 
-with Pack.Parser;
+with Interfaces;
 
 package Pack.Image
 is
@@ -27,10 +27,13 @@ is
    type Image_Type
      (End_Address : Ada.Streams.Stream_Element_Offset) is private;
 
-   --  Add given file to system image.
+   --  Add file with given path, address, size and offset to system image.
    procedure Add_File
-     (Image : in out Image_Type;
-      File  :        Parser.File_Entry_Type);
+     (Image   : in out Image_Type;
+      Path    :        String;
+      Address :        Interfaces.Unsigned_64;
+      Size    :        Interfaces.Unsigned_64;
+      Offset  :        Interfaces.Unsigned_64);
 
    --  Write system image content to file given by filename.
    procedure Write

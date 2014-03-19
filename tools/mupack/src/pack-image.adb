@@ -18,8 +18,6 @@
 
 with Ada.Streams.Stream_IO;
 
-with Interfaces;
-
 with Mutools.Utils;
 with Mutools.Files;
 
@@ -29,28 +27,31 @@ is
    -------------------------------------------------------------------------
 
    procedure Add_File
-     (Image : in out Image_Type;
-      File  :        Parser.File_Entry_Type)
+     (Image   : in out Image_Type;
+      Path    :        String;
+      Address :        Interfaces.Unsigned_64;
+      Size    :        Interfaces.Unsigned_64;
+      Offset  :        Interfaces.Unsigned_64)
    is
       use Ada.Streams;
       use type Interfaces.Unsigned_64;
 
       Max_Size : constant Stream_Element_Offset
-        := Stream_Element_Offset (File.Size);
+        := Stream_Element_Offset (Size);
       Fd       : Stream_IO.File_Type;
       Last     : Stream_Element_Offset;
       Buffer   : Stream_Element_Array (0 .. Max_Size - 1);
    begin
       Stream_IO.Open (File => Fd,
                       Mode => Stream_IO.In_File,
-                      Name => S (File.Path) & "/" & S (File.Filename));
+                      Name => Path);
 
-      if File.Offset > 0 then
+      if Offset > 0 then
 
          --  Stream_IO Index starts at 1, our offset at 0 -> add one.
 
          Stream_IO.Set_Index (File => Fd,
-                              To   => Stream_IO.Count (File.Offset + 1));
+                              To   => Stream_IO.Count (Offset + 1));
       end if;
 
       Stream_IO.Read (File => Fd,
@@ -59,9 +60,9 @@ is
 
       declare
          File_Start : constant Stream_Element_Offset
-           := Stream_Element_Offset (File.Address);
+           := Stream_Element_Offset (Address);
          File_End   : constant Stream_Element_Offset
-           := Stream_Element_Offset (File.Address) + Last;
+           := Stream_Element_Offset (Address) + Last;
       begin
          if File_End > Image.Data'Last then
             Stream_IO.Close (File => Fd);

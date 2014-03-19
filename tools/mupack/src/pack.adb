@@ -112,8 +112,12 @@ is
                        & Mutools.Utils.To_Hex (Number => Size) & " bytes");
 
             for I in Files'Range loop
-               Image.Add_File (Image => Img,
-                               File  => Files (I));
+               Image.Add_File
+                 (Image   => Img,
+                  Path    => S (Files (I).Path) & "/" & S (Files (I).Filename),
+                  Address => Files (I).Address,
+                  Size    => Files (I).Size,
+                  Offset  => Files (I).Offset);
             end loop;
 
             Image.Write (Image    => Img,

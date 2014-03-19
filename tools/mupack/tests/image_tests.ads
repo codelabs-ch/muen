@@ -26,9 +26,6 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
-   --  Add section to ELF binary.
-   procedure Add_Section_To_Elf;
-
    --  Add file to system image.
    procedure Add_File_To_Image;
 

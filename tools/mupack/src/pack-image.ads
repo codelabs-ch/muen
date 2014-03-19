@@ -18,8 +18,6 @@
 
 with Ada.Streams;
 
-with Interfaces;
-
 with Pack.Parser;
 
 package Pack.Image
@@ -38,14 +36,6 @@ is
    procedure Write
      (Image    : Image_Type;
       Filename : String);
-
-   --  Add file to kernel image. The file is added as new section with
-   --  the specified physical address and name.
-   procedure Add_Section
-     (Image    : String;
-      Filename : String;
-      Name     : String;
-      Address  : Interfaces.Unsigned_64);
 
    --  Convert given source ELF binary to raw binary file.
    procedure To_Binary

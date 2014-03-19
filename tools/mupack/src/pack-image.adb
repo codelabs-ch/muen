@@ -18,6 +18,8 @@
 
 with Ada.Streams.Stream_IO;
 
+with Interfaces;
+
 with Mutools.Utils;
 with Mutools.Files;
 
@@ -78,24 +80,6 @@ is
 
       Stream_IO.Close (File => Fd);
    end Add_File;
-
-   -------------------------------------------------------------------------
-
-   procedure Add_Section
-     (Image    : String;
-      Filename : String;
-      Name     : String;
-      Address  : Interfaces.Unsigned_64)
-   is
-   begin
-      OS.Execute
-        (Command => Objcopy & " --add-section ." & Name & "=" & Filename & " "
-         & Image & " --change-section-address ." & Name & "=0x"
-         & Mutools.Utils.To_Hex (Number => Address,
-                                 Prefix => False)
-         & " --set-section-flags ."
-         & Name & "=alloc 2>/dev/null");
-   end Add_Section;
 
    -------------------------------------------------------------------------
 

@@ -23,12 +23,8 @@ with Interfaces;
 with Mutools.Utils;
 with Mutools.Files;
 
-with Pack.OS;
-
 package body Pack.Image
 is
-
-   Objcopy : constant String := "/usr/bin/objcopy";
 
    -------------------------------------------------------------------------
 
@@ -80,17 +76,6 @@ is
 
       Stream_IO.Close (File => Fd);
    end Add_File;
-
-   -------------------------------------------------------------------------
-
-   procedure To_Binary
-     (Src_Elf : String;
-      Dst_Bin : String)
-   is
-   begin
-      OS.Execute (Command => Objcopy & " -O binary --set-section-flags "
-                  & ".bss=alloc,load,contents " & Src_Elf & " " & Dst_Bin);
-   end To_Binary;
 
    -------------------------------------------------------------------------
 

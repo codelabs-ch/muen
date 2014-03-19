@@ -37,11 +37,6 @@ is
      (Image    : Image_Type;
       Filename : String);
 
-   --  Convert given source ELF binary to raw binary file.
-   procedure To_Binary
-     (Src_Elf : String;
-      Dst_Bin : String);
-
    Write_Error : exception;
 
 private

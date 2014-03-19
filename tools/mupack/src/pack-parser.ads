@@ -28,7 +28,6 @@ is
       Acpi_Dsdt,
       Bin_Raw,
       Bzimage,
-      Elf,
       Pt,
       Iobm,
       Msrbm,

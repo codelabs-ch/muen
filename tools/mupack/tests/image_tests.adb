@@ -50,7 +50,7 @@ is
                                 Address  => 16#0010#,
                                 Size     => 16#0020#,
                                 Offset   => 0,
-                                Format   => Parser.Elf));
+                                Format   => Parser.Bin_Raw));
       Image.Write (Image    => Img,
                    Filename => Fname);
       Assert (Condition => Test_Utils.Equal_Files
@@ -74,7 +74,7 @@ is
                                 Address  => 0,
                                 Size     => 16#0a#,
                                 Offset   => 16#0a#,
-                                Format   => Parser.Elf));
+                                Format   => Parser.Bin_Raw));
       Image.Write (Image    => Img,
                    Filename => Fname);
       Assert (Condition => Test_Utils.Equal_Files
@@ -97,7 +97,7 @@ is
                                 Address  => 16#0000#,
                                 Size     => 16#001c#,
                                 Offset   => 0,
-                                Format   => Parser.Elf));
+                                Format   => Parser.Bin_Raw));
       Fail (Message => "Exception expected");
 
    exception

@@ -13,7 +13,7 @@
   <memory caching="WB" name="mem1" physicalAddress="16#0001_0000#" size="16#0001_0000#"/>
   <memory caching="WB" name="mem2" physicalAddress="16#0002_0000#" size="16#0001_0000#"/>
   <memory caching="WB" name="mem3" physicalAddress="16#0000#" size="16#0001_0000#">
-   <file filename="test" format="elf" offset="16#0000#"/>
+   <file filename="test" format="bin_raw" offset="16#0000#"/>
   </memory>
   <memory caching="WB" name="mem4" physicalAddress="16#0003_0000#" size="16#0001_0000#"/>
  </memory>

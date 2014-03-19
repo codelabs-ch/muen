@@ -49,7 +49,7 @@
 		</memory>
 
 		<memory name="tau0"           physicalAddress="16#0024_0000#" size="16#0001_0000#" caching="UC">
-			<file format="elf" filename="tau0-bin" offset="16#0000#"/>
+			<file format="bin_raw" filename="tau0-bin" offset="16#0000#"/>
 		</memory>
 		<memory name="tau0|pt"        physicalAddress="16#001f_0000#" size="16#4000#"      caching="WB">
 			<file format="pt" filename="tau0_pt" offset="16#0000#"/>
@@ -62,7 +62,7 @@
 		</memory>
 
 		<memory name="subject1"       physicalAddress="16#4000_0000#" size="16#0001_0000_0000#" caching="UC">
-			<file format="elf" filename="subject1-bin" offset="16#0000#"/>
+			<file format="bin_raw" filename="subject1-bin" offset="16#0000#"/>
 		</memory>
 		<memory name="subject1|pt"    physicalAddress="16#001f_4000#" size="16#4000#"      caching="WB">
 			<file format="pt" filename="subject1_pt" offset="16#0000#"/>
@@ -75,7 +75,7 @@
 		</memory>
 
 		<memory name="subject2"       physicalAddress="16#0040_0000#" size="16#0040_0000#" caching="UC">
-			<file format="elf" filename="subject2-bin" offset="16#0000#"/>
+			<file format="bin_raw" filename="subject2-bin" offset="16#0000#"/>
 		</memory>
 		<memory name="subject2|pt"    physicalAddress="16#001f_8000#" size="16#4000#"      caching="WB">
 			<file format="pt" filename="subject2_pt" offset="16#0000#"/>

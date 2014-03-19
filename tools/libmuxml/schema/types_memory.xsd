@@ -21,7 +21,6 @@
 			<xs:enumeration value="acpi_dsdt"/>
 			<xs:enumeration value="bin_raw"/>
 			<xs:enumeration value="bzimage"/>
-			<xs:enumeration value="elf"/>
 			<xs:enumeration value="pt"/>
 			<xs:enumeration value="iobm"/>
 			<xs:enumeration value="msrbm"/>

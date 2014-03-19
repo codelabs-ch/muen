@@ -15,7 +15,7 @@
 			<file format="acpi_rsdp" filename="sections.ref" offset="16#0000#"/>
 		</memory>
 		<memory name="linux|bin" size="16#0001_3000#" physicalAddress="16#0011_3000#" caching="WB">
-			<file format="elf" filename="obj1.o" offset="16#0004#"/>
+			<file format="bin_raw" filename="obj1.o" offset="16#0004#"/>
 		</memory>
 	</memory>
 

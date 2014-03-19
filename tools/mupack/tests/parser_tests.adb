@@ -53,7 +53,7 @@ is
                   Address  => 16#0011_3000#,
                   Size     => 16#0001_3000#,
                   Offset   => 4,
-                  Format   => Parser.Elf));
+                  Format   => Parser.Bin_Raw));
    begin
       declare
          Files : constant Parser.File_Array
@@ -87,7 +87,7 @@ is
                   Address  => 16#0000_1000#,
                   Size     => 16#0000_7000#,
                   Offset   => 16#0001_b000#,
-                  Format   => Parser.Elf));
+                  Format   => Parser.Bin_Raw));
    begin
       Assert (Condition => Parser.Get_Image_Size (Files => Empty) = 0,
               Message   => "Zero expected");

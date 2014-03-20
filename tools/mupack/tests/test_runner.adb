@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@ with Ahven.Text_Runner;
 with Ahven.Framework;
 
 with Image_Tests;
-with Parser_Tests;
 with Pack_Tests;
 with Content_Provider_Tests;
 with Util_Tests;
@@ -34,8 +33,6 @@ is
 begin
    Add_Test (Suite => S.all,
              T     => new Image_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Parser_Tests.Testcase);
    Add_Test (Suite => S.all,
              T     => new Pack_Tests.Testcase);
    Add_Test (Suite => S.all,

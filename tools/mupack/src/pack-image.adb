@@ -26,6 +26,34 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Buffer
+     (Image   : in out Image_Type;
+      Buffer  :        Ada.Streams.Stream_Element_Array;
+      Address :        Ada.Streams.Stream_Element_Offset)
+   is
+   begin
+      Image.Data (Address .. Address + (Buffer'Length - 1)) := Buffer;
+
+   exception
+      when Constraint_Error =>
+         declare
+            Addr    : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64 (Address);
+            Imgsize : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64 (Image.Data'Length);
+            Bufsize : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64 (Buffer'Length);
+         begin
+            raise Image_Error with "Unable to add buffer of "
+              & Mutools.Utils.To_Hex (Number => Bufsize) & " bytes at address "
+              & Mutools.Utils.To_Hex (Number => Addr)
+              & " to system image with size "
+              & Mutools.Utils.To_Hex (Number => Imgsize);
+         end;
+   end Add_Buffer;
+
+   -------------------------------------------------------------------------
+
    procedure Add_File
      (Image   : in out Image_Type;
       Path    :        String;
@@ -59,9 +87,7 @@ is
                       Last => Last);
 
       declare
-         File_Start : constant Stream_Element_Offset
-           := Stream_Element_Offset (Address);
-         File_End   : constant Stream_Element_Offset
+         File_End : constant Stream_Element_Offset
            := Stream_Element_Offset (Address) + Last;
       begin
          if File_End > Image.Data'Last then
@@ -72,7 +98,9 @@ is
               (Number => Interfaces.Unsigned_64 (File_End));
          end if;
 
-         Image.Data (File_Start .. File_End) := Buffer (Buffer'First .. Last);
+         Add_Buffer (Image   => Image,
+                     Buffer  => Buffer (Buffer'First .. Last),
+                     Address => Stream_Element_Offset (Address));
       end;
 
       Stream_IO.Close (File => Fd);

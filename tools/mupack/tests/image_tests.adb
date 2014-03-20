@@ -31,6 +31,46 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Buffer_To_Image
+   is
+      Img   : Image.Image_Type (End_Address => 16#1d#);
+      Fname : constant String := "obj/test_buff.img";
+   begin
+      Image.Add_Buffer (Image   => Img,
+                        Buffer  => (1 .. 10 => 16#41#),
+                        Address => 0);
+      Image.Add_Buffer (Image   => Img,
+                        Buffer  => (1 .. 10 => 16#42#),
+                        Address => 10);
+      Image.Add_Buffer (Image   => Img,
+                        Buffer  => (1 .. 10 => 16#43#),
+                        Address => 20);
+      Image.Write (Image    => Img,
+                   Filename => Fname);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Fname,
+               Filename2 => "data/img.ref"),
+              Message   => "Image mismatch");
+      Ada.Directories.Delete_File (Name => Fname);
+   end Add_Buffer_To_Image;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Buffer_To_Image_Small
+   is
+      Img : Image.Image_Type (End_Address => 16#10#);
+   begin
+      Image.Add_Buffer (Image   => Img,
+                        Buffer  => (1 .. 3 => 0),
+                        Address => 16#10#);
+      Fail (Message => "Exception expected");
+
+   exception
+      when Image.Image_Error => null;
+   end Add_Buffer_To_Image_Small;
+
+   -------------------------------------------------------------------------
+
    procedure Add_File_To_Image
    is
       Img   : Image.Image_Type (End_Address => 16#2d#);
@@ -97,6 +137,12 @@ is
    is
    begin
       T.Set_Name (Name => "Image tests");
+      T.Add_Test_Routine
+        (Routine => Add_Buffer_To_Image'Access,
+         Name    => "Add buffer to system image");
+      T.Add_Test_Routine
+        (Routine => Add_Buffer_To_Image_Small'Access,
+         Name    => "Add buffer to system image (too small)");
       T.Add_Test_Routine
         (Routine => Add_File_To_Image'Access,
          Name    => "Add file to system image");

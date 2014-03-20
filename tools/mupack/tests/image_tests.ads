@@ -26,6 +26,12 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
+   --  Add buffer to system image.
+   procedure Add_Buffer_To_Image;
+
+   --  Add buffer to system image which is too small.
+   procedure Add_Buffer_To_Image_Small;
+
    --  Add file to system image.
    procedure Add_File_To_Image;
 

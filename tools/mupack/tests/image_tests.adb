@@ -16,7 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Exceptions;
 with Ada.Directories;
 
 with Test_Utils;
@@ -113,26 +112,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_File_To_Image_Small
-   is
-      Img : Image.Image_Type (End_Address => 10);
-   begin
-      Image.Add_File (Image   => Img,
-                      Path    => "data/pattern",
-                      Address => 16#0000#,
-                      Size    => 16#001c#,
-                      Offset  => 0);
-      Fail (Message => "Exception expected");
-
-   exception
-      when E : Pack_Error =>
-         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                 = "Image end address 16#A# below file end address 16#1B#",
-                 Message   => "Exception mismatch");
-   end Add_File_To_Image_Small;
-
-   -------------------------------------------------------------------------
-
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -149,9 +128,6 @@ is
       T.Add_Test_Routine
         (Routine => Add_File_To_Image_Offset'Access,
          Name    => "Add file to system image (offset)");
-      T.Add_Test_Routine
-        (Routine => Add_File_To_Image_Small'Access,
-         Name    => "Add file to system image (too small)");
       T.Add_Test_Routine
         (Routine => Write_Empty_Image'Access,
          Name    => "Write empty image");

@@ -85,23 +85,9 @@ is
       Stream_IO.Read (File => Fd,
                       Item => Buffer,
                       Last => Last);
-
-      declare
-         File_End : constant Stream_Element_Offset
-           := Stream_Element_Offset (Address) + Last;
-      begin
-         if File_End > Image.Data'Last then
-            Stream_IO.Close (File => Fd);
-            raise Pack_Error with "Image end address " & Mutools.Utils.To_Hex
-              (Number => Interfaces.Unsigned_64 (Image.Data'Last))
-              & " below file end address " & Mutools.Utils.To_Hex
-              (Number => Interfaces.Unsigned_64 (File_End));
-         end if;
-
-         Add_Buffer (Image   => Image,
-                     Buffer  => Buffer (Buffer'First .. Last),
-                     Address => Stream_Element_Offset (Address));
-      end;
+      Add_Buffer (Image   => Image,
+                  Buffer  => Buffer (Buffer'First .. Last),
+                  Address => Stream_Element_Offset (Address));
 
       Stream_IO.Close (File => Fd);
    end Add_File;

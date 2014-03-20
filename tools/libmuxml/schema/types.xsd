@@ -19,6 +19,12 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="byteType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="16#[0-9a-fA-F]{2}#"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:simpleType name="nameType">
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1"/>

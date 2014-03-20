@@ -28,6 +28,7 @@ with Pack.Image;
 with Pack.Command_Line;
 with Pack.Content_Providers;
 with Pack.Utils;
+with Pack.Checks;
 
 package body Pack
 is
@@ -45,9 +46,17 @@ is
       Mulog.Log (Msg => "Using output directory '" & Out_Dir & "'");
       Mulog.Log (Msg => "Processing policy '" & Policy_File & "'");
 
+      Checks.Register_All;
+      Mulog.Log (Msg => "Registered checker(s)" & Checks.Get_Count'Img);
+      Content_Providers.Register_All;
+      Mulog.Log (Msg => "Registered content provider(s)"
+                 & Content_Providers.Get_Count'Img);
+
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
                    File => Policy_File);
+
+      Checks.Run (Data => Policy);
 
       Pack_Image :
       declare
@@ -59,10 +68,6 @@ is
       begin
          Data.Mmap_File := U (Out_Dir & "/mmap");
          Data.XML_Doc   := Policy.Doc;
-
-         Content_Providers.Register_All;
-         Mulog.Log (Msg => "Registered content provider(s)"
-                    & Content_Providers.Get_Count'Img);
 
          Content_Providers.Run (Data => Data);
 

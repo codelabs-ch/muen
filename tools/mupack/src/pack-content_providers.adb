@@ -84,7 +84,7 @@ is
       In_Dir     : constant String := Command_Line.Get_Input_Dir;
       File_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
-        (N     => Data.XML_Data.Doc,
+        (N     => Data.XML_Doc,
          XPath => "/system/memory/memory/file");
       File_Count : constant Natural
         := DOM.Core.Nodes.Length (List => File_Nodes);

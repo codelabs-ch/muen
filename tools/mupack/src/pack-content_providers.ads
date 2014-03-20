@@ -18,7 +18,7 @@
 
 with Ada.Streams;
 
-with Muxml;
+with DOM.Core;
 
 with Pack.Image;
 
@@ -26,7 +26,7 @@ package Pack.Content_Providers
 is
 
    type Param_Type (Size : Ada.Streams.Stream_Element_Offset) is record
-      XML_Data  : Muxml.XML_Data_Type;
+      XML_Doc   : DOM.Core.Document;
       Image     : Pack.Image.Image_Type (End_Address => Size);
       Mmap_File : Ada.Strings.Unbounded.Unbounded_String;
    end record;

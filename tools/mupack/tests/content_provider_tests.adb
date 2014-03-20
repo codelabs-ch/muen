@@ -48,14 +48,16 @@ is
 
    procedure Process_Files
    is
-      Data : Content_Providers.Param_Type (16#126000#);
+      Policy : Muxml.XML_Data_Type;
+      Data   : Content_Providers.Param_Type (16#126000#);
    begin
       Command_Line.Test.Set_Input_Dir  (Path => "data");
       Command_Line.Test.Set_Output_Dir (Path => "obj");
       Command_Line.Test.Set_Policy     (Path => "data/test_policy.xml");
-      Muxml.Parse (Data => Data.XML_Data,
+      Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Data.XML_Doc := Policy.Doc;
       Data.Mmap_File := Ada.Strings.Unbounded.To_Unbounded_String
         (Source => "obj/mmap-testfile");
 

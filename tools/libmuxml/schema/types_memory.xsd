@@ -53,7 +53,7 @@
 	</xs:simpleType>
 
 	<xs:complexType name="fillContentType">
-		<xs:attribute name="pattern" type="xs:string" use="required"/>
+		<xs:attribute name="pattern" type="byteType" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="memRegionsType">

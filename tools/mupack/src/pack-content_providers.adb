@@ -121,34 +121,38 @@ is
                Memory : constant DOM.Core.Node := DOM.Core.Nodes.Parent_Node
                  (N => File);
 
-               Filename : constant String
+               Filename   : constant String
                  := DOM.Core.Elements.Get_Attribute
                    (Elem => File,
                     Name => "filename");
-               Format   : constant String
+               Format     : constant String
                  := DOM.Core.Elements.Get_Attribute
                    (Elem => File,
                     Name => "format");
-               Offset   : constant Interfaces.Unsigned_64
-                 := Interfaces.Unsigned_64'Value
-                   (DOM.Core.Elements.Get_Attribute
-                      (Elem => File,
-                       Name => "offset"));
-               Address  : constant Interfaces.Unsigned_64
+               Offset_Str : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => File,
+                    Name => "offset");
+               Address    : constant Interfaces.Unsigned_64
                  := Interfaces.Unsigned_64'Value
                    (DOM.Core.Elements.Get_Attribute
                       (Elem => Memory,
                        Name => "physicalAddress"));
-               Size     : constant Interfaces.Unsigned_64
+               Size       : constant Interfaces.Unsigned_64
                  := Interfaces.Unsigned_64'Value
                    (DOM.Core.Elements.Get_Attribute
                       (Elem => Memory,
                        Name => "size"));
-               Mem_Name : constant String
+               Mem_Name   : constant String
                  := DOM.Core.Elements.Get_Attribute
                    (Elem => Memory,
                     Name => "name");
+               Offset     : Interfaces.Unsigned_64 := 0;
             begin
+               if Offset_Str /= "none" then
+                  Offset := Interfaces.Unsigned_64'Value (Offset_Str);
+               end if;
+
                Image.Add_File (Image   => Data.Image,
                                Path    => In_Dir & "/" & Filename,
                                Address => Address,

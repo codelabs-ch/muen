@@ -32,4 +32,7 @@ is
    --  Try to pack file that is larger than the referenced memory region.
    procedure File_Larger_Than_Memory;
 
+   --  Try to pack file with offset larger than file size.
+   procedure Offset_Larger_Than_File;
+
 end Check_Tests;

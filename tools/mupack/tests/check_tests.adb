@@ -130,6 +130,50 @@ is
       T.Add_Test_Routine
         (Routine => File_Larger_Than_Memory'Access,
          Name    => "File larger than memory region");
+      T.Add_Test_Routine
+        (Routine => Offset_Larger_Than_File'Access,
+         Name    => "Offset larger than file");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Offset_Larger_Than_File
+   is
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Command_Line.Test.Set_Input_Dir (Path => "data");
+      Command_Line.Test.Set_Output_Dir (Path => "obj");
+      Command_Line.Test.Set_Policy (Path => "data/test_policy.xml");
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      declare
+         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Policy.Doc,
+               XPath => "/system/memory/memory[@name='linux|acpi_rsdp']/file"),
+            Index => 0);
+      begin
+
+         --  Make offset larger than file.
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "offset",
+            Value => "16#ffff#");
+
+         Checks.Files_Size (Data => Policy);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Checks.Check_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Offset of file 'data/sections.ref' referenced by "
+                    & "physical memory region 'linux|acpi_rsdp' larger than "
+                    & "file size: 16#FFFF# > 16#26B#",
+                    Message   => "Exception mismatch");
+      end;
+   end Offset_Larger_Than_File;
 
 end Check_Tests;

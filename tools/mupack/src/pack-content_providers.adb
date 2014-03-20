@@ -25,6 +25,8 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
+with Mulog;
+
 with Pack.Command_Line;
 
 package body Pack.Content_Providers
@@ -41,8 +43,16 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
         (N     => Data.XML_Data.Doc,
          XPath => "/system/memory/memory/file");
+      File_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => File_Nodes);
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => File_Nodes) - 1 loop
+      Mulog.Log (Msg => "Found" & File_Count'Img & " file(s) to process");
+
+      if File_Count = 0 then
+         return;
+      end if;
+
+      for I in 0 .. File_Count - 1 loop
          declare
             File   : constant DOM.Core.Node := DOM.Core.Nodes.Item
               (List  => File_Nodes,

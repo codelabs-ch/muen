@@ -29,4 +29,7 @@ is
    --  Check existence of files referenced in policy.
    procedure File_Existence;
 
+   --  Try to pack file that is larger than the referenced memory region.
+   procedure File_Larger_Than_Memory;
+
 end Check_Tests;

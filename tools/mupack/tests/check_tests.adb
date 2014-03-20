@@ -80,6 +80,46 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure File_Larger_Than_Memory
+   is
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Command_Line.Test.Set_Input_Dir (Path => "data");
+      Command_Line.Test.Set_Output_Dir (Path => "obj");
+      Command_Line.Test.Set_Policy (Path => "data/test_policy.xml");
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      declare
+         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Policy.Doc,
+               XPath => "/system/memory/memory[@name='linux|acpi_rsdp']"),
+            Index => 0);
+      begin
+
+         --  Make memory region too small.
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "size",
+            Value => "16#0000#");
+
+         Checks.Files_Size (Data => Policy);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Checks.Check_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "File 'data/sections.ref' too large for physical memory"
+                    & " region 'linux|acpi_rsdp': 16#26B# > 16#0#",
+                    Message   => "Exception mismatch");
+      end;
+   end File_Larger_Than_Memory;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -87,6 +127,9 @@ is
       T.Add_Test_Routine
         (Routine => File_Existence'Access,
          Name    => "File existence");
+      T.Add_Test_Routine
+        (Routine => File_Larger_Than_Memory'Access,
+         Name    => "File larger than memory region");
    end Initialize;
 
 end Check_Tests;

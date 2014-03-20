@@ -18,11 +18,14 @@
 
 with Ada.Directories;
 
+with Interfaces;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
+with Mutools.Utils;
 with Mutools.Immutable_Processors;
 
 with Pack.Command_Line;
@@ -70,6 +73,68 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Files_Size (Data : Muxml.XML_Data_Type)
+   is
+      use type Interfaces.Unsigned_64;
+
+      In_Dir     : constant String := Command_Line.Get_Input_Dir;
+      File_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/memory/memory/file");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => File_Nodes) - 1 loop
+         declare
+            File       : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => File_Nodes,
+                 Index => I);
+            Memory     : constant DOM.Core.Node
+              := DOM.Core.Nodes.Parent_Node (N => File);
+            Path       : constant String
+              := In_Dir & "/" & DOM.Core.Elements.Get_Attribute
+                (Elem => File,
+                 Name => "filename");
+            Mem_Name   : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Memory,
+                 Name => "name");
+            Offset_Str : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => File,
+                 Name => "offset");
+            Mem_Size   : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Memory,
+                    Name => "size"));
+            File_Size  : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64 (Ada.Directories.Size (Name => Path));
+            Offset     : Interfaces.Unsigned_64 := 0;
+         begin
+            if Offset_Str = "none" then
+               if File_Size > Mem_Size then
+                  raise Check_Error with "File '" & Path & "' too large for "
+                    & "physical memory region '" & Mem_Name & "': "
+                    & Mutools.Utils.To_Hex (Number => File_Size) & " > "
+                    & Mutools.Utils.To_Hex (Number => Mem_Size);
+               end if;
+            else
+               Offset := Interfaces.Unsigned_64'Value (Offset_Str);
+               if Offset > File_Size then
+                  raise Check_Error with "Offset of file '" & Path
+                    & "' referenced by physical memory region '" & Mem_Name
+                    & "' larger than file size: "
+                    & Mutools.Utils.To_Hex (Number => Offset) & " > "
+                    & Mutools.Utils.To_Hex (Number => File_Size);
+               end if;
+            end if;
+         end;
+      end loop;
+   end Files_Size;
+
+   -------------------------------------------------------------------------
+
    function Get_Count return Natural renames Check_Procs.Get_Count;
 
    -------------------------------------------------------------------------
@@ -78,6 +143,7 @@ is
    is
    begin
       Check_Procs.Register (Process => Files_Exist'Access);
+      Check_Procs.Register (Process => Files_Size'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

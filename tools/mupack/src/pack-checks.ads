@@ -24,6 +24,9 @@ is
    --  Check existence of files referenced in XML policy.
    procedure Files_Exist (Data : Muxml.XML_Data_Type);
 
+   --  Check if files fit into corresponding memory region.
+   procedure Files_Size (Data : Muxml.XML_Data_Type);
+
    --  Register all checkers.
    procedure Register_All;
 

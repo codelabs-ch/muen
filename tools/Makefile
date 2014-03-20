@@ -10,6 +10,7 @@ TOOLS =           \
 	mugenpt       \
 	mugenspec     \
 	mugenzp       \
+	mulnxbzpatch  \
 	mupack
 
 # Implicitly built libraries

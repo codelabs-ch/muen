@@ -28,13 +28,18 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Mutools.Utils;
+with Mutools.Processors;
 
 with Pack.Command_Line;
+
+pragma Elaborate_All (Mutools.Processors);
 
 package body Pack.Content_Providers
 is
 
    use Ada.Strings.Unbounded;
+
+   package Content_Procs is new Mutools.Processors (Param_Type => Param_Type);
 
    --  Add entry with given parameters to memory map file.
    procedure Add_Mmap_Entry
@@ -76,6 +81,10 @@ is
                        Item => Path);
       Ada.Text_IO.New_Line (File => File);
    end Add_Mmap_Entry;
+
+   -------------------------------------------------------------------------
+
+   function Get_Count return Natural renames Content_Procs.Get_Count;
 
    -------------------------------------------------------------------------
 
@@ -166,5 +175,17 @@ is
             raise;
       end;
    end Process_Files;
+
+   -------------------------------------------------------------------------
+
+   procedure Register_All
+   is
+   begin
+      Content_Procs.Register (Process => Process_Files'Access);
+   end Register_All;
+
+   -------------------------------------------------------------------------
+
+   procedure Run (Data : in out Param_Type) renames Content_Procs.Run;
 
 end Pack.Content_Providers;

@@ -34,4 +34,13 @@ is
    --  Add file content to system image.
    procedure Process_Files (Data : in out Param_Type);
 
+   --  Register all content providers.
+   procedure Register_All;
+
+   --  Run registered content providers.
+   procedure Run (Data : in out Param_Type);
+
+   --  Return number of registered content providers.
+   function Get_Count return Natural;
+
 end Pack.Content_Providers;

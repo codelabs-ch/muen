@@ -22,6 +22,7 @@ with Ahven.Framework;
 with Image_Tests;
 with Parser_Tests;
 with Pack_Tests;
+with Content_Provider_Tests;
 
 procedure Test_Runner
 is
@@ -36,6 +37,8 @@ begin
              T     => new Parser_Tests.Testcase);
    Add_Test (Suite => S.all,
              T     => new Pack_Tests.Testcase);
+   Add_Test (Suite => S.all,
+             T     => new Content_Provider_Tests.Testcase);
 
    Ahven.Text_Runner.Run (Suite => S);
    Release_Suite (T => S);

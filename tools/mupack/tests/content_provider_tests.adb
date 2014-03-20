@@ -17,6 +17,7 @@
 --
 
 with Ada.Directories;
+with Ada.Strings.Unbounded;
 
 with Muxml;
 
@@ -55,6 +56,8 @@ is
       Muxml.Parse (Data => Data.XML_Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Data.Mmap_File := Ada.Strings.Unbounded.To_Unbounded_String
+        (Source => "obj/mmap-testfile");
 
       Content_Providers.Process_Files (Data => Data);
 
@@ -64,8 +67,13 @@ is
               (Filename1 => "obj/muen.img",
                Filename2 => "data/muen.img.ref"),
               Message   => "Image file differs");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "obj/mmap-testfile",
+               Filename2 => "data/mmap.ref"),
+              Message   => "Memory map file differs");
 
       Ada.Directories.Delete_File (Name => "obj/muen.img");
+      Ada.Directories.Delete_File (Name => "obj/mmap-testfile");
    end Process_Files;
 
 end Content_Provider_Tests;

@@ -26,31 +26,31 @@
 		<memory name="kernel_data"    physicalAddress="16#0011_8000#" size="16#6000#"      caching="UC"/>
 		<memory name="sys_interface"  physicalAddress="16#001f_f000#" size="16#1000#"      caching="UC"/>
 		<memory name="kernel_0|pt"    physicalAddress="16#0020_0000#" size="16#4000#"      caching="WB">
-			<file format="pt" filename="kernel_pt_0" offset="16#0000#"/>
+			<file format="pt" filename="kernel_pt_0" offset="none"/>
 		</memory>
 		<memory name="kernel_1|pt"    physicalAddress="16#0020_4000#" size="16#4000#"      caching="WB">
-			<file format="pt" filename="kernel_pt_1" offset="16#0000#"/>
+			<file format="pt" filename="kernel_pt_1" offset="none"/>
 		</memory>
 
 		<memory name="tau0"           physicalAddress="16#0024_0000#" size="16#0001_0000#" caching="UC">
-			<file format="bin_raw" filename="tau0-bin" offset="16#0000#"/>
+			<file format="bin_raw" filename="tau0-bin" offset="none"/>
 		</memory>
 		<memory name="tau0|pt"        physicalAddress="16#001f_0000#" size="16#4000#"      caching="WB">
-			<file format="pt" filename="tau0_pt" offset="16#0000#"/>
+			<file format="pt" filename="tau0_pt" offset="none"/>
 		</memory>
 
 		<memory name="subject1"       physicalAddress="16#4000_0000#" size="16#0001_0000_0000#" caching="UC">
-			<file format="bin_raw" filename="subject1-bin" offset="16#0000#"/>
+			<file format="bin_raw" filename="subject1-bin" offset="none"/>
 		</memory>
 		<memory name="subject1|pt"    physicalAddress="16#001f_4000#" size="16#4000#"      caching="WB">
-			<file format="pt" filename="subject1_pt" offset="16#0000#"/>
+			<file format="pt" filename="subject1_pt" offset="none"/>
 		</memory>
 
 		<memory name="subject2"       physicalAddress="16#0040_0000#" size="16#0040_0000#" caching="UC">
-			<file format="bin_raw" filename="subject2-bin" offset="16#0000#"/>
+			<file format="bin_raw" filename="subject2-bin" offset="none"/>
 		</memory>
 		<memory name="subject2|pt"    physicalAddress="16#001f_8000#" size="16#4000#"      caching="WB">
-			<file format="pt" filename="subject2_pt" offset="16#0000#"/>
+			<file format="pt" filename="subject2_pt" offset="none"/>
 		</memory>
 	</memory>
 

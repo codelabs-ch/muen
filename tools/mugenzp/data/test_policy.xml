@@ -12,7 +12,7 @@
 
 	<memory>
 		<memory name="lnx|zp" size="16#1000#" physicalAddress="16#1000#" caching="WB">
-			<file format="zp" filename="lnx.zp" offset="16#0000#"/>
+			<file format="zp" filename="lnx.zp" offset="none"/>
 		</memory>
 	</memory>
 

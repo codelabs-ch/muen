@@ -12,16 +12,16 @@
 
 	<memory>
 		<memory name="linux|acpi_rsdp" physicalAddress="16#002e_0000#" size="16#0024#" caching="WB">
-			<file format="acpi_rsdp" filename="linux_rsdp" offset="16#0000#"/>
+			<file format="acpi_rsdp" filename="linux_rsdp" offset="none"/>
 		</memory>
 		<memory name="linux|acpi_xsdt" physicalAddress="16#002e_0024#" size="16#002c#" caching="WB">
-			<file format="acpi_xsdt" filename="linux_xsdt" offset="16#0000#"/>
+			<file format="acpi_xsdt" filename="linux_xsdt" offset="none"/>
 		</memory>
 		<memory name="linux|acpi_fadt" physicalAddress="16#002e_0050#" size="16#010c#" caching="WB">
-			<file format="acpi_fadt" filename="linux_fadt" offset="16#0000#"/>
+			<file format="acpi_fadt" filename="linux_fadt" offset="none"/>
 		</memory>
 		<memory name="linux|acpi_dsdt" physicalAddress="16#002e_015c#" size="16#1000#" caching="WB">
-			<file format="acpi_dsdt" filename="linux_dsdt" offset="16#0000#"/>
+			<file format="acpi_dsdt" filename="linux_dsdt" offset="none"/>
 		</memory>
 	</memory>
 

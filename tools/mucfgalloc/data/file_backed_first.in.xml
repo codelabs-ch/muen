@@ -13,7 +13,7 @@
   <memory caching="WB" name="mem1" size="16#0001_0000#"/>
   <memory caching="WB" name="mem2" size="16#0001_0000#"/>
   <memory caching="WB" name="mem3" size="16#0001_0000#">
-    <file format="bin_raw" filename="test" offset="16#0000#"/>
+    <file format="bin_raw" filename="test" offset="none"/>
   </memory>
   <memory caching="WB" name="mem4" size="16#0001_0000#"/>
  </memory>

@@ -21,7 +21,6 @@ with Ada.Strings.Unbounded;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
-with DOM.Core.Documents;
 
 with McKae.XML.XPath.XIA;
 
@@ -108,11 +107,8 @@ is
          Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
            (List  => McKae.XML.XPath.XIA.XPath_Query
               (N     => Policy.Doc,
-               XPath => "/system/memory/memory[@name='linux|acpi_rsdp']"),
+               XPath => "/system/memory/memory[@name='filled']"),
             Index => 0);
-         Fill : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
-           (Doc      => Policy.Doc,
-            Tag_Name => "fill");
       begin
 
          --  Set size and address of memory region.
@@ -121,20 +117,10 @@ is
            (Elem  => Node,
             Name  => "physicalAddress",
             Value => "16#0000#");
-
          DOM.Core.Elements.Set_Attribute
            (Elem  => Node,
             Name  => "size",
             Value => "16#000a#");
-
-         --  Add fill element to memory region.
-
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => DOM.Core.Nodes.Append_Child
-              (N         => Node,
-               New_Child => Fill),
-            Name  => "pattern",
-            Value => "16#42#");
 
          Data.XML_Doc := Policy.Doc;
          Data.Mmap_File := Ada.Strings.Unbounded.To_Unbounded_String

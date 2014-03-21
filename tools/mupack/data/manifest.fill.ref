@@ -1,2 +1,2 @@
 [Name;PhysicalAddress;Offset;Size;Type;Content]
-linux|acpi_rsdp;16#0#;16#0#;16#A#;fill_pattern;16#42#
+filled;16#0#;16#0#;16#A#;fill_pattern;16#42#

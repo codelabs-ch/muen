@@ -78,7 +78,7 @@ is
                       Filename => "obj/manifest");
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "obj/muen.img",
-               Filename2 => "data/muen.img.ref"),
+               Filename2 => "data/muen.file.ref"),
               Message   => "Image file differs");
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "obj/manifest",

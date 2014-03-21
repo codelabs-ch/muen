@@ -186,6 +186,7 @@ is
    is
    begin
       Content_Procs.Register (Process => Process_Files'Access);
+      Content_Procs.Register (Process => Process_Fills'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

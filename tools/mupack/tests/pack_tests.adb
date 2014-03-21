@@ -20,6 +20,8 @@ with Ada.Directories;
 
 with Pack.Command_Line.Test;
 
+with Test_Utils;
+
 package body Pack_Tests
 is
 
@@ -39,6 +41,15 @@ is
 
       Assert (Condition => Ada.Directories.Exists (Name => "obj/muen.img"),
               Message   => "System image not found");
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "obj/muen.img",
+               Filename2 => "data/muen.img.ref"),
+              Message   => "Image file differs");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "obj/muen.img.manifest",
+               Filename2 => "data/muen.img.manifest.ref"),
+              Message   => "Manifest file differs");
 
       Ada.Directories.Delete_File (Name => "obj/muen.img");
       Ada.Directories.Delete_File (Name => "obj/muen.img.manifest");

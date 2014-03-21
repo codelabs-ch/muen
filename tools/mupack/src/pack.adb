@@ -29,6 +29,7 @@ with Pack.Command_Line;
 with Pack.Content_Providers;
 with Pack.Utils;
 with Pack.Checks;
+with Pack.Manifest;
 
 package body Pack
 is
@@ -63,6 +64,7 @@ is
          Size   : constant Interfaces.Unsigned_64
            := Utils.Get_Image_Size (Policy => Policy);
          Sysimg : constant String := Out_Dir & "/muen.img";
+         Mfest  : constant String := Out_Dir & "/muen.img.manifest";
          Data   : Content_Providers.Param_Type
            (Ada.Streams.Stream_Element_Offset (Size));
       begin
@@ -76,6 +78,11 @@ is
          Mulog.Log (Msg => "Successfully created system image '" & Sysimg
                     & "' of size " & Mutools.Utils.To_Hex (Number => Size)
                     & " bytes");
+
+         Manifest.Write (Manifest => Data.Manifest,
+                         Filename => Mfest);
+         Mulog.Log (Msg => "Manifest of system image '" & Sysimg
+                    & "' written to '" & Mfest & "'");
       end Pack_Image;
    end Run;
 

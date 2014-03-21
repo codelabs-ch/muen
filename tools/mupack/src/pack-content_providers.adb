@@ -166,6 +166,14 @@ is
                                Address  => Address,
                                Size     => Size,
                                Offset   => Offset);
+
+               Manifest.Add_Entry (Manifest => Data.Manifest,
+                                   Mem_Name => Mem_Name,
+                                   Format   => Format,
+                                   Content  => In_Dir & "/" & Filename,
+                                   Address  => Address,
+                                   Size     => Size,
+                                   Offset   => Offset);
             end;
          end loop;
 

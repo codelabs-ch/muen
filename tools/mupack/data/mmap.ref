@@ -1,3 +1,0 @@
-[Name;PhysicalAddress;Offset;Size;Type  Path]
-linux|acpi_rsdp;16#100000#;16#0#;16#13000#;acpi_rsdp       data/sections.ref
-linux|bin;16#113000#;16#4#;16#13000#;bin_raw               data/obj1.o

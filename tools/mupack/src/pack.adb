@@ -68,8 +68,7 @@ is
          Data   : Content_Providers.Param_Type
            (Ada.Streams.Stream_Element_Offset (Size));
       begin
-         Data.Mmap_File := U (Out_Dir & "/mmap");
-         Data.XML_Doc   := Policy.Doc;
+         Data.XML_Doc := Policy.Doc;
 
          Content_Providers.Run (Data => Data);
 

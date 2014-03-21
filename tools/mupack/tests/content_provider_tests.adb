@@ -22,6 +22,7 @@ with Ada.Strings.Unbounded;
 with Muxml;
 
 with Pack.Image;
+with Pack.Manifest;
 with Pack.Command_Line.Test;
 with Pack.Content_Providers;
 
@@ -65,17 +66,19 @@ is
 
       Image.Write (Image    => Data.Image,
                    Filename => "obj/muen.img");
+      Manifest.Write (Manifest => Data.Manifest,
+                      Filename => "obj/manifest");
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "obj/muen.img",
                Filename2 => "data/muen.img.ref"),
               Message   => "Image file differs");
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "obj/mmap-testfile",
-               Filename2 => "data/mmap.ref"),
-              Message   => "Memory map file differs");
+              (Filename1 => "obj/manifest",
+               Filename2 => "data/manifest.ref"),
+              Message   => "Manifest file differs");
 
       Ada.Directories.Delete_File (Name => "obj/muen.img");
-      Ada.Directories.Delete_File (Name => "obj/mmap-testfile");
+      Ada.Directories.Delete_File (Name => "obj/manifest");
    end Process_Files;
 
 end Content_Provider_Tests;

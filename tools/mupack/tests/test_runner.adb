@@ -24,6 +24,7 @@ with Pack_Tests;
 with Content_Provider_Tests;
 with Util_Tests;
 with Check_Tests;
+with Manifest_Tests;
 
 procedure Test_Runner
 is
@@ -42,6 +43,8 @@ begin
              T     => new Util_Tests.Testcase);
    Add_Test (Suite => S.all,
              T     => new Check_Tests.Testcase);
+   Add_Test (Suite => S.all,
+             T     => new Manifest_Tests.Testcase);
 
    Ahven.Text_Runner.Run (Suite => S);
    Release_Suite (T => S);

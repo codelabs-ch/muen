@@ -205,6 +205,19 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Allocate_Variable_Fill_Regions
+      (Policy :        Muxml.XML_Data_Type;
+       Map    : in out Alloc.Map.Map_Type)
+   is
+   begin
+      Allocate_Variable_Regions
+         (Policy => Policy,
+          Path   => "/system/memory/*[not (@physicalAddress) and (fill)]",
+          Map    => Map);
+   end Allocate_Variable_Fill_Regions;
+
+   -------------------------------------------------------------------------
+
    procedure Allocate_Variable_Regions
       (Policy :        Muxml.XML_Data_Type;
        Path   :        String;

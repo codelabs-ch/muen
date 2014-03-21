@@ -67,6 +67,10 @@ private
       (Policy :        Muxml.XML_Data_Type;
        Map    : in out Alloc.Map.Map_Type);
 
+   procedure Allocate_Variable_Fill_Regions
+     (Policy :        Muxml.XML_Data_Type;
+      Map    : in out Alloc.Map.Map_Type);
+
    type Region_Type is
    record
       Alignment   : Interfaces.Unsigned_64;

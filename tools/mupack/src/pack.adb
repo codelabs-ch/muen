@@ -61,12 +61,14 @@ is
 
       Pack_Image :
       declare
+         use type Interfaces.Unsigned_64;
+
          Size   : constant Interfaces.Unsigned_64
            := Utils.Get_Image_Size (Policy => Policy);
          Sysimg : constant String := Out_Dir & "/muen.img";
          Mfest  : constant String := Out_Dir & "/muen.img.manifest";
          Data   : Content_Providers.Param_Type
-           (Ada.Streams.Stream_Element_Offset (Size));
+           (Ada.Streams.Stream_Element_Offset (Size - 1));
       begin
          Data.XML_Doc := Policy.Doc;
 

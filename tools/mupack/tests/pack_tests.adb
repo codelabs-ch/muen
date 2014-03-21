@@ -41,6 +41,7 @@ is
               Message   => "System image not found");
 
       Ada.Directories.Delete_File (Name => "obj/muen.img");
+      Ada.Directories.Delete_File (Name => "obj/muen.img.manifest");
    end Execute_Run;
 
    -------------------------------------------------------------------------

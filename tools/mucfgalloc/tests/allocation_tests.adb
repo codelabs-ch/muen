@@ -88,6 +88,26 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Fill_Pattern_Second
+   is
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_A,
+                   File => "data/fill_pattern_second.in.xml");
+
+      Make_Directory (Name => "obj/fill_pattern_second");
+      Allocator.Write (Output_Dir => "obj/fill_pattern_second",
+                       Policy     => Policy);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/fill_pattern_second.ref.xml",
+               Filename2 => "obj/fill_pattern_second/system.xml"),
+              Message => "Fill pattern second");
+   end Fill_Pattern_Second;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -116,6 +136,9 @@ is
       T.Add_Test_Routine
         (Routine => File_Backed_First'Access,
          Name    => "Invalid allocation of file-backed regions");
+      T.Add_Test_Routine
+        (Routine => Fill_Pattern_Second'Access,
+         Name    => "Allocation with fill pattern regions");
    end Initialize;
 
    -------------------------------------------------------------------------

@@ -186,7 +186,7 @@ is
       Allocate_Variable_Regions
          (Policy => Policy,
           Path   =>
-            "/system/memory/*[not (@physicalAddress) and not (file)]",
+            "/system/memory/*[not (@physicalAddress) and not (file or fill)]",
           Map    => Map);
    end Allocate_Variable_Empty_Regions;
 
@@ -354,6 +354,7 @@ is
       Add_Device_Regions (Policy, Map);
       Add_Fixed_Regions (Policy, Map);
       Allocate_Variable_File_Regions (Policy, Map);
+      Allocate_Variable_Fill_Regions (Policy, Map);
       Allocate_Variable_Empty_Regions (Policy, Map);
 
       --  Update DOM tree

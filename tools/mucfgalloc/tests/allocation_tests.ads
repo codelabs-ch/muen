@@ -50,6 +50,9 @@ is
    --  Check whether file-backed regions are allocated first
    procedure File_Backed_First;
 
+   --  Check whether fill pattern regions are allocated second
+   procedure Fill_Pattern_Second;
+
 private
 
    --  Create a directory if not present

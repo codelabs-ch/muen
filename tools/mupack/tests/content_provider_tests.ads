@@ -29,4 +29,7 @@ is
    --  Process files.
    procedure Process_Files;
 
+   --  Process fills.
+   procedure Process_Fills;
+
 end Content_Provider_Tests;

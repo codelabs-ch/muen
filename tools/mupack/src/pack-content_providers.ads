@@ -36,6 +36,9 @@ is
    --  Add file content to system image.
    procedure Process_Files (Data : in out Param_Type);
 
+   --  Add fill content to system image.
+   procedure Process_Fills (Data : in out Param_Type);
+
    --  Register all content providers.
    procedure Register_All;
 

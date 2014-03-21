@@ -19,6 +19,12 @@
 with Ada.Directories;
 with Ada.Strings.Unbounded;
 
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+with DOM.Core.Documents;
+
+with McKae.XML.XPath.XIA;
+
 with Muxml;
 
 with Pack.Image;
@@ -43,6 +49,9 @@ is
       T.Add_Test_Routine
         (Routine => Process_Files'Access,
          Name    => "Process files");
+      T.Add_Test_Routine
+        (Routine => Process_Fills'Access,
+         Name    => "Process fills");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -80,5 +89,75 @@ is
       Ada.Directories.Delete_File (Name => "obj/muen.img");
       Ada.Directories.Delete_File (Name => "obj/manifest");
    end Process_Files;
+
+   -------------------------------------------------------------------------
+
+   procedure Process_Fills
+   is
+      Policy : Muxml.XML_Data_Type;
+      Data   : Content_Providers.Param_Type (9);
+   begin
+      Command_Line.Test.Set_Input_Dir (Path => "data");
+      Command_Line.Test.Set_Output_Dir (Path => "obj");
+      Command_Line.Test.Set_Policy (Path => "data/test_policy.xml");
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      declare
+         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Policy.Doc,
+               XPath => "/system/memory/memory[@name='linux|acpi_rsdp']"),
+            Index => 0);
+         Fill : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
+           (Doc      => Policy.Doc,
+            Tag_Name => "fill");
+      begin
+
+         --  Set size and address of memory region.
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "physicalAddress",
+            Value => "16#0000#");
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "size",
+            Value => "16#000a#");
+
+         --  Add fill element to memory region.
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => DOM.Core.Nodes.Append_Child
+              (N         => Node,
+               New_Child => Fill),
+            Name  => "pattern",
+            Value => "16#42#");
+
+         Data.XML_Doc := Policy.Doc;
+         Data.Mmap_File := Ada.Strings.Unbounded.To_Unbounded_String
+           (Source => "obj/mmap-testfile");
+
+         Content_Providers.Process_Fills (Data => Data);
+
+         Image.Write (Image    => Data.Image,
+                      Filename => "obj/fill.img");
+         Manifest.Write (Manifest => Data.Manifest,
+                         Filename => "obj/manifest");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "obj/fill.img",
+                  Filename2 => "data/img.offset.ref"),
+                 Message   => "Image file differs");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "obj/manifest",
+                  Filename2 => "data/manifest.fill.ref"),
+                 Message   => "Manifest file differs");
+
+         Ada.Directories.Delete_File (Name => "obj/fill.img");
+         Ada.Directories.Delete_File (Name => "obj/manifest");
+      end;
+   end Process_Fills;
 
 end Content_Provider_Tests;

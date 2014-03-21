@@ -26,6 +26,7 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Mutools.Utils;
 with Mutools.Processors;
 
 with Pack.Command_Line;
@@ -117,6 +118,67 @@ is
          end;
       end loop;
    end Process_Files;
+
+   -------------------------------------------------------------------------
+
+   procedure Process_Fills (Data : in out Param_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Data.XML_Doc,
+         XPath => "/system/memory/memory/fill");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
+   begin
+      Mulog.Log (Msg => "Found" & Count'Img & " fill(s) to process");
+
+      if Count = 0 then
+         return;
+      end if;
+
+      for I in 0 .. Count - 1 loop
+         declare
+            Fill   : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Nodes,
+               Index => I);
+            Memory : constant DOM.Core.Node := DOM.Core.Nodes.Parent_Node
+              (N => Fill);
+
+            Pattern  : constant Ada.Streams.Stream_Element
+              := Ada.Streams.Stream_Element'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Fill,
+                    Name => "pattern"));
+            Address  : constant Ada.Streams.Stream_Element_Offset
+              := Ada.Streams.Stream_Element_Offset'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Memory,
+                    Name => "physicalAddress"));
+            Size     : constant Ada.Streams.Stream_Element_Offset
+              := Ada.Streams.Stream_Element_Offset'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Memory,
+                    Name => "size"));
+            Mem_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Memory,
+                 Name => "name");
+         begin
+            Image.Add_Buffer (Image   => Data.Image,
+                              Buffer  => (1 .. Size => Pattern),
+                              Address => Address);
+
+            Manifest.Add_Entry
+              (Manifest => Data.Manifest,
+               Mem_Name => Mem_Name,
+               Format   => "fill_pattern",
+               Content  => Mutools.Utils.To_Hex
+                 (Number => Interfaces.Unsigned_64 (Pattern)),
+               Address  => Interfaces.Unsigned_64 (Address),
+               Size     => Interfaces.Unsigned_64 (Size),
+               Offset   => 0);
+         end;
+      end loop;
+   end Process_Fills;
 
    -------------------------------------------------------------------------
 

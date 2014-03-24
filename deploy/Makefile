@@ -4,7 +4,7 @@ TARGET_IP = 192.168.254.2
 
 all: deploy
 
-deploy: $(PACK_DIR)/kernel .server
+deploy: $(PACK_DIR)/muen.img .server
 	echo y | amttool $(TARGET_IP) powerup
 	echo y | amttool $(TARGET_IP) reset
 

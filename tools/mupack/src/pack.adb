@@ -29,6 +29,7 @@ with Pack.Command_Line;
 with Pack.Content_Providers;
 with Pack.Utils;
 with Pack.Pre_Checks;
+with Pack.Post_Checks;
 with Pack.Manifest;
 
 package body Pack
@@ -49,6 +50,9 @@ is
 
       Pre_Checks.Register_All;
       Mulog.Log (Msg => "Registered pre-check(s)" & Pre_Checks.Get_Count'Img);
+      Post_Checks.Register_All;
+      Mulog.Log (Msg => "Registered post-check(s)"
+                 & Post_Checks.Get_Count'Img);
       Content_Providers.Register_All;
       Mulog.Log (Msg => "Registered content provider(s)"
                  & Content_Providers.Get_Count'Img);
@@ -73,6 +77,8 @@ is
          Data.XML_Doc := Policy.Doc;
 
          Content_Providers.Run (Data => Data);
+
+         Post_Checks.Run (Data => Data);
 
          Image.Write (Image    => Data.Image,
                       Filename => Sysimg);

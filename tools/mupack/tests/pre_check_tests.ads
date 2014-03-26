@@ -18,7 +18,7 @@
 
 with Ahven.Framework;
 
-package Check_Tests
+package Pre_Check_Tests
 is
 
    type Testcase is new Ahven.Framework.Test_Case with null record;
@@ -35,4 +35,4 @@ is
    --  Try to pack file with offset larger than file size.
    procedure Offset_Larger_Than_File;
 
-end Check_Tests;
+end Pre_Check_Tests;

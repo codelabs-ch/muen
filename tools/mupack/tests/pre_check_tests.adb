@@ -26,9 +26,9 @@ with McKae.XML.XPath.XIA;
 with Muxml;
 
 with Pack.Command_Line.Test;
-with Pack.Checks;
+with Pack.Pre_Checks;
 
-package body Check_Tests
+package body Pre_Check_Tests
 is
 
    use Ahven;
@@ -49,7 +49,7 @@ is
 
       --  Must not raise an exception.
 
-      Checks.Files_Exist (Data => Policy);
+      Pre_Checks.Files_Exist (Data => Policy);
 
       declare
          Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
@@ -66,11 +66,11 @@ is
             Name  => "filename",
             Value => "nonexistent");
 
-         Checks.Files_Exist (Data => Policy);
+         Pre_Checks.Files_Exist (Data => Policy);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Checks.Check_Error =>
+         when E : Pre_Checks.Check_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "File 'data/nonexistent' referenced by physical memory "
                     & "region 'linux|acpi_rsdp' not found",
@@ -106,11 +106,11 @@ is
             Name  => "size",
             Value => "16#0000#");
 
-         Checks.Files_Size (Data => Policy);
+         Pre_Checks.Files_Size (Data => Policy);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Checks.Check_Error =>
+         when E : Pre_Checks.Check_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "File 'data/sections.ref' too large for physical memory"
                     & " region 'linux|acpi_rsdp': 16#26B# > 16#0#",
@@ -123,7 +123,7 @@ is
    procedure Initialize (T : in out Testcase)
    is
    begin
-      T.Set_Name (Name => "Checker tests");
+      T.Set_Name (Name => "Pre-check tests");
       T.Add_Test_Routine
         (Routine => File_Existence'Access,
          Name    => "File existence");
@@ -163,11 +163,11 @@ is
             Name  => "offset",
             Value => "16#ffff#");
 
-         Checks.Files_Size (Data => Policy);
+         Pre_Checks.Files_Size (Data => Policy);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Checks.Check_Error =>
+         when E : Pre_Checks.Check_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Offset of file 'data/sections.ref' referenced by "
                     & "physical memory region 'linux|acpi_rsdp' larger than "
@@ -176,4 +176,4 @@ is
       end;
    end Offset_Larger_Than_File;
 
-end Check_Tests;
+end Pre_Check_Tests;

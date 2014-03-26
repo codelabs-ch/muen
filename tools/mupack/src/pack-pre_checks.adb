@@ -32,7 +32,7 @@ with Pack.Command_Line;
 
 pragma Elaborate_All (Mutools.Immutable_Processors);
 
-package body Pack.Checks
+package body Pack.Pre_Checks
 is
 
    package Check_Procs is new
@@ -150,4 +150,4 @@ is
 
    procedure Run (Data : Muxml.XML_Data_Type) renames Check_Procs.Run;
 
-end Pack.Checks;
+end Pack.Pre_Checks;

@@ -28,7 +28,7 @@ with Pack.Image;
 with Pack.Command_Line;
 with Pack.Content_Providers;
 with Pack.Utils;
-with Pack.Checks;
+with Pack.Pre_Checks;
 with Pack.Manifest;
 
 package body Pack
@@ -47,8 +47,8 @@ is
       Mulog.Log (Msg => "Using output directory '" & Out_Dir & "'");
       Mulog.Log (Msg => "Processing policy '" & Policy_File & "'");
 
-      Checks.Register_All;
-      Mulog.Log (Msg => "Registered checker(s)" & Checks.Get_Count'Img);
+      Pre_Checks.Register_All;
+      Mulog.Log (Msg => "Registered pre-check(s)" & Pre_Checks.Get_Count'Img);
       Content_Providers.Register_All;
       Mulog.Log (Msg => "Registered content provider(s)"
                  & Content_Providers.Get_Count'Img);
@@ -57,7 +57,7 @@ is
                    Kind => Muxml.Format_B,
                    File => Policy_File);
 
-      Checks.Run (Data => Policy);
+      Pre_Checks.Run (Data => Policy);
 
       Pack_Image :
       declare

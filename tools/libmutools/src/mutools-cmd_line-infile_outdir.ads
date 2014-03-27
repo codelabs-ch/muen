@@ -19,17 +19,22 @@
 private with Ada.Strings.Unbounded;
 private with Ada.Directories;
 
+with Muxml;
+
 package Mutools.Cmd_Line.Infile_Outdir
 is
 
    --  Init command line, use given tool description in usage output.
    procedure Init (Description : String);
 
-   --  Return policy filename.
-   function Get_Policy return String;
-
-   --  Return output directory.
-   function Get_Output_Dir return String;
+   --  The Run procedure extracts the output directory and the policy path from
+   --  the command line options/arguments. It then parses the policy and passes
+   --  the output directory and XML data on to the given process procedure.
+   procedure Run
+     (Kind    : Muxml.Schema_Kind;
+      Process : not null access procedure
+        (Output_Dir : String;
+         Policy     : Muxml.XML_Data_Type));
 
 private
 

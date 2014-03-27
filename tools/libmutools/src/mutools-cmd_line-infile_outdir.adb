@@ -22,26 +22,12 @@ with GNAT.OS_Lib;
 with GNAT.Strings;
 with GNAT.Command_Line;
 
+with Mulog;
+
 package body Mutools.Cmd_Line.Infile_Outdir
 is
 
    use Ada.Strings.Unbounded;
-
-   -------------------------------------------------------------------------
-
-   function Get_Output_Dir return String
-   is
-   begin
-      return To_String (Output_Dir);
-   end Get_Output_Dir;
-
-   -------------------------------------------------------------------------
-
-   function Get_Policy return String
-   is
-   begin
-      return To_String (Policy);
-   end Get_Policy;
 
    -------------------------------------------------------------------------
 
@@ -88,5 +74,26 @@ is
          GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));
       end if;
    end Init;
+
+   -------------------------------------------------------------------------
+
+   procedure Run
+     (Kind    : Muxml.Schema_Kind;
+      Process : not null access procedure
+        (Output_Dir : String;
+         Policy     : Muxml.XML_Data_Type))
+   is
+      Data        : Muxml.XML_Data_Type;
+      Out_Dir     : constant String := To_String (Output_Dir);
+      Policy_File : constant String := To_String (Policy);
+   begin
+      Mulog.Log (Msg => "Using output directory '" & Out_Dir & "'");
+      Mulog.Log (Msg => "Processing policy '" & Policy_File & "'");
+      Muxml.Parse (Data => Data,
+                   Kind => Kind,
+                   File => Policy_File);
+      Process (Output_Dir => Out_Dir,
+               Policy     => Data);
+   end Run;
 
 end Mutools.Cmd_Line.Infile_Outdir;

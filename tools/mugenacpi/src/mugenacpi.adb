@@ -19,22 +19,20 @@
 with Ada.Command_Line;
 with Ada.Exceptions;
 
-with Mugen.Generators;
-with Mugen.Command_Line;
-
 with Mulog;
 with Muxml;
+with Mutools.Cmd_Line.Infile_Outdir;
 
 with Acpi.Generator;
 
 procedure Mugenacpi
 is
 begin
-   Mugen.Command_Line.Init
+   Mutools.Cmd_Line.Infile_Outdir.Init
      (Description => "Generate ACPI tables according to given system policy");
-   Mugen.Generators.Run
-      (Kind    => Muxml.Format_B,
-       Process => Acpi.Generator.Write'Access);
+   Mutools.Cmd_Line.Infile_Outdir.Run
+     (Kind    => Muxml.Format_B,
+      Process => Acpi.Generator.Write'Access);
 
 exception
    when E : Muxml.Processing_Error =>

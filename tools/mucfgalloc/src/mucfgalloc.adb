@@ -18,23 +18,21 @@
 with Ada.Command_Line;
 with Ada.Exceptions;
 
-with Mugen.Generators;
-with Mugen.Command_Line;
-
 with Mulog;
 with Muxml;
+with Mutools.Cmd_Line.Infile_Outdir;
 
 with Alloc.Allocator;
 
 procedure Mucfgalloc
 is
 begin
-   Mugen.Command_Line.Init
+   Mutools.Cmd_Line.Infile_Outdir.Init
      (Description => "Assign physical addresses to all global memory " &
         "elements");
-   Mugen.Generators.Run
-      (Kind    => Muxml.Format_A,
-       Process => Alloc.Allocator.Write'Access);
+   Mutools.Cmd_Line.Infile_Outdir.Run
+     (Kind    => Muxml.Format_A,
+      Process => Alloc.Allocator.Write'Access);
 
 exception
    when E : Muxml.Processing_Error

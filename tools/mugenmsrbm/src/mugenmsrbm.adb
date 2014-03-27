@@ -19,22 +19,20 @@
 with Ada.Command_Line;
 with Ada.Exceptions;
 
-with Mugen.Generators;
-with Mugen.Command_Line;
-
 with Mulog;
 with Muxml;
+with Mutools.Cmd_Line.Infile_Outdir;
 
 with Msrbm.Generator;
 
 procedure Mugenmsrbm
 is
 begin
-   Mugen.Command_Line.Init
+   Mutools.Cmd_Line.Infile_Outdir.Init
      (Description => "Generate MSR bitmaps according to given system policy");
-   Mugen.Generators.Run
-      (Kind    => Muxml.Format_B,
-       Process => Msrbm.Generator.Write'Access);
+   Mutools.Cmd_Line.Infile_Outdir.Run
+     (Kind    => Muxml.Format_B,
+      Process => Msrbm.Generator.Write'Access);
 
 exception
    when E : Muxml.Processing_Error =>

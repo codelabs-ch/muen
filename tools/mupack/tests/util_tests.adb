@@ -40,7 +40,7 @@ is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-      Assert (Condition => Utils.Get_Image_Size (Policy => Data) = 16#127000#,
+      Assert (Condition => Utils.Get_Image_Size (Policy => Data) = 16#128000#,
               Message   => "Image size mismatch");
    end Image_Size;
 

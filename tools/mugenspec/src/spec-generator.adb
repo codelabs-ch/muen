@@ -545,19 +545,23 @@ is
          Owner : DOM.Core.Node;
          Index : Natural)
       is
-         IRQ_Nr      : constant Natural := Natural'Value
+         IRQ_Nr         : constant Natural := Natural'Value
            (DOM.Core.Elements.Get_Attribute
               (Elem => IRQ,
                Name => "number"));
-         Host_Vector : constant Natural := IRQ_Nr + Vector_Offset;
-         CPU         : constant Natural := Natural'Value
+         Host_Vector    : constant Natural := IRQ_Nr + Vector_Offset;
+         CPU            : constant Natural := Natural'Value
            (DOM.Core.Elements.Get_Attribute
               (Elem => Owner,
                Name => "cpu"));
-         Subject_Id  : constant String
+         Subject_Id     : constant String
            := DOM.Core.Elements.Get_Attribute
              (Elem => Owner,
               Name => "id");
+         Subject_Vector : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => IRQ,
+              Name => "vector");
       begin
 
          --  IRQ routing table.
@@ -574,7 +578,11 @@ is
          --  Vector -> subject routing table.
 
          Vector_Buffer := Vector_Buffer & Indent (N => 2)
-           & Host_Vector'Img & " => " & Subject_Id;
+           & Host_Vector'Img & " => Vector_Route_Type'("
+           & ASCII.LF
+           & Indent (N => 3) & "Subject => " & Subject_Id & ","
+           & ASCII.LF
+           & Indent (N => 3) & "Vector  => " & Subject_Vector & ")";
       end Write_Interrupt;
 
       Tmpl : Templates.Template_Type;
@@ -614,7 +622,7 @@ is
       end if;
 
       Vector_Buffer := Vector_Buffer & Indent (N => 2)
-        & " others => Skp.Invalid_Subject";
+        & " others => Null_Vector_Route";
 
       Tmpl := Templates.Create
         (Content => String_Templates.skp_interrupts_ads);

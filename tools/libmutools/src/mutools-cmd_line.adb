@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,16 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmulog/libmulog";
-with "../libmuxml/libmuxml";
-with "../shared_tools";
+package body Mutools.Cmd_Line
+is
 
-library project Libmugen extends "../libs.gpr" is
+   -------------------------------------------------------------------------
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Library_Dir use "lib";
-   for Library_Kind use "static";
-   for Library_Name use "mugen";
+   procedure Finalize (Config : in out Config_Type)
+   is
+   begin
+      GNAT.Command_Line.Free (Config => Config.Data);
+   end Finalize;
 
-end Libmugen;
+end Mutools.Cmd_Line;

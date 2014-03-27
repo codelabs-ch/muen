@@ -18,20 +18,31 @@
 
 with Ada.Strings.Unbounded;
 
-package Bzpatch.Command_Line
+with Muxml;
+
+package Mutools.Cmd_Line.Infile_Outfile
 is
 
    --  Init command line, use given tool description in usage output.
    procedure Init (Description : String);
 
-   --  Return source file.
-   function Get_File_Src return String;
+   --  The Run procedure extracts the input and output files from the command
+   --  line arguments. It then parses the input policy and passes the output
+   --  file and XML data on to the given process procedure.
+   procedure Run
+     (Kind    : Muxml.Schema_Kind;
+      Process : not null access procedure
+        (Input_Policy : Muxml.XML_Data_Type;
+         Output_File  : String));
 
-   --  Retun destination file.
-   function Get_File_Dst return String;
+   --  The Run procedure extracts the input and output files from the command
+   --  line arguments and passes them to the given process procedure.
+   procedure Run
+     (Process : not null access procedure
+        (Input_File, Output_File : String));
 
 private
 
-   File_Src, File_Dst : Ada.Strings.Unbounded.Unbounded_String;
+   File_In, File_Out : Ada.Strings.Unbounded.Unbounded_String;
 
-end Bzpatch.Command_Line;
+end Mutools.Cmd_Line.Infile_Outfile;

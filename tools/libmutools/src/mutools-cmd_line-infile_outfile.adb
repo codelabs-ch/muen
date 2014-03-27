@@ -17,52 +17,21 @@
 --
 
 with Ada.Command_Line;
-with Ada.Finalization;
 
 with GNAT.OS_Lib;
 with GNAT.Command_Line;
 
-package body Bzpatch.Command_Line
+with Mulog;
+
+package body Mutools.Cmd_Line.Infile_Outfile
 is
 
-   type Config_Type is new
-     Ada.Finalization.Limited_Controlled with record
-      Data : GNAT.Command_Line.Command_Line_Configuration;
-   end record;
-
-   overriding
-   procedure Finalize (Config : in out Config_Type);
-
-   -------------------------------------------------------------------------
-
-   procedure Finalize (Config : in out Config_Type)
-   is
-   begin
-      GNAT.Command_Line.Free (Config => Config.Data);
-   end Finalize;
-
-   -------------------------------------------------------------------------
-
-   function Get_File_Dst return String
-   is
-   begin
-      return Ada.Strings.Unbounded.To_String (File_Dst);
-   end Get_File_Dst;
-
-   -------------------------------------------------------------------------
-
-   function Get_File_Src return String
-   is
-   begin
-      return Ada.Strings.Unbounded.To_String (File_Src);
-   end Get_File_Src;
+   use Ada.Strings.Unbounded;
 
    -------------------------------------------------------------------------
 
    procedure Init (Description : String)
    is
-      use Ada.Strings.Unbounded;
-
       Cmdline : Config_Type;
    begin
       GNAT.Command_Line.Set_Usage
@@ -87,14 +56,50 @@ is
             GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));
       end;
 
-      File_Src := To_Unbounded_String (GNAT.Command_Line.Get_Argument);
-      File_Dst := To_Unbounded_String (GNAT.Command_Line.Get_Argument);
-      if File_Src = Null_Unbounded_String
-        or File_Dst = Null_Unbounded_String
+      File_In  := To_Unbounded_String (GNAT.Command_Line.Get_Argument);
+      File_Out := To_Unbounded_String (GNAT.Command_Line.Get_Argument);
+      if File_In = Null_Unbounded_String
+        or File_Out = Null_Unbounded_String
       then
          GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
          GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));
       end if;
    end Init;
 
-end Bzpatch.Command_Line;
+   -------------------------------------------------------------------------
+
+   procedure Run
+     (Kind    : Muxml.Schema_Kind;
+      Process : not null access procedure
+        (Input_Policy : Muxml.XML_Data_Type;
+         Output_File  : String))
+   is
+      Data       : Muxml.XML_Data_Type;
+      Policy_In  : constant String := To_String (File_In);
+      Policy_Out : constant String := To_String (File_Out);
+   begin
+      Mulog.Log (Msg => "Processing policy '" & Policy_In & "'");
+      Muxml.Parse (Data => Data,
+                   Kind => Kind,
+                   File => Policy_In);
+      Process (Input_Policy => Data,
+               Output_File  => Policy_Out);
+      Mulog.Log (Msg => "Sucessfully created policy '" & Policy_Out & "'");
+   end Run;
+
+   -------------------------------------------------------------------------
+
+   procedure Run
+     (Process : not null access procedure
+        (Input_File, Output_File : String))
+   is
+      F_In  : constant String := To_String (File_In);
+      F_Out : constant String := To_String (File_Out);
+   begin
+      Mulog.Log (Msg => "Processing input file '" & F_In & "'");
+      Process (Input_File  => F_In,
+               Output_File => F_Out);
+      Mulog.Log (Msg => "Sucessfully created output file '" & F_Out & "'");
+   end Run;
+
+end Mutools.Cmd_Line.Infile_Outfile;

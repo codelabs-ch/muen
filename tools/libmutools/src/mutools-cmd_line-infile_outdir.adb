@@ -17,54 +17,17 @@
 --
 
 with Ada.Command_Line;
-with Ada.Finalization;
-with Ada.Directories;
-with Ada.Strings.Unbounded;
 
 with GNAT.OS_Lib;
 with GNAT.Strings;
 with GNAT.Command_Line;
 
-package body Mugen.Command_Line
+with Mulog;
+
+package body Mutools.Cmd_Line.Infile_Outdir
 is
 
    use Ada.Strings.Unbounded;
-
-   Policy     : Unbounded_String;
-   Output_Dir : Unbounded_String := To_Unbounded_String
-     (Ada.Directories.Current_Directory);
-
-   type Config_Type is new
-     Ada.Finalization.Limited_Controlled with record
-      Data : GNAT.Command_Line.Command_Line_Configuration;
-   end record;
-
-   overriding
-   procedure Finalize (Config : in out Config_Type);
-
-   -------------------------------------------------------------------------
-
-   procedure Finalize (Config : in out Config_Type)
-   is
-   begin
-      GNAT.Command_Line.Free (Config => Config.Data);
-   end Finalize;
-
-   -------------------------------------------------------------------------
-
-   function Get_Output_Dir return String
-   is
-   begin
-      return To_String (Output_Dir);
-   end Get_Output_Dir;
-
-   -------------------------------------------------------------------------
-
-   function Get_Policy return String
-   is
-   begin
-      return To_String (Policy);
-   end Get_Policy;
 
    -------------------------------------------------------------------------
 
@@ -112,4 +75,25 @@ is
       end if;
    end Init;
 
-end Mugen.Command_Line;
+   -------------------------------------------------------------------------
+
+   procedure Run
+     (Kind    : Muxml.Schema_Kind;
+      Process : not null access procedure
+        (Output_Dir : String;
+         Policy     : Muxml.XML_Data_Type))
+   is
+      Data        : Muxml.XML_Data_Type;
+      Out_Dir     : constant String := To_String (Output_Dir);
+      Policy_File : constant String := To_String (Policy);
+   begin
+      Mulog.Log (Msg => "Using output directory '" & Out_Dir & "'");
+      Mulog.Log (Msg => "Processing policy '" & Policy_File & "'");
+      Muxml.Parse (Data => Data,
+                   Kind => Kind,
+                   File => Policy_File);
+      Process (Output_Dir => Out_Dir,
+               Policy     => Data);
+   end Run;
+
+end Mutools.Cmd_Line.Infile_Outdir;

@@ -39,8 +39,9 @@ is
                    File => "data/allocation_with_devices.in.xml");
 
       Make_Directory (Name => "obj/allocation_with_devices");
-      Allocator.Write (Output_Dir => "obj/allocation_with_devices",
-                       Policy     => Policy);
+      Allocator.Write
+        (Input_Policy => Policy,
+         Output_File  => "obj/allocation_with_devices/system.xml");
 
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/allocation_with_devices.ref.xml",
@@ -59,8 +60,9 @@ is
                    File => "data/automatic_allocation.in.xml");
 
       Make_Directory (Name => "obj/automatic_allocation");
-      Allocator.Write (Output_Dir => "obj/automatic_allocation",
-                       Policy     => Policy);
+      Allocator.Write
+        (Input_Policy => Policy,
+         Output_File  => "obj/automatic_allocation/system.xml");
 
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/automatic_allocation.ref.xml",
@@ -79,8 +81,9 @@ is
                    File => "data/file_backed_first.in.xml");
 
       Make_Directory (Name => "obj/file_backed_first");
-      Allocator.Write (Output_Dir => "obj/file_backed_first",
-                       Policy     => Policy);
+      Allocator.Write
+        (Input_Policy => Policy,
+         Output_File  => "obj/file_backed_first/system.xml");
 
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/file_backed_first.ref.xml",
@@ -99,8 +102,9 @@ is
                    File => "data/fill_pattern_second.in.xml");
 
       Make_Directory (Name => "obj/fill_pattern_second");
-      Allocator.Write (Output_Dir => "obj/fill_pattern_second",
-                       Policy     => Policy);
+      Allocator.Write
+        (Input_Policy => Policy,
+         Output_File  => "obj/fill_pattern_second/system.xml");
 
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/fill_pattern_second.ref.xml",
@@ -154,8 +158,9 @@ is
                    File => "data/limited_allocation.in.xml");
 
       Make_Directory (Name => "obj/limited_allocation");
-      Allocator.Write (Output_Dir => "obj/limited_allocation",
-                       Policy     => Policy);
+      Allocator.Write
+        (Input_Policy => Policy,
+         Output_File  => "obj/limited_allocation/system.xml");
 
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/limited_allocation.ref.xml",
@@ -183,8 +188,9 @@ is
                    Kind => Muxml.Format_A,
                    File => "data/overlap_between_device_memory.xml");
       Make_Directory ("obj/overlap_between_device_memory");
-      Allocator.Write (Policy     => Policy,
-                       Output_Dir => "obj/overlap_between_device_memory");
+      Allocator.Write
+        (Input_Policy => Policy,
+         Output_File  => "obj/overlap_between_device_memory/system.xml");
       pragma Unreferenced (Policy);
       Fail ("Overlap undetected");
    exception
@@ -201,8 +207,9 @@ is
                    Kind => Muxml.Format_A,
                    File => "data/overlap_between_devices.xml");
       Make_Directory ("obj/overlap_between_devices");
-      Allocator.Write (Policy     => Policy,
-                       Output_Dir => "obj/overlap_between_devices");
+      Allocator.Write
+        (Input_Policy => Policy,
+         Output_File  => "obj/overlap_between_devices/system.xml");
       pragma Unreferenced (Policy);
       Fail ("Overlap undetected");
    exception
@@ -219,8 +226,9 @@ is
                    Kind => Muxml.Format_A,
                    File => "data/overlapping_device.xml");
       Make_Directory ("obj/overlapping_devices");
-      Allocator.Write (Policy     => Policy,
-                       Output_Dir => "obj/overlapping_devices");
+      Allocator.Write
+        (Input_Policy => Policy,
+         Output_File  => "obj/overlapping_devices/system.xml");
       pragma Unreferenced (Policy);
       Fail ("Overlap undetected");
    exception
@@ -237,8 +245,9 @@ is
                    Kind => Muxml.Format_A,
                    File => "data/overlapping.xml");
       Make_Directory ("obj/overlapping_physical_memory");
-      Allocator.Write (Policy     => Policy,
-                       Output_Dir => "obj/overlapping_physical_memory");
+      Allocator.Write
+        (Input_Policy => Policy,
+         Output_File  => "obj/overlapping_physical_memory/system.xml");
       pragma Unreferenced (Policy);
       Fail ("Overlap undetected");
    exception

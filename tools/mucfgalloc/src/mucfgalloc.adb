@@ -18,27 +18,25 @@
 with Ada.Command_Line;
 with Ada.Exceptions;
 
-with Mugen.Generators;
-with Mugen.Command_Line;
-
 with Mulog;
 with Muxml;
+with Mutools.Cmd_Line.Infile_Outfile;
 
 with Alloc.Allocator;
 
 procedure Mucfgalloc
 is
 begin
-   Mugen.Command_Line.Init
+   Mutools.Cmd_Line.Infile_Outfile.Init
      (Description => "Assign physical addresses to all global memory " &
         "elements");
-   Mugen.Generators.Run
-      (Kind    => Muxml.Format_A,
-       Process => Alloc.Allocator.Write'Access);
+   Mutools.Cmd_Line.Infile_Outfile.Run
+     (Kind    => Muxml.Format_A,
+      Process => Alloc.Allocator.Write'Access);
 
 exception
    when E : Muxml.Processing_Error
-          | Alloc.Allocator.Out_Of_Memory =>
+      | Alloc.Allocator.Out_Of_Memory =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Processing failed, aborting");
       Mulog.Log (Level => Mulog.Error,

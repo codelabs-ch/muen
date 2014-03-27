@@ -22,15 +22,16 @@ with Ada.IO_Exceptions;
 
 with Mulog;
 with Mutools.Files;
+with Mutools.Cmd_Line.Infile_Outfile;
 
-with Bzpatch.Command_Line;
+with Bzpatch;
 
 procedure Mulnxbzpatch
 is
 begin
-   Bzpatch.Command_Line.Init (Description => "Linux bzImage patch tool");
-   Bzpatch.Patch (Input  => Bzpatch.Command_Line.Get_File_Src,
-                  Output => Bzpatch.Command_Line.Get_File_Dst);
+   Mutools.Cmd_Line.Infile_Outfile.Init
+     (Description => "Linux bzImage patch tool");
+   Mutools.Cmd_Line.Infile_Outfile.Run (Process => Bzpatch.Patch'Access);
 
 exception
    when E : Bzpatch.Patch_Error

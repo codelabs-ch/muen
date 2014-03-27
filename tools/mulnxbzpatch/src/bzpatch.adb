@@ -128,8 +128,6 @@ is
       end loop;
       Close (File => File_In);
       Close (File => File_Out);
-
-      Mulog.Log (Msg => "Result written to '" & Output & "'");
    end Patch;
 
 end Bzpatch;

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,16 +16,20 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package Mugen.Command_Line
+with Ada.Finalization;
+
+with GNAT.Command_Line;
+
+package Mutools.Cmd_Line
 is
+private
 
-   --  Init command line, use given tool description in usage output.
-   procedure Init (Description : String);
+   type Config_Type is new
+     Ada.Finalization.Limited_Controlled with record
+      Data : GNAT.Command_Line.Command_Line_Configuration;
+   end record;
 
-   --  Return policy filename.
-   function Get_Policy return String;
+   overriding
+   procedure Finalize (Config : in out Config_Type);
 
-   --  Return output directory.
-   function Get_Output_Dir return String;
-
-end Mugen.Command_Line;
+end Mutools.Cmd_Line;

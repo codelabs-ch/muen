@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,19 +16,31 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+private with Ada.Strings.Unbounded;
+private with Ada.Directories;
+
 with Muxml;
 
-package Mugen.Generators
+package Mutools.Cmd_Line.Infile_Outdir
 is
 
-   --  The Run procedure uses the Command_Line package to read the output
-   --  directory and the path of the policy file. It then parses the policy and
-   --  passes the output directory and XML data on to the given generator
-   --  procedure.
+   --  Init command line, use given tool description in usage output.
+   procedure Init (Description : String);
+
+   --  The Run procedure extracts the output directory and the policy path from
+   --  the command line options/arguments. It then parses the policy and passes
+   --  the output directory and XML data on to the given process procedure.
    procedure Run
      (Kind    : Muxml.Schema_Kind;
       Process : not null access procedure
         (Output_Dir : String;
          Policy     : Muxml.XML_Data_Type));
 
-end Mugen.Generators;
+private
+
+   Policy     : Ada.Strings.Unbounded.Unbounded_String;
+   Output_Dir : Ada.Strings.Unbounded.Unbounded_String
+     := Ada.Strings.Unbounded.To_Unbounded_String
+       (Ada.Directories.Current_Directory);
+
+end Mutools.Cmd_Line.Infile_Outdir;

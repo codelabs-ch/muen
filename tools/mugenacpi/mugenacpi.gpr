@@ -19,7 +19,6 @@
 with "xmlada";
 
 with "../../contrib/projects/xia";
-with "../libmugen/libmugen";
 with "../libmutools/libmutools";
 with "../shared_tools";
 

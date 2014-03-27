@@ -19,23 +19,21 @@
 with Ada.Command_Line;
 with Ada.Exceptions;
 
-with Mugen.Generators;
-with Mugen.Command_Line;
-
 with Mulog;
 with Muxml;
+with Mutools.Cmd_Line.Infile_Outdir;
 
 with Spec.Generator;
 
 procedure Mugenspec
 is
 begin
-   Mugen.Command_Line.Init
+   Mutools.Cmd_Line.Infile_Outdir.Init
      (Description => "Generate source specifications according to given"
       & " system policy");
-   Mugen.Generators.Run
-      (Kind    => Muxml.Format_B,
-       Process => Spec.Generator.Write'Access);
+   Mutools.Cmd_Line.Infile_Outdir.Run
+     (Kind    => Muxml.Format_B,
+      Process => Spec.Generator.Write'Access);
 
 exception
    when E : Muxml.Processing_Error =>

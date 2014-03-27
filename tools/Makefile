@@ -15,7 +15,6 @@ TOOLS =           \
 
 # Implicitly built libraries
 LIBS =        \
-	libmugen  \
 	libmulog  \
 	libpaging \
 	libtest

@@ -9,7 +9,6 @@ DUMMY := $(shell mkdir -p $(OBJ_DIR))
 all: $(IMAGE)
 
 $(IMAGE): $(KNL_FILE)
-	cp $^ $@
 	$(MUPACK) -i $(POLICY_DIR) -o $(OBJ_DIR) $(POLICY_DIR)/system.xml
 
 clean:

@@ -20,23 +20,23 @@ with Ada.Exceptions;
 
 with Mulog;
 with Muxml;
-with Mutools.Cmd_Line.Infile_Outdir;
+with Mutools.Cmd_Line.Infile_Outfile;
 
 with Alloc.Allocator;
 
 procedure Mucfgalloc
 is
 begin
-   Mutools.Cmd_Line.Infile_Outdir.Init
+   Mutools.Cmd_Line.Infile_Outfile.Init
      (Description => "Assign physical addresses to all global memory " &
         "elements");
-   Mutools.Cmd_Line.Infile_Outdir.Run
+   Mutools.Cmd_Line.Infile_Outfile.Run
      (Kind    => Muxml.Format_A,
       Process => Alloc.Allocator.Write'Access);
 
 exception
    when E : Muxml.Processing_Error
-          | Alloc.Allocator.Out_Of_Memory =>
+      | Alloc.Allocator.Out_Of_Memory =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Processing failed, aborting");
       Mulog.Log (Level => Mulog.Error,

@@ -7,7 +7,7 @@ PATCH    = hardware/$(HARDWARE).patch
 
 POLICY     = xml/demo_system.xml
 POLICY_SRC = $(OBJ_DIR)/demo_system.xml
-POLICY_B   = $(OBJ_DIR)/system.xml
+POLICY_B   = $(OBJ_DIR)/demo_system_b.xml
 
 GENERATORS =      \
 	$(MUGENACPI)  \
@@ -39,7 +39,7 @@ $(DSDT_OBJ) $(POLICY_SRC): $(POLICY) $(DSDT_SRC) $(PATCH)
 endif
 
 $(POLICY_B): $(POLICY_SRC)
-	@$(MUCFGALLOC) -o $(OBJ_DIR) $(POLICY_SRC)
+	@$(MUCFGALLOC) $^ $@
 
 .validated: $(POLICY_B) $(MUCFGVALIDATE)
 	@$(MUCFGVALIDATE) $(POLICY_B)

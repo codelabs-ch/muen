@@ -300,12 +300,14 @@ is
    -------------------------------------------------------------------------
 
    procedure Write
-     (Output_Dir : String;
-      Policy     : Muxml.XML_Data_Type)
+     (Input_Policy : Muxml.XML_Data_Type;
+      Output_File  : String)
    is
       use Ada.Text_IO;
+
       Map             : Alloc.Map.Map_Type;
       Memory_Map_File : File_Type;
+      Map_Filename    : constant String := Output_File & ".map";
 
       procedure Dump_Memory_Map (Region : Alloc.Map.Region_Type);
       procedure Dump_Memory_Map (Region : Alloc.Map.Region_Type)
@@ -333,7 +335,7 @@ is
          use Mutools.Utils;
       begin
          N := McKae.XML.XPath.XIA.XPath_Query
-           (N     => Policy.Doc,
+           (N     => Input_Policy.Doc,
             XPath => "/system/memory/*[@name='" &
                To_String (Region.Name) & "']");
 
@@ -352,30 +354,39 @@ is
    begin
 
       --  Add data from policy to memory map
-      Add_Empty_Regions (Policy, Map);
-      Add_Device_Regions (Policy, Map);
-      Add_Fixed_Regions (Policy, Map);
-      Allocate_Variable_File_Regions (Policy, Map);
-      Allocate_Variable_Fill_Regions (Policy, Map);
-      Allocate_Variable_Empty_Regions (Policy, Map);
+      Add_Empty_Regions
+        (Policy => Input_Policy,
+         Map    => Map);
+      Add_Device_Regions
+        (Policy => Input_Policy,
+         Map    => Map);
+      Add_Fixed_Regions
+        (Policy => Input_Policy,
+         Map    => Map);
+      Allocate_Variable_File_Regions
+        (Policy => Input_Policy,
+         Map    => Map);
+      Allocate_Variable_Fill_Regions
+        (Policy => Input_Policy,
+         Map    => Map);
+      Allocate_Variable_Empty_Regions
+        (Policy => Input_Policy,
+         Map    => Map);
 
       --  Update DOM tree
       Map.Iterate (Update_DOM'Access, Alloc.Map.Allocated);
 
       --  Create a memory map file
-      Create (Memory_Map_File, Out_File, Output_Dir & "/system.map");
+      Create (Memory_Map_File, Out_File, Map_Filename);
       Map.Iterate (Dump_Memory_Map'Access, Alloc.Map.Any);
       Close (Memory_Map_File);
-      Mulog.Log (Msg => "Memory map written to '" & Output_Dir
-                 & "/system.map'");
+      Mulog.Log (Msg => "Memory map written to '" & Map_Filename & "'");
 
       --  Write output file
       Muxml.Write
-         (File => Output_Dir & "/system.xml",
+         (File => Output_File,
           Kind => Muxml.Format_B,
-          Data => Policy);
-      Mulog.Log (Msg => "Created allocated policy '" & Output_Dir
-                 & "/system.xml'");
+          Data => Input_Policy);
 
    exception
       when E : Alloc.Map.Overlapping_Empty_Region =>

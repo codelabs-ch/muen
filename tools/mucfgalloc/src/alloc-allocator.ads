@@ -25,10 +25,11 @@ private with Ada.Strings.Unbounded;
 package Alloc.Allocator
 is
 
-   --  Write fully allocated configuration to given output directory.
+   --  Allocate memory regions in given input policy and write result to
+   --  specified output file.
    procedure Write
-     (Output_Dir : String;
-      Policy     : Muxml.XML_Data_Type);
+     (Input_Policy : Muxml.XML_Data_Type;
+      Output_File  : String);
 
    --  Physical memory regions in the config overlapped each other.
    Overlapping_Physical_Memory : exception;

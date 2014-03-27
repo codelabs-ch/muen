@@ -3,7 +3,7 @@ with SK;
 --# inherit SK, Skp;
 package Skp.Interrupts is
 
-   Remap_Offset : constant := 32;
+   Remap_Offset : constant :=__remap_offset__;
 
    subtype Remapped_Vector_Type is Skp.Dst_Vector_Range range
      Remap_Offset .. Skp.Dst_Vector_Range'Last;

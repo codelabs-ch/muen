@@ -627,6 +627,9 @@ is
       Tmpl := Templates.Create
         (Content => String_Templates.skp_interrupts_ads);
       Templates.Replace (Template => Tmpl,
+                         Pattern  => "__remap_offset__",
+                         Content  => Host_IRQ_Remap_Offset'Img);
+      Templates.Replace (Template => Tmpl,
                          Pattern  => "__routing_range__",
                          Content  => "1 .." & Natural'Max (1, IRQ_Count)'Img);
       Templates.Replace (Template => Tmpl,

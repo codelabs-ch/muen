@@ -515,8 +515,8 @@ is
       Policy     : Muxml.XML_Data_Type)
    is
 
-      --  IRQ to host Vector offset.
-      Vector_Offset : constant := 48;
+      --  Device IRQ to host vector remapping offset.
+      Host_IRQ_Remap_Offset : constant := 32;
 
       Subjects  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -549,7 +549,7 @@ is
            (DOM.Core.Elements.Get_Attribute
               (Elem => IRQ,
                Name => "number"));
-         Host_Vector    : constant Natural := IRQ_Nr + Vector_Offset;
+         Host_Vector    : constant Natural := IRQ_Nr + Host_IRQ_Remap_Offset;
          CPU            : constant Natural := Natural'Value
            (DOM.Core.Elements.Get_Attribute
               (Elem => Owner,

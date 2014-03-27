@@ -20,7 +20,6 @@ with "xmlada";
 
 with "../../contrib/projects/xia";
 with "../libpaging/libpaging";
-with "../libmugen/libmugen";
 with "../libmutools/libmutools";
 with "../shared_tools";
 

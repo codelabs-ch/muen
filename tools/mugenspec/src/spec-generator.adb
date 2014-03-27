@@ -545,14 +545,19 @@ is
          Owner : DOM.Core.Node;
          Index : Natural)
       is
-         IRQ_Nr : constant Natural := Natural'Value
+         IRQ_Nr      : constant Natural := Natural'Value
            (DOM.Core.Elements.Get_Attribute
               (Elem => IRQ,
                Name => "number"));
-         CPU    : constant Natural := Natural'Value
+         Host_Vector : constant Natural := IRQ_Nr + Vector_Offset;
+         CPU         : constant Natural := Natural'Value
            (DOM.Core.Elements.Get_Attribute
               (Elem => Owner,
                Name => "cpu"));
+         Subject_Id  : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Owner,
+              Name => "id");
       begin
 
          --  IRQ routing table.
@@ -564,15 +569,12 @@ is
            & "," & ASCII.LF
            & Indent (N => 3) & "IRQ    =>" & IRQ_Nr'Img
            & "," & ASCII.LF
-           & Indent (N => 3) & "Vector =>"
-           & Positive'Image (Vector_Offset + IRQ_Nr) & ")";
+           & Indent (N => 3) & "Vector =>" & Host_Vector'Img & ")";
 
          --  Vector -> subject routing table.
 
          Vector_Buffer := Vector_Buffer & Indent (N => 2)
-           & Positive'Image (Vector_Offset + IRQ_Nr) & " => "
-           & DOM.Core.Elements.Get_Attribute (Elem => Owner,
-                                              Name => "id");
+           & Host_Vector'Img & " => " & Subject_Id;
       end Write_Interrupt;
 
       Tmpl : Templates.Template_Type;

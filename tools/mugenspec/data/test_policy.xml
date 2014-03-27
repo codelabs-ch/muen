@@ -497,11 +497,11 @@
 				<device logical="foodevice" physical="multiport">
 					<ioPort logical="data" physical="ports1" start="16#03f8#" end="16#03fd#"/>
 					<ioPort logical="cmd"  physical="ports2" start="16#abcd#" end="16#bcda#"/>
-					<irq logical="irq" physical="irq" number="12"/>
+					<irq logical="irq" physical="irq" number="12" vector="44"/>
 				</device>
 				<device logical="bardevice" physical="testdevice">
 					<ioPort logical="cmd"  physical="fooport" start="16#00ab#" end="16#00ab#"/>
-					<irq logical="irq" physical="irq" number="15"/>
+					<irq logical="irq" physical="irq" number="15" vector="47"/>
 				</device>
 			</devices>
 			<events/>

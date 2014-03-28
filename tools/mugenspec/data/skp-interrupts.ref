@@ -27,18 +27,31 @@ package Skp.Interrupts is
        1 => IRQ_Route_Type'(
          CPU    => 1,
          IRQ    => 12,
-         Vector => 60),
+         Vector => 44),
        2 => IRQ_Route_Type'(
          CPU    => 1,
          IRQ    => 15,
-         Vector => 63));
+         Vector => 47));
+
+   type Vector_Route_Type is record
+      Subject : Skp.Dst_Subject_Type;
+      Vector  : Skp.Vector_Range;
+   end record;
+
+   Null_Vector_Route : constant Vector_Route_Type := Vector_Route_Type'
+     (Subject => Skp.Invalid_Subject,
+      Vector  => 0);
 
    type Vector_Routing_Array is array (Remapped_Vector_Type)
-     of Skp.Dst_Subject_Type;
+     of Vector_Route_Type;
 
    Vector_Routing : constant Vector_Routing_Array := Vector_Routing_Array'(
-       60 => 1,
-       63 => 1,
-       others => Skp.Invalid_Subject);
+       44 => Vector_Route_Type'(
+         Subject => 1,
+         Vector  => 44),
+       47 => Vector_Route_Type'(
+         Subject => 1,
+         Vector  => 47),
+       others => Null_Vector_Route);
 
 end Skp.Interrupts;

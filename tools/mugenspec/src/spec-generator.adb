@@ -515,8 +515,8 @@ is
       Policy     : Muxml.XML_Data_Type)
    is
 
-      --  IRQ to host Vector offset.
-      Vector_Offset : constant := 48;
+      --  Device IRQ to host vector remapping offset.
+      Host_IRQ_Remap_Offset : constant := 32;
 
       Subjects  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -545,14 +545,23 @@ is
          Owner : DOM.Core.Node;
          Index : Natural)
       is
-         IRQ_Nr : constant Natural := Natural'Value
+         IRQ_Nr         : constant Natural := Natural'Value
            (DOM.Core.Elements.Get_Attribute
               (Elem => IRQ,
                Name => "number"));
-         CPU    : constant Natural := Natural'Value
+         Host_Vector    : constant Natural := IRQ_Nr + Host_IRQ_Remap_Offset;
+         CPU            : constant Natural := Natural'Value
            (DOM.Core.Elements.Get_Attribute
               (Elem => Owner,
                Name => "cpu"));
+         Subject_Id     : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Owner,
+              Name => "id");
+         Subject_Vector : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => IRQ,
+              Name => "vector");
       begin
 
          --  IRQ routing table.
@@ -564,15 +573,16 @@ is
            & "," & ASCII.LF
            & Indent (N => 3) & "IRQ    =>" & IRQ_Nr'Img
            & "," & ASCII.LF
-           & Indent (N => 3) & "Vector =>"
-           & Positive'Image (Vector_Offset + IRQ_Nr) & ")";
+           & Indent (N => 3) & "Vector =>" & Host_Vector'Img & ")";
 
          --  Vector -> subject routing table.
 
          Vector_Buffer := Vector_Buffer & Indent (N => 2)
-           & Positive'Image (Vector_Offset + IRQ_Nr) & " => "
-           & DOM.Core.Elements.Get_Attribute (Elem => Owner,
-                                              Name => "id");
+           & Host_Vector'Img & " => Vector_Route_Type'("
+           & ASCII.LF
+           & Indent (N => 3) & "Subject => " & Subject_Id & ","
+           & ASCII.LF
+           & Indent (N => 3) & "Vector  => " & Subject_Vector & ")";
       end Write_Interrupt;
 
       Tmpl : Templates.Template_Type;
@@ -612,10 +622,13 @@ is
       end if;
 
       Vector_Buffer := Vector_Buffer & Indent (N => 2)
-        & " others => Skp.Invalid_Subject";
+        & " others => Null_Vector_Route";
 
       Tmpl := Templates.Create
         (Content => String_Templates.skp_interrupts_ads);
+      Templates.Replace (Template => Tmpl,
+                         Pattern  => "__remap_offset__",
+                         Content  => Host_IRQ_Remap_Offset'Img);
       Templates.Replace (Template => Tmpl,
                          Pattern  => "__routing_range__",
                          Content  => "1 .." & Natural'Max (1, IRQ_Count)'Img);

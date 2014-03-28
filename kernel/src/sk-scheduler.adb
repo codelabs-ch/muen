@@ -397,26 +397,25 @@ is
    --#    X86_64.State from *;
    is
       Vect_Nr : Skp.Interrupts.Remapped_Vector_Type;
+      Route   : Skp.Interrupts.Vector_Route_Type;
    begin
       if Vector >= Skp.Interrupts.Remap_Offset then
          Vect_Nr := Skp.Interrupts.Remapped_Vector_Type (Vector);
-         if Skp.Interrupts.Vector_Routing (Vect_Nr) in Skp.Subject_Id_Type then
+         Route   := Skp.Interrupts.Vector_Routing (Vect_Nr);
+         if Route.Subject in Skp.Subject_Id_Type then
             Events.Insert_Event
-              (Subject => Skp.Interrupts.Vector_Routing (Vect_Nr),
-               Event   => Vector);
+              (Subject => Route.Subject,
+               Event   => SK.Byte (Route.Vector));
          end if;
 
          pragma Debug
-           (Skp.Interrupts.Vector_Routing (Vect_Nr) not in Skp.Subject_Id_Type
-            and then Vector /= IPI_Vector,
+           (Route.Subject in Skp.Subject_Id_Type and then Vector /= IPI_Vector,
             KC.Put_String (Item => "Spurious IRQ vector "));
          pragma Debug
-           (Skp.Interrupts.Vector_Routing (Vect_Nr) not in Skp.Subject_Id_Type
-            and then Vector /= IPI_Vector,
+           (Route.Subject in Skp.Subject_Id_Type and then Vector /= IPI_Vector,
             KC.Put_Byte (Item => Vector));
          pragma Debug
-           (Skp.Interrupts.Vector_Routing (Vect_Nr) not in Skp.Subject_Id_Type
-            and then Vector /= IPI_Vector,
+           (Route.Subject in Skp.Subject_Id_Type and then Vector /= IPI_Vector,
             KC.New_Line);
       end if;
 

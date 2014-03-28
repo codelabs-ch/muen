@@ -16,13 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
+with Pack.Image;
+with Pack.Post_Checks;
+with Pack.Content_Providers;
 
-with Muxml;
-
-with Pack.Utils;
-
-package body Util_Tests
+package body Post_Check_Tests
 is
 
    use Ahven;
@@ -30,29 +28,33 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Image_Size
-   is
-      use type Interfaces.Unsigned_64;
-
-      Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/test_policy.xml");
-
-      Assert (Condition => Utils.Get_Image_Size (Policy => Data) = 16#128000#,
-              Message   => "Image size mismatch");
-   end Image_Size;
-
-   -------------------------------------------------------------------------
-
    procedure Initialize (T : in out Testcase)
    is
    begin
-      T.Set_Name (Name => "Util tests");
+      T.Set_Name (Name => "Post-check tests");
       T.Add_Test_Routine
-        (Routine => Image_Size'Access,
-         Name    => "Calculate image size");
+        (Routine => Multiboot_Header'Access,
+         Name    => "Multiboot header");
    end Initialize;
 
-end Util_Tests;
+   -------------------------------------------------------------------------
+
+   procedure Multiboot_Header
+   is
+      Data : Content_Providers.Param_Type (16#102000#);
+   begin
+      begin
+         Post_Checks.Multiboot_Header (Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when Post_Checks.Check_Error => null;
+      end;
+
+      Image.Add_Buffer (Image   => Data.Image,
+                        Buffer  => (16#02#, 16#b0#, 16#ad#, 16#1b#),
+                        Address => 16#101ffc#);
+      Post_Checks.Multiboot_Header (Data => Data);
+   end Multiboot_Header;
+
+end Post_Check_Tests;

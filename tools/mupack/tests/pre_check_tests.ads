@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 with Ahven.Framework;
 
-package Image_Tests
+package Pre_Check_Tests
 is
 
    type Testcase is new Ahven.Framework.Test_Case with null record;
@@ -26,22 +26,13 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
-   --  Add buffer to system image.
-   procedure Add_Buffer_To_Image;
+   --  Check existence of files referenced in policy.
+   procedure File_Existence;
 
-   --  Add buffer to system image which is too small.
-   procedure Add_Buffer_To_Image_Small;
+   --  Try to pack file that is larger than the referenced memory region.
+   procedure File_Larger_Than_Memory;
 
-   --  Add file to system image.
-   procedure Add_File_To_Image;
+   --  Try to pack file with offset larger than file size.
+   procedure Offset_Larger_Than_File;
 
-   --  Add file content at given offset to system image.
-   procedure Add_File_To_Image_Offset;
-
-   --  Try to write an empty image.
-   procedure Write_Empty_Image;
-
-   --  Get image data.
-   procedure Get_Buffer_From_Image;
-
-end Image_Tests;
+end Pre_Check_Tests;

@@ -18,7 +18,7 @@
 
 with Ahven.Framework;
 
-package Check_Tests
+package Post_Check_Tests
 is
 
    type Testcase is new Ahven.Framework.Test_Case with null record;
@@ -26,13 +26,7 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
-   --  Check existence of files referenced in policy.
-   procedure File_Existence;
+   --  Multiboot header presence.
+   procedure Multiboot_Header;
 
-   --  Try to pack file that is larger than the referenced memory region.
-   procedure File_Larger_Than_Memory;
-
-   --  Try to pack file with offset larger than file size.
-   procedure Offset_Larger_Than_File;
-
-end Check_Tests;
+end Post_Check_Tests;

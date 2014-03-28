@@ -36,17 +36,24 @@ is
       Mf    : Manifest.Manifest_Type;
    begin
       Manifest.Add_Entry (Manifest => Mf,
+                          Mem_Name => "mboot",
+                          Format   => "bin_raw",
+                          Content  => "data/mboot",
+                          Address  => 16#100000#,
+                          Size     => 16#1000#,
+                          Offset   => 0);
+      Manifest.Add_Entry (Manifest => Mf,
                           Mem_Name => "linux|acpi_rsdp",
                           Format   => "acpi_rsdp",
                           Content  => "data/sections.ref",
-                          Address  => 16#100000#,
+                          Address  => 16#101000#,
                           Size     => 16#13000#,
                           Offset   => 0);
       Manifest.Add_Entry (Manifest => Mf,
                           Mem_Name => "linux|bin",
                           Format   => "bin_raw",
                           Content  => "data/obj1.o",
-                          Address  => 16#113000#,
+                          Address  => 16#114000#,
                           Size     => 16#13000#,
                           Offset   => 4);
 

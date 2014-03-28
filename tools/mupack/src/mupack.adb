@@ -22,7 +22,8 @@ with Ada.Exceptions;
 with Mulog;
 with Muxml;
 
-with Pack.Checks;
+with Pack.Pre_Checks;
+with Pack.Post_Checks;
 with Pack.Command_Line;
 
 procedure Mupack
@@ -34,7 +35,8 @@ begin
 exception
    when E : Muxml.Processing_Error
       | Pack.Pack_Error
-      | Pack.Checks.Check_Error =>
+      | Pack.Pre_Checks.Check_Error
+      | Pack.Post_Checks.Check_Error =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Processing failed, aborting");
       Mulog.Log (Level => Mulog.Error,

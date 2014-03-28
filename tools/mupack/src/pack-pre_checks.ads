@@ -18,7 +18,7 @@
 
 with Muxml;
 
-package Pack.Checks
+package Pack.Pre_Checks
 is
 
    --  Check existence of files referenced in XML policy.
@@ -27,15 +27,15 @@ is
    --  Check if files fit into corresponding memory region.
    procedure Files_Size (Data : Muxml.XML_Data_Type);
 
-   --  Register all checkers.
+   --  Register all pre-checks.
    procedure Register_All;
 
-   --  Run registered checkers.
+   --  Run registered pre-checks.
    procedure Run (Data : Muxml.XML_Data_Type);
 
-   --  Return number of registered checkers.
+   --  Return number of registered pre-checks.
    function Get_Count return Natural;
 
    Check_Error : exception;
 
-end Pack.Checks;
+end Pack.Pre_Checks;

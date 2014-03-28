@@ -94,6 +94,30 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Buffer
+     (Image   : Image_Type;
+      Address : Interfaces.Unsigned_64;
+      Size    : Interfaces.Unsigned_64)
+      return Ada.Streams.Stream_Element_Array
+   is
+      use Ada.Streams;
+      use type Interfaces.Unsigned_64;
+   begin
+      return Image.Data
+        (Stream_Element_Offset
+           (Address) .. Stream_Element_Offset (Address + Size - 1));
+
+   exception
+      when Constraint_Error =>
+         raise Image_Error with "Unable to return image data at address "
+           & Mutools.Utils.To_Hex (Number => Address) & " with size "
+           & Mutools.Utils.To_Hex (Number => Size) & " (image end address is "
+           & Mutools.Utils.To_Hex (Number => Interfaces.Unsigned_64
+                                   (Image.End_Address)) & ")";
+   end Get_Buffer;
+
+   -------------------------------------------------------------------------
+
    procedure Write
      (Image    : Image_Type;
       Filename : String)

@@ -16,7 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Streams;
 with Ada.Directories;
+with Ada.Exceptions;
 
 with Test_Utils;
 
@@ -112,6 +114,45 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Get_Buffer_From_Image
+   is
+      use type Ada.Streams.Stream_Element_Array;
+
+      Img        : Image.Image_Type (End_Address => 16#2d#);
+      Ref_Buffer : constant Ada.Streams.Stream_Element_Array (1 .. 4)
+        := (others => 22);
+   begin
+      Image.Add_Buffer (Image   => Img,
+                        Buffer  => Ref_Buffer,
+                        Address => 16#10#);
+      Assert (Condition => Image.Get_Buffer
+              (Image   => Img,
+               Address => 16#10#,
+               Size    => 4) = Ref_Buffer,
+              Message   => "Buffer mismatch");
+
+      begin
+         declare
+            Dummy : Ada.Streams.Stream_Element_Array
+              := Image.Get_Buffer (Image   => Img,
+                                   Address => 16#2d#,
+                                   Size    => 12);
+            pragma Unreferenced (Dummy);
+         begin
+            Fail (Message => "Exception expected");
+         end;
+
+      exception
+         when E : Image.Image_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to return image data at address 16#2D# with size"
+                    & " 16#C# (image end address is 16#2D#)",
+                    Message   => "Exception mismatch");
+      end;
+   end Get_Buffer_From_Image;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -131,6 +172,9 @@ is
       T.Add_Test_Routine
         (Routine => Write_Empty_Image'Access,
          Name    => "Write empty image");
+      T.Add_Test_Routine
+        (Routine => Get_Buffer_From_Image'Access,
+         Name    => "Get buffer from image");
    end Initialize;
 
    -------------------------------------------------------------------------

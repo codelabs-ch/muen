@@ -27,10 +27,9 @@ package Pack.Content_Providers
 is
 
    type Param_Type (End_Address : Ada.Streams.Stream_Element_Offset) is record
-      XML_Doc   : DOM.Core.Document;
-      Image     : Pack.Image.Image_Type (End_Address => End_Address);
-      Manifest  : Pack.Manifest.Manifest_Type;
-      Mmap_File : Ada.Strings.Unbounded.Unbounded_String;
+      XML_Doc  : DOM.Core.Document;
+      Image    : Pack.Image.Image_Type (End_Address => End_Address);
+      Manifest : Pack.Manifest.Manifest_Type;
    end record;
 
    --  Add file content to system image.

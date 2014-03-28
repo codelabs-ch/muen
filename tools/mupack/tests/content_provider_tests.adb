@@ -17,7 +17,6 @@
 --
 
 with Ada.Directories;
-with Ada.Strings.Unbounded;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
@@ -67,8 +66,6 @@ is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
       Data.XML_Doc := Policy.Doc;
-      Data.Mmap_File := Ada.Strings.Unbounded.To_Unbounded_String
-        (Source => "obj/mmap-testfile");
 
       Content_Providers.Process_Files (Data => Data);
 
@@ -123,8 +120,6 @@ is
             Value => "16#000a#");
 
          Data.XML_Doc := Policy.Doc;
-         Data.Mmap_File := Ada.Strings.Unbounded.To_Unbounded_String
-           (Source => "obj/mmap-testfile");
 
          Content_Providers.Process_Fills (Data => Data);
 

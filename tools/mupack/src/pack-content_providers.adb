@@ -54,11 +54,11 @@ is
       File_Count : constant Natural
         := DOM.Core.Nodes.Length (List => File_Nodes);
    begin
-      Mulog.Log (Msg => "Found" & File_Count'Img & " file(s) to process");
-
       if File_Count = 0 then
          return;
       end if;
+
+      Mulog.Log (Msg => "Found" & File_Count'Img & " file(s) to process");
 
       for I in 0 .. File_Count - 1 loop
          declare
@@ -127,11 +127,11 @@ is
          XPath => "/system/memory/memory/fill");
       Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
    begin
-      Mulog.Log (Msg => "Found" & Count'Img & " fill(s) to process");
-
       if Count = 0 then
          return;
       end if;
+
+      Mulog.Log (Msg => "Found" & Count'Img & " fill(s) to process");
 
       for I in 0 .. Count - 1 loop
          declare

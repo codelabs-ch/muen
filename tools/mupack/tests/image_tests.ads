@@ -41,4 +41,7 @@ is
    --  Try to write an empty image.
    procedure Write_Empty_Image;
 
+   --  Get image data.
+   procedure Get_Buffer_From_Image;
+
 end Image_Tests;

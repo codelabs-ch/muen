@@ -41,6 +41,13 @@ is
       Size    :        Interfaces.Unsigned_64;
       Offset  :        Interfaces.Unsigned_64);
 
+   --  Return image data at address with given size.
+   function Get_Buffer
+     (Image   : Image_Type;
+      Address : Interfaces.Unsigned_64;
+      Size    : Interfaces.Unsigned_64)
+      return Ada.Streams.Stream_Element_Array;
+
    --  Write system image content to file given by filename.
    procedure Write
      (Image    : Image_Type;

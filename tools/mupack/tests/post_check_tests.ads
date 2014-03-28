@@ -16,23 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Pack.Content_Providers;
+with Ahven.Framework;
 
-package Pack.Post_Checks
+package Post_Check_Tests
 is
 
-   --  Check Multiboot header presence.
-   procedure Multiboot_Header (Data : Content_Providers.Param_Type);
+   type Testcase is new Ahven.Framework.Test_Case with null record;
 
-   --  Register all post-checks.
-   procedure Register_All;
+   --  Initialize testcase.
+   procedure Initialize (T : in out Testcase);
 
-   --  Run registered post-checks.
-   procedure Run (Data : Content_Providers.Param_Type);
+   --  Multiboot header presence.
+   procedure Multiboot_Header;
 
-   --  Return number of registered post-checks.
-   function Get_Count return Natural;
-
-   Check_Error : exception;
-
-end Pack.Post_Checks;
+end Post_Check_Tests;

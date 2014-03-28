@@ -24,6 +24,7 @@ with Pack_Tests;
 with Content_Provider_Tests;
 with Util_Tests;
 with Pre_Check_Tests;
+with Post_Check_Tests;
 with Manifest_Tests;
 
 procedure Test_Runner
@@ -43,6 +44,8 @@ begin
              T     => new Util_Tests.Testcase);
    Add_Test (Suite => S.all,
              T     => new Pre_Check_Tests.Testcase);
+   Add_Test (Suite => S.all,
+             T     => new Post_Check_Tests.Testcase);
    Add_Test (Suite => S.all,
              T     => new Manifest_Tests.Testcase);
 

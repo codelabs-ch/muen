@@ -16,7 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Streams;
+
 with Mutools.Immutable_Processors;
+
+with Pack.Image;
 
 pragma Elaborate_All (Mutools.Immutable_Processors);
 
@@ -26,16 +30,41 @@ is
    package Check_Procs is new
      Mutools.Immutable_Processors (Param_Type => Content_Providers.Param_Type);
 
+   Mboot_Magic : constant Ada.Streams.Stream_Element_Array (1 .. 4)
+     := (16#02#, 16#b0#, 16#ad#, 16#1b#);
+
    -------------------------------------------------------------------------
 
    function Get_Count return Natural renames Check_Procs.Get_Count;
 
    -------------------------------------------------------------------------
 
+   procedure Multiboot_Header (Data : Content_Providers.Param_Type)
+   is
+      use type Ada.Streams.Stream_Element_Offset;
+      use type Ada.Streams.Stream_Element_Array;
+
+      --  Skip first MiB, contains only 0s.
+      First_8k : constant Ada.Streams.Stream_Element_Array
+        := Image.Get_Buffer (Image   => Data.Image,
+                             Address => 16#100000#,
+                             Size    => 16#2000#);
+   begin
+      for I in First_8k'First .. First_8k'Last - (Mboot_Magic'Length - 1) loop
+         if First_8k (I .. I + Mboot_Magic'Length - 1) = Mboot_Magic then
+            return;
+         end if;
+      end loop;
+
+      raise Check_Error with "No Multiboot header found in system image";
+   end Multiboot_Header;
+
+   -------------------------------------------------------------------------
+
    procedure Register_All
    is
    begin
-      null;
+      Check_Procs.Register (Process => Multiboot_Header'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

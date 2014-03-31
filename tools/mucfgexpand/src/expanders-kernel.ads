@@ -16,24 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Text_Runner;
-with Ahven.Framework;
-
-with XML_Utils_Tests;
-with Kernel_Tests;
-
-procedure Test_Runner
+package Expanders.Kernel
 is
-   use Ahven.Framework;
 
-   S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Mucfgexpand tests");
-begin
-   Add_Test (Suite => S.all,
-             T     => new XML_Utils_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Kernel_Tests.Testcase);
+   --  Add kernel binary memory elements.
+   procedure Add_Binary_Memory (Data : in out Muxml.XML_Data_Type);
 
-   Ahven.Text_Runner.Run (Suite => S);
-   Release_Suite (T => S);
-end Test_Runner;
+end Expanders.Kernel;

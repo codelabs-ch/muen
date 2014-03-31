@@ -112,7 +112,9 @@ is
       DOM.Core.Elements.Set_Attribute
         (Elem  => File_Node,
          Name  => "offset",
-         Value => Mutools.Utils.To_Hex (Number => File_Offset));
+         Value => Mutools.Utils.To_Hex
+           (Number    => File_Offset,
+            Normalize => True));
    end Add_Memory_Region;
 
    -------------------------------------------------------------------------
@@ -136,11 +138,15 @@ is
       DOM.Core.Elements.Set_Attribute
         (Elem  => Mem_Node,
          Name  => "physicalAddress",
-         Value => Mutools.Utils.To_Hex (Number => Address));
+         Value => Mutools.Utils.To_Hex
+           (Number    => Address,
+            Normalize => True));
       DOM.Core.Elements.Set_Attribute
         (Elem  => Mem_Node,
          Name  => "size",
-         Value => Mutools.Utils.To_Hex (Number => Size));
+         Value => Mutools.Utils.To_Hex
+           (Number    => Size,
+            Normalize => True));
       DOM.Core.Elements.Set_Attribute
         (Elem  => Mem_Node,
          Name  => "caching",

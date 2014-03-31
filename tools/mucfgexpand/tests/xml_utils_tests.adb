@@ -43,7 +43,7 @@ is
       XML_Utils.Add_Memory_Region
         (Policy  => Policy,
          Name    => "test",
-         Address => 16#9000#,
+         Address => 16#9000_1000#,
          Size    => 16#3000#,
          Caching => "UC");
 

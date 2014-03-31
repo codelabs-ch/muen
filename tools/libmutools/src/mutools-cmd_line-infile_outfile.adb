@@ -88,6 +88,25 @@ is
    -------------------------------------------------------------------------
 
    procedure Run
+     (Kind    : Muxml.Schema_Kind;
+      Process : Process_Mutable)
+   is
+      Data       : Muxml.XML_Data_Type;
+      Policy_In  : constant String := To_String (File_In);
+      Policy_Out : constant String := To_String (File_Out);
+   begin
+      Mulog.Log (Msg => "Processing policy '" & Policy_In & "'");
+      Muxml.Parse (Data => Data,
+                   Kind => Kind,
+                   File => Policy_In);
+      Process (Policy      => Data,
+               Output_File => Policy_Out);
+      Mulog.Log (Msg => "Successfully created policy '" & Policy_Out & "'");
+   end Run;
+
+   -------------------------------------------------------------------------
+
+   procedure Run
      (Process : not null access procedure
         (Input_File, Output_File : String))
    is

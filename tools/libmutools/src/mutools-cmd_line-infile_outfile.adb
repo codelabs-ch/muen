@@ -70,9 +70,7 @@ is
 
    procedure Run
      (Kind    : Muxml.Schema_Kind;
-      Process : not null access procedure
-        (Input_Policy : Muxml.XML_Data_Type;
-         Output_File  : String))
+      Process : Process_Immutable)
    is
       Data       : Muxml.XML_Data_Type;
       Policy_In  : constant String := To_String (File_In);

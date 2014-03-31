@@ -26,14 +26,16 @@ is
    --  Init command line, use given tool description in usage output.
    procedure Init (Description : String);
 
+   type Process_Immutable is not null access procedure
+     (Input_Policy : Muxml.XML_Data_Type;
+      Output_File  : String);
+
    --  The Run procedure extracts the input and output files from the command
    --  line arguments. It then parses the input policy and passes the output
    --  file and XML data on to the given process procedure.
    procedure Run
      (Kind    : Muxml.Schema_Kind;
-      Process : not null access procedure
-        (Input_Policy : Muxml.XML_Data_Type;
-         Output_File  : String));
+      Process : Process_Immutable);
 
    --  The Run procedure extracts the input and output files from the command
    --  line arguments and passes them to the given process procedure.

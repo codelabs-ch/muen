@@ -3,6 +3,7 @@ TOOLS =           \
 	libmuxml      \
 	libmutools    \
 	mucfgalloc    \
+	mucfgexpand   \
 	mucfgvalidate \
 	mugenacpi     \
 	mugeniobm     \

@@ -37,7 +37,7 @@ is
 
       Validators.Register_All;
       Mulog.Log
-        (Msg => "Registered validators" &  XML_Processors.Get_Count'Img);
+        (Msg => "Registered validators" & XML_Processors.Get_Count'Img);
 
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,

@@ -82,7 +82,7 @@ is
                    File => Policy_In);
       Process (Input_Policy => Data,
                Output_File  => Policy_Out);
-      Mulog.Log (Msg => "Sucessfully created policy '" & Policy_Out & "'");
+      Mulog.Log (Msg => "Successfully created policy '" & Policy_Out & "'");
    end Run;
 
    -------------------------------------------------------------------------
@@ -116,7 +116,7 @@ is
       Mulog.Log (Msg => "Processing input file '" & F_In & "'");
       Process (Input_File  => F_In,
                Output_File => F_Out);
-      Mulog.Log (Msg => "Sucessfully created output file '" & F_Out & "'");
+      Mulog.Log (Msg => "Successfully created output file '" & F_Out & "'");
    end Run;
 
 end Mutools.Cmd_Line.Infile_Outfile;

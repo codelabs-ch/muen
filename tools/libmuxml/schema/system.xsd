@@ -8,6 +8,8 @@
 	<xs:include schemaLocation="./types.xsd"/>
 	<xs:include schemaLocation="./types_memory.xsd"/>
 
+	<xs:include_format schemaLocation="./memory.xsd"/>
+
 	<xs:complexType name="systemType">
 		<xs:sequence>
 			<xs:element name="platform"   type="platformType"   minOccurs="1" maxOccurs="1"/>

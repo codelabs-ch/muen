@@ -39,6 +39,34 @@ is
    -------------------------------------------------------------------------
 
    procedure Add_Memory_Region
+     (Policy  : in out Muxml.XML_Data_Type;
+      Name    :        String;
+      Address :        Interfaces.Unsigned_64;
+      Size    :        Interfaces.Unsigned_64;
+      Caching :        String)
+   is
+      Section    : constant DOM.Core.Node
+        := DOM.Core.Nodes.Item
+          (List  => McKae.XML.XPath.XIA.XPath_Query
+             (N     => Policy.Doc,
+              XPath => "/system/memory"),
+           Index => 0);
+      Dummy_Node : DOM.Core.Node;
+      pragma Unreferenced (Dummy_Node);
+   begin
+      Dummy_Node := DOM.Core.Nodes.Append_Child
+        (N         => Section,
+         New_Child => Create_Memory_Node
+           (Policy  => Policy,
+            Name    => Name,
+            Address => Address,
+            Size    => Size,
+            Caching => Caching));
+   end Add_Memory_Region;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Memory_Region
      (Policy      : in out Muxml.XML_Data_Type;
       Name        :        String;
       Address     :        Interfaces.Unsigned_64;

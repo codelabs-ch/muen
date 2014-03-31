@@ -32,6 +32,35 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Memory
+   is
+      Filename : constant String := "obj/memory.xml";
+      Policy   : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      XML_Utils.Add_Memory_Region
+        (Policy  => Policy,
+         Name    => "test",
+         Address => 16#9000#,
+         Size    => 16#3000#,
+         Caching => "UC");
+
+      Muxml.Write (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => Filename);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Filename,
+               Filename2 => "data/memory.ref.xml"),
+              Message   => "Policy mismatch");
+
+      Ada.Directories.Delete_File (Name => Filename);
+   end Add_Memory;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Memory_With_File
    is
       Filename : constant String := "obj/memory_with_file.xml";
@@ -68,6 +97,9 @@ is
    is
    begin
       T.Set_Name (Name => "XML utility tests");
+      T.Add_Test_Routine
+        (Routine => Add_Memory'Access,
+         Name    => "Add memory region");
       T.Add_Test_Routine
         (Routine => Add_Memory_With_File'Access,
          Name    => "Add memory region with file content");

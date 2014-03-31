@@ -27,6 +27,15 @@ with Mutools.Utils;
 package body Expand.XML_Utils
 is
 
+   --  Create memory node element with given parameters.
+   function Create_Memory_Node
+     (Policy  : in out Muxml.XML_Data_Type;
+      Name    :        String;
+      Address :        Interfaces.Unsigned_64;
+      Size    :        Interfaces.Unsigned_64;
+      Caching :        String)
+      return DOM.Core.Node;
+
    -------------------------------------------------------------------------
 
    procedure Add_Memory_Region
@@ -39,17 +48,23 @@ is
       File_Format :        String;
       File_Offset :        Interfaces.Unsigned_64)
    is
-      Section   : constant DOM.Core.Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Policy.Doc,
-            XPath => "/system/memory"),
-         Index => 0);
-      Mem_Node  : DOM.Core.Node := DOM.Core.Documents.Create_Element
-        (Doc      => Policy.Doc,
-         Tag_Name => "memory");
-      File_Node : DOM.Core.Node := DOM.Core.Documents.Create_Element
-        (Doc      => Policy.Doc,
-         Tag_Name => "file");
+      Section   : constant DOM.Core.Node
+        := DOM.Core.Nodes.Item
+          (List  => McKae.XML.XPath.XIA.XPath_Query
+             (N     => Policy.Doc,
+              XPath => "/system/memory"),
+           Index => 0);
+      Mem_Node  : DOM.Core.Node
+        := Create_Memory_Node
+          (Policy  => Policy,
+           Name    => Name,
+           Address => Address,
+           Size    => Size,
+           Caching => Caching);
+      File_Node : DOM.Core.Node
+        := DOM.Core.Documents.Create_Element
+          (Doc      => Policy.Doc,
+           Tag_Name => "file");
    begin
       Mem_Node := DOM.Core.Nodes.Append_Child
         (N         => Section,
@@ -58,6 +73,34 @@ is
         (N         => Mem_Node,
          New_Child => File_Node);
 
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => File_Node,
+         Name  => "format",
+         Value => File_Format);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => File_Node,
+         Name  => "filename",
+         Value => File_Name);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => File_Node,
+         Name  => "offset",
+         Value => Mutools.Utils.To_Hex (Number => File_Offset));
+   end Add_Memory_Region;
+
+   -------------------------------------------------------------------------
+
+   function Create_Memory_Node
+     (Policy  : in out Muxml.XML_Data_Type;
+      Name    :        String;
+      Address :        Interfaces.Unsigned_64;
+      Size    :        Interfaces.Unsigned_64;
+      Caching :        String)
+      return DOM.Core.Node
+   is
+      Mem_Node : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
+        (Doc      => Policy.Doc,
+         Tag_Name => "memory");
+   begin
       DOM.Core.Elements.Set_Attribute
         (Elem  => Mem_Node,
          Name  => "name",
@@ -75,18 +118,7 @@ is
          Name  => "caching",
          Value => Caching);
 
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => File_Node,
-         Name  => "format",
-         Value => File_Format);
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => File_Node,
-         Name  => "filename",
-         Value => File_Name);
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => File_Node,
-         Name  => "offset",
-         Value => Mutools.Utils.To_Hex (Number => File_Offset));
-   end Add_Memory_Region;
+      return Mem_Node;
+   end Create_Memory_Node;
 
 end Expand.XML_Utils;

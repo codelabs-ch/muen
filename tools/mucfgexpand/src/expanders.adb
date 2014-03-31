@@ -18,6 +18,8 @@
 
 with Mutools.Processors;
 
+with Expanders.Kernel;
+
 pragma Elaborate_All (Mutools.Processors);
 
 package body Expanders
@@ -35,7 +37,7 @@ is
    procedure Register_All
    is
    begin
-      null;
+      Procs.Register (Process => Kernel.Add_Binary_Memory'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

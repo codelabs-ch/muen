@@ -48,18 +48,6 @@
 		<memory name="sm_state" size="16#1000#" caching="WB"/>
 		<memory name="linux_state" size="16#1000#" caching="WB"/>
 
-		<!-- kernel binary -->
-		<memory name="kernel_text" physicalAddress="16#0010_0000#" size="16#0001_0000#" caching="WB">
-			<file format="bin_raw" filename="kernel" offset="16#0000#"/>
-		</memory>
-		<memory name="kernel_data" physicalAddress="16#0011_0000#" size="16#1000#" caching="WB">
-			<file format="bin_raw" filename="kernel" offset="16#0001_0000#"/>
-		</memory>
-		<memory name="kernel_bss" physicalAddress="16#0011_1000#" size="16#1000#" caching="WB"/>
-		<memory name="kernel_ro" physicalAddress="16#0011_f000#" size="16#4000#" caching="WB">
-			<file format="bin_raw" filename="kernel" offset="16#0001_f000#"/>
-		</memory>
-
 		<memory name="kernel_stack_0" size="16#2000#" caching="WB"/>
 		<memory name="kernel_stack_1" size="16#2000#" caching="WB"/>
 		<memory name="kernel_stack_2" size="16#2000#" caching="WB"/>

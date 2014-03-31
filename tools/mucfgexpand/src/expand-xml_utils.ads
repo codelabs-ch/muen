@@ -16,21 +16,23 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Text_Runner;
-with Ahven.Framework;
+with Interfaces;
 
-with XML_Utils_Tests;
+with Muxml;
 
-procedure Test_Runner
+package Expand.XML_Utils
 is
-   use Ahven.Framework;
 
-   S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Mucfgexpand tests");
-begin
-   Add_Test (Suite => S.all,
-             T     => new XML_Utils_Tests.Testcase);
+   --  Add file-backed physical memory region element with given parameters to
+   --  policy.
+   procedure Add_Memory_Region
+     (Policy      : in out Muxml.XML_Data_Type;
+      Name        :        String;
+      Address     :        Interfaces.Unsigned_64;
+      Size        :        Interfaces.Unsigned_64;
+      Caching     :        String;
+      File_Name   :        String;
+      File_Format :        String;
+      File_Offset :        Interfaces.Unsigned_64);
 
-   Ahven.Text_Runner.Run (Suite => S);
-   Release_Suite (T => S);
-end Test_Runner;
+end Expand.XML_Utils;

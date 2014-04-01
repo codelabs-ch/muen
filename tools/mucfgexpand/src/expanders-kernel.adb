@@ -18,6 +18,8 @@
 
 with Ada.Strings.Fixed;
 
+with Interfaces;
+
 with McKae.XML.XPath.XIA;
 
 with DOM.Core.Nodes;
@@ -26,6 +28,8 @@ with DOM.Core.Elements;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Utils;
+with Mutools.Constants;
 
 with Expand.XML_Utils;
 
@@ -174,5 +178,70 @@ is
          end;
       end loop;
    end Add_Section_Skeleton;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Subj_State_Mappings (Data : in out Muxml.XML_Data_Type)
+   is
+      State_Start : constant := 16#001e_0000#;
+      CPU_Nodes   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/kernel/memory/cpu");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => CPU_Nodes) - 1 loop
+         declare
+            CPU      : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => CPU_Nodes,
+                 Index => I);
+            CPU_Id   : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => CPU,
+                 Name => "id");
+            Subjects : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Data.Doc,
+                 XPath => "/system/subjects/subject[@cpu='" & CPU_Id & "']");
+         begin
+            for J in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+               declare
+                  use type Interfaces.Unsigned_64;
+
+                  Subj      : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Subjects,
+                       Index => J);
+                  Subj_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Subj,
+                       Name => "name");
+                  Subj_Id   : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Subj,
+                       Name => "id");
+                  Address   : constant Interfaces.Unsigned_64
+                    := State_Start + Interfaces.Unsigned_64'Value (Subj_Id)
+                                * Mutools.Constants.Page_Size;
+               begin
+                  Mulog.Log (Msg => "Mapping state of subject " & Subj_Name
+                             & " to address " & Mutools.Utils.To_Hex
+                               (Number => Address) & " on CPU " & CPU_Id);
+                  Expand.XML_Utils.Append_Child
+                    (Node      => CPU,
+                     New_Child => Expand.XML_Utils.Create_Virtual_Memory_Node
+                       (Policy        => Data,
+                        Logical_Name  => Subj_Name & "_state",
+                        Physical_Name => Subj_Name & "_state",
+                        Address       => Mutools.Utils.To_Hex
+                          (Number    => Address,
+                           Normalize => True),
+                        Writable      => True,
+                        Executable    => False));
+               end;
+            end loop;
+         end;
+      end loop;
+   end Add_Subj_State_Mappings;
 
 end Expanders.Kernel;

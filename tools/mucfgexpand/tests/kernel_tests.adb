@@ -39,6 +39,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Subj_State_Mappings
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/kernel_subj_state_mappings.xml",
+         Ref_Filename => "data/kernel_subj_state_mappings.ref.xml",
+         Pre          => Expanders.Kernel.Add_Section_Skeleton'Access,
+         Expander     => Expanders.Kernel.Add_Subj_State_Mappings'Access);
+   end Add_Subj_State_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -46,6 +58,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_Binary_Mappings'Access,
          Name    => "Add binary mappings");
+      T.Add_Test_Routine
+        (Routine => Add_Subj_State_Mappings'Access,
+         Name    => "Add subject state mappings");
    end Initialize;
 
 end Kernel_Tests;

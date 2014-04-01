@@ -29,4 +29,7 @@ is
    --  Add kernel binary memory mappings.
    procedure Add_Binary_Mappings;
 
+   --  Add subject state memory mappings.
+   procedure Add_Subj_State_Mappings;
+
 end Kernel_Tests;

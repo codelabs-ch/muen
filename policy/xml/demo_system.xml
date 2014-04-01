@@ -42,7 +42,6 @@
 		<memory name="sm|vmcs" physicalAddress="16#8000#" size="16#1000#" caching="WB"/>
 		<memory name="linux|vmcs" physicalAddress="16#9000#" size="16#1000#" caching="WB"/>
 
-		<memory name="sys_interface" size="16#1000#" caching="WB"/>
 		<memory name="kernel_0|pt" physicalAddress="16#0012_9000#" size="16#4000#" caching="WB">
 			<file format="pt" filename="kernel_pt_0" offset="none"/>
 		</memory>

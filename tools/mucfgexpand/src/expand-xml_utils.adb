@@ -46,8 +46,8 @@ is
       Section    : constant DOM.Core.Node
         := DOM.Core.Nodes.Item
           (List  => McKae.XML.XPath.XIA.XPath_Query
-             (N     => Policy.Doc,
-              XPath => "/system/memory"),
+               (N     => Policy.Doc,
+                XPath => "/system/memory"),
            Index => 0);
       Dummy_Node : DOM.Core.Node;
       pragma Unreferenced (Dummy_Node);
@@ -77,8 +77,8 @@ is
       Section   : constant DOM.Core.Node
         := DOM.Core.Nodes.Item
           (List  => McKae.XML.XPath.XIA.XPath_Query
-             (N     => Policy.Doc,
-              XPath => "/system/memory"),
+               (N     => Policy.Doc,
+                XPath => "/system/memory"),
            Index => 0);
       Mem_Node  : DOM.Core.Node
         := Create_Memory_Node

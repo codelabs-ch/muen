@@ -65,12 +65,12 @@ is
       Expand.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => "kernel_ro",
-         Address     => "16#0011_F000#",
+         Address     => "16#0011_f000#",
          Size        => "16#4000#",
          Caching     => "WB",
          File_Name   => "kernel",
          File_Format => "bin_raw",
-         File_Offset => "16#0001_F000#");
+         File_Offset => "16#0001_f000#");
    end Add_Kernel_Binary;
 
    -------------------------------------------------------------------------

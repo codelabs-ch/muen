@@ -18,8 +18,8 @@
    <file filename="kernel" format="bin_raw" offset="16#0001_0000#"/>
   </memory>
   <memory caching="WB" name="kernel_bss" physicalAddress="16#0011_1000#" size="16#1000#"/>
-  <memory caching="WB" name="kernel_ro" physicalAddress="16#0011_F000#" size="16#4000#">
-   <file filename="kernel" format="bin_raw" offset="16#0001_F000#"/>
+  <memory caching="WB" name="kernel_ro" physicalAddress="16#0011_f000#" size="16#4000#">
+   <file filename="kernel" format="bin_raw" offset="16#0001_f000#"/>
   </memory>
  </memory>
  <events/>

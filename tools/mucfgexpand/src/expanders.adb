@@ -19,6 +19,7 @@
 with Mutools.Processors;
 
 with Expanders.Memory;
+with Expanders.Kernel;
 
 pragma Elaborate_All (Mutools.Processors);
 
@@ -41,6 +42,11 @@ is
       Procs.Register (Process => Memory.Add_Stack_Store'Access);
       Procs.Register (Process => Memory.Add_Subject_States'Access);
       Procs.Register (Process => Memory.Add_Tau0_Interface'Access);
+      Procs.Register (Process => Kernel.Add_Section_Skeleton'Access);
+      Procs.Register (Process => Kernel.Add_Binary_Mappings'Access);
+      Procs.Register (Process => Kernel.Add_Subj_State_Mappings'Access);
+      Procs.Register (Process => Kernel.Map_Tau0_Interface'Access);
+      Procs.Register (Process => Kernel.Add_Devices'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

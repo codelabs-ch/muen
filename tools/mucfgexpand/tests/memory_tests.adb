@@ -79,6 +79,30 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Subject_States
+   is
+      Filename : constant String := "obj/memory_subject_states.xml";
+      Policy   : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Expanders.Memory.Add_Subject_States (Data => Policy);
+
+      Muxml.Write (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => Filename);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Filename,
+               Filename2 => "data/memory_subject_states.ref.xml"),
+              Message   => "Policy mismatch");
+
+      Ada.Directories.Delete_File (Name => Filename);
+   end Add_Subject_States;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -89,6 +113,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_Stack_Store'Access,
          Name    => "Add kernel stack and store memory regions");
+      T.Add_Test_Routine
+        (Routine => Add_Subject_States'Access,
+         Name    => "Add subject state memory regions");
    end Initialize;
 
 end Memory_Tests;

@@ -25,4 +25,7 @@ is
    --  Add kernel stack and store memory elements.
    procedure Add_Stack_Store (Data : in out Muxml.XML_Data_Type);
 
+   --  Add subject state memory elements.
+   procedure Add_Subject_States (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Memory;

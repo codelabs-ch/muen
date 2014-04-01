@@ -39,6 +39,7 @@ is
    begin
       Procs.Register (Process => Memory.Add_Kernel_Binary'Access);
       Procs.Register (Process => Memory.Add_Stack_Store'Access);
+      Procs.Register (Process => Memory.Add_Subject_States'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

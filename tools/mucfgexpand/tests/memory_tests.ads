@@ -32,4 +32,7 @@ is
    --  Add stack and store regions.
    procedure Add_Stack_Store;
 
+   --  Add subject state regions.
+   procedure Add_Subject_States;
+
 end Memory_Tests;

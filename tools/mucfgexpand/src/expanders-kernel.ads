@@ -19,6 +19,9 @@
 package Expanders.Kernel
 is
 
+   --  Add kernel section skeleton.
+   procedure Add_Section_Skeleton (Data : in out Muxml.XML_Data_Type);
+
    --  Add kernel memory mappings (binary, stack and store).
    procedure Add_Binary_Mappings (Data : in out Muxml.XML_Data_Type);
 

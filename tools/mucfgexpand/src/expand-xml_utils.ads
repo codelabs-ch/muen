@@ -23,6 +23,11 @@ with Muxml;
 package Expand.XML_Utils
 is
 
+   --  Append new child node to given node.
+   procedure Append_Child
+     (Node      : DOM.Core.Node;
+      New_Child : DOM.Core.Node);
+
    --  Add physical memory region element with given parameters to policy.
    procedure Add_Memory_Region
      (Policy  : in out Muxml.XML_Data_Type;

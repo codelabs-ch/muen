@@ -80,24 +80,22 @@ is
                (N     => Policy.Doc,
                 XPath => "/system/memory"),
            Index => 0);
-      Mem_Node  : DOM.Core.Node
+      Mem_Node  : constant DOM.Core.Node
         := Create_Memory_Node
           (Policy  => Policy,
            Name    => Name,
            Address => Address,
            Size    => Size,
            Caching => Caching);
-      File_Node : DOM.Core.Node
+      File_Node : constant DOM.Core.Node
         := DOM.Core.Documents.Create_Element
           (Doc      => Policy.Doc,
            Tag_Name => "file");
    begin
-      Mem_Node := DOM.Core.Nodes.Append_Child
-        (N         => Section,
-         New_Child => Mem_Node);
-      File_Node := DOM.Core.Nodes.Append_Child
-        (N         => Mem_Node,
-         New_Child => File_Node);
+      Append_Child (Node      => Section,
+                    New_Child => Mem_Node);
+      Append_Child (Node      => Mem_Node,
+                    New_Child => File_Node);
 
       DOM.Core.Elements.Set_Attribute
         (Elem  => File_Node,
@@ -112,6 +110,20 @@ is
          Name  => "offset",
          Value => File_Offset);
    end Add_Memory_Region;
+
+   -------------------------------------------------------------------------
+
+   procedure Append_Child
+     (Node      : DOM.Core.Node;
+      New_Child : DOM.Core.Node)
+   is
+      Dummy : DOM.Core.Node;
+      pragma Unreferenced (Dummy);
+   begin
+      Dummy := DOM.Core.Nodes.Append_Child
+        (N         => Node,
+         New_Child => New_Child);
+   end Append_Child;
 
    -------------------------------------------------------------------------
 

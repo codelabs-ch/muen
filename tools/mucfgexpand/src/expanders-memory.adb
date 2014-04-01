@@ -28,7 +28,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_Binary_Memory (Data : in out Muxml.XML_Data_Type)
+   procedure Add_Kernel_Binary (Data : in out Muxml.XML_Data_Type)
    is
    begin
       Mulog.Log (Msg => "Adding kernel binary memory regions");
@@ -66,7 +66,7 @@ is
          File_Name   => "kernel",
          File_Format => "bin_raw",
          File_Offset => "16#0001_F000#");
-   end Add_Binary_Memory;
+   end Add_Kernel_Binary;
 
    -------------------------------------------------------------------------
 

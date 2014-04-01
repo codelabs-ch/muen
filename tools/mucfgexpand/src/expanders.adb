@@ -37,7 +37,7 @@ is
    procedure Register_All
    is
    begin
-      Procs.Register (Process => Memory.Add_Binary_Memory'Access);
+      Procs.Register (Process => Memory.Add_Kernel_Binary'Access);
       Procs.Register (Process => Memory.Add_Stack_Store'Access);
    end Register_All;
 

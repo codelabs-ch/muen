@@ -39,7 +39,7 @@ is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
-      Expanders.Memory.Add_Binary_Memory (Data => Policy);
+      Expanders.Memory.Add_Kernel_Binary (Data => Policy);
 
       Muxml.Write (Data => Policy,
                    Kind => Muxml.Format_Src,

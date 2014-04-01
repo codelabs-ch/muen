@@ -32,4 +32,7 @@ is
    --  Add memory region with file content.
    procedure Add_Memory_With_File;
 
+   --  Create virtual memory node.
+   procedure Create_Virtual_Memory;
+
 end XML_Utils_Tests;

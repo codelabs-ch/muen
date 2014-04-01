@@ -18,6 +18,8 @@
 
 with Ada.Directories;
 
+with DOM.Core.Elements;
+
 with Muxml;
 
 with Expand.XML_Utils;
@@ -99,6 +101,49 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Create_Virtual_Memory
+   is
+      Dom_Impl : DOM.Core.DOM_Implementation;
+      Policy   : Muxml.XML_Data_Type;
+      Node     : DOM.Core.Node;
+      Logical  : constant String := "testl";
+      Physical : constant String := "testp";
+      Address  : constant String := "16#2000#";
+   begin
+      Policy.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
+
+      Node := XML_Utils.Create_Virtual_Memory_Node
+        (Policy        => Policy,
+         Logical_Name  => Logical,
+         Physical_Name => Physical,
+         Address       => Address,
+         Writable      => True,
+         Executable    => False);
+
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "logical") = Logical,
+              Message   => "Logical name mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "physical") = "testp",
+              Message   => "Physical name mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "virtualAddress") = Address,
+              Message   => "Address mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "writable") = "true",
+              Message   => "Writable mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "executable") = "false",
+              Message   => "Executable mismatch");
+   end Create_Virtual_Memory;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -109,6 +154,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_Memory_With_File'Access,
          Name    => "Add memory region with file content");
+      T.Add_Test_Routine
+        (Routine => Create_Virtual_Memory'Access,
+         Name    => "Create virtual memory node");
    end Initialize;
 
 end XML_Utils_Tests;

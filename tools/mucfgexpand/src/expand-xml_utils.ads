@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core;
+
 with Muxml;
 
 package Expand.XML_Utils
@@ -40,5 +42,15 @@ is
       File_Name   :        String;
       File_Format :        String;
       File_Offset :        String);
+
+   --  Create virtual memory node with given parameters.
+   function Create_Virtual_Memory_Node
+     (Policy        : in out Muxml.XML_Data_Type;
+      Logical_Name  :        String;
+      Physical_Name :        String;
+      Address       :        String;
+      Writable      :        Boolean;
+      Executable    :        Boolean)
+      return DOM.Core.Node;
 
 end Expand.XML_Utils;

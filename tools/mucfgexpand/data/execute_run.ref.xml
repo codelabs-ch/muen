@@ -40,6 +40,7 @@
     <memory executable="false" logical="stack" physical="kernel_stack_0" virtualAddress="16#0011_3000#" writable="true"/>
     <memory executable="false" logical="store" physical="kernel_store_0" virtualAddress="16#0011_6000#" writable="true"/>
     <memory executable="false" logical="lnx_state" physical="lnx_state" virtualAddress="16#001E_0000#" writable="true"/>
+    <memory executable="false" logical="subject1_state" physical="subject1_state" virtualAddress="16#001E_1000#" writable="true"/>
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
    </cpu>
    <cpu id="1">

@@ -241,8 +241,9 @@ is
                  Name => "id");
             Subjects : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
-                (N     => Data.Doc,
-                 XPath => "/system/subjects/subject[@cpu='" & CPU_Id & "']");
+                 (N     => Data.Doc,
+                  XPath => "/system/subjects/subject"
+                  & (if CPU_Id = "0" then "" else "[@cpu='" & CPU_Id & "']"));
          begin
             for J in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
                declare

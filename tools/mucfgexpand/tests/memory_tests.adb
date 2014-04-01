@@ -60,6 +60,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Tau0_Interface
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_tau0_iface.xml",
+         Ref_Filename => "data/memory_tau0_iface.ref.xml",
+         Expander     => Expanders.Memory.Add_Tau0_Interface'Access);
+   end Add_Tau0_Interface;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -73,6 +84,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_Subject_States'Access,
          Name    => "Add subject state memory regions");
+      T.Add_Test_Routine
+        (Routine => Add_Tau0_Interface'Access,
+         Name    => "Add tau0 interface memory region");
    end Initialize;
 
 end Memory_Tests;

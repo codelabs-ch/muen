@@ -35,4 +35,7 @@ is
    --  Add subject state regions.
    procedure Add_Subject_States;
 
+   --  Add tau0 interface memory region.
+   procedure Add_Tau0_Interface;
+
 end Memory_Tests;

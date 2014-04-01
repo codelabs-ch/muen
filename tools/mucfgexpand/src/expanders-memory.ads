@@ -28,4 +28,7 @@ is
    --  Add subject state memory elements.
    procedure Add_Subject_States (Data : in out Muxml.XML_Data_Type);
 
+   --  Add tau0 interface memory element.
+   procedure Add_Tau0_Interface (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Memory;

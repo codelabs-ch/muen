@@ -140,4 +140,19 @@ is
       end loop;
    end Add_Subject_States;
 
+   -------------------------------------------------------------------------
+
+   procedure Add_Tau0_Interface (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Mulog.Log (Msg => "Adding tau0 interface memory region");
+
+      Expand.XML_Utils.Add_Memory_Region
+        (Policy  => Data,
+         Name    => "sys_interface",
+         Address => "",
+         Size    => "16#1000#",
+         Caching => "WB");
+   end Add_Tau0_Interface;
+
 end Expanders.Memory;

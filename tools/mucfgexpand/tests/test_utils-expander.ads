@@ -21,13 +21,15 @@ with Muxml;
 package Test_Utils.Expander
 is
 
+   type Process_Policy is not null access procedure
+     (Data : in out Muxml.XML_Data_Type);
+
    --  Run expander test with given expander procedure. Verify result by
    --  comparing the created policy in filename with a specified reference
    --  file.
    procedure Run_Test
      (Filename     : String;
       Ref_Filename : String;
-      Expander     : not null access procedure
-        (Data : in out Muxml.XML_Data_Type));
+      Expander     : Process_Policy);
 
 end Test_Utils.Expander;

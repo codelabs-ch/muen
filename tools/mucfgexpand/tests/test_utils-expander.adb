@@ -31,8 +31,7 @@ is
    procedure Run_Test
      (Filename     : String;
       Ref_Filename : String;
-      Expander     : not null access procedure
-        (Data : in out Muxml.XML_Data_Type))
+      Expander     : Process_Policy)
    is
       Output_File : Ada.Text_IO.File_Type;
       Policy      : Muxml.XML_Data_Type;

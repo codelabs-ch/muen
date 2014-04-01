@@ -16,13 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Directories;
-
-with Muxml;
-
 with Expanders.Memory;
 
-with Test_Utils;
+with Test_Utils.Expander;
 
 package body Memory_Tests
 is
@@ -33,72 +29,33 @@ is
 
    procedure Add_Binary_Memory
    is
-      Filename : constant String := "obj/binary_memory.xml";
-      Policy   : Muxml.XML_Data_Type;
    begin
-      Muxml.Parse (Data => Policy,
-                   Kind => Muxml.Format_Src,
-                   File => "data/test_policy.xml");
-      Expanders.Memory.Add_Kernel_Binary (Data => Policy);
-
-      Muxml.Write (Data => Policy,
-                   Kind => Muxml.Format_Src,
-                   File => Filename);
-
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => Filename,
-               Filename2 => "data/binary_memory.ref.xml"),
-              Message   => "Policy mismatch");
-
-      Ada.Directories.Delete_File (Name => Filename);
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_kernel_binary.xml",
+         Ref_Filename => "data/memory_kernel_binary.ref.xml",
+         Expander     => Expanders.Memory.Add_Kernel_Binary'Access);
    end Add_Binary_Memory;
 
    -------------------------------------------------------------------------
 
    procedure Add_Stack_Store
    is
-      Filename : constant String := "obj/stack_store.xml";
-      Policy   : Muxml.XML_Data_Type;
    begin
-      Muxml.Parse (Data => Policy,
-                   Kind => Muxml.Format_Src,
-                   File => "data/test_policy.xml");
-      Expanders.Memory.Add_Stack_Store (Data => Policy);
-
-      Muxml.Write (Data => Policy,
-                   Kind => Muxml.Format_Src,
-                   File => Filename);
-
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => Filename,
-               Filename2 => "data/stack_store.ref.xml"),
-              Message   => "Policy mismatch");
-
-      Ada.Directories.Delete_File (Name => Filename);
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_stack_store.xml",
+         Ref_Filename => "data/memory_stack_store.ref.xml",
+         Expander     => Expanders.Memory.Add_Stack_Store'Access);
    end Add_Stack_Store;
 
    -------------------------------------------------------------------------
 
    procedure Add_Subject_States
    is
-      Filename : constant String := "obj/memory_subject_states.xml";
-      Policy   : Muxml.XML_Data_Type;
    begin
-      Muxml.Parse (Data => Policy,
-                   Kind => Muxml.Format_Src,
-                   File => "data/test_policy.xml");
-      Expanders.Memory.Add_Subject_States (Data => Policy);
-
-      Muxml.Write (Data => Policy,
-                   Kind => Muxml.Format_Src,
-                   File => Filename);
-
-      Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => Filename,
-               Filename2 => "data/memory_subject_states.ref.xml"),
-              Message   => "Policy mismatch");
-
-      Ada.Directories.Delete_File (Name => Filename);
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_subject_states.xml",
+         Ref_Filename => "data/memory_subject_states.ref.xml",
+         Expander     => Expanders.Memory.Add_Subject_States'Access);
    end Add_Subject_States;
 
    -------------------------------------------------------------------------

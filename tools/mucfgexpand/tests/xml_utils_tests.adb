@@ -46,6 +46,12 @@ is
          Address => "16#9000_1000#",
          Size    => "16#3000#",
          Caching => "UC");
+      XML_Utils.Add_Memory_Region
+        (Policy  => Policy,
+         Name    => "noaddress",
+         Address => "",
+         Size    => "16#8000#",
+         Caching => "WC");
 
       Muxml.Write (Data => Policy,
                    Kind => Muxml.Format_Src,

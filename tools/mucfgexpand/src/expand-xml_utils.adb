@@ -133,16 +133,19 @@ is
          Value => Name);
       DOM.Core.Elements.Set_Attribute
         (Elem  => Mem_Node,
-         Name  => "physicalAddress",
-         Value => Address);
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Mem_Node,
          Name  => "size",
          Value => Size);
       DOM.Core.Elements.Set_Attribute
         (Elem  => Mem_Node,
          Name  => "caching",
          Value => Caching);
+
+      if Address'Length > 0 then
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Mem_Node,
+            Name  => "physicalAddress",
+            Value => Address);
+      end if;
 
       return Mem_Node;
    end Create_Memory_Node;

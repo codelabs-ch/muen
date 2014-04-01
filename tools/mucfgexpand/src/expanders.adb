@@ -38,6 +38,7 @@ is
    is
    begin
       Procs.Register (Process => Kernel.Add_Binary_Memory'Access);
+      Procs.Register (Process => Kernel.Add_Stack_Store'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

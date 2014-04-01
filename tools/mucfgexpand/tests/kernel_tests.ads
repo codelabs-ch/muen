@@ -29,4 +29,7 @@ is
    --  Add binary memory regions.
    procedure Add_Binary_Memory;
 
+   --  Add stack and store regions.
+   procedure Add_Stack_Store;
+
 end Kernel_Tests;

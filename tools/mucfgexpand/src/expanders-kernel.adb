@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
+
 with Mulog;
 with Muxml.Utils;
 
@@ -65,5 +67,40 @@ is
          File_Format => "bin_raw",
          File_Offset => "16#0001_F000#");
    end Add_Binary_Memory;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Stack_Store (Data : in out Muxml.XML_Data_Type)
+   is
+      CPU_Count : constant Positive := Positive'Value
+        (Muxml.Utils.Get_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/processor",
+            Name  => "logicalCpus"));
+   begin
+      Mulog.Log (Msg => "Adding kernel stack and store memory regions for"
+                 & CPU_Count'Img & " CPU(s)");
+
+      for I in 0 .. CPU_Count - 1 loop
+         declare
+            CPU_Str : constant String := Ada.Strings.Fixed.Trim
+              (Source => I'Img,
+               Side   => Ada.Strings.Left);
+         begin
+            Expand.XML_Utils.Add_Memory_Region
+              (Policy  => Data,
+               Name    => "kernel_stack_" & CPU_Str,
+               Address => "",
+               Size    => "16#2000#",
+               Caching => "WB");
+            Expand.XML_Utils.Add_Memory_Region
+              (Policy  => Data,
+               Name    => "kernel_store_" & CPU_Str,
+               Address => "",
+               Size    => "16#1000#",
+               Caching => "WB");
+         end;
+      end loop;
+   end Add_Stack_Store;
 
 end Expanders.Kernel;

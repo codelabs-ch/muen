@@ -22,4 +22,7 @@ is
    --  Add kernel binary memory elements.
    procedure Add_Binary_Memory (Data : in out Muxml.XML_Data_Type);
 
+   --  Add kernel stack and store memory elements.
+   procedure Add_Stack_Store (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Kernel;

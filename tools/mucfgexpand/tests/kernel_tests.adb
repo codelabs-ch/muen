@@ -55,6 +55,30 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Stack_Store
+   is
+      Filename : constant String := "obj/stack_store.xml";
+      Policy   : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Expanders.Kernel.Add_Stack_Store (Data => Policy);
+
+      Muxml.Write (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => Filename);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Filename,
+               Filename2 => "data/stack_store.ref.xml"),
+              Message   => "Policy mismatch");
+
+      Ada.Directories.Delete_File (Name => Filename);
+   end Add_Stack_Store;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -62,6 +86,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_Binary_Memory'Access,
          Name    => "Add kernel binary memory regions");
+      T.Add_Test_Routine
+        (Routine => Add_Stack_Store'Access,
+         Name    => "Add kernel stack and store memory regions");
    end Initialize;
 
 end Kernel_Tests;

@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
 with Muxml;
 
 package Expand.XML_Utils
@@ -27,8 +25,8 @@ is
    procedure Add_Memory_Region
      (Policy  : in out Muxml.XML_Data_Type;
       Name    :        String;
-      Address :        Interfaces.Unsigned_64;
-      Size    :        Interfaces.Unsigned_64;
+      Address :        String;
+      Size    :        String;
       Caching :        String);
 
    --  Add file-backed physical memory region element with given parameters to
@@ -36,11 +34,11 @@ is
    procedure Add_Memory_Region
      (Policy      : in out Muxml.XML_Data_Type;
       Name        :        String;
-      Address     :        Interfaces.Unsigned_64;
-      Size        :        Interfaces.Unsigned_64;
+      Address     :        String;
+      Size        :        String;
       Caching     :        String;
       File_Name   :        String;
       File_Format :        String;
-      File_Offset :        Interfaces.Unsigned_64);
+      File_Offset :        String);
 
 end Expand.XML_Utils;

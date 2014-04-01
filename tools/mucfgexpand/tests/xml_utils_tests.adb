@@ -43,8 +43,8 @@ is
       XML_Utils.Add_Memory_Region
         (Policy  => Policy,
          Name    => "test",
-         Address => 16#9000_1000#,
-         Size    => 16#3000#,
+         Address => "16#9000_1000#",
+         Size    => "16#3000#",
          Caching => "UC");
 
       Muxml.Write (Data => Policy,
@@ -72,12 +72,12 @@ is
       XML_Utils.Add_Memory_Region
         (Policy      => Policy,
          Name        => "test",
-         Address     => 16#2000#,
-         Size        => 16#4000#,
+         Address     => "16#2000#",
+         Size        => "16#4000#",
          Caching     => "WB",
          File_Name   => "testfile",
          File_Format => "bin_raw",
-         File_Offset => 16#1000#);
+         File_Offset => "16#1000#");
 
       Muxml.Write (Data => Policy,
                    Kind => Muxml.Format_Src,

@@ -22,8 +22,6 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
-with Mutools.Utils;
-
 package body Expand.XML_Utils
 is
 
@@ -31,8 +29,8 @@ is
    function Create_Memory_Node
      (Policy  : in out Muxml.XML_Data_Type;
       Name    :        String;
-      Address :        Interfaces.Unsigned_64;
-      Size    :        Interfaces.Unsigned_64;
+      Address :        String;
+      Size    :        String;
       Caching :        String)
       return DOM.Core.Node;
 
@@ -41,8 +39,8 @@ is
    procedure Add_Memory_Region
      (Policy  : in out Muxml.XML_Data_Type;
       Name    :        String;
-      Address :        Interfaces.Unsigned_64;
-      Size    :        Interfaces.Unsigned_64;
+      Address :        String;
+      Size    :        String;
       Caching :        String)
    is
       Section    : constant DOM.Core.Node
@@ -69,12 +67,12 @@ is
    procedure Add_Memory_Region
      (Policy      : in out Muxml.XML_Data_Type;
       Name        :        String;
-      Address     :        Interfaces.Unsigned_64;
-      Size        :        Interfaces.Unsigned_64;
+      Address     :        String;
+      Size        :        String;
       Caching     :        String;
       File_Name   :        String;
       File_Format :        String;
-      File_Offset :        Interfaces.Unsigned_64)
+      File_Offset :        String)
    is
       Section   : constant DOM.Core.Node
         := DOM.Core.Nodes.Item
@@ -112,9 +110,7 @@ is
       DOM.Core.Elements.Set_Attribute
         (Elem  => File_Node,
          Name  => "offset",
-         Value => Mutools.Utils.To_Hex
-           (Number    => File_Offset,
-            Normalize => True));
+         Value => File_Offset);
    end Add_Memory_Region;
 
    -------------------------------------------------------------------------
@@ -122,8 +118,8 @@ is
    function Create_Memory_Node
      (Policy  : in out Muxml.XML_Data_Type;
       Name    :        String;
-      Address :        Interfaces.Unsigned_64;
-      Size    :        Interfaces.Unsigned_64;
+      Address :        String;
+      Size    :        String;
       Caching :        String)
       return DOM.Core.Node
    is
@@ -138,15 +134,11 @@ is
       DOM.Core.Elements.Set_Attribute
         (Elem  => Mem_Node,
          Name  => "physicalAddress",
-         Value => Mutools.Utils.To_Hex
-           (Number    => Address,
-            Normalize => True));
+         Value => Address);
       DOM.Core.Elements.Set_Attribute
         (Elem  => Mem_Node,
          Name  => "size",
-         Value => Mutools.Utils.To_Hex
-           (Number    => Size,
-            Normalize => True));
+         Value => Size);
       DOM.Core.Elements.Set_Attribute
         (Elem  => Mem_Node,
          Name  => "caching",

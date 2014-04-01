@@ -17,6 +17,7 @@
 --
 
 with Mulog;
+with Muxml.Utils;
 
 with Expand.XML_Utils;
 
@@ -33,36 +34,36 @@ is
       Expand.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => "kernel_text",
-         Address     => 16#0010_0000#,
-         Size        => 16#0001_0000#,
+         Address     => "16#0010_0000#",
+         Size        => "16#0001_0000#",
          Caching     => "WB",
          File_Name   => "kernel",
          File_Format => "bin_raw",
-         File_Offset => 0);
+         File_Offset => "16#0000#");
       Expand.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => "kernel_data",
-         Address     => 16#0011_0000#,
-         Size        => 16#1000#,
+         Address     => "16#0011_0000#",
+         Size        => "16#1000#",
          Caching     => "WB",
          File_Name   => "kernel",
          File_Format => "bin_raw",
-         File_Offset => 16#0001_0000#);
+         File_Offset => "16#0001_0000#");
       Expand.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => "kernel_bss",
-         Address     => 16#0011_1000#,
-         Size        => 16#1000#,
+         Address     => "16#0011_1000#",
+         Size        => "16#1000#",
          Caching     => "WB");
       Expand.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => "kernel_ro",
-         Address     => 16#0011_f000#,
-         Size        => 16#4000#,
+         Address     => "16#0011_F000#",
+         Size        => "16#4000#",
          Caching     => "WB",
          File_Name   => "kernel",
          File_Format => "bin_raw",
-         File_Offset => 16#0001_f000#);
+         File_Offset => "16#0001_F000#");
    end Add_Binary_Memory;
 
 end Expanders.Kernel;

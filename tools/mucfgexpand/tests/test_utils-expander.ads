@@ -24,12 +24,15 @@ is
    type Process_Policy is not null access procedure
      (Data : in out Muxml.XML_Data_Type);
 
+   procedure Process_Nil (Data : in out Muxml.XML_Data_Type) is null;
+
    --  Run expander test with given expander procedure. Verify result by
    --  comparing the created policy in filename with a specified reference
-   --  file.
+   --  file. The Pre procedure is executed prior to the expansion step.
    procedure Run_Test
      (Filename     : String;
       Ref_Filename : String;
+      Pre          : Process_Policy := Process_Nil'Access;
       Expander     : Process_Policy);
 
 end Test_Utils.Expander;

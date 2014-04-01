@@ -31,6 +31,7 @@ is
    procedure Run_Test
      (Filename     : String;
       Ref_Filename : String;
+      Pre          : Process_Policy := Process_Nil'Access;
       Expander     : Process_Policy)
    is
       Output_File : Ada.Text_IO.File_Type;
@@ -39,6 +40,8 @@ is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
+      Pre (Data => Policy);
+
       Expander (Data => Policy);
 
       Ada.Text_IO.Create

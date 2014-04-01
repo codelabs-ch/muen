@@ -32,4 +32,7 @@ is
    --  Add subject state memory mappings.
    procedure Add_Subj_State_Mappings;
 
+   --  Map tau0 interface memory region.
+   procedure Map_Tau0_Interface;
+
 end Kernel_Tests;

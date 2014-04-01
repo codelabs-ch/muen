@@ -61,6 +61,21 @@ is
       T.Add_Test_Routine
         (Routine => Add_Subj_State_Mappings'Access,
          Name    => "Add subject state mappings");
+      T.Add_Test_Routine
+        (Routine => Map_Tau0_Interface'Access,
+         Name    => "Map tau0 interface memory region");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Map_Tau0_Interface
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/kernel_tau0_iface_mapping.xml",
+         Ref_Filename => "data/kernel_tau0_iface_mapping.ref.xml",
+         Pre          => Expanders.Kernel.Add_Section_Skeleton'Access,
+         Expander     => Expanders.Kernel.Map_Tau0_Interface'Access);
+   end Map_Tau0_Interface;
 
 end Kernel_Tests;

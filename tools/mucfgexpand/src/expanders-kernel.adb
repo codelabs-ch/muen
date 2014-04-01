@@ -244,4 +244,28 @@ is
       end loop;
    end Add_Subj_State_Mappings;
 
+   -------------------------------------------------------------------------
+
+   procedure Map_Tau0_Interface (Data : in out Muxml.XML_Data_Type)
+   is
+      BSP : constant DOM.Core.Node
+        := DOM.Core.Nodes.Item
+          (List  => McKae.XML.XPath.XIA.XPath_Query
+               (N     => Data.Doc,
+                XPath => "/system/kernel/memory/cpu[@id='0']"),
+           Index => 0);
+   begin
+      Mulog.Log (Msg => "Mapping tau0 system interface on CPU 0");
+
+      Expand.XML_Utils.Append_Child
+        (Node      => BSP,
+         New_Child => Expand.XML_Utils.Create_Virtual_Memory_Node
+           (Policy        => Data,
+            Logical_Name  => "tau0_interface",
+            Physical_Name => "sys_interface",
+            Address       => "16#001f_f000#",
+            Writable      => False,
+            Executable    => False));
+   end Map_Tau0_Interface;
+
 end Expanders.Kernel;

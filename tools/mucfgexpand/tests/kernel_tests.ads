@@ -35,4 +35,7 @@ is
    --  Map tau0 interface memory region.
    procedure Map_Tau0_Interface;
 
+   --  Add devices to kernel section.
+   procedure Add_Devices;
+
 end Kernel_Tests;

@@ -120,6 +120,46 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Devices (Data : in out Muxml.XML_Data_Type)
+   is
+      Devices_Node : constant DOM.Core.Node
+        := DOM.Core.Nodes.Item
+          (List  => McKae.XML.XPath.XIA.XPath_Query
+               (N     => Data.Doc,
+                XPath => "/system/kernel/devices"),
+           Index => 0);
+      Ioapic       : constant DOM.Core.Node
+        := DOM.Core.Documents.Create_Element
+          (Doc      => Data.Doc,
+           Tag_Name => "device");
+   begin
+      Mulog.Log (Msg => "Adding devices to kernel");
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Ioapic,
+         Name  => "logical",
+         Value => "ioapic");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Ioapic,
+         Name  => "physical",
+         Value => "ioapic");
+
+      Expand.XML_Utils.Append_Child
+        (Node      => Ioapic,
+         New_Child => Expand.XML_Utils.Create_Virtual_Memory_Node
+           (Policy        => Data,
+            Logical_Name  => "mmio",
+            Physical_Name => "mmio",
+            Address       => "16#001f_c000#",
+            Writable      => True,
+            Executable    => False));
+      Expand.XML_Utils.Append_Child
+        (Node      => Devices_Node,
+         New_Child => Ioapic);
+   end Add_Devices;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Section_Skeleton (Data : in out Muxml.XML_Data_Type)
    is
       CPU_Count     : constant Positive

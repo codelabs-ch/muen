@@ -39,6 +39,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Devices
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/kernel_devices.xml",
+         Ref_Filename => "data/kernel_devices.ref.xml",
+         Pre          => Expanders.Kernel.Add_Section_Skeleton'Access,
+         Expander     => Expanders.Kernel.Add_Devices'Access);
+   end Add_Devices;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Subj_State_Mappings
    is
    begin
@@ -64,6 +76,9 @@ is
       T.Add_Test_Routine
         (Routine => Map_Tau0_Interface'Access,
          Name    => "Map tau0 interface memory region");
+      T.Add_Test_Routine
+        (Routine => Add_Devices'Access,
+         Name    => "Add kernel devices");
    end Initialize;
 
    -------------------------------------------------------------------------

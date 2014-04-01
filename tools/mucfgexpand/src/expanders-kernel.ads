@@ -31,4 +31,7 @@ is
    --  Map tau0 interface memory region on BSP.
    procedure Map_Tau0_Interface (Data : in out Muxml.XML_Data_Type);
 
+   --  Add devices to kernel section.
+   procedure Add_Devices (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Kernel;

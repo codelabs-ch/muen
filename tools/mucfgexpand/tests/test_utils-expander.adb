@@ -17,6 +17,9 @@
 --
 
 with Ada.Directories;
+with Ada.Text_IO.Text_Streams;
+
+with DOM.Core.Nodes;
 
 with Ahven;
 
@@ -31,16 +34,23 @@ is
       Expander     : not null access procedure
         (Data : in out Muxml.XML_Data_Type))
    is
-      Policy : Muxml.XML_Data_Type;
+      Output_File : Ada.Text_IO.File_Type;
+      Policy      : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
       Expander (Data => Policy);
 
-      Muxml.Write (Data => Policy,
-                   Kind => Muxml.Format_Src,
-                   File => Filename);
+      Ada.Text_IO.Create
+        (File => Output_File,
+         Mode => Ada.Text_IO.Out_File,
+         Name => Filename);
+      DOM.Core.Nodes.Write
+        (Stream       => Ada.Text_IO.Text_Streams.Stream (Output_File),
+         N            => Policy.Doc,
+         Pretty_Print => True);
+      Ada.Text_IO.Close (File => Output_File);
 
       Ahven.Assert (Condition => Test_Utils.Equal_Files
                     (Filename1 => Filename,

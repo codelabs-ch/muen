@@ -32,6 +32,7 @@
     <memory executable="false" logical="store" physical="kernel_store_1" virtualAddress="16#0011_6000#" writable="true"/>
    </cpu>
   </memory>
+  <devices/>
  </kernel>
  <subjects>
   <subject cpu="0" id="0" name="lnx">

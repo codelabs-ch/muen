@@ -36,71 +36,26 @@ is
 
    procedure Add_Binary_Mappings (Data : in out Muxml.XML_Data_Type)
    is
-      use type DOM.Core.Node;
-
-      Kernel_Node  : DOM.Core.Node
-        := DOM.Core.Nodes.Item
-          (List  => McKae.XML.XPath.XIA.XPath_Query
-               (N     => Data.Doc,
-                XPath => "/system/kernel"),
-           Index => 0);
-      CPU_Count    : constant Positive
-        := Positive'Value
-          (Muxml.Utils.Get_Attribute
-               (Doc   => Data.Doc,
-                XPath => "/system/platform/processor",
-                Name  => "logicalCpus"));
-      Section_Node : constant DOM.Core.Node
-        := DOM.Core.Documents.Create_Element
-          (Doc      => Data.Doc,
-           Tag_Name => "memory");
+      CPU_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/kernel/memory/cpu");
    begin
-      Mulog.Log (Msg => "Adding binary memory mappings for" & CPU_Count'Img
+      Mulog.Log (Msg => "Adding binary memory mappings for"
+                 & DOM.Core.Nodes.Length (List => CPU_Nodes)'Img
                  & " kernel(s)");
 
-      --  TODO: Remove this after device expansion
-
-      if Kernel_Node = null then
+      for I in 0 .. DOM.Core.Nodes.Length (List => CPU_Nodes) - 1 loop
          declare
-            Subjects_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => McKae.XML.XPath.XIA.XPath_Query
-                     (N     => Data.Doc,
-                      XPath => "/system/subjects"),
-                 Index => 0);
-         begin
-            Kernel_Node := DOM.Core.Documents.Create_Element
-              (Doc      => Data.Doc,
-               Tag_Name => "kernel");
-            Kernel_Node := DOM.Core.Nodes.Insert_Before
-              (N         => DOM.Core.Nodes.Parent_Node (N => Subjects_Node),
-               New_Child => Kernel_Node,
-               Ref_Child => Subjects_Node);
-         end;
-      end if;
-
-      Expand.XML_Utils.Append_Child (Node      => Kernel_Node,
-                                     New_Child => Section_Node);
-
-      for I in 0 .. CPU_Count - 1 loop
-         declare
-            CPU_Str  : constant String
-              := Ada.Strings.Fixed.Trim
-                (Source => I'Img,
-                 Side   => Ada.Strings.Left);
             CPU_Node : constant DOM.Core.Node
-              := DOM.Core.Documents.Create_Element
-                (Doc      => Data.Doc,
-                 Tag_Name => "cpu");
+              := DOM.Core.Nodes.Item
+                (List  => CPU_Nodes,
+                 Index => I);
+            CPU_Str  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => CPU_Node,
+                 Name => "id");
          begin
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => CPU_Node,
-               Name  => "id",
-               Value => CPU_Str);
-            Expand.XML_Utils.Append_Child
-              (Node      => Section_Node,
-               New_Child => CPU_Node);
-
             Expand.XML_Utils.Append_Child
               (Node      => CPU_Node,
                New_Child => Expand.XML_Utils.Create_Virtual_Memory_Node

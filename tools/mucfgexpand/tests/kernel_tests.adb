@@ -33,6 +33,7 @@ is
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/kernel_binary_mappings.xml",
          Ref_Filename => "data/kernel_binary_mappings.ref.xml",
+         Pre          => Expanders.Kernel.Add_Section_Skeleton'Access,
          Expander     => Expanders.Kernel.Add_Binary_Mappings'Access);
    end Add_Binary_Mappings;
 

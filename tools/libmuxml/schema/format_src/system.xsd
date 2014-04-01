@@ -6,7 +6,6 @@
 			<xs:element name="platform"   type="platformType"   minOccurs="1" maxOccurs="1"/>
 			<xs:element name="memory"     type="memRegionsType" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="events"     type="eventsType"     minOccurs="1" maxOccurs="1"/>
-			<xs:element name="kernel"     type="kernelType"     minOccurs="0" maxOccurs="1"/>
 			<xs:element name="subjects"   type="subjectsType"   minOccurs="1" maxOccurs="1"/>
 			<xs:element name="scheduling" type="schedulingType" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>

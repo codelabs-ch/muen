@@ -18,7 +18,7 @@
 
 with Ahven.Framework;
 
-package Kernel_Tests
+package Memory_Tests
 is
 
    type Testcase is new Ahven.Framework.Test_Case with null record;
@@ -32,4 +32,4 @@ is
    --  Add stack and store regions.
    procedure Add_Stack_Store;
 
-end Kernel_Tests;
+end Memory_Tests;

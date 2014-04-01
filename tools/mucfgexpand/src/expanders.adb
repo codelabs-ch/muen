@@ -18,7 +18,7 @@
 
 with Mutools.Processors;
 
-with Expanders.Kernel;
+with Expanders.Memory;
 
 pragma Elaborate_All (Mutools.Processors);
 
@@ -37,8 +37,8 @@ is
    procedure Register_All
    is
    begin
-      Procs.Register (Process => Kernel.Add_Binary_Memory'Access);
-      Procs.Register (Process => Kernel.Add_Stack_Store'Access);
+      Procs.Register (Process => Memory.Add_Binary_Memory'Access);
+      Procs.Register (Process => Memory.Add_Stack_Store'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

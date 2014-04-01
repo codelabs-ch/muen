@@ -20,11 +20,11 @@ with Ada.Directories;
 
 with Muxml;
 
-with Expanders.Kernel;
+with Expanders.Memory;
 
 with Test_Utils;
 
-package body Kernel_Tests
+package body Memory_Tests
 is
 
    use Ahven;
@@ -39,7 +39,7 @@ is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
-      Expanders.Kernel.Add_Binary_Memory (Data => Policy);
+      Expanders.Memory.Add_Binary_Memory (Data => Policy);
 
       Muxml.Write (Data => Policy,
                    Kind => Muxml.Format_Src,
@@ -63,7 +63,7 @@ is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
-      Expanders.Kernel.Add_Stack_Store (Data => Policy);
+      Expanders.Memory.Add_Stack_Store (Data => Policy);
 
       Muxml.Write (Data => Policy,
                    Kind => Muxml.Format_Src,
@@ -82,7 +82,7 @@ is
    procedure Initialize (T : in out Testcase)
    is
    begin
-      T.Set_Name (Name => "Kernel expander tests");
+      T.Set_Name (Name => "Memory expander tests");
       T.Add_Test_Routine
         (Routine => Add_Binary_Memory'Access,
          Name    => "Add kernel binary memory regions");
@@ -91,4 +91,4 @@ is
          Name    => "Add kernel stack and store memory regions");
    end Initialize;
 
-end Kernel_Tests;
+end Memory_Tests;

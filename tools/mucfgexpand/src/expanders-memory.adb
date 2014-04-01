@@ -23,7 +23,7 @@ with Muxml.Utils;
 
 with Expand.XML_Utils;
 
-package body Expanders.Kernel
+package body Expanders.Memory
 is
 
    -------------------------------------------------------------------------
@@ -103,4 +103,4 @@ is
       end loop;
    end Add_Stack_Store;
 
-end Expanders.Kernel;
+end Expanders.Memory;

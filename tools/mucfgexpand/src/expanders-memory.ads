@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package Expanders.Kernel
+package Expanders.Memory
 is
 
    --  Add kernel binary memory elements.
@@ -25,4 +25,4 @@ is
    --  Add kernel stack and store memory elements.
    procedure Add_Stack_Store (Data : in out Muxml.XML_Data_Type);
 
-end Expanders.Kernel;
+end Expanders.Memory;

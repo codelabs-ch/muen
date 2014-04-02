@@ -145,8 +145,8 @@ is
       exception
          when E : Image.Image_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Unable to return image data at address 16#2d# with size"
-                    & " 16#c# (image end address is 16#2d#)",
+                    = "Unable to return image data at address 16#002d# with"
+                    & " size 16#000c# (image end address is 16#002d#)",
                     Message   => "Exception mismatch");
       end;
    end Get_Buffer_From_Image;

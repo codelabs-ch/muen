@@ -738,20 +738,20 @@ is
            (Template => Tmpl,
             Pattern  => "__stack_addr__",
             Content  => Mutools.Utils.To_Hex
-              (Number => Stack_Addr,
-               Prefix => False));
+              (Number    => Stack_Addr,
+               Normalize => False));
          Templates.Replace
            (Template => Tmpl,
             Pattern  => "__kpml4_addr__",
             Content  => Mutools.Utils.To_Hex
-              (Number => PML4_Addr,
-               Prefix => False));
+              (Number    => PML4_Addr,
+               Normalize => False));
          Templates.Replace
            (Template => Tmpl,
             Pattern  => "__cpu_store_addr__",
             Content  => Mutools.Utils.To_Hex
-              (Number => CPU_Store_Addr,
-               Prefix => False));
+              (Number    => CPU_Store_Addr,
+               Normalize => False));
          Templates.Replace
            (Template => Tmpl,
             Pattern  => "__cpu_count__",
@@ -760,14 +760,14 @@ is
            (Template => Tmpl,
             Pattern  => "__vmxon_addr__",
             Content  => Mutools.Utils.To_Hex
-              (Number => VMXON_Addr,
-               Prefix => False));
+              (Number    => VMXON_Addr,
+               Normalize => False));
          Templates.Replace
            (Template => Tmpl,
             Pattern  => "__vmcs_addr__",
             Content  => Mutools.Utils.To_Hex
-              (Number => VMCS_Addr,
-               Prefix => False));
+              (Number    => VMCS_Addr,
+               Normalize => False));
 
          Mulog.Log (Msg => "Writing kernel header file to '"
                     & Output_Dir & "/policy.h'");

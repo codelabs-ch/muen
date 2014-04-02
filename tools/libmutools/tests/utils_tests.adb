@@ -97,8 +97,8 @@ is
 
    procedure To_Hex
    is
-      Ref_First  : constant String := "16#0#";
-      Ref_Last   : constant String := "16#ffffffffffffffff#";
+      Ref_First  : constant String := "0";
+      Ref_Last   : constant String := "ffffffffffffffff";
       Ref_Number : constant String := "deadcafebeefbeef";
       Norm_First : constant String := "16#0000#";
       Norm_Last  : constant String := "16#ffff_ffff_ffff_ffff#";
@@ -107,33 +107,31 @@ is
       Number     : constant Interfaces.Unsigned_64 := 16#deadcafebeefbeef#;
    begin
       Assert (Condition => Utils.To_Hex
-              (Number => Interfaces.Unsigned_64'First) = Ref_First,
+              (Number    => Interfaces.Unsigned_64'First,
+               Normalize => False) = Ref_First,
               Message   => "Unsigned_64'First hex string mismatch");
       Assert (Condition => Utils.To_Hex
-              (Number => Interfaces.Unsigned_64'Last) = Ref_Last,
+              (Number    => Interfaces.Unsigned_64'Last,
+               Normalize => False) = Ref_Last,
               Message   => "Unsigned_64'Last hex string mismatch");
       Assert (Condition => Utils.To_Hex
-              (Number => Number,
-               Prefix => False) = Ref_Number,
+              (Number    => Number,
+               Normalize => False) = Ref_Number,
               Message   => "Hex string without prefix mismatch");
       Assert (Condition => Utils.To_Hex
               (Number    => Interfaces.Unsigned_64'First,
-               Prefix    => True,
                Normalize => True) = Norm_First,
               Message => "Normalized Unsigned_64'First hex string mismatch");
       Assert (Condition => Utils.To_Hex
               (Number    => Interfaces.Unsigned_64'Last,
-               Prefix    => True,
                Normalize => True) = Norm_Last,
               Message => "Normalized Unsigned_64'Last hex string mismatch");
       Assert (Condition => Utils.To_Hex
               (Number    => Number,
-               Prefix    => True,
                Normalize => True) = Norm_Num,
               Message => "Normalized " & Norm_Num & " hex string mismatch");
       Assert (Condition => Utils.To_Hex
               (Number    => 16#de_adbe_efbe#,
-               Prefix    => True,
                Normalize => True) = Norm_Num2,
               Message => "Normalized " & Norm_Num2 & " hex string mismatch");
    end To_Hex;

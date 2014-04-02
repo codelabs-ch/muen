@@ -33,6 +33,20 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_AP_Trampoline (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Mulog.Log (Msg => "Adding AP trampoline memory region");
+      Expand.XML_Utils.Add_Memory_Region
+        (Policy  => Data,
+         Name    => "trampoline",
+         Address => "16#0000#",
+         Size    => "16#1000#",
+         Caching => "WB");
+   end Add_AP_Trampoline;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Kernel_Binary (Data : in out Muxml.XML_Data_Type)
    is
    begin

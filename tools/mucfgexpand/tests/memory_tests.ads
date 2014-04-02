@@ -38,4 +38,7 @@ is
    --  Add tau0 interface memory region.
    procedure Add_Tau0_Interface;
 
+   --  Add AP trampoline memory region.
+   procedure Add_AP_Trampoline;
+
 end Memory_Tests;

@@ -31,4 +31,7 @@ is
    --  Add tau0 interface memory element.
    procedure Add_Tau0_Interface (Data : in out Muxml.XML_Data_Type);
 
+   --  Add memory region for AP trampoline.
+   procedure Add_AP_Trampoline (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Memory;

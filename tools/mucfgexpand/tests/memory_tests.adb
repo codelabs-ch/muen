@@ -27,6 +27,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_AP_Trampoline
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_trampoline.xml",
+         Ref_Filename => "data/memory_trampoline.ref.xml",
+         Expander     => Expanders.Memory.Add_AP_Trampoline'Access);
+   end Add_AP_Trampoline;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Binary_Memory
    is
    begin
@@ -87,6 +98,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_Tau0_Interface'Access,
          Name    => "Add tau0 interface memory region");
+      T.Add_Test_Routine
+        (Routine => Add_AP_Trampoline'Access,
+         Name    => "Add AP trampoline memory region");
    end Initialize;
 
 end Memory_Tests;

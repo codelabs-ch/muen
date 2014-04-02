@@ -36,19 +36,6 @@
 		<memory name="sm|vmcs" physicalAddress="16#8000#" size="16#1000#" caching="WB"/>
 		<memory name="linux|vmcs" physicalAddress="16#9000#" size="16#1000#" caching="WB"/>
 
-		<memory name="kernel_0|pt" physicalAddress="16#0012_9000#" size="16#4000#" caching="WB">
-			<file format="pt" filename="kernel_pt_0" offset="none"/>
-		</memory>
-		<memory name="kernel_1|pt" physicalAddress="16#0012_d000#" size="16#4000#" caching="WB">
-			<file format="pt" filename="kernel_pt_1" offset="none"/>
-		</memory>
-		<memory name="kernel_2|pt" physicalAddress="16#0013_1000#" size="16#4000#" caching="WB">
-			<file format="pt" filename="kernel_pt_2" offset="none"/>
-		</memory>
-		<memory name="kernel_3|pt" physicalAddress="16#0013_5000#" size="16#4000#" caching="WB">
-			<file format="pt" filename="kernel_pt_3" offset="none"/>
-		</memory>
-
 		<!-- tau0 subject -->
 		<memory name="tau0|pt" size="16#4000#" caching="WB">
 			<file format="pt" filename="tau0_pt" offset="none"/>

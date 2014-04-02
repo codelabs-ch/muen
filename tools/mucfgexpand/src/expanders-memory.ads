@@ -34,4 +34,7 @@ is
    --  Add memory region for AP trampoline.
    procedure Add_AP_Trampoline (Data : in out Muxml.XML_Data_Type);
 
+   --  Add VMXON regions.
+   procedure Add_VMXON_Regions (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Memory;

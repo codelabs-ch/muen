@@ -18,6 +18,8 @@
 
 with Ada.Strings.Fixed;
 
+with Interfaces;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
@@ -25,6 +27,8 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Utils;
+with Mutools.Constants;
 
 with Expand.XML_Utils;
 
@@ -168,5 +172,41 @@ is
          Size    => "16#1000#",
          Caching => "WB");
    end Add_Tau0_Interface;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_VMXON_Regions (Data : in out Muxml.XML_Data_Type)
+   is
+      Curr_Addr : Interfaces.Unsigned_64 := 16#1000#;
+      CPU_Count : constant Positive      := Positive'Value
+        (Muxml.Utils.Get_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/processor",
+            Name  => "logicalCpus"));
+   begin
+      for I in 0 .. CPU_Count - 1 loop
+         declare
+            use type Interfaces.Unsigned_64;
+
+            CPU_Str : constant String := Ada.Strings.Fixed.Trim
+              (Source => I'Img,
+               Side   => Ada.Strings.Left);
+         begin
+            Mulog.Log (Msg => "Adding VMXON region for CPU " & CPU_Str & " at "
+                       & "address " & Mutools.Utils.To_Hex
+                         (Number    => Curr_Addr,
+                          Normalize => True));
+            Expand.XML_Utils.Add_Memory_Region
+              (Policy  => Data,
+               Name    => "kernel_" & CPU_Str & "|vmxon",
+               Address => Mutools.Utils.To_Hex
+                 (Number    => Curr_Addr,
+                  Normalize => True),
+               Size    => "16#1000#",
+               Caching => "WB");
+            Curr_Addr := Curr_Addr + Mutools.Constants.Page_Size;
+         end;
+      end loop;
+   end Add_VMXON_Regions;
 
 end Expanders.Memory;

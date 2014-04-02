@@ -43,6 +43,7 @@ is
       Procs.Register (Process => Memory.Add_Subject_States'Access);
       Procs.Register (Process => Memory.Add_Tau0_Interface'Access);
       Procs.Register (Process => Memory.Add_AP_Trampoline'Access);
+      Procs.Register (Process => Memory.Add_VMXON_Regions'Access);
       Procs.Register (Process => Kernel.Add_Section_Skeleton'Access);
       Procs.Register (Process => Kernel.Add_Binary_Mappings'Access);
       Procs.Register (Process => Kernel.Add_Subj_State_Mappings'Access);

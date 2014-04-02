@@ -41,4 +41,7 @@ is
    --  Add AP trampoline memory region.
    procedure Add_AP_Trampoline;
 
+   --  Add VMXON memory regions.
+   procedure Add_VMXON_Regions;
+
 end Memory_Tests;

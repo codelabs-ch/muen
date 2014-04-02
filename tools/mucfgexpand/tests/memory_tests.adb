@@ -82,6 +82,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_VMXON_Regions
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_vmxon.xml",
+         Ref_Filename => "data/memory_vmxon.ref.xml",
+         Expander     => Expanders.Memory.Add_VMXON_Regions'Access);
+   end Add_VMXON_Regions;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -101,6 +112,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_AP_Trampoline'Access,
          Name    => "Add AP trampoline memory region");
+      T.Add_Test_Routine
+        (Routine => Add_VMXON_Regions'Access,
+         Name    => "Add VMXON memory regions");
    end Initialize;
 
 end Memory_Tests;

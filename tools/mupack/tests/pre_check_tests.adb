@@ -113,7 +113,7 @@ is
          when E : Pre_Checks.Check_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "File 'data/sections.ref' too large for physical memory"
-                    & " region 'linux|acpi_rsdp': 16#26B# > 16#0#",
+                    & " region 'linux|acpi_rsdp': 16#26b# > 16#0#",
                     Message   => "Exception mismatch");
       end;
    end File_Larger_Than_Memory;
@@ -171,9 +171,8 @@ is
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Offset of file 'data/sections.ref' referenced by "
                     & "physical memory region 'linux|acpi_rsdp' larger than "
-                    & "file size: 16#FFFF# > 16#26B#",
+                    & "file size: 16#ffff# > 16#26b#",
                     Message   => "Exception mismatch");
       end;
    end Offset_Larger_Than_File;
-
 end Pre_Check_Tests;

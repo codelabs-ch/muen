@@ -98,13 +98,13 @@ is
    procedure To_Hex
    is
       Ref_First  : constant String                 := "16#0#";
-      Ref_Last   : constant String                 := "16#FFFFFFFFFFFFFFFF#";
-      Ref_Number : constant String                 := "DEADCAFEBEEFBEEF";
+      Ref_Last   : constant String                 := "16#ffffffffffffffff#";
+      Ref_Number : constant String                 := "deadcafebeefbeef";
       Number     : constant Interfaces.Unsigned_64 := 16#deadcafebeefbeef#;
       Norm_First : constant String                 := "16#0000#";
-      Norm_Last  : constant String := "16#FFFF_FFFF_FFFF_FFFF#";
-      Norm_Num   : constant String := "16#DEAD_CAFE_BEEF_BEEF#";
-      Norm_Num2  : constant String := "16#00DE_ADBE_EFBE#";
+      Norm_Last  : constant String := "16#ffff_ffff_ffff_ffff#";
+      Norm_Num   : constant String := "16#dead_cafe_beef_beef#";
+      Norm_Num2  : constant String := "16#00de_adbe_efbe#";
    begin
       Assert (Condition => Utils.To_Hex
               (Number => Interfaces.Unsigned_64'First) = Ref_First,
@@ -127,12 +127,12 @@ is
                Normalize => True) = Norm_Last,
               Message => "Normalized Unsigned_64'Last hex string mismatch");
       Assert (Condition => Utils.To_Hex
-              (Number    => 16#DEAD_CAFE_BEEF_BEEF#,
+              (Number    => 16#dead_cafe_beef_beef#,
                Prefix    => True,
                Normalize => True) = Norm_Num,
               Message => "Normalized " & Norm_Num & " hex string mismatch");
       Assert (Condition => Utils.To_Hex
-              (Number    => 16#DE_ADBE_EFBE#,
+              (Number    => 16#de_adbe_efbe#,
                Prefix    => True,
                Normalize => True) = Norm_Num2,
               Message => "Normalized " & Norm_Num2 & " hex string mismatch");

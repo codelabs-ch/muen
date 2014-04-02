@@ -22,7 +22,7 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
-package body Expand.XML_Utils
+package body Expanders.XML_Utils
 is
 
    --  Create memory node element with given parameters.
@@ -77,8 +77,8 @@ is
       Section   : constant DOM.Core.Node
         := DOM.Core.Nodes.Item
           (List  => McKae.XML.XPath.XIA.XPath_Query
-               (N     => Policy.Doc,
-                XPath => "/system/memory"),
+             (N     => Policy.Doc,
+              XPath => "/system/memory"),
            Index => 0);
       Mem_Node  : constant DOM.Core.Node
         := Create_Memory_Node
@@ -201,4 +201,4 @@ is
       return Mem_Node;
    end Create_Virtual_Memory_Node;
 
-end Expand.XML_Utils;
+end Expanders.XML_Utils;

@@ -22,7 +22,7 @@ with DOM.Core.Elements;
 
 with Muxml;
 
-with Expand.XML_Utils;
+with Expanders.XML_Utils;
 
 with Test_Utils;
 
@@ -30,7 +30,7 @@ package body XML_Utils_Tests
 is
 
    use Ahven;
-   use Expand;
+   use Expanders;
 
    -------------------------------------------------------------------------
 

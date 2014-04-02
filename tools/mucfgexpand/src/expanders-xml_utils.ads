@@ -20,7 +20,7 @@ with DOM.Core;
 
 with Muxml;
 
-package Expand.XML_Utils
+package Expanders.XML_Utils
 is
 
    --  Append new child node to given node.
@@ -58,4 +58,4 @@ is
       Executable    :        Boolean)
       return DOM.Core.Node;
 
-end Expand.XML_Utils;
+end Expanders.XML_Utils;

@@ -31,7 +31,7 @@ with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.Constants;
 
-with Expand.XML_Utils;
+with Expanders.XML_Utils;
 
 package body Expanders.Kernel
 is
@@ -60,54 +60,54 @@ is
                 (Elem => CPU_Node,
                  Name => "id");
          begin
-            Expand.XML_Utils.Append_Child
+            XML_Utils.Append_Child
               (Node      => CPU_Node,
-               New_Child => Expand.XML_Utils.Create_Virtual_Memory_Node
+               New_Child => XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "text",
                   Physical_Name => "kernel_text",
                   Address       => "16#0010_0000#",
                   Writable      => False,
                   Executable    => True));
-            Expand.XML_Utils.Append_Child
+            XML_Utils.Append_Child
               (Node      => CPU_Node,
-               New_Child => Expand.XML_Utils.Create_Virtual_Memory_Node
+               New_Child => XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "data",
                   Physical_Name => "kernel_data",
                   Address       => "16#0011_0000#",
                   Writable      => True,
                   Executable    => False));
-            Expand.XML_Utils.Append_Child
+            XML_Utils.Append_Child
               (Node      => CPU_Node,
-               New_Child => Expand.XML_Utils.Create_Virtual_Memory_Node
+               New_Child => XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "bss",
                   Physical_Name => "kernel_bss",
                   Address       => "16#0011_1000#",
                   Writable      => True,
                   Executable    => False));
-            Expand.XML_Utils.Append_Child
+            XML_Utils.Append_Child
               (Node      => CPU_Node,
-               New_Child => Expand.XML_Utils.Create_Virtual_Memory_Node
+               New_Child => XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "ro",
                   Physical_Name => "kernel_ro",
                   Address       => "16#0011_f000#",
                   Writable      => False,
                   Executable    => False));
-            Expand.XML_Utils.Append_Child
+            XML_Utils.Append_Child
               (Node      => CPU_Node,
-               New_Child => Expand.XML_Utils.Create_Virtual_Memory_Node
+               New_Child => XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "stack",
                   Physical_Name => "kernel_stack_" & CPU_Str,
                   Address       => "16#0011_3000#",
                   Writable      => True,
                   Executable    => False));
-            Expand.XML_Utils.Append_Child
+            XML_Utils.Append_Child
               (Node      => CPU_Node,
-               New_Child => Expand.XML_Utils.Create_Virtual_Memory_Node
+               New_Child => XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "store",
                   Physical_Name => "kernel_store_" & CPU_Str,
@@ -144,16 +144,16 @@ is
          Name  => "physical",
          Value => "ioapic");
 
-      Expand.XML_Utils.Append_Child
+      XML_Utils.Append_Child
         (Node      => Ioapic,
-         New_Child => Expand.XML_Utils.Create_Virtual_Memory_Node
+         New_Child => XML_Utils.Create_Virtual_Memory_Node
            (Policy        => Data,
             Logical_Name  => "mmio",
             Physical_Name => "mmio",
             Address       => "16#001f_c000#",
             Writable      => True,
             Executable    => False));
-      Expand.XML_Utils.Append_Child
+      XML_Utils.Append_Child
         (Node      => Devices_Node,
          New_Child => Ioapic);
    end Add_Devices;
@@ -188,10 +188,10 @@ is
          New_Child => Kernel_Node,
          Ref_Child => Subjects_Node);
 
-      Expand.XML_Utils.Append_Child
+      XML_Utils.Append_Child
         (Node      => Kernel_Node,
          New_Child => Memory_Node);
-      Expand.XML_Utils.Append_Child
+      XML_Utils.Append_Child
         (Node      => Kernel_Node,
          New_Child => DOM.Core.Documents.Create_Element
            (Doc      => Data.Doc,
@@ -212,7 +212,7 @@ is
               (Elem  => CPU_Node,
                Name  => "id",
                Value => CPU_Str);
-            Expand.XML_Utils.Append_Child
+            XML_Utils.Append_Child
               (Node      => Memory_Node,
                New_Child => CPU_Node);
          end;
@@ -268,9 +268,9 @@ is
                   Mulog.Log (Msg => "Mapping state of subject " & Subj_Name
                              & " to address " & Mutools.Utils.To_Hex
                                (Number => Address) & " on CPU " & CPU_Id);
-                  Expand.XML_Utils.Append_Child
+                  XML_Utils.Append_Child
                     (Node      => CPU,
-                     New_Child => Expand.XML_Utils.Create_Virtual_Memory_Node
+                     New_Child => XML_Utils.Create_Virtual_Memory_Node
                        (Policy        => Data,
                         Logical_Name  => Subj_Name & "_state",
                         Physical_Name => Subj_Name & "_state",
@@ -298,9 +298,9 @@ is
    begin
       Mulog.Log (Msg => "Mapping tau0 system interface on CPU 0");
 
-      Expand.XML_Utils.Append_Child
+      XML_Utils.Append_Child
         (Node      => BSP,
-         New_Child => Expand.XML_Utils.Create_Virtual_Memory_Node
+         New_Child => XML_Utils.Create_Virtual_Memory_Node
            (Policy        => Data,
             Logical_Name  => "tau0_interface",
             Physical_Name => "sys_interface",

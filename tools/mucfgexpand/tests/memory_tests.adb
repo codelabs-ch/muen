@@ -29,6 +29,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Alignment
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_alignment.xml",
+         Ref_Filename => "data/memory_alignment.ref.xml",
+         Expander     => Expanders.Memory.Add_Alignment'Access);
+   end Add_Alignment;
+
+   -------------------------------------------------------------------------
+
    procedure Add_AP_Trampoline
    is
    begin
@@ -133,6 +144,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_Kernel_PTs'Access,
          Name    => "Add kernel pagetable memory regions");
+      T.Add_Test_Routine
+        (Routine => Add_Alignment'Access,
+         Name    => "Add alignment attribute");
    end Initialize;
 
 end Memory_Tests;

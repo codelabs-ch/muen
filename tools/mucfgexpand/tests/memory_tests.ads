@@ -47,4 +47,7 @@ is
    --  Add kernel pagetable memory regions.
    procedure Add_Kernel_PTs;
 
+   --  Add alignment attribute.
+   procedure Add_Alignment;
+
 end Memory_Tests;

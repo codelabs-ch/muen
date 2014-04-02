@@ -37,6 +37,34 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Alignment (Data : in out Muxml.XML_Data_Type)
+   is
+      Align : constant String := "16#1000#";
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/memory/memory[not(@alignment)]");
+   begin
+      Mulog.Log (Msg => "Adding alignment to"
+                 & DOM.Core.Nodes.Length (List => Nodes)'Img
+                 & " memory region(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Mem : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+         begin
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Mem,
+               Name  => "alignment",
+               Value => Align);
+         end;
+      end loop;
+   end Add_Alignment;
+
+   -------------------------------------------------------------------------
+
    procedure Add_AP_Trampoline (Data : in out Muxml.XML_Data_Type)
    is
    begin

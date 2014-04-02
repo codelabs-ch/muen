@@ -24,66 +24,66 @@
 	</platform>
 
 	<memory>
-		<memory name="trampoline"     physicalAddress="16#0000#"      size="16#1000#"      caching="WB"/>
-		<memory name="kernel_0|vmxon" physicalAddress="16#1000#"      size="16#1000#"      caching="WB"/>
-		<memory name="kernel_1|vmxon" physicalAddress="16#2000#"      size="16#1000#"      caching="WB"/>
+		<memory alignment="16#1000#" name="trampoline"     physicalAddress="16#0000#"      size="16#1000#"      caching="WB"/>
+		<memory alignment="16#1000#" name="kernel_0|vmxon" physicalAddress="16#1000#"      size="16#1000#"      caching="WB"/>
+		<memory alignment="16#1000#" name="kernel_1|vmxon" physicalAddress="16#2000#"      size="16#1000#"      caching="WB"/>
 
-		<memory name="tau0|vmcs"      physicalAddress="16#3000#"      size="16#1000#"      caching="WB"/>
-		<memory name="subject1|vmcs"  physicalAddress="16#4000#"      size="16#1000#"      caching="WB"/>
-		<memory name="subject2|vmcs"  physicalAddress="16#5000#"      size="16#1000#"      caching="WB"/>
+		<memory alignment="16#1000#" name="tau0|vmcs"      physicalAddress="16#3000#"      size="16#1000#"      caching="WB"/>
+		<memory alignment="16#1000#" name="subject1|vmcs"  physicalAddress="16#4000#"      size="16#1000#"      caching="WB"/>
+		<memory alignment="16#1000#" name="subject2|vmcs"  physicalAddress="16#5000#"      size="16#1000#"      caching="WB"/>
 
-		<memory name="vga"            physicalAddress="16#000b_8000#" size="16#1000#"      caching="WC"/>
+		<memory alignment="16#1000#" name="vga"            physicalAddress="16#000b_8000#" size="16#1000#"      caching="WC"/>
 
-		<memory name="kernel_text"    physicalAddress="16#0010_0000#" size="16#0001_2000#" caching="UC"/>
-		<memory name="kernel_stack_0" physicalAddress="16#0011_2000#" size="16#2000#"      caching="WB"/>
-		<memory name="kernel_stack_1" physicalAddress="16#0011_4000#" size="16#2000#"      caching="WB"/>
-		<memory name="kernel_store_0" physicalAddress="16#0011_6000#" size="16#1000#"      caching="WB"/>
-		<memory name="kernel_store_1" physicalAddress="16#0011_7000#" size="16#1000#"      caching="WB"/>
-		<memory name="kernel_data"    physicalAddress="16#0011_8000#" size="16#6000#"      caching="UC"/>
-		<memory name="sys_interface"  physicalAddress="16#001f_f000#" size="16#1000#"      caching="UC"/>
-		<memory name="kernel_0|pt"    physicalAddress="16#0020_0000#" size="16#4000#"      caching="WB">
+		<memory alignment="16#1000#" name="kernel_text"    physicalAddress="16#0010_0000#" size="16#0001_2000#" caching="UC"/>
+		<memory alignment="16#1000#" name="kernel_stack_0" physicalAddress="16#0011_2000#" size="16#2000#"      caching="WB"/>
+		<memory alignment="16#1000#" name="kernel_stack_1" physicalAddress="16#0011_4000#" size="16#2000#"      caching="WB"/>
+		<memory alignment="16#1000#" name="kernel_store_0" physicalAddress="16#0011_6000#" size="16#1000#"      caching="WB"/>
+		<memory alignment="16#1000#" name="kernel_store_1" physicalAddress="16#0011_7000#" size="16#1000#"      caching="WB"/>
+		<memory alignment="16#1000#" name="kernel_data"    physicalAddress="16#0011_8000#" size="16#6000#"      caching="UC"/>
+		<memory alignment="16#1000#" name="sys_interface"  physicalAddress="16#001f_f000#" size="16#1000#"      caching="UC"/>
+		<memory alignment="16#1000#" name="kernel_0|pt"    physicalAddress="16#0020_0000#" size="16#4000#"      caching="WB">
 			<file format="pt" filename="kernel_pt_0" offset="none"/>
 		</memory>
-		<memory name="kernel_1|pt"    physicalAddress="16#0020_4000#" size="16#4000#"      caching="WB">
+		<memory alignment="16#1000#" name="kernel_1|pt"    physicalAddress="16#0020_4000#" size="16#4000#"      caching="WB">
 			<file format="pt" filename="kernel_pt_1" offset="none"/>
 		</memory>
 
-		<memory name="tau0"           physicalAddress="16#0024_0000#" size="16#0001_0000#" caching="UC">
+		<memory alignment="16#1000#" name="tau0"           physicalAddress="16#0024_0000#" size="16#0001_0000#" caching="UC">
 			<file format="bin_raw" filename="tau0-bin" offset="none"/>
 		</memory>
-		<memory name="tau0|pt"        physicalAddress="16#001f_0000#" size="16#4000#"      caching="WB">
+		<memory alignment="16#1000#" name="tau0|pt"        physicalAddress="16#001f_0000#" size="16#4000#"      caching="WB">
 			<file format="pt" filename="tau0_pt" offset="none"/>
 		</memory>
-		<memory name="tau0|iobm"      physicalAddress="16#001a_0000#" size="16#2000#"      caching="WB">
+		<memory alignment="16#1000#" name="tau0|iobm"      physicalAddress="16#001a_0000#" size="16#2000#"      caching="WB">
 			<file format="iobm" filename="tau0_iobm" offset="none"/>
 		</memory>
-		<memory name="tau0|msrbm"     physicalAddress="16#0090_0000#" size="16#1000#"      caching="WB">
+		<memory alignment="16#1000#" name="tau0|msrbm"     physicalAddress="16#0090_0000#" size="16#1000#"      caching="WB">
 			<file format="msrbm" filename="tau0_msrbm" offset="none"/>
 		</memory>
 
-		<memory name="subject1"       physicalAddress="16#4000_0000#" size="16#0001_0000_0000#" caching="UC">
+		<memory alignment="16#1000#" name="subject1"       physicalAddress="16#4000_0000#" size="16#0001_0000_0000#" caching="UC">
 			<file format="bin_raw" filename="subject1-bin" offset="none"/>
 		</memory>
-		<memory name="subject1|pt"    physicalAddress="16#001f_4000#" size="16#4000#"      caching="WB">
+		<memory alignment="16#1000#" name="subject1|pt"    physicalAddress="16#001f_4000#" size="16#4000#"      caching="WB">
 			<file format="pt" filename="subject1_pt" offset="none"/>
 		</memory>
-		<memory name="subject1|iobm"  physicalAddress="16#001b_0000#" size="16#2000#"      caching="WB">
+		<memory alignment="16#1000#" name="subject1|iobm"  physicalAddress="16#001b_0000#" size="16#2000#"      caching="WB">
 			<file format="iobm" filename="subject1_iobm" offset="none"/>
 		</memory>
-		<memory name="subject1|msrbm" physicalAddress="16#0091_0000#" size="16#1000#"      caching="WB">
+		<memory alignment="16#1000#" name="subject1|msrbm" physicalAddress="16#0091_0000#" size="16#1000#"      caching="WB">
 			<file format="msrbm" filename="subject1_msrbm" offset="none"/>
 		</memory>
 
-		<memory name="subject2"       physicalAddress="16#0040_0000#" size="16#0040_0000#" caching="UC">
+		<memory alignment="16#1000#" name="subject2"       physicalAddress="16#0040_0000#" size="16#0040_0000#" caching="UC">
 			<file format="bin_raw" filename="subject2-bin" offset="none"/>
 		</memory>
-		<memory name="subject2|pt"    physicalAddress="16#001f_8000#" size="16#4000#"      caching="WB">
+		<memory alignment="16#1000#" name="subject2|pt"    physicalAddress="16#001f_8000#" size="16#4000#"      caching="WB">
 			<file format="pt" filename="subject2_pt" offset="none"/>
 		</memory>
-		<memory name="subject2|iobm"  physicalAddress="16#001c_0000#" size="16#2000#"      caching="WB">
+		<memory alignment="16#1000#" name="subject2|iobm"  physicalAddress="16#001c_0000#" size="16#2000#"      caching="WB">
 			<file format="iobm" filename="subject2_iobm" offset="none"/>
 		</memory>
-		<memory name="subject2|msrbm" physicalAddress="16#0092_0000#" size="16#1000#"      caching="WB">
+		<memory alignment="16#1000#" name="subject2|msrbm" physicalAddress="16#0092_0000#" size="16#1000#"      caching="WB">
 			<file format="msrbm" filename="subject2_msrbm" offset="none"/>
 		</memory>
 	</memory>

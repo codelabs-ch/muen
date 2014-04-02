@@ -16,35 +16,25 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mulog;
 with Muxml;
 
-with Validate.XML_Processors;
-with Validate.Command_Line;
-with Validators;
-
-package body Validate
+package Test_Utils.Expander
 is
 
-   -------------------------------------------------------------------------
+   type Process_Policy is not null access procedure
+     (Data : in out Muxml.XML_Data_Type);
 
-   procedure Run
-   is
-      Data        : Muxml.XML_Data_Type;
-      Policy_File : constant String := Command_Line.Get_Policy;
-   begin
-      Mulog.Log (Msg => "Validating policy '" & Policy_File & "'");
+   procedure Process_Nil (Data : in out Muxml.XML_Data_Type) is null;
 
-      Validators.Register_All;
-      Mulog.Log
-        (Msg => "Registered validators" & XML_Processors.Get_Count'Img);
+   --  Run expander test with given expander procedure. Verify result by
+   --  comparing the created policy in filename with a specified reference
+   --  file. The Pre procedure is executed prior to the expansion step.
+   procedure Run_Test
+     (Policy_Filename : String            := "data/test_policy.xml";
+      Policy_Format   : Muxml.Schema_Kind := Muxml.Format_Src;
+      Filename        : String;
+      Ref_Filename    : String;
+      Pre             : Process_Policy    := Process_Nil'Access;
+      Expander        : Process_Policy);
 
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => Policy_File);
-      XML_Processors.Run (Data => Data);
-
-      Mulog.Log (Msg => "Successfully validated policy '" & Policy_File & "'");
-   end Run;
-
-end Validate;
+end Test_Utils.Expander;

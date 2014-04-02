@@ -17,34 +17,29 @@
 --
 
 with Mulog;
-with Muxml;
 
-with Validate.XML_Processors;
-with Validate.Command_Line;
-with Validators;
+with Expanders;
 
-package body Validate
+package body Expand
 is
 
    -------------------------------------------------------------------------
 
    procedure Run
+     (Policy      : in out Muxml.XML_Data_Type;
+      Output_File :        String)
    is
-      Data        : Muxml.XML_Data_Type;
-      Policy_File : constant String := Command_Line.Get_Policy;
    begin
-      Mulog.Log (Msg => "Validating policy '" & Policy_File & "'");
-
-      Validators.Register_All;
+      Expanders.Register_All;
       Mulog.Log
-        (Msg => "Registered validators" & XML_Processors.Get_Count'Img);
+        (Msg => "Registered expanders" & Expanders.Get_Count'Img);
 
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => Policy_File);
-      XML_Processors.Run (Data => Data);
+      Expanders.Run (Data => Policy);
 
-      Mulog.Log (Msg => "Successfully validated policy '" & Policy_File & "'");
+      Muxml.Write
+        (File => Output_File,
+         Kind => Muxml.Format_A,
+         Data => Policy);
    end Run;
 
-end Validate;
+end Expand;

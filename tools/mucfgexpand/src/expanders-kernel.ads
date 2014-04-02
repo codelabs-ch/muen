@@ -16,35 +16,22 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mulog;
-with Muxml;
-
-with Validate.XML_Processors;
-with Validate.Command_Line;
-with Validators;
-
-package body Validate
+package Expanders.Kernel
 is
 
-   -------------------------------------------------------------------------
+   --  Add kernel section skeleton.
+   procedure Add_Section_Skeleton (Data : in out Muxml.XML_Data_Type);
 
-   procedure Run
-   is
-      Data        : Muxml.XML_Data_Type;
-      Policy_File : constant String := Command_Line.Get_Policy;
-   begin
-      Mulog.Log (Msg => "Validating policy '" & Policy_File & "'");
+   --  Add kernel memory mappings (binary, stack and store).
+   procedure Add_Binary_Mappings (Data : in out Muxml.XML_Data_Type);
 
-      Validators.Register_All;
-      Mulog.Log
-        (Msg => "Registered validators" & XML_Processors.Get_Count'Img);
+   --  Add subject state memory mappings.
+   procedure Add_Subj_State_Mappings (Data : in out Muxml.XML_Data_Type);
 
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => Policy_File);
-      XML_Processors.Run (Data => Data);
+   --  Map tau0 interface memory region on BSP.
+   procedure Map_Tau0_Interface (Data : in out Muxml.XML_Data_Type);
 
-      Mulog.Log (Msg => "Successfully validated policy '" & Policy_File & "'");
-   end Run;
+   --  Add devices to kernel section.
+   procedure Add_Devices (Data : in out Muxml.XML_Data_Type);
 
-end Validate;
+end Expanders.Kernel;

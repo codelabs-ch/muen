@@ -70,9 +70,7 @@ is
 
    procedure Run
      (Kind    : Muxml.Schema_Kind;
-      Process : not null access procedure
-        (Input_Policy : Muxml.XML_Data_Type;
-         Output_File  : String))
+      Process : Process_Immutable)
    is
       Data       : Muxml.XML_Data_Type;
       Policy_In  : constant String := To_String (File_In);
@@ -84,7 +82,26 @@ is
                    File => Policy_In);
       Process (Input_Policy => Data,
                Output_File  => Policy_Out);
-      Mulog.Log (Msg => "Sucessfully created policy '" & Policy_Out & "'");
+      Mulog.Log (Msg => "Successfully created policy '" & Policy_Out & "'");
+   end Run;
+
+   -------------------------------------------------------------------------
+
+   procedure Run
+     (Kind    : Muxml.Schema_Kind;
+      Process : Process_Mutable)
+   is
+      Data       : Muxml.XML_Data_Type;
+      Policy_In  : constant String := To_String (File_In);
+      Policy_Out : constant String := To_String (File_Out);
+   begin
+      Mulog.Log (Msg => "Processing policy '" & Policy_In & "'");
+      Muxml.Parse (Data => Data,
+                   Kind => Kind,
+                   File => Policy_In);
+      Process (Policy      => Data,
+               Output_File => Policy_Out);
+      Mulog.Log (Msg => "Successfully created policy '" & Policy_Out & "'");
    end Run;
 
    -------------------------------------------------------------------------
@@ -99,7 +116,7 @@ is
       Mulog.Log (Msg => "Processing input file '" & F_In & "'");
       Process (Input_File  => F_In,
                Output_File => F_Out);
-      Mulog.Log (Msg => "Sucessfully created output file '" & F_Out & "'");
+      Mulog.Log (Msg => "Successfully created output file '" & F_Out & "'");
    end Run;
 
 end Mutools.Cmd_Line.Infile_Outfile;

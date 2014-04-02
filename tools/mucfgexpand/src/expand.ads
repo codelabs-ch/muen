@@ -16,35 +16,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mulog;
 with Muxml;
 
-with Validate.XML_Processors;
-with Validate.Command_Line;
-with Validators;
-
-package body Validate
+package Expand
 is
 
-   -------------------------------------------------------------------------
-
+   --  Start the expansion process.
    procedure Run
-   is
-      Data        : Muxml.XML_Data_Type;
-      Policy_File : constant String := Command_Line.Get_Policy;
-   begin
-      Mulog.Log (Msg => "Validating policy '" & Policy_File & "'");
+     (Policy      : in out Muxml.XML_Data_Type;
+      Output_File :        String);
 
-      Validators.Register_All;
-      Mulog.Log
-        (Msg => "Registered validators" & XML_Processors.Get_Count'Img);
-
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => Policy_File);
-      XML_Processors.Run (Data => Data);
-
-      Mulog.Log (Msg => "Successfully validated policy '" & Policy_File & "'");
-   end Run;
-
-end Validate;
+end Expand;

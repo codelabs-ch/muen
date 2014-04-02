@@ -7,6 +7,7 @@ PATCH    = hardware/$(HARDWARE).patch
 
 POLICY     = xml/demo_system.xml
 POLICY_SRC = $(OBJ_DIR)/demo_system.xml
+POLICY_A   = $(OBJ_DIR)/demo_system_a.xml
 POLICY_B   = $(OBJ_DIR)/demo_system_b.xml
 
 GENERATORS =      \
@@ -38,11 +39,14 @@ $(DSDT_OBJ) $(POLICY_SRC): $(POLICY) $(DSDT_SRC) $(PATCH)
 	cd $(OBJ_DIR) && patch -p3 < ../$(PATCH)
 endif
 
-$(POLICY_B): $(POLICY_SRC)
-	@$(MUCFGALLOC) $^ $@
+$(POLICY_A): $(POLICY_SRC) $(MUCFGEXPAND)
+	$(MUCFGEXPAND) $< $@
+
+$(POLICY_B): $(POLICY_A) $(MUCFGALLOC)
+	@$(MUCFGALLOC) $< $@
 
 .validated: $(POLICY_B) $(MUCFGVALIDATE)
-	@$(MUCFGVALIDATE) $(POLICY_B)
+	@$(MUCFGVALIDATE) $<
 	@touch $@
 
 $(DSDT): $(DSDT_OBJ)

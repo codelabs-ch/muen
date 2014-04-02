@@ -16,35 +16,35 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mulog;
-with Muxml;
+with Ahven.Framework;
 
-with Validate.XML_Processors;
-with Validate.Command_Line;
-with Validators;
-
-package body Validate
+package Memory_Tests
 is
 
-   -------------------------------------------------------------------------
+   type Testcase is new Ahven.Framework.Test_Case with null record;
 
-   procedure Run
-   is
-      Data        : Muxml.XML_Data_Type;
-      Policy_File : constant String := Command_Line.Get_Policy;
-   begin
-      Mulog.Log (Msg => "Validating policy '" & Policy_File & "'");
+   --  Initialize testcase.
+   procedure Initialize (T : in out Testcase);
 
-      Validators.Register_All;
-      Mulog.Log
-        (Msg => "Registered validators" & XML_Processors.Get_Count'Img);
+   --  Add binary memory regions.
+   procedure Add_Binary_Memory;
 
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => Policy_File);
-      XML_Processors.Run (Data => Data);
+   --  Add stack and store regions.
+   procedure Add_Stack_Store;
 
-      Mulog.Log (Msg => "Successfully validated policy '" & Policy_File & "'");
-   end Run;
+   --  Add subject state regions.
+   procedure Add_Subject_States;
 
-end Validate;
+   --  Add tau0 interface memory region.
+   procedure Add_Tau0_Interface;
+
+   --  Add AP trampoline memory region.
+   procedure Add_AP_Trampoline;
+
+   --  Add VMXON memory regions.
+   procedure Add_VMXON_Regions;
+
+   --  Add kernel pagetable memory regions.
+   procedure Add_Kernel_PTs;
+
+end Memory_Tests;

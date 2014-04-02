@@ -16,35 +16,20 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mulog;
 with Muxml;
 
-with Validate.XML_Processors;
-with Validate.Command_Line;
-with Validators;
-
-package body Validate
+package Expanders
 is
 
-   -------------------------------------------------------------------------
+   --  Register all expanders.
+   procedure Register_All;
 
-   procedure Run
-   is
-      Data        : Muxml.XML_Data_Type;
-      Policy_File : constant String := Command_Line.Get_Policy;
-   begin
-      Mulog.Log (Msg => "Validating policy '" & Policy_File & "'");
+   --  Run registered expanders.
+   procedure Run (Data : in out Muxml.XML_Data_Type);
 
-      Validators.Register_All;
-      Mulog.Log
-        (Msg => "Registered validators" & XML_Processors.Get_Count'Img);
+   --  Return number of registered expanders.
+   function Get_Count return Natural;
 
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => Policy_File);
-      XML_Processors.Run (Data => Data);
+   Expansion_Error : exception;
 
-      Mulog.Log (Msg => "Successfully validated policy '" & Policy_File & "'");
-   end Run;
-
-end Validate;
+end Expanders;

@@ -8,16 +8,8 @@
 	<xs:include schemaLocation="./types.xsd"/>
 	<xs:include schemaLocation="./types_memory.xsd"/>
 
-	<xs:complexType name="systemType">
-		<xs:sequence>
-			<xs:element name="platform"   type="platformType"   minOccurs="1" maxOccurs="1"/>
-			<xs:element name="memory"     type="memRegionsType" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="events"     type="eventsType"     minOccurs="1" maxOccurs="1"/>
-			<xs:element name="kernel"     type="kernelType"     minOccurs="1" maxOccurs="1"/>
-			<xs:element name="subjects"   type="subjectsType"   minOccurs="1" maxOccurs="1"/>
-			<xs:element name="scheduling" type="schedulingType" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
+	<xs:include_format schemaLocation="./memory.xsd"/>
+	<xs:include_format schemaLocation="./system.xsd"/>
 
 	<xs:element name="system" type="systemType"/>
 

@@ -29,17 +29,18 @@ is
    -------------------------------------------------------------------------
 
    procedure Run_Test
-     (Policy_Filename : String := "data/test_policy.xml";
+     (Policy_Filename : String            := "data/test_policy.xml";
+      Policy_Format   : Muxml.Schema_Kind := Muxml.Format_Src;
       Filename        : String;
       Ref_Filename    : String;
-      Pre             : Process_Policy := Process_Nil'Access;
+      Pre             : Process_Policy    := Process_Nil'Access;
       Expander        : Process_Policy)
    is
       Output_File : Ada.Text_IO.File_Type;
       Policy      : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Policy,
-                   Kind => Muxml.Format_Src,
+                   Kind => Policy_Format,
                    File => Policy_Filename);
       Pre (Data => Policy);
 

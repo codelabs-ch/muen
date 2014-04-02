@@ -30,10 +30,11 @@ is
    --  comparing the created policy in filename with a specified reference
    --  file. The Pre procedure is executed prior to the expansion step.
    procedure Run_Test
-     (Policy_Filename : String := "data/test_policy.xml";
+     (Policy_Filename : String            := "data/test_policy.xml";
+      Policy_Format   : Muxml.Schema_Kind := Muxml.Format_Src;
       Filename        : String;
       Ref_Filename    : String;
-      Pre             : Process_Policy := Process_Nil'Access;
+      Pre             : Process_Policy    := Process_Nil'Access;
       Expander        : Process_Policy);
 
 end Test_Utils.Expander;

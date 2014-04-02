@@ -93,6 +93,56 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Kernel_PTs (Data : in out Muxml.XML_Data_Type)
+   is
+      Cur_Addr  : Interfaces.Unsigned_64 := 16#0012_9000#;
+      CPU_Count : constant Positive      := Positive'Value
+        (Muxml.Utils.Get_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/processor",
+            Name  => "logicalCpus"));
+
+   begin
+      for I in 0 .. CPU_Count - 1 loop
+         declare
+            use type Interfaces.Unsigned_64;
+
+            CPU_Str : constant String := Ada.Strings.Fixed.Trim
+              (Source => I'Img,
+               Side   => Ada.Strings.Left);
+            Size : constant Interfaces.Unsigned_64
+              := XML_Utils.Calculate_PT_Size
+                (Policy             => Data,
+                 Dev_Virt_Mem_XPath => "/system/kernel/devices/device/memory",
+                 Virt_Mem_XPath     => "/system/kernel/memory/cpu[@id='" &
+                   CPU_Str & "']/memory");
+            Size_Str : constant String := Mutools.Utils.To_Hex
+                (Number    => Size,
+                 Normalize => True);
+         begin
+            Mulog.Log (Msg => "Adding pagetable region with size " & Size_Str
+                       & " at address "
+                       & Mutools.Utils.To_Hex (Number    => Cur_Addr,
+                                               Normalize => True)
+                       & " for CPU " & CPU_Str);
+            XML_Utils.Add_Memory_Region
+              (Policy      => Data,
+               Name        => "kernel_" & CPU_Str & "|pt",
+               Address     => Mutools.Utils.To_Hex (Number    => Cur_Addr,
+                                                    Normalize => True),
+               Size        => Size_Str,
+               Caching     => "WB",
+               File_Name   => "kernel_pt_" & CPU_Str,
+               File_Format => "pt",
+               File_Offset => "none");
+
+            Cur_Addr := Cur_Addr + Size;
+         end;
+      end loop;
+   end Add_Kernel_PTs;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Stack_Store (Data : in out Muxml.XML_Data_Type)
    is
       CPU_Count : constant Positive := Positive'Value

@@ -44,4 +44,7 @@ is
    --  Add VMXON memory regions.
    procedure Add_VMXON_Regions;
 
+   --  Add kernel pagetable memory regions.
+   procedure Add_Kernel_PTs;
+
 end Memory_Tests;

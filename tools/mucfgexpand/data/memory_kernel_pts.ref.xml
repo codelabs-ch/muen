@@ -34,10 +34,10 @@
   <memory caching="WB" name="trampoline" physicalAddress="16#0000#" size="16#1000#"/>
   <memory caching="WB" name="kernel_0|vmxon" physicalAddress="16#1000#" size="16#1000#"/>
   <memory caching="WB" name="kernel_1|vmxon" physicalAddress="16#2000#" size="16#1000#"/>
-  <memory caching="WB" name="kernel_0|pt" physicalAddress="16#0012_9000#" size="16#4000#">
+  <memory caching="WB" name="kernel_0|pt" physicalAddress="16#0012_9000#" size="16#6000#">
    <file filename="kernel_pt_0" format="pt" offset="none"/>
   </memory>
-  <memory caching="WB" name="kernel_1|pt" physicalAddress="16#0012_D000#" size="16#4000#">
+  <memory caching="WB" name="kernel_1|pt" physicalAddress="16#0012_F000#" size="16#6000#">
    <file filename="kernel_pt_1" format="pt" offset="none"/>
   </memory>
  </memory>
@@ -67,7 +67,7 @@
   </memory>
   <devices>
    <device logical="ioapic" physical="ioapic">
-    <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#001f_c000#" writable="true"/>
+    <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#fec0_0000#" writable="true"/>
    </device>
   </devices>
  </kernel>

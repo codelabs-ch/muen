@@ -22,6 +22,9 @@ is
    --  Add kernel binary memory elements.
    procedure Add_Kernel_Binary (Data : in out Muxml.XML_Data_Type);
 
+   --  Add kernel pagetable memory elements.
+   procedure Add_Kernel_PTs (Data : in out Muxml.XML_Data_Type);
+
    --  Add kernel stack and store memory elements.
    procedure Add_Stack_Store (Data : in out Muxml.XML_Data_Type);
 

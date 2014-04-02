@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Muxml;
+
 with Expanders.Memory;
 
 with Test_Utils.Expander;
@@ -46,6 +48,19 @@ is
          Ref_Filename => "data/memory_kernel_binary.ref.xml",
          Expander     => Expanders.Memory.Add_Kernel_Binary'Access);
    end Add_Binary_Memory;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Kernel_PTs
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Policy_Filename => "data/calculate_pt.xml",
+         Policy_Format   => Muxml.Format_A,
+         Filename        => "obj/memory_kernel_pts.xml",
+         Ref_Filename    => "data/memory_kernel_pts.ref.xml",
+         Expander        => Expanders.Memory.Add_Kernel_PTs'Access);
+   end Add_Kernel_PTs;
 
    -------------------------------------------------------------------------
 
@@ -115,6 +130,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_VMXON_Regions'Access,
          Name    => "Add VMXON memory regions");
+      T.Add_Test_Routine
+        (Routine => Add_Kernel_PTs'Access,
+         Name    => "Add kernel pagetable memory regions");
    end Initialize;
 
 end Memory_Tests;

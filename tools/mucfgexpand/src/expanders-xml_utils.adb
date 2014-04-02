@@ -22,6 +22,10 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
+with Paging.Memory;
+
+with Mutools.Constants;
+
 package body Expanders.XML_Utils
 is
 
@@ -124,6 +128,126 @@ is
         (N         => Node,
          New_Child => New_Child);
    end Append_Child;
+
+   -------------------------------------------------------------------------
+
+   function Calculate_PT_Size
+     (Policy             : Muxml.XML_Data_Type;
+      Dev_Virt_Mem_XPath : String;
+      Virt_Mem_XPath     : String)
+      return Interfaces.Unsigned_64
+   is
+      use type DOM.Core.Node;
+
+      Layout       : Paging.Memory.Memory_Layout_Type;
+      Device_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => Dev_Virt_Mem_XPath);
+      Memory_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => Virt_Mem_XPath);
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Memory_Nodes) - 1 loop
+         declare
+            Logical : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Memory_Nodes,
+                 Index => I);
+            Physical_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Logical,
+                 Name => "physical");
+            Physical : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Policy.Doc,
+                    XPath => "/system/memory/memory[@name='" & Physical_Name
+                    & "']"),
+                 Index => 0);
+            Virtual_Address : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Logical,
+                    Name => "virtualAddress"));
+            Size : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Physical,
+                    Name => "size"));
+         begin
+            Paging.Memory.Add_Memory_Region
+              (Mem_Layout       => Layout,
+               Physical_Address => 0,
+               Virtual_Address  => Virtual_Address,
+               Size             => Size,
+               Caching          => Paging.WB,
+               Writable         => False,
+               Executable       => False);
+         end;
+      end loop;
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Device_Nodes) - 1 loop
+         declare
+            Logical_Mem : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Device_Nodes,
+                 Index => I);
+            Dev_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Parent_Node (N => Logical_Mem),
+                 Name => "physical");
+            Physical_Mem_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Logical_Mem,
+                 Name => "physical");
+            Physical_Mem : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Policy.Doc,
+                    XPath => "/system/platform/device[@name='" & Dev_Name
+                    & "']/memory[@name='" & Physical_Mem_Name
+                    & "']"),
+                 Index => 0);
+            Virtual_Address : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Logical_Mem,
+                    Name => "virtualAddress"));
+            Size : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+              (DOM.Core.Elements.Get_Attribute
+                 (Elem => Physical_Mem,
+                  Name => "size"));
+         begin
+            Paging.Memory.Add_Memory_Region
+              (Mem_Layout       => Layout,
+               Physical_Address => 0,
+               Virtual_Address  => Virtual_Address,
+               Size             => Size,
+               Caching          => Paging.WB,
+               Writable         => False,
+               Executable       => False);
+         end;
+      end loop;
+
+      declare
+         use type Interfaces.Unsigned_64;
+
+         PML4s, PDPTs, PDs, PTs : Natural;
+      begin
+         Paging.Memory.Get_Table_Count
+           (Mem_Layout => Layout,
+            PML4_Count => PML4s,
+            PDPT_Count => PDPTs,
+            PD_Count   => PDs,
+            PT_Count   => PTs);
+
+         return Interfaces.Unsigned_64
+           (PML4s + PDPTs + PDs + PTs) * Mutools.Constants.Page_Size;
+      end;
+   end Calculate_PT_Size;
 
    -------------------------------------------------------------------------
 

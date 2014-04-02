@@ -35,4 +35,7 @@ is
    --  Create virtual memory node.
    procedure Create_Virtual_Memory;
 
+   --  Calculate size of paging structures.
+   procedure Calculate_PT_Size;
+
 end XML_Utils_Tests;

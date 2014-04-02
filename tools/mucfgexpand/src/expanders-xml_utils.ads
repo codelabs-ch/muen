@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with DOM.Core;
 
 with Muxml;
@@ -57,5 +59,15 @@ is
       Writable      :        Boolean;
       Executable    :        Boolean)
       return DOM.Core.Node;
+
+   --  Returns the size of the paging structures needed to map the virtual
+   --  memory regions given by XPath expressions. Dev_Virt_Mem_XPath identifies
+   --  the virtual device memory regions and Virt_Mem_XPath the virtual memory
+   --  mappings.
+   function Calculate_PT_Size
+     (Policy             : Muxml.XML_Data_Type;
+      Dev_Virt_Mem_XPath : String;
+      Virt_Mem_XPath     : String)
+      return Interfaces.Unsigned_64;
 
 end Expanders.XML_Utils;

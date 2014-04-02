@@ -18,6 +18,8 @@
 
 with Ada.Directories;
 
+with Interfaces;
+
 with DOM.Core.Elements;
 
 with Muxml;
@@ -101,6 +103,27 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Calculate_PT_Size
+   is
+      use type Interfaces.Unsigned_64;
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_A,
+                   File => "data/calculate_pt.xml");
+
+      Assert
+        (Condition => Expanders.XML_Utils.Calculate_PT_Size
+           (Policy             => Policy,
+            Dev_Virt_Mem_XPath => "/system/kernel/devices/device/memory",
+            Virt_Mem_XPath     => "/system/kernel/memory/cpu[@id='0']/memory")
+         = 16#6000#,
+         Message   => "Size mismatch");
+   end Calculate_PT_Size;
+
+   -------------------------------------------------------------------------
+
    procedure Create_Virtual_Memory
    is
       Dom_Impl : DOM.Core.DOM_Implementation;
@@ -157,6 +180,9 @@ is
       T.Add_Test_Routine
         (Routine => Create_Virtual_Memory'Access,
          Name    => "Create virtual memory node");
+      T.Add_Test_Routine
+        (Routine => Calculate_PT_Size'Access,
+         Name    => "Calculate size of paging structures");
    end Initialize;
 
 end XML_Utils_Tests;

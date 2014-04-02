@@ -377,8 +377,8 @@ is
       end Error_Msg;
    begin
       For_Each_Match (XML_Data     => XML_Data,
-                      Source_XPath => "//memory[@virtualAddress]",
-                      Ref_XPath    => "//memory[@physicalAddress]",
+                      Source_XPath => "//memory/memory[@virtualAddress]",
+                      Ref_XPath    => "/system/memory/memory",
                       Log_Message  => "physical memory references",
                       Error        => Error_Msg'Access,
                       Match        => Is_Valid_Reference'Access);

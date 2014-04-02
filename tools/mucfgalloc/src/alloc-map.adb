@@ -40,9 +40,8 @@ is
       is
          use Mutools.Utils;
       begin
-         return
-            "(" & To_Hex (Number => First_Address, Normalize => True) &
-            " - " & To_Hex (Number => Last_Address, Normalize => True) & ")";
+         return "(" & To_Hex (Number => First_Address) & " - "
+           & To_Hex (Number => Last_Address) & ")";
       end Range_Image;
    begin
       while Curr /= No_Element
@@ -108,10 +107,9 @@ is
       end if;
 
       if First_Multiple + Size - 1 > Upper_Limit then
-         raise Limit_Exceeded with
-            "Region '" & To_String (Name) & "' cannot be placed below " &
-            To_Hex (Number => Upper_Limit, Normalize => True) &
-            " (Start: " & To_Hex (First_Multiple, Normalize => True) & ")";
+         raise Limit_Exceeded with "Region '" & To_String (Name)
+           & "' cannot be placed below " & To_Hex (Number => Upper_Limit)
+           & " (Start: " & To_Hex (First_Multiple) & ")";
       end if;
 
       Reserve

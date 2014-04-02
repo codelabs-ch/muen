@@ -145,19 +145,16 @@ is
                  Virt_Mem_XPath     => "/system/kernel/memory/cpu[@id='" &
                    CPU_Str & "']/memory");
             Size_Str : constant String := Mutools.Utils.To_Hex
-                (Number    => Size,
-                 Normalize => True);
+              (Number => Size);
          begin
             Mulog.Log (Msg => "Adding pagetable region with size " & Size_Str
                        & " at address "
-                       & Mutools.Utils.To_Hex (Number    => Cur_Addr,
-                                               Normalize => True)
+                       & Mutools.Utils.To_Hex (Number => Cur_Addr)
                        & " for CPU " & CPU_Str);
             XML_Utils.Add_Memory_Region
               (Policy      => Data,
                Name        => "kernel_" & CPU_Str & "|pt",
-               Address     => Mutools.Utils.To_Hex (Number    => Cur_Addr,
-                                                    Normalize => True),
+               Address     => Mutools.Utils.To_Hex (Number => Cur_Addr),
                Size        => Size_Str,
                Caching     => "WB",
                File_Name   => "kernel_pt_" & CPU_Str,
@@ -272,14 +269,11 @@ is
          begin
             Mulog.Log (Msg => "Adding VMXON region for CPU " & CPU_Str & " at "
                        & "address " & Mutools.Utils.To_Hex
-                         (Number    => Curr_Addr,
-                          Normalize => True));
+                         (Number => Curr_Addr));
             XML_Utils.Add_Memory_Region
               (Policy  => Data,
                Name    => "kernel_" & CPU_Str & "|vmxon",
-               Address => Mutools.Utils.To_Hex
-                 (Number    => Curr_Addr,
-                  Normalize => True),
+               Address => Mutools.Utils.To_Hex (Number => Curr_Addr),
                Size    => "16#1000#",
                Caching => "WB");
             Curr_Addr := Curr_Addr + Mutools.Constants.Page_Size;

@@ -54,6 +54,9 @@ is
    --  Validate that device memory names are unique.
    procedure Device_Memory_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that device memory referenced by logical device memory exists.
+   procedure Device_Memory_References (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that only shareable devices have multiple references.
    procedure Device_Sharing (XML_Data : Muxml.XML_Data_Type);
 

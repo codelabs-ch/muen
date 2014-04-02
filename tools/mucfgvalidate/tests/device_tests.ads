@@ -59,6 +59,9 @@ is
    --  Validate device memory name uniqueness.
    procedure Validate_Devmem_Name_Uniqueness;
 
+   --  Validate physical device memory references.
+   procedure Validate_Devmem_Refs;
+
    --  Validate device shareability.
    procedure Validate_Device_Shareability;
 

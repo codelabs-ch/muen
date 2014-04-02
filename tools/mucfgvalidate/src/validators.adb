@@ -305,6 +305,8 @@ is
       Validate.XML_Processors.Register
         (Process => Device.Device_Memory_Name_Uniqueness'Access);
       Validate.XML_Processors.Register
+        (Process => Device.Device_Memory_References'Access);
+      Validate.XML_Processors.Register
         (Process => Device.Device_Sharing'Access);
       Validate.XML_Processors.Register
         (Process => Scheduling.CPU_Element_Count'Access);

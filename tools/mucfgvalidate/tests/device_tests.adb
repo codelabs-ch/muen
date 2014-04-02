@@ -72,6 +72,9 @@ is
         (Routine => Validate_Devmem_Name_Uniqueness'Access,
          Name    => "Validate device memory name uniqueness");
       T.Add_Test_Routine
+        (Routine => Validate_Devmem_Refs'Access,
+         Name    => "Validate device memory references");
+      T.Add_Test_Routine
         (Routine => Validate_Device_Shareability'Access,
          Name    => "Validate device shareability");
    end Initialize;
@@ -121,6 +124,44 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Devmem_Name_Uniqueness;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Devmem_Refs
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/validators.xml");
+
+      declare
+         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Data.Doc,
+               XPath => "/system/kernel/devices/device/memory"),
+            Index => 0);
+      begin
+
+         --  Set invalid device memory reference.
+
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "physical",
+            Value => "nonexistent");
+
+         Validators.Device.Device_Memory_References (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Validators.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Physical device memory 'nonexistent' referenced by logical"
+                    & " device memory 'vga_buffer' of logical device 'gfx' not"
+                    & " found",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Devmem_Refs;
 
    -------------------------------------------------------------------------
 

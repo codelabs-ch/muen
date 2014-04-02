@@ -140,6 +140,40 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Device_Memory_References (XML_Data : Muxml.XML_Data_Type)
+   is
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Log_Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+            Name => "logical");
+         Logical_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "logical");
+         Phys_Name    : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "physical");
+      begin
+         return "Physical device memory '" & Phys_Name
+           & "' referenced by logical device memory '" & Logical_Name
+           & "' of logical device '" & Log_Dev_Name & "' not found";
+      end Error_Msg;
+   begin
+      For_Each_Match (XML_Data     => XML_Data,
+                      Source_XPath => "//device/memory[@logical]",
+                      Ref_XPath    => "/system/platform/device/memory",
+                      Log_Message  => "device memory reference(s)",
+                      Error        => Error_Msg'Access,
+                      Match        => Is_Valid_Resource_Ref'Access);
+   end Device_Memory_References;
+
+   -------------------------------------------------------------------------
+
    procedure Device_Sharing (XML_Data : Muxml.XML_Data_Type)
    is
       Devices : constant DOM.Core.Node_List := XPath_Query

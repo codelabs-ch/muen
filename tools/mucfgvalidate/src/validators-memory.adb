@@ -101,7 +101,8 @@ is
             Subjects    : constant DOM.Core.Node_List
               := XPath_Query
                 (N     => XML_Data.Doc,
-                 XPath => "//subjects/subject[@name='" & Entity_Name & "']");
+                 XPath => "/system/subjects/subject[@name='"
+                 & Entity_Name & "']");
          begin
             if not Is_Valid_Kernel_Entity (Name => Entity_Name)
               and then DOM.Core.Nodes.Length (List => Subjects) /= 1

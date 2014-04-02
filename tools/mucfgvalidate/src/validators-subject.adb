@@ -47,7 +47,7 @@ is
    is
       Nodes : constant DOM.Core.Node_List
         := XPath_Query (N     => XML_Data.Doc,
-                        XPath => "//subjects/subject");
+                        XPath => "/system/subjects/subject");
    begin
       Mulog.Log (Msg => "Checking " & Mode & " destinations in"
                  & DOM.Core.Nodes.Length (List => Nodes)'Img
@@ -70,7 +70,8 @@ is
             Events    : constant DOM.Core.Node_List
               := XPath_Query
                 (N     => Subj_Node,
-                 XPath => "events/source//notify[@mode='" & Mode & "']");
+                 XPath => "events/source/group/event/notify[@mode='"
+                 & Mode & "']");
          begin
             for J in 0 .. DOM.Core.Nodes.Length (List => Events) - 1 loop
                declare
@@ -92,8 +93,8 @@ is
                            (DOM.Core.Nodes.Item
                                 (List  => XPath_Query
                                      (N     => XML_Data.Doc,
-                                      XPath => "//subjects/subject[@name='"
-                                      & Ref_Subj_Name & "']/@cpu"),
+                                      XPath => "/system/subjects/subject["
+                                      & "@name='" & Ref_Subj_Name & "']/@cpu"),
                                  Index => 0)));
                begin
                   if not Test (Ref_Subj_CPU, Subj_CPU) then
@@ -122,7 +123,7 @@ is
       Last_Id   : constant Natural := CPU_Count - 1;
       Nodes     : constant DOM.Core.Node_List
         := XPath_Query (N     => XML_Data.Doc,
-                        XPath => "//subjects/subject");
+                        XPath => "/system/subjects/subject");
    begin
       Check_Attribute (Nodes     => Nodes,
                        Node_Type => "subject",
@@ -150,7 +151,7 @@ is
    is
       Nodes : constant DOM.Core.Node_List
         := XPath_Query (N     => XML_Data.Doc,
-                        XPath => "//subjects/subject");
+                        XPath => "/system/subjects/subject");
    begin
       Mulog.Log (Msg => "Checking self-references in" & DOM.Core.Nodes.Length
                  (List => Nodes)'Img & " subject event table(s)");
@@ -166,8 +167,8 @@ is
                  Name => "name");
             Entries   : constant DOM.Core.Node_List
               := XPath_Query (N     => Subj_Node,
-                              XPath => "events/source//notify[@subject='"
-                              & Subj_Name & "']");
+                              XPath => "events/source/group/event/notify["
+                              & "@subject='" & Subj_Name & "']");
          begin
             if DOM.Core.Nodes.Length (List => Entries) /= 0 then
                declare
@@ -195,7 +196,8 @@ is
    is
       Nodes : constant DOM.Core.Node_List
         := XPath_Query (N     => XML_Data.Doc,
-                        XPath => "//notify");
+                        XPath => "/system/subjects/subject/events/source/group"
+                        & "/event/notify");
    begin
       Mulog.Log (Msg => "Checking subject references in"
                  & DOM.Core.Nodes.Length (List => Nodes)'Img
@@ -213,7 +215,7 @@ is
                  Name => "subject");
             Subjects    : constant DOM.Core.Node_List
               := XPath_Query (N     => XML_Data.Doc,
-                              XPath => "//subjects/subject[@name='"
+                              XPath => "/system/subjects/subject[@name='"
                               & Subj_Ref & "']");
          begin
             if DOM.Core.Nodes.Length (List => Subjects) = 0 then

@@ -73,7 +73,7 @@ is
       Ref_Ticks : Natural;
       Majors    : constant DOM.Core.Node_List
         := XPath_Query (N     => XML_Data.Doc,
-                        XPath => "//majorFrame");
+                        XPath => "/system/scheduling/majorFrame");
    begin
       Mulog.Log (Msg => "Checking tick count in" & DOM.Core.Nodes.Length
                  (List => Majors)'Img & " scheduling major frame(s)");
@@ -185,13 +185,13 @@ is
                                Right => Right);
       end Match_CPU_ID;
    begin
-      For_Each_Match (XML_Data     => XML_Data,
-                      Source_XPath => "//minorFrame",
-                      Ref_XPath    => "/system/subjects/subject",
-                      Log_Message  => "minor frame(s) for subject CPU"
-                      & " affinity",
-                      Error        => Error_Msg'Access,
-                      Match        => Match_CPU_ID'Access);
+      For_Each_Match
+        (XML_Data     => XML_Data,
+         Source_XPath => "/system/scheduling/majorFrame/cpu/minorFrame",
+         Ref_XPath    => "/system/subjects/subject",
+         Log_Message  => "minor frame(s) for subject CPU affinity",
+         Error        => Error_Msg'Access,
+         Match        => Match_CPU_ID'Access);
    end Subject_CPU_Affinity;
 
    -------------------------------------------------------------------------
@@ -213,13 +213,13 @@ is
            & "' referenced in scheduling plan not found";
       end Error_Msg;
    begin
-      For_Each_Match (XML_Data     => XML_Data,
-                      Source_XPath => "//minorFrame",
-                      Ref_XPath    => "/system/subjects/subject",
-                      Log_Message  => "subject reference(s) in scheduling "
-                      & "plan",
-                      Error        => Error_Msg'Access,
-                      Match        => Match_Subject_Name'Access);
+      For_Each_Match
+        (XML_Data     => XML_Data,
+         Source_XPath => "/system/scheduling/majorFrame/cpu/minorFrame",
+         Ref_XPath    => "/system/subjects/subject",
+         Log_Message  => "subject reference(s) in scheduling plan",
+         Error        => Error_Msg'Access,
+         Match        => Match_Subject_Name'Access);
    end Subject_References;
 
 end Validators.Scheduling;

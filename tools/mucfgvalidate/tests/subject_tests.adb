@@ -71,7 +71,7 @@ is
          Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
            (List  => McKae.XML.XPath.XIA.XPath_Query
               (N     => Data.Doc,
-               XPath => "//subjects/subject"),
+               XPath => "/system/subjects/subject"),
             Index => 0);
       begin
 

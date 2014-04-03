@@ -53,6 +53,10 @@ is
       --  All kernel memory regions and mappings must exist to add PTs.
 
       Procs.Register (Process => Memory.Add_Kernel_PTs'Access);
+
+      --  Add alignment to all memory regions including expanded ones.
+
+      Procs.Register (Process => Memory.Add_Alignment'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

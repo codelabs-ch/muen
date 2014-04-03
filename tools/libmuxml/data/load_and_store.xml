@@ -10,7 +10,7 @@
   </device>
  </platform>
  <memory>
-  <memory caching="WB" name="trampoline" physicalAddress="16#0000#" size="16#1000#"/>
+  <memory alignment="16#1000#" caching="WB" name="trampoline" physicalAddress="16#0000#" size="16#1000#"/>
  </memory>
  <events>
   <event mode="ipi" name="xv6_keyboard"/>

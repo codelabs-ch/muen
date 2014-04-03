@@ -40,4 +40,7 @@ is
    --  Add VMXON regions.
    procedure Add_VMXON_Regions (Data : in out Muxml.XML_Data_Type);
 
+   --  Add alignment attribute with default value where missing.
+   procedure Add_Alignment (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Memory;

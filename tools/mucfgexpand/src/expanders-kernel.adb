@@ -265,8 +265,8 @@ is
                     := State_Start + Interfaces.Unsigned_64'Value (Subj_Id)
                                 * Mutools.Constants.Page_Size;
                begin
-                  Mulog.Log (Msg => "Mapping state of subject " & Subj_Name
-                             & " to address " & Mutools.Utils.To_Hex
+                  Mulog.Log (Msg => "Mapping state of subject '" & Subj_Name
+                             & "' to address " & Mutools.Utils.To_Hex
                                (Number => Address) & " on CPU " & CPU_Id);
                   XML_Utils.Append_Child
                     (Node      => CPU,

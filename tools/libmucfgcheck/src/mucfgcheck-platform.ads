@@ -16,17 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmulog/libmulog";
-with "../libmuxml/libmuxml";
-with "../libmutools/libmutools";
-with "../shared_tools";
+with Muxml;
 
-library project Libmucfgcheck extends "../libs.gpr" is
+package Mucfgcheck.Platform
+is
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Library_Dir use "lib";
-   for Library_Kind use "static";
-   for Library_Name use "mucfgcheck";
+   --  Validate that memory regions fit into available platform memory.
+   procedure Memory_Space (XML_Data : Muxml.XML_Data_Type);
 
-end Libmucfgcheck;
+   --  Validate that no memory blocks overlap.
+   procedure Memory_Block_Overlap (XML_Data : Muxml.XML_Data_Type);
+
+end Mucfgcheck.Platform;

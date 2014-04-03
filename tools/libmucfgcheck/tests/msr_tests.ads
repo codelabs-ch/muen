@@ -16,17 +16,20 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmulog/libmulog";
-with "../libmuxml/libmuxml";
-with "../libmutools/libmutools";
-with "../shared_tools";
+with Ahven.Framework;
 
-library project Libmucfgcheck extends "../libs.gpr" is
+package MSR_Tests
+is
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Library_Dir use "lib";
-   for Library_Kind use "static";
-   for Library_Name use "mucfgcheck";
+   type Testcase is new Ahven.Framework.Test_Case with null record;
 
-end Libmucfgcheck;
+   --  Initialize testcase.
+   procedure Initialize (T : in out Testcase);
+
+   --  Validate that MSR start are smaller than end addresses.
+   procedure Validate_Start_Smaller_End;
+
+   --  Validate that MSR start and end addresses are either low or high.
+   procedure Validate_Low_High;
+
+end MSR_Tests;

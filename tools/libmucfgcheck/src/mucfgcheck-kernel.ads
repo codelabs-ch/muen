@@ -16,17 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmulog/libmulog";
-with "../libmuxml/libmuxml";
-with "../libmutools/libmutools";
-with "../shared_tools";
+with Muxml;
 
-library project Libmucfgcheck extends "../libs.gpr" is
+package Mucfgcheck.Kernel
+is
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Library_Dir use "lib";
-   for Library_Kind use "static";
-   for Library_Name use "mucfgcheck";
+   --  Validate that all CPU store virtual addresses are equal.
+   procedure CPU_Store_Address_Equality (XML_Data : Muxml.XML_Data_Type);
 
-end Libmucfgcheck;
+   --  Validate that all stack virtual addresses are equal.
+   procedure Stack_Address_Equality (XML_Data : Muxml.XML_Data_Type);
+
+end Mucfgcheck.Kernel;

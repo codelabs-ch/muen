@@ -16,17 +16,26 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmulog/libmulog";
-with "../libmuxml/libmuxml";
-with "../libmutools/libmutools";
-with "../shared_tools";
+with Ahven.Framework;
 
-library project Libmucfgcheck extends "../libs.gpr" is
+package Scheduling_Tests
+is
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Library_Dir use "lib";
-   for Library_Kind use "static";
-   for Library_Name use "mucfgcheck";
+   type Testcase is new Ahven.Framework.Test_Case with null record;
 
-end Libmucfgcheck;
+   --  Initialize testcase.
+   procedure Initialize (T : in out Testcase);
+
+   --  Validate CPU element count in major frames.
+   procedure Validate_CPU_Element_Count;
+
+   --  Validate subject references.
+   procedure Validate_Subj_References;
+
+   --  Validate subject CPU affinity.
+   procedure Validate_Subj_CPU_Affinity;
+
+   --  Validate major frame tick count.
+   procedure Validate_Major_Ticks;
+
+end Scheduling_Tests;

@@ -16,17 +16,32 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmulog/libmulog";
-with "../libmuxml/libmuxml";
-with "../libmutools/libmutools";
-with "../shared_tools";
+with Ahven.Framework;
 
-library project Libmucfgcheck extends "../libs.gpr" is
+package Subject_Tests
+is
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Library_Dir use "lib";
-   for Library_Kind use "static";
-   for Library_Name use "mucfgcheck";
+   type Testcase is new Ahven.Framework.Test_Case with null record;
 
-end Libmucfgcheck;
+   --  Initialize testcase.
+   procedure Initialize (T : in out Testcase);
+
+   --  Validate subject CPU IDs.
+   procedure Validate_CPU_IDs;
+
+   --  Validate event table subject references.
+   procedure Validate_Event_Subject_References;
+
+   --  Validate event table self-references.
+   procedure Validate_Event_Self_References;
+
+   --  Validate event switch notification destinations.
+   procedure Validate_Event_Switch_Destination;
+
+   --  Validate event IPI notification destinations.
+   procedure Validate_Event_IPI_Destination;
+
+   --  Validate subject name uniqueness.
+   procedure Validate_Name_Uniqueness;
+
+end Subject_Tests;

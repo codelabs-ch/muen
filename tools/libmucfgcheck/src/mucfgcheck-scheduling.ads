@@ -16,17 +16,22 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmulog/libmulog";
-with "../libmuxml/libmuxml";
-with "../libmutools/libmutools";
-with "../shared_tools";
+with Muxml;
 
-library project Libmucfgcheck extends "../libs.gpr" is
+package Mucfgcheck.Scheduling
+is
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Library_Dir use "lib";
-   for Library_Kind use "static";
-   for Library_Name use "mucfgcheck";
+   --  Validate that a CPU element for each logical CPU exists in a major
+   --  frame.
+   procedure CPU_Element_Count (XML_Data : Muxml.XML_Data_Type);
 
-end Libmucfgcheck;
+   --  Validate subject references.
+   procedure Subject_References (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that subjects are scheduled on the correct logical CPU.
+   procedure Subject_CPU_Affinity (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate tick counts in major frame.
+   procedure Major_Frame_Ticks (XML_Data : Muxml.XML_Data_Type);
+
+end Mucfgcheck.Scheduling;

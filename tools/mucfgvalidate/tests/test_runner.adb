@@ -19,14 +19,7 @@
 with Ahven.Text_Runner;
 with Ahven.Framework;
 
-with Memory_Tests;
-with MSR_Tests;
-with Device_Tests;
-with Scheduling_Tests;
 with Validate_Tests;
-with Subject_Tests;
-with Platform_Tests;
-with Kernel_Tests;
 
 procedure Test_Runner
 is
@@ -35,21 +28,6 @@ is
    S : constant Test_Suite_Access := Create_Suite
      (Suite_Name => "Muvalidate tests");
 begin
-   Add_Test (Suite => S.all,
-             T     => new Memory_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new MSR_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Device_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Scheduling_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Subject_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Platform_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Kernel_Tests.Testcase);
-
    Add_Test (Suite => S.all,
              T     => new Validate_Tests.Testcase);
 

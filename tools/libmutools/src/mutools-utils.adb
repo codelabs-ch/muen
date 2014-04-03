@@ -37,12 +37,12 @@ is
          16#7# => '7',
          16#8# => '8',
          16#9# => '9',
-         16#a# => 'A',
-         16#b# => 'B',
-         16#c# => 'C',
-         16#d# => 'D',
-         16#e# => 'E',
-         16#f# => 'F');
+         16#a# => 'a',
+         16#b# => 'b',
+         16#c# => 'c',
+         16#d# => 'd',
+         16#e# => 'e',
+         16#f# => 'f');
 
    -------------------------------------------------------------------------
 
@@ -92,8 +92,7 @@ is
 
    function To_Hex
      (Number    : Interfaces.Unsigned_64;
-      Prefix    : Boolean := True;
-      Normalize : Boolean := False)
+      Normalize : Boolean := True)
       return String
    is
       Num_Str : String (1 .. 23);
@@ -113,7 +112,7 @@ is
          return Digits_To_Char (Hex_Digits_Range (N));
       end To_Hex_Digit;
    begin
-      if Normalize or Prefix then
+      if Normalize then
          Num_Str (Pos) := '#';
          Pos := Pos - 1;
       end if;
@@ -131,13 +130,12 @@ is
          end if;
       end loop;
 
-      if Normalize or Prefix then
+      if Normalize then
          Num_Str (Pos - 2 .. Pos) := "16#";
          Pos := Pos - 3;
       end if;
 
       return Num_Str (Pos + 1 .. Num_Str'Last);
-
    end To_Hex;
 
 end Mutools.Utils;

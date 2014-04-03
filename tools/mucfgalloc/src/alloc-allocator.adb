@@ -317,9 +317,9 @@ is
       begin
          Put_Line
             (Memory_Map_File,
-             To_Hex (Region.First_Address, Normalize => True) &
+             To_Hex (Number => Region.First_Address) &
              " " &
-             To_Hex (Region.Last_Address, Normalize => True) &
+             To_Hex (Number => Region.Last_Address) &
              " " &
              Region.Kind'Img & " " & To_String (Region.Name) &
              " ALLOCATABLE: " & Region.Allocatable'Img);
@@ -348,7 +348,7 @@ is
          Set_Attribute
             (Item (N, 0),
              "physicalAddress",
-             To_Hex (Number => Region.First_Address, Normalize => True));
+             To_Hex (Number => Region.First_Address));
       end Update_DOM;
 
    begin

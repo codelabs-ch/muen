@@ -42,14 +42,12 @@ is
       Pos   : Unsigned_64_Pos)
       return Interfaces.Unsigned_64;
 
-   --  Return hexadecimal representation of given number. If Prefix is True,
-   --  the returned string includes the base (16#..#). If Normalize is True,
-   --  the output is normalized to consist of blocks of 0000 separated by '_'.
-   --  Normalize implies Prefix.
+   --  Return hexadecimal representation of given number. If Normalize is True,
+   --  the returned string includes the base (16#..#) and consist of blocks of
+   --  0000 separated by '_'.
    function To_Hex
      (Number    : Interfaces.Unsigned_64;
-      Prefix    : Boolean := True;
-      Normalize : Boolean := False)
+      Normalize : Boolean := True)
       return String;
 
    --  Extract entity name from given encoded string (e.g. 'linux|zp' or

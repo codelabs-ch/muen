@@ -275,8 +275,7 @@ is
                         Logical_Name  => Subj_Name & "_state",
                         Physical_Name => Subj_Name & "_state",
                         Address       => Mutools.Utils.To_Hex
-                          (Number    => Address,
-                           Normalize => True),
+                          (Number => Address),
                         Writable      => True,
                         Executable    => False));
                end;

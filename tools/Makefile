@@ -2,6 +2,7 @@
 TOOLS =           \
 	libmuxml      \
 	libmutools    \
+	libpaging     \
 	mucfgalloc    \
 	mucfgexpand   \
 	mucfgvalidate \
@@ -15,9 +16,8 @@ TOOLS =           \
 	mupack
 
 # Implicitly built libraries
-LIBS =        \
-	libmulog  \
-	libpaging \
+LIBS =       \
+	libmulog \
 	libtest
 
 # Projects to clean

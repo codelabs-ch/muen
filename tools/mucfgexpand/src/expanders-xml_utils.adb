@@ -31,21 +31,23 @@ is
 
    --  Create memory node element with given parameters.
    function Create_Memory_Node
-     (Policy  : in out Muxml.XML_Data_Type;
-      Name    :        String;
-      Address :        String;
-      Size    :        String;
-      Caching :        String)
+     (Policy    : in out Muxml.XML_Data_Type;
+      Name      :        String;
+      Address   :        String;
+      Size      :        String;
+      Caching   :        String;
+      Alignment :        String)
       return DOM.Core.Node;
 
    -------------------------------------------------------------------------
 
    procedure Add_Memory_Region
-     (Policy  : in out Muxml.XML_Data_Type;
-      Name    :        String;
-      Address :        String;
-      Size    :        String;
-      Caching :        String)
+     (Policy    : in out Muxml.XML_Data_Type;
+      Name      :        String;
+      Address   :        String;
+      Size      :        String;
+      Caching   :        String;
+      Alignment :        String)
    is
       Section    : constant DOM.Core.Node
         := DOM.Core.Nodes.Item
@@ -59,11 +61,12 @@ is
       Dummy_Node := DOM.Core.Nodes.Append_Child
         (N         => Section,
          New_Child => Create_Memory_Node
-           (Policy  => Policy,
-            Name    => Name,
-            Address => Address,
-            Size    => Size,
-            Caching => Caching));
+           (Policy    => Policy,
+            Name      => Name,
+            Address   => Address,
+            Size      => Size,
+            Caching   => Caching,
+            Alignment => Alignment));
    end Add_Memory_Region;
 
    -------------------------------------------------------------------------
@@ -74,6 +77,7 @@ is
       Address     :        String;
       Size        :        String;
       Caching     :        String;
+      Alignment   :        String;
       File_Name   :        String;
       File_Format :        String;
       File_Offset :        String)
@@ -86,11 +90,12 @@ is
            Index => 0);
       Mem_Node  : constant DOM.Core.Node
         := Create_Memory_Node
-          (Policy  => Policy,
-           Name    => Name,
-           Address => Address,
-           Size    => Size,
-           Caching => Caching);
+          (Policy    => Policy,
+           Name      => Name,
+           Address   => Address,
+           Size      => Size,
+           Caching   => Caching,
+           Alignment => Alignment);
       File_Node : constant DOM.Core.Node
         := DOM.Core.Documents.Create_Element
           (Doc      => Policy.Doc,
@@ -258,11 +263,12 @@ is
    -------------------------------------------------------------------------
 
    function Create_Memory_Node
-     (Policy  : in out Muxml.XML_Data_Type;
-      Name    :        String;
-      Address :        String;
-      Size    :        String;
-      Caching :        String)
+     (Policy    : in out Muxml.XML_Data_Type;
+      Name      :        String;
+      Address   :        String;
+      Size      :        String;
+      Caching   :        String;
+      Alignment :        String)
       return DOM.Core.Node
    is
       Mem_Node : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
@@ -281,6 +287,10 @@ is
         (Elem  => Mem_Node,
          Name  => "caching",
          Value => Caching);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Mem_Node,
+         Name  => "alignment",
+         Value => Alignment);
 
       if Address'Length > 0 then
          DOM.Core.Elements.Set_Attribute

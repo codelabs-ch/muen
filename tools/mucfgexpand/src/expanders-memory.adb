@@ -73,11 +73,12 @@ is
    begin
       Mulog.Log (Msg => "Adding AP trampoline memory region");
       XML_Utils.Add_Memory_Region
-        (Policy  => Data,
-         Name    => "trampoline",
-         Address => "16#0000#",
-         Size    => "16#1000#",
-         Caching => "WB");
+        (Policy    => Data,
+         Name      => "trampoline",
+         Address   => "16#0000#",
+         Size      => "16#1000#",
+         Caching   => "WB",
+         Alignment => "16#1000#");
    end Add_AP_Trampoline;
 
    -------------------------------------------------------------------------
@@ -93,6 +94,7 @@ is
          Address     => "16#0010_0000#",
          Size        => "16#0001_0000#",
          Caching     => "WB",
+         Alignment   => "16#1000#",
          File_Name   => "kernel",
          File_Format => "bin_raw",
          File_Offset => "16#0000#");
@@ -102,6 +104,7 @@ is
          Address     => "16#0011_0000#",
          Size        => "16#1000#",
          Caching     => "WB",
+         Alignment   => "16#1000#",
          File_Name   => "kernel",
          File_Format => "bin_raw",
          File_Offset => "16#0001_0000#");
@@ -110,13 +113,15 @@ is
          Name        => "kernel_bss",
          Address     => "16#0011_1000#",
          Size        => "16#1000#",
-         Caching     => "WB");
+         Caching     => "WB",
+         Alignment   => "16#1000#");
       XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => "kernel_ro",
          Address     => "16#0011_f000#",
          Size        => "16#4000#",
          Caching     => "WB",
+         Alignment   => "16#1000#",
          File_Name   => "kernel",
          File_Format => "bin_raw",
          File_Offset => "16#0001_f000#");
@@ -160,6 +165,7 @@ is
                Address     => Mutools.Utils.To_Hex (Number => Cur_Addr),
                Size        => Size_Str,
                Caching     => "WB",
+               Alignment   => "16#1000#",
                File_Name   => "kernel_pt_" & CPU_Str,
                File_Format => "pt",
                File_Offset => "none");
@@ -189,17 +195,19 @@ is
                Side   => Ada.Strings.Left);
          begin
             XML_Utils.Add_Memory_Region
-              (Policy  => Data,
-               Name    => "kernel_stack_" & CPU_Str,
-               Address => "",
-               Size    => "16#2000#",
-               Caching => "WB");
+              (Policy    => Data,
+               Name      => "kernel_stack_" & CPU_Str,
+               Address   => "",
+               Size      => "16#2000#",
+               Caching   => "WB",
+               Alignment => "16#1000#");
             XML_Utils.Add_Memory_Region
-              (Policy  => Data,
-               Name    => "kernel_store_" & CPU_Str,
-               Address => "",
-               Size    => "16#1000#",
-               Caching => "WB");
+              (Policy    => Data,
+               Name      => "kernel_store_" & CPU_Str,
+               Address   => "",
+               Size      => "16#1000#",
+               Caching   => "WB",
+               Alignment => "16#1000#");
          end;
       end loop;
    end Add_Stack_Store;
@@ -233,6 +241,7 @@ is
                Address     => "",
                Size        => Mutools.Utils.To_Hex (Number => IOBM_Size),
                Caching     => "WB",
+               Alignment   => "16#1000#",
                File_Name   => Subj_Name & "_iobm",
                File_Format => "iobm",
                File_Offset => "none");
@@ -242,6 +251,7 @@ is
                Address     => "",
                Size        => Mutools.Utils.To_Hex (Number => MSRBM_Size),
                Caching     => "WB",
+               Alignment   => "16#1000#",
                File_Name   => Subj_Name & "_msrbm",
                File_Format => "msrbm",
                File_Offset => "none");
@@ -285,6 +295,7 @@ is
                Address     => "",
                Size        => Size_Str,
                Caching     => "WB",
+               Alignment   => "16#1000#",
                File_Name   =>  Subj_Name & "_pt",
                File_Format => "pt",
                File_Offset => "none");
@@ -315,11 +326,12 @@ is
                  Name => "name");
          begin
             XML_Utils.Add_Memory_Region
-              (Policy  => Data,
-               Name    => Subj_Name & "_state",
-               Address => "",
-               Size    => "16#1000#",
-               Caching => "WB");
+              (Policy    => Data,
+               Name      => Subj_Name & "_state",
+               Address   => "",
+               Size      => "16#1000#",
+               Caching   => "WB",
+               Alignment => "16#1000#");
          end;
       end loop;
    end Add_Subject_States;
@@ -332,11 +344,12 @@ is
       Mulog.Log (Msg => "Adding tau0 interface memory region");
 
       XML_Utils.Add_Memory_Region
-        (Policy  => Data,
-         Name    => "sys_interface",
-         Address => "",
-         Size    => "16#1000#",
-         Caching => "WB");
+        (Policy    => Data,
+         Name      => "sys_interface",
+         Address   => "",
+         Size      => "16#1000#",
+         Caching   => "WB",
+         Alignment => "16#1000#");
    end Add_Tau0_Interface;
 
    -------------------------------------------------------------------------
@@ -372,11 +385,12 @@ is
                        & Subj_Name & "' at address "
                        & Mutools.Utils.To_Hex (Number => Curr_Addr));
             XML_Utils.Add_Memory_Region
-              (Policy  => Data,
-               Name    => Subj_Name & "|vmcs",
-               Address => Mutools.Utils.To_Hex (Number => Curr_Addr),
-               Size    => "16#1000#",
-               Caching => "WB");
+              (Policy    => Data,
+               Name      => Subj_Name & "|vmcs",
+               Address   => Mutools.Utils.To_Hex (Number => Curr_Addr),
+               Size      => "16#1000#",
+               Caching   => "WB",
+               Alignment => "16#1000#");
             Curr_Addr := Curr_Addr + Mutools.Constants.Page_Size;
          end;
       end loop;
@@ -405,11 +419,12 @@ is
                        & "address " & Mutools.Utils.To_Hex
                          (Number => Curr_Addr));
             XML_Utils.Add_Memory_Region
-              (Policy  => Data,
-               Name    => "kernel_" & CPU_Str & "|vmxon",
-               Address => Mutools.Utils.To_Hex (Number => Curr_Addr),
-               Size    => "16#1000#",
-               Caching => "WB");
+              (Policy    => Data,
+               Name      => "kernel_" & CPU_Str & "|vmxon",
+               Address   => Mutools.Utils.To_Hex (Number => Curr_Addr),
+               Size      => "16#1000#",
+               Caching   => "WB",
+               Alignment => "16#1000#");
             Curr_Addr := Curr_Addr + Mutools.Constants.Page_Size;
          end;
       end loop;

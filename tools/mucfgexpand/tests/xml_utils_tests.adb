@@ -45,17 +45,19 @@ is
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
       XML_Utils.Add_Memory_Region
-        (Policy  => Policy,
-         Name    => "test",
-         Address => "16#9000_1000#",
-         Size    => "16#3000#",
-         Caching => "UC");
+        (Policy    => Policy,
+         Name      => "test",
+         Address   => "16#9000_1000#",
+         Size      => "16#3000#",
+         Caching   => "UC",
+         Alignment => "16#1000#");
       XML_Utils.Add_Memory_Region
-        (Policy  => Policy,
-         Name    => "noaddress",
-         Address => "",
-         Size    => "16#8000#",
-         Caching => "WC");
+        (Policy    => Policy,
+         Name      => "noaddress",
+         Address   => "",
+         Size      => "16#8000#",
+         Caching   => "WC",
+         Alignment => "16#0020_0000#");
 
       Muxml.Write (Data => Policy,
                    Kind => Muxml.Format_Src,
@@ -85,6 +87,7 @@ is
          Address     => "16#2000#",
          Size        => "16#4000#",
          Caching     => "WB",
+         Alignment   => "16#1000#",
          File_Name   => "testfile",
          File_Format => "bin_raw",
          File_Offset => "16#1000#");

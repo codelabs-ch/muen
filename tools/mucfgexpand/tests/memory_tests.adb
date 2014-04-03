@@ -108,6 +108,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_VMCS_Regions
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_vmcs.xml",
+         Ref_Filename => "data/memory_vmcs.ref.xml",
+         Expander     => Expanders.Memory.Add_VMCS_Regions'Access);
+   end Add_VMCS_Regions;
+
+   -------------------------------------------------------------------------
+
    procedure Add_VMXON_Regions
    is
    begin
@@ -141,6 +152,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_VMXON_Regions'Access,
          Name    => "Add VMXON memory regions");
+      T.Add_Test_Routine
+        (Routine => Add_VMCS_Regions'Access,
+         Name    => "Add VMCS memory regions");
       T.Add_Test_Routine
         (Routine => Add_Kernel_PTs'Access,
          Name    => "Add kernel pagetable memory regions");

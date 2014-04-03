@@ -38,25 +38,26 @@ is
    procedure Register_All
    is
    begin
+      Procs.Register (Process => Memory.Add_Alignment'Access);
       Procs.Register (Process => Memory.Add_Kernel_Binary'Access);
       Procs.Register (Process => Memory.Add_Stack_Store'Access);
       Procs.Register (Process => Memory.Add_Subject_States'Access);
       Procs.Register (Process => Memory.Add_Tau0_Interface'Access);
       Procs.Register (Process => Memory.Add_AP_Trampoline'Access);
       Procs.Register (Process => Memory.Add_VMXON_Regions'Access);
+      Procs.Register (Process => Memory.Add_VMCS_Regions'Access);
+      Procs.Register (Process => Memory.Add_Subject_Bitmaps'Access);
       Procs.Register (Process => Kernel.Add_Section_Skeleton'Access);
       Procs.Register (Process => Kernel.Add_Binary_Mappings'Access);
       Procs.Register (Process => Kernel.Add_Subj_State_Mappings'Access);
       Procs.Register (Process => Kernel.Map_Tau0_Interface'Access);
       Procs.Register (Process => Kernel.Add_Devices'Access);
 
-      --  All kernel memory regions and mappings must exist to add PTs.
+      --  All kernel/subject memory regions and mappings must exist and specify
+      --  and alignment to add PTs.
 
       Procs.Register (Process => Memory.Add_Kernel_PTs'Access);
-
-      --  Add alignment to all memory regions including expanded ones.
-
-      Procs.Register (Process => Memory.Add_Alignment'Access);
+      Procs.Register (Process => Memory.Add_Subject_PTs'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

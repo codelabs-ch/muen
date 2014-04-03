@@ -30,79 +30,27 @@
 	</platform>
 
 	<memory>
-		<memory name="tau0|vmcs" physicalAddress="16#5000#" size="16#1000#" caching="WB"/>
-		<memory name="vt|vmcs" physicalAddress="16#6000#" size="16#1000#" caching="WB"/>
-		<memory name="time|vmcs" physicalAddress="16#7000#" size="16#1000#" caching="WB"/>
-		<memory name="sm|vmcs" physicalAddress="16#8000#" size="16#1000#" caching="WB"/>
-		<memory name="linux|vmcs" physicalAddress="16#9000#" size="16#1000#" caching="WB"/>
-
 		<!-- tau0 subject -->
-		<memory name="tau0|pt" size="16#4000#" caching="WB">
-			<file format="pt" filename="tau0_pt" offset="none"/>
-		</memory>
-		<memory name="tau0|iobm" size="16#2000#" caching="WB">
-			<file format="iobm" filename="tau0_iobm" offset="none"/>
-		</memory>
-		<memory name="tau0|msrbm" size="16#1000#" caching="WB">
-			<file format="msrbm" filename="tau0_msrbm" offset="none"/>
-		</memory>
 		<memory name="tau0|bin" size="16#0001_4000#" caching="WB">
 			<file format="bin_raw" filename="tau0" offset="none"/>
 		</memory>
 
 		<!-- time subject -->
-		<memory name="time|pt" size="16#4000#" caching="WB">
-			<file format="pt" filename="time_pt" offset="none"/>
-		</memory>
-		<memory name="time|iobm" size="16#2000#" caching="WB">
-			<file format="iobm" filename="time_iobm" offset="none"/>
-		</memory>
-		<memory name="time|msrbm" size="16#1000#" caching="WB">
-			<file format="msrbm" filename="time_msrbm" offset="none"/>
-		</memory>
 		<memory name="time|bin" size="16#0001_4000#" caching="WB">
 			<file format="bin_raw" filename="time" offset="none"/>
 		</memory>
 
 		<!-- vt subject -->
-		<memory name="vt|pt" size="16#4000#" caching="WB">
-			<file format="pt" filename="vt_pt" offset="none"/>
-		</memory>
-		<memory name="vt|iobm" size="16#2000#" caching="WB">
-			<file format="iobm" filename="vt_iobm" offset="none"/>
-		</memory>
-		<memory name="vt|msrbm" size="16#1000#" caching="WB">
-			<file format="msrbm" filename="vt_msrbm" offset="none"/>
-		</memory>
 		<memory name="vt|bin" size="16#0002_4000#" caching="WB">
 			<file format="bin_raw" filename="vt" offset="none"/>
 		</memory>
 
 		<!-- sm subject -->
-		<memory name="sm|pt" size="16#4000#" caching="WB">
-			<file format="pt" filename="sm_pt" offset="none"/>
-		</memory>
-		<memory name="sm|iobm" size="16#2000#" caching="WB">
-			<file format="iobm" filename="sm_iobm" offset="none"/>
-		</memory>
-		<memory name="sm|msrbm" size="16#1000#" caching="WB">
-			<file format="msrbm" filename="sm_msrbm" offset="none"/>
-		</memory>
 		<memory name="sm|bin" size="16#0001_4000#" caching="WB">
 			<file format="bin_raw" filename="sm" offset="none"/>
 		</memory>
 
 		<!-- Linux subject -->
-		<memory name="linux|pt" size="16#5000#" caching="WB">
-			<file format="pt" filename="linux_pt" offset="none"/>
-		</memory>
-
-		<memory name="linux|iobm" size="16#2000#" caching="WB">
-			<file format="iobm" filename="linux_iobm" offset="none"/>
-		</memory>
-		<memory name="linux|msrbm" size="16#1000#" caching="WB">
-			<file format="msrbm" filename="linux_msrbm" offset="none"/>
-		</memory>
 		<memory name="linux|bin" size="16#0050_0000#" alignment="16#0020_0000#" caching="WB">
 			<file format="bzimage" filename="bzImage" offset="none"/>
 		</memory>
@@ -126,7 +74,7 @@
 
 		<memory name="linux|lowmem" size="16#0009_b000#" caching="WB"/>
 		<memory name="linux|bios" size="16#0001_0000#" caching="WB"/>
-		<memory name="linux|ram" size="16#0f70_0000#" caching="WB"/>
+		<memory name="linux|ram" size="16#0f70_0000#" alignment="16#0010_0000#" caching="WB"/>
 
 		<!-- channels -->
 		<memory name="time_channel" size="16#1000#" caching="WB"/>

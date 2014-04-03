@@ -86,6 +86,29 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Subject_Bitmaps
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_subject_bitmaps.xml",
+         Ref_Filename => "data/memory_subject_bitmaps.ref.xml",
+         Expander     => Expanders.Memory.Add_Subject_Bitmaps'Access);
+   end Add_Subject_Bitmaps;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Subject_PTs
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_subject_pts.xml",
+         Ref_Filename => "data/memory_subject_pts.ref.xml",
+         Pre          => Expanders.Memory.Add_Alignment'Access,
+         Expander     => Expanders.Memory.Add_Subject_PTs'Access);
+   end Add_Subject_PTs;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Subject_States
    is
    begin
@@ -105,6 +128,17 @@ is
          Ref_Filename => "data/memory_tau0_iface.ref.xml",
          Expander     => Expanders.Memory.Add_Tau0_Interface'Access);
    end Add_Tau0_Interface;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_VMCS_Regions
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_vmcs.xml",
+         Ref_Filename => "data/memory_vmcs.ref.xml",
+         Expander     => Expanders.Memory.Add_VMCS_Regions'Access);
+   end Add_VMCS_Regions;
 
    -------------------------------------------------------------------------
 
@@ -142,11 +176,20 @@ is
         (Routine => Add_VMXON_Regions'Access,
          Name    => "Add VMXON memory regions");
       T.Add_Test_Routine
+        (Routine => Add_VMCS_Regions'Access,
+         Name    => "Add VMCS memory regions");
+      T.Add_Test_Routine
         (Routine => Add_Kernel_PTs'Access,
          Name    => "Add kernel pagetable memory regions");
       T.Add_Test_Routine
         (Routine => Add_Alignment'Access,
          Name    => "Add alignment attribute");
+      T.Add_Test_Routine
+        (Routine => Add_Subject_Bitmaps'Access,
+         Name    => "Add subject I/O and MSR bitmap memory regions");
+      T.Add_Test_Routine
+        (Routine => Add_Subject_PTs'Access,
+         Name    => "Add subject pagetable memory regions");
    end Initialize;
 
 end Memory_Tests;

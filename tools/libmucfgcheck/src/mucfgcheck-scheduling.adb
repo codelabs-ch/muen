@@ -24,7 +24,7 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Muxml.Utils;
 
-package body Validators.Scheduling
+package body Mucfgcheck.Scheduling
 is
 
    use McKae.XML.XPath.XIA;
@@ -222,4 +222,4 @@ is
          Match        => Match_Subject_Name'Access);
    end Subject_References;
 
-end Validators.Scheduling;
+end Mucfgcheck.Scheduling;

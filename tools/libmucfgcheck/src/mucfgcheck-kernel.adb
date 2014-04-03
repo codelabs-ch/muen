@@ -21,7 +21,7 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
-package body Validators.Kernel
+package body Mucfgcheck.Kernel
 is
 
    -------------------------------------------------------------------------
@@ -70,4 +70,4 @@ is
                        Error_Msg => "differs");
    end Stack_Address_Equality;
 
-end Validators.Kernel;
+end Mucfgcheck.Kernel;

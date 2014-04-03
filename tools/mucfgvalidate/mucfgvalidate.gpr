@@ -23,6 +23,7 @@ with "../../contrib/projects/xia";
 with "../libmulog/libmulog";
 with "../libmuxml/libmuxml";
 with "../libmutools/libmutools";
+with "../libmucfgcheck/libmucfgcheck";
 with "../shared_tools";
 
 project Mucfgvalidate extends "../tools.gpr" is

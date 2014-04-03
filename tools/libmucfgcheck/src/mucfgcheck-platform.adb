@@ -22,7 +22,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 
-package body Validators.Platform
+package body Mucfgcheck.Platform
 is
 
    use McKae.XML.XPath.XIA;
@@ -86,4 +86,4 @@ is
       return Sum;
    end Sum;
 
-end Validators.Platform;
+end Mucfgcheck.Platform;

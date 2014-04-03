@@ -18,7 +18,7 @@
 
 with Muxml;
 
-package Validators.MSR
+package Mucfgcheck.MSR
 is
 
    --  Validate that all MSR start addresses are smaller than end addresses.
@@ -27,4 +27,4 @@ is
    --  Validate that all MSR start and addresses are either low or high.
    procedure Low_Or_High (XML_Data : Muxml.XML_Data_Type);
 
-end Validators.MSR;
+end Mucfgcheck.MSR;

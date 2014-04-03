@@ -25,7 +25,7 @@ with McKae.XML.XPath.XIA;
 
 with Muxml;
 
-with Validators.Subject;
+with Mucfgcheck.Subject;
 
 package body Subject_Tests
 is
@@ -82,11 +82,11 @@ is
             Name  => "cpu",
             Value => "7");
 
-         Validators.Subject.CPU_ID (XML_Data => Data);
+         Mucfgcheck.Subject.CPU_ID (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Attribute 'cpu => 7' of 'linux' subject element not in "
                     & "valid range 0 .. 0",
@@ -105,11 +105,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Subject.Event_IPI_Different_Core (XML_Data => Data);
+         Mucfgcheck.Subject.Event_IPI_Different_Core (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Destination subject 'linux' (CPU 0) in subject's "
                     & "'linux' (CPU 0) ipi notification 'forward_keyboard' "
@@ -129,11 +129,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Subject.Event_Self_References (XML_Data => Data);
+         Mucfgcheck.Subject.Event_Self_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Reference to self in event table entry "
                     & "'forward_keyboard' of subject 'linux'",
@@ -152,11 +152,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Subject.Event_Subject_References (XML_Data => Data);
+         Mucfgcheck.Subject.Event_Subject_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Reference to unknown subject 'nonexistent' in event "
                     & "'invalid_subject'",
@@ -175,11 +175,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Subject.Event_Switch_Same_Core (XML_Data => Data);
+         Mucfgcheck.Subject.Event_Switch_Same_Core (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Destination subject 'linux' (CPU 0) in subject's "
                     & "'subject1' (CPU 1) switch notification 'linux_switch' "
@@ -212,11 +212,11 @@ is
             Name  => "name",
             Value => "linux");
 
-         Validators.Subject.Name_Uniqueness (XML_Data => Data);
+         Mucfgcheck.Subject.Name_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Subjects with id 0 and 1 have identical name 'linux'",
                     Message   => "Exception mismatch");

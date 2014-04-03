@@ -18,7 +18,7 @@
 
 with Muxml;
 
-package Validators.Device
+package Mucfgcheck.Device
 is
 
    --  Validate that devices referenced by logical devices exists.
@@ -60,4 +60,4 @@ is
    --  Validate that only shareable devices have multiple references.
    procedure Device_Sharing (XML_Data : Muxml.XML_Data_Type);
 
-end Validators.Device;
+end Mucfgcheck.Device;

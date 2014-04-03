@@ -20,9 +20,9 @@ with Ada.Exceptions;
 
 with Muxml;
 
-with Validators.Kernel;
+with Mucfgcheck.MSR;
 
-package body Kernel_Tests
+package body MSR_Tests
 is
 
    use Ahven;
@@ -32,18 +32,18 @@ is
    procedure Initialize (T : in out Testcase)
    is
    begin
-      T.Set_Name (Name => "Kernel validator tests");
+      T.Set_Name (Name => "MSR validator tests");
       T.Add_Test_Routine
-        (Routine => Validate_CPU_Store_Address_Equality'Access,
-         Name    => "Validate CPU Store address equality");
+        (Routine => Validate_Start_Smaller_End'Access,
+         Name    => "Validate MSR range start less or equal end");
       T.Add_Test_Routine
-        (Routine => Validate_Stack_Address_Equality'Access,
-         Name    => "Validate stack address equality");
+        (Routine => Validate_Low_High'Access,
+         Name    => "Validate MSR range low/high");
    end Initialize;
 
    -------------------------------------------------------------------------
 
-   procedure Validate_CPU_Store_Address_Equality
+   procedure Validate_Low_High
    is
       Data : Muxml.XML_Data_Type;
    begin
@@ -52,21 +52,21 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Kernel.CPU_Store_Address_Equality (XML_Data => Data);
+         Mucfgcheck.MSR.Low_Or_High (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'virtualAddress => 16#0021_0000#' of "
-                      & "'kernel_store_1' CPU Store memory element differs",
+                    = "MSR start 16#1f00# and end 16#c000_0800# in different"
+                    & " low/high range (Subject 'linux')",
                     Message   => "Exception mismatch");
       end;
-   end Validate_CPU_Store_Address_Equality;
+   end Validate_Low_High;
 
    -------------------------------------------------------------------------
 
-   procedure Validate_Stack_Address_Equality
+   procedure Validate_Start_Smaller_End
    is
       Data : Muxml.XML_Data_Type;
    begin
@@ -75,16 +75,16 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Kernel.Stack_Address_Equality (XML_Data => Data);
+         Mucfgcheck.MSR.Start_Smaller_End (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'virtualAddress => 16#0031_0000#' of "
-                    & "'kernel_stack_1' kernel stack memory element differs",
+                    = "MSR start 16#0902# larger than end 16#0800#"
+                    & " (Subject 'linux')",
                     Message   => "Exception mismatch");
       end;
-   end Validate_Stack_Address_Equality;
+   end Validate_Start_Smaller_End;
 
-end Kernel_Tests;
+end MSR_Tests;

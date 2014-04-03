@@ -22,11 +22,8 @@ with Interfaces;
 
 with Muxml;
 
-package Validators
+package Mucfgcheck
 is
-
-   --  Register all known validators.
-   procedure Register_All;
 
    Validation_Error : exception;
 
@@ -110,4 +107,4 @@ private
    --  attribute of the right node.
    function Is_Valid_Reference (Left, Right : DOM.Core.Node) return Boolean;
 
-end Validators;
+end Mucfgcheck;

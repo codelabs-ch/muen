@@ -25,7 +25,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 
-package body Validators.MSR
+package body Mucfgcheck.MSR
 is
 
    use McKae.XML.XPath.XIA;
@@ -126,4 +126,4 @@ is
       end loop;
    end Start_Smaller_End;
 
-end Validators.MSR;
+end Mucfgcheck.MSR;

@@ -25,7 +25,7 @@ with McKae.XML.XPath.XIA;
 
 with Muxml;
 
-with Validators.Device;
+with Mucfgcheck.Device;
 
 package body Device_Tests
 is
@@ -90,11 +90,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Device.Device_Sharing (XML_Data => Data);
+         Mucfgcheck.Device.Device_Sharing (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Non-shareable device 'serial' is referenced by multiple"
                     & " logical devices 'kernel->log', 'linux->console'",
@@ -113,11 +113,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Device.Device_Memory_Name_Uniqueness (XML_Data => Data);
+         Mucfgcheck.Device.Device_Memory_Name_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Device 'vga' has multiple memory regions with name"
                     & " 'buffer'",
@@ -150,11 +150,11 @@ is
             Name  => "physical",
             Value => "nonexistent");
 
-         Validators.Device.Device_Memory_References (XML_Data => Data);
+         Mucfgcheck.Device.Device_Memory_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                  = "Physical device memory 'nonexistent' referenced by logical"
                     & " device memory 'vga_buffer' of logical device 'gfx' not"
@@ -174,11 +174,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Device.Device_IO_Port_Name_Uniqueness (XML_Data => Data);
+         Mucfgcheck.Device.Device_IO_Port_Name_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Device 'vga' has multiple I/O ports with name 'port'",
                     Message   => "Exception mismatch");
@@ -196,11 +196,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Device.IO_Port_Range_Equality (XML_Data => Data);
+         Mucfgcheck.Device.IO_Port_Range_Equality (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "I/O port ranges of physical 'serial' and logical I/O "
                     & "port 'ports' of logical device 'log' differ",
@@ -233,11 +233,11 @@ is
             Name  => "physical",
             Value => "nonexistent");
 
-         Validators.Device.IO_Port_References (XML_Data => Data);
+         Mucfgcheck.Device.IO_Port_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Physical I/O port 'nonexistent' referenced by logical"
                     & " I/O port 'ports' of logical device 'log' not found",
@@ -270,11 +270,11 @@ is
             Name  => "start",
             Value => "16#ffff#");
 
-         Validators.Device.IO_Port_Start_Smaller_End (XML_Data => Data);
+         Mucfgcheck.Device.IO_Port_Start_Smaller_End (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "I/O port 'ports' start 16#ffff# larger than "
                     & "end 16#50b8#",
@@ -293,11 +293,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Device.IRQ_Number_Equality (XML_Data => Data);
+         Mucfgcheck.Device.IRQ_Number_Equality (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Physical IRQ 'cmd' and logical IRQ 'irq' of logical "
                     & "device 'console' differ",
@@ -316,11 +316,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Device.Physical_Device_Name_Uniqueness (XML_Data => Data);
+         Mucfgcheck.Device.Physical_Device_Name_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Multiple physical devices with name 'vga'",
                     Message   => "Exception mismatch");
@@ -352,11 +352,11 @@ is
             Name  => "physical",
             Value => "nonexistent");
 
-         Validators.Device.Physical_Device_References (XML_Data => Data);
+         Mucfgcheck.Device.Physical_Device_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Physical device 'nonexistent' referenced by logical"
                     & " device 'log' not found",
@@ -375,11 +375,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Device.Device_IRQ_Name_Uniqueness (XML_Data => Data);
+         Mucfgcheck.Device.Device_IRQ_Name_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Device 'vga' has multiple IRQs with name 'bar'",
                     Message   => "Exception mismatch");
@@ -412,11 +412,11 @@ is
             Name  => "physical",
             Value => "nonexistent");
 
-         Validators.Device.Physical_IRQ_References (XML_Data => Data);
+         Mucfgcheck.Device.Physical_IRQ_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Physical IRQ 'nonexistent' referenced by logical IRQ"
                     & " 'irq' of logical device 'console' not found",
@@ -435,11 +435,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Device.Physical_IRQ_Uniqueness (XML_Data => Data);
+         Mucfgcheck.Device.Physical_IRQ_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Devices 'serial' and 'keyboard' share IRQ 1",
                     Message   => "Exception mismatch");

@@ -18,7 +18,7 @@
 
 with Muxml;
 
-package Validators.Subject
+package Mucfgcheck.Subject
 is
 
    --  Validate subject name uniqueness
@@ -42,4 +42,4 @@ is
    --  different logical CPUs.
    procedure Event_IPI_Different_Core (XML_Data : Muxml.XML_Data_Type);
 
-end Validators.Subject;
+end Mucfgcheck.Subject;

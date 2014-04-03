@@ -26,7 +26,7 @@ with McKae.XML.XPath.XIA;
 
 with Muxml;
 
-with Validators.Memory;
+with Mucfgcheck.Memory;
 
 package body Memory_Tests
 is
@@ -141,11 +141,11 @@ is
             Name  => "name",
             Value => "kernel_1|vmxon");
 
-         Validators.Memory.Entity_Name_Encoding (XML_Data => Data);
+         Mucfgcheck.Memory.Entity_Name_Encoding (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Entity 'kernel_1' encoded in memory region "
                     & "'kernel_1|vmxon' does not exist or is invalid",
@@ -164,11 +164,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Memory.Entity_Name_Encoding (XML_Data => Data);
+         Mucfgcheck.Memory.Entity_Name_Encoding (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Entity 'invalid_0' encoded in memory region "
                     & "'invalid_0|vmxon' does not exist or is invalid",
@@ -187,11 +187,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Memory.Kernel_PT_Consecutiveness (XML_Data => Data);
+         Mucfgcheck.Memory.Kernel_PT_Consecutiveness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Kernel PT memory region 'kernel_0|pt' not adjacent to "
                     & "other PT regions",
@@ -223,11 +223,11 @@ is
            (Elem  => Node,
             Name  => "name",
             Value => "foobar");
-         Validators.Memory.Kernel_PT_Region_Presence (XML_Data => Data);
+         Mucfgcheck.Memory.Kernel_PT_Region_Presence (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Kernel PT region 'kernel_0|pt' for logical CPU 0"
                     & " not found",
@@ -260,11 +260,11 @@ is
             Name  => "name",
             Value => "foobar");
 
-         Validators.Memory.Kernel_Stack_Region_Presence (XML_Data => Data);
+         Mucfgcheck.Memory.Kernel_Stack_Region_Presence (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Kernel stack region 'kernel_stack_0' for logical CPU 0"
                     & " not found",
@@ -297,11 +297,11 @@ is
             Name  => "name",
             Value => "foobar");
 
-         Validators.Memory.Kernel_Store_Region_Presence (XML_Data => Data);
+         Mucfgcheck.Memory.Kernel_Store_Region_Presence (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Kernel store region 'kernel_store_0' for logical CPU 0"
                     & " not found",
@@ -320,11 +320,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Memory.Physical_Address_Alignment (XML_Data => Data);
+         Mucfgcheck.Memory.Physical_Address_Alignment (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Attribute 'physicalAddress => 16#0010_0023#' of "
                     & "'kernel_text' physical memory element not page aligned",
@@ -343,11 +343,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Memory.Physical_Memory_Name_Uniqueness (XML_Data => Data);
+         Mucfgcheck.Memory.Physical_Memory_Name_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Multiple physical memory regions with name"
                     & " 'kernel_text'",
@@ -366,11 +366,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Memory.Physical_Memory_Overlap (XML_Data => Data);
+         Mucfgcheck.Memory.Physical_Memory_Overlap (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Overlap of physical or device memory region "
                     & "'invalid_0|vmxon' and 'invalid|vmcs'",
@@ -403,11 +403,11 @@ is
             Name  => "physicalAddress",
             Value => "16#000b_7000#");
 
-         Validators.Memory.Physical_Memory_Overlap (XML_Data => Data);
+         Mucfgcheck.Memory.Physical_Memory_Overlap (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Overlap of physical or device memory region "
                     & "'invalid_0|vmxon' and 'videobuffer'",
@@ -426,11 +426,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Memory.Physical_Memory_References (XML_Data => Data);
+         Mucfgcheck.Memory.Physical_Memory_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Physical memory 'lnx_mem' referenced by logical memory"
                     & " 'linux' not found",
@@ -449,11 +449,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Memory.Region_Size (XML_Data => Data);
+         Mucfgcheck.Memory.Region_Size (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Attribute 'size => 16#0042#' of 'ram_1' physical "
                     & "memory element not multiple of page size (4K)",
@@ -472,11 +472,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Memory.Virtual_Address_Alignment (XML_Data => Data);
+         Mucfgcheck.Memory.Virtual_Address_Alignment (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Attribute 'virtualAddress => 16#000e_0500#' of 'linux' "
                     & "logical memory element not page aligned",
@@ -509,11 +509,11 @@ is
             Name  => "virtualAddress",
             Value => "16#000b_7000#");
 
-         Validators.Memory.Virtual_Memory_Overlap (XML_Data => Data);
+         Mucfgcheck.Memory.Virtual_Memory_Overlap (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Overlap of virtual memory region 'text' and "
                     & "'vga_buffer' of kernel running on CPU 0",
@@ -554,11 +554,11 @@ is
             Name  => "virtualAddress",
             Value => "16#000b_7000#");
 
-         Validators.Memory.Virtual_Memory_Overlap (XML_Data => Data);
+         Mucfgcheck.Memory.Virtual_Memory_Overlap (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Overlap of virtual memory region 'linux' and "
                     & "'vga_buffer' of subject 'linux'",
@@ -604,11 +604,11 @@ is
             Name  => "logical",
             Value => "testregion");
 
-         Validators.Memory.Virtual_Memory_Overlap (XML_Data => Data);
+         Mucfgcheck.Memory.Virtual_Memory_Overlap (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Overlap of virtual memory region 'text' and "
                     & "'testregion' of kernel running on CPU 0",
@@ -666,11 +666,11 @@ is
             Name  => "logical",
             Value => "testregion");
 
-         Validators.Memory.Virtual_Memory_Overlap (XML_Data => Data);
+         Mucfgcheck.Memory.Virtual_Memory_Overlap (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Overlap of virtual memory region 'linux' and "
                     & "'testregion' of subject 'linux'",
@@ -689,11 +689,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Memory.VMCS_Consecutiveness (XML_Data => Data);
+         Mucfgcheck.Memory.VMCS_Consecutiveness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Memory region 'invalid|vmcs' not adjacent to other"
                     & " VMCS regions",
@@ -712,11 +712,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Memory.VMCS_In_Lowmem (XML_Data => Data);
+         Mucfgcheck.Memory.VMCS_In_Lowmem (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Attribute 'physicalAddress => 16#0010_0000#' of "
                     & "'invalid|vmcs' VMCS memory element not below 1 MiB",
@@ -735,11 +735,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Memory.VMCS_Region_Presence (XML_Data => Data);
+         Mucfgcheck.Memory.VMCS_Region_Presence (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "VMCS region 'linux|vmcs' for subject linux not found",
                     Message   => "Exception mismatch");
@@ -757,11 +757,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Memory.VMCS_Region_Size (XML_Data => Data);
+         Mucfgcheck.Memory.VMCS_Region_Size (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Attribute 'size => 16#0001_0013#' of 'invalid|vmcs' "
                     & "VMCS memory element not 4K",
@@ -780,11 +780,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Memory.VMXON_Consecutiveness (XML_Data => Data);
+         Mucfgcheck.Memory.VMXON_Consecutiveness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Memory region 'invalid_0|vmxon' not adjacent to other"
                     & " VMXON regions",
@@ -803,11 +803,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Memory.VMXON_In_Lowmem (XML_Data => Data);
+         Mucfgcheck.Memory.VMXON_In_Lowmem (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Attribute 'physicalAddress => 16#0010_0000#' of "
                     & "'invalid_0|vmxon' VMXON memory element not below 1 MiB",
@@ -826,11 +826,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Memory.VMXON_Region_Presence (XML_Data => Data);
+         Mucfgcheck.Memory.VMXON_Region_Presence (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "VMXON region 'kernel_0|vmxon' for logical CPU 0 not "
                     & "found",
@@ -849,11 +849,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Memory.VMXON_Region_Size (XML_Data => Data);
+         Mucfgcheck.Memory.VMXON_Region_Size (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Attribute 'size => 16#0001_0012#' of 'invalid_0|vmxon' "
                     & "VMXON memory element not 4K",

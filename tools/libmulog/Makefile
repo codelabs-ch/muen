@@ -1,4 +1,1 @@
-all:
-
-clean:
-	@rm -rf lib obj
+include ../library_implicit.mk

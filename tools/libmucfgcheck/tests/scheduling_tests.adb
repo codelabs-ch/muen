@@ -20,7 +20,7 @@ with Ada.Exceptions;
 
 with Muxml;
 
-with Validators.Scheduling;
+with Mucfgcheck.Scheduling;
 
 package body Scheduling_Tests
 is
@@ -58,11 +58,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Scheduling.CPU_Element_Count (XML_Data => Data);
+         Mucfgcheck.Scheduling.CPU_Element_Count (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "CPU element count of 2 in scheduling plan invalid, "
                     & "logical CPU count is 1",
@@ -81,11 +81,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Scheduling.Major_Frame_Ticks (XML_Data => Data);
+         Mucfgcheck.Scheduling.Major_Frame_Ticks (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Invalid CPU elements in scheduling plan, tick counts "
                     & "differ",
@@ -104,11 +104,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Scheduling.Subject_CPU_Affinity (XML_Data => Data);
+         Mucfgcheck.Scheduling.Subject_CPU_Affinity (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Subject 'subject1' scheduled on wrong CPU 0,"
                     & " should be 1",
@@ -127,11 +127,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Scheduling.Subject_References (XML_Data => Data);
+         Mucfgcheck.Scheduling.Subject_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Subject 'nonexistent' referenced in scheduling plan not"
                     & " found",

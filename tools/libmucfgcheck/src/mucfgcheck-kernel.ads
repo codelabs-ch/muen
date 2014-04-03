@@ -18,7 +18,7 @@
 
 with Muxml;
 
-package Validators.Kernel
+package Mucfgcheck.Kernel
 is
 
    --  Validate that all CPU store virtual addresses are equal.
@@ -27,4 +27,4 @@ is
    --  Validate that all stack virtual addresses are equal.
    procedure Stack_Address_Equality (XML_Data : Muxml.XML_Data_Type);
 
-end Validators.Kernel;
+end Mucfgcheck.Kernel;

@@ -24,7 +24,7 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Muxml.Utils;
 
-package body Validators.Subject
+package body Mucfgcheck.Subject
 is
 
    use McKae.XML.XPath.XIA;
@@ -285,4 +285,4 @@ is
                    Comparator => Check_Name_Inequality'Access);
    end Name_Uniqueness;
 
-end Validators.Subject;
+end Mucfgcheck.Subject;

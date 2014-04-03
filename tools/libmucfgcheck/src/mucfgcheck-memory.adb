@@ -30,7 +30,7 @@ with Muxml.Utils;
 with Mutools.Constants;
 with Mutools.Utils;
 
-package body Validators.Memory
+package body Mucfgcheck.Memory
 is
 
    use McKae.XML.XPath.XIA;
@@ -812,4 +812,4 @@ is
                        Error_Msg => "not 4K");
    end VMXON_Region_Size;
 
-end Validators.Memory;
+end Mucfgcheck.Memory;

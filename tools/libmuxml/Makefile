@@ -12,9 +12,7 @@ COMPONENT_DEPS = $(SCHEMA_FILES)
 TEST_DEPS      = $(COMPONENT_DEPS)
 COV_DEPS       = $(COMPONENT_DEPS)
 
-ADDITIONAL_CLEAN = $(SCHEMA_FILES)
-
-include ../component.mk
+include ../library.mk
 include ../../Makecov
 
 DUMMY := $(shell mkdir -p $(OBJ_DIR))

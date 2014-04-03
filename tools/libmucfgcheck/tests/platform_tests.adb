@@ -20,7 +20,7 @@ with Ada.Exceptions;
 
 with Muxml;
 
-with Validators.Platform;
+with Mucfgcheck.Platform;
 
 package body Platform_Tests
 is
@@ -52,11 +52,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Platform.Memory_Block_Overlap (XML_Data => Data);
+         Mucfgcheck.Platform.Memory_Block_Overlap (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Overlap of platform memory block 'ram_1' and 'ram_2'",
                     Message   => "Exception mismatch");
@@ -74,11 +74,11 @@ is
                    File => "data/validators.xml");
 
       begin
-         Validators.Platform.Memory_Space (XML_Data => Data);
+         Mucfgcheck.Platform.Memory_Space (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
-         when E : Validators.Validation_Error =>
+         when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Allocated 253989 bytes of physical memory but only 4162"
                     & " bytes available by the platform",

@@ -21,9 +21,9 @@ with Ada.Exceptions;
 
 with Mulog;
 with Muxml;
+with Mucfgcheck;
 
 with Validate.Command_Line;
-with Validators;
 
 procedure Mucfgvalidate
 is
@@ -33,7 +33,7 @@ begin
 
 exception
    when E : Muxml.Processing_Error |
-      Validators.Validation_Error =>
+      Mucfgcheck.Validation_Error =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Validation failed, aborting");
       Mulog.Log (Level => Mulog.Error,

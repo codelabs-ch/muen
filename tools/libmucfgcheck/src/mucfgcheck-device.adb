@@ -27,7 +27,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 
-package body Validators.Device
+package body Mucfgcheck.Device
 is
 
    use Ada.Strings.Unbounded;
@@ -593,4 +593,4 @@ is
                    Comparator => Check_Inequality'Access);
    end Physical_IRQ_Uniqueness;
 
-end Validators.Device;
+end Mucfgcheck.Device;

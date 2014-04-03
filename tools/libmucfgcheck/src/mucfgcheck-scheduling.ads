@@ -18,13 +18,20 @@
 
 with Muxml;
 
-package Validators.Platform
+package Mucfgcheck.Scheduling
 is
 
-   --  Validate that memory regions fit into available platform memory.
-   procedure Memory_Space (XML_Data : Muxml.XML_Data_Type);
+   --  Validate that a CPU element for each logical CPU exists in a major
+   --  frame.
+   procedure CPU_Element_Count (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that no memory blocks overlap.
-   procedure Memory_Block_Overlap (XML_Data : Muxml.XML_Data_Type);
+   --  Validate subject references.
+   procedure Subject_References (XML_Data : Muxml.XML_Data_Type);
 
-end Validators.Platform;
+   --  Validate that subjects are scheduled on the correct logical CPU.
+   procedure Subject_CPU_Affinity (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate tick counts in major frame.
+   procedure Major_Frame_Ticks (XML_Data : Muxml.XML_Data_Type);
+
+end Mucfgcheck.Scheduling;

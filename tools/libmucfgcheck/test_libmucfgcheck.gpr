@@ -16,21 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Text_Runner;
-with Ahven.Framework;
+with "../../contrib/projects/ahven";
+with "../shared_tools";
 
-with Validate_Tests;
+with "libmucfgcheck";
 
-procedure Test_Runner
-is
-   use Ahven.Framework;
+project Test_Libmucfgcheck extends "../tools.gpr" is
 
-   S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Muvalidate tests");
-begin
-   Add_Test (Suite => S.all,
-             T     => new Validate_Tests.Testcase);
+   for Source_Dirs use ("tests");
+   for Main use ("test_runner.adb");
+   for Object_Dir use "obj/" & Shared_Tools.Build;
 
-   Ahven.Text_Runner.Run (Suite => S);
-   Release_Suite (T => S);
-end Test_Runner;
+end Test_Libmucfgcheck;

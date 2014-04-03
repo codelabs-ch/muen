@@ -18,7 +18,7 @@
 
 with Muxml;
 
-package Validators.Memory
+package Mucfgcheck.Memory
 is
 
    --  Validate that a VMXON region exists for every specified kernel.
@@ -82,4 +82,4 @@ is
    --  Validate that a kernel PT region exists for every CPU.
    procedure Kernel_PT_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 
-end Validators.Memory;
+end Mucfgcheck.Memory;

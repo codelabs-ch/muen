@@ -86,6 +86,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Subject_Bitmaps
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_subject_bitmaps.xml",
+         Ref_Filename => "data/memory_subject_bitmaps.ref.xml",
+         Expander     => Expanders.Memory.Add_Subject_Bitmaps'Access);
+   end Add_Subject_Bitmaps;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Subject_States
    is
    begin
@@ -161,6 +172,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_Alignment'Access,
          Name    => "Add alignment attribute");
+      T.Add_Test_Routine
+        (Routine => Add_Subject_Bitmaps'Access,
+         Name    => "Add subject I/O and MSR bitmap memory regions");
    end Initialize;
 
 end Memory_Tests;

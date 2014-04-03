@@ -206,6 +206,51 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Subject_Bitmaps (Data : in out Muxml.XML_Data_Type)
+   is
+      IOBM_Size  : constant := Mutools.Constants.Page_Size * 2;
+      MSRBM_Size : constant := Mutools.Constants.Page_Size;
+      Nodes      : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+         begin
+            Mulog.Log (Msg => "Adding I/O and MSR bitmap memory regions for"
+                       & " subject '" & Subj_Name & "'");
+            XML_Utils.Add_Memory_Region
+              (Policy      => Data,
+               Name        => Subj_Name & "|iobm",
+               Address     => "",
+               Size        => Mutools.Utils.To_Hex (Number => IOBM_Size),
+               Caching     => "WB",
+               File_Name   => Subj_Name & "_iobm",
+               File_Format => "iobm",
+               File_Offset => "none");
+            XML_Utils.Add_Memory_Region
+              (Policy      => Data,
+               Name        => Subj_Name & "|msrbm",
+               Address     => "",
+               Size        => Mutools.Utils.To_Hex (Number => MSRBM_Size),
+               Caching     => "WB",
+               File_Name   => Subj_Name & "_msrbm",
+               File_Format => "msrbm",
+               File_Offset => "none");
+         end;
+      end loop;
+   end Add_Subject_Bitmaps;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Subject_States (Data : in out Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List

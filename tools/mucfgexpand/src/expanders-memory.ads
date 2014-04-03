@@ -46,4 +46,7 @@ is
    --  Add alignment attribute with default value where missing.
    procedure Add_Alignment (Data : in out Muxml.XML_Data_Type);
 
+   --  Add subject I/O and MSR bitmap memory regions.
+   procedure Add_Subject_Bitmaps (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Memory;

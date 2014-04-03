@@ -53,4 +53,7 @@ is
    --  Add alignment attribute.
    procedure Add_Alignment;
 
+   --  Add I/O and MSR bitmap memory regions.
+   procedure Add_Subject_Bitmaps;
+
 end Memory_Tests;

@@ -13,7 +13,7 @@
   </device>
  </platform>
  <memory>
-  <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
+  <memory alignment="16#1000#" caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
   <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#4000#">
    <file filename="lnx_pt" format="pt" offset="none"/>
   </memory>

@@ -53,7 +53,8 @@ is
       Procs.Register (Process => Kernel.Map_Tau0_Interface'Access);
       Procs.Register (Process => Kernel.Add_Devices'Access);
 
-      --  All kernel/subject memory regions and mappings must exist to add PTs.
+      --  All kernel/subject memory regions and mappings must exist and specify
+      --  and alignment to add PTs.
 
       Procs.Register (Process => Memory.Add_Kernel_PTs'Access);
       Procs.Register (Process => Memory.Add_Subject_PTs'Access);

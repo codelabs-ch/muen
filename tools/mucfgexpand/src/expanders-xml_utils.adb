@@ -181,16 +181,15 @@ is
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Physical,
                     Name => "size"));
-            Align : constant String
-              := DOM.Core.Elements.Get_Attribute
+            Alignment : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
                    (Elem => Physical,
-                    Name => "alignment");
+                    Name => "alignment"));
          begin
             Paging.Memory.Add_Memory_Region
               (Mem_Layout       => Layout,
-               Physical_Address =>
-                 (if Align'Length > 0 then Interfaces.Unsigned_64'Value (Align)
-                  else Mutools.Constants.Page_Size),
+               Physical_Address => Alignment,
                Virtual_Address  => Virtual_Address,
                Size             => Size,
                Caching          => Paging.WB,

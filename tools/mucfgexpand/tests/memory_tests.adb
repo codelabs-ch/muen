@@ -103,6 +103,7 @@ is
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/memory_subject_pts.xml",
          Ref_Filename => "data/memory_subject_pts.ref.xml",
+         Pre          => Expanders.Memory.Add_Alignment'Access,
          Expander     => Expanders.Memory.Add_Subject_PTs'Access);
    end Add_Subject_PTs;
 

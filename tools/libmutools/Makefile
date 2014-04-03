@@ -1,4 +1,4 @@
 COMPONENT = libmutools
 
-include ../component.mk
+include ../library.mk
 include ../../Makecov

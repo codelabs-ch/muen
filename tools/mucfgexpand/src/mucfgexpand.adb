@@ -23,6 +23,7 @@ with Mulog;
 with Muxml;
 
 with Mutools.Cmd_Line.Infile_Outfile;
+with Mucfgcheck;
 
 with Expand;
 with Expanders;
@@ -39,7 +40,8 @@ begin
 exception
    when E : Muxml.XML_Input_Error
       | Muxml.Validation_Error
-      | Expanders.Expansion_Error =>
+      | Expanders.Expansion_Error
+      | Mucfgcheck.Validation_Error =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Expansion failed, aborting");
       Mulog.Log (Level => Mulog.Error,

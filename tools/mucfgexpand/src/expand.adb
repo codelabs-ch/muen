@@ -19,6 +19,7 @@
 with Mulog;
 
 with Expand.Pre_Checks;
+with Expand.Post_Checks;
 with Expanders;
 
 package body Expand
@@ -34,13 +35,16 @@ is
       Pre_Checks.Register_All;
       Mulog.Log
         (Msg => "Registered pre-checks" & Pre_Checks.Get_Count'Img);
+      Post_Checks.Register_All;
+      Mulog.Log
+        (Msg => "Registered post-checks" & Post_Checks.Get_Count'Img);
       Expanders.Register_All;
       Mulog.Log
         (Msg => "Registered expanders" & Expanders.Get_Count'Img);
 
       Pre_Checks.Run (Data => Policy);
-
       Expanders.Run (Data => Policy);
+      Post_Checks.Run (Data => Policy);
 
       Muxml.Write
         (File => Output_File,

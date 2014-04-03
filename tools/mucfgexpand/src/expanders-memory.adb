@@ -35,6 +35,9 @@ with Expanders.XML_Utils;
 package body Expanders.Memory
 is
 
+   --  Physical start address of VMX-related memory regions.
+   VMX_Start_Address : constant Interfaces.Unsigned_64 := 16#1000#;
+
    -------------------------------------------------------------------------
 
    procedure Add_Alignment (Data : in out Muxml.XML_Data_Type)
@@ -252,7 +255,7 @@ is
 
    procedure Add_VMXON_Regions (Data : in out Muxml.XML_Data_Type)
    is
-      Curr_Addr : Interfaces.Unsigned_64 := 16#1000#;
+      Curr_Addr : Interfaces.Unsigned_64 := VMX_Start_Address;
       CPU_Count : constant Positive      := Positive'Value
         (Muxml.Utils.Get_Attribute
            (Doc   => Data.Doc,

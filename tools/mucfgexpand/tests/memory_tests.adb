@@ -97,6 +97,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Subject_PTs
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_subject_pts.xml",
+         Ref_Filename => "data/memory_subject_pts.ref.xml",
+         Expander     => Expanders.Memory.Add_Subject_PTs'Access);
+   end Add_Subject_PTs;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Subject_States
    is
    begin
@@ -175,6 +186,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_Subject_Bitmaps'Access,
          Name    => "Add subject I/O and MSR bitmap memory regions");
+      T.Add_Test_Routine
+        (Routine => Add_Subject_PTs'Access,
+         Name    => "Add subject pagetable memory regions");
    end Initialize;
 
 end Memory_Tests;

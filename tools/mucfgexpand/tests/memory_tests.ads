@@ -56,4 +56,7 @@ is
    --  Add I/O and MSR bitmap memory regions.
    procedure Add_Subject_Bitmaps;
 
+   --  Add subject pagetable memory regions.
+   procedure Add_Subject_PTs;
+
 end Memory_Tests;

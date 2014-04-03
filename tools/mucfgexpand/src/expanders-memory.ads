@@ -25,6 +25,9 @@ is
    --  Add kernel pagetable memory elements.
    procedure Add_Kernel_PTs (Data : in out Muxml.XML_Data_Type);
 
+   --  Add subject pagetable memory elements.
+   procedure Add_Subject_PTs (Data : in out Muxml.XML_Data_Type);
+
    --  Add kernel stack and store memory elements.
    procedure Add_Stack_Store (Data : in out Muxml.XML_Data_Type);
 

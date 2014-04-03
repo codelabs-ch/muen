@@ -251,6 +251,49 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Subject_PTs (Data : in out Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Size      : constant Interfaces.Unsigned_64
+              := XML_Utils.Calculate_PT_Size
+                (Policy             => Data,
+                 Dev_Virt_Mem_XPath => "/system/subjects/subject[@name='"
+                 & Subj_Name & "']/devices/device/memory",
+                 Virt_Mem_XPath     => "/system/subjects/subject[@name='"
+                 & Subj_Name & "']/memory/memory");
+            Size_Str  : constant String := Mutools.Utils.To_Hex
+              (Number => Size);
+         begin
+            Mulog.Log (Msg => "Adding pagetable region with size " & Size_Str
+                       & " for subject '" & Subj_Name & "'");
+            XML_Utils.Add_Memory_Region
+              (Policy      => Data,
+               Name        => Subj_Name & "|pt",
+               Address     => "",
+               Size        => Size_Str,
+               Caching     => "WB",
+               File_Name   =>  Subj_Name & "_pt",
+               File_Format => "pt",
+               File_Offset => "none");
+         end;
+      end loop;
+   end Add_Subject_PTs;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Subject_States (Data : in out Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List

@@ -31,41 +31,26 @@
 
 	<memory>
 		<!-- tau0 subject -->
-		<memory name="tau0|pt" size="16#4000#" caching="WB">
-			<file format="pt" filename="tau0_pt" offset="none"/>
-		</memory>
 		<memory name="tau0|bin" size="16#0001_4000#" caching="WB">
 			<file format="bin_raw" filename="tau0" offset="none"/>
 		</memory>
 
 		<!-- time subject -->
-		<memory name="time|pt" size="16#4000#" caching="WB">
-			<file format="pt" filename="time_pt" offset="none"/>
-		</memory>
 		<memory name="time|bin" size="16#0001_4000#" caching="WB">
 			<file format="bin_raw" filename="time" offset="none"/>
 		</memory>
 
 		<!-- vt subject -->
-		<memory name="vt|pt" size="16#4000#" caching="WB">
-			<file format="pt" filename="vt_pt" offset="none"/>
-		</memory>
 		<memory name="vt|bin" size="16#0002_4000#" caching="WB">
 			<file format="bin_raw" filename="vt" offset="none"/>
 		</memory>
 
 		<!-- sm subject -->
-		<memory name="sm|pt" size="16#4000#" caching="WB">
-			<file format="pt" filename="sm_pt" offset="none"/>
-		</memory>
 		<memory name="sm|bin" size="16#0001_4000#" caching="WB">
 			<file format="bin_raw" filename="sm" offset="none"/>
 		</memory>
 
 		<!-- Linux subject -->
-		<memory name="linux|pt" size="16#5000#" caching="WB">
-			<file format="pt" filename="linux_pt" offset="none"/>
-		</memory>
 		<memory name="linux|bin" size="16#0050_0000#" alignment="16#0020_0000#" caching="WB">
 			<file format="bzimage" filename="bzImage" offset="none"/>
 		</memory>

@@ -38,6 +38,7 @@ is
    procedure Register_All
    is
    begin
+      Procs.Register (Process => Memory.Add_Alignment'Access);
       Procs.Register (Process => Memory.Add_Kernel_Binary'Access);
       Procs.Register (Process => Memory.Add_Stack_Store'Access);
       Procs.Register (Process => Memory.Add_Subject_States'Access);
@@ -56,10 +57,6 @@ is
 
       Procs.Register (Process => Memory.Add_Kernel_PTs'Access);
       Procs.Register (Process => Memory.Add_Subject_PTs'Access);
-
-      --  Add alignment to all memory regions including expanded ones.
-
-      Procs.Register (Process => Memory.Add_Alignment'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

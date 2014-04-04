@@ -35,6 +35,11 @@ is
    pragma Warnings (On, "*padded by * bits");
 
    --  Descriptors used to manage subject states.
+
+   --# accept Flow, 31, Descriptors,
+   --#    "Initialized on a per-CPU basis in Scheduler.Init";
+   --# accept Flow, 32, Descriptors,
+   --#    "Initialized on a per-CPU basis in Scheduler.Init";
    --# accept Warning, 396, Descriptors, "Not an external variable";
    Descriptors : Subject_State_Array;
    for Descriptors'Address use System'To_Address (16#001e0000#);
@@ -255,11 +260,4 @@ is
       Descriptors (Id).RSP := Value;
    end Set_RSP;
 
-begin
-
-   --# hide SK.Subjects;
-
-   for D in Skp.Subject_Id_Type range Subject_State_Array'Range loop
-      Descriptors (D) := SK.Null_Subject_State;
-   end loop;
 end SK.Subjects;

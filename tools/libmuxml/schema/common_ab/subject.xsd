@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+	<xs:complexType name="subjectType">
+		<xs:complexContent>
+			<xs:extension base="subjectBaseType"/>
+		</xs:complexContent>
+	</xs:complexType>
+
+</xs:schema>

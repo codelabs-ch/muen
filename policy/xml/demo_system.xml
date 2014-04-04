@@ -269,6 +269,7 @@
 			</memory>
 			<devices/>
 			<events/>
+			<binary filename="tau0" size="16#0001_4000#" virtualAddress="16#1000#"/>
 		</subject>
 
 		<subject id="1" name="vt" cpu="0">
@@ -473,6 +474,7 @@
 					</group>
 				</source>
 			</events>
+			<binary filename="vt" size="16#0002_4000#" virtualAddress="16#1000#"/>
 		</subject>
 
 		<subject id="2" name="time" cpu="2">
@@ -668,6 +670,7 @@
 					</group>
 				</source>
 			</events>
+			<binary filename="time" size="16#0001_4000#" virtualAddress="16#1000#"/>
 		</subject>
 
 		<subject id="3" name="sm" cpu="1">
@@ -862,6 +865,7 @@
 					</group>
 				</source>
 			</events>
+			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
 		</subject>
 
 		<subject id="4" name="linux" cpu="1">
@@ -1248,6 +1252,7 @@
 					</group>
 				</source>
 			</events>
+			<binary filename="bzImage" size="16#0050_0000#" virtualAddress="16#0040_0000#"/>
 		</subject>
 	</subjects>
 

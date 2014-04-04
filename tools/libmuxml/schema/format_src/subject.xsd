@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+	<xs:complexType name="subjectType">
+		<xs:complexContent>
+			<xs:extension base="subjectBaseType">
+				<xs:sequence>
+					<xs:element name="binary" type="binaryType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="binaryType">
+		<xs:attribute name="filename"       type="xs:string"      use="required"/>
+		<xs:attribute name="size"           type="memorySizeType" use="required"/>
+		<xs:attribute name="virtualAddress" type="word64Type"     use="required"/>
+	</xs:complexType>
+
+</xs:schema>

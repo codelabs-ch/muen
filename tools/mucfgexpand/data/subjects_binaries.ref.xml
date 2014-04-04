@@ -14,9 +14,6 @@
  </platform>
  <memory>
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="test" physicalAddress="16#2000#" size="16#4000#">
-   <file filename="testfile" format="bin_raw" offset="16#1000#"/>
-  </memory>
  </memory>
  <events/>
  <subjects>
@@ -198,7 +195,6 @@
    </memory>
    <devices/>
    <events/>
-   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>
   <subject cpu="1" id="1" name="subject1">
    <vcpu>
@@ -376,7 +372,6 @@
    </memory>
    <devices/>
    <events/>
-   <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

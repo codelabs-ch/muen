@@ -216,6 +216,7 @@
    </memory>
    <devices/>
    <events/>
+   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>
   <subject cpu="1" id="1" name="subject1">
    <vcpu>
@@ -393,6 +394,7 @@
    </memory>
    <devices/>
    <events/>
+   <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

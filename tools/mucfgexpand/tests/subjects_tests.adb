@@ -16,33 +16,35 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Text_Runner;
-with Ahven.Framework;
+with Expanders.Subjects;
 
-with XML_Utils_Tests;
-with Memory_Tests;
-with Kernel_Tests;
-with Expand_Tests;
-with Subjects_Tests;
+with Test_Utils.Expander;
 
-procedure Test_Runner
+package body Subjects_Tests
 is
-   use Ahven.Framework;
 
-   S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Mucfgexpand tests");
-begin
-   Add_Test (Suite => S.all,
-             T     => new XML_Utils_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Memory_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Kernel_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Expand_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Subjects_Tests.Testcase);
+   use Ahven;
 
-   Ahven.Text_Runner.Run (Suite => S);
-   Release_Suite (T => S);
-end Test_Runner;
+   -------------------------------------------------------------------------
+
+   procedure Add_Binaries
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_binaries.xml",
+         Ref_Filename => "data/subjects_binaries.ref.xml",
+         Expander     => Expanders.Subjects.Add_Binaries'Access);
+   end Add_Binaries;
+
+   -------------------------------------------------------------------------
+
+   procedure Initialize (T : in out Testcase)
+   is
+   begin
+      T.Set_Name (Name => "Subjects expander tests");
+      T.Add_Test_Routine
+        (Routine => Add_Binaries'Access,
+         Name    => "Add binaries");
+   end Initialize;
+
+end Subjects_Tests;

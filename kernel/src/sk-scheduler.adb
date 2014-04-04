@@ -253,6 +253,10 @@ is
       for I in Skp.Subject_Id_Type loop
          if Skp.Subjects.Get_CPU_Id (Subject_Id => I) = CPU_Global.CPU_ID then
 
+            --  Initialize subject state.
+
+            Subjects.Clear_State (Id => I);
+
             --  VMCS
 
             VMCS_Addr := Skp.Subjects.Get_VMCS_Address (Subject_Id => I);

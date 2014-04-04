@@ -42,6 +42,20 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Clear_State (Id : Skp.Subject_Id_Type)
+   --# global
+   --#    in out Descriptors;
+   --# derives
+   --#    Descriptors from *, Id;
+   --# post
+   --#    Descriptors (Id) = SK.Null_Subject_State;
+   is
+   begin
+      Descriptors (Id) := SK.Null_Subject_State;
+   end Clear_State;
+
+   -------------------------------------------------------------------------
+
    function Get_Instruction_Length (Id : Skp.Subject_Id_Type) return SK.Word64
    --# global
    --#    Descriptors;

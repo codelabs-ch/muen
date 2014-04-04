@@ -114,4 +114,11 @@ is
    --#       X86_64.State &
    --#    X86_64.State from *;
 
+   --  Clear state of subject with given ID.
+   procedure Clear_State (Id : Skp.Subject_Id_Type);
+   --# global
+   --#    in out State;
+   --# derives
+   --#    State from *, Id;
+
 end SK.Subjects;

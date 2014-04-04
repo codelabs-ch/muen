@@ -9,7 +9,7 @@
    <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
   </device>
   <device name="ioapic" shared="false">
-   <memory name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#" caching="UC"/>
+   <memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>
   </device>
  </platform>
  <memory>

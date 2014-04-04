@@ -30,6 +30,13 @@ is
      (Node      : DOM.Core.Node;
       New_Child : DOM.Core.Node);
 
+   --  Remove child element node with given name. All children of the specified
+   --  child node are removed as well. An exception is raised if no child with
+   --  the given name exists.
+   procedure Remove_Child
+     (Node       : DOM.Core.Node;
+      Child_Name : String);
+
    --  Add physical memory region element with given parameters to policy.
    procedure Add_Memory_Region
      (Policy    : in out Muxml.XML_Data_Type;
@@ -71,5 +78,7 @@ is
       Dev_Virt_Mem_XPath : String;
       Virt_Mem_XPath     : String)
       return Interfaces.Unsigned_64;
+
+   XML_Error : exception;
 
 end Expanders.XML_Utils;

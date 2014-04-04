@@ -18,7 +18,7 @@
 
 with Ahven.Framework;
 
-package Memory_Tests
+package Subjects_Tests
 is
 
    type Testcase is new Ahven.Framework.Test_Case with null record;
@@ -26,37 +26,7 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
-   --  Add kernel binary memory regions.
-   procedure Add_Kernel_Binary;
+   --  Add subject binaries.
+   procedure Add_Binaries;
 
-   --  Add stack and store regions.
-   procedure Add_Stack_Store;
-
-   --  Add subject state regions.
-   procedure Add_Subject_States;
-
-   --  Add tau0 interface memory region.
-   procedure Add_Tau0_Interface;
-
-   --  Add AP trampoline memory region.
-   procedure Add_AP_Trampoline;
-
-   --  Add VMXON memory regions.
-   procedure Add_VMXON_Regions;
-
-   --  Add VMXON memory regions.
-   procedure Add_VMCS_Regions;
-
-   --  Add kernel pagetable memory regions.
-   procedure Add_Kernel_PTs;
-
-   --  Add alignment attribute.
-   procedure Add_Alignment;
-
-   --  Add I/O and MSR bitmap memory regions.
-   procedure Add_Subject_Bitmaps;
-
-   --  Add subject pagetable memory regions.
-   procedure Add_Subject_PTs;
-
-end Memory_Tests;
+end Subjects_Tests;

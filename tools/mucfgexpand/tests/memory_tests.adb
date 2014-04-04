@@ -51,14 +51,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_Binary_Memory
+   procedure Add_Kernel_Binary
    is
    begin
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/memory_kernel_binary.xml",
          Ref_Filename => "data/memory_kernel_binary.ref.xml",
          Expander     => Expanders.Memory.Add_Kernel_Binary'Access);
-   end Add_Binary_Memory;
+   end Add_Kernel_Binary;
 
    -------------------------------------------------------------------------
 
@@ -158,7 +158,7 @@ is
    begin
       T.Set_Name (Name => "Memory expander tests");
       T.Add_Test_Routine
-        (Routine => Add_Binary_Memory'Access,
+        (Routine => Add_Kernel_Binary'Access,
          Name    => "Add kernel binary memory regions");
       T.Add_Test_Routine
         (Routine => Add_Stack_Store'Access,

@@ -16,29 +16,35 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Framework;
+with Expanders.Subjects;
 
-package XML_Utils_Tests
+with Test_Utils.Expander;
+
+package body Subjects_Tests
 is
 
-   type Testcase is new Ahven.Framework.Test_Case with null record;
+   use Ahven;
 
-   --  Initialize testcase.
-   procedure Initialize (T : in out Testcase);
+   -------------------------------------------------------------------------
 
-   --  Add memory region.
-   procedure Add_Memory;
+   procedure Add_Binaries
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_binaries.xml",
+         Ref_Filename => "data/subjects_binaries.ref.xml",
+         Expander     => Expanders.Subjects.Add_Binaries'Access);
+   end Add_Binaries;
 
-   --  Add memory region with file content.
-   procedure Add_Memory_With_File;
+   -------------------------------------------------------------------------
 
-   --  Create virtual memory node.
-   procedure Create_Virtual_Memory;
+   procedure Initialize (T : in out Testcase)
+   is
+   begin
+      T.Set_Name (Name => "Subjects expander tests");
+      T.Add_Test_Routine
+        (Routine => Add_Binaries'Access,
+         Name    => "Add binaries");
+   end Initialize;
 
-   --  Calculate size of paging structures.
-   procedure Calculate_PT_Size;
-
-   --  Remove XML child node.
-   procedure Remove_Child;
-
-end XML_Utils_Tests;
+end Subjects_Tests;

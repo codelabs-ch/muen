@@ -30,30 +30,7 @@
 	</platform>
 
 	<memory>
-		<!-- tau0 subject -->
-		<memory name="tau0|bin" size="16#0001_4000#" caching="WB">
-			<file format="bin_raw" filename="tau0" offset="none"/>
-		</memory>
-
-		<!-- time subject -->
-		<memory name="time|bin" size="16#0001_4000#" caching="WB">
-			<file format="bin_raw" filename="time" offset="none"/>
-		</memory>
-
-		<!-- vt subject -->
-		<memory name="vt|bin" size="16#0002_4000#" caching="WB">
-			<file format="bin_raw" filename="vt" offset="none"/>
-		</memory>
-
-		<!-- sm subject -->
-		<memory name="sm|bin" size="16#0001_4000#" caching="WB">
-			<file format="bin_raw" filename="sm" offset="none"/>
-		</memory>
-
 		<!-- Linux subject -->
-		<memory name="linux|bin" size="16#0050_0000#" alignment="16#0020_0000#" caching="WB">
-			<file format="bzimage" filename="bzImage" offset="none"/>
-		</memory>
 		<memory name="linux|zp" size="16#2000#" caching="WB">
 			<file format="zp" filename="linux_zp" offset="none"/>
 		</memory>
@@ -263,12 +240,11 @@
 			</vcpu>
 			<bootparams/>
 			<memory>
-				<!-- Page at 0x0: Stack guard page ==> DO NOT MAP -->
-				<memory logical="text" physical="tau0|bin" virtualAddress="16#1000#" writable="true" executable="true"/>
 				<memory logical="sys_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="true" executable="false"/>
 			</memory>
 			<devices/>
 			<events/>
+			<binary filename="tau0" size="16#0001_4000#" virtualAddress="16#1000#"/>
 		</subject>
 
 		<subject id="1" name="vt" cpu="0">
@@ -445,8 +421,6 @@
 			</vcpu>
 			<bootparams/>
 			<memory>
-				<!-- Page at 0x0: Stack guard page ==> DO NOT MAP -->
-				<memory logical="text" physical="vt|bin" virtualAddress="16#1000#" writable="true" executable="true"/>
 				<memory logical="linux_output" physical="linux_output" virtualAddress="16#0010_0000#" writable="false" executable="false"/>
 				<memory logical="time_output" physical="time_output" virtualAddress="16#0011_0000#" writable="false" executable="false"/>
 				<memory logical="sm_output" physical="sm_output" virtualAddress="16#0012_0000#" writable="false" executable="false"/>
@@ -473,6 +447,7 @@
 					</group>
 				</source>
 			</events>
+			<binary filename="vt" size="16#0002_4000#" virtualAddress="16#1000#"/>
 		</subject>
 
 		<subject id="2" name="time" cpu="2">
@@ -649,8 +624,6 @@
 			</vcpu>
 			<bootparams/>
 			<memory>
-				<!-- Page at 0x0: Stack guard page ==> DO NOT MAP -->
-				<memory logical="text" physical="time|bin" virtualAddress="16#1000#" writable="true" executable="true"/>
 				<memory logical="time_channel" physical="time_channel" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
 				<memory logical="time_output" physical="time_output" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
 			</memory>
@@ -668,6 +641,7 @@
 					</group>
 				</source>
 			</events>
+			<binary filename="time" size="16#0001_4000#" virtualAddress="16#1000#"/>
 		</subject>
 
 		<subject id="3" name="sm" cpu="1">
@@ -844,8 +818,6 @@
 			</vcpu>
 			<bootparams/>
 			<memory>
-				<!-- Page at 0x0: Stack guard page ==> DO NOT MAP -->
-				<memory logical="text" physical="sm|bin" virtualAddress="16#1000#" writable="true" executable="true"/>
 				<memory logical="sm_output" physical="sm_output" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
 				<memory logical="linux_state" physical="linux_state" virtualAddress="16#001e_0000#" writable="true" executable="false"/>
 			</memory>
@@ -862,6 +834,7 @@
 					</group>
 				</source>
 			</events>
+			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
 		</subject>
 
 		<subject id="4" name="linux" cpu="1">
@@ -1057,7 +1030,6 @@
 				<memory logical="acpi_free" physical="linux|acpi_empty" virtualAddress="16#000e_4000#" writable="false" executable="false"/>
 
 				<memory logical="bios" physical="linux|bios" virtualAddress="16#000f_0000#" writable="false" executable="false"/>
-				<memory logical="text" physical="linux|bin" virtualAddress="16#0040_0000#" writable="true" executable="true"/>
 				<memory logical="ram" physical="linux|ram" virtualAddress="16#0090_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
@@ -1248,6 +1220,7 @@
 					</group>
 				</source>
 			</events>
+			<binary filename="bzImage" size="16#0050_0000#" virtualAddress="16#0040_0000#"/>
 		</subject>
 	</subjects>
 

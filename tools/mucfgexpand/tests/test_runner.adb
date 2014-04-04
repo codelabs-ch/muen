@@ -23,6 +23,7 @@ with XML_Utils_Tests;
 with Memory_Tests;
 with Kernel_Tests;
 with Expand_Tests;
+with Subjects_Tests;
 
 procedure Test_Runner
 is
@@ -39,6 +40,8 @@ begin
              T     => new Kernel_Tests.Testcase);
    Add_Test (Suite => S.all,
              T     => new Expand_Tests.Testcase);
+   Add_Test (Suite => S.all,
+             T     => new Subjects_Tests.Testcase);
 
    Ahven.Text_Runner.Run (Suite => S);
    Release_Suite (T => S);

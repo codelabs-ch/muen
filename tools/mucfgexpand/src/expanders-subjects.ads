@@ -16,29 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Framework;
-
-package XML_Utils_Tests
+package Expanders.Subjects
 is
 
-   type Testcase is new Ahven.Framework.Test_Case with null record;
+   --  Add subject binary physical memory regions and mappings. Removes the
+   --  binary element after processing.
+   procedure Add_Binaries (Data : in out Muxml.XML_Data_Type);
 
-   --  Initialize testcase.
-   procedure Initialize (T : in out Testcase);
-
-   --  Add memory region.
-   procedure Add_Memory;
-
-   --  Add memory region with file content.
-   procedure Add_Memory_With_File;
-
-   --  Create virtual memory node.
-   procedure Create_Virtual_Memory;
-
-   --  Calculate size of paging structures.
-   procedure Calculate_PT_Size;
-
-   --  Remove XML child node.
-   procedure Remove_Child;
-
-end XML_Utils_Tests;
+end Expanders.Subjects;

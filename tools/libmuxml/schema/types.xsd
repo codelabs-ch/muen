@@ -92,13 +92,6 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:complexType name="binaryType">
-		<xs:attribute name="filename"        type="xs:string"      use="required"/>
-		<xs:attribute name="size"            type="memorySizeType" use="required"/>
-		<xs:attribute name="physicalAddress" type="word64Type"     use="required"/>
-		<xs:attribute name="virtualAddress"  type="word64Type"     use="required"/>
-	</xs:complexType>
-
 	<xs:simpleType name="noneType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="none"/>

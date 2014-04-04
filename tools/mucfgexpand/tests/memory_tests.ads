@@ -26,8 +26,8 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
-   --  Add binary memory regions.
-   procedure Add_Binary_Memory;
+   --  Add kernel binary memory regions.
+   procedure Add_Kernel_Binary;
 
    --  Add stack and store regions.
    procedure Add_Stack_Store;

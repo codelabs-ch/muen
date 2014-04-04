@@ -20,7 +20,6 @@
   <memory>
    <cpu id="0">
     <memory executable="false" logical="lnx_state" physical="lnx_state" virtualAddress="16#001e_0000#" writable="true"/>
-    <memory executable="false" logical="subject1_state" physical="subject1_state" virtualAddress="16#001e_1000#" writable="true"/>
    </cpu>
    <cpu id="1">
     <memory executable="false" logical="subject1_state" physical="subject1_state" virtualAddress="16#001e_1000#" writable="true"/>

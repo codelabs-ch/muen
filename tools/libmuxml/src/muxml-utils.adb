@@ -44,6 +44,20 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Append_Child
+     (Node      : DOM.Core.Node;
+      New_Child : DOM.Core.Node)
+   is
+      Dummy : DOM.Core.Node;
+      pragma Unreferenced (Dummy);
+   begin
+      Dummy := DOM.Core.Nodes.Append_Child
+        (N         => Node,
+         New_Child => New_Child);
+   end Append_Child;
+
+   -------------------------------------------------------------------------
+
    function Get_Attribute
      (Doc   : DOM.Core.Node;
       XPath : String;

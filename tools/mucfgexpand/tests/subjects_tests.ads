@@ -29,4 +29,7 @@ is
    --  Add subject binaries.
    procedure Add_Binaries;
 
+   --  Handle subject profile.
+   procedure Handle_Profile;
+
 end Subjects_Tests;

@@ -66,7 +66,7 @@
 	<events/>
 
 	<subjects>
-		<subject id="0" name="tau0" cpu="3">
+		<subject id="0" name="tau0" cpu="3" profile="native">
 			<vcpu>
 				<vmx>
 					<controls>
@@ -247,7 +247,7 @@
 			<binary filename="tau0" size="16#0001_4000#" virtualAddress="16#1000#"/>
 		</subject>
 
-		<subject id="1" name="vt" cpu="0">
+		<subject id="1" name="vt" cpu="0" profile="native">
 			<vcpu>
 				<vmx>
 					<controls>
@@ -450,7 +450,7 @@
 			<binary filename="vt" size="16#0002_4000#" virtualAddress="16#1000#"/>
 		</subject>
 
-		<subject id="2" name="time" cpu="2">
+		<subject id="2" name="time" cpu="2" profile="native">
 			<vcpu>
 				<vmx>
 					<controls>
@@ -644,7 +644,7 @@
 			<binary filename="time" size="16#0001_4000#" virtualAddress="16#1000#"/>
 		</subject>
 
-		<subject id="3" name="sm" cpu="1">
+		<subject id="3" name="sm" cpu="1" profile="native">
 			<vcpu>
 				<vmx>
 					<controls>
@@ -837,7 +837,7 @@
 			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
 		</subject>
 
-		<subject id="4" name="linux" cpu="1">
+		<subject id="4" name="linux" cpu="1" profile="linux">
 			<vcpu>
 				<vmx>
 					<controls>

@@ -60,7 +60,7 @@ is
                 (Elem => CPU_Node,
                  Name => "id");
          begin
-            XML_Utils.Append_Child
+            Muxml.Utils.Append_Child
               (Node      => CPU_Node,
                New_Child => XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
@@ -69,7 +69,7 @@ is
                   Address       => "16#0010_0000#",
                   Writable      => False,
                   Executable    => True));
-            XML_Utils.Append_Child
+            Muxml.Utils.Append_Child
               (Node      => CPU_Node,
                New_Child => XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
@@ -78,7 +78,7 @@ is
                   Address       => "16#0011_0000#",
                   Writable      => True,
                   Executable    => False));
-            XML_Utils.Append_Child
+            Muxml.Utils.Append_Child
               (Node      => CPU_Node,
                New_Child => XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
@@ -87,7 +87,7 @@ is
                   Address       => "16#0011_1000#",
                   Writable      => True,
                   Executable    => False));
-            XML_Utils.Append_Child
+            Muxml.Utils.Append_Child
               (Node      => CPU_Node,
                New_Child => XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
@@ -96,7 +96,7 @@ is
                   Address       => "16#0011_f000#",
                   Writable      => False,
                   Executable    => False));
-            XML_Utils.Append_Child
+            Muxml.Utils.Append_Child
               (Node      => CPU_Node,
                New_Child => XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
@@ -105,7 +105,7 @@ is
                   Address       => "16#0011_3000#",
                   Writable      => True,
                   Executable    => False));
-            XML_Utils.Append_Child
+            Muxml.Utils.Append_Child
               (Node      => CPU_Node,
                New_Child => XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
@@ -144,7 +144,7 @@ is
          Name  => "physical",
          Value => "ioapic");
 
-      XML_Utils.Append_Child
+      Muxml.Utils.Append_Child
         (Node      => Ioapic,
          New_Child => XML_Utils.Create_Virtual_Memory_Node
            (Policy        => Data,
@@ -153,7 +153,7 @@ is
             Address       => "16#001f_c000#",
             Writable      => True,
             Executable    => False));
-      XML_Utils.Append_Child
+      Muxml.Utils.Append_Child
         (Node      => Devices_Node,
          New_Child => Ioapic);
    end Add_Devices;
@@ -188,10 +188,10 @@ is
          New_Child => Kernel_Node,
          Ref_Child => Subjects_Node);
 
-      XML_Utils.Append_Child
+      Muxml.Utils.Append_Child
         (Node      => Kernel_Node,
          New_Child => Memory_Node);
-      XML_Utils.Append_Child
+      Muxml.Utils.Append_Child
         (Node      => Kernel_Node,
          New_Child => DOM.Core.Documents.Create_Element
            (Doc      => Data.Doc,
@@ -212,7 +212,7 @@ is
               (Elem  => CPU_Node,
                Name  => "id",
                Value => CPU_Str);
-            XML_Utils.Append_Child
+            Muxml.Utils.Append_Child
               (Node      => Memory_Node,
                New_Child => CPU_Node);
          end;
@@ -267,7 +267,7 @@ is
                   Mulog.Log (Msg => "Mapping state of subject '" & Subj_Name
                              & "' to address " & Mutools.Utils.To_Hex
                                (Number => Address) & " on CPU " & CPU_Id);
-                  XML_Utils.Append_Child
+                  Muxml.Utils.Append_Child
                     (Node      => CPU,
                      New_Child => XML_Utils.Create_Virtual_Memory_Node
                        (Policy        => Data,
@@ -296,7 +296,7 @@ is
    begin
       Mulog.Log (Msg => "Mapping tau0 system interface on CPU 0");
 
-      XML_Utils.Append_Child
+      Muxml.Utils.Append_Child
         (Node      => BSP,
          New_Child => XML_Utils.Create_Virtual_Memory_Node
            (Policy        => Data,

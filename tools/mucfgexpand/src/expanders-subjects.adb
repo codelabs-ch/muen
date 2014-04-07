@@ -22,6 +22,7 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Muxml.Utils;
 
 with Expanders.XML_Utils;
 
@@ -79,7 +80,7 @@ is
                File_Name   => Filename,
                File_Format => "bin_raw",
                File_Offset => "none");
-            XML_Utils.Append_Child
+            Muxml.Utils.Append_Child
               (Node      => Subj_Mem_Node,
                New_Child => XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,

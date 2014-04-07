@@ -25,7 +25,7 @@ with DOM.Core.Documents;
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
 
-with Muxml;
+with Muxml.Utils;
 
 with Expanders.XML_Utils;
 
@@ -207,8 +207,8 @@ is
         (Doc      => Doc,
          Tag_Name => "elem");
 
-      XML_Utils.Append_Child (Node      => Doc,
-                              New_Child => Node);
+      Muxml.Utils.Append_Child (Node      => Doc,
+                                New_Child => Node);
 
       Assert (Condition => DOM.Core.Nodes.Has_Child_Nodes (N => Doc),
               Message   => "Unable to add child to document");

@@ -25,11 +25,6 @@ with Muxml;
 package Expanders.XML_Utils
 is
 
-   --  Append new child node to given node.
-   procedure Append_Child
-     (Node      : DOM.Core.Node;
-      New_Child : DOM.Core.Node);
-
    --  Remove child element node with given name. All children of the specified
    --  child node are removed as well. An exception is raised if no child with
    --  the given name exists.

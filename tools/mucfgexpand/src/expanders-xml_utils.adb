@@ -25,6 +25,7 @@ with McKae.XML.XPath.XIA;
 with Paging.Memory;
 
 with Mutools.Constants;
+with Muxml.Utils;
 
 package body Expanders.XML_Utils
 is
@@ -101,10 +102,10 @@ is
           (Doc      => Policy.Doc,
            Tag_Name => "file");
    begin
-      Append_Child (Node      => Section,
-                    New_Child => Mem_Node);
-      Append_Child (Node      => Mem_Node,
-                    New_Child => File_Node);
+      Muxml.Utils.Append_Child (Node      => Section,
+                                New_Child => Mem_Node);
+      Muxml.Utils.Append_Child (Node      => Mem_Node,
+                                New_Child => File_Node);
 
       DOM.Core.Elements.Set_Attribute
         (Elem  => File_Node,
@@ -119,20 +120,6 @@ is
          Name  => "offset",
          Value => File_Offset);
    end Add_Memory_Region;
-
-   -------------------------------------------------------------------------
-
-   procedure Append_Child
-     (Node      : DOM.Core.Node;
-      New_Child : DOM.Core.Node)
-   is
-      Dummy : DOM.Core.Node;
-      pragma Unreferenced (Dummy);
-   begin
-      Dummy := DOM.Core.Nodes.Append_Child
-        (N         => Node,
-         New_Child => New_Child);
-   end Append_Child;
 
    -------------------------------------------------------------------------
 

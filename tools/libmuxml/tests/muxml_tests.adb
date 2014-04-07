@@ -33,7 +33,7 @@ is
    procedure Initialize (T : in out Testcase)
    is
    begin
-      T.Set_Name (Name => "Load XML files");
+      T.Set_Name (Name => "Load/Store XML files");
       T.Add_Test_Routine
         (Routine => Load_Nonexistent_Xml'Access,
          Name    => "Load nonexistent XML");

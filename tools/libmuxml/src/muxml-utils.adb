@@ -19,6 +19,7 @@
 with DOM.Core.Append_Node;
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
+with DOM.Core.Attrs;
 
 with McKae.XML.XPath.XIA;
 
@@ -90,5 +91,74 @@ is
    begin
       return DOM.Core.Nodes.Node_Value (N => Node);
    end Get_Element_Value;
+
+   -------------------------------------------------------------------------
+
+   procedure Merge (Left, Right : DOM.Core.Node)
+   is
+   begin
+      if DOM.Core.Nodes.Node_Name (N => Left)
+        /= DOM.Core.Nodes.Node_Name (N => Right)
+      then
+         return;
+      end if;
+      declare
+         use type DOM.Core.Node;
+
+         R_Child : DOM.Core.Node := DOM.Core.Nodes.First_Child (N => Right);
+      begin
+         while R_Child /= null loop
+            declare
+               L_Child : DOM.Core.Node := DOM.Core.Nodes.First_Child
+                 (N => Left);
+            begin
+
+               --  Find matching children.
+
+               while L_Child /= null and then
+                 DOM.Core.Nodes.Node_Name (N => L_Child)
+                 /= DOM.Core.Nodes.Node_Name (N => R_Child)
+               loop
+                  L_Child := DOM.Core.Nodes.Next_Sibling (N => L_Child);
+               end loop;
+
+               if L_Child = null then
+
+                  --  No match, attach right child incl. all children to left
+
+                  Append_Child
+                    (Node      => Left,
+                     New_Child => DOM.Core.Nodes.Clone_Node
+                       (N    => R_Child,
+                        Deep => True));
+               else
+                  Merge (Left  => L_Child,
+                         Right => R_Child);
+               end if;
+            end;
+
+            R_Child := DOM.Core.Nodes.Next_Sibling (N => R_Child);
+         end loop;
+      end;
+
+      DOM.Core.Nodes.Set_Node_Value
+        (N     => Left,
+         Value => DOM.Core.Nodes.Node_Value (N => Right));
+
+      declare
+         Attrs : constant DOM.Core.Named_Node_Map
+           := DOM.Core.Nodes.Attributes (N => Right);
+         Node  : DOM.Core.Node;
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length (Map => Attrs) - 1 loop
+            Node := DOM.Core.Nodes.Item (Map   => Attrs,
+                                         Index => I);
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Left,
+               Name  => DOM.Core.Attrs.Name (Att => Node),
+               Value => DOM.Core.Attrs.Value (Att => Node));
+         end loop;
+      end;
+   end Merge;
 
 end Muxml.Utils;

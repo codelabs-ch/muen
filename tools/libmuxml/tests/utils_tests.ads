@@ -29,4 +29,7 @@ is
    --  Append XML child node.
    procedure Append_Child;
 
+   --  Merge two XML nodes.
+   procedure Merge_Nodes;
+
 end Utils_Tests;

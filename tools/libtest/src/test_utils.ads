@@ -27,6 +27,10 @@ is
       Filename2 : String)
       return Boolean;
 
+   --  Return content of file given by Filename as string.
+   function Read_File (Filename : String) return String;
+
    Open_File_Error : exception;
+   IO_Error        : exception;
 
 end Test_Utils;

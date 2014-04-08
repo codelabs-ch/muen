@@ -17,6 +17,8 @@
 --
 
 with Ada.Direct_IO;
+with Ada.Text_IO;
+with Ada.Strings.Unbounded;
 
 package body Test_Utils
 is
@@ -87,5 +89,51 @@ is
 
       return Result;
    end Equal_Files;
+
+   -------------------------------------------------------------------------
+
+   function Read_File (Filename : String) return String
+   is
+      File : Ada.Text_IO.File_Type;
+   begin
+      begin
+         Ada.Text_IO.Open
+           (File => File,
+            Mode => Ada.Text_IO.In_File,
+            Name => Filename,
+            Form => "shared=no");
+
+      exception
+         when others =>
+            raise Open_File_Error with
+              "Unable to open file '" & Filename & "'";
+      end;
+
+      declare
+         use Ada.Strings.Unbounded;
+
+         Data : Unbounded_String;
+      begin
+         Read_Data :
+         loop
+            Data := Data & Ada.Text_IO.Get_Line (File => File);
+
+            if Ada.Text_IO.End_Of_File (File => File) then
+               exit Read_Data;
+            end if;
+
+            Data := Data & ASCII.LF;
+         end loop Read_Data;
+
+         Ada.Text_IO.Close (File);
+         return To_String (Source => Data);
+
+      exception
+         when others =>
+            Ada.Text_IO.Close (File);
+            raise IO_Error with "Error reading data from file '"
+              & Filename & "'";
+      end;
+   end Read_File;
 
 end Test_Utils;

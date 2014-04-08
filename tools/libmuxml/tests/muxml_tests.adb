@@ -1,7 +1,7 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
---  Copyright (C) 2014  Alexander Senier <mail@senier.net>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014        Alexander Senier <mail@senier.net>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
 --
 
 with Ada.Exceptions;
+with Ada.Directories;
+with Ada.Characters.Handling;
 
 with Muxml;
 with Test_Utils;
@@ -44,39 +46,44 @@ is
         (Routine => Load_Invalid_Xml'Access,
          Name    => "Load invalid XML file");
       T.Add_Test_Routine
-        (Routine => Load_Policy_Xml'Access,
-         Name    => "Load policy from XML");
-      T.Add_Test_Routine
-        (Routine => Load_And_Store'Access,
-         Name    => "Load and store XML");
-      T.Add_Test_Routine
         (Routine => Load_Invalid_Format'Access,
          Name    => "Load XML with invalid format");
       T.Add_Test_Routine
         (Routine => Store_Invalid_Format'Access,
          Name    => "Store XML with invalid format");
       T.Add_Test_Routine
-        (Routine => Load_VCPU_Profile_Xml'Access,
-         Name    => "Load VCPU profile from XML");
+        (Routine => Load_And_Store_Xml'Access,
+         Name    => "Load and store supported documents");
    end Initialize;
 
    -------------------------------------------------------------------------
 
-   procedure Load_And_Store
+   procedure Load_And_Store_Xml
    is
-      Data : XML_Data_Type;
    begin
-      Parse (Data => Data,
-             Kind => Muxml.Format_B,
-             File => "data/load_and_store.xml");
-      Write (Data => Data,
-             Kind => Muxml.Format_B,
-             File => "obj/load_and_store.xml");
-      Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/load_and_store.xml",
-                   Filename2 => "obj/load_and_store.xml"),
-              Message => "Stored XML differs from loaded one");
-   end Load_And_Store;
+      for K in Schema_Kind loop
+         declare
+            Data     : XML_Data_Type;
+            K_Str    : constant String := Ada.Characters.Handling.To_Lower
+              (Item => K'Img);
+            Src_File : constant String := "data/" & K_Str & ".xml";
+            Dst_File : constant String := "obj/" & K_Str & ".xml";
+         begin
+            Parse (Data => Data,
+                   Kind => K,
+                   File => Src_File);
+            Write (Data => Data,
+                   Kind => K,
+                   File => Dst_File);
+            Assert
+              (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Src_File,
+                  Filename2 => Dst_File),
+               Message => "Stored " & K_Str & " XML differs from loaded one");
+            Ada.Directories.Delete_File (Name => Dst_File);
+         end;
+      end loop;
+   end Load_And_Store_Xml;
 
    -------------------------------------------------------------------------
 
@@ -87,7 +94,7 @@ is
    begin
       Parse (Data => Data,
              Kind => Muxml.Format_B,
-             File => "data/test_policy_a.xml");
+             File => "data/format_a.xml");
       Fail (Message => "Exception expected");
 
    exception
@@ -151,35 +158,6 @@ is
                  (X => E) = Ref_Msg,
                  Message   => "Exception message mismatch");
    end Load_Nonexistent_Xml;
-
-   -------------------------------------------------------------------------
-
-   procedure Load_Policy_Xml
-   is
-      Data : XML_Data_Type;
-      pragma Unreferenced (Data);
-   begin
-      Parse (Data => Data,
-             Kind => Muxml.Format_B,
-             File => "data/test_policy.xml");
-
-      --  Must not raise an exception.
-
-   end Load_Policy_Xml;
-
-   -------------------------------------------------------------------------
-
-   procedure Load_VCPU_Profile_Xml
-   is
-      Data : XML_Data_Type;
-      pragma Unreferenced (Data);
-   begin
-      Parse (Data => Data,
-             Kind => Muxml.VCPU_Profile,
-             File => "data/vcpu_profile.xml");
-
-      --  Must not raise an exception.
-   end Load_VCPU_Profile_Xml;
 
    -------------------------------------------------------------------------
 

@@ -38,6 +38,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Handle_Profile
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_profiles.xml",
+         Ref_Filename => "data/subjects_profiles.ref.xml",
+         Expander     => Expanders.Subjects.Handle_Profile'Access);
+   end Handle_Profile;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -45,6 +56,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_Binaries'Access,
          Name    => "Add binaries");
+      T.Add_Test_Routine
+        (Routine => Handle_Profile'Access,
+         Name    => "Handle profile");
    end Initialize;
 
 end Subjects_Tests;

@@ -33,7 +33,7 @@ is
    procedure Initialize (T : in out Testcase)
    is
    begin
-      T.Set_Name (Name => "Load XML files");
+      T.Set_Name (Name => "Load/Store XML files");
       T.Add_Test_Routine
         (Routine => Load_Nonexistent_Xml'Access,
          Name    => "Load nonexistent XML");
@@ -55,6 +55,9 @@ is
       T.Add_Test_Routine
         (Routine => Store_Invalid_Format'Access,
          Name    => "Store XML with invalid format");
+      T.Add_Test_Routine
+        (Routine => Load_VCPU_Profile_Xml'Access,
+         Name    => "Load VCPU profile from XML");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -163,6 +166,20 @@ is
       --  Must not raise an exception.
 
    end Load_Policy_Xml;
+
+   -------------------------------------------------------------------------
+
+   procedure Load_VCPU_Profile_Xml
+   is
+      Data : XML_Data_Type;
+      pragma Unreferenced (Data);
+   begin
+      Parse (Data => Data,
+             Kind => Muxml.VCPU_Profile,
+             File => "data/vcpu_profile.xml");
+
+      --  Must not raise an exception.
+   end Load_VCPU_Profile_Xml;
 
    -------------------------------------------------------------------------
 

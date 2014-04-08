@@ -41,4 +41,9 @@ is
      (Left  : in out DOM.Core.Node_List;
       Right :        DOM.Core.Node_List);
 
+   --  Append new child node to given node.
+   procedure Append_Child
+     (Node      : DOM.Core.Node;
+      New_Child : DOM.Core.Node);
+
 end Muxml.Utils;

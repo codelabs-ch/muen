@@ -54,6 +54,7 @@ is
       Procs.Register (Process => Kernel.Map_Tau0_Interface'Access);
       Procs.Register (Process => Kernel.Add_Devices'Access);
       Procs.Register (Process => Subjects.Add_Binaries'Access);
+      Procs.Register (Process => Subjects.Handle_Profile'Access);
 
       --  All kernel/subject memory regions and mappings must exist and specify
       --  and alignment to add PTs.

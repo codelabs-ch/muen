@@ -48,4 +48,7 @@ is
    --  Try to store a policy with invalid format to XML.
    procedure Store_Invalid_Format;
 
+   --  Load VCPU profile from XML file.
+   procedure Load_VCPU_Profile_Xml;
+
 end Muxml_Tests;

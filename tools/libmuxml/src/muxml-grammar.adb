@@ -26,6 +26,7 @@ with Unicode.CES.Utf8;
 with Muxml.Format_src_Schema;
 with Muxml.Format_a_Schema;
 with Muxml.Format_b_Schema;
+with Muxml.VCPU_Profile_Schema;
 
 package body Muxml.Grammar
 is
@@ -58,6 +59,12 @@ is
             Str_Input.Set_Public_Id (Id => Format_b_Schema.XSD_Id);
             Input_Sources.Strings.Open
               (Str      => Format_b_Schema.XSD,
+               Encoding => Unicode.CES.Utf8.Utf8_Encoding,
+               Input    => Str_Input);
+         when VCPU_Profile =>
+            Str_Input.Set_Public_Id (Id => VCPU_Profile_Schema.XSD_Id);
+            Input_Sources.Strings.Open
+              (Str      => VCPU_Profile_Schema.XSD,
                Encoding => Unicode.CES.Utf8.Utf8_Encoding,
                Input    => Str_Input);
       end case;

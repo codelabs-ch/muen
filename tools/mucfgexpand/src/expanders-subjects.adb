@@ -22,6 +22,7 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Muxml.Utils;
 
 with Expanders.XML_Utils;
 
@@ -79,7 +80,7 @@ is
                File_Name   => Filename,
                File_Format => "bin_raw",
                File_Offset => "none");
-            XML_Utils.Append_Child
+            Muxml.Utils.Append_Child
               (Node      => Subj_Mem_Node,
                New_Child => XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
@@ -95,5 +96,27 @@ is
          end;
       end loop;
    end Add_Binaries;
+
+   -------------------------------------------------------------------------
+
+   procedure Handle_Profile (Data : in out Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Subj : constant DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Nodes,
+               Index => I);
+         begin
+            DOM.Core.Elements.Remove_Attribute
+              (Elem => Subj,
+               Name => "profile");
+         end;
+      end loop;
+   end Handle_Profile;
 
 end Expanders.Subjects;

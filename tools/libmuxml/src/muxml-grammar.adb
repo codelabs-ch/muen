@@ -23,10 +23,10 @@ with Input_Sources.Strings;
 with Schema.Schema_Readers;
 with Unicode.CES.Utf8;
 
-with Muxml.Format_src_Schema;
-with Muxml.Format_a_Schema;
-with Muxml.Format_b_Schema;
-with Muxml.VCPU_Profile_Schema;
+with Muxml.system_src_schema;
+with Muxml.system_a_schema;
+with Muxml.system_b_schema;
+with Muxml.vcpu_profile_schema;
 
 package body Muxml.Grammar
 is
@@ -36,14 +36,14 @@ is
    end record;
 
    Schema_Map : constant array (Schema_Kind) of Schema_Info_Type
-     := (Format_Src   => (Id  => Format_src_Schema.XSD_Id'Access,
-                          XSD => Format_src_Schema.XSD'Access),
-         Format_A     => (Id  => Format_a_Schema.XSD_Id'Access,
-                          XSD => Format_a_Schema.XSD'Access),
-         Format_B     => (Id  => Format_b_Schema.XSD_Id'Access,
-                          XSD => Format_b_Schema.XSD'Access),
-         VCPU_Profile => (Id  => VCPU_Profile_Schema.XSD_Id'Access,
-                          XSD => VCPU_Profile_Schema.XSD'Access));
+     := (Format_Src   => (Id  => system_src_schema.XSD_Id'Access,
+                          XSD => system_src_schema.XSD'Access),
+         Format_A     => (Id  => system_a_schema.XSD_Id'Access,
+                          XSD => system_a_schema.XSD'Access),
+         Format_B     => (Id  => system_b_schema.XSD_Id'Access,
+                          XSD => system_b_schema.XSD'Access),
+         VCPU_Profile => (Id  => vcpu_profile_schema.XSD_Id'Access,
+                          XSD => vcpu_profile_schema.XSD'Access));
 
    -------------------------------------------------------------------------
 

@@ -45,4 +45,7 @@ is
    --  Load and store all supported XML documents.
    procedure Load_And_Store_Xml;
 
+   --  Parse a given XML string.
+   procedure Parse_Xml_String;
+
 end Muxml_Tests;

@@ -1,7 +1,7 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
---  Copyright (C) 2014  Alexander Senier <mail@senier.net>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014        Alexander Senier <mail@senier.net>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -35,6 +35,13 @@ is
      (Data : out XML_Data_Type;
       Kind :     Schema_Kind;
       File :     String);
+
+   --  Parse the given XML string into the DOM data structure. The XML data is
+   --  validated against the specified built-in XML schema.
+   procedure Parse_String
+     (Data : out XML_Data_Type;
+      Kind :     Schema_Kind;
+      XML  :     String);
 
    --  Write the given DOM data structure to an XML file.
    procedure Write

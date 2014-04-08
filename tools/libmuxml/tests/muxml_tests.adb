@@ -54,6 +54,9 @@ is
       T.Add_Test_Routine
         (Routine => Load_And_Store_Xml'Access,
          Name    => "Load and store supported documents");
+      T.Add_Test_Routine
+        (Routine => Parse_Xml_String'Access,
+         Name    => "Parse XML string");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -158,6 +161,29 @@ is
                  (X => E) = Ref_Msg,
                  Message   => "Exception message mismatch");
    end Load_Nonexistent_Xml;
+
+   -------------------------------------------------------------------------
+
+   procedure Parse_Xml_String
+   is
+      XML_Data : constant String := Test_Utils.Read_File
+        (Filename => "data/vcpu_profile.xml");
+      Data : Muxml.XML_Data_Type;
+   begin
+      Parse_String (Data => Data,
+                    Kind => Muxml.VCPU_Profile,
+                    XML  => XML_Data);
+      Write (Data => Data,
+             Kind => Muxml.VCPU_Profile,
+             File => "obj/vcpu_profile_from_string.xml");
+
+      Assert
+        (Condition => Test_Utils.Equal_Files
+           (Filename1 => "obj/vcpu_profile_from_string.xml",
+            Filename2 => "data/vcpu_profile.xml"),
+         Message   => "Error parsing XML string");
+      Ada.Directories.Delete_File (Name => "obj/vcpu_profile_from_string.xml");
+   end Parse_Xml_String;
 
    -------------------------------------------------------------------------
 

@@ -18,6 +18,7 @@
 
 with DOM.Core.Nodes;
 with DOM.Core.Documents;
+with DOM.Core.Elements;
 
 with Muxml.Utils;
 
@@ -42,7 +43,7 @@ is
       Node := DOM.Core.Documents.Create_Element (Doc      => Data.Doc,
                                                  Tag_Name => "node");
       Child := DOM.Core.Documents.Create_Element (Doc     => Data.Doc,
-                                                 Tag_Name => "child");
+                                                  Tag_Name => "child");
       Utils.Append_Child (Node      => Node,
                           New_Child => Child);
 
@@ -61,6 +62,116 @@ is
       T.Add_Test_Routine
         (Routine => Append_Child'Access,
          Name    => "Append XML child node");
+      T.Add_Test_Routine
+        (Routine => Merge_Nodes'Access,
+         Name    => "Merge XML nodes");
+      T.Add_Test_Routine
+        (Routine => Merge_Nodes_Name_Mismatch'Access,
+         Name    => "Merge XML nodes (name mismatch)");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Merge_Nodes
+   is
+      Data : Muxml.XML_Data_Type;
+      Impl : DOM.Core.DOM_Implementation;
+      Doc  : constant DOM.Core.Document
+        := DOM.Core.Create_Document (Implementation => Impl);
+      Node, Tmp : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.VCPU_Profile,
+                   File => "data/vcpu_profile.xml");
+
+      --  Construct the following XML structure:
+      --  <vcpu><segments><cs selector="16#ffff#>text</cs></segments></vcpu>
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Doc,
+         Tag_Name => "cs");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "access",
+         Value => "16#cafe#");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "selector",
+         Value => "16#ffff#");
+      Utils.Append_Child
+        (Node      => Node,
+         New_Child => DOM.Core.Documents.Create_Text_Node
+           (Doc  => Doc,
+            Data => "text"));
+      Tmp := DOM.Core.Documents.Create_Element
+        (Doc      => Doc,
+         Tag_Name => "segments");
+      Utils.Append_Child (Node      => Tmp,
+                          New_Child => Node);
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Doc,
+         Tag_Name => "vcpu");
+      Utils.Append_Child (Node      => Node,
+                          New_Child => Tmp);
+      Utils.Append_Child
+        (Node      => Doc,
+         New_Child => Node);
+
+      Assert (Condition => Utils.Get_Attribute
+              (Doc   => Data.Doc,
+               XPath => "/vcpu/segments/cs",
+               Name  => "selector") = "16#0008#",
+              Message   => "Unexpected cs selector attribute in vcpu policy");
+
+      Utils.Merge (Left  => Data.Doc,
+                   Right => Doc);
+
+      Assert (Condition => Utils.Get_Attribute
+              (Doc   => Data.Doc,
+               XPath => "/vcpu/segments/cs",
+               Name  => "access") = "16#cafe#",
+              Message   => "Error merging XML nodes: cs access");
+      Assert (Condition => Utils.Get_Attribute
+              (Doc   => Data.Doc,
+               XPath => "/vcpu/segments/cs",
+               Name  => "selector") = "16#ffff#",
+              Message   => "Error merging XML nodes: cs selector");
+   end Merge_Nodes;
+
+   -------------------------------------------------------------------------
+
+   procedure Merge_Nodes_Name_Mismatch
+   is
+      Impl : DOM.Core.DOM_Implementation;
+      Doc  : constant DOM.Core.Document
+        := DOM.Core.Create_Document (Implementation => Impl);
+      Node_A, Node_B : DOM.Core.Node;
+   begin
+      Node_A := DOM.Core.Documents.Create_Element
+        (Doc      => Doc,
+         Tag_Name => "A");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node_A,
+         Name  => "attr",
+         Value => "foobar");
+      Utils.Append_Child (Node      => Doc,
+                          New_Child => Node_A);
+
+      Node_B := DOM.Core.Documents.Create_Element
+        (Doc      => Doc,
+         Tag_Name => "B");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node_B,
+         Name  => "attr",
+         Value => "16#cafe#");
+
+      Utils.Merge (Left  => Node_A,
+                   Right => Node_B);
+
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node_A,
+               Name => "attr") = "foobar",
+              Message   => "Node B merged into Node A");
+   end Merge_Nodes_Name_Mismatch;
 
 end Utils_Tests;

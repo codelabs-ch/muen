@@ -32,4 +32,7 @@ is
    --  Merge two XML nodes.
    procedure Merge_Nodes;
 
+   --  Try to merge XML nodes with different names.
+   procedure Merge_Nodes_Name_Mismatch;
+
 end Utils_Tests;

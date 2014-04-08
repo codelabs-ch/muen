@@ -65,6 +65,9 @@ is
       T.Add_Test_Routine
         (Routine => Merge_Nodes'Access,
          Name    => "Merge XML nodes");
+      T.Add_Test_Routine
+        (Routine => Merge_Nodes_Name_Mismatch'Access,
+         Name    => "Merge XML nodes (name mismatch)");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -134,5 +137,41 @@ is
                Name  => "selector") = "16#ffff#",
               Message   => "Error merging XML nodes: cs selector");
    end Merge_Nodes;
+
+   -------------------------------------------------------------------------
+
+   procedure Merge_Nodes_Name_Mismatch
+   is
+      Impl : DOM.Core.DOM_Implementation;
+      Doc  : constant DOM.Core.Document
+        := DOM.Core.Create_Document (Implementation => Impl);
+      Node_A, Node_B : DOM.Core.Node;
+   begin
+      Node_A := DOM.Core.Documents.Create_Element
+        (Doc      => Doc,
+         Tag_Name => "A");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node_A,
+         Name  => "attr",
+         Value => "foobar");
+      Utils.Append_Child (Node      => Doc,
+                          New_Child => Node_A);
+
+      Node_B := DOM.Core.Documents.Create_Element
+        (Doc      => Doc,
+         Tag_Name => "B");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node_B,
+         Name  => "attr",
+         Value => "16#cafe#");
+
+      Utils.Merge (Left  => Node_A,
+                   Right => Node_B);
+
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node_A,
+               Name => "attr") = "foobar",
+              Message   => "Node B merged into Node A");
+   end Merge_Nodes_Name_Mismatch;
 
 end Utils_Tests;

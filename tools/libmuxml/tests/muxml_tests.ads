@@ -1,7 +1,7 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
---  Copyright (C) 2014  Alexander Senier <mail@senier.net>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014        Alexander Senier <mail@senier.net>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -36,19 +36,13 @@ is
    --  Try to load an invalid XML file.
    procedure Load_Invalid_Xml;
 
-   --  Load policy from XML file.
-   procedure Load_Policy_Xml;
-
-   --  Load a policy from XML and store it back to XML.
-   procedure Load_And_Store;
-
    --  Try to load a policy from an XML with invalid format.
    procedure Load_Invalid_Format;
 
    --  Try to store a policy with invalid format to XML.
    procedure Store_Invalid_Format;
 
-   --  Load VCPU profile from XML file.
-   procedure Load_VCPU_Profile_Xml;
+   --  Load and store all supported XML documents.
+   procedure Load_And_Store_Xml;
 
 end Muxml_Tests;

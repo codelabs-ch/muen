@@ -194,14 +194,17 @@ is
    begin
       Parse (Data => Data,
              Kind => Muxml.Format_A,
-             File => "data/test_policy_a.xml");
+             File => "data/format_a.xml");
 
-      Write (Data => Data,
-             Kind => Muxml.Format_B,
-             File => "obj/test_policy_b.xml");
-      Fail (Message => "Exception expected");
-   exception
-      when XML_Input_Error => null;
+      begin
+         Write (Data => Data,
+                Kind => Muxml.Format_B,
+                File => "obj/test_policy_b.xml");
+         Fail (Message => "Exception expected");
+
+      exception
+         when Validation_Error => null;
+      end;
    end Store_Invalid_Format;
 
 end Muxml_Tests;

@@ -49,6 +49,7 @@ is
       Kind : Schema_Kind;
       File : String);
 
+   Validation_Error : exception;
    Processing_Error : exception;
 
 private

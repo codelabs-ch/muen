@@ -37,7 +37,7 @@ begin
       Process => Expand.Run'Access);
 
 exception
-   when E : Muxml.Processing_Error | Expanders.Expansion_Error =>
+   when E : Muxml.Validation_Error | Expanders.Expansion_Error =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Expansion failed, aborting");
       Mulog.Log (Level => Mulog.Error,

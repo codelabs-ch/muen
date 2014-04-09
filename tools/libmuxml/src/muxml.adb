@@ -81,10 +81,10 @@ is
 
    exception
       when SV.XML_Validation_Error =>
-         raise Processing_Error with "XML validation error - "
+         raise Validation_Error with "XML validation error - "
            & Reader.Get_Error_Message;
       when E : others =>
-         raise Processing_Error with "Error reading XML data - "
+         raise Validation_Error with "Error validating XML data - "
            & Ada.Exceptions.Exception_Message (X => E);
    end Parse;
 

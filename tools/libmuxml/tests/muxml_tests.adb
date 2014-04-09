@@ -124,8 +124,8 @@ is
 
    procedure Load_Non_Xml_File
    is
-      Ref_Msg : constant String := "Error reading XML file 'data/invalid' - "
-        & "data/invalid:1:1: Non-white space found at top level";
+      Ref_Msg : constant String := "Error reading XML data - data/invalid:1:1:"
+                  & " Non-white space found at top level";
       Data    : XML_Data_Type;
       pragma Unreferenced (Data);
    begin

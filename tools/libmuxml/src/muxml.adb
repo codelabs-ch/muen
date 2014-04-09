@@ -36,6 +36,14 @@ is
    package DR renames Schema.Dom_Readers;
    package SV renames Schema.Validators;
 
+   --  Parse the contents of given XML input source into the DOM data
+   --  structure. The XML data is validated against the built-in system policy
+   --  XML schema.
+   procedure Parse
+     (Data  :    out XML_Data_Type;
+      Input : in out Input_Sources.Input_Source'Class;
+      Kind  :        Schema_Kind);
+
    -------------------------------------------------------------------------
 
    procedure Finalize (Object : in out XML_Data_Type)
@@ -47,43 +55,61 @@ is
    -------------------------------------------------------------------------
 
    procedure Parse
-     (Data : out XML_Data_Type;
-      Kind :     Schema_Kind;
-      File :     String)
+     (Data  :    out XML_Data_Type;
+      Input : in out Input_Sources.Input_Source'Class;
+      Kind  :        Schema_Kind)
    is
-      Reader     : DR.Tree_Reader;
-      File_Input : Input_Sources.File.File_Input;
+      Reader : DR.Tree_Reader;
    begin
       Reader.Set_Grammar (Grammar => Grammar.Get_Grammar (Kind));
       Reader.Set_Feature (Name  => Sax.Readers.Schema_Validation_Feature,
                           Value => True);
 
       begin
+         Reader.Parse (Input => Input);
+
+      exception
+         when others =>
+            Input.Close;
+            Data.Doc := Reader.Get_Tree;
+            Reader.Free;
+            raise;
+      end;
+
+      Input.Close;
+      Data.Doc := Reader.Get_Tree;
+
+   exception
+      when SV.XML_Validation_Error =>
+         raise Processing_Error with "XML validation error - "
+           & Reader.Get_Error_Message;
+      when E : others =>
+         raise Processing_Error with "Error reading XML data - "
+           & Ada.Exceptions.Exception_Message (X => E);
+   end Parse;
+
+   -------------------------------------------------------------------------
+
+   procedure Parse
+     (Data : out XML_Data_Type;
+      Kind :     Schema_Kind;
+      File :     String)
+   is
+      File_Input : Input_Sources.File.File_Input;
+   begin
+      begin
          Input_Sources.File.Open (Filename => File,
                                   Input    => File_Input);
 
-         begin
-            Reader.Parse (Input => File_Input);
-
-         exception
-            when others =>
-               Input_Sources.File.Close (Input => File_Input);
-               Data.Doc := Reader.Get_Tree;
-               Reader.Free;
-               raise;
-         end;
-
-         Input_Sources.File.Close (Input => File_Input);
-         Data.Doc := Reader.Get_Tree;
-
       exception
-         when SV.XML_Validation_Error =>
-            raise Processing_Error with "XML processing error - "
-              & Reader.Get_Error_Message;
          when E : others =>
             raise Processing_Error with "Error reading XML file '" & File
               & "' - " & Ada.Exceptions.Exception_Message (X => E);
       end;
+
+      Parse (Data  => Data,
+             Input => File_Input,
+             Kind  => Kind);
    end Parse;
 
    -------------------------------------------------------------------------
@@ -93,41 +119,23 @@ is
       Kind :     Schema_Kind;
       XML  :     String)
    is
-      Reader    : DR.Tree_Reader;
       Str_Input : Input_Sources.Strings.String_Input;
    begin
-      Reader.Set_Grammar (Grammar => Grammar.Get_Grammar (Kind));
-      Reader.Set_Feature (Name  => Sax.Readers.Schema_Validation_Feature,
-                          Value => True);
-
       begin
          Input_Sources.Strings.Local.Open
            (Str      => XML,
             Encoding => Unicode.CES.Utf8.Utf8_Encoding,
             Input    => Str_Input);
 
-         begin
-            Reader.Parse (Input => Str_Input);
-
-         exception
-            when others =>
-               Input_Sources.Strings.Close (Input => Str_Input);
-               Data.Doc := Reader.Get_Tree;
-               Reader.Free;
-               raise;
-         end;
-
-         Input_Sources.Strings.Close (Input => Str_Input);
-         Data.Doc := Reader.Get_Tree;
-
       exception
-         when SV.XML_Validation_Error =>
-            raise Processing_Error with "XML processing error - "
-              & Reader.Get_Error_Message;
          when E : others =>
             raise Processing_Error with "Error reading XML string - "
               & Ada.Exceptions.Exception_Message (X => E);
       end;
+
+      Parse (Data  => Data,
+             Input => Str_Input,
+             Kind  => Kind);
    end Parse_String;
 
    -------------------------------------------------------------------------
@@ -144,9 +152,9 @@ is
    begin
       Create (Output_File, Out_File, File);
       DOM.Core.Nodes.Write
-         (Stream       => Stream (Output_File),
-          N            => Data.Doc,
-          Pretty_Print => True);
+        (Stream       => Stream (Output_File),
+         N            => Data.Doc,
+         Pretty_Print => True);
       Close (Output_File);
 
       declare

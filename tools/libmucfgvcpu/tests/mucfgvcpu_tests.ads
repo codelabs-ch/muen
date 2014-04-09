@@ -16,16 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with DOM.Core;
+with Ahven.Framework;
 
-package Mucfgvcpu
+package Mucfgvcpu_Tests
 is
 
-   type Profile_Type is (Native, Linux);
+   type Testcase is new Ahven.Framework.Test_Case with null record;
 
-   --  Set given vcpu node to values of specified profile.
-   procedure Set_VCPU_Profile
-     (Profile : Profile_Type;
-      Node    : DOM.Core.Node);
+   --  Initialize testcase.
+   procedure Initialize (T : in out Testcase);
 
-end Mucfgvcpu;
+   --  Set VCPU profile.
+   procedure Set_VCPU_Profile;
+
+end Mucfgvcpu_Tests;

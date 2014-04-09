@@ -32,8 +32,9 @@ begin
    Validate.Run;
 
 exception
-   when E : Muxml.Processing_Error |
-      Mucfgcheck.Validation_Error =>
+   when E : Muxml.XML_Input_Error
+      | Muxml.Validation_Error
+      | Mucfgcheck.Validation_Error =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Validation failed, aborting");
       Mulog.Log (Level => Mulog.Error,

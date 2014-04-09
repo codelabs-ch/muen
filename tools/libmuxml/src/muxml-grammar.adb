@@ -80,10 +80,10 @@ is
 
    exception
       when Schema.Validators.XML_Validation_Error =>
-         raise Processing_Error with "XML validation error - "
+         raise Validation_Error with "XML validation error - "
            & Reader.Get_Error_Message;
       when E : others =>
-         raise Processing_Error with "Error reading " & Kind'Img
+         raise Validation_Error with "Error validating " & Kind'Img
            & " XSD - " & Ada.Exceptions.Exception_Message (X => E);
    end Get_Grammar;
 

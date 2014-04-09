@@ -35,7 +35,8 @@ begin
       Process => Alloc.Allocator.Write'Access);
 
 exception
-   when E : Muxml.Processing_Error
+   when E : Muxml.XML_Input_Error
+      | Muxml.Validation_Error
       | Alloc.Allocator.Out_Of_Memory =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Processing failed, aborting");

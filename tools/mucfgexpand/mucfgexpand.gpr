@@ -24,6 +24,7 @@ with "../libpaging/libpaging";
 with "../libmulog/libmulog";
 with "../libmuxml/libmuxml";
 with "../libmutools/libmutools";
+with "../libmucfgvcpu/libmucfgvcpu";
 with "../shared_tools";
 
 project Mucfgexpand extends "../tools.gpr" is

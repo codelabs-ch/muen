@@ -23,6 +23,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mucfgvcpu;
 
 with Expanders.XML_Utils;
 
@@ -108,10 +109,30 @@ is
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
-            Subj : constant DOM.Core.Node := DOM.Core.Nodes.Item
-              (List  => Nodes,
-               Index => I);
+            Subj : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Nodes,
+                 Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj,
+                 Name => "name");
+            Profile : constant Mucfgvcpu.Profile_Type
+              := Mucfgvcpu.Profile_Type'Value
+                (DOM.Core.Elements.Get_Attribute
+                     (Elem => Subj,
+                      Name => "profile"));
+            VCPU_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => McKae.XML.XPath.XIA.XPath_Query
+                     (N     => Subj,
+                      XPath => "vcpu"),
+                 Index => 0);
          begin
+            Mulog.Log (Msg => "Setting profile of subject '" & Subj_Name
+                       & "' to " & Profile'Img);
+            Mucfgvcpu.Set_VCPU_Profile (Profile => Profile,
+                                        Node    => VCPU_Node);
             DOM.Core.Elements.Remove_Attribute
               (Elem => Subj,
                Name => "profile");

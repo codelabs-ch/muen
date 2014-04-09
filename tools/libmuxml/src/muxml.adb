@@ -103,7 +103,7 @@ is
 
       exception
          when E : others =>
-            raise Processing_Error with "Error reading XML file '" & File
+            raise XML_Input_Error with "Error reading XML file '" & File
               & "' - " & Ada.Exceptions.Exception_Message (X => E);
       end;
 
@@ -129,7 +129,7 @@ is
 
       exception
          when E : others =>
-            raise Processing_Error with "Error reading XML string - "
+            raise XML_Input_Error with "Error reading XML string - "
               & Ada.Exceptions.Exception_Message (X => E);
       end;
 

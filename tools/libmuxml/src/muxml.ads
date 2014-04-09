@@ -50,7 +50,7 @@ is
       File : String);
 
    Validation_Error : exception;
-   Processing_Error : exception;
+   XML_Input_Error  : exception;
 
 private
 

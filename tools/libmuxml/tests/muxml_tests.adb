@@ -157,7 +157,7 @@ is
       Fail (Message => "Exception expected");
 
    exception
-      when E : Processing_Error =>
+      when E : XML_Input_Error =>
          Assert (Condition => Ada.Exceptions.Exception_Message
                  (X => E) = Ref_Msg,
                  Message   => "Exception message mismatch");
@@ -201,7 +201,7 @@ is
              File => "obj/test_policy_b.xml");
       Fail (Message => "Exception expected");
    exception
-      when Processing_Error => null;
+      when XML_Input_Error => null;
    end Store_Invalid_Format;
 
 end Muxml_Tests;

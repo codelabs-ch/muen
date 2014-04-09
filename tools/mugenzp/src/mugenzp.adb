@@ -36,7 +36,7 @@ begin
       Process => Zp.Generator.Write'Access);
 
 exception
-   when E : Muxml.Validation_Error =>
+   when E : Muxml.XML_Input_Error | Muxml.Validation_Error =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Processing failed, aborting");
       Mulog.Log (Level => Mulog.Error,

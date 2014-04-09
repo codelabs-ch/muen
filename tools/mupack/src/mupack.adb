@@ -33,7 +33,8 @@ begin
    Pack.Run;
 
 exception
-   when E : Muxml.Validation_Error
+   when E : Muxml.XML_Input_Error
+      | Muxml.Validation_Error
       | Pack.Pack_Error
       | Pack.Pre_Checks.Check_Error
       | Pack.Post_Checks.Check_Error =>

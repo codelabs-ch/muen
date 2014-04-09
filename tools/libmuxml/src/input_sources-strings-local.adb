@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,21 +16,20 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package Test_Utils
+package body Input_Sources.Strings.Local
 is
 
-   --  Compare two files byte-wise. Returns True if both files are equal.
-   --  The two files are closed but not removed after comparison. Raises
-   --  Open_File_Error exception if one of the given files cannot be opened.
-   function Equal_Files
-     (Filename1 : String;
-      Filename2 : String)
-      return Boolean;
+   procedure Open
+     (Str      : Unicode.CES.Byte_Sequence;
+      Encoding : Unicode.CES.Encoding_Scheme;
+      Input    : out String_Input)
+   is
+   begin
+      Input_Sources.Strings.Open
+        (Str      => Str,
+         Encoding => Encoding,
+         Input    => Input);
+      Input.Index := Input.Buffer'First + Input.Prolog_Size;
+   end Open;
 
-   --  Return content of file given by Filename as string.
-   function Read_File (Filename : String) return String;
-
-   Open_File_Error : exception;
-   IO_Error        : exception;
-
-end Test_Utils;
+end Input_Sources.Strings.Local;

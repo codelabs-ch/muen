@@ -21,4 +21,4 @@ DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
 obj/muxml-%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL)
 	@xsltproc --stringparam format $* $(RESOLVE_XSL) $(SCHEMA_FILE) > $@.tmp
-	@scripts/xml2ada Muxml.$*_schema $@.tmp $@
+	@../scripts/xml2ada Muxml.$*_schema $@.tmp $@

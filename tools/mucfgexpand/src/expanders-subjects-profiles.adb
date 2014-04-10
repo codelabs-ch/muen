@@ -127,6 +127,25 @@ is
             Address       => "16#000e_2000#",
             Writable      => False,
             Executable    => False));
+      XML_Utils.Add_Memory_Region
+        (Policy      => Data,
+         Name        => Subj_Name & "|acpi_dsdt",
+         Address     => "",
+         Size        => "16#1000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         File_Name   => Subj_Name & "_dsdt.aml",
+         File_Format => "acpi_dsdt",
+         File_Offset => "none");
+      Muxml.Utils.Append_Child
+        (Node      => Subj_Mem_Node,
+         New_Child => XML_Utils.Create_Virtual_Memory_Node
+           (Policy        => Data,
+            Logical_Name  => "acpi_dsdt",
+            Physical_Name => Subj_Name & "|acpi_dsdt",
+            Address       => "16#000e_3000#",
+            Writable      => False,
+            Executable    => False));
    end Handle_Linux_Profile;
 
 end Expanders.Subjects.Profiles;

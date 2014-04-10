@@ -31,10 +31,6 @@
 
 	<memory>
 		<!-- Linux subject -->
-		<memory name="linux|zp" size="16#2000#" caching="WB">
-			<file format="zp" filename="linux_zp" offset="none"/>
-		</memory>
-
 		<memory name="linux|acpi_rsdp" size="16#1000#" caching="WB">
 			<file format="acpi_rsdp" filename="linux_rsdp" offset="none"/>
 		</memory>
@@ -148,7 +144,6 @@
 		<subject id="4" name="linux" cpu="1" profile="linux">
 			<bootparams>lpj=10000 earlyprintk=serial console=ttyS0,115200 console=hvc pci=noearly notsc</bootparams>
 			<memory>
-				<memory logical="zero_page" physical="linux|zp" virtualAddress="16#0000#" writable="true" executable="false"/>
 				<memory logical="time_channel" physical="time_channel" virtualAddress="16#2000#" writable="false" executable="false"/>
 				<memory logical="linux_keyboard" physical="linux_keyboard" virtualAddress="16#3000#" writable="true" executable="false"/>
 				<memory logical="linux_output" physical="linux_output" virtualAddress="16#4000#" writable="true" executable="false"/>

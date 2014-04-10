@@ -125,7 +125,6 @@
 			<bootparams/>
 			<memory>
 				<memory logical="sm_output" physical="sm_output" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
-				<memory logical="linux_state" physical="linux_state" virtualAddress="16#001e_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices/>
 			<events>
@@ -141,6 +140,9 @@
 				</source>
 			</events>
 			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
+			<monitor>
+				<subject name="linux" virtualAddress="16#001e_0000#" writable="true"/>
+			</monitor>
 		</subject>
 
 		<subject id="4" name="linux" cpu="1" profile="linux">

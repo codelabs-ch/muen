@@ -35,4 +35,7 @@ is
    --  Add tau0.
    procedure Add_Tau0;
 
+   --  Handle subject monitors.
+   procedure Handle_Monitors;
+
 end Subjects_Tests;

@@ -200,6 +200,71 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Handle_Monitors (Data : in out Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/monitor/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Monitored_Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Nodes,
+                 Index => I);
+            Monitored_Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Monitored_Subj_Node,
+                 Name => "name");
+            Address   : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Monitored_Subj_Node,
+                 Name => "virtualAddress");
+            Writable  : constant Boolean := Boolean'Value
+              (DOM.Core.Elements.Get_Attribute
+                 (Elem => Monitored_Subj_Node,
+                  Name => "writable"));
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Parent_Node
+                (N => DOM.Core.Nodes.Parent_Node
+                   (N => Monitored_Subj_Node));
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Mem_Node  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  =>  McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Subj_Node,
+                    XPath => "memory"),
+                 Index => 0);
+         begin
+            Mulog.Log (Msg => "Mapping state of subject '"
+                       & Monitored_Subj_Name & "' "
+                       & (if Writable then "writable" else "readable")
+                       & " to virtual address " & Address
+                       & " of subject '" & Subj_Name & "'");
+
+            Muxml.Utils.Append_Child
+              (Node      => Mem_Node,
+               New_Child => XML_Utils.Create_Virtual_Memory_Node
+                 (Policy        => Data,
+                  Logical_Name  => Monitored_Subj_Name & "_state",
+                  Physical_Name => Monitored_Subj_Name & "_state",
+                  Address       => Address,
+                  Writable      => Writable,
+                  Executable    => False));
+
+            XML_Utils.Remove_Child
+              (Node       => Subj_Node,
+               Child_Name => "monitor");
+         end;
+      end loop;
+   end Handle_Monitors;
+
+   -------------------------------------------------------------------------
+
    procedure Handle_Profile (Data : in out Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List

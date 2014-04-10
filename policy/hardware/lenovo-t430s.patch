@@ -12,11 +12,11 @@ index a39a390..c53ab3c 100644
                          })
                      }
 diff --git a/policy/xml/demo_system.xml b/policy/xml/demo_system.xml
-index a2bf7ee..d87ac12 100644
+index 373baa7..bcf863a 100644
 --- a/policy/xml/demo_system.xml
 +++ b/policy/xml/demo_system.xml
-@@ -6,7 +6,7 @@
- 			<memoryBlock name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#" caching="WB"/>
+@@ -7,7 +7,7 @@
+ 			<memoryBlock allocatable="true" name="extended_mem_1" physicalAddress="16#0010_0000#" size="16#8000_0000#" />
  		</memory>
  		<device name="serial" shared="false">
 -			<ioPort name="port1" start="16#03f8#" end="16#03ff#"/>
@@ -24,21 +24,21 @@ index a2bf7ee..d87ac12 100644
  		</device>
  		<device name="vga" shared="false">
  			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
-@@ -1193,7 +1193,7 @@
- 					<!-- All segments must be specified -->
- 				</segments>
- 			</vcpu>
+@@ -128,7 +128,7 @@
+ 		</subject>
+ 
+ 		<subject id="4" name="linux" cpu="1" profile="linux">
 -			<bootparams>lpj=10000 earlyprintk=serial console=ttyS0,115200 console=hvc pci=noearly notsc</bootparams>
 +			<bootparams>lpj=10000 earlyprintk=serial,0x50b0 console=serial,0x50b0 console=hvc pci=noearly notsc</bootparams>
  			<memory>
- 				<memory logical="zero_page" physical="linux|zp" virtualAddress="16#0000#" writable="true" executable="false"/>
  				<memory logical="time_channel" physical="time_channel" virtualAddress="16#2000#" writable="false" executable="false"/>
-@@ -1214,7 +1214,7 @@
+ 				<memory logical="linux_keyboard" physical="linux_keyboard" virtualAddress="16#3000#" writable="true" executable="false"/>
+@@ -141,7 +141,7 @@
  			</memory>
  			<devices>
  				<device logical="ttyS0" physical="serial">
 -					<ioPort logical="port1" physical="port1" start="16#03f8#" end="16#03ff#"/>
 +					<ioPort logical="port1" physical="port1" start="16#50b0#" end="16#50b7#"/>
  				</device>
- 				<device logical="port80" physical="port80">
- 					<ioPort logical="ports" physical="ports" start="16#0080#" end="16#0080#"/>
+ 				<device logical="cmos_rtc" physical="cmos_rtc">
+ 					<ioPort logical="ports" physical="ports" start="16#0070#" end="16#0071#"/>

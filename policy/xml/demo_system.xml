@@ -31,9 +31,6 @@
 
 	<memory>
 		<!-- Linux subject -->
-		<memory name="linux|acpi_rsdp" size="16#1000#" caching="WB">
-			<file format="acpi_rsdp" filename="linux_rsdp" offset="none"/>
-		</memory>
 		<memory name="linux|acpi_xsdt" size="16#1000#" caching="WB">
 			<file format="acpi_xsdt" filename="linux_xsdt" offset="none"/>
 		</memory>
@@ -151,7 +148,6 @@
 				<memory logical="bios" physical="linux|bios" virtualAddress="16#000c_0000#" writable="false" executable="false"/>
 				<memory logical="bios" physical="linux|bios" virtualAddress="16#000d_0000#" writable="false" executable="false"/>
 
-				<memory logical="acpi_rsdp" physical="linux|acpi_rsdp" virtualAddress="16#000e_0000#" writable="false" executable="false"/>
 				<memory logical="acpi_xsdt" physical="linux|acpi_xsdt" virtualAddress="16#000e_1000#" writable="false" executable="false"/>
 				<memory logical="acpi_fadt" physical="linux|acpi_fadt" virtualAddress="16#000e_2000#" writable="false" executable="false"/>
 				<memory logical="acpi_dsdt" physical="linux|acpi_dsdt" virtualAddress="16#000e_3000#" writable="false" executable="false"/>

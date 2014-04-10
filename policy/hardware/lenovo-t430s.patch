@@ -1,7 +1,7 @@
-diff --git a/policy/acpi/dsdt.dsl b/policy/acpi/dsdt.dsl
+diff --git a/policy/acpi/linux_dsdt.dsl b/policy/acpi/linux_dsdt.dsl
 index a39a390..c53ab3c 100644
---- a/policy/acpi/dsdt.dsl
-+++ b/policy/acpi/dsdt.dsl
+--- a/policy/acpi/linux_dsdt.dsl
++++ b/policy/acpi/linux_dsdt.dsl
 @@ -173,7 +173,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
                      Method (_CRS)
                      {

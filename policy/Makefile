@@ -1,8 +1,8 @@
 OUTPUT   = $(OBJ_DIR)/skp.ads
 LAST_HW  = $(shell cat $(OBJ_DIR)/.hw 2>/dev/null)
-DSDT_SRC = acpi/dsdt.dsl
-DSDT_OBJ = $(OBJ_DIR)/dsdt.dsl
-DSDT     = $(OBJ_DIR)/DSDT.aml
+DSDT_SRC = acpi/linux_dsdt.dsl
+DSDT_OBJ = $(OBJ_DIR)/linux_dsdt.dsl
+DSDT     = $(OBJ_DIR)/linux_dsdt.aml
 PATCH    = hardware/$(HARDWARE).patch
 
 POLICY     = xml/demo_system.xml
@@ -50,7 +50,7 @@ $(POLICY_B): $(POLICY_A) $(MUCFGALLOC)
 	@touch $@
 
 $(DSDT): $(DSDT_OBJ)
-	@iasl -ta $(OBJ_DIR)/dsdt.dsl
+	@iasl -p$(OBJ_DIR)/linux_dsdt -ta $<
 
 $(OUTPUT): $(GENERATORS) $(POLICY_B)
 	@for gen in $(GENERATORS); do $$gen $(GENERATOR_OPTS) || exit 1; done

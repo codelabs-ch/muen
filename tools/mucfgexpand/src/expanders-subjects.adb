@@ -200,6 +200,33 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Handle_Monitors (Data : in out Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/monitor/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Monitored_Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Nodes,
+                 Index => I);
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Parent_Node
+                (N => DOM.Core.Nodes.Parent_Node
+                   (N => Monitored_Subj_Node));
+         begin
+            XML_Utils.Remove_Child
+              (Node       => Subj_Node,
+               Child_Name => "monitor");
+         end;
+      end loop;
+   end Handle_Monitors;
+
+   -------------------------------------------------------------------------
+
    procedure Handle_Profile (Data : in out Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List

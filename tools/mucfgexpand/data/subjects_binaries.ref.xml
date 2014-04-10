@@ -40,6 +40,9 @@
    </memory>
    <devices/>
    <events/>
+   <monitor>
+    <subject name="lnx" virtualAddress="16#4000#" writable="true"/>
+   </monitor>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

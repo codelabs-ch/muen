@@ -49,6 +49,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Handle_Monitors
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_monitors.xml",
+         Ref_Filename => "data/subjects_monitors.ref.xml",
+         Expander     => Expanders.Subjects.Handle_Monitors'Access);
+   end Handle_Monitors;
+
+   -------------------------------------------------------------------------
+
    procedure Handle_Profile
    is
    begin
@@ -73,6 +84,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_Tau0'Access,
          Name    => "Add tau0");
+      T.Add_Test_Routine
+        (Routine => Handle_Monitors'Access,
+         Name    => "Handle monitors");
    end Initialize;
 
 end Subjects_Tests;

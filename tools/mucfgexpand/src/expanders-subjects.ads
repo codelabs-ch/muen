@@ -30,4 +30,8 @@ is
    --  Add tau0 subject.
    procedure Add_Tau0 (Data : in out Muxml.XML_Data_Type);
 
+   --  Add subject state mappings to subject monitors. Removes the monitor
+   --  element after processing.
+   procedure Handle_Monitors (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Subjects;

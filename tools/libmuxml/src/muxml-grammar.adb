@@ -36,14 +36,14 @@ is
    end record;
 
    Schema_Map : constant array (Schema_Kind) of Schema_Info_Type
-     := (Format_Src   => (Id  => system_src_schema.XSD_Id'Access,
-                          XSD => system_src_schema.XSD'Access),
-         Format_A     => (Id  => system_a_schema.XSD_Id'Access,
-                          XSD => system_a_schema.XSD'Access),
-         Format_B     => (Id  => system_b_schema.XSD_Id'Access,
-                          XSD => system_b_schema.XSD'Access),
-         VCPU_Profile => (Id  => vcpu_profile_schema.XSD_Id'Access,
-                          XSD => vcpu_profile_schema.XSD'Access));
+     := (Format_Src   => (Id  => system_src_schema.Id'Access,
+                          XSD => system_src_schema.Data'Access),
+         Format_A     => (Id  => system_a_schema.Id'Access,
+                          XSD => system_a_schema.Data'Access),
+         Format_B     => (Id  => system_b_schema.Id'Access,
+                          XSD => system_b_schema.Data'Access),
+         VCPU_Profile => (Id  => vcpu_profile_schema.Id'Access,
+                          XSD => vcpu_profile_schema.Data'Access));
 
    -------------------------------------------------------------------------
 

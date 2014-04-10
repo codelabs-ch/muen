@@ -20,6 +20,8 @@ with DOM.Core.Nodes;
 with DOM.Core.Documents;
 with DOM.Core.Elements;
 
+with McKae.XML.XPath.XIA;
+
 with Muxml.Utils;
 
 package body Utils_Tests
@@ -68,6 +70,9 @@ is
       T.Add_Test_Routine
         (Routine => Merge_Nodes_Name_Mismatch'Access,
          Name    => "Merge XML nodes (name mismatch)");
+      T.Add_Test_Routine
+        (Routine => Merge_Nodes_With_List'Access,
+         Name    => "Merge XML nodes (list elements)");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -173,5 +178,56 @@ is
                Name => "attr") = "foobar",
               Message   => "Node B merged into Node A");
    end Merge_Nodes_Name_Mismatch;
+
+   -------------------------------------------------------------------------
+
+   procedure Merge_Nodes_With_List
+   is
+      Data : Muxml.XML_Data_Type;
+      Impl : DOM.Core.DOM_Implementation;
+      Doc  : constant DOM.Core.Document
+        := DOM.Core.Create_Document (Implementation => Impl);
+      Node, Tmp, MSRs_Node : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.VCPU_Profile,
+                   File => "data/vcpu_profile.xml");
+
+      MSRs_Node := DOM.Core.Nodes.Item
+        (List  => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Data.Doc,
+            XPath => "/vcpu/registers/msrs"),
+         Index => 0);
+
+      --  Construct the following XML structure:
+      --  <msrs><msr start="16#0174#"/></msrs>
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Doc,
+         Tag_Name => "msr");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "start",
+         Value => "16#0174#");
+      Tmp := DOM.Core.Documents.Create_Element
+        (Doc      => Doc,
+         Tag_Name => "msrs");
+      Utils.Append_Child (Node      => Tmp,
+                          New_Child => Node);
+
+      Utils.Merge (Left     => MSRs_Node,
+                   Right    => Tmp,
+                   List_Tag => "msr");
+
+      declare
+         MSR_Count : constant Natural := DOM.Core.Nodes.Length
+           (List => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Data.Doc,
+               XPath => "/vcpu/registers/msrs/msr"));
+      begin
+         Assert (Condition => MSR_Count = 3,
+                 Message   => "Error merging child element list");
+      end;
+   end Merge_Nodes_With_List;
 
 end Utils_Tests;

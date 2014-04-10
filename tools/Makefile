@@ -3,6 +3,7 @@ TOOLS =           \
 	libmuxml      \
 	libmutools    \
 	libmucfgcheck \
+	libmucfgvcpu  \
 	libpaging     \
 	mucfgalloc    \
 	mucfgexpand   \

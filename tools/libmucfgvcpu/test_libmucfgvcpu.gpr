@@ -16,26 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Framework;
+with "../../contrib/projects/ahven";
+with "../libtest/libtest";
+with "../shared_tools";
 
-package Utils_Tests
-is
+with "libmucfgvcpu";
 
-   type Testcase is new Ahven.Framework.Test_Case with null record;
+project Test_Libmucfgvcpu extends "../tools.gpr" is
 
-   --  Initialize testcase.
-   procedure Initialize (T : in out Testcase);
+   for Source_Dirs use ("tests");
+   for Main use ("test_runner.adb");
+   for Object_Dir use "obj/" & Shared_Tools.Build;
 
-   --  Append XML child node.
-   procedure Append_Child;
-
-   --  Merge two XML nodes.
-   procedure Merge_Nodes;
-
-   --  Try to merge XML nodes with different names.
-   procedure Merge_Nodes_Name_Mismatch;
-
-   --  Merge two XML nodes with list child elements.
-   procedure Merge_Nodes_With_List;
-
-end Utils_Tests;
+end Test_Libmucfgvcpu;

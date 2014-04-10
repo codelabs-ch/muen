@@ -16,26 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Framework;
+with DOM.Core;
 
-package Utils_Tests
+package Mucfgvcpu
 is
 
-   type Testcase is new Ahven.Framework.Test_Case with null record;
+   type Profile_Type is (Native, Linux);
 
-   --  Initialize testcase.
-   procedure Initialize (T : in out Testcase);
+   --  Set given vcpu node to values of specified profile.
+   procedure Set_VCPU_Profile
+     (Profile : Profile_Type;
+      Node    : DOM.Core.Node);
 
-   --  Append XML child node.
-   procedure Append_Child;
-
-   --  Merge two XML nodes.
-   procedure Merge_Nodes;
-
-   --  Try to merge XML nodes with different names.
-   procedure Merge_Nodes_Name_Mismatch;
-
-   --  Merge two XML nodes with list child elements.
-   procedure Merge_Nodes_With_List;
-
-end Utils_Tests;
+end Mucfgvcpu;

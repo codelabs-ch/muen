@@ -16,26 +16,21 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ahven.Text_Runner;
 with Ahven.Framework;
 
-package Utils_Tests
+with Mucfgvcpu_Tests;
+
+procedure Test_Runner
 is
+   use Ahven.Framework;
 
-   type Testcase is new Ahven.Framework.Test_Case with null record;
+   S : constant Test_Suite_Access := Create_Suite
+     (Suite_Name => "Libmucfgvcpu tests");
+begin
+   Add_Test (Suite => S.all,
+             T     => new Mucfgvcpu_Tests.Testcase);
 
-   --  Initialize testcase.
-   procedure Initialize (T : in out Testcase);
-
-   --  Append XML child node.
-   procedure Append_Child;
-
-   --  Merge two XML nodes.
-   procedure Merge_Nodes;
-
-   --  Try to merge XML nodes with different names.
-   procedure Merge_Nodes_Name_Mismatch;
-
-   --  Merge two XML nodes with list child elements.
-   procedure Merge_Nodes_With_List;
-
-end Utils_Tests;
+   Ahven.Text_Runner.Run (Suite => S);
+   Release_Suite (T => S);
+end Test_Runner;

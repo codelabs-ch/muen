@@ -18,7 +18,7 @@
 
 with Ahven.Framework;
 
-package Utils_Tests
+package Mucfgvcpu_Tests
 is
 
    type Testcase is new Ahven.Framework.Test_Case with null record;
@@ -26,16 +26,7 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
-   --  Append XML child node.
-   procedure Append_Child;
+   --  Set VCPU profile.
+   procedure Set_VCPU_Profile;
 
-   --  Merge two XML nodes.
-   procedure Merge_Nodes;
-
-   --  Try to merge XML nodes with different names.
-   procedure Merge_Nodes_Name_Mismatch;
-
-   --  Merge two XML nodes with list child elements.
-   procedure Merge_Nodes_With_List;
-
-end Utils_Tests;
+end Mucfgvcpu_Tests;

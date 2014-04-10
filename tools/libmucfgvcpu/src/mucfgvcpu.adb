@@ -48,8 +48,9 @@ is
                           Kind => Muxml.VCPU_Profile,
                           XML  => Profile_Map (Profile).XML.all);
       Muxml.Utils.Merge
-        (Left  => Node,
-         Right => DOM.Core.Documents.Get_Element (Doc => Data.Doc));
+        (Left     => Node,
+         Right    => DOM.Core.Documents.Get_Element (Doc => Data.Doc),
+         List_Tag => "msr");
 
       --  The profile's document must not be freed since some resources
       --  referenced by the merged DOM tree are not copied to the Node's

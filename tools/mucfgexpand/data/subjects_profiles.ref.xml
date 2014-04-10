@@ -14,6 +14,9 @@
  </platform>
  <memory>
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx|zp" size="16#2000#">
+   <file filename="lnx_zp" format="zp" offset="none"/>
+  </memory>
  </memory>
  <events/>
  <subjects>
@@ -194,6 +197,7 @@
    <bootparams/>
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+    <memory executable="false" logical="zero_page" physical="lnx|zp" virtualAddress="16#0000#" writable="true"/>
    </memory>
    <devices/>
    <events/>

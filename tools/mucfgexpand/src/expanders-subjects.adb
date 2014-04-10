@@ -27,6 +27,7 @@ with Muxml.Utils;
 with Mucfgvcpu;
 
 with Expanders.XML_Utils;
+with Expanders.Subjects.Profiles;
 
 package body Expanders.Subjects
 is
@@ -275,6 +276,7 @@ is
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
             use type DOM.Core.Node;
+            use type Mucfgvcpu.Profile_Type;
 
             Subj : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
@@ -309,6 +311,13 @@ is
                        & "' to " & Profile'Img);
             Mucfgvcpu.Set_VCPU_Profile (Profile => Profile,
                                         Node    => VCPU_Node);
+
+            if Profile = Mucfgvcpu.Linux then
+               Profiles.Handle_Linux_Profile
+                 (Data    => Data,
+                  Subject => Subj);
+            end if;
+
             DOM.Core.Elements.Remove_Attribute
               (Elem => Subj,
                Name => "profile");

@@ -74,6 +74,9 @@
   <memory alignment="16#1000#" caching="WB" name="lnx|acpi_xsdt" size="16#1000#">
    <file filename="lnx_xsdt" format="acpi_xsdt" offset="none"/>
   </memory>
+  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_fadt" size="16#1000#">
+   <file filename="lnx_fadt" format="acpi_fadt" offset="none"/>
+  </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" physicalAddress="16#0012_9000#" size="16#4000#">
    <file filename="kernel_pt_0" format="pt" offset="none"/>
   </memory>
@@ -480,6 +483,7 @@
     <memory executable="false" logical="zero_page" physical="lnx|zp" virtualAddress="16#0000#" writable="true"/>
     <memory executable="false" logical="acpi_rsdp" physical="lnx|acpi_rsdp" virtualAddress="16#000e_0000#" writable="false"/>
     <memory executable="false" logical="acpi_xsdt" physical="lnx|acpi_xsdt" virtualAddress="16#000e_1000#" writable="false"/>
+    <memory executable="false" logical="acpi_fadt" physical="lnx|acpi_fadt" virtualAddress="16#000e_2000#" writable="false"/>
    </memory>
    <devices/>
    <events/>

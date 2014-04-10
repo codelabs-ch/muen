@@ -146,6 +146,22 @@ is
             Address       => "16#000e_3000#",
             Writable      => False,
             Executable    => False));
+      XML_Utils.Add_Memory_Region
+        (Policy    => Data,
+         Name      => Subj_Name & "|acpi_empty",
+         Address   => "",
+         Size      => "16#c000#",
+         Caching   => "WB",
+         Alignment => "16#1000#");
+      Muxml.Utils.Append_Child
+        (Node      => Subj_Mem_Node,
+         New_Child => XML_Utils.Create_Virtual_Memory_Node
+           (Policy        => Data,
+            Logical_Name  => "acpi_free",
+            Physical_Name => Subj_Name & "|acpi_empty",
+            Address       => "16#000e_4000#",
+            Writable      => False,
+            Executable    => False));
    end Handle_Linux_Profile;
 
 end Expanders.Subjects.Profiles;

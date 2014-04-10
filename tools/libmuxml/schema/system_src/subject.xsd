@@ -4,7 +4,8 @@
 	<xs:complexType name="subjectType">
 		<xs:sequence>
 			<xs:group ref="subjectBaseElements"/>
-			<xs:element name="binary" type="binaryType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="binary"  type="binaryType"  minOccurs="1" maxOccurs="1"/>
+			<xs:element name="monitor" type="monitorType" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="subjectBaseAttrs"/>
 		<xs:attribute name="profile" type="subjectProfileType" use="required"/>
@@ -22,5 +23,17 @@
 			<xs:enumeration value="linux"/>
 		</xs:restriction>
 	</xs:simpleType>
+
+	<xs:complexType name="monitorType">
+		<xs:sequence>
+			<xs:element name="subject" type="monitorSubjectRefType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="monitorSubjectRefType">
+		<xs:attribute name="name"           type="nameType"   use="required"/>
+		<xs:attribute name="virtualAddress" type="word64Type" use="required"/>
+		<xs:attribute name="writable"       type="xs:boolean" use="required"/>
+	</xs:complexType>
 
 </xs:schema>

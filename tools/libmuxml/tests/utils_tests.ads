@@ -35,4 +35,7 @@ is
    --  Try to merge XML nodes with different names.
    procedure Merge_Nodes_Name_Mismatch;
 
+   --  Merge two XML nodes with list child elements.
+   procedure Merge_Nodes_With_List;
+
 end Utils_Tests;

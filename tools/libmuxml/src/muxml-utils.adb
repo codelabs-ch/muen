@@ -94,7 +94,10 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Merge (Left, Right : DOM.Core.Node)
+   procedure Merge
+     (Left     : DOM.Core.Node;
+      Right    : DOM.Core.Node;
+      List_Tag : String := "")
    is
    begin
       if DOM.Core.Nodes.Node_Name (N => Left)
@@ -122,9 +125,12 @@ is
                   L_Child := DOM.Core.Nodes.Next_Sibling (N => L_Child);
                end loop;
 
-               if L_Child = null then
+               if L_Child = null
+                 or else DOM.Core.Nodes.Node_Name (N => L_Child) = List_Tag
+               then
 
-                  --  No match, attach right child incl. all children to left
+                  --  No match or list found, attach right child incl. all
+                  --  children to left.
 
                   Append_Child
                     (Node      => Left,
@@ -132,8 +138,9 @@ is
                        (N    => R_Child,
                         Deep => True));
                else
-                  Merge (Left  => L_Child,
-                         Right => R_Child);
+                  Merge (Left     => L_Child,
+                         Right    => R_Child,
+                         List_Tag => List_Tag);
                end if;
             end;
 

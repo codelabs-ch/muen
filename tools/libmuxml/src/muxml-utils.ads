@@ -49,7 +49,11 @@ is
    --  Merge the right node incl. all its children into the left node. Values
    --  provided by the right node take precedence and replace existing data in
    --  the left node tree. Nothing is done if left and right do not have
-   --  matching names.
-   procedure Merge (Left, Right : DOM.Core.Node);
+   --  matching names. Child nodes matching the list tag are appended instead
+   --  of merged into a single element.
+   procedure Merge
+     (Left     : DOM.Core.Node;
+      Right    : DOM.Core.Node;
+      List_Tag : String := "");
 
 end Muxml.Utils;

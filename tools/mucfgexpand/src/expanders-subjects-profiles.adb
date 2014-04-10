@@ -68,6 +68,27 @@ is
             Address       => "16#0000#",
             Writable      => True,
             Executable    => False));
+
+      Mulog.Log (Msg => "Adding ACPI tables for subject '" & Subj_Name & "'");
+      XML_Utils.Add_Memory_Region
+        (Policy      => Data,
+         Name        => Subj_Name & "|acpi_rsdp",
+         Address     => "",
+         Size        => "16#1000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         File_Name   => Subj_Name & "_rsdp",
+         File_Format => "acpi_rsdp",
+         File_Offset => "none");
+      Muxml.Utils.Append_Child
+        (Node      => Subj_Mem_Node,
+         New_Child => XML_Utils.Create_Virtual_Memory_Node
+           (Policy        => Data,
+            Logical_Name  => "acpi_rsdp",
+            Physical_Name => Subj_Name & "|acpi_rsdp",
+            Address       => "16#000e_0000#",
+            Writable      => False,
+            Executable    => False));
    end Handle_Linux_Profile;
 
 end Expanders.Subjects.Profiles;

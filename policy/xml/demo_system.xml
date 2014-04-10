@@ -31,8 +31,6 @@
 
 	<memory>
 		<!-- Linux subject -->
-		<memory name="linux|acpi_empty" size="16#c000#" caching="WB"/>
-
 		<memory name="linux|lowmem" size="16#0009_b000#" caching="WB"/>
 		<memory name="linux|bios" size="16#0001_0000#" caching="WB"/>
 		<memory name="linux|ram" size="16#0f70_0000#" alignment="16#0010_0000#" caching="WB"/>
@@ -138,9 +136,6 @@
 				<memory logical="lowmem" physical="linux|lowmem" virtualAddress="16#0001_4000#" writable="true" executable="false"/>
 				<memory logical="bios" physical="linux|bios" virtualAddress="16#000c_0000#" writable="false" executable="false"/>
 				<memory logical="bios" physical="linux|bios" virtualAddress="16#000d_0000#" writable="false" executable="false"/>
-
-				<memory logical="acpi_free" physical="linux|acpi_empty" virtualAddress="16#000e_4000#" writable="false" executable="false"/>
-
 				<memory logical="bios" physical="linux|bios" virtualAddress="16#000f_0000#" writable="false" executable="false"/>
 				<memory logical="ram" physical="linux|ram" virtualAddress="16#0090_0000#" writable="true" executable="true"/>
 			</memory>

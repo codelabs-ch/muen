@@ -18,6 +18,7 @@
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
+with DOM.Core.Documents;
 
 with McKae.XML.XPath.XIA;
 
@@ -109,6 +110,8 @@ is
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
+            use type DOM.Core.Node;
+
             Subj : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Nodes,
@@ -122,13 +125,22 @@ is
                 (DOM.Core.Elements.Get_Attribute
                      (Elem => Subj,
                       Name => "profile"));
-            VCPU_Node : constant DOM.Core.Node
+            VCPU_Node : DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => McKae.XML.XPath.XIA.XPath_Query
                      (N     => Subj,
                       XPath => "vcpu"),
                  Index => 0);
          begin
+            if VCPU_Node = null then
+               VCPU_Node := DOM.Core.Nodes.Insert_Before
+                 (N         => Subj,
+                  New_Child => DOM.Core.Documents.Create_Element
+                    (Doc      => Data.Doc,
+                     Tag_Name => "vcpu"),
+                  Ref_Child => DOM.Core.Nodes.First_Child (N => Subj));
+            end if;
+
             Mulog.Log (Msg => "Setting profile of subject '" & Subj_Name
                        & "' to " & Profile'Img);
             Mucfgvcpu.Set_VCPU_Profile (Profile => Profile,

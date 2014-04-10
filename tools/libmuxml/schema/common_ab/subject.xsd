@@ -2,9 +2,10 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
 	<xs:complexType name="subjectType">
-		<xs:complexContent>
-			<xs:extension base="subjectBaseType"/>
-		</xs:complexContent>
+		<xs:sequence>
+			<xs:group ref="subjectBaseElements"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="subjectBaseAttrs"/>
 	</xs:complexType>
 
 </xs:schema>

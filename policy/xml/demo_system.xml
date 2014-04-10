@@ -31,9 +31,6 @@
 
 	<memory>
 		<!-- Linux subject -->
-		<memory name="linux|acpi_dsdt" size="16#1000#" caching="WB">
-			<file format="acpi_dsdt" filename="linux_dsdt.aml" offset="none"/>
-		</memory>
 		<memory name="linux|acpi_empty" size="16#c000#" caching="WB"/>
 
 		<memory name="linux|lowmem" size="16#0009_b000#" caching="WB"/>
@@ -142,7 +139,6 @@
 				<memory logical="bios" physical="linux|bios" virtualAddress="16#000c_0000#" writable="false" executable="false"/>
 				<memory logical="bios" physical="linux|bios" virtualAddress="16#000d_0000#" writable="false" executable="false"/>
 
-				<memory logical="acpi_dsdt" physical="linux|acpi_dsdt" virtualAddress="16#000e_3000#" writable="false" executable="false"/>
 				<memory logical="acpi_free" physical="linux|acpi_empty" virtualAddress="16#000e_4000#" writable="false" executable="false"/>
 
 				<memory logical="bios" physical="linux|bios" virtualAddress="16#000f_0000#" writable="false" executable="false"/>

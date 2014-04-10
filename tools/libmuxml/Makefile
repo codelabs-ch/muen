@@ -1,3 +1,4 @@
+TESTS_DIR = $(CURDIR)/tests-ng
 COMPONENT = libmuxml
 
 SCHEMA_FILES = \
@@ -26,3 +27,13 @@ $(GEN_DIR)/muxml-%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL)
 	@xsltproc --stringparam format $* $(RESOLVE_XSL) $(SCHEMA_FILE) > $@.tmp
 	@../scripts/xml2ada Muxml.$*_schema $@.tmp $@
 	@rm $@.tmp
+
+update_suite:
+	mkdir -p $(OBJ_DIR)/debug
+	gnattest --tests-dir=$(TESTS_DIR) -P$(COMPONENT)
+
+build_tests: update_suite
+	gprbuild -p -P obj/debug/gnattest/harness/test_driver
+
+gnattests: build_tests
+	obj/debug/gnattest/harness/test_runner

@@ -14,13 +14,13 @@ result=$3
 tidy -q -i -xml --hide-comments yes -o $pretty $in_file
 
 echo -n > $result
-echo -n "--  Auto-generated, "                              >> $result
-date --iso=seconds                                          >> $result
-echo "package $package is"                                  >> $result
-echo "   XSD_Id : aliased constant String := \"$package\";" >> $result
-echo '   XSD    : aliased constant String := ""'            >> $result
-sed -e 's/\t/ /g;s/"/""/g;s/^\(.*\)/\& "\1"/g' $pretty      >> $result
-echo '& "";'                                                >> $result
-echo "end $package;"                                        >> $result
+echo -n "--  Auto-generated, "                            >> $result
+date --iso=seconds                                        >> $result
+echo "package $package is"                                >> $result
+echo "   Id   : aliased constant String := \"$package\";" >> $result
+echo '   Data : aliased constant String := ""'            >> $result
+sed -e 's/\t/ /g;s/"/""/g;s/^\(.*\)/\& "\1"/g' $pretty    >> $result
+echo '& "";'                                              >> $result
+echo "end $package;"                                      >> $result
 
 rm -r $tmp

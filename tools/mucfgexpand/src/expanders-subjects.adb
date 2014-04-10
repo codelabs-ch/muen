@@ -123,13 +123,13 @@ is
             Profile : constant Mucfgvcpu.Profile_Type
               := Mucfgvcpu.Profile_Type'Value
                 (DOM.Core.Elements.Get_Attribute
-                     (Elem => Subj,
-                      Name => "profile"));
+                   (Elem => Subj,
+                    Name => "profile"));
             VCPU_Node : DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => McKae.XML.XPath.XIA.XPath_Query
-                     (N     => Subj,
-                      XPath => "vcpu"),
+                   (N     => Subj,
+                    XPath => "vcpu"),
                  Index => 0);
          begin
             if VCPU_Node = null then

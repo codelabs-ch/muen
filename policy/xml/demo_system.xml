@@ -66,16 +66,6 @@
 	<events/>
 
 	<subjects>
-		<subject id="0" name="tau0" cpu="3" profile="native">
-			<bootparams/>
-			<memory>
-				<memory logical="sys_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="true" executable="false"/>
-			</memory>
-			<devices/>
-			<events/>
-			<binary filename="tau0" size="16#0001_4000#" virtualAddress="16#1000#"/>
-		</subject>
-
 		<subject id="1" name="vt" cpu="0" profile="native">
 			<bootparams/>
 			<memory>

@@ -38,6 +38,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Tau0
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_tau0.xml",
+         Ref_Filename => "data/subjects_tau0.ref.xml",
+         Expander     => Expanders.Subjects.Add_Tau0'Access);
+   end Add_Tau0;
+
+   -------------------------------------------------------------------------
+
    procedure Handle_Profile
    is
    begin
@@ -59,6 +70,9 @@ is
       T.Add_Test_Routine
         (Routine => Handle_Profile'Access,
          Name    => "Handle profile");
+      T.Add_Test_Routine
+        (Routine => Add_Tau0'Access,
+         Name    => "Add tau0");
    end Initialize;
 
 end Subjects_Tests;

@@ -101,6 +101,105 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Tau0 (Data : in out Muxml.XML_Data_Type)
+   is
+      Tau0_CPU : constant String
+        := Muxml.Utils.Get_Attribute
+          (Doc   => Data.Doc,
+           XPath => "/system/scheduling/majorFrame/cpu/"
+           & "minorFrame[@subject='tau0']/..",
+           Name  => "id");
+      Subjects_Node : constant DOM.Core.Node
+        := DOM.Core.Nodes.Item
+          (List  => McKae.XML.XPath.XIA.XPath_Query
+             (N     => Data.Doc,
+              XPath => "/system/subjects"),
+           Index => 0);
+      Tau0_Node : DOM.Core.Node
+        := DOM.Core.Documents.Create_Element
+          (Doc      => Data.Doc,
+           Tag_Name => "subject");
+      Mem_Node  : constant DOM.Core.Node
+        := DOM.Core.Documents.Create_Element
+          (Doc      => Data.Doc,
+           Tag_Name => "memory");
+      Bin_Node  : constant DOM.Core.Node
+        := DOM.Core.Documents.Create_Element
+          (Doc      => Data.Doc,
+           Tag_Name => "binary");
+   begin
+      Mulog.Log (Msg => "Adding tau0 subject");
+
+      Tau0_Node := DOM.Core.Nodes.Insert_Before
+        (N         => Subjects_Node,
+         New_Child => Tau0_Node,
+         Ref_Child => DOM.Core.Nodes.First_Child (N => Subjects_Node));
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Tau0_Node,
+         Name  => "id",
+         Value => "0");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Tau0_Node,
+         Name  => "name",
+         Value => "tau0");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Tau0_Node,
+         Name  => "profile",
+         Value => "native");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Tau0_Node,
+         Name  => "cpu",
+         Value => Tau0_CPU);
+
+      Muxml.Utils.Append_Child
+        (Node      => Tau0_Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "bootparams"));
+
+      Muxml.Utils.Append_Child
+        (Node      => Mem_Node,
+         New_Child => XML_Utils.Create_Virtual_Memory_Node
+           (Policy        => Data,
+            Logical_Name  => "sys_interface",
+            Physical_Name => "sys_interface",
+            Address       => "16#001f_f000#",
+            Writable      => True,
+            Executable    => False));
+      Muxml.Utils.Append_Child
+        (Node      => Tau0_Node,
+         New_Child => Mem_Node);
+
+      Muxml.Utils.Append_Child
+        (Node      => Tau0_Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "devices"));
+      Muxml.Utils.Append_Child
+        (Node      => Tau0_Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "events"));
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Bin_Node,
+         Name  => "filename",
+         Value => "tau0");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Bin_Node,
+         Name  => "size",
+         Value => "16#0001_4000#");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Bin_Node,
+         Name  => "virtualAddress",
+         Value => "16#1000#");
+      Muxml.Utils.Append_Child
+        (Node      => Tau0_Node,
+         New_Child => Bin_Node);
+   end Add_Tau0;
+
+   -------------------------------------------------------------------------
+
    procedure Handle_Profile (Data : in out Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List
@@ -123,13 +222,13 @@ is
             Profile : constant Mucfgvcpu.Profile_Type
               := Mucfgvcpu.Profile_Type'Value
                 (DOM.Core.Elements.Get_Attribute
-                     (Elem => Subj,
-                      Name => "profile"));
+                   (Elem => Subj,
+                    Name => "profile"));
             VCPU_Node : DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => McKae.XML.XPath.XIA.XPath_Query
-                     (N     => Subj,
-                      XPath => "vcpu"),
+                   (N     => Subj,
+                    XPath => "vcpu"),
                  Index => 0);
          begin
             if VCPU_Node = null then

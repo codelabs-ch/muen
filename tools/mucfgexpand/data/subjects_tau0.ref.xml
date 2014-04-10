@@ -13,16 +13,19 @@
   </device>
  </platform>
  <memory>
-  <memory alignment="16#1000#" caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#4000#">
-   <file filename="lnx_pt" format="pt" offset="none"/>
-  </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#4000#">
-   <file filename="subject1_pt" format="pt" offset="none"/>
-  </memory>
+  <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
  </memory>
  <events/>
  <subjects>
+  <subject cpu="1" id="0" name="tau0" profile="native">
+   <bootparams/>
+   <memory>
+    <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="true"/>
+   </memory>
+   <devices/>
+   <events/>
+   <binary filename="tau0" size="16#0001_4000#" virtualAddress="16#1000#"/>
+  </subject>
   <subject cpu="0" id="0" name="lnx" profile="linux">
    <bootparams/>
    <memory>

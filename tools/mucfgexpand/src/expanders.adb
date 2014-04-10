@@ -39,6 +39,11 @@ is
    procedure Register_All
    is
    begin
+
+      --  Add tau0 subject prior to subject-related memory expanders (state,
+      --  VMCS and bitmaps).
+
+      Procs.Register (Process => Subjects.Add_Tau0'Access);
       Procs.Register (Process => Memory.Add_Alignment'Access);
       Procs.Register (Process => Memory.Add_Kernel_Binary'Access);
       Procs.Register (Process => Memory.Add_Stack_Store'Access);

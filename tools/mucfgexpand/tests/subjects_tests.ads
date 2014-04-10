@@ -32,4 +32,7 @@ is
    --  Handle subject profile.
    procedure Handle_Profile;
 
+   --  Add tau0.
+   procedure Add_Tau0;
+
 end Subjects_Tests;

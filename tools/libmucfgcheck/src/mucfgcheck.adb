@@ -223,4 +223,18 @@ is
       return Ref_Name = Phy_Name;
    end Is_Valid_Reference;
 
+   -------------------------------------------------------------------------
+
+   function Match_Subject_Name (Left, Right : DOM.Core.Node) return Boolean
+   is
+      Frame_Name   : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Left,
+         Name => "subject");
+      Subject_Name : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Right,
+         Name => "name");
+   begin
+      return Frame_Name = Subject_Name;
+   end Match_Subject_Name;
+
 end Mucfgcheck;

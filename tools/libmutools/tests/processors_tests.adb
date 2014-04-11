@@ -55,7 +55,7 @@ is
    procedure Initialize (T : in out Testcase)
    is
    begin
-      T.Set_Name (Name => "Processors  tests");
+      T.Set_Name (Name => "Processors tests");
       T.Add_Test_Routine
         (Routine => Register_Immutable_Processor'Access,
          Name    => "Register immutable data processor");

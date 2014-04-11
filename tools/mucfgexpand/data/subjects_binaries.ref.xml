@@ -41,7 +41,7 @@
    <devices/>
    <events/>
    <monitor>
-    <subject name="lnx" virtualAddress="16#4000#" writable="true"/>
+    <state subject="lnx" virtualAddress="16#4000#" writable="true"/>
    </monitor>
   </subject>
  </subjects>

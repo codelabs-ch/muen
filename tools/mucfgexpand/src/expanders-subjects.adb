@@ -242,7 +242,7 @@ is
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject/monitor/subject");
+           XPath => "/system/subjects/subject/monitor/state");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
@@ -253,7 +253,7 @@ is
             Monitored_Subj_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Monitored_Subj_Node,
-                 Name => "name");
+                 Name => "subject");
             Address   : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Monitored_Subj_Node,

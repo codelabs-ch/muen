@@ -34,6 +34,13 @@ with Expanders.Subjects.Profiles;
 package body Expanders.Subjects
 is
 
+   --  Add element with given name to subjects missing such an element. The new
+   --  node is inserted before the reference node with the specified name.
+   procedure Add_Optional_Element
+     (Data         : in out Muxml.XML_Data_Type;
+      Element_Name :        String;
+      Ref_Name     :        String);
+
    -------------------------------------------------------------------------
 
    procedure Add_Binaries (Data : in out Muxml.XML_Data_Type)
@@ -140,10 +147,23 @@ is
 
    procedure Add_Missing_Elements (Data : in out Muxml.XML_Data_Type)
    is
+   begin
+      Add_Optional_Element (Data         => Data,
+                            Element_Name => "bootparams",
+                            Ref_Name     => "memory");
+   end Add_Missing_Elements;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Optional_Element
+     (Data         : in out Muxml.XML_Data_Type;
+      Element_Name :        String;
+      Ref_Name     :        String)
+   is
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject[not (bootparams)]");
+           XPath => "/system/subjects/subject[not (" & Element_Name & ")]");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
@@ -151,25 +171,25 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Nodes,
                  Index => I);
-            Mem_Node  : constant DOM.Core.Node
+            Ref_Node  : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => McKae.XML.XPath.XIA.XPath_Query
                    (N     => Subj_Node,
-                    XPath => "memory"),
+                    XPath => Ref_Name),
                  Index => 0);
-            Boot_Node : DOM.Core.Node
+            Elem_Node : DOM.Core.Node
               := DOM.Core.Documents.Create_Element
                 (Doc      => Data.Doc,
-                 Tag_Name => "bootparams");
+                 Tag_Name => Element_Name);
          begin
-            Boot_Node := DOM.Core.Nodes.Insert_Before
+            Elem_Node := DOM.Core.Nodes.Insert_Before
               (N         => Subj_Node,
-               New_Child => Boot_Node,
-               Ref_Child => Mem_Node);
-            pragma Unreferenced (Boot_Node);
+               New_Child => Elem_Node,
+               Ref_Child => Ref_Node);
+            pragma Unreferenced (Elem_Node);
          end;
       end loop;
-   end Add_Missing_Elements;
+   end Add_Optional_Element;
 
    -------------------------------------------------------------------------
 

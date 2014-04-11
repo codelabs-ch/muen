@@ -28,12 +28,12 @@ $(GEN_DIR)/muxml-%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL)
 	@../scripts/xml2ada Muxml.$*_schema $@.tmp $@
 	@rm $@.tmp
 
-update_suite:
-	mkdir -p $(OBJ_DIR)/debug
+update_suite: $(SCHEMA_FILES)
+	mkdir -p $(OBJ_DIR)/tests
 	gnattest --tests-dir=$(TESTS_DIR) -Pgnattest_$(COMPONENT)
 
 build_tests: update_suite
-	gprbuild -p -P obj/debug/gnattest/harness/test_driver
+	gprbuild -p -P obj/tests/gnattest/harness/test_driver
 
 gnattests: build_tests
-	obj/debug/gnattest/harness/test_runner
+	obj/tests/gnattest/harness/test_runner

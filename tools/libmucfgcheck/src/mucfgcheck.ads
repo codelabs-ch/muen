@@ -25,10 +25,6 @@ with Muxml;
 package Mucfgcheck
 is
 
-   Validation_Error : exception;
-
-private
-
    use type Interfaces.Unsigned_64;
 
    type Test_Function is not null access function
@@ -111,5 +107,7 @@ private
 
    --  Returns True if the subject name matches.
    function Match_Subject_Name (Left, Right : DOM.Core.Node) return Boolean;
+
+   Validation_Error : exception;
 
 end Mucfgcheck;

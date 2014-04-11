@@ -587,7 +587,7 @@ is
       end Check_Inequality;
    begin
       Mulog.Log (Msg => "Checking uniqueness of" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img& " device IRQ(s)");
+                 (List => Nodes)'Img & " device IRQ(s)");
 
       Compare_All (Nodes      => Nodes,
                    Comparator => Check_Inequality'Access);

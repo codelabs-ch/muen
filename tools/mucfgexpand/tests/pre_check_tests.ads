@@ -29,4 +29,7 @@ is
    --  Check tau0 presence in scheduling plan.
    procedure Tau0_Presence_In_Scheduling;
 
+   --  Check subject monitor references.
+   procedure Subject_Monitor_References;
+
 end Pre_Check_Tests;

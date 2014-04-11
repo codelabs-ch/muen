@@ -35,4 +35,7 @@ is
    --  Check that tau0 is present in the scheduling plan.
    procedure Tau0_Presence_In_Scheduling (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check subject monitor references.
+   procedure Subject_Monitor_References (XML_Data : Muxml.XML_Data_Type);
+
 end Expand.Pre_Checks;

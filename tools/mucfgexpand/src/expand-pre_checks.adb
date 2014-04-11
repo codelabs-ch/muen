@@ -17,6 +17,7 @@
 --
 
 with DOM.Core.Nodes;
+with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
@@ -48,11 +49,44 @@ is
         (Process => Mucfgcheck.Device.Device_Memory_References'Access);
 
       Check_Procs.Register (Process => Tau0_Presence_In_Scheduling'Access);
+      Check_Procs.Register (Process => Subject_Monitor_References'Access);
    end Register_All;
 
    -------------------------------------------------------------------------
 
    procedure Run (Data : Muxml.XML_Data_Type) renames Check_Procs.Run;
+
+   -------------------------------------------------------------------------
+
+   procedure Subject_Monitor_References (XML_Data : Muxml.XML_Data_Type)
+   is
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Ref_Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "subject");
+         Subj_Name     : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node
+              (N => DOM.Core.Nodes.Parent_Node (N => Node)),
+            Name => "name");
+      begin
+         return "Subject '" & Ref_Subj_Name & "' referenced by subject monitor"
+           & " '" & Subj_Name & "' does not exist";
+      end Error_Msg;
+   begin
+      Mucfgcheck.For_Each_Match
+        (XML_Data     => XML_Data,
+         Source_XPath => "/system/subjects/subject/monitor/state",
+         Ref_XPath    => "/system/subjects/subject",
+         Log_Message  => "subject monitor reference(s)",
+         Error        => Error_Msg'Access,
+         Match        => Mucfgcheck.Match_Subject_Name'Access);
+   end Subject_Monitor_References;
 
    -------------------------------------------------------------------------
 

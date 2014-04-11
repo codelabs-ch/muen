@@ -19,6 +19,7 @@
 with Ada.Exceptions;
 
 with DOM.Core.Nodes;
+with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
@@ -41,7 +42,44 @@ is
       T.Add_Test_Routine
         (Routine => Tau0_Presence_In_Scheduling'Access,
          Name    => "Presence of tau0 in scheduling plan");
+      T.Add_Test_Routine
+        (Routine => Subject_Monitor_References'Access,
+         Name    => "Subject monitor references");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Subject_Monitor_References
+   is
+      Monitor_Node : DOM.Core.Node;
+      Policy       : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Monitor_Node := DOM.Core.Nodes.Item
+        (List  => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Policy.Doc,
+            XPath => "/system/subjects/subject/monitor/state"
+            & "[@subject='lnx']"),
+         Index => 0);
+      DOM.Core.Elements.Set_Attribute (Elem  => Monitor_Node,
+                                       Name  => "subject",
+                                       Value => "nonexistent");
+
+      begin
+         Expand.Pre_Checks.Subject_Monitor_References (XML_Data => Policy);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'nonexistent' referenced by subject monitor "
+                    & "'subject1' does not exist",
+                    Message   => "Exception mismatch");
+      end;
+   end Subject_Monitor_References;
 
    -------------------------------------------------------------------------
 

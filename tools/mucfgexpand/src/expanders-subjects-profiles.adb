@@ -162,6 +162,25 @@ is
             Address       => "16#000e_4000#",
             Writable      => False,
             Executable    => False));
+
+      Mulog.Log (Msg => "Adding low-mem region for subject '"
+                 & Subj_Name & "'");
+      XML_Utils.Add_Memory_Region
+        (Policy    => Data,
+         Name      => Subj_Name & "|lowmem",
+         Address   => "",
+         Size      => "16#0009_b000#",
+         Caching   => "WB",
+         Alignment => "16#1000#");
+      Muxml.Utils.Append_Child
+        (Node      => Subj_Mem_Node,
+         New_Child => XML_Utils.Create_Virtual_Memory_Node
+           (Policy        => Data,
+            Logical_Name  => "lowmem",
+            Physical_Name => Subj_Name & "|lowmem",
+            Address       => "16#0001_4000#",
+            Writable      => True,
+            Executable    => False));
    end Handle_Linux_Profile;
 
 end Expanders.Subjects.Profiles;

@@ -46,7 +46,7 @@
 	<events/>
 
 	<subjects>
-		<subject id="1" name="vt" cpu="0" profile="native">
+		<subject name="vt" cpu="0" profile="native">
 			<bootparams/>
 			<memory>
 				<memory logical="linux_output" physical="linux_output" virtualAddress="16#0010_0000#" writable="false" executable="false"/>
@@ -78,7 +78,7 @@
 			<binary filename="vt" size="16#0002_4000#" virtualAddress="16#1000#"/>
 		</subject>
 
-		<subject id="2" name="time" cpu="2" profile="native">
+		<subject name="time" cpu="2" profile="native">
 			<bootparams/>
 			<memory>
 				<memory logical="time_channel" physical="time_channel" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
@@ -101,7 +101,7 @@
 			<binary filename="time" size="16#0001_4000#" virtualAddress="16#1000#"/>
 		</subject>
 
-		<subject id="3" name="sm" cpu="1" profile="native">
+		<subject name="sm" cpu="1" profile="native">
 			<bootparams/>
 			<memory>
 				<memory logical="sm_output" physical="sm_output" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
@@ -125,7 +125,7 @@
 			</monitor>
 		</subject>
 
-		<subject id="4" name="linux" cpu="1" profile="linux">
+		<subject name="linux" cpu="1" profile="linux">
 			<bootparams>lpj=10000 earlyprintk=serial console=ttyS0,115200 console=hvc pci=noearly notsc</bootparams>
 			<memory>
 				<memory logical="time_channel" physical="time_channel" virtualAddress="16#2000#" writable="false" executable="false"/>

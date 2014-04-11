@@ -25,10 +25,6 @@ with Muxml;
 package Mucfgcheck
 is
 
-   Validation_Error : exception;
-
-private
-
    use type Interfaces.Unsigned_64;
 
    type Test_Function is not null access function
@@ -103,8 +99,15 @@ private
       Match        : not null access function
         (Left, Right : DOM.Core.Node) return Boolean);
 
+   --  Match functions.
+
    --  Returns True if the left node's 'physical' attribute matches the 'name'
    --  attribute of the right node.
    function Is_Valid_Reference (Left, Right : DOM.Core.Node) return Boolean;
+
+   --  Returns True if the subject name matches.
+   function Match_Subject_Name (Left, Right : DOM.Core.Node) return Boolean;
+
+   Validation_Error : exception;
 
 end Mucfgcheck;

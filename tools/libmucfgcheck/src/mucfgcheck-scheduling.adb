@@ -29,9 +29,6 @@ is
 
    use McKae.XML.XPath.XIA;
 
-   --  Returns True if the minor frame subject name matches.
-   function Match_Subject_Name (Left, Right : DOM.Core.Node) return Boolean;
-
    -------------------------------------------------------------------------
 
    procedure CPU_Element_Count (XML_Data : Muxml.XML_Data_Type)
@@ -118,20 +115,6 @@ is
          end;
       end loop;
    end Major_Frame_Ticks;
-
-   -------------------------------------------------------------------------
-
-   function Match_Subject_Name (Left, Right : DOM.Core.Node) return Boolean
-   is
-      Frame_Name   : constant String := DOM.Core.Elements.Get_Attribute
-        (Elem => Left,
-         Name => "subject");
-      Subject_Name : constant String := DOM.Core.Elements.Get_Attribute
-        (Elem => Right,
-         Name => "name");
-   begin
-      return Frame_Name = Subject_Name;
-   end Match_Subject_Name;
 
    -------------------------------------------------------------------------
 

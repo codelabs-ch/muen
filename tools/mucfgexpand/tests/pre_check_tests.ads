@@ -16,26 +16,20 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muxml;
+with Ahven.Framework;
 
-package Expand.Pre_Checks
+package Pre_Check_Tests
 is
 
-   --  Register all pre-checks.
-   procedure Register_All;
+   type Testcase is new Ahven.Framework.Test_Case with null record;
 
-   --  Run registered pre-checks.
-   procedure Run (Data : Muxml.XML_Data_Type);
+   --  Initialize testcase.
+   procedure Initialize (T : in out Testcase);
 
-   --  Return number of registered pre-checks.
-   function Get_Count return Natural;
-
-   --  Expander specific pre-checks.
-
-   --  Check that tau0 is present in the scheduling plan.
-   procedure Tau0_Presence_In_Scheduling (XML_Data : Muxml.XML_Data_Type);
+   --  Check tau0 presence in scheduling plan.
+   procedure Tau0_Presence_In_Scheduling;
 
    --  Check subject monitor references.
-   procedure Subject_Monitor_References (XML_Data : Muxml.XML_Data_Type);
+   procedure Subject_Monitor_References;
 
-end Expand.Pre_Checks;
+end Pre_Check_Tests;

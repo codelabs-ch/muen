@@ -24,6 +24,7 @@ with Memory_Tests;
 with Kernel_Tests;
 with Expand_Tests;
 with Subjects_Tests;
+with Pre_Check_Tests;
 
 procedure Test_Runner
 is
@@ -42,6 +43,8 @@ begin
              T     => new Expand_Tests.Testcase);
    Add_Test (Suite => S.all,
              T     => new Subjects_Tests.Testcase);
+   Add_Test (Suite => S.all,
+             T     => new Pre_Check_Tests.Testcase);
 
    Ahven.Text_Runner.Run (Suite => S);
    Release_Suite (T => S);

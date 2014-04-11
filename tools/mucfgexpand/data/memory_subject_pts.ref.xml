@@ -41,7 +41,7 @@
    <events/>
    <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
    <monitor>
-    <subject name="lnx" virtualAddress="16#4000#" writable="true"/>
+    <state subject="lnx" virtualAddress="16#4000#" writable="true"/>
    </monitor>
   </subject>
  </subjects>

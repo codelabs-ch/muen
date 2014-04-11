@@ -103,7 +103,6 @@
 			<memory>
 				<memory logical="sm_output" physical="sm_output" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
 			</memory>
-			<devices/>
 			<events>
 				<source>
 					<group name="vmcall">

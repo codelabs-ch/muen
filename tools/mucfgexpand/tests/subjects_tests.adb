@@ -49,6 +49,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Missing_Elements
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_missing_elements.xml",
+         Ref_Filename => "data/subjects_missing_elements.ref.xml",
+         Expander     => Expanders.Subjects.Add_Missing_Elements'Access);
+   end Add_Missing_Elements;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Tau0
    is
    begin
@@ -101,6 +112,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_Ids'Access,
          Name    => "Add subject ids");
+      T.Add_Test_Routine
+        (Routine => Add_Missing_Elements'Access,
+         Name    => "Add missing subject elements");
    end Initialize;
 
 end Subjects_Tests;

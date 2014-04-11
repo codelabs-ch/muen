@@ -47,7 +47,6 @@
 
 	<subjects>
 		<subject name="vt" cpu="0" profile="native">
-			<bootparams/>
 			<memory>
 				<memory logical="linux_output" physical="linux_output" virtualAddress="16#0010_0000#" writable="false" executable="false"/>
 				<memory logical="time_output" physical="time_output" virtualAddress="16#0011_0000#" writable="false" executable="false"/>
@@ -79,7 +78,6 @@
 		</subject>
 
 		<subject name="time" cpu="2" profile="native">
-			<bootparams/>
 			<memory>
 				<memory logical="time_channel" physical="time_channel" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
 				<memory logical="time_output" physical="time_output" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
@@ -102,11 +100,9 @@
 		</subject>
 
 		<subject name="sm" cpu="1" profile="native">
-			<bootparams/>
 			<memory>
 				<memory logical="sm_output" physical="sm_output" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
 			</memory>
-			<devices/>
 			<events>
 				<source>
 					<group name="vmcall">

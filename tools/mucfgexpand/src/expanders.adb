@@ -66,6 +66,7 @@ is
       Procs.Register (Process => Subjects.Add_Binaries'Access);
       Procs.Register (Process => Subjects.Handle_Profile'Access);
       Procs.Register (Process => Subjects.Handle_Monitors'Access);
+      Procs.Register (Process => Subjects.Add_Missing_Elements'Access);
 
       --  All kernel/subject memory regions and mappings must exist and specify
       --  and alignment to add PTs.

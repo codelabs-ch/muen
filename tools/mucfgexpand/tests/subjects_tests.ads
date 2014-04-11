@@ -41,4 +41,7 @@ is
    --  Add subject ids.
    procedure Add_Ids;
 
+   --  Add missing subject elements.
+   procedure Add_Missing_Elements;
+
 end Subjects_Tests;

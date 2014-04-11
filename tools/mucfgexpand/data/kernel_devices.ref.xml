@@ -29,7 +29,6 @@
  </kernel>
  <subjects>
   <subject cpu="0" name="lnx" profile="linux">
-   <bootparams/>
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
@@ -38,7 +37,6 @@
    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>
   <subject cpu="1" name="subject1" profile="native">
-   <bootparams/>
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>

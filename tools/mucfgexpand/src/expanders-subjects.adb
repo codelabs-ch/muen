@@ -138,6 +138,41 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Missing_Elements (Data : in out Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject[not (bootparams)]");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Nodes,
+                 Index => I);
+            Mem_Node  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Subj_Node,
+                    XPath => "memory"),
+                 Index => 0);
+            Boot_Node : DOM.Core.Node
+              := DOM.Core.Documents.Create_Element
+                (Doc      => Data.Doc,
+                 Tag_Name => "bootparams");
+         begin
+            Boot_Node := DOM.Core.Nodes.Insert_Before
+              (N         => Subj_Node,
+               New_Child => Boot_Node,
+               Ref_Child => Mem_Node);
+            pragma Unreferenced (Boot_Node);
+         end;
+      end loop;
+   end Add_Missing_Elements;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Tau0 (Data : in out Muxml.XML_Data_Type)
    is
       Tau0_CPU : constant String

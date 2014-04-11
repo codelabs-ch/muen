@@ -82,6 +82,7 @@
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|acpi_empty" size="16#c000#"/>
   <memory alignment="16#1000#" caching="WB" name="lnx|lowmem" size="16#0009_b000#"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx|bios" size="16#0001_0000#"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" physicalAddress="16#0012_9000#" size="16#4000#">
    <file filename="kernel_pt_0" format="pt" offset="none"/>
   </memory>
@@ -492,6 +493,9 @@
     <memory executable="false" logical="acpi_dsdt" physical="lnx|acpi_dsdt" virtualAddress="16#000e_3000#" writable="false"/>
     <memory executable="false" logical="acpi_free" physical="lnx|acpi_empty" virtualAddress="16#000e_4000#" writable="false"/>
     <memory executable="false" logical="lowmem" physical="lnx|lowmem" virtualAddress="16#0001_4000#" writable="true"/>
+    <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000c_0000#" writable="false"/>
+    <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000d_0000#" writable="false"/>
+    <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000f_0000#" writable="false"/>
    </memory>
    <devices/>
    <events/>

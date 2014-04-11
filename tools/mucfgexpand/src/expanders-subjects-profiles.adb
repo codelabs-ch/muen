@@ -163,7 +163,7 @@ is
             Writable      => False,
             Executable    => False));
 
-      Mulog.Log (Msg => "Adding low-mem region for subject '"
+      Mulog.Log (Msg => "Adding low-mem and BIOS regions for subject '"
                  & Subj_Name & "'");
       XML_Utils.Add_Memory_Region
         (Policy    => Data,
@@ -180,6 +180,40 @@ is
             Physical_Name => Subj_Name & "|lowmem",
             Address       => "16#0001_4000#",
             Writable      => True,
+            Executable    => False));
+      XML_Utils.Add_Memory_Region
+        (Policy    => Data,
+         Name      => Subj_Name & "|bios",
+         Address   => "",
+         Size      => "16#0001_0000#",
+         Caching   => "WB",
+         Alignment => "16#1000#");
+      Muxml.Utils.Append_Child
+        (Node      => Subj_Mem_Node,
+         New_Child => XML_Utils.Create_Virtual_Memory_Node
+           (Policy        => Data,
+            Logical_Name  => "bios",
+            Physical_Name => Subj_Name & "|bios",
+            Address       => "16#000c_0000#",
+            Writable      => False,
+            Executable    => False));
+      Muxml.Utils.Append_Child
+        (Node      => Subj_Mem_Node,
+         New_Child => XML_Utils.Create_Virtual_Memory_Node
+           (Policy        => Data,
+            Logical_Name  => "bios",
+            Physical_Name => Subj_Name & "|bios",
+            Address       => "16#000d_0000#",
+            Writable      => False,
+            Executable    => False));
+      Muxml.Utils.Append_Child
+        (Node      => Subj_Mem_Node,
+         New_Child => XML_Utils.Create_Virtual_Memory_Node
+           (Policy        => Data,
+            Logical_Name  => "bios",
+            Physical_Name => Subj_Name & "|bios",
+            Address       => "16#000f_0000#",
+            Writable      => False,
             Executable    => False));
    end Handle_Linux_Profile;
 

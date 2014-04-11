@@ -30,7 +30,7 @@ $(GEN_DIR)/muxml-%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL)
 
 update_suite:
 	mkdir -p $(OBJ_DIR)/debug
-	gnattest --tests-dir=$(TESTS_DIR) -P$(COMPONENT)
+	gnattest --tests-dir=$(TESTS_DIR) -Pgnattest_$(COMPONENT)
 
 build_tests: update_suite
 	gprbuild -p -P obj/debug/gnattest/harness/test_driver

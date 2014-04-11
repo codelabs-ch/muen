@@ -5,7 +5,8 @@ VERSION      = $(GIT_REV)
 GIT_REV      = $(shell git describe --always --dirty="-UNCLEAN")
 
 include ../Makeconf
-include ../Makespark
+
+BUILD_OPTS  += --RTS=$(TOP_DIR)/rts/obj
 
 all: $(ALL) install
 

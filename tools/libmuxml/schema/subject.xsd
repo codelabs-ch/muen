@@ -3,10 +3,9 @@
 
 	<xs:group name="subjectBaseElements">
 		<xs:sequence>
-			<xs:element name="bootparams" type="xs:string"         minOccurs="1" maxOccurs="1"/>
-			<xs:element name="memory"     type="memoryRefsType"    minOccurs="1" maxOccurs="1"/>
-			<xs:element name="devices"    type="devicesRefType"    minOccurs="1" maxOccurs="1"/>
-			<xs:element name="events"     type="subjectEventsType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="memory"  type="memoryRefsType"    minOccurs="1" maxOccurs="1"/>
+			<xs:element name="devices" type="devicesRefType"    minOccurs="1" maxOccurs="1"/>
+			<xs:element name="events"  type="subjectEventsType" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:group>
 

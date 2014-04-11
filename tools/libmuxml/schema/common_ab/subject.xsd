@@ -3,7 +3,8 @@
 
 	<xs:complexType name="subjectType">
 		<xs:sequence>
-			<xs:element name="vcpu" type="vcpuType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="vcpu"       type="vcpuType"  minOccurs="1" maxOccurs="1"/>
+			<xs:element name="bootparams" type="xs:string" minOccurs="1" maxOccurs="1"/>
 			<xs:group ref="subjectBaseElements"/>
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>

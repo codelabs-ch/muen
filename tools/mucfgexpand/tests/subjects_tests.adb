@@ -38,6 +38,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Ids
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_ids.xml",
+         Ref_Filename => "data/subjects_ids.ref.xml",
+         Expander     => Expanders.Subjects.Add_Ids'Access);
+   end Add_Ids;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Tau0
    is
    begin
@@ -87,6 +98,9 @@ is
       T.Add_Test_Routine
         (Routine => Handle_Monitors'Access,
          Name    => "Handle monitors");
+      T.Add_Test_Routine
+        (Routine => Add_Ids'Access,
+         Name    => "Add subject ids");
    end Initialize;
 
 end Subjects_Tests;

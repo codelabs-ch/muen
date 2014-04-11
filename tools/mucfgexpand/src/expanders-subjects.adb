@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
@@ -99,6 +101,40 @@ is
          end;
       end loop;
    end Add_Binaries;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Ids (Data : in out Muxml.XML_Data_Type)
+   is
+      Nodes  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject[not (@id)]");
+      Cur_Id : Positive := 1;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Nodes,
+                 Index => I);
+            Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Subj_Node,
+               Name => "name");
+            Id_Str    : constant String := Ada.Strings.Fixed.Trim
+              (Source => Cur_Id'Img,
+               Side   => Ada.Strings.Left);
+         begin
+            Mulog.Log (Msg => "Setting id of subject '" & Subj_Name & "' to "
+                       & Id_Str);
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Subj_Node,
+               Name  => "id",
+               Value => Id_Str);
+            Cur_Id := Cur_Id + 1;
+         end;
+      end loop;
+   end Add_Ids;
 
    -------------------------------------------------------------------------
 

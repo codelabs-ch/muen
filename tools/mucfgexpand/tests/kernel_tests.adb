@@ -16,7 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Muxml;
+
 with Expanders.Kernel;
+with Expanders.Subjects;
 
 with Test_Utils.Expander;
 
@@ -24,6 +27,9 @@ package body Kernel_Tests
 is
 
    use Ahven;
+
+   --  Invoke kernel section skeleton and subject id expanders.
+   procedure Pre_Subj_State_Mappings (Data : in out Muxml.XML_Data_Type);
 
    -------------------------------------------------------------------------
 
@@ -57,7 +63,7 @@ is
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/kernel_subj_state_mappings.xml",
          Ref_Filename => "data/kernel_subj_state_mappings.ref.xml",
-         Pre          => Expanders.Kernel.Add_Section_Skeleton'Access,
+         Pre          => Pre_Subj_State_Mappings'Access,
          Expander     => Expanders.Kernel.Add_Subj_State_Mappings'Access);
    end Add_Subj_State_Mappings;
 
@@ -92,5 +98,14 @@ is
          Pre          => Expanders.Kernel.Add_Section_Skeleton'Access,
          Expander     => Expanders.Kernel.Map_Tau0_Interface'Access);
    end Map_Tau0_Interface;
+
+   -------------------------------------------------------------------------
+
+   procedure Pre_Subj_State_Mappings (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Expanders.Kernel.Add_Section_Skeleton (Data => Data);
+      Expanders.Subjects.Add_Ids (Data => Data);
+   end Pre_Subj_State_Mappings;
 
 end Kernel_Tests;

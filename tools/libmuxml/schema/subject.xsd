@@ -11,7 +11,6 @@
 	</xs:group>
 
 	<xs:attributeGroup name="subjectBaseAttrs">
-		<xs:attribute name="id"   type="xs:nonNegativeInteger" use="required"/>
 		<xs:attribute name="name" type="nameType"              use="required"/>
 		<xs:attribute name="cpu"  type="xs:nonNegativeInteger" use="required"/>
 	</xs:attributeGroup>

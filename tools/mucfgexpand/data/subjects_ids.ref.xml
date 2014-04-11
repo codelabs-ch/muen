@@ -14,14 +14,10 @@
  </platform>
  <memory>
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_stack_0" size="16#2000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_store_0" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_stack_1" size="16#2000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_store_1" size="16#1000#"/>
  </memory>
  <events/>
  <subjects>
-  <subject cpu="0" name="lnx" profile="linux">
+  <subject cpu="0" id="1" name="lnx" profile="linux">
    <bootparams/>
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
@@ -30,7 +26,7 @@
    <events/>
    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>
-  <subject cpu="1" name="subject1" profile="native">
+  <subject cpu="1" id="2" name="subject1" profile="native">
    <bootparams/>
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>

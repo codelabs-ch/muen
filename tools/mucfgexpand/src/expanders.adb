@@ -44,6 +44,11 @@ is
       --  VMCS and bitmaps).
 
       Procs.Register (Process => Subjects.Add_Tau0'Access);
+
+      --  Set subject ids prior to kernel subject state mapping expander.
+
+      Procs.Register (Process => Subjects.Add_Ids'Access);
+
       Procs.Register (Process => Memory.Add_Alignment'Access);
       Procs.Register (Process => Memory.Add_Kernel_Binary'Access);
       Procs.Register (Process => Memory.Add_Stack_Store'Access);

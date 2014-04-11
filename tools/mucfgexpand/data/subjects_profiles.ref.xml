@@ -35,7 +35,7 @@
  </memory>
  <events/>
  <subjects>
-  <subject cpu="0" id="0" name="lnx">
+  <subject cpu="0" name="lnx">
    <vcpu>
     <vmx>
      <controls>
@@ -227,7 +227,7 @@
    <events/>
    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>
-  <subject cpu="1" id="1" name="subject1">
+  <subject cpu="1" name="subject1">
    <vcpu>
     <vmx>
      <controls>

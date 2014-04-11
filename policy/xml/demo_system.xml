@@ -31,7 +31,6 @@
 
 	<memory>
 		<!-- Linux subject -->
-		<memory name="linux|bios" size="16#0001_0000#" caching="WB"/>
 		<memory name="linux|ram" size="16#0f70_0000#" alignment="16#0010_0000#" caching="WB"/>
 
 		<!-- channels -->
@@ -132,9 +131,6 @@
 				<memory logical="time_channel" physical="time_channel" virtualAddress="16#2000#" writable="false" executable="false"/>
 				<memory logical="linux_keyboard" physical="linux_keyboard" virtualAddress="16#3000#" writable="true" executable="false"/>
 				<memory logical="linux_output" physical="linux_output" virtualAddress="16#4000#" writable="true" executable="false"/>
-				<memory logical="bios" physical="linux|bios" virtualAddress="16#000c_0000#" writable="false" executable="false"/>
-				<memory logical="bios" physical="linux|bios" virtualAddress="16#000d_0000#" writable="false" executable="false"/>
-				<memory logical="bios" physical="linux|bios" virtualAddress="16#000f_0000#" writable="false" executable="false"/>
 				<memory logical="ram" physical="linux|ram" virtualAddress="16#0090_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>

@@ -31,26 +31,6 @@
 
 	<memory>
 		<!-- Linux subject -->
-		<memory name="linux|zp" size="16#2000#" caching="WB">
-			<file format="zp" filename="linux_zp" offset="none"/>
-		</memory>
-
-		<memory name="linux|acpi_rsdp" size="16#1000#" caching="WB">
-			<file format="acpi_rsdp" filename="linux_rsdp" offset="none"/>
-		</memory>
-		<memory name="linux|acpi_xsdt" size="16#1000#" caching="WB">
-			<file format="acpi_xsdt" filename="linux_xsdt" offset="none"/>
-		</memory>
-		<memory name="linux|acpi_fadt" size="16#1000#" caching="WB">
-			<file format="acpi_fadt" filename="linux_fadt" offset="none"/>
-		</memory>
-		<memory name="linux|acpi_dsdt" size="16#1000#" caching="WB">
-			<file format="acpi_dsdt" filename="DSDT.aml" offset="none"/>
-		</memory>
-		<memory name="linux|acpi_empty" size="16#c000#" caching="WB"/>
-
-		<memory name="linux|lowmem" size="16#0009_b000#" caching="WB"/>
-		<memory name="linux|bios" size="16#0001_0000#" caching="WB"/>
 		<memory name="linux|ram" size="16#0f70_0000#" alignment="16#0010_0000#" caching="WB"/>
 
 		<!-- channels -->
@@ -148,21 +128,9 @@
 		<subject id="4" name="linux" cpu="1" profile="linux">
 			<bootparams>lpj=10000 earlyprintk=serial console=ttyS0,115200 console=hvc pci=noearly notsc</bootparams>
 			<memory>
-				<memory logical="zero_page" physical="linux|zp" virtualAddress="16#0000#" writable="true" executable="false"/>
 				<memory logical="time_channel" physical="time_channel" virtualAddress="16#2000#" writable="false" executable="false"/>
 				<memory logical="linux_keyboard" physical="linux_keyboard" virtualAddress="16#3000#" writable="true" executable="false"/>
 				<memory logical="linux_output" physical="linux_output" virtualAddress="16#4000#" writable="true" executable="false"/>
-				<memory logical="lowmem" physical="linux|lowmem" virtualAddress="16#0001_4000#" writable="true" executable="false"/>
-				<memory logical="bios" physical="linux|bios" virtualAddress="16#000c_0000#" writable="false" executable="false"/>
-				<memory logical="bios" physical="linux|bios" virtualAddress="16#000d_0000#" writable="false" executable="false"/>
-
-				<memory logical="acpi_rsdp" physical="linux|acpi_rsdp" virtualAddress="16#000e_0000#" writable="false" executable="false"/>
-				<memory logical="acpi_xsdt" physical="linux|acpi_xsdt" virtualAddress="16#000e_1000#" writable="false" executable="false"/>
-				<memory logical="acpi_fadt" physical="linux|acpi_fadt" virtualAddress="16#000e_2000#" writable="false" executable="false"/>
-				<memory logical="acpi_dsdt" physical="linux|acpi_dsdt" virtualAddress="16#000e_3000#" writable="false" executable="false"/>
-				<memory logical="acpi_free" physical="linux|acpi_empty" virtualAddress="16#000e_4000#" writable="false" executable="false"/>
-
-				<memory logical="bios" physical="linux|bios" virtualAddress="16#000f_0000#" writable="false" executable="false"/>
 				<memory logical="ram" physical="linux|ram" virtualAddress="16#0090_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>

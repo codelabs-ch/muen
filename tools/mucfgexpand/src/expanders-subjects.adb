@@ -151,6 +151,9 @@ is
       Add_Optional_Element (Data         => Data,
                             Element_Name => "bootparams",
                             Ref_Name     => "memory");
+      Add_Optional_Element (Data         => Data,
+                            Element_Name => "devices",
+                            Ref_Name     => "events");
    end Add_Missing_Elements;
 
    -------------------------------------------------------------------------

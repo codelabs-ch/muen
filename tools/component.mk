@@ -1,9 +1,11 @@
 include ../../Makeconf
 
+TEST_RUNNER = @obj/tests/test_runner $(TEST_OPTS)
+
 all: $(COMPONENT)
 
 tests: test_$(COMPONENT)
-	@obj/tests/test_runner $(TEST_OPTS)
+	$(TEST_RUNNER)
 
 $(COMPONENT): $(COMPONENT_DEPS)
 	@gprbuild $(BUILD_OPTS) -P$@

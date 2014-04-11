@@ -16,40 +16,35 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mulog;
+with Mutools.Immutable_Processors;
+with Mucfgcheck.Memory;
+with Mucfgcheck.Device;
 
-with Expand.Pre_Checks;
-with Expand.Post_Checks;
-with Expanders;
+pragma Elaborate_All (Mutools.Immutable_Processors);
 
-package body Expand
+package body Expand.Pre_Checks
 is
+
+   package Check_Procs is new
+     Mutools.Immutable_Processors (Param_Type => Muxml.XML_Data_Type);
 
    -------------------------------------------------------------------------
 
-   procedure Run
-     (Policy      : in out Muxml.XML_Data_Type;
-      Output_File :        String)
+   function Get_Count return Natural renames Check_Procs.Get_Count;
+
+   -------------------------------------------------------------------------
+
+   procedure Register_All
    is
    begin
-      Pre_Checks.Register_All;
-      Mulog.Log
-        (Msg => "Registered pre-checks" & Pre_Checks.Get_Count'Img);
-      Post_Checks.Register_All;
-      Mulog.Log
-        (Msg => "Registered post-checks" & Post_Checks.Get_Count'Img);
-      Expanders.Register_All;
-      Mulog.Log
-        (Msg => "Registered expanders" & Expanders.Get_Count'Img);
+      Check_Procs.Register
+        (Process => Mucfgcheck.Memory.Physical_Memory_References'Access);
+      Check_Procs.Register
+        (Process => Mucfgcheck.Device.Device_Memory_References'Access);
+   end Register_All;
 
-      Pre_Checks.Run (Data => Policy);
-      Expanders.Run (Data => Policy);
-      Post_Checks.Run (Data => Policy);
+   -------------------------------------------------------------------------
 
-      Muxml.Write
-        (File => Output_File,
-         Kind => Muxml.Format_A,
-         Data => Policy);
-   end Run;
+   procedure Run (Data : Muxml.XML_Data_Type) renames Check_Procs.Run;
 
-end Expand;
+end Expand.Pre_Checks;

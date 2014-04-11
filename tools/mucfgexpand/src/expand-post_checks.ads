@@ -16,23 +16,18 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "xmlada";
+with Muxml;
 
-with "../../contrib/projects/xia";
+package Expand.Post_Checks
+is
 
-with "../libpaging/libpaging";
-with "../libmulog/libmulog";
-with "../libmuxml/libmuxml";
-with "../libmutools/libmutools";
-with "../libmucfgvcpu/libmucfgvcpu";
-with "../libmucfgcheck/libmucfgcheck";
-with "../shared_tools";
+   --  Register all post-checks.
+   procedure Register_All;
 
-project Mucfgexpand extends "../tools.gpr" is
+   --  Run registered post-checks.
+   procedure Run (Data : Muxml.XML_Data_Type);
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Exec_Dir use "bin";
-   for Main use ("mucfgexpand.adb");
+   --  Return number of registered post-checks.
+   function Get_Count return Natural;
 
-end Mucfgexpand;
+end Expand.Post_Checks;

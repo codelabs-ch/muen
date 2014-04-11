@@ -1,17 +1,19 @@
 COMPONENT = libmucfgvcpu
 
 PROFILE_FILES = \
-   obj/mucfgvcpu-profile_native.ads \
-   obj/mucfgvcpu-profile_linux.ads
+   $(GEN_DIR)/mucfgvcpu-profile_native.ads \
+   $(GEN_DIR)/mucfgvcpu-profile_linux.ads
 
 COMPONENT_DEPS = $(PROFILE_FILES)
 TEST_DEPS      = $(COMPONENT_DEPS)
 COV_DEPS       = $(COMPONENT_DEPS)
 
+ADDITIONAL_CLEAN = $(GEN_DIR)
+
 include ../library.mk
 include ../../Makecov
 
-DUMMY := $(shell mkdir -p $(OBJ_DIR))
+DUMMY := $(shell mkdir -p $(GEN_DIR))
 
-obj/mucfgvcpu-profile_%.ads: profiles/%.xml
+$(GEN_DIR)/mucfgvcpu-profile_%.ads: profiles/%.xml
 	@../scripts/xml2ada Mucfgvcpu.Profile_$* $< $@

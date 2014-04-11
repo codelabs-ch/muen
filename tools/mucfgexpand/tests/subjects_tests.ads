@@ -38,4 +38,7 @@ is
    --  Handle subject monitors.
    procedure Handle_Monitors;
 
+   --  Add subject ids.
+   procedure Add_Ids;
+
 end Subjects_Tests;

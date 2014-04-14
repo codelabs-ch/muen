@@ -17,8 +17,11 @@
 --
 
 with DOM.Core.Nodes;
+with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
+
+with Mulog;
 
 with Expanders.XML_Utils;
 
@@ -35,7 +38,38 @@ is
              (N     => Data.Doc,
               XPath => "/system"),
            Index => 0);
+      Channels : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/channels/channel");
    begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Channels) - 1 loop
+         declare
+            Channel_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Channels,
+                 Index => I);
+            Channel_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Channel_Node,
+                 Name => "name");
+            Channel_Size : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Channel_Node,
+                 Name => "size");
+         begin
+            Mulog.Log (Msg => "Adding physical memory region with size "
+                       & Channel_Size & " for channel '" & Channel_Name & "'");
+            XML_Utils.Add_Memory_Region
+              (Policy    => Data,
+               Name      => Channel_Name,
+               Address   => "",
+               Size      => Channel_Size,
+               Caching   => "WB",
+               Alignment => "16#1000#");
+         end;
+      end loop;
+
       XML_Utils.Remove_Child
         (Node       => System_Node,
          Child_Name => "channels");

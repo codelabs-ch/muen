@@ -1,0 +1,25 @@
+BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
+
+SPARK_BODIES = $(patsubst %.ad*,%.adb,$(SPARK_FILES))
+
+SPARK_OPTS =             \
+	--warnings=on    \
+	-f               \
+	--proof=per_path \
+	--timeout=10     \
+	-Xbuild=prove    \
+	-j$(NUM_CPUS)    \
+
+
+ALL = $(OBJ_DIR)/$(PACKAGE)
+
+ifeq ($(NO_PROOF),)
+ALL += $(OBJ_DIR)/prove/gnatprove/gnatprove.out
+endif
+
+all: $(ALL)
+
+$(OBJ_DIR)/prove/gnatprove/gnatprove.out:
+	gnatprove $(SPARK_OPTS) -P$(PACKAGE)
+
+.PHONY: $(OBJ_DIR)/$(PACKAGE)

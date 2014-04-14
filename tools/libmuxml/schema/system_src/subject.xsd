@@ -4,7 +4,7 @@
 	<xs:complexType name="subjectType">
 		<xs:sequence>
 			<xs:element name="bootparams" type="xs:string"             minOccurs="0" maxOccurs="1"/>
-			<xs:element name="memory"     type="memoryRefsType"        minOccurs="1" maxOccurs="1"/>
+			<xs:element name="memory"     type="memoryRefsType"        minOccurs="0" maxOccurs="1"/>
 			<xs:element name="devices"    type="devicesRefType"        minOccurs="0" maxOccurs="1"/>
 			<xs:element name="events"     type="subjectEventsType"     minOccurs="1" maxOccurs="1"/>
 			<xs:element name="channels"   type="channelReferencesType" minOccurs="0" maxOccurs="1"/>

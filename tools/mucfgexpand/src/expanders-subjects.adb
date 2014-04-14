@@ -111,7 +111,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_Channels (Data : in out Muxml.XML_Data_Type)
+   procedure Add_Channel_Mappings (Data : in out Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -164,7 +164,7 @@ is
                   Executable    => False));
          end;
       end loop;
-   end Add_Channels;
+   end Add_Channel_Mappings;
 
    -------------------------------------------------------------------------
 

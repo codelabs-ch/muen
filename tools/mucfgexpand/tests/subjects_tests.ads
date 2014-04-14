@@ -45,7 +45,7 @@ is
    procedure Add_Missing_Elements;
 
    --  Add channel mappings.
-   procedure Add_Channels;
+   procedure Add_Channel_Mappings;
 
    --  Remove channel elements.
    procedure Remove_Channel_Elements;

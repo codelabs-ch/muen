@@ -38,14 +38,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_Channels
+   procedure Add_Channel_Mappings
    is
    begin
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/subjects_channels.xml",
          Ref_Filename => "data/subjects_channels.ref.xml",
-         Expander     => Expanders.Subjects.Add_Channels'Access);
-   end Add_Channels;
+         Expander     => Expanders.Subjects.Add_Channel_Mappings'Access);
+   end Add_Channel_Mappings;
 
    -------------------------------------------------------------------------
 
@@ -127,8 +127,8 @@ is
         (Routine => Add_Missing_Elements'Access,
          Name    => "Add missing subject elements");
       T.Add_Test_Routine
-        (Routine => Add_Channels'Access,
-         Name    => "Add channels");
+        (Routine => Add_Channel_Mappings'Access,
+         Name    => "Add channel mappings");
       T.Add_Test_Routine
         (Routine => Remove_Channel_Elements'Access,
          Name    => "Remove channel elements");

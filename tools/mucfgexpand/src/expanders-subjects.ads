@@ -41,7 +41,7 @@ is
    procedure Add_Missing_Elements (Data : in out Muxml.XML_Data_Type);
 
    --  Add memory mappings for channels.
-   procedure Add_Channels (Data : in out Muxml.XML_Data_Type);
+   procedure Add_Channel_Mappings (Data : in out Muxml.XML_Data_Type);
 
    --  Remove subject channel elements.
    procedure Remove_Channel_Elements (Data : in out Muxml.XML_Data_Type);

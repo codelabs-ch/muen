@@ -18,6 +18,9 @@
   <memory alignment="16#1000#" caching="WB" name="subject1|vmcs" physicalAddress="16#4000#" size="16#1000#"/>
  </memory>
  <events/>
+ <channels>
+  <channel hasEvent="true" name="data_channel" size="16#1000#"/>
+ </channels>
  <subjects>
   <subject cpu="0" name="lnx" profile="linux">
    <memory>

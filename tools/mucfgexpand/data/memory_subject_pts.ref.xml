@@ -22,6 +22,9 @@
   </memory>
  </memory>
  <events/>
+ <channels>
+  <channel hasEvent="true" name="data_channel" size="16#1000#"/>
+ </channels>
  <subjects>
   <subject cpu="0" name="lnx" profile="linux">
    <memory>

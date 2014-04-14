@@ -16,6 +16,9 @@
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
  </memory>
  <events/>
+ <channels>
+  <channel hasEvent="true" name="data_channel" size="16#1000#"/>
+ </channels>
  <kernel>
   <memory>
    <cpu id="0">

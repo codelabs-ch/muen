@@ -164,21 +164,6 @@ is
                   Executable    => False));
          end;
       end loop;
-
-      declare
-         Nodes : constant DOM.Core.Node_List
-           := McKae.XML.XPath.XIA.XPath_Query
-             (N     => Data.Doc,
-              XPath => "/system/subjects/subject/channels/..");
-      begin
-         for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
-            XML_Utils.Remove_Child
-              (Node       => DOM.Core.Nodes.Item
-                 (List  => Nodes,
-                  Index => I),
-               Child_Name => "channels");
-         end loop;
-      end;
    end Add_Channels;
 
    -------------------------------------------------------------------------
@@ -493,5 +478,23 @@ is
          end;
       end loop;
    end Handle_Profile;
+
+   -------------------------------------------------------------------------
+
+   procedure Remove_Channel_Elements (Data : in out Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/channels/..");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         XML_Utils.Remove_Child
+           (Node       => DOM.Core.Nodes.Item
+              (List  => Nodes,
+               Index => I),
+            Child_Name => "channels");
+      end loop;
+   end Remove_Channel_Elements;
 
 end Expanders.Subjects;

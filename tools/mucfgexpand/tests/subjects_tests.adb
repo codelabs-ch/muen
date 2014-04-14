@@ -129,6 +129,20 @@ is
       T.Add_Test_Routine
         (Routine => Add_Channels'Access,
          Name    => "Add channels");
+      T.Add_Test_Routine
+        (Routine => Remove_Channel_Elements'Access,
+         Name    => "Remove channel elements");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Remove_Channel_Elements
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_remove_channels.xml",
+         Ref_Filename => "data/subjects_remove_channels.ref.xml",
+         Expander     => Expanders.Subjects.Remove_Channel_Elements'Access);
+   end Remove_Channel_Elements;
 
 end Subjects_Tests;

@@ -40,7 +40,10 @@ is
    --  Add missing subject XML elements.
    procedure Add_Missing_Elements (Data : in out Muxml.XML_Data_Type);
 
-   --  Add memory mappings for channels and remove channels element.
+   --  Add memory mappings for channels.
    procedure Add_Channels (Data : in out Muxml.XML_Data_Type);
+
+   --  Remove subject channel elements.
+   procedure Remove_Channel_Elements (Data : in out Muxml.XML_Data_Type);
 
 end Expanders.Subjects;

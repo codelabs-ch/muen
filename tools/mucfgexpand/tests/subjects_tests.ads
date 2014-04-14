@@ -47,4 +47,7 @@ is
    --  Add channel mappings.
    procedure Add_Channels;
 
+   --  Remove channel elements.
+   procedure Remove_Channel_Elements;
+
 end Subjects_Tests;

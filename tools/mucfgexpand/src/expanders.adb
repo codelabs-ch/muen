@@ -73,6 +73,7 @@ is
       Procs.Register (Process => Subjects.Handle_Profile'Access);
       Procs.Register (Process => Subjects.Handle_Monitors'Access);
       Procs.Register (Process => Subjects.Add_Channels'Access);
+      Procs.Register (Process => Subjects.Remove_Channel_Elements'Access);
       Procs.Register (Process => Channels.Add_Physical_Memory'Access);
 
       --  All kernel/subject memory regions and mappings must exist and specify

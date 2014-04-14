@@ -38,6 +38,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Channels
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_channels.xml",
+         Ref_Filename => "data/subjects_channels.ref.xml",
+         Expander     => Expanders.Subjects.Add_Channels'Access);
+   end Add_Channels;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Ids
    is
    begin
@@ -115,6 +126,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_Missing_Elements'Access,
          Name    => "Add missing subject elements");
+      T.Add_Test_Routine
+        (Routine => Add_Channels'Access,
+         Name    => "Add channels");
    end Initialize;
 
 end Subjects_Tests;

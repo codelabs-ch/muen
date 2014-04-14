@@ -111,6 +111,78 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Channels (Data : in out Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/channels/*");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Channel_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Nodes,
+                 Index => I);
+            Channel_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Channel_Node,
+                 Name => "ref");
+            Channel_Addr : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Channel_Node,
+                 Name => "virtualAddress");
+            Channel_Writer : constant Boolean
+              := DOM.Core.Nodes.Node_Name (N => Channel_Node) = "writer";
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Parent_Node
+                (N => DOM.Core.Nodes.Parent_Node
+                   (N => Channel_Node));
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Mem_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Subj_Node,
+                    XPath => "memory"),
+                 Index => 0);
+         begin
+            Mulog.Log (Msg => "Mapping channel '" & Channel_Name & "' "
+                       & (if Channel_Writer then "writable" else "readable")
+                       & " to virtual address " & Channel_Addr
+                       & " of subject '" & Subj_Name & "'");
+            Muxml.Utils.Append_Child
+              (Node      => Mem_Node,
+               New_Child => XML_Utils.Create_Virtual_Memory_Node
+                 (Policy        => Data,
+                  Logical_Name  => Channel_Name,
+                  Physical_Name => Channel_Name,
+                  Address       => Channel_Addr,
+                  Writable      => Channel_Writer,
+                  Executable    => False));
+         end;
+      end loop;
+
+      declare
+         Nodes : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Data.Doc,
+              XPath => "/system/subjects/subject/channels/..");
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+            XML_Utils.Remove_Child
+              (Node       => DOM.Core.Nodes.Item
+                 (List  => Nodes,
+                  Index => I),
+               Child_Name => "channels");
+         end loop;
+      end;
+   end Add_Channels;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Ids (Data : in out Muxml.XML_Data_Type)
    is
       Nodes  : constant DOM.Core.Node_List

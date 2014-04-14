@@ -40,4 +40,7 @@ is
    --  Add subject bootparams element where missing.
    procedure Add_Missing_Elements (Data : in out Muxml.XML_Data_Type);
 
+   --  Add memory mappings for channels and remove channels element.
+   procedure Add_Channels (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Subjects;

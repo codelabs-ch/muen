@@ -44,4 +44,7 @@ is
    --  Add missing subject elements.
    procedure Add_Missing_Elements;
 
+   --  Add channel mappings.
+   procedure Add_Channels;
+
 end Subjects_Tests;

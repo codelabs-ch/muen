@@ -27,6 +27,9 @@
    </memory>
    <devices/>
    <events/>
+   <channels>
+    <reader ref="data_channel" vector="12" virtualAddress="16#6000#"/>
+   </channels>
    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>
   <subject cpu="1" name="subject1" profile="native">
@@ -36,6 +39,9 @@
    </memory>
    <devices/>
    <events/>
+   <channels>
+    <writer event="1" ref="data_channel" virtualAddress="16#3000#"/>
+   </channels>
    <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
    <monitor>
     <state subject="lnx" virtualAddress="16#4000#" writable="true"/>

@@ -15,6 +15,9 @@
  <events>
   <event mode="ipi" name="xv6_keyboard"/>
  </events>
+ <channels>
+  <channel hasEvent="true" name="data_channel" size="16#1000#"/>
+ </channels>
  <subjects>
   <subject cpu="0" name="tau0" profile="native">
    <bootparams/>

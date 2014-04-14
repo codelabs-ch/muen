@@ -35,6 +35,64 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Channel_Reader_Writer
+   is
+      Node   : DOM.Core.Node;
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Node := DOM.Core.Nodes.Item
+        (List  => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Policy.Doc,
+            XPath => "/system/subjects/subject/channels/writer"
+            & "[@ref='data_channel']"),
+         Index => 0);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "ref",
+         Value => "nonexistent");
+
+      begin
+         Expand.Pre_Checks.Channel_Reader_Writer (XML_Data => Policy);
+         Fail (Message => "Exception expected (writer)");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid number of writers for channel 'data_channel':"
+                    & " 0",
+                    Message   => "Exception mismatch (writer)");
+      end;
+
+      Node := DOM.Core.Nodes.Item
+        (List  => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Policy.Doc,
+            XPath => "/system/subjects/subject/channels/reader"
+            & "[@ref='data_channel']"),
+         Index => 0);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "ref",
+         Value => "nonexistent");
+
+      begin
+         Expand.Pre_Checks.Channel_Reader_Writer (XML_Data => Policy);
+         Fail (Message => "Exception expected (reader)");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid number of readers for channel 'data_channel':"
+                    & " 0",
+                    Message   => "Exception mismatch (reader)");
+      end;
+   end Channel_Reader_Writer;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -48,6 +106,9 @@ is
       T.Add_Test_Routine
         (Routine => Subject_Channel_References'Access,
          Name    => "Subject channel references");
+      T.Add_Test_Routine
+        (Routine => Channel_Reader_Writer'Access,
+         Name    => "Channel reader/writer counts");
    end Initialize;
 
    -------------------------------------------------------------------------

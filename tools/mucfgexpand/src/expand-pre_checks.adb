@@ -36,6 +36,56 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Channel_Reader_Writer (XML_Data : Muxml.XML_Data_Type)
+   is
+      Channels : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/channels/channel");
+   begin
+      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
+                 (List => Channels)'Img & " channel(s) for reader/writer "
+                 & "count");
+      for I in 0 .. DOM.Core.Nodes.Length (List => Channels) - 1 loop
+         declare
+            Channel : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Channels,
+                 Index => I);
+            Channel_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Channel,
+                 Name => "name");
+            Reader_Count : constant Natural
+              := DOM.Core.Nodes.Length
+                (List => McKae.XML.XPath.XIA.XPath_Query
+                   (N     => XML_Data.Doc,
+                    XPath => "/system/subjects/subject/channels/reader[@ref='"
+                    & Channel_Name & "']"));
+            Writer_Count : constant Natural
+              := DOM.Core.Nodes.Length
+                (List => McKae.XML.XPath.XIA.XPath_Query
+                   (N     => XML_Data.Doc,
+                    XPath => "/system/subjects/subject/channels/writer[@ref='"
+                    & Channel_Name & "']"));
+         begin
+            if Reader_Count /= 1 then
+               raise Mucfgcheck.Validation_Error with "Invalid number of "
+                 & "readers for channel '" & Channel_Name & "':"
+                 & Reader_Count'Img;
+            end if;
+
+            if Writer_Count /= 1 then
+               raise Mucfgcheck.Validation_Error with "Invalid number of "
+                 & "writers for channel '" & Channel_Name & "':"
+                 & Writer_Count'Img;
+            end if;
+         end;
+      end loop;
+   end Channel_Reader_Writer;
+
+   -------------------------------------------------------------------------
+
    function Get_Count return Natural renames Check_Procs.Get_Count;
 
    -------------------------------------------------------------------------
@@ -51,6 +101,7 @@ is
       Check_Procs.Register (Process => Tau0_Presence_In_Scheduling'Access);
       Check_Procs.Register (Process => Subject_Monitor_References'Access);
       Check_Procs.Register (Process => Subject_Channel_References'Access);
+      Check_Procs.Register (Process => Channel_Reader_Writer'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

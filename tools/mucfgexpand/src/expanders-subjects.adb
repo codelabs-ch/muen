@@ -221,11 +221,14 @@ is
    is
    begin
       Add_Optional_Element (Data         => Data,
-                            Element_Name => "bootparams",
-                            Ref_Name     => "memory");
-      Add_Optional_Element (Data         => Data,
                             Element_Name => "devices",
                             Ref_Name     => "events");
+      Add_Optional_Element (Data         => Data,
+                            Element_Name => "memory",
+                            Ref_Name     => "devices");
+      Add_Optional_Element (Data         => Data,
+                            Element_Name => "bootparams",
+                            Ref_Name     => "memory");
    end Add_Missing_Elements;
 
    -------------------------------------------------------------------------

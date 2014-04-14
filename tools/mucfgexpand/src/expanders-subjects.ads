@@ -37,7 +37,7 @@ is
    --  Add subject ids.
    procedure Add_Ids (Data : in out Muxml.XML_Data_Type);
 
-   --  Add subject bootparams element where missing.
+   --  Add missing subject XML elements.
    procedure Add_Missing_Elements (Data : in out Muxml.XML_Data_Type);
 
    --  Add memory mappings for channels and remove channels element.

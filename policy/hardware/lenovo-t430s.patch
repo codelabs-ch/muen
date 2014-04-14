@@ -12,7 +12,7 @@ index a39a390..c53ab3c 100644
                          })
                      }
 diff --git a/policy/xml/demo_system.xml b/policy/xml/demo_system.xml
-index 373baa7..bcf863a 100644
+index 5ba74d2..4b514b8 100644
 --- a/policy/xml/demo_system.xml
 +++ b/policy/xml/demo_system.xml
 @@ -7,7 +7,7 @@
@@ -24,16 +24,14 @@ index 373baa7..bcf863a 100644
  		</device>
  		<device name="vga" shared="false">
  			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
-@@ -128,7 +128,7 @@
+@@ -119,13 +119,13 @@
  		</subject>
  
- 		<subject id="4" name="linux" cpu="1" profile="linux">
+ 		<subject name="linux" cpu="1" profile="linux">
 -			<bootparams>lpj=10000 earlyprintk=serial console=ttyS0,115200 console=hvc pci=noearly notsc</bootparams>
 +			<bootparams>lpj=10000 earlyprintk=serial,0x50b0 console=serial,0x50b0 console=hvc pci=noearly notsc</bootparams>
  			<memory>
- 				<memory logical="time_channel" physical="time_channel" virtualAddress="16#2000#" writable="false" executable="false"/>
- 				<memory logical="linux_keyboard" physical="linux_keyboard" virtualAddress="16#3000#" writable="true" executable="false"/>
-@@ -141,7 +141,7 @@
+ 				<memory logical="ram" physical="linux|ram" virtualAddress="16#0090_0000#" writable="true" executable="true"/>
  			</memory>
  			<devices>
  				<device logical="ttyS0" physical="serial">

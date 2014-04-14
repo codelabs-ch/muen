@@ -50,11 +50,61 @@ is
 
       Check_Procs.Register (Process => Tau0_Presence_In_Scheduling'Access);
       Check_Procs.Register (Process => Subject_Monitor_References'Access);
+      Check_Procs.Register (Process => Subject_Channel_References'Access);
    end Register_All;
 
    -------------------------------------------------------------------------
 
    procedure Run (Data : Muxml.XML_Data_Type) renames Check_Procs.Run;
+
+   -------------------------------------------------------------------------
+
+   procedure Subject_Channel_References (XML_Data : Muxml.XML_Data_Type)
+   is
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      --  Match name of reference and channel.
+      function Match_Channel_Name (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Ref_Channel_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "ref");
+         Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node
+              (N => DOM.Core.Nodes.Parent_Node (N => Node)),
+            Name => "name");
+      begin
+         return "Channel '" & Ref_Channel_Name & "' referenced by subject '"
+           & Subj_Name & "' does not exist";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Match_Channel_Name (Left, Right : DOM.Core.Node) return Boolean
+      is
+         Ref_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "ref");
+         Channel_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         return Ref_Name = Channel_Name;
+      end Match_Channel_Name;
+   begin
+      Mucfgcheck.For_Each_Match
+        (XML_Data     => XML_Data,
+         Source_XPath => "/system/subjects/subject/channels/*",
+         Ref_XPath    => "/system/channels/channel",
+         Log_Message  => "subject channel reference(s)",
+         Error        => Error_Msg'Access,
+         Match        => Match_Channel_Name'Access);
+   end Subject_Channel_References;
 
    -------------------------------------------------------------------------
 

@@ -45,7 +45,45 @@ is
       T.Add_Test_Routine
         (Routine => Subject_Monitor_References'Access,
          Name    => "Subject monitor references");
+      T.Add_Test_Routine
+        (Routine => Subject_Channel_References'Access,
+         Name    => "Subject channel references");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Subject_Channel_References
+   is
+      Reader_Node : DOM.Core.Node;
+      Policy      : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Reader_Node := DOM.Core.Nodes.Item
+        (List  => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Policy.Doc,
+            XPath => "/system/subjects/subject/channels/reader"
+            & "[@ref='data_channel']"),
+         Index => 0);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Reader_Node,
+         Name  => "ref",
+         Value => "nonexistent");
+
+      begin
+         Expand.Pre_Checks.Subject_Channel_References (XML_Data => Policy);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Channel 'nonexistent' referenced by subject 'lnx' does"
+                    & " not exist",
+                    Message   => "Exception mismatch");
+      end;
+   end Subject_Channel_References;
 
    -------------------------------------------------------------------------
 

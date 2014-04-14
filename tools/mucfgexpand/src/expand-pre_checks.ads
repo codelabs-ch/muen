@@ -38,4 +38,7 @@ is
    --  Check subject monitor references.
    procedure Subject_Monitor_References (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check subject channel references.
+   procedure Subject_Channel_References (XML_Data : Muxml.XML_Data_Type);
+
 end Expand.Pre_Checks;

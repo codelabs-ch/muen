@@ -85,11 +85,22 @@ is
 
    procedure Validate_Self_References
    is
-      Data : Muxml.XML_Data_Type;
+      Data       : Muxml.XML_Data_Type;
+      Event_Node : DOM.Core.Node;
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/validators.xml");
+
+      Event_Node := DOM.Core.Nodes.Item
+        (List  => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Data.Doc,
+            XPath => "/system/subjects/subject/events/target/event"
+            & "[@physical='nonexistent']"),
+         Index => 0);
+      DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
+                                       Name  => "physical",
+                                       Value => "linux_kbd");
 
       begin
          Mucfgcheck.Events.Self_References (XML_Data => Data);
@@ -98,8 +109,8 @@ is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Reference to self in event table entry "
-                    & "'forward_keyboard' of subject 'linux'",
+                    = "Reference to self in event 'linux_kbd' of subject "
+                    & "'linux'",
                     Message   => "Exception mismatch");
       end;
    end Validate_Self_References;

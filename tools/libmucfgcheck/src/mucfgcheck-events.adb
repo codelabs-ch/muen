@@ -126,41 +126,46 @@ is
    procedure Self_References (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List
-        := XPath_Query (N     => XML_Data.Doc,
-                        XPath => "/system/subjects/subject");
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/source/group/event/"
+           & "notify");
    begin
       Mulog.Log (Msg => "Checking self-references in" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img & " subject event table(s)");
+                 (List => Nodes)'Img & " subject event(s)");
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
-            Subj_Node : constant DOM.Core.Node
+            use type DOM.Core.Node;
+
+            Src_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Nodes,
                                       Index => I);
-            Subj_Name : constant String
+            Src_Subj : constant DOM.Core.Node
+              := Muxml.Utils.Ancestor_Node (Node  => Src_Node,
+                                            Level => 5);
+            Src_Subj_Name : constant String
               := DOM.Core.Elements.Get_Attribute
-                (Elem => Subj_Node,
+                (Elem => Src_Subj,
                  Name => "name");
-            Entries   : constant DOM.Core.Node_List
-              := XPath_Query (N     => Subj_Node,
-                              XPath => "events/source/group/event/notify["
-                              & "@subject='" & Subj_Name & "']");
+            Dst_Event_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Src_Node,
+                 Name => "physical");
+            Dst_Event_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => XPath_Query
+                   (N     => XML_Data.Doc,
+                    XPath => "/system/subjects/subject/events/target/event"
+                    & "[@physical='" & Dst_Event_Name & "']"),
+                 Index => 0);
+            Dst_Subj : constant DOM.Core.Node
+              := Muxml.Utils.Ancestor_Node (Node  => Dst_Event_Node,
+                                            Level => 3);
          begin
-            if DOM.Core.Nodes.Length (List => Entries) /= 0 then
-               declare
-                  Event_Node : constant DOM.Core.Node
-                    := DOM.Core.Nodes.Item
-                      (List  => Entries,
-                       Index => 0);
-                  Event_Name : constant String
-                    := DOM.Core.Elements.Get_Attribute
-                      (Elem => DOM.Core.Nodes.Parent_Node (N => Event_Node),
-                       Name => "logical");
-               begin
-                  raise Validation_Error with "Reference to self in event "
-                    & "table entry '" & Event_Name & "' of subject '"
-                    & Subj_Name & "'";
-               end;
+            if Dst_Subj = Src_Subj then
+               raise Validation_Error with "Reference to self in event '"
+                 & Dst_Event_Name & "' of subject '" & Src_Subj_Name & "'";
             end if;
          end;
       end loop;

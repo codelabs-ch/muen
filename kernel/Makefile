@@ -26,8 +26,14 @@ $(VERSION_SPEC): .git-rev
 	@echo "     \"$(VERSION)\";"                   >> $@
 	@echo "end SK.Version;"                        >> $@
 
-$(OBJ_DIR)/$(PACKAGE): $(VERSION_SPEC)
-	gprbuild $(BUILD_OPTS) -P$(PACKAGE)
+$(OBJ_DIR)/debug/$(PACKAGE): $(VERSION_SPEC)
+	gprbuild $(BUILD_OPTS) -P$(PACKAGE) -Xbuild=debug
+
+$(OBJ_DIR)/release/$(PACKAGE): $(VERSION_SPEC)
+	gprbuild $(BUILD_OPTS) -P$(PACKAGE) -Xbuild=release
+
+$(OBJ_DIR)/$(PACKAGE): $(OBJ_DIR)/debug/$(PACKAGE) $(OBJ_DIR)/release/$(PACKAGE)
+	@cp $< $@
 
 install: $(OBJ_DIR)/$(PACKAGE)
 	@$(TO_RAW_CMD) $^ $(POLICY_DIR)/$(PACKAGE)

@@ -26,6 +26,7 @@ use type Skp.Dst_Vector_Range;
 --#    System,
 --#    Skp.Interrupts,
 --#    X86_64,
+--#    SK.CPU,
 --#    SK.IO,
 --#    SK.IO_Apic,
 --#    SK.Descriptors,
@@ -71,5 +72,14 @@ is
    --#    in out IO_Apic.State;
    --# derives
    --#    IO_Apic.State from *, CPU_Registry.State;
+
+   --  Halt on (unexpected) exception.
+   procedure Dispatch_Exception (Unused_Context : SK.Isr_Context_Type);
+   --# global
+   --#    in out X86_64.State;
+   --# derives
+   --#    X86_64.State from * &
+   --#    null         from Unused_Context;
+   pragma Export (C, Dispatch_Exception, "dispatch_interrupt");
 
 end SK.Interrupts;

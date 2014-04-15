@@ -21,18 +21,6 @@ with Skp;
 package SK.Dump
 is
 
-   --  ISR execution environment state.
-   type Isr_Context_Type is record
-      GPR        : CPU_Registers_Type;
-      Vector     : SK.Word64;
-      Error_Code : SK.Word64;
-      RIP        : SK.Word64;
-      CS         : SK.Word64;
-      RFLAGS     : SK.Word64;
-      RSP        : SK.Word64;
-      SS         : SK.Word64;
-   end record;
-
    --  Print CPU registers.
    procedure Print_Registers
      (GPR : CPU_Registers_Type;
@@ -41,8 +29,8 @@ is
    pragma Inline_Always (Print_Registers);
 
    --  Print ISR execution environment state.
-   procedure Print_State (Context : Isr_Context_Type);
-   pragma Export (C, Print_State, "dispatch_interrupt");
+   procedure Print_ISR_State (Context : Isr_Context_Type);
+   pragma Inline_Always (Print_ISR_State);
 
    --  Print subject exit information including the whole subject state.
    procedure Print_Subject (Subject_Id : Skp.Subject_Id_Type);

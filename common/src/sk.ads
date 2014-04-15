@@ -89,6 +89,18 @@ is
 
    Null_Subject_State : constant Subject_State_Type;
 
+   --  ISR execution environment state.
+   type Isr_Context_Type is record
+      GPR        : CPU_Registers_Type;
+      Vector     : Word64;
+      Error_Code : Word64;
+      RIP        : Word64;
+      CS         : Word64;
+      RFLAGS     : Word64;
+      RSP        : Word64;
+      SS         : Word64;
+   end record;
+
    --  Test if bit at given position is set.
    function Bit_Test
      (Value : Word64;

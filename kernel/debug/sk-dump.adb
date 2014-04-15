@@ -103,7 +103,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_State (Context : Isr_Context_Type)
+   procedure Print_ISR_State (Context : Isr_Context_Type)
    is
    begin
       Locks.Spin_Lock;
@@ -132,9 +132,7 @@ is
                        CR3 => CPU.Get_CR3,
                        CR4 => CPU.Get_CR4);
       Locks.Unlock;
-
-      CPU.Stop;
-   end Print_State;
+   end Print_ISR_State;
 
    -------------------------------------------------------------------------
 

@@ -22,6 +22,7 @@ with Skp.Interrupts;
 
 with SK.CPU;
 with SK.CPU_Registry;
+with SK.Dump;
 with SK.IO;
 with SK.IO_Apic;
 with SK.KC;
@@ -137,6 +138,18 @@ is
          end if;
       end loop;
    end Setup_IRQ_Routing;
+
+   -------------------------------------------------------------------------
+
+   procedure Dispatch_Exception (Unused_Context : SK.Isr_Context_Type)
+   is
+   begin
+      pragma Debug (Dump.Print_ISR_State (Unused_Context));
+      CPU.Stop;
+
+      --# accept F, 30, Unused_Context,
+      --#    "Isr Context is used for debugging only";
+   end Dispatch_Exception;
 
 begin
 

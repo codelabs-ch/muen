@@ -312,7 +312,9 @@
 						<event id="18" logical="s2_handover"   action="continue"> <notify physical="s2_handover"  subject="subject2" vector="none" mode="switch"/> </event>
 					</group>
 				</source>
-				<target/>
+				<target>
+					<event physical="tau0_handover" logical="tau0_handover" vector="32"/>
+				</target>
 			</events>
 		</subject>
 
@@ -504,7 +506,11 @@
 					<irq logical="irq" physical="irq" number="15" vector="47"/>
 				</device>
 			</devices>
-			<events/>
+			<events>
+				<target>
+					<event physical="xv6_keyboard" logical="xv6_keyboard" vector="32"/>
+				</target>
+			</events>
 		</subject>
 
 		<subject id="2" name="subject2" cpu="0">
@@ -750,7 +756,10 @@
 						<event id="59" logical="vmfunc"                action="continue"> <notify physical="tau0_handover" subject="tau0" vector="32" mode="switch"/> </event>
 					</group>
 				</source>
-				<target/>
+				<target>
+					<event physical="s2_handover" logical="s2_handover" vector="none"/>
+					<event physical="ept_handover" logical="ept_handover" vector="12"/>
+				</target>
 			</events>
 		</subject>
 	</subjects>

@@ -28,6 +28,25 @@ is
 
    -------------------------------------------------------------------------
 
+   function Ancestor_Node
+     (Node  : DOM.Core.Node;
+      Level : Positive)
+      return DOM.Core.Node
+   is
+      use type DOM.Core.Node;
+
+      Result : DOM.Core.Node := Node;
+   begin
+      for I in 1 .. Level loop
+         exit when Result = null;
+         Result := DOM.Core.Nodes.Parent_Node (N => Result);
+      end loop;
+
+      return Result;
+   end Ancestor_Node;
+
+   -------------------------------------------------------------------------
+
    procedure Append
      (Left  : in out DOM.Core.Node_List;
       Right :        DOM.Core.Node_List)

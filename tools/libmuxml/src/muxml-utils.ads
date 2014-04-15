@@ -56,4 +56,10 @@ is
       Right    : DOM.Core.Node;
       List_Tag : String := "");
 
+   --  Return the ancestor at given level of the specified node.
+   function Ancestor_Node
+     (Node  : DOM.Core.Node;
+      Level : Positive)
+      return DOM.Core.Node;
+
 end Muxml.Utils;

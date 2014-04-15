@@ -57,6 +57,48 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Get_Ancestor_Node
+   is
+      Impl : DOM.Core.DOM_Implementation;
+      Data : XML_Data_Type;
+      Node : DOM.Core.Node;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "top");
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "child1"));
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "child2"));
+
+      declare
+         use type DOM.Core.Node;
+
+         Ancestor : DOM.Core.Node
+           := Utils.Ancestor_Node
+             (Node  => Node,
+              Level => 2);
+      begin
+         Assert (Condition => DOM.Core.Nodes.Node_Name (N => Ancestor) = "top",
+                 Message   => "Ancestor mismatch (1)");
+
+         Ancestor := Utils.Ancestor_Node (Node  => Ancestor,
+                                          Level => 1);
+         Assert (Condition => Ancestor = null,
+                 Message   => "Ancestor mismatch (2)");
+      end;
+   end Get_Ancestor_Node;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -73,6 +115,9 @@ is
       T.Add_Test_Routine
         (Routine => Merge_Nodes_With_List'Access,
          Name    => "Merge XML nodes (list elements)");
+      T.Add_Test_Routine
+        (Routine => Get_Ancestor_Node'Access,
+         Name    => "Get ancestor node");
    end Initialize;
 
    -------------------------------------------------------------------------

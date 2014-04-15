@@ -38,4 +38,7 @@ is
    --  Merge two XML nodes with list child elements.
    procedure Merge_Nodes_With_List;
 
+   --  Get ancestor node.
+   procedure Get_Ancestor_Node;
+
 end Utils_Tests;

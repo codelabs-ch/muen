@@ -135,9 +135,9 @@ is
             Channel_Writer : constant Boolean
               := DOM.Core.Nodes.Node_Name (N => Channel_Node) = "writer";
             Subj_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Parent_Node
-                (N => DOM.Core.Nodes.Parent_Node
-                   (N => Channel_Node));
+              := Muxml.Utils.Ancestor_Node
+                (Node  => Channel_Node,
+                 Level => 2);
             Subj_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
@@ -381,9 +381,9 @@ is
                  (Elem => Monitored_Subj_Node,
                   Name => "writable"));
             Subj_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Parent_Node
-                (N => DOM.Core.Nodes.Parent_Node
-                   (N => Monitored_Subj_Node));
+              := Muxml.Utils.Ancestor_Node
+                (Node  => Monitored_Subj_Node,
+                 Level => 2);
             Subj_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,

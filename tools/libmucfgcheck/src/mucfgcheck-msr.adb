@@ -24,6 +24,7 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Muxml.Utils;
 
 package body Mucfgcheck.MSR
 is
@@ -54,10 +55,9 @@ is
               := DOM.Core.Nodes.Item (List  => Nodes,
                                       Index => I);
             Name     : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => DOM.Core.Nodes.Parent_Node
-                 (N => DOM.Core.Nodes.Parent_Node
-                 (N => DOM.Core.Nodes.Parent_Node
-                 (N => DOM.Core.Nodes.Parent_Node (N => Node)))),
+              (Elem => Muxml.Utils.Ancestor_Node
+                 (Node  => Node,
+                  Level => 4),
                Name => "name");
             S_Addr_Str : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Node,
@@ -101,10 +101,9 @@ is
               := DOM.Core.Nodes.Item (List  => Nodes,
                                       Index => I);
             Name     : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => DOM.Core.Nodes.Parent_Node
-                 (N => DOM.Core.Nodes.Parent_Node
-                 (N => DOM.Core.Nodes.Parent_Node
-                 (N => DOM.Core.Nodes.Parent_Node (N => Node)))),
+              (Elem => Muxml.Utils.Ancestor_Node
+                 (Node  => Node,
+                  Level => 4),
                Name => "name");
             S_Addr_Str : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Node,

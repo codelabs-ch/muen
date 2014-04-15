@@ -22,6 +22,7 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Muxml.Utils;
 with Mutools.Immutable_Processors;
 with Mucfgcheck.Memory;
 with Mucfgcheck.Device;
@@ -126,8 +127,9 @@ is
            (Elem => Node,
             Name => "ref");
          Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => DOM.Core.Nodes.Parent_Node
-              (N => DOM.Core.Nodes.Parent_Node (N => Node)),
+           (Elem => Muxml.Utils.Ancestor_Node
+              (Node  => Node,
+               Level => 2),
             Name => "name");
       begin
          return "Channel '" & Ref_Channel_Name & "' referenced by subject '"
@@ -172,8 +174,9 @@ is
            (Elem => Node,
             Name => "subject");
          Subj_Name     : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => DOM.Core.Nodes.Parent_Node
-              (N => DOM.Core.Nodes.Parent_Node (N => Node)),
+           (Elem => Muxml.Utils.Ancestor_Node
+              (Node  => Node,
+               Level => 2),
             Name => "name");
       begin
          return "Subject '" & Ref_Subj_Name & "' referenced by subject monitor"

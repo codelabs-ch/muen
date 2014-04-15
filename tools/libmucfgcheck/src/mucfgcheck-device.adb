@@ -26,6 +26,7 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Muxml.Utils;
 
 package body Mucfgcheck.Device
 is
@@ -212,9 +213,9 @@ is
                                                   Index => J);
                         Subj_Name : constant String
                           := DOM.Core.Elements.Get_Attribute
-                            (Elem => DOM.Core.Nodes.Parent_Node
-                                 (N => DOM.Core.Nodes.Parent_Node
-                                      (N => Cur_Ref)),
+                            (Elem => Muxml.Utils.Ancestor_Node
+                                 (Node  => Cur_Ref,
+                                  Level => 2),
                              Name => "name");
                         Name      : constant String
                           := (if Subj_Name'Length > 0

@@ -27,19 +27,4 @@ is
    --  Validate subject CPU ID.
    procedure CPU_ID (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate subject references in event table notification entries.
-   procedure Event_Subject_References (XML_Data : Muxml.XML_Data_Type);
-
-   --  Validate that there are no self-references in subject's event
-   --  notification entries.
-   procedure Event_Self_References (XML_Data : Muxml.XML_Data_Type);
-
-   --  Validate that notification entries switch to a subject running on the
-   --  same core.
-   procedure Event_Switch_Same_Core (XML_Data : Muxml.XML_Data_Type);
-
-   --  Validate that target subjects of IPI notification entries run on
-   --  different logical CPUs.
-   procedure Event_IPI_Different_Core (XML_Data : Muxml.XML_Data_Type);
-
 end Mucfgcheck.Subject;

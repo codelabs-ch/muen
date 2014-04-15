@@ -42,18 +42,6 @@ is
         (Routine => Validate_CPU_IDs'Access,
          Name    => "Validate CPU IDs");
       T.Add_Test_Routine
-        (Routine => Validate_Event_Subject_References'Access,
-         Name    => "Validate event table subject references");
-      T.Add_Test_Routine
-        (Routine => Validate_Event_Self_References'Access,
-         Name    => "Validate event table self-references");
-      T.Add_Test_Routine
-        (Routine => Validate_Event_Switch_Destination'Access,
-         Name    => "Validate event switch destination");
-      T.Add_Test_Routine
-        (Routine => Validate_Event_IPI_Destination'Access,
-         Name    => "Validate event IPI destination");
-      T.Add_Test_Routine
         (Routine => Validate_Name_Uniqueness'Access,
          Name    => "Validate name uniqueness");
    end Initialize;
@@ -93,100 +81,6 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_CPU_IDs;
-
-   -------------------------------------------------------------------------
-
-   procedure Validate_Event_IPI_Destination
-   is
-      Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
-
-      begin
-         Mucfgcheck.Subject.Event_IPI_Different_Core (XML_Data => Data);
-         Fail (Message => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Destination subject 'linux' (CPU 0) in subject's "
-                    & "'linux' (CPU 0) ipi notification 'forward_keyboard' "
-                    & "invalid - no IPI allowed",
-                    Message   => "Exception mismatch");
-      end;
-   end Validate_Event_IPI_Destination;
-
-   -------------------------------------------------------------------------
-
-   procedure Validate_Event_Self_References
-   is
-      Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
-
-      begin
-         Mucfgcheck.Subject.Event_Self_References (XML_Data => Data);
-         Fail (Message => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Reference to self in event table entry "
-                    & "'forward_keyboard' of subject 'linux'",
-                    Message   => "Exception mismatch");
-      end;
-   end Validate_Event_Self_References;
-
-   -------------------------------------------------------------------------
-
-   procedure Validate_Event_Subject_References
-   is
-      Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
-
-      begin
-         Mucfgcheck.Subject.Event_Subject_References (XML_Data => Data);
-         Fail (Message => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Reference to unknown subject 'nonexistent' in event "
-                    & "'invalid_subject'",
-                    Message   => "Exception mismatch");
-      end;
-   end Validate_Event_Subject_References;
-
-   -------------------------------------------------------------------------
-
-   procedure Validate_Event_Switch_Destination
-   is
-      Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
-
-      begin
-         Mucfgcheck.Subject.Event_Switch_Same_Core (XML_Data => Data);
-         Fail (Message => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Destination subject 'linux' (CPU 0) in subject's "
-                    & "'subject1' (CPU 1) switch notification 'linux_switch' "
-                    & "invalid - must run on the same CPU",
-                    Message   => "Exception mismatch");
-      end;
-   end Validate_Event_Switch_Destination;
 
    -------------------------------------------------------------------------
 

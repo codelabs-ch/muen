@@ -18,7 +18,7 @@
 
 with Ahven.Framework;
 
-package Subject_Tests
+package Event_Tests
 is
 
    type Testcase is new Ahven.Framework.Test_Case with null record;
@@ -26,10 +26,16 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
-   --  Validate subject CPU IDs.
-   procedure Validate_CPU_IDs;
+   --  Validate event table subject references.
+   procedure Validate_Subject_References;
 
-   --  Validate subject name uniqueness.
-   procedure Validate_Name_Uniqueness;
+   --  Validate event table self-references.
+   procedure Validate_Self_References;
 
-end Subject_Tests;
+   --  Validate event switch notification destinations.
+   procedure Validate_Switch_Destination;
+
+   --  Validate event IPI notification destinations.
+   procedure Validate_IPI_Destination;
+
+end Event_Tests;

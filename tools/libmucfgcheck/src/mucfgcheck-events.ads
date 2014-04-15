@@ -16,20 +16,24 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Framework;
+with Muxml;
 
-package Subject_Tests
+package Mucfgcheck.Events
 is
 
-   type Testcase is new Ahven.Framework.Test_Case with null record;
+   --  Validate subject references in event table notification entries.
+   procedure Subject_References (XML_Data : Muxml.XML_Data_Type);
 
-   --  Initialize testcase.
-   procedure Initialize (T : in out Testcase);
+   --  Validate that there are no self-references in subject's event
+   --  notification entries.
+   procedure Self_References (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate subject CPU IDs.
-   procedure Validate_CPU_IDs;
+   --  Validate that notification entries switch to a subject running on the
+   --  same core.
+   procedure Switch_Same_Core (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate subject name uniqueness.
-   procedure Validate_Name_Uniqueness;
+   --  Validate that target subjects of IPI notification entries run on
+   --  different logical CPUs.
+   procedure IPI_Different_Core (XML_Data : Muxml.XML_Data_Type);
 
-end Subject_Tests;
+end Mucfgcheck.Events;

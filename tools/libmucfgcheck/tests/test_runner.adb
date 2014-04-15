@@ -26,6 +26,7 @@ with Scheduling_Tests;
 with Subject_Tests;
 with Platform_Tests;
 with Kernel_Tests;
+with Event_Tests;
 
 procedure Test_Runner
 is
@@ -48,6 +49,8 @@ begin
              T     => new Platform_Tests.Testcase);
    Add_Test (Suite => S.all,
              T     => new Kernel_Tests.Testcase);
+   Add_Test (Suite => S.all,
+             T     => new Event_Tests.Testcase);
 
    Ahven.Text_Runner.Run (Suite => S);
    Release_Suite (T => S);

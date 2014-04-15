@@ -19,6 +19,7 @@
 with SK.KC;
 with SK.CPU;
 with SK.Apic;
+with SK.Constants;
 with SK.Locks;
 with SK.CPU_Global;
 with SK.Subjects;
@@ -164,5 +165,28 @@ is
    end Print_Subject;
 
    -------------------------------------------------------------------------
+
+   procedure Print_VMX_Error
+   is
+      Error   : SK.Word64;
+      Success : Boolean;
+   begin
+      KC.Put_String (Item => "Error running subject ");
+      KC.Put_Byte   (Item => SK.Byte
+         (CPU_Global.Get_Current_Minor_Frame.Subject_Id));
+      KC.New_Line;
+
+      CPU.VMREAD (Field   => Constants.VMX_INST_ERROR,
+                  Value   => Error,
+                  Success => Success);
+
+      if Success then
+         KC.Put_String (Item => "VM instruction error: ");
+         KC.Put_Byte   (Item => Byte (Error));
+         KC.New_Line;
+      else
+         KC.Put_Line   (Item => "Unable to read VMX instruction error");
+      end if;
+   end Print_VMX_Error;
 
 end SK.Dump;

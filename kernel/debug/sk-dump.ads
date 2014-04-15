@@ -48,4 +48,8 @@ is
    procedure Print_Subject (Subject_Id : Skp.Subject_Id_Type);
    pragma Inline_Always (Print_Subject);
 
+   --  Print vmx error after vmlaunch/vmresumed failed.
+   procedure Print_VMX_Error;
+   pragma Inline_Always (Print_VMX_Error);
+
 end SK.Dump;

@@ -47,7 +47,9 @@
 		<memory alignment="16#1000#" name="kernel_stack_1" size="16#2000#" physicalAddress="16#0020_4000#" caching="WB"/>
 	</memory>
 
-	<events/>
+	<events>
+		<event name="linux_kbd" mode="ipi"/>
+	</events>
 
 	<kernel>
 		<memory>
@@ -266,7 +268,7 @@
 				<source>
 					<group name="vmcall">
 						<event id="1" logical="forward_keyboard" action="continue">
-							<notify physical="linux_keyboard_forward" subject="linux" vector="49" mode="ipi"/>
+							<notify physical="linux_kbd" subject="linux" vector="49" mode="ipi"/>
 						</event>
 						<event id="2" logical="invalid_subject" action="continue">
 							<notify physical="test" subject="nonexistent" vector="12" mode="ipi"/>

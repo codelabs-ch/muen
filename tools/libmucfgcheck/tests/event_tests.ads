@@ -26,6 +26,9 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
+   --  Validate source/target connections.
+   procedure Validate_Source_Target;
+
    --  Validate event table subject references.
    procedure Validate_Subject_References;
 

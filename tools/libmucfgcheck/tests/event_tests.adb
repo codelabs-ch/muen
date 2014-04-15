@@ -18,6 +18,11 @@
 
 with Ada.Exceptions;
 
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+
+with McKae.XML.XPath.XIA;
+
 with Muxml;
 with Mucfgcheck.Events;
 
@@ -32,6 +37,9 @@ is
    is
    begin
       T.Set_Name (Name => "Event validator tests");
+      T.Add_Test_Routine
+        (Routine => Validate_Source_Target'Access,
+         Name    => "Validate event source/target connections");
       T.Add_Test_Routine
         (Routine => Validate_Subject_References'Access,
          Name    => "Validate event table subject references");
@@ -92,6 +100,50 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Self_References;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Source_Target
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/validators.xml");
+
+      begin
+         Mucfgcheck.Events.Source_Targets (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid number of targets for event 'linux_kbd': 0",
+                    Message   => "Exception mismatch (target)");
+      end;
+
+      declare
+         Event_Node : constant DOM.Core.Node
+           := DOM.Core.Nodes.Item
+             (List  => McKae.XML.XPath.XIA.XPath_Query
+                (N     => Data.Doc,
+                 XPath => "/system/events/event[@name='linux_kbd']"),
+              Index => 0);
+      begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
+                                          Name  => "name",
+                                          Value => "new_event");
+
+         Mucfgcheck.Events.Source_Targets (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid number of sources for event 'new_event': 0",
+                    Message   => "Exception mismatch (source)");
+      end;
+   end Validate_Source_Target;
 
    -------------------------------------------------------------------------
 

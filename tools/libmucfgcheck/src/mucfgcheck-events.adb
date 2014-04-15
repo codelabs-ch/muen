@@ -167,6 +167,55 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Source_Targets (XML_Data : Muxml.XML_Data_Type)
+   is
+      Events : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/events/event");
+   begin
+      Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
+                 (List => Events)'Img & " event source/target connection(s)");
+      for I in 0 .. DOM.Core.Nodes.Length (List => Events) - 1 loop
+         declare
+            Event : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Events,
+                 Index => I);
+            Event_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Event,
+                 Name => "name");
+            Source_Count : constant Natural
+              := DOM.Core.Nodes.Length
+                (List => XPath_Query
+                   (N     => XML_Data.Doc,
+                    XPath => "/system/subjects/subject/events/source/group/"
+                    & "event/notify[@physical='" & Event_Name & "']"));
+            Target_Count : constant Natural
+              := DOM.Core.Nodes.Length
+                (List => XPath_Query
+                   (N     => XML_Data.Doc,
+                    XPath => "/system/subjects/subject/events/target/event"
+                    & "[@physical='" & Event_Name & "']"));
+         begin
+            if Source_Count = 0 then
+               raise Mucfgcheck.Validation_Error with "Invalid number of "
+                 & "sources for event '" & Event_Name & "':"
+                 & Source_Count'Img;
+            end if;
+
+            if Target_Count /= 1 then
+               raise Mucfgcheck.Validation_Error with "Invalid number of "
+                 & "targets for event '" & Event_Name & "':"
+                 & Target_Count'Img;
+            end if;
+         end;
+      end loop;
+   end Source_Targets;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_References (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List

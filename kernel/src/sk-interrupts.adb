@@ -25,7 +25,6 @@ with SK.CPU_Registry;
 with SK.Dump;
 with SK.IO;
 with SK.IO_Apic;
-with SK.KC;
 
 package body SK.Interrupts
 --# own
@@ -118,15 +117,11 @@ is
          Route   := Skp.Interrupts.IRQ_Routing (I);
          APIC_ID := CPU_Registry.Get_APIC_ID (CPU_ID => Route.CPU);
 
-         pragma Debug (KC.Put_String (Item => "Routing IRQ "));
-         pragma Debug (KC.Put_Byte   (Item => Route.IRQ));
-         pragma Debug (KC.Put_String (Item => " as vector "));
-         pragma Debug (KC.Put_Byte   (Item => SK.Byte (Route.Vector)));
-         pragma Debug (KC.Put_String (Item => " to CPU "));
-         pragma Debug (KC.Put_Byte   (Item => SK.Byte (Route.CPU)));
-         pragma Debug (KC.Put_String (Item => " with APIC ID "));
-         pragma Debug (KC.Put_Byte   (Item => APIC_ID));
-         pragma Debug (KC.New_Line);
+         pragma Debug (Dump.Print_IRQ_Routing
+            (IRQ     => Route.IRQ,
+             Vector  => SK.Byte (Route.Vector),
+             CPU     => SK.Byte (Route.CPU),
+             APIC_ID => APIC_ID));
 
          if Skp.Interrupts.IRQ_Routing (I).Vector /= Skp.Invalid_Vector then
             IO_Apic.Route_IRQ

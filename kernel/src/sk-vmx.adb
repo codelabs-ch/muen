@@ -85,9 +85,9 @@ is
                   Value   => Value,
                   Success => Success);
       if not Success then
-         pragma Debug (KC.Put_String (Item => "Error reading VMCS field "));
-         pragma Debug (KC.Put_Word16 (Item => Field));
-         pragma Debug (KC.New_Line);
+         pragma Debug (Dump.Print_Message_16
+                         (Msg  => "Error reading VMCS field",
+                          Item => Field));
          CPU.Panic;
       end if;
    end VMCS_Read;
@@ -355,9 +355,9 @@ is
       CPU.VMCLEAR (Region  => VMCS_Address,
                    Success => Success);
       if not Success then
-         pragma Debug (KC.Put_String (Item => "Error clearing VMCS: "));
-         pragma Debug (KC.Put_Word64 (Item => VMCS_Address));
-         pragma Debug (KC.New_Line);
+         pragma Debug (Dump.Print_Message_64
+                         (Msg  => "Error clearing VMCS:",
+                          Item => VMCS_Address));
          CPU.Panic;
       end if;
    end Clear;
@@ -371,9 +371,9 @@ is
       CPU.VMPTRLD (Region  => VMCS_Address,
                    Success => Success);
       if not Success then
-         pragma Debug (KC.Put_String (Item => "Error loading VMCS pointer: "));
-         pragma Debug (KC.Put_Word64 (Item => VMCS_Address));
-         pragma Debug (KC.New_Line);
+         pragma Debug (Dump.Print_Message_64
+                         (Msg  => "Error loading VMCS pointer:",
+                          Item => VMCS_Address));
          CPU.Panic;
       end if;
    end Load;

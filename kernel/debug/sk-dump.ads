@@ -28,15 +28,38 @@ is
       CR0 : Word64; CR2 : Word64; CR3 : Word64; CR4 : Word64);
    pragma Inline_Always (Print_Registers);
 
+   --  Print IRQ Routing.
+   procedure Print_IRQ_Routing
+     (IRQ     : SK.Byte;
+      Vector  : SK.Byte;
+      CPU     : SK.Byte;
+      APIC_ID : SK.Byte);
+
    --  Print ISR execution environment state.
    procedure Print_ISR_State (Context : Isr_Context_Type);
    pragma Inline_Always (Print_ISR_State);
+
+   --  Print a single value prepended by a message.
+   procedure Print_Message_8  (Msg : String; Item : SK.Byte);
+   procedure Print_Message_16 (Msg : String; Item : SK.Word16);
+   procedure Print_Message_32 (Msg : String; Item : SK.Word32);
+   procedure Print_Message_64 (Msg : String; Item : SK.Word64);
+
+   --  Print invalid event from userspace.
+   procedure Print_Spurious_Event
+     (Current_Subject : Skp.Subject_Id_Type;
+      Event_Nr        : SK.Word64);
 
    --  Print subject exit information including the whole subject state.
    procedure Print_Subject (Subject_Id : Skp.Subject_Id_Type);
    pragma Inline_Always (Print_Subject);
 
-   --  Print vmx error after vmlaunch/vmresumed failed.
+   --  Print exit reason and exit qualification of VMX entry errors.
+   procedure Print_VMX_Entry_Error
+     (Current_Subject : Skp.Subject_Id_Type;
+      Exit_Reason     : SK.Word64);
+
+   --  Print VMX error after vmlaunch/vmresume failed.
    procedure Print_VMX_Error;
    pragma Inline_Always (Print_VMX_Error);
 

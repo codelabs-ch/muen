@@ -23,9 +23,30 @@ with SK.Constants;
 with SK.Locks;
 with SK.CPU_Global;
 with SK.Subjects;
+with SK.VMX;
 
 package body SK.Dump
 is
+
+   -------------------------------------------------------------------------
+
+   procedure Print_IRQ_Routing
+     (IRQ     : SK.Byte;
+      Vector  : SK.Byte;
+      CPU     : SK.Byte;
+      APIC_ID : SK.Byte)
+   is
+   begin
+      KC.Put_String (Item => "Routing IRQ ");
+      KC.Put_Byte   (Item => IRQ);
+      KC.Put_String (Item => " as vector ");
+      KC.Put_Byte   (Item => Vector);
+      KC.Put_String (Item => " to CPU ");
+      KC.Put_Byte   (Item => CPU);
+      KC.Put_String (Item => " with APIC ID ");
+      KC.Put_Byte   (Item => APIC_ID);
+      KC.New_Line;
+   end Print_IRQ_Routing;
 
    -------------------------------------------------------------------------
 
@@ -136,6 +157,64 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Print_Message_8 (Msg : String; Item : SK.Byte)
+   is
+   begin
+      KC.Put_String (Item => Msg);
+      KC.Put_String (Item => " ");
+      KC.Put_Byte   (Item => Item);
+      KC.New_Line;
+   end Print_Message_8;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_Message_16 (Msg : String; Item : SK.Word16)
+   is
+   begin
+      KC.Put_String (Item => Msg);
+      KC.Put_String (Item => " ");
+      KC.Put_Word16 (Item => Item);
+      KC.New_Line;
+   end Print_Message_16;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_Message_32 (Msg : String; Item : SK.Word32)
+   is
+   begin
+      KC.Put_String (Item => Msg);
+      KC.Put_String (Item => " ");
+      KC.Put_Word32 (Item => Item);
+      KC.New_Line;
+   end Print_Message_32;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_Message_64 (Msg : String; Item : SK.Word64)
+   is
+   begin
+      KC.Put_String (Item => Msg);
+      KC.Put_String (Item => " ");
+      KC.Put_Word64 (Item => Item);
+      KC.New_Line;
+   end Print_Message_64;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_Spurious_Event
+     (Current_Subject : Skp.Subject_Id_Type;
+      Event_Nr        : SK.Word64)
+   is
+   begin
+      KC.Put_String (Item => "Ignoring spurious event ");
+      KC.Put_Word64 (Item => Event_Nr);
+      KC.Put_String (Item => " from subject ");
+      KC.Put_Byte   (Item => SK.Byte (Current_Subject));
+      KC.New_Line;
+   end Print_Spurious_Event;
+
+   -------------------------------------------------------------------------
+
    procedure Print_Subject (Subject_Id : Skp.Subject_Id_Type)
    is
       State : SK.Subject_State_Type;
@@ -161,6 +240,28 @@ is
                        CR3 => State.CR3,
                        CR4 => State.CR4);
    end Print_Subject;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_VMX_Entry_Error
+     (Current_Subject : Skp.Subject_Id_Type;
+      Exit_Reason     : SK.Word64)
+   is
+      Exit_Qualification : SK.Word64;
+   begin
+      KC.Put_String (Item => "Subject ");
+      KC.Put_Byte   (Item => Byte (Current_Subject));
+      KC.Put_String (Item => " VM-entry failure (");
+      KC.Put_Word16 (Item => Word16 (Exit_Reason));
+      KC.Put_String (Item => ":");
+
+      VMX.VMCS_Read
+        (Field => Constants.VMX_EXIT_QUALIFICATION,
+         Value => Exit_Qualification);
+
+      KC.Put_Word32 (Item => Word32 (Exit_Qualification));
+      KC.Put_Line   (Item => ")");
+   end Print_VMX_Entry_Error;
 
    -------------------------------------------------------------------------
 

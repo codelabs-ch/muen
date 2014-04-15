@@ -23,7 +23,6 @@ with Skp.Interrupts;
 
 with SK.VMX;
 with SK.Constants;
-with SK.KC;
 with SK.CPU;
 with SK.CPU_Global;
 with SK.Subjects;
@@ -372,16 +371,11 @@ is
          end if;
       end if;
 
-      pragma Debug (not Valid_Event or Event = Skp.Subjects.Null_Event,
-                    KC.Put_String (Item => "Ignoring spurious event "));
-      pragma Debug (not Valid_Event or Event = Skp.Subjects.Null_Event,
-                    KC.Put_Byte   (Item => SK.Byte (Event_Nr)));
-      pragma Debug (not Valid_Event or Event = Skp.Subjects.Null_Event,
-                    KC.Put_String (Item => " from subject "));
-      pragma Debug (not Valid_Event or Event = Skp.Subjects.Null_Event,
-                    KC.Put_Byte   (Item => SK.Byte (Current_Subject)));
-      pragma Debug (not Valid_Event or Event = Skp.Subjects.Null_Event,
-                    KC.New_Line);
+      pragma Debug
+        (not Valid_Event or Event = Skp.Subjects.Null_Event,
+         Dump.Print_Spurious_Event
+           (Current_Subject => Current_Subject,
+            Event_Nr        => Event_Nr));
 
       RIP := Subjects.Get_RIP (Id => Current_Subject);
       RIP := RIP + Subjects.Get_Instruction_Length (Id => Current_Subject);
@@ -414,22 +408,14 @@ is
 
          pragma Debug
            (Route.Subject in Skp.Subject_Id_Type and then Vector /= IPI_Vector,
-            KC.Put_String (Item => "Spurious IRQ vector "));
-         pragma Debug
-           (Route.Subject in Skp.Subject_Id_Type and then Vector /= IPI_Vector,
-            KC.Put_Byte (Item => Vector));
-         pragma Debug
-           (Route.Subject in Skp.Subject_Id_Type and then Vector /= IPI_Vector,
-            KC.New_Line);
+            Dump.Print_Message_8
+              (Msg  => "Spurious IRQ vector",
+               Item => Vector));
       end if;
 
       pragma Debug (Vector < Skp.Interrupts.Remap_Offset,
-                    KC.Put_String (Item => "IRQ with invalid vector "));
-      pragma Debug (Vector < Skp.Interrupts.Remap_Offset,
-                    KC.Put_Byte (Item => Vector));
-      pragma Debug (Vector < Skp.Interrupts.Remap_Offset,
-                    KC.New_Line);
-
+                    Dump.Print_Message_8 (Msg  => "IRQ with invalid vector",
+                                          Item => Vector));
       Apic.EOI;
    end Handle_Irq;
 
@@ -457,9 +443,9 @@ is
             Trap_Nr    => Skp.Subjects.Trap_Range (Trap_Nr));
 
          if Trap_Entry.Dst_Subject = Skp.Invalid_Subject then
-            pragma Debug (KC.Put_String (Item => ">>> No handler for trap "));
-            pragma Debug (KC.Put_Word16 (Item => Word16 (Trap_Nr)));
-            pragma Debug (KC.Put_Line   (Item => " <<<"));
+            pragma Debug (Dump.Print_Message_16
+                            (Msg  => ">>> No handler for trap",
+                             Item => Word16 (Trap_Nr)));
             pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject));
             CPU.Panic;
          else
@@ -482,9 +468,8 @@ is
                  (Subject_Id => Trap_Entry.Dst_Subject));
          end if;
       else
-         pragma Debug (KC.Put_String (Item => ">>> Unknown trap "));
-         pragma Debug (KC.Put_Word16 (Item => Word16 (Trap_Nr)));
-         pragma Debug (KC.Put_Line (Item => " <<<"));
+         pragma Debug (Dump.Print_Message_64 (Msg  => ">>> Unknown trap",
+                                              Item => Trap_Nr));
          pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject));
          CPU.Panic;
       end if;
@@ -557,17 +542,9 @@ is
       if SK.Bit_Test (Value => Exit_Status,
                       Pos   => Constants.VM_EXIT_ENTRY_FAILURE)
       then
-         pragma Debug (KC.Put_String (Item => "Subject "));
-         pragma Debug (KC.Put_Byte   (Item => Byte (Current_Subject)));
-         pragma Debug (KC.Put_String (Item => " VM-entry failure ("));
-         pragma Debug (KC.Put_Word16 (Item => Word16 (Exit_Status)));
-         pragma Debug (KC.Put_String (Item => ":"));
-         pragma Debug (VMX.VMCS_Read
-                       (Field => Constants.VMX_EXIT_QUALIFICATION,
-                        Value => Exit_Status));
-
-         pragma Debug (KC.Put_Word32 (Item => Word32 (Exit_Status)));
-         pragma Debug (KC.Put_Line   (Item => ")"));
+         pragma Debug (Dump.Print_VMX_Entry_Error
+                         (Current_Subject => Current_Subject,
+                          Exit_Reason     => Exit_Status));
          CPU.Panic;
       end if;
 

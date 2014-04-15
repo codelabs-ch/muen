@@ -133,8 +133,6 @@ is
       XML_Processors.Register
         (Process => Events.Subject_Event_References'Access);
       XML_Processors.Register
-        (Process => Events.Subject_References'Access);
-      XML_Processors.Register
         (Process => Events.Self_References'Access);
       XML_Processors.Register
         (Process => Events.Switch_Same_Core'Access);

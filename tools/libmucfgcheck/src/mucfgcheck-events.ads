@@ -27,9 +27,6 @@ is
    --  Check subject event references.
    procedure Subject_Event_References (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate subject references in event table notification entries.
-   procedure Subject_References (XML_Data : Muxml.XML_Data_Type);
-
    --  Validate that there are no self-references in subject's event
    --  notification entries.
    procedure Self_References (XML_Data : Muxml.XML_Data_Type);

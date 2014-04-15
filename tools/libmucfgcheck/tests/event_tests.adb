@@ -44,9 +44,6 @@ is
         (Routine => Validate_Subject_Event_References'Access,
          Name    => "Validate subject event references");
       T.Add_Test_Routine
-        (Routine => Validate_Subject_References'Access,
-         Name    => "Validate event table subject references");
-      T.Add_Test_Routine
         (Routine => Validate_Self_References'Access,
          Name    => "Validate event table self-references");
       T.Add_Test_Routine
@@ -213,29 +210,6 @@ is
                     Message   => "Exception mismatch (target)");
       end;
    end Validate_Subject_Event_References;
-
-   -------------------------------------------------------------------------
-
-   procedure Validate_Subject_References
-   is
-      Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
-
-      begin
-         Mucfgcheck.Events.Subject_References (XML_Data => Data);
-         Fail (Message => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Reference to unknown subject 'nonexistent' in event "
-                    & "'invalid_subject'",
-                    Message   => "Exception mismatch");
-      end;
-   end Validate_Subject_References;
 
    -------------------------------------------------------------------------
 

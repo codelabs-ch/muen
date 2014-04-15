@@ -32,9 +32,6 @@ is
    --  Validate subject event references.
    procedure Validate_Subject_Event_References;
 
-   --  Validate event table subject references.
-   procedure Validate_Subject_References;
-
    --  Validate event table self-references.
    procedure Validate_Self_References;
 

@@ -131,6 +131,8 @@ is
       XML_Processors.Register
         (Process => Events.Source_Targets'Access);
       XML_Processors.Register
+        (Process => Events.Subject_Event_References'Access);
+      XML_Processors.Register
         (Process => Events.Subject_References'Access);
       XML_Processors.Register
         (Process => Events.Self_References'Access);

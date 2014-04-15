@@ -24,6 +24,9 @@ is
    --  Check that each global event has associated sources and one target.
    procedure Source_Targets (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check subject event references.
+   procedure Subject_Event_References (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate subject references in event table notification entries.
    procedure Subject_References (XML_Data : Muxml.XML_Data_Type);
 

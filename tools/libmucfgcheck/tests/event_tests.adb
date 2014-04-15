@@ -23,7 +23,7 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
-with Muxml;
+with Muxml.Utils;
 with Mucfgcheck.Events;
 
 package body Event_Tests
@@ -40,6 +40,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Source_Target'Access,
          Name    => "Validate event source/target connections");
+      T.Add_Test_Routine
+        (Routine => Validate_Subject_Event_References'Access,
+         Name    => "Validate subject event references");
       T.Add_Test_Routine
         (Routine => Validate_Subject_References'Access,
          Name    => "Validate event table subject references");
@@ -144,6 +147,51 @@ is
                     Message   => "Exception mismatch (source)");
       end;
    end Validate_Source_Target;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Subject_Event_References
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/validators.xml");
+
+      begin
+         Mucfgcheck.Events.Subject_Event_References (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Event 'test' referenced by subject 'linux' does not "
+                    & "exist",
+                    Message   => "Exception mismatch (source)");
+      end;
+
+      declare
+         Event_Node : constant DOM.Core.Node
+           := DOM.Core.Nodes.Item
+             (List  => McKae.XML.XPath.XIA.XPath_Query
+                (N     => Data.Doc,
+                 XPath => "/system/subjects/subject/events/source/group/"
+                 & "event/notify[@physical='test']/.."),
+              Index => 0);
+      begin
+         Muxml.Utils.Remove_Child (Node       => Event_Node,
+                                   Child_Name => "notify");
+         Mucfgcheck.Events.Subject_Event_References (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Event 'nonexistent' referenced by subject 'linux' does "
+                    & "not exist",
+                    Message   => "Exception mismatch (target)");
+      end;
+   end Validate_Subject_Event_References;
 
    -------------------------------------------------------------------------
 

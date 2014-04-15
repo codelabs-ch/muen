@@ -29,6 +29,9 @@ is
    --  Validate source/target connections.
    procedure Validate_Source_Target;
 
+   --  Validate subject event references.
+   procedure Validate_Subject_Event_References;
+
    --  Validate event table subject references.
    procedure Validate_Subject_References;
 

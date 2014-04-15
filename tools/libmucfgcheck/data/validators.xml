@@ -275,6 +275,9 @@
 						</event>
 					</group>
 				</source>
+				<target>
+					<event physical="nonexistent" logical="test" vector="12"/>
+				</target>
 			</events>
 		</subject>
 		<subject id="1" name="subject1" cpu="1">

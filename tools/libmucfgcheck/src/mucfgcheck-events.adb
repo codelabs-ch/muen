@@ -22,6 +22,7 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Muxml.Utils;
 
 package body Mucfgcheck.Events
 is
@@ -213,6 +214,58 @@ is
          end;
       end loop;
    end Source_Targets;
+
+   -------------------------------------------------------------------------
+
+   procedure Subject_Event_References (XML_Data : Muxml.XML_Data_Type)
+   is
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      --  Match name of reference and event.
+      function Match_Event_Name (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Ref_Event_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "physical");
+         Node_Name : constant String := DOM.Core.Nodes.Node_Name
+           (N => Node);
+         Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Muxml.Utils.Ancestor_Node
+              (Node  => Node,
+               Level => (if Node_Name = "notify" then 5 else 3)),
+            Name => "name");
+      begin
+         return "Event '" & Ref_Event_Name & "' referenced by subject '"
+           & Subj_Name & "' does not exist";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Match_Event_Name (Left, Right : DOM.Core.Node) return Boolean
+      is
+         Ref_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "physical");
+         Event_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         return Ref_Name = Event_Name;
+      end Match_Event_Name;
+   begin
+      Mucfgcheck.For_Each_Match
+        (XML_Data     => XML_Data,
+         Source_XPath => "/system/subjects/subject/events//*[@physical]",
+         Ref_XPath    => "/system/events/event",
+         Log_Message  => "subject event reference(s)",
+         Error        => Error_Msg'Access,
+         Match        => Match_Event_Name'Access);
+   end Subject_Event_References;
 
    -------------------------------------------------------------------------
 

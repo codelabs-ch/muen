@@ -21,6 +21,7 @@ with Mutools.Processors;
 with Expanders.Memory;
 with Expanders.Kernel;
 with Expanders.Subjects;
+with Expanders.Channels;
 
 pragma Elaborate_All (Mutools.Processors);
 
@@ -63,10 +64,17 @@ is
       Procs.Register (Process => Kernel.Add_Subj_State_Mappings'Access);
       Procs.Register (Process => Kernel.Map_Tau0_Interface'Access);
       Procs.Register (Process => Kernel.Add_Devices'Access);
+
+      --  Create optional subject elements such as memory first.
+
+      Procs.Register (Process => Subjects.Add_Missing_Elements'Access);
+
       Procs.Register (Process => Subjects.Add_Binaries'Access);
       Procs.Register (Process => Subjects.Handle_Profile'Access);
       Procs.Register (Process => Subjects.Handle_Monitors'Access);
-      Procs.Register (Process => Subjects.Add_Missing_Elements'Access);
+      Procs.Register (Process => Subjects.Add_Channel_Mappings'Access);
+      Procs.Register (Process => Subjects.Remove_Channel_Elements'Access);
+      Procs.Register (Process => Channels.Add_Physical_Memory'Access);
 
       --  All kernel/subject memory regions and mappings must exist and specify
       --  and alignment to add PTs.

@@ -17,12 +17,18 @@
   <memory alignment="16#1000#" caching="WB" name="trampoline" physicalAddress="16#0000#" size="16#1000#"/>
  </memory>
  <events/>
+ <channels>
+  <channel hasEvent="true" name="data_channel" size="16#1000#"/>
+ </channels>
  <subjects>
   <subject cpu="0" name="lnx" profile="linux">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
    <events/>
+   <channels>
+    <reader ref="data_channel" vector="12" virtualAddress="16#6000#"/>
+   </channels>
    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>
   <subject cpu="1" name="subject1" profile="native">
@@ -30,6 +36,9 @@
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
    <events/>
+   <channels>
+    <writer event="1" ref="data_channel" virtualAddress="16#3000#"/>
+   </channels>
    <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
    <monitor>
     <state subject="lnx" virtualAddress="16#4000#" writable="true"/>

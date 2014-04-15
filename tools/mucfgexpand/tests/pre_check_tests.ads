@@ -32,4 +32,10 @@ is
    --  Check subject monitor references.
    procedure Subject_Monitor_References;
 
+   --  Check subject channel references.
+   procedure Subject_Channel_References;
+
+   --  Check channel reader/writer counts.
+   procedure Channel_Reader_Writer;
+
 end Pre_Check_Tests;

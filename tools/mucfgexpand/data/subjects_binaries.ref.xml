@@ -22,6 +22,9 @@
   </memory>
  </memory>
  <events/>
+ <channels>
+  <channel hasEvent="true" name="data_channel" size="16#1000#"/>
+ </channels>
  <subjects>
   <subject cpu="0" name="lnx" profile="linux">
    <memory>
@@ -29,6 +32,9 @@
     <memory executable="true" logical="binary" physical="lnx|bin" virtualAddress="16#2000#" writable="true"/>
    </memory>
    <events/>
+   <channels>
+    <reader ref="data_channel" vector="12" virtualAddress="16#6000#"/>
+   </channels>
   </subject>
   <subject cpu="1" name="subject1" profile="native">
    <memory>
@@ -36,6 +42,9 @@
     <memory executable="true" logical="binary" physical="subject1|bin" virtualAddress="16#0020_0000#" writable="true"/>
    </memory>
    <events/>
+   <channels>
+    <writer event="1" ref="data_channel" virtualAddress="16#3000#"/>
+   </channels>
    <monitor>
     <state subject="lnx" virtualAddress="16#4000#" writable="true"/>
    </monitor>

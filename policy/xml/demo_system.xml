@@ -30,30 +30,21 @@
 	</platform>
 
 	<memory>
-		<!-- Linux subject -->
 		<memory name="linux|ram" size="16#0f70_0000#" alignment="16#0010_0000#" caching="WB"/>
-
-		<!-- channels -->
-		<memory name="time_channel" size="16#1000#" caching="WB"/>
-
-		<memory name="linux_keyboard" size="16#1000#" caching="WB"/>
-
-		<memory name="linux_output" size="16#0001_0000#" caching="WB"/>
-		<memory name="time_output" size="16#0001_0000#" caching="WB"/>
-		<memory name="sm_output" size="16#0001_0000#" caching="WB"/>
 	</memory>
 
 	<events/>
 
+	<channels>
+		<channel name="virtual_time" size="16#1000#" hasEvent="false"/>
+		<channel name="linux_keyboard" size="16#1000#" hasEvent="false"/>
+		<channel name="linux_console" size="16#0001_0000#" hasEvent="false"/>
+		<channel name="time_console" size="16#0001_0000#" hasEvent="false"/>
+		<channel name="sm_console" size="16#0001_0000#" hasEvent="false"/>
+	</channels>
+
 	<subjects>
 		<subject name="vt" cpu="0" profile="native">
-			<memory>
-				<memory logical="linux_output" physical="linux_output" virtualAddress="16#0010_0000#" writable="false" executable="false"/>
-				<memory logical="time_output" physical="time_output" virtualAddress="16#0011_0000#" writable="false" executable="false"/>
-				<memory logical="sm_output" physical="sm_output" virtualAddress="16#0012_0000#" writable="false" executable="false"/>
-
-				<memory logical="linux_keyboard" physical="linux_keyboard" virtualAddress="16#0005_0000#" writable="true" executable="false"/>
-			</memory>
 			<devices>
 				<device logical="vga" physical="vga">
 					<memory logical="buffer" physical="buffer" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
@@ -74,14 +65,16 @@
 					</group>
 				</source>
 			</events>
+			<channels>
+				<reader ref="linux_console" virtualAddress="16#0010_0000#"/>
+				<reader ref="time_console" virtualAddress="16#0011_0000#"/>
+				<reader ref="sm_console" virtualAddress="16#0012_0000#"/>
+				<writer ref="linux_keyboard" virtualAddress="16#0005_0000#"/>
+			</channels>
 			<binary filename="vt" size="16#0002_4000#" virtualAddress="16#1000#"/>
 		</subject>
 
 		<subject name="time" cpu="2" profile="native">
-			<memory>
-				<memory logical="time_channel" physical="time_channel" virtualAddress="16#0002_0000#" writable="true" executable="false"/>
-				<memory logical="time_output" physical="time_output" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
-			</memory>
 			<devices>
 				<device logical="port80" physical="port80">
 					<ioPort logical="ports" physical="ports" start="16#0080#" end="16#0080#"/>
@@ -96,13 +89,14 @@
 					</group>
 				</source>
 			</events>
+			<channels>
+				<writer ref="virtual_time" virtualAddress="16#0002_0000#"/>
+				<writer ref="time_console" virtualAddress="16#000b_8000#"/>
+			</channels>
 			<binary filename="time" size="16#0001_4000#" virtualAddress="16#1000#"/>
 		</subject>
 
 		<subject name="sm" cpu="1" profile="native">
-			<memory>
-				<memory logical="sm_output" physical="sm_output" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
-			</memory>
 			<events>
 				<source>
 					<group name="vmcall">
@@ -115,6 +109,9 @@
 					</group>
 				</source>
 			</events>
+			<channels>
+				<writer ref="sm_console" virtualAddress="16#000b_8000#"/>
+			</channels>
 			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
 			<monitor>
 				<state subject="linux" virtualAddress="16#001e_0000#" writable="true"/>
@@ -124,9 +121,6 @@
 		<subject name="linux" cpu="1" profile="linux">
 			<bootparams>lpj=10000 earlyprintk=serial console=ttyS0,115200 console=hvc pci=noearly notsc</bootparams>
 			<memory>
-				<memory logical="time_channel" physical="time_channel" virtualAddress="16#2000#" writable="false" executable="false"/>
-				<memory logical="linux_keyboard" physical="linux_keyboard" virtualAddress="16#3000#" writable="true" executable="false"/>
-				<memory logical="linux_output" physical="linux_output" virtualAddress="16#4000#" writable="true" executable="false"/>
 				<memory logical="ram" physical="linux|ram" virtualAddress="16#0090_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
@@ -317,6 +311,11 @@
 					</group>
 				</source>
 			</events>
+			<channels>
+				<reader ref="virtual_time" virtualAddress="16#2000#"/>
+				<reader ref="linux_keyboard" virtualAddress="16#3000#"/>
+				<writer ref="linux_console" virtualAddress="16#4000#"/>
+			</channels>
 			<binary filename="bzImage" size="16#0050_0000#" virtualAddress="16#0040_0000#"/>
 		</subject>
 	</subjects>

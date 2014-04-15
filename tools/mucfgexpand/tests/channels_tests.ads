@@ -18,7 +18,7 @@
 
 with Ahven.Framework;
 
-package Subjects_Tests
+package Channels_Tests
 is
 
    type Testcase is new Ahven.Framework.Test_Case with null record;
@@ -26,28 +26,7 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
-   --  Add subject binaries.
-   procedure Add_Binaries;
+   --  Add physical memory regions.
+   procedure Add_Memory_Regions;
 
-   --  Handle subject profile.
-   procedure Handle_Profile;
-
-   --  Add tau0.
-   procedure Add_Tau0;
-
-   --  Handle subject monitors.
-   procedure Handle_Monitors;
-
-   --  Add subject ids.
-   procedure Add_Ids;
-
-   --  Add missing subject elements.
-   procedure Add_Missing_Elements;
-
-   --  Add channel mappings.
-   procedure Add_Channel_Mappings;
-
-   --  Remove channel elements.
-   procedure Remove_Channel_Elements;
-
-end Subjects_Tests;
+end Channels_Tests;

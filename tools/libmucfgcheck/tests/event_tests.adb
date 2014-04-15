@@ -61,11 +61,21 @@ is
 
    procedure Validate_IPI_Destination
    is
-      Data : Muxml.XML_Data_Type;
+      Data       : Muxml.XML_Data_Type;
+      Event_Node : DOM.Core.Node;
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/validators.xml");
+      Event_Node := DOM.Core.Nodes.Item
+        (List  => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Data.Doc,
+            XPath => "/system/subjects/subject/events/target/event"
+            & "[@physical='nonexistent']"),
+         Index => 0);
+      DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
+                                       Name  => "physical",
+                                       Value => "linux_kbd");
 
       begin
          Mucfgcheck.Events.IPI_Different_Core (XML_Data => Data);
@@ -75,8 +85,8 @@ is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Destination subject 'linux' (CPU 0) in subject's "
-                    & "'linux' (CPU 0) ipi notification 'forward_keyboard' "
-                    & "invalid - no IPI allowed",
+                    & "'linux' (CPU 0) ipi notification 'linux_kbd' invalid - "
+                    & "no IPI allowed",
                     Message   => "Exception mismatch");
       end;
    end Validate_IPI_Destination;
@@ -231,11 +241,21 @@ is
 
    procedure Validate_Switch_Destination
    is
-      Data : Muxml.XML_Data_Type;
+      Data       : Muxml.XML_Data_Type;
+      Event_Node : DOM.Core.Node;
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/validators.xml");
+      Event_Node := DOM.Core.Nodes.Item
+        (List  => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Data.Doc,
+            XPath => "/system/subjects/subject/events/target/event"
+            & "[@physical='nonexistent']"),
+         Index => 0);
+      DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
+                                       Name  => "physical",
+                                       Value => "switch_to_linux");
 
       begin
          Mucfgcheck.Events.Switch_Same_Core (XML_Data => Data);
@@ -245,8 +265,8 @@ is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Destination subject 'linux' (CPU 0) in subject's "
-                    & "'subject1' (CPU 1) switch notification 'linux_switch' "
-                    & "invalid - must run on the same CPU",
+                    & "'subject1' (CPU 1) switch notification 'switch_to_"
+                    & "linux' invalid - must run on the same CPU",
                     Message   => "Exception mismatch");
       end;
    end Validate_Switch_Destination;

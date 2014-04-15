@@ -47,65 +47,66 @@ is
    is
       Nodes : constant DOM.Core.Node_List
         := XPath_Query (N     => XML_Data.Doc,
-                        XPath => "/system/subjects/subject");
+                        XPath => "/system/events/event[@mode='" & Mode & "']");
    begin
       Mulog.Log (Msg => "Checking " & Mode & " destinations in"
-                 & DOM.Core.Nodes.Length (List => Nodes)'Img
-                 & " subject event table(s)");
+                 & DOM.Core.Nodes.Length (List => Nodes)'Img & " event(s)");
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
-            Subj_Node : constant DOM.Core.Node
+            Event_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Nodes,
                                       Index => I);
-            Subj_Name : constant String
+            Event_Name : constant String
               := DOM.Core.Elements.Get_Attribute
-                (Elem => Subj_Node,
+                (Elem => Event_Node,
                  Name => "name");
-            Subj_CPU  : constant Interfaces.Unsigned_64
+            Src_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => XPath_Query
+                   (N     => XML_Data.Doc,
+                    XPath => "/system/subjects/subject/events/source/group/"
+                    & "event/notify[@physical='" & Event_Name & "']"),
+                 Index => 0);
+            Src_Subj : constant DOM.Core.Node
+              := Muxml.Utils.Ancestor_Node (Node  => Src_Node,
+                                            Level => 5);
+            Src_Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Src_Subj,
+                 Name => "name");
+            Src_Subj_CPU : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
                 (DOM.Core.Elements.Get_Attribute
-                     (Elem => Subj_Node,
-                      Name => "cpu"));
-            Events    : constant DOM.Core.Node_List
-              := XPath_Query
-                (N     => Subj_Node,
-                 XPath => "events/source/group/event/notify[@mode='"
-                 & Mode & "']");
+                   (Elem => Src_Subj,
+                    Name => "cpu"));
+            Dst_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => XPath_Query
+                   (N     => XML_Data.Doc,
+                    XPath => "/system/subjects/subject/events/target/"
+                    & "event[@physical='" & Event_Name & "']"),
+                 Index => 0);
+            Dst_Subj : constant DOM.Core.Node
+              := Muxml.Utils.Ancestor_Node (Node  => Dst_Node,
+                                            Level => 3);
+            Dst_Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Dst_Subj,
+                 Name => "name");
+            Dst_Subj_CPU : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Dst_Subj,
+                    Name => "cpu"));
          begin
-            for J in 0 .. DOM.Core.Nodes.Length (List => Events) - 1 loop
-               declare
-                  Event_Node    : constant DOM.Core.Node
-                    := DOM.Core.Nodes.Item
-                      (List  => Events,
-                       Index => J);
-                  Event_Name    : constant String
-                    := DOM.Core.Elements.Get_Attribute
-                      (Elem => DOM.Core.Nodes.Parent_Node (N => Event_Node),
-                       Name => "logical");
-                  Ref_Subj_Name : constant String
-                    := DOM.Core.Elements.Get_Attribute
-                      (Elem => Event_Node,
-                       Name => "subject");
-                  Ref_Subj_CPU  : constant Interfaces.Unsigned_64
-                    := Interfaces.Unsigned_64'Value
-                      (DOM.Core.Nodes.Node_Value
-                           (DOM.Core.Nodes.Item
-                                (List  => XPath_Query
-                                     (N     => XML_Data.Doc,
-                                      XPath => "/system/subjects/subject["
-                                      & "@name='" & Ref_Subj_Name & "']/@cpu"),
-                                 Index => 0)));
-               begin
-                  if not Test (Ref_Subj_CPU, Subj_CPU) then
-                     raise Validation_Error with "Destination subject '"
-                       & Ref_Subj_Name & "' (CPU" & Ref_Subj_CPU'Img & ") in "
-                       & "subject's '" & Subj_Name & "' (CPU" & Subj_CPU'Img
-                       & ") " & Mode & " notification '" & Event_Name & "' "
-                       & "invalid - " & Error_Msg;
-                  end if;
-               end;
-            end loop;
+            if not Test (Src_Subj_CPU, Dst_Subj_CPU) then
+               raise Validation_Error with "Destination subject '"
+                 & Dst_Subj_Name & "' (CPU" & Dst_Subj_CPU'Img & ") in "
+                 & "subject's '" & Src_Subj_Name & "' (CPU" & Src_Subj_CPU'Img
+                 & ") " & Mode & " notification '" & Event_Name & "' "
+                 & "invalid - " & Error_Msg;
+            end if;
          end;
       end loop;
    end Check_Event_Destination;

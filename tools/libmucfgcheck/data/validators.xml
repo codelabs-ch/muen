@@ -49,6 +49,7 @@
 
 	<events>
 		<event name="linux_kbd" mode="ipi"/>
+		<event name="switch_to_linux" mode="switch"/>
 	</events>
 
 	<kernel>

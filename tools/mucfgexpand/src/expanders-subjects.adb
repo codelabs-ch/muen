@@ -102,7 +102,7 @@ is
                   Writable      => True,
                   Executable    => True));
 
-            XML_Utils.Remove_Child
+            Muxml.Utils.Remove_Child
               (Node       => Subj_Node,
                Child_Name => "binary");
          end;
@@ -411,7 +411,7 @@ is
                   Writable      => Writable,
                   Executable    => False));
 
-            XML_Utils.Remove_Child
+            Muxml.Utils.Remove_Child
               (Node       => Subj_Node,
                Child_Name => "monitor");
          end;
@@ -489,7 +489,7 @@ is
            XPath => "/system/subjects/subject/channels/..");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
-         XML_Utils.Remove_Child
+         Muxml.Utils.Remove_Child
            (Node       => DOM.Core.Nodes.Item
               (List  => Nodes,
                Index => I),

@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Exceptions;
+
 with DOM.Core.Nodes;
 with DOM.Core.Documents;
 with DOM.Core.Elements;
@@ -118,21 +120,24 @@ is
       T.Add_Test_Routine
         (Routine => Get_Ancestor_Node'Access,
          Name    => "Get ancestor node");
+      T.Add_Test_Routine
+        (Routine => Remove_Child'Access,
+         Name    => "Remove child node");
    end Initialize;
 
    -------------------------------------------------------------------------
 
    procedure Merge_Nodes
    is
-      Data : Muxml.XML_Data_Type;
+      Data : XML_Data_Type;
       Impl : DOM.Core.DOM_Implementation;
       Doc  : constant DOM.Core.Document
         := DOM.Core.Create_Document (Implementation => Impl);
       Node, Tmp : DOM.Core.Node;
    begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.VCPU_Profile,
-                   File => "data/vcpu_profile.xml");
+      Parse (Data => Data,
+             Kind => VCPU_Profile,
+             File => "data/vcpu_profile.xml");
 
       --  Construct the following XML structure:
       --  <vcpu><segments><cs selector="16#ffff#>text</cs></segments></vcpu>
@@ -228,15 +233,15 @@ is
 
    procedure Merge_Nodes_With_List
    is
-      Data : Muxml.XML_Data_Type;
+      Data : XML_Data_Type;
       Impl : DOM.Core.DOM_Implementation;
       Doc  : constant DOM.Core.Document
         := DOM.Core.Create_Document (Implementation => Impl);
       Node, Tmp, MSRs_Node : DOM.Core.Node;
    begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.VCPU_Profile,
-                   File => "data/vcpu_profile.xml");
+      Parse (Data => Data,
+             Kind => VCPU_Profile,
+             File => "data/vcpu_profile.xml");
 
       MSRs_Node := DOM.Core.Nodes.Item
         (List  => McKae.XML.XPath.XIA.XPath_Query
@@ -274,5 +279,43 @@ is
                  Message   => "Error merging child element list");
       end;
    end Merge_Nodes_With_List;
+
+   -------------------------------------------------------------------------
+
+   procedure Remove_Child
+   is
+      Node     : DOM.Core.Node;
+      Dom_Impl : DOM.Core.DOM_Implementation;
+      Doc      : constant DOM.Core.Document
+        := DOM.Core.Create_Document (Implementation => Dom_Impl);
+   begin
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Doc,
+         Tag_Name => "elem");
+
+      Utils.Append_Child (Node      => Doc,
+                          New_Child => Node);
+
+      Assert (Condition => DOM.Core.Nodes.Has_Child_Nodes (N => Doc),
+              Message   => "Unable to add child to document");
+
+      Utils.Remove_Child (Node       => Doc,
+                          Child_Name => "elem");
+
+      Assert (Condition => not DOM.Core.Nodes.Has_Child_Nodes (N => Doc),
+              Message   => "Error removing child node");
+
+      begin
+         Utils.Remove_Child (Node       => Doc,
+                             Child_Name => "elem");
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Utils.XML_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to remove child 'elem' from node '#document'",
+                    Message   => "Exception mismatch");
+      end;
+   end Remove_Child;
 
 end Utils_Tests;

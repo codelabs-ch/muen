@@ -38,7 +38,4 @@ is
    --  Calculate size of paging structures.
    procedure Calculate_PT_Size;
 
-   --  Remove XML child node.
-   procedure Remove_Child;
-
 end XML_Utils_Tests;

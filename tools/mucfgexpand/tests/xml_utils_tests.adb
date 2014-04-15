@@ -17,15 +17,12 @@
 --
 
 with Ada.Directories;
-with Ada.Exceptions;
 
 with Interfaces;
 
-with DOM.Core.Documents;
 with DOM.Core.Elements;
-with DOM.Core.Nodes;
 
-with Muxml.Utils;
+with Muxml;
 
 with Expanders.XML_Utils;
 
@@ -189,47 +186,6 @@ is
       T.Add_Test_Routine
         (Routine => Calculate_PT_Size'Access,
          Name    => "Calculate size of paging structures");
-      T.Add_Test_Routine
-        (Routine => Remove_Child'Access,
-         Name    => "Remove XML child node");
    end Initialize;
-
-   -------------------------------------------------------------------------
-
-   procedure Remove_Child
-   is
-      Node     : DOM.Core.Node;
-      Dom_Impl : DOM.Core.DOM_Implementation;
-      Doc      : constant DOM.Core.Document
-        := DOM.Core.Create_Document (Implementation => Dom_Impl);
-   begin
-      Node := DOM.Core.Documents.Create_Element
-        (Doc      => Doc,
-         Tag_Name => "elem");
-
-      Muxml.Utils.Append_Child (Node      => Doc,
-                                New_Child => Node);
-
-      Assert (Condition => DOM.Core.Nodes.Has_Child_Nodes (N => Doc),
-              Message   => "Unable to add child to document");
-
-      XML_Utils.Remove_Child (Node       => Doc,
-                              Child_Name => "elem");
-
-      Assert (Condition => not DOM.Core.Nodes.Has_Child_Nodes (N => Doc),
-              Message   => "Error removing child node");
-
-      begin
-         XML_Utils.Remove_Child (Node       => Doc,
-                                 Child_Name => "elem");
-         Fail (Message => "Exception expected");
-
-      exception
-         when E : XML_Utils.XML_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Unable to remove child 'elem' from node '#document'",
-                    Message   => "Exception mismatch");
-      end;
-   end Remove_Child;
 
 end XML_Utils_Tests;

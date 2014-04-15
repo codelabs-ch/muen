@@ -41,4 +41,7 @@ is
    --  Get ancestor node.
    procedure Get_Ancestor_Node;
 
+   --  Remove XML child node.
+   procedure Remove_Child;
+
 end Utils_Tests;

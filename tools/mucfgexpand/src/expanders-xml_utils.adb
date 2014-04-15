@@ -327,33 +327,4 @@ is
       return Mem_Node;
    end Create_Virtual_Memory_Node;
 
-   -------------------------------------------------------------------------
-
-   procedure Remove_Child
-     (Node       : DOM.Core.Node;
-      Child_Name : String)
-   is
-      Children : constant DOM.Core.Node_List
-        := DOM.Core.Nodes.Child_Nodes (N => Node);
-   begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Children) - 1 loop
-         declare
-            Child : DOM.Core.Node := DOM.Core.Nodes.Item
-              (List  => Children,
-               Index => I);
-         begin
-            if DOM.Core.Nodes.Node_Name (N => Child) = Child_Name then
-               Child := DOM.Core.Nodes.Remove_Child
-                 (N         => Node,
-                  Old_Child => Child);
-               DOM.Core.Nodes.Free (N => Child);
-               return;
-            end if;
-         end;
-      end loop;
-
-      raise XML_Error with "Unable to remove child '" & Child_Name
-        & "' from node '" & DOM.Core.Nodes.Node_Name (N => Node) & "'";
-   end Remove_Child;
-
 end Expanders.XML_Utils;

@@ -269,10 +269,10 @@
 				<source>
 					<group name="vmcall">
 						<event id="1" logical="forward_keyboard" action="continue">
-							<notify physical="linux_kbd" subject="linux" vector="49" mode="ipi"/>
+							<notify physical="linux_kbd"/>
 						</event>
 						<event id="2" logical="invalid_subject" action="continue">
-							<notify physical="test" subject="nonexistent" vector="12" mode="ipi"/>
+							<notify physical="test"/>
 						</event>
 					</group>
 				</source>
@@ -465,7 +465,7 @@
 				<source>
 					<group name="vmcall">
 						<event id="1" logical="linux_switch" action="continue">
-							<notify physical="switch_to_linux" subject="linux" vector="12" mode="switch"/>
+							<notify physical="switch_to_linux"/>
 						</event>
 					</group>
 				</source>

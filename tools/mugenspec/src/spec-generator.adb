@@ -1048,24 +1048,31 @@ is
         (Policy : Muxml.XML_Data_Type;
          Event  : DOM.Core.Node)
       is
-         Event_Id    : constant String := DOM.Core.Elements.Get_Attribute
+         Event_Id : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Event,
             Name => "id");
-         Dst_Subject : constant String := Get_Attribute
+         Phys_Event_Ref : constant String := Get_Attribute
            (Doc   => Event,
             XPath => "notify",
-            Name  => "subject");
-         Dst_Id      : constant String := Get_Attribute
-           (Doc   => Policy.Doc,
-            XPath => "/system/subjects/subject[@name='" & Dst_Subject & "']",
-            Name  => "id");
-         Dst_Vector  : constant String := Get_Attribute
-           (Doc   => Event,
-            XPath => "notify",
-            Name  => "vector");
+            Name  => "physical");
+         Event_Target : constant DOM.Core.Node
+           := DOM.Core.Nodes.Item
+             (List  => McKae.XML.XPath.XIA.XPath_Query
+                  (N     => Policy.Doc,
+                   XPath => "/system/subjects/subject/events/target/event"
+                   & "[@physical='" & Phys_Event_Ref & "']"),
+              Index => 0);
+         Dst_Id : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Muxml.Utils.Ancestor_Node
+              (Node  => Event_Target,
+               Level => 3),
+            Name => "id");
+         Dst_Vector : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Event_Target,
+            Name => "vector");
          Notify_Mode : constant String := Get_Attribute
-           (Doc   => Event,
-            XPath => "notify",
+           (Doc   => Policy.Doc,
+            XPath => "/system/events/event[@name='" & Phys_Event_Ref & "']",
             Name  => "mode");
       begin
          Buffer := Buffer & Indent (N => 3)  & " "
@@ -1102,21 +1109,29 @@ is
         (Policy : Muxml.XML_Data_Type;
          Trap   : DOM.Core.Node)
       is
-         Trap_Id     : constant String := DOM.Core.Elements.Get_Attribute
+         Trap_Id : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Trap,
             Name => "id");
-         Dst_Subject : constant String := Get_Attribute
+         Phys_Event_Ref : constant String := Get_Attribute
            (Doc   => Trap,
             XPath => "notify",
-            Name  => "subject");
-         Dst_Id      : constant String := Get_Attribute
-           (Doc   => Policy.Doc,
-            XPath => "/system/subjects/subject[@name='" & Dst_Subject & "']",
-            Name  => "id");
-         Dst_Vector  : constant String := Get_Attribute
-           (Doc   => Trap,
-            XPath => "notify",
-            Name  => "vector");
+            Name  => "physical");
+         Event_Target : constant DOM.Core.Node
+           := DOM.Core.Nodes.Item
+             (List  => McKae.XML.XPath.XIA.XPath_Query
+                  (N     => Policy.Doc,
+                   XPath => "/system/subjects/subject/events/target/event"
+                   & "[@physical='" & Phys_Event_Ref & "']"),
+              Index => 0);
+
+         Dst_Id : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Muxml.Utils.Ancestor_Node
+              (Node  => Event_Target,
+               Level => 3),
+            Name => "id");
+         Dst_Vector : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Event_Target,
+            Name => "vector");
       begin
          Buffer := Buffer & Indent (N => 3) & " "
            & Trap_Id & " => Trap_Entry_Type'(Dst_Subject => " & Dst_Id

@@ -49,9 +49,6 @@
 
 	<xs:complexType name="eventNotifyType">
 		<xs:attribute name="physical" type="nameType"           use="required"/>
-		<xs:attribute name="subject"  type="nameType"           use="required"/>
-		<xs:attribute name="vector"   type="optionalVectorType" use="required"/>
-		<xs:attribute name="mode"     type="eventModeType"      use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="interruptEntryType">

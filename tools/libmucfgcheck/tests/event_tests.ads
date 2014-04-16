@@ -18,7 +18,7 @@
 
 with Ahven.Framework;
 
-package Utils_Tests
+package Event_Tests
 is
 
    type Testcase is new Ahven.Framework.Test_Case with null record;
@@ -26,22 +26,19 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
-   --  Append XML child node.
-   procedure Append_Child;
+   --  Validate source/target connections.
+   procedure Validate_Source_Target;
 
-   --  Merge two XML nodes.
-   procedure Merge_Nodes;
+   --  Validate subject event references.
+   procedure Validate_Subject_Event_References;
 
-   --  Try to merge XML nodes with different names.
-   procedure Merge_Nodes_Name_Mismatch;
+   --  Validate event table self-references.
+   procedure Validate_Self_References;
 
-   --  Merge two XML nodes with list child elements.
-   procedure Merge_Nodes_With_List;
+   --  Validate event switch notification destinations.
+   procedure Validate_Switch_Destination;
 
-   --  Get ancestor node.
-   procedure Get_Ancestor_Node;
+   --  Validate event IPI notification destinations.
+   procedure Validate_IPI_Destination;
 
-   --  Remove XML child node.
-   procedure Remove_Child;
-
-end Utils_Tests;
+end Event_Tests;

@@ -18,13 +18,25 @@
 
 with Muxml;
 
-package Mucfgcheck.Subject
+package Mucfgcheck.Events
 is
 
-   --  Validate subject name uniqueness
-   procedure Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
+   --  Check that each global event has associated sources and one target.
+   procedure Source_Targets (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate subject CPU ID.
-   procedure CPU_ID (XML_Data : Muxml.XML_Data_Type);
+   --  Check subject event references.
+   procedure Subject_Event_References (XML_Data : Muxml.XML_Data_Type);
 
-end Mucfgcheck.Subject;
+   --  Validate that there are no self-references in subject's event
+   --  notification entries.
+   procedure Self_References (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that notification entries switch to a subject running on the
+   --  same core.
+   procedure Switch_Same_Core (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that target subjects of IPI notification entries run on
+   --  different logical CPUs.
+   procedure IPI_Different_Core (XML_Data : Muxml.XML_Data_Type);
+
+end Mucfgcheck.Events;

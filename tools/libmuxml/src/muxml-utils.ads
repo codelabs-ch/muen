@@ -56,4 +56,19 @@ is
       Right    : DOM.Core.Node;
       List_Tag : String := "");
 
+   --  Return the ancestor at given level of the specified node.
+   function Ancestor_Node
+     (Node  : DOM.Core.Node;
+      Level : Positive)
+      return DOM.Core.Node;
+
+   --  Remove child element node with given name. All children of the specified
+   --  child node are removed as well. An exception is raised if no child with
+   --  the given name exists.
+   procedure Remove_Child
+     (Node       : DOM.Core.Node;
+      Child_Name : String);
+
+   XML_Error : exception;
+
 end Muxml.Utils;

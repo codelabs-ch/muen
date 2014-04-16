@@ -22,6 +22,7 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Muxml.Utils;
 
 with Expanders.XML_Utils;
 
@@ -70,7 +71,7 @@ is
          end;
       end loop;
 
-      XML_Utils.Remove_Child
+      Muxml.Utils.Remove_Child
         (Node       => System_Node,
          Child_Name => "channels");
    end Add_Physical_Memory;

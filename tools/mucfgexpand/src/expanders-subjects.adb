@@ -102,7 +102,7 @@ is
                   Writable      => True,
                   Executable    => True));
 
-            XML_Utils.Remove_Child
+            Muxml.Utils.Remove_Child
               (Node       => Subj_Node,
                Child_Name => "binary");
          end;
@@ -135,9 +135,9 @@ is
             Channel_Writer : constant Boolean
               := DOM.Core.Nodes.Node_Name (N => Channel_Node) = "writer";
             Subj_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Parent_Node
-                (N => DOM.Core.Nodes.Parent_Node
-                   (N => Channel_Node));
+              := Muxml.Utils.Ancestor_Node
+                (Node  => Channel_Node,
+                 Level => 2);
             Subj_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
@@ -381,9 +381,9 @@ is
                  (Elem => Monitored_Subj_Node,
                   Name => "writable"));
             Subj_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Parent_Node
-                (N => DOM.Core.Nodes.Parent_Node
-                   (N => Monitored_Subj_Node));
+              := Muxml.Utils.Ancestor_Node
+                (Node  => Monitored_Subj_Node,
+                 Level => 2);
             Subj_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
@@ -411,7 +411,7 @@ is
                   Writable      => Writable,
                   Executable    => False));
 
-            XML_Utils.Remove_Child
+            Muxml.Utils.Remove_Child
               (Node       => Subj_Node,
                Child_Name => "monitor");
          end;
@@ -489,7 +489,7 @@ is
            XPath => "/system/subjects/subject/channels/..");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
-         XML_Utils.Remove_Child
+         Muxml.Utils.Remove_Child
            (Node       => DOM.Core.Nodes.Item
               (List  => Nodes,
                Index => I),

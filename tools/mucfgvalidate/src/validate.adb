@@ -25,6 +25,7 @@ with Mucfgcheck.Scheduling;
 with Mucfgcheck.Kernel;
 with Mucfgcheck.Subject;
 with Mucfgcheck.Platform;
+with Mucfgcheck.Events;
 
 with Validate.XML_Processors;
 with Validate.Command_Line;
@@ -128,13 +129,15 @@ is
       XML_Processors.Register
         (Process => Subject.CPU_ID'Access);
       XML_Processors.Register
-        (Process => Subject.Event_Subject_References'Access);
+        (Process => Events.Source_Targets'Access);
       XML_Processors.Register
-        (Process => Subject.Event_Self_References'Access);
+        (Process => Events.Subject_Event_References'Access);
       XML_Processors.Register
-        (Process => Subject.Event_Switch_Same_Core'Access);
+        (Process => Events.Self_References'Access);
       XML_Processors.Register
-        (Process => Subject.Event_IPI_Different_Core'Access);
+        (Process => Events.Switch_Same_Core'Access);
+      XML_Processors.Register
+        (Process => Events.IPI_Different_Core'Access);
       XML_Processors.Register
         (Process => Platform.Memory_Space'Access);
       XML_Processors.Register

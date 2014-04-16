@@ -47,7 +47,10 @@
 		<memory alignment="16#1000#" name="kernel_stack_1" size="16#2000#" physicalAddress="16#0020_4000#" caching="WB"/>
 	</memory>
 
-	<events/>
+	<events>
+		<event name="linux_kbd" mode="ipi"/>
+		<event name="switch_to_linux" mode="switch"/>
+	</events>
 
 	<kernel>
 		<memory>
@@ -266,13 +269,16 @@
 				<source>
 					<group name="vmcall">
 						<event id="1" logical="forward_keyboard" action="continue">
-							<notify physical="linux_keyboard_forward" subject="linux" vector="49" mode="ipi"/>
+							<notify physical="linux_kbd"/>
 						</event>
 						<event id="2" logical="invalid_subject" action="continue">
-							<notify physical="test" subject="nonexistent" vector="12" mode="ipi"/>
+							<notify physical="test"/>
 						</event>
 					</group>
 				</source>
+				<target>
+					<event physical="nonexistent" logical="test" vector="12"/>
+				</target>
 			</events>
 		</subject>
 		<subject id="1" name="subject1" cpu="1">
@@ -459,7 +465,7 @@
 				<source>
 					<group name="vmcall">
 						<event id="1" logical="linux_switch" action="continue">
-							<notify physical="switch_to_linux" subject="linux" vector="12" mode="switch"/>
+							<notify physical="switch_to_linux"/>
 						</event>
 					</group>
 				</source>

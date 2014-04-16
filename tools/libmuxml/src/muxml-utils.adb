@@ -28,6 +28,25 @@ is
 
    -------------------------------------------------------------------------
 
+   function Ancestor_Node
+     (Node  : DOM.Core.Node;
+      Level : Positive)
+      return DOM.Core.Node
+   is
+      use type DOM.Core.Node;
+
+      Result : DOM.Core.Node := Node;
+   begin
+      for I in 1 .. Level loop
+         exit when Result = null;
+         Result := DOM.Core.Nodes.Parent_Node (N => Result);
+      end loop;
+
+      return Result;
+   end Ancestor_Node;
+
+   -------------------------------------------------------------------------
+
    procedure Append
      (Left  : in out DOM.Core.Node_List;
       Right :        DOM.Core.Node_List)
@@ -167,5 +186,34 @@ is
          end loop;
       end;
    end Merge;
+
+   -------------------------------------------------------------------------
+
+   procedure Remove_Child
+     (Node       : DOM.Core.Node;
+      Child_Name : String)
+   is
+      Children : constant DOM.Core.Node_List
+        := DOM.Core.Nodes.Child_Nodes (N => Node);
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Children) - 1 loop
+         declare
+            Child : DOM.Core.Node := DOM.Core.Nodes.Item
+              (List  => Children,
+               Index => I);
+         begin
+            if DOM.Core.Nodes.Node_Name (N => Child) = Child_Name then
+               Child := DOM.Core.Nodes.Remove_Child
+                 (N         => Node,
+                  Old_Child => Child);
+               DOM.Core.Nodes.Free (N => Child);
+               return;
+            end if;
+         end;
+      end loop;
+
+      raise XML_Error with "Unable to remove child '" & Child_Name
+        & "' from node '" & DOM.Core.Nodes.Node_Name (N => Node) & "'";
+   end Remove_Child;
 
 end Muxml.Utils;

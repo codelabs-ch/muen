@@ -29,18 +29,6 @@ is
    --  Validate subject CPU IDs.
    procedure Validate_CPU_IDs;
 
-   --  Validate event table subject references.
-   procedure Validate_Event_Subject_References;
-
-   --  Validate event table self-references.
-   procedure Validate_Event_Self_References;
-
-   --  Validate event switch notification destinations.
-   procedure Validate_Event_Switch_Destination;
-
-   --  Validate event IPI notification destinations.
-   procedure Validate_Event_IPI_Destination;
-
    --  Validate subject name uniqueness.
    procedure Validate_Name_Uniqueness;
 

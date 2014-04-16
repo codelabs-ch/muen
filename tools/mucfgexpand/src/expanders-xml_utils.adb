@@ -53,8 +53,8 @@ is
       Section    : constant DOM.Core.Node
         := DOM.Core.Nodes.Item
           (List  => McKae.XML.XPath.XIA.XPath_Query
-               (N     => Policy.Doc,
-                XPath => "/system/memory"),
+             (N     => Policy.Doc,
+              XPath => "/system/memory"),
            Index => 0);
       Dummy_Node : DOM.Core.Node;
       pragma Unreferenced (Dummy_Node);
@@ -214,9 +214,9 @@ is
                     Name => "virtualAddress"));
             Size : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
-              (DOM.Core.Elements.Get_Attribute
-                 (Elem => Physical_Mem,
-                  Name => "size"));
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Physical_Mem,
+                    Name => "size"));
          begin
             Paging.Memory.Add_Memory_Region
               (Mem_Layout       => Layout,

@@ -237,7 +237,7 @@ is
       XSAVE_Support := Has_Expected_XSAVE_Size;
       pragma Debug
         (not XSAVE_Support, KC.Put_Line
-             (Item => "XSAVE not properly configured"));
+           (Item => "XSAVE not properly configured"));
 
       return VMX_Support        and
         not VMX_Disabled_Locked and

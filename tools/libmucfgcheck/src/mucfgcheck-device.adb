@@ -214,8 +214,8 @@ is
                         Subj_Name : constant String
                           := DOM.Core.Elements.Get_Attribute
                             (Elem => Muxml.Utils.Ancestor_Node
-                                 (Node  => Cur_Ref,
-                                  Level => 2),
+                               (Node  => Cur_Ref,
+                                Level => 2),
                              Name => "name");
                         Name      : constant String
                           := (if Subj_Name'Length > 0

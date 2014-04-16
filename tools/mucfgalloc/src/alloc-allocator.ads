@@ -46,8 +46,8 @@ is
 private
 
    procedure Add_Device_Regions
-      (Policy      :        Muxml.XML_Data_Type;
-       Map         : in out Alloc.Map.Map_Type);
+      (Policy :        Muxml.XML_Data_Type;
+       Map    : in out Alloc.Map.Map_Type);
 
    procedure Add_Empty_Regions
       (Policy :        Muxml.XML_Data_Type;

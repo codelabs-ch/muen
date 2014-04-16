@@ -125,8 +125,8 @@ is
       Devices_Node : constant DOM.Core.Node
         := DOM.Core.Nodes.Item
           (List  => McKae.XML.XPath.XIA.XPath_Query
-               (N     => Data.Doc,
-                XPath => "/system/kernel/devices"),
+             (N     => Data.Doc,
+              XPath => "/system/kernel/devices"),
            Index => 0);
       Ioapic       : constant DOM.Core.Node
         := DOM.Core.Documents.Create_Element
@@ -165,9 +165,9 @@ is
       CPU_Count     : constant Positive
         := Positive'Value
           (Muxml.Utils.Get_Attribute
-               (Doc   => Data.Doc,
-                XPath => "/system/platform/processor",
-                Name  => "logicalCpus"));
+             (Doc   => Data.Doc,
+              XPath => "/system/platform/processor",
+              Name  => "logicalCpus"));
       Kernel_Node   : DOM.Core.Node
         := DOM.Core.Documents.Create_Element
           (Doc      => Data.Doc,
@@ -179,8 +179,8 @@ is
       Subjects_Node : constant DOM.Core.Node
         := DOM.Core.Nodes.Item
           (List  => McKae.XML.XPath.XIA.XPath_Query
-               (N     => Data.Doc,
-                XPath => "/system/subjects"),
+             (N     => Data.Doc,
+              XPath => "/system/subjects"),
            Index => 0);
    begin
       Kernel_Node := DOM.Core.Nodes.Insert_Before
@@ -241,8 +241,8 @@ is
                  Name => "id");
             Subjects : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
-                 (N     => Data.Doc,
-                  XPath => "/system/subjects/subject[@cpu='" & CPU_Id & "']");
+                (N     => Data.Doc,
+                 XPath => "/system/subjects/subject[@cpu='" & CPU_Id & "']");
          begin
             for J in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
                declare
@@ -262,7 +262,7 @@ is
                        Name => "id");
                   Address   : constant Interfaces.Unsigned_64
                     := State_Start + Interfaces.Unsigned_64'Value (Subj_Id)
-                                * Mutools.Constants.Page_Size;
+                    * Mutools.Constants.Page_Size;
                begin
                   Mulog.Log (Msg => "Mapping state of subject '" & Subj_Name
                              & "' to address " & Mutools.Utils.To_Hex
@@ -290,8 +290,8 @@ is
       BSP : constant DOM.Core.Node
         := DOM.Core.Nodes.Item
           (List  => McKae.XML.XPath.XIA.XPath_Query
-               (N     => Data.Doc,
-                XPath => "/system/kernel/memory/cpu[@id='0']"),
+             (N     => Data.Doc,
+              XPath => "/system/kernel/memory/cpu[@id='0']"),
            Index => 0);
    begin
       Mulog.Log (Msg => "Mapping tau0 system interface on CPU 0");

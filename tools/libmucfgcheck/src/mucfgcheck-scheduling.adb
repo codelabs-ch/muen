@@ -36,9 +36,9 @@ is
       CPU_Count : constant Positive
         := Positive'Value
           (Muxml.Utils.Get_Attribute
-               (Doc   => XML_Data.Doc,
-                XPath => "/system/platform/processor",
-                Name  => "logicalCpus"));
+             (Doc   => XML_Data.Doc,
+              XPath => "/system/platform/processor",
+              Name  => "logicalCpus"));
       Majors    : constant DOM.Core.Node_List
         := XPath_Query (N     => XML_Data.Doc,
                         XPath => "/system/scheduling/majorFrame");
@@ -100,8 +100,8 @@ is
                      CPU_Ticks := CPU_Ticks + Positive'Value
                        (DOM.Core.Nodes.Node_Value
                           (N => DOM.Core.Nodes.Item
-                             (List  => Minors,
-                              Index => K)));
+                               (List  => Minors,
+                                Index => K)));
                   end loop;
                end;
 
@@ -131,17 +131,17 @@ is
       function Error_Msg (Node : DOM.Core.Node) return String
       is
          Frame_CPU_ID : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
-               Name => "id");
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+            Name => "id");
          Subj_Name    : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "subject");
          Subject      : constant DOM.Core.Node := DOM.Core.Nodes.Item
-             (List  => XPath_Query
-                  (N     => XML_Data.Doc,
-                   XPath => "/system/subjects/subject[@name='" & Subj_Name
-                   & "']"),
-              Index => 0);
+           (List  => XPath_Query
+              (N     => XML_Data.Doc,
+               XPath => "/system/subjects/subject[@name='" & Subj_Name
+               & "']"),
+            Index => 0);
          Subj_CPU_ID  : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Subject,
             Name => "cpu");

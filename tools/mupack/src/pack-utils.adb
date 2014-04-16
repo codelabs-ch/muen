@@ -32,8 +32,8 @@ is
    is
       Nodes    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
-        (N     => Policy.Doc,
-         XPath => "/system/memory/memory[file or fill]");
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory[file or fill]");
       Img_Size : Interfaces.Unsigned_64 := 0;
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop

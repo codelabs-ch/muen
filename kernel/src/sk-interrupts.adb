@@ -118,10 +118,10 @@ is
          APIC_ID := CPU_Registry.Get_APIC_ID (CPU_ID => Route.CPU);
 
          pragma Debug (Dump.Print_IRQ_Routing
-            (IRQ     => Route.IRQ,
-             Vector  => SK.Byte (Route.Vector),
-             CPU     => SK.Byte (Route.CPU),
-             APIC_ID => APIC_ID));
+                       (IRQ     => Route.IRQ,
+                        Vector  => SK.Byte (Route.Vector),
+                        CPU     => SK.Byte (Route.CPU),
+                        APIC_ID => APIC_ID));
 
          if Skp.Interrupts.IRQ_Routing (I).Vector /= Skp.Invalid_Vector then
             IO_Apic.Route_IRQ

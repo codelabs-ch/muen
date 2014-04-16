@@ -23,20 +23,20 @@ is
    -------------------------------------------------------------------------
 
    procedure Allocate_Fixed
-      (Map           : in out Map_Type;
-       Name          :        Ada.Strings.Unbounded.Unbounded_String;
-       First_Address :        Interfaces.Unsigned_64;
-       Last_Address  :        Interfaces.Unsigned_64)
+     (Map           : in out Map_Type;
+      Name          :        Ada.Strings.Unbounded.Unbounded_String;
+      First_Address :        Interfaces.Unsigned_64;
+      Last_Address  :        Interfaces.Unsigned_64)
    is
       use Region_List_Package;
       Curr : Cursor := First (Map.Data);
 
       function Range_Image
-         (First_Address : Interfaces.Unsigned_64;
-          Last_Address  : Interfaces.Unsigned_64) return String;
+        (First_Address : Interfaces.Unsigned_64;
+         Last_Address  : Interfaces.Unsigned_64) return String;
       function Range_Image
-         (First_Address : Interfaces.Unsigned_64;
-          Last_Address  : Interfaces.Unsigned_64) return String
+        (First_Address : Interfaces.Unsigned_64;
+         Last_Address  : Interfaces.Unsigned_64) return String
       is
          use Mutools.Utils;
       begin
@@ -48,41 +48,41 @@ is
       loop
          if Element (Curr).First_Address > Last_Address then
             raise Invalid_Fixed_Allocation with
-               "Allocation outside empty regions " &
-               Range_Image (First_Address, Last_Address);
+              "Allocation outside empty regions " &
+              Range_Image (First_Address, Last_Address);
          end if;
-         exit when (Element (Curr).Kind = Empty or
-                    Element (Curr).Kind = Device) and
-                   Element (Curr).First_Address <= First_Address and
-                   Last_Address <= Element (Curr).Last_Address;
+         exit when
+           (Element (Curr).Kind = Empty or Element (Curr).Kind = Device)
+           and Element (Curr).First_Address <= First_Address
+           and Last_Address <= Element (Curr).Last_Address;
          Next (Curr);
       end loop;
 
       if Curr = No_Element then
          raise Invalid_Fixed_Allocation with
-            "Allocation beyond empty regions " &
-            Range_Image (First_Address, Last_Address);
+           "Allocation beyond empty regions " &
+           Range_Image (First_Address, Last_Address);
       end if;
 
       Reserve
-         (Map           => Map,
-          Kind          => Fixed,
-          Curr          => Curr,
-          Name          => Name,
-          First_Address => First_Address,
-          Last_Address  => Last_Address);
+        (Map           => Map,
+         Kind          => Fixed,
+         Curr          => Curr,
+         Name          => Name,
+         First_Address => First_Address,
+         Last_Address  => Last_Address);
 
    end Allocate_Fixed;
 
    -------------------------------------------------------------------------
 
    procedure Allocate_Variable
-      (Map         : in out Map_Type;
-       Name        :        Ada.Strings.Unbounded.Unbounded_String;
-       Size        :        Interfaces.Unsigned_64;
-       Upper_Limit :        Interfaces.Unsigned_64 :=
-                              Interfaces.Unsigned_64'Last;
-       Alignment   :        Interfaces.Unsigned_64 := 1)
+     (Map         : in out Map_Type;
+      Name        :        Ada.Strings.Unbounded.Unbounded_String;
+      Size        :        Interfaces.Unsigned_64;
+      Upper_Limit :        Interfaces.Unsigned_64 :=
+        Interfaces.Unsigned_64'Last;
+      Alignment   :        Interfaces.Unsigned_64 := 1)
    is
       use Ada.Strings.Unbounded;
       use Region_List_Package;
@@ -93,12 +93,12 @@ is
       while Curr /= No_Element
       loop
          First_Multiple :=
-            ((Element (Curr).First_Address + Alignment - 1) /
-             Alignment) * Alignment;
+           ((Element (Curr).First_Address + Alignment - 1) /
+              Alignment) * Alignment;
 
          exit when Element (Curr).Allocatable and
-                   Element (Curr).Kind = Empty and
-                   First_Multiple + Size - 1 <= Element (Curr).Last_Address;
+           Element (Curr).Kind = Empty and
+           First_Multiple + Size - 1 <= Element (Curr).Last_Address;
          Next (Curr);
       end loop;
 
@@ -113,61 +113,61 @@ is
       end if;
 
       Reserve
-         (Map           => Map,
-          Kind          => Allocated,
-          Curr          => Curr,
-          Name          => Name,
-          First_Address => First_Multiple,
-          Last_Address  => First_Multiple + Size - 1);
+        (Map           => Map,
+         Kind          => Allocated,
+         Curr          => Curr,
+         Name          => Name,
+         First_Address => First_Multiple,
+         Last_Address  => First_Multiple + Size - 1);
 
    end Allocate_Variable;
 
    -------------------------------------------------------------------------
 
    procedure Insert_Device_Region
-      (Map           : in out Map_Type;
-       Name          :        Ada.Strings.Unbounded.Unbounded_String;
-       First_Address :        Interfaces.Unsigned_64;
-       Last_Address  :        Interfaces.Unsigned_64)
+     (Map           : in out Map_Type;
+      Name          :        Ada.Strings.Unbounded.Unbounded_String;
+      First_Address :        Interfaces.Unsigned_64;
+      Last_Address  :        Interfaces.Unsigned_64)
    is
    begin
       Insert_New_Region
-         (Map           => Map,
-          Name          => Name,
-          Allocatable   => False,
-          Kind          => Device,
-          First_Address => First_Address,
-          Last_Address  => Last_Address);
+        (Map           => Map,
+         Name          => Name,
+         Allocatable   => False,
+         Kind          => Device,
+         First_Address => First_Address,
+         Last_Address  => Last_Address);
    end Insert_Device_Region;
 
    ----------------------------------------------------------------------------
 
    procedure Insert_Empty_Region
-      (Map           : in out Map_Type;
-       Name          :        Ada.Strings.Unbounded.Unbounded_String;
-       Allocatable   :        Boolean;
-       First_Address :        Interfaces.Unsigned_64;
-       Last_Address  :        Interfaces.Unsigned_64)
+     (Map           : in out Map_Type;
+      Name          :        Ada.Strings.Unbounded.Unbounded_String;
+      Allocatable   :        Boolean;
+      First_Address :        Interfaces.Unsigned_64;
+      Last_Address  :        Interfaces.Unsigned_64)
    is
    begin
       Insert_New_Region
-         (Map           => Map,
-          Name          => Name,
-          Allocatable   => Allocatable,
-          Kind          => Empty,
-          First_Address => First_Address,
-          Last_Address  => Last_Address);
+        (Map           => Map,
+         Name          => Name,
+         Allocatable   => Allocatable,
+         Kind          => Empty,
+         First_Address => First_Address,
+         Last_Address  => Last_Address);
    end Insert_Empty_Region;
 
    ----------------------------------------------------------------------------
 
    procedure Insert_New_Region
-      (Map           : in out Map_Type;
-       Name          :        Ada.Strings.Unbounded.Unbounded_String;
-       Allocatable   :        Boolean;
-       Kind          :        Region_Kind;
-       First_Address :        Interfaces.Unsigned_64;
-       Last_Address  :        Interfaces.Unsigned_64)
+     (Map           : in out Map_Type;
+      Name          :        Ada.Strings.Unbounded.Unbounded_String;
+      Allocatable   :        Boolean;
+      Kind          :        Region_Kind;
+      First_Address :        Interfaces.Unsigned_64;
+      Last_Address  :        Interfaces.Unsigned_64)
    is
       use Region_List_Package;
       Right, Left : Cursor;
@@ -192,24 +192,24 @@ is
    begin
       Right := First (Map.Data);
       while Right /= No_Element and then
-            First_Address > Element (Right).Last_Address
+        First_Address > Element (Right).Last_Address
       loop
          Left := Right;
          Right := Next (Right);
 
          exit when
-            Element (Left).Last_Address < First_Address and
-            (Right = No_Element or else
-             Last_Address < Element (Right).First_Address);
+           Element (Left).Last_Address < First_Address and
+           (Right = No_Element or else
+            Last_Address < Element (Right).First_Address);
       end loop;
 
       --  Overlap check
       if Right /= No_Element and then
-         Element (Right).First_Address <= Last_Address
+        Element (Right).First_Address <= Last_Address
       then
          raise Overlapping_Empty_Region with
-            "Region '" & To_String (Name) & "' overlaps with region '" &
-            To_String (Element (Right).Name) & "'";
+           "Region '" & To_String (Name) & "' overlaps with region '" &
+           To_String (Element (Right).Name) & "'";
       end if;
 
       --  Check for adjacent areas and merge them if possible.
@@ -250,17 +250,17 @@ is
       declare
          --  (I)
          Adjacent_Left : constant Boolean :=
-             Left /= No_Element and then                       --  (I.a)
-            (Kind = Empty and Element (Left).Kind = Empty and  --  (I.b)
-             Allocatable and Element (Left).Allocatable and    --  (I.c)
-             Element (Left).Last_Address + 1 = First_Address); --  (I.d)
+           Left /= No_Element and then                          --  (I.a)
+           (Kind = Empty and Element (Left).Kind = Empty and    --  (I.b)
+              Allocatable and Element (Left).Allocatable and    --  (I.c)
+              Element (Left).Last_Address + 1 = First_Address); --  (I.d)
 
          --  (II)
          Adjacent_Right : constant Boolean :=
-             Right /= No_Element and then                       --  (II.a)
-            (Kind = Empty and Element (Right).Kind = Empty and  --  (II.b)
-             Allocatable and Element (Right).Allocatable and    --  (II.c)
-             Last_Address + 1 = Element (Right).First_Address); --  (II.d)
+           Right /= No_Element and then                          --  (II.a)
+           (Kind = Empty and Element (Right).Kind = Empty and    --  (II.b)
+              Allocatable and Element (Right).Allocatable and    --  (II.c)
+              Last_Address + 1 = Element (Right).First_Address); --  (II.d)
       begin
          if Adjacent_Right and Adjacent_Left then                      --  (1)
             Update_Element (Map.Data, Left, Set_Last_Address'Access);
@@ -271,14 +271,14 @@ is
             Update_Element (Map.Data, Right, Set_First_Address'Access);
          else                                                          --  (4)
             Insert
-               (Container => Map.Data,
-                Before    => Right,
-                New_Item  => Region_Type'
-                              (Kind          => Kind,
-                               Name          => Name,
-                               Allocatable   => Allocatable,
-                               First_Address => First_Address,
-                               Last_Address  => Last_Address));
+              (Container => Map.Data,
+               Before    => Right,
+               New_Item  => Region_Type'
+                 (Kind          => Kind,
+                  Name          => Name,
+                  Allocatable   => Allocatable,
+                  First_Address => First_Address,
+                  Last_Address  => Last_Address));
          end if;
       end;
 
@@ -287,9 +287,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Iterate
-      (Map     : Map_Type;
-       Process : not null access procedure (Region : Region_Type);
-       Filter  : Region_Kind := Any)
+     (Map     : Map_Type;
+      Process : not null access procedure (Region : Region_Type);
+      Filter  : Region_Kind := Any)
    is
       use Region_List_Package;
 
@@ -308,12 +308,12 @@ is
    -------------------------------------------------------------------------
 
    procedure Reserve
-      (Map           : in out Map_Type;
-       Kind          :        Region_Kind;
-       Curr          :        Region_List_Package.Cursor;
-       Name          :        Ada.Strings.Unbounded.Unbounded_String;
-       First_Address :        Interfaces.Unsigned_64;
-       Last_Address  :        Interfaces.Unsigned_64)
+     (Map           : in out Map_Type;
+      Kind          :        Region_Kind;
+      Curr          :        Region_List_Package.Cursor;
+      Name          :        Ada.Strings.Unbounded.Unbounded_String;
+      First_Address :        Interfaces.Unsigned_64;
+      Last_Address  :        Interfaces.Unsigned_64)
    is
       use Region_List_Package;
 
@@ -399,9 +399,9 @@ is
       --        after the last element of the allocated area
 
       Match_First : constant Boolean :=
-         Element (Curr).First_Address = First_Address;
+        Element (Curr).First_Address = First_Address;
       Match_Last : constant Boolean :=
-         Element (Curr).Last_Address = Last_Address;
+        Element (Curr).Last_Address = Last_Address;
 
    begin
 
@@ -413,48 +413,48 @@ is
          --  (2)
          Update_Element (Map.Data, Curr, Set_First_After_Last'Access);
          Insert
-            (Container => Map.Data,
-             Before    => Curr,
-             New_Item  => Region_Type'
-               (First_Address => First_Address,
-                Last_Address  => Last_Address,
-                Name          => Name,
-                Allocatable   => False,
-                Kind          => Kind));
+           (Container => Map.Data,
+            Before    => Curr,
+            New_Item  => Region_Type'
+              (First_Address => First_Address,
+               Last_Address  => Last_Address,
+               Name          => Name,
+               Allocatable   => False,
+               Kind          => Kind));
       elsif Match_Last then
          --  (3)
          Insert
-            (Container => Map.Data,
-             Before    => Curr,
-             New_Item  => Region_Type'
-               (First_Address => Element (Curr).First_Address,
-                Last_Address  => First_Address - 1,
-                Name          => Element (Curr).Name,
-                Allocatable   => Element (Curr).Allocatable,
-                Kind          => Empty));
+           (Container => Map.Data,
+            Before    => Curr,
+            New_Item  => Region_Type'
+              (First_Address => Element (Curr).First_Address,
+               Last_Address  => First_Address - 1,
+               Name          => Element (Curr).Name,
+               Allocatable   => Element (Curr).Allocatable,
+               Kind          => Empty));
          Update_Element (Map.Data, Curr, Allocate'Access);
          Update_Element (Map.Data, Curr, Set_First_To_First'Access);
          Update_Element (Map.Data, Curr, Set_Name'Access);
       else
          --  (4)
          Insert
-            (Container => Map.Data,
-             Before    => Curr,
-             New_Item  => Region_Type'
-               (First_Address => Element (Curr).First_Address,
-                Last_Address  => First_Address - 1,
-                Name          => Element (Curr).Name,
-                Allocatable   => Element (Curr).Allocatable,
-                Kind          => Empty));
+           (Container => Map.Data,
+            Before    => Curr,
+            New_Item  => Region_Type'
+              (First_Address => Element (Curr).First_Address,
+               Last_Address  => First_Address - 1,
+               Name          => Element (Curr).Name,
+               Allocatable   => Element (Curr).Allocatable,
+               Kind          => Empty));
          Insert
-            (Container => Map.Data,
-             Before    => Curr,
-             New_Item  => Region_Type'
-               (First_Address => First_Address,
-                Last_Address  => Last_Address,
-                Name          => Name,
-                Allocatable   => False,
-                Kind          => Kind));
+           (Container => Map.Data,
+            Before    => Curr,
+            New_Item  => Region_Type'
+              (First_Address => First_Address,
+               Last_Address  => Last_Address,
+               Name          => Name,
+               Allocatable   => False,
+               Kind          => Kind));
          Update_Element (Map.Data, Curr, Set_First_Past_Last'Access);
       end if;
    end Reserve;

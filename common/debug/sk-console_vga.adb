@@ -181,9 +181,9 @@ is
       Screen := Screen_Type'
         (others => Screen_Row_Type'
            (others => Screen_Cell_Type'
-              (Char     => ' ',
-               FG_Color => Light_Grey,
-               BG_Color => Black)));
+                (Char     => ' ',
+                 FG_Color => Light_Grey,
+                 BG_Color => Black)));
 
       Cur_X         := Width_Type'First;
       Cur_Y         := Height_Type'First;

@@ -86,8 +86,8 @@ is
                   Success => Success);
       if not Success then
          pragma Debug (Dump.Print_Message_16
-                         (Msg  => "Error reading VMCS field",
-                          Item => Field));
+                       (Msg  => "Error reading VMCS field",
+                        Item => Field));
          CPU.Panic;
       end if;
    end VMCS_Read;
@@ -356,8 +356,8 @@ is
                    Success => Success);
       if not Success then
          pragma Debug (Dump.Print_Message_64
-                         (Msg  => "Error clearing VMCS:",
-                          Item => VMCS_Address));
+                       (Msg  => "Error clearing VMCS:",
+                        Item => VMCS_Address));
          CPU.Panic;
       end if;
    end Clear;
@@ -372,8 +372,8 @@ is
                    Success => Success);
       if not Success then
          pragma Debug (Dump.Print_Message_64
-                         (Msg  => "Error loading VMCS pointer:",
-                          Item => VMCS_Address));
+                       (Msg  => "Error loading VMCS pointer:",
+                        Item => VMCS_Address));
          CPU.Panic;
       end if;
    end Load;

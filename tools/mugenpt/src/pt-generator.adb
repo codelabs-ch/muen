@@ -102,10 +102,10 @@ is
             PML4_Addr : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
                 (Muxml.Utils.Get_Attribute
-                     (Doc   => Policy.Doc,
-                      XPath => "/system/memory/memory[@name='kernel_" & ID_Str
-                      & "|pt']",
-                      Name  => "physicalAddress"));
+                   (Doc   => Policy.Doc,
+                    XPath => "/system/memory/memory[@name='kernel_" & ID_Str
+                    & "|pt']",
+                    Name  => "physicalAddress"));
             Nodes     : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Policy.Doc,
@@ -155,33 +155,33 @@ is
          Size    : constant Interfaces.Unsigned_64
            := Interfaces.Unsigned_64'Value
              (DOM.Core.Elements.Get_Attribute
-                  (Elem => Physical,
-                   Name => "size"));
+                (Elem => Physical,
+                 Name => "size"));
          PMA     : constant Interfaces.Unsigned_64
            := Interfaces.Unsigned_64'Value
              (DOM.Core.Elements.Get_Attribute
-                  (Elem => Physical,
-                   Name => "physicalAddress"));
+                (Elem => Physical,
+                 Name => "physicalAddress"));
          VMA     : constant Interfaces.Unsigned_64
            := Interfaces.Unsigned_64'Value
              (DOM.Core.Elements.Get_Attribute
-                  (Elem => Logical,
-                   Name => "virtualAddress"));
+                (Elem => Logical,
+                 Name => "virtualAddress"));
          Write   : constant Boolean
            := Boolean'Value
              (DOM.Core.Elements.Get_Attribute
-                  (Elem => Logical,
-                   Name => "writable"));
+                (Elem => Logical,
+                 Name => "writable"));
          Exec    : constant Boolean
            := Boolean'Value
              (DOM.Core.Elements.Get_Attribute
-                  (Elem => Logical,
-                   Name => "executable"));
+                (Elem => Logical,
+                 Name => "executable"));
          Caching : constant Paging.Caching_Type
            := Paging.Caching_Type'Value
              (DOM.Core.Elements.Get_Attribute
-                  (Elem => Physical,
-                   Name => "caching"));
+                (Elem => Physical,
+                 Name => "caching"));
       begin
          Paging.Memory.Add_Memory_Region
            (Mem_Layout       => Vmem,
@@ -213,9 +213,9 @@ is
             Physical_Mem  : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => McKae.XML.XPath.XIA.XPath_Query
-                     (N     => Policy.Doc,
-                      XPath => "/system/memory/memory[@name='" & Physical_Name
-                      & "']"),
+                   (N     => Policy.Doc,
+                    XPath => "/system/memory/memory[@name='" & Physical_Name
+                    & "']"),
                  Index => 0);
          begin
             Mulog.Log (Msg => "Adding region " & Logical_Name
@@ -228,8 +228,8 @@ is
       for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
          declare
             Device   : constant DOM.Core.Node := DOM.Core.Nodes.Item
-                (List  => Devices,
-                 Index => I);
+              (List  => Devices,
+               Index => I);
             Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Device,
                Name => "physical");
@@ -255,10 +255,10 @@ is
                   Physical_Mem  : constant DOM.Core.Node
                     := DOM.Core.Nodes.Item
                       (List  => McKae.XML.XPath.XIA.XPath_Query
-                           (N     => Policy.Doc,
-                            XPath => "/system/platform/device[@name='"
-                            & Dev_Name & "']/memory[@name='" & Physical_Name
-                            & "']"),
+                         (N     => Policy.Doc,
+                          XPath => "/system/platform/device[@name='"
+                          & Dev_Name & "']/memory[@name='" & Physical_Name
+                          & "']"),
                        Index => 0);
                begin
                   Mulog.Log (Msg => "Adding region " & Logical_Name
@@ -304,21 +304,21 @@ is
             PML4_Addr : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
                 (Muxml.Utils.Get_Attribute
-                     (Doc   => Policy.Doc,
-                      XPath => "/system/memory/memory[@name='" & Name
-                      & "|pt']",
-                      Name  => "physicalAddress"));
+                   (Doc   => Policy.Doc,
+                    XPath => "/system/memory/memory[@name='" & Name
+                    & "|pt']",
+                    Name  => "physicalAddress"));
             Nodes     : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => DOM.Core.Nodes.Item
-                     (List  => Subjects,
-                      Index => I),
+                   (List  => Subjects,
+                    Index => I),
                  XPath => "memory/memory");
             Devices   : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => DOM.Core.Nodes.Item
-                     (List  => Subjects,
-                      Index => I),
+                   (List  => Subjects,
+                    Index => I),
                  XPath => "devices/device[count(memory)>0]");
 
             Paging_Mode : Paging.Paging_Mode_Type;

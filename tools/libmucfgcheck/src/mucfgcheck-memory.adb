@@ -93,8 +93,8 @@ is
             Ref_Name    : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => DOM.Core.Nodes.Item
-                     (List  => Nodes,
-                      Index => I),
+                   (List  => Nodes,
+                    Index => I),
                  Name => "name");
             Entity_Name : constant String
               := Mutools.Utils.Decode_Entity_Name (Encoded_Str => Ref_Name);
@@ -674,8 +674,8 @@ is
               Name => "name");
          Ref_Name  : constant String := Subj_Name & "|vmcs";
          Mem_Name  : constant String := DOM.Core.Elements.Get_Attribute
-             (Elem => Right,
-              Name => "name");
+           (Elem => Right,
+            Name => "name");
       begin
          return Ref_Name = Mem_Name;
       end Match_Region_Name;

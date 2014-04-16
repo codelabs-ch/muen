@@ -156,7 +156,7 @@ is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                 = "Physical device memory 'nonexistent' referenced by logical"
+                    = "Physical device memory 'nonexistent' referenced by logical"
                     & " device memory 'vga_buffer' of logical device 'gfx' not"
                     & " found",
                     Message   => "Exception mismatch");

@@ -96,7 +96,7 @@ package body Acpi is
       ID        : ID_T;
       Copy_Last : constant Idx := Idx
         (Integer'Min (Integer (ID'Last),
-                      Integer (ID'First) + Str'Length - 1));
+         Integer (ID'First) + Str'Length - 1));
    begin
       for I in Idx range ID'First .. Copy_Last loop
          ID (I) := Character'Pos

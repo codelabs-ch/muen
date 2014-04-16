@@ -72,8 +72,8 @@ is
                   RSDP_Filename : constant String
                     := Output_Dir & "/" & DOM.Core.Nodes.Node_Value
                       (N => DOM.Core.Nodes.Item
-                           (List  => RSDP_File,
-                            Index => 0));
+                         (List  => RSDP_File,
+                          Index => 0));
 
                   XSDT_Addr     : constant String := Muxml.Utils.Get_Attribute
                     (Doc   => Cur_Subj,
@@ -82,12 +82,12 @@ is
                   XSDT_Filename : constant String
                     := Output_Dir & "/" & DOM.Core.Nodes.Node_Value
                       (N => DOM.Core.Nodes.Item
-                           (List  => McKae.XML.XPath.XIA.XPath_Query
-                                (N     => Policy.Doc,
-                                 XPath => "/system/memory/memory[@name='"
-                                 & XSDT_Name & "']/file[@format='"
-                                 & "acpi_xsdt']/@filename"),
-                            Index => 0));
+                         (List  => McKae.XML.XPath.XIA.XPath_Query
+                            (N     => Policy.Doc,
+                             XPath => "/system/memory/memory[@name='"
+                             & XSDT_Name & "']/file[@format='"
+                             & "acpi_xsdt']/@filename"),
+                          Index => 0));
 
                   FADT_Addr     : constant String := Muxml.Utils.Get_Attribute
                     (Doc   => Cur_Subj,
@@ -96,12 +96,12 @@ is
                   FADT_Filename : constant String
                     := Output_Dir & "/" & DOM.Core.Nodes.Node_Value
                       (N => DOM.Core.Nodes.Item
-                           (List  => McKae.XML.XPath.XIA.XPath_Query
-                                (N     => Policy.Doc,
-                                 XPath => "/system/memory/memory[@name='"
-                                 & FADT_Name & "']/file[@format='"
-                                 & "acpi_fadt']/@filename"),
-                            Index => 0));
+                         (List  => McKae.XML.XPath.XIA.XPath_Query
+                            (N     => Policy.Doc,
+                             XPath => "/system/memory/memory[@name='"
+                             & FADT_Name & "']/file[@format='"
+                             & "acpi_fadt']/@filename"),
+                          Index => 0));
 
                   DSDT_Addr     : constant String := Muxml.Utils.Get_Attribute
                     (Doc   => Cur_Subj,

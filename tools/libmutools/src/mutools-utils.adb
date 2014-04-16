@@ -102,7 +102,7 @@ is
 
       --  Convert given hex digit to character.
       function To_Hex_Digit (N : Interfaces.Unsigned_64) return Character
-         with pre => N <= 16#F#;
+        with pre => N <= 16#F#;
 
       ----------------------------------------------------------------------
 

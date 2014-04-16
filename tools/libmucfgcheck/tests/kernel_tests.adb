@@ -59,7 +59,7 @@ is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Attribute 'virtualAddress => 16#0021_0000#' of "
-                      & "'kernel_store_1' CPU Store memory element differs",
+                    & "'kernel_store_1' CPU Store memory element differs",
                     Message   => "Exception mismatch");
       end;
    end Validate_CPU_Store_Address_Equality;

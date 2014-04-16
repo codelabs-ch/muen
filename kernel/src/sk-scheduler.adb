@@ -444,8 +444,8 @@ is
 
          if Trap_Entry.Dst_Subject = Skp.Invalid_Subject then
             pragma Debug (Dump.Print_Message_16
-                            (Msg  => ">>> No handler for trap",
-                             Item => Word16 (Trap_Nr)));
+                          (Msg  => ">>> No handler for trap",
+                           Item => Word16 (Trap_Nr)));
             pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject));
             CPU.Panic;
          else
@@ -543,8 +543,8 @@ is
                       Pos   => Constants.VM_EXIT_ENTRY_FAILURE)
       then
          pragma Debug (Dump.Print_VMX_Entry_Error
-                         (Current_Subject => Current_Subject,
-                          Exit_Reason     => Exit_Status));
+                       (Current_Subject => Current_Subject,
+                        Exit_Reason     => Exit_Status));
          CPU.Panic;
       end if;
 

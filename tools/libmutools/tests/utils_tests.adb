@@ -40,7 +40,7 @@ is
    begin
       for I in Utils.Unsigned_64_Pos'Range loop
          Assert (Condition => not Utils.Bit_Test (Value => Number,
-                                              Pos   => I),
+                                                  Pos   => I),
                  Message   => "Bit" & I'Img & " set");
       end loop;
 

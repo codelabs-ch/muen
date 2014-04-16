@@ -446,8 +446,8 @@ is
          Dev_Name : constant String
            := Capitalize
              (Str => DOM.Core.Elements.Get_Attribute
-                  (Elem => Dev,
-                   Name => "name"));
+                (Elem => Dev,
+                 Name => "name"));
          Ports    : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Dev,
@@ -468,8 +468,8 @@ is
                Name       : constant String
                  := Capitalize
                    (Str => DOM.Core.Elements.Get_Attribute
-                        (Elem => Port,
-                         Name => "name"));
+                      (Elem => Port,
+                       Name => "name"));
                Start_Addr : constant String
                  := DOM.Core.Elements.Get_Attribute
                    (Elem => Port,
@@ -972,8 +972,8 @@ is
                Minors     : constant DOM.Core.Node_List
                  := McKae.XML.XPath.XIA.XPath_Query
                    (N     => DOM.Core.Nodes.Item
-                        (List  => Major_CPUs,
-                         Index => CPU),
+                      (List  => Major_CPUs,
+                       Index => CPU),
                     XPath => "minorFrame");
             begin
                Write_Major_Frame (Minors => Minors,
@@ -1058,9 +1058,9 @@ is
          Event_Target : constant DOM.Core.Node
            := DOM.Core.Nodes.Item
              (List  => McKae.XML.XPath.XIA.XPath_Query
-                  (N     => Policy.Doc,
-                   XPath => "/system/subjects/subject/events/target/event"
-                   & "[@physical='" & Phys_Event_Ref & "']"),
+                (N     => Policy.Doc,
+                 XPath => "/system/subjects/subject/events/target/event"
+                 & "[@physical='" & Phys_Event_Ref & "']"),
               Index => 0);
          Dst_Id : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Muxml.Utils.Ancestor_Node
@@ -1119,9 +1119,9 @@ is
          Event_Target : constant DOM.Core.Node
            := DOM.Core.Nodes.Item
              (List  => McKae.XML.XPath.XIA.XPath_Query
-                  (N     => Policy.Doc,
-                   XPath => "/system/subjects/subject/events/target/event"
-                   & "[@physical='" & Phys_Event_Ref & "']"),
+                (N     => Policy.Doc,
+                 XPath => "/system/subjects/subject/events/target/event"
+                 & "[@physical='" & Phys_Event_Ref & "']"),
               Index => 0);
 
          Dst_Id : constant String := DOM.Core.Elements.Get_Attribute

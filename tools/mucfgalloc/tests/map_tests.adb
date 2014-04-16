@@ -31,7 +31,9 @@ is
 
    procedure Write_Region (R : Alloc.Map.Region_Type);
 
-   function U (S : String) return Ada.Strings.Unbounded.Unbounded_String
+   function U
+     (S : String)
+      return Ada.Strings.Unbounded.Unbounded_String
       renames Ada.Strings.Unbounded.To_Unbounded_String;
 
    -------------------------------------------------------------------------
@@ -49,8 +51,8 @@ is
       M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/allocate_device.txt",
-                   Filename2 => "obj/allocate_device.txt"),
+              (Filename1 => "data/allocate_device.txt",
+               Filename2 => "obj/allocate_device.txt"),
               Message => "Device allocation failed");
 
    end Allocate_Device;
@@ -69,8 +71,8 @@ is
       M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/alloc_fixed_full_empty_region.txt",
-                   Filename2 => "obj/alloc_fixed_full_empty_region.txt"),
+              (Filename1 => "data/alloc_fixed_full_empty_region.txt",
+               Filename2 => "obj/alloc_fixed_full_empty_region.txt"),
               Message => "Allocation of full empty region");
    end Allocate_Fixed_Full_Empty_Region;
 
@@ -199,8 +201,8 @@ is
       M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/alloc_fixed_partial_left.txt",
-                   Filename2 => "obj/alloc_fixed_partial_left.txt"),
+              (Filename1 => "data/alloc_fixed_partial_left.txt",
+               Filename2 => "obj/alloc_fixed_partial_left.txt"),
               Message => "Partial allocation of empty region (left)");
    end Allocate_Fixed_Partial_Left;
 
@@ -218,8 +220,8 @@ is
       M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/alloc_fixed_partial_middle.txt",
-                   Filename2 => "obj/alloc_fixed_partial_middle.txt"),
+              (Filename1 => "data/alloc_fixed_partial_middle.txt",
+               Filename2 => "obj/alloc_fixed_partial_middle.txt"),
               Message => "Partial allocation of full empty region");
    end Allocate_Fixed_Partial_Middle;
 
@@ -238,8 +240,8 @@ is
       M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/alloc_fixed_partial_right.txt",
-                   Filename2 => "obj/alloc_fixed_partial_right.txt"),
+              (Filename1 => "data/alloc_fixed_partial_right.txt",
+               Filename2 => "obj/alloc_fixed_partial_right.txt"),
               Message => "Partial allocation of empty region (right)");
    end Allocate_Fixed_Partial_Right;
 
@@ -255,8 +257,8 @@ is
       M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/alloc_variable_alignment.txt",
-                   Filename2 => "obj/alloc_variable_alignment.txt"),
+              (Filename1 => "data/alloc_variable_alignment.txt",
+               Filename2 => "obj/alloc_variable_alignment.txt"),
               Message => "Variable allocation (aligned)");
    end Allocate_Variable_Aligned;
 
@@ -271,7 +273,7 @@ is
       M.Insert_Empty_Region (U ("EMPTY3"), True, 2500, 2999);
       M.Insert_Empty_Region (U ("EMPTY4"), True, 5000, 10000);
       M.Allocate_Variable
-         (Size => 1000, Name => U ("mem1"), Upper_Limit => 3000);
+        (Size => 1000, Name => U ("mem1"), Upper_Limit => 3000);
       Fail ("Invalid constraints undetected");
    exception
       when Alloc.Map.Limit_Exceeded => null;
@@ -292,8 +294,8 @@ is
       M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/alloc_variable_exact.txt",
-                   Filename2 => "obj/alloc_variable_exact.txt"),
+              (Filename1 => "data/alloc_variable_exact.txt",
+               Filename2 => "obj/alloc_variable_exact.txt"),
               Message => "Variable allocation (exact)");
    end Allocate_Variable_Exact;
 
@@ -359,8 +361,8 @@ is
       M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/device_regions_not_merged.txt",
-                   Filename2 => "obj/device_regions_not_merged.txt"),
+              (Filename1 => "data/device_regions_not_merged.txt",
+               Filename2 => "obj/device_regions_not_merged.txt"),
               Message => "Device regions being merged");
    end Device_Regions_Not_Merged;
 
@@ -477,8 +479,8 @@ is
       M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/non_overlapping1.txt",
-                   Filename2 => "obj/non_overlapping_random.txt"),
+              (Filename1 => "data/non_overlapping1.txt",
+               Filename2 => "obj/non_overlapping_random.txt"),
               Message => "Memory map mismatch (random)");
    end Non_Overlapping_Random;
 
@@ -497,8 +499,8 @@ is
       M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/non_overlapping1.txt",
-                   Filename2 => "obj/non_overlapping_reversed.txt"),
+              (Filename1 => "data/non_overlapping1.txt",
+               Filename2 => "obj/non_overlapping_reversed.txt"),
               Message => "Memory map mismatch (reversed)");
    end Non_Overlapping_Reversed;
 
@@ -517,8 +519,8 @@ is
       M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/non_overlapping1.txt",
-                   Filename2 => "obj/non_overlapping_sorted.txt"),
+              (Filename1 => "data/non_overlapping1.txt",
+               Filename2 => "obj/non_overlapping_sorted.txt"),
               Message => "Memory map mismatch (sorted)");
    end Non_Overlapping_Sorted;
 
@@ -538,8 +540,8 @@ is
       Close (Output_File);
 
       Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/ordering.txt",
-                   Filename2 => "obj/ordering.txt"),
+              (Filename1 => "data/ordering.txt",
+               Filename2 => "obj/ordering.txt"),
               Message => "Wrong ordering");
    end Ordering;
 
@@ -610,8 +612,8 @@ is
       M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/merge.txt",
-                   Filename2 => "obj/merge_random.txt"),
+              (Filename1 => "data/merge.txt",
+               Filename2 => "obj/merge_random.txt"),
               Message => "Region merge failed (random)");
    end Region_Merge_Random;
 
@@ -630,8 +632,8 @@ is
       M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/merge.txt",
-                   Filename2 => "obj/merge_reversed.txt"),
+              (Filename1 => "data/merge.txt",
+               Filename2 => "obj/merge_reversed.txt"),
               Message => "Region merge failed (reversed)");
    end Region_Merge_Reversed;
 
@@ -650,8 +652,8 @@ is
       M.Iterate (Write_Region'Access);
       Close (Output_File);
       Assert (Condition => Test_Utils.Equal_Files
-                  (Filename1 => "data/merge.txt",
-                   Filename2 => "obj/merge_sorted.txt"),
+              (Filename1 => "data/merge.txt",
+               Filename2 => "obj/merge_sorted.txt"),
               Message => "Region merge failed (sorted)");
    end Region_Merge_Sorted;
 
@@ -661,10 +663,10 @@ is
    is
    begin
       Put_Line
-         (Output_File,
-          R.Kind'Img &
-          R.First_Address'Img &
-          R.Last_Address'Img);
+        (Output_File,
+         R.Kind'Img &
+           R.First_Address'Img &
+           R.Last_Address'Img);
    end Write_Region;
 
 end Map_Tests;

@@ -36,9 +36,9 @@ is
       CPU_Count : constant Positive
         := Positive'Value
           (Muxml.Utils.Get_Attribute
-               (Doc   => XML_Data.Doc,
-                XPath => "/system/platform/processor",
-                Name  => "logicalCpus"));
+             (Doc   => XML_Data.Doc,
+              XPath => "/system/platform/processor",
+              Name  => "logicalCpus"));
       Last_Id   : constant Natural := CPU_Count - 1;
       Nodes     : constant DOM.Core.Node_List
         := XPath_Query (N     => XML_Data.Doc,

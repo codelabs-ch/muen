@@ -115,8 +115,8 @@ is
             Access_Mode : constant MSRs.MSR_Mode_Type
               := MSRs.MSR_Mode_Type'Value
                 (DOM.Core.Elements.Get_Attribute
-                     (Elem => Cur_MSR,
-                      Name => "mode"));
+                   (Elem => Cur_MSR,
+                    Name => "mode"));
          begin
             MSRs.Allow_MSRs (Bitmap     => Bitmap,
                              Start_Addr => Start_Addr,

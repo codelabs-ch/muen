@@ -107,13 +107,13 @@ is
             Start_Port : constant Interfaces.Unsigned_16
               := Interfaces.Unsigned_16'Value
                 (DOM.Core.Elements.Get_Attribute
-                     (Elem => Cur_Node,
-                      Name => "start"));
+                   (Elem => Cur_Node,
+                    Name => "start"));
             End_Port   : constant Interfaces.Unsigned_16
               := Interfaces.Unsigned_16'Value
                 (DOM.Core.Elements.Get_Attribute
-                     (Elem => Cur_Node,
-                      Name => "end"));
+                   (Elem => Cur_Node,
+                    Name => "end"));
          begin
             Iobm.IO_Ports.Allow_Ports
               (B          => Bitmap,

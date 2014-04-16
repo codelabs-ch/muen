@@ -4,14 +4,15 @@ ARC = $(PKG).tgz
 SRC = http://www.mckae.com/xia/xia-1.00.tgz
 DLA = $(WRK).tgz
 
+PATCHES = fix-warnings.patch
+
 define CMD_CLEAN_EXTRA
 	@rm -f src
 endef
 
-all: download src
+all: patch src
 
 src:
 	@ln -sf $(WRK) src
-	@patch -d $(WRK) -p1 < fix-warnings.patch
 
 include ../contrib.archive.mk

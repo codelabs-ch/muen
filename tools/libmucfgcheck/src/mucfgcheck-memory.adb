@@ -329,7 +329,7 @@ is
       end Check_Inequality;
    begin
       Mulog.Log (Msg => "Checking uniqueness of" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img& " physical memory region name(s)");
+                 (List => Nodes)'Img & " physical memory region name(s)");
 
       Compare_All (Nodes      => Nodes,
                    Comparator => Check_Inequality'Access);

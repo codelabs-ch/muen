@@ -20,6 +20,7 @@ with Skp.Kernel;
 
 with SK.CPU;
 with SK.CPU_Global;
+with SK.Dump;
 with SK.Interrupts;
 with SK.Descriptors;
 with SK.KC;
@@ -84,9 +85,9 @@ is
                   Value   => Value,
                   Success => Success);
       if not Success then
-         pragma Debug (KC.Put_String (Item => "Error reading VMCS field "));
-         pragma Debug (KC.Put_Word16 (Item => Field));
-         pragma Debug (KC.New_Line);
+         pragma Debug (Dump.Print_Message_16
+                         (Msg  => "Error reading VMCS field",
+                          Item => Field));
          CPU.Panic;
       end if;
    end VMCS_Read;
@@ -95,28 +96,10 @@ is
 
    procedure VMX_Error
    is
-      Error   : SK.Word64;
-      Success : Boolean;
    begin
-      pragma Debug (KC.Put_String (Item => "Error running subject "));
-      pragma Debug (KC.Put_Byte
-                    (Item => SK.Byte
-                     (CPU_Global.Get_Current_Minor_Frame.Subject_Id)));
-      pragma Debug (KC.New_Line);
-
-      pragma Debug (CPU.VMREAD (Field   => Constants.VMX_INST_ERROR,
-                                Value   => Error,
-                                Success => Success));
-      pragma Debug (Success, KC.Put_String (Item => "VM instruction error: "));
-      pragma Debug (Success, KC.Put_Byte (Item => Byte (Error)));
-      pragma Debug (Success, KC.New_Line);
-      pragma Debug (not Success, KC.Put_Line
-        (Item => "Unable to read VMX instruction error"));
+      pragma Debug (Dump.Print_VMX_Error);
 
       CPU.Panic;
-
-      --# accept Warning, 400, Error,   "Only used for debug output";
-      --# accept Warning, 400, Success, "Only used for debug output";
    end VMX_Error;
 
    -------------------------------------------------------------------------
@@ -372,9 +355,9 @@ is
       CPU.VMCLEAR (Region  => VMCS_Address,
                    Success => Success);
       if not Success then
-         pragma Debug (KC.Put_String (Item => "Error clearing VMCS: "));
-         pragma Debug (KC.Put_Word64 (Item => VMCS_Address));
-         pragma Debug (KC.New_Line);
+         pragma Debug (Dump.Print_Message_64
+                         (Msg  => "Error clearing VMCS:",
+                          Item => VMCS_Address));
          CPU.Panic;
       end if;
    end Clear;
@@ -388,9 +371,9 @@ is
       CPU.VMPTRLD (Region  => VMCS_Address,
                    Success => Success);
       if not Success then
-         pragma Debug (KC.Put_String (Item => "Error loading VMCS pointer: "));
-         pragma Debug (KC.Put_Word64 (Item => VMCS_Address));
-         pragma Debug (KC.New_Line);
+         pragma Debug (Dump.Print_Message_64
+                         (Msg  => "Error loading VMCS pointer:",
+                          Item => VMCS_Address));
          CPU.Panic;
       end if;
    end Load;

@@ -1,0 +1,26 @@
+diff -Naur ahven-2.4.orig/src/ahven-runner.adb ahven-2.4/src/ahven-runner.adb
+--- ahven-2.4.orig/src/ahven-runner.adb	2014-02-08 22:21:51.000000000 +0100
++++ ahven-2.4/src/ahven-runner.adb	2014-04-16 11:00:29.475904048 +0200
+@@ -48,7 +48,8 @@
+ 
+       Reporter (Listener.Main_Result, Params);
+       if (Error_Count (Listener.Main_Result) > 0) or
+-         (Failure_Count (Listener.Main_Result) > 0) then
++         (Failure_Count (Listener.Main_Result) > 0)
++      then
+          Ada.Command_Line.Set_Exit_Status (Ada.Command_Line.Failure);
+       end if;
+    exception
+diff -Naur ahven-2.4.orig/src/ahven-text_runner.adb ahven-2.4/src/ahven-text_runner.adb
+--- ahven-2.4.orig/src/ahven-text_runner.adb	2014-02-08 22:21:51.000000000 +0100
++++ ahven-2.4/src/ahven-text_runner.adb	2014-04-16 11:00:29.475904048 +0200
+@@ -182,7 +182,8 @@
+          exit Test_Loop when not Is_Valid (Position);
+          Print_Test (Data (Position), Level, Status);
+          if Print_Log and
+-           (Length (Get_Output_File (Data (Position))) > 0) then
++           (Length (Get_Output_File (Data (Position))) > 0)
++         then
+             Print_Log_File (To_String (Get_Output_File (Data (Position))));
+          end if;
+          Position := Next (Position);

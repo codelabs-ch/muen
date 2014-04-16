@@ -1,4 +1,4 @@
-PV  = 2.3
+PV  = 2.4
 PKG = ahven-$(PV)
 ARC = $(PKG).tar.gz
 SRC = http://sf.net/projects/ahven/files/ahven/Ahven%20$(PV)/$(ARC)/download

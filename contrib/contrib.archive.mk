@@ -3,6 +3,7 @@ include ../contrib.mk
 $(DLA):
 	$(CMD_DL)
 
-download: $(WRK)
-$(WRK): $(DLA)
+download: $(STAMP_UNPACK)
+$(STAMP_UNPACK): $(DLA)
 	@tar xfz $^ -C $(TMP)
+	@touch $@

@@ -18,14 +18,18 @@ define CMD_INSTALL
 endef
 endif
 
-$(STAMP_CONFIGURE): $(WRK)
+$(STAMP_PATCH): $(STAMP_UNPACK) $(PATCHES)
+	@for p in $(PATCHES); do patch -d $(WRK) -p1 < $$p || exit 1; done
+	@touch $@
+
+$(STAMP_CONFIGURE): $(STAMP_PATCH)
 	$(CMD_CONFIGURE)
 	@touch $@
 
 ifdef CMD_CONFIGURE
 $(STAMP_BUILD): $(STAMP_CONFIGURE)
 else
-$(STAMP_BUILD): $(WRK)
+$(STAMP_BUILD): $(STAMP_PATCH)
 endif
 	@$(CMD_BUILD)
 	@touch $@

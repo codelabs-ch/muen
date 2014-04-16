@@ -1,5 +1,6 @@
 include ../contrib.mk
 
-$(WRK):
-	@git clone $(SRC) $@
+$(STAMP_UNPACK):
+	@git clone $(SRC) $(WRK)
 	@cd $(WRK) && git checkout $(REV)
+	@touch $@

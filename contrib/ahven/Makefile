@@ -4,6 +4,8 @@ ARC = $(PKG).tar.gz
 SRC = http://sf.net/projects/ahven/files/ahven/Ahven%20$(PV)/$(ARC)/download
 DLA = $(WRK).tar.gz
 
+PATCHES = fix-warnings.patch
+
 define CMD_DL
 	@wget $(SRC) -O $@
 endef

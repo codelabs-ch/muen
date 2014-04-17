@@ -545,16 +545,30 @@ is
          Owner : DOM.Core.Node;
          Index : Natural)
       is
-         IRQ_Nr         : constant Natural := Natural'Value
+         Phys_IRQ_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => IRQ,
+              Name => "physical");
+         Dev_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => DOM.Core.Nodes.Parent_Node (N => IRQ),
+              Name => "physical");
+         Physical_IRQ : constant DOM.Core.Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Policy.Doc,
+               XPath => "/system/platform/device[@name='" & Dev_Name
+               & "']/irq[@name='" & Phys_IRQ_Name & "']"),
+            Index => 0);
+         IRQ_Nr : constant Natural := Natural'Value
            (DOM.Core.Elements.Get_Attribute
-              (Elem => IRQ,
+              (Elem => Physical_IRQ,
                Name => "number"));
-         Host_Vector    : constant Natural := IRQ_Nr + Host_IRQ_Remap_Offset;
-         CPU            : constant Natural := Natural'Value
+         Host_Vector : constant Natural := IRQ_Nr + Host_IRQ_Remap_Offset;
+         CPU : constant Natural := Natural'Value
            (DOM.Core.Elements.Get_Attribute
               (Elem => Owner,
                Name => "cpu"));
-         Subject_Id     : constant String
+         Subject_Id : constant String
            := DOM.Core.Elements.Get_Attribute
              (Elem => Owner,
               Name => "id");

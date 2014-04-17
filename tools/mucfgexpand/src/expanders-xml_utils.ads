@@ -57,6 +57,15 @@ is
       Executable    :        Boolean)
       return DOM.Core.Node;
 
+   --  Create subject event node with given parameters.
+   function Create_Event_Node
+     (Policy        : in out Muxml.XML_Data_Type;
+      ID            :        String;
+      Logical_Name  :        String;
+      Physical_Name :        String;
+      Action        :        String)
+      return DOM.Core.Node;
+
    --  Returns the size of the paging structures needed to map the virtual
    --  memory regions given by XPath expressions. Dev_Virt_Mem_XPath identifies
    --  the virtual device memory regions and Virt_Mem_XPath the virtual memory

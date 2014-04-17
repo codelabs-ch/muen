@@ -26,7 +26,9 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Types;
 with Mucfgvcpu;
+with Mucfgcheck.Events;
 
 with Expanders.XML_Utils;
 with Expanders.Subjects.Profiles;
@@ -174,6 +176,39 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject/events/source/group/default");
+
+      --  Returns True if an event with specified reference ID exists in the
+      --  given node list.
+      function ID_Exists
+        (Nodes  : DOM.Core.Node_List;
+         Ref_ID : Natural)
+         return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function ID_Exists
+        (Nodes  : DOM.Core.Node_List;
+         Ref_ID : Natural)
+         return Boolean
+      is
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+            declare
+               Node : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => Nodes,
+                    Index => I);
+               ID_Str : constant String := DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => "id");
+            begin
+               if Natural'Value (ID_Str) = Ref_ID then
+                  return True;
+               end if;
+            end;
+         end loop;
+         return False;
+      end ID_Exists;
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
@@ -181,12 +216,27 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Nodes,
                  Index => I);
+            Action : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Def_Node,
+                 Name => "action");
+            Physical_Name : constant String
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Def_Node,
+                 XPath => "notify",
+                 Name  => "physical");
             Group_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Parent_Node (N => Def_Node);
             Group_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Group_Node,
                  Name => "name");
+            Group : constant Mutools.Types.Event_Group_Type
+              := Mutools.Types.Event_Group_Type'Value (Group_Name);
+            Group_Events : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Group_Node,
+                 XPath => "event");
             Subj_Node : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node
                 (Node  => Def_Node,
@@ -195,9 +245,36 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
                  Name => "name");
+            Group_Max_Event : constant Natural := Mucfgcheck.Events.Get_Max_ID
+              (Group => Group);
          begin
             Mulog.Log (Msg => "Adding default events to event group '"
                        & Group_Name & "' of subject '" & Subj_Name & "'");
+
+            for ID in Natural range 0 .. Group_Max_Event loop
+               declare
+                  ID_Str : constant String := Ada.Strings.Fixed.Trim
+                    (Source => ID'Img,
+                     Side   => Ada.Strings.Left);
+               begin
+                  if Mucfgcheck.Events.Is_Valid_Event_ID
+                    (Group => Group,
+                     ID    => ID)
+                    and then
+                      not ID_Exists (Nodes  => Group_Events,
+                                     Ref_ID => ID)
+                  then
+                     Muxml.Utils.Append_Child
+                       (Node      => Group_Node,
+                        New_Child => XML_Utils.Create_Event_Node
+                          (Policy        => Data,
+                           ID            => ID_Str,
+                           Logical_Name  => "default_event_" & ID_Str,
+                           Physical_Name => Physical_Name,
+                           Action        => Action));
+                  end if;
+               end;
+            end loop;
 
             Muxml.Utils.Remove_Child (Node       => Group_Node,
                                       Child_Name => "default");

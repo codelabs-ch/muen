@@ -40,6 +40,9 @@ is
    --  different logical CPUs.
    procedure IPI_Different_Core (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that source event IDs are unique per group.
+   procedure Source_Group_Event_ID_Uniqueness (XML_Data : Muxml.XML_Data_Type);
+
    --  Returns the maximum valid ID for a given event group.
    function Get_Max_ID (Group : Mutools.Types.Event_Group_Type) return Natural;
 

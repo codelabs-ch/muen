@@ -67,6 +67,9 @@ is
         (Routine => Validate_IPI_Destination'Access,
          Name    => "Validate event IPI destination");
       T.Add_Test_Routine
+        (Routine => Validate_Source_Group_IDs_Uniqueness'Access,
+         Name    => "Validate uniqueness of source event IDs");
+      T.Add_Test_Routine
         (Routine => Get_Max_ID'Access,
          Name    => "Check per-group max event ID");
       T.Add_Test_Routine
@@ -194,6 +197,39 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Self_References;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Source_Group_IDs_Uniqueness
+   is
+      Data       : Muxml.XML_Data_Type;
+      Event_Node : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/validators.xml");
+      Event_Node := DOM.Core.Nodes.Item
+        (List  => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Data.Doc,
+            XPath => "/system/subjects/subject/events/source/group/event"
+            & "[@logical='invalid_subject']"),
+         Index => 0);
+      DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
+                                       Name  => "id",
+                                       Value => "1");
+
+      begin
+         Mucfgcheck.Events.Source_Group_Event_ID_Uniqueness (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'linux' source events 'forward_keyboard' and "
+                    & "'invalid_subject' share ID 1",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Source_Group_IDs_Uniqueness;
 
    -------------------------------------------------------------------------
 

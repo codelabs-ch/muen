@@ -135,6 +135,8 @@ is
       XML_Processors.Register
         (Process => Events.IPI_Different_Core'Access);
       XML_Processors.Register
+        (Process => Events.Source_Group_Event_ID_Uniqueness'Access);
+      XML_Processors.Register
         (Process => Platform.Memory_Space'Access);
       XML_Processors.Register
         (Process => Platform.Memory_Block_Overlap'Access);

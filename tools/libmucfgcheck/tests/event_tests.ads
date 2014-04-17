@@ -41,6 +41,9 @@ is
    --  Validate event IPI notification destinations.
    procedure Validate_IPI_Destination;
 
+   --  Validate uniqueness of IDs in source event groups.
+   procedure Validate_Source_Group_IDs_Uniqueness;
+
    --  Check maximum ID for given event group.
    procedure Get_Max_ID;
 

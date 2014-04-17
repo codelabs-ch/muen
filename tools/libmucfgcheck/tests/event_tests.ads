@@ -44,4 +44,7 @@ is
    --  Check maximum ID for given event group.
    procedure Get_Max_ID;
 
+   --  Check per-group event ID validity.
+   procedure Is_Valid_Event_ID;
+
 end Event_Tests;

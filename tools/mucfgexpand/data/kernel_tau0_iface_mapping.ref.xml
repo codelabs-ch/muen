@@ -15,7 +15,9 @@
  <memory>
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
  </memory>
- <events/>
+ <events>
+  <event mode="switch" name="trap_to_subject1"/>
+ </events>
  <channels>
   <channel hasEvent="true" name="data_channel" size="16#1000#"/>
  </channels>
@@ -33,7 +35,15 @@
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
-   <events/>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default action="continue">
+       <notify physical="trap_to_subject1"/>
+      </default>
+     </group>
+    </source>
+   </events>
    <channels>
     <reader ref="data_channel" vector="12" virtualAddress="16#6000#"/>
    </channels>
@@ -43,7 +53,11 @@
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
-   <events/>
+   <events>
+    <target>
+     <event logical="trap_to_subject1" physical="trap_to_subject1" vector="none"/>
+    </target>
+   </events>
    <channels>
     <writer event="1" ref="data_channel" virtualAddress="16#3000#"/>
    </channels>

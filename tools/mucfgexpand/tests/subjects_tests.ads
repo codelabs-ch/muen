@@ -50,4 +50,7 @@ is
    --  Remove channel elements.
    procedure Remove_Channel_Elements;
 
+   --  Add default events.
+   procedure Add_Default_Events;
+
 end Subjects_Tests;

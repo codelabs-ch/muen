@@ -100,7 +100,9 @@
    <file filename="subject1_pt" format="pt" offset="none"/>
   </memory>
  </memory>
- <events/>
+ <events>
+  <event mode="switch" name="trap_to_subject1"/>
+ </events>
  <kernel>
   <memory>
    <cpu id="0">
@@ -500,7 +502,12 @@
     <memory executable="false" logical="data_channel" physical="data_channel" virtualAddress="16#6000#" writable="false"/>
    </memory>
    <devices/>
-   <events/>
+   <events>
+    <source>
+     <group name="vmx_exit">
+     </group>
+    </source>
+   </events>
   </subject>
   <subject cpu="1" id="2" name="subject1">
    <vcpu>
@@ -680,7 +687,11 @@
     <memory executable="false" logical="data_channel" physical="data_channel" virtualAddress="16#3000#" writable="true"/>
    </memory>
    <devices/>
-   <events/>
+   <events>
+    <target>
+     <event logical="trap_to_subject1" physical="trap_to_subject1" vector="none"/>
+    </target>
+   </events>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

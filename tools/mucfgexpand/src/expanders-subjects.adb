@@ -168,6 +168,46 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Default_Events (Data : in out Muxml.XML_Data_Type)
+   is
+      Nodes  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/events/source/group/default");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Def_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Nodes,
+                 Index => I);
+            Group_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Parent_Node (N => Def_Node);
+            Group_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Group_Node,
+                 Name => "name");
+            Subj_Node : constant DOM.Core.Node
+              := Muxml.Utils.Ancestor_Node
+                (Node  => Def_Node,
+                 Level => 4);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+         begin
+            Mulog.Log (Msg => "Adding default events to event group '"
+                       & Group_Name & "' of subject '" & Subj_Name & "'");
+
+            Muxml.Utils.Remove_Child (Node       => Group_Node,
+                                      Child_Name => "default");
+         end;
+      end loop;
+
+   end Add_Default_Events;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Ids (Data : in out Muxml.XML_Data_Type)
    is
       Nodes  : constant DOM.Core.Node_List

@@ -45,9 +45,6 @@ is
    --  Validate that physical I/O port names are unique per device.
    procedure Device_IO_Port_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that logical and physical I/O port ranges are equal.
-   procedure IO_Port_Range_Equality (XML_Data : Muxml.XML_Data_Type);
-
    --  Validate that device memory names are unique.
    procedure Device_Memory_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 

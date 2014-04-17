@@ -97,6 +97,21 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Element
+     (Doc   : DOM.Core.Node;
+      XPath : String)
+      return DOM.Core.Node
+   is
+   begin
+      return DOM.Core.Nodes.Item
+        (List  => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Doc,
+            XPath => XPath),
+         Index => 0);
+   end Get_Element;
+
+   -------------------------------------------------------------------------
+
    function Get_Element_Value
      (Doc   : DOM.Core.Node;
       XPath : String)

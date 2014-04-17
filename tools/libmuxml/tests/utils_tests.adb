@@ -101,6 +101,56 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Get_Element
+   is
+      use type DOM.Core.Node;
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : XML_Data_Type;
+      Node : DOM.Core.Node;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "parent");
+      Utils.Append_Child
+        (Node      => Data.Doc,
+         New_Child => Node);
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "child"));
+      Utils.Append_Child
+        (Node      => Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "grandchild"));
+
+      Assert (Condition => DOM.Core.Nodes.Node_Name
+              (N => Utils.Get_Element
+               (Doc   => Data.Doc,
+                XPath => "parent")) = "parent",
+              Message   => "Element mismatch (1)");
+      Assert (Condition => DOM.Core.Nodes.Node_Name
+              (N => Utils.Get_Element
+               (Doc   => Data.Doc,
+                XPath => "/parent/child")) = "child",
+              Message   => "Element mismatch (2)");
+      Assert (Condition => DOM.Core.Nodes.Node_Name
+              (N => Utils.Get_Element
+               (Doc   => Data.Doc,
+                XPath => "//grandchild")) = "grandchild",
+              Message   => "Element mismatch (3)");
+      Assert (Condition => Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "nonexistent") = null,
+              Message   => "Element mismatch (4)");
+   end Get_Element;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -117,6 +167,9 @@ is
       T.Add_Test_Routine
         (Routine => Merge_Nodes_With_List'Access,
          Name    => "Merge XML nodes (list elements)");
+      T.Add_Test_Routine
+        (Routine => Get_Element'Access,
+         Name    => "Get element node");
       T.Add_Test_Routine
         (Routine => Get_Ancestor_Node'Access,
          Name    => "Get ancestor node");

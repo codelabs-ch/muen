@@ -28,6 +28,14 @@ is
       Name  : String)
       return String;
 
+   --  Returns the element specified by an XPath in the given document. If no
+   --  such element exists null is returned. The first match is returned if
+   --  multiple elements are found.
+   function Get_Element
+     (Doc   : DOM.Core.Node;
+      XPath : String)
+      return DOM.Core.Node;
+
    --  Searches the element specified by an XPath in the given document and
    --  returns its value as string. If no such element exists, an empty string
    --  is returned.

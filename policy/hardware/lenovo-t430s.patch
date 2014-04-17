@@ -12,7 +12,7 @@ index a39a390..c53ab3c 100644
                          })
                      }
 diff --git a/policy/xml/demo_system.xml b/policy/xml/demo_system.xml
-index 5ba74d2..4b514b8 100644
+index 7d5eceb..5fe4ae4 100644
 --- a/policy/xml/demo_system.xml
 +++ b/policy/xml/demo_system.xml
 @@ -7,7 +7,7 @@
@@ -24,7 +24,7 @@ index 5ba74d2..4b514b8 100644
  		</device>
  		<device name="vga" shared="false">
  			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
-@@ -119,13 +119,13 @@
+@@ -134,7 +134,7 @@
  		</subject>
  
  		<subject name="linux" cpu="1" profile="linux">
@@ -33,10 +33,3 @@ index 5ba74d2..4b514b8 100644
  			<memory>
  				<memory logical="ram" physical="linux|ram" virtualAddress="16#0090_0000#" writable="true" executable="true"/>
  			</memory>
- 			<devices>
- 				<device logical="ttyS0" physical="serial">
--					<ioPort logical="port1" physical="port1" start="16#03f8#" end="16#03ff#"/>
-+					<ioPort logical="port1" physical="port1" start="16#50b0#" end="16#50b7#"/>
- 				</device>
- 				<device logical="cmos_rtc" physical="cmos_rtc">
- 					<ioPort logical="ports" physical="ports" start="16#0070#" end="16#0071#"/>

@@ -242,71 +242,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure IO_Port_Range_Equality (XML_Data : Muxml.XML_Data_Type)
-   is
-      --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
-
-      --  Returns True if the device I/O port range matches.
-      function Match_Port_Range (Left, Right : DOM.Core.Node) return Boolean;
-
-      ----------------------------------------------------------------------
-
-      function Error_Msg (Node : DOM.Core.Node) return String
-      is
-         Log_Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
-            Name => "logical");
-         Logical_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Node,
-            Name => "logical");
-         Phys_Name    : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Node,
-            Name => "physical");
-      begin
-         return "I/O port ranges of physical '" & Phys_Name & "' and logical"
-           & " I/O port '" & Logical_Name & "' of logical device '"
-           & Log_Dev_Name & "' differ";
-      end Error_Msg;
-
-      ----------------------------------------------------------------------
-
-      function Match_Port_Range (Left, Right : DOM.Core.Node) return Boolean
-      is
-         use Interfaces;
-
-         L_Start_Addr : constant Unsigned_32 := Unsigned_32'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => Left,
-               Name => "start"));
-         L_End_Addr   : constant Unsigned_32 := Unsigned_32'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => Left,
-               Name => "end"));
-         P_Start_Addr : constant Unsigned_32 := Unsigned_32'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => Right,
-               Name => "start"));
-         P_End_Addr   : constant Unsigned_32 := Unsigned_32'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => Right,
-               Name => "end"));
-      begin
-         return L_Start_Addr = P_Start_Addr and then L_End_Addr = P_End_Addr
-           and then Is_Valid_Resource_Ref (Left  => Left,
-                                           Right => Right);
-      end Match_Port_Range;
-   begin
-      For_Each_Match (XML_Data     => XML_Data,
-                      Source_XPath => "//ioPort[@logical]",
-                      Ref_XPath    => "/system/platform/device/ioPort",
-                      Log_Message  => "I/O port range(s) for equality",
-                      Error        => Error_Msg'Access,
-                      Match        => Match_Port_Range'Access);
-   end IO_Port_Range_Equality;
-
-   -------------------------------------------------------------------------
-
    procedure IO_Port_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.
@@ -347,7 +282,7 @@ is
 
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "//ioPort");
+         XPath => "/system/platform/device/ioPort");
    begin
       Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
                  (List => Nodes)'Img & " I/O port range(s) for start <= end");
@@ -384,61 +319,6 @@ is
          end;
       end loop;
    end IO_Port_Start_Smaller_End;
-
-   -------------------------------------------------------------------------
-
-   procedure IRQ_Number_Equality (XML_Data : Muxml.XML_Data_Type)
-   is
-      --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
-
-      --  Returns True if the device IRQ number matches.
-      function Match_IRQ_Number (Left, Right : DOM.Core.Node) return Boolean;
-
-      ----------------------------------------------------------------------
-
-      function Error_Msg (Node : DOM.Core.Node) return String
-      is
-         Log_Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
-            Name => "logical");
-         Logical_Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Node,
-            Name => "logical");
-         Phys_Name    : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Node,
-            Name => "physical");
-      begin
-         return "Physical IRQ '" & Phys_Name & "' and logical IRQ '"
-           & Logical_Name & "' of logical device '" & Log_Dev_Name
-           & "' differ";
-      end Error_Msg;
-
-      ----------------------------------------------------------------------
-
-      function Match_IRQ_Number (Left, Right : DOM.Core.Node) return Boolean
-      is
-         Log_IRQ_Str  : constant String  := DOM.Core.Elements.Get_Attribute
-           (Elem => Left,
-            Name => "number");
-         Logical_IRQ  : constant Natural := Natural'Value (Log_IRQ_Str);
-         Phys_IRQ_Str : constant String  := DOM.Core.Elements.Get_Attribute
-           (Elem => Right,
-            Name => "number");
-         Physical_IRQ : constant Natural := Natural'Value (Phys_IRQ_Str);
-      begin
-         return Logical_IRQ = Physical_IRQ
-           and then Is_Valid_Resource_Ref (Left  => Left,
-                                           Right => Right);
-      end Match_IRQ_Number;
-   begin
-      For_Each_Match (XML_Data     => XML_Data,
-                      Source_XPath => "//irq[@logical]",
-                      Ref_XPath    => "/system/platform/device/irq",
-                      Log_Message  => "device IRQ(s) for equality",
-                      Error        => Error_Msg'Access,
-                      Match        => Match_IRQ_Number'Access);
-   end IRQ_Number_Equality;
 
    -------------------------------------------------------------------------
 

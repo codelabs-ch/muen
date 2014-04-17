@@ -54,9 +54,6 @@ is
         (Routine => Validate_Physirq_Name_Uniqueness'Access,
          Name    => "Validate per-device IRQ name uniqueness");
       T.Add_Test_Routine
-        (Routine => Validate_IRQ_Number_Eq'Access,
-         Name    => "Validate IRQ number equality");
-      T.Add_Test_Routine
         (Routine => Validate_IO_Port_Start_Smaller_End'Access,
          Name    => "Validate I/O port start less or equal end");
       T.Add_Test_Routine
@@ -65,9 +62,6 @@ is
       T.Add_Test_Routine
         (Routine => Validate_IO_Port_Name_Uniqueness'Access,
          Name    => "Validate per-device I/O port name uniqueness");
-      T.Add_Test_Routine
-        (Routine => Validate_IO_Port_Range_Eq'Access,
-         Name    => "Validate I/O port range equality");
       T.Add_Test_Routine
         (Routine => Validate_Devmem_Name_Uniqueness'Access,
          Name    => "Validate device memory name uniqueness");
@@ -187,29 +181,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Validate_IO_Port_Range_Eq
-   is
-      Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
-
-      begin
-         Mucfgcheck.Device.IO_Port_Range_Equality (XML_Data => Data);
-         Fail (Message => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "I/O port ranges of physical 'serial' and logical I/O "
-                    & "port 'ports' of logical device 'log' differ",
-                    Message   => "Exception mismatch");
-      end;
-   end Validate_IO_Port_Range_Eq;
-
-   -------------------------------------------------------------------------
-
    procedure Validate_IO_Port_Refs
    is
       Data : Muxml.XML_Data_Type;
@@ -259,7 +230,7 @@ is
          Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
            (List  => McKae.XML.XPath.XIA.XPath_Query
               (N     => Data.Doc,
-               XPath => "/system/kernel/devices/device/ioPort"),
+               XPath => "/system/platform/device/ioPort[@name='ports']"),
             Index => 0);
       begin
 
@@ -269,6 +240,10 @@ is
            (Elem  => Node,
             Name  => "start",
             Value => "16#ffff#");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "end",
+            Value => "16#50b8#");
 
          Mucfgcheck.Device.IO_Port_Start_Smaller_End (XML_Data => Data);
          Fail (Message => "Exception expected");
@@ -281,29 +256,6 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_IO_Port_Start_Smaller_End;
-
-   -------------------------------------------------------------------------
-
-   procedure Validate_IRQ_Number_Eq
-   is
-      Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
-
-      begin
-         Mucfgcheck.Device.IRQ_Number_Equality (XML_Data => Data);
-         Fail (Message => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical IRQ 'cmd' and logical IRQ 'irq' of logical "
-                    & "device 'console' differ",
-                    Message   => "Exception mismatch");
-      end;
-   end Validate_IRQ_Number_Eq;
 
    -------------------------------------------------------------------------
 

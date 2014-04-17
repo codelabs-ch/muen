@@ -38,7 +38,8 @@ is
 
    --  Write I/O bitmap for given port nodes to specified file.
    procedure Write_IO_Bitmap
-     (Ports    : DOM.Core.Node_List;
+     (Policy   : Muxml.XML_Data_Type;
+      Ports    : DOM.Core.Node_List;
       Filename : String);
 
    -------------------------------------------------------------------------
@@ -82,7 +83,8 @@ is
             Mulog.Log (Msg => "Writing I/O bitmap of " & Name & " to '"
                        & Output_Dir & "/" & To_String (Filename) & "'");
 
-            Write_IO_Bitmap (Ports    => Ports,
+            Write_IO_Bitmap (Policy   => Policy,
+                             Ports    => Ports,
                              Filename => Output_Dir & "/"
                              & To_String (Filename));
          end;
@@ -92,7 +94,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Write_IO_Bitmap
-     (Ports    : DOM.Core.Node_List;
+     (Policy   : Muxml.XML_Data_Type;
+      Ports    : DOM.Core.Node_List;
       Filename : String)
    is
       File   : Ada.Streams.Stream_IO.File_Type;
@@ -104,15 +107,30 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Ports,
                  Index => I);
+            Phys_Name  :  constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Cur_Node,
+                 Name => "physical");
+            Dev_Name   :  constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Parent_Node (N => Cur_Node),
+                 Name => "physical");
+            Phys_Port  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Policy.Doc,
+                    XPath => "/system/platform/device[@name='" & Dev_Name
+                    & "']/ioPort[@name='" & Phys_Name & "']"),
+                 Index => 0);
             Start_Port : constant Interfaces.Unsigned_16
               := Interfaces.Unsigned_16'Value
                 (DOM.Core.Elements.Get_Attribute
-                   (Elem => Cur_Node,
+                   (Elem => Phys_Port,
                     Name => "start"));
             End_Port   : constant Interfaces.Unsigned_16
               := Interfaces.Unsigned_16'Value
                 (DOM.Core.Elements.Get_Attribute
-                   (Elem => Cur_Node,
+                   (Elem => Phys_Port,
                     Name => "end"));
          begin
             Iobm.IO_Ports.Allow_Ports

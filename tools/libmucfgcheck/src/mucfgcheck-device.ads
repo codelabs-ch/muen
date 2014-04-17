@@ -36,9 +36,6 @@ is
    --  Validate that physical IRQ names are unique per device.
    procedure Device_IRQ_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that logical and physical device IRQ numbers are equal.
-   procedure IRQ_Number_Equality (XML_Data : Muxml.XML_Data_Type);
-
    --  Validate that all IO start ports are smaller than end ports.
    procedure IO_Port_Start_Smaller_End (XML_Data : Muxml.XML_Data_Type);
 
@@ -47,9 +44,6 @@ is
 
    --  Validate that physical I/O port names are unique per device.
    procedure Device_IO_Port_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
-
-   --  Validate that logical and physical I/O port ranges are equal.
-   procedure IO_Port_Range_Equality (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that device memory names are unique.
    procedure Device_Memory_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);

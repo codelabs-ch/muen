@@ -41,9 +41,6 @@ is
    --  Validate physical device IRQ uniqueness.
    procedure Validate_Physirq_Name_Uniqueness;
 
-   --  Validate physical and logical IRQ equality.
-   procedure Validate_IRQ_Number_Eq;
-
    --  Validate that IO start ports are smaller than end ports.
    procedure Validate_IO_Port_Start_Smaller_End;
 
@@ -52,9 +49,6 @@ is
 
    --  Validate device I/O port name uniqueness.
    procedure Validate_IO_Port_Name_Uniqueness;
-
-   --  Validate physical and logical I/O port range equality.
-   procedure Validate_IO_Port_Range_Eq;
 
    --  Validate device memory name uniqueness.
    procedure Validate_Devmem_Name_Uniqueness;

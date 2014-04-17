@@ -407,7 +407,8 @@ is
          end if;
 
          pragma Debug
-           (Route.Subject in Skp.Subject_Id_Type and then Vector /= IPI_Vector,
+           (Route.Subject not in Skp.Subject_Id_Type
+            and then Vector /= IPI_Vector,
             Dump.Print_Message_8
               (Msg  => "Spurious IRQ vector",
                Item => Vector));

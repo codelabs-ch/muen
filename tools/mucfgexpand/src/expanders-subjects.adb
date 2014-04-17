@@ -266,7 +266,7 @@ is
                   then
                      Muxml.Utils.Append_Child
                        (Node      => Group_Node,
-                        New_Child => XML_Utils.Create_Event_Node
+                        New_Child => XML_Utils.Create_Source_Event_Node
                           (Policy        => Data,
                            ID            => ID_Str,
                            Logical_Name  => "default_event_" & ID_Str,

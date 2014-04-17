@@ -57,8 +57,8 @@ is
       Executable    :        Boolean)
       return DOM.Core.Node;
 
-   --  Create subject event node with given parameters.
-   function Create_Event_Node
+   --  Create subject source event node with given parameters.
+   function Create_Source_Event_Node
      (Policy        : in out Muxml.XML_Data_Type;
       ID            :        String;
       Logical_Name  :        String;

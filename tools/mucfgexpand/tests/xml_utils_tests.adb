@@ -140,7 +140,7 @@ is
    begin
       Policy.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
 
-      Node := XML_Utils.Create_Event_Node
+      Node := XML_Utils.Create_Source_Event_Node
         (Policy        => Policy,
          ID            => ID,
          Logical_Name  => Logical,

@@ -117,13 +117,18 @@ is
       XPath : String)
       return String
    is
-      Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Doc,
-            XPath => XPath & "/text()"),
-         Index => 0);
+      use type DOM.Core.Node;
+
+      Node : constant DOM.Core.Node
+        := Get_Element
+          (Doc   => Doc,
+           XPath => XPath & "/text()");
    begin
-      return DOM.Core.Nodes.Node_Value (N => Node);
+      if Node = null then
+         return "";
+      else
+         return DOM.Core.Nodes.Node_Value (N => Node);
+      end if;
    end Get_Element_Value;
 
    -------------------------------------------------------------------------

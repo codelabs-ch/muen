@@ -151,6 +151,63 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Get_Element_Value
+   is
+      use type DOM.Core.Node;
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : XML_Data_Type;
+      Node : DOM.Core.Node;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "parent");
+      Utils.Append_Child
+        (Node      => Node,
+         New_Child => DOM.Core.Documents.Create_Text_Node
+           (Doc  => Data.Doc,
+            Data => "parent text"));
+      Utils.Append_Child
+        (Node      => Data.Doc,
+         New_Child => Node);
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "child"));
+      Utils.Append_Child
+        (Node      => Node,
+         New_Child => DOM.Core.Documents.Create_Text_Node
+           (Doc  => Data.Doc,
+            Data => "child text"));
+      Utils.Append_Child
+        (Node      => Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "grandchild"));
+
+      Assert (Condition => Utils.Get_Element_Value
+              (Doc   => Data.Doc,
+               XPath => "parent") = "parent text",
+              Message   => "Element value mismatch (1)");
+      Assert (Condition => Utils.Get_Element_Value
+              (Doc   => Data.Doc,
+               XPath => "parent/child") = "child text",
+              Message   => "Element value mismatch (2)");
+      Assert (Condition => Utils.Get_Element_Value
+              (Doc   => Data.Doc,
+               XPath => "//grandchild") = "",
+              Message   => "Element value mismatch (3)");
+      Assert (Condition => Utils.Get_Element_Value
+              (Doc   => Data.Doc,
+               XPath => "nonexistent") = "",
+              Message   => "Element value mismatch (4)");
+   end Get_Element_Value;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -170,6 +227,9 @@ is
       T.Add_Test_Routine
         (Routine => Get_Element'Access,
          Name    => "Get element node");
+      T.Add_Test_Routine
+        (Routine => Get_Element_Value'Access,
+         Name    => "Get element value");
       T.Add_Test_Routine
         (Routine => Get_Ancestor_Node'Access,
          Name    => "Get ancestor node");

@@ -36,9 +36,11 @@ is
      Mutools.Immutable_Processors (Param_Type => Muxml.XML_Data_Type);
 
    --  Check the existence of channel endpoint (reader or writer) event
-   --  attributes given by name.
+   --  attributes given by name. The XPath query specifies which global
+   --  channels should be checked.
    procedure Check_Channel_Events_Attr
      (XML_Data  : Muxml.XML_Data_Type;
+      XPath     : String;
       Endpoint  : String;
       Attr_Name : String);
 
@@ -47,9 +49,11 @@ is
    procedure Channel_Reader_Has_Event_Vector (XML_Data : Muxml.XML_Data_Type)
    is
    begin
-      Check_Channel_Events_Attr (XML_Data  => XML_Data,
-                                 Endpoint  => "reader",
-                                 Attr_Name => "vector");
+      Check_Channel_Events_Attr
+        (XML_Data  => XML_Data,
+         XPath     => "/system/channels/channel[@hasEvent!='switch']",
+         Endpoint  => "reader",
+         Attr_Name => "vector");
    end Channel_Reader_Has_Event_Vector;
 
    -------------------------------------------------------------------------
@@ -107,22 +111,25 @@ is
    procedure Channel_Writer_Has_Event_ID (XML_Data : Muxml.XML_Data_Type)
    is
    begin
-      Check_Channel_Events_Attr (XML_Data  => XML_Data,
-                                 Endpoint  => "writer",
-                                 Attr_Name => "event");
+      Check_Channel_Events_Attr
+        (XML_Data  => XML_Data,
+         XPath     => "/system/channels/channel[@hasEvent]",
+         Endpoint  => "writer",
+         Attr_Name => "event");
    end Channel_Writer_Has_Event_ID;
 
    -------------------------------------------------------------------------
 
    procedure Check_Channel_Events_Attr
      (XML_Data  : Muxml.XML_Data_Type;
+      XPath     : String;
       Endpoint  : String;
       Attr_Name : String)
    is
       Channels : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/channels/channel[@hasEvent]");
+           XPath => XPath);
    begin
       Mulog.Log (Msg => "Checking '" & Attr_Name & "' attribute of"
                  & DOM.Core.Nodes.Length (List => Channels)'Img & " channel "

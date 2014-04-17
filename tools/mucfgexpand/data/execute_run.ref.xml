@@ -84,6 +84,7 @@
   <memory alignment="16#1000#" caching="WB" name="lnx|lowmem" size="16#0009_b000#"/>
   <memory alignment="16#1000#" caching="WB" name="lnx|bios" size="16#0001_0000#"/>
   <memory alignment="16#1000#" caching="WB" name="data_channel" size="16#1000#"/>
+  <memory alignment="16#1000#" caching="WB" name="data_channel2" size="16#2000#"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" physicalAddress="16#0012_9000#" size="16#4000#">
    <file filename="kernel_pt_0" format="pt" offset="none"/>
   </memory>
@@ -500,6 +501,7 @@
     <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000d_0000#" writable="false"/>
     <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000f_0000#" writable="false"/>
     <memory executable="false" logical="data_channel" physical="data_channel" virtualAddress="16#6000#" writable="false"/>
+    <memory executable="false" logical="data_channel2" physical="data_channel2" virtualAddress="16#7000#" writable="false"/>
    </memory>
    <devices/>
    <events>
@@ -856,6 +858,7 @@
     <memory executable="true" logical="binary" physical="subject1|bin" virtualAddress="16#0020_0000#" writable="true"/>
     <memory executable="false" logical="lnx_state" physical="lnx_state" virtualAddress="16#4000#" writable="true"/>
     <memory executable="false" logical="data_channel" physical="data_channel" virtualAddress="16#3000#" writable="true"/>
+    <memory executable="false" logical="data_channel2" physical="data_channel2" virtualAddress="16#3000#" writable="true"/>
    </memory>
    <devices/>
    <events>

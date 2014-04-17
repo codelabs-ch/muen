@@ -73,11 +73,9 @@ is
                  Name => "virtualAddress");
             Subj_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Parent_Node (N => Bin_Node);
-            Subj_Mem_Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-              (List  =>  McKae.XML.XPath.XIA.XPath_Query
-                 (N     => Subj_Node,
-                  XPath => "memory"),
-               Index => 0);
+            Subj_Mem_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+              (Doc   => Subj_Node,
+               XPath => "memory");
             Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Subj_Node,
                Name => "name");
@@ -138,25 +136,18 @@ is
          Writer_Subj_Source_Node  : DOM.Core.Node;
          Writer_Subj_Source_Group : DOM.Core.Node;
          Writer_Subj_Events_Node  : constant DOM.Core.Node
-           := DOM.Core.Nodes.Item
-             (List  => McKae.XML.XPath.XIA.XPath_Query
-                (N     => Subject,
-                 XPath => "events"),
-              Index => 0);
+           := Muxml.Utils.Get_Element (Doc   => Subject,
+                                       XPath => "events");
       begin
-         Writer_Subj_Source_Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Writer_Subj_Events_Node,
-               XPath => "source"),
-            Index => 0);
+         Writer_Subj_Source_Node := Muxml.Utils.Get_Element
+           (Doc   => Writer_Subj_Events_Node,
+            XPath => "source");
          if Writer_Subj_Source_Node = null then
             declare
                Ref_Node : constant DOM.Core.Node
-                 := DOM.Core.Nodes.Item
-                   (List  => McKae.XML.XPath.XIA.XPath_Query
-                      (N     => Writer_Subj_Events_Node,
-                       XPath => "target"),
-                    Index => 0);
+                 := Muxml.Utils.Get_Element
+                   (Doc   => Writer_Subj_Events_Node,
+                    XPath => "target");
             begin
                Writer_Subj_Source_Node := DOM.Core.Nodes.Insert_Before
                  (N         => Writer_Subj_Events_Node,
@@ -167,11 +158,9 @@ is
             end;
          end if;
 
-         Writer_Subj_Source_Group := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Writer_Subj_Source_Node,
-               XPath => "group[@name='vmcall']"),
-            Index => 0);
+         Writer_Subj_Source_Group := Muxml.Utils.Get_Element
+           (Doc   =>  Writer_Subj_Source_Node,
+            XPath => "group[@name='vmcall']");
          if Writer_Subj_Source_Group = null then
             Writer_Subj_Source_Group := DOM.Core.Nodes.Append_Child
               (N         => Writer_Subj_Source_Node,
@@ -196,17 +185,13 @@ is
          use type DOM.Core.Node;
 
          Reader_Subj_Events_Node : constant DOM.Core.Node
-           := DOM.Core.Nodes.Item
-             (List  => McKae.XML.XPath.XIA.XPath_Query
-                (N     => Subject,
-                 XPath => "events"),
-              Index => 0);
+           := Muxml.Utils.Get_Element
+             (Doc   => Subject,
+              XPath => "events");
          Reader_Subj_Target_Node : DOM.Core.Node
-           := DOM.Core.Nodes.Item
-             (List  => McKae.XML.XPath.XIA.XPath_Query
-                (N     => Reader_Subj_Events_Node,
-                 XPath => "target"),
-              Index => 0);
+           := Muxml.Utils.Get_Element
+             (Doc   => Reader_Subj_Events_Node,
+              XPath => "target");
       begin
          if Reader_Subj_Target_Node = null then
             Reader_Subj_Target_Node := DOM.Core.Nodes.Append_Child
@@ -222,11 +207,9 @@ is
       ----------------------------------------------------------------------
 
       Events_Node : constant DOM.Core.Node
-        := DOM.Core.Nodes.Item
-          (List  => McKae.XML.XPath.XIA.XPath_Query
-             (N     => Data.Doc,
-              XPath => "/system/events"),
-           Index => 0);
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/events");
       Channels    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -253,19 +236,15 @@ is
                  Name => "hasEvent");
             Event_Node  : DOM.Core.Node;
             Writer_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => McKae.XML.XPath.XIA.XPath_Query
-                   (N     => Data.Doc,
-                    XPath => "/system/subjects/subject/channels/writer[@ref='"
-                    & Channel_Name & "']"),
-                 Index => 0);
+              := Muxml.Utils.Get_Element
+                (Doc   => Data.Doc,
+                 XPath => "/system/subjects/subject/channels/writer[@ref='"
+                 & Channel_Name & "']");
             Reader_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => McKae.XML.XPath.XIA.XPath_Query
-                   (N     => Data.Doc,
-                    XPath => "/system/subjects/subject/channels/reader[@ref='"
-                    & Channel_Name & "']"),
-                 Index => 0);
+              := Muxml.Utils.Get_Element
+                (Doc   => Data.Doc,
+                 XPath => "/system/subjects/subject/channels/reader[@ref='"
+                 & Channel_Name & "']");
             Writer_Subj_Source_Group, Reader_Subj_Target_Node : DOM.Core.Node;
          begin
             Event_Node := DOM.Core.Documents.Create_Element
@@ -365,11 +344,9 @@ is
                 (Elem => Subj_Node,
                  Name => "name");
             Mem_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => McKae.XML.XPath.XIA.XPath_Query
-                   (N     => Subj_Node,
-                    XPath => "memory"),
-                 Index => 0);
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj_Node,
+                 XPath => "memory");
          begin
             Mulog.Log (Msg => "Mapping channel '" & Channel_Name & "' "
                        & (if Channel_Writer then "writable" else "readable")
@@ -572,11 +549,9 @@ is
                 (List  => Nodes,
                  Index => I);
             Ref_Node  : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => McKae.XML.XPath.XIA.XPath_Query
-                   (N     => Subj_Node,
-                    XPath => Ref_Name),
-                 Index => 0);
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj_Node,
+                 XPath => Ref_Name);
             Elem_Node : DOM.Core.Node
               := DOM.Core.Documents.Create_Element
                 (Doc      => Data.Doc,
@@ -602,11 +577,9 @@ is
            & "minorFrame[@subject='tau0']/..",
            Name  => "id");
       Subjects_Node : constant DOM.Core.Node
-        := DOM.Core.Nodes.Item
-          (List  => McKae.XML.XPath.XIA.XPath_Query
-             (N     => Data.Doc,
-              XPath => "/system/subjects"),
-           Index => 0);
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/subjects");
       Tau0_Node : DOM.Core.Node
         := DOM.Core.Documents.Create_Element
           (Doc      => Data.Doc,
@@ -726,11 +699,9 @@ is
                 (Elem => Subj_Node,
                  Name => "name");
             Mem_Node  : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  =>  McKae.XML.XPath.XIA.XPath_Query
-                   (N     => Subj_Node,
-                    XPath => "memory"),
-                 Index => 0);
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj_Node,
+                 XPath => "memory");
          begin
             Mulog.Log (Msg => "Mapping state of subject '"
                        & Monitored_Subj_Name & "' "
@@ -783,11 +754,9 @@ is
                    (Elem => Subj,
                     Name => "profile"));
             VCPU_Node : DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => McKae.XML.XPath.XIA.XPath_Query
-                   (N     => Subj,
-                    XPath => "vcpu"),
-                 Index => 0);
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj,
+                 XPath => "vcpu");
          begin
             if VCPU_Node = null then
                VCPU_Node := DOM.Core.Nodes.Insert_Before

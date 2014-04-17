@@ -123,11 +123,9 @@ is
    procedure Add_Devices (Data : in out Muxml.XML_Data_Type)
    is
       Devices_Node : constant DOM.Core.Node
-        := DOM.Core.Nodes.Item
-          (List  => McKae.XML.XPath.XIA.XPath_Query
-             (N     => Data.Doc,
-              XPath => "/system/kernel/devices"),
-           Index => 0);
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/kernel/devices");
       Ioapic       : constant DOM.Core.Node
         := DOM.Core.Documents.Create_Element
           (Doc      => Data.Doc,
@@ -177,11 +175,9 @@ is
           (Doc      => Data.Doc,
            Tag_Name => "memory");
       Subjects_Node : constant DOM.Core.Node
-        := DOM.Core.Nodes.Item
-          (List  => McKae.XML.XPath.XIA.XPath_Query
-             (N     => Data.Doc,
-              XPath => "/system/subjects"),
-           Index => 0);
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/subjects");
    begin
       Kernel_Node := DOM.Core.Nodes.Insert_Before
         (N         => DOM.Core.Nodes.Parent_Node (N => Subjects_Node),
@@ -287,12 +283,9 @@ is
 
    procedure Map_Tau0_Interface (Data : in out Muxml.XML_Data_Type)
    is
-      BSP : constant DOM.Core.Node
-        := DOM.Core.Nodes.Item
-          (List  => McKae.XML.XPath.XIA.XPath_Query
-             (N     => Data.Doc,
-              XPath => "/system/kernel/memory/cpu[@id='0']"),
-           Index => 0);
+      BSP : constant DOM.Core.Node := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu[@id='0']");
    begin
       Mulog.Log (Msg => "Mapping tau0 system interface on CPU 0");
 

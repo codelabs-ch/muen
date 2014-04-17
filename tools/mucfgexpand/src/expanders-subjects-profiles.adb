@@ -16,10 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with DOM.Core.Nodes;
 with DOM.Core.Elements;
-
-with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
@@ -40,11 +37,9 @@ is
           (Elem => Subject,
            Name => "name");
       Subj_Mem_Node : constant DOM.Core.Node
-        := DOM.Core.Nodes.Item
-          (List  => McKae.XML.XPath.XIA.XPath_Query
-             (N     => Subject,
-              XPath => "memory"),
-           Index => 0);
+        := Muxml.Utils.Get_Element
+          (Doc   => Subject,
+           XPath => "memory");
    begin
       Mulog.Log
         (Msg => "Adding Linux zero-page for subject '" & Subj_Name & "'");

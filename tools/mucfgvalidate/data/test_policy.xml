@@ -46,7 +46,7 @@
 		<devices>
 			<device logical="log" physical="debugconsole">
 				<ioPort logical="ports" physical="serial" start="16#50b0#" end="16#50b8#"/>
-				<irq logical="cmd" physical="command" number="2" vector="34"/>
+				<irq logical="cmd" physical="command" vector="34"/>
 			</device>
 		</devices>
 	</kernel>

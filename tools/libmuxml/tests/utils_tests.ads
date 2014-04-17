@@ -44,6 +44,9 @@ is
    --  Get element value for given XPath.
    procedure Get_Element_Value;
 
+   --  Get attribute for given XPath and attribute name.
+   procedure Get_Attribute;
+
    --  Get ancestor node.
    procedure Get_Ancestor_Node;
 

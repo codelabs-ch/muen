@@ -101,6 +101,71 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Get_Attribute
+   is
+      use type DOM.Core.Node;
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : XML_Data_Type;
+      Node : DOM.Core.Node;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "parent");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "parentAttr",
+         Value => "parent_attribute");
+      Utils.Append_Child
+        (Node      => Data.Doc,
+         New_Child => Node);
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "child"));
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "childAttr",
+         Value => "child_attribute");
+
+      Utils.Append_Child
+        (Node      => Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "grandchild"));
+
+      Assert (Condition => Utils.Get_Attribute
+              (Doc   => Data.Doc,
+               XPath => "parent",
+               Name  => "parentAttr") = "parent_attribute",
+              Message   => "Attribute mismatch (1)");
+      Assert (Condition => Utils.Get_Attribute
+              (Doc   => Data.Doc,
+               XPath => "/parent/child",
+               Name  => "childAttr") = "child_attribute",
+              Message   => "Attribute mismatch (2)");
+      Assert (Condition => Utils.Get_Attribute
+              (Doc   => Data.Doc,
+               XPath => "parent",
+               Name  => "nonexistent") = "",
+              Message   => "Attribute mismatch (3)");
+      Assert (Condition => Utils.Get_Attribute
+              (Doc   => Data.Doc,
+               XPath => "//grandchild",
+               Name  => "nonexistent") = "",
+              Message   => "Attribute mismatch (4)");
+      Assert (Condition => Utils.Get_Attribute
+              (Doc   => Data.Doc,
+               XPath => "nonexistent",
+               Name  => "someAttribute") = "",
+              Message   => "Attribute mismatch (5)");
+   end Get_Attribute;
+
+   -------------------------------------------------------------------------
+
    procedure Get_Element
    is
       use type DOM.Core.Node;
@@ -230,6 +295,9 @@ is
       T.Add_Test_Routine
         (Routine => Get_Element_Value'Access,
          Name    => "Get element value");
+      T.Add_Test_Routine
+        (Routine => Get_Attribute'Access,
+         Name    => "Get attribute value");
       T.Add_Test_Routine
         (Routine => Get_Ancestor_Node'Access,
          Name    => "Get ancestor node");

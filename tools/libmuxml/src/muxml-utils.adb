@@ -84,15 +84,19 @@ is
       Name  : String)
       return String
    is
-      Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Doc,
-            XPath => XPath),
-         Index => 0);
+      use type DOM.Core.Node;
+
+      Node : constant DOM.Core.Node := Get_Element
+        (Doc   => Doc,
+         XPath => XPath);
    begin
-      return DOM.Core.Elements.Get_Attribute
-        (Elem => Node,
-         Name => Name);
+      if Node = null then
+         return "";
+      else
+         return DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => Name);
+      end if;
    end Get_Attribute;
 
    -------------------------------------------------------------------------

@@ -333,6 +333,36 @@ is
 
    -------------------------------------------------------------------------
 
+   function Create_Target_Event_Node
+     (Policy        : in out Muxml.XML_Data_Type;
+      Logical_Name  :        String;
+      Physical_Name :        String;
+      Vector        :        String)
+      return DOM.Core.Node
+   is
+      Event_Node  : constant DOM.Core.Node
+        := DOM.Core.Documents.Create_Element
+          (Doc      => Policy.Doc,
+           Tag_Name => "event");
+   begin
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Event_Node,
+         Name  => "logical",
+         Value => Logical_Name);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Event_Node,
+         Name  => "physical",
+         Value => Physical_Name);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Event_Node,
+         Name  => "vector",
+         Value => Vector);
+
+      return Event_Node;
+   end Create_Target_Event_Node;
+
+   -------------------------------------------------------------------------
+
    function Create_Virtual_Memory_Node
      (Policy        : in out Muxml.XML_Data_Type;
       Logical_Name  :        String;

@@ -230,7 +230,7 @@ is
          Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
            (List  => McKae.XML.XPath.XIA.XPath_Query
               (N     => Data.Doc,
-               XPath => "/system/kernel/devices/device/ioPort"),
+               XPath => "/system/platform/device/ioPort[@name='ports']"),
             Index => 0);
       begin
 
@@ -240,6 +240,10 @@ is
            (Elem  => Node,
             Name  => "start",
             Value => "16#ffff#");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "end",
+            Value => "16#50b8#");
 
          Mucfgcheck.Device.IO_Port_Start_Smaller_End (XML_Data => Data);
          Fail (Message => "Exception expected");

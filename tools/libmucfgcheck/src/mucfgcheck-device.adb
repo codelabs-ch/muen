@@ -282,7 +282,7 @@ is
 
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "//ioPort");
+         XPath => "/system/platform/device/ioPort");
    begin
       Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
                  (List => Nodes)'Img & " I/O port range(s) for start <= end");

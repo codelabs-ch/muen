@@ -23,7 +23,7 @@
   </memory>
   <devices>
    <device logical="log" physical="debugconsole">
-    <ioPort end="16#50b8#" logical="ports" physical="serial" start="16#50b0#"/>
+    <ioPort logical="ports" physical="serial"/>
    </device>
   </devices>
  </kernel>

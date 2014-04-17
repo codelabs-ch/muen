@@ -66,11 +66,11 @@
 		</memory>
 		<devices>
 			<device logical="log" physical="serial">
-				<ioPort logical="ports" physical="serial" start="16#50b0#" end="16#50b8#"/>
+				<ioPort logical="ports" physical="serial"/>
 			</device>
 			<device logical="gfx" physical="vga">
 				<memory logical="vga_buffer" physical="videobuffer" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
-				<ioPort logical="ports" physical="ports" start="16#03d4#" end="16#03d5#"/>
+				<ioPort logical="ports" physical="ports"/>
 			</device>
 		</devices>
 	</kernel>
@@ -258,11 +258,11 @@
 			<devices>
 				<device logical="console" physical="serial">
 					<irq logical="irq" physical="cmd" vector="53"/>
-					<ioPort logical="consoleports" physical="serial" start="16#50b0#" end="16#50b0#"/>
+					<ioPort logical="consoleports" physical="serial"/>
 				</device>
 				<device logical="gfx" physical="vga">
 					<memory logical="vga_buffer" physical="videobuffer" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
-					<ioPort logical="ports" physical="ports" start="16#03d4#" end="16#03d5#"/>
+					<ioPort logical="ports" physical="ports"/>
 				</device>
 			</devices>
 			<events>

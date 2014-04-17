@@ -53,7 +53,7 @@
 		</memory>
 		<devices>
 			<device logical="log" physical="debugconsole">
-				<ioPort logical="ports" physical="serial" start="16#50b0#" end="16#50b8#"/>
+				<ioPort logical="ports" physical="serial"/>
 			</device>
 		</devices>
 	</kernel>
@@ -240,7 +240,7 @@
 			</memory>
 			<devices>
 				<device logical="debug" physical="serial">
-					<ioPort logical="debugports" physical="serial" start="16#50b0#" end="16#50b0#"/>
+					<ioPort logical="debugports" physical="serial"/>
 				</device>
 			</devices>
 			<events/>
@@ -424,14 +424,14 @@
 			</memory>
 			<devices>
 				<device logical="console" physical="vga">
-					<ioPort logical="consoleports" physical="ports" start="16#03d4#" end="16#03d5#"/>
+					<ioPort logical="consoleports" physical="ports"/>
 				</device>
 				<device logical="multiport" physical="multiport">
-					<ioPort logical="ports1" physical="ports1" start="16#03f8#" end="16#03fd#"/>
-					<ioPort logical="ports2" physical="ports2" start="16#abcd#" end="16#bcda#"/>
+					<ioPort logical="ports1" physical="ports1"/>
+					<ioPort logical="ports2" physical="ports2"/>
 				</device>
 				<device logical="testdevice" physical="testdevice">
-					<ioPort logical="fooport" physical="fooport" start="16#00ab#" end="16#00ab#"/>
+					<ioPort logical="fooport" physical="fooport"/>
 				</device>
 			</devices>
 			<events/>

@@ -45,7 +45,7 @@
 		</memory>
 		<devices>
 			<device logical="log" physical="debugconsole">
-				<ioPort logical="ports" physical="serial" start="16#50b0#" end="16#50b8#"/>
+				<ioPort logical="ports" physical="serial"/>
 				<irq logical="cmd" physical="command" vector="34"/>
 			</device>
 		</devices>
@@ -233,7 +233,7 @@
 			<devices>
 				<device logical="console" physical="vga">
 					<memory logical="framebuffer" physical="buffer" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
-					<ioPort logical="consoleports" physical="ports" start="16#03d4#" end="16#03d5#"/>
+					<ioPort logical="consoleports" physical="ports"/>
 				</device>
 			</devices>
 			<events/>

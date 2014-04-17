@@ -41,10 +41,8 @@
 	</xs:complexType>
 
 	<xs:complexType name="ioPortRefType">
-		<xs:attribute name="logical"  type="nameType"   use="required"/>
-		<xs:attribute name="physical" type="nameType"   use="required"/>
-		<xs:attribute name="start"    type="word16Type" use="required"/>
-		<xs:attribute name="end"      type="word16Type" use="required"/>
+		<xs:attribute name="logical"  type="nameType" use="required"/>
+		<xs:attribute name="physical" type="nameType" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="irqRefType">

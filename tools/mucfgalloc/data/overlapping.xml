@@ -236,7 +236,7 @@
 		</memory>
 		<devices>
 			<device logical="log" physical="debugconsole">
-				<ioPort logical="ports" physical="port1" start="16#03f8#" end="16#03ff#"/>
+				<ioPort logical="ports" physical="port1"/>
 			</device>
 		</devices>
 	</kernel>
@@ -608,12 +608,12 @@
 			<devices>
 				<device logical="vga" physical="vga">
 					<memory logical="buffer" physical="buffer" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
-					<ioPort logical="ports" physical="ports" start="16#03d4#" end="16#03d5#"/>
+					<ioPort logical="ports" physical="ports"/>
 				</device>
 				<device logical="keyboard" physical="keyboard">
 					<irq logical="kbd_irq" physical="kbd_irq" vector="49"/>
-					<ioPort logical="port_60" physical="port_60" start="16#0060#" end="16#0060#"/>
-					<ioPort logical="port_64" physical="port_64" start="16#0064#" end="16#0064#"/>
+					<ioPort logical="port_60" physical="port_60"/>
+					<ioPort logical="port_64" physical="port_64"/>
 				</device>
 			</devices>
 			<events/>
@@ -799,7 +799,7 @@
 			</memory>
 			<devices>
 				<device logical="port80" physical="port80">
-					<ioPort logical="ports" physical="ports" start="16#0080#" end="16#0080#"/>
+					<ioPort logical="ports" physical="ports"/>
 				</device>
 			</devices>
 			<events/>
@@ -1184,10 +1184,10 @@
 			</memory>
 			<devices>
 				<device logical="ttyS0" physical="serial">
-					<ioPort logical="port1" physical="port1" start="16#03f8#" end="16#03ff#"/>
+					<ioPort logical="port1" physical="port1"/>
 				</device>
 				<device logical="port80" physical="port80">
-					<ioPort logical="ports" physical="ports" start="16#0080#" end="16#0080#"/>
+					<ioPort logical="ports" physical="ports"/>
 				</device>
 			</devices>
 			<events/>

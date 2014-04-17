@@ -24,12 +24,26 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Muxml.Utils;
+with Mutools.Types;
 with Mucfgcheck.Events;
 
 package body Event_Tests
 is
 
    use Ahven;
+
+   -------------------------------------------------------------------------
+
+   procedure Get_Max_ID
+   is
+   begin
+      Assert (Condition => Mucfgcheck.Events.Get_Max_ID
+              (Group => Mutools.Types.Vmx_Exit) = 59,
+              Message   => "Invalid VMX exit max ID");
+      Assert (Condition => Mucfgcheck.Events.Get_Max_ID
+              (Group => Mutools.Types.Vmcall) = 31,
+              Message   => "Invalid Vmcall max ID");
+   end Get_Max_ID;
 
    -------------------------------------------------------------------------
 
@@ -52,7 +66,66 @@ is
       T.Add_Test_Routine
         (Routine => Validate_IPI_Destination'Access,
          Name    => "Validate event IPI destination");
+      T.Add_Test_Routine
+        (Routine => Get_Max_ID'Access,
+         Name    => "Check per-group max event ID");
+      T.Add_Test_Routine
+        (Routine => Is_Valid_Event_ID'Access,
+         Name    => "Check per-group event ID validity");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Is_Valid_Event_ID
+   is
+      use Mutools.Types;
+
+      type ID_Test_Info is record
+         Group : Event_Group_Type;
+         ID    : Natural;
+         Valid : Boolean;
+      end record;
+
+      Test_Data : constant array (Natural range <>) of ID_Test_Info
+        := ((Group => Vmx_Exit,
+             ID    => 0,
+             Valid => True),
+            (Group => Vmx_Exit,
+             ID    => 34,
+             Valid => True),
+            (Group => Vmx_Exit,
+             ID    => 35,
+             Valid => False),
+            (Group => Vmx_Exit,
+             ID    => 38,
+             Valid => False),
+            (Group => Vmx_Exit,
+             ID    => 42,
+             Valid => False),
+            (Group => Vmx_Exit,
+             ID    => 59,
+             Valid => True),
+            (Group => Vmx_Exit,
+             ID    => 60,
+             Valid => False),
+            (Group => Vmcall,
+             ID    => 0,
+             Valid => True),
+            (Group => Vmcall,
+             ID    => 31,
+             Valid => True),
+            (Group => Vmcall,
+             ID    => 32,
+             Valid => False));
+   begin
+      for Data of Test_Data loop
+         Assert (Condition => Mucfgcheck.Events.Is_Valid_Event_ID
+                 (Group => Data.Group,
+                  ID    => Data.ID) = Data.Valid,
+                 Message   => "Unexpected result for ID" & Data.ID'Img
+                 & " of group " & Data.Group'Img);
+      end loop;
+   end Is_Valid_Event_ID;
 
    -------------------------------------------------------------------------
 

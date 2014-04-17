@@ -35,6 +35,9 @@ is
    --  Create virtual memory node.
    procedure Create_Virtual_Memory;
 
+   --  Create subject event node.
+   procedure Create_Subject_Event;
+
    --  Calculate size of paging structures.
    procedure Calculate_PT_Size;
 

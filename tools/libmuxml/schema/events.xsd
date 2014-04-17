@@ -13,13 +13,6 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:complexType name="eventGroupType">
-		<xs:sequence>
-			<xs:element name="event" type="eventEntryType" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="name" type="eventGroupNameType" use="required"/>
-	</xs:complexType>
-
 	<xs:complexType name="eventTargetType">
 		<xs:sequence>
 			<xs:element name="event" type="interruptEntryType" minOccurs="0" maxOccurs="unbounded"/>

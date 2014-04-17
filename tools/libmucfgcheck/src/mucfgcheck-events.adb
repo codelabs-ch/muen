@@ -113,6 +113,17 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Max_ID (Group : Mutools.Types.Event_Group_Type) return Natural
+   is
+   begin
+      case Group is
+         when Mutools.Types.Vmx_Exit => return 59;
+         when Mutools.Types.Vmcall   => return 31;
+      end case;
+   end Get_Max_ID;
+
+   -------------------------------------------------------------------------
+
    procedure IPI_Different_Core (XML_Data : Muxml.XML_Data_Type)
    is
    begin
@@ -121,6 +132,38 @@ is
                                Test      => Not_Equals'Access,
                                Error_Msg => "no IPI allowed");
    end IPI_Different_Core;
+
+   -------------------------------------------------------------------------
+
+   function Is_Valid_Event_ID
+     (Group : Mutools.Types.Event_Group_Type;
+      ID    : Natural)
+      return Boolean
+   is
+      type Reserved_IDs_Type is array (Natural range <>) of Natural;
+
+      type Reserved_IDs_Access is access constant Reserved_IDs_Type;
+
+      --  Reserved VMX exit IDs, see Intel SDM Vol. 3C, appendix C.
+      Vmx_Exit_Reserved : aliased constant Reserved_IDs_Type := (35, 38, 42);
+
+      Reserved_IDs : constant array (Mutools.Types.Event_Group_Type)
+        of Reserved_IDs_Access
+          := (Mutools.Types.Vmx_Exit => Vmx_Exit_Reserved'Access,
+              Mutools.Types.Vmcall   => null);
+
+      Result : Boolean;
+   begin
+      Result := ID <= Get_Max_ID (Group => Group);
+
+      if Reserved_IDs (Group) /= null then
+         for Res_ID of Reserved_IDs (Group).all loop
+            Result := Result and ID /= Res_ID;
+         end loop;
+      end if;
+
+      return Result;
+   end Is_Valid_Event_ID;
 
    -------------------------------------------------------------------------
 

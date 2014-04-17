@@ -20,6 +20,7 @@ with Ada.Directories;
 
 with Interfaces;
 
+with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
 with Muxml;
@@ -127,6 +128,51 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Create_Subject_Event
+   is
+      Dom_Impl : DOM.Core.DOM_Implementation;
+      Policy   : Muxml.XML_Data_Type;
+      Node     : DOM.Core.Node;
+      Logical  : constant String := "log_name";
+      Physical : constant String := "phys_name";
+      Action   : constant String := "continue";
+      ID       : constant String := "42";
+   begin
+      Policy.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
+
+      Node := XML_Utils.Create_Event_Node
+        (Policy        => Policy,
+         ID            => ID,
+         Logical_Name  => Logical,
+         Physical_Name => Physical,
+         Action        => Action);
+
+      Assert (Condition => DOM.Core.Elements.Get_Tag_Name
+              (Elem => Node) = "event",
+              Message   => "Event tag mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "id") = ID,
+              Message   => "ID mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "action") = Action,
+              Message   => "Action mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "logical") = Logical,
+              Message   => "Logical name mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Tag_Name
+              (Elem => DOM.Core.Nodes.First_Child (N => Node)) = "notify",
+              Message   => "Notify tag mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => DOM.Core.Nodes.First_Child (N => Node),
+               Name => "physical") = Physical,
+              Message   => "Physical name mismatch");
+   end Create_Subject_Event;
+
+   -------------------------------------------------------------------------
+
    procedure Create_Virtual_Memory
    is
       Dom_Impl : DOM.Core.DOM_Implementation;
@@ -183,6 +229,9 @@ is
       T.Add_Test_Routine
         (Routine => Create_Virtual_Memory'Access,
          Name    => "Create virtual memory node");
+      T.Add_Test_Routine
+        (Routine => Create_Subject_Event'Access,
+         Name    => "Create subject event node");
       T.Add_Test_Routine
         (Routine => Calculate_PT_Size'Access,
          Name    => "Calculate size of paging structures");

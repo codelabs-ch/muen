@@ -49,6 +49,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Default_Events
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_default_events.xml",
+         Ref_Filename => "data/subjects_default_events.ref.xml",
+         Expander     => Expanders.Subjects.Add_Default_Events'Access);
+   end Add_Default_Events;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Ids
    is
    begin
@@ -132,6 +143,9 @@ is
       T.Add_Test_Routine
         (Routine => Remove_Channel_Elements'Access,
          Name    => "Remove channel elements");
+      T.Add_Test_Routine
+        (Routine => Add_Default_Events'Access,
+         Name    => "Add default events");
    end Initialize;
 
    -------------------------------------------------------------------------

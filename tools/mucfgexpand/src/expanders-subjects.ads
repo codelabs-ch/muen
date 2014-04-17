@@ -46,4 +46,7 @@ is
    --  Remove subject channel elements.
    procedure Remove_Channel_Elements (Data : in out Muxml.XML_Data_Type);
 
+   --  Add default events. Removes the default element after processing.
+   procedure Add_Default_Events (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Subjects;

@@ -15,7 +15,9 @@
  <memory>
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
  </memory>
- <events/>
+ <events>
+  <event mode="switch" name="trap_to_subject1"/>
+ </events>
  <channels>
   <channel hasEvent="true" name="data_channel" size="16#1000#"/>
  </channels>
@@ -24,14 +26,26 @@
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
-   <events/>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default action="continue">
+       <notify physical="trap_to_subject1"/>
+      </default>
+     </group>
+    </source>
+   </events>
    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>
   <subject cpu="1" name="subject1" profile="native">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
-   <events/>
+   <events>
+    <target>
+     <event logical="trap_to_subject1" physical="trap_to_subject1" vector="none"/>
+    </target>
+   </events>
    <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
    <monitor>
     <state subject="lnx" virtualAddress="16#4000#" writable="true"/>

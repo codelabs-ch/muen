@@ -36,7 +36,7 @@
 		<memory alignment="16#1000#" name="kernel_text" size="16#0001_0000#" physicalAddress="16#0010_0023#" caching="WB">
 			<file format="bin_raw" filename="kernel" offset="16#0000#"/>
 		</memory>
-		<memory alignment="16#1000#" name="kernel_text" size="16#0000#" physicalAddress="16#5000_0000#" caching="UC"/>
+		<memory alignment="16#1000#" name="kernel_1|vmxon" size="16#0000#" physicalAddress="16#5000_0000#" caching="UC"/>
 		<memory alignment="16#1000#" name="kernel_1|vmxon" size="16#0000#" physicalAddress="16#0012_0000#" caching="WB"/>
 		<memory alignment="16#1000#" name="some|vmcs" size="16#0000#" physicalAddress="16#ffff_0000#" caching="WB"/>
 		<memory alignment="16#1000#" name="kernel_0|pt" size="16#4000#" physicalAddress="16#0001_3000#" caching="WB"/>

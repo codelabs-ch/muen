@@ -136,12 +136,9 @@ is
          Subj_Name    : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
             Name => "subject");
-         Subject      : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => XPath_Query
-              (N     => XML_Data.Doc,
-               XPath => "/system/subjects/subject[@name='" & Subj_Name
-               & "']"),
-            Index => 0);
+         Subject      : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc     => XML_Data.Doc,
+            XPath   => "/system/subjects/subject[@name='" & Subj_Name & "']");
          Subj_CPU_ID  : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Subject,
             Name => "cpu");

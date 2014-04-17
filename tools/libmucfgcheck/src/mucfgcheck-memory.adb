@@ -413,11 +413,10 @@ is
         := DOM.Core.Elements.Get_Attribute
           (Elem => Virtual_Mem_Node,
            Name => "physical");
-      Phy_Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-        (List  => XPath_Query
-           (N     => XML_Data.Doc,
-            XPath => Ref_Nodes_Path & "[@name='" & Phy_Name & "']"),
-         Index => 0);
+      Phy_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => XML_Data.Doc,
+           XPath => Ref_Nodes_Path & "[@name='" & Phy_Name & "']");
       Cur_Size : constant String
         := DOM.Core.Elements.Get_Attribute
           (Elem => Phy_Node,

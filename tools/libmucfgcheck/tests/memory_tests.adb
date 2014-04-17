@@ -22,9 +22,7 @@ with DOM.Core.Nodes;
 with DOM.Core.Documents;
 with DOM.Core.Elements;
 
-with McKae.XML.XPath.XIA;
-
-with Muxml;
+with Muxml.Utils;
 
 with Mucfgcheck.Memory;
 
@@ -127,11 +125,9 @@ is
                    File => "data/validators.xml");
 
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Data.Doc,
-               XPath => "/system/memory/memory[@name='invalid_0|vmxon']"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='invalid_0|vmxon']");
       begin
 
          --  Set invalid CPU number in entity reference.
@@ -210,11 +206,9 @@ is
                    File => "data/validators.xml");
 
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Data.Doc,
-               XPath => "/system/memory/memory[@name='kernel_0|pt']"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='kernel_0|pt']");
       begin
 
          --  Rename existing kernel PT region.
@@ -246,11 +240,9 @@ is
                    File => "data/validators.xml");
 
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Data.Doc,
-               XPath => "/system/memory/memory[@name='kernel_stack_0']"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='kernel_stack_0']");
       begin
 
          --  Rename existing kernel stack region.
@@ -283,11 +275,9 @@ is
                    File => "data/validators.xml");
 
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Data.Doc,
-               XPath => "/system/memory/memory[@name='kernel_store_0']"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='kernel_store_0']");
       begin
 
          --  Rename existing kernel store region.
@@ -350,7 +340,7 @@ is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Multiple physical memory regions with name"
-                    & " 'kernel_text'",
+                    & " 'kernel_1|vmxon'",
                     Message   => "Exception mismatch");
       end;
    end Validate_Physmem_Name_Uniqueness;
@@ -389,11 +379,9 @@ is
                    File => "data/validators.xml");
 
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Data.Doc,
-               XPath => "/system/memory/memory[@name='invalid_0|vmxon']"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='invalid_0|vmxon']");
       begin
 
          --  Let existing region overlap with device memory.
@@ -495,11 +483,10 @@ is
                    File => "data/validators.xml");
 
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Data.Doc,
-               XPath => "/system/kernel/memory/cpu[@id='0']/memory"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/kernel/memory/cpu[@id='0']/"
+            & "memory[@logical='text']");
       begin
 
          --  Let existing region overlap with device memory.
@@ -532,12 +519,9 @@ is
                    File => "data/validators.xml");
 
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Data.Doc,
-               XPath => "/system/subjects/subject[@name='linux']"
-               & "/memory/memory"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/memory/memory");
       begin
 
          --  Fix reference of existing memory region.
@@ -577,11 +561,9 @@ is
                    File => "data/validators.xml");
 
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Data.Doc,
-               XPath => "/system/kernel/memory/cpu[@id='0']"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/kernel/memory/cpu[@id='0']");
          Mem  : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
            (Doc      => Data.Doc,
             Tag_Name => "memory");
@@ -627,16 +609,12 @@ is
                    File => "data/validators.xml");
 
       declare
-         Node    : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Data.Doc,
-               XPath => "/system/subjects/subject[@name='linux']/memory"),
-            Index => 0);
-         Lnx_Mem :  constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Node,
-               XPath => "memory[@logical='linux']"),
-            Index => 0);
+         Node    : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']/memory");
+         Lnx_Mem :  constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Node,
+            XPath => "memory[@logical='linux']");
          Mem     : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
            (Doc      => Data.Doc,
             Tag_Name => "memory");

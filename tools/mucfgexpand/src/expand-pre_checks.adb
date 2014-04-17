@@ -87,6 +87,48 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Channel_Writer_Has_Event_ID (XML_Data : Muxml.XML_Data_Type)
+   is
+      Channels : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/channels/channel[@hasEvent]");
+   begin
+      Mulog.Log (Msg => "Checking event ID of" & DOM.Core.Nodes.Length
+                 (List => Channels)'Img & " channel writer(s) with associated"
+                 & " event");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Channels) - 1 loop
+         declare
+            Channel_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Channels,
+                 Index => I);
+            Channel_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Channel_Node,
+                 Name => "name");
+            Writer_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => McKae.XML.XPath.XIA.XPath_Query
+                   (N     => XML_Data.Doc,
+                    XPath => "/system/subjects/subject/channels/writer[@ref='"
+                    & Channel_Name & "']"),
+                 Index => 0);
+         begin
+            if DOM.Core.Elements.Get_Attribute
+              (Elem => Writer_Node,
+               Name => "event") = ""
+            then
+               raise Mucfgcheck.Validation_Error with "Missing 'event' "
+                 & "attribute for channel writer '" & Channel_Name & "'";
+            end if;
+         end;
+      end loop;
+   end Channel_Writer_Has_Event_ID;
+
+   -------------------------------------------------------------------------
+
    function Get_Count return Natural renames Check_Procs.Get_Count;
 
    -------------------------------------------------------------------------

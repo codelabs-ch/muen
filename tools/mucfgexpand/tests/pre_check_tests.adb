@@ -93,6 +93,40 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Channel_Writer_Has_Event_ID
+   is
+      Node   : DOM.Core.Node;
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Node := DOM.Core.Nodes.Item
+        (List  => McKae.XML.XPath.XIA.XPath_Query
+           (N     => Policy.Doc,
+            XPath => "/system/subjects/subject/channels/writer"
+            & "[@ref='data_channel']"),
+         Index => 0);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "event",
+         Value => "");
+
+      begin
+         Expand.Pre_Checks.Channel_Writer_Has_Event_ID (XML_Data => Policy);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Missing 'event' attribute for channel writer "
+                    & "'data_channel'",
+                    Message   => "Exception mismatch");
+      end;
+   end Channel_Writer_Has_Event_ID;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -109,6 +143,9 @@ is
       T.Add_Test_Routine
         (Routine => Channel_Reader_Writer'Access,
          Name    => "Channel reader/writer counts");
+      T.Add_Test_Routine
+        (Routine => Channel_Writer_Has_Event_ID'Access,
+         Name    => "Channel writers event IDs");
    end Initialize;
 
    -------------------------------------------------------------------------

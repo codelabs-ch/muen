@@ -41,4 +41,7 @@ is
    --  Check event IDs of channel writers with HasEvent set.
    procedure Channel_Writer_Has_Event_ID;
 
+   --  Check vector numbers of channel readers with HasEvent set.
+   procedure Channel_Reader_Has_Event_Vector;
+
 end Pre_Check_Tests;

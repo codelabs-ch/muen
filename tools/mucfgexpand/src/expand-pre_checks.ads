@@ -47,4 +47,8 @@ is
    --  Check that writer of a channel with hasEvent specifies an event ID.
    procedure Channel_Writer_Has_Event_ID (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that reader of a channel with hasEvent modes async and ipi
+   --  specifies a vector number.
+   procedure Channel_Reader_Has_Event_Vector (XML_Data : Muxml.XML_Data_Type);
+
 end Expand.Pre_Checks;

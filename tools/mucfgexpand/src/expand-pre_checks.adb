@@ -37,6 +37,48 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Channel_Reader_Has_Event_Vector (XML_Data : Muxml.XML_Data_Type)
+   is
+      Channels : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/channels/channel[@hasEvent]");
+   begin
+      Mulog.Log (Msg => "Checking vector number of" & DOM.Core.Nodes.Length
+                 (List => Channels)'Img & " channel reader(s) with associated"
+                 & " event");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Channels) - 1 loop
+         declare
+            Channel_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Channels,
+                 Index => I);
+            Channel_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Channel_Node,
+                 Name => "name");
+            Reader_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => McKae.XML.XPath.XIA.XPath_Query
+                   (N     => XML_Data.Doc,
+                    XPath => "/system/subjects/subject/channels/reader[@ref='"
+                    & Channel_Name & "']"),
+                 Index => 0);
+         begin
+            if DOM.Core.Elements.Get_Attribute
+              (Elem => Reader_Node,
+               Name => "vector") = ""
+            then
+               raise Mucfgcheck.Validation_Error with "Missing 'vector' "
+                 & "attribute for channel reader '" & Channel_Name & "'";
+            end if;
+         end;
+      end loop;
+   end Channel_Reader_Has_Event_Vector;
+
+   -------------------------------------------------------------------------
+
    procedure Channel_Reader_Writer (XML_Data : Muxml.XML_Data_Type)
    is
       Channels : constant DOM.Core.Node_List
@@ -146,6 +188,7 @@ is
       Check_Procs.Register (Process => Subject_Channel_References'Access);
       Check_Procs.Register (Process => Channel_Reader_Writer'Access);
       Check_Procs.Register (Process => Channel_Writer_Has_Event_ID'Access);
+      Check_Procs.Register (Process => Channel_Reader_Has_Event_Vector'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

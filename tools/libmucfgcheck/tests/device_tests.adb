@@ -54,9 +54,6 @@ is
         (Routine => Validate_Physirq_Name_Uniqueness'Access,
          Name    => "Validate per-device IRQ name uniqueness");
       T.Add_Test_Routine
-        (Routine => Validate_IRQ_Number_Eq'Access,
-         Name    => "Validate IRQ number equality");
-      T.Add_Test_Routine
         (Routine => Validate_IO_Port_Start_Smaller_End'Access,
          Name    => "Validate I/O port start less or equal end");
       T.Add_Test_Routine
@@ -281,29 +278,6 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_IO_Port_Start_Smaller_End;
-
-   -------------------------------------------------------------------------
-
-   procedure Validate_IRQ_Number_Eq
-   is
-      Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
-
-      begin
-         Mucfgcheck.Device.IRQ_Number_Equality (XML_Data => Data);
-         Fail (Message => "Exception expected");
-
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical IRQ 'cmd' and logical IRQ 'irq' of logical "
-                    & "device 'console' differ",
-                    Message   => "Exception mismatch");
-      end;
-   end Validate_IRQ_Number_Eq;
 
    -------------------------------------------------------------------------
 

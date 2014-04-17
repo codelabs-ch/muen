@@ -97,8 +97,6 @@ is
       XML_Processors.Register
         (Process => Device.Physical_IRQ_References'Access);
       XML_Processors.Register
-        (Process => Device.IRQ_Number_Equality'Access);
-      XML_Processors.Register
         (Process => Device.IO_Port_Start_Smaller_End'Access);
       XML_Processors.Register
         (Process => Device.Device_IO_Port_Name_Uniqueness'Access);

@@ -41,4 +41,7 @@ is
    --  Validate event IPI notification destinations.
    procedure Validate_IPI_Destination;
 
+   --  Check maximum ID for given event group.
+   procedure Get_Max_ID;
+
 end Event_Tests;

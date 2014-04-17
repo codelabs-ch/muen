@@ -24,12 +24,26 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Muxml.Utils;
+with Mutools.Types;
 with Mucfgcheck.Events;
 
 package body Event_Tests
 is
 
    use Ahven;
+
+   -------------------------------------------------------------------------
+
+   procedure Get_Max_ID
+   is
+   begin
+      Assert (Condition => Mucfgcheck.Events.Get_Max_ID
+              (Group => Mutools.Types.Vmx_Exit) = 59,
+              Message   => "Invalid VMX exit max ID");
+      Assert (Condition => Mucfgcheck.Events.Get_Max_ID
+              (Group => Mutools.Types.Vmcall) = 31,
+              Message   => "Invalid Vmcall max ID");
+   end Get_Max_ID;
 
    -------------------------------------------------------------------------
 
@@ -52,6 +66,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_IPI_Destination'Access,
          Name    => "Validate event IPI destination");
+      T.Add_Test_Routine
+        (Routine => Get_Max_ID'Access,
+         Name    => "Check per-group max event ID");
    end Initialize;
 
    -------------------------------------------------------------------------

@@ -17,6 +17,7 @@
 --
 
 with Muxml;
+with Mutools.Types;
 
 package Mucfgcheck.Events
 is
@@ -38,5 +39,8 @@ is
    --  Validate that target subjects of IPI notification entries run on
    --  different logical CPUs.
    procedure IPI_Different_Core (XML_Data : Muxml.XML_Data_Type);
+
+   --  Returns the maximum valid ID for a given event group.
+   function Get_Max_ID (Group : Mutools.Types.Event_Group_Type) return Natural;
 
 end Mucfgcheck.Events;

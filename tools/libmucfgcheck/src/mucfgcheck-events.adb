@@ -113,6 +113,17 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Max_ID (Group : Mutools.Types.Event_Group_Type) return Natural
+   is
+   begin
+      case Group is
+         when Mutools.Types.Vmx_Exit => return 59;
+         when Mutools.Types.Vmcall   => return 31;
+      end case;
+   end Get_Max_ID;
+
+   -------------------------------------------------------------------------
+
    procedure IPI_Different_Core (XML_Data : Muxml.XML_Data_Type)
    is
    begin

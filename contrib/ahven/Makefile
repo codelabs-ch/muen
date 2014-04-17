@@ -10,6 +10,10 @@ define CMD_DL
 	@wget $(SRC) -O $@
 endef
 
+define CMD_BUILD
+	@$(MAKE) -C $(WRK) build_lib
+endef
+
 define CMD_INSTALL
 	@$(MAKE) -C $(WRK) PREFIX=$(BUILDDIR) install_lib
 endef

@@ -19,7 +19,7 @@
   <event mode="switch" name="trap_to_subject1"/>
  </events>
  <channels>
-  <channel hasEvent="true" name="data_channel" size="16#1000#"/>
+  <channel hasEvent="ipi" name="data_channel" size="16#1000#"/>
  </channels>
  <kernel>
   <memory>

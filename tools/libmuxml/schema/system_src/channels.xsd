@@ -10,7 +10,7 @@
 	<xs:complexType name="channelType">
 		<xs:attribute name="name"     type="nameType"       use="required"/>
 		<xs:attribute name="size"     type="memorySizeType" use="required"/>
-		<xs:attribute name="hasEvent" type="xs:boolean"     use="optional"/>
+		<xs:attribute name="hasEvent" type="eventModeType"  use="optional"/>
 	</xs:complexType>
 
 	<xs:complexType name="channelEventType">

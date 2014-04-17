@@ -43,11 +43,11 @@
 	</events>
 
 	<channels>
-		<channel name="virtual_time" size="16#1000#" hasEvent="false"/>
-		<channel name="linux_keyboard" size="16#1000#" hasEvent="false"/>
-		<channel name="linux_console" size="16#0001_0000#" hasEvent="false"/>
-		<channel name="time_console" size="16#0001_0000#" hasEvent="false"/>
-		<channel name="sm_console" size="16#0001_0000#" hasEvent="false"/>
+		<channel name="virtual_time" size="16#1000#" hasEvent="ipi"/>
+		<channel name="linux_keyboard" size="16#1000#" hasEvent="ipi"/>
+		<channel name="linux_console" size="16#0001_0000#" hasEvent="ipi"/>
+		<channel name="time_console" size="16#0001_0000#" hasEvent="ipi"/>
+		<channel name="sm_console" size="16#0001_0000#" hasEvent="ipi"/>
 	</channels>
 
 	<subjects>

@@ -16,7 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Strings.Unbounded;
 with Ada.Streams.Stream_IO;
 
 with DOM.Core.Nodes;
@@ -27,14 +26,13 @@ with McKae.XML.XPath.XIA;
 with Interfaces;
 
 with Mulog;
+with Muxml.Utils;
 with Mutools.Files;
 
 with Msrbm.MSRs;
 
 package body Msrbm.Generator
 is
-
-   use Ada.Strings.Unbounded;
 
    --  Write MSR bitmap for given registers and write to specified file.
    procedure Write_MSR_Bitmap
@@ -67,25 +65,17 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Cur_Subj,
                  XPath => "vcpu/registers/msrs/msr");
-
-            Filename  : Unbounded_String;
-            Nodes     : DOM.Core.Node_List;
+            Filename  : constant String
+              := Output_Dir & "/" & Muxml.Utils.Get_Attribute
+                (Doc   => Policy.Doc,
+                 XPath => "/system/memory/memory[@name='" & Name & "|msrbm']/"
+                 & "file[@format='msrbm']",
+                 Name  => "filename");
          begin
-            Nodes := McKae.XML.XPath.XIA.XPath_Query
-              (N     => Policy.Doc,
-               XPath => "/system/memory/memory[@name='" & Name & "|msrbm']/"
-               & "file[@format='msrbm']/@filename");
-            Filename := To_Unbounded_String
-              (DOM.Core.Nodes.Node_Value
-                 (N => DOM.Core.Nodes.Item (List  => Nodes,
-                                            Index => 0)));
-
             Mulog.Log (Msg => "Writing MSR bitmap of " & Name & " to '"
-                       & Output_Dir & "/" & To_String (Filename) & "'");
-
+                       & Filename & "'");
             Write_MSR_Bitmap (Registers => Registers,
-                              Filename  => Output_Dir & "/"
-                              & To_String (Filename));
+                              Filename  => Filename);
          end;
       end loop;
    end Write;

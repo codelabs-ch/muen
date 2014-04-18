@@ -18,12 +18,9 @@
 
 with Ada.Directories;
 
-with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
-with McKae.XML.XPath.XIA;
-
-with Muxml;
+with Muxml.Utils;
 
 with Pack.Image;
 with Pack.Manifest;
@@ -101,11 +98,9 @@ is
                    File => "data/test_policy.xml");
 
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Policy.Doc,
-               XPath => "/system/memory/memory[@name='filled']"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Policy.Doc,
+            XPath => "/system/memory/memory[@name='filled']");
       begin
 
          --  Set size and address of memory region.

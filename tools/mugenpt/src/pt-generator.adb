@@ -211,12 +211,10 @@ is
                 (Elem => Logical_Mem,
                  Name => "physical");
             Physical_Mem  : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => McKae.XML.XPath.XIA.XPath_Query
-                   (N     => Policy.Doc,
-                    XPath => "/system/memory/memory[@name='" & Physical_Name
-                    & "']"),
-                 Index => 0);
+              := Muxml.Utils.Get_Element
+                (Doc   => Policy.Doc,
+                 XPath => "/system/memory/memory[@name='" & Physical_Name
+                 & "']");
          begin
             Mulog.Log (Msg => "Adding region " & Logical_Name
                        & "[" & Physical_Name & "]");
@@ -253,13 +251,10 @@ is
                       (Elem => Logical_Mem,
                        Name => "physical");
                   Physical_Mem  : constant DOM.Core.Node
-                    := DOM.Core.Nodes.Item
-                      (List  => McKae.XML.XPath.XIA.XPath_Query
-                         (N     => Policy.Doc,
-                          XPath => "/system/platform/device[@name='"
-                          & Dev_Name & "']/memory[@name='" & Physical_Name
-                          & "']"),
-                       Index => 0);
+                    := Muxml.Utils.Get_Element
+                      (Doc   => Policy.Doc,
+                       XPath => "/system/platform/device[@name='" & Dev_Name
+                       & "']/memory[@name='" & Physical_Name & "']");
                begin
                   Mulog.Log (Msg => "Adding region " & Logical_Name
                              & "[" & Physical_Name & "] of device "

@@ -44,6 +44,9 @@ is
    --  Validate uniqueness of IDs in source event groups.
    procedure Validate_Source_Group_IDs_Uniqueness;
 
+   --  Verify that source event IDs are valid per group.
+   procedure Validate_Source_Group_IDs;
+
    --  Check maximum ID for given event group.
    procedure Get_Max_ID;
 

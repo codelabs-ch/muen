@@ -298,6 +298,57 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Source_Group_Event_ID_Validity (XML_Data : Muxml.XML_Data_Type)
+   is
+      Events : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/source/group/event");
+   begin
+      Mulog.Log (Msg => "Checking validity of" & DOM.Core.Nodes.Length
+                 (List => Events)'Img & " source event ID(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Events) - 1 loop
+         declare
+            Event_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Events,
+                 Index => I);
+            Event_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Event_Node,
+                 Name => "logical");
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Muxml.Utils.Ancestor_Node
+                   (Node  => Event_Node,
+                    Level => 4),
+                 Name => "name");
+            Event_ID : constant Natural
+              := Natural'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Event_Node,
+                    Name => "id"));
+            Event_Group : constant Mutools.Types.Event_Group_Type
+              := Mutools.Types.Event_Group_Type'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => DOM.Core.Nodes.Parent_Node (N => Event_Node),
+                    Name => "name"));
+         begin
+            if not Is_Valid_Event_ID
+              (Group => Event_Group,
+               ID    => Event_ID)
+            then
+               raise Validation_Error with "Subject '" & Subj_Name & "': ID"
+                 & Event_ID'Img & " of event '" & Event_Name & "' invalid for "
+                 & "group " & Event_Group'Img;
+            end if;
+         end;
+      end loop;
+   end Source_Group_Event_ID_Validity;
+
+   -------------------------------------------------------------------------
+
    procedure Source_Targets (XML_Data : Muxml.XML_Data_Type)
    is
       Events : constant DOM.Core.Node_List

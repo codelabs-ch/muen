@@ -18,11 +18,9 @@
 
 with DOM.Core.Nodes;
 
-with McKae.XML.XPath.XIA;
-
 with Test_Utils;
 
-with Muxml;
+with Muxml.Utils;
 
 with Spec.Generator;
 
@@ -59,11 +57,9 @@ is
                    File => "data/test_policy.xml");
 
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Policy.Doc,
-               XPath => "/system/subjects/subject[@name='subject1']/devices"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Policy.Doc,
+            XPath => "/system/subjects/subject[@name='subject1']/devices");
          Tmp : DOM.Core.Node;
          pragma Unreferenced (Tmp);
       begin

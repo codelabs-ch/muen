@@ -34,10 +34,6 @@
 	</memory>
 
 	<events>
-		<event name="linux_keyboard_forward" mode="ipi"/>
-		<event name="linux_vt_update" mode="ipi"/>
-		<event name="time_vt_update" mode="ipi"/>
-		<event name="sm_vt_update" mode="ipi"/>
 		<event name="resume_linux" mode="switch"/>
 		<event name="trap_to_sm" mode="switch"/>
 	</events>
@@ -63,20 +59,7 @@
 					<ioPort logical="port_64" physical="port_64"/>
 				</device>
 			</devices>
-			<events>
-				<source>
-					<group name="vmcall">
-						<event id="1" logical="forward_keyboard" action="continue">
-							<notify physical="linux_keyboard_forward"/>
-						</event>
-					</group>
-				</source>
-				<target>
-					<event physical="linux_vt_update" logical="update_linux_console" vector="34"/>
-					<event physical="time_vt_update" logical="update_time_console" vector="35"/>
-					<event physical="sm_vt_update" logical="update_sm_console" vector="36"/>
-				</target>
-			</events>
+			<events/>
 			<channels>
 				<reader ref="linux_console" virtualAddress="16#0010_0000#" vector="34"/>
 				<reader ref="time_console" virtualAddress="16#0011_0000#" vector="35"/>
@@ -92,15 +75,7 @@
 					<ioPort logical="ports" physical="ports"/>
 				</device>
 			</devices>
-			<events>
-				<source>
-					<group name="vmcall">
-						<event id="1" logical="vt_update" action="continue">
-							<notify physical="time_vt_update"/>
-						</event>
-					</group>
-				</source>
-			</events>
+			<events/>
 			<channels>
 				<writer ref="virtual_time" virtualAddress="16#0002_0000#"/>
 				<writer ref="time_console" virtualAddress="16#000b_8000#" event="1"/>
@@ -112,9 +87,6 @@
 			<events>
 				<source>
 					<group name="vmcall">
-						<event id="1" logical="vt_update" action="continue">
-							<notify physical="sm_vt_update"/>
-						</event>
 						<event id="4" logical="resume_linux" action="continue">
 							<notify physical="resume_linux"/>
 						</event>
@@ -153,14 +125,8 @@
 							<notify physical="trap_to_sm"/>
 						</default>
 					</group>
-					<group name="vmcall">
-						<event id="1" logical="vt_update" action="continue">
-							<notify physical="linux_vt_update"/>
-						</event>
-					</group>
 				</source>
 				<target>
-					<event physical="linux_keyboard_forward" logical="read_keyboard_data" vector="49"/>
 					<event physical="resume_linux" logical="resume_after_trap" vector="none"/>
 				</target>
 			</events>

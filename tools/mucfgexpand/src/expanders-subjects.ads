@@ -43,6 +43,9 @@ is
    --  Add memory mappings for channels.
    procedure Add_Channel_Mappings (Data : in out Muxml.XML_Data_Type);
 
+   --  Add channel events to vmcall groups.
+   procedure Add_Channel_Events (Data : in out Muxml.XML_Data_Type);
+
    --  Remove subject channel elements.
    procedure Remove_Channel_Elements (Data : in out Muxml.XML_Data_Type);
 

@@ -47,6 +47,9 @@ is
    --  Add channel mappings.
    procedure Add_Channel_Mappings;
 
+   --  Add channel events.
+   procedure Add_Channel_Events;
+
    --  Remove channel elements.
    procedure Remove_Channel_Elements;
 

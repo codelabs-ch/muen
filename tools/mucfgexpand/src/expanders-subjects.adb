@@ -17,6 +17,7 @@
 --
 
 with Ada.Strings.Fixed;
+with Ada.Strings.Unbounded;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
@@ -110,6 +111,189 @@ is
          end;
       end loop;
    end Add_Binaries;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Channel_Events (Data : in out Muxml.XML_Data_Type)
+   is
+      Events_Node : constant DOM.Core.Node
+        := DOM.Core.Nodes.Item
+          (List  => McKae.XML.XPath.XIA.XPath_Query
+             (N     => Data.Doc,
+              XPath => "/system/events"),
+           Index => 0);
+      Channels    : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/channels/channel[@hasEvent]");
+   begin
+      Mulog.Log (Msg => "Adding channel events for" & DOM.Core.Nodes.Length
+                 (List => Channels)'Img & " channel(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Channels) - 1 loop
+         declare
+            use Ada.Strings.Unbounded;
+            use type DOM.Core.Node;
+
+            Channel_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Channels,
+                 Index => I);
+            Channel_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Channel_Node,
+                 Name => "name");
+            Channel_Mode : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Channel_Node,
+                 Name => "hasEvent");
+            Event_Node  : DOM.Core.Node;
+            Writer_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Data.Doc,
+                    XPath => "/system/subjects/subject/channels/writer[@ref='"
+                    & Channel_Name & "']"),
+                 Index => 0);
+            Reader_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Data.Doc,
+                    XPath => "/system/subjects/subject/channels/reader[@ref='"
+                    & Channel_Name & "']"),
+                 Index => 0);
+            Writer_Subj_Node : constant DOM.Core.Node
+              := Muxml.Utils.Ancestor_Node
+                (Node  => Writer_Node,
+                 Level => 2);
+            Writer_Subj_Events_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Writer_Subj_Node,
+                    XPath => "events"),
+                 Index => 0);
+
+            Writer_Subj_Source_Node  : DOM.Core.Node;
+            Writer_Subj_Source_Group : DOM.Core.Node;
+
+            Reader_Subj_Node : constant DOM.Core.Node
+              := Muxml.Utils.Ancestor_Node
+                (Node  => Reader_Node,
+                 Level => 2);
+            Reader_Subj_Events_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Reader_Subj_Node,
+                    XPath => "events"),
+                 Index => 0);
+            Reader_Subj_Target_Node : DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Reader_Subj_Events_Node,
+                    XPath => "target"),
+                 Index => 0);
+         begin
+            Event_Node := DOM.Core.Documents.Create_Element
+              (Doc      => Data.Doc,
+               Tag_Name => "event");
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Event_Node,
+               Name  => "name",
+               Value => Channel_Name);
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Event_Node,
+               Name  => "mode",
+               Value => Channel_Mode);
+            Muxml.Utils.Append_Child
+              (Node      => Events_Node,
+               New_Child => Event_Node);
+
+            Writer_Subj_Source_Node := DOM.Core.Nodes.Item
+              (List  => McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Writer_Subj_Events_Node,
+                  XPath => "source"),
+               Index => 0);
+            if Writer_Subj_Source_Node = null then
+               declare
+                  Ref_Node : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => McKae.XML.XPath.XIA.XPath_Query
+                         (N     => Writer_Subj_Events_Node,
+                          XPath => "target"),
+                       Index => 0);
+               begin
+                  Writer_Subj_Source_Node := DOM.Core.Nodes.Insert_Before
+                    (N         => Writer_Subj_Events_Node,
+                     New_Child => DOM.Core.Documents.Create_Element
+                       (Doc      => Data.Doc,
+                        Tag_Name => "source"),
+                     Ref_Child => Ref_Node);
+               end;
+            end if;
+
+            Writer_Subj_Source_Group := DOM.Core.Nodes.Item
+              (List  => McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Writer_Subj_Source_Node,
+                  XPath => "group[@name='vmcall']"),
+               Index => 0);
+            if Writer_Subj_Source_Group = null then
+               Writer_Subj_Source_Group := DOM.Core.Nodes.Append_Child
+                 (N         => Writer_Subj_Source_Node,
+                  New_Child => DOM.Core.Documents.Create_Element
+                    (Doc      => Data.Doc,
+                     Tag_Name => "group"));
+               DOM.Core.Elements.Set_Attribute
+                 (Elem  => Writer_Subj_Source_Group,
+                  Name  => "name",
+                  Value => "vmcall");
+            end if;
+
+            if Reader_Subj_Target_Node = null then
+               Reader_Subj_Target_Node := DOM.Core.Nodes.Append_Child
+                 (N         => Reader_Subj_Events_Node,
+                  New_Child => DOM.Core.Documents.Create_Element
+                    (Doc      => Data.Doc,
+                     Tag_Name => "target"));
+            end if;
+
+            declare
+               ID : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Writer_Node,
+                    Name => "event");
+               Vector : Unbounded_String
+                 := To_Unbounded_String
+                   (DOM.Core.Elements.Get_Attribute
+                      (Elem => Reader_Node,
+                       Name => "vector"));
+               Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Writer_Node,
+                    Name => "ref");
+            begin
+               if Vector = Null_Unbounded_String then
+                  Vector := To_Unbounded_String ("none");
+               end if;
+
+               Muxml.Utils.Append_Child
+                 (Node      => Writer_Subj_Source_Group,
+                  New_Child => XML_Utils.Create_Source_Event_Node
+                    (Policy        => Data,
+                     ID            => ID,
+                     Logical_Name  => "channel_event_" & Name,
+                     Physical_Name => Name,
+                     Action        => "continue"));
+               Muxml.Utils.Append_Child
+                 (Node      => Reader_Subj_Target_Node,
+                  New_Child => XML_Utils.Create_Target_Event_Node
+                    (Policy        => Data,
+                     Logical_Name  => "channel_event_" & Name,
+                     Physical_Name => Name,
+                     Vector        => To_String (Vector)));
+            end;
+         end;
+      end loop;
+   end Add_Channel_Events;
 
    -------------------------------------------------------------------------
 

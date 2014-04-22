@@ -605,33 +605,18 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
       declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
-            XPath => "/system/kernel/memory/cpu[@id='0']");
-         Mem  : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
-           (Doc      => Data.Doc,
-            Tag_Name => "memory");
+            XPath => "/system/kernel/memory/cpu[@id='0']/"
+            & "memory[@physical='kernel_data']");
       begin
-
-         --  Add overlapping/duplicate memory region to CPU 0 address space.
-
          DOM.Core.Elements.Set_Attribute
-           (Elem  => DOM.Core.Nodes.Append_Child
-              (N         => Node,
-               New_Child => Mem),
-            Name  => "physical",
-            Value => "kernel_text");
-         DOM.Core.Elements.Set_Attribute
-           (Elem      => Mem,
+           (Elem      => Node,
             Name      => "virtualAddress",
             Value     => "16#0010_0000#");
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Mem,
-            Name  => "logical",
-            Value => "testregion");
 
          Mucfgcheck.Memory.Virtual_Memory_Overlap (XML_Data => Data);
          Fail (Message => "Exception expected");
@@ -639,8 +624,8 @@ is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Overlap of virtual memory region 'text' and "
-                    & "'testregion' of kernel running on CPU 0",
+                    = "Overlap of virtual memory region 'text' and 'data' of"
+                    & " kernel running on CPU 0",
                     Message   => "Exception mismatch");
       end;
    end Validate_Virtmem_Overlap_Kernel;

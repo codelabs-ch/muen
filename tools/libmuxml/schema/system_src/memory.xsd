@@ -13,7 +13,7 @@
 	<xs:complexType name="memoryBlockType">
 		<xs:complexContent>
 			<xs:extension base="memoryBlockBaseType">
-				<xs:attribute name="allocatable" type="xs:boolean" use="optional"/>
+				<xs:attribute name="allocatable" type="booleanType" use="optional"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

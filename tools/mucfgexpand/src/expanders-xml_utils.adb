@@ -340,7 +340,7 @@ is
       Vector        :        String)
       return DOM.Core.Node
    is
-      Event_Node  : constant DOM.Core.Node
+      Event_Node : constant DOM.Core.Node
         := DOM.Core.Documents.Create_Element
           (Doc      => Policy.Doc,
            Tag_Name => "event");

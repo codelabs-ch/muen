@@ -415,9 +415,22 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Serial : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/device[@name='serial']");
+         Node   : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "irq");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "number",
+                                          Value => "1");
+         Muxml.Utils.Append_Child (Node      => Serial,
+                                   New_Child => Node);
+
          Mucfgcheck.Device.Physical_IRQ_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 

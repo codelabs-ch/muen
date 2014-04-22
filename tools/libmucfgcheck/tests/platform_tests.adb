@@ -83,17 +83,27 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/memory/"
+            & "memoryBlock[@name='extended_mem_1']");
       begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "size",
+            Value => "16#1000#");
+
          Mucfgcheck.Platform.Memory_Space (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Allocated 253989 bytes of physical memory but only 4162"
-                    & " bytes available by the platform",
+                    = "Allocated 266039296 bytes of physical memory but only "
+                    & "659456 bytes available by the platform",
                     Message   => "Exception mismatch");
       end;
    end Validate_Memory_Space;

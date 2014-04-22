@@ -51,15 +51,12 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
       declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
             XPath => "/system/subjects/subject[@name='linux']");
       begin
-
-         --  Set invalid CPU ID.
-
          DOM.Core.Elements.Set_Attribute
            (Elem  => Node,
             Name  => "cpu",
@@ -72,7 +69,7 @@ is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Attribute 'cpu => 7' of 'linux' subject element not in "
-                    & "valid range 0 .. 0",
+                    & "valid range 0 .. 3",
                     Message   => "Exception mismatch");
       end;
    end Validate_CPU_IDs;

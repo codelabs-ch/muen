@@ -198,29 +198,30 @@ is
 
    procedure Validate_Source_Group_IDs
    is
-      Data       : Muxml.XML_Data_Type;
-      Event_Node : DOM.Core.Node;
+      Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
-      Event_Node := Muxml.Utils.Get_Element
-        (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/events/source/group/event"
-         & "[@logical='invalid_subject']");
-      DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
-                                       Name  => "id",
-                                       Value => "256");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/source/group/event"
+            & "[@logical='resume_linux']");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "id",
+                                          Value => "256");
+
          Mucfgcheck.Events.Source_Group_Event_ID_Validity (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'linux': ID 256 of event 'invalid_subject' "
-                    & "invalid for group VMCALL",
+                    = "Subject 'sm': ID 256 of event 'resume_linux' invalid "
+                    & "for group VMCALL",
                     Message   => "Exception mismatch");
       end;
    end Validate_Source_Group_IDs;

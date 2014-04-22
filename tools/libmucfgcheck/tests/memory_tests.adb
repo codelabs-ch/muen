@@ -18,8 +18,6 @@
 
 with Ada.Exceptions;
 
-with DOM.Core.Nodes;
-with DOM.Core.Documents;
 with DOM.Core.Elements;
 
 with Muxml.Utils;
@@ -638,43 +636,18 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
       declare
-         Node    : constant DOM.Core.Node := Muxml.Utils.Get_Element
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject[@name='linux']/memory");
-         Lnx_Mem :  constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Node,
-            XPath => "memory[@logical='linux']");
-         Mem     : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
-           (Doc      => Data.Doc,
-            Tag_Name => "memory");
+            XPath => "/system/subjects/subject/memory/"
+            & "memory[@physical='linux|bin']");
       begin
-
-         --  Fix reference of existing memory region.
-
          DOM.Core.Elements.Set_Attribute
-           (Elem  => Lnx_Mem,
-            Name  => "physical",
-            Value => "kernel_text");
-
-         --  Add overlapping/duplicate memory region to subject address space.
-
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => DOM.Core.Nodes.Append_Child
-              (N         => Node,
-               New_Child => Mem),
-            Name  => "physical",
-            Value => "kernel_text");
-         DOM.Core.Elements.Set_Attribute
-           (Elem      => Mem,
-            Name      => "virtualAddress",
-            Value     => "16#000e_0000#");
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Mem,
-            Name  => "logical",
-            Value => "testregion");
+           (Elem  => Node,
+            Name  => "virtualAddress",
+            Value => "16#0000#");
 
          Mucfgcheck.Memory.Virtual_Memory_Overlap (XML_Data => Data);
          Fail (Message => "Exception expected");
@@ -682,8 +655,8 @@ is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Overlap of virtual memory region 'linux' and "
-                    & "'testregion' of subject 'linux'",
+                    = "Overlap of virtual memory region 'binary' and "
+                    & "'zero_page' of subject 'linux'",
                     Message   => "Exception mismatch");
       end;
    end Validate_Virtmem_Overlap_Subject;

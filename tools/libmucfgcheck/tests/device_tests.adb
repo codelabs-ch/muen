@@ -314,16 +314,13 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
       declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
-            XPath => "/system/kernel/devices/device[@physical='serial']");
+            XPath => "/system/kernel/devices/device[@physical='ioapic']");
       begin
-
-         --  Set invalid device reference.
-
          DOM.Core.Elements.Set_Attribute
            (Elem  => Node,
             Name  => "physical",
@@ -336,7 +333,7 @@ is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Physical device 'nonexistent' referenced by logical"
-                    & " device 'log' not found",
+                    & " device 'ioapic' not found",
                     Message   => "Exception mismatch");
       end;
    end Validate_Physdev_Refs;

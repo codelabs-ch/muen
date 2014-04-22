@@ -58,6 +58,7 @@ $(OBJ_DIR)/$(PACKAGE).idx: $(SPARK_FILES)
 	@sparkmake $(SPARKMAKE_OPTS)         \
 		-index=$(OBJ_DIR)/$(PACKAGE).idx \
 		-exclude=$(SRC_DIR)/debug/*      \
+		-exclude=$(CURDIR)/debug/*       \
 		-exclude=$(OBJ_DIR)/*            \
 		$(SPARK_DIRS)
 

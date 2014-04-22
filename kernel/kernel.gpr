@@ -20,14 +20,26 @@ with "../config/shared";
 
 project Kernel is
 
+   type Build_Type is ("debug", "release");
+   Build_Mode : Build_Type := external ("build", "release");
+
+   Extra_Dirs := ();
+
+   case Build_Mode is
+      when "debug" =>
+         Extra_Dirs := ("../common/" & Build_Mode, Build_Mode);
+      when "release" =>
+         Extra_Dirs := (Build_Mode);
+    end case;
+
    for Languages use ("Ada", "Asm");
    for Source_Dirs use
      ("../common/src",
-      "../common/debug",
       "../policy/obj",
-      "src/**",
-      "debug");
-   for Object_Dir use "obj";
+      "src/**") &
+     Extra_Dirs;
+
+   for Object_Dir use "obj/" & Build_Mode;
 
    for Main use ("init");
 
@@ -42,6 +54,7 @@ project Kernel is
       for Required_Switches ("Asm") use ("-x", "assembler-with-cpp");
       for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches
         & ("-gnatwale", "-Wstack-usage=8192", "-Werror");
+      for Local_Configuration_Pragmas use "../config/restrictions-" & Build_Mode & ".adc";
    end Compiler;
 
    package Linker is

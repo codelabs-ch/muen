@@ -701,9 +701,18 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='time|vmcs']");
       begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "physicalAddress",
+            Value => "16#0010_0000#");
+
          Mucfgcheck.Memory.VMCS_In_Lowmem (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -711,7 +720,7 @@ is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Attribute 'physicalAddress => 16#0010_0000#' of "
-                    & "'invalid|vmcs' VMCS memory element not below 1 MiB",
+                    & "'time|vmcs' VMCS memory element not below 1 MiB",
                     Message   => "Exception mismatch");
       end;
    end Validate_VMCS_In_Lowmem;

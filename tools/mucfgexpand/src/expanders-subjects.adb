@@ -232,7 +232,7 @@ is
           (N     => Data.Doc,
            XPath => "/system/channels/channel[@hasEvent]");
    begin
-      Mulog.Log (Msg => "Adding channel events for" & DOM.Core.Nodes.Length
+      Mulog.Log (Msg => "Adding events for" & DOM.Core.Nodes.Length
                  (List => Channels)'Img & " channel(s)");
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Channels) - 1 loop

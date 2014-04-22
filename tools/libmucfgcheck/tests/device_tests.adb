@@ -284,9 +284,17 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/device[@name='serial']");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "name",
+                                          Value => "vga");
+
          Mucfgcheck.Device.Physical_Device_Name_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 

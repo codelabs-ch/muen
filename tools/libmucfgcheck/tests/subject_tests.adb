@@ -18,12 +18,9 @@
 
 with Ada.Exceptions;
 
-with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
-with McKae.XML.XPath.XIA;
-
-with Muxml;
+with Muxml.Utils;
 
 with Mucfgcheck.Subject;
 
@@ -56,11 +53,9 @@ is
                    Kind => Muxml.Format_B,
                    File => "data/validators.xml");
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Data.Doc,
-               XPath => "/system/subjects/subject"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='linux']");
       begin
 
          --  Set invalid CPU ID.
@@ -92,11 +87,9 @@ is
                    Kind => Muxml.Format_B,
                    File => "data/validators.xml");
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Data.Doc,
-               XPath => "/system/subjects/subject[@name='subject1']"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject[@name='subject1']");
       begin
 
          --  Set duplicate subject name.

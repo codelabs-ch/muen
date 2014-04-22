@@ -65,12 +65,10 @@ is
                 (Elem => Event_Node,
                  Name => "name");
             Src_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => XPath_Query
-                   (N     => XML_Data.Doc,
-                    XPath => "/system/subjects/subject/events/source/group/"
-                    & "event/notify[@physical='" & Event_Name & "']"),
-                 Index => 0);
+              := Muxml.Utils.Get_Element
+                (Doc   => XML_Data.Doc,
+                 XPath => "/system/subjects/subject/events/source/group/"
+                 & "event/notify[@physical='" & Event_Name & "']");
             Src_Subj : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node (Node  => Src_Node,
                                             Level => 5);
@@ -84,12 +82,10 @@ is
                    (Elem => Src_Subj,
                     Name => "cpu"));
             Dst_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => XPath_Query
-                   (N     => XML_Data.Doc,
-                    XPath => "/system/subjects/subject/events/target/"
-                    & "event[@physical='" & Event_Name & "']"),
-                 Index => 0);
+              := Muxml.Utils.Get_Element
+                (Doc   => XML_Data.Doc,
+                 XPath => "/system/subjects/subject/events/target/"
+                 & "event[@physical='" & Event_Name & "']");
             Dst_Subj : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node (Node  => Dst_Node,
                                             Level => 3);
@@ -200,12 +196,10 @@ is
                 (Elem => Src_Node,
                  Name => "physical");
             Dst_Event_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => XPath_Query
-                   (N     => XML_Data.Doc,
-                    XPath => "/system/subjects/subject/events/target/event"
-                    & "[@physical='" & Dst_Event_Name & "']"),
-                 Index => 0);
+              := Muxml.Utils.Get_Element
+                (Doc   => XML_Data.Doc,
+                 XPath => "/system/subjects/subject/events/target/event"
+                 & "[@physical='" & Dst_Event_Name & "']");
             Dst_Subj : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node (Node  => Dst_Event_Node,
                                             Level => 3);

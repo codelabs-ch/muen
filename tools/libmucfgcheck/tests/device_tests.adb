@@ -18,12 +18,9 @@
 
 with Ada.Exceptions;
 
-with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
-with McKae.XML.XPath.XIA;
-
-with Muxml;
+with Muxml.Utils;
 
 with Mucfgcheck.Device;
 
@@ -130,11 +127,9 @@ is
                    File => "data/validators.xml");
 
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Data.Doc,
-               XPath => "/system/kernel/devices/device/memory"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/kernel/devices/device/memory");
       begin
 
          --  Set invalid device memory reference.
@@ -190,11 +185,9 @@ is
                    File => "data/validators.xml");
 
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Data.Doc,
-               XPath => "/system/kernel/devices/device/ioPort"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/kernel/devices/device[@logical='log']/ioPort");
       begin
 
          --  Set invalid I/O port reference.
@@ -227,11 +220,9 @@ is
                    File => "data/validators.xml");
 
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Data.Doc,
-               XPath => "/system/platform/device/ioPort[@name='ports']"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/device/ioPort[@name='ports']");
       begin
 
          --  Set invalid port range.
@@ -290,11 +281,9 @@ is
                    File => "data/validators.xml");
 
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Data.Doc,
-               XPath => "/system/kernel/devices/device"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/kernel/devices/device[@physical='serial']");
       begin
 
          --  Set invalid device reference.
@@ -349,12 +338,10 @@ is
                    File => "data/validators.xml");
 
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Data.Doc,
-               XPath => "/system/subjects/subject/devices/device/irq"
-               & "[@physical='cmd']"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/devices/device/irq"
+            & "[@physical='cmd']");
       begin
 
          --  Set invalid IRQ number.

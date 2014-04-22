@@ -84,16 +84,35 @@ is
       Name  : String)
       return String
    is
-      Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
+      use type DOM.Core.Node;
+
+      Node : constant DOM.Core.Node := Get_Element
+        (Doc   => Doc,
+         XPath => XPath);
+   begin
+      if Node = null then
+         return "";
+      else
+         return DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => Name);
+      end if;
+   end Get_Attribute;
+
+   -------------------------------------------------------------------------
+
+   function Get_Element
+     (Doc   : DOM.Core.Node;
+      XPath : String)
+      return DOM.Core.Node
+   is
+   begin
+      return DOM.Core.Nodes.Item
         (List  => McKae.XML.XPath.XIA.XPath_Query
            (N     => Doc,
             XPath => XPath),
          Index => 0);
-   begin
-      return DOM.Core.Elements.Get_Attribute
-        (Elem => Node,
-         Name => Name);
-   end Get_Attribute;
+   end Get_Element;
 
    -------------------------------------------------------------------------
 
@@ -102,13 +121,18 @@ is
       XPath : String)
       return String
    is
-      Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Doc,
-            XPath => XPath & "/text()"),
-         Index => 0);
+      use type DOM.Core.Node;
+
+      Node : constant DOM.Core.Node
+        := Get_Element
+          (Doc   => Doc,
+           XPath => XPath & "/text()");
    begin
-      return DOM.Core.Nodes.Node_Value (N => Node);
+      if Node = null then
+         return "";
+      else
+         return DOM.Core.Nodes.Node_Value (N => Node);
+      end if;
    end Get_Element_Value;
 
    -------------------------------------------------------------------------

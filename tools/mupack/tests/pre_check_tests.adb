@@ -18,12 +18,9 @@
 
 with Ada.Exceptions;
 
-with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
-with McKae.XML.XPath.XIA;
-
-with Muxml;
+with Muxml.Utils;
 
 with Pack.Command_Line.Test;
 with Pack.Pre_Checks;
@@ -52,11 +49,9 @@ is
       Pre_Checks.Files_Exist (Data => Policy);
 
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Policy.Doc,
-               XPath => "/system/memory/memory[@name='linux|acpi_rsdp']/file"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Policy.Doc,
+            XPath => "/system/memory/memory[@name='linux|acpi_rsdp']/file");
       begin
 
          --  Set invalid filename.
@@ -92,11 +87,9 @@ is
                    File => "data/test_policy.xml");
 
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Policy.Doc,
-               XPath => "/system/memory/memory[@name='linux|acpi_rsdp']"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Policy.Doc,
+            XPath => "/system/memory/memory[@name='linux|acpi_rsdp']");
       begin
 
          --  Make memory region too small.
@@ -149,11 +142,9 @@ is
                    File => "data/test_policy.xml");
 
       declare
-         Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-           (List  => McKae.XML.XPath.XIA.XPath_Query
-              (N     => Policy.Doc,
-               XPath => "/system/memory/memory[@name='linux|acpi_rsdp']/file"),
-            Index => 0);
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Policy.Doc,
+            XPath => "/system/memory/memory[@name='linux|acpi_rsdp']/file");
       begin
 
          --  Make offset larger than file.
@@ -175,4 +166,5 @@ is
                     Message   => "Exception mismatch");
       end;
    end Offset_Larger_Than_File;
+
 end Pre_Check_Tests;

@@ -50,12 +50,9 @@ is
       Caching   :        String;
       Alignment :        String)
    is
-      Section    : constant DOM.Core.Node
-        := DOM.Core.Nodes.Item
-          (List  => McKae.XML.XPath.XIA.XPath_Query
-             (N     => Policy.Doc,
-              XPath => "/system/memory"),
-           Index => 0);
+      Section    : constant DOM.Core.Node := Muxml.Utils.Get_Element
+        (Doc   => Policy.Doc,
+         XPath => "/system/memory");
       Dummy_Node : DOM.Core.Node;
       pragma Unreferenced (Dummy_Node);
    begin
@@ -84,11 +81,9 @@ is
       File_Offset :        String)
    is
       Section   : constant DOM.Core.Node
-        := DOM.Core.Nodes.Item
-          (List  => McKae.XML.XPath.XIA.XPath_Query
-             (N     => Policy.Doc,
-              XPath => "/system/memory"),
-           Index => 0);
+        := Muxml.Utils.Get_Element
+          (Doc   => Policy.Doc,
+           XPath => "/system/memory");
       Mem_Node  : constant DOM.Core.Node
         := Create_Memory_Node
           (Policy    => Policy,
@@ -152,12 +147,10 @@ is
                 (Elem => Logical,
                  Name => "physical");
             Physical : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => McKae.XML.XPath.XIA.XPath_Query
-                   (N     => Policy.Doc,
-                    XPath => "/system/memory/memory[@name='" & Physical_Name
-                    & "']"),
-                 Index => 0);
+              := Muxml.Utils.Get_Element
+                (Doc   => Policy.Doc,
+                 XPath => "/system/memory/memory[@name='" & Physical_Name
+                 & "']");
             Virtual_Address : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
                 (DOM.Core.Elements.Get_Attribute
@@ -200,13 +193,10 @@ is
                 (Elem => Logical_Mem,
                  Name => "physical");
             Physical_Mem : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => McKae.XML.XPath.XIA.XPath_Query
-                   (N     => Policy.Doc,
-                    XPath => "/system/platform/device[@name='" & Dev_Name
-                    & "']/memory[@name='" & Physical_Mem_Name
-                    & "']"),
-                 Index => 0);
+              := Muxml.Utils.Get_Element
+                (Doc   => Policy.Doc,
+                 XPath => "/system/platform/device[@name='" & Dev_Name
+                 & "']/memory[@name='" & Physical_Mem_Name & "']");
             Virtual_Address : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
                 (DOM.Core.Elements.Get_Attribute

@@ -51,13 +51,6 @@ is
       N : Interfaces.C.size_t);
    pragma Import (C, C_Memset, "memset");
 
-   --  Return bootparams of subject associated with memory element given by
-   --  name.
-   function Get_Bootparams
-     (XML_Data    : Muxml.XML_Data_Type;
-      Memory_Name : String)
-      return String;
-
    --  Write Linux bootparams structure and specified command line to file
    --  given by filename. The size of the generated file is 4k + length (cmdl).
    --  The physical address argument designates the physical address of the
@@ -66,30 +59,6 @@ is
      (Filename         : String;
       Cmdline          : String;
       Physical_Address : Natural);
-
-   -------------------------------------------------------------------------
-
-   function Get_Bootparams
-     (XML_Data    : Muxml.XML_Data_Type;
-      Memory_Name : String)
-      return String
-   is
-      use type DOM.Core.Node;
-
-      Node : constant DOM.Core.Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => XML_Data.Doc,
-            XPath => "/system/subjects/subject[@name='"
-            & Mutools.Utils.Decode_Entity_Name (Encoded_Str => Memory_Name)
-            & "']/bootparams/text()"),
-         Index => 0);
-   begin
-      if Node /= null then
-         return DOM.Core.Nodes.Node_Value (N => Node);
-      else
-         return "";
-      end if;
-   end Get_Bootparams;
 
    -------------------------------------------------------------------------
 
@@ -124,14 +93,18 @@ is
                  XPath => "/system/subjects/subject/memory/"
                  & "memory[@physical='" & Memname & "']",
                  Name  => "virtualAddress");
+            Bootparams : constant String
+              := Muxml.Utils.Get_Element_Value
+                (Doc   => Policy.Doc,
+                 XPath => "/system/subjects/subject[@name='"
+                 & Mutools.Utils.Decode_Entity_Name
+                   (Encoded_Str => Memname) & "']/bootparams");
          begin
             Mulog.Log (Msg => "Guest-physical address of " & Memname
                        & " zero-page is " & Physaddr);
             Write_ZP_File
               (Filename         => Output_Dir & "/" & Filename,
-               Cmdline          => Get_Bootparams
-                 (XML_Data    => Policy,
-                  Memory_Name => Memname),
+               Cmdline          => Bootparams,
                Physical_Address => Natural'Value (Physaddr));
          end;
       end loop;

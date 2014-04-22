@@ -146,12 +146,10 @@ is
                 (Elem => Channel_Node,
                  Name => "name");
             Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => McKae.XML.XPath.XIA.XPath_Query
-                   (N     => XML_Data.Doc,
-                    XPath => "/system/subjects/subject/channels/" & Endpoint
-                    & "[@ref='" & Channel_Name & "']"),
-                 Index => 0);
+              := Muxml.Utils.Get_Element
+                (Doc   => XML_Data.Doc,
+                 XPath => "/system/subjects/subject/channels/" & Endpoint
+                 & "[@ref='" & Channel_Name & "']");
          begin
             if DOM.Core.Elements.Get_Attribute
               (Elem => Node,

@@ -34,11 +34,8 @@ is
    procedure Add_Physical_Memory (Data : in out Muxml.XML_Data_Type)
    is
       System_Node : constant DOM.Core.Node
-        := DOM.Core.Nodes.Item
-          (List  => McKae.XML.XPath.XIA.XPath_Query
-             (N     => Data.Doc,
-              XPath => "/system"),
-           Index => 0);
+        := Muxml.Utils.Get_Element (Doc   => Data.Doc,
+                                    XPath => "/system");
       Channels : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,

@@ -21,9 +21,7 @@ with Ada.Exceptions;
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
-with McKae.XML.XPath.XIA;
-
-with Muxml;
+with Muxml.Utils;
 with Mucfgcheck;
 
 with Expand.Pre_Checks;
@@ -43,12 +41,10 @@ is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
-      Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Policy.Doc,
-            XPath => "/system/subjects/subject/channels/reader"
-            & "[@ref='data_channel']"),
-         Index => 0);
+      Node := Muxml.Utils.Get_Element
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/channels/reader"
+         & "[@ref='data_channel']");
       DOM.Core.Elements.Set_Attribute
         (Elem  => Node,
          Name  => "vector",
@@ -79,12 +75,10 @@ is
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
 
-      Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Policy.Doc,
-            XPath => "/system/subjects/subject/channels/writer"
-            & "[@ref='data_channel']"),
-         Index => 0);
+      Node := Muxml.Utils.Get_Element
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/channels/writer"
+         & "[@ref='data_channel']");
       DOM.Core.Elements.Set_Attribute
         (Elem  => Node,
          Name  => "ref",
@@ -102,12 +96,10 @@ is
                     Message   => "Exception mismatch (writer)");
       end;
 
-      Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Policy.Doc,
-            XPath => "/system/subjects/subject/channels/reader"
-            & "[@ref='data_channel']"),
-         Index => 0);
+      Node := Muxml.Utils.Get_Element
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/channels/reader"
+         & "[@ref='data_channel']");
       DOM.Core.Elements.Set_Attribute
         (Elem  => Node,
          Name  => "ref",
@@ -136,12 +128,10 @@ is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
-      Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Policy.Doc,
-            XPath => "/system/subjects/subject/channels/writer"
-            & "[@ref='data_channel']"),
-         Index => 0);
+      Node := Muxml.Utils.Get_Element
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/channels/writer"
+         & "[@ref='data_channel']");
       DOM.Core.Elements.Set_Attribute
         (Elem  => Node,
          Name  => "event",
@@ -197,12 +187,10 @@ is
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
 
-      Reader_Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Policy.Doc,
-            XPath => "/system/subjects/subject/channels/reader"
-            & "[@ref='data_channel']"),
-         Index => 0);
+      Reader_Node := Muxml.Utils.Get_Element
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/channels/reader"
+         & "[@ref='data_channel']");
       DOM.Core.Elements.Set_Attribute
         (Elem  => Reader_Node,
          Name  => "ref",
@@ -232,12 +220,9 @@ is
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
 
-      Monitor_Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Policy.Doc,
-            XPath => "/system/subjects/subject/monitor/state"
-            & "[@subject='lnx']"),
-         Index => 0);
+      Monitor_Node := Muxml.Utils.Get_Element
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/monitor/state[@subject='lnx']");
       DOM.Core.Elements.Set_Attribute (Elem  => Monitor_Node,
                                        Name  => "subject",
                                        Value => "nonexistent");
@@ -266,12 +251,10 @@ is
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
 
-      Tau0_Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Policy.Doc,
-            XPath => "/system/scheduling/majorFrame/cpu/"
-            & "minorFrame[@subject='tau0']"),
-         Index => 0);
+      Tau0_Node := Muxml.Utils.Get_Element
+        (Doc   => Policy.Doc,
+         XPath => "/system/scheduling/majorFrame/cpu/"
+         & "minorFrame[@subject='tau0']");
       Tau0_Node := DOM.Core.Nodes.Remove_Child
         (N         => DOM.Core.Nodes.Parent_Node (N => Tau0_Node),
          Old_Child => Tau0_Node);

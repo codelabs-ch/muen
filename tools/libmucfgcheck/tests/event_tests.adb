@@ -18,10 +18,7 @@
 
 with Ada.Exceptions;
 
-with DOM.Core.Nodes;
 with DOM.Core.Elements;
-
-with McKae.XML.XPath.XIA;
 
 with Muxml.Utils;
 with Mutools.Types;
@@ -143,12 +140,10 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/validators.xml");
-      Event_Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Data.Doc,
-            XPath => "/system/subjects/subject/events/target/event"
-            & "[@physical='nonexistent']"),
-         Index => 0);
+      Event_Node := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/target/event"
+         & "[@physical='nonexistent']");
       DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
                                        Name  => "physical",
                                        Value => "linux_kbd");
@@ -178,12 +173,10 @@ is
                    Kind => Muxml.Format_B,
                    File => "data/validators.xml");
 
-      Event_Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Data.Doc,
-            XPath => "/system/subjects/subject/events/target/event"
-            & "[@physical='nonexistent']"),
-         Index => 0);
+      Event_Node := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/target/event"
+         & "[@physical='nonexistent']");
       DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
                                        Name  => "physical",
                                        Value => "linux_kbd");
@@ -211,12 +204,10 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/validators.xml");
-      Event_Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Data.Doc,
-            XPath => "/system/subjects/subject/events/source/group/event"
-            & "[@logical='invalid_subject']"),
-         Index => 0);
+      Event_Node := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/source/group/event"
+         & "[@logical='invalid_subject']");
       DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
                                        Name  => "id",
                                        Value => "256");
@@ -244,12 +235,10 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/validators.xml");
-      Event_Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Data.Doc,
-            XPath => "/system/subjects/subject/events/source/group/event"
-            & "[@logical='invalid_subject']"),
-         Index => 0);
+      Event_Node := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/source/group/event"
+         & "[@logical='invalid_subject']");
       DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
                                        Name  => "id",
                                        Value => "1");
@@ -289,12 +278,9 @@ is
       end;
 
       declare
-         Event_Node : constant DOM.Core.Node
-           := DOM.Core.Nodes.Item
-             (List  => McKae.XML.XPath.XIA.XPath_Query
-                (N     => Data.Doc,
-                 XPath => "/system/events/event[@name='linux_kbd']"),
-              Index => 0);
+         Event_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/events/event[@name='linux_kbd']");
       begin
          DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
                                           Name  => "name",
@@ -334,13 +320,10 @@ is
       end;
 
       declare
-         Event_Node : constant DOM.Core.Node
-           := DOM.Core.Nodes.Item
-             (List  => McKae.XML.XPath.XIA.XPath_Query
-                (N     => Data.Doc,
-                 XPath => "/system/subjects/subject/events/source/group/"
-                 & "event/notify[@physical='test']/.."),
-              Index => 0);
+         Event_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/source/group/"
+            & "event/notify[@physical='test']/..");
       begin
          Muxml.Utils.Remove_Child (Node       => Event_Node,
                                    Child_Name => "notify");
@@ -366,12 +349,10 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/validators.xml");
-      Event_Node := DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Data.Doc,
-            XPath => "/system/subjects/subject/events/target/event"
-            & "[@physical='nonexistent']"),
-         Index => 0);
+      Event_Node := Muxml.Utils.Get_Element
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/target/event"
+         & "[@physical='nonexistent']");
       DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
                                        Name  => "physical",
                                        Value => "switch_to_linux");

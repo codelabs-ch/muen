@@ -17,22 +17,13 @@
  </memory>
  <events>
   <event mode="switch" name="trap_to_subject1"/>
+  <event mode="ipi" name="data_channel"/>
+  <event mode="switch" name="data_channel2"/>
  </events>
  <channels>
   <channel hasEvent="ipi" name="data_channel" size="16#1000#"/>
   <channel hasEvent="switch" name="data_channel2" size="16#2000#"/>
  </channels>
- <kernel>
-  <memory>
-   <cpu id="0"/>
-   <cpu id="1"/>
-  </memory>
-  <devices>
-   <device logical="ioapic" physical="ioapic">
-    <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#001f_c000#" writable="true"/>
-   </device>
-  </devices>
- </kernel>
  <subjects>
   <subject cpu="0" name="lnx" profile="linux">
    <memory>
@@ -46,6 +37,10 @@
       </default>
      </group>
     </source>
+    <target>
+     <event logical="channel_event_data_channel" physical="data_channel" vector="12"/>
+     <event logical="channel_event_data_channel2" physical="data_channel2" vector="none"/>
+    </target>
    </events>
    <channels>
     <reader ref="data_channel" vector="12" virtualAddress="16#6000#"/>
@@ -58,6 +53,16 @@
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
    <events>
+    <source>
+     <group name="vmcall">
+      <event action="continue" id="1" logical="channel_event_data_channel">
+       <notify physical="data_channel"/>
+      </event>
+      <event action="continue" id="1" logical="channel_event_data_channel2">
+       <notify physical="data_channel2"/>
+      </event>
+     </group>
+    </source>
     <target>
      <event logical="trap_to_subject1" physical="trap_to_subject1" vector="none"/>
     </target>

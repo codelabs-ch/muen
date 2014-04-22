@@ -57,13 +57,21 @@ is
       Executable    :        Boolean)
       return DOM.Core.Node;
 
-   --  Create subject event node with given parameters.
-   function Create_Event_Node
+   --  Create subject source event node with given parameters.
+   function Create_Source_Event_Node
      (Policy        : in out Muxml.XML_Data_Type;
       ID            :        String;
       Logical_Name  :        String;
       Physical_Name :        String;
       Action        :        String)
+      return DOM.Core.Node;
+
+   --  Create subject target event node with given parameters.
+   function Create_Target_Event_Node
+     (Policy        : in out Muxml.XML_Data_Type;
+      Logical_Name  :        String;
+      Physical_Name :        String;
+      Vector        :        String)
       return DOM.Core.Node;
 
    --  Returns the size of the paging structures needed to map the virtual

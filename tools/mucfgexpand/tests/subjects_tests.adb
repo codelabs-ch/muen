@@ -38,6 +38,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Channel_Events
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_channel_events.xml",
+         Ref_Filename => "data/subjects_channel_events.ref.xml",
+         Expander     => Expanders.Subjects.Add_Channel_Events'Access);
+   end Add_Channel_Events;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Channel_Mappings
    is
    begin
@@ -140,6 +151,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_Channel_Mappings'Access,
          Name    => "Add channel mappings");
+      T.Add_Test_Routine
+        (Routine => Add_Channel_Events'Access,
+         Name    => "Add channel events");
       T.Add_Test_Routine
         (Routine => Remove_Channel_Elements'Access,
          Name    => "Remove channel elements");

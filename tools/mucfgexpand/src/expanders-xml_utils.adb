@@ -248,49 +248,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Create_Event_Node
-     (Policy        : in out Muxml.XML_Data_Type;
-      ID            :        String;
-      Logical_Name  :        String;
-      Physical_Name :        String;
-      Action        :        String)
-      return DOM.Core.Node
-   is
-      Event_Node  : constant DOM.Core.Node
-        := DOM.Core.Documents.Create_Element
-        (Doc      => Policy.Doc,
-         Tag_Name => "event");
-      Notify_Node : constant DOM.Core.Node
-        := DOM.Core.Documents.Create_Element
-          (Doc      => Policy.Doc,
-           Tag_Name => "notify");
-   begin
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Event_Node,
-         Name  => "id",
-         Value => ID);
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Event_Node,
-         Name  => "logical",
-         Value => Logical_Name);
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Event_Node,
-         Name  => "action",
-         Value => Action);
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Notify_Node,
-         Name  => "physical",
-         Value => Physical_Name);
-
-      Muxml.Utils.Append_Child
-        (Node      => Event_Node,
-         New_Child => Notify_Node);
-
-      return Event_Node;
-   end Create_Event_Node;
-
-   -------------------------------------------------------------------------
-
    function Create_Memory_Node
      (Policy    : in out Muxml.XML_Data_Type;
       Name      :        String;
@@ -330,6 +287,79 @@ is
 
       return Mem_Node;
    end Create_Memory_Node;
+
+   -------------------------------------------------------------------------
+
+   function Create_Source_Event_Node
+     (Policy        : in out Muxml.XML_Data_Type;
+      ID            :        String;
+      Logical_Name  :        String;
+      Physical_Name :        String;
+      Action        :        String)
+      return DOM.Core.Node
+   is
+      Event_Node  : constant DOM.Core.Node
+        := DOM.Core.Documents.Create_Element
+          (Doc      => Policy.Doc,
+           Tag_Name => "event");
+      Notify_Node : constant DOM.Core.Node
+        := DOM.Core.Documents.Create_Element
+          (Doc      => Policy.Doc,
+           Tag_Name => "notify");
+   begin
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Event_Node,
+         Name  => "id",
+         Value => ID);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Event_Node,
+         Name  => "logical",
+         Value => Logical_Name);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Event_Node,
+         Name  => "action",
+         Value => Action);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Notify_Node,
+         Name  => "physical",
+         Value => Physical_Name);
+
+      Muxml.Utils.Append_Child
+        (Node      => Event_Node,
+         New_Child => Notify_Node);
+
+      return Event_Node;
+   end Create_Source_Event_Node;
+
+   -------------------------------------------------------------------------
+
+   function Create_Target_Event_Node
+     (Policy        : in out Muxml.XML_Data_Type;
+      Logical_Name  :        String;
+      Physical_Name :        String;
+      Vector        :        String)
+      return DOM.Core.Node
+   is
+      Event_Node : constant DOM.Core.Node
+        := DOM.Core.Documents.Create_Element
+          (Doc      => Policy.Doc,
+           Tag_Name => "event");
+   begin
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Event_Node,
+         Name  => "logical",
+         Value => Logical_Name);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Event_Node,
+         Name  => "physical",
+         Value => Physical_Name);
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Event_Node,
+         Name  => "vector",
+         Value => Vector);
+
+      return Event_Node;
+   end Create_Target_Event_Node;
 
    -------------------------------------------------------------------------
 

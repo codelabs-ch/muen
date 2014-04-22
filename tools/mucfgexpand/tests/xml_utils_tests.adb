@@ -137,10 +137,11 @@ is
       Physical : constant String := "phys_name";
       Action   : constant String := "continue";
       ID       : constant String := "42";
+      Vector   : constant String := "none";
    begin
       Policy.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
 
-      Node := XML_Utils.Create_Event_Node
+      Node := XML_Utils.Create_Source_Event_Node
         (Policy        => Policy,
          ID            => ID,
          Logical_Name  => Logical,
@@ -169,6 +170,28 @@ is
               (Elem => DOM.Core.Nodes.First_Child (N => Node),
                Name => "physical") = Physical,
               Message   => "Physical name mismatch");
+
+      Node := XML_Utils.Create_Target_Event_Node
+        (Policy        => Policy,
+         Logical_Name  => Logical,
+         Physical_Name => Physical,
+         Vector        => Vector);
+
+      Assert (Condition => DOM.Core.Elements.Get_Tag_Name
+              (Elem => Node) = "event",
+              Message   => "Event tag mismatch (2)");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "logical") = Logical,
+              Message   => "Logical name mismatch (2)");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "physical") = Physical,
+              Message   => "Physical name mismatch (2)");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "vector") = Vector,
+              Message   => "Vector mismatch");
    end Create_Subject_Event;
 
    -------------------------------------------------------------------------

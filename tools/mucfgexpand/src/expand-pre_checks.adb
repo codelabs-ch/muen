@@ -35,6 +35,27 @@ is
    package Check_Procs is new
      Mutools.Immutable_Processors (Param_Type => Muxml.XML_Data_Type);
 
+   --  Check the existence of channel endpoint (reader or writer) event
+   --  attributes given by name. The XPath query specifies which global
+   --  channels should be checked.
+   procedure Check_Channel_Events_Attr
+     (XML_Data  : Muxml.XML_Data_Type;
+      XPath     : String;
+      Endpoint  : String;
+      Attr_Name : String);
+
+   -------------------------------------------------------------------------
+
+   procedure Channel_Reader_Has_Event_Vector (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Channel_Events_Attr
+        (XML_Data  => XML_Data,
+         XPath     => "/system/channels/channel[@hasEvent!='switch']",
+         Endpoint  => "reader",
+         Attr_Name => "vector");
+   end Channel_Reader_Has_Event_Vector;
+
    -------------------------------------------------------------------------
 
    procedure Channel_Reader_Writer (XML_Data : Muxml.XML_Data_Type)
@@ -87,6 +108,65 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Channel_Writer_Has_Event_ID (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Channel_Events_Attr
+        (XML_Data  => XML_Data,
+         XPath     => "/system/channels/channel[@hasEvent]",
+         Endpoint  => "writer",
+         Attr_Name => "event");
+   end Channel_Writer_Has_Event_ID;
+
+   -------------------------------------------------------------------------
+
+   procedure Check_Channel_Events_Attr
+     (XML_Data  : Muxml.XML_Data_Type;
+      XPath     : String;
+      Endpoint  : String;
+      Attr_Name : String)
+   is
+      Channels : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => XPath);
+   begin
+      Mulog.Log (Msg => "Checking '" & Attr_Name & "' attribute of"
+                 & DOM.Core.Nodes.Length (List => Channels)'Img & " channel "
+                 & Endpoint & "(s) with associated event");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Channels) - 1 loop
+         declare
+            Channel_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Channels,
+                 Index => I);
+            Channel_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Channel_Node,
+                 Name => "name");
+            Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => McKae.XML.XPath.XIA.XPath_Query
+                   (N     => XML_Data.Doc,
+                    XPath => "/system/subjects/subject/channels/" & Endpoint
+                    & "[@ref='" & Channel_Name & "']"),
+                 Index => 0);
+         begin
+            if DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => Attr_Name) = ""
+            then
+               raise Mucfgcheck.Validation_Error with "Missing '" & Attr_Name
+                 & "' attribute for " & Endpoint & " of channel '"
+                 & Channel_Name & "'";
+            end if;
+         end;
+      end loop;
+   end Check_Channel_Events_Attr;
+
+   -------------------------------------------------------------------------
+
    function Get_Count return Natural renames Check_Procs.Get_Count;
 
    -------------------------------------------------------------------------
@@ -103,6 +183,8 @@ is
       Check_Procs.Register (Process => Subject_Monitor_References'Access);
       Check_Procs.Register (Process => Subject_Channel_References'Access);
       Check_Procs.Register (Process => Channel_Reader_Writer'Access);
+      Check_Procs.Register (Process => Channel_Writer_Has_Event_ID'Access);
+      Check_Procs.Register (Process => Channel_Reader_Has_Event_Vector'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

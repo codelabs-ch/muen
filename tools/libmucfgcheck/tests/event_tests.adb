@@ -166,30 +166,30 @@ is
 
    procedure Validate_Self_References
    is
-      Data       : Muxml.XML_Data_Type;
-      Event_Node : DOM.Core.Node;
+      Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
-      Event_Node := Muxml.Utils.Get_Element
-        (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/events/target/event"
-         & "[@physical='nonexistent']");
-      DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
-                                       Name  => "physical",
-                                       Value => "linux_kbd");
-
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/target/event"
+            & "[@physical='linux_console']");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "physical",
+                                          Value => "linux_keyboard");
+
          Mucfgcheck.Events.Self_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Reference to self in event 'linux_kbd' of subject "
-                    & "'linux'",
+                    = "Reference to self in event 'linux_keyboard' of subject "
+                    & "'vt'",
                     Message   => "Exception mismatch");
       end;
    end Validate_Self_References;

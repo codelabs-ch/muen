@@ -116,6 +116,74 @@ is
 
    procedure Add_Channel_Events (Data : in out Muxml.XML_Data_Type)
    is
+
+      --  Add optional events/source/group[@name='vmcall'] elements.
+      function Add_Optional_Events_Source_Group
+        (Subject : DOM.Core.Node)
+         return DOM.Core.Node;
+
+      ----------------------------------------------------------------------
+
+      function Add_Optional_Events_Source_Group
+        (Subject : DOM.Core.Node)
+         return DOM.Core.Node
+      is
+         use type DOM.Core.Node;
+
+         Writer_Subj_Source_Node  : DOM.Core.Node;
+         Writer_Subj_Source_Group : DOM.Core.Node;
+         Writer_Subj_Events_Node  : constant DOM.Core.Node
+           := DOM.Core.Nodes.Item
+             (List  => McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subject,
+                 XPath => "events"),
+              Index => 0);
+      begin
+         Writer_Subj_Source_Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Writer_Subj_Events_Node,
+               XPath => "source"),
+            Index => 0);
+         if Writer_Subj_Source_Node = null then
+            declare
+               Ref_Node : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => McKae.XML.XPath.XIA.XPath_Query
+                      (N     => Writer_Subj_Events_Node,
+                       XPath => "target"),
+                    Index => 0);
+            begin
+               Writer_Subj_Source_Node := DOM.Core.Nodes.Insert_Before
+                 (N         => Writer_Subj_Events_Node,
+                  New_Child => DOM.Core.Documents.Create_Element
+                    (Doc      => Data.Doc,
+                     Tag_Name => "source"),
+                  Ref_Child => Ref_Node);
+            end;
+         end if;
+
+         Writer_Subj_Source_Group := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Writer_Subj_Source_Node,
+               XPath => "group[@name='vmcall']"),
+            Index => 0);
+         if Writer_Subj_Source_Group = null then
+            Writer_Subj_Source_Group := DOM.Core.Nodes.Append_Child
+              (N         => Writer_Subj_Source_Node,
+               New_Child => DOM.Core.Documents.Create_Element
+                 (Doc      => Data.Doc,
+                  Tag_Name => "group"));
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Writer_Subj_Source_Group,
+               Name  => "name",
+               Value => "vmcall");
+         end if;
+
+         return Writer_Subj_Source_Group;
+      end Add_Optional_Events_Source_Group;
+
+      ----------------------------------------------------------------------
+
       Events_Node : constant DOM.Core.Node
         := DOM.Core.Nodes.Item
           (List  => McKae.XML.XPath.XIA.XPath_Query
@@ -166,14 +234,7 @@ is
               := Muxml.Utils.Ancestor_Node
                 (Node  => Writer_Node,
                  Level => 2);
-            Writer_Subj_Events_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => McKae.XML.XPath.XIA.XPath_Query
-                   (N     => Writer_Subj_Node,
-                    XPath => "events"),
-                 Index => 0);
 
-            Writer_Subj_Source_Node  : DOM.Core.Node;
             Writer_Subj_Source_Group : DOM.Core.Node;
 
             Reader_Subj_Node : constant DOM.Core.Node
@@ -208,45 +269,8 @@ is
               (Node      => Events_Node,
                New_Child => Event_Node);
 
-            Writer_Subj_Source_Node := DOM.Core.Nodes.Item
-              (List  => McKae.XML.XPath.XIA.XPath_Query
-                 (N     => Writer_Subj_Events_Node,
-                  XPath => "source"),
-               Index => 0);
-            if Writer_Subj_Source_Node = null then
-               declare
-                  Ref_Node : constant DOM.Core.Node
-                    := DOM.Core.Nodes.Item
-                      (List  => McKae.XML.XPath.XIA.XPath_Query
-                         (N     => Writer_Subj_Events_Node,
-                          XPath => "target"),
-                       Index => 0);
-               begin
-                  Writer_Subj_Source_Node := DOM.Core.Nodes.Insert_Before
-                    (N         => Writer_Subj_Events_Node,
-                     New_Child => DOM.Core.Documents.Create_Element
-                       (Doc      => Data.Doc,
-                        Tag_Name => "source"),
-                     Ref_Child => Ref_Node);
-               end;
-            end if;
-
-            Writer_Subj_Source_Group := DOM.Core.Nodes.Item
-              (List  => McKae.XML.XPath.XIA.XPath_Query
-                 (N     => Writer_Subj_Source_Node,
-                  XPath => "group[@name='vmcall']"),
-               Index => 0);
-            if Writer_Subj_Source_Group = null then
-               Writer_Subj_Source_Group := DOM.Core.Nodes.Append_Child
-                 (N         => Writer_Subj_Source_Node,
-                  New_Child => DOM.Core.Documents.Create_Element
-                    (Doc      => Data.Doc,
-                     Tag_Name => "group"));
-               DOM.Core.Elements.Set_Attribute
-                 (Elem  => Writer_Subj_Source_Group,
-                  Name  => "name",
-                  Value => "vmcall");
-            end if;
+            Writer_Subj_Source_Group := Add_Optional_Events_Source_Group
+              (Subject => Writer_Subj_Node);
 
             if Reader_Subj_Target_Node = null then
                Reader_Subj_Target_Node := DOM.Core.Nodes.Append_Child

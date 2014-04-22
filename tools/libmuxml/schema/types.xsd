@@ -25,6 +25,13 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="booleanType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="true"/>
+			<xs:enumeration value="false"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:simpleType name="nameType">
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1"/>

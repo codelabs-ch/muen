@@ -410,16 +410,13 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
       declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='invalid_0|vmxon']");
+            XPath => "/system/memory/memory[@name='kernel_text']");
       begin
-
-         --  Let existing region overlap with device memory.
-
          DOM.Core.Elements.Set_Attribute
            (Elem  => Node,
             Name  => "physicalAddress",
@@ -432,7 +429,7 @@ is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Overlap of physical or device memory region "
-                    & "'invalid_0|vmxon' and 'videobuffer'",
+                    & "'kernel_text' and 'buffer'",
                     Message   => "Exception mismatch");
       end;
    end Validate_Physmem_Overlap_Device;

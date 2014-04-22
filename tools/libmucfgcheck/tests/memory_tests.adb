@@ -474,16 +474,25 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='kernel_text']");
       begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "size",
+            Value => "16#0042#");
+
          Mucfgcheck.Memory.Region_Size (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'size => 16#0042#' of 'ram_1' physical "
+                    = "Attribute 'size => 16#0042#' of 'kernel_text' physical "
                     & "memory element not multiple of page size (4K)",
                     Message   => "Exception mismatch");
       end;

@@ -442,17 +442,26 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='linux|ram']");
       begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "name",
+            Value => "foobar");
+
          Mucfgcheck.Memory.Physical_Memory_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Physical memory 'lnx_mem' referenced by logical memory"
-                    & " 'linux' not found",
+                    = "Physical memory 'linux|ram' referenced by logical "
+                    & "memory 'ram' not found",
                     Message   => "Exception mismatch");
       end;
    end Validate_Physmem_Refs;

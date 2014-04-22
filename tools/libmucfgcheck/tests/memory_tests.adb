@@ -122,20 +122,17 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
       declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='invalid_0|vmxon']");
+            XPath => "/system/memory/memory[@name='kernel_0|vmxon']");
       begin
-
-         --  Set invalid CPU number in entity reference.
-
          DOM.Core.Elements.Set_Attribute
            (Elem  => Node,
             Name  => "name",
-            Value => "kernel_1|vmxon");
+            Value => "kernel_5|vmxon");
 
          Mucfgcheck.Memory.Entity_Name_Encoding (XML_Data => Data);
          Fail (Message => "Exception expected");
@@ -143,8 +140,8 @@ is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Entity 'kernel_1' encoded in memory region "
-                    & "'kernel_1|vmxon' does not exist or is invalid",
+                    = "Entity 'kernel_5' encoded in memory region "
+                    & "'kernel_5|vmxon' does not exist or is invalid",
                     Message   => "Exception mismatch");
       end;
    end Validate_CPU_Entity_Name_Encoding;

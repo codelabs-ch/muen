@@ -158,8 +158,8 @@ is
                Name => Attr_Name) = ""
             then
                raise Mucfgcheck.Validation_Error with "Missing '" & Attr_Name
-                 & "' attribute for channel " & Endpoint & " '" & Channel_Name
-                 & "'";
+                 & "' attribute for " & Endpoint & " of channel '"
+                 & Channel_Name & "'";
             end if;
          end;
       end loop;

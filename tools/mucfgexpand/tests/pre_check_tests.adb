@@ -62,7 +62,7 @@ is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Missing 'vector' attribute for channel reader "
+                    = "Missing 'vector' attribute for reader of channel "
                     & "'data_channel'",
                     Message   => "Exception mismatch");
       end;
@@ -154,7 +154,7 @@ is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Missing 'event' attribute for channel writer "
+                    = "Missing 'event' attribute for writer of channel "
                     & "'data_channel'",
                     Message   => "Exception mismatch");
       end;

@@ -378,17 +378,26 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='kernel_text']");
       begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "size",
+            Value => "16#1000_0000#");
+
          Mucfgcheck.Memory.Physical_Memory_Overlap (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Overlap of physical or device memory region "
-                    & "'invalid_0|vmxon' and 'invalid|vmcs'",
+                    = "Overlap of physical or device memory region 'linux|ram'"
+                    & " and 'kernel_text'",
                     Message   => "Exception mismatch");
       end;
    end Validate_Physmem_Overlap;

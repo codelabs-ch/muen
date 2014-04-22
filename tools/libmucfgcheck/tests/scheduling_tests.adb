@@ -18,7 +18,9 @@
 
 with Ada.Exceptions;
 
-with Muxml;
+with DOM.Core.Nodes;
+
+with Muxml.Utils;
 
 with Mucfgcheck.Scheduling;
 
@@ -55,17 +57,26 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/scheduling/majorFrame/cpu[@id='3']");
       begin
+         Node := DOM.Core.Nodes.Remove_Child
+           (N         => DOM.Core.Nodes.Parent_Node (N => Node),
+            Old_Child => Node);
+         pragma Unreferenced (Node);
+
          Mucfgcheck.Scheduling.CPU_Element_Count (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "CPU element count of 2 in scheduling plan invalid, "
-                    & "logical CPU count is 1",
+                    = "CPU element count of 3 in scheduling plan invalid, "
+                    & "logical CPU count is 4",
                     Message   => "Exception mismatch");
       end;
    end Validate_CPU_Element_Count;

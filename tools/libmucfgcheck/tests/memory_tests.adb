@@ -250,16 +250,13 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
       declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
             XPath => "/system/memory/memory[@name='kernel_stack_0']");
       begin
-
-         --  Rename existing kernel stack region.
-
          DOM.Core.Elements.Set_Attribute
            (Elem  => Node,
             Name  => "name",

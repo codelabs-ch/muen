@@ -860,9 +860,18 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='kernel_0|vmxon']");
       begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "name",
+            Value => "foobar");
+
          Mucfgcheck.Memory.VMXON_Region_Presence (XML_Data => Data);
          Fail (Message => "Exception expected");
 

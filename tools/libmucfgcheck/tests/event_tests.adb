@@ -230,29 +230,30 @@ is
 
    procedure Validate_Source_Group_IDs_Uniqueness
    is
-      Data       : Muxml.XML_Data_Type;
-      Event_Node : DOM.Core.Node;
+      Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
-      Event_Node := Muxml.Utils.Get_Element
-        (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/events/source/group/event"
-         & "[@logical='invalid_subject']");
-      DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
-                                       Name  => "id",
-                                       Value => "1");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/source/group/event"
+            & "[@logical='resume_linux']");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "id",
+                                          Value => "1");
+
          Mucfgcheck.Events.Source_Group_Event_ID_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'linux' source events 'forward_keyboard' and "
-                    & "'invalid_subject' share ID 1",
+                    = "Subject 'sm' source events 'resume_linux' and "
+                    & "'channel_event_sm_console' share ID 1",
                     Message   => "Exception mismatch");
       end;
    end Validate_Source_Group_IDs_Uniqueness;

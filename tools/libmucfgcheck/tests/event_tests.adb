@@ -316,37 +316,48 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/target/"
+            & "event[@physical='trap_to_sm']");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "physical",
+                                          Value => "nonexistent_dst");
+
          Mucfgcheck.Events.Subject_Event_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Event 'test' referenced by subject 'linux' does not "
-                    & "exist",
-                    Message   => "Exception mismatch (source)");
+                    = "Event 'nonexistent_dst' referenced by subject 'sm' does"
+                    & " not exist",
+                    Message   => "Exception mismatch (target)");
       end;
 
       declare
-         Event_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
             XPath => "/system/subjects/subject/events/source/group/"
-            & "event/notify[@physical='test']/..");
+            & "event/notify[@physical='resume_linux']");
       begin
-         Muxml.Utils.Remove_Child (Node       => Event_Node,
-                                   Child_Name => "notify");
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "physical",
+                                          Value => "nonexistent_src");
+
          Mucfgcheck.Events.Subject_Event_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Event 'nonexistent' referenced by subject 'linux' does "
-                    & "not exist",
-                    Message   => "Exception mismatch (target)");
+                    = "Event 'nonexistent_src' referenced by subject 'sm' does"
+                    & " not exist",
+                    Message   => "Exception mismatch (source)");
       end;
    end Validate_Subject_Event_References;
 

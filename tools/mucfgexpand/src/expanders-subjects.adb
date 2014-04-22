@@ -266,15 +266,6 @@ is
                     XPath => "/system/subjects/subject/channels/reader[@ref='"
                     & Channel_Name & "']"),
                  Index => 0);
-            Writer_Subj_Node : constant DOM.Core.Node
-              := Muxml.Utils.Ancestor_Node
-                (Node  => Writer_Node,
-                 Level => 2);
-            Reader_Subj_Node : constant DOM.Core.Node
-              := Muxml.Utils.Ancestor_Node
-                (Node  => Reader_Node,
-                 Level => 2);
-
             Writer_Subj_Source_Group, Reader_Subj_Target_Node : DOM.Core.Node;
          begin
             Event_Node := DOM.Core.Documents.Create_Element
@@ -293,9 +284,13 @@ is
                New_Child => Event_Node);
 
             Writer_Subj_Source_Group := Add_Optional_Events_Source_Group
-              (Subject => Writer_Subj_Node);
+              (Subject => Muxml.Utils.Ancestor_Node
+                 (Node  => Writer_Node,
+                  Level => 2));
             Reader_Subj_Target_Node := Add_Optional_Events_Target
-              (Subject => Reader_Subj_Node);
+              (Subject => Muxml.Utils.Ancestor_Node
+                 (Node  => Reader_Node,
+                  Level => 2));
 
             declare
                ID : constant String

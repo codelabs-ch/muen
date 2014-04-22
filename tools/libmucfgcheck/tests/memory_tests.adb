@@ -539,21 +539,18 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
       declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
             XPath => "/system/kernel/memory/cpu[@id='0']/"
-            & "memory[@logical='text']");
+            & "memory[@logical='tau0_interface']");
       begin
-
-         --  Let existing region overlap with device memory.
-
          DOM.Core.Elements.Set_Attribute
            (Elem  => Node,
             Name  => "virtualAddress",
-            Value => "16#000b_7000#");
+            Value => "16#001f_c000#");
 
          Mucfgcheck.Memory.Virtual_Memory_Overlap (XML_Data => Data);
          Fail (Message => "Exception expected");
@@ -561,8 +558,8 @@ is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Overlap of virtual memory region 'text' and "
-                    & "'vga_buffer' of kernel running on CPU 0",
+                    = "Overlap of virtual memory region 'tau0_interface' and "
+                    & "'mmio' of kernel running on CPU 0",
                     Message   => "Exception mismatch");
       end;
    end Validate_Virtmem_Overlap_Device_Kernel;

@@ -183,16 +183,26 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/device/ioPort[@name='port_64']");
       begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "name",
+            Value => "port_60");
+
          Mucfgcheck.Device.Device_IO_Port_Name_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Device 'vga' has multiple I/O ports with name 'port'",
+                    = "Device 'keyboard' has multiple I/O ports with name "
+                    & "'port_60'",
                     Message   => "Exception mismatch");
       end;
    end Validate_IO_Port_Name_Uniqueness;

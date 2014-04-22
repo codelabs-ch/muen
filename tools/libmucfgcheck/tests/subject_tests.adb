@@ -82,15 +82,12 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
       declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject[@name='subject1']");
+            XPath => "/system/subjects/subject[@name='vt']");
       begin
-
-         --  Set duplicate subject name.
-
          DOM.Core.Elements.Set_Attribute
            (Elem  => Node,
             Name  => "name",
@@ -102,7 +99,7 @@ is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subjects with id 0 and 1 have identical name 'linux'",
+                    = "Subjects with id 1 and 4 have identical name 'linux'",
                     Message   => "Exception mismatch");
       end;
    end Validate_Name_Uniqueness;

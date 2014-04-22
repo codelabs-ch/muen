@@ -346,16 +346,30 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Kbd  : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/device[@name='keyboard']");
+         Node : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "irq");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "name",
+                                          Value => "kbd_irq");
+         Muxml.Utils.Append_Child (Node      => Kbd,
+                                   New_Child => Node);
+
          Mucfgcheck.Device.Device_IRQ_Name_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Device 'vga' has multiple IRQs with name 'bar'",
+                    = "Device 'keyboard' has multiple IRQs with name "
+                    & "'kbd_irq'",
                     Message   => "Exception mismatch");
       end;
    end Validate_Physirq_Name_Uniqueness;

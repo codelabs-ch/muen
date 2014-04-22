@@ -122,6 +122,11 @@ is
         (Subject : DOM.Core.Node)
          return DOM.Core.Node;
 
+      --  Add optional events/target element.
+      function Add_Optional_Events_Target
+        (Subject : DOM.Core.Node)
+         return DOM.Core.Node;
+
       ----------------------------------------------------------------------
 
       function Add_Optional_Events_Source_Group
@@ -184,6 +189,38 @@ is
 
       ----------------------------------------------------------------------
 
+      function Add_Optional_Events_Target
+        (Subject : DOM.Core.Node)
+         return DOM.Core.Node
+      is
+         use type DOM.Core.Node;
+
+         Reader_Subj_Events_Node : constant DOM.Core.Node
+           := DOM.Core.Nodes.Item
+             (List  => McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subject,
+                 XPath => "events"),
+              Index => 0);
+         Reader_Subj_Target_Node : DOM.Core.Node
+           := DOM.Core.Nodes.Item
+             (List  => McKae.XML.XPath.XIA.XPath_Query
+                (N     => Reader_Subj_Events_Node,
+                 XPath => "target"),
+              Index => 0);
+      begin
+         if Reader_Subj_Target_Node = null then
+            Reader_Subj_Target_Node := DOM.Core.Nodes.Append_Child
+              (N         => Reader_Subj_Events_Node,
+               New_Child => DOM.Core.Documents.Create_Element
+                 (Doc      => Data.Doc,
+                  Tag_Name => "target"));
+         end if;
+
+         return Reader_Subj_Target_Node;
+      end Add_Optional_Events_Target;
+
+      ----------------------------------------------------------------------
+
       Events_Node : constant DOM.Core.Node
         := DOM.Core.Nodes.Item
           (List  => McKae.XML.XPath.XIA.XPath_Query
@@ -201,7 +238,6 @@ is
       for I in 0 .. DOM.Core.Nodes.Length (List => Channels) - 1 loop
          declare
             use Ada.Strings.Unbounded;
-            use type DOM.Core.Node;
 
             Channel_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
@@ -234,25 +270,12 @@ is
               := Muxml.Utils.Ancestor_Node
                 (Node  => Writer_Node,
                  Level => 2);
-
-            Writer_Subj_Source_Group : DOM.Core.Node;
-
             Reader_Subj_Node : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node
                 (Node  => Reader_Node,
                  Level => 2);
-            Reader_Subj_Events_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => McKae.XML.XPath.XIA.XPath_Query
-                   (N     => Reader_Subj_Node,
-                    XPath => "events"),
-                 Index => 0);
-            Reader_Subj_Target_Node : DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => McKae.XML.XPath.XIA.XPath_Query
-                   (N     => Reader_Subj_Events_Node,
-                    XPath => "target"),
-                 Index => 0);
+
+            Writer_Subj_Source_Group, Reader_Subj_Target_Node : DOM.Core.Node;
          begin
             Event_Node := DOM.Core.Documents.Create_Element
               (Doc      => Data.Doc,
@@ -271,14 +294,8 @@ is
 
             Writer_Subj_Source_Group := Add_Optional_Events_Source_Group
               (Subject => Writer_Subj_Node);
-
-            if Reader_Subj_Target_Node = null then
-               Reader_Subj_Target_Node := DOM.Core.Nodes.Append_Child
-                 (N         => Reader_Subj_Events_Node,
-                  New_Child => DOM.Core.Documents.Create_Element
-                    (Doc      => Data.Doc,
-                     Tag_Name => "target"));
-            end if;
+            Reader_Subj_Target_Node := Add_Optional_Events_Target
+              (Subject => Reader_Subj_Node);
 
             declare
                ID : constant String

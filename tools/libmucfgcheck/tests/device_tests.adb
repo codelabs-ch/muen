@@ -19,6 +19,7 @@
 with Ada.Exceptions;
 
 with DOM.Core.Elements;
+with DOM.Core.Documents;
 
 with Muxml.Utils;
 
@@ -111,9 +112,24 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Dev  : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/device[@name='vga']");
+         Node : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "memory");
       begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "name",
+            Value => "buffer");
+         Muxml.Utils.Append_Child
+           (Node      => Dev,
+            New_Child => Node);
+
          Mucfgcheck.Device.Device_Memory_Name_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 

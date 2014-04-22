@@ -764,16 +764,25 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='sm|vmcs']");
       begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "size",
+            Value => "16#0001_0013#");
+
          Mucfgcheck.Memory.VMCS_Region_Size (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'size => 16#0001_0013#' of 'invalid|vmcs' "
+                    = "Attribute 'size => 16#0001_0013#' of 'sm|vmcs' "
                     & "VMCS memory element not 4K",
                     Message   => "Exception mismatch");
       end;

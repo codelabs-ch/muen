@@ -123,16 +123,26 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/scheduling/majorFrame/cpu/"
+            & "minorFrame[@subject='vt']");
       begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "subject",
+            Value => "linux");
+
          Mucfgcheck.Scheduling.Subject_CPU_Affinity (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'subject1' scheduled on wrong CPU 0,"
+                    = "Subject 'linux' scheduled on wrong CPU 0,"
                     & " should be 1",
                     Message   => "Exception mismatch");
       end;

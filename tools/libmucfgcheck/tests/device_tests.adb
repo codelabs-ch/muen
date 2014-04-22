@@ -248,16 +248,13 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
       declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
             XPath => "/system/platform/device/ioPort[@name='ports']");
       begin
-
-         --  Set invalid port range.
-
          DOM.Core.Elements.Set_Attribute
            (Elem  => Node,
             Name  => "start",

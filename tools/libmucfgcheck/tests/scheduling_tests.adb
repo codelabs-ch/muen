@@ -156,9 +156,19 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/scheduling/majorFrame/cpu/"
+            & "minorFrame[@subject='vt']");
       begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "subject",
+            Value => "nonexistent");
+
          Mucfgcheck.Scheduling.Subject_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 

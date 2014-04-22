@@ -135,29 +135,29 @@ is
    procedure Validate_IPI_Destination
    is
       Data       : Muxml.XML_Data_Type;
-      Event_Node : DOM.Core.Node;
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
-      Event_Node := Muxml.Utils.Get_Element
-        (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/events/target/event"
-         & "[@physical='nonexistent']");
-      DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
-                                       Name  => "physical",
-                                       Value => "linux_kbd");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/events/event[@name='trap_to_sm']");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "mode",
+                                          Value => "ipi");
+
          Mucfgcheck.Events.IPI_Different_Core (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Destination subject 'linux' (CPU 0) in subject's "
-                    & "'linux' (CPU 0) ipi notification 'linux_kbd' invalid - "
-                    & "no IPI allowed",
+                    = "Destination subject 'sm' (CPU 1) in subject's 'linux' "
+                    & "(CPU 1) ipi notification 'trap_to_sm' invalid - no IPI"
+                    & " allowed",
                     Message   => "Exception mismatch");
       end;
    end Validate_IPI_Destination;

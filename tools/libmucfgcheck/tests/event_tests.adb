@@ -266,23 +266,32 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/target/"
+            & "event[@physical='trap_to_sm']/..");
       begin
+         Muxml.Utils.Remove_Child
+           (Node       => Node,
+            Child_Name => "event");
+
          Mucfgcheck.Events.Source_Targets (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Invalid number of targets for event 'linux_kbd': 0",
+                    = "Invalid number of targets for event 'trap_to_sm': 0",
                     Message   => "Exception mismatch (target)");
       end;
 
       declare
          Event_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
-            XPath => "/system/events/event[@name='linux_kbd']");
+            XPath => "/system/events/event[@name='trap_to_sm']");
       begin
          DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
                                           Name  => "name",

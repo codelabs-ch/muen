@@ -365,30 +365,31 @@ is
 
    procedure Validate_Switch_Destination
    is
-      Data       : Muxml.XML_Data_Type;
-      Event_Node : DOM.Core.Node;
+      Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
-      Event_Node := Muxml.Utils.Get_Element
-        (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/events/target/event"
-         & "[@physical='nonexistent']");
-      DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
-                                       Name  => "physical",
-                                       Value => "switch_to_linux");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/source/group/event/"
+            & "notify[@physical='linux_keyboard']");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "physical",
+                                          Value => "resume_linux");
+
          Mucfgcheck.Events.Switch_Same_Core (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Destination subject 'linux' (CPU 0) in subject's "
-                    & "'subject1' (CPU 1) switch notification 'switch_to_"
-                    & "linux' invalid - must run on the same CPU",
+                    = "Destination subject 'linux' (CPU 1) in subject's 'vt' "
+                    & "(CPU 0) switch notification 'resume_linux' invalid - "
+                    & "must run on the same CPU",
                     Message   => "Exception mismatch");
       end;
    end Validate_Switch_Destination;

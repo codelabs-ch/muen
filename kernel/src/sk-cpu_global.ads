@@ -20,21 +20,22 @@ with Skp.Scheduling;
 
 use type Skp.CPU_Range;
 
---# inherit
---#    Skp.Scheduling,
---#    SK;
 package SK.CPU_Global
---# own
---#    State;
+with SPARK_Mode,
+   Abstract_State => State
 is
 
    --  ID of the local CPU.
-   CPU_ID : constant Skp.CPU_Range;
+   CPU_ID : constant Skp.CPU_Range
+   with
+      Import,
+      Convention => C,
+      Link_Name  => "cpu_id";
 
    --  Returns True if the local CPU is the bootstrap processor.
-   function Is_BSP return Boolean;
-   --# return
-   --#    CPU_ID = Skp.CPU_Range'First;
+   function Is_BSP return Boolean
+   with
+      Post => Is_BSP'Result = (CPU_ID = Skp.CPU_Range'First);
 
    --  Currently active minor frame.
    type Active_Minor_Frame_Type is record
@@ -43,62 +44,51 @@ is
    end record;
 
    --  Initialize per-CPU storage.
-   procedure Init;
-   --# global
-   --#    out State;
-   --# derives
-   --#    State from ;
+   procedure Init
+   with
+      Global  => (Output => State),
+      Depends => (State => null);
 
    --  Set the currently active minor frame to specified frame.
-   procedure Set_Current_Minor (Frame : Active_Minor_Frame_Type);
-   --# global
-   --#    in out State;
-   --# derives
-   --#    State from *, Frame;
+   procedure Set_Current_Minor (Frame : Active_Minor_Frame_Type)
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ Frame);
 
    --  Returns the currently active minor frame.
-   function Get_Current_Minor_Frame return Active_Minor_Frame_Type;
-   --# global
-   --#    State;
+   function Get_Current_Minor_Frame return Active_Minor_Frame_Type
+   with
+      Global  => (Input => State);
 
    --  Set the per-CPU scheduling plan.
-   procedure Set_Scheduling_Plan (Data : Skp.Scheduling.Major_Frame_Array);
-   --# global
-   --#    in out State;
-   --# derives
-   --#    State from *, Data;
+   procedure Set_Scheduling_Plan (Data : Skp.Scheduling.Major_Frame_Array)
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ Data);
 
    --  Return number of minor frames in given scheduling plan major frame.
    function Get_Major_Length
      (Major_Id : Skp.Scheduling.Major_Frame_Range)
-      return Skp.Scheduling.Minor_Frame_Range;
-   --# global
-   --#    State;
+      return Skp.Scheduling.Minor_Frame_Range
+   with
+      Global  => (Input => State);
 
    --  Return scheduling minor frame indexed by major and minor id.
    function Get_Minor_Frame
      (Major_Id : Skp.Scheduling.Major_Frame_Range;
       Minor_Id : Skp.Scheduling.Minor_Frame_Range)
-      return Skp.Scheduling.Minor_Frame_Type;
-   --# global
-   --#    State;
+      return Skp.Scheduling.Minor_Frame_Type
+   with
+      Global  => (Input => State);
 
    --  Remove subject specified by Old_Id from the scheduling plan and replace
    --  it with the subject given by New_Id.
    procedure Swap_Subject
      (Old_Id : Skp.Subject_Id_Type;
-      New_Id : Skp.Subject_Id_Type);
-   --# global
-   --#    in out State;
-   --# derives
-   --#    State from *, Old_Id, New_Id;
-   --# pre
-   --#    Old_Id /= New_Id;
-
-private
-
-   --# hide SK.CPU_Global;
-
-   pragma Import (C, CPU_ID, "cpu_id");
+      New_Id : Skp.Subject_Id_Type)
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ (Old_Id, New_Id)),
+      Pre     => Old_Id /= New_Id;
 
 end SK.CPU_Global;

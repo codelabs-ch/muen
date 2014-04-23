@@ -7,6 +7,7 @@ TOOLS =           \
 	libpaging     \
 	mucfgalloc    \
 	mucfgexpand   \
+	mucfgmerge    \
 	mucfgvalidate \
 	mugenacpi     \
 	mugeniobm     \

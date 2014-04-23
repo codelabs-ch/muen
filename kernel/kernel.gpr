@@ -25,6 +25,7 @@ project Kernel is
 
    Extra_Dirs := ();
    Extra_Languages := ();
+   Extra_Warning_Switches := ();
    Preprocessor_Switches := ();
 
    case Build_Mode is
@@ -53,8 +54,15 @@ project Kernel is
             "-gnateDProve_Warnings=Warnings",
             "-gnateDDebug_Warnings=Debug",
             "-gnateDRelease_Warnings=Warnings");
+         Extra_Warning_Switches := ("-gnatw.W");
 
     end case;
+
+   Warning_Switches :=
+     ("-gnatwale.e.Y.N",
+      "-Wuninitialized",
+      "-Wall",
+      "-Werror") & Extra_Warning_Switches;
 
    for Languages use ("Ada") & Extra_Languages;
 
@@ -78,8 +86,10 @@ project Kernel is
    package Compiler is
       for Required_Switches ("Asm") use ("-x", "assembler-with-cpp");
       for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches
+        & ("-Wstack-usage=8192")
         & Preprocessor_Switches
-        & ("-gnatwale", "-Wstack-usage=8192", "-Werror");
+        & Warning_Switches;
+
       for Local_Configuration_Pragmas use "../config/restrictions-" & Build_Mode & ".adc";
    end Compiler;
 

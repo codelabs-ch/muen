@@ -27,12 +27,12 @@ package body SK.Subjects
 --#    State is Descriptors;
 is
 
-   pragma Warnings (Off, "*padded by * bits");
+   pragma $Build_Warnings (Off, "*padded by * bits");
    type Subject_State_Array is array
      (Skp.Subject_Id_Type) of SK.Subject_State_Type;
    for Subject_State_Array'Component_Size use Page_Size * 8;
    for Subject_State_Array'Alignment use Page_Size;
-   pragma Warnings (On, "*padded by * bits");
+   pragma $Build_Warnings (On, "*padded by * bits");
 
    --  Descriptors used to manage subject states.
 

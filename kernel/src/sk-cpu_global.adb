@@ -37,9 +37,9 @@ is
      (Skp.Kernel.CPU_Store_Address + 8);
    --# end accept;
 
-   pragma Warnings (Off, "* bits of ""Storage"" unused");
+   pragma $Build_Warnings (Off, "* bits of ""Storage"" unused");
    for Storage'Size use 8 * (SK.Page_Size - 8);
-   pragma Warnings (On,  "* bits of ""Storage"" unused");
+   pragma $Build_Warnings (On,  "* bits of ""Storage"" unused");
 
    -------------------------------------------------------------------------
 

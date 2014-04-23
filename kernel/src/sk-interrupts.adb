@@ -120,7 +120,7 @@ is
          pragma Debug (Dump.Print_IRQ_Routing
                        (IRQ     => Route.IRQ,
                         Vector  => SK.Byte (Route.Vector),
-                        CPU     => SK.Byte (Route.CPU),
+                        CPU_ID  => SK.Byte (Route.CPU),
                         APIC_ID => APIC_ID));
 
          if Skp.Interrupts.IRQ_Routing (I).Vector /= Skp.Invalid_Vector then

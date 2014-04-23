@@ -33,7 +33,7 @@ is
    procedure Print_IRQ_Routing
      (IRQ     : SK.Byte;
       Vector  : SK.Byte;
-      CPU     : SK.Byte;
+      CPU_ID  : SK.Byte;
       APIC_ID : SK.Byte)
    is
    begin
@@ -42,7 +42,7 @@ is
       KC.Put_String (Item => " as vector ");
       KC.Put_Byte   (Item => Vector);
       KC.Put_String (Item => " to CPU ");
-      KC.Put_Byte   (Item => CPU);
+      KC.Put_Byte   (Item => CPU_ID);
       KC.Put_String (Item => " with APIC ID ");
       KC.Put_Byte   (Item => APIC_ID);
       KC.New_Line;

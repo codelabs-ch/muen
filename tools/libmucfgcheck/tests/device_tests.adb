@@ -80,17 +80,14 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/devices/"
+         & "device[@physical='port80']",
+         Name  => "physical",
+         Value => "cmos_rtc");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/devices/"
-            & "device[@physical='port80']");
       begin
-         DOM.Core.Elements.Set_Attribute (Elem  => Node,
-                                          Name  => "physical",
-                                          Value => "cmos_rtc");
-
          Mucfgcheck.Device.Device_Sharing (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -151,17 +148,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/devices/device/memory",
+         Name  => "physical",
+         Value => "nonexistent");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/kernel/devices/device/memory");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "physical",
-            Value => "nonexistent");
-
          Mucfgcheck.Device.Device_Memory_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -184,17 +177,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/platform/device/ioPort[@name='port_64']",
+         Name  => "name",
+         Value => "port_60");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/platform/device/ioPort[@name='port_64']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "name",
-            Value => "port_60");
-
          Mucfgcheck.Device.Device_IO_Port_Name_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -216,18 +205,14 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/devices/device[@logical='vga']"
+         & "/ioPort",
+         Name  => "physical",
+         Value => "nonexistent");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/devices/device[@logical='vga']"
-            & "/ioPort");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "physical",
-            Value => "nonexistent");
-
          Mucfgcheck.Device.IO_Port_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -285,16 +270,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/platform/device[@name='serial']",
+         Name  => "name",
+         Value => "vga");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/platform/device[@name='serial']");
       begin
-         DOM.Core.Elements.Set_Attribute (Elem  => Node,
-                                          Name  => "name",
-                                          Value => "vga");
-
          Mucfgcheck.Device.Physical_Device_Name_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -315,17 +297,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/devices/device[@physical='ioapic']",
+         Name  => "physical",
+         Value => "nonexistent");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/kernel/devices/device[@physical='ioapic']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "physical",
-            Value => "nonexistent");
-
          Mucfgcheck.Device.Physical_Device_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -383,18 +361,14 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/devices/device/irq"
+         & "[@physical='kbd_irq']",
+         Name  => "physical",
+         Value => "nonexistent");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/devices/device/irq"
-            & "[@physical='kbd_irq']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "physical",
-            Value => "nonexistent");
-
          Mucfgcheck.Device.Physical_IRQ_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 

@@ -87,21 +87,25 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
                  Name => "name");
+            Subj_Name : constant String
+              := Mutools.Utils.Decode_Entity_Name (Encoded_Str => Memname);
+            Subj_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Policy.Doc,
+                 XPath => "/system/subjects/subject[@name='" & Subj_Name
+                 & "']");
             Physaddr : constant String
               := Muxml.Utils.Get_Attribute
-                (Doc   => Policy.Doc,
-                 XPath => "/system/subjects/subject/memory/"
-                 & "memory[@physical='" & Memname & "']",
+                (Doc   => Subj_Node,
+                 XPath => "memory/memory[@physical='" & Memname & "']",
                  Name  => "virtualAddress");
             Bootparams : constant String
               := Muxml.Utils.Get_Element_Value
-                (Doc   => Policy.Doc,
-                 XPath => "/system/subjects/subject[@name='"
-                 & Mutools.Utils.Decode_Entity_Name
-                   (Encoded_Str => Memname) & "']/bootparams");
+                (Doc   => Subj_Node,
+                 XPath => "bootparams");
          begin
-            Mulog.Log (Msg => "Guest-physical address of " & Memname
-                       & " zero-page is " & Physaddr);
+            Mulog.Log (Msg => "Guest-physical address of '" & Memname
+                       & "' zero-page is " & Physaddr);
             Write_ZP_File
               (Filename         => Output_Dir & "/" & Filename,
                Cmdline          => Bootparams,

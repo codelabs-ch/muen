@@ -28,6 +28,14 @@ is
       Name  : String)
       return String;
 
+   --  Set attribute 'Name' of element given by XPath to the specified value.
+   --  If no such element exists, an exception is raised.
+   procedure Set_Attribute
+     (Doc   : DOM.Core.Node;
+      XPath : String;
+      Name  : String;
+      Value : String);
+
    --  Returns the element specified by an XPath in the given document. If no
    --  such element exists null is returned. The first match is returned if
    --  multiple elements are found.

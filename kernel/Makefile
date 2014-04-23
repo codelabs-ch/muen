@@ -47,4 +47,4 @@ sloc:
 
 FORCE:
 
-.PHONY: FORCE
+.PHONY: FORCE $(OBJ_DIR)/debug/$(PACKAGE) $(OBJ_DIR)/release/$(PACKAGE)

@@ -58,7 +58,7 @@ is
    procedure Write_ZP_File
      (Filename         : String;
       Cmdline          : String;
-      Physical_Address : Natural);
+      Physical_Address : Interfaces.Unsigned_64);
 
    -------------------------------------------------------------------------
 
@@ -109,7 +109,7 @@ is
             Write_ZP_File
               (Filename         => Output_Dir & "/" & Filename,
                Cmdline          => Bootparams,
-               Physical_Address => Natural'Value (Physaddr));
+               Physical_Address => Interfaces.Unsigned_64'Value (Physaddr));
          end;
       end loop;
 
@@ -120,7 +120,7 @@ is
    procedure Write_ZP_File
      (Filename         : String;
       Cmdline          : String;
-      Physical_Address : Natural)
+      Physical_Address : Interfaces.Unsigned_64)
    is
       use Ada.Streams.Stream_IO;
       use type Interfaces.C.size_t;

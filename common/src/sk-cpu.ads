@@ -16,227 +16,206 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
---# inherit
---#    SK,
---#    X86_64;
+with X86_64;
+
 package SK.CPU
+with SPARK_Mode
 is
 
    --  Clear Interrupt Flag.
-   procedure Cli;
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *;
-   pragma Inline_Always (Cli);
+   procedure Cli
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ null),
+      Inline_Always;
 
    --  Execute CPUID instruction.
    procedure CPUID
      (EAX : in out SK.Word32;
       EBX :    out SK.Word32;
       ECX : in out SK.Word32;
-      EDX :    out SK.Word32);
-   --# global
-   --#    in X86_64.State;
-   --# derives
-   --#    EAX, EBX, ECX, EDX from X86_64.State, EAX, ECX;
-   pragma Inline_Always (CPUID);
+      EDX :    out SK.Word32)
+   with
+      Global  => (Input => X86_64.State),
+      Depends => ((EAX, EBX, ECX, EDX) => (EAX, ECX, X86_64.State)),
+      Inline_Always;
 
    --  Halt the CPU.
-   procedure Hlt;
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *;
-   pragma Inline_Always (Hlt);
+   procedure Hlt
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ null),
+      Inline_Always;
 
    --  Set Interrupt Flag.
-   procedure Sti;
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *;
-   pragma Inline_Always (Sti);
+   procedure Sti
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ null),
+      Inline_Always;
 
    --  Load Interrupt Descriptor Table (IDT) register.
-   procedure Lidt (Address : SK.Word64);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, Address;
-   pragma Inline_Always (Lidt);
+   procedure Lidt (Address : SK.Word64)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ Address),
+      Inline_Always;
 
    --  Panic.
-   procedure Panic;
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *;
-   pragma Inline_Always (Panic);
+   procedure Panic
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ null),
+      Inline_Always,
+      No_Return;
 
    --  Stop CPU.
-   procedure Stop;
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *;
-   pragma Inline_Always (Stop);
+   procedure Stop
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ null),
+      Inline_Always,
+      No_Return;
 
    --  Return current value of CR0 register.
-   function Get_CR0 return SK.Word64;
-   --# global
-   --#    X86_64.State;
-   pragma Inline_Always (Get_CR0);
+   function Get_CR0 return SK.Word64
+   with
+      Global  => (Input => X86_64.State),
+      Inline_Always;
 
    --  Return current value of CR2 register.
-   function Get_CR2 return SK.Word64;
-   --# global
-   --#    X86_64.State;
-   pragma Inline_Always (Get_CR2);
+   function Get_CR2 return SK.Word64
+   with
+      Global  => (Input => X86_64.State),
+      Inline_Always;
 
    --  Return current value of CR3 register.
-   function Get_CR3 return SK.Word64;
-   --# global
-   --#    X86_64.State;
-   pragma Inline_Always (Get_CR3);
+   function Get_CR3 return SK.Word64
+   with
+      Global  => (Input => X86_64.State),
+      Inline_Always;
 
    --  Return current value of CR4 register.
-   function Get_CR4 return SK.Word64;
-   --# global
-   --#    X86_64.State;
-   pragma Inline_Always (Get_CR4);
+   function Get_CR4 return SK.Word64
+   with
+      Global  => (Input => X86_64.State),
+      Inline_Always;
 
       --  Set value of CR2.
-   procedure Set_CR2 (Value : SK.Word64);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, Value;
-   pragma Inline_Always (Set_CR2);
+   procedure Set_CR2 (Value : SK.Word64)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ Value),
+      Inline_Always;
 
    --  Set value of CR4.
-   procedure Set_CR4 (Value : SK.Word64);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, Value;
-   pragma Inline_Always (Set_CR4);
+   procedure Set_CR4 (Value : SK.Word64)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ Value),
+      Inline_Always;
 
    --  Return current value of given model specific register.
-   function Get_MSR64 (Register : SK.Word32) return SK.Word64;
-   --# global
-   --#    X86_64.State;
-   pragma Inline_Always (Get_MSR64);
+   function Get_MSR64 (Register : SK.Word32) return SK.Word64
+   with
+      Global  => (Input => X86_64.State),
+      Inline_Always;
 
    --  Return value of given MSR as low/high doublewords.
    procedure Get_MSR
      (Register :     SK.Word32;
       Low      : out SK.Word32;
-      High     : out SK.Word32);
-   --# global
-   --#    X86_64.State;
-   --# derives
-   --#    Low, High from X86_64.State, Register;
-   pragma Inline_Always (Get_MSR);
+      High     : out SK.Word32)
+   with
+      Global  => (Input => X86_64.State),
+      Depends => ((Low, High) => (X86_64.State, Register)),
+      Inline_Always;
 
    --  Write specified quadword to given MSR.
    procedure Write_MSR64
      (Register : SK.Word32;
-      Value    : SK.Word64);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, Register, Value;
-   pragma Inline_Always (Write_MSR64);
+      Value    : SK.Word64)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ (Register, Value)),
+      Inline_Always;
 
    --  Write specified low/high doublewords to given MSR.
    procedure Write_MSR
      (Register : SK.Word32;
       Low      : SK.Word32;
-      High     : SK.Word32);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, Register, Low, High;
-   pragma Inline_Always (Write_MSR);
+      High     : SK.Word32)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ (Register, Low, High)),
+      Inline_Always;
 
    --  Return current RFLAGS.
-   function Get_RFLAGS return SK.Word64;
-   --# global
-   --#    X86_64.State;
-   pragma Inline_Always (Get_RFLAGS);
+   function Get_RFLAGS return SK.Word64
+   with
+      Global  => (Input => X86_64.State),
+      Inline_Always;
 
    --  Set CPU RSP and RBP registers to given address.
-   procedure Set_Stack (Address : SK.Word64);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, Address;
-   pragma Inline_Always (Set_Stack);
+   procedure Set_Stack (Address : SK.Word64)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ Address),
+      Inline_Always;
 
    --  Enter VMX operation.
    procedure VMXON
      (Region  :     SK.Word64;
-      Success : out Boolean);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, Region &
-   --#    Success      from X86_64.State, Region;
-   pragma Inline_Always (VMXON);
+      Success : out Boolean)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => ((X86_64.State, Success) => (X86_64.State, Region)),
+      Inline_Always;
 
    procedure VMCLEAR
      (Region  :     SK.Word64;
-      Success : out Boolean);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, Region &
-   --#    Success      from X86_64.State, Region;
-   pragma Inline_Always (VMCLEAR);
+      Success : out Boolean)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => ((X86_64.State, Success) => (X86_64.State, Region)),
+      Inline_Always;
 
    procedure VMPTRLD
      (Region  :     SK.Word64;
-      Success : out Boolean);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, Region &
-   --#    Success      from X86_64.State, Region;
-   pragma Inline_Always (VMPTRLD);
+      Success : out Boolean)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => ((X86_64.State, Success) => (X86_64.State, Region)),
+      Inline_Always;
 
    procedure VMREAD
      (Field   :     SK.Word64;
       Value   : out SK.Word64;
-      Success : out Boolean);
-   --# global
-   --#    in X86_64.State;
-   --# derives
-   --#    Value, Success from X86_64.State, Field;
-   pragma Inline_Always (VMREAD);
+      Success : out Boolean)
+   with
+      Global  => (Input => X86_64.State),
+      Depends => ((Value, Success) => (X86_64.State, Field)),
+      Inline_Always;
 
    procedure VMWRITE
      (Field   :     SK.Word64;
       Value   :     SK.Word64;
-      Success : out Boolean);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State, Success from X86_64.State, Field, Value;
-   pragma Inline_Always (VMWRITE);
+      Success : out Boolean)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => ((X86_64.State, Success) => (X86_64.State, Field, Value)),
+      Inline_Always;
 
-   procedure XRSTOR (Source : SK.XSAVE_Area_Type);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from X86_64.State, Source;
-   pragma Inline_Always (XRSTOR);
+   procedure XRSTOR (Source : SK.XSAVE_Area_Type)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ Source),
+      Inline_Always;
 
-   procedure XSAVE (Target : out SK.XSAVE_Area_Type);
-   --# global
-   --#    in X86_64.State;
-   --# derives
-   --#    Target from X86_64.State;
-   pragma Inline_Always (XSAVE);
+   procedure XSAVE (Target : out SK.XSAVE_Area_Type)
+   with
+      Global  => (Input => X86_64.State),
+      Depends => (Target => X86_64.State),
+      Inline_Always;
 
 end SK.CPU;

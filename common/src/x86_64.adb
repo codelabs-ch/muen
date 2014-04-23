@@ -16,11 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package X86_64
-with SPARK_Mode,
-   Abstract_State =>
-     (State with External => (Async_Readers, Async_Writers, Effective_Writes)),
-   Initializes    => State
+package body X86_64
+with
+   SPARK_Mode    => Off,
+   Refined_State => (State => null)
 is
 
 end X86_64;

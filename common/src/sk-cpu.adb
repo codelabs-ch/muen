@@ -19,13 +19,15 @@
 with System.Machine_Code;
 
 package body SK.CPU
+with SPARK_Mode
 is
 
    -------------------------------------------------------------------------
 
    procedure Cli
+   with
+      SPARK_Mode => Off
    is
-      --# hide Cli;
    begin
       System.Machine_Code.Asm
         (Template => "cli",
@@ -39,8 +41,9 @@ is
       EBX :    out SK.Word32;
       ECX : in out SK.Word32;
       EDX :    out SK.Word32)
+   with
+      SPARK_Mode => Off
    is
-      --# hide CPUID;
    begin
       System.Machine_Code.Asm
         (Template => "cpuid",
@@ -56,9 +59,9 @@ is
    -------------------------------------------------------------------------
 
    function Get_CR0 return SK.Word64
+   with
+      SPARK_Mode => Off
    is
-      --# hide Get_CR0;
-
       Result : SK.Word64;
    begin
       System.Machine_Code.Asm
@@ -71,9 +74,9 @@ is
    -------------------------------------------------------------------------
 
    function Get_CR2 return SK.Word64
+   with
+      SPARK_Mode => Off
    is
-      --# hide Get_CR2;
-
       Result : SK.Word64;
    begin
       System.Machine_Code.Asm
@@ -86,9 +89,9 @@ is
    -------------------------------------------------------------------------
 
    function Get_CR3 return SK.Word64
+   with
+      SPARK_Mode => Off
    is
-      --# hide Get_CR3;
-
       Result : SK.Word64;
    begin
       System.Machine_Code.Asm
@@ -101,9 +104,9 @@ is
    -------------------------------------------------------------------------
 
    function Get_CR4 return SK.Word64
+   with
+      SPARK_Mode => Off
    is
-      --# hide Get_CR4;
-
       Result : SK.Word64;
    begin
       System.Machine_Code.Asm
@@ -119,8 +122,9 @@ is
      (Register :     SK.Word32;
       Low      : out SK.Word32;
       High     : out SK.Word32)
+   with
+      SPARK_Mode => Off
    is
-      --# hide Get_MSR;
    begin
       System.Machine_Code.Asm
         (Template => "rdmsr",
@@ -133,6 +137,8 @@ is
    -------------------------------------------------------------------------
 
    function Get_MSR64 (Register : SK.Word32) return SK.Word64
+   with
+      SPARK_Mode => Off
    is
       Low_Dword, High_Dword : SK.Word32;
    begin
@@ -145,9 +151,9 @@ is
    -------------------------------------------------------------------------
 
    function Get_RFLAGS return SK.Word64
+   with
+      SPARK_Mode => Off
    is
-      --# hide Get_RFLAGS;
-
       Result : SK.Word64;
    begin
       System.Machine_Code.Asm
@@ -161,8 +167,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Hlt
+   with
+      SPARK_Mode => Off
    is
-      --# hide Hlt;
    begin
       System.Machine_Code.Asm
         (Template => "hlt",
@@ -172,8 +179,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Lidt (Address : SK.Word64)
+   with
+      SPARK_Mode => Off
    is
-      --# hide Lidt;
    begin
       System.Machine_Code.Asm
         (Template => "lidt (%0)",
@@ -184,19 +192,23 @@ is
    -------------------------------------------------------------------------
 
    procedure Panic
+   with
+      SPARK_Mode => Off
    is
-      --# hide Panic;
    begin
-      System.Machine_Code.Asm
-        (Template => "ud2",
-         Volatile => True);
+      loop
+         System.Machine_Code.Asm
+           (Template => "ud2",
+            Volatile => True);
+      end loop;
    end Panic;
 
    -------------------------------------------------------------------------
 
    procedure Set_CR2 (Value : SK.Word64)
+   with
+      SPARK_Mode => Off
    is
-      --# hide Set_CR2;
    begin
       System.Machine_Code.Asm
         (Template => "movq %0, %%cr2",
@@ -207,8 +219,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Set_CR4 (Value : SK.Word64)
+   with
+      SPARK_Mode => Off
    is
-      --# hide Set_CR4;
    begin
       System.Machine_Code.Asm
         (Template => "movq %0, %%cr4",
@@ -219,8 +232,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Set_Stack (Address : SK.Word64)
+   with
+      SPARK_Mode => Off
    is
-      --# hide Set_Stack;
    begin
       System.Machine_Code.Asm
         (Template => "mov %0, %%rsp; mov %%rsp, %%rbp",
@@ -231,8 +245,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Sti
+   with
+      SPARK_Mode => Off
    is
-      --# hide Sti;
    begin
       System.Machine_Code.Asm
         (Template => "sti",
@@ -243,11 +258,11 @@ is
 
    procedure Stop
    is
-      --# hide Stop;
    begin
-      System.Machine_Code.Asm
-        (Template => "cli; 1: hlt; jmp 1b",
-         Volatile => True);
+      loop
+         Cli;
+         Hlt;
+      end loop;
    end Stop;
 
    -------------------------------------------------------------------------
@@ -255,8 +270,9 @@ is
    procedure VMCLEAR
      (Region  :     SK.Word64;
       Success : out Boolean)
+   with
+      SPARK_Mode => Off
    is
-      --# hide VMCLEAR;
    begin
       System.Machine_Code.Asm
         (Template => "vmclear %1; seta %0",
@@ -271,8 +287,9 @@ is
    procedure VMPTRLD
      (Region  :     SK.Word64;
       Success : out Boolean)
+   with
+      SPARK_Mode => Off
    is
-      --# hide VMPTRLD;
    begin
       System.Machine_Code.Asm
         (Template => "vmptrld %1; seta %0",
@@ -288,8 +305,9 @@ is
      (Field   :     SK.Word64;
       Value   : out SK.Word64;
       Success : out Boolean)
+   with
+      SPARK_Mode => Off
    is
-      --# hide VMREAD;
    begin
       System.Machine_Code.Asm
         (Template => "vmread %2, %0; seta %1",
@@ -306,8 +324,9 @@ is
      (Field   :     SK.Word64;
       Value   :     SK.Word64;
       Success : out Boolean)
+   with
+      SPARK_Mode => Off
    is
-      --# hide VMWRITE;
    begin
       System.Machine_Code.Asm
         (Template => "vmwrite %1, %2; seta %0",
@@ -323,8 +342,9 @@ is
    procedure VMXON
      (Region  :     SK.Word64;
       Success : out Boolean)
+   with
+      SPARK_Mode => Off
    is
-      --# hide VMXON;
    begin
       System.Machine_Code.Asm
         (Template => "vmxon %1; seta %0",
@@ -340,8 +360,9 @@ is
      (Register : SK.Word32;
       Low      : SK.Word32;
       High     : SK.Word32)
+   with
+      SPARK_Mode => Off
    is
-      --# hide Write_MSR;
    begin
       System.Machine_Code.Asm
         (Template => "wrmsr",
@@ -370,8 +391,9 @@ is
    -------------------------------------------------------------------------
 
    procedure XRSTOR (Source : SK.XSAVE_Area_Type)
+   with
+      SPARK_Mode => Off
    is
-      --# hide XRSTOR;
    begin
       System.Machine_Code.Asm
         (Template => "xrstor64 %2",
@@ -384,8 +406,9 @@ is
    -------------------------------------------------------------------------
 
    procedure XSAVE (Target : out SK.XSAVE_Area_Type)
+   with
+      SPARK_Mode => Off
    is
-      --# hide XSAVE;
    begin
       System.Machine_Code.Asm
         (Template => "xsave64 %0",

@@ -51,14 +51,16 @@ is
       N : Interfaces.C.size_t);
    pragma Import (C, C_Memset, "memset");
 
-   --  Write Linux bootparams structure and specified command line to file
-   --  given by filename. The size of the generated file is 4k + length (cmdl).
-   --  The physical address argument designates the physical address of the
-   --  zero-page in guest memory.
+   --  Write Linux bootparams structure with ramdisk information and specified
+   --  command line to file given by filename. The size of the generated file
+   --  is 4k + length (cmdl). The physical address argument designates the
+   --  physical address of the zero-page in guest memory.
    procedure Write_ZP_File
      (Filename         : String;
       Cmdline          : String;
-      Physical_Address : Interfaces.Unsigned_64);
+      Physical_Address : Interfaces.Unsigned_64;
+      Ramdisk_Address  : Interfaces.Unsigned_64;
+      Ramdisk_Size     : Interfaces.Unsigned_64);
 
    -------------------------------------------------------------------------
 
@@ -109,7 +111,9 @@ is
             Write_ZP_File
               (Filename         => Output_Dir & "/" & Filename,
                Cmdline          => Bootparams,
-               Physical_Address => Interfaces.Unsigned_64'Value (Physaddr));
+               Physical_Address => Interfaces.Unsigned_64'Value (Physaddr),
+               Ramdisk_Address  => 0,
+               Ramdisk_Size     => 0);
          end;
       end loop;
 
@@ -120,7 +124,9 @@ is
    procedure Write_ZP_File
      (Filename         : String;
       Cmdline          : String;
-      Physical_Address : Interfaces.Unsigned_64)
+      Physical_Address : Interfaces.Unsigned_64;
+      Ramdisk_Address  : Interfaces.Unsigned_64;
+      Ramdisk_Size     : Interfaces.Unsigned_64)
    is
       use Ada.Streams.Stream_IO;
       use type Interfaces.C.size_t;
@@ -161,6 +167,11 @@ is
       Params.e820_map (3) := (addr   => 16#400000#,
                               size   => Memory_Size_High,
                               c_type => E820_RAM);
+
+      --  Initramfs
+
+      Params.hdr.ramdisk_image := Interfaces.C.unsigned (Ramdisk_Address);
+      Params.hdr.ramdisk_size  := Interfaces.C.unsigned (Ramdisk_Size);
 
       Params.hdr.cmdline_size     := 16#0000_0fff#;
       Params.hdr.kernel_alignment := 16#0100_0000#;

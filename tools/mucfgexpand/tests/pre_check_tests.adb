@@ -19,7 +19,6 @@
 with Ada.Exceptions;
 
 with DOM.Core.Nodes;
-with DOM.Core.Elements;
 
 with Muxml.Utils;
 with Mucfgcheck;
@@ -35,18 +34,15 @@ is
 
    procedure Channel_Reader_Has_Event_Vector
    is
-      Node   : DOM.Core.Node;
       Policy : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
-      Node := Muxml.Utils.Get_Element
+      Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject/channels/reader"
-         & "[@ref='data_channel']");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
+         & "[@ref='data_channel']",
          Name  => "vector",
          Value => "");
 
@@ -68,19 +64,15 @@ is
 
    procedure Channel_Reader_Writer
    is
-      Node   : DOM.Core.Node;
       Policy : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
-
-      Node := Muxml.Utils.Get_Element
+      Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject/channels/writer"
-         & "[@ref='data_channel']");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
+         & "[@ref='data_channel']",
          Name  => "ref",
          Value => "nonexistent");
 
@@ -96,12 +88,10 @@ is
                     Message   => "Exception mismatch (writer)");
       end;
 
-      Node := Muxml.Utils.Get_Element
+      Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject/channels/reader"
-         & "[@ref='data_channel']");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
+         & "[@ref='data_channel']",
          Name  => "ref",
          Value => "nonexistent");
 
@@ -122,18 +112,15 @@ is
 
    procedure Channel_Writer_Has_Event_ID
    is
-      Node   : DOM.Core.Node;
       Policy : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
-      Node := Muxml.Utils.Get_Element
+      Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject/channels/writer"
-         & "[@ref='data_channel']");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
+         & "[@ref='data_channel']",
          Name  => "event",
          Value => "");
 
@@ -180,19 +167,15 @@ is
 
    procedure Subject_Channel_References
    is
-      Reader_Node : DOM.Core.Node;
-      Policy      : Muxml.XML_Data_Type;
+      Policy : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
-
-      Reader_Node := Muxml.Utils.Get_Element
+      Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject/channels/reader"
-         & "[@ref='data_channel']");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Reader_Node,
+         & "[@ref='data_channel']",
          Name  => "ref",
          Value => "nonexistent");
 
@@ -213,19 +196,16 @@ is
 
    procedure Subject_Monitor_References
    is
-      Monitor_Node : DOM.Core.Node;
-      Policy       : Muxml.XML_Data_Type;
+      Policy : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
-
-      Monitor_Node := Muxml.Utils.Get_Element
+      Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
-         XPath => "/system/subjects/subject/monitor/state[@subject='lnx']");
-      DOM.Core.Elements.Set_Attribute (Elem  => Monitor_Node,
-                                       Name  => "subject",
-                                       Value => "nonexistent");
+         XPath => "/system/subjects/subject/monitor/state[@subject='lnx']",
+         Name  => "subject",
+         Value => "nonexistent");
 
       begin
          Expand.Pre_Checks.Subject_Monitor_References (XML_Data => Policy);

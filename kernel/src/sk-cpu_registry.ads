@@ -18,28 +18,23 @@
 
 with Skp;
 
---# inherit
---#    Skp,
---#    SK;
 package SK.CPU_Registry
---# own
---#    State;
---# initializes
---#    State;
+with SPARK_Mode,
+   Abstract_State => State,
+   Initializes    => State
 is
 
    --  Register CPU with given CPU ID and local APIC ID.
    procedure Register
      (CPU_ID  : Skp.CPU_Range;
-      APIC_ID : SK.Byte);
-   --# global
-   --#    in out State;
-   --# derives
-   --#    State from *, CPU_ID, APIC_ID;
+      APIC_ID : SK.Byte)
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ (CPU_ID, APIC_ID));
 
    --  Return APIC ID for CPU with given CPU ID.
-   function Get_APIC_ID (CPU_ID : Skp.CPU_Range) return SK.Byte;
-   --# global
-   --#    State;
+   function Get_APIC_ID (CPU_ID : Skp.CPU_Range) return SK.Byte
+   with
+      Global => State;
 
 end SK.CPU_Registry;

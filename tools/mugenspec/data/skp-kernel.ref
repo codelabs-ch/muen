@@ -1,4 +1,6 @@
-package Skp.Kernel is
+package Skp.Kernel
+with SPARK_Mode
+is
 
    Stack_Address      : constant := 16#0011_4000#;
    CPU_Store_Address  : constant := 16#0011_6000#;

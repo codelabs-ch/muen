@@ -17,6 +17,7 @@
 --
 
 package SK.Constants
+with SPARK_Mode
 is
 
    -----------

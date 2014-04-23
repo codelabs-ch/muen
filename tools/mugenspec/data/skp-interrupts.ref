@@ -1,7 +1,8 @@
 with SK;
 
---# inherit SK, Skp;
-package Skp.Interrupts is
+package Skp.Interrupts
+with SPARK_Mode
+is
 
    Remap_Offset : constant := 32;
 

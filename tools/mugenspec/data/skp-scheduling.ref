@@ -1,7 +1,8 @@
 with SK;
 
---# inherit SK, Skp;
-package Skp.Scheduling is
+package Skp.Scheduling
+with SPARK_Mode
+is
 
    type Minor_Frame_Type is record
       Subject_Id : Skp.Subject_Id_Type;

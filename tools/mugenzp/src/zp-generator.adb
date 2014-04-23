@@ -105,15 +105,39 @@ is
               := Muxml.Utils.Get_Element_Value
                 (Doc   => Subj_Node,
                  XPath => "bootparams");
+            Initramfs_Name : constant String := Subj_Name & "|initramfs";
+            Initramfs_Addr_Str : constant String
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Subj_Node,
+                 XPath => "memory/memory[@physical='" & Initramfs_Name & "']",
+                 Name  => "virtualAddress");
+
+            Initramfs_Address, Initramfs_Size : Interfaces.Unsigned_64 := 0;
          begin
             Mulog.Log (Msg => "Guest-physical address of '" & Memname
                        & "' zero-page is " & Physaddr);
+
+            if Initramfs_Addr_Str'Length > 0 then
+               Initramfs_Address := Interfaces.Unsigned_64'Value
+                 (Initramfs_Addr_Str);
+               Initramfs_Size := Interfaces.Unsigned_64'Value
+                 (Muxml.Utils.Get_Attribute
+                    (Doc   => Policy.Doc,
+                     XPath => "/system/memory/memory[@name='" & Initramfs_Name
+                     & "']",
+                     Name  => "size"));
+               Mulog.Log (Msg => "Declaring ramdisk of size "
+                          & Mutools.Utils.To_Hex (Number => Initramfs_Size)
+                          & " at address " & Initramfs_Addr_Str
+                          & " in zero-page");
+            end if;
+
             Write_ZP_File
               (Filename         => Output_Dir & "/" & Filename,
                Cmdline          => Bootparams,
                Physical_Address => Interfaces.Unsigned_64'Value (Physaddr),
-               Ramdisk_Address  => 0,
-               Ramdisk_Size     => 0);
+               Ramdisk_Address  => Initramfs_Address,
+               Ramdisk_Size     => Initramfs_Size);
          end;
       end loop;
 

@@ -14,6 +14,9 @@
  </platform>
  <memory>
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx|initramfs" size="16#0030_0000#">
+   <file filename="initramfs.cpio.gz" format="bin_raw" offset="none"/>
+  </memory>
  </memory>
  <events>
   <event mode="switch" name="trap_to_subject1"/>
@@ -26,6 +29,7 @@
   <subject cpu="0" name="lnx" profile="linux">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+    <memory executable="true" logical="initramfs" physical="lnx|initramfs" virtualAddress="16#0010_0000#" writable="true"/>
    </memory>
    <events>
     <source>

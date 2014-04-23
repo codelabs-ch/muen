@@ -166,6 +166,8 @@ is
                 C => 0,
                 N => bootparam_h.boot_params'Object_Size / 8);
 
+      Params.hdr.type_of_loader := 16#ff#;
+
       Params.e820_entries := 4;
 
       --  Zero page incl. cmdl (8k), Time page, HVC and kbd channels

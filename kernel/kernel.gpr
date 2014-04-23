@@ -25,16 +25,35 @@ project Kernel is
 
    Extra_Dirs := ();
    Extra_Languages := ();
+   Preprocessor_Switches := ();
 
    case Build_Mode is
       when "debug" =>
          Extra_Dirs := ("../common/" & Build_Mode, Build_Mode);
          Extra_Languages := ("Asm");
+         Preprocessor_Switches :=
+           ("-gnateDBuild_Warnings=Warnings",
+            "-gnateDProve_Warnings=Ignored_Warnings",
+            "-gnateDDebug_Warnings=Warnings",
+            "-gnateDRelease_Warnings=Ignored_Warnings");
+
       when "release" =>
          Extra_Dirs := (Build_Mode);
          Extra_Languages := ("Asm");
+         Preprocessor_Switches :=
+           ("-gnateDBuild_Warnings=Warnings",
+            "-gnateDProve_Warnings=Ignored_Warnings",
+            "-gnateDDebug_Warnings=Ignored_Warnings",
+            "-gnateDRelease_Warnings=Warnings");
+
       when "prove" =>
          Extra_Dirs := ("release", "spark");
+         Preprocessor_Switches :=
+           ("-gnateDBuild_Warnings=Debug",
+            "-gnateDProve_Warnings=Warnings",
+            "-gnateDDebug_Warnings=Debug",
+            "-gnateDRelease_Warnings=Warnings");
+
     end case;
 
    for Languages use ("Ada") & Extra_Languages;
@@ -59,6 +78,7 @@ project Kernel is
    package Compiler is
       for Required_Switches ("Asm") use ("-x", "assembler-with-cpp");
       for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches
+        & Preprocessor_Switches
         & ("-gnatwale", "-Wstack-usage=8192", "-Werror");
       for Local_Configuration_Pragmas use "../config/restrictions-" & Build_Mode & ".adc";
    end Compiler;

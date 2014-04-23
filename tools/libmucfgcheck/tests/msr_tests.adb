@@ -18,7 +18,9 @@
 
 with Ada.Exceptions;
 
-with Muxml;
+with DOM.Core.Elements;
+
+with Muxml.Utils;
 
 with Mucfgcheck.MSR;
 
@@ -49,16 +51,26 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/vcpu/registers/msrs/"
+            & "msr[@end='16#0176#']");
       begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "end",
+            Value => "16#c000_0800#");
+
          Mucfgcheck.MSR.Low_Or_High (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "MSR start 16#1f00# and end 16#c000_0800# in different"
+                    = "MSR start 16#0174# and end 16#c000_0800# in different"
                     & " low/high range (Subject 'linux')",
                     Message   => "Exception mismatch");
       end;
@@ -72,16 +84,26 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/vcpu/registers/msrs/"
+            & "msr[@end='16#0176#']");
       begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "end",
+            Value => "16#0170#");
+
          Mucfgcheck.MSR.Start_Smaller_End (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "MSR start 16#0902# larger than end 16#0800#"
+                    = "MSR start 16#0174# larger than end 16#0170#"
                     & " (Subject 'linux')",
                     Message   => "Exception mismatch");
       end;

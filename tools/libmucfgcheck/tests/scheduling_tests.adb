@@ -18,7 +18,10 @@
 
 with Ada.Exceptions;
 
-with Muxml;
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+
+with Muxml.Utils;
 
 with Mucfgcheck.Scheduling;
 
@@ -55,17 +58,26 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/scheduling/majorFrame/cpu[@id='3']");
       begin
+         Node := DOM.Core.Nodes.Remove_Child
+           (N         => DOM.Core.Nodes.Parent_Node (N => Node),
+            Old_Child => Node);
+         pragma Unreferenced (Node);
+
          Mucfgcheck.Scheduling.CPU_Element_Count (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "CPU element count of 2 in scheduling plan invalid, "
-                    & "logical CPU count is 1",
+                    = "CPU element count of 3 in scheduling plan invalid, "
+                    & "logical CPU count is 4",
                     Message   => "Exception mismatch");
       end;
    end Validate_CPU_Element_Count;
@@ -78,9 +90,19 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/scheduling/majorFrame/cpu/"
+            & "minorFrame[@ticks='60']");
       begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "ticks",
+            Value => "42");
+
          Mucfgcheck.Scheduling.Major_Frame_Ticks (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -101,16 +123,26 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/scheduling/majorFrame/cpu/"
+            & "minorFrame[@subject='vt']");
       begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "subject",
+            Value => "linux");
+
          Mucfgcheck.Scheduling.Subject_CPU_Affinity (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'subject1' scheduled on wrong CPU 0,"
+                    = "Subject 'linux' scheduled on wrong CPU 0,"
                     & " should be 1",
                     Message   => "Exception mismatch");
       end;
@@ -124,9 +156,19 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/scheduling/majorFrame/cpu/"
+            & "minorFrame[@subject='vt']");
       begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "subject",
+            Value => "nonexistent");
+
          Mucfgcheck.Scheduling.Subject_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 

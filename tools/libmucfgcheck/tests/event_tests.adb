@@ -135,29 +135,29 @@ is
    procedure Validate_IPI_Destination
    is
       Data       : Muxml.XML_Data_Type;
-      Event_Node : DOM.Core.Node;
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
-      Event_Node := Muxml.Utils.Get_Element
-        (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/events/target/event"
-         & "[@physical='nonexistent']");
-      DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
-                                       Name  => "physical",
-                                       Value => "linux_kbd");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/events/event[@name='trap_to_sm']");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "mode",
+                                          Value => "ipi");
+
          Mucfgcheck.Events.IPI_Different_Core (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Destination subject 'linux' (CPU 0) in subject's "
-                    & "'linux' (CPU 0) ipi notification 'linux_kbd' invalid - "
-                    & "no IPI allowed",
+                    = "Destination subject 'sm' (CPU 1) in subject's 'linux' "
+                    & "(CPU 1) ipi notification 'trap_to_sm' invalid - no IPI"
+                    & " allowed",
                     Message   => "Exception mismatch");
       end;
    end Validate_IPI_Destination;
@@ -166,30 +166,30 @@ is
 
    procedure Validate_Self_References
    is
-      Data       : Muxml.XML_Data_Type;
-      Event_Node : DOM.Core.Node;
+      Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
-      Event_Node := Muxml.Utils.Get_Element
-        (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/events/target/event"
-         & "[@physical='nonexistent']");
-      DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
-                                       Name  => "physical",
-                                       Value => "linux_kbd");
-
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/target/event"
+            & "[@physical='linux_console']");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "physical",
+                                          Value => "linux_keyboard");
+
          Mucfgcheck.Events.Self_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Reference to self in event 'linux_kbd' of subject "
-                    & "'linux'",
+                    = "Reference to self in event 'linux_keyboard' of subject "
+                    & "'vt'",
                     Message   => "Exception mismatch");
       end;
    end Validate_Self_References;
@@ -198,29 +198,30 @@ is
 
    procedure Validate_Source_Group_IDs
    is
-      Data       : Muxml.XML_Data_Type;
-      Event_Node : DOM.Core.Node;
+      Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
-      Event_Node := Muxml.Utils.Get_Element
-        (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/events/source/group/event"
-         & "[@logical='invalid_subject']");
-      DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
-                                       Name  => "id",
-                                       Value => "256");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/source/group/event"
+            & "[@logical='resume_linux']");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "id",
+                                          Value => "256");
+
          Mucfgcheck.Events.Source_Group_Event_ID_Validity (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'linux': ID 256 of event 'invalid_subject' "
-                    & "invalid for group VMCALL",
+                    = "Subject 'sm': ID 256 of event 'resume_linux' invalid "
+                    & "for group VMCALL",
                     Message   => "Exception mismatch");
       end;
    end Validate_Source_Group_IDs;
@@ -229,29 +230,30 @@ is
 
    procedure Validate_Source_Group_IDs_Uniqueness
    is
-      Data       : Muxml.XML_Data_Type;
-      Event_Node : DOM.Core.Node;
+      Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
-      Event_Node := Muxml.Utils.Get_Element
-        (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/events/source/group/event"
-         & "[@logical='invalid_subject']");
-      DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
-                                       Name  => "id",
-                                       Value => "1");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/source/group/event"
+            & "[@logical='resume_linux']");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "id",
+                                          Value => "1");
+
          Mucfgcheck.Events.Source_Group_Event_ID_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'linux' source events 'forward_keyboard' and "
-                    & "'invalid_subject' share ID 1",
+                    = "Subject 'sm' source events 'resume_linux' and "
+                    & "'channel_event_sm_console' share ID 1",
                     Message   => "Exception mismatch");
       end;
    end Validate_Source_Group_IDs_Uniqueness;
@@ -264,23 +266,32 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/target/"
+            & "event[@physical='trap_to_sm']/..");
       begin
+         Muxml.Utils.Remove_Child
+           (Node       => Node,
+            Child_Name => "event");
+
          Mucfgcheck.Events.Source_Targets (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Invalid number of targets for event 'linux_kbd': 0",
+                    = "Invalid number of targets for event 'trap_to_sm': 0",
                     Message   => "Exception mismatch (target)");
       end;
 
       declare
          Event_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
-            XPath => "/system/events/event[@name='linux_kbd']");
+            XPath => "/system/events/event[@name='trap_to_sm']");
       begin
          DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
                                           Name  => "name",
@@ -305,37 +316,48 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/target/"
+            & "event[@physical='trap_to_sm']");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "physical",
+                                          Value => "nonexistent_dst");
+
          Mucfgcheck.Events.Subject_Event_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Event 'test' referenced by subject 'linux' does not "
-                    & "exist",
-                    Message   => "Exception mismatch (source)");
+                    = "Event 'nonexistent_dst' referenced by subject 'sm' does"
+                    & " not exist",
+                    Message   => "Exception mismatch (target)");
       end;
 
       declare
-         Event_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
             XPath => "/system/subjects/subject/events/source/group/"
-            & "event/notify[@physical='test']/..");
+            & "event/notify[@physical='resume_linux']");
       begin
-         Muxml.Utils.Remove_Child (Node       => Event_Node,
-                                   Child_Name => "notify");
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "physical",
+                                          Value => "nonexistent_src");
+
          Mucfgcheck.Events.Subject_Event_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Event 'nonexistent' referenced by subject 'linux' does "
-                    & "not exist",
-                    Message   => "Exception mismatch (target)");
+                    = "Event 'nonexistent_src' referenced by subject 'sm' does"
+                    & " not exist",
+                    Message   => "Exception mismatch (source)");
       end;
    end Validate_Subject_Event_References;
 
@@ -343,30 +365,31 @@ is
 
    procedure Validate_Switch_Destination
    is
-      Data       : Muxml.XML_Data_Type;
-      Event_Node : DOM.Core.Node;
+      Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
-      Event_Node := Muxml.Utils.Get_Element
-        (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject/events/target/event"
-         & "[@physical='nonexistent']");
-      DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
-                                       Name  => "physical",
-                                       Value => "switch_to_linux");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/source/group/event/"
+            & "notify[@physical='linux_keyboard']");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "physical",
+                                          Value => "resume_linux");
+
          Mucfgcheck.Events.Switch_Same_Core (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Destination subject 'linux' (CPU 0) in subject's "
-                    & "'subject1' (CPU 1) switch notification 'switch_to_"
-                    & "linux' invalid - must run on the same CPU",
+                    = "Destination subject 'linux' (CPU 1) in subject's 'vt' "
+                    & "(CPU 0) switch notification 'resume_linux' invalid - "
+                    & "must run on the same CPU",
                     Message   => "Exception mismatch");
       end;
    end Validate_Switch_Destination;

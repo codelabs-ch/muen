@@ -19,6 +19,7 @@
 with Ada.Exceptions;
 
 with DOM.Core.Elements;
+with DOM.Core.Documents;
 
 with Muxml.Utils;
 
@@ -78,17 +79,27 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/devices/"
+            & "device[@physical='port80']");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "physical",
+                                          Value => "cmos_rtc");
+
          Mucfgcheck.Device.Device_Sharing (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Non-shareable device 'serial' is referenced by multiple"
-                    & " logical devices 'kernel->log', 'linux->console'",
+                    = "Non-shareable device 'cmos_rtc' is referenced by "
+                    & "multiple logical devices 'time->port80', "
+                    & "'linux->cmos_rtc'",
                     Message   => "Exception mismatch");
       end;
    end Validate_Device_Shareability;
@@ -101,9 +112,24 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Dev  : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/device[@name='vga']");
+         Node : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "memory");
       begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "name",
+            Value => "buffer");
+         Muxml.Utils.Append_Child
+           (Node      => Dev,
+            New_Child => Node);
+
          Mucfgcheck.Device.Device_Memory_Name_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -124,16 +150,13 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
       declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
             XPath => "/system/kernel/devices/device/memory");
       begin
-
-         --  Set invalid device memory reference.
-
          DOM.Core.Elements.Set_Attribute
            (Elem  => Node,
             Name  => "physical",
@@ -146,8 +169,8 @@ is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Physical device memory 'nonexistent' referenced by"
-                    & " logical device memory 'vga_buffer' of logical device "
-                    & "'gfx' not found",
+                    & " logical device memory 'mmio' of logical device "
+                    & "'ioapic' not found",
                     Message   => "Exception mismatch");
       end;
    end Validate_Devmem_Refs;
@@ -160,16 +183,26 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/device/ioPort[@name='port_64']");
       begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "name",
+            Value => "port_60");
+
          Mucfgcheck.Device.Device_IO_Port_Name_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Device 'vga' has multiple I/O ports with name 'port'",
+                    = "Device 'keyboard' has multiple I/O ports with name "
+                    & "'port_60'",
                     Message   => "Exception mismatch");
       end;
    end Validate_IO_Port_Name_Uniqueness;
@@ -182,16 +215,14 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
       declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
-            XPath => "/system/kernel/devices/device[@logical='log']/ioPort");
+            XPath => "/system/subjects/subject/devices/device[@logical='vga']"
+            & "/ioPort");
       begin
-
-         --  Set invalid I/O port reference.
-
          DOM.Core.Elements.Set_Attribute
            (Elem  => Node,
             Name  => "physical",
@@ -204,7 +235,7 @@ is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Physical I/O port 'nonexistent' referenced by logical"
-                    & " I/O port 'ports' of logical device 'log' not found",
+                    & " I/O port 'ports' of logical device 'vga' not found",
                     Message   => "Exception mismatch");
       end;
    end Validate_IO_Port_Refs;
@@ -217,16 +248,13 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
       declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
             XPath => "/system/platform/device/ioPort[@name='ports']");
       begin
-
-         --  Set invalid port range.
-
          DOM.Core.Elements.Set_Attribute
            (Elem  => Node,
             Name  => "start",
@@ -256,9 +284,17 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/device[@name='serial']");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "name",
+                                          Value => "vga");
+
          Mucfgcheck.Device.Physical_Device_Name_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -278,16 +314,13 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
       declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
-            XPath => "/system/kernel/devices/device[@physical='serial']");
+            XPath => "/system/kernel/devices/device[@physical='ioapic']");
       begin
-
-         --  Set invalid device reference.
-
          DOM.Core.Elements.Set_Attribute
            (Elem  => Node,
             Name  => "physical",
@@ -300,7 +333,7 @@ is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Physical device 'nonexistent' referenced by logical"
-                    & " device 'log' not found",
+                    & " device 'ioapic' not found",
                     Message   => "Exception mismatch");
       end;
    end Validate_Physdev_Refs;
@@ -313,16 +346,30 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Kbd  : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/device[@name='keyboard']");
+         Node : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "irq");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "name",
+                                          Value => "kbd_irq");
+         Muxml.Utils.Append_Child (Node      => Kbd,
+                                   New_Child => Node);
+
          Mucfgcheck.Device.Device_IRQ_Name_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Device 'vga' has multiple IRQs with name 'bar'",
+                    = "Device 'keyboard' has multiple IRQs with name "
+                    & "'kbd_irq'",
                     Message   => "Exception mismatch");
       end;
    end Validate_Physirq_Name_Uniqueness;
@@ -335,17 +382,14 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
       declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
             XPath => "/system/subjects/subject/devices/device/irq"
-            & "[@physical='cmd']");
+            & "[@physical='kbd_irq']");
       begin
-
-         --  Set invalid IRQ number.
-
          DOM.Core.Elements.Set_Attribute
            (Elem  => Node,
             Name  => "physical",
@@ -358,7 +402,7 @@ is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Physical IRQ 'nonexistent' referenced by logical IRQ"
-                    & " 'irq' of logical device 'console' not found",
+                    & " 'kbd_irq' of logical device 'keyboard' not found",
                     Message   => "Exception mismatch");
       end;
    end Validate_Physirq_Refs;
@@ -371,9 +415,22 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Serial : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/device[@name='serial']");
+         Node   : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "irq");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "number",
+                                          Value => "1");
+         Muxml.Utils.Append_Child (Node      => Serial,
+                                   New_Child => Node);
+
          Mucfgcheck.Device.Physical_IRQ_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 

@@ -18,7 +18,9 @@
 
 with Ada.Exceptions;
 
-with Muxml;
+with DOM.Core.Elements;
+
+with Muxml.Utils;
 
 with Mucfgcheck.Kernel;
 
@@ -49,9 +51,18 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/kernel/memory/cpu/memory"
+            & "[@physical='kernel_store_1']");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "virtualAddress",
+                                          Value => "16#0021_0000#");
+
          Mucfgcheck.Kernel.CPU_Store_Address_Equality (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -72,9 +83,18 @@ is
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => "data/validators.xml");
+                   File => "data/test_policy.xml");
 
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/kernel/memory/cpu/memory"
+            & "[@physical='kernel_stack_1']");
       begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "virtualAddress",
+                                          Value => "16#0031_0000#");
+
          Mucfgcheck.Kernel.Stack_Address_Equality (XML_Data => Data);
          Fail (Message => "Exception expected");
 

@@ -31,11 +31,13 @@ hwchange:
 		echo $(HARDWARE) > $(OBJ_DIR)/.hw)
 
 ifeq ($(HARDWARE), bochs)
-$(DSDT_OBJ) $(POLICY_SRC): $(POLICY) $(DSDT_SRC)
-	cp $(POLICY) $(DSDT_SRC) $(OBJ_DIR)
+$(DSDT_OBJ) $(POLICY_SRC): $(MUCFGMERGE) $(POLICY) $(DSDT_SRC)
+	@$(MUCFGMERGE) $(POLICY) $(POLICY_SRC)
+	cp $(DSDT_SRC) $(OBJ_DIR)
 else
-$(DSDT_OBJ) $(POLICY_SRC): $(POLICY) $(DSDT_SRC) $(PATCH)
-	cp $(POLICY) $(DSDT_SRC) $(OBJ_DIR)
+$(DSDT_OBJ) $(POLICY_SRC): $(MUCFGMERGE) $(POLICY) $(DSDT_SRC) $(PATCH)
+	@$(MUCFGMERGE) $(POLICY) $(POLICY_SRC)
+	cp $(DSDT_SRC) $(OBJ_DIR)
 	cd $(OBJ_DIR) && patch -p3 < ../$(PATCH)
 endif
 

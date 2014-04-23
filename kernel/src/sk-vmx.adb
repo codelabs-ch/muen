@@ -262,7 +262,7 @@ is
       PD := Interrupts.Get_IDT_Pointer;
       VMCS_Write (Field => Constants.HOST_BASE_IDTR,
                   Value => PD.Base);
-      PD := GDT.Get_GDT_Pointer;
+      PD := GDT.GDT_Pointer;
       VMCS_Write (Field => Constants.HOST_BASE_GDTR,
                   Value => PD.Base);
 

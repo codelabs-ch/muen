@@ -16,13 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
---# inherit
---#    SK;
 package SK.IO_Apic
---# own
---#    State;
---# initializes
---#    State;
+with SPARK_Mode,
+   Abstract_State =>
+     (State with External => (Async_Writers, Async_Readers, Effective_Writes)),
+   Initializes    => State
 is
 
    --  Interrupt trigger mode.
@@ -34,24 +32,21 @@ is
      (IRQ            : SK.Byte;
       Vector         : SK.Byte;
       Trigger_Mode   : Trigger_Kind;
-      Destination_Id : SK.Byte);
-   --# global
-   --#    in out State;
-   --# derives
-   --#    State from *, IRQ, Vector, Trigger_Mode, Destination_Id;
+      Destination_Id : SK.Byte)
+   with
+      Global  => (Output => State),  --  XXX Logically output state *is* In_Out
+      Depends => (State => (Destination_Id, IRQ, Trigger_Mode, Vector));
 
    --  Mask/disable interrupt delivery for specified IRQ.
-   procedure Mask_Interrupt (IRQ : SK.Byte);
-   --# global
-   --#    in out State;
-   --# derives
-   --#    State from *, IRQ;
+   procedure Mask_Interrupt (IRQ : SK.Byte)
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ IRQ);
 
    --  Unmask/enable interrupt delivery for specified IRQ.
-   procedure Unmask_Interrupt (IRQ : SK.Byte);
-   --# global
-   --#    in out State;
-   --# derives
-   --#    State from *, IRQ;
+   procedure Unmask_Interrupt (IRQ : SK.Byte)
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ IRQ);
 
 end SK.IO_Apic;

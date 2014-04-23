@@ -30,9 +30,6 @@
 	</platform>
 
 	<memory>
-		<memory name="linux|initramfs" size="16#0030_0000#" caching="WB">
-			<file filename="initramfs.cpio.gz" format="bin_raw" offset="none"/>
-		</memory>
 		<memory name="linux|ram" size="16#0f70_0000#" caching="WB"/>
 	</memory>
 
@@ -110,8 +107,8 @@
 
 		<subject name="linux" cpu="1" profile="linux">
 			<bootparams>lpj=10000 earlyprintk=serial console=ttyS0,115200 console=hvc pci=noearly notsc</bootparams>
+			<initrd filename="initramfs.cpio.gz" size="16#0030_0000#"/>
 			<memory>
-				<memory logical="initramfs" physical="linux|initramfs" virtualAddress="16#0010_0000#" writable="true" executable="true"/>
 				<memory logical="ram" physical="linux|ram" virtualAddress="16#0090_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>

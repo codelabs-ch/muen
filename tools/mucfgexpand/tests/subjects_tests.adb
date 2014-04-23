@@ -82,6 +82,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Initrd
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_initrd.xml",
+         Ref_Filename => "data/subjects_initrd.ref.xml",
+         Expander     => Expanders.Subjects.Add_Initrd'Access);
+   end Add_Initrd;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Missing_Elements
    is
    begin
@@ -160,6 +171,9 @@ is
       T.Add_Test_Routine
         (Routine => Add_Default_Events'Access,
          Name    => "Add default events");
+      T.Add_Test_Routine
+        (Routine => Add_Initrd'Access,
+         Name    => "Add initial ramdisk");
    end Initialize;
 
    -------------------------------------------------------------------------

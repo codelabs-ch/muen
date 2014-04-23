@@ -56,4 +56,7 @@ is
    --  Add default events.
    procedure Add_Default_Events;
 
+   --  Add initrd.
+   procedure Add_Initrd;
+
 end Subjects_Tests;

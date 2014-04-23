@@ -516,6 +516,48 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Initrd (Data : in out Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/initrd");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Initrd_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Nodes,
+                 Index => I);
+            Filename : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Initrd_Node,
+                 Name => "filename");
+            Filesize : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Initrd_Node,
+                 Name => "size");
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Parent_Node (N => Initrd_Node);
+            Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Subj_Node,
+               Name => "name");
+            Virtual_Address : constant String := "16#0010_0000#";
+         begin
+            Mulog.Log (Msg => "Mapping initial ramdisk '" & Filename
+                       & "' with size "  & Filesize & " at virtual address "
+                       & Virtual_Address
+                       & " of subject '" & Subj_Name & "'");
+
+            Muxml.Utils.Remove_Child
+              (Node       => Subj_Node,
+               Child_Name => "initrd");
+         end;
+      end loop;
+   end Add_Initrd;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Missing_Elements (Data : in out Muxml.XML_Data_Type)
    is
    begin

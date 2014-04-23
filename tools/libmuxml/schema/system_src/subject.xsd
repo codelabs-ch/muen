@@ -4,6 +4,7 @@
 	<xs:complexType name="subjectType">
 		<xs:sequence>
 			<xs:element name="bootparams" type="xs:string"             minOccurs="0" maxOccurs="1"/>
+			<xs:element name="initrd"     type="initrdType"            minOccurs="0" maxOccurs="1"/>
 			<xs:element name="memory"     type="memoryRefsType"        minOccurs="0" maxOccurs="1"/>
 			<xs:element name="devices"    type="devicesRefType"        minOccurs="0" maxOccurs="1"/>
 			<xs:element name="events"     type="subjectEventsType"     minOccurs="1" maxOccurs="1"/>
@@ -38,6 +39,11 @@
 		<xs:attribute name="subject"        type="nameType"    use="required"/>
 		<xs:attribute name="virtualAddress" type="word64Type"  use="required"/>
 		<xs:attribute name="writable"       type="booleanType" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="initrdType">
+		<xs:attribute name="filename" type="xs:string"  use="required"/>
+		<xs:attribute name="size"     type="word64Type" use="required"/>
 	</xs:complexType>
 
 </xs:schema>

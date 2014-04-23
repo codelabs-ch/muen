@@ -15,6 +15,9 @@ all: .built
 src/.config: config/linux64-$(CONFIG)
 	@cp $< $@
 
+install: .built
+	@$(MULNXBZPATCH) src/arch/x86/boot/bzImage $(POLICY_DIR)/bzImage
+
 clean:
 	@make clean -C initramfs
 	@make clean -C src

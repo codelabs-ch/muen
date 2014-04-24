@@ -3,7 +3,6 @@ LAST_HW  = $(shell cat $(OBJ_DIR)/.hw 2>/dev/null)
 DSDT_SRC = platform/$(HARDWARE).dsl
 DSDT_OBJ = $(OBJ_DIR)/linux_dsdt.dsl
 DSDT     = $(OBJ_DIR)/linux_dsdt.aml
-PATCH    = hardware/$(HARDWARE).patch
 
 POLICY     = xml/demo_system.xml
 POLICY_SRC = $(OBJ_DIR)/demo_system.xml
@@ -31,16 +30,9 @@ hwchange:
 	$(if $(findstring $(HARDWARE),$(LAST_HW)),,rm -f $(OBJ_DIR)/*; \
 		echo $(HARDWARE) > $(OBJ_DIR)/.hw)
 
-ifeq ($(HARDWARE), bochs)
 $(DSDT_OBJ) $(POLICY_SRC): $(MUCFGMERGE) $(POLICY) $(DSDT_SRC) $(PLATFORM)
 	@$(MUCFGMERGE) -p$(PLATFORM) $(POLICY) $(POLICY_SRC)
 	cp $(DSDT_SRC) $(DSDT_OBJ)
-else
-$(DSDT_OBJ) $(POLICY_SRC): $(MUCFGMERGE) $(POLICY) $(DSDT_SRC) $(PATCH)
-	@$(MUCFGMERGE) -p$(PLATFORM) $(POLICY) $(POLICY_SRC)
-	cp $(DSDT_SRC) $(DSDT_OBJ)
-	cd $(OBJ_DIR) && patch -p1 < ../$(PATCH)
-endif
 
 $(POLICY_A): $(POLICY_SRC) $(MUCFGEXPAND)
 	@$(MUCFGEXPAND) $< $@

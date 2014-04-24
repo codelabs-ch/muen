@@ -1,8 +1,28 @@
-diff --git a/policy/acpi/linux_dsdt.dsl b/policy/acpi/linux_dsdt.dsl
-index a39a390..c53ab3c 100644
---- a/policy/acpi/linux_dsdt.dsl
-+++ b/policy/acpi/linux_dsdt.dsl
-@@ -173,7 +173,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
+diff -Naur orig/demo_system.xml obj/demo_system.xml
+--- orig/demo_system.xml	2014-04-24 08:48:03.563880094 +0200
++++ obj/demo_system.xml	2014-04-24 08:49:06.019882412 +0200
+@@ -7,7 +7,7 @@
+    <memoryBlock allocatable="true" name="extended_mem_1" physicalAddress="16#0010_0000#" size="16#8000_0000#"/>
+   </memory>
+   <device name="serial" shared="false">
+-   <ioPort end="16#03ff#" name="port1" start="16#03f8#"/>
++   <ioPort end="16#50b7#" name="port1" start="16#50b0#"/>
+   </device>
+   <device name="vga" shared="false">
+    <memory caching="WC" name="buffer" physicalAddress="16#000b_8000#" size="16#4000#"/>
+@@ -102,7 +102,7 @@
+    </monitor>
+   </subject>
+   <subject cpu="1" name="linux" profile="linux">
+-   <bootparams>lpj=10000 earlyprintk=serial console=ttyS0,115200 console=hvc pci=noearly notsc</bootparams>
++   <bootparams>lpj=10000 earlyprintk=serial,0x50b0 console=serial,0x50b0 console=hvc pci=noearly notsc</bootparams>
+    <memory>
+     <memory executable="true" logical="initramfs" physical="linux|initramfs" virtualAddress="16#0010_0000#" writable="true"/>
+     <memory executable="true" logical="ram" physical="linux|ram" virtualAddress="16#00c0_0000#" writable="true"/>
+diff -Naur orig/linux_dsdt.dsl obj/linux_dsdt.dsl
+--- orig/linux_dsdt.dsl	2014-04-24 08:47:02.883877843 +0200
++++ obj/linux_dsdt.dsl	2014-04-24 08:43:09.267869173 +0200
+@@ -173,7 +173,7 @@
                      Method (_CRS)
                      {
                          Return (ResourceTemplate () {
@@ -11,25 +31,3 @@ index a39a390..c53ab3c 100644
                              IRQNoFlags () { 0 }
                          })
                      }
-diff --git a/policy/xml/demo_system.xml b/policy/xml/demo_system.xml
-index 7d5eceb..5fe4ae4 100644
---- a/policy/xml/demo_system.xml
-+++ b/policy/xml/demo_system.xml
-@@ -7,7 +7,7 @@
- 			<memoryBlock allocatable="true" name="extended_mem_1" physicalAddress="16#0010_0000#" size="16#8000_0000#" />
- 		</memory>
- 		<device name="serial" shared="false">
--			<ioPort name="port1" start="16#03f8#" end="16#03ff#"/>
-+			<ioPort name="port1" start="16#50b0#" end="16#50b7#"/>
- 		</device>
- 		<device name="vga" shared="false">
- 			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
-@@ -134,7 +134,7 @@
- 		</subject>
- 
- 		<subject name="linux" cpu="1" profile="linux">
--			<bootparams>lpj=10000 earlyprintk=serial console=ttyS0,115200 console=hvc pci=noearly notsc</bootparams>
-+			<bootparams>lpj=10000 earlyprintk=serial,0x50b0 console=serial,0x50b0 console=hvc pci=noearly notsc</bootparams>
- 			<memory>
- 				<memory logical="ram" physical="linux|ram" virtualAddress="16#0090_0000#" writable="true" executable="true"/>
- 			</memory>

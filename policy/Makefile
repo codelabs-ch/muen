@@ -38,7 +38,7 @@ else
 $(DSDT_OBJ) $(POLICY_SRC): $(MUCFGMERGE) $(POLICY) $(DSDT_SRC) $(PATCH)
 	@$(MUCFGMERGE) $(POLICY) $(POLICY_SRC)
 	cp $(DSDT_SRC) $(OBJ_DIR)
-	cd $(OBJ_DIR) && patch -p3 < ../$(PATCH)
+	cd $(OBJ_DIR) && patch -p1 < ../$(PATCH)
 endif
 
 $(POLICY_A): $(POLICY_SRC) $(MUCFGEXPAND)

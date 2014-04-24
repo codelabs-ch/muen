@@ -29,4 +29,8 @@ is
    --  Execute Run procedure.
    procedure Execute_Run;
 
+   --  Execute Run procedure with system policy which contains no file/fill
+   --  content.
+   procedure Execute_Run_No_Content;
+
 end Pack_Tests;

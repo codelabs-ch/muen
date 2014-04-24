@@ -71,25 +71,32 @@ is
            := Utils.Get_Image_Size (Policy => Policy);
          Sysimg : constant String := Out_Dir & "/muen.img";
          Mfest  : constant String := Out_Dir & "/muen.img.manifest";
-         Data   : Content_Providers.Param_Type
-           (Ada.Streams.Stream_Element_Offset (Size - 1));
       begin
-         Data.XML_Doc := Policy.Doc;
+         if Size = 0 then
+            raise Pack_Error with "Image size is zero, no content to pack";
+         end if;
 
-         Content_Providers.Run (Data => Data);
+         declare
+            Data : Content_Providers.Param_Type
+              (Ada.Streams.Stream_Element_Offset (Size - 1));
+         begin
+            Data.XML_Doc := Policy.Doc;
 
-         Post_Checks.Run (Data => Data);
+            Content_Providers.Run (Data => Data);
 
-         Image.Write (Image    => Data.Image,
-                      Filename => Sysimg);
-         Mulog.Log (Msg => "Successfully created system image '" & Sysimg
-                    & "' of size " & Mutools.Utils.To_Hex (Number => Size)
-                    & " bytes");
+            Post_Checks.Run (Data => Data);
 
-         Manifest.Write (Manifest => Data.Manifest,
-                         Filename => Mfest);
-         Mulog.Log (Msg => "Manifest of system image '" & Sysimg
-                    & "' written to '" & Mfest & "'");
+            Image.Write (Image    => Data.Image,
+                         Filename => Sysimg);
+            Mulog.Log (Msg => "Successfully created system image '" & Sysimg
+                       & "' of size " & Mutools.Utils.To_Hex (Number => Size)
+                       & " bytes");
+
+            Manifest.Write (Manifest => Data.Manifest,
+                            Filename => Mfest);
+            Mulog.Log (Msg => "Manifest of system image '" & Sysimg
+                       & "' written to '" & Mfest & "'");
+         end;
       end Pack_Image;
    end Run;
 

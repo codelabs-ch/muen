@@ -17,6 +17,7 @@
 --
 
 with Ada.Directories;
+with Ada.Exceptions;
 
 with Pack.Command_Line.Test;
 
@@ -57,6 +58,24 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Execute_Run_No_Content
+   is
+   begin
+      Command_Line.Test.Set_Input_Dir  (Path => "data");
+      Command_Line.Test.Set_Output_Dir (Path => "obj");
+      Command_Line.Test.Set_Policy     (Path => "data/test_policy.xml");
+
+      Pack.Run;
+
+   exception
+      when E : Pack_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Image size is zero, no content to pack",
+                 Message   => "Exception mismatch");
+   end Execute_Run_No_Content;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -64,6 +83,9 @@ is
       T.Add_Test_Routine
         (Routine => Execute_Run'Access,
          Name    => "Run packaging process");
+      T.Add_Test_Routine
+        (Routine => Execute_Run_No_Content'Access,
+         Name    => "Run packaging with no content");
    end Initialize;
 
 end Pack_Tests;

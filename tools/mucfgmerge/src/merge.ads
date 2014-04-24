@@ -16,14 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muxml;
-
 package Merge
 is
 
    --  Start the merge process.
    procedure Run
-     (Policy      : in out Muxml.XML_Data_Type;
-      Output_File :        String);
+     (Policy_File   : String;
+      Platform_File : String;
+      Output_File   : String);
 
 end Merge;

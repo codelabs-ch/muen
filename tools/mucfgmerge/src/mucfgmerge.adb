@@ -22,18 +22,17 @@ with Ada.Exceptions;
 with Mulog;
 with Muxml;
 
-with Mutools.Cmd_Line.Infile_Outfile;
+with Mutools.Cmd_Line;
 
-with Merge;
+with Merge.Cmd_Line;
 
 procedure Mucfgmerge
 is
 begin
-   Mutools.Cmd_Line.Infile_Outfile.Init
-     (Description => "Muen policy merger");
-   Mutools.Cmd_Line.Infile_Outfile.Run
-     (Kind    => Muxml.Format_Src,
-      Process => Merge.Run'Access);
+   Merge.Cmd_Line.Init (Description => "Muen policy merger");
+   Merge.Run (Policy_File   => Merge.Cmd_Line.Get_Policy,
+              Platform_File => Merge.Cmd_Line.Get_Platform_File,
+              Output_File   => Merge.Cmd_Line.Get_Output_File);
 
 exception
    when E : Muxml.XML_Input_Error

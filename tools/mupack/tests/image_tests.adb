@@ -75,7 +75,7 @@ is
    procedure Add_File_To_Image
    is
       Img   : Image.Image_Type (End_Address => 16#2d#);
-      Fname : constant String := "obj/test.img";
+      Fname : constant String := "obj/add_file.img";
    begin
       Image.Add_File (Image   => Img,
                       Path    => "data/pattern",
@@ -86,7 +86,7 @@ is
                    Filename => Fname);
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => Fname,
-               Filename2 => "data/img.ref"),
+               Filename2 => "data/add_data.img"),
               Message   => "Image mismatch");
       Ada.Directories.Delete_File (Name => Fname);
    end Add_File_To_Image;

@@ -18,9 +18,7 @@
 
 with Ada.Exceptions;
 
-with DOM.Core.Elements;
-
-with Muxml.Utils;
+with Muxml;
 with Mutools.XML_Utils;
 
 with Pack.Command_Line.Test;
@@ -150,23 +148,23 @@ is
       Command_Line.Test.Set_Input_Dir (Path => "data");
       Command_Line.Test.Set_Output_Dir (Path => "obj");
       Command_Line.Test.Set_Policy (Path => "data/test_policy.xml");
+
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Policy.Doc,
-            XPath => "/system/memory/memory[@name='linux|acpi_rsdp']/file");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "linux|acpi_rsdp",
+         Address     => "16#0010_0000#",
+         Size        => "16#0000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         File_Name   => "sections.ref",
+         File_Format => "acpi_rsdp",
+         File_Offset => "16#ffff#");
+
       begin
-
-         --  Make offset larger than file.
-
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "offset",
-            Value => "16#ffff#");
-
          Pre_Checks.Files_Size (Data => Policy);
          Fail (Message => "Exception expected");
 

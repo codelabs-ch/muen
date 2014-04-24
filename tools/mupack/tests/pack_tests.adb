@@ -35,7 +35,7 @@ is
    begin
       Command_Line.Test.Set_Input_Dir  (Path => "data");
       Command_Line.Test.Set_Output_Dir (Path => "obj");
-      Command_Line.Test.Set_Policy     (Path => "data/test_policy.xml");
+      Command_Line.Test.Set_Policy     (Path => "data/execute_run.xml");
 
       Pack.Run;
 
@@ -44,11 +44,11 @@ is
 
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "obj/muen.img",
-               Filename2 => "data/muen.img.ref"),
+               Filename2 => "data/execute_run.img"),
               Message   => "Image file differs");
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "obj/muen.img.manifest",
-               Filename2 => "data/muen.img.manifest.ref"),
+               Filename2 => "data/execute_run.manifest"),
               Message   => "Manifest file differs");
 
       Ada.Directories.Delete_File (Name => "obj/muen.img");

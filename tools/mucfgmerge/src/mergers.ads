@@ -16,21 +16,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Text_Runner;
-with Ahven.Framework;
+with Muxml;
 
-with Mergers_Tests;
-
-procedure Test_Runner
+package Mergers
 is
-   use Ahven.Framework;
 
-   S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Mucfgmerge tests");
-begin
-   Add_Test (Suite => S.all,
-             T     => new Mergers_Tests.Testcase);
+   --  Load platform section from specified file and merge with given policy.
+   procedure Merge_Platform
+     (Policy        : in out Muxml.XML_Data_Type;
+      Platform_File :        String);
 
-   Ahven.Text_Runner.Run (Suite => S);
-   Release_Suite (T => S);
-end Test_Runner;
+end Mergers;

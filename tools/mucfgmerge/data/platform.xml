@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<platform>
+ <device name="debugconsole" shared="false">
+  <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
+ </device>
+</platform>
+

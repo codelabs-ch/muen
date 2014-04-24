@@ -19,6 +19,8 @@
 with Muxml;
 with Mulog;
 
+with Mergers;
+
 package body Merge
 is
 
@@ -37,6 +39,11 @@ is
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => Policy_File);
+
+      Mergers.Merge_Platform
+        (Policy        => Policy,
+         Platform_File => Platform_File);
+
       Muxml.Write
         (File => Output_File,
          Kind => Muxml.Format_Src,

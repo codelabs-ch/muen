@@ -95,23 +95,23 @@ is
       Command_Line.Test.Set_Input_Dir (Path => "data");
       Command_Line.Test.Set_Output_Dir (Path => "obj");
       Command_Line.Test.Set_Policy (Path => "data/test_policy.xml");
+
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Policy.Doc,
-            XPath => "/system/memory/memory[@name='linux|acpi_rsdp']");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "linux|acpi_rsdp",
+         Address     => "16#0010_0000#",
+         Size        => "16#0000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         File_Name   => "sections.ref",
+         File_Format => "acpi_rsdp",
+         File_Offset => "none");
+
       begin
-
-         --  Make memory region too small.
-
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "size",
-            Value => "16#0000#");
-
          Pre_Checks.Files_Size (Data => Policy);
          Fail (Message => "Exception expected");
 

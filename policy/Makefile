@@ -9,6 +9,7 @@ POLICY     = xml/demo_system.xml
 POLICY_SRC = $(OBJ_DIR)/demo_system.xml
 POLICY_A   = $(OBJ_DIR)/demo_system_a.xml
 POLICY_B   = $(OBJ_DIR)/demo_system_b.xml
+PLATFORM   = platform/$(HARDWARE).xml
 
 GENERATORS =      \
 	$(MUGENACPI)  \
@@ -31,12 +32,12 @@ hwchange:
 		echo $(HARDWARE) > $(OBJ_DIR)/.hw)
 
 ifeq ($(HARDWARE), bochs)
-$(DSDT_OBJ) $(POLICY_SRC): $(MUCFGMERGE) $(POLICY) $(DSDT_SRC)
-	@$(MUCFGMERGE) $(POLICY) $(POLICY_SRC)
+$(DSDT_OBJ) $(POLICY_SRC): $(MUCFGMERGE) $(POLICY) $(DSDT_SRC) $(PLATFORM)
+	@$(MUCFGMERGE) -p$(PLATFORM) $(POLICY) $(POLICY_SRC)
 	cp $(DSDT_SRC) $(OBJ_DIR)
 else
-$(DSDT_OBJ) $(POLICY_SRC): $(MUCFGMERGE) $(POLICY) $(DSDT_SRC) $(PATCH)
-	@$(MUCFGMERGE) $(POLICY) $(POLICY_SRC)
+$(DSDT_OBJ) $(POLICY_SRC): $(MUCFGMERGE) $(POLICY) $(DSDT_SRC) $(PLATFORM) $(PATCH)
+	@$(MUCFGMERGE) -p$(PLATFORM) $(POLICY) $(POLICY_SRC)
 	cp $(DSDT_SRC) $(OBJ_DIR)
 	cd $(OBJ_DIR) && patch -p1 < ../$(PATCH)
 endif

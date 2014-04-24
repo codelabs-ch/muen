@@ -4,8 +4,8 @@
 	<xs:complexType name="memoryType">
 		<xs:complexContent>
 			<xs:extension base="memoryBaseType">
-				<xs:attribute name="alignment"       type="word64Type" use="required"/>
-				<xs:attribute name="physicalAddress" type="word64Type" use="required"/>
+				<xs:attribute name="alignment"       type="alignmentType" use="required"/>
+				<xs:attribute name="physicalAddress" type="word64Type"    use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

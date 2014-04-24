@@ -105,7 +105,7 @@ is
          Size        => "16#0000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
-         File_Name   => "sections.ref",
+         File_Name   => "pattern",
          File_Format => "acpi_rsdp",
          File_Offset => "none");
 
@@ -116,8 +116,8 @@ is
       exception
          when E : Pre_Checks.Check_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "File 'data/sections.ref' too large for physical memory"
-                    & " region 'linux|acpi_rsdp': 16#026b# > 16#0000#",
+                    = "File 'data/pattern' too large for physical memory"
+                    & " region 'linux|acpi_rsdp': 16#001e# > 16#0000#",
                     Message   => "Exception mismatch");
       end;
    end File_Larger_Than_Memory;
@@ -160,7 +160,7 @@ is
          Size        => "16#0000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
-         File_Name   => "sections.ref",
+         File_Name   => "pattern",
          File_Format => "acpi_rsdp",
          File_Offset => "16#ffff#");
 
@@ -171,9 +171,9 @@ is
       exception
          when E : Pre_Checks.Check_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Offset of file 'data/sections.ref' referenced by "
+                    = "Offset of file 'data/pattern' referenced by "
                     & "physical memory region 'linux|acpi_rsdp' larger than "
-                    & "file size: 16#ffff# > 16#026b#",
+                    & "file size: 16#ffff# > 16#001e#",
                     Message   => "Exception mismatch");
       end;
    end Offset_Larger_Than_File;

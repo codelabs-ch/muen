@@ -1,5 +1,5 @@
 [Name;PhysicalAddress;Offset;Size;Type;Content]
 mboot;16#0010_0000#;16#0000#;16#1000#;bin_raw;data/mboot
-linux|acpi_rsdp;16#0010_1000#;16#0000#;16#0001_3000#;acpi_rsdp;data/sections.ref
-linux|bin;16#0011_6000#;16#0004#;16#0001_3000#;bin_raw;data/obj1.o
-filled;16#0012_9000#;16#0000#;16#1000#;fill_pattern;16#0048#
+linux|acpi_rsdp;16#0010_1000#;16#0000#;16#1000#;acpi_rsdp;data/pattern
+linux|bin;16#0010_2000#;16#0004#;16#1000#;bin_raw;data/obj1.o
+filled;16#0010_3000#;16#0000#;16#1000#;fill_pattern;16#0002#

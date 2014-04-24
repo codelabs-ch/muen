@@ -197,6 +197,11 @@ is
                 (Doc   => Policy.Doc,
                  XPath => "/system/platform/device[@name='" & Dev_Name
                  & "']/memory[@name='" & Physical_Mem_Name & "']");
+            Physical_Address : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Physical_Mem,
+                    Name => "physicalAddress"));
             Virtual_Address : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
                 (DOM.Core.Elements.Get_Attribute
@@ -210,7 +215,7 @@ is
          begin
             Paging.Memory.Add_Memory_Region
               (Mem_Layout       => Layout,
-               Physical_Address => 0,
+               Physical_Address => Physical_Address,
                Virtual_Address  => Virtual_Address,
                Size             => Size,
                Caching          => Paging.WB,

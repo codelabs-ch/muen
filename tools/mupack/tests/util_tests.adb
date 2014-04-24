@@ -19,6 +19,7 @@
 with Interfaces;
 
 with Muxml;
+with Mutools.XML_Utils;
 
 with Pack.Utils;
 
@@ -40,7 +41,18 @@ is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-      Assert (Condition => Utils.Get_Image_Size (Policy => Data) = 16#128000#,
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Data,
+         Name        => "linux|bin",
+         Address     => "16#0011_4000#",
+         Size        => "16#0001_3000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         File_Name   => "obj1.o",
+         File_Format => "bin_raw",
+         File_Offset => "none");
+
+      Assert (Condition => Utils.Get_Image_Size (Policy => Data) = 16#127000#,
               Message   => "Image size mismatch");
    end Image_Size;
 

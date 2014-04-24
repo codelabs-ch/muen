@@ -20,6 +20,7 @@ with Ahven.Text_Runner;
 with Ahven.Framework;
 
 with Utils_Tests;
+with XML_Utils_Tests;
 with Processors_Tests;
 
 procedure Test_Runner
@@ -31,6 +32,8 @@ is
 begin
    Add_Test (Suite => S.all,
              T     => new Utils_Tests.Testcase);
+   Add_Test (Suite => S.all,
+             T     => new XML_Utils_Tests.Testcase);
    Add_Test (Suite => S.all,
              T     => new Processors_Tests.Testcase);
 

@@ -32,13 +32,13 @@ is
 
    procedure Add_Entries_To_Manifest
    is
-      Fname : constant String := "obj/manifest";
+      Fname : constant String := "obj/add_entries.manifest";
       Mf    : Manifest.Manifest_Type;
    begin
       Manifest.Add_Entry (Manifest => Mf,
-                          Mem_Name => "mboot",
-                          Format   => "bin_raw",
-                          Content  => "data/mboot",
+                          Mem_Name => "some_name",
+                          Format   => "some_format",
+                          Content  => "testfile",
                           Address  => 16#100000#,
                           Size     => 16#1000#,
                           Offset   => 0);
@@ -49,20 +49,13 @@ is
                           Address  => 16#101000#,
                           Size     => 16#13000#,
                           Offset   => 0);
-      Manifest.Add_Entry (Manifest => Mf,
-                          Mem_Name => "linux|bin",
-                          Format   => "bin_raw",
-                          Content  => "data/obj1.o",
-                          Address  => 16#114000#,
-                          Size     => 16#13000#,
-                          Offset   => 4);
 
       Manifest.Write (Manifest => Mf,
                       Filename => Fname);
 
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => Fname,
-               Filename2 => "data/manifest.ref"),
+               Filename2 => "data/add_entries.manifest"),
               Message   => "Manifest mismatch");
 
       Ada.Directories.Delete_File (Name => Fname);

@@ -17,6 +17,7 @@
 --
 
 with "../../contrib/projects/ahven";
+with "../libtest/libtest";
 with "../shared_tools";
 
 with "libmutools";

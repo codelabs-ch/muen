@@ -18,9 +18,8 @@
 
 with Ada.Exceptions;
 
-with DOM.Core.Elements;
-
-with Muxml.Utils;
+with Muxml;
+with Mutools.XML_Utils;
 
 with Pack.Command_Line.Test;
 with Pack.Pre_Checks;
@@ -40,27 +39,39 @@ is
       Command_Line.Test.Set_Input_Dir (Path => "data");
       Command_Line.Test.Set_Output_Dir (Path => "obj");
       Command_Line.Test.Set_Policy (Path => "data/test_policy.xml");
+
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
       --  Must not raise an exception.
 
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "mboot",
+         Address     => "16#0010_0000#",
+         Size        => "16#1000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         File_Name   => "mboot",
+         File_Format => "bin_raw",
+         File_Offset => "none");
       Pre_Checks.Files_Exist (Data => Policy);
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Policy.Doc,
-            XPath => "/system/memory/memory[@name='linux|acpi_rsdp']/file");
+      --  Add entry with invalid filename.
+
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "linux|acpi_rsdp",
+         Address     => "16#0010_0000#",
+         Size        => "16#1000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         File_Name   => "nonexistent",
+         File_Format => "bin_raw",
+         File_Offset => "none");
+
       begin
-
-         --  Set invalid filename.
-
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "filename",
-            Value => "nonexistent");
-
          Pre_Checks.Files_Exist (Data => Policy);
          Fail (Message => "Exception expected");
 
@@ -82,31 +93,31 @@ is
       Command_Line.Test.Set_Input_Dir (Path => "data");
       Command_Line.Test.Set_Output_Dir (Path => "obj");
       Command_Line.Test.Set_Policy (Path => "data/test_policy.xml");
+
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Policy.Doc,
-            XPath => "/system/memory/memory[@name='linux|acpi_rsdp']");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "linux|acpi_rsdp",
+         Address     => "16#0010_0000#",
+         Size        => "16#0000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         File_Name   => "pattern",
+         File_Format => "acpi_rsdp",
+         File_Offset => "none");
+
       begin
-
-         --  Make memory region too small.
-
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "size",
-            Value => "16#0000#");
-
          Pre_Checks.Files_Size (Data => Policy);
          Fail (Message => "Exception expected");
 
       exception
          when E : Pre_Checks.Check_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "File 'data/sections.ref' too large for physical memory"
-                    & " region 'linux|acpi_rsdp': 16#026b# > 16#0000#",
+                    = "File 'data/pattern' too large for physical memory"
+                    & " region 'linux|acpi_rsdp': 16#001e# > 16#0000#",
                     Message   => "Exception mismatch");
       end;
    end File_Larger_Than_Memory;
@@ -137,32 +148,32 @@ is
       Command_Line.Test.Set_Input_Dir (Path => "data");
       Command_Line.Test.Set_Output_Dir (Path => "obj");
       Command_Line.Test.Set_Policy (Path => "data/test_policy.xml");
+
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Policy.Doc,
-            XPath => "/system/memory/memory[@name='linux|acpi_rsdp']/file");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "linux|acpi_rsdp",
+         Address     => "16#0010_0000#",
+         Size        => "16#0000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         File_Name   => "pattern",
+         File_Format => "acpi_rsdp",
+         File_Offset => "16#ffff#");
+
       begin
-
-         --  Make offset larger than file.
-
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "offset",
-            Value => "16#ffff#");
-
          Pre_Checks.Files_Size (Data => Policy);
          Fail (Message => "Exception expected");
 
       exception
          when E : Pre_Checks.Check_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Offset of file 'data/sections.ref' referenced by "
+                    = "Offset of file 'data/pattern' referenced by "
                     & "physical memory region 'linux|acpi_rsdp' larger than "
-                    & "file size: 16#ffff# > 16#026b#",
+                    & "file size: 16#ffff# > 16#001e#",
                     Message   => "Exception mismatch");
       end;
    end Offset_Larger_Than_File;

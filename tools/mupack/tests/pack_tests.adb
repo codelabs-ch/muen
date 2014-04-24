@@ -17,6 +17,7 @@
 --
 
 with Ada.Directories;
+with Ada.Exceptions;
 
 with Pack.Command_Line.Test;
 
@@ -35,7 +36,7 @@ is
    begin
       Command_Line.Test.Set_Input_Dir  (Path => "data");
       Command_Line.Test.Set_Output_Dir (Path => "obj");
-      Command_Line.Test.Set_Policy     (Path => "data/test_policy.xml");
+      Command_Line.Test.Set_Policy     (Path => "data/execute_run.xml");
 
       Pack.Run;
 
@@ -44,16 +45,34 @@ is
 
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "obj/muen.img",
-               Filename2 => "data/muen.img.ref"),
+               Filename2 => "data/execute_run.img"),
               Message   => "Image file differs");
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "obj/muen.img.manifest",
-               Filename2 => "data/muen.img.manifest.ref"),
+               Filename2 => "data/execute_run.manifest"),
               Message   => "Manifest file differs");
 
       Ada.Directories.Delete_File (Name => "obj/muen.img");
       Ada.Directories.Delete_File (Name => "obj/muen.img.manifest");
    end Execute_Run;
+
+   -------------------------------------------------------------------------
+
+   procedure Execute_Run_No_Content
+   is
+   begin
+      Command_Line.Test.Set_Input_Dir  (Path => "data");
+      Command_Line.Test.Set_Output_Dir (Path => "obj");
+      Command_Line.Test.Set_Policy     (Path => "data/test_policy.xml");
+
+      Pack.Run;
+
+   exception
+      when E : Pack_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Image size is zero, no content to pack",
+                 Message   => "Exception mismatch");
+   end Execute_Run_No_Content;
 
    -------------------------------------------------------------------------
 
@@ -64,6 +83,9 @@ is
       T.Add_Test_Routine
         (Routine => Execute_Run'Access,
          Name    => "Run packaging process");
+      T.Add_Test_Routine
+        (Routine => Execute_Run_No_Content'Access,
+         Name    => "Run packaging with no content");
    end Initialize;
 
 end Pack_Tests;

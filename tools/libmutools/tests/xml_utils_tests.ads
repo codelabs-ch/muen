@@ -26,13 +26,10 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
-   --  Create virtual memory node.
-   procedure Create_Virtual_Memory;
+   --  Add memory region.
+   procedure Add_Memory;
 
-   --  Create subject event node.
-   procedure Create_Subject_Event;
-
-   --  Calculate size of paging structures.
-   procedure Calculate_PT_Size;
+   --  Add memory region with file content.
+   procedure Add_Memory_With_File;
 
 end XML_Utils_Tests;

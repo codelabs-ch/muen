@@ -19,8 +19,10 @@
 with Ada.Directories;
 
 with DOM.Core.Elements;
+with DOM.Core.Documents;
 
 with Muxml.Utils;
+with Mutools.XML_Utils;
 
 with Pack.Image;
 with Pack.Manifest;
@@ -59,28 +61,59 @@ is
       Command_Line.Test.Set_Input_Dir  (Path => "data");
       Command_Line.Test.Set_Output_Dir (Path => "obj");
       Command_Line.Test.Set_Policy     (Path => "data/test_policy.xml");
+
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
-      Data.XML_Doc := Policy.Doc;
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "mboot",
+         Address     => "16#0010_0000#",
+         Size        => "16#1000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         File_Name   => "mboot",
+         File_Format => "bin_raw",
+         File_Offset => "none");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "linux|acpi_rsdp",
+         Address     => "16#0010_1000#",
+         Size        => "16#1000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         File_Name   => "pattern",
+         File_Format => "acpi_rsdp",
+         File_Offset => "none");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "linux|bin",
+         Address     => "16#0010_2000#",
+         Size        => "16#0001_3000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         File_Name   => "obj1.o",
+         File_Format => "bin_raw",
+         File_Offset => "16#0004#");
 
+      Data.XML_Doc := Policy.Doc;
       Content_Providers.Process_Files (Data => Data);
 
       Image.Write (Image    => Data.Image,
-                   Filename => "obj/muen.img");
+                   Filename => "obj/process_files.img");
       Manifest.Write (Manifest => Data.Manifest,
-                      Filename => "obj/manifest");
+                      Filename => "obj/process_files.manifest");
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "obj/muen.img",
-               Filename2 => "data/muen.file.ref"),
+              (Filename1 => "obj/process_files.img",
+               Filename2 => "data/process_files.img"),
               Message   => "Image file differs");
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "obj/manifest",
-               Filename2 => "data/manifest.ref"),
+              (Filename1 => "obj/process_files.manifest",
+               Filename2 => "data/process_files.manifest"),
               Message   => "Manifest file differs");
 
-      Ada.Directories.Delete_File (Name => "obj/muen.img");
-      Ada.Directories.Delete_File (Name => "obj/manifest");
+      Ada.Directories.Delete_File (Name => "obj/process_files.img");
+      Ada.Directories.Delete_File (Name => "obj/process_files.manifest");
    end Process_Files;
 
    -------------------------------------------------------------------------
@@ -93,46 +126,53 @@ is
       Command_Line.Test.Set_Input_Dir (Path => "data");
       Command_Line.Test.Set_Output_Dir (Path => "obj");
       Command_Line.Test.Set_Policy (Path => "data/test_policy.xml");
+
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy    => Policy,
+         Name      => "filled",
+         Address   => "16#0000#",
+         Size      => "16#000a#",
+         Caching   => "WB",
+         Alignment => "16#1000#");
 
       declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+         Fill   : DOM.Core.Node;
+         Memory : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Policy.Doc,
             XPath => "/system/memory/memory[@name='filled']");
       begin
-
-         --  Set size and address of memory region.
-
+         Fill := DOM.Core.Documents.Create_Element
+           (Doc      => Policy.Doc,
+            Tag_Name => "fill");
          DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "physicalAddress",
-            Value => "16#0000#");
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "size",
-            Value => "16#000a#");
+           (Elem  => Fill,
+            Name  => "pattern",
+            Value => "16#42#");
+         Muxml.Utils.Append_Child
+           (Node      => Memory,
+            New_Child => Fill);
 
          Data.XML_Doc := Policy.Doc;
-
          Content_Providers.Process_Fills (Data => Data);
 
          Image.Write (Image    => Data.Image,
-                      Filename => "obj/fill.img");
+                      Filename => "obj/process_fills.img");
          Manifest.Write (Manifest => Data.Manifest,
-                         Filename => "obj/manifest");
+                         Filename => "obj/process_fills.manifest");
          Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => "obj/fill.img",
-                  Filename2 => "data/img.offset.ref"),
+                 (Filename1 => "obj/process_fills.img",
+                  Filename2 => "data/process_fills.img"),
                  Message   => "Image file differs");
          Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => "obj/manifest",
-                  Filename2 => "data/manifest.fill.ref"),
+                 (Filename1 => "obj/process_fills.manifest",
+                  Filename2 => "data/process_fills.manifest"),
                  Message   => "Manifest file differs");
 
-         Ada.Directories.Delete_File (Name => "obj/fill.img");
-         Ada.Directories.Delete_File (Name => "obj/manifest");
+         Ada.Directories.Delete_File (Name => "obj/process_fills.img");
+         Ada.Directories.Delete_File (Name => "obj/process_fills.manifest");
       end;
    end Process_Fills;
 

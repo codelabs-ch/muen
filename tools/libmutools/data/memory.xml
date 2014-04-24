@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<system>
+ <platform>
+  <processor logicalCpus="2" speed="2900" vmxTimerRate="5"/>
+  <memory>
+   <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
+  </memory>
+  <device name="debugconsole" shared="false">
+   <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
+  </device>
+ </platform>
+ <memory>
+  <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
+  <memory alignment="16#1000#" caching="UC" name="test" physicalAddress="16#9000_1000#" size="16#3000#"/>
+  <memory alignment="16#0020_0000#" caching="WC" name="noaddress" size="16#8000#"/>
+ </memory>
+ <events/>
+ <subjects>
+  <subject cpu="0" name="lnx" profile="linux">
+   <initrd filename="initramfs.cpio.gz" size="16#0030_0000#"/>
+   <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+   </memory>
+   <events/>
+   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
+  </subject>
+ </subjects>
+ <scheduling tickRate="10000">
+  <majorFrame>
+   <cpu id="0">
+    <minorFrame subject="lnx" ticks="80"/>
+   </cpu>
+   <cpu id="1">
+    <minorFrame subject="subject1" ticks="40"/>
+    <minorFrame subject="tau0" ticks="40"/>
+   </cpu>
+  </majorFrame>
+ </scheduling>
+</system>
+

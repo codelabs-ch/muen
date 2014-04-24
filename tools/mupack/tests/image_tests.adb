@@ -35,7 +35,7 @@ is
    procedure Add_Buffer_To_Image
    is
       Img   : Image.Image_Type (End_Address => 16#1d#);
-      Fname : constant String := "obj/test_buff.img";
+      Fname : constant String := "obj/add_buffer.img";
    begin
       Image.Add_Buffer (Image   => Img,
                         Buffer  => (1 .. 10 => 16#41#),
@@ -50,7 +50,7 @@ is
                    Filename => Fname);
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => Fname,
-               Filename2 => "data/img.ref"),
+               Filename2 => "data/add_data.img"),
               Message   => "Image mismatch");
       Ada.Directories.Delete_File (Name => Fname);
    end Add_Buffer_To_Image;
@@ -75,7 +75,7 @@ is
    procedure Add_File_To_Image
    is
       Img   : Image.Image_Type (End_Address => 16#2d#);
-      Fname : constant String := "obj/test.img";
+      Fname : constant String := "obj/add_file.img";
    begin
       Image.Add_File (Image   => Img,
                       Path    => "data/pattern",
@@ -86,7 +86,7 @@ is
                    Filename => Fname);
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => Fname,
-               Filename2 => "data/img.ref"),
+               Filename2 => "data/add_data.img"),
               Message   => "Image mismatch");
       Ada.Directories.Delete_File (Name => Fname);
    end Add_File_To_Image;
@@ -95,19 +95,19 @@ is
 
    procedure Add_File_To_Image_Offset
    is
-      Img   : Image.Image_Type (End_Address => 16#9#);
-      Fname : constant String := "obj/test.img";
+      Img   : Image.Image_Type (End_Address => 16#a#);
+      Fname : constant String := "obj/add_file_offset.img";
    begin
       Image.Add_File (Image   => Img,
                       Path    => "data/pattern",
                       Address => 0,
                       Size    => 16#0a#,
-                      Offset  => 16#0a#);
+                      Offset  => 16#02#);
       Image.Write (Image    => Img,
                    Filename => Fname);
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => Fname,
-               Filename2 => "data/img.offset.ref"),
+               Filename2 => "data/add_file_offset.img"),
               Message   => "Image mismatch");
       Ada.Directories.Delete_File (Name => Fname);
    end Add_File_To_Image_Offset;

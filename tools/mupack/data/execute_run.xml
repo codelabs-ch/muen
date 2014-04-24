@@ -11,7 +11,18 @@
 	</platform>
 
 	<memory>
-		<memory alignment="16#1000#" name="dummy" size="16#1000#" physicalAddress="16#0000#" caching="WB"/>
+		<memory alignment="16#1000#" name="mboot" size="16#1000#" physicalAddress="16#0010_0000#" caching="WB">
+			<file format="bin_raw" filename="mboot" offset="none"/>
+		</memory>
+		<memory alignment="16#1000#" name="linux|acpi_rsdp" size="16#1000#" physicalAddress="16#0010_1000#" caching="WB">
+			<file format="acpi_rsdp" filename="pattern" offset="none"/>
+		</memory>
+		<memory alignment="16#1000#" name="linux|bin" size="16#1000#" physicalAddress="16#0010_2000#" caching="WB">
+			<file format="bin_raw" filename="obj1.o" offset="16#0004#"/>
+		</memory>
+		<memory alignment="16#1000#" name="filled" size="16#1000#" physicalAddress="16#0010_3000#" caching="WB">
+			<fill pattern="16#02#"/>
+		</memory>
 	</memory>
 
 	<events/>

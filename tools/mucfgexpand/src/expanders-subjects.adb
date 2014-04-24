@@ -28,6 +28,7 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Muxml.Utils;
 with Mutools.Types;
+with Mutools.XML_Utils;
 with Mucfgvcpu;
 with Mucfgcheck.Events;
 
@@ -83,7 +84,7 @@ is
             Mulog.Log (Msg => "Mapping binary '" & Filename & "' with size "
                        & Filesize & " at virtual address " & Virtual_Address
                        & " of subject '" & Subj_Name & "'");
-            XML_Utils.Add_Memory_Region
+            Mutools.XML_Utils.Add_Memory_Region
               (Policy      => Data,
                Name        => Subj_Name & "|bin",
                Address     => "",
@@ -552,7 +553,7 @@ is
                        & Virtual_Address
                        & " of subject '" & Subj_Name & "'");
 
-            XML_Utils.Add_Memory_Region
+            Mutools.XML_Utils.Add_Memory_Region
               (Policy      => Data,
                Name        => Subj_Name & "|initramfs",
                Address     => "",

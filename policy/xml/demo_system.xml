@@ -30,7 +30,7 @@
 	</platform>
 
 	<memory>
-		<memory name="linux|ram" size="16#0fa0_0000#" caching="WB"/>
+		<memory name="linux|ram" size="16#0fa0_0000#" alignment="16#0020_0000#" caching="WB"/>
 	</memory>
 
 	<events>

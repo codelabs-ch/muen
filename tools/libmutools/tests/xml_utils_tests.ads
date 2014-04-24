@@ -16,16 +16,20 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../../contrib/projects/ahven";
-with "../libtest/libtest";
-with "../shared_tools";
+with Ahven.Framework;
 
-with "libmutools";
+package XML_Utils_Tests
+is
 
-project Test_Libmutools extends "../tools.gpr" is
+   type Testcase is new Ahven.Framework.Test_Case with null record;
 
-   for Source_Dirs use ("tests");
-   for Main use ("test_runner.adb");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
+   --  Initialize testcase.
+   procedure Initialize (T : in out Testcase);
 
-end Test_Libmutools;
+   --  Add memory region.
+   procedure Add_Memory;
+
+   --  Add memory region with file content.
+   procedure Add_Memory_With_File;
+
+end XML_Utils_Tests;

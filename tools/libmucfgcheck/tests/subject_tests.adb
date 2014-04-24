@@ -18,8 +18,6 @@
 
 with Ada.Exceptions;
 
-with DOM.Core.Elements;
-
 with Muxml.Utils;
 
 with Mucfgcheck.Subject;
@@ -52,16 +50,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject[@name='linux']");
-      begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "cpu",
-            Value => "7");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']",
+         Name  => "cpu",
+         Value => "7");
 
+      begin
          Mucfgcheck.Subject.CPU_ID (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -83,16 +78,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject[@name='vt']");
-      begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "name",
-            Value => "linux");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='vt']",
+         Name  => "name",
+         Value => "linux");
 
+      begin
          Mucfgcheck.Subject.Name_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 

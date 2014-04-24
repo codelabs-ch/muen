@@ -5,6 +5,14 @@
 		<xs:restriction base="word64Type"/>
 	</xs:simpleType>
 
+	<xs:simpleType name="alignmentType">
+		<xs:restriction base="word64Type">
+			<xs:enumeration value="16#1000#"/>
+			<xs:enumeration value="16#0020_0000#"/>
+			<xs:enumeration value="16#4000_0000#"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:simpleType name="cachingType">
 		<xs:restriction base="xs:string">
 			<xs:pattern value="UC|WC|WT|WB|WP"/>

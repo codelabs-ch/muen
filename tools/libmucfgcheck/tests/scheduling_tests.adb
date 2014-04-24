@@ -19,7 +19,6 @@
 with Ada.Exceptions;
 
 with DOM.Core.Nodes;
-with DOM.Core.Elements;
 
 with Muxml.Utils;
 
@@ -91,18 +90,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/majorFrame/cpu/minorFrame[@ticks='60']",
+         Name  => "ticks",
+         Value => "42");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/scheduling/majorFrame/cpu/"
-            & "minorFrame[@ticks='60']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "ticks",
-            Value => "42");
-
          Mucfgcheck.Scheduling.Major_Frame_Ticks (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -124,18 +118,14 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/majorFrame/cpu/"
+         & "minorFrame[@subject='vt']",
+         Name  => "subject",
+         Value => "linux");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/scheduling/majorFrame/cpu/"
-            & "minorFrame[@subject='vt']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "subject",
-            Value => "linux");
-
          Mucfgcheck.Scheduling.Subject_CPU_Affinity (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -157,18 +147,14 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/majorFrame/cpu/"
+         & "minorFrame[@subject='vt']",
+         Name  => "subject",
+         Value => "nonexistent");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/scheduling/majorFrame/cpu/"
-            & "minorFrame[@subject='vt']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "subject",
-            Value => "nonexistent");
-
          Mucfgcheck.Scheduling.Subject_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 

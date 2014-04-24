@@ -18,7 +18,7 @@
 
 with Ada.Exceptions;
 
-with DOM.Core.Elements;
+with DOM.Core;
 
 with Muxml.Utils;
 with Mutools.Types;
@@ -139,16 +139,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='trap_to_sm']",
+         Name  => "mode",
+         Value => "ipi");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/events/event[@name='trap_to_sm']");
       begin
-         DOM.Core.Elements.Set_Attribute (Elem  => Node,
-                                          Name  => "mode",
-                                          Value => "ipi");
-
          Mucfgcheck.Events.IPI_Different_Core (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -171,17 +168,14 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/target/event"
+         & "[@physical='linux_console']",
+         Name  => "physical",
+         Value => "linux_keyboard");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/events/target/event"
-            & "[@physical='linux_console']");
       begin
-         DOM.Core.Elements.Set_Attribute (Elem  => Node,
-                                          Name  => "physical",
-                                          Value => "linux_keyboard");
-
          Mucfgcheck.Events.Self_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -203,17 +197,14 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/source/group/event"
+         & "[@logical='resume_linux']",
+         Name  => "id",
+         Value => "256");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/events/source/group/event"
-            & "[@logical='resume_linux']");
       begin
-         DOM.Core.Elements.Set_Attribute (Elem  => Node,
-                                          Name  => "id",
-                                          Value => "256");
-
          Mucfgcheck.Events.Source_Group_Event_ID_Validity (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -235,17 +226,14 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/source/group/event"
+         & "[@logical='resume_linux']",
+         Name  => "id",
+         Value => "1");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/events/source/group/event"
-            & "[@logical='resume_linux']");
       begin
-         DOM.Core.Elements.Set_Attribute (Elem  => Node,
-                                          Name  => "id",
-                                          Value => "1");
-
          Mucfgcheck.Events.Source_Group_Event_ID_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -288,15 +276,13 @@ is
                     Message   => "Exception mismatch (target)");
       end;
 
-      declare
-         Event_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/events/event[@name='trap_to_sm']");
-      begin
-         DOM.Core.Elements.Set_Attribute (Elem  => Event_Node,
-                                          Name  => "name",
-                                          Value => "new_event");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='trap_to_sm']",
+         Name  => "name",
+         Value => "new_event");
 
+      begin
          Mucfgcheck.Events.Source_Targets (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -317,17 +303,14 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/target/"
+         & "event[@physical='trap_to_sm']",
+         Name  => "physical",
+         Value => "nonexistent_dst");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/events/target/"
-            & "event[@physical='trap_to_sm']");
       begin
-         DOM.Core.Elements.Set_Attribute (Elem  => Node,
-                                          Name  => "physical",
-                                          Value => "nonexistent_dst");
-
          Mucfgcheck.Events.Subject_Event_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -339,16 +322,14 @@ is
                     Message   => "Exception mismatch (target)");
       end;
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/events/source/group/"
-            & "event/notify[@physical='resume_linux']");
-      begin
-         DOM.Core.Elements.Set_Attribute (Elem  => Node,
-                                          Name  => "physical",
-                                          Value => "nonexistent_src");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/source/group/"
+         & "event/notify[@physical='resume_linux']",
+         Name  => "physical",
+         Value => "nonexistent_src");
 
+      begin
          Mucfgcheck.Events.Subject_Event_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -370,17 +351,14 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/source/group/event/"
+         & "notify[@physical='linux_keyboard']",
+         Name  => "physical",
+         Value => "resume_linux");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/events/source/group/event/"
-            & "notify[@physical='linux_keyboard']");
       begin
-         DOM.Core.Elements.Set_Attribute (Elem  => Node,
-                                          Name  => "physical",
-                                          Value => "resume_linux");
-
          Mucfgcheck.Events.Switch_Same_Core (XML_Data => Data);
          Fail (Message => "Exception expected");
 

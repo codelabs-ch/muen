@@ -240,4 +240,29 @@ is
         & "' from node '" & DOM.Core.Nodes.Node_Name (N => Node) & "'";
    end Remove_Child;
 
+   -------------------------------------------------------------------------
+
+   procedure Set_Attribute
+     (Doc   : DOM.Core.Node;
+      XPath : String;
+      Name  : String;
+      Value : String)
+   is
+      use type DOM.Core.Node;
+
+      Node : constant DOM.Core.Node := Get_Element
+        (Doc   => Doc,
+         XPath => XPath);
+   begin
+      if Node = null then
+         raise XML_Error with "Unable to set attribute '" & Name & "' to "
+           & "value '" & Value & "' - No element found at XPath '" & XPath
+           & "'";
+      end if;
+
+      DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                       Name  => Name,
+                                       Value => Value);
+   end Set_Attribute;
+
 end Muxml.Utils;

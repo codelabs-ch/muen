@@ -53,4 +53,7 @@ is
    --  Remove XML child node.
    procedure Remove_Child;
 
+   --  Set attributes of elements.
+   procedure Set_Attribute;
+
 end Utils_Tests;

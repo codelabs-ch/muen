@@ -19,7 +19,7 @@ install:
 	@for bin in $(BINARIES); do \
 		$(TO_RAW_CMD) $$bin/obj/$$bin $(POLICY_DIR)/$$bin || exit 1; \
 	done
-	@$(MULNXBZPATCH) linux/src/arch/x86/boot/bzImage $(POLICY_DIR)/bzImage
+	$(MAKE) -C linux $@
 
 clean:
 	@for subj in $(SUBJECTS); do make clean -C $$subj; done

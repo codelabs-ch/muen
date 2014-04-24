@@ -51,14 +51,16 @@ is
       N : Interfaces.C.size_t);
    pragma Import (C, C_Memset, "memset");
 
-   --  Write Linux bootparams structure and specified command line to file
-   --  given by filename. The size of the generated file is 4k + length (cmdl).
-   --  The physical address argument designates the physical address of the
-   --  zero-page in guest memory.
+   --  Write Linux bootparams structure with ramdisk information and specified
+   --  command line to file given by filename. The size of the generated file
+   --  is 4k + length (cmdl). The physical address argument designates the
+   --  physical address of the zero-page in guest memory.
    procedure Write_ZP_File
      (Filename         : String;
       Cmdline          : String;
-      Physical_Address : Natural);
+      Physical_Address : Interfaces.Unsigned_64;
+      Ramdisk_Address  : Interfaces.Unsigned_64;
+      Ramdisk_Size     : Interfaces.Unsigned_64);
 
    -------------------------------------------------------------------------
 
@@ -87,25 +89,55 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
                  Name => "name");
+            Subj_Name : constant String
+              := Mutools.Utils.Decode_Entity_Name (Encoded_Str => Memname);
+            Subj_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Policy.Doc,
+                 XPath => "/system/subjects/subject[@name='" & Subj_Name
+                 & "']");
             Physaddr : constant String
               := Muxml.Utils.Get_Attribute
-                (Doc   => Policy.Doc,
-                 XPath => "/system/subjects/subject/memory/"
-                 & "memory[@physical='" & Memname & "']",
+                (Doc   => Subj_Node,
+                 XPath => "memory/memory[@physical='" & Memname & "']",
                  Name  => "virtualAddress");
             Bootparams : constant String
               := Muxml.Utils.Get_Element_Value
-                (Doc   => Policy.Doc,
-                 XPath => "/system/subjects/subject[@name='"
-                 & Mutools.Utils.Decode_Entity_Name
-                   (Encoded_Str => Memname) & "']/bootparams");
+                (Doc   => Subj_Node,
+                 XPath => "bootparams");
+            Initramfs_Name : constant String := Subj_Name & "|initramfs";
+            Initramfs_Addr_Str : constant String
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Subj_Node,
+                 XPath => "memory/memory[@physical='" & Initramfs_Name & "']",
+                 Name  => "virtualAddress");
+
+            Initramfs_Address, Initramfs_Size : Interfaces.Unsigned_64 := 0;
          begin
-            Mulog.Log (Msg => "Guest-physical address of " & Memname
-                       & " zero-page is " & Physaddr);
+            Mulog.Log (Msg => "Guest-physical address of '" & Memname
+                       & "' zero-page is " & Physaddr);
+
+            if Initramfs_Addr_Str'Length > 0 then
+               Initramfs_Address := Interfaces.Unsigned_64'Value
+                 (Initramfs_Addr_Str);
+               Initramfs_Size := Interfaces.Unsigned_64'Value
+                 (Muxml.Utils.Get_Attribute
+                    (Doc   => Policy.Doc,
+                     XPath => "/system/memory/memory[@name='" & Initramfs_Name
+                     & "']",
+                     Name  => "size"));
+               Mulog.Log (Msg => "Declaring ramdisk of size "
+                          & Mutools.Utils.To_Hex (Number => Initramfs_Size)
+                          & " at address " & Initramfs_Addr_Str
+                          & " in zero-page");
+            end if;
+
             Write_ZP_File
               (Filename         => Output_Dir & "/" & Filename,
                Cmdline          => Bootparams,
-               Physical_Address => Natural'Value (Physaddr));
+               Physical_Address => Interfaces.Unsigned_64'Value (Physaddr),
+               Ramdisk_Address  => Initramfs_Address,
+               Ramdisk_Size     => Initramfs_Size);
          end;
       end loop;
 
@@ -116,7 +148,9 @@ is
    procedure Write_ZP_File
      (Filename         : String;
       Cmdline          : String;
-      Physical_Address : Natural)
+      Physical_Address : Interfaces.Unsigned_64;
+      Ramdisk_Address  : Interfaces.Unsigned_64;
+      Ramdisk_Size     : Interfaces.Unsigned_64)
    is
       use Ada.Streams.Stream_IO;
       use type Interfaces.C.size_t;
@@ -131,6 +165,8 @@ is
       C_Memset (S => Params'Address,
                 C => 0,
                 N => bootparam_h.boot_params'Object_Size / 8);
+
+      Params.hdr.type_of_loader := 16#ff#;
 
       Params.e820_entries := 4;
 
@@ -157,6 +193,11 @@ is
       Params.e820_map (3) := (addr   => 16#400000#,
                               size   => Memory_Size_High,
                               c_type => E820_RAM);
+
+      --  Initramfs
+
+      Params.hdr.ramdisk_image := Interfaces.C.unsigned (Ramdisk_Address);
+      Params.hdr.ramdisk_size  := Interfaces.C.unsigned (Ramdisk_Size);
 
       Params.hdr.cmdline_size     := 16#0000_0fff#;
       Params.hdr.kernel_alignment := 16#0100_0000#;

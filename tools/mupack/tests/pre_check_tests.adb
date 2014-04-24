@@ -21,6 +21,7 @@ with Ada.Exceptions;
 with DOM.Core.Elements;
 
 with Muxml.Utils;
+with Mutools.XML_Utils;
 
 with Pack.Command_Line.Test;
 with Pack.Pre_Checks;
@@ -40,27 +41,39 @@ is
       Command_Line.Test.Set_Input_Dir (Path => "data");
       Command_Line.Test.Set_Output_Dir (Path => "obj");
       Command_Line.Test.Set_Policy (Path => "data/test_policy.xml");
+
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
 
       --  Must not raise an exception.
 
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "mboot",
+         Address     => "16#0010_0000#",
+         Size        => "16#1000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         File_Name   => "mboot",
+         File_Format => "bin_raw",
+         File_Offset => "none");
       Pre_Checks.Files_Exist (Data => Policy);
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Policy.Doc,
-            XPath => "/system/memory/memory[@name='linux|acpi_rsdp']/file");
+      --  Add entry with invalid filename.
+
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "linux|acpi_rsdp",
+         Address     => "16#0010_0000#",
+         Size        => "16#1000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         File_Name   => "nonexistent",
+         File_Format => "bin_raw",
+         File_Offset => "none");
+
       begin
-
-         --  Set invalid filename.
-
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "filename",
-            Value => "nonexistent");
-
          Pre_Checks.Files_Exist (Data => Policy);
          Fail (Message => "Exception expected");
 

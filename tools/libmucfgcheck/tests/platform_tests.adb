@@ -18,8 +18,6 @@
 
 with Ada.Exceptions;
 
-with DOM.Core.Elements;
-
 with Muxml.Utils;
 
 with Mucfgcheck.Platform;
@@ -52,17 +50,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/platform/memory/memoryBlock[@name='base_mem']",
+         Name  => "size",
+         Value => "16#1000_0000#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/platform/memory/memoryBlock[@name='base_mem']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "size",
-            Value => "16#1000_0000#");
-
          Mucfgcheck.Platform.Memory_Block_Overlap (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -84,18 +78,14 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/platform/memory/"
+         & "memoryBlock[@name='extended_mem_1']",
+         Name  => "size",
+         Value => "16#1000#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/platform/memory/"
-            & "memoryBlock[@name='extended_mem_1']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "size",
-            Value => "16#1000#");
-
          Mucfgcheck.Platform.Memory_Space (XML_Data => Data);
          Fail (Message => "Exception expected");
 

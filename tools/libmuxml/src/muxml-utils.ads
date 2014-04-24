@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+
 package Muxml.Utils
 is
 
@@ -62,15 +64,20 @@ is
      (Node      : DOM.Core.Node;
       New_Child : DOM.Core.Node);
 
+   type Tags_Type is array (Positive range <>)
+     of Ada.Strings.Unbounded.Unbounded_String;
+
+   No_Tags : constant Tags_Type (1 .. 0) := (others => <>);
+
    --  Merge the right node incl. all its children into the left node. Values
    --  provided by the right node take precedence and replace existing data in
    --  the left node tree. Nothing is done if left and right do not have
-   --  matching names. Child nodes matching the list tag are appended instead
-   --  of merged into a single element.
+   --  matching names. Child nodes matching one of the list tags are appended
+   --  instead of merged into a single element.
    procedure Merge
-     (Left     : DOM.Core.Node;
-      Right    : DOM.Core.Node;
-      List_Tag : String := "");
+     (Left      : DOM.Core.Node;
+      Right     : DOM.Core.Node;
+      List_Tags : Tags_Type := No_Tags);
 
    --  Return the ancestor at given level of the specified node.
    function Ancestor_Node

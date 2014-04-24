@@ -18,8 +18,6 @@
 
 with Ada.Exceptions;
 
-with DOM.Core.Elements;
-
 with Muxml.Utils;
 
 with Mucfgcheck.Memory;
@@ -121,17 +119,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_0|vmxon']",
+         Name  => "name",
+         Value => "kernel_5|vmxon");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='kernel_0|vmxon']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "name",
-            Value => "kernel_5|vmxon");
-
          Mucfgcheck.Memory.Entity_Name_Encoding (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -153,17 +147,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_0|vmxon']",
+         Name  => "name",
+         Value => "invalid_0|vmxon");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='kernel_0|vmxon']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "name",
-            Value => "invalid_0|vmxon");
-
          Mucfgcheck.Memory.Entity_Name_Encoding (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -185,17 +175,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_0|pt']",
+         Name  => "physicalAddress",
+         Value => "16#0000#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='kernel_0|pt']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "physicalAddress",
-            Value => "16#0000#");
-
          Mucfgcheck.Memory.Kernel_PT_Consecutiveness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -217,17 +203,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_0|pt']",
+         Name  => "name",
+         Value => "foobar");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='kernel_0|pt']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "name",
-            Value => "foobar");
-
          Mucfgcheck.Memory.Kernel_PT_Region_Presence (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -249,17 +231,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_stack_0']",
+         Name  => "name",
+         Value => "foobar");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='kernel_stack_0']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "name",
-            Value => "foobar");
-
          Mucfgcheck.Memory.Kernel_Stack_Region_Presence (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -281,17 +259,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_store_0']",
+         Name  => "name",
+         Value => "foobar");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='kernel_store_0']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "name",
-            Value => "foobar");
-
          Mucfgcheck.Memory.Kernel_Store_Region_Presence (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -313,17 +287,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_text']",
+         Name  => "physicalAddress",
+         Value => "16#0010_0023#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='kernel_text']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "physicalAddress",
-            Value => "16#0010_0023#");
-
          Mucfgcheck.Memory.Physical_Address_Alignment (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -345,17 +315,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_0|vmxon']",
+         Name  => "name",
+         Value => "kernel_1|vmxon");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='kernel_0|vmxon']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "name",
-            Value => "kernel_1|vmxon");
-
          Mucfgcheck.Memory.Physical_Memory_Name_Uniqueness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -377,17 +343,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_text']",
+         Name  => "size",
+         Value => "16#1000_0000#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='kernel_text']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "size",
-            Value => "16#1000_0000#");
-
          Mucfgcheck.Memory.Physical_Memory_Overlap (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -409,17 +371,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_text']",
+         Name  => "physicalAddress",
+         Value => "16#000b_7000#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='kernel_text']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "physicalAddress",
-            Value => "16#000b_7000#");
-
          Mucfgcheck.Memory.Physical_Memory_Overlap (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -441,17 +399,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='linux|ram']",
+         Name  => "name",
+         Value => "foobar");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='linux|ram']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "name",
-            Value => "foobar");
-
          Mucfgcheck.Memory.Physical_Memory_References (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -473,17 +427,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_text']",
+         Name  => "size",
+         Value => "16#0042#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='kernel_text']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "size",
-            Value => "16#0042#");
-
          Mucfgcheck.Memory.Region_Size (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -505,18 +455,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/memory/memory[@physical='vt|bin']",
+         Name  => "virtualAddress",
+         Value => "16#000e_0500#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/memory/"
-            & "memory[@physical='vt|bin']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "virtualAddress",
-            Value => "16#000e_0500#");
-
          Mucfgcheck.Memory.Virtual_Address_Alignment (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -538,18 +483,14 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu[@id='0']/"
+         & "memory[@logical='tau0_interface']",
+         Name  => "virtualAddress",
+         Value => "16#001f_c000#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/kernel/memory/cpu[@id='0']/"
-            & "memory[@logical='tau0_interface']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "virtualAddress",
-            Value => "16#001f_c000#");
-
          Mucfgcheck.Memory.Virtual_Memory_Overlap (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -571,18 +512,14 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/memory/"
+         & "memory[@physical='vt|bin']",
+         Name  => "virtualAddress",
+         Value => "16#000b_7000#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/memory/"
-            & "memory[@physical='vt|bin']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "virtualAddress",
-            Value => "16#000b_7000#");
-
          Mucfgcheck.Memory.Virtual_Memory_Overlap (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -604,18 +541,14 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu[@id='0']/"
+         & "memory[@physical='kernel_data']",
+         Name  => "virtualAddress",
+         Value => "16#0010_0000#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/kernel/memory/cpu[@id='0']/"
-            & "memory[@physical='kernel_data']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem      => Node,
-            Name      => "virtualAddress",
-            Value     => "16#0010_0000#");
-
          Mucfgcheck.Memory.Virtual_Memory_Overlap (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -637,18 +570,14 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/memory/"
+         & "memory[@physical='linux|bin']",
+         Name  => "virtualAddress",
+         Value => "16#0000#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/memory/"
-            & "memory[@physical='linux|bin']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "virtualAddress",
-            Value => "16#0000#");
-
          Mucfgcheck.Memory.Virtual_Memory_Overlap (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -670,17 +599,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='linux|vmcs']",
+         Name  => "physicalAddress",
+         Value => "16#a000#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='linux|vmcs']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "physicalAddress",
-            Value => "16#a000#");
-
          Mucfgcheck.Memory.VMCS_Consecutiveness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -702,17 +627,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='time|vmcs']",
+         Name  => "physicalAddress",
+         Value => "16#0010_0000#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='time|vmcs']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "physicalAddress",
-            Value => "16#0010_0000#");
-
          Mucfgcheck.Memory.VMCS_In_Lowmem (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -734,17 +655,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='linux|vmcs']",
+         Name  => "name",
+         Value => "foobar");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='linux|vmcs']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "name",
-            Value => "foobar");
-
          Mucfgcheck.Memory.VMCS_Region_Presence (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -765,17 +682,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='sm|vmcs']",
+         Name  => "size",
+         Value => "16#0001_0013#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='sm|vmcs']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "size",
-            Value => "16#0001_0013#");
-
          Mucfgcheck.Memory.VMCS_Region_Size (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -797,17 +710,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_1|vmxon']",
+         Name  => "physicalAddress",
+         Value => "16#a000#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='kernel_1|vmxon']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "physicalAddress",
-            Value => "16#a000#");
-
          Mucfgcheck.Memory.VMXON_Consecutiveness (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -829,17 +738,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_1|vmxon']",
+         Name  => "physicalAddress",
+         Value => "16#0010_0000#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='kernel_1|vmxon']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "physicalAddress",
-            Value => "16#0010_0000#");
-
          Mucfgcheck.Memory.VMXON_In_Lowmem (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -861,17 +766,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_0|vmxon']",
+         Name  => "name",
+         Value => "foobar");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='kernel_0|vmxon']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "name",
-            Value => "foobar");
-
          Mucfgcheck.Memory.VMXON_Region_Presence (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -893,17 +794,13 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_0|vmxon']",
+         Name  => "size",
+         Value => "16#0001_0012#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/memory/memory[@name='kernel_0|vmxon']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "size",
-            Value => "16#0001_0012#");
-
          Mucfgcheck.Memory.VMXON_Region_Size (XML_Data => Data);
          Fail (Message => "Exception expected");
 

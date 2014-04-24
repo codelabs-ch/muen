@@ -30,10 +30,7 @@
 	</platform>
 
 	<memory>
-		<memory name="linux|initramfs" size="16#0030_0000#" caching="WB">
-			<file filename="initramfs.cpio.gz" format="bin_raw" offset="none"/>
-		</memory>
-		<memory name="linux|ram" size="16#0f70_0000#" caching="WB"/>
+		<memory name="linux|ram" size="16#0fa0_0000#" caching="WB"/>
 	</memory>
 
 	<events>
@@ -110,9 +107,9 @@
 
 		<subject name="linux" cpu="1" profile="linux">
 			<bootparams>lpj=10000 earlyprintk=serial console=ttyS0,115200 console=hvc pci=noearly notsc</bootparams>
+			<initrd filename="initramfs.cpio.gz" size="16#0030_0000#"/>
 			<memory>
-				<memory logical="initramfs" physical="linux|initramfs" virtualAddress="16#0010_0000#" writable="true" executable="true"/>
-				<memory logical="ram" physical="linux|ram" virtualAddress="16#0090_0000#" writable="true" executable="true"/>
+				<memory logical="ram" physical="linux|ram" virtualAddress="16#0060_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
 				<device logical="ttyS0" physical="serial">
@@ -139,7 +136,7 @@
 				<reader ref="linux_keyboard" virtualAddress="16#3000#" vector="49"/>
 				<writer ref="linux_console" virtualAddress="16#4000#" event="1"/>
 			</channels>
-			<binary filename="bzImage" size="16#0050_0000#" virtualAddress="16#0040_0000#"/>
+			<binary filename="bzImage" size="16#0020_0000#" virtualAddress="16#0040_0000#"/>
 		</subject>
 	</subjects>
 

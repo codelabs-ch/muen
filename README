@@ -147,7 +147,7 @@ Muen needs a recent Bochs version from the project's subversion repository.
 Issue the following commands to checkout, build and install Bochs with
 `/usr/local` prefix:
 
-  $ sudo apt-get install libsdl1.2-dev
+  $ sudo apt-get install g++ libsdl1.2-dev
   $ svn checkout svn://svn.code.sf.net/p/bochs/code/trunk bochs-code
   $ cd bochs-code/bochs
   $ ./configure           \

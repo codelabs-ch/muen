@@ -1,6 +1,6 @@
 diff -Naur orig/demo_system.xml obj/demo_system.xml
---- orig/demo_system.xml	2014-04-24 08:48:03.563880094 +0200
-+++ obj/demo_system.xml	2014-04-24 08:49:06.019882412 +0200
+--- orig/demo_system.xml	2014-04-24 11:23:20.214133101 +0200
++++ obj/demo_system.xml	2014-04-24 11:22:35.722131868 +0200
 @@ -7,7 +7,7 @@
     <memoryBlock allocatable="true" name="extended_mem_1" physicalAddress="16#0010_0000#" size="16#8000_0000#"/>
    </memory>
@@ -10,15 +10,15 @@ diff -Naur orig/demo_system.xml obj/demo_system.xml
    </device>
    <device name="vga" shared="false">
     <memory caching="WC" name="buffer" physicalAddress="16#000b_8000#" size="16#4000#"/>
-@@ -102,7 +102,7 @@
+@@ -99,7 +99,7 @@
     </monitor>
    </subject>
    <subject cpu="1" name="linux" profile="linux">
 -   <bootparams>lpj=10000 earlyprintk=serial console=ttyS0,115200 console=hvc pci=noearly notsc</bootparams>
 +   <bootparams>lpj=10000 earlyprintk=serial,0x50b0 console=serial,0x50b0 console=hvc pci=noearly notsc</bootparams>
+    <initrd filename="initramfs.cpio.gz" size="16#0030_0000#"/>
     <memory>
-     <memory executable="true" logical="initramfs" physical="linux|initramfs" virtualAddress="16#0010_0000#" writable="true"/>
-     <memory executable="true" logical="ram" physical="linux|ram" virtualAddress="16#00c0_0000#" writable="true"/>
+     <memory executable="true" logical="ram" physical="linux|ram" virtualAddress="16#0060_0000#" writable="true"/>
 diff -Naur orig/linux_dsdt.dsl obj/linux_dsdt.dsl
 --- orig/linux_dsdt.dsl	2014-04-24 08:47:02.883877843 +0200
 +++ obj/linux_dsdt.dsl	2014-04-24 08:43:09.267869173 +0200

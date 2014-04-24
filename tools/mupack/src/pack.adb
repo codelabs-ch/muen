@@ -89,8 +89,8 @@ is
             Image.Write (Image    => Data.Image,
                          Filename => Sysimg);
             Mulog.Log (Msg => "Successfully created system image '" & Sysimg
-                       & "' of size " & Mutools.Utils.To_Hex (Number => Size)
-                       & " bytes");
+                       & "' with end address " & Mutools.Utils.To_Hex
+                         (Number => Size));
 
             Manifest.Write (Manifest => Data.Manifest,
                             Filename => Mfest);

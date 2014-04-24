@@ -19,15 +19,3 @@ diff -Naur orig/demo_system.xml obj/demo_system.xml
     <initrd filename="initramfs.cpio.gz" size="16#0030_0000#"/>
     <memory>
      <memory executable="true" logical="ram" physical="linux|ram" virtualAddress="16#0060_0000#" writable="true"/>
-diff -Naur orig/linux_dsdt.dsl obj/linux_dsdt.dsl
---- orig/linux_dsdt.dsl	2014-04-24 08:47:02.883877843 +0200
-+++ obj/linux_dsdt.dsl	2014-04-24 08:43:09.267869173 +0200
-@@ -173,7 +173,7 @@
-                     Method (_CRS)
-                     {
-                         Return (ResourceTemplate () {
--                            IO (Decode16, 0x3f8, 0x3f8, 0x08, 0x08,)
-+                            IO (Decode16, 0x50b0, 0x50b0, 0x08, 0x08,)
-                             IRQNoFlags () { 0 }
-                         })
-                     }

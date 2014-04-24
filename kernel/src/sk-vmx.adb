@@ -21,15 +21,13 @@ with Skp.Kernel;
 with SK.CPU;
 with SK.CPU_Global;
 with SK.Dump;
-with SK.Interrupts;
 with SK.Descriptors;
 with SK.KC;
 with SK.GDT;
 with SK.Constants;
 
 package body SK.VMX
---# own
---#    State is VMX_Exit_Address;
+with SPARK_Mode
 is
 
    --  Segment selectors
@@ -38,10 +36,11 @@ is
    SEL_KERN_DATA : constant := 16#10#;
    SEL_TSS       : constant := 16#18#;
 
-   --# accept Warning, 350, VMX_Exit_Address, "Imported from Linker";
-   VMX_Exit_Address : SK.Word64;
-   pragma Import (C, VMX_Exit_Address, "vmx_exit_handler_ptr");
-   --# end accept;
+   VMX_Exit_Address : constant SK.Word64
+   with
+      Import,
+      Convention => C,
+      Link_Name  => "vmx_exit_handler_ptr";
 
    ---------------------------------------------------------------------------
 
@@ -63,13 +62,18 @@ is
       CPU.VMWRITE (Field   => SK.Word64 (Field),
                    Value   => Value,
                    Success => Success);
+
       if not Success then
          pragma Debug (KC.Put_String (Item => "Error setting VMCS field "));
          pragma Debug (KC.Put_Word16 (Item => Field));
          pragma Debug (KC.Put_String (Item => " to value "));
          pragma Debug (KC.Put_Word64 (Item => Value));
          pragma Debug (KC.New_Line);
-         CPU.Panic;
+
+         pragma Assume (False); --  Workaround for No_Return: Pre => False
+         if True then  --  Workaround for No_Return placement limitation
+            CPU.Panic;
+         end if;
       end if;
    end VMCS_Write;
 
@@ -84,11 +88,16 @@ is
       CPU.VMREAD (Field   => SK.Word64 (Field),
                   Value   => Value,
                   Success => Success);
+
       if not Success then
          pragma Debug (Dump.Print_Message_16
                        (Msg  => "Error reading VMCS field",
                         Item => Field));
-         CPU.Panic;
+
+         pragma Assume (False); --  Workaround for No_Return: Pre => False
+         if True then  --  Workaround for No_Return placement limitation
+            CPU.Panic;
+         end if;
       end if;
    end VMCS_Read;
 
@@ -99,6 +108,7 @@ is
    begin
       pragma Debug (Dump.Print_VMX_Error);
 
+      pragma Assume (False); --  Workaround for No_Return: Pre => False
       CPU.Panic;
    end VMX_Error;
 
@@ -225,17 +235,6 @@ is
    -------------------------------------------------------------------------
 
    procedure VMCS_Setup_Host_Fields
-   --# global
-   --#    in     Interrupts.State;
-   --#    in     GDT.GDT_Pointer;
-   --#    in     VMX_Exit_Address;
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from
-   --#       *,
-   --#       Interrupts.State,
-   --#       GDT.GDT_Pointer,
-   --#       VMX_Exit_Address;
    is
       PD : Descriptors.Pseudo_Descriptor_Type;
    begin
@@ -259,12 +258,15 @@ is
       VMCS_Write (Field => Constants.HOST_CR4,
                   Value => CPU.Get_CR4);
 
+      pragma $Prove_Warnings (Off, "statement has no effect",
+         Reason => "False Positive");
       PD := Interrupts.Get_IDT_Pointer;
       VMCS_Write (Field => Constants.HOST_BASE_IDTR,
                   Value => PD.Base);
       PD := GDT.GDT_Pointer;
       VMCS_Write (Field => Constants.HOST_BASE_GDTR,
                   Value => PD.Base);
+      pragma $Prove_Warnings (On, "statement has no effect");
 
       VMCS_Write (Field => Constants.HOST_RSP,
                   Value => Skp.Kernel.Stack_Address);
@@ -354,11 +356,16 @@ is
    begin
       CPU.VMCLEAR (Region  => VMCS_Address,
                    Success => Success);
+
       if not Success then
          pragma Debug (Dump.Print_Message_64
                        (Msg  => "Error clearing VMCS:",
                         Item => VMCS_Address));
-         CPU.Panic;
+
+         pragma Assume (False); --  Workaround for No_Return: Pre => False
+         if True then  --  Workaround for No_Return placement limitation
+            CPU.Panic;
+         end if;
       end if;
    end Clear;
 
@@ -370,11 +377,16 @@ is
    begin
       CPU.VMPTRLD (Region  => VMCS_Address,
                    Success => Success);
+
       if not Success then
          pragma Debug (Dump.Print_Message_64
                        (Msg  => "Error loading VMCS pointer:",
                         Item => VMCS_Address));
-         CPU.Panic;
+
+         pragma Assume (False); --  Workaround for No_Return: Pre => False
+         if True then  --  Workaround for No_Return placement limitation
+            CPU.Panic;
+         end if;
       end if;
    end Load;
 
@@ -390,9 +402,14 @@ is
 
       CPU.VMXON (Region  => Skp.Vmxon_Address + Get_CPU_Offset,
                  Success => Success);
+
       if not Success then
          pragma Debug (KC.Put_Line (Item => "Error enabling VMX"));
-         CPU.Panic;
+
+         pragma Assume (False); --  Workaround for No_Return: Pre => False
+         if True then  --  Workaround for No_Return placement limitation
+            CPU.Panic;
+         end if;
       end if;
    end Enter_Root_Mode;
 

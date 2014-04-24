@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<platform>
+	<processor logicalCpus="4" speed="50" vmxTimerRate="0"/>
+	<device name="serial" shared="false">
+		<ioPort name="port1" start="16#03f8#" end="16#03ff#"/>
+	</device>
+</platform>

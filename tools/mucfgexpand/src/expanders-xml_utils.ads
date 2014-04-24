@@ -25,28 +25,6 @@ with Muxml;
 package Expanders.XML_Utils
 is
 
-   --  Add physical memory region element with given parameters to policy.
-   procedure Add_Memory_Region
-     (Policy    : in out Muxml.XML_Data_Type;
-      Name      :        String;
-      Address   :        String;
-      Size      :        String;
-      Caching   :        String;
-      Alignment :        String);
-
-   --  Add file-backed physical memory region element with given parameters to
-   --  policy.
-   procedure Add_Memory_Region
-     (Policy      : in out Muxml.XML_Data_Type;
-      Name        :        String;
-      Address     :        String;
-      Size        :        String;
-      Caching     :        String;
-      Alignment   :        String;
-      File_Name   :        String;
-      File_Format :        String;
-      File_Offset :        String);
-
    --  Create virtual memory node with given parameters.
    function Create_Virtual_Memory_Node
      (Policy        : in out Muxml.XML_Data_Type;

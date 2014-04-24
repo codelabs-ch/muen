@@ -23,8 +23,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
-
-with Expanders.XML_Utils;
+with Mutools.XML_Utils;
 
 package body Expanders.Channels
 is
@@ -58,7 +57,7 @@ is
          begin
             Mulog.Log (Msg => "Adding physical memory region with size "
                        & Channel_Size & " for channel '" & Channel_Name & "'");
-            XML_Utils.Add_Memory_Region
+            Mutools.XML_Utils.Add_Memory_Region
               (Policy    => Data,
                Name      => Channel_Name,
                Address   => "",

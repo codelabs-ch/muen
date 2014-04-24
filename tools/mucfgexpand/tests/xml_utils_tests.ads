@@ -26,12 +26,6 @@ is
    --  Initialize testcase.
    procedure Initialize (T : in out Testcase);
 
-   --  Add memory region.
-   procedure Add_Memory;
-
-   --  Add memory region with file content.
-   procedure Add_Memory_With_File;
-
    --  Create virtual memory node.
    procedure Create_Virtual_Memory;
 

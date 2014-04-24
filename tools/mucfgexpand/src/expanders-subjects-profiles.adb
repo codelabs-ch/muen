@@ -20,6 +20,7 @@ with DOM.Core.Elements;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.XML_Utils;
 
 with Expanders.XML_Utils;
 
@@ -44,7 +45,7 @@ is
       Mulog.Log
         (Msg => "Adding Linux zero-page for subject '" & Subj_Name & "'");
 
-      XML_Utils.Add_Memory_Region
+      Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => Subj_Name & "|zp",
          Address     => "",
@@ -65,7 +66,7 @@ is
             Executable    => False));
 
       Mulog.Log (Msg => "Adding ACPI tables for subject '" & Subj_Name & "'");
-      XML_Utils.Add_Memory_Region
+      Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => Subj_Name & "|acpi_rsdp",
          Address     => "",
@@ -84,7 +85,7 @@ is
             Address       => "16#000e_0000#",
             Writable      => False,
             Executable    => False));
-      XML_Utils.Add_Memory_Region
+      Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => Subj_Name & "|acpi_xsdt",
          Address     => "",
@@ -103,7 +104,7 @@ is
             Address       => "16#000e_1000#",
             Writable      => False,
             Executable    => False));
-      XML_Utils.Add_Memory_Region
+      Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => Subj_Name & "|acpi_fadt",
          Address     => "",
@@ -122,7 +123,7 @@ is
             Address       => "16#000e_2000#",
             Writable      => False,
             Executable    => False));
-      XML_Utils.Add_Memory_Region
+      Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => Subj_Name & "|acpi_dsdt",
          Address     => "",
@@ -141,7 +142,7 @@ is
             Address       => "16#000e_3000#",
             Writable      => False,
             Executable    => False));
-      XML_Utils.Add_Memory_Region
+      Mutools.XML_Utils.Add_Memory_Region
         (Policy    => Data,
          Name      => Subj_Name & "|acpi_empty",
          Address   => "",
@@ -160,7 +161,7 @@ is
 
       Mulog.Log (Msg => "Adding low-mem and BIOS regions for subject '"
                  & Subj_Name & "'");
-      XML_Utils.Add_Memory_Region
+      Mutools.XML_Utils.Add_Memory_Region
         (Policy    => Data,
          Name      => Subj_Name & "|lowmem",
          Address   => "",
@@ -176,7 +177,7 @@ is
             Address       => "16#0001_4000#",
             Writable      => True,
             Executable    => False));
-      XML_Utils.Add_Memory_Region
+      Mutools.XML_Utils.Add_Memory_Region
         (Policy    => Data,
          Name      => Subj_Name & "|bios",
          Address   => "",

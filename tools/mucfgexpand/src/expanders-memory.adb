@@ -29,6 +29,7 @@ with Mulog;
 with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.Constants;
+with Mutools.XML_Utils;
 
 with Expanders.XML_Utils;
 
@@ -72,7 +73,7 @@ is
    is
    begin
       Mulog.Log (Msg => "Adding AP trampoline memory region");
-      XML_Utils.Add_Memory_Region
+      Mutools.XML_Utils.Add_Memory_Region
         (Policy    => Data,
          Name      => "trampoline",
          Address   => "16#0000#",
@@ -88,7 +89,7 @@ is
    begin
       Mulog.Log (Msg => "Adding kernel binary memory regions");
 
-      XML_Utils.Add_Memory_Region
+      Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => "kernel_text",
          Address     => "16#0010_0000#",
@@ -98,7 +99,7 @@ is
          File_Name   => "kernel",
          File_Format => "bin_raw",
          File_Offset => "16#0000#");
-      XML_Utils.Add_Memory_Region
+      Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => "kernel_data",
          Address     => "16#0011_0000#",
@@ -108,14 +109,14 @@ is
          File_Name   => "kernel",
          File_Format => "bin_raw",
          File_Offset => "16#0001_0000#");
-      XML_Utils.Add_Memory_Region
+      Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => "kernel_bss",
          Address     => "16#0011_1000#",
          Size        => "16#1000#",
          Caching     => "WB",
          Alignment   => "16#1000#");
-      XML_Utils.Add_Memory_Region
+      Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => "kernel_ro",
          Address     => "16#0011_f000#",
@@ -159,7 +160,7 @@ is
                        & " at address "
                        & Mutools.Utils.To_Hex (Number => Cur_Addr)
                        & " for CPU " & CPU_Str);
-            XML_Utils.Add_Memory_Region
+            Mutools.XML_Utils.Add_Memory_Region
               (Policy      => Data,
                Name        => "kernel_" & CPU_Str & "|pt",
                Address     => Mutools.Utils.To_Hex (Number => Cur_Addr),
@@ -194,14 +195,14 @@ is
               (Source => I'Img,
                Side   => Ada.Strings.Left);
          begin
-            XML_Utils.Add_Memory_Region
+            Mutools.XML_Utils.Add_Memory_Region
               (Policy    => Data,
                Name      => "kernel_stack_" & CPU_Str,
                Address   => "",
                Size      => "16#2000#",
                Caching   => "WB",
                Alignment => "16#1000#");
-            XML_Utils.Add_Memory_Region
+            Mutools.XML_Utils.Add_Memory_Region
               (Policy    => Data,
                Name      => "kernel_store_" & CPU_Str,
                Address   => "",
@@ -235,7 +236,7 @@ is
          begin
             Mulog.Log (Msg => "Adding I/O and MSR bitmap memory regions for"
                        & " subject '" & Subj_Name & "'");
-            XML_Utils.Add_Memory_Region
+            Mutools.XML_Utils.Add_Memory_Region
               (Policy      => Data,
                Name        => Subj_Name & "|iobm",
                Address     => "",
@@ -245,7 +246,7 @@ is
                File_Name   => Subj_Name & "_iobm",
                File_Format => "iobm",
                File_Offset => "none");
-            XML_Utils.Add_Memory_Region
+            Mutools.XML_Utils.Add_Memory_Region
               (Policy      => Data,
                Name        => Subj_Name & "|msrbm",
                Address     => "",
@@ -289,7 +290,7 @@ is
          begin
             Mulog.Log (Msg => "Adding pagetable region with size " & Size_Str
                        & " for subject '" & Subj_Name & "'");
-            XML_Utils.Add_Memory_Region
+            Mutools.XML_Utils.Add_Memory_Region
               (Policy      => Data,
                Name        => Subj_Name & "|pt",
                Address     => "",
@@ -325,7 +326,7 @@ is
                 (Elem => Subj_Node,
                  Name => "name");
          begin
-            XML_Utils.Add_Memory_Region
+            Mutools.XML_Utils.Add_Memory_Region
               (Policy    => Data,
                Name      => Subj_Name & "_state",
                Address   => "",
@@ -343,7 +344,7 @@ is
    begin
       Mulog.Log (Msg => "Adding tau0 interface memory region");
 
-      XML_Utils.Add_Memory_Region
+      Mutools.XML_Utils.Add_Memory_Region
         (Policy    => Data,
          Name      => "sys_interface",
          Address   => "",
@@ -384,7 +385,7 @@ is
             Mulog.Log (Msg => "Adding VMCS region for subject '"
                        & Subj_Name & "' at address "
                        & Mutools.Utils.To_Hex (Number => Curr_Addr));
-            XML_Utils.Add_Memory_Region
+            Mutools.XML_Utils.Add_Memory_Region
               (Policy    => Data,
                Name      => Subj_Name & "|vmcs",
                Address   => Mutools.Utils.To_Hex (Number => Curr_Addr),
@@ -418,7 +419,7 @@ is
             Mulog.Log (Msg => "Adding VMXON region for CPU " & CPU_Str & " at "
                        & "address " & Mutools.Utils.To_Hex
                          (Number => Curr_Addr));
-            XML_Utils.Add_Memory_Region
+            Mutools.XML_Utils.Add_Memory_Region
               (Policy    => Data,
                Name      => "kernel_" & CPU_Str & "|vmxon",
                Address   => Mutools.Utils.To_Hex (Number => Curr_Addr),

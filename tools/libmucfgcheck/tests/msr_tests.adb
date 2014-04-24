@@ -18,8 +18,6 @@
 
 with Ada.Exceptions;
 
-with DOM.Core.Elements;
-
 with Muxml.Utils;
 
 with Mucfgcheck.MSR;
@@ -52,18 +50,14 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/registers/msrs/"
+         & "msr[@end='16#0176#']",
+         Name  => "end",
+         Value => "16#c000_0800#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/vcpu/registers/msrs/"
-            & "msr[@end='16#0176#']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "end",
-            Value => "16#c000_0800#");
-
          Mucfgcheck.MSR.Low_Or_High (XML_Data => Data);
          Fail (Message => "Exception expected");
 
@@ -85,18 +79,14 @@ is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/registers/msrs/"
+         & "msr[@end='16#0176#']",
+         Name  => "end",
+         Value => "16#0170#");
 
-      declare
-         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/vcpu/registers/msrs/"
-            & "msr[@end='16#0176#']");
       begin
-         DOM.Core.Elements.Set_Attribute
-           (Elem  => Node,
-            Name  => "end",
-            Value => "16#0170#");
-
          Mucfgcheck.MSR.Start_Smaller_End (XML_Data => Data);
          Fail (Message => "Exception expected");
 

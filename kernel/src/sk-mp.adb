@@ -23,25 +23,25 @@ with Skp;
 with SK.CPU_Global;
 
 package body SK.MP
---# own Barrier is Sense, CPU_Sense, Barrier_Count;
+with SPARK_Mode,
+   Refined_State => (Barrier => (Sense, CPU_Sense, Barrier_Count))
 is
 
    type Sense_Array is array (Skp.CPU_Range) of Boolean;
 
    Sense         : Boolean     := False;
    CPU_Sense     : Sense_Array := Sense_Array'(others => True);
-   Barrier_Count : SK.Byte     := 0;
-   pragma Atomic (Barrier_Count);
+   Barrier_Count : SK.Byte     := 0
+      with Atomic, Async_Readers, Async_Writers;
 
    -------------------------------------------------------------------------
 
    procedure Get_And_Increment_Barrier (Count : out SK.Byte)
-   --# global
-   --#    in out Barrier_Count;
-   --# derives
-   --#    Barrier_Count, Count from Barrier_Count;
+   with
+      SPARK_Mode => Off,
+      Global     => (In_Out => Barrier_Count),
+      Depends    => ((Barrier_Count, Count) => Barrier_Count)
    is
-      --# hide Get_And_Increment_Barrier;
    begin
       Count := 1;
 
@@ -57,16 +57,12 @@ is
    -------------------------------------------------------------------------
 
    procedure Wait_For_All
-   --# global
-   --#    in out Sense;
-   --#    in out CPU_Sense;
-   --#    in out Barrier_Count;
-   --# derives
-   --#    CPU_Sense     from *, Sense &
-   --#    Sense         from *, Barrier_Count &
-   --#    Barrier_Count from *;
+   with
+      SPARK_Mode      => Off,
+      Refined_Global  => (In_Out => (Barrier_Count, CPU_Sense, Sense)),
+      Refined_Depends => ((Barrier_Count, Sense) =>+ Barrier_Count,
+                          CPU_Sense              =>+ Sense)
    is
-      --# hide Wait_For_All;
       Count : SK.Byte;
    begin
       CPU_Sense (CPU_Global.CPU_ID) := not Sense;

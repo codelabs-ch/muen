@@ -19,7 +19,6 @@
 with X86_64;
 
 package SK.System_State
-with SPARK_Mode
 is
 
    --  Check validity of initial system state.

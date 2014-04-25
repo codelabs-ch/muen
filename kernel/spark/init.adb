@@ -11,7 +11,6 @@ with X86_64;
 
 procedure Init
 with
-   SPARK_Mode,
    Global =>
       (Input  => SK.Scheduler.Tau0_Kernel_Interface,
        In_Out => (SK.CPU_Registry.State, SK.Events.State, SK.Interrupts.State,

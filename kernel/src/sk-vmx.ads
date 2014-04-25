@@ -20,7 +20,6 @@ with SK.Interrupts;
 with X86_64;
 
 package SK.VMX
-with SPARK_Mode
 is
 
    --  Enter VMX root operation.

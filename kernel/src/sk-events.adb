@@ -19,7 +19,7 @@
 with System.Machine_Code;
 
 package body SK.Events
-with SPARK_Mode,
+with
    Refined_State => (State => Global_Events)
 
 --  External modification by concurrent kernels is not modelled.

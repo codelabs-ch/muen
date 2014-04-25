@@ -21,7 +21,7 @@ with Skp.Scheduling;
 use type Skp.CPU_Range;
 
 package SK.CPU_Global
-with SPARK_Mode,
+with
    Abstract_State => State
 is
 

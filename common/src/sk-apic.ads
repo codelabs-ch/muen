@@ -19,7 +19,6 @@
 with X86_64;
 
 package SK.Apic
-with SPARK_Mode
 is
 
    --  Place local APIC in x2APIC mode and set bit 8 of the APIC spurious

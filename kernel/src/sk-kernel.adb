@@ -24,7 +24,6 @@ with SK.System_State;
 with SK.VMX;
 
 package body SK.Kernel
-with SPARK_Mode
 is
 
    -------------------------------------------------------------------------

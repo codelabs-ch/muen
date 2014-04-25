@@ -19,7 +19,7 @@
 with System;
 
 package body SK.IO_Apic
-with SPARK_Mode,
+with
    Refined_State => (State => (Window, Register_Select))
 is
 

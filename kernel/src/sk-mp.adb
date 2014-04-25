@@ -23,7 +23,7 @@ with Skp;
 with SK.CPU_Global;
 
 package body SK.MP
-with SPARK_Mode,
+with
    Refined_State => (Barrier => (Sense, CPU_Sense, Barrier_Count))
 is
 

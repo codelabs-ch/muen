@@ -19,7 +19,6 @@
 with X86_64;
 
 package SK.CPU
-with SPARK_Mode
 is
 
    --  Clear Interrupt Flag.

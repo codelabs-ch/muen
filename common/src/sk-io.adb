@@ -19,7 +19,6 @@
 with System.Machine_Code;
 
 package body SK.IO
-with SPARK_Mode
 is
 
    -------------------------------------------------------------------------

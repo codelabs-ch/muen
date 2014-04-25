@@ -17,7 +17,7 @@
 --
 
 package body SK.CPU_Registry
-with SPARK_Mode,
+with
    Refined_State => (State => CPUs)
 is
 

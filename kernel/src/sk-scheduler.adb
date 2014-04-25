@@ -28,7 +28,7 @@ with SK.Apic;
 with SK.Dump;
 
 package body SK.Scheduler
-with SPARK_Mode,
+with
    Refined_State => (State                 => (Current_Major),
                      Tau0_Kernel_Interface => (New_Major))
 is

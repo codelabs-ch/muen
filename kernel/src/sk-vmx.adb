@@ -27,7 +27,6 @@ with SK.GDT;
 with SK.Constants;
 
 package body SK.VMX
-with SPARK_Mode
 is
 
    --  Segment selectors

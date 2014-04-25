@@ -17,7 +17,7 @@
 --
 
 package SK.IO_Apic
-with SPARK_Mode,
+with
    Abstract_State =>
      (State with External => (Async_Writers, Async_Readers, Effective_Writes)),
    Initializes    => State

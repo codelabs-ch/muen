@@ -28,7 +28,7 @@ with SK.IO;
 use type SK.Descriptors.Pseudo_Descriptor_Type;
 
 package body SK.Interrupts
-with SPARK_Mode,
+with
    Refined_State => (State =>  (IDT, IDT_Pointer))
 is
 

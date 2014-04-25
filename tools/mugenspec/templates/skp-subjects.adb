@@ -1,5 +1,4 @@
 package body Skp.Subjects
-with SPARK_Mode
 is
 
    type Trap_Table_Type is array (Trap_Range) of Trap_Entry_Type;

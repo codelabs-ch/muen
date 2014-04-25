@@ -1,7 +1,6 @@
 with SK;
 
 package Skp.Scheduling
-with SPARK_Mode
 is
 
    type Minor_Frame_Type is record

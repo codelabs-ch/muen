@@ -21,7 +21,6 @@ with SK.KC;
 with SK.Constants;
 
 package body SK.System_State
-with SPARK_Mode
 is
 
    -------------------------------------------------------------------------

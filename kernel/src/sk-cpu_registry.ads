@@ -19,7 +19,7 @@
 with Skp;
 
 package SK.CPU_Registry
-with SPARK_Mode,
+with
    Abstract_State => State,
    Initializes    => State
 is

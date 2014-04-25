@@ -33,7 +33,7 @@ use type Skp.Subjects.Event_Entry_Type;
 use type Skp.Subjects.Profile_Kind;
 
 package SK.Scheduler
-with SPARK_Mode,
+with
    Abstract_State =>
      (State,
       (Tau0_Kernel_Interface with External => Async_Writers)),

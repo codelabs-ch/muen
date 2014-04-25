@@ -17,7 +17,6 @@
 --
 
 package SK
-with SPARK_Mode
 is
 
    type Byte is mod 2**8;

@@ -19,7 +19,6 @@
 with System.Machine_Code;
 
 package body SK.CPU
-with SPARK_Mode
 is
 
    -------------------------------------------------------------------------

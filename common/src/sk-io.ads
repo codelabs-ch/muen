@@ -19,7 +19,6 @@
 with X86_64;
 
 package SK.IO
-with SPARK_Mode
 is
 
    --  Receive byte from given port.

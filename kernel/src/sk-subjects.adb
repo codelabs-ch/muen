@@ -23,7 +23,7 @@ with SK.CPU;
 with SK.Constants;
 
 package body SK.Subjects
-with SPARK_Mode,
+with
    Refined_State => (State => Descriptors)
 is
 

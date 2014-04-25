@@ -17,7 +17,7 @@
 --
 
 package SK.MP
-with SPARK_Mode,
+with
    Abstract_State =>
     (Barrier with External => (Async_Writers, Async_Readers)),
    Initializes    => Barrier

@@ -19,7 +19,7 @@
 with Skp;
 
 package SK.Events
-with SPARK_Mode,
+with
    Abstract_State => (State with External => (Async_Writers, Async_Readers)),
    Initializes    => State
 is

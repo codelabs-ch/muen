@@ -24,7 +24,7 @@ with Skp.Scheduling;
 use type Skp.Scheduling.Major_Frame_Array;
 
 package body SK.CPU_Global
-with SPARK_Mode,
+with
    Refined_State => (State => Storage)
 is
 

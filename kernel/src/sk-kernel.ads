@@ -26,7 +26,6 @@ with SK.Subjects;
 with X86_64;
 
 package SK.Kernel
-with SPARK_Mode
 is
 
    --  Kernel initialization.

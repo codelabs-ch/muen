@@ -17,7 +17,7 @@
 --
 
 package X86_64
-with SPARK_Mode,
+with
    Abstract_State =>
      (State with External => (Async_Readers, Async_Writers, Effective_Writes)),
    Initializes    => State

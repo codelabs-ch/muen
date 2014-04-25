@@ -1,5 +1,4 @@
 package Skp.Kernel
-with SPARK_Mode
 is
 
    Stack_Address      : constant := 16#0011_4000#;

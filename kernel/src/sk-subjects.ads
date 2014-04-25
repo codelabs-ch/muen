@@ -20,7 +20,7 @@ with Skp;
 with X86_64;
 
 package SK.Subjects
-with SPARK_Mode,
+with
    Abstract_State => State,
    Initializes    => State
 is

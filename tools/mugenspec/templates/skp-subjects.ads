@@ -1,7 +1,6 @@
 with SK;
 
 package Skp.Subjects
-with SPARK_Mode
 is
 
    type Profile_Kind is (Native, Vm);

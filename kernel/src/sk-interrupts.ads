@@ -26,7 +26,7 @@ with X86_64;
 use type Skp.Dst_Vector_Range;
 
 package SK.Interrupts
-with SPARK_Mode,
+with
    Abstract_State => State,
    Initializes    => State
 is

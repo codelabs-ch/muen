@@ -20,7 +20,6 @@ with SK.CPU;
 with SK.Constants;
 
 package body SK.Apic
-with SPARK_Mode
 is
 
    ENABLE_APIC         : constant := 8;

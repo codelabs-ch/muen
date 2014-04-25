@@ -1,7 +1,6 @@
 with SK;
 
 package Skp.Interrupts
-with SPARK_Mode
 is
 
    Remap_Offset : constant := 32;

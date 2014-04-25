@@ -1,5 +1,4 @@
 package Skp
-with SPARK_Mode
 is
 
    type CPU_Range is range __cpu_range__;

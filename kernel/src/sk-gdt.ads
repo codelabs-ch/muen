@@ -19,7 +19,6 @@
 with SK.Descriptors;
 
 package SK.GDT
-with SPARK_Mode
 is
 
    --  Global descriptor table pointer

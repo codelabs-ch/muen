@@ -74,12 +74,13 @@ is
    begin
       Mulog.Log (Msg => "Adding AP trampoline memory region");
       Mutools.XML_Utils.Add_Memory_Region
-        (Policy    => Data,
-         Name      => "trampoline",
-         Address   => "16#0000#",
-         Size      => "16#1000#",
-         Caching   => "WB",
-         Alignment => "16#1000#");
+        (Policy      => Data,
+         Name        => "trampoline",
+         Address     => "16#0000#",
+         Size        => "16#1000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "system");
    end Add_AP_Trampoline;
 
    -------------------------------------------------------------------------

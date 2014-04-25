@@ -91,14 +91,16 @@ is
       Trap_Nr    : Trap_Range)
       return Trap_Entry_Type
    with
-      Global => null;
+      Global => null,
+      Post   => Get_Trap'Result.Dst_Subject /= Subject_Id;
 
    function Get_Event
      (Subject_Id : Skp.Subject_Id_Type;
       Event_Nr   : Event_Range)
       return Event_Entry_Type
    with
-      Global => null;
+      Global => null,
+      Post   => Get_Event'Result.Dst_Subject /= Subject_Id;
 
    function Get_VMX_Controls
      (Subject_Id : Skp.Subject_Id_Type)

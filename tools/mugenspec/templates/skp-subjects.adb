@@ -114,6 +114,12 @@ __subjects__);
       return Event_Entry_Type
    is
    begin
+      --  XXX Help the prover for now [N226-016]
+      pragma Assume
+       (for all Subject in Skp.Subject_Id_Type =>
+          (for all Event in Event_Range =>
+            (Subject_Specs (Subject).Event_Table (Event).Dst_Subject
+             /= Subject)));
       return Subject_Specs (Subject_Id).Event_Table (Event_Nr);
    end Get_Event;
 
@@ -183,6 +189,12 @@ __subjects__);
       return Trap_Entry_Type
    is
    begin
+      --  XXX Help the prover for now [N226-016]
+      pragma Assume
+       (for all Subject in Skp.Subject_Id_Type =>
+          (for all Trap in Trap_Range =>
+            (Subject_Specs (Subject).Trap_Table (Trap).Dst_Subject
+             /= Subject)));
       return Subject_Specs (Subject_Id).Trap_Table (Trap_Nr);
    end Get_Trap;
 

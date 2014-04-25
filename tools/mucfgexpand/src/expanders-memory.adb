@@ -251,6 +251,7 @@ is
                Size        => Mutools.Utils.To_Hex (Number => IOBM_Size),
                Caching     => "WB",
                Alignment   => "16#1000#",
+               Memory_Type => "system_iobm",
                File_Name   => Subj_Name & "_iobm",
                File_Format => "iobm",
                File_Offset => "none");
@@ -261,6 +262,7 @@ is
                Size        => Mutools.Utils.To_Hex (Number => MSRBM_Size),
                Caching     => "WB",
                Alignment   => "16#1000#",
+               Memory_Type => "system_msrbm",
                File_Name   => Subj_Name & "_msrbm",
                File_Format => "msrbm",
                File_Offset => "none");

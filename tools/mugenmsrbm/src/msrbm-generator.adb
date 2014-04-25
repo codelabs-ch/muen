@@ -68,8 +68,8 @@ is
             Filename  : constant String
               := Output_Dir & "/" & Muxml.Utils.Get_Attribute
                 (Doc   => Policy.Doc,
-                 XPath => "/system/memory/memory[@name='" & Name & "|msrbm']/"
-                 & "file[@format='msrbm']",
+                 XPath => "/system/memory/memory[@type='system_msrbm' and "
+                 & "contains(string(@name),'" & Name & "')]/file",
                  Name  => "filename");
          begin
             Mulog.Log (Msg => "Writing MSR bitmap of " & Name & " to '"

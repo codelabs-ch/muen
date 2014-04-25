@@ -16,8 +16,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.CPU_Global;
+with SK.Events;
+with SK.Interrupts;
+with SK.MP;
+with SK.Subjects;
 with Skp.Scheduling;
 with Skp.Subjects;
+with X86_64;
 
 use type Skp.CPU_Range;
 use type Skp.Dst_Vector_Range;
@@ -26,88 +32,52 @@ use type Skp.Subjects.Trap_Entry_Type;
 use type Skp.Subjects.Event_Entry_Type;
 use type Skp.Subjects.Profile_Kind;
 
---# inherit
---#    Skp.Kernel,
---#    Skp.Subjects,
---#    Skp.Scheduling,
---#    Skp.Interrupts,
---#    X86_64,
---#    SK.Constants,
---#    SK.CPU,
---#    SK.CPU_Global,
---#    SK.GDT,
---#    SK.Interrupts,
---#    SK.Subjects,
---#    SK.VMX,
---#    SK.Apic,
---#    SK.MP,
---#    SK.Events;
 package SK.Scheduler
---# own
---#    State;
---# initializes
---#    State;
+with SPARK_Mode,
+   Abstract_State =>
+     (State,
+      (Tau0_Kernel_Interface with External => Async_Writers)),
+   Initializes    => (State, Tau0_Kernel_Interface)
 is
 
    --  Init scheduler.
-   procedure Init;
-   --# global
-   --#    in     State;
-   --#    in     Interrupts.State;
-   --#    in     GDT.GDT_Pointer;
-   --#    in     VMX.State;
-   --#    in out Subjects.State;
-   --#    in out CPU_Global.State;
-   --#    in out X86_64.State;
-   --# derives
-   --#    Subjects.State   from * &
-   --#    CPU_Global.State from *, State &
-   --#    X86_64.State from
-   --#       *,
-   --#       State,
-   --#       Interrupts.State,
-   --#       GDT.GDT_Pointer,
-   --#       VMX.State,
-   --#       CPU_Global.State;
+   procedure Init
+   with
+      Global  =>
+        (Input  => (Interrupts.State, State),
+         In_Out => (CPU_Global.State, Subjects.State, X86_64.State)),
+      Depends =>
+        (CPU_Global.State =>+ State,
+         Subjects.State   =>+ null,
+         X86_64.State     =>+ (CPU_Global.State, Interrupts.State, State));
 
    --  Handle_Vmx_Exit could be private if spark/init.adb did not need access.
 
    --  VMX exit handler.
    procedure Handle_Vmx_Exit
-     (Subject_Registers : in out SK.CPU_Registers_Type);
-   --# global
-   --#    in out CPU_Global.State;
-   --#    in out State;
-   --#    in out MP.Barrier;
-   --#    in out Subjects.State;
-   --#    in out Events.State;
-   --#    in out X86_64.State;
-   --# derives
-   --#    CPU_Global.State, Subjects.State from
-   --#       *,
-   --#       State,
-   --#       Subject_Registers,
-   --#       CPU_Global.State,
-   --#       X86_64.State &
-   --#    Subject_Registers, Events.State from
-   --#       *,
-   --#       State,
-   --#       Subject_Registers,
-   --#       CPU_Global.State,
-   --#       Subjects.State,
-   --#       X86_64.State &
-   --#    MP.Barrier, State from
-   --#       *,
-   --#       State,
-   --#       CPU_Global.State,
-   --#       X86_64.State &
-   --#    X86_64.State from
-   --#       *,
-   --#       State,
-   --#       Subject_Registers,
-   --#       CPU_Global.State,
-   --#       Subjects.State,
-   --#       Events.State;
-   pragma Export (C, Handle_Vmx_Exit, "handle_vmx_exit");
+     (Subject_Registers : in out SK.CPU_Registers_Type)
+   with
+      Global     =>
+        (Input  => Tau0_Kernel_Interface,
+         In_Out => (CPU_Global.State, Events.State, MP.Barrier, State,
+                    Subjects.State, X86_64.State)),
+      Depends    =>
+       (CPU_Global.State    =>+ (State, Subject_Registers,
+                                 Tau0_Kernel_Interface, X86_64.State),
+        (Events.State,
+         Subject_Registers) =>+ (CPU_Global.State, State, Subjects.State,
+                                 Subject_Registers, Tau0_Kernel_Interface,
+                                 X86_64.State),
+        MP.Barrier          =>+ (CPU_Global.State, State, X86_64.State),
+        State               =>+ (CPU_Global.State, Tau0_Kernel_Interface,
+                                 X86_64.State),
+        Subjects.State      =>+ (CPU_Global.State, State, Subject_Registers,
+                                 X86_64.State),
+        X86_64.State        =>+ (CPU_Global.State, Events.State, State,
+                                 Subjects.State, Subject_Registers,
+                                 Tau0_Kernel_Interface)),
+      Export,
+      Convention => C,
+      Link_Name  => "handle_vmx_exit";
 
 end SK.Scheduler;

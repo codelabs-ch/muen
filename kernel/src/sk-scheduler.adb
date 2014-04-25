@@ -24,25 +24,24 @@ with Skp.Interrupts;
 with SK.VMX;
 with SK.Constants;
 with SK.CPU;
-with SK.CPU_Global;
-with SK.Subjects;
 with SK.Apic;
-with SK.MP;
-with SK.Events;
 with SK.Dump;
 
 package body SK.Scheduler
---# own
---#    State is in New_Major, Current_Major;
+with SPARK_Mode,
+   Refined_State => (State                 => (Current_Major),
+                     Tau0_Kernel_Interface => (New_Major))
 is
 
    --  IRQ constants.
    Timer_Vector : constant := 48;
    IPI_Vector   : constant := 254;
 
-   New_Major : Skp.Scheduling.Major_Frame_Range;
-   for New_Major'Address use System'To_Address (Skp.Kernel.Tau0_Iface_Address);
-   --# assert New_Major'Always_Valid;
+   New_Major : Skp.Scheduling.Major_Frame_Range
+   with
+      Atomic,
+      Async_Writers,
+      Address => System'To_Address (Skp.Kernel.Tau0_Iface_Address);
 
    --  Current major.
    Current_Major : Skp.Scheduling.Major_Frame_Range
@@ -52,17 +51,12 @@ is
 
    --  Inject pending event into subject identified by ID.
    procedure Inject_Event (Subject_Id : Skp.Subject_Id_Type)
-   --# global
-   --#    in     Subjects.State;
-   --#    in out Events.State;
-   --#    in out X86_64.State;
-   --# derives
-   --#    Events.State, X86_64.State from
-   --#       *,
-   --#       Subject_Id,
-   --#       Subjects.State,
-   --#       Events.State,
-   --#       X86_64.State;
+   with
+      Global  => (Input  => Subjects.State,
+                  In_Out => (Events.State, X86_64.State)),
+      Depends =>
+        ((Events.State, X86_64.State) =>
+            (Events.State, Subjects.State, Subject_Id, X86_64.State))
    is
       RFLAGS        : SK.Word64;
       Intr_State    : SK.Word64;
@@ -109,14 +103,11 @@ is
      (Old_Id   : Skp.Subject_Id_Type;
       New_Id   : Skp.Subject_Id_Type;
       New_VMCS : SK.Word64)
-   --# global
-   --#    in out CPU_Global.State;
-   --#    in out X86_64.State;
-   --# derives
-   --#    CPU_Global.State from *, Old_Id, New_Id &
-   --#    X86_64.State     from *, New_VMCS;
-   --# pre
-   --#    Old_Id /= New_Id;
+   with
+      Global  => (In_Out => (CPU_Global.State, X86_64.State)),
+      Depends => (CPU_Global.State =>+ (New_Id, Old_Id),
+                  X86_64.State     =>+ New_VMCS),
+      Pre     =>  Old_Id /= New_Id
    is
       Remaining_Ticks : SK.Word64;
    begin
@@ -138,23 +129,15 @@ is
    --  to the one set by Tau0. Otherwise the minor frame index is incremented
    --  by 1.
    procedure Update_Scheduling_Info
-   --# global
-   --#    in     New_Major;
-   --#    in out X86_64.State;
-   --#    in out Current_Major;
-   --#    in out CPU_Global.State;
-   --#    in out MP.Barrier;
-   --#    in out Events.State;
-   --# derives
-   --#    MP.Barrier from
-   --#       *,
-   --#       Current_Major,
-   --#       CPU_Global.State &
-   --#    Current_Major, CPU_Global.State, Events.State, X86_64.State from
-   --#       *,
-   --#       Current_Major,
-   --#       CPU_Global.State,
-   --#       New_Major;
+   with
+      Global  =>
+        (Input  => New_Major,
+         In_Out => (CPU_Global.State, Current_Major, Events.State,
+                    MP.Barrier, X86_64.State)),
+      Depends =>
+        ((CPU_Global.State, Current_Major, Events.State, X86_64.State) =>+
+            (CPU_Global.State, Current_Major, New_Major),
+         MP.Barrier =>+ (CPU_Global.State, Current_Major))
    is
       Minor_Frame : CPU_Global.Active_Minor_Frame_Type;
       Plan_Frame  : Skp.Scheduling.Minor_Frame_Type;
@@ -175,9 +158,7 @@ is
          Minor_Frame.Minor_Id := Skp.Scheduling.Minor_Frame_Range'First;
 
          MP.Wait_For_All;
-         --# accept Flow, 22, "CPU ID differs per logical CPU";
          if CPU_Global.Is_BSP then
-         --# end accept;
             Current_Major := New_Major;
          end if;
          MP.Wait_For_All;
@@ -214,24 +195,15 @@ is
    -------------------------------------------------------------------------
 
    procedure Init
-   --# global
-   --#    in     Current_Major;
-   --#    in     Interrupts.State;
-   --#    in     GDT.GDT_Pointer;
-   --#    in     VMX.State;
-   --#    in out Subjects.State;
-   --#    in out CPU_Global.State;
-   --#    in out X86_64.State;
-   --# derives
-   --#    Subjects.State   from * &
-   --#    CPU_Global.State from *, Current_Major    &
-   --#    X86_64.State from
-   --#       *,
-   --#       Current_Major,
-   --#       Interrupts.State,
-   --#       GDT.GDT_Pointer,
-   --#       VMX.State,
-   --#       CPU_Global.State;
+   with
+      Refined_Global  =>
+        (Input  => (Current_Major, Interrupts.State),
+         In_Out => (CPU_Global.State, Subjects.State, X86_64.State)),
+      Refined_Depends =>
+        (CPU_Global.State =>+ Current_Major,
+         Subjects.State   =>+ null,
+         X86_64.State     =>+ (CPU_Global.State, Current_Major,
+                               Interrupts.State))
    is
       Plan_Frame        : Skp.Scheduling.Minor_Frame_Type;
       Initial_VMCS_Addr : SK.Word64 := 0;
@@ -322,18 +294,14 @@ is
    procedure Handle_Hypercall
      (Current_Subject : Skp.Subject_Id_Type;
       Event_Nr        : SK.Word64)
-   --# global
-   --#    in out CPU_Global.State;
-   --#    in out Events.State;
-   --#    in out Subjects.State;
-   --#    in out X86_64.State;
-   --# derives
-   --#    Events.State from *, Current_Subject, Event_Nr &
-   --#    CPU_Global.State, X86_64.State from
-   --#       *,
-   --#       Current_Subject,
-   --#       Event_Nr &
-   --#    Subjects.State from *, Current_Subject;
+   with
+      Global  =>
+        (In_Out => (CPU_Global.State, Events.State, Subjects.State,
+                    X86_64.State)),
+      Depends =>
+        ((CPU_Global.State,
+          Events.State, X86_64.State) =>+ (Current_Subject, Event_Nr),
+         Subjects.State               =>+ Current_Subject)
    is
       Event       : Skp.Subjects.Event_Entry_Type;
       Dst_CPU     : Skp.CPU_Range;
@@ -362,10 +330,6 @@ is
 
             if Event.Handover then
 
-               --# accept Warning, 444, "Guaranteed by validated policy";
-               --# assume Current_Subject /= Event.Dst_Subject;
-               --# end accept;
-
                Subject_Handover
                  (Old_Id   => Current_Subject,
                   New_Id   => Event.Dst_Subject,
@@ -391,12 +355,9 @@ is
 
    --  Handle external interrupt request with given vector.
    procedure Handle_Irq (Vector : SK.Byte)
-   --# global
-   --#    in out Events.State;
-   --#    in out X86_64.State;
-   --# derives
-   --#    Events.State from *, Vector &
-   --#    X86_64.State from *;
+   with
+      Global  => (In_Out => (Events.State, X86_64.State)),
+      Depends => (Events.State =>+ Vector, X86_64.State =>+ null)
    is
       Vect_Nr : Skp.Interrupts.Remapped_Vector_Type;
       Route   : Skp.Interrupts.Vector_Route_Type;
@@ -430,113 +391,129 @@ is
    procedure Handle_Trap
      (Current_Subject : Skp.Subject_Id_Type;
       Trap_Nr         : SK.Word64)
-   --# global
-   --#    in out CPU_Global.State;
-   --#    in out Events.State;
-   --#    in out X86_64.State;
-   --# derives
-   --#    CPU_Global.State, Events.State, X86_64.State from
-   --#       *,
-   --#       Current_Subject,
-   --#       Trap_Nr;
+   with
+      Global  =>
+        (In_Out => (CPU_Global.State, Events.State, X86_64.State)),
+      Depends =>
+        ((CPU_Global.State, Events.State, X86_64.State) =>+
+            (Current_Subject, Trap_Nr))
    is
       Trap_Entry : Skp.Subjects.Trap_Entry_Type;
-   begin
-      if Trap_Nr <= SK.Word64 (Skp.Subjects.Trap_Range'Last) then
-         Trap_Entry := Skp.Subjects.Get_Trap
-           (Subject_Id => Current_Subject,
-            Trap_Nr    => Skp.Subjects.Trap_Range (Trap_Nr));
 
-         if Trap_Entry.Dst_Subject = Skp.Invalid_Subject then
-            pragma Debug (Dump.Print_Message_16
-                          (Msg  => ">>> No handler for trap",
-                           Item => Word16 (Trap_Nr)));
-            pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject));
-            CPU.Panic;
-         else
-            if Trap_Entry.Dst_Vector < Skp.Invalid_Vector then
-               Events.Insert_Event
-                 (Subject => Trap_Entry.Dst_Subject,
-                  Event   => SK.Byte (Trap_Entry.Dst_Vector));
-            end if;
+      ----------------------------------------------------------------------
 
-            --  Handover to trap handler subject.
+      procedure Panic_No_Trap_Handler
+      with
+          Global  => (In_Out => (X86_64.State)),
+          Depends => (X86_64.State =>+ null),
+          Post    => False --  Workaround for No_Return limitations
+      is
+      begin
+         pragma Debug (Dump.Print_Message_16
+                       (Msg  => ">>> No handler for trap",
+                        Item => Word16 (Trap_Nr)));
+         pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject));
 
-            --# accept Warning, 444, "Guaranteed by validated policy";
-            --# assume Current_Subject /= Trap_Entry.Dst_Subject;
-            --# end accept;
+         pragma Assume (False); --  Workaround for limited No_Return handling
+         CPU.Panic;
+      end Panic_No_Trap_Handler;
 
-            Subject_Handover
-              (Old_Id   => Current_Subject,
-               New_Id   => Trap_Entry.Dst_Subject,
-               New_VMCS => Skp.Subjects.Get_VMCS_Address
-                 (Subject_Id => Trap_Entry.Dst_Subject));
-         end if;
-      else
+      ----------------------------------------------------------------------
+
+      procedure Panic_Unknown_Trap
+      with
+         Global  => (In_Out => (X86_64.State)),
+         Depends => (X86_64.State =>+ null),
+         Post    => False --  Workaround for No_Return limitations
+      is
+      begin
          pragma Debug (Dump.Print_Message_64 (Msg  => ">>> Unknown trap",
                                               Item => Trap_Nr));
          pragma Debug (Dump.Print_Subject (Subject_Id => Current_Subject));
+
+         pragma Assume (False); --  Workaround for limited No_Return handling
          CPU.Panic;
+      end Panic_Unknown_Trap;
+
+   begin
+      if not (Trap_Nr <= SK.Word64 (Skp.Subjects.Trap_Range'Last)) then
+         Panic_Unknown_Trap;
       end if;
+
+      Trap_Entry := Skp.Subjects.Get_Trap
+        (Subject_Id => Current_Subject,
+         Trap_Nr    => Skp.Subjects.Trap_Range (Trap_Nr));
+
+      if Trap_Entry.Dst_Subject = Skp.Invalid_Subject then
+         Panic_No_Trap_Handler;
+      end if;
+
+      if Trap_Entry.Dst_Vector < Skp.Invalid_Vector then
+         Events.Insert_Event
+           (Subject => Trap_Entry.Dst_Subject,
+            Event   => SK.Byte (Trap_Entry.Dst_Vector));
+      end if;
+
+      --  Handover to trap handler subject.
+
+      Subject_Handover
+        (Old_Id   => Current_Subject,
+         New_Id   => Trap_Entry.Dst_Subject,
+         New_VMCS => Skp.Subjects.Get_VMCS_Address
+           (Subject_Id => Trap_Entry.Dst_Subject));
+
    end Handle_Trap;
 
    -------------------------------------------------------------------------
 
    procedure Handle_Vmx_Exit (Subject_Registers : in out SK.CPU_Registers_Type)
-   --# global
-   --#    in     New_Major;
-   --#    in out CPU_Global.State;
-   --#    in out Current_Major;
-   --#    in out MP.Barrier;
-   --#    in out Subjects.State;
-   --#    in out Events.State;
-   --#    in out X86_64.State;
-   --# derives
-   --#    CPU_Global.State from
-   --#       *,
-   --#       Current_Major,
-   --#       New_Major,
-   --#       Subject_Registers,
-   --#       CPU_Global.State,
-   --#       X86_64.State &
-   --#    Subject_Registers, Events.State from
-   --#       *,
-   --#       Current_Major,
-   --#       New_Major,
-   --#       Subject_Registers,
-   --#       CPU_Global.State,
-   --#       Subjects.State,
-   --#       X86_64.State &
-   --#    X86_64.State from
-   --#       *,
-   --#       Current_Major,
-   --#       New_Major,
-   --#       Subject_Registers,
-   --#       CPU_Global.State,
-   --#       Subjects.State,
-   --#       Events.State &
-   --#    Subjects.State from
-   --#       *,
-   --#       Current_Major,
-   --#       Subject_Registers,
-   --#       CPU_Global.State,
-   --#       X86_64.State &
-   --#    Current_Major from
-   --#       *,
-   --#       New_Major,
-   --#       CPU_Global.State,
-   --#       X86_64.State &
-   --#    MP.Barrier from
-   --#       *,
-   --#       Current_Major,
-   --#       CPU_Global.State,
-   --#       X86_64.State;
+   with
+      Refined_Global  =>
+        (Input  => New_Major,
+         In_Out => (CPU_Global.State, Current_Major, Events.State,
+                    MP.Barrier, Subjects.State, X86_64.State)),
+      Refined_Depends =>
+        (CPU_Global.State    =>+ (Current_Major, New_Major, Subject_Registers,
+                                  X86_64.State),
+         Current_Major       =>+ (CPU_Global.State, New_Major, X86_64.State),
+         (Events.State,
+          Subject_Registers) =>+ (CPU_Global.State, Current_Major, New_Major,
+                                  Subjects.State, Subject_Registers,
+                                  X86_64.State),
+         MP.Barrier          =>+ (CPU_Global.State, Current_Major,
+                                  X86_64.State),
+         Subjects.State      =>+ (CPU_Global.State, Current_Major,
+                                  Subject_Registers, X86_64.State),
+         X86_64.State        =>+ (CPU_Global.State, Current_Major,
+                                  Events.State, New_Major, Subjects.State,
+                                  Subject_Registers))
    is
       Exit_Status     : SK.Word64;
       Current_Subject : Skp.Subject_Id_Type;
       Current_Minor   : CPU_Global.Active_Minor_Frame_Type;
+
+      ----------------------------------------------------------------------
+
+      procedure Panic_Exit_Failure
+      with
+         Global  => (In_Out => (X86_64.State)),
+         Depends => (X86_64.State =>+ null),
+         Post    => False -- Workaround for No_Return limitations
+      is
+      begin
+         pragma Debug (Dump.Print_VMX_Entry_Error
+                       (Current_Subject => Current_Subject,
+                        Exit_Reason     => Exit_Status));
+
+         pragma Assume (False); -- Workaround for No_Return limitations
+         CPU.Panic;
+      end Panic_Exit_Failure;
    begin
-      Current_Minor   := CPU_Global.Get_Current_Minor_Frame;
+      pragma $Prove_Warnings (Off, "statement has no effect",
+         Reason => "False positive");
+      Current_Minor := CPU_Global.Get_Current_Minor_Frame;
+      pragma $Prove_Warnings (On, "statement has no effect");
+
       Current_Subject := CPU_Global.Get_Minor_Frame
         (Major_Id => Current_Major,
          Minor_Id => Current_Minor.Minor_Id).Subject_Id;
@@ -547,10 +524,7 @@ is
       if SK.Bit_Test (Value => Exit_Status,
                       Pos   => Constants.VM_EXIT_ENTRY_FAILURE)
       then
-         pragma Debug (Dump.Print_VMX_Entry_Error
-                       (Current_Subject => Current_Subject,
-                        Exit_Reason     => Exit_Status));
-         CPU.Panic;
+         Panic_Exit_Failure;
       end if;
 
       Subjects.Save_State (Id   => Current_Subject,

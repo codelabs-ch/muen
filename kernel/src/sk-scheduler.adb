@@ -68,6 +68,7 @@ is
       Intr_State    : SK.Word64;
       Event         : SK.Byte;
       Event_Present : Boolean;
+      Event_Pending : Boolean;
    begin
       RFLAGS := Subjects.Get_RFLAGS (Id => Subject_Id);
 
@@ -93,7 +94,10 @@ is
          end if;
       end if;
 
-      if Events.Has_Pending_Events (Subject => Subject_Id) then
+      Events.Has_Pending_Events (Subject       => Subject_Id,
+                                 Event_Pending => Event_Pending);
+
+      if Event_Pending then
          VMX.VMCS_Set_Interrupt_Window (Value => True);
       end if;
    end Inject_Event;

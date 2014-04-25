@@ -29,7 +29,7 @@ is
       Size        :        String;
       Caching     :        String;
       Alignment   :        String;
-      Memory_Type :        String := "");
+      Memory_Type :        String);
 
    --  Add file-backed physical memory region element with given parameters to
    --  policy.
@@ -40,7 +40,7 @@ is
       Size        :        String;
       Caching     :        String;
       Alignment   :        String;
-      Memory_Type :        String := "";
+      Memory_Type :        String;
       File_Name   :        String;
       File_Format :        String;
       File_Offset :        String);

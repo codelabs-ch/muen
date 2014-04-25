@@ -44,7 +44,7 @@ is
       Size        :        String;
       Caching     :        String;
       Alignment   :        String;
-      Memory_Type :        String := "")
+      Memory_Type :        String)
    is
       Section     : constant DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
@@ -71,7 +71,7 @@ is
       Size        :        String;
       Caching     :        String;
       Alignment   :        String;
-      Memory_Type :        String := "";
+      Memory_Type :        String;
       File_Name   :        String;
       File_Format :        String;
       File_Offset :        String)

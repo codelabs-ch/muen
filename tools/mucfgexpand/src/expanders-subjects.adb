@@ -561,6 +561,7 @@ is
                Size        => Filesize,
                Caching     => "WB",
                Alignment   => "16#1000#",
+               Memory_Type => "subject_initrd",
                File_Name   => Filename,
                File_Format => "bin_raw",
                File_Offset => "none");

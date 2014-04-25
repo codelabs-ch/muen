@@ -65,7 +65,7 @@
   <memory alignment="16#1000#" caching="WB" name="subject1|bin" size="16#1000#" type="subject_binary">
    <file filename="subject1_bin" format="bin_raw" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|initramfs" size="16#0030_0000#">
+  <memory alignment="16#1000#" caching="WB" name="lnx|initramfs" size="16#0030_0000#" type="subject_initrd">
    <file filename="initramfs.cpio.gz" format="bin_raw" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|zp" size="16#2000#">

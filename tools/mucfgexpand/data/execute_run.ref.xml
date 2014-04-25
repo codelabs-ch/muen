@@ -94,13 +94,13 @@
   <memory alignment="16#1000#" caching="WB" name="kernel_1|pt" physicalAddress="16#0012_d000#" size="16#4000#" type="system_pt">
    <file filename="kernel_pt_1" format="pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#4000#">
+  <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#4000#" type="system_pt">
    <file filename="tau0_pt" format="pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#5000#">
+  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#5000#" type="system_pt">
    <file filename="lnx_pt" format="pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#5000#">
+  <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#5000#" type="system_pt">
    <file filename="subject1_pt" format="pt" offset="none"/>
   </memory>
  </memory>

@@ -307,6 +307,7 @@ is
                Size        => Size_Str,
                Caching     => "WB",
                Alignment   => "16#1000#",
+               Memory_Type => "system_pt",
                File_Name   =>  Subj_Name & "_pt",
                File_Format => "pt",
                File_Offset => "none");

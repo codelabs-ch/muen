@@ -34,14 +34,10 @@ with Muxml.Utils;
 
 with bootparam_h;
 
-with Zp.Constants;
+with Zp.Utils;
 
 package body Zp.Generator
 is
-
-   --  Memory size in bytes.
-   Memory_Size      : constant := 256 * 1024 * 1024;
-   Memory_Size_High : constant := Memory_Size - 16#400000#;
 
    procedure C_Memset
      (S : System.Address;
@@ -52,13 +48,16 @@ is
    --  Write Linux bootparams structure with ramdisk information and specified
    --  command line to file given by filename. The size of the generated file
    --  is 4k + length (cmdl). The physical address argument designates the
-   --  physical address of the zero-page in guest memory.
+   --  physical address of the zero-page in guest memory. The subject memory
+   --  nodes describe the virtual address space and are used to generate the
+   --  e820 map.
    procedure Write_ZP_File
      (Filename         : String;
       Cmdline          : String;
       Physical_Address : Interfaces.Unsigned_64;
       Ramdisk_Address  : Interfaces.Unsigned_64;
-      Ramdisk_Size     : Interfaces.Unsigned_64);
+      Ramdisk_Size     : Interfaces.Unsigned_64;
+      Subject_Memory   : DOM.Core.Node_List);
 
    -------------------------------------------------------------------------
 
@@ -94,6 +93,10 @@ is
                 (Doc   => Policy.Doc,
                  XPath => "/system/subjects/subject[@name='" & Subj_Name
                  & "']");
+            Subj_Memory : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subj_Node,
+                 XPath => "memory/memory");
             Physaddr : constant String
               := Muxml.Utils.Get_Attribute
                 (Doc   => Subj_Node,
@@ -135,7 +138,8 @@ is
                Cmdline          => Bootparams,
                Physical_Address => Interfaces.Unsigned_64'Value (Physaddr),
                Ramdisk_Address  => Initramfs_Address,
-               Ramdisk_Size     => Initramfs_Size);
+               Ramdisk_Size     => Initramfs_Size,
+               Subject_Memory   => Subj_Memory);
          end;
       end loop;
 
@@ -148,7 +152,8 @@ is
       Cmdline          : String;
       Physical_Address : Interfaces.Unsigned_64;
       Ramdisk_Address  : Interfaces.Unsigned_64;
-      Ramdisk_Size     : Interfaces.Unsigned_64)
+      Ramdisk_Size     : Interfaces.Unsigned_64;
+      Subject_Memory   : DOM.Core.Node_List)
    is
       use Ada.Streams.Stream_IO;
       use type Interfaces.C.size_t;
@@ -166,31 +171,9 @@ is
 
       Params.hdr.type_of_loader := 16#ff#;
 
-      Params.e820_entries := 4;
-
-      --  Zero page incl. cmdl (8k), Time page, HVC and kbd channels
-
-      Params.e820_map (0) := (addr   => 16#000000#,
-                              size   => 16#014000#,
-                              c_type => Constants.E820_RESERVED);
-
-      --  Usable lower memory
-
-      Params.e820_map (1) := (addr   => 16#014000#,
-                              size   => 16#08f000#,
-                              c_type => Constants.E820_RAM);
-
-      --  VGA memory, OPROMs, BIOS extension (ACPI tables), System BIOS
-
-      Params.e820_map (2) := (addr   => 16#0b8000#,
-                              size   => 16#048000#,
-                              c_type => Constants.E820_RESERVED);
-
-      --  High memory
-
-      Params.e820_map (3) := (addr   => 16#400000#,
-                              size   => Memory_Size_High,
-                              c_type => Constants.E820_RAM);
+      Params.e820_entries := Interfaces.C.unsigned_char
+        (DOM.Core.Nodes.Length (List => Subject_Memory));
+      Params.e820_map := Utils.Create_e820_Map (Memory => Subject_Memory);
 
       --  Initramfs
 

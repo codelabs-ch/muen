@@ -16,65 +16,29 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
---# inherit
---#    X86_64,
---#    SK.Apic,
---#    SK.Interrupts,
---#    SK.GDT,
---#    SK.Scheduler,
---#    SK.System_State,
---#    SK.Subjects,
---#    SK.VMX,
---#    SK.MP,
---#    SK.IO_Apic,
---#    SK.CPU,
---#    SK.CPU_Global,
---#    SK.CPU_Registry;
+with SK.CPU_Global;
+with SK.CPU_Registry;
+with SK.Interrupts;
+with SK.IO_Apic;
+with SK.MP;
+with SK.Scheduler;
+with SK.Subjects;
+with X86_64;
+
 package SK.Kernel
+with SPARK_Mode
 is
 
    --  Kernel initialization.
-   procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type);
-   --# global
-   --#    in     GDT.GDT_Pointer;
-   --#    in     Scheduler.State;
-   --#    in     VMX.State;
-   --#    in out Interrupts.State;
-   --#    in out Subjects.State;
-   --#    in out MP.Barrier;
-   --#    in out IO_Apic.State;
-   --#    in out CPU_Global.State;
-   --#    in out CPU_Registry.State;
-   --#    in out X86_64.State;
-   --# derives
-   --#    Interrupts.State from * &
-   --#    MP.Barrier, Subjects.State, CPU_Registry.State from
-   --#       *,
-   --#       X86_64.State,
-   --#       Interrupts.State &
-   --#    IO_Apic.State from
-   --#       *,
-   --#       X86_64.State,
-   --#       Interrupts.State,
-   --#       CPU_Registry.State &
-   --#    CPU_Global.State from
-   --#       *,
-   --#       X86_64.State,
-   --#       Scheduler.State,
-   --#       Interrupts.State &
-   --#    X86_64.State from
-   --#       *,
-   --#       GDT.GDT_Pointer,
-   --#       Subjects.State,
-   --#       Scheduler.State,
-   --#       VMX.State,
-   --#       Interrupts.State,
-   --#       X86_64.State &
-   --#    Subject_Registers from
-   --#       Subjects.State,
-   --#       Scheduler.State,
-   --#       Interrupts.State,
-   --#       X86_64.State;
-   pragma Export (C, Initialize, "sk_initialize");
+   procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type)
+   with
+      Global  =>
+        (Input  => Scheduler.State,
+         Output => CPU_Global.State,
+         In_Out => (CPU_Registry.State, Interrupts.State, IO_Apic.State,
+                    MP.Barrier, Subjects.State, X86_64.State)),
+      Export,
+      Convention => C,
+      Link_Name  => "sk_initialize";
 
 end SK.Kernel;

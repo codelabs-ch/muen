@@ -19,6 +19,30 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="memoryKindType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="system"/>
+			<xs:enumeration value="system_vmxon"/>
+			<xs:enumeration value="system_vmcs"/>
+			<xs:enumeration value="system_iobm"/>
+			<xs:enumeration value="system_msrbm"/>
+			<xs:enumeration value="system_pt"/>
+			<xs:enumeration value="kernel"/>
+			<xs:enumeration value="kernel_binary"/>
+			<xs:enumeration value="subject"/>
+			<xs:enumeration value="subject_state"/>
+			<xs:enumeration value="subject_binary"/>
+			<xs:enumeration value="subject_channel"/>
+			<xs:enumeration value="subject_initrd"/>
+			<xs:enumeration value="subject_bios"/>
+			<xs:enumeration value="subject_acpi_rsdp"/>
+			<xs:enumeration value="subject_acpi_xsdt"/>
+			<xs:enumeration value="subject_acpi_fadt"/>
+			<xs:enumeration value="subject_acpi_dsdt"/>
+			<xs:enumeration value="subject_zeropage"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:simpleType name="fileFormatType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="acpi_rsdp"/>

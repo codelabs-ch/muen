@@ -202,19 +202,21 @@ is
                Side   => Ada.Strings.Left);
          begin
             Mutools.XML_Utils.Add_Memory_Region
-              (Policy    => Data,
-               Name      => "kernel_stack_" & CPU_Str,
-               Address   => "",
-               Size      => "16#2000#",
-               Caching   => "WB",
-               Alignment => "16#1000#");
+              (Policy      => Data,
+               Name        => "kernel_stack_" & CPU_Str,
+               Address     => "",
+               Size        => "16#2000#",
+               Caching     => "WB",
+               Alignment   => "16#1000#",
+               Memory_Type => "kernel");
             Mutools.XML_Utils.Add_Memory_Region
-              (Policy    => Data,
-               Name      => "kernel_store_" & CPU_Str,
-               Address   => "",
-               Size      => "16#1000#",
-               Caching   => "WB",
-               Alignment => "16#1000#");
+              (Policy      => Data,
+               Name        => "kernel_store_" & CPU_Str,
+               Address     => "",
+               Size        => "16#1000#",
+               Caching     => "WB",
+               Alignment   => "16#1000#",
+               Memory_Type => "kernel");
          end;
       end loop;
    end Add_Stack_Store;

@@ -24,10 +24,10 @@
   <memory alignment="16#1000#" caching="WB" name="kernel_ro" physicalAddress="16#0011_f000#" size="16#4000#" type="kernel_binary">
    <file filename="kernel" format="bin_raw" offset="16#0001_f000#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_stack_0" size="16#2000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_store_0" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_stack_1" size="16#2000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_store_1" size="16#1000#"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_stack_0" size="16#2000#" type="kernel"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_store_0" size="16#1000#" type="kernel"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_stack_1" size="16#2000#" type="kernel"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_store_1" size="16#1000#" type="kernel"/>
   <memory alignment="16#1000#" caching="WB" name="tau0_state" size="16#1000#"/>
   <memory alignment="16#1000#" caching="WB" name="lnx_state" size="16#1000#"/>
   <memory alignment="16#1000#" caching="WB" name="subject1_state" size="16#1000#"/>

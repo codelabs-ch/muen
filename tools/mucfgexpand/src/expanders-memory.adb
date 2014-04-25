@@ -338,12 +338,13 @@ is
                  Name => "name");
          begin
             Mutools.XML_Utils.Add_Memory_Region
-              (Policy    => Data,
-               Name      => Subj_Name & "_state",
-               Address   => "",
-               Size      => "16#1000#",
-               Caching   => "WB",
-               Alignment => "16#1000#");
+              (Policy      => Data,
+               Name        => Subj_Name & "_state",
+               Address     => "",
+               Size        => "16#1000#",
+               Caching     => "WB",
+               Alignment   => "16#1000#",
+               Memory_Type => "subject_state");
          end;
       end loop;
    end Add_Subject_States;

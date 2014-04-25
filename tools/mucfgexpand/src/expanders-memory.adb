@@ -434,12 +434,13 @@ is
                        & "address " & Mutools.Utils.To_Hex
                          (Number => Curr_Addr));
             Mutools.XML_Utils.Add_Memory_Region
-              (Policy    => Data,
-               Name      => "kernel_" & CPU_Str & "|vmxon",
-               Address   => Mutools.Utils.To_Hex (Number => Curr_Addr),
-               Size      => "16#1000#",
-               Caching   => "WB",
-               Alignment => "16#1000#");
+              (Policy      => Data,
+               Name        => "kernel_" & CPU_Str & "|vmxon",
+               Address     => Mutools.Utils.To_Hex (Number => Curr_Addr),
+               Size        => "16#1000#",
+               Caching     => "WB",
+               Alignment   => "16#1000#",
+               Memory_Type => "system_vmxon");
             Curr_Addr := Curr_Addr + Mutools.Constants.Page_Size;
          end;
       end loop;

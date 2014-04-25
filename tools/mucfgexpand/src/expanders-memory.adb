@@ -172,6 +172,7 @@ is
                Size        => Size_Str,
                Caching     => "WB",
                Alignment   => "16#1000#",
+               Memory_Type => "system_pt",
                File_Name   => "kernel_pt_" & CPU_Str,
                File_Format => "pt",
                File_Offset => "none");

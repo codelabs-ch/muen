@@ -10,13 +10,13 @@
   </device>
  </platform>
  <memory>
-  <memory alignment="16#1000#" caching="WB" name="mem1" size="16#0001_0000#"/>
-  <memory alignment="16#1000#" caching="WB" name="mem2" size="16#0001_0000#"/>
-  <memory alignment="16#1000#" caching="WB" name="mem3" size="16#0001_0000#">
+  <memory alignment="16#1000#" caching="WB" name="mem1" size="16#0001_0000#" type="system"/>
+  <memory alignment="16#1000#" caching="WB" name="mem2" size="16#0001_0000#" type="system"/>
+  <memory alignment="16#1000#" caching="WB" name="mem3" size="16#0001_0000#" type="system">
     <file format="bin_raw" filename="test" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="mem4" size="16#0001_0000#"/>
-  <memory alignment="16#1000#" caching="WB" name="mem5" size="16#0001_0000#">
+  <memory alignment="16#1000#" caching="WB" name="mem4" size="16#0001_0000#" type="system"/>
+  <memory alignment="16#1000#" caching="WB" name="mem5" size="16#0001_0000#" type="system">
     <fill pattern="16#ff#"/>
   </memory>
  </memory>

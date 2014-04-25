@@ -52,6 +52,7 @@ is
          Size        => "16#2000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
+         Memory_Type => "subject_zeropage",
          File_Name   => Subj_Name & "_zp",
          File_Format => "zp",
          File_Offset => "none");

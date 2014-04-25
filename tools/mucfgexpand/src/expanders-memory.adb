@@ -99,7 +99,8 @@ is
          Alignment   => "16#1000#",
          File_Name   => "kernel",
          File_Format => "bin_raw",
-         File_Offset => "16#0000#");
+         File_Offset => "16#0000#",
+         Memory_Type => "kernel_binary");
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => "kernel_data",
@@ -109,14 +110,16 @@ is
          Alignment   => "16#1000#",
          File_Name   => "kernel",
          File_Format => "bin_raw",
-         File_Offset => "16#0001_0000#");
+         File_Offset => "16#0001_0000#",
+         Memory_Type => "kernel_binary");
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => "kernel_bss",
          Address     => "16#0011_1000#",
          Size        => "16#1000#",
          Caching     => "WB",
-         Alignment   => "16#1000#");
+         Alignment   => "16#1000#",
+         Memory_Type => "kernel_binary");
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => "kernel_ro",
@@ -126,7 +129,8 @@ is
          Alignment   => "16#1000#",
          File_Name   => "kernel",
          File_Format => "bin_raw",
-         File_Offset => "16#0001_f000#");
+         File_Offset => "16#0001_f000#",
+         Memory_Type => "kernel_binary");
    end Add_Kernel_Binary;
 
    -------------------------------------------------------------------------

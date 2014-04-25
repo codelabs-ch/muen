@@ -34,16 +34,14 @@ with Muxml.Utils;
 
 with bootparam_h;
 
+with Zp.Constants;
+
 package body Zp.Generator
 is
 
    --  Memory size in bytes.
    Memory_Size      : constant := 256 * 1024 * 1024;
    Memory_Size_High : constant := Memory_Size - 16#400000#;
-
-   --  arch/x86/include/uapi/asm/e820.h.
-   E820_RAM      : constant := 1;
-   E820_RESERVED : constant := 2;
 
    procedure C_Memset
      (S : System.Address;
@@ -174,25 +172,25 @@ is
 
       Params.e820_map (0) := (addr   => 16#000000#,
                               size   => 16#014000#,
-                              c_type => E820_RESERVED);
+                              c_type => Constants.E820_RESERVED);
 
       --  Usable lower memory
 
       Params.e820_map (1) := (addr   => 16#014000#,
                               size   => 16#08f000#,
-                              c_type => E820_RAM);
+                              c_type => Constants.E820_RAM);
 
       --  VGA memory, OPROMs, BIOS extension (ACPI tables), System BIOS
 
       Params.e820_map (2) := (addr   => 16#0b8000#,
                               size   => 16#048000#,
-                              c_type => E820_RESERVED);
+                              c_type => Constants.E820_RESERVED);
 
       --  High memory
 
       Params.e820_map (3) := (addr   => 16#400000#,
                               size   => Memory_Size_High,
-                              c_type => E820_RAM);
+                              c_type => Constants.E820_RAM);
 
       --  Initramfs
 

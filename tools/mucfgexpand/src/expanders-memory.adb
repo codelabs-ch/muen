@@ -357,12 +357,13 @@ is
       Mulog.Log (Msg => "Adding tau0 interface memory region");
 
       Mutools.XML_Utils.Add_Memory_Region
-        (Policy    => Data,
-         Name      => "sys_interface",
-         Address   => "",
-         Size      => "16#1000#",
-         Caching   => "WB",
-         Alignment => "16#1000#");
+        (Policy      => Data,
+         Name        => "sys_interface",
+         Address     => "",
+         Size        => "16#1000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "system");
    end Add_Tau0_Interface;
 
    -------------------------------------------------------------------------

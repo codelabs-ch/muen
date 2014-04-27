@@ -164,10 +164,9 @@ is
 
       if Kind in Valid_Schema_Kind then
          declare
-            Tmp : XML_Data_Type;
-            pragma Unreferenced (Tmp);
+            Unused_Data : XML_Data_Type;
          begin
-            Parse (Data => Tmp,
+            Parse (Data => Unused_Data,
                    Kind => Kind,
                    File => File);
          end;

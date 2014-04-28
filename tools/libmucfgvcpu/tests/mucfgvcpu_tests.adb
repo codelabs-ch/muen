@@ -40,7 +40,34 @@ is
       T.Add_Test_Routine
         (Routine => Set_VCPU_Profile'Access,
          Name    => "Set VCPU profile");
+      T.Add_Test_Routine
+        (Routine => Merge_User_VCPU_Profile'Access,
+         Name    => "Merge user-provided VCPU profile");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Merge_User_VCPU_Profile
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.None,
+                   File => "data/user_profile.xml");
+      Mucfgvcpu.Set_VCPU_Profile
+        (Profile => Mucfgvcpu.Linux,
+         Node    => DOM.Core.Documents.Get_Element (Doc => Data.Doc));
+
+      Muxml.Write (Data => Data,
+                   Kind => Muxml.VCPU_Profile,
+                   File => "obj/merged_user_profile.xml");
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/merged_user_profile.xml",
+               Filename2 => "obj/merged_user_profile.xml"),
+              Message   => "VCPU profile differs");
+      Ada.Directories.Delete_File (Name => "obj/merged_user_profile.xml");
+   end Merge_User_VCPU_Profile;
 
    -------------------------------------------------------------------------
 

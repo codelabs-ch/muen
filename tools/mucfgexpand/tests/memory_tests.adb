@@ -183,7 +183,7 @@ is
          Name    => "Add kernel pagetable memory regions");
       T.Add_Test_Routine
         (Routine => Add_Missing_Attributes'Access,
-         Name    => "Add alignment attribute");
+         Name    => "Add alignment/type attributes");
       T.Add_Test_Routine
         (Routine => Add_Subject_Bitmaps'Access,
          Name    => "Add subject I/O and MSR bitmap memory regions");

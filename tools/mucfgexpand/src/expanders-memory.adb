@@ -162,7 +162,7 @@ is
       Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/memory/memory[not(@alignment)]");
+           XPath => "/system/memory/memory[not(@alignment) or not(@type)]");
    begin
       Mulog.Log (Msg => "Adding alignment to"
                  & DOM.Core.Nodes.Length (List => Nodes)'Img
@@ -174,10 +174,25 @@ is
               := DOM.Core.Nodes.Item (List  => Nodes,
                                       Index => I);
          begin
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Mem,
-               Name  => "alignment",
-               Value => Align);
+            if DOM.Core.Elements.Get_Attribute
+              (Elem => Mem,
+               Name => "alignment") = ""
+            then
+               DOM.Core.Elements.Set_Attribute
+                 (Elem  => Mem,
+                  Name  => "alignment",
+                  Value => Align);
+            end if;
+
+            if DOM.Core.Elements.Get_Attribute
+              (Elem => Mem,
+               Name => "type") = ""
+            then
+               DOM.Core.Elements.Set_Attribute
+                 (Elem  => Mem,
+                  Name  => "type",
+                  Value => "subject");
+            end if;
          end;
       end loop;
    end Add_Missing_Attributes;

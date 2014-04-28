@@ -29,4 +29,7 @@ is
    --  Set VCPU profile.
    procedure Set_VCPU_Profile;
 
+   --  Merge user-provided VCPU profile with default.
+   procedure Merge_User_VCPU_Profile;
+
 end Mucfgvcpu_Tests;

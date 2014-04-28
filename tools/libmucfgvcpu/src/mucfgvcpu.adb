@@ -18,6 +18,7 @@
 
 with Ada.Strings.Unbounded;
 
+with DOM.Core.Nodes;
 with DOM.Core.Documents;
 
 with Muxml.Utils;
@@ -49,15 +50,23 @@ is
      (Profile : Profile_Type;
       Node    : DOM.Core.Node)
    is
-      Data : Muxml.XML_Data_Type;
+      Data      : Muxml.XML_Data_Type;
+      VCPU_Node : DOM.Core.Node;
    begin
       Muxml.Parse_String (Data => Data,
                           Kind => Muxml.VCPU_Profile,
                           XML  => Profile_Map (Profile).XML.all);
+      VCPU_Node := DOM.Core.Documents.Get_Element (Doc => Data.Doc);
+
       Muxml.Utils.Merge
-        (Left      => Node,
-         Right     => DOM.Core.Documents.Get_Element (Doc => Data.Doc),
+        (Left      => VCPU_Node,
+         Right     => Node,
          List_Tags => (1 => U ("msr")));
+      VCPU_Node := DOM.Core.Nodes.Replace_Child
+        (N         => DOM.Core.Nodes.Parent_Node (N => Node),
+         New_Child => VCPU_Node,
+         Old_Child => Node);
+      DOM.Core.Nodes.Free (N => VCPU_Node);
 
       --  The profile's document must not be freed since some resources
       --  referenced by the merged DOM tree are not copied to the Node's

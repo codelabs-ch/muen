@@ -831,6 +831,9 @@ is
                     (Doc      => Data.Doc,
                      Tag_Name => "vcpu"),
                   Ref_Child => DOM.Core.Nodes.First_Child (N => Subj));
+            else
+               Mulog.Log (Msg => "Subject '" & Subj_Name & "' provides "
+                          & "user-defined VCPU element");
             end if;
 
             Mulog.Log (Msg => "Setting profile of subject '" & Subj_Name

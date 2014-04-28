@@ -14,6 +14,7 @@
 	<xs:include_format schemaLocation="./memory.xsd"/>
 	<xs:include_format schemaLocation="./subject.xsd"/>
 	<xs:include_format schemaLocation="./system.xsd"/>
+	<xs:include_format schemaLocation="./vcpu.xsd"/>
 
 	<xs:element name="system" type="systemType"/>
 

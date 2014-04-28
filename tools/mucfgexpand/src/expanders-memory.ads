@@ -47,7 +47,7 @@ is
    procedure Add_VMCS_Regions (Data : in out Muxml.XML_Data_Type);
 
    --  Add alignment attribute with default value where missing.
-   procedure Add_Alignment (Data : in out Muxml.XML_Data_Type);
+   procedure Add_Missing_Attributes (Data : in out Muxml.XML_Data_Type);
 
    --  Add subject I/O and MSR bitmap memory regions.
    procedure Add_Subject_Bitmaps (Data : in out Muxml.XML_Data_Type);

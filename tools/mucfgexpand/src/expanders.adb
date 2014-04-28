@@ -50,7 +50,7 @@ is
 
       Procs.Register (Process => Subjects.Add_Ids'Access);
 
-      Procs.Register (Process => Memory.Add_Alignment'Access);
+      Procs.Register (Process => Memory.Add_Missing_Attributes'Access);
       Procs.Register (Process => Memory.Add_Kernel_Binary'Access);
       Procs.Register (Process => Memory.Add_Stack_Store'Access);
       Procs.Register (Process => Memory.Add_Subject_States'Access);

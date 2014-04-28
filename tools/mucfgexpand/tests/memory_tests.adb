@@ -29,17 +29,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_Alignment
-   is
-   begin
-      Test_Utils.Expander.Run_Test
-        (Filename     => "obj/memory_alignment.xml",
-         Ref_Filename => "data/memory_alignment.ref.xml",
-         Expander     => Expanders.Memory.Add_Alignment'Access);
-   end Add_Alignment;
-
-   -------------------------------------------------------------------------
-
    procedure Add_AP_Trampoline
    is
    begin
@@ -75,6 +64,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Missing_Attributes
+   is
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_attributes.xml",
+         Ref_Filename => "data/memory_attributes.ref.xml",
+         Expander     => Expanders.Memory.Add_Missing_Attributes'Access);
+   end Add_Missing_Attributes;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Stack_Store
    is
    begin
@@ -103,7 +103,7 @@ is
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/memory_subject_pts.xml",
          Ref_Filename => "data/memory_subject_pts.ref.xml",
-         Pre          => Expanders.Memory.Add_Alignment'Access,
+         Pre          => Expanders.Memory.Add_Missing_Attributes'Access,
          Expander     => Expanders.Memory.Add_Subject_PTs'Access);
    end Add_Subject_PTs;
 
@@ -182,7 +182,7 @@ is
         (Routine => Add_Kernel_PTs'Access,
          Name    => "Add kernel pagetable memory regions");
       T.Add_Test_Routine
-        (Routine => Add_Alignment'Access,
+        (Routine => Add_Missing_Attributes'Access,
          Name    => "Add alignment attribute");
       T.Add_Test_Routine
         (Routine => Add_Subject_Bitmaps'Access,

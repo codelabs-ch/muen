@@ -26,23 +26,25 @@ is
 
    --  Create memory node element with given parameters.
    function Create_Memory_Node
-     (Policy    : in out Muxml.XML_Data_Type;
-      Name      :        String;
-      Address   :        String;
-      Size      :        String;
-      Caching   :        String;
-      Alignment :        String)
+     (Policy      : in out Muxml.XML_Data_Type;
+      Name        :        String;
+      Address     :        String;
+      Size        :        String;
+      Caching     :        String;
+      Alignment   :        String;
+      Memory_Type :        String)
       return DOM.Core.Node;
 
    -------------------------------------------------------------------------
 
    procedure Add_Memory_Region
-     (Policy    : in out Muxml.XML_Data_Type;
-      Name      :        String;
-      Address   :        String;
-      Size      :        String;
-      Caching   :        String;
-      Alignment :        String)
+     (Policy      : in out Muxml.XML_Data_Type;
+      Name        :        String;
+      Address     :        String;
+      Size        :        String;
+      Caching     :        String;
+      Alignment   :        String;
+      Memory_Type :        String := "")
    is
       Section     : constant DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
@@ -51,12 +53,13 @@ is
       Muxml.Utils.Append_Child
         (Node      => Section,
          New_Child => Create_Memory_Node
-           (Policy    => Policy,
-            Name      => Name,
-            Address   => Address,
-            Size      => Size,
-            Caching   => Caching,
-            Alignment => Alignment));
+           (Policy      => Policy,
+            Name        => Name,
+            Address     => Address,
+            Size        => Size,
+            Caching     => Caching,
+            Alignment   => Alignment,
+            Memory_Type => Memory_Type));
    end Add_Memory_Region;
 
    -------------------------------------------------------------------------
@@ -68,6 +71,7 @@ is
       Size        :        String;
       Caching     :        String;
       Alignment   :        String;
+      Memory_Type :        String := "";
       File_Name   :        String;
       File_Format :        String;
       File_Offset :        String)
@@ -78,12 +82,13 @@ is
            XPath => "/system/memory");
       Mem_Node  : constant DOM.Core.Node
         := Create_Memory_Node
-          (Policy    => Policy,
-           Name      => Name,
-           Address   => Address,
-           Size      => Size,
-           Caching   => Caching,
-           Alignment => Alignment);
+          (Policy      => Policy,
+           Name        => Name,
+           Address     => Address,
+           Size        => Size,
+           Caching     => Caching,
+           Alignment   => Alignment,
+           Memory_Type => Memory_Type);
       File_Node : constant DOM.Core.Node
         := DOM.Core.Documents.Create_Element
           (Doc      => Policy.Doc,
@@ -111,12 +116,13 @@ is
    -------------------------------------------------------------------------
 
    function Create_Memory_Node
-     (Policy    : in out Muxml.XML_Data_Type;
-      Name      :        String;
-      Address   :        String;
-      Size      :        String;
-      Caching   :        String;
-      Alignment :        String)
+     (Policy      : in out Muxml.XML_Data_Type;
+      Name        :        String;
+      Address     :        String;
+      Size        :        String;
+      Caching     :        String;
+      Alignment   :        String;
+      Memory_Type :        String)
       return DOM.Core.Node
    is
       Mem_Node : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
@@ -145,6 +151,13 @@ is
            (Elem  => Mem_Node,
             Name  => "physicalAddress",
             Value => Address);
+      end if;
+
+      if Memory_Type'Length > 0 then
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Mem_Node,
+            Name  => "type",
+            Value => Memory_Type);
       end if;
 
       return Mem_Node;

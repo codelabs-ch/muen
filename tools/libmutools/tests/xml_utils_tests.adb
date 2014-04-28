@@ -40,19 +40,21 @@ is
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
       Mutools.XML_Utils.Add_Memory_Region
-        (Policy    => Policy,
-         Name      => "test",
-         Address   => "16#9000_1000#",
-         Size      => "16#3000#",
-         Caching   => "UC",
-         Alignment => "16#1000#");
+        (Policy      => Policy,
+         Name        => "test",
+         Address     => "16#9000_1000#",
+         Size        => "16#3000#",
+         Caching     => "UC",
+         Alignment   => "16#1000#",
+         Memory_Type => "");
       Mutools.XML_Utils.Add_Memory_Region
-        (Policy    => Policy,
-         Name      => "noaddress",
-         Address   => "",
-         Size      => "16#8000#",
-         Caching   => "WC",
-         Alignment => "16#0020_0000#");
+        (Policy      => Policy,
+         Name        => "noaddress",
+         Address     => "",
+         Size        => "16#8000#",
+         Caching     => "WC",
+         Alignment   => "16#0020_0000#",
+         Memory_Type => "");
 
       Muxml.Write (Data => Policy,
                    Kind => Muxml.Format_Src,

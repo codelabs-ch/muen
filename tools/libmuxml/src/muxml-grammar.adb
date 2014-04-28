@@ -35,7 +35,7 @@ is
       Id, XSD : access constant String;
    end record;
 
-   Schema_Map : constant array (Schema_Kind) of Schema_Info_Type
+   Schema_Map : constant array (Valid_Schema_Kind) of Schema_Info_Type
      := (Format_Src   => (Id  => system_src_schema.Id'Access,
                           XSD => system_src_schema.Data'Access),
          Format_A     => (Id  => system_a_schema.Id'Access,
@@ -48,7 +48,7 @@ is
    -------------------------------------------------------------------------
 
    function Get_Grammar
-     (Kind : Schema_Kind)
+     (Kind : Valid_Schema_Kind)
       return Schema.Validators.XML_Grammar
    is
       use type Schema.Validators.XML_Grammar;

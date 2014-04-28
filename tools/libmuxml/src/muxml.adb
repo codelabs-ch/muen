@@ -61,9 +61,14 @@ is
    is
       Reader : DR.Tree_Reader;
    begin
-      Reader.Set_Grammar (Grammar => Grammar.Get_Grammar (Kind));
-      Reader.Set_Feature (Name  => Sax.Readers.Schema_Validation_Feature,
-                          Value => True);
+      if Kind in Valid_Schema_Kind then
+         Reader.Set_Grammar (Grammar => Grammar.Get_Grammar (Kind));
+         Reader.Set_Feature (Name  => Sax.Readers.Schema_Validation_Feature,
+                             Value => True);
+      else
+         Reader.Set_Feature (Name  => Sax.Readers.Schema_Validation_Feature,
+                             Value => False);
+      end if;
 
       begin
          Reader.Parse (Input => Input);
@@ -157,14 +162,15 @@ is
          Pretty_Print => True);
       Close (Output_File);
 
-      declare
-         Tmp : XML_Data_Type;
-         pragma Unreferenced (Tmp);
-      begin
-         Parse (Data => Tmp,
-                Kind => Kind,
-                File => File);
-      end;
+      if Kind in Valid_Schema_Kind then
+         declare
+            Unused_Data : XML_Data_Type;
+         begin
+            Parse (Data => Unused_Data,
+                   Kind => Kind,
+                   File => File);
+         end;
+      end if;
    end Write;
 
 end Muxml;

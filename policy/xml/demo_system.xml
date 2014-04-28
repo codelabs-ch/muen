@@ -6,9 +6,6 @@
 			<memoryBlock allocatable="false" name="base_mem" physicalAddress="16#0000#" size="16#000a_0000#" />
 			<memoryBlock allocatable="true" name="extended_mem_1" physicalAddress="16#0010_0000#" size="16#8000_0000#" />
 		</memory>
-		<device name="serial" shared="false">
-			<ioPort name="port1" start="16#03f8#" end="16#03ff#"/>
-		</device>
 		<device name="vga" shared="false">
 			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
 			<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
@@ -106,7 +103,7 @@
 		</subject>
 
 		<subject name="linux" cpu="1" profile="linux">
-			<bootparams>lpj=10000 earlyprintk=serial console=ttyS0,115200 console=hvc pci=noearly notsc</bootparams>
+			<bootparams>lpj=10000 console=hvc pci=noearly notsc</bootparams>
 			<initrd filename="initramfs.cpio.gz" size="16#0030_0000#"/>
 			<memory>
 				<memory logical="ram" physical="linux|ram" virtualAddress="16#0060_0000#" writable="true" executable="true"/>

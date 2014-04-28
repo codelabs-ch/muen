@@ -22,7 +22,10 @@ with Ada.Finalization;
 
 package Muxml
 is
-   type Schema_Kind is (Format_A, Format_B, Format_Src, VCPU_Profile);
+   type Schema_Kind is (None, Format_A, Format_B, Format_Src, VCPU_Profile);
+
+   subtype Valid_Schema_Kind is Schema_Kind range
+     Schema_Kind'Succ (Schema_Kind'First) .. Schema_Kind'Last;
 
    --  DOM tree of XML document.
    type XML_Data_Type is new Ada.Finalization.Limited_Controlled with record

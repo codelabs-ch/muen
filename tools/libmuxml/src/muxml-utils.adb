@@ -138,10 +138,25 @@ is
    -------------------------------------------------------------------------
 
    procedure Merge
-     (Left     : DOM.Core.Node;
-      Right    : DOM.Core.Node;
-      List_Tag : String := "")
+     (Left      : DOM.Core.Node;
+      Right     : DOM.Core.Node;
+      List_Tags : Tags_Type := No_Tags)
    is
+      --  Returns True if the given name matches a list tag.
+      function Is_List_Tag (Name : String) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Is_List_Tag (Name : String) return Boolean
+      is
+      begin
+         for Tag of List_Tags loop
+            if Name = Ada.Strings.Unbounded.To_String (Source => Tag) then
+               return True;
+            end if;
+         end loop;
+         return False;
+      end Is_List_Tag;
    begin
       if DOM.Core.Nodes.Node_Name (N => Left)
         /= DOM.Core.Nodes.Node_Name (N => Right)
@@ -169,7 +184,8 @@ is
                end loop;
 
                if L_Child = null
-                 or else DOM.Core.Nodes.Node_Name (N => L_Child) = List_Tag
+                 or else Is_List_Tag
+                   (Name => DOM.Core.Nodes.Node_Name (N => L_Child))
                then
 
                   --  No match or list found, attach right child incl. all
@@ -181,9 +197,9 @@ is
                        (N    => R_Child,
                         Deep => True));
                else
-                  Merge (Left     => L_Child,
-                         Right    => R_Child,
-                         List_Tag => List_Tag);
+                  Merge (Left      => L_Child,
+                         Right     => R_Child,
+                         List_Tags => List_Tags);
                end if;
             end;
 

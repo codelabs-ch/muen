@@ -17,6 +17,7 @@
 --
 
 with Ada.Exceptions;
+with Ada.Strings.Unbounded;
 
 with DOM.Core.Nodes;
 with DOM.Core.Documents;
@@ -31,6 +32,11 @@ is
 
    use Ahven;
    use Muxml;
+
+   function U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
 
    -------------------------------------------------------------------------
 
@@ -449,9 +455,9 @@ is
       Utils.Append_Child (Node      => Tmp,
                           New_Child => Node);
 
-      Utils.Merge (Left     => MSRs_Node,
-                   Right    => Tmp,
-                   List_Tag => "msr");
+      Utils.Merge (Left      => MSRs_Node,
+                   Right     => Tmp,
+                   List_Tags => (1 => U ("msr")));
 
       declare
          MSR_Count : constant Natural := DOM.Core.Nodes.Length

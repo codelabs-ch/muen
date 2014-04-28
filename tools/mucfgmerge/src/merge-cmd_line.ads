@@ -16,21 +16,27 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Text_Runner;
-with Ahven.Framework;
+with Ada.Strings.Unbounded;
 
-with Mergers_Tests;
-
-procedure Test_Runner
+package Merge.Cmd_Line
 is
-   use Ahven.Framework;
 
-   S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Mucfgmerge tests");
-begin
-   Add_Test (Suite => S.all,
-             T     => new Mergers_Tests.Testcase);
+   --  Init command line, use given tool description in usage output.
+   procedure Init (Description : String);
 
-   Ahven.Text_Runner.Run (Suite => S);
-   Release_Suite (T => S);
-end Test_Runner;
+   --  Return policy filename.
+   function Get_Policy return String;
+
+   --  Return output directory.
+   function Get_Output_File return String;
+
+   --  Retun platform filename.
+   function Get_Platform_File return String;
+
+private
+
+   Policy        : Ada.Strings.Unbounded.Unbounded_String;
+   Output_File   : Ada.Strings.Unbounded.Unbounded_String;
+   Platform_File : Ada.Strings.Unbounded.Unbounded_String;
+
+end Merge.Cmd_Line;

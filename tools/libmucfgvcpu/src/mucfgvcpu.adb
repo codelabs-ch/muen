@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+
 with DOM.Core.Documents;
 
 with Muxml.Utils;
@@ -25,6 +27,11 @@ with Mucfgvcpu.Profile_linux;
 
 package body Mucfgvcpu
 is
+
+   function U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
 
    type String_Access is not null access constant String;
 
@@ -48,9 +55,9 @@ is
                           Kind => Muxml.VCPU_Profile,
                           XML  => Profile_Map (Profile).XML.all);
       Muxml.Utils.Merge
-        (Left     => Node,
-         Right    => DOM.Core.Documents.Get_Element (Doc => Data.Doc),
-         List_Tag => "msr");
+        (Left      => Node,
+         Right     => DOM.Core.Documents.Get_Element (Doc => Data.Doc),
+         List_Tags => (1 => U ("msr")));
 
       --  The profile's document must not be freed since some resources
       --  referenced by the merged DOM tree are not copied to the Node's

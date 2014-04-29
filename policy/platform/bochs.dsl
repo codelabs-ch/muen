@@ -52,46 +52,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
                         0x00000000,         // Translation Offset
                         0x00010000,         // Length
                         ,, , TypeStatic)
-                    /* Time page (0x1000 - 0x1fff) */
-                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadOnly,
-                        0x00000000,         // Granularity
-                        0x00001000,         // Range Minimum
-                        0x00001FFF,         // Range Maximum
-                        0x00000000,         // Translation Offset
-                        0x00001000,         // Length
-                        ,, , AddressRangeMemory, TypeStatic)
-                    /* VGA memory (0xb8000 - 0xbffff) */
-                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite,
-                        0x00000000,         // Granularity
-                        0x000B8000,         // Range Minimum
-                        0x000BFFFF,         // Range Maximum
-                        0x00000000,         // Translation Offset
-                        0x00008000,         // Length
-                        ,, , AddressRangeMemory, TypeStatic)
-                    /* OPROMs (0xc0000 - 0xdffff) */
-                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadOnly,
-                        0x00000000,         // Granularity
-                        0x000C0000,         // Range Minimum
-                        0x000DFFFF,         // Range Maximum
-                        0x00000000,         // Translation Offset
-                        0x00020000,         // Length
-                        ,, , AddressRangeMemory, TypeStatic)
-                    /* BIOS extension (0xe0000 - 0xeffff) */
-                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadOnly,
-                        0x00000000,         // Granularity
-                        0x000E0000,         // Range Minimum
-                        0x000EFFFF,         // Range Maximum
-                        0x00000000,         // Translation Offset
-                        0x00010000,         // Length
-                        ,, , AddressRangeMemory, TypeStatic)
-                    /* System BIOS (0xf0000 - 0xfffff) */
-                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadOnly,
-                        0x00000000,         // Granularity
-                        0x000F0000,         // Range Minimum
-                        0x000FFFFF,         // Range Maximum
-                        0x00000000,         // Translation Offset
-                        0x00010000,         // Length
-                        ,, , AddressRangeMemory, TypeStatic)
                     /* MMIO (0x30000000 - 0x3fffffff) */
                     DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite,
                         0x00000000,         // Granularity

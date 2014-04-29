@@ -10,8 +10,8 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
                 /* Reserve MMConf region */
                 DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, NonCacheable, ReadWrite,
                     0x00000000,
-                    0x00100000,
-                    0x010fffff,
+                    0xf8000000,
+                    0xf8ffffff,
                     0x00000000,
                     0x01000000,
                     ,, , AddressRangeReserved, TypeStatic)
@@ -30,7 +30,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
             Method (_CBA, 0, Serialized)
             {
                 /* Point to MMConf region */
-                Return (0x00100000)
+                Return (0xf8000000)
             }
             Method (_CRS, 0, Serialized)
             {

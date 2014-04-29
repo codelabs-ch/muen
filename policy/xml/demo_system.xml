@@ -115,6 +115,9 @@
 				<device logical="cmos_rtc" physical="cmos_rtc">
 					<ioPort logical="ports" physical="ports"/>
 				</device>
+				<device logical="pci_mmconf" physical="pci_mmconf">
+					<memory logical="mmconf" physical="mmconf" virtualAddress="16#f800_0000#" writable="true" executable="false"/>
+				</device>
 			</devices>
 			<events>
 				<source>

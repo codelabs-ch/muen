@@ -44,4 +44,7 @@ is
    --  Check vector numbers of channel readers with HasEvent set.
    procedure Channel_Reader_Has_Event_Vector;
 
+   --  Check presence of logical CPU count attribute.
+   procedure Platform_CPU_Count_Presence;
+
 end Pre_Check_Tests;

@@ -51,4 +51,8 @@ is
    --  specifies a vector number.
    procedure Channel_Reader_Has_Event_Vector (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that the logicalCpus attribute of '/system/platform/processor' is
+   --  present.
+   procedure Platform_CPU_Count_Presence (XML_Data : Muxml.XML_Data_Type);
+
 end Expand.Pre_Checks;

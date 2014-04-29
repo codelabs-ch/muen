@@ -50,8 +50,8 @@ is
    --  Add kernel pagetable memory regions.
    procedure Add_Kernel_PTs;
 
-   --  Add alignment attribute.
-   procedure Add_Alignment;
+   --  Add alignment/type attributes.
+   procedure Add_Missing_Attributes;
 
    --  Add I/O and MSR bitmap memory regions.
    procedure Add_Subject_Bitmaps;

@@ -14,24 +14,24 @@
  </platform>
  <memory>
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="lnx|zp" size="16#2000#">
+  <memory alignment="16#1000#" caching="WB" name="lnx|zp" size="16#2000#" type="subject_zeropage">
    <file filename="lnx_zp" format="zp" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_rsdp" size="16#1000#">
+  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_rsdp" size="16#1000#" type="subject_acpi_rsdp">
    <file filename="lnx_rsdp" format="acpi_rsdp" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_xsdt" size="16#1000#">
+  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_xsdt" size="16#1000#" type="subject_acpi_xsdt">
    <file filename="lnx_xsdt" format="acpi_xsdt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_fadt" size="16#1000#">
+  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_fadt" size="16#1000#" type="subject_acpi_fadt">
    <file filename="lnx_fadt" format="acpi_fadt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_dsdt" size="16#1000#">
+  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_dsdt" size="16#1000#" type="subject_acpi_dsdt">
    <file filename="lnx_dsdt.aml" format="acpi_dsdt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_empty" size="16#c000#"/>
-  <memory alignment="16#1000#" caching="WB" name="lnx|lowmem" size="16#0009_b000#"/>
-  <memory alignment="16#1000#" caching="WB" name="lnx|bios" size="16#0001_0000#"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_empty" size="16#c000#" type="subject_bios"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx|lowmem" size="16#0009_b000#" type="subject"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx|bios" size="16#0001_0000#" type="subject_bios"/>
  </memory>
  <events>
   <event mode="switch" name="trap_to_subject1"/>

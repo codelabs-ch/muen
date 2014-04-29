@@ -13,27 +13,27 @@
   </device>
  </platform>
  <memory>
-  <memory alignment="16#1000#" caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_text" physicalAddress="16#0010_0000#" size="16#0001_0000#">
+  <memory alignment="16#1000#" caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#" type="subject"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_text" physicalAddress="16#0010_0000#" size="16#0001_0000#" type="kernel_binary">
    <file filename="kernel" format="bin_raw" offset="16#0000#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_data" physicalAddress="16#0011_0000#" size="16#1000#">
+  <memory alignment="16#1000#" caching="WB" name="kernel_data" physicalAddress="16#0011_0000#" size="16#1000#" type="kernel_binary">
    <file filename="kernel" format="bin_raw" offset="16#0001_0000#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_bss" physicalAddress="16#0011_1000#" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_ro" physicalAddress="16#0011_f000#" size="16#4000#">
+  <memory alignment="16#1000#" caching="WB" name="kernel_bss" physicalAddress="16#0011_1000#" size="16#1000#" type="kernel_binary"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_ro" physicalAddress="16#0011_f000#" size="16#4000#" type="kernel_binary">
    <file filename="kernel" format="bin_raw" offset="16#0001_f000#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_stack_0" size="16#2000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_store_0" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_stack_1" size="16#2000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_store_1" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="lnx_state" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="subject1_state" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="sys_interface" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="trampoline" physicalAddress="16#0000#" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_0|vmxon" physicalAddress="16#1000#" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_1|vmxon" physicalAddress="16#2000#" size="16#1000#"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_stack_0" size="16#2000#" type="kernel"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_store_0" size="16#1000#" type="kernel"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_stack_1" size="16#2000#" type="kernel"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_store_1" size="16#1000#" type="kernel"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx_state" size="16#1000#" type="subject_state"/>
+  <memory alignment="16#1000#" caching="WB" name="subject1_state" size="16#1000#" type="subject_state"/>
+  <memory alignment="16#1000#" caching="WB" name="sys_interface" size="16#1000#" type="system"/>
+  <memory alignment="16#1000#" caching="WB" name="trampoline" physicalAddress="16#0000#" size="16#1000#" type="system"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_0|vmxon" physicalAddress="16#1000#" size="16#1000#" type="system_vmxon"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_1|vmxon" physicalAddress="16#2000#" size="16#1000#" type="system_vmxon"/>
  </memory>
  <events/>
  <kernel>

@@ -72,6 +72,7 @@ is
          Size        => "16#1000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
+         Memory_Type => "system",
          File_Name   => "mboot",
          File_Format => "bin_raw",
          File_Offset => "none");
@@ -82,6 +83,7 @@ is
          Size        => "16#1000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
+         Memory_Type => "subject_acpi_rsdp",
          File_Name   => "pattern",
          File_Format => "acpi_rsdp",
          File_Offset => "none");
@@ -92,6 +94,7 @@ is
          Size        => "16#0001_3000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
+         Memory_Type => "subject_binary",
          File_Name   => "obj1.o",
          File_Format => "bin_raw",
          File_Offset => "16#0004#");
@@ -131,12 +134,13 @@ is
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
       Mutools.XML_Utils.Add_Memory_Region
-        (Policy    => Policy,
-         Name      => "filled",
-         Address   => "16#0000#",
-         Size      => "16#000a#",
-         Caching   => "WB",
-         Alignment => "16#1000#");
+        (Policy      => Policy,
+         Name        => "filled",
+         Address     => "16#0000#",
+         Size        => "16#000a#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "subject");
 
       declare
          Fill   : DOM.Core.Node;

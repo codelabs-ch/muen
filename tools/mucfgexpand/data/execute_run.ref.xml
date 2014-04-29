@@ -13,94 +13,94 @@
   </device>
  </platform>
  <memory>
-  <memory alignment="16#1000#" caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_text" physicalAddress="16#0010_0000#" size="16#0001_0000#">
+  <memory alignment="16#1000#" caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#" type="subject"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_text" physicalAddress="16#0010_0000#" size="16#0001_0000#" type="kernel_binary">
    <file filename="kernel" format="bin_raw" offset="16#0000#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_data" physicalAddress="16#0011_0000#" size="16#1000#">
+  <memory alignment="16#1000#" caching="WB" name="kernel_data" physicalAddress="16#0011_0000#" size="16#1000#" type="kernel_binary">
    <file filename="kernel" format="bin_raw" offset="16#0001_0000#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_bss" physicalAddress="16#0011_1000#" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_ro" physicalAddress="16#0011_f000#" size="16#4000#">
+  <memory alignment="16#1000#" caching="WB" name="kernel_bss" physicalAddress="16#0011_1000#" size="16#1000#" type="kernel_binary"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_ro" physicalAddress="16#0011_f000#" size="16#4000#" type="kernel_binary">
    <file filename="kernel" format="bin_raw" offset="16#0001_f000#"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_stack_0" size="16#2000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_store_0" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_stack_1" size="16#2000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_store_1" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="tau0_state" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="lnx_state" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="subject1_state" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="sys_interface" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="trampoline" physicalAddress="16#0000#" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_0|vmxon" physicalAddress="16#1000#" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_1|vmxon" physicalAddress="16#2000#" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="tau0|vmcs" physicalAddress="16#3000#" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="lnx|vmcs" physicalAddress="16#4000#" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="subject1|vmcs" physicalAddress="16#5000#" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="tau0|iobm" size="16#2000#">
+  <memory alignment="16#1000#" caching="WB" name="kernel_stack_0" size="16#2000#" type="kernel"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_store_0" size="16#1000#" type="kernel"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_stack_1" size="16#2000#" type="kernel"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_store_1" size="16#1000#" type="kernel"/>
+  <memory alignment="16#1000#" caching="WB" name="tau0_state" size="16#1000#" type="subject_state"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx_state" size="16#1000#" type="subject_state"/>
+  <memory alignment="16#1000#" caching="WB" name="subject1_state" size="16#1000#" type="subject_state"/>
+  <memory alignment="16#1000#" caching="WB" name="sys_interface" size="16#1000#" type="system"/>
+  <memory alignment="16#1000#" caching="WB" name="trampoline" physicalAddress="16#0000#" size="16#1000#" type="system"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_0|vmxon" physicalAddress="16#1000#" size="16#1000#" type="system_vmxon"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_1|vmxon" physicalAddress="16#2000#" size="16#1000#" type="system_vmxon"/>
+  <memory alignment="16#1000#" caching="WB" name="tau0|vmcs" physicalAddress="16#3000#" size="16#1000#" type="system_vmcs"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx|vmcs" physicalAddress="16#4000#" size="16#1000#" type="system_vmcs"/>
+  <memory alignment="16#1000#" caching="WB" name="subject1|vmcs" physicalAddress="16#5000#" size="16#1000#" type="system_vmcs"/>
+  <memory alignment="16#1000#" caching="WB" name="tau0|iobm" size="16#2000#" type="system_iobm">
    <file filename="tau0_iobm" format="iobm" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="tau0|msrbm" size="16#1000#">
+  <memory alignment="16#1000#" caching="WB" name="tau0|msrbm" size="16#1000#" type="system_msrbm">
    <file filename="tau0_msrbm" format="msrbm" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|iobm" size="16#2000#">
+  <memory alignment="16#1000#" caching="WB" name="lnx|iobm" size="16#2000#" type="system_iobm">
    <file filename="lnx_iobm" format="iobm" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|msrbm" size="16#1000#">
+  <memory alignment="16#1000#" caching="WB" name="lnx|msrbm" size="16#1000#" type="system_msrbm">
    <file filename="lnx_msrbm" format="msrbm" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject1|iobm" size="16#2000#">
+  <memory alignment="16#1000#" caching="WB" name="subject1|iobm" size="16#2000#" type="system_iobm">
    <file filename="subject1_iobm" format="iobm" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject1|msrbm" size="16#1000#">
+  <memory alignment="16#1000#" caching="WB" name="subject1|msrbm" size="16#1000#" type="system_msrbm">
    <file filename="subject1_msrbm" format="msrbm" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="tau0|bin" size="16#0001_4000#">
+  <memory alignment="16#1000#" caching="WB" name="tau0|bin" size="16#0001_4000#" type="subject_binary">
    <file filename="tau0" format="bin_raw" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|bin" size="16#1000#">
+  <memory alignment="16#1000#" caching="WB" name="lnx|bin" size="16#1000#" type="subject_binary">
    <file filename="lnx_bin" format="bin_raw" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject1|bin" size="16#1000#">
+  <memory alignment="16#1000#" caching="WB" name="subject1|bin" size="16#1000#" type="subject_binary">
    <file filename="subject1_bin" format="bin_raw" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|initramfs" size="16#0030_0000#">
+  <memory alignment="16#1000#" caching="WB" name="lnx|initramfs" size="16#0030_0000#" type="subject_initrd">
    <file filename="initramfs.cpio.gz" format="bin_raw" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|zp" size="16#2000#">
+  <memory alignment="16#1000#" caching="WB" name="lnx|zp" size="16#2000#" type="subject_zeropage">
    <file filename="lnx_zp" format="zp" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_rsdp" size="16#1000#">
+  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_rsdp" size="16#1000#" type="subject_acpi_rsdp">
    <file filename="lnx_rsdp" format="acpi_rsdp" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_xsdt" size="16#1000#">
+  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_xsdt" size="16#1000#" type="subject_acpi_xsdt">
    <file filename="lnx_xsdt" format="acpi_xsdt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_fadt" size="16#1000#">
+  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_fadt" size="16#1000#" type="subject_acpi_fadt">
    <file filename="lnx_fadt" format="acpi_fadt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_dsdt" size="16#1000#">
+  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_dsdt" size="16#1000#" type="subject_acpi_dsdt">
    <file filename="lnx_dsdt.aml" format="acpi_dsdt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_empty" size="16#c000#"/>
-  <memory alignment="16#1000#" caching="WB" name="lnx|lowmem" size="16#0009_b000#"/>
-  <memory alignment="16#1000#" caching="WB" name="lnx|bios" size="16#0001_0000#"/>
-  <memory alignment="16#1000#" caching="WB" name="data_channel" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="data_channel2" size="16#2000#"/>
-  <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" physicalAddress="16#0012_9000#" size="16#4000#">
+  <memory alignment="16#1000#" caching="WB" name="lnx|acpi_empty" size="16#c000#" type="subject_bios"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx|lowmem" size="16#0009_b000#" type="subject"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx|bios" size="16#0001_0000#" type="subject_bios"/>
+  <memory alignment="16#1000#" caching="WB" name="data_channel" size="16#1000#" type="subject_channel"/>
+  <memory alignment="16#1000#" caching="WB" name="data_channel2" size="16#2000#" type="subject_channel"/>
+  <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" physicalAddress="16#0012_9000#" size="16#4000#" type="system_pt">
    <file filename="kernel_pt_0" format="pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_1|pt" physicalAddress="16#0012_d000#" size="16#4000#">
+  <memory alignment="16#1000#" caching="WB" name="kernel_1|pt" physicalAddress="16#0012_d000#" size="16#4000#" type="system_pt">
    <file filename="kernel_pt_1" format="pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#4000#">
+  <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#4000#" type="system_pt">
    <file filename="tau0_pt" format="pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#5000#">
+  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#5000#" type="system_pt">
    <file filename="lnx_pt" format="pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#5000#">
+  <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#5000#" type="system_pt">
    <file filename="subject1_pt" format="pt" offset="none"/>
   </memory>
  </memory>

@@ -53,6 +53,7 @@ is
          Size        => "16#1000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
+         Memory_Type => "system",
          File_Name   => "mboot",
          File_Format => "bin_raw",
          File_Offset => "none");
@@ -67,6 +68,7 @@ is
          Size        => "16#1000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
+         Memory_Type => "subject_acpi_rsdp",
          File_Name   => "nonexistent",
          File_Format => "bin_raw",
          File_Offset => "none");
@@ -105,6 +107,7 @@ is
          Size        => "16#0000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
+         Memory_Type => "subject_acpi_rsdp",
          File_Name   => "pattern",
          File_Format => "acpi_rsdp",
          File_Offset => "none");
@@ -160,6 +163,7 @@ is
          Size        => "16#0000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
+         Memory_Type => "subject_acpi_rsdp",
          File_Name   => "pattern",
          File_Format => "acpi_rsdp",
          File_Offset => "16#ffff#");

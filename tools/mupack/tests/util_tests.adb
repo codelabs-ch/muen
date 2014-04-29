@@ -48,6 +48,7 @@ is
          Size        => "16#0001_3000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
+         Memory_Type => "subject_binary",
          File_Name   => "obj1.o",
          File_Format => "bin_raw",
          File_Offset => "none");

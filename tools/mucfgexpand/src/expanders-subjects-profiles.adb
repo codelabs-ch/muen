@@ -52,6 +52,7 @@ is
          Size        => "16#2000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
+         Memory_Type => "subject_zeropage",
          File_Name   => Subj_Name & "_zp",
          File_Format => "zp",
          File_Offset => "none");
@@ -73,6 +74,7 @@ is
          Size        => "16#1000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
+         Memory_Type => "subject_acpi_rsdp",
          File_Name   => Subj_Name & "_rsdp",
          File_Format => "acpi_rsdp",
          File_Offset => "none");
@@ -92,6 +94,7 @@ is
          Size        => "16#1000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
+         Memory_Type => "subject_acpi_xsdt",
          File_Name   => Subj_Name & "_xsdt",
          File_Format => "acpi_xsdt",
          File_Offset => "none");
@@ -111,6 +114,7 @@ is
          Size        => "16#1000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
+         Memory_Type => "subject_acpi_fadt",
          File_Name   => Subj_Name & "_fadt",
          File_Format => "acpi_fadt",
          File_Offset => "none");
@@ -130,6 +134,7 @@ is
          Size        => "16#1000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
+         Memory_Type => "subject_acpi_dsdt",
          File_Name   => Subj_Name & "_dsdt.aml",
          File_Format => "acpi_dsdt",
          File_Offset => "none");
@@ -143,12 +148,13 @@ is
             Writable      => False,
             Executable    => False));
       Mutools.XML_Utils.Add_Memory_Region
-        (Policy    => Data,
-         Name      => Subj_Name & "|acpi_empty",
-         Address   => "",
-         Size      => "16#c000#",
-         Caching   => "WB",
-         Alignment => "16#1000#");
+        (Policy      => Data,
+         Name        => Subj_Name & "|acpi_empty",
+         Address     => "",
+         Size        => "16#c000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "subject_bios");
       Muxml.Utils.Append_Child
         (Node      => Subj_Mem_Node,
          New_Child => XML_Utils.Create_Virtual_Memory_Node
@@ -162,12 +168,13 @@ is
       Mulog.Log (Msg => "Adding low-mem and BIOS regions for subject '"
                  & Subj_Name & "'");
       Mutools.XML_Utils.Add_Memory_Region
-        (Policy    => Data,
-         Name      => Subj_Name & "|lowmem",
-         Address   => "",
-         Size      => "16#0009_b000#",
-         Caching   => "WB",
-         Alignment => "16#1000#");
+        (Policy      => Data,
+         Name        => Subj_Name & "|lowmem",
+         Address     => "",
+         Size        => "16#0009_b000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "subject");
       Muxml.Utils.Append_Child
         (Node      => Subj_Mem_Node,
          New_Child => XML_Utils.Create_Virtual_Memory_Node
@@ -178,12 +185,13 @@ is
             Writable      => True,
             Executable    => False));
       Mutools.XML_Utils.Add_Memory_Region
-        (Policy    => Data,
-         Name      => Subj_Name & "|bios",
-         Address   => "",
-         Size      => "16#0001_0000#",
-         Caching   => "WB",
-         Alignment => "16#1000#");
+        (Policy      => Data,
+         Name        => Subj_Name & "|bios",
+         Address     => "",
+         Size        => "16#0001_0000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "subject_bios");
       Muxml.Utils.Append_Child
         (Node      => Subj_Mem_Node,
          New_Child => XML_Utils.Create_Virtual_Memory_Node

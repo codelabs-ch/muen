@@ -26,6 +26,7 @@ with Unicode.CES.Utf8;
 with Muxml.system_src_schema;
 with Muxml.system_a_schema;
 with Muxml.system_b_schema;
+with Muxml.platform_config_schema;
 with Muxml.vcpu_profile_schema;
 
 package body Muxml.Grammar
@@ -36,14 +37,16 @@ is
    end record;
 
    Schema_Map : constant array (Valid_Schema_Kind) of Schema_Info_Type
-     := (Format_Src   => (Id  => system_src_schema.Id'Access,
-                          XSD => system_src_schema.Data'Access),
-         Format_A     => (Id  => system_a_schema.Id'Access,
-                          XSD => system_a_schema.Data'Access),
-         Format_B     => (Id  => system_b_schema.Id'Access,
-                          XSD => system_b_schema.Data'Access),
-         VCPU_Profile => (Id  => vcpu_profile_schema.Id'Access,
-                          XSD => vcpu_profile_schema.Data'Access));
+     := (Format_Src      => (Id  => system_src_schema.Id'Access,
+                             XSD => system_src_schema.Data'Access),
+         Format_A        => (Id  => system_a_schema.Id'Access,
+                             XSD => system_a_schema.Data'Access),
+         Format_B        => (Id  => system_b_schema.Id'Access,
+                             XSD => system_b_schema.Data'Access),
+         Platform_Config => (Id  => platform_config_schema.Id'Access,
+                             XSD => platform_config_schema.Data'Access),
+         VCPU_Profile    => (Id  => vcpu_profile_schema.Id'Access,
+                             XSD => vcpu_profile_schema.Data'Access));
 
    -------------------------------------------------------------------------
 

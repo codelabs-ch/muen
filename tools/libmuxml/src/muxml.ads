@@ -22,7 +22,13 @@ with Ada.Finalization;
 
 package Muxml
 is
-   type Schema_Kind is (None, Format_A, Format_B, Format_Src, VCPU_Profile);
+   type Schema_Kind is
+     (None,
+      Format_A,
+      Format_B,
+      Format_Src,
+      Platform_Config,
+      VCPU_Profile);
 
    subtype Valid_Schema_Kind is Schema_Kind range
      Schema_Kind'Succ (Schema_Kind'First) .. Schema_Kind'Last;

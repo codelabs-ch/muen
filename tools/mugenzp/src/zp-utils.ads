@@ -16,24 +16,21 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Text_Runner;
-with Ahven.Framework;
+with bootparam_h;
 
-with Generator_Tests;
-with Utils_Tests;
+with DOM.Core;
 
-procedure Test_Runner
+package Zp.Utils
 is
-   use Ahven.Framework;
 
-   S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Muzpgen tests");
-begin
-   Add_Test (Suite => S.all,
-             T     => new Generator_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Utils_Tests.Testcase);
+   --  Create e820 map based on given virtual memory regions.
+   function Create_e820_Map
+     (Memory : DOM.Core.Node_List)
+      return bootparam_h.boot_params_e820_map_array;
 
-   Ahven.Text_Runner.Run (Suite => S);
-   Release_Suite (T => S);
-end Test_Runner;
+   Null_e820_Map : constant bootparam_h.boot_params_e820_map_array
+     := (others => (addr   => 0,
+                    size   => 0,
+                    c_type => 0));
+
+end Zp.Utils;

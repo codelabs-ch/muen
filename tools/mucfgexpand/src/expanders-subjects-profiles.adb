@@ -171,7 +171,7 @@ is
         (Policy      => Data,
          Name        => Subj_Name & "|lowmem",
          Address     => "",
-         Size        => "16#0009_b000#",
+         Size        => "16#0008_c000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
          Memory_Type => "subject");

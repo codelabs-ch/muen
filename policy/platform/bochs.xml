@@ -5,4 +5,7 @@
 	<device name="serial" shared="false">
 		<ioPort name="port1" start="16#03f8#" end="16#03ff#"/>
 	</device>
+	<device name="pci_mmconf" shared="false">
+		<memory name="mmconf" physicalAddress="16#d000_0000#" size="16#0100_0000#" caching="UC"/>
+	</device>
 </platform>

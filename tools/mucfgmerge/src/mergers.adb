@@ -47,7 +47,7 @@ is
       Platform_Node : DOM.Core.Node;
    begin
       Muxml.Parse (Data => Platform,
-                   Kind => Muxml.None,
+                   Kind => Muxml.Platform_Config,
                    File => Platform_File);
 
       Platform_Node := Muxml.Utils.Get_Element

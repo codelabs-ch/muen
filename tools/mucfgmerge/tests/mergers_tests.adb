@@ -18,7 +18,9 @@
 
 with Ada.Directories;
 
-with Muxml;
+with DOM.Core.Nodes;
+
+with Muxml.Utils;
 
 with Mergers;
 
@@ -38,6 +40,9 @@ is
       T.Add_Test_Routine
         (Routine => Merge_Platform'Access,
          Name    => "Merge platform");
+      T.Add_Test_Routine
+        (Routine => Merge_Platform_Null'Access,
+         Name    => "Merge platform (null)");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -65,5 +70,35 @@ is
 
       Ada.Directories.Delete_File (Name => Filename);
    end Merge_Platform;
+
+   -------------------------------------------------------------------------
+
+   procedure Merge_Platform_Null
+   is
+      Filename     : constant String := "obj/merged_platform_null.xml";
+      Ref_Filename : constant String := "data/merged_platform_null.ref.xml";
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Remove_Child
+        (Node       => DOM.Core.Nodes.First_Child (N => Policy.Doc),
+         Child_Name => "platform");
+
+      Mergers.Merge_Platform (Policy        => Policy,
+                              Platform_File => "data/platform.xml");
+      Muxml.Write (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => Filename);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Filename,
+               Filename2 => Ref_Filename),
+              Message   => "Policy mismatch");
+
+      Ada.Directories.Delete_File (Name => Filename);
+   end Merge_Platform_Null;
 
 end Mergers_Tests;

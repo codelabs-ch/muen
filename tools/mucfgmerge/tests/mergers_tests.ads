@@ -29,4 +29,8 @@ is
    --  Merge platform section.
    procedure Merge_Platform;
 
+   --  Merge platform configuration with policy which contains no platform
+   --  node.
+   procedure Merge_Platform_Null;
+
 end Mergers_Tests;

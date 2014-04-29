@@ -169,6 +169,25 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Platform_CPU_Count_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+      Attr_Path : constant String := "/system/platform/processor/@logicalCpus";
+      Attr      : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => Attr_Path);
+   begin
+      Mulog.Log (Msg => "Checking presence of '" & Attr_Path & "' attribute");
+
+      if DOM.Core.Nodes.Length (List => Attr) /= 1 then
+         raise Mucfgcheck.Validation_Error with "Required "
+           & "'/system/platform/processor/@logicalCpus' attribute not found, "
+           & "add it or use mucfgmerge tool";
+      end if;
+   end Platform_CPU_Count_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure Register_All
    is
    begin
@@ -183,6 +202,7 @@ is
       Check_Procs.Register (Process => Channel_Reader_Writer'Access);
       Check_Procs.Register (Process => Channel_Writer_Has_Event_ID'Access);
       Check_Procs.Register (Process => Channel_Reader_Has_Event_Vector'Access);
+      Check_Procs.Register (Process => Platform_CPU_Count_Presence'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

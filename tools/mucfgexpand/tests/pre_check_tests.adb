@@ -19,6 +19,7 @@
 with Ada.Exceptions;
 
 with DOM.Core.Nodes;
+with DOM.Core.Documents;
 
 with Muxml.Utils;
 with Mucfgcheck;
@@ -161,7 +162,36 @@ is
       T.Add_Test_Routine
         (Routine => Channel_Reader_Has_Event_Vector'Access,
          Name    => "Channel readers vector numbers");
+      T.Add_Test_Routine
+        (Routine => Platform_CPU_Count_Presence'Access,
+         Name    => "Logical CPU count attribute");
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Platform_CPU_Count_Presence
+   is
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Remove_Child
+        (Node       => DOM.Core.Documents.Get_Element (Doc => Policy.Doc),
+         Child_Name => "platform");
+
+      begin
+         Expand.Pre_Checks.Platform_CPU_Count_Presence (XML_Data => Policy);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Required '/system/platform/processor/@logicalCpus' "
+                    & "attribute not found, add it or use mucfgmerge tool",
+                    Message   => "Exception mismatch");
+      end;
+   end Platform_CPU_Count_Presence;
 
    -------------------------------------------------------------------------
 

@@ -1,5 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <platform>
+ <processor logicalCpus="2" speed="50" vmxTimerRate="0"/>
+ <memory>
+  <memoryBlock allocatable="true" name="ram_2" physicalAddress="16#9900_0000#" size="16#2000#"/>
+ </memory>
  <device name="debugconsole" shared="false">
   <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
  </device>

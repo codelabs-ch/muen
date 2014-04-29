@@ -47,9 +47,8 @@ is
       Platform_Node : DOM.Core.Node;
    begin
       Muxml.Parse (Data => Platform,
-                   Kind => Muxml.None,
+                   Kind => Muxml.Platform_Config,
                    File => Platform_File);
-
       Platform_Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
          XPath => "/system/platform");
@@ -73,12 +72,18 @@ is
                New_Child => Platform_Node,
                Ref_Child => Mem_Node);
          end;
+      else
+         Muxml.Utils.Merge
+           (Left      => DOM.Core.Documents.Get_Element (Doc => Platform.Doc),
+            Right     => Platform_Node,
+            List_Tags => Platform_List_Tags);
       end if;
 
-      Muxml.Utils.Merge
-        (Left      => Platform_Node,
-         Right     => DOM.Core.Documents.Get_Element (Doc => Platform.Doc),
-         List_Tags => Platform_List_Tags);
+      Platform_Node := DOM.Core.Nodes.Replace_Child
+        (N         => DOM.Core.Nodes.Parent_Node (N => Platform_Node),
+         New_Child => DOM.Core.Documents.Get_Element (Doc => Platform.Doc),
+         Old_Child => Platform_Node);
+      DOM.Core.Nodes.Free (N => Platform_Node);
 
       --  The platform document must not be freed since some resources
       --  referenced by the merged DOM tree are not copied to the Node's

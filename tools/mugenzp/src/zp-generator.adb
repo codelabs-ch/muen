@@ -68,7 +68,7 @@ is
       Zps : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
-           XPath => "/system/memory/memory/file[@format='zp']");
+           XPath => "/system/memory/memory[@type='subject_zeropage']/file");
    begin
       Mulog.Log (Msg => "Found" & DOM.Core.Nodes.Length (List => Zps)'Img
                  & " zero-page file(s)");
@@ -125,7 +125,7 @@ is
                  (Muxml.Utils.Get_Attribute
                     (Doc   => Policy.Doc,
                      XPath => "/system/memory/memory[@name='" & Initramfs_Name
-                     & "']",
+                     & "' and @type='subject_initrd']",
                      Name  => "size"));
                Mulog.Log (Msg => "Declaring ramdisk of size "
                           & Mutools.Utils.To_Hex (Number => Initramfs_Size)

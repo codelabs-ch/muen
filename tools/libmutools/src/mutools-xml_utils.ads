@@ -42,7 +42,7 @@ is
       Alignment   :        String;
       Memory_Type :        String;
       File_Name   :        String;
-      File_Format :        String;
+      File_Format :        String := "";
       File_Offset :        String);
 
 end Mutools.XML_Utils;

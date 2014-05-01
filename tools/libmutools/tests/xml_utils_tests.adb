@@ -87,7 +87,6 @@ is
          Alignment   => "16#1000#",
          Memory_Type => "",
          File_Name   => "testfile",
-         File_Format => "bin_raw",
          File_Offset => "16#1000#");
 
       Muxml.Write (Data => Policy,

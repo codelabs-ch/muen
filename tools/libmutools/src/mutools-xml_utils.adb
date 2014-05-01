@@ -73,7 +73,7 @@ is
       Alignment   :        String;
       Memory_Type :        String;
       File_Name   :        String;
-      File_Format :        String;
+      File_Format :        String := "";
       File_Offset :        String)
    is
       Section   : constant DOM.Core.Node
@@ -99,10 +99,12 @@ is
       Muxml.Utils.Append_Child (Node      => Mem_Node,
                                 New_Child => File_Node);
 
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => File_Node,
-         Name  => "format",
-         Value => File_Format);
+      if File_Format'Length > 0 then
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => File_Node,
+            Name  => "format",
+            Value => File_Format);
+      end if;
       DOM.Core.Elements.Set_Attribute
         (Elem  => File_Node,
          Name  => "filename",

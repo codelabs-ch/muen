@@ -20,12 +20,16 @@ package body Muxml.Grammar.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Schema.Validators.XML_Grammar;
+
+      G : Schema.Validators.XML_Grammar;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      for I in Valid_Schema_Kind loop
+         G := Schema.Validators.No_Grammar;
+         G := Get_Grammar (Kind => Format_Src);
+         Assert (Condition => G /= Schema.Validators.No_Grammar,
+                 Message   => "Grammar is null");
+      end loop;
 --  begin read only
    end Test_Get_Grammar;
 --  end read only

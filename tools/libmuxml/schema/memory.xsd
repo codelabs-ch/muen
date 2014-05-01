@@ -43,21 +43,6 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:simpleType name="fileFormatType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="acpi_rsdp"/>
-			<xs:enumeration value="acpi_xsdt"/>
-			<xs:enumeration value="acpi_fadt"/>
-			<xs:enumeration value="acpi_dsdt"/>
-			<xs:enumeration value="bin_raw"/>
-			<xs:enumeration value="bzimage"/>
-			<xs:enumeration value="pt"/>
-			<xs:enumeration value="iobm"/>
-			<xs:enumeration value="msrbm"/>
-			<xs:enumeration value="zp"/>
-		</xs:restriction>
-	</xs:simpleType>
-
 	<xs:complexType name="memoryBlockBaseType" abstract="true">
 		<xs:attribute name="name"            type="nameType"       use="required"/>
 		<xs:attribute name="physicalAddress" type="word64Type"     use="required"/>
@@ -73,7 +58,6 @@
 	</xs:complexType>
 
 	<xs:complexType name="fileContentType">
-		<xs:attribute name="format"   type="fileFormatType"     use="optional"/>
 		<xs:attribute name="filename" type="xs:string"          use="required"/>
 		<xs:attribute name="offset"   type="optionalOffsetType" use="required"/>
 	</xs:complexType>

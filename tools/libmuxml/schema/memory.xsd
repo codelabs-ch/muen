@@ -73,7 +73,7 @@
 	</xs:complexType>
 
 	<xs:complexType name="fileContentType">
-		<xs:attribute name="format"   type="fileFormatType"     use="required"/>
+		<xs:attribute name="format"   type="fileFormatType"     use="optional"/>
 		<xs:attribute name="filename" type="xs:string"          use="required"/>
 		<xs:attribute name="offset"   type="optionalOffsetType" use="required"/>
 	</xs:complexType>

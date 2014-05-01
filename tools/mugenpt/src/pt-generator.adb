@@ -94,18 +94,19 @@ is
          declare
             ID_Str : constant String := I'Img (I'Img'First + 1 .. I'Img'Last);
 
-            Filename  : constant String := Muxml.Utils.Get_Attribute
+            PT_Node   : constant DOM.Core.Node := Muxml.Utils.Get_Element
               (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@name='kernel_" & ID_Str
-               & "|pt']/file[@format='pt']",
+               XPath => "/system/memory/memory[@type='system_pt' and "
+               & "@name='kernel_" & ID_Str & "|pt']");
+            Filename  : constant String := Muxml.Utils.Get_Attribute
+              (Doc   => PT_Node,
+               XPath => "file",
                Name  => "filename");
             PML4_Addr : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
-                (Muxml.Utils.Get_Attribute
-                   (Doc   => Policy.Doc,
-                    XPath => "/system/memory/memory[@name='kernel_" & ID_Str
-                    & "|pt']",
-                    Name  => "physicalAddress"));
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => PT_Node,
+                    Name => "physicalAddress"));
             Nodes     : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Policy.Doc,
@@ -287,29 +288,31 @@ is
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
-            Name      : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => DOM.Core.Nodes.Item (List  => Subjects,
-                                            Index => I),
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Subj_Node,
                Name => "name");
-            Filename  : constant String := Muxml.Utils.Get_Attribute
+            PT_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
               (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@name='" & Name & "|pt']/"
-               & "file[@format='pt']",
+               XPath => "/system/memory/memory[@type='system_pt' and "
+               & "contains(string(@name),'" & Name & "')]");
+            Filename : constant String := Muxml.Utils.Get_Attribute
+              (Doc   => PT_Node,
+               XPath => "file",
                Name  => "filename");
             PML4_Addr : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
-                (Muxml.Utils.Get_Attribute
-                   (Doc   => Policy.Doc,
-                    XPath => "/system/memory/memory[@name='" & Name
-                    & "|pt']",
-                    Name  => "physicalAddress"));
-            Nodes     : constant DOM.Core.Node_List
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => PT_Node,
+                    Name => "physicalAddress"));
+            Nodes : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
-                (N     => DOM.Core.Nodes.Item
-                   (List  => Subjects,
-                    Index => I),
+                (N     => Subj_Node,
                  XPath => "memory/memory");
-            Devices   : constant DOM.Core.Node_List
+            Devices : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => DOM.Core.Nodes.Item
                    (List  => Subjects,

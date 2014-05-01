@@ -143,7 +143,6 @@ is
                Alignment   => "16#1000#",
                Memory_Type => "system_pt",
                File_Name   => "kernel_pt_" & CPU_Str,
-               File_Format => "pt",
                File_Offset => "none");
 
             Cur_Addr := Cur_Addr + Size;

@@ -89,10 +89,10 @@
   <memory alignment="16#1000#" caching="WB" name="data_channel" size="16#1000#" type="subject_channel"/>
   <memory alignment="16#1000#" caching="WB" name="data_channel2" size="16#2000#" type="subject_channel"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" physicalAddress="16#0012_9000#" size="16#4000#" type="system_pt">
-   <file filename="kernel_pt_0" format="pt" offset="none"/>
+   <file filename="kernel_pt_0" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_1|pt" physicalAddress="16#0012_d000#" size="16#4000#" type="system_pt">
-   <file filename="kernel_pt_1" format="pt" offset="none"/>
+   <file filename="kernel_pt_1" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#4000#" type="system_pt">
    <file filename="tau0_pt" format="pt" offset="none"/>

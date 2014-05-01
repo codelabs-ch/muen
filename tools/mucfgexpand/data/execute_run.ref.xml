@@ -39,22 +39,22 @@
   <memory alignment="16#1000#" caching="WB" name="lnx|vmcs" physicalAddress="16#4000#" size="16#1000#" type="system_vmcs"/>
   <memory alignment="16#1000#" caching="WB" name="subject1|vmcs" physicalAddress="16#5000#" size="16#1000#" type="system_vmcs"/>
   <memory alignment="16#1000#" caching="WB" name="tau0|iobm" size="16#2000#" type="system_iobm">
-   <file filename="tau0_iobm" format="iobm" offset="none"/>
+   <file filename="tau0_iobm" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="tau0|msrbm" size="16#1000#" type="system_msrbm">
-   <file filename="tau0_msrbm" format="msrbm" offset="none"/>
+   <file filename="tau0_msrbm" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|iobm" size="16#2000#" type="system_iobm">
-   <file filename="lnx_iobm" format="iobm" offset="none"/>
+   <file filename="lnx_iobm" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|msrbm" size="16#1000#" type="system_msrbm">
-   <file filename="lnx_msrbm" format="msrbm" offset="none"/>
+   <file filename="lnx_msrbm" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject1|iobm" size="16#2000#" type="system_iobm">
-   <file filename="subject1_iobm" format="iobm" offset="none"/>
+   <file filename="subject1_iobm" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject1|msrbm" size="16#1000#" type="system_msrbm">
-   <file filename="subject1_msrbm" format="msrbm" offset="none"/>
+   <file filename="subject1_msrbm" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="tau0|bin" size="16#0001_4000#" type="subject_binary">
    <file filename="tau0" format="bin_raw" offset="none"/>

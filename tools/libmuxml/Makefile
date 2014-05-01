@@ -1,6 +1,8 @@
 TESTS_DIR = $(CURDIR)/tests-ng
 COMPONENT = libmuxml
 
+SRC_FILES = $(wildcard $(SRC_DIR)/*)
+
 SCHEMA_FILES = \
    $(GEN_DIR)/muxml-system_a_schema.ads     \
    $(GEN_DIR)/muxml-system_b_schema.ads     \
@@ -28,7 +30,7 @@ $(GEN_DIR)/muxml-%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL)
 	@../scripts/xml2ada Muxml.$*_schema $@.tmp $@
 	@rm $@.tmp
 
-$(OBJ_DIR)/.harness_stamp: $(SCHEMA_FILES)
+$(OBJ_DIR)/.harness_stamp: $(SRC_FILES) $(SCHEMA_FILES)
 	mkdir -p $(OBJ_DIR)/tests ../libtest/obj/tests ../libtest/lib
 	gnattest --tests-dir=$(TESTS_DIR) -Pgnattest_$(COMPONENT)
 	@touch $@

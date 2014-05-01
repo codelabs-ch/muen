@@ -54,7 +54,6 @@ is
          Alignment   => "16#1000#",
          Memory_Type => "subject_zeropage",
          File_Name   => Subj_Name & "_zp",
-         File_Format => "zp",
          File_Offset => "none");
       Muxml.Utils.Append_Child
         (Node      => Subj_Mem_Node,
@@ -76,7 +75,6 @@ is
          Alignment   => "16#1000#",
          Memory_Type => "subject_acpi_rsdp",
          File_Name   => Subj_Name & "_rsdp",
-         File_Format => "acpi_rsdp",
          File_Offset => "none");
       Muxml.Utils.Append_Child
         (Node      => Subj_Mem_Node,
@@ -96,7 +94,6 @@ is
          Alignment   => "16#1000#",
          Memory_Type => "subject_acpi_xsdt",
          File_Name   => Subj_Name & "_xsdt",
-         File_Format => "acpi_xsdt",
          File_Offset => "none");
       Muxml.Utils.Append_Child
         (Node      => Subj_Mem_Node,
@@ -116,7 +113,6 @@ is
          Alignment   => "16#1000#",
          Memory_Type => "subject_acpi_fadt",
          File_Name   => Subj_Name & "_fadt",
-         File_Format => "acpi_fadt",
          File_Offset => "none");
       Muxml.Utils.Append_Child
         (Node      => Subj_Mem_Node,
@@ -136,7 +132,6 @@ is
          Alignment   => "16#1000#",
          Memory_Type => "subject_acpi_dsdt",
          File_Name   => Subj_Name & "_dsdt.aml",
-         File_Format => "acpi_dsdt",
          File_Offset => "none");
       Muxml.Utils.Append_Child
         (Node      => Subj_Mem_Node,

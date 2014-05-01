@@ -1,7 +1,4 @@
-TESTS_DIR = $(CURDIR)/tests-ng
 COMPONENT = libmuxml
-
-SRC_FILES = $(wildcard $(SRC_DIR)/*)
 
 SCHEMA_FILES = \
    $(GEN_DIR)/muxml-system_a_schema.ads     \
@@ -29,14 +26,3 @@ $(GEN_DIR)/muxml-%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL)
 	@xsltproc --stringparam format $* $(RESOLVE_XSL) $(SCHEMA_FILE) > $@.tmp
 	@../scripts/xml2ada Muxml.$*_schema $@.tmp $@
 	@rm $@.tmp
-
-$(OBJ_DIR)/.harness_stamp: $(SRC_FILES) $(SCHEMA_FILES)
-	mkdir -p $(OBJ_DIR)/tests ../libtest/obj/tests ../libtest/lib
-	gnattest --tests-dir=$(TESTS_DIR) -Pgnattest_$(COMPONENT)
-	@touch $@
-
-build_tests: $(OBJ_DIR)/.harness_stamp
-	gprbuild -p -P obj/tests/gnattest/harness/test_driver
-
-gnattests: build_tests
-	obj/tests/gnattest/harness/test_runner

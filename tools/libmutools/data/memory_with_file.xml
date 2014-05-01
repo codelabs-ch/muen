@@ -12,7 +12,7 @@
  <memory>
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
   <memory alignment="16#1000#" caching="WB" name="test" physicalAddress="16#2000#" size="16#4000#">
-   <file filename="testfile" format="bin_raw" offset="16#1000#"/>
+   <file filename="testfile" offset="16#1000#"/>
   </memory>
  </memory>
  <events/>

@@ -70,7 +70,6 @@ is
          Caching     => "WB",
          Alignment   => "16#1000#",
          File_Name   => "kernel",
-         File_Format => "bin_raw",
          File_Offset => "16#0000#",
          Memory_Type => "kernel_binary");
       Mutools.XML_Utils.Add_Memory_Region
@@ -81,7 +80,6 @@ is
          Caching     => "WB",
          Alignment   => "16#1000#",
          File_Name   => "kernel",
-         File_Format => "bin_raw",
          File_Offset => "16#0001_0000#",
          Memory_Type => "kernel_binary");
       Mutools.XML_Utils.Add_Memory_Region
@@ -100,7 +98,6 @@ is
          Caching     => "WB",
          Alignment   => "16#1000#",
          File_Name   => "kernel",
-         File_Format => "bin_raw",
          File_Offset => "16#0001_f000#",
          Memory_Type => "kernel_binary");
    end Add_Kernel_Binary;
@@ -146,7 +143,6 @@ is
                Alignment   => "16#1000#",
                Memory_Type => "system_pt",
                File_Name   => "kernel_pt_" & CPU_Str,
-               File_Format => "pt",
                File_Offset => "none");
 
             Cur_Addr := Cur_Addr + Size;
@@ -268,7 +264,6 @@ is
                Alignment   => "16#1000#",
                Memory_Type => "system_iobm",
                File_Name   => Subj_Name & "_iobm",
-               File_Format => "iobm",
                File_Offset => "none");
             Mutools.XML_Utils.Add_Memory_Region
               (Policy      => Data,
@@ -279,7 +274,6 @@ is
                Alignment   => "16#1000#",
                Memory_Type => "system_msrbm",
                File_Name   => Subj_Name & "_msrbm",
-               File_Format => "msrbm",
                File_Offset => "none");
          end;
       end loop;
@@ -324,7 +318,6 @@ is
                Alignment   => "16#1000#",
                Memory_Type => "system_pt",
                File_Name   =>  Subj_Name & "_pt",
-               File_Format => "pt",
                File_Offset => "none");
          end;
       end loop;

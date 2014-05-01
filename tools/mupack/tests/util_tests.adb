@@ -50,7 +50,6 @@ is
          Alignment   => "16#1000#",
          Memory_Type => "subject_binary",
          File_Name   => "obj1.o",
-         File_Format => "bin_raw",
          File_Offset => "none");
 
       Assert (Condition => Utils.Get_Image_Size (Policy => Data) = 16#127000#,

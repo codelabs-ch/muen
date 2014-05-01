@@ -31,14 +31,14 @@
  <memory>
   <memory alignment="16#0020_0000#" caching="WB" name="linux|ram" physicalAddress="16#0070_0000#" size="16#0f70_0000#" type="subject"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_text" physicalAddress="16#0010_0000#" size="16#0001_0000#" type="kernel_binary">
-   <file filename="kernel" format="bin_raw" offset="16#0000#"/>
+   <file filename="kernel" offset="16#0000#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_data" physicalAddress="16#0011_0000#" size="16#1000#" type="kernel_binary">
-   <file filename="kernel" format="bin_raw" offset="16#0001_0000#"/>
+   <file filename="kernel" offset="16#0001_0000#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_bss" physicalAddress="16#0011_1000#" size="16#1000#" type="kernel_binary"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_ro" physicalAddress="16#0011_f000#" size="16#4000#" type="kernel_binary">
-   <file filename="kernel" format="bin_raw" offset="16#0001_f000#"/>
+   <file filename="kernel" offset="16#0001_f000#"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_stack_0" physicalAddress="16#006f_e000#" size="16#2000#" type="kernel"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_store_0" physicalAddress="16#0fea_1000#" size="16#1000#" type="kernel"/>
@@ -65,64 +65,64 @@
   <memory alignment="16#1000#" caching="WB" name="sm|vmcs" physicalAddress="16#8000#" size="16#1000#" type="system_vmcs"/>
   <memory alignment="16#1000#" caching="WB" name="linux|vmcs" physicalAddress="16#9000#" size="16#1000#" type="system_vmcs"/>
   <memory alignment="16#1000#" caching="WB" name="tau0|iobm" physicalAddress="16#006a_3000#" size="16#2000#" type="system_iobm">
-   <file filename="tau0_iobm" format="iobm" offset="none"/>
+   <file filename="tau0_iobm" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="tau0|msrbm" physicalAddress="16#006a_f000#" size="16#1000#" type="system_msrbm">
-   <file filename="tau0_msrbm" format="msrbm" offset="none"/>
+   <file filename="tau0_msrbm" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vt|iobm" physicalAddress="16#006a_7000#" size="16#2000#" type="system_iobm">
-   <file filename="vt_iobm" format="iobm" offset="none"/>
+   <file filename="vt_iobm" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vt|msrbm" physicalAddress="16#006b_1000#" size="16#1000#" type="system_msrbm">
-   <file filename="vt_msrbm" format="msrbm" offset="none"/>
+   <file filename="vt_msrbm" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="time|iobm" physicalAddress="16#006a_5000#" size="16#2000#" type="system_iobm">
-   <file filename="time_iobm" format="iobm" offset="none"/>
+   <file filename="time_iobm" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="time|msrbm" physicalAddress="16#006b_0000#" size="16#1000#" type="system_msrbm">
-   <file filename="time_msrbm" format="msrbm" offset="none"/>
+   <file filename="time_msrbm" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="sm|iobm" physicalAddress="16#006a_1000#" size="16#2000#" type="system_iobm">
-   <file filename="sm_iobm" format="iobm" offset="none"/>
+   <file filename="sm_iobm" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="sm|msrbm" physicalAddress="16#006a_e000#" size="16#1000#" type="system_msrbm">
-   <file filename="sm_msrbm" format="msrbm" offset="none"/>
+   <file filename="sm_msrbm" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="linux|iobm" physicalAddress="16#0011_d000#" size="16#2000#" type="system_iobm">
-   <file filename="linux_iobm" format="iobm" offset="none"/>
+   <file filename="linux_iobm" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="linux|msrbm" physicalAddress="16#006a_d000#" size="16#1000#" type="system_msrbm">
-   <file filename="linux_msrbm" format="msrbm" offset="none"/>
+   <file filename="linux_msrbm" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="tau0|bin" physicalAddress="16#0067_1000#" size="16#0001_4000#" type="subject_binary">
-   <file filename="tau0" format="bin_raw" offset="none"/>
+   <file filename="tau0" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vt|bin" physicalAddress="16#0063_9000#" size="16#0002_4000#" type="subject_binary">
-   <file filename="vt" format="bin_raw" offset="none"/>
+   <file filename="vt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="time|bin" physicalAddress="16#0068_5000#" size="16#0001_4000#" type="subject_binary">
-   <file filename="time" format="bin_raw" offset="none"/>
+   <file filename="time" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="sm|bin" physicalAddress="16#0065_d000#" size="16#0001_4000#" type="subject_binary">
-   <file filename="sm" format="bin_raw" offset="none"/>
+   <file filename="sm" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="linux|bin" physicalAddress="16#0013_9000#" size="16#0050_0000#" type="subject_binary">
-   <file filename="bzImage" format="bin_raw" offset="none"/>
+   <file filename="bzImage" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="linux|zp" physicalAddress="16#0012_7000#" size="16#2000#" type="subject_zeropage">
-   <file filename="linux_zp" format="zp" offset="none"/>
+   <file filename="linux_zp" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="linux|acpi_rsdp" physicalAddress="16#006a_b000#" size="16#1000#" type="subject_acpi_rsdp">
-   <file filename="linux_rsdp" format="acpi_rsdp" offset="none"/>
+   <file filename="linux_rsdp" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="linux|acpi_xsdt" physicalAddress="16#006a_c000#" size="16#1000#" type="subject_acpi_xsdt">
-   <file filename="linux_xsdt" format="acpi_xsdt" offset="none"/>
+   <file filename="linux_xsdt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="linux|acpi_fadt" physicalAddress="16#006a_a000#" size="16#1000#" type="subject_acpi_fadt">
-   <file filename="linux_fadt" format="acpi_fadt" offset="none"/>
+   <file filename="linux_fadt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="linux|acpi_dsdt" physicalAddress="16#006a_9000#" size="16#1000#" type="subject_acpi_dsdt">
-   <file filename="linux_dsdt.aml" format="acpi_dsdt" offset="none"/>
+   <file filename="linux_dsdt.aml" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="linux|acpi_empty" physicalAddress="16#006f_2000#" size="16#c000#" type="subject"/>
   <memory alignment="16#1000#" caching="WB" name="linux|lowmem" physicalAddress="16#0fe0_0000#" size="16#0009_b000#" type="subject"/>
@@ -133,31 +133,31 @@
   <memory alignment="16#1000#" caching="WB" name="time_console" physicalAddress="16#006e_2000#" size="16#0001_0000#" type="subject_channel"/>
   <memory alignment="16#1000#" caching="WB" name="sm_console" physicalAddress="16#006d_2000#" size="16#0001_0000#" type="subject_channel"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" physicalAddress="16#0012_9000#" size="16#4000#" type="system_pt">
-   <file filename="kernel_pt_0" format="pt" offset="none"/>
+   <file filename="kernel_pt_0" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_1|pt" physicalAddress="16#0012_d000#" size="16#4000#" type="system_pt">
-   <file filename="kernel_pt_1" format="pt" offset="none"/>
+   <file filename="kernel_pt_1" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_2|pt" physicalAddress="16#0013_1000#" size="16#4000#" type="system_pt">
-   <file filename="kernel_pt_2" format="pt" offset="none"/>
+   <file filename="kernel_pt_2" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_3|pt" physicalAddress="16#0013_5000#" size="16#4000#" type="system_pt">
-   <file filename="kernel_pt_3" format="pt" offset="none"/>
+   <file filename="kernel_pt_3" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="tau0|pt" physicalAddress="16#0012_3000#" size="16#4000#" type="system_pt">
-   <file filename="tau0_pt" format="pt" offset="none"/>
+   <file filename="tau0_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vt|pt" physicalAddress="16#0069_d000#" size="16#4000#" type="system_pt">
-   <file filename="vt_pt" format="pt" offset="none"/>
+   <file filename="vt_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="time|pt" physicalAddress="16#0069_9000#" size="16#4000#" type="system_pt">
-   <file filename="time_pt" format="pt" offset="none"/>
+   <file filename="time_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="sm|pt" physicalAddress="16#0011_9000#" size="16#4000#" type="system_pt">
-   <file filename="sm_pt" format="pt" offset="none"/>
+   <file filename="sm_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="linux|pt" physicalAddress="16#0011_2000#" size="16#7000#" type="system_pt">
-   <file filename="linux_pt" format="pt" offset="none"/>
+   <file filename="linux_pt" offset="none"/>
   </memory>
  </memory>
  <events>

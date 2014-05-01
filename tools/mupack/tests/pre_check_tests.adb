@@ -55,7 +55,6 @@ is
          Alignment   => "16#1000#",
          Memory_Type => "system",
          File_Name   => "mboot",
-         File_Format => "bin_raw",
          File_Offset => "none");
       Pre_Checks.Files_Exist (Data => Policy);
 
@@ -70,7 +69,6 @@ is
          Alignment   => "16#1000#",
          Memory_Type => "subject_acpi_rsdp",
          File_Name   => "nonexistent",
-         File_Format => "bin_raw",
          File_Offset => "none");
 
       begin
@@ -109,7 +107,6 @@ is
          Alignment   => "16#1000#",
          Memory_Type => "subject_acpi_rsdp",
          File_Name   => "pattern",
-         File_Format => "acpi_rsdp",
          File_Offset => "none");
 
       begin
@@ -165,7 +162,6 @@ is
          Alignment   => "16#1000#",
          Memory_Type => "subject_acpi_rsdp",
          File_Name   => "pattern",
-         File_Format => "acpi_rsdp",
          File_Offset => "16#ffff#");
 
       begin

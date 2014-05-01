@@ -723,17 +723,20 @@ is
          PML4_Addr     : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@name='kernel_0|pt']",
+               XPath => "/system/memory/memory[@type='system_pt' and "
+               & "contains(string(@name),'kernel')]",
                Name  => "physicalAddress"));
          VMXON_Addr    : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@name='kernel_0|vmxon']",
+               XPath => "/system/memory/memory[@type='system_vmxon' and "
+               & "contains(string(@name),'kernel')]",
                Name  => "physicalAddress"));
          VMCS_Addr     : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@name='tau0|vmcs']",
+               XPath => "/system/memory/memory[@type='system_vmcs' and "
+               & "contains(string(@name),'tau0')]",
                Name  => "physicalAddress"));
 
          Tmpl : Templates.Template_Type;
@@ -1178,7 +1181,8 @@ is
          PML4_Addr  : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@name='" &  Name & "|pt']",
+               XPath => "/system/memory/memory[@type='system_pt' and "
+               & "contains(string(@name),'" & Name & "')]",
                Name  => "physicalAddress"));
          Entry_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Element_Value
@@ -1191,17 +1195,20 @@ is
          VMCS_Addr  : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@name='" & Name & "|vmcs']",
+               XPath => "/system/memory/memory[@type='system_vmcs' and "
+               & "contains(string(@name),'" & Name & "')]",
                Name  => "physicalAddress"));
          IOBM_Addr  : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@name='" & Name & "|iobm']",
+               XPath => "/system/memory/memory[@type='system_iobm' and "
+               & "contains(string(@name),'" & Name & "')]",
                Name  => "physicalAddress"));
          MSRBM_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@name='" & Name & "|msrbm']",
+               XPath => "/system/memory/memory[@type='system_msrbm' and "
+               & "contains(string(@name),'" & Name & "')]",
                Name  => "physicalAddress"));
 
          CS_Access : constant String := Muxml.Utils.Get_Attribute
@@ -1441,7 +1448,8 @@ is
       VMXON_Addr : constant Unsigned_64 := Unsigned_64'Value
         (Muxml.Utils.Get_Attribute
            (Doc   => Policy.Doc,
-            XPath => "/system/memory/memory[@name='kernel_0|vmxon']",
+            XPath => "/system/memory/memory[@type='system_vmxon' and "
+            & "contains(string(@name),'kernel_0')]",
             Name  => "physicalAddress"));
 
       Tmpl : Templates.Template_Type;

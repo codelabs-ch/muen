@@ -57,8 +57,8 @@ is
             RSDP_Name : constant String := Name & "|acpi_rsdp";
             RSDP_File : constant String := Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@name='" & RSDP_Name
-               & "']/file[@format='acpi_rsdp']",
+               XPath => "/system/memory/memory[@type='subject_acpi_rsdp' and "
+               & "@name='" & RSDP_Name & "']/file",
                Name  => "filename");
          begin
             if RSDP_File /= "" then
@@ -79,8 +79,9 @@ is
                   XSDT_Filename : constant String
                     := Output_Dir & "/" & Muxml.Utils.Get_Attribute
                       (Doc   => Policy.Doc,
-                       XPath => "/system/memory/memory[@name='" & XSDT_Name
-                       & "']/file[@format='acpi_xsdt']",
+                       XPath => "/system/memory/memory"
+                       & "[@type='subject_acpi_xsdt' and @name='" & XSDT_Name
+                       & "']/file",
                        Name  => "filename");
 
                   FADT_Addr     : constant String := Muxml.Utils.Get_Attribute
@@ -90,8 +91,9 @@ is
                   FADT_Filename : constant String
                     := Output_Dir & "/" & Muxml.Utils.Get_Attribute
                       (Doc   => Policy.Doc,
-                       XPath => "/system/memory/memory[@name='" & FADT_Name
-                       & "']/file[@format='acpi_fadt']",
+                       XPath => "/system/memory/memory"
+                       & "[@type='subject_acpi_fadt' and @name='" & FADT_Name
+                       & "']/file",
                        Name  => "filename");
 
                   DSDT_Addr     : constant String := Muxml.Utils.Get_Attribute

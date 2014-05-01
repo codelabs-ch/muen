@@ -74,7 +74,6 @@ is
          Alignment   => "16#1000#",
          Memory_Type => "system",
          File_Name   => "mboot",
-         File_Format => "bin_raw",
          File_Offset => "none");
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Policy,
@@ -85,7 +84,6 @@ is
          Alignment   => "16#1000#",
          Memory_Type => "subject_acpi_rsdp",
          File_Name   => "pattern",
-         File_Format => "acpi_rsdp",
          File_Offset => "none");
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Policy,
@@ -96,7 +94,6 @@ is
          Alignment   => "16#1000#",
          Memory_Type => "subject_binary",
          File_Name   => "obj1.o",
-         File_Format => "bin_raw",
          File_Offset => "16#0004#");
 
       Data.XML_Doc := Policy.Doc;

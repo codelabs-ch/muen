@@ -12,13 +12,13 @@
 
 	<memory>
 		<memory alignment="16#1000#" name="mboot" size="16#1000#" physicalAddress="16#0010_0000#" caching="WB" type="system">
-			<file format="bin_raw" filename="mboot" offset="none"/>
+			<file filename="mboot" offset="none"/>
 		</memory>
 		<memory alignment="16#1000#" name="linux|acpi_rsdp" size="16#1000#" physicalAddress="16#0010_1000#" caching="WB" type="subject_acpi_rsdp">
-			<file format="acpi_rsdp" filename="pattern" offset="none"/>
+			<file filename="pattern" offset="none"/>
 		</memory>
 		<memory alignment="16#1000#" name="linux|bin" size="16#1000#" physicalAddress="16#0010_2000#" caching="WB" type="subject_binary">
-			<file format="bin_raw" filename="obj1.o" offset="16#0004#"/>
+			<file filename="obj1.o" offset="16#0004#"/>
 		</memory>
 		<memory alignment="16#1000#" name="filled" size="16#1000#" physicalAddress="16#0010_3000#" caching="WB" type="system">
 			<fill pattern="16#02#"/>

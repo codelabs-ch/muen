@@ -26,7 +26,7 @@ is
    use Ahven.Framework;
 
    S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Muvalidate tests");
+     (Suite_Name => "Mucfgvalidate tests");
 begin
    Add_Test (Suite => S.all,
              T     => new Validate_Tests.Testcase);

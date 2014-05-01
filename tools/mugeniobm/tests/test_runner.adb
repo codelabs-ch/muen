@@ -27,7 +27,7 @@ is
    use Ahven.Framework;
 
    S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Muiobmgen tests");
+     (Suite_Name => "Mugeniobm tests");
 begin
    Add_Test (Suite => S.all,
              T     => new IO_Port_Tests.Testcase);

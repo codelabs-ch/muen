@@ -27,7 +27,7 @@ is
    use Ahven.Framework;
 
    S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Mumsrbmgen tests");
+     (Suite_Name => "Mugenmsrbm tests");
 begin
    Add_Test (Suite => S.all,
              T     => new MSR_Tests.Testcase);

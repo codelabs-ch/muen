@@ -29,7 +29,7 @@ $(GEN_DIR)/muxml-%_schema.ads: $(XSD_FILES) $(RESOLVE_XSL)
 	@rm $@.tmp
 
 update_suite: $(SCHEMA_FILES)
-	mkdir -p $(OBJ_DIR)/tests
+	mkdir -p $(OBJ_DIR)/tests ../libtest/obj/tests ../libtest/lib
 	gnattest --tests-dir=$(TESTS_DIR) -Pgnattest_$(COMPONENT)
 
 build_tests: update_suite

@@ -57,13 +57,13 @@
    <file filename="subject1_msrbm" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="tau0|bin" size="16#0001_4000#" type="subject_binary">
-   <file filename="tau0" format="bin_raw" offset="none"/>
+   <file filename="tau0" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|bin" size="16#1000#" type="subject_binary">
-   <file filename="lnx_bin" format="bin_raw" offset="none"/>
+   <file filename="lnx_bin" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject1|bin" size="16#1000#" type="subject_binary">
-   <file filename="subject1_bin" format="bin_raw" offset="none"/>
+   <file filename="subject1_bin" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|initramfs" size="16#0030_0000#" type="subject_initrd">
    <file filename="initramfs.cpio.gz" format="bin_raw" offset="none"/>

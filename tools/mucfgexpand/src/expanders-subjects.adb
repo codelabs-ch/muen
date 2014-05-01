@@ -93,7 +93,6 @@ is
                Alignment   => "16#1000#",
                Memory_Type => "subject_binary",
                File_Name   => Filename,
-               File_Format => "bin_raw",
                File_Offset => "none");
             Muxml.Utils.Append_Child
               (Node      => Subj_Mem_Node,

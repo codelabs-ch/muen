@@ -294,12 +294,39 @@ package body Muxml.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Node     : DOM.Core.Node;
+      Dom_Impl : DOM.Core.DOM_Implementation;
+      Doc      : constant DOM.Core.Document
+        := DOM.Core.Create_Document (Implementation => Dom_Impl);
    begin
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Doc,
+         Tag_Name => "elem");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Append_Child (Node      => Doc,
+                    New_Child => Node);
 
+      Assert (Condition => DOM.Core.Nodes.Has_Child_Nodes (N => Doc),
+              Message   => "Unable to add child to document");
+
+      Remove_Child (Node       => Doc,
+                    Child_Name => "elem");
+
+      Assert (Condition => not DOM.Core.Nodes.Has_Child_Nodes (N => Doc),
+              Message   => "Error removing child node");
+
+      begin
+         Remove_Child (Node       => Doc,
+                       Child_Name => "elem");
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Utils.XML_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to remove child 'elem' from node '#document'",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Remove_Child;
 --  end read only

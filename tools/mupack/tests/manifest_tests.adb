@@ -37,14 +37,14 @@ is
    begin
       Manifest.Add_Entry (Manifest => Mf,
                           Mem_Name => "some_name",
-                          Format   => "some_format",
+                          Mem_Type => "some_format",
                           Content  => "testfile",
                           Address  => 16#100000#,
                           Size     => 16#1000#,
                           Offset   => 0);
       Manifest.Add_Entry (Manifest => Mf,
                           Mem_Name => "linux|acpi_rsdp",
-                          Format   => "acpi_rsdp",
+                          Mem_Type => "acpi_rsdp",
                           Content  => "data/sections.ref",
                           Address  => 16#101000#,
                           Size     => 16#13000#,

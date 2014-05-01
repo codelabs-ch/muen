@@ -72,10 +72,6 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => File,
                  Name => "filename");
-            Format     : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => File,
-                 Name => "format");
             Offset_Str : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => File,
@@ -94,6 +90,10 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Memory,
                  Name => "name");
+            Mem_Type   : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Memory,
+                 Name => "type");
             Offset     : Interfaces.Unsigned_64 := 0;
          begin
             if Offset_Str /= "none" then
@@ -108,7 +108,7 @@ is
 
             Manifest.Add_Entry (Manifest => Data.Manifest,
                                 Mem_Name => Mem_Name,
-                                Format   => Format,
+                                Mem_Type => Mem_Type,
                                 Content  => In_Dir & "/" & Filename,
                                 Address  => Address,
                                 Size     => Size,
@@ -168,7 +168,7 @@ is
             Manifest.Add_Entry
               (Manifest => Data.Manifest,
                Mem_Name => Mem_Name,
-               Format   => "fill_pattern",
+               Mem_Type => "fill_pattern",
                Content  => Mutools.Utils.To_Hex
                  (Number => Interfaces.Unsigned_64 (Pattern)),
                Address  => Interfaces.Unsigned_64 (Address),

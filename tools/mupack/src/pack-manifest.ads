@@ -30,7 +30,7 @@ is
    procedure Add_Entry
      (Manifest : in out Manifest_Type;
       Mem_Name :        String;
-      Format   :        String;
+      Mem_Type :        String;
       Content  :        String;
       Address  :        Interfaces.Unsigned_64;
       Size     :        Interfaces.Unsigned_64;

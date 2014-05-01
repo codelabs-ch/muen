@@ -33,7 +33,7 @@ is
    procedure Add_Entry
      (Manifest : in out Manifest_Type;
       Mem_Name :        String;
-      Format   :        String;
+      Mem_Type :        String;
       Content  :        String;
       Address  :        Interfaces.Unsigned_64;
       Size     :        Interfaces.Unsigned_64;
@@ -49,7 +49,7 @@ is
       Append (Source   => Manifest.Data,
               New_Item => Mutools.Utils.To_Hex (Number => Size) & ";");
       Append (Source   => Manifest.Data,
-              New_Item => Format & ";");
+              New_Item => Mem_Type & ";");
       Append (Source   => Manifest.Data,
               New_Item => Content);
       Append (Source   => Manifest.Data,

@@ -20,12 +20,63 @@ package body Muxml.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Impl : DOM.Core.DOM_Implementation;
+      Data : XML_Data_Type;
+      Node : DOM.Core.Node;
    begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "parent");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "parentAttr",
+         Value => "parent_attribute");
+      Append_Child
+        (Node      => Data.Doc,
+         New_Child => Node);
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "child"));
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "childAttr",
+         Value => "child_attribute");
 
+      Append_Child
+        (Node      => Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "grandchild"));
+
+      Assert (Condition => Get_Attribute
+              (Doc   => Data.Doc,
+               XPath => "parent",
+               Name  => "parentAttr") = "parent_attribute",
+              Message   => "Attribute mismatch (1)");
+      Assert (Condition => Get_Attribute
+              (Doc   => Data.Doc,
+               XPath => "/parent/child",
+               Name  => "childAttr") = "child_attribute",
+              Message   => "Attribute mismatch (2)");
+      Assert (Condition => Get_Attribute
+              (Doc   => Data.Doc,
+               XPath => "parent",
+               Name  => "nonexistent") = "",
+              Message   => "Attribute mismatch (3)");
+      Assert (Condition => Get_Attribute
+              (Doc   => Data.Doc,
+               XPath => "//grandchild",
+               Name  => "nonexistent") = "",
+              Message   => "Attribute mismatch (4)");
+      Assert (Condition => Get_Attribute
+              (Doc   => Data.Doc,
+               XPath => "nonexistent",
+               Name  => "someAttribute") = "",
+              Message   => "Attribute mismatch (5)");
 --  begin read only
    end Test_Get_Attribute;
 --  end read only

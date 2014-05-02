@@ -1,1 +1,3 @@
-include ../library_implicit.mk
+COMPONENT = libmulog
+
+include ../library.mk

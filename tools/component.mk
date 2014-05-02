@@ -11,13 +11,13 @@ $(DEPENDS):
 tests: test_$(COMPONENT)
 	$(TEST_RUNNER)
 
-$(COMPONENT): $(DEPENDS) $(COMPONENT_DEPS)
+$(COMPONENT): $(DEPENDS) $(COMPONENT_TARGETS)
 	@gprbuild $(BUILD_OPTS) -P$@
 
-test_$(COMPONENT): $(TEST_DEPS)
+test_$(COMPONENT): $(TEST_TARGETS)
 	@gprbuild $(BUILD_OPTS) -P$@ -XBUILD=tests
 
-build_cov: $(COV_DEPS)
+build_cov: $(COV_TARGETS)
 	@gprbuild $(BUILD_OPTS) -Ptest_$(COMPONENT) -XBUILD=coverage
 
 clean:

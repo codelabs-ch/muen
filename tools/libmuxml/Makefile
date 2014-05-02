@@ -11,9 +11,9 @@ SCHEMA_FILE = schema/`echo $* | sed -e 's/_a//g;s/_b//g;s/_src//g'`.xsd
 XSD_FILES   = $(shell find schema/ -name '*.xsd')
 RESOLVE_XSL = schema/resolve.xsl
 
-COMPONENT_DEPS = $(SCHEMA_FILES)
-TEST_DEPS      = $(COMPONENT_DEPS)
-COV_DEPS       = $(COMPONENT_DEPS)
+COMPONENT_TARGETS = $(SCHEMA_FILES)
+TEST_TARGETS      = $(COMPONENT_TARGETS)
+COV_TARGETS       = $(COMPONENT_TARGETS)
 
 ADDITIONAL_CLEAN = $(GEN_DIR)
 

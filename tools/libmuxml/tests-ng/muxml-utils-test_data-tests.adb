@@ -343,8 +343,11 @@ package body Muxml.Utils.Test_Data.Tests is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
-   begin
-      declare
+
+      ----------------------------------------------------------------------
+
+      procedure Positive
+      is
          Data : Muxml.XML_Data_Type;
          Impl : DOM.Core.DOM_Implementation;
          Doc  : constant DOM.Core.Document
@@ -408,10 +411,12 @@ package body Muxml.Utils.Test_Data.Tests is
                   XPath => "/vcpu/segments/cs",
                   Name  => "selector") = "16#ffff#",
                  Message   => "Error merging XML nodes: cs selector");
-      end;
+      end Positive;
 
-      Merge_Nodes_Name_Mismatch:
-      declare
+      ----------------------------------------------------------------------
+
+      procedure Nodes_Name_Mismatch
+      is
          Impl : DOM.Core.DOM_Implementation;
          Doc  : constant DOM.Core.Document
            := DOM.Core.Create_Document (Implementation => Impl);
@@ -442,7 +447,10 @@ package body Muxml.Utils.Test_Data.Tests is
                  (Elem => Node_A,
                   Name => "attr") = "foobar",
                  Message   => "Node B merged into Node A");
-      end Merge_Nodes_Name_Mismatch;
+      end Nodes_Name_Mismatch;
+   begin
+      Positive;
+      Nodes_Name_Mismatch;
 --  begin read only
    end Test_Merge;
 --  end read only

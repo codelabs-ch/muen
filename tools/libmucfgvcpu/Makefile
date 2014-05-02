@@ -1,5 +1,7 @@
 COMPONENT = libmucfgvcpu
 
+DEPENDS = libmutools
+
 PROFILE_FILES = \
 	$(GEN_DIR)/mucfgvcpu-profile_native.ads \
 	$(GEN_DIR)/mucfgvcpu-profile_linux.ads

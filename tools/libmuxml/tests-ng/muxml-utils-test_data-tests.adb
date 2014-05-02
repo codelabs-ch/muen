@@ -198,12 +198,55 @@ package body Muxml.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Impl : DOM.Core.DOM_Implementation;
+      Data : XML_Data_Type;
+      Node : DOM.Core.Node;
    begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "parent");
+      Append_Child
+        (Node      => Node,
+         New_Child => DOM.Core.Documents.Create_Text_Node
+           (Doc  => Data.Doc,
+            Data => "parent text"));
+      Append_Child
+        (Node      => Data.Doc,
+         New_Child => Node);
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "child"));
+      Append_Child
+        (Node      => Node,
+         New_Child => DOM.Core.Documents.Create_Text_Node
+           (Doc  => Data.Doc,
+            Data => "child text"));
+      Append_Child
+        (Node      => Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "grandchild"));
 
+      Assert (Condition => Get_Element_Value
+              (Doc   => Data.Doc,
+               XPath => "parent") = "parent text",
+              Message   => "Element value mismatch (1)");
+      Assert (Condition => Get_Element_Value
+              (Doc   => Data.Doc,
+               XPath => "parent/child") = "child text",
+              Message   => "Element value mismatch (2)");
+      Assert (Condition => Get_Element_Value
+              (Doc   => Data.Doc,
+               XPath => "//grandchild") = "",
+              Message   => "Element value mismatch (3)");
+      Assert (Condition => Get_Element_Value
+              (Doc   => Data.Doc,
+               XPath => "nonexistent") = "",
+              Message   => "Element value mismatch (4)");
 --  begin read only
    end Test_Get_Element_Value;
 --  end read only

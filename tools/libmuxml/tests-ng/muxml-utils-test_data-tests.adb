@@ -139,12 +139,50 @@ package body Muxml.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type DOM.Core.Node;
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : XML_Data_Type;
+      Node : DOM.Core.Node;
    begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "parent");
+      Append_Child
+        (Node      => Data.Doc,
+         New_Child => Node);
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "child"));
+      Append_Child
+        (Node      => Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "grandchild"));
 
+      Assert (Condition => DOM.Core.Nodes.Node_Name
+              (N => Get_Element
+               (Doc   => Data.Doc,
+                XPath => "parent")) = "parent",
+              Message   => "Element mismatch (1)");
+      Assert (Condition => DOM.Core.Nodes.Node_Name
+              (N => Get_Element
+               (Doc   => Data.Doc,
+                XPath => "/parent/child")) = "child",
+              Message   => "Element mismatch (2)");
+      Assert (Condition => DOM.Core.Nodes.Node_Name
+              (N => Get_Element
+               (Doc   => Data.Doc,
+                XPath => "//grandchild")) = "grandchild",
+              Message   => "Element mismatch (3)");
+      Assert (Condition => Get_Element
+              (Doc   => Data.Doc,
+               XPath => "nonexistent") = null,
+              Message   => "Element mismatch (4)");
 --  begin read only
    end Test_Get_Element;
 --  end read only

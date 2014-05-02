@@ -92,12 +92,38 @@ package body Muxml.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Impl : DOM.Core.DOM_Implementation;
+      Data : XML_Data_Type;
+      Node : DOM.Core.Node;
    begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "elem");
+      Append_Child (Node      => Data.Doc,
+                    New_Child => Node);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Set_Attribute (Doc   => Data.Doc,
+                     XPath => "/elem",
+                     Name  => "test",
+                     Value => "value");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "test") = "value",
+              Message   => "Attribute value mismatch");
 
+      begin
+         Set_Attribute (Doc   => Data.Doc,
+                        XPath => "/nonexistent",
+                        Name  => "foo",
+                        Value => "bar");
+      exception
+         when E : XML_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to set attribute 'foo' to value 'bar' - No "
+                    & "element found at XPath '/nonexistent'",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Set_Attribute;
 --  end read only

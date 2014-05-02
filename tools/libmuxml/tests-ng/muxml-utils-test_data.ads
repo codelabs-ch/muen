@@ -6,10 +6,13 @@
 with AUnit.Test_Fixtures;
 
 with Ada.Exceptions;
+with Ada.Strings.Unbounded;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
+
+with McKae.XML.XPath.XIA;
 
 package Muxml.Utils.Test_Data is
 

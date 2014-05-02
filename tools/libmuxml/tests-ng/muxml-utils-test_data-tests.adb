@@ -448,9 +448,63 @@ package body Muxml.Utils.Test_Data.Tests is
                   Name => "attr") = "foobar",
                  Message   => "Node B merged into Node A");
       end Nodes_Name_Mismatch;
+
+      ----------------------------------------------------------------------
+
+      procedure Nodes_With_List
+      is
+         use Ada.Strings.Unbounded;
+
+         Data : XML_Data_Type;
+         Impl : DOM.Core.DOM_Implementation;
+         Doc  : constant DOM.Core.Document
+           := DOM.Core.Create_Document (Implementation => Impl);
+         Node, Tmp, MSRs_Node : DOM.Core.Node;
+      begin
+         Parse (Data => Data,
+                Kind => VCPU_Profile,
+                File => "data/vcpu_profile.xml");
+
+         MSRs_Node := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Data.Doc,
+               XPath => "/vcpu/registers/msrs"),
+            Index => 0);
+
+         --  Construct the following XML structure:
+         --  <msrs><msr start="16#0174#"/></msrs>
+
+         Node := DOM.Core.Documents.Create_Element
+           (Doc      => Doc,
+            Tag_Name => "msr");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "start",
+            Value => "16#0174#");
+         Tmp := DOM.Core.Documents.Create_Element
+           (Doc      => Doc,
+            Tag_Name => "msrs");
+         Append_Child (Node      => Tmp,
+                       New_Child => Node);
+
+         Merge (Left      => MSRs_Node,
+                Right     => Tmp,
+                List_Tags => (1 => To_Unbounded_String ("msr")));
+
+         declare
+            MSR_Count : constant Natural := DOM.Core.Nodes.Length
+              (List => McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Data.Doc,
+                  XPath => "/vcpu/registers/msrs/msr"));
+         begin
+            Assert (Condition => MSR_Count = 3,
+                    Message   => "Error merging child element list");
+         end;
+      end Nodes_With_List;
    begin
       Positive;
       Nodes_Name_Mismatch;
+      Nodes_With_List;
 --  begin read only
    end Test_Merge;
 --  end read only

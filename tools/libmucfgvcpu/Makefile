@@ -1,8 +1,8 @@
 COMPONENT = libmucfgvcpu
 
 PROFILE_FILES = \
-   $(GEN_DIR)/mucfgvcpu-profile_native.ads \
-   $(GEN_DIR)/mucfgvcpu-profile_linux.ads
+	$(GEN_DIR)/mucfgvcpu-profile_native.ads \
+	$(GEN_DIR)/mucfgvcpu-profile_linux.ads
 
 COMPONENT_DEPS = $(PROFILE_FILES)
 TEST_DEPS      = $(COMPONENT_DEPS)

@@ -1,13 +1,17 @@
 include ../../Makeconf
 
 TEST_RUNNER = @obj/tests/test_runner $(TEST_OPTS)
+TOOLS_DIR   = $(TOP_DIR)/tools
 
 all: $(COMPONENT)
+
+$(DEPENDS):
+	@$(MAKE) -s -C $(TOOLS_DIR)/$@
 
 tests: test_$(COMPONENT)
 	$(TEST_RUNNER)
 
-$(COMPONENT): $(COMPONENT_DEPS)
+$(COMPONENT): $(DEPENDS) $(COMPONENT_DEPS)
 	@gprbuild $(BUILD_OPTS) -P$@
 
 test_$(COMPONENT): $(TEST_DEPS)

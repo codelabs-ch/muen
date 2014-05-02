@@ -262,12 +262,39 @@ package body Muxml.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Impl        : DOM.Core.DOM_Implementation;
+      Data        : XML_Data_Type;
+      Node        : DOM.Core.Node;
+      Left, Right : DOM.Core.Node_List;
    begin
+      Append (Left  => Left,
+              Right => Right);
+      Assert (Condition => DOM.Core.Nodes.Length (List => Left) = 0,
+              Message   => "Length not zero");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "node");
+      Append_Child
+        (Node      => Data.Doc,
+         New_Child => Node);
+
+      Left := DOM.Core.Documents.Get_Elements_By_Tag_Name
+        (Doc      => Data.Doc,
+         Tag_Name => "node");
+      Assert (Condition => DOM.Core.Nodes.Length (List => Left) = 1,
+              Message   => "Left length not 1:" & DOM.Core.Nodes.Length
+                (List => Left)'Img);
+
+      Right := Left;
+
+      Append (Left  => Left,
+              Right => Right);
+      Assert (Condition => DOM.Core.Nodes.Length (List => Left) = 2,
+              Message   => "Length not 2:" & DOM.Core.Nodes.Length
+                (List => Left)'Img);
 --  begin read only
    end Test_Append;
 --  end read only

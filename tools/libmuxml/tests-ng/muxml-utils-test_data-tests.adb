@@ -137,8 +137,8 @@ package body Muxml.Utils.Test_Data.Tests is
                                                  Tag_Name => "node");
       Child := DOM.Core.Documents.Create_Element (Doc     => Data.Doc,
                                                   Tag_Name => "child");
-      Utils.Append_Child (Node      => Node,
-                          New_Child => Child);
+      Append_Child (Node      => Node,
+                    New_Child => Child);
 
       Assert (Condition => DOM.Core.Nodes.Has_Child_Nodes (N => Node),
               Message   => "Error appending child");
@@ -184,7 +184,7 @@ package body Muxml.Utils.Test_Data.Tests is
            (Elem  => Node,
             Name  => "selector",
             Value => "16#ffff#");
-         Utils.Append_Child
+         Append_Child
            (Node      => Node,
             New_Child => DOM.Core.Documents.Create_Text_Node
               (Doc  => Doc,
@@ -192,33 +192,33 @@ package body Muxml.Utils.Test_Data.Tests is
          Tmp := DOM.Core.Documents.Create_Element
            (Doc      => Doc,
             Tag_Name => "segments");
-         Utils.Append_Child (Node      => Tmp,
-                             New_Child => Node);
+         Append_Child (Node      => Tmp,
+                       New_Child => Node);
          Node := DOM.Core.Documents.Create_Element
            (Doc      => Doc,
             Tag_Name => "vcpu");
-         Utils.Append_Child (Node      => Node,
-                             New_Child => Tmp);
-         Utils.Append_Child
+         Append_Child (Node      => Node,
+                       New_Child => Tmp);
+         Append_Child
            (Node      => Doc,
             New_Child => Node);
 
          Assert
-           (Condition => Utils.Get_Attribute
+           (Condition => Get_Attribute
               (Doc   => Data.Doc,
                XPath => "/vcpu/segments/cs",
                Name  => "selector") = "16#0008#",
             Message   => "Unexpected cs selector attribute in vcpu policy");
 
-         Utils.Merge (Left  => Data.Doc,
-                      Right => Doc);
+         Merge (Left  => Data.Doc,
+                Right => Doc);
 
-         Assert (Condition => Utils.Get_Attribute
+         Assert (Condition => Get_Attribute
                  (Doc   => Data.Doc,
                   XPath => "/vcpu/segments/cs",
                   Name  => "access") = "16#cafe#",
                  Message   => "Error merging XML nodes: cs access");
-         Assert (Condition => Utils.Get_Attribute
+         Assert (Condition => Get_Attribute
                  (Doc   => Data.Doc,
                   XPath => "/vcpu/segments/cs",
                   Name  => "selector") = "16#ffff#",
@@ -239,8 +239,8 @@ package body Muxml.Utils.Test_Data.Tests is
            (Elem  => Node_A,
             Name  => "attr",
             Value => "foobar");
-         Utils.Append_Child (Node      => Doc,
-                             New_Child => Node_A);
+         Append_Child (Node      => Doc,
+                       New_Child => Node_A);
 
          Node_B := DOM.Core.Documents.Create_Element
            (Doc      => Doc,
@@ -250,8 +250,8 @@ package body Muxml.Utils.Test_Data.Tests is
             Name  => "attr",
             Value => "16#cafe#");
 
-         Utils.Merge (Left  => Node_A,
-                      Right => Node_B);
+         Merge (Left  => Node_A,
+                Right => Node_B);
 
          Assert (Condition => DOM.Core.Elements.Get_Attribute
                  (Elem => Node_A,
@@ -322,7 +322,7 @@ package body Muxml.Utils.Test_Data.Tests is
                  Message   => "Exception expected");
 
       exception
-         when E : Utils.XML_Error =>
+         when E : XML_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Unable to remove child 'elem' from node '#document'",
                     Message   => "Exception mismatch");

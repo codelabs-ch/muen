@@ -22,10 +22,9 @@ package body Input_Sources.Strings.Local.Test_Data.Tests is
 
       Str_Input : Input_Sources.Strings.String_Input;
    begin
-      Input_Sources.Strings.Local.Open
-        (Str      => "<doc>the doc</doc>",
-         Encoding => Unicode.CES.Utf8.Utf8_Encoding,
-         Input    => Str_Input);
+      Open (Str      => "<doc>the doc</doc>",
+            Encoding => Unicode.CES.Utf8.Utf8_Encoding,
+            Input    => Str_Input);
 
       Assert (Condition => Str_Input.Index = Str_Input.Buffer'First
               + Str_Input.Prolog_Size,

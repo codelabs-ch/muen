@@ -50,7 +50,7 @@ package body Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests is
          pragma Unreferenced (Data);
       begin
          Parse (Data => Data,
-                Kind => Muxml.Format_B,
+                Kind => Format_B,
                 File => "data/format_a.xml");
          Assert (Condition => False,
                  Message   => "Exception expected (1)");
@@ -65,7 +65,7 @@ package body Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests is
          pragma Unreferenced (Data);
       begin
          Parse (Data => Data,
-                Kind => Muxml.Format_B,
+                Kind => Format_B,
                 File => "data/invalid.xml");
          Assert (Condition => False,
                  Message   => "Exception expected (1)");
@@ -83,7 +83,7 @@ package body Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests is
          pragma Unreferenced (Data);
       begin
          Parse (Data => Data,
-                Kind => Muxml.Format_B,
+                Kind => Format_B,
                 File => "data/invalid");
 
          Assert (Condition => False,
@@ -104,7 +104,7 @@ package body Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests is
          pragma Unreferenced (Data);
       begin
          Parse (Data => Data,
-                Kind => Muxml.Format_B,
+                Kind => Format_B,
                 File => "nonexistent");
          Assert (Condition => False,
                  Message   => "Exception expected (3)");
@@ -132,13 +132,13 @@ package body Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests is
 
       XML_Data : constant String := Test_Utils.Read_File
         (Filename => "data/vcpu_profile.xml");
-      Data : Muxml.XML_Data_Type;
+      Data : XML_Data_Type;
    begin
       Parse_String (Data => Data,
-                    Kind => Muxml.VCPU_Profile,
+                    Kind => VCPU_Profile,
                     XML  => XML_Data);
       Write (Data => Data,
-             Kind => Muxml.VCPU_Profile,
+             Kind => VCPU_Profile,
              File => "obj/vcpu_profile_from_string.xml");
 
       Assert
@@ -166,12 +166,12 @@ package body Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests is
       Data : XML_Data_Type;
    begin
       Parse (Data => Data,
-             Kind => Muxml.Format_A,
+             Kind => Format_A,
              File => "data/format_a.xml");
 
       begin
          Write (Data => Data,
-                Kind => Muxml.Format_B,
+                Kind => Format_B,
                 File => "obj/test_policy_b.xml");
          Assert (Condition => False,
                  Message   => "Exception expected");
@@ -197,7 +197,7 @@ package body Muxml.XML_Data_Type_Test_Data.XML_Data_Type_Tests is
       use type DOM.Core.Node;
 
       Impl : DOM.Core.DOM_Implementation;
-      Data : Muxml.XML_Data_Type;
+      Data : XML_Data_Type;
    begin
       Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
       Assert (Condition => DOM.Core.Nodes.Node_Name

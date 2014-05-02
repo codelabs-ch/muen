@@ -6,9 +6,9 @@ LIBS =            \
 	libmucfgvcpu  \
 	libpaging
 
-# Implicitly built libraries
-IMP_LIBS =   \
-	libmulog \
+# Library projects with no unit test suite
+LIBS_NO_TESTS = \
+	libmulog    \
 	libtest
 
 # Tool projects
@@ -32,9 +32,9 @@ TESTS =      \
 	$(TOOLS)
 
 # Projects to clean
-CLEAN =         \
-	$(LIBS)     \
-	$(IMP_LIBS) \
+CLEAN =              \
+	$(LIBS)          \
+	$(LIBS_NO_TESTS) \
 	$(TOOLS)
 
 all: tools

@@ -1,6 +1,8 @@
 COMPONENT = libmutools
 
-DEPENDS = libmuxml
+DEPENDS =    \
+	libmulog \
+	libmuxml
 
 include ../library.mk
 include ../../Makecov

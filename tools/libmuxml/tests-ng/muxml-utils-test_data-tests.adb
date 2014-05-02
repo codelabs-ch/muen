@@ -458,12 +458,42 @@ package body Muxml.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Impl : DOM.Core.DOM_Implementation;
+      Data : XML_Data_Type;
+      Node : DOM.Core.Node;
    begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "top");
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "child1"));
+      Node := DOM.Core.Nodes.Append_Child
+        (N         => Node,
+         New_Child => DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "child2"));
 
+      declare
+         use type DOM.Core.Node;
+
+         Ancestor : DOM.Core.Node
+           := Ancestor_Node
+             (Node  => Node,
+              Level => 2);
+      begin
+         Assert (Condition => DOM.Core.Nodes.Node_Name (N => Ancestor) = "top",
+                 Message   => "Ancestor mismatch (1)");
+
+         Ancestor := Ancestor_Node (Node  => Ancestor,
+                                    Level => 1);
+         Assert (Condition => Ancestor = null,
+                 Message   => "Ancestor mismatch (2)");
+      end;
 --  begin read only
    end Test_Ancestor_Node;
 --  end read only

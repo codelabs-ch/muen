@@ -26,7 +26,7 @@ is
    use Ahven.Framework;
 
    S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Muptgen tests");
+     (Suite_Name => "Mugenpt tests");
 begin
    Add_Test (Suite => S.all,
              T     => new Generator_Tests.Testcase);

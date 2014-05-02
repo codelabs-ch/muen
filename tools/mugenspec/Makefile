@@ -1,5 +1,7 @@
 COMPONENT = mugenspec
 
+DEPENDS = libmutools
+
 TEMPLATES = src/string_templates.ads
 TMPL_SRCS = $(wildcard templates/*)
 

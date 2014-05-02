@@ -36,5 +36,10 @@ build_gnattests: $(DEPENDS) $(TDEPENDS) $(TEST_TARGETS) $(OBJ_DIR)/.harness_stam
 gnattests: build_gnattests
 	$(GNATTEST_RUNNER)
 
+build_gnatcov: $(DEPENDS) $(TDEPENDS) $(COV_TARGETS) $(OBJ_DIR)/.harness_stamp
+	gprbuild $(BUILD_OPTS) -P$(GNATTEST_DRIVER) -XBUILD=tests \
+		-cargs -ftest-coverage -fprofile-arcs \
+		-largs -fprofile-generate
+
 clean:
 	@rm -rf bin obj $(ADDITIONAL_CLEAN)

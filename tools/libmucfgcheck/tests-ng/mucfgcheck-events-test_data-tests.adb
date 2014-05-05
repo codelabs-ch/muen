@@ -138,12 +138,30 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/target/event"
+         & "[@physical='linux_console']",
+         Name  => "physical",
+         Value => "linux_keyboard");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Self_References (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Reference to self in event 'linux_keyboard' of subject "
+                    & "'vt'",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Self_References;
 --  end read only

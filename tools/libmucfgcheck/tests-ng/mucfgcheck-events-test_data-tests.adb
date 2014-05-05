@@ -335,11 +335,10 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Get_Max_ID (Group => Mutools.Types.Vmx_Exit) = 59,
+              Message   => "Invalid VMX exit max ID");
+      Assert (Condition => Get_Max_ID (Group => Mutools.Types.Vmcall) = 31,
+              Message   => "Invalid Vmcall max ID");
 --  begin read only
    end Test_Get_Max_ID;
 --  end read only

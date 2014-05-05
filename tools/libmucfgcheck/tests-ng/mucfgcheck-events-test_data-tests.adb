@@ -295,12 +295,30 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/source/group/event"
+         & "[@logical='resume_linux']",
+         Name  => "id",
+         Value => "256");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Source_Group_Event_ID_Validity (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'sm': ID 256 of event 'resume_linux' invalid "
+                    & "for group VMCALL",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Source_Group_Event_ID_Validity;
 --  end read only

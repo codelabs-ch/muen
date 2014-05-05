@@ -437,12 +437,29 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/memory/memory[@physical='vt|bin']",
+         Name  => "virtualAddress",
+         Value => "16#000e_0500#");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Virtual_Address_Alignment (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Attribute 'virtualAddress => 16#000e_0500#' of 'binary'"
+                    & " logical memory element not page aligned",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Virtual_Address_Alignment;
 --  end read only

@@ -1,5 +1,10 @@
 COMPONENT = mucfgexpand
 
+DEPENDS =         \
+	libmucfgcheck \
+	libmucfgvcpu  \
+	libpaging
+
 include ../component.mk
 include ../../Makecov
 

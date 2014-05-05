@@ -1,12 +1,14 @@
 COMPONENT = libmucfgvcpu
 
-PROFILE_FILES = \
-   $(GEN_DIR)/mucfgvcpu-profile_native.ads \
-   $(GEN_DIR)/mucfgvcpu-profile_linux.ads
+DEPENDS = libmutools
 
-COMPONENT_DEPS = $(PROFILE_FILES)
-TEST_DEPS      = $(COMPONENT_DEPS)
-COV_DEPS       = $(COMPONENT_DEPS)
+PROFILE_FILES = \
+	$(GEN_DIR)/mucfgvcpu-profile_native.ads \
+	$(GEN_DIR)/mucfgvcpu-profile_linux.ads
+
+COMPONENT_TARGETS = $(PROFILE_FILES)
+TEST_TARGETS      = $(COMPONENT_TARGETS)
+COV_TARGETS       = $(COMPONENT_TARGETS)
 
 ADDITIONAL_CLEAN = $(GEN_DIR)
 

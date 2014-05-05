@@ -435,12 +435,31 @@ package body Mucfgcheck.Device.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/devices/"
+         & "device[@physical='port80']",
+         Name  => "physical",
+         Value => "cmos_rtc");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Device_Sharing (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Non-shareable device 'cmos_rtc' is referenced by "
+                    & "multiple logical devices 'time->port80', "
+                    & "'linux->cmos_rtc'",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Device_Sharing;
 --  end read only

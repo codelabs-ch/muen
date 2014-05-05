@@ -58,12 +58,29 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_0|vmxon']",
+         Name  => "size",
+         Value => "16#0001_0012#");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         VMXON_Region_Size (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Attribute 'size => 16#0001_0012#' of 'kernel_0|vmxon' "
+                    & "VMXON memory element not 4K",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_VMXON_Region_Size;
 --  end read only

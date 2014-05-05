@@ -140,12 +140,30 @@ package body Mucfgcheck.Device.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/devices/device/irq"
+         & "[@physical='kbd_irq']",
+         Name  => "physical",
+         Value => "nonexistent");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Physical_IRQ_References (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Physical IRQ 'nonexistent' referenced by logical IRQ"
+                    & " 'kbd_irq' of logical device 'keyboard' not found",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Physical_IRQ_References;
 --  end read only

@@ -348,12 +348,39 @@ package body Mucfgcheck.Device.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      declare
+         Dev  : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/device[@name='vga']");
+         Node : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "memory");
+      begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "name",
+            Value => "buffer");
+         Muxml.Utils.Append_Child
+           (Node      => Dev,
+            New_Child => Node);
 
+         Device_Memory_Name_Uniqueness (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Device 'vga' has multiple memory regions with name"
+                    & " 'buffer'",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Device_Memory_Name_Uniqueness;
 --  end read only

@@ -95,12 +95,36 @@ package body Mucfgcheck.Device.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      declare
+         Serial : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/device[@name='serial']");
+         Node   : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "irq");
+      begin
+         DOM.Core.Elements.Set_Attribute (Elem  => Node,
+                                          Name  => "number",
+                                          Value => "1");
+         Muxml.Utils.Append_Child (Node      => Serial,
+                                   New_Child => Node);
 
+         Physical_IRQ_Uniqueness (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Devices 'serial' and 'keyboard' share IRQ 1",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Physical_IRQ_Uniqueness;
 --  end read only

@@ -59,12 +59,30 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory"
+         & "[@physical='kernel_stack_1']",
+         Name  => "virtualAddress",
+         Value => "16#0031_0000#");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Stack_Address_Equality (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Attribute 'virtualAddress => 16#0031_0000#' of "
+                    & "'kernel_stack_1' kernel stack memory element differs",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Stack_Address_Equality;
 --  end read only

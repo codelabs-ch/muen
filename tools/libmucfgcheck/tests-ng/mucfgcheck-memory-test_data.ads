@@ -5,6 +5,10 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Exceptions;
+
+with Muxml.Utils;
+
 package Mucfgcheck.Memory.Test_Data is
 
 --  begin read only

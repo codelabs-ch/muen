@@ -247,12 +247,29 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='time|vmcs']",
+         Name  => "physicalAddress",
+         Value => "16#0010_0000#");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         VMCS_In_Lowmem (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Attribute 'physicalAddress => 16#0010_0000#' of "
+                    & "'time|vmcs' VMCS memory element not below 1 MiB",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_VMCS_In_Lowmem;
 --  end read only

@@ -79,12 +79,50 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/target/"
+         & "event[@physical='trap_to_sm']",
+         Name  => "physical",
+         Value => "nonexistent_dst");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Subject_Event_References (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Event 'nonexistent_dst' referenced by subject 'sm' does"
+                    & " not exist",
+                    Message   => "Exception mismatch (target)");
+      end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/source/group/"
+         & "event/notify[@physical='resume_linux']",
+         Name  => "physical",
+         Value => "nonexistent_src");
+
+      begin
+         Subject_Event_References (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Event 'nonexistent_src' referenced by subject 'sm' does"
+                    & " not exist",
+                    Message   => "Exception mismatch (source)");
+      end;
 --  begin read only
    end Test_Subject_Event_References;
 --  end read only

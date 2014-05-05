@@ -354,12 +354,53 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use Mutools.Types;
+
+      type ID_Test_Info is record
+         Group : Event_Group_Type;
+         ID    : Natural;
+         Valid : Boolean;
+      end record;
+
+      Test_Data : constant array (Natural range <>) of ID_Test_Info
+        := ((Group => Vmx_Exit,
+             ID    => 0,
+             Valid => True),
+            (Group => Vmx_Exit,
+             ID    => 34,
+             Valid => True),
+            (Group => Vmx_Exit,
+             ID    => 35,
+             Valid => False),
+            (Group => Vmx_Exit,
+             ID    => 38,
+             Valid => False),
+            (Group => Vmx_Exit,
+             ID    => 42,
+             Valid => False),
+            (Group => Vmx_Exit,
+             ID    => 59,
+             Valid => True),
+            (Group => Vmx_Exit,
+             ID    => 60,
+             Valid => False),
+            (Group => Vmcall,
+             ID    => 0,
+             Valid => True),
+            (Group => Vmcall,
+             ID    => 31,
+             Valid => True),
+            (Group => Vmcall,
+             ID    => 32,
+             Valid => False));
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      for Data of Test_Data loop
+         Assert (Condition => Mucfgcheck.Events.Is_Valid_Event_ID
+                 (Group => Data.Group,
+                  ID    => Data.ID) = Data.Valid,
+                 Message   => "Unexpected result for ID" & Data.ID'Img
+                 & " of group " & Data.Group'Img);
+      end loop;
 --  begin read only
    end Test_Is_Valid_Event_ID;
 --  end read only

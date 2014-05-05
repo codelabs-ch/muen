@@ -550,13 +550,58 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
-
    begin
+      declare
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='kernel_text']",
+            Name  => "size",
+            Value => "16#1000_0000#");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+         begin
+            Physical_Memory_Overlap (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
 
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Overlap of physical or device memory region "
+                       & "'linux|ram' and 'kernel_text'",
+                       Message   => "Exception mismatch");
+         end;
+      end;
+
+      declare
+         Data : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Data,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/memory/memory[@name='kernel_text']",
+            Name  => "physicalAddress",
+            Value => "16#000b_7000#");
+
+         begin
+            Physical_Memory_Overlap (XML_Data => Data);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+
+         exception
+            when E : Validation_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Overlap of physical or device memory region "
+                       & "'kernel_text' and 'buffer'",
+                       Message   => "Exception mismatch");
+         end;
+      end;
 --  begin read only
    end Test_Physical_Memory_Overlap;
 --  end read only

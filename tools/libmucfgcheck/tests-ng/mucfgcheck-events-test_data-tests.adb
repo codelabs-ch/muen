@@ -20,12 +20,50 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      declare
+         Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/events/target/"
+            & "event[@physical='trap_to_sm']/..");
+      begin
+         Muxml.Utils.Remove_Child
+           (Node       => Node,
+            Child_Name => "event");
 
+         Source_Targets (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid number of targets for event 'trap_to_sm': 0",
+                    Message   => "Exception mismatch (target)");
+      end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='trap_to_sm']",
+         Name  => "name",
+         Value => "new_event");
+
+      begin
+         Source_Targets (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid number of sources for event 'new_event': 0",
+                    Message   => "Exception mismatch (source)");
+      end;
 --  begin read only
    end Test_Source_Targets;
 --  end read only

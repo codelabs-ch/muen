@@ -323,12 +323,29 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_0|vmxon']",
+         Name  => "name",
+         Value => "kernel_1|vmxon");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Physical_Memory_Name_Uniqueness (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Multiple physical memory regions with name"
+                    & " 'kernel_1|vmxon'",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Physical_Memory_Name_Uniqueness;
 --  end read only

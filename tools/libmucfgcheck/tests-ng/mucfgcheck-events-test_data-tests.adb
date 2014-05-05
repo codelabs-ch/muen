@@ -177,12 +177,31 @@ package body Mucfgcheck.Events.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/events/source/group/event/"
+         & "notify[@physical='linux_keyboard']",
+         Name  => "physical",
+         Value => "resume_linux");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Switch_Same_Core (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Destination subject 'linux' (CPU 1) in subject's 'vt' "
+                    & "(CPU 0) switch notification 'resume_linux' invalid - "
+                    & "must run on the same CPU",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Switch_Same_Core;
 --  end read only

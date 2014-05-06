@@ -148,12 +148,83 @@ package body Mucfgcheck.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Impl         : DOM.Core.DOM_Implementation;
+      Data         : Muxml.XML_Data_Type;
+      Parent, Node : DOM.Core.Node;
+      Nodes        : DOM.Core.Node_List;
    begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Parent := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "parent");
+      Muxml.Utils.Append_Child
+        (Node      => Data.Doc,
+         New_Child => Parent);
 
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "node");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "value",
+         Value => "12");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "name",
+         Value => "new_node");
+      Muxml.Utils.Append_Child
+        (Node      => Parent,
+         New_Child => Node);
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "node");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "value",
+         Value => "12");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "name",
+         Value => "new_node");
+      Muxml.Utils.Append_Child
+        (Node      => Parent,
+         New_Child => Node);
+
+      Nodes := DOM.Core.Documents.Get_Elements_By_Tag_Name
+        (Doc      => Data.Doc,
+         Tag_Name => "node");
+
+      --  Should not raise an exception.
+
+      Check_Attribute
+        (Nodes     => Nodes,
+         Node_Type => "test",
+         Attr      => "value",
+         Name_Attr => "name",
+         Test      => Equals'Access,
+         Right     => 12,
+         Error_Msg => "not equal 12");
+
+      begin
+         Check_Attribute
+           (Nodes     => Nodes,
+            Node_Type => "test",
+            Attr      => "value",
+            Name_Attr => "name",
+            Test      => Equals'Access,
+            Right     => 13,
+            Error_Msg => "not equal 13");
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Attribute 'value => 12' of 'new_node' test element not "
+                    & "equal 13",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Check_Attribute;
 --  end read only

@@ -5,6 +5,13 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Exceptions;
+
+with DOM.Core.Elements;
+with DOM.Core.Documents;
+
+with Muxml.Utils;
+
 package Mucfgcheck.Test_Data is
 
 --  begin read only

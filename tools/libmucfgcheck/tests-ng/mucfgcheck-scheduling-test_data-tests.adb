@@ -20,12 +20,33 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      declare
+         Node : DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/scheduling/majorFrame/cpu[@id='3']");
+      begin
+         Node := DOM.Core.Nodes.Remove_Child
+           (N         => DOM.Core.Nodes.Parent_Node (N => Node),
+            Old_Child => Node);
+         pragma Unreferenced (Node);
 
+         CPU_Element_Count (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   =>"Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "CPU element count of 3 in scheduling plan invalid, "
+                    & "logical CPU count is 4",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_CPU_Element_Count;
 --  end read only
@@ -41,12 +62,30 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/majorFrame/cpu/"
+         & "minorFrame[@subject='vt']",
+         Name  => "subject",
+         Value => "nonexistent");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Subject_References (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   =>"Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'nonexistent' referenced in scheduling plan not"
+                    & " found",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Subject_References;
 --  end read only
@@ -62,12 +101,30 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/majorFrame/cpu/"
+         & "minorFrame[@subject='vt']",
+         Name  => "subject",
+         Value => "linux");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Subject_CPU_Affinity (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   =>"Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'linux' scheduled on wrong CPU 0,"
+                    & " should be 1",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Subject_CPU_Affinity;
 --  end read only
@@ -83,12 +140,29 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/scheduling/majorFrame/cpu/minorFrame[@ticks='60']",
+         Name  => "ticks",
+         Value => "42");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Major_Frame_Ticks (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   =>"Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid CPU elements in scheduling plan, tick counts "
+                    & "differ",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Major_Frame_Ticks;
 --  end read only

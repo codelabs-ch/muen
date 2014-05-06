@@ -5,6 +5,12 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Exceptions;
+
+with DOM.Core.Nodes;
+
+with Muxml.Utils;
+
 package Mucfgcheck.Scheduling.Test_Data is
 
 --  begin read only

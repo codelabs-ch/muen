@@ -15,10 +15,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Test_Utils;
-with Alloc.Map;
 with Ada.Text_IO;
 with Ada.Strings.Unbounded;
+
+with Interfaces;
+
+with Alloc.Map;
+
+with Test_Utils;
 
 package body Map_Tests
 is
@@ -368,6 +372,51 @@ is
 
    ----------------------------------------------------------------------------
 
+   procedure Get_Region_By_Name
+   is
+      use type Ada.Strings.Unbounded.Unbounded_String;
+      use type Interfaces.Unsigned_64;
+
+      M : Map_Type;
+   begin
+      M.Insert_Empty_Region (Name          => U ("foobar"),
+                             Allocatable   => True,
+                             First_Address => 1001,
+                             Last_Address  => 2000);
+
+      declare
+         Region : constant Region_Type :=
+           Get_Region (Map  => M,
+                       Name => "foobar");
+      begin
+         Assert (Condition => Region.Name = U ("foobar"),
+                 Message   => "Region name mismatch");
+         Assert (Condition => Region.Kind = Alloc.Map.Empty,
+                 Message   => "Region kind mismatch");
+         Assert (Condition => Region.First_Address = 1001,
+                 Message   => "Region first address mismatch");
+         Assert (Condition => Region.Last_Address = 2000,
+                 Message   => "Region last address mismatch");
+         Assert (Condition => Region.Allocatable,
+                 Message   => "Region not allocatable");
+      end;
+
+      begin
+         declare
+            Dummy : constant Region_Type
+              := Get_Region (Map  => M,
+                             Name => "nonexistent");
+         begin
+            Fail (Message => "Exception expected");
+         end;
+
+      exception
+         when No_Region => null;
+      end;
+   end Get_Region_By_Name;
+
+   ----------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -462,6 +511,9 @@ is
       T.Add_Test_Routine
         (Routine => Device_Regions_Not_Merged'Access,
          Name    => "Merging of device regions");
+      T.Add_Test_Routine
+        (Routine => Get_Region_By_Name'Access,
+         Name    => "Get region from map by name");
    end Initialize;
 
    -------------------------------------------------------------------------

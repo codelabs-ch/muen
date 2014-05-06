@@ -135,4 +135,7 @@ is
    --  regular empty regions
    procedure Device_Regions_Not_Merged;
 
+   --  Get region from map by name.
+   procedure Get_Region_By_Name;
+
 end Map_Tests;

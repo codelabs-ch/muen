@@ -1,5 +1,7 @@
 --
 --  Copyright (C) 2014  Alexander Senier <mail@senier.net>
+--  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -121,6 +123,30 @@ is
          Last_Address  => First_Multiple + Size - 1);
 
    end Allocate_Variable;
+
+   -------------------------------------------------------------------------
+
+   function Get_Region
+     (Map  : Map_Type;
+      Name : String)
+      return Region_Type
+   is
+      use Ada.Strings.Unbounded;
+      use type Region_List_Package.Cursor;
+
+      U_Name : constant Unbounded_String
+        := To_Unbounded_String (Source => Name);
+      Cur    : Region_List_Package.Cursor := Map.Data.First;
+   begin
+      while Cur /= Region_List_Package.No_Element loop
+         if Region_List_Package.Element (Position => Cur).Name = U_Name then
+            return Region_List_Package.Element (Position => Cur);
+         end if;
+         Cur := Region_List_Package.Next (Position => Cur);
+      end loop;
+
+      raise No_Region with "Unable to find region with name '" & Name & "'";
+   end Get_Region;
 
    -------------------------------------------------------------------------
 

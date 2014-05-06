@@ -19,13 +19,12 @@
 
 with Ada.Directories;
 with Muxml;
-with Alloc.Allocator;
+with Allocator;
 with Test_Utils;
 
 package body Allocation_Tests
 is
    use Ahven;
-   use Alloc;
    use Test_Utils;
 
    -------------------------------------------------------------------------
@@ -194,7 +193,7 @@ is
       pragma Unreferenced (Policy);
       Fail ("Overlap undetected");
    exception
-      when Alloc.Allocator.Overlapping_Physical_Memory => null;
+      when Allocator.Overlapping_Physical_Memory => null;
    end Overlap_Between_Device_Memory;
 
    -------------------------------------------------------------------------
@@ -213,7 +212,7 @@ is
       pragma Unreferenced (Policy);
       Fail ("Overlap undetected");
    exception
-      when Alloc.Allocator.Overlapping_Physical_Memory => null;
+      when Allocator.Overlapping_Physical_Memory => null;
    end Overlap_Between_Devices;
 
    -------------------------------------------------------------------------
@@ -232,7 +231,7 @@ is
       pragma Unreferenced (Policy);
       Fail ("Overlap undetected");
    exception
-      when Alloc.Allocator.Overlapping_Physical_Memory => null;
+      when Allocator.Overlapping_Physical_Memory => null;
    end Overlapping_Devices;
 
    -------------------------------------------------------------------------
@@ -252,7 +251,7 @@ is
       Fail ("Overlap undetected");
    exception
       --  Should raise an exception.
-      when Alloc.Allocator.Overlapping_Physical_Memory => null;
+      when Allocator.Overlapping_Physical_Memory => null;
    end Overlapping_Physical_Memory;
 
 end Allocation_Tests;

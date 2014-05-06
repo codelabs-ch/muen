@@ -29,7 +29,7 @@ with Ada.Exceptions;
 with Mulog;
 with Mutools.Utils;
 
-package body Alloc.Allocator
+package body Allocator
 is
 
    -------------------------------------------------------------------------
@@ -397,4 +397,4 @@ is
            with Ada.Exceptions.Exception_Message (E);
    end Write;
 
-end Alloc.Allocator;
+end Allocator;

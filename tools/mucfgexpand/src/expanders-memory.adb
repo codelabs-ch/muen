@@ -371,7 +371,7 @@ is
          Size        => "16#1000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
-         Memory_Type => "system");
+         Memory_Type => "kernel_interface");
    end Add_Tau0_Interface;
 
    -------------------------------------------------------------------------

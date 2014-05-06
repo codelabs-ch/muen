@@ -20,12 +20,30 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/platform/memory/"
+         & "memoryBlock[@name='extended_mem_1']",
+         Name  => "size",
+         Value => "16#1000#");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Memory_Space (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Allocated 266039296 bytes of physical memory but only "
+                    & "659456 bytes available by the platform",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Memory_Space;
 --  end read only
@@ -41,12 +59,29 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/platform/memory/memoryBlock[@name='base_mem']",
+         Name  => "size",
+         Value => "16#1000_0000#");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Memory_Block_Overlap (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Overlap of platform memory block 'base_mem' and"
+                    & " 'extended_mem_1'",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Memory_Block_Overlap;
 --  end read only

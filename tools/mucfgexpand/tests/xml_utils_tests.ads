@@ -35,4 +35,7 @@ is
    --  Calculate size of paging structures.
    procedure Calculate_PT_Size;
 
+   --  Calculate address of newly allocated region.
+   procedure Calculate_Region_Address;
+
 end XML_Utils_Tests;

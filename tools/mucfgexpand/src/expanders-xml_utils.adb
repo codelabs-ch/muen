@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+
 with DOM.Core.Nodes;
 with DOM.Core.Documents;
 with DOM.Core.Elements;
@@ -24,11 +26,18 @@ with McKae.XML.XPath.XIA;
 
 with Paging.Memory;
 
+with Alloc.Map;
+
 with Mutools.Constants;
 with Muxml.Utils;
 
 package body Expanders.XML_Utils
 is
+
+   function U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
 
    -------------------------------------------------------------------------
 
@@ -154,6 +163,94 @@ is
            (PML4s + PDPTs + PDs + PTs) * Mutools.Constants.Page_Size;
       end;
    end Calculate_PT_Size;
+
+   -------------------------------------------------------------------------
+
+   function Calculate_Region_Address
+     (Policy             : Muxml.XML_Data_Type;
+      Fixed_Memory       : DOM.Core.Node_List;
+      Device_Memory      : DOM.Core.Node_List;
+      Address_Space_Size : Interfaces.Unsigned_64;
+      Region_Size        : Interfaces.Unsigned_64)
+      return Interfaces.Unsigned_64
+   is
+      Map : Alloc.Map.Map_Type;
+   begin
+      Map.Insert_Empty_Region (Name          => U ("Mem"),
+                               Allocatable   => True,
+                               First_Address => 0,
+                               Last_Address  => Address_Space_Size);
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Fixed_Memory) - 1 loop
+         declare
+            use type Interfaces.Unsigned_64;
+
+            Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Fixed_Memory,
+                                      Index => I);
+            Virt_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "logical");
+            Phy_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "physical");
+            Virt_Addr : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Node,
+                    Name => "virtualAddress"));
+            Size : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (Muxml.Utils.Get_Attribute
+                   (Doc   =>  Policy.Doc,
+                    XPath => "/system/memory/memory[@name='" & Phy_Name & "']",
+                    Name  => "size"));
+         begin
+            Map.Allocate_Fixed (Name          => U (Virt_Name),
+                                First_Address => Virt_Addr,
+                                Last_Address  => Virt_Addr + Size - 1);
+         end;
+      end loop;
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Device_Memory) - 1 loop
+         declare
+            use type Interfaces.Unsigned_64;
+
+            Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Device_Memory,
+                                      Index => I);
+            Virt_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "logical");
+            Phy_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "physical");
+            Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+               Name => "physical");
+            Virt_Addr : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Node,
+                    Name => "virtualAddress"));
+            Size : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (Muxml.Utils.Get_Attribute
+                   (Doc   =>  Policy.Doc,
+                    XPath => "/system/platform/device[@name='" & Dev_Name
+                    & "']/memory[@name='" & Phy_Name & "']",
+                    Name  => "size"));
+         begin
+            Map.Allocate_Fixed (Name          => U (Virt_Name),
+                                First_Address => Virt_Addr,
+                                Last_Address  => Virt_Addr + Size - 1);
+         end;
+      end loop;
+
+      Map.Allocate_Variable (Name => U ("New_Region"),
+                             Size => Region_Size);
+      return Map.Get_Region (Name => "New_Region").First_Address;
+   end Calculate_Region_Address;
 
    -------------------------------------------------------------------------
 

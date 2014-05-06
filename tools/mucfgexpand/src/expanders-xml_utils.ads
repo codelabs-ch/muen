@@ -62,4 +62,15 @@ is
       Virt_Mem_XPath     : String)
       return Interfaces.Unsigned_64;
 
+   --  Allocate a region of given region size in the address space with the
+   --  specified size and reserved (fixed and device) memory regions. Return
+   --  the virtual start address of the new region.
+   function Calculate_Region_Address
+     (Policy             : Muxml.XML_Data_Type;
+      Fixed_Memory       : DOM.Core.Node_List;
+      Device_Memory      : DOM.Core.Node_List;
+      Address_Space_Size : Interfaces.Unsigned_64;
+      Region_Size        : Interfaces.Unsigned_64)
+      return Interfaces.Unsigned_64;
+
 end Expanders.XML_Utils;

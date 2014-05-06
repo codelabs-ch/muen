@@ -108,6 +108,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Kernel_PT_Region_Presence'Access,
          Name    => "Validate kernel PT region presence");
+      T.Add_Test_Routine
+        (Routine => Validate_Kernel_Memory_Mappings'Access,
+         Name    => "Validate kernel memory mappings");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -165,6 +168,34 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_Entity_Name_Encoding;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Kernel_Memory_Mappings
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='vt|bin']",
+         Name  => "type",
+         Value => "kernel");
+
+      begin
+         Mucfgcheck.Memory.Kernel_Memory_Mappings (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Kernel memory region 'vt|bin' mapped by logical memory "
+                    & "region 'binary' of subject 'vt'",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Kernel_Memory_Mappings;
 
    -------------------------------------------------------------------------
 

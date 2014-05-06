@@ -40,7 +40,7 @@ package Mucfgcheck.Test_Data.Tests is
    --  mucfgcheck.ads:106:4:Is_Valid_Reference
 
    procedure Test_Match_Subject_Name_cb4b01 (Gnattest_T : in out Test);
-   --  mucfgcheck.ads:109:4:Match_Subject_Name
+   --  mucfgcheck.ads:110:4:Match_Subject_Name
 
 end Mucfgcheck.Test_Data.Tests;
 --  end read only

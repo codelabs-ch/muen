@@ -32,4 +32,7 @@ is
    --  Validate subject name uniqueness.
    procedure Validate_Name_Uniqueness;
 
+   --  Validate memory types.
+   procedure Validate_Memory_Types;
+
 end Subject_Tests;

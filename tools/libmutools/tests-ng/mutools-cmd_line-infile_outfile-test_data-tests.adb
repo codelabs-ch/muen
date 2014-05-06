@@ -59,11 +59,20 @@ package body Mutools.Cmd_Line.Infile_Outfile.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
+      File_In  := Infile;
+      File_Out := Outfile;
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Run (Kind    => Muxml.Format_Src,
+           Process => Immutable_Process'Access);
+      Assert (Condition => Process_Counter = 2,
+              Message   => "Counter not 2");
 
+      Process_Counter := 1;
+
+   exception
+      when others =>
+         Process_Counter := 1;
+         raise;
 --  begin read only
    end Test_1_Run;
 --  end read only

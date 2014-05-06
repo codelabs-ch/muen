@@ -22,4 +22,12 @@ package Mucfgcheck.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
+   --  Create new memory node with given attributes.
+   function Create_Mem_Node
+     (Doc     : DOM.Core.Document;
+      Name    : String;
+      Address : String;
+      Size    : String)
+      return DOM.Core.Node;
+
 end Mucfgcheck.Test_Data;

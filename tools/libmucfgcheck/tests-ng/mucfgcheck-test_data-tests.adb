@@ -240,39 +240,7 @@ package body Mucfgcheck.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Data : Muxml.XML_Data_Type;
-
-      --  Create new memory node with given attributes.
-      function Create_Mem_Node
-        (Name, Address, Size : String)
-         return DOM.Core.Node;
-
-      ----------------------------------------------------------------------
-
-      function Create_Mem_Node
-        (Name, Address, Size : String)
-         return DOM.Core.Node
-      is
-      begin
-         return Node : DOM.Core.Node do
-            Node := DOM.Core.Documents.Create_Element
-              (Doc      => Data.Doc,
-               Tag_Name => "memory");
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Node,
-               Name  => "name",
-               Value => Name);
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Node,
-               Name  => "address",
-               Value => Address);
-            DOM.Core.Elements.Set_Attribute
-              (Elem  => Node,
-               Name  => "size",
-               Value => Size);
-         end return;
-      end Create_Mem_Node;
-
+      Data         : Muxml.XML_Data_Type;
       Impl         : DOM.Core.DOM_Implementation;
       Parent, Node : DOM.Core.Node;
       Nodes        : DOM.Core.Node_List;
@@ -287,7 +255,8 @@ package body Mucfgcheck.Test_Data.Tests is
          New_Child => Parent);
 
       Node := Create_Mem_Node
-        (Name    => "mem1",
+        (Doc     => Data.Doc,
+         Name    => "mem1",
          Address => "16#1000#",
          Size    => "16#1000#");
       Muxml.Utils.Append_Child
@@ -295,7 +264,8 @@ package body Mucfgcheck.Test_Data.Tests is
          New_Child => Node);
 
       Node := Create_Mem_Node
-        (Name    => "mem2",
+        (Doc     => Data.Doc,
+         Name    => "mem2",
          Address => "16#2000#",
          Size    => "16#1000#");
       Muxml.Utils.Append_Child
@@ -314,7 +284,8 @@ package body Mucfgcheck.Test_Data.Tests is
          Address_Attr => "address");
 
       Node := Create_Mem_Node
-        (Name    => "mem3",
+        (Doc     => Data.Doc,
+         Name    => "mem3",
          Address => "16#2100#",
          Size    => "16#1000#");
       Muxml.Utils.Append_Child

@@ -65,9 +65,6 @@
   <memory alignment="16#1000#" caching="WB" name="subject1|bin" size="16#1000#" type="subject_binary">
    <file filename="subject1_bin" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|initramfs" size="16#0030_0000#" type="subject_initrd">
-   <file filename="initramfs.cpio.gz" offset="none"/>
-  </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|zp" size="16#2000#" type="subject_zeropage">
    <file filename="lnx_zp" offset="none"/>
   </memory>
@@ -88,6 +85,9 @@
   <memory alignment="16#1000#" caching="WB" name="lnx|bios" size="16#0001_0000#" type="subject_bios"/>
   <memory alignment="16#1000#" caching="WB" name="data_channel" size="16#1000#" type="subject_channel"/>
   <memory alignment="16#1000#" caching="WB" name="data_channel2" size="16#2000#" type="subject_channel"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx|initramfs" size="16#0030_0000#" type="subject_initrd">
+   <file filename="initramfs.cpio.gz" offset="none"/>
+  </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" physicalAddress="16#0012_9000#" size="16#4000#" type="system_pt">
    <file filename="kernel_pt_0" offset="none"/>
   </memory>
@@ -495,7 +495,6 @@
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
     <memory executable="true" logical="binary" physical="lnx|bin" virtualAddress="16#2000#" writable="true"/>
-    <memory executable="true" logical="initramfs" physical="lnx|initramfs" virtualAddress="16#0010_0000#" writable="true"/>
     <memory executable="false" logical="zero_page" physical="lnx|zp" virtualAddress="16#0000#" writable="true"/>
     <memory executable="false" logical="acpi_rsdp" physical="lnx|acpi_rsdp" virtualAddress="16#000e_0000#" writable="false"/>
     <memory executable="false" logical="acpi_xsdt" physical="lnx|acpi_xsdt" virtualAddress="16#000e_1000#" writable="false"/>
@@ -508,6 +507,7 @@
     <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000f_0000#" writable="false"/>
     <memory executable="false" logical="data_channel" physical="data_channel" virtualAddress="16#6000#" writable="false"/>
     <memory executable="false" logical="data_channel2" physical="data_channel2" virtualAddress="16#7000#" writable="false"/>
+    <memory executable="true" logical="initramfs" physical="lnx|initramfs" virtualAddress="16#0010_0000#" writable="true"/>
    </memory>
    <devices/>
    <events>

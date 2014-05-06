@@ -20,12 +20,33 @@ package body Mutools.Files.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Fname   : constant String := "obj/testfile";
+      My_File : Ada.Streams.Stream_IO.File_Type;
    begin
+      Open (Filename => Fname,
+            File     => My_File);
+      Assert (Condition => Ada.Directories.Exists (Name => Fname),
+              Message   => "File missing (1)");
+      Ada.Streams.Stream_IO.Close (File => My_File);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      --  Open existing file.
 
+      Open (Filename => Fname,
+            File     => My_File);
+      Assert (Condition => Ada.Directories.Exists (Name => Fname),
+              Message   => "File missing (2)");
+      Ada.Streams.Stream_IO.Close (File => My_File);
+      Ada.Directories.Delete_File (Name => Fname);
+
+      --  Try to open a file which is a directory.
+
+      begin
+         Open (Filename => "obj",
+               File     => My_File);
+
+      exception
+         when IO_Error => null;
+      end;
 --  begin read only
    end Test_Open;
 --  end read only

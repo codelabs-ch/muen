@@ -21,11 +21,14 @@ package body Mutools.Utils.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Bit_Test
+              (Value => 512,
+               Pos   => 9),
+              Message   => "Bit not set");
+      Assert (Condition => not Bit_Test
+              (Value => 512,
+               Pos   => 8),
+              Message   => "Bit set");
 --  begin read only
    end Test_Bit_Test;
 --  end read only
@@ -41,12 +44,34 @@ package body Mutools.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Interfaces.Unsigned_64;
+
+      Ref_Num_1 : constant Interfaces.Unsigned_64 := 16#800000#;
+      Ref_Num_2 : constant Interfaces.Unsigned_64 := 16#A000800000#;
+      Number    : Interfaces.Unsigned_64          := 0;
    begin
+      for I in Utils.Unsigned_64_Pos'Range loop
+         Assert (Condition => not Bit_Test
+                 (Value => Number,
+                  Pos   => I),
+                 Message   => "Bit" & I'Img & " set");
+      end loop;
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Number := Utils.Bit_Set (Value => Number,
+                               Pos   => 23);
+      Assert (Condition => Number = Ref_Num_1,
+              Message   => "Number mismatch (1)");
+      Assert (Condition => Bit_Test
+              (Value => Number,
+               Pos   => 23),
+              Message   => "Bit 23 not set");
 
+      Number := Bit_Set (Value => Number,
+                         Pos   => 37);
+      Number := Bit_Set (Value => Number,
+                         Pos   => 39);
+      Assert (Condition => Number = Ref_Num_2,
+              Message   => "Number mismatch (2)");
 --  begin read only
    end Test_Bit_Set;
 --  end read only
@@ -62,12 +87,12 @@ package body Mutools.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Interfaces.Unsigned_64;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Bit_Clear
+              (Value => 512,
+               Pos   => 9) = 0,
+              Message   => "Bit not cleared");
 --  begin read only
    end Test_Bit_Clear;
 --  end read only
@@ -83,12 +108,43 @@ package body Mutools.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Ref_First  : constant String := "0";
+      Ref_Last   : constant String := "ffffffffffffffff";
+      Ref_Number : constant String := "deadcafebeefbeef";
+      Norm_First : constant String := "16#0000#";
+      Norm_Last  : constant String := "16#ffff_ffff_ffff_ffff#";
+      Norm_Num   : constant String := "16#dead_cafe_beef_beef#";
+      Norm_Num2  : constant String := "16#00de_adbe_efbe#";
+      Number     : constant Interfaces.Unsigned_64 := 16#deadcafebeefbeef#;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => To_Hex
+              (Number    => Interfaces.Unsigned_64'First,
+               Normalize => False) = Ref_First,
+              Message   => "Unsigned_64'First hex string mismatch");
+      Assert (Condition => To_Hex
+              (Number    => Interfaces.Unsigned_64'Last,
+               Normalize => False) = Ref_Last,
+              Message   => "Unsigned_64'Last hex string mismatch");
+      Assert (Condition => To_Hex
+              (Number    => Number,
+               Normalize => False) = Ref_Number,
+              Message   => "Hex string without prefix mismatch");
+      Assert (Condition => To_Hex
+              (Number    => Interfaces.Unsigned_64'First,
+               Normalize => True) = Norm_First,
+              Message => "Normalized Unsigned_64'First hex string mismatch");
+      Assert (Condition => To_Hex
+              (Number    => Interfaces.Unsigned_64'Last,
+               Normalize => True) = Norm_Last,
+              Message => "Normalized Unsigned_64'Last hex string mismatch");
+      Assert (Condition => To_Hex
+              (Number    => Number,
+               Normalize => True) = Norm_Num,
+              Message => "Normalized " & Norm_Num & " hex string mismatch");
+      Assert (Condition => To_Hex
+              (Number    => 16#de_adbe_efbe#,
+               Normalize => True) = Norm_Num2,
+              Message => "Normalized " & Norm_Num2 & " hex string mismatch");
 --  begin read only
    end Test_To_Hex;
 --  end read only
@@ -105,11 +161,9 @@ package body Mutools.Utils.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Decode_Entity_Name
+              (Encoded_Str => "linux|zp") = "linux",
+              Message   => "Entity name mismatch");
 --  begin read only
    end Test_Decode_Entity_Name;
 --  end read only

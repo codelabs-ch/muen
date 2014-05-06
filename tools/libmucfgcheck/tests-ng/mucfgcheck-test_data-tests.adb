@@ -313,12 +313,89 @@ package body Mucfgcheck.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Addr_Not_Equal : exception;
+
+      --  Check that address attribute is the same for Left and Right.
+      procedure Check_Address_Same (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Address_Same (Left, Right : DOM.Core.Node)
+      is
+         Left_Addr : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "address");
+         Right_Addr : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "address");
+      begin
+         if Left_Addr /= Right_Addr then
+            raise Addr_Not_Equal with "Address differs";
+         end if;
+      end Check_Address_Same;
+
+      Data         : Muxml.XML_Data_Type;
+      Impl         : DOM.Core.DOM_Implementation;
+      Parent, Node : DOM.Core.Node;
+      Nodes        : DOM.Core.Node_List;
    begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Parent := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "parent");
+      Muxml.Utils.Append_Child
+        (Node      => Data.Doc,
+         New_Child => Parent);
 
+      Node := Create_Mem_Node
+        (Doc     => Data.Doc,
+         Name    => "mem1",
+         Address => "16#1000#",
+         Size    => "16#1000#");
+      Muxml.Utils.Append_Child
+        (Node      => Parent,
+         New_Child => Node);
+
+      Node := Create_Mem_Node
+        (Doc     => Data.Doc,
+         Name    => "mem2",
+         Address => "16#1000#",
+         Size    => "16#1000#");
+      Muxml.Utils.Append_Child
+        (Node      => Parent,
+         New_Child => Node);
+
+      --  Should not raise an exception.
+
+      Nodes := DOM.Core.Documents.Get_Elements_By_Tag_Name
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+      Compare_All (Nodes      => Nodes,
+                   Comparator => Check_Address_Same'Access);
+
+      Node := Create_Mem_Node
+        (Doc     => Data.Doc,
+         Name    => "mem3",
+         Address => "16#2000#",
+         Size    => "16#1000#");
+      Muxml.Utils.Append_Child
+        (Node      => Parent,
+         New_Child => Node);
+
+      Nodes := DOM.Core.Documents.Get_Elements_By_Tag_Name
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+
+      begin
+         Compare_All (Nodes      => Nodes,
+                      Comparator => Check_Address_Same'Access);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when Addr_Not_Equal => null;
+      end;
 --  begin read only
    end Test_Compare_All;
 --  end read only

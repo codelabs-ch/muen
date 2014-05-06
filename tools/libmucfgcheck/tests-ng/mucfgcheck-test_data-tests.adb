@@ -533,12 +533,40 @@ package body Mucfgcheck.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data        : Muxml.XML_Data_Type;
+      Impl        : DOM.Core.DOM_Implementation;
+      Left, Right : DOM.Core.Node;
    begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Left := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "el1");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Left,
+         Name  => "subject",
+         Value => "refname");
+      Right := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "el2");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Right,
+         Name  => "name",
+         Value => "refname");
 
+      Assert (Condition => Match_Subject_Name
+              (Left  => Left,
+               Right => Right),
+              Message   => "Name does not match");
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Right,
+         Name  => "name",
+         Value => "nonexistent");
+      Assert (Condition => not Match_Subject_Name
+              (Left  => Left,
+               Right => Right),
+              Message   => "Name matches");
 --  begin read only
    end Test_Match_Subject_Name;
 --  end read only

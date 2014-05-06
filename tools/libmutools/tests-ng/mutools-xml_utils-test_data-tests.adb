@@ -20,12 +20,39 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Filename : constant String := "obj/memory.xml";
+      Policy   : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "test",
+         Address     => "16#9000_1000#",
+         Size        => "16#3000#",
+         Caching     => "UC",
+         Alignment   => "16#1000#",
+         Memory_Type => "");
+      Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "noaddress",
+         Address     => "",
+         Size        => "16#8000#",
+         Caching     => "WC",
+         Alignment   => "16#0020_0000#",
+         Memory_Type => "");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Muxml.Write (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => Filename);
 
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Filename,
+               Filename2 => "data/memory.xml"),
+              Message   => "Policy mismatch");
+
+      Ada.Directories.Delete_File (Name => Filename);
 --  begin read only
    end Test_1_Add_Memory_Region;
 --  end read only
@@ -41,12 +68,33 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Filename : constant String := "obj/memory_with_file.xml";
+      Policy   : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "test",
+         Address     => "16#2000#",
+         Size        => "16#4000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "",
+         File_Name   => "testfile",
+         File_Offset => "16#1000#");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Muxml.Write (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => Filename);
 
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Filename,
+               Filename2 => "data/memory_with_file.xml"),
+              Message   => "Policy mismatch");
+
+      Ada.Directories.Delete_File (Name => Filename);
 --  begin read only
    end Test_2_Add_Memory_Region;
 --  end read only

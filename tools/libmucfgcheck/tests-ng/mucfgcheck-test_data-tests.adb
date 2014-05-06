@@ -411,12 +411,92 @@ package body Mucfgcheck.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      --  Return test error message.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      --  Returns True if the name attribute of Left and Right is equal.
+      function Match_Name (Left, Right : DOM.Core.Node) return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+      begin
+         return "Name mismatch";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Match_Name (Left, Right : DOM.Core.Node) return Boolean
+      is
+         Left_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "name");
+         Right_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         return Left_Name = Right_Name;
+      end Match_Name;
+
+      Data         : Muxml.XML_Data_Type;
+      Impl         : DOM.Core.DOM_Implementation;
+      Parent, Node : DOM.Core.Node;
    begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Parent := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "parent");
+      Muxml.Utils.Append_Child
+        (Node      => Data.Doc,
+         New_Child => Parent);
 
+      Node := Create_Mem_Node
+        (Doc     => Data.Doc,
+         Name    => "mem1",
+         Address => "16#1000#",
+         Size    => "16#1000#");
+      Muxml.Utils.Append_Child
+        (Node      => Parent,
+         New_Child => Node);
+
+      Node := Create_Mem_Node
+        (Doc     => Data.Doc,
+         Name    => "mem2",
+         Address => "16#1000#",
+         Size    => "16#1000#");
+      Muxml.Utils.Append_Child
+        (Node      => Parent,
+         New_Child => Node);
+
+      --  Should not raise an exception.
+
+      For_Each_Match
+        (XML_Data     => Data,
+         Source_XPath => "/parent/*",
+         Ref_XPath    => "/parent/memory",
+         Log_Message  => "attribute matches",
+         Error        => Error_Msg'Access,
+         Match        => Match_Name'Access);
+
+      begin
+         For_Each_Match
+           (XML_Data     => Data,
+            Source_XPath => "/parent/*",
+            Ref_XPath    => "/parent/nonexistent",
+            Log_Message  => "attribute matches",
+            Error        => Error_Msg'Access,
+            Match        => Match_Name'Access);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Name mismatch",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_For_Each_Match;
 --  end read only

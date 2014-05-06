@@ -20,12 +20,39 @@ package body Paging.EPT.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      PML4 : Tables.PML4.Page_Table_Type;
    begin
+      Tables.PML4.Set_Physical_Address (Table   => PML4,
+                                        Address => 16#1f4000#);
+      Tables.PML4.Add_Entry (Table => PML4,
+                             Index => 0,
+                             E     => Entries.Create
+                               (Dst_Offset  => 0,
+                                Dst_Address => 16#1f5000#,
+                                Readable    => True,
+                                Writable    => True,
+                                Executable  => True,
+                                Maps_Page   => False,
+                                Global      => False,
+                                Caching     => WC));
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      declare
+         use Ada.Streams.Stream_IO;
 
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/ept_pml4",
+                             File     => File);
+
+         Serialize (Stream => Stream (File => File),
+                    PML4   => PML4);
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/ept_pml4.ref",
+               Filename2 => "obj/ept_pml4"),
+              Message   => "EPT PML4 table mismatch");
 --  begin read only
    end Test_1_Serialize;
 --  end read only
@@ -41,12 +68,72 @@ package body Paging.EPT.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      PDPT : Tables.PDPT.Page_Table_Type;
    begin
+      Tables.PDPT.Set_Physical_Address (Table   => PDPT,
+                                        Address => 16#1f5000#);
+      Tables.PDPT.Add_Entry (Table => PDPT,
+                             Index => 0,
+                             E     => Entries.Create
+                               (Dst_Offset  => 0,
+                                Dst_Address => 16#4000_0000#,
+                                Readable    => True,
+                                Writable    => True,
+                                Executable  => True,
+                                Maps_Page   => True,
+                                Global      => False,
+                                Caching     => UC));
+      Tables.PDPT.Add_Entry (Table => PDPT,
+                             Index => 1,
+                             E     => Entries.Create
+                               (Dst_Offset  => 0,
+                                Dst_Address => 16#8000_0000#,
+                                Readable    => True,
+                                Writable    => True,
+                                Executable  => True,
+                                Maps_Page   => True,
+                                Global      => False,
+                                Caching     => UC));
+      Tables.PDPT.Add_Entry (Table => PDPT,
+                             Index => 2,
+                             E     => Entries.Create
+                               (Dst_Offset  => 0,
+                                Dst_Address => 16#c000_0000#,
+                                Readable    => True,
+                                Writable    => True,
+                                Executable  => True,
+                                Maps_Page   => True,
+                                Global      => False,
+                                Caching     => UC));
+      Tables.PDPT.Add_Entry (Table => PDPT,
+                             Index => 3,
+                             E     => Entries.Create
+                               (Dst_Offset  => 0,
+                                Dst_Address => 16#1_0000_0000#,
+                                Readable    => True,
+                                Writable    => True,
+                                Executable  => True,
+                                Maps_Page   => True,
+                                Global      => False,
+                                Caching     => UC));
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      declare
+         use Ada.Streams.Stream_IO;
 
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/ept_pdpt",
+                             File     => File);
+
+         Serialize (Stream => Stream (File => File),
+                    PDPT   => PDPT);
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/ept_pdpt.ref",
+               Filename2 => "obj/ept_pdpt"),
+              Message   => "EPT PDPT table mismatch");
 --  begin read only
    end Test_2_Serialize;
 --  end read only
@@ -62,12 +149,39 @@ package body Paging.EPT.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      PD : Tables.PD.Page_Table_Type;
    begin
+      Tables.PD.Set_Physical_Address (Table   => PD,
+                                      Address => 16#1f6000#);
+      Tables.PD.Add_Entry (Table => PD,
+                           Index => 0,
+                           E     => Entries.Create
+                             (Dst_Offset  => 0,
+                              Dst_Address => 16#1f7000#,
+                              Readable    => True,
+                              Writable    => True,
+                              Executable  => True,
+                              Maps_Page   => False,
+                              Global      => False,
+                              Caching     => WC));
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      declare
+         use Ada.Streams.Stream_IO;
 
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/ept_pd",
+                             File     => File);
+
+         Serialize (Stream => Stream (File => File),
+                    PD     => PD);
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/ept_pd.ref",
+               Filename2 => "obj/ept_pd"),
+              Message   => "EPT page directory mismatch");
 --  begin read only
    end Test_3_Serialize;
 --  end read only
@@ -83,12 +197,39 @@ package body Paging.EPT.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      PT : Tables.PT.Page_Table_Type;
    begin
+      Tables.PT.Set_Physical_Address (Table   => PT,
+                                      Address => 16#1f7000#);
+      Tables.PT.Add_Entry (Table => PT,
+                           Index => 184,
+                           E     => Entries.Create
+                             (Dst_Offset  => 0,
+                              Dst_Address => 16#000b_8000#,
+                              Readable    => True,
+                              Writable    => True,
+                              Executable  => False,
+                              Maps_Page   => True,
+                              Global      => False,
+                              Caching     => WC));
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      declare
+         use Ada.Streams.Stream_IO;
 
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/ept_pt",
+                             File     => File);
+
+         Serialize (Stream => Stream (File => File),
+                    PT     => PT);
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/ept_pt.ref",
+               Filename2 => "obj/ept_pt"),
+              Message   => "EPT page table mismatch");
 --  begin read only
    end Test_4_Serialize;
 --  end read only

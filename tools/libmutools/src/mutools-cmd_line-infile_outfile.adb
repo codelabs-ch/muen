@@ -45,7 +45,9 @@ is
          Help        => "Display usage and exit");
 
       begin
-         GNAT.Command_Line.Getopt (Config => Cmdline.Data);
+         GNAT.Command_Line.Getopt
+           (Config => Cmdline.Data,
+            Parser => Parser);
 
       exception
          when GNAT.Command_Line.Invalid_Switch |
@@ -56,8 +58,10 @@ is
             GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));
       end;
 
-      File_In  := To_Unbounded_String (GNAT.Command_Line.Get_Argument);
-      File_Out := To_Unbounded_String (GNAT.Command_Line.Get_Argument);
+      File_In  := To_Unbounded_String
+        (GNAT.Command_Line.Get_Argument (Parser => Parser));
+      File_Out := To_Unbounded_String
+        (GNAT.Command_Line.Get_Argument (Parser => Parser));
       if File_In = Null_Unbounded_String
         or File_Out = Null_Unbounded_String
       then

@@ -240,12 +240,105 @@ package body Mucfgcheck.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
+
+      --  Create new memory node with given attributes.
+      function Create_Mem_Node
+        (Name, Address, Size : String)
+         return DOM.Core.Node;
+
+      ----------------------------------------------------------------------
+
+      function Create_Mem_Node
+        (Name, Address, Size : String)
+         return DOM.Core.Node
+      is
+      begin
+         return Node : DOM.Core.Node do
+            Node := DOM.Core.Documents.Create_Element
+              (Doc      => Data.Doc,
+               Tag_Name => "memory");
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Node,
+               Name  => "name",
+               Value => Name);
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Node,
+               Name  => "address",
+               Value => Address);
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Node,
+               Name  => "size",
+               Value => Size);
+         end return;
+      end Create_Mem_Node;
+
+      Impl         : DOM.Core.DOM_Implementation;
+      Parent, Node : DOM.Core.Node;
+      Nodes        : DOM.Core.Node_List;
    begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Parent := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "parent");
+      Muxml.Utils.Append_Child
+        (Node      => Data.Doc,
+         New_Child => Parent);
 
+      Node := Create_Mem_Node
+        (Name    => "mem1",
+         Address => "16#1000#",
+         Size    => "16#1000#");
+      Muxml.Utils.Append_Child
+        (Node      => Parent,
+         New_Child => Node);
+
+      Node := Create_Mem_Node
+        (Name    => "mem2",
+         Address => "16#2000#",
+         Size    => "16#1000#");
+      Muxml.Utils.Append_Child
+        (Node      => Parent,
+         New_Child => Node);
+
+      Nodes := DOM.Core.Documents.Get_Elements_By_Tag_Name
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+
+      --  Should not raise an exception.
+
+      Check_Memory_Overlap
+        (Nodes        => Nodes,
+         Region_Type  => "physical memory region",
+         Address_Attr => "address");
+
+      Node := Create_Mem_Node
+        (Name    => "mem3",
+         Address => "16#2100#",
+         Size    => "16#1000#");
+      Muxml.Utils.Append_Child
+        (Node      => Parent,
+         New_Child => Node);
+
+      Nodes := DOM.Core.Documents.Get_Elements_By_Tag_Name
+        (Doc      => Data.Doc,
+         Tag_Name => "memory");
+
+      begin
+         Check_Memory_Overlap
+           (Nodes        => Nodes,
+            Region_Type  => "physical memory region",
+            Address_Attr => "address");
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Overlap of physical memory region 'mem2' and 'mem3'",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Check_Memory_Overlap;
 --  end read only

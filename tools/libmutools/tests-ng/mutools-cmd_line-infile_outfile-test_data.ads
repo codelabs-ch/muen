@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with GNAT.OS_Lib;
+
 package Mutools.Cmd_Line.Infile_Outfile.Test_Data is
 
 --  begin read only

@@ -20,12 +20,28 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='vt']",
+         Name  => "name",
+         Value => "linux");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Name_Uniqueness (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   =>"Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subjects with id 1 and 4 have identical name 'linux'",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Name_Uniqueness;
 --  end read only
@@ -41,12 +57,29 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']",
+         Name  => "cpu",
+         Value => "7");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         CPU_ID (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   =>"Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Attribute 'cpu => 7' of 'linux' subject element not in "
+                    & "valid range 0 .. 3",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_CPU_ID;
 --  end read only
@@ -62,12 +95,29 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+       Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='vt|bin']",
+         Name  => "type",
+         Value => "system_pt");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Memory_Types (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   =>"Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical memory region 'binary' of subject 'vt' mapping "
+                    & "physical region 'vt|bin' has invalid type system_pt",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Memory_Types;
 --  end read only

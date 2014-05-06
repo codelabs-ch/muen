@@ -22,6 +22,11 @@ with Mutools.Utils;
 package body Alloc.Map
 is
 
+   function S
+     (Source : Ada.Strings.Unbounded.Unbounded_String)
+      return String
+      renames Ada.Strings.Unbounded.To_String;
+
    -------------------------------------------------------------------------
 
    procedure Allocate_Fixed
@@ -50,7 +55,8 @@ is
       loop
          if Element (Curr).First_Address > Last_Address then
             raise Invalid_Fixed_Allocation with
-              "Allocation outside empty regions " &
+              "Allocation of region '" & S (Name)
+              & "' outside empty regions " &
               Range_Image (First_Address, Last_Address);
          end if;
          exit when
@@ -62,8 +68,8 @@ is
 
       if Curr = No_Element then
          raise Invalid_Fixed_Allocation with
-           "Allocation beyond empty regions " &
-           Range_Image (First_Address, Last_Address);
+           "Allocation of region '" & S (Name) & "' beyond empty regions "
+           & Range_Image (First_Address, Last_Address);
       end if;
 
       Reserve

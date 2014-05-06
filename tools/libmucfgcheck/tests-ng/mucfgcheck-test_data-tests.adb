@@ -162,67 +162,55 @@ package body Mucfgcheck.Test_Data.Tests is
         (Node      => Data.Doc,
          New_Child => Parent);
 
-      Node := DOM.Core.Documents.Create_Element
-        (Doc      => Data.Doc,
-         Tag_Name => "node");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
-         Name  => "value",
-         Value => "12");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
-         Name  => "name",
-         Value => "new_node");
+      Node := Create_Mem_Node
+        (Doc     => Data.Doc,
+         Name    => "mem1",
+         Address => "16#1000#",
+         Size    => "16#1000#");
       Muxml.Utils.Append_Child
         (Node      => Parent,
          New_Child => Node);
-      Node := DOM.Core.Documents.Create_Element
-        (Doc      => Data.Doc,
-         Tag_Name => "node");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
-         Name  => "value",
-         Value => "12");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Node,
-         Name  => "name",
-         Value => "new_node");
+      Node := Create_Mem_Node
+        (Doc     => Data.Doc,
+         Name    => "mem2",
+         Address => "16#1000#",
+         Size    => "16#1000#");
       Muxml.Utils.Append_Child
         (Node      => Parent,
          New_Child => Node);
 
       Nodes := DOM.Core.Documents.Get_Elements_By_Tag_Name
         (Doc      => Data.Doc,
-         Tag_Name => "node");
+         Tag_Name => "memory");
 
       --  Should not raise an exception.
 
       Check_Attribute
         (Nodes     => Nodes,
          Node_Type => "test",
-         Attr      => "value",
+         Attr      => "address",
          Name_Attr => "name",
          Test      => Equals'Access,
-         Right     => 12,
-         Error_Msg => "not equal 12");
+         Right     => 16#1000#,
+         Error_Msg => "not equal 16#1000#");
 
       begin
          Check_Attribute
            (Nodes     => Nodes,
             Node_Type => "test",
-            Attr      => "value",
+            Attr      => "address",
             Name_Attr => "name",
             Test      => Equals'Access,
-            Right     => 13,
-            Error_Msg => "not equal 13");
+            Right     => 16#2000#,
+            Error_Msg => "not equal 16#2000#");
          Assert (Condition => False,
                  Message   => "Exception expected");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'value => 12' of 'new_node' test element not "
-                    & "equal 13",
+                    = "Attribute 'address => 16#1000#' of 'mem1' test element "
+                    & "not equal 16#2000#",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

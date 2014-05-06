@@ -59,12 +59,35 @@ package body Mutools.Cmd_Line.Infile_Outdir.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use Ada.Strings.Unbounded;
+
+      Counter : Positive                  := 1;
+      Outdir  : constant Unbounded_String := To_Unbounded_String ("obj");
+
+      --  Test process procedure.
+      procedure Test_Process
+        (Output_Dir : String;
+         Policy     : Muxml.XML_Data_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Test_Process
+        (Output_Dir : String;
+         Policy     : Muxml.XML_Data_Type)
+      is
+      begin
+         Assert (Condition => Output_Dir = Outdir,
+                 Message   => "Outdir mismatch");
+         Counter := Counter + 1;
+      end Test_Process;
    begin
+      Policy     := To_Unbounded_String ("data/test_policy.xml");
+      Output_Dir := Outdir;
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Run (Kind    => Muxml.Format_Src,
+           Process => Test_Process'Access);
+      Assert (Condition => Counter = 2,
+              Message   => "Counter not 2");
 --  begin read only
    end Test_Run;
 --  end read only

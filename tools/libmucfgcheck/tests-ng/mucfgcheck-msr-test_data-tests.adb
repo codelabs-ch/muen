@@ -20,12 +20,30 @@ package body Mucfgcheck.MSR.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/registers/msrs/"
+         & "msr[@end='16#0176#']",
+         Name  => "end",
+         Value => "16#0170#");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Start_Smaller_End (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "MSR start 16#0174# larger than end 16#0170#"
+                    & " (Subject 'linux')",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Start_Smaller_End;
 --  end read only
@@ -41,12 +59,30 @@ package body Mucfgcheck.MSR.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/vcpu/registers/msrs/"
+         & "msr[@end='16#0176#']",
+         Name  => "end",
+         Value => "16#c000_0800#");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Low_Or_High (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "MSR start 16#0174# and end 16#c000_0800# in different"
+                    & " low/high range (Subject 'linux')",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Low_Or_High;
 --  end read only

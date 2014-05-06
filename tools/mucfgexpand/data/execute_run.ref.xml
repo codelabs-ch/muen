@@ -493,7 +493,7 @@
    </vcpu>
    <bootparams/>
    <memory>
-    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
     <memory executable="true" logical="binary" physical="lnx|bin" virtualAddress="16#2000#" writable="true"/>
     <memory executable="true" logical="initramfs" physical="lnx|initramfs" virtualAddress="16#0010_0000#" writable="true"/>
     <memory executable="false" logical="zero_page" physical="lnx|zp" virtualAddress="16#0000#" writable="true"/>

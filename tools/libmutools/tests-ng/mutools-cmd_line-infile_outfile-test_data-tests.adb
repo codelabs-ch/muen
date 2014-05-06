@@ -118,12 +118,35 @@ package body Mutools.Cmd_Line.Infile_Outfile.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+       use Ada.Strings.Unbounded;
+
+      --  Test process procedure.
+      procedure Test_Process (Input_File, Output_File : String);
+
+      ----------------------------------------------------------------------
+
+      procedure Test_Process (Input_File, Output_File : String)
+      is
+      begin
+         Assert (Condition => Infile = Input_File,
+                 Message   => "Input file mismatch");
+         Assert (Condition => Outfile = Output_File,
+                 Message   => "Output file mismatch");
+         Process_Counter := Process_Counter + 1;
+      end Test_Process;
    begin
+      File_In  := Infile;
+      File_Out := Outfile;
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Run (Process => Test_Process'Access);
+      Assert (Condition => Process_Counter = 2,
+              Message   => "Counter not 2");
+      Process_Counter := 1;
 
+   exception
+      when others =>
+         Process_Counter := 1;
+         raise;
 --  begin read only
    end Test_3_Run;
 --  end read only

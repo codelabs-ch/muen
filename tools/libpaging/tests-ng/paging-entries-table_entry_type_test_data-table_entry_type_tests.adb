@@ -20,12 +20,35 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Interfaces.Unsigned_64;
+
+      TEntry : Table_Entry_Type;
    begin
+      TEntry := Create (Dst_Offset  => 42,
+                        Dst_Address => 16#1f_f000#,
+                        Readable    => True,
+                        Writable    => False,
+                        Executable  => True,
+                        Maps_Page   => True,
+                        Global      => True,
+                        Caching     => Paging.WB);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => TEntry.Dst_Offset = 42,
+              Message   => "Dst offset mismatch");
+      Assert (Condition => TEntry.Dst_Address = 16#1f_f000#,
+              Message   => "Dst address mismatch");
+      Assert (Condition => TEntry.Readable,
+              Message   => "Not readable");
+      Assert (Condition => not TEntry.Writable,
+              Message   => "Writable");
+      Assert (Condition => TEntry.Executable,
+              Message   => "Writable");
+      Assert (Condition => TEntry.Maps_Page,
+              Message   => "Not mapping page");
+      Assert (Condition => TEntry.Global,
+              Message   => "Non-global entry");
+      Assert (Condition => TEntry.Caching = Paging.WB,
+              Message   => "Caching type mismatch");
 --  begin read only
    end Test_Create;
 --  end read only
@@ -42,11 +65,8 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Get_Dst_Offset (E => Test_Entry) = 42,
+              Message   => "Dst offset mismatch");
 --  begin read only
    end Test_Get_Dst_Offset;
 --  end read only
@@ -62,12 +82,10 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Interfaces.Unsigned_64;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Get_Dst_Address (E => Test_Entry) = 16#1f_f000#,
+              Message   => "Dst address mismatch");
 --  begin read only
    end Test_Get_Dst_Address;
 --  end read only
@@ -83,12 +101,14 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Interfaces.Unsigned_64;
+
+      TEntry : Table_Entry_Type;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Set_Dst_Address (E       => TEntry,
+                       Address => 16#9000#);
+      Assert (Condition => TEntry.Dst_Address = 16#9000#,
+              Message   => "Address mismatch");
 --  begin read only
    end Test_Set_Dst_Address;
 --  end read only
@@ -105,11 +125,8 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Is_Readable (E => Test_Entry),
+              Message   => "Not readable");
 --  begin read only
    end Test_Is_Readable;
 --  end read only
@@ -126,11 +143,8 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => not Is_Writable (E => Test_Entry),
+              Message   => "Writable");
 --  begin read only
    end Test_Is_Writable;
 --  end read only
@@ -147,11 +161,8 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Is_Executable (E => Test_Entry),
+              Message   => "Writable");
 --  begin read only
    end Test_Is_Executable;
 --  end read only
@@ -168,11 +179,8 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Maps_Page (E => Test_Entry),
+              Message   => "Not mapping page");
 --  begin read only
    end Test_Maps_Page;
 --  end read only
@@ -189,11 +197,8 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Is_Global (E => Test_Entry),
+              Message   => "Non-global entry");
 --  begin read only
    end Test_Is_Global;
 --  end read only
@@ -210,11 +215,8 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Get_Caching (E => Test_Entry) = Paging.WB,
+              Message   => "Caching type mismatch");
 --  begin read only
    end Test_Get_Caching;
 --  end read only

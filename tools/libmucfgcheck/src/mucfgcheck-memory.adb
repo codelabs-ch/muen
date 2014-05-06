@@ -495,6 +495,43 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure System_Memory_Mappings (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/memory/memory[contains(string(@type),'system')]");
+   begin
+      Mulog.Log (Msg => "Checking mapping of" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " system memory region(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Phys_Mem  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Nodes,
+                 Index => I);
+            Phys_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Phys_Mem,
+               Name => "name");
+            Virt_Mem  : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => XML_Data.Doc,
+                 XPath => "//memory[@physical='" & Phys_Name & "']");
+         begin
+            if Virt_Mem /= null then
+               raise Validation_Error with "System memory region '"
+                 & Phys_Name & "' is mapped by logical memory region '"
+                 & DOM.Core.Elements.Get_Attribute (Elem => Virt_Mem,
+                                                    Name => "logical") & "'";
+            end if;
+         end;
+      end loop;
+   end System_Memory_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure Virtual_Address_Alignment (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query

@@ -53,7 +53,7 @@
   <memory alignment="16#1000#" caching="WB" name="time_state" physicalAddress="16#0fea_a000#" size="16#1000#" type="subject_state"/>
   <memory alignment="16#1000#" caching="WB" name="sm_state" physicalAddress="16#0fea_7000#" size="16#1000#" type="subject_state"/>
   <memory alignment="16#1000#" caching="WB" name="linux_state" physicalAddress="16#0fea_6000#" size="16#1000#" type="subject_state"/>
-  <memory alignment="16#1000#" caching="WB" name="sys_interface" physicalAddress="16#0fea_8000#" size="16#1000#" type="system"/>
+  <memory alignment="16#1000#" caching="WB" name="sys_interface" physicalAddress="16#0fea_8000#" size="16#1000#" type="kernel_interface"/>
   <memory alignment="16#1000#" caching="WB" name="trampoline" physicalAddress="16#0000#" size="16#1000#" type="system"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_0|vmxon" physicalAddress="16#1000#" size="16#1000#" type="system_vmxon"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_1|vmxon" physicalAddress="16#2000#" size="16#1000#" type="system_vmxon"/>

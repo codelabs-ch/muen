@@ -23,6 +23,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Types;
 
 package body Mucfgcheck.Subject
 is
@@ -52,6 +53,53 @@ is
                        Right     => Interfaces.Unsigned_64 (Last_Id),
                        Error_Msg => "not in valid range 0 .." & Last_Id'Img);
    end CPU_ID;
+
+   -------------------------------------------------------------------------
+
+   procedure Memory_Types (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := XPath_Query (N     => XML_Data.Doc,
+                        XPath => "/system/subjects/subject[@name!='tau0']"
+                        & "/memory/memory");
+   begin
+      Mulog.Log (Msg => "Checking memory types of" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " subject memory mapping(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Virt_Mem     : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Subject_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Muxml.Utils.Ancestor_Node (Node  => Virt_Mem,
+                                                  Level => 2),
+               Name => "name");
+            Virt_Name    : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Virt_Mem,
+               Name => "logical");
+            Phys_Name    : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Virt_Mem,
+               Name => "physical");
+            Phys_Mem     : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => XML_Data.Doc,
+                 XPath => "/system/memory/memory[@name='" & Phys_Name & "']");
+            Mem_Type_Str : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Phys_Mem,
+               Name => "type");
+            Memory_Type  : constant Mutools.Types.Memory_Kind
+              := Mutools.Types.Memory_Kind'Value (Mem_Type_Str);
+         begin
+            if Memory_Type not in Mutools.Types.Subject_Memory then
+               raise Validation_Error with "Logical memory region '"
+                 & Virt_Name & "' of subject '" & Subject_Name & "' mapping "
+                 & "physical region '" & Phys_Name & "' has invalid type "
+                 & Mem_Type_Str;
+            end if;
+         end;
+      end loop;
+   end Memory_Types;
 
    -------------------------------------------------------------------------
 

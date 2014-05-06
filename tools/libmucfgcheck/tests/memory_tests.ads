@@ -101,4 +101,10 @@ is
    --  Validate kernel store region presence.
    procedure Validate_Kernel_PT_Region_Presence;
 
+   --  Validate kernel memory region mappings.
+   procedure Validate_Kernel_Memory_Mappings;
+
+   --  Validate system memory region mappings.
+   procedure Validate_System_Memory_Mappings;
+
 end Memory_Tests;

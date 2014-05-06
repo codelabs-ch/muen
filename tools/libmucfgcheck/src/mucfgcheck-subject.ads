@@ -27,4 +27,7 @@ is
    --  Validate subject CPU ID.
    procedure CPU_ID (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate memory types of memory mappings.
+   procedure Memory_Types (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Subject;

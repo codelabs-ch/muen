@@ -82,4 +82,10 @@ is
    --  Validate that a kernel PT region exists for every CPU.
    procedure Kernel_PT_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate kernel memory mappings.
+   procedure Kernel_Memory_Mappings (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate system memory mappings.
+   procedure System_Memory_Mappings (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Memory;

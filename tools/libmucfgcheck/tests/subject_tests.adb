@@ -39,6 +39,9 @@ is
       T.Add_Test_Routine
         (Routine => Validate_Name_Uniqueness'Access,
          Name    => "Validate name uniqueness");
+      T.Add_Test_Routine
+        (Routine => Validate_Memory_Types'Access,
+         Name    => "Validate memory types");
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -68,6 +71,34 @@ is
                     Message   => "Exception mismatch");
       end;
    end Validate_CPU_IDs;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Memory_Types
+   is
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='vt|bin']",
+         Name  => "type",
+         Value => "system_pt");
+
+      begin
+         Mucfgcheck.Subject.Memory_Types (XML_Data => Data);
+         Fail (Message => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical memory region 'binary' of subject 'vt' mapping "
+                    & "physical region 'vt|bin' has invalid type system_pt",
+                    Message   => "Exception mismatch");
+      end;
+   end Validate_Memory_Types;
 
    -------------------------------------------------------------------------
 

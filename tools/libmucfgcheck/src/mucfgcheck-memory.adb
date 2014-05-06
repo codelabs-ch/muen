@@ -29,6 +29,7 @@ with Mulog;
 with Muxml.Utils;
 with Mutools.Constants;
 with Mutools.Utils;
+with Mutools.Types;
 
 package body Mucfgcheck.Memory
 is
@@ -140,6 +141,70 @@ is
    begin
       return L_Addr + L_Size = R_Addr or R_Addr + R_Size = L_Addr;
    end Is_Adjacent_Region;
+
+   -------------------------------------------------------------------------
+
+   procedure Kernel_Memory_Mappings (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/memory/memory[contains(string(@type),'kernel')]");
+   begin
+      Mulog.Log (Msg => "Checking mapping of" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " kernel memory region(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Phys_Mem  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Nodes,
+                 Index => I);
+            Phys_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Phys_Mem,
+               Name => "name");
+            Virt_Mem  : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => XML_Data.Doc,
+                 XPath => "//memory[@physical='" & Phys_Name & "']");
+            Virt_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Virt_Mem,
+               Name => "logical");
+            Owner     : constant DOM.Core.Node
+              := Muxml.Utils.Ancestor_Node
+                (Node  => Virt_Mem,
+                 Level => 3);
+         begin
+            if DOM.Core.Nodes.Node_Name (N => Owner) /= "kernel" then
+               declare
+                  use type Mutools.Types.Memory_Kind;
+
+                  Mem_Type  : constant Mutools.Types.Memory_Kind
+                    := Mutools.Types.Memory_Kind'Value
+                      (DOM.Core.Elements.Get_Attribute
+                         (Elem => Phys_Mem,
+                          Name => "type"));
+                  Subj_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Muxml.Utils.Ancestor_Node
+                         (Node  => Virt_Mem,
+                          Level => 2),
+                       Name => "name");
+               begin
+
+                  --  tau0 is allowed to map kernel interface.
+
+                  if not (Mem_Type = Mutools.Types.Kernel_Interface
+                          and then Subj_Name = "tau0")
+                  then
+                     raise Validation_Error with "Kernel memory region '"
+                       & Phys_Name & "' mapped by logical memory region '"
+                       & Virt_Name & "' of subject '" & Subj_Name & "'";
+                  end if;
+               end;
+            end if;
+         end;
+      end loop;
+   end Kernel_Memory_Mappings;
 
    -------------------------------------------------------------------------
 
@@ -427,6 +492,43 @@ is
          Name  => "size",
          Value => Cur_Size);
    end Set_Size;
+
+   -------------------------------------------------------------------------
+
+   procedure System_Memory_Mappings (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/memory/memory[contains(string(@type),'system')]");
+   begin
+      Mulog.Log (Msg => "Checking mapping of" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " system memory region(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Phys_Mem  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Nodes,
+                 Index => I);
+            Phys_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Phys_Mem,
+               Name => "name");
+            Virt_Mem  : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => XML_Data.Doc,
+                 XPath => "//memory[@physical='" & Phys_Name & "']");
+         begin
+            if Virt_Mem /= null then
+               raise Validation_Error with "System memory region '"
+                 & Phys_Name & "' is mapped by logical memory region '"
+                 & DOM.Core.Elements.Get_Attribute (Elem => Virt_Mem,
+                                                    Name => "logical") & "'";
+            end if;
+         end;
+      end loop;
+   end System_Memory_Mappings;
 
    -------------------------------------------------------------------------
 

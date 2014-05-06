@@ -83,6 +83,10 @@ is
       XML_Processors.Register
         (Process => Memory.Kernel_PT_Consecutiveness'Access);
       XML_Processors.Register
+        (Process => Memory.Kernel_Memory_Mappings'Access);
+      XML_Processors.Register
+        (Process => Memory.System_Memory_Mappings'Access);
+      XML_Processors.Register
         (Process => MSR.Start_Smaller_End'Access);
       XML_Processors.Register
         (Process => MSR.Low_Or_High'Access);
@@ -124,6 +128,8 @@ is
         (Process => Subject.Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Subject.CPU_ID'Access);
+      XML_Processors.Register
+        (Process => Subject.Memory_Types'Access);
       XML_Processors.Register
         (Process => Events.Source_Targets'Access);
       XML_Processors.Register

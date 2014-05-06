@@ -33,4 +33,8 @@ package Mutools.Cmd_Line.Infile_Outfile.Test_Data is
      (Input_Policy : Muxml.XML_Data_Type;
       Output_File  : String);
 
+   procedure Mutable_Process
+     (Policy      : in out Muxml.XML_Data_Type;
+      Output_File :        String);
+
 end Mutools.Cmd_Line.Infile_Outfile.Test_Data;

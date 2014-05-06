@@ -42,4 +42,15 @@ package body Mutools.Cmd_Line.Infile_Outfile.Test_Data is
       Process_Counter := Process_Counter + 1;
    end Immutable_Process;
 
+   -------------------------------------------------------------------------
+
+   procedure Mutable_Process
+     (Policy      : in out Muxml.XML_Data_Type;
+      Output_File :        String)
+   is
+   begin
+      Immutable_Process (Input_Policy => Policy,
+                         Output_File  => Output_File);
+   end Mutable_Process;
+
 end Mutools.Cmd_Line.Infile_Outfile.Test_Data;

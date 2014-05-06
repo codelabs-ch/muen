@@ -20,12 +20,30 @@ package body Mutools.Cmd_Line.Infile_Outdir.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Ada.Strings.Unbounded.Unbounded_String;
+
+      Args        : aliased GNAT.OS_Lib.Argument_List
+        := (1 => new String'("-o"),
+            2 => new String'("obj"),
+            3 => new String'("data/test_policy.xml"));
+      Test_Parser : GNAT.Command_Line.Opt_Parser;
    begin
+      GNAT.Command_Line.Initialize_Option_Scan
+        (Parser       => Test_Parser,
+         Command_Line => Args'Unchecked_Access);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Parser := Test_Parser;
 
+      Init (Description => "Test run");
+
+      for A in Args'Range loop
+         GNAT.OS_Lib.Free (X => Args (A));
+      end loop;
+
+      Assert (Condition => Policy = "data/test_policy.xml",
+              Message   => "Policy mismatch");
+      Assert (Condition => Output_Dir = "obj",
+              Message   => "Outdir mismatch");
 --  begin read only
    end Test_Init;
 --  end read only

@@ -5,6 +5,14 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Streams.Stream_IO;
+
+with Mutools.Files;
+
+with Paging.Entries;
+
+with Test_Utils;
+
 package Paging.IA32e.Test_Data is
 
 --  begin read only

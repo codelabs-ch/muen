@@ -20,12 +20,16 @@ package body Paging.Memory.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Interfaces.Unsigned_64;
+
+      Ref_Addr : constant Interfaces.Unsigned_64 := 16#deadbeef000#;
+      Layout   : Memory_Layout_Type;
    begin
+      Set_Address (Mem_Layout => Layout,
+                   Address    => Ref_Addr);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Get_Address (Mem_Layout => Layout) = Ref_Addr,
+              Message   => "Layout address mismatch");
 --  begin read only
    end Test_Set_Address;
 --  end read only
@@ -42,11 +46,8 @@ package body Paging.Memory.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Already tested in Test_Set_Address");
 --  begin read only
    end Test_Get_Address;
 --  end read only
@@ -62,12 +63,23 @@ package body Paging.Memory.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Layout : Memory_Layout_Type := Null_Layout;
+
+      PML4s, PDPTs, PDs, PTs : Natural;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Get_Table_Count (Mem_Layout => Layout,
+                       PML4_Count => PML4s,
+                       PDPT_Count => PDPTs,
+                       PD_Count   => PDs,
+                       PT_Count   => PTs);
+      Assert (Condition => PML4s = 0,
+              Message   => "PML4 count not 0");
+      Assert (Condition => PDPTs = 0,
+              Message   => "PDPT count not 0");
+      Assert (Condition => PDs = 0,
+              Message   => "PD count not 0");
+      Assert (Condition => PTs = 0,
+              Message   => "PT count not 0");
 --  begin read only
    end Test_Get_Table_Count;
 --  end read only
@@ -83,12 +95,32 @@ package body Paging.Memory.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Layout : Memory_Layout_Type := Null_Layout;
+
+      PML4s, PDPTs, PDs, PTs : Natural;
    begin
+      Add_Memory_Region
+        (Mem_Layout       => Layout,
+         Physical_Address => 16#1000#,
+         Virtual_Address  => 16#deafbeef000#,
+         Size             => Page_Size,
+         Caching          => WB,
+         Writable         => True,
+         Executable       => False);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Get_Table_Count (Mem_Layout => Layout,
+                       PML4_Count => PML4s,
+                       PDPT_Count => PDPTs,
+                       PD_Count   => PDs,
+                       PT_Count   => PTs);
+      Assert (Condition => PML4s = 1,
+              Message   => "PML4 count not 1");
+      Assert (Condition => PDPTs = 1,
+              Message   => "PDPT count not 1");
+      Assert (Condition => PDs = 1,
+              Message   => "PD count not 1");
+      Assert (Condition => PTs = 1,
+              Message   => "PT count not 1");
 --  begin read only
    end Test_Add_Memory_Region;
 --  end read only
@@ -105,11 +137,8 @@ package body Paging.Memory.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Tested in Test_Serialize");
 --  begin read only
    end Test_Update_References;
 --  end read only
@@ -125,12 +154,284 @@ package body Paging.Memory.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      ----------------------------------------------------------------------
+
+      procedure EPT_Generate_Paging_Structures
+      is
+         Layout : Memory_Layout_Type := Null_Layout;
+      begin
+         Set_Address (Mem_Layout => Layout,
+                      Address    => 16#001f_4000#);
+
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#4000_0000#,
+            Virtual_Address  => 16#0#,
+            Size             => 16#1_0000_0000#,
+            Caching          => UC,
+            Writable         => True,
+            Executable       => True);
+
+         Update_References (Mem_Layout => Layout);
+
+         declare
+            use Ada.Streams.Stream_IO;
+
+            File : File_Type;
+         begin
+            Mutools.Files.Open (Filename => "obj/ept",
+                                File     => File);
+
+            Serialize
+              (Stream         => Stream (File => File),
+               Mem_Layout     => Layout,
+               Serialize_PML4 => EPT.Serialize'Access,
+               Serialize_PDPT => EPT.Serialize'Access,
+               Serialize_PD   => EPT.Serialize'Access,
+               Serialize_PT   => EPT.Serialize'Access);
+
+            Close (File => File);
+         end;
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/ept.ref",
+                  Filename2 => "obj/ept"),
+                 Message   => "EPT paging structures mismatch");
+      end EPT_Generate_Paging_Structures;
+
+      ----------------------------------------------------------------------
+
+      procedure IA32e_Generate_Paging_Structures
+      is
+         Layout : Memory_Layout_Type := Null_Layout;
+      begin
+         Set_Address (Mem_Layout => Layout,
+                      Address    => 16#20_0000#);
+
+         --  Text
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#0010_0000#,
+            Virtual_Address  => 16#0010_0000#,
+            Size             => 16#0001_2000#,
+            Caching          => UC,
+            Writable         => True,
+            Executable       => True);
+
+         --  Stack
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#0011_2000#,
+            Virtual_Address  => 16#0011_2000#,
+            Size             => 16#2000#,
+            Caching          => WB,
+            Writable         => True,
+            Executable       => False);
+
+         --  Store
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#0011_6000#,
+            Virtual_Address  => 16#0011_6000#,
+            Size             => 16#1000#,
+            Caching          => WB,
+            Writable         => True,
+            Executable       => False);
+
+         --  Data
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#0011_8000#,
+            Virtual_Address  => 16#0011_8000#,
+            Size             => 16#6000#,
+            Caching          => UC,
+            Writable         => True,
+            Executable       => True);
+
+         --  Tau0 interface
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#001f_f000#,
+            Virtual_Address  => 16#001f_f000#,
+            Size             => 16#1000#,
+            Caching          => UC,
+            Writable         => False,
+            Executable       => False);
+
+         Update_References (Mem_Layout => Layout);
+
+         declare
+            use Ada.Streams.Stream_IO;
+
+            File : File_Type;
+         begin
+            Mutools.Files.Open (Filename => "obj/ia32e",
+                                File     => File);
+
+            Serialize
+              (Stream         => Stream (File => File),
+               Mem_Layout     => Layout,
+               Serialize_PML4 => IA32e.Serialize'Access,
+               Serialize_PDPT => IA32e.Serialize'Access,
+               Serialize_PD   => IA32e.Serialize'Access,
+               Serialize_PT   => IA32e.Serialize'Access);
+
+            Close (File => File);
+         end;
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/ia32e.ref",
+                  Filename2 => "obj/ia32e"),
+                 Message   => "IA-32e paging structures mismatch");
+      end IA32e_Generate_Paging_Structures;
+
+      ----------------------------------------------------------------------
+
+      procedure IA32e_Generate_Multiple_PTs
+      is
+         Layout : Memory_Layout_Type := Null_Layout;
+      begin
+         Set_Address (Mem_Layout => Layout,
+                      Address    => 16#20_0000#);
+
+         --  Entry 0 in PT 0.
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#0000#,
+            Virtual_Address  => 16#0000#,
+            Size             => 16#1000#,
+            Caching          => WB,
+            Writable         => True,
+            Executable       => False);
+
+         --  Entry 50 in PT 53.
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#06a8_0000#,
+            Virtual_Address  => 16#06a8_0000#,
+            Size             => 16#1000#,
+            Caching          => WC,
+            Writable         => True,
+            Executable       => True);
+
+         --  Entry 511 in PT 511.
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#3fff_f000#,
+            Virtual_Address  => 16#3fff_f000#,
+            Size             => 16#1000#,
+            Caching          => UC,
+            Writable         => False,
+            Executable       => True);
+
+         Update_References (Mem_Layout => Layout);
+
+         declare
+            use Ada.Streams.Stream_IO;
+
+            File : File_Type;
+         begin
+            Mutools.Files.Open (Filename => "obj/ia32e_multi_pt",
+                                File     => File);
+
+            Serialize
+              (Stream         => Stream (File => File),
+               Mem_Layout     => Layout,
+               Serialize_PML4 => IA32e.Serialize'Access,
+               Serialize_PDPT => IA32e.Serialize'Access,
+               Serialize_PD   => IA32e.Serialize'Access,
+               Serialize_PT   => IA32e.Serialize'Access);
+
+            Close (File => File);
+         end;
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/ia32e_multi_pt.ref",
+                  Filename2 => "obj/ia32e_multi_pt"),
+                 Message   => "IA-32e multiple PTs mismatch");
+      end Ia32e_Generate_Multiple_Pts;
+
+      ----------------------------------------------------------------------
+
+      procedure IA32e_Generate_Multiple_Structures
+      is
+         Layout : Memory_Layout_Type := Null_Layout;
+      begin
+         Set_Address (Mem_Layout => Layout,
+                      Address    => 16#1_0000#);
+
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#001f_f000#,
+            Virtual_Address  => 16#001f_f000#,
+            Size             => 16#0040_2000#,
+            Caching          => WB,
+            Writable         => True,
+            Executable       => False);
+
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#4000_0000#,
+            Virtual_Address  => 16#4000_0000#,
+            Size             => 16#4000_0000#,
+            Caching          => UC,
+            Writable         => False,
+            Executable       => True);
+
+         Update_References (Mem_Layout => Layout);
+
+         declare
+            use Ada.Streams.Stream_IO;
+
+            File : File_Type;
+         begin
+            Mutools.Files.Open (Filename => "obj/ia32e_multi",
+                                File     => File);
+
+            Serialize
+              (Stream         => Stream (File => File),
+               Mem_Layout     => Layout,
+               Serialize_PML4 => IA32e.Serialize'Access,
+               Serialize_PDPT => IA32e.Serialize'Access,
+               Serialize_PD   => IA32e.Serialize'Access,
+               Serialize_PT   => IA32e.Serialize'Access);
+
+            Close (File => File);
+         end;
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/ia32e_multi.ref",
+                  Filename2 => "obj/ia32e_multi"),
+                 Message   => "IA-32e multiple paging structures mismatch");
+      end IA32e_Generate_Multiple_Structures;
+
+      ----------------------------------------------------------------------
+
+      procedure Serialize_Empty_Layout
+      is
+         use type Ada.Streams.Stream_Element_Offset;
+
+         Mem_Stream : aliased Memory_Stream_Type;
+      begin
+         Serialize
+           (Stream         => Mem_Stream'Access,
+            Mem_Layout     => Null_Layout,
+            Serialize_PML4 => IA32e.Serialize'Access,
+            Serialize_PDPT => IA32e.Serialize'Access,
+            Serialize_PD   => IA32e.Serialize'Access,
+            Serialize_PT   => IA32e.Serialize'Access);
+
+         --  Serializing an empty layout should not generate any output.
+
+         Assert (Condition => Mem_Stream.Write_Idx = 1,
+                 Message   => "Serialized null layout mismatch");
+      end Serialize_Empty_Layout;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      EPT_Generate_Paging_Structures;
+      IA32e_Generate_Paging_Structures;
+      IA32e_Generate_Multiple_Structures;
+      IA32e_Generate_Multiple_PTs;
+      Serialize_Empty_Layout;
 --  begin read only
    end Test_Serialize;
 --  end read only

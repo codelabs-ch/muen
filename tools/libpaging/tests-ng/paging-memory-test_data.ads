@@ -5,6 +5,15 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Streams.Stream_IO;
+
+with Mutools.Files;
+
+with Paging.EPT;
+with Paging.IA32e;
+
+with Test_Utils;
+
 package Paging.Memory.Test_Data is
 
 --  begin read only
@@ -14,5 +23,23 @@ package Paging.Memory.Test_Data is
 
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
+
+   --  Stream type that serializes to memory buffer.
+   type Memory_Stream_Type is new Ada.Streams.Root_Stream_Type with record
+      Buffer    : Ada.Streams.Stream_Element_Array (1 .. 1) := (others => 0);
+      Write_Idx : Ada.Streams.Stream_Element_Offset         := 1;
+      Read_Idx  : Ada.Streams.Stream_Element_Offset         := 1;
+   end record;
+
+   overriding
+   procedure Read
+     (Stream : in out Memory_Stream_Type;
+      Item   :    out Ada.Streams.Stream_Element_Array;
+      Last   :    out Ada.Streams.Stream_Element_Offset) is null;
+
+   overriding
+   procedure Write
+     (Stream : in out Memory_Stream_Type;
+      Item   :        Ada.Streams.Stream_Element_Array);
 
 end Paging.Memory.Test_Data;

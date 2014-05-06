@@ -21,11 +21,14 @@ package body Mucfgcheck.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Equals
+              (Left  => 12,
+               Right => 12),
+              Message   => "Not equal");
+      Assert (Condition => not Equals
+              (Left  => 12,
+               Right => 13),
+              Message   => "Equal");
 --  begin read only
    end Test_Equals;
 --  end read only
@@ -42,11 +45,14 @@ package body Mucfgcheck.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Not_Equals
+              (Left  => 12,
+               Right => 13),
+              Message   => "Equal");
+      Assert (Condition => not Not_Equals
+              (Left  => 12,
+               Right => 12),
+              Message   => "Not equal");
 --  begin read only
    end Test_Not_Equals;
 --  end read only
@@ -63,11 +69,18 @@ package body Mucfgcheck.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Less_Than
+              (Left  => 12,
+               Right => 13),
+              Message   => "Not smaller");
+      Assert (Condition => not Less_Than
+              (Left  => 12,
+               Right => 12),
+              Message   => "Smaller (1)");
+      Assert (Condition => not Less_Than
+              (Left  => 13,
+               Right => 12),
+              Message   => "Smaller (2)");
 --  begin read only
    end Test_Less_Than;
 --  end read only
@@ -84,11 +97,18 @@ package body Mucfgcheck.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Less_Or_Equal
+              (Left  => 12,
+               Right => 13),
+              Message   => "Not smaller (1)");
+      Assert (Condition => Less_Or_Equal
+              (Left  => 12,
+               Right => 12),
+              Message   => "Not smaller (2)");
+      Assert (Condition => not Less_Or_Equal
+              (Left  => 13,
+               Right => 12),
+              Message   => "Smaller");
 --  begin read only
    end Test_Less_Or_Equal;
 --  end read only
@@ -105,11 +125,14 @@ package body Mucfgcheck.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Mod_Equal_Zero
+              (Left  => 2048,
+               Right => 8),
+              Message   => "Mod not zero");
+      Assert (Condition => not Mod_Equal_Zero
+              (Left  => 9,
+               Right => 8),
+              Message   => "Mod zero");
 --  begin read only
    end Test_Mod_Equal_Zero;
 --  end read only

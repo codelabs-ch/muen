@@ -6,7 +6,8 @@ GNATTEST_DRIVER = $(OBJ_DIR)/tests/gnattest/harness/test_driver
 TESTS_DIR       = $(CURDIR)/tests-ng
 TOOLS_DIR       = $(TOP_DIR)/tools
 
-SRC_FILES = $(wildcard $(SRC_DIR)/*)
+SRC_FILES  = $(wildcard $(SRC_DIR)/*)
+SRC_FILES += $(wildcard $(TESTS_DIR)/additional/*)
 
 all: $(COMPONENT)
 

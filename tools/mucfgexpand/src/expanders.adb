@@ -70,7 +70,6 @@ is
       Procs.Register (Process => Subjects.Add_Missing_Elements'Access);
 
       Procs.Register (Process => Subjects.Add_Binaries'Access);
-      Procs.Register (Process => Subjects.Add_Initrd'Access);
       Procs.Register (Process => Subjects.Handle_Profile'Access);
       Procs.Register (Process => Subjects.Handle_Monitors'Access);
       Procs.Register (Process => Subjects.Add_Channel_Mappings'Access);
@@ -78,6 +77,11 @@ is
       Procs.Register (Process => Subjects.Remove_Channel_Elements'Access);
       Procs.Register (Process => Subjects.Add_Default_Events'Access);
       Procs.Register (Process => Channels.Add_Physical_Memory'Access);
+
+      --  All subject memory regions incl. channels must exist to determine
+      --  virtual address of initrd region.
+
+      Procs.Register (Process => Subjects.Add_Initrd'Access);
 
       --  All kernel/subject memory regions and mappings must exist and specify
       --  and alignment to add PTs.

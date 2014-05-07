@@ -22,7 +22,7 @@ with Mulog;
 with Muxml;
 with Mutools.Cmd_Line.Infile_Outfile;
 
-with Alloc.Allocator;
+with Allocator;
 
 procedure Mucfgalloc
 is
@@ -32,12 +32,12 @@ begin
         "elements");
    Mutools.Cmd_Line.Infile_Outfile.Run
      (Kind    => Muxml.Format_A,
-      Process => Alloc.Allocator.Write'Access);
+      Process => Allocator.Write'Access);
 
 exception
    when E : Muxml.XML_Input_Error
       | Muxml.Validation_Error
-      | Alloc.Allocator.Out_Of_Memory =>
+      | Allocator.Out_Of_Memory =>
       Mulog.Log (Level => Mulog.Error,
                  Msg   => "Processing failed, aborting");
       Mulog.Log (Level => Mulog.Error,

@@ -4,6 +4,7 @@ LIBS =            \
 	libmutools    \
 	libmucfgcheck \
 	libmucfgvcpu  \
+	liballoc      \
 	libpaging
 
 # Library projects with no unit test suite

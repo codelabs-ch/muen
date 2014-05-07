@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
@@ -27,6 +29,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Utils;
 with Mutools.Types;
 with Mutools.XML_Utils;
 with Mucfgvcpu;
@@ -546,11 +549,24 @@ is
             Subj_Mem_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
               (Doc   => Subj_Node,
                XPath => "memory");
-            Virtual_Address : constant String := "16#0010_0000#";
+            Virtual_Address : constant Interfaces.Unsigned_64
+              := XML_Utils.Calculate_Region_Address
+                (Policy             => Data,
+                 Fixed_Memory       => McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Subj_Mem_Node,
+                    XPath => "memory"),
+                 Device_Memory      => McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Subj_Node,
+                    XPath => "devices/device/memory"),
+                 Address_Space_Size => Interfaces.Unsigned_64'Last,
+                 Region_Size        => Interfaces.Unsigned_64'Value
+                   (Filesize));
+            Virt_Addr_Str : constant String := Mutools.Utils.To_Hex
+              (Number => Virtual_Address);
          begin
             Mulog.Log (Msg => "Mapping initial ramdisk '" & Filename
                        & "' with size "  & Filesize & " at virtual address "
-                       & Virtual_Address
+                       & Virt_Addr_Str
                        & " of subject '" & Subj_Name & "'");
 
             Mutools.XML_Utils.Add_Memory_Region
@@ -569,7 +585,7 @@ is
                  (Policy        => Data,
                   Logical_Name  => "initramfs",
                   Physical_Name => Subj_Name & "|initramfs",
-                  Address       => Virtual_Address,
+                  Address       => Virt_Addr_Str,
                   Writable      => True,
                   Executable    => True));
 

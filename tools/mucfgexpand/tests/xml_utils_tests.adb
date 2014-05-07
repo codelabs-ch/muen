@@ -21,6 +21,8 @@ with Interfaces;
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
+with McKae.XML.XPath.XIA;
+
 with Muxml;
 
 with Expanders.XML_Utils;
@@ -51,6 +53,48 @@ is
          = 16#6000#,
          Message   => "Size mismatch");
    end Calculate_PT_Size;
+
+   -------------------------------------------------------------------------
+
+   procedure Calculate_Region_Address
+   is
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      declare
+         use type Interfaces.Unsigned_64;
+
+         Virt_Mem : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Policy.Doc,
+              XPath => "/system/subjects/subject[@name='subject1']/memory/"
+              & "memory");
+         Dev_Mem  :  constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Policy.Doc,
+              XPath => "/system/subjects/subject[@name='subject1']/devices/"
+              & "device/memory");
+      begin
+         Assert (Condition => Expanders.XML_Utils.Calculate_Region_Address
+                 (Policy             => Policy,
+                  Fixed_Memory       => Virt_Mem,
+                  Device_Memory      => Dev_Mem,
+                  Address_Space_Size => Interfaces.Unsigned_64'Last,
+                  Region_Size        => 16#1000#) = 16#0000#,
+                 Message   => "Region address mismatch (1)");
+
+         Assert (Condition => Expanders.XML_Utils.Calculate_Region_Address
+                 (Policy             => Policy,
+                  Fixed_Memory       => Virt_Mem,
+                  Device_Memory      => Dev_Mem,
+                  Address_Space_Size => Interfaces.Unsigned_64'Last,
+                  Region_Size        => 16#2000#) = 16#2000#,
+                 Message   => "Region address mismatch (2)");
+      end;
+   end Calculate_Region_Address;
 
    -------------------------------------------------------------------------
 
@@ -178,6 +222,9 @@ is
       T.Add_Test_Routine
         (Routine => Calculate_PT_Size'Access,
          Name    => "Calculate size of paging structures");
+      T.Add_Test_Routine
+        (Routine => Calculate_Region_Address'Access,
+         Name    => "Calculate address of new allocated region");
    end Initialize;
 
 end XML_Utils_Tests;

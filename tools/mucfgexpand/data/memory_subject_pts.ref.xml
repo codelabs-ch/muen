@@ -32,7 +32,7 @@
   <subject cpu="0" name="lnx" profile="linux">
    <initrd filename="initramfs.cpio.gz" size="16#0030_0000#"/>
    <memory>
-    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
    </memory>
    <events>
     <source>

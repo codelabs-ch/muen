@@ -1,6 +1,5 @@
 --
---  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014  Alexander Senier <mail@senier.net>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,24 +15,21 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "xmlada";
+with Ahven.Text_Runner;
+with Ahven.Framework;
 
-with "../../contrib/projects/xia";
+with Map_Tests;
 
-with "../liballoc/liballoc";
-with "../libpaging/libpaging";
-with "../libmulog/libmulog";
-with "../libmuxml/libmuxml";
-with "../libmutools/libmutools";
-with "../libmucfgvcpu/libmucfgvcpu";
-with "../libmucfgcheck/libmucfgcheck";
-with "../shared_tools";
+procedure Test_Runner
+is
+   use Ahven.Framework;
 
-project Mucfgexpand extends "../tools.gpr" is
+   S : constant Test_Suite_Access := Create_Suite
+     (Suite_Name => "Liballoc tests");
+begin
+   Add_Test (Suite => S.all,
+             T     => new Map_Tests.Testcase);
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Exec_Dir use "bin";
-   for Main use ("mucfgexpand.adb");
-
-end Mucfgexpand;
+   Ahven.Text_Runner.Run (Suite => S);
+   Release_Suite (T => S);
+end Test_Runner;

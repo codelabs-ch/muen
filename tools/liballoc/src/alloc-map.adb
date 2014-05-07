@@ -1,5 +1,7 @@
 --
 --  Copyright (C) 2014  Alexander Senier <mail@senier.net>
+--  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -19,6 +21,11 @@ with Mutools.Utils;
 
 package body Alloc.Map
 is
+
+   function S
+     (Source : Ada.Strings.Unbounded.Unbounded_String)
+      return String
+      renames Ada.Strings.Unbounded.To_String;
 
    -------------------------------------------------------------------------
 
@@ -48,7 +55,8 @@ is
       loop
          if Element (Curr).First_Address > Last_Address then
             raise Invalid_Fixed_Allocation with
-              "Allocation outside empty regions " &
+              "Allocation of region '" & S (Name)
+              & "' outside empty regions " &
               Range_Image (First_Address, Last_Address);
          end if;
          exit when
@@ -60,8 +68,8 @@ is
 
       if Curr = No_Element then
          raise Invalid_Fixed_Allocation with
-           "Allocation beyond empty regions " &
-           Range_Image (First_Address, Last_Address);
+           "Allocation of region '" & S (Name) & "' beyond empty regions "
+           & Range_Image (First_Address, Last_Address);
       end if;
 
       Reserve
@@ -121,6 +129,30 @@ is
          Last_Address  => First_Multiple + Size - 1);
 
    end Allocate_Variable;
+
+   -------------------------------------------------------------------------
+
+   function Get_Region
+     (Map  : Map_Type;
+      Name : String)
+      return Region_Type
+   is
+      use Ada.Strings.Unbounded;
+      use type Region_List_Package.Cursor;
+
+      U_Name : constant Unbounded_String
+        := To_Unbounded_String (Source => Name);
+      Cur    : Region_List_Package.Cursor := Map.Data.First;
+   begin
+      while Cur /= Region_List_Package.No_Element loop
+         if Region_List_Package.Element (Position => Cur).Name = U_Name then
+            return Region_List_Package.Element (Position => Cur);
+         end if;
+         Cur := Region_List_Package.Next (Position => Cur);
+      end loop;
+
+      raise No_Region with "Unable to find region with name '" & Name & "'";
+   end Get_Region;
 
    -------------------------------------------------------------------------
 

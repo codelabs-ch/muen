@@ -1,5 +1,7 @@
 --
 --  Copyright (C) 2014  Alexander Senier <mail@senier.net>
+--  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -79,10 +81,18 @@ is
        Process : not null access procedure (Region : Region_Type);
        Filter  : Region_Kind := Any);
 
+   --  Return region with specified name from given map. An exception is raised
+   --  if no region with the given name exists.
+   function Get_Region
+     (Map  : Map_Type;
+      Name : String)
+      return Region_Type;
+
    Overlapping_Empty_Region : exception;
    Invalid_Fixed_Allocation : exception;
    Out_Of_Memory            : exception;
    Limit_Exceeded           : exception;
+   No_Region                : exception;
 
 private
 

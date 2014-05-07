@@ -22,7 +22,7 @@ private with Alloc.Map;
 private with Interfaces;
 private with Ada.Strings.Unbounded;
 
-package Alloc.Allocator
+package Allocator
 is
 
    --  Allocate memory regions in given input policy and write result to
@@ -84,4 +84,4 @@ private
 
    function "<" (Left, Right : Region_Type) return Boolean;
 
-end Alloc.Allocator;
+end Allocator;

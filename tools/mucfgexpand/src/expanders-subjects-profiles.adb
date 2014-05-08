@@ -166,7 +166,7 @@ is
         (Policy      => Data,
          Name        => Subj_Name & "|lowmem",
          Address     => "",
-         Size        => "16#0008_c000#",
+         Size        => "16#0008_6000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
          Memory_Type => "subject");
@@ -176,7 +176,7 @@ is
            (Policy        => Data,
             Logical_Name  => "lowmem",
             Physical_Name => Subj_Name & "|lowmem",
-            Address       => "16#0001_4000#",
+            Address       => "16#0001_a000#",
             Writable      => True,
             Executable    => False));
       Mutools.XML_Utils.Add_Memory_Region

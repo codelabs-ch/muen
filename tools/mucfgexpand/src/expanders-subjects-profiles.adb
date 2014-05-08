@@ -65,6 +65,27 @@ is
             Writable      => True,
             Executable    => False));
 
+      Mulog.Log (Msg => "Adding info region for subject '" & Subj_Name & "'");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Data,
+         Name        => Subj_Name & "|sinfo",
+         Address     => "",
+         Size        => "16#6000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "subject_info",
+         File_Name   => Subj_Name & "_sinfo",
+         File_Offset => "none");
+      Muxml.Utils.Append_Child
+        (Node      => Subj_Mem_Node,
+         New_Child => XML_Utils.Create_Virtual_Memory_Node
+           (Policy        => Data,
+            Logical_Name  => "sinfo",
+            Physical_Name => Subj_Name & "|sinfo",
+            Address       => "16#0001_4000#",
+            Writable      => False,
+            Executable    => False));
+
       Mulog.Log (Msg => "Adding ACPI tables for subject '" & Subj_Name & "'");
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,

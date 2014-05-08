@@ -21,6 +21,32 @@ is
 
    -------------------------------------------------------------------------
 
+   function Create_Channel
+     (Name       : Name_Type;
+      Address    : Interfaces.Unsigned_64;
+      Size       : Interfaces.Unsigned_64;
+      Writable   : Boolean;
+      Has_Event  : Boolean;
+      Has_Vector : Boolean;
+      Event      : Event_Number_Range;
+      Vector     : Vector_Range)
+      return Channel_Type
+   is
+   begin
+      return Channel : Channel_Type := Null_Channel do
+         Channel.Name       := Name;
+         Channel.Address    := Address;
+         Channel.Size       := Size;
+         Channel.Writable   := Writable;
+         Channel.Has_Event  := Has_Event;
+         Channel.Has_Vector := Has_Vector;
+         Channel.Event      := Event;
+         Channel.Vector     := Vector;
+      end return;
+   end Create_Channel;
+
+   -------------------------------------------------------------------------
+
    function Create_Name (Str : String) return Name_Type
    is
       Name    : Name_Type := Null_Name;

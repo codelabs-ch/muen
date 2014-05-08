@@ -24,4 +24,16 @@ is
      with
        Pre => Str'Length in Name_Index_Type;
 
+   --  Create channel with given parameters.
+   function Create_Channel
+     (Name       : Name_Type;
+      Address    : Interfaces.Unsigned_64;
+      Size       : Interfaces.Unsigned_64;
+      Writable   : Boolean;
+      Has_Event  : Boolean;
+      Has_Vector : Boolean;
+      Event      : Event_Number_Range;
+      Vector     : Vector_Range)
+      return Channel_Type;
+
 end Musinfo.Utils;

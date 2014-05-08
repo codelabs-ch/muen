@@ -29,4 +29,7 @@ is
    --  Verify name creation.
    procedure Create_Name;
 
+   --  Verify channel creation.
+   procedure Create_Channel;
+
 end Utils_Tests;

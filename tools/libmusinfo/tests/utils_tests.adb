@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with Musinfo.Utils;
 
 package body Utils_Tests
@@ -23,6 +25,47 @@ is
 
    use Ahven;
    use Musinfo;
+
+   -------------------------------------------------------------------------
+
+   procedure Create_Channel
+   is
+      use type Interfaces.Unsigned_64;
+
+      Ref_Name   : constant Name_Type := Utils.Create_Name (Str => "foo");
+      Ref_Addr   : constant Interfaces.Unsigned_64 := 16#8000_cafe_beef_0000#;
+      Ref_Size   : constant Interfaces.Unsigned_64 := 16#2000#;
+      Ref_Event  : constant Event_Number_Range     := 234;
+      Ref_Vector : constant Vector_Range           := 123;
+      Channel    : Channel_Type;
+   begin
+      Channel := Utils.Create_Channel
+        (Name       => Ref_Name,
+         Address    => Ref_Addr,
+         Size       => Ref_Size,
+         Writable   => False,
+         Has_Event  => True,
+         Has_Vector => False,
+         Event      => Ref_Event,
+         Vector     => Ref_Vector);
+
+      Assert (Condition => Channel.Name = Ref_Name,
+              Message   => "Name mismatch");
+      Assert (Condition => Channel.Address = Ref_Addr,
+              Message   => "Address mismatch");
+      Assert (Condition => Channel.Size = Ref_Size,
+              Message   => "Size mismatch");
+      Assert (Condition => not Channel.Writable,
+              Message   => "Writable");
+      Assert (Condition => Channel.Has_Event,
+              Message   => "Has no event");
+      Assert (Condition => not Channel.Has_Vector,
+              Message   => "Has vector");
+      Assert (Condition => Channel.Event = Ref_Event,
+              Message   => "Event mismatch");
+      Assert (Condition => Channel.Vector = Ref_Vector,
+              Message   => "Vector mismatch");
+   end Create_Channel;
 
    -------------------------------------------------------------------------
 
@@ -47,6 +90,9 @@ is
       T.Add_Test_Routine
         (Routine => Create_Name'Access,
          Name    => "Create name from string");
+      T.Add_Test_Routine
+        (Routine => Create_Channel'Access,
+         Name    => "Create channel");
    end Initialize;
 
 end Utils_Tests;

@@ -28,6 +28,38 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Append_Channel
+   is
+      Ref_Channel : constant Channel_Type := Utils.Create_Channel
+        (Name       => Utils.Create_Name (Str => "foobar"),
+         Address    => 16#3000#,
+         Size       => 16#1000#,
+         Writable   => True,
+         Has_Event  => False,
+         Has_Vector => False,
+         Event      => 12,
+         Vector     => 21);
+      Info : Subject_Info_Type := Null_Subject_Info;
+   begin
+      Assert (Condition => Info.Channel_Count = Channel_Count_Type'First,
+              Message   => "Channel present");
+
+      Utils.Append_Channel (Info    => Info,
+                            Channel => Ref_Channel);
+
+      Assert (Condition => Info.Channel_Count = 1,
+              Message   => "Channel not appended");
+      Assert (Condition => Info.Channels (1) = Ref_Channel,
+              Message   => "Channel mismatch");
+
+      Utils.Append_Channel (Info    => Info,
+                            Channel => Ref_Channel);
+      Assert (Condition => Info.Channel_Count = 2,
+              Message   => "Channel not appended (2)");
+   end Append_Channel;
+
+   -------------------------------------------------------------------------
+
    procedure Create_Channel
    is
       use type Interfaces.Unsigned_64;
@@ -93,6 +125,9 @@ is
       T.Add_Test_Routine
         (Routine => Create_Channel'Access,
          Name    => "Create channel");
+      T.Add_Test_Routine
+        (Routine => Append_Channel'Access,
+         Name    => "Append channel to subject info");
    end Initialize;
 
 end Utils_Tests;

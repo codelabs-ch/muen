@@ -32,4 +32,7 @@ is
    --  Verify channel creation.
    procedure Create_Channel;
 
+   --  Verify appending of channel to subject info.
+   procedure Append_Channel;
+
 end Utils_Tests;

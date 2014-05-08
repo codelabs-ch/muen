@@ -36,4 +36,11 @@ is
       Vector     : Vector_Range)
       return Channel_Type;
 
+   --  Append channel to subject info.
+   procedure Append_Channel
+     (Info    : in out Subject_Info_Type;
+      Channel :        Channel_Type)
+     with
+       Pre => Info.Channel_Count < Channel_Count_Type'Last;
+
 end Musinfo.Utils;

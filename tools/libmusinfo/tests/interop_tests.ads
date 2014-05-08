@@ -29,4 +29,7 @@ is
    --  Verify name type interoperability.
    procedure Name_To_C;
 
+   --  Verify channel type interoperability.
+   procedure Channel_To_C;
+
 end Interop_Tests;

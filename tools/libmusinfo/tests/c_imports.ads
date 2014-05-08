@@ -31,4 +31,12 @@ is
        Convention => C,
        Link_Name  => "assert_name";
 
+   function C_Assert_Channel
+     (Channel : Musinfo.Channel_Type)
+      return Interfaces.C.int
+     with
+       Import     => True,
+       Convention => C,
+       Link_Name  => "assert_channel";
+
 end C_Imports;

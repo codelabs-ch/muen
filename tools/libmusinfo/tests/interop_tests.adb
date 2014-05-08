@@ -30,6 +30,27 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Channel_To_C
+   is
+      use type Interfaces.C.int;
+
+      Ref_Str : constant String (Name_Index_Type) := (others => 'a');
+   begin
+      Assert (Condition => C_Imports.C_Assert_Channel
+              (Channel => Utils.Create_Channel
+               (Name       => Utils.Create_Name (Str => Ref_Str),
+                Address    => 16#dead_beef_cafe_feed#,
+                Size       => 16#8080_abab_cdcd_9090#,
+                Writable   => True,
+                Has_Event  => True,
+                Has_Vector => True,
+                Event      => 128,
+                Vector     => 255)) = 1,
+              Message   => "C channel mismatch");
+   end Channel_To_C;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize (T : in out Testcase)
    is
    begin
@@ -37,6 +58,9 @@ is
       T.Add_Test_Routine
         (Routine => Name_To_C'Access,
          Name    => "Name to C");
+      T.Add_Test_Routine
+        (Routine => Channel_To_C'Access,
+         Name    => "Channel to C");
    end Initialize;
 
    -------------------------------------------------------------------------

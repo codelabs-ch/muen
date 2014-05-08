@@ -20,6 +20,10 @@
 
 #include "musinfo.h"
 
+#define WRITABLE_FLAG	1 << 0
+#define HAS_EVENT_FLAG	1 << 1
+#define HAS_VECTOR_FLAG	1 << 2
+
 int assert_name(const struct name_type * const name)
 {
 	if (name->length != MAX_NAME_LENGTH)
@@ -38,5 +42,55 @@ int assert_name(const struct name_type * const name)
 			return 0;
 		}
 	}
+	return 1;
+}
+
+int assert_channel(const struct channel_type * const channel)
+{
+	if (!assert_name(&channel->name))
+	{
+		return 0;
+	}
+
+	if (channel->address != 0xdeadbeefcafefeed)
+	{
+		printf("Channel: Invalid address 0x%lx\n", channel->address);
+		return 0;
+	}
+
+	if (channel->size != 0x8080ababcdcd9090)
+	{
+		printf("Channel: Invalid size 0x%lx\n", channel->size);
+		return 0;
+	}
+
+	if (!(channel->flags & WRITABLE_FLAG))
+	{
+		printf("Channel: Writable flag not set\n");
+		return 0;
+	}
+	if (!(channel->flags & HAS_EVENT_FLAG))
+	{
+		printf("Channel: Has_Event flag not set\n");
+		return 0;
+	}
+	if (!(channel->flags & HAS_VECTOR_FLAG))
+	{
+		printf("Channel: Has_Vector flag not set\n");
+		return 0;
+	}
+
+	if (channel->event != 128)
+	{
+		printf("Channel: Invalid event number %d\n", channel->event);
+		return 0;
+	}
+
+	if (channel->vector != 255)
+	{
+		printf("Channel: Invalid vector number %d\n", channel->vector);
+		return 0;
+	}
+
 	return 1;
 }

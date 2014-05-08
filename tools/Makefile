@@ -23,6 +23,7 @@ TOOLS =           \
 	mugeniobm     \
 	mugenmsrbm    \
 	mugenpt       \
+	mugensinfo    \
 	mugenspec     \
 	mugenzp       \
 	mulnxbzpatch  \

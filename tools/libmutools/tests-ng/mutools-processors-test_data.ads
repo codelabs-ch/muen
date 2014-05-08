@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with Mutools.Instances;
+
 generic
    type GNATtest_Test_Type is new AUnit.Test_Fixtures.Test_Fixture
      with private;
@@ -12,8 +14,10 @@ package Mutools.Processors.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
---  end read only
-   with null record;
+   --  end read only
+   with record
+      Param : access Param_Type;
+   end record;
 
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);

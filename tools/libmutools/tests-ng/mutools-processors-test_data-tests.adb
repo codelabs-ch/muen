@@ -20,12 +20,10 @@ package body Mutools.Processors.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Ada.Containers.Count_Type;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Procs.Length = 1,
+              Message   => "No procedure registered");
 --  begin read only
    end Test_Register;
 --  end read only
@@ -38,15 +36,11 @@ package body Mutools.Processors.Test_Data.Tests is
    procedure Test_Run (Gnattest_T : in out Test) is
    --  mutools-processors.ads:34:4:Run
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Run (Data => Gnattest_T.Param.all);
+      Assert (Condition => Instances.Counter = 25,
+              Message   => "Counter mismatch" & Instances.Counter'Img);
+      Instances.Counter := 0;
 --  begin read only
    end Test_Run;
 --  end read only
@@ -63,11 +57,8 @@ package body Mutools.Processors.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Get_Count = 1,
+              Message   => "Count not 1");
 --  begin read only
    end Test_Get_Count;
 --  end read only
@@ -84,11 +75,11 @@ package body Mutools.Processors.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Get_Count = 1,
+              Message   => "Count not 1");
+      Clear;
+      Assert (Condition => Get_Count = 0,
+              Message   => "Count not 0");
 --  begin read only
    end Test_Clear;
 --  end read only

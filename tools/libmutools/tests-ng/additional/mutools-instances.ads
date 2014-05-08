@@ -24,7 +24,7 @@ is
 
    package Mutable is new Processors (Param_Type => Natural);
 
-   Immutable_Counter : Natural := 0;
+   Counter : Natural := 0;
 
    package Immutable is new Immutable_Processors (Param_Type => Natural);
 

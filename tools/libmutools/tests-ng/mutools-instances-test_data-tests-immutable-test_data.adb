@@ -13,7 +13,7 @@ package body Mutools.Instances.Test_Data.Tests.Immutable.Test_Data is
    procedure Dummy (Data : Natural)
    is
    begin
-      Instances.Immutable_Counter := Immutable_Counter + Data;
+      Instances.Counter := Counter + Data;
    end Dummy;
 
    -------------------------------------------------------------------------
@@ -29,7 +29,7 @@ package body Mutools.Instances.Test_Data.Tests.Immutable.Test_Data is
    procedure Tear_Down (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
    begin
-      null;
+      Instances.Counter := 0;
    end Tear_Down;
 
    -------------------------------------------------------------------------

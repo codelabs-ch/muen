@@ -5,11 +5,25 @@
 
 package body Mutools.Instances.Test_Data.Tests.Mutable.Test_Data is
 
+   Test_Natural : aliased Natural := 25;
+
+   -------------------------------------------------------------------------
+
+   procedure Dummy (Data : in out Natural)
+   is
+   begin
+      Instances.Counter := Counter + Data;
+   end Dummy;
+
+   -------------------------------------------------------------------------
+
    procedure Set_Up (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
    begin
       null;
    end Set_Up;
+
+   -------------------------------------------------------------------------
 
    procedure Tear_Down (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
@@ -17,16 +31,20 @@ package body Mutools.Instances.Test_Data.Tests.Mutable.Test_Data is
       null;
    end Tear_Down;
 
+   -------------------------------------------------------------------------
+
    procedure User_Set_Up (Gnattest_T : in out New_Test) is
-      pragma Unreferenced (Gnattest_T);
    begin
-      null;
+      Gnattest_T.Param := Test_Natural'Access;
+      Instances.Mutable.Register (Process => Dummy'Access);
    end User_Set_Up;
+
+   -------------------------------------------------------------------------
 
    procedure User_Tear_Down (Gnattest_T : in out New_Test) is
       pragma Unreferenced (Gnattest_T);
    begin
-      null;
+      Instances.Mutable.Clear;
    end User_Tear_Down;
 
 end Mutools.Instances.Test_Data.Tests.Mutable.Test_Data;

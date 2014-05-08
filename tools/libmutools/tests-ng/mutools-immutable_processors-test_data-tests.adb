@@ -38,9 +38,9 @@ package body Mutools.Immutable_Processors.Test_Data.Tests is
 --  end read only
    begin
       Run (Data => Gnattest_T.Param.all);
-      Assert (Condition => Instances.Immutable_Counter = 12,
+      Assert (Condition => Instances.Counter = 12,
               Message   => "Counter mismatch");
-      Instances.Immutable_Counter := 0;
+      Instances.Counter := 0;
 --  begin read only
    end Test_Run;
 --  end read only

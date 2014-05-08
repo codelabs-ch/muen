@@ -16,21 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Text_Runner;
-with Ahven.Framework;
-
-with Writer_Tests;
-
-procedure Test_Runner
+package Musinfo.Writer
 is
-   use Ahven.Framework;
 
-   S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Libmusinfo tests");
-begin
-   Add_Test (Suite => S.all,
-             T     => new Writer_Tests.Testcase);
+   --  Serialize given subject information structure to file with specified
+   --  filename.
+   procedure Serialize
+     (Info     : Subject_Info_Type;
+      Filename : String);
 
-   Ahven.Text_Runner.Run (Suite => S);
-   Release_Suite (T => S);
-end Test_Runner;
+end Musinfo.Writer;

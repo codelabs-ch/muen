@@ -15,6 +15,7 @@ GENERATORS =      \
 	$(MUGENIOBM)  \
 	$(MUGENMSRBM) \
 	$(MUGENPT)    \
+	$(MUGENSINFO) \
 	$(MUGENSPEC)  \
 	$(MUGENZP)
 

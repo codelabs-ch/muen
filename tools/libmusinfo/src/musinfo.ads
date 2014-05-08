@@ -22,9 +22,8 @@ package Musinfo
 is
 
    --  Unique identifier used to designate a subject info memory region.
-   --  Generated as follows:
-   --  echo -n "muinfo" | hexdump -C, 2 bytes for counter.
-   Muen_Subject_Info_Magic : constant := 16#6d75_696e_666f_0001#;
+   --  "muinfo" with highest 2 bytes for counter.
+   Muen_Subject_Info_Magic : constant := 16#0100_6f66_6e69_756d#;
 
    type Bit_Type is range 0 .. 1
      with

@@ -30,6 +30,10 @@ struct name_type {
 	char data[MAX_NAME_LENGTH];
 } __attribute__((packed));
 
+#define WRITABLE_FLAG	1 << 0
+#define HAS_EVENT_FLAG	1 << 1
+#define HAS_VECTOR_FLAG	1 << 2
+
 struct channel_type {
 	struct name_type name;
 	uint64_t address;

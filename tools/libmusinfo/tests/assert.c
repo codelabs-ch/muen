@@ -20,10 +20,6 @@
 
 #include "musinfo.h"
 
-#define WRITABLE_FLAG	1 << 0
-#define HAS_EVENT_FLAG	1 << 1
-#define HAS_VECTOR_FLAG	1 << 2
-
 int assert_name(const struct name_type * const name)
 {
 	if (name->length != MAX_NAME_LENGTH)

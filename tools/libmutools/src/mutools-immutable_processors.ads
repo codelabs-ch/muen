@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Containers.Doubly_Linked_Lists;
+
 generic
    --  Parameter passed to processors.
    type Param_Type (<>) is limited private;
@@ -35,5 +37,12 @@ is
 
    --  Clear all registered processors.
    procedure Clear;
+
+private
+
+   package Processor_Package is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => Process_Procedure);
+
+   Procs : Processor_Package.List;
 
 end Mutools.Immutable_Processors;

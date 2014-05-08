@@ -15,17 +15,15 @@ package body Mutools.Immutable_Processors.Test_Data.Tests is
    procedure Test_Register_d8bf1e (Gnattest_T : in out Test) renames Test_Register;
 --  id:2.2/d8bf1e669c1b2aa4/Register/1/0/
    procedure Test_Register (Gnattest_T : in out Test) is
-   --  mutools-immutable_processors.ads:28:4:Register
+   --  mutools-immutable_processors.ads:30:4:Register
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Ada.Containers.Count_Type;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Procs.Length = 1,
+              Message   => "No procedure registered");
 --  begin read only
    end Test_Register;
 --  end read only
@@ -36,17 +34,13 @@ package body Mutools.Immutable_Processors.Test_Data.Tests is
    procedure Test_Run_bf79dd (Gnattest_T : in out Test) renames Test_Run;
 --  id:2.2/bf79dde4c949577b/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  mutools-immutable_processors.ads:31:4:Run
+   --  mutools-immutable_processors.ads:33:4:Run
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Run (Data => Gnattest_T.Param.all);
+      Assert (Condition => Instances.Immutable_Counter = 12,
+              Message   => "Counter mismatch");
+      Instances.Immutable_Counter := 0;
 --  begin read only
    end Test_Run;
 --  end read only
@@ -57,17 +51,14 @@ package body Mutools.Immutable_Processors.Test_Data.Tests is
    procedure Test_Get_Count_1fbd7c (Gnattest_T : in out Test) renames Test_Get_Count;
 --  id:2.2/1fbd7c784b3d55c2/Get_Count/1/0/
    procedure Test_Get_Count (Gnattest_T : in out Test) is
-   --  mutools-immutable_processors.ads:34:4:Get_Count
+   --  mutools-immutable_processors.ads:36:4:Get_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Get_Count = 1,
+              Message   => "Count not 1");
 --  begin read only
    end Test_Get_Count;
 --  end read only
@@ -78,17 +69,17 @@ package body Mutools.Immutable_Processors.Test_Data.Tests is
    procedure Test_Clear_4b4f85 (Gnattest_T : in out Test) renames Test_Clear;
 --  id:2.2/4b4f85da05a9b689/Clear/1/0/
    procedure Test_Clear (Gnattest_T : in out Test) is
-   --  mutools-immutable_processors.ads:37:4:Clear
+   --  mutools-immutable_processors.ads:39:4:Clear
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Get_Count = 1,
+              Message   => "Count not 1");
+      Clear;
+      Assert (Condition => Get_Count = 0,
+              Message   => "Count not 0");
 --  begin read only
    end Test_Clear;
 --  end read only

@@ -11,16 +11,16 @@ package Mutools.Immutable_Processors.Test_Data.Tests is
    with null record;
 
    procedure Test_Register_d8bf1e (Gnattest_T : in out Test);
-   --  mutools-immutable_processors.ads:28:4:Register
+   --  mutools-immutable_processors.ads:30:4:Register
 
    procedure Test_Run_bf79dd (Gnattest_T : in out Test);
-   --  mutools-immutable_processors.ads:31:4:Run
+   --  mutools-immutable_processors.ads:33:4:Run
 
    procedure Test_Get_Count_1fbd7c (Gnattest_T : in out Test);
-   --  mutools-immutable_processors.ads:34:4:Get_Count
+   --  mutools-immutable_processors.ads:36:4:Get_Count
 
    procedure Test_Clear_4b4f85 (Gnattest_T : in out Test);
-   --  mutools-immutable_processors.ads:37:4:Clear
+   --  mutools-immutable_processors.ads:39:4:Clear
 
 end Mutools.Immutable_Processors.Test_Data.Tests;
 --  end read only

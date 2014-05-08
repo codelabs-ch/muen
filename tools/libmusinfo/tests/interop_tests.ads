@@ -32,4 +32,7 @@ is
    --  Verify channel type interoperability.
    procedure Channel_To_C;
 
+   --  Verify subject info type interoperability.
+   procedure Subject_Info_To_C;
+
 end Interop_Tests;

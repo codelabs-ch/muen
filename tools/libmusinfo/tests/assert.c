@@ -90,3 +90,29 @@ int assert_channel(const struct channel_type * const channel)
 
 	return 1;
 }
+
+int assert_subject_info(const struct subject_info_type * const info)
+{
+	if (info->magic != MUEN_SUBJECT_INFO_MAGIC)
+	{
+		printf("Sinfo: Invalid magic '%lx'\n", info->magic);
+		return 0;
+	}
+
+	if (info->channel_count != MAX_CHANNEL_COUNT)
+	{
+		printf("Sinfo: Invalid channel count %d\n", info->channel_count);
+		return 0;
+	}
+
+	int i;
+	for (i = 0; i < info->channel_count; i++)
+	{
+		if (!assert_channel(&info->channels[i]))
+		{
+			return 0;
+		}
+	}
+
+	return 1;
+}

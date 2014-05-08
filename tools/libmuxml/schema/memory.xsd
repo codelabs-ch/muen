@@ -31,6 +31,7 @@
 			<xs:enumeration value="kernel_binary"/>
 			<xs:enumeration value="kernel_interface"/>
 			<xs:enumeration value="subject"/>
+			<xs:enumeration value="subject_info"/>
 			<xs:enumeration value="subject_state"/>
 			<xs:enumeration value="subject_binary"/>
 			<xs:enumeration value="subject_channel"/>

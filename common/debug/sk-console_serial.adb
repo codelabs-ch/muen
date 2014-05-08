@@ -21,6 +21,8 @@ with Skp.Hardware;
 with SK.IO;
 
 package body SK.Console_Serial
+with
+   SPARK_Mode => Off
 is
 
    --  Serial output address.

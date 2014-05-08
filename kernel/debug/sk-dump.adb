@@ -26,6 +26,8 @@ with SK.Subjects;
 with SK.VMX;
 
 package body SK.Dump
+with
+   SPARK_Mode => Off
 is
 
    -------------------------------------------------------------------------

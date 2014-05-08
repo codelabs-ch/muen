@@ -19,6 +19,8 @@
 with Skp;
 
 package SK.Dump
+with
+   SPARK_Mode => Off
 is
 
    --  Print CPU registers.

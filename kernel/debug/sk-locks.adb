@@ -19,8 +19,8 @@
 with System.Machine_Code;
 
 package body SK.Locks
---# own
---#    State is Lock;
+with
+   SPARK_Mode => Off
 is
 
    type Spin_Lock_Type is record
@@ -32,13 +32,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Spin_Lock
-   --# global
-   --#    in out Lock;
-   --# derives
-   --#    Lock from *;
    is
-      --# hide Spin_Lock;
-
       Result : SK.Byte;
    begin
       loop
@@ -56,12 +50,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Unlock
-   --# global
-   --#    in out Lock;
-   --# derives
-   --#    Lock from *;
    is
-      --# hide Unlock;
    begin
       System.Machine_Code.Asm
         (Template => "movq $0, %0",

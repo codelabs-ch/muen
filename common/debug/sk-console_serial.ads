@@ -17,6 +17,8 @@
 --
 
 package SK.Console_Serial
+with
+   SPARK_Mode => Off
 is
 
    --  Initialize serial port.

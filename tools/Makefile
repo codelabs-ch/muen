@@ -4,6 +4,7 @@ LIBS =            \
 	libmutools    \
 	libmucfgcheck \
 	libmucfgvcpu  \
+	libmusinfo    \
 	liballoc      \
 	libpaging
 

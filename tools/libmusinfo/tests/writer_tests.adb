@@ -16,6 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Directories;
+
+with Interfaces;
+
+with Musinfo.Utils;
 with Musinfo.Writer;
 
 with Test_Utils;
@@ -24,6 +29,7 @@ package body Writer_Tests
 is
 
    use Ahven;
+   use Musinfo;
 
    -------------------------------------------------------------------------
 
@@ -40,15 +46,62 @@ is
 
    procedure Serialize
    is
+      Info : Subject_Info_Type := Null_Subject_Info;
    begin
-      Musinfo.Writer.Serialize
-        (Info     => Musinfo.Null_Subject_Info,
+      Writer.Serialize
+        (Info     => Info,
          Filename => "obj/null_info");
 
       Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/null_info",
                Filename2 => "obj/null_info"),
               Message   => "Null info mismatch");
+
+      Utils.Append_Channel
+        (Info    => Info,
+         Channel => Utils.Create_Channel
+           (Name       => Utils.Create_Name (Str => "channel1"),
+            Address    => 0,
+            Size       => 16#1000#,
+            Writable   => False,
+            Has_Event  => False,
+            Has_Vector => False,
+            Event      => 0,
+            Vector     => 0));
+      Utils.Append_Channel
+        (Info    => Info,
+         Channel => Utils.Create_Channel
+           (Name       => Utils.Create_Name (Str => "channel2"),
+            Address    => Interfaces.Unsigned_64'Last,
+            Size       => Interfaces.Unsigned_64'Last,
+            Writable   => False,
+            Has_Event  => False,
+            Has_Vector => True,
+            Event      => 0,
+            Vector     => 255));
+      Utils.Append_Channel
+        (Info    => Info,
+         Channel => Utils.Create_Channel
+           (Name       => Utils.Create_Name (Str => "channel3"),
+            Address    => 16#beef_cafe_8080_1111#,
+            Size       => 16#dead_beef_cafe_4321#,
+            Writable   => True,
+            Has_Event  => True,
+            Has_Vector => False,
+            Event      => 1,
+            Vector     => 0));
+
+      Writer.Serialize
+        (Info     => Info,
+         Filename => "obj/subject_info");
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/subject_info",
+               Filename2 => "obj/subject_info"),
+              Message   => "Subject info mismatch");
+
+      Ada.Directories.Delete_File (Name => "obj/null_info");
+      Ada.Directories.Delete_File (Name => "obj/subject_info");
    end Serialize;
 
 end Writer_Tests;

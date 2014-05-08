@@ -16,24 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ahven.Text_Runner;
-with Ahven.Framework;
-
-with Writer_Tests;
-with Utils_Tests;
-
-procedure Test_Runner
+package Musinfo.Utils
 is
-   use Ahven.Framework;
 
-   S : constant Test_Suite_Access := Create_Suite
-     (Suite_Name => "Libmusinfo tests");
-begin
-   Add_Test (Suite => S.all,
-             T     => new Writer_Tests.Testcase);
-   Add_Test (Suite => S.all,
-             T     => new Utils_Tests.Testcase);
+   --  Create name from given string.
+   function Create_Name (Str : String) return Name_Type
+     with
+       Pre => Str'Length in Name_Index_Type;
 
-   Ahven.Text_Runner.Run (Suite => S);
-   Release_Suite (T => S);
-end Test_Runner;
+end Musinfo.Utils;

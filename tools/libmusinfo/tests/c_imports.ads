@@ -16,17 +16,19 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../../contrib/projects/ahven";
-with "../libtest/libtest";
-with "../shared_tools";
+with Interfaces.C;
 
-with "libmusinfo";
+with Musinfo;
 
-project Test_Libmusinfo extends "../tools.gpr" is
+package C_Imports
+is
 
-   for Languages use ("Ada", "C");
-   for Source_Dirs use ("tests/**");
-   for Main use ("test_runner.adb");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
+   function C_Assert_Name
+     (Name : Musinfo.Name_Type)
+      return Interfaces.C.int
+     with
+       Import     => True,
+       Convention => C,
+       Link_Name  => "assert_name";
 
-end Test_Libmusinfo;
+end C_Imports;

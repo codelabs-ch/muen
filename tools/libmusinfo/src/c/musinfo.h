@@ -19,8 +19,6 @@
 #ifndef MUSINFO_H_
 #define MUSINFO_H_
 
-#include <stdint.h>
-
 #define MUEN_SUBJECT_INFO_MAGIC	0x01006f666e69756d
 #define MAX_NAME_LENGTH			63
 #define MAX_CHANNEL_COUNT		255

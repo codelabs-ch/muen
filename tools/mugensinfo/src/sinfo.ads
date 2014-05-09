@@ -16,22 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package Mutools.Types
+package Sinfo
 is
-
-   --  Subject event groups.
-   type Event_Group_Type is (Vmx_Exit, Vmcall);
-
-   --  Types of physical memory.
-   type Memory_Kind is
-     (System, System_Vmxon, System_Vmcs, System_Iobm, System_Msrbm, System_Pt,
-      Kernel, Kernel_Binary, Kernel_Interface,
-      Subject, Subject_Info, Subject_Binary, Subject_Zeropage, Subject_Initrd,
-      Subject_Channel, Subject_State, Subject_Bios, Subject_Acpi_Rsdp,
-      Subject_Acpi_Xsdt, Subject_Acpi_Fadt, Subject_Acpi_Dsdt);
-
-   subtype System_Memory  is Memory_Kind range System  .. System_Pt;
-   subtype Kernel_Memory  is Memory_Kind range Kernel  .. Kernel_Interface;
-   subtype Subject_Memory is Memory_Kind range Subject .. Subject_Acpi_Dsdt;
-
-end Mutools.Types;
+end Sinfo;

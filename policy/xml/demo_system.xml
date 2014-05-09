@@ -37,7 +37,7 @@
 	<channels>
 		<channel name="virtual_time" size="16#1000#"/>
 		<channel name="virtual_keyboard" size="16#1000#" hasEvent="ipi"/>
-		<channel name="linux_console" size="16#0001_0000#" hasEvent="ipi"/>
+		<channel name="virtual_console" size="16#0001_0000#" hasEvent="ipi"/>
 		<channel name="time_console" size="16#0001_0000#" hasEvent="ipi"/>
 		<channel name="sm_console" size="16#0001_0000#" hasEvent="ipi"/>
 	</channels>
@@ -57,7 +57,7 @@
 			</devices>
 			<events/>
 			<channels>
-				<reader ref="linux_console" virtualAddress="16#0010_0000#" vector="34"/>
+				<reader ref="virtual_console" virtualAddress="16#0010_0000#" vector="34"/>
 				<reader ref="time_console" virtualAddress="16#0011_0000#" vector="35"/>
 				<reader ref="sm_console" virtualAddress="16#0012_0000#" vector="36"/>
 				<writer ref="virtual_keyboard" virtualAddress="16#0005_0000#" event="1"/>
@@ -133,7 +133,7 @@
 			<channels>
 				<reader ref="virtual_time" virtualAddress="16#2000#"/>
 				<reader ref="virtual_keyboard" virtualAddress="16#3000#" vector="49"/>
-				<writer ref="linux_console" virtualAddress="16#4000#" event="1"/>
+				<writer ref="virtual_console" virtualAddress="16#4000#" event="1"/>
 			</channels>
 			<binary filename="bzImage" size="16#0020_0000#" virtualAddress="16#0040_0000#"/>
 		</subject>

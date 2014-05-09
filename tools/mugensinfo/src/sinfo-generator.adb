@@ -33,6 +33,89 @@ with Musinfo.Writer;
 package body Sinfo.Generator
 is
 
+   --  Add channel with given physical and virtual memory regions of specified
+   --  subject to subject info data.
+   procedure Add_Channel_To_Info
+     (Info          : in out Musinfo.Subject_Info_Type;
+      Subject_Node  :        DOM.Core.Node;
+      Subject_Name  :        String;
+      Virt_Mem_Node :        DOM.Core.Node;
+      Phys_Mem_Node :        DOM.Core.Node);
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Channel_To_Info
+     (Info          : in out Musinfo.Subject_Info_Type;
+      Subject_Node  :        DOM.Core.Node;
+      Subject_Name  :        String;
+      Virt_Mem_Node :        DOM.Core.Node;
+      Phys_Mem_Node :        DOM.Core.Node)
+   is
+      Address : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => Virt_Mem_Node,
+              Name => "virtualAddress"));
+      Writable : constant Boolean
+        := Boolean'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => Virt_Mem_Node,
+              Name => "writable"));
+      Size : constant Interfaces.Unsigned_64
+        := Interfaces.Unsigned_64'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => Phys_Mem_Node,
+              Name => "size"));
+      Phys_Name : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Phys_Mem_Node,
+           Name => "name");
+      Event_ID_Str : constant String
+        := Muxml.Utils.Get_Attribute
+          (Doc   => Subject_Node,
+           XPath => "events/source/group/event/notify[@physical='"
+           & Phys_Name & "']/..",
+           Name  => "id");
+      Has_Event : constant Boolean := Event_ID_Str'Length > 0;
+      Event_Nr  : Musinfo.Event_Number_Range
+        := Musinfo.Event_Number_Range'First;
+      Vector_Str : constant String
+        := Muxml.Utils.Get_Attribute
+          (Doc   => Subject_Node,
+           XPath => "events/target/event[@physical='" & Phys_Name & "']",
+           Name  => "vector");
+      Has_Vector : constant Boolean     := Vector_Str'Length > 0;
+      Vector     : Musinfo.Vector_Range := Musinfo.Vector_Range'First;
+   begin
+      if Has_Event then
+         Event_Nr := Musinfo.Event_Number_Range'Value (Event_ID_Str);
+      end if;
+
+      if Has_Vector then
+         Vector := Musinfo.Vector_Range'Value (Vector_Str);
+      end if;
+
+      Mulog.Log
+        (Msg => "Announcing channel to subject '" & Subject_Name
+         & "': " & Phys_Name & "@" & Mutools.Utils.To_Hex (Number => Address)
+         & ", size " & Mutools.Utils.To_Hex (Number => Size) & ", "
+         & (if Writable   then "writable" else "read-only")
+         & (if Has_Event  then ", event "  & Event_ID_Str else "")
+         & (if Has_Vector then ", vector " & Vector_Str   else ""));
+
+      Musinfo.Utils.Append_Channel
+        (Info    => Info,
+         Channel => Musinfo.Utils.Create_Channel
+           (Name       => Musinfo.Utils.Create_Name (Str => Phys_Name),
+            Address    => Address,
+            Size       => Size,
+            Writable   => Writable,
+            Has_Event  => Has_Event,
+            Has_Vector => Has_Vector,
+            Event      => Event_Nr,
+            Vector     => Vector));
+   end Add_Channel_To_Info;
+
    -------------------------------------------------------------------------
 
    procedure Write
@@ -98,78 +181,12 @@ is
                           Name => "type"));
                begin
                   if Mem_Type = Mutools.Types.Subject_Channel then
-                     declare
-                        Address : constant Interfaces.Unsigned_64
-                          := Interfaces.Unsigned_64'Value
-                            (DOM.Core.Elements.Get_Attribute
-                               (Elem => Virt_Mem_Node,
-                                Name => "virtualAddress"));
-                        Writable : constant Boolean
-                          := Boolean'Value
-                            (DOM.Core.Elements.Get_Attribute
-                               (Elem => Virt_Mem_Node,
-                                Name => "writable"));
-                        Size : constant Interfaces.Unsigned_64
-                          := Interfaces.Unsigned_64'Value
-                            (DOM.Core.Elements.Get_Attribute
-                               (Elem => Phys_Mem_Node,
-                                Name => "size"));
-                        Event_ID_Str : constant String
-                          := Muxml.Utils.Get_Attribute
-                            (Doc   => Subj_Node,
-                             XPath => "events/source/group/event/"
-                             & "notify[@physical='" & Phys_Name & "']/..",
-                             Name  => "id");
-                        Has_Event : constant Boolean
-                          := Event_ID_Str'Length > 0;
-                        Event_Nr : Musinfo.Event_Number_Range
-                          := Musinfo.Event_Number_Range'First;
-                        Vector_Str : constant String
-                          := Muxml.Utils.Get_Attribute
-                            (Doc   => Subj_Node,
-                             XPath => "events/target/event[@physical='"
-                             & Phys_Name & "']",
-                             Name  => "vector");
-                        Has_Vector : constant Boolean := Vector_Str'Length > 0;
-                        Vector : Musinfo.Vector_Range
-                          := Musinfo.Vector_Range'First;
-                     begin
-                        if Has_Event then
-                           Event_Nr := Musinfo.Event_Number_Range'Value
-                             (Event_ID_Str);
-                        end if;
-
-                        if Has_Vector then
-                           Vector := Musinfo.Vector_Range'Value (Vector_Str);
-                        end if;
-
-                        Mulog.Log
-                          (Msg => "Announcing channel to subject '" & Subj_Name
-                           & "': " & Phys_Name & "@"
-                           & Mutools.Utils.To_Hex (Number => Address) & ", "
-                           & "size " & Mutools.Utils.To_Hex (Number => Size)
-                           & ", "
-                           & (if Writable then "writable" else "read-only")
-                           & (if Has_Event then
-                                  ", event " & Event_ID_Str
-                             else "")
-                           & (if Has_Vector then
-                                  ", vector " & Vector_Str
-                             else ""));
-
-                        Musinfo.Utils.Append_Channel
-                          (Info    => Subject_Info,
-                           Channel => Musinfo.Utils.Create_Channel
-                             (Name       => Musinfo.Utils.Create_Name
-                                  (Str => Phys_Name),
-                              Address    => Address,
-                              Size       => Size,
-                              Writable   => Writable,
-                              Has_Event  => Has_Event,
-                              Has_Vector => Has_Vector,
-                              Event      => Event_Nr,
-                              Vector     => Vector));
-                     end;
+                     Add_Channel_To_Info
+                       (Info          => Subject_Info,
+                        Subject_Node  => Subj_Node,
+                        Subject_Name  => Subj_Name,
+                        Virt_Mem_Node => Virt_Mem_Node,
+                        Phys_Mem_Node => Phys_Mem_Node);
                   end if;
                end;
             end loop;

@@ -830,15 +830,9 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
    procedure Test_Iterate (Gnattest_T : in out Test_Map_Type) is
    --  alloc-map.ads:79:4:Iterate
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Implicitly tested");
 --  begin read only
    end Test_Iterate;
 --  end read only
@@ -927,11 +921,8 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Implicitly tested");
 --  begin read only
    end Test_Reserve;
 --  end read only
@@ -948,11 +939,8 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Implicitly tested");
 --  begin read only
    end Test_Insert_New_Region;
 --  end read only

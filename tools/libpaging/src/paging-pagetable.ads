@@ -27,7 +27,7 @@ with Paging.Entries;
 generic
 
    --  Type of pagetable entries.
-   type Entry_Type (<>) is new Paging.Entries.Table_Entry_Type with private;
+   type Entry_Type is new Paging.Entries.Table_Entry_Type with private;
 
    --  Range of pagetable entries.
    type Table_Range is range <>;

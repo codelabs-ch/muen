@@ -88,6 +88,9 @@ is
       Name : String)
       return Region_Type;
 
+   --  Clear memory map.
+   procedure Clear (Map : in out Map_Type);
+
    Overlapping_Empty_Region : exception;
    Invalid_Fixed_Allocation : exception;
    Out_Of_Memory            : exception;

@@ -52,5 +52,8 @@ package Paging.Pagetable.Test_Data.Tests is
    procedure Test_Iterate_5faa5a (Gnattest_T : in out Test);
    --  paging-pagetable.ads:125:4:Iterate
 
+   procedure Test_Clear_6001b9 (Gnattest_T : in out Test);
+   --  paging-pagetable.ads:132:4:Clear
+
 end Paging.Pagetable.Test_Data.Tests;
 --  end read only

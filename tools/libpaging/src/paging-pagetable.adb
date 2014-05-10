@@ -91,6 +91,14 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Clear (Map : in out Page_Table_Map)
+   is
+   begin
+      Map.Tables.Clear;
+   end Clear;
+
+   -------------------------------------------------------------------------
+
    function Contains
      (Table : Page_Table_Type;
       Index : Table_Range)

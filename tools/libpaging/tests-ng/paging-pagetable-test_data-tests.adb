@@ -158,10 +158,10 @@ package body Paging.Pagetable.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Clear (Gnattest_T : in out Test);
-   procedure Test_Clear_6aaa65 (Gnattest_T : in out Test) renames Test_Clear;
+   procedure Test_1_Clear (Gnattest_T : in out Test);
+   procedure Test_Clear_6aaa65 (Gnattest_T : in out Test) renames Test_1_Clear;
 --  id:2.2/6aaa657ec64c7fcd/Clear/1/0/
-   procedure Test_Clear (Gnattest_T : in out Test) is
+   procedure Test_1_Clear (Gnattest_T : in out Test) is
    --  paging-pagetable.ads:85:4:Clear
 --  end read only
 
@@ -174,7 +174,7 @@ package body Paging.Pagetable.Test_Data.Tests is
          "Test not implemented.");
 
 --  begin read only
-   end Test_Clear;
+   end Test_1_Clear;
 --  end read only
 
 
@@ -301,6 +301,27 @@ package body Paging.Pagetable.Test_Data.Tests is
 
 --  begin read only
    end Test_2_Iterate;
+--  end read only
+
+
+--  begin read only
+   procedure Test_2_Clear (Gnattest_T : in out Test);
+   procedure Test_Clear_6001b9 (Gnattest_T : in out Test) renames Test_2_Clear;
+--  id:2.2/6001b9bac3147d11/Clear/0/0/
+   procedure Test_2_Clear (Gnattest_T : in out Test) is
+   --  paging-pagetable.ads:132:4:Clear
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_2_Clear;
 --  end read only
 
 end Paging.Pagetable.Test_Data.Tests;

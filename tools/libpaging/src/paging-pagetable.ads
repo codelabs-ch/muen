@@ -128,6 +128,9 @@ is
         (Table_Number : Table_Range;
          Table        : Page_Table_Type));
 
+   --  Clear page table map.
+   procedure Clear (Map : in out Page_Table_Map);
+
    Duplicate_Entry : exception;
    Missing_Table   : exception;
 

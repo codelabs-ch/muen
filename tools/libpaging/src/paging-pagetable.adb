@@ -82,6 +82,15 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Clear (Table : in out Page_Table_Type)
+   is
+   begin
+      Table.Address := Interfaces.Unsigned_64'First;
+      Table.Data.Clear;
+   end Clear;
+
+   -------------------------------------------------------------------------
+
    function Contains
      (Table : Page_Table_Type;
       Index : Table_Range)

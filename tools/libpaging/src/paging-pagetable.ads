@@ -81,6 +81,9 @@ is
         (Index  :        Table_Range;
          TEntry : in out Entry_Type));
 
+   --  Clear page table entries.
+   procedure Clear (Table : in out Page_Table_Type);
+
    --  A page table container.
    type Page_Table_Map is private;
 

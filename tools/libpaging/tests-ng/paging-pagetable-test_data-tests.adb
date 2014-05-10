@@ -158,11 +158,32 @@ package body Paging.Pagetable.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Clear (Gnattest_T : in out Test);
+   procedure Test_Clear_6aaa65 (Gnattest_T : in out Test) renames Test_Clear;
+--  id:2.2/6aaa657ec64c7fcd/Clear/1/0/
+   procedure Test_Clear (Gnattest_T : in out Test) is
+   --  paging-pagetable.ads:85:4:Clear
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Clear;
+--  end read only
+
+
+--  begin read only
    procedure Test_2_Contains (Gnattest_T : in out Test);
    procedure Test_Contains_9d1091 (Gnattest_T : in out Test) renames Test_2_Contains;
 --  id:2.2/9d1091ed14a6fdf7/Contains/0/0/
    procedure Test_2_Contains (Gnattest_T : in out Test) is
-   --  paging-pagetable.ads:89:4:Contains
+   --  paging-pagetable.ads:92:4:Contains
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -183,7 +204,7 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_Add_Entry_65d51a (Gnattest_T : in out Test) renames Test_2_Add_Entry;
 --  id:2.2/65d51aa67b84994c/Add_Entry/0/0/
    procedure Test_2_Add_Entry (Gnattest_T : in out Test) is
-   --  paging-pagetable.ads:97:4:Add_Entry
+   --  paging-pagetable.ads:100:4:Add_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -204,7 +225,7 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_Get_Table_Address_fc9ed7 (Gnattest_T : in out Test) renames Test_Get_Table_Address;
 --  id:2.2/fc9ed7f2652cb3f4/Get_Table_Address/1/0/
    procedure Test_Get_Table_Address (Gnattest_T : in out Test) is
-   --  paging-pagetable.ads:104:4:Get_Table_Address
+   --  paging-pagetable.ads:107:4:Get_Table_Address
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -225,7 +246,7 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_Length_9893fe (Gnattest_T : in out Test) renames Test_Length;
 --  id:2.2/9893fe3cdac3dfa6/Length/1/0/
    procedure Test_Length (Gnattest_T : in out Test) is
-   --  paging-pagetable.ads:110:4:Length
+   --  paging-pagetable.ads:113:4:Length
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -246,7 +267,7 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_Update_70239d (Gnattest_T : in out Test) renames Test_2_Update;
 --  id:2.2/70239d729314ca12/Update/0/0/
    procedure Test_2_Update (Gnattest_T : in out Test) is
-   --  paging-pagetable.ads:114:4:Update
+   --  paging-pagetable.ads:117:4:Update
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -267,7 +288,7 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_Iterate_5faa5a (Gnattest_T : in out Test) renames Test_2_Iterate;
 --  id:2.2/5faa5a0a5bad1a74/Iterate/0/0/
    procedure Test_2_Iterate (Gnattest_T : in out Test) is
-   --  paging-pagetable.ads:122:4:Iterate
+   --  paging-pagetable.ads:125:4:Iterate
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

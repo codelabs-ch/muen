@@ -31,23 +31,26 @@ package Paging.Pagetable.Test_Data.Tests is
    procedure Test_Update_29bdb2 (Gnattest_T : in out Test);
    --  paging-pagetable.ads:78:4:Update
 
+   procedure Test_Clear_6aaa65 (Gnattest_T : in out Test);
+   --  paging-pagetable.ads:85:4:Clear
+
    procedure Test_Contains_9d1091 (Gnattest_T : in out Test);
-   --  paging-pagetable.ads:89:4:Contains
+   --  paging-pagetable.ads:92:4:Contains
 
    procedure Test_Add_Entry_65d51a (Gnattest_T : in out Test);
-   --  paging-pagetable.ads:97:4:Add_Entry
+   --  paging-pagetable.ads:100:4:Add_Entry
 
    procedure Test_Get_Table_Address_fc9ed7 (Gnattest_T : in out Test);
-   --  paging-pagetable.ads:104:4:Get_Table_Address
+   --  paging-pagetable.ads:107:4:Get_Table_Address
 
    procedure Test_Length_9893fe (Gnattest_T : in out Test);
-   --  paging-pagetable.ads:110:4:Length
+   --  paging-pagetable.ads:113:4:Length
 
    procedure Test_Update_70239d (Gnattest_T : in out Test);
-   --  paging-pagetable.ads:114:4:Update
+   --  paging-pagetable.ads:117:4:Update
 
    procedure Test_Iterate_5faa5a (Gnattest_T : in out Test);
-   --  paging-pagetable.ads:122:4:Iterate
+   --  paging-pagetable.ads:125:4:Iterate
 
 end Paging.Pagetable.Test_Data.Tests;
 --  end read only

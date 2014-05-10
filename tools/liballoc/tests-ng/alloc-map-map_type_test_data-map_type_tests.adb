@@ -18,14 +18,60 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
    --  alloc-map.ads:42:4:Insert_Device_Region
 --  end read only
 
-      pragma Unreferenced (Gnattest_T);
+      ----------------------------------------------------------------------
 
+      procedure Allocate_Device
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("RAM1"), True,    0,  999);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("RAM2"), True, 1000, 1999);
+         Gnattest_T.Fixture.Insert_Device_Region (U ("DEV1"), 11000, 15000);
+         Gnattest_T.Fixture.Allocate_Fixed (U ("APP1"), 500, 799);
+         Gnattest_T.Fixture.Allocate_Fixed (U ("D1"), 11000, 15000);
+         Ada.Text_IO.Create (File => Output_File,
+                             Mode => Ada.Text_IO.Out_File,
+                             Name => "obj/allocate_device.txt");
+         Gnattest_T.Fixture.Iterate (Write_Region'Access);
+         Gnattest_T.Fixture.Clear;
+         Ada.Text_IO.Close (File => Output_File);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/allocate_device.txt",
+                  Filename2 => "obj/allocate_device.txt"),
+                 Message   => "Device allocation failed");
+      end Allocate_Device;
+
+      ----------------------------------------------------------------------
+
+      procedure Device_Regions_Not_Merged
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 1001, 2000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 2001, 3000);
+         Gnattest_T.Fixture.Insert_Device_Region (U ("DEVICE1"), 3001, 4000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 4001, 5000);
+         Gnattest_T.Fixture.Insert_Device_Region (U ("DEVICE2"), 6001, 7000);
+         Gnattest_T.Fixture.Insert_Device_Region (U ("DEVICE3"), 7001, 9000);
+         Ada.Text_IO.Create (File => Output_File,
+                             Mode => Ada.Text_IO.Out_File,
+                             Name => "obj/device_regions_not_merged.txt");
+         Gnattest_T.Fixture.Iterate (Write_Region'Access);
+         Gnattest_T.Fixture.Clear;
+         Ada.Text_IO.Close (File => Output_File);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/device_regions_not_merged.txt",
+                  Filename2 => "obj/device_regions_not_merged.txt"),
+                 Message   => "Device regions being merged");
+      end Device_Regions_Not_Merged;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Allocate_Device;
+      Device_Regions_Not_Merged;
 --  begin read only
    end Test_Insert_Device_Region;
 --  end read only

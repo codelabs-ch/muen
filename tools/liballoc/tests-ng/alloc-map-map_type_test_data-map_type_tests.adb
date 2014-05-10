@@ -106,14 +106,280 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
    --  alloc-map.ads:59:4:Allocate_Fixed
 --  end read only
 
-      pragma Unreferenced (Gnattest_T);
+      ----------------------------------------------------------------------
 
+      procedure Allocate_Fixed_Full_Empty_Region
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 0,    1000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 1002, 2000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 11000, 15000);
+         Gnattest_T.Fixture.Allocate_Fixed (U ("FIXED1"), 1002, 2000);
+         Ada.Text_IO.Create (File => Output_File,
+                             Mode => Ada.Text_IO.Out_File,
+                             Name => "obj/alloc_fixed_full_empty_region.txt");
+         Gnattest_T.Fixture.Iterate (Write_Region'Access);
+         Gnattest_T.Fixture.Clear;
+         Ada.Text_IO.Close (File => Output_File);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/alloc_fixed_full_empty_region.txt",
+                  Filename2 => "obj/alloc_fixed_full_empty_region.txt"),
+                 Message   => "Allocation of full empty region");
+      end Allocate_Fixed_Full_Empty_Region;
+
+      ----------------------------------------------------------------------
+
+      procedure Allocate_Fixed_Invalid_Double
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 0,    1000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 1002, 2000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 5000, 10000);
+         Gnattest_T.Fixture.Allocate_Fixed (U ("FIXED1"), 1002, 2000);
+         Gnattest_T.Fixture.Allocate_Fixed (U ("FIXED2"), 1002, 2000);
+
+         Gnattest_T.Fixture.Clear;
+         Assert (Condition => False,
+                 Message   => "Double allocation undetected");
+
+      exception
+         when Invalid_Fixed_Allocation => Gnattest_T.Fixture.Clear;
+      end Allocate_Fixed_Invalid_Double;
+
+      ----------------------------------------------------------------------
+
+      procedure Allocate_Fixed_Invalid_Exceed
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 0,    1000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 1200, 2000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 5000, 10000);
+         Gnattest_T.Fixture.Allocate_Fixed (U ("FIXED1"), 1000, 3000);
+
+         Gnattest_T.Fixture.Clear;
+         Assert (Condition => False,
+                 Message   => "Invalid fixed allocation undetected "
+                 & "(exceeding)");
+
+      exception
+         when Invalid_Fixed_Allocation => Gnattest_T.Fixture.Clear;
+      end Allocate_Fixed_Invalid_Exceed;
+
+      ----------------------------------------------------------------------
+
+      procedure Allocate_Fixed_Invalid_Left
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 0,    1000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 1200, 2000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 5000, 10000);
+         Gnattest_T.Fixture.Allocate_Fixed (U ("FIXED1"), 1100, 1500);
+
+         Gnattest_T.Fixture.Clear;
+         Assert (Condition => False,
+                 Message   => "Invalid fixed allocation undetected (left)");
+
+      exception
+         when Invalid_Fixed_Allocation => Gnattest_T.Fixture.Clear;
+      end Allocate_Fixed_Invalid_Left;
+
+      ----------------------------------------------------------------------
+
+      procedure Allocate_Fixed_Invalid_Multiple
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 0,    1000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 1500, 2000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 2500, 3000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY4"), True, 5000, 10000);
+         Gnattest_T.Fixture.Allocate_Fixed (U ("FIXED1"), 1700, 2800);
+
+         Gnattest_T.Fixture.Clear;
+         Assert (Condition => False,
+                 Message   => "Invalid fixed allocation of multiple empty "
+                 & "regions");
+
+      exception
+         when Invalid_Fixed_Allocation => Gnattest_T.Fixture.Clear;
+      end Allocate_Fixed_Invalid_Multiple;
+
+      ----------------------------------------------------------------------
+
+      procedure Allocate_Fixed_Invalid_Outside_Empty
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 0,    1000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 1500, 2000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 2500, 3000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY4"), True, 5000, 10000);
+         Gnattest_T.Fixture.Allocate_Fixed (U ("FIXED1"), 2200, 2300);
+
+         Gnattest_T.Fixture.Clear;
+         Assert (Condition => False,
+                 Message   => "Invalid fixed allocation outside empty "
+                 & "regions");
+
+      exception
+         when Invalid_Fixed_Allocation => Gnattest_T.Fixture.Clear;
+      end Allocate_Fixed_Invalid_Outside_Empty;
+
+      ----------------------------------------------------------------------
+
+      procedure Allocate_Fixed_Invalid_Partial_Double
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 0,    1000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 1200, 2000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 5000, 10000);
+         Gnattest_T.Fixture.Allocate_Fixed (U ("FIXED1"), 1250, 1800);
+         Gnattest_T.Fixture.Allocate_Fixed (U ("FIXED2"), 1300, 1700);
+
+         Gnattest_T.Fixture.Clear;
+         Assert (Condition => False,
+                 Message   => "Invalid fixed double-allocation undetected");
+
+      exception
+         when Invalid_Fixed_Allocation => Gnattest_T.Fixture.Clear;
+      end Allocate_Fixed_Invalid_Partial_Double;
+
+      ----------------------------------------------------------------------
+
+      procedure Allocate_Fixed_Invalid_Right
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 0,    1000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 1500, 2000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 2500, 3000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY4"), True, 5000, 10000);
+         Gnattest_T.Fixture.Allocate_Fixed (U ("FIXED1"), 1600, 2300);
+
+         Gnattest_T.Fixture.Clear;
+         Assert (Condition => False,
+                 Message   => "Invalid fixed allocation outside empty regions "
+                 & "(right)");
+
+      exception
+         when Invalid_Fixed_Allocation => Gnattest_T.Fixture.Clear;
+      end Allocate_Fixed_Invalid_Right;
+
+      ----------------------------------------------------------------------
+
+      procedure Allocate_Fixed_Partial_Left
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 0,    1000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 1500, 2000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 2500, 3000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY4"), True, 5000, 10000);
+         Gnattest_T.Fixture.Allocate_Fixed (U ("FIXED1"), 2500, 2800);
+         Ada.Text_IO.Create (File => Output_File,
+                             Mode => Ada.Text_IO.Out_File,
+                             Name => "obj/alloc_fixed_partial_left.txt");
+         Gnattest_T.Fixture.Iterate (Write_Region'Access);
+         Gnattest_T.Fixture.Clear;
+         Ada.Text_IO.Close (File => Output_File);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/alloc_fixed_partial_left.txt",
+                  Filename2 => "obj/alloc_fixed_partial_left.txt"),
+                 Message   => "Partial allocation of empty region (left)");
+      end Allocate_Fixed_Partial_Left;
+
+      ----------------------------------------------------------------------
+
+      procedure Allocate_Fixed_Partial_Middle
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 0,    1000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 1002, 2000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 11000, 15000);
+         Gnattest_T.Fixture.Allocate_Fixed (U ("FIXED"), 1500, 1800);
+         Ada.Text_IO.Create (File => Output_File,
+                             Mode => Ada.Text_IO.Out_File,
+                             Name => "obj/alloc_fixed_partial_middle.txt");
+         Gnattest_T.Fixture.Iterate (Write_Region'Access);
+         Gnattest_T.Fixture.Clear;
+         Ada.Text_IO.Close (File => Output_File);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/alloc_fixed_partial_middle.txt",
+                  Filename2 => "obj/alloc_fixed_partial_middle.txt"),
+                 Message   => "Partial allocation of full empty region");
+      end Allocate_Fixed_Partial_Middle;
+
+      ----------------------------------------------------------------------
+
+      procedure Allocate_Fixed_Partial_Right
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 0,    1000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 1500, 2000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 2500, 3000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY4"), True, 5000, 10000);
+         Gnattest_T.Fixture.Allocate_Fixed (U ("FIXED1"), 2800, 3000);
+         Ada.Text_IO.Create (File => Output_File,
+                             Mode => Ada.Text_IO.Out_File,
+                             Name => "obj/alloc_fixed_partial_right.txt");
+         Gnattest_T.Fixture.Iterate (Write_Region'Access);
+         Gnattest_T.Fixture.Clear;
+         Ada.Text_IO.Close (File => Output_File);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/alloc_fixed_partial_right.txt",
+                  Filename2 => "obj/alloc_fixed_partial_right.txt"),
+                 Message   => "Partial allocation of empty region (right)");
+      end Allocate_Fixed_Partial_Right;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Allocate_Fixed_Full_Empty_Region;
+      Allocate_Fixed_Invalid_Double;
+      Allocate_Fixed_Invalid_Exceed;
+      Allocate_Fixed_Invalid_Left;
+      Allocate_Fixed_Invalid_Multiple;
+      Allocate_Fixed_Invalid_Outside_Empty;
+      Allocate_Fixed_Invalid_Partial_Double;
+      Allocate_Fixed_Invalid_Right;
+      Allocate_Fixed_Partial_Left;
+      Allocate_Fixed_Partial_Middle;
+      Allocate_Fixed_Partial_Right;
 --  begin read only
    end Test_Allocate_Fixed;
 --  end read only

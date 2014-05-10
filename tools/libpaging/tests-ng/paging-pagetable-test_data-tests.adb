@@ -17,15 +17,13 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_1_Add_Entry (Gnattest_T : in out Test) is
    --  paging-pagetable.ads:44:4:Add_Entry
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
+      use type Ada.Containers.Count_Type;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Add_Entry (Table => Gnattest_T.Table,
+                 Index => 0,
+                 E     => Gnattest_T.TEntry);
+      Assert (Condition => Gnattest_T.Table.Data.Length = 1,
+              Message   => "Entry not added");
 --  begin read only
    end Test_1_Add_Entry;
 --  end read only
@@ -38,15 +36,15 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_Count (Gnattest_T : in out Test) is
    --  paging-pagetable.ads:50:4:Count
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
+      use type Ada.Containers.Count_Type;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Count (Table => Gnattest_T.Table) = 0,
+              Message   => "Table not empty");
+      Add_Entry (Table => Gnattest_T.Table,
+                 Index => 0,
+                 E     => Gnattest_T.TEntry);
+      Assert (Condition => Count (Table => Gnattest_T.Table) = 1,
+              Message   => "Count mismatch");
 --  begin read only
    end Test_Count;
 --  end read only
@@ -59,15 +57,19 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_1_Contains (Gnattest_T : in out Test) is
    --  paging-pagetable.ads:53:4:Contains
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
    begin
+      Assert (Condition => not Contains
+              (Table => Gnattest_T.Table,
+               Index => 3),
+              Message   => "Unexpected entry");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Add_Entry (Table => Gnattest_T.Table,
+                 Index => 12,
+                 E     => Gnattest_T.TEntry);
+      Assert (Condition => Contains
+              (Table => Gnattest_T.Table,
+               Index => 12),
+              Message   => "Entry not found");
 --  begin read only
    end Test_1_Contains;
 --  end read only
@@ -80,15 +82,15 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_Get_Physical_Address (Gnattest_T : in out Test) is
    --  paging-pagetable.ads:59:4:Get_Physical_Address
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
+      use type Interfaces.Unsigned_64;
    begin
+      Assert (Condition => Gnattest_T.Table.Address = 0,
+              Message   => "Address not zero");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Gnattest_T.Table.Address := 16#3000#;
+      Assert (Condition => Get_Physical_Address
+              (Table => Gnattest_T.Table) = 16#3000#,
+              Message   => "Address mismatch");
 --  begin read only
    end Test_Get_Physical_Address;
 --  end read only
@@ -101,15 +103,12 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_Set_Physical_Address (Gnattest_T : in out Test) is
    --  paging-pagetable.ads:64:4:Set_Physical_Address
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
+      use type Interfaces.Unsigned_64;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Set_Physical_Address (Table   => Gnattest_T.Table,
+                            Address => 16#5000#);
+      Assert (Condition => Gnattest_T.Table.Address = 16#5000#,
+              Message   => "Address mismatch");
 --  begin read only
    end Test_Set_Physical_Address;
 --  end read only
@@ -122,15 +121,18 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_1_Iterate (Gnattest_T : in out Test) is
    --  paging-pagetable.ads:70:4:Iterate
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
    begin
+      Add_Entry (Table => Gnattest_T.Table,
+                 Index => 1,
+                 E     => Gnattest_T.TEntry);
+      Add_Entry (Table => Gnattest_T.Table,
+                 Index => 2,
+                 E     => Gnattest_T.TEntry);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Iterate (Table   => Gnattest_T.Table,
+               Process => Inc_Counter_1'Access);
+      Assert (Condition => Test_Counter = 2,
+              Message   => "Counter mismatch" & Test_Counter'Img);
 --  begin read only
    end Test_1_Iterate;
 --  end read only
@@ -143,15 +145,14 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_1_Update (Gnattest_T : in out Test) is
    --  paging-pagetable.ads:78:4:Update
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Add_Entry (Table => Gnattest_T.Table,
+                 Index => 1,
+                 E     => Gnattest_T.TEntry);
+      Update (Table   => Gnattest_T.Table,
+              Process => Inc_Counter_2'Access);
+      Assert (Condition => Test_Counter = 1,
+              Message   => "Counter mismatch" & Test_Counter'Img);
 --  begin read only
    end Test_1_Update;
 --  end read only
@@ -164,15 +165,20 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_1_Clear (Gnattest_T : in out Test) is
    --  paging-pagetable.ads:85:4:Clear
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
+      use type Ada.Containers.Count_Type;
+      use type Interfaces.Unsigned_64;
    begin
+      Add_Entry (Table => Gnattest_T.Table,
+                 Index => 1,
+                 E     => Gnattest_T.TEntry);
+      Gnattest_T.Table.Address := 16#4000#;
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Clear (Table => Gnattest_T.Table);
 
+      Assert (Condition => Gnattest_T.Table.Data.Length = 0,
+              Message   => "Table not cleared");
+      Assert (Condition => Gnattest_T.Table.Address = 0,
+              Message   => "Table address not zero");
 --  begin read only
    end Test_1_Clear;
 --  end read only
@@ -185,15 +191,22 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_2_Contains (Gnattest_T : in out Test) is
    --  paging-pagetable.ads:92:4:Contains
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
    begin
+      Assert (Condition => not Contains
+              (Map          => Gnattest_T.Map,
+               Table_Number => 6,
+               Entry_Index  => 4),
+              Message   => "Unexpected entry");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Add_Entry (Map          => Gnattest_T.Map,
+                 Table_Number => 2,
+                 Entry_Index  => 3,
+                 Table_Entry  => Gnattest_T.TEntry);
+      Assert (Condition => Contains
+              (Map          => Gnattest_T.Map,
+               Table_Number => 2,
+               Entry_Index  => 3),
+              Message   => "Entry not found");
 --  begin read only
    end Test_2_Contains;
 --  end read only
@@ -206,15 +219,24 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_2_Add_Entry (Gnattest_T : in out Test) is
    --  paging-pagetable.ads:100:4:Add_Entry
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
+      use type Ada.Containers.Count_Type;
    begin
+      Add_Entry (Map          => Gnattest_T.Map,
+                 Table_Number => 2,
+                 Entry_Index  => 3,
+                 Table_Entry  => Gnattest_T.TEntry);
+      Assert (Condition => Gnattest_T.Map.Tables.Length = 1,
+              Message   => "Entry not added");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Add_Entry (Map          => Gnattest_T.Map,
+                    Table_Number => 2,
+                    Entry_Index  => 3,
+                    Table_Entry  => Gnattest_T.TEntry);
 
+      exception
+         when Duplicate_Entry => null;
+      end;
 --  begin read only
    end Test_2_Add_Entry;
 --  end read only
@@ -227,15 +249,27 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_Get_Table_Address (Gnattest_T : in out Test) is
    --  paging-pagetable.ads:107:4:Get_Table_Address
 --  end read only
+      use type Interfaces.Unsigned_64;
 
-      pragma Unreferenced (Gnattest_T);
-
+      Address : Interfaces.Unsigned_64;
    begin
+      Add_Entry (Map          => Gnattest_T.Map,
+                 Table_Number => 2,
+                 Entry_Index  => 3,
+                 Table_Entry  => Gnattest_T.TEntry);
+      Assert (Condition => Get_Table_Address
+              (Map          => Gnattest_T.Map,
+               Table_Number => 2) = 0,
+              Message   => "Unexpected address");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Address := Get_Table_Address
+           (Map          => Gnattest_T.Map,
+            Table_Number => 12);
 
+      exception
+         when Missing_Table => null;
+      end;
 --  begin read only
    end Test_Get_Table_Address;
 --  end read only
@@ -248,15 +282,16 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_Length (Gnattest_T : in out Test) is
    --  paging-pagetable.ads:113:4:Length
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
+      use type Ada.Containers.Count_Type;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Length (Map => Gnattest_T.Map) = 0,
+              Message   => "Map not empty");
+      Add_Entry (Map          => Gnattest_T.Map,
+                 Table_Number => 2,
+                 Entry_Index  => 3,
+                 Table_Entry  => Gnattest_T.TEntry);
+      Assert (Condition => Length (Map => Gnattest_T.Map) = 1,
+              Message   => "Length mismatch");
 --  begin read only
    end Test_Length;
 --  end read only
@@ -269,15 +304,15 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_2_Update (Gnattest_T : in out Test) is
    --  paging-pagetable.ads:117:4:Update
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Add_Entry (Map          => Gnattest_T.Map,
+                 Table_Number => 2,
+                 Entry_Index  => 3,
+                 Table_Entry  => Gnattest_T.TEntry);
+      Update (Map     => Gnattest_T.Map,
+              Process => Inc_Counter_4'Access);
+      Assert (Condition => Test_Counter = 1,
+              Message   => "Counter mismatch" & Test_Counter'Img);
 --  begin read only
    end Test_2_Update;
 --  end read only
@@ -290,15 +325,19 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_2_Iterate (Gnattest_T : in out Test) is
    --  paging-pagetable.ads:125:4:Iterate
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Add_Entry (Map          => Gnattest_T.Map,
+                 Table_Number => 1,
+                 Entry_Index  => 1,
+                 Table_Entry  => Gnattest_T.TEntry);
+      Add_Entry (Map          => Gnattest_T.Map,
+                 Table_Number => 2,
+                 Entry_Index  => 2,
+                 Table_Entry  => Gnattest_T.TEntry);
+      Iterate (Map     => Gnattest_T.Map,
+               Process => Inc_Counter_3'Access);
+      Assert (Condition => Test_Counter = 2,
+              Message   => "Counter mismatch" & Test_Counter'Img);
 --  begin read only
    end Test_2_Iterate;
 --  end read only
@@ -311,15 +350,17 @@ package body Paging.Pagetable.Test_Data.Tests is
    procedure Test_2_Clear (Gnattest_T : in out Test) is
    --  paging-pagetable.ads:132:4:Clear
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
+      use type Ada.Containers.Count_Type;
+      use type Interfaces.Unsigned_64;
    begin
+      Add_Entry (Map          => Gnattest_T.Map,
+                 Table_Number => 1,
+                 Entry_Index  => 1,
+                 Table_Entry  => Gnattest_T.TEntry);
+      Clear (Map => Gnattest_T.Map);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Gnattest_T.Map.Tables.Length = 0,
+              Message   => "Map not cleared");
 --  begin read only
    end Test_2_Clear;
 --  end read only

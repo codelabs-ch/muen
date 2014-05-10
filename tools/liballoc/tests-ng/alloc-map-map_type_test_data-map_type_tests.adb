@@ -85,14 +85,266 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
    --  alloc-map.ads:50:4:Insert_Empty_Region
 --  end read only
 
-      pragma Unreferenced (Gnattest_T);
+      ----------------------------------------------------------------------
 
+      procedure Non_Overlapping_Random
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 11000, 15000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 1002, 2000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 5000, 10000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY4"), True, 0,    1000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY5"), True, 16000, 30000);
+         Ada.Text_IO.Create
+           (File => Output_File,
+            Mode => Ada.Text_IO.Out_File,
+            Name => "obj/non_overlapping_randoGnattest_T.Fixture.txt");
+         Gnattest_T.Fixture.Iterate (Write_Region'Access);
+         Gnattest_T.Fixture.Clear;
+         Ada.Text_IO.Close (File => Output_File);
+
+         Assert
+           (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/non_overlapping1.txt",
+               Filename2 => "obj/non_overlapping_randoGnattest_T.Fixture.txt"),
+            Message   => "Memory map mismatch (random)");
+      end Non_Overlapping_Random;
+
+      ----------------------------------------------------------------------
+
+      procedure Non_Overlapping_Reversed
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 16000, 30000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 1002, 2000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 11000, 15000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY4"), True, 5000, 10000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY5"), True, 0,    1000);
+         Ada.Text_IO.Create (File => Output_File,
+                             Mode => Ada.Text_IO.Out_File,
+                             Name => "obj/non_overlapping_reversed.txt");
+         Gnattest_T.Fixture.Iterate (Write_Region'Access);
+         Gnattest_T.Fixture.Clear;
+         Ada.Text_IO.Close (File => Output_File);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/non_overlapping1.txt",
+                  Filename2 => "obj/non_overlapping_reversed.txt"),
+                 Message   => "Memory map mismatch (reversed)");
+      end Non_Overlapping_Reversed;
+
+      ----------------------------------------------------------------------
+
+      procedure Non_Overlapping_Sorted
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 0,    1000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 1002, 2000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 5000, 10000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY4"), True, 11000, 15000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY5"), True, 16000, 30000);
+         Ada.Text_IO.Create (File => Output_File,
+                             Mode => Ada.Text_IO.Out_File,
+                             Name => "obj/non_overlapping_sorted.txt");
+         Gnattest_T.Fixture.Iterate (Write_Region'Access);
+         Gnattest_T.Fixture.Clear;
+         Ada.Text_IO.Close (File => Output_File);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/non_overlapping1.txt",
+                  Filename2 => "obj/non_overlapping_sorted.txt"),
+                 Message   => "Memory map mismatch (sorted)");
+      end Non_Overlapping_Sorted;
+
+      ----------------------------------------------------------------------
+
+      procedure Overlapping_Empty_Encompassing
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 100,  900);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 0,   1000);
+
+         Gnattest_T.Fixture.Clear;
+         Assert (Condition => False,
+                 Message   => "Overlap undetected");
+
+      exception
+         when Overlapping_Empty_Region => Gnattest_T.Fixture.Clear;
+      end Overlapping_Empty_Encompassing;
+
+      ----------------------------------------------------------------------
+
+      procedure Overlapping_Empty_Included
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 0,   1000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 100,  900);
+
+         Gnattest_T.Fixture.Clear;
+         Assert (Condition => False,
+                 Message   => "Overlap undetected");
+
+      exception
+         when Overlapping_Empty_Region => Gnattest_T.Fixture.Clear;
+      end Overlapping_Empty_Included;
+
+      ----------------------------------------------------------------------
+
+      procedure Overlapping_Empty_Left
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 0,   1000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 900, 2000);
+
+         Gnattest_T.Fixture.Clear;
+         Assert (Condition => False,
+                 Message   => "Overlap undetected");
+
+      exception
+         when Overlapping_Empty_Region => Gnattest_T.Fixture.Clear;
+      end Overlapping_Empty_Left;
+
+      ----------------------------------------------------------------------
+
+      procedure Overlapping_Empty_Right
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 900, 2000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 0,   1000);
+
+         Gnattest_T.Fixture.Clear;
+         Assert (Condition => False,
+                 Message   => "Overlap undetected");
+
+      exception
+         when Overlapping_Empty_Region => Gnattest_T.Fixture.Clear;
+      end Overlapping_Empty_Right;
+
+      ----------------------------------------------------------------------
+
+      procedure Region_Merge_Random
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 12001, 15000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 1000, 2000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 4000, 10000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY4"), True, 11000, 12000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY5"), True, 2001, 3000);
+         Ada.Text_IO.Create (File => Output_File,
+                             Mode => Ada.Text_IO.Out_File,
+                             Name => "obj/merge_randoGnattest_T.Fixture.txt");
+         Gnattest_T.Fixture.Iterate (Write_Region'Access);
+         Gnattest_T.Fixture.Clear;
+         Ada.Text_IO.Close (File => Output_File);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/merge.txt",
+                  Filename2 => "obj/merge_randoGnattest_T.Fixture.txt"),
+                 Message   => "Region merge failed (random)");
+      end Region_Merge_Random;
+
+      ----------------------------------------------------------------------
+
+      procedure Region_Merge_Reversed
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 12001, 15000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 11000, 12000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 4000, 10000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY4"), True, 2001, 3000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY5"), True, 1000, 2000);
+         Ada.Text_IO.Create (File => Output_File,
+                             Mode => Ada.Text_IO.Out_File,
+                             Name => "obj/merge_reversed.txt");
+         Gnattest_T.Fixture.Iterate (Write_Region'Access);
+         Gnattest_T.Fixture.Clear;
+         Ada.Text_IO.Close (File => Output_File);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/merge.txt",
+                  Filename2 => "obj/merge_reversed.txt"),
+                 Message   => "Region merge failed (reversed)");
+      end Region_Merge_Reversed;
+
+      ----------------------------------------------------------------------
+
+      procedure Region_Merge_Sorted
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 1000, 2000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 2001, 3000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 4000, 10000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY4"), True, 11000, 12000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY5"), True, 12001, 15000);
+         Ada.Text_IO.Create (File => Output_File,
+                             Mode => Ada.Text_IO.Out_File,
+                             Name => "obj/merge_sorted.txt");
+         Gnattest_T.Fixture.Iterate (Write_Region'Access);
+         Gnattest_T.Fixture.Clear;
+         Ada.Text_IO.Close (File => Output_File);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/merge.txt",
+                  Filename2 => "obj/merge_sorted.txt"),
+                 Message   => "Region merge failed (sorted)");
+      end Region_Merge_Sorted;
+
+      use type Ada.Containers.Count_Type;
    begin
+      Gnattest_T.Fixture.Insert_Empty_Region
+        (U ("EMPTY"), True, 11000, 15000);
+      Assert (Condition => Gnattest_T.Fixture.Data.Length = 1,
+              Message   => "Length not 1");
+      Gnattest_T.Fixture.Clear;
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Non_Overlapping_Random;
+      Non_Overlapping_Reversed;
+      Non_Overlapping_Sorted;
+      Overlapping_Empty_Encompassing;
+      Overlapping_Empty_Included;
+      Overlapping_Empty_Left;
+      Overlapping_Empty_Right;
+      Region_Merge_Random;
+      Region_Merge_Reversed;
+      Region_Merge_Sorted;
 --  begin read only
    end Test_Insert_Empty_Region;
 --  end read only

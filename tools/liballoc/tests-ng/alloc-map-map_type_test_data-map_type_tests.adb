@@ -599,15 +599,44 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
    procedure Test_Get_Region (Gnattest_T : in out Test_Map_Type) is
    --  alloc-map.ads:86:4:Get_Region
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
+      use type Ada.Strings.Unbounded.Unbounded_String;
+      use type Interfaces.Unsigned_64;
    begin
+      Gnattest_T.Fixture.Insert_Empty_Region
+        (Name          => U ("foobar"),
+         Allocatable   => True,
+         First_Address => 1001,
+         Last_Address  => 2000);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      declare
+         Region : constant Region_Type := Gnattest_T.Fixture.Get_Region
+           (Name => "foobar");
+      begin
+         Assert (Condition => Region.Name = U ("foobar"),
+                 Message   => "Region name mismatch");
+         Assert (Condition => Region.Kind = Empty,
+                 Message   => "Region kind mismatch");
+         Assert (Condition => Region.First_Address = 1001,
+                 Message   => "Region first address mismatch");
+         Assert (Condition => Region.Last_Address = 2000,
+                 Message   => "Region last address mismatch");
+         Assert (Condition => Region.Allocatable,
+                 Message   => "Region not allocatable");
+      end;
 
+      begin
+         declare
+            Dummy : constant Region_Type := Gnattest_T.Fixture.Get_Region
+              (Name => "nonexistent");
+         begin
+            Gnattest_T.Fixture.Clear;
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         end;
+
+      exception
+         when No_Region => Gnattest_T.Fixture.Clear;
+      end;
 --  begin read only
    end Test_Get_Region;
 --  end read only

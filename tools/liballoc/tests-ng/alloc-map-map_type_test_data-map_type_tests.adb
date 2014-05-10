@@ -393,14 +393,179 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
    --  alloc-map.ads:67:4:Allocate_Variable
 --  end read only
 
-      pragma Unreferenced (Gnattest_T);
+      ----------------------------------------------------------------------
 
+      procedure Allocate_Variable_Aligned
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 100,    1000);
+         Gnattest_T.Fixture.Allocate_Variable
+           (Size => 400, Alignment => 500, Name => U ("mem1"));
+         Ada.Text_IO.Create (File => Output_File,
+                             Mode => Ada.Text_IO.Out_File,
+                             Name => "obj/alloc_variable_alignment.txt");
+         Gnattest_T.Fixture.Iterate (Write_Region'Access);
+         Gnattest_T.Fixture.Clear;
+         Ada.Text_IO.Close (File => Output_File);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/alloc_variable_alignment.txt",
+                  Filename2 => "obj/alloc_variable_alignment.txt"),
+                 Message   => "Variable allocation (aligned)");
+      end Allocate_Variable_Aligned;
+
+      ----------------------------------------------------------------------
+
+      procedure Allocate_Variable_Below_OOM
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 0,     499);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 1500, 1999);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 2500, 2999);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY4"), True, 5000, 10000);
+         Gnattest_T.Fixture.Allocate_Variable
+           (Size => 1000, Name => U ("mem1"), Upper_Limit => 3000);
+
+         Gnattest_T.Fixture.Clear;
+         Assert (Condition => False,
+                 Message   => "Invalid constraints undetected");
+
+      exception
+         when Limit_Exceeded => Gnattest_T.Fixture.Clear;
+      end Allocate_Variable_Below_OOM;
+
+      ----------------------------------------------------------------------
+
+      procedure Allocate_Variable_Exact
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 0,    1000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 1500, 2000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 2500, 3000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY4"), True, 5000, 10000);
+         Gnattest_T.Fixture.Allocate_Variable (Size => 1500, Name => U ("mem1"));
+         Ada.Text_IO.Create (File => Output_File,
+                             Mode => Ada.Text_IO.Out_File,
+                             Name => "obj/alloc_variable_exact.txt");
+         Gnattest_T.Fixture.Iterate (Write_Region'Access);
+         Gnattest_T.Fixture.Clear;
+         Ada.Text_IO.Close (File => Output_File);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/alloc_variable_exact.txt",
+                  Filename2 => "obj/alloc_variable_exact.txt"),
+                 Message   => "Variable allocation (exact)");
+      end Allocate_Variable_Exact;
+
+      ----------------------------------------------------------------------
+
+      procedure Allocate_Variable_OOM
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 0,    1000);
+         Gnattest_T.Fixture.Allocate_Variable
+           (Size => 1500, Name => U ("mem1"));
+
+         Gnattest_T.Fixture.Clear;
+         Assert (Condition => False,
+                 Message   => "Out-of-memory undetected");
+
+      exception
+         when Out_Of_Memory => Gnattest_T.Fixture.Clear;
+      end Allocate_Variable_OOM;
+
+      ----------------------------------------------------------------------
+
+      procedure Allocate_Variable_OOM_Alignment
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 1,    1000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 2001, 3000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 4001, 5000);
+         Gnattest_T.Fixture.Allocate_Variable
+           (Size => 1000, Alignment => 123, Name => U ("mem1"));
+
+         Gnattest_T.Fixture.Clear;
+         Assert (Condition => False,
+                 Message   => "Out-of-memory undetected");
+
+      exception
+         when Out_Of_Memory => Gnattest_T.Fixture.Clear;
+      end Allocate_Variable_OOM_Alignment;
+
+      ----------------------------------------------------------------------
+
+      procedure Allocate_Variable_OOM_Fragmentation
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY1"), True, 0,    1000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY2"), True, 2000, 3000);
+         Gnattest_T.Fixture.Insert_Empty_Region
+           (U ("EMPTY3"), True, 4000, 5000);
+         Gnattest_T.Fixture.Allocate_Variable
+           (Size => 800, Name => U ("mem1"));
+         Gnattest_T.Fixture.Allocate_Variable
+           (Size => 800, Name => U ("mem2"));
+         Gnattest_T.Fixture.Allocate_Variable
+           (Size => 800, Name => U ("mem3"));
+         Gnattest_T.Fixture.Allocate_Variable
+           (Size => 300, Name => U ("mem4"));
+
+         Gnattest_T.Fixture.Clear;
+         Assert (Condition => False,
+                 Message   => "Out-of-memory undetected");
+
+      exception
+         when Out_Of_Memory => Gnattest_T.Fixture.Clear;
+      end Allocate_Variable_OOM_Fragmentation;
+
+      ----------------------------------------------------------------------
+
+      procedure Ordering
+      is
+      begin
+         Gnattest_T.Fixture.Insert_Empty_Region (U ("EMPTY1"), True, 0, 999);
+
+         --  Only name differs
+         Gnattest_T.Fixture.Allocate_Variable
+           (Size => 500, Alignment => 100, Name => U ("mem1"));
+         Gnattest_T.Fixture.Allocate_Variable
+           (Size => 500, Alignment => 100, Name => U ("mem2"));
+         Ada.Text_IO.Create (File => Output_File,
+                             Mode => Ada.Text_IO.Out_File,
+                             Name => "obj/ordering.txt");
+         Gnattest_T.Fixture.Iterate (Write_Region'Access);
+         Gnattest_T.Fixture.Clear;
+         Ada.Text_IO.Close (File => Output_File);
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/ordering.txt",
+                  Filename2 => "obj/ordering.txt"),
+                 Message   => "Wrong ordering");
+      end Ordering;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Allocate_Variable_Aligned;
+      Allocate_Variable_Below_OOM;
+      Allocate_Variable_Exact;
+      Allocate_Variable_OOM;
+      Allocate_Variable_OOM_Alignment;
+      Allocate_Variable_OOM_Fragmentation;
+      Ordering;
 --  begin read only
    end Test_Allocate_Variable;
 --  end read only

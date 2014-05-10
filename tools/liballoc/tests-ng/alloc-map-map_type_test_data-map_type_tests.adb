@@ -455,15 +455,16 @@ package body Alloc.Map.Map_Type_Test_Data.Map_Type_Tests is
    procedure Test_Clear (Gnattest_T : in out Test_Map_Type) is
    --  alloc-map.ads:92:4:Clear
 --  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
+      use type Ada.Containers.Count_Type;
    begin
+      Gnattest_T.Fixture.Insert_Empty_Region
+        (U ("EMPTY1"), True, 1001, 2000);
+      Assert (Condition => Gnattest_T.Fixture.Data.Length = 1,
+              Message   => "Length not 1");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Gnattest_T.Fixture.Clear;
+      Assert (Condition => Gnattest_T.Fixture.Data.Length = 0,
+              Message   => "Map not cleared");
 --  begin read only
    end Test_Clear;
 --  end read only

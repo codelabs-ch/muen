@@ -31,6 +31,9 @@ is
    --  Return number of registered expanders.
    function Get_Count return Natural;
 
+   --  Clear registered expanders.
+   procedure Clear;
+
    Expansion_Error : exception;
 
 private

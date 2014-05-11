@@ -9,6 +9,7 @@ with Ada.Directories;
 
 with Expand.Pre_Checks;
 with Expand.Post_Checks;
+with Expanders;
 
 with Test_Utils;
 

@@ -18,5 +18,8 @@ package Expanders.Test_Data.Tests is
    procedure Test_Get_Count_1fbd7c (Gnattest_T : in out Test);
    --  expanders.ads:32:4:Get_Count
 
+   procedure Test_Clear_4b4f85 (Gnattest_T : in out Test);
+   --  expanders.ads:35:4:Clear
+
 end Expanders.Test_Data.Tests;
 --  end read only

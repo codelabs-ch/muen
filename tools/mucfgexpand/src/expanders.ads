@@ -17,6 +17,7 @@
 --
 
 with Muxml;
+with Mutools.Processors;
 
 package Expanders
 is
@@ -31,5 +32,10 @@ is
    function Get_Count return Natural;
 
    Expansion_Error : exception;
+
+private
+
+   package Procs is new Mutools.Processors
+     (Param_Type => Muxml.XML_Data_Type);
 
 end Expanders;

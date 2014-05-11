@@ -20,12 +20,21 @@ package body Expand.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Filename : constant String := "obj/execute_run.xml";
+      Policy   : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Run (Policy      => Policy,
+           Output_File => Filename);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Filename,
+               Filename2 => "data/execute_run.ref.xml"),
+              Message   => "Policy mismatch");
 
+      Ada.Directories.Delete_File (Name => Filename);
 --  begin read only
    end Test_Run;
 --  end read only

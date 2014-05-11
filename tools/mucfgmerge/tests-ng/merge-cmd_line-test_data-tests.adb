@@ -15,7 +15,7 @@ package body Merge.Cmd_Line.Test_Data.Tests is
    procedure Test_Init_a69a58 (Gnattest_T : in out Test) renames Test_Init;
 --  id:2.2/a69a5871ab5eef40/Init/1/0/
    procedure Test_Init (Gnattest_T : in out Test) is
-   --  merge-cmd_line.ads:25:4:Init
+   --  merge-cmd_line.ads:27:4:Init
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -36,7 +36,7 @@ package body Merge.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Policy_aac0d6 (Gnattest_T : in out Test) renames Test_Get_Policy;
 --  id:2.2/aac0d695aae58756/Get_Policy/1/0/
    procedure Test_Get_Policy (Gnattest_T : in out Test) is
-   --  merge-cmd_line.ads:28:4:Get_Policy
+   --  merge-cmd_line.ads:30:4:Get_Policy
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -57,7 +57,7 @@ package body Merge.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Output_File_762f34 (Gnattest_T : in out Test) renames Test_Get_Output_File;
 --  id:2.2/762f34e807656cc2/Get_Output_File/1/0/
    procedure Test_Get_Output_File (Gnattest_T : in out Test) is
-   --  merge-cmd_line.ads:31:4:Get_Output_File
+   --  merge-cmd_line.ads:33:4:Get_Output_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -78,7 +78,7 @@ package body Merge.Cmd_Line.Test_Data.Tests is
    procedure Test_Get_Platform_File_632c68 (Gnattest_T : in out Test) renames Test_Get_Platform_File;
 --  id:2.2/632c686b957c35ab/Get_Platform_File/1/0/
    procedure Test_Get_Platform_File (Gnattest_T : in out Test) is
-   --  merge-cmd_line.ads:34:4:Get_Platform_File
+   --  merge-cmd_line.ads:36:4:Get_Platform_File
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

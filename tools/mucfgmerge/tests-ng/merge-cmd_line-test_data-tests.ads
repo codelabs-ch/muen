@@ -10,16 +10,16 @@ package Merge.Cmd_Line.Test_Data.Tests is
    with null record;
 
    procedure Test_Init_a69a58 (Gnattest_T : in out Test);
-   --  merge-cmd_line.ads:25:4:Init
+   --  merge-cmd_line.ads:27:4:Init
 
    procedure Test_Get_Policy_aac0d6 (Gnattest_T : in out Test);
-   --  merge-cmd_line.ads:28:4:Get_Policy
+   --  merge-cmd_line.ads:30:4:Get_Policy
 
    procedure Test_Get_Output_File_762f34 (Gnattest_T : in out Test);
-   --  merge-cmd_line.ads:31:4:Get_Output_File
+   --  merge-cmd_line.ads:33:4:Get_Output_File
 
    procedure Test_Get_Platform_File_632c68 (Gnattest_T : in out Test);
-   --  merge-cmd_line.ads:34:4:Get_Platform_File
+   --  merge-cmd_line.ads:36:4:Get_Platform_File
 
 end Merge.Cmd_Line.Test_Data.Tests;
 --  end read only

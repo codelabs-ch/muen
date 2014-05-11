@@ -21,7 +21,6 @@ with Ada.Finalization;
 
 with GNAT.OS_Lib;
 with GNAT.Strings;
-with GNAT.Command_Line;
 
 package body Merge.Cmd_Line
 is
@@ -102,7 +101,9 @@ is
          Help        => "Display usage and exit");
 
       begin
-         GNAT.Command_Line.Getopt (Config => Cmdline.Data);
+         GNAT.Command_Line.Getopt
+           (Config => Cmdline.Data,
+            Parser => Parser);
          if Platform'Length /= 0 then
             Platform_File := U (Platform.all);
          end if;
@@ -119,8 +120,8 @@ is
               (Code => Ada.Command_Line.Failure);
       end;
 
-      Policy      := U (GNAT.Command_Line.Get_Argument);
-      Output_File := U (GNAT.Command_Line.Get_Argument);
+      Policy      := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
+      Output_File := U (GNAT.Command_Line.Get_Argument (Parser => Parser));
 
       if Policy = Null_Unbounded_String or Output_File = Null_Unbounded_String
         or Platform_File = Null_Unbounded_String

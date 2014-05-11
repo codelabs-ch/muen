@@ -18,14 +18,204 @@ package body Allocator.Test_Data.Tests is
    --  allocator.ads:30:4:Write
 --  end read only
 
-      pragma Unreferenced (Gnattest_T);
+      ----------------------------------------------------------------------
 
+      procedure Allocation_With_Devices
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_A,
+                      File => "data/allocation_with_devices.in.xml");
+
+         Make_Directory (Name => "obj/allocation_with_devices");
+         Write
+           (Input_Policy => Policy,
+            Output_File  => "obj/allocation_with_devices/system.xml");
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/allocation_with_devices.ref.xml",
+                  Filename2 => "obj/allocation_with_devices/system.xml"),
+                 Message   => "Invalid allocation involving devices");
+      end Allocation_With_Devices;
+
+      ----------------------------------------------------------------------
+
+      procedure Automatic_Allocation
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_A,
+                      File => "data/automatic_allocation.in.xml");
+
+         Make_Directory (Name => "obj/automatic_allocation");
+         Write
+           (Input_Policy => Policy,
+            Output_File  => "obj/automatic_allocation/system.xml");
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/automatic_allocation.ref.xml",
+                  Filename2 => "obj/automatic_allocation/system.xml"),
+                 Message   => "Automatic allocation");
+      end Automatic_Allocation;
+
+      ----------------------------------------------------------------------
+
+      procedure File_Backed_First
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_A,
+                      File => "data/file_backed_first.in.xml");
+
+         Make_Directory (Name => "obj/file_backed_first");
+         Write
+           (Input_Policy => Policy,
+            Output_File  => "obj/file_backed_first/system.xml");
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/file_backed_first.ref.xml",
+                  Filename2 => "obj/file_backed_first/system.xml"),
+                 Message   => "File-backed first");
+      end File_Backed_First;
+
+      ----------------------------------------------------------------------
+
+      procedure Fill_Pattern_Second
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_A,
+                      File => "data/fill_pattern_second.in.xml");
+
+         Make_Directory (Name => "obj/fill_pattern_second");
+         Write
+           (Input_Policy => Policy,
+            Output_File  => "obj/fill_pattern_second/system.xml");
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/fill_pattern_second.ref.xml",
+                  Filename2 => "obj/fill_pattern_second/system.xml"),
+                 Message   => "Fill pattern second");
+      end Fill_Pattern_Second;
+
+      ----------------------------------------------------------------------
+
+      procedure Limited_Allocation
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_A,
+                      File => "data/limited_allocation.in.xml");
+
+         Make_Directory (Name => "obj/limited_allocation");
+         Write
+           (Input_Policy => Policy,
+            Output_File  => "obj/limited_allocation/system.xml");
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/limited_allocation.ref.xml",
+                  Filename2 => "obj/limited_allocation/system.xml"),
+                 Message   => "Limited allocation");
+      end Limited_Allocation;
+
+      ----------------------------------------------------------------------
+
+      procedure Overlap_Between_Device_Memory
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_A,
+                      File => "data/overlap_between_device_memory.xml");
+         Make_Directory ("obj/overlap_between_device_memory");
+         Write
+           (Input_Policy => Policy,
+            Output_File  => "obj/overlap_between_device_memory/system.xml");
+         pragma Unreferenced (Policy);
+         Assert (Condition => False,
+                 Message   => "Overlap undetected");
+
+      exception
+         when Overlapping_Physical_Memory => null;
+      end Overlap_Between_Device_Memory;
+
+      ----------------------------------------------------------------------
+
+      procedure Overlap_Between_Devices
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_A,
+                      File => "data/overlap_between_devices.xml");
+         Make_Directory ("obj/overlap_between_devices");
+         Write
+           (Input_Policy => Policy,
+            Output_File  => "obj/overlap_between_devices/system.xml");
+         pragma Unreferenced (Policy);
+         Assert (Condition => False,
+                 Message   => "Overlap undetected");
+
+      exception
+         when Overlapping_Physical_Memory => null;
+      end Overlap_Between_Devices;
+
+      ----------------------------------------------------------------------
+
+      procedure Overlapping_Devices
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_A,
+                      File => "data/overlapping_device.xml");
+         Make_Directory ("obj/overlapping_devices");
+         Write
+           (Input_Policy => Policy,
+            Output_File  => "obj/overlapping_devices/system.xml");
+         pragma Unreferenced (Policy);
+         Assert (Condition => False,
+                 Message   => "Overlap undetected");
+
+      exception
+         when Overlapping_Physical_Memory => null;
+      end Overlapping_Devices;
+
+      ----------------------------------------------------------------------
+
+      procedure Overlapping_Physical_Memory
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_A,
+                      File => "data/overlapping.xml");
+         Make_Directory ("obj/overlapping_physical_memory");
+         Write
+           (Input_Policy => Policy,
+            Output_File  => "obj/overlapping_physical_memory/system.xml");
+         pragma Unreferenced (Policy);
+         Assert (Condition => False,
+                 Message   => "Overlap undetected");
+
+      exception
+         when Allocator.Overlapping_Physical_Memory => null;
+      end Overlapping_Physical_Memory;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Allocation_With_Devices;
+      Automatic_Allocation;
+      File_Backed_First;
+      Fill_Pattern_Second;
+      Limited_Allocation;
+      Overlap_Between_Device_Memory;
+      Overlap_Between_Devices;
+      Overlapping_Devices;
+      Overlapping_Physical_Memory;
 --  begin read only
    end Test_Write;
 --  end read only
@@ -42,11 +232,8 @@ package body Allocator.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Tested in Test_Write");
 --  begin read only
    end Test_Add_Device_Regions;
 --  end read only
@@ -63,11 +250,8 @@ package body Allocator.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Tested in Test_Write");
 --  begin read only
    end Test_Add_Empty_Regions;
 --  end read only
@@ -84,11 +268,8 @@ package body Allocator.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Tested in Test_Write");
 --  begin read only
    end Test_Add_Fixed_Regions;
 --  end read only
@@ -105,11 +286,8 @@ package body Allocator.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Tested in Test_Write");
 --  begin read only
    end Test_Allocate_Variable_Regions;
 --  end read only
@@ -126,11 +304,8 @@ package body Allocator.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Tested in Test_Write");
 --  begin read only
    end Test_Allocate_Variable_Empty_Regions;
 --  end read only
@@ -147,11 +322,8 @@ package body Allocator.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Tested in Test_Write");
 --  begin read only
    end Test_Allocate_Variable_File_Regions;
 --  end read only
@@ -168,11 +340,8 @@ package body Allocator.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Tested in Test_Write");
 --  begin read only
    end Test_Allocate_Variable_Fill_Regions;
 --  end read only
@@ -189,11 +358,8 @@ package body Allocator.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Tested in Test_Write");
 --  begin read only
    end Test_Less_Than;
 --  end read only

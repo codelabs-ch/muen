@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with Test_Utils;
+
 package Allocator.Test_Data is
 
 --  begin read only
@@ -14,5 +16,7 @@ package Allocator.Test_Data is
 
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
+
+   procedure Make_Directory (Name : String);
 
 end Allocator.Test_Data;

@@ -21,11 +21,10 @@ package body Expanders.Channels.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/channels_memory.xml",
+         Ref_Filename => "data/channels_memory.ref.xml",
+         Expander     => Expanders.Channels.Add_Physical_Memory'Access);
 --  begin read only
    end Test_Add_Physical_Memory;
 --  end read only

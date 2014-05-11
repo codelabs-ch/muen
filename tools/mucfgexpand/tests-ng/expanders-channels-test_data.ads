@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with Test_Utils.Expander;
+
 package Expanders.Channels.Test_Data is
 
 --  begin read only

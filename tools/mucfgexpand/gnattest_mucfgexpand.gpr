@@ -23,6 +23,8 @@ with "../libmucfgvcpu/libmucfgvcpu";
 with "../libmucfgcheck/libmucfgcheck";
 with "../libtest/libtest";
 
+with "gnattest_src";
+
 project GNATtest_Mucfgexpand extends "../tools.gpr" is
 
    for Source_Dirs use ("src");

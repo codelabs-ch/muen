@@ -5,6 +5,10 @@
 
 with AUnit.Test_Fixtures;
 
+with Expanders.Subjects;
+
+with Test_Utils.Expander;
+
 package Expanders.Kernel.Test_Data is
 
 --  begin read only
@@ -14,5 +18,8 @@ package Expanders.Kernel.Test_Data is
 
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
+
+   --  Invoke kernel section skeleton and subject id expanders.
+   procedure Pre_Subj_State_Mappings (Data : in out Muxml.XML_Data_Type);
 
 end Expanders.Kernel.Test_Data;

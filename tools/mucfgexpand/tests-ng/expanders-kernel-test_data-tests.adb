@@ -21,11 +21,8 @@ package body Expanders.Kernel.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Tested implicitly");
 --  begin read only
    end Test_Add_Section_Skeleton;
 --  end read only
@@ -42,11 +39,11 @@ package body Expanders.Kernel.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/kernel_binary_mappings.xml",
+         Ref_Filename => "data/kernel_binary_mappings.ref.xml",
+         Pre          => Add_Section_Skeleton'Access,
+         Expander     => Add_Binary_Mappings'Access);
 --  begin read only
    end Test_Add_Binary_Mappings;
 --  end read only
@@ -63,11 +60,11 @@ package body Expanders.Kernel.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/kernel_subj_state_mappings.xml",
+         Ref_Filename => "data/kernel_subj_state_mappings.ref.xml",
+         Pre          => Pre_Subj_State_Mappings'Access,
+         Expander     => Add_Subj_State_Mappings'Access);
 --  begin read only
    end Test_Add_Subj_State_Mappings;
 --  end read only
@@ -84,11 +81,11 @@ package body Expanders.Kernel.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/kernel_tau0_iface_mapping.xml",
+         Ref_Filename => "data/kernel_tau0_iface_mapping.ref.xml",
+         Pre          => Add_Section_Skeleton'Access,
+         Expander     => Map_Tau0_Interface'Access);
 --  begin read only
    end Test_Map_Tau0_Interface;
 --  end read only
@@ -105,11 +102,11 @@ package body Expanders.Kernel.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/kernel_devices.xml",
+         Ref_Filename => "data/kernel_devices.ref.xml",
+         Pre          => Add_Section_Skeleton'Access,
+         Expander     => Add_Devices'Access);
 --  begin read only
    end Test_Add_Devices;
 --  end read only

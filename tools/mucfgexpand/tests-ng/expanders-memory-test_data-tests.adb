@@ -21,11 +21,10 @@ package body Expanders.Memory.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_kernel_binary.xml",
+         Ref_Filename => "data/memory_kernel_binary.ref.xml",
+         Expander     => Add_Kernel_Binary'Access);
 --  begin read only
    end Test_Add_Kernel_Binary;
 --  end read only
@@ -42,11 +41,12 @@ package body Expanders.Memory.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Policy_Filename => "data/calculate_pt.xml",
+         Policy_Format   => Muxml.Format_A,
+         Filename        => "obj/memory_kernel_pts.xml",
+         Ref_Filename    => "data/memory_kernel_pts.ref.xml",
+         Expander        => Add_Kernel_PTs'Access);
 --  begin read only
    end Test_Add_Kernel_PTs;
 --  end read only
@@ -63,11 +63,11 @@ package body Expanders.Memory.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_subject_pts.xml",
+         Ref_Filename => "data/memory_subject_pts.ref.xml",
+         Pre          => Add_Missing_Attributes'Access,
+         Expander     => Add_Subject_PTs'Access);
 --  begin read only
    end Test_Add_Subject_PTs;
 --  end read only
@@ -84,11 +84,10 @@ package body Expanders.Memory.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_stack_store.xml",
+         Ref_Filename => "data/memory_stack_store.ref.xml",
+         Expander     => Add_Stack_Store'Access);
 --  begin read only
    end Test_Add_Stack_Store;
 --  end read only
@@ -105,11 +104,10 @@ package body Expanders.Memory.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_subject_states.xml",
+         Ref_Filename => "data/memory_subject_states.ref.xml",
+         Expander     => Add_Subject_States'Access);
 --  begin read only
    end Test_Add_Subject_States;
 --  end read only
@@ -126,11 +124,10 @@ package body Expanders.Memory.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_tau0_iface.xml",
+         Ref_Filename => "data/memory_tau0_iface.ref.xml",
+         Expander     => Add_Tau0_Interface'Access);
 --  begin read only
    end Test_Add_Tau0_Interface;
 --  end read only
@@ -147,11 +144,10 @@ package body Expanders.Memory.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_trampoline.xml",
+         Ref_Filename => "data/memory_trampoline.ref.xml",
+         Expander     => Add_AP_Trampoline'Access);
 --  begin read only
    end Test_Add_AP_Trampoline;
 --  end read only
@@ -168,11 +164,10 @@ package body Expanders.Memory.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_vmxon.xml",
+         Ref_Filename => "data/memory_vmxon.ref.xml",
+         Expander     => Add_VMXON_Regions'Access);
 --  begin read only
    end Test_Add_VMXON_Regions;
 --  end read only
@@ -189,11 +184,10 @@ package body Expanders.Memory.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_vmcs.xml",
+         Ref_Filename => "data/memory_vmcs.ref.xml",
+         Expander     => Add_VMCS_Regions'Access);
 --  begin read only
    end Test_Add_VMCS_Regions;
 --  end read only
@@ -210,11 +204,10 @@ package body Expanders.Memory.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_attributes.xml",
+         Ref_Filename => "data/memory_attributes.ref.xml",
+         Expander     => Add_Missing_Attributes'Access);
 --  begin read only
    end Test_Add_Missing_Attributes;
 --  end read only
@@ -231,11 +224,10 @@ package body Expanders.Memory.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_subject_bitmaps.xml",
+         Ref_Filename => "data/memory_subject_bitmaps.ref.xml",
+         Expander     => Add_Subject_Bitmaps'Access);
 --  begin read only
    end Test_Add_Subject_Bitmaps;
 --  end read only

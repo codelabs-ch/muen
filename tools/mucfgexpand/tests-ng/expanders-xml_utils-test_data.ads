@@ -5,6 +5,11 @@
 
 with AUnit.Test_Fixtures;
 
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
+
+with McKae.XML.XPath.XIA;
+
 package Expanders.XML_Utils.Test_Data is
 
 --  begin read only

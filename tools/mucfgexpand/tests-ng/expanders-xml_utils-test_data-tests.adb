@@ -20,12 +20,43 @@ package body Expanders.XML_Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Dom_Impl : DOM.Core.DOM_Implementation;
+      Policy   : Muxml.XML_Data_Type;
+      Node     : DOM.Core.Node;
+      Logical  : constant String := "testl";
+      Physical : constant String := "testp";
+      Address  : constant String := "16#2000#";
    begin
+      Policy.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Node := Create_Virtual_Memory_Node
+        (Policy        => Policy,
+         Logical_Name  => Logical,
+         Physical_Name => Physical,
+         Address       => Address,
+         Writable      => True,
+         Executable    => False);
 
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "logical") = Logical,
+              Message   => "Logical name mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "physical") = "testp",
+              Message   => "Physical name mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "virtualAddress") = Address,
+              Message   => "Address mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "writable") = "true",
+              Message   => "Writable mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "executable") = "false",
+              Message   => "Executable mismatch");
 --  begin read only
    end Test_Create_Virtual_Memory_Node;
 --  end read only
@@ -41,12 +72,45 @@ package body Expanders.XML_Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Dom_Impl : DOM.Core.DOM_Implementation;
+      Policy   : Muxml.XML_Data_Type;
+      Node     : DOM.Core.Node;
+      Logical  : constant String := "log_name";
+      Physical : constant String := "phys_name";
+      Action   : constant String := "continue";
+      ID       : constant String := "42";
    begin
+      Policy.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Node := Create_Source_Event_Node
+        (Policy        => Policy,
+         ID            => ID,
+         Logical_Name  => Logical,
+         Physical_Name => Physical,
+         Action        => Action);
 
+      Assert (Condition => DOM.Core.Elements.Get_Tag_Name
+              (Elem => Node) = "event",
+              Message   => "Event tag mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "id") = ID,
+              Message   => "ID mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "action") = Action,
+              Message   => "Action mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "logical") = Logical,
+              Message   => "Logical name mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Tag_Name
+              (Elem => DOM.Core.Nodes.First_Child (N => Node)) = "notify",
+              Message   => "Notify tag mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => DOM.Core.Nodes.First_Child (N => Node),
+               Name => "physical") = Physical,
+              Message   => "Physical name mismatch");
 --  begin read only
    end Test_Create_Source_Event_Node;
 --  end read only
@@ -62,12 +126,36 @@ package body Expanders.XML_Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Dom_Impl : DOM.Core.DOM_Implementation;
+      Policy   : Muxml.XML_Data_Type;
+      Node     : DOM.Core.Node;
+      Logical  : constant String := "log_name";
+      Physical : constant String := "phys_name";
+      Vector   : constant String := "none";
    begin
+      Policy.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Node := Create_Target_Event_Node
+        (Policy        => Policy,
+         Logical_Name  => Logical,
+         Physical_Name => Physical,
+         Vector        => Vector);
 
+      Assert (Condition => DOM.Core.Elements.Get_Tag_Name
+              (Elem => Node) = "event",
+              Message   => "Event tag mismatch (2)");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "logical") = Logical,
+              Message   => "Logical name mismatch (2)");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "physical") = Physical,
+              Message   => "Physical name mismatch (2)");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "vector") = Vector,
+              Message   => "Vector mismatch");
 --  begin read only
    end Test_Create_Target_Event_Node;
 --  end read only
@@ -83,12 +171,21 @@ package body Expanders.XML_Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Interfaces.Unsigned_64;
+
+      Policy : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_A,
+                   File => "data/calculate_pt.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert
+        (Condition => Calculate_PT_Size
+           (Policy             => Policy,
+            Dev_Virt_Mem_XPath => "/system/kernel/devices/device/memory",
+            Virt_Mem_XPath     => "/system/kernel/memory/cpu[@id='0']/memory")
+         = 16#6000#,
+         Message   => "Size mismatch");
 --  begin read only
    end Test_Calculate_PT_Size;
 --  end read only
@@ -104,12 +201,42 @@ package body Expanders.XML_Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      declare
+         use type Interfaces.Unsigned_64;
 
+         Virt_Mem : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Policy.Doc,
+              XPath => "/system/subjects/subject[@name='subject1']/memory/"
+              & "memory");
+         Dev_Mem  :  constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Policy.Doc,
+              XPath => "/system/subjects/subject[@name='subject1']/devices/"
+              & "device/memory");
+      begin
+         Assert (Condition => Calculate_Region_Address
+                 (Policy             => Policy,
+                  Fixed_Memory       => Virt_Mem,
+                  Device_Memory      => Dev_Mem,
+                  Address_Space_Size => Interfaces.Unsigned_64'Last,
+                  Region_Size        => 16#1000#) = 16#0000#,
+                 Message   => "Region address mismatch (1)");
+
+         Assert (Condition => Calculate_Region_Address
+                 (Policy             => Policy,
+                  Fixed_Memory       => Virt_Mem,
+                  Device_Memory      => Dev_Mem,
+                  Address_Space_Size => Interfaces.Unsigned_64'Last,
+                  Region_Size        => 16#2000#) = 16#2000#,
+                 Message   => "Region address mismatch (2)");
+      end;
 --  begin read only
    end Test_Calculate_Region_Address;
 --  end read only

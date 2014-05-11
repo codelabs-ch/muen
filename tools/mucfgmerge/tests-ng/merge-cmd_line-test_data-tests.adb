@@ -20,12 +20,33 @@ package body Merge.Cmd_Line.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Ada.Strings.Unbounded.Unbounded_String;
+
+      Args        : aliased GNAT.OS_Lib.Argument_List
+        := (1 => new String'("-p"),
+            2 => new String'("platform.xml"),
+            3 => new String'("data/test_policy.xml"),
+            4 => new String'("merged.xml"));
+      Test_Parser : GNAT.Command_Line.Opt_Parser;
    begin
+      GNAT.Command_Line.Initialize_Option_Scan
+        (Parser       => Test_Parser,
+         Command_Line => Args'Unchecked_Access);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Parser := Test_Parser;
 
+      Init (Description => "Test run");
+
+      for A in Args'Range loop
+         GNAT.OS_Lib.Free (X => Args (A));
+      end loop;
+
+      Assert (Condition => Policy = "data/test_policy.xml",
+              Message   => "Policy mismatch");
+      Assert (Condition => Platform_File = "platform.xml",
+              Message   => "Platform file mismatch");
+      Assert (Condition => Output_File = "merged.xml",
+              Message   => "Output file  mismatch");
 --  begin read only
    end Test_Init;
 --  end read only
@@ -41,12 +62,14 @@ package body Merge.Cmd_Line.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use Ada.Strings.Unbounded;
+
+      Ref : constant Unbounded_String
+        := To_Unbounded_String ("testpolicy.xml");
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Policy := Ref;
+      Assert (Condition => Get_Policy = Ref,
+              Message   => "Policy mismatch");
 --  begin read only
    end Test_Get_Policy;
 --  end read only
@@ -62,12 +85,14 @@ package body Merge.Cmd_Line.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use Ada.Strings.Unbounded;
+
+      Ref : constant Unbounded_String
+        := To_Unbounded_String ("output.xml");
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Output_File := Ref;
+      Assert (Condition => Get_Output_File = Ref,
+              Message   => "Output file mismatch");
 --  begin read only
    end Test_Get_Output_File;
 --  end read only
@@ -83,12 +108,14 @@ package body Merge.Cmd_Line.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use Ada.Strings.Unbounded;
+
+      Ref : constant Unbounded_String
+        := To_Unbounded_String ("platform.xml");
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Platform_File := Ref;
+      Assert (Condition => Get_Platform_File = Ref,
+              Message   => "Platform file mismatch");
 --  begin read only
    end Test_Get_Platform_File;
 --  end read only

@@ -5,6 +5,14 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Directories;
+
+with DOM.Core.Nodes;
+
+with Muxml.Utils;
+
+with Test_Utils;
+
 package Mergers.Test_Data is
 
 --  begin read only

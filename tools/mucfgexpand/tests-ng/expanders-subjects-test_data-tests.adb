@@ -21,11 +21,10 @@ package body Expanders.Subjects.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_binaries.xml",
+         Ref_Filename => "data/subjects_binaries.ref.xml",
+         Expander     => Add_Binaries'Access);
 --  begin read only
    end Test_Add_Binaries;
 --  end read only
@@ -42,11 +41,10 @@ package body Expanders.Subjects.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_profiles.xml",
+         Ref_Filename => "data/subjects_profiles.ref.xml",
+         Expander     => Handle_Profile'Access);
 --  begin read only
    end Test_Handle_Profile;
 --  end read only
@@ -63,11 +61,10 @@ package body Expanders.Subjects.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_tau0.xml",
+         Ref_Filename => "data/subjects_tau0.ref.xml",
+         Expander     => Add_Tau0'Access);
 --  begin read only
    end Test_Add_Tau0;
 --  end read only
@@ -84,11 +81,10 @@ package body Expanders.Subjects.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_monitors.xml",
+         Ref_Filename => "data/subjects_monitors.ref.xml",
+         Expander     => Handle_Monitors'Access);
 --  begin read only
    end Test_Handle_Monitors;
 --  end read only
@@ -105,11 +101,10 @@ package body Expanders.Subjects.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_ids.xml",
+         Ref_Filename => "data/subjects_ids.ref.xml",
+         Expander     => Add_Ids'Access);
 --  begin read only
    end Test_Add_Ids;
 --  end read only
@@ -126,11 +121,10 @@ package body Expanders.Subjects.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_missing_elements.xml",
+         Ref_Filename => "data/subjects_missing_elements.ref.xml",
+         Expander     => Add_Missing_Elements'Access);
 --  begin read only
    end Test_Add_Missing_Elements;
 --  end read only
@@ -147,11 +141,10 @@ package body Expanders.Subjects.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_channels.xml",
+         Ref_Filename => "data/subjects_channels.ref.xml",
+         Expander     => Add_Channel_Mappings'Access);
 --  begin read only
    end Test_Add_Channel_Mappings;
 --  end read only
@@ -168,11 +161,10 @@ package body Expanders.Subjects.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_channel_events.xml",
+         Ref_Filename => "data/subjects_channel_events.ref.xml",
+         Expander     => Add_Channel_Events'Access);
 --  begin read only
    end Test_Add_Channel_Events;
 --  end read only
@@ -189,11 +181,10 @@ package body Expanders.Subjects.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_remove_channels.xml",
+         Ref_Filename => "data/subjects_remove_channels.ref.xml",
+         Expander     => Remove_Channel_Elements'Access);
 --  begin read only
    end Test_Remove_Channel_Elements;
 --  end read only
@@ -210,11 +201,10 @@ package body Expanders.Subjects.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_default_events.xml",
+         Ref_Filename => "data/subjects_default_events.ref.xml",
+         Expander     => Add_Default_Events'Access);
 --  begin read only
    end Test_Add_Default_Events;
 --  end read only
@@ -231,11 +221,10 @@ package body Expanders.Subjects.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_initrd.xml",
+         Ref_Filename => "data/subjects_initrd.ref.xml",
+         Expander     => Add_Initrd'Access);
 --  begin read only
    end Test_Add_Initrd;
 --  end read only

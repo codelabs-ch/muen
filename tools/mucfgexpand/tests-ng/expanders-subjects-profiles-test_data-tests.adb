@@ -21,11 +21,8 @@ package body Expanders.Subjects.Profiles.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Tested in Handle_Profile test");
 --  begin read only
    end Test_Handle_Linux_Profile;
 --  end read only

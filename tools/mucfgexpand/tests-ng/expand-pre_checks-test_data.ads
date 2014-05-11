@@ -5,6 +5,16 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Exceptions;
+
+with DOM.Core.Nodes;
+with DOM.Core.Documents;
+
+with Muxml.Utils;
+with Mucfgcheck;
+
+with Test_Utils;
+
 package Expand.Pre_Checks.Test_Data is
 
 --  begin read only

@@ -83,12 +83,33 @@ package body Expand.Pre_Checks.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Tau0_Node : DOM.Core.Node;
+      Policy    : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Tau0_Node := Muxml.Utils.Get_Element
+        (Doc   => Policy.Doc,
+         XPath => "/system/scheduling/majorFrame/cpu/"
+         & "minorFrame[@subject='tau0']");
+      Tau0_Node := DOM.Core.Nodes.Remove_Child
+        (N         => DOM.Core.Nodes.Parent_Node (N => Tau0_Node),
+         Old_Child => Tau0_Node);
+      pragma Unreferenced (Tau0_Node);
 
+      begin
+         Tau0_Presence_In_Scheduling (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject tau0 not present in scheduling plan",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Tau0_Presence_In_Scheduling;
 --  end read only
@@ -104,12 +125,29 @@ package body Expand.Pre_Checks.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/monitor/state[@subject='lnx']",
+         Name  => "subject",
+         Value => "nonexistent");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Subject_Monitor_References (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'nonexistent' referenced by subject monitor "
+                    & "'subject1' does not exist",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Subject_Monitor_References;
 --  end read only
@@ -125,12 +163,30 @@ package body Expand.Pre_Checks.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/channels/reader"
+         & "[@ref='data_channel']",
+         Name  => "ref",
+         Value => "nonexistent");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Subject_Channel_References (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Channel 'nonexistent' referenced by subject 'lnx' does"
+                    & " not exist",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Subject_Channel_References;
 --  end read only
@@ -146,12 +202,50 @@ package body Expand.Pre_Checks.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/channels/writer"
+         & "[@ref='data_channel']",
+         Name  => "ref",
+         Value => "nonexistent");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Channel_Reader_Writer (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid number of writers for channel 'data_channel':"
+                    & " 0",
+                    Message   => "Exception mismatch (writer)");
+      end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/channels/reader"
+         & "[@ref='data_channel']",
+         Name  => "ref",
+         Value => "nonexistent");
+
+      begin
+         Channel_Reader_Writer (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid number of readers for channel 'data_channel':"
+                    & " 0",
+                    Message   => "Exception mismatch (reader)");
+      end;
 --  begin read only
    end Test_Channel_Reader_Writer;
 --  end read only
@@ -167,12 +261,30 @@ package body Expand.Pre_Checks.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/channels/writer"
+         & "[@ref='data_channel']",
+         Name  => "event",
+         Value => "");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Channel_Writer_Has_Event_ID (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Missing 'event' attribute for writer of channel "
+                    & "'data_channel'",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Channel_Writer_Has_Event_ID;
 --  end read only
@@ -188,12 +300,31 @@ package body Expand.Pre_Checks.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/channels/reader"
+         & "[@ref='data_channel']",
+         Name  => "vector",
+         Value => "");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Channel_Reader_Has_Event_Vector
+           (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Missing 'vector' attribute for reader of channel "
+                    & "'data_channel'",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Channel_Reader_Has_Event_Vector;
 --  end read only
@@ -209,12 +340,27 @@ package body Expand.Pre_Checks.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Remove_Child
+        (Node       => DOM.Core.Documents.Get_Element (Doc => Policy.Doc),
+         Child_Name => "platform");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Platform_CPU_Count_Presence (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Required '/system/platform/processor/@logicalCpus' "
+                    & "attribute not found, add it or use mucfgmerge tool",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Platform_CPU_Count_Presence;
 --  end read only

@@ -21,11 +21,9 @@ package body Expanders.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Register_All;
+      Assert (Condition => Procs.Get_Count = 28,
+              Message   => "Count mismatch:" & Get_Count'Img);
 --  begin read only
    end Test_Register_All;
 --  end read only
@@ -41,12 +39,12 @@ package body Expanders.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Procs.Register (Process => Inc_Counter'Access);
+      Run (Data => Policy);
+      Assert (Condition => Test_Counter = 1,
+              Message   => "Counter not 1:" & Test_Counter'Img);
 --  begin read only
    end Test_Run;
 --  end read only
@@ -63,11 +61,12 @@ package body Expanders.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
+      Assert (Condition => Get_Count = 0,
+              Message   => "Count not zero");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Procs.Register (Process => Inc_Counter'Access);
+      Assert (Condition => Procs.Get_Count = 1,
+              Message   => "Count not 1");
 --  begin read only
    end Test_Get_Count;
 --  end read only

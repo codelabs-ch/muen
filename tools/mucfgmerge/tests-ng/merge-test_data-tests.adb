@@ -20,12 +20,18 @@ package body Merge.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Output : constant String := "obj/run.xml";
    begin
+      Run (Policy_File   => "data/test_policy.xml",
+           Platform_File => "data/platform.xml",
+           Output_File   => Output);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/run.xml",
+               Filename2 => Output),
+              Message   => "Policy mismatch");
 
+      Ada.Directories.Delete_File (Name => "obj/run.xml");
 --  begin read only
    end Test_Run;
 --  end read only

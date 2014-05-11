@@ -35,9 +35,12 @@ package body Expand.Test_Data.Tests is
               Message   => "Policy mismatch");
 
       Ada.Directories.Delete_File (Name => Filename);
-      Expanders.Clear;
-      Pre_Checks.Clear;
-      Post_Checks.Clear;
+      Assert (Condition => Pre_Checks.Get_Count = 0,
+              Message   => "Pre-checks not zero");
+      Assert (Condition => Expanders.Get_Count = 0,
+              Message   => "Expanders not zero");
+      Assert (Condition => Post_Checks.Get_Count = 0,
+              Message   => "Post-checks not zero");
 --  begin read only
    end Test_Run;
 --  end read only

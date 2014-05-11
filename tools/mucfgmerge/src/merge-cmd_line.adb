@@ -112,12 +112,10 @@ is
       exception
          when GNAT.Command_Line.Invalid_Switch |
               GNAT.Command_Line.Exit_From_Command_Line =>
-            Ada.Command_Line.Set_Exit_Status
-              (Code => Ada.Command_Line.Failure);
+            GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));
          when GNAT.Command_Line.Invalid_Parameter =>
             GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
-            Ada.Command_Line.Set_Exit_Status
-              (Code => Ada.Command_Line.Failure);
+            GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));
       end;
 
       Policy      := U (GNAT.Command_Line.Get_Argument (Parser => Parser));

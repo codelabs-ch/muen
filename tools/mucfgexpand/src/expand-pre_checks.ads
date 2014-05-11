@@ -31,6 +31,9 @@ is
    --  Return number of registered pre-checks.
    function Get_Count return Natural;
 
+   --  Clear registered pre-checks;
+   procedure Clear;
+
    --  Expander specific pre-checks.
 
    --  Check that tau0 is present in the scheduling plan.

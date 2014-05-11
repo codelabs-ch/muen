@@ -7,6 +7,8 @@ with AUnit.Test_Fixtures;
 
 with Ada.Directories;
 
+with Expand.Pre_Checks;
+
 with Test_Utils;
 
 package Expand.Test_Data is

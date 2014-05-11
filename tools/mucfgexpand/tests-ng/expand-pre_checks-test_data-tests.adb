@@ -74,11 +74,37 @@ package body Expand.Pre_Checks.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Clear (Gnattest_T : in out Test);
+   procedure Test_Clear_4b4f85 (Gnattest_T : in out Test) renames Test_Clear;
+--  id:2.2/4b4f85da05a9b689/Clear/1/0/
+   procedure Test_Clear (Gnattest_T : in out Test) is
+   --  expand-pre_checks.ads:35:4:Clear
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Assert (Condition => Check_Procs.Get_Count = 0,
+              Message   => "Procs not empty");
+
+      Check_Procs.Register (Process => Inc_Counter'Access);
+      Assert (Condition => Check_Procs.Get_Count /= 0,
+              Message   => "Procs count still zero");
+
+      Clear;
+      Assert (Condition => Check_Procs.Get_Count = 0,
+              Message   => "Procs not cleared");
+--  begin read only
+   end Test_Clear;
+--  end read only
+
+
+--  begin read only
    procedure Test_Tau0_Presence_In_Scheduling (Gnattest_T : in out Test);
    procedure Test_Tau0_Presence_In_Scheduling_8c7e59 (Gnattest_T : in out Test) renames Test_Tau0_Presence_In_Scheduling;
 --  id:2.2/8c7e594b2b87e9fe/Tau0_Presence_In_Scheduling/1/0/
    procedure Test_Tau0_Presence_In_Scheduling (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:37:4:Tau0_Presence_In_Scheduling
+   --  expand-pre_checks.ads:40:4:Tau0_Presence_In_Scheduling
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -120,7 +146,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Subject_Monitor_References_3a1ff8 (Gnattest_T : in out Test) renames Test_Subject_Monitor_References;
 --  id:2.2/3a1ff8d2d6e965b6/Subject_Monitor_References/1/0/
    procedure Test_Subject_Monitor_References (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:40:4:Subject_Monitor_References
+   --  expand-pre_checks.ads:43:4:Subject_Monitor_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -158,7 +184,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Subject_Channel_References_b0f446 (Gnattest_T : in out Test) renames Test_Subject_Channel_References;
 --  id:2.2/b0f44645f4ddfb91/Subject_Channel_References/1/0/
    procedure Test_Subject_Channel_References (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:43:4:Subject_Channel_References
+   --  expand-pre_checks.ads:46:4:Subject_Channel_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -197,7 +223,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Channel_Reader_Writer_918b3c (Gnattest_T : in out Test) renames Test_Channel_Reader_Writer;
 --  id:2.2/918b3c5761bd21a7/Channel_Reader_Writer/1/0/
    procedure Test_Channel_Reader_Writer (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:46:4:Channel_Reader_Writer
+   --  expand-pre_checks.ads:49:4:Channel_Reader_Writer
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -256,7 +282,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Channel_Writer_Has_Event_ID_ae7fe0 (Gnattest_T : in out Test) renames Test_Channel_Writer_Has_Event_ID;
 --  id:2.2/ae7fe00845fcf90b/Channel_Writer_Has_Event_ID/1/0/
    procedure Test_Channel_Writer_Has_Event_ID (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:49:4:Channel_Writer_Has_Event_ID
+   --  expand-pre_checks.ads:52:4:Channel_Writer_Has_Event_ID
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -295,7 +321,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Channel_Reader_Has_Event_Vector_dc496b (Gnattest_T : in out Test) renames Test_Channel_Reader_Has_Event_Vector;
 --  id:2.2/dc496b276bd400a4/Channel_Reader_Has_Event_Vector/1/0/
    procedure Test_Channel_Reader_Has_Event_Vector (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:53:4:Channel_Reader_Has_Event_Vector
+   --  expand-pre_checks.ads:56:4:Channel_Reader_Has_Event_Vector
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -335,7 +361,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Platform_CPU_Count_Presence_a69356 (Gnattest_T : in out Test) renames Test_Platform_CPU_Count_Presence;
 --  id:2.2/a6935685458554d5/Platform_CPU_Count_Presence/1/0/
    procedure Test_Platform_CPU_Count_Presence (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:57:4:Platform_CPU_Count_Presence
+   --  expand-pre_checks.ads:60:4:Platform_CPU_Count_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

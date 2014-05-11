@@ -35,6 +35,7 @@ package body Expand.Test_Data.Tests is
               Message   => "Policy mismatch");
 
       Ada.Directories.Delete_File (Name => Filename);
+      Pre_Checks.Clear;
 --  begin read only
    end Test_Run;
 --  end read only

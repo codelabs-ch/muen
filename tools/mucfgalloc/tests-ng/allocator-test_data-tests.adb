@@ -1,0 +1,201 @@
+--  This package has been generated automatically by GNATtest.
+--  You are allowed to add your code to the bodies of test routines.
+--  Such changes will be kept during further regeneration of this file.
+--  All code placed outside of test routine bodies will be lost. The
+--  code intended to set up and tear down the test environment should be
+--  placed into Allocator.Test_Data.
+
+with AUnit.Assertions; use AUnit.Assertions;
+
+package body Allocator.Test_Data.Tests is
+
+
+--  begin read only
+   procedure Test_Write (Gnattest_T : in out Test);
+   procedure Test_Write_2892fa (Gnattest_T : in out Test) renames Test_Write;
+--  id:2.2/2892fa6e04d61b6a/Write/1/0/
+   procedure Test_Write (Gnattest_T : in out Test) is
+   --  allocator.ads:30:4:Write
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Write;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Add_Device_Regions (Gnattest_T : in out Test);
+   procedure Test_Add_Device_Regions_1b40f3 (Gnattest_T : in out Test) renames Test_Add_Device_Regions;
+--  id:2.2/1b40f3907f142123/Add_Device_Regions/1/0/
+   procedure Test_Add_Device_Regions (Gnattest_T : in out Test) is
+   --  allocator.ads:48:4:Add_Device_Regions
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Add_Device_Regions;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Add_Empty_Regions (Gnattest_T : in out Test);
+   procedure Test_Add_Empty_Regions_c56154 (Gnattest_T : in out Test) renames Test_Add_Empty_Regions;
+--  id:2.2/c56154c660d702e8/Add_Empty_Regions/1/0/
+   procedure Test_Add_Empty_Regions (Gnattest_T : in out Test) is
+   --  allocator.ads:52:4:Add_Empty_Regions
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Add_Empty_Regions;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Add_Fixed_Regions (Gnattest_T : in out Test);
+   procedure Test_Add_Fixed_Regions_768f98 (Gnattest_T : in out Test) renames Test_Add_Fixed_Regions;
+--  id:2.2/768f98394e92c2f7/Add_Fixed_Regions/1/0/
+   procedure Test_Add_Fixed_Regions (Gnattest_T : in out Test) is
+   --  allocator.ads:56:4:Add_Fixed_Regions
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Add_Fixed_Regions;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Allocate_Variable_Regions (Gnattest_T : in out Test);
+   procedure Test_Allocate_Variable_Regions_f4dacd (Gnattest_T : in out Test) renames Test_Allocate_Variable_Regions;
+--  id:2.2/f4dacd693f4e9bfe/Allocate_Variable_Regions/1/0/
+   procedure Test_Allocate_Variable_Regions (Gnattest_T : in out Test) is
+   --  allocator.ads:60:4:Allocate_Variable_Regions
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Allocate_Variable_Regions;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Allocate_Variable_Empty_Regions (Gnattest_T : in out Test);
+   procedure Test_Allocate_Variable_Empty_Regions_dfed85 (Gnattest_T : in out Test) renames Test_Allocate_Variable_Empty_Regions;
+--  id:2.2/dfed855132ea0b94/Allocate_Variable_Empty_Regions/1/0/
+   procedure Test_Allocate_Variable_Empty_Regions (Gnattest_T : in out Test) is
+   --  allocator.ads:65:4:Allocate_Variable_Empty_Regions
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Allocate_Variable_Empty_Regions;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Allocate_Variable_File_Regions (Gnattest_T : in out Test);
+   procedure Test_Allocate_Variable_File_Regions_5081f2 (Gnattest_T : in out Test) renames Test_Allocate_Variable_File_Regions;
+--  id:2.2/5081f2e9909ccb18/Allocate_Variable_File_Regions/1/0/
+   procedure Test_Allocate_Variable_File_Regions (Gnattest_T : in out Test) is
+   --  allocator.ads:69:4:Allocate_Variable_File_Regions
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Allocate_Variable_File_Regions;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Allocate_Variable_Fill_Regions (Gnattest_T : in out Test);
+   procedure Test_Allocate_Variable_Fill_Regions_080868 (Gnattest_T : in out Test) renames Test_Allocate_Variable_Fill_Regions;
+--  id:2.2/08086880ccd87ba6/Allocate_Variable_Fill_Regions/1/0/
+   procedure Test_Allocate_Variable_Fill_Regions (Gnattest_T : in out Test) is
+   --  allocator.ads:73:4:Allocate_Variable_Fill_Regions
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Allocate_Variable_Fill_Regions;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Less_Than (Gnattest_T : in out Test);
+   procedure Test_Less_Than_876b8b (Gnattest_T : in out Test) renames Test_Less_Than;
+--  id:2.2/876b8b84e4a301d7/Less_Than/1/0/
+   procedure Test_Less_Than (Gnattest_T : in out Test) is
+   --  allocator.ads:85:4:"<"
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Less_Than;
+--  end read only
+
+end Allocator.Test_Data.Tests;

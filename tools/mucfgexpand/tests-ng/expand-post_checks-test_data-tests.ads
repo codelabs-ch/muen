@@ -10,13 +10,13 @@ package Expand.Post_Checks.Test_Data.Tests is
    with null record;
 
    procedure Test_Register_All_3f90ea (Gnattest_T : in out Test);
-   --  expand-post_checks.ads:25:4:Register_All
+   --  expand-post_checks.ads:26:4:Register_All
 
    procedure Test_Run_9b6b0d (Gnattest_T : in out Test);
-   --  expand-post_checks.ads:28:4:Run
+   --  expand-post_checks.ads:29:4:Run
 
    procedure Test_Get_Count_1fbd7c (Gnattest_T : in out Test);
-   --  expand-post_checks.ads:31:4:Get_Count
+   --  expand-post_checks.ads:32:4:Get_Count
 
 end Expand.Post_Checks.Test_Data.Tests;
 --  end read only

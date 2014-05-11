@@ -72,4 +72,30 @@ package body Expand.Post_Checks.Test_Data.Tests is
    end Test_Get_Count;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Clear (Gnattest_T : in out Test);
+   procedure Test_Clear_4b4f85 (Gnattest_T : in out Test) renames Test_Clear;
+--  id:2.2/4b4f85da05a9b689/Clear/1/0/
+   procedure Test_Clear (Gnattest_T : in out Test) is
+   --  expand-post_checks.ads:35:4:Clear
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Assert (Condition => Check_Procs.Get_Count = 0,
+              Message   => "Procs not empty");
+
+      Check_Procs.Register (Process => Inc_Counter'Access);
+      Assert (Condition => Check_Procs.Get_Count /= 0,
+              Message   => "Procs count still zero");
+
+      Clear;
+      Assert (Condition => Check_Procs.Get_Count = 0,
+              Message   => "Procs not cleared");
+--  begin read only
+   end Test_Clear;
+--  end read only
+
 end Expand.Post_Checks.Test_Data.Tests;

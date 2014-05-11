@@ -18,5 +18,8 @@ package Expand.Post_Checks.Test_Data.Tests is
    procedure Test_Get_Count_1fbd7c (Gnattest_T : in out Test);
    --  expand-post_checks.ads:32:4:Get_Count
 
+   procedure Test_Clear_4b4f85 (Gnattest_T : in out Test);
+   --  expand-post_checks.ads:35:4:Clear
+
 end Expand.Post_Checks.Test_Data.Tests;
 --  end read only

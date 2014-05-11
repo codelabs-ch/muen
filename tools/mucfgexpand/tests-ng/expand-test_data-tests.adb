@@ -36,6 +36,7 @@ package body Expand.Test_Data.Tests is
 
       Ada.Directories.Delete_File (Name => Filename);
       Pre_Checks.Clear;
+      Post_Checks.Clear;
 --  begin read only
    end Test_Run;
 --  end read only

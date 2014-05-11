@@ -5,16 +5,29 @@
 
 package body Expand.Post_Checks.Test_Data is
 
+   -------------------------------------------------------------------------
+
    procedure Set_Up (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
    begin
       null;
    end Set_Up;
 
+   -------------------------------------------------------------------------
+
    procedure Tear_Down (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
    begin
-      null;
+      Clear;
+      Test_Counter := 0;
    end Tear_Down;
+
+   -------------------------------------------------------------------------
+
+   procedure Inc_Counter (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Test_Counter := Test_Counter + 1;
+   end Inc_Counter;
 
 end Expand.Post_Checks.Test_Data;

@@ -19,18 +19,18 @@
 #ifndef MUSINFO_H_
 #define MUSINFO_H_
 
-#define MUEN_SUBJECT_INFO_MAGIC	0x01006f666e69756d
-#define MAX_NAME_LENGTH			63
-#define MAX_CHANNEL_COUNT		255
+#define MUEN_SUBJECT_INFO_MAGIC	0x01006f666e69756dULL
+#define MAX_NAME_LENGTH		63
+#define MAX_CHANNEL_COUNT	255
 
 struct name_type {
 	uint8_t length;
 	char data[MAX_NAME_LENGTH];
 } __attribute__((packed));
 
-#define WRITABLE_FLAG	1 << 0
-#define HAS_EVENT_FLAG	1 << 1
-#define HAS_VECTOR_FLAG	1 << 2
+#define WRITABLE_FLAG	(1 << 0)
+#define HAS_EVENT_FLAG	(1 << 1)
+#define HAS_VECTOR_FLAG	(1 << 2)
 
 struct channel_type {
 	struct name_type name;

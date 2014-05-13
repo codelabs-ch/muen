@@ -25,7 +25,6 @@ is
 
    procedure Trigger_Event (Number : SK.Byte)
    is
-
       Id : SK.Word64 := Word64 (Number);
    begin
       System.Machine_Code.Asm

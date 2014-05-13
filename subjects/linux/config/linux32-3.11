@@ -135,8 +135,6 @@ CONFIG_RD_GZIP=y
 # CONFIG_RD_XZ is not set
 # CONFIG_RD_LZO is not set
 # CONFIG_RD_LZ4 is not set
-# CONFIG_INITRAMFS_COMPRESSION_NONE is not set
-# CONFIG_INITRAMFS_COMPRESSION_GZIP is not set
 CONFIG_CC_OPTIMIZE_FOR_SIZE=y
 CONFIG_SYSCTL=y
 CONFIG_ANON_INODES=y
@@ -1086,6 +1084,11 @@ CONFIG_MUCHANNEL=y
 #
 # Microsoft Hyper-V guest support
 #
+
+#
+# Muen driver support
+#
+CONFIG_MUEN_SINFO=y
 # CONFIG_STAGING is not set
 # CONFIG_X86_PLATFORM_DEVICES is not set
 

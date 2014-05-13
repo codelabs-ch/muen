@@ -37,10 +37,9 @@ is
 
    --  Write given value to the ICR register of the local APIC.
    procedure Write_ICR (Value : SK.Word64)
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, Value;
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ Value)
    is
       Low_Dword, High_Dword : SK.Word32;
    begin
@@ -54,20 +53,22 @@ is
 
    -------------------------------------------------------------------------
 
+   pragma $Prove_Warnings (Off, "subprogram ""Busy_Wait"" has no effect",
+      Reason => "By design, a busy loop has no effect except burning time.");
+
    --  Busy-sleep for a given (scaled) period of time.
-   procedure Sleep (Count : Positive)
-   --# derives null from Count;
-   --# pre
-   --#    Count < Integer'Last / 2 ** 8;
+   procedure Busy_Wait (Count : Positive)
+   with
+      Depends => (null => Count),
+      Pre     => Count < Integer'Last / 2 ** 8
    is
    begin
-      --# accept Flow, 10, "Passing time by busy looping";
       for I in Integer range 1 .. Count * (2 ** 8) loop
          null;
       end loop;
-      --# end accept;
-      --# accept Flow, 35, Count, "Count controls wait time";
-   end Sleep;
+   end Busy_Wait;
+
+   pragma $Prove_Warnings (On, "subprogram ""Busy_Wait"" has no effect");
 
    -------------------------------------------------------------------------
 
@@ -109,13 +110,14 @@ is
       ID, Unused : SK.Word32;
    begin
 
-      --# accept Flow, 10, Unused, "Result unused";
+      pragma $Prove_Warnings (Off, "unused assignment to ""Unused""",
+         Reason => "Get_ID only needs the lower half of the MSR.");
 
       CPU.Get_MSR (Register => MSR_X2APIC_ID,
                    Low      => ID,
                    High     => Unused);
 
-      --# accept Flow, 33, Unused, "Result unused";
+      pragma $Prove_Warnings (On, "unused assignment to ""Unused""");
 
       return SK.Byte'Mod (ID);
    end Get_ID;
@@ -126,13 +128,13 @@ is
    is
    begin
       Write_ICR (Value => Ipi_Init_Broadcast);
-      Sleep (Count => 10);
+      Busy_Wait (Count => 10);
 
       Write_ICR (Value => Ipi_Start_Broadcast);
-      Sleep (Count => 200);
+      Busy_Wait (Count => 200);
 
       Write_ICR (Value => Ipi_Start_Broadcast);
-      Sleep (Count => 200);
+      Busy_Wait (Count => 200);
    end Start_AP_Processors;
 
    -------------------------------------------------------------------------

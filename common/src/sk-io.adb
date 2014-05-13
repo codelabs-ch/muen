@@ -26,8 +26,9 @@ is
    procedure Inb
      (Port  :     SK.Word16;
       Value : out SK.Byte)
+   with
+      SPARK_Mode => Off
    is
-      --# hide Inb;
    begin
       System.Machine_Code.Asm
         (Template => "inb %1, %0",
@@ -41,8 +42,9 @@ is
    procedure Outb
      (Port  : SK.Word16;
       Value : SK.Byte)
+   with
+      SPARK_Mode => Off
    is
-      --# hide Outb;
    begin
       System.Machine_Code.Asm
         (Template => "outb %0, %1",
@@ -56,8 +58,9 @@ is
    procedure Outw
      (Port  : SK.Word16;
       Value : SK.Word16)
+   with
+      SPARK_Mode => Off
    is
-      --# hide Outw;
    begin
       System.Machine_Code.Asm
         (Template => "outw %0, %1",

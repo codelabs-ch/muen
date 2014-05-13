@@ -17,8 +17,8 @@
 --
 
 package body SK.CPU_Registry
---# own
---#    State is CPUs;
+with
+   Refined_State => (State => CPUs)
 is
 
    type ID_Array is array (Skp.CPU_Range) of SK.Byte;
@@ -30,10 +30,9 @@ is
    procedure Register
      (CPU_ID  : Skp.CPU_Range;
       APIC_ID : SK.Byte)
-   --# global
-   --#    in out CPUs;
-   --# derives
-   --#    CPUs from *, CPU_ID, APIC_ID;
+   with
+      Refined_Global  => (In_Out => CPUs),
+      Refined_Depends => (CPUs =>+ (CPU_ID, APIC_ID))
    is
    begin
       CPUs (CPU_ID) := APIC_ID;
@@ -42,8 +41,8 @@ is
    -------------------------------------------------------------------------
 
    function Get_APIC_ID (CPU_ID : Skp.CPU_Range) return SK.Byte
-   --# global
-   --#    CPUs;
+   with
+      Refined_Global => CPUs
    is
    begin
       return CPUs (CPU_ID);

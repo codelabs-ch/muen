@@ -20,19 +20,52 @@ with "../config/shared";
 
 project Kernel is
 
-   type Build_Type is ("debug", "release");
-   Build_Mode : Build_Type := external ("build", "release");
+   type Build_Type is ("debug", "release", "prove");
+   Build_Mode : Build_Type := external ("build", "prove");
 
    Extra_Dirs := ();
+   Extra_Languages := ();
+   Extra_Warning_Switches := ();
+   Preprocessor_Switches := ();
 
    case Build_Mode is
       when "debug" =>
          Extra_Dirs := ("../common/" & Build_Mode, Build_Mode);
+         Extra_Languages := ("Asm");
+         Preprocessor_Switches :=
+           ("-gnateDBuild_Warnings=Warnings",
+            "-gnateDProve_Warnings=Ignored_Warnings",
+            "-gnateDDebug_Warnings=Warnings",
+            "-gnateDRelease_Warnings=Ignored_Warnings");
+
       when "release" =>
          Extra_Dirs := (Build_Mode);
+         Extra_Languages := ("Asm");
+         Preprocessor_Switches :=
+           ("-gnateDBuild_Warnings=Warnings",
+            "-gnateDProve_Warnings=Ignored_Warnings",
+            "-gnateDDebug_Warnings=Ignored_Warnings",
+            "-gnateDRelease_Warnings=Warnings");
+
+      when "prove" =>
+         Extra_Dirs := ("release", "spark");
+         Preprocessor_Switches :=
+           ("-gnateDBuild_Warnings=Debug",
+            "-gnateDProve_Warnings=Warnings",
+            "-gnateDDebug_Warnings=Debug",
+            "-gnateDRelease_Warnings=Warnings");
+         Extra_Warning_Switches := ("-gnatw.W");
+
     end case;
 
-   for Languages use ("Ada", "Asm");
+   Warning_Switches :=
+     ("-gnatwale.e.Y.N",
+      "-Wuninitialized",
+      "-Wall",
+      "-Werror") & Extra_Warning_Switches;
+
+   for Languages use ("Ada") & Extra_Languages;
+
    for Source_Dirs use
      ("../common/src",
       "../policy/obj",
@@ -53,7 +86,10 @@ project Kernel is
    package Compiler is
       for Required_Switches ("Asm") use ("-x", "assembler-with-cpp");
       for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches
-        & ("-gnatwale", "-Wstack-usage=8192", "-Werror");
+        & ("-Wstack-usage=8192")
+        & Preprocessor_Switches
+        & Warning_Switches;
+
       for Local_Configuration_Pragmas use "../config/restrictions-" & Build_Mode & ".adc";
    end Compiler;
 
@@ -67,9 +103,5 @@ project Kernel is
    package Naming is
       for Body_Suffix ("Asm") use ".S";
    end Naming;
-
-   package Spark is
-      for Output_Dir use "obj";
-   end Spark;
 
 end Kernel;

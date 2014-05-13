@@ -19,11 +19,8 @@
 with System;
 
 package body SK.IO_Apic
---# own State is
---#    in     In_Window,
---#       out Out_Window,
---#       out Register_Select,
---#       out EOI_Register;
+with
+   Refined_State => (State => (Window, Register_Select))
 is
 
    --  I/O APIC at physical address 0xfec00000 is mapped at virtual address
@@ -37,32 +34,27 @@ is
 
    IO_APIC_IND  : constant := 16#00#;
    IO_APIC_DAT  : constant := 16#10#;
-   IO_APIC_EOIR : constant := 16#40#;
 
    IO_APIC_REDTBL : constant := 16#10#;
 
    RED_TRIGGER_MODE : constant := 15;
    RED_MASK         : constant := 16;
 
-   Register_Select : SK.Word32;
-   for Register_Select'Address use System'To_Address
-     (IO_Apic_Address + IO_APIC_IND);
-   pragma Volatile (Register_Select);
+   Register_Select : SK.Word32
+   with
+      Volatile,
+      Async_Writers,  --  XXX Can the chosen register change behind out back?
+      Async_Readers,
+      Effective_Writes,
+      Address => System'To_Address (IO_Apic_Address + IO_APIC_IND);
 
-   In_Window : SK.Word32;
-   for In_Window'Address use System'To_Address (IO_Apic_Address + IO_APIC_DAT);
-   pragma Volatile (In_Window);
-   --# assert In_Window'Always_Valid;
-
-   Out_Window : SK.Word32;
-   for Out_Window'Address use System'To_Address
-     (IO_Apic_Address + IO_APIC_DAT);
-   pragma Volatile (Out_Window);
-
-   EOI_Register : SK.Word32;
-   for EOI_Register'Address use System'To_Address
-     (IO_Apic_Address + IO_APIC_EOIR);
-   pragma Volatile (EOI_Register);
+   Window : SK.Word32
+   with
+      Volatile,
+      Async_Writers,  --  XXX Can the chosen register change behind out back?
+      Async_Readers,
+      Effective_Writes,
+      Address => System'To_Address (IO_Apic_Address + IO_APIC_DAT);
 
    -------------------------------------------------------------------------
 
@@ -74,8 +66,9 @@ is
       Vector         :     SK.Byte;
       Trigger_Mode   :     Trigger_Kind;
       Destination_Id :     SK.Byte)
-   --# derives
-   --#    Redir_Entry from Vector, Trigger_Mode, Destination_Id;
+   with
+      Global  => null,
+      Depends => (Redir_Entry => (Destination_Id, Trigger_Mode, Vector))
    is
    begin
       Redir_Entry := SK.Word64 (Vector);
@@ -95,12 +88,12 @@ is
       Vector         : SK.Byte;
       Trigger_Mode   : Trigger_Kind;
       Destination_Id : SK.Byte)
-   --# global
-   --#    out Register_Select;
-   --#    out Out_Window;
-   --# derives
-   --#    Register_Select from IRQ &
-   --#    Out_Window      from Vector, Trigger_Mode, Destination_Id;
+   with
+      --  XXX Data flow does not represent properties of registers
+      Refined_Global  => (Output => (Window, Register_Select)),
+      Refined_Depends =>
+        (Window          => (Destination_Id, Trigger_Mode, Vector),
+         Register_Select => IRQ)
    is
       Redir_Entry : SK.Word64;
    begin
@@ -110,54 +103,56 @@ is
                                 Destination_Id => Destination_Id);
 
       Register_Select := IO_APIC_REDTBL + SK.Word32 (IRQ) * 2;
-      Out_Window      := SK.Word32'Mod (Redir_Entry);
+      Window          := SK.Word32'Mod (Redir_Entry);
 
       Register_Select := IO_APIC_REDTBL + SK.Word32 (IRQ) * 2 + 1;
-      Out_Window      := SK.Word32 (Redir_Entry / 2 ** 32);
+      Window          := SK.Word32 (Redir_Entry / 2 ** 32);
    end Route_IRQ;
 
    -------------------------------------------------------------------------
 
    procedure Mask_Interrupt (IRQ : SK.Byte)
-   --# global
-   --#    in     In_Window;
-   --#       out Out_Window;
-   --#       out Register_Select;
-   --# derives
-   --#    Register_Select from IRQ &
-   --#    Out_Window      from In_Window;
+   with
+      --  XXX Data flow does not represent properties of registers
+      Refined_Global  =>
+        (Output => Register_Select,
+         In_Out => Window),
+      Refined_Depends =>
+        (Window          =>+ null,
+         Register_Select => IRQ)
    is
       Value : SK.Word32;
    begin
       Register_Select := IO_APIC_REDTBL + SK.Word32 (IRQ) * 2;
 
-      Value := In_Window;
+      Value := Window;
       Value := SK.Word32'Mod
         (SK.Bit_Set (Value => SK.Word64 (Value),
                      Pos   => RED_MASK));
-      Out_Window := Value;
+      Window := Value;
    end Mask_Interrupt;
 
    -------------------------------------------------------------------------
 
    procedure Unmask_Interrupt (IRQ : SK.Byte)
-   --# global
-   --#    in     In_Window;
-   --#       out Out_Window;
-   --#       out Register_Select;
-   --# derives
-   --#    Register_Select from IRQ &
-   --#    Out_Window      from In_Window;
+   with
+      --  XXX Data flow does not represent properties of registers
+      Refined_Global  =>
+        (Output => Register_Select,
+         In_Out => Window),
+      Refined_Depends =>
+        (Window          =>+ null,
+         Register_Select => IRQ)
    is
       Value : SK.Word32;
    begin
       Register_Select := IO_APIC_REDTBL + SK.Word32 (IRQ) * 2;
 
-      Value := In_Window;
+      Value := Window;
       Value := SK.Word32'Mod
         (SK.Bit_Clear (Value => SK.Word64 (Value),
                        Pos   => RED_MASK));
-      Out_Window := Value;
+      Window := Value;
    end Unmask_Interrupt;
 
 end SK.IO_Apic;

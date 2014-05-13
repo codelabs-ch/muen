@@ -18,16 +18,14 @@
 
 with SK.Descriptors;
 
---# inherit
---#    SK.Descriptors;
 package SK.GDT
---# own
---#    in GDT_Pointer;
 is
 
-   --  Return GDT pointer.
-   function Get_GDT_Pointer return Descriptors.Pseudo_Descriptor_Type;
-   --# global
-   --#    GDT_Pointer;
+   --  Global descriptor table pointer
+   GDT_Pointer : constant Descriptors.Pseudo_Descriptor_Type
+   with
+      Import,
+      Convention => C,
+      Link_Name  => "gdt_ptr";
 
 end SK.GDT;

@@ -16,21 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
---# inherit
---#    Skp.Scheduling,
---#    SK;
 package SK.MP
---# own
---#    Barrier;
---# initializes
---#    Barrier;
+with
+   Abstract_State =>
+    (Barrier with External => (Async_Writers, Async_Readers)),
+   Initializes    => Barrier
 is
 
    --  Blocks until all logical processors are waiting on barrier.
-   procedure Wait_For_All;
-   --# global
-   --#    in out Barrier;
-   --# derives
-   --#    Barrier from *;
+   procedure Wait_For_All
+   with
+      Global  => (In_Out => Barrier),
+      Depends => (Barrier =>+ null);
 
 end SK.MP;

@@ -23,37 +23,36 @@ with SK.CPU;
 with SK.Constants;
 
 package body SK.Subjects
---# own
---#    State is Descriptors;
+with
+   Refined_State => (State => Descriptors)
 is
 
-   pragma Warnings (Off, "*padded by * bits");
+   pragma $Build_Warnings (Off, "*padded by * bits");
    type Subject_State_Array is array
-     (Skp.Subject_Id_Type) of SK.Subject_State_Type;
-   for Subject_State_Array'Component_Size use Page_Size * 8;
-   for Subject_State_Array'Alignment use Page_Size;
-   pragma Warnings (On, "*padded by * bits");
+     (Skp.Subject_Id_Type) of SK.Subject_State_Type
+   with
+      --   Independent_Components,
+      --  Although the aspect had to be disabled due to [N508-004],
+      --  Independent_Components is assured by the large Component_Size
+      --  and alignment.
+      Component_Size => Page_Size * 8,
+      Alignment      => Page_Size;
+   pragma $Build_Warnings (On, "*padded by * bits");
 
    --  Descriptors used to manage subject states.
-
-   --# accept Flow, 31, Descriptors,
-   --#    "Initialized on a per-CPU basis in Scheduler.Init";
-   --# accept Flow, 32, Descriptors,
-   --#    "Initialized on a per-CPU basis in Scheduler.Init";
-   --# accept Warning, 396, Descriptors, "Not an external variable";
-   Descriptors : Subject_State_Array;
-   for Descriptors'Address use System'To_Address (16#001e0000#);
-   --# end accept;
+   --  TODO: Model access rules
+   --  TODO: Handle initialization
+   Descriptors : Subject_State_Array
+   with
+      Address => System'To_Address (16#001e0000#);
 
    -------------------------------------------------------------------------
 
    procedure Clear_State (Id : Skp.Subject_Id_Type)
-   --# global
-   --#    in out Descriptors;
-   --# derives
-   --#    Descriptors from *, Id;
-   --# post
-   --#    Descriptors (Id) = SK.Null_Subject_State;
+   with
+      Refined_Global  => (In_Out => Descriptors),
+      Refined_Depends => (Descriptors =>+ Id),
+      Refined_Post    => Descriptors (Id) = SK.Null_Subject_State
    is
    begin
       Descriptors (Id) := SK.Null_Subject_State;
@@ -62,10 +61,10 @@ is
    -------------------------------------------------------------------------
 
    function Get_Instruction_Length (Id : Skp.Subject_Id_Type) return SK.Word64
-   --# global
-   --#    Descriptors;
-   --# return
-   --#    Descriptors (Id).Instruction_Len;
+   with
+      Refined_Global => (Input => Descriptors),
+      Refined_Post   =>
+         Get_Instruction_Length'Result = Descriptors (Id).Instruction_Len
    is
    begin
       return Descriptors (Id).Instruction_Len;
@@ -74,10 +73,10 @@ is
    -------------------------------------------------------------------------
 
    function Get_Interrupt_Info (Id : Skp.Subject_Id_Type) return SK.Word64
-   --# global
-   --#    Descriptors;
-   --# return
-   --#    Descriptors (Id).Interrupt_Info;
+   with
+      Refined_Global => (Input => Descriptors),
+      Refined_Post   =>
+         Get_Interrupt_Info'Result = Descriptors (Id).Interrupt_Info
    is
    begin
       return Descriptors (Id).Interrupt_Info;
@@ -86,10 +85,9 @@ is
    -------------------------------------------------------------------------
 
    function Get_RFLAGS (Id : Skp.Subject_Id_Type) return SK.Word64
-   --# global
-   --#    Descriptors;
-   --# return
-   --#    Descriptors (Id).RFLAGS;
+   with
+      Refined_Global => (Input => Descriptors),
+      Refined_Post   => Get_RFLAGS'Result = Descriptors (Id).RFLAGS
    is
    begin
       return Descriptors (Id).RFLAGS;
@@ -98,10 +96,9 @@ is
    -------------------------------------------------------------------------
 
    function Get_RIP (Id : Skp.Subject_Id_Type) return SK.Word64
-   --# global
-   --#    Descriptors;
-   --# return
-   --#    Descriptors (Id).RIP;
+   with
+      Refined_Global => (Input => Descriptors),
+      Refined_Post   => Get_RIP'Result = Descriptors (Id).RIP
    is
    begin
       return Descriptors (Id).RIP;
@@ -110,10 +107,9 @@ is
    -------------------------------------------------------------------------
 
    function Get_State (Id : Skp.Subject_Id_Type) return SK.Subject_State_Type
-   --# global
-   --#    Descriptors;
-   --# return
-   --#    Descriptors (Id);
+   with
+      Refined_Global => (Input => Descriptors),
+      Refined_Post   => Get_State'Result = Descriptors (Id)
    is
    begin
       return Descriptors (Id);
@@ -124,18 +120,13 @@ is
    procedure Restore_State
      (Id   :     Skp.Subject_Id_Type;
       GPRs : out SK.CPU_Registers_Type)
-   --# global
-   --#    in     Descriptors;
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from
-   --#       *,
-   --#       Id,
-   --#       Descriptors,
-   --#       X86_64.State &
-   --#    GPRs from Descriptors, Id;
-   --# post
-   --#    GPRs = Descriptors (Id).Regs;
+     with
+      SPARK_Mode      => Off, -- XXX Workaround for [N425-012]
+      Refined_Global  => (Input  => Descriptors,
+                          In_Out => X86_64.State),
+      Refined_Depends => (GPRs         =>  (Descriptors, Id),
+                          X86_64.State =>+ (Descriptors, Id)),
+      Refined_Post    => Descriptors (Id).Regs = GPRs
    is
    begin
       VMX.VMCS_Write (Field => Constants.GUEST_RIP,
@@ -160,18 +151,11 @@ is
    procedure Save_State
      (Id   : Skp.Subject_Id_Type;
       GPRs : SK.CPU_Registers_Type)
-   --# global
-   --#    in out X86_64.State;
-   --#    in out Descriptors;
-   --# derives
-   --#    Descriptors from
-   --#       *,
-   --#       Id,
-   --#       GPRs,
-   --#       X86_64.State &
-   --#    X86_64.State from *;
-   --# post
-   --#    Descriptors (Id).Regs = GPRs;
+   with
+      Refined_Global  => (In_Out => (Descriptors, X86_64.State)),
+      Refined_Depends => (Descriptors  =>+ (Id, GPRs, X86_64.State),
+                          X86_64.State =>+ null),
+      Refined_Post    => Descriptors (Id).Regs = GPRs
    is
    begin
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
@@ -187,7 +171,7 @@ is
                      Value => Descriptors (Id).Guest_Phys_Addr);
 
       VMX.VMCS_Read (Field => Constants.GUEST_RIP,
-                     Value => Descriptors (Id).RIP);
+                       Value => Descriptors (Id).RIP);
       VMX.VMCS_Read (Field => Constants.GUEST_SEL_CS,
                      Value => Descriptors (Id).CS);
       VMX.VMCS_Read (Field => Constants.GUEST_RSP,
@@ -217,12 +201,10 @@ is
    procedure Set_CR0
      (Id    : Skp.Subject_Id_Type;
       Value : SK.Word64)
-   --# global
-   --#    Descriptors;
-   --# derives
-   --#    Descriptors from *, Id, Value;
-   --# post
-   --#    Descriptors (Id).CR0 = Value;
+   with
+      Refined_Global  => (In_Out => Descriptors),
+      Refined_Depends => (Descriptors =>+ (Id, Value)),
+      Refined_Post    => Descriptors (Id).CR0 = Value
    is
    begin
       Descriptors (Id).CR0 := Value;
@@ -233,12 +215,10 @@ is
    procedure Set_RIP
      (Id    : Skp.Subject_Id_Type;
       Value : SK.Word64)
-   --# global
-   --#    Descriptors;
-   --# derives
-   --#    Descriptors from *, Id, Value;
-   --# post
-   --#    Descriptors (Id).RIP = Value;
+   with
+      Refined_Global  => (In_Out => Descriptors),
+      Refined_Depends => (Descriptors =>+ (Id, Value)),
+      Refined_Post    => Descriptors (Id).RIP = Value
    is
    begin
       Descriptors (Id).RIP := Value;
@@ -249,15 +229,17 @@ is
    procedure Set_RSP
      (Id    : Skp.Subject_Id_Type;
       Value : SK.Word64)
-   --# global
-   --#    Descriptors;
-   --# derives
-   --#    Descriptors from *, Id, Value;
-   --# post
-   --#    Descriptors (Id).RSP = Value;
+   with
+      Refined_Global  => (In_Out => Descriptors),
+      Refined_Depends => (Descriptors =>+ (Id, Value)),
+      Refined_Post    => Descriptors (Id).RSP = Value
    is
    begin
       Descriptors (Id).RSP := Value;
    end Set_RSP;
+
+begin
+   --  FIXME: Initialization of "Descriptors" hidden.
+   pragma SPARK_Mode (Off);
 
 end SK.Subjects;

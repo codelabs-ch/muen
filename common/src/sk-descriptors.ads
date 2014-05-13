@@ -18,9 +18,8 @@
 
 with Skp;
 
---# inherit
---#    Skp,
---#    SK;
+use type Skp.Vector_Range;
+
 package SK.Descriptors
 is
 
@@ -54,11 +53,10 @@ is
    --  Setup IDT using the given ISR addresses.
    procedure Setup_IDT
      (ISRs :        ISR_Array;
-      IDT  : in out IDT_Type);
-   --# derives
-   --#    IDT from *, ISRs;
-   --# pre
-   --#    ISRs'First = IDT'First and ISRs'Last = IDT'Last;
+      IDT  : in out IDT_Type)
+   with
+      Depends => (IDT =>+ ISRs),
+      Pre     => ISRs'First = IDT'First and ISRs'Last = IDT'Last;
 
    --  Create pseudo-descriptor from given descriptor table address and length.
    function Create_Descriptor

@@ -16,20 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package body SK.GDT
+package body X86_64
+with
+   SPARK_Mode    => Off,
+   Refined_State => (State => null)
 is
 
-   --  Global descriptor table pointer
-   GDT_Pointer : Descriptors.Pseudo_Descriptor_Type;
-   pragma Import (C, GDT_Pointer, "gdt_ptr");
-   --# assert GDT_Pointer'Always_Valid;
-
-   -------------------------------------------------------------------------
-
-   function Get_GDT_Pointer return Descriptors.Pseudo_Descriptor_Type
-   is
-   begin
-      return GDT_Pointer;
-   end Get_GDT_Pointer;
-
-end SK.GDT;
+end X86_64;

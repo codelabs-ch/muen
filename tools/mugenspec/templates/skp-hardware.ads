@@ -1,3 +1,4 @@
-package Skp.Hardware is
+package Skp.Hardware
+is
 __devices__
 end Skp.Hardware;

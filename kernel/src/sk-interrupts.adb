@@ -21,24 +21,27 @@ with System.Storage_Elements;
 with Skp.Interrupts;
 
 with SK.CPU;
-with SK.CPU_Registry;
+with SK.Descriptors;
 with SK.Dump;
 with SK.IO;
-with SK.IO_Apic;
+
+use type SK.Descriptors.Pseudo_Descriptor_Type;
 
 package body SK.Interrupts
---# own
---#    State is ISR_List, IDT, IDT_Pointer;
+with
+   Refined_State => (State =>  (IDT, IDT_Pointer))
 is
 
    subtype Exception_Range is Skp.Vector_Range range 0 .. 19;
 
    --  ISR trampolines.
    subtype ISR_List_Type is Descriptors.ISR_Array (Exception_Range);
-   --# accept Warning, 350, ISR_List, "Imported from Linker";
-   ISR_List : ISR_List_Type;
-   pragma Import (C, ISR_List, "isrlist");
-   --# end accept;
+
+   ISR_List : constant ISR_List_Type
+   with
+      Import,
+      Convention => C,
+      Link_Name  => "isrlist";
 
    subtype IDT_Type is Descriptors.IDT_Type (Exception_Range);
 
@@ -68,10 +71,8 @@ is
    -------------------------------------------------------------------------
 
    function Get_IDT_Pointer return Descriptors.Pseudo_Descriptor_Type
-   --# global
-   --#    IDT_Pointer;
-   --# return
-   --#    IDT_Pointer;
+   with
+      Refined_Global => IDT_Pointer
    is
    begin
       return IDT_Pointer;
@@ -80,11 +81,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Init
-   --# global
-   --#    in     ISR_List;
-   --#    in out IDT;
-   --# derives
-   --#    IDT from *, ISR_List;
+   with
+      Refined_Global  => (In_Out => IDT),
+      Refined_Depends => (IDT =>+ null)
    is
    begin
       Descriptors.Setup_IDT (ISRs => ISR_List,
@@ -94,13 +93,12 @@ is
    -------------------------------------------------------------------------
 
    procedure Load
-   --# global
-   --#    in     IDT_Pointer;
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, IDT_Pointer;
+   with
+      SPARK_Mode      => Off,
+      Refined_Global  => (Input  => IDT_Pointer,
+                          In_Out => X86_64.State),
+      Refined_Depends => (X86_64.State =>+ IDT_Pointer)
    is
-      --# hide Load;
    begin
       CPU.Lidt (Address => SK.Word64 (System.Storage_Elements.To_Integer
                 (Value => IDT_Pointer'Address)));
@@ -114,13 +112,17 @@ is
       APIC_ID : SK.Byte;
    begin
       for I in Skp.Interrupts.Routing_Range loop
+         pragma $Prove_Warnings (Off, "statement has no effect",
+            Reason => "Warning appears to be spurious");
          Route   := Skp.Interrupts.IRQ_Routing (I);
+         pragma $Prove_Warnings (On, "statement has no effect");
+
          APIC_ID := CPU_Registry.Get_APIC_ID (CPU_ID => Route.CPU);
 
          pragma Debug (Dump.Print_IRQ_Routing
                        (IRQ     => Route.IRQ,
                         Vector  => SK.Byte (Route.Vector),
-                        CPU     => SK.Byte (Route.CPU),
+                        CPU_ID  => SK.Byte (Route.CPU),
                         APIC_ID => APIC_ID));
 
          if Skp.Interrupts.IRQ_Routing (I).Vector /= Skp.Invalid_Vector then
@@ -140,15 +142,14 @@ is
    is
    begin
       pragma Debug (Dump.Print_ISR_State (Unused_Context));
-      CPU.Stop;
 
-      --# accept F, 30, Unused_Context,
-      --#    "Isr Context is used for debugging only";
+      pragma Assume (False); --  Workaround for No_Return: Pre => False
+      CPU.Stop;
    end Dispatch_Exception;
 
 begin
 
-   --# hide SK.Interrupts;
+   pragma SPARK_Mode (Off);
 
    IDT_Pointer := Descriptors.Create_Descriptor
      (Table_Address => SK.Word64

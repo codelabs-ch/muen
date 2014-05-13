@@ -16,62 +16,47 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
---# inherit
---#    Skp.Kernel,
---#    X86_64,
---#    SK.CPU,
---#    SK.CPU_Global,
---#    SK.Interrupts,
---#    SK.GDT,
---#    SK.Descriptors,
---#    SK.Constants;
+with SK.Interrupts;
+with X86_64;
+
 package SK.VMX
---# own
---#    State;
---# initializes
---#    State;
 is
 
    --  Enter VMX root operation.
-   procedure Enter_Root_Mode;
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *;
+   procedure Enter_Root_Mode
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ null);
 
    --  Clear VMCS with given address.
-   procedure Clear (VMCS_Address : SK.Word64);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, VMCS_Address;
+   procedure Clear (VMCS_Address : SK.Word64)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ VMCS_Address);
 
    --  Load VMCS with given address.
-   procedure Load (VMCS_Address : SK.Word64);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, VMCS_Address;
+   procedure Load (VMCS_Address : SK.Word64)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ VMCS_Address);
 
    --  Read value from specified field of the current, active VMCS. If the
    --  operation fails, CPU.Panic is called.
    procedure VMCS_Read
      (Field :     SK.Word16;
-      Value : out SK.Word64);
-   --# global
-   --#    X86_64.State;
-   --# derives
-   --#    Value, X86_64.State from X86_64.State, Field;
+      Value : out SK.Word64)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => ((Value, X86_64.State) => (Field, X86_64.State));
 
    --  Write given value to the specified field of the current, active VMCS. If
    --  the operation fails, CPU.Panic is called.
    procedure VMCS_Write
      (Field : SK.Word16;
-      Value : SK.Word64);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, Field, Value;
+      Value : SK.Word64)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ (Field, Value));
 
    --  Setup control fields of the currently active VMCS.
    procedure VMCS_Setup_Control_Fields
@@ -84,36 +69,19 @@ is
       Ctls_Entry         : SK.Word32;
       CR0_Mask           : SK.Word64;
       CR4_Mask           : SK.Word64;
-      Exception_Bitmap   : SK.Word32);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from
-   --#       *,
-   --#       Ctls_Exec_Pin,
-   --#       Ctls_Exec_Proc,
-   --#       Ctls_Exec_Proc2,
-   --#       Ctls_Exit,
-   --#       Ctls_Entry,
-   --#       IO_Bitmap_Address,
-   --#       MSR_Bitmap_Address,
-   --#       CR0_Mask,
-   --#       CR4_Mask,
-   --#       Exception_Bitmap;
+      Exception_Bitmap   : SK.Word32)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+
+                  (CR0_Mask, CR4_Mask, Ctls_Entry, Ctls_Exec_Pin,
+                   Ctls_Exec_Proc, Ctls_Exec_Proc2, Ctls_Exit,
+                   Exception_Bitmap, IO_Bitmap_Address, MSR_Bitmap_Address));
 
    --  Setup host fields of the currently active VMCS.
-   procedure VMCS_Setup_Host_Fields;
-   --# global
-   --#    in     Interrupts.State;
-   --#    in     GDT.GDT_Pointer;
-   --#    in     State;
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from
-   --#       *,
-   --#       Interrupts.State,
-   --#       GDT.GDT_Pointer,
-   --#       State;
+   procedure VMCS_Setup_Host_Fields
+   with
+      Global  => (Input => Interrupts.State, In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ Interrupts.State);
 
    --  Setup guest fields of the currently active VMCS.
    procedure VMCS_Setup_Guest_Fields
@@ -121,31 +89,27 @@ is
       EPT_Pointer  : SK.Word64;
       CR0_Value    : SK.Word64;
       CR4_Value    : SK.Word64;
-      CS_Access    : SK.Word32);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from
-   --#       *,
-   --#       PML4_Address,
-   --#       EPT_Pointer,
-   --#       CR0_Value,
-   --#       CR4_Value,
-   --#       CS_Access;
+      CS_Access    : SK.Word32)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+
+                  (CR0_Value, CR4_Value, CS_Access, EPT_Pointer,
+                   PML4_Address));
 
    --  Enable/Disable interrupt-window exiting depending on the given value.
-   procedure VMCS_Set_Interrupt_Window (Value : Boolean);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, Value;
+   procedure VMCS_Set_Interrupt_Window (Value : Boolean)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ (Value, X86_64.State));
 
    --  Report VMX launch/resume error and panic.
-   procedure VMX_Error;
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *;
-   pragma Export (C, VMX_Error, "vmx_error");
+   procedure VMX_Error
+   with
+      Global     => (In_Out => X86_64.State),
+      Depends    => (X86_64.State =>+ null),
+      No_Return,
+      Export,
+      Convention => C,
+      Link_Name  => "vmx_error";
 
 end SK.VMX;

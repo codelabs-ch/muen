@@ -16,37 +16,33 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
---# inherit
---#    X86_64,
---#    SK;
+with X86_64;
+
 package SK.IO
 is
 
    --  Receive byte from given port.
    procedure Inb
      (Port  :     SK.Word16;
-      Value : out SK.Byte);
-   --# global
-   --#    in X86_64.State;
-   --# derives
-   --#    Value from Port, X86_64.State;
+      Value : out SK.Byte)
+   with
+      Global  => (Input => X86_64.State),
+      Depends => (Value => (Port, X86_64.State));
 
    --  Send byte to given port.
    procedure Outb
      (Port  : SK.Word16;
-      Value : SK.Byte);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, Port, Value;
+      Value : SK.Byte)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ (Port, Value));
 
    --  Send 16-bit word to given port.
    procedure Outw
      (Port  : SK.Word16;
-      Value : SK.Word16);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, Port, Value;
+      Value : SK.Word16)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ (Port, Value));
 
 end SK.IO;

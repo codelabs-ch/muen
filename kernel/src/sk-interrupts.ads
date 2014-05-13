@@ -19,67 +19,59 @@
 with Skp;
 
 with SK.Descriptors;
+with SK.CPU_Registry;
+with SK.IO_Apic;
+with X86_64;
 
 use type Skp.Dst_Vector_Range;
 
---# inherit
---#    System,
---#    Skp.Interrupts,
---#    X86_64,
---#    SK.CPU,
---#    SK.IO,
---#    SK.IO_Apic,
---#    SK.Descriptors,
---#    SK.CPU_Registry;
 package SK.Interrupts
---# own
---#    State;
---# initializes
---#    State;
+with
+   Abstract_State => State,
+   Initializes    => State
 is
 
    --  Initalize IDT structure.
-   procedure Init;
-   --# global
-   --#    in out State;
-   --# derives
-   --#    State from *;
+   procedure Init
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ null);
 
    --  Load IDT into IDT register.
-   procedure Load;
-   --# global
-   --#    in     State;
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *, State;
+   procedure Load
+   with
+      Global  => (Input => State, In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ State);
 
    --  Return IDT pointer.
-   function Get_IDT_Pointer return Descriptors.Pseudo_Descriptor_Type;
-   --# global
-   --#    State;
+   function Get_IDT_Pointer return Descriptors.Pseudo_Descriptor_Type
+   with
+      Global  => State;
 
    --  Mask all interrupts in the legacy PIC.
-   procedure Disable_Legacy_PIC;
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from *;
+   procedure Disable_Legacy_PIC
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ null);
 
    --  Setup I/O APIC IRQ routing.
-   procedure Setup_IRQ_Routing;
-   --# global
-   --#    in     CPU_Registry.State;
-   --#    in out IO_Apic.State;
-   --# derives
-   --#    IO_Apic.State from *, CPU_Registry.State;
+   procedure Setup_IRQ_Routing
+   with
+      Global  => (Input => CPU_Registry.State, In_Out => IO_Apic.State),
+      Depends => (IO_Apic.State =>+ CPU_Registry.State);
+
+   pragma $Prove_Warnings (Off, "unused variable ""Unused_Context""",
+      Reason => "Unused Context is only used for debugging");
 
    --  Halt on (unexpected) exception.
-   procedure Dispatch_Exception (Unused_Context : SK.Isr_Context_Type);
-   --# global
-   --#    in out X86_64.State;
-   --# derives
-   --#    X86_64.State from * &
-   --#    null         from Unused_Context;
-   pragma Export (C, Dispatch_Exception, "dispatch_interrupt");
+   procedure Dispatch_Exception (Unused_Context : SK.Isr_Context_Type)
+   with
+      Global     => (In_Out => X86_64.State),
+      Depends    => (X86_64.State =>+ null,
+                     null         =>  Unused_Context),
+      Export,
+      Convention => C,
+      Link_Name  => "dispatch_interrupt";
 
+   pragma $Prove_Warnings (On, "unused variable ""Unused_Context""");
 end SK.Interrupts;

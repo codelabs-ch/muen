@@ -18,39 +18,36 @@
 
 with Skp;
 
---# inherit
---#    Skp,
---#    SK;
 package SK.Events
---# own
---#    State;
---# initializes
---#    State;
+with
+   Abstract_State => (State with External => (Async_Writers, Async_Readers)),
+   Initializes    => State
 is
 
    --  Insert new event for given subject.
    procedure Insert_Event
      (Subject : Skp.Subject_Id_Type;
-      Event   : SK.Byte);
-   --# global
-   --#    in out State;
-   --# derives
-   --#    State from *, Subject, Event;
+      Event   : SK.Byte)
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ (Event, Subject));
 
    --  Return True if the subject identified by ID has events pending.
-   function Has_Pending_Events (Subject : Skp.Subject_Id_Type) return Boolean;
-   --# global
-   --#    State;
+   procedure Has_Pending_Events
+     (Subject       :     Skp.Subject_Id_Type;
+      Event_Pending : out Boolean)
+   with
+      Global  => (Input => State),
+      Depends => (Event_Pending => (Subject, State));
 
    --  Consume an event of a subject given by ID. Returns False if no
    --  outstanding event is found.
    procedure Consume_Event
      (Subject :     Skp.Subject_Id_Type;
       Found   : out Boolean;
-      Event   : out SK.Byte);
-   --# global
-   --#    in out State;
-   --# derives
-   --#    State, Found, Event from State, Subject;
+      Event   : out SK.Byte)
+   with
+      Global  => (In_Out => State),
+      Depends => ((Event, Found, State) => (State, Subject));
 
 end SK.Events;

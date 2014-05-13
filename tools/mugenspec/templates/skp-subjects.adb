@@ -42,9 +42,6 @@ __subjects__);
    function Get_CPU_Id (Subject_Id : Skp.Subject_Id_Type) return Skp.CPU_Range
    is
    begin
-      --# accept Warning, 444, "CPU_Id is in CPU_Range (obviously)";
-      --# assume Subject_Specs (Subject_Id).CPU_Id in Skp.CPU_Range;
-      --# end accept;
       return Subject_Specs (Subject_Id).CPU_Id;
    end Get_CPU_Id;
 
@@ -53,9 +50,6 @@ __subjects__);
    function Get_CR0 (Subject_Id : Skp.Subject_Id_Type) return SK.Word64
    is
    begin
-      --# accept Warning, 444, "CR0_Value is Word64 (obviously)";
-      --# assume Subject_Specs (Subject_Id).CR0_Value in SK.Word64;
-      --# end accept;
       return Subject_Specs (Subject_Id).CR0_Value;
    end Get_CR0;
 
@@ -64,9 +58,6 @@ __subjects__);
    function Get_CR0_Mask (Subject_Id : Skp.Subject_Id_Type) return SK.Word64
    is
    begin
-      --# accept Warning, 444, "CR0_Mask is Word64 (obviously)";
-      --# assume Subject_Specs (Subject_Id).CR0_Mask in SK.Word64;
-      --# end accept;
       return Subject_Specs (Subject_Id).CR0_Mask;
    end Get_CR0_Mask;
 
@@ -75,9 +66,6 @@ __subjects__);
    function Get_CR4 (Subject_Id : Skp.Subject_Id_Type) return SK.Word64
    is
    begin
-      --# accept Warning, 444, "CR4_Value is Word64 (obviously)";
-      --# assume Subject_Specs (Subject_Id).CR4_Value in SK.Word64;
-      --# end accept;
       return Subject_Specs (Subject_Id).CR4_Value;
    end Get_CR4;
 
@@ -86,9 +74,6 @@ __subjects__);
    function Get_CR4_Mask (Subject_Id : Skp.Subject_Id_Type) return SK.Word64
    is
    begin
-      --# accept Warning, 444, "CR4_Mask is Word64 (obviously)";
-      --# assume Subject_Specs (Subject_Id).CR4_Mask in SK.Word64;
-      --# end accept;
       return Subject_Specs (Subject_Id).CR4_Mask;
    end Get_CR4_Mask;
 
@@ -97,9 +82,6 @@ __subjects__);
    function Get_CS_Access (Subject_Id : Skp.Subject_Id_Type) return SK.Word32
    is
    begin
-      --# accept Warning, 444, "CS_Access is Word32 (obviously)";
-      --# assume Subject_Specs (Subject_Id).CS_Access in SK.Word32;
-      --# end accept;
       return Subject_Specs (Subject_Id).CS_Access;
    end Get_CS_Access;
 
@@ -110,9 +92,6 @@ __subjects__);
       return SK.Word64
    is
    begin
-      --# accept Warning, 444, "Entry_Point is Word64 (obviously)";
-      --# assume Subject_Specs (Subject_Id).Entry_Point in SK.Word64;
-      --# end accept;
       return Subject_Specs (Subject_Id).Entry_Point;
    end Get_Entry_Point;
 
@@ -123,9 +102,6 @@ __subjects__);
       return SK.Word64
    is
    begin
-      --# accept Warning, 444, "EPT_Pointer is Word64 (obviously)";
-      --# assume Subject_Specs (Subject_Id).EPT_Pointer in SK.Word64;
-      --# end accept;
       return Subject_Specs (Subject_Id).EPT_Pointer;
    end Get_EPT_Pointer;
 
@@ -137,6 +113,12 @@ __subjects__);
       return Event_Entry_Type
    is
    begin
+      --  XXX Help the prover for now [N226-016]
+      pragma Assume
+       (for all Subject in Skp.Subject_Id_Type =>
+          (for all Event in Event_Range =>
+            (Subject_Specs (Subject).Event_Table (Event).Dst_Subject
+             /= Subject)));
       return Subject_Specs (Subject_Id).Event_Table (Event_Nr);
    end Get_Event;
 
@@ -147,9 +129,6 @@ __subjects__);
       return SK.Word32
    is
    begin
-      --# accept Warning, 444, "Exception_Bitmap is Word32 (obviously)";
-      --# assume Subject_Specs (Subject_Id).Exception_Bitmap in SK.Word32;
-      --# end accept;
       return Subject_Specs (Subject_Id).Exception_Bitmap;
    end Get_Exception_Bitmap;
 
@@ -160,9 +139,6 @@ __subjects__);
       return SK.Word64
    is
    begin
-      --# accept Warning, 444, "IO_Bitmap_Address is Word64 (obviously)";
-      --# assume Subject_Specs (Subject_Id).IO_Bitmap_Address in SK.Word64;
-      --# end accept;
       return Subject_Specs (Subject_Id).IO_Bitmap_Address;
    end Get_IO_Bitmap_Address;
 
@@ -173,9 +149,6 @@ __subjects__);
       return SK.Word64
    is
    begin
-      --# accept Warning, 444, "MSR_Bitmap_Address is Word64 (obviously)";
-      --# assume Subject_Specs (Subject_Id).MSR_Bitmap_Address in SK.Word64;
-      --# end accept;
       return Subject_Specs (Subject_Id).MSR_Bitmap_Address;
    end Get_MSR_Bitmap_Address;
 
@@ -186,9 +159,6 @@ __subjects__);
       return SK.Word64
    is
    begin
-      --# accept Warning, 444, "PML4_Address is Word64 (obviously)";
-      --# assume Subject_Specs (Subject_Id).PML4_Address in SK.Word64;
-      --# end accept;
       return Subject_Specs (Subject_Id).PML4_Address;
    end Get_PML4_Address;
 
@@ -197,9 +167,6 @@ __subjects__);
    function Get_Profile (Subject_Id : Skp.Subject_Id_Type) return Profile_Kind
    is
    begin
-      --# accept Warning, 444, "Profile is Profile_Kind (obviously)";
-      --# assume Subject_Specs (Subject_Id).Profile in Profile_Kind;
-      --# end accept;
       return Subject_Specs (Subject_Id).Profile;
    end Get_Profile;
 
@@ -210,9 +177,6 @@ __subjects__);
       return SK.Word64
    is
    begin
-      --# accept Warning, 444, "Stack_Address is Word64 (obviously)";
-      --# assume Subject_Specs (Subject_Id).Stack_Address in SK.Word64;
-      --# end accept;
       return Subject_Specs (Subject_Id).Stack_Address;
    end Get_Stack_Address;
 
@@ -224,6 +188,12 @@ __subjects__);
       return Trap_Entry_Type
    is
    begin
+      --  XXX Help the prover for now [N226-016]
+      pragma Assume
+       (for all Subject in Skp.Subject_Id_Type =>
+          (for all Trap in Trap_Range =>
+            (Subject_Specs (Subject).Trap_Table (Trap).Dst_Subject
+             /= Subject)));
       return Subject_Specs (Subject_Id).Trap_Table (Trap_Nr);
    end Get_Trap;
 
@@ -234,9 +204,6 @@ __subjects__);
       return SK.Word64
    is
    begin
-      --# accept Warning, 444, "VMCS_Address is Word64 (obviously)";
-      --# assume Subject_Specs (Subject_Id).VMCS_Address in SK.Word64;
-      --# end accept;
       return Subject_Specs (Subject_Id).VMCS_Address;
    end Get_VMCS_Address;
 

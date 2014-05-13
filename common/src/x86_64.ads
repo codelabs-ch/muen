@@ -17,10 +17,10 @@
 --
 
 package X86_64
---# own
---#    State;
---# initializes
---#    State;
+with
+   Abstract_State =>
+     (State with External => (Async_Readers, Async_Writers, Effective_Writes)),
+   Initializes    => State
 is
 
 end X86_64;

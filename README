@@ -95,9 +95,9 @@ environment listed in the following table.
 
 |===================================================================
 | Operating system     | Debian GNU/Linux 7 (wheezy), x86_64
-| Ada compiler         | GNAT GPL 2013 (20130314)
-| GCC version          | 4.7.4 20130416 for GNAT GPL 2013 (20130314)
-| SPARK version        | GPL 2012
+| Ada compiler         | GNAT GPL 2014
+| GCC version          | 4.7.4 [TBD] for GNAT GPL 2014
+| SPARK version        | GPL 2014
 | Emulator             | Bochs from svn (>= r12175)
 | Hardware             | Lenovo T430s with Intel Core i7 3520M
 | Intel AMT SoL client | amtterm (>= commit 0ece513...)
@@ -108,14 +108,14 @@ Install the Debian packages needed to build Muen:
   $ sudo apt-get install git-core iasl tidy wget xorriso xsltproc
 
 The Ada and SPARK packages currently available in Debian wheezy are too old to
-build Muen. GNAT GPL 2013 and SPARK 2012 from AdaCore's <<libre>> site must be
+build Muen. GNAT GPL 2014 and SPARK 2014 from AdaCore's <<libre>> site must be
 installed instead. Extend your `PATH` to make the GPL compiler and tools
 visible to the Muen build system (assuming that they are installed below
 `/opt`):
 
   $ export PATH=/opt/gnat/bin:/opt/spark/bin:$PATH
 
-Because the linker of GNAT GPL 2013 is not multiarch <<march>> aware, export
+Because the linker of GNAT GPL 2014 is not multiarch <<march>> aware, export
 the C run-time `LIBRARY_PATH`:
 
   $ export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
@@ -125,7 +125,6 @@ change to the Muen source directory and issue the following commands:
 
   $ git submodule init
   $ git submodule update
-  $ export SPARK_DIR=/opt/spark
   $ make
 
 This will create an image containing the example system which can be booted by

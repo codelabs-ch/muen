@@ -1,4 +1,5 @@
-package Skp.Hardware is
+package Skp.Hardware
+is
 
    Serial_Serial_Start : constant := 16#50b0#;
    Serial_Serial_End   : constant := 16#50b0#;

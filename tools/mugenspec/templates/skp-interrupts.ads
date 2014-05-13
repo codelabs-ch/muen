@@ -1,7 +1,7 @@
 with SK;
 
---# inherit SK, Skp;
-package Skp.Interrupts is
+package Skp.Interrupts
+is
 
    Remap_Offset : constant :=__remap_offset__;
 

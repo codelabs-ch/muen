@@ -17,6 +17,8 @@
 --
 
 package body SK.Utils
+with
+   SPARK_Mode => Off
 is
 
    --  Return character representation of given quadword.

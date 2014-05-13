@@ -1,4 +1,5 @@
-package Skp is
+package Skp
+is
 
    type CPU_Range is range __cpu_range__;
 

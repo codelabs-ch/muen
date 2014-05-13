@@ -1,4 +1,5 @@
-package Skp.Kernel is
+package Skp.Kernel
+is
 
    Stack_Address      : constant := 16#0011_4000#;
    CPU_Store_Address  : constant := 16#0011_6000#;

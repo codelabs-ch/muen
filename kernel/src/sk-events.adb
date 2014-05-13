@@ -19,9 +19,10 @@
 with System.Machine_Code;
 
 package body SK.Events
---  Warning: External modification by concurrent kernels not yet visible to
---  the SPARK examiner.
---# own State is Global_Events;
+with
+   Refined_State => (State => Global_Events)
+
+--  External modification by concurrent kernels is not modelled.
 is
 
    Event_Count  : constant := 256;
@@ -32,35 +33,43 @@ is
 
    type Event_Bit_Type is range 0 .. (Bits_In_Word - 1);
 
-   type Bitfield64_Type is mod 2 ** Bits_In_Word;
-   pragma Atomic (Bitfield64_Type);
+   type Bitfield64_Type is mod 2 ** Bits_In_Word
+   with
+       Atomic;
 
    type Atomic64_Type is record
       Bits : Bitfield64_Type;
-   end record;
-
-   pragma Atomic (Atomic64_Type);
-   for Atomic64_Type'Size use 64;
-   for Atomic64_Type'Alignment use 8;
-
-   Null_Atomic64 : constant Atomic64_Type := Atomic64_Type'(Bits => 0);
+   end record
+   with
+       Atomic,
+       Size      => 64,
+       Alignment => 8;
 
    type Event_Array is array (Event_Word_Type) of Atomic64_Type;
 
    type Global_Event_Array is array (Skp.Subject_Id_Type) of Event_Array;
 
    Global_Events : Global_Event_Array := Global_Event_Array'
-     (others => Event_Array'(others => Null_Atomic64));
+     (others => Event_Array'(others => Atomic64_Type'(Bits => 0)))
+   with
+      Volatile,
+      Async_Writers,
+      Async_Readers;
 
    -------------------------------------------------------------------------
 
    procedure Atomic_Bit_Set
      (Field : in out Atomic64_Type;
       Pos   :        Event_Bit_Type)
-   --# derives
-   --#    Field from *, Pos;
+   with
+      Depends => (Field =>+ Pos);
+
+   procedure Atomic_Bit_Set
+     (Field : in out Atomic64_Type;
+      Pos   :        Event_Bit_Type)
+   with
+      SPARK_Mode => Off
    is
-      --# hide Atomic_Bit_Set;
    begin
       System.Machine_Code.Asm
         (Template => "lock bts %0, (%1)",
@@ -76,10 +85,15 @@ is
    procedure Atomic_Bit_Clear
      (Field : in out Atomic64_Type;
       Pos   :        Event_Bit_Type)
-   --# derives
-   --#    Field from *, Pos;
+   with
+      Depends => (Field =>+ Pos);
+
+   procedure Atomic_Bit_Clear
+     (Field : in out Atomic64_Type;
+      Pos   :        Event_Bit_Type)
+   with
+      SPARK_Mode => Off
    is
-      --# hide Atomic_Bit_Clear;
    begin
       System.Machine_Code.Asm
         (Template => "lock btr %0, (%1)",
@@ -97,10 +111,16 @@ is
      (Field :     SK.Word64;
       Found : out Boolean;
       Pos   : out Event_Bit_Type)
-   --# derives Found, Pos from Field;
-   is
-      --# hide Find_Highest_Bit_Set;
+   with
+      Depends => ((Found, Pos) => Field);
 
+   procedure Find_Highest_Bit_Set
+     (Field :     SK.Word64;
+      Found : out Boolean;
+      Pos   : out Event_Bit_Type)
+   with
+      SPARK_Mode => Off
+   is
       Tmp_Pos : SK.Word64;
    begin
       Found := Field /= 0;
@@ -120,13 +140,11 @@ is
    procedure Insert_Event
      (Subject : Skp.Subject_Id_Type;
       Event   : SK.Byte)
-   --# global
-   --#    in out Global_Events;
-   --# derives
-   --#    Global_Events from
-   --#       *,
-   --#       Subject,
-   --#       Event;
+   with
+      SPARK_Mode      => Off,
+      --  Workaround for [N306-030] "Accessing parts of volatile objects"
+      Refined_Global  => (In_Out => Global_Events),
+      Refined_Depends => (Global_Events =>+ (Event, Subject))
    is
       Event_Word : Event_Word_Type;
       Event_Bit  : Event_Bit_Type;
@@ -139,11 +157,15 @@ is
 
    -------------------------------------------------------------------------
 
-   function Has_Pending_Events (Subject : Skp.Subject_Id_Type) return Boolean
-   --# global
-   --#    Global_Events;
+   procedure Has_Pending_Events
+     (Subject       :     Skp.Subject_Id_Type;
+      Event_Pending : out Boolean)
+   with
+      SPARK_Mode      => Off,
+      --  Workaround for [N306-030] "Accessing parts of volatile objects"
+      Refined_Global  => Global_Events,
+      Refined_Depends => (Event_Pending => (Subject, Global_Events))
    is
-      Found  : Boolean;
       Bits   : SK.Word64;
       Bitpos : Event_Bit_Type;
    begin
@@ -151,18 +173,13 @@ is
       for Event_Word in reverse Event_Word_Type loop
          Bits := SK.Word64 (Global_Events (Subject) (Event_Word).Bits);
 
-         --# accept Flow, 10, Bitpos, "Result unused";
-
          Find_Highest_Bit_Set
            (Field => Bits,
-            Found => Found,
+            Found => Event_Pending,
             Pos   => Bitpos);
-         exit Search_Event_Words when Found;
+         exit Search_Event_Words when Event_Pending;
       end loop Search_Event_Words;
 
-      --# accept Flow, 33, Bitpos, "Result unused";
-
-      return Found;
    end Has_Pending_Events;
 
    -------------------------------------------------------------------------
@@ -171,10 +188,12 @@ is
      (Subject :     Skp.Subject_Id_Type;
       Found   : out Boolean;
       Event   : out SK.Byte)
-   --# global
-   --#    in out Global_Events;
-   --# derives
-   --#    Found, Event, Global_Events from Global_Events, Subject;
+   with
+      SPARK_Mode      => Off,
+      --  Workaround for [N306-030] "Accessing parts of volatile objects"
+      Refined_Global  => (In_Out => Global_Events),
+      Refined_Depends => ((Event, Found, Global_Events) =>
+                              (Global_Events, Subject))
    is
       Bits        : SK.Word64;
       Bit_In_Word : Event_Bit_Type;

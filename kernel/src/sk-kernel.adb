@@ -16,18 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.Apic;
+with SK.CPU;
 with SK.KC;
 with SK.Version;
-with SK.Interrupts;
 with SK.System_State;
 with SK.VMX;
-with SK.Scheduler;
-with SK.Apic;
-with SK.MP;
-with SK.CPU;
-with SK.CPU_Global;
-with SK.CPU_Registry;
-with SK.Subjects;
 
 package body SK.Kernel
 is
@@ -40,9 +34,7 @@ is
    begin
       Is_Bsp := CPU_Global.Is_BSP;
 
-      --# accept Flow, 22, "CPU ID differs per logical CPU";
       if Is_Bsp then
-      --# end accept;
          Interrupts.Init;
       end if;
       Interrupts.Load;
@@ -53,50 +45,51 @@ is
                      & SK.Version.Version_String & " ("
                      & Standard'Compiler_Version & ")"));
       Success := System_State.Is_Valid;
-      if Success then
 
-         Apic.Enable;
-         CPU_Global.Init;
+      if not Success then
 
-         --  Register CPU ID -> local APIC ID mapping and make sure all CPUs
-         --  are registered before programming the IRQ routing.
-
-         CPU_Registry.Register (CPU_ID  => CPU_Global.CPU_ID,
-                                APIC_ID => Apic.Get_ID);
-
-         --# accept Flow, 22, "CPU ID differs per logical CPU";
-         if Is_Bsp then
-         --# end accept;
-            Apic.Start_AP_Processors;
-         end if;
-
-         MP.Wait_For_All;
-
-         --# accept Flow, 22, "CPU ID differs per logical CPU";
-         if Is_Bsp then
-         --# end accept;
-            Interrupts.Disable_Legacy_PIC;
-            Interrupts.Setup_IRQ_Routing;
-         end if;
-
-         System_State.Enable_VMX_Feature;
-
-         VMX.Enter_Root_Mode;
-         Scheduler.Init;
-
-         --  Synchronize all logical CPUs.
-
-         MP.Wait_For_All;
-         Subjects.Restore_State
-           (Id   => CPU_Global.Get_Current_Minor_Frame.Subject_Id,
-            GPRs => Subject_Registers);
-      else
          pragma Debug (KC.Put_Line (Item => "System initialisation error"));
-         CPU.Stop;
+         loop
+            --  Workaround for limited No_Return capabilities
+            CPU.Cli;
+            CPU.Hlt;
+         end loop;
+
+         pragma Assert (False); --  Unreachable
       end if;
 
-      --# accept F, 602, Subject_Registers, Subject_Registers,
-      --#        "Initialize does not return on error.";
+      Apic.Enable;
+      CPU_Global.Init;
+
+      --  Register CPU ID -> local APIC ID mapping and make sure all CPUs
+      --  are registered before programming the IRQ routing.
+
+      CPU_Registry.Register (CPU_ID  => CPU_Global.CPU_ID,
+                             APIC_ID => Apic.Get_ID);
+
+      if Is_Bsp then
+         Apic.Start_AP_Processors;
+      end if;
+
+      MP.Wait_For_All;
+
+      if Is_Bsp then
+         Interrupts.Disable_Legacy_PIC;
+         Interrupts.Setup_IRQ_Routing;
+      end if;
+
+      System_State.Enable_VMX_Feature;
+
+      VMX.Enter_Root_Mode;
+      Scheduler.Init;
+
+      --  Synchronize all logical CPUs.
+
+      MP.Wait_For_All;
+      Subjects.Restore_State
+        (Id   => CPU_Global.Get_Current_Minor_Frame.Subject_Id,
+         GPRs => Subject_Registers);
+
    end Initialize;
 
 end SK.Kernel;

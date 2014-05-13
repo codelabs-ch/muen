@@ -19,6 +19,8 @@
 with Skp;
 
 package SK.Dump
+with
+   SPARK_Mode => Off
 is
 
    --  Print CPU registers.
@@ -32,7 +34,7 @@ is
    procedure Print_IRQ_Routing
      (IRQ     : SK.Byte;
       Vector  : SK.Byte;
-      CPU     : SK.Byte;
+      CPU_ID  : SK.Byte;
       APIC_ID : SK.Byte);
 
    --  Print ISR execution environment state.

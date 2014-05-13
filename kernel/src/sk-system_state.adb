@@ -81,8 +81,8 @@ is
    --  512 + 64 + 256 bytes (the size we expect) and EAX/EDX
    --  report support for FPU, SSE, and AVX
    function Has_Expected_XSAVE_Size return Boolean
-   --# global
-   --#    X86_64.State;
+   with
+      Global => (Input => X86_64.State)
    is
       EAX, EBX, ECX, EDX : SK.Word32;
    begin
@@ -104,23 +104,23 @@ is
    --  Returns True if local APIC is present and supports x2APIC mode, see
    --  Intel SDM 3A, chapters 10.4.2 and 10.12.1.
    function Has_X2_Apic return Boolean
-   --# global
-   --#    X86_64.State;
+   with
+      Global => (Input => X86_64.State)
    is
       Unused_EAX, Unused_EBX, ECX, EDX : SK.Word32;
    begin
       Unused_EAX := 1;
       ECX        := 0;
 
-      --# accept Flow, 10, Unused_EAX, "Result unused" &
-      --#        Flow, 10, Unused_EBX, "Result unused";
+      pragma $Prove_Warnings (Off, "unused assignment to ""Unused_E*X""",
+         Reason => "Only parts of the CPUID result is needed");
       CPU.CPUID
         (EAX => Unused_EAX,
          EBX => Unused_EBX,
          ECX => ECX,
          EDX => EDX);
+      pragma $Prove_Warnings (On, "unused assignment to ""Unused_E*X""");
 
-      --# accept Flow, 33, Unused_EBX, "Result unused";
       return SK.Bit_Test
         (Value => SK.Word64 (EDX),
          Pos   => Constants.CPUID_FEATURE_LOCAL_APIC) and then
@@ -133,25 +133,23 @@ is
 
    --  Returns true if VMX is supported by the CPU.
    function Has_VMX_Support return Boolean
-   --# global
-   --#    X86_64.State;
+   with
+      Global => (Input => X86_64.State)
    is
       Unused_EAX, Unused_EBX, ECX, Unused_EDX : SK.Word32;
    begin
       Unused_EAX := 1;
       ECX        := 0;
 
-      --# accept Flow, 10, Unused_EAX, "Result unused" &
-      --#        Flow, 10, Unused_EBX, "Result unused" &
-      --#        Flow, 10, Unused_EDX, "Result unused";
+      pragma $Prove_Warnings (Off, "unused assignment to ""Unused_E*X""",
+         Reason => "Only parts of the CPUID result is needed");
       CPU.CPUID
         (EAX => Unused_EAX,
          EBX => Unused_EBX,
          ECX => ECX,
          EDX => Unused_EDX);
+      pragma $Prove_Warnings (On, "unused assignment to ""Unused_E*X""");
 
-      --# accept Flow, 33, Unused_EBX, "Result unused" &
-      --#        Flow, 33, Unused_EDX, "Result unused";
       return SK.Bit_Test
         (Value => SK.Word64 (ECX),
          Pos   => Constants.CPUID_FEATURE_VMX_FLAG);

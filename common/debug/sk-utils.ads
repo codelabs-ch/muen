@@ -17,6 +17,8 @@
 --
 
 package SK.Utils
+with
+   SPARK_Mode => Off
 is
 
    --  Convert given quadword to hex string and store it in specified buffer.

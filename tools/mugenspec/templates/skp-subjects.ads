@@ -1,6 +1,5 @@
 with SK;
 
---# inherit SK, Skp;
 package Skp.Subjects
 is
 
@@ -40,64 +39,102 @@ is
       Entry_Ctrls : SK.Word32;
    end record;
 
-   function Get_CPU_Id (Subject_Id : Skp.Subject_Id_Type) return Skp.CPU_Range;
+   function Get_CPU_Id (Subject_Id : Skp.Subject_Id_Type) return Skp.CPU_Range
+   with
+      Global => null;
 
    function Get_PML4_Address
      (Subject_Id : Skp.Subject_Id_Type)
-      return SK.Word64;
+      return SK.Word64
+   with
+      Global => null;
 
    function Get_EPT_Pointer
      (Subject_Id : Skp.Subject_Id_Type)
-      return SK.Word64;
+      return SK.Word64
+   with
+      Global => null;
 
    function Get_VMCS_Address
      (Subject_Id : Skp.Subject_Id_Type)
-      return SK.Word64;
+      return SK.Word64
+   with
+      Global => null;
 
    function Get_IO_Bitmap_Address
      (Subject_Id : Skp.Subject_Id_Type)
-      return SK.Word64;
+      return SK.Word64
+   with
+      Global => null;
 
    function Get_MSR_Bitmap_Address
      (Subject_Id : Skp.Subject_Id_Type)
-      return SK.Word64;
+      return SK.Word64
+   with
+      Global => null;
 
    function Get_Stack_Address
      (Subject_Id : Skp.Subject_Id_Type)
-      return SK.Word64;
+      return SK.Word64
+   with
+      Global => null;
 
    function Get_Entry_Point
      (Subject_Id : Skp.Subject_Id_Type)
-      return SK.Word64;
+      return SK.Word64
+   with
+      Global => null;
 
    function Get_Trap
      (Subject_Id : Skp.Subject_Id_Type;
       Trap_Nr    : Trap_Range)
-      return Trap_Entry_Type;
+      return Trap_Entry_Type
+   with
+      Global => null,
+      Post   => Get_Trap'Result.Dst_Subject /= Subject_Id;
 
    function Get_Event
      (Subject_Id : Skp.Subject_Id_Type;
       Event_Nr   : Event_Range)
-      return Event_Entry_Type;
+      return Event_Entry_Type
+   with
+      Global => null,
+      Post   => Get_Event'Result.Dst_Subject /= Subject_Id;
 
    function Get_VMX_Controls
      (Subject_Id : Skp.Subject_Id_Type)
-      return VMX_Controls_Type;
+      return VMX_Controls_Type
+   with
+      Global => null;
 
-   function Get_CR0 (Subject_Id : Skp.Subject_Id_Type) return SK.Word64;
+   function Get_CR0 (Subject_Id : Skp.Subject_Id_Type) return SK.Word64
+   with
+      Global => null;
 
-   function Get_CR0_Mask (Subject_Id : Skp.Subject_Id_Type) return SK.Word64;
+   function Get_CR0_Mask (Subject_Id : Skp.Subject_Id_Type) return SK.Word64
+   with
+      Global => null;
 
-   function Get_CR4 (Subject_Id : Skp.Subject_Id_Type) return SK.Word64;
+   function Get_CR4 (Subject_Id : Skp.Subject_Id_Type) return SK.Word64
+   with
+      Global => null;
 
-   function Get_CR4_Mask (Subject_Id : Skp.Subject_Id_Type) return SK.Word64;
+   function Get_CR4_Mask (Subject_Id : Skp.Subject_Id_Type) return SK.Word64
+   with
+      Global => null;
 
-   function Get_CS_Access (Subject_Id : Skp.Subject_Id_Type) return SK.Word32;
+   function Get_CS_Access (Subject_Id : Skp.Subject_Id_Type) return SK.Word32
+   with
+      Global => null;
 
    function Get_Exception_Bitmap
      (Subject_Id : Skp.Subject_Id_Type)
-      return SK.Word32;
+      return SK.Word32
+   with
+      Global => null;
 
-   function Get_Profile (Subject_Id : Skp.Subject_Id_Type) return Profile_Kind;
+   function Get_Profile (Subject_Id : Skp.Subject_Id_Type) return Profile_Kind
+   with
+      Global => null;
 
 end Skp.Subjects;

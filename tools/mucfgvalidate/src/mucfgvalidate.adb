@@ -29,7 +29,7 @@ procedure Mucfgvalidate
 is
 begin
    Validate.Command_Line.Init (Description => "Muen policy validator");
-   Validate.Run;
+   Validate.Run (Policy => Validate.Command_Line.Get_Policy);
 
 exception
    when E : Muxml.XML_Input_Error

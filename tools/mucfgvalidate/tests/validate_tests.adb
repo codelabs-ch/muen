@@ -17,7 +17,6 @@
 --
 
 with Validate.XML_Processors;
-with Validate.Command_Line.Test;
 
 package body Validate_Tests
 is
@@ -29,9 +28,7 @@ is
    procedure Execute_Run
    is
    begin
-      Validate.Command_Line.Test.Set_Policy (Path => "data/test_policy.xml");
-
-      Validate.Run;
+      Validate.Run (Policy => "data/test_policy.xml");
 
       --  Positive test, no exceptions must occur.
 

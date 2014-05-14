@@ -19,7 +19,7 @@
 package Validate
 is
 
-   --  Start the validation process.
-   procedure Run;
+   --  Start the validation process of the policy given by filename.
+   procedure Run (Policy : String);
 
 end Validate;

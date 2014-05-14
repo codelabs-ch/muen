@@ -20,12 +20,13 @@ package body Acpi.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      ID : ID_4;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      ID := To_ID_4 (Str => "Muen");
+      Assert (Condition => ID'Length = 4,
+              Message   => "Length mismatch");
+      Assert (Condition => ID = (16#4d#, 16#75#, 16#65#, 16#6e#),
+              Message   => "Content mismatch");
 --  begin read only
    end Test_To_ID_4;
 --  end read only
@@ -41,12 +42,14 @@ package body Acpi.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      ID : ID_6;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      ID := To_ID_6 (Str => "Muen");
+      Assert (Condition => ID'Length = 6,
+              Message   => "Length mismatch");
+      Assert (Condition => ID =
+              (16#4d#, 16#75#, 16#65#, 16#6e#, 16#20#, 16#20#),
+              Message   => "Content mismatch");
 --  begin read only
    end Test_To_ID_6;
 --  end read only
@@ -62,12 +65,14 @@ package body Acpi.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      ID : ID_8;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      ID := To_ID_8 (Str => "Muen");
+      Assert (Condition => ID'Length = 8,
+              Message   => "Length mismatch");
+      Assert (Condition => ID =
+              (16#4d#, 16#75#, 16#65#, 16#6e#, 16#20#, 16#20#, 16#20#, 16#20#),
+              Message   => "Content mismatch");
 --  begin read only
    end Test_To_ID_8;
 --  end read only

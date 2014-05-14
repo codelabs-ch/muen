@@ -20,12 +20,35 @@ package body Acpi.Generator.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
+
+      Linux_RSDP : constant String := "obj/linux_rsdp";
+      Linux_XSDT : constant String := "obj/linux_xsdt";
+      Linux_FADT : constant String := "obj/linux_fadt";
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Write (Output_Dir => "obj",
+             Policy     => Policy);
 
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/linux_rsdp.ref",
+               Filename2 => Linux_RSDP),
+              Message   => "RSDP table mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/linux_xsdt.ref",
+               Filename2 => Linux_XSDT),
+              Message   => "XSDT table mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/linux_fadt.ref",
+               Filename2 => Linux_FADT),
+              Message   => "FADT table mismatch");
+
+      Ada.Directories.Delete_File (Name => Linux_RSDP);
+      Ada.Directories.Delete_File (Name => Linux_XSDT);
+      Ada.Directories.Delete_File (Name => Linux_FADT);
 --  begin read only
    end Test_Write;
 --  end read only

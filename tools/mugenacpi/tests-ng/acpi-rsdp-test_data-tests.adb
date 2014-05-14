@@ -20,12 +20,16 @@ package body Acpi.RSDP.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Linux_RSDP : constant String := "obj/linux_rsdp";
    begin
+      Write (XSDT_Address => 16#000e_1000#,
+             Filename     => Linux_RSDP);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/linux_rsdp.ref",
+               Filename2 => Linux_RSDP),
+              Message   => "RSDP mismatch");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Ada.Directories.Delete_File (Name => Linux_RSDP);
 --  begin read only
    end Test_Write;
 --  end read only

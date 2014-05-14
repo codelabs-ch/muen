@@ -20,12 +20,16 @@ package body Acpi.FADT.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Linux_FADT : constant String := "obj/linux_fadt";
    begin
+      Write (DSDT_Address => 16#000e_3000#,
+             Filename     => Linux_FADT);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/linux_fadt.ref",
+               Filename2 => Linux_FADT),
+              Message   => "FADT mismatch");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Ada.Directories.Delete_File (Name => Linux_FADT);
 --  begin read only
    end Test_Write;
 --  end read only

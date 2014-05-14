@@ -20,12 +20,16 @@ package body Acpi.XSDT.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Linux_XSDT : constant String := "obj/linux_xsdt";
    begin
+      Write (FADT_Address => 16#000e_2000#,
+             Filename     => Linux_XSDT);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/linux_xsdt.ref",
+               Filename2 => Linux_XSDT),
+              Message   => "XSDT mismatch");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Ada.Directories.Delete_File (Name => Linux_XSDT);
 --  begin read only
    end Test_Write;
 --  end read only

@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with Validate.XML_Processors;
+
 package Validate.Test_Data is
 
 --  begin read only

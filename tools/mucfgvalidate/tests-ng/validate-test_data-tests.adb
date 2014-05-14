@@ -12,8 +12,8 @@ package body Validate.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Run (Gnattest_T : in out Test);
-   procedure Test_Run_3bfa1e (Gnattest_T : in out Test) renames Test_Run;
---  id:2.2/3bfa1e656c84148a/Run/1/0/
+   procedure Test_Run_caf683 (Gnattest_T : in out Test) renames Test_Run;
+--  id:2.2/caf683ddeff4352b/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
    --  validate.ads:23:4:Run
 --  end read only
@@ -21,11 +21,11 @@ package body Validate.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
+      Run (Policy => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      --  Positive test, no exceptions must occur.
 
+      XML_Processors.Clear;
 --  begin read only
    end Test_Run;
 --  end read only

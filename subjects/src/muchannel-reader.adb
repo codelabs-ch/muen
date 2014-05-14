@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -148,19 +148,19 @@ is
       if not Is_Active (Channel => Channel) then
          Result := Inactive;
       else
-         Reader.Epoch    := Channel.Header.Epoch;
-         Reader.Protocol := Channel.Header.Protocol;
-         Reader.Size     := Channel.Header.Size;
-         Reader.Elements := Channel.Header.Elements;
-         Reader.RC       := Header_Field_Type (Data_Range'First);
-
          if Channel.Header.Transport = SHMStream_Marker and then
-           Is_Valid (Protocol     => Reader.Protocol,
-                     Size         => Reader.Size,
-                     Elements     => Reader.Elements,
+           Is_Valid (Protocol     => Channel.Header.Protocol,
+                     Size         => Channel.Header.Size,
+                     Elements     => Channel.Header.Elements,
                      Channel_Size => Header_Field_Type
                        (Elements * (Element_Type'Size / 8)))
          then
+            Reader.Epoch    := Channel.Header.Epoch;
+            Reader.Protocol := Channel.Header.Protocol;
+            Reader.Size     := Channel.Header.Size;
+            Reader.Elements := Channel.Header.Elements;
+            Reader.RC       := Header_Field_Type (Data_Range'First);
+
             if Has_Epoch_Changed (Reader  => Reader,
                                   Channel => Channel)
             then

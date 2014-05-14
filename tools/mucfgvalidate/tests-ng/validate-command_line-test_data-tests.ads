@@ -10,10 +10,10 @@ package Validate.Command_Line.Test_Data.Tests is
    with null record;
 
    procedure Test_Init_a69a58 (Gnattest_T : in out Test);
-   --  validate-command_line.ads:25:4:Init
+   --  validate-command_line.ads:27:4:Init
 
    procedure Test_Get_Policy_aac0d6 (Gnattest_T : in out Test);
-   --  validate-command_line.ads:28:4:Get_Policy
+   --  validate-command_line.ads:30:4:Get_Policy
 
 end Validate.Command_Line.Test_Data.Tests;
 --  end read only

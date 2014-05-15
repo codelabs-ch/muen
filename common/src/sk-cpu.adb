@@ -190,6 +190,19 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Ltr (Address : SK.Word16)
+   with
+      SPARK_Mode => Off
+   is
+   begin
+      System.Machine_Code.Asm
+        (Template => "ltr %%ax",
+         Inputs   => (SK.Word16'Asm_Input ("a", Address)),
+         Volatile => True);
+   end Ltr;
+
+   -------------------------------------------------------------------------
+
    procedure Panic
    with
       SPARK_Mode => Off

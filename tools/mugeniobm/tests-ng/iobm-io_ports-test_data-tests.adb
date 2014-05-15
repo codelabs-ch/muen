@@ -55,14 +55,13 @@ package body Iobm.IO_Ports.Test_Data.Tests is
    --  iobm-io_ports.ads:47:4:To_Stream
 --  end read only
 
-      pragma Unreferenced (Gnattest_T);
+      use type Ada.Streams.Stream_Element_Array;
 
+      IO_Bitmap  : IO_Bitmap_Type   := Null_IO_Bitmap;
+      All_Denied : IO_Bitmap_Stream := (others => 16#ff#);
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => To_Stream (B => IO_Bitmap) = All_Denied,
+              Message   => "Not all ports denied");
 --  begin read only
    end Test_To_Stream;
 --  end read only

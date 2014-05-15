@@ -20,12 +20,35 @@ package body Iobm.Generator.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
+
+      Tau0_Iobm : constant String := "obj/tau0_iobm";
+      Sub1_Iobm : constant String := "obj/subject1_iobm";
+      Sub2_Iobm : constant String := "obj/subject2_iobm";
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Write (Output_Dir => "obj",
+             Policy     => Policy);
 
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/tau0_iobm.ref",
+               Filename2 => Tau0_Iobm),
+              Message   => "Tau0 I/O bitmap mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/subject1_iobm.ref",
+               Filename2 => Sub1_Iobm),
+              Message   => "Subject 1 I/O bitmap mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/subject2_iobm.ref",
+               Filename2 => Sub2_Iobm),
+              Message   => "Subject 2 I/O bitmap mismatch");
+
+      Ada.Directories.Delete_File (Name => Tau0_Iobm);
+      Ada.Directories.Delete_File (Name => Sub1_Iobm);
+      Ada.Directories.Delete_File (Name => Sub2_Iobm);
 --  begin read only
    end Test_Write;
 --  end read only

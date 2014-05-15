@@ -20,12 +20,28 @@ package body Iobm.IO_Ports.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Ada.Streams.Stream_Element_Array;
+
+      B        : IO_Bitmap_Type            := Null_IO_Bitmap;
+      Null_Ref : constant IO_Bitmap_Stream := (others => 16#ff#);
+      S_Ref    : IO_Bitmap_Stream          := (2583   => 16#fe#,
+                                               others => 16#ff#);
    begin
+      Assert (Condition => To_Stream (B => B) = Null_Ref,
+              Message   => "Null bitmap allows access");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Allow_Ports (B          => B,
+                   Start_Port => 16#50b0#,
+                   End_Port   => 16#50b0#);
+      Assert (Condition => To_Stream (B => B) = S_Ref,
+              Message   => "Error allowing single port");
 
+      Allow_Ports (B          => B,
+                   Start_Port => 16#03d4#,
+                   End_Port   => 16#03d5#);
+      S_Ref (123) := 16#cf#;
+      Assert (Condition => To_Stream (B => B) = S_Ref,
+              Message   => "Error allowing ports");
 --  begin read only
    end Test_Allow_Ports;
 --  end read only

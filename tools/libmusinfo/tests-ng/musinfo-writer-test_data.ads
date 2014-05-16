@@ -5,6 +5,12 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Directories;
+
+with Musinfo.Utils;
+
+with Test_Utils;
+
 package Musinfo.Writer.Test_Data is
 
 --  begin read only

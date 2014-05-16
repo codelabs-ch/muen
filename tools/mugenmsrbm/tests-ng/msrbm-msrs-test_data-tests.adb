@@ -69,12 +69,13 @@ package body Msrbm.MSRs.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Ada.Streams.Stream_Element_Array;
+
+      MSR_Bitmap : MSR_Bitmap_Type   := Null_MSR_Bitmap;
+      All_Denied : MSR_Bitmap_Stream := (others => 16#ff#);
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => To_Stream (Bitmap => MSR_Bitmap) = All_Denied,
+              Message   => "Not all MSRs denied");
 --  begin read only
    end Test_To_Stream;
 --  end read only

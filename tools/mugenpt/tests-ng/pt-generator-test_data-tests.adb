@@ -20,12 +20,42 @@ package body Pt.Generator.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
+
+      Knl_Pt0 : constant String := "obj/kernel_pt_0";
+      Knl_Pt1 : constant String := "obj/kernel_pt_1";
+      Tau0_Pt : constant String := "obj/tau0_pt";
+      Sub1_Pt : constant String := "obj/subject1_pt";
+      Sub2_Pt : constant String := "obj/subject2_pt";
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Write (Output_Dir => "obj",
+             Policy     => Policy);
 
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/kernel_pt_0.ref",
+               Filename2 => Knl_Pt0),
+              Message   => "Kernel pagetables mismatch (0)");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/kernel_pt_1.ref",
+               Filename2 => Knl_Pt1),
+              Message   => "Kernel pagetables mismatch (1)");
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/tau0_pt.ref",
+               Filename2 => Tau0_Pt),
+              Message   => "Tau0 pagetables mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/subject1_pt.ref",
+               Filename2 => Sub1_Pt),
+              Message   => "Subject 1 pagetables mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/subject2_pt.ref",
+               Filename2 => Sub2_Pt),
+              Message   => "Subject 2 pagetables mismatch");
 --  begin read only
    end Test_Write;
 --  end read only

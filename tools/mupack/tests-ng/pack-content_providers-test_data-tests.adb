@@ -161,11 +161,9 @@ package body Pack.Content_Providers.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Register_All;
+      Assert (Condition => Content_Procs.Get_Count = 2,
+              Message   => "Count mismatch");
 --  begin read only
    end Test_Register_All;
 --  end read only
@@ -201,12 +199,13 @@ package body Pack.Content_Providers.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Unused : Param_Type := (End_Address => 10, others => <>);
    begin
+      Content_Procs.Register (Process => Inc_Counter'Access);
+      Run (Data => Unused);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Test_Counter = 1,
+              Message   => "Counter mismatch");
 --  begin read only
    end Test_Run;
 --  end read only
@@ -223,11 +222,11 @@ package body Pack.Content_Providers.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Content_Procs.Get_Count = 0,
+              Message   => "Procs not zero:" & Content_Procs.Get_Count'Img);
+      Content_Procs.Register (Process => Inc_Counter'Access);
+      Assert (Condition => Content_Procs.Get_Count = 1,
+              Message   => "Procs not one:" & Content_Procs.Get_Count'Img);
 --  begin read only
    end Test_Get_Count;
 --  end read only

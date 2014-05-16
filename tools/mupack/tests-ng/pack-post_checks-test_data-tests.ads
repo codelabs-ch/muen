@@ -10,16 +10,19 @@ package Pack.Post_Checks.Test_Data.Tests is
    with null record;
 
    procedure Test_Multiboot_Header_a1691f (Gnattest_T : in out Test);
-   --  pack-post_checks.ads:25:4:Multiboot_Header
+   --  pack-post_checks.ads:27:4:Multiboot_Header
 
    procedure Test_Register_All_3f90ea (Gnattest_T : in out Test);
-   --  pack-post_checks.ads:28:4:Register_All
+   --  pack-post_checks.ads:30:4:Register_All
 
    procedure Test_Run_ca760b (Gnattest_T : in out Test);
-   --  pack-post_checks.ads:31:4:Run
+   --  pack-post_checks.ads:33:4:Run
 
    procedure Test_Get_Count_1fbd7c (Gnattest_T : in out Test);
-   --  pack-post_checks.ads:34:4:Get_Count
+   --  pack-post_checks.ads:36:4:Get_Count
+
+   procedure Test_Clear_4b4f85 (Gnattest_T : in out Test);
+   --  pack-post_checks.ads:39:4:Clear
 
 end Pack.Post_Checks.Test_Data.Tests;
 --  end read only

@@ -16,13 +16,35 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libtest/libtest";
+with System;
 
-with "gnattest_src";
+with Interfaces.C;
 
-project GNATtest_Libmusinfo extends "../tools.gpr" is
+package C_Imports
+is
 
-   for Source_Dirs use ("src/**", "tests-ng/additional");
-   for Object_Dir use "obj/tests";
+   function C_Assert_Name
+     (Name : System.Address)
+      return Interfaces.C.int
+     with
+       Import     => True,
+       Convention => C,
+       Link_Name  => "assert_name";
 
-end GNATtest_Libmusinfo;
+   function C_Assert_Channel
+     (Channel : System.Address)
+      return Interfaces.C.int
+     with
+       Import     => True,
+       Convention => C,
+       Link_Name  => "assert_channel";
+
+   function C_Assert_Subject_Info
+     (Info : System.Address)
+      return Interfaces.C.int
+     with
+       Import     => True,
+       Convention => C,
+       Link_Name  => "assert_subject_info";
+
+end C_Imports;

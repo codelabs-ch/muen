@@ -5,6 +5,12 @@
 
 with AUnit.Test_Fixtures;
 
+with Interfaces.C;
+
+with Musinfo.Utils;
+
+with C_Imports;
+
 package Musinfo.Interop.Test_Data is
 
 --  begin read only

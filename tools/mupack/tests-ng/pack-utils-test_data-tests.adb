@@ -20,12 +20,27 @@ package body Pack.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Interfaces.Unsigned_64;
+
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Data,
+         Name        => "linux|bin",
+         Address     => "16#0011_4000#",
+         Size        => "16#0001_3000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "subject_binary",
+         File_Name   => "obj1.o",
+         File_Offset => "none");
 
+      Assert (Condition => Get_Image_Size (Policy => Data) = 16#127000#,
+              Message   => "Image size mismatch");
 --  begin read only
    end Test_Get_Image_Size;
 --  end read only

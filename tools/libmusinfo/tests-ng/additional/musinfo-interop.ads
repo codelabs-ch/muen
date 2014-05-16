@@ -16,11 +16,17 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libtest/libtest";
+--  Template package for additional C interop tests.
+package Musinfo.Interop
+is
 
-project GNATtest_Libmusinfo extends "../tools.gpr" is
+   --  Verify name type interoperability.
+   procedure Name_To_C;
 
-   for Source_Dirs use ("src/**", "tests-ng/additional");
-   for Object_Dir use "obj/tests";
+   --  Verify channel type interoperability.
+   procedure Channel_To_C;
 
-end GNATtest_Libmusinfo;
+   --  Verify subject info type interoperability.
+   procedure Subject_Info_To_C;
+
+end Musinfo.Interop;

@@ -5,6 +5,12 @@
 
 with AUnit.Test_Fixtures;
 
+with DOM.Core.Nodes;
+
+with Muxml.Utils;
+
+with Test_Utils;
+
 package Spec.Generator.Test_Data is
 
 --  begin read only

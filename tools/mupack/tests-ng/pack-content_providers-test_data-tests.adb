@@ -20,12 +20,63 @@ package body Pack.Content_Providers.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
+      Data   : Param_Type (16#126000#);
    begin
+      Set_Input_Directory (Dir => "data");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "mboot",
+         Address     => "16#0010_0000#",
+         Size        => "16#1000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "system",
+         File_Name   => "mboot",
+         File_Offset => "none");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "linux|acpi_rsdp",
+         Address     => "16#0010_1000#",
+         Size        => "16#1000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "subject_acpi_rsdp",
+         File_Name   => "pattern",
+         File_Offset => "none");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "linux|bin",
+         Address     => "16#0010_2000#",
+         Size        => "16#0001_3000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "subject_binary",
+         File_Name   => "obj1.o",
+         File_Offset => "16#0004#");
 
+      Data.XML_Doc := Policy.Doc;
+      Process_Files (Data => Data);
+
+      Image.Write (Image    => Data.Image,
+                   Filename => "obj/process_files.img");
+      Manifest.Write (Manifest => Data.Manifest,
+                      Filename => "obj/process_files.manifest");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "obj/process_files.img",
+               Filename2 => "data/process_files.img"),
+              Message   => "Image file differs");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "obj/process_files.manifest",
+               Filename2 => "data/process_files.manifest"),
+              Message   => "Manifest file differs");
+
+      Ada.Directories.Delete_File (Name => "obj/process_files.img");
+      Ada.Directories.Delete_File (Name => "obj/process_files.manifest");
 --  begin read only
    end Test_Process_Files;
 --  end read only

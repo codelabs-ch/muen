@@ -5,6 +5,14 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Directories;
+
+with Muxml;
+
+with Mutools.XML_Utils;
+
+with Test_Utils;
+
 package Pack.Content_Providers.Test_Data is
 
 --  begin read only

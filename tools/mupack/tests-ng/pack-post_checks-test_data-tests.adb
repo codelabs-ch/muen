@@ -20,12 +20,21 @@ package body Pack.Post_Checks.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Content_Providers.Param_Type (16#102000#);
    begin
+      begin
+         Multiboot_Header (Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      exception
+         when Check_Error => null;
+      end;
 
+      Image.Add_Buffer (Image   => Data.Image,
+                        Buffer  => (16#02#, 16#b0#, 16#ad#, 16#1b#),
+                        Address => 16#101ffc#);
+      Multiboot_Header (Data => Data);
 --  begin read only
    end Test_Multiboot_Header;
 --  end read only

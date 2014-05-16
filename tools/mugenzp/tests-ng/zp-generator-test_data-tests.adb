@@ -20,12 +20,19 @@ package body Zp.Generator.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Write (Output_Dir => "obj",
+             Policy     => Policy);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/lnx.zp.ref",
+               Filename2 => "obj/lnx.zp"),
+              Message   => "Data differs");
+      Ada.Directories.Delete_File (Name => "obj/lnx.zp");
 --  begin read only
    end Test_Write;
 --  end read only

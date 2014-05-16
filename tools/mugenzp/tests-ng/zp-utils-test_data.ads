@@ -5,6 +5,12 @@
 
 with AUnit.Test_Fixtures;
 
+with McKae.XML.XPath.XIA;
+
+with Muxml;
+
+with ZP.Constants;
+
 package Zp.Utils.Test_Data is
 
 --  begin read only

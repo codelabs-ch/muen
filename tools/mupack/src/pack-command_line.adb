@@ -84,14 +84,13 @@ is
          Output      => Out_Dir'Access,
          Switch      => "-o:",
          Long_Switch => "--output-directory:",
-         Help        => "Output directory, default is the current directory");
+         Help        => "Output directory");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Output      => In_Dir'Access,
          Switch      => "-i:",
          Long_Switch => "--input-directory:",
-         Help        => "Directory of input files, default is the current"
-         & " directory");
+         Help        => "Directory of input files");
       GNAT.Command_Line.Define_Switch
         (Config      => Cmdline.Data,
          Switch      => "-h",
@@ -119,7 +118,10 @@ is
       end;
 
       Policy := To_Unbounded_String (GNAT.Command_Line.Get_Argument);
-      if Policy = Null_Unbounded_String then
+      if Policy = Null_Unbounded_String
+        or else Input_Dir = Null_Unbounded_String
+        or else Output_Dir = Null_Unbounded_String
+      then
          GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
          GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));
       end if;

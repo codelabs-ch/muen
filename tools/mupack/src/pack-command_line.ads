@@ -16,7 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Directories;
 with Ada.Strings.Unbounded;
 
 package Pack.Command_Line
@@ -36,9 +35,6 @@ is
 
 private
 
-   Policy                : Ada.Strings.Unbounded.Unbounded_String;
-   Output_Dir, Input_Dir : Ada.Strings.Unbounded.Unbounded_String
-     := Ada.Strings.Unbounded.To_Unbounded_String
-       (Ada.Directories.Current_Directory);
+   Policy, Output_Dir, Input_Dir : Ada.Strings.Unbounded.Unbounded_String;
 
 end Pack.Command_Line;

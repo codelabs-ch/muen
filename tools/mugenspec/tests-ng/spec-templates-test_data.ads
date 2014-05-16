@@ -5,6 +5,10 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Directories;
+
+with Test_Utils;
+
 package Spec.Templates.Test_Data is
 
 --  begin read only
@@ -14,5 +18,7 @@ package Spec.Templates.Test_Data is
 
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
+
+   Tmpl : constant String := "This is a PATTERN1 template PATTERN2" & ASCII.LF;
 
 end Spec.Templates.Test_Data;

@@ -20,12 +20,27 @@ package body Spec.Templates.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      T : Template_Type;
    begin
+      begin
+         T := Load (Filename => "template");
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      exception
+         when IO_Error => null;
+      end;
 
+      T := Load (Filename  => "data/template",
+                 Use_Store => False);
+      Assert (Condition => Get_Size (Template => T) = 37,
+              Message   => "Template size mismatch (1)");
+
+      Set_Template_Dir (Path => "./data");
+      T := Load (Filename => "template");
+
+      Assert (Condition => Get_Size (Template => T) = 37,
+              Message   => "Template size mismatch (2)");
 --  begin read only
    end Test_Load;
 --  end read only
@@ -41,12 +56,11 @@ package body Spec.Templates.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      T : Template_Type;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      T := Create (Content => Tmpl);
+      Assert (Condition => Get_Size (Template => T) = 37,
+              Message   => "Template size mismatch");
 --  begin read only
    end Test_Create;
 --  end read only
@@ -63,11 +77,8 @@ package body Spec.Templates.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Tested in Create");
 --  begin read only
    end Test_Get_Size;
 --  end read only
@@ -84,11 +95,8 @@ package body Spec.Templates.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Tested in Load");
 --  begin read only
    end Test_Set_Template_Dir;
 --  end read only
@@ -104,12 +112,38 @@ package body Spec.Templates.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Out_File : constant String := "obj/template";
+      T        : Template_Type;
    begin
+      Set_Template_Dir (Path => "./data");
+      T := Load (Filename => "template");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Replace (Template => T,
+                  Pattern  => "NONEXISTENT_PATTERN",
+                  Content  => "foobar");
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when Pattern_Not_Found => null;
+      end;
+
+      Replace (Template => T,
+               Pattern  => "PATTERN1",
+               Content  => "processed");
+      Replace (Template => T,
+               Pattern  => "PATTERN2",
+               Content  => "file");
+      Write (Template => T,
+             Filename => Out_File);
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/template.ref",
+               Filename2 => Out_File),
+              Message   => "Template mismatch");
+
+      Ada.Directories.Delete_File (Name => Out_File);
 --  begin read only
    end Test_Replace;
 --  end read only
@@ -126,11 +160,8 @@ package body Spec.Templates.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Tested in Replace");
 --  begin read only
    end Test_Write;
 --  end read only

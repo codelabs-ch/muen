@@ -20,12 +20,48 @@ package body Bzpatch.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      ----------------------------------------------------------------------
+
+      procedure Patch_Bzimage
+      is
+      begin
+         Patch (Input  => "data/bzimage.32",
+                Output => "obj/bzimage.32.patched");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/bzimage.32.ref",
+                  Filename2 => "obj/bzimage.32.patched"),
+                 Message   => "Mismatch in 32-bit image");
+         Ada.Directories.Delete_File (Name => "obj/bzimage.32.patched");
+
+         Patch (Input  => "data/bzimage.64",
+                Output => "obj/bzimage.64.patched");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/bzimage.64.ref",
+                  Filename2 => "obj/bzimage.64.patched"),
+                 Message   => "Mismatch in 64-bit image");
+         Ada.Directories.Delete_File (Name => "obj/bzimage.64.patched");
+      end Patch_Bzimage;
+
+      ----------------------------------------------------------------------
+
+      procedure Invalid_Bzimage
+      is
+      begin
+         Patch (Input  => "data/invalid_bzimage",
+                Output => "obj/foobar");
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Patch_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to find entry point in bzImage "
+                    & "'data/invalid_bzimage'",
+                    Message   => "Exception mismatch");
+      end Invalid_Bzimage;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Patch_Bzimage;
+      Invalid_Bzimage;
 --  begin read only
    end Test_Patch;
 --  end read only

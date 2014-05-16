@@ -17,6 +17,7 @@
 --
 
 with Ada.Directories;
+with Ada.Strings.Unbounded;
 
 package Pack.Command_Line
 is

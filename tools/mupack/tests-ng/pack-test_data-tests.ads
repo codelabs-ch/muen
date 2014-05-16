@@ -10,13 +10,7 @@ package Pack.Test_Data.Tests is
    with null record;
 
    procedure Test_Run_e5a2dd (Gnattest_T : in out Test);
-   --  pack.ads:25:4:Run
-
-   procedure Test_U_0031f0 (Gnattest_T : in out Test);
-   --  pack.ads:34:4:U
-
-   procedure Test_S_e42122 (Gnattest_T : in out Test);
-   --  pack.ads:39:4:S
+   --  pack.ads:26:4:Run
 
 end Pack.Test_Data.Tests;
 --  end read only

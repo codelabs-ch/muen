@@ -19,12 +19,14 @@
 package body Pack.Command_Line.Test
 is
 
+   use Ada.Strings.Unbounded;
+
    -------------------------------------------------------------------------
 
    procedure Set_Input_Dir (Path : String)
    is
    begin
-      Input_Dir := U (Path);
+      Input_Dir := To_Unbounded_String (Path);
    end Set_Input_Dir;
 
    -------------------------------------------------------------------------
@@ -32,7 +34,7 @@ is
    procedure Set_Output_Dir (Path : String)
    is
    begin
-      Output_Dir := U (Path);
+      Output_Dir := To_Unbounded_String (Path);
    end Set_Output_Dir;
 
    -------------------------------------------------------------------------
@@ -40,7 +42,7 @@ is
    procedure Set_Policy (Path : String)
    is
    begin
-      Policy := U (Path);
+      Policy := To_Unbounded_String (Path);
    end Set_Policy;
 
 end Pack.Command_Line.Test;

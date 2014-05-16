@@ -26,6 +26,8 @@ with GNAT.Command_Line;
 package body Pack.Command_Line
 is
 
+   use Ada.Strings.Unbounded;
+
    type Config_Type is new
      Ada.Finalization.Limited_Controlled with record
       Data : GNAT.Command_Line.Command_Line_Configuration;
@@ -47,7 +49,7 @@ is
    function Get_Input_Dir return String
    is
    begin
-      return S (Input_Dir);
+      return To_String (Input_Dir);
    end Get_Input_Dir;
 
    -------------------------------------------------------------------------
@@ -55,7 +57,7 @@ is
    function Get_Output_Dir return String
    is
    begin
-      return S (Output_Dir);
+      return To_String (Output_Dir);
    end Get_Output_Dir;
 
    -------------------------------------------------------------------------
@@ -63,15 +65,13 @@ is
    function Get_Policy return String
    is
    begin
-      return S (Policy);
+      return To_String (Policy);
    end Get_Policy;
 
    -------------------------------------------------------------------------
 
    procedure Init (Description : String)
    is
-      use Ada.Strings.Unbounded;
-
       Cmdline         : Config_Type;
       Out_Dir, In_Dir : aliased GNAT.Strings.String_Access;
    begin
@@ -101,10 +101,10 @@ is
       begin
          GNAT.Command_Line.Getopt (Config => Cmdline.Data);
          if Out_Dir'Length /= 0 then
-            Output_Dir := U (Out_Dir.all);
+            Output_Dir := To_Unbounded_String (Out_Dir.all);
          end if;
          if In_Dir'Length /= 0 then
-            Input_Dir := U (In_Dir.all);
+            Input_Dir := To_Unbounded_String (In_Dir.all);
          end if;
          GNAT.Strings.Free (X => Out_Dir);
          GNAT.Strings.Free (X => In_Dir);
@@ -118,7 +118,7 @@ is
             GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));
       end;
 
-      Policy := U (GNAT.Command_Line.Get_Argument);
+      Policy := To_Unbounded_String (GNAT.Command_Line.Get_Argument);
       if Policy = Null_Unbounded_String then
          GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
          GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));

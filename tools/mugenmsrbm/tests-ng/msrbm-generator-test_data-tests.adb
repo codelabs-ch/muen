@@ -20,12 +20,26 @@ package body Msrbm.Generator.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
+
+      Tau0_Msrbm : constant String := "obj/tau0_msrbm";
+      Sub1_Msrbm : constant String := "obj/subject1_msrbm";
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Write (Output_Dir => "obj",
+             Policy     => Policy);
 
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/tau0_msrbm.ref",
+               Filename2 => Tau0_Msrbm),
+              Message   => "Tau0 MSR bitmap mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/subject1_msrbm.ref",
+               Filename2 => Sub1_Msrbm),
+              Message   => "Subject 1 MSR bitmap mismatch");
 --  begin read only
    end Test_Write;
 --  end read only

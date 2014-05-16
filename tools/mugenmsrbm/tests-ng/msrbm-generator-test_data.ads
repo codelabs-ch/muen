@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with Test_Utils;
+
 package Msrbm.Generator.Test_Data is
 
 --  begin read only

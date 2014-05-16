@@ -185,12 +185,13 @@ package body Pack.Image.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Img : Image_Type (End_Address => 12);
    begin
+      Write (Image    => Img,
+             Filename => "file");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+   exception
+      when Write_Error => null;
 --  begin read only
    end Test_Write;
 --  end read only

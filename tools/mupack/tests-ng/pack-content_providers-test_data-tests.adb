@@ -92,12 +92,59 @@ package body Pack.Content_Providers.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
+      Data   : Param_Type (9);
    begin
+      Set_Input_Directory (Dir => "data");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "filled",
+         Address     => "16#0000#",
+         Size        => "16#000a#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "subject");
 
+      declare
+         Fill   : DOM.Core.Node;
+         Memory : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Policy.Doc,
+            XPath => "/system/memory/memory[@name='filled']");
+      begin
+         Fill := DOM.Core.Documents.Create_Element
+           (Doc      => Policy.Doc,
+            Tag_Name => "fill");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Fill,
+            Name  => "pattern",
+            Value => "16#42#");
+         Muxml.Utils.Append_Child
+           (Node      => Memory,
+            New_Child => Fill);
+      end;
+
+      Data.XML_Doc := Policy.Doc;
+      Process_Fills (Data => Data);
+
+      Image.Write (Image    => Data.Image,
+                   Filename => "obj/process_fills.img");
+      Manifest.Write (Manifest => Data.Manifest,
+                      Filename => "obj/process_fills.manifest");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "obj/process_fills.img",
+               Filename2 => "data/process_fills.img"),
+              Message   => "Image file differs");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "obj/process_fills.manifest",
+               Filename2 => "data/process_fills.manifest"),
+              Message   => "Manifest file differs");
+
+      Ada.Directories.Delete_File (Name => "obj/process_fills.img");
+      Ada.Directories.Delete_File (Name => "obj/process_fills.manifest");
 --  begin read only
    end Test_Process_Fills;
 --  end read only

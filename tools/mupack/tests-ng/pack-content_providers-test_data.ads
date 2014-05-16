@@ -7,7 +7,10 @@ with AUnit.Test_Fixtures;
 
 with Ada.Directories;
 
-with Muxml;
+with DOM.Core.Elements;
+with DOM.Core.Documents;
+
+with Muxml.Utils;
 
 with Mutools.XML_Utils;
 

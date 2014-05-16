@@ -20,12 +20,49 @@ package body Pack.Image.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      ----------------------------------------------------------------------
+
+      procedure Add_Buffer_To_Image
+      is
+         Img   : Image_Type (End_Address => 16#1d#);
+         Fname : constant String := "obj/add_buffer.img";
+      begin
+         Add_Buffer (Image   => Img,
+                     Buffer  => (1 .. 10 => 16#41#),
+                     Address => 0);
+         Add_Buffer (Image   => Img,
+                     Buffer  => (1 .. 10 => 16#42#),
+                     Address => 10);
+         Add_Buffer (Image   => Img,
+                     Buffer  => (1 .. 10 => 16#43#),
+                     Address => 20);
+         Write (Image    => Img,
+                Filename => Fname);
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Fname,
+                  Filename2 => "data/add_data.img"),
+                 Message   => "Image mismatch");
+         Ada.Directories.Delete_File (Name => Fname);
+      end Add_Buffer_To_Image;
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Buffer_To_Image_Small
+      is
+         Img : Image.Image_Type (End_Address => 16#10#);
+      begin
+         Add_Buffer (Image   => Img,
+                     Buffer  => (1 .. 3 => 0),
+                     Address => 16#10#);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when Image.Image_Error => null;
+      end Add_Buffer_To_Image_Small;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Add_Buffer_To_Image;
+      Add_Buffer_To_Image_Small;
 --  begin read only
    end Test_Add_Buffer;
 --  end read only

@@ -30,6 +30,9 @@ is
    --  Register all pre-checks.
    procedure Register_All;
 
+   --  Set input directory.
+   procedure Set_Input_Directory (Dir : String);
+
    --  Run registered pre-checks.
    procedure Run (Data : Muxml.XML_Data_Type);
 

@@ -60,6 +60,7 @@ is
                    Kind => Muxml.Format_B,
                    File => Policy_File);
 
+      Pre_Checks.Set_Input_Directory (Dir => Input_Dir);
       Pre_Checks.Run (Data => Policy);
 
       Pack_Image :

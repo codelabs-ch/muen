@@ -21,7 +21,6 @@ with Ada.Exceptions;
 with Muxml;
 with Mutools.XML_Utils;
 
-with Pack.Command_Line.Test;
 with Pack.Pre_Checks;
 
 package body Pre_Check_Tests
@@ -36,9 +35,7 @@ is
    is
       Policy : Muxml.XML_Data_Type;
    begin
-      Command_Line.Test.Set_Input_Dir (Path => "data");
-      Command_Line.Test.Set_Output_Dir (Path => "obj");
-      Command_Line.Test.Set_Policy (Path => "data/test_policy.xml");
+      Pre_Checks.Set_Input_Directory (Dir => "data");
 
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
@@ -90,9 +87,7 @@ is
    is
       Policy : Muxml.XML_Data_Type;
    begin
-      Command_Line.Test.Set_Input_Dir (Path => "data");
-      Command_Line.Test.Set_Output_Dir (Path => "obj");
-      Command_Line.Test.Set_Policy (Path => "data/test_policy.xml");
+      Pre_Checks.Set_Input_Directory (Dir => "data");
 
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
@@ -145,9 +140,7 @@ is
    is
       Policy : Muxml.XML_Data_Type;
    begin
-      Command_Line.Test.Set_Input_Dir (Path => "data");
-      Command_Line.Test.Set_Output_Dir (Path => "obj");
-      Command_Line.Test.Set_Policy (Path => "data/test_policy.xml");
+      Pre_Checks.Set_Input_Directory (Dir => "data");
 
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,

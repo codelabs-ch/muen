@@ -18,11 +18,14 @@ package Pack.Pre_Checks.Test_Data.Tests is
    procedure Test_Register_All_3f90ea (Gnattest_T : in out Test);
    --  pack-pre_checks.ads:31:4:Register_All
 
+   procedure Test_Set_Input_Directory_400f2c (Gnattest_T : in out Test);
+   --  pack-pre_checks.ads:34:4:Set_Input_Directory
+
    procedure Test_Run_9b6b0d (Gnattest_T : in out Test);
-   --  pack-pre_checks.ads:34:4:Run
+   --  pack-pre_checks.ads:37:4:Run
 
    procedure Test_Get_Count_1fbd7c (Gnattest_T : in out Test);
-   --  pack-pre_checks.ads:37:4:Get_Count
+   --  pack-pre_checks.ads:40:4:Get_Count
 
 end Pack.Pre_Checks.Test_Data.Tests;
 --  end read only

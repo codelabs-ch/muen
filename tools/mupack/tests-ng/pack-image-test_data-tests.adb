@@ -78,12 +78,50 @@ package body Pack.Image.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      ----------------------------------------------------------------------
+
+      procedure Add_File_To_Image
+      is
+         Img   : Image_Type (End_Address => 16#2d#);
+         Fname : constant String := "obj/add_file.img";
+      begin
+         Add_File (Image   => Img,
+                   Path    => "data/pattern",
+                   Address => 16#0010#,
+                   Size    => 16#0020#,
+                   Offset  => 0);
+         Write (Image    => Img,
+                Filename => Fname);
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Fname,
+                  Filename2 => "data/add_data.img"),
+                 Message   => "Image mismatch");
+         Ada.Directories.Delete_File (Name => Fname);
+      end Add_File_To_Image;
+
+      ----------------------------------------------------------------------
+
+      procedure Add_File_To_Image_Offset
+      is
+         Img   : Image_Type (End_Address => 16#a#);
+         Fname : constant String := "obj/add_file_offset.img";
+      begin
+         Add_File (Image   => Img,
+                   Path    => "data/pattern",
+                   Address => 0,
+                   Size    => 16#0a#,
+                   Offset  => 16#02#);
+         Write (Image    => Img,
+                Filename => Fname);
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Fname,
+                  Filename2 => "data/add_file_offset.img"),
+                 Message   => "Image mismatch");
+         Ada.Directories.Delete_File (Name => Fname);
+      end Add_File_To_Image_Offset;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Add_File_To_Image;
+      Add_File_To_Image_Offset;
 --  begin read only
    end Test_Add_File;
 --  end read only

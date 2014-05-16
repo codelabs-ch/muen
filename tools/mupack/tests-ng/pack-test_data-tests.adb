@@ -20,12 +20,49 @@ package body Pack.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      ----------------------------------------------------------------------
+
+      procedure Execute_Run
+      is
+      begin
+         Run (Policy_File => "data/execute_run.xml",
+              Input_Dir   => "data",
+              Output_Dir  => "obj");
+
+         Assert (Condition => Ada.Directories.Exists (Name => "obj/muen.img"),
+                 Message   => "System image not found");
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "obj/muen.img",
+                  Filename2 => "data/execute_run.img"),
+                 Message   => "Image file differs");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "obj/muen.img.manifest",
+                  Filename2 => "data/execute_run.manifest"),
+                 Message   => "Manifest file differs");
+
+         Ada.Directories.Delete_File (Name => "obj/muen.img");
+         Ada.Directories.Delete_File (Name => "obj/muen.img.manifest");
+      end Execute_Run;
+
+      ----------------------------------------------------------------------
+
+      procedure Execute_Run_No_Content
+      is
+      begin
+         Run (Policy_File => "data/test_policy.xml",
+              Input_Dir   => "data",
+              Output_Dir  => "obj");
+
+      exception
+         when E : Pack_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Image size is zero, no content to pack",
+                    Message   => "Exception mismatch");
+      end Execute_Run_No_Content;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Execute_Run;
+      Execute_Run_No_Content;
 --  begin read only
    end Test_Run;
 --  end read only

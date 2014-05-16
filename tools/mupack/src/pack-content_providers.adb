@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Strings.Unbounded;
-
 with Interfaces;
 
 with DOM.Core.Nodes;
@@ -37,8 +35,6 @@ is
    use Ada.Strings.Unbounded;
 
    package Content_Procs is new Mutools.Processors (Param_Type => Param_Type);
-
-   Input_Dir : Unbounded_String;
 
    -------------------------------------------------------------------------
 

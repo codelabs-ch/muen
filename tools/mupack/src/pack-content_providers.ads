@@ -17,6 +17,7 @@
 --
 
 with Ada.Streams;
+with Ada.Strings.Unbounded;
 
 with DOM.Core;
 
@@ -49,5 +50,9 @@ is
 
    --  Return number of registered content providers.
    function Get_Count return Natural;
+
+private
+
+   Input_Dir : Ada.Strings.Unbounded.Unbounded_String;
 
 end Pack.Content_Providers;

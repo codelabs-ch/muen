@@ -137,12 +137,39 @@ package body Pack.Image.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Ada.Streams.Stream_Element_Array;
+
+      Img        : Image_Type (End_Address => 16#2d#);
+      Ref_Buffer : constant Ada.Streams.Stream_Element_Array (1 .. 4)
+        := (others => 22);
    begin
+      Add_Buffer (Image   => Img,
+                  Buffer  => Ref_Buffer,
+                  Address => 16#10#);
+      Assert (Condition => Get_Buffer
+              (Image   => Img,
+               Address => 16#10#,
+               Size    => 4) = Ref_Buffer,
+              Message   => "Buffer mismatch");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         declare
+            Unreferenced : Ada.Streams.Stream_Element_Array
+              := Get_Buffer (Image   => Img,
+                             Address => 16#2d#,
+                             Size    => 12);
+         begin
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+         end;
 
+      exception
+         when E : Image.Image_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Unable to return image data at address 16#002d# with"
+                    & " size 16#000c# (image end address is 16#002d#)",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Get_Buffer;
 --  end read only

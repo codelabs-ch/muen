@@ -5,6 +5,7 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Exceptions;
 with Ada.Directories;
 
 with Test_Utils;

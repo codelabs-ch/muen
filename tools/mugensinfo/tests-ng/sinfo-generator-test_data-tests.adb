@@ -20,12 +20,22 @@ package body Sinfo.Generator.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy        : Muxml.XML_Data_Type;
+      Subject_Sinfo : constant String := "obj/lnx_sinfo";
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Write (Output_Dir => "obj",
+             Policy     => Policy);
 
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/lnx_sinfo",
+               Filename2 => Subject_Sinfo),
+              Message   => "Subject info file mismatch");
+
+      Ada.Directories.Delete_File (Name => Subject_Sinfo);
 --  begin read only
    end Test_Write;
 --  end read only

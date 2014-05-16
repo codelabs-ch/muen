@@ -21,6 +21,8 @@ with Ada.Strings.Unbounded;
 
 with DOM.Core;
 
+with Mutools.Processors;
+
 with Pack.Image;
 with Pack.Manifest;
 
@@ -51,8 +53,13 @@ is
    --  Return number of registered content providers.
    function Get_Count return Natural;
 
+   --  Clear registered providers;
+   procedure Clear;
+
 private
 
    Input_Dir : Ada.Strings.Unbounded.Unbounded_String;
+
+   package Content_Procs is new Mutools.Processors (Param_Type => Param_Type);
 
 end Pack.Content_Providers;

@@ -25,16 +25,19 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Mutools.Utils;
-with Mutools.Processors;
-
-pragma Elaborate_All (Mutools.Processors);
 
 package body Pack.Content_Providers
 is
 
    use Ada.Strings.Unbounded;
 
-   package Content_Procs is new Mutools.Processors (Param_Type => Param_Type);
+   -------------------------------------------------------------------------
+
+   procedure Clear
+   is
+   begin
+      Content_Procs.Clear;
+   end Clear;
 
    -------------------------------------------------------------------------
 

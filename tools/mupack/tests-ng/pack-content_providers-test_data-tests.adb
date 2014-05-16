@@ -74,11 +74,32 @@ package body Pack.Content_Providers.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Set_Input_Directory (Gnattest_T : in out Test);
+   procedure Test_Set_Input_Directory_400f2c (Gnattest_T : in out Test) renames Test_Set_Input_Directory;
+--  id:2.2/400f2c005681d9c3/Set_Input_Directory/1/0/
+   procedure Test_Set_Input_Directory (Gnattest_T : in out Test) is
+   --  pack-content_providers.ads:45:4:Set_Input_Directory
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Set_Input_Directory;
+--  end read only
+
+
+--  begin read only
    procedure Test_Run (Gnattest_T : in out Test);
    procedure Test_Run_ca760b (Gnattest_T : in out Test) renames Test_Run;
 --  id:2.2/ca760b43164ae370/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  pack-content_providers.ads:45:4:Run
+   --  pack-content_providers.ads:48:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -99,7 +120,7 @@ package body Pack.Content_Providers.Test_Data.Tests is
    procedure Test_Get_Count_1fbd7c (Gnattest_T : in out Test) renames Test_Get_Count;
 --  id:2.2/1fbd7c784b3d55c2/Get_Count/1/0/
    procedure Test_Get_Count (Gnattest_T : in out Test) is
-   --  pack-content_providers.ads:48:4:Get_Count
+   --  pack-content_providers.ads:51:4:Get_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

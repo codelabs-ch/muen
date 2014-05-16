@@ -19,7 +19,7 @@
 with Ada.Directories;
 with Ada.Exceptions;
 
-with Pack.Command_Line.Test;
+with Pack;
 
 with Test_Utils;
 
@@ -34,8 +34,6 @@ is
    procedure Execute_Run
    is
    begin
-      Command_Line.Test.Set_Input_Dir (Path => "data");
-
       Pack.Run (Policy_File => "data/execute_run.xml",
                 Input_Dir   => "data",
                 Output_Dir  => "obj");

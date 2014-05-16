@@ -41,6 +41,9 @@ is
    --  Register all content providers.
    procedure Register_All;
 
+   --  Set input directory.
+   procedure Set_Input_Directory (Dir : String);
+
    --  Run registered content providers.
    procedure Run (Data : in out Param_Type);
 

@@ -82,6 +82,7 @@ is
          begin
             Data.XML_Doc := Policy.Doc;
 
+            Content_Providers.Set_Input_Directory (Dir => Input_Dir);
             Content_Providers.Run (Data => Data);
 
             Post_Checks.Run (Data => Data);

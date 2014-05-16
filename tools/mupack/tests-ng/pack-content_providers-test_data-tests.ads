@@ -18,11 +18,14 @@ package Pack.Content_Providers.Test_Data.Tests is
    procedure Test_Register_All_3f90ea (Gnattest_T : in out Test);
    --  pack-content_providers.ads:42:4:Register_All
 
+   procedure Test_Set_Input_Directory_400f2c (Gnattest_T : in out Test);
+   --  pack-content_providers.ads:45:4:Set_Input_Directory
+
    procedure Test_Run_ca760b (Gnattest_T : in out Test);
-   --  pack-content_providers.ads:45:4:Run
+   --  pack-content_providers.ads:48:4:Run
 
    procedure Test_Get_Count_1fbd7c (Gnattest_T : in out Test);
-   --  pack-content_providers.ads:48:4:Get_Count
+   --  pack-content_providers.ads:51:4:Get_Count
 
 end Pack.Content_Providers.Test_Data.Tests;
 --  end read only

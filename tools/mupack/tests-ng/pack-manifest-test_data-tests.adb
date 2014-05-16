@@ -21,11 +21,8 @@ package body Pack.Manifest.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => True,
+              Message   => "Tested in Write");
 --  begin read only
    end Test_Add_Entry;
 --  end read only
@@ -41,12 +38,33 @@ package body Pack.Manifest.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Fname : constant String := "obj/add_entries.manifest";
+      Mf    : Manifest_Type;
    begin
+      Add_Entry (Manifest => Mf,
+                 Mem_Name => "some_name",
+                 Mem_Type => "some_format",
+                 Content  => "testfile",
+                 Address  => 16#100000#,
+                 Size     => 16#1000#,
+                 Offset   => 0);
+      Add_Entry (Manifest => Mf,
+                 Mem_Name => "linux|acpi_rsdp",
+                 Mem_Type => "acpi_rsdp",
+                 Content  => "data/sections.ref",
+                 Address  => 16#101000#,
+                 Size     => 16#13000#,
+                 Offset   => 0);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Write (Manifest => Mf,
+             Filename => Fname);
 
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Fname,
+               Filename2 => "data/add_entries.manifest"),
+              Message   => "Manifest mismatch");
+
+      Ada.Directories.Delete_File (Name => Fname);
 --  begin read only
    end Test_Write;
 --  end read only

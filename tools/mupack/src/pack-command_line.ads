@@ -18,6 +18,8 @@
 
 with Ada.Strings.Unbounded;
 
+with GNAT.Command_Line;
+
 package Pack.Command_Line
 is
 
@@ -36,5 +38,8 @@ is
 private
 
    Policy, Output_Dir, Input_Dir : Ada.Strings.Unbounded.Unbounded_String;
+
+   Parser : GNAT.Command_Line.Opt_Parser
+     := GNAT.Command_Line.Command_Line_Parser;
 
 end Pack.Command_Line;

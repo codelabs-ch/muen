@@ -21,7 +21,6 @@ with Ada.Finalization;
 
 with GNAT.OS_Lib;
 with GNAT.Strings;
-with GNAT.Command_Line;
 
 package body Pack.Command_Line
 is
@@ -98,7 +97,9 @@ is
          Help        => "Display usage and exit");
 
       begin
-         GNAT.Command_Line.Getopt (Config => Cmdline.Data);
+         GNAT.Command_Line.Getopt
+           (Config => Cmdline.Data,
+            Parser => Parser);
          if Out_Dir'Length /= 0 then
             Output_Dir := To_Unbounded_String (Out_Dir.all);
          end if;
@@ -117,7 +118,9 @@ is
             GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));
       end;
 
-      Policy := To_Unbounded_String (GNAT.Command_Line.Get_Argument);
+      Policy := To_Unbounded_String
+        (GNAT.Command_Line.Get_Argument
+           (Parser => Parser));
       if Policy = Null_Unbounded_String
         or else Input_Dir = Null_Unbounded_String
         or else Output_Dir = Null_Unbounded_String

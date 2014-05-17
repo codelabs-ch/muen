@@ -5,6 +5,10 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Exceptions;
+
+with Mutools.XML_Utils;
+
 package Pack.Pre_Checks.Test_Data is
 
 --  begin read only

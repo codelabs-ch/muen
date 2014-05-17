@@ -20,12 +20,53 @@ package body Pack.Pre_Checks.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
    begin
+      Set_Input_Directory (Dir => "data");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
+      --  Must not raise an exception.
+
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "mboot",
+         Address     => "16#0010_0000#",
+         Size        => "16#1000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "system",
+         File_Name   => "mboot",
+         File_Offset => "none");
+      Files_Exist (Data => Policy);
+
+      --  Add entry with invalid filename.
+
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Policy,
+         Name        => "linux|acpi_rsdp",
+         Address     => "16#0010_0000#",
+         Size        => "16#1000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "subject_acpi_rsdp",
+         File_Name   => "nonexistent",
+         File_Offset => "none");
+
+      begin
+         Files_Exist (Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Check_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "File 'data/nonexistent' referenced by physical memory "
+                    & "region 'linux|acpi_rsdp' not found",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Files_Exist;
 --  end read only
@@ -41,12 +82,83 @@ package body Pack.Pre_Checks.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      ----------------------------------------------------------------------
+
+      procedure File_Larger_Than_Memory
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Set_Input_Directory (Dir => "data");
+
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         Mutools.XML_Utils.Add_Memory_Region
+           (Policy      => Policy,
+            Name        => "linux|acpi_rsdp",
+            Address     => "16#0010_0000#",
+            Size        => "16#0000#",
+            Caching     => "WB",
+            Alignment   => "16#1000#",
+            Memory_Type => "subject_acpi_rsdp",
+            File_Name   => "pattern",
+            File_Offset => "none");
+
+         begin
+            Files_Size (Data => Policy);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+
+         exception
+            when E : Check_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "File 'data/pattern' too large for physical memory"
+                       & " region 'linux|acpi_rsdp': 16#001e# > 16#0000#",
+                       Message   => "Exception mismatch");
+         end;
+      end File_Larger_Than_Memory;
+
+      ----------------------------------------------------------------------
+
+      procedure Offset_Larger_Than_File
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Set_Input_Directory (Dir => "data");
+
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         Mutools.XML_Utils.Add_Memory_Region
+           (Policy      => Policy,
+            Name        => "linux|acpi_rsdp",
+            Address     => "16#0010_0000#",
+            Size        => "16#0000#",
+            Caching     => "WB",
+            Alignment   => "16#1000#",
+            Memory_Type => "subject_acpi_rsdp",
+            File_Name   => "pattern",
+            File_Offset => "16#ffff#");
+
+         begin
+            Files_Size (Data => Policy);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+
+         exception
+            when E : Check_Error =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Offset of file 'data/pattern' referenced by "
+                       & "physical memory region 'linux|acpi_rsdp' larger than "
+                       & "file size: 16#ffff# > 16#001e#",
+                       Message   => "Exception mismatch");
+         end;
+      end Offset_Larger_Than_File;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      File_Larger_Than_Memory;
+      Offset_Larger_Than_File;
 --  begin read only
    end Test_Files_Size;
 --  end read only

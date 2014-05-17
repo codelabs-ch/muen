@@ -27,19 +27,21 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mutools.Utils;
-with Mutools.Immutable_Processors;
-
-pragma Elaborate_All (Mutools.Immutable_Processors);
 
 package body Pack.Pre_Checks
 is
 
    use Ada.Strings.Unbounded;
 
-   package Check_Procs is new
-     Mutools.Immutable_Processors (Param_Type => Muxml.XML_Data_Type);
-
    Input_Dir : Unbounded_String;
+
+   -------------------------------------------------------------------------
+
+   procedure Clear
+   is
+   begin
+      Check_Procs.Clear;
+   end Clear;
 
    -------------------------------------------------------------------------
 

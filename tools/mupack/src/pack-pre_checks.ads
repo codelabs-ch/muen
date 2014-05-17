@@ -17,6 +17,7 @@
 --
 
 with Muxml;
+with Mutools.Immutable_Processors;
 
 package Pack.Pre_Checks
 is
@@ -39,6 +40,14 @@ is
    --  Return number of registered pre-checks.
    function Get_Count return Natural;
 
+   --  Clear registered pre-checks.
+   procedure Clear;
+
    Check_Error : exception;
+
+private
+
+   package Check_Procs is new
+     Mutools.Immutable_Processors (Param_Type => Muxml.XML_Data_Type);
 
 end Pack.Pre_Checks;

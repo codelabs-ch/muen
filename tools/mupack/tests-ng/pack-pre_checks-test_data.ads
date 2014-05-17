@@ -19,4 +19,8 @@ package Pack.Pre_Checks.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
+   Test_Counter : Natural := 0;
+
+   procedure Inc_Counter (Data : Muxml.XML_Data_Type);
+
 end Pack.Pre_Checks.Test_Data;

@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with GNAT.OS_Lib;
+
 package Pack.Command_Line.Test_Data is
 
 --  begin read only

@@ -17,7 +17,6 @@
 --
 
 with Ada.Directories;
-with Ada.Strings.Unbounded;
 
 with Interfaces;
 
@@ -32,8 +31,6 @@ package body Pack.Pre_Checks
 is
 
    use Ada.Strings.Unbounded;
-
-   Input_Dir : Unbounded_String;
 
    -------------------------------------------------------------------------
 

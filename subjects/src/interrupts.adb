@@ -61,6 +61,9 @@ is
    --  consecutive entries in the GDT.
    procedure Get_TSS_Descriptor (Low, High : out SK.Word64);
 
+   --  Setup TSS with an RSP entry and load it into TR.
+   procedure Load_TSS;
+
    -------------------------------------------------------------------------
 
    procedure Get_TSS_Descriptor (Low, High : out SK.Word64)
@@ -88,6 +91,7 @@ is
                                 IST  => 0);
       Load_GDT;
       Load_IDT;
+      Load_TSS;
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -130,5 +134,21 @@ is
            (System.Storage_Elements.To_Integer
               (Value => IDT_Descriptor'Address)));
    end Load_IDT;
+
+   -------------------------------------------------------------------------
+
+   procedure Load_TSS
+   is
+      use type SK.Word16;
+   begin
+      SK.TSS.Set_IST_Entry
+        (TSS_Data => TSS,
+         Index    => 1,
+         Address  => 16#5000#);
+
+      --  TSS is in GDT entry 3.
+
+      SK.CPU.Ltr (Address => 3 * 8);
+   end Load_TSS;
 
 end Interrupts;

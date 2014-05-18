@@ -35,8 +35,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Setup_IDT
-     (ISRs :     ISR_Array;
-      IDT  : in out IDT_Type)
+     (ISRs :        ISR_Array;
+      IDT  : in out IDT_Type;
+      IST  :        Natural)
    is
    begin
       for I in Skp.Vector_Range range ISRs'Range loop
@@ -44,7 +45,7 @@ is
            (Offset_15_00     => SK.Word16
               (ISRs (I) and 16#0000_0000_0000_ffff#),
             Segment_Selector => 16#0008#,
-            Flags            => 16#8e00#,
+            Flags            => 16#8e00# + SK.Word16 (IST),
             Offset_31_16     => SK.Word16
               ((ISRs (I) and 16#0000_0000_ffff_0000#) / 2 ** 16),
             Offset_63_32     => SK.Word32

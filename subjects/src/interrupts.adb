@@ -40,7 +40,7 @@ is
    --  IDT descriptor, loaded into IDTR.
    IDT_Descriptor : SK.Descriptors.Pseudo_Descriptor_Type;
 
-   type GDT_Type is array (1 .. 3) of SK.Word64;
+   type GDT_Type is array (1 .. 5) of SK.Word64;
    GDT : GDT_Type;
    for GDT'Alignment use 8;
 
@@ -94,10 +94,18 @@ is
 
    procedure Load_GDT
    is
+      use type SK.Word64;
+
+      TSS_Desc_Low, TSS_Desc_High : SK.Word64;
    begin
+      Get_TSS_Descriptor (Low  => TSS_Desc_Low,
+                          High => TSS_Desc_High);
+
       GDT := GDT_Type'(1 => 0,
                        2 => 16#20980000000000#,
-                       3 => 16#20930000000000#);
+                       3 => 16#20930000000000#,
+                       4 => TSS_Desc_Low,
+                       5 => TSS_Desc_High);
       GDT_Descriptor := SK.Descriptors.Create_Descriptor
         (Table_Address => SK.Word64
            (System.Storage_Elements.To_Integer (Value => GDT'Address)),

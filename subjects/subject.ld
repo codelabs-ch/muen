@@ -24,12 +24,12 @@ SECTIONS
 
 	.bss 0x1000 :
 	{
-		. += 0x2000;
+		. += 0x4000;
 		stack = .;
 		*(.bss)
 	}
 
-	.text 0x4000 :
+	.text 0x6000 :
 	{
 		stub.o(.stub)
 		*(.text)

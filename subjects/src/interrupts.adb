@@ -22,6 +22,7 @@ with System.Storage_Elements;
 with Skp;
 
 with SK.CPU;
+with SK.TSS;
 with SK.Descriptors;
 
 package body Interrupts
@@ -46,11 +47,36 @@ is
    --  GDT descriptor, loaded into GDTR.
    GDT_Descriptor : SK.Descriptors.Pseudo_Descriptor_Type;
 
+   --  Task-State Segment needed for stack switching.
+   TSS : SK.TSS.TSS_Type := SK.TSS.Null_TSS;
+
    --  Setup GDT with two entries (code & stack) and load it into GDTR.
    procedure Load_GDT;
 
    --  Load IDT into IDTR.
    procedure Load_IDT;
+
+   --  Returns a TSS Descriptor split in two 64 bit words as specified by Intel
+   --  SDM Vol. 3A, section 7.2.3. The high and low values can be used as
+   --  consecutive entries in the GDT.
+   procedure Get_TSS_Descriptor (Low, High : out SK.Word64);
+
+   -------------------------------------------------------------------------
+
+   procedure Get_TSS_Descriptor (Low, High : out SK.Word64)
+   is
+      use type SK.Word64;
+
+      TSS_Address : constant SK.Word64 := SK.Word64
+        (System.Storage_Elements.To_Integer (Value => TSS'Address));
+      Limit       : SK.Word64;
+   begin
+      Limit := TSS'Size / 8 - 1;
+      Low   := 16#0020_8900_0000_0000# or (Limit * 2 ** 47);
+      Low   := Low or (TSS_Address and 16#00ff_ffff#) * 2 ** 16;
+      Low   := Low or (TSS_Address and 16#ff00_0000#) * 2 ** 55;
+      High  := TSS_Address / 2 ** 32;
+   end Get_TSS_Descriptor;
 
    -------------------------------------------------------------------------
 

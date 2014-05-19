@@ -88,7 +88,7 @@ is
    begin
       SK.Descriptors.Setup_IDT (ISRs => ISRs,
                                 IDT  => IDT,
-                                IST  => 0);
+                                IST  => 1);
       Load_GDT;
       Load_IDT;
       Load_TSS;

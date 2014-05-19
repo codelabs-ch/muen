@@ -87,7 +87,8 @@ is
    is
    begin
       Descriptors.Setup_IDT (ISRs => ISR_List,
-                             IDT  => IDT);
+                             IDT  => IDT,
+                             IST  => 0);
    end Init;
 
    -------------------------------------------------------------------------

@@ -50,13 +50,17 @@ is
    --  Interrupt descriptor table, see Intel SDM Vol. 3A, chapter 6.10.
    type IDT_Type is array (Skp.Vector_Range range <>) of Gate_Type;
 
-   --  Setup IDT using the given ISR addresses.
+   --  Setup IDT using the given ISR addresses and IST index. The IST
+   --  parameter specifies the index of the TSS RSP entry containing the stack
+   --  pointer to use when switching stacks. Set IST to 0 to specify no stack
+   --  switching.
    procedure Setup_IDT
      (ISRs :        ISR_Array;
-      IDT  : in out IDT_Type)
+      IDT  : in out IDT_Type;
+      IST  :        Natural)
    with
-      Depends => (IDT =>+ ISRs),
-      Pre     => ISRs'First = IDT'First and ISRs'Last = IDT'Last;
+      Depends => (IDT =>+ (ISRs, IST)),
+      Pre     => ISRs'First = IDT'First and ISRs'Last = IDT'Last and IST <= 7;
 
    --  Create pseudo-descriptor from given descriptor table address and length.
    function Create_Descriptor

@@ -60,6 +60,13 @@ is
       Depends => (X86_64.State =>+ Address),
       Inline_Always;
 
+   --  Load Task Register (TR).
+   procedure Ltr (Address : SK.Word16)
+   with
+     Global  => (In_Out => X86_64.State),
+     Depends => (X86_64.State =>+ Address),
+     Inline_Always;
+
    --  Panic.
    procedure Panic
    with

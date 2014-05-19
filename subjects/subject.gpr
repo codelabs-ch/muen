@@ -25,8 +25,6 @@ project Subject is
 
    package Builder is
       for Global_Configuration_Pragmas use "../config/restrictions-nospark.adc";
-      for Global_Compilation_Switches ("Asm") use ("-mno-red-zone");
-      for Global_Compilation_Switches ("Ada") use ("-mno-red-zone");
    end Builder;
 
    package Compiler is

@@ -117,6 +117,9 @@
 			<device logical="log" physical="debugconsole">
 				<ioPort logical="ports" physical="serial"/>
 			</device>
+			<device logical="ioapic" physical="ioapic">
+				<memory logical="mmio" physical="mmio" writable="true" executable="false" virtualAddress="16#001f_c000#"/>
+			</device>
 		</devices>
 	</kernel>
 

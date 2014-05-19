@@ -18,15 +18,12 @@
 
 with System;
 
+with Skp.Kernel;
+
 package body SK.IO_Apic
 with
    Refined_State => (State => (Window, Register_Select))
 is
-
-   --  I/O APIC at physical address 0xfec00000 is mapped at virtual address
-   --  0x1fc000.
-
-   IO_Apic_Address : constant := 16#1fc000#;
 
    --  I/O APIC register offsets relative to I/O Apic address, see 82093AA I/O
    --  Advanced Programmable Interrupt Controller (IOAPIC) specification,
@@ -46,7 +43,7 @@ is
       Async_Writers,  --  XXX Can the chosen register change behind out back?
       Async_Readers,
       Effective_Writes,
-      Address => System'To_Address (IO_Apic_Address + IO_APIC_IND);
+      Address => System'To_Address (Skp.Kernel.IO_Apic_Address + IO_APIC_IND);
 
    Window : SK.Word32
    with
@@ -54,7 +51,7 @@ is
       Async_Writers,  --  XXX Can the chosen register change behind out back?
       Async_Readers,
       Effective_Writes,
-      Address => System'To_Address (IO_Apic_Address + IO_APIC_DAT);
+      Address => System'To_Address (Skp.Kernel.IO_Apic_Address + IO_APIC_DAT);
 
    -------------------------------------------------------------------------
 

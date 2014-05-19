@@ -1,6 +1,7 @@
 COMPONENT = mucfgexpand
 
 DEPENDS =         \
+	liballoc      \
 	libmucfgcheck \
 	libmucfgvcpu  \
 	libpaging

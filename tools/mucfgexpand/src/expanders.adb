@@ -16,20 +16,21 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mutools.Processors;
-
 with Expanders.Memory;
 with Expanders.Kernel;
 with Expanders.Subjects;
 with Expanders.Channels;
 
-pragma Elaborate_All (Mutools.Processors);
-
 package body Expanders
 is
 
-   package Procs is new Mutools.Processors
-     (Param_Type => Muxml.XML_Data_Type);
+   -------------------------------------------------------------------------
+
+   procedure Clear
+   is
+   begin
+      Procs.Clear;
+   end Clear;
 
    -------------------------------------------------------------------------
 

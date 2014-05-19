@@ -16,34 +16,25 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mucfgcheck.Memory;
+with Muxml;
 
-package body Expand.Post_Checks
+package Test_Utils.Expander
 is
 
-   -------------------------------------------------------------------------
+   type Process_Policy is not null access procedure
+     (Data : in out Muxml.XML_Data_Type);
 
-   procedure Clear
-   is
-   begin
-      Check_Procs.Clear;
-   end Clear;
+   procedure Process_Nil (Data : in out Muxml.XML_Data_Type) is null;
 
-   -------------------------------------------------------------------------
+   --  Run expander test with given expander procedure. Verify result by
+   --  comparing the created policy in filename with a specified reference
+   --  file. The Pre procedure is executed prior to the expansion step.
+   procedure Run_Test
+     (Policy_Filename : String            := "data/test_policy.xml";
+      Policy_Format   : Muxml.Schema_Kind := Muxml.Format_Src;
+      Filename        : String;
+      Ref_Filename    : String;
+      Pre             : Process_Policy    := Process_Nil'Access;
+      Expander        : Process_Policy);
 
-   function Get_Count return Natural renames Check_Procs.Get_Count;
-
-   -------------------------------------------------------------------------
-
-   procedure Register_All
-   is
-   begin
-      Check_Procs.Register
-        (Process => Mucfgcheck.Memory.Physical_Memory_Name_Uniqueness'Access);
-   end Register_All;
-
-   -------------------------------------------------------------------------
-
-   procedure Run (Data : Muxml.XML_Data_Type) renames Check_Procs.Run;
-
-end Expand.Post_Checks;
+end Test_Utils.Expander;

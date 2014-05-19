@@ -1,6 +1,5 @@
 include ../../Makeconf
 
-TEST_RUNNER     = $(OBJ_DIR)/tests/test_runner $(TEST_OPTS)
 GNATTEST_RUNNER = $(OBJ_DIR)/tests/gnattest/harness/test_runner
 GNATTEST_DRIVER = $(OBJ_DIR)/tests/gnattest/harness/test_driver
 TESTS_DIR       = $(CURDIR)/tests-ng
@@ -14,14 +13,8 @@ all: $(COMPONENT)
 $(DEPENDS) $(TDEPENDS):
 	@$(MAKE) -s -C $(TOOLS_DIR)/$@
 
-tests: test_$(COMPONENT)
-	@$(TEST_RUNNER)
-
 $(COMPONENT): $(DEPENDS) $(COMPONENT_TARGETS)
 	@gprbuild $(BUILD_OPTS) -P$@
-
-test_$(COMPONENT): $(DEPENDS) $(TDEPENDS) $(TEST_TARGETS)
-	@gprbuild $(BUILD_OPTS) -P$@ -XBUILD=tests
 
 build_cov: $(DEPENDS) $(TDEPENDS) $(COV_TARGETS)
 	@gprbuild $(BUILD_OPTS) -Ptest_$(COMPONENT) -XBUILD=coverage

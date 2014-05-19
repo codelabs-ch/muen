@@ -16,15 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Containers.Doubly_Linked_Lists;
-
 package body Mutools.Immutable_Processors
 is
-
-   package Processor_Package is new Ada.Containers.Doubly_Linked_Lists
-     (Element_Type => Process_Procedure);
-
-   Procs : Processor_Package.List;
 
    -------------------------------------------------------------------------
 

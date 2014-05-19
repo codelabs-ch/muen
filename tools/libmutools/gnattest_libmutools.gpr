@@ -16,34 +16,13 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Containers.Doubly_Linked_Lists;
+with "../libmulog/libmulog";
+with "../libmuxml/libmuxml";
+with "../libtest/libtest";
 
-generic
-   --  Parameter passed to processors.
-   type Param_Type (<>) is limited private;
-package Mutools.Processors
-is
+project GNATtest_Libmutools extends "../tools.gpr" is
 
-   type Process_Procedure is not null access procedure
-     (Data : in out Param_Type);
+   for Source_Dirs use ("src", "tests-ng/additional");
+   for Object_Dir use "obj/tests";
 
-   --  Register policy processor.
-   procedure Register (Process : Process_Procedure);
-
-   --  Run all registered policy processors.
-   procedure Run (Data : in out Param_Type);
-
-   --  Returns the number of registered processors.
-   function Get_Count return Natural;
-
-   --  Clear all registered processors.
-   procedure Clear;
-
-private
-
-   package Processor_Package is new Ada.Containers.Doubly_Linked_Lists
-     (Element_Type => Process_Procedure);
-
-   Procs : Processor_Package.List;
-
-end Mutools.Processors;
+end GNATtest_Libmutools;

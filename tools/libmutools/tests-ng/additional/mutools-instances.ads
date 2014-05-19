@@ -16,34 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Containers.Doubly_Linked_Lists;
+with Mutools.Processors;
+with Mutools.Immutable_Processors;
 
-generic
-   --  Parameter passed to processors.
-   type Param_Type (<>) is limited private;
-package Mutools.Processors
+package Mutools.Instances
 is
 
-   type Process_Procedure is not null access procedure
-     (Data : in out Param_Type);
+   package Mutable is new Processors (Param_Type => Natural);
 
-   --  Register policy processor.
-   procedure Register (Process : Process_Procedure);
+   Counter : Natural := 0;
 
-   --  Run all registered policy processors.
-   procedure Run (Data : in out Param_Type);
+   package Immutable is new Immutable_Processors (Param_Type => Natural);
 
-   --  Returns the number of registered processors.
-   function Get_Count return Natural;
-
-   --  Clear all registered processors.
-   procedure Clear;
-
-private
-
-   package Processor_Package is new Ada.Containers.Doubly_Linked_Lists
-     (Element_Type => Process_Procedure);
-
-   Procs : Processor_Package.List;
-
-end Mutools.Processors;
+end Mutools.Instances;

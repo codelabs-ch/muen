@@ -24,10 +24,10 @@ $(OBJ_DIR)/.harness_stamp: $(SRC_FILES)
 	gnattest --tests-dir=$(TESTS_DIR) -Pgnattest_$(COMPONENT)
 	@touch $@
 
-build_gnattests: $(DEPENDS) $(TDEPENDS) $(TEST_TARGETS) $(OBJ_DIR)/.harness_stamp
+build_tests: $(DEPENDS) $(TDEPENDS) $(TEST_TARGETS) $(OBJ_DIR)/.harness_stamp
 	gprbuild $(BUILD_OPTS) -P$(GNATTEST_DRIVER) -XBUILD=tests
 
-gnattests: build_gnattests
+tests: build_tests
 	$(GNATTEST_RUNNER)
 
 build_gnatcov: $(DEPENDS) $(TDEPENDS) $(COV_TARGETS) $(OBJ_DIR)/.harness_stamp

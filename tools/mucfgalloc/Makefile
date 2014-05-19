@@ -1,6 +1,8 @@
 COMPONENT = mucfgalloc
 
-DEPENDS = libmutools
+DEPENDS =    \
+	liballoc \
+	libmutools
 
 include ../component.mk
 include ../../Makecov

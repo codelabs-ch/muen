@@ -23,7 +23,7 @@ with "../libtest/libtest";
 
 project GNATtest_Src extends "../tools.gpr" is
 
-   for Source_Dirs use ("tests-ng/src");
+   for Source_Dirs use ("tests/src");
    for Object_Dir use "obj/tests";
 
 end GNATtest_Src;

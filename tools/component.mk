@@ -2,7 +2,7 @@ include ../../Makeconf
 
 GNATTEST_RUNNER = $(OBJ_DIR)/tests/gnattest/harness/test_runner
 GNATTEST_DRIVER = $(OBJ_DIR)/tests/gnattest/harness/test_driver
-TESTS_DIR       = $(CURDIR)/tests-ng
+TESTS_DIR       = $(CURDIR)/tests
 TOOLS_DIR       = $(TOP_DIR)/tools
 
 SRC_FILES  = $(wildcard $(SRC_DIR)/*)

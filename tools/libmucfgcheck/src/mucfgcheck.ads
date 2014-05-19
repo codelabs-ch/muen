@@ -105,7 +105,8 @@ is
    --  attribute of the right node.
    function Is_Valid_Reference (Left, Right : DOM.Core.Node) return Boolean;
 
-   --  Returns True if the subject name matches.
+   --  Returns True if the left node's 'subject' attribute matches the 'name'
+   --  attribute of the right node.
    function Match_Subject_Name (Left, Right : DOM.Core.Node) return Boolean;
 
    Validation_Error : exception;

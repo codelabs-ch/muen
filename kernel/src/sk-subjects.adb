@@ -18,6 +18,8 @@
 
 with System;
 
+with Skp.Kernel;
+
 with SK.VMX;
 with SK.CPU;
 with SK.Constants;
@@ -44,7 +46,7 @@ is
    --  TODO: Handle initialization
    Descriptors : Subject_State_Array
    with
-      Address => System'To_Address (16#001e0000#);
+      Address => System'To_Address (Skp.Kernel.Subj_States_Address);
 
    -------------------------------------------------------------------------
 

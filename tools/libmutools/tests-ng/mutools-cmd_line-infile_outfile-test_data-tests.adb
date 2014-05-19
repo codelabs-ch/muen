@@ -66,13 +66,6 @@ package body Mutools.Cmd_Line.Infile_Outfile.Test_Data.Tests is
            Process => Immutable_Process'Access);
       Assert (Condition => Process_Counter = 2,
               Message   => "Counter not 2");
-
-      Process_Counter := 1;
-
-   exception
-      when others =>
-         Process_Counter := 1;
-         raise;
 --  begin read only
    end Test_1_Run;
 --  end read only
@@ -96,13 +89,6 @@ package body Mutools.Cmd_Line.Infile_Outfile.Test_Data.Tests is
            Process => Mutable_Process'Access);
       Assert (Condition => Process_Counter = 2,
               Message   => "Counter not 2");
-
-      Process_Counter := 1;
-
-   exception
-      when others =>
-         Process_Counter := 1;
-         raise;
 --  begin read only
    end Test_2_Run;
 --  end read only
@@ -141,12 +127,6 @@ package body Mutools.Cmd_Line.Infile_Outfile.Test_Data.Tests is
       Run (Process => Test_Process'Access);
       Assert (Condition => Process_Counter = 2,
               Message   => "Counter not 2");
-      Process_Counter := 1;
-
-   exception
-      when others =>
-         Process_Counter := 1;
-         raise;
 --  begin read only
    end Test_3_Run;
 --  end read only

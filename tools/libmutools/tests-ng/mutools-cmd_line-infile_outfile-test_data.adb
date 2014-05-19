@@ -20,7 +20,7 @@ package body Mutools.Cmd_Line.Infile_Outfile.Test_Data is
    procedure Tear_Down (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
    begin
-      null;
+      Process_Counter := 1;
    end Tear_Down;
 
    -------------------------------------------------------------------------

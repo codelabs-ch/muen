@@ -17,14 +17,11 @@
 --
 
 with "../libmuxml/libmuxml";
-with "../shared_tools";
+with "../libtest/libtest";
 
-library project Libmucfgvcpu extends "../libs.gpr" is
+project GNATtest_Libmucfgvcpu extends "../tools.gpr" is
 
    for Source_Dirs use ("src", "generated");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Library_Dir use "lib";
-   for Library_Kind use "static";
-   for Library_Name use "mucfgvcpu";
+   for Object_Dir use "obj/tests";
 
-end Libmucfgvcpu;
+end GNATtest_Libmucfgvcpu;

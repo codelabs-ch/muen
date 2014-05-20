@@ -796,7 +796,18 @@ is
         (Output_Dir : String;
          Policy     : Muxml.XML_Data_Type)
       is
-         pragma Unreferenced (Policy);
+         Subj_States_Addr : constant Unsigned_64 := Unsigned_64'Value
+           (Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/kernel/memory/cpu/"
+               & "memory[@logical='tau0_state']",
+               Name  => "virtualAddress"));
+         IO_Apic_Addr     : constant Unsigned_64 := Unsigned_64'Value
+           (Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/kernel/devices/device[@logical='ioapic']"
+               & "/memory",
+               Name  => "virtualAddress"));
 
          Tmpl : Templates.Template_Type;
       begin
@@ -813,6 +824,14 @@ is
            (Template => Tmpl,
             Pattern  => "__tau0_iface_addr__",
             Content  => Mutools.Utils.To_Hex (Number => Tau0_Iface_Addr));
+         Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__subj_states_addr__",
+            Content  => Mutools.Utils.To_Hex (Number => Subj_States_Addr));
+         Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__ioapic_addr__",
+            Content  => Mutools.Utils.To_Hex (Number => IO_Apic_Addr));
 
          Mulog.Log (Msg => "Writing kernel spec to '"
                     & Output_Dir & "/skp-kernel.ads'");

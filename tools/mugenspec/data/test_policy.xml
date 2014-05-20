@@ -103,6 +103,7 @@
 				<memory logical="store" physical="kernel_store_0" writable="true" executable="false" virtualAddress="16#0011_6000#"/>
 				<memory logical="data" physical="kernel_data" writable="true" executable="true" virtualAddress="16#0011_8000#"/>
 				<memory logical="tau0_interface" physical="sys_interface" writable="false" executable="false" virtualAddress="16#001f_f000#"/>
+				<memory logical="tau0_state" physical="tau0_state" writable="true" executable="false" virtualAddress="16#001e_0000#"/>
 			</cpu>
 			<cpu id="1">
 				<memory logical="text" physical="kernel_text" writable="true" executable="true" virtualAddress="16#0010_0000#"/>
@@ -115,6 +116,9 @@
 		<devices>
 			<device logical="log" physical="debugconsole">
 				<ioPort logical="ports" physical="serial"/>
+			</device>
+			<device logical="ioapic" physical="ioapic">
+				<memory logical="mmio" physical="mmio" writable="true" executable="false" virtualAddress="16#001f_c000#"/>
 			</device>
 		</devices>
 	</kernel>

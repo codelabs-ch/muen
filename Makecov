@@ -1,18 +1,7 @@
-COV_DIR = $(OBJ_DIR)/coverage
-
 clean_cov:
-	@rm -f $(COV_DIR)/*.gcda
-
-clean_gnatcov:
 	rm -f $(OBJ_DIR)/tests/*.gcda
 
 cov: clean_cov build_cov
-	@$(COV_DIR)/test_runner || true
-	@lcov -c -d $(COV_DIR) -o $(COV_DIR)/cov.info
-	@lcov -e $(COV_DIR)/cov.info "$(SRC_DIR)/*.adb" -o $(COV_DIR)/cov.info
-	@genhtml --no-branch-coverage $(COV_DIR)/cov.info -o $(COV_DIR)
-
-gnatcov: clean_gnatcov build_gnatcov
 	$(OBJ_DIR)/tests/gnattest/harness/test_runner || true
 	lcov -c -d $(OBJ_DIR)/tests --no-recursion -o $(OBJ_DIR)/cov.info
 	lcov -e $(OBJ_DIR)/cov.info "$(SRC_DIR)/*.adb" -o $(OBJ_DIR)/cov.info

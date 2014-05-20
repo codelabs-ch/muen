@@ -1,6 +1,5 @@
-RECIPES =   \
-	ahven   \
-	alog    \
+RECIPES = \
+	alog  \
 	xia
 
 all: build_recipes

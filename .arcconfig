@@ -3,6 +3,6 @@
 	"conduit_uri" : "https://dev.codelabs.ch/",
 	"git.default-relative-commit" : "devel",
 	"arc.land.onto.default" : "devel",
-	"unit.engine" : "AhvenTestEngine",
+	"unit.engine" : "GNATtestEngine",
 	"history.immutable" : true
 }

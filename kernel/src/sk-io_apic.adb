@@ -61,16 +61,17 @@ is
    procedure Create_Redirection_Entry
      (Redir_Entry    : out SK.Word64;
       Vector         :     SK.Byte;
-      Trigger_Mode   :     Trigger_Kind;
+      Trigger_Mode   :     Skp.Interrupts.IRQ_Mode_Type;
       Destination_Id :     SK.Byte)
    with
       Global  => null,
       Depends => (Redir_Entry => (Destination_Id, Trigger_Mode, Vector))
    is
+      use type Skp.Interrupts.IRQ_Mode_Type;
    begin
       Redir_Entry := SK.Word64 (Vector);
 
-      if Trigger_Mode = Level then
+      if Trigger_Mode = Skp.Interrupts.Level then
          Redir_Entry := SK.Bit_Set (Value => Redir_Entry,
                                     Pos   => RED_TRIGGER_MODE);
       end if;
@@ -83,7 +84,7 @@ is
    procedure Route_IRQ
      (IRQ            : SK.Byte;
       Vector         : SK.Byte;
-      Trigger_Mode   : Trigger_Kind;
+      Trigger_Mode   : Skp.Interrupts.IRQ_Mode_Type;
       Destination_Id : SK.Byte)
    with
       --  XXX Data flow does not represent properties of registers

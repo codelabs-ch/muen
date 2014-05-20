@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK;
+
 with Subject.Text_IO;
 
 with Subject_Info;
@@ -23,17 +25,67 @@ with Subject_Info;
 package body Exit_Handlers.EPT_Violation
 is
 
+   --  Type related to EPT violation specific exit qualification.
+
+   type EPTV_Info_Type is record
+      Read              : Boolean;
+      Write             : Boolean;
+      Instruction_Fetch : Boolean;
+      Is_Readable       : Boolean;
+      Is_Writable       : Boolean;
+      Valid_Address     : Boolean;
+      Is_Linear_Access  : Boolean;
+      NMI_Blocking      : Boolean;
+   end record;
+
+   --  Return EPT violation information from exit qualification, as specified
+   --  by Intel SDM Vol. 3C, section 27.2.1, table 27-7.
+   function To_EPTV_Info (Qualification : SK.Word64) return EPTV_Info_Type;
+
    -------------------------------------------------------------------------
 
    procedure Process (Halt : out Boolean)
    is
+      Info : constant EPTV_Info_Type := To_EPTV_Info
+        (Qualification => Subject_Info.State.Exit_Qualification);
    begin
+      Subject.Text_IO.Put_String (Item => "Invalid ");
+      if Info.Read then
+         Subject.Text_IO.Put_String (Item => "read");
+      else
+         Subject.Text_IO.Put_String (Item => "write");
+      end if;
       Subject.Text_IO.Put_String
-        (Item => "EPT Violation at guest physical address ");
+        (Item => " access at guest physical address ");
       Subject.Text_IO.Put_Word64 (Item => Subject_Info.State.Guest_Phys_Addr);
       Subject.Text_IO.New_Line;
 
       Halt := True;
    end Process;
+
+   -------------------------------------------------------------------------
+
+   function To_EPTV_Info (Qualification : SK.Word64) return EPTV_Info_Type
+   is
+      Info : EPTV_Info_Type;
+   begin
+      Info.Read              := SK.Bit_Test (Value => Qualification,
+                                             Pos   => 0);
+      Info.Write             := SK.Bit_Test (Value => Qualification,
+                                             Pos   => 1);
+      Info.Instruction_Fetch := SK.Bit_Test (Value => Qualification,
+                                             Pos   => 2);
+      Info.Is_Readable       := SK.Bit_Test (Value => Qualification,
+                                             Pos   => 3);
+      Info.Is_Writable       := SK.Bit_Test (Value => Qualification,
+                                             Pos   => 4);
+      Info.Valid_Address     := SK.Bit_Test (Value => Qualification,
+                                             Pos   => 7);
+      Info.Is_Linear_Access  := SK.Bit_Test (Value => Qualification,
+                                             Pos   => 8);
+      Info.NMI_Blocking      := SK.Bit_Test (Value => Qualification,
+                                             Pos   => 12);
+      return Info;
+   end To_EPTV_Info;
 
 end Exit_Handlers.EPT_Violation;

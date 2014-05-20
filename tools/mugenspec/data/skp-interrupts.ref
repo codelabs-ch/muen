@@ -13,15 +13,19 @@ is
    type IRQ_Level_Type is (High, Low);
 
    type IRQ_Route_Type is record
-      CPU    : Skp.CPU_Range;
-      IRQ    : SK.Byte;
-      Vector : Remapped_Vector_Type;
+      CPU       : Skp.CPU_Range;
+      IRQ       : SK.Byte;
+      IRQ_Mode  : IRQ_Mode_Type;
+      IRQ_Level : IRQ_Level_Type;
+      Vector    : Remapped_Vector_Type;
    end record;
 
    Null_IRQ_Route : constant IRQ_Route_Type := IRQ_Route_Type'
-     (CPU    => 0,
-      IRQ    => 0,
-      Vector => Skp.Invalid_Vector);
+     (CPU       => 0,
+      IRQ       => 0,
+      IRQ_Mode  => Edge,
+      IRQ_Level => High,
+      Vector    => Skp.Invalid_Vector);
 
    type Routing_Range is range 1 .. 2;
 

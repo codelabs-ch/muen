@@ -16,7 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+
 with Muxml;
+with Mutools.Immutable_Processors;
 
 package Pack.Pre_Checks
 is
@@ -30,12 +33,25 @@ is
    --  Register all pre-checks.
    procedure Register_All;
 
+   --  Set input directory.
+   procedure Set_Input_Directory (Dir : String);
+
    --  Run registered pre-checks.
    procedure Run (Data : Muxml.XML_Data_Type);
 
    --  Return number of registered pre-checks.
    function Get_Count return Natural;
 
+   --  Clear registered pre-checks.
+   procedure Clear;
+
    Check_Error : exception;
+
+private
+
+   Input_Dir : Ada.Strings.Unbounded.Unbounded_String;
+
+   package Check_Procs is new
+     Mutools.Immutable_Processors (Param_Type => Muxml.XML_Data_Type);
 
 end Pack.Pre_Checks;

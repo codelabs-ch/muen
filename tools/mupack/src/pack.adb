@@ -25,7 +25,6 @@ with Mulog;
 with Mutools.Utils;
 
 with Pack.Image;
-with Pack.Command_Line;
 with Pack.Content_Providers;
 with Pack.Utils;
 with Pack.Pre_Checks;
@@ -38,14 +37,14 @@ is
    -------------------------------------------------------------------------
 
    procedure Run
+     (Policy_File : String;
+      Input_Dir   : String;
+      Output_Dir  : String)
    is
-      Out_Dir     : constant String := Command_Line.Get_Output_Dir;
-      In_Dir      : constant String := Command_Line.Get_Input_Dir;
-      Policy_File : constant String := Command_Line.Get_Policy;
-      Policy      : Muxml.XML_Data_Type;
+      Policy : Muxml.XML_Data_Type;
    begin
-      Mulog.Log (Msg => "Looking for input files in '" & In_Dir & "'");
-      Mulog.Log (Msg => "Using output directory '" & Out_Dir & "'");
+      Mulog.Log (Msg => "Looking for input files in '" & Input_Dir & "'");
+      Mulog.Log (Msg => "Using output directory '" & Output_Dir & "'");
       Mulog.Log (Msg => "Processing policy '" & Policy_File & "'");
 
       Pre_Checks.Register_All;
@@ -61,6 +60,7 @@ is
                    Kind => Muxml.Format_B,
                    File => Policy_File);
 
+      Pre_Checks.Set_Input_Directory (Dir => Input_Dir);
       Pre_Checks.Run (Data => Policy);
 
       Pack_Image :
@@ -69,8 +69,8 @@ is
 
          Size   : constant Interfaces.Unsigned_64
            := Utils.Get_Image_Size (Policy => Policy);
-         Sysimg : constant String := Out_Dir & "/muen.img";
-         Mfest  : constant String := Out_Dir & "/muen.img.manifest";
+         Sysimg : constant String := Output_Dir & "/muen.img";
+         Mfest  : constant String := Output_Dir & "/muen.img.manifest";
       begin
          if Size = 0 then
             raise Pack_Error with "Image size is zero, no content to pack";
@@ -82,6 +82,7 @@ is
          begin
             Data.XML_Doc := Policy.Doc;
 
+            Content_Providers.Set_Input_Directory (Dir => Input_Dir);
             Content_Providers.Run (Data => Data);
 
             Post_Checks.Run (Data => Data);

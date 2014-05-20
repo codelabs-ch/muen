@@ -50,6 +50,10 @@ is
         (File => Output_File,
          Kind => Muxml.Format_A,
          Data => Policy);
+
+      Pre_Checks.Clear;
+      Expanders.Clear;
+      Post_Checks.Clear;
    end Run;
 
 end Expand;

@@ -28,7 +28,6 @@ with Mucfgcheck.Platform;
 with Mucfgcheck.Events;
 
 with Validate.XML_Processors;
-with Validate.Command_Line;
 
 package body Validate
 is
@@ -152,12 +151,11 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Run
+   procedure Run (Policy : String)
    is
-      Data        : Muxml.XML_Data_Type;
-      Policy_File : constant String := Command_Line.Get_Policy;
+      Data : Muxml.XML_Data_Type;
    begin
-      Mulog.Log (Msg => "Validating policy '" & Policy_File & "'");
+      Mulog.Log (Msg => "Validating policy '" & Policy & "'");
 
       Register_All;
       Mulog.Log
@@ -165,10 +163,10 @@ is
 
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
-                   File => Policy_File);
+                   File => Policy);
       XML_Processors.Run (Data => Data);
 
-      Mulog.Log (Msg => "Successfully validated policy '" & Policy_File & "'");
+      Mulog.Log (Msg => "Successfully validated policy '" & Policy & "'");
    end Run;
 
 end Validate;

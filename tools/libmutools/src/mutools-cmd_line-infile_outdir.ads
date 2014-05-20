@@ -43,4 +43,7 @@ private
      := Ada.Strings.Unbounded.To_Unbounded_String
        (Ada.Directories.Current_Directory);
 
+   Parser : GNAT.Command_Line.Opt_Parser
+     := GNAT.Command_Line.Command_Line_Parser;
+
 end Mutools.Cmd_Line.Infile_Outdir;

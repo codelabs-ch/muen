@@ -32,9 +32,6 @@ pragma Elaborate_All (Mutools.Immutable_Processors);
 package body Expand.Pre_Checks
 is
 
-   package Check_Procs is new
-     Mutools.Immutable_Processors (Param_Type => Muxml.XML_Data_Type);
-
    --  Check the existence of channel endpoint (reader or writer) event
    --  attributes given by name. The XPath query specifies which global
    --  channels should be checked.
@@ -162,6 +159,14 @@ is
          end;
       end loop;
    end Check_Channel_Events_Attr;
+
+   -------------------------------------------------------------------------
+
+   procedure Clear
+   is
+   begin
+      Check_Procs.Clear;
+   end Clear;
 
    -------------------------------------------------------------------------
 

@@ -17,6 +17,7 @@
 --
 
 with Muxml;
+with Mutools.Immutable_Processors;
 
 package Expand.Post_Checks
 is
@@ -29,5 +30,13 @@ is
 
    --  Return number of registered post-checks.
    function Get_Count return Natural;
+
+   --  Clear registered post-checks;
+   procedure Clear;
+
+private
+
+   package Check_Procs is new
+     Mutools.Immutable_Processors (Param_Type => Muxml.XML_Data_Type);
 
 end Expand.Post_Checks;

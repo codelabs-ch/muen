@@ -16,16 +16,18 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Mutools.Immutable_Processors;
 with Mucfgcheck.Memory;
-
-pragma Elaborate_All (Mutools.Immutable_Processors);
 
 package body Expand.Post_Checks
 is
 
-   package Check_Procs is new
-     Mutools.Immutable_Processors (Param_Type => Muxml.XML_Data_Type);
+   -------------------------------------------------------------------------
+
+   procedure Clear
+   is
+   begin
+      Check_Procs.Clear;
+   end Clear;
 
    -------------------------------------------------------------------------
 

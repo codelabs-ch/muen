@@ -17,6 +17,7 @@
 --
 
 with Muxml;
+with Mutools.Processors;
 
 package Expanders
 is
@@ -30,6 +31,14 @@ is
    --  Return number of registered expanders.
    function Get_Count return Natural;
 
+   --  Clear registered expanders.
+   procedure Clear;
+
    Expansion_Error : exception;
+
+private
+
+   package Procs is new Mutools.Processors
+     (Param_Type => Muxml.XML_Data_Type);
 
 end Expanders;

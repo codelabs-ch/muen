@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Mutools.Immutable_Processors;
+
 with Pack.Content_Providers;
 
 package Pack.Post_Checks
@@ -33,6 +35,14 @@ is
    --  Return number of registered post-checks.
    function Get_Count return Natural;
 
+   --  Clear registered post checks.
+   procedure Clear;
+
    Check_Error : exception;
+
+private
+
+   package Check_Procs is new
+     Mutools.Immutable_Processors (Param_Type => Content_Providers.Param_Type);
 
 end Pack.Post_Checks;

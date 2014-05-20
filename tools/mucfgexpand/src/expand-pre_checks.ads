@@ -17,6 +17,7 @@
 --
 
 with Muxml;
+with Mutools.Immutable_Processors;
 
 package Expand.Pre_Checks
 is
@@ -29,6 +30,9 @@ is
 
    --  Return number of registered pre-checks.
    function Get_Count return Natural;
+
+   --  Clear registered pre-checks;
+   procedure Clear;
 
    --  Expander specific pre-checks.
 
@@ -54,5 +58,10 @@ is
    --  Check that the logicalCpus attribute of '/system/platform/processor' is
    --  present.
    procedure Platform_CPU_Count_Presence (XML_Data : Muxml.XML_Data_Type);
+
+private
+
+   package Check_Procs is new
+     Mutools.Immutable_Processors (Param_Type => Muxml.XML_Data_Type);
 
 end Expand.Pre_Checks;

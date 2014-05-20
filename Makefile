@@ -6,10 +6,6 @@ ifeq (,$(filter $(MAKECMDGOALS),clean distclean))
 CONTRIB := $(shell $(MAKE) -C contrib)
 endif
 
-ifdef JUNIT_DIR
-export TEST_OPTS=-d $(JUNIT_DIR) -x -- || true
-endif
-
 all: pack
 
 rts:

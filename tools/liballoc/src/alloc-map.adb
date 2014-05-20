@@ -132,6 +132,14 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Clear (Map : in out Map_Type)
+   is
+   begin
+      Map.Data.Clear;
+   end Clear;
+
+   -------------------------------------------------------------------------
+
    function Get_Region
      (Map  : Map_Type;
       Name : String)

@@ -18,20 +18,21 @@
 
 with Ada.Streams;
 
-with Mutools.Immutable_Processors;
-
 with Pack.Image;
-
-pragma Elaborate_All (Mutools.Immutable_Processors);
 
 package body Pack.Post_Checks
 is
 
-   package Check_Procs is new
-     Mutools.Immutable_Processors (Param_Type => Content_Providers.Param_Type);
-
    Mboot_Magic : constant Ada.Streams.Stream_Element_Array (1 .. 4)
      := (16#02#, 16#b0#, 16#ad#, 16#1b#);
+
+   -------------------------------------------------------------------------
+
+   procedure Clear
+   is
+   begin
+      Check_Procs.Clear;
+   end Clear;
 
    -------------------------------------------------------------------------
 

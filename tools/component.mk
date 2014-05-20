@@ -16,9 +16,6 @@ $(DEPENDS) $(TDEPENDS):
 $(COMPONENT): $(DEPENDS) $(COMPONENT_TARGETS)
 	@gprbuild $(BUILD_OPTS) -P$@
 
-build_cov: $(DEPENDS) $(TDEPENDS) $(COV_TARGETS)
-	@gprbuild $(BUILD_OPTS) -Ptest_$(COMPONENT) -XBUILD=coverage
-
 $(OBJ_DIR)/.harness_stamp: $(SRC_FILES)
 	@mkdir -p $(OBJ_DIR)/tests
 	gnattest --tests-dir=$(TESTS_DIR) -Pgnattest_$(COMPONENT)

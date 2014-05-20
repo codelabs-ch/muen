@@ -16,32 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Strings.Unbounded;
+with "../libmutools/libmutools";
+with "../libtest/libtest";
 
-with GNAT.Command_Line;
+project GNATtest_Mucfgmerge extends "../tools.gpr" is
 
-package Merge.Cmd_Line
-is
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj/tests";
 
-   --  Init command line, use given tool description in usage output.
-   procedure Init (Description : String);
-
-   --  Return policy filename.
-   function Get_Policy return String;
-
-   --  Return output directory.
-   function Get_Output_File return String;
-
-   --  Retun platform filename.
-   function Get_Platform_File return String;
-
-private
-
-   Policy        : Ada.Strings.Unbounded.Unbounded_String;
-   Output_File   : Ada.Strings.Unbounded.Unbounded_String;
-   Platform_File : Ada.Strings.Unbounded.Unbounded_String;
-
-   Parser : GNAT.Command_Line.Opt_Parser
-     := GNAT.Command_Line.Command_Line_Parser;
-
-end Merge.Cmd_Line;
+end GNATtest_Mucfgmerge;

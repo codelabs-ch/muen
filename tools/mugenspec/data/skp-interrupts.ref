@@ -33,13 +33,17 @@ is
 
    IRQ_Routing : constant IRQ_Routing_Array := IRQ_Routing_Array'(
        1 => IRQ_Route_Type'(
-         CPU    => 1,
-         IRQ    => 12,
-         Vector => 44),
+         CPU       => 1,
+         IRQ       => 12,
+         IRQ_Mode  => Edge,
+         IRQ_Level => High,
+         Vector    => 44),
        2 => IRQ_Route_Type'(
-         CPU    => 1,
-         IRQ    => 15,
-         Vector => 47));
+         CPU       => 1,
+         IRQ       => 15,
+         IRQ_Mode  => Edge,
+         IRQ_Level => High,
+         Vector    => 47));
 
    type Vector_Route_Type is record
       Subject : Skp.Dst_Subject_Type;

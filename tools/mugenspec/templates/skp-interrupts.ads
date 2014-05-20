@@ -8,6 +8,10 @@ is
    subtype Remapped_Vector_Type is Skp.Dst_Vector_Range range
      Remap_Offset .. Skp.Dst_Vector_Range'Last;
 
+   type IRQ_Mode_Type is (Edge, Level);
+
+   type IRQ_Level_Type is (High, Low);
+
    type IRQ_Route_Type is record
       CPU    : Skp.CPU_Range;
       IRQ    : SK.Byte;

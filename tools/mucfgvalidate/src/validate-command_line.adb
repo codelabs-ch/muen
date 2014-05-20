@@ -20,7 +20,6 @@ with Ada.Command_Line;
 with Ada.Finalization;
 
 with GNAT.OS_Lib;
-with GNAT.Command_Line;
 
 package body Validate.Command_Line
 is
@@ -68,7 +67,9 @@ is
          Help        => "Display usage and exit");
 
       begin
-         GNAT.Command_Line.Getopt (Config => Cmdline.Data);
+         GNAT.Command_Line.Getopt
+           (Config => Cmdline.Data,
+            Parser => Parser);
 
       exception
          when GNAT.Command_Line.Invalid_Switch |
@@ -80,7 +81,7 @@ is
       end;
 
       Policy := Ada.Strings.Unbounded.To_Unbounded_String
-        (GNAT.Command_Line.Get_Argument);
+        (GNAT.Command_Line.Get_Argument (Parser => Parser));
       if Policy = Ada.Strings.Unbounded.Null_Unbounded_String then
          GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
          GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));

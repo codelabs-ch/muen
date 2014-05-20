@@ -132,6 +132,7 @@ is
                Vector         =>
                  SK.Byte (Skp.Interrupts.IRQ_Routing (I).Vector),
                Trigger_Mode   => Skp.Interrupts.Edge,
+               Trigger_Level  => Skp.Interrupts.High,
                Destination_Id => APIC_ID);
          end if;
       end loop;

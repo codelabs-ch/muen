@@ -34,6 +34,7 @@ is
 
    IO_APIC_REDTBL : constant := 16#10#;
 
+   RED_INTPOL       : constant := 13;
    RED_TRIGGER_MODE : constant := 15;
    RED_MASK         : constant := 16;
 
@@ -62,18 +63,26 @@ is
      (Redir_Entry    : out SK.Word64;
       Vector         :     SK.Byte;
       Trigger_Mode   :     Skp.Interrupts.IRQ_Mode_Type;
+      Trigger_Level  :     Skp.Interrupts.IRQ_Level_Type;
       Destination_Id :     SK.Byte)
    with
       Global  => null,
-      Depends => (Redir_Entry => (Destination_Id, Trigger_Mode, Vector))
+      Depends => (Redir_Entry => (Destination_Id, Trigger_Mode, Trigger_Level,
+                                  Vector))
    is
       use type Skp.Interrupts.IRQ_Mode_Type;
+      use type Skp.Interrupts.IRQ_Level_Type;
    begin
       Redir_Entry := SK.Word64 (Vector);
 
       if Trigger_Mode = Skp.Interrupts.Level then
          Redir_Entry := SK.Bit_Set (Value => Redir_Entry,
                                     Pos   => RED_TRIGGER_MODE);
+      end if;
+
+      if Trigger_Level = Skp.Interrupts.Low then
+         Redir_Entry := SK.Bit_Set (Value => Redir_Entry,
+                                    Pos   => RED_INTPOL);
       end if;
 
       Redir_Entry := Redir_Entry + SK.Word64 (Destination_Id) * 2 ** 56;
@@ -85,12 +94,14 @@ is
      (IRQ            : SK.Byte;
       Vector         : SK.Byte;
       Trigger_Mode   : Skp.Interrupts.IRQ_Mode_Type;
+      Trigger_Level  : Skp.Interrupts.IRQ_Level_Type;
       Destination_Id : SK.Byte)
    with
       --  XXX Data flow does not represent properties of registers
       Refined_Global  => (Output => (Window, Register_Select)),
       Refined_Depends =>
-        (Window          => (Destination_Id, Trigger_Mode, Vector),
+        (Window          => (Destination_Id, Trigger_Mode, Trigger_Level,
+                             Vector),
          Register_Select => IRQ)
    is
       Redir_Entry : SK.Word64;
@@ -98,6 +109,7 @@ is
       Create_Redirection_Entry (Redir_Entry    => Redir_Entry,
                                 Vector         => Vector,
                                 Trigger_Mode   => Trigger_Mode,
+                                Trigger_Level  => Trigger_Level,
                                 Destination_Id => Destination_Id);
 
       Register_Select := IO_APIC_REDTBL + SK.Word32 (IRQ) * 2;

@@ -31,10 +31,12 @@ is
      (IRQ            : SK.Byte;
       Vector         : SK.Byte;
       Trigger_Mode   : Skp.Interrupts.IRQ_Mode_Type;
+      Trigger_Level  : Skp.Interrupts.IRQ_Level_Type;
       Destination_Id : SK.Byte)
    with
       Global  => (Output => State),  --  XXX Logically output state *is* In_Out
-      Depends => (State => (Destination_Id, IRQ, Trigger_Mode, Vector));
+      Depends => (State => (Destination_Id, IRQ, Trigger_Mode, Trigger_Level,
+                            Vector));
 
    --  Mask/disable interrupt delivery for specified IRQ.
    procedure Mask_Interrupt (IRQ : SK.Byte)

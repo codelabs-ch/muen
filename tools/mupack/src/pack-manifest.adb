@@ -75,8 +75,8 @@ is
                             Item => Manifest_Header);
       Ada.Text_IO.Put
         (File => File,
-         Item => S (Head (Source => Manifest.Data,
-                          Count  => Len)));
+         Item => To_String (Head (Source => Manifest.Data,
+                                  Count  => Len)));
       Ada.Text_IO.Close (File => File);
    end Write;
 

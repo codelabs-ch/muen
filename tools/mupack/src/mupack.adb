@@ -30,7 +30,9 @@ procedure Mupack
 is
 begin
    Pack.Command_Line.Init (Description => "Muen system image packager");
-   Pack.Run;
+   Pack.Run (Policy_File => Pack.Command_Line.Get_Policy,
+             Input_Dir   => Pack.Command_Line.Get_Input_Dir,
+             Output_Dir  => Pack.Command_Line.Get_Output_Dir);
 
 exception
    when E : Muxml.XML_Input_Error

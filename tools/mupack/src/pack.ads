@@ -16,26 +16,18 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Strings.Unbounded;
-
 package Pack
 is
 
-   --  Start the packaging process.
-   procedure Run;
+   --  Start packaging of the system specified by given policy. Files
+   --  referenced in the policy are expected to be found in the given input
+   --  directory, while intermediate files and the resulting system image are
+   --  created in the given output directory.
+   procedure Run
+     (Policy_File : String;
+      Input_Dir   : String;
+      Output_Dir  : String);
 
    Pack_Error : exception;
-
-private
-
-   function U
-     (Source : String)
-      return Ada.Strings.Unbounded.Unbounded_String
-      renames Ada.Strings.Unbounded.To_Unbounded_String;
-
-   function S
-     (Source : Ada.Strings.Unbounded.Unbounded_String)
-      return String
-      renames Ada.Strings.Unbounded.To_String;
 
 end Pack;

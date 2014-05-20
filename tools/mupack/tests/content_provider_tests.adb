@@ -26,7 +26,6 @@ with Mutools.XML_Utils;
 
 with Pack.Image;
 with Pack.Manifest;
-with Pack.Command_Line.Test;
 with Pack.Content_Providers;
 
 with Test_Utils;
@@ -58,9 +57,7 @@ is
       Policy : Muxml.XML_Data_Type;
       Data   : Content_Providers.Param_Type (16#126000#);
    begin
-      Command_Line.Test.Set_Input_Dir  (Path => "data");
-      Command_Line.Test.Set_Output_Dir (Path => "obj");
-      Command_Line.Test.Set_Policy     (Path => "data/test_policy.xml");
+      Content_Providers.Set_Input_Directory (Dir => "data");
 
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
@@ -123,9 +120,7 @@ is
       Policy : Muxml.XML_Data_Type;
       Data   : Content_Providers.Param_Type (9);
    begin
-      Command_Line.Test.Set_Input_Dir (Path => "data");
-      Command_Line.Test.Set_Output_Dir (Path => "obj");
-      Command_Line.Test.Set_Policy (Path => "data/test_policy.xml");
+      Content_Providers.Set_Input_Directory (Dir => "data");
 
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,

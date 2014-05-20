@@ -25,18 +25,19 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Mutools.Utils;
-with Mutools.Processors;
-
-with Pack.Command_Line;
-
-pragma Elaborate_All (Mutools.Processors);
 
 package body Pack.Content_Providers
 is
 
    use Ada.Strings.Unbounded;
 
-   package Content_Procs is new Mutools.Processors (Param_Type => Param_Type);
+   -------------------------------------------------------------------------
+
+   procedure Clear
+   is
+   begin
+      Content_Procs.Clear;
+   end Clear;
 
    -------------------------------------------------------------------------
 
@@ -46,7 +47,6 @@ is
 
    procedure Process_Files (Data : in out Param_Type)
    is
-      In_Dir     : constant String := Command_Line.Get_Input_Dir;
       File_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.XML_Doc,
@@ -100,19 +100,21 @@ is
                Offset := Interfaces.Unsigned_64'Value (Offset_Str);
             end if;
 
-            Image.Add_File (Image   => Data.Image,
-                            Path    => In_Dir & "/" & Filename,
-                            Address => Address,
-                            Size    => Size,
-                            Offset  => Offset);
+            Image.Add_File
+              (Image   => Data.Image,
+               Path    => To_String (Input_Dir) & "/" & Filename,
+               Address => Address,
+               Size    => Size,
+               Offset  => Offset);
 
-            Manifest.Add_Entry (Manifest => Data.Manifest,
-                                Mem_Name => Mem_Name,
-                                Mem_Type => Mem_Type,
-                                Content  => In_Dir & "/" & Filename,
-                                Address  => Address,
-                                Size     => Size,
-                                Offset   => Offset);
+            Manifest.Add_Entry
+              (Manifest => Data.Manifest,
+               Mem_Name => Mem_Name,
+               Mem_Type => Mem_Type,
+               Content  => To_String (Input_Dir) & "/" & Filename,
+               Address  => Address,
+               Size     => Size,
+               Offset   => Offset);
          end;
       end loop;
    end Process_Files;
@@ -190,5 +192,13 @@ is
    -------------------------------------------------------------------------
 
    procedure Run (Data : in out Param_Type) renames Content_Procs.Run;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Input_Directory (Dir : String)
+   is
+   begin
+      Input_Dir := To_Unbounded_String (Dir);
+   end Set_Input_Directory;
 
 end Pack.Content_Providers;

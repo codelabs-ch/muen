@@ -26,23 +26,24 @@ with DOM.Core.Elements;
 with McKae.XML.XPath.XIA;
 
 with Mutools.Utils;
-with Mutools.Immutable_Processors;
-
-with Pack.Command_Line;
-
-pragma Elaborate_All (Mutools.Immutable_Processors);
 
 package body Pack.Pre_Checks
 is
 
-   package Check_Procs is new
-     Mutools.Immutable_Processors (Param_Type => Muxml.XML_Data_Type);
+   use Ada.Strings.Unbounded;
+
+   -------------------------------------------------------------------------
+
+   procedure Clear
+   is
+   begin
+      Check_Procs.Clear;
+   end Clear;
 
    -------------------------------------------------------------------------
 
    procedure Files_Exist (Data : Muxml.XML_Data_Type)
    is
-      In_Dir     : constant String := Command_Line.Get_Input_Dir;
       File_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -55,7 +56,7 @@ is
                 (List  => File_Nodes,
                  Index => I);
             Path : constant String
-              := In_Dir & "/" & DOM.Core.Elements.Get_Attribute
+              := To_String (Input_Dir) & "/" & DOM.Core.Elements.Get_Attribute
                 (Elem => File,
                  Name => "filename");
             Mem_Name : constant String
@@ -77,7 +78,6 @@ is
    is
       use type Interfaces.Unsigned_64;
 
-      In_Dir     : constant String := Command_Line.Get_Input_Dir;
       File_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -92,7 +92,7 @@ is
             Memory     : constant DOM.Core.Node
               := DOM.Core.Nodes.Parent_Node (N => File);
             Path       : constant String
-              := In_Dir & "/" & DOM.Core.Elements.Get_Attribute
+              := To_String (Input_Dir) & "/" & DOM.Core.Elements.Get_Attribute
                 (Elem => File,
                  Name => "filename");
             Mem_Name   : constant String
@@ -149,5 +149,13 @@ is
    -------------------------------------------------------------------------
 
    procedure Run (Data : Muxml.XML_Data_Type) renames Check_Procs.Run;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Input_Directory (Dir : String)
+   is
+   begin
+      Input_Dir := To_Unbounded_String (Dir);
+   end Set_Input_Directory;
 
 end Pack.Pre_Checks;

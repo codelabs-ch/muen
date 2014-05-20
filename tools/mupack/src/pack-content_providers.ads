@@ -17,8 +17,11 @@
 --
 
 with Ada.Streams;
+with Ada.Strings.Unbounded;
 
 with DOM.Core;
+
+with Mutools.Processors;
 
 with Pack.Image;
 with Pack.Manifest;
@@ -41,10 +44,22 @@ is
    --  Register all content providers.
    procedure Register_All;
 
+   --  Set input directory.
+   procedure Set_Input_Directory (Dir : String);
+
    --  Run registered content providers.
    procedure Run (Data : in out Param_Type);
 
    --  Return number of registered content providers.
    function Get_Count return Natural;
+
+   --  Clear registered providers;
+   procedure Clear;
+
+private
+
+   Input_Dir : Ada.Strings.Unbounded.Unbounded_String;
+
+   package Content_Procs is new Mutools.Processors (Param_Type => Param_Type);
 
 end Pack.Content_Providers;

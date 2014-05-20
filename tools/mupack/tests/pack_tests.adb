@@ -19,7 +19,7 @@
 with Ada.Directories;
 with Ada.Exceptions;
 
-with Pack.Command_Line.Test;
+with Pack;
 
 with Test_Utils;
 
@@ -34,11 +34,9 @@ is
    procedure Execute_Run
    is
    begin
-      Command_Line.Test.Set_Input_Dir  (Path => "data");
-      Command_Line.Test.Set_Output_Dir (Path => "obj");
-      Command_Line.Test.Set_Policy     (Path => "data/execute_run.xml");
-
-      Pack.Run;
+      Pack.Run (Policy_File => "data/execute_run.xml",
+                Input_Dir   => "data",
+                Output_Dir  => "obj");
 
       Assert (Condition => Ada.Directories.Exists (Name => "obj/muen.img"),
               Message   => "System image not found");
@@ -61,11 +59,9 @@ is
    procedure Execute_Run_No_Content
    is
    begin
-      Command_Line.Test.Set_Input_Dir  (Path => "data");
-      Command_Line.Test.Set_Output_Dir (Path => "obj");
-      Command_Line.Test.Set_Policy     (Path => "data/test_policy.xml");
-
-      Pack.Run;
+      Pack.Run (Policy_File => "data/test_policy.xml",
+                Input_Dir   => "data",
+                Output_Dir  => "obj");
 
    exception
       when E : Pack_Error =>

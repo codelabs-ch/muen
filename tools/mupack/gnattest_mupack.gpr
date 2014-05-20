@@ -16,31 +16,12 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package body Pack.Command_Line.Test
-is
+with "../libmutools/libmutools";
+with "../libtest/libtest";
 
-   -------------------------------------------------------------------------
+project GNATtest_Mupack extends "../tools.gpr" is
 
-   procedure Set_Input_Dir (Path : String)
-   is
-   begin
-      Input_Dir := U (Path);
-   end Set_Input_Dir;
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj/tests";
 
-   -------------------------------------------------------------------------
-
-   procedure Set_Output_Dir (Path : String)
-   is
-   begin
-      Output_Dir := U (Path);
-   end Set_Output_Dir;
-
-   -------------------------------------------------------------------------
-
-   procedure Set_Policy (Path : String)
-   is
-   begin
-      Policy := U (Path);
-   end Set_Policy;
-
-end Pack.Command_Line.Test;
+end GNATtest_Mupack;

@@ -83,11 +83,11 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
             {
                 Return (Package (0x01)
                 {
-                    /* Route PCI 00:02.x PIN D to IRQ 11 */
+                    /* Route PCI 00:19.x PIN A to IRQ 11 */
                     Package (0x04)
                     {
-                        0x0002FFFF,
-                        0x03,
+                        0x0019FFFF,
+                        0x00,
                         Zero,
                         0x0b
                     }

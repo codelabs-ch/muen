@@ -103,7 +103,7 @@
 
 		<subject name="linux" cpu="1" profile="linux">
 			<bootparams>lpj=10000 console=hvc pci=noearly notsc</bootparams>
-			<initrd filename="initramfs.cpio.gz" size="16#0030_0000#"/>
+			<initrd filename="initramfs.cpio.gz" size="16#0040_0000#"/>
 			<memory>
 				<memory logical="ram" physical="linux|ram" virtualAddress="16#0060_0000#" writable="true" executable="true"/>
 			</memory>

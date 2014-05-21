@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp.Interrupts;
+
 package SK.IO_Apic
 with
    Abstract_State =>
@@ -23,19 +25,18 @@ with
    Initializes    => State
 is
 
-   --  Interrupt trigger mode.
-   type Trigger_Kind is (Edge, Level);
-
    --  Route IRQ as interrupt with specified vector to APIC given by
    --  destination id.
    procedure Route_IRQ
      (IRQ            : SK.Byte;
       Vector         : SK.Byte;
-      Trigger_Mode   : Trigger_Kind;
+      Trigger_Mode   : Skp.Interrupts.IRQ_Mode_Type;
+      Trigger_Level  : Skp.Interrupts.IRQ_Level_Type;
       Destination_Id : SK.Byte)
    with
       Global  => (Output => State),  --  XXX Logically output state *is* In_Out
-      Depends => (State => (Destination_Id, IRQ, Trigger_Mode, Vector));
+      Depends => (State => (Destination_Id, IRQ, Trigger_Mode, Trigger_Level,
+                            Vector));
 
    --  Mask/disable interrupt delivery for specified IRQ.
    procedure Mask_Interrupt (IRQ : SK.Byte)

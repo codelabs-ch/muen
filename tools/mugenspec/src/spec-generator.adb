@@ -544,6 +544,8 @@ is
          Owner : DOM.Core.Node;
          Index : Natural)
       is
+         use type DOM.Core.Node;
+
          Phys_IRQ_Name : constant String
            := DOM.Core.Elements.Get_Attribute
              (Elem => IRQ,
@@ -574,6 +576,11 @@ is
            := DOM.Core.Elements.Get_Attribute
              (Elem => IRQ,
               Name => "vector");
+         Is_PCI_Device : constant Boolean
+           := Muxml.Utils.Get_Element
+             (Doc   => Policy.Doc,
+              XPath => "/system/platform/device[@name='" & Dev_Name
+              & "']/pci") /= null;
       begin
 
          --  IRQ routing table.
@@ -581,11 +588,17 @@ is
          IRQ_Buffer := IRQ_Buffer & Indent (N => 2)
            & Index'Img & " => IRQ_Route_Type'("
            & ASCII.LF
-           & Indent (N => 3) & "CPU    =>" & CPU'Img
+           & Indent (N => 3) & "CPU       =>" & CPU'Img
            & "," & ASCII.LF
-           & Indent (N => 3) & "IRQ    =>" & IRQ_Nr'Img
+           & Indent (N => 3) & "IRQ       =>" & IRQ_Nr'Img
            & "," & ASCII.LF
-           & Indent (N => 3) & "Vector =>" & Host_Vector'Img & ")";
+           & Indent (N => 3)
+           & "IRQ_Mode  => " & (if Is_PCI_Device then "Level" else "Edge")
+           & "," & ASCII.LF
+           & Indent (N => 3)
+           & "IRQ_Level => " & (if Is_PCI_Device then "Low" else "High")
+           & "," & ASCII.LF
+           & Indent (N => 3) & "Vector    =>" & Host_Vector'Img & ")";
 
          --  Vector -> subject routing table.
 

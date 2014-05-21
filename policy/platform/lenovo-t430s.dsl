@@ -52,14 +52,23 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
                         0x00000000,         // Translation Offset
                         0x00010000,         // Length
                         ,, , TypeStatic)
-                    /* MMIO (0x30000000 - 0x3fffffff) */
+                    /* PCI 00:19.x, MMIO 1 */
                     DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite,
                         0x00000000,         // Granularity
-                        0x30000000,         // Range Minimum
-                        0x3FFFFFFF,         // Range Maximum
+                        0xd2500000,         // Range Minimum
+                        0xd251ffff,         // Range Maximum
                         0x00000000,         // Translation Offset
-                        0x10000000,         // Length
+                        0x00020000,         // Length
                         ,, , AddressRangeMemory, TypeStatic)
+                    /* PCI 00:19.x, MMIO 2 */
+                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite,
+                        0x00000000,         // Granularity
+                        0xd253b000,         // Range Minimum
+                        0xd253bfff,         // Range Maximum
+                        0x00000000,         // Translation Offset
+                        0x00001000,         // Length
+                        ,, , AddressRangeMemory, TypeStatic)
+
                 })
                 Return (MCRS)
             }

@@ -27,7 +27,7 @@ is
       IRQ_Level => High,
       Vector    => Skp.Invalid_Vector);
 
-   type Routing_Range is range 1 .. 2;
+   type Routing_Range is range 1 .. 3;
 
    type IRQ_Routing_Array is array (Routing_Range) of IRQ_Route_Type;
 
@@ -43,7 +43,13 @@ is
          IRQ       => 15,
          IRQ_Mode  => Edge,
          IRQ_Level => High,
-         Vector    => 47));
+         Vector    => 47),
+       3 => IRQ_Route_Type'(
+         CPU       => 1,
+         IRQ       => 22,
+         IRQ_Mode  => Level,
+         IRQ_Level => Low,
+         Vector    => 54));
 
    type Vector_Route_Type is record
       Subject : Skp.Dst_Subject_Type;
@@ -64,6 +70,9 @@ is
        47 => Vector_Route_Type'(
          Subject => 1,
          Vector  => 47),
+       54 => Vector_Route_Type'(
+         Subject => 1,
+         Vector  => 125),
        others => Null_Vector_Route);
 
 end Skp.Interrupts;

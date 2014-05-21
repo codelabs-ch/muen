@@ -21,6 +21,10 @@
 			<irq name="irq" number="15"/>
 			<ioPort name="fooport" start="16#00ab#" end="16#00ab#"/>
 		</device>
+		<device name="pcidevice" shared="false">
+			<pci bus="16#04#" device="16#12#" function="5"/>
+			<irq name="pci_irq" number="22"/>
+		</device>
 	</platform>
 
 	<memory>
@@ -508,6 +512,9 @@
 				<device logical="bardevice" physical="testdevice">
 					<ioPort logical="cmd"  physical="fooport"/>
 					<irq logical="irq" physical="irq" vector="47"/>
+				</device>
+				<device logical="pci" physical="pcidevice">
+					<irq logical="pci_irq" physical="pci_irq" vector="125"/>
 				</device>
 			</devices>
 			<events>

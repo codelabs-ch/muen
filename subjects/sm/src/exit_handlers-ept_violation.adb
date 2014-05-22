@@ -25,6 +25,8 @@ with Subject_Info;
 package body Exit_Handlers.EPT_Violation
 is
 
+   use type SK.Word64;
+
    --  Type related to EPT violation specific exit qualification.
 
    type EPTV_Info_Type is record
@@ -41,6 +43,12 @@ is
    --  Return EPT violation information from exit qualification, as specified
    --  by Intel SDM Vol. 3C, section 27.2.1, table 27-7.
    function To_EPTV_Info (Qualification : SK.Word64) return EPTV_Info_Type;
+
+   MMConf_Base_Address : constant SK.Word64 := 16#f800_0000#;
+   MMConf_Size         : constant SK.Word64 := 16#0100_0000#;
+
+   subtype MMConf_Region is SK.Word64 range
+     MMConf_Base_Address .. MMConf_Base_Address + MMConf_Size - 1;
 
    -------------------------------------------------------------------------
 

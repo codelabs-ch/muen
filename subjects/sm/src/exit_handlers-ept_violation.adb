@@ -26,6 +26,7 @@ package body Exit_Handlers.EPT_Violation
 is
 
    use type SK.Word64;
+   use Subject_Info;
 
    --  Type related to EPT violation specific exit qualification.
 
@@ -57,18 +58,26 @@ is
       Info : constant EPTV_Info_Type := To_EPTV_Info
         (Qualification => Subject_Info.State.Exit_Qualification);
    begin
-      Subject.Text_IO.Put_String (Item => "Invalid ");
-      if Info.Read then
-         Subject.Text_IO.Put_String (Item => "read");
-      else
-         Subject.Text_IO.Put_String (Item => "write");
-      end if;
-      Subject.Text_IO.Put_String
-        (Item => " access at guest physical address ");
-      Subject.Text_IO.Put_Word64 (Item => Subject_Info.State.Guest_Phys_Addr);
-      Subject.Text_IO.New_Line;
-
       Halt := True;
+
+      if State.Guest_Phys_Addr in MMConf_Region and then Info.Read then
+
+         --  Return 16#ffff# to indicate a non-existent device.
+
+         State.Regs.RAX := 16#ffff#;
+         Halt           := False;
+      else
+         Subject.Text_IO.Put_String (Item => "Invalid ");
+         if Info.Read then
+            Subject.Text_IO.Put_String (Item => "read");
+         else
+            Subject.Text_IO.Put_String (Item => "write");
+         end if;
+         Subject.Text_IO.Put_String
+           (Item => " access at guest physical address ");
+         Subject.Text_IO.Put_Word64 (Item => State.Guest_Phys_Addr);
+         Subject.Text_IO.New_Line;
+      end if;
    end Process;
 
    -------------------------------------------------------------------------

@@ -10,8 +10,8 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
                 /* Reserve MMConf region */
                 DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, NonCacheable, ReadWrite,
                     0x00000000,
-                    0xd0000000,
-                    0xd0ffffff,
+                    0xf8000000,
+                    0xf8ffffff,
                     0x00000000,
                     0x01000000,
                     ,, , AddressRangeReserved, TypeStatic)
@@ -30,7 +30,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
             Method (_CBA, 0, Serialized)
             {
                 /* Point to MMConf region */
-                Return (0xd0000000)
+                Return (0xf8000000)
             }
             Method (_CRS, 0, Serialized)
             {
@@ -52,14 +52,23 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
                         0x00000000,         // Translation Offset
                         0x00010000,         // Length
                         ,, , TypeStatic)
-                    /* MMIO (0x30000000 - 0x3fffffff) */
+                    /* PCI 00:19.x, MMIO 1 */
                     DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite,
                         0x00000000,         // Granularity
-                        0x30000000,         // Range Minimum
-                        0x3FFFFFFF,         // Range Maximum
+                        0xd2500000,         // Range Minimum
+                        0xd251ffff,         // Range Maximum
                         0x00000000,         // Translation Offset
-                        0x10000000,         // Length
+                        0x00020000,         // Length
                         ,, , AddressRangeMemory, TypeStatic)
+                    /* PCI 00:19.x, MMIO 2 */
+                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite,
+                        0x00000000,         // Granularity
+                        0xd253b000,         // Range Minimum
+                        0xd253bfff,         // Range Maximum
+                        0x00000000,         // Translation Offset
+                        0x00001000,         // Length
+                        ,, , AddressRangeMemory, TypeStatic)
+
                 })
                 Return (MCRS)
             }
@@ -83,11 +92,11 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
             {
                 Return (Package (0x01)
                 {
-                    /* Route PCI 00:02.x PIN D to IRQ 11 */
+                    /* Route PCI 00:19.x PIN A to IRQ 11 */
                     Package (0x04)
                     {
-                        0x0002FFFF,
-                        0x03,
+                        0x0019FFFF,
+                        0x00,
                         Zero,
                         0x0b
                     }

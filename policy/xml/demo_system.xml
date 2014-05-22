@@ -114,8 +114,11 @@
 				<device logical="cmos_rtc" physical="cmos_rtc">
 					<ioPort logical="ports" physical="ports"/>
 				</device>
-				<device logical="pci_mmconf" physical="pci_mmconf">
-					<memory logical="mmconf" physical="mmconf" virtualAddress="16#d000_0000#" writable="true" executable="false"/>
+				<device logical="eth0" physical="ethernet">
+					<irq logical="eth0_irq" physical="irq" vector="59"/>
+					<memory logical="mmconf" physical="mmconf" virtualAddress="16#f80c_8000#" writable="true" executable="false"/>
+					<memory logical="mmio1" physical="mmio1" virtualAddress="16#d250_0000#" writable="true" executable="false"/>
+					<memory logical="mmio2" physical="mmio2" virtualAddress="16#d253_b000#" writable="true" executable="false"/>
 				</device>
 			</devices>
 			<events>

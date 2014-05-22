@@ -29,6 +29,7 @@ with Interrupts;
 with Interrupt_Handler;
 with Subject_Info;
 with Exit_Handlers.CPUID;
+with Exit_Handlers.EPT_Violation;
 with Exit_Handlers.IO_Instruction;
 with Exit_Handlers.RDMSR;
 with Exit_Handlers.WRMSR;
@@ -74,12 +75,7 @@ begin
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_CR_ACCESS then
          Exit_Handlers.CR_Access.Process (Halt => Dump_And_Halt);
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_EPT_VIOLATION then
-         Subject.Text_IO.Put_String
-           (Item => "EPT Violation at guest physical address ");
-         Subject.Text_IO.Put_Word64 (Item => State.Guest_Phys_Addr);
-         Subject.Text_IO.New_Line;
-
-         Dump_And_Halt := True;
+         Exit_Handlers.EPT_Violation.Process (Halt => Dump_And_Halt);
       else
          Subject.Text_IO.Put_String (Item => "Unhandled trap for subject ");
          Subject.Text_IO.Put_Byte   (Item => SK.Byte (Id));

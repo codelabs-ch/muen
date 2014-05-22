@@ -11,7 +11,7 @@ iso: $(ISOFILE)
 	@echo
 
 $(ISOFILE): $(IMAGE) grub.cfg Makefile
-	@grub-mkrescue -o $@ -graft-points \
+	@grub-mkrescue -o $@ \
 		boot/grub/grub.cfg=grub.cfg \
 		boot/kernel.bin=$(IMAGE)
 

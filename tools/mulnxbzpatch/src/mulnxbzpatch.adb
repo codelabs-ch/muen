@@ -34,6 +34,8 @@ begin
    Mutools.Cmd_Line.Infile_Outfile.Run (Process => Bzpatch.Patch'Access);
 
 exception
+   when Mutools.Cmd_Line.Invalid_Cmd_Line =>
+      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Bzpatch.Patch_Error
       | Ada.IO_Exceptions.Name_Error
       | Mutools.Files.IO_Error =>

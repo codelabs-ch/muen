@@ -22,31 +22,104 @@ package body Merge.Cmd_Line.Test_Data.Tests is
 
       use type Ada.Strings.Unbounded.Unbounded_String;
 
-      Args        : aliased GNAT.OS_Lib.Argument_List
-        := (1 => new String'("-p"),
-            2 => new String'("platform.xml"),
-            3 => new String'("data/test_policy.xml"),
-            4 => new String'("merged.xml"));
-      Test_Parser : GNAT.Command_Line.Opt_Parser;
+      ----------------------------------------------------------------------
+
+      procedure Invalid_Switch
+      is
+         Args        : aliased GNAT.OS_Lib.Argument_List
+           := (1 => new String'("-x"));
+         Test_Parser : GNAT.Command_Line.Opt_Parser;
+      begin
+         GNAT.Command_Line.Initialize_Option_Scan
+           (Parser       => Test_Parser,
+            Command_Line => Args'Unchecked_Access);
+
+         Parser := Test_Parser;
+
+         begin
+            Init (Description => "Test run");
+            for A in Args'Range loop
+               GNAT.OS_Lib.Free (X => Args (A));
+            end loop;
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+
+         exception
+            when Invalid_Cmd_Line =>
+               null;
+         end;
+
+         for A in Args'Range loop
+            GNAT.OS_Lib.Free (X => Args (A));
+         end loop;
+      end Invalid_Switch;
+
+      ----------------------------------------------------------------------
+
+      procedure Null_Argument
+      is
+         Args        : aliased GNAT.OS_Lib.Argument_List
+           := (1 => new String'("file"));
+         Test_Parser : GNAT.Command_Line.Opt_Parser;
+      begin
+         GNAT.Command_Line.Initialize_Option_Scan
+           (Parser       => Test_Parser,
+            Command_Line => Args'Unchecked_Access);
+
+         Parser := Test_Parser;
+
+         begin
+            Init (Description => "Test run");
+            for A in Args'Range loop
+               GNAT.OS_Lib.Free (X => Args (A));
+            end loop;
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+
+         exception
+            when Invalid_Cmd_Line =>
+               null;
+         end;
+
+         for A in Args'Range loop
+            GNAT.OS_Lib.Free (X => Args (A));
+         end loop;
+      end Null_Argument;
+
+      ----------------------------------------------------------------------
+
+      procedure Positive_Test
+      is
+         Args        : aliased GNAT.OS_Lib.Argument_List
+           := (1 => new String'("-p"),
+               2 => new String'("platform.xml"),
+               3 => new String'("data/test_policy.xml"),
+               4 => new String'("merged.xml"));
+         Test_Parser : GNAT.Command_Line.Opt_Parser;
+      begin
+         GNAT.Command_Line.Initialize_Option_Scan
+           (Parser       => Test_Parser,
+            Command_Line => Args'Unchecked_Access);
+
+         Parser := Test_Parser;
+
+         Init (Description => "Test run");
+
+         for A in Args'Range loop
+            GNAT.OS_Lib.Free (X => Args (A));
+         end loop;
+
+         Assert (Condition => Policy = "data/test_policy.xml",
+                 Message   => "Policy mismatch");
+         Assert (Condition => Platform_File = "platform.xml",
+                 Message   => "Platform file mismatch");
+         Assert (Condition => Output_File = "merged.xml",
+                 Message   => "Output file  mismatch");
+      end;
    begin
-      GNAT.Command_Line.Initialize_Option_Scan
-        (Parser       => Test_Parser,
-         Command_Line => Args'Unchecked_Access);
-
-      Parser := Test_Parser;
-
-      Init (Description => "Test run");
-
-      for A in Args'Range loop
-         GNAT.OS_Lib.Free (X => Args (A));
-      end loop;
-
-      Assert (Condition => Policy = "data/test_policy.xml",
-              Message   => "Policy mismatch");
-      Assert (Condition => Platform_File = "platform.xml",
-              Message   => "Platform file mismatch");
-      Assert (Condition => Output_File = "merged.xml",
-              Message   => "Output file  mismatch");
+      Invalid_Switch;
+      Null_Argument;
+      Positive_Test;
 --  begin read only
    end Test_Init;
 --  end read only

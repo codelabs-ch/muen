@@ -22,6 +22,9 @@ with GNAT.Command_Line;
 
 package Mutools.Cmd_Line
 is
+
+   Invalid_Cmd_Line : exception;
+
 private
 
    type Config_Type is new

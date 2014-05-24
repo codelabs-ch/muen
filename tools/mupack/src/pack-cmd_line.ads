@@ -20,7 +20,7 @@ with Ada.Strings.Unbounded;
 
 with GNAT.Command_Line;
 
-package Pack.Command_Line
+package Pack.Cmd_Line
 is
 
    --  Init command line, use given tool description in usage output.
@@ -42,4 +42,4 @@ private
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;
 
-end Pack.Command_Line;
+end Pack.Cmd_Line;

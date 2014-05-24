@@ -22,7 +22,7 @@ with Ada.Finalization;
 with GNAT.OS_Lib;
 with GNAT.Strings;
 
-package body Pack.Command_Line
+package body Pack.Cmd_Line
 is
 
    use Ada.Strings.Unbounded;
@@ -130,4 +130,4 @@ is
       end if;
    end Init;
 
-end Pack.Command_Line;
+end Pack.Cmd_Line;

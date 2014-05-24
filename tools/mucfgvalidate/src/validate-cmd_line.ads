@@ -29,6 +29,8 @@ is
    --  Return policy filename.
    function Get_Policy return String;
 
+   Invalid_Cmd_Line : exception;
+
 private
 
    Policy : Ada.Strings.Unbounded.Unbounded_String;

@@ -21,7 +21,7 @@ with Ada.Finalization;
 
 with GNAT.OS_Lib;
 
-package body Validate.Command_Line
+package body Validate.Cmd_Line
 is
 
    type Config_Type is new
@@ -88,4 +88,4 @@ is
       end if;
    end Init;
 
-end Validate.Command_Line;
+end Validate.Cmd_Line;

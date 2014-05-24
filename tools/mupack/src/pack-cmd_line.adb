@@ -16,10 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Command_Line;
 with Ada.Finalization;
 
-with GNAT.OS_Lib;
 with GNAT.Strings;
 
 package body Pack.Cmd_Line
@@ -112,10 +110,10 @@ is
       exception
          when GNAT.Command_Line.Invalid_Switch |
               GNAT.Command_Line.Exit_From_Command_Line =>
-            GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));
+            raise Invalid_Cmd_Line;
          when GNAT.Command_Line.Invalid_Parameter =>
             GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
-            GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));
+            raise Invalid_Cmd_Line;
       end;
 
       Policy := To_Unbounded_String
@@ -126,7 +124,7 @@ is
         or else Output_Dir = Null_Unbounded_String
       then
          GNAT.Command_Line.Display_Help (Config => Cmdline.Data);
-         GNAT.OS_Lib.OS_Exit (Status => Natural (Ada.Command_Line.Failure));
+         raise Invalid_Cmd_Line;
       end if;
    end Init;
 

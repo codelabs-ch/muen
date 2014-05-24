@@ -35,6 +35,8 @@ is
    --  Retun input directory.
    function Get_Input_Dir return String;
 
+   Invalid_Cmd_Line : exception;
+
 private
 
    Policy, Output_Dir, Input_Dir : Ada.Strings.Unbounded.Unbounded_String;

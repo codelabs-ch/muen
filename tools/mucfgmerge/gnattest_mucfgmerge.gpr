@@ -16,7 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmutools/libmutools";
+with "../libmulog/libmulog";
+with "../libmuxml/libmuxml";
 with "../libtest/libtest";
 
 project GNATtest_Mucfgmerge extends "../tools.gpr" is

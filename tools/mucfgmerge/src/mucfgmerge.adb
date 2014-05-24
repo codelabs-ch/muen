@@ -22,8 +22,6 @@ with Ada.Exceptions;
 with Mulog;
 with Muxml;
 
-with Mutools.Cmd_Line;
-
 with Merge.Cmd_Line;
 
 procedure Mucfgmerge

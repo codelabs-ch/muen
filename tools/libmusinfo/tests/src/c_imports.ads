@@ -47,4 +47,15 @@ is
        Convention => C,
        Link_Name  => "assert_subject_info";
 
+   function C_Assert_Name_Type
+     (Size          : Interfaces.C.int;
+      Alignment     : Interfaces.C.int;
+      Length_Offset : Interfaces.C.int;
+      Data_Offset   : Interfaces.C.int)
+      return Interfaces.C.int
+     with
+       Import     => True,
+       Convention => C,
+       Link_Name  => "assert_name_type";
+
 end C_Imports;

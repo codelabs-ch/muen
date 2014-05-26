@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <stddef.h>
 
 #include "musinfo.h"
 
@@ -39,6 +40,38 @@ int assert_name(const struct name_type * const name)
 			return 0;
 		}
 	}
+	return 1;
+}
+
+int assert_name_type(const int size, const int alignment,
+		const int length_offset, const int data_offset)
+{
+	if (sizeof(struct name_type) != size)
+	{
+		printf("Name: Invalid size %d /= %d\n", size, sizeof(struct name_type));
+		return 0;
+	}
+	if (__alignof__ (struct name_type) != alignment)
+	{
+		printf("Name: Invalid alignment %d /= %d\n", alignment,
+				__alignof__ (struct name_type));
+		return 0;
+	}
+
+	if (offsetof(struct name_type, length) != length_offset)
+	{
+		printf("Name: Invalid 'length' offset %d /= %d\n", length_offset,
+				offsetof(struct name_type, length));
+		return 0;
+	}
+
+	if (offsetof(struct name_type, data) != data_offset)
+	{
+		printf("Name: Invalid 'data' offset %d /= %d\n", data_offset,
+				offsetof(struct name_type, data));
+		return 0;
+	}
+
 	return 1;
 }
 

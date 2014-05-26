@@ -212,3 +212,45 @@ int assert_subject_info(const struct subject_info_type * const info)
 
 	return 1;
 }
+
+int assert_subject_info_type(const int size, const int alignment,
+		const int magic_offset, const int chan_count_offset,
+		const int channels_offset)
+{
+	if (sizeof(struct subject_info_type) != size)
+	{
+		printf("Sinfo: Invalid size %d /= %d\n", size,
+				sizeof(struct subject_info_type));
+		return 0;
+	}
+	if (__alignof__ (struct subject_info_type) != alignment)
+	{
+		printf("Sinfo: Invalid alignment %d /= %d\n", alignment,
+				__alignof__ (struct subject_info_type));
+		return 0;
+	}
+
+	if (offsetof(struct subject_info_type, magic) != magic_offset)
+	{
+		printf("Sinfo: Invalid 'magic' offset %d /= %d\n", magic_offset,
+				offsetof(struct subject_info_type, magic));
+		return 0;
+	}
+
+	if (offsetof(struct subject_info_type, channel_count) != chan_count_offset)
+	{
+		printf("Sinfo: Invalid 'channel_count' offset %d /= %d\n",
+				chan_count_offset,
+				offsetof(struct subject_info_type, channel_count));
+		return 0;
+	}
+
+	if (offsetof(struct subject_info_type, channels) != channels_offset)
+	{
+		printf("Sinfo: Invalid 'channels' offset %d /= %d\n", channels_offset,
+				offsetof(struct subject_info_type, channels));
+		return 0;
+	}
+
+	return 1;
+}

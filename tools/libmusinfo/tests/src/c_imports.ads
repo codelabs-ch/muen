@@ -73,4 +73,16 @@ is
        Convention => C,
        Link_Name  => "assert_channel_type";
 
+   function C_Assert_Subject_Info_Type
+     (Size                 : Interfaces.C.int;
+      Alignment            : Interfaces.C.int;
+      Magic_Offset         : Interfaces.C.int;
+      Channel_Count_Offset : Interfaces.C.int;
+      Channels_Offset      : Interfaces.C.int)
+      return Interfaces.C.int
+     with
+       Import     => True,
+       Convention => C,
+       Link_Name  => "assert_subject_info_type";
+
 end C_Imports;

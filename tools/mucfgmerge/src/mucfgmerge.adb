@@ -22,8 +22,6 @@ with Ada.Exceptions;
 with Mulog;
 with Muxml;
 
-with Mutools.Cmd_Line;
-
 with Merge.Cmd_Line;
 
 procedure Mucfgmerge
@@ -35,6 +33,8 @@ begin
               Output_File   => Merge.Cmd_Line.Get_Output_File);
 
 exception
+   when Merge.Cmd_Line.Invalid_Cmd_Line =>
+      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
       | Muxml.Validation_Error =>
       Mulog.Log (Level => Mulog.Error,

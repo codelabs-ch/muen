@@ -24,15 +24,15 @@ with Muxml;
 
 with Pack.Pre_Checks;
 with Pack.Post_Checks;
-with Pack.Command_Line;
+with Pack.Cmd_Line;
 
 procedure Mupack
 is
 begin
-   Pack.Command_Line.Init (Description => "Muen system image packager");
-   Pack.Run (Policy_File => Pack.Command_Line.Get_Policy,
-             Input_Dir   => Pack.Command_Line.Get_Input_Dir,
-             Output_Dir  => Pack.Command_Line.Get_Output_Dir);
+   Pack.Cmd_Line.Init (Description => "Muen system image packager");
+   Pack.Run (Policy_File => Pack.Cmd_Line.Get_Policy,
+             Input_Dir   => Pack.Cmd_Line.Get_Input_Dir,
+             Output_Dir  => Pack.Cmd_Line.Get_Output_Dir);
 
 exception
    when E : Muxml.XML_Input_Error

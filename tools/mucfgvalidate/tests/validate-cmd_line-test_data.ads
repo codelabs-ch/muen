@@ -7,7 +7,7 @@ with AUnit.Test_Fixtures;
 
 with GNAT.OS_Lib;
 
-package Validate.Command_Line.Test_Data is
+package Validate.Cmd_Line.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -17,4 +17,4 @@ package Validate.Command_Line.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-end Validate.Command_Line.Test_Data;
+end Validate.Cmd_Line.Test_Data;

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ with Ada.Strings.Unbounded;
 
 with GNAT.Command_Line;
 
-package Pack.Command_Line
+package Validate.Cmd_Line
 is
 
    --  Init command line, use given tool description in usage output.
@@ -29,17 +29,13 @@ is
    --  Return policy filename.
    function Get_Policy return String;
 
-   --  Return output directory.
-   function Get_Output_Dir return String;
-
-   --  Retun input directory.
-   function Get_Input_Dir return String;
+   Invalid_Cmd_Line : exception;
 
 private
 
-   Policy, Output_Dir, Input_Dir : Ada.Strings.Unbounded.Unbounded_String;
+   Policy : Ada.Strings.Unbounded.Unbounded_String;
 
    Parser : GNAT.Command_Line.Opt_Parser
      := GNAT.Command_Line.Command_Line_Parser;
 
-end Pack.Command_Line;
+end Validate.Cmd_Line;

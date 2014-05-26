@@ -1,6 +1,8 @@
 COMPONENT = mucfgmerge
 
-DEPENDS = libmutools
+DEPENDS =    \
+	libmulog \
+	libmuxml
 
 include ../component.mk
 include ../../Makecov

@@ -38,6 +38,8 @@ begin
       Process => Expand.Run'Access);
 
 exception
+   when Mutools.Cmd_Line.Invalid_Cmd_Line =>
+      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
       | Muxml.Validation_Error
       | Expanders.Expansion_Error

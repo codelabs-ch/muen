@@ -4,16 +4,16 @@
 --  begin read only
 with Gnattest_Generated;
 
-package Validate.Command_Line.Test_Data.Tests is
+package Validate.Cmd_Line.Test_Data.Tests is
 
-   type Test is new GNATtest_Generated.GNATtest_Standard.Validate.Command_Line.Test_Data.Test
+   type Test is new GNATtest_Generated.GNATtest_Standard.Validate.Cmd_Line.Test_Data.Test
    with null record;
 
    procedure Test_Init_a69a58 (Gnattest_T : in out Test);
-   --  validate-command_line.ads:27:4:Init
+   --  validate-cmd_line.ads:27:4:Init
 
    procedure Test_Get_Policy_aac0d6 (Gnattest_T : in out Test);
-   --  validate-command_line.ads:30:4:Get_Policy
+   --  validate-cmd_line.ads:30:4:Get_Policy
 
-end Validate.Command_Line.Test_Data.Tests;
+end Validate.Cmd_Line.Test_Data.Tests;
 --  end read only

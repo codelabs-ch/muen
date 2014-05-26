@@ -23,15 +23,17 @@ with Mulog;
 with Muxml;
 with Mucfgcheck;
 
-with Validate.Command_Line;
+with Validate.Cmd_Line;
 
 procedure Mucfgvalidate
 is
 begin
-   Validate.Command_Line.Init (Description => "Muen policy validator");
-   Validate.Run (Policy => Validate.Command_Line.Get_Policy);
+   Validate.Cmd_Line.Init (Description => "Muen policy validator");
+   Validate.Run (Policy => Validate.Cmd_Line.Get_Policy);
 
 exception
+   when Validate.Cmd_Line.Invalid_Cmd_Line =>
+      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
       | Muxml.Validation_Error
       | Mucfgcheck.Validation_Error =>

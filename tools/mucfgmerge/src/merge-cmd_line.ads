@@ -35,6 +35,8 @@ is
    --  Retun platform filename.
    function Get_Platform_File return String;
 
+   Invalid_Cmd_Line : exception;
+
 private
 
    Policy        : Ada.Strings.Unbounded.Unbounded_String;

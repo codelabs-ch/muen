@@ -32,4 +32,7 @@ is
    --  Verify name type equivalence.
    procedure Check_Name_Type;
 
+   --  Verify channel type equivalence.
+   procedure Check_Channel_Type;
+
 end Musinfo.Interop;

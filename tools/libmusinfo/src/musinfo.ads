@@ -65,6 +65,27 @@ is
          Padding => (others => 0),
          Data    => (others => ASCII.NUL));
 
+   type Channel_Flags_Type is record
+      Writable   : Boolean;
+      Has_Event  : Boolean;
+      Has_Vector : Boolean;
+      Padding    : Bit_Array (1 .. 5);
+   end record
+     with Size => 8;
+
+   for Channel_Flags_Type use record
+      Writable   at 0 range 0 .. 0;
+      Has_Event  at 0 range 1 .. 1;
+      Has_Vector at 0 range 2 .. 2;
+      Padding    at 0 range 3 .. 7;
+   end record;
+
+   Null_Flags : constant Channel_Flags_Type
+     := (Writable   => False,
+         Has_Event  => False,
+         Has_Vector => False,
+         Padding    => (others => 0));
+
    type Event_Number_Range is range 0 .. 255
      with
        Size => 8;
@@ -80,45 +101,36 @@ is
    --  can optionally have an assigned vector or event which is indicated by
    --  the Has_Event/Vector flags.
    type Channel_Type is record
-      Name       : Name_Type;
-      Address    : Interfaces.Unsigned_64;
-      Size       : Interfaces.Unsigned_64;
-      Writable   : Boolean;
-      Has_Event  : Boolean;
-      Has_Vector : Boolean;
-      Padding_1  : Bit_Array (1 .. 5);
-      Event      : Event_Number_Range;
-      Vector     : Vector_Range;
-      Padding_2  : Bit_Array (1 .. 40);
+      Name    : Name_Type;
+      Address : Interfaces.Unsigned_64;
+      Size    : Interfaces.Unsigned_64;
+      Flags   : Channel_Flags_Type;
+      Event   : Event_Number_Range;
+      Vector  : Vector_Range;
+      Padding : Bit_Array (1 .. 40);
    end record
      with
        Alignment => 8,
        Size      => Channel_Type_Size * 8;
 
    for Channel_Type use record
-      Name       at  0 range 0 .. 511;
-      Address    at 64 range 0 .. 63;
-      Size       at 72 range 0 .. 63;
-      Writable   at 80 range 0 .. 0;
-      Has_Event  at 80 range 1 .. 1;
-      Has_Vector at 80 range 2 .. 2;
-      Padding_1  at 80 range 3 .. 7;
-      Event      at 81 range 0 .. 7;
-      Vector     at 82 range 0 .. 7;
-      Padding_2  at 83 range 0 .. 39;
+      Name    at  0 range 0 .. 511;
+      Address at 64 range 0 .. 63;
+      Size    at 72 range 0 .. 63;
+      Flags   at 80 range 0 .. 7;
+      Event   at 81 range 0 .. 7;
+      Vector  at 82 range 0 .. 7;
+      Padding at 83 range 0 .. 39;
    end record;
 
    Null_Channel : constant Channel_Type
-     := (Name       => Null_Name,
-         Address    => 0,
-         Size       => 0,
-         Writable   => False,
-         Has_Event  => False,
-         Has_Vector => False,
-         Padding_1  => (others => 0),
-         Event      => 0,
-         Vector     => 0,
-         Padding_2  => (others => 0));
+     := (Name    => Null_Name,
+         Address => 0,
+         Size    => 0,
+         Flags   => Null_Flags,
+         Event   => 0,
+         Vector  => 0,
+         Padding => (others => 0));
 
    type Channel_Count_Type is range 0 .. 255
      with

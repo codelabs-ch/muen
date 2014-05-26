@@ -156,4 +156,33 @@ package body Musinfo.Interop.Test_Data.Tests is
    end Test_Check_Channel_Type;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Check_Subject_Info_Type (Gnattest_T : in out Test);
+   procedure Test_Check_Subject_Info_Type_659906 (Gnattest_T : in out Test) renames Test_Check_Subject_Info_Type;
+--  id:2.2/659906a031093bd7/Check_Subject_Info_Type/1/0/
+   procedure Test_Check_Subject_Info_Type (Gnattest_T : in out Test) is
+   --  musinfo-interop.ads:39:4:Check_Subject_Info_Type
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.C.int;
+
+      Dummy : Subject_Info_Type;
+   begin
+
+      Assert (Condition => C_Imports.C_Assert_Subject_Info_Type
+              (Size                 => Subject_Info_Type'Size / 8,
+               Alignment            => Subject_Info_Type'Alignment,
+               Magic_Offset         => Dummy.Magic'Bit_Position / 8,
+               Channel_Count_Offset => Dummy.Channel_Count'Bit_Position / 8,
+               Channels_Offset      => Dummy.Channels'Bit_Position / 8) = 1,
+              Message   => "C subject info type mismatch");
+
+
+--  begin read only
+   end Test_Check_Subject_Info_Type;
+--  end read only
+
 end Musinfo.Interop.Test_Data.Tests;

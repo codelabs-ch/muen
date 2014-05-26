@@ -35,4 +35,7 @@ is
    --  Verify channel type equivalence.
    procedure Check_Channel_Type;
 
+   --  Verify subject info type equivalence.
+   procedure Check_Subject_Info_Type;
+
 end Musinfo.Interop;

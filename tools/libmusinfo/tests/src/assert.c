@@ -125,6 +125,68 @@ int assert_channel(const struct channel_type * const channel)
 	return 1;
 }
 
+int assert_channel_type(const int size, const int alignment,
+		const int name_offset, const int address_offset, const int size_offset,
+		const int flags_offset, const int event_offset, const int vector_offset)
+{
+	if (sizeof(struct channel_type) != size)
+	{
+		printf("Channel: Invalid size %d /= %d\n", size,
+				sizeof(struct channel_type));
+		return 0;
+	}
+	if (__alignof__ (struct channel_type) != alignment)
+	{
+		printf("Channel: Invalid alignment %d /= %d\n", alignment,
+				__alignof__ (struct channel_type));
+		return 0;
+	}
+
+	if (offsetof(struct channel_type, name) != name_offset)
+	{
+		printf("Channel: Invalid 'name' offset %d /= %d\n", name_offset,
+				offsetof(struct channel_type, name));
+		return 0;
+	}
+
+	if (offsetof(struct channel_type, address) != address_offset)
+	{
+		printf("Channel: Invalid 'address' offset %d /= %d\n", address_offset,
+				offsetof(struct channel_type, address));
+		return 0;
+	}
+
+	if (offsetof(struct channel_type, size) != size_offset)
+	{
+		printf("Channel: Invalid 'size' offset %d /= %d\n", size_offset,
+				offsetof(struct channel_type, size));
+		return 0;
+	}
+
+	if (offsetof(struct channel_type, flags) != flags_offset)
+	{
+		printf("Channel: Invalid 'flags' offset %d /= %d\n", flags_offset,
+				offsetof(struct channel_type, flags));
+		return 0;
+	}
+
+	if (offsetof(struct channel_type, event) != event_offset)
+	{
+		printf("Channel: Invalid 'event' offset %d /= %d\n", event_offset,
+				offsetof(struct channel_type, event));
+		return 0;
+	}
+
+	if (offsetof(struct channel_type, vector) != vector_offset)
+	{
+		printf("Channel: Invalid 'vector' offset %d /= %d\n", vector_offset,
+				offsetof(struct channel_type, vector));
+		return 0;
+	}
+
+	return 1;
+}
+
 int assert_subject_info(const struct subject_info_type * const info)
 {
 	if (info->magic != MUEN_SUBJECT_INFO_MAGIC)

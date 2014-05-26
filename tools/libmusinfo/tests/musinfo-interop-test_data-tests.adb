@@ -98,4 +98,31 @@ package body Musinfo.Interop.Test_Data.Tests is
    end Test_Subject_Info_To_C;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Check_Name_Type (Gnattest_T : in out Test);
+   procedure Test_Check_Name_Type_3e54f1 (Gnattest_T : in out Test) renames Test_Check_Name_Type;
+--  id:2.2/3e54f1454c3de673/Check_Name_Type/1/0/
+   procedure Test_Check_Name_Type (Gnattest_T : in out Test) is
+   --  musinfo-interop.ads:33:4:Check_Name_Type
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.C.int;
+
+      Dummy : Name_Type;
+   begin
+
+      Assert (Condition => C_Imports.C_Assert_Name_Type
+              (Size          => Name_Type'Size / 8,
+               Alignment     => Name_Type'Alignment,
+               Length_Offset => Dummy.Length'Bit_Position / 8,
+               Data_Offset   => Dummy.Data'Bit_Position / 8) = 1,
+              Message   => "C name type mismatch");
+
+--  begin read only
+   end Test_Check_Name_Type;
+--  end read only
+
 end Musinfo.Interop.Test_Data.Tests;

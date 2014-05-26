@@ -47,6 +47,6 @@ struct subject_info_type {
 	uint8_t channel_count;
 	char padding[7];
 	struct channel_type channels[MAX_CHANNEL_COUNT];
-} __attribute__((packed));
+} __attribute__((packed, aligned (8)));
 
 #endif /* MUSINFO_H_  */

@@ -158,7 +158,8 @@ is
       Channels      : Channel_Array;
    end record
      with
-       Size => Subject_Info_Type_Size * 8;
+       Size      => Subject_Info_Type_Size * 8,
+       Alignment => 8;
 
    for Subject_Info_Type use record
       Magic         at 0  range 0 .. 63;

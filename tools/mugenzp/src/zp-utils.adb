@@ -33,8 +33,7 @@ is
 
    subtype Usable_Memory is
      MT.Subject_Memory with Static_Predicate => Usable_Memory in
-       MT.Subject | MT.Subject_Binary | MT.Subject_Zeropage
-         | MT.Subject_Initrd;
+       MT.Subject;
 
    subtype ACPI_Memory is
      MT.Subject_Memory with Static_Predicate => ACPI_Memory in

@@ -5,6 +5,12 @@
 	<device name="serial" shared="false">
 		<ioPort name="port1" start="16#03f8#" end="16#03ff#"/>
 	</device>
+	<device name="xhci" shared="false">
+		<pci bus="16#00#" device="16#14#" function="0"/>
+		<irq name="irq" number="16"/>
+		<memory name="mmconf" physicalAddress="16#f80a_0000#" size="16#1000#" caching="UC"/>
+		<memory name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#" caching="UC"/>
+	</device>
 	<device name="ethernet" shared="false">
 		<pci bus="16#00#" device="16#19#" function="0"/>
 		<irq name="irq" number="20"/>

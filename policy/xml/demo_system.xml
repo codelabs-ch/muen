@@ -143,7 +143,7 @@
 				<reader ref="virtual_keyboard" virtualAddress="16#3000#" vector="49"/>
 				<writer ref="virtual_console" virtualAddress="16#4000#" event="1"/>
 			</channels>
-			<binary filename="bzImage" size="16#0021_0000#" virtualAddress="16#0040_0000#"/>
+			<binary filename="bzImage" size="16#0023_0000#" virtualAddress="16#0040_0000#"/>
 		</subject>
 	</subjects>
 

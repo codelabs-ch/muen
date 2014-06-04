@@ -5,5 +5,10 @@
  <device name="serial" shared="false">
   <ioPort end="16#03ff#" name="port1" start="16#03f8#"/>
  </device>
+ <devices>
+  <device name="serial" shared="false">
+   <ioPort end="16#03ff#" name="port1" start="16#03f8#"/>
+  </device>
+ </devices>
 </platform>
 

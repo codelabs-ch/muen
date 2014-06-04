@@ -30,6 +30,12 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:complexType name="devicesType">
+		<xs:sequence>
+			<xs:element name="device" type="deviceType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
 	<xs:complexType name="processorType">
 		<xs:attribute name="logicalCpus"  type="xs:positiveInteger" use="required"/>
 		<xs:attribute name="speed"        type="xs:positiveInteger" use="required"/>

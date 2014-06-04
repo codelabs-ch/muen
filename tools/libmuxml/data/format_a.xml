@@ -11,6 +11,14 @@
   <device name="e1000e" shared="false">
    <pci bus="16#00#" device="16#02#" function="0"/>
   </device>
+  <devices>
+   <device name="debugconsole" shared="false">
+    <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
+   </device>
+   <device name="e1000e" shared="false">
+    <pci bus="16#00#" device="16#02#" function="0"/>
+   </device>
+  </devices>
  </platform>
  <memory>
   <memory alignment="16#1000#" caching="WB" name="trampoline" size="16#1000#" type="system"/>

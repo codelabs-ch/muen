@@ -108,7 +108,7 @@ is
             Phys_Port  : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Policy.Doc,
-                 XPath => "/system/platform/device[@name='" & Dev_Name
+                 XPath => "/system/platform/devices/device[@name='" & Dev_Name
                  & "']/ioPort[@name='" & Phys_Name & "']");
             Start_Port : constant Interfaces.Unsigned_16
               := Interfaces.Unsigned_16'Value

@@ -147,6 +147,8 @@ is
         (Process => Platform.Memory_Space'Access);
       XML_Processors.Register
         (Process => Platform.Memory_Block_Overlap'Access);
+      XML_Processors.Register
+        (Process => Platform.PCI_Config_Space_Address'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

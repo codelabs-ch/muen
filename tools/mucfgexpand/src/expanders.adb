@@ -20,6 +20,7 @@ with Expanders.Memory;
 with Expanders.Kernel;
 with Expanders.Subjects;
 with Expanders.Channels;
+with Expanders.Platform;
 
 package body Expanders
 is
@@ -51,6 +52,7 @@ is
 
       Procs.Register (Process => Subjects.Add_Ids'Access);
 
+      Procs.Register (Process => Platform.Add_PCI_Config_Space'Access);
       Procs.Register (Process => Memory.Add_Missing_Attributes'Access);
       Procs.Register (Process => Memory.Add_Kernel_Binary'Access);
       Procs.Register (Process => Memory.Add_Stack_Store'Access);

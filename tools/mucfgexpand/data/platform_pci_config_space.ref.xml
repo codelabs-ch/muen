@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<system>
+ <platform>
+  <processor logicalCpus="2" speed="2900" vmxTimerRate="5"/>
+  <memory>
+   <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
+  </memory>
+  <devices pciConfigAddress="16#f800_0000#">
+   <device name="debugconsole" shared="false">
+    <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
+   </device>
+   <device name="ioapic" shared="false">
+    <memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>
+   </device>
+   <device name="xhci" shared="false">
+    <pci bus="16#00#" device="16#14#" function="0"/>
+    <irq name="irq" number="16"/>
+    <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#f80a_0000#" size="16#1000#"/>
+   </device>
+  </devices>
+ </platform>
+ <memory>
+  <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
+ </memory>
+ <events>
+  <event mode="switch" name="trap_to_subject1"/>
+ </events>
+ <channels>
+  <channel hasEvent="ipi" name="data_channel" size="16#1000#"/>
+  <channel hasEvent="switch" name="data_channel2" size="16#2000#"/>
+ </channels>
+ <subjects>
+  <subject cpu="0" name="lnx" profile="linux">
+   <initrd filename="initramfs.cpio.gz" size="16#0030_0000#"/>
+   <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
+   </memory>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default action="continue">
+       <notify physical="trap_to_subject1"/>
+      </default>
+     </group>
+    </source>
+   </events>
+   <channels>
+    <reader ref="data_channel" vector="12" virtualAddress="16#6000#"/>
+    <reader ref="data_channel2" virtualAddress="16#7000#"/>
+   </channels>
+   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
+  </subject>
+  <subject cpu="1" name="subject1" profile="native">
+   <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+   </memory>
+   <events>
+    <target>
+     <event logical="trap_to_subject1" physical="trap_to_subject1" vector="none"/>
+    </target>
+   </events>
+   <channels>
+    <writer event="1" ref="data_channel" virtualAddress="16#3000#"/>
+    <writer event="1" ref="data_channel2" virtualAddress="16#3000#"/>
+   </channels>
+   <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
+   <monitor>
+    <state subject="lnx" virtualAddress="16#4000#" writable="true"/>
+   </monitor>
+  </subject>
+ </subjects>
+ <scheduling tickRate="10000">
+  <majorFrame>
+   <cpu id="0">
+    <minorFrame subject="lnx" ticks="80"/>
+   </cpu>
+   <cpu id="1">
+    <minorFrame subject="subject1" ticks="40"/>
+    <minorFrame subject="tau0" ticks="40"/>
+   </cpu>
+  </majorFrame>
+ </scheduling>
+</system>
+

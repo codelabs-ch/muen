@@ -65,7 +65,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/platform/device[@name='serial']",
+         XPath => "/system/platform/devices/device[@name='serial']",
          Name  => "name",
          Value => "vga");
 
@@ -104,7 +104,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       declare
          Serial : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
-            XPath => "/system/platform/device[@name='serial']");
+            XPath => "/system/platform/devices/device[@name='serial']");
          Node   : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
            (Doc      => Data.Doc,
             Tag_Name => "irq");
@@ -188,7 +188,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       declare
          Kbd  : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
-            XPath => "/system/platform/device[@name='keyboard']");
+            XPath => "/system/platform/devices/device[@name='keyboard']");
          Node : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
            (Doc      => Data.Doc,
             Tag_Name => "irq");
@@ -234,7 +234,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       declare
          Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
-            XPath => "/system/platform/device/ioPort[@name='ports']");
+            XPath => "/system/platform/devices/device/ioPort[@name='ports']");
       begin
          DOM.Core.Elements.Set_Attribute
            (Elem  => Node,
@@ -317,7 +317,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/platform/device/ioPort[@name='port_64']",
+         XPath => "/system/platform/devices/device/ioPort[@name='port_64']",
          Name  => "name",
          Value => "port_60");
 
@@ -357,7 +357,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       declare
          Dev  : constant DOM.Core.Node := Muxml.Utils.Get_Element
            (Doc   => Data.Doc,
-            XPath => "/system/platform/device[@name='vga']");
+            XPath => "/system/platform/devices/device[@name='vga']");
          Node : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
            (Doc      => Data.Doc,
             Tag_Name => "memory");

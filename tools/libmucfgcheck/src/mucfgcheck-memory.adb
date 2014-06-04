@@ -409,7 +409,7 @@ is
          XPath => "/system/memory/memory");
       Dev_Mem : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/platform/device/memory");
+         XPath => "/system/platform/devices/device/memory");
    begin
       Muxml.Utils.Append (Left  => Nodes,
                           Right => Dev_Mem);
@@ -578,8 +578,8 @@ is
               (Virtual_Mem_Node => DOM.Core.Nodes.Item
                  (List  => Kernel_Dev_Mem,
                   Index => I),
-               Ref_Nodes_Path   => "/system/platform/device[@name='" & Dev_Name
-               & "']/memory",
+               Ref_Nodes_Path   => "/system/platform/devices/device[@name='"
+               & Dev_Name & "']/memory",
                XML_Data         => XML_Data);
          end;
       end loop;
@@ -665,8 +665,8 @@ is
                        (Virtual_Mem_Node => DOM.Core.Nodes.Item
                           (List  => Dev_Memory,
                            Index => K),
-                        Ref_Nodes_Path   => "/system/platform/device[@name='"
-                        & Dev_Name & "']/memory",
+                        Ref_Nodes_Path   => "/system/platform/devices/"
+                        & "device[@name='" & Dev_Name & "']/memory",
                         XML_Data         => XML_Data);
                   end;
                end loop;

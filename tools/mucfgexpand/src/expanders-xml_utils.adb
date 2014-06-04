@@ -118,7 +118,7 @@ is
             Physical_Mem : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Policy.Doc,
-                 XPath => "/system/platform/device[@name='" & Dev_Name
+                 XPath => "/system/platform/devices/device[@name='" & Dev_Name
                  & "']/memory[@name='" & Physical_Mem_Name & "']");
             Physical_Address : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
@@ -237,8 +237,8 @@ is
               := Interfaces.Unsigned_64'Value
                 (Muxml.Utils.Get_Attribute
                    (Doc   =>  Policy.Doc,
-                    XPath => "/system/platform/device[@name='" & Dev_Name
-                    & "']/memory[@name='" & Phy_Name & "']",
+                    XPath => "/system/platform/devices/device[@name='"
+                    & Dev_Name & "']/memory[@name='" & Phy_Name & "']",
                     Name  => "size"));
          begin
             Map.Allocate_Fixed (Name          => U (Virt_Name),

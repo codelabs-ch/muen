@@ -7,6 +7,8 @@ with AUnit.Test_Fixtures;
 
 with Ada.Directories;
 
+with DOM.Core.Elements;
+
 with Test_Utils;
 
 package Mutools.XML_Utils.Test_Data is

@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core;
+
 with Muxml;
 
 package Mutools.XML_Utils
@@ -43,5 +45,16 @@ is
       Memory_Type :        String;
       File_Name   :        String;
       File_Offset :        String);
+
+   --  Create memory node element with given parameters.
+   function Create_Memory_Node
+     (Policy      : in out Muxml.XML_Data_Type;
+      Name        :        String;
+      Address     :        String;
+      Size        :        String;
+      Caching     :        String;
+      Alignment   :        String;
+      Memory_Type :        String)
+      return DOM.Core.Node;
 
 end Mutools.XML_Utils;

@@ -24,17 +24,6 @@ with Muxml.Utils;
 package body Mutools.XML_Utils
 is
 
-   --  Create memory node element with given parameters.
-   function Create_Memory_Node
-     (Policy      : in out Muxml.XML_Data_Type;
-      Name        :        String;
-      Address     :        String;
-      Size        :        String;
-      Caching     :        String;
-      Alignment   :        String;
-      Memory_Type :        String)
-      return DOM.Core.Node;
-
    -------------------------------------------------------------------------
 
    procedure Add_Memory_Region

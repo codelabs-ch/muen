@@ -26,6 +26,7 @@ with Muxml.Utils;
 with Mutools.Immutable_Processors;
 with Mucfgcheck.Memory;
 with Mucfgcheck.Device;
+with Mucfgcheck.Platform;
 
 pragma Elaborate_All (Mutools.Immutable_Processors);
 
@@ -200,6 +201,8 @@ is
         (Process => Mucfgcheck.Memory.Physical_Memory_References'Access);
       Check_Procs.Register
         (Process => Mucfgcheck.Device.Device_Memory_References'Access);
+      Check_Procs.Register
+        (Process => Mucfgcheck.Platform.PCI_Config_Space_Address'Access);
 
       Check_Procs.Register (Process => Tau0_Presence_In_Scheduling'Access);
       Check_Procs.Register (Process => Subject_Monitor_References'Access);

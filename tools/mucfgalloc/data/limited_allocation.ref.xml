@@ -6,7 +6,6 @@
    <memoryBlock allocatable="false" name="ram_1" physicalAddress="16#0000_0000#" size="16#0013_0000#"/>
    <memoryBlock allocatable="true" name="ram_2" physicalAddress="16#0015_0000#" size="16#0020_0000#"/>
   </memory>
-  <device name="dev_1" shared="false"/>
   <devices/>
  </platform>
  <memory>

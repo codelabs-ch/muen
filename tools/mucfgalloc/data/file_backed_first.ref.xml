@@ -5,9 +5,6 @@
   <memory>
    <memoryBlock allocatable="true" name="ram_2" physicalAddress="16#0000#" size="16#0020_0000#"/>
   </memory>
-  <device name="dev_1" shared="false">
-   <memory caching="UC" name="mmio_1" physicalAddress="16#0030_0000#" size="16#0020_0000#"/>
-  </device>
   <devices>
    <device name="dev_1" shared="false">
     <memory caching="UC" name="mmio_1" physicalAddress="16#0030_0000#" size="16#0020_0000#"/>

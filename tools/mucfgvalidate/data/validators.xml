@@ -6,28 +6,6 @@
 			<memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#0042#" />
 			<memoryBlock allocatable="true" name="ram_2" physicalAddress="16#0000#" size="16#1000#" />
 		</memory>
-		<device name="serial" shared="false">
-			<irq name="bar" number="1"/>
-			<irq name="cmd" number="23"/>
-			<ioPort name="serial" start="16#50b0#" end="16#50b0#"/>
-		</device>
-		<device name="keyboard" shared="false">
-			<irq name="foo" number="1"/>
-			<ioPort name="port_60" start="16#0060#" end="16#0060#"/>
-			<ioPort name="port_64" start="16#0064#" end="16#0064#"/>
-		</device>
-		<device name="vga" shared="false">
-			<memory name="videobuffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
-			<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
-		</device>
-		<device name="vga" shared="false">
-			<irq name="bar" number="7"/>
-			<irq name="bar" number="8"/>
-			<ioPort name="port" start="16#0064#" end="16#0064#"/>
-			<ioPort name="port" start="16#0080#" end="16#0080#"/>
-			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
-			<memory name="buffer" physicalAddress="16#000c_8000#" size="16#4000#" caching="WC"/>
-		</device>
 		<devices>
 			<device name="serial" shared="false">
 				<irq name="bar" number="1"/>

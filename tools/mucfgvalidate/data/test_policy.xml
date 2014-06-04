@@ -5,14 +5,6 @@
 		<memory>
 			<memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#" />
 		</memory>
-		<device name="debugconsole" shared="false">
-			<ioPort name="serial" start="16#50b0#" end="16#50b8#"/>
-			<irq name="command" number="2"/>
-		</device>
-		<device name="vga" shared="false">
-			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
-			<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
-		</device>
 		<devices>
 			<device name="debugconsole" shared="false">
 				<ioPort name="serial" start="16#50b0#" end="16#50b8#"/>

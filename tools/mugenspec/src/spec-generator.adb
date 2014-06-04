@@ -433,7 +433,7 @@ is
 
       Devices : constant DOM.Core.Node_List := McKae.XML.XPath.XIA.XPath_Query
         (N     => Policy.Doc,
-         XPath => "/system/platform/device");
+         XPath => "/system/platform/devices/device");
 
       --  Write device constants to hardware spec.
       procedure Write_Device (Dev : DOM.Core.Node);
@@ -557,7 +557,7 @@ is
          Physical_IRQ : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
              (Doc   => Policy.Doc,
-              XPath => "/system/platform/device[@name='" & Dev_Name
+              XPath => "/system/platform/devices/device[@name='" & Dev_Name
               & "']/irq[@name='" & Phys_IRQ_Name & "']");
          IRQ_Nr : constant Natural := Natural'Value
            (DOM.Core.Elements.Get_Attribute
@@ -579,7 +579,7 @@ is
          Is_PCI_Device : constant Boolean
            := Muxml.Utils.Get_Element
              (Doc   => Policy.Doc,
-              XPath => "/system/platform/device[@name='" & Dev_Name
+              XPath => "/system/platform/devices/device[@name='" & Dev_Name
               & "']/pci") /= null;
       begin
 

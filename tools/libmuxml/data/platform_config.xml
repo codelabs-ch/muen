@@ -2,9 +2,6 @@
 <platform>
  <processor logicalCpus="4" speed="50" vmxTimerRate="0"/>
  <memory/>
- <device name="serial" shared="false">
-  <ioPort end="16#03ff#" name="port1" start="16#03f8#"/>
- </device>
  <devices>
   <device name="serial" shared="false">
    <ioPort end="16#03ff#" name="port1" start="16#03f8#"/>

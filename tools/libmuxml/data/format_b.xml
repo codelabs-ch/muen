@@ -5,9 +5,6 @@
   <memory>
    <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
   </memory>
-  <device name="debugconsole" shared="false">
-   <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
-  </device>
   <devices>
    <device name="debugconsole" shared="false">
     <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>

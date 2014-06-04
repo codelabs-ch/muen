@@ -18,6 +18,21 @@
 		<device name="testdevice" shared="false">
 			<ioPort name="fooport" start="16#00ab#" end="16#00ab#"/>
 		</device>
+		<devices>
+			<device name="serial" shared="false">
+				<ioPort name="serial" start="16#50b0#" end="16#50b0#"/>
+			</device>
+			<device name="vga" shared="true">
+				<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
+			</device>
+			<device name="multiport" shared="false">
+				<ioPort name="ports1" start="16#03f8#" end="16#03fd#"/>
+				<ioPort name="ports2" start="16#abcd#" end="16#bcda#"/>
+			</device>
+			<device name="testdevice" shared="false">
+				<ioPort name="fooport" start="16#00ab#" end="16#00ab#"/>
+			</device>
+		</devices>
 	</platform>
 
 	<memory>

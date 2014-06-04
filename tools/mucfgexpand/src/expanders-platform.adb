@@ -28,6 +28,8 @@ with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.XML_Utils;
 
+with Expanders.XML_Utils;
+
 package body Expanders.Platform
 is
 
@@ -79,6 +81,10 @@ is
               (Bus_Nr * 2 ** 20 + Device_Nr * 2 ** 15 + Func_Nr * 2 ** 12);
             PCI_Cfg_Addr_Str : constant String
               := Mutools.Utils.To_Hex (Number => PCI_Cfg_Addr);
+            Dev_Ref_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+              (Doc   => Data.Doc,
+               XPath => "/system/subjects/subject/devices/device[@physical='"
+               & Dev_Name & "']");
          begin
             Mulog.Log (Msg => "Adding PCI config space region to device '"
                        & Dev_Name & "' at physical address "
@@ -93,6 +99,15 @@ is
                Caching     => "UC",
                Alignment   => "",
                Memory_Type => ""));
+            Muxml.Utils.Append_Child
+              (Node      => Dev_Ref_Node,
+               New_Child => XML_Utils.Create_Virtual_Memory_Node
+                 (Policy        => Data,
+                  Logical_Name  => "mmconf",
+                  Physical_Name => "mmconf",
+                  Address       => PCI_Cfg_Addr_Str,
+                  Writable      => True,
+                  Executable    => False));
          end;
       end loop;
    end Add_PCI_Config_Space;

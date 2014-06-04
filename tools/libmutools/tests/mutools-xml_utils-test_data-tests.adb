@@ -154,12 +154,16 @@ package body Mutools.XML_Utils.Test_Data.Tests is
                                   Address     => "",
                                   Size        => "16#1000#",
                                   Caching     => "UC",
-                                  Alignment   => "16#1000#",
+                                  Alignment   => "",
                                   Memory_Type => "");
       Assert (Condition => DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "physicalAddress") = "",
               Message   => "Address set");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "alignment") = "",
+              Message   => "Alignment set");
       Assert (Condition => DOM.Core.Elements.Get_Attribute
               (Elem => Node,
                Name => "type") = "",

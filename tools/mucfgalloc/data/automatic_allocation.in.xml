@@ -7,6 +7,7 @@
    <memoryBlock allocatable="true" name="ram_2" physicalAddress="16#0010_0000#" size="16#0050_0000#"/>
   </memory>
   <device name="dev_1" shared="false"/>
+  <devices/>
  </platform>
  <memory>
   <memory alignment="16#1000#" caching="UC" name="mem1" physicalAddress="16#0010_8000#" size="16#0000_1000#" type="system"/>

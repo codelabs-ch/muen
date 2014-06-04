@@ -8,6 +8,11 @@
   <device name="dev_1" shared="false">
       <memory caching="UC" name="mmio_1" physicalAddress="16#0010_0000#" size="16#0030_0000#"/>
   </device>
+  <devices>
+   <device name="dev_1" shared="false">
+    <memory caching="UC" name="mmio_1" physicalAddress="16#0010_0000#" size="16#0030_0000#"/>
+   </device>
+  </devices>
  </platform>
  <memory>
   <memory alignment="16#1000#" caching="WB" name="mem1" size="16#0001_0000#" type="system"/>

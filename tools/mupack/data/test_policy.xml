@@ -5,9 +5,7 @@
 		<memory>
 			<memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#" />
 		</memory>
-		<device name="serial" shared="false">
-			<ioPort name="serial" start="16#50b0#" end="16#50b0#"/>
-		</device>
+		<devices/>
 	</platform>
 
 	<memory>
@@ -22,11 +20,7 @@
 				<memory logical="text" physical="kernel_text" writable="true" executable="true" virtualAddress="16#0010_0000#"/>
 			</cpu>
 		</memory>
-		<devices>
-			<device logical="log" physical="debugconsole">
-				<ioPort logical="ports" physical="serial"/>
-			</device>
-		</devices>
+		<devices/>
 	</kernel>
 
 	<subjects>

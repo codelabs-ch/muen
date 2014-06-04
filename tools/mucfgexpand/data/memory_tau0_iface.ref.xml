@@ -36,6 +36,12 @@
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
    </memory>
+   <devices>
+    <device logical="xhci" physical="xhci">
+     <irq logical="irq" physical="irq" vector="55"/>
+     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
+    </device>
+   </devices>
    <events>
     <source>
      <group name="vmx_exit">

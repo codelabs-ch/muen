@@ -21,6 +21,7 @@ with DOM.Core.Nodes;
 with McKae.XML.XPath.XIA;
 
 with Mulog;
+with Muxml.Utils;
 
 package body Mucfgcheck.Platform
 is
@@ -67,6 +68,26 @@ is
            & " bytes available by the platform";
       end if;
    end Memory_Space;
+
+   -------------------------------------------------------------------------
+
+   procedure PCI_Config_Space_Address (XML_Data : Muxml.XML_Data_Type)
+   is
+      Cfg_Address   : constant String := Muxml.Utils.Get_Attribute
+        (Doc   => XML_Data.Doc,
+         XPath => "/system/platform/devices",
+         Name  => "pciConfigAddress");
+      PCI_Dev_Count : constant Natural
+        := DOM.Core.Nodes.Length
+          (List => XPath_Query
+             (N     => XML_Data.Doc,
+              XPath => "/system/platform/devices/device/pci"));
+   begin
+      Mulog.Log (Msg => "Checking PCI configuration space address");
+      if PCI_Dev_Count > 0 and then Cfg_Address'Length = 0 then
+         raise Validation_Error with "Missing PCI configuration space address";
+      end if;
+   end PCI_Config_Space_Address;
 
    -------------------------------------------------------------------------
 

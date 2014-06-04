@@ -254,7 +254,8 @@ is
                   Physical_Mem  : constant DOM.Core.Node
                     := Muxml.Utils.Get_Element
                       (Doc   => Policy.Doc,
-                       XPath => "/system/platform/device[@name='" & Dev_Name
+                       XPath => "/system/platform/devices"
+                       & "/device[@name='" & Dev_Name
                        & "']/memory[@name='" & Physical_Name & "']");
                begin
                   Mulog.Log (Msg => "Adding region " & Logical_Name

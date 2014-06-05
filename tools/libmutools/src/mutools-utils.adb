@@ -19,6 +19,8 @@
 
 with Ada.Strings.Fixed;
 
+with Mutools.Constants;
+
 package body Mutools.Utils
 is
 
@@ -87,6 +89,39 @@ is
    begin
       return Encoded_Str (Encoded_Str'First .. Udrl_Idx - 1);
    end Decode_Entity_Name;
+
+   -------------------------------------------------------------------------
+
+   function Is_Managed_By_VMX
+     (MSR                    : Interfaces.Unsigned_64;
+      DEBUGCTL_Control       : Boolean;
+      PAT_Control            : Boolean;
+      PERFGLOBALCTRL_Control : Boolean;
+      EFER_Control           : Boolean)
+      return Boolean
+   is
+      use Mutools.Constants;
+
+      Result : Boolean;
+   begin
+
+      --  Reference: Intel SDM Vol. 3C, section 26.3.2.1 and section 27.3.1.
+
+      case MSR is
+         when IA32_SYSENTER_CS
+            | IA32_SYSENTER_ESP
+            | IA32_SYSENTER_EIP
+            | IA32_FS_BASE
+            | IA32_GS_BASE          => Result := True;
+         when IA32_DEBUGCTL         => Result := DEBUGCTL_Control;
+         when IA32_PAT              => Result := PAT_Control;
+         when IA32_PERF_GLOBAL_CTRL => Result := PERFGLOBALCTRL_Control;
+         when IA32_EFER             => Result := EFER_Control;
+         when others                => Result := False;
+      end case;
+
+      return Result;
+   end Is_Managed_By_VMX;
 
    -------------------------------------------------------------------------
 

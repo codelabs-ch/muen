@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with Mutools.Constants;
+
 package Mutools.Utils.Test_Data is
 
 --  begin read only

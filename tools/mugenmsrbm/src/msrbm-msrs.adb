@@ -27,27 +27,28 @@ is
      (Bitmap     : in out MSR_Bitmap_Type;
       Start_Addr :        Interfaces.Unsigned_32;
       End_Addr   :        Interfaces.Unsigned_32;
-      Mode       :        MSR_Mode_Type)
+      Mode       :        Mutools.Types.MSR_Mode_Type)
    is
       use type Interfaces.Unsigned_32;
+      use type Mutools.Types.MSR_Mode_Type;
 
       Mask   : constant := 16#1fff#;
       Offset : Natural;
    begin
       case Mode is
-         when RW =>
+         when Mutools.Types.RW =>
             Allow_MSRs (Bitmap     => Bitmap,
                         Start_Addr => Start_Addr,
                         End_Addr   => End_Addr,
-                        Mode       => R);
+                        Mode       => Mutools.Types.R);
             Allow_MSRs (Bitmap     => Bitmap,
                         Start_Addr => Start_Addr,
                         End_Addr   => End_Addr,
-                        Mode       => W);
+                        Mode       => Mutools.Types.W);
             return;
-         when W =>
+         when Mutools.Types.W =>
             Offset := 2048 * 8;
-         when R =>
+         when Mutools.Types.R =>
             Offset := 0;
       end case;
 

@@ -28,6 +28,7 @@ with Interfaces;
 with Mulog;
 with Muxml.Utils;
 with Mutools.Files;
+with Mutools.Types;
 
 with Msrbm.MSRs;
 
@@ -102,8 +103,8 @@ is
               := Interfaces.Unsigned_32'Value
                 (DOM.Core.Elements.Get_Attribute (Elem => Cur_MSR,
                                                   Name => "end"));
-            Access_Mode : constant MSRs.MSR_Mode_Type
-              := MSRs.MSR_Mode_Type'Value
+            Access_Mode : constant Mutools.Types.MSR_Mode_Type
+              := Mutools.Types.MSR_Mode_Type'Value
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => Cur_MSR,
                     Name => "mode"));

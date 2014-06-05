@@ -12,10 +12,10 @@ package body Msrbm.MSRs.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Allow_MSRs (Gnattest_T : in out Test);
-   procedure Test_Allow_MSRs_c99a60 (Gnattest_T : in out Test) renames Test_Allow_MSRs;
---  id:2.2/c99a60488753a1e9/Allow_MSRs/1/0/
+   procedure Test_Allow_MSRs_e209a8 (Gnattest_T : in out Test) renames Test_Allow_MSRs;
+--  id:2.2/e209a8771f6aa99f/Allow_MSRs/1/0/
    procedure Test_Allow_MSRs (Gnattest_T : in out Test) is
-   --  msrbm-msrs.ads:43:4:Allow_MSRs
+   --  msrbm-msrs.ads:42:4:Allow_MSRs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -35,11 +35,11 @@ package body Msrbm.MSRs.Test_Data.Tests is
       Allow_MSRs (Bitmap     => B,
                   Start_Addr => 0,
                   End_Addr   => 16#1fff#,
-                  Mode       => RW);
+                  Mode       => Mutools.Types.RW);
       Allow_MSRs (Bitmap     => B,
                   Start_Addr => 16#c0000000#,
                   End_Addr   => 16#c0001fff#,
-                  Mode       => RW);
+                  Mode       => Mutools.Types.RW);
       Assert (Condition => To_Stream (Bitmap => B) = Full_Ref,
               Message   => "Full MSR bitmap mismatch");
 
@@ -47,11 +47,11 @@ package body Msrbm.MSRs.Test_Data.Tests is
       Allow_MSRs (Bitmap     => B,
                   Start_Addr => 16#c0000000#,
                   End_Addr   => 16#c0000007#,
-                  Mode       => R);
+                  Mode       => Mutools.Types.R);
       Allow_MSRs (Bitmap     => B,
                   Start_Addr => 16#80#,
                   End_Addr   => 16#87#,
-                  Mode       => W);
+                  Mode       => Mutools.Types.W);
       Assert (Condition => To_Stream (Bitmap => B) = RW_Ref,
               Message   => "RW MSR bitmap mismatch");
 --  begin read only
@@ -64,7 +64,7 @@ package body Msrbm.MSRs.Test_Data.Tests is
    procedure Test_To_Stream_a9353e (Gnattest_T : in out Test) renames Test_To_Stream;
 --  id:2.2/a9353e0af3662022/To_Stream/1/0/
    procedure Test_To_Stream (Gnattest_T : in out Test) is
-   --  msrbm-msrs.ads:55:4:To_Stream
+   --  msrbm-msrs.ads:54:4:To_Stream
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -20,12 +20,11 @@ with Ada.Streams;
 
 with Interfaces;
 
+with Mutools.Types;
 with Mutools.Constants;
 
 package Msrbm.MSRs
 is
-
-   type MSR_Mode_Type is (R, W, RW);
 
    subtype MSR_Low_Range  is Interfaces.Unsigned_32 range
      16#00000000# .. 16#00001fff#;
@@ -44,7 +43,7 @@ is
      (Bitmap     : in out MSR_Bitmap_Type;
       Start_Addr :        Interfaces.Unsigned_32;
       End_Addr   :        Interfaces.Unsigned_32;
-      Mode       :        MSR_Mode_Type);
+      Mode       :        Mutools.Types.MSR_Mode_Type);
 
    use type Ada.Streams.Stream_Element_Offset;
 

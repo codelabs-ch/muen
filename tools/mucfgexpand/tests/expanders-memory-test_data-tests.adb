@@ -232,4 +232,25 @@ package body Expanders.Memory.Test_Data.Tests is
    end Test_Add_Subject_Bitmaps;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Add_Subject_MSR_Store (Gnattest_T : in out Test);
+   procedure Test_Add_Subject_MSR_Store_187092 (Gnattest_T : in out Test) renames Test_Add_Subject_MSR_Store;
+--  id:2.2/187092daa53d49c3/Add_Subject_MSR_Store/1/0/
+   procedure Test_Add_Subject_MSR_Store (Gnattest_T : in out Test) is
+   --  expanders-memory.ads:56:4:Add_Subject_MSR_Store
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/memory_subject_msrstore.xml",
+         Ref_Filename => "data/memory_subject_msrstore.ref.xml",
+         Pre          => Subjects.Handle_Profile'Access,
+         Expander     => Add_Subject_MSR_Store'Access);
+--  begin read only
+   end Test_Add_Subject_MSR_Store;
+--  end read only
+
 end Expanders.Memory.Test_Data.Tests;

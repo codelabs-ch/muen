@@ -39,6 +39,9 @@ is
    --  Physical start address of VMX-related memory regions.
    VMX_Start_Address : constant Interfaces.Unsigned_64 := 16#1000#;
 
+   --  Size of a single MSR-Store entry, see Intel SDM Vol. 3C, table 24-11.
+   MSR_Store_Entry_Size : constant := 128 / 8;
+
    -------------------------------------------------------------------------
 
    procedure Add_AP_Trampoline (Data : in out Muxml.XML_Data_Type)
@@ -278,6 +281,69 @@ is
          end;
       end loop;
    end Add_Subject_Bitmaps;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Subject_MSR_Store (Data : in out Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject["
+           & "vcpu/registers/msrs/msr/@mode=('w' or 'rw')]");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            package MXU renames Mutools.XML_Utils;
+
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Subj_Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Registers  : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subj_Node,
+                 XPath => "vcpu/registers/msrs/msr[@mode=('rw' or 'w')]");
+            Ctrls_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj_Node,
+                 XPath => "vcpu/vmx/controls");
+            MSR_Count  : constant Natural
+              := MXU.Calculate_MSR_Count
+                (MSRs                   => Registers,
+                 DEBUGCTL_Control       => MXU.Has_Managed_DEBUGCTL
+                   (Controls => Ctrls_Node),
+                 PAT_Control            => MXU.Has_Managed_PAT
+                   (Controls => Ctrls_Node),
+                 PERFGLOBALCTRL_Control => MXU.Has_Managed_PERFGLOBALCTRL
+                   (Controls => Ctrls_Node),
+                 EFER_Control           => MXU.Has_Managed_EFER
+                   (Controls => Ctrls_Node));
+
+            Size_Str : constant String := Mutools.Utils.To_Hex
+              (Number => Interfaces.Unsigned_64
+                 (MSR_Count * MSR_Store_Entry_Size));
+         begin
+            if MSR_Count > 0 then
+               Mulog.Log (Msg => "Adding MSR store region with size "
+                          & Size_Str & " for subject '" & Subj_Name & "'");
+               Mutools.XML_Utils.Add_Memory_Region
+                 (Policy      => Data,
+                  Name        => Subj_Name & "|msrstore",
+                  Address     => "",
+                  Size        => Size_Str,
+                  Caching     => "WB",
+                  Alignment   => "16#1000#",
+                  Memory_Type => "system_msrstore",
+                  File_Name   =>  Subj_Name & "_msrstore",
+                  File_Offset => "none");
+            end if;
+         end;
+      end loop;
+   end Add_Subject_MSR_Store;
 
    -------------------------------------------------------------------------
 

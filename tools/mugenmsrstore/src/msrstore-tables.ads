@@ -26,6 +26,9 @@ is
    --  MSR store table as specified by Intel SDM Vol. 3C, section 24.7.2.
    type MSR_Store_Type (Size : MSR_Store_Size) is private;
 
+   --  Returns True if the given MSR store is full.
+   function Is_Full (Store : MSR_Store_Type) return Boolean;
+
 private
 
    --  MSR table entry format as specified by Intel SDM Vol. 3C, table 24-11.
@@ -54,5 +57,10 @@ private
       Next_Idx : Positive := Positive (MSR_Store_Size'First);
       Data     : MSR_Table_Type (1 .. Size) := (others => Null_Store_Entry);
    end record;
+
+   function Is_Full
+     (Store : MSR_Store_Type)
+      return Boolean
+   is (Store.Next_Idx > Positive (Store.Size));
 
 end Msrstore.Tables;

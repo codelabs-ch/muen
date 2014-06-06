@@ -18,5 +18,8 @@ package Msrstore.Tables.Test_Data.Tests is
    procedure Test_Append_Entry_ce511a (Gnattest_T : in out Test);
    --  msrstore-tables.ads:38:4:Append_Entry
 
+   procedure Test_To_Stream_45df0e (Gnattest_T : in out Test);
+   --  msrstore-tables.ads:46:4:To_Stream
+
 end Msrstore.Tables.Test_Data.Tests;
 --  end read only

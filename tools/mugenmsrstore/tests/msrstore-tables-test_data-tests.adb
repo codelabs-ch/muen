@@ -110,4 +110,38 @@ package body Msrstore.Tables.Test_Data.Tests is
    end Test_Append_Entry;
 --  end read only
 
+
+--  begin read only
+   procedure Test_To_Stream (Gnattest_T : in out Test);
+   procedure Test_To_Stream_45df0e (Gnattest_T : in out Test) renames Test_To_Stream;
+--  id:2.2/45df0e704318cdb4/To_Stream/1/0/
+   procedure Test_To_Stream (Gnattest_T : in out Test) is
+   --  msrstore-tables.ads:46:4:To_Stream
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Ada.Streams.Stream_Element_Array;
+
+      Ref_Stream : constant Ada.Streams.Stream_Element_Array
+        := (16#84#, 16#00#, 16#00#, 16#c0#, 16#00#, 16#00#, 16#00#, 16#00#,
+            16#fe#, 16#ca#, 16#fe#, 16#ca#, 16#00#, 16#00#, 16#00#, 16#00#,
+            16#00#, 16#2a#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#,
+            16#78#, 16#56#, 16#34#, 16#12#, 16#00#, 16#00#, 16#00#, 16#00#);
+
+      Store : MSR_Store_Type (Size => 2);
+   begin
+      Store.Next_Idx := 3;
+      Store.Data (1) := (Index    => 16#c000_0084#,
+                         Reserved => 0,
+                         Data     => 16#cafe_cafe#);
+      Store.Data (2) := (Index    => 16#2a00#,
+                         Reserved => 0,
+                         Data     => 16#1234_5678#);
+      Assert (Condition => To_Stream (Store => Store) = Ref_Stream,
+              Message   => "Stream mismatch");
+--  begin read only
+   end Test_To_Stream;
+--  end read only
+
 end Msrstore.Tables.Test_Data.Tests;

@@ -20,12 +20,23 @@ package body Msrstore.Tables.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Store : MSR_Store_Type (Size => 2);
    begin
+      Assert (Condition => Store.Size = 2,
+              Message   => "Invalid MSR store size");
+      Assert (Condition => Store.Next_Idx = 1,
+              Message   => "Empty MSR store contains entry");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Assert (Condition => not Is_Full (Store => Store),
+              Message   => "Empty MSR store is full");
 
+      Store.Next_Idx := 2;
+      Assert (Condition => not Is_Full (Store => Store),
+              Message   => "MSR store is full");
+
+      Store.Next_Idx := 3;
+      Assert (Condition => Is_Full (Store => Store),
+              Message   => "MSR store not full");
 --  begin read only
    end Test_Is_Full;
 --  end read only

@@ -22,6 +22,7 @@ TOOLS =           \
 	mugenacpi     \
 	mugeniobm     \
 	mugenmsrbm    \
+	mugenmsrstore \
 	mugenpt       \
 	mugensinfo    \
 	mugenspec     \

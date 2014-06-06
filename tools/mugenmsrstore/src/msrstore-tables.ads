@@ -31,6 +31,9 @@ is
    --  Returns True if the given MSR store is full.
    function Is_Full (Store : MSR_Store_Type) return Boolean;
 
+   --  Returns True if the given MSR store is empty.
+   function Is_Empty (Store : MSR_Store_Type) return Boolean;
+
    --  Append entry with specified MSR index and data to given store.
    procedure Append_Entry
      (Store : in out MSR_Store_Type;
@@ -72,6 +75,11 @@ private
       Next_Idx : Positive := Positive (MSR_Store_Size'First);
       Data     : MSR_Table_Type (1 .. Size) := (others => Null_Store_Entry);
    end record;
+
+   function Is_Empty
+     (Store : MSR_Store_Type)
+      return Boolean
+   is (Store.Next_Idx = Positive (MSR_Store_Size'First));
 
    function Is_Full
      (Store : MSR_Store_Type)

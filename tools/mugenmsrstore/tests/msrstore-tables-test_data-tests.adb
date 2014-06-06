@@ -52,12 +52,34 @@ package body Msrstore.Tables.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Interfaces.Unsigned_32;
+      use type Interfaces.Unsigned_64;
+
+      Store : MSR_Store_Type (Size => 2);
    begin
+      Append_Entry (Store => Store,
+                    Index => 16#c000_0080#,
+                    Data  => 16#cafe_beef#);
+      Assert (Condition => Store.Next_Idx = 2,
+              Message   => "Entry not appended (1)");
+      Assert (Condition => Store.Data (1).Index = 16#c000_0080#,
+              Message   => "Index mismatch (1)");
+      Assert (Condition => Store.Data (1).Reserved = 0,
+              Message   => "Reserved field mismatch (1)");
+      Assert (Condition => Store.Data (1).Data = 16#cafe_beef#,
+              Message   => "Data mismatch (1)");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Append_Entry (Store => Store,
+                    Index => 16#beef_beef#,
+                    Data  => 16#0123_4567#);
+      Assert (Condition => Store.Next_Idx = 3,
+              Message   => "Entry not appended (2)");
+      Assert (Condition => Store.Data (2).Index = 16#beef_beef#,
+              Message   => "Index mismatch (2)");
+      Assert (Condition => Store.Data (2).Reserved = 0,
+              Message   => "Reserved field mismatch (2)");
+      Assert (Condition => Store.Data (2).Data = 16#0123_4567#,
+              Message   => "Data mismatch (2)");
 --  begin read only
    end Test_Append_Entry;
 --  end read only

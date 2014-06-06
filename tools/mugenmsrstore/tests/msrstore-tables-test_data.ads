@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with System.Assertions;
+
 package Msrstore.Tables.Test_Data is
 
 --  begin read only

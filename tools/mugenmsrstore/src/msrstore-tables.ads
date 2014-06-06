@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Streams;
+
 with Interfaces;
 
 package Msrstore.Tables
@@ -36,6 +38,11 @@ is
       Data  :        Interfaces.Unsigned_64)
      with
        Pre => not Is_Full (Store => Store);
+
+   --  Convert MSR store to binary stream.
+   function To_Stream
+     (Store : MSR_Store_Type)
+      return Ada.Streams.Stream_Element_Array;
 
 private
 

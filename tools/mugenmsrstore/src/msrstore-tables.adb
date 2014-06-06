@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Unchecked_Conversion;
+
 package body Msrstore.Tables
 is
 
@@ -32,5 +34,28 @@ is
       Store.Data (Cur_Idx).Data  := Data;
       Store.Next_Idx             := Store.Next_Idx + 1;
    end Append_Entry;
+
+   -------------------------------------------------------------------------
+
+   function To_Stream
+     (Store : MSR_Store_Type)
+      return Ada.Streams.Stream_Element_Array
+   is
+      use Ada.Streams;
+
+      Last_Idx    : constant MSR_Store_Size
+        := MSR_Store_Size (Store.Next_Idx - 1);
+      Stream_Size : constant Stream_Element_Offset
+        := (Store_Entry_Type'Size / 8) * Stream_Element_Offset (Last_Idx);
+
+      subtype Table_Type    is MSR_Table_Type       (1 .. Last_Idx);
+      subtype Result_Stream is Stream_Element_Array (1 .. Stream_Size);
+
+      function Convert is new Ada.Unchecked_Conversion
+        (Source => Table_Type,
+         Target => Result_Stream);
+   begin
+      return Convert (S => Store.Data (1 .. Last_Idx));
+   end To_Stream;
 
 end Msrstore.Tables;

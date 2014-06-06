@@ -1,0 +1,58 @@
+--
+--  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--
+--  This program is free software: you can redistribute it and/or modify
+--  it under the terms of the GNU General Public License as published by
+--  the Free Software Foundation, either version 3 of the License, or
+--  (at your option) any later version.
+--
+--  This program is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+--  You should have received a copy of the GNU General Public License
+--  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+
+with Interfaces;
+
+package Msrstore.Tables
+is
+
+   type MSR_Store_Size is range 1 .. 512;
+
+   --  MSR store table as specified by Intel SDM Vol. 3C, section 24.7.2.
+   type MSR_Store_Type (Size : MSR_Store_Size) is private;
+
+private
+
+   --  MSR table entry format as specified by Intel SDM Vol. 3C, table 24-11.
+   type Store_Entry_Type is record
+      Index    : Interfaces.Unsigned_32;
+      Reserved : Interfaces.Unsigned_32;
+      Data     : Interfaces.Unsigned_64;
+   end record
+     with Size => 16 * 8;
+
+   for Store_Entry_Type use record
+      Index    at 0 range 0 .. 31;
+      Reserved at 4 range 0 .. 31;
+      Data     at 8 range 0 .. 63;
+   end record;
+
+   Null_Store_Entry : constant Store_Entry_Type
+     := Store_Entry_Type'(Index    => 0,
+                          Reserved => 0,
+                          Data     => 0);
+
+   type MSR_Table_Type is array (MSR_Store_Size range <>) of Store_Entry_Type;
+   pragma Pack (MSR_Table_Type);
+
+   type MSR_Store_Type (Size : MSR_Store_Size) is record
+      Next_Idx : Positive := Positive (MSR_Store_Size'First);
+      Data     : MSR_Table_Type (1 .. Size) := (others => Null_Store_Entry);
+   end record;
+
+end Msrstore.Tables;

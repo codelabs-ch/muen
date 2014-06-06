@@ -45,7 +45,9 @@ is
    --  Convert MSR store to binary stream.
    function To_Stream
      (Store : MSR_Store_Type)
-      return Ada.Streams.Stream_Element_Array;
+      return Ada.Streams.Stream_Element_Array
+     with
+       Pre => not Is_Empty (Store => Store);
 
 private
 

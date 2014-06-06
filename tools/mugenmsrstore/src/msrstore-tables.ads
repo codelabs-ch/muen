@@ -29,6 +29,14 @@ is
    --  Returns True if the given MSR store is full.
    function Is_Full (Store : MSR_Store_Type) return Boolean;
 
+   --  Append entry with specified MSR index and data to given store.
+   procedure Append_Entry
+     (Store : in out MSR_Store_Type;
+      Index :        Interfaces.Unsigned_32;
+      Data  :        Interfaces.Unsigned_64)
+     with
+       Pre => not Is_Full (Store => Store);
+
 private
 
    --  MSR table entry format as specified by Intel SDM Vol. 3C, table 24-11.

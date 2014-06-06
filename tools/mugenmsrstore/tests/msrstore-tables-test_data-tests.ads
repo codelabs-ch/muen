@@ -10,10 +10,13 @@ package Msrstore.Tables.Test_Data.Tests is
    with null record;
 
    procedure Test_Is_Full_aaff6f (Gnattest_T : in out Test);
-   --  msrstore-tables.ads:30:4:Is_Full
+   --  msrstore-tables.ads:32:4:Is_Full
+
+   procedure Test_Is_Empty_7c576a (Gnattest_T : in out Test);
+   --  msrstore-tables.ads:35:4:Is_Empty
 
    procedure Test_Append_Entry_ce511a (Gnattest_T : in out Test);
-   --  msrstore-tables.ads:33:4:Append_Entry
+   --  msrstore-tables.ads:38:4:Append_Entry
 
 end Msrstore.Tables.Test_Data.Tests;
 --  end read only

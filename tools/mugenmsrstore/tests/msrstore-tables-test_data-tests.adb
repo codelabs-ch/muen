@@ -15,7 +15,7 @@ package body Msrstore.Tables.Test_Data.Tests is
    procedure Test_Is_Full_aaff6f (Gnattest_T : in out Test) renames Test_Is_Full;
 --  id:2.2/aaff6f63df362f53/Is_Full/1/0/
    procedure Test_Is_Full (Gnattest_T : in out Test) is
-   --  msrstore-tables.ads:30:4:Is_Full
+   --  msrstore-tables.ads:32:4:Is_Full
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -43,11 +43,37 @@ package body Msrstore.Tables.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Is_Empty (Gnattest_T : in out Test);
+   procedure Test_Is_Empty_7c576a (Gnattest_T : in out Test) renames Test_Is_Empty;
+--  id:2.2/7c576a03a21b9e2d/Is_Empty/1/0/
+   procedure Test_Is_Empty (Gnattest_T : in out Test) is
+   --  msrstore-tables.ads:35:4:Is_Empty
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Store : MSR_Store_Type (Size => 2);
+   begin
+      Assert (Condition => Store.Next_Idx = 1,
+              Message   => "Empty MSR store contains entry");
+
+      Assert (Condition => Is_Empty (Store => Store),
+              Message   => "MSR store not empty");
+
+      Store.Next_Idx := 2;
+      Assert (Condition => not Is_Empty (Store => Store),
+              Message   => "MSR store still empty");
+--  begin read only
+   end Test_Is_Empty;
+--  end read only
+
+
+--  begin read only
    procedure Test_Append_Entry (Gnattest_T : in out Test);
    procedure Test_Append_Entry_ce511a (Gnattest_T : in out Test) renames Test_Append_Entry;
 --  id:2.2/ce511a06b30ed5cd/Append_Entry/1/0/
    procedure Test_Append_Entry (Gnattest_T : in out Test) is
-   --  msrstore-tables.ads:33:4:Append_Entry
+   --  msrstore-tables.ads:38:4:Append_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -30,6 +30,7 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Muxml.Utils;
 with Mutools.Utils;
+with Mutools.XML_Utils;
 
 with Spec.Templates;
 with Spec.Utils;
@@ -1197,6 +1198,8 @@ is
         (Subject : DOM.Core.Node;
          Policy  : Muxml.XML_Data_Type)
       is
+         use type DOM.Core.Node;
+
          --  EPT memory type WB, page-walk length 4
          EPT_Flags : constant := 16#1e#;
 
@@ -1242,6 +1245,14 @@ is
                XPath => "/system/memory/memory[@type='system_msrbm' and "
                & "contains(string(@name),'" & Name & "')]",
                Name  => "physicalAddress"));
+
+         MSR_Store_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "/system/memory/memory[@type='system_msrstore' and "
+               & "contains(string(@name),'" & Name & "')]");
+         MSR_Store_Addr : Unsigned_64 := 0;
+         MSR_Count      : Natural     := 0;
 
          CS_Access : constant String := Muxml.Utils.Get_Attribute
            (Doc   => Subject,
@@ -1301,6 +1312,40 @@ is
          Event_Count : constant Natural := DOM.Core.Nodes.Length
            (List => Events);
       begin
+         if MSR_Store_Node /= null then
+            MSR_Store_Addr := Unsigned_64'Value
+              (DOM.Core.Elements.Get_Attribute
+                 (Elem => MSR_Store_Node,
+                  Name => "physicalAddress"));
+            declare
+               Ctrls_Node : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Doc   => Subject,
+                    XPath => "vcpu/vmx/controls");
+               Debug_Ctrl : constant Boolean
+                 := Mutools.XML_Utils.Has_Managed_DEBUGCTL
+                   (Controls => Ctrls_Node);
+               PERF_Ctrl  : constant Boolean
+                 := Mutools.XML_Utils.Has_Managed_PERFGLOBALCTRL
+                   (Controls => Ctrls_Node);
+               PAT_Ctrl   : constant Boolean
+                 := Mutools.XML_Utils.Has_Managed_PAT (Controls => Ctrls_Node);
+               EFER_Ctrl  : constant Boolean
+                 := Mutools.XML_Utils.Has_Managed_EFER
+                   (Controls => Ctrls_Node);
+            begin
+               MSR_Count := Mutools.XML_Utils.Calculate_MSR_Count
+                 (MSRs                   => McKae.XML.XPath.XIA.XPath_Query
+                   (N     => Subject,
+                    XPath => "vcpu/registers/msrs/msr"
+                    & "[@mode='w' or @mode='rw']"),
+                  DEBUGCTL_Control       => Debug_Ctrl,
+                  PAT_Control            => PAT_Ctrl,
+                  PERFGLOBALCTRL_Control => PERF_Ctrl,
+                  EFER_Control           => EFER_Ctrl);
+            end;
+         end if;
+
          Buffer := Buffer & Indent (N => 2) & Subj_Id
            & " => Subject_Spec_Type'("
            & ASCII.LF
@@ -1345,7 +1390,8 @@ is
            & Indent & "    MSR_Bitmap_Address => "
            & Mutools.Utils.To_Hex (Number => MSRBM_Addr) & ","
            & ASCII.LF
-           & Indent & "    MSR_Store_Address  => 0,"
+           & Indent & "    MSR_Store_Address  => "
+           & Mutools.Utils.To_Hex (Number => MSR_Store_Addr) & ","
            & ASCII.LF
            & Indent & "    Stack_Address      => "
            & Mutools.Utils.To_Hex (Number => Stack_Addr) & ","
@@ -1372,7 +1418,7 @@ is
            (Number => Get_Exceptions (Fields => Exceptions,
                                       Default => 16#ffff_ffff#)) & ","
            & ASCII.LF
-           & Indent & "    MSR_Count          => 0,"
+           & Indent & "    MSR_Count          =>" & MSR_Count'Img & ","
            & ASCII.LF
            & Indent & "    VMX_Controls       => VMX_Controls_Type'("
            & ASCII.LF

@@ -20,11 +20,10 @@ with Ada.Streams;
 
 with Interfaces;
 
+private with Mutools.Constants;
+
 package Msrstore.Tables
 is
-
-   --  MSR store table entry size in bytes.
-   MSR_Store_Entry_Size : constant := 16;
 
    type MSR_Store_Size is range 1 .. 512;
 
@@ -60,7 +59,7 @@ private
       Reserved : Interfaces.Unsigned_32;
       Data     : Interfaces.Unsigned_64;
    end record
-     with Size => MSR_Store_Entry_Size * 8;
+     with Size => Mutools.Constants.MSR_Store_Entry_Size * 8;
 
    for Store_Entry_Type use record
       Index    at 0 range 0 .. 31;

@@ -23,12 +23,17 @@ with Mulog;
 with Muxml;
 with Mutools.Cmd_Line.Infile_Outdir;
 
+with Msrstore.Generator;
+
 procedure Mugenmsrstore
 is
 begin
    Mutools.Cmd_Line.Infile_Outdir.Init
      (Description => "Generate MSR store files according to given system "
       & "policy");
+   Mutools.Cmd_Line.Infile_Outdir.Run
+     (Kind    => Muxml.Format_B,
+      Process => Msrstore.Generator.Write'Access);
 
 exception
    when Mutools.Cmd_Line.Invalid_Cmd_Line =>

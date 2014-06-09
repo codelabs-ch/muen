@@ -75,4 +75,15 @@ is
    --  saved/loaded automatically on VM-exits and entries.
    function Has_Managed_EFER (Controls : DOM.Core.Node) return Boolean;
 
+   --  Returns the number of Model-Specific registers that must be managed by
+   --  the MSR store mechanism given the list of MSR nodes and considering the
+   --  specified control flags.
+   function Calculate_MSR_Count
+     (MSRs                   : DOM.Core.Node_List;
+      DEBUGCTL_Control       : Boolean;
+      PAT_Control            : Boolean;
+      PERFGLOBALCTRL_Control : Boolean;
+      EFER_Control           : Boolean)
+      return Natural;
+
 end Mutools.XML_Utils;

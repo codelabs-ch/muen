@@ -46,7 +46,7 @@ is
       Last_Idx    : constant MSR_Store_Size
         := MSR_Store_Size (Store.Next_Idx - 1);
       Stream_Size : constant Stream_Element_Offset
-        := (Store_Entry_Type'Size / 8) * Stream_Element_Offset (Last_Idx);
+        := MSR_Store_Entry_Size * Stream_Element_Offset (Last_Idx);
 
       subtype Table_Type    is MSR_Table_Type       (1 .. Last_Idx);
       subtype Result_Stream is Stream_Element_Array (1 .. Stream_Size);

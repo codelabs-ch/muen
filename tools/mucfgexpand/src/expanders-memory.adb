@@ -296,6 +296,8 @@ is
          declare
             package MXU renames Mutools.XML_Utils;
 
+            use type Interfaces.Unsigned_64;
+
             Subj_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Nodes,
                                       Index => I);
@@ -311,21 +313,28 @@ is
               := Muxml.Utils.Get_Element
                 (Doc   => Subj_Node,
                  XPath => "vcpu/vmx/controls");
-            MSR_Count  : constant Natural
-              := MXU.Calculate_MSR_Count
-                (MSRs                   => Registers,
-                 DEBUGCTL_Control       => MXU.Has_Managed_DEBUGCTL
-                   (Controls => Ctrls_Node),
-                 PAT_Control            => MXU.Has_Managed_PAT
-                   (Controls => Ctrls_Node),
-                 PERFGLOBALCTRL_Control => MXU.Has_Managed_PERFGLOBALCTRL
-                   (Controls => Ctrls_Node),
-                 EFER_Control           => MXU.Has_Managed_EFER
-                   (Controls => Ctrls_Node));
+            MSR_Count  : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64
+                (MXU.Calculate_MSR_Count
+                   (MSRs                   => Registers,
+                    DEBUGCTL_Control       => MXU.Has_Managed_DEBUGCTL
+                      (Controls => Ctrls_Node),
+                    PAT_Control            => MXU.Has_Managed_PAT
+                      (Controls => Ctrls_Node),
+                    PERFGLOBALCTRL_Control => MXU.Has_Managed_PERFGLOBALCTRL
+                      (Controls => Ctrls_Node),
+                    EFER_Control           => MXU.Has_Managed_EFER
+                      (Controls => Ctrls_Node)));
 
-            Size_Str : constant String := Mutools.Utils.To_Hex
-              (Number => Interfaces.Unsigned_64
-                 (MSR_Count * MSR_Store_Entry_Size));
+            --  MSR store size rounded up to next multiple of page size.
+
+            Store_Size : constant Interfaces.Unsigned_64
+              := Mutools.Constants.Page_Size *
+                (((MSR_Count * MSR_Store_Entry_Size) +
+                 (Mutools.Constants.Page_Size - 1)) /
+                   Mutools.Constants.Page_Size);
+            Size_Str   : constant String
+              := Mutools.Utils.To_Hex (Number => Store_Size);
          begin
             if MSR_Count > 0 then
                Mulog.Log (Msg => "Adding MSR store region with size "

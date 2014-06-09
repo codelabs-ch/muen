@@ -71,4 +71,8 @@ is
    --  saved/loaded automatically on VM-exits and entries.
    function Has_Managed_PAT (Controls : DOM.Core.Node) return Boolean;
 
+   --  Returns True if the given VMX controls specify that the EFER MSR is
+   --  saved/loaded automatically on VM-exits and entries.
+   function Has_Managed_EFER (Controls : DOM.Core.Node) return Boolean;
+
 end Mutools.XML_Utils;

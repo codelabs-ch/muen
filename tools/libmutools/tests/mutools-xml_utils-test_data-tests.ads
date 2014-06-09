@@ -27,5 +27,8 @@ package Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Has_Managed_PAT_0e0b54 (Gnattest_T : in out Test);
    --  mutools-xml_utils.ads:72:4:Has_Managed_PAT
 
+   procedure Test_Has_Managed_EFER_29e528 (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:76:4:Has_Managed_EFER
+
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

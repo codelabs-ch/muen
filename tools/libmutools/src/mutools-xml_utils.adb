@@ -168,6 +168,22 @@ is
 
    -------------------------------------------------------------------------
 
+   function Has_Managed_EFER (Controls : DOM.Core.Node) return Boolean
+   is
+      Load : constant Boolean
+        := "1" = Muxml.Utils.Get_Element_Value
+          (Doc   => Controls,
+           XPath => "entry/LoadIA32EFER");
+      Save : constant Boolean
+        := "1" = Muxml.Utils.Get_Element_Value
+          (Doc   => Controls,
+           XPath => "exit/SaveIA32EFER");
+   begin
+      return Load and Save;
+   end Has_Managed_EFER;
+
+   -------------------------------------------------------------------------
+
    function Has_Managed_PAT (Controls : DOM.Core.Node) return Boolean
    is
       Load : constant Boolean

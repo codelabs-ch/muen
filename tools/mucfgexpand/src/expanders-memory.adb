@@ -39,9 +39,6 @@ is
    --  Physical start address of VMX-related memory regions.
    VMX_Start_Address : constant Interfaces.Unsigned_64 := 16#1000#;
 
-   --  Size of a single MSR-Store entry, see Intel SDM Vol. 3C, table 24-11.
-   MSR_Store_Entry_Size : constant := 128 / 8;
-
    -------------------------------------------------------------------------
 
    procedure Add_AP_Trampoline (Data : in out Muxml.XML_Data_Type)
@@ -330,7 +327,7 @@ is
 
             Store_Size : constant Interfaces.Unsigned_64
               := Mutools.Constants.Page_Size *
-                (((MSR_Count * MSR_Store_Entry_Size) +
+                (((MSR_Count * Mutools.Constants.MSR_Store_Entry_Size) +
                  (Mutools.Constants.Page_Size - 1)) /
                    Mutools.Constants.Page_Size);
             Size_Str   : constant String

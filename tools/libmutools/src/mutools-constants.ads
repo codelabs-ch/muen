@@ -37,4 +37,8 @@ is
    IA32_GS_BASE          : constant := 16#c000_0101#;
    IA32_KERNEL_GS_BASE   : constant := 16#c000_0102#;
 
+   --  Size of a single MSR-Store entry in bytes, see Intel SDM Vol. 3C,
+   --  table 24-11.
+   MSR_Store_Entry_Size : constant := 16;
+
 end Mutools.Constants;

@@ -150,4 +150,20 @@ is
       return Mem_Node;
    end Create_Memory_Node;
 
+   -------------------------------------------------------------------------
+
+   function Has_Managed_DEBUGCTL (Controls : DOM.Core.Node) return Boolean
+   is
+      Load : constant Boolean
+        := "1" = Muxml.Utils.Get_Element_Value
+          (Doc   => Controls,
+           XPath => "entry/LoadDebugControls");
+      Save : constant Boolean
+        := "1" = Muxml.Utils.Get_Element_Value
+          (Doc   => Controls,
+           XPath => "exit/SaveDebugControls");
+   begin
+      return Load and Save;
+   end Has_Managed_DEBUGCTL;
+
 end Mutools.XML_Utils;

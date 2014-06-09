@@ -57,4 +57,8 @@ is
       Memory_Type :        String)
       return DOM.Core.Node;
 
+   --  Returns True if the given VMX controls specify that the DEBUGCTL MSR is
+   --  saved/loaded automatically on VM-exits and entries.
+   function Has_Managed_DEBUGCTL (Controls : DOM.Core.Node) return Boolean;
+
 end Mutools.XML_Utils;

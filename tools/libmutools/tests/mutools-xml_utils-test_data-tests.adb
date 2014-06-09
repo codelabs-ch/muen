@@ -217,4 +217,41 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    end Test_Has_Managed_DEBUGCTL;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Has_Managed_PERFGLOBALCTRL (Gnattest_T : in out Test);
+   procedure Test_Has_Managed_PERFGLOBALCTRL_811a8a (Gnattest_T : in out Test) renames Test_Has_Managed_PERFGLOBALCTRL;
+--  id:2.2/811a8a093040ed89/Has_Managed_PERFGLOBALCTRL/1/0/
+   procedure Test_Has_Managed_PERFGLOBALCTRL (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:66:4:Has_Managed_PERFGLOBALCTRL
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+      Ctrls  : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Ctrls := Muxml.Utils.Get_Element
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/controls");
+
+      Assert (Condition => not Has_Managed_PERFGLOBALCTRL (Controls => Ctrls),
+              Message   => "PERFGLOBALCTL is managed");
+
+      DOM.Core.Nodes.Set_Node_Value
+        (N     => DOM.Core.Nodes.First_Child
+           (N => Muxml.Utils.Get_Element
+                (Doc   => Ctrls,
+                 XPath => "entry/LoadIA32PERFGLOBALCTRL")),
+         Value => "1");
+      Assert (Condition => Has_Managed_PERFGLOBALCTRL (Controls => Ctrls),
+              Message   => "DEBUGCTL not managed");
+--  begin read only
+   end Test_Has_Managed_PERFGLOBALCTRL;
+--  end read only
+
 end Mutools.XML_Utils.Test_Data.Tests;

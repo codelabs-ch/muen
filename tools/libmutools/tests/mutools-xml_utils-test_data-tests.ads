@@ -21,5 +21,8 @@ package Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Has_Managed_DEBUGCTL_07c840 (Gnattest_T : in out Test);
    --  mutools-xml_utils.ads:62:4:Has_Managed_DEBUGCTL
 
+   procedure Test_Has_Managed_PERFGLOBALCTRL_811a8a (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:66:4:Has_Managed_PERFGLOBALCTRL
+
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

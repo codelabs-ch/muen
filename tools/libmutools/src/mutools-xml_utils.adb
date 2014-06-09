@@ -166,4 +166,18 @@ is
       return Load and Save;
    end Has_Managed_DEBUGCTL;
 
+   -------------------------------------------------------------------------
+
+   function Has_Managed_PERFGLOBALCTRL
+     (Controls : DOM.Core.Node)
+      return Boolean
+   is
+      Load : constant Boolean
+        := "1" = Muxml.Utils.Get_Element_Value
+          (Doc   => Controls,
+           XPath => "entry/LoadIA32PERFGLOBALCTRL");
+   begin
+      return Load;
+   end Has_Managed_PERFGLOBALCTRL;
+
 end Mutools.XML_Utils;

@@ -1345,6 +1345,8 @@ is
            & Indent & "    MSR_Bitmap_Address => "
            & Mutools.Utils.To_Hex (Number => MSRBM_Addr) & ","
            & ASCII.LF
+           & Indent & "    MSR_Store_Address  => 0,"
+           & ASCII.LF
            & Indent & "    Stack_Address      => "
            & Mutools.Utils.To_Hex (Number => Stack_Addr) & ","
            & ASCII.LF
@@ -1369,6 +1371,8 @@ is
            & Mutools.Utils.To_Hex
            (Number => Get_Exceptions (Fields => Exceptions,
                                       Default => 16#ffff_ffff#)) & ","
+           & ASCII.LF
+           & Indent & "    MSR_Count          => 0,"
            & ASCII.LF
            & Indent & "    VMX_Controls       => VMX_Controls_Type'("
            & ASCII.LF

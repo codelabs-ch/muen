@@ -19,6 +19,7 @@ is
       VMCS_Address       : SK.Word64;
       IO_Bitmap_Address  : SK.Word64;
       MSR_Bitmap_Address : SK.Word64;
+      MSR_Store_Address  : SK.Word64;
       Stack_Address      : SK.Word64;
       Entry_Point        : SK.Word64;
       CR0_Value          : SK.Word64;
@@ -27,6 +28,7 @@ is
       CR4_Mask           : SK.Word64;
       CS_Access          : SK.Word32;
       Exception_Bitmap   : SK.Word32;
+      MSR_Count          : SK.Word32;
       VMX_Controls       : VMX_Controls_Type;
       Trap_Table         : Trap_Table_Type;
       Event_Table        : Event_Table_Type;
@@ -151,6 +153,24 @@ __subjects__);
    begin
       return Subject_Specs (Subject_Id).MSR_Bitmap_Address;
    end Get_MSR_Bitmap_Address;
+
+   -------------------------------------------------------------------------
+
+   function Get_MSR_Count (Subject_Id : Skp.Subject_Id_Type) return SK.Word32
+   is
+   begin
+      return Subject_Specs (Subject_Id).MSR_Count;
+   end Get_MSR_Count;
+
+   -------------------------------------------------------------------------
+
+   function Get_MSR_Store_Address
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word64
+   is
+   begin
+      return Subject_Specs (Subject_Id).MSR_Store_Address;
+   end Get_MSR_Store_Address;
 
    -------------------------------------------------------------------------
 

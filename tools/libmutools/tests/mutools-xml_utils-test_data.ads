@@ -9,6 +9,8 @@ with Ada.Directories;
 
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
+with DOM.Core.Documents;
+with DOM.Core.Append_Node;
 
 with Muxml.Utils;
 

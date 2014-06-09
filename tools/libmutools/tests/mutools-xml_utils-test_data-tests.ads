@@ -30,5 +30,8 @@ package Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Has_Managed_EFER_29e528 (Gnattest_T : in out Test);
    --  mutools-xml_utils.ads:76:4:Has_Managed_EFER
 
+   procedure Test_Calculate_MSR_Count_5d62ce (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:81:4:Calculate_MSR_Count
+
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

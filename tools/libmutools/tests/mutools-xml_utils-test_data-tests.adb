@@ -254,4 +254,47 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    end Test_Has_Managed_PERFGLOBALCTRL;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Has_Managed_PAT (Gnattest_T : in out Test);
+   procedure Test_Has_Managed_PAT_0e0b54 (Gnattest_T : in out Test) renames Test_Has_Managed_PAT;
+--  id:2.2/0e0b54fd46c7da60/Has_Managed_PAT/1/0/
+   procedure Test_Has_Managed_PAT (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:72:4:Has_Managed_PAT
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+      Ctrls  : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Ctrls := Muxml.Utils.Get_Element
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/controls");
+
+      Assert (Condition => not Has_Managed_PAT (Controls => Ctrls),
+              Message   => "PAT is managed");
+
+      DOM.Core.Nodes.Set_Node_Value
+        (N     => DOM.Core.Nodes.First_Child
+           (N => Muxml.Utils.Get_Element
+                (Doc   => Ctrls,
+                 XPath => "entry/LoadIA32PAT")),
+         Value => "1");
+      DOM.Core.Nodes.Set_Node_Value
+        (N     => DOM.Core.Nodes.First_Child
+           (N => Muxml.Utils.Get_Element
+                (Doc   => Ctrls,
+                 XPath => "exit/SaveIA32PAT")),
+         Value => "1");
+      Assert (Condition => Has_Managed_PAT (Controls => Ctrls),
+              Message   => "PAT not managed");
+--  begin read only
+   end Test_Has_Managed_PAT;
+--  end read only
+
 end Mutools.XML_Utils.Test_Data.Tests;

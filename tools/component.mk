@@ -28,10 +28,5 @@ build_tests: $(DEPENDS) $(TDEPENDS) $(TEST_TARGETS) $(OBJ_DIR)/.harness_stamp
 tests: build_tests
 	$(GNATTEST_RUNNER)
 
-build_cov: $(DEPENDS) $(TDEPENDS) $(COV_TARGETS) $(OBJ_DIR)/.harness_stamp
-	gprbuild $(BUILD_OPTS) -P$(GNATTEST_DRIVER) -XBUILD=tests \
-		-cargs -ftest-coverage -fprofile-arcs \
-		-largs -fprofile-generate
-
 clean:
 	@rm -rf bin obj $(ADDITIONAL_CLEAN)

@@ -33,8 +33,4 @@ abstract project Shared is
         "-gnatf",
         "-gnato");
 
-   Cov_Compiler_Switches := ("-ftest-coverage", "-fprofile-arcs");
-
-   Cov_Linker_Switches := ("-fprofile-generate");
-
 end Shared;

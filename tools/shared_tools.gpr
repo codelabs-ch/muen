@@ -18,7 +18,7 @@
 
 abstract project Shared_Tools is
 
-   type Build_Type is ("debug", "tests", "coverage");
+   type Build_Type is ("debug", "tests");
    Build : Build_Type := external ("BUILD", "debug");
 
 end Shared_Tools;

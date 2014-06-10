@@ -3,4 +3,4 @@ COMPONENT = libmucfgcheck
 DEPENDS = libmutools
 
 include ../library.mk
-include ../../Makecov
+include ../coverage.mk

@@ -5,4 +5,4 @@ DEPENDS =      \
 	libpaging
 
 include ../component.mk
-include ../../Makecov
+include ../coverage.mk

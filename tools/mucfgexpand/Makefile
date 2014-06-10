@@ -7,7 +7,7 @@ DEPENDS =         \
 	libpaging
 
 include ../component.mk
-include ../../Makecov
+include ../coverage.mk
 
 XML_OBJ := $(wildcard obj/*.xml)
 REFS    := $(subst .xml,.ref.xml,$(subst obj/,data/,$(XML_OBJ)))

@@ -12,7 +12,7 @@ COV_TARGETS       = $(COMPONENT_TARGETS)
 ADDITIONAL_CLEAN = $(TEMPLATES)
 
 include ../component.mk
-include ../../Makecov
+include ../coverage.mk
 
 $(TEMPLATES): $(TMPL_SRCS)
 	@echo -n > $@

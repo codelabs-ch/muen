@@ -20,7 +20,7 @@ COV_TARGETS       = $(COMPONENT_TARGETS)
 ADDITIONAL_CLEAN = $(GEN_DIR)
 
 include ../library.mk
-include ../../Makecov
+include ../coverage.mk
 
 DUMMY := $(shell mkdir -p $(GEN_DIR))
 

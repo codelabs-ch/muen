@@ -64,7 +64,6 @@ is
    IA32_PERFEVTSEL3             : constant := 16#189#;
    IA32_MISC_ENABLE             : constant := 16#1a0#;
    IA32_EFER                    : constant := 16#c000_0080#;
-   IA32_KERNEL_GSBASE           : constant := 16#c000_0102#;
 
    IA32_VMX_BASIC               : constant := 16#480#;
    IA32_VMX_PINBASED_CTLS       : constant := 16#481#;

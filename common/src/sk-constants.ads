@@ -134,6 +134,8 @@ is
    IO_BITMAP_A                  : constant := 16#2000#;
    IO_BITMAP_B                  : constant := 16#2002#;
    MSR_BITMAP                   : constant := 16#2004#;
+   VM_EXIT_MSR_STORE_ADDRESS    : constant := 16#2006#;
+   VM_ENTRY_MSR_LOAD_ADDRESS    : constant := 16#200a#;
    EPT_POINTER                  : constant := 16#201a#;
    GUEST_PHYSICAL_ADDRESS       : constant := 16#2400#;
    VMCS_LINK_POINTER            : constant := 16#2800#;

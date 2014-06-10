@@ -64,8 +64,6 @@ is
 
             State.Regs.RAX := 16#1800#;
             State.Regs.RDX := 0;
-         when SK.Constants.IA32_KERNEL_GSBASE =>
-            State.Regs.RAX := State.Kernel_GS_BASE;
          when others =>
             Subject.Text_IO.Put_String
               (Item => "Unhandled read access to MSR 16#");

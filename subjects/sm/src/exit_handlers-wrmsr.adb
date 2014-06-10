@@ -50,8 +50,6 @@ is
             Subject.Text_IO.Put_Word32
               (Item => SK.Word32 (State.Regs.RAX and 16#ffff_ffff#));
             Subject.Text_IO.New_Line;
-         when SK.Constants.IA32_KERNEL_GSBASE =>
-            State.Kernel_GS_BASE := State.Regs.RAX;
          when others =>
             Subject.Text_IO.Put_String
               (Item => "Unhandled write access to MSR 16#");

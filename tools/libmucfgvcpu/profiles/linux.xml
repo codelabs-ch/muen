@@ -167,7 +167,7 @@
 			<!-- IA32_EFER/STAR/LSTAR/FMASK -->
 			<msr start="16#c000_0080#" end="16#c000_0084#" mode="rw"/>
 			<!-- IA32_FS_BASE/GS_BASE -->
-			<msr start="16#c000_0100#" end="16#c000_0101#" mode="rw"/>
+			<msr start="16#c000_0100#" end="16#c000_0102#" mode="rw"/>
 		</msrs>
 	</registers>
 	<segments>

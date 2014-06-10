@@ -52,6 +52,14 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
                         0x00000000,         // Translation Offset
                         0x00010000,         // Length
                         ,, , TypeStatic)
+                    /* PCI 00:14.x, MMIO */
+                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite,
+                        0x00000000,         // Granularity
+                        0xd2520000,         // Range Minimum
+                        0xd252ffff,         // Range Maximum
+                        0x00000000,         // Translation Offset
+                        0x00010000,         // Length
+                        ,, , AddressRangeMemory, TypeStatic)
                     /* PCI 00:19.x, MMIO 1 */
                     DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite,
                         0x00000000,         // Granularity
@@ -90,8 +98,16 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
 
             Method (_PRT, 0, NotSerialized)
             {
-                Return (Package (0x01)
+                Return (Package (0x02)
                 {
+                    /* Route PCI 00:14.x PIN A to IRQ 7 */
+                    Package (0x04)
+                    {
+                        0x0014FFFF,
+                        0x00,
+                        Zero,
+                        0x07
+                    },
                     /* Route PCI 00:19.x PIN A to IRQ 11 */
                     Package (0x04)
                     {

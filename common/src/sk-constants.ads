@@ -91,7 +91,9 @@ is
    CPU_BASED_EXEC_CONTROL       : constant := 16#4002#;
    EXCEPTION_BITMAP             : constant := 16#4004#;
    VM_EXIT_CONTROLS             : constant := 16#400c#;
+   VM_EXIT_MSR_STORE_COUNT      : constant := 16#400e#;
    VM_ENTRY_CONTROLS            : constant := 16#4012#;
+   VM_ENTRY_MSR_LOAD_COUNT      : constant := 16#4014#;
    VM_ENTRY_INTERRUPT_INFO      : constant := 16#4016#;
    VM_ENTRY_EXC_ERROR_CODE      : constant := 16#4018#;
    VM_ENTRY_INSTRUCTION_LEN     : constant := 16#401a#;

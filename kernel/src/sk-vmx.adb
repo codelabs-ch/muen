@@ -139,6 +139,8 @@ is
    procedure VMCS_Setup_Control_Fields
      (IO_Bitmap_Address  : SK.Word64;
       MSR_Bitmap_Address : SK.Word64;
+      MSR_Store_Address  : SK.Word64;
+      MSR_Count          : SK.Word32;
       Ctls_Exec_Pin      : SK.Word32;
       Ctls_Exec_Proc     : SK.Word32;
       Ctls_Exec_Proc2    : SK.Word32;
@@ -207,6 +209,17 @@ is
 
       VMCS_Write (Field => Constants.MSR_BITMAP,
                   Value => MSR_Bitmap_Address);
+
+      --  MSR store.
+
+      VMCS_Write (Field => Constants.VM_EXIT_MSR_STORE_ADDRESS,
+                  Value => MSR_Store_Address);
+      VMCS_Write (Field => Constants.VM_ENTRY_MSR_LOAD_ADDRESS,
+                  Value => MSR_Store_Address);
+      VMCS_Write (Field => Constants.VM_EXIT_MSR_STORE_COUNT,
+                  Value => SK.Word64 (MSR_Count));
+      VMCS_Write (Field => Constants.VM_ENTRY_MSR_LOAD_COUNT,
+                  Value => SK.Word64 (MSR_Count));
 
       --  VM-exit controls.
 

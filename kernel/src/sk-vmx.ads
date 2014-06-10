@@ -62,6 +62,8 @@ is
    procedure VMCS_Setup_Control_Fields
      (IO_Bitmap_Address  : SK.Word64;
       MSR_Bitmap_Address : SK.Word64;
+      MSR_Store_Address  : SK.Word64;
+      MSR_Count          : SK.Word32;
       Ctls_Exec_Pin      : SK.Word32;
       Ctls_Exec_Proc     : SK.Word32;
       Ctls_Exec_Proc2    : SK.Word32;
@@ -75,7 +77,8 @@ is
       Depends => (X86_64.State =>+
                   (CR0_Mask, CR4_Mask, Ctls_Entry, Ctls_Exec_Pin,
                    Ctls_Exec_Proc, Ctls_Exec_Proc2, Ctls_Exit,
-                   Exception_Bitmap, IO_Bitmap_Address, MSR_Bitmap_Address));
+                   Exception_Bitmap, IO_Bitmap_Address, MSR_Bitmap_Address,
+                   MSR_Count, MSR_Store_Address));
 
    --  Setup host fields of the currently active VMCS.
    procedure VMCS_Setup_Host_Fields

@@ -244,6 +244,8 @@ is
                  (Subject_Id => I),
                MSR_Bitmap_Address => Skp.Subjects.Get_MSR_Bitmap_Address
                  (Subject_Id => I),
+               MSR_Store_Address  => 0,
+               MSR_Count          => 0,
                Ctls_Exec_Pin      => Controls.Exec_Pin,
                Ctls_Exec_Proc     => Controls.Exec_Proc,
                Ctls_Exec_Proc2    => Controls.Exec_Proc2,

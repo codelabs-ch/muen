@@ -68,11 +68,11 @@ package body Musinfo.Utils.Test_Data.Tests is
               Message   => "Address mismatch");
       Assert (Condition => Channel.Size = Ref_Size,
               Message   => "Size mismatch");
-      Assert (Condition => not Channel.Writable,
+      Assert (Condition => not Channel.Flags.Writable,
               Message   => "Writable");
-      Assert (Condition => Channel.Has_Event,
+      Assert (Condition => Channel.Flags.Has_Event,
               Message   => "Has no event");
-      Assert (Condition => not Channel.Has_Vector,
+      Assert (Condition => not Channel.Flags.Has_Vector,
               Message   => "Has vector");
       Assert (Condition => Channel.Event = Ref_Event,
               Message   => "Event mismatch");

@@ -18,5 +18,14 @@ package Musinfo.Interop.Test_Data.Tests is
    procedure Test_Subject_Info_To_C_3471da (Gnattest_T : in out Test);
    --  musinfo-interop.ads:30:4:Subject_Info_To_C
 
+   procedure Test_Check_Name_Type_3e54f1 (Gnattest_T : in out Test);
+   --  musinfo-interop.ads:33:4:Check_Name_Type
+
+   procedure Test_Check_Channel_Type_451002 (Gnattest_T : in out Test);
+   --  musinfo-interop.ads:36:4:Check_Channel_Type
+
+   procedure Test_Check_Subject_Info_Type_659906 (Gnattest_T : in out Test);
+   --  musinfo-interop.ads:39:4:Check_Subject_Info_Type
+
 end Musinfo.Interop.Test_Data.Tests;
 --  end read only

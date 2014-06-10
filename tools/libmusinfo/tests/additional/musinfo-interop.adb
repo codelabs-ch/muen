@@ -22,5 +22,8 @@ is
    procedure Name_To_C is null;
    procedure Channel_To_C is null;
    procedure Subject_Info_To_C is null;
+   procedure Check_Name_Type is null;
+   procedure Check_Channel_Type is null;
+   procedure Check_Subject_Info_Type is null;
 
 end Musinfo.Interop;

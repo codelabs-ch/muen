@@ -98,4 +98,91 @@ package body Musinfo.Interop.Test_Data.Tests is
    end Test_Subject_Info_To_C;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Check_Name_Type (Gnattest_T : in out Test);
+   procedure Test_Check_Name_Type_3e54f1 (Gnattest_T : in out Test) renames Test_Check_Name_Type;
+--  id:2.2/3e54f1454c3de673/Check_Name_Type/1/0/
+   procedure Test_Check_Name_Type (Gnattest_T : in out Test) is
+   --  musinfo-interop.ads:33:4:Check_Name_Type
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.C.int;
+
+      Dummy : Name_Type;
+   begin
+
+      Assert (Condition => C_Imports.C_Assert_Name_Type
+              (Size          => Name_Type'Size / 8,
+               Alignment     => Name_Type'Alignment,
+               Length_Offset => Dummy.Length'Bit_Position / 8,
+               Data_Offset   => Dummy.Data'Bit_Position / 8) = 1,
+              Message   => "C name type mismatch");
+
+--  begin read only
+   end Test_Check_Name_Type;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Check_Channel_Type (Gnattest_T : in out Test);
+   procedure Test_Check_Channel_Type_451002 (Gnattest_T : in out Test) renames Test_Check_Channel_Type;
+--  id:2.2/451002ebfab2ca67/Check_Channel_Type/1/0/
+   procedure Test_Check_Channel_Type (Gnattest_T : in out Test) is
+   --  musinfo-interop.ads:36:4:Check_Channel_Type
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.C.int;
+
+      Dummy : Channel_Type;
+   begin
+
+      Assert (Condition => C_Imports.C_Assert_Channel_Type
+              (Size           => Channel_Type'Size / 8,
+               Alignment      => Channel_Type'Alignment,
+               Name_Offset    => Dummy.Name'Bit_Position / 8,
+               Address_Offset => Dummy.Address'Bit_Position / 8,
+               Size_Offset    => Dummy.Size'Bit_Position / 8,
+               Flags_Offset   => Dummy.Flags'Bit_Position / 8,
+               Event_Offset   => Dummy.Event'Bit_Position / 8,
+               Vector_Offset  => Dummy.Vector'Bit_Position / 8) = 1,
+              Message   => "C channel type mismatch");
+
+--  begin read only
+   end Test_Check_Channel_Type;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Check_Subject_Info_Type (Gnattest_T : in out Test);
+   procedure Test_Check_Subject_Info_Type_659906 (Gnattest_T : in out Test) renames Test_Check_Subject_Info_Type;
+--  id:2.2/659906a031093bd7/Check_Subject_Info_Type/1/0/
+   procedure Test_Check_Subject_Info_Type (Gnattest_T : in out Test) is
+   --  musinfo-interop.ads:39:4:Check_Subject_Info_Type
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.C.int;
+
+      Dummy : Subject_Info_Type;
+   begin
+
+      Assert (Condition => C_Imports.C_Assert_Subject_Info_Type
+              (Size                 => Subject_Info_Type'Size / 8,
+               Alignment            => Subject_Info_Type'Alignment,
+               Magic_Offset         => Dummy.Magic'Bit_Position / 8,
+               Channel_Count_Offset => Dummy.Channel_Count'Bit_Position / 8,
+               Channels_Offset      => Dummy.Channels'Bit_Position / 8) = 1,
+              Message   => "C subject info type mismatch");
+
+
+--  begin read only
+   end Test_Check_Subject_Info_Type;
+--  end read only
+
 end Musinfo.Interop.Test_Data.Tests;

@@ -45,14 +45,14 @@ is
    is
    begin
       return Channel : Channel_Type := Null_Channel do
-         Channel.Name       := Name;
-         Channel.Address    := Address;
-         Channel.Size       := Size;
-         Channel.Writable   := Writable;
-         Channel.Has_Event  := Has_Event;
-         Channel.Has_Vector := Has_Vector;
-         Channel.Event      := Event;
-         Channel.Vector     := Vector;
+         Channel.Name             := Name;
+         Channel.Address          := Address;
+         Channel.Size             := Size;
+         Channel.Flags.Writable   := Writable;
+         Channel.Flags.Has_Event  := Has_Event;
+         Channel.Flags.Has_Vector := Has_Vector;
+         Channel.Event            := Event;
+         Channel.Vector           := Vector;
       end return;
    end Create_Channel;
 

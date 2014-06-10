@@ -29,4 +29,13 @@ is
    --  Verify subject info type interoperability.
    procedure Subject_Info_To_C;
 
+   --  Verify name type equivalence.
+   procedure Check_Name_Type;
+
+   --  Verify channel type equivalence.
+   procedure Check_Channel_Type;
+
+   --  Verify subject info type equivalence.
+   procedure Check_Subject_Info_Type;
+
 end Musinfo.Interop;

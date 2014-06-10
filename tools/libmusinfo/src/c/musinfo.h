@@ -40,13 +40,13 @@ struct channel_type {
 	uint8_t event;
 	uint8_t vector;
 	char padding[5];
-} __attribute__((packed));
+} __attribute__((packed, aligned (8)));
 
 struct subject_info_type {
 	uint64_t magic;
 	uint8_t channel_count;
 	char padding[7];
 	struct channel_type channels[MAX_CHANNEL_COUNT];
-} __attribute__((packed));
+} __attribute__((packed, aligned (8)));
 
 #endif /* MUSINFO_H_  */

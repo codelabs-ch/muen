@@ -26,7 +26,7 @@
 	</platform>
 
 	<memory>
-		<memory name="linux|ram" size="16#0fa0_0000#" alignment="16#0020_0000#" caching="WB"/>
+		<memory name="linux|ram" size="16#0f60_0000#" physicalAddress="16#00a0_0000#" caching="WB"/>
 	</memory>
 
 	<events>
@@ -105,7 +105,7 @@
 			<bootparams>lpj=10000 console=hvc pci=noearly notsc</bootparams>
 			<initrd filename="initramfs.cpio.gz" size="16#0040_0000#"/>
 			<memory>
-				<memory logical="ram" physical="linux|ram" virtualAddress="16#0060_0000#" writable="true" executable="true"/>
+				<memory logical="ram" physical="linux|ram" virtualAddress="16#00a0_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
 				<device logical="ttyS0" physical="serial">
@@ -138,7 +138,7 @@
 				<reader ref="virtual_keyboard" virtualAddress="16#3000#" vector="49"/>
 				<writer ref="virtual_console" virtualAddress="16#4000#" event="1"/>
 			</channels>
-			<binary filename="bzImage" size="16#0020_0000#" virtualAddress="16#0040_0000#"/>
+			<binary filename="bzImage" size="16#0021_0000#" virtualAddress="16#0040_0000#"/>
 		</subject>
 	</subjects>
 

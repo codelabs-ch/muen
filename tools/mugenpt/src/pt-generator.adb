@@ -314,9 +314,7 @@ is
                  XPath => "memory/memory");
             Devices : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
-                (N     => DOM.Core.Nodes.Item
-                   (List  => Subjects,
-                    Index => I),
+                (N     => Subj_Node,
                  XPath => "devices/device[count(memory)>0]");
 
             Paging_Mode : Paging.Paging_Mode_Type;

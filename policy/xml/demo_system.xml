@@ -118,12 +118,10 @@
 				</device>
 				<device logical="xhci" physical="xhci">
 					<irq logical="xhci_irq" physical="irq" vector="55"/>
-					<memory logical="mmconf" physical="mmconf" virtualAddress="16#f80a_0000#" writable="true" executable="false"/>
 					<memory logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true" executable="false"/>
 				</device>
 				<device logical="eth0" physical="ethernet">
 					<irq logical="eth0_irq" physical="irq" vector="59"/>
-					<memory logical="mmconf" physical="mmconf" virtualAddress="16#f80c_8000#" writable="true" executable="false"/>
 					<memory logical="mmio1" physical="mmio1" virtualAddress="16#d250_0000#" writable="true" executable="false"/>
 					<memory logical="mmio2" physical="mmio2" virtualAddress="16#d253_b000#" writable="true" executable="false"/>
 				</device>

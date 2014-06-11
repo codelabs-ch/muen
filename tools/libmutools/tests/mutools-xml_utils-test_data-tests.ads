@@ -10,10 +10,13 @@ package Mutools.XML_Utils.Test_Data.Tests is
    with null record;
 
    procedure Test_Add_Memory_Region_6142bd (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:25:4:Add_Memory_Region
+   --  mutools-xml_utils.ads:27:4:Add_Memory_Region
 
    procedure Test_Add_Memory_Region_741476 (Gnattest_T : in out Test);
-   --  mutools-xml_utils.ads:36:4:Add_Memory_Region
+   --  mutools-xml_utils.ads:38:4:Add_Memory_Region
+
+   procedure Test_Create_Memory_Node_4c3d32 (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:50:4:Create_Memory_Node
 
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

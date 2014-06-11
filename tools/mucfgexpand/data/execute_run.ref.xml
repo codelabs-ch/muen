@@ -5,12 +5,18 @@
   <memory>
    <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
   </memory>
-  <devices>
+  <devices pciConfigAddress="16#f800_0000#">
    <device name="debugconsole" shared="false">
     <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
    </device>
    <device name="ioapic" shared="false">
     <memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>
+   </device>
+   <device name="xhci" shared="false">
+    <pci bus="16#00#" device="16#14#" function="0"/>
+    <irq name="irq" number="16"/>
+    <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#f80a_0000#" size="16#1000#"/>
    </device>
   </devices>
  </platform>
@@ -102,7 +108,7 @@
   <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#4000#" type="system_pt">
    <file filename="tau0_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#5000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#8000#" type="system_pt">
    <file filename="lnx_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#5000#" type="system_pt">
@@ -515,7 +521,13 @@
     <memory executable="false" logical="data_channel2" physical="data_channel2" virtualAddress="16#7000#" writable="false"/>
     <memory executable="true" logical="initramfs" physical="lnx|initramfs" virtualAddress="16#0010_0000#" writable="true"/>
    </memory>
-   <devices/>
+   <devices>
+    <device logical="xhci" physical="xhci">
+     <irq logical="irq" physical="irq" vector="55"/>
+     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
+     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80a_0000#" writable="true"/>
+    </device>
+   </devices>
    <events>
     <source>
      <group name="vmx_exit">

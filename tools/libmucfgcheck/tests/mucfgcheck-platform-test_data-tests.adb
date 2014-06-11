@@ -86,4 +86,42 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
    end Test_Memory_Block_Overlap;
 --  end read only
 
+
+--  begin read only
+   procedure Test_PCI_Config_Space_Address (Gnattest_T : in out Test);
+   procedure Test_PCI_Config_Space_Address_4663d9 (Gnattest_T : in out Test) renames Test_PCI_Config_Space_Address;
+--  id:2.2/4663d97b4d1f43a4/PCI_Config_Space_Address/1/0/
+   procedure Test_PCI_Config_Space_Address (Gnattest_T : in out Test) is
+   --  mucfgcheck-platform.ads:32:4:PCI_Config_Space_Address
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/platform/devices",
+         Name  => "pciConfigAddress",
+         Value => "");
+
+      begin
+         PCI_Config_Space_Address (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Missing PCI configuration space address",
+                    Message   => "Exception mismatch");
+      end;
+
+--  begin read only
+   end Test_PCI_Config_Space_Address;
+--  end read only
+
 end Mucfgcheck.Platform.Test_Data.Tests;

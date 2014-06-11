@@ -5,13 +5,9 @@
 
 with AUnit.Test_Fixtures;
 
-with Ada.Directories;
+with Test_Utils.Expander;
 
-with DOM.Core.Elements;
-
-with Test_Utils;
-
-package Mutools.XML_Utils.Test_Data is
+package Expanders.Platform.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -21,4 +17,4 @@ package Mutools.XML_Utils.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-end Mutools.XML_Utils.Test_Data;
+end Expanders.Platform.Test_Data;

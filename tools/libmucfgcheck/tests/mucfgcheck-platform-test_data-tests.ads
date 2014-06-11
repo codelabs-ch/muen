@@ -15,5 +15,8 @@ package Mucfgcheck.Platform.Test_Data.Tests is
    procedure Test_Memory_Block_Overlap_12597b (Gnattest_T : in out Test);
    --  mucfgcheck-platform.ads:28:4:Memory_Block_Overlap
 
+   procedure Test_PCI_Config_Space_Address_4663d9 (Gnattest_T : in out Test);
+   --  mucfgcheck-platform.ads:32:4:PCI_Config_Space_Address
+
 end Mucfgcheck.Platform.Test_Data.Tests;
 --  end read only

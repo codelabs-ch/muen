@@ -24,17 +24,6 @@ with Muxml.Utils;
 package body Mutools.XML_Utils
 is
 
-   --  Create memory node element with given parameters.
-   function Create_Memory_Node
-     (Policy      : in out Muxml.XML_Data_Type;
-      Name        :        String;
-      Address     :        String;
-      Size        :        String;
-      Caching     :        String;
-      Alignment   :        String;
-      Memory_Type :        String)
-      return DOM.Core.Node;
-
    -------------------------------------------------------------------------
 
    procedure Add_Memory_Region
@@ -136,10 +125,13 @@ is
         (Elem  => Mem_Node,
          Name  => "caching",
          Value => Caching);
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Mem_Node,
-         Name  => "alignment",
-         Value => Alignment);
+
+      if Alignment'Length > 0 then
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Mem_Node,
+            Name  => "alignment",
+            Value => Alignment);
+      end if;
 
       if Address'Length > 0 then
          DOM.Core.Elements.Set_Attribute

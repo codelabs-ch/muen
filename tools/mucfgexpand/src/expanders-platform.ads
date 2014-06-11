@@ -16,19 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muxml;
-
-package Mucfgcheck.Platform
+package Expanders.Platform
 is
 
-   --  Validate that memory regions fit into available platform memory.
-   procedure Memory_Space (XML_Data : Muxml.XML_Data_Type);
+   --  Add PCI config space memory regions and mappings for PCI devices.
+   procedure Add_PCI_Config_Space (Data : in out Muxml.XML_Data_Type);
 
-   --  Validate that no memory blocks overlap.
-   procedure Memory_Block_Overlap (XML_Data : Muxml.XML_Data_Type);
-
-   --  Validate that PCI config space address is specified if PCI devices are
-   --  present.
-   procedure PCI_Config_Space_Address (XML_Data : Muxml.XML_Data_Type);
-
-end Mucfgcheck.Platform;
+end Expanders.Platform;

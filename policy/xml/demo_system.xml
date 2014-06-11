@@ -5,24 +5,26 @@
 			<memoryBlock allocatable="false" name="base_mem" physicalAddress="16#0000#" size="16#000a_0000#" />
 			<memoryBlock allocatable="true" name="extended_mem_1" physicalAddress="16#0010_0000#" size="16#8000_0000#" />
 		</memory>
-		<device name="vga" shared="false">
-			<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
-			<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
-		</device>
-		<device name="keyboard" shared="false">
-			<irq name="kbd_irq" number="1"/>
-			<ioPort name="port_60" start="16#0060#" end="16#0060#"/>
-			<ioPort name="port_64" start="16#0064#" end="16#0064#"/>
-		</device>
-		<device name="cmos_rtc" shared="false">
-			<ioPort name="ports" start="16#0070#" end="16#0071#"/>
-		</device>
-		<device name="port80" shared="false">
-			<ioPort name="ports" start="16#0080#" end="16#0080#"/>
-		</device>
-		<device name="ioapic" shared="false">
-			<memory name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#" caching="UC" />
-		</device>
+		<devices>
+			<device name="vga" shared="false">
+				<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
+				<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
+			</device>
+			<device name="keyboard" shared="false">
+				<irq name="kbd_irq" number="1"/>
+				<ioPort name="port_60" start="16#0060#" end="16#0060#"/>
+				<ioPort name="port_64" start="16#0064#" end="16#0064#"/>
+			</device>
+			<device name="cmos_rtc" shared="false">
+				<ioPort name="ports" start="16#0070#" end="16#0071#"/>
+			</device>
+			<device name="port80" shared="false">
+				<ioPort name="ports" start="16#0080#" end="16#0080#"/>
+			</device>
+			<device name="ioapic" shared="false">
+				<memory name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#" caching="UC" />
+			</device>
+		</devices>
 	</platform>
 
 	<memory>

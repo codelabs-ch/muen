@@ -79,7 +79,7 @@ is
    begin
       Devices := McKae.XML.XPath.XIA.XPath_Query
         (N     => Policy.Doc,
-         XPath => "/system/platform/device");
+         XPath => "/system/platform/devices/device");
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1
       loop

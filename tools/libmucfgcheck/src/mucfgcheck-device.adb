@@ -53,7 +53,7 @@ is
    is
       Devices : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/platform/device");
+         XPath => "/system/platform/devices/device");
 
       --  Check device resource names.
       procedure Check_Names (Left, Right : DOM.Core.Node);
@@ -167,7 +167,7 @@ is
    begin
       For_Each_Match (XML_Data     => XML_Data,
                       Source_XPath => "//device/memory[@logical]",
-                      Ref_XPath    => "/system/platform/device/memory",
+                      Ref_XPath    => "/system/platform/devices/device/memory",
                       Log_Message  => "device memory reference(s)",
                       Error        => Error_Msg'Access,
                       Match        => Is_Valid_Resource_Ref'Access);
@@ -179,7 +179,7 @@ is
    is
       Devices : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/platform/device");
+         XPath => "/system/platform/devices/device");
    begin
       Mulog.Log (Msg => "Checking shareability of" & DOM.Core.Nodes.Length
                  (List => Devices)'Img & " devices");
@@ -268,7 +268,7 @@ is
    begin
       For_Each_Match (XML_Data     => XML_Data,
                       Source_XPath => "//ioPort[@logical]",
-                      Ref_XPath    => "/system/platform/device/ioPort",
+                      Ref_XPath    => "/system/platform/devices/device/ioPort",
                       Log_Message  => "I/O port reference(s)",
                       Error        => Error_Msg'Access,
                       Match        => Is_Valid_Resource_Ref'Access);
@@ -282,7 +282,7 @@ is
 
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/platform/device/ioPort");
+         XPath => "/system/platform/devices/device/ioPort");
    begin
       Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
                  (List => Nodes)'Img & " I/O port range(s) for start <= end");
@@ -338,7 +338,7 @@ is
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/platform/device");
+         XPath => "/system/platform/devices/device");
 
       --  Check inequality of device names.
       procedure Check_Inequality (Left, Right : DOM.Core.Node);
@@ -391,7 +391,7 @@ is
    begin
       For_Each_Match (XML_Data     => XML_Data,
                       Source_XPath => "//device[@physical]",
-                      Ref_XPath    => "/system/platform/device",
+                      Ref_XPath    => "/system/platform/devices/device",
                       Log_Message  => "physical device reference(s)",
                       Error        => Error_Msg'Access,
                       Match        => Is_Valid_Reference'Access);
@@ -425,7 +425,7 @@ is
    begin
       For_Each_Match (XML_Data     => XML_Data,
                       Source_XPath => "//irq[@logical]",
-                      Ref_XPath    => "/system/platform/device/irq",
+                      Ref_XPath    => "/system/platform/devices/device/irq",
                       Log_Message  => "device IRQ reference(s)",
                       Error        => Error_Msg'Access,
                       Match        => Is_Valid_Resource_Ref'Access);
@@ -437,7 +437,7 @@ is
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/platform/device/irq");
+         XPath => "/system/platform/devices/device/irq");
 
       --  Check inequality of IRQ numbers.
       procedure Check_Inequality (Left, Right : DOM.Core.Node);

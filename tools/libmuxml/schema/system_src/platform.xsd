@@ -5,7 +5,7 @@
 		<xs:sequence>
 			<xs:element name="processor" type="processorType"      minOccurs="0" maxOccurs="1"/>
 			<xs:element name="memory"    type="physicalMemoryType" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="device"    type="deviceType"         minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="devices"   type="devicesType"        minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 

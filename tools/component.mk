@@ -3,7 +3,6 @@ include ../../Makeconf
 GNATTEST_RUNNER = $(OBJ_DIR)/tests/gnattest/harness/test_runner
 GNATTEST_DRIVER = $(OBJ_DIR)/tests/gnattest/harness/test_driver
 TESTS_DIR       = $(CURDIR)/tests
-TOOLS_DIR       = $(TOP_DIR)/tools
 
 SRC_FILES  = $(wildcard $(SRC_DIR)/*)
 SRC_FILES += $(wildcard $(TESTS_DIR)/additional/*)
@@ -11,7 +10,7 @@ SRC_FILES += $(wildcard $(TESTS_DIR)/additional/*)
 all: $(COMPONENT)
 
 $(DEPENDS) $(TDEPENDS):
-	@$(MAKE) -s -C $(TOOLS_DIR)/$@
+	@$(MAKE) -s -C $(TOP_DIR)/$@
 
 $(COMPONENT): $(DEPENDS) $(COMPONENT_TARGETS)
 	@gprbuild $(BUILD_OPTS) -P$@
@@ -22,15 +21,12 @@ $(OBJ_DIR)/.harness_stamp: $(SRC_FILES)
 	@touch $@
 
 build_tests: $(DEPENDS) $(TDEPENDS) $(TEST_TARGETS) $(OBJ_DIR)/.harness_stamp
-	gprbuild $(BUILD_OPTS) -P$(GNATTEST_DRIVER) -XBUILD=tests
-
-tests: build_tests
-	$(GNATTEST_RUNNER)
-
-build_cov: $(DEPENDS) $(TDEPENDS) $(COV_TARGETS) $(OBJ_DIR)/.harness_stamp
 	gprbuild $(BUILD_OPTS) -P$(GNATTEST_DRIVER) -XBUILD=tests \
 		-cargs -ftest-coverage -fprofile-arcs \
 		-largs -fprofile-generate
+
+tests: build_tests
+	$(GNATTEST_RUNNER)
 
 clean:
 	@rm -rf bin obj $(ADDITIONAL_CLEAN)

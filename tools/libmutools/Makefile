@@ -5,4 +5,4 @@ DEPENDS =    \
 	libmuxml
 
 include ../library.mk
-include ../../Makecov
+include ../coverage.mk

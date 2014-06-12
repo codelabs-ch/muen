@@ -229,4 +229,24 @@ package body Expanders.Subjects.Test_Data.Tests is
    end Test_Add_Initrd;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Add_CPU_Ids (Gnattest_T : in out Test);
+   procedure Test_Add_CPU_Ids_cf5c89 (Gnattest_T : in out Test) renames Test_Add_CPU_Ids;
+--  id:2.2/cf5c8998ce7da859/Add_CPU_Ids/1/0/
+   procedure Test_Add_CPU_Ids (Gnattest_T : in out Test) is
+   --  expanders-subjects.ads:60:4:Add_CPU_Ids
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/subjects_cpu_ids.xml",
+         Ref_Filename => "data/subjects_cpu_ids.ref.xml",
+         Expander     => Add_CPU_Ids'Access);
+--  begin read only
+   end Test_Add_CPU_Ids;
+--  end read only
+
 end Expanders.Subjects.Test_Data.Tests;

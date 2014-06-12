@@ -2,8 +2,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
 	<xs:attributeGroup name="subjectBaseAttrs">
-		<xs:attribute name="name" type="nameType"              use="required"/>
-		<xs:attribute name="cpu"  type="xs:nonNegativeInteger" use="required"/>
+		<xs:attribute name="name" type="nameType" use="required"/>
 	</xs:attributeGroup>
 
 	<xs:complexType name="subjectEventsType">

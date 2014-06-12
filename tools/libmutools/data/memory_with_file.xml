@@ -19,7 +19,7 @@
  </memory>
  <events/>
  <subjects>
-  <subject cpu="0" name="lnx" profile="linux">
+  <subject name="lnx" profile="linux">
    <vcpu>
     <vmx>
      <controls>

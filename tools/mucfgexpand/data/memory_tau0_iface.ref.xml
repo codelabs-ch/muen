@@ -31,7 +31,7 @@
   <channel hasEvent="switch" name="data_channel2" size="16#2000#"/>
  </channels>
  <subjects>
-  <subject cpu="0" name="lnx" profile="linux">
+  <subject name="lnx" profile="linux">
    <initrd filename="initramfs.cpio.gz" size="16#0030_0000#"/>
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
@@ -57,7 +57,7 @@
    </channels>
    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>
-  <subject cpu="1" name="subject1" profile="native">
+  <subject name="subject1" profile="native">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
@@ -82,8 +82,7 @@
     <minorFrame subject="lnx" ticks="80"/>
    </cpu>
    <cpu id="1">
-    <minorFrame subject="subject1" ticks="40"/>
-    <minorFrame subject="tau0" ticks="40"/>
+    <minorFrame subject="tau0" ticks="80"/>
    </cpu>
   </majorFrame>
  </scheduling>

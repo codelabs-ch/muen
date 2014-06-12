@@ -33,10 +33,9 @@
   <memory>
    <cpu id="0">
     <memory executable="false" logical="lnx_state" physical="lnx_state" virtualAddress="16#001e_1000#" writable="true"/>
-   </cpu>
-   <cpu id="1">
     <memory executable="false" logical="subject1_state" physical="subject1_state" virtualAddress="16#001e_2000#" writable="true"/>
    </cpu>
+   <cpu id="1"/>
   </memory>
   <devices/>
  </kernel>
@@ -67,7 +66,7 @@
    </channels>
    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>
-  <subject cpu="1" id="2" name="subject1" profile="native">
+  <subject cpu="0" id="2" name="subject1" profile="native">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
@@ -92,8 +91,7 @@
     <minorFrame subject="lnx" ticks="80"/>
    </cpu>
    <cpu id="1">
-    <minorFrame subject="subject1" ticks="40"/>
-    <minorFrame subject="tau0" ticks="40"/>
+    <minorFrame subject="tau0" ticks="80"/>
    </cpu>
   </majorFrame>
  </scheduling>

@@ -168,4 +168,104 @@ package body Mutools.Utils.Test_Data.Tests is
    end Test_Decode_Entity_Name;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Is_Managed_By_VMX (Gnattest_T : in out Test);
+   procedure Test_Is_Managed_By_VMX_d49f3b (Gnattest_T : in out Test) renames Test_Is_Managed_By_VMX;
+--  id:2.2/d49f3b4fcfb97944/Is_Managed_By_VMX/1/0/
+   procedure Test_Is_Managed_By_VMX (Gnattest_T : in out Test) is
+   --  mutools-utils.ads:60:4:Is_Managed_By_VMX
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Mutools.Constants;
+
+      subtype Handled_MSR is
+        Interfaces.Unsigned_64 with Static_Predicate => Handled_MSR in
+          IA32_SYSENTER_CS | IA32_SYSENTER_ESP | IA32_SYSENTER_EIP
+            | IA32_FS_BASE | IA32_GS_BASE;
+   begin
+      for MSR in Handled_MSR loop
+         Assert (Condition => Is_Managed_By_VMX
+                 (MSR                    => MSR,
+                  DEBUGCTL_Control       => False,
+                  PAT_Control            => False,
+                  PERFGLOBALCTRL_Control => False,
+                  EFER_Control           => False),
+                 Message   => To_Hex (Number => MSR) & " not managed by VMX");
+      end loop;
+
+
+      Assert (Condition => not Is_Managed_By_VMX
+              (MSR                    => IA32_KERNEL_GS_BASE,
+               DEBUGCTL_Control       => False,
+               PAT_Control            => False,
+               PERFGLOBALCTRL_Control => False,
+               EFER_Control           => False),
+              Message   => "IA32_KERNEL_GS_BASE managed by VMX");
+
+      Assert (Condition => Is_Managed_By_VMX
+              (MSR                    => IA32_DEBUGCTL,
+               DEBUGCTL_Control       => True,
+               PAT_Control            => False,
+               PERFGLOBALCTRL_Control => False,
+               EFER_Control           => False),
+              Message   => "IA32_DEBUGCTL not managed by VMX");
+      Assert (Condition => not Is_Managed_By_VMX
+              (MSR                    => IA32_DEBUGCTL,
+               DEBUGCTL_Control       => False,
+               PAT_Control            => False,
+               PERFGLOBALCTRL_Control => False,
+               EFER_Control           => False),
+              Message   => "IA32_DEBUGCTL managed by VMX");
+
+      Assert (Condition => Is_Managed_By_VMX
+              (MSR                    => IA32_PAT,
+               DEBUGCTL_Control       => False,
+               PAT_Control            => True,
+               PERFGLOBALCTRL_Control => False,
+               EFER_Control           => False),
+              Message   => "IA32_PAT not managed by VMX");
+      Assert (Condition => not Is_Managed_By_VMX
+              (MSR                    => IA32_PAT,
+               DEBUGCTL_Control       => False,
+               PAT_Control            => False,
+               PERFGLOBALCTRL_Control => False,
+               EFER_Control           => False),
+              Message   => "IA32_PAT managed by VMX");
+
+      Assert (Condition => Is_Managed_By_VMX
+              (MSR                    => IA32_PERF_GLOBAL_CTRL,
+               DEBUGCTL_Control       => False,
+               PAT_Control            => False,
+               PERFGLOBALCTRL_Control => True,
+               EFER_Control           => False),
+              Message   => "IA32_PERF_GLOBAL_CTRL not managed by VMX");
+      Assert (Condition => not Is_Managed_By_VMX
+              (MSR                    => IA32_PERF_GLOBAL_CTRL,
+               DEBUGCTL_Control       => False,
+               PAT_Control            => False,
+               PERFGLOBALCTRL_Control => False,
+               EFER_Control           => False),
+              Message   => "IA32_PER_GLOBAL_CTRL managed by VMX");
+
+      Assert (Condition => Is_Managed_By_VMX
+              (MSR                    => IA32_EFER,
+               DEBUGCTL_Control       => False,
+               PAT_Control            => False,
+               PERFGLOBALCTRL_Control => False,
+               EFER_Control           => True),
+              Message   => "IA32_EFER not managed by VMX");
+      Assert (Condition => not Is_Managed_By_VMX
+              (MSR                    => IA32_EFER,
+               DEBUGCTL_Control       => False,
+               PAT_Control            => False,
+               PERFGLOBALCTRL_Control => False,
+               EFER_Control           => False),
+              Message   => "IA32_EFER managed by VMX");
+--  begin read only
+   end Test_Is_Managed_By_VMX;
+--  end read only
+
 end Mutools.Utils.Test_Data.Tests;

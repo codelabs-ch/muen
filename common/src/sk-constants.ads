@@ -64,7 +64,6 @@ is
    IA32_PERFEVTSEL3             : constant := 16#189#;
    IA32_MISC_ENABLE             : constant := 16#1a0#;
    IA32_EFER                    : constant := 16#c000_0080#;
-   IA32_KERNEL_GSBASE           : constant := 16#c000_0102#;
 
    IA32_VMX_BASIC               : constant := 16#480#;
    IA32_VMX_PINBASED_CTLS       : constant := 16#481#;
@@ -91,7 +90,9 @@ is
    CPU_BASED_EXEC_CONTROL       : constant := 16#4002#;
    EXCEPTION_BITMAP             : constant := 16#4004#;
    VM_EXIT_CONTROLS             : constant := 16#400c#;
+   VM_EXIT_MSR_STORE_COUNT      : constant := 16#400e#;
    VM_ENTRY_CONTROLS            : constant := 16#4012#;
+   VM_ENTRY_MSR_LOAD_COUNT      : constant := 16#4014#;
    VM_ENTRY_INTERRUPT_INFO      : constant := 16#4016#;
    VM_ENTRY_EXC_ERROR_CODE      : constant := 16#4018#;
    VM_ENTRY_INSTRUCTION_LEN     : constant := 16#401a#;
@@ -132,6 +133,8 @@ is
    IO_BITMAP_A                  : constant := 16#2000#;
    IO_BITMAP_B                  : constant := 16#2002#;
    MSR_BITMAP                   : constant := 16#2004#;
+   VM_EXIT_MSR_STORE_ADDRESS    : constant := 16#2006#;
+   VM_ENTRY_MSR_LOAD_ADDRESS    : constant := 16#200a#;
    EPT_POINTER                  : constant := 16#201a#;
    GUEST_PHYSICAL_ADDRESS       : constant := 16#2400#;
    VMCS_LINK_POINTER            : constant := 16#2800#;

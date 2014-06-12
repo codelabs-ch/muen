@@ -57,4 +57,33 @@ is
       Memory_Type :        String)
       return DOM.Core.Node;
 
+   --  Returns True if the given VMX controls specify that the DEBUGCTL MSR is
+   --  saved/loaded automatically on VM-exits and entries.
+   function Has_Managed_DEBUGCTL (Controls : DOM.Core.Node) return Boolean;
+
+   --  Returns True if the given VMX controls specify that the
+   --  PERFGLOBALCTRL MSR is loaded automatically on VM-entries.
+   function Has_Managed_PERFGLOBALCTRL
+     (Controls : DOM.Core.Node)
+      return Boolean;
+
+   --  Returns True if the given VMX controls specify that the PAT MSR is
+   --  saved/loaded automatically on VM-exits and entries.
+   function Has_Managed_PAT (Controls : DOM.Core.Node) return Boolean;
+
+   --  Returns True if the given VMX controls specify that the EFER MSR is
+   --  saved/loaded automatically on VM-exits and entries.
+   function Has_Managed_EFER (Controls : DOM.Core.Node) return Boolean;
+
+   --  Returns the number of Model-Specific registers that must be managed by
+   --  the MSR store mechanism given the list of MSR nodes and considering the
+   --  specified control flags.
+   function Calculate_MSR_Count
+     (MSRs                   : DOM.Core.Node_List;
+      DEBUGCTL_Control       : Boolean;
+      PAT_Control            : Boolean;
+      PERFGLOBALCTRL_Control : Boolean;
+      EFER_Control           : Boolean)
+      return Natural;
+
 end Mutools.XML_Utils;

@@ -96,6 +96,9 @@
   <memory alignment="16#1000#" caching="WB" name="lnx|bios" size="16#0001_0000#" type="subject_bios"/>
   <memory alignment="16#1000#" caching="WB" name="data_channel" size="16#1000#" type="subject_channel"/>
   <memory alignment="16#1000#" caching="WB" name="data_channel2" size="16#2000#" type="subject_channel"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx|msrstore" size="16#1000#" type="system_msrstore">
+   <file filename="lnx_msrstore" offset="none"/>
+  </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|initramfs" size="16#0030_0000#" type="subject_initrd">
    <file filename="initramfs.cpio.gz" offset="none"/>
   </memory>
@@ -494,7 +497,7 @@
      <msrs>
       <msr end="16#0176#" mode="rw" start="16#0174#"/>
       <msr end="16#c000_0084#" mode="rw" start="16#c000_0080#"/>
-      <msr end="16#c000_0101#" mode="rw" start="16#c000_0100#"/>
+      <msr end="16#c000_0102#" mode="rw" start="16#c000_0100#"/>
      </msrs>
     </registers>
     <segments>

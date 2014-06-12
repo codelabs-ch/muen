@@ -18,5 +18,20 @@ package Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Create_Memory_Node_4c3d32 (Gnattest_T : in out Test);
    --  mutools-xml_utils.ads:50:4:Create_Memory_Node
 
+   procedure Test_Has_Managed_DEBUGCTL_07c840 (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:62:4:Has_Managed_DEBUGCTL
+
+   procedure Test_Has_Managed_PERFGLOBALCTRL_811a8a (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:66:4:Has_Managed_PERFGLOBALCTRL
+
+   procedure Test_Has_Managed_PAT_0e0b54 (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:72:4:Has_Managed_PAT
+
+   procedure Test_Has_Managed_EFER_29e528 (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:76:4:Has_Managed_EFER
+
+   procedure Test_Calculate_MSR_Count_5d62ce (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:81:4:Calculate_MSR_Count
+
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

@@ -54,4 +54,15 @@ is
    --  'kernel_0|vmxon').
    function Decode_Entity_Name (Encoded_Str : String) return String;
 
+   --  Returns True if the given MSR is automatically stored/loaded to/from the
+   --  VMCS guest state area on VM-exit/entry also considering the given
+   --  VM-controls.
+   function Is_Managed_By_VMX
+     (MSR                    : Interfaces.Unsigned_64;
+      DEBUGCTL_Control       : Boolean;
+      PAT_Control            : Boolean;
+      PERFGLOBALCTRL_Control : Boolean;
+      EFER_Control           : Boolean)
+      return Boolean;
+
 end Mutools.Utils;

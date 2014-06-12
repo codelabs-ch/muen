@@ -16,10 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
+with DOM.Core.Nodes;
 with DOM.Core.Documents;
 with DOM.Core.Elements;
 
 with Muxml.Utils;
+
+with Mutools.Utils;
 
 package body Mutools.XML_Utils
 is
@@ -99,6 +104,51 @@ is
 
    -------------------------------------------------------------------------
 
+   function Calculate_MSR_Count
+     (MSRs                   : DOM.Core.Node_List;
+      DEBUGCTL_Control       : Boolean;
+      PAT_Control            : Boolean;
+      PERFGLOBALCTRL_Control : Boolean;
+      EFER_Control           : Boolean)
+      return Natural
+   is
+      MSR_Count : Natural := 0;
+   begin
+      for J in 0 .. DOM.Core.Nodes.Length (List => MSRs) - 1 loop
+         declare
+            MSR_Node  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => MSRs,
+                                      Index => J);
+            MSR_Start : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => MSR_Node,
+                    Name => "start"));
+            MSR_End   : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => MSR_Node,
+                    Name => "end"));
+         begin
+            for Register in MSR_Start .. MSR_End loop
+               if not Utils.Is_Managed_By_VMX
+                 (MSR                    => Register,
+                  DEBUGCTL_Control       => DEBUGCTL_Control,
+                  PAT_Control            => PAT_Control,
+                  PERFGLOBALCTRL_Control => PERFGLOBALCTRL_Control,
+                  EFER_Control           => EFER_Control)
+               then
+                  MSR_Count := MSR_Count + 1;
+               end if;
+            end loop;
+         end;
+      end loop;
+
+      return MSR_Count;
+   end Calculate_MSR_Count;
+
+   -------------------------------------------------------------------------
+
    function Create_Memory_Node
      (Policy      : in out Muxml.XML_Data_Type;
       Name        :        String;
@@ -149,5 +199,67 @@ is
 
       return Mem_Node;
    end Create_Memory_Node;
+
+   -------------------------------------------------------------------------
+
+   function Has_Managed_DEBUGCTL (Controls : DOM.Core.Node) return Boolean
+   is
+      Load : constant Boolean
+        := "1" = Muxml.Utils.Get_Element_Value
+          (Doc   => Controls,
+           XPath => "entry/LoadDebugControls");
+      Save : constant Boolean
+        := "1" = Muxml.Utils.Get_Element_Value
+          (Doc   => Controls,
+           XPath => "exit/SaveDebugControls");
+   begin
+      return Load and Save;
+   end Has_Managed_DEBUGCTL;
+
+   -------------------------------------------------------------------------
+
+   function Has_Managed_EFER (Controls : DOM.Core.Node) return Boolean
+   is
+      Load : constant Boolean
+        := "1" = Muxml.Utils.Get_Element_Value
+          (Doc   => Controls,
+           XPath => "entry/LoadIA32EFER");
+      Save : constant Boolean
+        := "1" = Muxml.Utils.Get_Element_Value
+          (Doc   => Controls,
+           XPath => "exit/SaveIA32EFER");
+   begin
+      return Load and Save;
+   end Has_Managed_EFER;
+
+   -------------------------------------------------------------------------
+
+   function Has_Managed_PAT (Controls : DOM.Core.Node) return Boolean
+   is
+      Load : constant Boolean
+        := "1" = Muxml.Utils.Get_Element_Value
+          (Doc   => Controls,
+           XPath => "entry/LoadIA32PAT");
+      Save : constant Boolean
+        := "1" = Muxml.Utils.Get_Element_Value
+          (Doc   => Controls,
+           XPath => "exit/SaveIA32PAT");
+   begin
+      return Load and Save;
+   end Has_Managed_PAT;
+
+   -------------------------------------------------------------------------
+
+   function Has_Managed_PERFGLOBALCTRL
+     (Controls : DOM.Core.Node)
+      return Boolean
+   is
+      Load : constant Boolean
+        := "1" = Muxml.Utils.Get_Element_Value
+          (Doc   => Controls,
+           XPath => "entry/LoadIA32PERFGLOBALCTRL");
+   begin
+      return Load;
+   end Has_Managed_PERFGLOBALCTRL;
 
 end Mutools.XML_Utils;

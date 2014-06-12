@@ -52,4 +52,7 @@ is
    --  Add subject I/O and MSR bitmap memory regions.
    procedure Add_Subject_Bitmaps (Data : in out Muxml.XML_Data_Type);
 
+   --  Add subject MSR store memory regions.
+   procedure Add_Subject_MSR_Store (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Memory;

@@ -81,6 +81,10 @@ is
       Procs.Register (Process => Subjects.Add_Default_Events'Access);
       Procs.Register (Process => Channels.Add_Physical_Memory'Access);
 
+      --  Subject profiles must be expanded since they may add MSR registers.
+
+      Procs.Register (Process => Memory.Add_Subject_MSR_Store'Access);
+
       --  All subject memory regions incl. channels must exist to determine
       --  virtual address of initrd region.
 

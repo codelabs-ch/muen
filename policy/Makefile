@@ -10,13 +10,14 @@ POLICY_A   = $(OBJ_DIR)/demo_system_a.xml
 POLICY_B   = $(OBJ_DIR)/demo_system_b.xml
 PLATFORM   = platform/$(HARDWARE).xml
 
-GENERATORS =      \
-	$(MUGENACPI)  \
-	$(MUGENIOBM)  \
-	$(MUGENMSRBM) \
-	$(MUGENPT)    \
-	$(MUGENSINFO) \
-	$(MUGENSPEC)  \
+GENERATORS =         \
+	$(MUGENACPI)     \
+	$(MUGENIOBM)     \
+	$(MUGENMSRBM)    \
+	$(MUGENMSRSTORE) \
+	$(MUGENPT)       \
+	$(MUGENSINFO)    \
+	$(MUGENSPEC)     \
 	$(MUGENZP)
 
 GENERATOR_OPTS = -o $(OBJ_DIR) $(POLICY_B)

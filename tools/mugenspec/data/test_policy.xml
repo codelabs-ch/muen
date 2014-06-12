@@ -66,18 +66,24 @@
 		<memory alignment="16#1000#" name="tau0|msrbm"     physicalAddress="16#0090_0000#" size="16#1000#"      caching="WB" type="system_msrbm">
 			<file filename="tau0_msrbm" offset="none"/>
 		</memory>
+		<memory alignment="16#1000#" name="tau0|msrstore"  physicalAddress="16#0090_1000#" size="16#1000#"      caching="WB" type="system_msrstore">
+			<file filename="tau0_msrstore" offset="none"/>
+		</memory>
 
-		<memory alignment="16#1000#" name="subject1"       physicalAddress="16#4000_0000#" size="16#0001_0000_0000#" caching="UC" type="subject_binary">
+		<memory alignment="16#1000#" name="subject1"          physicalAddress="16#4000_0000#" size="16#0001_0000_0000#" caching="UC" type="subject_binary">
 			<file filename="subject1-bin" offset="none"/>
 		</memory>
-		<memory alignment="16#1000#" name="subject1|pt"    physicalAddress="16#001f_4000#" size="16#4000#"      caching="WB" type="system_pt">
+		<memory alignment="16#1000#" name="subject1|pt"       physicalAddress="16#001f_4000#" size="16#4000#"           caching="WB" type="system_pt">
 			<file filename="subject1_pt" offset="none"/>
 		</memory>
-		<memory alignment="16#1000#" name="subject1|iobm"  physicalAddress="16#001b_0000#" size="16#2000#"      caching="WB" type="system_iobm">
+		<memory alignment="16#1000#" name="subject1|iobm"     physicalAddress="16#001b_0000#" size="16#2000#"           caching="WB" type="system_iobm">
 			<file filename="subject1_iobm" offset="none"/>
 		</memory>
-		<memory alignment="16#1000#" name="subject1|msrbm" physicalAddress="16#0091_0000#" size="16#1000#"      caching="WB" type="system_msrbm">
+		<memory alignment="16#1000#" name="subject1|msrbm"    physicalAddress="16#0091_0000#" size="16#1000#"           caching="WB" type="system_msrbm">
 			<file filename="subject1_msrbm" offset="none"/>
+		</memory>
+		<memory alignment="16#1000#" name="subject1|msrstore" physicalAddress="16#0091_1000#" size="16#1000#"           caching="WB" type="system_msrstore">
+			<file filename="subject1_msrstore" offset="none"/>
 		</memory>
 
 		<memory alignment="16#1000#" name="subject2"       physicalAddress="16#0040_0000#" size="16#0040_0000#" caching="UC" type="subject_binary">
@@ -492,7 +498,11 @@
 						<XSAVEEnable>0</XSAVEEnable>
 						<SMEPEnable>0</SMEPEnable>
 					</cr4>
-					<msrs/>
+					<msrs>
+						<msr start="16#0174#" end="16#0176#" mode="rw"/>
+						<msr start="16#c000_0080#" end="16#c000_0084#" mode="rw"/>
+						<msr start="16#c000_0100#" end="16#c000_0102#" mode="rw"/>
+					</msrs>
 				</registers>
 				<segments>
 					<cs selector="16#0008#" base="16#0000#" limit="16#ffff#" access="16#c09b#"/>

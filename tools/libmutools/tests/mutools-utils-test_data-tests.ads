@@ -24,5 +24,8 @@ package Mutools.Utils.Test_Data.Tests is
    procedure Test_Decode_Entity_Name_ec79f4 (Gnattest_T : in out Test);
    --  mutools-utils.ads:55:4:Decode_Entity_Name
 
+   procedure Test_Is_Managed_By_VMX_d49f3b (Gnattest_T : in out Test);
+   --  mutools-utils.ads:60:4:Is_Managed_By_VMX
+
 end Mutools.Utils.Test_Data.Tests;
 --  end read only

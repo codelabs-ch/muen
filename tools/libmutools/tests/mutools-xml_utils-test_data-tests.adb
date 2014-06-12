@@ -174,4 +174,247 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    end Test_Create_Memory_Node;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Has_Managed_DEBUGCTL (Gnattest_T : in out Test);
+   procedure Test_Has_Managed_DEBUGCTL_07c840 (Gnattest_T : in out Test) renames Test_Has_Managed_DEBUGCTL;
+--  id:2.2/07c840ea4cf93188/Has_Managed_DEBUGCTL/1/0/
+   procedure Test_Has_Managed_DEBUGCTL (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:62:4:Has_Managed_DEBUGCTL
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+      Ctrls  : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Ctrls := Muxml.Utils.Get_Element
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/controls");
+
+      Assert (Condition => not Has_Managed_DEBUGCTL (Controls => Ctrls),
+              Message   => "DEBUGCTL is managed");
+
+      DOM.Core.Nodes.Set_Node_Value
+        (N     => DOM.Core.Nodes.First_Child
+           (N => Muxml.Utils.Get_Element
+                (Doc   => Ctrls,
+                 XPath => "entry/LoadDebugControls")),
+         Value => "1");
+      DOM.Core.Nodes.Set_Node_Value
+        (N     => DOM.Core.Nodes.First_Child
+           (N => Muxml.Utils.Get_Element
+                (Doc   => Ctrls,
+                 XPath => "exit/SaveDebugControls")),
+         Value => "1");
+      Assert (Condition => Has_Managed_DEBUGCTL (Controls => Ctrls),
+              Message   => "DEBUGCTL not managed");
+--  begin read only
+   end Test_Has_Managed_DEBUGCTL;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Has_Managed_PERFGLOBALCTRL (Gnattest_T : in out Test);
+   procedure Test_Has_Managed_PERFGLOBALCTRL_811a8a (Gnattest_T : in out Test) renames Test_Has_Managed_PERFGLOBALCTRL;
+--  id:2.2/811a8a093040ed89/Has_Managed_PERFGLOBALCTRL/1/0/
+   procedure Test_Has_Managed_PERFGLOBALCTRL (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:66:4:Has_Managed_PERFGLOBALCTRL
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+      Ctrls  : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Ctrls := Muxml.Utils.Get_Element
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/controls");
+
+      Assert (Condition => not Has_Managed_PERFGLOBALCTRL (Controls => Ctrls),
+              Message   => "PERFGLOBALCTL is managed");
+
+      DOM.Core.Nodes.Set_Node_Value
+        (N     => DOM.Core.Nodes.First_Child
+           (N => Muxml.Utils.Get_Element
+                (Doc   => Ctrls,
+                 XPath => "entry/LoadIA32PERFGLOBALCTRL")),
+         Value => "1");
+      Assert (Condition => Has_Managed_PERFGLOBALCTRL (Controls => Ctrls),
+              Message   => "DEBUGCTL not managed");
+--  begin read only
+   end Test_Has_Managed_PERFGLOBALCTRL;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Has_Managed_PAT (Gnattest_T : in out Test);
+   procedure Test_Has_Managed_PAT_0e0b54 (Gnattest_T : in out Test) renames Test_Has_Managed_PAT;
+--  id:2.2/0e0b54fd46c7da60/Has_Managed_PAT/1/0/
+   procedure Test_Has_Managed_PAT (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:72:4:Has_Managed_PAT
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+      Ctrls  : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Ctrls := Muxml.Utils.Get_Element
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/controls");
+
+      Assert (Condition => not Has_Managed_PAT (Controls => Ctrls),
+              Message   => "PAT is managed");
+
+      DOM.Core.Nodes.Set_Node_Value
+        (N     => DOM.Core.Nodes.First_Child
+           (N => Muxml.Utils.Get_Element
+                (Doc   => Ctrls,
+                 XPath => "entry/LoadIA32PAT")),
+         Value => "1");
+      DOM.Core.Nodes.Set_Node_Value
+        (N     => DOM.Core.Nodes.First_Child
+           (N => Muxml.Utils.Get_Element
+                (Doc   => Ctrls,
+                 XPath => "exit/SaveIA32PAT")),
+         Value => "1");
+      Assert (Condition => Has_Managed_PAT (Controls => Ctrls),
+              Message   => "PAT not managed");
+--  begin read only
+   end Test_Has_Managed_PAT;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Has_Managed_EFER (Gnattest_T : in out Test);
+   procedure Test_Has_Managed_EFER_29e528 (Gnattest_T : in out Test) renames Test_Has_Managed_EFER;
+--  id:2.2/29e528793cfc9400/Has_Managed_EFER/1/0/
+   procedure Test_Has_Managed_EFER (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:76:4:Has_Managed_EFER
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+      Ctrls  : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Ctrls := Muxml.Utils.Get_Element
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject/vcpu/vmx/controls");
+
+      Assert (Condition => not Has_Managed_EFER (Controls => Ctrls),
+              Message   => "EFER is managed");
+
+      DOM.Core.Nodes.Set_Node_Value
+        (N     => DOM.Core.Nodes.First_Child
+           (N => Muxml.Utils.Get_Element
+                (Doc   => Ctrls,
+                 XPath => "entry/LoadIA32EFER")),
+         Value => "1");
+      DOM.Core.Nodes.Set_Node_Value
+        (N     => DOM.Core.Nodes.First_Child
+           (N => Muxml.Utils.Get_Element
+                (Doc   => Ctrls,
+                 XPath => "exit/SaveIA32EFER")),
+         Value => "1");
+      Assert (Condition => Has_Managed_EFER (Controls => Ctrls),
+              Message   => "EFER not managed");
+--  begin read only
+   end Test_Has_Managed_EFER;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Calculate_MSR_Count (Gnattest_T : in out Test);
+   procedure Test_Calculate_MSR_Count_5d62ce (Gnattest_T : in out Test) renames Test_Calculate_MSR_Count;
+--  id:2.2/5d62ce190007559a/Calculate_MSR_Count/1/0/
+   procedure Test_Calculate_MSR_Count (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:81:4:Calculate_MSR_Count
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : Muxml.XML_Data_Type;
+      MSRs : DOM.Core.Node_List;
+
+      --  Append MSR with given attributes to MSR list.
+      procedure Append_MSR
+        (MSR_Start : String;
+         MSR_End   : String;
+         Mode      : String)
+      is
+         Node : DOM.Core.Node;
+      begin
+         Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "msr");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "mode",
+            Value => Mode);
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "start",
+            Value => MSR_Start);
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "end",
+            Value => MSR_End);
+
+         DOM.Core.Append_Node (List => MSRs,
+                               N    => Node);
+      end Append_MSR;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Assert (Condition => Calculate_MSR_Count
+              (MSRs                   => MSRs,
+               DEBUGCTL_Control       => False,
+               PAT_Control            => False,
+               PERFGLOBALCTRL_Control => False,
+               EFER_Control           => False) = 0,
+              Message   => "Empty list count not 0");
+
+      Append_MSR (MSR_Start => "16#0010#",
+                  MSR_End   => "16#0010#",
+                  Mode      => "r");
+      Append_MSR (MSR_Start => "16#0174#",
+                  MSR_End   => "16#0176#",
+                  Mode      => "rw");
+      Append_MSR (MSR_Start => "16#c000_0080#",
+                  MSR_End   => "16#c000_0084#",
+                  Mode      => "rw");
+      Append_MSR (MSR_Start => "16#c000_0100#",
+                  MSR_End   => "16#c000_0102#",
+                  Mode      => "rw");
+
+      Assert (Condition => Calculate_MSR_Count
+              (MSRs                   => MSRs,
+               DEBUGCTL_Control       => False,
+               PAT_Control            => False,
+               PERFGLOBALCTRL_Control => False,
+               EFER_Control           => True) = 6,
+              Message   => "MSR count mismatch");
+--  begin read only
+   end Test_Calculate_MSR_Count;
+--  end read only
+
 end Mutools.XML_Utils.Test_Data.Tests;

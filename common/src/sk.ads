@@ -83,7 +83,6 @@ is
       CR4                : Word64;
       RFLAGS             : Word64;
       IA32_EFER          : Word64;
-      Kernel_GS_BASE     : Word64;
       XSAVE_Area         : XSAVE_Area_Type;
    end record;
 
@@ -163,7 +162,6 @@ private
         CR4                => 0,
         RFLAGS             => 0,
         IA32_EFER          => 0,
-        Kernel_GS_BASE     => 0,
         XSAVE_Area         => XSAVE_Area_Type'(others => 0));
 
 end SK;

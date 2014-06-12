@@ -73,6 +73,18 @@ is
    with
       Global => null;
 
+   function Get_MSR_Store_Address
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word64
+     with
+       Global => null;
+
+   function Get_MSR_Count
+     (Subject_Id : Skp.Subject_Id_Type)
+      return SK.Word32
+     with
+       Global => null;
+
    function Get_Stack_Address
      (Subject_Id : Skp.Subject_Id_Type)
       return SK.Word64

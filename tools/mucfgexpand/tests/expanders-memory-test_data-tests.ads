@@ -42,5 +42,8 @@ package Expanders.Memory.Test_Data.Tests is
    procedure Test_Add_Subject_Bitmaps_4f1ecd (Gnattest_T : in out Test);
    --  expanders-memory.ads:53:4:Add_Subject_Bitmaps
 
+   procedure Test_Add_Subject_MSR_Store_187092 (Gnattest_T : in out Test);
+   --  expanders-memory.ads:56:4:Add_Subject_MSR_Store
+
 end Expanders.Memory.Test_Data.Tests;
 --  end read only

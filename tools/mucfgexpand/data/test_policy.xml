@@ -66,8 +66,8 @@
     </target>
    </events>
    <channels>
-    <writer ref="data_channel" event="1" virtualAddress="16#3000#"/>
-    <writer ref="data_channel2" event="1" virtualAddress="16#3000#"/>
+    <writer event="1" ref="data_channel" virtualAddress="16#3000#"/>
+    <writer event="1" ref="data_channel2" virtualAddress="16#3000#"/>
    </channels>
    <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
    <monitor>
@@ -87,3 +87,4 @@
   </majorFrame>
  </scheduling>
 </system>
+

@@ -48,9 +48,11 @@ is
 
       Procs.Register (Process => Subjects.Add_Tau0'Access);
 
-      --  Set subject ids prior to kernel subject state mapping expander.
+      --  Set subject ids and cpu prior to kernel subject state mapping
+      --  expander.
 
       Procs.Register (Process => Subjects.Add_Ids'Access);
+      Procs.Register (Process => Subjects.Add_CPU_Ids'Access);
 
       Procs.Register (Process => Platform.Add_PCI_Config_Space'Access);
       Procs.Register (Process => Memory.Add_Missing_Attributes'Access);

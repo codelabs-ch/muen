@@ -24,6 +24,7 @@ with Ada.Strings.Unbounded;
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
+with DOM.Core.Append_Node;
 
 with McKae.XML.XPath.XIA;
 
@@ -47,6 +48,13 @@ is
      (Data         : in out Muxml.XML_Data_Type;
       Element_Name :        String;
       Ref_Name     :        String);
+
+   --  Return the list of subjects that can trigger a switch to the given
+   --  target subject.
+   function Get_Switch_Subjects
+     (Data   : in out Muxml.XML_Data_Type;
+      Target :        DOM.Core.Node)
+      return DOM.Core.Node_List;
 
    -------------------------------------------------------------------------
 
@@ -380,6 +388,8 @@ is
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
+            use type DOM.Core.Node;
+
             Subj_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Nodes,
@@ -388,18 +398,54 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
                  Name => "name");
-            CPU_Id    : constant String
-              := Muxml.Utils.Get_Attribute
+            CPU_Node  : DOM.Core.Node
+              := Muxml.Utils.Get_Element
                 (Doc   => Data.Doc,
                  XPath => "/system/scheduling/majorFrame/cpu/minorFrame["
-                 & "@subject='" & Subj_Name & "']/..",
-                 Name  => "id");
+                 & "@subject='" & Subj_Name & "']/..");
          begin
-            Mulog.Log (Msg => "Setting cpu of subject '" & Subj_Name & "' to "
-                       & CPU_Id);
-            DOM.Core.Elements.Set_Attribute (Elem  => Subj_Node,
-                                             Name  => "cpu",
-                                             Value => CPU_Id);
+            if CPU_Node = null then
+
+               --  Subject is executed via switch events.
+
+               declare
+                  Src_Subjs    : constant DOM.Core.Node_List
+                    := Get_Switch_Subjects (Data   => Data,
+                                            Target => Subj_Node);
+                  Switch_Count : constant Integer
+                    := DOM.Core.Nodes.Length (List => Src_Subjs);
+               begin
+                  for J in 0 .. Switch_Count - 1 loop
+                     declare
+                        Cur_Src_Name : constant String
+                          := DOM.Core.Elements.Get_Attribute
+                            (Elem => DOM.Core.Nodes.Item (List  => Src_Subjs,
+                                                          Index => J),
+                             Name => "name");
+                     begin
+                        CPU_Node := Muxml.Utils.Get_Element
+                          (Doc   => Data.Doc,
+                           XPath => "/system/scheduling/majorFrame/cpu/"
+                           & "minorFrame[" & "@subject='" & Cur_Src_Name
+                           & "']/..");
+                        exit when CPU_Node /= null;
+                     end;
+                  end loop;
+               end;
+            end if;
+
+            declare
+               CPU_Id : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem  => CPU_Node,
+                    Name  => "id");
+            begin
+               Mulog.Log (Msg => "Setting cpu of subject '" & Subj_Name
+                          & "' to " & CPU_Id);
+               DOM.Core.Elements.Set_Attribute (Elem  => Subj_Node,
+                                                Name  => "cpu",
+                                                Value => CPU_Id);
+            end;
          end;
       end loop;
    end Add_CPU_Ids;
@@ -779,6 +825,46 @@ is
         (Node      => Tau0_Node,
          New_Child => Bin_Node);
    end Add_Tau0;
+
+   -------------------------------------------------------------------------
+
+   function Get_Switch_Subjects
+     (Data   : in out Muxml.XML_Data_Type;
+      Target :        DOM.Core.Node)
+      return DOM.Core.Node_List
+   is
+      Target_Events : constant DOM.Core.Node_List
+        :=  McKae.XML.XPath.XIA.XPath_Query
+          (N     => Target,
+           XPath => "events/target/event/@physical");
+      Subjects : DOM.Core.Node_List;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Target_Events) - 1 loop
+         declare
+            Ev_Name    : constant String
+              := DOM.Core.Nodes.Node_Value
+                (N => DOM.Core.Nodes.Item
+                   (List  => Target_Events,
+                    Index => I));
+            Event_Mode : constant String
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Data.Doc,
+                 XPath => "/system/events/event[@name='" & Ev_Name  & "']",
+                 Name  => "mode");
+         begin
+            if Event_Mode = "switch" then
+               DOM.Core.Append_Node
+                 (List => Subjects,
+                  N    => Muxml.Utils.Get_Element
+                    (Doc   => Data.Doc,
+                     XPath => "/system/subjects/subject"
+                     & "[events/source/group/*/notify/@physical='" & Ev_Name
+                     & "']"));
+            end if;
+         end;
+      end loop;
+      return Subjects;
+   end Get_Switch_Subjects;
 
    -------------------------------------------------------------------------
 

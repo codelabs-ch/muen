@@ -97,8 +97,7 @@
     <minorFrame subject="lnx" ticks="80"/>
    </cpu>
    <cpu id="1">
-    <minorFrame subject="subject1" ticks="40"/>
-    <minorFrame subject="tau0" ticks="40"/>
+    <minorFrame subject="tau0" ticks="80"/>
    </cpu>
   </majorFrame>
  </scheduling>

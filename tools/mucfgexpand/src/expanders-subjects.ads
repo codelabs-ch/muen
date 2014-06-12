@@ -56,4 +56,7 @@ is
    --  initrd element after processing.
    procedure Add_Initrd (Data : in out Muxml.XML_Data_Type);
 
+   --  Add cpu ids.
+   procedure Add_CPU_Ids (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Subjects;

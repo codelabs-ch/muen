@@ -371,6 +371,41 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_CPU_Ids (Data : in out Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Nodes,
+                 Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            CPU_Id    : constant String
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Data.Doc,
+                 XPath => "/system/scheduling/majorFrame/cpu/minorFrame["
+                 & "@subject='" & Subj_Name & "']/..",
+                 Name  => "id");
+         begin
+            Mulog.Log (Msg => "Setting cpu of subject '" & Subj_Name & "' to "
+                       & CPU_Id);
+            DOM.Core.Elements.Set_Attribute (Elem  => Subj_Node,
+                                             Name  => "cpu",
+                                             Value => CPU_Id);
+         end;
+      end loop;
+   end Add_CPU_Ids;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Default_Events (Data : in out Muxml.XML_Data_Type)
    is
       Nodes  : constant DOM.Core.Node_List

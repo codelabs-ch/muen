@@ -42,5 +42,8 @@ package Expanders.Subjects.Test_Data.Tests is
    procedure Test_Add_Initrd_cf4328 (Gnattest_T : in out Test);
    --  expanders-subjects.ads:57:4:Add_Initrd
 
+   procedure Test_Add_CPU_Ids_cf5c89 (Gnattest_T : in out Test);
+   --  expanders-subjects.ads:60:4:Add_CPU_Ids
+
 end Expanders.Subjects.Test_Data.Tests;
 --  end read only

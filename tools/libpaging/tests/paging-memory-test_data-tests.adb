@@ -201,6 +201,54 @@ package body Paging.Memory.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure EPT_Generate_Paging_Structures_No_Large_Pages
+      is
+         Layout : Memory_Layout_Type := Null_Layout;
+      begin
+         Set_Large_Page_Support (Mem_Layout => Layout,
+                                 State      => False);
+         Set_Address (Mem_Layout => Layout,
+                      Address    => 16#001f_4000#);
+
+          Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#4000_0000#,
+            Virtual_Address  => 16#0#,
+            Size             => 16#0020_0000#,
+            Caching          => UC,
+            Writable         => True,
+            Executable       => True);
+
+         Update_References (Mem_Layout => Layout);
+
+         declare
+            use Ada.Streams.Stream_IO;
+
+            File : File_Type;
+         begin
+            Mutools.Files.Open (Filename => "obj/ept_no_large_pages",
+                                File     => File);
+
+            Serialize
+              (Stream         => Stream (File => File),
+               Mem_Layout     => Layout,
+               Serialize_PML4 => EPT.Serialize'Access,
+               Serialize_PDPT => EPT.Serialize'Access,
+               Serialize_PD   => EPT.Serialize'Access,
+               Serialize_PT   => EPT.Serialize'Access);
+
+            Close (File => File);
+         end;
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/ept_no_large_pages.ref",
+                  Filename2 => "obj/ept_no_large_pages"),
+                 Message   => "EPT paging structures without large pages"
+                 & " mismatch");
+      end EPT_Generate_Paging_Structures_No_Large_Pages;
+
+      ----------------------------------------------------------------------
+
       procedure IA32e_Generate_Paging_Structures
       is
          Layout : Memory_Layout_Type := Null_Layout;
@@ -428,6 +476,7 @@ package body Paging.Memory.Test_Data.Tests is
       end Serialize_Empty_Layout;
    begin
       EPT_Generate_Paging_Structures;
+      EPT_Generate_Paging_Structures_No_Large_Pages;
       IA32e_Generate_Paging_Structures;
       IA32e_Generate_Multiple_Structures;
       IA32e_Generate_Multiple_PTs;

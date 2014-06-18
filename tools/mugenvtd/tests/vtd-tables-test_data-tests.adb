@@ -11,11 +11,11 @@ package body VTd.Tables.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Add_Entry (Gnattest_T : in out Test);
-   procedure Test_Add_Entry_7bb9cf (Gnattest_T : in out Test) renames Test_Add_Entry;
+   procedure Test_1_Add_Entry (Gnattest_T : in out Test);
+   procedure Test_Add_Entry_7bb9cf (Gnattest_T : in out Test) renames Test_1_Add_Entry;
 --  id:2.2/7bb9cf95e4456862/Add_Entry/1/0/
-   procedure Test_Add_Entry (Gnattest_T : in out Test) is
-   --  vtd-tables.ads:37:4:Add_Entry
+   procedure Test_1_Add_Entry (Gnattest_T : in out Test) is
+   --  vtd-tables.ads:38:4:Add_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -30,7 +30,7 @@ package body VTd.Tables.Test_Data.Tests is
       Assert (Condition => Root_Table.Entries (12).CTP = 16#0010_0000#,
               Message   => "Entry CTP mismatch");
 --  begin read only
-   end Test_Add_Entry;
+   end Test_1_Add_Entry;
 --  end read only
 
 
@@ -39,7 +39,7 @@ package body VTd.Tables.Test_Data.Tests is
    procedure Test_Serialize_3e830c (Gnattest_T : in out Test) renames Test_Serialize;
 --  id:2.2/3e830c731d3b0f3a/Serialize/1/0/
    procedure Test_Serialize (Gnattest_T : in out Test) is
-   --  vtd-tables.ads:43:4:Serialize
+   --  vtd-tables.ads:44:4:Serialize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -69,6 +69,36 @@ package body VTd.Tables.Test_Data.Tests is
       Ada.Directories.Delete_File (Name => "obj/serialize");
 --  begin read only
    end Test_Serialize;
+--  end read only
+
+
+--  begin read only
+   procedure Test_2_Add_Entry (Gnattest_T : in out Test);
+   procedure Test_Add_Entry_f03eb2 (Gnattest_T : in out Test) renames Test_2_Add_Entry;
+--  id:2.2/f03eb2d99e674632/Add_Entry/0/0/
+   procedure Test_2_Add_Entry (Gnattest_T : in out Test) is
+   --  vtd-tables.ads:60:4:Add_Entry
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_16;
+
+      Context_Table : Context_Table_Type;
+   begin
+      Add_Entry (CT      => Context_Table,
+                 Device  => 1,
+                 Func    => 6,
+                 Domain  => 24,
+                 SLPTPTR => 16#4000#);
+      Assert (Condition => Context_Table.Entries (14).Present = 1,
+              Message   => "Entry not present");
+      Assert (Condition => Context_Table.Entries (14).DID = 24,
+              Message   => "DID mismatch");
+      Assert (Condition => Context_Table.Entries (14).SLPTPTR = 16#4000#,
+              Message   => "SLPTPTR mismatch");
+--  begin read only
+   end Test_2_Add_Entry;
 --  end read only
 
 end VTd.Tables.Test_Data.Tests;

@@ -49,6 +49,23 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Entry
+     (CT      : in out Context_Table_Type;
+      Device  :        Device_Range;
+      Func    :        Function_Range;
+      Domain  :        Domain_Range;
+      SLPTPTR :        Table_Pointer_Type)
+   is
+      Idx : constant Table_Range
+        := Table_Range (Device) * 8 + Table_Range (Func);
+   begin
+      CT.Entries (Idx).Present := 1;
+      CT.Entries (Idx).DID     := Interfaces.Unsigned_16 (Domain);
+      CT.Entries (Idx).SLPTPTR := SLPTPTR;
+   end Add_Entry;
+
+   -------------------------------------------------------------------------
+
    procedure Serialize
      (RT       : Root_Table_Type;
       Filename : String)

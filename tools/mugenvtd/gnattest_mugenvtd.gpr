@@ -17,6 +17,7 @@
 --
 
 with "../libmutools/libmutools";
+with "../libtest/libtest";
 
 project GNATtest_Mugenvtd extends "../tools.gpr" is
 

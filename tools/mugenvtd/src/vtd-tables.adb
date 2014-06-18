@@ -16,8 +16,24 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Streams.Stream_IO;
+with Ada.Unchecked_Conversion;
+
+with Mutools.Constants;
+
 package body VTd.Tables
 is
+
+   use type Ada.Streams.Stream_Element_Offset;
+
+   subtype RT_Stream is Ada.Streams.Stream_Element_Array
+     (1 .. Mutools.Constants.Page_Size);
+
+   --  Root_Table_Type'Write adds additional output so manual conversion to
+   --  stream array is necessary.
+   function Convert is new Ada.Unchecked_Conversion
+     (Source => Root_Table_Type,
+      Target => RT_Stream);
 
    -------------------------------------------------------------------------
 
@@ -30,5 +46,22 @@ is
       RT.Entries (Bus).Present := 1;
       RT.Entries (Bus).CTP     := CTP;
    end Add_Entry;
+
+   -------------------------------------------------------------------------
+
+   procedure Serialize
+     (RT       : Root_Table_Type;
+      Filename : String)
+   is
+      File : Ada.Streams.Stream_IO.File_Type;
+   begin
+      Ada.Streams.Stream_IO.Create
+        (File => File,
+         Mode => Ada.Streams.Stream_IO.Out_File,
+         Name => Filename);
+      Ada.Streams.Stream_IO.Write (File => File,
+                                   Item => Convert (S => RT));
+      Ada.Streams.Stream_IO.Close (File => File);
+   end Serialize;
 
 end VTd.Tables;

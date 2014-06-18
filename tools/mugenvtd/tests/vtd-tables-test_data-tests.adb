@@ -33,4 +33,42 @@ package body VTd.Tables.Test_Data.Tests is
    end Test_Add_Entry;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Serialize (Gnattest_T : in out Test);
+   procedure Test_Serialize_3e830c (Gnattest_T : in out Test) renames Test_Serialize;
+--  id:2.2/3e830c731d3b0f3a/Serialize/1/0/
+   procedure Test_Serialize (Gnattest_T : in out Test) is
+   --  vtd-tables.ads:43:4:Serialize
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Root_Table : Root_Table_Type;
+   begin
+      Serialize (RT       => Root_Table,
+                 Filename => "obj/serialize_default");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "obj/serialize_default",
+               Filename2 => "data/serialize_default"),
+              Message   => "Default table mismatch");
+      Ada.Directories.Delete_File (Name => "obj/serialize_default");
+
+      Add_Entry (RT  => Root_Table,
+                 Bus => Bus_Range'First,
+                 CTP => CT_Pointer_Type'Last);
+      Add_Entry (RT  => Root_Table,
+                 Bus => Bus_Range'Last,
+                 CTP => CT_Pointer_Type'Last);
+      Serialize (RT       => Root_Table,
+                 Filename => "obj/serialize");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "obj/serialize",
+               Filename2 => "data/serialize"),
+              Message   => "Table mismatch");
+      Ada.Directories.Delete_File (Name => "obj/serialize");
+--  begin read only
+   end Test_Serialize;
+--  end read only
+
 end VTd.Tables.Test_Data.Tests;

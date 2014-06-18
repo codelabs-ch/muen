@@ -39,6 +39,11 @@ is
       Bus :        Bus_Range;
       CTP :        CT_Pointer_Type);
 
+   --  Serialize given root table to file with specified filename.
+   procedure Serialize
+     (RT       : Root_Table_Type;
+      Filename : String);
+
 private
 
    type Bit_Type is range 0 .. 1

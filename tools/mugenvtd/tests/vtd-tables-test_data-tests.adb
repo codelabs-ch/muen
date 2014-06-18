@@ -55,10 +55,10 @@ package body VTd.Tables.Test_Data.Tests is
       Ada.Directories.Delete_File (Name => "obj/serialize_default");
 
       Add_Entry (RT  => Root_Table,
-                 Bus => Bus_Range'First,
+                 Bus => Table_Range'First,
                  CTP => CT_Pointer_Type'Last);
       Add_Entry (RT  => Root_Table,
-                 Bus => Bus_Range'Last,
+                 Bus => Table_Range'Last,
                  CTP => CT_Pointer_Type'Last);
       Serialize (RT       => Root_Table,
                  Filename => "obj/serialize");

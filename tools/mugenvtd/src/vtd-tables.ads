@@ -19,11 +19,10 @@
 package VTd.Tables
 is
 
+   type Table_Range is range 0 .. 255;
+
    --  DMAR root table, see Intel VT-d specification, section 9.1.
    type Root_Table_Type is private;
-
-   --  I/O bus range.
-   type Bus_Range is range 0 .. 255;
 
    --  A Context-table Pointer (CTP) points to a context table for a specific
    --  bus. Assuming a Host Address Width (HAW) of 35 bits, the CTP can be
@@ -36,7 +35,7 @@ is
    --  Context-table Pointer (CTP).
    procedure Add_Entry
      (RT  : in out Root_Table_Type;
-      Bus :        Bus_Range;
+      Bus :        Table_Range;
       CTP :        CT_Pointer_Type);
 
    --  Serialize given root table to file with specified filename.
@@ -70,7 +69,7 @@ private
       Reserved_2 at 0 range 35 .. 127;
    end record;
 
-   type Root_Entry_Array is array (Bus_Range) of Root_Entry_Type
+   type Root_Entry_Array is array (Table_Range) of Root_Entry_Type
      with
        Size => 256 * 128;
 

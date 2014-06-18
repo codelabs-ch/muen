@@ -39,7 +39,7 @@ is
 
    procedure Add_Entry
      (RT  : in out Root_Table_Type;
-      Bus :        Bus_Range;
+      Bus :        Table_Range;
       CTP :        CT_Pointer_Type)
    is
    begin

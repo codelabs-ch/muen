@@ -26,6 +26,7 @@ TOOLS =           \
 	mugenpt       \
 	mugensinfo    \
 	mugenspec     \
+	mugenvtd      \
 	mugenzp       \
 	mulnxbzpatch  \
 	mupack

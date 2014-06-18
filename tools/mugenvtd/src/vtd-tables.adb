@@ -40,7 +40,7 @@ is
    procedure Add_Entry
      (RT  : in out Root_Table_Type;
       Bus :        Table_Range;
-      CTP :        CT_Pointer_Type)
+      CTP :        Table_Pointer_Type)
    is
    begin
       RT.Entries (Bus).Present := 1;

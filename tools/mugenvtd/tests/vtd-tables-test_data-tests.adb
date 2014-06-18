@@ -12,8 +12,8 @@ package body VTd.Tables.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Add_Entry (Gnattest_T : in out Test);
-   procedure Test_Add_Entry_c1683a (Gnattest_T : in out Test) renames Test_Add_Entry;
---  id:2.2/c1683ae3e6351283/Add_Entry/1/0/
+   procedure Test_Add_Entry_7bb9cf (Gnattest_T : in out Test) renames Test_Add_Entry;
+--  id:2.2/7bb9cf95e4456862/Add_Entry/1/0/
    procedure Test_Add_Entry (Gnattest_T : in out Test) is
    --  vtd-tables.ads:37:4:Add_Entry
 --  end read only
@@ -56,10 +56,10 @@ package body VTd.Tables.Test_Data.Tests is
 
       Add_Entry (RT  => Root_Table,
                  Bus => Table_Range'First,
-                 CTP => CT_Pointer_Type'Last);
+                 CTP => Table_Pointer_Type'Last);
       Add_Entry (RT  => Root_Table,
                  Bus => Table_Range'Last,
-                 CTP => CT_Pointer_Type'Last);
+                 CTP => Table_Pointer_Type'Last);
       Serialize (RT       => Root_Table,
                  Filename => "obj/serialize");
       Assert (Condition => Test_Utils.Equal_Files

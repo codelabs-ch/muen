@@ -21,22 +21,22 @@ is
 
    type Table_Range is range 0 .. 255;
 
-   --  DMAR root table, see Intel VT-d specification, section 9.1.
-   type Root_Table_Type is private;
-
-   --  A Context-table Pointer (CTP) points to a context table for a specific
-   --  bus. Assuming a Host Address Width (HAW) of 35 bits, the CTP can be
-   --  maximum 23 bits (i.e. context tables must be below 8 MiB).
-   type CT_Pointer_Type is range 0 .. 2 ** 23 - 1
+   --  Pointer used to reference context and address translation tables.
+   --  Assuming a Host Address Width (HAW) of 35 bits, the pointer can be
+   --  maximum 23 bits (i.e. referenced tables must be below 8 MiB).
+   type Table_Pointer_Type is range 0 .. 2 ** 23 - 1
      with
        Size => 23;
+
+   --  DMAR root table, see Intel VT-d specification, section 9.1.
+   type Root_Table_Type is private;
 
    --  Add an entry to given DMAR root table with specified bus number and
    --  Context-table Pointer (CTP).
    procedure Add_Entry
      (RT  : in out Root_Table_Type;
       Bus :        Table_Range;
-      CTP :        CT_Pointer_Type);
+      CTP :        Table_Pointer_Type);
 
    --  Serialize given root table to file with specified filename.
    procedure Serialize
@@ -56,7 +56,7 @@ private
    type Root_Entry_Type is record
       Present    : Bit_Type            := 0;
       Reserved_1 : Bit_Array (1 .. 11) := (others => 0);
-      CTP        : CT_Pointer_Type     := 0;
+      CTP        : Table_Pointer_Type  := 0;
       Reserved_2 : Bit_Array (1 .. 93) := (others => 0);
    end record
      with

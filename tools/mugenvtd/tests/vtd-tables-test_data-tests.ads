@@ -9,7 +9,7 @@ package VTd.Tables.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.VTd.Tables.Test_Data.Test
    with null record;
 
-   procedure Test_Add_Entry_c1683a (Gnattest_T : in out Test);
+   procedure Test_Add_Entry_7bb9cf (Gnattest_T : in out Test);
    --  vtd-tables.ads:37:4:Add_Entry
 
    procedure Test_Serialize_3e830c (Gnattest_T : in out Test);

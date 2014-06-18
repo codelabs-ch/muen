@@ -335,6 +335,16 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Set_Large_Page_Support
+     (Mem_Layout : in out Memory_Layout_Type;
+      State      :        Boolean)
+   is
+   begin
+      Mem_Layout.Use_Large_Pages := State;
+   end Set_Large_Page_Support;
+
+   -------------------------------------------------------------------------
+
    procedure Update_References (Mem_Layout : in out Memory_Layout_Type)
    is
       use type Interfaces.Unsigned_64;

@@ -82,15 +82,22 @@ is
         (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
          PT     : Tables.PT.Page_Table_Type));
 
+   --  Enable or disable large page mappings for the given memory layout.
+   procedure Set_Large_Page_Support
+     (Mem_Layout : in out Memory_Layout_Type;
+      State      :        Boolean);
+
 private
 
    type Memory_Layout_Type is record
-      PML4  : Tables.PML4.Page_Table_Type;
-      PDPTs : Tables.PDPT.Page_Table_Map;
-      PDs   : Tables.PD.Page_Table_Map;
-      PTs   : Tables.PT.Page_Table_Map;
+      Use_Large_Pages : Boolean := True;
+      PML4            : Tables.PML4.Page_Table_Type;
+      PDPTs           : Tables.PDPT.Page_Table_Map;
+      PDs             : Tables.PD.Page_Table_Map;
+      PTs             : Tables.PT.Page_Table_Map;
    end record;
 
-   Null_Layout : constant Memory_Layout_Type := (others => <>);
+   Null_Layout : constant Memory_Layout_Type := (Use_Large_Pages => True,
+                                                 others          => <>);
 
 end Paging.Memory;

@@ -27,5 +27,8 @@ package Paging.Memory.Test_Data.Tests is
    procedure Test_Serialize_bf151f (Gnattest_T : in out Test);
    --  paging-memory.ads:69:4:Serialize
 
+   procedure Test_Set_Large_Page_Support_f61057 (Gnattest_T : in out Test);
+   --  paging-memory.ads:86:4:Set_Large_Page_Support
+
 end Paging.Memory.Test_Data.Tests;
 --  end read only

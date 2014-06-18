@@ -436,4 +436,33 @@ package body Paging.Memory.Test_Data.Tests is
    end Test_Serialize;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Set_Large_Page_Support (Gnattest_T : in out Test);
+   procedure Test_Set_Large_Page_Support_f61057 (Gnattest_T : in out Test) renames Test_Set_Large_Page_Support;
+--  id:2.2/f61057a95eba2569/Set_Large_Page_Support/1/0/
+   procedure Test_Set_Large_Page_Support (Gnattest_T : in out Test) is
+   --  paging-memory.ads:86:4:Set_Large_Page_Support
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Layout : Memory_Layout_Type;
+   begin
+      Assert (Condition => Layout.Use_Large_Pages,
+              Message   => "Large page support not default");
+
+      Set_Large_Page_Support (Mem_Layout => Layout,
+                              State      => False);
+      Assert (Condition => not Layout.Use_Large_Pages,
+              Message   => "Large page support enabled");
+
+      Set_Large_Page_Support (Mem_Layout => Layout,
+                              State      => True);
+      Assert (Condition => Layout.Use_Large_Pages,
+              Message   => "Large page support disabled");
+--  begin read only
+   end Test_Set_Large_Page_Support;
+--  end read only
+
 end Paging.Memory.Test_Data.Tests;

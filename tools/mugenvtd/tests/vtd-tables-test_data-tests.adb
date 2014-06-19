@@ -47,12 +47,12 @@ package body VTd.Tables.Test_Data.Tests is
       Root_Table : Root_Table_Type;
    begin
       Serialize (RT       => Root_Table,
-                 Filename => "obj/serialize_default");
+                 Filename => "obj/serialize_rt_default");
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "obj/serialize_default",
-               Filename2 => "data/serialize_default"),
+              (Filename1 => "obj/serialize_rt_default",
+               Filename2 => "data/serialize_rt_default"),
               Message   => "Default table mismatch");
-      Ada.Directories.Delete_File (Name => "obj/serialize_default");
+      Ada.Directories.Delete_File (Name => "obj/serialize_rt_default");
 
       Add_Entry (RT  => Root_Table,
                  Bus => Table_Range'First,
@@ -61,12 +61,12 @@ package body VTd.Tables.Test_Data.Tests is
                  Bus => Table_Range'Last,
                  CTP => Table_Pointer_Type'Last);
       Serialize (RT       => Root_Table,
-                 Filename => "obj/serialize");
+                 Filename => "obj/serialize_rt");
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "obj/serialize",
-               Filename2 => "data/serialize"),
+              (Filename1 => "obj/serialize_rt",
+               Filename2 => "data/serialize_rt"),
               Message   => "Table mismatch");
-      Ada.Directories.Delete_File (Name => "obj/serialize");
+      Ada.Directories.Delete_File (Name => "obj/serialize_rt");
 --  begin read only
    end Test_1_Serialize;
 --  end read only

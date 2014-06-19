@@ -46,12 +46,16 @@ package body Paging.Layouts.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Interfaces.Unsigned_64;
+
+      Ref_Addr : constant Interfaces.Unsigned_64 := 16#fefe_1234_0000#;
+      Layout   : Memory_Layout_Type (Levels => 4);
    begin
+      Pagetables.Set_Physical_Address (Table   => Layout.Level_1_Table,
+                                       Address => Ref_Addr);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Get_Address (Mem_Layout => Layout) = Ref_Addr,
+              Message   => "Layout address mismatch");
 --  begin read only
    end Test_Get_Address;
 --  end read only

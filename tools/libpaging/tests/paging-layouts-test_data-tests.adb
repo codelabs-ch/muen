@@ -89,4 +89,133 @@ package body Paging.Layouts.Test_Data.Tests is
    end Test_Set_Large_Page_Support;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Add_Memory_Region (Gnattest_T : in out Test);
+   procedure Test_Add_Memory_Region_9a2b02 (Gnattest_T : in out Test) renames Test_Add_Memory_Region;
+--  id:2.2/9a2b0204b5616592/Add_Memory_Region/1/0/
+   procedure Test_Add_Memory_Region (Gnattest_T : in out Test) is
+   --  paging-layouts.ads:49:4:Add_Memory_Region
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_PD_Region
+      is
+         Layout : Memory_Layout_Type (Levels => 4);
+      begin
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#0020_0000#,
+            Virtual_Address  => 16#0040_0000#,
+            Size             => PD_Page_Size,
+            Caching          => WB,
+            Writable         => True,
+            Executable       => False);
+
+         Assert (Condition => Pagetables.Contains
+                 (Table => Layout.Level_1_Table,
+                  Index => 0),
+                 Message   => "Level 1 entry not created");
+         Assert (Condition => Maps.Contains
+                 (Map          => Layout.Structures (2),
+                  Table_Number => 0,
+                  Entry_Index  => 0),
+                 Message   => "Level 2 entry not created");
+         Assert (Condition => Maps.Length (Map => Layout.Structures (2)) = 1,
+                 Message   => "More than one level 2 table");
+         Assert (Condition => Maps.Contains
+                 (Map          => Layout.Structures (3),
+                  Table_Number => 0,
+                  Entry_Index  => 2),
+                 Message   => "Level 3 entry not created");
+         Assert (Condition => Maps.Length (Map => Layout.Structures (3)) = 1,
+                 Message   => "More than one level 3 table");
+         Assert (Condition => Maps.Length (Map => Layout.Structures (4)) = 0,
+                 Message   => "Level 4 table created");
+      end Add_PD_Region;
+
+      ----------------------------------------------------------------------
+
+      procedure Add_PDPT_Region
+      is
+         Layout : Memory_Layout_Type (Levels => 4);
+      begin
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#0000#,
+            Virtual_Address  => 16#4000_0000#,
+            Size             => PDPT_Page_Size,
+            Caching          => WB,
+            Writable         => True,
+            Executable       => False);
+
+         Assert (Condition => Pagetables.Contains
+                 (Table => Layout.Level_1_Table,
+                  Index => 0),
+                 Message   => "Level 1 entry not created");
+         Assert (Condition => Maps.Contains
+                 (Map          => Layout.Structures (2),
+                  Table_Number => 0,
+                  Entry_Index  => 1),
+                 Message   => "Level 2 entry not created");
+         Assert (Condition => Maps.Length (Map => Layout.Structures (2)) = 1,
+                 Message   => "More than one level 2 table");
+         Assert (Condition => Maps.Length (Map => Layout.Structures (3)) = 0,
+                 Message   => "Level 3 table created");
+         Assert (Condition => Maps.Length (Map => Layout.Structures (4)) = 0,
+                 Message   => "Level 4 table created");
+      end Add_PDPT_Region;
+
+      ----------------------------------------------------------------------
+
+      procedure Add_PT_Region
+      is
+         Layout : Memory_Layout_Type (Levels => 4);
+      begin
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#1000#,
+            Virtual_Address  => 16#0caf_ebee_f000#,
+            Size             => Page_Size,
+            Caching          => WB,
+            Writable         => True,
+            Executable       => False);
+
+         Assert (Condition => Pagetables.Contains
+                 (Table => Layout.Level_1_Table,
+                  Index => 25),
+                 Message   => "Level 1 entry not created");
+         Assert (Condition => Maps.Contains
+                 (Map          => Layout.Structures (2),
+                  Table_Number => 25,
+                  Entry_Index  => 191),
+                 Message   => "Level 2 entry not created");
+         Assert (Condition => Maps.Length (Map => Layout.Structures (2)) = 1,
+                 Message   => "More than one level 2 table");
+         Assert (Condition => Maps.Contains
+                 (Map          => Layout.Structures (3),
+                  Table_Number => 191,
+                  Entry_Index  => 351),
+                 Message   => "Level 3 entry not created");
+         Assert (Condition => Maps.Length (Map => Layout.Structures (3)) = 1,
+                 Message   => "More than one level 3 table");
+         Assert (Condition => Maps.Contains
+                 (Map          => Layout.Structures (4),
+                  Table_Number => 351,
+                  Entry_Index  => 239),
+                 Message   => "Level 4 entry not created");
+         Assert (Condition => Maps.Length (Map => Layout.Structures (4)) = 1,
+                 Message   => "More than one level 4 table");
+      end Add_PT_Region;
+   begin
+      Add_PT_Region;
+      Add_PD_Region;
+      Add_PDPT_Region;
+--  begin read only
+   end Test_Add_Memory_Region;
+--  end read only
+
 end Paging.Layouts.Test_Data.Tests;

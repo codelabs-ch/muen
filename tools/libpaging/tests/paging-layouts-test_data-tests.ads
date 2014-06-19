@@ -18,5 +18,8 @@ package Paging.Layouts.Test_Data.Tests is
    procedure Test_Set_Large_Page_Support_ade5cf (Gnattest_T : in out Test);
    --  paging-layouts.ads:44:4:Set_Large_Page_Support
 
+   procedure Test_Add_Memory_Region_9a2b02 (Gnattest_T : in out Test);
+   --  paging-layouts.ads:49:4:Add_Memory_Region
+
 end Paging.Layouts.Test_Data.Tests;
 --  end read only

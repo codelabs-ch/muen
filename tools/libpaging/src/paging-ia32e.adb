@@ -304,4 +304,39 @@ is
       Raw_Table_Type'Write (Stream, Raw_Table);
    end Serialize;
 
+   -------------------------------------------------------------------------
+
+   procedure Serialize_PML4
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table  : Pagetables.Page_Table_Type)
+   is
+      Raw_Table : Raw_Table_Type := (others => 0);
+
+      --  Add given table entry to raw table.
+      procedure Add_To_Raw_Table
+        (Index  : Table_Range;
+         TEntry : Entries.Table_Entry_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_To_Raw_Table
+        (Index  : Table_Range;
+         TEntry : Entries.Table_Entry_Type)
+      is
+         PAT : constant PAT_Entry := PAT_Mapping (TEntry.Get_Caching);
+      begin
+         Raw_Table (Index) := Create_Entry
+           (Address       => TEntry.Get_Dst_Address,
+            Writable      => TEntry.Is_Writable,
+            User_Access   => TEntry.Is_Readable,
+            Writethrough  => PAT.PWT,
+            Cache_Disable => PAT.PCD,
+            Exec_Disable  => not TEntry.Is_Executable);
+      end Add_To_Raw_Table;
+   begin
+      Pagetables.Iterate (Table   => Table,
+                          Process => Add_To_Raw_Table'Access);
+      Raw_Table_Type'Write (Stream, Raw_Table);
+   end Serialize_PML4;
+
 end Paging.IA32e;

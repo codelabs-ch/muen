@@ -15,7 +15,7 @@ package body Paging.IA32e.Test_Data.Tests is
    procedure Test_Serialize_0929b4 (Gnattest_T : in out Test) renames Test_1_Serialize;
 --  id:2.2/0929b4c278710f34/Serialize/1/0/
    procedure Test_1_Serialize (Gnattest_T : in out Test) is
-   --  paging-ia32e.ads:28:4:Serialize
+   --  paging-ia32e.ads:29:4:Serialize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -63,7 +63,7 @@ package body Paging.IA32e.Test_Data.Tests is
    procedure Test_Serialize_5b10db (Gnattest_T : in out Test) renames Test_2_Serialize;
 --  id:2.2/5b10db2ed3f164c2/Serialize/0/0/
    procedure Test_2_Serialize (Gnattest_T : in out Test) is
-   --  paging-ia32e.ads:34:4:Serialize
+   --  paging-ia32e.ads:35:4:Serialize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -111,7 +111,7 @@ package body Paging.IA32e.Test_Data.Tests is
    procedure Test_Serialize_16bab4 (Gnattest_T : in out Test) renames Test_3_Serialize;
 --  id:2.2/16bab447958518fa/Serialize/0/0/
    procedure Test_3_Serialize (Gnattest_T : in out Test) is
-   --  paging-ia32e.ads:40:4:Serialize
+   --  paging-ia32e.ads:41:4:Serialize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -159,7 +159,7 @@ package body Paging.IA32e.Test_Data.Tests is
    procedure Test_Serialize_6a5ffb (Gnattest_T : in out Test) renames Test_4_Serialize;
 --  id:2.2/6a5ffbf13c87f30d/Serialize/0/0/
    procedure Test_4_Serialize (Gnattest_T : in out Test) is
-   --  paging-ia32e.ads:46:4:Serialize
+   --  paging-ia32e.ads:47:4:Serialize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -210,6 +210,53 @@ package body Paging.IA32e.Test_Data.Tests is
               Message   => "IA-32e page table mismatch");
 --  begin read only
    end Test_4_Serialize;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Serialize_PML4 (Gnattest_T : in out Test);
+   procedure Test_Serialize_PML4_e35f5c (Gnattest_T : in out Test) renames Test_Serialize_PML4;
+--  id:2.2/e35f5ceb25bfba78/Serialize_PML4/1/0/
+   procedure Test_Serialize_PML4 (Gnattest_T : in out Test) is
+   --  paging-ia32e.ads:53:4:Serialize_PML4
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      PML4 : Pagetables.Page_Table_Type;
+   begin
+      Pagetables.Set_Physical_Address (Table   => PML4,
+                                       Address => 16#001f_0000#);
+      Pagetables.Add_Entry (Table => PML4,
+                            Index => 0,
+                            E     => Entries.Create
+                              (Dst_Offset  => 0,
+                               Dst_Address => 16#001f_1000#,
+                               Readable    => True,
+                               Writable    => True,
+                               Executable  => True,
+                               Maps_Page   => False,
+                               Global      => False,
+                               Caching     => WC));
+
+      declare
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/ia32e_pml4",
+                             File     => File);
+         Serialize_PML4 (Stream => Stream (File => File),
+                         Table  => PML4);
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/ia32e_pml4.ref",
+               Filename2 => "obj/ia32e_pml4"),
+              Message   => "IA-32e PML4 table mismatch");
+--  begin read only
+   end Test_Serialize_PML4;
 --  end read only
 
 end Paging.IA32e.Test_Data.Tests;

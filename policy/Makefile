@@ -18,6 +18,7 @@ GENERATORS =         \
 	$(MUGENPT)       \
 	$(MUGENSINFO)    \
 	$(MUGENSPEC)     \
+	$(MUGENVTD)      \
 	$(MUGENZP)
 
 GENERATOR_OPTS = -o $(OBJ_DIR) $(POLICY_B)

@@ -355,4 +355,63 @@ package body Paging.IA32e.Test_Data.Tests is
    end Test_Serialize_PD;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Serialize_PT (Gnattest_T : in out Test);
+   procedure Test_Serialize_PT_7859fb (Gnattest_T : in out Test) renames Test_Serialize_PT;
+--  id:2.2/7859fb6d538016a6/Serialize_PT/1/0/
+   procedure Test_Serialize_PT (Gnattest_T : in out Test) is
+   --  paging-ia32e.ads:71:4:Serialize_PT
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      PT : Pagetables.Page_Table_Type;
+   begin
+      Pagetables.Set_Physical_Address (Table   => PT,
+                                       Address => 16#001f_3000#);
+      Pagetables.Add_Entry (Table => PT,
+                            Index => 0,
+                            E     => Entries.Create
+                              (Dst_Offset  => 0,
+                               Dst_Address => 16#0024_0000#,
+                               Readable    => True,
+                               Writable    => True,
+                               Executable  => True,
+                               Maps_Page   => False,
+                               Global      => False,
+                               Caching     => WB));
+      Pagetables.Add_Entry (Table => PT,
+                            Index => 256,
+                            E     => Entries.Create
+                              (Dst_Offset  => 0,
+                               Dst_Address => 16#001f_f000#,
+                               Readable    => True,
+                               Writable    => False,
+                               Executable  => False,
+                               Maps_Page   => False,
+                               Global      => False,
+                               Caching     => UC));
+
+      declare
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/ia32e_pt",
+                             File     => File);
+
+         Serialize_PT (Stream => Stream (File => File),
+                       Table  => PT);
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/ia32e_pt.ref",
+               Filename2 => "obj/ia32e_pt"),
+              Message   => "IA-32e page table mismatch");
+--  begin read only
+   end Test_Serialize_PT;
+--  end read only
+
 end Paging.IA32e.Test_Data.Tests;

@@ -66,4 +66,10 @@ is
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
       Table  : Pagetables.Page_Table_Type);
 
+   --  A page table comprises 512 64-bit entries (PTEs), see Intel SDM Vol. 3A,
+   --  page 4-22.
+   procedure Serialize_PT
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table  : Pagetables.Page_Table_Type);
+
 end Paging.IA32e;

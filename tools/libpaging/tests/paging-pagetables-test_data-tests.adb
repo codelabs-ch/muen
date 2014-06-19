@@ -19,13 +19,29 @@ package body Paging.Pagetables.Test_Data.Tests is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
+      use type Ada.Containers.Count_Type;
 
+      Table : Page_Table_Type;
+      Dummy : Entries.Table_Entry_Type;
    begin
+      Assert (Condition => Table.Data.Length = 0,
+              Message   => "Table not empty");
+      Add_Entry (Table => Table,
+                 Index => 0,
+                 E     => Dummy);
+      Assert (Condition => Table.Data.Length = 1,
+              Message   => "Entry not added");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      begin
+         Add_Entry (Table => Table,
+                    Index => 0,
+                    E     => Dummy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when Duplicate_Entry => null;
+      end;
 --  begin read only
    end Test_Add_Entry;
 --  end read only

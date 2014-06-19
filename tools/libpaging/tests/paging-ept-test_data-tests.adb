@@ -281,4 +281,84 @@ package body Paging.EPT.Test_Data.Tests is
    end Test_Serialize_PML4;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Serialize_PDPT (Gnattest_T : in out Test);
+   procedure Test_Serialize_PDPT_a8af06 (Gnattest_T : in out Test) renames Test_Serialize_PDPT;
+--  id:2.2/a8af06b522bb073b/Serialize_PDPT/1/0/
+   procedure Test_Serialize_PDPT (Gnattest_T : in out Test) is
+   --  paging-ept.ads:50:4:Serialize_PDPT
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      PDPT : Pagetables.Page_Table_Type;
+   begin
+      Pagetables.Set_Physical_Address (Table   => PDPT,
+                                       Address => 16#1f5000#);
+      Pagetables.Add_Entry (Table => PDPT,
+                            Index => 0,
+                            E     => Entries.Create
+                              (Dst_Offset  => 0,
+                               Dst_Address => 16#4000_0000#,
+                               Readable    => True,
+                               Writable    => True,
+                               Executable  => True,
+                               Maps_Page   => True,
+                               Global      => False,
+                               Caching     => UC));
+      Pagetables.Add_Entry (Table => PDPT,
+                            Index => 1,
+                            E     => Entries.Create
+                              (Dst_Offset  => 0,
+                               Dst_Address => 16#8000_0000#,
+                               Readable    => True,
+                               Writable    => True,
+                               Executable  => True,
+                               Maps_Page   => True,
+                               Global      => False,
+                               Caching     => UC));
+      Pagetables.Add_Entry (Table => PDPT,
+                            Index => 2,
+                            E     => Entries.Create
+                              (Dst_Offset  => 0,
+                               Dst_Address => 16#c000_0000#,
+                               Readable    => True,
+                               Writable    => True,
+                               Executable  => True,
+                               Maps_Page   => True,
+                               Global      => False,
+                               Caching     => UC));
+      Pagetables.Add_Entry (Table => PDPT,
+                            Index => 3,
+                            E     => Entries.Create
+                              (Dst_Offset  => 0,
+                               Dst_Address => 16#1_0000_0000#,
+                               Readable    => True,
+                               Writable    => True,
+                               Executable  => True,
+                               Maps_Page   => True,
+                               Global      => False,
+                               Caching     => UC));
+
+      declare
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/ept_pdpt",
+                             File     => File);
+         Serialize_PDPT (Stream => Stream (File => File),
+                         Table  => PDPT);
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/ept_pdpt.ref",
+               Filename2 => "obj/ept_pdpt"),
+              Message   => "EPT PDPT table mismatch");
+--  begin read only
+   end Test_Serialize_PDPT;
+--  end read only
+
 end Paging.EPT.Test_Data.Tests;

@@ -19,6 +19,7 @@ package body Paging.Pagetables.Test_Data.Tests is
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
+
       use type Ada.Containers.Count_Type;
 
       Table : Page_Table_Type;
@@ -57,12 +58,16 @@ package body Paging.Pagetables.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Table : Page_Table_Type := Null_Table;
+      Dummy : Entries.Table_Entry_Type;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Count (Table => Table) = 0,
+              Message   => "Null table not empty");
+      Add_Entry (Table => Table,
+                 Index => 0,
+                 E     => Dummy);
+      Assert (Condition => Count (Table => Table) = 1,
+              Message   => "Count mismatch");
 --  begin read only
    end Test_Count;
 --  end read only

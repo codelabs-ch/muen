@@ -274,4 +274,53 @@ package body Paging.Layouts.Test_Data.Tests is
    end Test_Update_References;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_Table_Count (Gnattest_T : in out Test);
+   procedure Test_Get_Table_Count_035af5 (Gnattest_T : in out Test) renames Test_Get_Table_Count;
+--  id:2.2/035af58847312281/Get_Table_Count/1/0/
+   procedure Test_Get_Table_Count (Gnattest_T : in out Test) is
+   --  paging-layouts.ads:66:4:Get_Table_Count
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Layout : Memory_Layout_Type (Levels => 4) := Null_Layout;
+   begin
+      declare
+         Counts : constant Table_Count_Array
+           := Get_Table_Count (Mem_Layout => Layout);
+      begin
+         for I in Counts'Range loop
+            Assert (Condition => Counts (I) = 0,
+              Message   => "Level" & I'Img & " count not 0");
+         end loop;
+      end;
+
+      Add_Memory_Region
+        (Mem_Layout       => Layout,
+         Physical_Address => 16#000f_f000#,
+         Virtual_Address  => 16#000f_f000#,
+         Size             => 16#0001_0020_2000#,
+         Caching          => UC,
+         Writable         => True,
+         Executable       => True);
+
+      declare
+         Counts : constant Table_Count_Array
+           := Get_Table_Count (Mem_Layout => Layout);
+      begin
+         Assert (Condition => Counts (1) = 1,
+                 Message   => "Level 1 count not 1");
+         Assert (Condition => Counts (2) = 1,
+                 Message   => "Level 2 count not 1");
+         Assert (Condition => Counts (3) = 2,
+                 Message   => "Level 3 count not 2");
+         Assert (Condition => Counts (4) = 2,
+                 Message   => "Level 4 count not 2");
+      end;
+--  begin read only
+   end Test_Get_Table_Count;
+--  end read only
+
 end Paging.Layouts.Test_Data.Tests;

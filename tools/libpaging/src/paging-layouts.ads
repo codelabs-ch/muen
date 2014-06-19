@@ -59,6 +59,16 @@ is
    --  addresses of table entries referencing other paging structures.
    procedure Update_References (Mem_Layout : in out Memory_Layout_Type);
 
+   type Table_Count_Array is array (Positive range <>) of Natural;
+
+   --  Returns the number of pagetables per level in ascending order (i.e.
+   --  first array element is level 1, etc).
+   function Get_Table_Count
+     (Mem_Layout : Memory_Layout_Type)
+      return Table_Count_Array
+     with
+       Post => Get_Table_Count'Result'Length = Mem_Layout.Levels;
+
 private
 
    type Tables_Array is array (Positive range <>) of Maps.Page_Table_Map;

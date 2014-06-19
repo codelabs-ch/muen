@@ -24,5 +24,8 @@ package Paging.Layouts.Test_Data.Tests is
    procedure Test_Update_References_e977e1 (Gnattest_T : in out Test);
    --  paging-layouts.ads:60:4:Update_References
 
+   procedure Test_Get_Table_Count_035af5 (Gnattest_T : in out Test);
+   --  paging-layouts.ads:66:4:Get_Table_Count
+
 end Paging.Layouts.Test_Data.Tests;
 --  end read only

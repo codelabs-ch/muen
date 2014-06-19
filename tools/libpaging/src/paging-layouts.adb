@@ -102,6 +102,30 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Table_Count
+     (Mem_Layout : Memory_Layout_Type)
+      return Table_Count_Array
+   is
+      Table_Counts : Table_Count_Array (1 .. Mem_Layout.Levels);
+   begin
+
+      --  There is max. one level 1 table.
+
+      if Pagetables.Count (Table => Mem_Layout.Level_1_Table) > 0 then
+         Table_Counts (1) := 1;
+      else
+         Table_Counts (1) := 0;
+      end if;
+
+      for I in Positive range 2 .. Mem_Layout.Levels loop
+         Table_Counts (I) := Maps.Length (Map => Mem_Layout.Structures (I));
+      end loop;
+
+      return Table_Counts;
+   end Get_Table_Count;
+
+   -------------------------------------------------------------------------
+
    procedure Map_Page
      (Mem_Layout       : in out Memory_Layout_Type;
       Level            :        Paging_Level;

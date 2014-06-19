@@ -71,12 +71,20 @@ package body Paging.Layouts.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Layout : Memory_Layout_Type (Levels => 4);
    begin
+      Assert (Condition => Layout.Use_Large_Pages,
+              Message   => "Large page support not default");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Set_Large_Page_Support (Mem_Layout => Layout,
+                              State      => False);
+      Assert (Condition => not Layout.Use_Large_Pages,
+              Message   => "Large page support enabled");
 
+      Set_Large_Page_Support (Mem_Layout => Layout,
+                              State      => True);
+      Assert (Condition => Layout.Use_Large_Pages,
+              Message   => "Large page support disabled");
 --  begin read only
    end Test_Set_Large_Page_Support;
 --  end read only

@@ -113,12 +113,16 @@ package body Paging.Pagetables.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Interfaces.Unsigned_64;
+
+      Table : Page_Table_Type := Null_Table;
    begin
+      Assert (Condition => Table.Address = 0,
+              Message   => "Address not zero");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Table.Address := 16#3000#;
+      Assert (Condition => Get_Physical_Address (Table => Table) = 16#3000#,
+              Message   => "Address mismatch");
 --  begin read only
    end Test_Get_Physical_Address;
 --  end read only

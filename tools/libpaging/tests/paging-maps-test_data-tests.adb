@@ -148,12 +148,28 @@ package body Paging.Maps.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Map     : Page_Table_Map;
+      Dummy   : Entries.Table_Entry_Type;
+      Counter : Natural := 0;
+
+      ----------------------------------------------------------------------
+
+      procedure Inc_Counter
+        (Table_Number :        Table_Range;
+         Table        : in out Pagetables.Page_Table_Type)
+      is
+      begin
+         Counter := Counter + 1;
+      end Inc_Counter;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Add_Entry (Map          => Map,
+                 Table_Number => 2,
+                 Entry_Index  => 3,
+                 Table_Entry  => Dummy);
+      Update (Map     => Map,
+              Process => Inc_Counter'Access);
+      Assert (Condition => Counter = 1,
+              Message   => "Counter mismatch" & Counter'Img);
 --  begin read only
    end Test_Update;
 --  end read only

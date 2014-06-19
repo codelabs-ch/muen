@@ -20,12 +20,24 @@ package body Paging.Maps.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Map   : Page_Table_Map;
+      Dummy : Entries.Table_Entry_Type;
    begin
+      Assert (Condition => not Contains
+              (Map          => Map,
+               Table_Number => 6,
+               Entry_Index  => 4),
+              Message   => "Unexpected entry");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Add_Entry (Map          => Map,
+                 Table_Number => 2,
+                 Entry_Index  => 3,
+                 Table_Entry  => Dummy);
+      Assert (Condition => Contains
+              (Map          => Map,
+               Table_Number => 2,
+               Entry_Index  => 3),
+              Message   => "Entry not found");
 --  begin read only
    end Test_Contains;
 --  end read only

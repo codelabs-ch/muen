@@ -27,5 +27,8 @@ package Paging.IA32e.Test_Data.Tests is
    procedure Test_Serialize_PDPT_a8af06 (Gnattest_T : in out Test);
    --  paging-ia32e.ads:59:4:Serialize_PDPT
 
+   procedure Test_Serialize_PD_bcee26 (Gnattest_T : in out Test);
+   --  paging-ia32e.ads:65:4:Serialize_PD
+
 end Paging.IA32e.Test_Data.Tests;
 --  end read only

@@ -306,6 +306,41 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Serialize_PD
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table  : Pagetables.Page_Table_Type)
+   is
+      Raw_Table : Raw_Table_Type := (others => 0);
+
+      --  Add given table entry to raw table.
+      procedure Add_To_Raw_Table
+        (Index  : Table_Range;
+         TEntry : Entries.Table_Entry_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_To_Raw_Table
+        (Index  : Table_Range;
+         TEntry : Entries.Table_Entry_Type)
+      is
+      begin
+         Raw_Table (Index) := Create_Dir_Entry
+           (Address      => TEntry.Get_Dst_Address,
+            Writable     => TEntry.Is_Writable,
+            User_Access  => TEntry.Is_Readable,
+            Map_Page     => TEntry.Maps_Page,
+            Global       => TEntry.Is_Global,
+            Caching      => TEntry.Get_Caching,
+            Exec_Disable => not TEntry.Is_Executable);
+      end Add_To_Raw_Table;
+   begin
+      Pagetables.Iterate (Table   => Table,
+                          Process => Add_To_Raw_Table'Access);
+      Raw_Table_Type'Write (Stream, Raw_Table);
+   end Serialize_PD;
+
+   -------------------------------------------------------------------------
+
    procedure Serialize_PDPT
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
       Table  : Pagetables.Page_Table_Type)

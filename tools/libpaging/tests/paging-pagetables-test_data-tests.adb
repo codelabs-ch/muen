@@ -241,12 +241,23 @@ package body Paging.Pagetables.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Ada.Containers.Count_Type;
+      use type Interfaces.Unsigned_64;
+
+      Table : Page_Table_Type;
+      Dummy : Entries.Table_Entry_Type;
    begin
+      Add_Entry (Table => Table,
+                 Index => 1,
+                 E     => Dummy);
+      Table.Address := 16#4000#;
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Clear (Table => Table);
 
+      Assert (Condition => Table.Data.Length = 0,
+              Message   => "Table not cleared");
+      Assert (Condition => Table.Address = 0,
+              Message   => "Table address not zero");
 --  begin read only
    end Test_Clear;
 --  end read only

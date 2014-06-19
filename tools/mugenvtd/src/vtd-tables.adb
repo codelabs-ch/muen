@@ -19,8 +19,6 @@
 with Ada.Streams.Stream_IO;
 with Ada.Unchecked_Conversion;
 
-with Mutools.Constants;
-
 package body VTd.Tables
 is
 

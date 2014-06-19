@@ -15,7 +15,7 @@ package body VTd.Tables.Test_Data.Tests is
    procedure Test_Add_Entry_7bb9cf (Gnattest_T : in out Test) renames Test_1_Add_Entry;
 --  id:2.2/7bb9cf95e4456862/Add_Entry/1/0/
    procedure Test_1_Add_Entry (Gnattest_T : in out Test) is
-   --  vtd-tables.ads:40:4:Add_Entry
+   --  vtd-tables.ads:42:4:Add_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -32,7 +32,7 @@ package body VTd.Tables.Test_Data.Tests is
 
       Add_Entry (RT  => Root_Table,
                  Bus => 255,
-                 CTP => 16#ffff_ffff#);
+                 CTP => 16#ffff_f000#);
       Assert (Condition => Root_Table.Entries (255).Present = 1,
               Message   => "Entry not present (2)");
       Assert (Condition => Root_Table.Entries (255).CTP = 16#000f_ffff#,
@@ -48,7 +48,7 @@ package body VTd.Tables.Test_Data.Tests is
    procedure Test_Serialize_3e830c (Gnattest_T : in out Test) renames Test_1_Serialize;
 --  id:2.2/3e830c731d3b0f3a/Serialize/1/0/
    procedure Test_1_Serialize (Gnattest_T : in out Test) is
-   --  vtd-tables.ads:46:4:Serialize
+   --  vtd-tables.ads:48:4:Serialize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -65,10 +65,10 @@ package body VTd.Tables.Test_Data.Tests is
 
       Add_Entry (RT  => Root_Table,
                  Bus => Table_Range'First,
-                 CTP => Table_Pointer_Type'Last);
+                 CTP => 16#0007_ffff_f000#);
       Add_Entry (RT  => Root_Table,
                  Bus => Table_Range'Last,
-                 CTP => Table_Pointer_Type'Last);
+                 CTP => 16#0007_ffff_f000#);
       Serialize (RT       => Root_Table,
                  Filename => "obj/serialize_rt");
       Assert (Condition => Test_Utils.Equal_Files
@@ -86,7 +86,7 @@ package body VTd.Tables.Test_Data.Tests is
    procedure Test_Add_Entry_f03eb2 (Gnattest_T : in out Test) renames Test_2_Add_Entry;
 --  id:2.2/f03eb2d99e674632/Add_Entry/0/0/
    procedure Test_2_Add_Entry (Gnattest_T : in out Test) is
-   --  vtd-tables.ads:62:4:Add_Entry
+   --  vtd-tables.ads:64:4:Add_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -116,7 +116,7 @@ package body VTd.Tables.Test_Data.Tests is
    procedure Test_Serialize_eeeebf (Gnattest_T : in out Test) renames Test_2_Serialize;
 --  id:2.2/eeeebf76e1fa2a78/Serialize/0/0/
    procedure Test_2_Serialize (Gnattest_T : in out Test) is
-   --  vtd-tables.ads:70:4:Serialize
+   --  vtd-tables.ads:72:4:Serialize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -135,12 +135,12 @@ package body VTd.Tables.Test_Data.Tests is
                  Device  => 2,
                  Func    => 2,
                  Domain  => 128,
-                 SLPTPTR => Table_Pointer_Type'Last);
+                 SLPTPTR => 16#0007_ffff_f000#);
       Add_Entry (CT      => Context_Table,
                  Device  => 31,
                  Func    => 7,
                  Domain  => 255,
-                 SLPTPTR => Table_Pointer_Type'Last);
+                 SLPTPTR => 16#0007_ffff_f000#);
       Serialize (CT       => Context_Table,
                  Filename => "obj/serialize_ct");
       Assert (Condition => Test_Utils.Equal_Files

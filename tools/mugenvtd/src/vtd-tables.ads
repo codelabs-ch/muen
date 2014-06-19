@@ -18,19 +18,21 @@
 
 with Interfaces;
 
+with Mutools.Constants;
+
 package VTd.Tables
 is
 
    type Table_Range is range 0 .. 255;
 
-   --  Pointer used to reference context and address translation tables.
-   --  Assuming a Host Address Width (HAW) of 35 bits, the pointer can be
-   --  maximum 35 bits. Make sure that values of this type are 4k-aligned as
-   --  hardware treats the first 12 bits as 0. These bits are shifted away by
-   --  the Add_Entry procedures.
+   package MC renames Mutools.Constants;
+
+   --  Pointer used to reference context and address translation tables
+   --  (assuming a Host Address Width (HAW) of 35 bits).
    type Table_Pointer_Type is range 0 .. 2 ** 35 - 1
      with
-       Size => 35;
+       Size              => 35,
+       Dynamic_Predicate => Table_Pointer_Type mod MC.Page_Size = 0;
 
    --  DMAR root table, see Intel VT-d specification, section 9.1.
    type Root_Table_Type is private;

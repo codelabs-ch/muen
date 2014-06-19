@@ -12,8 +12,8 @@ package body VTd.Tables.Test_Data.Tests is
 
 --  begin read only
    procedure Test_1_Add_Entry (Gnattest_T : in out Test);
-   procedure Test_Add_Entry_7bb9cf (Gnattest_T : in out Test) renames Test_1_Add_Entry;
---  id:2.2/7bb9cf95e4456862/Add_Entry/1/0/
+   procedure Test_Add_Entry_2b23ee (Gnattest_T : in out Test) renames Test_1_Add_Entry;
+--  id:2.2/2b23ee4a1e3f5824/Add_Entry/1/0/
    procedure Test_1_Add_Entry (Gnattest_T : in out Test) is
    --  vtd-tables.ads:42:4:Add_Entry
 --  end read only
@@ -64,10 +64,10 @@ package body VTd.Tables.Test_Data.Tests is
       Ada.Directories.Delete_File (Name => "obj/serialize_rt_default");
 
       Add_Entry (RT  => Root_Table,
-                 Bus => Table_Range'First,
+                 Bus => Table_Index_Type'First,
                  CTP => 16#0007_ffff_f000#);
       Add_Entry (RT  => Root_Table,
-                 Bus => Table_Range'Last,
+                 Bus => Table_Index_Type'Last,
                  CTP => 16#0007_ffff_f000#);
       Serialize (RT       => Root_Table,
                  Filename => "obj/serialize_rt");

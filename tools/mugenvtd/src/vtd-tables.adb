@@ -36,7 +36,7 @@ is
 
    procedure Add_Entry
      (RT  : in out Root_Table_Type;
-      Bus :        Table_Range;
+      Bus :        Table_Index_Type;
       CTP :        Table_Pointer_Type)
    is
    begin
@@ -53,8 +53,8 @@ is
       Domain  :        Domain_Range;
       SLPTPTR :        Table_Pointer_Type)
    is
-      Idx : constant Table_Range
-        := Table_Range (Device) * 8 + Table_Range (Func);
+      Idx : constant Table_Index_Type
+        := Table_Index_Type (Device) * 8 + Table_Index_Type (Func);
    begin
       CT.Entries (Idx).Present := 1;
       CT.Entries (Idx).DID     := Interfaces.Unsigned_16 (Domain);

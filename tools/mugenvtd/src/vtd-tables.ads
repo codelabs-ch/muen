@@ -23,7 +23,7 @@ with Mutools.Constants;
 package VTd.Tables
 is
 
-   type Table_Range is range 0 .. 255;
+   type Table_Index_Type is range 0 .. 255;
 
    package MC renames Mutools.Constants;
 
@@ -41,7 +41,7 @@ is
    --  Context-table Pointer (CTP).
    procedure Add_Entry
      (RT  : in out Root_Table_Type;
-      Bus :        Table_Range;
+      Bus :        Table_Index_Type;
       CTP :        Table_Pointer_Type);
 
    --  Serialize given root table to file with specified filename.
@@ -103,7 +103,7 @@ private
       Reserved_2 at 0 range 35 .. 127;
    end record;
 
-   type Root_Entry_Array is array (Table_Range) of Root_Entry_Type
+   type Root_Entry_Array is array (Table_Index_Type) of Root_Entry_Type
      with
        Size => 256 * 128;
 
@@ -146,7 +146,7 @@ private
       Reserved_4 at 0 range 88 .. 127;
    end record;
 
-   type Context_Entry_Array is array (Table_Range) of Context_Entry_Type
+   type Context_Entry_Array is array (Table_Index_Type) of Context_Entry_Type
      with
        Size => 256 * 128;
 

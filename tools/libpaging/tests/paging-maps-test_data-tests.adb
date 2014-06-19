@@ -53,12 +53,17 @@ package body Paging.Maps.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Ada.Containers.Count_Type;
+
+      Map   : Page_Table_Map;
+      Dummy : Entries.Table_Entry_Type;
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Add_Entry (Map          => Map,
+                 Table_Number => 2,
+                 Entry_Index  => 3,
+                 Table_Entry  => Dummy);
+      Assert (Condition => Map.Tables.Length = 1,
+              Message   => "Entry not added");
 --  begin read only
    end Test_Add_Entry;
 --  end read only

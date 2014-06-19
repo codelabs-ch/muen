@@ -18,7 +18,10 @@
 
 with Interfaces;
 
-private with Paging.Pagetables;
+with Ada.Streams;
+
+with Paging.Pagetables;
+
 private with Paging.Maps;
 
 package Paging.Layouts
@@ -68,6 +71,23 @@ is
       return Table_Count_Array
      with
        Post => Get_Table_Count'Result'Length = Mem_Layout.Levels;
+
+   type Table_Serializer is not null access procedure
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table  : Pagetables.Page_Table_Type);
+
+   type Serializer_Array is array (Positive range <>) of Table_Serializer;
+
+   --  Serialze paging structures of given memory layout. Pagetables are
+   --  processed in the order PML4 -> PTs -> PDs -> PDPTs using the
+   --  specified serialization procedures. The provided serializers are used in
+   --  ascending order, i.e. Serializers (1) -> level 1, etc.
+   procedure Serialize
+     (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
+      Mem_Layout  : Memory_Layout_Type;
+      Serializers : Serializer_Array)
+     with
+       Pre => Serializers'First = 1 and Serializers'Last = Mem_Layout.Levels;
 
 private
 

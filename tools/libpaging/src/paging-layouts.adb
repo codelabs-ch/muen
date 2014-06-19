@@ -189,6 +189,46 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Serialize
+     (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
+      Mem_Layout  : Memory_Layout_Type;
+      Serializers : Serializer_Array)
+   is
+      Cur_Level : Positive := Serializers'First;
+
+      --  Call serialize procedure for given table.
+      procedure Handle_Table
+        (Table_Number : Table_Range;
+         Table        : Pagetables.Page_Table_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Handle_Table
+        (Table_Number : Table_Range;
+         Table        : Pagetables.Page_Table_Type)
+      is
+         pragma Unreferenced (Table_Number);
+      begin
+         Serializers (Cur_Level)(Stream => Stream,
+                                 Table  => Table);
+      end Handle_Table;
+   begin
+      if Pagetables.Count (Table => Mem_Layout.Level_1_Table) = 0 then
+         return;
+      end if;
+
+      Serializers (Serializers'First)(Stream => Stream,
+                                      Table  => Mem_Layout.Level_1_Table);
+
+      for I in reverse Serializers'First + 1 .. Mem_Layout.Levels loop
+         Cur_Level := I;
+         Maps.Iterate (Map     => Mem_Layout.Structures (I),
+                       Process => Handle_Table'Access);
+      end loop;
+   end Serialize;
+
+   -------------------------------------------------------------------------
+
    procedure Set_Address
      (Mem_Layout : in out Memory_Layout_Type;
       Address    :        Interfaces.Unsigned_64)

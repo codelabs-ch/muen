@@ -10,22 +10,25 @@ package Paging.Layouts.Test_Data.Tests is
    with null record;
 
    procedure Test_Set_Address_9d0225 (Gnattest_T : in out Test);
-   --  paging-layouts.ads:34:4:Set_Address
+   --  paging-layouts.ads:37:4:Set_Address
 
    procedure Test_Get_Address_963b67 (Gnattest_T : in out Test);
-   --  paging-layouts.ads:39:4:Get_Address
+   --  paging-layouts.ads:42:4:Get_Address
 
    procedure Test_Set_Large_Page_Support_ade5cf (Gnattest_T : in out Test);
-   --  paging-layouts.ads:44:4:Set_Large_Page_Support
+   --  paging-layouts.ads:47:4:Set_Large_Page_Support
 
    procedure Test_Add_Memory_Region_9a2b02 (Gnattest_T : in out Test);
-   --  paging-layouts.ads:49:4:Add_Memory_Region
+   --  paging-layouts.ads:52:4:Add_Memory_Region
 
    procedure Test_Update_References_e977e1 (Gnattest_T : in out Test);
-   --  paging-layouts.ads:60:4:Update_References
+   --  paging-layouts.ads:63:4:Update_References
 
    procedure Test_Get_Table_Count_035af5 (Gnattest_T : in out Test);
-   --  paging-layouts.ads:66:4:Get_Table_Count
+   --  paging-layouts.ads:69:4:Get_Table_Count
+
+   procedure Test_Serialize_129d4a (Gnattest_T : in out Test);
+   --  paging-layouts.ads:84:4:Serialize
 
 end Paging.Layouts.Test_Data.Tests;
 --  end read only

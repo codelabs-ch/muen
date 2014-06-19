@@ -26,14 +26,13 @@ is
 
    use type Ada.Streams.Stream_Element_Offset;
 
-   subtype RT_Stream is Ada.Streams.Stream_Element_Array
+   subtype Table_Stream is Ada.Streams.Stream_Element_Array
      (1 .. Mutools.Constants.Page_Size);
 
-   --  Root_Table_Type'Write adds additional output so manual conversion to
-   --  stream array is necessary.
-   function Convert is new Ada.Unchecked_Conversion
-     (Source => Root_Table_Type,
-      Target => RT_Stream);
+   --  Write given stream to file.
+   procedure Write
+     (Stream   : Ada.Streams.Stream_Element_Array;
+      Filename : String);
 
    -------------------------------------------------------------------------
 
@@ -70,6 +69,38 @@ is
      (RT       : Root_Table_Type;
       Filename : String)
    is
+      --  Root_Table_Type'Write adds additional output so manual conversion to
+      --  stream array is necessary.
+      function Convert is new Ada.Unchecked_Conversion
+        (Source => Root_Table_Type,
+         Target => Table_Stream);
+   begin
+      Write (Stream   => Convert (S => RT),
+             Filename => Filename);
+   end Serialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Serialize
+     (CT       : Context_Table_Type;
+      Filename : String)
+   is
+      --  Context_Table_Type'Write adds additional output so manual conversion
+      --  to stream array is necessary.
+      function Convert is new Ada.Unchecked_Conversion
+        (Source => Context_Table_Type,
+         Target => Table_Stream);
+   begin
+      Write (Stream   => Convert (S => CT),
+             Filename => Filename);
+   end Serialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Write
+     (Stream   : Ada.Streams.Stream_Element_Array;
+      Filename : String)
+   is
       File : Ada.Streams.Stream_IO.File_Type;
    begin
       Ada.Streams.Stream_IO.Create
@@ -77,8 +108,8 @@ is
          Mode => Ada.Streams.Stream_IO.Out_File,
          Name => Filename);
       Ada.Streams.Stream_IO.Write (File => File,
-                                   Item => Convert (S => RT));
+                                   Item => Stream);
       Ada.Streams.Stream_IO.Close (File => File);
-   end Serialize;
+   end Write;
 
 end VTd.Tables;

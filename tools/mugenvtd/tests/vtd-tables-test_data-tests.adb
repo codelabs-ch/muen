@@ -35,10 +35,10 @@ package body VTd.Tables.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Serialize (Gnattest_T : in out Test);
-   procedure Test_Serialize_3e830c (Gnattest_T : in out Test) renames Test_Serialize;
+   procedure Test_1_Serialize (Gnattest_T : in out Test);
+   procedure Test_Serialize_3e830c (Gnattest_T : in out Test) renames Test_1_Serialize;
 --  id:2.2/3e830c731d3b0f3a/Serialize/1/0/
-   procedure Test_Serialize (Gnattest_T : in out Test) is
+   procedure Test_1_Serialize (Gnattest_T : in out Test) is
    --  vtd-tables.ads:44:4:Serialize
 --  end read only
 
@@ -68,7 +68,7 @@ package body VTd.Tables.Test_Data.Tests is
               Message   => "Table mismatch");
       Ada.Directories.Delete_File (Name => "obj/serialize");
 --  begin read only
-   end Test_Serialize;
+   end Test_1_Serialize;
 --  end read only
 
 
@@ -99,6 +99,48 @@ package body VTd.Tables.Test_Data.Tests is
               Message   => "SLPTPTR mismatch");
 --  begin read only
    end Test_2_Add_Entry;
+--  end read only
+
+
+--  begin read only
+   procedure Test_2_Serialize (Gnattest_T : in out Test);
+   procedure Test_Serialize_eeeebf (Gnattest_T : in out Test) renames Test_2_Serialize;
+--  id:2.2/eeeebf76e1fa2a78/Serialize/0/0/
+   procedure Test_2_Serialize (Gnattest_T : in out Test) is
+   --  vtd-tables.ads:68:4:Serialize
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Context_Table : Context_Table_Type;
+   begin
+      Serialize (CT       => Context_Table,
+                 Filename => "obj/serialize_ct_default");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "obj/serialize_ct_default",
+               Filename2 => "data/serialize_ct_default"),
+              Message   => "Default table mismatch");
+      Ada.Directories.Delete_File (Name => "obj/serialize_ct_default");
+
+      Add_Entry (CT      => Context_Table,
+                 Device  => 2,
+                 Func    => 2,
+                 Domain  => 128,
+                 SLPTPTR => Table_Pointer_Type'Last);
+      Add_Entry (CT      => Context_Table,
+                 Device  => 31,
+                 Func    => 7,
+                 Domain  => 255,
+                 SLPTPTR => Table_Pointer_Type'Last);
+      Serialize (CT       => Context_Table,
+                 Filename => "obj/serialize_ct");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "obj/serialize_ct",
+               Filename2 => "data/serialize_ct"),
+              Message   => "Table mismatch");
+      Ada.Directories.Delete_File (Name => "obj/serialize_ct");
+--  begin read only
+   end Test_2_Serialize;
 --  end read only
 
 end VTd.Tables.Test_Data.Tests;

@@ -64,6 +64,11 @@ is
       Domain  :        Domain_Range;
       SLPTPTR :        Table_Pointer_Type);
 
+   --  Serialize given context table to file with specified filename.
+   procedure Serialize
+     (CT       : Context_Table_Type;
+      Filename : String);
+
 private
 
    type Bit_Type is range 0 .. 1

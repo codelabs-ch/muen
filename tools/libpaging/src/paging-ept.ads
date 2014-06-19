@@ -51,4 +51,8 @@ is
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
       Table  : Pagetables.Page_Table_Type);
 
+   procedure Serialize_PD
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table  : Pagetables.Page_Table_Type);
+
 end Paging.EPT;

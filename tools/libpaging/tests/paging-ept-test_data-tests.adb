@@ -361,4 +361,51 @@ package body Paging.EPT.Test_Data.Tests is
    end Test_Serialize_PDPT;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Serialize_PD (Gnattest_T : in out Test);
+   procedure Test_Serialize_PD_bcee26 (Gnattest_T : in out Test) renames Test_Serialize_PD;
+--  id:2.2/bcee260e5a48d108/Serialize_PD/1/0/
+   procedure Test_Serialize_PD (Gnattest_T : in out Test) is
+      --  paging-ept.ads:54:4:Serialize_PD
+      --  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      PD : Pagetables.Page_Table_Type;
+   begin
+      Pagetables.Set_Physical_Address (Table   => PD,
+                                       Address => 16#1f6000#);
+      Pagetables.Add_Entry (Table => PD,
+                            Index => 0,
+                            E     => Entries.Create
+                              (Dst_Offset  => 0,
+                               Dst_Address => 16#1f7000#,
+                               Readable    => True,
+                               Writable    => True,
+                               Executable  => True,
+                               Maps_Page   => False,
+                               Global      => False,
+                               Caching     => WC));
+
+      declare
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/ept_pd",
+                             File     => File);
+         Serialize_PD (Stream => Stream (File => File),
+                       Table  => PD);
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/ept_pd.ref",
+               Filename2 => "obj/ept_pd"),
+              Message   => "EPT page directory mismatch");
+--  begin read only
+   end Test_Serialize_PD;
+--  end read only
+
 end Paging.EPT.Test_Data.Tests;

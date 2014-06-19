@@ -27,5 +27,8 @@ package Paging.EPT.Test_Data.Tests is
    procedure Test_Serialize_PDPT_a8af06 (Gnattest_T : in out Test);
    --  paging-ept.ads:50:4:Serialize_PDPT
 
+   procedure Test_Serialize_PD_bcee26 (Gnattest_T : in out Test);
+   --  paging-ept.ads:54:4:Serialize_PD
+
 end Paging.EPT.Test_Data.Tests;
 --  end read only

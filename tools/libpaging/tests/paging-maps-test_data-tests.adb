@@ -226,12 +226,19 @@ package body Paging.Maps.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Ada.Containers.Count_Type;
+
+      Map   : Page_Table_Map;
+      Dummy : Entries.Table_Entry_Type;
    begin
+      Add_Entry (Map          => Map,
+                 Table_Number => 1,
+                 Entry_Index  => 1,
+                 Table_Entry  => Dummy);
+      Clear (Map => Map);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Map.Tables.Length = 0,
+              Message   => "Map not cleared");
 --  begin read only
    end Test_Clear;
 --  end read only

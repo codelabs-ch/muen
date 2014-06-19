@@ -21,5 +21,8 @@ package Paging.Layouts.Test_Data.Tests is
    procedure Test_Add_Memory_Region_9a2b02 (Gnattest_T : in out Test);
    --  paging-layouts.ads:49:4:Add_Memory_Region
 
+   procedure Test_Update_References_e977e1 (Gnattest_T : in out Test);
+   --  paging-layouts.ads:60:4:Update_References
+
 end Paging.Layouts.Test_Data.Tests;
 --  end read only

@@ -185,4 +185,96 @@ is
       Mem_Layout.Use_Large_Pages := State;
    end Set_Large_Page_Support;
 
+   -------------------------------------------------------------------------
+
+   procedure Update_References (Mem_Layout : in out Memory_Layout_Type)
+   is
+      use type Interfaces.Unsigned_64;
+
+      Phys_Addr : Interfaces.Unsigned_64 := Pagetables.Get_Physical_Address
+        (Table => Mem_Layout.Level_1_Table) + Page_Size;
+
+      Cur_Level : Positive;
+
+      --  Adjust destination address of references to level 2 structures.
+      procedure Adjust_Level_1
+        (Index  :        Table_Range;
+         TEntry : in out Entries.Table_Entry_Type);
+
+      --  Set physical address of each table and adjust destination address of
+      --  each table entry that references a higher level table (e.g. PDE->PT).
+      procedure Adjust_Tables
+        (Table_Number :        Table_Range;
+         Table        : in out Pagetables.Page_Table_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Adjust_Level_1
+        (Index  :        Table_Range;
+         TEntry : in out Entries.Table_Entry_Type)
+      is
+         pragma Unreferenced (Index);
+
+         Dst_Idx : constant Table_Range := TEntry.Get_Dst_Offset;
+         Address : constant Interfaces.Unsigned_64
+           := Maps.Get_Table_Address
+             (Map          => Mem_Layout.Structures
+                (Mem_Layout.Structures'First),
+              Table_Number => Dst_Idx);
+      begin
+         TEntry.Set_Dst_Address (Address => Address);
+      end Adjust_Level_1;
+
+      ----------------------------------------------------------------------
+
+      procedure Adjust_Tables
+        (Table_Number :        Table_Range;
+         Table        : in out Pagetables.Page_Table_Type)
+      is
+         pragma Unreferenced (Table_Number);
+
+         --  Adjust destination address of given table entry.
+         procedure Adjust_Entry
+           (Index  :        Table_Range;
+            TEntry : in out Entries.Table_Entry_Type);
+
+         -------------------------------------------------------------------
+
+         procedure Adjust_Entry
+           (Index  :        Table_Range;
+            TEntry : in out Entries.Table_Entry_Type)
+         is
+            pragma Unreferenced (Index);
+
+            Dst_Idx : Table_Range;
+            Address : Interfaces.Unsigned_64;
+         begin
+            if TEntry.Maps_Page then
+               return;
+            end if;
+
+            Dst_Idx := TEntry.Get_Dst_Offset;
+            Address := Maps.Get_Table_Address
+              (Map          => Mem_Layout.Structures (Cur_Level + 1),
+               Table_Number => Dst_Idx);
+
+            TEntry.Set_Dst_Address (Address => Address);
+         end Adjust_Entry;
+      begin
+         Pagetables.Update (Table   => Table,
+                            Process => Adjust_Entry'Access);
+         Pagetables.Set_Physical_Address (Table   => Table,
+                                          Address => Phys_Addr);
+         Phys_Addr := Phys_Addr + Page_Size;
+      end Adjust_Tables;
+   begin
+      for I in reverse Positive range 2 .. Mem_Layout.Levels loop
+         Cur_Level := I;
+         Maps.Update (Map     => Mem_Layout.Structures (I),
+                      Process => Adjust_Tables'Access);
+      end loop;
+      Pagetables.Update (Table   => Mem_Layout.Level_1_Table,
+                         Process => Adjust_Level_1'Access);
+   end Update_References;
+
 end Paging.Layouts;

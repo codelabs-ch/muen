@@ -218,4 +218,60 @@ package body Paging.Layouts.Test_Data.Tests is
    end Test_Add_Memory_Region;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Update_References (Gnattest_T : in out Test);
+   procedure Test_Update_References_e977e1 (Gnattest_T : in out Test) renames Test_Update_References;
+--  id:2.2/e977e15fcefa86bd/Update_References/1/0/
+   procedure Test_Update_References (Gnattest_T : in out Test) is
+   --  paging-layouts.ads:60:4:Update_References
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_64;
+
+      Layout : Memory_Layout_Type (Levels => 4);
+   begin
+      Set_Address (Mem_Layout => Layout,
+                   Address    => 16#001f_0000#);
+      Add_Memory_Region
+        (Mem_Layout       => Layout,
+         Physical_Address => 16#1000#,
+         Virtual_Address  => 16#0caf_ebee_f000#,
+         Size             => Page_Size,
+         Caching          => WB,
+         Writable         => True,
+         Executable       => False);
+
+      Assert (Condition => Maps.Get_Table_Address
+              (Map          => Layout.Structures (2),
+               Table_Number => 25) = 0,
+              Message   => "Level 2 table address set");
+      Assert (Condition => Maps.Get_Table_Address
+              (Map          => Layout.Structures (3),
+               Table_Number => 191) = 0,
+              Message   => "Level 3 table address set");
+      Assert (Condition => Maps.Get_Table_Address
+              (Map          => Layout.Structures (4),
+               Table_Number => 351) = 0,
+              Message   => "Level 4 table address set");
+
+      Update_References (Mem_Layout => Layout);
+      Assert (Condition => Maps.Get_Table_Address
+              (Map          => Layout.Structures (2),
+               Table_Number => 25) = 16#001f_3000#,
+              Message   => "Level 2 table address mismatch");
+      Assert (Condition => Maps.Get_Table_Address
+              (Map          => Layout.Structures (3),
+               Table_Number => 191) = 16#001f_2000#,
+              Message   => "Level 3 table address mismatch");
+      Assert (Condition => Maps.Get_Table_Address
+              (Map          => Layout.Structures (4),
+               Table_Number => 351) = 16#001f_1000#,
+              Message   => "Level 4 table address mismatch");
+--  begin read only
+   end Test_Update_References;
+--  end read only
+
 end Paging.Layouts.Test_Data.Tests;

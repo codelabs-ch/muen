@@ -43,7 +43,7 @@ is
    is
    begin
       RT.Entries (Bus).Present := 1;
-      RT.Entries (Bus).CTP     := CTP;
+      RT.Entries (Bus).CTP     := Aligned_Pointer_Type (CTP / 2 ** 12);
    end Add_Entry;
 
    -------------------------------------------------------------------------
@@ -60,7 +60,7 @@ is
    begin
       CT.Entries (Idx).Present := 1;
       CT.Entries (Idx).DID     := Interfaces.Unsigned_16 (Domain);
-      CT.Entries (Idx).SLPTPTR := SLPTPTR;
+      CT.Entries (Idx).SLPTPTR := Aligned_Pointer_Type (SLPTPTR / 2 ** 12);
    end Add_Entry;
 
    -------------------------------------------------------------------------

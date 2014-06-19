@@ -25,10 +25,12 @@ is
 
    --  Pointer used to reference context and address translation tables.
    --  Assuming a Host Address Width (HAW) of 35 bits, the pointer can be
-   --  maximum 23 bits (i.e. referenced tables must be below 8 MiB).
-   type Table_Pointer_Type is range 0 .. 2 ** 23 - 1
+   --  maximum 35 bits. Make sure that values of this type are 4k-aligned as
+   --  hardware treats the first 12 bits as 0. These bits are shifted away by
+   --  the Add_Entry procedures.
+   type Table_Pointer_Type is range 0 .. 2 ** 35 - 1
      with
-       Size => 23;
+       Size => 35;
 
    --  DMAR root table, see Intel VT-d specification, section 9.1.
    type Root_Table_Type is private;
@@ -79,11 +81,15 @@ private
      with
        Pack;
 
+   type Aligned_Pointer_Type is range 0 .. 2 ** 23 - 1
+     with
+       Size => 23;
+
    type Root_Entry_Type is record
-      Present    : Bit_Type            := 0;
-      Reserved_1 : Bit_Array (1 .. 11) := (others => 0);
-      CTP        : Table_Pointer_Type  := 0;
-      Reserved_2 : Bit_Array (1 .. 93) := (others => 0);
+      Present    : Bit_Type             := 0;
+      Reserved_1 : Bit_Array (1 .. 11)  := (others => 0);
+      CTP        : Aligned_Pointer_Type := 0;
+      Reserved_2 : Bit_Array (1 .. 93)  := (others => 0);
    end record
      with
        Size => 128;
@@ -113,7 +119,7 @@ private
       FPD        : Bit_Type               := 0;
       T          : Bit_Array (1 .. 2)     := Level_2_Translate;
       Reserved_1 : Bit_Array (1 .. 8)     := (others => 0);
-      SLPTPTR    : Table_Pointer_Type     := 0;
+      SLPTPTR    : Aligned_Pointer_Type   := 0;
       Reserved_2 : Bit_Array (1 .. 29)    := (others => 0);
       AW         : Bit_Array (1 .. 3)     := AGAW_39_Bit;
       IGN        : Bit_Array (1 .. 4)     := (others => 0);

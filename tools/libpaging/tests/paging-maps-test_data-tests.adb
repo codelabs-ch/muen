@@ -79,12 +79,32 @@ package body Paging.Maps.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use type Interfaces.Unsigned_64;
+
+      Map   : Page_Table_Map;
+      Dummy : Entries.Table_Entry_Type;
    begin
+      Add_Entry (Map          => Map,
+                 Table_Number => 2,
+                 Entry_Index  => 3,
+                 Table_Entry  => Dummy);
+      Assert (Condition => Get_Table_Address
+              (Map          => Map,
+               Table_Number => 2) = 0,
+              Message   => "Unexpected address");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      declare
+         Unused : Interfaces.Unsigned_64;
+      begin
+         Unused := Get_Table_Address
+           (Map          => Map,
+            Table_Number => 12);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
 
+      exception
+         when Missing_Table => null;
+      end;
 --  begin read only
    end Test_Get_Table_Address;
 --  end read only

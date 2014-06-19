@@ -83,12 +83,21 @@ package body Paging.Pagetables.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Table : Page_Table_Type := Null_Table;
+      Dummy : Entries.Table_Entry_Type;
    begin
+      Assert (Condition => not Contains
+              (Table => Table,
+               Index => 3),
+              Message   => "Unexpected entry");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Add_Entry (Table => Table,
+                 Index => 12,
+                 E     => Dummy);
+      Assert (Condition => Contains
+              (Table => Table,
+               Index => 12),
+              Message   => "Entry not found");
 --  begin read only
    end Test_Contains;
 --  end read only

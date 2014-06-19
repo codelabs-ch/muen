@@ -259,4 +259,52 @@ package body Paging.IA32e.Test_Data.Tests is
    end Test_Serialize_PML4;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Serialize_PDPT (Gnattest_T : in out Test);
+   procedure Test_Serialize_PDPT_a8af06 (Gnattest_T : in out Test) renames Test_Serialize_PDPT;
+--  id:2.2/a8af06b522bb073b/Serialize_PDPT/1/0/
+   procedure Test_Serialize_PDPT (Gnattest_T : in out Test) is
+   --  paging-ia32e.ads:59:4:Serialize_PDPT
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      PDPT : Pagetables.Page_Table_Type;
+   begin
+      Pagetables.Set_Physical_Address (Table   => PDPT,
+                                       Address => 16#001f_1000#);
+      Pagetables.Add_Entry (Table => PDPT,
+                            Index => 0,
+                            E     => Entries.Create
+                              (Dst_Offset  => 0,
+                               Dst_Address => 16#001f_2000#,
+                               Readable    => True,
+                               Writable    => True,
+                               Executable  => True,
+                               Maps_Page   => False,
+                               Global      => False,
+                               Caching     => UC));
+
+      declare
+         use Ada.Streams.Stream_IO;
+
+         File : File_Type;
+      begin
+         Mutools.Files.Open (Filename => "obj/ia32e_pdpt",
+                             File     => File);
+
+         Serialize_PDPT (Stream => Stream (File => File),
+                         Table  => PDPT);
+         Close (File => File);
+      end;
+
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/ia32e_pdpt.ref",
+               Filename2 => "obj/ia32e_pdpt"),
+              Message   => "IA-32e PDP table mismatch");
+--  begin read only
+   end Test_Serialize_PDPT;
+--  end read only
+
 end Paging.IA32e.Test_Data.Tests;

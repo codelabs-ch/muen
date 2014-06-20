@@ -15,7 +15,7 @@ package body Paging.Test_Data.Tests is
    procedure Test_Get_Indexes_b21229 (Gnattest_T : in out Test) renames Test_Get_Indexes;
 --  id:2.2/b21229569172abbf/Get_Indexes/1/0/
    procedure Test_Get_Indexes (Gnattest_T : in out Test) is
-   --  paging.ads:48:4:Get_Indexes
+   --  paging.ads:52:4:Get_Indexes
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

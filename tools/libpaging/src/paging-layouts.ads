@@ -29,7 +29,7 @@ is
 
    --  A memory layout is a collection of logical to physical memory mappings
    --  managed in several levels of paging structures.
-   type Memory_Layout_Type (Levels : Positive) is private;
+   type Memory_Layout_Type (Levels : Paging_Level) is private;
 
    Null_Layout : constant Memory_Layout_Type;
 
@@ -62,7 +62,7 @@ is
    --  addresses of table entries referencing other paging structures.
    procedure Update_References (Mem_Layout : in out Memory_Layout_Type);
 
-   type Table_Count_Array is array (Positive range <>) of Natural;
+   type Table_Count_Array is array (Paging_Level range <>) of Natural;
 
    --  Returns the number of pagetables per level in ascending order (i.e.
    --  first array element is level 1, etc).
@@ -76,7 +76,7 @@ is
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
       Table  : Pagetables.Page_Table_Type);
 
-   type Serializer_Array is array (Positive range <>) of Table_Serializer;
+   type Serializer_Array is array (Paging_Level range <>) of Table_Serializer;
 
    --  Serialze paging structures of given memory layout. Pagetables are
    --  processed in the order PML4 -> PTs -> PDs -> PDPTs using the
@@ -91,9 +91,9 @@ is
 
 private
 
-   type Tables_Array is array (Positive range <>) of Maps.Page_Table_Map;
+   type Tables_Array is array (Paging_Level range <>) of Maps.Page_Table_Map;
 
-   type Memory_Layout_Type (Levels : Positive) is record
+   type Memory_Layout_Type (Levels : Paging_Level) is record
       Use_Large_Pages : Boolean := True;
       Level_1_Table   : Pagetables.Page_Table_Type;
       Structures      : Tables_Array (2 .. Levels);

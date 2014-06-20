@@ -30,6 +30,10 @@ is
    --  All paging structure types (PML4, PDPT, PD, PT) have 512 entries.
    type Table_Range is range 0 .. 511;
 
+   type Paging_Level is new Positive range 1 .. 4;
+
+   type Table_Index_Array is array (Paging_Level range <>) of Natural;
+
    --  A PDPT entry maps a 1 GB page.
    PDPT_Page_Size : constant := 2 ** 30;
 

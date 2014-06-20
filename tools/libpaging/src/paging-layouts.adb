@@ -22,13 +22,13 @@ package body Paging.Layouts
 is
 
    --  Paging structure levels that can map a page frame.
-   subtype Paging_Level is Positive range 2 .. 4;
+   subtype Page_Map_Level is Paging_Level range 2 .. 4;
 
    --  Map page at specified paging level with given parameters by creating all
    --  necessary/lower-level paging structure entries.
    procedure Map_Page
      (Mem_Layout       : in out Memory_Layout_Type;
-      Level            :        Paging_Level;
+      Level            :        Page_Map_Level;
       Physical_Address :        Interfaces.Unsigned_64;
       Virtual_Address  :        Interfaces.Unsigned_64;
       Caching          :        Caching_Type;
@@ -54,7 +54,7 @@ is
       Physical_Addr : Interfaces.Unsigned_64 := Physical_Address;
       Virtual_Addr  : Interfaces.Unsigned_64 := Virtual_Address;
       Offset        : Interfaces.Unsigned_64 := 0;
-      Level         : Paging_Level;
+      Level         : Page_Map_Level;
    begin
       while Physical_Addr < Physical_End loop
          if Mem_Layout.Use_Large_Pages
@@ -117,7 +117,7 @@ is
          Table_Counts (1) := 0;
       end if;
 
-      for I in Positive range 2 .. Mem_Layout.Levels loop
+      for I in Paging_Level range 2 .. Mem_Layout.Levels loop
          Table_Counts (I) := Maps.Length (Map => Mem_Layout.Structures (I));
       end loop;
 
@@ -128,14 +128,14 @@ is
 
    procedure Map_Page
      (Mem_Layout       : in out Memory_Layout_Type;
-      Level            :        Paging_Level;
+      Level            :        Page_Map_Level;
       Physical_Address :        Interfaces.Unsigned_64;
       Virtual_Address  :        Interfaces.Unsigned_64;
       Caching          :        Caching_Type;
       Writable         :        Boolean;
       Executable       :        Boolean)
    is
-      Indexes : array (1 .. 4) of Table_Range := (others => 0);
+      Indexes : array (Paging_Level) of Table_Range := (others => 0);
    begin
       Get_Indexes (Address    => Virtual_Address,
                    PML4_Index => Indexes (1),
@@ -161,7 +161,7 @@ is
                Caching     => WB));
       end if;
 
-      for I in Positive range 2 .. Mem_Layout.Levels loop
+      for I in Paging_Level range 2 .. Level loop
          if not Maps.Contains (Map          => Mem_Layout.Structures (I),
                                Table_Number => Indexes (I - 1),
                                Entry_Index  => Indexes (I))
@@ -180,10 +180,6 @@ is
                   Global      => False,
                   Caching     => (if Level = I then Caching else WB)));
          end if;
-
-         if Level = I then
-            return;
-         end if;
       end loop;
    end Map_Page;
 
@@ -194,7 +190,7 @@ is
       Mem_Layout  : Memory_Layout_Type;
       Serializers : Serializer_Array)
    is
-      Cur_Level : Positive := Serializers'First;
+      Cur_Level : Paging_Level := Serializers'First;
 
       --  Call serialize procedure for given table.
       procedure Handle_Table
@@ -258,7 +254,7 @@ is
       Phys_Addr : Interfaces.Unsigned_64 := Pagetables.Get_Physical_Address
         (Table => Mem_Layout.Level_1_Table) + Page_Size;
 
-      Cur_Level : Positive;
+      Cur_Level : Paging_Level;
 
       --  Adjust destination address of references to level 2 structures.
       procedure Adjust_Level_1
@@ -332,7 +328,7 @@ is
          Phys_Addr := Phys_Addr + Page_Size;
       end Adjust_Tables;
    begin
-      for I in reverse Positive range 2 .. Mem_Layout.Levels loop
+      for I in reverse Paging_Level range 2 .. Mem_Layout.Levels loop
          Cur_Level := I;
          Maps.Update (Map     => Mem_Layout.Structures (I),
                       Process => Adjust_Tables'Access);

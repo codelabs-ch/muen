@@ -10,7 +10,7 @@ package Paging.Test_Data.Tests is
    with null record;
 
    procedure Test_Get_Indexes_b21229 (Gnattest_T : in out Test);
-   --  paging.ads:48:4:Get_Indexes
+   --  paging.ads:52:4:Get_Indexes
 
 end Paging.Test_Data.Tests;
 --  end read only

@@ -31,7 +31,7 @@ with Interfaces;
 
 with Paging.EPT;
 with Paging.IA32e;
-with Paging.Memory;
+with Paging.Layouts;
 
 package body Pt.Generator
 is
@@ -61,7 +61,7 @@ is
    --  Write memory layout of with specified paging mode to file specified by
    --  name.
    procedure Write_To_File
-     (Mem_Layout : Paging.Memory.Memory_Layout_Type;
+     (Mem_Layout : Paging.Layouts.Memory_Layout_Type;
       PT_Type    : Paging.Paging_Mode_Type;
       Filename   : String);
 
@@ -140,7 +140,7 @@ is
       Filename     : String;
       PT_Type      : Paging.Paging_Mode_Type := Paging.IA32e_Mode)
    is
-      Vmem : Paging.Memory.Memory_Layout_Type;
+      Vmem : Paging.Layouts.Memory_Layout_Type (Levels => 4);
 
       --  Add mapping of given logical to physical memory.
       procedure Add_Mapping
@@ -184,7 +184,7 @@ is
                 (Elem => Physical,
                  Name => "caching"));
       begin
-         Paging.Memory.Add_Memory_Region
+         Paging.Layouts.Add_Memory_Region
            (Mem_Layout       => Vmem,
             Physical_Address => PMA,
             Virtual_Address  => VMA,
@@ -194,8 +194,8 @@ is
             Executable       => Exec);
       end Add_Mapping;
    begin
-      Paging.Memory.Set_Address (Mem_Layout => Vmem,
-                                 Address    => Pml4_Address);
+      Paging.Layouts.Set_Address (Mem_Layout => Vmem,
+                                  Address    => Pml4_Address);
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
          declare
@@ -268,7 +268,7 @@ is
          end;
       end loop;
 
-      Paging.Memory.Update_References (Mem_Layout => Vmem);
+      Paging.Layouts.Update_References (Mem_Layout => Vmem);
 
       Write_To_File (Mem_Layout => Vmem,
                      PT_Type    => PT_Type,
@@ -346,7 +346,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Write_To_File
-     (Mem_Layout : Paging.Memory.Memory_Layout_Type;
+     (Mem_Layout : Paging.Layouts.Memory_Layout_Type;
       PT_Type    : Paging.Paging_Mode_Type;
       Filename   : String)
    is
@@ -359,21 +359,23 @@ is
 
       case PT_Type is
          when Paging.IA32e_Mode =>
-            Paging.Memory.Serialize
-              (Stream         => Stream (File),
-               Mem_Layout     => Mem_Layout,
-               Serialize_PML4 => Paging.IA32e.Serialize'Access,
-               Serialize_PDPT => Paging.IA32e.Serialize'Access,
-               Serialize_PD   => Paging.IA32e.Serialize'Access,
-               Serialize_PT   => Paging.IA32e.Serialize'Access);
+            Paging.Layouts.Serialize
+              (Stream      => Stream (File),
+               Mem_Layout  => Mem_Layout,
+               Serializers =>
+                 (1 => Paging.IA32e.Serialize_PML4'Access,
+                  2 => Paging.IA32e.Serialize_PDPT'Access,
+                  3 => Paging.IA32e.Serialize_PD'Access,
+                  4 => Paging.IA32e.Serialize_PT'Access));
          when Paging.EPT_Mode =>
-            Paging.Memory.Serialize
-              (Stream         => Stream (File),
-               Mem_Layout     => Mem_Layout,
-               Serialize_PML4 => Paging.EPT.Serialize'Access,
-               Serialize_PDPT => Paging.EPT.Serialize'Access,
-               Serialize_PD   => Paging.EPT.Serialize'Access,
-               Serialize_PT   => Paging.EPT.Serialize'Access);
+            Paging.Layouts.Serialize
+              (Stream      => Stream (File),
+               Mem_Layout  => Mem_Layout,
+               Serializers =>
+                 (1 => Paging.EPT.Serialize_PML4'Access,
+                  2 => Paging.EPT.Serialize_PDPT'Access,
+                  3 => Paging.EPT.Serialize_PD'Access,
+                  4 => Paging.EPT.Serialize_PT'Access));
       end case;
 
       Close (File => File);

@@ -32,7 +32,7 @@ is
 
    type Paging_Level is new Positive range 1 .. 4;
 
-   type Table_Index_Array is array (Paging_Level range <>) of Natural;
+   type Table_Index_Array is array (Paging_Level range <>) of Table_Range;
 
    --  A PDPT entry maps a 1 GB page.
    PDPT_Page_Size : constant := 2 ** 30;
@@ -55,5 +55,19 @@ is
       PDPT_Index : out Table_Range;
       PD_Index   : out Table_Range;
       PT_Index   : out Table_Range);
+
+   --  Return the paging structure indexes for a given linear address. see
+   --  Intel SDM Vol. 3A, page 4-22:
+   --   * PML4 index is formed by bits 39 .. 47
+   --   * PDPT index is formed by bits 30 .. 38
+   --   * PD   index is formed by bits 21 .. 29
+   --   * PT   index is formed by bits 12 .. 20
+   --  The returned paging level indexes depend on the range of the provided
+   --  array:
+   --   * 3-element array -> PDPT, PD and PT are returned
+   --   * 4-element array -> PML4, PDPT, PD and PT are returned
+   procedure Get_Indexes
+     (Address :     Interfaces.Unsigned_64;
+      Indexes : out Table_Index_Array);
 
 end Paging;

@@ -19,6 +19,8 @@
 package body Paging
 is
 
+   use type Interfaces.Unsigned_64;
+
    --  PML4 index is bits 39 .. 47 of the linear address.
    PML4_Index_Mask : constant Interfaces.Unsigned_64 := 16#0000ff8000000000#;
 
@@ -31,6 +33,21 @@ is
    --  PT index is bits 12 .. 20 of the linear address.
    PT_Index_Mask : constant Interfaces.Unsigned_64 := 16#00000000001ff000#;
 
+   type Level_Info_Type is record
+      Mask : Interfaces.Unsigned_64;
+      Size : Interfaces.Unsigned_64;
+   end record;
+
+   Level_Map : constant array (Paging_Level) of Level_Info_Type
+     := (1 => (Mask => PML4_Index_Mask,
+               Size => 2 ** 39),
+         2 => (Mask => PDPT_Index_Mask,
+               Size => PDPT_Page_Size),
+         3 => (Mask => PD_Index_Mask,
+               Size => PD_Page_Size),
+         4 => (Mask => PT_Index_Mask,
+               Size => Page_Size));
+
    -------------------------------------------------------------------------
 
    procedure Get_Indexes
@@ -40,7 +57,6 @@ is
       PD_Index   : out Table_Range;
       PT_Index   : out Table_Range)
    is
-      use type Interfaces.Unsigned_64;
    begin
       PML4_Index := Table_Range
         ((Address and PML4_Index_Mask) / 2 ** 39);
@@ -50,6 +66,22 @@ is
         ((Address and PD_Index_Mask) / PD_Page_Size);
       PT_Index   := Table_Range
         ((Address and PT_Index_Mask) / Page_Size);
+   end Get_Indexes;
+
+   -------------------------------------------------------------------------
+
+   procedure Get_Indexes
+     (Address :     Interfaces.Unsigned_64;
+      Indexes : out Table_Index_Array)
+   is
+      Cur_Lvl : Natural := 4;
+   begin
+      for Idx of reverse Indexes loop
+         Idx := Table_Range
+           ((Address and Level_Map (Paging_Level (Cur_Lvl)).Mask) /
+                Level_Map (Paging_Level (Cur_Lvl)).Size);
+         Cur_Lvl := Cur_Lvl - 1;
+      end loop;
    end Get_Indexes;
 
 end Paging;

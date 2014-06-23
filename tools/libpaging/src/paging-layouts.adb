@@ -135,13 +135,10 @@ is
       Writable         :        Boolean;
       Executable       :        Boolean)
    is
-      Indexes : array (Paging_Level) of Table_Range := (others => 0);
+      Indexes : Table_Index_Array (1 .. Mem_Layout.Levels) := (others => 0);
    begin
-      Get_Indexes (Address    => Virtual_Address,
-                   PML4_Index => Indexes (1),
-                   PDPT_Index => Indexes (2),
-                   PD_Index   => Indexes (3),
-                   PT_Index   => Indexes (4));
+      Get_Indexes (Address => Virtual_Address,
+                   Indexes => Indexes);
 
       if not Pagetables.Contains
         (Table => Mem_Layout.Level_1_Table,

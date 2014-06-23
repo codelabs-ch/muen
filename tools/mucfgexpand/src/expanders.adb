@@ -21,6 +21,7 @@ with Expanders.Kernel;
 with Expanders.Subjects;
 with Expanders.Channels;
 with Expanders.Platform;
+with Expanders.Device_Domains;
 
 package body Expanders
 is
@@ -97,6 +98,8 @@ is
 
       Procs.Register (Process => Memory.Add_Kernel_PTs'Access);
       Procs.Register (Process => Memory.Add_Subject_PTs'Access);
+
+      Procs.Register (Process => Device_Domains.Add_Section_Skeleton'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

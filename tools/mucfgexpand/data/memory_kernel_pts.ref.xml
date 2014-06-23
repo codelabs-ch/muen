@@ -43,6 +43,7 @@
    <file filename="kernel_pt_1" offset="none"/>
   </memory>
  </memory>
+ <deviceDomains/>
  <events/>
  <kernel>
   <memory>

@@ -171,6 +171,8 @@
 		<memory alignment="16#1000#" name="linux_keyboard" physicalAddress="16#0030_c000#" size="16#1000#" caching="WB" type="subject_channel"/>
 	</memory>
 
+	<deviceDomains/>
+
 	<events/>
 
 	<kernel>

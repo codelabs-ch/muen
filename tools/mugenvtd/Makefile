@@ -1,6 +1,8 @@
 COMPONENT = mugenvtd
 
-DEPENDS = libmutools
+DEPENDS =      \
+	libmutools \
+	libpaging
 
 include ../component.mk
 include ../coverage.mk

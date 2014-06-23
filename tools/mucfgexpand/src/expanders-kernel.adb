@@ -125,6 +125,9 @@ is
       --  Add I/O APIC.
       procedure Add_IO_APIC (Devices : DOM.Core.Node);
 
+      --  Add IOMMUs (if present).
+      procedure Add_IOMMUs (Devices : DOM.Core.Node);
+
       ----------------------------------------------------------------------
 
       procedure Add_IO_APIC (Devices : DOM.Core.Node)
@@ -161,12 +164,70 @@ is
             New_Child => Ioapic);
       end Add_IO_APIC;
 
+      ----------------------------------------------------------------------
+
+      procedure Add_IOMMUs (Devices : DOM.Core.Node)
+      is
+         Addrbase : Interfaces.Unsigned_64 := 16#001f_d000#;
+         Physdevs : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Data.Doc,
+              XPath => "/system/platform/devices/device[starts-with"
+              & "(string(@name),'iommu')]");
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length (List => Physdevs) - 1 loop
+            declare
+               use type Interfaces.Unsigned_64;
+
+               Addr_Str : constant String
+                 := Mutools.Utils.To_Hex (Number => Addrbase);
+               IOMMU    : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => Physdevs,
+                                         Index => I);
+               Name     : constant String := DOM.Core.Elements.Get_Attribute
+                 (Elem => IOMMU,
+                  Name => "name");
+               Ref      : constant DOM.Core.Node
+                 := DOM.Core.Documents.Create_Element
+                   (Doc      => Data.Doc,
+                    Tag_Name => "device");
+            begin
+               Mulog.Log (Msg => "Adding IOMMU '" & Name
+                          & "' to kernel devices, MMIO: " & Addr_Str);
+
+               DOM.Core.Elements.Set_Attribute
+                 (Elem  => Ref,
+                  Name  => "logical",
+                  Value => Name);
+               DOM.Core.Elements.Set_Attribute
+                 (Elem  => Ref,
+                  Name  => "physical",
+                  Value => Name);
+
+               Muxml.Utils.Append_Child
+                 (Node      => Ref,
+                  New_Child => XML_Utils.Create_Virtual_Memory_Node
+                    (Policy        => Data,
+                     Logical_Name  => "mmio",
+                     Physical_Name => "mmio",
+                     Address       => Addr_Str,
+                     Writable      => True,
+                     Executable    => False));
+               Muxml.Utils.Append_Child
+                 (Node      => Devices,
+                  New_Child => Ref);
+               Addrbase := Addrbase + Mutools.Constants.Page_Size;
+            end;
+         end loop;
+      end Add_IOMMUs;
+
       Devices_Node : constant DOM.Core.Node
         := Muxml.Utils.Get_Element
           (Doc   => Data.Doc,
            XPath => "/system/kernel/devices");
    begin
       Add_IO_APIC (Devices => Devices_Node);
+      Add_IOMMUs  (Devices => Devices_Node);
    end Add_Devices;
 
    -------------------------------------------------------------------------

@@ -53,6 +53,8 @@
 		</memory>
 	</memory>
 
+	<deviceDomains/>
+
 	<events>
 		<event name="xv6_keyboard" mode="ipi"/>
 	</events>

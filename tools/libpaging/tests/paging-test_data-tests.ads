@@ -9,11 +9,8 @@ package Paging.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.Paging.Test_Data.Test
    with null record;
 
-   procedure Test_Get_Indexes_b21229 (Gnattest_T : in out Test);
-   --  paging.ads:52:4:Get_Indexes
-
    procedure Test_Get_Indexes_9d42e6 (Gnattest_T : in out Test);
-   --  paging.ads:69:4:Get_Indexes
+   --  paging.ads:56:4:Get_Indexes
 
 end Paging.Test_Data.Tests;
 --  end read only

@@ -51,26 +51,6 @@ is
    -------------------------------------------------------------------------
 
    procedure Get_Indexes
-     (Address    :     Interfaces.Unsigned_64;
-      PML4_Index : out Table_Range;
-      PDPT_Index : out Table_Range;
-      PD_Index   : out Table_Range;
-      PT_Index   : out Table_Range)
-   is
-   begin
-      PML4_Index := Table_Range
-        ((Address and PML4_Index_Mask) / 2 ** 39);
-      PDPT_Index := Table_Range
-        ((Address and PDPT_Index_Mask) / PDPT_Page_Size);
-      PD_Index   := Table_Range
-        ((Address and PD_Index_Mask) / PD_Page_Size);
-      PT_Index   := Table_Range
-        ((Address and PT_Index_Mask) / Page_Size);
-   end Get_Indexes;
-
-   -------------------------------------------------------------------------
-
-   procedure Get_Indexes
      (Address :     Interfaces.Unsigned_64;
       Indexes : out Table_Index_Array)
    is

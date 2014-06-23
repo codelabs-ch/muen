@@ -16,18 +16,20 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Streams;
-
 with Interfaces;
+
+with Ada.Streams;
 
 with Paging.Tables;
 
-package Paging.Memory
+private with Paging.Maps;
+
+package Paging.Layouts
 is
 
    --  A memory layout is a collection of logical to physical memory mappings
    --  managed in several levels of paging structures.
-   type Memory_Layout_Type is private;
+   type Memory_Layout_Type (Levels : Paging_Level) is private;
 
    Null_Layout : constant Memory_Layout_Type;
 
@@ -41,13 +43,10 @@ is
      (Mem_Layout : Memory_Layout_Type)
       return Interfaces.Unsigned_64;
 
-   --  Returns the number of pagetables per level.
-   procedure Get_Table_Count
-     (Mem_Layout :     Memory_Layout_Type;
-      PML4_Count : out Natural;
-      PDPT_Count : out Natural;
-      PD_Count   : out Natural;
-      PT_Count   : out Natural);
+   --  Enable or disable large page mappings for the given memory layout.
+   procedure Set_Large_Page_Support
+     (Mem_Layout : in out Memory_Layout_Type;
+      State      :        Boolean);
 
    --  Add memory region with specified attributes to given memory layout.
    procedure Add_Memory_Region
@@ -63,41 +62,45 @@ is
    --  addresses of table entries referencing other paging structures.
    procedure Update_References (Mem_Layout : in out Memory_Layout_Type);
 
+   type Table_Count_Array is array (Paging_Level range <>) of Natural;
+
+   --  Returns the number of pagetables per level in ascending order (i.e.
+   --  first array element is level 1, etc).
+   function Get_Table_Count
+     (Mem_Layout : Memory_Layout_Type)
+      return Table_Count_Array
+     with
+       Post => Get_Table_Count'Result'Length = Mem_Layout.Levels;
+
+   type Table_Serializer is not null access procedure
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table  : Tables.Page_Table_Type);
+
+   type Serializer_Array is array (Paging_Level range <>) of Table_Serializer;
+
    --  Serialze paging structures of given memory layout. Pagetables are
    --  processed in the order PML4 -> PTs -> PDs -> PDPTs using the
-   --  specified serialization procedures.
+   --  specified serialization procedures. The provided serializers are used in
+   --  ascending order, i.e. Serializers (1) -> level 1, etc.
    procedure Serialize
-     (Stream         : not null access Ada.Streams.Root_Stream_Type'Class;
-      Mem_Layout     : Memory_Layout_Type;
-      Serialize_PML4 : not null access procedure
-        (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-         PML4   : Tables.PML4.Page_Table_Type);
-      Serialize_PDPT : not null access procedure
-        (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-         PDPT   : Tables.PDPT.Page_Table_Type);
-      Serialize_PD   : not null access procedure
-        (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-         PD     : Tables.PD.Page_Table_Type);
-      Serialize_PT   : not null access procedure
-        (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-         PT     : Tables.PT.Page_Table_Type));
-
-   --  Enable or disable large page mappings for the given memory layout.
-   procedure Set_Large_Page_Support
-     (Mem_Layout : in out Memory_Layout_Type;
-      State      :        Boolean);
+     (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
+      Mem_Layout  : Memory_Layout_Type;
+      Serializers : Serializer_Array)
+     with
+       Pre => Serializers'First = 1 and Serializers'Last = Mem_Layout.Levels;
 
 private
 
-   type Memory_Layout_Type is record
+   type Tables_Array is array (Paging_Level range <>) of Maps.Page_Table_Map;
+
+   type Memory_Layout_Type (Levels : Paging_Level) is record
       Use_Large_Pages : Boolean := True;
-      PML4            : Tables.PML4.Page_Table_Type;
-      PDPTs           : Tables.PDPT.Page_Table_Map;
-      PDs             : Tables.PD.Page_Table_Map;
-      PTs             : Tables.PT.Page_Table_Map;
+      Level_1_Table   : Tables.Page_Table_Type;
+      Structures      : Tables_Array (2 .. Levels);
    end record;
 
-   Null_Layout : constant Memory_Layout_Type := (Use_Large_Pages => True,
+   Null_Layout : constant Memory_Layout_Type := (Levels          => 4,
+                                                 Use_Large_Pages => True,
                                                  others          => <>);
 
-end Paging.Memory;
+end Paging.Layouts;

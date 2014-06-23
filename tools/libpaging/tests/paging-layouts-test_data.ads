@@ -14,7 +14,7 @@ with Paging.IA32e;
 
 with Test_Utils;
 
-package Paging.Memory.Test_Data is
+package Paging.Layouts.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -42,4 +42,4 @@ package Paging.Memory.Test_Data is
      (Stream : in out Memory_Stream_Type;
       Item   :        Ada.Streams.Stream_Element_Array);
 
-end Paging.Memory.Test_Data;
+end Paging.Layouts.Test_Data;

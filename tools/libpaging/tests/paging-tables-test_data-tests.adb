@@ -1,0 +1,265 @@
+--  This package has been generated automatically by GNATtest.
+--  You are allowed to add your code to the bodies of test routines.
+--  Such changes will be kept during further regeneration of this file.
+--  All code placed outside of test routine bodies will be lost. The
+--  code intended to set up and tear down the test environment should be
+--  placed into Paging.Tables.Test_Data.
+
+with AUnit.Assertions; use AUnit.Assertions;
+
+package body Paging.Tables.Test_Data.Tests is
+
+
+--  begin read only
+   procedure Test_Add_Entry (Gnattest_T : in out Test);
+   procedure Test_Add_Entry_b9776e (Gnattest_T : in out Test) renames Test_Add_Entry;
+--  id:2.2/b9776e04c3dbdc90/Add_Entry/1/0/
+   procedure Test_Add_Entry (Gnattest_T : in out Test) is
+   --  paging-tables.ads:33:4:Add_Entry
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Ada.Containers.Count_Type;
+
+      Table : Page_Table_Type;
+      Dummy : Entries.Table_Entry_Type;
+   begin
+      Assert (Condition => Table.Data.Length = 0,
+              Message   => "Table not empty");
+      Add_Entry (Table => Table,
+                 Index => 0,
+                 E     => Dummy);
+      Assert (Condition => Table.Data.Length = 1,
+              Message   => "Entry not added");
+
+      begin
+         Add_Entry (Table => Table,
+                    Index => 0,
+                    E     => Dummy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when Duplicate_Entry => null;
+      end;
+--  begin read only
+   end Test_Add_Entry;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Count (Gnattest_T : in out Test);
+   procedure Test_Count_046773 (Gnattest_T : in out Test) renames Test_Count;
+--  id:2.2/046773b03ed5e755/Count/1/0/
+   procedure Test_Count (Gnattest_T : in out Test) is
+   --  paging-tables.ads:39:4:Count
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Table : Page_Table_Type := Null_Table;
+      Dummy : Entries.Table_Entry_Type;
+   begin
+      Assert (Condition => Count (Table => Table) = 0,
+              Message   => "Null table not empty");
+      Add_Entry (Table => Table,
+                 Index => 0,
+                 E     => Dummy);
+      Assert (Condition => Count (Table => Table) = 1,
+              Message   => "Count mismatch");
+--  begin read only
+   end Test_Count;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Contains (Gnattest_T : in out Test);
+   procedure Test_Contains_907a69 (Gnattest_T : in out Test) renames Test_Contains;
+--  id:2.2/907a695980077ad6/Contains/1/0/
+   procedure Test_Contains (Gnattest_T : in out Test) is
+   --  paging-tables.ads:42:4:Contains
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Table : Page_Table_Type := Null_Table;
+      Dummy : Entries.Table_Entry_Type;
+   begin
+      Assert (Condition => not Contains
+              (Table => Table,
+               Index => 3),
+              Message   => "Unexpected entry");
+
+      Add_Entry (Table => Table,
+                 Index => 12,
+                 E     => Dummy);
+      Assert (Condition => Contains
+              (Table => Table,
+               Index => 12),
+              Message   => "Entry not found");
+--  begin read only
+   end Test_Contains;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Get_Physical_Address (Gnattest_T : in out Test);
+   procedure Test_Get_Physical_Address_696158 (Gnattest_T : in out Test) renames Test_Get_Physical_Address;
+--  id:2.2/69615859ff9354ca/Get_Physical_Address/1/0/
+   procedure Test_Get_Physical_Address (Gnattest_T : in out Test) is
+   --  paging-tables.ads:48:4:Get_Physical_Address
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_64;
+
+      Table : Page_Table_Type := Null_Table;
+   begin
+      Assert (Condition => Table.Address = 0,
+              Message   => "Address not zero");
+
+      Table.Address := 16#3000#;
+      Assert (Condition => Get_Physical_Address (Table => Table) = 16#3000#,
+              Message   => "Address mismatch");
+--  begin read only
+   end Test_Get_Physical_Address;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Set_Physical_Address (Gnattest_T : in out Test);
+   procedure Test_Set_Physical_Address_8a6f74 (Gnattest_T : in out Test) renames Test_Set_Physical_Address;
+--  id:2.2/8a6f7428d81aac8e/Set_Physical_Address/1/0/
+   procedure Test_Set_Physical_Address (Gnattest_T : in out Test) is
+   --  paging-tables.ads:53:4:Set_Physical_Address
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_64;
+
+      Table : Page_Table_Type := Null_Table;
+   begin
+      Set_Physical_Address (Table   => Table,
+                            Address => 16#5000#);
+      Assert (Condition => Table.Address = 16#5000#,
+              Message   => "Address mismatch");
+--  begin read only
+   end Test_Set_Physical_Address;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Iterate (Gnattest_T : in out Test);
+   procedure Test_Iterate_2eb2fa (Gnattest_T : in out Test) renames Test_Iterate;
+--  id:2.2/2eb2fa347a1fe1b6/Iterate/1/0/
+   procedure Test_Iterate (Gnattest_T : in out Test) is
+   --  paging-tables.ads:59:4:Iterate
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Counter : Natural         := 0;
+      Table   : Page_Table_Type := Null_Table;
+      Dummy   : Entries.Table_Entry_Type;
+
+      ----------------------------------------------------------------------
+
+      procedure Inc_Counter
+        (Index  : Table_Range;
+         TEntry : Entries.Table_Entry_Type)
+      is
+      begin
+         Counter := Counter + 1;
+      end Inc_Counter;
+   begin
+      Add_Entry (Table => Table,
+                 Index => 1,
+                 E     => Dummy);
+      Add_Entry (Table => Table,
+                 Index => 2,
+                 E     => Dummy);
+
+      Iterate (Table   => Table,
+               Process => Inc_Counter'Access);
+      Assert (Condition => Counter = 2,
+              Message   => "Counter mismatch" & Counter'Img);
+--  begin read only
+   end Test_Iterate;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Update (Gnattest_T : in out Test);
+   procedure Test_Update_f3fe46 (Gnattest_T : in out Test) renames Test_Update;
+--  id:2.2/f3fe46aa212eaf88/Update/1/0/
+   procedure Test_Update (Gnattest_T : in out Test) is
+   --  paging-tables.ads:67:4:Update
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Counter : Natural         := 0;
+      Table   : Page_Table_Type := Null_Table;
+      Dummy   : Entries.Table_Entry_Type;
+
+      ----------------------------------------------------------------------
+
+      procedure Inc_Counter
+        (Index  :        Table_Range;
+         TEntry : in out Entries.Table_Entry_Type)
+      is
+      begin
+         Counter := Counter + 1;
+      end Inc_Counter;
+   begin
+      Add_Entry (Table => Table,
+                 Index => 1,
+                 E     => Dummy);
+      Add_Entry (Table => Table,
+                 Index => 2,
+                 E     => Dummy);
+
+      Update (Table   => Table,
+              Process => Inc_Counter'Access);
+      Assert (Condition => Counter = 2,
+              Message   => "Counter mismatch" & Counter'Img);
+--  begin read only
+   end Test_Update;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Clear (Gnattest_T : in out Test);
+   procedure Test_Clear_5b2240 (Gnattest_T : in out Test) renames Test_Clear;
+--  id:2.2/5b2240cb4b547858/Clear/1/0/
+   procedure Test_Clear (Gnattest_T : in out Test) is
+   --  paging-tables.ads:74:4:Clear
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Ada.Containers.Count_Type;
+      use type Interfaces.Unsigned_64;
+
+      Table : Page_Table_Type;
+      Dummy : Entries.Table_Entry_Type;
+   begin
+      Add_Entry (Table => Table,
+                 Index => 1,
+                 E     => Dummy);
+      Table.Address := 16#4000#;
+
+      Clear (Table => Table);
+
+      Assert (Condition => Table.Data.Length = 0,
+              Message   => "Table not cleared");
+      Assert (Condition => Table.Address = 0,
+              Message   => "Table address not zero");
+--  begin read only
+   end Test_Clear;
+--  end read only
+
+end Paging.Tables.Test_Data.Tests;

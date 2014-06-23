@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package body Paging.Pagetable
+package body Paging.Maps
 is
 
    -------------------------------------------------------------------------
@@ -25,34 +25,33 @@ is
      (Map          : in out Page_Table_Map;
       Table_Number :        Table_Range;
       Entry_Index  :        Table_Range;
-      Table_Entry  :        Entry_Type)
+      Table_Entry  :        Entries.Table_Entry_Type)
    is
       use type Tables_Map_Package.Cursor;
 
       --  Add entry to given table.
       procedure Add_Entry
         (Number :        Table_Range;
-         Table  : in out Page_Table_Type);
+         Table  : in out Tables.Page_Table_Type);
 
       procedure Add_Entry
         (Number :        Table_Range;
-         Table  : in out Page_Table_Type)
+         Table  : in out Tables.Page_Table_Type)
       is
          pragma Unreferenced (Number);
       begin
-         Add_Entry (Table => Table,
-                    Index => Entry_Index,
-                    E     => Table_Entry);
+         Tables.Add_Entry (Table => Table,
+                               Index => Entry_Index,
+                               E     => Table_Entry);
       end Add_Entry;
 
       Pos : Tables_Map_Package.Cursor := Map.Tables.Find (Key => Table_Number);
       Ins : Boolean;
    begin
-
       if Pos = Tables_Map_Package.No_Element then
          Map.Tables.Insert
            (Key      => Table_Number,
-            New_Item => Null_Table,
+            New_Item => Tables.Null_Table,
             Position => Pos,
             Inserted => Ins);
       end if;
@@ -61,33 +60,6 @@ is
         (Position => Pos,
          Process  => Add_Entry'Access);
    end Add_Entry;
-
-   -------------------------------------------------------------------------
-
-   procedure Add_Entry
-     (Table : in out Page_Table_Type;
-      Index :        Table_Range;
-      E     :        Entry_Type)
-   is
-   begin
-      if Table.Data.Contains (Key => Index) then
-         raise Duplicate_Entry with "Table entry with index" & Index'Img
-           & " already exists";
-      end if;
-
-      Table.Data.Insert
-        (Key      => Index,
-         New_Item => E);
-   end Add_Entry;
-
-   -------------------------------------------------------------------------
-
-   procedure Clear (Table : in out Page_Table_Type)
-   is
-   begin
-      Table.Address := Interfaces.Unsigned_64'First;
-      Table.Data.Clear;
-   end Clear;
 
    -------------------------------------------------------------------------
 
@@ -100,17 +72,6 @@ is
    -------------------------------------------------------------------------
 
    function Contains
-     (Table : Page_Table_Type;
-      Index : Table_Range)
-      return Boolean
-   is
-   begin
-      return Table.Data.Contains (Key => Index);
-   end Contains;
-
-   -------------------------------------------------------------------------
-
-   function Contains
      (Map          : Page_Table_Map;
       Table_Number : Table_Range;
       Entry_Index  : Table_Range)
@@ -118,28 +79,10 @@ is
    is
    begin
       return Map.Tables.Contains (Key => Table_Number)
-        and then Contains
+        and then Tables.Contains
           (Table => Map.Tables.Element (Key => Table_Number),
            Index => Entry_Index);
    end Contains;
-
-   -------------------------------------------------------------------------
-
-   function Count (Table : Page_Table_Type) return Table_Range
-   is
-   begin
-      return Table_Range (Table.Data.Length);
-   end Count;
-
-   -------------------------------------------------------------------------
-
-   function Get_Physical_Address
-     (Table : Page_Table_Type)
-      return Interfaces.Unsigned_64
-   is
-   begin
-      return Table.Address;
-   end Get_Physical_Address;
 
    -------------------------------------------------------------------------
 
@@ -158,7 +101,8 @@ is
            & " not in map";
       end if;
 
-      return Tables_Map_Package.Element (Position => Pos).Address;
+      return Tables.Get_Physical_Address
+        (Table => Tables_Map_Package.Element (Position => Pos));
    end Get_Table_Address;
 
    -------------------------------------------------------------------------
@@ -167,7 +111,7 @@ is
      (Map     : Page_Table_Map;
       Process : not null access procedure
         (Table_Number : Table_Range;
-         Table        : Page_Table_Type))
+         Table        : Tables.Page_Table_Type))
    is
       --  Process the given page table.
       procedure Call_Process (Pos : Tables_Map_Package.Cursor);
@@ -185,31 +129,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Iterate
-     (Table   : Page_Table_Type;
-      Process : not null access procedure
-        (Index  : Table_Range;
-         TEntry : Entry_Type))
-   is
-      --  Perform process operation for given element.
-      procedure Call_Process (Position : Entries_Map_Package.Cursor);
-
-      procedure Call_Process (Position : Entries_Map_Package.Cursor)
-      is
-         Index  : constant Table_Range := Entries_Map_Package.Key
-           (Position => Position);
-         TEntry : constant Entry_Type  := Entries_Map_Package.Element
-           (Position => Position);
-      begin
-         Process (Index  => Index,
-                  TEntry => TEntry);
-      end Call_Process;
-   begin
-      Table.Data.Iterate (Process => Call_Process'Access);
-   end Iterate;
-
-   -------------------------------------------------------------------------
-
    function Length (Map : Page_Table_Map) return Natural
    is
    begin
@@ -218,42 +137,11 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Physical_Address
-     (Table   : in out Page_Table_Type;
-      Address :        Interfaces.Unsigned_64)
-   is
-   begin
-      Table.Address := Address;
-   end Set_Physical_Address;
-
-   -------------------------------------------------------------------------
-
-   procedure Update
-     (Table   : in out Page_Table_Type;
-      Process : not null access procedure
-        (Index  :        Table_Range;
-         TEntry : in out Entry_Type))
-   is
-      --  Process the given page table entry.
-      procedure Call_Process (Pos : Entries_Map_Package.Cursor);
-
-      procedure Call_Process (Pos : Entries_Map_Package.Cursor)
-      is
-      begin
-         Table.Data.Update_Element (Position => Pos,
-                                    Process  => Process);
-      end Call_Process;
-   begin
-      Table.Data.Iterate (Process => Call_Process'Access);
-   end Update;
-
-   -------------------------------------------------------------------------
-
    procedure Update
      (Map     : in out Page_Table_Map;
       Process : not null access procedure
         (Table_Number :        Table_Range;
-         Table        : in out Page_Table_Type))
+         Table        : in out Tables.Page_Table_Type))
    is
       --  Process the given page table.
       procedure Call_Process (Pos : Tables_Map_Package.Cursor);
@@ -268,4 +156,4 @@ is
       Map.Tables.Iterate (Process => Call_Process'Access);
    end Update;
 
-end Paging.Pagetable;
+end Paging.Maps;

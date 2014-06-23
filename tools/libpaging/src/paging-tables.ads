@@ -16,35 +16,80 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
+private with Ada.Containers.Indefinite_Ordered_Maps;
+
 with Paging.Entries;
-with Paging.Pagetable;
-pragma Elaborate_All (Paging.Pagetable);
 
 package Paging.Tables
 is
 
-   --  A Page Map Level 4 table comprises 512 64-bit entries (PML4Es), see
-   --  Intel SDM Vol. 3A, page 4-22.
-   package PML4 is new Pagetable
-     (Entry_Type  => Entries.PML4_Entry_Type,
-      Table_Range => Table_Range);
+   type Page_Table_Type is private;
 
-   --  A page-directory pointer table comprises 512 64-bit entries (PDPTEs),
-   --  see Intel SDM Vol. 3A, page 4-22.
-   package PDPT is new Pagetable
-     (Entry_Type  => Entries.PDPT_Entry_Type,
-      Table_Range => Table_Range);
+   Null_Table : constant Page_Table_Type;
 
-   --  A page directory comprises 512 64-bit entries (PDEs), see Intel SDM
-   --  Vol. 3A, 4 - 22.
-   package PD is new Pagetable
-     (Entry_Type  => Entries.PD_Entry_Type,
-      Table_Range => Table_Range);
+   --  Add given entry to pagetable.
+   procedure Add_Entry
+     (Table : in out Page_Table_Type;
+      Index :        Table_Range;
+      E     :        Entries.Table_Entry_Type);
 
-   --  A page table comprises 512 64-bit entries (PTEs), see Intel SDM Vol.
-   --  3A, page 4-22.
-   package PT is new Pagetable
-     (Entry_Type  => Entries.PT_Entry_Type,
-      Table_Range => Table_Range);
+   --  Returns the number of entries present in the table.
+   function Count (Table : Page_Table_Type) return Table_Range;
+
+   --  Returns true if an entry with given index exists.
+   function Contains
+     (Table : Page_Table_Type;
+      Index : Table_Range)
+      return Boolean;
+
+   --  Returns the physical memory address of the pagetable.
+   function Get_Physical_Address
+     (Table : Page_Table_Type)
+      return Interfaces.Unsigned_64;
+
+   --  Sets the physical memory address of the pagetable.
+   procedure Set_Physical_Address
+     (Table   : in out Page_Table_Type;
+      Address :        Interfaces.Unsigned_64);
+
+   --  Iterate over given page table and call given process procedure for each
+   --  entry.
+   procedure Iterate
+     (Table   : Page_Table_Type;
+      Process : not null access procedure
+        (Index  : Table_Range;
+         TEntry : Entries.Table_Entry_Type));
+
+   --  Iterate over specified page table and call given process procedure for
+   --  each entry. The table entry is modifiable.
+   procedure Update
+     (Table   : in out Page_Table_Type;
+      Process : not null access procedure
+        (Index  :        Table_Range;
+         TEntry : in out Entries.Table_Entry_Type));
+
+   --  Clear page table entries.
+   procedure Clear (Table : in out Page_Table_Type);
+
+   Duplicate_Entry : exception;
+
+private
+
+   use type Entries.Table_Entry_Type;
+
+   package Entries_Map_Package is new Ada.Containers.Indefinite_Ordered_Maps
+     (Key_Type     => Table_Range,
+      Element_Type => Entries.Table_Entry_Type);
+
+   type Page_Table_Type is record
+      Address : Interfaces.Unsigned_64;
+      Data    : Entries_Map_Package.Map;
+   end record;
+
+   Null_Table : constant Page_Table_Type
+     := (Address => 0,
+         Data    => Entries_Map_Package.Empty_Map);
 
 end Paging.Tables;

@@ -3,7 +3,7 @@
 --  automatically. Contents of this package can be modified in any way
 --  except for sections surrounded by a 'read only' marker.
 
-package body Paging.Memory.Test_Data is
+package body Paging.Layouts.Test_Data is
 
    -------------------------------------------------------------------------
 
@@ -42,4 +42,4 @@ package body Paging.Memory.Test_Data is
       Stream.Write_Idx                            := End_Idx + 1;
    end Write;
 
-end Paging.Memory.Test_Data;
+end Paging.Layouts.Test_Data;

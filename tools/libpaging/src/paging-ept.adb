@@ -129,22 +129,22 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Serialize
+   procedure Serialize_PD
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      PD     : Tables.PD.Page_Table_Type)
+      Table  : Tables.Page_Table_Type)
    is
       Raw_Table : Raw_Table_Type := (others => 0);
 
       --  Add given table entry to raw table.
       procedure Add_To_Raw_Table
         (Index  : Table_Range;
-         TEntry : Entries.PD_Entry_Type);
+         TEntry : Entries.Table_Entry_Type);
 
       ----------------------------------------------------------------------
 
       procedure Add_To_Raw_Table
         (Index  : Table_Range;
-         TEntry : Entries.PD_Entry_Type)
+         TEntry : Entries.Table_Entry_Type)
       is
       begin
          Raw_Table (Index) := Create_Map_Entry
@@ -157,29 +157,29 @@ is
             Memory_Type => TEntry.Get_Caching);
       end Add_To_Raw_Table;
    begin
-      Tables.PD.Iterate (Table   => PD,
-                         Process => Add_To_Raw_Table'Access);
+      Tables.Iterate (Table   => Table,
+                      Process => Add_To_Raw_Table'Access);
       Raw_Table_Type'Write (Stream, Raw_Table);
-   end Serialize;
+   end Serialize_PD;
 
    -------------------------------------------------------------------------
 
-   procedure Serialize
+   procedure Serialize_PDPT
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      PDPT   : Tables.PDPT.Page_Table_Type)
+      Table  : Tables.Page_Table_Type)
    is
       Raw_Table : Raw_Table_Type := (others => 0);
 
       --  Add given table entry to raw table.
       procedure Add_To_Raw_Table
         (Index  : Table_Range;
-         TEntry : Entries.PDPT_Entry_Type);
+         TEntry : Entries.Table_Entry_Type);
 
       ----------------------------------------------------------------------
 
       procedure Add_To_Raw_Table
         (Index  : Table_Range;
-         TEntry : Entries.PDPT_Entry_Type)
+         TEntry : Entries.Table_Entry_Type)
       is
       begin
          Raw_Table (Index) := Create_Map_Entry
@@ -192,29 +192,29 @@ is
             Memory_Type => TEntry.Get_Caching);
       end Add_To_Raw_Table;
    begin
-      Tables.PDPT.Iterate (Table   => PDPT,
-                           Process => Add_To_Raw_Table'Access);
+      Tables.Iterate (Table   => Table,
+                      Process => Add_To_Raw_Table'Access);
       Raw_Table_Type'Write (Stream, Raw_Table);
-   end Serialize;
+   end Serialize_PDPT;
 
    -------------------------------------------------------------------------
 
-   procedure Serialize
+   procedure Serialize_PML4
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      PML4   : Tables.PML4.Page_Table_Type)
+      Table  : Tables.Page_Table_Type)
    is
       Raw_Table : Raw_Table_Type := (others => 0);
 
       --  Add given table entry to raw table.
       procedure Add_To_Raw_Table
         (Index  : Table_Range;
-         TEntry : Entries.PML4_Entry_Type);
+         TEntry : Entries.Table_Entry_Type);
 
       ----------------------------------------------------------------------
 
       procedure Add_To_Raw_Table
         (Index  : Table_Range;
-         TEntry : Entries.PML4_Entry_Type)
+         TEntry : Entries.Table_Entry_Type)
       is
       begin
          Raw_Table (Index) := Create_Entry
@@ -224,29 +224,29 @@ is
             Executable  => TEntry.Is_Executable);
       end Add_To_Raw_Table;
    begin
-      Tables.PML4.Iterate (Table   => PML4,
-                           Process => Add_To_Raw_Table'Access);
+      Tables.Iterate (Table   => Table,
+                      Process => Add_To_Raw_Table'Access);
       Raw_Table_Type'Write (Stream, Raw_Table);
-   end Serialize;
+   end Serialize_PML4;
 
    -------------------------------------------------------------------------
 
-   procedure Serialize
+   procedure Serialize_PT
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      PT     : Tables.PT.Page_Table_Type)
+      Table  : Tables.Page_Table_Type)
    is
       Raw_Table : Raw_Table_Type := (others => 0);
 
       --  Add given table entry to raw table.
       procedure Add_To_Raw_Table
         (Index  : Table_Range;
-         TEntry : Entries.PT_Entry_Type);
+         TEntry : Entries.Table_Entry_Type);
 
       ----------------------------------------------------------------------
 
       procedure Add_To_Raw_Table
         (Index  : Table_Range;
-         TEntry : Entries.PT_Entry_Type)
+         TEntry : Entries.Table_Entry_Type)
       is
       begin
          Raw_Table (Index) := Create_Map_Entry
@@ -259,9 +259,9 @@ is
             Memory_Type => TEntry.Get_Caching);
       end Add_To_Raw_Table;
    begin
-      Tables.PT.Iterate (Table   => PT,
-                         Process => Add_To_Raw_Table'Access);
+      Tables.Iterate (Table   => Table,
+                      Process => Add_To_Raw_Table'Access);
       Raw_Table_Type'Write (Stream, Raw_Table);
-   end Serialize;
+   end Serialize_PT;
 
 end Paging.EPT;

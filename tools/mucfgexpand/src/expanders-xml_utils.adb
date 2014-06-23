@@ -24,7 +24,7 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
-with Paging.Memory;
+with Paging.Layouts;
 
 with Alloc.Map;
 
@@ -49,7 +49,7 @@ is
    is
       use type DOM.Core.Node;
 
-      Layout       : Paging.Memory.Memory_Layout_Type;
+      Layout       : Paging.Layouts.Memory_Layout_Type (Levels => 4);
       Device_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -90,7 +90,7 @@ is
                    (Elem => Physical,
                     Name => "alignment"));
          begin
-            Paging.Memory.Add_Memory_Region
+            Paging.Layouts.Add_Memory_Region
               (Mem_Layout       => Layout,
                Physical_Address => Alignment,
                Virtual_Address  => Virtual_Address,
@@ -136,7 +136,7 @@ is
                    (Elem => Physical_Mem,
                     Name => "size"));
          begin
-            Paging.Memory.Add_Memory_Region
+            Paging.Layouts.Add_Memory_Region
               (Mem_Layout       => Layout,
                Physical_Address => Physical_Address,
                Virtual_Address  => Virtual_Address,
@@ -150,17 +150,14 @@ is
       declare
          use type Interfaces.Unsigned_64;
 
-         PML4s, PDPTs, PDs, PTs : Natural;
+         Table_Counts : constant Paging.Layouts.Table_Count_Array
+           := Paging.Layouts.Get_Table_Count (Mem_Layout => Layout);
+         Count        : Natural := 0;
       begin
-         Paging.Memory.Get_Table_Count
-           (Mem_Layout => Layout,
-            PML4_Count => PML4s,
-            PDPT_Count => PDPTs,
-            PD_Count   => PDs,
-            PT_Count   => PTs);
-
-         return Interfaces.Unsigned_64
-           (PML4s + PDPTs + PDs + PTs) * Mutools.Constants.Page_Size;
+         for C of Table_Counts loop
+            Count := Count + C;
+         end loop;
+         return Interfaces.Unsigned_64 (Count) * Mutools.Constants.Page_Size;
       end;
    end Calculate_PT_Size;
 

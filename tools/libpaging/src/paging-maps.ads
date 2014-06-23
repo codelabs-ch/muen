@@ -18,71 +18,13 @@
 
 with Interfaces;
 
-private with Ada.Containers.Indefinite_Ordered_Maps;
 private with Ada.Containers.Ordered_Maps;
 
 with Paging.Entries;
+with Paging.Tables;
 
---  Page table structure storing a specified type of pagetable entries.
-generic
-
-   --  Type of pagetable entries.
-   type Entry_Type is new Paging.Entries.Table_Entry_Type with private;
-
-   --  Range of pagetable entries.
-   type Table_Range is range <>;
-
-package Paging.Pagetable
+package Paging.Maps
 is
-
-   --  Page table storing up to 512 entries.
-   type Page_Table_Type is private;
-
-   Null_Table : constant Page_Table_Type;
-
-   --  Add given entry to pagetable.
-   procedure Add_Entry
-     (Table : in out Page_Table_Type;
-      Index :        Table_Range;
-      E     :        Entry_Type);
-
-   --  Returns the number of entries present in the table.
-   function Count (Table : Page_Table_Type) return Table_Range;
-
-   --  Returns true if an entry with given index exists.
-   function Contains
-     (Table : Page_Table_Type;
-      Index : Table_Range)
-      return Boolean;
-
-   --  Returns the physical memory address of the pagetable.
-   function Get_Physical_Address
-     (Table : Page_Table_Type)
-      return Interfaces.Unsigned_64;
-
-   --  Sets the physical memory address of the pagetable.
-   procedure Set_Physical_Address
-     (Table   : in out Page_Table_Type;
-      Address :        Interfaces.Unsigned_64);
-
-   --  Iterate over given page table and call given process procedure for each
-   --  entry.
-   procedure Iterate
-     (Table   : Page_Table_Type;
-      Process : not null access procedure
-        (Index  : Table_Range;
-         TEntry : Entry_Type));
-
-   --  Iterate over specified page table and call given process procedure for
-   --  each entry. The table entry is modifiable.
-   procedure Update
-     (Table   : in out Page_Table_Type;
-      Process : not null access procedure
-        (Index  :        Table_Range;
-         TEntry : in out Entry_Type));
-
-   --  Clear page table entries.
-   procedure Clear (Table : in out Page_Table_Type);
 
    --  A page table container.
    type Page_Table_Map is private;
@@ -101,7 +43,7 @@ is
      (Map          : in out Page_Table_Map;
       Table_Number :        Table_Range;
       Entry_Index  :        Table_Range;
-      Table_Entry  :        Entry_Type);
+      Table_Entry  :        Entries.Table_Entry_Type);
 
    --  Returns the physical address of the table specified by number.
    function Get_Table_Address
@@ -118,7 +60,7 @@ is
      (Map     : in out Page_Table_Map;
       Process : not null access procedure
         (Table_Number :        Table_Range;
-         Table        : in out Page_Table_Type));
+         Table        : in out Tables.Page_Table_Type));
 
    --  Iterate over given page table map and call given process procedure for
    --  each entry.
@@ -126,35 +68,23 @@ is
      (Map     : Page_Table_Map;
       Process : not null access procedure
         (Table_Number : Table_Range;
-         Table        : Page_Table_Type));
+         Table        : Tables.Page_Table_Type));
 
    --  Clear page table map.
    procedure Clear (Map : in out Page_Table_Map);
 
-   Duplicate_Entry : exception;
-   Missing_Table   : exception;
+   Missing_Table : exception;
 
 private
 
-   package Entries_Map_Package is new Ada.Containers.Indefinite_Ordered_Maps
-     (Key_Type     => Table_Range,
-      Element_Type => Entry_Type);
-
-   type Page_Table_Type is record
-      Address : Interfaces.Unsigned_64;
-      Data    : Entries_Map_Package.Map;
-   end record;
-
-   Null_Table : constant Page_Table_Type
-     := (Address => 0,
-         Data    => Entries_Map_Package.Empty_Map);
+   use type Tables.Page_Table_Type;
 
    package Tables_Map_Package is new Ada.Containers.Ordered_Maps
      (Key_Type     => Table_Range,
-      Element_Type => Page_Table_Type);
+      Element_Type => Tables.Page_Table_Type);
 
    type Page_Table_Map is record
       Tables : Tables_Map_Package.Map;
    end record;
 
-end Paging.Pagetable;
+end Paging.Maps;

@@ -26,20 +26,20 @@ is
    --  Implementation of EPT paging structures, as specified by Intel SDM
    --  Vol. 3C, section 28.3.
 
-   procedure Serialize
+   procedure Serialize_PML4
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      PML4   : Tables.PML4.Page_Table_Type);
+      Table  : Tables.Page_Table_Type);
 
-   procedure Serialize
+   procedure Serialize_PDPT
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      PDPT   : Tables.PDPT.Page_Table_Type);
+      Table  : Tables.Page_Table_Type);
 
-   procedure Serialize
+   procedure Serialize_PD
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      PD     : Tables.PD.Page_Table_Type);
+      Table  : Tables.Page_Table_Type);
 
-   procedure Serialize
+   procedure Serialize_PT
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      PT     : Tables.PT.Page_Table_Type);
+      Table  : Tables.Page_Table_Type);
 
 end Paging.EPT;

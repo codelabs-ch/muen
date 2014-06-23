@@ -201,6 +201,54 @@ package body Paging.Memory.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure EPT_Generate_Paging_Structures_No_Large_Pages
+      is
+         Layout : Memory_Layout_Type := Null_Layout;
+      begin
+         Set_Large_Page_Support (Mem_Layout => Layout,
+                                 State      => False);
+         Set_Address (Mem_Layout => Layout,
+                      Address    => 16#001f_4000#);
+
+          Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#4000_0000#,
+            Virtual_Address  => 16#0#,
+            Size             => 16#0020_0000#,
+            Caching          => UC,
+            Writable         => True,
+            Executable       => True);
+
+         Update_References (Mem_Layout => Layout);
+
+         declare
+            use Ada.Streams.Stream_IO;
+
+            File : File_Type;
+         begin
+            Mutools.Files.Open (Filename => "obj/ept_no_large_pages",
+                                File     => File);
+
+            Serialize
+              (Stream         => Stream (File => File),
+               Mem_Layout     => Layout,
+               Serialize_PML4 => EPT.Serialize'Access,
+               Serialize_PDPT => EPT.Serialize'Access,
+               Serialize_PD   => EPT.Serialize'Access,
+               Serialize_PT   => EPT.Serialize'Access);
+
+            Close (File => File);
+         end;
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/ept_no_large_pages.ref",
+                  Filename2 => "obj/ept_no_large_pages"),
+                 Message   => "EPT paging structures without large pages"
+                 & " mismatch");
+      end EPT_Generate_Paging_Structures_No_Large_Pages;
+
+      ----------------------------------------------------------------------
+
       procedure IA32e_Generate_Paging_Structures
       is
          Layout : Memory_Layout_Type := Null_Layout;
@@ -428,12 +476,42 @@ package body Paging.Memory.Test_Data.Tests is
       end Serialize_Empty_Layout;
    begin
       EPT_Generate_Paging_Structures;
+      EPT_Generate_Paging_Structures_No_Large_Pages;
       IA32e_Generate_Paging_Structures;
       IA32e_Generate_Multiple_Structures;
       IA32e_Generate_Multiple_PTs;
       Serialize_Empty_Layout;
 --  begin read only
    end Test_Serialize;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Set_Large_Page_Support (Gnattest_T : in out Test);
+   procedure Test_Set_Large_Page_Support_f61057 (Gnattest_T : in out Test) renames Test_Set_Large_Page_Support;
+--  id:2.2/f61057a95eba2569/Set_Large_Page_Support/1/0/
+   procedure Test_Set_Large_Page_Support (Gnattest_T : in out Test) is
+   --  paging-memory.ads:86:4:Set_Large_Page_Support
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Layout : Memory_Layout_Type;
+   begin
+      Assert (Condition => Layout.Use_Large_Pages,
+              Message   => "Large page support not default");
+
+      Set_Large_Page_Support (Mem_Layout => Layout,
+                              State      => False);
+      Assert (Condition => not Layout.Use_Large_Pages,
+              Message   => "Large page support enabled");
+
+      Set_Large_Page_Support (Mem_Layout => Layout,
+                              State      => True);
+      Assert (Condition => Layout.Use_Large_Pages,
+              Message   => "Large page support disabled");
+--  begin read only
+   end Test_Set_Large_Page_Support;
 --  end read only
 
 end Paging.Memory.Test_Data.Tests;

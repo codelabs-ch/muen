@@ -57,12 +57,14 @@ is
       Page          : Paging_Level;
    begin
       while Physical_Addr /= Physical_End loop
-         if Physical_Addr + PDPT_Page_Size <= Physical_End
+         if Mem_Layout.Use_Large_Pages
+           and then Physical_Addr + PDPT_Page_Size <= Physical_End
            and then Physical_Addr mod PDPT_Page_Size = 0
            and then Virtual_Addr mod PDPT_Page_Size = 0
          then
             Page := PDPT_Page;
-         elsif Physical_Addr + PD_Page_Size <= Physical_End
+         elsif Mem_Layout.Use_Large_Pages
+           and then Physical_Addr + PD_Page_Size <= Physical_End
            and then Physical_Addr mod PD_Page_Size = 0
            and then Virtual_Addr mod PD_Page_Size = 0
          then
@@ -332,6 +334,16 @@ is
         (Table   => Mem_Layout.PML4,
          Address => Address);
    end Set_Address;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Large_Page_Support
+     (Mem_Layout : in out Memory_Layout_Type;
+      State      :        Boolean)
+   is
+   begin
+      Mem_Layout.Use_Large_Pages := State;
+   end Set_Large_Page_Support;
 
    -------------------------------------------------------------------------
 

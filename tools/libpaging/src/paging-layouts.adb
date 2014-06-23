@@ -60,19 +60,19 @@ is
          if Mem_Layout.Use_Large_Pages
            and then Physical_Addr + PDPT_Page_Size <= Physical_End
            and then Physical_Addr mod PDPT_Page_Size = 0
-           and then Virtual_Addr mod PDPT_Page_Size = 0
+           and then Virtual_Addr  mod PDPT_Page_Size = 0
          then
-            Level  := 2;
+            Level  := Mem_Layout.Levels - 2;
             Offset := PDPT_Page_Size;
          elsif Mem_Layout.Use_Large_Pages
            and then Physical_Addr + PD_Page_Size <= Physical_End
            and then Physical_Addr mod PD_Page_Size = 0
-           and then Virtual_Addr mod PD_Page_Size = 0
+           and then Virtual_Addr  mod PD_Page_Size = 0
          then
-            Level  := 3;
+            Level  := Mem_Layout.Levels - 1;
             Offset := PD_Page_Size;
          else
-            Level  := 4;
+            Level  := Mem_Layout.Levels;
             Offset := Page_Size;
          end if;
 

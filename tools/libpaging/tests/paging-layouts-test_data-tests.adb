@@ -425,6 +425,51 @@ package body Paging.Layouts.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure EPT_Generate_Paging_Structures_Three_Levels
+      is
+         Layout : Memory_Layout_Type (Levels => 3);
+      begin
+         Set_Large_Page_Support (Mem_Layout => Layout,
+                                 State      => False);
+         Set_Address (Mem_Layout => Layout,
+                      Address    => 16#001f_4000#);
+
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#4000_0000#,
+            Virtual_Address  => 16#0#,
+            Size             => 16#0020_0000#,
+            Caching          => UC,
+            Writable         => True,
+            Executable       => True);
+
+         Update_References (Mem_Layout => Layout);
+
+         declare
+            use Ada.Streams.Stream_IO;
+
+            File : File_Type;
+         begin
+            Mutools.Files.Open (Filename => "obj/ept_three_levels",
+                                File     => File);
+            Serialize (Stream      => Stream (File => File),
+                       Mem_Layout  => Layout,
+                       Serializers =>
+                         (1 => EPT.Serialize_PDPT'Access,
+                          2 => EPT.Serialize_PD'Access,
+                          3 => EPT.Serialize_PT'Access));
+            Close (File => File);
+         end;
+
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => "data/ept_three_levels.ref",
+                  Filename2 => "obj/ept_three_levels"),
+                 Message   => "Three level EPT paging structures"
+                 & " mismatch");
+      end EPT_Generate_Paging_Structures_Three_Levels;
+
+      ----------------------------------------------------------------------
+
       procedure IA32e_Generate_Paging_Structures
       is
          Layout : Memory_Layout_Type := Null_Layout;
@@ -646,6 +691,7 @@ package body Paging.Layouts.Test_Data.Tests is
    begin
       EPT_Generate_Paging_Structures;
       EPT_Generate_Paging_Structures_No_Large_Pages;
+      EPT_Generate_Paging_Structures_Three_Levels;
       IA32e_Generate_Paging_Structures;
       IA32e_Generate_Multiple_Structures;
       IA32e_Generate_Multiple_PTs;

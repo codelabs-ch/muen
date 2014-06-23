@@ -18,35 +18,10 @@
 
 with Ada.Streams;
 
-with Paging.Tables;
 with Paging.Pagetables;
 
 package Paging.IA32e
 is
-
-   --  A Page Map Level 4 table comprises 512 64-bit entries (PML4Es), see
-   --  Intel SDM Vol. 3A, page 4-22.
-   procedure Serialize
-     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      PML4   : Tables.PML4.Page_Table_Type);
-
-   --  A page directory pointer table comprises 512 64-bit entries (PDPTEs),
-   --  see Intel SDM Vol. 3A, page 4-22.
-   procedure Serialize
-     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      PDPT   : Tables.PDPT.Page_Table_Type);
-
-   --  A page directory comprises 512 64-bit entries (PDEs), see Intel SDM Vol.
-   --  3A, page 4-22.
-   procedure Serialize
-     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      PD     : Tables.PD.Page_Table_Type);
-
-   --  A page table comprises 512 64-bit entries (PDEs), see Intel SDM Vol. 3A,
-   --  page 4-22.
-   procedure Serialize
-     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      PT     : Tables.PT.Page_Table_Type);
 
    --  A Page Map Level 4 table comprises 512 64-bit entries (PML4Es), see
    --  Intel SDM Vol. 3A, page 4-22.

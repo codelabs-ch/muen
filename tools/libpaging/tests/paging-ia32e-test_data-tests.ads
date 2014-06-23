@@ -9,29 +9,17 @@ package Paging.IA32e.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.Paging.IA32e.Test_Data.Test
    with null record;
 
-   procedure Test_Serialize_0929b4 (Gnattest_T : in out Test);
-   --  paging-ia32e.ads:29:4:Serialize
-
-   procedure Test_Serialize_5b10db (Gnattest_T : in out Test);
-   --  paging-ia32e.ads:35:4:Serialize
-
-   procedure Test_Serialize_16bab4 (Gnattest_T : in out Test);
-   --  paging-ia32e.ads:41:4:Serialize
-
-   procedure Test_Serialize_6a5ffb (Gnattest_T : in out Test);
-   --  paging-ia32e.ads:47:4:Serialize
-
    procedure Test_Serialize_PML4_e35f5c (Gnattest_T : in out Test);
-   --  paging-ia32e.ads:53:4:Serialize_PML4
+   --  paging-ia32e.ads:28:4:Serialize_PML4
 
    procedure Test_Serialize_PDPT_a8af06 (Gnattest_T : in out Test);
-   --  paging-ia32e.ads:59:4:Serialize_PDPT
+   --  paging-ia32e.ads:34:4:Serialize_PDPT
 
    procedure Test_Serialize_PD_bcee26 (Gnattest_T : in out Test);
-   --  paging-ia32e.ads:65:4:Serialize_PD
+   --  paging-ia32e.ads:40:4:Serialize_PD
 
    procedure Test_Serialize_PT_7859fb (Gnattest_T : in out Test);
-   --  paging-ia32e.ads:71:4:Serialize_PT
+   --  paging-ia32e.ads:46:4:Serialize_PT
 
 end Paging.IA32e.Test_Data.Tests;
 --  end read only

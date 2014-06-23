@@ -167,6 +167,7 @@
    <file filename="linux_pt" offset="none"/>
   </memory>
  </memory>
+ <deviceDomains/>
  <events>
   <event mode="switch" name="resume_linux"/>
   <event mode="switch" name="trap_to_sm"/>

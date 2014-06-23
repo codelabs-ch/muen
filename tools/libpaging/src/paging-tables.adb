@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package body Paging.Pagetables
+package body Paging.Tables
 is
 
    -------------------------------------------------------------------------
@@ -131,4 +131,4 @@ is
       Table.Data.Iterate (Process => Call_Process'Access);
    end Update;
 
-end Paging.Pagetables;
+end Paging.Tables;

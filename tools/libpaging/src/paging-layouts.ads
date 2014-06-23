@@ -20,7 +20,7 @@ with Interfaces;
 
 with Ada.Streams;
 
-with Paging.Pagetables;
+with Paging.Tables;
 
 private with Paging.Maps;
 
@@ -74,7 +74,7 @@ is
 
    type Table_Serializer is not null access procedure
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Table  : Pagetables.Page_Table_Type);
+      Table  : Tables.Page_Table_Type);
 
    type Serializer_Array is array (Paging_Level range <>) of Table_Serializer;
 
@@ -95,7 +95,7 @@ private
 
    type Memory_Layout_Type (Levels : Paging_Level) is record
       Use_Large_Pages : Boolean := True;
-      Level_1_Table   : Pagetables.Page_Table_Type;
+      Level_1_Table   : Tables.Page_Table_Type;
       Structures      : Tables_Array (2 .. Levels);
    end record;
 

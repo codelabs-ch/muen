@@ -28,7 +28,7 @@ package body Paging.Layouts.Test_Data.Tests is
       Set_Address (Mem_Layout => Layout,
                    Address    => Ref_Addr);
 
-      Assert (Condition => Pagetables.Get_Physical_Address
+      Assert (Condition => Tables.Get_Physical_Address
               (Table => Layout.Level_1_Table) = Ref_Addr,
               Message   => "Layout address mismatch");
 --  begin read only
@@ -51,7 +51,7 @@ package body Paging.Layouts.Test_Data.Tests is
       Ref_Addr : constant Interfaces.Unsigned_64 := 16#fefe_1234_0000#;
       Layout   : Memory_Layout_Type (Levels => 4);
    begin
-      Pagetables.Set_Physical_Address (Table   => Layout.Level_1_Table,
+      Tables.Set_Physical_Address (Table   => Layout.Level_1_Table,
                                        Address => Ref_Addr);
 
       Assert (Condition => Get_Address (Mem_Layout => Layout) = Ref_Addr,
@@ -115,7 +115,7 @@ package body Paging.Layouts.Test_Data.Tests is
             Writable         => True,
             Executable       => False);
 
-         Assert (Condition => Pagetables.Contains
+         Assert (Condition => Tables.Contains
                  (Table => Layout.Level_1_Table,
                   Index => 0),
                  Message   => "Level 1 entry not created");
@@ -152,7 +152,7 @@ package body Paging.Layouts.Test_Data.Tests is
             Writable         => True,
             Executable       => False);
 
-         Assert (Condition => Pagetables.Contains
+         Assert (Condition => Tables.Contains
                  (Table => Layout.Level_1_Table,
                   Index => 0),
                  Message   => "Level 1 entry not created");
@@ -184,7 +184,7 @@ package body Paging.Layouts.Test_Data.Tests is
             Writable         => True,
             Executable       => False);
 
-         Assert (Condition => Pagetables.Contains
+         Assert (Condition => Tables.Contains
                  (Table => Layout.Level_1_Table,
                   Index => 25),
                  Message   => "Level 1 entry not created");

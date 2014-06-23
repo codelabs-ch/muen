@@ -131,7 +131,7 @@ is
 
    procedure Serialize_PD
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Table  : Pagetables.Page_Table_Type)
+      Table  : Tables.Page_Table_Type)
    is
       Raw_Table : Raw_Table_Type := (others => 0);
 
@@ -157,8 +157,8 @@ is
             Memory_Type => TEntry.Get_Caching);
       end Add_To_Raw_Table;
    begin
-      Pagetables.Iterate (Table   => Table,
-                          Process => Add_To_Raw_Table'Access);
+      Tables.Iterate (Table   => Table,
+                      Process => Add_To_Raw_Table'Access);
       Raw_Table_Type'Write (Stream, Raw_Table);
    end Serialize_PD;
 
@@ -166,7 +166,7 @@ is
 
    procedure Serialize_PDPT
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Table  : Pagetables.Page_Table_Type)
+      Table  : Tables.Page_Table_Type)
    is
       Raw_Table : Raw_Table_Type := (others => 0);
 
@@ -192,8 +192,8 @@ is
             Memory_Type => TEntry.Get_Caching);
       end Add_To_Raw_Table;
    begin
-      Pagetables.Iterate (Table   => Table,
-                          Process => Add_To_Raw_Table'Access);
+      Tables.Iterate (Table   => Table,
+                      Process => Add_To_Raw_Table'Access);
       Raw_Table_Type'Write (Stream, Raw_Table);
    end Serialize_PDPT;
 
@@ -201,7 +201,7 @@ is
 
    procedure Serialize_PML4
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Table  : Pagetables.Page_Table_Type)
+      Table  : Tables.Page_Table_Type)
    is
       Raw_Table : Raw_Table_Type := (others => 0);
 
@@ -224,8 +224,8 @@ is
             Executable  => TEntry.Is_Executable);
       end Add_To_Raw_Table;
    begin
-      Pagetables.Iterate (Table   => Table,
-                          Process => Add_To_Raw_Table'Access);
+      Tables.Iterate (Table   => Table,
+                      Process => Add_To_Raw_Table'Access);
       Raw_Table_Type'Write (Stream, Raw_Table);
    end Serialize_PML4;
 
@@ -233,7 +233,7 @@ is
 
    procedure Serialize_PT
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Table  : Pagetables.Page_Table_Type)
+      Table  : Tables.Page_Table_Type)
    is
       Raw_Table : Raw_Table_Type := (others => 0);
 
@@ -259,8 +259,8 @@ is
             Memory_Type => TEntry.Get_Caching);
       end Add_To_Raw_Table;
    begin
-      Pagetables.Iterate (Table   => Table,
-                          Process => Add_To_Raw_Table'Access);
+      Tables.Iterate (Table   => Table,
+                      Process => Add_To_Raw_Table'Access);
       Raw_Table_Type'Write (Stream, Raw_Table);
    end Serialize_PT;
 

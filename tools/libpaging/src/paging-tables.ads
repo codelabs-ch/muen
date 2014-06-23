@@ -22,7 +22,7 @@ private with Ada.Containers.Indefinite_Ordered_Maps;
 
 with Paging.Entries;
 
-package Paging.Pagetables
+package Paging.Tables
 is
 
    type Page_Table_Type is private;
@@ -92,4 +92,4 @@ private
      := (Address => 0,
          Data    => Entries_Map_Package.Empty_Map);
 
-end Paging.Pagetables;
+end Paging.Tables;

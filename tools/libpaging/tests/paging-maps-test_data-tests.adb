@@ -140,8 +140,8 @@ package body Paging.Maps.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Update (Gnattest_T : in out Test);
-   procedure Test_Update_7b49c2 (Gnattest_T : in out Test) renames Test_Update;
---  id:2.2/7b49c2e8c677cb11/Update/1/0/
+   procedure Test_Update_91c512 (Gnattest_T : in out Test) renames Test_Update;
+--  id:2.2/91c512879b519688/Update/1/0/
    procedure Test_Update (Gnattest_T : in out Test) is
    --  paging-maps.ads:59:4:Update
 --  end read only
@@ -156,7 +156,7 @@ package body Paging.Maps.Test_Data.Tests is
 
       procedure Inc_Counter
         (Table_Number :        Table_Range;
-         Table        : in out Pagetables.Page_Table_Type)
+         Table        : in out Tables.Page_Table_Type)
       is
       begin
          Counter := Counter + 1;
@@ -177,8 +177,8 @@ package body Paging.Maps.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Iterate (Gnattest_T : in out Test);
-   procedure Test_Iterate_ffea48 (Gnattest_T : in out Test) renames Test_Iterate;
---  id:2.2/ffea48126aa59663/Iterate/1/0/
+   procedure Test_Iterate_869b21 (Gnattest_T : in out Test) renames Test_Iterate;
+--  id:2.2/869b215615633eeb/Iterate/1/0/
    procedure Test_Iterate (Gnattest_T : in out Test) is
    --  paging-maps.ads:67:4:Iterate
 --  end read only
@@ -193,7 +193,7 @@ package body Paging.Maps.Test_Data.Tests is
 
       procedure Inc_Counter
         (Table_Number : Table_Range;
-         Table        : Pagetables.Page_Table_Type)
+         Table        : Tables.Page_Table_Type)
       is
       begin
          Counter := Counter + 1;

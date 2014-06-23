@@ -96,7 +96,7 @@ is
       return Interfaces.Unsigned_64
    is
    begin
-      return Pagetables.Get_Physical_Address
+      return Tables.Get_Physical_Address
         (Table => Mem_Layout.Level_1_Table);
    end Get_Address;
 
@@ -111,7 +111,7 @@ is
 
       --  There is max. one level 1 table.
 
-      if Pagetables.Count (Table => Mem_Layout.Level_1_Table) > 0 then
+      if Tables.Count (Table => Mem_Layout.Level_1_Table) > 0 then
          Table_Counts (1) := 1;
       else
          Table_Counts (1) := 0;
@@ -140,11 +140,11 @@ is
       Get_Indexes (Address => Virtual_Address,
                    Indexes => Indexes);
 
-      if not Pagetables.Contains
+      if not Tables.Contains
         (Table => Mem_Layout.Level_1_Table,
          Index => Indexes (Indexes'First))
       then
-         Pagetables.Add_Entry
+         Tables.Add_Entry
            (Table => Mem_Layout.Level_1_Table,
             Index => Indexes (Indexes'First),
             E     => Entries.Create
@@ -192,13 +192,13 @@ is
       --  Call serialize procedure for given table.
       procedure Handle_Table
         (Table_Number : Table_Range;
-         Table        : Pagetables.Page_Table_Type);
+         Table        : Tables.Page_Table_Type);
 
       ----------------------------------------------------------------------
 
       procedure Handle_Table
         (Table_Number : Table_Range;
-         Table        : Pagetables.Page_Table_Type)
+         Table        : Tables.Page_Table_Type)
       is
          pragma Unreferenced (Table_Number);
       begin
@@ -206,7 +206,7 @@ is
                                  Table  => Table);
       end Handle_Table;
    begin
-      if Pagetables.Count (Table => Mem_Layout.Level_1_Table) = 0 then
+      if Tables.Count (Table => Mem_Layout.Level_1_Table) = 0 then
          return;
       end if;
 
@@ -227,7 +227,7 @@ is
       Address    :        Interfaces.Unsigned_64)
    is
    begin
-      Pagetables.Set_Physical_Address
+      Tables.Set_Physical_Address
         (Table   => Mem_Layout.Level_1_Table,
          Address => Address);
    end Set_Address;
@@ -248,7 +248,7 @@ is
    is
       use type Interfaces.Unsigned_64;
 
-      Phys_Addr : Interfaces.Unsigned_64 := Pagetables.Get_Physical_Address
+      Phys_Addr : Interfaces.Unsigned_64 := Tables.Get_Physical_Address
         (Table => Mem_Layout.Level_1_Table) + Page_Size;
 
       Cur_Level : Paging_Level;
@@ -262,7 +262,7 @@ is
       --  each table entry that references a higher level table (e.g. PDE->PT).
       procedure Adjust_Tables
         (Table_Number :        Table_Range;
-         Table        : in out Pagetables.Page_Table_Type);
+         Table        : in out Tables.Page_Table_Type);
 
       ----------------------------------------------------------------------
 
@@ -286,7 +286,7 @@ is
 
       procedure Adjust_Tables
         (Table_Number :        Table_Range;
-         Table        : in out Pagetables.Page_Table_Type)
+         Table        : in out Tables.Page_Table_Type)
       is
          pragma Unreferenced (Table_Number);
 
@@ -318,10 +318,10 @@ is
             TEntry.Set_Dst_Address (Address => Address);
          end Adjust_Entry;
       begin
-         Pagetables.Update (Table   => Table,
-                            Process => Adjust_Entry'Access);
-         Pagetables.Set_Physical_Address (Table   => Table,
-                                          Address => Phys_Addr);
+         Tables.Update (Table   => Table,
+                        Process => Adjust_Entry'Access);
+         Tables.Set_Physical_Address (Table   => Table,
+                                      Address => Phys_Addr);
          Phys_Addr := Phys_Addr + Page_Size;
       end Adjust_Tables;
    begin
@@ -330,8 +330,8 @@ is
          Maps.Update (Map     => Mem_Layout.Structures (I),
                       Process => Adjust_Tables'Access);
       end loop;
-      Pagetables.Update (Table   => Mem_Layout.Level_1_Table,
-                         Process => Adjust_Level_1'Access);
+      Tables.Update (Table   => Mem_Layout.Level_1_Table,
+                     Process => Adjust_Level_1'Access);
    end Update_References;
 
 end Paging.Layouts;

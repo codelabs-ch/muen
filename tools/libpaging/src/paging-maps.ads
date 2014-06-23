@@ -21,7 +21,7 @@ with Interfaces;
 private with Ada.Containers.Ordered_Maps;
 
 with Paging.Entries;
-with Paging.Pagetables;
+with Paging.Tables;
 
 package Paging.Maps
 is
@@ -60,7 +60,7 @@ is
      (Map     : in out Page_Table_Map;
       Process : not null access procedure
         (Table_Number :        Table_Range;
-         Table        : in out Pagetables.Page_Table_Type));
+         Table        : in out Tables.Page_Table_Type));
 
    --  Iterate over given page table map and call given process procedure for
    --  each entry.
@@ -68,7 +68,7 @@ is
      (Map     : Page_Table_Map;
       Process : not null access procedure
         (Table_Number : Table_Range;
-         Table        : Pagetables.Page_Table_Type));
+         Table        : Tables.Page_Table_Type));
 
    --  Clear page table map.
    procedure Clear (Map : in out Page_Table_Map);
@@ -77,11 +77,11 @@ is
 
 private
 
-   use type Pagetables.Page_Table_Type;
+   use type Tables.Page_Table_Type;
 
    package Tables_Map_Package is new Ada.Containers.Ordered_Maps
      (Key_Type     => Table_Range,
-      Element_Type => Pagetables.Page_Table_Type);
+      Element_Type => Tables.Page_Table_Type);
 
    type Page_Table_Map is record
       Tables : Tables_Map_Package.Map;

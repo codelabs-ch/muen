@@ -18,7 +18,7 @@
 
 with Ada.Streams;
 
-with Paging.Pagetables;
+with Paging.Tables;
 
 package Paging.EPT
 is
@@ -28,18 +28,18 @@ is
 
    procedure Serialize_PML4
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Table  : Pagetables.Page_Table_Type);
+      Table  : Tables.Page_Table_Type);
 
    procedure Serialize_PDPT
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Table  : Pagetables.Page_Table_Type);
+      Table  : Tables.Page_Table_Type);
 
    procedure Serialize_PD
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Table  : Pagetables.Page_Table_Type);
+      Table  : Tables.Page_Table_Type);
 
    procedure Serialize_PT
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Table  : Pagetables.Page_Table_Type);
+      Table  : Tables.Page_Table_Type);
 
 end Paging.EPT;

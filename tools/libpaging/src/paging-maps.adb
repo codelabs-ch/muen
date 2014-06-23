@@ -32,15 +32,15 @@ is
       --  Add entry to given table.
       procedure Add_Entry
         (Number :        Table_Range;
-         Table  : in out Pagetables.Page_Table_Type);
+         Table  : in out Tables.Page_Table_Type);
 
       procedure Add_Entry
         (Number :        Table_Range;
-         Table  : in out Pagetables.Page_Table_Type)
+         Table  : in out Tables.Page_Table_Type)
       is
          pragma Unreferenced (Number);
       begin
-         Pagetables.Add_Entry (Table => Table,
+         Tables.Add_Entry (Table => Table,
                                Index => Entry_Index,
                                E     => Table_Entry);
       end Add_Entry;
@@ -51,7 +51,7 @@ is
       if Pos = Tables_Map_Package.No_Element then
          Map.Tables.Insert
            (Key      => Table_Number,
-            New_Item => Pagetables.Null_Table,
+            New_Item => Tables.Null_Table,
             Position => Pos,
             Inserted => Ins);
       end if;
@@ -79,7 +79,7 @@ is
    is
    begin
       return Map.Tables.Contains (Key => Table_Number)
-        and then Pagetables.Contains
+        and then Tables.Contains
           (Table => Map.Tables.Element (Key => Table_Number),
            Index => Entry_Index);
    end Contains;
@@ -101,7 +101,7 @@ is
            & " not in map";
       end if;
 
-      return Pagetables.Get_Physical_Address
+      return Tables.Get_Physical_Address
         (Table => Tables_Map_Package.Element (Position => Pos));
    end Get_Table_Address;
 
@@ -111,7 +111,7 @@ is
      (Map     : Page_Table_Map;
       Process : not null access procedure
         (Table_Number : Table_Range;
-         Table        : Pagetables.Page_Table_Type))
+         Table        : Tables.Page_Table_Type))
    is
       --  Process the given page table.
       procedure Call_Process (Pos : Tables_Map_Package.Cursor);
@@ -141,7 +141,7 @@ is
      (Map     : in out Page_Table_Map;
       Process : not null access procedure
         (Table_Number :        Table_Range;
-         Table        : in out Pagetables.Page_Table_Type))
+         Table        : in out Tables.Page_Table_Type))
    is
       --  Process the given page table.
       procedure Call_Process (Pos : Tables_Map_Package.Cursor);

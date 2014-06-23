@@ -22,6 +22,8 @@
 		<memory alignment="16#1000#" name="lnx_console" size="16#1000#" physicalAddress="16#ffff_f000#" caching="WB" type="subject_channel"/>
 	</memory>
 
+	<deviceDomains/>
+
 	<events/>
 
 	<kernel>

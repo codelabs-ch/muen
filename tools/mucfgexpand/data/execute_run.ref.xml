@@ -118,6 +118,7 @@
    <file filename="subject1_pt" offset="none"/>
   </memory>
  </memory>
+ <deviceDomains/>
  <events>
   <event mode="switch" name="trap_to_subject1"/>
   <event mode="ipi" name="data_channel"/>

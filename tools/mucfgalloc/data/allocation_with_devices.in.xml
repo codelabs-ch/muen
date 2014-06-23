@@ -18,6 +18,7 @@
   <memory alignment="16#1000#" caching="WB" name="mem3" size="16#0001_0000#" type="system"/>
   <memory alignment="16#1000#" caching="WB" name="mem4" size="16#0001_0000#" type="system"/>
  </memory>
+ <deviceDomains/>
  <events/>
  <kernel>
   <memory>

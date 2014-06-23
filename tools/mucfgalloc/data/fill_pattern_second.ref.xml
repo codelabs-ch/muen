@@ -22,6 +22,7 @@
    <fill pattern="16#ff#"/>
   </memory>
  </memory>
+ <deviceDomains/>
  <events/>
  <kernel>
   <memory>

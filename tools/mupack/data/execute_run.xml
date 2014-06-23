@@ -23,6 +23,8 @@
 		</memory>
 	</memory>
 
+	<deviceDomains/>
+
 	<events/>
 
 	<kernel>

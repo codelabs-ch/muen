@@ -37,6 +37,7 @@
   <memory alignment="16#1000#" caching="WB" name="kernel_0|vmxon" physicalAddress="16#1000#" size="16#1000#" type="system_vmxon"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_1|vmxon" physicalAddress="16#2000#" size="16#1000#" type="system_vmxon"/>
  </memory>
+ <deviceDomains/>
  <events/>
  <kernel>
   <memory>

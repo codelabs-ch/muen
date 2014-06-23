@@ -15,6 +15,7 @@
   <memory alignment="16#1000#" caching="UC" name="mem4" size="16#0001_0000#" type="system"/>
   <memory alignment="16#1000#" caching="UC" name="mem5" size="16#0001_0000#" type="system"/>
  </memory>
+ <deviceDomains/>
  <events/>
  <kernel>
   <memory>

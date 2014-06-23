@@ -14,6 +14,7 @@
   <memory alignment="16#1000#" caching="UC" name="mem3" physicalAddress="16#0010_9000#" size="16#0010_0000#" type="system"/>
   <memory alignment="16#0020_0000#" caching="UC" name="mem4" physicalAddress="16#0040_0000#" size="16#0000_1000#" type="system"/>
  </memory>
+ <deviceDomains/>
  <events/>
  <kernel>
   <memory>

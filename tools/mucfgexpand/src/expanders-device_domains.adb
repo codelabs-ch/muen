@@ -32,6 +32,8 @@ with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.XML_Utils;
 
+with Expanders.XML_Utils;
+
 package body Expanders.Device_Domains
 is
 
@@ -122,6 +124,8 @@ is
          return;
       end if;
 
+      --  DMAR root table.
+
       Mulog.Log (Msg => "Adding VT-d DMAR root table");
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
@@ -133,6 +137,8 @@ is
          Memory_Type => "system_vtd_root",
          File_Name   => "vtd_root",
          File_Offset => "none");
+
+      --  DMAR context table for each occupied PCI bus.
 
       declare
          PCI_Buses : constant PCI_Bus_Set.Set := Get_Occupied_PCI_Buses
@@ -161,6 +167,51 @@ is
                   File_Offset => "none");
             end;
             PCI_Bus_Set.Next (Position => Curr_Idx);
+         end loop;
+      end;
+
+      --  Second-level address translation tables for each domain.
+
+      declare
+         Domains : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Data.Doc,
+              XPath => "/system/deviceDomains/domain");
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length (List => Domains) - 1 loop
+            declare
+               Domain   : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => Domains,
+                    Index => I);
+               Name     : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Domain,
+                    Name => "name");
+               Size_Str : constant String
+                 := Mutools.Utils.To_Hex
+                   (Number => XML_Utils.Calculate_PT_Size
+                      (Policy             => Data,
+                       Paging_Levels      => 3,
+                       Large_Pages        => False,
+                       Dev_Virt_Mem_XPath => "none",
+                       Virt_Mem_XPath     => "/system/deviceDomains/domain"
+                       & "[@name='" & Name & "']/memory/memory"));
+            begin
+               Mulog.Log (Msg => "Adding VT-d DMAR second-level paging "
+                          & "entries for domain '" & Name & "' with size "
+                          & Size_Str);
+               Mutools.XML_Utils.Add_Memory_Region
+                 (Policy      => Data,
+                  Name        => Name & "|pt",
+                  Address     => "",
+                  Size        => Size_Str,
+                  Caching     => "WB",
+                  Alignment   => "16#1000#",
+                  Memory_Type => "system_pt",
+                  File_Name   => "vtd_" & Name & "_pt",
+                  File_Offset => "none");
+            end;
          end loop;
       end;
    end Add_Tables;

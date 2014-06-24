@@ -381,7 +381,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Physical memory 'linux|ram' referenced by logical "
-                    & "memory 'ram' not found",
+                    & "memory 'linux|ram' not found",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

@@ -25,13 +25,33 @@
    <device name="port80" shared="false">
     <ioPort end="16#0080#" name="ports" start="16#0080#"/>
    </device>
-    <device name="ioapic" shared="false">
+   <device name="ioapic" shared="false">
     <memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>
    </device>
    <device name="xhci" shared="false">
     <pci bus="16#00#" device="16#14#" function="0"/>
     <irq name="irq" number="16"/>
     <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#f80a_0000#" size="16#1000#"/>
+   </device>
+   <device name="ethernet" shared="false">
+    <pci bus="16#00#" device="16#19#" function="0"/>
+    <irq name="irq" number="20"/>
+    <memory caching="UC" name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
+    <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#f80c_8000#" size="16#1000#"/>
+   </device>
+   <device name="wireless" shared="false">
+    <pci bus="16#03#" device="16#00#" function="0"/>
+    <irq name="irq" number="21"/>
+    <memory caching="UC" name="mmio" physicalAddress="16#d1c0_0000#" size="16#2000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#f830_0000#" size="16#1000#"/>
+   </device>
+   <device name="iommu_1" shared="false">
+    <memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
+   </device>
+   <device name="iommu_2" shared="false">
+    <memory caching="UC" name="mmio" physicalAddress="16#fed9_1000#" size="16#1000#"/>
    </device>
   </devices>
  </platform>
@@ -166,8 +186,27 @@
   <memory alignment="16#1000#" caching="WB" name="linux|pt" physicalAddress="16#0011_2000#" size="16#7000#" type="system_pt">
    <file filename="linux_pt" offset="none"/>
   </memory>
+  <memory alignment="16#1000#" caching="UC" name="wireless|dma" physicalAddress="16#cafe_1000#" size="16#1000#" type="subject"/>
  </memory>
- <deviceDomains/>
+ <deviceDomains>
+  <domain id="1" name="linux_domain">
+   <memory>
+    <memory executable="false" logical="linux|ram" physical="linux|ram" virtualAddress="16#00a0_0000#" writable="true"/>
+   </memory>
+   <devices>
+    <device logical="xhci" physical="xhci"/>
+    <device logical="ethernet" physical="ethernet"/>
+   </devices>
+  </domain>
+  <domain id="2" name="wireless_domain">
+   <memory>
+    <memory executable="false" logical="dma" physical="wireless|dma" virtualAddress="16#0020_0000#" writable="true"/>
+   </memory>
+   <devices>
+    <device logical="wireless" physical="wireless"/>
+   </devices>
+  </domain>
+ </deviceDomains>
  <events>
   <event mode="switch" name="resume_linux"/>
   <event mode="switch" name="trap_to_sm"/>
@@ -220,6 +259,12 @@
   <devices>
    <device logical="ioapic" physical="ioapic">
     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#001f_c000#" writable="true"/>
+   </device>
+   <device logical="iommu_1" physical="iommu_1">
+    <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#001f_d000#" writable="true"/>
+   </device>
+   <device logical="iommu_2" physical="iommu_2">
+    <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#001f_e000#" writable="true"/>
    </device>
   </devices>
  </kernel>
@@ -589,6 +634,11 @@
      <irq logical="kbd_irq" physical="kbd_irq" vector="49"/>
      <ioPort logical="port_60" physical="port_60"/>
      <ioPort logical="port_64" physical="port_64"/>
+    </device>
+    <device logical="wireless" physical="wireless">
+     <irq logical="wlan_irq" physical="irq" vector="57"/>
+     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d1c0_0000#" writable="true"/>
+     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f830_0000#" writable="true"/>
     </device>
    </devices>
    <events>
@@ -1188,6 +1238,17 @@
     </device>
     <device logical="cmos_rtc" physical="cmos_rtc">
      <ioPort logical="ports" physical="ports"/>
+    </device>
+    <device logical="xhci" physical="xhci">
+     <irq logical="xhci_irq" physical="irq" vector="55"/>
+     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
+     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80a_0000#" writable="true"/>
+    </device>
+    <device logical="eth0" physical="ethernet">
+     <irq logical="eth0_irq" physical="irq" vector="59"/>
+     <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d250_0000#" writable="true"/>
+     <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d253_b000#" writable="true"/>
+     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80c_8000#" writable="true"/>
     </device>
    </devices>
    <events>

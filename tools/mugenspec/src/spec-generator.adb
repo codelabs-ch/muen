@@ -357,6 +357,11 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
+   --  Write IOMMU-related policy file to specified output directory.
+   procedure Write_IOMMU
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type);
+
    --  Write kernel-related policy files to specified output directory.
    procedure Write_Kernel
      (Output_Dir : String;
@@ -421,6 +426,8 @@ is
                     Policy     => Policy);
       Write_Hardware (Output_Dir => Output_Dir,
                       Policy     => Policy);
+      Write_IOMMU (Output_Dir => Output_Dir,
+                   Policy     => Policy);
    end Write;
 
    -------------------------------------------------------------------------
@@ -671,6 +678,68 @@ is
       Templates.Write (Template => Tmpl,
                        Filename => Output_Dir & "/skp-interrupts.ads");
    end Write_Interrupts;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_IOMMU
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type)
+   is
+      Filename    : constant String := Output_Dir & "/skp-iommu.ads";
+      Root_Addr   : constant String
+        := Muxml.Utils.Get_Attribute
+          (Doc   => Policy.Doc,
+           XPath => "/system/memory/memory[@type='system_vtd_root']",
+           Name  => "physicalAddress");
+      IOMMUs      : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/kernel/devices/device["
+           & "starts-with(string(@physical),'iommu')]/memory");
+      IOMMU_Count : constant Natural := DOM.Core.Nodes.Length (List => IOMMUs);
+      Buffer      : Unbounded_String;
+      Tmpl        : Templates.Template_Type;
+   begin
+      Tmpl := Templates.Create (Content => String_Templates.skp_iommu_ads);
+
+      for I in 1 .. IOMMU_Count loop
+         declare
+            IOMMU_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => IOMMUs,
+                                      Index => I - 1);
+            IOMMU_Addr : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => IOMMU_Node,
+                 Name => "virtualAddress");
+         begin
+            Buffer := Buffer & Indent (N => 2) & I'Img
+              & " => " & IOMMU_Addr;
+
+            if I /= IOMMU_Count then
+               Buffer := Buffer & "," & ASCII.LF;
+            end if;
+         end;
+      end loop;
+
+      Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__root_table_addr__",
+         Content  => (if Root_Addr'Length > 0 then Root_Addr else "0"));
+      Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__iommu_device_range__",
+         Content  => "1 .." & IOMMU_Count'Img);
+      Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__iommu_devices__",
+         Content  => (if Length (Buffer) > 0 then To_String (Buffer)
+                      else Indent (N => 2) & " others => 0"));
+
+      Mulog.Log (Msg => "Writing IOMMU spec to '" & Filename & "'");
+
+      Templates.Write (Template => Tmpl,
+                       Filename => Filename);
+   end Write_IOMMU;
 
    -------------------------------------------------------------------------
 

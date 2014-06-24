@@ -1,0 +1,16 @@
+with SK;
+
+package Skp.IOMMU
+is
+
+   Root_Table_Address : constant := 16#0030_0000#;
+
+   type IOMMU_Device_Range is range 1 .. 2;
+
+   type IOMMU_Device_Array is array (IOMMU_Device_Range) of SK.Word64;
+
+   IOMMUs : constant IOMMU_Device_Array := IOMMU_Device_Array'(
+       1 => 16#001f_d000#,
+       2 => 16#001f_e000#);
+
+end Skp.IOMMU;

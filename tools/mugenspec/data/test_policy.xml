@@ -26,6 +26,12 @@
 				<pci bus="16#04#" device="16#12#" function="5"/>
 				<irq name="pci_irq" number="22"/>
 			</device>
+			<device name="iommu_1" shared="false">
+				<memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
+			</device>
+			<device name="iommu_2" shared="false">
+				<memory caching="UC" name="mmio" physicalAddress="16#fed9_1000#" size="16#1000#"/>
+			</device>
 		</devices>
 	</platform>
 
@@ -98,6 +104,10 @@
 		<memory alignment="16#1000#" name="subject2|msrbm" physicalAddress="16#0092_0000#" size="16#1000#"      caching="WB" type="system_msrbm">
 			<file filename="subject2_msrbm" offset="none"/>
 		</memory>
+
+		<memory alignment="16#1000#" name="vtd_root_table" physicalAddress="16#0030_0000#" size="16#1000#" caching="WB" type="system_vtd_root">
+			<file filename="vtd_root_table" offset="none"/>
+		</memory>
 	</memory>
 
 	<deviceDomains/>
@@ -133,6 +143,12 @@
 			</device>
 			<device logical="ioapic" physical="ioapic">
 				<memory logical="mmio" physical="mmio" writable="true" executable="false" virtualAddress="16#001f_c000#"/>
+			</device>
+			<device logical="iommu_1" physical="iommu_1">
+				<memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#001f_d000#" writable="true"/>
+			</device>
+			<device logical="iommu_2" physical="iommu_2">
+				<memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#001f_e000#" writable="true"/>
 			</device>
 		</devices>
 	</kernel>

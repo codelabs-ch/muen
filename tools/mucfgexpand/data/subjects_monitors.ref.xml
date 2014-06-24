@@ -17,6 +17,12 @@
     <irq name="irq" number="16"/>
     <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
    </device>
+   <device name="nic1" shared="false">
+    <pci bus="16#23#" device="16#19#" function="0"/>
+    <irq name="irq" number="20"/>
+    <memory caching="UC" name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
+    <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
+   </device>
    <device name="iommu_1" shared="false">
     <memory caching="UC" name="mmio" physicalAddress="16#0fed_9000#" size="16#1000#"/>
    </device>
@@ -87,6 +93,13 @@
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
     <memory executable="false" logical="lnx_state" physical="lnx_state" virtualAddress="16#4000#" writable="true"/>
    </memory>
+   <devices>
+    <device logical="nic1" physical="nic1">
+     <irq logical="irq" physical="irq" vector="56"/>
+     <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d252_0000#" writable="true"/>
+     <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d262_0000#" writable="true"/>
+    </device>
+   </devices>
    <events>
     <target>
      <event logical="trap_to_subject1" physical="trap_to_subject1" vector="none"/>

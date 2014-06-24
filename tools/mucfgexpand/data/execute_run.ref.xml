@@ -18,6 +18,13 @@
     <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#f80a_0000#" size="16#1000#"/>
    </device>
+   <device name="nic1" shared="false">
+    <pci bus="16#23#" device="16#19#" function="0"/>
+    <irq name="irq" number="20"/>
+    <memory caching="UC" name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
+    <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
+    <memory caching="UC" name="mmconf" physicalAddress="16#fa3c_8000#" size="16#1000#"/>
+   </device>
    <device name="iommu_1" shared="false">
     <memory caching="UC" name="mmio" physicalAddress="16#0fed_9000#" size="16#1000#"/>
    </device>
@@ -122,7 +129,7 @@
   <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#8000#" type="system_pt">
    <file filename="lnx_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#5000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#9000#" type="system_pt">
    <file filename="subject1_pt" offset="none"/>
   </memory>
  </memory>
@@ -923,7 +930,14 @@
     <memory executable="false" logical="data_channel" physical="data_channel" virtualAddress="16#3000#" writable="true"/>
     <memory executable="false" logical="data_channel2" physical="data_channel2" virtualAddress="16#3000#" writable="true"/>
    </memory>
-   <devices/>
+   <devices>
+    <device logical="nic1" physical="nic1">
+     <irq logical="irq" physical="irq" vector="56"/>
+     <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d252_0000#" writable="true"/>
+     <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d262_0000#" writable="true"/>
+     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#fa3c_8000#" writable="true"/>
+    </device>
+   </devices>
    <events>
     <source>
      <group name="vmcall">

@@ -25,4 +25,7 @@ is
    --  Expand domain IDs (DIDs).
    procedure Add_Domain_IDs (Data : in out Muxml.XML_Data_Type);
 
+   --  Add VT-d tables (root, context and address translation).
+   procedure Add_Tables (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Device_Domains;

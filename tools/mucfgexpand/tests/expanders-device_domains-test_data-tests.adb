@@ -50,4 +50,25 @@ package body Expanders.Device_Domains.Test_Data.Tests is
    end Test_Add_Domain_IDs;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Add_Tables (Gnattest_T : in out Test);
+   procedure Test_Add_Tables_17f65c (Gnattest_T : in out Test) renames Test_Add_Tables;
+--  id:2.2/17f65ca27fa9a88d/Add_Tables/1/0/
+   procedure Test_Add_Tables (Gnattest_T : in out Test) is
+   --  expanders-device_domains.ads:29:4:Add_Tables
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/device_domains_tables.xml",
+         Ref_Filename => "data/device_domains_tables.ref.xml",
+         Pre          => Add_Section_Skeleton'Access,
+         Expander     => Add_Tables'Access);
+--  begin read only
+   end Test_Add_Tables;
+--  end read only
+
 end Expanders.Device_Domains.Test_Data.Tests;

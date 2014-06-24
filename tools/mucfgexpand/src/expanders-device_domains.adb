@@ -26,6 +26,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.XML_Utils;
 
 package body Expanders.Device_Domains
 is
@@ -91,5 +92,33 @@ is
          pragma Unreferenced (DD_Node);
       end if;
    end Add_Section_Skeleton;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Tables (Data : in out Muxml.XML_Data_Type)
+   is
+      IOMMUs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/platform/devices/device[starts-with"
+           & "(string(@name),'iommu')]");
+   begin
+      if DOM.Core.Nodes.Length (List => IOMMUs) = 0 then
+         Mulog.Log (Msg => "No IOMMU device found, not adding VT-d tables");
+         return;
+      end if;
+
+      Mulog.Log (Msg => "Adding VT-d DMAR root table");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Data,
+         Name        => "root|vtd",
+         Address     => "",
+         Size        => "16#1000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "system_vtd_root",
+         File_Name   => "vtd_root",
+         File_Offset => "none");
+   end Add_Tables;
 
 end Expanders.Device_Domains;

@@ -28,6 +28,8 @@
  </platform>
  <memory>
   <memory alignment="16#1000#" caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#" type="subject"/>
+  <memory alignment="16#1000#" caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#" type="subject"/>
+  <memory alignment="16#1000#" caching="UC" name="nic2|dma" physicalAddress="16#3000#" size="16#1000#" type="subject"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_text" physicalAddress="16#0010_0000#" size="16#0001_0000#" type="kernel_binary">
    <file filename="kernel" offset="16#0000#"/>
   </memory>
@@ -124,7 +126,24 @@
    <file filename="subject1_pt" offset="none"/>
   </memory>
  </memory>
- <deviceDomains/>
+ <deviceDomains>
+  <domain name="nic1_domain">
+   <memory>
+    <memory executable="false" logical="dma1" physical="nic1|dma" virtualAddress="16#1000#" writable="true"/>
+   </memory>
+   <devices>
+    <device logical="nic1" physical="nic1"/>
+   </devices>
+  </domain>
+  <domain name="nic2_domain">
+   <memory>
+    <memory executable="false" logical="dma2" physical="nic2|dma" virtualAddress="16#2000#" writable="true"/>
+   </memory>
+   <devices>
+    <device logical="nic2" physical="nic2"/>
+   </devices>
+  </domain>
+ </deviceDomains>
  <events>
   <event mode="switch" name="trap_to_subject1"/>
   <event mode="ipi" name="data_channel"/>

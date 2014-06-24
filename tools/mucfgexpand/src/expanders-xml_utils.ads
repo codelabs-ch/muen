@@ -21,6 +21,7 @@ with Interfaces;
 with DOM.Core;
 
 with Muxml;
+with Paging;
 
 package Expanders.XML_Utils
 is
@@ -53,11 +54,14 @@ is
       return DOM.Core.Node;
 
    --  Returns the size of the paging structures needed to map the virtual
-   --  memory regions given by XPath expressions. Dev_Virt_Mem_XPath identifies
-   --  the virtual device memory regions and Virt_Mem_XPath the virtual memory
+   --  memory regions given by XPath expressions given the specified paging
+   --  levels and large page mappings. Dev_Virt_Mem_XPath identifies the
+   --  virtual device memory regions and Virt_Mem_XPath the virtual memory
    --  mappings.
    function Calculate_PT_Size
      (Policy             : Muxml.XML_Data_Type;
+      Paging_Levels      : Paging.Paging_Level;
+      Large_Pages        : Boolean;
       Dev_Virt_Mem_XPath : String;
       Virt_Mem_XPath     : String)
       return Interfaces.Unsigned_64;

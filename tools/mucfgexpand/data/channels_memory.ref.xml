@@ -28,7 +28,7 @@
  <memory>
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
   <memory caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#"/>
-  <memory caching="UC" name="nic2|dma" physicalAddress="16#3000#" size="16#1000#"/>
+  <memory caching="UC" name="xhci|dma" physicalAddress="16#3000#" size="16#1000#"/>
   <memory alignment="16#1000#" caching="WB" name="data_channel" size="16#1000#" type="subject_channel"/>
   <memory alignment="16#1000#" caching="WB" name="data_channel2" size="16#2000#" type="subject_channel"/>
  </memory>
@@ -41,12 +41,12 @@
     <device logical="nic1" physical="nic1"/>
    </devices>
   </domain>
-  <domain name="nic2_domain">
+  <domain name="xhci_domain">
    <memory>
-    <memory executable="false" logical="dma2" physical="nic2|dma" virtualAddress="16#2000#" writable="true"/>
+    <memory executable="false" logical="dma2" physical="xhci|dma" virtualAddress="16#2000#" writable="true"/>
    </memory>
    <devices>
-    <device logical="nic2" physical="nic2"/>
+    <device logical="xhci" physical="xhci"/>
    </devices>
   </domain>
  </deviceDomains>

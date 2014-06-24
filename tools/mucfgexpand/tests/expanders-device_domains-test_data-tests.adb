@@ -29,4 +29,25 @@ package body Expanders.Device_Domains.Test_Data.Tests is
    end Test_Add_Section_Skeleton;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Add_Domain_IDs (Gnattest_T : in out Test);
+   procedure Test_Add_Domain_IDs_acdb9f (Gnattest_T : in out Test) renames Test_Add_Domain_IDs;
+--  id:2.2/acdb9ff1b910151d/Add_Domain_IDs/1/0/
+   procedure Test_Add_Domain_IDs (Gnattest_T : in out Test) is
+   --  expanders-device_domains.ads:26:4:Add_Domain_IDs
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/device_domains_ids.xml",
+         Ref_Filename => "data/device_domains_ids.ref.xml",
+         Pre          => Add_Section_Skeleton'Access,
+         Expander     => Add_Domain_IDs'Access);
+--  begin read only
+   end Test_Add_Domain_IDs;
+--  end read only
+
 end Expanders.Device_Domains.Test_Data.Tests;

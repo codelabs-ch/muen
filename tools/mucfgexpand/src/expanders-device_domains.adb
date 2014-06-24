@@ -16,13 +16,53 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
+
 with DOM.Core.Nodes;
+with DOM.Core.Elements;
 with DOM.Core.Documents;
 
+with McKae.XML.XPath.XIA;
+
+with Mulog;
 with Muxml.Utils;
 
 package body Expanders.Device_Domains
 is
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Domain_IDs (Data : in out Muxml.XML_Data_Type)
+   is
+      Domains : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/deviceDomains/domain");
+   begin
+      for I in 1 .. DOM.Core.Nodes.Length (List => Domains) loop
+         declare
+            Domain : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Domains,
+                 Index => I - 1);
+            Name   : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Domain,
+                 Name => "name");
+            ID_Str : constant String
+              := Ada.Strings.Fixed.Trim
+                (Source => I'Img,
+                 Side   => Ada.Strings.Left);
+         begin
+            Mulog.Log (Msg => "Setting ID of device security domain '" & Name
+                       & "' to " & ID_Str);
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Domain,
+               Name  => "id",
+               Value => ID_Str);
+         end;
+      end loop;
+   end Add_Domain_IDs;
 
    -------------------------------------------------------------------------
 

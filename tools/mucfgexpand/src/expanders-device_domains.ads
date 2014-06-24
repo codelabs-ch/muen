@@ -22,4 +22,7 @@ is
    --  Add section skeleton.
    procedure Add_Section_Skeleton (Data : in out Muxml.XML_Data_Type);
 
+   --  Expand domain IDs (DIDs).
+   procedure Add_Domain_IDs (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Device_Domains;

@@ -18,6 +18,12 @@
     <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
     <memory caching="UC" name="mmconf" physicalAddress="16#f80a_0000#" size="16#1000#"/>
    </device>
+   <device name="iommu_1" shared="false">
+    <memory caching="UC" name="mmio" physicalAddress="16#0fed_9000#" size="16#1000#"/>
+   </device>
+   <device name="iommu_2" shared="false">
+    <memory caching="UC" name="mmio" physicalAddress="16#0fed_9100#" size="16#1000#"/>
+   </device>
   </devices>
  </platform>
  <memory>

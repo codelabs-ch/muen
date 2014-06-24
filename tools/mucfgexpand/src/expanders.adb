@@ -101,6 +101,7 @@ is
 
       Procs.Register (Process => Device_Domains.Add_Section_Skeleton'Access);
       Procs.Register (Process => Device_Domains.Add_Domain_IDs'Access);
+      Procs.Register (Process => Device_Domains.Add_Tables'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

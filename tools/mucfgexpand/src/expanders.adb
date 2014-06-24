@@ -100,6 +100,7 @@ is
       Procs.Register (Process => Memory.Add_Subject_PTs'Access);
 
       Procs.Register (Process => Device_Domains.Add_Section_Skeleton'Access);
+      Procs.Register (Process => Device_Domains.Add_Domain_IDs'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

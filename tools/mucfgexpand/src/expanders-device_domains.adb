@@ -19,6 +19,8 @@
 with Ada.Strings.Fixed;
 with Ada.Containers.Ordered_Sets;
 
+with Interfaces;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
@@ -27,6 +29,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Utils;
 with Mutools.XML_Utils;
 
 package body Expanders.Device_Domains
@@ -130,6 +133,36 @@ is
          Memory_Type => "system_vtd_root",
          File_Name   => "vtd_root",
          File_Offset => "none");
+
+      declare
+         PCI_Buses : constant PCI_Bus_Set.Set := Get_Occupied_PCI_Buses
+           (Data => Data);
+         Curr_Idx  : PCI_Bus_Set.Cursor       := PCI_Buses.First;
+         Curr_Bus  : PCI_Bus_Range;
+      begin
+         while PCI_Bus_Set.Has_Element (Position => Curr_Idx) loop
+            Curr_Bus := PCI_Bus_Set.Element (Position => Curr_Idx);
+            declare
+               Curr_Bus_Hx : constant String := Mutools.Utils.To_Hex
+                 (Number    => Interfaces.Unsigned_64 (Curr_Bus),
+                  Normalize => False);
+            begin
+               Mulog.Log (Msg => "Adding VT-d DMAR context table for PCI bus "
+                          & "16#" & Curr_Bus_Hx & "#");
+               Mutools.XML_Utils.Add_Memory_Region
+                 (Policy      => Data,
+                  Name        => "context_" & Curr_Bus_Hx,
+                  Address     => "",
+                  Size        => "16#1000#",
+                  Caching     => "WB",
+                  Alignment   => "16#1000#",
+                  Memory_Type => "system_vtd_context",
+                  File_Name   => "vtd_context_bus_" & Curr_Bus_Hx,
+                  File_Offset => "none");
+            end;
+            PCI_Bus_Set.Next (Position => Curr_Idx);
+         end loop;
+      end;
    end Add_Tables;
 
    -------------------------------------------------------------------------

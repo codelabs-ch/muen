@@ -33,8 +33,8 @@
  </platform>
  <memory>
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
-  <memory caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#"/>
-  <memory caching="UC" name="xhci|dma" physicalAddress="16#3000#" size="16#1000#"/>
+  <memory alignment="16#1000#" caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#"/>
+  <memory alignment="16#1000#" caching="UC" name="xhci|dma" physicalAddress="16#3000#" size="16#1000#"/>
   <memory alignment="16#1000#" caching="WB" name="lnx|initramfs" size="16#0030_0000#" type="subject_initrd">
    <file filename="initramfs.cpio.gz" offset="none"/>
   </memory>

@@ -5,6 +5,10 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Directories;
+
+with Test_Utils;
+
 package VTd.Generator.Test_Data is
 
 --  begin read only

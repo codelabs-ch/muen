@@ -43,13 +43,16 @@ is
 
    function Calculate_PT_Size
      (Policy             : Muxml.XML_Data_Type;
+      Paging_Levels      : Paging.Paging_Level;
+      Large_Pages        : Boolean;
       Dev_Virt_Mem_XPath : String;
       Virt_Mem_XPath     : String)
       return Interfaces.Unsigned_64
    is
       use type DOM.Core.Node;
 
-      Layout       : Paging.Layouts.Memory_Layout_Type (Levels => 4);
+      Layout       : Paging.Layouts.Memory_Layout_Type
+        (Levels => Paging_Levels);
       Device_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -59,6 +62,9 @@ is
           (N     => Policy.Doc,
            XPath => Virt_Mem_XPath);
    begin
+      Paging.Layouts.Set_Large_Page_Support (Mem_Layout => Layout,
+                                             State      => Large_Pages);
+
       for I in 0 .. DOM.Core.Nodes.Length (List => Memory_Nodes) - 1 loop
          declare
             Logical : constant DOM.Core.Node

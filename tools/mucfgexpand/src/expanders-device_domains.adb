@@ -17,6 +17,7 @@
 --
 
 with Ada.Strings.Fixed;
+with Ada.Containers.Ordered_Sets;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
@@ -30,6 +31,16 @@ with Mutools.XML_Utils;
 
 package body Expanders.Device_Domains
 is
+
+   type PCI_Bus_Range is range 0 .. 255;
+
+   package PCI_Bus_Set is new Ada.Containers.Ordered_Sets
+     (Element_Type => PCI_Bus_Range);
+
+   --  Return set of occupied PCI bus numbers for given system policy.
+   function Get_Occupied_PCI_Buses
+     (Data : Muxml.XML_Data_Type)
+      return PCI_Bus_Set.Set;
 
    -------------------------------------------------------------------------
 
@@ -120,5 +131,36 @@ is
          File_Name   => "vtd_root",
          File_Offset => "none");
    end Add_Tables;
+
+   -------------------------------------------------------------------------
+
+   function Get_Occupied_PCI_Buses
+     (Data : Muxml.XML_Data_Type)
+      return PCI_Bus_Set.Set
+   is
+      Buses  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/platform/devices/device/pci/@bus");
+      Result : PCI_Bus_Set.Set;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Buses) - 1 loop
+         declare
+            Bus : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Buses,
+                 Index => I);
+         begin
+            Result.Insert
+              (New_Item => PCI_Bus_Range'Value
+                 (DOM.Core.Nodes.Node_Value (N => Bus)));
+
+         exception
+            when Constraint_Error => null;
+         end;
+      end loop;
+
+      return Result;
+   end Get_Occupied_PCI_Buses;
 
 end Expanders.Device_Domains;

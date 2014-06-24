@@ -24,6 +24,7 @@ package body Expanders.Device_Domains.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/device_domains_skeleton.xml",
          Ref_Filename => "data/device_domains_skeleton.ref.xml",
+         Pre          => Remove_Device_Domains'Access,
          Expander     => Add_Section_Skeleton'Access);
 --  begin read only
    end Test_Add_Section_Skeleton;

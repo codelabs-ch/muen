@@ -127,7 +127,7 @@
   </memory>
  </memory>
  <deviceDomains>
-  <domain name="nic1_domain">
+  <domain id="1" name="nic1_domain">
    <memory>
     <memory executable="false" logical="dma1" physical="nic1|dma" virtualAddress="16#1000#" writable="true"/>
    </memory>
@@ -135,7 +135,7 @@
     <device logical="nic1" physical="nic1"/>
    </devices>
   </domain>
-  <domain name="nic2_domain">
+  <domain id="2" name="nic2_domain">
    <memory>
     <memory executable="false" logical="dma2" physical="nic2|dma" virtualAddress="16#2000#" writable="true"/>
    </memory>

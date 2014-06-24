@@ -20,12 +20,29 @@ package body VTd.Generator.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Policy : Muxml.XML_Data_Type;
+
+      Lnx_Dom_Pt : constant String := "obj/lnx_domain_pt";
+      Net_Dom_Pt : constant String := "obj/net_domain_pt";
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Write (Output_Dir => "obj",
+             Policy     => Policy);
 
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/lnx_domain_pt.ref",
+               Filename2 => Lnx_Dom_Pt),
+              Message   => "Lnx device domain paging structures mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/net_domain_pt.ref",
+               Filename2 => Net_Dom_Pt),
+              Message   => "Net device domain paging structures mismatch");
+
+      Ada.Directories.Delete_File (Name => Lnx_Dom_Pt);
+      Ada.Directories.Delete_File (Name => Net_Dom_Pt);
 --  begin read only
    end Test_Write;
 --  end read only

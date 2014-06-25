@@ -92,4 +92,52 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
    end Test_IOMMU_Presence;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Domain_Memory_Overlap (Gnattest_T : in out Test);
+   procedure Test_Domain_Memory_Overlap_99bf8c (Gnattest_T : in out Test) renames Test_Domain_Memory_Overlap;
+--  id:2.2/99bf8c89fba72094/Domain_Memory_Overlap/1/0/
+   procedure Test_Domain_Memory_Overlap (Gnattest_T : in out Test) is
+   --  mucfgcheck-device_domains.ads:31:4:Domain_Memory_Overlap
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      declare
+         Mem_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/deviceDomains/domain[@name='linux_domain']"
+            & "/memory");
+      begin
+         Muxml.Utils.Append_Child
+           (Node      => Mem_Node,
+            New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+              (Policy        => Data,
+               Logical_Name  => "dma",
+               Physical_Name => "kernel_data",
+               Address       => "16#00a0_1000#",
+               Writable      => True,
+               Executable    => False));
+
+         Domain_Memory_Overlap (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Overlap of domain memory region 'linux|ram' and 'dma'"
+                    & " of device domain 'linux_domain'",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Domain_Memory_Overlap;
+--  end read only
+
 end Mucfgcheck.Device_Domains.Test_Data.Tests;

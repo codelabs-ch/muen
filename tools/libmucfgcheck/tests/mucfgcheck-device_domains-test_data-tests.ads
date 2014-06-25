@@ -15,5 +15,8 @@ package Mucfgcheck.Device_Domains.Test_Data.Tests is
    procedure Test_IOMMU_Presence_6c934e (Gnattest_T : in out Test);
    --  mucfgcheck-device_domains.ads:28:4:IOMMU_Presence
 
+   procedure Test_Domain_Memory_Overlap_99bf8c (Gnattest_T : in out Test);
+   --  mucfgcheck-device_domains.ads:31:4:Domain_Memory_Overlap
+
 end Mucfgcheck.Device_Domains.Test_Data.Tests;
 --  end read only

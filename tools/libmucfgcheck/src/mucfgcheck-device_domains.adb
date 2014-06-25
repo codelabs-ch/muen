@@ -78,6 +78,51 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Domain_Memory_Overlap (XML_Data : Muxml.XML_Data_Type)
+   is
+      Domains : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/deviceDomains/domain");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Domains) - 1 loop
+         declare
+            Domain   : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Domains,
+                 Index => I);
+            Dom_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Domain,
+                 Name => "name");
+            Memory   : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Domain,
+                 XPath => "memory/memory");
+         begin
+            if DOM.Core.Nodes.Length (List => Memory) > 1 then
+               for J in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
+                  Set_Size
+                    (Virtual_Mem_Node => DOM.Core.Nodes.Item
+                       (List  => Memory,
+                        Index => J),
+                     Ref_Nodes_Path   => "/system/memory/memory",
+                     XML_Data         => XML_Data);
+               end loop;
+
+               Check_Memory_Overlap
+                 (Nodes        => Memory,
+                  Region_Type  => "domain memory region",
+                  Address_Attr => "virtualAddress",
+                  Name_Attr    => "logical",
+                  Add_Msg      => " of device domain '" & Dom_Name & "'");
+            end if;
+         end;
+      end loop;
+   end Domain_Memory_Overlap;
+
+   -------------------------------------------------------------------------
+
    procedure IOMMU_Presence (XML_Data : Muxml.XML_Data_Type)
    is
       Domains   : constant DOM.Core.Node_List

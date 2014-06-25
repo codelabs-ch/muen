@@ -176,11 +176,63 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Create_Virtual_Memory_Node (Gnattest_T : in out Test);
+   procedure Test_Create_Virtual_Memory_Node_b6e99c (Gnattest_T : in out Test) renames Test_Create_Virtual_Memory_Node;
+--  id:2.2/b6e99c7daf116e37/Create_Virtual_Memory_Node/1/0/
+   procedure Test_Create_Virtual_Memory_Node (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:63:4:Create_Virtual_Memory_Node
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Dom_Impl : DOM.Core.DOM_Implementation;
+      Policy   : Muxml.XML_Data_Type;
+      Node     : DOM.Core.Node;
+      Logical  : constant String := "testl";
+      Physical : constant String := "testp";
+      Address  : constant String := "16#2000#";
+   begin
+      Policy.Doc := DOM.Core.Create_Document (Implementation => Dom_Impl);
+
+      Node := Create_Virtual_Memory_Node
+        (Policy        => Policy,
+         Logical_Name  => Logical,
+         Physical_Name => Physical,
+         Address       => Address,
+         Writable      => True,
+         Executable    => False);
+
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "logical") = Logical,
+              Message   => "Logical name mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "physical") = "testp",
+              Message   => "Physical name mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "virtualAddress") = Address,
+              Message   => "Address mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "writable") = "true",
+              Message   => "Writable mismatch");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => "executable") = "false",
+              Message   => "Executable mismatch");
+--  begin read only
+   end Test_Create_Virtual_Memory_Node;
+--  end read only
+
+
+--  begin read only
    procedure Test_Has_Managed_DEBUGCTL (Gnattest_T : in out Test);
    procedure Test_Has_Managed_DEBUGCTL_07c840 (Gnattest_T : in out Test) renames Test_Has_Managed_DEBUGCTL;
 --  id:2.2/07c840ea4cf93188/Has_Managed_DEBUGCTL/1/0/
    procedure Test_Has_Managed_DEBUGCTL (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:64:4:Has_Managed_DEBUGCTL
+   --  mutools-xml_utils.ads:74:4:Has_Managed_DEBUGCTL
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -223,7 +275,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Has_Managed_PERFGLOBALCTRL_811a8a (Gnattest_T : in out Test) renames Test_Has_Managed_PERFGLOBALCTRL;
 --  id:2.2/811a8a093040ed89/Has_Managed_PERFGLOBALCTRL/1/0/
    procedure Test_Has_Managed_PERFGLOBALCTRL (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:68:4:Has_Managed_PERFGLOBALCTRL
+   --  mutools-xml_utils.ads:78:4:Has_Managed_PERFGLOBALCTRL
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -260,7 +312,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Has_Managed_PAT_0e0b54 (Gnattest_T : in out Test) renames Test_Has_Managed_PAT;
 --  id:2.2/0e0b54fd46c7da60/Has_Managed_PAT/1/0/
    procedure Test_Has_Managed_PAT (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:74:4:Has_Managed_PAT
+   --  mutools-xml_utils.ads:84:4:Has_Managed_PAT
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -303,7 +355,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Has_Managed_EFER_29e528 (Gnattest_T : in out Test) renames Test_Has_Managed_EFER;
 --  id:2.2/29e528793cfc9400/Has_Managed_EFER/1/0/
    procedure Test_Has_Managed_EFER (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:78:4:Has_Managed_EFER
+   --  mutools-xml_utils.ads:88:4:Has_Managed_EFER
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -346,7 +398,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Calculate_MSR_Count_5d62ce (Gnattest_T : in out Test) renames Test_Calculate_MSR_Count;
 --  id:2.2/5d62ce190007559a/Calculate_MSR_Count/1/0/
    procedure Test_Calculate_MSR_Count (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:83:4:Calculate_MSR_Count
+   --  mutools-xml_utils.ads:93:4:Calculate_MSR_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -423,7 +475,7 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Occupied_PCI_Buses_0b9ce6 (Gnattest_T : in out Test) renames Test_Get_Occupied_PCI_Buses;
 --  id:2.2/0b9ce63ef86880a3/Get_Occupied_PCI_Buses/1/0/
    procedure Test_Get_Occupied_PCI_Buses (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:97:4:Get_Occupied_PCI_Buses
+   --  mutools-xml_utils.ads:107:4:Get_Occupied_PCI_Buses
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

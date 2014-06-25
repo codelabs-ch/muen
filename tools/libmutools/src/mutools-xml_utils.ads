@@ -59,6 +59,16 @@ is
       Memory_Type :        String)
       return DOM.Core.Node;
 
+   --  Create virtual memory node with given parameters.
+   function Create_Virtual_Memory_Node
+     (Policy        : in out Muxml.XML_Data_Type;
+      Logical_Name  :        String;
+      Physical_Name :        String;
+      Address       :        String;
+      Writable      :        Boolean;
+      Executable    :        Boolean)
+      return DOM.Core.Node;
+
    --  Returns True if the given VMX controls specify that the DEBUGCTL MSR is
    --  saved/loaded automatically on VM-exits and entries.
    function Has_Managed_DEBUGCTL (Controls : DOM.Core.Node) return Boolean;

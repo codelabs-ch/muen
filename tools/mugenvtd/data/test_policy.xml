@@ -11,6 +11,9 @@
 				<memory name="region2" physicalAddress="16#000b_a000#" size="16#1000#" caching="WC"/>
 				<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
 			</device>
+			<device name="iommu_1" shared="false">
+				<memory caching="UC" name="mmio" physicalAddress="16#0fed_9000#" size="16#1000#"/>
+			</device>
 			<device name="xhci" shared="false">
 				<pci bus="16#00#" device="16#14#" function="0"/>
 				<irq name="irq" number="16"/>

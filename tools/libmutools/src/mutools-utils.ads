@@ -44,10 +44,12 @@ is
 
    --  Return hexadecimal representation of given number. If Normalize is True,
    --  the returned string includes the base (16#..#) and consist of blocks of
-   --  0000 separated by '_'.
+   --  0000 separated by '_'. If Byte_Short is True, numbers smaller or equal
+   --  255 are represented by blocks of 00.
    function To_Hex
-     (Number    : Interfaces.Unsigned_64;
-      Normalize : Boolean := True)
+     (Number     : Interfaces.Unsigned_64;
+      Normalize  : Boolean := True;
+      Byte_Short : Boolean := False)
       return String;
 
    --  Extract entity name from given encoded string (e.g. 'linux|zp' or

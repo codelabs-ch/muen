@@ -18,14 +18,14 @@ package Mutools.Utils.Test_Data.Tests is
    procedure Test_Bit_Clear_ad7498 (Gnattest_T : in out Test);
    --  mutools-utils.ads:40:4:Bit_Clear
 
-   procedure Test_To_Hex_2377b9 (Gnattest_T : in out Test);
-   --  mutools-utils.ads:48:4:To_Hex
+   procedure Test_To_Hex_cea88e (Gnattest_T : in out Test);
+   --  mutools-utils.ads:49:4:To_Hex
 
    procedure Test_Decode_Entity_Name_ec79f4 (Gnattest_T : in out Test);
-   --  mutools-utils.ads:55:4:Decode_Entity_Name
+   --  mutools-utils.ads:57:4:Decode_Entity_Name
 
    procedure Test_Is_Managed_By_VMX_d49f3b (Gnattest_T : in out Test);
-   --  mutools-utils.ads:60:4:Is_Managed_By_VMX
+   --  mutools-utils.ads:62:4:Is_Managed_By_VMX
 
 end Mutools.Utils.Test_Data.Tests;
 --  end read only

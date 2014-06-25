@@ -333,7 +333,8 @@ is
         := DOM.Core.Elements.Get_Attribute
           (Elem => Muxml.Utils.Get_Element
              (Doc   => Policy.Doc,
-              XPath => "/system/memory/memory/file[@filename='vtd_root']"),
+              XPath => "/system/memory/memory[@type='system_vtd_root']/file"
+              & "[@filename='vtd_root']"),
            Name => "filename");
    begin
       while MX.PCI_Bus_Set.Has_Element (Position => Ctx_Pos) loop
@@ -352,8 +353,8 @@ is
             Mem_Node  : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Policy.Doc,
-                 XPath => "/system/memory/memory/file[@filename='"
-                 & Filename & "']/..");
+                 XPath => "/system/memory/memory[@type='system_vtd_context']"
+                 & "/file[@filename='" & Filename & "']/..");
             Ctx_Addr  : constant Tables.Table_Pointer_Type
               := Tables.Table_Pointer_Type'Value
                 (DOM.Core.Elements.Get_Attribute

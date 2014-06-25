@@ -24,5 +24,8 @@ package Mucfgcheck.Device_Domains.Test_Data.Tests is
    procedure Test_Memory_Mapping_Address_Equality_7d613d (Gnattest_T : in out Test);
    --  mucfgcheck-device_domains.ads:38:4:Memory_Mapping_Address_Equality
 
+   procedure Test_PCI_Device_Domain_Assignment_1d4add (Gnattest_T : in out Test);
+   --  mucfgcheck-device_domains.ads:42:4:PCI_Device_Domain_Assignment
+
 end Mucfgcheck.Device_Domains.Test_Data.Tests;
 --  end read only

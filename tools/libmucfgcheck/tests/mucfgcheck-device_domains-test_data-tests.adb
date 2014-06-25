@@ -221,4 +221,44 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
    end Test_Memory_Mapping_Address_Equality;
 --  end read only
 
+
+--  begin read only
+   procedure Test_PCI_Device_Domain_Assignment (Gnattest_T : in out Test);
+   procedure Test_PCI_Device_Domain_Assignment_1d4add (Gnattest_T : in out Test) renames Test_PCI_Device_Domain_Assignment;
+--  id:2.2/1d4addf6fc1debab/PCI_Device_Domain_Assignment/1/0/
+   procedure Test_PCI_Device_Domain_Assignment (Gnattest_T : in out Test) is
+   --  mucfgcheck-device_domains.ads:42:4:PCI_Device_Domain_Assignment
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/deviceDomains/domain/devices/device"
+         & "[@physical='ethernet']",
+         Name  => "physical",
+         Value => "nonexistent");
+
+      begin
+         PCI_Device_Domain_Assignment (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "PCI device 'ethernet' referenced by subject 'linux' is"
+                    & " not assigned to any device domain",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_PCI_Device_Domain_Assignment;
+--  end read only
+
 end Mucfgcheck.Device_Domains.Test_Data.Tests;

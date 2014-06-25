@@ -37,4 +37,8 @@ is
    --  virtual address.
    procedure Memory_Mapping_Address_Equality (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that each PCI device referenced by a subject is assigned to a
+   --  device domain.
+   procedure PCI_Device_Domain_Assignment (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Device_Domains;

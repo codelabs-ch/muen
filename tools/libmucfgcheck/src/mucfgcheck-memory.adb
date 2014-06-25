@@ -881,6 +881,23 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VTd_Context_Region_Size (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/memory/memory[@type='system_vtd_context']");
+   begin
+      Check_Attribute (Nodes     => Nodes,
+                       Node_Type => "VT-d context table",
+                       Attr      => "size",
+                       Name_Attr => "name",
+                       Test      => Equals'Access,
+                       Right     => Mutools.Constants.Page_Size,
+                       Error_Msg => "not 4K");
+   end VTd_Context_Region_Size;
+
+   -------------------------------------------------------------------------
+
    procedure VTd_Root_Region_Size (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query

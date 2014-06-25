@@ -1011,4 +1011,42 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    end Test_VTd_Root_Region_Size;
 --  end read only
 
+
+--  begin read only
+   procedure Test_VTd_Context_Region_Size (Gnattest_T : in out Test);
+   procedure Test_VTd_Context_Region_Size_4d6204 (Gnattest_T : in out Test) renames Test_VTd_Context_Region_Size;
+--  id:2.2/4d620465079ba6ad/VTd_Context_Region_Size/1/0/
+   procedure Test_VTd_Context_Region_Size (Gnattest_T : in out Test) is
+   --  mucfgcheck-memory.ads:95:4:VTd_Context_Region_Size
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='context_3']",
+         Name  => "size",
+         Value => "16#002a#");
+
+      begin
+         VTd_Context_Region_Size (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Attribute 'size => 16#002a#' of 'context_3' VT-d "
+                    & "context table element not 4K",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_VTd_Context_Region_Size;
+--  end read only
+
 end Mucfgcheck.Memory.Test_Data.Tests;

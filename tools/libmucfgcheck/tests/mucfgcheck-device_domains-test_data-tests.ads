@@ -12,5 +12,8 @@ package Mucfgcheck.Device_Domains.Test_Data.Tests is
    procedure Test_Device_Reference_Uniqueness_a4b310 (Gnattest_T : in out Test);
    --  mucfgcheck-device_domains.ads:25:4:Device_Reference_Uniqueness
 
+   procedure Test_IOMMU_Presence_6c934e (Gnattest_T : in out Test);
+   --  mucfgcheck-device_domains.ads:28:4:IOMMU_Presence
+
 end Mucfgcheck.Device_Domains.Test_Data.Tests;
 --  end read only

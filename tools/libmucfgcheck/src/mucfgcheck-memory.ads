@@ -88,4 +88,7 @@ is
    --  Validate system memory mappings.
    procedure System_Memory_Mappings (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate size of VT-d root table region.
+   procedure VTd_Root_Region_Size (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Memory;

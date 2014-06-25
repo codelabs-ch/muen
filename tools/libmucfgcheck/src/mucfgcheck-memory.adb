@@ -879,4 +879,21 @@ is
                        Error_Msg => "not 4K");
    end VMXON_Region_Size;
 
+   -------------------------------------------------------------------------
+
+   procedure VTd_Root_Region_Size (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/memory/memory[@type='system_vtd_root']");
+   begin
+      Check_Attribute (Nodes     => Nodes,
+                       Node_Type => "VT-d root table",
+                       Attr      => "size",
+                       Name_Attr => "name",
+                       Test      => Equals'Access,
+                       Right     => Mutools.Constants.Page_Size,
+                       Error_Msg => "not 4K");
+   end VTd_Root_Region_Size;
+
 end Mucfgcheck.Memory;

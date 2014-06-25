@@ -187,6 +187,15 @@
    <file filename="linux_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="UC" name="wireless|dma" physicalAddress="16#cafe_1000#" size="16#1000#" type="subject"/>
+  <memory alignment="16#1000#" caching="WB" name="root|vtd" physicalAddress="16#cafe_2000#" size="16#1000#" type="system_vtd_root">
+   <file filename="vtd_root" offset="none"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="context_0" physicalAddress="16#cafe_3000#" size="16#1000#" type="system_vtd_context">
+   <file filename="vtd_context_bus_0" offset="none"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="context_3" physicalAddress="16#cafe_4000#" size="16#1000#" type="system_vtd_context">
+   <file filename="vtd_context_bus_3" offset="none"/>
+  </memory>
  </memory>
  <deviceDomains>
   <domain id="1" name="linux_domain">

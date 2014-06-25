@@ -21,5 +21,8 @@ package Mucfgcheck.Device_Domains.Test_Data.Tests is
    procedure Test_Memory_Reference_Uniqueness_8ea57c (Gnattest_T : in out Test);
    --  mucfgcheck-device_domains.ads:34:4:Memory_Reference_Uniqueness
 
+   procedure Test_Memory_Mapping_Address_Equality_7d613d (Gnattest_T : in out Test);
+   --  mucfgcheck-device_domains.ads:38:4:Memory_Mapping_Address_Equality
+
 end Mucfgcheck.Device_Domains.Test_Data.Tests;
 --  end read only

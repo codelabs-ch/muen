@@ -33,4 +33,8 @@ is
    --  Validate that domain memory references are unique.
    procedure Memory_Reference_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that domain memory referenced by subjects is mapped at the same
+   --  virtual address.
+   procedure Memory_Mapping_Address_Equality (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Device_Domains;

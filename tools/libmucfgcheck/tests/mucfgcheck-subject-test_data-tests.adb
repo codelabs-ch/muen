@@ -95,7 +95,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-       Data : Muxml.XML_Data_Type;
+      Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,

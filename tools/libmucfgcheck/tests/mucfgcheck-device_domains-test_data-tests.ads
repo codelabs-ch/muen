@@ -18,5 +18,8 @@ package Mucfgcheck.Device_Domains.Test_Data.Tests is
    procedure Test_Domain_Memory_Overlap_99bf8c (Gnattest_T : in out Test);
    --  mucfgcheck-device_domains.ads:31:4:Domain_Memory_Overlap
 
+   procedure Test_Memory_Reference_Uniqueness_8ea57c (Gnattest_T : in out Test);
+   --  mucfgcheck-device_domains.ads:34:4:Memory_Reference_Uniqueness
+
 end Mucfgcheck.Device_Domains.Test_Data.Tests;
 --  end read only

@@ -30,4 +30,7 @@ is
    --  Validate that no virtual memory regions of a domain overlap.
    procedure Domain_Memory_Overlap (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that domain memory references are unique.
+   procedure Memory_Reference_Uniqueness (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Device_Domains;

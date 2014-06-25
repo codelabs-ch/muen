@@ -5,6 +5,10 @@
 
 with AUnit.Test_Fixtures;
 
+with DOM.Core.Documents;
+
+with Muxml.Utils;
+
 with Test_Utils.Expander;
 
 package Expanders.Device_Domains.Test_Data is
@@ -16,5 +20,9 @@ package Expanders.Device_Domains.Test_Data is
 
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
+
+   --  Remove device domains from policy.
+   procedure Remove_Device_Domains
+     (Data : in out Muxml.XML_Data_Type);
 
 end Expanders.Device_Domains.Test_Data;

@@ -15,5 +15,8 @@ package Expanders.Device_Domains.Test_Data.Tests is
    procedure Test_Add_Domain_IDs_acdb9f (Gnattest_T : in out Test);
    --  expanders-device_domains.ads:26:4:Add_Domain_IDs
 
+   procedure Test_Add_Tables_17f65c (Gnattest_T : in out Test);
+   --  expanders-device_domains.ads:29:4:Add_Tables
+
 end Expanders.Device_Domains.Test_Data.Tests;
 --  end read only

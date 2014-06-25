@@ -17,7 +17,6 @@
 --
 
 with Ada.Strings.Fixed;
-with Ada.Containers.Ordered_Sets;
 
 with Interfaces;
 
@@ -36,16 +35,6 @@ with Expanders.XML_Utils;
 
 package body Expanders.Device_Domains
 is
-
-   type PCI_Bus_Range is range 0 .. 255;
-
-   package PCI_Bus_Set is new Ada.Containers.Ordered_Sets
-     (Element_Type => PCI_Bus_Range);
-
-   --  Return set of occupied PCI bus numbers for given system policy.
-   function Get_Occupied_PCI_Buses
-     (Data : Muxml.XML_Data_Type)
-      return PCI_Bus_Set.Set;
 
    -------------------------------------------------------------------------
 
@@ -141,13 +130,16 @@ is
       --  DMAR context table for each occupied PCI bus.
 
       declare
-         PCI_Buses : constant PCI_Bus_Set.Set := Get_Occupied_PCI_Buses
-           (Data => Data);
-         Curr_Idx  : PCI_Bus_Set.Cursor       := PCI_Buses.First;
-         Curr_Bus  : PCI_Bus_Range;
+         PCI_Buses : constant Mutools.XML_Utils.PCI_Bus_Set.Set
+           := Mutools.XML_Utils.Get_Occupied_PCI_Buses
+             (Data => Data);
+         Curr_Idx  : Mutools.XML_Utils.PCI_Bus_Set.Cursor := PCI_Buses.First;
+         Curr_Bus  : Mutools.XML_Utils.PCI_Bus_Range;
       begin
-         while PCI_Bus_Set.Has_Element (Position => Curr_Idx) loop
-            Curr_Bus := PCI_Bus_Set.Element (Position => Curr_Idx);
+         while Mutools.XML_Utils.PCI_Bus_Set.Has_Element (Position => Curr_Idx)
+         loop
+            Curr_Bus := Mutools.XML_Utils.PCI_Bus_Set.Element
+              (Position => Curr_Idx);
             declare
                Curr_Bus_Hx : constant String := Mutools.Utils.To_Hex
                  (Number    => Interfaces.Unsigned_64 (Curr_Bus),
@@ -166,7 +158,7 @@ is
                   File_Name   => "vtd_context_bus_" & Curr_Bus_Hx,
                   File_Offset => "none");
             end;
-            PCI_Bus_Set.Next (Position => Curr_Idx);
+            Mutools.XML_Utils.PCI_Bus_Set.Next (Position => Curr_Idx);
          end loop;
       end;
 
@@ -215,36 +207,5 @@ is
          end loop;
       end;
    end Add_Tables;
-
-   -------------------------------------------------------------------------
-
-   function Get_Occupied_PCI_Buses
-     (Data : Muxml.XML_Data_Type)
-      return PCI_Bus_Set.Set
-   is
-      Buses  : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/platform/devices/device/pci/@bus");
-      Result : PCI_Bus_Set.Set;
-   begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Buses) - 1 loop
-         declare
-            Bus : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => Buses,
-                 Index => I);
-         begin
-            Result.Insert
-              (New_Item => PCI_Bus_Range'Value
-                 (DOM.Core.Nodes.Node_Value (N => Bus)));
-
-         exception
-            when Constraint_Error => null;
-         end;
-      end loop;
-
-      return Result;
-   end Get_Occupied_PCI_Buses;
 
 end Expanders.Device_Domains;

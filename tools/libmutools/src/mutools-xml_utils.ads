@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Containers.Ordered_Sets;
+
 with DOM.Core;
 
 with Muxml;
@@ -85,5 +87,15 @@ is
       PERFGLOBALCTRL_Control : Boolean;
       EFER_Control           : Boolean)
       return Natural;
+
+   type PCI_Bus_Range is range 0 .. 255;
+
+   package PCI_Bus_Set is new Ada.Containers.Ordered_Sets
+     (Element_Type => PCI_Bus_Range);
+
+   --  Return set of occupied PCI bus numbers for given system policy.
+   function Get_Occupied_PCI_Buses
+     (Data : Muxml.XML_Data_Type)
+      return PCI_Bus_Set.Set;
 
 end Mutools.XML_Utils;

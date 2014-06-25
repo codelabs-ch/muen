@@ -22,6 +22,8 @@ with DOM.Core.Nodes;
 with DOM.Core.Documents;
 with DOM.Core.Elements;
 
+with McKae.XML.XPath.XIA;
+
 with Muxml.Utils;
 
 with Mutools.Utils;
@@ -199,6 +201,37 @@ is
 
       return Mem_Node;
    end Create_Memory_Node;
+
+   -------------------------------------------------------------------------
+
+   function Get_Occupied_PCI_Buses
+     (Data : Muxml.XML_Data_Type)
+      return PCI_Bus_Set.Set
+   is
+      Buses  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/platform/devices/device/pci/@bus");
+      Result : PCI_Bus_Set.Set;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Buses) - 1 loop
+         declare
+            Bus : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Buses,
+                 Index => I);
+         begin
+            Result.Insert
+              (New_Item => PCI_Bus_Range'Value
+                 (DOM.Core.Nodes.Node_Value (N => Bus)));
+
+         exception
+            when Constraint_Error => null;
+         end;
+      end loop;
+
+      return Result;
+   end Get_Occupied_PCI_Buses;
 
    -------------------------------------------------------------------------
 

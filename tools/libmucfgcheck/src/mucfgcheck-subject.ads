@@ -30,4 +30,7 @@ is
    --  Validate memory types of memory mappings.
    procedure Memory_Types (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that no subject references an IOMMU device.
+   procedure No_IOMMU_Device_References (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Subject;

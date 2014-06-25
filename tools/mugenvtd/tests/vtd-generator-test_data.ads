@@ -7,6 +7,11 @@ with AUnit.Test_Fixtures;
 
 with Ada.Directories;
 
+with DOM.Core.Nodes;
+with DOM.Core.Documents;
+
+with Muxml.Utils;
+
 with Test_Utils;
 
 package VTd.Generator.Test_Data is

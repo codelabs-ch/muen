@@ -100,10 +100,10 @@ package body Mutools.Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_To_Hex (Gnattest_T : in out Test);
-   procedure Test_To_Hex_2377b9 (Gnattest_T : in out Test) renames Test_To_Hex;
---  id:2.2/2377b95f6282e83d/To_Hex/1/0/
+   procedure Test_To_Hex_cea88e (Gnattest_T : in out Test) renames Test_To_Hex;
+--  id:2.2/cea88e075ae00656/To_Hex/1/0/
    procedure Test_To_Hex (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:48:4:To_Hex
+   --  mutools-utils.ads:49:4:To_Hex
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -115,6 +115,7 @@ package body Mutools.Utils.Test_Data.Tests is
       Norm_Last  : constant String := "16#ffff_ffff_ffff_ffff#";
       Norm_Num   : constant String := "16#dead_cafe_beef_beef#";
       Norm_Num2  : constant String := "16#00de_adbe_efbe#";
+      Norm_Short : constant String := "16#23#";
       Number     : constant Interfaces.Unsigned_64 := 16#deadcafebeefbeef#;
    begin
       Assert (Condition => To_Hex
@@ -132,19 +133,24 @@ package body Mutools.Utils.Test_Data.Tests is
       Assert (Condition => To_Hex
               (Number    => Interfaces.Unsigned_64'First,
                Normalize => True) = Norm_First,
-              Message => "Normalized Unsigned_64'First hex string mismatch");
+              Message   => "Normalized Unsigned_64'First hex string mismatch");
       Assert (Condition => To_Hex
               (Number    => Interfaces.Unsigned_64'Last,
                Normalize => True) = Norm_Last,
-              Message => "Normalized Unsigned_64'Last hex string mismatch");
+              Message   => "Normalized Unsigned_64'Last hex string mismatch");
       Assert (Condition => To_Hex
               (Number    => Number,
                Normalize => True) = Norm_Num,
-              Message => "Normalized " & Norm_Num & " hex string mismatch");
+              Message   => "Normalized " & Norm_Num & " hex string mismatch");
       Assert (Condition => To_Hex
               (Number    => 16#de_adbe_efbe#,
                Normalize => True) = Norm_Num2,
-              Message => "Normalized " & Norm_Num2 & " hex string mismatch");
+              Message   => "Normalized " & Norm_Num2 & " hex string mismatch");
+      Assert (Condition => To_Hex
+              (Number     => 16#23#,
+               Normalize  => True,
+               Byte_Short => True) = Norm_Short,
+              Message   => "Normalized 16#23# hex string mismatch");
 --  begin read only
    end Test_To_Hex;
 --  end read only
@@ -155,7 +161,7 @@ package body Mutools.Utils.Test_Data.Tests is
    procedure Test_Decode_Entity_Name_ec79f4 (Gnattest_T : in out Test) renames Test_Decode_Entity_Name;
 --  id:2.2/ec79f4ba16a29875/Decode_Entity_Name/1/0/
    procedure Test_Decode_Entity_Name (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:55:4:Decode_Entity_Name
+   --  mutools-utils.ads:57:4:Decode_Entity_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -174,7 +180,7 @@ package body Mutools.Utils.Test_Data.Tests is
    procedure Test_Is_Managed_By_VMX_d49f3b (Gnattest_T : in out Test) renames Test_Is_Managed_By_VMX;
 --  id:2.2/d49f3b4fcfb97944/Is_Managed_By_VMX/1/0/
    procedure Test_Is_Managed_By_VMX (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:60:4:Is_Managed_By_VMX
+   --  mutools-utils.ads:62:4:Is_Managed_By_VMX
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -11,6 +11,9 @@
 				<memory name="region2" physicalAddress="16#000b_a000#" size="16#1000#" caching="WC"/>
 				<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
 			</device>
+			<device name="iommu_1" shared="false">
+				<memory caching="UC" name="mmio" physicalAddress="16#0fed_9000#" size="16#1000#"/>
+			</device>
 			<device name="xhci" shared="false">
 				<pci bus="16#00#" device="16#14#" function="0"/>
 				<irq name="irq" number="16"/>
@@ -18,13 +21,13 @@
 				<memory caching="UC" name="mmconf" physicalAddress="16#f80a_0000#" size="16#1000#"/>
 			</device>
 			<device name="ethernet" shared="false">
-				<pci bus="16#00#" device="16#19#" function="0"/>
+				<pci bus="16#23#" device="16#19#" function="0"/>
 				<irq name="irq" number="20"/>
 				<memory name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#" caching="UC"/>
 				<memory name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#" caching="UC"/>
 			</device>
 			<device name="wireless" shared="false">
-				<pci bus="16#03#" device="16#00#" function="0"/>
+				<pci bus="16#23#" device="16#00#" function="0"/>
 				<irq name="irq" number="21"/>
 				<memory name="mmio" physicalAddress="16#d1c0_0000#" size="16#2000#" caching="UC"/>
 			</device>
@@ -65,6 +68,16 @@
 		<memory alignment="16#1000#" caching="WB" name="lnx|ram" physicalAddress="16#00a0_0000#" size="16#0020_0000#" type="subject"/>
 		<memory alignment="16#1000#" caching="WB" name="nic1|dma" physicalAddress="16#0030_0000#" size="16#1000#" type="subject"/>
 		<memory alignment="16#1000#" caching="WB" name="nic2|dma" physicalAddress="16#0030_1000#" size="16#1000#" type="subject"/>
+
+		<memory alignment="16#1000#" caching="WB" name="root|vtd" physicalAddress="16#001f_5000#" size="16#1000#" type="system_vtd_root">
+			<file filename="vtd_root" offset="none"/>
+		</memory>
+		<memory alignment="16#1000#" caching="WB" name="context_0" physicalAddress="16#001f_6000#" size="16#1000#" type="system_vtd_context">
+			<file filename="vtd_context_bus_0" offset="none"/>
+		</memory>
+		<memory alignment="16#1000#" caching="WB" name="context_23" physicalAddress="16#001f_7000#" size="16#1000#" type="system_vtd_context">
+			<file filename="vtd_context_bus_23" offset="none"/>
+		</memory>
 
 		<memory alignment="16#1000#" name="lnx_domain|pt" physicalAddress="16#001f_8000#" size="16#3000#" caching="WB" type="system_pt">
 			<file filename="lnx_domain_pt" offset="none"/>

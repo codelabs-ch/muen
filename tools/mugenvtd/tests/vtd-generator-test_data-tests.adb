@@ -22,6 +22,9 @@ package body VTd.Generator.Test_Data.Tests is
 
       Policy : Muxml.XML_Data_Type;
 
+      Root_Table : constant String := "obj/vtd_root";
+      Context_0  : constant String := "obj/vtd_context_bus_0";
+      Context_23 : constant String := "obj/vtd_context_bus_23";
       Lnx_Dom_Pt : constant String := "obj/lnx_domain_pt";
       Net_Dom_Pt : constant String := "obj/net_domain_pt";
    begin
@@ -33,6 +36,18 @@ package body VTd.Generator.Test_Data.Tests is
              Policy     => Policy);
 
       Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/vtd_root",
+               Filename2 => Root_Table),
+              Message   => "Root table mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/vtd_context_bus_0",
+               Filename2 => Context_0),
+              Message   => "Context 0 table mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/vtd_context_bus_23",
+               Filename2 => Context_23),
+              Message   => "Context 23 table mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
               (Filename1 => "data/lnx_domain_pt.ref",
                Filename2 => Lnx_Dom_Pt),
               Message   => "Lnx device domain paging structures mismatch");
@@ -41,8 +56,40 @@ package body VTd.Generator.Test_Data.Tests is
                Filename2 => Net_Dom_Pt),
               Message   => "Net device domain paging structures mismatch");
 
+      Ada.Directories.Delete_File (Name => Root_Table);
+      Ada.Directories.Delete_File (Name => Context_0);
+      Ada.Directories.Delete_File (Name => Context_23);
       Ada.Directories.Delete_File (Name => Lnx_Dom_Pt);
       Ada.Directories.Delete_File (Name => Net_Dom_Pt);
+
+      declare
+         Platform : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Policy.Doc,
+              XPath => "/system/platform");
+      begin
+         Muxml.Utils.Remove_Child
+           (Node       => Platform,
+            Child_Name => "devices");
+         Muxml.Utils.Remove_Child
+           (Node       => DOM.Core.Documents.Get_Element (Doc => Policy.Doc),
+            Child_Name => "deviceDomains");
+      end;
+
+      --  No IOMMU and device domains present, no tables must be generated.
+
+      Write (Output_Dir => "obj",
+             Policy     => Policy);
+      Assert (Condition => not Ada.Directories.Exists (Name => Root_Table),
+              Message   => "Root table exists");
+      Assert (Condition => not Ada.Directories.Exists (Name => Context_0),
+              Message   => "Context 0 table exists");
+      Assert (Condition => not Ada.Directories.Exists (Name => Context_23),
+              Message   => "Context 23 table exists");
+      Assert (Condition => not Ada.Directories.Exists (Name => Lnx_Dom_Pt),
+              Message   => "Lnx domain table exists");
+      Assert (Condition => not Ada.Directories.Exists (Name => Net_Dom_Pt),
+              Message   => "Net domain table exists");
 --  begin read only
    end Test_Write;
 --  end read only

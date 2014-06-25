@@ -126,14 +126,16 @@ is
    -------------------------------------------------------------------------
 
    function To_Hex
-     (Number    : Interfaces.Unsigned_64;
-      Normalize : Boolean := True)
+     (Number     : Interfaces.Unsigned_64;
+      Normalize  : Boolean := True;
+      Byte_Short : Boolean := False)
       return String
    is
-      Num_Str : String (1 .. 23);
-      Pos     : Natural := Num_Str'Last;
-      Tmp     : Interfaces.Unsigned_64 := Number;
-      Digit   : Natural := 0;
+      Num_Str  : String (1 .. 23);
+      Pos      : Natural                := Num_Str'Last;
+      Tmp      : Interfaces.Unsigned_64 := Number;
+      Digit    : Natural                := 0;
+      Diggroup : Positive               := 4;
 
       --  Convert given hex digit to character.
       function To_Hex_Digit (N : Interfaces.Unsigned_64) return Character
@@ -148,6 +150,10 @@ is
       end To_Hex_Digit;
    begin
       if Normalize then
+         if Byte_Short and Number <= 16#ff# then
+            Diggroup := 2;
+         end if;
+
          Num_Str (Pos) := '#';
          Pos := Pos - 1;
       end if;
@@ -157,9 +163,9 @@ is
          Tmp   := Tmp / 16;
          Pos   := Pos - 1;
          Digit := Digit + 1;
-         exit when Tmp = 0 and (not Normalize or Digit mod 4 = 0);
+         exit when Tmp = 0 and (not Normalize or Digit mod Diggroup = 0);
 
-         if Normalize and Digit mod 4 = 0 then
+         if Normalize and Digit mod Diggroup = 0 then
             Num_Str (Pos) := '_';
             Pos := Pos - 1;
          end if;

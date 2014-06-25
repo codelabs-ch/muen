@@ -26,16 +26,6 @@ with Paging;
 package Expanders.XML_Utils
 is
 
-   --  Create virtual memory node with given parameters.
-   function Create_Virtual_Memory_Node
-     (Policy        : in out Muxml.XML_Data_Type;
-      Logical_Name  :        String;
-      Physical_Name :        String;
-      Address       :        String;
-      Writable      :        Boolean;
-      Executable    :        Boolean)
-      return DOM.Core.Node;
-
    --  Create subject source event node with given parameters.
    function Create_Source_Event_Node
      (Policy        : in out Muxml.XML_Data_Type;

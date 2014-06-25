@@ -328,43 +328,4 @@ is
       return Event_Node;
    end Create_Target_Event_Node;
 
-   -------------------------------------------------------------------------
-
-   function Create_Virtual_Memory_Node
-     (Policy        : in out Muxml.XML_Data_Type;
-      Logical_Name  :        String;
-      Physical_Name :        String;
-      Address       :        String;
-      Writable      :        Boolean;
-      Executable    :        Boolean)
-      return DOM.Core.Node
-   is
-      Mem_Node : constant DOM.Core.Node := DOM.Core.Documents.Create_Element
-        (Doc      => Policy.Doc,
-         Tag_Name => "memory");
-   begin
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Mem_Node,
-         Name  => "logical",
-         Value => Logical_Name);
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Mem_Node,
-         Name  => "physical",
-         Value => Physical_Name);
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Mem_Node,
-         Name  => "virtualAddress",
-         Value => Address);
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Mem_Node,
-         Name  => "writable",
-         Value => (if Writable then "true" else "false"));
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Mem_Node,
-         Name  => "executable",
-         Value => (if Executable then "true" else "false"));
-
-      return Mem_Node;
-   end Create_Virtual_Memory_Node;
-
 end Expanders.XML_Utils;

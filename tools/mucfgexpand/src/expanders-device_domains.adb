@@ -194,18 +194,19 @@ is
                     Dev_Virt_Mem_XPath => "none",
                     Virt_Mem_XPath     => "/system/deviceDomains/domain"
                     & "[@name='" & Name & "']/memory/memory"));
+            Descr    : constant String := "vtd_" & Name & "_pt";
          begin
             Mulog.Log (Msg => "Adding VT-d DMAR second-level paging entries "
                        & "for domain '" & Name & "' with size " & Size_Str);
             Mutools.XML_Utils.Add_Memory_Region
               (Policy      => Data,
-               Name        => Name & "|pt",
+               Name        => Descr,
                Address     => "",
                Size        => Size_Str,
                Caching     => "WB",
                Alignment   => "16#1000#",
                Memory_Type => "system_pt",
-               File_Name   => "vtd_" & Name & "_pt",
+               File_Name   => Descr,
                File_Offset => "none");
          end;
       end loop;

@@ -30,5 +30,8 @@ package Mucfgcheck.Device_Domains.Test_Data.Tests is
    procedure Test_Domain_Memory_Type_4a5128 (Gnattest_T : in out Test);
    --  mucfgcheck-device_domains.ads:45:4:Domain_Memory_Type
 
+   procedure Test_PCI_Device_References_76ba6c (Gnattest_T : in out Test);
+   --  mucfgcheck-device_domains.ads:48:4:PCI_Device_References
+
 end Mucfgcheck.Device_Domains.Test_Data.Tests;
 --  end read only

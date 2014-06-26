@@ -44,4 +44,7 @@ is
    --  Validate memory type of physical memory referenced by domains.
    procedure Domain_Memory_Type (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that each device referenced by a device domain is a PCI device.
+   procedure PCI_Device_References (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Device_Domains;

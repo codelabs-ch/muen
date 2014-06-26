@@ -300,4 +300,44 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
    end Test_Domain_Memory_Type;
 --  end read only
 
+
+--  begin read only
+   procedure Test_PCI_Device_References (Gnattest_T : in out Test);
+   procedure Test_PCI_Device_References_76ba6c (Gnattest_T : in out Test) renames Test_PCI_Device_References;
+--  id:2.2/76ba6cac9424ec00/PCI_Device_References/1/0/
+   procedure Test_PCI_Device_References (Gnattest_T : in out Test) is
+   --  mucfgcheck-device_domains.ads:48:4:PCI_Device_References
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/deviceDomains/domain/devices/"
+         & "device[@physical='xhci']",
+         Name  => "physical",
+         Value => "keyboard");
+
+      begin
+         PCI_Device_References (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Physical device 'keyboard' referenced by device domain "
+                    & "'linux_domain' is not a PCI device",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_PCI_Device_References;
+--  end read only
+
 end Mucfgcheck.Device_Domains.Test_Data.Tests;

@@ -372,4 +372,55 @@ is
       end if;
    end PCI_Device_Domain_Assignment;
 
+   -------------------------------------------------------------------------
+
+   procedure PCI_Device_References (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant  DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/deviceDomains/domain/devices/device");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
+   begin
+      Mulog.Log (Msg => "Checking type of" & Count'Img
+                 & " security domain device reference(s)");
+
+      for I in 0 .. Count - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Dev_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Dev_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Dev_Node,
+                 Name => "physical");
+            Phys_Dev : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => XML_Data.Doc,
+                 XPath => "/system/platform/devices/device[@name='" & Dev_Name
+                 & "']");
+            PCI_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Phys_Dev,
+                 XPath => "pci");
+         begin
+            if PCI_Node = null then
+               declare
+                  Dom_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Muxml.Utils.Ancestor_Node (Node  => Dev_Node,
+                                                          Level => 2),
+                       Name => "name");
+               begin
+                  raise Validation_Error with "Physical device '" & Dev_Name
+                    & "' referenced by device domain '" & Dom_Name  & "' is "
+                    & "not a PCI device";
+               end;
+            end if;
+         end;
+      end loop;
+   end PCI_Device_References;
+
 end Mucfgcheck.Device_Domains;

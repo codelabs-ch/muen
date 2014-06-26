@@ -26,6 +26,7 @@ with Mucfgcheck.Kernel;
 with Mucfgcheck.Subject;
 with Mucfgcheck.Platform;
 with Mucfgcheck.Events;
+with Mucfgcheck.Device_Domains;
 
 with Validate.XML_Processors;
 
@@ -85,6 +86,12 @@ is
         (Process => Memory.Kernel_Memory_Mappings'Access);
       XML_Processors.Register
         (Process => Memory.System_Memory_Mappings'Access);
+      XML_Processors.Register
+        (Process => Memory.VTd_Root_Region_Presence'Access);
+      XML_Processors.Register
+        (Process => Memory.VTd_Root_Region_Size'Access);
+      XML_Processors.Register
+        (Process => Memory.VTd_Context_Region_Size'Access);
       XML_Processors.Register
         (Process => MSR.Start_Smaller_End'Access);
       XML_Processors.Register
@@ -149,6 +156,26 @@ is
         (Process => Platform.Memory_Block_Overlap'Access);
       XML_Processors.Register
         (Process => Platform.PCI_Config_Space_Address'Access);
+      XML_Processors.Register
+        (Process => Device_Domains.Device_Reference_Uniqueness'Access);
+      XML_Processors.Register
+        (Process => Device_Domains.IOMMU_Presence'Access);
+      XML_Processors.Register
+        (Process => Device_Domains.Domain_Memory_Overlap'Access);
+      XML_Processors.Register
+        (Process => Device_Domains.Memory_Reference_Uniqueness'Access);
+      XML_Processors.Register
+        (Process => Device_Domains.Memory_Mapping_Address_Equality'Access);
+      XML_Processors.Register
+        (Process => Device_Domains.PCI_Device_Domain_Assignment'Access);
+      XML_Processors.Register
+        (Process => Device_Domains.Domain_Memory_Type'Access);
+      XML_Processors.Register
+        (Process => Device_Domains.PCI_Device_References'Access);
+      XML_Processors.Register
+        (Process => Device_Domains.Domain_PT_Region_Presence'Access);
+      XML_Processors.Register
+        (Process => Device_Domains.PCI_Bus_Context_Region_Presence'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

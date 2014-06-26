@@ -202,6 +202,8 @@ is
       Check_Procs.Register
         (Process => Mucfgcheck.Device.Device_Memory_References'Access);
       Check_Procs.Register
+        (Process => Mucfgcheck.Device.PCI_Device_BDF_Uniqueness'Access);
+      Check_Procs.Register
         (Process => Mucfgcheck.Platform.PCI_Config_Space_Address'Access);
 
       Check_Procs.Register (Process => Tau0_Presence_In_Scheduling'Access);

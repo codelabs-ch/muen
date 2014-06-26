@@ -118,7 +118,7 @@ is
       Mulog.Log (Msg => "Adding VT-d DMAR root table");
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
-         Name        => "root|vtd",
+         Name        => "vtd_root",
          Address     => "",
          Size        => "16#1000#",
          Caching     => "WB",
@@ -149,7 +149,7 @@ is
                           & "16#" & Curr_Bus_Hx & "#");
                Mutools.XML_Utils.Add_Memory_Region
                  (Policy      => Data,
-                  Name        => "context_" & Curr_Bus_Hx,
+                  Name        => "vtd_context_" & Curr_Bus_Hx,
                   Address     => "",
                   Size        => "16#1000#",
                   Caching     => "WB",

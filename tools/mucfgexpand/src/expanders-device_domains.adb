@@ -102,11 +102,15 @@ is
 
    procedure Add_Tables (Data : in out Muxml.XML_Data_Type)
    is
-      IOMMUs : constant DOM.Core.Node_List
+      IOMMUs  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/platform/devices/device[starts-with"
            & "(string(@name),'iommu')]");
+      Domains : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/deviceDomains/domain");
    begin
       if DOM.Core.Nodes.Length (List => IOMMUs) = 0 then
          Mulog.Log (Msg => "No IOMMU device found, not adding VT-d tables");
@@ -118,7 +122,7 @@ is
       Mulog.Log (Msg => "Adding VT-d DMAR root table");
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
-         Name        => "root|vtd",
+         Name        => "vtd_root",
          Address     => "",
          Size        => "16#1000#",
          Caching     => "WB",
@@ -126,6 +130,13 @@ is
          Memory_Type => "system_vtd_root",
          File_Name   => "vtd_root",
          File_Offset => "none");
+
+      --  Do not expand regions used for context and address translation tables
+      --  if no device domains are specified in the policy.
+
+      if DOM.Core.Nodes.Length (List => Domains) = 0 then
+         return;
+      end if;
 
       --  DMAR context table for each occupied PCI bus.
 
@@ -149,7 +160,7 @@ is
                           & "16#" & Curr_Bus_Hx & "#");
                Mutools.XML_Utils.Add_Memory_Region
                  (Policy      => Data,
-                  Name        => "context_" & Curr_Bus_Hx,
+                  Name        => "vtd_context_" & Curr_Bus_Hx,
                   Address     => "",
                   Size        => "16#1000#",
                   Caching     => "WB",
@@ -164,48 +175,41 @@ is
 
       --  Second-level address translation tables for each domain.
 
-      declare
-         Domains : constant DOM.Core.Node_List
-           := McKae.XML.XPath.XIA.XPath_Query
-             (N     => Data.Doc,
-              XPath => "/system/deviceDomains/domain");
-      begin
-         for I in 0 .. DOM.Core.Nodes.Length (List => Domains) - 1 loop
-            declare
-               Domain   : constant DOM.Core.Node
-                 := DOM.Core.Nodes.Item
-                   (List  => Domains,
-                    Index => I);
-               Name     : constant String
-                 := DOM.Core.Elements.Get_Attribute
-                   (Elem => Domain,
-                    Name => "name");
-               Size_Str : constant String
-                 := Mutools.Utils.To_Hex
-                   (Number => XML_Utils.Calculate_PT_Size
-                      (Policy             => Data,
-                       Paging_Levels      => 3,
-                       Large_Pages        => False,
-                       Dev_Virt_Mem_XPath => "none",
-                       Virt_Mem_XPath     => "/system/deviceDomains/domain"
-                       & "[@name='" & Name & "']/memory/memory"));
-            begin
-               Mulog.Log (Msg => "Adding VT-d DMAR second-level paging "
-                          & "entries for domain '" & Name & "' with size "
-                          & Size_Str);
-               Mutools.XML_Utils.Add_Memory_Region
-                 (Policy      => Data,
-                  Name        => Name & "|pt",
-                  Address     => "",
-                  Size        => Size_Str,
-                  Caching     => "WB",
-                  Alignment   => "16#1000#",
-                  Memory_Type => "system_pt",
-                  File_Name   => "vtd_" & Name & "_pt",
-                  File_Offset => "none");
-            end;
-         end loop;
-      end;
+      for I in 0 .. DOM.Core.Nodes.Length (List => Domains) - 1 loop
+         declare
+            Domain   : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Domains,
+                 Index => I);
+            Name     : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Domain,
+                 Name => "name");
+            Size_Str : constant String
+              := Mutools.Utils.To_Hex
+                (Number => XML_Utils.Calculate_PT_Size
+                   (Policy             => Data,
+                    Paging_Levels      => 3,
+                    Large_Pages        => False,
+                    Dev_Virt_Mem_XPath => "none",
+                    Virt_Mem_XPath     => "/system/deviceDomains/domain"
+                    & "[@name='" & Name & "']/memory/memory"));
+            Descr    : constant String := "vtd_" & Name & "_pt";
+         begin
+            Mulog.Log (Msg => "Adding VT-d DMAR second-level paging entries "
+                       & "for domain '" & Name & "' with size " & Size_Str);
+            Mutools.XML_Utils.Add_Memory_Region
+              (Policy      => Data,
+               Name        => Descr,
+               Address     => "",
+               Size        => Size_Str,
+               Caching     => "WB",
+               Alignment   => "16#1000#",
+               Memory_Type => "system_pt",
+               File_Name   => Descr,
+               File_Offset => "none");
+         end;
+      end loop;
    end Add_Tables;
 
 end Expanders.Device_Domains;

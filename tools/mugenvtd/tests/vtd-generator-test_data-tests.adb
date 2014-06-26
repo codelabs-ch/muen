@@ -62,6 +62,28 @@ package body VTd.Generator.Test_Data.Tests is
       Ada.Directories.Delete_File (Name => Lnx_Dom_Pt);
       Ada.Directories.Delete_File (Name => Net_Dom_Pt);
 
+      Muxml.Utils.Remove_Child
+        (Node       => DOM.Core.Documents.Get_Element (Doc => Policy.Doc),
+         Child_Name => "deviceDomains");
+
+      --  No device domains present, no context tables and paging structures
+      --  must be generated.
+
+      Write (Output_Dir => "obj",
+             Policy     => Policy);
+      Assert (Condition => Ada.Directories.Exists (Name => Root_Table),
+              Message   => "Root table does not exist");
+      Assert (Condition => not Ada.Directories.Exists (Name => Context_0),
+              Message   => "Context 0 table exists (1)");
+      Assert (Condition => not Ada.Directories.Exists (Name => Context_23),
+              Message   => "Context 23 table exists (1)");
+      Assert (Condition => not Ada.Directories.Exists (Name => Lnx_Dom_Pt),
+              Message   => "Lnx domain table exists (1)");
+      Assert (Condition => not Ada.Directories.Exists (Name => Net_Dom_Pt),
+              Message   => "Net domain table exists (1)");
+
+      Ada.Directories.Delete_File (Name => Root_Table);
+
       declare
          Platform : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
@@ -71,9 +93,6 @@ package body VTd.Generator.Test_Data.Tests is
          Muxml.Utils.Remove_Child
            (Node       => Platform,
             Child_Name => "devices");
-         Muxml.Utils.Remove_Child
-           (Node       => DOM.Core.Documents.Get_Element (Doc => Policy.Doc),
-            Child_Name => "deviceDomains");
       end;
 
       --  No IOMMU and device domains present, no tables must be generated.
@@ -83,13 +102,13 @@ package body VTd.Generator.Test_Data.Tests is
       Assert (Condition => not Ada.Directories.Exists (Name => Root_Table),
               Message   => "Root table exists");
       Assert (Condition => not Ada.Directories.Exists (Name => Context_0),
-              Message   => "Context 0 table exists");
+              Message   => "Context 0 table exists (2)");
       Assert (Condition => not Ada.Directories.Exists (Name => Context_23),
-              Message   => "Context 23 table exists");
+              Message   => "Context 23 table exists (2)");
       Assert (Condition => not Ada.Directories.Exists (Name => Lnx_Dom_Pt),
-              Message   => "Lnx domain table exists");
+              Message   => "Lnx domain table exists (2)");
       Assert (Condition => not Ada.Directories.Exists (Name => Net_Dom_Pt),
-              Message   => "Net domain table exists");
+              Message   => "Net domain table exists (2)");
 --  begin read only
    end Test_Write;
 --  end read only

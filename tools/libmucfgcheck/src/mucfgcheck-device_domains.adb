@@ -165,6 +165,44 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Domain_PT_Region_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+      Domains   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/deviceDomains/domain");
+      Dom_Count : constant Natural := DOM.Core.Nodes.Length (List => Domains);
+   begin
+      Mulog.Log (Msg => "Checking presence of" & Dom_Count'Img
+                 & " security domain PT memory region(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Domains) - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Dom_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Domains,
+                                      Index => I);
+            Dom_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Dom_Node,
+                 Name => "name");
+            PT_Node  : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => XML_Data.Doc,
+                 XPath => "/system/memory/memory[@type='system_pt' and "
+                 & "starts-with(@name,'" & Dom_Name & "')]/file");
+         begin
+            if PT_Node = null then
+               raise Validation_Error with "No file-backed PT region for "
+                 & "device domain '" & Dom_Name & "' found";
+            end if;
+         end;
+      end loop;
+   end Domain_PT_Region_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure IOMMU_Presence (XML_Data : Muxml.XML_Data_Type)
    is
       Domains   : constant DOM.Core.Node_List

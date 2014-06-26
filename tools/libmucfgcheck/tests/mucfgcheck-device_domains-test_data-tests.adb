@@ -340,4 +340,43 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
    end Test_PCI_Device_References;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Domain_PT_Region_Presence (Gnattest_T : in out Test);
+   procedure Test_Domain_PT_Region_Presence_393bd6 (Gnattest_T : in out Test) renames Test_Domain_PT_Region_Presence;
+--  id:2.2/393bd68fe235e762/Domain_PT_Region_Presence/1/0/
+   procedure Test_Domain_PT_Region_Presence (Gnattest_T : in out Test) is
+   --  mucfgcheck-device_domains.ads:51:4:Domain_PT_Region_Presence
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/deviceDomains/domain[@name='linux_domain']",
+         Name  => "name",
+         Value => "domain_without_pt");
+
+      begin
+         Domain_PT_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "No file-backed PT region for device domain "
+                    & "'domain_without_pt' found",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Domain_PT_Region_Presence;
+--  end read only
+
 end Mucfgcheck.Device_Domains.Test_Data.Tests;

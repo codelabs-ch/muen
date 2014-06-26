@@ -33,5 +33,8 @@ package Mucfgcheck.Device_Domains.Test_Data.Tests is
    procedure Test_PCI_Device_References_76ba6c (Gnattest_T : in out Test);
    --  mucfgcheck-device_domains.ads:48:4:PCI_Device_References
 
+   procedure Test_Domain_PT_Region_Presence_393bd6 (Gnattest_T : in out Test);
+   --  mucfgcheck-device_domains.ads:51:4:Domain_PT_Region_Presence
+
 end Mucfgcheck.Device_Domains.Test_Data.Tests;
 --  end read only

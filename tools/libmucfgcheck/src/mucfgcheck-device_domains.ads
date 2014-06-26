@@ -47,4 +47,7 @@ is
    --  Validate that each device referenced by a device domain is a PCI device.
    procedure PCI_Device_References (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that each device domain has a physical PT memory region.
+   procedure Domain_PT_Region_Presence (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Device_Domains;

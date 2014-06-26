@@ -1049,4 +1049,41 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    end Test_VTd_Context_Region_Size;
 --  end read only
 
+
+--  begin read only
+   procedure Test_VTd_Root_Region_Presence (Gnattest_T : in out Test);
+   procedure Test_VTd_Root_Region_Presence_b744c5 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Presence;
+--  id:2.2/b744c5d7d5100d62/VTd_Root_Region_Presence/1/0/
+   procedure Test_VTd_Root_Region_Presence (Gnattest_T : in out Test) is
+   --  mucfgcheck-memory.ads:98:4:VTd_Root_Region_Presence
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@type='system_vtd_root']",
+         Name  => "type",
+         Value => "subject");
+
+      begin
+         VTd_Root_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VT-d root table memory region not found",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_VTd_Root_Region_Presence;
+--  end read only
+
 end Mucfgcheck.Memory.Test_Data.Tests;

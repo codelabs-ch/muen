@@ -81,5 +81,8 @@ package Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Context_Region_Size_4d6204 (Gnattest_T : in out Test);
    --  mucfgcheck-memory.ads:95:4:VTd_Context_Region_Size
 
+   procedure Test_VTd_Root_Region_Presence_b744c5 (Gnattest_T : in out Test);
+   --  mucfgcheck-memory.ads:98:4:VTd_Root_Region_Presence
+
 end Mucfgcheck.Memory.Test_Data.Tests;
 --  end read only

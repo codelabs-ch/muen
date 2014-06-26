@@ -898,6 +898,32 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure VTd_Root_Region_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+      Domains : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/deviceDomains/domain");
+   begin
+      if DOM.Core.Nodes.Length (List => Domains) > 0 then
+         Mulog.Log (Msg => "Checking presence of VT-d root table region");
+
+         declare
+            Nodes : constant DOM.Core.Node_List
+              := XPath_Query
+                (N     => XML_Data.Doc,
+                 XPath => "/system/memory/memory[@type='system_vtd_root']"
+                 & "/file");
+         begin
+            if DOM.Core.Nodes.Length (List => Nodes) /= 1 then
+               raise Validation_Error with "VT-d root table memory region not"
+                 & " found";
+            end if;
+         end;
+      end if;
+   end VTd_Root_Region_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure VTd_Root_Region_Size (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query

@@ -23,6 +23,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Types;
 
 package body Mucfgcheck.Device_Domains
 is
@@ -120,6 +121,47 @@ is
          end;
       end loop;
    end Domain_Memory_Overlap;
+
+   -------------------------------------------------------------------------
+
+   procedure Domain_Memory_Type (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/deviceDomains/domain/memory/memory");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
+   begin
+      Mulog.Log (Msg => "Checking memory type of" & Count'Img
+                 & " security domain memory reference(s)");
+      for I in 0 .. Count - 1 loop
+         declare
+            use type Mutools.Types.Memory_Kind;
+
+            Dom_Mem   : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Phys_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Dom_Mem,
+                 Name => "physical");
+            Phys_Mem  : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => XML_Data.Doc,
+                 XPath => "/system/memory/memory[@name='" & Phys_Name & "']");
+            Mem_Type  : constant Mutools.Types.Memory_Kind
+              := Mutools.Types.Memory_Kind'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Phys_Mem,
+                    Name => "type"));
+         begin
+            if Mem_Type /= Mutools.Types.Subject then
+               raise Validation_Error with "Device domain memory '"
+                 & Phys_Name & "' has invalid memory type " & Mem_Type'Img;
+            end if;
+         end;
+      end loop;
+   end Domain_Memory_Type;
 
    -------------------------------------------------------------------------
 

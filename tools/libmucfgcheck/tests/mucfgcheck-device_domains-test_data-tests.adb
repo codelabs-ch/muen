@@ -261,4 +261,43 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
    end Test_PCI_Device_Domain_Assignment;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Domain_Memory_Type (Gnattest_T : in out Test);
+   procedure Test_Domain_Memory_Type_4a5128 (Gnattest_T : in out Test) renames Test_Domain_Memory_Type;
+--  id:2.2/4a5128dd3c649f3f/Domain_Memory_Type/1/0/
+   procedure Test_Domain_Memory_Type (Gnattest_T : in out Test) is
+   --  mucfgcheck-device_domains.ads:45:4:Domain_Memory_Type
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='wireless|dma']",
+         Name  => "type",
+         Value => "system_pt");
+
+      begin
+         Domain_Memory_Type (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Device domain memory 'wireless|dma' has invalid memory"
+                    & " type SYSTEM_PT",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Domain_Memory_Type;
+--  end read only
+
 end Mucfgcheck.Device_Domains.Test_Data.Tests;

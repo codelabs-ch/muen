@@ -41,4 +41,7 @@ is
    --  device domain.
    procedure PCI_Device_Domain_Assignment (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate memory type of physical memory referenced by domains.
+   procedure Domain_Memory_Type (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Device_Domains;

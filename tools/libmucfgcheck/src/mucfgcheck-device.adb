@@ -198,7 +198,8 @@ is
             References : constant DOM.Core.Node_List
               := XPath_Query
                 (N     => XML_Data.Doc,
-                 XPath => "//device[@physical='" & Dev_Name & "']");
+                 XPath => "//devices[parent::subject|parent::kernel]/"
+                 & "device[@physical='" & Dev_Name & "']");
             Ref_Count  : constant Natural := DOM.Core.Nodes.Length
               (List => References);
          begin

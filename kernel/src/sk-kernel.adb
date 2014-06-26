@@ -22,6 +22,7 @@ with SK.KC;
 with SK.Version;
 with SK.System_State;
 with SK.VMX;
+with SK.VTd;
 
 package body SK.Kernel
 is
@@ -76,6 +77,7 @@ is
       if Is_Bsp then
          Interrupts.Disable_Legacy_PIC;
          Interrupts.Setup_IRQ_Routing;
+         VTd.Initialize;
       end if;
 
       System_State.Enable_VMX_Feature;

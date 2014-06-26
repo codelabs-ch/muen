@@ -32,6 +32,10 @@ is
      with
        Size => 1;
 
+   type Bit_2_Type is mod 2 ** 2
+     with
+       Size => 2;
+
    type Bit_4_Type is mod 2 ** 4
      with
        Size => 4;
@@ -43,6 +47,10 @@ is
    type Bit_24_Type is mod 2 ** 24
      with
        Size => 24;
+
+   type Bit_61_Type is mod 2 ** 61
+     with
+       Size => 61;
 
    --  Registers
 
@@ -119,6 +127,21 @@ is
       TES      at 0 range 31 .. 31;
    end record;
 
+   --  Context Command Register (16#0028#)
+   type Reg_Context_Command_Type is record
+      Unused : Bit_61_Type;
+      CIRG   : Bit_2_Type;
+      ICC    : Bit_Type;
+   end record
+     with
+       Size => 64;
+
+   for Reg_Context_Command_Type use record
+      Unused at 0 range  0 .. 60;
+      CIRG   at 0 range 61 .. 62;
+      ICC    at 0 range 63 .. 63;
+   end record;
+
    --  Specified by Skp.IOMMU package (TODO)
 
    IOMMU_Base_Address : constant := 16#001f_d000#;
@@ -134,6 +157,7 @@ is
       Global_Command     : Reg_Global_Command_Type;
       Global_Status      : Reg_Global_Status_Type;
       Root_Table_Address : SK.Word64;
+      Context_Command    : Reg_Context_Command_Type;
    end record;
 
    for IOMMU_Type use record
@@ -144,6 +168,7 @@ is
       Global_Command     at 24 range 0 .. 31;
       Global_Status      at 28 range 0 .. 31;
       Root_Table_Address at 32 range 0 .. 63;
+      Context_Command    at 40 range 0 .. 63;
    end record;
 
    pragma $Build_Warnings (Off, "*padded by * bits");
@@ -191,6 +216,19 @@ is
                Global_Status := IOMMUs (I).Global_Status;
             end loop;
          end Set_Root_Table_Address;
+
+         Invalidate_Context_Cache :
+         declare
+            Context_Command : Reg_Context_Command_Type;
+         begin
+            IOMMUs (I).Context_Command.CIRG := 1;
+            IOMMUs (I).Context_Command.ICC  := 1;
+
+            Context_Command := IOMMUs (I).Context_Command;
+            while Context_Command.ICC = 1 loop
+               Context_Command := IOMMUs (I).Context_Command;
+            end loop;
+         end Invalidate_Context_Cache;
       end loop;
    end Initialize;
 

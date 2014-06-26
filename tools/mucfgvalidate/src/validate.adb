@@ -119,6 +119,8 @@ is
       XML_Processors.Register
         (Process => Device.Device_Sharing'Access);
       XML_Processors.Register
+        (Process => Device.PCI_Device_BDF_Uniqueness'Access);
+      XML_Processors.Register
         (Process => Scheduling.CPU_Element_Count'Access);
       XML_Processors.Register
         (Process => Scheduling.Subject_References'Access);

@@ -379,4 +379,43 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
    end Test_Domain_PT_Region_Presence;
 --  end read only
 
+
+--  begin read only
+   procedure Test_PCI_Bus_Context_Region_Presence (Gnattest_T : in out Test);
+   procedure Test_PCI_Bus_Context_Region_Presence_aa1427 (Gnattest_T : in out Test) renames Test_PCI_Bus_Context_Region_Presence;
+--  id:2.2/aa142726d91f9ac7/PCI_Bus_Context_Region_Presence/1/0/
+   procedure Test_PCI_Bus_Context_Region_Presence (Gnattest_T : in out Test) is
+   --  mucfgcheck-device_domains.ads:54:4:PCI_Bus_Context_Region_Presence
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='context_3']",
+         Name  => "type",
+         Value => "subject");
+
+      begin
+         PCI_Bus_Context_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "No file-backed VT-d context table memory region found "
+                    & "for PCI bus 16#03#",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_PCI_Bus_Context_Region_Presence;
+--  end read only
+
 end Mucfgcheck.Device_Domains.Test_Data.Tests;

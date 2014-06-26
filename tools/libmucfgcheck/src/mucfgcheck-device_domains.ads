@@ -50,4 +50,7 @@ is
    --  Validate that each device domain has a physical PT memory region.
    procedure Domain_PT_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that each PCI bus has a physical VT-d context memory region.
+   procedure PCI_Bus_Context_Region_Presence (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Device_Domains;

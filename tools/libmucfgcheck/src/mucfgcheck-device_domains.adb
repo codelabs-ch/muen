@@ -24,6 +24,7 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Muxml.Utils;
 with Mutools.Types;
+with Mutools.Utils;
 
 package body Mucfgcheck.Device_Domains
 is
@@ -344,6 +345,59 @@ is
       Compare_All (Nodes      => Nodes,
                    Comparator => Check_Inequality'Access);
    end Memory_Reference_Uniqueness;
+
+   -------------------------------------------------------------------------
+
+   procedure PCI_Bus_Context_Region_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+      Devs  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/deviceDomains/domain/devices/device");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Devs);
+   begin
+      if Count > 0 then
+         Mulog.Log (Msg => "Checking presence of VT-d context table memory "
+                    & "region(s)");
+
+         for I in 0 .. Count - 1 loop
+            declare
+               use type DOM.Core.Node;
+
+               Dev_Ref    : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => Devs,
+                                         Index => I);
+               Dev_Name   : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Dev_Ref,
+                    Name => "physical");
+               Bus_Nr     : constant Interfaces.Unsigned_64
+                 := Interfaces.Unsigned_64'Value
+                   (Muxml.Utils.Get_Attribute
+                      (Doc   => XML_Data.Doc,
+                       XPath => "/system/platform/devices/device[@name='"
+                       & Dev_Name & "']/pci",
+                       Name  => "bus"));
+               Bus_Nr_Hex : constant String := Mutools.Utils.To_Hex
+                 (Number    => Bus_Nr,
+                  Normalize => False);
+               Ctx_Node   : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Doc   => XML_Data.Doc,
+                    XPath => "/system/memory/memory"
+                    & "[@type='system_vtd_context']"
+                    & "/file[@filename='vtd_context_bus_" & Bus_Nr_Hex & "']");
+            begin
+               if Ctx_Node = null then
+                  raise Validation_Error with "No file-backed VT-d context "
+                    & "table memory region found for PCI bus "
+                    & Mutools.Utils.To_Hex (Number     => Bus_Nr,
+                                            Byte_Short => True);
+               end if;
+            end;
+         end loop;
+      end if;
+   end PCI_Bus_Context_Region_Presence;
 
    -------------------------------------------------------------------------
 

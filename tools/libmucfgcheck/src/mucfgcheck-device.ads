@@ -54,4 +54,7 @@ is
    --  Validate that only shareable devices have multiple references.
    procedure Device_Sharing (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that PCI device bus, device, function triplets are unique.
+   procedure PCI_Device_BDF_Uniqueness (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Device;

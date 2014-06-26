@@ -464,4 +464,42 @@ package body Mucfgcheck.Device.Test_Data.Tests is
    end Test_Device_Sharing;
 --  end read only
 
+
+--  begin read only
+   procedure Test_PCI_Device_BDF_Uniqueness (Gnattest_T : in out Test);
+   procedure Test_PCI_Device_BDF_Uniqueness_bef97c (Gnattest_T : in out Test) renames Test_PCI_Device_BDF_Uniqueness;
+--  id:2.2/bef97c6f1475ed8d/PCI_Device_BDF_Uniqueness/1/0/
+   procedure Test_PCI_Device_BDF_Uniqueness (Gnattest_T : in out Test) is
+   --  mucfgcheck-device.ads:58:4:PCI_Device_BDF_Uniqueness
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/platform/devices/device/pci[@device='16#19#']",
+         Name  => "device",
+         Value => "16#14#");
+
+      begin
+         PCI_Device_BDF_Uniqueness (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "PCI devices 'xhci' and 'ethernet' have identical BDF "
+                    & "16#00#:16#14#:0",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_PCI_Device_BDF_Uniqueness;
+--  end read only
+
 end Mucfgcheck.Device.Test_Data.Tests;

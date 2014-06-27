@@ -48,6 +48,10 @@ is
      with
        Size => 24;
 
+   type Bit_60_Type is mod 2 ** 60
+     with
+       Size => 60;
+
    type Bit_61_Type is mod 2 ** 61
      with
        Size => 61;
@@ -142,10 +146,31 @@ is
       ICC    at 0 range 63 .. 63;
    end record;
 
+   --  IOTLB Invalidate Register (dynamic)
+
+   type Reg_IOTLB_Invalidate is record
+      Unused   : Bit_60_Type;
+      IIRG     : Bit_2_Type;
+      Reserved : Bit_Type;
+      IVT      : Bit_Type;
+   end record;
+
+   for Reg_IOTLB_Invalidate use record
+      Unused   at 0 range 0  .. 59;
+      IIRG     at 0 range 60 .. 61;
+      Reserved at 0 range 62 .. 62;
+      IVT      at 0 range 63 .. 63;
+   end record;
+
    --  Specified by Skp.IOMMU package (TODO)
 
    IOMMU_Base_Address : constant := 16#001f_d000#;
    IOMMU_Count        : constant := 2;
+
+   --  IOTLB Invalidate Register offset, must be calculated using Extended
+   --  Capability Register IRO field (TODO)
+
+   IOTLB_Offset : constant := 16#108#;
 
    type IOMMU_Range is range 1 .. IOMMU_Count;
 
@@ -158,8 +183,10 @@ is
       Global_Status      : Reg_Global_Status_Type;
       Root_Table_Address : SK.Word64;
       Context_Command    : Reg_Context_Command_Type;
+      IOTLB_Invalidate   : Reg_IOTLB_Invalidate;
    end record;
 
+   pragma Warnings (Off, "*-bit gap before component *");
    for IOMMU_Type use record
       Version            at  0 range 0 .. 31;
       Reserved           at  4 range 0 .. 31;
@@ -169,7 +196,9 @@ is
       Global_Status      at 28 range 0 .. 31;
       Root_Table_Address at 32 range 0 .. 63;
       Context_Command    at 40 range 0 .. 63;
+      IOTLB_Invalidate   at IOTLB_Offset range 0 .. 63;
    end record;
+   pragma Warnings (On, "*-bit gap before component *");
 
    pragma $Build_Warnings (Off, "*padded by * bits");
    type IOMMU_Array is array (IOMMU_Range) of IOMMU_Type
@@ -229,6 +258,19 @@ is
                Context_Command := IOMMUs (I).Context_Command;
             end loop;
          end Invalidate_Context_Cache;
+
+         IOTLB_Flush :
+         declare
+            IOTLB_Invalidate : Reg_IOTLB_Invalidate;
+         begin
+            IOMMUs (I).IOTLB_Invalidate.IIRG := 1;
+            IOMMUs (I).IOTLB_Invalidate.IVT  := 1;
+
+            IOTLB_Invalidate := IOMMUs (I).IOTLB_Invalidate;
+            while IOTLB_Invalidate.IVT = 1 loop
+               IOTLB_Invalidate := IOMMUs (I).IOTLB_Invalidate;
+            end loop;
+         end IOTLB_Flush;
       end loop;
    end Initialize;
 

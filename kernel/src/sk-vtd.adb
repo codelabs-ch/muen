@@ -269,6 +269,26 @@ is
                IOTLB_Invalidate := IOMMUs (I).IOTLB_Invalidate;
             end loop;
          end IOTLB_Flush;
+
+         Enable_Translation :
+         declare
+            Global_Command : Reg_Global_Command_Type;
+            Global_Status  : Reg_Global_Status_Type;
+         begin
+            Global_Command := IOMMUs (I).Global_Command;
+            Global_Command.TE := 1;
+            IOMMUs (I).Global_Command := Global_Command;
+
+            Global_Status := IOMMUs (I).Global_Status;
+            while Global_Status.TES = 0 loop
+               Global_Status := IOMMUs (I).Global_Status;
+            end loop;
+         end Enable_Translation;
+
+         pragma Debug
+           (KC.Put_String ("VT-d DMA address translation for IOMMU "));
+         pragma Debug (KC.Put_Byte (SK.Byte (I)));
+         pragma Debug (KC.Put_Line (" enabled"));
       end loop;
    end Initialize;
 

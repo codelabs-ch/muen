@@ -181,7 +181,9 @@ is
       Root_Table_Address : SK.Word64;
       Context_Command    : Reg_Context_Command_Type;
       IOTLB_Invalidate   : Reg_IOTLB_Invalidate;
-   end record;
+   end record
+     with
+       Alignment => Page_Size;
 
    pragma Warnings (Off, "*-bit gap before component *");
    for IOMMU_Type use record
@@ -200,8 +202,7 @@ is
    pragma $Build_Warnings (Off, "*padded by * bits");
    type IOMMU_Array is array (Skp.IOMMU.IOMMU_Device_Range) of IOMMU_Type
      with
-       Component_Size => Page_Size * 8,
-       Alignment      => Page_Size;
+       Component_Size => Page_Size * 8;
    pragma $Build_Warnings (On, "*padded by * bits");
 
    IOMMUs : IOMMU_Array

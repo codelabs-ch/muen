@@ -165,14 +165,11 @@ is
    --  Specified by Skp.IOMMU package (TODO)
 
    IOMMU_Base_Address : constant := 16#001f_d000#;
-   IOMMU_Count        : constant := 2;
 
    --  IOTLB Invalidate Register offset, must be calculated using Extended
    --  Capability Register IRO field (TODO)
 
    IOTLB_Offset : constant := 16#108#;
-
-   type IOMMU_Range is range 1 .. IOMMU_Count;
 
    type IOMMU_Type is record
       Version            : Reg_Version_Type;
@@ -201,7 +198,7 @@ is
    pragma Warnings (On, "*-bit gap before component *");
 
    pragma $Build_Warnings (Off, "*padded by * bits");
-   type IOMMU_Array is array (IOMMU_Range) of IOMMU_Type
+   type IOMMU_Array is array (Skp.IOMMU.IOMMU_Device_Range) of IOMMU_Type
      with
        Component_Size => Page_Size * 8,
        Alignment      => Page_Size;
@@ -218,7 +215,7 @@ is
    is
       Version : Reg_Version_Type;
    begin
-      for I in IOMMU_Range loop
+      for I in Skp.IOMMU.IOMMU_Device_Range loop
          Version := IOMMUs (I).Version;
 
          --  Basic sanity check, TODO: check IOMMU capabilities.

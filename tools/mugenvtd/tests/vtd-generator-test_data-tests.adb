@@ -25,8 +25,8 @@ package body VTd.Generator.Test_Data.Tests is
       Root_Table : constant String := "obj/vtd_root";
       Context_0  : constant String := "obj/vtd_context_bus_0";
       Context_23 : constant String := "obj/vtd_context_bus_23";
-      Lnx_Dom_Pt : constant String := "obj/lnx_domain_pt";
-      Net_Dom_Pt : constant String := "obj/net_domain_pt";
+      Lnx_Dom_Pt : constant String := "obj/vtd_lnx_domain_pt";
+      Net_Dom_Pt : constant String := "obj/vtd_net_domain_pt";
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
@@ -48,11 +48,11 @@ package body VTd.Generator.Test_Data.Tests is
                Filename2 => Context_23),
               Message   => "Context 23 table mismatch");
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/lnx_domain_pt.ref",
+              (Filename1 => "data/vtd_lnx_domain_pt.ref",
                Filename2 => Lnx_Dom_Pt),
               Message   => "Lnx device domain paging structures mismatch");
       Assert (Condition => Test_Utils.Equal_Files
-              (Filename1 => "data/net_domain_pt.ref",
+              (Filename1 => "data/vtd_net_domain_pt.ref",
                Filename2 => Net_Dom_Pt),
               Message   => "Net device domain paging structures mismatch");
 

@@ -69,21 +69,21 @@
 		<memory alignment="16#1000#" caching="WB" name="nic1|dma" physicalAddress="16#0030_0000#" size="16#1000#" type="subject"/>
 		<memory alignment="16#1000#" caching="WB" name="nic2|dma" physicalAddress="16#0030_1000#" size="16#1000#" type="subject"/>
 
-		<memory alignment="16#1000#" caching="WB" name="root|vtd" physicalAddress="16#001f_5000#" size="16#1000#" type="system_vtd_root">
+		<memory alignment="16#1000#" caching="WB" name="vtd_root" physicalAddress="16#001f_5000#" size="16#1000#" type="system_vtd_root">
 			<file filename="vtd_root" offset="none"/>
 		</memory>
-		<memory alignment="16#1000#" caching="WB" name="context_0" physicalAddress="16#001f_6000#" size="16#1000#" type="system_vtd_context">
+		<memory alignment="16#1000#" caching="WB" name="vtd_context_0" physicalAddress="16#001f_6000#" size="16#1000#" type="system_vtd_context">
 			<file filename="vtd_context_bus_0" offset="none"/>
 		</memory>
-		<memory alignment="16#1000#" caching="WB" name="context_23" physicalAddress="16#001f_7000#" size="16#1000#" type="system_vtd_context">
+		<memory alignment="16#1000#" caching="WB" name="vtd_context_23" physicalAddress="16#001f_7000#" size="16#1000#" type="system_vtd_context">
 			<file filename="vtd_context_bus_23" offset="none"/>
 		</memory>
 
-		<memory alignment="16#1000#" name="lnx_domain|pt" physicalAddress="16#001f_8000#" size="16#3000#" caching="WB" type="system_pt">
-			<file filename="lnx_domain_pt" offset="none"/>
+		<memory alignment="16#1000#" name="vtd_lnx_domain_pt" physicalAddress="16#001f_8000#" size="16#3000#" caching="WB" type="system_pt">
+			<file filename="vtd_lnx_domain_pt" offset="none"/>
 		</memory>
-		<memory alignment="16#1000#" name="net_domain|pt" physicalAddress="16#001f_c000#" size="16#3000#" caching="WB" type="system_pt">
-			<file filename="net_domain_pt" offset="none"/>
+		<memory alignment="16#1000#" name="vtd_net_domain_pt" physicalAddress="16#001f_c000#" size="16#3000#" caching="WB" type="system_pt">
+			<file filename="vtd_net_domain_pt" offset="none"/>
 		</memory>
 	</memory>
 

@@ -166,7 +166,7 @@ is
                     := Muxml.Utils.Get_Element
                       (Doc   => Policy.Doc,
                        XPath => "/system/memory/memory[@type='system_pt' and "
-                       & "starts-with(string(@name),'" & Dom_Name & "')]");
+                       & "contains(string(@name),'" & Dom_Name & "')]");
                   PT_Addr  : constant Tables.Table_Pointer_Type
                     := Tables.Table_Pointer_Type'Value
                       (DOM.Core.Elements.Get_Attribute
@@ -224,7 +224,7 @@ is
             PT_Node    : constant DOM.Core.Node := Muxml.Utils.Get_Element
               (Doc   => Policy.Doc,
                XPath => "/system/memory/memory[@type='system_pt' and "
-               & "starts-with(string(@name),'" & Dom_Name & "')]");
+               & "contains(string(@name),'" & Dom_Name & "')]");
             Filename   : constant String := Muxml.Utils.Get_Attribute
               (Doc   => PT_Node,
                XPath => "file",

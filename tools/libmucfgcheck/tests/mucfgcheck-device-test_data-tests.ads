@@ -42,5 +42,8 @@ package Mucfgcheck.Device.Test_Data.Tests is
    procedure Test_Device_Sharing_288f44 (Gnattest_T : in out Test);
    --  mucfgcheck-device.ads:55:4:Device_Sharing
 
+   procedure Test_PCI_Device_BDF_Uniqueness_bef97c (Gnattest_T : in out Test);
+   --  mucfgcheck-device.ads:58:4:PCI_Device_BDF_Uniqueness
+
 end Mucfgcheck.Device.Test_Data.Tests;
 --  end read only

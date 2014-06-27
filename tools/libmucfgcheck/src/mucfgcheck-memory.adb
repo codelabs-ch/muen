@@ -38,14 +38,6 @@ is
 
    One_Megabyte : constant := 16#100000#;
 
-   --  Set size attribute of given virtual memory node to the value of
-   --  the associated physical memory region. 'Ref_Nodes_Path' is the XPath
-   --  used to select the reference nodes.
-   procedure Set_Size
-     (Virtual_Mem_Node : DOM.Core.Node;
-      Ref_Nodes_Path   : String;
-      XML_Data         : Muxml.XML_Data_Type);
-
    --  Returns True if the left and right memory regions are adjacent.
    function Is_Adjacent_Region (Left, Right : DOM.Core.Node) return Boolean;
 
@@ -469,32 +461,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Size
-     (Virtual_Mem_Node : DOM.Core.Node;
-      Ref_Nodes_Path   : String;
-      XML_Data         : Muxml.XML_Data_Type)
-   is
-      Phy_Name : constant String
-        := DOM.Core.Elements.Get_Attribute
-          (Elem => Virtual_Mem_Node,
-           Name => "physical");
-      Phy_Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => XML_Data.Doc,
-           XPath => Ref_Nodes_Path & "[@name='" & Phy_Name & "']");
-      Cur_Size : constant String
-        := DOM.Core.Elements.Get_Attribute
-          (Elem => Phy_Node,
-           Name => "size");
-   begin
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Virtual_Mem_Node,
-         Name  => "size",
-         Value => Cur_Size);
-   end Set_Size;
-
-   -------------------------------------------------------------------------
-
    procedure System_Memory_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
@@ -912,5 +878,65 @@ is
                        Right     => Mutools.Constants.Page_Size,
                        Error_Msg => "not 4K");
    end VMXON_Region_Size;
+
+   -------------------------------------------------------------------------
+
+   procedure VTd_Context_Region_Size (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/memory/memory[@type='system_vtd_context']");
+   begin
+      Check_Attribute (Nodes     => Nodes,
+                       Node_Type => "VT-d context table",
+                       Attr      => "size",
+                       Name_Attr => "name",
+                       Test      => Equals'Access,
+                       Right     => Mutools.Constants.Page_Size,
+                       Error_Msg => "not 4K");
+   end VTd_Context_Region_Size;
+
+   -------------------------------------------------------------------------
+
+   procedure VTd_Root_Region_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+      Domains : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/deviceDomains/domain");
+   begin
+      if DOM.Core.Nodes.Length (List => Domains) > 0 then
+         Mulog.Log (Msg => "Checking presence of VT-d root table region");
+
+         declare
+            Nodes : constant DOM.Core.Node_List
+              := XPath_Query
+                (N     => XML_Data.Doc,
+                 XPath => "/system/memory/memory[@type='system_vtd_root']"
+                 & "/file");
+         begin
+            if DOM.Core.Nodes.Length (List => Nodes) /= 1 then
+               raise Validation_Error with "VT-d root table memory region not"
+                 & " found";
+            end if;
+         end;
+      end if;
+   end VTd_Root_Region_Presence;
+
+   -------------------------------------------------------------------------
+
+   procedure VTd_Root_Region_Size (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/memory/memory[@type='system_vtd_root']");
+   begin
+      Check_Attribute (Nodes     => Nodes,
+                       Node_Type => "VT-d root table",
+                       Attr      => "size",
+                       Name_Attr => "name",
+                       Test      => Equals'Access,
+                       Right     => Mutools.Constants.Page_Size,
+                       Error_Msg => "not 4K");
+   end VTd_Root_Region_Size;
 
 end Mucfgcheck.Memory;

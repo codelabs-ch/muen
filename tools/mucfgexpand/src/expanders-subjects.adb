@@ -107,7 +107,7 @@ is
                File_Offset => "none");
             Muxml.Utils.Append_Child
               (Node      => Subj_Mem_Node,
-               New_Child => XML_Utils.Create_Virtual_Memory_Node
+               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "binary",
                   Physical_Name => Subj_Name & "|bin",
@@ -366,7 +366,7 @@ is
                        & " of subject '" & Subj_Name & "'");
             Muxml.Utils.Append_Child
               (Node      => Mem_Node,
-               New_Child => XML_Utils.Create_Virtual_Memory_Node
+               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => Channel_Name,
                   Physical_Name => Channel_Name,
@@ -662,7 +662,7 @@ is
                File_Offset => "none");
             Muxml.Utils.Append_Child
               (Node      => Subj_Mem_Node,
-               New_Child => XML_Utils.Create_Virtual_Memory_Node
+               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "initramfs",
                   Physical_Name => Subj_Name & "|initramfs",
@@ -787,7 +787,7 @@ is
 
       Muxml.Utils.Append_Child
         (Node      => Mem_Node,
-         New_Child => XML_Utils.Create_Virtual_Memory_Node
+         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
            (Policy        => Data,
             Logical_Name  => "sys_interface",
             Physical_Name => "sys_interface",
@@ -914,7 +914,7 @@ is
 
             Muxml.Utils.Append_Child
               (Node      => Mem_Node,
-               New_Child => XML_Utils.Create_Virtual_Memory_Node
+               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => Monitored_Subj_Name & "_state",
                   Physical_Name => Monitored_Subj_Name & "_state",

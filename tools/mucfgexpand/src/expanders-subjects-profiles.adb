@@ -22,8 +22,6 @@ with Mulog;
 with Muxml.Utils;
 with Mutools.XML_Utils;
 
-with Expanders.XML_Utils;
-
 package body Expanders.Subjects.Profiles
 is
 
@@ -57,7 +55,7 @@ is
          File_Offset => "none");
       Muxml.Utils.Append_Child
         (Node      => Subj_Mem_Node,
-         New_Child => XML_Utils.Create_Virtual_Memory_Node
+         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
            (Policy        => Data,
             Logical_Name  => "zero_page",
             Physical_Name => Subj_Name & "|zp",
@@ -78,7 +76,7 @@ is
          File_Offset => "none");
       Muxml.Utils.Append_Child
         (Node      => Subj_Mem_Node,
-         New_Child => XML_Utils.Create_Virtual_Memory_Node
+         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
            (Policy        => Data,
             Logical_Name  => "sinfo",
             Physical_Name => Subj_Name & "|sinfo",
@@ -99,7 +97,7 @@ is
          File_Offset => "none");
       Muxml.Utils.Append_Child
         (Node      => Subj_Mem_Node,
-         New_Child => XML_Utils.Create_Virtual_Memory_Node
+         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
            (Policy        => Data,
             Logical_Name  => "acpi_rsdp",
             Physical_Name => Subj_Name & "|acpi_rsdp",
@@ -118,7 +116,7 @@ is
          File_Offset => "none");
       Muxml.Utils.Append_Child
         (Node      => Subj_Mem_Node,
-         New_Child => XML_Utils.Create_Virtual_Memory_Node
+         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
            (Policy        => Data,
             Logical_Name  => "acpi_xsdt",
             Physical_Name => Subj_Name & "|acpi_xsdt",
@@ -137,7 +135,7 @@ is
          File_Offset => "none");
       Muxml.Utils.Append_Child
         (Node      => Subj_Mem_Node,
-         New_Child => XML_Utils.Create_Virtual_Memory_Node
+         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
            (Policy        => Data,
             Logical_Name  => "acpi_fadt",
             Physical_Name => Subj_Name & "|acpi_fadt",
@@ -156,7 +154,7 @@ is
          File_Offset => "none");
       Muxml.Utils.Append_Child
         (Node      => Subj_Mem_Node,
-         New_Child => XML_Utils.Create_Virtual_Memory_Node
+         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
            (Policy        => Data,
             Logical_Name  => "acpi_dsdt",
             Physical_Name => Subj_Name & "|acpi_dsdt",
@@ -173,7 +171,7 @@ is
          Memory_Type => "subject_bios");
       Muxml.Utils.Append_Child
         (Node      => Subj_Mem_Node,
-         New_Child => XML_Utils.Create_Virtual_Memory_Node
+         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
            (Policy        => Data,
             Logical_Name  => "acpi_free",
             Physical_Name => Subj_Name & "|acpi_empty",
@@ -193,7 +191,7 @@ is
          Memory_Type => "subject");
       Muxml.Utils.Append_Child
         (Node      => Subj_Mem_Node,
-         New_Child => XML_Utils.Create_Virtual_Memory_Node
+         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
            (Policy        => Data,
             Logical_Name  => "lowmem",
             Physical_Name => Subj_Name & "|lowmem",
@@ -210,7 +208,7 @@ is
          Memory_Type => "subject_bios");
       Muxml.Utils.Append_Child
         (Node      => Subj_Mem_Node,
-         New_Child => XML_Utils.Create_Virtual_Memory_Node
+         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
            (Policy        => Data,
             Logical_Name  => "bios",
             Physical_Name => Subj_Name & "|bios",
@@ -219,7 +217,7 @@ is
             Executable    => False));
       Muxml.Utils.Append_Child
         (Node      => Subj_Mem_Node,
-         New_Child => XML_Utils.Create_Virtual_Memory_Node
+         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
            (Policy        => Data,
             Logical_Name  => "bios",
             Physical_Name => Subj_Name & "|bios",
@@ -228,7 +226,7 @@ is
             Executable    => False));
       Muxml.Utils.Append_Child
         (Node      => Subj_Mem_Node,
-         New_Child => XML_Utils.Create_Virtual_Memory_Node
+         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
            (Policy        => Data,
             Logical_Name  => "bios",
             Physical_Name => Subj_Name & "|bios",

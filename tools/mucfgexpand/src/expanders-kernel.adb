@@ -30,8 +30,7 @@ with Mulog;
 with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.Constants;
-
-with Expanders.XML_Utils;
+with Mutools.XML_Utils;
 
 package body Expanders.Kernel
 is
@@ -62,7 +61,7 @@ is
          begin
             Muxml.Utils.Append_Child
               (Node      => CPU_Node,
-               New_Child => XML_Utils.Create_Virtual_Memory_Node
+               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "text",
                   Physical_Name => "kernel_text",
@@ -71,7 +70,7 @@ is
                   Executable    => True));
             Muxml.Utils.Append_Child
               (Node      => CPU_Node,
-               New_Child => XML_Utils.Create_Virtual_Memory_Node
+               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "data",
                   Physical_Name => "kernel_data",
@@ -80,7 +79,7 @@ is
                   Executable    => False));
             Muxml.Utils.Append_Child
               (Node      => CPU_Node,
-               New_Child => XML_Utils.Create_Virtual_Memory_Node
+               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "bss",
                   Physical_Name => "kernel_bss",
@@ -89,7 +88,7 @@ is
                   Executable    => False));
             Muxml.Utils.Append_Child
               (Node      => CPU_Node,
-               New_Child => XML_Utils.Create_Virtual_Memory_Node
+               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "ro",
                   Physical_Name => "kernel_ro",
@@ -98,7 +97,7 @@ is
                   Executable    => False));
             Muxml.Utils.Append_Child
               (Node      => CPU_Node,
-               New_Child => XML_Utils.Create_Virtual_Memory_Node
+               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "stack",
                   Physical_Name => "kernel_stack_" & CPU_Str,
@@ -107,7 +106,7 @@ is
                   Executable    => False));
             Muxml.Utils.Append_Child
               (Node      => CPU_Node,
-               New_Child => XML_Utils.Create_Virtual_Memory_Node
+               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "store",
                   Physical_Name => "kernel_store_" & CPU_Str,
@@ -207,7 +206,7 @@ is
 
          Muxml.Utils.Append_Child
            (Node      => Ref,
-            New_Child => XML_Utils.Create_Virtual_Memory_Node
+            New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
               (Policy        => Data,
                Logical_Name  => "mmio",
                Physical_Name => "mmio",
@@ -336,7 +335,7 @@ is
                                (Number => Address) & " on CPU " & CPU_Id);
                   Muxml.Utils.Append_Child
                     (Node      => CPU,
-                     New_Child => XML_Utils.Create_Virtual_Memory_Node
+                     New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                        (Policy        => Data,
                         Logical_Name  => Subj_Name & "_state",
                         Physical_Name => Subj_Name & "_state",
@@ -362,7 +361,7 @@ is
 
       Muxml.Utils.Append_Child
         (Node      => BSP,
-         New_Child => XML_Utils.Create_Virtual_Memory_Node
+         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
            (Policy        => Data,
             Logical_Name  => "tau0_interface",
             Physical_Name => "sys_interface",

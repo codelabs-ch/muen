@@ -95,7 +95,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-       Data : Muxml.XML_Data_Type;
+      Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
@@ -120,6 +120,63 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       end;
 --  begin read only
    end Test_Memory_Types;
+--  end read only
+
+
+--  begin read only
+   procedure Test_No_IOMMU_Device_References (Gnattest_T : in out Test);
+   procedure Test_No_IOMMU_Device_References_c1578b (Gnattest_T : in out Test) renames Test_No_IOMMU_Device_References;
+--  id:2.2/c1578b1a998ee62a/No_IOMMU_Device_References/1/0/
+   procedure Test_No_IOMMU_Device_References (Gnattest_T : in out Test) is
+   --  mucfgcheck-subject.ads:34:4:No_IOMMU_Device_References
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/devices/device"
+         & "[@physical='wireless']",
+         Name  => "physical",
+         Value => "iommu_1");
+
+      begin
+         No_IOMMU_Device_References (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "IOMMU device referenced by subject 'vt'",
+                    Message   => "Exception mismatch");
+      end;
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/devices/device"
+         & "[@physical='ethernet']",
+         Name  => "physical",
+         Value => "iommu_2");
+
+      begin
+         No_IOMMU_Device_References (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "IOMMU device referenced by subjects 'vt', 'linux'",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_No_IOMMU_Device_References;
 --  end read only
 
 end Mucfgcheck.Subject.Test_Data.Tests;

@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
@@ -141,5 +143,46 @@ is
       Compare_All (Nodes      => Subjects,
                    Comparator => Check_Name_Inequality'Access);
    end Name_Uniqueness;
+
+   -------------------------------------------------------------------------
+
+   procedure No_IOMMU_Device_References (XML_Data : Muxml.XML_Data_Type)
+   is
+      use Ada.Strings.Unbounded;
+
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/devices/"
+           & "device[starts-with(@physical,'iommu')]");
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
+      Names : Unbounded_String;
+   begin
+      if Count > 0 then
+         for I in 0 .. Count - 1 loop
+            declare
+               Subj      : constant DOM.Core.Node
+                 := Muxml.Utils.Ancestor_Node
+                   (Node  => DOM.Core.Nodes.Item
+                      (List  => Nodes,
+                       Index => I),
+                    Level => 2);
+               Subj_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Subj,
+                    Name => "name");
+            begin
+               Names := Names & " '" & Subj_Name & "'";
+
+               if I < Count - 1 then
+                  Names := Names & ",";
+               end if;
+            end;
+         end loop;
+
+         raise Validation_Error with "IOMMU device referenced by subject"
+           & (if Count > 1 then "s" else "") & To_String (Source => Names);
+      end if;
+   end No_IOMMU_Device_References;
 
 end Mucfgcheck.Subject;

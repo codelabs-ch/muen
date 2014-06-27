@@ -18,5 +18,8 @@ package Mucfgcheck.Subject.Test_Data.Tests is
    procedure Test_Memory_Types_0a6ddc (Gnattest_T : in out Test);
    --  mucfgcheck-subject.ads:31:4:Memory_Types
 
+   procedure Test_No_IOMMU_Device_References_c1578b (Gnattest_T : in out Test);
+   --  mucfgcheck-subject.ads:34:4:No_IOMMU_Device_References
+
 end Mucfgcheck.Subject.Test_Data.Tests;
 --  end read only

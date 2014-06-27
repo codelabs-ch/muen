@@ -28,8 +28,6 @@ with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.XML_Utils;
 
-with Expanders.XML_Utils;
-
 package body Expanders.Platform
 is
 
@@ -101,7 +99,7 @@ is
                Memory_Type => ""));
             Muxml.Utils.Append_Child
               (Node      => Dev_Ref_Node,
-               New_Child => XML_Utils.Create_Virtual_Memory_Node
+               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "mmconf",
                   Physical_Name => "mmconf",

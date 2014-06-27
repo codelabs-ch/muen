@@ -1003,7 +1003,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'size => 16#0012#' of 'root|vtd' VT-d root "
+                    = "Attribute 'size => 16#0012#' of 'vtd_root' VT-d root "
                     & "table element not 4K",
                     Message   => "Exception mismatch");
       end;
@@ -1029,7 +1029,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/memory/memory[@name='context_3']",
+         XPath => "/system/memory/memory[@name='vtd_context_3']",
          Name  => "size",
          Value => "16#002a#");
 
@@ -1041,7 +1041,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'size => 16#002a#' of 'context_3' VT-d "
+                    = "Attribute 'size => 16#002a#' of 'vtd_context_3' VT-d "
                     & "context table element not 4K",
                     Message   => "Exception mismatch");
       end;

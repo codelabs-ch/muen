@@ -192,7 +192,7 @@ is
               := Muxml.Utils.Get_Element
                 (Doc   => XML_Data.Doc,
                  XPath => "/system/memory/memory[@type='system_pt' and "
-                 & "starts-with(@name,'" & Dom_Name & "')]/file");
+                 & "contains(string(@name),'" & Dom_Name & "')]/file");
          begin
             if PT_Node = null then
                raise Validation_Error with "No file-backed PT region for "

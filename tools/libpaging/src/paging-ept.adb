@@ -62,6 +62,49 @@ is
       Memory_Type : Caching_Type)
       return Interfaces.Unsigned_64;
 
+   --  Create directory entry with given parameters.
+   function Create_Dir_Entry
+     (Address     : Interfaces.Unsigned_64;
+      Readable    : Boolean;
+      Writable    : Boolean;
+      Executable  : Boolean;
+      Map_Page    : Boolean;
+      Ignore_PAT  : Boolean;
+      Memory_Type : Caching_Type)
+      return Interfaces.Unsigned_64;
+
+   -------------------------------------------------------------------------
+
+   function Create_Dir_Entry
+     (Address     : Interfaces.Unsigned_64;
+      Readable    : Boolean;
+      Writable    : Boolean;
+      Executable  : Boolean;
+      Map_Page    : Boolean;
+      Ignore_PAT  : Boolean;
+      Memory_Type : Caching_Type)
+      return Interfaces.Unsigned_64
+   is
+      use type Interfaces.Unsigned_64;
+
+      Result : Interfaces.Unsigned_64;
+   begin
+      Result := Create_Map_Entry
+        (Address     => Address,
+         Readable    => Readable,
+         Writable    => Writable,
+         Executable  => Executable,
+         Map_Page    => Map_Page,
+         Ignore_PAT  => Ignore_PAT,
+         Memory_Type => Memory_Type);
+
+      if Map_Page then
+         Result := Result or 2 ** Present_Flag;
+      end if;
+
+      return Result;
+   end Create_Dir_Entry;
+
    -------------------------------------------------------------------------
 
    function Create_Entry
@@ -118,10 +161,7 @@ is
          if Ignore_PAT then
             Result := Result or 2 ** Ignore_PAT_Flag;
          end if;
-
          Result := Result or EPT_MT_Mapping (Memory_Type);
-
-         Result := Result or 2 ** Present_Flag;
       end if;
 
       return Result;
@@ -147,7 +187,7 @@ is
          TEntry : Entries.Table_Entry_Type)
       is
       begin
-         Raw_Table (Index) := Create_Map_Entry
+         Raw_Table (Index) := Create_Dir_Entry
            (Address     => TEntry.Get_Dst_Address,
             Readable    => TEntry.Is_Readable,
             Writable    => TEntry.Is_Writable,
@@ -182,7 +222,7 @@ is
          TEntry : Entries.Table_Entry_Type)
       is
       begin
-         Raw_Table (Index) := Create_Map_Entry
+         Raw_Table (Index) := Create_Dir_Entry
            (Address     => TEntry.Get_Dst_Address,
             Readable    => TEntry.Is_Readable,
             Writable    => TEntry.Is_Writable,

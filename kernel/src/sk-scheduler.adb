@@ -26,6 +26,7 @@ with SK.Constants;
 with SK.CPU;
 with SK.Apic;
 with SK.Dump;
+with SK.VTd;
 
 package body SK.Scheduler
 with
@@ -362,20 +363,24 @@ is
       Route   : Skp.Interrupts.Vector_Route_Type;
    begin
       if Vector >= Skp.Interrupts.Remap_Offset then
-         Vect_Nr := Skp.Interrupts.Remapped_Vector_Type (Vector);
-         Route   := Skp.Interrupts.Vector_Routing (Vect_Nr);
-         if Route.Subject in Skp.Subject_Id_Type then
-            Events.Insert_Event
-              (Subject => Route.Subject,
-               Event   => SK.Byte (Route.Vector));
-         end if;
+         if Vector = 253 then
+            VTd.Process_Fault;
+         else
+            Vect_Nr := Skp.Interrupts.Remapped_Vector_Type (Vector);
+            Route   := Skp.Interrupts.Vector_Routing (Vect_Nr);
+            if Route.Subject in Skp.Subject_Id_Type then
+               Events.Insert_Event
+                 (Subject => Route.Subject,
+                  Event   => SK.Byte (Route.Vector));
+            end if;
 
-         pragma Debug
-           (Route.Subject not in Skp.Subject_Id_Type
-            and then Vector /= SK.Constants.IPI_Vector,
-            Dump.Print_Message_8
-              (Msg  => "Spurious IRQ vector",
-               Item => Vector));
+            pragma Debug
+              (Route.Subject not in Skp.Subject_Id_Type
+               and then Vector /= SK.Constants.IPI_Vector,
+               Dump.Print_Message_8
+                 (Msg  => "Spurious IRQ vector",
+                  Item => Vector));
+         end if;
       end if;
 
       pragma Debug (Vector < Skp.Interrupts.Remap_Offset,

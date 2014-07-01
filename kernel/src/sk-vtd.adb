@@ -44,6 +44,14 @@ is
      with
        Size => 12;
 
+   type Bit_13_Type is mod 2 ** 13
+     with
+       Size => 13;
+
+   type Bit_20_Type is mod 2 ** 20
+     with
+       Size => 20;
+
    type Bit_23_Type is mod 2 ** 23
      with
        Size => 23;
@@ -55,6 +63,10 @@ is
    type Bit_30_Type is mod 2 ** 30
      with
        Size => 30;
+
+   type Bit_52_Type is mod 2 ** 52
+     with
+       Size => 52;
 
    type Bit_60_Type is mod 2 ** 60
      with
@@ -245,6 +257,39 @@ is
       IVT      at 0 range 63 .. 63;
    end record;
 
+   --  Fault Recording Register (dynamic)
+   type Reg_Fault_Recording_Type is record
+      Reserved_1 : Bit_12_Type;
+      FI         : Bit_52_Type;
+      SID        : SK.Word16;
+      Reserved_2 : Bit_13_Type;
+      PRIV       : Bit_Type;
+      EXE        : Bit_Type;
+      PP         : Bit_Type;
+      FR         : SK.Byte;
+      PV         : Bit_20_Type;
+      AType      : Bit_2_Type;
+      T          : Bit_Type;
+      F          : Bit_Type;
+   end record
+     with
+       Size => 128;
+
+   for Reg_Fault_Recording_Type use record
+      Reserved_1 at 0 range 0   .. 11;
+      FI         at 0 range 12  .. 63;
+      SID        at 0 range 64  .. 79;
+      Reserved_2 at 0 range 80  .. 92;
+      PRIV       at 0 range 93  .. 93;
+      EXE        at 0 range 94  .. 94;
+      PP         at 0 range 95  .. 95;
+      FR         at 0 range 96  .. 103;
+      PV         at 0 range 104 .. 123;
+      AType      at 0 range 124 .. 125;
+      T          at 0 range 126 .. 126;
+      F          at 0 range 127 .. 127;
+   end record;
+
    --  Specified by Skp.IOMMU package (TODO)
 
    IOMMU_Base_Address : constant := 16#001f_d000#;
@@ -253,6 +298,10 @@ is
    --  Capability Register IRO field (TODO)
 
    IOTLB_Offset : constant := 16#108#;
+
+   --  Fault-recording register offset, must be calculcated using Capability
+   --  Register FRO field (TODO).
+   FR_Offset : constant := 16#20# * 16;
 
    type IOMMU_Type is record
       Version             : Reg_Version_Type;
@@ -269,6 +318,7 @@ is
       Fault_Event_Data    : Reg_Fault_Event_Data_Type;
       Fault_Event_Address : Reg_Fault_Event_Address_Type;
       IOTLB_Invalidate    : Reg_IOTLB_Invalidate;
+      Fault_Recording     : Reg_Fault_Recording_Type;
    end record
      with
        Alignment => Page_Size;
@@ -289,6 +339,7 @@ is
       Fault_Event_Data    at 60 range 0 .. 31;
       Fault_Event_Address at 64 range 0 .. 31;
       IOTLB_Invalidate    at IOTLB_Offset range 0 .. 63;
+      Fault_Recording     at FR_Offset    range 0 .. 127;
    end record;
    pragma Warnings (On, "*-bit gap before component *");
 

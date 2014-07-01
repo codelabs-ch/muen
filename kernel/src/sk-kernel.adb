@@ -22,7 +22,6 @@ with SK.KC;
 with SK.Version;
 with SK.System_State;
 with SK.VMX;
-with SK.VTd;
 
 package body SK.Kernel
 is

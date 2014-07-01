@@ -7,6 +7,7 @@ with SK.Kernel;
 with SK.MP;
 with SK.Scheduler;
 with SK.Subjects;
+with SK.VTd;
 with X86_64;
 
 procedure Init
@@ -15,7 +16,7 @@ with
       (Input  => SK.Scheduler.Tau0_Kernel_Interface,
        In_Out => (SK.CPU_Registry.State, SK.Events.State, SK.Interrupts.State,
                   SK.IO_Apic.State, SK.MP.Barrier, SK.Scheduler.State,
-                  SK.Subjects.State, X86_64.State),
+                  SK.Subjects.State, SK.VTd.State, X86_64.State),
        Output => SK.CPU_Global.State)
 is
    Subject_Registers : SK.CPU_Registers_Type;

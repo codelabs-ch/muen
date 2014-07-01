@@ -465,6 +465,10 @@ is
    -------------------------------------------------------------------------
 
    procedure Initialize
+   with
+      SPARK_Mode      => Off, -- XXX Workaround for [N425-012]
+      Refined_Global  => (In_Out => (X86_64.State, IOMMUs)),
+      Refined_Depends => ((X86_64.State, IOMMUs) =>+ null)
    is
       Version : Reg_Version_Type;
    begin

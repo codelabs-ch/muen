@@ -28,7 +28,8 @@ is
    --  Initialize VT-d device isolation.
    procedure Initialize
    with
-      Global => (In_Out => X86_64.State);
+      Global  => (In_Out => (X86_64.State, State)),
+      Depends => ((X86_64.State, State) =>+ null);
 
    --  Process fault reported by IOMMU.
    procedure Process_Fault;

@@ -373,6 +373,22 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Sets the fault event interrupt mask of the specified IOMMU to the given
+   --  state. Setting the mask to true prohibits hardware from generating an
+   --  interrupt when a fault event occurs.
+   procedure Set_Fault_Event_Mask
+     (IOMMU  : Skp.IOMMU.IOMMU_Device_Range;
+      Enable : Boolean)
+   is
+      Fault_Event_Control : Reg_Fault_Event_Control_Type;
+   begin
+      Fault_Event_Control := IOMMUs (IOMMU).Fault_Event_Control;
+      Fault_Event_Control.IM := (if Enable then 1 else 0);
+      IOMMUs (IOMMU).Fault_Event_Control := Fault_Event_Control;
+   end Set_Fault_Event_Mask;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize
    is
       Version : Reg_Version_Type;

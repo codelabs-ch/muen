@@ -19,6 +19,10 @@
 with X86_64;
 
 package SK.VTd
+with
+   Abstract_State =>
+     (State with External => (Async_Writers, Async_Readers, Effective_Writes)),
+   Initializes    => State
 is
 
    --  Initialize VT-d device isolation.

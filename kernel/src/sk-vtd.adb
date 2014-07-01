@@ -26,6 +26,8 @@ with SK.Apic;
 with SK.Constants;
 
 package body SK.VTd
+with
+  Refined_State => (State => IOMMUs)
 is
 
    --  Basic types
@@ -354,6 +356,9 @@ is
    IOMMUs : IOMMU_Array
      with
        Volatile,
+       Async_Writers,
+       Async_Readers,
+       Effective_Writes,
        Address => System'To_Address (IOMMU_Base_Address);
 
    -------------------------------------------------------------------------

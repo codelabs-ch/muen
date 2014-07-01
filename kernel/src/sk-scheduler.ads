@@ -21,6 +21,7 @@ with SK.Events;
 with SK.Interrupts;
 with SK.MP;
 with SK.Subjects;
+with SK.VTd;
 with Skp.Scheduling;
 with Skp.Subjects;
 with X86_64;
@@ -60,7 +61,7 @@ is
       Global     =>
         (Input  => Tau0_Kernel_Interface,
          In_Out => (CPU_Global.State, Events.State, MP.Barrier, State,
-                    Subjects.State, X86_64.State)),
+                    Subjects.State, VTd.State, X86_64.State)),
       Depends    =>
        (CPU_Global.State    =>+ (State, Subject_Registers,
                                  Tau0_Kernel_Interface, X86_64.State),
@@ -71,8 +72,9 @@ is
         MP.Barrier          =>+ (CPU_Global.State, State, X86_64.State),
         State               =>+ (CPU_Global.State, Tau0_Kernel_Interface,
                                  X86_64.State),
-        Subjects.State      =>+ (CPU_Global.State, State, Subject_Registers,
-                                 X86_64.State),
+       (Subjects.State,
+        VTd.State)          =>+ (CPU_Global.State, State, Subjects.State,
+                                 Subject_Registers, X86_64.State),
         X86_64.State        =>+ (CPU_Global.State, Events.State, State,
                                  Subjects.State, Subject_Registers,
                                  Tau0_Kernel_Interface)),

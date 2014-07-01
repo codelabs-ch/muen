@@ -26,7 +26,6 @@ with SK.Constants;
 with SK.CPU;
 with SK.Apic;
 with SK.Dump;
-with SK.VTd;
 
 package body SK.Scheduler
 with
@@ -356,8 +355,8 @@ is
    --  Handle external interrupt request with given vector.
    procedure Handle_Irq (Vector : SK.Byte)
    with
-      Global  => (In_Out => (Events.State, X86_64.State)),
-      Depends => (Events.State =>+ Vector, X86_64.State =>+ null)
+      Global  => (In_Out => (Events.State, VTd.State, X86_64.State)),
+      Depends => ((Events.State, VTd.State) =>+ Vector, X86_64.State =>+ null)
    is
       Vect_Nr : Skp.Interrupts.Remapped_Vector_Type;
       Route   : Skp.Interrupts.Vector_Route_Type;
@@ -475,7 +474,7 @@ is
       Refined_Global  =>
         (Input  => New_Major,
          In_Out => (CPU_Global.State, Current_Major, Events.State,
-                    MP.Barrier, Subjects.State, X86_64.State)),
+                    MP.Barrier, Subjects.State, VTd.State, X86_64.State)),
       Refined_Depends =>
         (CPU_Global.State    =>+ (Current_Major, New_Major, Subject_Registers,
                                   X86_64.State),
@@ -486,8 +485,10 @@ is
                                   X86_64.State),
          MP.Barrier          =>+ (CPU_Global.State, Current_Major,
                                   X86_64.State),
-         Subjects.State      =>+ (CPU_Global.State, Current_Major,
-                                  Subject_Registers, X86_64.State),
+         (Subjects.State,
+          VTd.State)         =>+ (CPU_Global.State, Current_Major,
+                                  Subjects.State, Subject_Registers,
+                                  X86_64.State),
          X86_64.State        =>+ (CPU_Global.State, Current_Major,
                                   Events.State, New_Major, Subjects.State,
                                   Subject_Registers))

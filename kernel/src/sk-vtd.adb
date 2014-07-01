@@ -389,6 +389,27 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Sets the fault interrupt vector and destination APIC ID of the specified
+   --  IOMMU to the given values.
+   procedure Setup_Fault_Interrupt
+     (IOMMU   : Skp.IOMMU.IOMMU_Device_Range;
+      Vector  : SK.Byte;
+      APIC_ID : SK.Byte)
+   is
+      Fault_Event_Addr : Reg_Fault_Event_Address_Type;
+      Fault_Event_Data : Reg_Fault_Event_Data_Type;
+   begin
+      Fault_Event_Addr := IOMMUs (IOMMU).Fault_Event_Address;
+      Fault_Event_Addr.APIC_ID := APIC_ID;
+      IOMMUs (IOMMU).Fault_Event_Address  := Fault_Event_Addr;
+
+      Fault_Event_Data.EIMD := 0;
+      Fault_Event_Data.IMD  := SK.Word16 (Vector);
+      IOMMUs (IOMMU).Fault_Event_Data := Fault_Event_Data;
+   end Setup_Fault_Interrupt;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize
    is
       Version : Reg_Version_Type;

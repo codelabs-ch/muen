@@ -19,6 +19,13 @@
 package SK.Constants
 is
 
+   -----------------------
+   -- Interrupt vectors --
+   -----------------------
+
+   Timer_Vector                 : constant := 48;
+   IPI_Vector                   : constant := 254;
+
    -----------
    -- Flags --
    -----------

@@ -33,10 +33,6 @@ with
                      Tau0_Kernel_Interface => (New_Major))
 is
 
-   --  IRQ constants.
-   Timer_Vector : constant := 48;
-   IPI_Vector   : constant := 254;
-
    New_Major : Skp.Scheduling.Major_Frame_Range
    with
       Atomic,
@@ -183,7 +179,7 @@ is
         (Subject_Id => Minor_Frame.Subject_Id) = Skp.Subjects.Vm
       then
          Events.Insert_Event (Subject => Minor_Frame.Subject_Id,
-                              Event   => Timer_Vector);
+                              Event   => SK.Constants.Timer_Vector);
       end if;
 
       --  Update preemption timer ticks in subject VMCS.
@@ -327,13 +323,12 @@ is
                if Event.Send_IPI then
                   Dst_CPU := Skp.Subjects.Get_CPU_Id
                     (Subject_Id => Event.Dst_Subject);
-                  Apic.Send_IPI (Vector  => IPI_Vector,
+                  Apic.Send_IPI (Vector  => SK.Constants.IPI_Vector,
                                  Apic_Id => SK.Byte (Dst_CPU));
                end if;
             end if;
 
             if Event.Handover then
-
                Subject_Handover
                  (Old_Id   => Current_Subject,
                   New_Id   => Event.Dst_Subject,
@@ -377,7 +372,7 @@ is
 
          pragma Debug
            (Route.Subject not in Skp.Subject_Id_Type
-            and then Vector /= IPI_Vector,
+            and then Vector /= SK.Constants.IPI_Vector,
             Dump.Print_Message_8
               (Msg  => "Spurious IRQ vector",
                Item => Vector));

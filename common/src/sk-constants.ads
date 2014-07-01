@@ -24,6 +24,7 @@ is
    -----------------------
 
    Timer_Vector                 : constant := 48;
+   VTd_Fault_Vector             : constant := 253;
    IPI_Vector                   : constant := 254;
 
    -----------

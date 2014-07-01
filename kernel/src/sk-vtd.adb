@@ -22,6 +22,8 @@ with Skp.IOMMU;
 
 with SK.KC;
 with SK.CPU;
+with SK.Apic;
+with SK.Constants;
 
 package body SK.VTd
 is
@@ -479,7 +481,14 @@ is
             end if;
          end if;
 
+         Set_Fault_Event_Mask (IOMMU  => I,
+                               Enable => True);
          Clear_Fault_Record (IOMMU => I);
+         Setup_Fault_Interrupt (IOMMU   => I,
+                                Vector  => SK.Constants.VTd_Fault_Vector,
+                                APIC_ID => SK.Apic.Get_ID);
+         Set_Fault_Event_Mask (IOMMU  => I,
+                               Enable => False);
 
          Set_Root_Table_Address :
          declare

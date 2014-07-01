@@ -492,10 +492,13 @@ is
 
          Set_Root_Table_Address :
          declare
-            Global_Status : Reg_Global_Status_Type;
+            Global_Status  : Reg_Global_Status_Type;
+            Global_Command : Reg_Global_Command_Type;
          begin
             IOMMUs (I).Root_Table_Address  := Skp.IOMMU.Root_Table_Address;
-            IOMMUs (I).Global_Command.SRTP := 1;
+            Global_Command := IOMMUs (I).Global_Command;
+            Global_Command.SRTP := 1;
+            IOMMUs (I).Global_Command := Global_Command;
 
             Global_Status := IOMMUs (I).Global_Status;
             while Global_Status.RTPS = 0 loop
@@ -507,8 +510,10 @@ is
          declare
             Context_Command : Reg_Context_Command_Type;
          begin
-            IOMMUs (I).Context_Command.CIRG := 1;
-            IOMMUs (I).Context_Command.ICC  := 1;
+            Context_Command := IOMMUs (I).Context_Command;
+            Context_Command.ICC  := 1;
+            Context_Command.CIRG := 1;
+            IOMMUs (I).Context_Command := Context_Command;
 
             Context_Command := IOMMUs (I).Context_Command;
             while Context_Command.ICC = 1 loop
@@ -520,8 +525,10 @@ is
          declare
             IOTLB_Invalidate : Reg_IOTLB_Invalidate;
          begin
-            IOMMUs (I).IOTLB_Invalidate.IIRG := 1;
-            IOMMUs (I).IOTLB_Invalidate.IVT  := 1;
+            IOTLB_Invalidate := IOMMUs (I).IOTLB_Invalidate;
+            IOTLB_Invalidate.IIRG := 1;
+            IOTLB_Invalidate.IVT  := 1;
+            IOMMUs (I).IOTLB_Invalidate := IOTLB_Invalidate;
 
             IOTLB_Invalidate := IOMMUs (I).IOTLB_Invalidate;
             while IOTLB_Invalidate.IVT = 1 loop

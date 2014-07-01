@@ -40,6 +40,10 @@ is
      with
        Size => 4;
 
+   type Bit_12_Type is mod 2 ** 12
+     with
+       Size => 12;
+
    type Bit_23_Type is mod 2 ** 23
      with
        Size => 23;
@@ -47,6 +51,10 @@ is
    type Bit_24_Type is mod 2 ** 24
      with
        Size => 24;
+
+   type Bit_30_Type is mod 2 ** 30
+     with
+       Size => 30;
 
    type Bit_60_Type is mod 2 ** 60
      with
@@ -146,6 +154,81 @@ is
       ICC    at 0 range 63 .. 63;
    end record;
 
+   --  Fault Status Register
+   type Reg_Fault_Status_Type is record
+      PFO      : Bit_Type;
+      PPF      : Bit_Type;
+      AFO      : Bit_Type;
+      APF      : Bit_Type;
+      IQE      : Bit_Type;
+      ICE      : Bit_Type;
+      ITE      : Bit_Type;
+      PRO      : Bit_Type;
+      FRI      : SK.Byte;
+      Reserved : SK.Word16;
+   end record
+     with
+       Size => 32;
+
+   for Reg_Fault_Status_Type use record
+      PFO      at 0 range 0  .. 0;
+      PPF      at 0 range 1  .. 1;
+      AFO      at 0 range 2  .. 2;
+      APF      at 0 range 3  .. 3;
+      IQE      at 0 range 4  .. 4;
+      ICE      at 0 range 5  .. 5;
+      ITE      at 0 range 6  .. 6;
+      PRO      at 0 range 7  .. 7;
+      FRI      at 0 range 8  .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   type Reg_Fault_Event_Control_Type is record
+      Reserved : Bit_30_Type;
+      IP       : Bit_Type;
+      IM       : Bit_Type;
+   end record
+     with
+       Size => 32;
+
+   for Reg_Fault_Event_Control_Type use record
+      Reserved at 0 range 0  .. 29;
+      IP       at 0 range 30 .. 30;
+      IM       at 0 range 31 .. 31;
+   end record;
+
+   type Reg_Fault_Event_Data_Type is record
+      IMD  : SK.Word16;
+      EIMD : SK.Word16;
+   end record
+     with
+       Size => 32;
+
+   for Reg_Fault_Event_Data_Type use record
+      IMD  at 0 range 0  .. 15;
+      EIMD at 0 range 16 .. 31;
+   end record;
+
+   type Reg_Fault_Event_Address_Type is record
+      Reserved_1       : Bit_2_Type;
+      Destination_Mode : Bit_Type;
+      Redirection_Hint : Bit_Type;
+      Reserved_2       : SK.Byte;
+      APIC_ID          : SK.Byte;
+      FEEh             : Bit_12_Type;
+   end record
+     with
+       Size => 32;
+
+   for Reg_Fault_Event_Address_Type use record
+      Reserved_1       at 0 range 0  .. 1;
+      Destination_Mode at 0 range 2  .. 2;
+      Redirection_Hint at 0 range 3  .. 3;
+      Reserved_2       at 0 range 4  .. 11;
+      APIC_ID          at 0 range 12 .. 19;
+      FEEh             at 0 range 20 .. 31;
+   end record;
+
    --  IOTLB Invalidate Register (dynamic)
 
    type Reg_IOTLB_Invalidate is record
@@ -172,30 +255,40 @@ is
    IOTLB_Offset : constant := 16#108#;
 
    type IOMMU_Type is record
-      Version            : Reg_Version_Type;
-      Reserved           : SK.Word32;
-      Capability         : SK.Word64;
-      Ext_Capability     : SK.Word64;
-      Global_Command     : Reg_Global_Command_Type;
-      Global_Status      : Reg_Global_Status_Type;
-      Root_Table_Address : SK.Word64;
-      Context_Command    : Reg_Context_Command_Type;
-      IOTLB_Invalidate   : Reg_IOTLB_Invalidate;
+      Version             : Reg_Version_Type;
+      Reserved_1          : SK.Word32;
+      Capability          : SK.Word64;
+      Ext_Capability      : SK.Word64;
+      Global_Command      : Reg_Global_Command_Type;
+      Global_Status       : Reg_Global_Status_Type;
+      Root_Table_Address  : SK.Word64;
+      Context_Command     : Reg_Context_Command_Type;
+      Reserved_2          : SK.Word32;
+      Fault_Status        : Reg_Fault_Status_Type;
+      Fault_Event_Control : Reg_Fault_Event_Control_Type;
+      Fault_Event_Data    : Reg_Fault_Event_Data_Type;
+      Fault_Event_Address : Reg_Fault_Event_Address_Type;
+      IOTLB_Invalidate    : Reg_IOTLB_Invalidate;
    end record
      with
        Alignment => Page_Size;
 
    pragma Warnings (Off, "*-bit gap before component *");
    for IOMMU_Type use record
-      Version            at  0 range 0 .. 31;
-      Reserved           at  4 range 0 .. 31;
-      Capability         at  8 range 0 .. 63;
-      Ext_Capability     at 16 range 0 .. 63;
-      Global_Command     at 24 range 0 .. 31;
-      Global_Status      at 28 range 0 .. 31;
-      Root_Table_Address at 32 range 0 .. 63;
-      Context_Command    at 40 range 0 .. 63;
-      IOTLB_Invalidate   at IOTLB_Offset range 0 .. 63;
+      Version             at  0 range 0 .. 31;
+      Reserved_1          at  4 range 0 .. 31;
+      Capability          at  8 range 0 .. 63;
+      Ext_Capability      at 16 range 0 .. 63;
+      Global_Command      at 24 range 0 .. 31;
+      Global_Status       at 28 range 0 .. 31;
+      Root_Table_Address  at 32 range 0 .. 63;
+      Context_Command     at 40 range 0 .. 63;
+      Reserved_2          at 48 range 0 .. 31;
+      Fault_Status        at 52 range 0 .. 31;
+      Fault_Event_Control at 56 range 0 .. 31;
+      Fault_Event_Data    at 60 range 0 .. 31;
+      Fault_Event_Address at 64 range 0 .. 31;
+      IOTLB_Invalidate    at IOTLB_Offset range 0 .. 63;
    end record;
    pragma Warnings (On, "*-bit gap before component *");
 

@@ -366,6 +366,8 @@ is
    --  Clears the Fault recording register and the Primary Fault Overflow flag
    --  of the specified IOMMU.
    procedure Clear_Fault_Record (IOMMU : Skp.IOMMU.IOMMU_Device_Range)
+   with
+      SPARK_Mode => Off -- XXX Workaround for [N425-012]
    is
       Fault_Recording : Reg_Fault_Recording_Type;
       Fault_Status    : Reg_Fault_Status_Type;
@@ -386,6 +388,8 @@ is
    procedure Set_Fault_Event_Mask
      (IOMMU  : Skp.IOMMU.IOMMU_Device_Range;
       Enable : Boolean)
+   with
+      SPARK_Mode => Off -- XXX Workaround for [N425-012]
    is
       Fault_Event_Control : Reg_Fault_Event_Control_Type;
    begin
@@ -402,6 +406,8 @@ is
      (IOMMU   : Skp.IOMMU.IOMMU_Device_Range;
       Vector  : SK.Byte;
       APIC_ID : SK.Byte)
+   with
+      SPARK_Mode => Off -- XXX Workaround for [N425-012]
    is
       Fault_Event_Addr : Reg_Fault_Event_Address_Type;
       Fault_Event_Data : Reg_Fault_Event_Data_Type;

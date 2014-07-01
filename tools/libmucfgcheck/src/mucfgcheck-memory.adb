@@ -900,11 +900,12 @@ is
 
    procedure VTd_Root_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      Domains : constant DOM.Core.Node_List := XPath_Query
+      IOMMUs : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "/system/deviceDomains/domain");
+         XPath => "/system/platform/devices/device[starts-with"
+           & "(string(@name),'iommu')]");
    begin
-      if DOM.Core.Nodes.Length (List => Domains) > 0 then
+      if DOM.Core.Nodes.Length (List => IOMMUs) > 0 then
          Mulog.Log (Msg => "Checking presence of VT-d root table region");
 
          declare

@@ -228,7 +228,10 @@ is
             pragma Debug (KC.Put_Byte (Item => SK.Byte (Version.MIN)));
             pragma Debug (KC.New_Line);
 
-            CPU.Panic;
+            pragma Assume (False); --  Workaround for No_Return: Pre => False
+            if True then  --  Workaround for No_Return placement limitation
+               CPU.Panic;
+            end if;
          end if;
 
          Set_Root_Table_Address :

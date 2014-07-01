@@ -356,6 +356,23 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Clears the Fault recording register and the Primary Fault Overflow flag
+   --  of the specified IOMMU.
+   procedure Clear_Fault_Record (IOMMU : Skp.IOMMU.IOMMU_Device_Range)
+   is
+      Fault_Recording : Reg_Fault_Recording_Type;
+      Fault_Status    : Reg_Fault_Status_Type;
+   begin
+      Fault_Recording := IOMMUs (IOMMU).Fault_Recording;
+      Fault_Recording.F := 1;
+      IOMMUs (IOMMU).Fault_Recording := Fault_Recording;
+      Fault_Status := IOMMUs (IOMMU).Fault_Status;
+      Fault_Status.PFO := 1;
+      IOMMUs (IOMMU).Fault_Status := Fault_Status;
+   end Clear_Fault_Record;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize
    is
       Version : Reg_Version_Type;
@@ -377,6 +394,8 @@ is
                CPU.Panic;
             end if;
          end if;
+
+         Clear_Fault_Record (IOMMU => I);
 
          Set_Root_Table_Address :
          declare

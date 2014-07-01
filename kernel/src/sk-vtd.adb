@@ -418,6 +418,9 @@ is
    -------------------------------------------------------------------------
 
    procedure Process_Fault
+   with
+      SPARK_Mode     => Off, -- XXX Workaround for [N425-012]
+      Refined_Global => (In_Out => IOMMUs)
    is
       Status : Reg_Fault_Status_Type;
    begin

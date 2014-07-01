@@ -32,6 +32,8 @@ is
       Depends => ((X86_64.State, State) =>+ null);
 
    --  Process fault reported by IOMMU.
-   procedure Process_Fault;
+   procedure Process_Fault
+   with
+      Global => (In_Out => State);
 
 end SK.VTd;

@@ -26,4 +26,7 @@ is
    with
       Global => (In_Out => X86_64.State);
 
+   --  Process fault reported by IOMMU.
+   procedure Process_Fault;
+
 end SK.VTd;

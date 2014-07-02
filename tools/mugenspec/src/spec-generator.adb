@@ -703,29 +703,9 @@ is
            XPath => "/system/kernel/devices/device["
            & "starts-with(string(@physical),'iommu')]/memory");
       IOMMU_Count : constant Natural := DOM.Core.Nodes.Length (List => IOMMUs);
-      Buffer      : Unbounded_String;
       Tmpl        : Templates.Template_Type;
    begin
       Tmpl := Templates.Create (Content => String_Templates.skp_iommu_ads);
-
-      for I in 1 .. IOMMU_Count loop
-         declare
-            IOMMU_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => IOMMUs,
-                                      Index => I - 1);
-            IOMMU_Addr : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => IOMMU_Node,
-                 Name => "virtualAddress");
-         begin
-            Buffer := Buffer & Indent (N => 2) & I'Img
-              & " => " & IOMMU_Addr;
-
-            if I /= IOMMU_Count then
-               Buffer := Buffer & "," & ASCII.LF;
-            end if;
-         end;
-      end loop;
 
       Templates.Replace
         (Template => Tmpl,
@@ -739,11 +719,6 @@ is
         (Template => Tmpl,
          Pattern  => "__iommu_device_range__",
          Content  => "1 .." & IOMMU_Count'Img);
-      Templates.Replace
-        (Template => Tmpl,
-         Pattern  => "__iommu_devices__",
-         Content  => (if Length (Buffer) > 0 then To_String (Buffer)
-                      else Indent (N => 2) & " others => 0"));
 
       Mulog.Log (Msg => "Writing IOMMU spec to '" & Filename & "'");
 

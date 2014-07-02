@@ -274,10 +274,6 @@ is
       F          at 0 range 127 .. 127;
    end record;
 
-   --  Specified by Skp.IOMMU package (TODO)
-
-   IOMMU_Base_Address : constant := 16#001f_d000#;
-
    --  IOTLB Invalidate Register offset, must be calculated using Extended
    --  Capability Register IRO field (TODO)
 
@@ -339,7 +335,7 @@ is
        Async_Writers,
        Async_Readers,
        Effective_Writes,
-       Address => System'To_Address (IOMMU_Base_Address);
+       Address => System'To_Address (Skp.IOMMU.Base_Address);
 
    -------------------------------------------------------------------------
 

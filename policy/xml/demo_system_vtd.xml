@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<system>
+	<platform>
+		<memory>
+			<memoryBlock allocatable="false" name="base_mem" physicalAddress="16#0000#" size="16#000a_0000#" />
+			<memoryBlock allocatable="true" name="extended_mem_1" physicalAddress="16#0010_0000#" size="16#8000_0000#" />
+		</memory>
+		<devices>
+			<device name="vga" shared="false">
+				<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
+				<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
+			</device>
+			<device name="keyboard" shared="false">
+				<irq name="kbd_irq" number="1"/>
+				<ioPort name="port_60" start="16#0060#" end="16#0060#"/>
+				<ioPort name="port_64" start="16#0064#" end="16#0064#"/>
+			</device>
+			<device name="cmos_rtc" shared="false">
+				<ioPort name="ports" start="16#0070#" end="16#0071#"/>
+			</device>
+			<device name="port80" shared="false">
+				<ioPort name="ports" start="16#0080#" end="16#0080#"/>
+			</device>
+			<device name="ioapic" shared="false">
+				<memory name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#" caching="UC" />
+			</device>
+		</devices>
+	</platform>
+
+	<memory>
+		<memory name="linux|ram" size="16#0f60_0000#" alignment="16#0020_0000#" caching="WB"/>
+	</memory>
+
+	<deviceDomains>
+		<domain name="linux_domain">
+			<memory>
+				<memory logical="dma" physical="linux|ram" virtualAddress="16#00a0_0000#" writable="true" executable="false"/>
+			</memory>
+			<devices>
+				<device logical="xhci" physical="xhci"/>
+				<device logical="nic" physical="ethernet"/>
+			</devices>
+		</domain>
+	</deviceDomains>
+
+	<events>
+		<event name="resume_linux" mode="switch"/>
+		<event name="trap_to_sm" mode="switch"/>
+	</events>
+
+	<channels>
+		<channel name="virtual_time" size="16#1000#"/>
+		<channel name="virtual_keyboard" size="16#1000#" hasEvent="ipi"/>
+		<channel name="virtual_console" size="16#0001_0000#" hasEvent="ipi"/>
+		<channel name="time_console" size="16#0001_0000#" hasEvent="ipi"/>
+		<channel name="sm_console" size="16#0001_0000#" hasEvent="ipi"/>
+	</channels>
+
+	<subjects>
+		<subject name="vt" profile="native">
+			<devices>
+				<device logical="vga" physical="vga">
+					<memory logical="buffer" physical="buffer" virtualAddress="16#000b_8000#" writable="true" executable="false"/>
+					<ioPort logical="ports" physical="ports"/>
+				</device>
+				<device logical="keyboard" physical="keyboard">
+					<irq logical="kbd_irq" physical="kbd_irq" vector="49"/>
+					<ioPort logical="port_60" physical="port_60"/>
+					<ioPort logical="port_64" physical="port_64"/>
+				</device>
+			</devices>
+			<events/>
+			<channels>
+				<reader ref="virtual_console" virtualAddress="16#0010_0000#" vector="34"/>
+				<reader ref="time_console" virtualAddress="16#0011_0000#" vector="35"/>
+				<reader ref="sm_console" virtualAddress="16#0012_0000#" vector="36"/>
+				<writer ref="virtual_keyboard" virtualAddress="16#0005_0000#" event="1"/>
+			</channels>
+			<binary filename="vt" size="16#0002_4000#" virtualAddress="16#1000#"/>
+		</subject>
+
+		<subject name="time" profile="native">
+			<devices>
+				<device logical="port80" physical="port80">
+					<ioPort logical="ports" physical="ports"/>
+				</device>
+			</devices>
+			<events/>
+			<channels>
+				<writer ref="virtual_time" virtualAddress="16#0002_0000#"/>
+				<writer ref="time_console" virtualAddress="16#000b_8000#" event="1"/>
+			</channels>
+			<binary filename="time" size="16#0001_4000#" virtualAddress="16#1000#"/>
+		</subject>
+
+		<subject name="sm" profile="native">
+			<events>
+				<source>
+					<group name="vmcall">
+						<event id="4" logical="resume_linux" action="continue">
+							<notify physical="resume_linux"/>
+						</event>
+					</group>
+				</source>
+				<target>
+					<event physical="trap_to_sm" logical="handle_linux_trap" vector="36"/>
+				</target>
+			</events>
+			<channels>
+				<writer ref="sm_console" virtualAddress="16#000b_8000#" event="1"/>
+			</channels>
+			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
+			<monitor>
+				<state subject="linux" virtualAddress="16#001e_0000#" writable="true"/>
+			</monitor>
+		</subject>
+
+		<subject name="linux" profile="linux">
+			<bootparams>lpj=10000 console=hvc pci=noearly notsc</bootparams>
+			<initrd filename="initramfs.cpio.gz" size="16#0040_0000#"/>
+			<memory>
+				<memory logical="ram" physical="linux|ram" virtualAddress="16#00a0_0000#" writable="true" executable="true"/>
+			</memory>
+			<devices>
+				<device logical="ttyS0" physical="serial">
+					<ioPort logical="port1" physical="port1"/>
+				</device>
+				<device logical="cmos_rtc" physical="cmos_rtc">
+					<ioPort logical="ports" physical="ports"/>
+				</device>
+				<device logical="xhci" physical="xhci">
+					<irq logical="xhci_irq" physical="irq" vector="55"/>
+					<memory logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true" executable="false"/>
+				</device>
+				<device logical="eth0" physical="ethernet">
+					<irq logical="eth0_irq" physical="irq" vector="59"/>
+					<memory logical="mmio1" physical="mmio1" virtualAddress="16#d250_0000#" writable="true" executable="false"/>
+					<memory logical="mmio2" physical="mmio2" virtualAddress="16#d253_b000#" writable="true" executable="false"/>
+				</device>
+			</devices>
+			<events>
+				<source>
+					<group name="vmx_exit">
+						<default action="continue">
+							<notify physical="trap_to_sm"/>
+						</default>
+					</group>
+				</source>
+				<target>
+					<event physical="resume_linux" logical="resume_after_trap" vector="none"/>
+				</target>
+			</events>
+			<channels>
+				<reader ref="virtual_time" virtualAddress="16#2000#"/>
+				<reader ref="virtual_keyboard" virtualAddress="16#3000#" vector="49"/>
+				<writer ref="virtual_console" virtualAddress="16#4000#" event="1"/>
+			</channels>
+			<binary filename="bzImage" size="16#0023_0000#" virtualAddress="16#0040_0000#"/>
+		</subject>
+	</subjects>
+
+	<scheduling tickRate="10000">
+		<majorFrame>
+			<cpu id="0">
+				<minorFrame subject="vt" ticks="60"/>
+				<minorFrame subject="vt" ticks="60"/>
+			</cpu>
+			<cpu id="1">
+				<minorFrame subject="linux" ticks="120"/>
+			</cpu>
+			<cpu id="2">
+				<minorFrame subject="time" ticks="120"/>
+			</cpu>
+			<cpu id="3">
+				<minorFrame subject="tau0" ticks="120"/>
+			</cpu>
+		</majorFrame>
+		<majorFrame>
+			<cpu id="0">
+				<minorFrame subject="vt" ticks="120"/>
+			</cpu>
+			<cpu id="1">
+				<minorFrame subject="linux" ticks="120"/>
+			</cpu>
+			<cpu id="2">
+				<minorFrame subject="time" ticks="120"/>
+			</cpu>
+			<cpu id="3">
+				<minorFrame subject="tau0" ticks="120"/>
+			</cpu>
+		</majorFrame>
+	</scheduling>
+</system>

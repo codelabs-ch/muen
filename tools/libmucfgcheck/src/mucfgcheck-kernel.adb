@@ -21,6 +21,8 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
+with Mutools.Constants;
+
 package body Mucfgcheck.Kernel
 is
 
@@ -46,6 +48,72 @@ is
                        Right     => Addr,
                        Error_Msg => "differs");
    end CPU_Store_Address_Equality;
+
+   -------------------------------------------------------------------------
+
+   procedure IOMMU_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
+   is
+      XPath : constant String
+        := "/system/kernel/devices/device[starts-with(@physical,'iommu')]"
+        & "/memory";
+
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => XPath);
+
+      --  Returns True if the left and right IOMMU memory regions are adjacent.
+      function Is_Adjacent_IOMMU_Region
+        (Left, Right : DOM.Core.Node)
+         return Boolean;
+
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
+            Name => "physical");
+      begin
+         return "Mapping of MMIO region of IOMMU '" & Name & "' not adjacent "
+           & "to other IOMMU regions";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Is_Adjacent_IOMMU_Region
+        (Left, Right : DOM.Core.Node)
+         return Boolean
+      is
+         use Interfaces;
+
+         L_Addr : constant Unsigned_64 := Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Left,
+               Name => "virtualAddress"));
+         R_Addr : constant Unsigned_64 := Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Right,
+               Name => "virtualAddress"));
+      begin
+         return L_Addr + Mutools.Constants.Page_Size = R_Addr
+           or R_Addr + Mutools.Constants.Page_Size = L_Addr;
+      end Is_Adjacent_IOMMU_Region;
+   begin
+      if DOM.Core.Nodes.Length (List => Nodes) < 2 then
+         return;
+      end if;
+
+      For_Each_Match (XML_Data     => XML_Data,
+                      Source_XPath => XPath,
+                      Ref_XPath    => XPath,
+                      Log_Message  => "IOMMU region(s) for consecutiveness",
+                      Error        => Error_Msg'Access,
+                      Match        => Is_Adjacent_IOMMU_Region'Access);
+   end IOMMU_Consecutiveness;
 
    -------------------------------------------------------------------------
 

@@ -27,4 +27,7 @@ is
    --  Validate that all stack virtual addresses are equal.
    procedure Stack_Address_Equality (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that all IOMMU memory-mapped IO regions are consecutive.
+   procedure IOMMU_Consecutiveness (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Kernel;

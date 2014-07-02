@@ -691,6 +691,12 @@ is
           (Doc   => Policy.Doc,
            XPath => "/system/memory/memory[@type='system_vtd_root']",
            Name  => "physicalAddress");
+      Base_Addr   : constant String
+        := Muxml.Utils.Get_Attribute
+          (Doc   => Policy.Doc,
+           XPath => "/system/kernel/devices/device[@physical='iommu_1']/"
+             & "memory[@physical='mmio']",
+           Name  => "virtualAddress");
       IOMMUs      : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -725,6 +731,10 @@ is
         (Template => Tmpl,
          Pattern  => "__root_table_addr__",
          Content  => (if Root_Addr'Length > 0 then Root_Addr else "0"));
+      Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__base_addr__",
+         Content  => (if Base_Addr'Length > 0 then Base_Addr else "0"));
       Templates.Replace
         (Template => Tmpl,
          Pattern  => "__iommu_device_range__",

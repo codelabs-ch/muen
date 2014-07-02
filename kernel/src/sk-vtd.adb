@@ -36,6 +36,10 @@ is
      with
        Size => 1;
 
+   type Bit_Array is array (Positive range <>) of Bit_Type
+     with
+       Pack;
+
    type Bit_2_Type is mod 2 ** 2
      with
        Size => 2;
@@ -48,37 +52,13 @@ is
      with
        Size => 12;
 
-   type Bit_13_Type is mod 2 ** 13
-     with
-       Size => 13;
-
    type Bit_20_Type is mod 2 ** 20
      with
        Size => 20;
 
-   type Bit_23_Type is mod 2 ** 23
-     with
-       Size => 23;
-
-   type Bit_24_Type is mod 2 ** 24
-     with
-       Size => 24;
-
-   type Bit_30_Type is mod 2 ** 30
-     with
-       Size => 30;
-
    type Bit_52_Type is mod 2 ** 52
      with
        Size => 52;
-
-   type Bit_60_Type is mod 2 ** 60
-     with
-       Size => 60;
-
-   type Bit_61_Type is mod 2 ** 61
-     with
-       Size => 61;
 
    --  Registers
 
@@ -86,7 +66,7 @@ is
    type Reg_Version_Type is record
       MIN      : Bit_4_Type;
       MAX      : Bit_4_Type;
-      Reserved : Bit_24_Type;
+      Reserved : Bit_Array (1 .. 24);
    end record
      with
        Size => 32;
@@ -99,7 +79,7 @@ is
 
    --  Global Command Register (16#0018#)
    type Reg_Global_Command_Type is record
-      Reserved : Bit_23_Type;
+      Reserved : Bit_Array (1 .. 23);
       CFI      : Bit_Type;
       SIRTP    : Bit_Type;
       IRE      : Bit_Type;
@@ -128,7 +108,7 @@ is
 
    --  Global Status Register (16#001c#)
    type Reg_Global_Status_Type is record
-      Reserved : Bit_23_Type;
+      Reserved : Bit_Array (1 .. 23);
       CFIS     : Bit_Type;
       IRTPS    : Bit_Type;
       IRES     : Bit_Type;
@@ -157,7 +137,7 @@ is
 
    --  Context Command Register (16#0028#)
    type Reg_Context_Command_Type is record
-      Unused : Bit_61_Type;
+      Unused : Bit_Array (1 .. 61);
       CIRG   : Bit_2_Type;
       ICC    : Bit_Type;
    end record
@@ -200,7 +180,7 @@ is
    end record;
 
    type Reg_Fault_Event_Control_Type is record
-      Reserved : Bit_30_Type;
+      Reserved : Bit_Array (1 .. 30);
       IP       : Bit_Type;
       IM       : Bit_Type;
    end record
@@ -226,7 +206,7 @@ is
    end record;
 
    type Reg_Fault_Event_Address_Type is record
-      Reserved_1       : Bit_2_Type;
+      Reserved_1       : Bit_Array (1 .. 2);
       Destination_Mode : Bit_Type;
       Redirection_Hint : Bit_Type;
       Reserved_2       : SK.Byte;
@@ -248,7 +228,7 @@ is
    --  IOTLB Invalidate Register (dynamic)
 
    type Reg_IOTLB_Invalidate is record
-      Unused   : Bit_60_Type;
+      Unused   : Bit_Array (1 .. 60);
       IIRG     : Bit_2_Type;
       Reserved : Bit_Type;
       IVT      : Bit_Type;
@@ -263,10 +243,10 @@ is
 
    --  Fault Recording Register (dynamic)
    type Reg_Fault_Recording_Type is record
-      Reserved_1 : Bit_12_Type;
+      Reserved_1 : Bit_Array (1 .. 12);
       FI         : Bit_52_Type;
       SID        : SK.Word16;
-      Reserved_2 : Bit_13_Type;
+      Reserved_2 : Bit_Array (1 .. 13);
       PRIV       : Bit_Type;
       EXE        : Bit_Type;
       PP         : Bit_Type;

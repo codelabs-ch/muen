@@ -410,7 +410,13 @@ is
    is
       Status : Reg_Fault_Status_Type;
    begin
+
+      --  Systems without an IOMMU have a null range.
+
+      pragma Warnings (Off);
       for I in Skp.IOMMU.IOMMU_Device_Range loop
+         pragma Warnings (On);
+
          Status := IOMMUs (I).Fault_Status;
 
          if Status.PPF = 1 then
@@ -461,7 +467,13 @@ is
    is
       Version : Reg_Version_Type;
    begin
+
+      --  Systems without an IOMMU have a null range.
+
+      pragma Warnings (Off);
       for I in Skp.IOMMU.IOMMU_Device_Range loop
+         pragma Warnings (On);
+
          Version := IOMMUs (I).Version;
 
          --  Basic sanity check, TODO: check IOMMU capabilities.

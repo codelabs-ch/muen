@@ -30,8 +30,8 @@ DUMMY := $(shell mkdir -p $(OBJ_DIR))
 all: hwchange .validated $(OUTPUT) $(DSDT)
 
 hwchange:
-	$(if $(findstring $(HARDWARE),$(LAST_HW)),,rm -f $(OBJ_DIR)/*; \
-		echo $(HARDWARE) > $(OBJ_DIR)/.hw)
+	$(if $(findstring $(HARDWARE)/$(SYSTEM),$(LAST_HW)),,rm -f $(OBJ_DIR)/*; \
+		echo $(HARDWARE)/$(SYSTEM) > $(OBJ_DIR)/.hw)
 
 $(DSDT_OBJ) $(POLICY_SRC): $(MUCFGMERGE) $(POLICY) $(DSDT_SRC) $(PLATFORM)
 	@$(MUCFGMERGE) -p$(PLATFORM) $(POLICY) $(POLICY_SRC)

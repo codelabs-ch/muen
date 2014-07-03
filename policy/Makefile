@@ -4,10 +4,10 @@ DSDT_SRC = platform/$(HARDWARE).dsl
 DSDT_OBJ = $(OBJ_DIR)/linux_dsdt.dsl
 DSDT     = $(OBJ_DIR)/linux_dsdt.aml
 
-POLICY     = xml/demo_system.xml
-POLICY_SRC = $(OBJ_DIR)/demo_system.xml
-POLICY_A   = $(OBJ_DIR)/demo_system_a.xml
-POLICY_B   = $(OBJ_DIR)/demo_system_b.xml
+POLICY     = xml/$(SYSTEM).xml
+POLICY_SRC = $(OBJ_DIR)/$(SYSTEM).xml
+POLICY_A   = $(OBJ_DIR)/$(SYSTEM)_a.xml
+POLICY_B   = $(OBJ_DIR)/$(SYSTEM)_b.xml
 PLATFORM   = platform/$(HARDWARE).xml
 
 GENERATORS =         \

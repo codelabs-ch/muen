@@ -35,17 +35,23 @@ is
 
    procedure Add_PCI_Config_Space (Data : in out Muxml.XML_Data_Type)
    is
-      Cfg_Start_Addr : constant Interfaces.Unsigned_64
-        := Interfaces.Unsigned_64'Value
-          (Muxml.Utils.Get_Attribute
+      Start_Addr_Str : constant String
+        := Muxml.Utils.Get_Attribute
              (Doc   => Data.Doc,
               XPath => "/system/platform/devices",
-              Name  => "pciConfigAddress"));
-      PCI_Devices : constant DOM.Core.Node_List
+              Name  => "pciConfigAddress");
+      PCI_Devices    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/platform/devices/device[pci]");
+      Cfg_Start_Addr : Interfaces.Unsigned_64;
    begin
+      if Start_Addr_Str'Length = 0 then
+         return;
+      end if;
+
+      Cfg_Start_Addr := Interfaces.Unsigned_64'Value (Start_Addr_Str);
+
       for I in 0 .. DOM.Core.Nodes.Length (List => PCI_Devices) - 1 loop
          declare
             use type Interfaces.Unsigned_64;

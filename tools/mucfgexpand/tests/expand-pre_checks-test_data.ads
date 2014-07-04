@@ -9,6 +9,7 @@ with Ada.Exceptions;
 
 with DOM.Core.Nodes;
 with DOM.Core.Documents;
+with DOM.Core.Elements;
 
 with Muxml.Utils;
 with Mucfgcheck;

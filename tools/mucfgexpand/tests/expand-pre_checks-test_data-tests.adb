@@ -229,6 +229,47 @@ package body Expand.Pre_Checks.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Multiple_Readers
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_Src,
+                      File => "data/test_policy.xml");
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/channels/channel[@name='data_channel2']",
+            Name  => "hasEvent",
+            Value => "");
+         declare
+            Node   : DOM.Core.Node := Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "/system/subjects/subject[@name='subject1']/channels");
+            Reader : DOM.Core.Node := DOM.Core.Documents.Create_Element
+              (Doc      => Policy.Doc,
+               Tag_Name => "reader");
+         begin
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Reader,
+               Name  => "physical",
+               Value => "data_channel2");
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Reader,
+               Name  => "virtualAddress",
+               Value => "16#6000#");
+            Muxml.Utils.Append_Child (Node      => Node,
+                                      New_Child => Reader);
+         end;
+
+         Channel_Reader_Writer (XML_Data => Policy);
+
+         --  Must not raise an exception.
+
+      end Multiple_Readers;
+
+      ----------------------------------------------------------------------
+
       procedure No_Reader
       is
          Policy : Muxml.XML_Data_Type;
@@ -287,6 +328,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    begin
       No_Writer;
       No_Reader;
+      Multiple_Readers;
 --  begin read only
    end Test_Channel_Reader_Writer;
 --  end read only

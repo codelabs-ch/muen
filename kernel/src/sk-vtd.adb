@@ -62,7 +62,7 @@ is
 
    --  Registers
 
-   --  Version register (16#0000#)
+   --  Version register
    type Reg_Version_Type is record
       MIN      : Bit_4_Type;
       MAX      : Bit_4_Type;
@@ -77,7 +77,7 @@ is
       Reserved at 0 range 8 .. 31;
    end record;
 
-   --  Global Command Register (16#0018#)
+   --  Global Command Register
    type Reg_Global_Command_Type is record
       Reserved : Bit_Array (1 .. 23);
       CFI      : Bit_Type;
@@ -106,7 +106,7 @@ is
       TE       at 0 range 31 .. 31;
    end record;
 
-   --  Global Status Register (16#001c#)
+   --  Global Status Register
    type Reg_Global_Status_Type is record
       Reserved : Bit_Array (1 .. 23);
       CFIS     : Bit_Type;
@@ -135,7 +135,7 @@ is
       TES      at 0 range 31 .. 31;
    end record;
 
-   --  Context Command Register (16#0028#)
+   --  Context Command Register
    type Reg_Context_Command_Type is record
       Unused : Bit_Array (1 .. 61);
       CIRG   : Bit_2_Type;
@@ -309,19 +309,19 @@ is
 
    pragma Warnings (Off, "*-bit gap before component *");
    for IOMMU_Type use record
-      Version             at  0 range 0 .. 31;
-      Reserved_1          at  4 range 0 .. 31;
-      Capability          at  8 range 0 .. 63;
-      Ext_Capability      at 16 range 0 .. 63;
-      Global_Command      at 24 range 0 .. 31;
-      Global_Status       at 28 range 0 .. 31;
-      Root_Table_Address  at 32 range 0 .. 63;
-      Context_Command     at 40 range 0 .. 63;
-      Reserved_2          at 48 range 0 .. 31;
-      Fault_Status        at 52 range 0 .. 31;
-      Fault_Event_Control at 56 range 0 .. 31;
-      Fault_Event_Data    at 60 range 0 .. 31;
-      Fault_Event_Address at 64 range 0 .. 31;
+      Version             at 16#00# range 0 .. 31;
+      Reserved_1          at 16#04# range 0 .. 31;
+      Capability          at 16#08# range 0 .. 63;
+      Ext_Capability      at 16#10# range 0 .. 63;
+      Global_Command      at 16#18# range 0 .. 31;
+      Global_Status       at 16#1c# range 0 .. 31;
+      Root_Table_Address  at 16#20# range 0 .. 63;
+      Context_Command     at 16#28# range 0 .. 63;
+      Reserved_2          at 16#30# range 0 .. 31;
+      Fault_Status        at 16#34# range 0 .. 31;
+      Fault_Event_Control at 16#38# range 0 .. 31;
+      Fault_Event_Data    at 16#3c# range 0 .. 31;
+      Fault_Event_Address at 16#40# range 0 .. 31;
       IOTLB_Invalidate    at IOTLB_Offset range 0 .. 63;
       Fault_Recording     at FR_Offset    range 0 .. 127;
    end record;

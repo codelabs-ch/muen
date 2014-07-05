@@ -55,6 +55,7 @@ is
       for I in 0 .. DOM.Core.Nodes.Length (List => PCI_Devices) - 1 loop
          declare
             use type Interfaces.Unsigned_64;
+            use type DOM.Core.Node;
 
             Device    : constant DOM.Core.Node := DOM.Core.Nodes.Item
               (List  => PCI_Devices,
@@ -103,15 +104,17 @@ is
                Caching     => "UC",
                Alignment   => "",
                Memory_Type => ""));
-            Muxml.Utils.Append_Child
-              (Node      => Dev_Ref_Node,
-               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
-                 (Policy        => Data,
-                  Logical_Name  => "mmconf",
-                  Physical_Name => "mmconf",
-                  Address       => PCI_Cfg_Addr_Str,
-                  Writable      => True,
-                  Executable    => False));
+            if Dev_Ref_Node /= null then
+               Muxml.Utils.Append_Child
+                 (Node      => Dev_Ref_Node,
+                  New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+                    (Policy        => Data,
+                     Logical_Name  => "mmconf",
+                     Physical_Name => "mmconf",
+                     Address       => PCI_Cfg_Addr_Str,
+                     Writable      => True,
+                     Executable    => False));
+            end if;
          end;
       end loop;
    end Add_PCI_Config_Space;

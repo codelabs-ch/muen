@@ -1,8 +1,8 @@
 OUTPUT   = $(OBJ_DIR)/skp.ads
 LAST_CFG = $(shell cat $(OBJ_DIR)/.cfg 2>/dev/null)
 DSDT_SRC = platform/$(HARDWARE).dsl
-DSDT_OBJ = $(OBJ_DIR)/linux_dsdt.dsl
-DSDT     = $(OBJ_DIR)/linux_dsdt.aml
+DSDT_OBJ = $(DSDT).dsl
+DSDT     = $(OBJ_DIR)/linux_dsdt
 
 POLICY     = xml/$(SYSTEM).xml
 POLICY_SRC = $(OBJ_DIR)/$(SYSTEM).xml
@@ -27,7 +27,7 @@ include ../Makeconf
 
 DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
-all: cfgchange .validated $(OUTPUT) $(DSDT)
+all: cfgchange .validated $(OUTPUT) $(DSDT).aml
 
 cfgchange:
 	$(if $(findstring $(HARDWARE)/$(SYSTEM),$(LAST_CFG)),,rm -f $(OBJ_DIR)/*; \
@@ -47,8 +47,8 @@ $(POLICY_B): $(POLICY_A) $(MUCFGALLOC)
 	@$(MUCFGVALIDATE) $<
 	@touch $@
 
-$(DSDT): $(DSDT_OBJ)
-	@iasl -p$(OBJ_DIR)/linux_dsdt -ta $<
+%.aml: %.dsl
+	@iasl -p$@ -ta $<
 
 $(OUTPUT): $(GENERATORS) $(POLICY_B)
 	@for gen in $(GENERATORS); do $$gen $(GENERATOR_OPTS) || exit 1; done

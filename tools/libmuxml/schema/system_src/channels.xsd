@@ -26,12 +26,16 @@
 	</xs:complexType>
 
 	<xs:complexType name="channelReaderType">
-		<xs:attribute name="ref"            type="nameType"   use="required"/>
+		<xs:attribute name="logical"        type="nameType"   use="optional"/>
+		<xs:attribute name="physical"       type="nameType"   use="optional"/>
+		<xs:attribute name="ref"            type="nameType"   use="reguired"/>
 		<xs:attribute name="virtualAddress" type="word64Type" use="required"/>
 		<xs:attribute name="vector"         type="vectorType" use="optional"/>
 	</xs:complexType>
 
 	<xs:complexType name="channelWriterType">
+		<xs:attribute name="logical"        type="nameType"              use="optional"/>
+		<xs:attribute name="physical"       type="nameType"              use="optional"/>
 		<xs:attribute name="ref"            type="nameType"              use="required"/>
 		<xs:attribute name="virtualAddress" type="word64Type"            use="required"/>
 		<xs:attribute name="event"          type="xs:nonNegativeInteger" use="optional"/>

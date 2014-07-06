@@ -250,13 +250,13 @@ is
             Writer_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Data.Doc,
-                 XPath => "/system/subjects/subject/channels/writer[@ref='"
-                 & Channel_Name & "']");
+                 XPath => "/system/subjects/subject/channels/writer"
+                 & "[@physical='" & Channel_Name & "']");
             Reader_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Data.Doc,
-                 XPath => "/system/subjects/subject/channels/reader[@ref='"
-                 & Channel_Name & "']");
+                 XPath => "/system/subjects/subject/channels/reader"
+                 & "[@physical='" & Channel_Name & "']");
             Writer_Subj_Source_Group, Reader_Subj_Target_Node : DOM.Core.Node;
          begin
             Event_Node := DOM.Core.Documents.Create_Element
@@ -296,7 +296,7 @@ is
                Name : constant String
                  := DOM.Core.Elements.Get_Attribute
                    (Elem => Writer_Node,
-                    Name => "ref");
+                    Name => "physical");
             begin
                if Vector = Null_Unbounded_String then
                   Vector := To_Unbounded_String ("none");
@@ -340,7 +340,11 @@ is
             Channel_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Channel_Node,
-                 Name => "ref");
+                 Name => "physical");
+            Logical_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Channel_Node,
+                 Name => "logical");
             Channel_Addr : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Channel_Node,
@@ -368,7 +372,7 @@ is
               (Node      => Mem_Node,
                New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
-                  Logical_Name  => Channel_Name,
+                  Logical_Name  => Logical_Name,
                   Physical_Name => Channel_Name,
                   Address       => Channel_Addr,
                   Writable      => Channel_Writer,

@@ -66,8 +66,8 @@
    <initrd filename="initramfs.cpio.gz" size="16#0030_0000#"/>
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
-    <memory executable="false" logical="data_channel" physical="data_channel" virtualAddress="16#6000#" writable="false"/>
-    <memory executable="false" logical="data_channel2" physical="data_channel2" virtualAddress="16#7000#" writable="false"/>
+    <memory executable="false" logical="primary_data" physical="data_channel" virtualAddress="16#6000#" writable="false"/>
+    <memory executable="false" logical="secondary_data" physical="data_channel2" virtualAddress="16#7000#" writable="false"/>
    </memory>
    <devices>
     <device logical="xhci" physical="xhci">
@@ -93,8 +93,8 @@
   <subject name="subject1" profile="native">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
-    <memory executable="false" logical="data_channel" physical="data_channel" virtualAddress="16#3000#" writable="true"/>
-    <memory executable="false" logical="data_channel2" physical="data_channel2" virtualAddress="16#3000#" writable="true"/>
+    <memory executable="false" logical="primary_data" physical="data_channel" virtualAddress="16#3000#" writable="true"/>
+    <memory executable="false" logical="secondary_data" physical="data_channel2" virtualAddress="16#3000#" writable="true"/>
    </memory>
    <devices>
     <device logical="nic1" physical="nic1">

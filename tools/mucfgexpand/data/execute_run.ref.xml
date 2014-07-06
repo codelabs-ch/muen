@@ -574,8 +574,8 @@
     <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000c_0000#" writable="false"/>
     <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000d_0000#" writable="false"/>
     <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000f_0000#" writable="false"/>
-    <memory executable="false" logical="data_channel" physical="data_channel" virtualAddress="16#6000#" writable="false"/>
-    <memory executable="false" logical="data_channel2" physical="data_channel2" virtualAddress="16#7000#" writable="false"/>
+    <memory executable="false" logical="primary_data" physical="data_channel" virtualAddress="16#6000#" writable="false"/>
+    <memory executable="false" logical="secondary_data" physical="data_channel2" virtualAddress="16#7000#" writable="false"/>
     <memory executable="true" logical="initramfs" physical="lnx|initramfs" virtualAddress="16#0010_0000#" writable="true"/>
    </memory>
    <devices>
@@ -942,8 +942,8 @@
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
     <memory executable="true" logical="binary" physical="subject1|bin" virtualAddress="16#0020_0000#" writable="true"/>
     <memory executable="false" logical="lnx_state" physical="lnx_state" virtualAddress="16#4000#" writable="true"/>
-    <memory executable="false" logical="data_channel" physical="data_channel" virtualAddress="16#3000#" writable="true"/>
-    <memory executable="false" logical="data_channel2" physical="data_channel2" virtualAddress="16#3000#" writable="true"/>
+    <memory executable="false" logical="primary_data" physical="data_channel" virtualAddress="16#3000#" writable="true"/>
+    <memory executable="false" logical="secondary_data" physical="data_channel2" virtualAddress="16#3000#" writable="true"/>
    </memory>
    <devices>
     <device logical="nic1" physical="nic1">

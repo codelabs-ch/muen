@@ -59,10 +59,10 @@
 			</devices>
 			<events/>
 			<channels>
-				<reader ref="virtual_console" virtualAddress="16#0010_0000#" vector="34"/>
-				<reader ref="time_console" virtualAddress="16#0011_0000#" vector="35"/>
-				<reader ref="sm_console" virtualAddress="16#0012_0000#" vector="36"/>
-				<writer ref="virtual_keyboard" virtualAddress="16#0005_0000#" event="1"/>
+				<reader logical="console_1" physical="virtual_console" ref="virtual_console" virtualAddress="16#0010_0000#" vector="34"/>
+				<reader logical="console_2" physical="time_console" ref="time_console" virtualAddress="16#0011_0000#" vector="35"/>
+				<reader logical="console_3" physical="sm_console" ref="sm_console" virtualAddress="16#0012_0000#" vector="36"/>
+				<writer logical="keyboard" physical="virtual_keyboard" ref="virtual_keyboard" virtualAddress="16#0005_0000#" event="1"/>
 			</channels>
 			<binary filename="vt" size="16#0002_4000#" virtualAddress="16#1000#"/>
 		</subject>
@@ -75,8 +75,8 @@
 			</devices>
 			<events/>
 			<channels>
-				<writer ref="virtual_time" virtualAddress="16#0002_0000#"/>
-				<writer ref="time_console" virtualAddress="16#000b_8000#" event="1"/>
+				<writer logical="time" physical="virtual_time" ref="virtual_time" virtualAddress="16#0002_0000#"/>
+				<writer logical="console" physical="time_console" ref="time_console" virtualAddress="16#000b_8000#" event="1"/>
 			</channels>
 			<binary filename="time" size="16#0001_4000#" virtualAddress="16#1000#"/>
 		</subject>
@@ -95,7 +95,7 @@
 				</target>
 			</events>
 			<channels>
-				<writer ref="sm_console" virtualAddress="16#000b_8000#" event="1"/>
+				<writer logical="console" physical="sm_console" ref="sm_console" virtualAddress="16#000b_8000#" event="1"/>
 			</channels>
 			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
 			<monitor>
@@ -130,9 +130,9 @@
 				</target>
 			</events>
 			<channels>
-				<reader ref="virtual_time" virtualAddress="16#2000#"/>
-				<reader ref="virtual_keyboard" virtualAddress="16#3000#" vector="49"/>
-				<writer ref="virtual_console" virtualAddress="16#4000#" event="1"/>
+				<reader logical="virtual_time" physical="virtual_time" ref="virtual_time" virtualAddress="16#2000#"/>
+				<reader logical="virtual_keyboard" physical="virtual_keyboard" ref="virtual_keyboard" virtualAddress="16#3000#" vector="49"/>
+				<writer logical="virtual_console" physical="virtual_console" ref="virtual_console" virtualAddress="16#4000#" event="1"/>
 			</channels>
 			<binary filename="bzImage" size="16#0023_0000#" virtualAddress="16#0040_0000#"/>
 		</subject>

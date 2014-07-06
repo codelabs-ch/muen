@@ -80,14 +80,14 @@ is
               := DOM.Core.Nodes.Length
                 (List => McKae.XML.XPath.XIA.XPath_Query
                    (N     => XML_Data.Doc,
-                    XPath => "/system/subjects/subject/channels/reader[@ref='"
-                    & Channel_Name & "']"));
+                    XPath => "/system/subjects/subject/channels/reader"
+                    & "[@physical='" & Channel_Name & "']"));
             Writer_Count : constant Natural
               := DOM.Core.Nodes.Length
                 (List => McKae.XML.XPath.XIA.XPath_Query
                    (N     => XML_Data.Doc,
-                    XPath => "/system/subjects/subject/channels/writer[@ref='"
-                    & Channel_Name & "']"));
+                    XPath => "/system/subjects/subject/channels/writer"
+                    & "[@physical='" & Channel_Name & "']"));
          begin
             if Reader_Count /= 1 then
                raise Mucfgcheck.Validation_Error with "Invalid number of "
@@ -147,7 +147,7 @@ is
               := Muxml.Utils.Get_Element
                 (Doc   => XML_Data.Doc,
                  XPath => "/system/subjects/subject/channels/" & Endpoint
-                 & "[@ref='" & Channel_Name & "']");
+                 & "[@physical='" & Channel_Name & "']");
          begin
             if DOM.Core.Elements.Get_Attribute
               (Elem => Node,
@@ -235,7 +235,7 @@ is
       is
          Ref_Channel_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
-            Name => "ref");
+            Name => "physical");
          Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Muxml.Utils.Ancestor_Node
               (Node  => Node,
@@ -252,7 +252,7 @@ is
       is
          Ref_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Left,
-            Name => "ref");
+            Name => "physical");
          Channel_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Right,
             Name => "name");

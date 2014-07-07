@@ -1,6 +1,7 @@
 include Makeconf
 
 export HARDWARE
+export SYSTEM
 
 ifeq (,$(filter $(MAKECMDGOALS),clean distclean))
 CONTRIB := $(shell $(MAKE) -C contrib)
@@ -27,6 +28,7 @@ tools:
 	$(MAKE) -C $@
 
 deploy: HARDWARE=lenovo-t430s
+deploy: SYSTEM=demo_system_vtd
 deploy: pack
 	$(MAKE) -C $@
 

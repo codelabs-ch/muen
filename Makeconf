@@ -28,3 +28,4 @@ TO_RAW_OPTS = -O binary --set-section-flags .bss=alloc,load,contents
 TO_RAW_CMD  = objcopy $(TO_RAW_OPTS)
 
 HARDWARE ?= bochs
+SYSTEM   ?= demo_system

@@ -7,7 +7,7 @@
 		</memory>
 		<devices>
 			<device name="vga" shared="false">
-				<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
+				<memory name="buffer" physicalAddress="16#000b_8000#" size="16#8000#" caching="WC"/>
 				<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
 			</device>
 			<device name="keyboard" shared="false">

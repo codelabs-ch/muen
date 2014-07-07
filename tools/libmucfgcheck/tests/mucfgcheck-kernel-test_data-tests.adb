@@ -87,4 +87,42 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
    end Test_Stack_Address_Equality;
 --  end read only
 
+
+--  begin read only
+   procedure Test_IOMMU_Consecutiveness (Gnattest_T : in out Test);
+   procedure Test_IOMMU_Consecutiveness_fc88d4 (Gnattest_T : in out Test) renames Test_IOMMU_Consecutiveness;
+--  id:2.2/fc88d4365ce63af7/IOMMU_Consecutiveness/1/0/
+   procedure Test_IOMMU_Consecutiveness (Gnattest_T : in out Test) is
+   --  mucfgcheck-kernel.ads:31:4:IOMMU_Consecutiveness
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/devices/device[@physical='iommu_2']/memory",
+         Name  => "virtualAddress",
+         Value => "16#0021_0000#");
+
+      begin
+         IOMMU_Consecutiveness (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Mapping of MMIO region of IOMMU 'iommu_1' not adjacent "
+                    & "to other IOMMU regions",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_IOMMU_Consecutiveness;
+--  end read only
+
 end Mucfgcheck.Kernel.Test_Data.Tests;

@@ -28,7 +28,7 @@
 	</platform>
 
 	<memory>
-		<memory name="linux|ram" size="16#0f60_0000#" physicalAddress="16#00a0_0000#" caching="WB"/>
+		<memory name="linux|ram" size="16#0f60_0000#" alignment="16#0020_0000#" caching="WB"/>
 	</memory>
 
 	<events>

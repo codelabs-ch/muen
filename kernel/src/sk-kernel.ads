@@ -23,6 +23,7 @@ with SK.IO_Apic;
 with SK.MP;
 with SK.Scheduler;
 with SK.Subjects;
+with SK.VTd;
 with X86_64;
 
 package SK.Kernel
@@ -35,7 +36,7 @@ is
         (Input  => Scheduler.State,
          Output => CPU_Global.State,
          In_Out => (CPU_Registry.State, Interrupts.State, IO_Apic.State,
-                    MP.Barrier, Subjects.State, X86_64.State)),
+                    MP.Barrier, Subjects.State, VTd.State, X86_64.State)),
       Export,
       Convention => C,
       Link_Name  => "sk_initialize";

@@ -15,5 +15,8 @@ package Mucfgcheck.Kernel.Test_Data.Tests is
    procedure Test_Stack_Address_Equality_61fb48 (Gnattest_T : in out Test);
    --  mucfgcheck-kernel.ads:28:4:Stack_Address_Equality
 
+   procedure Test_IOMMU_Consecutiveness_fc88d4 (Gnattest_T : in out Test);
+   --  mucfgcheck-kernel.ads:31:4:IOMMU_Consecutiveness
+
 end Mucfgcheck.Kernel.Test_Data.Tests;
 --  end read only

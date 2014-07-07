@@ -76,6 +76,7 @@ is
       if Is_Bsp then
          Interrupts.Disable_Legacy_PIC;
          Interrupts.Setup_IRQ_Routing;
+         VTd.Initialize;
       end if;
 
       System_State.Enable_VMX_Feature;

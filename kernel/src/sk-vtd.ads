@@ -16,18 +16,24 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muxml;
+with X86_64;
 
-package Mucfgcheck.Kernel
+package SK.VTd
+with
+   Abstract_State =>
+     (State with External => (Async_Writers, Async_Readers, Effective_Writes)),
+   Initializes    => State
 is
 
-   --  Validate that all CPU store virtual addresses are equal.
-   procedure CPU_Store_Address_Equality (XML_Data : Muxml.XML_Data_Type);
+   --  Initialize VT-d device isolation.
+   procedure Initialize
+   with
+      Global  => (In_Out => (X86_64.State, State)),
+      Depends => ((X86_64.State, State) =>+ null);
 
-   --  Validate that all stack virtual addresses are equal.
-   procedure Stack_Address_Equality (XML_Data : Muxml.XML_Data_Type);
+   --  Process fault reported by IOMMU.
+   procedure Process_Fault
+   with
+      Global => (In_Out => State);
 
-   --  Validate that all IOMMU memory-mapped IO regions are consecutive.
-   procedure IOMMU_Consecutiveness (XML_Data : Muxml.XML_Data_Type);
-
-end Mucfgcheck.Kernel;
+end SK.VTd;

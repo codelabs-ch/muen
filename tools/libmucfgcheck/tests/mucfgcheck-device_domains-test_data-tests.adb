@@ -162,7 +162,7 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
          XPath => "/system/deviceDomains/domain/memory/memory"
          & "[@physical='linux|ram']",
          Name  => "physical",
-         Value => "wireless|dma");
+         Value => "wireless_dma");
 
       begin
          Memory_Reference_Uniqueness (XML_Data => Data);
@@ -173,7 +173,7 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Device domains 'linux_domain' and 'wireless_domain' "
-                    & "reference same physical memory region 'wireless|dma'",
+                    & "reference same physical memory region 'wireless_dma'",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -280,7 +280,7 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/memory/memory[@name='wireless|dma']",
+         XPath => "/system/memory/memory[@name='wireless_dma']",
          Name  => "type",
          Value => "system_pt");
 
@@ -292,7 +292,7 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Device domain memory 'wireless|dma' has invalid memory"
+                    = "Device domain memory 'wireless_dma' has invalid memory"
                     & " type SYSTEM_PT",
                     Message   => "Exception mismatch");
       end;
@@ -398,7 +398,7 @@ package body Mucfgcheck.Device_Domains.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/memory/memory[@name='context_3']",
+         XPath => "/system/memory/memory[@name='vtd_context_3']",
          Name  => "type",
          Value => "subject");
 

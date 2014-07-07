@@ -186,14 +186,14 @@
   <memory alignment="16#1000#" caching="WB" name="linux|pt" physicalAddress="16#0011_2000#" size="16#7000#" type="system_pt">
    <file filename="linux_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="UC" name="wireless|dma" physicalAddress="16#cafe_1000#" size="16#1000#" type="subject"/>
-  <memory alignment="16#1000#" caching="WB" name="root|vtd" physicalAddress="16#cafe_2000#" size="16#1000#" type="system_vtd_root">
+  <memory alignment="16#1000#" caching="UC" name="wireless_dma" physicalAddress="16#cafe_1000#" size="16#1000#" type="subject"/>
+  <memory alignment="16#1000#" caching="WB" name="vtd_root" physicalAddress="16#cafe_2000#" size="16#1000#" type="system_vtd_root">
    <file filename="vtd_root" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="context_0" physicalAddress="16#cafe_3000#" size="16#1000#" type="system_vtd_context">
+  <memory alignment="16#1000#" caching="WB" name="vtd_context_0" physicalAddress="16#cafe_3000#" size="16#1000#" type="system_vtd_context">
    <file filename="vtd_context_bus_0" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="context_3" physicalAddress="16#cafe_4000#" size="16#1000#" type="system_vtd_context">
+  <memory alignment="16#1000#" caching="WB" name="vtd_context_3" physicalAddress="16#cafe_4000#" size="16#1000#" type="system_vtd_context">
    <file filename="vtd_context_bus_3" offset="none"/>
   </memory>
  </memory>
@@ -209,7 +209,7 @@
   </domain>
   <domain id="2" name="wireless_domain">
    <memory>
-    <memory executable="false" logical="dma" physical="wireless|dma" virtualAddress="16#0020_0000#" writable="true"/>
+    <memory executable="false" logical="dma" physical="wireless_dma" virtualAddress="16#0020_0000#" writable="true"/>
    </memory>
    <devices>
     <device logical="wireless" physical="wireless"/>

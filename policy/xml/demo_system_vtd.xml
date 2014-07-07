@@ -28,7 +28,7 @@
 	</platform>
 
 	<memory>
-		<memory name="linux|ram" size="16#0f60_0000#" alignment="16#0020_0000#" caching="WB"/>
+		<memory name="nic_linux|ram" size="16#0f60_0000#" alignment="16#0020_0000#" caching="WB"/>
 	</memory>
 
 	<deviceDomains>
@@ -44,16 +44,16 @@
 	</deviceDomains>
 
 	<events>
-		<event name="resume_linux" mode="switch"/>
-		<event name="trap_to_sm" mode="switch"/>
+		<event name="resume_nic_linux" mode="switch"/>
+		<event name="trap_to_nic_sm" mode="switch"/>
 	</events>
 
 	<channels>
 		<channel name="virtual_time" size="16#1000#"/>
-		<channel name="virtual_keyboard" size="16#1000#" hasEvent="ipi"/>
-		<channel name="virtual_console" size="16#0001_0000#" hasEvent="ipi"/>
+		<channel name="nic_virtual_keyboard" size="16#1000#" hasEvent="ipi"/>
+		<channel name="nic_virtual_console" size="16#0001_0000#" hasEvent="ipi"/>
 		<channel name="time_console" size="16#0001_0000#" hasEvent="ipi"/>
-		<channel name="sm_console" size="16#0001_0000#" hasEvent="ipi"/>
+		<channel name="nic_sm_console" size="16#0001_0000#" hasEvent="ipi"/>
 	</channels>
 
 	<subjects>
@@ -71,10 +71,10 @@
 			</devices>
 			<events/>
 			<channels>
-				<reader logical="console_1" physical="virtual_console" virtualAddress="16#0010_0000#" vector="34"/>
-				<reader logical="console_3" physical="sm_console" virtualAddress="16#0012_0000#" vector="36"/>
+				<reader logical="console_1" physical="nic_virtual_console" virtualAddress="16#0010_0000#" vector="34"/>
+				<reader logical="console_3" physical="nic_sm_console" virtualAddress="16#0012_0000#" vector="36"/>
 				<reader logical="console_5" physical="time_console" virtualAddress="16#0014_0000#" vector="38"/>
-				<writer logical="keyboard" physical="virtual_keyboard" virtualAddress="16#0005_0000#" event="1"/>
+				<writer logical="keyboard" physical="nic_virtual_keyboard" virtualAddress="16#0005_0000#" event="1"/>
 			</channels>
 			<binary filename="vt" size="16#0003_0000#" virtualAddress="16#1000#"/>
 		</subject>
@@ -93,33 +93,33 @@
 			<binary filename="time" size="16#0001_4000#" virtualAddress="16#1000#"/>
 		</subject>
 
-		<subject name="sm" profile="native">
+		<subject name="nic_sm" profile="native">
 			<events>
 				<source>
 					<group name="vmcall">
-						<event id="4" logical="resume_linux" action="continue">
-							<notify physical="resume_linux"/>
+						<event id="4" logical="resume_nic_linux" action="continue">
+							<notify physical="resume_nic_linux"/>
 						</event>
 					</group>
 				</source>
 				<target>
-					<event physical="trap_to_sm" logical="handle_linux_trap" vector="36"/>
+					<event physical="trap_to_nic_sm" logical="handle_linux_trap" vector="36"/>
 				</target>
 			</events>
 			<channels>
-				<writer logical="console" physical="sm_console" virtualAddress="16#000b_8000#" event="1"/>
+				<writer logical="console" physical="nic_sm_console" virtualAddress="16#000b_8000#" event="1"/>
 			</channels>
 			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
 			<monitor>
-				<state subject="linux" virtualAddress="16#001e_0000#" writable="true"/>
+				<state subject="nic_linux" virtualAddress="16#001e_0000#" writable="true"/>
 			</monitor>
 		</subject>
 
-		<subject name="linux" profile="linux">
+		<subject name="nic_linux" profile="linux">
 			<bootparams>lpj=10000 console=hvc pci=noearly notsc</bootparams>
 			<initrd filename="initramfs.cpio.gz" size="16#0040_0000#"/>
 			<memory>
-				<memory logical="ram" physical="linux|ram" virtualAddress="16#00a0_0000#" writable="true" executable="true"/>
+				<memory logical="ram" physical="nic_linux|ram" virtualAddress="16#00a0_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
 				<device logical="ttyS0" physical="serial">
@@ -142,18 +142,18 @@
 				<source>
 					<group name="vmx_exit">
 						<default action="continue">
-							<notify physical="trap_to_sm"/>
+							<notify physical="trap_to_nic_sm"/>
 						</default>
 					</group>
 				</source>
 				<target>
-					<event physical="resume_linux" logical="resume_after_trap" vector="none"/>
+					<event physical="resume_nic_linux" logical="resume_after_trap" vector="none"/>
 				</target>
 			</events>
 			<channels>
 				<reader logical="virtual_time" physical="virtual_time" virtualAddress="16#2000#"/>
-				<reader logical="virtual_keyboard" physical="virtual_keyboard" virtualAddress="16#3000#" vector="49"/>
-				<writer logical="virtual_console" physical="virtual_console" virtualAddress="16#4000#" event="1"/>
+				<reader logical="virtual_keyboard" physical="nic_virtual_keyboard" virtualAddress="16#3000#" vector="49"/>
+				<writer logical="virtual_console" physical="nic_virtual_console" virtualAddress="16#4000#" event="1"/>
 			</channels>
 			<binary filename="bzImage" size="16#0023_0000#" virtualAddress="16#0040_0000#"/>
 		</subject>
@@ -166,7 +166,7 @@
 				<minorFrame subject="vt" ticks="60"/>
 			</cpu>
 			<cpu id="1">
-				<minorFrame subject="linux" ticks="120"/>
+				<minorFrame subject="nic_linux" ticks="120"/>
 			</cpu>
 			<cpu id="2">
 				<minorFrame subject="time" ticks="120"/>
@@ -180,7 +180,7 @@
 				<minorFrame subject="vt" ticks="120"/>
 			</cpu>
 			<cpu id="1">
-				<minorFrame subject="linux" ticks="120"/>
+				<minorFrame subject="nic_linux" ticks="120"/>
 			</cpu>
 			<cpu id="2">
 				<minorFrame subject="time" ticks="120"/>

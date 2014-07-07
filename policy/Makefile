@@ -2,7 +2,7 @@ OUTPUT   = $(OBJ_DIR)/skp.ads
 LAST_CFG = $(shell cat $(OBJ_DIR)/.cfg 2>/dev/null)
 DSDT_SRC = platform/$(HARDWARE).dsl
 DSDT_OBJ = $(DSDT).dsl
-DSDT     = $(OBJ_DIR)/linux_dsdt
+DSDT     = $(OBJ_DIR)/nic_linux_dsdt
 
 POLICY     = xml/$(SYSTEM).xml
 POLICY_SRC = $(OBJ_DIR)/$(SYSTEM).xml

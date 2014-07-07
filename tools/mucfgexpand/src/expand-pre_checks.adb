@@ -68,7 +68,7 @@ is
                  & "count");
       for I in 0 .. DOM.Core.Nodes.Length (List => Channels) - 1 loop
          declare
-            Channel : constant DOM.Core.Node
+            Channel      : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Channels,
                  Index => I);
@@ -76,6 +76,10 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Channel,
                  Name => "name");
+            Has_Event    : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Channel,
+                 Name => "hasEvent");
             Reader_Count : constant Natural
               := DOM.Core.Nodes.Length
                 (List => McKae.XML.XPath.XIA.XPath_Query
@@ -89,7 +93,9 @@ is
                     XPath => "/system/subjects/subject/channels/writer"
                     & "[@physical='" & Channel_Name & "']"));
          begin
-            if Reader_Count /= 1 then
+            if (Has_Event'Length > 0 and then Reader_Count /= 1)
+              or (Has_Event'Length = 0 and then Reader_Count < 1)
+            then
                raise Mucfgcheck.Validation_Error with "Invalid number of "
                  & "readers for channel '" & Channel_Name & "':"
                  & Reader_Count'Img;

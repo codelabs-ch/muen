@@ -227,39 +227,63 @@ package body Expand.Pre_Checks.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Policy : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Policy,
-                   Kind => Muxml.Format_Src,
-                   File => "data/test_policy.xml");
-      Muxml.Utils.Set_Attribute
-        (Doc   => Policy.Doc,
-         XPath => "/system/subjects/subject/channels/writer"
-         & "[@physical='data_channel']",
-         Name  => "physical",
-         Value => "nonexistent");
+      ----------------------------------------------------------------------
 
+      procedure Multiple_Readers
+      is
+         Policy : Muxml.XML_Data_Type;
       begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_Src,
+                      File => "data/test_policy.xml");
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/channels/channel[@name='data_channel2']",
+            Name  => "hasEvent",
+            Value => "");
+         declare
+            Node   : DOM.Core.Node := Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "/system/subjects/subject[@name='subject1']/channels");
+            Reader : DOM.Core.Node := DOM.Core.Documents.Create_Element
+              (Doc      => Policy.Doc,
+               Tag_Name => "reader");
+         begin
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Reader,
+               Name  => "physical",
+               Value => "data_channel2");
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Reader,
+               Name  => "virtualAddress",
+               Value => "16#6000#");
+            Muxml.Utils.Append_Child (Node      => Node,
+                                      New_Child => Reader);
+         end;
+
          Channel_Reader_Writer (XML_Data => Policy);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
 
-      exception
-         when E : Mucfgcheck.Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Invalid number of writers for channel 'data_channel':"
-                    & " 0",
-                    Message   => "Exception mismatch (writer)");
-      end;
+         --  Must not raise an exception.
 
-      Muxml.Utils.Set_Attribute
-        (Doc   => Policy.Doc,
-         XPath => "/system/subjects/subject/channels/reader"
-         & "[@physical='data_channel']",
-         Name  => "physical",
-         Value => "nonexistent");
+      end Multiple_Readers;
 
+      ----------------------------------------------------------------------
+
+      procedure No_Reader
+      is
+         Policy : Muxml.XML_Data_Type;
       begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_Src,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/subjects/subject/channels/reader"
+            & "[@physical='data_channel']",
+            Name  => "physical",
+            Value => "nonexistent");
+
          Channel_Reader_Writer (XML_Data => Policy);
          Assert (Condition => False,
                  Message   => "Exception expected");
@@ -270,7 +294,41 @@ package body Expand.Pre_Checks.Test_Data.Tests is
                     = "Invalid number of readers for channel 'data_channel':"
                     & " 0",
                     Message   => "Exception mismatch (reader)");
-      end;
+      end No_Reader;
+
+      ----------------------------------------------------------------------
+
+      procedure No_Writer
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_Src,
+                      File => "data/test_policy.xml");
+         Muxml.Utils.Set_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/subjects/subject/channels/writer"
+            & "[@physical='data_channel']",
+            Name  => "physical",
+            Value => "nonexistent");
+
+         Channel_Reader_Writer (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid number of writers for channel 'data_channel':"
+                    & " 0",
+                    Message   => "Exception mismatch (writer)");
+      end No_Writer;
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      No_Writer;
+      No_Reader;
+      Multiple_Readers;
 --  begin read only
    end Test_Channel_Reader_Writer;
 --  end read only

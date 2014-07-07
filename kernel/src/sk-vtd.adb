@@ -415,6 +415,8 @@ is
    begin
 
       --  Systems without an IOMMU have a null range.
+      --  NOTE: Due to ticket N704-009 the 'Reason' attribute of pragma
+      --        Warnings cannot be used.
 
       pragma Warnings (Off);
       for I in Skp.IOMMU.IOMMU_Device_Range loop
@@ -472,6 +474,8 @@ is
    begin
 
       --  Systems without an IOMMU have a null range.
+      --  NOTE: Due to ticket N704-009 the 'Reason' attribute of pragma
+      --        Warnings cannot be used.
 
       pragma Warnings (Off);
       for I in Skp.IOMMU.IOMMU_Device_Range loop

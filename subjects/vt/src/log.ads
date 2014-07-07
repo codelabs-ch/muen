@@ -23,7 +23,8 @@ with Mux.Console_Local;
 package Log
 is
 
-   package Console is new Mux.Console_Local (Assigned_Slot => 4);
+   package Console is new Mux.Console_Local
+     (Assigned_Slot => Mux.Slot_Range'Last);
 
    package Text_IO is new SK.Console
      (Initialize      => Console.Init,

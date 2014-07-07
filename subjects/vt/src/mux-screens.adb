@@ -62,7 +62,7 @@ is
       T1.Init;
       T2.Init (Label => "Time");
       T3.Init (Label => "Subject Monitor (SM)");
-      T4.Init (Label => "Virtual Terminals (VT)");
+      T6.Init (Label => "Virtual Terminals (VT)");
    end Init;
 
    -------------------------------------------------------------------------

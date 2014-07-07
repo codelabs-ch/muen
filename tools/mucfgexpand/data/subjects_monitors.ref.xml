@@ -83,8 +83,8 @@
     </source>
    </events>
    <channels>
-    <reader ref="data_channel" vector="12" virtualAddress="16#6000#"/>
-    <reader ref="data_channel2" virtualAddress="16#7000#"/>
+    <reader logical="primary_data" physical="data_channel" vector="12" virtualAddress="16#6000#"/>
+    <reader logical="secondary_data" physical="data_channel2" virtualAddress="16#7000#"/>
    </channels>
    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>
@@ -106,8 +106,8 @@
     </target>
    </events>
    <channels>
-    <writer event="1" ref="data_channel" virtualAddress="16#3000#"/>
-    <writer event="1" ref="data_channel2" virtualAddress="16#3000#"/>
+    <writer event="1" logical="primary_data" physical="data_channel" virtualAddress="16#3000#"/>
+    <writer event="1" logical="secondary_data" physical="data_channel2" virtualAddress="16#3000#"/>
    </channels>
    <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
   </subject>

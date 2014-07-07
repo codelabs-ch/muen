@@ -61,6 +61,10 @@ is
           (DOM.Core.Elements.Get_Attribute
              (Elem => Virt_Mem_Node,
               Name => "writable"));
+      Log_Name : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Virt_Mem_Node,
+           Name => "logical");
       Size : constant Interfaces.Unsigned_64
         := Interfaces.Unsigned_64'Value
           (DOM.Core.Elements.Get_Attribute
@@ -97,7 +101,8 @@ is
 
       Mulog.Log
         (Msg => "Announcing channel to subject '" & Subject_Name
-         & "': " & Phys_Name & "@" & Mutools.Utils.To_Hex (Number => Address)
+         & "': " & Log_Name & "[" & Phys_Name & "]@"
+         & Mutools.Utils.To_Hex (Number => Address)
          & ", size " & Mutools.Utils.To_Hex (Number => Size) & ", "
          & (if Writable   then "writable" else "read-only")
          & (if Has_Event  then ", event "  & Event_ID_Str else "")
@@ -106,7 +111,7 @@ is
       Musinfo.Utils.Append_Channel
         (Info    => Info,
          Channel => Musinfo.Utils.Create_Channel
-           (Name       => Musinfo.Utils.Create_Name (Str => Phys_Name),
+           (Name       => Musinfo.Utils.Create_Name (Str => Log_Name),
             Address    => Address,
             Size       => Size,
             Writable   => Writable,

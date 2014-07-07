@@ -196,8 +196,8 @@ package body Expand.Pre_Checks.Test_Data.Tests is
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject/channels/reader"
-         & "[@ref='data_channel']",
-         Name  => "ref",
+         & "[@physical='data_channel']",
+         Name  => "physical",
          Value => "nonexistent");
 
       begin
@@ -235,8 +235,8 @@ package body Expand.Pre_Checks.Test_Data.Tests is
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject/channels/writer"
-         & "[@ref='data_channel']",
-         Name  => "ref",
+         & "[@physical='data_channel']",
+         Name  => "physical",
          Value => "nonexistent");
 
       begin
@@ -255,8 +255,8 @@ package body Expand.Pre_Checks.Test_Data.Tests is
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject/channels/reader"
-         & "[@ref='data_channel']",
-         Name  => "ref",
+         & "[@physical='data_channel']",
+         Name  => "physical",
          Value => "nonexistent");
 
       begin
@@ -294,7 +294,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject/channels/writer"
-         & "[@ref='data_channel']",
+         & "[@physical='data_channel']",
          Name  => "event",
          Value => "");
 
@@ -333,7 +333,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
          XPath => "/system/subjects/subject/channels/reader"
-         & "[@ref='data_channel']",
+         & "[@physical='data_channel']",
          Name  => "vector",
          Value => "");
 

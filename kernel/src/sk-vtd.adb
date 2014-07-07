@@ -22,8 +22,10 @@ with Skp.IOMMU;
 
 with SK.KC;
 with SK.CPU;
+pragma $Release_Warnings (Off, "unit * is not referenced");
 with SK.Apic;
 with SK.Constants;
+pragma $Release_Warnings (On, "unit * is not referenced");
 
 package body SK.VTd
 with
@@ -385,6 +387,7 @@ is
 
    --  Sets the fault interrupt vector and destination APIC ID of the specified
    --  IOMMU to the given values.
+   pragma $Release_Warnings (Off, "procedure * is not referenced");
    procedure Setup_Fault_Interrupt
      (IOMMU   : Skp.IOMMU.IOMMU_Device_Range;
       Vector  : SK.Byte;
@@ -403,6 +406,7 @@ is
       Fault_Event_Data.IMD  := SK.Word16 (Vector);
       IOMMUs (IOMMU).Fault_Event_Data := Fault_Event_Data;
    end Setup_Fault_Interrupt;
+   pragma $Release_Warnings (On, "procedure * is not referenced");
 
    -------------------------------------------------------------------------
 
@@ -501,11 +505,12 @@ is
          Set_Fault_Event_Mask (IOMMU  => I,
                                Enable => True);
          Clear_Fault_Record (IOMMU => I);
-         Setup_Fault_Interrupt (IOMMU   => I,
-                                Vector  => SK.Constants.VTd_Fault_Vector,
-                                APIC_ID => SK.Apic.Get_ID);
-         Set_Fault_Event_Mask (IOMMU  => I,
-                               Enable => False);
+         pragma Debug (Setup_Fault_Interrupt
+                       (IOMMU   => I,
+                        Vector  => SK.Constants.VTd_Fault_Vector,
+                        APIC_ID => SK.Apic.Get_ID));
+         pragma Debug (Set_Fault_Event_Mask (IOMMU  => I,
+                                             Enable => False));
 
          Set_Root_Table_Address :
          declare

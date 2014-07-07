@@ -354,10 +354,11 @@ is
       Fault_Recording : Reg_Fault_Recording_Type;
       Fault_Status    : Reg_Fault_Status_Type;
    begin
-      Fault_Recording := IOMMUs (IOMMU).Fault_Recording;
+      Fault_Recording   := IOMMUs (IOMMU).Fault_Recording;
       Fault_Recording.F := 1;
       IOMMUs (IOMMU).Fault_Recording := Fault_Recording;
-      Fault_Status := IOMMUs (IOMMU).Fault_Status;
+
+      Fault_Status     := IOMMUs (IOMMU).Fault_Status;
       Fault_Status.PFO := 1;
       IOMMUs (IOMMU).Fault_Status := Fault_Status;
    end Clear_Fault_Record;
@@ -375,7 +376,7 @@ is
    is
       Fault_Event_Control : Reg_Fault_Event_Control_Type;
    begin
-      Fault_Event_Control := IOMMUs (IOMMU).Fault_Event_Control;
+      Fault_Event_Control    := IOMMUs (IOMMU).Fault_Event_Control;
       Fault_Event_Control.IM := (if Enable then 1 else 0);
       IOMMUs (IOMMU).Fault_Event_Control := Fault_Event_Control;
    end Set_Fault_Event_Mask;
@@ -394,9 +395,9 @@ is
       Fault_Event_Addr : Reg_Fault_Event_Address_Type;
       Fault_Event_Data : Reg_Fault_Event_Data_Type;
    begin
-      Fault_Event_Addr := IOMMUs (IOMMU).Fault_Event_Address;
+      Fault_Event_Addr         := IOMMUs (IOMMU).Fault_Event_Address;
       Fault_Event_Addr.APIC_ID := APIC_ID;
-      IOMMUs (IOMMU).Fault_Event_Address  := Fault_Event_Addr;
+      IOMMUs (IOMMU).Fault_Event_Address := Fault_Event_Addr;
 
       Fault_Event_Data.EIMD := 0;
       Fault_Event_Data.IMD  := SK.Word16 (Vector);
@@ -507,8 +508,8 @@ is
             Global_Status  : Reg_Global_Status_Type;
             Global_Command : Reg_Global_Command_Type;
          begin
-            IOMMUs (I).Root_Table_Address  := Skp.IOMMU.Root_Table_Address;
-            Global_Command := IOMMUs (I).Global_Command;
+            IOMMUs (I).Root_Table_Address := Skp.IOMMU.Root_Table_Address;
+            Global_Command      := IOMMUs (I).Global_Command;
             Global_Command.SRTP := 1;
             IOMMUs (I).Global_Command := Global_Command;
 
@@ -522,7 +523,7 @@ is
          declare
             Context_Command : Reg_Context_Command_Type;
          begin
-            Context_Command := IOMMUs (I).Context_Command;
+            Context_Command      := IOMMUs (I).Context_Command;
             Context_Command.ICC  := 1;
             Context_Command.CIRG := 1;
             IOMMUs (I).Context_Command := Context_Command;
@@ -537,7 +538,7 @@ is
          declare
             IOTLB_Invalidate : Reg_IOTLB_Invalidate;
          begin
-            IOTLB_Invalidate := IOMMUs (I).IOTLB_Invalidate;
+            IOTLB_Invalidate      := IOMMUs (I).IOTLB_Invalidate;
             IOTLB_Invalidate.IIRG := 1;
             IOTLB_Invalidate.IVT  := 1;
             IOMMUs (I).IOTLB_Invalidate := IOTLB_Invalidate;
@@ -553,7 +554,7 @@ is
             Global_Command : Reg_Global_Command_Type;
             Global_Status  : Reg_Global_Status_Type;
          begin
-            Global_Command := IOMMUs (I).Global_Command;
+            Global_Command    := IOMMUs (I).Global_Command;
             Global_Command.TE := 1;
             IOMMUs (I).Global_Command := Global_Command;
 

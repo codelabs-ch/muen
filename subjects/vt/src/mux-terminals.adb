@@ -43,6 +43,8 @@ is
       Input.KEY_F2 => 2,
       Input.KEY_F3 => 3,
       Input.KEY_F4 => 4,
+      Input.KEY_F5 => 5,
+      Input.KEY_F6 => 6,
       others       => Slot_Range'Last);
 
    type Flags_Type is array (Input_Channel_Range) of Boolean;
@@ -99,7 +101,7 @@ is
       use Input;
    begin
       case Event.Key is
-         when KEY_F1 | KEY_F2 | KEY_F3 | KEY_F4 =>
+         when KEY_F1 | KEY_F2 | KEY_F3 | KEY_F4 | KEY_F5 | KEY_F6 =>
             if Event.Pressed and then
               Active_Slot /= Slot_Map (Event.Key)
             then

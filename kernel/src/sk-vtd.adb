@@ -283,6 +283,12 @@ is
    --  Register FRO field (TODO).
    FR_Offset : constant := 16#20# * 16;
 
+   --  NOTE: The Intel VT-d spec section 10.2 mentions that software is
+   --  expected to access registers as a whole. To avoid side-effects from
+   --  partial/wider reads always read the entire record field/register, modify
+   --  the appropriate values and write back the new data (see also GNATtracker
+   --  ticket N307-023).
+
    type IOMMU_Type is record
       Version             : Reg_Version_Type;
       Reserved_1          : SK.Word32;

@@ -60,8 +60,8 @@ is
       --  TODO: Read this from configuration.
 
       T1.Init;
-      T2.Init (Label => "Time");
       T3.Init (Label => "Subject Monitor (SM)");
+      T5.Init (Label => "Time");
       T6.Init (Label => "Virtual Terminals (VT)");
    end Init;
 

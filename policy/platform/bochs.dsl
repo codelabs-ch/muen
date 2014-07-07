@@ -52,46 +52,8 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
                         0x00000000,         // Translation Offset
                         0x00010000,         // Length
                         ,, , TypeStatic)
-                    /* MMIO (0x30000000 - 0x3fffffff) */
-                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite,
-                        0x00000000,         // Granularity
-                        0x30000000,         // Range Minimum
-                        0x3FFFFFFF,         // Range Maximum
-                        0x00000000,         // Translation Offset
-                        0x10000000,         // Length
-                        ,, , AddressRangeMemory, TypeStatic)
                 })
                 Return (MCRS)
-            }
-
-            Method (_DMA, 0, NotSerialized)
-            {
-                Return (ResourceTemplate () {
-                    /* 4M~256M are identity mapped and thus available
-                     * for DMA. (IMO, Linux ignores this setting) */
-                    DWordMemory (ResourceConsumer, PosDecode, MinFixed, MaxFixed, Prefetchable, ReadWrite,
-                        0x00000000,
-                        0x00400000,
-                        0x0fffffff,
-                        0x00000000,
-                        0x0fc00000,
-                        ,, , , )
-                })
-            }
-
-            Method (_PRT, 0, NotSerialized)
-            {
-                Return (Package (0x01)
-                {
-                    /* Route PCI 00:02.x PIN D to IRQ 11 */
-                    Package (0x04)
-                    {
-                        0x0002FFFF,
-                        0x03,
-                        Zero,
-                        0x0b
-                    }
-                })
             }
 
             Method (_OSC, 4, NotSerialized)

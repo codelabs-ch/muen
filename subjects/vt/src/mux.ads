@@ -20,7 +20,7 @@ package Mux
 is
 
    --  Session slots.
-   type Slot_Range is range 1 .. 4;
+   type Slot_Range is range 1 .. 6;
 
    --  Number of input channels.
    type Input_Channel_Range is range 1 .. 3;

@@ -78,6 +78,7 @@ is
          when 4 =>
             T4.Enable_Cursor_Update;
             T4.Update_Cursor;
+         when others => null;
       end case;
    end Set_Active;
 
@@ -94,6 +95,7 @@ is
          when 2 => T2.Update (Char => Char);
          when 3 => T3.Update (Char => Char);
          when 4 => T4.Update (Char => Char);
+         when others => null;
       end case;
    end Update;
 

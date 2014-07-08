@@ -7,6 +7,8 @@ with AUnit.Test_Fixtures;
 
 with Test_Utils.Expander;
 
+with Muxml.Utils;
+
 package Expanders.Channels.Test_Data is
 
 --  begin read only

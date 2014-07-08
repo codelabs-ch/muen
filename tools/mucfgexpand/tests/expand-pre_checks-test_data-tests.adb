@@ -448,4 +448,84 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    end Test_Platform_CPU_Count_Presence;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Platform_IOAPIC_Presence (Gnattest_T : in out Test);
+   procedure Test_Platform_IOAPIC_Presence_c56d2d (Gnattest_T : in out Test) renames Test_Platform_IOAPIC_Presence;
+--  id:2.2/c56d2d279580918e/Platform_IOAPIC_Presence/1/0/
+   procedure Test_Platform_IOAPIC_Presence (Gnattest_T : in out Test) is
+   --  expand-pre_checks.ads:63:4:Platform_IOAPIC_Presence
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      declare
+         Devs : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Policy.Doc,
+            XPath => "/system/platform/devices");
+         Node : DOM.Core.Node;
+      begin
+         Node := DOM.Core.Documents.Create_Element
+           (Doc      => Policy.Doc,
+            Tag_Name => "device");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "name",
+            Value => "ioapic");
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "shared",
+            Value => "false");
+
+         Muxml.Utils.Append_Child
+           (Node      => Devs,
+            New_Child => Node);
+
+         Node := DOM.Core.Nodes.Append_Child
+           (N         => Node,
+            New_Child => DOM.Core.Documents.Create_Element
+              (Doc      => Policy.Doc,
+               Tag_Name => "memory"));
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "name",
+            Value => "mmio");
+
+         Platform_IOAPIC_Presence (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Multiple I/O APIC devices present",
+                    Message   => "Exception mismatch");
+      end;
+
+      Muxml.Utils.Remove_Child
+        (Node       => DOM.Core.Documents.Get_Element (Doc => Policy.Doc),
+         Child_Name => "platform");
+
+      begin
+         Platform_IOAPIC_Presence (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Required I/O APIC device with memory region 'mmio' "
+                    & "missing",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Platform_IOAPIC_Presence;
+--  end read only
+
 end Expand.Pre_Checks.Test_Data.Tests;

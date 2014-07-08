@@ -59,6 +59,9 @@ is
    --  present.
    procedure Platform_CPU_Count_Presence (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that the platform provides an I/O APIC device.
+   procedure Platform_IOAPIC_Presence (XML_Data : Muxml.XML_Data_Type);
+
 private
 
    package Check_Procs is new

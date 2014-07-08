@@ -59,8 +59,10 @@ is
 
       --  TODO: Read this from configuration.
 
-      T1.Init (Label => "Linux");
-      T3.Init (Label => "Subject Monitor (SM)");
+      T1.Init (Label => "NIC Linux");
+      T2.Init (Label => "USB Linux");
+      T3.Init (Label => "Subject Monitor: NIC Linux");
+      T4.Init (Label => "Subject Monitor: USB Linux");
       T5.Init (Label => "Time");
       T6.Init (Label => "Virtual Terminals (VT)");
    end Init;

@@ -41,6 +41,16 @@ is
       Cursor_Offset => 16#1800#);
    package T4 renames Term4_Package;
 
+   package Term5_Package is new Terminal_Screen
+     (Base_Address  => 16#000b_c000#,
+      Cursor_Offset => 16#1800#);
+   package T5 renames Term5_Package;
+
+   package Term6_Package is new Terminal_Screen
+     (Base_Address  => 16#000b_d000#,
+      Cursor_Offset => 16#1800#);
+   package T6 renames Term6_Package;
+
    -------------------------------------------------------------------------
 
    procedure Init
@@ -64,6 +74,8 @@ is
       T2.Disable_Cursor_Update;
       T3.Disable_Cursor_Update;
       T4.Disable_Cursor_Update;
+      T5.Disable_Cursor_Update;
+      T6.Disable_Cursor_Update;
       case Screen
       is
          when 1 =>
@@ -78,7 +90,12 @@ is
          when 4 =>
             T4.Enable_Cursor_Update;
             T4.Update_Cursor;
-         when others => null;
+         when 5 =>
+            T5.Enable_Cursor_Update;
+            T5.Update_Cursor;
+         when 6 =>
+            T6.Enable_Cursor_Update;
+            T6.Update_Cursor;
       end case;
    end Set_Active;
 
@@ -95,7 +112,8 @@ is
          when 2 => T2.Update (Char => Char);
          when 3 => T3.Update (Char => Char);
          when 4 => T4.Update (Char => Char);
-         when others => null;
+         when 5 => T5.Update (Char => Char);
+         when 6 => T6.Update (Char => Char);
       end case;
    end Update;
 

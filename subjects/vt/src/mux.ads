@@ -25,4 +25,7 @@ is
    --  Number of input channels.
    type Input_Channel_Range is range 1 .. 5;
 
+   --  Number of output channels.
+   type Output_Channel_Range is range 1 .. 2;
+
 end Mux;

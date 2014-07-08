@@ -7,7 +7,7 @@
 		</memory>
 		<devices>
 			<device name="vga" shared="false">
-				<memory name="buffer" physicalAddress="16#000b_8000#" size="16#4000#" caching="WC"/>
+				<memory name="buffer" physicalAddress="16#000b_8000#" size="16#8000#" caching="WC"/>
 				<ioPort name="ports" start="16#03d4#" end="16#03d5#"/>
 			</device>
 			<device name="keyboard" shared="false">
@@ -60,11 +60,11 @@
 			<events/>
 			<channels>
 				<reader logical="console_1" physical="virtual_console" virtualAddress="16#0010_0000#" vector="34"/>
-				<reader logical="console_2" physical="time_console" virtualAddress="16#0011_0000#" vector="35"/>
 				<reader logical="console_3" physical="sm_console" virtualAddress="16#0012_0000#" vector="36"/>
+				<reader logical="console_5" physical="time_console" virtualAddress="16#0014_0000#" vector="38"/>
 				<writer logical="keyboard" physical="virtual_keyboard" virtualAddress="16#0005_0000#" event="1"/>
 			</channels>
-			<binary filename="vt" size="16#0002_4000#" virtualAddress="16#1000#"/>
+			<binary filename="vt" size="16#0003_0000#" virtualAddress="16#1000#"/>
 		</subject>
 
 		<subject name="time" profile="native">

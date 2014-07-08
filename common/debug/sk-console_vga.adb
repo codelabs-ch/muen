@@ -275,7 +275,13 @@ is
    is
    begin
       Set_Position (X => X);
-      Cur_Y := Y;
+      if Y < Margin_Top then
+         Cur_Y := Margin_Top;
+      elsif Y > Margin_Bottom then
+         Cur_Y := Margin_Bottom;
+      else
+         Cur_Y := Y;
+      end if;
       Update_Cursor;
    end Set_Position;
 

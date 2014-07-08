@@ -41,6 +41,16 @@ is
       Cursor_Offset => 16#1800#);
    package T4 renames Term4_Package;
 
+   package Term5_Package is new Terminal_Screen
+     (Base_Address  => 16#000b_c000#,
+      Cursor_Offset => 16#1800#);
+   package T5 renames Term5_Package;
+
+   package Term6_Package is new Terminal_Screen
+     (Base_Address  => 16#000b_d000#,
+      Cursor_Offset => 16#1800#);
+   package T6 renames Term6_Package;
+
    -------------------------------------------------------------------------
 
    procedure Init
@@ -49,10 +59,10 @@ is
 
       --  TODO: Read this from configuration.
 
-      T1.Init;
-      T2.Init (Label => "Time");
+      T1.Init (Label => "Linux");
       T3.Init (Label => "Subject Monitor (SM)");
-      T4.Init (Label => "Virtual Terminals (VT)");
+      T5.Init (Label => "Time");
+      T6.Init (Label => "Virtual Terminals (VT)");
    end Init;
 
    -------------------------------------------------------------------------
@@ -60,36 +70,32 @@ is
    procedure Set_Active (Screen : Slot_Range)
    is
    begin
+      T1.Disable_Cursor_Update;
+      T2.Disable_Cursor_Update;
+      T3.Disable_Cursor_Update;
+      T4.Disable_Cursor_Update;
+      T5.Disable_Cursor_Update;
+      T6.Disable_Cursor_Update;
       case Screen
       is
          when 1 =>
-            T2.Disable_Cursor_Update;
-            T3.Disable_Cursor_Update;
-            T4.Disable_Cursor_Update;
-
             T1.Enable_Cursor_Update;
             T1.Update_Cursor;
          when 2 =>
-            T1.Disable_Cursor_Update;
-            T3.Disable_Cursor_Update;
-            T4.Disable_Cursor_Update;
-
             T2.Enable_Cursor_Update;
             T2.Update_Cursor;
          when 3 =>
-            T1.Disable_Cursor_Update;
-            T2.Disable_Cursor_Update;
-            T4.Disable_Cursor_Update;
-
             T3.Enable_Cursor_Update;
             T3.Update_Cursor;
          when 4 =>
-            T1.Disable_Cursor_Update;
-            T2.Disable_Cursor_Update;
-            T3.Disable_Cursor_Update;
-
             T4.Enable_Cursor_Update;
             T4.Update_Cursor;
+         when 5 =>
+            T5.Enable_Cursor_Update;
+            T5.Update_Cursor;
+         when 6 =>
+            T6.Enable_Cursor_Update;
+            T6.Update_Cursor;
       end case;
    end Set_Active;
 
@@ -106,6 +112,8 @@ is
          when 2 => T2.Update (Char => Char);
          when 3 => T3.Update (Char => Char);
          when 4 => T4.Update (Char => Char);
+         when 5 => T5.Update (Char => Char);
+         when 6 => T6.Update (Char => Char);
       end case;
    end Update;
 

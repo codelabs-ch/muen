@@ -29,7 +29,9 @@ is
    is
       use type SK.Byte;
    begin
-      if Vector >= 34 and then Vector <= 36 then
+      if Vector >= SK.Byte (Mux.Input_Channel_Range'First) + 33
+        and then Vector <= SK.Byte (Mux.Input_Channel_Range'Last) + 33
+      then
          Mux.Terminals.Set_Pending_Flag
            (Channel_Nr => Mux.Input_Channel_Range (Vector - 33));
       elsif Vector = 49 then

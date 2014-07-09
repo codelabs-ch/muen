@@ -42,5 +42,8 @@ package Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Platform_CPU_Count_Presence_a69356 (Gnattest_T : in out Test);
    --  expand-pre_checks.ads:60:4:Platform_CPU_Count_Presence
 
+   procedure Test_Platform_IOAPIC_Presence_c56d2d (Gnattest_T : in out Test);
+   --  expand-pre_checks.ads:63:4:Platform_IOAPIC_Presence
+
 end Expand.Pre_Checks.Test_Data.Tests;
 --  end read only

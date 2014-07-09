@@ -68,9 +68,11 @@ is
          end;
       end loop;
 
-      Muxml.Utils.Remove_Child
-        (Node       => System_Node,
-         Child_Name => "channels");
+      if DOM.Core.Nodes.Length (List => Channels) > 0 then
+         Muxml.Utils.Remove_Child
+           (Node       => System_Node,
+            Child_Name => "channels");
+      end if;
    end Add_Physical_Memory;
 
 end Expanders.Channels;

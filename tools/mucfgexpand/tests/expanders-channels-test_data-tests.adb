@@ -20,11 +20,34 @@ package body Expanders.Channels.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      ----------------------------------------------------------------------
+
+      procedure No_Channels_Section
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_Src,
+                      File => "data/test_policy.xml");
+
+         Muxml.Utils.Remove_Child
+           (Node       => Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "/system"),
+            Child_Name => "channels");
+
+         Expanders.Channels.Add_Physical_Memory (Data => Policy);
+
+         --  Must not raise an exception.
+
+      end No_Channels_Section;
    begin
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/channels_memory.xml",
          Ref_Filename => "data/channels_memory.ref.xml",
          Expander     => Expanders.Channels.Add_Physical_Memory'Access);
+
+      No_Channels_Section;
 --  begin read only
    end Test_Add_Physical_Memory;
 --  end read only

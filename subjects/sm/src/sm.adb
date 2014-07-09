@@ -41,6 +41,7 @@ is
    use type SK.Word64;
    use Subject_Info;
 
+   Resume_Event  : constant := 4;
    Id            : Skp.Subject_Id_Type;
    Dump_And_Halt : Boolean := False;
 begin
@@ -86,7 +87,7 @@ begin
 
       if not Dump_And_Halt then
          State.RIP := State.RIP + State.Instruction_Len;
-         SK.Hypercall.Trigger_Event (Number => SK.Byte (Id));
+         SK.Hypercall.Trigger_Event (Number => Resume_Event);
       else
          Subject.Text_IO.Put_String (Item => "Halting subject ");
          Subject.Text_IO.Put_Byte   (Item => SK.Byte (Id));

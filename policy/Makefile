@@ -1,8 +1,7 @@
 OUTPUT   = $(OBJ_DIR)/skp.ads
 LAST_CFG = $(shell cat $(OBJ_DIR)/.cfg 2>/dev/null)
-DSDT_SRC = platform/$(HARDWARE).dsl
-DSDT_OBJ = $(OBJ_DIR)/linux_dsdt.dsl
-DSDT     = $(OBJ_DIR)/linux_dsdt.aml
+
+DSDT_FILES = $(patsubst acpi/%.dsl,$(OBJ_DIR)/%.aml,$(wildcard acpi/*.dsl))
 
 POLICY     = xml/$(SYSTEM).xml
 POLICY_SRC = $(OBJ_DIR)/$(SYSTEM).xml
@@ -27,15 +26,14 @@ include ../Makeconf
 
 DUMMY := $(shell mkdir -p $(OBJ_DIR))
 
-all: cfgchange .validated $(OUTPUT) $(DSDT)
+all: cfgchange .validated $(OUTPUT) $(DSDT_FILES)
 
 cfgchange:
 	$(if $(findstring $(HARDWARE)/$(SYSTEM),$(LAST_CFG)),,rm -f $(OBJ_DIR)/*; \
 		echo $(HARDWARE)/$(SYSTEM) > $(OBJ_DIR)/.cfg)
 
-$(DSDT_OBJ) $(POLICY_SRC): $(MUCFGMERGE) $(POLICY) $(DSDT_SRC) $(PLATFORM)
+$(POLICY_SRC): $(MUCFGMERGE) $(POLICY) $(PLATFORM)
 	@$(MUCFGMERGE) -p$(PLATFORM) $(POLICY) $(POLICY_SRC)
-	cp $(DSDT_SRC) $(DSDT_OBJ)
 
 $(POLICY_A): $(POLICY_SRC) $(MUCFGEXPAND)
 	@$(MUCFGEXPAND) $< $@
@@ -47,8 +45,8 @@ $(POLICY_B): $(POLICY_A) $(MUCFGALLOC)
 	@$(MUCFGVALIDATE) $<
 	@touch $@
 
-$(DSDT): $(DSDT_OBJ)
-	@iasl -p$(OBJ_DIR)/linux_dsdt -ta $<
+$(OBJ_DIR)/%.aml: acpi/%.dsl
+	@iasl -p$@ -ta $<
 
 $(OUTPUT): $(GENERATORS) $(POLICY_B)
 	@for gen in $(GENERATORS); do $$gen $(GENERATOR_OPTS) || exit 1; done

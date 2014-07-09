@@ -111,11 +111,13 @@ is
                Log.Text_IO.New_Line;
             end if;
          when others =>
-            if Active_Slot /= 1 then
+            if Active_Slot > 2 then
                return;
             end if;
 
-            Mux.Channels.Write (Event);
+            Mux.Channels.Write
+              (Channel => Output_Channel_Range (Active_Slot),
+               Event   => Event);
       end case;
    end Process_Key;
 

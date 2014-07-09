@@ -60,22 +60,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
                         0x00000000,         // Translation Offset
                         0x00010000,         // Length
                         ,, , AddressRangeMemory, TypeStatic)
-                    /* PCI 00:19.x, MMIO 1 */
-                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite,
-                        0x00000000,         // Granularity
-                        0xd2500000,         // Range Minimum
-                        0xd251ffff,         // Range Maximum
-                        0x00000000,         // Translation Offset
-                        0x00020000,         // Length
-                        ,, , AddressRangeMemory, TypeStatic)
-                    /* PCI 00:19.x, MMIO 2 */
-                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite,
-                        0x00000000,         // Granularity
-                        0xd253b000,         // Range Minimum
-                        0xd253bfff,         // Range Maximum
-                        0x00000000,         // Translation Offset
-                        0x00001000,         // Length
-                        ,, , AddressRangeMemory, TypeStatic)
 
                 })
                 Return (MCRS)
@@ -98,7 +82,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
 
             Method (_PRT, 0, NotSerialized)
             {
-                Return (Package (0x02)
+                Return (Package (0x01)
                 {
                     /* Route PCI 00:14.x PIN A to IRQ 7 */
                     Package (0x04)
@@ -107,14 +91,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
                         0x00,
                         Zero,
                         0x07
-                    },
-                    /* Route PCI 00:19.x PIN A to IRQ 11 */
-                    Package (0x04)
-                    {
-                        0x0019FFFF,
-                        0x00,
-                        Zero,
-                        0x0b
                     }
                 })
             }
@@ -144,27 +120,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
                     Return (Arg3)
                 }
             }
-
-            Device (ISA)
-            {
-                Device (SER1)
-                {
-                    Name (_HID, EisaId ("PNP0501"))
-                    Name (_UID, "Muen no-IRQ UART")
-                    Method (_STA)
-                    {
-                        Return (0x0f)
-                    }
-                    Method (_CRS)
-                    {
-                        Return (ResourceTemplate () {
-                            IO (Decode16, 0x50b0, 0x50b0, 0x08, 0x08,)
-                            IRQNoFlags () { 0 }
-                        })
-                    }
-                }
-            }
-
         }
     }
 

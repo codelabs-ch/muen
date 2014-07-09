@@ -36,8 +36,11 @@ is
 
    In_Readers : In_Reader_Array := (others => VT_Channel_Rdr.Null_Reader);
 
-   Channel_1_Out : Key_Channel.Channel_Type;
-   for Channel_1_Out'Address use System'To_Address (16#50000#);
+   type Out_Channel_Array is array
+     (Output_Channel_Range) of Key_Channel.Channel_Type;
+
+   Out_Channels : Out_Channel_Array;
+   for Out_Channels'Address use System'To_Address (16#50000#);
 
    -------------------------------------------------------------------------
 
@@ -54,8 +57,10 @@ is
    procedure Init
    is
    begin
-      Key_Channel_Wtr.Initialize (Channel => Channel_1_Out,
-                                  Epoch   => 1);
+      for Channel of Out_Channels loop
+         Key_Channel_Wtr.Initialize (Channel => Channel,
+                                     Epoch   => 1);
+      end loop;
    end Init;
 
    -------------------------------------------------------------------------
@@ -74,12 +79,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Write (Event : Input.Key_Event_Type)
+   procedure Write
+     (Channel : Output_Channel_Range;
+      Event   : Input.Key_Event_Type)
    is
    begin
-      Key_Channel_Wtr.Write (Channel => Channel_1_Out,
+      Key_Channel_Wtr.Write (Channel => Out_Channels (Channel),
                              Element => Event);
-      SK.Hypercall.Trigger_Event (Number => 1);
+      SK.Hypercall.Trigger_Event (Number => SK.Byte (Channel));
    end Write;
 
 end Mux.Channels;

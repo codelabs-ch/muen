@@ -28,6 +28,12 @@ project Kernel is
    Extra_Warning_Switches := ();
    Preprocessor_Switches := ();
 
+   Build_Warning_Switches :=
+     ("-Wstack-usage=8192",
+      "-Wuninitialized",
+      "-Wall",
+      "-Werror");
+
    case Build_Mode is
       when "debug" =>
          Extra_Dirs := ("../common/" & Build_Mode, Build_Mode);
@@ -37,6 +43,7 @@ project Kernel is
             "-gnateDProve_Warnings=Ignored_Warnings",
             "-gnateDDebug_Warnings=Warnings",
             "-gnateDRelease_Warnings=Ignored_Warnings");
+         Extra_Warning_Switches := Build_Warning_Switches;
 
       when "release" =>
          Extra_Dirs := (Build_Mode);
@@ -46,6 +53,7 @@ project Kernel is
             "-gnateDProve_Warnings=Ignored_Warnings",
             "-gnateDDebug_Warnings=Ignored_Warnings",
             "-gnateDRelease_Warnings=Warnings");
+         Extra_Warning_Switches := Build_Warning_Switches;
 
       when "prove" =>
          Extra_Dirs := ("release", "spark");
@@ -58,11 +66,7 @@ project Kernel is
 
     end case;
 
-   Warning_Switches :=
-     ("-gnatwale.e.Y.N",
-      "-Wuninitialized",
-      "-Wall",
-      "-Werror") & Extra_Warning_Switches;
+   Warning_Switches := ("-gnatwale.e.Y.N") & Extra_Warning_Switches;
 
    for Languages use ("Ada") & Extra_Languages;
 
@@ -87,7 +91,6 @@ project Kernel is
       for Required_Switches ("Asm") use ("-x", "assembler-with-cpp");
       for Dependency_Switches ("Asm") use ("-MMD", "-MF", "");
       for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches
-        & ("-Wstack-usage=8192")
         & Preprocessor_Switches
         & Warning_Switches;
 

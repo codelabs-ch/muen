@@ -29,7 +29,7 @@
 
 	<memory>
 		<memory name="nic_linux|ram" size="16#0f60_0000#" alignment="16#0020_0000#" caching="WB"/>
-		<memory name="usb_linux|ram" size="16#0f60_0000#" alignment="16#0020_0000#" caching="WB"/>
+		<memory name="usb_linux|ram" size="16#4000_0000#" alignment="16#0020_0000#" caching="WB"/>
 	</memory>
 
 	<deviceDomains>

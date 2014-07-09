@@ -20,8 +20,6 @@ with SK.CPU;
 with SK.Hypercall;
 with SK.Constants;
 
-with Skp;
-
 with Subject.Console;
 with Subject.Text_IO;
 
@@ -36,13 +34,15 @@ with Exit_Handlers.WRMSR;
 with Exit_Handlers.CR_Access;
 with Exit_Handlers.RDTSC;
 
+pragma Unreferenced (Interrupt_Handler);
+
 procedure Sm
 is
    use type SK.Word64;
    use Subject_Info;
 
-   Id            : Skp.Subject_Id_Type;
-   Dump_And_Halt : Boolean := False;
+   Resume_Event  : constant := 4;
+   Dump_And_Halt : Boolean  := False;
 begin
    Subject.Console.Enable_Notification;
    Subject.Text_IO.Init;
@@ -53,8 +53,6 @@ begin
    SK.CPU.Hlt;
 
    loop
-      Id := Interrupt_Handler.Current_Subject;
-
       if State.Exit_Reason = SK.Constants.EXIT_REASON_CPUID then
          Exit_Handlers.CPUID.Process (Halt => Dump_And_Halt);
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_INVLPG
@@ -77,20 +75,18 @@ begin
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_EPT_VIOLATION then
          Exit_Handlers.EPT_Violation.Process (Halt => Dump_And_Halt);
       else
-         Subject.Text_IO.Put_String (Item => "Unhandled trap for subject ");
-         Subject.Text_IO.Put_Byte   (Item => SK.Byte (Id));
-         Subject.Text_IO.New_Line;
+         Subject.Text_IO.Put_Line
+           (Item => "Unhandled trap for associated subject");
 
          Dump_And_Halt := True;
       end if;
 
       if not Dump_And_Halt then
          State.RIP := State.RIP + State.Instruction_Len;
-         SK.Hypercall.Trigger_Event (Number => SK.Byte (Id));
+         SK.Hypercall.Trigger_Event (Number => Resume_Event);
       else
-         Subject.Text_IO.Put_String (Item => "Halting subject ");
-         Subject.Text_IO.Put_Byte   (Item => SK.Byte (Id));
-         Subject.Text_IO.Put_String (Item => " after EXIT (");
+         Subject.Text_IO.Put_String
+           (Item => "Halting associated subject after EXIT (");
          Subject.Text_IO.Put_Word16 (Item => SK.Word16 (State.Exit_Reason));
          Subject.Text_IO.Put_String (Item => ":");
          Subject.Text_IO.Put_Word32

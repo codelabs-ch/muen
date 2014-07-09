@@ -24,7 +24,11 @@ is
    procedure Handle_Interrupt (Vector : SK.Byte)
    is
    begin
-      Current_Subject := Integer (Vector) - 32;
+
+      --  The interrupt wakes up the SM moving it past the Hlt instruction, so
+      --  there is nothing else left to do.
+
+      null;
    end Handle_Interrupt;
 
 end Interrupt_Handler;

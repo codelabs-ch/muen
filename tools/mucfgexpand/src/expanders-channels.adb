@@ -68,11 +68,19 @@ is
          end;
       end loop;
 
-      if DOM.Core.Nodes.Length (List => Channels) > 0 then
-         Muxml.Utils.Remove_Child
-           (Node       => System_Node,
-            Child_Name => "channels");
-      end if;
+      declare
+         use type DOM.Core.Node;
+
+         Channels_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/channels");
+      begin
+         if Channels_Node /= null then
+            Muxml.Utils.Remove_Child
+              (Node       => System_Node,
+               Child_Name => "channels");
+         end if;
+      end;
    end Add_Physical_Memory;
 
 end Expanders.Channels;

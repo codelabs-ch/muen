@@ -22,6 +22,43 @@ package body Expanders.Channels.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure No_Channels
+      is
+         use type DOM.Core.Node;
+
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_Src,
+                      File => "data/test_policy.xml");
+
+         declare
+            Node     : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Policy.Doc,
+                 XPath => "/system/channels");
+            Channels : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Node,
+                 XPath => "channel");
+         begin
+            for I in 0 .. DOM.Core.Nodes.Length (List => Channels) - 1 loop
+               Muxml.Utils.Remove_Child
+                 (Node       => Node,
+                  Child_Name => "channel");
+            end loop;
+         end;
+
+         Expanders.Channels.Add_Physical_Memory (Data => Policy);
+
+         Assert (Condition => Muxml.Utils.Get_Element
+                 (Doc   => Policy.Doc,
+                  XPath => "/system/channels") = null,
+                 Message   => "Channels still present");
+      end No_Channels;
+
+      ----------------------------------------------------------------------
+
       procedure No_Channels_Section
       is
          Policy : Muxml.XML_Data_Type;
@@ -48,6 +85,7 @@ package body Expanders.Channels.Test_Data.Tests is
          Expander     => Expanders.Channels.Add_Physical_Memory'Access);
 
       No_Channels_Section;
+      No_Channels;
 --  begin read only
    end Test_Add_Physical_Memory;
 --  end read only

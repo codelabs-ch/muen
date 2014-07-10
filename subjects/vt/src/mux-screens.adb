@@ -59,12 +59,18 @@ is
 
       --  TODO: Read this from configuration.
 
-      T1.Init (Label => "NIC Linux");
-      T2.Init (Label => "USB Linux");
-      T3.Init (Label => "Subject Monitor: NIC Linux");
-      T4.Init (Label => "Subject Monitor: USB Linux");
-      T5.Init (Label => "Time");
-      T6.Init (Label => "Virtual Terminals (VT)");
+      T1.Init (Label   => "NIC Linux",
+               Trusted => False);
+      T2.Init (Label   => "USB Linux",
+               Trusted => False);
+      T3.Init (Label   => "Subject Monitor: NIC Linux",
+               Trusted => True);
+      T4.Init (Label   => "Subject Monitor: USB Linux",
+               Trusted => True);
+      T5.Init (Label   => "Time",
+               Trusted => True);
+      T6.Init (Label   => "Virtual Terminals (VT)",
+               Trusted => True);
    end Init;
 
    -------------------------------------------------------------------------

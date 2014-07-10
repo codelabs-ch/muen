@@ -224,15 +224,6 @@ is
             Address       => "16#000d_0000#",
             Writable      => False,
             Executable    => False));
-      Muxml.Utils.Append_Child
-        (Node      => Subj_Mem_Node,
-         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
-           (Policy        => Data,
-            Logical_Name  => "bios",
-            Physical_Name => Subj_Name & "|bios",
-            Address       => "16#000f_0000#",
-            Writable      => False,
-            Executable    => False));
    end Handle_Linux_Profile;
 
 end Expanders.Subjects.Profiles;

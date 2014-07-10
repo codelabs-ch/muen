@@ -270,7 +270,6 @@
     <memory executable="false" logical="lowmem" physical="lnx|lowmem" virtualAddress="16#0001_a000#" writable="true"/>
     <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000c_0000#" writable="false"/>
     <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000d_0000#" writable="false"/>
-    <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000f_0000#" writable="false"/>
    </memory>
    <devices>
     <device logical="xhci" physical="xhci">

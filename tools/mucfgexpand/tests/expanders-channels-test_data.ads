@@ -7,6 +7,10 @@ with AUnit.Test_Fixtures;
 
 with Test_Utils.Expander;
 
+with DOM.Core.Nodes;
+
+with McKae.XML.XPath.XIA;
+
 with Muxml.Utils;
 
 package Expanders.Channels.Test_Data is

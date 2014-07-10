@@ -32,8 +32,11 @@ package Terminal_Screen
 is
 
    --  Initialize terminal screen. If a Label is specified, it is displayed on
-   --  the first line of the screen.
-   procedure Init (Label : String := "");
+   --  the first line of the screen. If the Trusted boolean is set to True,
+   --  the label has the color red otherwise grey.
+   procedure Init
+     (Label   : String  := "";
+      Trusted : Boolean := False);
 
    --  Update state of terminal screen.
    procedure Update (Char : Character);

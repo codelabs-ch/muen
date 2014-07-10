@@ -2,7 +2,7 @@ with "xmlada";
 
 project Xia is
 
-   for Source_Dirs use ("../xia/src", "../xia/src/booch4xia");
+   for Source_Dirs use ("../xia/tmp/xia", "../xia/tmp/xia/booch4xia");
    for Object_Dir use "../build/xia";
 
    Compiler_Switches := ("-gnat05",

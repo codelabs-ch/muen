@@ -1,18 +1,5 @@
-PV  = 1.00
-PKG = xia-$(PV)
-ARC = $(PKG).tgz
-SRC = http://www.mckae.com/xia/xia-1.00.tgz
-DLA = $(WRK).tgz
+REV = master
+PKG = xia
+SRC = https://github.com/codelabs-ch/$(PKG).git
 
-PATCHES = fix-warnings.patch
-
-define CMD_CLEAN_EXTRA
-	@rm -f src
-endef
-
-all: patch src
-
-src:
-	@ln -sf $(WRK) src
-
-include ../contrib.archive.mk
+include ../contrib.git.mk

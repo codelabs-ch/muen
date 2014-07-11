@@ -63,6 +63,17 @@ is
       Ref_Value : String)
       return DOM.Core.Node;
 
+   --  Returns the attribute 'Attr_Name' of the element from the given node
+   --  list with an attribute 'Ref_Attr' that matches 'Ref_Value'. If no such
+   --  element with the specified attribute exists and empty string is
+   --  returned. The first match is returned if multiple elements are found.
+   function Get_Attribute
+     (Nodes     : DOM.Core.Node_List;
+      Ref_Attr  : String;
+      Ref_Value : String;
+      Attr_Name : String)
+      return String;
+
    --  Append all nodes of 'Right' to specified node list 'Left'.
    procedure Append
      (Left  : in out DOM.Core.Node_List;

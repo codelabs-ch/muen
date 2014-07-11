@@ -54,6 +54,15 @@ is
       XPath : String)
       return String;
 
+   --  Returns the element from the given node list with an attribute
+   --  'Ref_Attr' that matches 'Ref_Value'. If no such element exists null is
+   --  returned. The first match is returned if multiple elements are found.
+   function Get_Element
+     (Nodes     : DOM.Core.Node_List;
+      Ref_Attr  : String;
+      Ref_Value : String)
+      return DOM.Core.Node;
+
    --  Append all nodes of 'Right' to specified node list 'Left'.
    procedure Append
      (Left  : in out DOM.Core.Node_List;

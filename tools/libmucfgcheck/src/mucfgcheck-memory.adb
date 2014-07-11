@@ -545,6 +545,9 @@ is
    is
       use Interfaces;
 
+      Physical_Mem   : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/memory/memory[not(starts-with(@type,'system'))]");
       Subjects       : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "/system/subjects/subject");
@@ -592,12 +595,10 @@ is
          begin
             if DOM.Core.Nodes.Length (List => Memory) + KDev_Mem_Count > 1 then
                for J in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
-                  Set_Size
-                    (Virtual_Mem_Node => DOM.Core.Nodes.Item
-                       (List  => Memory,
-                        Index => J),
-                     Ref_Nodes_Path   => "/system/memory/memory",
-                     XML_Data         => XML_Data);
+                  Set_Size (Virtual_Mem_Node => DOM.Core.Nodes.Item
+                            (List  => Memory,
+                             Index => J),
+                            Ref_Nodes        => Physical_Mem);
                end loop;
 
                Muxml.Utils.Append (Left  => Memory,
@@ -635,12 +636,10 @@ is
          begin
             if DOM.Core.Nodes.Length (List => Memory) + Dev_Mem_Count > 1 then
                for J in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
-                  Set_Size
-                    (Virtual_Mem_Node => DOM.Core.Nodes.Item
-                       (List  => Memory,
-                        Index => J),
-                     Ref_Nodes_Path   => "/system/memory/memory",
-                     XML_Data         => XML_Data);
+                  Set_Size (Virtual_Mem_Node => DOM.Core.Nodes.Item
+                            (List  => Memory,
+                             Index => J),
+                            Ref_Nodes        => Physical_Mem);
                end loop;
 
                for K in 0 .. Dev_Mem_Count - 1 loop

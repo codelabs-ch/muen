@@ -362,7 +362,7 @@ is
       Route   : Skp.Interrupts.Vector_Route_Type;
    begin
       if Vector >= Skp.Interrupts.Remap_Offset then
-         if Vector = 253 then
+         if Vector = SK.Constants.VTd_Fault_Vector then
             VTd.Process_Fault;
          else
             Vect_Nr := Skp.Interrupts.Remapped_Vector_Type (Vector);

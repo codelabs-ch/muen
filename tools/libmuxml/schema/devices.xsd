@@ -9,7 +9,7 @@
 
 	<xs:simpleType name="irqNumberType">
 		<xs:restriction base="xs:nonNegativeInteger">
-			<xs:maxInclusive value="223"/>
+			<xs:maxInclusive value="220"/>
 		</xs:restriction>
 	</xs:simpleType>
 

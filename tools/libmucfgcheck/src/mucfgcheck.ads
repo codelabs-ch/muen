@@ -117,6 +117,12 @@ is
       Ref_Nodes_Path   : String;
       XML_Data         : Muxml.XML_Data_Type);
 
+   --  Set size of given virtual memory node by looking up the corresponding
+   --  physical memory region present in the 'Ref_Nodes' list.
+   procedure Set_Size
+     (Virtual_Mem_Node : DOM.Core.Node;
+      Ref_Nodes        : DOM.Core.Node_List);
+
    Validation_Error : exception;
 
 end Mucfgcheck;

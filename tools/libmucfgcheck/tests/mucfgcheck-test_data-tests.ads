@@ -45,5 +45,8 @@ package Mucfgcheck.Test_Data.Tests is
    procedure Test_Set_Size_d4bdf7 (Gnattest_T : in out Test);
    --  mucfgcheck.ads:115:4:Set_Size
 
+   procedure Test_Set_Size_e82b63 (Gnattest_T : in out Test);
+   --  mucfgcheck.ads:122:4:Set_Size
+
 end Mucfgcheck.Test_Data.Tests;
 --  end read only

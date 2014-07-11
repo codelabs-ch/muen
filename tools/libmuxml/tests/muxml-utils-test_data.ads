@@ -11,6 +11,7 @@ with Ada.Strings.Unbounded;
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
+with DOM.Core.Append_Node;
 
 with McKae.XML.XPath.XIA;
 

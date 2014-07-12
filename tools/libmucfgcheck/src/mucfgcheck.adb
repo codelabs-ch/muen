@@ -193,8 +193,7 @@ is
             Find_Match :
             for J in 0 .. DOM.Core.Nodes.Length (List => Ref_Nodes) - 1 loop
                if Match
-                 (Left  => DOM.Core.Nodes.Item (List  => Nodes,
-                                                Index => I),
+                 (Left  => Node,
                   Right => DOM.Core.Nodes.Item (List  => Ref_Nodes,
                                                 Index => J))
                then

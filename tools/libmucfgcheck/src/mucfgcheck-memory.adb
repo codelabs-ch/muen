@@ -256,18 +256,24 @@ is
 
    procedure Kernel_PT_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      CPU_Count : constant Positive := Positive'Value
+      CPU_Count   : constant Positive := Positive'Value
         (Muxml.Utils.Get_Attribute
            (Doc   => XML_Data.Doc,
             XPath => "/system/platform/processor",
             Name  => "logicalCpus"));
-      Mem_Node  : DOM.Core.Node_List;
+      Physical_Mem : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory");
+      Node         : DOM.Core.Node;
    begin
       Mulog.Log (Msg => "Checking presence of" & CPU_Count'Img
                  & " kernel PT region(s)");
 
       for I in 0 .. CPU_Count - 1 loop
          declare
+            use type DOM.Core.Node;
+
             CPU_Str  : constant String
               := Ada.Strings.Fixed.Trim
                 (Source => I'Img,
@@ -275,10 +281,11 @@ is
             Mem_Name : constant String
               := "kernel_" & CPU_Str & "|pt";
          begin
-            Mem_Node := XPath_Query
-              (N     => XML_Data.Doc,
-               XPath => "/system/memory/memory[@name='" & Mem_Name & "']");
-            if DOM.Core.Nodes.Length (List => Mem_Node) = 0 then
+            Node := Muxml.Utils.Get_Element
+              (Nodes     => Physical_Mem,
+               Ref_Attr  => "name",
+               Ref_Value => Mem_Name);
+            if Node = null then
                raise Validation_Error with "Kernel PT region '" & Mem_Name
                  & "' for logical CPU " & CPU_Str & " not found";
             end if;
@@ -316,18 +323,24 @@ is
 
    procedure Kernel_Stack_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      CPU_Count : constant Positive := Positive'Value
+      CPU_Count    : constant Positive := Positive'Value
         (Muxml.Utils.Get_Attribute
            (Doc   => XML_Data.Doc,
             XPath => "/system/platform/processor",
             Name  => "logicalCpus"));
-      Mem_Node  : DOM.Core.Node_List;
+      Physical_Mem : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory");
+      Node         : DOM.Core.Node;
    begin
       Mulog.Log (Msg => "Checking presence of" & CPU_Count'Img
                  & " kernel stack region(s)");
 
       for I in 0 .. CPU_Count - 1 loop
          declare
+            use type DOM.Core.Node;
+
             CPU_Str  : constant String
               := Ada.Strings.Fixed.Trim
                 (Source => I'Img,
@@ -335,10 +348,11 @@ is
             Mem_Name : constant String
               := "kernel_stack_" & CPU_Str;
          begin
-            Mem_Node := XPath_Query
-              (N     => XML_Data.Doc,
-               XPath => "/system/memory/memory[@name='" & Mem_Name & "']");
-            if DOM.Core.Nodes.Length (List => Mem_Node) = 0 then
+            Node := Muxml.Utils.Get_Element
+              (Nodes     => Physical_Mem,
+               Ref_Attr  => "name",
+               Ref_Value => Mem_Name);
+            if Node = null then
                raise Validation_Error with "Kernel stack region '" & Mem_Name
                  & "' for logical CPU " & CPU_Str & " not found";
             end if;
@@ -350,18 +364,24 @@ is
 
    procedure Kernel_Store_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      CPU_Count : constant Positive := Positive'Value
+      CPU_Count    : constant Positive := Positive'Value
         (Muxml.Utils.Get_Attribute
            (Doc   => XML_Data.Doc,
             XPath => "/system/platform/processor",
             Name  => "logicalCpus"));
-      Mem_Node  : DOM.Core.Node_List;
+      Physical_Mem : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory");
+      Node         : DOM.Core.Node;
    begin
       Mulog.Log (Msg => "Checking presence of" & CPU_Count'Img
                  & " kernel store region(s)");
 
       for I in 0 .. CPU_Count - 1 loop
          declare
+            use type DOM.Core.Node;
+
             CPU_Str  : constant String
               := Ada.Strings.Fixed.Trim
                 (Source => I'Img,
@@ -369,10 +389,11 @@ is
             Mem_Name : constant String
               := "kernel_store_" & CPU_Str;
          begin
-            Mem_Node := XPath_Query
-              (N     => XML_Data.Doc,
-               XPath => "/system/memory/memory[@name='" & Mem_Name & "']");
-            if DOM.Core.Nodes.Length (List => Mem_Node) = 0 then
+            Node := Muxml.Utils.Get_Element
+              (Nodes     => Physical_Mem,
+               Ref_Attr  => "name",
+               Ref_Value => Mem_Name);
+            if Node = null then
                raise Validation_Error with "Kernel store region '" & Mem_Name
                  & "' for logical CPU " & CPU_Str & " not found";
             end if;
@@ -709,7 +730,7 @@ is
    procedure VMCS_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
    is
       XPath : constant String
-        := "/system/memory/memory[contains(string(@name), '|vmcs')]";
+        := "/system/memory/memory[@type='system_vmcs']";
 
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,

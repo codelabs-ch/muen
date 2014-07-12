@@ -138,9 +138,14 @@ is
 
    procedure Kernel_Memory_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => "/system/memory/memory[contains(string(@type),'kernel')]");
+      Nodes      : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory[contains(string(@type),'kernel')]");
+      Virt_Nodes : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "//memory[@physical]");
    begin
       Mulog.Log (Msg => "Checking mapping of" & DOM.Core.Nodes.Length
                  (List => Nodes)'Img & " kernel memory region(s)");
@@ -151,16 +156,19 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Nodes,
                  Index => I);
-            Phys_Name : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Phys_Mem,
-               Name => "name");
+            Phys_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Phys_Mem,
+                 Name => "name");
             Virt_Mem  : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => XML_Data.Doc,
-                 XPath => "//memory[@physical='" & Phys_Name & "']");
-            Virt_Name : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Virt_Mem,
-               Name => "logical");
+                (Nodes     => Virt_Nodes,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Phys_Name);
+            Virt_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Virt_Mem,
+                 Name => "logical");
             Owner     : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node
                 (Node  => Virt_Mem,

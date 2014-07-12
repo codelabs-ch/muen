@@ -77,11 +77,37 @@ is
       Entry_Index  : Table_Range)
       return Boolean
    is
+      use type Tables_Map_Package.Cursor;
+
+      Pos    : constant Tables_Map_Package.Cursor
+        := Map.Tables.Find (Key => Table_Number);
+      Result : Boolean := False;
+
+      --  Check if entry with 'Entry_Index' is present in table.
+      procedure Check_Entry_Presence
+        (Key     : Table_Range;
+         Element : Tables.Page_Table_Type);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Entry_Presence
+        (Key     : Table_Range;
+         Element : Tables.Page_Table_Type)
+      is
+         pragma Unreferenced (Key);
+      begin
+         Result := Tables.Contains
+           (Table => Element,
+            Index => Entry_Index);
+      end Check_Entry_Presence;
    begin
-      return Map.Tables.Contains (Key => Table_Number)
-        and then Tables.Contains
-          (Table => Map.Tables.Element (Key => Table_Number),
-           Index => Entry_Index);
+      if Pos /= Tables_Map_Package.No_Element then
+         Tables_Map_Package.Query_Element
+           (Position => Pos,
+            Process  => Check_Entry_Presence'Access);
+      end if;
+
+      return Result;
    end Contains;
 
    -------------------------------------------------------------------------

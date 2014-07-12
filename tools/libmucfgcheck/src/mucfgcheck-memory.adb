@@ -56,6 +56,10 @@ is
       Nodes        : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "/system/memory/memory[contains(string(@name), '|')]");
+      Subjects     : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject");
 
       --  Return True if given name is a valid kernel entity.
       function Is_Valid_Kernel_Entity (Name : String) return Boolean;
@@ -83,6 +87,8 @@ is
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
+            use type DOM.Core.Node;
+
             Ref_Name    : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => DOM.Core.Nodes.Item
@@ -91,14 +97,14 @@ is
                  Name => "name");
             Entity_Name : constant String
               := Mutools.Utils.Decode_Entity_Name (Encoded_Str => Ref_Name);
-            Subjects    : constant DOM.Core.Node_List
-              := XPath_Query
-                (N     => XML_Data.Doc,
-                 XPath => "/system/subjects/subject[@name='"
-                 & Entity_Name & "']");
+            Subject     : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Subjects,
+                 Ref_Attr  => "name",
+                 Ref_Value => Entity_Name);
          begin
             if not Is_Valid_Kernel_Entity (Name => Entity_Name)
-              and then DOM.Core.Nodes.Length (List => Subjects) /= 1
+              and then Subject = null
             then
                raise Validation_Error with "Entity '" & Entity_Name & "' "
                  & "encoded in memory region '" & Ref_Name & "' does not "

@@ -548,6 +548,9 @@ is
       Physical_Mem   : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "/system/memory/memory[not(starts-with(@type,'system'))]");
+      Physical_Devs  : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/platform/devices/device");
       Subjects       : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "/system/subjects/subject");
@@ -568,14 +571,16 @@ is
             Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => DOM.Core.Nodes.Parent_Node (N => Cur_Node),
                Name => "physical");
+            Device   : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Physical_Devs,
+                 Ref_Attr  => "name",
+                 Ref_Value => Dev_Name);
          begin
-            Set_Size
-              (Virtual_Mem_Node => DOM.Core.Nodes.Item
-                 (List  => Kernel_Dev_Mem,
-                  Index => I),
-               Ref_Nodes_Path   => "/system/platform/devices/device[@name='"
-               & Dev_Name & "']/memory",
-               XML_Data         => XML_Data);
+            Set_Size (Virtual_Mem_Node => Cur_Node,
+                      Ref_Nodes        => XPath_Query
+                        (N     => Device,
+                         XPath => "memory"));
          end;
       end loop;
 
@@ -651,14 +656,16 @@ is
                        := DOM.Core.Elements.Get_Attribute
                          (Elem => DOM.Core.Nodes.Parent_Node (N => Cur_Node),
                           Name => "physical");
+                     Device   : constant DOM.Core.Node
+                       := Muxml.Utils.Get_Element
+                         (Nodes     => Physical_Devs,
+                          Ref_Attr  => "name",
+                          Ref_Value => Dev_Name);
                   begin
-                     Set_Size
-                       (Virtual_Mem_Node => DOM.Core.Nodes.Item
-                          (List  => Dev_Memory,
-                           Index => K),
-                        Ref_Nodes_Path   => "/system/platform/devices/"
-                        & "device[@name='" & Dev_Name & "']/memory",
-                        XML_Data         => XML_Data);
+                     Set_Size (Virtual_Mem_Node => Cur_Node,
+                               Ref_Nodes        => XPath_Query
+                                 (N     => Device,
+                                  XPath => "memory"));
                   end;
                end loop;
 

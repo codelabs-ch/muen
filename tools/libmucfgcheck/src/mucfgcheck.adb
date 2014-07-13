@@ -242,32 +242,6 @@ is
 
    procedure Set_Size
      (Virtual_Mem_Node : DOM.Core.Node;
-      Ref_Nodes_Path   : String;
-      XML_Data         : Muxml.XML_Data_Type)
-   is
-      Phy_Name : constant String
-        := DOM.Core.Elements.Get_Attribute
-          (Elem => Virtual_Mem_Node,
-           Name => "physical");
-      Phy_Node : constant DOM.Core.Node
-        := Muxml.Utils.Get_Element
-          (Doc   => XML_Data.Doc,
-           XPath => Ref_Nodes_Path & "[@name='" & Phy_Name & "']");
-      Cur_Size : constant String
-        := DOM.Core.Elements.Get_Attribute
-          (Elem => Phy_Node,
-           Name => "size");
-   begin
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Virtual_Mem_Node,
-         Name  => "size",
-         Value => Cur_Size);
-   end Set_Size;
-
-   -------------------------------------------------------------------------
-
-   procedure Set_Size
-     (Virtual_Mem_Node : DOM.Core.Node;
       Ref_Nodes        : DOM.Core.Node_List)
    is
       Phy_Name : constant String

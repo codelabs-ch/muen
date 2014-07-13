@@ -601,51 +601,11 @@ package body Mucfgcheck.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_1_Set_Size (Gnattest_T : in out Test);
-   procedure Test_Set_Size_d4bdf7 (Gnattest_T : in out Test) renames Test_1_Set_Size;
---  id:2.2/d4bdf7ed8b3bb70a/Set_Size/1/0/
-   procedure Test_1_Set_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:115:4:Set_Size
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Data : Muxml.XML_Data_Type;
-      Mem  : DOM.Core.Node_List;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/test_policy.xml");
-
-      declare
-         Node : DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/memory/memory"
-            & "[@physical='vt|bin']");
-      begin
-         Assert (Condition => DOM.Core.Elements.Get_Attribute
-                 (Elem => Node,
-                  Name => "size") = "",
-                 Message   => "Size set");
-         Set_Size (Virtual_Mem_Node => Node,
-                   Ref_Nodes_Path   => "/system/memory/memory",
-                   XML_Data         => Data);
-         Assert (Condition =>  DOM.Core.Elements.Get_Attribute
-                 (Elem => Node,
-                  Name => "size") = "16#0002_4000#",
-                 Message   => "Size mismatch");
-      end;
---  begin read only
-   end Test_1_Set_Size;
---  end read only
-
-
---  begin read only
-   procedure Test_2_Set_Size (Gnattest_T : in out Test);
-   procedure Test_Set_Size_e82b63 (Gnattest_T : in out Test) renames Test_2_Set_Size;
+   procedure Test_Set_Size (Gnattest_T : in out Test);
+   procedure Test_Set_Size_e82b63 (Gnattest_T : in out Test) renames Test_Set_Size;
 --  id:2.2/e82b63c700676990/Set_Size/0/0/
-   procedure Test_2_Set_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:122:4:Set_Size
+   procedure Test_Set_Size (Gnattest_T : in out Test) is
+   --  mucfgcheck.ads:114:4:Set_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -707,7 +667,7 @@ package body Mucfgcheck.Test_Data.Tests is
                  Message   => "'mem2' size mismatch");
       end;
 --  begin read only
-   end Test_2_Set_Size;
+   end Test_Set_Size;
 --  end read only
 
 end Mucfgcheck.Test_Data.Tests;

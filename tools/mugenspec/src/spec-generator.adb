@@ -792,13 +792,13 @@ is
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/memory/memory[@type='system_pt' and "
-               & "contains(string(@name),'kernel')]",
+               & "@name='kernel_0|pt']",
                Name  => "physicalAddress"));
          VMXON_Addr    : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/memory/memory[@type='system_vmxon' and "
-               & "contains(string(@name),'kernel')]",
+               & "@name='kernel_0|vmxon']",
                Name  => "physicalAddress"));
          VMCS_Addr     : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute

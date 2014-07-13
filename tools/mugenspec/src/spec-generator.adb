@@ -1127,12 +1127,16 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Subjects   : constant DOM.Core.Node_List
+      Subjects      : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/subjects/subject");
-      Subj_Count : constant Natural
+      Subj_Count    : constant Natural
         := DOM.Core.Nodes.Length (List => Subjects);
+      Event_Targets : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/subjects/subject/events/target/event");
 
       Buffer : Unbounded_String;
       Tmpl   : Templates.Template_Type;
@@ -1143,9 +1147,7 @@ is
          Event  : DOM.Core.Node);
 
       --  Add trap entry to template buffer.
-      procedure Add_Trap
-        (Policy : Muxml.XML_Data_Type;
-         Trap   : DOM.Core.Node);
+      procedure Add_Trap (Trap : DOM.Core.Node);
 
       --  Append SPARK specification of given subject to template buffer.
       procedure Write_Subject_Spec
@@ -1169,9 +1171,9 @@ is
               Name  => "physical");
          Event_Target : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
-             (Doc   => Policy.Doc,
-              XPath => "/system/subjects/subject/events/target/event"
-              & "[@physical='" & Phys_Event_Ref & "']");
+             (Nodes     => Event_Targets,
+              Ref_Attr  => "physical",
+              Ref_Value => Phys_Event_Ref);
          Dst_Id : constant String
            := DOM.Core.Elements.Get_Attribute
              (Elem => Muxml.Utils.Ancestor_Node
@@ -1218,9 +1220,7 @@ is
 
       -------------------------------------------------------------------
 
-      procedure Add_Trap
-        (Policy : Muxml.XML_Data_Type;
-         Trap   : DOM.Core.Node)
+      procedure Add_Trap (Trap : DOM.Core.Node)
       is
          Trap_Id : constant String
            := DOM.Core.Elements.Get_Attribute
@@ -1233,9 +1233,9 @@ is
               Name  => "physical");
          Event_Target : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
-             (Doc   => Policy.Doc,
-              XPath => "/system/subjects/subject/events/target/event"
-              & "[@physical='" & Phys_Event_Ref & "']");
+             (Nodes     => Event_Targets,
+              Ref_Attr  => "physical",
+              Ref_Value => Phys_Event_Ref);
 
          Dst_Id : constant String
            := DOM.Core.Elements.Get_Attribute
@@ -1511,10 +1511,9 @@ is
          else
             Buffer := Buffer & "Trap_Table_Type'(" & ASCII.LF;
             for I in 0 .. Trap_Count - 1 loop
-               Add_Trap (Policy => Policy,
-                         Trap   => DOM.Core.Nodes.Item
-                           (List  => Traps,
-                            Index => I));
+               Add_Trap (Trap   => DOM.Core.Nodes.Item
+                         (List  => Traps,
+                          Index => I));
 
                if I < Trap_Count - 1 then
                   Buffer := Buffer & "," & ASCII.LF;

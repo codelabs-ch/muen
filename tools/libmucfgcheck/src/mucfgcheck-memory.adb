@@ -407,7 +407,7 @@ is
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "//*[@physicalAddress]");
+         XPath => "/system/memory/memory");
    begin
       Check_Attribute (Nodes     => Nodes,
                        Node_Type => "physical memory",

@@ -25,8 +25,6 @@ is
 
    use Ada.Strings.Unbounded;
 
-   Store_Path : Unbounded_String := To_Unbounded_String ("./templates");
-
    -------------------------------------------------------------------------
 
    function Create (Content : String) return Template_Type
@@ -36,63 +34,6 @@ is
          T.Data := To_Unbounded_String (Content);
       end return;
    end Create;
-
-   -------------------------------------------------------------------------
-
-   function Get_Size (Template : Template_Type) return Natural
-   is
-   begin
-      return Length (Template.Data);
-   end Get_Size;
-
-   -------------------------------------------------------------------------
-
-   function Load
-     (Filename  : String;
-      Use_Store : Boolean := True)
-      return Template_Type
-   is
-      Path : Unbounded_String := To_Unbounded_String (Filename);
-   begin
-      if Use_Store then
-         Path := To_String (Store_Path) & "/" & Path;
-      end if;
-
-      declare
-         Size : constant Natural := Natural
-           (Ada.Directories.Size (To_String (Path)));
-
-         subtype Content_String is String (1 .. Size);
-         package FIO is new Ada.Direct_IO (Content_String);
-
-         Content    : Content_String;
-         Input_File : FIO.File_Type;
-      begin
-         FIO.Open (File => Input_File,
-                   Mode => FIO.In_File,
-                   Name => To_String (Path),
-                   Form => "shared=yes");
-         FIO.Read (File => Input_File,
-                   Item => Content);
-         FIO.Close (File => Input_File);
-
-         return T : Template_Type do
-            T.Data := To_Unbounded_String (Content);
-         end return;
-
-      exception
-         when others =>
-            if FIO.Is_Open (File => Input_File) then
-               FIO.Close (File => Input_File);
-            end if;
-            raise;
-      end;
-
-   exception
-      when others =>
-         raise IO_Error with "Unable to open template file '"
-           & To_String (Path) & "'";
-   end Load;
 
    -------------------------------------------------------------------------
 
@@ -115,14 +56,6 @@ is
                      High   => Idx + Pattern'Length - 1,
                      By     => Content);
    end Replace;
-
-   -------------------------------------------------------------------------
-
-   procedure Set_Template_Dir (Path : String)
-   is
-   begin
-      Store_Path := To_Unbounded_String (Path);
-   end Set_Template_Dir;
 
    -------------------------------------------------------------------------
 

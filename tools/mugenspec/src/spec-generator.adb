@@ -788,17 +788,24 @@ is
            (Doc   => Policy.Doc,
             XPath => "/system/platform/processor",
             Name  => "logicalCpus");
-         PML4_Addr     : constant Unsigned_64 := Unsigned_64'Value
-           (Muxml.Utils.Get_Attribute
+         PT_Node       : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
               (Doc   => Policy.Doc,
                XPath => "/system/memory/memory[@type='system_pt' and "
-               & "contains(string(@name),'kernel')]",
-               Name  => "physicalAddress"));
+               & "@name='kernel_0|pt']");
+         PML4_Addr     : constant Unsigned_64 := Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => PT_Node,
+               Name => "physicalAddress"));
+         PT_Size       : constant Unsigned_64 := Unsigned_64'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => PT_Node,
+               Name => "size"));
          VMXON_Addr    : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/memory/memory[@type='system_vmxon' and "
-               & "contains(string(@name),'kernel')]",
+               & "@name='kernel_0|vmxon']",
                Name  => "physicalAddress"));
          VMCS_Addr     : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
@@ -827,6 +834,12 @@ is
             Pattern  => "__kpml4_addr__",
             Content  => Mutools.Utils.To_Hex
               (Number    => PML4_Addr,
+               Normalize => False));
+         Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__kpt_size__",
+            Content  => Mutools.Utils.To_Hex
+              (Number    => PT_Size,
                Normalize => False));
          Templates.Replace
            (Template => Tmpl,

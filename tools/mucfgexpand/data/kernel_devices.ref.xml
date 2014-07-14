@@ -68,13 +68,13 @@
   </memory>
   <devices>
    <device logical="ioapic" physical="ioapic">
-    <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#001f_c000#" writable="true"/>
+    <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#0013_0000#" writable="true"/>
    </device>
    <device logical="iommu_1" physical="iommu_1">
-    <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#001f_d000#" writable="true"/>
+    <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#0013_1000#" writable="true"/>
    </device>
    <device logical="iommu_2" physical="iommu_2">
-    <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#001f_e000#" writable="true"/>
+    <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#0013_2000#" writable="true"/>
    </device>
   </devices>
  </kernel>

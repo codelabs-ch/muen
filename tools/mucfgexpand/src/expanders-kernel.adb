@@ -32,6 +32,8 @@ with Mutools.Utils;
 with Mutools.Constants;
 with Mutools.XML_Utils;
 
+with Expanders.Config;
+
 package body Expanders.Kernel
 is
 
@@ -122,6 +124,9 @@ is
    procedure Add_Devices (Data : in out Muxml.XML_Data_Type)
    is
 
+      --  Base address of kernel device mappings.
+      Base_Address : Interfaces.Unsigned_64 := Config.Kernel_Devices_Addr;
+
       --  Create device reference with given name and IOMMU address.
       function Create_Device_Reference
         (Name, MMIO_Addr : String)
@@ -137,22 +142,24 @@ is
 
       procedure Add_IO_APIC (Devices : DOM.Core.Node)
       is
-         Addrbase : constant String := "16#001f_c000#";
+         use type Interfaces.Unsigned_64;
+
+         Addr : constant String := Mutools.Utils.To_Hex
+           (Number => Base_Address);
       begin
-         Mulog.Log (Msg => "Adding I/O APIC to kernel devices, MMIO: "
-                    & Addrbase);
+         Mulog.Log (Msg => "Adding I/O APIC to kernel devices, MMIO: " & Addr);
          Muxml.Utils.Append_Child
            (Node      => Devices,
             New_Child => Create_Device_Reference
               (Name      => "ioapic",
-               MMIO_Addr => Addrbase));
+               MMIO_Addr => Addr));
+         Base_Address := Base_Address + Mutools.Constants.Page_Size;
       end Add_IO_APIC;
 
       ----------------------------------------------------------------------
 
       procedure Add_IOMMUs (Devices : DOM.Core.Node)
       is
-         Addrbase : Interfaces.Unsigned_64 := 16#001f_d000#;
          Physdevs : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Data.Doc,
@@ -164,7 +171,7 @@ is
                use type Interfaces.Unsigned_64;
 
                Addr_Str : constant String
-                 := Mutools.Utils.To_Hex (Number => Addrbase);
+                 := Mutools.Utils.To_Hex (Number => Base_Address);
                IOMMU    : constant DOM.Core.Node
                  := DOM.Core.Nodes.Item (List  => Physdevs,
                                          Index => I);
@@ -179,7 +186,7 @@ is
                   New_Child => Create_Device_Reference
                     (Name      => Name,
                      MMIO_Addr => Addr_Str));
-               Addrbase := Addrbase + Mutools.Constants.Page_Size;
+               Base_Address := Base_Address + Mutools.Constants.Page_Size;
             end;
          end loop;
       end Add_IOMMUs;
@@ -289,7 +296,7 @@ is
 
    procedure Add_Subj_State_Mappings (Data : in out Muxml.XML_Data_Type)
    is
-      State_Start : constant := 16#001e_0000#;
+      State_Start : constant := Config.Subject_States_Addr;
       CPU_Nodes   : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -365,7 +372,8 @@ is
            (Policy        => Data,
             Logical_Name  => "tau0_interface",
             Physical_Name => "sys_interface",
-            Address       => "16#001f_f000#",
+            Address       => Mutools.Utils.To_Hex
+              (Number => Config.Tau0_Interface_Addr),
             Writable      => False,
             Executable    => False));
    end Map_Tau0_Interface;

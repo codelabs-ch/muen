@@ -125,7 +125,7 @@ is
    is
 
       --  Base address of kernel device mappings.
-      Base_Address : Interfaces.Unsigned_64 := 16#0013_0000#;
+      Base_Address : Interfaces.Unsigned_64 := Config.Kernel_Devices_Addr;
 
       --  Create device reference with given name and IOMMU address.
       function Create_Device_Reference

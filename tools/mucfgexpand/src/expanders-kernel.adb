@@ -137,7 +137,7 @@ is
 
       procedure Add_IO_APIC (Devices : DOM.Core.Node)
       is
-         Addrbase : constant String := "16#001f_c000#";
+         Addrbase : constant String := "16#0013_0000#";
       begin
          Mulog.Log (Msg => "Adding I/O APIC to kernel devices, MMIO: "
                     & Addrbase);

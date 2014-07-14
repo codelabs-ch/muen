@@ -123,7 +123,7 @@ ap_entry_point:
 
 	// set up per-CPU paging
 
-	mov $0x4000, %edx
+	mov $KERNEL_PTSIZE, %edx
 	mul %edx
 	add $KERNEL_PML4, %eax
 	mov %eax, %cr3

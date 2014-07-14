@@ -182,7 +182,7 @@
     <memory executable="false" logical="store" physical="kernel_store_0" virtualAddress="16#0011_6000#" writable="true"/>
     <memory executable="false" logical="lnx_state" physical="lnx_state" virtualAddress="16#001e_1000#" writable="true"/>
     <memory executable="false" logical="subject1_state" physical="subject1_state" virtualAddress="16#001e_2000#" writable="true"/>
-    <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
+    <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#0012_f000#" writable="false"/>
    </cpu>
    <cpu id="1">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
@@ -379,7 +379,7 @@
    </vcpu>
    <bootparams/>
    <memory>
-    <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="true"/>
+    <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#0012_f000#" writable="true"/>
     <memory executable="true" logical="binary" physical="tau0|bin" virtualAddress="16#1000#" writable="true"/>
    </memory>
    <devices/>

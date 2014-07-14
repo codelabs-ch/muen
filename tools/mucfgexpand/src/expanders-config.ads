@@ -19,6 +19,6 @@
 package Expanders.Config
 is
 
-   Tau0_Interface_Addr : constant := 16#001f_f000#;
+   Tau0_Interface_Addr : constant := 16#0012_f000#;
 
 end Expanders.Config;

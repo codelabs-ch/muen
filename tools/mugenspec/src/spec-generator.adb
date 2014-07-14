@@ -31,8 +31,8 @@ with Mulog;
 with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.XML_Utils;
+with Mutools.Templates;
 
-with Spec.Templates;
 with Spec.Utils;
 
 with String_Templates;
@@ -437,7 +437,7 @@ is
       Policy     : Muxml.XML_Data_Type)
    is
       Buffer : Unbounded_String;
-      Tmpl   : Templates.Template_Type;
+      Tmpl   : Mutools.Templates.Template_Type;
 
       Devices : constant DOM.Core.Node_List := McKae.XML.XPath.XIA.XPath_Query
         (N     => Policy.Doc,
@@ -496,7 +496,8 @@ is
          end loop;
       end Write_Device;
    begin
-      Tmpl := Templates.Create (Content => String_Templates.skp_hardware_ads);
+      Tmpl := Mutools.Templates.Create
+        (Content => String_Templates.skp_hardware_ads);
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
          Write_Device (Dev => DOM.Core.Nodes.Item
@@ -504,15 +505,17 @@ is
                         Index => I));
       end loop;
 
-      Templates.Replace (Template => Tmpl,
-                         Pattern  => "__devices__",
-                         Content  => To_String (Buffer));
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__devices__",
+         Content  => To_String (Buffer));
 
       Mulog.Log (Msg => "Writing hardware spec to '"
                  & Output_Dir & "/skp-hardware.ads'");
 
-      Templates.Write (Template => Tmpl,
-                       Filename => Output_Dir & "/skp-hardware.ads");
+      Mutools.Templates.Write
+        (Template => Tmpl,
+         Filename => Output_Dir & "/skp-hardware.ads");
    end Write_Hardware;
 
    -------------------------------------------------------------------------
@@ -618,7 +621,7 @@ is
            & Indent (N => 3) & "Vector  => " & Subject_Vector & ")";
       end Write_Interrupt;
 
-      Tmpl : Templates.Template_Type;
+      Tmpl : Mutools.Templates.Template_Type;
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
@@ -657,26 +660,31 @@ is
       Vector_Buffer := Vector_Buffer & Indent (N => 2)
         & " others => Null_Vector_Route";
 
-      Tmpl := Templates.Create
+      Tmpl := Mutools.Templates.Create
         (Content => String_Templates.skp_interrupts_ads);
-      Templates.Replace (Template => Tmpl,
-                         Pattern  => "__remap_offset__",
-                         Content  => Host_IRQ_Remap_Offset'Img);
-      Templates.Replace (Template => Tmpl,
-                         Pattern  => "__routing_range__",
-                         Content  => "1 .." & Natural'Max (1, IRQ_Count)'Img);
-      Templates.Replace (Template => Tmpl,
-                         Pattern  => "__irq_routing_table__",
-                         Content  => To_String (IRQ_Buffer));
-      Templates.Replace (Template => Tmpl,
-                         Pattern  => "__vector_routing_table__",
-                         Content  => To_String (Vector_Buffer));
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__remap_offset__",
+         Content  => Host_IRQ_Remap_Offset'Img);
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__routing_range__",
+         Content  => "1 .." & Natural'Max (1, IRQ_Count)'Img);
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__irq_routing_table__",
+         Content  => To_String (IRQ_Buffer));
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__vector_routing_table__",
+         Content  => To_String (Vector_Buffer));
 
       Mulog.Log (Msg => "Writing interrupt routing spec to '"
                  & Output_Dir & "/skp-interrupts.ads'");
 
-      Templates.Write (Template => Tmpl,
-                       Filename => Output_Dir & "/skp-interrupts.ads");
+      Mutools.Templates.Write
+        (Template => Tmpl,
+         Filename => Output_Dir & "/skp-interrupts.ads");
    end Write_Interrupts;
 
    -------------------------------------------------------------------------
@@ -703,27 +711,29 @@ is
            XPath => "/system/kernel/devices/device["
            & "starts-with(string(@physical),'iommu')]/memory");
       IOMMU_Count : constant Natural := DOM.Core.Nodes.Length (List => IOMMUs);
-      Tmpl        : Templates.Template_Type;
+      Tmpl        : Mutools.Templates.Template_Type;
    begin
-      Tmpl := Templates.Create (Content => String_Templates.skp_iommu_ads);
+      Tmpl := Mutools.Templates.Create
+        (Content => String_Templates.skp_iommu_ads);
 
-      Templates.Replace
+      Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__root_table_addr__",
          Content  => (if Root_Addr'Length > 0 then Root_Addr else "0"));
-      Templates.Replace
+      Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__base_addr__",
          Content  => (if Base_Addr'Length > 0 then Base_Addr else "0"));
-      Templates.Replace
+      Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__iommu_device_range__",
          Content  => "1 .." & IOMMU_Count'Img);
 
       Mulog.Log (Msg => "Writing IOMMU spec to '" & Filename & "'");
 
-      Templates.Write (Template => Tmpl,
-                       Filename => Filename);
+      Mutools.Templates.Write
+        (Template => Tmpl,
+         Filename => Filename);
    end Write_IOMMU;
 
    -------------------------------------------------------------------------
@@ -814,50 +824,51 @@ is
                & "contains(string(@name),'tau0')]",
                Name  => "physicalAddress"));
 
-         Tmpl : Templates.Template_Type;
+         Tmpl : Mutools.Templates.Template_Type;
       begin
-         Tmpl := Templates.Create (Content => String_Templates.policy_h);
-         Templates.Replace
+         Tmpl := Mutools.Templates.Create
+           (Content => String_Templates.policy_h);
+         Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__subj_count__",
             Content  => Ada.Strings.Fixed.Trim
               (Source => Subject_Count'Img,
                Side   => Ada.Strings.Left));
-         Templates.Replace
+         Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__stack_addr__",
             Content  => Mutools.Utils.To_Hex
               (Number    => Stack_Addr,
                Normalize => False));
-         Templates.Replace
+         Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__kpml4_addr__",
             Content  => Mutools.Utils.To_Hex
               (Number    => PML4_Addr,
                Normalize => False));
-         Templates.Replace
+         Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__kpt_size__",
             Content  => Mutools.Utils.To_Hex
               (Number    => PT_Size,
                Normalize => False));
-         Templates.Replace
+         Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__cpu_store_addr__",
             Content  => Mutools.Utils.To_Hex
               (Number    => CPU_Store_Addr,
                Normalize => False));
-         Templates.Replace
+         Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__cpu_count__",
             Content  => CPU_Count);
-         Templates.Replace
+         Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__vmxon_addr__",
             Content  => Mutools.Utils.To_Hex
               (Number    => VMXON_Addr,
                Normalize => False));
-         Templates.Replace
+         Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__vmcs_addr__",
             Content  => Mutools.Utils.To_Hex
@@ -867,8 +878,9 @@ is
          Mulog.Log (Msg => "Writing kernel header file to '"
                     & Output_Dir & "/policy.h'");
 
-         Templates.Write (Template => Tmpl,
-                          Filename => Output_Dir & "/policy.h");
+         Mutools. Templates.Write
+           (Template => Tmpl,
+            Filename => Output_Dir & "/policy.h");
       end Write_Kernel_Header;
 
       ----------------------------------------------------------------------
@@ -890,26 +902,27 @@ is
                & "/memory",
                Name  => "virtualAddress"));
 
-         Tmpl : Templates.Template_Type;
+         Tmpl : Mutools.Templates.Template_Type;
       begin
-         Tmpl := Templates.Create (Content => String_Templates.skp_kernel_ads);
-         Templates.Replace
+         Tmpl := Mutools.Templates.Create
+           (Content => String_Templates.skp_kernel_ads);
+         Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__stack_addr__",
             Content  => Mutools.Utils.To_Hex (Number => Stack_Addr));
-         Templates.Replace
+         Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__cpu_store_addr__",
             Content  => Mutools.Utils.To_Hex (Number => CPU_Store_Addr));
-         Templates.Replace
+         Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__tau0_iface_addr__",
             Content  => Mutools.Utils.To_Hex (Number => Tau0_Iface_Addr));
-         Templates.Replace
+         Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__subj_states_addr__",
             Content  => Mutools.Utils.To_Hex (Number => Subj_States_Addr));
-         Templates.Replace
+         Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__ioapic_addr__",
             Content  => Mutools.Utils.To_Hex (Number => IO_Apic_Addr));
@@ -917,8 +930,9 @@ is
          Mulog.Log (Msg => "Writing kernel spec to '"
                     & Output_Dir & "/skp-kernel.ads'");
 
-         Templates.Write (Template => Tmpl,
-                          Filename => Output_Dir & "/skp-kernel.ads");
+         Mutools.Templates.Write
+           (Template => Tmpl,
+            Filename => Output_Dir & "/skp-kernel.ads");
       end Write_Kernel_Spec;
    begin
       Write_Kernel_Spec (Output_Dir => Output_Dir,
@@ -957,7 +971,7 @@ is
       Max_Minor_Count : Positive;
       Majors          : DOM.Core.Node_List;
       Buffer          : Unbounded_String;
-      Tmpl            : Templates.Template_Type;
+      Tmpl            : Mutools.Templates.Template_Type;
 
       --  Returns the maximum count of minor frames per major frame.
       function Get_Max_Minor_Count (Schedule : DOM.Core.Node) return Positive;
@@ -1102,23 +1116,26 @@ is
          end if;
       end loop;
 
-      Tmpl := Templates.Create
+      Tmpl := Mutools.Templates.Create
         (Content => String_Templates.skp_scheduling_ads);
-      Templates.Replace (Template => Tmpl,
-                         Pattern  => "__minor_range__",
-                         Content  => "1 .." & Max_Minor_Count'Img);
-      Templates.Replace (Template => Tmpl,
-                         Pattern  => "__major_range__",
-                         Content  => "0 .." & Natural'Image (Major_Count - 1));
-      Templates.Replace (Template => Tmpl,
-                         Pattern  => "__scheduling_plans__",
-                         Content  => To_String (Buffer));
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__minor_range__",
+         Content  => "1 .." & Max_Minor_Count'Img);
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__major_range__",
+         Content  => "0 .." & Natural'Image (Major_Count - 1));
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__scheduling_plans__",
+         Content  => To_String (Buffer));
 
       Mulog.Log (Msg => "Writing scheduling spec for" & CPU_Count'Img
                  & " CPUs to '" & Output_Dir & "/skp-scheduling.ads'");
 
-      Templates.Write (Template => Tmpl,
-                       Filename => Output_Dir & "/skp-scheduling.ads");
+      Mutools.Templates.Write (Template => Tmpl,
+                               Filename => Output_Dir & "/skp-scheduling.ads");
    end Write_Scheduling;
 
    -------------------------------------------------------------------------
@@ -1139,7 +1156,7 @@ is
            XPath => "/system/subjects/subject/events/target/event");
 
       Buffer : Unbounded_String;
-      Tmpl   : Templates.Template_Type;
+      Tmpl   : Mutools.Templates.Template_Type;
 
       --  Add event entry to template buffer.
       procedure Add_Event
@@ -1550,11 +1567,14 @@ is
          end if;
       end Write_Subject_Spec;
    begin
-      Tmpl := Templates.Create (Content => String_Templates.skp_subjects_ads);
-      Templates.Write (Template => Tmpl,
-                       Filename => Output_Dir & "/skp-subjects.ads");
+      Tmpl := Mutools.Templates.Create
+        (Content => String_Templates.skp_subjects_ads);
+      Mutools.Templates.Write
+        (Template => Tmpl,
+         Filename => Output_Dir & "/skp-subjects.ads");
 
-      Tmpl := Templates.Create (Content => String_Templates.skp_subjects_adb);
+      Tmpl := Mutools.Templates.Create
+        (Content => String_Templates.skp_subjects_adb);
 
       for I in 0 .. Subj_Count - 1 loop
          Write_Subject_Spec
@@ -1567,15 +1587,17 @@ is
          end if;
       end loop;
 
-      Templates.Replace (Template => Tmpl,
-                         Pattern  => "__subjects__",
-                         Content  => To_String (Buffer));
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__subjects__",
+         Content  => To_String (Buffer));
 
       Mulog.Log (Msg => "Writing subject spec to '"
                  & Output_Dir & "/skp-subjects.adb'");
 
-      Templates.Write (Template => Tmpl,
-                       Filename => Output_Dir & "/skp-subjects.adb");
+      Mutools.Templates.Write
+        (Template => Tmpl,
+         Filename => Output_Dir & "/skp-subjects.adb");
    end Write_Subject;
 
    -------------------------------------------------------------------------
@@ -1600,22 +1622,25 @@ is
             & "contains(string(@name),'kernel_0')]",
             Name  => "physicalAddress"));
 
-      Tmpl : Templates.Template_Type;
+      Tmpl : Mutools.Templates.Template_Type;
    begin
-      Tmpl := Templates.Create (Content => String_Templates.skp_ads);
-      Templates.Replace (Template => Tmpl,
-                         Pattern  => "__cpu_range__",
-                         Content  => "0 .." & Natural'Image
-                           (CPU_Count - 1));
-      Templates.Replace (Template => Tmpl,
-                         Pattern  => "__subj_range__",
-                         Content  => "0 .."  & Positive'Image (S_Count - 1));
-      Templates.Replace (Template => Tmpl,
-                         Pattern  => "__vmxon_addr__",
-                         Content  => Mutools.Utils.To_Hex
-                           (Number => VMXON_Addr));
-      Templates.Write (Template => Tmpl,
-                       Filename => Output_Dir & "/skp.ads");
+      Tmpl := Mutools.Templates.Create (Content => String_Templates.skp_ads);
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__cpu_range__",
+         Content  => "0 .." & Natural'Image
+           (CPU_Count - 1));
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__subj_range__",
+         Content  => "0 .."  & Positive'Image (S_Count - 1));
+      Mutools.Templates.Replace (Template => Tmpl,
+                                 Pattern  => "__vmxon_addr__",
+                                 Content  => Mutools.Utils.To_Hex
+                                   (Number => VMXON_Addr));
+      Mutools.Templates.Write
+        (Template => Tmpl,
+         Filename => Output_Dir & "/skp.ads");
    end Write_System;
 
 end Spec.Generator;

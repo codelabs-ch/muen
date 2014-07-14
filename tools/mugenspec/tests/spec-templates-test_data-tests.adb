@@ -59,7 +59,8 @@ package body Spec.Templates.Test_Data.Tests is
       T : Template_Type;
    begin
       T := Create (Content => Tmpl);
-      Assert (Condition => Get_Size (Template => T) = 37,
+      Assert (Condition => Ada.Strings.Unbounded.Length
+              (Source => T.Data) = 37,
               Message   => "Template size mismatch");
 --  begin read only
    end Test_Create;
@@ -115,8 +116,7 @@ package body Spec.Templates.Test_Data.Tests is
       Out_File : constant String := "obj/template";
       T        : Template_Type;
    begin
-      Set_Template_Dir (Path => "./data");
-      T := Load (Filename => "template");
+      T.Data := Ada.Strings.Unbounded.To_Unbounded_String (Source => Tmpl);
 
       begin
          Replace (Template => T,

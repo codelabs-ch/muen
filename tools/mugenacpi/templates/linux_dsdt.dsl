@@ -29,7 +29,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
             Method (_CBA, 0, Serialized)
             {
                 /* Point to MMConf region */
-                Return (0xf8000000)
+                Return (0x__config_base_address__)
             }
             Method (_CRS, 0, Serialized)
             {

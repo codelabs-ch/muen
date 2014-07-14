@@ -36,6 +36,7 @@ with Mutools.XML_Utils;
 with Mucfgvcpu;
 with Mucfgcheck.Events;
 
+with Expanders.Config;
 with Expanders.XML_Utils;
 with Expanders.Subjects.Profiles;
 
@@ -795,7 +796,8 @@ is
            (Policy        => Data,
             Logical_Name  => "sys_interface",
             Physical_Name => "sys_interface",
-            Address       => "16#001f_f000#",
+            Address       => Mutools.Utils.To_Hex
+              (Number => Config.Tau0_Interface_Addr),
             Writable      => True,
             Executable    => False));
       Muxml.Utils.Append_Child

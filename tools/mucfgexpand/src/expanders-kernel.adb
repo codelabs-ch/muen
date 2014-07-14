@@ -32,6 +32,8 @@ with Mutools.Utils;
 with Mutools.Constants;
 with Mutools.XML_Utils;
 
+with Expanders.Config;
+
 package body Expanders.Kernel
 is
 
@@ -370,7 +372,8 @@ is
            (Policy        => Data,
             Logical_Name  => "tau0_interface",
             Physical_Name => "sys_interface",
-            Address       => "16#001f_f000#",
+            Address       => Mutools.Utils.To_Hex
+              (Number => Config.Tau0_Interface_Addr),
             Writable      => False,
             Executable    => False));
    end Map_Tau0_Interface;

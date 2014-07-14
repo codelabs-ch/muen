@@ -16,7 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Mutools.Utils;
 with Mutools.Templates;
+
+with Muxml.Utils;
 
 with String_Templates;
 
@@ -30,7 +33,7 @@ is
       Subject  : DOM.Core.Node;
       Filename : String)
    is
-      pragma Unreferenced (Policy, Subject);
+      pragma Unreferenced (Subject);
 
       Dsl_File : String := Filename;
       Tmpl     : Mutools.Templates.Template_Type;
@@ -39,6 +42,26 @@ is
 
       Tmpl := Mutools.Templates.Create
         (Content => String_Templates.linux_dsdt_dsl);
+
+      Set_PCI_Cfg_Space_Address :
+      declare
+         PCI_Cfg_Addr_Str : constant String := Muxml.Utils.Get_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/platform/devices",
+            Name  => "pciConfigAddress");
+         PCI_Cfg_Addr     : Interfaces.Unsigned_64 := 0;
+      begin
+         if PCI_Cfg_Addr_Str'Length > 0 then
+            PCI_Cfg_Addr := Interfaces.Unsigned_64'Value (PCI_Cfg_Addr_Str);
+         end if;
+
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__config_base_address__",
+            Content  => Mutools.Utils.To_Hex
+              (Number     => PCI_Cfg_Addr,
+               Normalize  => False));
+      end Set_PCI_Cfg_Space_Address;
 
       Mutools.Templates.Write (Template => Tmpl,
                                Filename => Dsl_File);

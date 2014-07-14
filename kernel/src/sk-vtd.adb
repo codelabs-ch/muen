@@ -474,7 +474,8 @@ is
       Refined_Global  => (In_Out => (X86_64.State, IOMMUs)),
       Refined_Depends => ((X86_64.State, IOMMUs) =>+ null)
    is
-      Version : Reg_Version_Type;
+      Loop_Count_Max : constant := 10000;
+      Version        : Reg_Version_Type;
    begin
 
       --  Systems without an IOMMU have a null range.
@@ -522,10 +523,17 @@ is
             Global_Command.SRTP := 1;
             IOMMUs (I).Global_Command := Global_Command;
 
-            Global_Status := IOMMUs (I).Global_Status;
-            while Global_Status.RTPS = 0 loop
+            for J in 1 .. Loop_Count_Max loop
                Global_Status := IOMMUs (I).Global_Status;
+               exit when Global_Status.RTPS = 1;
             end loop;
+            if Global_Status.RTPS = 0 then
+               pragma Debug (KC.Put_String (Item => "IOMMU "));
+               pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
+               pragma Debug (KC.Put_Line
+                             (Item => ": unable to set root table address"));
+               CPU.Panic;
+            end if;
          end Set_Root_Table_Address;
 
          Invalidate_Context_Cache :
@@ -537,10 +545,17 @@ is
             Context_Command.CIRG := 1;
             IOMMUs (I).Context_Command := Context_Command;
 
-            Context_Command := IOMMUs (I).Context_Command;
-            while Context_Command.ICC = 1 loop
+            for J in 1 .. Loop_Count_Max loop
                Context_Command := IOMMUs (I).Context_Command;
+               exit when Context_Command.ICC = 0;
             end loop;
+            if Context_Command.ICC = 1 then
+               pragma Debug (KC.Put_String (Item => "IOMMU "));
+               pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
+               pragma Debug (KC.Put_Line
+                             (Item => ": unable to invalidate context cache"));
+               CPU.Panic;
+            end if;
          end Invalidate_Context_Cache;
 
          IOTLB_Flush :
@@ -552,10 +567,17 @@ is
             IOTLB_Invalidate.IVT  := 1;
             IOMMUs (I).IOTLB_Invalidate := IOTLB_Invalidate;
 
-            IOTLB_Invalidate := IOMMUs (I).IOTLB_Invalidate;
-            while IOTLB_Invalidate.IVT = 1 loop
+            for J in 1 .. Loop_Count_Max loop
                IOTLB_Invalidate := IOMMUs (I).IOTLB_Invalidate;
+               exit when IOTLB_Invalidate.IVT = 0;
             end loop;
+            if IOTLB_Invalidate.IVT = 1 then
+               pragma Debug (KC.Put_String (Item => "IOMMU "));
+               pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
+               pragma Debug (KC.Put_Line
+                             (Item => ": unable to flush IOTLB"));
+               CPU.Panic;
+            end if;
          end IOTLB_Flush;
 
          Enable_Translation :
@@ -567,10 +589,17 @@ is
             Global_Command.TE := 1;
             IOMMUs (I).Global_Command := Global_Command;
 
-            Global_Status := IOMMUs (I).Global_Status;
-            while Global_Status.TES = 0 loop
+            for J in 1 .. Loop_Count_Max loop
                Global_Status := IOMMUs (I).Global_Status;
+               exit when Global_Status.TES = 1;
             end loop;
+            if Global_Status.TES = 0 then
+               pragma Debug (KC.Put_String (Item => "IOMMU "));
+               pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
+               pragma Debug (KC.Put_Line
+                             (Item => ": error enabling translation"));
+               CPU.Panic;
+            end if;
          end Enable_Translation;
 
          pragma Debug

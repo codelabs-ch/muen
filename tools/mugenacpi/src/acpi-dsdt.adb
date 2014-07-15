@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Characters.Handling;
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
@@ -55,19 +56,23 @@ is
       Subject  : DOM.Core.Node;
       Filename : String)
    is
-      Devices  : constant DOM.Core.Node_List
+      Devices    : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
-              XPath => "/system/platform/devices/device[memory or irq]");
-      Dsl_File : String := Filename;
-      Tmpl     : Mutools.Templates.Template_Type;
-      Buffer   : Unbounded_String;
+              XPath => "/system/platform/devices/device");
+      Dsl_File   : String := Filename;
+      Tmpl       : Mutools.Templates.Template_Type;
+      Buffer     : Unbounded_String;
+      Cur_Serial : Natural;
 
       --  Add resources of given subject device memory to string buffer.
       procedure Add_Device_Memory_Resources (Dev_Mem : DOM.Core.Node);
 
       --  Add resources of given subject device interrupt to string buffer.
       procedure Add_Device_Interrupt_Resource (Dev_Irq : DOM.Core.Node);
+
+      --  Add resources of given subject legacy device to string buffer.
+      procedure Add_Legacy_Device_Resources (Legacy_Dev : DOM.Core.Node);
 
       ----------------------------------------------------------------------
 
@@ -172,6 +177,74 @@ is
             Size         => Mem_Size,
             Cacheable    => True) & ASCII.LF;
       end Add_Device_Memory_Resources;
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Legacy_Device_Resources (Legacy_Dev : DOM.Core.Node)
+      is
+         Log_Dev_Name  : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Legacy_Dev,
+              Name => "logical");
+         Phys_Dev_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Legacy_Dev,
+              Name => "physical");
+         Physical_Dev  : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Nodes     => Devices,
+              Ref_Attr  => "name",
+              Ref_Value => Phys_Dev_Name);
+         Ports         : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Physical_Dev,
+              XPath => "ioPort");
+      begin
+         Buffer := Buffer & Indent (N => 4) & "Device (SER"
+           & Ada.Characters.Handling.To_Upper
+           (Item => Mutools.Utils.To_Hex
+              (Number     => Interfaces.Unsigned_64 (Cur_Serial),
+               Normalize  => False)) & ")" & ASCII.LF;
+         Buffer := Buffer & Indent (N => 4) & "{" & ASCII.LF;
+         Buffer := Buffer & Indent (N => 5)
+           & "Name (_HID, EisaId (""PNP0501""))" & ASCII.LF;
+         Buffer := Buffer & Indent (N => 5)
+           & "Name (_UID, """ & Log_Dev_Name & """)" & ASCII.LF;
+         Buffer := Buffer & Indent (N => 5)
+           & "Method (_STA) { Return (0x0f) }" & ASCII.LF;
+         Buffer := Buffer & Indent (N => 5) & "Method (_CRS)" & ASCII.LF
+           & Indent (N => 5) & "{" & ASCII.LF;
+         Buffer := Buffer & Indent (N => 6) & "Return (ResourceTemplate () {"
+           & ASCII.LF;
+
+         for I in 0 .. DOM.Core.Nodes.Length (List => Ports) - 1 loop
+            declare
+               use type Interfaces.Unsigned_16;
+
+               Port       : constant DOM.Core.Node := DOM.Core.Nodes.Item
+                 (List  => Ports,
+                  Index => I);
+               Start_Port : constant Interfaces.Unsigned_16
+                 := Interfaces.Unsigned_16'Value
+                   (DOM.Core.Elements.Get_Attribute
+                      (Elem => Port,
+                       Name => "start"));
+               End_Port   : constant Interfaces.Unsigned_16
+                 := Interfaces.Unsigned_16'Value
+                   (DOM.Core.Elements.Get_Attribute
+                      (Elem => Port,
+                       Name => "end"));
+            begin
+               Buffer := Buffer & Indent (N => 7) & Asl.IO
+                 (Start_Port => Start_Port,
+                  Port_Range => End_Port - Start_Port + 1) & ASCII.LF;
+            end;
+         end loop;
+
+         Buffer := Buffer & Indent (N => 6) & "})" & ASCII.LF;
+         Buffer := Buffer & Indent (N => 5) & "}" & ASCII.LF
+           & Indent (N => 4) & "}" & ASCII.LF;
+      end Add_Legacy_Device_Resources;
    begin
       Dsl_File (Dsl_File'Last - 3 .. Dsl_File'Last) := ".dsl";
 
@@ -268,6 +341,42 @@ is
             Pattern  => "__pci_routing_table__",
             Content  => To_String (Buffer));
       end Add_Device_Irq;
+
+      Buffer := Null_Unbounded_String;
+
+      Add_Legacy_Devices :
+      declare
+         Legacy_Devs : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Subject,
+              XPath => "devices/device[starts-with(@logical,'serial')]");
+         Count       : constant Natural
+           := DOM.Core.Nodes.Length (List => Legacy_Devs);
+      begin
+         if Count > 0 then
+            Buffer := Buffer & Indent (N => 3) & "Device (ISA)" & ASCII.LF
+              & Indent (N => 3) & "{" & ASCII.LF;
+         end if;
+
+         for I in 0 .. Count - 1 loop
+            Cur_Serial := I;
+            Add_Legacy_Device_Resources
+              (Legacy_Dev => DOM.Core.Nodes.Item
+                 (List  => Legacy_Devs,
+                  Index => I));
+         end loop;
+
+         if Count > 0 then
+            Buffer := Buffer & Indent (N => 3) & "}" & ASCII.LF;
+         end if;
+
+         Buffer := Buffer & Indent (N => 2);
+
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__legacy_devices__",
+            Content  => To_String (Buffer));
+      end Add_Legacy_Devices;
 
       Mutools.Templates.Write (Template => Tmpl,
                                Filename => Dsl_File);

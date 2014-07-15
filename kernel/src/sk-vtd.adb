@@ -400,7 +400,7 @@ is
       Version             : Reg_Version_Type;
       Reserved_1          : SK.Word32;
       Capability          : Reg_Capability_Type;
-      Ext_Capability      : SK.Word64;
+      Ext_Capability      : Reg_Extcapability_Type;
       Global_Command      : Reg_Global_Command_Type;
       Global_Status       : Reg_Global_Status_Type;
       Root_Table_Address  : SK.Word64;

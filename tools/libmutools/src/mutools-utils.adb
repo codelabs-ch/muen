@@ -92,6 +92,18 @@ is
 
    -------------------------------------------------------------------------
 
+   function Indent
+     (N         : Positive := 1;
+      Unit_Size : Positive := 3)
+      return String
+   is
+      Result : constant String (1 .. N * Unit_Size) := (others => ' ');
+   begin
+      return Result;
+   end Indent;
+
+   -------------------------------------------------------------------------
+
    function Is_Managed_By_VMX
      (MSR                    : Interfaces.Unsigned_64;
       DEBUGCTL_Control       : Boolean;

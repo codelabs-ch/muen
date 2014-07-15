@@ -157,11 +157,39 @@ package body Mutools.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Indent (Gnattest_T : in out Test);
+   procedure Test_Indent_399a7a (Gnattest_T : in out Test) renames Test_Indent;
+--  id:2.2/399a7ad24f629c80/Indent/1/0/
+   procedure Test_Indent (Gnattest_T : in out Test) is
+   --  mutools-utils.ads:57:4:Indent
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Assert (Condition => Indent = "   ",
+              Message   => "Indent mismatch (1)");
+      Assert (Condition => Indent (N => 3) = "         ",
+              Message   => "Indent mismatch (2)");
+      Assert (Condition => Indent (Unit_Size => 1) = " ",
+              Message   => "Indent mismatch (3)");
+      Assert (Condition => Indent (N         => 3,
+                                   Unit_Size => 1) = "   ",
+              Message   => "Indent mismatch (4)");
+      Assert (Condition => Indent (N         => 2,
+                                   Unit_Size => 4) = "        ",
+              Message   => "Indent mismatch (5)");
+--  begin read only
+   end Test_Indent;
+--  end read only
+
+
+--  begin read only
    procedure Test_Decode_Entity_Name (Gnattest_T : in out Test);
    procedure Test_Decode_Entity_Name_ec79f4 (Gnattest_T : in out Test) renames Test_Decode_Entity_Name;
 --  id:2.2/ec79f4ba16a29875/Decode_Entity_Name/1/0/
    procedure Test_Decode_Entity_Name (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:57:4:Decode_Entity_Name
+   --  mutools-utils.ads:64:4:Decode_Entity_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -180,7 +208,7 @@ package body Mutools.Utils.Test_Data.Tests is
    procedure Test_Is_Managed_By_VMX_d49f3b (Gnattest_T : in out Test) renames Test_Is_Managed_By_VMX;
 --  id:2.2/d49f3b4fcfb97944/Is_Managed_By_VMX/1/0/
    procedure Test_Is_Managed_By_VMX (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:62:4:Is_Managed_By_VMX
+   --  mutools-utils.ads:69:4:Is_Managed_By_VMX
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

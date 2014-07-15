@@ -43,7 +43,10 @@ is
       Unit_Size : Positive := 4)
       return String renames Mutools.Utils.Indent;
 
-   Linux_Irq_Offset : constant := 48;
+   Linux_Irq_Offset   : constant := 48;
+
+   --  The size encompasses two PCI buses.
+   PCI_Cfg_Space_Size : constant := 16#0100_0000#;
 
    -------------------------------------------------------------------------
 
@@ -175,7 +178,7 @@ is
       Tmpl := Mutools.Templates.Create
         (Content => String_Templates.linux_dsdt_dsl);
 
-      Set_PCI_Cfg_Space_Address :
+      PCI_Cfg_Space :
       declare
          PCI_Cfg_Addr_Str : constant String := Muxml.Utils.Get_Attribute
            (Doc   => Policy.Doc,
@@ -185,15 +188,30 @@ is
       begin
          if PCI_Cfg_Addr_Str'Length > 0 then
             PCI_Cfg_Addr := Interfaces.Unsigned_64'Value (PCI_Cfg_Addr_Str);
+
+            Buffer := Buffer & Indent (N => 4)
+              & Asl.DWordMemory
+              (Base_Address => Interfaces.Unsigned_32 (PCI_Cfg_Addr),
+               Size         => Interfaces.Unsigned_32 (PCI_Cfg_Space_Size),
+               Cacheable    => False);
+            Buffer := Buffer & ASCII.LF;
          end if;
 
+         Buffer := Buffer & Indent (N => 3);
+
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__pci_config_space__",
+            Content  => To_String (Buffer));
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__config_base_address__",
             Content  => Mutools.Utils.To_Hex
               (Number     => PCI_Cfg_Addr,
                Normalize  => False));
-      end Set_PCI_Cfg_Space_Address;
+      end PCI_Cfg_Space;
+
+      Buffer := Null_Unbounded_String;
 
       Add_Device_Memory :
       declare

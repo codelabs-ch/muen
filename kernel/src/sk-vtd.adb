@@ -388,6 +388,7 @@ is
 
    --  Fault-recording register offset, must be calculcated using Capability
    --  Register FRO field (TODO).
+
    FR_Offset : constant := 16#20# * 16;
 
    --  NOTE: The Intel VT-d spec section 10.2 mentions that software is

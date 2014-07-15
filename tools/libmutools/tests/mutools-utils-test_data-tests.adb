@@ -116,6 +116,7 @@ package body Mutools.Utils.Test_Data.Tests is
       Norm_Num   : constant String := "16#dead_cafe_beef_beef#";
       Norm_Num2  : constant String := "16#00de_adbe_efbe#";
       Norm_Short : constant String := "16#23#";
+      Short      : constant String := "0f";
       Number     : constant Interfaces.Unsigned_64 := 16#deadcafebeefbeef#;
    begin
       Assert (Condition => To_Hex
@@ -151,6 +152,11 @@ package body Mutools.Utils.Test_Data.Tests is
                Normalize  => True,
                Byte_Short => True) = Norm_Short,
               Message   => "Normalized 16#23# hex string mismatch");
+      Assert (Condition => To_Hex
+              (Number     => 16#0f#,
+               Normalize  => False,
+               Byte_Short => True) = Short,
+              Message   => "Short 0f hex string mismatch");
 --  begin read only
    end Test_To_Hex;
 --  end read only

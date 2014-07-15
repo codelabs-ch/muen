@@ -561,6 +561,14 @@ is
          return False;
       end if;
 
+      if Caps.NFR > 0 then
+         pragma Debug
+           (KC.Put_String (Item => "Unsupported IOMMU NFR "));
+         pragma Debug (KC.Put_Byte (Item => Caps.NFR));
+         pragma Debug (KC.New_Line);
+         return False;
+      end if;
+
       return True;
    end Check_Capabilities;
 

@@ -72,7 +72,7 @@ __reserved_memory__})
 
             Method (_PRT, 0, NotSerialized)
             {
-                Return (Package (0x01)
+                Return (Package (__interrupt_count__)
                 {
                     /* eth0->eth0_irq */
                     Package (0x04)

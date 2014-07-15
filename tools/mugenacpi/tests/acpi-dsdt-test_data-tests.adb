@@ -40,6 +40,8 @@ package body Acpi.DSDT.Test_Data.Tests is
                   Filename2 => "obj/linux_dsdt.dsl"),
                  Message   => "DSDT table mismatch");
       end;
+
+      Ada.Directories.Delete_File (Name => "obj/linux_dsdt.dsl");
 --  begin read only
    end Test_Write;
 --  end read only

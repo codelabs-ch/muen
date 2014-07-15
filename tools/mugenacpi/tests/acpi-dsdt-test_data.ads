@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Directories;
+
 with Muxml.Utils;
 
 with Test_Utils;

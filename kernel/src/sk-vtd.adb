@@ -106,13 +106,13 @@ is
      with Size => 64;
 
    for Reg_Capability_Type use record
-      ND         at 0 range 0 .. 2;
-      AFL        at 0 range 3 .. 3;
-      RWBF       at 0 range 4 .. 4;
-      PLMR       at 0 range 5 .. 5;
-      PHMR       at 0 range 6 .. 6;
-      CM         at 0 range 7 .. 7;
-      SAGAW      at 0 range 8 .. 12;
+      ND         at 0 range 0  .. 2;
+      AFL        at 0 range 3  .. 3;
+      RWBF       at 0 range 4  .. 4;
+      PLMR       at 0 range 5  .. 5;
+      PHMR       at 0 range 6  .. 6;
+      CM         at 0 range 7  .. 7;
+      SAGAW      at 0 range 8  .. 12;
       Reserved_1 at 0 range 13 .. 15;
       MGAW       at 0 range 16 .. 21;
       ZLR        at 0 range 22 .. 22;

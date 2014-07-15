@@ -51,23 +51,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
                         0x00000000,         // Translation Offset
                         0x00010000,         // Length
                         ,, , TypeStatic)
-                    /* eth0->mmio1 */
-                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite,
-                        0x00000000,
-                        0xd2500000,
-                        0xd251ffff,
-                        0x00000000,
-                        0x00020000,
-                        ,,, AddressRangeMemory, TypeStatic)
-                    /* eth0->mmio2 */
-                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite,
-                        0x00000000,
-                        0xd253b000,
-                        0xd253bfff,
-                        0x00000000,
-                        0x00001000,
-                        ,,, AddressRangeMemory, TypeStatic)
-                })
+__reserved_memory__})
                 Return (MCRS)
             }
 

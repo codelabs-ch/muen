@@ -95,27 +95,7 @@ __pci_routing_table__})
                     Return (Arg3)
                 }
             }
-
-            Device (ISA)
-            {
-                Device (SER1)
-                {
-                    Name (_HID, EisaId ("PNP0501"))
-                    Name (_UID, "debugport")
-                    Method (_STA)
-                    {
-                       Return (0x0f)
-                    }
-                    Method (_CRS)
-                    {
-                        Return (ResourceTemplate () {
-                            IO (Decode16, 0x3f8, 0x3f8, 0x08, 0x08,)
-                            IRQNoFlags () { 0 }
-                        })
-                    }
-                }
-            }
-        }
+__legacy_devices__}
     }
 
     Name (_S0, Package (0x04)

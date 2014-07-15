@@ -76,7 +76,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
 
             Method (_PRT, 0, NotSerialized)
             {
-                Return (Package (0x01)
+                Return (Package (1)
                 {
                     /* eth0->eth0_irq */
                     Package (0x04)

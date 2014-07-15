@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
 with DOM.Core.Nodes;
@@ -153,6 +154,24 @@ is
             Pattern  => "__reserved_memory__",
             Content  => To_String (Buffer));
       end Add_Device_Memory;
+
+      Buffer := Null_Unbounded_String;
+
+      Add_Device_Irq :
+      declare
+         Dev_Irq : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Subject,
+              XPath => "devices/device/irq");
+         Count   : constant Natural := DOM.Core.Nodes.Length (List => Dev_Irq);
+      begin
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__interrupt_count__",
+            Content  => Ada.Strings.Fixed.Trim
+              (Source => Count'Img,
+               Side   => Ada.Strings.Left));
+      end Add_Device_Irq;
 
       Mutools.Templates.Write (Template => Tmpl,
                                Filename => Dsl_File);

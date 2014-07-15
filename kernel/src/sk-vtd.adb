@@ -540,9 +540,16 @@ is
       end if;
 
       Caps := IOMMUs (Idx).Capability;
+
       if Caps.ND < 2 then
          pragma Debug (KC.Put_Line
                        (Item => "IOMMU supports less than 256 domains"));
+         return False;
+      end if;
+
+      if Caps.SAGAW (2) = 0 then
+         pragma Debug
+           (KC.Put_Line (Item => "No support for 39-bit AGAW in IOMMU"));
          return False;
       end if;
 

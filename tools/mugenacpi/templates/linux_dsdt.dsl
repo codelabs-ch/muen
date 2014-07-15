@@ -74,15 +74,7 @@ __reserved_memory__})
             {
                 Return (Package (__interrupt_count__)
                 {
-                    /* eth0->eth0_irq */
-                    Package (0x04)
-                    {
-                        0x0019FFFF,
-                        0x00,
-                        Zero,
-                        0x0b
-                    }
-                })
+__pci_routing_table__})
             }
 
             Method (_OSC, 4, NotSerialized)

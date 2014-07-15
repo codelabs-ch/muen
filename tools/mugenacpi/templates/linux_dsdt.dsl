@@ -7,14 +7,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
         Method (_CRS)
         {
             Return (ResourceTemplate () {
-                DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, NonCacheable, ReadWrite,
-                    0x00000000,
-                    0xf8000000,
-                    0xf8ffffff,
-                    0x00000000,
-                    0x01000000,
-                    ,, , AddressRangeReserved, TypeStatic)
-            })
+__pci_config_space__})
         }
     }
 

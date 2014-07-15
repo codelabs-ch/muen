@@ -23,7 +23,8 @@ is
    --  parameters, see ACPI Specification 5.0, Errata A, section 19.5.34.
    function DWordMemory
      (Base_Address : Interfaces.Unsigned_32;
-      Size         : Interfaces.Unsigned_32)
+      Size         : Interfaces.Unsigned_32;
+      Cacheable    : Boolean)
       return String;
 
 end Acpi.Asl;

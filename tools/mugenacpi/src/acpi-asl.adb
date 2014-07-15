@@ -29,15 +29,16 @@ is
 
    function DWordMemory
      (Base_Address : Interfaces.Unsigned_32;
-      Size         : Interfaces.Unsigned_32)
+      Size         : Interfaces.Unsigned_32;
+      Cacheable    : Boolean)
       return String
    is
       use type Interfaces.Unsigned_32;
 
       End_Addr : constant Interfaces.Unsigned_32 := Base_Address + Size - 1;
       Buffer   : Unbounded_String := To_Unbounded_String
-        ("DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed,"
-         & " Cacheable, ReadWrite, 0x0,");
+        ("DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, "
+         & (if Cacheable then "" else "Non") & "Cacheable, ReadWrite, 0x0,");
    begin
       Buffer := Buffer & " 0x" & Mutools.Utils.To_Hex
         (Number     => Interfaces.Unsigned_64 (Base_Address),

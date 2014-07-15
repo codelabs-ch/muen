@@ -12,22 +12,31 @@ package body Acpi.Asl.Test_Data.Tests is
 
 --  begin read only
    procedure Test_DWordMemory (Gnattest_T : in out Test);
-   procedure Test_DWordMemory_2778f7 (Gnattest_T : in out Test) renames Test_DWordMemory;
---  id:2.2/2778f78290b0efd1/DWordMemory/1/0/
+   procedure Test_DWordMemory_9a4014 (Gnattest_T : in out Test) renames Test_DWordMemory;
+--  id:2.2/9a4014f56644c4de/DWordMemory/1/0/
    procedure Test_DWordMemory (Gnattest_T : in out Test) is
    --  acpi-asl.ads:24:4:DWordMemory
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
-      Ref : constant String := "DWordMemory (ResourceProducer, PosDecode, "
+      Ref_1 : constant String := "DWordMemory (ResourceProducer, PosDecode, "
         & "MinFixed, MaxFixed, Cacheable, ReadWrite, 0x0, 0xd2520000, "
         & "0xd252ffff, 0x0, 0x10000,,,, AddressRangeMemory, TypeStatic)";
+      Ref_2 : constant String := "DWordMemory (ResourceProducer, PosDecode, "
+        & "MinFixed, MaxFixed, NonCacheable, ReadWrite, 0x0, 0xf8000000, "
+        & "0xf8ffffff, 0x0, 0x1000000,,,, AddressRangeMemory, TypeStatic)";
    begin
       Assert (Condition => DWordMemory
               (Base_Address => 16#d252_0000#,
-               Size         => 16#0001_0000#) = Ref,
-              Message   => "DWordMemory string mismatch");
+               Size         => 16#0001_0000#,
+               Cacheable    => True) = Ref_1,
+              Message   => "DWordMemory string mismatch (1)");
+      Assert (Condition => DWordMemory
+              (Base_Address => 16#f800_0000#,
+               Size         => 16#0100_0000#,
+               Cacheable    => False) = Ref_2,
+              Message   => "DWordMemory string mismatch (2)");
 --  begin read only
    end Test_DWordMemory;
 --  end read only

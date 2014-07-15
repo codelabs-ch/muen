@@ -9,7 +9,7 @@ package Acpi.Asl.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.Acpi.Asl.Test_Data.Test
    with null record;
 
-   procedure Test_DWordMemory_2778f7 (Gnattest_T : in out Test);
+   procedure Test_DWordMemory_9a4014 (Gnattest_T : in out Test);
    --  acpi-asl.ads:24:4:DWordMemory
 
 end Acpi.Asl.Test_Data.Tests;

@@ -166,7 +166,8 @@ is
          Buffer := Buffer & ASCII.LF & Indent (N => 5);
          Buffer := Buffer & Asl.DWordMemory
            (Base_Address => Virtual_Addr,
-            Size         => Mem_Size) & ASCII.LF;
+            Size         => Mem_Size,
+            Cacheable    => True) & ASCII.LF;
       end Add_Device_Memory_Resources;
    begin
       Dsl_File (Dsl_File'Last - 3 .. Dsl_File'Last) := ".dsl";

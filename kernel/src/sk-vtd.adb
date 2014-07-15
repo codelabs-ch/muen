@@ -129,6 +129,61 @@ is
       Reserved_4 at 0 range 57 .. 63;
    end record;
 
+   --  Extended Capability register
+   type Reg_Extcapability_Type is record
+      C          : Bit_Type;
+      QI         : Bit_Type;
+      DT         : Bit_Type;
+      IR         : Bit_Type;
+      EIM        : Bit_Type;
+      Reserved_1 : Bit_Type;
+      PT         : Bit_Type;
+      SC         : Bit_Type;
+      IRO        : Bit_10_Type;
+      Reserved_2 : Bit_Array (1 .. 2);
+      MHMV       : Bit_Array (1 .. 4);
+      ECS        : Bit_Type;
+      MTS        : Bit_Type;
+      NEST       : Bit_Type;
+      DIS        : Bit_Type;
+      PASID      : Bit_Type;
+      PRS        : Bit_Type;
+      ERS        : Bit_Type;
+      SRS        : Bit_Type;
+      POT        : Bit_Type;
+      NWFS       : Bit_Type;
+      EAFS       : Bit_Type;
+      PSS        : Bit_Array (1 .. 5);
+      Reserved_3 : Bit_Array (1 .. 24);
+   end record;
+
+   for Reg_Extcapability_Type use record
+      C          at 0 range 0  .. 0;
+      QI         at 0 range 1  .. 1;
+      DT         at 0 range 2  .. 2;
+      IR         at 0 range 3  .. 3;
+      EIM        at 0 range 4  .. 4;
+      Reserved_1 at 0 range 5  .. 5;
+      PT         at 0 range 6  .. 6;
+      SC         at 0 range 7  .. 7;
+      IRO        at 0 range 8  .. 17;
+      Reserved_2 at 0 range 18 .. 19;
+      MHMV       at 0 range 20 .. 23;
+      ECS        at 0 range 24 .. 24;
+      MTS        at 0 range 25 .. 25;
+      NEST       at 0 range 26 .. 26;
+      DIS        at 0 range 27 .. 27;
+      PASID      at 0 range 28 .. 28;
+      PRS        at 0 range 29 .. 29;
+      ERS        at 0 range 30 .. 30;
+      SRS        at 0 range 31 .. 31;
+      POT        at 0 range 32 .. 32;
+      NWFS       at 0 range 33 .. 33;
+      EAFS       at 0 range 34 .. 34;
+      PSS        at 0 range 35 .. 39;
+      Reserved_3 at 0 range 40 .. 63;
+   end record;
+
    --  Global Command Register
    type Reg_Global_Command_Type is record
       Reserved : Bit_Array (1 .. 23);

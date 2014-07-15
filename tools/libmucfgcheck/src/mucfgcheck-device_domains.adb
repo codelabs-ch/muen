@@ -82,7 +82,7 @@ is
 
    procedure Domain_Memory_Overlap (XML_Data : Muxml.XML_Data_Type)
    is
-      Domains     : constant DOM.Core.Node_List
+      Domains      : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/deviceDomains/domain");

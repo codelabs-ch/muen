@@ -256,11 +256,12 @@ is
 
    procedure Kernel_PT_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      CPU_Count   : constant Positive := Positive'Value
-        (Muxml.Utils.Get_Attribute
-           (Doc   => XML_Data.Doc,
-            XPath => "/system/platform/processor",
-            Name  => "logicalCpus"));
+      CPU_Count    : constant Positive
+        := Positive'Value
+          (Muxml.Utils.Get_Attribute
+             (Doc   => XML_Data.Doc,
+              XPath => "/system/platform/processor",
+              Name  => "logicalCpus"));
       Physical_Mem : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,

@@ -49,7 +49,7 @@ is
    is
       use type DOM.Core.Node;
 
-      Mem_Node  : constant DOM.Core.Node := Muxml.Utils.Get_Element
+      Mem_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
         (Nodes     => Memory,
          Ref_Attr  => "name",
          Ref_Value => Name);

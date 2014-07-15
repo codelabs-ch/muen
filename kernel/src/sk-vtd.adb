@@ -553,6 +553,14 @@ is
          return False;
       end if;
 
+      if Caps.FRO * 16 /= FR_Offset then
+         pragma Debug
+           (KC.Put_String (Item => "Unsupported IOMMU FRO "));
+         pragma Debug (KC.Put_Word16 (Item => SK.Word16 (Caps.FRO)));
+         pragma Debug (KC.New_Line);
+         return False;
+      end if;
+
       return True;
    end Check_Capabilities;
 

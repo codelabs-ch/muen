@@ -527,10 +527,8 @@ is
       SPARK_Mode => Off -- XXX Workaround for [N425-012]
    is
       Version : Reg_Version_Type;
+      Caps    : Reg_Capability_Type;
    begin
-
-      --  Basic sanity check, TODO: check IOMMU capabilities.
-
       Version := IOMMUs (Idx).Version;
       if Version.MAX /= 1 or else Version.MIN /= 0 then
          pragma Debug (KC.Put_String
@@ -538,6 +536,13 @@ is
          pragma Debug (KC.Put_Byte (Item => SK.Byte (Version.MAX)));
          pragma Debug (KC.Put_Byte (Item => SK.Byte (Version.MIN)));
          pragma Debug (KC.New_Line);
+         return False;
+      end if;
+
+      Caps := IOMMUs (Idx).Capability;
+      if Caps.ND < 2 then
+         pragma Debug (KC.Put_Line
+                       (Item => "IOMMU supports less than 256 domains"));
          return False;
       end if;
 

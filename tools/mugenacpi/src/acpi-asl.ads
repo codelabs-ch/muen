@@ -19,12 +19,21 @@
 package Acpi.Asl
 is
 
+   use type Interfaces.Unsigned_16;
+
    --  Returns a DWord Memory Resource Descriptor string with the given
    --  parameters, see ACPI Specification 5.0, Errata A, section 19.5.34.
    function DWordMemory
      (Base_Address : Interfaces.Unsigned_32;
       Size         : Interfaces.Unsigned_32;
       Cacheable    : Boolean)
+      return String;
+
+   --  Returns an IO Resource Descriptor string with the given parameters, see
+   --  ACPI Specification 5.0, Errata A, section 19.5.62.
+   function IO
+     (Start_Port : Interfaces.Unsigned_16;
+      Port_Range : Interfaces.Unsigned_16)
       return String;
 
 end Acpi.Asl;

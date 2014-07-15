@@ -15,7 +15,7 @@ package body Acpi.Asl.Test_Data.Tests is
    procedure Test_DWordMemory_9a4014 (Gnattest_T : in out Test) renames Test_DWordMemory;
 --  id:2.2/9a4014f56644c4de/DWordMemory/1/0/
    procedure Test_DWordMemory (Gnattest_T : in out Test) is
-   --  acpi-asl.ads:24:4:DWordMemory
+   --  acpi-asl.ads:26:4:DWordMemory
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -39,6 +39,32 @@ package body Acpi.Asl.Test_Data.Tests is
               Message   => "DWordMemory string mismatch (2)");
 --  begin read only
    end Test_DWordMemory;
+--  end read only
+
+
+--  begin read only
+   procedure Test_IO (Gnattest_T : in out Test);
+   procedure Test_IO_93fe76 (Gnattest_T : in out Test) renames Test_IO;
+--  id:2.2/93fe76d2e3938c77/IO/1/0/
+   procedure Test_IO (Gnattest_T : in out Test) is
+   --  acpi-asl.ads:34:4:IO
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Ref_1 : constant String := "IO (Decode16, 0x3f8, 0x3f8, 0x08, 0x8,)";
+      Ref_2 : constant String := "IO (Decode16, 0x50b0, 0x50b0, 0x08, 0x8,)";
+   begin
+      Assert (Condition => IO
+              (Start_Port => 16#03f8#,
+               Port_Range => 8) = Ref_1,
+              Message   => "IO string mismatch (1)");
+      Assert (Condition => IO
+              (Start_Port => 16#50b0#,
+               Port_Range => 8) = Ref_2,
+              Message   => "IO string mismatch (2)");
+--  begin read only
+   end Test_IO;
 --  end read only
 
 end Acpi.Asl.Test_Data.Tests;

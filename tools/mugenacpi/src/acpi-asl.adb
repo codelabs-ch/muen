@@ -55,4 +55,24 @@ is
       return To_String (Buffer);
    end DWordMemory;
 
+   -------------------------------------------------------------------------
+
+   function IO
+     (Start_Port : Interfaces.Unsigned_16;
+      Port_Range : Interfaces.Unsigned_16)
+      return String
+   is
+      Start  : constant String  := Mutools.Utils.To_Hex
+        (Number     => Interfaces.Unsigned_64 (Start_Port),
+         Normalize  => False);
+      Buffer : Unbounded_String := To_Unbounded_String ("IO (Decode16,");
+   begin
+      Buffer := Buffer & " 0x" & Start & ", 0x" & Start;
+      Buffer := Buffer & ", 0x08, 0x" & Mutools.Utils.To_Hex
+        (Number     => Interfaces.Unsigned_64 (Port_Range),
+         Normalize  => False) & ",)";
+
+      return To_String (Buffer);
+   end IO;
+
 end Acpi.Asl;

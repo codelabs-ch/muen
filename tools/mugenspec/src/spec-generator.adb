@@ -45,12 +45,14 @@ is
    use Ada.Strings.Unbounded;
    use Interfaces;
 
+   function Indent
+     (N         : Positive := 1;
+      Unit_Size : Positive := 3)
+      return String renames Mutools.Utils.Indent;
+
    --  Return capitalisation of the given string (first letter in uppercase and
    --  the remaining letters in lowercase).
    function Capitalize (Str : String) return String;
-
-   --  Return N number of indentation spaces.
-   function Indent (N : Positive := 1) return String;
 
    type Pin_Ctrl_Type is
      (ExternalInterruptExiting,
@@ -392,20 +394,6 @@ is
         (Item => Result (Result'First));
       return Result;
    end Capitalize;
-
-   -------------------------------------------------------------------------
-
-   function Indent (N : Positive := 1) return String
-   is
-      Indent : constant String := "   ";
-      Result : Unbounded_String;
-   begin
-      for I in Positive range 1 .. N loop
-         Result := Result & Indent;
-      end loop;
-
-      return To_String (Result);
-   end Indent;
 
    -------------------------------------------------------------------------
 

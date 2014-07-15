@@ -79,6 +79,56 @@ is
       Reserved at 0 range 8 .. 31;
    end record;
 
+   --  Capability register
+   type Reg_Capability_Type is record
+      ND         : Bit_3_Type;
+      AFL        : Bit_Type;
+      RWBF       : Bit_Type;
+      PLMR       : Bit_Type;
+      PHMR       : Bit_Type;
+      CM         : Bit_Type;
+      SAGAW      : Bit_Array (1 .. 5);
+      Reserved_1 : Bit_Array (1 .. 3);
+      MGAW       : Bit_Array (1 .. 6);
+      ZLR        : Bit_Type;
+      Reserved_2 : Bit_Type;
+      FRO        : Bit_10_Type;
+      SLLPS      : Bit_Array (1 .. 4);
+      Reserved_3 : Bit_Type;
+      PSI        : Bit_Type;
+      NFR        : SK.Byte;
+      MAMV       : Bit_Array (1 .. 6);
+      DWD        : Bit_Type;
+      DRD        : Bit_Type;
+      FL1GP      : Bit_Type;
+      Reserved_4 : Bit_Array (1 .. 7);
+   end record
+     with Size => 64;
+
+   for Reg_Capability_Type use record
+      ND         at 0 range 0 .. 2;
+      AFL        at 0 range 3 .. 3;
+      RWBF       at 0 range 4 .. 4;
+      PLMR       at 0 range 5 .. 5;
+      PHMR       at 0 range 6 .. 6;
+      CM         at 0 range 7 .. 7;
+      SAGAW      at 0 range 8 .. 12;
+      Reserved_1 at 0 range 13 .. 15;
+      MGAW       at 0 range 16 .. 21;
+      ZLR        at 0 range 22 .. 22;
+      Reserved_2 at 0 range 23 .. 23;
+      FRO        at 0 range 24 .. 33;
+      SLLPS      at 0 range 34 .. 37;
+      Reserved_3 at 0 range 38 .. 38;
+      PSI        at 0 range 39 .. 39;
+      NFR        at 0 range 40 .. 47;
+      MAMV       at 0 range 48 .. 53;
+      DWD        at 0 range 54 .. 54;
+      DRD        at 0 range 55 .. 55;
+      FL1GP      at 0 range 56 .. 56;
+      Reserved_4 at 0 range 57 .. 63;
+   end record;
+
    --  Global Command Register
    type Reg_Global_Command_Type is record
       Reserved : Bit_Array (1 .. 23);

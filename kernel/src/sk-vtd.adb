@@ -54,6 +54,10 @@ is
      with
        Size => 4;
 
+   type Bit_10_Type is mod 2 ** 10
+     with
+       Size => 10;
+
    type Bit_52_Type is mod 2 ** 52
      with
        Size => 52;

@@ -468,6 +468,34 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Check capabilities of IOMMU given by index. Return False if capability
+   --  requirements are not met.
+   function Check_Capabilities
+     (Idx : Skp.IOMMU.IOMMU_Device_Range)
+      return Boolean
+   with
+      SPARK_Mode => Off -- XXX Workaround for [N425-012]
+   is
+      Version : Reg_Version_Type;
+   begin
+
+      --  Basic sanity check, TODO: check IOMMU capabilities.
+
+      Version := IOMMUs (Idx).Version;
+      if Version.MAX /= 1 or else Version.MIN /= 0 then
+         pragma Debug (KC.Put_String
+                       (Item => "Unsupported IOMMU version "));
+         pragma Debug (KC.Put_Byte (Item => SK.Byte (Version.MAX)));
+         pragma Debug (KC.Put_Byte (Item => SK.Byte (Version.MIN)));
+         pragma Debug (KC.New_Line);
+         return False;
+      end if;
+
+      return True;
+   end Check_Capabilities;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize
    with
       SPARK_Mode      => Off, -- XXX Workaround for [N425-012]
@@ -475,7 +503,6 @@ is
       Refined_Depends => ((X86_64.State, IOMMUs) =>+ null)
    is
       Loop_Count_Max : constant := 10000;
-      Version        : Reg_Version_Type;
    begin
 
       --  Systems without an IOMMU have a null range.
@@ -486,21 +513,11 @@ is
       for I in Skp.IOMMU.IOMMU_Device_Range loop
          pragma Warnings (On);
 
-         Version := IOMMUs (I).Version;
-
-         --  Basic sanity check, TODO: check IOMMU capabilities.
-
-         if Version.MAX /= 1 or else Version.MIN /= 0 then
-            pragma Debug (KC.Put_String
-                          (Item => "Unsupported IOMMU version "));
-            pragma Debug (KC.Put_Byte (Item => SK.Byte (Version.MAX)));
-            pragma Debug (KC.Put_Byte (Item => SK.Byte (Version.MIN)));
-            pragma Debug (KC.New_Line);
-
-            pragma Assume (False); --  Workaround for No_Return: Pre => False
-            if True then  --  Workaround for No_Return placement limitation
-               CPU.Panic;
-            end if;
+         if not Check_Capabilities (Idx => I) then
+            pragma Debug (KC.Put_String (Item => "IOMMU "));
+            pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
+            pragma Debug (KC.Put_Line   (Item => ": capability check failed"));
+            CPU.Panic;
          end if;
 
          Set_Fault_Event_Mask (IOMMU  => I,

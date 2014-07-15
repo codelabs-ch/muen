@@ -43,6 +43,8 @@ is
       Unit_Size : Positive := 4)
       return String renames Mutools.Utils.Indent;
 
+   Linux_Irq_Offset : constant := 48;
+
    -------------------------------------------------------------------------
 
    procedure Write
@@ -53,13 +55,74 @@ is
       Devices  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
-              XPath => "/system/platform/devices/device[memory]");
+              XPath => "/system/platform/devices/device[memory or irq]");
       Dsl_File : String := Filename;
       Tmpl     : Mutools.Templates.Template_Type;
       Buffer   : Unbounded_String;
 
       --  Add resources of given subject device memory to string buffer.
       procedure Add_Device_Memory_Resources (Dev_Mem : DOM.Core.Node);
+
+      --  Add resources of given subject device interrupt to string buffer.
+      procedure Add_Device_Interrupt_Resource (Dev_Irq : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Device_Interrupt_Resource (Dev_Irq : DOM.Core.Node)
+      is
+         Log_Irq_Name  : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Dev_Irq,
+              Name => "logical");
+         Virtual_Irq   : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Dev_Irq,
+                 Name => "vector")) - Linux_Irq_Offset;
+         Log_Dev_Name  : constant String
+           := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Dev_Irq),
+            Name => "logical");
+         Phys_Dev_Name : constant String
+           := DOM.Core.Elements.Get_Attribute
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Dev_Irq),
+            Name => "physical");
+         Physical_Dev  : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Nodes     => Devices,
+              Ref_Attr  => "name",
+              Ref_Value => Phys_Dev_Name);
+         PCI_Node      : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Physical_Dev,
+              XPath => "pci");
+         Bus_Nr        : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => PCI_Node,
+                 Name => "bus"));
+         Device_Nr     : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => PCI_Node,
+                 Name => "device"));
+      begin
+         Buffer := Buffer & Indent (N => 5)
+           & "/* " & Log_Dev_Name & "->" & Log_Irq_Name & " */";
+         Buffer := Buffer & ASCII.LF & Indent (N => 5) & "Package (4) { 0x";
+         Buffer := Buffer & Mutools.Utils.To_Hex
+           (Number     => Bus_Nr,
+            Normalize  => False,
+            Byte_Short => True);
+         Buffer := Buffer & Mutools.Utils.To_Hex
+           (Number     => Device_Nr,
+            Normalize  => False,
+            Byte_Short => True);
+         Buffer := Buffer & "ffff, 0, Zero, 0x";
+         Buffer := Buffer &  Mutools.Utils.To_Hex
+           (Number     => Virtual_Irq,
+            Normalize  => False) & " }" & ASCII.LF;
+      end Add_Device_Interrupt_Resource;
 
       ----------------------------------------------------------------------
 
@@ -171,6 +234,20 @@ is
             Content  => Ada.Strings.Fixed.Trim
               (Source => Count'Img,
                Side   => Ada.Strings.Left));
+
+         for I in 0 .. Count - 1 loop
+            Add_Device_Interrupt_Resource
+              (Dev_Irq => DOM.Core.Nodes.Item
+                 (List  => Dev_Irq,
+                  Index => I));
+         end loop;
+
+         Buffer := Buffer & Indent (N => 4);
+
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__pci_routing_table__",
+            Content  => To_String (Buffer));
       end Add_Device_Irq;
 
       Mutools.Templates.Write (Template => Tmpl,

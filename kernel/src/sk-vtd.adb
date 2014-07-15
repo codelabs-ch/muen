@@ -50,14 +50,6 @@ is
      with
        Size => 4;
 
-   type Bit_12_Type is mod 2 ** 12
-     with
-       Size => 12;
-
-   type Bit_20_Type is mod 2 ** 20
-     with
-       Size => 20;
-
    type Bit_52_Type is mod 2 ** 52
      with
        Size => 52;
@@ -213,7 +205,7 @@ is
       Redirection_Hint : Bit_Type;
       Reserved_2       : SK.Byte;
       APIC_ID          : SK.Byte;
-      FEEh             : Bit_12_Type;
+      FEEh             : Bit_Array (1 .. 12);
    end record
      with
        Size => 32;
@@ -253,7 +245,7 @@ is
       EXE        : Bit_Type;
       PP         : Bit_Type;
       FR         : SK.Byte;
-      PV         : Bit_20_Type;
+      PV         : Bit_Array (1 .. 20);
       AType      : Bit_2_Type;
       T          : Bit_Type;
       F          : Bit_Type;

@@ -51,16 +51,24 @@ is
    is
       use type DOM.Core.Node;
 
-      Layout       : Paging.Layouts.Memory_Layout_Type
+      Layout        : Paging.Layouts.Memory_Layout_Type
         (Levels => Paging_Levels);
-      Device_Nodes : constant DOM.Core.Node_List
+      Device_Nodes  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => Dev_Virt_Mem_XPath);
-      Memory_Nodes : constant DOM.Core.Node_List
+      Memory_Nodes  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => Virt_Mem_XPath);
+      Physical_Mem  : constant DOM.Core.Node_List
+        :=  McKae.XML.XPath.XIA.XPath_Query
+          (N     =>  Policy.Doc,
+           XPath => "/system/memory/memory");
+      Physical_Devs : constant DOM.Core.Node_List
+        :=  McKae.XML.XPath.XIA.XPath_Query
+          (N     =>  Policy.Doc,
+           XPath => "/system/platform/devices/device");
    begin
       Paging.Layouts.Set_Large_Page_Support (Mem_Layout => Layout,
                                              State      => Large_Pages);
@@ -77,9 +85,9 @@ is
                  Name => "physical");
             Physical : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => Policy.Doc,
-                 XPath => "/system/memory/memory[@name='" & Physical_Name
-                 & "']");
+                (Nodes     => Physical_Mem,
+                 Ref_Attr  => "name",
+                 Ref_Value => Physical_Name);
             Virtual_Address : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
                 (DOM.Core.Elements.Get_Attribute
@@ -123,9 +131,11 @@ is
                  Name => "physical");
             Physical_Mem : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => Policy.Doc,
-                 XPath => "/system/platform/devices/device[@name='" & Dev_Name
-                 & "']/memory[@name='" & Physical_Mem_Name & "']");
+                (Doc   => Muxml.Utils.Get_Element
+                   (Nodes     => Physical_Devs,
+                    Ref_Attr  => "name",
+                    Ref_Value => Dev_Name),
+                 XPath => "memory[@name='" & Physical_Mem_Name & "']");
             Physical_Address : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
                 (DOM.Core.Elements.Get_Attribute
@@ -178,6 +188,15 @@ is
       return Interfaces.Unsigned_64
    is
       Map : Alloc.Map.Map_Type;
+
+      Physical_Mem  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     =>  Policy.Doc,
+           XPath => "/system/memory/memory");
+      Physical_Devs : constant DOM.Core.Node_List
+        :=  McKae.XML.XPath.XIA.XPath_Query
+          (N     =>  Policy.Doc,
+           XPath => "/system/platform/devices/device");
    begin
       Map.Insert_Empty_Region (Name          => U ("Mem"),
                                Allocatable   => True,
@@ -205,9 +224,10 @@ is
             Size : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
                 (Muxml.Utils.Get_Attribute
-                   (Doc   =>  Policy.Doc,
-                    XPath => "/system/memory/memory[@name='" & Phy_Name & "']",
-                    Name  => "size"));
+                   (Nodes     => Physical_Mem,
+                    Ref_Attr  => "name",
+                    Ref_Value => Phy_Name,
+                    Attr_Name => "size"));
          begin
             Map.Allocate_Fixed (Name          => U (Virt_Name),
                                 First_Address => Virt_Addr,
@@ -239,9 +259,11 @@ is
             Size : constant Interfaces.Unsigned_64
               := Interfaces.Unsigned_64'Value
                 (Muxml.Utils.Get_Attribute
-                   (Doc   =>  Policy.Doc,
-                    XPath => "/system/platform/devices/device[@name='"
-                    & Dev_Name & "']/memory[@name='" & Phy_Name & "']",
+                   (Doc   => Muxml.Utils.Get_Element
+                      (Nodes     => Physical_Devs,
+                       Ref_Attr  => "name",
+                       Ref_Value => Dev_Name),
+                    XPath => "memory[@name='" & Phy_Name & "']",
                     Name  => "size"));
          begin
             Map.Allocate_Fixed (Name          => U (Virt_Name),

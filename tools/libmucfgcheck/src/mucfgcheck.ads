@@ -109,13 +109,11 @@ is
    --  attribute of the right node.
    function Match_Subject_Name (Left, Right : DOM.Core.Node) return Boolean;
 
-   --  Set size attribute of given virtual memory node to the value of
-   --  the associated physical memory region. 'Ref_Nodes_Path' is the XPath
-   --  used to select the reference nodes.
+   --  Set size of given virtual memory node by looking up the corresponding
+   --  physical memory region present in the 'Ref_Nodes' list.
    procedure Set_Size
      (Virtual_Mem_Node : DOM.Core.Node;
-      Ref_Nodes_Path   : String;
-      XML_Data         : Muxml.XML_Data_Type);
+      Ref_Nodes        : DOM.Core.Node_List);
 
    Validation_Error : exception;
 

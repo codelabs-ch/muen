@@ -33,16 +33,47 @@ with Acpi.XSDT;
 package body Acpi.Generator
 is
 
+   --  Return filename of file-backed memory region with given name contained
+   --  in given list of nodes.
+   function Get_Filename
+     (Memory : DOM.Core.Node_List;
+      Name   : String)
+      return String;
+
+   -------------------------------------------------------------------------
+
+   function Get_Filename
+     (Memory : DOM.Core.Node_List;
+      Name   : String)
+      return String
+   is
+      use type DOM.Core.Node;
+
+      Mem_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+        (Nodes     => Memory,
+         Ref_Attr  => "name",
+         Ref_Value => Name);
+   begin
+      return (if Mem_Node = null then "" else Muxml.Utils.Get_Attribute
+              (Doc   => Mem_Node,
+               XPath => "file",
+               Name  => "filename"));
+   end Get_Filename;
+
    -------------------------------------------------------------------------
 
    procedure Write
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Subjects : constant DOM.Core.Node_List
+      Subjects     : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/subjects/subject");
+      Physical_Mem : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
@@ -50,20 +81,23 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Subjects,
                  Index => I);
+            Subj_Mem  : DOM.Core.Node_List;
             Name      : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Cur_Subj,
                  Name => "name");
             RSDP_Name : constant String := Name & "|acpi_rsdp";
-            RSDP_File : constant String := Muxml.Utils.Get_Attribute
-              (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@type='subject_acpi_rsdp' and "
-               & "@name='" & RSDP_Name & "']/file",
-               Name  => "filename");
+            RSDP_File : constant String
+              := Get_Filename (Memory => Physical_Mem,
+                               Name   => RSDP_Name);
          begin
             if RSDP_File /= "" then
                Mulog.Log (Msg => "Generating ACPI tables of subject '"
                           & Name & "'");
+
+               Subj_Mem := McKae.XML.XPath.XIA.XPath_Query
+                 (N     => Cur_Subj,
+                  XPath => "memory/memory");
                declare
                   XSDT_Name : constant String := Name & "|acpi_xsdt";
                   FADT_Name : constant String := Name & "|acpi_fadt";
@@ -71,35 +105,34 @@ is
 
                   RSDP_Filename : constant String
                     := Output_Dir & "/" & RSDP_File;
-
-                  XSDT_Addr     : constant String := Muxml.Utils.Get_Attribute
-                    (Doc   => Cur_Subj,
-                     XPath => "memory/memory[@physical='" & XSDT_Name & "']",
-                     Name  => "virtualAddress");
+                  XSDT_Addr     : constant String
+                    := Muxml.Utils.Get_Attribute
+                    (Nodes     => Subj_Mem,
+                     Ref_Attr  => "physical",
+                     Ref_Value => XSDT_Name,
+                     Attr_Name => "virtualAddress");
                   XSDT_Filename : constant String
-                    := Output_Dir & "/" & Muxml.Utils.Get_Attribute
-                      (Doc   => Policy.Doc,
-                       XPath => "/system/memory/memory"
-                       & "[@type='subject_acpi_xsdt' and @name='" & XSDT_Name
-                       & "']/file",
-                       Name  => "filename");
+                    := Output_Dir & "/" & Get_Filename
+                    (Memory => Physical_Mem,
+                     Name   => XSDT_Name);
 
-                  FADT_Addr     : constant String := Muxml.Utils.Get_Attribute
-                    (Doc   => Cur_Subj,
-                     XPath => "memory/memory[@physical='" & FADT_Name & "']",
-                     Name  => "virtualAddress");
+                  FADT_Addr     : constant String
+                    := Muxml.Utils.Get_Attribute
+                      (Nodes     => Subj_Mem,
+                       Ref_Attr  => "physical",
+                       Ref_Value => FADT_Name,
+                       Attr_Name => "virtualAddress");
                   FADT_Filename : constant String
-                    := Output_Dir & "/" & Muxml.Utils.Get_Attribute
-                      (Doc   => Policy.Doc,
-                       XPath => "/system/memory/memory"
-                       & "[@type='subject_acpi_fadt' and @name='" & FADT_Name
-                       & "']/file",
-                       Name  => "filename");
+                    := Output_Dir & "/" & Get_Filename
+                      (Memory => Physical_Mem,
+                       Name   => FADT_Name);
 
-                  DSDT_Addr     : constant String := Muxml.Utils.Get_Attribute
-                    (Doc   => Cur_Subj,
-                     XPath => "memory/memory[@physical='" & DSDT_Name & "']",
-                     Name  => "virtualAddress");
+                  DSDT_Addr     : constant String
+                    := Muxml.Utils.Get_Attribute
+                      (Nodes     => Subj_Mem,
+                       Ref_Attr  => "physical",
+                       Ref_Value => DSDT_Name,
+                       Attr_Name => "virtualAddress");
                begin
                   Mulog.Log (Msg => "Writing RSDP with XSDT "
                              & "guest-physical address " & XSDT_Addr

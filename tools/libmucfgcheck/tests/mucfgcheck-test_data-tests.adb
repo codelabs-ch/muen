@@ -602,38 +602,69 @@ package body Mucfgcheck.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Set_Size (Gnattest_T : in out Test);
-   procedure Test_Set_Size_d4bdf7 (Gnattest_T : in out Test) renames Test_Set_Size;
---  id:2.2/d4bdf7ed8b3bb70a/Set_Size/1/0/
+   procedure Test_Set_Size_e82b63 (Gnattest_T : in out Test) renames Test_Set_Size;
+--  id:2.2/e82b63c700676990/Set_Size/0/0/
    procedure Test_Set_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck.ads:115:4:Set_Size
+   --  mucfgcheck.ads:114:4:Set_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
-      Data : Muxml.XML_Data_Type;
-      Mem  : DOM.Core.Node_List;
+      Data  : Muxml.XML_Data_Type;
+      Impl  : DOM.Core.DOM_Implementation;
+      Nodes : DOM.Core.Node_List;
    begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/test_policy.xml");
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      DOM.Core.Append_Node
+        (List => Nodes,
+         N    => Create_Mem_Node
+           (Doc     => Data.Doc,
+            Name    => "mem1",
+            Address => "16#1000#",
+            Size    => "16#1000#"));
+      DOM.Core.Append_Node
+        (List => Nodes,
+         N    => Create_Mem_Node
+           (Doc     => Data.Doc,
+            Name    => "mem2",
+            Address => "16#2000#",
+            Size    => "16#beef_0000#"));
 
       declare
-         Node : DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Data.Doc,
-            XPath => "/system/subjects/subject/memory/memory"
-            & "[@physical='vt|bin']");
+         Vmem_Node : DOM.Core.Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "memory");
       begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Vmem_Node,
+            Name  => "physical",
+            Value => "mem1");
+         Set_Size (Virtual_Mem_Node => Vmem_Node,
+                   Ref_Nodes        => Nodes);
+
          Assert (Condition => DOM.Core.Elements.Get_Attribute
-                 (Elem => Node,
-                  Name => "size") = "",
-                 Message   => "Size set");
-         Set_Size (Virtual_Mem_Node => Node,
-                   Ref_Nodes_Path   => "/system/memory/memory",
-                   XML_Data         => Data);
-         Assert (Condition =>  DOM.Core.Elements.Get_Attribute
-                 (Elem => Node,
-                  Name => "size") = "16#0002_4000#",
-                 Message   => "Size mismatch");
+                 (Elem => Vmem_Node,
+                  Name => "size") = "16#1000#",
+                 Message   => "'mem1' size mismatch");
+      end;
+
+      declare
+         Vmem_Node : DOM.Core.Node := DOM.Core.Documents.Create_Element
+           (Doc      => Data.Doc,
+            Tag_Name => "memory");
+      begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Vmem_Node,
+            Name  => "physical",
+            Value => "mem2");
+         Set_Size (Virtual_Mem_Node => Vmem_Node,
+                   Ref_Nodes        => Nodes);
+
+         Assert (Condition => DOM.Core.Elements.Get_Attribute
+                 (Elem => Vmem_Node,
+                  Name => "size") = "16#beef_0000#",
+                 Message   => "'mem2' size mismatch");
       end;
 --  begin read only
    end Test_Set_Size;

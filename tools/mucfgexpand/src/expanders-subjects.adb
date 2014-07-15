@@ -386,30 +386,35 @@ is
 
    procedure Add_CPU_Ids (Data : in out Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List
+      Nodes  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject");
+      Frames : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
             use type DOM.Core.Node;
 
-            Subj_Node : constant DOM.Core.Node
+            Subj_Node  : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Nodes,
                  Index => I);
-            Subj_Name : constant String
+            Subj_Name  : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
                  Name => "name");
-            CPU_Node  : DOM.Core.Node
+            Frame_Node : DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => Data.Doc,
-                 XPath => "/system/scheduling/majorFrame/cpu/minorFrame["
-                 & "@subject='" & Subj_Name & "']/..");
+                (Nodes     => Frames,
+                 Ref_Attr  => "subject",
+                 Ref_Value => Subj_Name);
+            CPU_Node   : DOM.Core.Node;
          begin
-            if CPU_Node = null then
+            if Frame_Node = null then
 
                --  Subject is executed via switch events.
 
@@ -428,16 +433,17 @@ is
                                                           Index => J),
                              Name => "name");
                      begin
-                        CPU_Node := Muxml.Utils.Get_Element
-                          (Doc   => Data.Doc,
-                           XPath => "/system/scheduling/majorFrame/cpu/"
-                           & "minorFrame[" & "@subject='" & Cur_Src_Name
-                           & "']/..");
-                        exit when CPU_Node /= null;
+                        Frame_Node := Muxml.Utils.Get_Element
+                          (Nodes     => Frames,
+                           Ref_Attr  => "subject",
+                           Ref_Value => Cur_Src_Name);
+                        exit when Frame_Node /= null;
                      end;
                   end loop;
                end;
             end if;
+
+            CPU_Node := DOM.Core.Nodes.Parent_Node (N => Frame_Node);
 
             declare
                CPU_Id : constant String

@@ -56,6 +56,10 @@ is
       Nodes        : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "/system/memory/memory[contains(string(@name), '|')]");
+      Subjects     : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject");
 
       --  Return True if given name is a valid kernel entity.
       function Is_Valid_Kernel_Entity (Name : String) return Boolean;
@@ -83,6 +87,8 @@ is
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
+            use type DOM.Core.Node;
+
             Ref_Name    : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => DOM.Core.Nodes.Item
@@ -91,14 +97,14 @@ is
                  Name => "name");
             Entity_Name : constant String
               := Mutools.Utils.Decode_Entity_Name (Encoded_Str => Ref_Name);
-            Subjects    : constant DOM.Core.Node_List
-              := XPath_Query
-                (N     => XML_Data.Doc,
-                 XPath => "/system/subjects/subject[@name='"
-                 & Entity_Name & "']");
+            Subject     : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Subjects,
+                 Ref_Attr  => "name",
+                 Ref_Value => Entity_Name);
          begin
             if not Is_Valid_Kernel_Entity (Name => Entity_Name)
-              and then DOM.Core.Nodes.Length (List => Subjects) /= 1
+              and then Subject = null
             then
                raise Validation_Error with "Entity '" & Entity_Name & "' "
                  & "encoded in memory region '" & Ref_Name & "' does not "
@@ -138,9 +144,14 @@ is
 
    procedure Kernel_Memory_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => "/system/memory/memory[contains(string(@type),'kernel')]");
+      Nodes      : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory[contains(string(@type),'kernel')]");
+      Virt_Nodes : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "//memory[@physical]");
    begin
       Mulog.Log (Msg => "Checking mapping of" & DOM.Core.Nodes.Length
                  (List => Nodes)'Img & " kernel memory region(s)");
@@ -151,16 +162,19 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Nodes,
                  Index => I);
-            Phys_Name : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Phys_Mem,
-               Name => "name");
+            Phys_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Phys_Mem,
+                 Name => "name");
             Virt_Mem  : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => XML_Data.Doc,
-                 XPath => "//memory[@physical='" & Phys_Name & "']");
-            Virt_Name : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Virt_Mem,
-               Name => "logical");
+                (Nodes     => Virt_Nodes,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Phys_Name);
+            Virt_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Virt_Mem,
+                 Name => "logical");
             Owner     : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node
                 (Node  => Virt_Mem,
@@ -242,18 +256,25 @@ is
 
    procedure Kernel_PT_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      CPU_Count : constant Positive := Positive'Value
-        (Muxml.Utils.Get_Attribute
-           (Doc   => XML_Data.Doc,
-            XPath => "/system/platform/processor",
-            Name  => "logicalCpus"));
-      Mem_Node  : DOM.Core.Node_List;
+      CPU_Count    : constant Positive
+        := Positive'Value
+          (Muxml.Utils.Get_Attribute
+             (Doc   => XML_Data.Doc,
+              XPath => "/system/platform/processor",
+              Name  => "logicalCpus"));
+      Physical_Mem : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory");
+      Node         : DOM.Core.Node;
    begin
       Mulog.Log (Msg => "Checking presence of" & CPU_Count'Img
                  & " kernel PT region(s)");
 
       for I in 0 .. CPU_Count - 1 loop
          declare
+            use type DOM.Core.Node;
+
             CPU_Str  : constant String
               := Ada.Strings.Fixed.Trim
                 (Source => I'Img,
@@ -261,10 +282,11 @@ is
             Mem_Name : constant String
               := "kernel_" & CPU_Str & "|pt";
          begin
-            Mem_Node := XPath_Query
-              (N     => XML_Data.Doc,
-               XPath => "/system/memory/memory[@name='" & Mem_Name & "']");
-            if DOM.Core.Nodes.Length (List => Mem_Node) = 0 then
+            Node := Muxml.Utils.Get_Element
+              (Nodes     => Physical_Mem,
+               Ref_Attr  => "name",
+               Ref_Value => Mem_Name);
+            if Node = null then
                raise Validation_Error with "Kernel PT region '" & Mem_Name
                  & "' for logical CPU " & CPU_Str & " not found";
             end if;
@@ -302,18 +324,24 @@ is
 
    procedure Kernel_Stack_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      CPU_Count : constant Positive := Positive'Value
+      CPU_Count    : constant Positive := Positive'Value
         (Muxml.Utils.Get_Attribute
            (Doc   => XML_Data.Doc,
             XPath => "/system/platform/processor",
             Name  => "logicalCpus"));
-      Mem_Node  : DOM.Core.Node_List;
+      Physical_Mem : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory");
+      Node         : DOM.Core.Node;
    begin
       Mulog.Log (Msg => "Checking presence of" & CPU_Count'Img
                  & " kernel stack region(s)");
 
       for I in 0 .. CPU_Count - 1 loop
          declare
+            use type DOM.Core.Node;
+
             CPU_Str  : constant String
               := Ada.Strings.Fixed.Trim
                 (Source => I'Img,
@@ -321,10 +349,11 @@ is
             Mem_Name : constant String
               := "kernel_stack_" & CPU_Str;
          begin
-            Mem_Node := XPath_Query
-              (N     => XML_Data.Doc,
-               XPath => "/system/memory/memory[@name='" & Mem_Name & "']");
-            if DOM.Core.Nodes.Length (List => Mem_Node) = 0 then
+            Node := Muxml.Utils.Get_Element
+              (Nodes     => Physical_Mem,
+               Ref_Attr  => "name",
+               Ref_Value => Mem_Name);
+            if Node = null then
                raise Validation_Error with "Kernel stack region '" & Mem_Name
                  & "' for logical CPU " & CPU_Str & " not found";
             end if;
@@ -336,18 +365,24 @@ is
 
    procedure Kernel_Store_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      CPU_Count : constant Positive := Positive'Value
+      CPU_Count    : constant Positive := Positive'Value
         (Muxml.Utils.Get_Attribute
            (Doc   => XML_Data.Doc,
             XPath => "/system/platform/processor",
             Name  => "logicalCpus"));
-      Mem_Node  : DOM.Core.Node_List;
+      Physical_Mem : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory");
+      Node         : DOM.Core.Node;
    begin
       Mulog.Log (Msg => "Checking presence of" & CPU_Count'Img
                  & " kernel store region(s)");
 
       for I in 0 .. CPU_Count - 1 loop
          declare
+            use type DOM.Core.Node;
+
             CPU_Str  : constant String
               := Ada.Strings.Fixed.Trim
                 (Source => I'Img,
@@ -355,10 +390,11 @@ is
             Mem_Name : constant String
               := "kernel_store_" & CPU_Str;
          begin
-            Mem_Node := XPath_Query
-              (N     => XML_Data.Doc,
-               XPath => "/system/memory/memory[@name='" & Mem_Name & "']");
-            if DOM.Core.Nodes.Length (List => Mem_Node) = 0 then
+            Node := Muxml.Utils.Get_Element
+              (Nodes     => Physical_Mem,
+               Ref_Attr  => "name",
+               Ref_Value => Mem_Name);
+            if Node = null then
                raise Validation_Error with "Kernel store region '" & Mem_Name
                  & "' for logical CPU " & CPU_Str & " not found";
             end if;
@@ -372,7 +408,7 @@ is
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "//*[@physicalAddress]");
+         XPath => "/system/memory/memory");
    begin
       Check_Attribute (Nodes     => Nodes,
                        Node_Type => "physical memory",
@@ -489,9 +525,14 @@ is
 
    procedure System_Memory_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => "/system/memory/memory[contains(string(@type),'system')]");
+      Nodes      : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory[contains(string(@type),'system')]");
+      Virt_Nodes : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "//memory[@physical]");
    begin
       Mulog.Log (Msg => "Checking mapping of" & DOM.Core.Nodes.Length
                  (List => Nodes)'Img & " system memory region(s)");
@@ -504,13 +545,15 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Nodes,
                  Index => I);
-            Phys_Name : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Phys_Mem,
-               Name => "name");
+            Phys_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Phys_Mem,
+                 Name => "name");
             Virt_Mem  : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => XML_Data.Doc,
-                 XPath => "//memory[@physical='" & Phys_Name & "']");
+                (Nodes     => Virt_Nodes,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Phys_Name);
          begin
             if Virt_Mem /= null then
                raise Validation_Error with "System memory region '"
@@ -545,6 +588,12 @@ is
    is
       use Interfaces;
 
+      Physical_Mem   : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/memory/memory[not(starts-with(@type,'system'))]");
+      Physical_Devs  : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/platform/devices/device");
       Subjects       : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
          XPath => "/system/subjects/subject");
@@ -565,14 +614,16 @@ is
             Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => DOM.Core.Nodes.Parent_Node (N => Cur_Node),
                Name => "physical");
+            Device   : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Physical_Devs,
+                 Ref_Attr  => "name",
+                 Ref_Value => Dev_Name);
          begin
-            Set_Size
-              (Virtual_Mem_Node => DOM.Core.Nodes.Item
-                 (List  => Kernel_Dev_Mem,
-                  Index => I),
-               Ref_Nodes_Path   => "/system/platform/devices/device[@name='"
-               & Dev_Name & "']/memory",
-               XML_Data         => XML_Data);
+            Set_Size (Virtual_Mem_Node => Cur_Node,
+                      Ref_Nodes        => XPath_Query
+                        (N     => Device,
+                         XPath => "memory"));
          end;
       end loop;
 
@@ -592,12 +643,10 @@ is
          begin
             if DOM.Core.Nodes.Length (List => Memory) + KDev_Mem_Count > 1 then
                for J in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
-                  Set_Size
-                    (Virtual_Mem_Node => DOM.Core.Nodes.Item
-                       (List  => Memory,
-                        Index => J),
-                     Ref_Nodes_Path   => "/system/memory/memory",
-                     XML_Data         => XML_Data);
+                  Set_Size (Virtual_Mem_Node => DOM.Core.Nodes.Item
+                            (List  => Memory,
+                             Index => J),
+                            Ref_Nodes        => Physical_Mem);
                end loop;
 
                Muxml.Utils.Append (Left  => Memory,
@@ -635,12 +684,10 @@ is
          begin
             if DOM.Core.Nodes.Length (List => Memory) + Dev_Mem_Count > 1 then
                for J in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
-                  Set_Size
-                    (Virtual_Mem_Node => DOM.Core.Nodes.Item
-                       (List  => Memory,
-                        Index => J),
-                     Ref_Nodes_Path   => "/system/memory/memory",
-                     XML_Data         => XML_Data);
+                  Set_Size (Virtual_Mem_Node => DOM.Core.Nodes.Item
+                            (List  => Memory,
+                             Index => J),
+                            Ref_Nodes        => Physical_Mem);
                end loop;
 
                for K in 0 .. Dev_Mem_Count - 1 loop
@@ -652,14 +699,16 @@ is
                        := DOM.Core.Elements.Get_Attribute
                          (Elem => DOM.Core.Nodes.Parent_Node (N => Cur_Node),
                           Name => "physical");
+                     Device   : constant DOM.Core.Node
+                       := Muxml.Utils.Get_Element
+                         (Nodes     => Physical_Devs,
+                          Ref_Attr  => "name",
+                          Ref_Value => Dev_Name);
                   begin
-                     Set_Size
-                       (Virtual_Mem_Node => DOM.Core.Nodes.Item
-                          (List  => Dev_Memory,
-                           Index => K),
-                        Ref_Nodes_Path   => "/system/platform/devices/"
-                        & "device[@name='" & Dev_Name & "']/memory",
-                        XML_Data         => XML_Data);
+                     Set_Size (Virtual_Mem_Node => Cur_Node,
+                               Ref_Nodes        => XPath_Query
+                                 (N     => Device,
+                                  XPath => "memory"));
                   end;
                end loop;
 
@@ -682,7 +731,7 @@ is
    procedure VMCS_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
    is
       XPath : constant String
-        := "/system/memory/memory[contains(string(@name), '|vmcs')]";
+        := "/system/memory/memory[@type='system_vmcs']";
 
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,

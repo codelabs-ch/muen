@@ -18,7 +18,7 @@
 
 with Interfaces;
 
-private with Ada.Containers.Indefinite_Ordered_Maps;
+private with Ada.Containers.Bounded_Ordered_Maps;
 
 with Paging.Entries;
 
@@ -78,18 +78,19 @@ is
 private
 
    use type Entries.Table_Entry_Type;
+   use Ada.Containers;
 
-   package Entries_Map_Package is new Ada.Containers.Indefinite_Ordered_Maps
+   package Entries_Map_Package is new Ada.Containers.Bounded_Ordered_Maps
      (Key_Type     => Table_Range,
       Element_Type => Entries.Table_Entry_Type);
 
    type Page_Table_Type is record
       Address : Interfaces.Unsigned_64;
-      Data    : Entries_Map_Package.Map;
+      Data    : Entries_Map_Package.Map (Count_Type (Table_Range'Last) + 1);
    end record;
 
    Null_Table : constant Page_Table_Type
      := (Address => 0,
-         Data    => Entries_Map_Package.Empty_Map);
+         Data    => <>);
 
 end Paging.Tables;

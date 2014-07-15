@@ -101,6 +101,31 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Attribute
+     (Nodes     : DOM.Core.Node_List;
+      Ref_Attr  : String;
+      Ref_Value : String;
+      Attr_Name : String)
+      return String
+   is
+      use type DOM.Core.Node;
+
+      Node : constant DOM.Core.Node
+        := Get_Element (Nodes     => Nodes,
+                        Ref_Attr  => Ref_Attr,
+                        Ref_Value => Ref_Value);
+   begin
+      if Node /= null then
+         return DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => Attr_Name);
+      else
+         return "";
+      end if;
+   end Get_Attribute;
+
+   -------------------------------------------------------------------------
+
    function Get_Element
      (Doc   : DOM.Core.Node;
       XPath : String)
@@ -112,6 +137,35 @@ is
            (N     => Doc,
             XPath => XPath),
          Index => 0);
+   end Get_Element;
+
+   -------------------------------------------------------------------------
+
+   function Get_Element
+     (Nodes     : DOM.Core.Node_List;
+      Ref_Attr  : String;
+      Ref_Value : String)
+      return DOM.Core.Node
+   is
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Node,
+                 Name => Ref_Attr);
+         begin
+            if Name = Ref_Value then
+               return Node;
+            end if;
+         end;
+      end loop;
+
+      return null;
    end Get_Element;
 
    -------------------------------------------------------------------------

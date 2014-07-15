@@ -82,10 +82,13 @@ is
 
    procedure Domain_Memory_Overlap (XML_Data : Muxml.XML_Data_Type)
    is
-      Domains : constant DOM.Core.Node_List
+      Domains      : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/deviceDomains/domain");
+      Physical_Mem : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/memory/memory[not(starts-with(@type,'system'))]");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Domains) - 1 loop
          declare
@@ -104,12 +107,10 @@ is
          begin
             if DOM.Core.Nodes.Length (List => Memory) > 1 then
                for J in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
-                  Set_Size
-                    (Virtual_Mem_Node => DOM.Core.Nodes.Item
-                       (List  => Memory,
-                        Index => J),
-                     Ref_Nodes_Path   => "/system/memory/memory",
-                     XML_Data         => XML_Data);
+                  Set_Size (Virtual_Mem_Node => DOM.Core.Nodes.Item
+                            (List  => Memory,
+                             Index => J),
+                            Ref_Nodes        => Physical_Mem);
                end loop;
 
                Check_Memory_Overlap

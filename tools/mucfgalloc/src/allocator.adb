@@ -28,6 +28,7 @@ with Ada.Exceptions;
 
 with Mulog;
 with Mutools.Utils;
+with Muxml.Utils;
 
 package body Allocator
 is
@@ -308,6 +309,10 @@ is
       Map             : Alloc.Map.Map_Type;
       Memory_Map_File : File_Type;
       Map_Filename    : constant String := Output_File & ".map";
+      Physical_Memory : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Input_Policy.Doc,
+           XPath => "/system/memory/memory");
 
       procedure Dump_Memory_Map (Region : Alloc.Map.Region_Type);
       procedure Dump_Memory_Map (Region : Alloc.Map.Region_Type)
@@ -328,29 +333,26 @@ is
       procedure Update_DOM (Region : Alloc.Map.Region_Type);
       procedure Update_DOM (Region : Alloc.Map.Region_Type)
       is
-         N : DOM.Core.Node_List;
          use Ada.Strings.Unbounded;
-         use DOM.Core.Nodes;
-         use DOM.Core.Elements;
-         use Mutools.Utils;
-      begin
-         N := McKae.XML.XPath.XIA.XPath_Query
-           (N     => Input_Policy.Doc,
-            XPath => "/system/memory/*[@name='" &
-              To_String (Region.Name) & "']");
+         use type DOM.Core.Node;
 
-         if Length (N) /= 1 then
+         Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Nodes     => Physical_Memory,
+              Ref_Attr  => "name",
+              Ref_Value => To_String (Region.Name));
+      begin
+         if Node = null then
             raise Internal_Error with
               "Allocated region '" & To_String (Region.Name) &
               "' not found in policy";
          end if;
 
-         Set_Attribute
-           (Item (N, 0),
-            "physicalAddress",
-            To_Hex (Number => Region.First_Address));
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "physicalAddress",
+            Value => Mutools.Utils.To_Hex (Number => Region.First_Address));
       end Update_DOM;
-
    begin
 
       --  Add data from policy to memory map

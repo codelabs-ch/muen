@@ -46,17 +46,17 @@ is
      with
        Size => 2;
 
+   type Bit_3_Type is mod 2 ** 3
+     with
+       Size => 3;
+
    type Bit_4_Type is mod 2 ** 4
      with
        Size => 4;
 
-   type Bit_12_Type is mod 2 ** 12
+   type Bit_10_Type is mod 2 ** 10
      with
-       Size => 12;
-
-   type Bit_20_Type is mod 2 ** 20
-     with
-       Size => 20;
+       Size => 10;
 
    type Bit_52_Type is mod 2 ** 52
      with
@@ -77,6 +77,56 @@ is
       MIN      at 0 range 0 ..  3;
       MAX      at 0 range 4 ..  7;
       Reserved at 0 range 8 .. 31;
+   end record;
+
+   --  Capability register
+   type Reg_Capability_Type is record
+      ND         : Bit_3_Type;
+      AFL        : Bit_Type;
+      RWBF       : Bit_Type;
+      PLMR       : Bit_Type;
+      PHMR       : Bit_Type;
+      CM         : Bit_Type;
+      SAGAW      : Bit_Array (1 .. 5);
+      Reserved_1 : Bit_Array (1 .. 3);
+      MGAW       : Bit_Array (1 .. 6);
+      ZLR        : Bit_Type;
+      Reserved_2 : Bit_Type;
+      FRO        : Bit_10_Type;
+      SLLPS      : Bit_Array (1 .. 4);
+      Reserved_3 : Bit_Type;
+      PSI        : Bit_Type;
+      NFR        : SK.Byte;
+      MAMV       : Bit_Array (1 .. 6);
+      DWD        : Bit_Type;
+      DRD        : Bit_Type;
+      FL1GP      : Bit_Type;
+      Reserved_4 : Bit_Array (1 .. 7);
+   end record
+     with Size => 64;
+
+   for Reg_Capability_Type use record
+      ND         at 0 range 0 .. 2;
+      AFL        at 0 range 3 .. 3;
+      RWBF       at 0 range 4 .. 4;
+      PLMR       at 0 range 5 .. 5;
+      PHMR       at 0 range 6 .. 6;
+      CM         at 0 range 7 .. 7;
+      SAGAW      at 0 range 8 .. 12;
+      Reserved_1 at 0 range 13 .. 15;
+      MGAW       at 0 range 16 .. 21;
+      ZLR        at 0 range 22 .. 22;
+      Reserved_2 at 0 range 23 .. 23;
+      FRO        at 0 range 24 .. 33;
+      SLLPS      at 0 range 34 .. 37;
+      Reserved_3 at 0 range 38 .. 38;
+      PSI        at 0 range 39 .. 39;
+      NFR        at 0 range 40 .. 47;
+      MAMV       at 0 range 48 .. 53;
+      DWD        at 0 range 54 .. 54;
+      DRD        at 0 range 55 .. 55;
+      FL1GP      at 0 range 56 .. 56;
+      Reserved_4 at 0 range 57 .. 63;
    end record;
 
    --  Global Command Register
@@ -213,7 +263,7 @@ is
       Redirection_Hint : Bit_Type;
       Reserved_2       : SK.Byte;
       APIC_ID          : SK.Byte;
-      FEEh             : Bit_12_Type;
+      FEEh             : Bit_Array (1 .. 12);
    end record
      with
        Size => 32;
@@ -253,7 +303,7 @@ is
       EXE        : Bit_Type;
       PP         : Bit_Type;
       FR         : SK.Byte;
-      PV         : Bit_20_Type;
+      PV         : Bit_Array (1 .. 20);
       AType      : Bit_2_Type;
       T          : Bit_Type;
       F          : Bit_Type;
@@ -294,7 +344,7 @@ is
    type IOMMU_Type is record
       Version             : Reg_Version_Type;
       Reserved_1          : SK.Word32;
-      Capability          : SK.Word64;
+      Capability          : Reg_Capability_Type;
       Ext_Capability      : SK.Word64;
       Global_Command      : Reg_Global_Command_Type;
       Global_Status       : Reg_Global_Status_Type;
@@ -468,6 +518,62 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Check capabilities of IOMMU given by index. Return False if capability
+   --  requirements are not met.
+   function Check_Capabilities
+     (Idx : Skp.IOMMU.IOMMU_Device_Range)
+      return Boolean
+   with
+      SPARK_Mode => Off -- XXX Workaround for [N425-012]
+   is
+      Version : Reg_Version_Type;
+      Caps    : Reg_Capability_Type;
+   begin
+      Version := IOMMUs (Idx).Version;
+      if Version.MAX /= 1 or else Version.MIN /= 0 then
+         pragma Debug (KC.Put_String
+                       (Item => "Unsupported IOMMU version "));
+         pragma Debug (KC.Put_Byte (Item => SK.Byte (Version.MAX)));
+         pragma Debug (KC.Put_Byte (Item => SK.Byte (Version.MIN)));
+         pragma Debug (KC.New_Line);
+         return False;
+      end if;
+
+      Caps := IOMMUs (Idx).Capability;
+
+      if Caps.ND < 2 then
+         pragma Debug (KC.Put_Line
+                       (Item => "IOMMU supports less than 256 domains"));
+         return False;
+      end if;
+
+      if Caps.SAGAW (2) = 0 then
+         pragma Debug
+           (KC.Put_Line (Item => "No support for 39-bit AGAW in IOMMU"));
+         return False;
+      end if;
+
+      if Caps.FRO * 16 /= FR_Offset then
+         pragma Debug
+           (KC.Put_String (Item => "Unsupported IOMMU FRO "));
+         pragma Debug (KC.Put_Word16 (Item => SK.Word16 (Caps.FRO)));
+         pragma Debug (KC.New_Line);
+         return False;
+      end if;
+
+      if Caps.NFR > 0 then
+         pragma Debug
+           (KC.Put_String (Item => "Unsupported IOMMU NFR "));
+         pragma Debug (KC.Put_Byte (Item => Caps.NFR));
+         pragma Debug (KC.New_Line);
+         return False;
+      end if;
+
+      return True;
+   end Check_Capabilities;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize
    with
       SPARK_Mode      => Off, -- XXX Workaround for [N425-012]
@@ -475,7 +581,6 @@ is
       Refined_Depends => ((X86_64.State, IOMMUs) =>+ null)
    is
       Loop_Count_Max : constant := 10000;
-      Version        : Reg_Version_Type;
    begin
 
       --  Systems without an IOMMU have a null range.
@@ -486,21 +591,11 @@ is
       for I in Skp.IOMMU.IOMMU_Device_Range loop
          pragma Warnings (On);
 
-         Version := IOMMUs (I).Version;
-
-         --  Basic sanity check, TODO: check IOMMU capabilities.
-
-         if Version.MAX /= 1 or else Version.MIN /= 0 then
-            pragma Debug (KC.Put_String
-                          (Item => "Unsupported IOMMU version "));
-            pragma Debug (KC.Put_Byte (Item => SK.Byte (Version.MAX)));
-            pragma Debug (KC.Put_Byte (Item => SK.Byte (Version.MIN)));
-            pragma Debug (KC.New_Line);
-
-            pragma Assume (False); --  Workaround for No_Return: Pre => False
-            if True then  --  Workaround for No_Return placement limitation
-               CPU.Panic;
-            end if;
+         if not Check_Capabilities (Idx => I) then
+            pragma Debug (KC.Put_String (Item => "IOMMU "));
+            pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
+            pragma Debug (KC.Put_Line   (Item => ": capability check failed"));
+            CPU.Panic;
          end if;
 
          Set_Fault_Event_Mask (IOMMU  => I,

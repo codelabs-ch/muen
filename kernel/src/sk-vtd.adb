@@ -344,7 +344,7 @@ is
    type IOMMU_Type is record
       Version             : Reg_Version_Type;
       Reserved_1          : SK.Word32;
-      Capability          : SK.Word64;
+      Capability          : Reg_Capability_Type;
       Ext_Capability      : SK.Word64;
       Global_Command      : Reg_Global_Command_Type;
       Global_Status       : Reg_Global_Status_Type;

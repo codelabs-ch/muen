@@ -384,7 +384,7 @@ is
    --  IOTLB Invalidate Register offset, must be calculated using Extended
    --  Capability Register IRO field (TODO)
 
-   IOTLB_Offset : constant := 16#108#;
+   IOTLB_Offset : constant := 16#10# * 16 + 8;
 
    --  Fault-recording register offset, must be calculcated using Capability
    --  Register FRO field (TODO).
@@ -584,6 +584,7 @@ is
    is
       Version : Reg_Version_Type;
       Caps    : Reg_Capability_Type;
+      Extcaps : Reg_Extcapability_Type;
    begin
       Version := IOMMUs (Idx).Version;
       if Version.MAX /= 1 or else Version.MIN /= 0 then
@@ -621,6 +622,16 @@ is
          pragma Debug
            (KC.Put_String (Item => "Unsupported IOMMU NFR "));
          pragma Debug (KC.Put_Byte (Item => Caps.NFR));
+         pragma Debug (KC.New_Line);
+         return False;
+      end if;
+
+      Extcaps := IOMMUs (Idx).Ext_Capability;
+
+      if Extcaps.IRO * 16 + 8 /= IOTLB_Offset then
+         pragma Debug
+           (KC.Put_String (Item => "Unsupported IOMMU IRO "));
+         pragma Debug (KC.Put_Word16 (Item => SK.Word16 (Extcaps.IRO)));
          pragma Debug (KC.New_Line);
          return False;
       end if;

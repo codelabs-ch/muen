@@ -106,13 +106,13 @@ is
      with Size => 64;
 
    for Reg_Capability_Type use record
-      ND         at 0 range 0 .. 2;
-      AFL        at 0 range 3 .. 3;
-      RWBF       at 0 range 4 .. 4;
-      PLMR       at 0 range 5 .. 5;
-      PHMR       at 0 range 6 .. 6;
-      CM         at 0 range 7 .. 7;
-      SAGAW      at 0 range 8 .. 12;
+      ND         at 0 range 0  .. 2;
+      AFL        at 0 range 3  .. 3;
+      RWBF       at 0 range 4  .. 4;
+      PLMR       at 0 range 5  .. 5;
+      PHMR       at 0 range 6  .. 6;
+      CM         at 0 range 7  .. 7;
+      SAGAW      at 0 range 8  .. 12;
       Reserved_1 at 0 range 13 .. 15;
       MGAW       at 0 range 16 .. 21;
       ZLR        at 0 range 22 .. 22;
@@ -127,6 +127,61 @@ is
       DRD        at 0 range 55 .. 55;
       FL1GP      at 0 range 56 .. 56;
       Reserved_4 at 0 range 57 .. 63;
+   end record;
+
+   --  Extended Capability register
+   type Reg_Extcapability_Type is record
+      C          : Bit_Type;
+      QI         : Bit_Type;
+      DT         : Bit_Type;
+      IR         : Bit_Type;
+      EIM        : Bit_Type;
+      Reserved_1 : Bit_Type;
+      PT         : Bit_Type;
+      SC         : Bit_Type;
+      IRO        : Bit_10_Type;
+      Reserved_2 : Bit_Array (1 .. 2);
+      MHMV       : Bit_Array (1 .. 4);
+      ECS        : Bit_Type;
+      MTS        : Bit_Type;
+      NEST       : Bit_Type;
+      DIS        : Bit_Type;
+      PASID      : Bit_Type;
+      PRS        : Bit_Type;
+      ERS        : Bit_Type;
+      SRS        : Bit_Type;
+      POT        : Bit_Type;
+      NWFS       : Bit_Type;
+      EAFS       : Bit_Type;
+      PSS        : Bit_Array (1 .. 5);
+      Reserved_3 : Bit_Array (1 .. 24);
+   end record;
+
+   for Reg_Extcapability_Type use record
+      C          at 0 range 0  .. 0;
+      QI         at 0 range 1  .. 1;
+      DT         at 0 range 2  .. 2;
+      IR         at 0 range 3  .. 3;
+      EIM        at 0 range 4  .. 4;
+      Reserved_1 at 0 range 5  .. 5;
+      PT         at 0 range 6  .. 6;
+      SC         at 0 range 7  .. 7;
+      IRO        at 0 range 8  .. 17;
+      Reserved_2 at 0 range 18 .. 19;
+      MHMV       at 0 range 20 .. 23;
+      ECS        at 0 range 24 .. 24;
+      MTS        at 0 range 25 .. 25;
+      NEST       at 0 range 26 .. 26;
+      DIS        at 0 range 27 .. 27;
+      PASID      at 0 range 28 .. 28;
+      PRS        at 0 range 29 .. 29;
+      ERS        at 0 range 30 .. 30;
+      SRS        at 0 range 31 .. 31;
+      POT        at 0 range 32 .. 32;
+      NWFS       at 0 range 33 .. 33;
+      EAFS       at 0 range 34 .. 34;
+      PSS        at 0 range 35 .. 39;
+      Reserved_3 at 0 range 40 .. 63;
    end record;
 
    --  Global Command Register
@@ -329,10 +384,11 @@ is
    --  IOTLB Invalidate Register offset, must be calculated using Extended
    --  Capability Register IRO field (TODO)
 
-   IOTLB_Offset : constant := 16#108#;
+   IOTLB_Offset : constant := 16#10# * 16 + 8;
 
    --  Fault-recording register offset, must be calculcated using Capability
    --  Register FRO field (TODO).
+
    FR_Offset : constant := 16#20# * 16;
 
    --  NOTE: The Intel VT-d spec section 10.2 mentions that software is
@@ -345,7 +401,7 @@ is
       Version             : Reg_Version_Type;
       Reserved_1          : SK.Word32;
       Capability          : Reg_Capability_Type;
-      Ext_Capability      : SK.Word64;
+      Ext_Capability      : Reg_Extcapability_Type;
       Global_Command      : Reg_Global_Command_Type;
       Global_Status       : Reg_Global_Status_Type;
       Root_Table_Address  : SK.Word64;
@@ -528,6 +584,7 @@ is
    is
       Version : Reg_Version_Type;
       Caps    : Reg_Capability_Type;
+      Extcaps : Reg_Extcapability_Type;
    begin
       Version := IOMMUs (Idx).Version;
       if Version.MAX /= 1 or else Version.MIN /= 0 then
@@ -565,6 +622,16 @@ is
          pragma Debug
            (KC.Put_String (Item => "Unsupported IOMMU NFR "));
          pragma Debug (KC.Put_Byte (Item => Caps.NFR));
+         pragma Debug (KC.New_Line);
+         return False;
+      end if;
+
+      Extcaps := IOMMUs (Idx).Ext_Capability;
+
+      if Extcaps.IRO * 16 + 8 /= IOTLB_Offset then
+         pragma Debug
+           (KC.Put_String (Item => "Unsupported IOMMU IRO "));
+         pragma Debug (KC.Put_Word16 (Item => SK.Word16 (Extcaps.IRO)));
          pragma Debug (KC.New_Line);
          return False;
       end if;

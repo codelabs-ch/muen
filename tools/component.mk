@@ -10,7 +10,7 @@ SRC_FILES += $(wildcard $(TESTS_DIR)/additional/*)
 all: $(COMPONENT)
 
 $(DEPENDS) $(TDEPENDS):
-	@$(MAKE) -s -C $(TOP_DIR)/$@
+	@$(MAKE) -s -C $(TOP_DIR)/tools/$@
 
 $(COMPONENT): $(DEPENDS) $(COMPONENT_TARGETS)
 	@gprbuild $(BUILD_OPTS) -P$@

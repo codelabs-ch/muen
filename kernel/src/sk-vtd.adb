@@ -503,7 +503,9 @@ is
       Vector  : SK.Byte;
       APIC_ID : SK.Byte)
    with
-      SPARK_Mode => Off -- XXX Workaround for [N425-012]
+      SPARK_Mode => Off, -- XXX Workaround for [N425-012]
+      Global     => (In_Out => IOMMUs),
+      Depends    => (IOMMUs =>+ (IOMMU, Vector, APIC_ID))
    is
       Fault_Event_Addr : Reg_Fault_Event_Address_Type;
       Fault_Event_Data : Reg_Fault_Event_Data_Type;

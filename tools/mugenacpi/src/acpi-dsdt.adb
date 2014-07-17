@@ -25,6 +25,7 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
+with Mutools.OS;
 with Mutools.Utils;
 with Mutools.Templates;
 
@@ -39,15 +40,31 @@ is
 
    use Ada.Strings.Unbounded;
 
+   Linux_Irq_Offset   : constant := 48;
+
+   --  The size encompasses two PCI buses.
+   PCI_Cfg_Space_Size : constant := 16#0100_0000#;
+
    function Indent
      (N         : Positive := 1;
       Unit_Size : Positive := 4)
       return String renames Mutools.Utils.Indent;
 
-   Linux_Irq_Offset   : constant := 48;
+   --  Compile the source dsl file and store it in the specified target AML
+   --  file.
+   procedure Compile_Dsl
+     (Source : String;
+      Target : String);
 
-   --  The size encompasses two PCI buses.
-   PCI_Cfg_Space_Size : constant := 16#0100_0000#;
+   -------------------------------------------------------------------------
+
+   procedure Compile_Dsl
+     (Source : String;
+      Target : String)
+   is
+   begin
+      Mutools.OS.Execute (Command => "iasl -p" & Target & " " & Source);
+   end Compile_Dsl;
 
    -------------------------------------------------------------------------
 
@@ -380,6 +397,9 @@ is
 
       Mutools.Templates.Write (Template => Tmpl,
                                Filename => Dsl_File);
+
+      Compile_Dsl (Source => Dsl_File,
+                   Target => Filename);
    end Write;
 
 end Acpi.DSDT;

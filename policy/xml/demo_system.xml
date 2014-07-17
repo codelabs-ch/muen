@@ -119,7 +119,7 @@
 				<memory logical="ram" physical="nic_linux|ram" virtualAddress="16#00a0_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
-				<device logical="ttyS0" physical="serial">
+				<device logical="serial" physical="serial">
 					<ioPort logical="port1" physical="port1"/>
 				</device>
 				<device logical="cmos_rtc" physical="cmos_rtc">

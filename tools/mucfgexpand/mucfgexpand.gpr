@@ -17,8 +17,7 @@
 --
 
 with "xmlada";
-
-with "../../contrib/projects/xia";
+with "xia";
 
 with "../liballoc/liballoc";
 with "../libpaging/libpaging";

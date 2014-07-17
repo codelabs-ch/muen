@@ -16,7 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../../contrib/projects/xia";
+with "xia";
+
 with "../libtest/libtest";
 
 project GNATtest_Libmuxml extends "../tools.gpr" is

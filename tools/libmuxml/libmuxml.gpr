@@ -17,8 +17,8 @@
 --
 
 with "xmlada";
+with "xia";
 
-with "../../contrib/projects/xia";
 with "../shared_tools";
 with "../libtest/libtest";
 

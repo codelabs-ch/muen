@@ -482,7 +482,9 @@ is
      (IOMMU  : Skp.IOMMU.IOMMU_Device_Range;
       Enable : Boolean)
    with
-      SPARK_Mode => Off -- XXX Workaround for [N425-012]
+      SPARK_Mode => Off, -- XXX Workaround for [N425-012]
+      Global     => (In_Out => IOMMUs),
+      Depends    => (IOMMUs =>+ (IOMMU, Enable))
    is
       Fault_Event_Control : Reg_Fault_Event_Control_Type;
    begin

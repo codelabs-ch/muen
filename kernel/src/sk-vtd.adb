@@ -457,7 +457,9 @@ is
    --  of the specified IOMMU.
    procedure Clear_Fault_Record (IOMMU : Skp.IOMMU.IOMMU_Device_Range)
    with
-      SPARK_Mode => Off -- XXX Workaround for [N425-012]
+      SPARK_Mode => Off, -- XXX Workaround for [N425-012]
+      Global     => (In_Out => IOMMUs),
+      Depends    => (IOMMUs =>+ IOMMU)
    is
       Fault_Recording : Reg_Fault_Recording_Type;
       Fault_Status    : Reg_Fault_Status_Type;

@@ -4,7 +4,9 @@ export HARDWARE
 export SYSTEM
 
 ifeq (,$(filter $(MAKECMDGOALS),clean distclean))
+ifeq (,$(NO_CONTRIB))
 CONTRIB := $(shell $(MAKE) -C contrib)
+endif
 endif
 
 all: pack

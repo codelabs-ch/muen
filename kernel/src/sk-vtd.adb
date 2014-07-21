@@ -548,7 +548,9 @@ is
             declare
                Dummy : Reg_Fault_Recording_Type;
             begin
+               pragma $Prove_Warnings (Off, "unused assignment");
                Dummy := IOMMUs (I).Fault_Recording;
+               pragma $Prove_Warnings (On, "unused assignment");
 
                pragma Debug (Dummy.F = 1, KC.Put_String (Item => "Reason: "));
                pragma Debug (Dummy.F = 1, KC.Put_Byte   (Item => Dummy.FR));

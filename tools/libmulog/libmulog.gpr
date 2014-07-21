@@ -16,7 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../../contrib/projects/alog";
+with "alog";
+
 with "../shared_tools";
 
 library project Libmulog extends "../libs.gpr" is

@@ -55,8 +55,8 @@ is
 
 begin
    declare
-      Cmd : constant String   := Ada.Command_Line.Command_Name;
-      Sep : constant Positive := Ada.Strings.Fixed.Index
+      Cmd : constant String  := Ada.Command_Line.Command_Name;
+      Sep : constant Natural := Ada.Strings.Fixed.Index
         (Source  => Cmd,
          Pattern => "/",
          Going   => Ada.Strings.Backward);

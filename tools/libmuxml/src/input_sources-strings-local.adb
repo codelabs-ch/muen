@@ -19,6 +19,8 @@
 package body Input_Sources.Strings.Local
 is
 
+   -------------------------------------------------------------------------
+
    procedure Open
      (Str      : Unicode.CES.Byte_Sequence;
       Encoding : Unicode.CES.Encoding_Scheme;

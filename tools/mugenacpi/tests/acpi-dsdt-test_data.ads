@@ -7,9 +7,11 @@ with AUnit.Test_Fixtures;
 
 with Ada.Directories;
 
+with Muxml.Utils;
+
 with Test_Utils;
 
-package Spec.Templates.Test_Data is
+package Acpi.DSDT.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -19,6 +21,4 @@ package Spec.Templates.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-   Tmpl : constant String := "This is a PATTERN1 template PATTERN2" & ASCII.LF;
-
-end Spec.Templates.Test_Data;
+end Acpi.DSDT.Test_Data;

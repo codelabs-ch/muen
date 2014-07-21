@@ -25,6 +25,7 @@ package body Acpi.Generator.Test_Data.Tests is
       Linux_RSDP : constant String := "obj/linux_rsdp";
       Linux_XSDT : constant String := "obj/linux_xsdt";
       Linux_FADT : constant String := "obj/linux_fadt";
+      Linux_DSDT : constant String := "obj/linux_dsdt.aml";
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
@@ -45,6 +46,10 @@ package body Acpi.Generator.Test_Data.Tests is
               (Filename1 => "data/linux_fadt.ref",
                Filename2 => Linux_FADT),
               Message   => "FADT table mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/linux_dsdt.aml.ref",
+               Filename2 => Linux_DSDT),
+              Message   => "DSDT table mismatch");
 
       Ada.Directories.Delete_File (Name => Linux_RSDP);
       Ada.Directories.Delete_File (Name => Linux_XSDT);

@@ -26,6 +26,7 @@ with Interfaces;
 with Mulog;
 with Muxml.Utils;
 
+with Acpi.DSDT;
 with Acpi.FADT;
 with Acpi.RSDP;
 with Acpi.XSDT;
@@ -133,6 +134,10 @@ is
                        Ref_Attr  => "physical",
                        Ref_Value => DSDT_Name,
                        Attr_Name => "virtualAddress");
+                  DSDT_Filename : constant String
+                    := Output_Dir & "/" & Get_Filename
+                      (Memory => Physical_Mem,
+                       Name   => DSDT_Name);
                begin
                   Mulog.Log (Msg => "Writing RSDP with XSDT "
                              & "guest-physical address " & XSDT_Addr
@@ -154,6 +159,13 @@ is
                   Acpi.FADT.Write
                     (DSDT_Address => Interfaces.Unsigned_64'Value (DSDT_Addr),
                      Filename     => FADT_Filename);
+
+                  Mulog.Log (Msg => "Writing DSDT table to '"
+                             & DSDT_Filename & "'");
+                  Acpi.DSDT.Write
+                    (Policy   => Policy,
+                     Subject  => Cur_Subj,
+                     Filename => DSDT_Filename);
                end;
             end if;
          end;

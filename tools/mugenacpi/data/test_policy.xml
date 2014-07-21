@@ -5,7 +5,18 @@
 		<memory>
 			<memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
 		</memory>
-		<devices/>
+		<devices pciConfigAddress="16#f800_0000#">
+			<device name="serial" shared="false">
+				<ioPort end="16#03ff#" name="serial_1" start="16#03f8#"/>
+			</device>
+			<device name="ethernet" shared="false">
+				<pci bus="16#00#" device="16#19#" function="0"/>
+				<irq name="irq" number="20"/>
+				<memory caching="UC" name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
+				<memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
+				<memory caching="UC" name="mmconf" physicalAddress="16#f80c_8000#" size="16#1000#"/>
+			</device>
+		</devices>
 	</platform>
 
 	<memory>
@@ -19,7 +30,7 @@
 			<file filename="linux_fadt" offset="none"/>
 		</memory>
 		<memory alignment="16#1000#" name="linux|acpi_dsdt" physicalAddress="16#002e_015c#" size="16#1000#" caching="WB" type="subject_acpi_dsdt">
-			<file filename="linux_dsdt" offset="none"/>
+			<file filename="linux_dsdt.aml" offset="none"/>
 		</memory>
 	</memory>
 
@@ -221,15 +232,14 @@
 				<memory logical="acpi_dsdt" physical="linux|acpi_dsdt" virtualAddress="16#000e_3000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="console" physical="vga">
-					<ioPort logical="consoleports" physical="ports"/>
+				<device logical="serial" physical="serial">
+					<ioPort logical="port1" physical="serial_1"/>
 				</device>
-				<device logical="multiport" physical="multiport">
-					<ioPort logical="ports1" physical="ports1"/>
-					<ioPort logical="ports2" physical="ports2"/>
-				</device>
-				<device logical="testdevice" physical="testdevice">
-					<ioPort logical="fooport" physical="fooport"/>
+				<device logical="eth0" physical="ethernet">
+					<irq logical="eth0_irq" physical="irq" vector="59"/>
+					<memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d250_0000#" writable="true"/>
+					<memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d253_b000#" writable="true"/>
+					<memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80c_8000#" writable="true"/>
 				</device>
 			</devices>
 			<events/>

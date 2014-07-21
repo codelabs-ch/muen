@@ -92,6 +92,18 @@ is
 
    -------------------------------------------------------------------------
 
+   function Indent
+     (N         : Positive := 1;
+      Unit_Size : Positive := 3)
+      return String
+   is
+      Result : constant String (1 .. N * Unit_Size) := (others => ' ');
+   begin
+      return Result;
+   end Indent;
+
+   -------------------------------------------------------------------------
+
    function Is_Managed_By_VMX
      (MSR                    : Interfaces.Unsigned_64;
       DEBUGCTL_Control       : Boolean;
@@ -135,7 +147,7 @@ is
       Pos      : Natural                := Num_Str'Last;
       Tmp      : Interfaces.Unsigned_64 := Number;
       Digit    : Natural                := 0;
-      Diggroup : Positive               := 4;
+      Diggroup : Positive               := 1;
 
       --  Convert given hex digit to character.
       function To_Hex_Digit (N : Interfaces.Unsigned_64) return Character
@@ -150,12 +162,13 @@ is
       end To_Hex_Digit;
    begin
       if Normalize then
-         if Byte_Short and Number <= 16#ff# then
-            Diggroup := 2;
-         end if;
-
+         Diggroup := 4;
          Num_Str (Pos) := '#';
          Pos := Pos - 1;
+      end if;
+
+      if Byte_Short and Number <= 16#ff# then
+         Diggroup := 2;
       end if;
 
       loop
@@ -163,7 +176,7 @@ is
          Tmp   := Tmp / 16;
          Pos   := Pos - 1;
          Digit := Digit + 1;
-         exit when Tmp = 0 and (not Normalize or Digit mod Diggroup = 0);
+         exit when Tmp = 0 and Digit mod Diggroup = 0;
 
          if Normalize and Digit mod Diggroup = 0 then
             Num_Str (Pos) := '_';

@@ -7,14 +7,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
         Method (_CRS)
         {
             Return (ResourceTemplate () {
-                /* Reserve MMConf region */
-                DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, NonCacheable, ReadWrite,
-                    0x00000000,
-                    0xf8000000,
-                    0xf8ffffff,
-                    0x00000000,
-                    0x01000000,
-                    ,, , AddressRangeReserved, TypeStatic)
+                DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, NonCacheable, ReadWrite, 0x0, 0xf8000000, 0xf8ffffff, 0x0, 0x1000000,,,, AddressRangeMemory, TypeStatic)
             })
         }
     }
@@ -52,15 +45,10 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
                         0x00000000,         // Translation Offset
                         0x00010000,         // Length
                         ,, , TypeStatic)
-                    /* PCI 00:14.x, MMIO */
-                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite,
-                        0x00000000,         // Granularity
-                        0xd2520000,         // Range Minimum
-                        0xd252ffff,         // Range Maximum
-                        0x00000000,         // Translation Offset
-                        0x00010000,         // Length
-                        ,, , AddressRangeMemory, TypeStatic)
-
+                    /* eth0->mmio1 */
+                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite, 0x0, 0xd2500000, 0xd251ffff, 0x0, 0x20000,,,, AddressRangeMemory, TypeStatic)
+                    /* eth0->mmio2 */
+                    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, Cacheable, ReadWrite, 0x0, 0xd253b000, 0xd253bfff, 0x0, 0x1000,,,, AddressRangeMemory, TypeStatic)
                 })
                 Return (MCRS)
             }
@@ -82,16 +70,10 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
 
             Method (_PRT, 0, NotSerialized)
             {
-                Return (Package (0x01)
+                Return (Package (1)
                 {
-                    /* Route PCI 00:14.x PIN A to IRQ 7 */
-                    Package (0x04)
-                    {
-                        0x0014FFFF,
-                        0x00,
-                        Zero,
-                        0x07
-                    }
+                    /* eth0->eth0_irq */
+                    Package (4) { 0x0019ffff, 0, Zero, 0xb }
                 })
             }
 
@@ -118,6 +100,21 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "Muen  ", "Homebrew", 0x00000000)
                     /* Unknown UUID */
                     Or (CDW1, 0x04, CDW1)
                     Return (Arg3)
+                }
+            }
+            Device (ISA)
+            {
+                Device (SER0)
+                {
+                    Name (_HID, EisaId ("PNP0501"))
+                    Name (_UID, "serial")
+                    Method (_STA) { Return (0x0f) }
+                    Method (_CRS)
+                    {
+                        Return (ResourceTemplate () {
+                            IO (Decode16, 0x3f8, 0x3f8, 0x08, 0x8,)
+                        })
+                    }
                 }
             }
         }

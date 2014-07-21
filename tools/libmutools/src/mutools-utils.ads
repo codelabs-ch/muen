@@ -52,6 +52,13 @@ is
       Byte_Short : Boolean := False)
       return String;
 
+   --  Return N number of indentation units. The unit size specifies the number
+   --  of spaces per unit.
+   function Indent
+     (N         : Positive := 1;
+      Unit_Size : Positive := 3)
+      return String;
+
    --  Extract entity name from given encoded string (e.g. 'linux|zp' or
    --  'kernel_0|vmxon').
    function Decode_Entity_Name (Encoded_Str : String) return String;

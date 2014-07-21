@@ -679,7 +679,11 @@ is
             pragma Debug (KC.Put_String (Item => "IOMMU "));
             pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
             pragma Debug (KC.Put_Line   (Item => ": capability check failed"));
-            CPU.Panic;
+
+            pragma Assume (False); --  Workaround for No_Return: Pre => False
+            if True then  --  Workaround for No_Return placement limitation
+               CPU.Panic;
+            end if;
          end if;
 
          Set_Fault_Event_Mask (IOMMU  => I,
@@ -711,7 +715,11 @@ is
                pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
                pragma Debug (KC.Put_Line
                              (Item => ": unable to set root table address"));
-               CPU.Panic;
+
+               pragma Assume (False); --  Workaround for No_Return: Pre=>False
+               if True then  --  Workaround for No_Return placement limitation
+                  CPU.Panic;
+               end if;
             end if;
          end Set_Root_Table_Address;
 
@@ -733,7 +741,11 @@ is
                pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
                pragma Debug (KC.Put_Line
                              (Item => ": unable to invalidate context cache"));
-               CPU.Panic;
+
+               pragma Assume (False); --  Workaround for No_Return: Pre=>False
+               if True then  --  Workaround for No_Return placement limitation
+                  CPU.Panic;
+               end if;
             end if;
          end Invalidate_Context_Cache;
 
@@ -755,7 +767,11 @@ is
                pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
                pragma Debug (KC.Put_Line
                              (Item => ": unable to flush IOTLB"));
-               CPU.Panic;
+
+               pragma Assume (False); --  Workaround for No_Return: Pre=>False
+               if True then  --  Workaround for No_Return placement limitation
+                  CPU.Panic;
+               end if;
             end if;
          end IOTLB_Flush;
 
@@ -777,7 +793,11 @@ is
                pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
                pragma Debug (KC.Put_Line
                              (Item => ": error enabling translation"));
-               CPU.Panic;
+
+               pragma Assume (False); --  Workaround for No_Return: Pre=>False
+               if True then  --  Workaround for No_Return placement limitation
+                  CPU.Panic;
+               end if;
             end if;
          end Enable_Translation;
 

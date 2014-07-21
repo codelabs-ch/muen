@@ -582,67 +582,72 @@ is
 
    --  Check capabilities of IOMMU given by index. Return False if capability
    --  requirements are not met.
-   function Check_Capabilities
-     (Idx : Skp.IOMMU.IOMMU_Device_Range)
-      return Boolean
+   procedure Check_Capabilities
+     (Idx    :     Skp.IOMMU.IOMMU_Device_Range;
+      Result : out Boolean)
    with
-      SPARK_Mode => Off -- XXX Workaround for [N425-012]
+      SPARK_Mode => Off, -- XXX Workaround for [N425-012]
+      Global     => (Input  => IOMMUs),
+      Depends    => (Result => (IOMMUs, Idx))
    is
       Version : Reg_Version_Type;
       Caps    : Reg_Capability_Type;
       Extcaps : Reg_Extcapability_Type;
+
+      Supported_Version, Nr_Domains, AGAW_39_Bit : Boolean;
+      Matching_FRO, Matching_NFR, Matching_IRO   : Boolean;
    begin
       Version := IOMMUs (Idx).Version;
-      if Version.MAX /= 1 or else Version.MIN /= 0 then
-         pragma Debug (KC.Put_String
-                       (Item => "Unsupported IOMMU version "));
-         pragma Debug (KC.Put_Byte (Item => SK.Byte (Version.MAX)));
-         pragma Debug (KC.Put_Byte (Item => SK.Byte (Version.MIN)));
-         pragma Debug (KC.New_Line);
-         return False;
-      end if;
+      Supported_Version := Version.MAX = 1 and then Version.MIN = 0;
+      pragma Debug (not Supported_Version,
+                    KC.Put_String (Item => "Unsupported IOMMU version "));
+      pragma Debug (not Supported_Version,
+                    KC.Put_Byte (Item => SK.Byte (Version.MAX)));
+      pragma Debug (not Supported_Version,
+                    KC.Put_Byte (Item => SK.Byte (Version.MIN)));
+      pragma Debug (not Supported_Version, KC.New_Line);
 
       Caps := IOMMUs (Idx).Capability;
 
-      if Caps.ND < 2 then
-         pragma Debug (KC.Put_Line
-                       (Item => "IOMMU supports less than 256 domains"));
-         return False;
-      end if;
+      Nr_Domains := Caps.ND >= 2;
+      pragma Debug
+        (not Nr_Domains,
+         KC.Put_Line (Item => "IOMMU supports less than 256 domains"));
 
-      if Caps.SAGAW (2) = 0 then
-         pragma Debug
-           (KC.Put_Line (Item => "No support for 39-bit AGAW in IOMMU"));
-         return False;
-      end if;
+      AGAW_39_Bit := Caps.SAGAW (2) = 1;
+      pragma Debug
+        (not AGAW_39_Bit,
+         KC.Put_Line (Item => "No support for 39-bit AGAW in IOMMU"));
 
-      if Caps.FRO * 16 /= FR_Offset then
-         pragma Debug
-           (KC.Put_String (Item => "Unsupported IOMMU FRO "));
-         pragma Debug (KC.Put_Word16 (Item => SK.Word16 (Caps.FRO)));
-         pragma Debug (KC.New_Line);
-         return False;
-      end if;
+      Matching_FRO := Caps.FRO * 16 = FR_Offset;
 
-      if Caps.NFR > 0 then
-         pragma Debug
-           (KC.Put_String (Item => "Unsupported IOMMU NFR "));
-         pragma Debug (KC.Put_Byte (Item => Caps.NFR));
-         pragma Debug (KC.New_Line);
-         return False;
-      end if;
+      pragma Debug (not Matching_FRO,
+                    KC.Put_String (Item => "Unsupported IOMMU FRO "));
+      pragma Debug (not Matching_FRO,
+                    KC.Put_Word16 (Item => SK.Word16 (Caps.FRO)));
+      pragma Debug (not Matching_FRO, KC.New_Line);
+
+      Matching_NFR := Caps.NFR = 0 ;
+      pragma Debug (not Matching_NFR,
+                    KC.Put_String (Item => "Unsupported IOMMU NFR "));
+      pragma Debug (not Matching_NFR, KC.Put_Byte (Item => Caps.NFR));
+      pragma Debug (not Matching_NFR, KC.New_Line);
 
       Extcaps := IOMMUs (Idx).Ext_Capability;
 
-      if Extcaps.IRO * 16 + 8 /= IOTLB_Offset then
-         pragma Debug
-           (KC.Put_String (Item => "Unsupported IOMMU IRO "));
-         pragma Debug (KC.Put_Word16 (Item => SK.Word16 (Extcaps.IRO)));
-         pragma Debug (KC.New_Line);
-         return False;
-      end if;
+      Matching_IRO := Extcaps.IRO * 16 + 8 = IOTLB_Offset;
+      pragma Debug (not Matching_IRO,
+                    KC.Put_String (Item => "Unsupported IOMMU IRO "));
+      pragma Debug (not Matching_IRO,
+                    KC.Put_Word16 (Item => SK.Word16 (Extcaps.IRO)));
+      pragma Debug (not Matching_IRO, KC.New_Line);
 
-      return True;
+      Result := Supported_Version and
+        Nr_Domains                and
+        AGAW_39_Bit               and
+        Matching_FRO              and
+        Matching_NFR              and
+        Matching_IRO;
    end Check_Capabilities;
 
    -------------------------------------------------------------------------
@@ -654,6 +659,8 @@ is
       Refined_Depends => ((X86_64.State, IOMMUs) =>+ null)
    is
       Loop_Count_Max : constant := 10000;
+
+      Needed_Caps_Present : Boolean;
    begin
 
       --  Systems without an IOMMU have a null range.
@@ -663,8 +670,10 @@ is
       pragma Warnings (Off);
       for I in Skp.IOMMU.IOMMU_Device_Range loop
          pragma Warnings (On);
+         Check_Capabilities (Idx    => I,
+                             Result => Needed_Caps_Present);
 
-         if not Check_Capabilities (Idx => I) then
+         if not Needed_Caps_Present then
             pragma Debug (KC.Put_String (Item => "IOMMU "));
             pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
             pragma Debug (KC.Put_Line   (Item => ": capability check failed"));

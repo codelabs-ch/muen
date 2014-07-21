@@ -23,7 +23,7 @@ generic
    --  Console width range.
    type Width_Type is range <>;
 
-   --  Console heigth range.
+   --  Console height range.
    type Height_Type is range <>;
 
    --  Base address of video framebuffer.

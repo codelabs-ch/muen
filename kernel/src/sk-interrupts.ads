@@ -31,7 +31,7 @@ with
    Initializes    => State
 is
 
-   --  Initalize IDT structure.
+   --  Initialize IDT structure.
    procedure Init
    with
       Global  => (In_Out => State),

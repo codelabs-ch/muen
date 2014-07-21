@@ -194,7 +194,7 @@ the `HARDWARE` variable:
 Network Boot
 ^^^^^^^^^^^^
 For fast deployment of the Muen system image to real hardware, the iPXE
-<<ipxe>> boot firmware installed on a USB stick in conjuction with Intel Active
+<<ipxe>> boot firmware installed on a USB stick in conjunction with Intel Active
 Management Technology (AMT) is used. Please refer to the amtterm <<amt>>
 documentation on how to configure AMT on the target hardware.
 

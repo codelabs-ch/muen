@@ -16,7 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Directories;
 with Ada.Exceptions;
 
 package body Mutools.Files
@@ -29,17 +28,10 @@ is
       File     : out Ada.Streams.Stream_IO.File_Type)
    is
    begin
-      if Ada.Directories.Exists (Name => Filename) then
-         Ada.Streams.Stream_IO.Open
-           (File => File,
-            Mode => Ada.Streams.Stream_IO.Out_File,
-            Name => Filename);
-      else
-         Ada.Streams.Stream_IO.Create
-           (File => File,
-            Mode => Ada.Streams.Stream_IO.Out_File,
-            Name => Filename);
-      end if;
+      Ada.Streams.Stream_IO.Create
+        (File => File,
+         Mode => Ada.Streams.Stream_IO.Out_File,
+         Name => Filename);
 
    exception
       when E : others =>

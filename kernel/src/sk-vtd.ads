@@ -29,7 +29,7 @@ is
    procedure Initialize
    with
       Global  => (In_Out => (X86_64.State, State)),
-      Depends => ((X86_64.State, State) =>+ null);
+      Depends => ((X86_64.State, State) =>+ State);
 
    --  Process fault reported by IOMMU.
    procedure Process_Fault

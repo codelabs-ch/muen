@@ -658,7 +658,7 @@ is
    with
       SPARK_Mode      => Off, -- XXX Workaround for [N425-012]
       Refined_Global  => (In_Out => (X86_64.State, IOMMUs)),
-      Refined_Depends => ((X86_64.State, IOMMUs) =>+ null)
+      Refined_Depends => ((X86_64.State, IOMMUs) =>+ IOMMUs)
    is
       Loop_Count_Max : constant := 10000;
 

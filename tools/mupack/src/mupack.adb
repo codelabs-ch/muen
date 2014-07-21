@@ -35,6 +35,8 @@ begin
              Output_Dir  => Pack.Cmd_Line.Get_Output_Dir);
 
 exception
+   when Pack.Cmd_Line.Invalid_Cmd_Line =>
+      Ada.Command_Line.Set_Exit_Status (Code => Ada.Command_Line.Failure);
    when E : Muxml.XML_Input_Error
       | Muxml.Validation_Error
       | Pack.Pack_Error

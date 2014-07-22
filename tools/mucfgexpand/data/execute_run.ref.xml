@@ -382,7 +382,7 @@
    <devices/>
    <events/>
   </subject>
-  <subject component="linux" cpu="0" id="1" name="lnx">
+  <subject cpu="0" id="1" name="lnx">
    <vcpu>
     <vmx>
      <controls>
@@ -762,7 +762,7 @@
     </target>
    </events>
   </subject>
-  <subject component="subject1" cpu="0" id="2" name="subject1">
+  <subject cpu="0" id="2" name="subject1">
    <vcpu>
     <vmx>
      <controls>

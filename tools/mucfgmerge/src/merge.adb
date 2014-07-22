@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with GNAT.Directory_Operations;
+
 with Muxml;
 with Mulog;
 
@@ -40,6 +42,9 @@ is
                    Kind => Muxml.None,
                    File => Policy_File);
 
+      Mergers.Merge_XIncludes
+        (Policy  => Policy,
+         Basedir => GNAT.Directory_Operations.Dir_Name (Path => Policy_File));
       Mergers.Merge_Platform
         (Policy        => Policy,
          Platform_File => Platform_File);

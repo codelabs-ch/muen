@@ -1,4 +1,4 @@
-<subject name="usb_sm" profile="native">
+<subject name="usb_sm" component="sm" profile="native">
 	<events>
 		<source>
 			<group name="vmcall">

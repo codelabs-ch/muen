@@ -19,7 +19,10 @@
 with Ada.Strings.Unbounded;
 
 with DOM.Core.Nodes;
+with DOM.Core.Elements;
 with DOM.Core.Documents;
+
+with McKae.XML.XPath.XIA;
 
 with Muxml.Utils;
 
@@ -93,5 +96,57 @@ is
       Platform.Doc := null;
       pragma Unreferenced (Platform);
    end Merge_Platform;
+
+   -------------------------------------------------------------------------
+
+   procedure Merge_XIncludes
+     (Policy  : in out Muxml.XML_Data_Type;
+      Basedir :        String)
+   is
+      Includes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "//include");
+   begin
+      if DOM.Core.Nodes.Length (List => Includes) = 0 then
+         return;
+      end if;
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Includes) - 1 loop
+         declare
+            Inc_Node : DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Includes,
+                 Index => I);
+            Href     : constant String
+              := Basedir & "/" & DOM.Core.Elements.Get_Attribute
+                (Elem => Inc_Node,
+                 Name => "href");
+            Content  : Muxml.XML_Data_Type;
+         begin
+            Muxml.Parse (Data => Content,
+                         Kind => Muxml.None,
+                         File => Href);
+
+            Merge_XIncludes (Policy  => Content,
+                             Basedir => Basedir);
+
+            Inc_Node :=  DOM.Core.Nodes.Replace_Child
+              (N         => DOM.Core.Nodes.Parent_Node (N => Inc_Node),
+               New_Child => DOM.Core.Documents.Get_Element
+                 (Doc => Content.Doc),
+               Old_Child => Inc_Node);
+            DOM.Core.Nodes.Free (N => Inc_Node);
+
+            --  The included document must not be freed since some resources
+            --  referenced by the merged DOM tree are not copied to the Node's
+            --  document. This can be removed as soon as XML/Ada supports
+            --  import of nodes into a document.
+
+            Content.Doc := null;
+            pragma Unreferenced (Content);
+         end;
+      end loop;
+   end Merge_XIncludes;
 
 end Mergers;

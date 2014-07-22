@@ -11,11 +11,44 @@ package body Mergers.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Merge_XIncludes (Gnattest_T : in out Test);
+   procedure Test_Merge_XIncludes_ff65dd (Gnattest_T : in out Test) renames Test_Merge_XIncludes;
+--  id:2.2/ff65dd150e825ab2/Merge_XIncludes/1/0/
+   procedure Test_Merge_XIncludes (Gnattest_T : in out Test) is
+   --  mergers.ads:26:4:Merge_XIncludes
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      XML_Doc  : Muxml.XML_Data_Type;
+      Filename : constant String := "obj/xinclude.xml";
+   begin
+      Muxml.Parse (Data => XML_Doc,
+                   Kind => Muxml.None,
+                   File => "data/xinclude.xml");
+      Merge_XIncludes (Policy  => XML_Doc,
+                       Basedir => "data");
+
+      Muxml.Write (Data => XML_Doc,
+                   Kind => Muxml.None,
+                   File => Filename);
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Filename,
+               Filename2 => "data/xinclude_resolved.xml"),
+              Message   => "Reference mismatch");
+
+      Ada.Directories.Delete_File (Name => Filename);
+--  begin read only
+   end Test_Merge_XIncludes;
+--  end read only
+
+
+--  begin read only
    procedure Test_Merge_Platform (Gnattest_T : in out Test);
    procedure Test_Merge_Platform_0cd3e6 (Gnattest_T : in out Test) renames Test_Merge_Platform;
 --  id:2.2/0cd3e620cc856c4c/Merge_Platform/1/0/
    procedure Test_Merge_Platform (Gnattest_T : in out Test) is
-   --  mergers.ads:25:4:Merge_Platform
+   --  mergers.ads:31:4:Merge_Platform
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -1,0 +1,33 @@
+<scheduling tickRate="10000">
+	<majorFrame>
+		<cpu id="0">
+			<minorFrame subject="tau0" ticks="20"/>
+			<minorFrame subject="vt" ticks="50"/>
+			<minorFrame subject="vt" ticks="50"/>
+		</cpu>
+		<cpu id="1">
+			<minorFrame subject="nic_linux" ticks="120"/>
+		</cpu>
+		<cpu id="2">
+			<minorFrame subject="time" ticks="120"/>
+		</cpu>
+		<cpu id="3">
+			<minorFrame subject="usb_linux" ticks="120"/>
+		</cpu>
+	</majorFrame>
+	<majorFrame>
+		<cpu id="0">
+			<minorFrame subject="vt" ticks="100"/>
+			<minorFrame subject="tau0" ticks="20"/>
+		</cpu>
+		<cpu id="1">
+			<minorFrame subject="nic_linux" ticks="120"/>
+		</cpu>
+		<cpu id="2">
+			<minorFrame subject="time" ticks="120"/>
+		</cpu>
+		<cpu id="3">
+			<minorFrame subject="usb_linux" ticks="120"/>
+		</cpu>
+	</majorFrame>
+</scheduling>

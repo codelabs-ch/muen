@@ -13,7 +13,8 @@
 			<xs:element name="monitor"    type="monitorType"           minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="subjectBaseAttrs"/>
-		<xs:attribute name="profile" type="subjectProfileType" use="required"/>
+		<xs:attribute name="component" type="nameType"           use="optional"/>
+		<xs:attribute name="profile"   type="subjectProfileType" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="binaryType">

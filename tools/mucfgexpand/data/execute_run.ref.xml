@@ -168,14 +168,6 @@
   <event mode="ipi" name="data_channel"/>
   <event mode="switch" name="data_channel2"/>
  </events>
- <components>
-  <component name="linux">
-   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
-  </component>
-  <component name="subject1">
-   <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
-  </component>
- </components>
  <kernel>
   <memory>
    <cpu id="0">

@@ -12,5 +12,8 @@ package Expanders.Components.Test_Data.Tests is
    procedure Test_Remove_Components_6de748 (Gnattest_T : in out Test);
    --  expanders-components.ads:23:4:Remove_Components
 
+   procedure Test_Remove_Component_Attr_bcb9b3 (Gnattest_T : in out Test);
+   --  expanders-components.ads:26:4:Remove_Component_Attr
+
 end Expanders.Components.Test_Data.Tests;
 --  end read only

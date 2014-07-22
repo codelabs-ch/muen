@@ -22,4 +22,7 @@ is
    --  Remove components section from policy.
    procedure Remove_Components (Data : in out Muxml.XML_Data_Type);
 
+   --  Remove component attribute from subject nodes.
+   procedure Remove_Component_Attr (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Components;

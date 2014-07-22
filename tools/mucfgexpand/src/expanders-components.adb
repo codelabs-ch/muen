@@ -16,12 +16,37 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core.Nodes;
+with DOM.Core.Elements;
 with DOM.Core.Documents;
+
+with McKae.XML.XPath.XIA;
 
 with Muxml.Utils;
 
 package body Expanders.Components
 is
+
+   -------------------------------------------------------------------------
+
+   procedure Remove_Component_Attr (Data : in out Muxml.XML_Data_Type)
+   is
+      Subjects : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject[@component]");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Subjects,
+                                      Index => I);
+         begin
+            DOM.Core.Elements.Remove_Attribute (Elem => Subj_Node,
+                                                Name => "component");
+         end;
+      end loop;
+   end Remove_Component_Attr;
 
    -------------------------------------------------------------------------
 

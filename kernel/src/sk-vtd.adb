@@ -457,7 +457,7 @@ is
    --  of the specified IOMMU.
    procedure Clear_Fault_Record (IOMMU : Skp.IOMMU.IOMMU_Device_Range)
    with
-      SPARK_Mode => Off, -- XXX Workaround for [N425-012]
+      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
       Global     => (In_Out => IOMMUs),
       Depends    => (IOMMUs =>+ IOMMU)
    is
@@ -482,7 +482,7 @@ is
      (IOMMU  : Skp.IOMMU.IOMMU_Device_Range;
       Enable : Boolean)
    with
-      SPARK_Mode => Off, -- XXX Workaround for [N425-012]
+      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
       Global     => (In_Out => IOMMUs),
       Depends    => (IOMMUs =>+ (IOMMU, Enable))
    is
@@ -503,7 +503,7 @@ is
       Vector  : SK.Byte;
       APIC_ID : SK.Byte)
    with
-      SPARK_Mode => Off, -- XXX Workaround for [N425-012]
+      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
       Global     => (In_Out => IOMMUs),
       Depends    => (IOMMUs =>+ (IOMMU, Vector, APIC_ID))
    is
@@ -524,7 +524,7 @@ is
 
    procedure Process_Fault
    with
-      SPARK_Mode     => Off, -- XXX Workaround for [N425-012]
+      SPARK_Mode     => $Complete_Proofs,  -- [N425-012]
       Refined_Global => (In_Out => IOMMUs)
    is
       Status : Reg_Fault_Status_Type;
@@ -588,7 +588,7 @@ is
      (Idx    :     Skp.IOMMU.IOMMU_Device_Range;
       Result : out Boolean)
    with
-      SPARK_Mode => Off, -- XXX Workaround for [N425-012]
+      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
       Global     => (Input  => IOMMUs),
       Depends    => (Result => (IOMMUs, Idx))
    is
@@ -656,7 +656,7 @@ is
 
    procedure Initialize
    with
-      SPARK_Mode      => Off, -- XXX Workaround for [N425-012]
+      SPARK_Mode      => $Complete_Proofs,  -- [N722-005]
       Refined_Global  => (In_Out => (X86_64.State, IOMMUs)),
       Refined_Depends => ((X86_64.State, IOMMUs) =>+ IOMMUs)
    is

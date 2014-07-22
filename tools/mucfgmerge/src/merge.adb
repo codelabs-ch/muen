@@ -37,7 +37,7 @@ is
       Mulog.Log (Msg => "Processing policy '" & Policy_File & "'");
 
       Muxml.Parse (Data => Policy,
-                   Kind => Muxml.Format_Src,
+                   Kind => Muxml.None,
                    File => Policy_File);
 
       Mergers.Merge_Platform

@@ -37,7 +37,7 @@
   </component>
  </components>
  <subjects>
-  <subject name="lnx" profile="linux">
+  <subject component="lnx" name="lnx" profile="linux">
    <vcpu>
     <vmx>
      <controls>

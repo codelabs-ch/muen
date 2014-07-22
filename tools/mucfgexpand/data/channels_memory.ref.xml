@@ -59,6 +59,14 @@
  <events>
   <event mode="switch" name="trap_to_subject1"/>
  </events>
+ <components>
+  <component name="linux">
+   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
+  </component>
+  <component name="subject1">
+   <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
+  </component>
+ </components>
  <subjects>
   <subject name="lnx" profile="linux">
    <memory>

@@ -62,6 +62,14 @@
   <channel hasEvent="ipi" name="data_channel" size="16#1000#"/>
   <channel hasEvent="switch" name="data_channel2" size="16#2000#"/>
  </channels>
+ <components>
+  <component name="linux">
+   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
+  </component>
+  <component name="subject1">
+   <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
+  </component>
+ </components>
  <subjects>
   <subject name="lnx" profile="linux">
    <memory>

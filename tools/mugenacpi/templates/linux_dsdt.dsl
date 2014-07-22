@@ -48,21 +48,6 @@ __reserved_memory__})
                 Return (MCRS)
             }
 
-            Method (_DMA, 0, NotSerialized)
-            {
-                Return (ResourceTemplate () {
-                    /* 4M~256M are identity mapped and thus available
-                     * for DMA. (IMO, Linux ignores this setting) */
-                    DWordMemory (ResourceConsumer, PosDecode, MinFixed, MaxFixed, Prefetchable, ReadWrite,
-                        0x00000000,
-                        0x00400000,
-                        0x0fffffff,
-                        0x00000000,
-                        0x0fc00000,
-                        ,, , , )
-                })
-            }
-
             Method (_PRT, 0, NotSerialized)
             {
                 Return (Package (__interrupt_count__)

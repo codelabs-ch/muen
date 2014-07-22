@@ -32,28 +32,7 @@
 	<subjects>
 		<include href="subject_vt.xml"/>
 		<include href="subject_time.xml"/>
-
-		<subject name="nic_sm" profile="native">
-			<events>
-				<source>
-					<group name="vmcall">
-						<event id="4" logical="resume_nic_linux" action="continue">
-							<notify physical="resume_nic_linux"/>
-						</event>
-					</group>
-				</source>
-				<target>
-					<event physical="trap_to_nic_sm" logical="handle_linux_trap" vector="36"/>
-				</target>
-			</events>
-			<channels>
-				<writer logical="console" physical="nic_sm_console" virtualAddress="16#000b_8000#" event="1"/>
-			</channels>
-			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
-			<monitor>
-				<state subject="nic_linux" virtualAddress="16#001e_0000#" writable="true"/>
-			</monitor>
-		</subject>
+		<include href="subject_nic_sm.xml"/>
 
 		<subject name="nic_linux" profile="linux">
 			<bootparams>lpj=10000 console=hvc pci=noearly notsc</bootparams>

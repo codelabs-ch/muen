@@ -7,12 +7,7 @@
 		<memory name="usb_linux|ram" size="16#0f60_0000#" alignment="16#0020_0000#" caching="WB"/>
 	</memory>
 
-	<events>
-		<event name="resume_nic_linux" mode="switch"/>
-		<event name="resume_usb_linux" mode="switch"/>
-		<event name="trap_to_nic_sm" mode="switch"/>
-		<event name="trap_to_usb_sm" mode="switch"/>
-	</events>
+	<include href="common_events.xml"/>
 
 	<channels>
 		<channel name="virtual_time" size="16#1000#"/>

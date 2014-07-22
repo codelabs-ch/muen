@@ -91,7 +91,7 @@
   </component>
  </components>
  <subjects>
-  <subject name="lnx">
+  <subject component="linux" name="lnx">
    <vcpu>
     <vmx>
      <controls>
@@ -299,7 +299,7 @@
    </channels>
    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>
-  <subject name="subject1">
+  <subject component="subject1" name="subject1">
    <vcpu>
     <vmx>
      <controls>

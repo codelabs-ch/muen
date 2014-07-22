@@ -72,7 +72,7 @@
   </component>
  </components>
  <subjects>
-  <subject name="lnx" profile="linux">
+  <subject component="linux" name="lnx" profile="linux">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
    </memory>
@@ -98,7 +98,7 @@
    </channels>
    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>
-  <subject name="subject1" profile="native">
+  <subject component="subject1" name="subject1" profile="native">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>

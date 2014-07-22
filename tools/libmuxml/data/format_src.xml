@@ -31,6 +31,11 @@
  <channels>
   <channel hasEvent="ipi" name="data_channel" size="16#1000#"/>
  </channels>
+ <components>
+  <component name="tau0">
+   <binary filename="tau0" size="16#1000#" virtualAddress="16#2000#"/>
+  </component>
+ </components>
  <subjects>
   <subject name="tau0" profile="native">
    <bootparams/>

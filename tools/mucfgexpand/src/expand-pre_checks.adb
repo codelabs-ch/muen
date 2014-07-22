@@ -374,6 +374,58 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_Component_References (XML_Data : Muxml.XML_Data_Type)
+   is
+      --  Returns the error message for a given reference node.
+      function Error_Msg (Node : DOM.Core.Node) return String;
+
+      --  Match name of reference and component.
+      function Match_Component_Name
+        (Left, Right : DOM.Core.Node)
+         return Boolean;
+
+      ----------------------------------------------------------------------
+
+      function Error_Msg (Node : DOM.Core.Node) return String
+      is
+         Ref_Comp_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "component");
+         Subj_Name     : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Node,
+            Name => "name");
+      begin
+         return "Component '" & Ref_Comp_Name & "' referenced by subject '"
+           & Subj_Name & "' does not exist";
+      end Error_Msg;
+
+      ----------------------------------------------------------------------
+
+      function Match_Component_Name
+        (Left, Right : DOM.Core.Node)
+         return Boolean
+      is
+         Ref_Name  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "component");
+         Comp_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "name");
+      begin
+         return Ref_Name = Comp_Name;
+      end Match_Component_Name;
+   begin
+      Mucfgcheck.For_Each_Match
+        (XML_Data     => XML_Data,
+         Source_XPath => "/system/subjects/subject",
+         Ref_XPath    => "/system/components/component",
+         Log_Message  => "subject component reference(s)",
+         Error        => Error_Msg'Access,
+         Match        => Match_Component_Name'Access);
+   end Subject_Component_References;
+
+   -------------------------------------------------------------------------
+
    procedure Subject_Monitor_References (XML_Data : Muxml.XML_Data_Type)
    is
       --  Returns the error message for a given reference node.

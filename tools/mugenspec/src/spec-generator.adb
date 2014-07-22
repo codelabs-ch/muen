@@ -1612,6 +1612,8 @@ is
 
       Tmpl : Mutools.Templates.Template_Type;
    begin
+      Mulog.Log (Msg => "Writing system spec to '" & Output_Dir & "/skp.ads'");
+
       Tmpl := Mutools.Templates.Create (Content => String_Templates.skp_ads);
       Mutools.Templates.Replace
         (Template => Tmpl,

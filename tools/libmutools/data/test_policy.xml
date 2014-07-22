@@ -31,6 +31,11 @@
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
  </memory>
  <events/>
+ <components>
+  <component name="lnx">
+   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
+  </component>
+ </components>
  <subjects>
   <subject name="lnx" profile="linux">
    <vcpu>

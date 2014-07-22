@@ -21,6 +21,12 @@ with Muxml;
 package Mergers
 is
 
+   --  Process XML Inclusions in the given XML policy. Inclusions are searched
+   --  relative to the given base directory.
+   procedure Merge_XIncludes
+     (Policy  : in out Muxml.XML_Data_Type;
+      Basedir :        String);
+
    --  Load platform section from specified file and merge with given policy.
    procedure Merge_Platform
      (Policy        : in out Muxml.XML_Data_Type;

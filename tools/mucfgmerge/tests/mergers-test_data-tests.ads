@@ -9,8 +9,11 @@ package Mergers.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.Mergers.Test_Data.Test
    with null record;
 
+   procedure Test_Merge_XIncludes_ff65dd (Gnattest_T : in out Test);
+   --  mergers.ads:26:4:Merge_XIncludes
+
    procedure Test_Merge_Platform_0cd3e6 (Gnattest_T : in out Test);
-   --  mergers.ads:25:4:Merge_Platform
+   --  mergers.ads:31:4:Merge_Platform
 
 end Mergers.Test_Data.Tests;
 --  end read only

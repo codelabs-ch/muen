@@ -14,6 +14,7 @@
 		<include href="subject_vt.xml"/>
 		<include href="subject_time.xml"/>
 		<include href="subject_nic_sm.xml"/>
+		<include href="subject_usb_sm.xml"/>
 
 		<subject name="nic_linux" profile="linux">
 			<bootparams>lpj=10000 console=hvc pci=noearly notsc</bootparams>
@@ -47,28 +48,6 @@
 				<writer logical="virtual_console" physical="nic_virtual_console" virtualAddress="16#4000#" event="1"/>
 			</channels>
 			<binary filename="bzImage" size="16#0023_0000#" virtualAddress="16#0040_0000#"/>
-		</subject>
-
-		<subject name="usb_sm" profile="native">
-			<events>
-				<source>
-					<group name="vmcall">
-						<event id="4" logical="resume_usb_linux" action="continue">
-							<notify physical="resume_usb_linux"/>
-						</event>
-					</group>
-				</source>
-				<target>
-					<event logical="handle_linux_trap" physical="trap_to_usb_sm" vector="36"/>
-				</target>
-			</events>
-			<channels>
-				<writer logical="console" physical="usb_sm_console" virtualAddress="16#000b_8000#" event="1"/>
-			</channels>
-			<binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
-			<monitor>
-				<state subject="usb_linux" virtualAddress="16#001e_0000#" writable="true"/>
-			</monitor>
 		</subject>
 
 		<subject name="usb_linux" profile="linux">

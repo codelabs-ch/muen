@@ -484,6 +484,9 @@ is
          end loop;
       end Write_Device;
    begin
+      Mulog.Log (Msg => "Writing hardware spec to '"
+                 & Output_Dir & "/skp-hardware.ads'");
+
       Tmpl := Mutools.Templates.Create
         (Content => String_Templates.skp_hardware_ads);
 
@@ -497,9 +500,6 @@ is
         (Template => Tmpl,
          Pattern  => "__devices__",
          Content  => To_String (Buffer));
-
-      Mulog.Log (Msg => "Writing hardware spec to '"
-                 & Output_Dir & "/skp-hardware.ads'");
 
       Mutools.Templates.Write
         (Template => Tmpl,
@@ -611,6 +611,9 @@ is
 
       Tmpl : Mutools.Templates.Template_Type;
    begin
+      Mulog.Log (Msg => "Writing interrupt routing spec to '"
+                 & Output_Dir & "/skp-interrupts.ads'");
+
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
             Subject : constant DOM.Core.Node := DOM.Core.Nodes.Item
@@ -667,9 +670,6 @@ is
          Pattern  => "__vector_routing_table__",
          Content  => To_String (Vector_Buffer));
 
-      Mulog.Log (Msg => "Writing interrupt routing spec to '"
-                 & Output_Dir & "/skp-interrupts.ads'");
-
       Mutools.Templates.Write
         (Template => Tmpl,
          Filename => Output_Dir & "/skp-interrupts.ads");
@@ -701,6 +701,8 @@ is
       IOMMU_Count : constant Natural := DOM.Core.Nodes.Length (List => IOMMUs);
       Tmpl        : Mutools.Templates.Template_Type;
    begin
+      Mulog.Log (Msg => "Writing IOMMU spec to '" & Filename & "'");
+
       Tmpl := Mutools.Templates.Create
         (Content => String_Templates.skp_iommu_ads);
 
@@ -716,8 +718,6 @@ is
         (Template => Tmpl,
          Pattern  => "__iommu_device_range__",
          Content  => "1 .." & IOMMU_Count'Img);
-
-      Mulog.Log (Msg => "Writing IOMMU spec to '" & Filename & "'");
 
       Mutools.Templates.Write
         (Template => Tmpl,
@@ -814,6 +814,9 @@ is
 
          Tmpl : Mutools.Templates.Template_Type;
       begin
+         Mulog.Log (Msg => "Writing kernel header file to '"
+                    & Output_Dir & "/policy.h'");
+
          Tmpl := Mutools.Templates.Create
            (Content => String_Templates.policy_h);
          Mutools.Templates.Replace
@@ -863,9 +866,6 @@ is
               (Number    => VMCS_Addr,
                Normalize => False));
 
-         Mulog.Log (Msg => "Writing kernel header file to '"
-                    & Output_Dir & "/policy.h'");
-
          Mutools. Templates.Write
            (Template => Tmpl,
             Filename => Output_Dir & "/policy.h");
@@ -892,6 +892,9 @@ is
 
          Tmpl : Mutools.Templates.Template_Type;
       begin
+         Mulog.Log (Msg => "Writing kernel spec to '"
+                    & Output_Dir & "/skp-kernel.ads'");
+
          Tmpl := Mutools.Templates.Create
            (Content => String_Templates.skp_kernel_ads);
          Mutools.Templates.Replace
@@ -914,9 +917,6 @@ is
            (Template => Tmpl,
             Pattern  => "__ioapic_addr__",
             Content  => Mutools.Utils.To_Hex (Number => IO_Apic_Addr));
-
-         Mulog.Log (Msg => "Writing kernel spec to '"
-                    & Output_Dir & "/skp-kernel.ads'");
 
          Mutools.Templates.Write
            (Template => Tmpl,
@@ -1060,6 +1060,9 @@ is
            & ", Ticks =>" & Ticks'Img & ")";
       end Write_Minor_Frame;
    begin
+      Mulog.Log (Msg => "Writing scheduling spec for" & CPU_Count'Img
+                 & " CPUs to '" & Output_Dir & "/skp-scheduling.ads'");
+
       Majors := McKae.XML.XPath.XIA.XPath_Query
         (N     => Scheduling,
          XPath => "majorFrame");
@@ -1118,9 +1121,6 @@ is
         (Template => Tmpl,
          Pattern  => "__scheduling_plans__",
          Content  => To_String (Buffer));
-
-      Mulog.Log (Msg => "Writing scheduling spec for" & CPU_Count'Img
-                 & " CPUs to '" & Output_Dir & "/skp-scheduling.ads'");
 
       Mutools.Templates.Write (Template => Tmpl,
                                Filename => Output_Dir & "/skp-scheduling.ads");
@@ -1555,6 +1555,9 @@ is
          end if;
       end Write_Subject_Spec;
    begin
+      Mulog.Log (Msg => "Writing subject spec to '"
+                 & Output_Dir & "/skp-subjects.adb'");
+
       Tmpl := Mutools.Templates.Create
         (Content => String_Templates.skp_subjects_ads);
       Mutools.Templates.Write
@@ -1579,9 +1582,6 @@ is
         (Template => Tmpl,
          Pattern  => "__subjects__",
          Content  => To_String (Buffer));
-
-      Mulog.Log (Msg => "Writing subject spec to '"
-                 & Output_Dir & "/skp-subjects.adb'");
 
       Mutools.Templates.Write
         (Template => Tmpl,

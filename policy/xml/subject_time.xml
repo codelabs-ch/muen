@@ -1,0 +1,13 @@
+<subject name="time" profile="native">
+	<devices>
+		<device logical="port80" physical="port80">
+			<ioPort logical="ports" physical="ports"/>
+		</device>
+	</devices>
+	<events/>
+	<channels>
+		<writer logical="time" physical="virtual_time" virtualAddress="16#0002_0000#"/>
+		<writer logical="console" physical="time_console" virtualAddress="16#000b_8000#" event="1"/>
+	</channels>
+	<binary filename="time" size="16#0001_4000#" virtualAddress="16#1000#"/>
+</subject>

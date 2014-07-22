@@ -64,7 +64,7 @@ project Kernel is
             "-gnateDRelease_Warnings=Warnings");
          Extra_Warning_Switches := ("-gnatw.W");
 
-    end case;
+   end case;
 
    Warning_Switches := ("-gnatwale.e.Y.N") & Extra_Warning_Switches;
 

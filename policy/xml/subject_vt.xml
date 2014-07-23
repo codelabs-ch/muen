@@ -20,5 +20,4 @@
 		<writer logical="keyboard_1" physical="nic_virtual_keyboard" virtualAddress="16#0005_0000#" event="1"/>
 		<writer logical="keyboard_2" physical="usb_virtual_keyboard" virtualAddress="16#0005_1000#" event="2"/>
 	</channels>
-	<binary filename="vt" size="16#0003_0000#" virtualAddress="16#1000#"/>
 </subject>

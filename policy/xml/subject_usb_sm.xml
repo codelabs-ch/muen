@@ -14,7 +14,6 @@
 	<channels>
 		<writer logical="console" physical="usb_sm_console" virtualAddress="16#000b_8000#" event="1"/>
 	</channels>
-	<binary filename="sm" size="16#0001_4000#" virtualAddress="16#1000#"/>
 	<monitor>
 		<state subject="usb_linux" virtualAddress="16#001e_0000#" writable="true"/>
 	</monitor>

@@ -28,5 +28,8 @@ build_tests: $(DEPENDS) $(TDEPENDS) $(TEST_TARGETS) $(OBJ_DIR)/.harness_stamp
 tests: build_tests
 	$(GNATTEST_RUNNER)
 
+install: $(COMPONENT)
+	@install -m 755 -D bin/$(COMPONENT) $(PREFIX)/bin/$(COMPONENT)
+
 clean:
 	@rm -rf bin obj $(ADDITIONAL_CLEAN)

@@ -6,8 +6,8 @@
 			<memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#" />
 		</memory>
 		<devices>
-			<device name="serial" shared="false">
-				<ioPort name="serial" start="16#50b0#" end="16#50b0#"/>
+			<device name="debugconsole" shared="false">
+				<ioPort name="port" start="16#50b0#" end="16#50b0#"/>
 			</device>
 			<device name="vga" shared="true">
 				<memory name="buffer" physicalAddress="16#000b_8000#" size="16#1000#" caching="WC"/>
@@ -139,7 +139,7 @@
 		</memory>
 		<devices>
 			<device logical="log" physical="debugconsole">
-				<ioPort logical="ports" physical="serial"/>
+				<ioPort logical="port" physical="port"/>
 			</device>
 			<device logical="ioapic" physical="ioapic">
 				<memory logical="mmio" physical="mmio" writable="true" executable="false" virtualAddress="16#001f_c000#"/>

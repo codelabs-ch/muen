@@ -1,18 +1,6 @@
 package Skp.Hardware
 is
 
-   Serial_Serial_Start : constant := 16#50b0#;
-   Serial_Serial_End   : constant := 16#50b0#;
-
-   Vga_Ports_Start : constant := 16#03d4#;
-   Vga_Ports_End   : constant := 16#03d5#;
-
-   Multiport_Ports1_Start : constant := 16#03f8#;
-   Multiport_Ports1_End   : constant := 16#03fd#;
-   Multiport_Ports2_Start : constant := 16#abcd#;
-   Multiport_Ports2_End   : constant := 16#bcda#;
-
-   Testdevice_Fooport_Start : constant := 16#00ab#;
-   Testdevice_Fooport_End   : constant := 16#00ab#;
+   Debugconsole_Port : constant := 16#50b0#;
 
 end Skp.Hardware;

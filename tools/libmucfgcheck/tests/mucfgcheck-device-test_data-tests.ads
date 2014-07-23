@@ -45,5 +45,8 @@ package Mucfgcheck.Device.Test_Data.Tests is
    procedure Test_PCI_Device_BDF_Uniqueness_bef97c (Gnattest_T : in out Test);
    --  mucfgcheck-device.ads:58:4:PCI_Device_BDF_Uniqueness
 
+   procedure Test_Debugconsole_Presence_b13687 (Gnattest_T : in out Test);
+   --  mucfgcheck-device.ads:61:4:Debugconsole_Presence
+
 end Mucfgcheck.Device.Test_Data.Tests;
 --  end read only

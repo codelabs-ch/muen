@@ -19,10 +19,6 @@
 package Expanders.Subjects
 is
 
-   --  Add subject binary physical memory regions and mappings. Removes the
-   --  binary element after processing.
-   procedure Add_Binaries (Data : in out Muxml.XML_Data_Type);
-
    --  Add subject profile related XML elements. Removes the profile attribute
    --  after processing.
    procedure Handle_Profile (Data : in out Muxml.XML_Data_Type);

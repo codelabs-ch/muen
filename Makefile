@@ -29,6 +29,9 @@ pack: policy kernel subjects
 tools:
 	$(MAKE) -C $@
 
+tools_install:
+	$(MAKE) -C tools install PREFIX=$(PREFIX)
+
 deploy: HARDWARE=lenovo-t430s
 deploy: SYSTEM=demo_system_vtd
 deploy: pack

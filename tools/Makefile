@@ -50,5 +50,8 @@ tools:
 tests:
 	@for prj in $(TESTS); do $(MAKE) $@ -C $$prj || exit 1; done
 
+install:
+	@for prj in $(TOOLS); do $(MAKE) $@ -C $$prj PREFIX=$(PREFIX) || exit 1; done
+
 clean:
 	@for prj in $(CLEAN); do $(MAKE) $@ -C $$prj || exit 1; done

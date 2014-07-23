@@ -47,7 +47,6 @@
    <channels>
     <writer event="1" logical="channel" physical="data_channel" virtualAddress="16#2000#"/>
    </channels>
-   <binary filename="tau0" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

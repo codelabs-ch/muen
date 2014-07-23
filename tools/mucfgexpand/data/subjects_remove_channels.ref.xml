@@ -89,7 +89,6 @@
      </group>
     </source>
    </events>
-   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>
   <subject component="subject1" name="subject1" profile="native">
    <memory>
@@ -107,7 +106,6 @@
      <event logical="trap_to_subject1" physical="trap_to_subject1" vector="none"/>
     </target>
    </events>
-   <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
    <monitor>
     <state subject="lnx" virtualAddress="16#4000#" writable="true"/>
    </monitor>

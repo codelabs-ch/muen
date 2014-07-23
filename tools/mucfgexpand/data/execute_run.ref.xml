@@ -82,12 +82,6 @@
   <memory alignment="16#1000#" caching="WB" name="subject1|msrbm" size="16#1000#" type="system_msrbm">
    <file filename="subject1_msrbm" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|bin" size="16#1000#" type="subject_binary">
-   <file filename="lnx_bin" offset="none"/>
-  </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject1|bin" size="16#1000#" type="subject_binary">
-   <file filename="subject1_bin" offset="none"/>
-  </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|zp" size="16#2000#" type="subject_zeropage">
    <file filename="lnx_zp" offset="none"/>
   </memory>
@@ -126,7 +120,7 @@
   <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#7000#" type="system_pt">
    <file filename="lnx_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#9000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#8000#" type="system_pt">
    <file filename="subject1_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vtd_root" size="16#1000#" type="system_vtd_root">
@@ -559,7 +553,6 @@
    <bootparams/>
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
-    <memory executable="true" logical="binary" physical="lnx|bin" virtualAddress="16#2000#" writable="true"/>
     <memory executable="false" logical="zero_page" physical="lnx|zp" virtualAddress="16#0000#" writable="true"/>
     <memory executable="false" logical="sinfo" physical="lnx|sinfo" virtualAddress="16#0001_4000#" writable="false"/>
     <memory executable="false" logical="acpi_rsdp" physical="lnx|acpi_rsdp" virtualAddress="16#000e_0000#" writable="false"/>
@@ -935,7 +928,6 @@
    <bootparams/>
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
-    <memory executable="true" logical="binary" physical="subject1|bin" virtualAddress="16#0020_0000#" writable="true"/>
     <memory executable="false" logical="lnx_state" physical="lnx_state" virtualAddress="16#4000#" writable="true"/>
     <memory executable="false" logical="primary_data" physical="data_channel" virtualAddress="16#3000#" writable="true"/>
     <memory executable="false" logical="secondary_data" physical="data_channel2" virtualAddress="16#5000#" writable="true"/>

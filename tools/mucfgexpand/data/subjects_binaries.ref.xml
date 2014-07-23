@@ -35,12 +35,6 @@
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
   <memory alignment="16#1000#" caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#"/>
   <memory alignment="16#1000#" caching="UC" name="xhci|dma" physicalAddress="16#3000#" size="16#1000#"/>
-  <memory alignment="16#1000#" caching="WB" name="lnx|bin" size="16#1000#" type="subject_binary">
-   <file filename="lnx_bin" offset="none"/>
-  </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject1|bin" size="16#1000#" type="subject_binary">
-   <file filename="subject1_bin" offset="none"/>
-  </memory>
  </memory>
  <deviceDomains>
   <domain name="nic1_domain">
@@ -79,7 +73,6 @@
   <subject component="linux" name="lnx" profile="linux">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
-    <memory executable="true" logical="binary" physical="lnx|bin" virtualAddress="16#2000#" writable="true"/>
    </memory>
    <devices>
     <device logical="xhci" physical="xhci">
@@ -104,7 +97,6 @@
   <subject component="subject1" name="subject1" profile="native">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
-    <memory executable="true" logical="binary" physical="subject1|bin" virtualAddress="16#0020_0000#" writable="true"/>
    </memory>
    <devices>
     <device logical="nic1" physical="nic1">

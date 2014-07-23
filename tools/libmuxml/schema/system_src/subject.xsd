@@ -9,7 +9,7 @@
 			<xs:element name="devices"    type="devicesRefType"        minOccurs="0" maxOccurs="1"/>
 			<xs:element name="events"     type="subjectEventsType"     minOccurs="1" maxOccurs="1"/>
 			<xs:element name="channels"   type="channelReferencesType" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="binary"     type="binaryType"            minOccurs="1" maxOccurs="1"/>
+			<xs:element name="binary"     type="binaryType"            minOccurs="0" maxOccurs="1"/>
 			<xs:element name="monitor"    type="monitorType"           minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="subjectBaseAttrs"/>

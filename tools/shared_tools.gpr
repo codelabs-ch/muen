@@ -21,4 +21,7 @@ abstract project Shared_Tools is
    type Build_Type is ("debug", "tests");
    Build : Build_Type := external ("BUILD", "debug");
 
+   type Link_Type is ("static", "dynamic");
+   Linking : Link_Type := external ("LINKING", "dynamic");
+
 end Shared_Tools;

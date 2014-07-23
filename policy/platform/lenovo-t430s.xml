@@ -9,8 +9,8 @@
 		<device name="iommu_2" shared="false">
 			<memory caching="UC" name="mmio" physicalAddress="16#fed9_1000#" size="16#1000#"/>
 		</device>
-		<device name="serial" shared="false">
-			<ioPort name="port1" start="16#50b0#" end="16#50b7#"/>
+		<device name="debugconsole" shared="false">
+			<ioPort name="port" start="16#50b0#" end="16#50b7#"/>
 		</device>
 		<device name="xhci" shared="false">
 			<pci bus="16#00#" device="16#14#" function="0"/>

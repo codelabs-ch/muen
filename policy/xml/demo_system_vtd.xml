@@ -42,8 +42,8 @@
 				<memory logical="ram" physical="nic_linux|ram" virtualAddress="16#00a0_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
-				<device logical="serial" physical="serial">
-					<ioPort logical="port1" physical="port1"/>
+				<device logical="serial" physical="debugconsole">
+					<ioPort logical="port" physical="port"/>
 				</device>
 				<device logical="cmos_rtc" physical="cmos_rtc">
 					<ioPort logical="ports" physical="ports"/>

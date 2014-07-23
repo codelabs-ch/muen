@@ -23,10 +23,16 @@ abstract project Tools is
 
    Compiler_Switches := Shared.Ada_Compiler_Switches & "-gnat12";
    Linker_Switches   := ();
+   Binder_Switches   := ("-E");
 
    case Shared_Tools.Build is
       when "debug" => Compiler_Switches := Compiler_Switches & ("-O2", "-gnatwale");
       when "tests" => Compiler_Switches := Compiler_Switches & "-gnatwal";
+   end case;
+
+   case Shared_Tools.Linking is
+      when "static"  => Binder_Switches := Binder_Switches & "-static";
+      when "dynamic" => null;
    end case;
 
    package Compiler is
@@ -38,7 +44,7 @@ abstract project Tools is
    end Linker;
 
    package Binder is
-      for Default_Switches ("Ada") use ("-E");
+      for Default_Switches ("Ada") use Binder_Switches;
    end Binder;
 
 end Tools;

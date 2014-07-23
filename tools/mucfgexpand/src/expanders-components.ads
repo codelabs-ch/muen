@@ -19,6 +19,10 @@
 package Expanders.Components
 is
 
+   --  Add component binary to subjects as physical memory regions and
+   --  mappings.
+   procedure Add_Binaries (Data : in out Muxml.XML_Data_Type);
+
    --  Remove components section from policy.
    procedure Remove_Components (Data : in out Muxml.XML_Data_Type);
 

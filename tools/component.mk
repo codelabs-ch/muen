@@ -13,7 +13,7 @@ $(DEPENDS) $(TDEPENDS):
 	@$(MAKE) -s -C $(TOP_DIR)/tools/$@
 
 $(COMPONENT): $(DEPENDS) $(COMPONENT_TARGETS)
-	@gprbuild $(BUILD_OPTS) -P$@
+	gprbuild $(BUILD_OPTS) -P$@
 
 $(OBJ_DIR)/.harness_stamp: $(SRC_FILES)
 	@mkdir -p $(OBJ_DIR)/tests
@@ -29,7 +29,7 @@ tests: build_tests
 	$(GNATTEST_RUNNER)
 
 install: $(COMPONENT)
-	@install -m 755 -D bin/$(COMPONENT) $(PREFIX)/bin/$(COMPONENT)
+	install -m 755 -D bin/$(COMPONENT) $(PREFIX)/bin/$(COMPONENT)
 
 clean:
 	@rm -rf bin obj $(ADDITIONAL_CLEAN)

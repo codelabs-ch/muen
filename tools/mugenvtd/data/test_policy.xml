@@ -31,6 +31,11 @@
 				<irq name="irq" number="21"/>
 				<memory name="mmio" physicalAddress="16#d1c0_0000#" size="16#2000#" caching="UC"/>
 			</device>
+			<device name="unassigned" shared="false">
+				<pci bus="16#00#" device="16#05#" function="3"/>
+				<irq name="irq" number="02"/>
+				<memory name="mmio" physicalAddress="16#a1c0_0000#" size="16#2000#" caching="UC"/>
+			</device>
 		</devices>
 	</platform>
 

@@ -33,4 +33,9 @@ is
    --  Validate that no subject references an IOMMU device.
    procedure No_IOMMU_Device_References (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that all subjects are runnable, i.e. directly referenced in
+   --  the scheduling plan or target of a switch event of a subject that is
+   --  itself scheduled.
+   procedure Runnability (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Subject;

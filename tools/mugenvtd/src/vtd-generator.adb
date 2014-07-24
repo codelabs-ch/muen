@@ -131,6 +131,8 @@ is
          begin
             for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
                declare
+                  use type DOM.Core.Node;
+
                   PCI_Node : constant DOM.Core.Node
                     := DOM.Core.Nodes.Item (List  => Devices,
                                             Index => I);
@@ -153,43 +155,55 @@ is
                       (Doc   => Policy.Doc,
                        XPath => "/system/deviceDomains/domain/devices/device"
                        & "[@physical='" & Dev_Name & "']/../..");
-                  Dom_Name : constant String
-                    := DOM.Core.Elements.Get_Attribute
-                      (Elem => Domain,
-                       Name => "name");
-                  DID      : constant Tables.Domain_Range
-                    := Tables.Domain_Range'Value
-                      (DOM.Core.Elements.Get_Attribute
-                         (Elem => Domain,
-                          Name => "id"));
-                  PT_Node  : constant DOM.Core.Node
-                    := Muxml.Utils.Get_Element
-                      (Doc   => Policy.Doc,
-                       XPath => "/system/memory/memory[@type='system_pt' and "
-                       & "contains(string(@name),'" & Dom_Name & "')]");
-                  PT_Addr  : constant Tables.Table_Pointer_Type
-                    := Tables.Table_Pointer_Type'Value
-                      (DOM.Core.Elements.Get_Attribute
-                         (Elem => PT_Node,
-                          Name => "physicalAddress"));
                begin
-                  Mulog.Log (Msg => "Adding context entry for device '"
-                             & Dev_Name & "' BDF " & Bus_Str_N
-                             & ":" & Mutools.Utils.To_Hex
-                               (Number     => Interfaces.Unsigned_64 (Dev),
-                                Byte_Short => True)
-                             & ":" & Mutools.Utils.To_Hex
-                               (Number     => Interfaces.Unsigned_64 (Func),
-                                Byte_Short => True)
-                             & " => Domain '" & Dom_Name & "', ID" & DID'Img
-                             & ", SLPTPTR " & Mutools.Utils.To_Hex
-                               (Number => Interfaces.Unsigned_64 (PT_Addr)));
-                  Tables.Add_Entry
-                    (CT      => Ctx_Table,
-                     Device  => Dev,
-                     Func    => Func,
-                     Domain  => DID,
-                     SLPTPTR => PT_Addr);
+
+                  --  Ignore devices which are not in a device domain
+                  --  (i.e. they are not assigned to a subject). This is
+                  --  enforced by the mucfgvalidate tool.
+
+                  if Domain /= null then
+                     declare
+                        Dom_Name : constant String
+                          := DOM.Core.Elements.Get_Attribute
+                            (Elem => Domain,
+                             Name => "name");
+                        DID      : constant Tables.Domain_Range
+                          := Tables.Domain_Range'Value
+                            (DOM.Core.Elements.Get_Attribute
+                               (Elem => Domain,
+                                Name => "id"));
+                        PT_Node  : constant DOM.Core.Node
+                          := Muxml.Utils.Get_Element
+                            (Doc   => Policy.Doc,
+                             XPath => "/system/memory/memory[@type='system_pt'"
+                             & " and contains(string(@name),'" & Dom_Name
+                             & "')]");
+                        PT_Addr  : constant Tables.Table_Pointer_Type
+                          := Tables.Table_Pointer_Type'Value
+                            (DOM.Core.Elements.Get_Attribute
+                               (Elem => PT_Node,
+                                Name => "physicalAddress"));
+                     begin
+                        Mulog.Log
+                          (Msg => "Adding context entry for device '"
+                           & Dev_Name & "' BDF " & Bus_Str_N
+                           & ":" & Mutools.Utils.To_Hex
+                             (Number     => Interfaces.Unsigned_64 (Dev),
+                              Byte_Short => True)
+                           & ":" & Mutools.Utils.To_Hex
+                             (Number     => Interfaces.Unsigned_64 (Func),
+                              Byte_Short => True)
+                           & " => Domain '" & Dom_Name & "', ID" & DID'Img
+                           & ", SLPTPTR " & Mutools.Utils.To_Hex
+                             (Number => Interfaces.Unsigned_64 (PT_Addr)));
+                        Tables.Add_Entry
+                          (CT      => Ctx_Table,
+                           Device  => Dev,
+                           Func    => Func,
+                           Domain  => DID,
+                           SLPTPTR => PT_Addr);
+                     end;
+                  end if;
                end;
             end loop;
 

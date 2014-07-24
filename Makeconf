@@ -10,6 +10,8 @@ ifeq (,$(NO_CONTRIB))
 export ADA_PROJECT_PATH := $(TOP_DIR)/contrib/projects:$(ADA_PROJECT_PATH)
 endif
 
+PREFIX = $(HOME)
+
 POLICY_DIR = $(TOP_DIR)/policy/obj
 
 MUCFGALLOC    = $(TOP_DIR)/tools/mucfgalloc/bin/mucfgalloc

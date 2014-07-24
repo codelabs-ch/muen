@@ -313,7 +313,17 @@
 				<memory logical="text" physical="tau0" virtualAddress="16#0000#" writable="true" executable="true"/>
 				<memory logical="sys_interface" physical="sys_interface" virtualAddress="16#0010_0000#" writable="false" executable="false"/>
 			</memory>
-			<devices/>
+			<devices>
+				<device logical="ethernet" physical="ethernet">
+					<irq logical="eth0_irq" physical="irq" vector="12"/>
+					<memory logical="mmio1" physical="mmio1" virtualAddress="16#d250_0000#" writable="true" executable="false"/>
+					<memory logical="mmio2" physical="mmio2" virtualAddress="16#d253_b000#" writable="true" executable="false"/>
+				</device>
+				<device logical="wireless" physical="wireless">
+					<irq logical="wlan_irq" physical="irq" vector="15"/>
+					<memory logical="mmio" physical="mmio" virtualAddress="16#0004_0000#" writable="true" executable="false"/>
+				</device>
+			</devices>
 			<events/>
 		</subject>
 

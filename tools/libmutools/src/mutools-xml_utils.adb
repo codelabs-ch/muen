@@ -21,6 +21,7 @@ with Interfaces;
 with DOM.Core.Nodes;
 with DOM.Core.Documents;
 with DOM.Core.Elements;
+with DOM.Core.Append_Node;
 
 with McKae.XML.XPath.XIA;
 
@@ -291,6 +292,57 @@ is
 
       return Result;
    end Get_Occupied_PCI_Buses;
+
+   -------------------------------------------------------------------------
+
+   function Get_Switch_Sources
+     (Data   : Muxml.XML_Data_Type;
+      Target : DOM.Core.Node)
+      return DOM.Core.Node_List
+   is
+      Events        : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/events/event[@mode='switch']");
+      Source_Events : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/events/source/group/*/notify");
+      Target_Events : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Target,
+           XPath => "events/target/event/@physical");
+      Subjects      : DOM.Core.Node_List;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Target_Events) - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Ev_Name : constant String
+              := DOM.Core.Nodes.Node_Value
+                (N => DOM.Core.Nodes.Item
+                   (List  => Target_Events,
+                    Index => I));
+            Event   : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Events,
+                 Ref_Attr  => "name",
+                 Ref_Value => Ev_Name);
+         begin
+            if Event /= null then
+               DOM.Core.Append_Node
+                 (List => Subjects,
+                  N    => Muxml.Utils.Ancestor_Node
+                    (Node  => Muxml.Utils.Get_Element
+                         (Nodes     => Source_Events,
+                          Ref_Attr  => "physical",
+                          Ref_Value => Ev_Name),
+                     Level => 5));
+            end if;
+         end;
+      end loop;
+      return Subjects;
+   end Get_Switch_Sources;
 
    -------------------------------------------------------------------------
 

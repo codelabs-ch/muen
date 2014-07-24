@@ -61,8 +61,16 @@
   <channel hasEvent="ipi" name="data_channel" size="16#1000#"/>
   <channel hasEvent="switch" name="data_channel2" size="16#2000#"/>
  </channels>
+ <components>
+  <component name="linux">
+   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
+  </component>
+  <component name="subject1">
+   <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
+  </component>
+ </components>
  <subjects>
-  <subject name="lnx" profile="linux">
+  <subject component="linux" name="lnx" profile="linux">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
    </memory>
@@ -81,9 +89,8 @@
      </group>
     </source>
    </events>
-   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>
-  <subject name="subject1" profile="native">
+  <subject component="subject1" name="subject1" profile="native">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
@@ -99,7 +106,6 @@
      <event logical="trap_to_subject1" physical="trap_to_subject1" vector="none"/>
     </target>
    </events>
-   <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
    <monitor>
     <state subject="lnx" virtualAddress="16#4000#" writable="true"/>
    </monitor>

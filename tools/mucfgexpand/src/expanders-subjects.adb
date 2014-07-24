@@ -49,72 +49,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Add_Binaries (Data : in out Muxml.XML_Data_Type)
-   is
-      Nodes : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/subjects/subject/binary");
-   begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
-         declare
-            Bin_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => Nodes,
-                 Index => I);
-            Filename : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Bin_Node,
-                 Name => "filename");
-            Filesize : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Bin_Node,
-                 Name => "size");
-            Virtual_Address : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Bin_Node,
-                 Name => "virtualAddress");
-            Subj_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Parent_Node (N => Bin_Node);
-            Subj_Mem_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-              (Doc   => Subj_Node,
-               XPath => "memory");
-            Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
-              (Elem => Subj_Node,
-               Name => "name");
-         begin
-            Mulog.Log (Msg => "Mapping binary '" & Filename & "' with size "
-                       & Filesize & " at virtual address " & Virtual_Address
-                       & " of subject '" & Subj_Name & "'");
-            Mutools.XML_Utils.Add_Memory_Region
-              (Policy      => Data,
-               Name        => Subj_Name & "|bin",
-               Address     => "",
-               Size        => Filesize,
-               Caching     => "WB",
-               Alignment   => "16#1000#",
-               Memory_Type => "subject_binary",
-               File_Name   => Filename,
-               File_Offset => "none");
-            Muxml.Utils.Append_Child
-              (Node      => Subj_Mem_Node,
-               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
-                 (Policy        => Data,
-                  Logical_Name  => "binary",
-                  Physical_Name => Subj_Name & "|bin",
-                  Address       => Virtual_Address,
-                  Writable      => True,
-                  Executable    => True));
-
-            Muxml.Utils.Remove_Child
-              (Node       => Subj_Node,
-               Child_Name => "binary");
-         end;
-      end loop;
-   end Add_Binaries;
-
-   -------------------------------------------------------------------------
-
    procedure Add_Channel_Events (Data : in out Muxml.XML_Data_Type)
    is
 
@@ -675,10 +609,6 @@ is
         := DOM.Core.Documents.Create_Element
           (Doc      => Data.Doc,
            Tag_Name => "memory");
-      Bin_Node  : constant DOM.Core.Node
-        := DOM.Core.Documents.Create_Element
-          (Doc      => Data.Doc,
-           Tag_Name => "binary");
    begin
       Mulog.Log (Msg => "Adding tau0 subject");
 
@@ -734,21 +664,25 @@ is
            (Doc      => Data.Doc,
             Tag_Name => "events"));
 
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Bin_Node,
-         Name  => "filename",
-         Value => "tau0");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Bin_Node,
-         Name  => "size",
-         Value => "16#0001_4000#");
-      DOM.Core.Elements.Set_Attribute
-        (Elem  => Bin_Node,
-         Name  => "virtualAddress",
-         Value => "16#1000#");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Data,
+         Name        => "tau0|bin",
+         Address     => "",
+         Size        => "16#0001_4000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "subject_binary",
+         File_Name   => "tau0",
+         File_Offset => "none");
       Muxml.Utils.Append_Child
-        (Node      => Tau0_Node,
-         New_Child => Bin_Node);
+        (Node      => Mem_Node,
+         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+           (Policy        => Data,
+            Logical_Name  => "binary",
+            Physical_Name => "tau0|bin",
+            Address       => "16#1000#",
+            Writable      => True,
+            Executable    => True));
    end Add_Tau0;
 
    -------------------------------------------------------------------------

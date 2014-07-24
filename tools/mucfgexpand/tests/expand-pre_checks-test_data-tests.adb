@@ -22,7 +22,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
 
    begin
       Register_All;
-      Assert (Condition => Check_Procs.Get_Count = 19,
+      Assert (Condition => Check_Procs.Get_Count = 20,
               Message   => "Count mismatch:" & Get_Count'Img);
 --  begin read only
    end Test_Register_All;
@@ -595,6 +595,44 @@ package body Expand.Pre_Checks.Test_Data.Tests is
       end;
 --  begin read only
    end Test_Platform_IOMMU_Memory;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Subject_Component_References (Gnattest_T : in out Test);
+   procedure Test_Subject_Component_References_0ac6d5 (Gnattest_T : in out Test) renames Test_Subject_Component_References;
+--  id:2.2/0ac6d5c2c7416f1f/Subject_Component_References/1/0/
+   procedure Test_Subject_Component_References (Gnattest_T : in out Test) is
+   --  expand-pre_checks.ads:69:4:Subject_Component_References
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='lnx']",
+         Name  => "component",
+         Value => "nonexistent");
+
+      begin
+         Subject_Component_References (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Component 'nonexistent' referenced by subject 'lnx' "
+                    & "does not exist",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Subject_Component_References;
 --  end read only
 
 end Expand.Pre_Checks.Test_Data.Tests;

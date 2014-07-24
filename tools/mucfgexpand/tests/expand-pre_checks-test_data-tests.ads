@@ -48,5 +48,8 @@ package Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Platform_IOMMU_Memory_4183d0 (Gnattest_T : in out Test);
    --  expand-pre_checks.ads:66:4:Platform_IOMMU_Memory
 
+   procedure Test_Subject_Component_References_0ac6d5 (Gnattest_T : in out Test);
+   --  expand-pre_checks.ads:69:4:Subject_Component_References
+
 end Expand.Pre_Checks.Test_Data.Tests;
 --  end read only

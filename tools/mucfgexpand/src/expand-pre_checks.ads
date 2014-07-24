@@ -65,6 +65,9 @@ is
    --  Check that IOMMU devices provide a single memory resource.
    procedure Platform_IOMMU_Memory (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check subject component references.
+   procedure Subject_Component_References (XML_Data : Muxml.XML_Data_Type);
+
 private
 
    package Check_Procs is new

@@ -11,6 +11,7 @@
 
 	<include href="common_events.xml"/>
 	<include href="common_channels.xml"/>
+	<include href="common_components.xml"/>
 
 	<subjects>
 		<include href="subject_vt.xml"/>
@@ -18,7 +19,7 @@
 		<include href="subject_nic_sm.xml"/>
 		<include href="subject_usb_sm.xml"/>
 
-		<subject name="nic_linux" profile="linux">
+		<subject name="nic_linux" component="linux" profile="linux">
 			<bootparams>lpj=10000 console=hvc pci=noearly notsc</bootparams>
 			<memory>
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#00a0_0000#" writable="false" executable="false"/>
@@ -49,10 +50,9 @@
 				<reader logical="virtual_keyboard" physical="nic_virtual_keyboard" virtualAddress="16#3000#" vector="49"/>
 				<writer logical="virtual_console" physical="nic_virtual_console" virtualAddress="16#4000#" event="1"/>
 			</channels>
-			<binary filename="bzImage" size="16#0023_0000#" virtualAddress="16#0040_0000#"/>
 		</subject>
 
-		<subject name="usb_linux" profile="linux">
+		<subject name="usb_linux" component="linux" profile="linux">
 			<bootparams>lpj=10000 console=hvc pci=noearly notsc</bootparams>
 			<memory>
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#00a0_0000#" writable="false" executable="false"/>
@@ -80,7 +80,6 @@
 				<reader logical="virtual_keyboard" physical="usb_virtual_keyboard" virtualAddress="16#3000#" vector="49"/>
 				<writer logical="virtual_console" physical="usb_virtual_console" virtualAddress="16#4000#" event="1"/>
 			</channels>
-			<binary filename="bzImage" size="16#0023_0000#" virtualAddress="16#0040_0000#"/>
 		</subject>
 	</subjects>
 

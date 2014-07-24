@@ -31,8 +31,13 @@
  <channels>
   <channel hasEvent="ipi" name="data_channel" size="16#1000#"/>
  </channels>
+ <components>
+  <component name="tau0">
+   <binary filename="tau0" size="16#1000#" virtualAddress="16#2000#"/>
+  </component>
+ </components>
  <subjects>
-  <subject name="tau0" profile="native">
+  <subject component="tau0" name="tau0" profile="native">
    <bootparams/>
    <memory>
     <memory executable="true" logical="text" physical="tau0-text" virtualAddress="16#0000#" writable="false"/>
@@ -42,7 +47,6 @@
    <channels>
     <writer event="1" logical="channel" physical="data_channel" virtualAddress="16#2000#"/>
    </channels>
-   <binary filename="tau0" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

@@ -15,13 +15,17 @@
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
  </memory>
  <events/>
+ <components>
+  <component name="linux">
+   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
+  </component>
+ </components>
  <subjects>
-  <subject name="lnx" profile="linux">
+  <subject component="linux" name="lnx" profile="linux">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
    <events/>
-   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

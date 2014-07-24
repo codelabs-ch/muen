@@ -35,6 +35,9 @@
   <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
   <memory alignment="16#1000#" caching="UC" name="nic1|dma" physicalAddress="16#2000#" size="16#1000#"/>
   <memory alignment="16#1000#" caching="UC" name="xhci|dma" physicalAddress="16#3000#" size="16#1000#"/>
+  <memory alignment="16#1000#" caching="WB" name="tau0|bin" size="16#0001_4000#" type="subject_binary">
+   <file filename="tau0" offset="none"/>
+  </memory>
  </memory>
  <deviceDomains>
   <domain name="nic1_domain">
@@ -61,17 +64,25 @@
   <channel hasEvent="ipi" name="data_channel" size="16#1000#"/>
   <channel hasEvent="switch" name="data_channel2" size="16#2000#"/>
  </channels>
+ <components>
+  <component name="linux">
+   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
+  </component>
+  <component name="subject1">
+   <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
+  </component>
+ </components>
  <subjects>
   <subject cpu="1" id="0" name="tau0" profile="native">
    <bootparams/>
    <memory>
     <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="true"/>
+    <memory executable="true" logical="binary" physical="tau0|bin" virtualAddress="16#1000#" writable="true"/>
    </memory>
    <devices/>
    <events/>
-   <binary filename="tau0" size="16#0001_4000#" virtualAddress="16#1000#"/>
   </subject>
-  <subject name="lnx" profile="linux">
+  <subject component="linux" name="lnx" profile="linux">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
    </memory>
@@ -94,9 +105,8 @@
     <reader logical="primary_data" physical="data_channel" vector="12" virtualAddress="16#6000#"/>
     <reader logical="secondary_data" physical="data_channel2" virtualAddress="16#7000#"/>
    </channels>
-   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>
-  <subject name="subject1" profile="native">
+  <subject component="subject1" name="subject1" profile="native">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
@@ -116,7 +126,6 @@
     <writer event="1" logical="primary_data" physical="data_channel" virtualAddress="16#3000#"/>
     <writer event="1" logical="secondary_data" physical="data_channel2" virtualAddress="16#5000#"/>
    </channels>
-   <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
    <monitor>
     <state subject="lnx" virtualAddress="16#4000#" writable="true"/>
    </monitor>

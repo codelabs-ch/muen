@@ -1,18 +1,18 @@
 include ../Makeconf
 
-SUBJECTS =  \
-	linux   \
-	sm      \
-	tau0    \
-	time    \
+COMPONENTS = \
+	linux    \
+	sm       \
+	tau0     \
+	time     \
 	vt
 
 BINARIES = \
-	$(subst linux,,$(SUBJECTS))
+	$(subst linux,,$(COMPONENTS))
 
-all: $(SUBJECTS) install
+all: $(COMPONENTS) install
 
-$(SUBJECTS):
+$(COMPONENTS):
 	@$(MAKE) -C $@
 
 install:
@@ -22,6 +22,6 @@ install:
 	$(MAKE) -C linux $@
 
 clean:
-	@for subj in $(SUBJECTS); do make clean -C $$subj; done
+	@for subj in $(COMPONENTS); do make clean -C $$subj; done
 
-.PHONY: $(SUBJECTS)
+.PHONY: $(COMPONENTS)

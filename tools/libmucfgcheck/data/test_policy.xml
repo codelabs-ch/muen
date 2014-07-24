@@ -10,6 +10,9 @@
    <device name="serial" shared="false">
     <ioPort end="16#03ff#" name="port1" start="16#03f8#"/>
    </device>
+   <device name="debugconsole" shared="false">
+    <ioPort end="16#50b7#" name="port" start="16#50b0#"/>
+   </device>
    <device name="vga" shared="false">
     <memory caching="WC" name="buffer" physicalAddress="16#000b_8000#" size="16#4000#"/>
     <ioPort end="16#03d5#" name="ports" start="16#03d4#"/>

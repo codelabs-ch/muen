@@ -108,6 +108,26 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Debugconsole_Presence (XML_Data : Muxml.XML_Data_Type)
+   is
+      use type DOM.Core.Node;
+
+      Debug_Console : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => XML_Data.Doc,
+           XPath => "/system/platform/devices/device"
+           & "[@name='debugconsole' and ioPort/@name='port']");
+   begin
+      Mulog.Log (Msg => "Checking presence of debug console device");
+
+      if Debug_Console = null then
+         raise Validation_Error with "Physical device 'debugconsole' with I/O"
+           & " port resource 'port' not found";
+      end if;
+   end Debugconsole_Presence;
+
+   -------------------------------------------------------------------------
+
    procedure Device_IO_Port_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
    is
    begin

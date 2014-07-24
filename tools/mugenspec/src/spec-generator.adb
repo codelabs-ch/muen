@@ -427,62 +427,41 @@ is
       Buffer : Unbounded_String;
       Tmpl   : Mutools.Templates.Template_Type;
 
-      Devices : constant DOM.Core.Node_List := McKae.XML.XPath.XIA.XPath_Query
-        (N     => Policy.Doc,
-         XPath => "/system/platform/devices/device");
-
-      --  Write device constants to hardware spec.
-      procedure Write_Device (Dev : DOM.Core.Node);
+      --  Write I/O port constant for debug console.
+      procedure Write_Debugconsole;
 
       ----------------------------------------------------------------------
 
-      procedure Write_Device (Dev : DOM.Core.Node)
+      procedure Write_Debugconsole
       is
-         Dev_Name : constant String
+         Debug_Console : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Policy.Doc,
+              XPath => "/system/platform/devices/device"
+              & "[@name='debugconsole' and ioPort/@name='port']");
+         Dev_Name      : constant String
            := Capitalize
              (Str => DOM.Core.Elements.Get_Attribute
-                (Elem => Dev,
+                (Elem => Debug_Console,
                  Name => "name"));
-         Ports    : constant DOM.Core.Node_List
-           := McKae.XML.XPath.XIA.XPath_Query
-             (N     => Dev,
-              XPath => "ioPort");
-         P_Count  : constant Natural := DOM.Core.Nodes.Length (List => Ports);
+         Port          : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Debug_Console,
+              XPath => "ioPort[@name='port']");
+         Name          : constant String
+           := Capitalize
+             (Str => DOM.Core.Elements.Get_Attribute
+                (Elem => Port,
+                 Name => "name"));
+         Address       : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Port,
+              Name => "start");
       begin
-         if P_Count = 0 then
-            return;
-         end if;
-
          Buffer := Buffer & ASCII.LF;
-         for P in 0 .. P_Count - 1 loop
-            declare
-               Port       : constant DOM.Core.Node
-                 := DOM.Core.Nodes.Item
-                   (List  => Ports,
-                    Index => P);
-               Name       : constant String
-                 := Capitalize
-                   (Str => DOM.Core.Elements.Get_Attribute
-                      (Elem => Port,
-                       Name => "name"));
-               Start_Addr : constant String
-                 := DOM.Core.Elements.Get_Attribute
-                   (Elem => Port,
-                    Name => "start");
-               End_Addr   : constant String
-                 := DOM.Core.Elements.Get_Attribute
-                   (Elem => Port,
-                    Name => "end");
-            begin
-               Buffer := Buffer & Indent & Dev_Name & "_" & Name
-                 & "_Start : constant := " & Start_Addr & ";"
-                 & ASCII.LF
-                 & Indent & Dev_Name & "_" & Name
-                 & "_End   : constant := " & End_Addr & ";"
-                 & ASCII.LF;
-            end;
-         end loop;
-      end Write_Device;
+         Buffer := Buffer & Indent & Dev_Name & "_" & Name
+           & " : constant := " & Address & ";" & ASCII.LF;
+      end Write_Debugconsole;
    begin
       Mulog.Log (Msg => "Writing hardware spec to '"
                  & Output_Dir & "/skp-hardware.ads'");
@@ -490,11 +469,7 @@ is
       Tmpl := Mutools.Templates.Create
         (Content => String_Templates.skp_hardware_ads);
 
-      for I in 0 .. DOM.Core.Nodes.Length (List => Devices) - 1 loop
-         Write_Device (Dev => DOM.Core.Nodes.Item
-                       (List  => Devices,
-                        Index => I));
-      end loop;
+      Write_Debugconsole;
 
       Mutools.Templates.Replace
         (Template => Tmpl,

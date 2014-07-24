@@ -7,7 +7,7 @@
 		</memory>
 		<devices>
 			<device name="debugconsole" shared="false">
-				<ioPort name="serial" start="16#50b0#" end="16#50b8#"/>
+				<ioPort name="port" start="16#50b0#" end="16#50b8#"/>
 				<irq name="command" number="2"/>
 			</device>
 			<device name="vga" shared="false">
@@ -49,7 +49,7 @@
 		</memory>
 		<devices>
 			<device logical="log" physical="debugconsole">
-				<ioPort logical="ports" physical="serial"/>
+				<ioPort logical="port" physical="port"/>
 				<irq logical="cmd" physical="command" vector="34"/>
 			</device>
 		</devices>

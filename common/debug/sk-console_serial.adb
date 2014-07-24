@@ -26,7 +26,7 @@ with
 is
 
    --  Serial output address.
-   Port    : constant := Skp.Hardware.Serial_Port1_Start;
+   Port    : constant := Skp.Hardware.Debugconsole_Port;
    --  Baud rate: 115200
    Divisor : constant := 1;
 

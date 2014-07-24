@@ -17,13 +17,13 @@ rts:
 policy: tools
 	$(MAKE) -C $@
 
-subjects: policy rts
+components: policy rts
 	$(MAKE) -C $@
 
 kernel: policy rts
 	$(MAKE) -C $@
 
-pack: policy kernel subjects
+pack: policy kernel components
 	$(MAKE) -C $@
 
 tools:
@@ -52,11 +52,11 @@ clean:
 	$(MAKE) clean -C kernel
 	$(MAKE) clean -C pack
 	$(MAKE) clean -C policy
-	$(MAKE) clean -C subjects
+	$(MAKE) clean -C components
 	$(MAKE) clean -C rts
 	rm -rf contrib/obj
 
 distclean: clean
 	$(MAKE) clean -C contrib
 
-.PHONY: deploy emulate kernel pack policy rts subjects tools
+.PHONY: components deploy emulate kernel pack policy rts tools

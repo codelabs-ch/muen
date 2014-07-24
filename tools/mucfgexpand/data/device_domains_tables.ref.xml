@@ -78,9 +78,17 @@
  </channels>
  <components>
   <component name="linux">
+   <channels>
+    <reader logical="primary_data" size="16#1000#" vector="12" virtualAddress="16#6000#"/>
+    <reader logical="secondary_data" size="16#2000#" virtualAddress="16#7000#"/>
+   </channels>
    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </component>
   <component name="subject1">
+   <channels>
+    <writer event="1" logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>
+    <writer event="1" logical="secondary_data" size="16#2000#" virtualAddress="16#3000#"/>
+   </channels>
    <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
   </component>
  </components>

@@ -33,6 +33,9 @@
  </channels>
  <components>
   <component name="tau0">
+   <channels>
+    <writer event="1" logical="channel" size="16#1000#" virtualAddress="16#2000#"/>
+   </channels>
    <binary filename="tau0" size="16#1000#" virtualAddress="16#2000#"/>
   </component>
  </components>

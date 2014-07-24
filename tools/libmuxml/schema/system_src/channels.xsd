@@ -13,11 +13,6 @@
 		<xs:attribute name="hasEvent" type="eventModeType"  use="optional"/>
 	</xs:complexType>
 
-	<xs:complexType name="channelEventType">
-		<xs:attribute name="number"    type="xs:nonNegativeInteger" use="required"/>
-		<xs:attribute name="dstVector" type="vectorType"            use="required"/>
-	</xs:complexType>
-
 	<xs:complexType name="channelReferencesType">
 		<xs:choice minOccurs="1" maxOccurs="unbounded">
 			<xs:element name="reader" type="channelReaderType"/>

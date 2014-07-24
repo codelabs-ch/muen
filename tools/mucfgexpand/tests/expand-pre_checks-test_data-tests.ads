@@ -51,5 +51,8 @@ package Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Subject_Component_References_0ac6d5 (Gnattest_T : in out Test);
    --  expand-pre_checks.ads:69:4:Subject_Component_References
 
+   procedure Test_Component_Channel_Name_Uniqueness_00e23b (Gnattest_T : in out Test);
+   --  expand-pre_checks.ads:72:4:Component_Channel_Name_Uniqueness
+
 end Expand.Pre_Checks.Test_Data.Tests;
 --  end read only

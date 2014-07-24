@@ -635,4 +635,43 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    end Test_Subject_Component_References;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Component_Channel_Name_Uniqueness (Gnattest_T : in out Test);
+   procedure Test_Component_Channel_Name_Uniqueness_00e23b (Gnattest_T : in out Test) renames Test_Component_Channel_Name_Uniqueness;
+--  id:2.2/00e23bc975658da7/Component_Channel_Name_Uniqueness/1/0/
+   procedure Test_Component_Channel_Name_Uniqueness (Gnattest_T : in out Test) is
+   --  expand-pre_checks.ads:72:4:Component_Channel_Name_Uniqueness
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/components/component[@name='linux']/channels/"
+         & "reader[@logical='secondary_data']",
+         Name  => "logical",
+         Value => "primary_data");
+
+      begin
+         Component_Channel_Name_Uniqueness (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Multiple channels with name 'primary_data' in component"
+                    & " 'linux'",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Component_Channel_Name_Uniqueness;
+--  end read only
+
 end Expand.Pre_Checks.Test_Data.Tests;

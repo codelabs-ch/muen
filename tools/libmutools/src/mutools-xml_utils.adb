@@ -247,22 +247,42 @@ is
      (Data : Muxml.XML_Data_Type)
       return PCI_Bus_Set.Set
    is
-      Buses  : constant DOM.Core.Node_List
+      Dev_Refs  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/platform/devices/device/pci/@bus");
-      Result : PCI_Bus_Set.Set;
+           XPath => "/system/subjects/subject/devices/device");
+      PCI_Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/platform/devices/device/pci");
+      Result    : PCI_Bus_Set.Set;
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Buses) - 1 loop
+      for I in 0 .. DOM.Core.Nodes.Length (List => PCI_Nodes) - 1 loop
          declare
-            Bus : constant DOM.Core.Node
+            use type DOM.Core.Node;
+
+            PCI      : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
-                (List  => Buses,
+                (List  => PCI_Nodes,
                  Index => I);
+            Bus      : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => PCI,
+                 Name => "bus");
+            Dev_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => DOM.Core.Nodes.Parent_Node (N => PCI),
+                 Name => "name");
+            Assigned : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Dev_Refs,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Dev_Name);
          begin
-            Result.Insert
-              (New_Item => PCI_Bus_Range'Value
-                 (DOM.Core.Nodes.Node_Value (N => Bus)));
+            if Assigned /= null then
+               Result.Insert
+                 (New_Item => PCI_Bus_Range'Value (Bus));
+            end if;
 
          exception
             when Constraint_Error => null;

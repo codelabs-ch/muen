@@ -20,6 +20,11 @@
     <memory caching="UC" name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
     <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
    </device>
+   <device name="unassigned" shared="false">
+    <pci bus="16#05#" device="16#11#" function="0"/>
+    <irq name="irq" number="10"/>
+    <memory caching="UC" name="mmio" physicalAddress="16#f250_0000#" size="16#0002_0000#"/>
+   </device>
   </devices>
  </platform>
  <memory>
@@ -53,6 +58,17 @@
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
+   <devices>
+    <device logical="xhci" physical="xhci">
+     <irq logical="xhci_irq" physical="irq" vector="55"/>
+     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
+    </device>
+    <device logical="eth0" physical="ethernet">
+     <irq logical="eth0_irq" physical="irq" vector="59"/>
+     <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d250_0000#" writable="true"/>
+     <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d253_b000#" writable="true"/>
+    </device>
+   </devices>
    <events/>
    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </subject>

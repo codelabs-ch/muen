@@ -9,9 +9,31 @@
 
 	<xs:complexType name="componentType">
 		<xs:sequence>
-			<xs:element name="binary" type="binaryType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="channels" type="logicalChannelsType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="binary"   type="binaryType"          minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="nameType" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="logicalChannelsType">
+		<xs:choice minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="reader" type="logicalChannelReaderType"/>
+			<xs:element name="writer" type="logicalChannelWriterType"/>
+		</xs:choice>
+	</xs:complexType>
+
+	<xs:complexType name="logicalChannelReaderType">
+		<xs:attribute name="logical"        type="nameType"   use="required"/>
+		<xs:attribute name="virtualAddress" type="word64Type" use="required"/>
+		<xs:attribute name="size"           type="word64Type" use="required"/>
+		<xs:attribute name="vector"         type="vectorType" use="optional"/>
+	</xs:complexType>
+
+	<xs:complexType name="logicalChannelWriterType">
+		<xs:attribute name="logical"        type="nameType"              use="required"/>
+		<xs:attribute name="virtualAddress" type="word64Type"            use="required"/>
+		<xs:attribute name="size"           type="word64Type"            use="required"/>
+		<xs:attribute name="event"          type="xs:nonNegativeInteger" use="optional"/>
 	</xs:complexType>
 
 </xs:schema>

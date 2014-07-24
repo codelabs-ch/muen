@@ -501,4 +501,46 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    end Test_Get_Occupied_PCI_Buses;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_Switch_Sources (Gnattest_T : in out Test);
+   procedure Test_Get_Switch_Sources_e0b744 (Gnattest_T : in out Test) renames Test_Get_Switch_Sources;
+--  id:2.2/e0b744f992ef1869/Get_Switch_Sources/1/0/
+   procedure Test_Get_Switch_Sources (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:113:4:Get_Switch_Sources
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy  : Muxml.XML_Data_Type;
+      Sources : DOM.Core.Node_List;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/switch_events.xml");
+
+      Sources := Get_Switch_Sources
+        (Data   => Policy,
+         Target => Muxml.Utils.Get_Element
+           (Doc   => Policy.Doc,
+            XPath => "/system/subjects/subject[@name='subj1']"));
+      Assert (Condition => DOM.Core.Nodes.Length (List => Sources) = 1,
+              Message   => "Missing source subjects (1)");
+      Assert (Condition => DOM.Core.Elements.Get_Attribute
+              (Elem => DOM.Core.Nodes.Item (List  => Sources,
+                                            Index => 0),
+               Name => "name") = "subj3",
+              Message   => "Subj1 source switch mismatch");
+
+      Sources := Get_Switch_Sources
+        (Data   => Policy,
+         Target => Muxml.Utils.Get_Element
+           (Doc   => Policy.Doc,
+            XPath => "/system/subjects/subject[@name='subj3']"));
+      Assert (Condition => DOM.Core.Nodes.Length (List => Sources) = 2,
+              Message   => "Missing source subjects (2)");
+--  begin read only
+   end Test_Get_Switch_Sources;
+--  end read only
+
 end Mutools.XML_Utils.Test_Data.Tests;

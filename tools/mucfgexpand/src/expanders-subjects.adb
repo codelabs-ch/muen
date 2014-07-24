@@ -24,7 +24,6 @@ with Ada.Strings.Unbounded;
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Documents;
-with DOM.Core.Append_Node;
 
 with McKae.XML.XPath.XIA;
 
@@ -49,13 +48,6 @@ is
      (Data         : in out Muxml.XML_Data_Type;
       Element_Name :        String;
       Ref_Name     :        String);
-
-   --  Return the list of subjects that can trigger a switch to the given
-   --  target subject.
-   function Get_Switch_Subjects
-     (Data   : in out Muxml.XML_Data_Type;
-      Target :        DOM.Core.Node)
-      return DOM.Core.Node_List;
 
    -------------------------------------------------------------------------
 
@@ -420,8 +412,9 @@ is
 
                declare
                   Src_Subjs    : constant DOM.Core.Node_List
-                    := Get_Switch_Subjects (Data   => Data,
-                                            Target => Subj_Node);
+                    := Mutools.XML_Utils.Get_Switch_Sources
+                      (Data   => Data,
+                       Target => Subj_Node);
                   Switch_Count : constant Integer
                     := DOM.Core.Nodes.Length (List => Src_Subjs);
                begin
@@ -837,46 +830,6 @@ is
         (Node      => Tau0_Node,
          New_Child => Bin_Node);
    end Add_Tau0;
-
-   -------------------------------------------------------------------------
-
-   function Get_Switch_Subjects
-     (Data   : in out Muxml.XML_Data_Type;
-      Target :        DOM.Core.Node)
-      return DOM.Core.Node_List
-   is
-      Target_Events : constant DOM.Core.Node_List
-        :=  McKae.XML.XPath.XIA.XPath_Query
-          (N     => Target,
-           XPath => "events/target/event/@physical");
-      Subjects : DOM.Core.Node_List;
-   begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Target_Events) - 1 loop
-         declare
-            Ev_Name    : constant String
-              := DOM.Core.Nodes.Node_Value
-                (N => DOM.Core.Nodes.Item
-                   (List  => Target_Events,
-                    Index => I));
-            Event_Mode : constant String
-              := Muxml.Utils.Get_Attribute
-                (Doc   => Data.Doc,
-                 XPath => "/system/events/event[@name='" & Ev_Name  & "']",
-                 Name  => "mode");
-         begin
-            if Event_Mode = "switch" then
-               DOM.Core.Append_Node
-                 (List => Subjects,
-                  N    => Muxml.Utils.Get_Element
-                    (Doc   => Data.Doc,
-                     XPath => "/system/subjects/subject"
-                     & "[events/source/group/*/notify/@physical='" & Ev_Name
-                     & "']"));
-            end if;
-         end;
-      end loop;
-      return Subjects;
-   end Get_Switch_Subjects;
 
    -------------------------------------------------------------------------
 

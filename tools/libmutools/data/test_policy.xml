@@ -20,6 +20,11 @@
 	   <memory name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#" caching="UC"/>
 	   <memory name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#" caching="UC"/>
    </device>
+   <device name="unassigned" shared="false">
+	   <pci bus="16#05#" device="16#11#" function="0"/>
+	   <irq name="irq" number="10"/>
+	   <memory name="mmio" physicalAddress="16#f250_0000#" size="16#0002_0000#" caching="UC"/>
+   </device>
   </devices>
  </platform>
  <memory>

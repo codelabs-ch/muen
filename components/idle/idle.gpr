@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-project Idle extends "../subject" is
+project Idle extends "../component" is
 
    for Languages use ("Ada");
    for Source_Dirs use ("src");

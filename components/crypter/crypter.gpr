@@ -18,7 +18,7 @@
 
 with "libsparkcrypto";
 
-project Crypter extends "../subject" is
+project Crypter extends "../component" is
 
    for Languages use ("Ada");
    for Source_Dirs use

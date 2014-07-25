@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-project Vt extends "../subject" is
+project Vt extends "../component" is
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use

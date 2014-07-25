@@ -710,20 +710,25 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Stack_Node : constant DOM.Core.Node
+      Phys_Memory : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory");
+      Stack_Node  : constant DOM.Core.Node
         := Muxml.Utils.Get_Element
           (Doc   => Policy.Doc,
            XPath => "/system/kernel/memory/cpu[@id='0']/"
            & "memory[@logical='stack']");
-      Stack_Ref  : constant String := DOM.Core.Elements.Get_Attribute
+      Stack_Ref   : constant String := DOM.Core.Elements.Get_Attribute
         (Elem => Stack_Node,
          Name => "physical");
-      Stack_Size : constant Unsigned_64 := Unsigned_64'Value
+      Stack_Size  : constant Unsigned_64 := Unsigned_64'Value
         (Muxml.Utils.Get_Attribute
-           (Doc   => Policy.Doc,
-            XPath => "/system/memory/memory[@name='" & Stack_Ref & "']",
-            Name  => "size"));
-      Stack_Addr : constant Unsigned_64 := Unsigned_64'Value
+           (Nodes     => Phys_Memory,
+            Ref_Attr  => "name",
+            Ref_Value => Stack_Ref,
+            Attr_Name => "size"));
+      Stack_Addr  : constant Unsigned_64 := Unsigned_64'Value
         (DOM.Core.Elements.Get_Attribute
            (Elem => Stack_Node,
             Name => "virtualAddress")) + Stack_Size;
@@ -768,9 +773,11 @@ is
             Name  => "logicalCpus");
          PT_Node       : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
-              (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@type='system_pt' and "
-               & "@name='kernel_0|pt']");
+             (Nodes => Phys_Memory,
+              Refs  => ((Name  => U ("type"),
+                         Value => U ("system_pt")),
+                        (Name  => U ("name"),
+                         Value => U ("kernel_0|pt"))));
          PML4_Addr     : constant Unsigned_64 := Unsigned_64'Value
            (DOM.Core.Elements.Get_Attribute
               (Elem => PT_Node,
@@ -781,16 +788,20 @@ is
                Name => "size"));
          VMXON_Addr    : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
-              (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@type='system_vmxon' and "
-               & "@name='kernel_0|vmxon']",
-               Name  => "physicalAddress"));
+              (Nodes     => Phys_Memory,
+               Refs      => ((Name  => U ("type"),
+                              Value => U ("system_vmxon")),
+                             (Name  => U ("name"),
+                              Value => U ("kernel_0|vmxon"))),
+               Attr_Name => "physicalAddress"));
          VMCS_Addr     : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
-              (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@type='system_vmcs' and "
-               & "contains(string(@name),'tau0')]",
-               Name  => "physicalAddress"));
+              (Nodes     => Phys_Memory,
+               Refs      => ((Name  => U ("type"),
+                              Value => U ("system_vmcs")),
+                             (Name  => U ("name"),
+                              Value => U ("tau0|vmcs"))),
+               Attr_Name => "physicalAddress"));
 
          Tmpl : Mutools.Templates.Template_Type;
       begin

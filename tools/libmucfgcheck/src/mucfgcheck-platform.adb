@@ -22,6 +22,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Utils;
 
 package body Mucfgcheck.Platform
 is
@@ -63,8 +64,9 @@ is
                  & " memory block(s)");
 
       if Mem_Sum > Block_Sum then
-         raise Validation_Error with "Allocated" & Mem_Sum'Img & " bytes of "
-           & "physical memory but only" & Block_Sum'Img
+         raise Validation_Error with "Allocated " & Mutools.Utils.To_Hex
+           (Number => Mem_Sum) & " bytes of physical memory but only "
+           & Mutools.Utils.To_Hex (Number => Block_Sum)
            & " bytes available by the platform";
       end if;
    end Memory_Space;

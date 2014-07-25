@@ -1116,6 +1116,10 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/subjects/subject");
+      Phys_Memory   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory");
       Subj_Count    : constant Natural
         := DOM.Core.Nodes.Length (List => Subjects);
       Events        : constant DOM.Core.Node_List
@@ -1268,10 +1272,12 @@ is
 
          PML4_Addr  : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
-              (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@type='system_pt' and "
-               & "contains(string(@name),'" & Name & "')]",
-               Name  => "physicalAddress"));
+              (Nodes     => Phys_Memory,
+               Refs      => ((Name  => To_Unbounded_String ("type"),
+                              Value => To_Unbounded_String ("system_pt")),
+                             (Name  => To_Unbounded_String ("name"),
+                              Value => To_Unbounded_String (Name & "|pt"))),
+               Attr_Name => "physicalAddress"));
          Entry_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Element_Value
               (Doc   => Subject,

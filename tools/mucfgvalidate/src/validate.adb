@@ -143,6 +143,8 @@ is
       XML_Processors.Register
         (Process => Subject.Memory_Types'Access);
       XML_Processors.Register
+        (Process => Subject.Runnability'Access);
+      XML_Processors.Register
         (Process => Events.Source_Targets'Access);
       XML_Processors.Register
         (Process => Events.Subject_Event_References'Access);

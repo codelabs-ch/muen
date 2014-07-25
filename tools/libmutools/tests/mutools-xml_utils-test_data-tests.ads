@@ -39,5 +39,8 @@ package Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Occupied_PCI_Buses_0b9ce6 (Gnattest_T : in out Test);
    --  mutools-xml_utils.ads:107:4:Get_Occupied_PCI_Buses
 
+   procedure Test_Get_Switch_Sources_e0b744 (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:113:4:Get_Switch_Sources
+
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

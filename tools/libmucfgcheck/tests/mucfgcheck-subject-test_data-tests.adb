@@ -179,4 +179,58 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
    end Test_No_IOMMU_Device_References;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Runnability (Gnattest_T : in out Test);
+   procedure Test_Runnability_97c1af (Gnattest_T : in out Test) renames Test_Runnability;
+--  id:2.2/97c1af40316dadad/Runnability/1/0/
+   procedure Test_Runnability (Gnattest_T : in out Test) is
+   --  mucfgcheck-subject.ads:39:4:Runnability
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_Src,
+                   File => "data/runnability.xml");
+
+      --  Must not raise an exception.
+
+      Runnability (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='subj2']"
+         & "/events/source/group/event/notify[@physical='to_subj4']",
+         Name  => "physical",
+         Value => "to_subj1");
+
+      --  Must not raise an exception since subj4 is still schedulable.
+
+      Runnability (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='to_subj4']",
+         Name  => "mode",
+         Value => "ipi");
+
+      begin
+         Runnability (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject 'subj4' is neither referenced in the scheduling"
+                    & " plan nor schedulable via switch events",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Runnability;
+--  end read only
+
 end Mucfgcheck.Subject.Test_Data.Tests;

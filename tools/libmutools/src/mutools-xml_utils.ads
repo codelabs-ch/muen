@@ -108,4 +108,11 @@ is
      (Data : Muxml.XML_Data_Type)
       return PCI_Bus_Set.Set;
 
+   --  Return the list of subjects that can trigger a switch to the given
+   --  target subject.
+   function Get_Switch_Sources
+     (Data   : Muxml.XML_Data_Type;
+      Target : DOM.Core.Node)
+      return DOM.Core.Node_List;
+
 end Mutools.XML_Utils;

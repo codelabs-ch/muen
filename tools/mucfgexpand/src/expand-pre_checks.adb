@@ -475,6 +475,7 @@ is
       Check_Procs.Register (Process => Subject_Monitor_References'Access);
       Check_Procs.Register (Process => Subject_Channel_References'Access);
       Check_Procs.Register (Process => Subject_Component_References'Access);
+      Check_Procs.Register (Process => Subject_Channel_Exports'Access);
       Check_Procs.Register (Process => Channel_Reader_Writer'Access);
       Check_Procs.Register (Process => Channel_Writer_Has_Event_ID'Access);
       Check_Procs.Register (Process => Channel_Reader_Has_Event_Vector'Access);

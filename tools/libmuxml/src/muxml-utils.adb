@@ -108,20 +108,13 @@ is
       Attr_Name : String)
       return String
    is
-      use type DOM.Core.Node;
-
-      Node : constant DOM.Core.Node
-        := Get_Element (Nodes     => Nodes,
-                        Ref_Attr  => Ref_Attr,
-                        Ref_Value => Ref_Value);
+      use Ada.Strings.Unbounded;
    begin
-      if Node /= null then
-         return DOM.Core.Elements.Get_Attribute
-           (Elem => Node,
-            Name => Attr_Name);
-      else
-         return "";
-      end if;
+      return Get_Attribute
+        (Nodes     => Nodes,
+         Refs      => (1 => (Name  => To_Unbounded_String (Ref_Attr),
+                             Value => To_Unbounded_String (Ref_Value))),
+         Attr_Name => Attr_Name);
    end Get_Attribute;
 
    -------------------------------------------------------------------------

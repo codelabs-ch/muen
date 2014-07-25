@@ -150,7 +150,15 @@ is
       Filename     : String;
       PT_Type      : Paging.Paging_Mode_Type := Paging.IA32e_Mode)
    is
-      Vmem : Paging.Layouts.Memory_Layout_Type (Levels => 4);
+      Phys_Mem  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory");
+      Phys_Devs : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/platform/devices/device");
+      Vmem      : Paging.Layouts.Memory_Layout_Type (Levels => 4);
 
       --  Add mapping of given logical to physical memory.
       procedure Add_Mapping
@@ -223,9 +231,9 @@ is
                  Name => "physical");
             Physical_Mem  : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => Policy.Doc,
-                 XPath => "/system/memory/memory[@name='" & Physical_Name
-                 & "']");
+                (Nodes     => Phys_Mem,
+                 Ref_Attr  => "name",
+                 Ref_Value => Physical_Name);
          begin
             Mulog.Log (Msg => "Adding region " & Logical_Name
                        & "[" & Physical_Name & "]");
@@ -261,12 +269,15 @@ is
                     := DOM.Core.Elements.Get_Attribute
                       (Elem => Logical_Mem,
                        Name => "physical");
+                  Physical_Dev  : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Nodes     => Phys_Devs,
+                       Ref_Attr  => "name",
+                       Ref_Value => Dev_Name);
                   Physical_Mem  : constant DOM.Core.Node
                     := Muxml.Utils.Get_Element
-                      (Doc   => Policy.Doc,
-                       XPath => "/system/platform/devices"
-                       & "/device[@name='" & Dev_Name
-                       & "']/memory[@name='" & Physical_Name & "']");
+                      (Doc   => Physical_Dev,
+                       XPath => "memory[@name='" & Physical_Name & "']");
                begin
                   Mulog.Log (Msg => "Adding region " & Logical_Name
                              & "[" & Physical_Name & "] of device "

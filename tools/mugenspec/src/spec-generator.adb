@@ -1141,9 +1141,7 @@ is
       procedure Add_Trap (Trap : DOM.Core.Node);
 
       --  Append SPARK specification of given subject to template buffer.
-      procedure Write_Subject_Spec
-        (Subject : DOM.Core.Node;
-         Policy  : Muxml.XML_Data_Type);
+      procedure Write_Subject_Spec (Subject : DOM.Core.Node);
 
       -------------------------------------------------------------------
 
@@ -1251,9 +1249,7 @@ is
 
       ----------------------------------------------------------------------
 
-      procedure Write_Subject_Spec
-        (Subject : DOM.Core.Node;
-         Policy  : Muxml.XML_Data_Type)
+      procedure Write_Subject_Spec (Subject : DOM.Core.Node)
       is
          use type DOM.Core.Node;
 
@@ -1313,9 +1309,11 @@ is
 
          MSR_Store_Node : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
-              (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@type='system_msrstore' and "
-               & "contains(string(@name),'" & Name & "')]");
+             (Nodes => Phys_Memory,
+              Refs  => ((Name  => To_Unbounded_String ("type"),
+                         Value => To_Unbounded_String ("system_msrstore")),
+                        (Name  => To_Unbounded_String ("name"),
+                         Value => To_Unbounded_String (Name & "|msrstore"))));
          MSR_Store_Addr : Unsigned_64 := 0;
          MSR_Count      : Natural     := 0;
 
@@ -1561,9 +1559,9 @@ is
 
       for I in 0 .. Subj_Count - 1 loop
          Write_Subject_Spec
-           (Subject => DOM.Core.Nodes.Item (List  => Subjects,
-                                            Index => I),
-            Policy  => Policy);
+           (Subject => DOM.Core.Nodes.Item
+              (List  => Subjects,
+               Index => I));
 
          if I < Subj_Count - 1 then
             Buffer := Buffer & "," & ASCII.LF;

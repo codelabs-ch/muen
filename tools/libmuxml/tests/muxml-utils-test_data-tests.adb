@@ -485,12 +485,81 @@ package body Muxml.Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use Ada.Strings.Unbounded;
+      use type DOM.Core.Node;
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : XML_Data_Type;
+      Node : DOM.Core.Node;
+      List : DOM.Core.Node_List;
    begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "bar");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "name",
+         Value => "bar");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "type",
+         Value => "bar");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "value",
+         Value => "bar");
+      DOM.Core.Append_Node
+        (List => List,
+         N    => Node);
 
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "foo");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "name",
+         Value => "foo");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "type",
+         Value => "foo");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "value",
+         Value => "foo");
+      DOM.Core.Append_Node
+        (List => List,
+         N    => Node);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "foobar");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "name",
+         Value => "foo");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "type",
+         Value => "bar");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "value",
+         Value => "foobar");
+      DOM.Core.Append_Node
+        (List => List,
+         N    => Node);
+
+      Assert (Condition => Get_Attribute
+              (Nodes     => List,
+               Refs      => ((Name  => To_Unbounded_String ("name"),
+                              Value => To_Unbounded_String ("foo")),
+                             (Name  => To_Unbounded_String ("type"),
+                              Value => To_Unbounded_String ("bar"))),
+               Attr_Name => "value") = "foobar",
+              Message   => "Attribute mismatch not found");
 --  begin read only
    end Test_3_Get_Attribute;
 --  end read only

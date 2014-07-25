@@ -170,6 +170,41 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Element
+     (Nodes : DOM.Core.Node_List;
+      Refs  : Ref_Attrs_Type)
+      return DOM.Core.Node
+   is
+      use Ada.Strings.Unbounded;
+
+      Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Match : Boolean;
+         begin
+            for Ref of Refs loop
+               Match := To_String (Ref.Value) = DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => To_String (Ref.Name));
+
+               exit when not Match;
+            end loop;
+
+            if Match then
+               return Node;
+            end if;
+         end;
+      end loop;
+
+      return null;
+   end Get_Element;
+
+   -------------------------------------------------------------------------
+
    function Get_Element_Value
      (Doc   : DOM.Core.Node;
       XPath : String)

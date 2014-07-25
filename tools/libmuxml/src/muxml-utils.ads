@@ -74,6 +74,22 @@ is
       Attr_Name : String)
       return String;
 
+   type Ref_Attr_Type is record
+      Name  : Ada.Strings.Unbounded.Unbounded_String;
+      Value : Ada.Strings.Unbounded.Unbounded_String;
+   end record;
+
+   type Ref_Attrs_Type is array (Positive range <>) of Ref_Attr_Type;
+
+   --  Returns the element from the given node list with a list of reference
+   --  attributes (name, value pairs) that must all match. If no such element
+   --  with the specified attribute exists null is returned. The first match is
+   --  returned if multiple elements are found.
+   function Get_Element
+     (Nodes : DOM.Core.Node_List;
+      Refs  : Ref_Attrs_Type)
+      return DOM.Core.Node;
+
    --  Append all nodes of 'Right' to specified node list 'Left'.
    procedure Append
      (Left  : in out DOM.Core.Node_List;

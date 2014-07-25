@@ -45,6 +45,11 @@ is
    use Ada.Strings.Unbounded;
    use Interfaces;
 
+   function U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
+
    function Indent
      (N         : Positive := 1;
       Unit_Size : Positive := 3)
@@ -1269,10 +1274,10 @@ is
          PML4_Addr  : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Nodes     => Phys_Memory,
-               Refs      => ((Name  => To_Unbounded_String ("type"),
-                              Value => To_Unbounded_String ("system_pt")),
-                             (Name  => To_Unbounded_String ("name"),
-                              Value => To_Unbounded_String (Name & "|pt"))),
+               Refs      => ((Name  => U ("type"),
+                              Value => U ("system_pt")),
+                             (Name  => U ("name"),
+                              Value => U (Name & "|pt"))),
                Attr_Name => "physicalAddress"));
          Entry_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Element_Value
@@ -1285,35 +1290,35 @@ is
          VMCS_Addr  : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Nodes     => Phys_Memory,
-               Refs      => ((Name  => To_Unbounded_String ("type"),
-                              Value => To_Unbounded_String ("system_vmcs")),
-                             (Name  => To_Unbounded_String ("name"),
-                              Value => To_Unbounded_String (Name & "|vmcs"))),
+               Refs      => ((Name  => U ("type"),
+                              Value => U ("system_vmcs")),
+                             (Name  => U ("name"),
+                              Value => U (Name & "|vmcs"))),
                Attr_Name => "physicalAddress"));
          IOBM_Addr  : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Nodes     => Phys_Memory,
-               Refs      => ((Name  => To_Unbounded_String ("type"),
-                              Value => To_Unbounded_String ("system_iobm")),
-                             (Name  => To_Unbounded_String ("name"),
-                              Value => To_Unbounded_String (Name & "|iobm"))),
+               Refs      => ((Name  => U ("type"),
+                              Value => U ("system_iobm")),
+                             (Name  => U ("name"),
+                              Value => U (Name & "|iobm"))),
                Attr_Name => "physicalAddress"));
          MSRBM_Addr : constant Unsigned_64 := Unsigned_64'Value
                       (Muxml.Utils.Get_Attribute
               (Nodes     => Phys_Memory,
-               Refs      => ((Name  => To_Unbounded_String ("type"),
-                              Value => To_Unbounded_String ("system_msrbm")),
-                             (Name  => To_Unbounded_String ("name"),
-                              Value => To_Unbounded_String (Name & "|msrbm"))),
+               Refs      => ((Name  => U ("type"),
+                              Value => U ("system_msrbm")),
+                             (Name  => U ("name"),
+                              Value => U (Name & "|msrbm"))),
                Attr_Name => "physicalAddress"));
 
          MSR_Store_Node : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
              (Nodes => Phys_Memory,
-              Refs  => ((Name  => To_Unbounded_String ("type"),
-                         Value => To_Unbounded_String ("system_msrstore")),
-                        (Name  => To_Unbounded_String ("name"),
-                         Value => To_Unbounded_String (Name & "|msrstore"))));
+              Refs  => ((Name  => U ("type"),
+                         Value => U ("system_msrstore")),
+                        (Name  => U ("name"),
+                         Value => U (Name & "|msrstore"))));
          MSR_Store_Addr : Unsigned_64 := 0;
          MSR_Count      : Natural     := 0;
 

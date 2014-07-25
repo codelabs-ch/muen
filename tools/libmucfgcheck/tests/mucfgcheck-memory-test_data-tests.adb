@@ -418,8 +418,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'physicalAddress => 16#0010_0023#' of "
-                    & "'kernel_text' physical memory element not page aligned",
+                    = "Physical address of memory region 'kernel_text' does "
+                    & "not honor alignment 16#1000#",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

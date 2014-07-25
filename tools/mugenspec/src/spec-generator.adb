@@ -1303,11 +1303,13 @@ is
                               Value => To_Unbounded_String (Name & "|iobm"))),
                Attr_Name => "physicalAddress"));
          MSRBM_Addr : constant Unsigned_64 := Unsigned_64'Value
-           (Muxml.Utils.Get_Attribute
-              (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@type='system_msrbm' and "
-               & "contains(string(@name),'" & Name & "')]",
-               Name  => "physicalAddress"));
+                      (Muxml.Utils.Get_Attribute
+              (Nodes     => Phys_Memory,
+               Refs      => ((Name  => To_Unbounded_String ("type"),
+                              Value => To_Unbounded_String ("system_msrbm")),
+                             (Name  => To_Unbounded_String ("name"),
+                              Value => To_Unbounded_String (Name & "|msrbm"))),
+               Attr_Name => "physicalAddress"));
 
          MSR_Store_Node : constant DOM.Core.Node
            := Muxml.Utils.Get_Element

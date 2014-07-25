@@ -45,6 +45,11 @@ is
    use Ada.Strings.Unbounded;
    use Interfaces;
 
+   function U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
+
    function Indent
      (N         : Positive := 1;
       Unit_Size : Positive := 3)
@@ -705,20 +710,25 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Stack_Node : constant DOM.Core.Node
+      Phys_Memory : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory");
+      Stack_Node  : constant DOM.Core.Node
         := Muxml.Utils.Get_Element
           (Doc   => Policy.Doc,
            XPath => "/system/kernel/memory/cpu[@id='0']/"
            & "memory[@logical='stack']");
-      Stack_Ref  : constant String := DOM.Core.Elements.Get_Attribute
+      Stack_Ref   : constant String := DOM.Core.Elements.Get_Attribute
         (Elem => Stack_Node,
          Name => "physical");
-      Stack_Size : constant Unsigned_64 := Unsigned_64'Value
+      Stack_Size  : constant Unsigned_64 := Unsigned_64'Value
         (Muxml.Utils.Get_Attribute
-           (Doc   => Policy.Doc,
-            XPath => "/system/memory/memory[@name='" & Stack_Ref & "']",
-            Name  => "size"));
-      Stack_Addr : constant Unsigned_64 := Unsigned_64'Value
+           (Nodes     => Phys_Memory,
+            Ref_Attr  => "name",
+            Ref_Value => Stack_Ref,
+            Attr_Name => "size"));
+      Stack_Addr  : constant Unsigned_64 := Unsigned_64'Value
         (DOM.Core.Elements.Get_Attribute
            (Elem => Stack_Node,
             Name => "virtualAddress")) + Stack_Size;
@@ -763,9 +773,11 @@ is
             Name  => "logicalCpus");
          PT_Node       : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
-              (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@type='system_pt' and "
-               & "@name='kernel_0|pt']");
+             (Nodes => Phys_Memory,
+              Refs  => ((Name  => U ("type"),
+                         Value => U ("system_pt")),
+                        (Name  => U ("name"),
+                         Value => U ("kernel_0|pt"))));
          PML4_Addr     : constant Unsigned_64 := Unsigned_64'Value
            (DOM.Core.Elements.Get_Attribute
               (Elem => PT_Node,
@@ -776,16 +788,20 @@ is
                Name => "size"));
          VMXON_Addr    : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
-              (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@type='system_vmxon' and "
-               & "@name='kernel_0|vmxon']",
-               Name  => "physicalAddress"));
+              (Nodes     => Phys_Memory,
+               Refs      => ((Name  => U ("type"),
+                              Value => U ("system_vmxon")),
+                             (Name  => U ("name"),
+                              Value => U ("kernel_0|vmxon"))),
+               Attr_Name => "physicalAddress"));
          VMCS_Addr     : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
-              (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@type='system_vmcs' and "
-               & "contains(string(@name),'tau0')]",
-               Name  => "physicalAddress"));
+              (Nodes     => Phys_Memory,
+               Refs      => ((Name  => U ("type"),
+                              Value => U ("system_vmcs")),
+                             (Name  => U ("name"),
+                              Value => U ("tau0|vmcs"))),
+               Attr_Name => "physicalAddress"));
 
          Tmpl : Mutools.Templates.Template_Type;
       begin
@@ -910,6 +926,10 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
+      Subjects     : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/subjects/subject");
       Scheduling   : constant DOM.Core.Node := Muxml.Utils.Get_Element
           (Doc   => Policy.Doc,
            XPath => "/system/scheduling");
@@ -1026,9 +1046,10 @@ is
            (Elem => Minor,
             Name => "subject");
          Subject_Id : constant String := Muxml.Utils.Get_Attribute
-           (Doc   => Policy.Doc,
-            XPath => "/system/subjects/subject[@name='" & Subject & "']",
-            Name  => "id");
+           (Nodes     => Subjects,
+            Ref_Attr  => "name",
+            Ref_Value => Subject,
+            Attr_Name => "id");
       begin
          Buffer := Buffer & Indent (N => 4) & Index'Img
            & " => Minor_Frame_Type'(Subject_Id => " & Subject_Id
@@ -1111,8 +1132,16 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/subjects/subject");
+      Phys_Memory   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory");
       Subj_Count    : constant Natural
         := DOM.Core.Nodes.Length (List => Subjects);
+      Events        : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/events/event");
       Event_Targets : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -1122,23 +1151,17 @@ is
       Tmpl   : Mutools.Templates.Template_Type;
 
       --  Add event entry to template buffer.
-      procedure Add_Event
-        (Policy : Muxml.XML_Data_Type;
-         Event  : DOM.Core.Node);
+      procedure Add_Event (Event : DOM.Core.Node);
 
       --  Add trap entry to template buffer.
       procedure Add_Trap (Trap : DOM.Core.Node);
 
       --  Append SPARK specification of given subject to template buffer.
-      procedure Write_Subject_Spec
-        (Subject : DOM.Core.Node;
-         Policy  : Muxml.XML_Data_Type);
+      procedure Write_Subject_Spec (Subject : DOM.Core.Node);
 
       -------------------------------------------------------------------
 
-      procedure Add_Event
-        (Policy : Muxml.XML_Data_Type;
-         Event  : DOM.Core.Node)
+      procedure Add_Event (Event : DOM.Core.Node)
       is
          Event_Id : constant String
            := DOM.Core.Elements.Get_Attribute
@@ -1166,9 +1189,10 @@ is
               Name => "vector");
          Notify_Mode : constant String
            := Muxml.Utils.Get_Attribute
-             (Doc   => Policy.Doc,
-              XPath => "/system/events/event[@name='" & Phys_Event_Ref & "']",
-              Name  => "mode");
+             (Nodes     => Events,
+              Ref_Attr  => "name",
+              Ref_Value => Phys_Event_Ref,
+              Attr_Name => "mode");
       begin
          Buffer := Buffer & Indent (N => 3)  & " "
            & Event_Id & " => Event_Entry_Type'("
@@ -1241,9 +1265,7 @@ is
 
       ----------------------------------------------------------------------
 
-      procedure Write_Subject_Spec
-        (Subject : DOM.Core.Node;
-         Policy  : Muxml.XML_Data_Type)
+      procedure Write_Subject_Spec (Subject : DOM.Core.Node)
       is
          use type DOM.Core.Node;
 
@@ -1262,10 +1284,12 @@ is
 
          PML4_Addr  : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
-              (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@type='system_pt' and "
-               & "contains(string(@name),'" & Name & "')]",
-               Name  => "physicalAddress"));
+              (Nodes     => Phys_Memory,
+               Refs      => ((Name  => U ("type"),
+                              Value => U ("system_pt")),
+                             (Name  => U ("name"),
+                              Value => U (Name & "|pt"))),
+               Attr_Name => "physicalAddress"));
          Entry_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Element_Value
               (Doc   => Subject,
@@ -1276,28 +1300,36 @@ is
                XPath => "vcpu/registers/gpr/rsp"));
          VMCS_Addr  : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
-              (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@type='system_vmcs' and "
-               & "contains(string(@name),'" & Name & "')]",
-               Name  => "physicalAddress"));
+              (Nodes     => Phys_Memory,
+               Refs      => ((Name  => U ("type"),
+                              Value => U ("system_vmcs")),
+                             (Name  => U ("name"),
+                              Value => U (Name & "|vmcs"))),
+               Attr_Name => "physicalAddress"));
          IOBM_Addr  : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
-              (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@type='system_iobm' and "
-               & "contains(string(@name),'" & Name & "')]",
-               Name  => "physicalAddress"));
+              (Nodes     => Phys_Memory,
+               Refs      => ((Name  => U ("type"),
+                              Value => U ("system_iobm")),
+                             (Name  => U ("name"),
+                              Value => U (Name & "|iobm"))),
+               Attr_Name => "physicalAddress"));
          MSRBM_Addr : constant Unsigned_64 := Unsigned_64'Value
-           (Muxml.Utils.Get_Attribute
-              (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@type='system_msrbm' and "
-               & "contains(string(@name),'" & Name & "')]",
-               Name  => "physicalAddress"));
+                      (Muxml.Utils.Get_Attribute
+              (Nodes     => Phys_Memory,
+               Refs      => ((Name  => U ("type"),
+                              Value => U ("system_msrbm")),
+                             (Name  => U ("name"),
+                              Value => U (Name & "|msrbm"))),
+               Attr_Name => "physicalAddress"));
 
          MSR_Store_Node : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
-              (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@type='system_msrstore' and "
-               & "contains(string(@name),'" & Name & "')]");
+             (Nodes => Phys_Memory,
+              Refs  => ((Name  => U ("type"),
+                         Value => U ("system_msrstore")),
+                        (Name  => U ("name"),
+                         Value => U (Name & "|msrstore"))));
          MSR_Store_Addr : Unsigned_64 := 0;
          MSR_Count      : Natural     := 0;
 
@@ -1512,10 +1544,9 @@ is
          else
             Buffer := Buffer & "Event_Table_Type'(" & ASCII.LF;
             for I in 0 .. Event_Count - 1 loop
-               Add_Event (Policy => Policy,
-                          Event  => DOM.Core.Nodes.Item
-                            (List  => Events,
-                             Index => I));
+               Add_Event (Event => DOM.Core.Nodes.Item
+                          (List  => Events,
+                           Index => I));
 
                if I < Event_Count - 1 then
                   Buffer := Buffer & "," & ASCII.LF;
@@ -1544,9 +1575,9 @@ is
 
       for I in 0 .. Subj_Count - 1 loop
          Write_Subject_Spec
-           (Subject => DOM.Core.Nodes.Item (List  => Subjects,
-                                            Index => I),
-            Policy  => Policy);
+           (Subject => DOM.Core.Nodes.Item
+              (List  => Subjects,
+               Index => I));
 
          if I < Subj_Count - 1 then
             Buffer := Buffer & "," & ASCII.LF;

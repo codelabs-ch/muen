@@ -378,11 +378,199 @@ package body Muxml.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_3_Get_Element (Gnattest_T : in out Test);
+   procedure Test_Get_Element_93bcee (Gnattest_T : in out Test) renames Test_3_Get_Element;
+--  id:2.2/93bceee1efa8b897/Get_Element/0/0/
+   procedure Test_3_Get_Element (Gnattest_T : in out Test) is
+   --  muxml-utils.ads:88:4:Get_Element
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Ada.Strings.Unbounded;
+      use type DOM.Core.Node;
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : XML_Data_Type;
+      Node : DOM.Core.Node;
+      List : DOM.Core.Node_List;
+   begin
+      Assert (Condition => Get_Element
+              (Nodes => List,
+               Refs  => ((Name  => To_Unbounded_String ("name"),
+                          Value => To_Unbounded_String ("foo")),
+                         (Name  => To_Unbounded_String ("type"),
+                          Value => To_Unbounded_String ("bar")))) = null,
+              Message   => "Element in empty list");
+
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "bar");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "name",
+         Value => "bar");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "type",
+         Value => "bar");
+      DOM.Core.Append_Node
+        (List => List,
+         N    => Node);
+      Assert (Condition => Get_Element
+              (Nodes => List,
+               Refs  => ((Name  => To_Unbounded_String ("name"),
+                          Value => To_Unbounded_String ("foo")),
+                         (Name  => To_Unbounded_String ("type"),
+                          Value => To_Unbounded_String ("bar")))) = null,
+              Message   => "Element in 'bar' list");
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "foo");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "name",
+         Value => "foo");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "type",
+         Value => "foo");
+      DOM.Core.Append_Node
+        (List => List,
+         N    => Node);
+      Assert (Condition => Get_Element
+              (Nodes => List,
+               Refs  => ((Name  => To_Unbounded_String ("name"),
+                          Value => To_Unbounded_String ("foo")),
+                         (Name  => To_Unbounded_String ("type"),
+                          Value => To_Unbounded_String ("bar")))) = null,
+              Message   => "Element 'foo' with type 'foo' found");
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "foobar");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "name",
+         Value => "foo");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "type",
+         Value => "bar");
+      DOM.Core.Append_Node
+        (List => List,
+         N    => Node);
+      Assert (Condition => Get_Element
+              (Nodes => List,
+               Refs  => ((Name  => To_Unbounded_String ("name"),
+                          Value => To_Unbounded_String ("foo")),
+                         (Name  => To_Unbounded_String ("type"),
+                          Value => To_Unbounded_String ("bar")))) = Node,
+              Message   => "Element not found");
+--  begin read only
+   end Test_3_Get_Element;
+--  end read only
+
+
+--  begin read only
+   procedure Test_3_Get_Attribute (Gnattest_T : in out Test);
+   procedure Test_Get_Attribute_55e944 (Gnattest_T : in out Test) renames Test_3_Get_Attribute;
+--  id:2.2/55e944c46d226e1f/Get_Attribute/0/0/
+   procedure Test_3_Get_Attribute (Gnattest_T : in out Test) is
+   --  muxml-utils.ads:98:4:Get_Attribute
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Ada.Strings.Unbounded;
+      use type DOM.Core.Node;
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : XML_Data_Type;
+      Node : DOM.Core.Node;
+      List : DOM.Core.Node_List;
+   begin
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "bar");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "name",
+         Value => "bar");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "type",
+         Value => "bar");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "value",
+         Value => "bar");
+      DOM.Core.Append_Node
+        (List => List,
+         N    => Node);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "foo");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "name",
+         Value => "foo");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "type",
+         Value => "foo");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "value",
+         Value => "foo");
+      DOM.Core.Append_Node
+        (List => List,
+         N    => Node);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "foobar");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "name",
+         Value => "foo");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "type",
+         Value => "bar");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "value",
+         Value => "foobar");
+      DOM.Core.Append_Node
+        (List => List,
+         N    => Node);
+
+      Assert (Condition => Get_Attribute
+              (Nodes     => List,
+               Refs      => ((Name  => To_Unbounded_String ("name"),
+                              Value => To_Unbounded_String ("foo")),
+                             (Name  => To_Unbounded_String ("type"),
+                              Value => To_Unbounded_String ("bar"))),
+               Attr_Name => "value") = "foobar",
+              Message   => "Attribute mismatch not found");
+--  begin read only
+   end Test_3_Get_Attribute;
+--  end read only
+
+
+--  begin read only
    procedure Test_Append (Gnattest_T : in out Test);
    procedure Test_Append_6bcf00 (Gnattest_T : in out Test) renames Test_Append;
 --  id:2.2/6bcf005e971aed10/Append/1/0/
    procedure Test_Append (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:78:4:Append
+   --  muxml-utils.ads:105:4:Append
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -430,7 +618,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Append_Child_0b6f31 (Gnattest_T : in out Test) renames Test_Append_Child;
 --  id:2.2/0b6f317beeb588d9/Append_Child/1/0/
    procedure Test_Append_Child (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:83:4:Append_Child
+   --  muxml-utils.ads:110:4:Append_Child
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -464,7 +652,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Merge_64a439 (Gnattest_T : in out Test) renames Test_Merge;
 --  id:2.2/64a439c9547e9313/Merge/1/0/
    procedure Test_Merge (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:97:4:Merge
+   --  muxml-utils.ads:124:4:Merge
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -640,7 +828,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Ancestor_Node_314569 (Gnattest_T : in out Test) renames Test_Ancestor_Node;
 --  id:2.2/3145695d1e1d2313/Ancestor_Node/1/0/
    procedure Test_Ancestor_Node (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:103:4:Ancestor_Node
+   --  muxml-utils.ads:130:4:Ancestor_Node
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -691,7 +879,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Remove_Child_540ca0 (Gnattest_T : in out Test) renames Test_Remove_Child;
 --  id:2.2/540ca0eb2b0d8bd4/Remove_Child/1/0/
    procedure Test_Remove_Child (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:111:4:Remove_Child
+   --  muxml-utils.ads:138:4:Remove_Child
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

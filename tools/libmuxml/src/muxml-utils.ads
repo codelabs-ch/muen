@@ -65,12 +65,39 @@ is
 
    --  Returns the attribute 'Attr_Name' of the element from the given node
    --  list with an attribute 'Ref_Attr' that matches 'Ref_Value'. If no such
-   --  element with the specified attribute exists and empty string is
+   --  element with the specified attribute exists an empty string is
    --  returned. The first match is returned if multiple elements are found.
    function Get_Attribute
      (Nodes     : DOM.Core.Node_List;
       Ref_Attr  : String;
       Ref_Value : String;
+      Attr_Name : String)
+      return String;
+
+   type Ref_Attr_Type is record
+      Name  : Ada.Strings.Unbounded.Unbounded_String;
+      Value : Ada.Strings.Unbounded.Unbounded_String;
+   end record;
+
+   type Ref_Attrs_Type is array (Positive range <>) of Ref_Attr_Type;
+
+   --  Returns the element from the given node list with a list of reference
+   --  attributes (name, value pairs) that must all match. If no such element
+   --  with the specified attribute exists null is returned. The first match is
+   --  returned if multiple elements are found.
+   function Get_Element
+     (Nodes : DOM.Core.Node_List;
+      Refs  : Ref_Attrs_Type)
+      return DOM.Core.Node;
+
+   --  Returns the attribute 'Attr_Name' of the element from the given node
+   --  list with a list of reference attributes (name, value pairs) that must
+   --  all match. If no such element with the specified attributes exists an
+   --  empty string is returned. The first match is returned if multiple
+   --  elements are found.
+   function Get_Attribute
+     (Nodes     : DOM.Core.Node_List;
+      Refs      : Ref_Attrs_Type;
       Attr_Name : String)
       return String;
 

@@ -63,18 +63,22 @@ is
 
    procedure Memory_Types (XML_Data : Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List
-        := XPath_Query (N     => XML_Data.Doc,
-                        XPath => "/system/subjects/subject[@name!='tau0']"
-                        & "/memory/memory");
+      Phys_Memory    : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory");
+      Subject_Memory : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject[@name!='tau0']/memory/memory");
    begin
       Mulog.Log (Msg => "Checking memory types of" & DOM.Core.Nodes.Length
-                 (List => Nodes)'Img & " subject memory mapping(s)");
+                 (List => Subject_Memory)'Img & " subject memory mapping(s)");
 
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subject_Memory) - 1 loop
          declare
             Virt_Mem     : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => Nodes,
+              := DOM.Core.Nodes.Item (List  => Subject_Memory,
                                       Index => I);
             Subject_Name : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Muxml.Utils.Ancestor_Node (Node  => Virt_Mem,
@@ -88,8 +92,9 @@ is
                Name => "physical");
             Phys_Mem     : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => XML_Data.Doc,
-                 XPath => "/system/memory/memory[@name='" & Phys_Name & "']");
+                (Nodes     => Phys_Memory,
+                 Ref_Attr  => "name",
+                 Ref_Value => Phys_Name);
             Mem_Type_Str : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Phys_Mem,
                Name => "type");

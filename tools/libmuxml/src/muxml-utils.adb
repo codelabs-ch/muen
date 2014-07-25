@@ -108,12 +108,28 @@ is
       Attr_Name : String)
       return String
    is
+      use Ada.Strings.Unbounded;
+   begin
+      return Get_Attribute
+        (Nodes     => Nodes,
+         Refs      => (1 => (Name  => To_Unbounded_String (Ref_Attr),
+                             Value => To_Unbounded_String (Ref_Value))),
+         Attr_Name => Attr_Name);
+   end Get_Attribute;
+
+   -------------------------------------------------------------------------
+
+   function Get_Attribute
+     (Nodes     : DOM.Core.Node_List;
+      Refs      : Ref_Attrs_Type;
+      Attr_Name : String)
+      return String
+   is
       use type DOM.Core.Node;
 
       Node : constant DOM.Core.Node
-        := Get_Element (Nodes     => Nodes,
-                        Ref_Attr  => Ref_Attr,
-                        Ref_Value => Ref_Value);
+        := Get_Element (Nodes => Nodes,
+                        Refs  => Refs);
    begin
       if Node /= null then
          return DOM.Core.Elements.Get_Attribute
@@ -147,6 +163,23 @@ is
       Ref_Value : String)
       return DOM.Core.Node
    is
+      use Ada.Strings.Unbounded;
+   begin
+      return Get_Element
+        (Nodes => Nodes,
+         Refs  => (1 => (Name  => To_Unbounded_String (Ref_Attr),
+                         Value => To_Unbounded_String (Ref_Value))));
+   end Get_Element;
+
+   -------------------------------------------------------------------------
+
+   function Get_Element
+     (Nodes : DOM.Core.Node_List;
+      Refs  : Ref_Attrs_Type)
+      return DOM.Core.Node
+   is
+      use Ada.Strings.Unbounded;
+
       Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
    begin
       for I in 0 .. Count - 1 loop
@@ -154,12 +187,17 @@ is
             Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Nodes,
                                       Index => I);
-            Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Node,
-                 Name => Ref_Attr);
+            Match : Boolean;
          begin
-            if Name = Ref_Value then
+            for Ref of Refs loop
+               Match := To_String (Ref.Value) = DOM.Core.Elements.Get_Attribute
+                 (Elem => Node,
+                  Name => To_String (Ref.Name));
+
+               exit when not Match;
+            end loop;
+
+            if Match then
                return Node;
             end if;
          end;

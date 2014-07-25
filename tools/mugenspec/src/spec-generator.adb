@@ -910,6 +910,10 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
+      Subjects     : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/subjects/subject");
       Scheduling   : constant DOM.Core.Node := Muxml.Utils.Get_Element
           (Doc   => Policy.Doc,
            XPath => "/system/scheduling");
@@ -1026,9 +1030,10 @@ is
            (Elem => Minor,
             Name => "subject");
          Subject_Id : constant String := Muxml.Utils.Get_Attribute
-           (Doc   => Policy.Doc,
-            XPath => "/system/subjects/subject[@name='" & Subject & "']",
-            Name  => "id");
+           (Nodes     => Subjects,
+            Ref_Attr  => "name",
+            Ref_Value => Subject,
+            Attr_Name => "id");
       begin
          Buffer := Buffer & Indent (N => 4) & Index'Img
            & " => Minor_Frame_Type'(Subject_Id => " & Subject_Id

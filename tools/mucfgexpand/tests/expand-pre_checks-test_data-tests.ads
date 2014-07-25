@@ -54,5 +54,8 @@ package Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Component_Channel_Name_Uniqueness_00e23b (Gnattest_T : in out Test);
    --  expand-pre_checks.ads:72:4:Component_Channel_Name_Uniqueness
 
+   procedure Test_Component_Channel_Size_0e858d (Gnattest_T : in out Test);
+   --  expand-pre_checks.ads:77:4:Component_Channel_Size
+
 end Expand.Pre_Checks.Test_Data.Tests;
 --  end read only

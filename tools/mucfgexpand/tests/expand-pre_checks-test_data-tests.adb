@@ -674,4 +674,44 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    end Test_Component_Channel_Name_Uniqueness;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Component_Channel_Size (Gnattest_T : in out Test);
+   procedure Test_Component_Channel_Size_0e858d (Gnattest_T : in out Test) renames Test_Component_Channel_Size;
+--  id:2.2/0e858d3a74aed20c/Component_Channel_Size/1/0/
+   procedure Test_Component_Channel_Size (Gnattest_T : in out Test) is
+   --  expand-pre_checks.ads:77:4:Component_Channel_Size
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/channels/channel[@name='data_channel']",
+         Name  => "size",
+         Value => "16#4000#");
+
+      begin
+         Component_Channel_Size (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Component 'linux' referenced by subject 'lnx' requests "
+                    & "size 16#1000# for logical channel 'primary_data' but "
+                    & "linked physical channel 'data_channel' has size "
+                    & "16#4000#",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Component_Channel_Size;
+--  end read only
+
 end Expand.Pre_Checks.Test_Data.Tests;

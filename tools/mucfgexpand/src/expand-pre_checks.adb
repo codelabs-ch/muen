@@ -18,6 +18,8 @@
 
 with Ada.Strings.Unbounded;
 
+with Interfaces;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
@@ -251,6 +253,109 @@ is
          end;
       end loop;
    end Component_Channel_Name_Uniqueness;
+
+   -------------------------------------------------------------------------
+
+   procedure Component_Channel_Size (XML_Data : Muxml.XML_Data_Type)
+   is
+      Components    : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/components/component");
+      Phys_Channels : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/channels/channel");
+      Subjects      : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1
+      loop
+         declare
+            Subj_Node     : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name     : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Subj_Channels : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subj_Node,
+                 XPath => "channels/*");
+            Comp_Name     : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "component");
+            Comp_Node     : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Components,
+                 Ref_Attr  => "name",
+                 Ref_Value => Comp_Name);
+            Comp_Channels : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "channels/*");
+         begin
+            Mulog.Log (Msg => "Checking size of" & DOM.Core.Nodes.Length
+                       (List => Comp_Channels)'Img & " component '" & Comp_Name
+                       & "' channel(s) referenced by subject '" & Subj_Name
+                       & "'");
+
+            for J in 0 .. DOM.Core.Nodes.Length (List => Comp_Channels) - 1
+            loop
+               declare
+                  use type Interfaces.Unsigned_64;
+
+                  Comp_Channel_Node : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Comp_Channels,
+                       Index => J);
+                  Comp_Channel_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Comp_Channel_Node,
+                       Name => "logical");
+                  Comp_Channel_Size : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Comp_Channel_Node,
+                       Name => "size");
+                  Subj_Channel_Link : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Nodes     => Subj_Channels,
+                       Ref_Attr  => "logical",
+                       Ref_Value => Comp_Channel_Name);
+                  Phys_Channel_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Subj_Channel_Link,
+                       Name => "physical");
+                  Phys_Channel_Node : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Nodes     => Phys_Channels,
+                       Ref_Attr  => "name",
+                       Ref_Value => Phys_Channel_Name);
+                  Phys_Channel_Size : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Phys_Channel_Node,
+                       Name => "size");
+               begin
+                  if Interfaces.Unsigned_64'Value (Phys_Channel_Size)
+                    /= Interfaces.Unsigned_64'Value (Comp_Channel_Size)
+                  then
+                     raise Mucfgcheck.Validation_Error with "Component '"
+                       & Comp_Name & "' referenced by subject '" & Subj_Name
+                       & "' requests size " & Comp_Channel_Size & " for "
+                       & "logical channel '" & Comp_Channel_Name & "' but "
+                       & "linked physical channel '" & Phys_Channel_Name & "' "
+                       & "has size " & Phys_Channel_Size;
+                  end if;
+               end;
+            end loop;
+         end;
+      end loop;
+   end Component_Channel_Size;
 
    -------------------------------------------------------------------------
 

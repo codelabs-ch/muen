@@ -37,7 +37,7 @@ project Component is
 
    package Linker is
       for Default_Switches ("Ada") use
-        ("-T", "../subject.ld",
+        ("-T", "../component.ld",
          "-nostdlib",
          "-n");
    end Linker;

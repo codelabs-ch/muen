@@ -1288,10 +1288,12 @@ is
                XPath => "vcpu/registers/gpr/rsp"));
          VMCS_Addr  : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
-              (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@type='system_vmcs' and "
-               & "contains(string(@name),'" & Name & "')]",
-               Name  => "physicalAddress"));
+              (Nodes     => Phys_Memory,
+               Refs      => ((Name  => To_Unbounded_String ("type"),
+                              Value => To_Unbounded_String ("system_vmcs")),
+                             (Name  => To_Unbounded_String ("name"),
+                              Value => To_Unbounded_String (Name & "|vmcs"))),
+               Attr_Name => "physicalAddress"));
          IOBM_Addr  : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,

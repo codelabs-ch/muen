@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
 with Ada.Streams.Stream_IO;
 
 with DOM.Core.Nodes;
@@ -34,6 +35,8 @@ with Iobm.IO_Ports;
 package body Iobm.Generator
 is
 
+   use Ada.Strings.Unbounded;
+
    --  Write I/O bitmap for given port nodes to specified file.
    procedure Write_IO_Bitmap
      (Policy   : Muxml.XML_Data_Type;
@@ -46,6 +49,10 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
+      Phys_Mem :  constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory");
       Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -65,11 +72,17 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Cur_Subj,
                  XPath => "devices/device/ioPort");
+            Iobm_Mem : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+             (Nodes => Phys_Mem,
+              Refs  => ((Name  => To_Unbounded_String ("type"),
+                         Value => To_Unbounded_String ("system_iobm")),
+                        (Name  => To_Unbounded_String ("name"),
+                         Value => To_Unbounded_String (Name & "|iobm"))));
             Filename : constant String
               := Output_Dir & "/" & Muxml.Utils.Get_Attribute
-                (Doc   => Policy.Doc,
-                 XPath => "/system/memory/memory[@type='system_iobm' and "
-                 & "contains(string(@name),'" & Name & "')]/file",
+                (Doc   => Iobm_Mem,
+                 XPath => "file",
                  Name  => "filename");
          begin
             Mulog.Log (Msg => "Writing I/O bitmap of " & Name & " to '"

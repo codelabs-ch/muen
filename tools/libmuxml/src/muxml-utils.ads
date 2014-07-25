@@ -65,7 +65,7 @@ is
 
    --  Returns the attribute 'Attr_Name' of the element from the given node
    --  list with an attribute 'Ref_Attr' that matches 'Ref_Value'. If no such
-   --  element with the specified attribute exists and empty string is
+   --  element with the specified attribute exists an empty string is
    --  returned. The first match is returned if multiple elements are found.
    function Get_Attribute
      (Nodes     : DOM.Core.Node_List;

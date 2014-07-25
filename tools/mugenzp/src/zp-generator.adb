@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
 with Ada.Streams.Stream_IO;
 
 with System;
@@ -38,6 +39,11 @@ with Zp.Utils;
 
 package body Zp.Generator
 is
+
+   function U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
 
    procedure C_Memset
      (S : System.Address;
@@ -65,7 +71,15 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Zps : constant DOM.Core.Node_List
+      Subjects : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/subjects/subject");
+      Phys_Mem : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory");
+      Zps      : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/memory/memory[@type='subject_zeropage']/file");
@@ -90,9 +104,9 @@ is
               := Mutools.Utils.Decode_Entity_Name (Encoded_Str => Memname);
             Subj_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => Policy.Doc,
-                 XPath => "/system/subjects/subject[@name='" & Subj_Name
-                 & "']");
+                (Nodes     => Subjects,
+                 Ref_Attr  => "name",
+                 Ref_Value => Subj_Name);
             Subj_Memory : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subj_Node,
@@ -123,10 +137,12 @@ is
                  (Initramfs_Addr_Str);
                Initramfs_Size := Interfaces.Unsigned_64'Value
                  (Muxml.Utils.Get_Attribute
-                    (Doc   => Policy.Doc,
-                     XPath => "/system/memory/memory[@name='" & Initramfs_Name
-                     & "' and @type='subject_initrd']",
-                     Name  => "size"));
+                    (Nodes     => Phys_Mem,
+                     Refs      => ((Name  => U ("type"),
+                                    Value => U ("subject_initrd")),
+                                   (Name  => U ("name"),
+                                    Value => U (Initramfs_Name))),
+                     Attr_Name => "size"));
                Mulog.Log (Msg => "Declaring ramdisk of size "
                           & Mutools.Utils.To_Hex (Number => Initramfs_Size)
                           & " at address " & Initramfs_Addr_Str

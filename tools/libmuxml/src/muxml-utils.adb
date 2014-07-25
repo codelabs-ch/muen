@@ -147,25 +147,12 @@ is
       Ref_Value : String)
       return DOM.Core.Node
    is
-      Count : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
+      use Ada.Strings.Unbounded;
    begin
-      for I in 0 .. Count - 1 loop
-         declare
-            Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item (List  => Nodes,
-                                      Index => I);
-            Name : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => Node,
-                 Name => Ref_Attr);
-         begin
-            if Name = Ref_Value then
-               return Node;
-            end if;
-         end;
-      end loop;
-
-      return null;
+      return Get_Element
+        (Nodes => Nodes,
+         Refs  => (1 => (Name  => To_Unbounded_String (Ref_Attr),
+                         Value => To_Unbounded_String (Ref_Value))));
    end Get_Element;
 
    -------------------------------------------------------------------------

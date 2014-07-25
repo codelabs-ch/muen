@@ -90,6 +90,17 @@ is
       Refs  : Ref_Attrs_Type)
       return DOM.Core.Node;
 
+   --  Returns the attribute 'Attr_Name' of the element from the given node
+   --  list with a list of reference attributes (name, value pairs) that must
+   --  all match. If no such element with the specified attributes exists an
+   --  empty string is returned. The first match is returned if multiple
+   --  elements are found.
+   function Get_Attribute
+     (Nodes     : DOM.Core.Node_List;
+      Refs      : Ref_Attrs_Type;
+      Attr_Name : String)
+      return String;
+
    --  Append all nodes of 'Right' to specified node list 'Left'.
    procedure Append
      (Left  : in out DOM.Core.Node_List;

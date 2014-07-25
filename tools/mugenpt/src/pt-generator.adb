@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
 with Ada.Streams.Stream_IO;
 
 with DOM.Core.Nodes;
@@ -35,6 +36,8 @@ with Paging.Layouts;
 
 package body Pt.Generator
 is
+
+   use Ada.Strings.Unbounded;
 
    --  Write pagetable files for each kernel/CPU as specified by the policy.
    procedure Write_Kernel_Pagetable
@@ -84,20 +87,27 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      CPUs : DOM.Core.Node_List;
-   begin
-      CPUs := McKae.XML.XPath.XIA.XPath_Query
+      Phys_Mem : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory");
+      CPUs     : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
         (N     => Policy.Doc,
          XPath => "/system/kernel/memory/cpu");
-
+   begin
       for I in 0 .. DOM.Core.Nodes.Length (List => CPUs) - 1 loop
          declare
             ID_Str : constant String := I'Img (I'Img'First + 1 .. I'Img'Last);
 
-            PT_Node   : constant DOM.Core.Node := Muxml.Utils.Get_Element
-              (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@type='system_pt' and "
-               & "@name='kernel_" & ID_Str & "|pt']");
+            PT_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes => Phys_Mem,
+                 Refs  => ((Name  => To_Unbounded_String ("type"),
+                            Value => To_Unbounded_String ("system_pt")),
+                           (Name  => To_Unbounded_String ("name"),
+                            Value => To_Unbounded_String ("kernel_"
+                              & ID_Str & "|pt"))));
             Filename  : constant String := Muxml.Utils.Get_Attribute
               (Doc   => PT_Node,
                XPath => "file",
@@ -281,12 +291,15 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Subjects : DOM.Core.Node_List;
-   begin
-      Subjects := McKae.XML.XPath.XIA.XPath_Query
+      Phys_Mem : constant DOM.Core.Node_List
+         := McKae.XML.XPath.XIA.XPath_Query
+        (N     => Policy.Doc,
+         XPath => "/system/memory/memory");
+      Subjects : constant DOM.Core.Node_List
+         := McKae.XML.XPath.XIA.XPath_Query
         (N     => Policy.Doc,
          XPath => "/system/subjects/subject");
-
+   begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
             Subj_Node : constant DOM.Core.Node
@@ -296,10 +309,13 @@ is
             Name : constant String := DOM.Core.Elements.Get_Attribute
               (Elem => Subj_Node,
                Name => "name");
-            PT_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-              (Doc   => Policy.Doc,
-               XPath => "/system/memory/memory[@type='system_pt' and "
-               & "contains(string(@name),'" & Name & "')]");
+            PT_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes => Phys_Mem,
+                 Refs  => ((Name  => To_Unbounded_String ("type"),
+                            Value => To_Unbounded_String ("system_pt")),
+                           (Name  => To_Unbounded_String ("name"),
+                            Value => To_Unbounded_String (Name & "|pt"))));
             Filename : constant String := Muxml.Utils.Get_Attribute
               (Doc   => PT_Node,
                XPath => "file",

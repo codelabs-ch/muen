@@ -45,6 +45,10 @@ is
    --  Check subject channel references.
    procedure Subject_Channel_References (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that a subject exports the logical channels requested by the
+   --  referenced component.
+   procedure Subject_Channel_Exports (XML_Data : Muxml.XML_Data_Type);
+
    --  Check that each channel has exactly one reader and one writer.
    procedure Channel_Reader_Writer (XML_Data : Muxml.XML_Data_Type);
 
@@ -67,6 +71,14 @@ is
 
    --  Check subject component references.
    procedure Subject_Component_References (XML_Data : Muxml.XML_Data_Type);
+
+   --  Check that component logical channel names are unique.
+   procedure Component_Channel_Name_Uniqueness
+     (XML_Data : Muxml.XML_Data_Type);
+
+   --  Check that requested logical channel sizes match the linked physical
+   --  channel sizes.
+   procedure Component_Channel_Size (XML_Data : Muxml.XML_Data_Type);
 
 private
 

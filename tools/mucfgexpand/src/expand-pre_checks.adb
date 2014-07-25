@@ -16,6 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
+
+with Interfaces;
+
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
@@ -191,6 +195,170 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Component_Channel_Name_Uniqueness
+     (XML_Data : Muxml.XML_Data_Type)
+   is
+      use Ada.Strings.Unbounded;
+
+      Components : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/components/component");
+
+      Component_Name : Unbounded_String;
+
+      --  Check inequality of logical channel names.
+      procedure Check_Inequality (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Inequality (Left, Right : DOM.Core.Node)
+      is
+         Left_Name  : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Left,
+            Name => "logical");
+         Right_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Right,
+            Name => "logical");
+      begin
+         if Left_Name = Right_Name then
+            raise Mucfgcheck.Validation_Error with "Multiple channels with "
+              & "name '" & Left_Name & "' in component '"
+              & To_String (Component_Name) & "'";
+         end if;
+      end Check_Inequality;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Components) - 1 loop
+         declare
+            Comp_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Components,
+                                      Index => I);
+            Channels  : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "channels/*");
+         begin
+            Component_Name := To_Unbounded_String
+              (DOM.Core.Elements.Get_Attribute
+                 (Elem => Comp_Node,
+                  Name => "name"));
+            if DOM.Core.Nodes.Length (List => Channels) > 1 then
+               Mulog.Log (Msg => "Checking uniqueness of"
+                          & DOM.Core.Nodes.Length (List => Channels)'Img
+                          & " channel names in component '"
+                          & To_String (Component_Name) & "'");
+               Mucfgcheck.Compare_All (Nodes      => Channels,
+                                       Comparator => Check_Inequality'Access);
+            end if;
+         end;
+      end loop;
+   end Component_Channel_Name_Uniqueness;
+
+   -------------------------------------------------------------------------
+
+   procedure Component_Channel_Size (XML_Data : Muxml.XML_Data_Type)
+   is
+      Components    : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/components/component");
+      Phys_Channels : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/channels/channel");
+      Subjects      : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1
+      loop
+         declare
+            Subj_Node     : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name     : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Subj_Channels : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subj_Node,
+                 XPath => "channels/*");
+            Comp_Name     : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "component");
+            Comp_Node     : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Components,
+                 Ref_Attr  => "name",
+                 Ref_Value => Comp_Name);
+            Comp_Channels : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "channels/*");
+         begin
+            Mulog.Log (Msg => "Checking size of" & DOM.Core.Nodes.Length
+                       (List => Comp_Channels)'Img & " component '" & Comp_Name
+                       & "' channel(s) referenced by subject '" & Subj_Name
+                       & "'");
+
+            for J in 0 .. DOM.Core.Nodes.Length (List => Comp_Channels) - 1
+            loop
+               declare
+                  use type Interfaces.Unsigned_64;
+
+                  Comp_Channel_Node : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Comp_Channels,
+                       Index => J);
+                  Comp_Channel_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Comp_Channel_Node,
+                       Name => "logical");
+                  Comp_Channel_Size : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Comp_Channel_Node,
+                       Name => "size");
+                  Subj_Channel_Link : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Nodes     => Subj_Channels,
+                       Ref_Attr  => "logical",
+                       Ref_Value => Comp_Channel_Name);
+                  Phys_Channel_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Subj_Channel_Link,
+                       Name => "physical");
+                  Phys_Channel_Node : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Nodes     => Phys_Channels,
+                       Ref_Attr  => "name",
+                       Ref_Value => Phys_Channel_Name);
+                  Phys_Channel_Size : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Phys_Channel_Node,
+                       Name => "size");
+               begin
+                  if Interfaces.Unsigned_64'Value (Phys_Channel_Size)
+                    /= Interfaces.Unsigned_64'Value (Comp_Channel_Size)
+                  then
+                     raise Mucfgcheck.Validation_Error with "Component '"
+                       & Comp_Name & "' referenced by subject '" & Subj_Name
+                       & "' requests size " & Comp_Channel_Size & " for "
+                       & "logical channel '" & Comp_Channel_Name & "' but "
+                       & "linked physical channel '" & Phys_Channel_Name & "' "
+                       & "has size " & Phys_Channel_Size;
+                  end if;
+               end;
+            end loop;
+         end;
+      end loop;
+   end Component_Channel_Size;
+
+   -------------------------------------------------------------------------
+
    function Get_Count return Natural renames Check_Procs.Get_Count;
 
    -------------------------------------------------------------------------
@@ -307,6 +475,7 @@ is
       Check_Procs.Register (Process => Subject_Monitor_References'Access);
       Check_Procs.Register (Process => Subject_Channel_References'Access);
       Check_Procs.Register (Process => Subject_Component_References'Access);
+      Check_Procs.Register (Process => Subject_Channel_Exports'Access);
       Check_Procs.Register (Process => Channel_Reader_Writer'Access);
       Check_Procs.Register (Process => Channel_Writer_Has_Event_ID'Access);
       Check_Procs.Register (Process => Channel_Reader_Has_Event_Vector'Access);
@@ -317,11 +486,100 @@ is
       --  Register after platform CPU count presence check.
 
       Check_Procs.Register (Process => Mucfgcheck.Platform.CPU_Count'Access);
+
+      Check_Procs.Register
+        (Process => Component_Channel_Name_Uniqueness'Access);
+      Check_Procs.Register (Process => Component_Channel_Size'Access);
    end Register_All;
 
    -------------------------------------------------------------------------
 
    procedure Run (Data : Muxml.XML_Data_Type) renames Check_Procs.Run;
+
+   -------------------------------------------------------------------------
+
+   procedure Subject_Channel_Exports (XML_Data : Muxml.XML_Data_Type)
+   is
+      Components : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/components/component");
+      Subjects   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1
+      loop
+         declare
+            Subj_Node     : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name     : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Subj_Channels : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Subj_Node,
+                 XPath => "channels/*");
+            Comp_Name     : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "component");
+            Comp_Node     : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Components,
+                 Ref_Attr  => "name",
+                 Ref_Value => Comp_Name);
+            Comp_Channels : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "channels/*");
+         begin
+            Mulog.Log (Msg => "Checking match of" & DOM.Core.Nodes.Length
+                       (List => Subj_Channels)'Img & " logical channel "
+                       & "export(s) of subject '" & Subj_Name & "' with "
+                       & "component '" & Comp_Name & "'");
+
+            for J in 0 .. DOM.Core.Nodes.Length (List => Comp_Channels) - 1
+            loop
+               declare
+                  use type DOM.Core.Node;
+
+                  Comp_Channel_Node : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Comp_Channels,
+                       Index => J);
+                  Comp_Channel_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Comp_Channel_Node,
+                       Name => "logical");
+                  Comp_Channel_Tag  : constant String
+                    := DOM.Core.Elements.Get_Tag_Name
+                      (Elem => Comp_Channel_Node);
+                  Subj_Channel_Link : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Nodes     => Subj_Channels,
+                       Ref_Attr  => "logical",
+                       Ref_Value => Comp_Channel_Name);
+               begin
+                  if Subj_Channel_Link = null
+                    or else Comp_Channel_Tag /= DOM.Core.Elements.Get_Tag_Name
+                      (Elem => Subj_Channel_Link)
+                  then
+                     raise Mucfgcheck.Validation_Error with "Subject '"
+                       & Subj_Name & "' does not export logical "
+                       & Comp_Channel_Tag & " channel '" & Comp_Channel_Name
+                       & "' as requested by referenced component '" & Comp_Name
+                       & "'";
+                  end if;
+               end;
+            end loop;
+         end;
+      end loop;
+   end Subject_Channel_Exports;
 
    -------------------------------------------------------------------------
 

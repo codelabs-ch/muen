@@ -1118,6 +1118,10 @@ is
            XPath => "/system/subjects/subject");
       Subj_Count    : constant Natural
         := DOM.Core.Nodes.Length (List => Subjects);
+      Events        : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/events/event");
       Event_Targets : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -1127,9 +1131,7 @@ is
       Tmpl   : Mutools.Templates.Template_Type;
 
       --  Add event entry to template buffer.
-      procedure Add_Event
-        (Policy : Muxml.XML_Data_Type;
-         Event  : DOM.Core.Node);
+      procedure Add_Event (Event : DOM.Core.Node);
 
       --  Add trap entry to template buffer.
       procedure Add_Trap (Trap : DOM.Core.Node);
@@ -1141,9 +1143,7 @@ is
 
       -------------------------------------------------------------------
 
-      procedure Add_Event
-        (Policy : Muxml.XML_Data_Type;
-         Event  : DOM.Core.Node)
+      procedure Add_Event (Event : DOM.Core.Node)
       is
          Event_Id : constant String
            := DOM.Core.Elements.Get_Attribute
@@ -1171,9 +1171,10 @@ is
               Name => "vector");
          Notify_Mode : constant String
            := Muxml.Utils.Get_Attribute
-             (Doc   => Policy.Doc,
-              XPath => "/system/events/event[@name='" & Phys_Event_Ref & "']",
-              Name  => "mode");
+             (Nodes     => Events,
+              Ref_Attr  => "name",
+              Ref_Value => Phys_Event_Ref,
+              Attr_Name => "mode");
       begin
          Buffer := Buffer & Indent (N => 3)  & " "
            & Event_Id & " => Event_Entry_Type'("
@@ -1517,10 +1518,9 @@ is
          else
             Buffer := Buffer & "Event_Table_Type'(" & ASCII.LF;
             for I in 0 .. Event_Count - 1 loop
-               Add_Event (Policy => Policy,
-                          Event  => DOM.Core.Nodes.Item
-                            (List  => Events,
-                             Index => I));
+               Add_Event (Event => DOM.Core.Nodes.Item
+                          (List  => Events,
+                           Index => I));
 
                if I < Event_Count - 1 then
                   Buffer := Buffer & "," & ASCII.LF;

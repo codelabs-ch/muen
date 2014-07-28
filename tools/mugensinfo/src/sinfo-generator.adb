@@ -127,7 +127,11 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Sinfos : constant DOM.Core.Node_List
+      Phys_Mem : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory");
+      Sinfos   : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/memory/memory[@type='subject_info']/file");
@@ -176,9 +180,9 @@ is
                        Name => "physical");
                   Phys_Mem_Node : constant DOM.Core.Node
                     := Muxml.Utils.Get_Element
-                      (Doc   => Policy.Doc,
-                       XPath => "/system/memory/memory[@name='" & Phys_Name
-                       & "']");
+                      (Nodes     => Phys_Mem,
+                       Ref_Attr  => "name",
+                       Ref_Value => Phys_Name);
                   Mem_Type : constant Mutools.Types.Memory_Kind
                     := Mutools.Types.Memory_Kind'Value
                       (DOM.Core.Elements.Get_Attribute

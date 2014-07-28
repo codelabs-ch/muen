@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
 with Ada.Streams.Stream_IO;
 
 with DOM.Core.Nodes;
@@ -36,6 +37,11 @@ with Msrstore.Tables;
 package body Msrstore.Generator
 is
 
+   function U
+     (Source : String)
+      return Ada.Strings.Unbounded.Unbounded_String
+      renames Ada.Strings.Unbounded.To_Unbounded_String;
+
    --  Generate MSR store for given registers with specified control flags and
    --  write to specified file.
    procedure Write_MSR_Store
@@ -53,6 +59,10 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
+      Phys_Mem :  constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory");
       Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -96,11 +106,17 @@ is
                  PAT_Control            => PAT_Ctrl,
                  PERFGLOBALCTRL_Control => PERF_Ctrl,
                  EFER_Control           => EFER_Ctrl);
+            Msrstore   : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+             (Nodes => Phys_Mem,
+              Refs  => ((Name  => U ("type"),
+                         Value => U ("system_msrstore")),
+                        (Name  => U ("name"),
+                         Value => U (Subj_Name & "|msrstore"))));
             Filename   : constant String
               := Output_Dir & "/" & Muxml.Utils.Get_Attribute
-                (Doc   => Policy.Doc,
-                 XPath => "/system/memory/memory[@type='system_msrstore' and "
-                 & "contains(string(@name),'" & Subj_Name & "')]/file",
+                (Doc   => Msrstore,
+                 XPath => "file",
                  Name  => "filename");
          begin
             Mulog.Log (Msg => "Writing MSR store with" & MSR_Count'Img

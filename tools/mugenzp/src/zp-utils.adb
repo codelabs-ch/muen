@@ -21,6 +21,8 @@ with Interfaces.C.Extensions;
 with DOM.Core.Elements;
 with DOM.Core.Nodes;
 
+with McKae.XML.XPath.XIA;
+
 with Muxml.Utils;
 with Mutools.Types;
 
@@ -46,6 +48,13 @@ is
      (Memory : DOM.Core.Node_List)
       return bootparam_h.boot_params_e820_map_array
    is
+      Phys_Mem : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => DOM.Core.Nodes.Owner_Document
+             (N => DOM.Core.Nodes.Item
+                (List  => Memory,
+                 Index => 0)),
+           XPath => "/system/memory/memory");
       e820_Map : bootparam_h.boot_params_e820_map_array := Null_e820_Map;
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Memory) - 1 loop
@@ -62,8 +71,9 @@ is
               (Elem => Virt_Node,
                Name => "physical");
             Phys_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
-              (Doc   => DOM.Core.Nodes.Owner_Document (N => Virt_Node),
-               XPath => "/system/memory/memory[@name='" & Phys_Name & "']");
+              (Nodes     => Phys_Mem,
+               Ref_Attr  => "name",
+               Ref_Value => Phys_Name);
             Mem_Size : constant Interfaces.C.Extensions.unsigned_long_long
               := Interfaces.C.Extensions.unsigned_long_long'Value
                 (DOM.Core.Elements.Get_Attribute

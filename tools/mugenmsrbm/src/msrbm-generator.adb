@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Unbounded;
 with Ada.Streams.Stream_IO;
 
 with DOM.Core.Nodes;
@@ -35,6 +36,8 @@ with Msrbm.MSRs;
 package body Msrbm.Generator
 is
 
+   use Ada.Strings.Unbounded;
+
    --  Write MSR bitmap for given registers and write to specified file.
    procedure Write_MSR_Bitmap
      (Registers : DOM.Core.Node_List;
@@ -46,12 +49,15 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Subjects : DOM.Core.Node_List;
+      Phys_Mem :  constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/memory/memory");
+      Subjects : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/subjects/subject");
    begin
-      Subjects := McKae.XML.XPath.XIA.XPath_Query
-        (N     => Policy.Doc,
-         XPath => "/system/subjects/subject");
-
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
             Cur_Subj  : constant DOM.Core.Node
@@ -66,11 +72,17 @@ is
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Cur_Subj,
                  XPath => "vcpu/registers/msrs/msr");
+            Msrbm_Mem : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes => Phys_Mem,
+                 Refs  => ((Name  => To_Unbounded_String ("type"),
+                            Value => To_Unbounded_String ("system_msrbm")),
+                           (Name  => To_Unbounded_String ("name"),
+                            Value => To_Unbounded_String (Name & "|msrbm"))));
             Filename  : constant String
               := Output_Dir & "/" & Muxml.Utils.Get_Attribute
-                (Doc   => Policy.Doc,
-                 XPath => "/system/memory/memory[@type='system_msrbm' and "
-                 & "contains(string(@name),'" & Name & "')]/file",
+                (Doc   => Msrbm_Mem,
+                 XPath => "file",
                  Name  => "filename");
          begin
             Mulog.Log (Msg => "Writing MSR bitmap of " & Name & " to '"

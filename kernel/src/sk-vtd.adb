@@ -760,6 +760,29 @@ is
 
    -------------------------------------------------------------------------
 
+   pragma $Prove_Warnings (Off, "unused variable ""IOMMU""");
+   procedure VTd_Error
+     (IOMMU   : Skp.IOMMU.IOMMU_Device_Range;
+      Message : String)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ null,
+                  null         => (IOMMU, Message)),
+      No_Return
+   is
+   begin
+      pragma Debug (KC.Put_String (Item => "IOMMU "));
+      pragma Debug (KC.Put_Byte   (Item => SK.Byte (IOMMU)));
+      pragma Debug (KC.Put_String (Item => ": "));
+      pragma Debug (KC.Put_Line   (Item => Message));
+
+      pragma Assume (False);  --  Workaround for No_Return: Pre=>False
+      CPU.Panic;
+   end VTd_Error;
+   pragma $Prove_Warnings (On, "unused variable ""IOMMU""");
+
+   -------------------------------------------------------------------------
+
    procedure Initialize
    with
       SPARK_Mode      => $Complete_Proofs,  -- [N722-005]
@@ -780,13 +803,10 @@ is
                              Result => Needed_Caps_Present);
 
          if not Needed_Caps_Present then
-            pragma Debug (KC.Put_String (Item => "IOMMU "));
-            pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
-            pragma Debug (KC.Put_Line   (Item => ": capability check failed"));
-
-            pragma Assume (False); --  Workaround for No_Return: Pre => False
+            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
             if True then  --  Workaround for No_Return placement limitation
-               CPU.Panic;
+               VTd_Error (IOMMU   => I,
+                          Message => "capability check failed");
             end if;
          end if;
 
@@ -805,14 +825,10 @@ is
             Address => Skp.IOMMU.Root_Table_Address,
             Success => Status);
          if not Status then
-            pragma Debug (KC.Put_String (Item => "IOMMU "));
-            pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
-            pragma Debug (KC.Put_Line
-                          (Item => ": unable to set root table address"));
-
-            pragma Assume (False); --  Workaround for No_Return: Pre=>False
+            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
             if True then  --  Workaround for No_Return placement limitation
-               CPU.Panic;
+               VTd_Error (IOMMU   => I,
+                          Message => "unable to set root table address");
             end if;
          end if;
 
@@ -820,41 +836,30 @@ is
            (IOMMU   => I,
             Success => Status);
          if not Status then
-            pragma Debug (KC.Put_String (Item => "IOMMU "));
-            pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
-            pragma Debug (KC.Put_Line
-                          (Item => ": unable to invalidate context cache"));
-
-            pragma Assume (False); --  Workaround for No_Return: Pre=>False
+            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
             if True then  --  Workaround for No_Return placement limitation
-               CPU.Panic;
+               VTd_Error (IOMMU   => I,
+                          Message => "unable to invalidate context cache");
             end if;
          end if;
 
          Flush_IOTLB (IOMMU   => I,
                       Success => Status);
          if not Status then
-            pragma Debug (KC.Put_String (Item => "IOMMU "));
-            pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
-            pragma Debug (KC.Put_Line   (Item => ": unable to flush IOTLB"));
-
-            pragma Assume (False); --  Workaround for No_Return: Pre=>False
+            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
             if True then  --  Workaround for No_Return placement limitation
-               CPU.Panic;
+               VTd_Error (IOMMU   => I,
+                          Message => "unable to flush IOTLB");
             end if;
          end if;
 
          Enable_Translation (IOMMU   => I,
                              Success => Status);
          if not Status then
-            pragma Debug (KC.Put_String (Item => "IOMMU "));
-            pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
-            pragma Debug (KC.Put_Line
-                          (Item => ": error enabling translation"));
-
-            pragma Assume (False); --  Workaround for No_Return: Pre=>False
+            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
             if True then  --  Workaround for No_Return placement limitation
-               CPU.Panic;
+               VTd_Error (IOMMU   => I,
+                          Message => "error enabling translation");
             end if;
          end if;
 

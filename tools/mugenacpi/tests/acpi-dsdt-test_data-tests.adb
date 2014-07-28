@@ -126,10 +126,50 @@ package body Acpi.DSDT.Test_Data.Tests is
          Ada.Directories.Delete_File (Name => "obj/linux_dsdt.dsl");
          Ada.Directories.Delete_File (Name => "obj/linux_dsdt.aml");
       end Empty_PRT;
+
+      ----------------------------------------------------------------------
+
+      procedure Single_Serial_Port
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         declare
+            Subj : constant DOM.Core.Node := Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "/system/subjects/subject[@name='linux']");
+            Dev  : constant DOM.Core.Node := Muxml.Utils.Get_Element
+              (Doc   => Subj,
+               XPath => "devices/device[@physical='serial_1']");
+         begin
+
+            --  Remove second I/O port resource.
+
+            Muxml.Utils.Remove_Child (Node       => Dev,
+                                      Child_Name => "ioPort");
+
+            Write (Policy   => Policy,
+                   Subject  => Subj,
+                   Filename => "obj/linux_dsdt.dsl");
+
+
+            Assert (Condition => Test_Utils.Equal_Files
+                    (Filename1 => "data/linux_dsdt_one_port.dsl.ref",
+                     Filename2 => "obj/linux_dsdt.dsl"),
+                    Message   => "DSDT table source mismatch");
+         end;
+
+         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.dsl");
+         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.aml");
+      end Single_Serial_Port;
    begin
       DSDT_Generation;
       Single_PRT_Entry;
       Empty_PRT;
+      Single_Serial_Port;
 --  begin read only
    end Test_Write;
 --  end read only

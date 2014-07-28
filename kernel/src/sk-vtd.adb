@@ -735,6 +735,31 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Enable address translation for IOMMU with given index.
+   procedure Enable_Translation
+     (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
+      Success : out Boolean)
+   with
+      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
+      Global     => (In_Out => IOMMUs),
+      Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+   is
+      Global_Command : Reg_Global_Command_Type;
+      Global_Status  : Reg_Global_Status_Type;
+   begin
+      Global_Command    := IOMMUs (IOMMU).Global_Command;
+      Global_Command.TE := 1;
+      IOMMUs (IOMMU).Global_Command := Global_Command;
+
+      for J in 1 .. Loop_Count_Max loop
+         Global_Status := IOMMUs (IOMMU).Global_Status;
+         exit when Global_Status.TES = 1;
+      end loop;
+      Success := Global_Status.TES = 1;
+   end Enable_Translation;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize
    with
       SPARK_Mode      => $Complete_Proofs,  -- [N722-005]
@@ -819,31 +844,19 @@ is
             end if;
          end if;
 
-         Enable_Translation :
-         declare
-            Global_Command : Reg_Global_Command_Type;
-            Global_Status  : Reg_Global_Status_Type;
-         begin
-            Global_Command    := IOMMUs (I).Global_Command;
-            Global_Command.TE := 1;
-            IOMMUs (I).Global_Command := Global_Command;
+         Enable_Translation (IOMMU   => I,
+                             Success => Status);
+         if not Status then
+            pragma Debug (KC.Put_String (Item => "IOMMU "));
+            pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
+            pragma Debug (KC.Put_Line
+                          (Item => ": error enabling translation"));
 
-            for J in 1 .. Loop_Count_Max loop
-               Global_Status := IOMMUs (I).Global_Status;
-               exit when Global_Status.TES = 1;
-            end loop;
-            if Global_Status.TES = 0 then
-               pragma Debug (KC.Put_String (Item => "IOMMU "));
-               pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
-               pragma Debug (KC.Put_Line
-                             (Item => ": error enabling translation"));
-
-               pragma Assume (False); --  Workaround for No_Return: Pre=>False
-               if True then  --  Workaround for No_Return placement limitation
-                  CPU.Panic;
-               end if;
+            pragma Assume (False); --  Workaround for No_Return: Pre=>False
+            if True then  --  Workaround for No_Return placement limitation
+               CPU.Panic;
             end if;
-         end Enable_Translation;
+         end if;
 
          pragma Debug
            (KC.Put_String ("VT-d DMA address translation for IOMMU "));

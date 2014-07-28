@@ -146,7 +146,7 @@ is
          Buffer := Buffer & "ffff, 0, Zero, 0x";
          Buffer := Buffer &  Mutools.Utils.To_Hex
            (Number     => Virtual_Irq,
-            Normalize  => False) & " }" & ASCII.LF;
+            Normalize  => False) & " }," & ASCII.LF;
       end Add_Device_Interrupt_Resource;
 
       ----------------------------------------------------------------------

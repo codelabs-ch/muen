@@ -20,33 +20,77 @@ package body Acpi.DSDT.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Policy : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Policy,
-                   Kind => Muxml.Format_B,
-                   File => "data/test_policy.xml");
+      ----------------------------------------------------------------------
 
-      declare
-         Subj : constant DOM.Core.Node := Muxml.Utils.Get_Element
-           (Doc   => Policy.Doc,
-            XPath => "/system/subjects/subject[@name='linux']");
+      procedure DSDT_Generation
+      is
+         Policy : Muxml.XML_Data_Type;
       begin
-         Write (Policy   => Policy,
-                Subject  => Subj,
-                Filename => "obj/linux_dsdt.dsl");
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
 
-         Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => "data/linux_dsdt.dsl.ref",
-                  Filename2 => "obj/linux_dsdt.dsl"),
-                 Message   => "DSDT table source mismatch");
-         Assert (Condition => Test_Utils.Equal_Files
-                 (Filename1 => "data/linux_dsdt.aml.ref",
-                  Filename2 => "obj/linux_dsdt.aml"),
-                 Message   => "DSDT table mismatch");
-      end;
+         declare
+            Subj : constant DOM.Core.Node := Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "/system/subjects/subject[@name='linux']");
+         begin
+            Write (Policy   => Policy,
+                   Subject  => Subj,
+                   Filename => "obj/linux_dsdt.dsl");
 
-      Ada.Directories.Delete_File (Name => "obj/linux_dsdt.dsl");
-      Ada.Directories.Delete_File (Name => "obj/linux_dsdt.aml");
+            Assert (Condition => Test_Utils.Equal_Files
+                    (Filename1 => "data/linux_dsdt.dsl.ref",
+                     Filename2 => "obj/linux_dsdt.dsl"),
+                    Message   => "DSDT table source mismatch");
+            Assert (Condition => Test_Utils.Equal_Files
+                    (Filename1 => "data/linux_dsdt.aml.ref",
+                     Filename2 => "obj/linux_dsdt.aml"),
+                    Message   => "DSDT table mismatch");
+         end;
+
+         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.dsl");
+         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.aml");
+      end DSDT_Generation;
+
+      ----------------------------------------------------------------------
+
+      procedure Single_PRT_Entry
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         declare
+            Subj : constant DOM.Core.Node := Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "/system/subjects/subject[@name='linux']");
+            Dev  : constant DOM.Core.Node := Muxml.Utils.Get_Element
+              (Doc   => Subj,
+               XPath => "devices/device[@physical='ethernet']");
+         begin
+
+            --  Remove second IRQ resource.
+
+            Muxml.Utils.Remove_Child (Node       => Dev,
+                                      Child_Name => "irq");
+
+            Write (Policy   => Policy,
+                   Subject  => Subj,
+                   Filename => "obj/linux_dsdt.dsl");
+
+            --  The iasl compilation step must not raise an exception.
+
+         end;
+
+         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.dsl");
+         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.aml");
+      end Single_PRT_Entry;
+   begin
+      DSDT_Generation;
+      Single_PRT_Entry;
 --  begin read only
    end Test_Write;
 --  end read only

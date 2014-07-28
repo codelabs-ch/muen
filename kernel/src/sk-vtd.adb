@@ -685,6 +685,31 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Invalidate context cache of IOMMU with given index.
+   procedure Invalidate_Context_Cache
+     (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
+      Success : out Boolean)
+   with
+      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
+      Global     => (In_Out => IOMMUs),
+      Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+   is
+      Context_Command : Reg_Context_Command_Type;
+   begin
+      Context_Command      := IOMMUs (IOMMU).Context_Command;
+      Context_Command.ICC  := 1;
+      Context_Command.CIRG := 1;
+      IOMMUs (IOMMU).Context_Command := Context_Command;
+
+      for J in 1 .. Loop_Count_Max loop
+         Context_Command := IOMMUs (IOMMU).Context_Command;
+         exit when Context_Command.ICC = 0;
+      end loop;
+      Success := Context_Command.ICC = 0;
+   end Invalidate_Context_Cache;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize
    with
       SPARK_Mode      => $Complete_Proofs,  -- [N722-005]
@@ -741,31 +766,20 @@ is
             end if;
          end if;
 
-         Invalidate_Context_Cache :
-         declare
-            Context_Command : Reg_Context_Command_Type;
-         begin
-            Context_Command      := IOMMUs (I).Context_Command;
-            Context_Command.ICC  := 1;
-            Context_Command.CIRG := 1;
-            IOMMUs (I).Context_Command := Context_Command;
+         Invalidate_Context_Cache
+           (IOMMU   => I,
+            Success => Status);
+         if not Status then
+            pragma Debug (KC.Put_String (Item => "IOMMU "));
+            pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
+            pragma Debug (KC.Put_Line
+                          (Item => ": unable to invalidate context cache"));
 
-            for J in 1 .. Loop_Count_Max loop
-               Context_Command := IOMMUs (I).Context_Command;
-               exit when Context_Command.ICC = 0;
-            end loop;
-            if Context_Command.ICC = 1 then
-               pragma Debug (KC.Put_String (Item => "IOMMU "));
-               pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
-               pragma Debug (KC.Put_Line
-                             (Item => ": unable to invalidate context cache"));
-
-               pragma Assume (False); --  Workaround for No_Return: Pre=>False
-               if True then  --  Workaround for No_Return placement limitation
-                  CPU.Panic;
-               end if;
+            pragma Assume (False); --  Workaround for No_Return: Pre=>False
+            if True then  --  Workaround for No_Return placement limitation
+               CPU.Panic;
             end if;
-         end Invalidate_Context_Cache;
+         end if;
 
          IOTLB_Flush :
          declare

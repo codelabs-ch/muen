@@ -6,9 +6,12 @@
 			<memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
 		</memory>
 		<devices pciConfigAddress="16#f800_0000#">
-			<device name="serial" shared="false">
+			<device name="serial_1" shared="false">
 				<ioPort end="16#03ff#" name="serial_1" start="16#03f8#"/>
 				<ioPort end="16#50b7#" name="serial_2" start="16#50b0#"/>
+			</device>
+			<device name="serial_2" shared="false">
+				<ioPort end="16#02ff#" name="serial" start="16#02f8#"/>
 			</device>
 			<device name="ethernet" shared="false">
 				<pci bus="16#00#" device="16#19#" function="0"/>
@@ -234,9 +237,12 @@
 				<memory logical="acpi_dsdt" physical="linux|acpi_dsdt" virtualAddress="16#000e_3000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
-				<device logical="serial" physical="serial">
+				<device logical="serial_1" physical="serial_1">
 					<ioPort logical="port1" physical="serial_1"/>
 					<ioPort logical="port2" physical="serial_2"/>
+				</device>
+				<device logical="serial_2" physical="serial_2">
+					<ioPort logical="port" physical="serial"/>
 				</device>
 				<device logical="eth0" physical="ethernet">
 					<irq logical="eth0_irq_1" physical="irq_1" vector="59"/>

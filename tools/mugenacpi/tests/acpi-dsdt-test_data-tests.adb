@@ -168,6 +168,46 @@ package body Acpi.DSDT.Test_Data.Tests is
 
       ----------------------------------------------------------------------
 
+      procedure Single_Serial_Device
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         declare
+            Subj : constant DOM.Core.Node := Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "/system/subjects/subject[@name='linux']");
+            Dev  : DOM.Core.Node := Muxml.Utils.Get_Element
+              (Doc   => Subj,
+               XPath => "devices/device[@physical='serial_1']");
+         begin
+
+            --  Remove one serial device reference.
+
+            Dev := DOM.Core.Nodes.Remove_Child
+              (N         => DOM.Core.Nodes.Parent_Node (N => Dev),
+               Old_Child => Dev);
+
+            Write (Policy   => Policy,
+                   Subject  => Subj,
+                   Filename => "obj/linux_dsdt.dsl");
+
+
+            Assert (Condition => Test_Utils.Equal_Files
+                    (Filename1 => "data/linux_dsdt_one_serial.dsl.ref",
+                     Filename2 => "obj/linux_dsdt.dsl"),
+                    Message   => "DSDT table source mismatch");
+         end;
+
+         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.dsl");
+         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.aml");
+      end Single_Serial_Device;
+
+      ----------------------------------------------------------------------
+
       procedure No_Serial_Device
       is
          Policy : Muxml.XML_Data_Type;
@@ -216,6 +256,7 @@ package body Acpi.DSDT.Test_Data.Tests is
       Single_PRT_Entry;
       Empty_PRT;
       Single_Serial_Port;
+      Single_Serial_Device;
       No_Serial_Device;
 --  begin read only
    end Test_Write;

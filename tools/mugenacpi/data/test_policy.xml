@@ -8,6 +8,7 @@
 		<devices pciConfigAddress="16#f800_0000#">
 			<device name="serial" shared="false">
 				<ioPort end="16#03ff#" name="serial_1" start="16#03f8#"/>
+				<ioPort end="16#50b7#" name="serial_2" start="16#50b0#"/>
 			</device>
 			<device name="ethernet" shared="false">
 				<pci bus="16#00#" device="16#19#" function="0"/>
@@ -235,6 +236,7 @@
 			<devices>
 				<device logical="serial" physical="serial">
 					<ioPort logical="port1" physical="serial_1"/>
+					<ioPort logical="port2" physical="serial_2"/>
 				</device>
 				<device logical="eth0" physical="ethernet">
 					<irq logical="eth0_irq_1" physical="irq_1" vector="59"/>

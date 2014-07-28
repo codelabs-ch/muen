@@ -88,9 +88,48 @@ package body Acpi.DSDT.Test_Data.Tests is
          Ada.Directories.Delete_File (Name => "obj/linux_dsdt.dsl");
          Ada.Directories.Delete_File (Name => "obj/linux_dsdt.aml");
       end Single_PRT_Entry;
+
+      ----------------------------------------------------------------------
+
+      procedure Empty_PRT
+      is
+         Policy : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_B,
+                      File => "data/test_policy.xml");
+
+         declare
+            Subj : constant DOM.Core.Node := Muxml.Utils.Get_Element
+              (Doc   => Policy.Doc,
+               XPath => "/system/subjects/subject[@name='linux']");
+            Dev  : constant DOM.Core.Node := Muxml.Utils.Get_Element
+              (Doc   => Subj,
+               XPath => "devices/device[@physical='ethernet']");
+         begin
+
+            --  Remove all IRQ resources.
+
+            Muxml.Utils.Remove_Child (Node       => Dev,
+                                      Child_Name => "irq");
+            Muxml.Utils.Remove_Child (Node       => Dev,
+                                      Child_Name => "irq");
+
+            Write (Policy   => Policy,
+                   Subject  => Subj,
+                   Filename => "obj/linux_dsdt.dsl");
+
+            --  The iasl compilation step must not raise an exception.
+
+         end;
+
+         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.dsl");
+         Ada.Directories.Delete_File (Name => "obj/linux_dsdt.aml");
+      end Empty_PRT;
    begin
       DSDT_Generation;
       Single_PRT_Entry;
+      Empty_PRT;
 --  begin read only
    end Test_Write;
 --  end read only

@@ -391,6 +391,10 @@ is
 
    FR_Offset : constant := 16#20# * 16;
 
+   --  Maximum number of busy-loops to perform when waiting for the hardware to
+   --  set a status flag.
+   Loop_Count_Max : constant := 10000;
+
    --  NOTE: The Intel VT-d spec section 10.2 mentions that software is
    --  expected to access registers as a whole. To avoid side-effects from
    --  partial/wider reads always read the entire record field/register, modify
@@ -660,8 +664,6 @@ is
       Refined_Global  => (In_Out => (X86_64.State, IOMMUs)),
       Refined_Depends => ((X86_64.State, IOMMUs) =>+ IOMMUs)
    is
-      Loop_Count_Max : constant := 10000;
-
       Needed_Caps_Present : Boolean;
    begin
 

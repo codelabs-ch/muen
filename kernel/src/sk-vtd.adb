@@ -710,6 +710,31 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Flush IOTLB of IOMMU with given index.
+   procedure Flush_IOTLB
+     (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
+      Success : out Boolean)
+   with
+      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
+      Global     => (In_Out => IOMMUs),
+      Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+   is
+      IOTLB_Invalidate : Reg_IOTLB_Invalidate;
+   begin
+      IOTLB_Invalidate      := IOMMUs (IOMMU).IOTLB_Invalidate;
+      IOTLB_Invalidate.IIRG := 1;
+      IOTLB_Invalidate.IVT  := 1;
+      IOMMUs (IOMMU).IOTLB_Invalidate := IOTLB_Invalidate;
+
+      for J in 1 .. Loop_Count_Max loop
+         IOTLB_Invalidate := IOMMUs (IOMMU).IOTLB_Invalidate;
+         exit when IOTLB_Invalidate.IVT = 0;
+      end loop;
+      Success := IOTLB_Invalidate.IVT = 0;
+   end Flush_IOTLB;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize
    with
       SPARK_Mode      => $Complete_Proofs,  -- [N722-005]
@@ -781,31 +806,18 @@ is
             end if;
          end if;
 
-         IOTLB_Flush :
-         declare
-            IOTLB_Invalidate : Reg_IOTLB_Invalidate;
-         begin
-            IOTLB_Invalidate      := IOMMUs (I).IOTLB_Invalidate;
-            IOTLB_Invalidate.IIRG := 1;
-            IOTLB_Invalidate.IVT  := 1;
-            IOMMUs (I).IOTLB_Invalidate := IOTLB_Invalidate;
+         Flush_IOTLB (IOMMU   => I,
+                      Success => Status);
+         if not Status then
+            pragma Debug (KC.Put_String (Item => "IOMMU "));
+            pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
+            pragma Debug (KC.Put_Line   (Item => ": unable to flush IOTLB"));
 
-            for J in 1 .. Loop_Count_Max loop
-               IOTLB_Invalidate := IOMMUs (I).IOTLB_Invalidate;
-               exit when IOTLB_Invalidate.IVT = 0;
-            end loop;
-            if IOTLB_Invalidate.IVT = 1 then
-               pragma Debug (KC.Put_String (Item => "IOMMU "));
-               pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
-               pragma Debug (KC.Put_Line
-                             (Item => ": unable to flush IOTLB"));
-
-               pragma Assume (False); --  Workaround for No_Return: Pre=>False
-               if True then  --  Workaround for No_Return placement limitation
-                  CPU.Panic;
-               end if;
+            pragma Assume (False); --  Workaround for No_Return: Pre=>False
+            if True then  --  Workaround for No_Return placement limitation
+               CPU.Panic;
             end if;
-         end IOTLB_Flush;
+         end if;
 
          Enable_Translation :
          declare

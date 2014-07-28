@@ -658,13 +658,40 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Set address of root table for IOMMU with given index.
+   procedure Set_Root_Table_Address
+     (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
+      Address :     SK.Word64;
+      Success : out Boolean)
+   with
+      SPARK_Mode => $Complete_Proofs,  -- [N425-012]
+      Global     => (In_Out => IOMMUs),
+      Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU, Address))
+   is
+      Global_Status  : Reg_Global_Status_Type;
+      Global_Command : Reg_Global_Command_Type;
+   begin
+      IOMMUs (IOMMU).Root_Table_Address := Address;
+      Global_Command      := IOMMUs (IOMMU).Global_Command;
+      Global_Command.SRTP := 1;
+      IOMMUs (IOMMU).Global_Command := Global_Command;
+
+      for I in 1 .. Loop_Count_Max loop
+         Global_Status := IOMMUs (IOMMU).Global_Status;
+         exit when Global_Status.RTPS = 1;
+      end loop;
+      Success := Global_Status.RTPS = 1;
+   end Set_Root_Table_Address;
+
+   -------------------------------------------------------------------------
+
    procedure Initialize
    with
       SPARK_Mode      => $Complete_Proofs,  -- [N722-005]
       Refined_Global  => (In_Out => (X86_64.State, IOMMUs)),
       Refined_Depends => ((X86_64.State, IOMMUs) =>+ IOMMUs)
    is
-      Needed_Caps_Present : Boolean;
+      Needed_Caps_Present, Status : Boolean;
    begin
 
       --  Systems without an IOMMU have a null range.
@@ -698,32 +725,21 @@ is
          pragma Debug (Set_Fault_Event_Mask (IOMMU  => I,
                                              Enable => False));
 
-         Set_Root_Table_Address :
-         declare
-            Global_Status  : Reg_Global_Status_Type;
-            Global_Command : Reg_Global_Command_Type;
-         begin
-            IOMMUs (I).Root_Table_Address := Skp.IOMMU.Root_Table_Address;
-            Global_Command      := IOMMUs (I).Global_Command;
-            Global_Command.SRTP := 1;
-            IOMMUs (I).Global_Command := Global_Command;
+         Set_Root_Table_Address
+           (IOMMU   => I,
+            Address => Skp.IOMMU.Root_Table_Address,
+            Success => Status);
+         if not Status then
+            pragma Debug (KC.Put_String (Item => "IOMMU "));
+            pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
+            pragma Debug (KC.Put_Line
+                          (Item => ": unable to set root table address"));
 
-            for J in 1 .. Loop_Count_Max loop
-               Global_Status := IOMMUs (I).Global_Status;
-               exit when Global_Status.RTPS = 1;
-            end loop;
-            if Global_Status.RTPS = 0 then
-               pragma Debug (KC.Put_String (Item => "IOMMU "));
-               pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
-               pragma Debug (KC.Put_Line
-                             (Item => ": unable to set root table address"));
-
-               pragma Assume (False); --  Workaround for No_Return: Pre=>False
-               if True then  --  Workaround for No_Return placement limitation
-                  CPU.Panic;
-               end if;
+            pragma Assume (False); --  Workaround for No_Return: Pre=>False
+            if True then  --  Workaround for No_Return placement limitation
+               CPU.Panic;
             end if;
-         end Set_Root_Table_Address;
+         end if;
 
          Invalidate_Context_Cache :
          declare

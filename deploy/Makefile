@@ -1,4 +1,5 @@
 PACK_DIR = $(CURDIR)/../pack/obj
+HTTP_LOG = $(CURDIR)/http.log
 
 TARGET_IP = 192.168.254.2
 
@@ -16,8 +17,8 @@ deploy: $(PACK_DIR)/muen.img .server
 	fi
 
 .server:
-	(cd $(PACK_DIR) && python -m SimpleHTTPServer >/dev/null 2>&1 & echo "$$!" > $@)
+	(cd $(PACK_DIR) && python -m SimpleHTTPServer >$(HTTP_LOG) 2>&1 & echo "$$!" > $@)
 
 clean:
 	@kill `cat .server 2>/dev/null` 2>/dev/null || true
-	@rm -f .server
+	@rm -f .server $(HTTP_LOG)

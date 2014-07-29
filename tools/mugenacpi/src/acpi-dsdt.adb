@@ -146,7 +146,7 @@ is
          Buffer := Buffer & "ffff, 0, Zero, 0x";
          Buffer := Buffer &  Mutools.Utils.To_Hex
            (Number     => Virtual_Irq,
-            Normalize  => False) & " }" & ASCII.LF;
+            Normalize  => False) & " }," & ASCII.LF;
       end Add_Device_Interrupt_Resource;
 
       ----------------------------------------------------------------------
@@ -212,7 +212,11 @@ is
              (Nodes     => Devices,
               Ref_Attr  => "name",
               Ref_Value => Phys_Dev_Name);
-         Ports         : constant DOM.Core.Node_List
+         Logical_Ports : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Legacy_Dev,
+              XPath => "ioPort");
+         Phys_Ports    : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Physical_Dev,
               XPath => "ioPort");
@@ -234,22 +238,32 @@ is
          Buffer := Buffer & Indent (N => 6) & "Return (ResourceTemplate () {"
            & ASCII.LF;
 
-         for I in 0 .. DOM.Core.Nodes.Length (List => Ports) - 1 loop
+         for I in 0 .. DOM.Core.Nodes.Length (List => Logical_Ports) - 1 loop
             declare
                use type Interfaces.Unsigned_16;
 
-               Port       : constant DOM.Core.Node := DOM.Core.Nodes.Item
-                 (List  => Ports,
-                  Index => I);
-               Start_Port : constant Interfaces.Unsigned_16
+               Log_Port       : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => Logical_Ports,
+                    Index => I);
+               Phys_Port_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Log_Port,
+                    Name => "physical");
+               Phys_Port      : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Nodes     => Phys_Ports,
+                    Ref_Attr  => "name",
+                    Ref_Value => Phys_Port_Name);
+               Start_Port     : constant Interfaces.Unsigned_16
                  := Interfaces.Unsigned_16'Value
                    (DOM.Core.Elements.Get_Attribute
-                      (Elem => Port,
+                      (Elem => Phys_Port,
                        Name => "start"));
-               End_Port   : constant Interfaces.Unsigned_16
+               End_Port       : constant Interfaces.Unsigned_16
                  := Interfaces.Unsigned_16'Value
                    (DOM.Core.Elements.Get_Attribute
-                      (Elem => Port,
+                      (Elem => Phys_Port,
                        Name => "end"));
             begin
                Buffer := Buffer & Indent (N => 7) & Asl.IO

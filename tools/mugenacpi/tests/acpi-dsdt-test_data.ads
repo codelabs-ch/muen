@@ -7,6 +7,8 @@ with AUnit.Test_Fixtures;
 
 with Ada.Directories;
 
+with DOM.Core.Nodes;
+
 with Muxml.Utils;
 
 with Test_Utils;

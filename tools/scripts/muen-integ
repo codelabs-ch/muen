@@ -1,0 +1,143 @@
+#!/bin/bash
+
+if [ ! $# -eq 2 ]; then
+	echo "Usage: $0 <commit> <build ID>"
+	exit 1
+fi
+
+COMMIT=$1
+BUILDID=$2
+HARBOR="Harbormaster build http://muen-builder.codelabs.local/B$BUILDID"
+
+ROOT=$HOME/Builds
+LOGDIR=$ROOT/logs/$BUILDID
+LOGFILE=$LOGDIR/build.log
+SAVE_ARTIFACTS=0
+
+# mail settings
+RECIPIENTS="reet@codelabs.ch ken@codelabs.ch"
+SENDER="muen.builder@gmail.com"
+
+export PATH=/usr/lib/ccache:/opt/gnat/bin:/opt/spark/bin:$PATH
+export DISPLAY=:0
+export CC="ccache gcc"
+
+log()
+{
+	echo $1 | tee -a $LOGFILE
+}
+
+send_mail()
+{
+	status=$1
+	message=$2
+
+	for mail in $RECIPIENTS
+	do
+		echo -e "To: $mail\nFrom: $SENDER\nSubject: [muen-integration] $status: $FBRANCH, $COMMIT\n\n$message" | /usr/sbin/sendmail -t -F "$SENDER" -f "$SENDER"
+	done
+}
+
+check_if_head()
+{
+	remotes=`git branch -r --contains $COMMIT`
+	for remote in $remotes
+	do
+		head=`git rev-parse $remote`
+		if [ "$COMMIT" = "$head" ]; then
+			log "Commit $COMMIT is HEAD of $remote branch"
+			FBRANCH=$remote
+			return
+		fi
+	done
+
+	log "Commit $COMMIT is not a branch HEAD, skipping build"
+	exit 1
+}
+
+save_artifacts()
+{
+	cp $WORKDIR/emulate/bochsout.txt $LOGDIR >>$LOGFILE 2>&1
+	cp $WORKDIR/emulate/emulate.out $LOGDIR >>$LOGFILE 2>&1
+	cp $WORKDIR/emulate/serial.out $LOGDIR >>$LOGFILE 2>&1
+}
+
+passed()
+{
+	log "State -> PASSED"
+	send_mail PASSED "Integration test successful for:\n\n$GITLOG\n\n$HARBOR"
+}
+
+failed()
+{
+	log "State -> FAILED"
+	send_mail FAILED "Integration test failed for:\n\n$GITLOG\n\nLog:\n`cat $LOGFILE`"
+	if [ $SAVE_ARTIFACTS -ne 0 ]; then
+		save_artifacts
+	fi
+	exit 1
+}
+
+execute()
+{
+	cmd=$1
+	log "Executing command '$cmd'"
+	$cmd >> $LOGFILE 2>&1
+	status=$?
+	if [ $status -ne 0 ]; then
+		log "! Command '$cmd' failed (status $status)"
+		failed
+	fi
+}
+
+expect()
+{
+	file=$1
+	pattern=$2
+	log "Expect pattern '$pattern' in file '$file'"
+	grep "$pattern" $file >>$LOGFILE 2>&1
+	if [ $? -ne 0 ]; then
+		log "Expected pattern '$pattern' not found in '$file'"
+		failed
+	fi
+}
+
+# Time to wait for bochs system boot
+BOOTWAIT=40
+
+mkdir -p $LOGDIR
+
+log "Muen integration test starting for commit $COMMIT"
+log "$HARBOR"
+echo "Logging to file $LOGFILE"
+
+execute "cd $ROOT"
+
+WORKDIR=$ROOT/muen
+
+execute "cd $WORKDIR"
+execute "git remote prune origin"
+execute "git fetch"
+check_if_head
+
+execute "git checkout $COMMIT"
+execute "make distclean"
+execute "cd subjects/linux/src"
+execute "git clean -dxf"
+execute "cd $WORKDIR"
+
+GITLOG=`git log -1`
+execute "git submodule update"
+
+execute "make emulate"
+SAVE_ARTIFACTS=1
+execute "sleep $BOOTWAIT"
+
+expect emulate/serial.out "Booting Muen kernel"
+expect emulate/serial.out "Welcome to Linux on Muen SK"
+
+expect emulate/bochsout.txt "CPU 1 started up at 0000:00000000 by APIC"
+expect emulate/bochsout.txt "CPU 2 started up at 0000:00000000 by APIC"
+expect emulate/bochsout.txt "CPU 3 started up at 0000:00000000 by APIC"
+
+passed

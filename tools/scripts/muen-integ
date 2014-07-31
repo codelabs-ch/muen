@@ -18,9 +18,30 @@ SAVE_ARTIFACTS=0
 RECIPIENTS="reet@codelabs.ch ken@codelabs.ch"
 SENDER="muen.builder@gmail.com"
 
+# servers
+PID_HTTP=0
+PID_XTERM=0
+
+TARGET_IP=192.168.254.2
+
 export PATH=/usr/lib/ccache:/opt/gnat/bin:/opt/spark/bin:$PATH
 export DISPLAY=:0
+export AMT_PASSWORD=XXX
 export CC="ccache gcc"
+
+trap cleanup EXIT
+
+cleanup()
+{
+	if [ $PID_HTTP -ne 0 ]; then
+		log "Stopping HTTP server ($PID_HTTP)"
+		kill $PID_HTTP >>$LOGFILE 2>&1 || true
+	fi
+	if [ $PID_XTERM -ne 0 ]; then
+		log "Stopping AMT console ($PID_XTERM)"
+		kill $PID_XTERM >>$LOGFILE 2>&1 || true
+	fi
+}
 
 log()
 {
@@ -122,6 +143,54 @@ bochs_emulate()
 	execute "make -C emulate clean"
 }
 
+nuc_deploy()
+{
+	BOOTWAIT=110
+
+	execute "ping -c 6 $TARGET_IP"
+	xterm -e script -f -c "amtterm $TARGET_IP" $LOGDIR/amt.out &
+	PID_XTERM=$!
+	log "xterm pid is $PID_XTERM"
+
+	execute "make deploy HARDWARE=intel-nuc-dc53427hye SYSTEM=integration_tests"
+
+	cd $ROOT; python -m SimpleHTTPServer 10000 >$LOGDIR/http.out 2>&1 &
+	PID_HTTP=$!
+	log "SimpleHTTPServer pid is $PID_HTTP"
+	cd $WORKDIR
+
+	execute "sleep $BOOTWAIT"
+
+	kill $PID_XTERM >>$LOGFILE 2>&1
+	if [ $? -ne 0 ]; then
+		log "Stopping AMT console failed, retrying on exit"
+	else
+		PID_XTERM=0
+	fi
+	kill $PID_HTTP >>$LOGFILE 2>&1
+	if [ $? -ne 0 ]; then
+		log "Stopping HTTP server failed, retrying on exit"
+	else
+		PID_HTTP=0
+	fi
+
+	echo y | amttool $TARGET_IP powerdown >>$LOGFILE 2>&1
+	execute "make -C deploy clean"
+
+	expect $LOGDIR/amt.out "Booting Muen kernel"
+	expect $LOGDIR/amt.out "Routing IRQ 01 as vector 21 to CPU 00 with APIC ID 00"
+	expect $LOGDIR/amt.out "Routing IRQ 14 as vector 34 to CPU 01 with APIC ID 01"
+	expect $LOGDIR/amt.out "Routing IRQ 10 as vector 30 to CPU 03 with APIC ID 03"
+	expect $LOGDIR/amt.out "VT-d DMA address translation for IOMMU 01 enabled"
+	expect $LOGDIR/amt.out "VT-d DMA address translation for IOMMU 02 enabled"
+	expect $LOGDIR/amt.out "Console output round 100"
+	expect $LOGDIR/amt.out "100%"
+	expect $LOGDIR/amt.out "stresstest DONE"
+	expect $LOGDIR/amt.out "integtest DONE"
+
+	expect $LOGDIR/http.out "200"
+}
+
 mkdir -p $LOGDIR
 
 log "Muen integration test starting for commit $COMMIT"
@@ -147,5 +216,6 @@ GITLOG=`git log -1`
 execute "git submodule update"
 
 bochs_emulate
+nuc_deploy
 
 passed

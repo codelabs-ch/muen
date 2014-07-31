@@ -102,8 +102,25 @@ expect()
 	fi
 }
 
-# Time to wait for bochs system boot
-BOOTWAIT=40
+bochs_emulate()
+{
+	BOOTWAIT=40
+
+	SAVE_ARTIFACTS=1
+	execute "make emulate"
+	execute "sleep $BOOTWAIT"
+	save_artifacts
+	SAVE_ARTIFACTS=0
+
+	expect $LOGDIR/serial.out "Booting Muen kernel"
+	expect $LOGDIR/serial.out "Welcome to Linux on Muen SK"
+
+	expect $LOGDIR/bochsout.txt "CPU 1 started up at 0000:00000000 by APIC"
+	expect $LOGDIR/bochsout.txt "CPU 2 started up at 0000:00000000 by APIC"
+	expect $LOGDIR/bochsout.txt "CPU 3 started up at 0000:00000000 by APIC"
+
+	execute "make -C emulate clean"
+}
 
 mkdir -p $LOGDIR
 
@@ -129,15 +146,6 @@ execute "cd $WORKDIR"
 GITLOG=`git log -1`
 execute "git submodule update"
 
-execute "make emulate"
-SAVE_ARTIFACTS=1
-execute "sleep $BOOTWAIT"
-
-expect emulate/serial.out "Booting Muen kernel"
-expect emulate/serial.out "Welcome to Linux on Muen SK"
-
-expect emulate/bochsout.txt "CPU 1 started up at 0000:00000000 by APIC"
-expect emulate/bochsout.txt "CPU 2 started up at 0000:00000000 by APIC"
-expect emulate/bochsout.txt "CPU 3 started up at 0000:00000000 by APIC"
+bochs_emulate
 
 passed

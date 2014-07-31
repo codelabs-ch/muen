@@ -1,16 +1,29 @@
 PACK_DIR = $(CURDIR)/../pack/obj
+HTTP_LOG = $(CURDIR)/http.log
 
 TARGET_IP = 192.168.254.2
+
+HTTP_STATE   = `cat $(HTTP_LOG)`
+TARGET_STATE = `amttool $(TARGET_IP) | sed -n 's/Powerstate: \s //p'`
 
 all: deploy
 
 deploy: $(PACK_DIR)/muen.img .server
-	echo y | amttool $(TARGET_IP) powerup
-	echo y | amttool $(TARGET_IP) reset
+	ping -c 3 $(TARGET_IP) >/dev/null
+	@echo Target is in $(TARGET_STATE) state
+	@if [ "$(TARGET_STATE)" = "S0" ]; then     \
+		echo y | amttool $(TARGET_IP) reset;   \
+	else                                       \
+		echo y | amttool $(TARGET_IP) powerup; \
+	fi
 
 .server:
-	(cd $(PACK_DIR) && python -m SimpleHTTPServer >/dev/null 2>&1 & echo "$$!" > $@)
+	(cd $(PACK_DIR) && python -m SimpleHTTPServer >$(HTTP_LOG) 2>&1 & echo "$$!" > $@)
+	@sleep 1
+	@if [ "$(HTTP_STATE)" != "" ]; then                                   \
+		echo HTTP start failed, check '$(HTTP_LOG)'; rm .server | exit 1; \
+	fi
 
 clean:
 	@kill `cat .server 2>/dev/null` 2>/dev/null || true
-	@rm -f .server
+	@rm -f .server $(HTTP_LOG)

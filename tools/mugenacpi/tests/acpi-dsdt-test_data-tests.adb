@@ -159,7 +159,7 @@ package body Acpi.DSDT.Test_Data.Tests is
             Assert (Condition => Test_Utils.Equal_Files
                     (Filename1 => "data/linux_dsdt_one_port.dsl.ref",
                      Filename2 => "obj/linux_dsdt.dsl"),
-                    Message   => "DSDT table source mismatch");
+                    Message   => "DSDT table source mismatch (single port)");
          end;
 
          Ada.Directories.Delete_File (Name => "obj/linux_dsdt.dsl");
@@ -199,7 +199,7 @@ package body Acpi.DSDT.Test_Data.Tests is
             Assert (Condition => Test_Utils.Equal_Files
                     (Filename1 => "data/linux_dsdt_one_serial.dsl.ref",
                      Filename2 => "obj/linux_dsdt.dsl"),
-                    Message   => "DSDT table source mismatch");
+                    Message   => "DSDT table source mismatch (single serial)");
          end;
 
          Ada.Directories.Delete_File (Name => "obj/linux_dsdt.dsl");

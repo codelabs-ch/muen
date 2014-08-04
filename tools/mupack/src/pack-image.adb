@@ -17,6 +17,7 @@
 --
 
 with Ada.Streams.Stream_IO;
+with Ada.Unchecked_Deallocation;
 
 with Mutools.Utils;
 with Mutools.Files;
@@ -94,6 +95,17 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Finalize (Image : in out Image_Type)
+   is
+      procedure Free is new Ada.Unchecked_Deallocation
+        (Object => Ada.Streams.Stream_Element_Array,
+         Name   => Stream_Access);
+   begin
+      Free (X => Image.Data);
+   end Finalize;
+
+   -------------------------------------------------------------------------
+
    function Get_Buffer
      (Image   : Image_Type;
       Address : Interfaces.Unsigned_64;
@@ -115,6 +127,14 @@ is
            & Mutools.Utils.To_Hex (Number => Interfaces.Unsigned_64
                                    (Image.End_Address)) & ")";
    end Get_Buffer;
+
+   -------------------------------------------------------------------------
+
+   procedure Initialize (Image : in out Image_Type)
+   is
+   begin
+      Image.Data.all := (others => 0);
+   end Initialize;
 
    -------------------------------------------------------------------------
 

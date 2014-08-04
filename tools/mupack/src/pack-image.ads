@@ -17,6 +17,7 @@
 --
 
 with Ada.Streams;
+with Ada.Finalization;
 
 with Interfaces;
 
@@ -25,7 +26,7 @@ is
 
    --  System image.
    type Image_Type
-     (End_Address : Ada.Streams.Stream_Element_Offset) is private;
+     (End_Address : Ada.Streams.Stream_Element_Offset) is limited private;
 
    --  Add given buffer to system image at specified address.
    procedure Add_Buffer
@@ -60,9 +61,18 @@ private
 
    use type Ada.Streams.Stream_Element_Offset;
 
-   type Image_Type (End_Address : Ada.Streams.Stream_Element_Offset) is record
-      Data : Ada.Streams.Stream_Element_Array (0 .. End_Address)
-        := (others => 0);
+   type Stream_Access is access Ada.Streams.Stream_Element_Array;
+
+   type Image_Type (End_Address : Ada.Streams.Stream_Element_Offset) is new
+     Ada.Finalization.Limited_Controlled with record
+      Data : Stream_Access := new Ada.Streams.Stream_Element_Array
+        (0 .. End_Address);
    end record;
+
+   overriding
+   procedure Initialize (Image : in out Image_Type);
+
+   overriding
+   procedure Finalize (Image : in out Image_Type);
 
 end Pack.Image;

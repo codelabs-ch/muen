@@ -18,6 +18,7 @@ src/.config: config/linux64-$(CONFIG)
 install: .built
 	@$(MULNXBZPATCH) src/arch/x86/boot/bzImage $(POLICY_DIR)/bzImage
 	@cp initramfs/obj/initramfs.cpio.gz $(POLICY_DIR)
+	@cp initramfs/obj/initramfs_integ.cpio.gz $(POLICY_DIR)
 
 clean:
 	@make clean -C initramfs

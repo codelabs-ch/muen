@@ -1,14 +1,16 @@
 include ../../../Makeconf
 
-FILE = initramfs.cpio.gz
 SITE = http://codelabs-ch.github.io/buildroot-muen
-URL  = $(SITE)/$(FILE)
 
-all: $(OBJ_DIR)/$(FILE)
+FILES = initramfs.cpio.gz initramfs_integ.cpio.gz
+WGETS = $(patsubst %.cpio.gz,$(OBJ_DIR)/%.cpio.gz,$(FILES))
 
-$(OBJ_DIR)/$(FILE):
-	@mkdir -p $(OBJ_DIR)
-	@wget $(URL) -O $@.tmp
+OBJDIR := $(shell mkdir -p $(OBJ_DIR))
+
+all: $(WGETS)
+
+$(OBJ_DIR)/%.cpio.gz:
+	@wget $(SITE)/$*.cpio.gz -O $@.tmp
 	@mv $@.tmp $@
 
 clean:

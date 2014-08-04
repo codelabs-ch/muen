@@ -7,6 +7,7 @@
 		</memory>
 		<devices pciConfigAddress="16#f800_0000#">
 			<device name="serial_1" shared="false">
+				<irq name="irq" number="2"/>
 				<ioPort end="16#03ff#" name="serial_1" start="16#03f8#"/>
 				<ioPort end="16#50b7#" name="serial_2" start="16#50b0#"/>
 			</device>
@@ -238,6 +239,7 @@
 			</memory>
 			<devices>
 				<device logical="serial_1" physical="serial_1">
+					<irq logical="irq" physical="irq" vector="50"/>
 					<ioPort logical="port1" physical="serial_1"/>
 					<ioPort logical="port2" physical="serial_2"/>
 				</device>

@@ -410,7 +410,7 @@ is
             Logical_Name  => "tau0_interface",
             Physical_Name => "sys_interface",
             Address       => Mutools.Utils.To_Hex
-              (Number => Config.Tau0_Interface_Addr),
+              (Number => Config.Tau0_Interface_Virtual_Addr),
             Writable      => False,
             Executable    => False));
    end Map_Tau0_Interface;

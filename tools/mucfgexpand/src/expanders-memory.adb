@@ -31,6 +31,7 @@ with Mutools.Utils;
 with Mutools.Constants;
 with Mutools.XML_Utils;
 
+with Expanders.Config;
 with Expanders.XML_Utils;
 
 package body Expanders.Memory
@@ -93,7 +94,8 @@ is
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => "kernel_ro",
-         Address     => "16#0011_f000#",
+         Address     => Mutools.Utils.To_Hex
+           (Number => Config.Kernel_RO_Section_Addr),
          Size        => "16#4000#",
          Caching     => "WB",
          Alignment   => "16#1000#",

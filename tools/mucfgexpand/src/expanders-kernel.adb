@@ -94,7 +94,8 @@ is
                  (Policy        => Data,
                   Logical_Name  => "ro",
                   Physical_Name => "kernel_ro",
-                  Address       => "16#0011_f000#",
+                  Address       => Mutools.Utils.To_Hex
+                    (Number => Config.Kernel_RO_Section_Addr),
                   Writable      => False,
                   Executable    => False));
             Muxml.Utils.Append_Child

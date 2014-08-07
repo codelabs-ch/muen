@@ -136,6 +136,8 @@ is
       Executable       :        Boolean)
    is
       Indexes : Table_Index_Array (1 .. Mem_Layout.Levels) := (others => 0);
+
+      Table_Idx : Tables_Index := 0;
    begin
       Get_Indexes (Address => Virtual_Address,
                    Indexes => Indexes);
@@ -148,7 +150,7 @@ is
            (Table => Mem_Layout.Level_1_Table,
             Index => Indexes (Indexes'First),
             E     => Entries.Create
-              (Dst_Offset  => Indexes (Indexes'First),
+              (Dst_Offset  => Tables_Index (Indexes (Indexes'First)),
                Dst_Address => 0,
                Readable    => True,
                Writable    => True,
@@ -159,16 +161,20 @@ is
       end if;
 
       for I in Paging_Level range 2 .. Level loop
+         Table_Idx := Table_Idx * 512 + Tables_Index (Indexes (I - 1));
          if not Maps.Contains (Map          => Mem_Layout.Structures (I),
-                               Table_Number => Indexes (I - 1),
+                               Table_Number => Table_Idx,
                                Entry_Index  => Indexes (I))
          then
             Maps.Add_Entry
               (Map          => Mem_Layout.Structures (I),
-               Table_Number => Indexes (I - 1),
+               Table_Number => Table_Idx,
                Entry_Index  => Indexes (I),
                Table_Entry  => Entries.Create
-                 (Dst_Offset  => Indexes (I),
+                 (Dst_Offset  =>
+                      (if I /= Level then
+                            Table_Idx * 512 + Tables_Index (Indexes (I))
+                       else 0),
                   Dst_Address => (if Level = I then Physical_Address else 0),
                   Readable    => True,
                   Writable    => Level /= I or Writable,
@@ -191,13 +197,13 @@ is
 
       --  Call serialize procedure for given table.
       procedure Handle_Table
-        (Table_Number : Table_Range;
+        (Table_Number : Tables_Index;
          Table        : Tables.Page_Table_Type);
 
       ----------------------------------------------------------------------
 
       procedure Handle_Table
-        (Table_Number : Table_Range;
+        (Table_Number : Tables_Index;
          Table        : Tables.Page_Table_Type)
       is
          pragma Unreferenced (Table_Number);
@@ -261,7 +267,7 @@ is
       --  Set physical address of each table and adjust destination address of
       --  each table entry that references a higher level table (e.g. PDE->PT).
       procedure Adjust_Tables
-        (Table_Number :        Table_Range;
+        (Table_Number :        Tables_Index;
          Table        : in out Tables.Page_Table_Type);
 
       ----------------------------------------------------------------------
@@ -272,7 +278,7 @@ is
       is
          pragma Unreferenced (Index);
 
-         Dst_Idx : constant Table_Range := TEntry.Get_Dst_Offset;
+         Dst_Idx : constant Tables_Index := TEntry.Get_Dst_Offset;
          Address : constant Interfaces.Unsigned_64
            := Maps.Get_Table_Address
              (Map          => Mem_Layout.Structures
@@ -285,7 +291,7 @@ is
       ----------------------------------------------------------------------
 
       procedure Adjust_Tables
-        (Table_Number :        Table_Range;
+        (Table_Number :        Tables_Index;
          Table        : in out Tables.Page_Table_Type)
       is
          pragma Unreferenced (Table_Number);
@@ -303,7 +309,7 @@ is
          is
             pragma Unreferenced (Index);
 
-            Dst_Idx : Table_Range;
+            Dst_Idx : Tables_Index;
             Address : Interfaces.Unsigned_64;
          begin
             if TEntry.Maps_Page then

@@ -197,14 +197,14 @@ package body Paging.Layouts.Test_Data.Tests is
                  Message   => "More than one level 2 table");
          Assert (Condition => Maps.Contains
                  (Map          => Layout.Structures (3),
-                  Table_Number => 191,
+                  Table_Number => 25 * 512 + 191,
                   Entry_Index  => 351),
                  Message   => "Level 3 entry not created");
          Assert (Condition => Maps.Length (Map => Layout.Structures (3)) = 1,
                  Message   => "More than one level 3 table");
          Assert (Condition => Maps.Contains
                  (Map          => Layout.Structures (4),
-                  Table_Number => 351,
+                  Table_Number => (25 * 512 + 191) * 512 + 351,
                   Entry_Index  => 239),
                  Message   => "Level 4 entry not created");
          Assert (Condition => Maps.Length (Map => Layout.Structures (4)) = 1,
@@ -250,11 +250,11 @@ package body Paging.Layouts.Test_Data.Tests is
               Message   => "Level 2 table address set");
       Assert (Condition => Maps.Get_Table_Address
               (Map          => Layout.Structures (3),
-               Table_Number => 191) = 0,
+               Table_Number => 25 * 512 + 191) = 0,
               Message   => "Level 3 table address set");
       Assert (Condition => Maps.Get_Table_Address
               (Map          => Layout.Structures (4),
-               Table_Number => 351) = 0,
+               Table_Number => (25 * 512 + 191) * 512 + 351) = 0,
               Message   => "Level 4 table address set");
 
       Update_References (Mem_Layout => Layout);
@@ -264,11 +264,11 @@ package body Paging.Layouts.Test_Data.Tests is
               Message   => "Level 2 table address mismatch");
       Assert (Condition => Maps.Get_Table_Address
               (Map          => Layout.Structures (3),
-               Table_Number => 191) = 16#001f_2000#,
+               Table_Number => 25 * 512 + 191) = 16#001f_2000#,
               Message   => "Level 3 table address mismatch");
       Assert (Condition => Maps.Get_Table_Address
               (Map          => Layout.Structures (4),
-               Table_Number => 351) = 16#001f_1000#,
+               Table_Number => (25 * 512 + 191) * 512 + 351) = 16#001f_1000#,
               Message   => "Level 4 table address mismatch");
 --  begin read only
    end Test_Update_References;

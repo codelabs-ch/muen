@@ -23,7 +23,7 @@ is
 
    procedure Add_Entry
      (Map          : in out Page_Table_Map;
-      Table_Number :        Table_Range;
+      Table_Number :        Tables_Index;
       Entry_Index  :        Table_Range;
       Table_Entry  :        Entries.Table_Entry_Type)
    is
@@ -31,11 +31,11 @@ is
 
       --  Add entry to given table.
       procedure Add_Entry
-        (Number :        Table_Range;
+        (Number :        Tables_Index;
          Table  : in out Tables.Page_Table_Type);
 
       procedure Add_Entry
-        (Number :        Table_Range;
+        (Number :        Tables_Index;
          Table  : in out Tables.Page_Table_Type)
       is
          pragma Unreferenced (Number);
@@ -73,7 +73,7 @@ is
 
    function Contains
      (Map          : Page_Table_Map;
-      Table_Number : Table_Range;
+      Table_Number : Tables_Index;
       Entry_Index  : Table_Range)
       return Boolean
    is
@@ -85,13 +85,13 @@ is
 
       --  Check if entry with 'Entry_Index' is present in table.
       procedure Check_Entry_Presence
-        (Key     : Table_Range;
+        (Key     : Tables_Index;
          Element : Tables.Page_Table_Type);
 
       ----------------------------------------------------------------------
 
       procedure Check_Entry_Presence
-        (Key     : Table_Range;
+        (Key     : Tables_Index;
          Element : Tables.Page_Table_Type)
       is
          pragma Unreferenced (Key);
@@ -114,7 +114,7 @@ is
 
    function Get_Table_Address
      (Map          : Page_Table_Map;
-      Table_Number : Table_Range)
+      Table_Number : Tables_Index)
       return Interfaces.Unsigned_64
    is
       use type Tables_Map_Package.Cursor;
@@ -136,7 +136,7 @@ is
    procedure Iterate
      (Map     : Page_Table_Map;
       Process : not null access procedure
-        (Table_Number : Table_Range;
+        (Table_Number : Tables_Index;
          Table        : Tables.Page_Table_Type))
    is
       --  Process the given page table.
@@ -166,7 +166,7 @@ is
    procedure Update
      (Map     : in out Page_Table_Map;
       Process : not null access procedure
-        (Table_Number :        Table_Range;
+        (Table_Number :        Tables_Index;
          Table        : in out Tables.Page_Table_Type))
    is
       --  Process the given page table.

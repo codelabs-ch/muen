@@ -33,7 +33,7 @@ is
    --  turn contains an entry with given index.
    function Contains
      (Map          : Page_Table_Map;
-      Table_Number : Table_Range;
+      Table_Number : Tables_Index;
       Entry_Index  : Table_Range)
       return Boolean;
 
@@ -41,14 +41,14 @@ is
    --  already present an exception is raised.
    procedure Add_Entry
      (Map          : in out Page_Table_Map;
-      Table_Number :        Table_Range;
+      Table_Number :        Tables_Index;
       Entry_Index  :        Table_Range;
       Table_Entry  :        Entries.Table_Entry_Type);
 
    --  Returns the physical address of the table specified by number.
    function Get_Table_Address
      (Map          : Page_Table_Map;
-      Table_Number : Table_Range)
+      Table_Number : Tables_Index)
       return Interfaces.Unsigned_64;
 
    --  Returns the number of tables in the map.
@@ -59,7 +59,7 @@ is
    procedure Update
      (Map     : in out Page_Table_Map;
       Process : not null access procedure
-        (Table_Number :        Table_Range;
+        (Table_Number :        Tables_Index;
          Table        : in out Tables.Page_Table_Type));
 
    --  Iterate over given page table map and call given process procedure for
@@ -67,7 +67,7 @@ is
    procedure Iterate
      (Map     : Page_Table_Map;
       Process : not null access procedure
-        (Table_Number : Table_Range;
+        (Table_Number : Tables_Index;
          Table        : Tables.Page_Table_Type));
 
    --  Clear page table map.
@@ -80,7 +80,7 @@ private
    use type Tables.Page_Table_Type;
 
    package Tables_Map_Package is new Ada.Containers.Ordered_Maps
-     (Key_Type     => Table_Range,
+     (Key_Type     => Tables_Index,
       Element_Type => Tables.Page_Table_Type);
 
    type Page_Table_Map is record

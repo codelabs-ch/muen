@@ -93,7 +93,7 @@ private
       Executable  : Boolean;
       Maps_Page   : Boolean;
       Global      : Boolean;
-      Caching     : Paging.Caching_Type;
+      Caching     : Caching_Type;
    end record;
 
    type PML4_Entry_Type is new Table_Entry_Type with null record;

@@ -17,6 +17,7 @@
 --
 
 with "../shared_tools";
+with "../libmutools/libmutools";
 
 library project Libpaging extends "../libs.gpr" is
 

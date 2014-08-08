@@ -283,11 +283,60 @@ package body Paging.Layouts.Test_Data.Tests is
          Assert (Condition => Maps.Length (Map => Layout.Structures (4)) = 2,
                  Message   => "Level 4 table count mismatch");
       end Add_Multiple_PT_Regions;
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Duplicate_PT_Regions
+      is
+         Layout : Memory_Layout_Type (Levels => 4);
+      begin
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#3c79_0000#,
+            Virtual_Address  => 16#e000_0000#,
+            Size             => Page_Size,
+            Caching          => WB,
+            Writable         => False,
+            Executable       => False);
+
+         --  Adding the identical mapping multiple times must not raise an
+         --  exception.
+
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#3c79_0000#,
+            Virtual_Address  => 16#e000_0000#,
+            Size             => Page_Size,
+            Caching          => WB,
+            Writable         => False,
+            Executable       => False);
+
+         begin
+            Add_Memory_Region
+              (Mem_Layout       => Layout,
+               Physical_Address => 16#1000#,
+               Virtual_Address  => 16#e000_0000#,
+               Size             => Page_Size,
+               Caching          => WB,
+               Writable         => False,
+               Executable       => True);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+
+         exception
+            when E : Mapping_Present =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Multiple mappings of VMA 16#e000_0000# with "
+                       & "different attributes present",
+                       Message   => "Exception mismatch");
+         end;
+      end Add_Duplicate_PT_Regions;
    begin
       Add_PT_Region;
       Add_PD_Region;
       Add_PDPT_Region;
       Add_Multiple_PT_Regions;
+      Add_Duplicate_PT_Regions;
 --  begin read only
    end Test_Add_Memory_Region;
 --  end read only

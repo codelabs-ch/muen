@@ -5,6 +5,7 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Exceptions;
 with Ada.Streams.Stream_IO;
 
 with Mutools.Files;

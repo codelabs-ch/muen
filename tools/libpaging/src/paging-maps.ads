@@ -45,6 +45,14 @@ is
       Entry_Index  :        Entry_Range;
       Table_Entry  :        Entries.Table_Entry_Type);
 
+   --  Return the table entry with given index from the table specified by
+   --  number. If the entry is not present an exception is raised.
+   function Get_Entry
+     (Map          : Page_Table_Map;
+      Table_Number : Table_Range;
+      Entry_Index  : Entry_Range)
+      return Entries.Table_Entry_Type;
+
    --  Returns the physical address of the table specified by number.
    function Get_Table_Address
      (Map          : Page_Table_Map;

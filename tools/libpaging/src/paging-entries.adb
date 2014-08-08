@@ -22,7 +22,7 @@ is
    -------------------------------------------------------------------------
 
    function Create
-     (Dst_Offset  : Tables_Index;
+     (Dst_Offset  : Table_Range;
       Dst_Address : Interfaces.Unsigned_64;
       Readable    : Boolean;
       Writable    : Boolean;
@@ -64,7 +64,7 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Dst_Offset (E : Table_Entry_Type) return Tables_Index
+   function Get_Dst_Offset (E : Table_Entry_Type) return Table_Range
    is
    begin
       return E.Dst_Offset;

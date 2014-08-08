@@ -9,10 +9,10 @@ package Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
    type Test_Table_Entry_Type is new
      GNATtest_Generated.GNATtest_Standard.Paging.Entries.Table_Entry_Type_Test_Data.Test_Table_Entry_Type with null record;
 
-   procedure Test_Create_af3043 (Gnattest_T : in out Test_Table_Entry_Type);
+   procedure Test_Create_c28192 (Gnattest_T : in out Test_Table_Entry_Type);
    --  paging-entries.ads:28:4:Create
 
-   procedure Test_Get_Dst_Offset_6f8f2c (Gnattest_T : in out Test_Table_Entry_Type);
+   procedure Test_Get_Dst_Offset_e2a5fc (Gnattest_T : in out Test_Table_Entry_Type);
    --  paging-entries.ads:41:4:Get_Dst_Offset
 
    procedure Test_Get_Dst_Address_17828e (Gnattest_T : in out Test_Table_Entry_Type);

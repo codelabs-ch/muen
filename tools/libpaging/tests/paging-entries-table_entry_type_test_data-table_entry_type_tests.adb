@@ -12,8 +12,8 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
 
 --  begin read only
    procedure Test_Create (Gnattest_T : in out Test_Table_Entry_Type);
-   procedure Test_Create_af3043 (Gnattest_T : in out Test_Table_Entry_Type) renames Test_Create;
---  id:2.2/af30435042090002/Create/1/0/
+   procedure Test_Create_c28192 (Gnattest_T : in out Test_Table_Entry_Type) renames Test_Create;
+--  id:2.2/c28192ec038b2fe0/Create/1/0/
    procedure Test_Create (Gnattest_T : in out Test_Table_Entry_Type) is
    --  paging-entries.ads:28:4:Create
 --  end read only
@@ -56,8 +56,8 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
 
 --  begin read only
    procedure Test_Get_Dst_Offset (Gnattest_T : in out Test_Table_Entry_Type);
-   procedure Test_Get_Dst_Offset_6f8f2c (Gnattest_T : in out Test_Table_Entry_Type) renames Test_Get_Dst_Offset;
---  id:2.2/6f8f2c09199652ce/Get_Dst_Offset/1/0/
+   procedure Test_Get_Dst_Offset_e2a5fc (Gnattest_T : in out Test_Table_Entry_Type) renames Test_Get_Dst_Offset;
+--  id:2.2/e2a5fc7b01d232b1/Get_Dst_Offset/1/0/
    procedure Test_Get_Dst_Offset (Gnattest_T : in out Test_Table_Entry_Type) is
    --  paging-entries.ads:41:4:Get_Dst_Offset
 --  end read only

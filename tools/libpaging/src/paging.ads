@@ -32,7 +32,7 @@ is
 
    --  Paging structure index type which defines the range of paging structures
    --  per level.
-   type Tables_Index is range 0 .. 512 * 512 * 512 - 1;
+   type Table_Range is range 0 .. 512 * 512 * 512 - 1;
 
    type Paging_Level is new Positive range 1 .. 4;
 

@@ -942,7 +942,7 @@
     <memory executable="true" logical="binary" physical="subject1|bin" virtualAddress="16#0020_0000#" writable="true"/>
     <memory executable="false" logical="lnx_state" physical="lnx_state" virtualAddress="16#4000#" writable="true"/>
     <memory executable="false" logical="primary_data" physical="data_channel" virtualAddress="16#3000#" writable="true"/>
-    <memory executable="false" logical="secondary_data" physical="data_channel2" virtualAddress="16#3000#" writable="true"/>
+    <memory executable="false" logical="secondary_data" physical="data_channel2" virtualAddress="16#5000#" writable="true"/>
    </memory>
    <devices>
     <device logical="nic1" physical="nic1">

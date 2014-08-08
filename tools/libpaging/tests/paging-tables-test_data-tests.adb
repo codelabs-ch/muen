@@ -49,11 +49,54 @@ package body Paging.Tables.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Get_Entry (Gnattest_T : in out Test);
+   procedure Test_Get_Entry_e3f7ba (Gnattest_T : in out Test) renames Test_Get_Entry;
+--  id:2.2/e3f7bab7ca565b5b/Get_Entry/1/0/
+   procedure Test_Get_Entry (Gnattest_T : in out Test) is
+   --  paging-tables.ads:40:4:Get_Entry
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Table : Page_Table_Type;
+      Dummy : Entries.Table_Entry_Type
+        := Entries.Create
+          (Dst_Index   => 24,
+           Dst_Address => 16#1000#,
+           Readable    => True,
+           Writable    => False,
+           Executable  => True,
+           Maps_Page   => True,
+           Global      => False,
+           Caching     => UC);
+   begin
+      Table.Data.Insert (Key      => 25,
+                         New_Item => Dummy);
+
+      Assert (Condition => Get_Entry (Table => Table,
+                                      Index => 25) = Dummy,
+              Message   => "Entry mismatch");
+
+      begin
+         Dummy := Get_Entry (Table => Table,
+                             Index => 42);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when Missing_Entry => null;
+      end;
+--  begin read only
+   end Test_Get_Entry;
+--  end read only
+
+
+--  begin read only
    procedure Test_Count (Gnattest_T : in out Test);
    procedure Test_Count_165b07 (Gnattest_T : in out Test) renames Test_Count;
 --  id:2.2/165b0799cddc8fab/Count/1/0/
    procedure Test_Count (Gnattest_T : in out Test) is
-   --  paging-tables.ads:39:4:Count
+   --  paging-tables.ads:46:4:Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -78,7 +121,7 @@ package body Paging.Tables.Test_Data.Tests is
    procedure Test_Contains_790fb8 (Gnattest_T : in out Test) renames Test_Contains;
 --  id:2.2/790fb83d2013d298/Contains/1/0/
    procedure Test_Contains (Gnattest_T : in out Test) is
-   --  paging-tables.ads:42:4:Contains
+   --  paging-tables.ads:49:4:Contains
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -108,7 +151,7 @@ package body Paging.Tables.Test_Data.Tests is
    procedure Test_Get_Physical_Address_696158 (Gnattest_T : in out Test) renames Test_Get_Physical_Address;
 --  id:2.2/69615859ff9354ca/Get_Physical_Address/1/0/
    procedure Test_Get_Physical_Address (Gnattest_T : in out Test) is
-   --  paging-tables.ads:48:4:Get_Physical_Address
+   --  paging-tables.ads:55:4:Get_Physical_Address
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -133,7 +176,7 @@ package body Paging.Tables.Test_Data.Tests is
    procedure Test_Set_Physical_Address_8a6f74 (Gnattest_T : in out Test) renames Test_Set_Physical_Address;
 --  id:2.2/8a6f7428d81aac8e/Set_Physical_Address/1/0/
    procedure Test_Set_Physical_Address (Gnattest_T : in out Test) is
-   --  paging-tables.ads:53:4:Set_Physical_Address
+   --  paging-tables.ads:60:4:Set_Physical_Address
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -156,7 +199,7 @@ package body Paging.Tables.Test_Data.Tests is
    procedure Test_Iterate_a130ac (Gnattest_T : in out Test) renames Test_Iterate;
 --  id:2.2/a130ac86f3412004/Iterate/1/0/
    procedure Test_Iterate (Gnattest_T : in out Test) is
-   --  paging-tables.ads:59:4:Iterate
+   --  paging-tables.ads:66:4:Iterate
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -196,7 +239,7 @@ package body Paging.Tables.Test_Data.Tests is
    procedure Test_Update_c7a83f (Gnattest_T : in out Test) renames Test_Update;
 --  id:2.2/c7a83fd5009ccda3/Update/1/0/
    procedure Test_Update (Gnattest_T : in out Test) is
-   --  paging-tables.ads:67:4:Update
+   --  paging-tables.ads:74:4:Update
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -236,7 +279,7 @@ package body Paging.Tables.Test_Data.Tests is
    procedure Test_Clear_5b2240 (Gnattest_T : in out Test) renames Test_Clear;
 --  id:2.2/5b2240cb4b547858/Clear/1/0/
    procedure Test_Clear (Gnattest_T : in out Test) is
-   --  paging-tables.ads:74:4:Clear
+   --  paging-tables.ads:81:4:Clear
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

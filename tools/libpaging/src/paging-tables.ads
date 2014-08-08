@@ -35,6 +35,13 @@ is
       Index :        Entry_Range;
       E     :        Entries.Table_Entry_Type);
 
+   --  Get entry with given index from pagetable. An exception is raised if no
+   --  entry with the specified index exists.
+   function Get_Entry
+     (Table : Page_Table_Type;
+      Index : Entry_Range)
+      return Entries.Table_Entry_Type;
+
    --  Returns the number of entries present in the table.
    function Count (Table : Page_Table_Type) return Entry_Range;
 
@@ -74,6 +81,7 @@ is
    procedure Clear (Table : in out Page_Table_Type);
 
    Duplicate_Entry : exception;
+   Missing_Entry   : exception;
 
 private
 

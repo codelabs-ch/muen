@@ -67,6 +67,26 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Entry
+     (Table : Page_Table_Type;
+      Index : Entry_Range)
+      return Entries.Table_Entry_Type
+   is
+      use type Entries_Map_Package.Cursor;
+
+      Pos : constant Entries_Map_Package.Cursor := Table.Data.Find
+        (Key => Index);
+   begin
+      if Pos = Entries_Map_Package.No_Element then
+         raise Missing_Entry with "Entry with number" & Index'Img
+           & " not in table";
+      end if;
+
+      return Entries_Map_Package.Element (Position => Pos);
+   end Get_Entry;
+
+   -------------------------------------------------------------------------
+
    function Get_Physical_Address
      (Table : Page_Table_Type)
       return Interfaces.Unsigned_64

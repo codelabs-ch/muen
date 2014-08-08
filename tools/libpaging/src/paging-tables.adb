@@ -23,7 +23,7 @@ is
 
    procedure Add_Entry
      (Table : in out Page_Table_Type;
-      Index :        Table_Range;
+      Index :        Entry_Range;
       E     :        Entries.Table_Entry_Type)
    is
    begin
@@ -50,7 +50,7 @@ is
 
    function Contains
      (Table : Page_Table_Type;
-      Index : Table_Range)
+      Index : Entry_Range)
       return Boolean
    is
    begin
@@ -59,10 +59,10 @@ is
 
    -------------------------------------------------------------------------
 
-   function Count (Table : Page_Table_Type) return Table_Range
+   function Count (Table : Page_Table_Type) return Entry_Range
    is
    begin
-      return Table_Range (Table.Data.Length);
+      return Entry_Range (Table.Data.Length);
    end Count;
 
    -------------------------------------------------------------------------
@@ -80,7 +80,7 @@ is
    procedure Iterate
      (Table   : Page_Table_Type;
       Process : not null access procedure
-        (Index  : Table_Range;
+        (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type))
    is
       --  Perform process operation for given element.
@@ -88,7 +88,7 @@ is
 
       procedure Call_Process (Position : Entries_Map_Package.Cursor)
       is
-         Index  : constant Table_Range := Entries_Map_Package.Key
+         Index  : constant Entry_Range := Entries_Map_Package.Key
            (Position => Position);
          TEntry : constant Entries.Table_Entry_Type
            := Entries_Map_Package.Element (Position => Position);
@@ -115,7 +115,7 @@ is
    procedure Update
      (Table   : in out Page_Table_Type;
       Process : not null access procedure
-        (Index  :        Table_Range;
+        (Index  :        Entry_Range;
          TEntry : in out Entries.Table_Entry_Type))
    is
       --  Process the given page table entry.

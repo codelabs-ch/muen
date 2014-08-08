@@ -34,7 +34,7 @@ is
    function Contains
      (Map          : Page_Table_Map;
       Table_Number : Tables_Index;
-      Entry_Index  : Table_Range)
+      Entry_Index  : Entry_Range)
       return Boolean;
 
    --  Add entry with given index to table specified by number. If the entry is
@@ -42,7 +42,7 @@ is
    procedure Add_Entry
      (Map          : in out Page_Table_Map;
       Table_Number :        Tables_Index;
-      Entry_Index  :        Table_Range;
+      Entry_Index  :        Entry_Range;
       Table_Entry  :        Entries.Table_Entry_Type);
 
    --  Returns the physical address of the table specified by number.

@@ -261,7 +261,7 @@ is
 
       --  Adjust destination address of references to level 2 structures.
       procedure Adjust_Level_1
-        (Index  :        Table_Range;
+        (Index  :        Entry_Range;
          TEntry : in out Entries.Table_Entry_Type);
 
       --  Set physical address of each table and adjust destination address of
@@ -273,7 +273,7 @@ is
       ----------------------------------------------------------------------
 
       procedure Adjust_Level_1
-        (Index  :        Table_Range;
+        (Index  :        Entry_Range;
          TEntry : in out Entries.Table_Entry_Type)
       is
          pragma Unreferenced (Index);
@@ -298,13 +298,13 @@ is
 
          --  Adjust destination address of given table entry.
          procedure Adjust_Entry
-           (Index  :        Table_Range;
+           (Index  :        Entry_Range;
             TEntry : in out Entries.Table_Entry_Type);
 
          -------------------------------------------------------------------
 
          procedure Adjust_Entry
-           (Index  :        Table_Range;
+           (Index  :        Entry_Range;
             TEntry : in out Entries.Table_Entry_Type)
          is
             pragma Unreferenced (Index);

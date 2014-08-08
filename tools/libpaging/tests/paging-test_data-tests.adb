@@ -34,13 +34,13 @@ package body Paging.Test_Data.Tests is
 
       Get_Indexes (Address => Interfaces.Unsigned_64'Last,
                    Indexes => Indexes);
-      Assert (Condition => Indexes (1) = Table_Range'Last,
+      Assert (Condition => Indexes (1) = Entry_Range'Last,
               Message   => "PML4 index mismatch (2)");
-      Assert (Condition => Indexes (2) = Table_Range'Last,
+      Assert (Condition => Indexes (2) = Entry_Range'Last,
               Message   => "PDPT index mismatch (2)");
-      Assert (Condition => Indexes (3) = Table_Range'Last,
+      Assert (Condition => Indexes (3) = Entry_Range'Last,
               Message   => "PD index mismatch (2)");
-      Assert (Condition => Indexes (4) = Table_Range'Last,
+      Assert (Condition => Indexes (4) = Entry_Range'Last,
               Message   => "PT index mismatch (2)");
 
       Get_Indexes (Address => 16#000f_ffc8_0200_f000#,

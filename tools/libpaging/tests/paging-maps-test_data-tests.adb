@@ -12,8 +12,8 @@ package body Paging.Maps.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Contains (Gnattest_T : in out Test);
-   procedure Test_Contains_d156dc (Gnattest_T : in out Test) renames Test_Contains;
---  id:2.2/d156dc5aa8519213/Contains/1/0/
+   procedure Test_Contains_dd232d (Gnattest_T : in out Test) renames Test_Contains;
+--  id:2.2/dd232d4a238020ed/Contains/1/0/
    procedure Test_Contains (Gnattest_T : in out Test) is
    --  paging-maps.ads:34:4:Contains
 --  end read only
@@ -45,8 +45,8 @@ package body Paging.Maps.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Add_Entry (Gnattest_T : in out Test);
-   procedure Test_Add_Entry_a7fe20 (Gnattest_T : in out Test) renames Test_Add_Entry;
---  id:2.2/a7fe2029fbb2b023/Add_Entry/1/0/
+   procedure Test_Add_Entry_36a86f (Gnattest_T : in out Test) renames Test_Add_Entry;
+--  id:2.2/36a86fffca1ac13c/Add_Entry/1/0/
    procedure Test_Add_Entry (Gnattest_T : in out Test) is
    --  paging-maps.ads:42:4:Add_Entry
 --  end read only

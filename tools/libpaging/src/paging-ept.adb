@@ -21,7 +21,7 @@ with Paging.Entries;
 package body Paging.EPT
 is
 
-   type Raw_Table_Type is array (Table_Range) of Interfaces.Unsigned_64;
+   type Raw_Table_Type is array (Entry_Range) of Interfaces.Unsigned_64;
 
    --  EPT paging structure entry layout, see Intel SDM Vol. 3C, figure 28-1.
 
@@ -177,13 +177,13 @@ is
 
       --  Add given table entry to raw table.
       procedure Add_To_Raw_Table
-        (Index  : Table_Range;
+        (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type);
 
       ----------------------------------------------------------------------
 
       procedure Add_To_Raw_Table
-        (Index  : Table_Range;
+        (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type)
       is
       begin
@@ -212,13 +212,13 @@ is
 
       --  Add given table entry to raw table.
       procedure Add_To_Raw_Table
-        (Index  : Table_Range;
+        (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type);
 
       ----------------------------------------------------------------------
 
       procedure Add_To_Raw_Table
-        (Index  : Table_Range;
+        (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type)
       is
       begin
@@ -247,13 +247,13 @@ is
 
       --  Add given table entry to raw table.
       procedure Add_To_Raw_Table
-        (Index  : Table_Range;
+        (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type);
 
       ----------------------------------------------------------------------
 
       procedure Add_To_Raw_Table
-        (Index  : Table_Range;
+        (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type)
       is
       begin
@@ -279,13 +279,13 @@ is
 
       --  Add given table entry to raw table.
       procedure Add_To_Raw_Table
-        (Index  : Table_Range;
+        (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type);
 
       ----------------------------------------------------------------------
 
       procedure Add_To_Raw_Table
-        (Index  : Table_Range;
+        (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type)
       is
       begin

@@ -23,7 +23,7 @@ is
 
    use type Interfaces.Unsigned_64;
 
-   type Raw_Table_Type is array (Table_Range) of Interfaces.Unsigned_64;
+   type Raw_Table_Type is array (Entry_Range) of Interfaces.Unsigned_64;
 
    --  Table entry flags.
    Present_Flag   : constant := 0;
@@ -163,13 +163,13 @@ is
 
       --  Add given table entry to raw table.
       procedure Add_To_Raw_Table
-        (Index  : Table_Range;
+        (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type);
 
       ----------------------------------------------------------------------
 
       procedure Add_To_Raw_Table
-        (Index  : Table_Range;
+        (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type)
       is
       begin
@@ -198,13 +198,13 @@ is
 
       --  Add given table entry to raw table.
       procedure Add_To_Raw_Table
-        (Index  : Table_Range;
+        (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type);
 
       ----------------------------------------------------------------------
 
       procedure Add_To_Raw_Table
-        (Index  : Table_Range;
+        (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type)
       is
       begin
@@ -233,13 +233,13 @@ is
 
       --  Add given table entry to raw table.
       procedure Add_To_Raw_Table
-        (Index  : Table_Range;
+        (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type);
 
       ----------------------------------------------------------------------
 
       procedure Add_To_Raw_Table
-        (Index  : Table_Range;
+        (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type)
       is
          PAT : constant PAT_Entry := PAT_Mapping (TEntry.Get_Caching);
@@ -268,13 +268,13 @@ is
 
       --  Add given table entry to raw table.
       procedure Add_To_Raw_Table
-        (Index  : Table_Range;
+        (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type);
 
       ----------------------------------------------------------------------
 
       procedure Add_To_Raw_Table
-        (Index  : Table_Range;
+        (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type)
       is
          PAT    : constant PAT_Entry := PAT_Mapping (TEntry.Get_Caching);

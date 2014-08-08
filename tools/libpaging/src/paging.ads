@@ -28,7 +28,7 @@ is
    type Paging_Mode_Type is (IA32e_Mode, EPT_Mode);
 
    --  All paging structure types (PML4, PDPT, PD, PT) have 512 entries.
-   type Table_Range is range 0 .. 511;
+   type Entry_Range is range 0 .. 511;
 
    --  Paging structure index type which defines the range of paging structures
    --  per level.
@@ -36,7 +36,7 @@ is
 
    type Paging_Level is new Positive range 1 .. 4;
 
-   type Table_Index_Array is array (Paging_Level range <>) of Table_Range;
+   type Table_Index_Array is array (Paging_Level range <>) of Entry_Range;
 
    --  A PDPT entry maps a 1 GB page.
    PDPT_Page_Size : constant := 2 ** 30;

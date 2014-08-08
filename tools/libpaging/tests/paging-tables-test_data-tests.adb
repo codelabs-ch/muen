@@ -12,8 +12,8 @@ package body Paging.Tables.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Add_Entry (Gnattest_T : in out Test);
-   procedure Test_Add_Entry_b9776e (Gnattest_T : in out Test) renames Test_Add_Entry;
---  id:2.2/b9776e04c3dbdc90/Add_Entry/1/0/
+   procedure Test_Add_Entry_e4a533 (Gnattest_T : in out Test) renames Test_Add_Entry;
+--  id:2.2/e4a533e0a4731676/Add_Entry/1/0/
    procedure Test_Add_Entry (Gnattest_T : in out Test) is
    --  paging-tables.ads:33:4:Add_Entry
 --  end read only
@@ -50,8 +50,8 @@ package body Paging.Tables.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Count (Gnattest_T : in out Test);
-   procedure Test_Count_046773 (Gnattest_T : in out Test) renames Test_Count;
---  id:2.2/046773b03ed5e755/Count/1/0/
+   procedure Test_Count_165b07 (Gnattest_T : in out Test) renames Test_Count;
+--  id:2.2/165b0799cddc8fab/Count/1/0/
    procedure Test_Count (Gnattest_T : in out Test) is
    --  paging-tables.ads:39:4:Count
 --  end read only
@@ -75,8 +75,8 @@ package body Paging.Tables.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Contains (Gnattest_T : in out Test);
-   procedure Test_Contains_907a69 (Gnattest_T : in out Test) renames Test_Contains;
---  id:2.2/907a695980077ad6/Contains/1/0/
+   procedure Test_Contains_790fb8 (Gnattest_T : in out Test) renames Test_Contains;
+--  id:2.2/790fb83d2013d298/Contains/1/0/
    procedure Test_Contains (Gnattest_T : in out Test) is
    --  paging-tables.ads:42:4:Contains
 --  end read only
@@ -153,8 +153,8 @@ package body Paging.Tables.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Iterate (Gnattest_T : in out Test);
-   procedure Test_Iterate_2eb2fa (Gnattest_T : in out Test) renames Test_Iterate;
---  id:2.2/2eb2fa347a1fe1b6/Iterate/1/0/
+   procedure Test_Iterate_a130ac (Gnattest_T : in out Test) renames Test_Iterate;
+--  id:2.2/a130ac86f3412004/Iterate/1/0/
    procedure Test_Iterate (Gnattest_T : in out Test) is
    --  paging-tables.ads:59:4:Iterate
 --  end read only
@@ -168,7 +168,7 @@ package body Paging.Tables.Test_Data.Tests is
       ----------------------------------------------------------------------
 
       procedure Inc_Counter
-        (Index  : Table_Range;
+        (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type)
       is
       begin
@@ -193,8 +193,8 @@ package body Paging.Tables.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Update (Gnattest_T : in out Test);
-   procedure Test_Update_f3fe46 (Gnattest_T : in out Test) renames Test_Update;
---  id:2.2/f3fe46aa212eaf88/Update/1/0/
+   procedure Test_Update_c7a83f (Gnattest_T : in out Test) renames Test_Update;
+--  id:2.2/c7a83fd5009ccda3/Update/1/0/
    procedure Test_Update (Gnattest_T : in out Test) is
    --  paging-tables.ads:67:4:Update
 --  end read only
@@ -208,7 +208,7 @@ package body Paging.Tables.Test_Data.Tests is
       ----------------------------------------------------------------------
 
       procedure Inc_Counter
-        (Index  :        Table_Range;
+        (Index  :        Entry_Range;
          TEntry : in out Entries.Table_Entry_Type)
       is
       begin

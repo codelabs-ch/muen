@@ -9,10 +9,10 @@ package Paging.Maps.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.Paging.Maps.Test_Data.Test
    with null record;
 
-   procedure Test_Contains_d156dc (Gnattest_T : in out Test);
+   procedure Test_Contains_dd232d (Gnattest_T : in out Test);
    --  paging-maps.ads:34:4:Contains
 
-   procedure Test_Add_Entry_a7fe20 (Gnattest_T : in out Test);
+   procedure Test_Add_Entry_36a86f (Gnattest_T : in out Test);
    --  paging-maps.ads:42:4:Add_Entry
 
    procedure Test_Get_Table_Address_153f3c (Gnattest_T : in out Test);

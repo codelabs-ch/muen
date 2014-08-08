@@ -24,7 +24,7 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
 
       TEntry : Table_Entry_Type;
    begin
-      TEntry := Create (Dst_Offset  => 42,
+      TEntry := Create (Dst_Index   => 42,
                         Dst_Address => 16#1f_f000#,
                         Readable    => True,
                         Writable    => False,
@@ -33,7 +33,7 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
                         Global      => True,
                         Caching     => Paging.WB);
 
-      Assert (Condition => TEntry.Dst_Offset = 42,
+      Assert (Condition => TEntry.Dst_Table_Index = 42,
               Message   => "Dst offset mismatch");
       Assert (Condition => TEntry.Dst_Address = 16#1f_f000#,
               Message   => "Dst address mismatch");
@@ -55,20 +55,20 @@ package body Paging.Entries.Table_Entry_Type_Test_Data.Table_Entry_Type_Tests is
 
 
 --  begin read only
-   procedure Test_Get_Dst_Offset (Gnattest_T : in out Test_Table_Entry_Type);
-   procedure Test_Get_Dst_Offset_e2a5fc (Gnattest_T : in out Test_Table_Entry_Type) renames Test_Get_Dst_Offset;
---  id:2.2/e2a5fc7b01d232b1/Get_Dst_Offset/1/0/
-   procedure Test_Get_Dst_Offset (Gnattest_T : in out Test_Table_Entry_Type) is
-   --  paging-entries.ads:41:4:Get_Dst_Offset
+   procedure Test_Get_Dst_Table_Index (Gnattest_T : in out Test_Table_Entry_Type);
+   procedure Test_Get_Dst_Table_Index_3a8ec3 (Gnattest_T : in out Test_Table_Entry_Type) renames Test_Get_Dst_Table_Index;
+--  id:2.2/3a8ec3d3f6058b3d/Get_Dst_Table_Index/1/0/
+   procedure Test_Get_Dst_Table_Index (Gnattest_T : in out Test_Table_Entry_Type) is
+   --  paging-entries.ads:41:4:Get_Dst_Table_Index
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
    begin
-      Assert (Condition => Get_Dst_Offset (E => Test_Entry) = 42,
-              Message   => "Dst offset mismatch");
+      Assert (Condition => Get_Dst_Table_Index (E => Test_Entry) = 42,
+              Message   => "Dst table index mismatch");
 --  begin read only
-   end Test_Get_Dst_Offset;
+   end Test_Get_Dst_Table_Index;
 --  end read only
 
 

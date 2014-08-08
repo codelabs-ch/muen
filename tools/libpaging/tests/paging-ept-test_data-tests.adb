@@ -27,7 +27,7 @@ package body Paging.EPT.Test_Data.Tests is
       Tables.Add_Entry (Table => PML4,
                         Index => 0,
                         E     => Entries.Create
-                          (Dst_Offset  => 0,
+                          (Dst_Index   => 0,
                            Dst_Address => 16#1f5000#,
                            Readable    => True,
                            Writable    => True,
@@ -74,7 +74,7 @@ package body Paging.EPT.Test_Data.Tests is
       Tables.Add_Entry (Table => PDPT,
                         Index => 0,
                         E     => Entries.Create
-                          (Dst_Offset  => 0,
+                          (Dst_Index   => 0,
                            Dst_Address => 16#4000_0000#,
                            Readable    => True,
                            Writable    => True,
@@ -85,7 +85,7 @@ package body Paging.EPT.Test_Data.Tests is
       Tables.Add_Entry (Table => PDPT,
                         Index => 1,
                         E     => Entries.Create
-                          (Dst_Offset  => 0,
+                          (Dst_Index   => 0,
                            Dst_Address => 16#8000_0000#,
                            Readable    => True,
                            Writable    => True,
@@ -96,7 +96,7 @@ package body Paging.EPT.Test_Data.Tests is
       Tables.Add_Entry (Table => PDPT,
                         Index => 2,
                         E     => Entries.Create
-                          (Dst_Offset  => 0,
+                          (Dst_Index   => 0,
                            Dst_Address => 16#c000_0000#,
                            Readable    => True,
                            Writable    => True,
@@ -107,7 +107,7 @@ package body Paging.EPT.Test_Data.Tests is
       Tables.Add_Entry (Table => PDPT,
                         Index => 3,
                         E     => Entries.Create
-                          (Dst_Offset  => 0,
+                          (Dst_Index   => 0,
                            Dst_Address => 16#1_0000_0000#,
                            Readable    => True,
                            Writable    => True,
@@ -154,7 +154,7 @@ package body Paging.EPT.Test_Data.Tests is
       Tables.Add_Entry (Table => PD,
                         Index => 0,
                         E     => Entries.Create
-                          (Dst_Offset  => 0,
+                          (Dst_Index   => 0,
                            Dst_Address => 16#1f7000#,
                            Readable    => True,
                            Writable    => True,
@@ -201,7 +201,7 @@ package body Paging.EPT.Test_Data.Tests is
       Tables.Add_Entry (Table => PT,
                         Index => 184,
                         E     => Entries.Create
-                          (Dst_Offset  => 0,
+                          (Dst_Index   => 0,
                            Dst_Address => 16#000b_8000#,
                            Readable    => True,
                            Writable    => True,

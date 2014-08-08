@@ -27,7 +27,7 @@ package body Paging.IA32e.Test_Data.Tests is
       Tables.Add_Entry (Table => PML4,
                         Index => 0,
                         E     => Entries.Create
-                          (Dst_Offset  => 0,
+                          (Dst_Index   => 0,
                            Dst_Address => 16#001f_1000#,
                            Readable    => True,
                            Writable    => True,
@@ -74,7 +74,7 @@ package body Paging.IA32e.Test_Data.Tests is
       Tables.Add_Entry (Table => PDPT,
                         Index => 0,
                         E     => Entries.Create
-                          (Dst_Offset  => 0,
+                          (Dst_Index   => 0,
                            Dst_Address => 16#001f_2000#,
                            Readable    => True,
                            Writable    => True,
@@ -122,7 +122,7 @@ package body Paging.IA32e.Test_Data.Tests is
       Tables.Add_Entry (Table => PD,
                         Index => 0,
                         E     => Entries.Create
-                          (Dst_Offset  => 0,
+                          (Dst_Index   => 0,
                            Dst_Address => 16#001f_3000#,
                            Readable    => True,
                            Writable    => True,
@@ -170,7 +170,7 @@ package body Paging.IA32e.Test_Data.Tests is
       Tables.Add_Entry (Table => PT,
                         Index => 0,
                         E     => Entries.Create
-                          (Dst_Offset  => 0,
+                          (Dst_Index   => 0,
                            Dst_Address => 16#0024_0000#,
                            Readable    => True,
                            Writable    => True,
@@ -181,7 +181,7 @@ package body Paging.IA32e.Test_Data.Tests is
       Tables.Add_Entry (Table => PT,
                         Index => 256,
                         E     => Entries.Create
-                          (Dst_Offset  => 0,
+                          (Dst_Index   => 0,
                            Dst_Address => 16#001f_f000#,
                            Readable    => True,
                            Writable    => False,

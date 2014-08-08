@@ -22,7 +22,7 @@ is
    -------------------------------------------------------------------------
 
    function Create
-     (Dst_Offset  : Table_Range;
+     (Dst_Index   : Table_Range;
       Dst_Address : Interfaces.Unsigned_64;
       Readable    : Boolean;
       Writable    : Boolean;
@@ -34,14 +34,14 @@ is
    is
    begin
       return Table_Entry_Type'
-        (Dst_Offset  => Dst_Offset,
-         Dst_Address => Dst_Address,
-         Readable    => Readable,
-         Writable    => Writable,
-         Executable  => Executable,
-         Maps_Page   => Maps_Page,
-         Global      => Global,
-         Caching     => Caching);
+        (Dst_Table_Index => Dst_Index,
+         Dst_Address     => Dst_Address,
+         Readable        => Readable,
+         Writable        => Writable,
+         Executable      => Executable,
+         Maps_Page       => Maps_Page,
+         Global          => Global,
+         Caching         => Caching);
    end Create;
 
    -------------------------------------------------------------------------
@@ -64,11 +64,11 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Dst_Offset (E : Table_Entry_Type) return Table_Range
+   function Get_Dst_Table_Index (E : Table_Entry_Type) return Table_Range
    is
    begin
-      return E.Dst_Offset;
-   end  Get_Dst_Offset;
+      return E.Dst_Table_Index;
+   end Get_Dst_Table_Index;
 
    -------------------------------------------------------------------------
 

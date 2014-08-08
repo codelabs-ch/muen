@@ -23,7 +23,7 @@ package Paging.Entries.Table_Entry_Type_Test_Data is
    procedure Tear_Down (Gnattest_T : in out Test_Table_Entry_Type);
 
    Test_Entry : constant Table_Entry_Type
-     := Create (Dst_Offset  => 42,
+     := Create (Dst_Index   => 42,
                 Dst_Address => 16#1f_f000#,
                 Readable    => True,
                 Writable    => False,

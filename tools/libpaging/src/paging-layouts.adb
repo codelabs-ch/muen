@@ -150,7 +150,7 @@ is
            (Table => Mem_Layout.Level_1_Table,
             Index => Indexes (Indexes'First),
             E     => Entries.Create
-              (Dst_Offset  => Table_Range (Indexes (Indexes'First)),
+              (Dst_Index   => Table_Range (Indexes (Indexes'First)),
                Dst_Address => 0,
                Readable    => True,
                Writable    => True,
@@ -171,7 +171,7 @@ is
                Table_Number => Table_Idx,
                Entry_Index  => Indexes (I),
                Table_Entry  => Entries.Create
-                 (Dst_Offset  =>
+                 (Dst_Index   =>
                       (if I /= Level then
                             Table_Idx * 512 + Table_Range (Indexes (I))
                        else 0),
@@ -278,7 +278,7 @@ is
       is
          pragma Unreferenced (Index);
 
-         Dst_Idx : constant Table_Range := TEntry.Get_Dst_Offset;
+         Dst_Idx : constant Table_Range := TEntry.Get_Dst_Table_Index;
          Address : constant Interfaces.Unsigned_64
            := Maps.Get_Table_Address
              (Map          => Mem_Layout.Structures
@@ -316,7 +316,7 @@ is
                return;
             end if;
 
-            Dst_Idx := TEntry.Get_Dst_Offset;
+            Dst_Idx := TEntry.Get_Dst_Table_Index;
             Address := Maps.Get_Table_Address
               (Map          => Mem_Layout.Structures (Cur_Level + 1),
                Table_Number => Dst_Idx);

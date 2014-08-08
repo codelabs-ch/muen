@@ -26,7 +26,7 @@ is
 
    --  Create a pagetable entry with given attributes.
    function Create
-     (Dst_Offset  : Table_Range;
+     (Dst_Index   : Table_Range;
       Dst_Address : Interfaces.Unsigned_64;
       Readable    : Boolean;
       Writable    : Boolean;
@@ -36,9 +36,9 @@ is
       Caching     : Caching_Type)
       return Table_Entry_Type;
 
-   --  Returns the offset of the page frame/paging structure referenced by this
-   --  table entry.
-   function Get_Dst_Offset (E : Table_Entry_Type) return Table_Range;
+   --  Returns the index of the paging structure referenced by this table
+   --  entry.
+   function Get_Dst_Table_Index (E : Table_Entry_Type) return Table_Range;
 
    --  Return the address pointed to by this table entry.
    function Get_Dst_Address
@@ -86,14 +86,14 @@ is
 private
 
    type Table_Entry_Type is tagged record
-      Dst_Offset  : Table_Range;
-      Dst_Address : Interfaces.Unsigned_64;
-      Readable    : Boolean;
-      Writable    : Boolean;
-      Executable  : Boolean;
-      Maps_Page   : Boolean;
-      Global      : Boolean;
-      Caching     : Caching_Type;
+      Dst_Table_Index : Table_Range;
+      Dst_Address     : Interfaces.Unsigned_64;
+      Readable        : Boolean;
+      Writable        : Boolean;
+      Executable      : Boolean;
+      Maps_Page       : Boolean;
+      Global          : Boolean;
+      Caching         : Caching_Type;
    end record;
 
    type PML4_Entry_Type is new Table_Entry_Type with null record;

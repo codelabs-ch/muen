@@ -125,7 +125,8 @@ is
    is
 
       --  Base address of kernel device mappings.
-      Base_Address : Interfaces.Unsigned_64 := Config.Kernel_Devices_Addr;
+      Base_Address : Interfaces.Unsigned_64
+        := Config.Kernel_Devices_Virtual_Addr;
 
       --  Create device reference with given device, MMIO region name and MMIO
       --  address.

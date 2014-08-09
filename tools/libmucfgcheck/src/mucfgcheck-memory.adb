@@ -256,32 +256,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Kernel_PT_Region_Size (XML_Data : Muxml.XML_Data_Type)
-   is
-      PT_Regions : constant DOM.Core.Node_List
-        := XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => "/system/memory/memory"
-           & "[starts-with(@name,'kernel') and @type='system_pt']");
-      Size       : constant Interfaces.Unsigned_64
-        := Interfaces.Unsigned_64'Value
-          (DOM.Core.Elements.Get_Attribute
-             (Elem => DOM.Core.Nodes.Item
-                (List  => PT_Regions,
-                 Index => 0),
-              Name => "size"));
-   begin
-      Check_Attribute (Nodes     => PT_Regions,
-                       Node_Type => "kernel PT region",
-                       Attr      => "size",
-                       Name_Attr => "name",
-                       Test      => Equals'Access,
-                       Right     => Size,
-                       Error_Msg => "differs");
-   end Kernel_PT_Region_Size;
-
-   -------------------------------------------------------------------------
-
    procedure Kernel_Stack_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
       CPU_Count    : constant Positive := Positive'Value

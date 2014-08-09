@@ -96,7 +96,8 @@ is
          Name        => "kernel_ro",
          Address     => Mutools.Utils.To_Hex
            (Number => Config.Kernel_RO_Section_Addr),
-         Size        => "16#4000#",
+         Size        => Mutools.Utils.To_Hex
+           (Number => Config.Kernel_RO_Section_Size),
          Caching     => "WB",
          Alignment   => "16#1000#",
          File_Name   => "kernel",

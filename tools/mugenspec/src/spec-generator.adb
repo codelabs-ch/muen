@@ -813,21 +813,6 @@ is
            (Doc   => Policy.Doc,
             XPath => "/system/platform/processor",
             Name  => "logicalCpus");
-         PT_Node       : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Nodes => Phys_Memory,
-              Refs  => ((Name  => U ("type"),
-                         Value => U ("system_pt")),
-                        (Name  => U ("name"),
-                         Value => U ("kernel_0|pt"))));
-         PML4_Addr     : constant Unsigned_64 := Unsigned_64'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => PT_Node,
-               Name => "physicalAddress"));
-         PT_Size       : constant Unsigned_64 := Unsigned_64'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => PT_Node,
-               Name => "size"));
          VMXON_Addr    : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Nodes     => Phys_Memory,
@@ -863,18 +848,6 @@ is
             Pattern  => "__stack_addr__",
             Content  => Mutools.Utils.To_Hex
               (Number    => Stack_Addr,
-               Normalize => False));
-         Mutools.Templates.Replace
-           (Template => Tmpl,
-            Pattern  => "__kpml4_addr__",
-            Content  => Mutools.Utils.To_Hex
-              (Number    => PML4_Addr,
-               Normalize => False));
-         Mutools.Templates.Replace
-           (Template => Tmpl,
-            Pattern  => "__kpt_size__",
-            Content  => Mutools.Utils.To_Hex
-              (Number    => PT_Size,
                Normalize => False));
          Mutools.Templates.Replace
            (Template => Tmpl,

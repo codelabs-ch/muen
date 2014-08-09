@@ -767,7 +767,7 @@ is
            (List => McKae.XML.XPath.XIA.XPath_Query
               (N     => Policy.Doc,
                XPath => "/system/subjects/subject"));
-         CPU_Count     : constant String := Muxml.Utils.Get_Attribute
+         CPU_Count_Str : constant String := Muxml.Utils.Get_Attribute
            (Doc   => Policy.Doc,
             XPath => "/system/platform/processor",
             Name  => "logicalCpus");
@@ -843,7 +843,7 @@ is
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__cpu_count__",
-            Content  => CPU_Count);
+            Content  => CPU_Count_Str);
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__vmxon_addr__",

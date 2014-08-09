@@ -214,46 +214,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Kernel_PT_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
-   is
-      XPath : constant String
-        := "/system/memory/memory[contains(substring-before(string(@name),"
-        & "'|pt'), 'kernel_')]";
-
-      Nodes : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => XPath);
-
-      --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
-
-      ----------------------------------------------------------------------
-
-      function Error_Msg (Node : DOM.Core.Node) return String
-      is
-         Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Node,
-            Name => "name");
-      begin
-         return "Kernel PT memory region '" & Name & "' not adjacent to other "
-           & "PT regions";
-      end Error_Msg;
-   begin
-      if DOM.Core.Nodes.Length (List => Nodes) < 2 then
-         return;
-      end if;
-
-      For_Each_Match
-        (XML_Data     => XML_Data,
-         Source_XPath => XPath,
-         Ref_XPath    => XPath,
-         Log_Message  => "Kernel PT region(s) for consecutiveness",
-         Error        => Error_Msg'Access,
-         Match        => Is_Adjacent_Region'Access);
-   end Kernel_PT_Consecutiveness;
-
-   -------------------------------------------------------------------------
-
    procedure Kernel_PT_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
       CPU_Count    : constant Positive

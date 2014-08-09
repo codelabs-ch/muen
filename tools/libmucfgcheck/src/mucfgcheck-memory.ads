@@ -70,9 +70,6 @@ is
    --  Validate that no virtual memory regions of a subject overlap.
    procedure Virtual_Memory_Overlap (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that all kernel PT regions are consecutive.
-   procedure Kernel_PT_Consecutiveness (XML_Data : Muxml.XML_Data_Type);
-
    --  Validate that a kernel stack region exists for every CPU.
    procedure Kernel_Stack_Region_Presence (XML_Data : Muxml.XML_Data_Type);
 

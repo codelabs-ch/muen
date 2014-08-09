@@ -13,4 +13,6 @@
 
 .section .rodata
     .align 4
-kernel_pml4_start:__kernel_pml4_addrs__
+kernel_pml4_start:
+    .long 0x200000
+    .long 0x204000

@@ -214,6 +214,57 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Kernel_PT_Below_4G (XML_Data : Muxml.XML_Data_Type)
+   is
+      CPU_Count    : constant Positive := Positive'Value
+        (Muxml.Utils.Get_Attribute
+           (Doc   => XML_Data.Doc,
+            XPath => "/system/platform/processor",
+            Name  => "logicalCpus"));
+      Physical_Mem : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory");
+   begin
+      Mulog.Log (Msg => "Checking physical address of" & CPU_Count'Img
+                 & " kernel PT region(s)");
+
+      for I in 0 .. CPU_Count - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            CPU_Str  : constant String
+              := Ada.Strings.Fixed.Trim
+                (Source => I'Img,
+                 Side   => Ada.Strings.Left);
+            Mem_Name : constant String
+              := "kernel_" & CPU_Str & "|pt";
+            Node     : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Physical_Mem,
+                 Ref_Attr  => "name",
+                 Ref_Value => Mem_Name);
+            Address  : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Node,
+                    Name => "physicalAddress"));
+            Size    : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Node,
+                    Name => "size"));
+         begin
+            if Address + Size >= 2 ** 32 then
+               raise Validation_Error with "Kernel PT region '" & Mem_Name
+                 & "' for logical CPU " & CPU_Str & " not below 4G";
+            end if;
+         end;
+      end loop;
+   end Kernel_PT_Below_4G;
+
+   -------------------------------------------------------------------------
+
    procedure Kernel_PT_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
       CPU_Count    : constant Positive

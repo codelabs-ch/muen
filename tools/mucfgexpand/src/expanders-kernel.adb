@@ -329,7 +329,7 @@ is
 
    procedure Add_Subj_State_Mappings (Data : in out Muxml.XML_Data_Type)
    is
-      State_Start : constant := Config.Subject_States_Addr;
+      State_Start : constant := Config.Subject_States_Virtual_Addr;
       CPU_Nodes   : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,

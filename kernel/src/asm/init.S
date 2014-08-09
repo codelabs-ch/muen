@@ -123,10 +123,11 @@ ap_entry_point:
 
 	// set up per-CPU paging
 
-	mov $KERNEL_PTSIZE, %edx
+	mov $0x4, %edx
 	mul %edx
-	add $KERNEL_PML4, %eax
-	mov %eax, %cr3
+	add $kernel_pml4_start, %eax
+	mov (%eax), %edx
+	mov %edx, %cr3
 
 	// enable IA-32e mode and execute-disable
 

@@ -106,13 +106,11 @@ is
 
    procedure Add_Kernel_PTs (Data : in out Muxml.XML_Data_Type)
    is
-      Cur_Addr  : Interfaces.Unsigned_64 := 16#0012_9000#;
-      CPU_Count : constant Positive      := Positive'Value
+      CPU_Count : constant Positive := Positive'Value
         (Muxml.Utils.Get_Attribute
            (Doc   => Data.Doc,
             XPath => "/system/platform/processor",
             Name  => "logicalCpus"));
-
    begin
       for I in 0 .. CPU_Count - 1 loop
          declare
@@ -133,21 +131,17 @@ is
               (Number => Size);
          begin
             Mulog.Log (Msg => "Adding pagetable region with size " & Size_Str
-                       & " at address "
-                       & Mutools.Utils.To_Hex (Number => Cur_Addr)
                        & " for CPU " & CPU_Str);
             Mutools.XML_Utils.Add_Memory_Region
               (Policy      => Data,
                Name        => "kernel_" & CPU_Str & "|pt",
-               Address     => Mutools.Utils.To_Hex (Number => Cur_Addr),
+               Address     => "",
                Size        => Size_Str,
                Caching     => "WB",
                Alignment   => "16#1000#",
                Memory_Type => "system_pt",
                File_Name   => "kernel_pt_" & CPU_Str,
                File_Offset => "none");
-
-            Cur_Addr := Cur_Addr + Size;
          end;
       end loop;
    end Add_Kernel_PTs;

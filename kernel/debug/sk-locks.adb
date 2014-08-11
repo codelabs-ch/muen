@@ -49,14 +49,14 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Unlock
+   procedure Release
    is
    begin
       System.Machine_Code.Asm
         (Template => "movq $0, %0",
          Outputs  => (SK.Byte'Asm_Output ("=m", Lock.Locked)),
          Volatile => True);
-   end Unlock;
+   end Release;
 
 begin
    Lock.Locked := 0;

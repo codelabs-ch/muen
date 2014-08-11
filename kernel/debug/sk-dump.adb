@@ -49,7 +49,7 @@ is
       KC.Put_String (Item => " with APIC ID ");
       KC.Put_Byte   (Item => APIC_ID);
       KC.New_Line;
-      Locks.Unlock;
+      Locks.Release;
    end Print_IRQ_Routing;
 
    -------------------------------------------------------------------------
@@ -125,7 +125,7 @@ is
       KC.Put_String (" EFL: ");
       KC.Put_Word32 (Item => Word32 (RFL));
       KC.New_Line;
-      Locks.Unlock;
+      Locks.Release;
    end Print_Registers;
 
    -------------------------------------------------------------------------
@@ -147,7 +147,7 @@ is
       KC.Put_Word64 (Item => Context.Error_Code);
       KC.New_Line;
       KC.New_Line;
-      Locks.Unlock;
+      Locks.Release;
 
       Print_Registers (GPR => Context.GPR,
                        RIP => Context.RIP,
@@ -171,7 +171,7 @@ is
       KC.Put_String (Item => " ");
       KC.Put_Byte   (Item => Item);
       KC.New_Line;
-      Locks.Unlock;
+      Locks.Release;
    end Print_Message_8;
 
    -------------------------------------------------------------------------
@@ -184,7 +184,7 @@ is
       KC.Put_String (Item => " ");
       KC.Put_Word16 (Item => Item);
       KC.New_Line;
-      Locks.Unlock;
+      Locks.Release;
    end Print_Message_16;
 
    -------------------------------------------------------------------------
@@ -197,7 +197,7 @@ is
       KC.Put_String (Item => " ");
       KC.Put_Word32 (Item => Item);
       KC.New_Line;
-      Locks.Unlock;
+      Locks.Release;
    end Print_Message_32;
 
    -------------------------------------------------------------------------
@@ -210,7 +210,7 @@ is
       KC.Put_String (Item => " ");
       KC.Put_Word64 (Item => Item);
       KC.New_Line;
-      Locks.Unlock;
+      Locks.Release;
    end Print_Message_64;
 
    -------------------------------------------------------------------------
@@ -226,7 +226,7 @@ is
       KC.Put_String (Item => " from subject ");
       KC.Put_Byte   (Item => SK.Byte (Current_Subject));
       KC.New_Line;
-      Locks.Unlock;
+      Locks.Release;
    end Print_Spurious_Event;
 
    -------------------------------------------------------------------------
@@ -246,7 +246,7 @@ is
       KC.Put_String (Item => ":");
       KC.Put_Word32 (Item => Word32 (State.Interrupt_Info));
       KC.New_Line;
-      Locks.Unlock;
+      Locks.Release;
       Print_Registers (GPR => State.Regs,
                        RIP => State.RIP,
                        CS  => State.CS,
@@ -280,7 +280,7 @@ is
 
       KC.Put_Word32 (Item => Word32 (Exit_Qualification));
       KC.Put_Line   (Item => ")");
-      Locks.Unlock;
+      Locks.Release;
    end Print_VMX_Entry_Error;
 
    -------------------------------------------------------------------------
@@ -307,7 +307,7 @@ is
       else
          KC.Put_Line   (Item => "Unable to read VMX instruction error");
       end if;
-      Locks.Unlock;
+      Locks.Release;
    end Print_VMX_Error;
 
 end SK.Dump;

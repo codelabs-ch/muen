@@ -25,6 +25,6 @@ is
    procedure Acquire;
 
    --  Unlock.
-   procedure Unlock;
+   procedure Release;
 
 end SK.Locks;

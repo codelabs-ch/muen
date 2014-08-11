@@ -63,6 +63,14 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/channels/channel");
+      Readers  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/channels/reader");
+      Writers  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/channels/writer");
    begin
       Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
                  (List => Channels)'Img & " channel(s) for reader/writer "
@@ -83,16 +91,16 @@ is
                  Name => "hasEvent");
             Reader_Count : constant Natural
               := DOM.Core.Nodes.Length
-                (List => McKae.XML.XPath.XIA.XPath_Query
-                   (N     => XML_Data.Doc,
-                    XPath => "/system/subjects/subject/channels/reader"
-                    & "[@physical='" & Channel_Name & "']"));
+                (List => Muxml.Utils.Get_Elements
+                   (Nodes     => Readers,
+                    Ref_Attr  => "physical",
+                    Ref_Value => Channel_Name));
             Writer_Count : constant Natural
               := DOM.Core.Nodes.Length
-                (List => McKae.XML.XPath.XIA.XPath_Query
-                   (N     => XML_Data.Doc,
-                    XPath => "/system/subjects/subject/channels/writer"
-                    & "[@physical='" & Channel_Name & "']"));
+                (List => Muxml.Utils.Get_Elements
+                   (Nodes     => Writers,
+                    Ref_Attr  => "physical",
+                    Ref_Value => Channel_Name));
          begin
             if (Has_Event'Length > 0 and then Reader_Count /= 1)
               or (Has_Event'Length = 0 and then Reader_Count < 1)

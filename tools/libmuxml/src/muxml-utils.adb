@@ -229,6 +229,36 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Elements
+     (Nodes     : DOM.Core.Node_List;
+      Ref_Attr  : String;
+      Ref_Value : String)
+      return DOM.Core.Node_List
+   is
+      Count  : constant Natural := DOM.Core.Nodes.Length (List => Nodes);
+      Result : DOM.Core.Node_List;
+   begin
+      for I in 0 .. Count - 1 loop
+         declare
+            Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+         begin
+            if DOM.Core.Elements.Get_Attribute
+              (Elem => Node,
+               Name => Ref_Attr) = Ref_Value
+            then
+               DOM.Core.Append_Node (List => Result,
+                                     N    => Node);
+            end if;
+         end;
+      end loop;
+
+      return Result;
+   end Get_Elements;
+
+   -------------------------------------------------------------------------
+
    procedure Merge
      (Left      : DOM.Core.Node;
       Right     : DOM.Core.Node;

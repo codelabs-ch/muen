@@ -313,11 +313,100 @@ package body Muxml.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Get_Elements (Gnattest_T : in out Test);
+   procedure Test_Get_Elements_e02b1f (Gnattest_T : in out Test) renames Test_Get_Elements;
+--  id:2.2/e02b1ff46879608e/Get_Elements/1/0/
+   procedure Test_Get_Elements (Gnattest_T : in out Test) is
+   --  muxml-utils.ads:69:4:Get_Elements
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+      use type DOM.Core.Node;
+
+      Impl : DOM.Core.DOM_Implementation;
+      Data : XML_Data_Type;
+      Node : DOM.Core.Node;
+      List : DOM.Core.Node_List;
+   begin
+      Assert (Condition => DOM.Core.Nodes.Length
+              (List => Get_Elements
+               (Nodes     => List,
+                Ref_Attr  => "name",
+                Ref_Value => "foo")) = 0,
+              Message   => "Elements in empty list");
+
+      Data.Doc := DOM.Core.Create_Document (Implementation => Impl);
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "bar");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "name",
+         Value => "bar");
+      DOM.Core.Append_Node
+        (List => List,
+         N    => Node);
+      Assert (Condition => DOM.Core.Nodes.Length
+              (List => Get_Elements
+               (Nodes     => List,
+                Ref_Attr  => "name",
+                Ref_Value => "foo")) = 0,
+              Message   => "Element in 'bar' list");
+
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "foo");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "name",
+         Value => "foo");
+      DOM.Core.Append_Node
+        (List => List,
+         N    => Node);
+      declare
+         Matches : constant DOM.Core.Node_List
+           := Get_Elements
+           (Nodes     => List,
+            Ref_Attr  => "name",
+            Ref_Value => "foo");
+      begin
+         Assert (Condition => DOM.Core.Nodes.Length
+                 (List => Matches) = 1,
+                 Message   => "Element not found (1)");
+         Assert (Condition => DOM.Core.Nodes.Item
+                 (List  => Matches,
+                  Index => 0) = Node,
+                 Message   => "Invalid match found");
+      end;
+      
+      Node := DOM.Core.Documents.Create_Element
+        (Doc      => Data.Doc,
+         Tag_Name => "foo");
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Node,
+         Name  => "name",
+         Value => "foo");
+      DOM.Core.Append_Node
+        (List => List,
+         N    => Node);
+      Assert (Condition => DOM.Core.Nodes.Length
+              (List => Get_Elements
+               (Nodes     => List,
+                Ref_Attr  => "name",
+                Ref_Value => "foo")) = 2,
+              Message   => "Elements not found (2)");
+--  begin read only
+   end Test_Get_Elements;
+--  end read only
+
+
+--  begin read only
    procedure Test_2_Get_Attribute (Gnattest_T : in out Test);
    procedure Test_Get_Attribute_002470 (Gnattest_T : in out Test) renames Test_2_Get_Attribute;
 --  id:2.2/002470113061adf7/Get_Attribute/0/0/
    procedure Test_2_Get_Attribute (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:70:4:Get_Attribute
+   --  muxml-utils.ads:79:4:Get_Attribute
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -382,7 +471,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Get_Element_93bcee (Gnattest_T : in out Test) renames Test_3_Get_Element;
 --  id:2.2/93bceee1efa8b897/Get_Element/0/0/
    procedure Test_3_Get_Element (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:88:4:Get_Element
+   --  muxml-utils.ads:97:4:Get_Element
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -480,7 +569,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Get_Attribute_55e944 (Gnattest_T : in out Test) renames Test_3_Get_Attribute;
 --  id:2.2/55e944c46d226e1f/Get_Attribute/0/0/
    procedure Test_3_Get_Attribute (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:98:4:Get_Attribute
+   --  muxml-utils.ads:107:4:Get_Attribute
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -570,7 +659,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Append_6bcf00 (Gnattest_T : in out Test) renames Test_Append;
 --  id:2.2/6bcf005e971aed10/Append/1/0/
    procedure Test_Append (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:105:4:Append
+   --  muxml-utils.ads:114:4:Append
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -618,7 +707,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Append_Child_0b6f31 (Gnattest_T : in out Test) renames Test_Append_Child;
 --  id:2.2/0b6f317beeb588d9/Append_Child/1/0/
    procedure Test_Append_Child (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:110:4:Append_Child
+   --  muxml-utils.ads:119:4:Append_Child
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -652,7 +741,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Merge_64a439 (Gnattest_T : in out Test) renames Test_Merge;
 --  id:2.2/64a439c9547e9313/Merge/1/0/
    procedure Test_Merge (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:124:4:Merge
+   --  muxml-utils.ads:133:4:Merge
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -828,7 +917,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Ancestor_Node_314569 (Gnattest_T : in out Test) renames Test_Ancestor_Node;
 --  id:2.2/3145695d1e1d2313/Ancestor_Node/1/0/
    procedure Test_Ancestor_Node (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:130:4:Ancestor_Node
+   --  muxml-utils.ads:139:4:Ancestor_Node
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -879,7 +968,7 @@ package body Muxml.Utils.Test_Data.Tests is
    procedure Test_Remove_Child_540ca0 (Gnattest_T : in out Test) renames Test_Remove_Child;
 --  id:2.2/540ca0eb2b0d8bd4/Remove_Child/1/0/
    procedure Test_Remove_Child (Gnattest_T : in out Test) is
-   --  muxml-utils.ads:138:4:Remove_Child
+   --  muxml-utils.ads:147:4:Remove_Child
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

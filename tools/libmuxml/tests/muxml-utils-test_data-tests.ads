@@ -24,29 +24,32 @@ package Muxml.Utils.Test_Data.Tests is
    procedure Test_Get_Element_710ca6 (Gnattest_T : in out Test);
    --  muxml-utils.ads:60:4:Get_Element
 
+   procedure Test_Get_Elements_e02b1f (Gnattest_T : in out Test);
+   --  muxml-utils.ads:69:4:Get_Elements
+
    procedure Test_Get_Attribute_002470 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:70:4:Get_Attribute
+   --  muxml-utils.ads:79:4:Get_Attribute
 
    procedure Test_Get_Element_93bcee (Gnattest_T : in out Test);
-   --  muxml-utils.ads:88:4:Get_Element
+   --  muxml-utils.ads:97:4:Get_Element
 
    procedure Test_Get_Attribute_55e944 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:98:4:Get_Attribute
+   --  muxml-utils.ads:107:4:Get_Attribute
 
    procedure Test_Append_6bcf00 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:105:4:Append
+   --  muxml-utils.ads:114:4:Append
 
    procedure Test_Append_Child_0b6f31 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:110:4:Append_Child
+   --  muxml-utils.ads:119:4:Append_Child
 
    procedure Test_Merge_64a439 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:124:4:Merge
+   --  muxml-utils.ads:133:4:Merge
 
    procedure Test_Ancestor_Node_314569 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:130:4:Ancestor_Node
+   --  muxml-utils.ads:139:4:Ancestor_Node
 
    procedure Test_Remove_Child_540ca0 (Gnattest_T : in out Test);
-   --  muxml-utils.ads:138:4:Remove_Child
+   --  muxml-utils.ads:147:4:Remove_Child
 
 end Muxml.Utils.Test_Data.Tests;
 --  end read only

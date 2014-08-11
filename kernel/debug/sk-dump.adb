@@ -39,7 +39,7 @@ is
       APIC_ID : SK.Byte)
    is
    begin
-      Locks.Spin_Lock;
+      Locks.Acquire;
       KC.Put_String (Item => "Routing IRQ ");
       KC.Put_Byte   (Item => IRQ);
       KC.Put_String (Item => " as vector ");
@@ -60,7 +60,7 @@ is
       CR0 : Word64; CR2 : Word64; CR3 : Word64; CR4 : Word64)
    is
    begin
-      Locks.Spin_Lock;
+      Locks.Acquire;
       KC.Put_String ("RIP: ");
       KC.Put_Word64 (Item => RIP);
       KC.Put_String (" CS : ");
@@ -133,7 +133,7 @@ is
    procedure Print_ISR_State (Context : Isr_Context_Type)
    is
    begin
-      Locks.Spin_Lock;
+      Locks.Acquire;
       KC.New_Line;
       KC.Put_String (Item => "[CPU ");
       KC.Put_Byte   (Item => Byte (CPU_Global.CPU_ID));
@@ -166,7 +166,7 @@ is
    procedure Print_Message_8 (Msg : String; Item : SK.Byte)
    is
    begin
-      Locks.Spin_Lock;
+      Locks.Acquire;
       KC.Put_String (Item => Msg);
       KC.Put_String (Item => " ");
       KC.Put_Byte   (Item => Item);
@@ -179,7 +179,7 @@ is
    procedure Print_Message_16 (Msg : String; Item : SK.Word16)
    is
    begin
-      Locks.Spin_Lock;
+      Locks.Acquire;
       KC.Put_String (Item => Msg);
       KC.Put_String (Item => " ");
       KC.Put_Word16 (Item => Item);
@@ -192,7 +192,7 @@ is
    procedure Print_Message_32 (Msg : String; Item : SK.Word32)
    is
    begin
-      Locks.Spin_Lock;
+      Locks.Acquire;
       KC.Put_String (Item => Msg);
       KC.Put_String (Item => " ");
       KC.Put_Word32 (Item => Item);
@@ -205,7 +205,7 @@ is
    procedure Print_Message_64 (Msg : String; Item : SK.Word64)
    is
    begin
-      Locks.Spin_Lock;
+      Locks.Acquire;
       KC.Put_String (Item => Msg);
       KC.Put_String (Item => " ");
       KC.Put_Word64 (Item => Item);
@@ -220,7 +220,7 @@ is
       Event_Nr        : SK.Word64)
    is
    begin
-      Locks.Spin_Lock;
+      Locks.Acquire;
       KC.Put_String (Item => "Ignoring spurious event ");
       KC.Put_Word64 (Item => Event_Nr);
       KC.Put_String (Item => " from subject ");
@@ -235,7 +235,7 @@ is
    is
       State : SK.Subject_State_Type;
    begin
-      Locks.Spin_Lock;
+      Locks.Acquire;
       State := Subjects.Get_State (Id => Subject_Id);
       KC.Put_String (Item => "Subject ");
       KC.Put_Byte   (Item =>  Byte (Subject_Id));
@@ -267,7 +267,7 @@ is
    is
       Exit_Qualification : SK.Word64;
    begin
-      Locks.Spin_Lock;
+      Locks.Acquire;
       KC.Put_String (Item => "Subject ");
       KC.Put_Byte   (Item => Byte (Current_Subject));
       KC.Put_String (Item => " VM-entry failure (");
@@ -290,7 +290,7 @@ is
       Error   : SK.Word64;
       Success : Boolean;
    begin
-      Locks.Spin_Lock;
+      Locks.Acquire;
       KC.Put_String (Item => "Error running subject ");
       KC.Put_Byte   (Item => SK.Byte
                      (CPU_Global.Get_Current_Minor_Frame.Subject_Id));

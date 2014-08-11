@@ -31,7 +31,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Spin_Lock
+   procedure Acquire
    is
       Result : SK.Byte;
    begin
@@ -45,7 +45,7 @@ is
             exit;
          end if;
       end loop;
-   end Spin_Lock;
+   end Acquire;
 
    -------------------------------------------------------------------------
 

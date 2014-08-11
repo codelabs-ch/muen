@@ -115,4 +115,7 @@ is
       Target : DOM.Core.Node)
       return DOM.Core.Node_List;
 
+   --  Returns the number of CPUs that are active in a given system policy.
+   function Get_Active_CPU_Count (Data : Muxml.XML_Data_Type) return Positive;
+
 end Mutools.XML_Utils;

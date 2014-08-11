@@ -244,6 +244,22 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Active_CPU_Count (Data : Muxml.XML_Data_Type) return Positive
+   is
+      First_Major_Frame : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/scheduling/majorFrame");
+      CPUs              : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => First_Major_Frame,
+           XPath => "cpu");
+   begin
+      return DOM.Core.Nodes.Length (List => CPUs);
+   end Get_Active_CPU_Count;
+
+   -------------------------------------------------------------------------
+
    function Get_Occupied_PCI_Buses
      (Data : Muxml.XML_Data_Type)
       return PCI_Bus_Set.Set

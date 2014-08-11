@@ -23,6 +23,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.XML_Utils;
 
 package body Mucfgcheck.Scheduling
 is
@@ -34,11 +35,7 @@ is
    procedure CPU_Element_Count (XML_Data : Muxml.XML_Data_Type)
    is
       CPU_Count : constant Positive
-        := Positive'Value
-          (Muxml.Utils.Get_Attribute
-             (Doc   => XML_Data.Doc,
-              XPath => "/system/platform/processor",
-              Name  => "logicalCpus"));
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => XML_Data);
       Majors    : constant DOM.Core.Node_List
         := XPath_Query (N     => XML_Data.Doc,
                         XPath => "/system/scheduling/majorFrame");
@@ -55,9 +52,10 @@ is
                               XPath => "cpu");
          begin
             if DOM.Core.Nodes.Length (List => CPUs) /= CPU_Count then
-               raise Validation_Error with "CPU element count of"
-                 & DOM.Core.Nodes.Length (List => CPUs)'Img & " in scheduling "
-                 & "plan invalid, logical CPU count is" & CPU_Count'Img;
+               raise Validation_Error with "CPU element count"
+                 & DOM.Core.Nodes.Length (List => CPUs)'Img
+                 & " of major frame" & Natural'Image (I + 1) & " invalid,"
+                 & " active CPU count is" & CPU_Count'Img;
             end if;
          end;
       end loop;

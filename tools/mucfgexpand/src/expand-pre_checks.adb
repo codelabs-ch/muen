@@ -131,10 +131,14 @@ is
       Endpoint  : String;
       Attr_Name : String)
    is
-      Channels : constant DOM.Core.Node_List
+      Channels  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
            XPath => XPath);
+      Endpoints : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/channels/" & Endpoint);
    begin
       Mulog.Log (Msg => "Checking '" & Attr_Name & "' attribute of"
                  & DOM.Core.Nodes.Length (List => Channels)'Img & " channel "
@@ -150,11 +154,11 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Channel_Node,
                  Name => "name");
-            Node : constant DOM.Core.Node
+            Node         : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => XML_Data.Doc,
-                 XPath => "/system/subjects/subject/channels/" & Endpoint
-                 & "[@physical='" & Channel_Name & "']");
+                (Nodes     => Endpoints,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Channel_Name);
          begin
             if DOM.Core.Elements.Get_Attribute
               (Elem => Node,

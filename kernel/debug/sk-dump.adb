@@ -39,6 +39,7 @@ is
       APIC_ID : SK.Byte)
    is
    begin
+      Locks.Spin_Lock;
       KC.Put_String (Item => "Routing IRQ ");
       KC.Put_Byte   (Item => IRQ);
       KC.Put_String (Item => " as vector ");
@@ -48,6 +49,7 @@ is
       KC.Put_String (Item => " with APIC ID ");
       KC.Put_Byte   (Item => APIC_ID);
       KC.New_Line;
+      Locks.Unlock;
    end Print_IRQ_Routing;
 
    -------------------------------------------------------------------------
@@ -58,6 +60,7 @@ is
       CR0 : Word64; CR2 : Word64; CR3 : Word64; CR4 : Word64)
    is
    begin
+      Locks.Spin_Lock;
       KC.Put_String ("RIP: ");
       KC.Put_Word64 (Item => RIP);
       KC.Put_String (" CS : ");
@@ -122,6 +125,7 @@ is
       KC.Put_String (" EFL: ");
       KC.Put_Word32 (Item => Word32 (RFL));
       KC.New_Line;
+      Locks.Unlock;
    end Print_Registers;
 
    -------------------------------------------------------------------------
@@ -143,6 +147,7 @@ is
       KC.Put_Word64 (Item => Context.Error_Code);
       KC.New_Line;
       KC.New_Line;
+      Locks.Unlock;
 
       Print_Registers (GPR => Context.GPR,
                        RIP => Context.RIP,
@@ -154,7 +159,6 @@ is
                        CR2 => CPU.Get_CR2,
                        CR3 => CPU.Get_CR3,
                        CR4 => CPU.Get_CR4);
-      Locks.Unlock;
    end Print_ISR_State;
 
    -------------------------------------------------------------------------
@@ -162,10 +166,12 @@ is
    procedure Print_Message_8 (Msg : String; Item : SK.Byte)
    is
    begin
+      Locks.Spin_Lock;
       KC.Put_String (Item => Msg);
       KC.Put_String (Item => " ");
       KC.Put_Byte   (Item => Item);
       KC.New_Line;
+      Locks.Unlock;
    end Print_Message_8;
 
    -------------------------------------------------------------------------
@@ -173,10 +179,12 @@ is
    procedure Print_Message_16 (Msg : String; Item : SK.Word16)
    is
    begin
+      Locks.Spin_Lock;
       KC.Put_String (Item => Msg);
       KC.Put_String (Item => " ");
       KC.Put_Word16 (Item => Item);
       KC.New_Line;
+      Locks.Unlock;
    end Print_Message_16;
 
    -------------------------------------------------------------------------
@@ -184,10 +192,12 @@ is
    procedure Print_Message_32 (Msg : String; Item : SK.Word32)
    is
    begin
+      Locks.Spin_Lock;
       KC.Put_String (Item => Msg);
       KC.Put_String (Item => " ");
       KC.Put_Word32 (Item => Item);
       KC.New_Line;
+      Locks.Unlock;
    end Print_Message_32;
 
    -------------------------------------------------------------------------
@@ -195,10 +205,12 @@ is
    procedure Print_Message_64 (Msg : String; Item : SK.Word64)
    is
    begin
+      Locks.Spin_Lock;
       KC.Put_String (Item => Msg);
       KC.Put_String (Item => " ");
       KC.Put_Word64 (Item => Item);
       KC.New_Line;
+      Locks.Unlock;
    end Print_Message_64;
 
    -------------------------------------------------------------------------
@@ -208,11 +220,13 @@ is
       Event_Nr        : SK.Word64)
    is
    begin
+      Locks.Spin_Lock;
       KC.Put_String (Item => "Ignoring spurious event ");
       KC.Put_Word64 (Item => Event_Nr);
       KC.Put_String (Item => " from subject ");
       KC.Put_Byte   (Item => SK.Byte (Current_Subject));
       KC.New_Line;
+      Locks.Unlock;
    end Print_Spurious_Event;
 
    -------------------------------------------------------------------------
@@ -221,6 +235,7 @@ is
    is
       State : SK.Subject_State_Type;
    begin
+      Locks.Spin_Lock;
       State := Subjects.Get_State (Id => Subject_Id);
       KC.Put_String (Item => "Subject ");
       KC.Put_Byte   (Item =>  Byte (Subject_Id));
@@ -231,6 +246,7 @@ is
       KC.Put_String (Item => ":");
       KC.Put_Word32 (Item => Word32 (State.Interrupt_Info));
       KC.New_Line;
+      Locks.Unlock;
       Print_Registers (GPR => State.Regs,
                        RIP => State.RIP,
                        CS  => State.CS,
@@ -251,6 +267,7 @@ is
    is
       Exit_Qualification : SK.Word64;
    begin
+      Locks.Spin_Lock;
       KC.Put_String (Item => "Subject ");
       KC.Put_Byte   (Item => Byte (Current_Subject));
       KC.Put_String (Item => " VM-entry failure (");
@@ -263,6 +280,7 @@ is
 
       KC.Put_Word32 (Item => Word32 (Exit_Qualification));
       KC.Put_Line   (Item => ")");
+      Locks.Unlock;
    end Print_VMX_Entry_Error;
 
    -------------------------------------------------------------------------
@@ -272,6 +290,7 @@ is
       Error   : SK.Word64;
       Success : Boolean;
    begin
+      Locks.Spin_Lock;
       KC.Put_String (Item => "Error running subject ");
       KC.Put_Byte   (Item => SK.Byte
                      (CPU_Global.Get_Current_Minor_Frame.Subject_Id));
@@ -288,6 +307,7 @@ is
       else
          KC.Put_Line   (Item => "Unable to read VMX instruction error");
       end if;
+      Locks.Unlock;
    end Print_VMX_Error;
 
 end SK.Dump;

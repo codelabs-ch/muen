@@ -109,11 +109,8 @@ is
 
    procedure Add_Kernel_PTs (Data : in out Muxml.XML_Data_Type)
    is
-      CPU_Count : constant Positive := Positive'Value
-        (Muxml.Utils.Get_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/platform/processor",
-            Name  => "logicalCpus"));
+      CPU_Count : constant Positive
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Data);
    begin
       for I in 0 .. CPU_Count - 1 loop
          declare

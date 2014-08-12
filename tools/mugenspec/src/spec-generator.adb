@@ -967,9 +967,8 @@ is
         (Timer_Rate * Long_Integer'Value (DOM.Core.Elements.Get_Attribute
          (Elem => Scheduling,
           Name => "tickRate")));
-      CPU_Count    : constant Natural      := Natural'Value
-        (DOM.Core.Elements.Get_Attribute (Elem => Processor,
-                                          Name => "logicalCpus"));
+      CPU_Count    : constant Natural
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Policy);
 
       Major_Count     : Positive;
       Max_Minor_Count : Positive;

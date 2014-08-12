@@ -333,6 +333,10 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/kernel/memory/cpu");
+      Subj_Nodes  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => CPU_Nodes) - 1 loop
          declare
@@ -345,9 +349,10 @@ is
                 (Elem => CPU,
                  Name => "id");
             Subjects : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => Data.Doc,
-                 XPath => "/system/subjects/subject[@cpu='" & CPU_Id & "']");
+              := Muxml.Utils.Get_Elements
+                (Nodes     => Subj_Nodes,
+                 Ref_Attr  => "cpu",
+                 Ref_Value => CPU_Id);
          begin
             for J in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
                declare

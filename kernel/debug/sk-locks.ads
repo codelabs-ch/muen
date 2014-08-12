@@ -22,9 +22,9 @@ with
 is
 
    --  Spin until lock is acquired.
-   procedure Spin_Lock;
+   procedure Acquire;
 
    --  Unlock.
-   procedure Unlock;
+   procedure Release;
 
 end SK.Locks;

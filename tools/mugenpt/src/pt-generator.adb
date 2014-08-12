@@ -27,6 +27,7 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Muxml.Utils;
 with Mutools.Files;
+with Mutools.Utils;
 
 with Interfaces;
 
@@ -202,6 +203,12 @@ is
                 (Elem => Physical,
                  Name => "caching"));
       begin
+         Mulog.Log (Msg => "Mapping PMA " & Mutools.Utils.To_Hex (PMA)
+                    & " to VMA " & Mutools.Utils.To_Hex (VMA)
+                    & ", size " & Mutools.Utils.To_Hex (Size)
+                    & ", caching " & Caching'Img & ", R"
+                    & (if Write then "W" else "-")
+                    & (if Exec then "X" else "-"));
          Paging.Layouts.Add_Memory_Region
            (Mem_Layout       => Vmem,
             Physical_Address => PMA,

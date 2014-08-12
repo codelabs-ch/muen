@@ -1624,11 +1624,8 @@ is
         (List => McKae.XML.XPath.XIA.XPath_Query
            (N     => Policy.Doc,
             XPath => "/system/subjects/subject"));
-      CPU_Count  : constant Natural     := Natural'Value
-        (Muxml.Utils.Get_Attribute
-           (Doc   => Policy.Doc,
-            XPath => "/system/platform/processor",
-            Name  => "logicalCpus"));
+      CPU_Count  : constant Natural
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Policy);
       VMXON_Addr : constant Unsigned_64 := Unsigned_64'Value
         (Muxml.Utils.Get_Attribute
            (Doc   => Policy.Doc,

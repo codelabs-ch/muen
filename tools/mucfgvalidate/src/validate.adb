@@ -167,6 +167,8 @@ is
       XML_Processors.Register
         (Process => Platform.PCI_Config_Space_Address'Access);
       XML_Processors.Register
+        (Process => Platform.CPU_Count'Access);
+      XML_Processors.Register
         (Process => Device_Domains.Device_Reference_Uniqueness'Access);
       XML_Processors.Register
         (Process => Device_Domains.IOMMU_Presence'Access);

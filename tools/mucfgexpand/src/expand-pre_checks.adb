@@ -218,18 +218,17 @@ is
       Device : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/platform/devices/device[@name='ioapic']/"
-           & "memory[@name='mmio']");
+           XPath => "/system/platform/devices/device[@name='ioapic']/memory");
       Count : constant Natural := DOM.Core.Nodes.Length (List => Device);
    begin
       Mulog.Log (Msg => "Checking presence of I/O APIC device");
 
       if Count < 1 then
          raise Mucfgcheck.Validation_Error with "Required I/O APIC device with"
-           & " memory region 'mmio' missing";
+           & " memory region missing";
       elsif Count > 1 then
          raise Mucfgcheck.Validation_Error with "Multiple I/O APIC devices"
-           & " present";
+           & " or I/O APIC device with multiple memory regions present";
       end if;
    end Platform_IOAPIC_Presence;
 

@@ -504,7 +504,8 @@ package body Expand.Pre_Checks.Test_Data.Tests is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Multiple I/O APIC devices present",
+                    = "Multiple I/O APIC devices or I/O APIC device with "
+                    & "multiple memory regions present",
                     Message   => "Exception mismatch");
       end;
 
@@ -520,7 +521,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Required I/O APIC device with memory region 'mmio' "
+                    = "Required I/O APIC device with memory region "
                     & "missing",
                     Message   => "Exception mismatch");
       end;

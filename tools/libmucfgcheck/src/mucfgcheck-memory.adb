@@ -214,43 +214,54 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Kernel_PT_Consecutiveness (XML_Data : Muxml.XML_Data_Type)
+   procedure Kernel_PT_Below_4G (XML_Data : Muxml.XML_Data_Type)
    is
-      XPath : constant String
-        := "/system/memory/memory[contains(substring-before(string(@name),"
-        & "'|pt'), 'kernel_')]";
-
-      Nodes : constant DOM.Core.Node_List := XPath_Query
-        (N     => XML_Data.Doc,
-         XPath => XPath);
-
-      --  Returns the error message for a given reference node.
-      function Error_Msg (Node : DOM.Core.Node) return String;
-
-      ----------------------------------------------------------------------
-
-      function Error_Msg (Node : DOM.Core.Node) return String
-      is
-         Name : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Node,
-            Name => "name");
-      begin
-         return "Kernel PT memory region '" & Name & "' not adjacent to other "
-           & "PT regions";
-      end Error_Msg;
+      CPU_Count    : constant Positive := Positive'Value
+        (Muxml.Utils.Get_Attribute
+           (Doc   => XML_Data.Doc,
+            XPath => "/system/platform/processor",
+            Name  => "logicalCpus"));
+      Physical_Mem : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory");
    begin
-      if DOM.Core.Nodes.Length (List => Nodes) < 2 then
-         return;
-      end if;
+      Mulog.Log (Msg => "Checking physical address of" & CPU_Count'Img
+                 & " kernel PT region(s)");
 
-      For_Each_Match
-        (XML_Data     => XML_Data,
-         Source_XPath => XPath,
-         Ref_XPath    => XPath,
-         Log_Message  => "Kernel PT region(s) for consecutiveness",
-         Error        => Error_Msg'Access,
-         Match        => Is_Adjacent_Region'Access);
-   end Kernel_PT_Consecutiveness;
+      for I in 0 .. CPU_Count - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            CPU_Str  : constant String
+              := Ada.Strings.Fixed.Trim
+                (Source => I'Img,
+                 Side   => Ada.Strings.Left);
+            Mem_Name : constant String
+              := "kernel_" & CPU_Str & "|pt";
+            Node     : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Physical_Mem,
+                 Ref_Attr  => "name",
+                 Ref_Value => Mem_Name);
+            Address  : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Node,
+                    Name => "physicalAddress"));
+            Size    : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => Node,
+                    Name => "size"));
+         begin
+            if Address + Size >= 2 ** 32 then
+               raise Validation_Error with "Kernel PT region '" & Mem_Name
+                 & "' for logical CPU " & CPU_Str & " not below 4G";
+            end if;
+         end;
+      end loop;
+   end Kernel_PT_Below_4G;
 
    -------------------------------------------------------------------------
 
@@ -293,32 +304,6 @@ is
          end;
       end loop;
    end Kernel_PT_Region_Presence;
-
-   -------------------------------------------------------------------------
-
-   procedure Kernel_PT_Region_Size (XML_Data : Muxml.XML_Data_Type)
-   is
-      PT_Regions : constant DOM.Core.Node_List
-        := XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => "/system/memory/memory"
-           & "[starts-with(@name,'kernel') and @type='system_pt']");
-      Size       : constant Interfaces.Unsigned_64
-        := Interfaces.Unsigned_64'Value
-          (DOM.Core.Elements.Get_Attribute
-             (Elem => DOM.Core.Nodes.Item
-                (List  => PT_Regions,
-                 Index => 0),
-              Name => "size"));
-   begin
-      Check_Attribute (Nodes     => PT_Regions,
-                       Node_Type => "kernel PT region",
-                       Attr      => "size",
-                       Name_Attr => "name",
-                       Test      => Equals'Access,
-                       Right     => Size,
-                       Error_Msg => "differs");
-   end Kernel_PT_Region_Size;
 
    -------------------------------------------------------------------------
 

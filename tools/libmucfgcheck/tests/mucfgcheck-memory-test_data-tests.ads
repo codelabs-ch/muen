@@ -57,35 +57,32 @@ package Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_Virtual_Memory_Overlap_7973e4 (Gnattest_T : in out Test);
    --  mucfgcheck-memory.ads:71:4:Virtual_Memory_Overlap
 
-   procedure Test_Kernel_PT_Consecutiveness_fcfd60 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:74:4:Kernel_PT_Consecutiveness
-
    procedure Test_Kernel_Stack_Region_Presence_e9e355 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:77:4:Kernel_Stack_Region_Presence
+   --  mucfgcheck-memory.ads:74:4:Kernel_Stack_Region_Presence
 
    procedure Test_Kernel_Store_Region_Presence_3872a1 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:80:4:Kernel_Store_Region_Presence
+   --  mucfgcheck-memory.ads:77:4:Kernel_Store_Region_Presence
 
    procedure Test_Kernel_PT_Region_Presence_851d89 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:83:4:Kernel_PT_Region_Presence
+   --  mucfgcheck-memory.ads:80:4:Kernel_PT_Region_Presence
 
-   procedure Test_Kernel_PT_Region_Size_db9bff (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:86:4:Kernel_PT_Region_Size
+   procedure Test_Kernel_PT_Below_4G_976943 (Gnattest_T : in out Test);
+   --  mucfgcheck-memory.ads:83:4:Kernel_PT_Below_4G
 
    procedure Test_Kernel_Memory_Mappings_fe36fc (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:89:4:Kernel_Memory_Mappings
+   --  mucfgcheck-memory.ads:86:4:Kernel_Memory_Mappings
 
    procedure Test_System_Memory_Mappings_6ca6be (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:92:4:System_Memory_Mappings
+   --  mucfgcheck-memory.ads:89:4:System_Memory_Mappings
 
    procedure Test_VTd_Root_Region_Size_bc3a31 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:95:4:VTd_Root_Region_Size
+   --  mucfgcheck-memory.ads:92:4:VTd_Root_Region_Size
 
    procedure Test_VTd_Context_Region_Size_4d6204 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:98:4:VTd_Context_Region_Size
+   --  mucfgcheck-memory.ads:95:4:VTd_Context_Region_Size
 
    procedure Test_VTd_Root_Region_Presence_b744c5 (Gnattest_T : in out Test);
-   --  mucfgcheck-memory.ads:101:4:VTd_Root_Region_Presence
+   --  mucfgcheck-memory.ads:98:4:VTd_Root_Region_Presence
 
 end Mucfgcheck.Memory.Test_Data.Tests;
 --  end read only

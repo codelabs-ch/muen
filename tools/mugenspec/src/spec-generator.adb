@@ -354,6 +354,12 @@ is
          MachineCheck               => 18,
          SIMDFloatingPointException => 19));
 
+   --  Returns the kernel PML4 addresses as string for inclusion in policy.h.
+   function Get_Kernel_PML4_Addrs
+     (Physical_Memory : DOM.Core.Node_List;
+      CPU_Count       : Positive)
+      return String;
+
    --  Write hardware-related policy file to specified output directory.
    procedure Write_Hardware
      (Output_Dir : String;
@@ -399,6 +405,42 @@ is
         (Item => Result (Result'First));
       return Result;
    end Capitalize;
+
+   -------------------------------------------------------------------------
+
+   function Get_Kernel_PML4_Addrs
+     (Physical_Memory : DOM.Core.Node_List;
+      CPU_Count       : Positive)
+      return String
+   is
+      Buffer : Unbounded_String;
+   begin
+      for I in Natural range 0 .. CPU_Count - 1 loop
+         declare
+            CPU_ID    : constant String
+              := Ada.Strings.Fixed.Trim
+                (Source  => I'Img,
+                 Side    => Ada.Strings.Left);
+            PML4_Addr : constant Unsigned_64
+              := Unsigned_64'Value
+                (Muxml.Utils.Get_Attribute
+                   (Nodes     => Physical_Memory,
+                    Refs      => ((Name  => U ("type"),
+                                   Value => U ("system_pt")),
+                                  (Name  => U ("name"),
+                                   Value => U ("kernel_" & CPU_ID & "|pt"))),
+                    Attr_Name => "physicalAddress"));
+         begin
+            Buffer := Buffer & ASCII.LF & Indent
+              (N         => 1,
+               Unit_Size => 4);
+            Buffer := Buffer  & ".long 0x" & Mutools.Utils.To_Hex
+              (Number     => PML4_Addr,
+               Normalize  => False);
+         end;
+      end loop;
+      return To_String (Buffer);
+   end Get_Kernel_PML4_Addrs;
 
    -------------------------------------------------------------------------
 
@@ -767,25 +809,10 @@ is
            (List => McKae.XML.XPath.XIA.XPath_Query
               (N     => Policy.Doc,
                XPath => "/system/subjects/subject"));
-         CPU_Count     : constant String := Muxml.Utils.Get_Attribute
+         CPU_Count_Str : constant String := Muxml.Utils.Get_Attribute
            (Doc   => Policy.Doc,
             XPath => "/system/platform/processor",
             Name  => "logicalCpus");
-         PT_Node       : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Nodes => Phys_Memory,
-              Refs  => ((Name  => U ("type"),
-                         Value => U ("system_pt")),
-                        (Name  => U ("name"),
-                         Value => U ("kernel_0|pt"))));
-         PML4_Addr     : constant Unsigned_64 := Unsigned_64'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => PT_Node,
-               Name => "physicalAddress"));
-         PT_Size       : constant Unsigned_64 := Unsigned_64'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => PT_Node,
-               Name => "size"));
          VMXON_Addr    : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Nodes     => Phys_Memory,
@@ -824,18 +851,6 @@ is
                Normalize => False));
          Mutools.Templates.Replace
            (Template => Tmpl,
-            Pattern  => "__kpml4_addr__",
-            Content  => Mutools.Utils.To_Hex
-              (Number    => PML4_Addr,
-               Normalize => False));
-         Mutools.Templates.Replace
-           (Template => Tmpl,
-            Pattern  => "__kpt_size__",
-            Content  => Mutools.Utils.To_Hex
-              (Number    => PT_Size,
-               Normalize => False));
-         Mutools.Templates.Replace
-           (Template => Tmpl,
             Pattern  => "__cpu_store_addr__",
             Content  => Mutools.Utils.To_Hex
               (Number    => CPU_Store_Addr,
@@ -843,7 +858,7 @@ is
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__cpu_count__",
-            Content  => CPU_Count);
+            Content  => CPU_Count_Str);
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__vmxon_addr__",
@@ -856,6 +871,12 @@ is
             Content  => Mutools.Utils.To_Hex
               (Number    => VMCS_Addr,
                Normalize => False));
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__kernel_pml4_addrs__",
+            Content  => Get_Kernel_PML4_Addrs
+              (Physical_Memory => Phys_Memory,
+               CPU_Count       => Positive'Value (CPU_Count_Str)));
 
          Mutools. Templates.Write
            (Template => Tmpl,

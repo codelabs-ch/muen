@@ -747,49 +747,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Kernel_PT_Consecutiveness (Gnattest_T : in out Test);
-   procedure Test_Kernel_PT_Consecutiveness_fcfd60 (Gnattest_T : in out Test) renames Test_Kernel_PT_Consecutiveness;
---  id:2.2/fcfd60df7a11c2d7/Kernel_PT_Consecutiveness/1/0/
-   procedure Test_Kernel_PT_Consecutiveness (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:74:4:Kernel_PT_Consecutiveness
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Data : Muxml.XML_Data_Type;
-   begin
-      Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_B,
-                   File => "data/test_policy.xml");
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/memory/memory[@name='kernel_0|pt']",
-         Name  => "physicalAddress",
-         Value => "16#0000#");
-
-      begin
-         Kernel_PT_Consecutiveness (XML_Data => Data);
-         Assert (Condition => False,
-                 Message   => "Exception expected");
-
-      exception
-         when E : Validation_Error =>
-            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel PT memory region 'kernel_0|pt' not adjacent to "
-                    & "other PT regions",
-                    Message   => "Exception mismatch");
-      end;
---  begin read only
-   end Test_Kernel_PT_Consecutiveness;
---  end read only
-
-
---  begin read only
    procedure Test_Kernel_Stack_Region_Presence (Gnattest_T : in out Test);
    procedure Test_Kernel_Stack_Region_Presence_e9e355 (Gnattest_T : in out Test) renames Test_Kernel_Stack_Region_Presence;
 --  id:2.2/e9e355ee728b2e37/Kernel_Stack_Region_Presence/1/0/
    procedure Test_Kernel_Stack_Region_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:77:4:Kernel_Stack_Region_Presence
+   --  mucfgcheck-memory.ads:74:4:Kernel_Stack_Region_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -827,7 +789,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_Kernel_Store_Region_Presence_3872a1 (Gnattest_T : in out Test) renames Test_Kernel_Store_Region_Presence;
 --  id:2.2/3872a19a8e2482ec/Kernel_Store_Region_Presence/1/0/
    procedure Test_Kernel_Store_Region_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:80:4:Kernel_Store_Region_Presence
+   --  mucfgcheck-memory.ads:77:4:Kernel_Store_Region_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -865,7 +827,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_Kernel_PT_Region_Presence_851d89 (Gnattest_T : in out Test) renames Test_Kernel_PT_Region_Presence;
 --  id:2.2/851d896c926ea31a/Kernel_PT_Region_Presence/1/0/
    procedure Test_Kernel_PT_Region_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:83:4:Kernel_PT_Region_Presence
+   --  mucfgcheck-memory.ads:80:4:Kernel_PT_Region_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -899,11 +861,11 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Kernel_PT_Region_Size (Gnattest_T : in out Test);
-   procedure Test_Kernel_PT_Region_Size_db9bff (Gnattest_T : in out Test) renames Test_Kernel_PT_Region_Size;
---  id:2.2/db9bff874893a9ea/Kernel_PT_Region_Size/1/0/
-   procedure Test_Kernel_PT_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:86:4:Kernel_PT_Region_Size
+   procedure Test_Kernel_PT_Below_4G (Gnattest_T : in out Test);
+   procedure Test_Kernel_PT_Below_4G_976943 (Gnattest_T : in out Test) renames Test_Kernel_PT_Below_4G;
+--  id:2.2/97694323e4a9cd62/Kernel_PT_Below_4G/1/0/
+   procedure Test_Kernel_PT_Below_4G (Gnattest_T : in out Test) is
+   --  mucfgcheck-memory.ads:83:4:Kernel_PT_Below_4G
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -915,24 +877,24 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/memory/memory[@name='kernel_1|pt']",
-         Name  => "size",
-         Value => "16#1000#");
+         XPath => "/system/memory/memory[@name='kernel_0|pt']",
+         Name  => "physicalAddress",
+         Value => "16#0001_0000_0000#");
 
       begin
-         Kernel_PT_Region_Size (XML_Data => Data);
+         Kernel_PT_Below_4G (XML_Data => Data);
          Assert (Condition => False,
                  Message   => "Exception expected");
 
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Attribute 'size => 16#1000#' of 'kernel_1|pt' kernel PT"
-                    & " region element differs",
+                    = "Kernel PT region 'kernel_0|pt' for logical CPU 0 not "
+                    & "below 4G",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
-   end Test_Kernel_PT_Region_Size;
+   end Test_Kernel_PT_Below_4G;
 --  end read only
 
 
@@ -941,7 +903,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_Kernel_Memory_Mappings_fe36fc (Gnattest_T : in out Test) renames Test_Kernel_Memory_Mappings;
 --  id:2.2/fe36fc1c47e6055f/Kernel_Memory_Mappings/1/0/
    procedure Test_Kernel_Memory_Mappings (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:89:4:Kernel_Memory_Mappings
+   --  mucfgcheck-memory.ads:86:4:Kernel_Memory_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -979,7 +941,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_System_Memory_Mappings_6ca6be (Gnattest_T : in out Test) renames Test_System_Memory_Mappings;
 --  id:2.2/6ca6befcb4661223/System_Memory_Mappings/1/0/
    procedure Test_System_Memory_Mappings (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:92:4:System_Memory_Mappings
+   --  mucfgcheck-memory.ads:89:4:System_Memory_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1017,7 +979,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Root_Region_Size_bc3a31 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Size;
 --  id:2.2/bc3a31ac2395433f/VTd_Root_Region_Size/1/0/
    procedure Test_VTd_Root_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:95:4:VTd_Root_Region_Size
+   --  mucfgcheck-memory.ads:92:4:VTd_Root_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1055,7 +1017,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Context_Region_Size_4d6204 (Gnattest_T : in out Test) renames Test_VTd_Context_Region_Size;
 --  id:2.2/4d620465079ba6ad/VTd_Context_Region_Size/1/0/
    procedure Test_VTd_Context_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:98:4:VTd_Context_Region_Size
+   --  mucfgcheck-memory.ads:95:4:VTd_Context_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1093,7 +1055,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Root_Region_Presence_b744c5 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Presence;
 --  id:2.2/b744c5d7d5100d62/VTd_Root_Region_Presence/1/0/
    procedure Test_VTd_Root_Region_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:101:4:VTd_Root_Region_Presence
+   --  mucfgcheck-memory.ads:98:4:VTd_Root_Region_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

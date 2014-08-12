@@ -89,6 +89,8 @@ is
      with
        Pre => Serializers'First = 1 and Serializers'Last = Mem_Layout.Levels;
 
+   Mapping_Present : exception;
+
 private
 
    type Tables_Array is array (Paging_Level range <>) of Maps.Page_Table_Map;

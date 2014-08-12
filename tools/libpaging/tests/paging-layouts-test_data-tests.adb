@@ -197,23 +197,146 @@ package body Paging.Layouts.Test_Data.Tests is
                  Message   => "More than one level 2 table");
          Assert (Condition => Maps.Contains
                  (Map          => Layout.Structures (3),
-                  Table_Number => 191,
+                  Table_Number => 25 * 512 + 191,
                   Entry_Index  => 351),
                  Message   => "Level 3 entry not created");
          Assert (Condition => Maps.Length (Map => Layout.Structures (3)) = 1,
                  Message   => "More than one level 3 table");
          Assert (Condition => Maps.Contains
                  (Map          => Layout.Structures (4),
-                  Table_Number => 351,
+                  Table_Number => (25 * 512 + 191) * 512 + 351,
                   Entry_Index  => 239),
                  Message   => "Level 4 entry not created");
          Assert (Condition => Maps.Length (Map => Layout.Structures (4)) = 1,
                  Message   => "More than one level 4 table");
       end Add_PT_Region;
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Multiple_PT_Regions
+      is
+         Layout : Memory_Layout_Type (Levels => 4);
+      begin
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#3c79_0000#,
+            Virtual_Address  => 16#e000_0000#,
+            Size             => Page_Size,
+            Caching          => WB,
+            Writable         => False,
+            Executable       => False);
+
+         Assert (Condition => Tables.Contains
+                 (Table => Layout.Level_1_Table,
+                  Index => 0),
+                 Message   => "Level 1 entry not created");
+         Assert (Condition => Maps.Contains
+                 (Map          => Layout.Structures (2),
+                  Table_Number => 0,
+                  Entry_Index  => 3),
+                 Message   => "Level 2 entry not created (1)");
+         Assert (Condition => Maps.Length (Map => Layout.Structures (2)) = 1,
+                 Message   => "More than one level 2 table");
+         Assert (Condition => Maps.Contains
+                 (Map          => Layout.Structures (3),
+                  Table_Number => 3,
+                  Entry_Index  => 256),
+                 Message   => "Level 3 entry not created (1)");
+         Assert (Condition => Maps.Length (Map => Layout.Structures (3)) = 1,
+                 Message   => "More than one level 3 table");
+         Assert (Condition => Maps.Contains
+                 (Map          => Layout.Structures (4),
+                  Table_Number => 3 * 512 + 256,
+                  Entry_Index  => 0),
+                 Message   => "Level 4 entry not created (1)");
+         Assert (Condition => Maps.Length (Map => Layout.Structures (4)) = 1,
+                 Message   => "More than one level 4 table");
+
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#3c79_8000#,
+            Virtual_Address  => 16#a000_0000#,
+            Size             => Page_Size,
+            Caching          => WB,
+            Writable         => False,
+            Executable       => False);
+
+         Assert (Condition => Maps.Contains
+                 (Map          => Layout.Structures (2),
+                  Table_Number => 0,
+                  Entry_Index  => 2),
+                 Message   => "Level 2 entry not created (2)");
+         Assert (Condition => Maps.Length (Map => Layout.Structures (2)) = 1,
+                 Message   => "More than one level 2 table");
+         Assert (Condition => Maps.Contains
+                 (Map          => Layout.Structures (3),
+                  Table_Number => 2,
+                  Entry_Index  => 256),
+                 Message   => "Level 3 entry not created (1)");
+         Assert (Condition => Maps.Length (Map => Layout.Structures (3)) = 2,
+                 Message   => "Level 3 table count mismatch");
+         Assert (Condition => Maps.Contains
+                 (Map          => Layout.Structures (4),
+                  Table_Number => 2 * 512 + 256,
+                  Entry_Index  => 0),
+                 Message   => "Level 4 entry not created (2)");
+         Assert (Condition => Maps.Length (Map => Layout.Structures (4)) = 2,
+                 Message   => "Level 4 table count mismatch");
+      end Add_Multiple_PT_Regions;
+
+      ----------------------------------------------------------------------
+
+      procedure Add_Duplicate_PT_Regions
+      is
+         Layout : Memory_Layout_Type (Levels => 4);
+      begin
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#3c79_0000#,
+            Virtual_Address  => 16#e000_0000#,
+            Size             => Page_Size,
+            Caching          => WB,
+            Writable         => False,
+            Executable       => False);
+
+         --  Adding the identical mapping multiple times must not raise an
+         --  exception.
+
+         Add_Memory_Region
+           (Mem_Layout       => Layout,
+            Physical_Address => 16#3c79_0000#,
+            Virtual_Address  => 16#e000_0000#,
+            Size             => Page_Size,
+            Caching          => WB,
+            Writable         => False,
+            Executable       => False);
+
+         begin
+            Add_Memory_Region
+              (Mem_Layout       => Layout,
+               Physical_Address => 16#1000#,
+               Virtual_Address  => 16#e000_0000#,
+               Size             => Page_Size,
+               Caching          => WB,
+               Writable         => False,
+               Executable       => True);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+
+         exception
+            when E : Mapping_Present =>
+               Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                       = "Multiple mappings of VMA 16#e000_0000# with "
+                       & "different attributes present",
+                       Message   => "Exception mismatch");
+         end;
+      end Add_Duplicate_PT_Regions;
    begin
       Add_PT_Region;
       Add_PD_Region;
       Add_PDPT_Region;
+      Add_Multiple_PT_Regions;
+      Add_Duplicate_PT_Regions;
 --  begin read only
    end Test_Add_Memory_Region;
 --  end read only
@@ -250,11 +373,11 @@ package body Paging.Layouts.Test_Data.Tests is
               Message   => "Level 2 table address set");
       Assert (Condition => Maps.Get_Table_Address
               (Map          => Layout.Structures (3),
-               Table_Number => 191) = 0,
+               Table_Number => 25 * 512 + 191) = 0,
               Message   => "Level 3 table address set");
       Assert (Condition => Maps.Get_Table_Address
               (Map          => Layout.Structures (4),
-               Table_Number => 351) = 0,
+               Table_Number => (25 * 512 + 191) * 512 + 351) = 0,
               Message   => "Level 4 table address set");
 
       Update_References (Mem_Layout => Layout);
@@ -264,11 +387,11 @@ package body Paging.Layouts.Test_Data.Tests is
               Message   => "Level 2 table address mismatch");
       Assert (Condition => Maps.Get_Table_Address
               (Map          => Layout.Structures (3),
-               Table_Number => 191) = 16#001f_2000#,
+               Table_Number => 25 * 512 + 191) = 16#001f_2000#,
               Message   => "Level 3 table address mismatch");
       Assert (Condition => Maps.Get_Table_Address
               (Map          => Layout.Structures (4),
-               Table_Number => 351) = 16#001f_1000#,
+               Table_Number => (25 * 512 + 191) * 512 + 351) = 16#001f_1000#,
               Message   => "Level 4 table address mismatch");
 --  begin read only
    end Test_Update_References;

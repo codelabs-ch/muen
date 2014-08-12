@@ -32,16 +32,23 @@ is
    --  Add given entry to pagetable.
    procedure Add_Entry
      (Table : in out Page_Table_Type;
-      Index :        Table_Range;
+      Index :        Entry_Range;
       E     :        Entries.Table_Entry_Type);
 
+   --  Get entry with given index from pagetable. An exception is raised if no
+   --  entry with the specified index exists.
+   function Get_Entry
+     (Table : Page_Table_Type;
+      Index : Entry_Range)
+      return Entries.Table_Entry_Type;
+
    --  Returns the number of entries present in the table.
-   function Count (Table : Page_Table_Type) return Table_Range;
+   function Count (Table : Page_Table_Type) return Entry_Range;
 
    --  Returns true if an entry with given index exists.
    function Contains
      (Table : Page_Table_Type;
-      Index : Table_Range)
+      Index : Entry_Range)
       return Boolean;
 
    --  Returns the physical memory address of the pagetable.
@@ -59,7 +66,7 @@ is
    procedure Iterate
      (Table   : Page_Table_Type;
       Process : not null access procedure
-        (Index  : Table_Range;
+        (Index  : Entry_Range;
          TEntry : Entries.Table_Entry_Type));
 
    --  Iterate over specified page table and call given process procedure for
@@ -67,13 +74,14 @@ is
    procedure Update
      (Table   : in out Page_Table_Type;
       Process : not null access procedure
-        (Index  :        Table_Range;
+        (Index  :        Entry_Range;
          TEntry : in out Entries.Table_Entry_Type));
 
    --  Clear page table entries.
    procedure Clear (Table : in out Page_Table_Type);
 
    Duplicate_Entry : exception;
+   Missing_Entry   : exception;
 
 private
 
@@ -81,12 +89,12 @@ private
    use Ada.Containers;
 
    package Entries_Map_Package is new Ada.Containers.Bounded_Ordered_Maps
-     (Key_Type     => Table_Range,
+     (Key_Type     => Entry_Range,
       Element_Type => Entries.Table_Entry_Type);
 
    type Page_Table_Type is record
       Address : Interfaces.Unsigned_64;
-      Data    : Entries_Map_Package.Map (Count_Type (Table_Range'Last) + 1);
+      Data    : Entries_Map_Package.Map (Count_Type (Entry_Range'Last) + 1);
    end record;
 
    Null_Table : constant Page_Table_Type

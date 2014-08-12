@@ -15,7 +15,7 @@ package body Paging.Test_Data.Tests is
    procedure Test_Get_Indexes_9d42e6 (Gnattest_T : in out Test) renames Test_Get_Indexes;
 --  id:2.2/9d42e63e2adac92c/Get_Indexes/0/0/
    procedure Test_Get_Indexes (Gnattest_T : in out Test) is
-   --  paging.ads:56:4:Get_Indexes
+   --  paging.ads:60:4:Get_Indexes
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -34,13 +34,13 @@ package body Paging.Test_Data.Tests is
 
       Get_Indexes (Address => Interfaces.Unsigned_64'Last,
                    Indexes => Indexes);
-      Assert (Condition => Indexes (1) = Table_Range'Last,
+      Assert (Condition => Indexes (1) = Entry_Range'Last,
               Message   => "PML4 index mismatch (2)");
-      Assert (Condition => Indexes (2) = Table_Range'Last,
+      Assert (Condition => Indexes (2) = Entry_Range'Last,
               Message   => "PDPT index mismatch (2)");
-      Assert (Condition => Indexes (3) = Table_Range'Last,
+      Assert (Condition => Indexes (3) = Entry_Range'Last,
               Message   => "PD index mismatch (2)");
-      Assert (Condition => Indexes (4) = Table_Range'Last,
+      Assert (Condition => Indexes (4) = Entry_Range'Last,
               Message   => "PT index mismatch (2)");
 
       Get_Indexes (Address => 16#000f_ffc8_0200_f000#,

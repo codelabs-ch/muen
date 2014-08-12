@@ -57,7 +57,7 @@ is
       Cur_Lvl : Natural := 4;
    begin
       for Idx of reverse Indexes loop
-         Idx := Table_Range
+         Idx := Entry_Range
            ((Address and Level_Map (Paging_Level (Cur_Lvl)).Mask) /
                 Level_Map (Paging_Level (Cur_Lvl)).Size);
          Cur_Lvl := Cur_Lvl - 1;

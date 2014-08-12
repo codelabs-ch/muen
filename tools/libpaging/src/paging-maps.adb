@@ -24,7 +24,7 @@ is
    procedure Add_Entry
      (Map          : in out Page_Table_Map;
       Table_Number :        Table_Range;
-      Entry_Index  :        Table_Range;
+      Entry_Index  :        Entry_Range;
       Table_Entry  :        Entries.Table_Entry_Type)
    is
       use type Tables_Map_Package.Cursor;
@@ -74,7 +74,7 @@ is
    function Contains
      (Map          : Page_Table_Map;
       Table_Number : Table_Range;
-      Entry_Index  : Table_Range)
+      Entry_Index  : Entry_Range)
       return Boolean
    is
       use type Tables_Map_Package.Cursor;
@@ -109,6 +109,29 @@ is
 
       return Result;
    end Contains;
+
+   -------------------------------------------------------------------------
+
+   function Get_Entry
+     (Map          : Page_Table_Map;
+      Table_Number : Table_Range;
+      Entry_Index  : Entry_Range)
+      return Entries.Table_Entry_Type
+   is
+      use type Tables_Map_Package.Cursor;
+
+      Pos : constant Tables_Map_Package.Cursor := Map.Tables.Find
+        (Key => Table_Number);
+   begin
+      if Pos = Tables_Map_Package.No_Element then
+         raise Missing_Table with "Table with number" & Table_Number'Img
+           & " not in map";
+      end if;
+
+      return Tables.Get_Entry
+        (Table => Tables_Map_Package.Element (Position => Pos),
+         Index => Entry_Index);
+   end Get_Entry;
 
    -------------------------------------------------------------------------
 

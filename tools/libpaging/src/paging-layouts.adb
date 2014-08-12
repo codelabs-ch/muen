@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Mutools.Utils;
+
 with Paging.Entries;
 
 package body Paging.Layouts
@@ -136,6 +138,8 @@ is
       Executable       :        Boolean)
    is
       Indexes : Table_Index_Array (1 .. Mem_Layout.Levels) := (others => 0);
+
+      Table_Idx : Table_Range := 0;
    begin
       Get_Indexes (Address => Virtual_Address,
                    Indexes => Indexes);
@@ -148,7 +152,7 @@ is
            (Table => Mem_Layout.Level_1_Table,
             Index => Indexes (Indexes'First),
             E     => Entries.Create
-              (Dst_Offset  => Indexes (Indexes'First),
+              (Dst_Index   => Table_Range (Indexes (Indexes'First)),
                Dst_Address => 0,
                Readable    => True,
                Writable    => True,
@@ -159,24 +163,44 @@ is
       end if;
 
       for I in Paging_Level range 2 .. Level loop
-         if not Maps.Contains (Map          => Mem_Layout.Structures (I),
-                               Table_Number => Indexes (I - 1),
-                               Entry_Index  => Indexes (I))
-         then
-            Maps.Add_Entry
+         Table_Idx := Table_Idx * 512 + Table_Range (Indexes (I - 1));
+
+         declare
+            use type Entries.Table_Entry_Type;
+
+            New_Entry : constant Entries.Table_Entry_Type
+              := Entries.Create
+                (Dst_Index   =>
+                   (if I /= Level then
+                           Table_Idx * 512 + Table_Range (Indexes (I))
+                    else 0),
+                 Dst_Address => (if Level = I then Physical_Address else 0),
+                 Readable    => True,
+                 Writable    => Level /= I or Writable,
+                 Executable  => Level /= I or Executable,
+                 Maps_Page   => Level = I,
+                 Global      => False,
+                 Caching     => (if Level = I then Caching else WB));
+         begin
+            if not Maps.Contains (Map          => Mem_Layout.Structures (I),
+                                  Table_Number => Table_Idx,
+                                  Entry_Index  => Indexes (I))
+            then
+               Maps.Add_Entry
+                 (Map          => Mem_Layout.Structures (I),
+                  Table_Number => Table_Idx,
+                  Entry_Index  => Indexes (I),
+                  Table_Entry  => New_Entry);
+            elsif Level = I and then New_Entry /= Maps.Get_Entry
               (Map          => Mem_Layout.Structures (I),
-               Table_Number => Indexes (I - 1),
-               Entry_Index  => Indexes (I),
-               Table_Entry  => Entries.Create
-                 (Dst_Offset  => Indexes (I),
-                  Dst_Address => (if Level = I then Physical_Address else 0),
-                  Readable    => True,
-                  Writable    => Level /= I or Writable,
-                  Executable  => Level /= I or Executable,
-                  Maps_Page   => Level = I,
-                  Global      => False,
-                  Caching     => (if Level = I then Caching else WB)));
-         end if;
+               Table_Number => Table_Idx,
+               Entry_Index  => Indexes (I))
+            then
+               raise Mapping_Present with "Multiple mappings of VMA "
+                 & Mutools.Utils.To_Hex (Number => Virtual_Address)
+                 & " with different attributes present";
+            end if;
+         end;
       end loop;
    end Map_Page;
 
@@ -255,7 +279,7 @@ is
 
       --  Adjust destination address of references to level 2 structures.
       procedure Adjust_Level_1
-        (Index  :        Table_Range;
+        (Index  :        Entry_Range;
          TEntry : in out Entries.Table_Entry_Type);
 
       --  Set physical address of each table and adjust destination address of
@@ -267,12 +291,12 @@ is
       ----------------------------------------------------------------------
 
       procedure Adjust_Level_1
-        (Index  :        Table_Range;
+        (Index  :        Entry_Range;
          TEntry : in out Entries.Table_Entry_Type)
       is
          pragma Unreferenced (Index);
 
-         Dst_Idx : constant Table_Range := TEntry.Get_Dst_Offset;
+         Dst_Idx : constant Table_Range := TEntry.Get_Dst_Table_Index;
          Address : constant Interfaces.Unsigned_64
            := Maps.Get_Table_Address
              (Map          => Mem_Layout.Structures
@@ -292,13 +316,13 @@ is
 
          --  Adjust destination address of given table entry.
          procedure Adjust_Entry
-           (Index  :        Table_Range;
+           (Index  :        Entry_Range;
             TEntry : in out Entries.Table_Entry_Type);
 
          -------------------------------------------------------------------
 
          procedure Adjust_Entry
-           (Index  :        Table_Range;
+           (Index  :        Entry_Range;
             TEntry : in out Entries.Table_Entry_Type)
          is
             pragma Unreferenced (Index);
@@ -310,7 +334,7 @@ is
                return;
             end if;
 
-            Dst_Idx := TEntry.Get_Dst_Offset;
+            Dst_Idx := TEntry.Get_Dst_Table_Index;
             Address := Maps.Get_Table_Address
               (Map          => Mem_Layout.Structures (Cur_Level + 1),
                Table_Number => Dst_Idx);

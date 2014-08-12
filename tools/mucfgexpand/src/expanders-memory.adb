@@ -448,11 +448,9 @@ is
       use type Interfaces.Unsigned_64;
 
       CPU_Count : constant Interfaces.Unsigned_64
-        := Interfaces.Unsigned_64'Value
-          (Muxml.Utils.Get_Attribute
-             (Doc   => Data.Doc,
-              XPath => "/system/platform/processor",
-              Name  => "logicalCpus"));
+        := Interfaces.Unsigned_64
+          (Mutools.XML_Utils.Get_Active_CPU_Count
+             (Data => Data));
       Curr_Addr : Interfaces.Unsigned_64 := VMX_Start_Address +
         CPU_Count * Mutools.Constants.Page_Size;
       Nodes     : constant DOM.Core.Node_List

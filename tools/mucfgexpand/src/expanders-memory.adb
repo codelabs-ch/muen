@@ -193,11 +193,8 @@ is
 
    procedure Add_Stack_Store (Data : in out Muxml.XML_Data_Type)
    is
-      CPU_Count : constant Positive := Positive'Value
-        (Muxml.Utils.Get_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/platform/processor",
-            Name  => "logicalCpus"));
+      CPU_Count : constant Positive
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Data);
    begin
       Mulog.Log (Msg => "Adding kernel stack and store memory regions for"
                  & CPU_Count'Img & " CPU(s)");

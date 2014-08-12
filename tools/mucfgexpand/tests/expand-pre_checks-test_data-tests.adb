@@ -529,4 +529,72 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    end Test_Platform_IOAPIC_Presence;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Platform_IOMMU_Memory (Gnattest_T : in out Test);
+   procedure Test_Platform_IOMMU_Memory_4183d0 (Gnattest_T : in out Test) renames Test_Platform_IOMMU_Memory;
+--  id:2.2/4183d0fc1a20cebd/Platform_IOMMU_Memory/1/0/
+   procedure Test_Platform_IOMMU_Memory (Gnattest_T : in out Test) is
+   --  expand-pre_checks.ads:66:4:Platform_IOMMU_Memory
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy  : Muxml.XML_Data_Type;
+      IOMMU_1 : DOM.Core.Node;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      IOMMU_1 := Muxml.Utils.Get_Element
+        (Doc   => Policy.Doc,
+         XPath => "/system/platform/devices/device[@name='iommu_1']");
+
+      declare
+         Node : DOM.Core.Node;
+      begin
+         Node := DOM.Core.Nodes.Append_Child
+           (N         => IOMMU_1,
+            New_Child => DOM.Core.Documents.Create_Element
+              (Doc      => Policy.Doc,
+               Tag_Name => "memory"));
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Node,
+            Name  => "name",
+            Value => "mmio_2");
+
+         Platform_IOMMU_Memory (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "IOMMU device 'iommu_1' has multiple memory regions",
+                    Message   => "Exception mismatch");
+      end;
+
+      Muxml.Utils.Remove_Child
+        (Node       => IOMMU_1,
+         Child_Name => "memory");
+      Muxml.Utils.Remove_Child
+        (Node       => IOMMU_1,
+         Child_Name => "memory");
+
+      begin
+         Platform_IOMMU_Memory (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "IOMMU device 'iommu_1' has no memory region",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Platform_IOMMU_Memory;
+--  end read only
+
 end Expand.Pre_Checks.Test_Data.Tests;

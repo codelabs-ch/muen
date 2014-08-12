@@ -179,20 +179,31 @@ is
                IOMMU    : constant DOM.Core.Node
                  := DOM.Core.Nodes.Item (List  => Physdevs,
                                          Index => I);
-               Name     : constant String := DOM.Core.Elements.Get_Attribute
+               Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
                  (Elem => IOMMU,
                   Name => "name");
+               Mem_Node : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element (Doc   => IOMMU,
+                                             XPath => "memory");
+               Mem_Name : constant String := DOM.Core.Elements.Get_Attribute
+                 (Elem => Mem_Node,
+                  Name => "name");
+               Mem_Size : constant Interfaces.Unsigned_64
+                 := Interfaces.Unsigned_64'Value
+                   (DOM.Core.Elements.Get_Attribute
+                      (Elem => Mem_Node,
+                       Name => "size"));
             begin
-               Mulog.Log (Msg => "Adding IOMMU '" & Name
+               Mulog.Log (Msg => "Adding IOMMU '" & Dev_Name
                           & "' to kernel devices, MMIO: " & Addr_Str);
                Muxml.Utils.Append_Child
                  (Node      => Devices,
                   New_Child => Create_Device_Reference
-                    (Device_Name => Name,
-                     MMIO_Name   => "mmio",
+                    (Device_Name => Dev_Name,
+                     MMIO_Name   => Mem_Name,
                      MMIO_Addr   => Addr_Str));
 
-               Base_Address := Base_Address + Mutools.Constants.Page_Size;
+               Base_Address := Base_Address + Mem_Size;
             end;
          end loop;
       end Add_IOMMUs;

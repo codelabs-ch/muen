@@ -27,6 +27,7 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.Constants;
 
 package body Mucfgcheck.Device
 is
@@ -340,6 +341,24 @@ is
          end;
       end loop;
    end IO_Port_Start_Smaller_End;
+
+   -------------------------------------------------------------------------
+
+   procedure IOMMU_Region_Size (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/platform/devices/device[starts-with(@name,'iommu')]"
+         & "/memory");
+   begin
+      Check_Attribute (Nodes     => Nodes,
+                       Node_Type => "IOMMU memory region",
+                       Attr      => "size",
+                       Name_Attr => "name",
+                       Test      => Equals'Access,
+                       Right     => Mutools.Constants.Page_Size,
+                       Error_Msg => "not 4K");
+   end IOMMU_Region_Size;
 
    -------------------------------------------------------------------------
 

@@ -48,5 +48,8 @@ package Mucfgcheck.Device.Test_Data.Tests is
    procedure Test_Debugconsole_Presence_b13687 (Gnattest_T : in out Test);
    --  mucfgcheck-device.ads:61:4:Debugconsole_Presence
 
+   procedure Test_IOMMU_Region_Size_7f9036 (Gnattest_T : in out Test);
+   --  mucfgcheck-device.ads:64:4:IOMMU_Region_Size
+
 end Mucfgcheck.Device.Test_Data.Tests;
 --  end read only

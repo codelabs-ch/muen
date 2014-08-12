@@ -60,4 +60,7 @@ is
    --  Validate presence of debug console device with I/O port resource.
    procedure Debugconsole_Presence (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that all IOMMU memory-mapped IO regions have a size of 4K.
+   procedure IOMMU_Region_Size (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Device;

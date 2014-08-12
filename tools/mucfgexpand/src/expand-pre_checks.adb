@@ -290,6 +290,8 @@ is
       Check_Procs.Register
         (Process => Mucfgcheck.Device.PCI_Device_BDF_Uniqueness'Access);
       Check_Procs.Register
+        (Process => Mucfgcheck.Device.IOMMU_Region_Size'Access);
+      Check_Procs.Register
         (Process => Mucfgcheck.Platform.PCI_Config_Space_Address'Access);
       Check_Procs.Register
         (Process => Mucfgcheck.Subject.Runnability'Access);

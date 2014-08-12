@@ -31,4 +31,7 @@ is
    --  present.
    procedure PCI_Config_Space_Address (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that the platform provides enough logical CPUs.
+   procedure CPU_Count (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Platform;

@@ -23,6 +23,7 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Muxml.Utils;
 with Mutools.Utils;
+with Mutools.XML_Utils;
 
 package body Mucfgcheck.Platform
 is
@@ -31,6 +32,28 @@ is
 
    --  Returns the sum of all node values.
    function Sum (Nodes : DOM.Core.Node_List) return Interfaces.Unsigned_64;
+
+   -------------------------------------------------------------------------
+
+   procedure CPU_Count (XML_Data : Muxml.XML_Data_Type)
+   is
+      Active_CPUs  : constant Positive
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => XML_Data);
+      Logical_CPUs : constant Positive
+        := Positive'Value
+          (Muxml.Utils.Get_Attribute
+             (Doc   => XML_Data.Doc,
+              XPath => "/system/platform/processor",
+              Name  => "logicalCpus"));
+   begin
+      Mulog.Log (Msg => "Checking logical CPU count");
+
+      if Active_CPUs > Logical_CPUs then
+         raise Validation_Error with "System requires" & Active_CPUs'Img
+           & " but platform only provides" & Logical_CPUs'Img
+           & " CPU(s)";
+      end if;
+   end CPU_Count;
 
    -------------------------------------------------------------------------
 

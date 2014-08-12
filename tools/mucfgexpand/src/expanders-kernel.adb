@@ -127,9 +127,12 @@ is
       --  Base address of kernel device mappings.
       Base_Address : Interfaces.Unsigned_64 := Config.Kernel_Devices_Addr;
 
-      --  Create device reference with given name and IOMMU address.
+      --  Create device reference with given device, MMIO region name and MMIO
+      --  address.
       function Create_Device_Reference
-        (Name, MMIO_Addr : String)
+        (Device_Name : String;
+         MMIO_Name   : String;
+         MMIO_Addr   : String)
          return DOM.Core.Node;
 
       --  Add I/O APIC.
@@ -151,8 +154,9 @@ is
          Muxml.Utils.Append_Child
            (Node      => Devices,
             New_Child => Create_Device_Reference
-              (Name      => "ioapic",
-               MMIO_Addr => Addr));
+              (Device_Name => "ioapic",
+               MMIO_Name   => "mmio",
+               MMIO_Addr   => Addr));
          Base_Address := Base_Address + Mutools.Constants.Page_Size;
       end Add_IO_APIC;
 
@@ -184,8 +188,10 @@ is
                Muxml.Utils.Append_Child
                  (Node      => Devices,
                   New_Child => Create_Device_Reference
-                    (Name      => Name,
-                     MMIO_Addr => Addr_Str));
+                    (Device_Name => Name,
+                     MMIO_Name   => "mmio",
+                     MMIO_Addr   => Addr_Str));
+
                Base_Address := Base_Address + Mutools.Constants.Page_Size;
             end;
          end loop;
@@ -194,7 +200,9 @@ is
       ----------------------------------------------------------------------
 
       function Create_Device_Reference
-        (Name, MMIO_Addr : String)
+        (Device_Name : String;
+         MMIO_Name   : String;
+         MMIO_Addr   : String)
          return DOM.Core.Node
       is
          Ref : constant DOM.Core.Node
@@ -205,18 +213,18 @@ is
          DOM.Core.Elements.Set_Attribute
            (Elem  => Ref,
             Name  => "logical",
-            Value => Name);
+            Value => Device_Name);
          DOM.Core.Elements.Set_Attribute
            (Elem  => Ref,
             Name  => "physical",
-            Value => Name);
+            Value => Device_Name);
 
          Muxml.Utils.Append_Child
            (Node      => Ref,
             New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
               (Policy        => Data,
-               Logical_Name  => "mmio",
-               Physical_Name => "mmio",
+               Logical_Name  => MMIO_Name,
+               Physical_Name => MMIO_Name,
                Address       => MMIO_Addr,
                Writable      => True,
                Executable    => False));

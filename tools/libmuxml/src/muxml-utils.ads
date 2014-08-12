@@ -63,6 +63,15 @@ is
       Ref_Value : String)
       return DOM.Core.Node;
 
+   --  Returns all elements from the given node list with an attribute
+   --  'Ref_Attr' that matches 'Ref_Value'. If no such element exists an empty
+   --  node list is returned.
+   function Get_Elements
+     (Nodes     : DOM.Core.Node_List;
+      Ref_Attr  : String;
+      Ref_Value : String)
+      return DOM.Core.Node_List;
+
    --  Returns the attribute 'Attr_Name' of the element from the given node
    --  list with an attribute 'Ref_Attr' that matches 'Ref_Value'. If no such
    --  element with the specified attribute exists an empty string is

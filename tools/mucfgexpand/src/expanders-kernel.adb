@@ -147,17 +147,30 @@ is
       is
          use type Interfaces.Unsigned_64;
 
-         Addr : constant String := Mutools.Utils.To_Hex
+         Addr     : constant String := Mutools.Utils.To_Hex
            (Number => Base_Address);
+         Mem_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Data.Doc,
+              XPath => "/system/platform/devices/device[@name='ioapic']"
+              & "/memory");
+         Mem_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Mem_Node,
+            Name => "name");
+         Mem_Size : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Mem_Node,
+                 Name => "size"));
       begin
          Mulog.Log (Msg => "Adding I/O APIC to kernel devices, MMIO: " & Addr);
          Muxml.Utils.Append_Child
            (Node      => Devices,
             New_Child => Create_Device_Reference
               (Device_Name => "ioapic",
-               MMIO_Name   => "mmio",
+               MMIO_Name   => Mem_Name,
                MMIO_Addr   => Addr));
-         Base_Address := Base_Address + Mutools.Constants.Page_Size;
+         Base_Address := Base_Address + Mem_Size;
       end Add_IO_APIC;
 
       ----------------------------------------------------------------------

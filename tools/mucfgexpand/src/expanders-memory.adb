@@ -491,11 +491,8 @@ is
    procedure Add_VMXON_Regions (Data : in out Muxml.XML_Data_Type)
    is
       Curr_Addr : Interfaces.Unsigned_64 := VMX_Start_Address;
-      CPU_Count : constant Positive      := Positive'Value
-        (Muxml.Utils.Get_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/platform/processor",
-            Name  => "logicalCpus"));
+      CPU_Count : constant Positive
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Data);
    begin
       for I in 0 .. CPU_Count - 1 loop
          declare

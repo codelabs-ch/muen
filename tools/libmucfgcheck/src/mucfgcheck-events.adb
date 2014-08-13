@@ -171,8 +171,7 @@ is
       Nodes : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/subjects/subject/events/source/group/event/"
-           & "notify");
+           XPath => "/system/subjects/subject/events/source/group/*/notify");
    begin
       Mulog.Log (Msg => "Checking self-references in" & DOM.Core.Nodes.Length
                  (List => Nodes)'Img & " subject event(s)");

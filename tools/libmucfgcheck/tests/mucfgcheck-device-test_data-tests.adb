@@ -540,4 +540,42 @@ package body Mucfgcheck.Device.Test_Data.Tests is
    end Test_Debugconsole_Presence;
 --  end read only
 
+
+--  begin read only
+   procedure Test_IOMMU_Region_Size (Gnattest_T : in out Test);
+   procedure Test_IOMMU_Region_Size_7f9036 (Gnattest_T : in out Test) renames Test_IOMMU_Region_Size;
+--  id:2.2/7f903633b01e1f7b/IOMMU_Region_Size/1/0/
+   procedure Test_IOMMU_Region_Size (Gnattest_T : in out Test) is
+   --  mucfgcheck-device.ads:64:4:IOMMU_Region_Size
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/platform/devices/device[@name='iommu_1']/memory",
+         Name  => "size",
+         Value => "16#2000#");
+
+      begin
+         IOMMU_Region_Size (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Attribute 'size => 16#2000#' of 'mmio' IOMMU memory "
+                    & "region element not 4K",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_IOMMU_Region_Size;
+--  end read only
+
 end Mucfgcheck.Device.Test_Data.Tests;

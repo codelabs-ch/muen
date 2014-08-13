@@ -127,9 +127,12 @@ is
       --  Base address of kernel device mappings.
       Base_Address : Interfaces.Unsigned_64 := Config.Kernel_Devices_Addr;
 
-      --  Create device reference with given name and IOMMU address.
+      --  Create device reference with given device, MMIO region name and MMIO
+      --  address.
       function Create_Device_Reference
-        (Name, MMIO_Addr : String)
+        (Device_Name : String;
+         MMIO_Name   : String;
+         MMIO_Addr   : String)
          return DOM.Core.Node;
 
       --  Add I/O APIC.
@@ -144,16 +147,30 @@ is
       is
          use type Interfaces.Unsigned_64;
 
-         Addr : constant String := Mutools.Utils.To_Hex
+         Addr     : constant String := Mutools.Utils.To_Hex
            (Number => Base_Address);
+         Mem_Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Data.Doc,
+              XPath => "/system/platform/devices/device[@name='ioapic']"
+              & "/memory");
+         Mem_Name : constant String := DOM.Core.Elements.Get_Attribute
+           (Elem => Mem_Node,
+            Name => "name");
+         Mem_Size : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Mem_Node,
+                 Name => "size"));
       begin
          Mulog.Log (Msg => "Adding I/O APIC to kernel devices, MMIO: " & Addr);
          Muxml.Utils.Append_Child
            (Node      => Devices,
             New_Child => Create_Device_Reference
-              (Name      => "ioapic",
-               MMIO_Addr => Addr));
-         Base_Address := Base_Address + Mutools.Constants.Page_Size;
+              (Device_Name => "ioapic",
+               MMIO_Name   => Mem_Name,
+               MMIO_Addr   => Addr));
+         Base_Address := Base_Address + Mem_Size;
       end Add_IO_APIC;
 
       ----------------------------------------------------------------------
@@ -175,18 +192,31 @@ is
                IOMMU    : constant DOM.Core.Node
                  := DOM.Core.Nodes.Item (List  => Physdevs,
                                          Index => I);
-               Name     : constant String := DOM.Core.Elements.Get_Attribute
+               Dev_Name : constant String := DOM.Core.Elements.Get_Attribute
                  (Elem => IOMMU,
                   Name => "name");
+               Mem_Node : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element (Doc   => IOMMU,
+                                             XPath => "memory");
+               Mem_Name : constant String := DOM.Core.Elements.Get_Attribute
+                 (Elem => Mem_Node,
+                  Name => "name");
+               Mem_Size : constant Interfaces.Unsigned_64
+                 := Interfaces.Unsigned_64'Value
+                   (DOM.Core.Elements.Get_Attribute
+                      (Elem => Mem_Node,
+                       Name => "size"));
             begin
-               Mulog.Log (Msg => "Adding IOMMU '" & Name
+               Mulog.Log (Msg => "Adding IOMMU '" & Dev_Name
                           & "' to kernel devices, MMIO: " & Addr_Str);
                Muxml.Utils.Append_Child
                  (Node      => Devices,
                   New_Child => Create_Device_Reference
-                    (Name      => Name,
-                     MMIO_Addr => Addr_Str));
-               Base_Address := Base_Address + Mutools.Constants.Page_Size;
+                    (Device_Name => Dev_Name,
+                     MMIO_Name   => Mem_Name,
+                     MMIO_Addr   => Addr_Str));
+
+               Base_Address := Base_Address + Mem_Size;
             end;
          end loop;
       end Add_IOMMUs;
@@ -194,7 +224,9 @@ is
       ----------------------------------------------------------------------
 
       function Create_Device_Reference
-        (Name, MMIO_Addr : String)
+        (Device_Name : String;
+         MMIO_Name   : String;
+         MMIO_Addr   : String)
          return DOM.Core.Node
       is
          Ref : constant DOM.Core.Node
@@ -205,18 +237,18 @@ is
          DOM.Core.Elements.Set_Attribute
            (Elem  => Ref,
             Name  => "logical",
-            Value => Name);
+            Value => Device_Name);
          DOM.Core.Elements.Set_Attribute
            (Elem  => Ref,
             Name  => "physical",
-            Value => Name);
+            Value => Device_Name);
 
          Muxml.Utils.Append_Child
            (Node      => Ref,
             New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
               (Policy        => Data,
-               Logical_Name  => "mmio",
-               Physical_Name => "mmio",
+               Logical_Name  => MMIO_Name,
+               Physical_Name => MMIO_Name,
                Address       => MMIO_Addr,
                Writable      => True,
                Executable    => False));
@@ -301,6 +333,10 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/kernel/memory/cpu");
+      Subj_Nodes  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => CPU_Nodes) - 1 loop
          declare
@@ -313,9 +349,10 @@ is
                 (Elem => CPU,
                  Name => "id");
             Subjects : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => Data.Doc,
-                 XPath => "/system/subjects/subject[@cpu='" & CPU_Id & "']");
+              := Muxml.Utils.Get_Elements
+                (Nodes     => Subj_Nodes,
+                 Ref_Attr  => "cpu",
+                 Ref_Value => CPU_Id);
          begin
             for J in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
                declare

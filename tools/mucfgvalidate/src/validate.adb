@@ -123,6 +123,8 @@ is
       XML_Processors.Register
         (Process => Device.Debugconsole_Presence'Access);
       XML_Processors.Register
+        (Process => Device.IOMMU_Region_Size'Access);
+      XML_Processors.Register
         (Process => Scheduling.CPU_Element_Count'Access);
       XML_Processors.Register
         (Process => Scheduling.Subject_References'Access);

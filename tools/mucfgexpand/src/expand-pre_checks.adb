@@ -218,20 +218,65 @@ is
       Device : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/platform/devices/device[@name='ioapic']/"
-           & "memory[@name='mmio']");
+           XPath => "/system/platform/devices/device[@name='ioapic']/memory");
       Count : constant Natural := DOM.Core.Nodes.Length (List => Device);
    begin
       Mulog.Log (Msg => "Checking presence of I/O APIC device");
 
       if Count < 1 then
          raise Mucfgcheck.Validation_Error with "Required I/O APIC device with"
-           & " memory region 'mmio' missing";
+           & " memory region missing";
       elsif Count > 1 then
          raise Mucfgcheck.Validation_Error with "Multiple I/O APIC devices"
-           & " present";
+           & " or I/O APIC device with multiple memory regions present";
       end if;
    end Platform_IOAPIC_Presence;
+
+   -------------------------------------------------------------------------
+
+   procedure Platform_IOMMU_Memory (XML_Data : Muxml.XML_Data_Type)
+   is
+      IOMMUs    : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/platform/devices/device[starts-with"
+           & "(string(@name),'iommu')]");
+      Dev_Count : constant Natural := DOM.Core.Nodes.Length (List => IOMMUs);
+   begin
+      if Dev_Count = 0 then
+         return;
+      end if;
+
+      Mulog.Log (Msg => "Checking presence of" & Dev_Count'Img
+                 & " IOMMU memory region(s)");
+
+      for I in 0 .. Dev_Count - 1 loop
+         declare
+            IOMMU     : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => IOMMUs,
+                 Index => I);
+            Dev_Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => IOMMU,
+                 Name => "name");
+            Memory    : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => IOMMU,
+                 XPath => "memory");
+            Mem_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => Memory);
+         begin
+            if Mem_Count < 1 then
+               raise Mucfgcheck.Validation_Error with "IOMMU device '"
+                 & Dev_Name & "' has no memory region";
+            elsif Mem_Count > 1 then
+               raise Mucfgcheck.Validation_Error with "IOMMU device '"
+                 & Dev_Name & "' has multiple memory regions";
+            end if;
+         end;
+      end loop;
+   end Platform_IOMMU_Memory;
 
    -------------------------------------------------------------------------
 
@@ -245,6 +290,8 @@ is
       Check_Procs.Register
         (Process => Mucfgcheck.Device.PCI_Device_BDF_Uniqueness'Access);
       Check_Procs.Register
+        (Process => Mucfgcheck.Device.IOMMU_Region_Size'Access);
+      Check_Procs.Register
         (Process => Mucfgcheck.Platform.PCI_Config_Space_Address'Access);
       Check_Procs.Register
         (Process => Mucfgcheck.Subject.Runnability'Access);
@@ -257,6 +304,7 @@ is
       Check_Procs.Register (Process => Channel_Reader_Has_Event_Vector'Access);
       Check_Procs.Register (Process => Platform_CPU_Count_Presence'Access);
       Check_Procs.Register (Process => Platform_IOAPIC_Presence'Access);
+      Check_Procs.Register (Process => Platform_IOMMU_Memory'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

@@ -10,7 +10,7 @@
     <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
    </device>
    <device name="ioapic" shared="false">
-    <memory caching="UC" name="mmio" physicalAddress="16#fec0_0000#" size="16#1000#"/>
+    <memory caching="UC" name="mmio_regs" physicalAddress="16#fec0_0000#" size="16#1000#"/>
    </device>
    <device name="xhci" shared="false">
     <pci bus="16#00#" device="16#14#" function="0"/>
@@ -27,7 +27,7 @@
     <memory caching="UC" name="mmio" physicalAddress="16#fed9_0000#" size="16#1000#"/>
    </device>
    <device name="iommu_2" shared="false">
-    <memory caching="UC" name="mmio" physicalAddress="16#fed9_1000#" size="16#1000#"/>
+    <memory caching="UC" name="MMIO_1" physicalAddress="16#fed9_1000#" size="16#1000#"/>
    </device>
   </devices>
  </platform>
@@ -68,13 +68,13 @@
   </memory>
   <devices>
    <device logical="ioapic" physical="ioapic">
-    <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#0013_0000#" writable="true"/>
+    <memory executable="false" logical="mmio_regs" physical="mmio_regs" virtualAddress="16#0013_0000#" writable="true"/>
    </device>
    <device logical="iommu_1" physical="iommu_1">
     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#0013_1000#" writable="true"/>
    </device>
    <device logical="iommu_2" physical="iommu_2">
-    <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#0013_2000#" writable="true"/>
+    <memory executable="false" logical="MMIO_1" physical="MMIO_1" virtualAddress="16#0013_2000#" writable="true"/>
    </device>
   </devices>
  </kernel>

@@ -62,6 +62,9 @@ is
    --  Check that the platform provides an I/O APIC device.
    procedure Platform_IOAPIC_Presence (XML_Data : Muxml.XML_Data_Type);
 
+   --  Check that IOMMU devices provide a single memory resource.
+   procedure Platform_IOMMU_Memory (XML_Data : Muxml.XML_Data_Type);
+
 private
 
    package Check_Procs is new

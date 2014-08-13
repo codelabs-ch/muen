@@ -68,7 +68,7 @@ is
               := Muxml.Utils.Get_Element
                 (Doc   => XML_Data.Doc,
                  XPath => "/system/subjects/subject/events/source/group/"
-                 & "event/notify[@physical='" & Event_Name & "']");
+                 & "*/notify[@physical='" & Event_Name & "']");
             Src_Subj : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node (Node  => Src_Node,
                                             Level => 5);

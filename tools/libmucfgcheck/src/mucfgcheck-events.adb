@@ -49,8 +49,17 @@ is
       Error_Msg : String)
    is
       Nodes : constant DOM.Core.Node_List
-        := XPath_Query (N     => XML_Data.Doc,
-                        XPath => "/system/events/event[@mode='" & Mode & "']");
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/events/event[@mode='" & Mode & "']");
+      Sources : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/source/group/*/notify");
+      Targets : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/target/event");
    begin
       Mulog.Log (Msg => "Checking " & Mode & " destinations in"
                  & DOM.Core.Nodes.Length (List => Nodes)'Img & " event(s)");
@@ -66,9 +75,9 @@ is
                  Name => "name");
             Src_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => XML_Data.Doc,
-                 XPath => "/system/subjects/subject/events/source/group/"
-                 & "*/notify[@physical='" & Event_Name & "']");
+                (Nodes     => Sources,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Event_Name);
             Src_Subj : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node (Node  => Src_Node,
                                             Level => 5);
@@ -83,9 +92,9 @@ is
                     Name => "cpu"));
             Dst_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => XML_Data.Doc,
-                 XPath => "/system/subjects/subject/events/target/"
-                 & "event[@physical='" & Event_Name & "']");
+                (Nodes     => Targets,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Event_Name);
             Dst_Subj : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node (Node  => Dst_Node,
                                             Level => 3);

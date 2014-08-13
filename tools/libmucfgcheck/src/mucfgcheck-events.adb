@@ -168,10 +168,14 @@ is
 
    procedure Self_References (XML_Data : Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List
+      Nodes   : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/subjects/subject/events/source/group/*/notify");
+      Targets : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/target/event");
    begin
       Mulog.Log (Msg => "Checking self-references in" & DOM.Core.Nodes.Length
                  (List => Nodes)'Img & " subject event(s)");
@@ -195,10 +199,9 @@ is
                 (Elem => Src_Node,
                  Name => "physical");
             Dst_Event_Node : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => XML_Data.Doc,
-                 XPath => "/system/subjects/subject/events/target/event"
-                 & "[@physical='" & Dst_Event_Name & "']");
+              := Muxml.Utils.Get_Element (Nodes     => Targets,
+                                          Ref_Attr  => "physical",
+                                          Ref_Value => Dst_Event_Name);
             Dst_Subj : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node (Node  => Dst_Event_Node,
                                             Level => 3);

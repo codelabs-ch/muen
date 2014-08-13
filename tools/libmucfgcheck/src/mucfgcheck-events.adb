@@ -367,7 +367,7 @@ is
                 (List => XPath_Query
                    (N     => XML_Data.Doc,
                     XPath => "/system/subjects/subject/events/source/group/"
-                    & "event/notify[@physical='" & Event_Name & "']"));
+                    & "*/notify[@physical='" & Event_Name & "']"));
             Target_Count : constant Natural
               := DOM.Core.Nodes.Length
                 (List => XPath_Query

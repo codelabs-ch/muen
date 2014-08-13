@@ -349,6 +349,14 @@ is
         := XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/events/event");
+      Sources : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/source/group/*/notify");
+      Targets : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/target/event");
    begin
       Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
                  (List => Events)'Img & " event source/target connection(s)");
@@ -364,16 +372,16 @@ is
                  Name => "name");
             Source_Count : constant Natural
               := DOM.Core.Nodes.Length
-                (List => XPath_Query
-                   (N     => XML_Data.Doc,
-                    XPath => "/system/subjects/subject/events/source/group/"
-                    & "*/notify[@physical='" & Event_Name & "']"));
+                (List => Muxml.Utils.Get_Elements
+                   (Nodes     => Sources,
+                    Ref_Attr  => "physical",
+                    Ref_Value => Event_Name));
             Target_Count : constant Natural
               := DOM.Core.Nodes.Length
-                (List => XPath_Query
-                   (N     => XML_Data.Doc,
-                    XPath => "/system/subjects/subject/events/target/event"
-                    & "[@physical='" & Event_Name & "']"));
+                (List => Muxml.Utils.Get_Elements
+                   (Nodes     => Targets,
+                    Ref_Attr  => "physical",
+                    Ref_Value => Event_Name));
          begin
             if Source_Count = 0 then
                raise Mucfgcheck.Validation_Error with "Invalid number of "

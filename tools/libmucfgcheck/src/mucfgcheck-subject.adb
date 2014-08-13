@@ -208,7 +208,7 @@ is
 
       package Subject_CPU_Package is new Ada.Containers.Hashed_Maps
         (Key_Type        => Unbounded_String,
-         Element_Type    => Natural,
+         Element_Type    => Integer,
          Hash            => Ada.Strings.Unbounded.Hash,
          Equivalent_Keys => Ada.Strings.Unbounded."=");
 
@@ -232,8 +232,8 @@ is
                  Name => "name"));
          Pos       : constant Subject_CPU_Package.Cursor
            := Subject_CPU_Package.Find
-           (Container => Subj_CPU_Map,
-            Key       => Subj_Name);
+             (Container => Subj_CPU_Map,
+              Key       => Subj_Name);
          CPU       : Integer := -1;
       begin
          if Pos = Subject_CPU_Package.No_Element then
@@ -259,6 +259,10 @@ is
                      Switch_Count : constant Integer
                        := DOM.Core.Nodes.Length (List => Src_Subjs);
                   begin
+                     Subj_CPU_Map.Insert
+                       (Key      => Subj_Name,
+                        New_Item => -1);
+
                      for J in 0 .. Switch_Count - 1 loop
                         CPU := Get_Executing_CPU
                           (Subject => DOM.Core.Nodes.Item
@@ -268,7 +272,7 @@ is
                      end loop;
 
                      if CPU /= -1 then
-                        Subj_CPU_Map.Insert
+                        Subj_CPU_Map.Replace
                           (Key      => Subj_Name,
                            New_Item => CPU);
                      end if;
@@ -292,6 +296,7 @@ is
       end Get_Executing_CPU;
    begin
       for I in 0 .. Subj_Count - 1 loop
+         Subj_CPU_Map.Clear;
          declare
             Subject   : constant DOM.Core.Node
               := DOM.Core.Nodes.Item (List  => Subjects,

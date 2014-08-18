@@ -19,8 +19,10 @@
 package Expanders.Config
 is
 
-   Tau0_Interface_Addr : constant := 16#0012_f000#;
-   Kernel_Devices_Addr : constant := 16#0013_0000#;
-   Subject_States_Addr : constant := 16#0014_0000#;
+   Kernel_RO_Section_Size      : constant := 16#0002_1000#;
+   Kernel_RO_Section_Addr      : constant := 16#0011_f000#;
+   Tau0_Interface_Virtual_Addr : constant := 16#001f_f000#;
+   Kernel_Devices_Virtual_Addr : constant := 16#0020_0000#;
+   Subject_States_Virtual_Addr : constant := 16#0030_0000#;
 
 end Expanders.Config;

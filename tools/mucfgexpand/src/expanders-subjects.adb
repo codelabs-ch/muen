@@ -796,7 +796,7 @@ is
             Logical_Name  => "sys_interface",
             Physical_Name => "sys_interface",
             Address       => Mutools.Utils.To_Hex
-              (Number => Config.Tau0_Interface_Addr),
+              (Number => Config.Tau0_Interface_Virtual_Addr),
             Writable      => True,
             Executable    => False));
       Muxml.Utils.Append_Child

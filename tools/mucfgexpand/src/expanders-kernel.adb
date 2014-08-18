@@ -94,7 +94,8 @@ is
                  (Policy        => Data,
                   Logical_Name  => "ro",
                   Physical_Name => "kernel_ro",
-                  Address       => "16#0011_f000#",
+                  Address       => Mutools.Utils.To_Hex
+                    (Number => Config.Kernel_RO_Section_Addr),
                   Writable      => False,
                   Executable    => False));
             Muxml.Utils.Append_Child
@@ -125,7 +126,8 @@ is
    is
 
       --  Base address of kernel device mappings.
-      Base_Address : Interfaces.Unsigned_64 := Config.Kernel_Devices_Addr;
+      Base_Address : Interfaces.Unsigned_64
+        := Config.Kernel_Devices_Virtual_Addr;
 
       --  Create device reference with given device, MMIO region name and MMIO
       --  address.
@@ -328,7 +330,7 @@ is
 
    procedure Add_Subj_State_Mappings (Data : in out Muxml.XML_Data_Type)
    is
-      State_Start : constant := Config.Subject_States_Addr;
+      State_Start : constant := Config.Subject_States_Virtual_Addr;
       CPU_Nodes   : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
@@ -410,7 +412,7 @@ is
             Logical_Name  => "tau0_interface",
             Physical_Name => "sys_interface",
             Address       => Mutools.Utils.To_Hex
-              (Number => Config.Tau0_Interface_Addr),
+              (Number => Config.Tau0_Interface_Virtual_Addr),
             Writable      => False,
             Executable    => False));
    end Map_Tau0_Interface;

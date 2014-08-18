@@ -23,6 +23,9 @@ package body Expand.Test_Data.Tests is
       --  Execute run procedure.
       procedure Execute_Run;
 
+      --  Test exception handling by trying to expand an invalid src policy.
+      procedure Trigger_Exception;
+
       ----------------------------------------------------------------------
 
       procedure Execute_Run
@@ -49,8 +52,46 @@ package body Expand.Test_Data.Tests is
          Assert (Condition => Post_Checks.Get_Count = 0,
                  Message   => "Post-checks not zero");
       end Execute_Run;
+
+      ----------------------------------------------------------------------
+
+      procedure Trigger_Exception
+      is
+         Filename : constant String := "obj/execute_run.xml";
+         Policy   : Muxml.XML_Data_Type;
+      begin
+         Muxml.Parse (Data => Policy,
+                      Kind => Muxml.Format_Src,
+                      File => "data/test_policy.xml");
+
+         --  Trigger validation error via invalid physical memory reference.
+
+         Muxml.Utils.Set_Attribute
+           (Doc   => Policy.Doc,
+            XPath => "/system/memory/memory[@name='dummy']",
+            Name  => "name",
+            Value => "foobar");
+
+         begin
+            Run (Policy      => Policy,
+                 Output_File => Filename);
+            Assert (Condition => False,
+                    Message   => "Exception expected");
+
+         exception
+            when E : others => null;
+         end;
+
+         Assert (Condition => Pre_Checks.Get_Count = 0,
+                 Message   => "Pre-checks not zero");
+         Assert (Condition => Expanders.Get_Count = 0,
+                 Message   => "Expanders not zero");
+         Assert (Condition => Post_Checks.Get_Count = 0,
+                 Message   => "Post-checks not zero");
+      end Trigger_Exception;
    begin
       Execute_Run;
+      Trigger_Exception;
 --  begin read only
    end Test_Run;
 --  end read only

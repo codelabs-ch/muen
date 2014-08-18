@@ -4,8 +4,9 @@
 	<xs:complexType name="memoryType">
 		<xs:complexContent>
 			<xs:extension base="memoryBaseType">
-				<xs:attribute name="alignment"       type="alignmentType" use="optional"/>
-				<xs:attribute name="physicalAddress" type="word64Type"    use="optional"/>
+				<xs:attribute name="type"            type="subjectMemoryKindType" use="optional"/>
+				<xs:attribute name="alignment"       type="alignmentType"         use="optional"/>
+				<xs:attribute name="physicalAddress" type="word64Type"            use="optional"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -17,5 +18,22 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+
+	<xs:simpleType name="subjectMemoryKindType">
+		<xs:restriction base="memoryKindType">
+			<xs:enumeration value="subject"/>
+			<xs:enumeration value="subject_info"/>
+			<xs:enumeration value="subject_state"/>
+			<xs:enumeration value="subject_binary"/>
+			<xs:enumeration value="subject_channel"/>
+			<xs:enumeration value="subject_initrd"/>
+			<xs:enumeration value="subject_bios"/>
+			<xs:enumeration value="subject_acpi_rsdp"/>
+			<xs:enumeration value="subject_acpi_xsdt"/>
+			<xs:enumeration value="subject_acpi_fadt"/>
+			<xs:enumeration value="subject_acpi_dsdt"/>
+			<xs:enumeration value="subject_zeropage"/>
+		</xs:restriction>
+	</xs:simpleType>
 
 </xs:schema>

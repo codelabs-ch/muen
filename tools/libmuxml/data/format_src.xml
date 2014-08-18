@@ -12,7 +12,7 @@
   </devices>
  </platform>
  <memory>
-  <memory alignment="16#1000#" caching="WB" name="trampoline" size="16#1000#"/>
+  <memory alignment="16#1000#" caching="WB" name="trampoline" size="16#1000#" type="subject"/>
  </memory>
  <deviceDomains>
   <domain name="linux_domain">

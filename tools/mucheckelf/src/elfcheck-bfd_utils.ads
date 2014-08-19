@@ -65,4 +65,12 @@ private
       Region_Name  : String;
       Address      : Interfaces.Unsigned_64);
 
+   --  Validate that the section flags match the permissions of the memory
+   --  region identified by name.
+   procedure Validate_Permission
+     (Section      : Bfd.Sections.Section;
+      Section_Name : String;
+      Region_Name  : String;
+      Read_Only    : Boolean);
+
 end Elfcheck.Bfd_Utils;

@@ -62,16 +62,26 @@ is
              (DOM.Core.Elements.Get_Attribute
                 (Elem => Memory_Region,
                  Name => "virtualAddress"));
+         Read_Only : constant Boolean
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Memory_Region,
+              Name => "writable") = "false";
       begin
-         Validate_Size (Section      => Section,
-                        Section_Name => Section_Name,
-                        Region_Name  => Region_Name,
-                        Size         => Size);
-         Validate_VMA (Section      => Section,
-                       Section_Name => Section_Name,
-                       Region_Name  => Region_Name,
-                       Address      => VMA);
-
+         Validate_Size
+           (Section      => Section,
+            Section_Name => Section_Name,
+            Region_Name  => Region_Name,
+            Size         => Size);
+         Validate_VMA
+           (Section      => Section,
+            Section_Name => Section_Name,
+            Region_Name  => Region_Name,
+            Address      => VMA);
+         Validate_Permission
+           (Section      => Section,
+            Section_Name => Section_Name,
+            Region_Name  => Region_Name,
+            Read_Only    => Read_Only);
       end;
    end Check_Section;
 
@@ -113,6 +123,29 @@ is
       when Bfd.OPEN_ERROR =>
          raise ELF_Error with "Unable to open file '" & Filename & "'";
    end Open;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Permission
+     (Section      : Bfd.Sections.Section;
+      Section_Name : String;
+      Region_Name  : String;
+      Read_Only    : Boolean)
+   is
+      use type Bfd.Section_Flags;
+
+      Flag_Value    : constant Bfd.Section_Flags
+        := (Section.Flags and Bfd.Sections.SEC_READONLY);
+      Flag_Expected : constant Bfd.Section_Flags
+        := (if Read_Only then Bfd.Sections.SEC_READONLY else 0);
+   begin
+      if Flag_Value /= Flag_Expected then
+         raise ELF_Error with "Memory region '" & Region_Name & "' is "
+           & (if Read_Only then "read-only" else "read-write") & " but section"
+           & " '" & Section_Name & "' READONLY flag is "
+           & (if Flag_Value = 0 then "not set" else "set");
+      end if;
+   end Validate_Permission;
 
    -------------------------------------------------------------------------
 

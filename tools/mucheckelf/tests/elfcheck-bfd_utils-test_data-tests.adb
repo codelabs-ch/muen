@@ -301,4 +301,34 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
    end Test_Validate_VMA;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Validate_Permission (Gnattest_T : in out Test);
+   procedure Test_Validate_Permission_619f4f (Gnattest_T : in out Test) renames Test_Validate_Permission;
+--  id:2.2/619f4fd4744b4a1a/Validate_Permission/1/0/
+   procedure Test_Validate_Permission (Gnattest_T : in out Test) is
+   --  elfcheck-bfd_utils.ads:70:4:Validate_Permission
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      S : Bfd.Sections.Section := (Flags => 0, others => <>);
+   begin
+      Validate_Permission (Section      => S,
+                           Section_Name => ".text",
+                           Region_Name  => "kernel_text",
+                           Read_Only    => True);
+      Assert (Condition => False,
+              Message   => "Exception expected");
+
+   exception
+      when E : ELF_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Memory region 'kernel_text' is read-only but section "
+                 & "'.text' READONLY flag is not set",
+                 Message   => "Exception mismatch");
+--  begin read only
+   end Test_Validate_Permission;
+--  end read only
+
 end Elfcheck.Bfd_Utils.Test_Data.Tests;

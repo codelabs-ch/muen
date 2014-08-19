@@ -57,11 +57,21 @@ is
              (DOM.Core.Elements.Get_Attribute
                 (Elem => Physical_Node,
                  Name => "size"));
+         VMA : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Memory_Region,
+                 Name => "virtualAddress"));
       begin
          Validate_Size (Section      => Section,
                         Section_Name => Section_Name,
                         Region_Name  => Region_Name,
                         Size         => Size);
+         Validate_VMA (Section      => Section,
+                       Section_Name => Section_Name,
+                       Region_Name  => Region_Name,
+                       Address      => VMA);
+
       end;
    end Check_Section;
 
@@ -123,5 +133,24 @@ is
                                    (Section.Size));
       end if;
    end Validate_Size;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_VMA
+     (Section      : Bfd.Sections.Section;
+      Section_Name : String;
+      Region_Name  : String;
+      Address      : Interfaces.Unsigned_64)
+   is
+      use type Interfaces.Unsigned_64;
+   begin
+      if Address /= Interfaces.Unsigned_64 (Section.Vma) then
+         raise ELF_Error with "Memory region '" & Region_Name & "' virtual "
+           & "address " & Mutools.Utils.To_Hex (Number => Address) & " not "
+           & "equal section '" & Section_Name & "' VMA "
+           & Mutools.Utils.To_Hex (Number => Interfaces.Unsigned_64
+                                   (Section.Vma));
+      end if;
+   end Validate_VMA;
 
 end Elfcheck.Bfd_Utils;

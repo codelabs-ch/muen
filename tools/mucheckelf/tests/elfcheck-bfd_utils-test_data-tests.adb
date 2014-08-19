@@ -271,4 +271,34 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
    end Test_Validate_Size;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Validate_VMA (Gnattest_T : in out Test);
+   procedure Test_Validate_VMA_0341b9 (Gnattest_T : in out Test) renames Test_Validate_VMA;
+--  id:2.2/0341b9398452ad8b/Validate_VMA/1/0/
+   procedure Test_Validate_VMA (Gnattest_T : in out Test) is
+   --  elfcheck-bfd_utils.ads:62:4:Validate_VMA
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      S : Bfd.Sections.Section := (Vma => 16#1000#, others => <>);
+   begin
+      Validate_VMA (Section      => S,
+                    Section_Name => ".text",
+                    Region_Name  => "kernel_text",
+                    Address      => 16#2000#);
+      Assert (Condition => False,
+              Message   => "Exception expected");
+
+   exception
+      when E : ELF_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Memory region 'kernel_text' virtual address 16#2000# not "
+                 & "equal section '.text' VMA 16#1000#",
+                 Message   => "Exception mismatch");
+--  begin read only
+   end Test_Validate_VMA;
+--  end read only
+
 end Elfcheck.Bfd_Utils.Test_Data.Tests;

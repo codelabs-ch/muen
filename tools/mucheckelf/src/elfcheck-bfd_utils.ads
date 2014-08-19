@@ -57,4 +57,12 @@ private
       Region_Name  : String;
       Size         : Interfaces.Unsigned_64);
 
+   --  Validate that the section VMA is equal to the virtualAddress of the
+   --  memory region identified by name.
+   procedure Validate_VMA
+     (Section      : Bfd.Sections.Section;
+      Section_Name : String;
+      Region_Name  : String;
+      Address      : Interfaces.Unsigned_64);
+
 end Elfcheck.Bfd_Utils;

@@ -21,5 +21,8 @@ package Elfcheck.Bfd_Utils.Test_Data.Tests is
    procedure Test_Validate_Size_f89357 (Gnattest_T : in out Test);
    --  elfcheck-bfd_utils.ads:54:4:Validate_Size
 
+   procedure Test_Validate_VMA_0341b9 (Gnattest_T : in out Test);
+   --  elfcheck-bfd_utils.ads:62:4:Validate_VMA
+
 end Elfcheck.Bfd_Utils.Test_Data.Tests;
 --  end read only

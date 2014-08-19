@@ -9,7 +9,7 @@ DUMMY := $(shell mkdir -p $(OBJ_DIR))
 all: $(IMAGE)
 
 $(IMAGE): $(KNL_FILE)
-	$(MUPACK) -i $(POLICY_OBJ_DIR) -o $(OBJ_DIR) $(POLICY_OBJ_DIR)/$(SYSTEM)_b.xml
+	$(MUPACK) -i $(POLICY_OBJ_DIR) -o $(OBJ_DIR) $(POLICY_B)
 
 clean:
 	@rm -rf $(OBJ_DIR)

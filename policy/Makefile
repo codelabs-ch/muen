@@ -1,11 +1,7 @@
 OUTPUT   = $(OBJ_DIR)/skp.ads
 LAST_CFG = $(shell cat $(OBJ_DIR)/.cfg 2>/dev/null)
 
-POLICY     = xml/$(SYSTEM).xml
-POLICY_SRC = $(OBJ_DIR)/$(SYSTEM).xml
-POLICY_A   = $(OBJ_DIR)/$(SYSTEM)_a.xml
-POLICY_B   = $(OBJ_DIR)/$(SYSTEM)_b.xml
-PLATFORM   = platform/$(HARDWARE).xml
+PLATFORM = platform/$(HARDWARE).xml
 
 GENERATORS =         \
 	$(MUGENACPI)     \

@@ -36,7 +36,7 @@ $(OBJ_DIR)/$(PACKAGE): $(OBJ_DIR)/debug/$(PACKAGE) $(OBJ_DIR)/release/$(PACKAGE)
 	@cp $< $@
 
 install: $(OBJ_DIR)/$(PACKAGE)
-	@$(TO_RAW_CMD) $^ $(POLICY_DIR)/$(PACKAGE)
+	@$(TO_RAW_CMD) $^ $(POLICY_OBJ_DIR)/$(PACKAGE)
 
 clean:
 	rm -rf $(OBJ_DIR)

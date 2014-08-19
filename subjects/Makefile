@@ -17,7 +17,7 @@ $(SUBJECTS):
 
 install:
 	@for bin in $(BINARIES); do \
-		$(TO_RAW_CMD) $$bin/obj/$$bin $(POLICY_DIR)/$$bin || exit 1; \
+		$(TO_RAW_CMD) $$bin/obj/$$bin $(POLICY_OBJ_DIR)/$$bin || exit 1; \
 	done
 	$(MAKE) -C linux $@
 

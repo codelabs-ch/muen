@@ -202,10 +202,9 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/subjects/subject[@name='subj2']"
-         & "/events/source/group/event/notify[@physical='to_subj4']",
-         Name  => "physical",
-         Value => "to_subj1");
+         XPath => "/system/events/event[@name='to_subj4_from_subj2']",
+         Name  => "mode",
+         Value => "ipi");
 
       --  Must not raise an exception since subj4 is still schedulable.
 
@@ -213,7 +212,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/events/event[@name='to_subj4']",
+         XPath => "/system/events/event[@name='to_subj3_from_subj2']",
          Name  => "mode",
          Value => "ipi");
 
@@ -225,7 +224,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'subj4' is neither referenced in the scheduling"
+                    = "Subject 'subj3' is neither referenced in the scheduling"
                     & " plan nor schedulable via switch events",
                     Message   => "Exception mismatch");
       end;

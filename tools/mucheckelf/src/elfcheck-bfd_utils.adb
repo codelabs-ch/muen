@@ -16,10 +16,54 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with DOM.Core.Elements;
+
+with Mulog;
+with Muxml.Utils;
 with Mutools.Utils;
 
 package body Elfcheck.Bfd_Utils
 is
+
+   -------------------------------------------------------------------------
+
+   procedure Check_Section
+     (Policy      : Muxml.XML_Data_Type;
+      Region_Name : String;
+      Section     : Bfd.Sections.Section)
+   is
+      use type DOM.Core.Node;
+
+      Memory_Region : DOM.Core.Node;
+      Section_Name  : constant String := Bfd.Sections.Get_Name (S => Section);
+   begin
+      Memory_Region := Muxml.Utils.Get_Element
+        (Doc   => Policy.Doc,
+         XPath => "//memory[@physical='" & Region_Name & "']");
+      if Memory_Region = null then
+         raise ELF_Error with "Memory region '" & Region_Name
+           & "' not found in policy";
+      end if;
+
+      Mulog.Log (Msg => "Validating binary section '" & Section_Name
+                 & "' against memory region '" & Region_Name & "'");
+
+      declare
+         Physical_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Policy.Doc,
+            XPath => "/system/memory/memory[@name='" & Region_Name & "']");
+         Size : constant Interfaces.Unsigned_64
+           := Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Physical_Node,
+                 Name => "size"));
+      begin
+         Validate_Size (Section      => Section,
+                        Section_Name => Section_Name,
+                        Region_Name  => Region_Name,
+                        Size         => Size);
+      end;
+   end Check_Section;
 
    -------------------------------------------------------------------------
 

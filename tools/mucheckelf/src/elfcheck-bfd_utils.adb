@@ -16,17 +16,29 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmulog/libmulog";
-with "../libmuxml/libmuxml";
-with "../shared_tools";
+package body Elfcheck.Bfd_Utils
+is
 
-with "bfdada";
+   -------------------------------------------------------------------------
 
-project Mucheckelf extends "../tools.gpr" is
+   procedure Open
+     (Filename   :     String;
+      Descriptor : out Bfd.Files.File_Type)
+   is
+   begin
+      Bfd.Files.Open (File => Descriptor,
+                      Name => Filename);
+      if not Bfd.Files.Check_Format
+        (File   => Descriptor,
+         Expect => Bfd.Files.OBJECT)
+      then
+         raise ELF_Error with "File '" & Filename & "' is not a binary object "
+           & "file";
+      end if;
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Exec_Dir use "bin";
-   for Main use ("mucheckelf.adb");
+   exception
+      when Bfd.OPEN_ERROR =>
+         raise ELF_Error with "Unable to open file '" & Filename & "'";
+   end Open;
 
-end Mucheckelf;
+end Elfcheck.Bfd_Utils;

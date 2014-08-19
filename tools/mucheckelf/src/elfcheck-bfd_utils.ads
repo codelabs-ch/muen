@@ -16,17 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmulog/libmulog";
-with "../libmuxml/libmuxml";
-with "../shared_tools";
+with Bfd.Files;
 
-with "bfdada";
+package Elfcheck.Bfd_Utils
+is
 
-project Mucheckelf extends "../tools.gpr" is
+   --  Open file given by filename. If the file could not be opened or the file
+   --  is not in the expected format, an exception is raised.
+   procedure Open
+     (Filename   :     String;
+      Descriptor : out Bfd.Files.File_Type);
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Shared_Tools.Build;
-   for Exec_Dir use "bin";
-   for Main use ("mucheckelf.adb");
-
-end Mucheckelf;
+end Elfcheck.Bfd_Utils;

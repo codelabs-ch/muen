@@ -19,6 +19,8 @@
 with "../libmulog/libmulog";
 with "../libmuxml/libmuxml";
 
+with "bfdada";
+
 project GNATtest_Mucheckelf extends "../tools.gpr" is
 
    for Source_Dirs use ("src");

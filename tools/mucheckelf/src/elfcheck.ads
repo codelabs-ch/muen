@@ -22,4 +22,6 @@ is
    --  Start the ELF check process.
    procedure Run (Policy_File, ELF_Binary : String);
 
+   ELF_Error : exception;
+
 end Elfcheck;

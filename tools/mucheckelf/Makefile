@@ -1,8 +1,6 @@
 COMPONENT = mucheckelf
 
-DEPENDS =    \
-	libmulog \
-	libmuxml
+DEPENDS = libmutools
 
 include ../component.mk
 include ../coverage.mk

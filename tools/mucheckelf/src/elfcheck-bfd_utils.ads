@@ -17,6 +17,7 @@
 --
 
 with Bfd.Files;
+with Bfd.Sections;
 
 package Elfcheck.Bfd_Utils
 is
@@ -26,5 +27,12 @@ is
    procedure Open
      (Filename   :     String;
       Descriptor : out Bfd.Files.File_Type);
+
+   --  Get section by name from given file descriptor. If the requested section
+   --  is not found, an exception is raised.
+   function Get_Section
+     (Descriptor : Bfd.Files.File_Type;
+      Name       : String)
+      return Bfd.Sections.Section;
 
 end Elfcheck.Bfd_Utils;

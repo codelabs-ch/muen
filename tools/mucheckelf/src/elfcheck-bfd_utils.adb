@@ -21,6 +21,23 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Section
+     (Descriptor : Bfd.Files.File_Type;
+      Name       : String)
+      return Bfd.Sections.Section
+   is
+   begin
+      return Bfd.Sections.Find_Section
+        (File => Descriptor,
+         Name => Name);
+
+   exception
+      when Bfd.NOT_FOUND =>
+         raise ELF_Error with "Section '" & Name & "' not found";
+   end Get_Section;
+
+   -------------------------------------------------------------------------
+
    procedure Open
      (Filename   :     String;
       Descriptor : out Bfd.Files.File_Type)

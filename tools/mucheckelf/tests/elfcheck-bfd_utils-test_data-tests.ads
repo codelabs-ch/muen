@@ -10,7 +10,10 @@ package Elfcheck.Bfd_Utils.Test_Data.Tests is
    with null record;
 
    procedure Test_Open_fd83b4 (Gnattest_T : in out Test);
-   --  elfcheck-bfd_utils.ads:26:4:Open
+   --  elfcheck-bfd_utils.ads:27:4:Open
+
+   procedure Test_Get_Section_eabc3e (Gnattest_T : in out Test);
+   --  elfcheck-bfd_utils.ads:33:4:Get_Section
 
 end Elfcheck.Bfd_Utils.Test_Data.Tests;
 --  end read only

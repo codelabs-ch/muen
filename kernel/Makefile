@@ -36,6 +36,7 @@ $(OBJ_DIR)/$(PACKAGE): $(OBJ_DIR)/debug/$(PACKAGE) $(OBJ_DIR)/release/$(PACKAGE)
 	@cp $< $@
 
 install: $(OBJ_DIR)/$(PACKAGE)
+	@$(MUCHECKELF) $(POLICY_B) $^
 	@$(TO_RAW_CMD) $^ $(POLICY_OBJ_DIR)/$(PACKAGE)
 
 clean:

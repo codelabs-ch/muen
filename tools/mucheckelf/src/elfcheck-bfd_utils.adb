@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Mutools.Utils;
+
 package body Elfcheck.Bfd_Utils
 is
 
@@ -57,5 +59,25 @@ is
       when Bfd.OPEN_ERROR =>
          raise ELF_Error with "Unable to open file '" & Filename & "'";
    end Open;
+
+   -------------------------------------------------------------------------
+
+   procedure Validate_Size
+     (Section      : Bfd.Sections.Section;
+      Section_Name : String;
+      Region_Name  : String;
+      Size         : Interfaces.Unsigned_64)
+   is
+      use type Interfaces.Unsigned_64;
+   begin
+      if Size < Interfaces.Unsigned_64 (Section.Size) then
+         raise ELF_Error with "Size of physical memory region '"
+           & Region_Name & "' too small to store '" & Section_Name
+           & "' section: "
+           & Mutools.Utils.To_Hex (Number => Size) & " < "
+           & Mutools.Utils.To_Hex (Number => Interfaces.Unsigned_64
+                                   (Section.Size));
+      end if;
+   end Validate_Size;
 
 end Elfcheck.Bfd_Utils;

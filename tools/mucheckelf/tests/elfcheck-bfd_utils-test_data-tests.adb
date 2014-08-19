@@ -15,7 +15,7 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
    procedure Test_Open_fd83b4 (Gnattest_T : in out Test) renames Test_Open;
 --  id:2.2/fd83b40ddcdb3d67/Open/1/0/
    procedure Test_Open (Gnattest_T : in out Test) is
-   --  elfcheck-bfd_utils.ads:27:4:Open
+   --  elfcheck-bfd_utils.ads:29:4:Open
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -102,7 +102,7 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
    procedure Test_Get_Section_eabc3e (Gnattest_T : in out Test) renames Test_Get_Section;
 --  id:2.2/eabc3e5123f1b3fe/Get_Section/1/0/
    procedure Test_Get_Section (Gnattest_T : in out Test) is
-   --  elfcheck-bfd_utils.ads:33:4:Get_Section
+   --  elfcheck-bfd_utils.ads:35:4:Get_Section
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -162,6 +162,36 @@ package body Elfcheck.Bfd_Utils.Test_Data.Tests is
       Positive_Test;
 --  begin read only
    end Test_Get_Section;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Validate_Size (Gnattest_T : in out Test);
+   procedure Test_Validate_Size_f89357 (Gnattest_T : in out Test) renames Test_Validate_Size;
+--  id:2.2/f89357f6993b636d/Validate_Size/1/0/
+   procedure Test_Validate_Size (Gnattest_T : in out Test) is
+   --  elfcheck-bfd_utils.ads:44:4:Validate_Size
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      S : Bfd.Sections.Section := (Size => 16#2000#, others => <>);
+   begin
+      Validate_Size (Section      => S,
+                     Section_Name => ".text",
+                     Region_Name  => "kernel_text",
+                     Size         => 16#1000#);
+      Assert (Condition => False,
+              Message   => "Exception expected");
+
+   exception
+      when E : ELF_Error =>
+         Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                 = "Size of physical memory region 'kernel_text' too small to "
+                 & "store '.text' section: 16#1000# < 16#2000#",
+                 Message   => "Exception mismatch");
+--  begin read only
+   end Test_Validate_Size;
 --  end read only
 
 end Elfcheck.Bfd_Utils.Test_Data.Tests;

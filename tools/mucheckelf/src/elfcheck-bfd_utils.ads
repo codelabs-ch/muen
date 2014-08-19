@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with Bfd.Files;
 with Bfd.Sections;
 
@@ -34,5 +36,15 @@ is
      (Descriptor : Bfd.Files.File_Type;
       Name       : String)
       return Bfd.Sections.Section;
+
+private
+
+   --  Validate that the section size is smaller than the size of the memory
+   --  region identified by name.
+   procedure Validate_Size
+     (Section      : Bfd.Sections.Section;
+      Section_Name : String;
+      Region_Name  : String;
+      Size         : Interfaces.Unsigned_64);
 
 end Elfcheck.Bfd_Utils;

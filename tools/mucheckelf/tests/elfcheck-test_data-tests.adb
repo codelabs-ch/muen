@@ -21,11 +21,8 @@ package body Elfcheck.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Run (Policy_File => "data/test_policy.xml",
+           ELF_Binary  => "data/binary");
 --  begin read only
    end Test_Run;
 --  end read only

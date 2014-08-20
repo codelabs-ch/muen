@@ -371,9 +371,9 @@ package body Muxml.Utils.Test_Data.Tests is
       declare
          Matches : constant DOM.Core.Node_List
            := Get_Elements
-           (Nodes     => List,
-            Ref_Attr  => "name",
-            Ref_Value => "foo");
+             (Nodes     => List,
+              Ref_Attr  => "name",
+              Ref_Value => "foo");
       begin
          Assert (Condition => DOM.Core.Nodes.Length
                  (List => Matches) = 1,

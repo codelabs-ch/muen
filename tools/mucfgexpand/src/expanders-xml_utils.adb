@@ -62,12 +62,12 @@ is
           (N     => Policy.Doc,
            XPath => Virt_Mem_XPath);
       Physical_Mem  : constant DOM.Core.Node_List
-        :=  McKae.XML.XPath.XIA.XPath_Query
-          (N     =>  Policy.Doc,
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
            XPath => "/system/memory/memory");
       Physical_Devs : constant DOM.Core.Node_List
-        :=  McKae.XML.XPath.XIA.XPath_Query
-          (N     =>  Policy.Doc,
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
            XPath => "/system/platform/devices/device");
    begin
       Paging.Layouts.Set_Large_Page_Support (Mem_Layout => Layout,

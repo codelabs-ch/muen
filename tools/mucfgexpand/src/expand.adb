@@ -54,6 +54,13 @@ is
       Pre_Checks.Clear;
       Expanders.Clear;
       Post_Checks.Clear;
+
+   exception
+      when others =>
+         Pre_Checks.Clear;
+         Expanders.Clear;
+         Post_Checks.Clear;
+         raise;
    end Run;
 
 end Expand;

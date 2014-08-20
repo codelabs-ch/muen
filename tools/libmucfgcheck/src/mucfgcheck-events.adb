@@ -49,8 +49,17 @@ is
       Error_Msg : String)
    is
       Nodes : constant DOM.Core.Node_List
-        := XPath_Query (N     => XML_Data.Doc,
-                        XPath => "/system/events/event[@mode='" & Mode & "']");
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/events/event[@mode='" & Mode & "']");
+      Sources : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/source/group/*/notify");
+      Targets : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/target/event");
    begin
       Mulog.Log (Msg => "Checking " & Mode & " destinations in"
                  & DOM.Core.Nodes.Length (List => Nodes)'Img & " event(s)");
@@ -66,9 +75,9 @@ is
                  Name => "name");
             Src_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => XML_Data.Doc,
-                 XPath => "/system/subjects/subject/events/source/group/"
-                 & "event/notify[@physical='" & Event_Name & "']");
+                (Nodes     => Sources,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Event_Name);
             Src_Subj : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node (Node  => Src_Node,
                                             Level => 5);
@@ -83,9 +92,9 @@ is
                     Name => "cpu"));
             Dst_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
-                (Doc   => XML_Data.Doc,
-                 XPath => "/system/subjects/subject/events/target/"
-                 & "event[@physical='" & Event_Name & "']");
+                (Nodes     => Targets,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Event_Name);
             Dst_Subj : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node (Node  => Dst_Node,
                                             Level => 3);
@@ -168,11 +177,14 @@ is
 
    procedure Self_References (XML_Data : Muxml.XML_Data_Type)
    is
-      Nodes : constant DOM.Core.Node_List
+      Nodes   : constant DOM.Core.Node_List
         := XPath_Query
           (N     => XML_Data.Doc,
-           XPath => "/system/subjects/subject/events/source/group/event/"
-           & "notify");
+           XPath => "/system/subjects/subject/events/source/group/*/notify");
+      Targets : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/target/event");
    begin
       Mulog.Log (Msg => "Checking self-references in" & DOM.Core.Nodes.Length
                  (List => Nodes)'Img & " subject event(s)");
@@ -196,10 +208,9 @@ is
                 (Elem => Src_Node,
                  Name => "physical");
             Dst_Event_Node : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => XML_Data.Doc,
-                 XPath => "/system/subjects/subject/events/target/event"
-                 & "[@physical='" & Dst_Event_Name & "']");
+              := Muxml.Utils.Get_Element (Nodes     => Targets,
+                                          Ref_Attr  => "physical",
+                                          Ref_Value => Dst_Event_Name);
             Dst_Subj : constant DOM.Core.Node
               := Muxml.Utils.Ancestor_Node (Node  => Dst_Event_Node,
                                             Level => 3);
@@ -349,6 +360,14 @@ is
         := XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/events/event");
+      Sources : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/source/group/*/notify");
+      Targets : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/events/target/event");
    begin
       Mulog.Log (Msg => "Checking" & DOM.Core.Nodes.Length
                  (List => Events)'Img & " event source/target connection(s)");
@@ -364,16 +383,16 @@ is
                  Name => "name");
             Source_Count : constant Natural
               := DOM.Core.Nodes.Length
-                (List => XPath_Query
-                   (N     => XML_Data.Doc,
-                    XPath => "/system/subjects/subject/events/source/group/"
-                    & "event/notify[@physical='" & Event_Name & "']"));
+                (List => Muxml.Utils.Get_Elements
+                   (Nodes     => Sources,
+                    Ref_Attr  => "physical",
+                    Ref_Value => Event_Name));
             Target_Count : constant Natural
               := DOM.Core.Nodes.Length
-                (List => XPath_Query
-                   (N     => XML_Data.Doc,
-                    XPath => "/system/subjects/subject/events/target/event"
-                    & "[@physical='" & Event_Name & "']"));
+                (List => Muxml.Utils.Get_Elements
+                   (Nodes     => Targets,
+                    Ref_Attr  => "physical",
+                    Ref_Value => Event_Name));
          begin
             if Source_Count = 0 then
                raise Mucfgcheck.Validation_Error with "Invalid number of "

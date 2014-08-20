@@ -7,6 +7,8 @@ with AUnit.Test_Fixtures;
 
 with Ada.Directories;
 
+with Muxml.Utils;
+
 with Expand.Pre_Checks;
 with Expand.Post_Checks;
 with Expanders;

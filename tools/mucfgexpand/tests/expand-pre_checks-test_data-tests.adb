@@ -22,7 +22,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
 
    begin
       Register_All;
-      Assert (Condition => Check_Procs.Get_Count = 15,
+      Assert (Condition => Check_Procs.Get_Count = 18,
               Message   => "Count mismatch:" & Get_Count'Img);
 --  begin read only
    end Test_Register_All;

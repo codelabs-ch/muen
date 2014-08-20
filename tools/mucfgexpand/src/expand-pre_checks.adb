@@ -26,6 +26,7 @@ with Muxml.Utils;
 with Mutools.Immutable_Processors;
 with Mucfgcheck.Memory;
 with Mucfgcheck.Device;
+with Mucfgcheck.Events;
 with Mucfgcheck.Platform;
 with Mucfgcheck.Subject;
 
@@ -293,6 +294,12 @@ is
         (Process => Mucfgcheck.Device.IOMMU_Region_Size'Access);
       Check_Procs.Register
         (Process => Mucfgcheck.Platform.PCI_Config_Space_Address'Access);
+      Check_Procs.Register
+        (Process => Mucfgcheck.Events.Subject_Event_References'Access);
+      Check_Procs.Register
+        (Process => Mucfgcheck.Events.Source_Targets'Access);
+      Check_Procs.Register
+        (Process => Mucfgcheck.Events.Self_References'Access);
       Check_Procs.Register
         (Process => Mucfgcheck.Subject.Runnability'Access);
 

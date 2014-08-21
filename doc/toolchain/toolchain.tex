@@ -197,6 +197,20 @@ format states all system properties explicitly and is used as input for the
 Validation step discussed in the following section.
 
 \subsection{Policy Validation}
+Before structures required to pack the final system image are generated, the
+policy must be thoroughly validated to catch errors in the system specification.
+Such errors might range from overlapping memory, undefined resource references
+to incomplete scheduling plans etc. The Validator task performs checks that
+assure the policy in format B is sound and contains no higher-level errors which
+cannot be handled by XML schemata restrictions only.
+
+It is important to always run the Validator as the system could behave
+erroneously or crash otherwise. This is especially true if a policy writer
+decides to specify the system directly in format B which is also possible of
+course (but not advised).  Section \ref{sec:tools-validator} explains the
+Validator tool and lists some example checks performed by the tool as
+illustration.
+
 \subsection{Structure Generation}
 \subsection{Image Packaging}
 
@@ -339,6 +353,7 @@ In order to reduce the size of the final system image file-backed memory regions
 are placed at the start of memory.
 
 \subsection{Validator}
+\label{sec:tools-validator}
 The Validator performs additional checks that go beyond the basic restrictions
 imposed by the XML schema validation.
 

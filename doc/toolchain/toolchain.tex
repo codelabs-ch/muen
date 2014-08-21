@@ -233,6 +233,34 @@ For more information about the structure generators, see section
 \ref{sec:tools-gen}.
 
 \subsection{Image Packaging}
+The Packer tool assembles the final system image by first allocating a memory
+buffer which is initialized with zero. The size of the buffer is large enough
+to hold the complete system image, which consists of all file-backed memory
+regions specified in the policy:
+
+\begin{itemize}
+	\item Kernel binary
+	\item Kernel page tables
+	\item I/O bitmaps
+	\item MSR bitmaps
+	\item MSR store
+	\item Subject binaries
+	\item Subject page tables
+	\item VT-d tables
+	\item ACPI tables for VM subjects
+	\item Initial Ramdisks for Linux subjects
+	\item Zero Page structures for Linux subjects
+	\item Muen subject information structures
+\end{itemize}
+
+It then simply iterates over all file-backed memory regions and inserts the
+contents of the specified files into the allocated buffer. After performing
+various post-checks on the created image, it is writen to a file. The resulting
+image can be booted by any
+Multiboot\footnote{\url{http://www.gnu.org/software/grub/manual/multiboot/multiboot.html}}
+compliant bootloader.
+
+For more information about the Packer tool, see section \ref{sec:tools-packer}.
 
 \section{Tools}
 \label{sec:tools}
@@ -615,6 +643,7 @@ Generate subject information data for each Linux subject.
 \end{description}
 
 \subsection{Packer}
+\label{sec:tools-packer}
 The Packer is responsible to assemble the final system image.
 
 \begin{description} \itemsep1pt \parskip0pt

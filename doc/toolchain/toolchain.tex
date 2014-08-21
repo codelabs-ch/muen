@@ -212,6 +212,26 @@ Validator tool and lists some example checks performed by the tool as
 illustration.
 
 \subsection{Structure Generation}
+The structure generation step encompasses various tools which extract
+information from a policy in format B and generate files in different formats
+(see figure \ref{fig:build-process}).
+
+While some generated files are directly linked into the Muen kernel (i.e.
+Source Specs, see \ref{sec:tools-gen-spec}), most of them are packed into the
+final system image by the packer tool.
+
+For example, the tool responsible to generate page table structures queries
+memory mappings and the associated physical memory regions from the policy and
+creates page table structures in accordance to the format specified by the Intel
+Software Developer's Manual (SDM). The resulting files (one for each kernel
+running on the active CPUs of the system and one for each defined subject) are
+packed into the system image and only applied by the kernel. The kernel itself
+does not care about memory management, all required tables are pre-built during
+system integration.
+
+For more information about the structure generators, see section
+\ref{sec:tools-gen}.
+
 \subsection{Image Packaging}
 
 \section{Tools}
@@ -379,6 +399,7 @@ Examples of checks include:
 \end{itemize}
 
 \subsection{Structure Generators}
+\label{sec:tools-gen}
 These tools do not change the policy and use it read-only.
 
 \subsubsection{Page Tables}
@@ -557,6 +578,7 @@ Generate Zero Pages for all Linux subjects.
 \end{description}
 
 \subsubsection{Source Specifications}
+\label{sec:tools-gen-spec}
 Generate source specifications used by kernel and subjects.
 
 \begin{description} \itemsep1pt \parskip0pt

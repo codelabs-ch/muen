@@ -124,4 +124,41 @@ package body Mucfgcheck.Platform.Test_Data.Tests is
    end Test_PCI_Config_Space_Address;
 --  end read only
 
+
+--  begin read only
+   procedure Test_CPU_Count (Gnattest_T : in out Test);
+   procedure Test_CPU_Count_07d30c (Gnattest_T : in out Test) renames Test_CPU_Count;
+--  id:2.2/07d30c7e1521c027/CPU_Count/1/0/
+   procedure Test_CPU_Count (Gnattest_T : in out Test) is
+   --  mucfgcheck-platform.ads:35:4:CPU_Count
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/platform/processor",
+         Name  => "logicalCpus",
+         Value => "2");
+
+      begin
+         CPU_Count (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "System requires 4 but platform only provides 2 CPU(s)",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_CPU_Count;
+--  end read only
+
 end Mucfgcheck.Platform.Test_Data.Tests;

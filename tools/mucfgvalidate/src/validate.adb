@@ -139,6 +139,8 @@ is
       XML_Processors.Register
         (Process => Kernel.IOMMU_Consecutiveness'Access);
       XML_Processors.Register
+        (Process => Kernel.CPU_Memory_Section_Count'Access);
+      XML_Processors.Register
         (Process => Subject.Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Subject.CPU_ID'Access);
@@ -166,6 +168,8 @@ is
         (Process => Platform.Memory_Block_Overlap'Access);
       XML_Processors.Register
         (Process => Platform.PCI_Config_Space_Address'Access);
+      XML_Processors.Register
+        (Process => Platform.CPU_Count'Access);
       XML_Processors.Register
         (Process => Device_Domains.Device_Reference_Uniqueness'Access);
       XML_Processors.Register

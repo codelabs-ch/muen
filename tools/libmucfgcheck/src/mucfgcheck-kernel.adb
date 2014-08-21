@@ -21,10 +21,34 @@ with DOM.Core.Elements;
 
 with McKae.XML.XPath.XIA;
 
+with Mulog;
 with Mutools.Constants;
+with Mutools.XML_Utils;
 
 package body Mucfgcheck.Kernel
 is
+
+   -------------------------------------------------------------------------
+
+   procedure CPU_Memory_Section_Count (XML_Data : Muxml.XML_Data_Type)
+   is
+      Active_CPUs   : constant Positive
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => XML_Data);
+      CPU_Sections  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/kernel/memory/cpu");
+      Section_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => CPU_Sections);
+   begin
+      Mulog.Log (Msg => "Checking kernel memory CPU section count");
+
+      if Section_Count < Active_CPUs then
+         raise Validation_Error with "Invalid number of kernel memory CPU "
+           & "section(s)," & Section_Count'Img & " present but"
+           & Active_CPUs'Img & " required";
+      end if;
+   end CPU_Memory_Section_Count;
 
    -------------------------------------------------------------------------
 

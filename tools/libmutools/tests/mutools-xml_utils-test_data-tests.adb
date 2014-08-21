@@ -543,4 +543,27 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    end Test_Get_Switch_Sources;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_Active_CPU_Count (Gnattest_T : in out Test);
+   procedure Test_Get_Active_CPU_Count_8e636b (Gnattest_T : in out Test) renames Test_Get_Active_CPU_Count;
+--  id:2.2/8e636bf46ceb65f2/Get_Active_CPU_Count/1/0/
+   procedure Test_Get_Active_CPU_Count (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:119:4:Get_Active_CPU_Count
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Assert (Condition => Get_Active_CPU_Count (Data => Policy) = 2,
+              Message   => "Active CPU count mismatch");
+--  begin read only
+   end Test_Get_Active_CPU_Count;
+--  end read only
+
 end Mutools.XML_Utils.Test_Data.Tests;

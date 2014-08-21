@@ -809,10 +809,8 @@ is
            (List => McKae.XML.XPath.XIA.XPath_Query
               (N     => Policy.Doc,
                XPath => "/system/subjects/subject"));
-         CPU_Count_Str : constant String := Muxml.Utils.Get_Attribute
-           (Doc   => Policy.Doc,
-            XPath => "/system/platform/processor",
-            Name  => "logicalCpus");
+         CPU_Count     : constant Positive
+           := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Policy);
          VMXON_Addr    : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Nodes     => Phys_Memory,
@@ -858,7 +856,9 @@ is
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__cpu_count__",
-            Content  => CPU_Count_Str);
+            Content  => Ada.Strings.Fixed.Trim
+              (Source => CPU_Count'Img,
+               Side   => Ada.Strings.Left));
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__vmxon_addr__",
@@ -876,7 +876,7 @@ is
             Pattern  => "__kernel_pml4_addrs__",
             Content  => Get_Kernel_PML4_Addrs
               (Physical_Memory => Phys_Memory,
-               CPU_Count       => Positive'Value (CPU_Count_Str)));
+               CPU_Count       => CPU_Count));
 
          Mutools. Templates.Write
            (Template => Tmpl,
@@ -967,9 +967,8 @@ is
         (Timer_Rate * Long_Integer'Value (DOM.Core.Elements.Get_Attribute
          (Elem => Scheduling,
           Name => "tickRate")));
-      CPU_Count    : constant Natural      := Natural'Value
-        (DOM.Core.Elements.Get_Attribute (Elem => Processor,
-                                          Name => "logicalCpus"));
+      CPU_Count    : constant Natural
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Policy);
 
       Major_Count     : Positive;
       Max_Minor_Count : Positive;
@@ -1625,11 +1624,8 @@ is
         (List => McKae.XML.XPath.XIA.XPath_Query
            (N     => Policy.Doc,
             XPath => "/system/subjects/subject"));
-      CPU_Count  : constant Natural     := Natural'Value
-        (Muxml.Utils.Get_Attribute
-           (Doc   => Policy.Doc,
-            XPath => "/system/platform/processor",
-            Name  => "logicalCpus"));
+      CPU_Count  : constant Natural
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Policy);
       VMXON_Addr : constant Unsigned_64 := Unsigned_64'Value
         (Muxml.Utils.Get_Attribute
            (Doc   => Policy.Doc,

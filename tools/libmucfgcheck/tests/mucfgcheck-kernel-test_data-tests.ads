@@ -18,5 +18,8 @@ package Mucfgcheck.Kernel.Test_Data.Tests is
    procedure Test_IOMMU_Consecutiveness_fc88d4 (Gnattest_T : in out Test);
    --  mucfgcheck-kernel.ads:31:4:IOMMU_Consecutiveness
 
+   procedure Test_CPU_Memory_Section_Count_14dd51 (Gnattest_T : in out Test);
+   --  mucfgcheck-kernel.ads:34:4:CPU_Memory_Section_Count
+
 end Mucfgcheck.Kernel.Test_Data.Tests;
 --  end read only

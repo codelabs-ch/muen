@@ -312,6 +312,10 @@ is
       Check_Procs.Register (Process => Platform_CPU_Count_Presence'Access);
       Check_Procs.Register (Process => Platform_IOAPIC_Presence'Access);
       Check_Procs.Register (Process => Platform_IOMMU_Memory'Access);
+
+      --  Register after platform CPU count presence check.
+
+      Check_Procs.Register (Process => Mucfgcheck.Platform.CPU_Count'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

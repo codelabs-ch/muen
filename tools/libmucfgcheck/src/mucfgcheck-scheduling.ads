@@ -21,8 +21,7 @@ with Muxml;
 package Mucfgcheck.Scheduling
 is
 
-   --  Validate that a CPU element for each logical CPU exists in a major
-   --  frame.
+   --  Validate that each major frame specifies the same number of CPUs.
    procedure CPU_Element_Count (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate subject references.

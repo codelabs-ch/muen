@@ -125,4 +125,44 @@ package body Mucfgcheck.Kernel.Test_Data.Tests is
    end Test_IOMMU_Consecutiveness;
 --  end read only
 
+
+--  begin read only
+   procedure Test_CPU_Memory_Section_Count (Gnattest_T : in out Test);
+   procedure Test_CPU_Memory_Section_Count_14dd51 (Gnattest_T : in out Test) renames Test_CPU_Memory_Section_Count;
+--  id:2.2/14dd51df8988d4a1/CPU_Memory_Section_Count/1/0/
+   procedure Test_CPU_Memory_Section_Count (Gnattest_T : in out Test) is
+   --  mucfgcheck-kernel.ads:34:4:CPU_Memory_Section_Count
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      declare
+         Mem_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/kernel/memory");
+      begin
+         Muxml.Utils.Remove_Child (Node       => Mem_Node,
+                                   Child_Name => "cpu");
+
+         CPU_Memory_Section_Count (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Invalid number of kernel memory CPU section(s), 3 "
+                    & "present but 4 required",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_CPU_Memory_Section_Count;
+--  end read only
+
 end Mucfgcheck.Kernel.Test_Data.Tests;

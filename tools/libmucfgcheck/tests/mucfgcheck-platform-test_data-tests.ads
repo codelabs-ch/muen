@@ -18,5 +18,8 @@ package Mucfgcheck.Platform.Test_Data.Tests is
    procedure Test_PCI_Config_Space_Address_4663d9 (Gnattest_T : in out Test);
    --  mucfgcheck-platform.ads:32:4:PCI_Config_Space_Address
 
+   procedure Test_CPU_Count_07d30c (Gnattest_T : in out Test);
+   --  mucfgcheck-platform.ads:35:4:CPU_Count
+
 end Mucfgcheck.Platform.Test_Data.Tests;
 --  end read only

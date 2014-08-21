@@ -109,11 +109,8 @@ is
 
    procedure Add_Kernel_PTs (Data : in out Muxml.XML_Data_Type)
    is
-      CPU_Count : constant Positive := Positive'Value
-        (Muxml.Utils.Get_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/platform/processor",
-            Name  => "logicalCpus"));
+      CPU_Count : constant Positive
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Data);
    begin
       for I in 0 .. CPU_Count - 1 loop
          declare
@@ -196,11 +193,8 @@ is
 
    procedure Add_Stack_Store (Data : in out Muxml.XML_Data_Type)
    is
-      CPU_Count : constant Positive := Positive'Value
-        (Muxml.Utils.Get_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/platform/processor",
-            Name  => "logicalCpus"));
+      CPU_Count : constant Positive
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Data);
    begin
       Mulog.Log (Msg => "Adding kernel stack and store memory regions for"
                  & CPU_Count'Img & " CPU(s)");
@@ -454,11 +448,9 @@ is
       use type Interfaces.Unsigned_64;
 
       CPU_Count : constant Interfaces.Unsigned_64
-        := Interfaces.Unsigned_64'Value
-          (Muxml.Utils.Get_Attribute
-             (Doc   => Data.Doc,
-              XPath => "/system/platform/processor",
-              Name  => "logicalCpus"));
+        := Interfaces.Unsigned_64
+          (Mutools.XML_Utils.Get_Active_CPU_Count
+             (Data => Data));
       Curr_Addr : Interfaces.Unsigned_64 := VMX_Start_Address +
         CPU_Count * Mutools.Constants.Page_Size;
       Nodes     : constant DOM.Core.Node_List
@@ -497,11 +489,8 @@ is
    procedure Add_VMXON_Regions (Data : in out Muxml.XML_Data_Type)
    is
       Curr_Addr : Interfaces.Unsigned_64 := VMX_Start_Address;
-      CPU_Count : constant Positive      := Positive'Value
-        (Muxml.Utils.Get_Attribute
-           (Doc   => Data.Doc,
-            XPath => "/system/platform/processor",
-            Name  => "logicalCpus"));
+      CPU_Count : constant Positive
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Data);
    begin
       for I in 0 .. CPU_Count - 1 loop
          declare

@@ -30,4 +30,7 @@ is
    --  Validate that all IOMMU memory-mapped IO regions are consecutive.
    procedure IOMMU_Consecutiveness (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that each active CPU has a memory section.
+   procedure CPU_Memory_Section_Count (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Kernel;

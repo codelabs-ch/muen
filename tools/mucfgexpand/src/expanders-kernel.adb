@@ -272,11 +272,7 @@ is
    procedure Add_Section_Skeleton (Data : in out Muxml.XML_Data_Type)
    is
       CPU_Count     : constant Positive
-        := Positive'Value
-          (Muxml.Utils.Get_Attribute
-             (Doc   => Data.Doc,
-              XPath => "/system/platform/processor",
-              Name  => "logicalCpus"));
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Data);
       Kernel_Node   : DOM.Core.Node
         := DOM.Core.Documents.Create_Element
           (Doc      => Data.Doc,

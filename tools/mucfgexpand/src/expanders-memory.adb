@@ -123,7 +123,7 @@ is
               := XML_Utils.Calculate_PT_Size
                 (Policy             => Data,
                  Paging_Levels      => 4,
-                 Large_Pages        => True,
+                 Large_Pages        => False,
                  Dev_Virt_Mem_XPath => "/system/kernel/devices/device/memory",
                  Virt_Mem_XPath     => "/system/kernel/memory/cpu[@id='" &
                    CPU_Str & "']/memory");
@@ -366,7 +366,7 @@ is
               := XML_Utils.Calculate_PT_Size
                 (Policy             => Data,
                  Paging_Levels      => 4,
-                 Large_Pages        => True,
+                 Large_Pages        => False,
                  Dev_Virt_Mem_XPath => "/system/subjects/subject[@name='"
                  & Subj_Name & "']/devices/device/memory",
                  Virt_Mem_XPath     => "/system/subjects/subject[@name='"

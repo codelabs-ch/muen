@@ -34,6 +34,7 @@ package body Spec.Generator.Test_Data.Tests is
          Skp_Spec    : constant String := "obj/skp.ads";
          HW_Spec     : constant String := "obj/skp-hardware.ads";
          IOMMU_Spec  : constant String := "obj/skp-iommu.ads";
+         Policy_GPR  : constant String := "obj/policy.gpr";
       begin
          Muxml.Parse (Data => Policy,
                       Kind => Muxml.Format_B,
@@ -74,6 +75,10 @@ package body Spec.Generator.Test_Data.Tests is
                  (Filename1 => IOMMU_Spec,
                   Filename2 => "data/skp-iommu.ref"),
                  Message   => "IOMMU spec mismatch");
+         Assert (Condition => Test_Utils.Equal_Files
+                 (Filename1 => Policy_GPR,
+                  Filename2 => "data/policy.gpr.ref"),
+                 Message   => "Policy project file mismatch");
       end Write_Specs;
 
       ----------------------------------------------------------------------

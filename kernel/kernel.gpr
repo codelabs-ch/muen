@@ -17,6 +17,7 @@
 --
 
 with "../config/shared";
+with "../policy/obj/policy";
 
 project Kernel is
 
@@ -25,9 +26,6 @@ project Kernel is
 
    type Proof_Type is ("limited", "complete");
    Proof_Mode : Proof_Type := external ("proofs", "limited");
-
-   type Feature_Type is ("enable", "disable");
-   IOMMU_Support : Feature_Type := external ("iommu", "enable");
 
    Extra_Dirs := ();
    Extra_Languages := ();
@@ -123,7 +121,7 @@ project Kernel is
 
    package Naming is
       for Body_Suffix ("Asm") use ".S";
-      for Body ("SK.VTd") use "sk-vtd__" & IOMMU_Support & ".adb";
+      for Body ("SK.VTd") use "sk-vtd__" & Policy.IOMMU_Support & ".adb";
    end Naming;
 
 end Kernel;

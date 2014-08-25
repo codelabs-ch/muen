@@ -178,7 +178,15 @@ policy formats:
 
 The motivation to have several policy formats is to provide abstractions and a
 compact way for users to specify a system while simultaneously facilitate
-reduced complexity of tools operating on the policy and.
+reduced complexity of tools operating on the policy.
+
+The implementation of such tools is simplified by the absence of higher-level
+abstractions which would make the extraction of input data more involved. As
+an example, the page table generation tool can directly access all virtual
+memory mappings of a subject and must not concern itself with channels. The
+channel abstraction has already been broken down into the corresponding memory
+elements during the policy compilation step of the build process (see
+section \ref{sec:build-policy_compilation}).
 
 \subsubsection{Source Format}
 The user-specified policy is written in the source format. Constructs such as
@@ -233,6 +241,7 @@ whole build process.
 \end{figure}
 
 \subsection{Policy Compilation}
+\label{sec:build-policy_compilation}
 Policy compilation encompasses the tasks involved to transform the policy from
 source format to format A and finally to format B, which is the fully expanded
 format with no implicit properties.

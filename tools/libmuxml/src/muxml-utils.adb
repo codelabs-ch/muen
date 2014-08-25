@@ -147,12 +147,19 @@ is
       XPath : String)
       return DOM.Core.Node
    is
+      use type DOM.Core.Node;
+
+      Element : DOM.Core.Node := null;
    begin
-      return DOM.Core.Nodes.Item
-        (List  => McKae.XML.XPath.XIA.XPath_Query
-           (N     => Doc,
-            XPath => XPath),
-         Index => 0);
+      if Doc /= null then
+         Element := DOM.Core.Nodes.Item
+           (List  => McKae.XML.XPath.XIA.XPath_Query
+              (N     => Doc,
+               XPath => XPath),
+            Index => 0);
+      end if;
+
+      return Element;
    end Get_Element;
 
    -------------------------------------------------------------------------

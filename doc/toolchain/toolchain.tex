@@ -182,15 +182,16 @@ derived automatically. Section \ref{sec:tools-expander} explains the Expander
 tool in detail.
 
 The result of the expansion task is a policy in format A which is the input for
-the Allocator tool. This tool is responsible to assign a physical memory address
-to all memory regions which are not already explicitly stated. By querying the
-platform section of the policy, the tool is aware of the total amount of
-available RAM on a specific system and allocates regions of it for memory
-elements with no explicit physical address.  The Allocator tools also implements
-optimization strategies to keep the resulting system image as small as possible.
-For example, file-backed memory regions (e.g. a memory region storing a
-component executable) are preferably placed in lower physical regions. See
-section \ref{sec:tools-allocator} for a description of the Allocator tool.
+the Allocator tool. This tool is responsible to assign a physical memory
+address to all memory regions which are not already explicitly stated. By
+querying the platform section of the policy, the tool is aware of the total
+amount of available RAM on a specific system and allocates regions of it for
+memory elements with no explicit physical address.  The Allocator tool also
+implements optimization strategies to keep the resulting system image as small
+as possible.  For example, file-backed memory regions (e.g. a memory region
+storing a component executable) are preferably placed in lower physical
+regions. See section \ref{sec:tools-allocator} for a description of the
+Allocator tool.
 
 After the allocation task is complete, the policy is stored in format B. This
 format states all system properties explicitly and is used as input for the
@@ -198,18 +199,17 @@ Validation step discussed in the following section.
 
 \subsection{Policy Validation}
 Before structures required to pack the final system image are generated, the
-policy must be thoroughly validated to catch errors in the system specification.
-Such errors might range from overlapping memory, undefined resource references
-to incomplete scheduling plans etc. The Validator task performs checks that
-assure the policy in format B is sound and contains no higher-level errors which
-cannot be handled by XML schemata restrictions only.
+policy must be thoroughly validated to catch errors in the system
+specification.  Such errors might range from overlapping memory, undefined
+resource references to incomplete scheduling plans etc. The Validator task
+performs checks that assure the policy in format B is sound and free from
+higher-level errors that are not covered by XML schemata restrictions.
 
-It is important to always run the Validator as the system could behave
-erroneously or crash otherwise. This is especially true if a policy writer
-decides to specify the system directly in format B which is also possible of
-course (but not advised).  Section \ref{sec:tools-validator} explains the
-Validator tool and lists some example checks performed by the tool as
-illustration.
+It is important to always run the Validator as the system could misbehave
+otherwise. This is especially true if a policy writer decides to specify the
+system directly in format B which is also possible of course (but not advised).
+Section \ref{sec:tools-validator} explains the Validator tool and lists some
+example checks performed by the tool as illustration.
 
 \subsection{Structure Generation}
 The structure generation step encompasses various tools which extract
@@ -222,12 +222,11 @@ final system image by the packer tool.
 
 For example, the tool responsible to generate page table structures queries
 memory mappings and the associated physical memory regions from the policy and
-creates page table structures in accordance to the format specified by the Intel
-Software Developer's Manual (SDM). The resulting files (one for each kernel
-running on the active CPUs of the system and one for each defined subject) are
-packed into the system image and only applied by the kernel. The kernel itself
-does not care about memory management, all required tables are pre-built during
-system integration.
+creates page table structures in accordance to the format specified by the
+Intel Software Developer's Manual (SDM). The resulting files are packed into
+the system image and only applied by the kernel. The kernel itself does not
+care about memory management, all required tables are pre-built during system
+integration.
 
 For more information about the structure generators, see section
 \ref{sec:tools-gen}.
@@ -255,8 +254,8 @@ regions specified in the policy:
 
 It then simply iterates over all file-backed memory regions and inserts the
 contents of the specified files into the allocated buffer. After performing
-various post-checks on the created image, it is writen to a file. The resulting
-image can be booted by any
+various post-checks on the created image, it is written to a file. The
+resulting image can be booted by any
 Multiboot\footnote{\url{http://www.gnu.org/software/grub/manual/multiboot/multiboot.html}}
 compliant bootloader.
 

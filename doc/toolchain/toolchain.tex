@@ -134,12 +134,12 @@ The build of a system is divided into the following steps:
 \end{itemize}
 
 The toolchain is composed of several tools that operate on a user-specified
-system policy. Following the Unix philosophy "A program should do only one
-thing and do it well" each of the tools performs a specific task. They work in
+system policy. Following the Unix philosophy "A program should do only one thing
+and do it well" each of the tools performs a specific task. They work in
 conjunction to process a user-defined policy and build a bootable system image.
-An in-depth description of the tools is given in section \ref{sec:tools}.
-
-Figure \ref{fig:build-process} gives an overview of the whole build process.
+An in-depth description of the involved tools is given in section
+\ref{sec:tools} while figure \ref{fig:build-process} gives an overview of the
+whole build process.
 
 \begin{figure}[h]
 	\centering
@@ -149,14 +149,123 @@ Figure \ref{fig:build-process} gives an overview of the whole build process.
 \end{figure}
 
 \subsection{Policy Compilation}
+Policy compilation encompasses the tasks involved to transform the policy from
+source format to format A and finally to format B, which is the fully expanded
+format with no implicit properties.
+
+The Merger tool is responsible to merge all XML files referenced by the
+user-specified system policy in format source. It is basically an implementation
+of the XML XInclude mechanism\footnote{\url{http://www.w3.org/TR/xinclude-11/}}
+with the additional benefit that the resulting policy is already well formatted
+to minimize the difference in the generated policies resulting from the
+following tasks.  This allows the user to easily review (\texttt{diff}) and
+therefore verify the results of each policy compilation task.
+
+Using the XInclude mechanism, the policy writer is able to separate and organize
+the system policy as desired. Instead of specifying the whole policy in one
+file, the subject specifications could be put in separate files, or if multiple
+hardware platforms are supported, the parts common to all platforms could be
+extracted as well. See section \ref{sec:tools-merger} for more information about
+the Merger tool.
+
+After the merge task, the Expander tool takes care of completing the
+user-specified policy with additional information and abstractions only
+available in format source are resolved to low-level mechanisms.
+
+For example, the concept of \emph{channels} only exists in format source.
+Therefore a channel specified in format source must be expanded to shared memory
+regions with optional associated events in format A.  Also, the Expander tool
+inserts specifications for the Muen kernel itself so the user is lifted from
+that burden. Generally, the aim of the expansion task is to make the life of a
+policy writer as easy as possible by expanding all information which can be
+derived automatically. Section \ref{sec:tools-expander} explains the Expander
+tool in detail.
+
+The result of the expansion task is a policy in format A which is the input for
+the Allocator tool. This tool is responsible to assign a physical memory
+address to all memory regions which are not already explicitly stated. By
+querying the platform section of the policy, the tool is aware of the total
+amount of available RAM on a specific system and allocates regions of it for
+memory elements with no explicit physical address.  The Allocator tool also
+implements optimization strategies to keep the resulting system image as small
+as possible.  For example, file-backed memory regions (e.g. a memory region
+storing a component executable) are preferably placed in lower physical
+regions. See section \ref{sec:tools-allocator} for a description of the
+Allocator tool.
+
+After the allocation task is complete, the policy is stored in format B. This
+format states all system properties explicitly and is used as input for the
+Validation step discussed in the following section.
+
 \subsection{Policy Validation}
+Before structures required to pack the final system image are generated, the
+policy must be thoroughly validated to catch errors in the system
+specification.  Such errors might range from overlapping memory, undefined
+resource references to incomplete scheduling plans etc. The Validator task
+performs checks that assure the policy in format B is sound and free from
+higher-level errors that are not covered by XML schemata restrictions.
+
+It is important to always run the Validator as the system could misbehave
+otherwise. This is especially true if a policy writer decides to specify the
+system directly in format B which is also possible of course (but not advised).
+Section \ref{sec:tools-validator} explains the Validator tool and lists some
+example checks performed by the tool as illustration.
+
 \subsection{Structure Generation}
+The structure generation step encompasses various tools which extract
+information from a policy in format B and generate files in different formats
+(see figure \ref{fig:build-process}).
+
+While some generated files are directly linked into the Muen kernel (i.e.
+Source Specs, see \ref{sec:tools-gen-spec}), most of them are packed into the
+final system image by the packer tool.
+
+For example, the tool responsible to generate page table structures queries
+memory mappings and the associated physical memory regions from the policy and
+creates page table structures in accordance to the format specified by the
+Intel Software Developer's Manual (SDM). The resulting files are packed into
+the system image and only applied by the kernel. The kernel itself does not
+care about memory management, all required tables are pre-built during system
+integration.
+
+For more information about the structure generators, see section
+\ref{sec:tools-gen}.
+
 \subsection{Image Packaging}
+The Packer tool assembles the final system image by first allocating a memory
+buffer which is initialized with zero. The size of the buffer is large enough
+to hold the complete system image, which consists of all file-backed memory
+regions specified in the policy:
+
+\begin{itemize}
+	\item Kernel binary
+	\item Kernel page tables
+	\item I/O bitmaps
+	\item MSR bitmaps
+	\item MSR store
+	\item Subject binaries
+	\item Subject page tables
+	\item VT-d tables
+	\item ACPI tables for VM subjects
+	\item Initial Ramdisks for Linux subjects
+	\item Zero Page structures for Linux subjects
+	\item Muen subject information structures
+\end{itemize}
+
+It then simply iterates over all file-backed memory regions and inserts the
+contents of the specified files into the allocated buffer. After performing
+various post-checks on the created image, it is written to a file. The
+resulting image can be booted by any
+Multiboot\footnote{\url{http://www.gnu.org/software/grub/manual/multiboot/multiboot.html}}
+compliant bootloader.
+
+For more information about the Packer tool, see section \ref{sec:tools-packer}.
 
 \section{Tools}
 \label{sec:tools}
 
 \subsection{Merger}
+\label{sec:tools-merger}
 The Merger combines user-provided system policy files into a single XML
 document.
 
@@ -164,18 +273,17 @@ document.
 	\item[Name] \hfill \\
 		\texttt{mucfgmerge}
 	\item[Input] \hfill \\
-		Toplevel system policy, platform file
+		System policy in format source, platform specification
 	\item[Output] \hfill \\
-		System policy, merged
+		System policy in format source (merged)
 \end{description}
 
-This tool merges the system policy and included files into a single file. It is
-a replacement for the XInclude mechanism, which is not supported by the XML/Ada
-library. XML Content is re-formatted so changes to the policy by subsequent
-build steps (e.g. expander) can be manually reviewed or visualized by diffing
-the files.
+This tool merges the system policy and included files into a single file. XML
+Content is re-formatted so changes to the policy by subsequent build steps can
+be manually reviewed or visualized by diffing the files.
 
 \subsection{Expander}
+\label{sec:tools-expander}
 The expander completes the user-provided system policy by creating or deriving
 additional configuration elements.
 
@@ -183,81 +291,28 @@ additional configuration elements.
 	\item[Name] \hfill \\
 		\texttt{mucfgexpand}
 	\item[Input] \hfill \\
-		Toplevel system policy, separate hardware and platform configuration
+		System policy in format source
 	\item[Output] \hfill \\
-		System policy, expanded
-	\item[Data] \hfill
-		\begin{enumerate}
-			\item Implicit kernel config (compiled-in XML)
-			\item Implicit tau0 config (compiled-in XML)
-			\item Devices
-			\item Memory
-			\item Channels
-			\item Kernel
-			\item Subjects
-			\item Components
-		\end{enumerate}
+		System policy in format A (expanded)
 \end{description}
 
 The Expander performs the following actions:
 \begin{itemize}
-	\item Add implicit kernel configuration
-	\item Add implicit tau0 configuration
-	\item Expand device resources
-		\begin{itemize}
-			\item Add memory resource to global memory
-			\item Add device resources to subjects
-				\begin{itemize}
-					\item Map memory into subject's address space
-					\item Add device IRQs
-					\item Add device I/O ports
-				\end{itemize}
-			\item Add device resources to kernel
-				\begin{itemize}
-					\item Map memory into kernel's address space
-				\end{itemize}
-		\end{itemize}
-	\item Expand kernel memory
-		\begin{itemize}
-			\item Add kernel binary (physical) memory, use file as memory
-				content. Add mapping
-			\item Add trampoline memory with fixed physical memory address
-				\texttt{0x0}
-			\item Add I/O APIC memory, add mapping
-			\item Add kernel interface memory, add mapping
-			\item Add pagetable memory for all kernels, use files as memory
-				content (kernel count = CPU count)
-			\item Add VMXON memory for all CPUs
-			\item Add stack memory for all kernels
-			\item Add storage memory for all kernels
-			\item Add mappings for per-CPU memory
-				\begin{itemize}
-					\item Add mapping for stack memory
-					\item Add mapping for per-CPU storage area
-				\end{itemize}
-		\end{itemize}
-	\item Expand subject memory
-		\begin{itemize}
-			\item Add VMCS memory
-			\item Add pagetable memory, use file name as memory content
-			\item Add bitmap memory (I/O and MSR), use file names as memory content
-			\item Add memory for subject binary, use file name as memory content
-			\item Add additional memory, add mapping (TODO: how?)
-			\item Expand subject profile/initial state to VCPU element
-			\item Run subject-specific expanders (e.g. if Linux add zero page
-				memory, use zero page file as memory content)
-		\end{itemize}
+	\item Pre-check the system policy to make sure it is sound
 	\item Expand channels
-		\begin{itemize}
-			\item Add channel memory to global memory
-			\item Map channel memory into subject address space
-			\item Add event table entries to source subject
-				(if src.cpu /= dst.cpu send IPI).
-		\end{itemize}
-	\item Adjust subject configuration (e.g. change VMX controls).
+	\item Expand device resources
+	\item Expand device isolation domains
+	\item Expand kernel sections
+	\item Expand $\tau$0 subject
+	\item Expand additional memory regions
+	\item Expand platform-related information
+	\item Expand additional subject information
+	\item Expand profile-specific information
+	\item Post-check resulting policy
 \end{itemize}
 
 \subsection{Allocator}
+\label{sec:tools-allocator}
 The Allocator is responsible to assign a physical address to all global memory
 regions.
 
@@ -265,30 +320,21 @@ regions.
 	\item[Name] \hfill \\
 		\texttt{mucfgalloc}
 	\item[Input] \hfill \\
-		System policy
+		System policy in format A
 	\item[Output] \hfill \\
-		System policy, all physical addresses assigned
-	\item[Data] \hfill
-		\begin{enumerate}
-			\item Usable, physical memory blocks
-			\item Allocated memory
-				\begin{itemize}
-					\item Device memory
-					\item Fixed physical memory regions
-				\end{itemize}
-			\item Unallocated memory
-		\end{enumerate}
+		System policy in format B (allocated)
 \end{description}
 
-First, the Allocator initializes the physical memory view of the system based on
-the physical memory blocks specified in the XML platform section. It then
+First, the Allocator initializes the physical memory view of the system based
+on the physical memory blocks specified in the XML platform section. It then
 reserves memory that is occupied by pre-allocated memory elements (i.e. memory
-regions with a physical address or device memory). Finally it places all
-remaining memory regions in physical memory.
-In order to reduce the size of the final system image file-backed memory regions
-are placed at the start of memory.
+regions with a physical address or device memory).  Finally it places all
+remaining memory regions in physical memory.  In order to reduce the size of
+the final system image file-backed memory regions are placed at the start of
+memory.
 
 \subsection{Validator}
+\label{sec:tools-validator}
 The Validator performs additional checks that go beyond the basic restrictions
 imposed by the XML schema validation.
 
@@ -296,7 +342,7 @@ imposed by the XML schema validation.
 	\item[Name] \hfill \\
 		\texttt{mucfgvalidate}
 	\item[Input] \hfill \\
-		System policy
+		System policy in format B
 	\item[Output] \hfill \\
 		None, raises exception on error
 \end{description}
@@ -314,6 +360,7 @@ Examples of checks include:
 \end{itemize}
 
 \subsection{Structure Generators}
+\label{sec:tools-gen}
 These tools do not change the policy and use it read-only.
 
 \subsubsection{Page Tables}
@@ -323,7 +370,7 @@ Generate page tables for kernel(s) and subjects.
 	\item[Name] \hfill \\
 		\texttt{mugenpt}
 	\item[Input] \hfill \\
-		System policy
+		System policy in format B
 	\item[Output] \hfill \\
 		Page tables of kernels and subjects in binary format
 	\item[Output format] \hfill
@@ -331,66 +378,53 @@ Generate page tables for kernel(s) and subjects.
 			\item IA32-e paging structures, Intel SDM Vol. 3A, section 4.5
 			\item EPT paging structures, Intel SDM Vol. 3C, section 28.2
 		\end{itemize}
-	\item[Data] \hfill
-		\begin{enumerate}
-			\item Filename
-			\item PML4 address
-			\item Subject profile
-			\item Memory layout (virtual and device memory)
-		\end{enumerate}
 \end{description}
 
 The tool generates paging structures for subjects and kernels running on each
 CPU. These page tables are used to grant access to physical memory according to
-the virtual memory layout of the subject. The rest of physical and device memory
-is isolated from the subject.
+the virtual memory layout of the subject. The rest of physical and device
+memory is isolated from the subject.
 
-Depending on the subject profile either native 64-bit IA32-e or Extended Page
-Tables (EPT) are generated.
+An IA32-e page table is generated for each kernel running on a logical, active
+CPU. Depending on the subject profile either native 64-bit IA32-e or Extended
+Page Tables (EPT) are generated.
 
-An IA32-e page table is generated for each kernel running on a logical CPU.
-
-Page tables are used by the memory management unit (MMU) to enforce isolation of
-physical memory according to the system policy.
+Page tables are used by the memory management unit (MMU) to enforce isolation
+of physical memory according to the system policy.
 
 \subsubsection{VT-d tables}
-Generate VT-d tables for each device domain.
+Generate VT-d tables for each device isolation domain.
 
 \begin{description} \itemsep1pt \parskip0pt
 	\item[Name] \hfill \\
 		\texttt{mugenvtd}
 	\item[Input] \hfill \\
-		System policy
+		System policy in format B
 	\item[Output] \hfill \\
 		VT-d tables of device domains in binary format
 	\item[Output format] \hfill \\
-		Intel VT-d specification
-	\item[Data] \hfill
-		\begin{enumerate}
-			\item Filename
-			\item Device domains
-			\item PCI devices
-		\end{enumerate}
+		VT-d tables according to Intel VT-d specification, section 9
 \end{description}
 
+The tool creates root, context and second-level address translation tables for
+Intel VT-d DMAR (DMA\footnote{DMA - Direct Memory Access} remapping) hardware
+(see Intel VT-d specification, section 3). DMAR is used to restrict direct
+hardware device access to physical memory via DMA. Devices are put in so-called
+device security or device isolation domains and are only allowed to access
+physical memory as granted by the policy.
+
 \subsubsection{I/O Bitmaps}
-Generate I/O bitmap for each subject.
+Generate I/O bitmaps for each subject.
 
 \begin{description} \itemsep1pt \parskip0pt
 	\item[Name] \hfill \\
 		\texttt{mugeniobm}
 	\item[Input] \hfill \\
-		System policy
+		System policy in format B
 	\item[Output] \hfill \\
 		I/O bitmaps of subjects in binary format
 	\item[Output format] \hfill \\
 		Intel SDM Vol. 3C, section 24.6.4
-	\item[Data] \hfill
-		\begin{enumerate}
-			\item Filename
-			\item Subject
-			\item Device I/O ports
-		\end{enumerate}
 \end{description}
 
 The tool generates I/O bitmaps for each subject. Access to device I/O ports is
@@ -406,17 +440,11 @@ Generate MSR bitmap for each subject.
 	\item[Name] \hfill \\
 		\texttt{mugenmsrbm}
 	\item[Input] \hfill \\
-		System policy
+		System policy in format B
 	\item[Output] \hfill \\
 		MSR bitmaps of subjects in binary format
 	\item[Output format] \hfill \\
 		Intel SDM Vol. 3C, section 24.6.9
-	\item[Data] \hfill
-		\begin{enumerate}
-			\item Filename
-			\item Subject
-			\item MSRs
-		\end{enumerate}
 \end{description}
 
 The tool generates MSR bitmaps for each subject. Access to Model-Specific
@@ -432,17 +460,11 @@ Generate MSR store for each subject with MSR access.
 	\item[Name] \hfill \\
 		\texttt{mugenmsrstore}
 	\item[Input] \hfill \\
-		System policy
+		System policy in format B
 	\item[Output] \hfill \\
 		MSR store files of subjects in binary format
 	\item[Output format] \hfill \\
 		Intel SDM Vol. 3C, table 24-11
-	\item[Data] \hfill
-		\begin{enumerate}
-			\item Filename
-			\item Subject
-			\item MSRs
-		\end{enumerate}
 \end{description}
 
 The tool generates MSR stores for each subject. The MSR store is used to
@@ -454,24 +476,23 @@ subjects that have access to the same MSRs cannot transfer data via these
 registers).
 
 \subsubsection{ACPI Tables}
-Generate ACPI tables for all Linux subjects. A set of tables consists of an
-RSDP, XSDT, FADT and DSDT table.
+Generate ACPI tables for all Linux subjects.
 
 \begin{description} \itemsep1pt \parskip0pt
 	\item[Name] \hfill \\
 		\texttt{mugenacpi}
 	\item[Input] \hfill \\
-		System policy
+		System policy in format B
 	\item[Output] \hfill \\
 		ACPI tables of all Linux subjects
-	\item[Data] \hfill
-		\begin{enumerate}
-			\item Filename
-			\item Subject name
-			\item Memory mappings
-			\item Device references
-		\end{enumerate}
+	\item[Output format] \hfill \\
+		Advanced Configuration and Power Interface (ACPI)
+		Specification\footnote{\url{http://www.acpi.info/DOWNLOADS/ACPIspec50.pdf}}
 \end{description}
+
+ACPI tables are used to announce available hardware to VM subjects. A set of
+tables consists of an RSDP, XSDT, FADT and DSDT table. See the ACPI
+specification for more information about a specific table.
 
 \subsubsection{Linux Zero Pages}
 Generate Zero Pages for all Linux subjects.
@@ -480,31 +501,36 @@ Generate Zero Pages for all Linux subjects.
 	\item[Name] \hfill \\
 		\texttt{mugenzp}
 	\item[Input] \hfill \\
-		System policy
+		System policy in format B
 	\item[Output] \hfill \\
 		Zero pages of all Linux subjects
-	\item[Data] \hfill
-		\begin{enumerate}
-			\item Filename
-			\item Subject name
-			\item Memory mappings
-		\end{enumerate}
 \end{description}
 
+The so-called Zero Page (ZP) exports information required by the boot protocol
+of the Linux kernel on the x86 architecture. The kernel uses the provided
+information to retrieve settings about its running environment:
+\begin{itemize}
+	\item Type of bootloader
+	\item Map of physical memory (e820 map)
+	\item Address and size of initial ramdisk
+	\item Kernel command line parameters
+\end{itemize}
+
 \subsubsection{Source Specifications}
+\label{sec:tools-gen-spec}
 Generate source specifications used by kernel and subjects.
 
 \begin{description} \itemsep1pt \parskip0pt
 	\item[Name] \hfill \\
 		\texttt{mugenspec}
 	\item[Input] \hfill \\
-		System policy
+		System policy in format B
 	\item[Output] \hfill \\
 		Source specifications in SPARK and C format
 \end{description}
 
 Gathers data from the system policy to generate various source files in SPARK
-and C format. Created output includes constant values for channel addresses,
+and C format. Created output includes constant values for memory addresses,
 device resources, scheduling plans, etc.
 
 \subsubsection{Subject info}
@@ -514,34 +540,36 @@ Generate subject information data for each Linux subject.
 	\item[Name] \hfill \\
 		\texttt{mugensinfo}
 	\item[Input] \hfill \\
-		System policy
+		System policy in format B
 	\item[Output] \hfill \\
-		Subject infor data in binary format
+		Subject info data in binary format
 	\item[Output format] \hfill \\
-		TBD
-	\item[Data] \hfill
-		\begin{enumerate}
-			\item Filename
-			\item Subject
-			\item Channel(s)
-		\end{enumerate}
+		As specified in \texttt{libmusinfo/src/musinfo.[ads|c]}
 \end{description}
 
+The Sinfo page is used to export subject information data extracted from the
+system policy to VM subjects.  Currently, only information about available
+channels is provided.
+
 \subsection{Packer}
+\label{sec:tools-packer}
 The Packer is responsible to assemble the final system image.
 
 \begin{description} \itemsep1pt \parskip0pt
 	\item[Name] \hfill \\
 		\texttt{mupack}
 	\item[Input] \hfill \\
-		System policy, Input directories, System image filename
+		System policy in format B, Input directories, System image filename
 	\item[Output] \hfill \\
 		System image file
-	\item[Data] \hfill
-		\begin{enumerate}
-			\item File
-			\item Physical address
-		\end{enumerate}
 \end{description}
+
+The Packer calculates the size of the resulting system image by querying the
+file-backed memory region with the highest physical memory address. It
+allocates a buffer of that size which is initially filled with zeros. It then
+iterates over all file-backed memory regions in the policy and adds the content
+of the files to the buffer. Before writing the buffer to a file specified on
+the command line, the packer tool performs post-checks on the buffer to make
+sure it is sound.
 
 \end{document}

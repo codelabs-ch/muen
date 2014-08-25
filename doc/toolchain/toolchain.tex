@@ -65,8 +65,8 @@ component-based system running on the Muen Separation Kernel (SK).
 \section{Policy}
 A policy is a description of a component-based system running on top of the Muen
 Separation Kernel. It defines what hardware resources are present, how many
-active components (called subjects) the system is composed of, how they can
-interact and which system resources they can access. The following properties
+active components (called subjects) the system is composed of, how they interact
+and which system resources they are allowed to access. The following properties
 are specified by the policy:
 
 \begin{itemize}
@@ -104,7 +104,7 @@ this step by implementing a simple tool that performs the data collection.
 This part of the policy specifies the physical memory layout of the system.
 Memory regions are defined by their size, caching, type and are placed by
 specifying a physical address. Additionally the content of the region can be
-declared as backed by a (part of a) file or filled with a pattern.
+declared as backed by a file or filled with a pattern.
 
 \subsubsection{Device Domains}
 The physical memory accessible by PCI devices is specified by so called device
@@ -178,18 +178,16 @@ policy formats:
 
 The motivation to have several policy formats is to provide abstractions and a
 compact way for users to specify a system while simultaneously facilitate
-reduced complexity of tools operating on the policy. In particular tools that
-generate certain binary artifacts based on the data specified by the policy,
-e.g. the creation of binary page tables for subject virtual memory layouts.
+reduced complexity of tools operating on the policy and.
 
 \subsubsection{Source Format}
-The source format is used by the user-specified policy. Constructs such as
+The user-specified policy is written in the source format. Constructs such as
 channels or events provide abstractions to simplify the specification of
 component-based systems. Many XML elements and attributes are optional and will
 be filled in with default values during later steps of the policy compilation
 process.
 
-Kernel and tau0 resources are not part of the source format since they are also
+Kernel and $\tau$0 resources are not part of the source format since they are also
 automatically added by the policy expansion step.
 
 \subsubsection{Format A}
@@ -200,10 +198,10 @@ region and the corresponding writer and reader subject mappings with the
 appropriate access rights.
 
 In this format all implicit elements, such as for example automatically
-generated page table memory regions, are specified. The kernel and tau0
+generated page table memory regions, are specified. The kernel and $\tau$0
 configuration is also declared as part of format A.
 
-The only optional attribute are addresses of physical memory regions.
+The only optional attributes are addresses of physical memory regions.
 
 \subsubsection{Format B}
 Format B is equivalent to Format A except that all physical memory regions have

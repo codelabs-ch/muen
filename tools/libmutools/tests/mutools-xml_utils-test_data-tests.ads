@@ -45,5 +45,8 @@ package Mutools.XML_Utils.Test_Data.Tests is
    procedure Test_Get_Active_CPU_Count_8e636b (Gnattest_T : in out Test);
    --  mutools-xml_utils.ads:119:4:Get_Active_CPU_Count
 
+   procedure Test_Is_PCI_Device_Reference_c44529 (Gnattest_T : in out Test);
+   --  mutools-xml_utils.ads:122:4:Is_PCI_Device_Reference
+
 end Mutools.XML_Utils.Test_Data.Tests;
 --  end read only

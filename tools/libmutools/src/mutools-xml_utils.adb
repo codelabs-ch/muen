@@ -422,4 +422,28 @@ is
       return Load;
    end Has_Managed_PERFGLOBALCTRL;
 
+   -------------------------------------------------------------------------
+
+   function Is_PCI_Device_Reference
+     (Data       : Muxml.XML_Data_Type;
+      Device_Ref : DOM.Core.Node)
+      return Boolean
+   is
+      use type DOM.Core.Node;
+
+      Physical_Dev_Name : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Device_Ref,
+           Name => "physical");
+      Physical_Dev_Node : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/platform/devices/device[@name='"
+           & Physical_Dev_Name & "']");
+   begin
+      return Muxml.Utils.Get_Element
+        (Doc   => Physical_Dev_Node,
+         XPath => "pci") /= null;
+   end Is_PCI_Device_Reference;
+
 end Mutools.XML_Utils;

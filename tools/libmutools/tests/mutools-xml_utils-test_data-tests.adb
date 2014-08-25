@@ -566,4 +566,60 @@ package body Mutools.XML_Utils.Test_Data.Tests is
    end Test_Get_Active_CPU_Count;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Is_PCI_Device_Reference (Gnattest_T : in out Test);
+   procedure Test_Is_PCI_Device_Reference_c44529 (Gnattest_T : in out Test) renames Test_Is_PCI_Device_Reference;
+--  id:2.2/c4452982639ee4fa/Is_PCI_Device_Reference/1/0/
+   procedure Test_Is_PCI_Device_Reference (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:122:4:Is_PCI_Device_Reference
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      declare
+         PCI_Dev_Ref : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Policy.Doc,
+            XPath => "/system/subjects/subject/devices/"
+            & "device[@physical='ethernet']");
+      begin
+         Assert (Condition => Is_PCI_Device_Reference
+                 (Data       => Policy,
+                  Device_Ref => PCI_Dev_Ref),
+                 Message   => "'ethernet' not a PCI device");
+      end;
+
+      declare
+         Devices_Node    : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Policy.Doc,
+              XPath => "/system/subjects/subject[@name='lnx']/devices");
+         Non_PCI_Dev_Ref : DOM.Core.Node
+           := DOM.Core.Documents.Create_Element
+             (Doc      => Policy.Doc,
+              Tag_Name => "device");
+      begin
+         DOM.Core.Elements.Set_Attribute
+           (Elem  => Non_PCI_Dev_Ref,
+            Name  => "physical",
+            Value => "debugconsole");
+         Muxml.Utils.Append_Child
+           (Node      => Devices_Node,
+            New_Child => Non_PCI_Dev_Ref);
+
+         Assert (Condition => not Is_PCI_Device_Reference
+                 (Data       => Policy,
+                  Device_Ref => Non_PCI_Dev_Ref),
+                 Message   => "'debuglog' is a PCI device");
+      end;
+--  begin read only
+   end Test_Is_PCI_Device_Reference;
+--  end read only
+
 end Mutools.XML_Utils.Test_Data.Tests;

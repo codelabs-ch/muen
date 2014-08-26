@@ -59,6 +59,8 @@ cleanup()
 		log "Stopping AMT console ($PID_XTERM)"
 		kill $PID_XTERM || true >>$LOGFILE 2>&1
 	fi
+
+	release_file_lock
 }
 
 log()

@@ -118,4 +118,10 @@ is
    --  Returns the number of CPUs that are active in a given system policy.
    function Get_Active_CPU_Count (Data : Muxml.XML_Data_Type) return Positive;
 
+   --  Returns True if the given node references a PCI device.
+   function Is_PCI_Device_Reference
+     (Data       : Muxml.XML_Data_Type;
+      Device_Ref : DOM.Core.Node)
+      return Boolean;
+
 end Mutools.XML_Utils;

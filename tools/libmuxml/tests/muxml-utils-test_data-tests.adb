@@ -183,6 +183,10 @@ package body Muxml.Utils.Test_Data.Tests is
               (Doc   => Data.Doc,
                XPath => "nonexistent") = null,
               Message   => "Element mismatch (4)");
+      Assert (Condition => Get_Element
+              (Doc   => null,
+               XPath => "/") = null,
+              Message   => "Element mismatch (5)");
 --  begin read only
    end Test_1_Get_Element;
 --  end read only
@@ -367,9 +371,9 @@ package body Muxml.Utils.Test_Data.Tests is
       declare
          Matches : constant DOM.Core.Node_List
            := Get_Elements
-           (Nodes     => List,
-            Ref_Attr  => "name",
-            Ref_Value => "foo");
+             (Nodes     => List,
+              Ref_Attr  => "name",
+              Ref_Value => "foo");
       begin
          Assert (Condition => DOM.Core.Nodes.Length
                  (List => Matches) = 1,

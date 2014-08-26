@@ -28,6 +28,7 @@ with McKae.XML.XPath.XIA;
 with Mutools.OS;
 with Mutools.Utils;
 with Mutools.Templates;
+with Mutools.XML_Utils;
 
 with Muxml.Utils;
 
@@ -349,21 +350,33 @@ is
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Subject,
               XPath => "devices/device/irq");
-         Count   : constant Natural := DOM.Core.Nodes.Length (List => Dev_Irq);
+         Count   : Natural := 0;
       begin
+         for I in 0 .. DOM.Core.Nodes.Length (List => Dev_Irq) - 1 loop
+            declare
+               Irq_Node : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => Dev_Irq,
+                    Index => I);
+               Dev_Ref  : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Parent_Node (N => Irq_Node);
+            begin
+               if Mutools.XML_Utils.Is_PCI_Device_Reference
+                 (Data       => Policy,
+                  Device_Ref => Dev_Ref)
+               then
+                  Add_Device_Interrupt_Resource (Dev_Irq => Irq_Node);
+                  Count := Count + 1;
+               end if;
+            end;
+         end loop;
+
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__interrupt_count__",
             Content  => Ada.Strings.Fixed.Trim
               (Source => Count'Img,
                Side   => Ada.Strings.Left));
-
-         for I in 0 .. Count - 1 loop
-            Add_Device_Interrupt_Resource
-              (Dev_Irq => DOM.Core.Nodes.Item
-                 (List  => Dev_Irq,
-                  Index => I));
-         end loop;
 
          Buffer := Buffer & Indent (N => 4);
 

@@ -8,7 +8,7 @@ cpuid: x86_64=1, vmx=2, apic=x2apic
 cpuid: family=6, model=0x1a, stepping=5
 cpuid: simd=avx, xsave=1
 
-megs: 512
+memory: guest=2048, host=512
 
 ata0: enabled=1, ioaddr1=0x1f0, ioaddr2=0x3f0, irq=14
 ata0-master: type=cdrom, path=muen.iso, status=inserted

@@ -100,7 +100,7 @@ resources. The necessary information can be easily gathered by running any
 common Linux distribution on the target hardware. There are plans to automate
 this step by implementing a simple tool that performs the data collection.
 
-\subsubsection{Physical memory regions}
+\subsubsection{Physical Memory Regions}
 This part of the policy specifies the physical memory layout of the system.
 Memory regions are defined by their size, caching, type and are placed by
 specifying a physical address. Additionally the content of the region can be
@@ -486,7 +486,7 @@ Page Tables (EPT) are generated.
 Page tables are used by the memory management unit (MMU) to enforce isolation
 of physical memory according to the system policy.
 
-\subsubsection{VT-d tables}
+\subsubsection{VT-d Tables}
 Generate VT-d tables for each device isolation domain.
 
 \begin{description} \itemsep1pt \parskip0pt
@@ -627,7 +627,7 @@ Gathers data from the system policy to generate various source files in SPARK
 and C format. Created output includes constant values for memory addresses,
 device resources, scheduling plans, etc.
 
-\subsubsection{Subject info}
+\subsubsection{Subject Info}
 Generate subject information data for each Linux subject.
 
 \begin{description} \itemsep1pt \parskip0pt

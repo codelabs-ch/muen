@@ -92,7 +92,7 @@ passed()
 failed()
 {
 	log "State -> FAILED"
-	send_mail FAILED "Integration test failed for:\n\n$GITLOG\n\nLog:\n`cat $LOGFILE`"
+	send_mail FAILED "Integration test failed for:\n\n$GITLOG\n\nLog:\n`tail -n 50 $LOGFILE`"
 	if [ $SAVE_ARTIFACTS -ne 0 ]; then
 		save_artifacts
 	fi

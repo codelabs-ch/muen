@@ -208,6 +208,8 @@ log "Muen integration test starting for commit $COMMIT"
 log "$HARBOR"
 echo "Logging to file $LOGFILE"
 
+acquire_file_lock
+
 execute "cd $ROOT"
 
 WORKDIR=$ROOT/muen

@@ -1,0 +1,48 @@
+\begin{tikzpicture}[minimum height=0.6cm]
+	\node (src) [apribox]               {Source Format};
+	\node (mrg) [bluebox, right=of src] {Merger};
+	\node (exp) [bluebox, right=of mrg] {Expander};
+	\node (fma) [apribox, right=of exp] {Format A};
+	\node (alo) [bluebox, right=of fma] {Allocator};
+	\node (fmb) [apribox, below=of alo] {Format B};
+	\node (val) [bluebox, left=of fmb]  {Validator};
+	\node (sge) [bluebox, left=of val]  {Structure Generators};
+
+	\node (spk) [graybox, below=of sge] {Source Specs};
+	\node (iob) [graybox, right=of spk] {I/O Bitmaps};
+	\node (msc) [graybox, right=of iob, minimum width=1.5cm] {...};
+	\node (pta) [graybox, left=of spk] {Page Tables};
+	\node (zpa) [graybox, left=of pta] {Zero Page};
+
+	\node (bin) [apribox, below=of spk] {Binaries};
+
+	\node (pak) [bluebox, below=of bin] {Packer};
+
+	\node (img) [apribox, below=of pak] {System Image};
+
+	\draw[arrow] (src) -- (mrg);
+	\draw[arrow] (mrg) -- (exp);
+	\draw[arrow] (exp) -- (fma);
+	\draw[arrow] (fma) -- (alo);
+	\draw[arrow] (alo) -- (fmb);
+	\draw[arrow] (fmb) -- (val);
+	\draw[arrow] (val) -- (sge);
+
+	\draw[arrow] (sge) -- (spk);
+	\draw[arrow] (sge) -- (iob);
+	\draw[arrow] (sge) -- (msc);
+	\draw[arrow] (sge) -- (pta);
+	\draw[arrow] (sge) -- (zpa);
+
+	\draw[arrow] (spk) -- (bin);
+
+	\draw[arrow] (bin) -- (pak);
+
+	\draw[arrow] (msc) -- (pak);
+	\draw[arrow] (iob) -- (pak);
+	\draw[arrow] (iob) -- (pak);
+	\draw[arrow] (pta) -- (pak);
+	\draw[arrow] (zpa) -- (pak);
+
+	\draw[arrow] (pak) -- (img);
+\end{tikzpicture}

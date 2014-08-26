@@ -60,11 +60,14 @@
 
 \section{Introduction}
 This document describes the process of configuring and building a
-component-based system running on the Muen separation kernel (SK).
+component-based system running on the Muen Separation Kernel (SK).
 
 \section{Policy}
 A policy is a description of a component-based system running on top of the Muen
-separation kernel. It specifies properties such as
+Separation Kernel. It defines what hardware resources are present, how many
+active components (called subjects) the system is composed of, how they interact
+and which system resources they are allowed to access. The following properties
+are specified by the policy:
 
 \begin{itemize}
 	\item Hardware platform
@@ -72,56 +75,145 @@ separation kernel. It specifies properties such as
 	\item Device domains
 	\item Events
 	\item Communication channels
-	\item Components
+% TODO	\item Components
 	\item Subjects
 	\item Scheduling plans
 \end{itemize}
 
+The policy serves as a static description of a Muen system. Since all aspects of
+the system are fixed at integration time the policy can be validated prior to
+execution, see also section \ref{subsec:policy_validation}.
+
 \subsection{Content}
+This section presents the different parts of a system policy and gives an
+overview what each section contains.
+
 \subsubsection{Hardware Platform}
+Systems running the Muen SK perform static resource allocation at integration
+time. This means that all available hardware resources of a target platform
+must be defined in the system policy in order for these resources to be
+allocated to subjects.
+
+Data required by a platform description includes the amount of available
+physical memory blocks, the number of logical CPUs and hardware device
+resources. The necessary information can be easily gathered by running any
+common Linux distribution on the target hardware. There are plans to automate
+this step by implementing a simple tool that performs the data collection.
 
 \subsubsection{Physical memory regions}
-Part of the policy is the description of the available hardware resources of a
-given target platform. Each hardware system specifies the available physical
-memory, hardware devices and properties of the processor such as the logical
-CPU count.
+This part of the policy specifies the physical memory layout of the system.
+Memory regions are defined by their size, caching, type and are placed by
+specifying a physical address. Additionally the content of the region can be
+declared as backed by a file or filled with a pattern.
 
 \subsubsection{Device Domains}
+The physical memory accessible by PCI devices is specified by so called device
+domains. Such domains define virtual mappings of physical memory regions for one
+or multiple devices. Device references select a subset of hardware devices
+provided by the platform.
+
+Device domains are isolated from each other by the use of Intel VT-d. Thus they
+can only be specified and enforced on systems that provide at least one
+IOMMU\footnote{Input/Output Memory Management Unit}.
+
 \subsubsection{Events}
+Events are an activity caused by a subject (source) that impacts a second
+subject (target). Events are declared globally and have an unique name to be
+unambiguous.
+
+Subjects can use events to either deliver an interrupt or hand over execution to
+a target subject. The first kind of event provides a basic notification
+mechanism and enables the implementation of event-driven services. The second
+type facilitates suspension of execution of the source subject and switching to
+the target. Such a construct is used to pass the thread of execution on to a
+different subject, e.g. invocation of a debugger subject if an error occurs in
+the source subject.
+
 \subsubsection{Communication Channels}
-\subsubsection{Components}
+Inter-subject communication is represented by so called channels. These channels
+represent directed information flows since they have a single writer and
+possibly multiple readers. Optionally a channel can have an associated
+notification event (doorbell interrupt).
+
+Channels are declared globally and have an unique name to be unambiguous.
+
+%TODO: \subsubsection{Components}
+
 \subsubsection{Subjects}
-The system policy defines active execution environments in the form of
-components and subjects. A subject specification assigns system resources such
-as physical memory mappings, devices as well as inter-subject communication
-channels and events.
+A subject is a software component executed by the SK. Similar terms are
+partition or container. They represent the building blocks of a component-based
+system.
+
+All subjects of a system are declared as part of the policy. A subject
+specification defines which physical memory is mapped where into the virtual
+address space, which device resources and communication channels are accessible
+and what events can be triggered by the subject.
+
+Subjects also have an associated profile (e.g. native or Linux) which determines
+properties of the execution environment provided by the kernel.
 
 \subsubsection{Scheduling Plans}
+The Muen SK performs scheduling of subjects in a fixed, cyclic and
+preemptive way according to a user-specified regime. Scheduling information is
+declared in so called scheduling plans. They specify in what order subjects are
+executed on which logical CPU and for how long. Multiple scheduling plans can be
+specified to enable the definition of different system execution profiles which
+can be switched during runtime.
+
+A scheduling plan is specified in terms of frames. A \emph{major frame} consists
+of a sequence of minor frames. When the end of a major frame is reached, the
+scheduler starts over from the beginning and uses the first minor frame in a
+cyclic fashion. This means that major frames are repetitive. A
+\emph{minor frame} specifies a subject and a precise amount of time.
 
 \subsection{Format}
-The system policy is specified in XML.
+The system policy is specified in XML. There are currently three different
+policy formats:
 
-TODO: Describe the general concept here. From permissive XML schema to more
-restrictive ones etc. No implicit values at the end. Policy always reviewable
-after each step.
+\begin{itemize}
+	\item Source Format
+	\item Format A
+	\item Format B
+\end{itemize}
+
+The motivation to have several policy formats is to provide abstractions and a
+compact way for users to specify a system while simultaneously facilitate
+reduced complexity of tools operating on the policy.
+
+The implementation of such tools is simplified by the absence of higher-level
+abstractions which would make the extraction of input data more involved. As
+an example, the page table generation tool can directly access all virtual
+memory mappings of a subject and must not concern itself with channels. The
+channel abstraction has already been broken down into the corresponding memory
+elements during the policy compilation step of the build process (see
+section \ref{sec:build-policy_compilation}).
 
 \subsubsection{Source Format}
-System policy defined by the user. Many attributes are optional. Constructs
-like channels provide abstraction.
+The user-specified policy is written in the source format. Constructs such as
+channels or events provide abstractions to simplify the specification of
+component-based systems. Many XML elements and attributes are optional and will
+be filled in with default values during later steps of the policy compilation
+process.
 
-The user may not provide kernel, tau0 and platform configuration (enforced by
-XSD).
+Kernel and $\tau$0 resources are not part of the source format since they are also
+automatically added by the policy expansion step.
 
 \subsubsection{Format A}
-Contains an expanded configuration containing all memory regions with given
-size. Kernel and tau0 configuration is added.
+Format A is a processed version of the source format where all includes are
+resolved and abstractions such as channels have been broken down into their
+underlying elements. For example, a channel is expanded to a physical memory
+region and the corresponding writer and reader subject mappings with the
+appropriate access rights.
 
-Subject profiles are expanded to their respective values. The Expander may also
-change values depending on the detected configuration.
+In this format all implicit elements, such as for example automatically
+generated page table memory regions, are specified. The kernel and $\tau$0
+configuration is also declared as part of format A.
+
+The only optional attributes are addresses of physical memory regions.
 
 \subsubsection{Format B}
-Format B is equivalent to Format A except that the Allocator has assigned a
-physical address to all elements of the memory layout.
+Format B is equivalent to Format A except that all physical memory regions have
+a fixed location (i.e. their physical address is set).
 
 \section{Build Process}
 The build of a system is divided into the following steps:
@@ -149,6 +241,7 @@ whole build process.
 \end{figure}
 
 \subsection{Policy Compilation}
+\label{sec:build-policy_compilation}
 Policy compilation encompasses the tasks involved to transform the policy from
 source format to format A and finally to format B, which is the fully expanded
 format with no implicit properties.
@@ -198,6 +291,7 @@ format states all system properties explicitly and is used as input for the
 Validation step discussed in the following section.
 
 \subsection{Policy Validation}
+\label{subsec:policy_validation}
 Before structures required to pack the final system image are generated, the
 policy must be thoroughly validated to catch errors in the system
 specification.  Such errors might range from overlapping memory, undefined

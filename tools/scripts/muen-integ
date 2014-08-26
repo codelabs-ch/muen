@@ -13,6 +13,7 @@ ROOT=$HOME/Builds
 LOGDIR=$ROOT/logs/$BUILDID
 LOGFILE=$LOGDIR/build.log
 SAVE_ARTIFACTS=0
+LOCK=/tmp/muen-integ.running
 
 # mail settings
 RECIPIENTS="reet@codelabs.ch ken@codelabs.ch"
@@ -30,6 +31,16 @@ export AMT_PASSWORD=XXX
 export CC="ccache gcc"
 
 trap cleanup EXIT
+
+acquire_file_lock()
+{
+	while [ -f $LOCK ]; do
+		log "$0 already running with PID `cat $LOCK`, waiting ..."
+		sleep 10
+	done
+
+	echo $$ > $LOCK
+}
 
 cleanup()
 {

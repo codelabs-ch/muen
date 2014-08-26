@@ -42,6 +42,13 @@ acquire_file_lock()
 	echo $$ > $LOCK
 }
 
+release_file_lock()
+{
+	if [ `cat $LOCK` -eq $$ ]; then
+		rm -f $LOCK
+	fi
+}
+
 cleanup()
 {
 	if [ $PID_HTTP -ne 0 ]; then

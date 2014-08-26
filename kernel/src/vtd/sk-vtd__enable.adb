@@ -533,15 +533,7 @@ is
    is
       Status : Reg_Fault_Status_Type;
    begin
-
-      --  Systems without an IOMMU have a null range.
-      --  NOTE: Due to ticket N704-009 the 'Reason' attribute of pragma
-      --        Warnings cannot be used.
-
-      pragma Warnings (Off);
       for I in Skp.IOMMU.IOMMU_Device_Range loop
-         pragma Warnings (On);
-
          Status := IOMMUs (I).Fault_Status;
 
          if Status.PPF = 1 then
@@ -791,14 +783,7 @@ is
    is
       Needed_Caps_Present, Status : Boolean;
    begin
-
-      --  Systems without an IOMMU have a null range.
-      --  NOTE: Due to ticket N704-009 the 'Reason' attribute of pragma
-      --        Warnings cannot be used.
-
-      pragma Warnings (Off);
       for I in Skp.IOMMU.IOMMU_Device_Range loop
-         pragma Warnings (On);
          Check_Capabilities (Idx    => I,
                              Result => Needed_Caps_Present);
 

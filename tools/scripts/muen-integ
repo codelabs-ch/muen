@@ -35,11 +35,11 @@ cleanup()
 {
 	if [ $PID_HTTP -ne 0 ]; then
 		log "Stopping HTTP server ($PID_HTTP)"
-		kill $PID_HTTP >>$LOGFILE 2>&1 || true
+		kill $PID_HTTP || true >>$LOGFILE 2>&1
 	fi
 	if [ $PID_XTERM -ne 0 ]; then
 		log "Stopping AMT console ($PID_XTERM)"
-		kill $PID_XTERM >>$LOGFILE 2>&1 || true
+		kill $PID_XTERM || true >>$LOGFILE 2>&1
 	fi
 }
 

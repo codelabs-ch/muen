@@ -88,11 +88,6 @@ is
 
       Procs.Register (Process => Memory.Add_Subject_MSR_Store'Access);
 
-      --  All subject memory regions incl. channels must exist to determine
-      --  virtual address of initrd region.
-
-      Procs.Register (Process => Subjects.Add_Initrd'Access);
-
       --  All kernel/subject memory regions and mappings must exist and specify
       --  and alignment to add PTs.
 

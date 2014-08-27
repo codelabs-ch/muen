@@ -3,6 +3,8 @@
 	<include href="common_platform.xml"/>
 
 	<memory>
+		<include href="common_memory.xml"/>
+
 		<memory name="nic_linux|ram" size="16#0f60_0000#" alignment="16#0020_0000#" caching="WB"/>
 		<memory name="usb_linux|ram" size="16#4000_0000#" alignment="16#0020_0000#" caching="WB"/>
 	</memory>
@@ -40,6 +42,7 @@
 			<initrd filename="initramfs.cpio.gz" size="16#0040_0000#"/>
 			<memory>
 				<memory logical="ram" physical="nic_linux|ram" virtualAddress="16#00a0_0000#" writable="true" executable="true"/>
+				<memory logical="initramfs" physical="initramfs" virtualAddress="16#1000_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="serial" physical="debugconsole">
@@ -79,6 +82,7 @@
 			<initrd filename="initramfs.cpio.gz" size="16#0040_0000#"/>
 			<memory>
 				<memory logical="ram" physical="usb_linux|ram" virtualAddress="16#00a0_0000#" writable="true" executable="true"/>
+				<memory logical="initramfs" physical="initramfs" virtualAddress="16#40a0_0000#" writable="false" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="cmos_rtc" physical="cmos_rtc">

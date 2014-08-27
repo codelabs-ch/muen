@@ -52,10 +52,6 @@ is
    --  Add default events. Removes the default element after processing.
    procedure Add_Default_Events (Data : in out Muxml.XML_Data_Type);
 
-   --  Add initial ramdisk physical memory regions and mappings. Removes the
-   --  initrd element after processing.
-   procedure Add_Initrd (Data : in out Muxml.XML_Data_Type);
-
    --  Add cpu ids.
    procedure Add_CPU_Ids (Data : in out Muxml.XML_Data_Type);
 

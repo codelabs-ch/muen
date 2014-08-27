@@ -211,31 +211,11 @@ package body Expanders.Subjects.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Add_Initrd (Gnattest_T : in out Test);
-   procedure Test_Add_Initrd_cf4328 (Gnattest_T : in out Test) renames Test_Add_Initrd;
---  id:2.2/cf4328683afda431/Add_Initrd/1/0/
-   procedure Test_Add_Initrd (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:57:4:Add_Initrd
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-   begin
-      Test_Utils.Expander.Run_Test
-        (Filename     => "obj/subjects_initrd.xml",
-         Ref_Filename => "data/subjects_initrd.ref.xml",
-         Expander     => Add_Initrd'Access);
---  begin read only
-   end Test_Add_Initrd;
---  end read only
-
-
---  begin read only
    procedure Test_Add_CPU_Ids (Gnattest_T : in out Test);
    procedure Test_Add_CPU_Ids_cf5c89 (Gnattest_T : in out Test) renames Test_Add_CPU_Ids;
 --  id:2.2/cf5c8998ce7da859/Add_CPU_Ids/1/0/
    procedure Test_Add_CPU_Ids (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:60:4:Add_CPU_Ids
+   --  expanders-subjects.ads:56:4:Add_CPU_Ids
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

@@ -114,9 +114,6 @@
   <memory alignment="16#1000#" caching="WB" name="lnx|msrstore" size="16#1000#" type="system_msrstore">
    <file filename="lnx_msrstore" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|initramfs" size="16#0030_0000#" type="subject_initrd">
-   <file filename="initramfs.cpio.gz" offset="none"/>
-  </memory>
   <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" size="16#5000#" type="system_pt">
    <file filename="kernel_pt_0" offset="none"/>
   </memory>
@@ -126,7 +123,7 @@
   <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#4000#" type="system_pt">
    <file filename="tau0_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#8000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#7000#" type="system_pt">
    <file filename="lnx_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#9000#" type="system_pt">
@@ -575,7 +572,6 @@
     <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000d_0000#" writable="false"/>
     <memory executable="false" logical="primary_data" physical="data_channel" virtualAddress="16#6000#" writable="false"/>
     <memory executable="false" logical="secondary_data" physical="data_channel2" virtualAddress="16#7000#" writable="false"/>
-    <memory executable="true" logical="initramfs" physical="lnx|initramfs" virtualAddress="16#000f_0000#" writable="true"/>
    </memory>
    <devices>
     <device logical="xhci" physical="xhci">

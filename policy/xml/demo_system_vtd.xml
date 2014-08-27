@@ -12,7 +12,7 @@
 	<deviceDomains>
 		<domain name="nic_domain">
 			<memory>
-				<memory logical="dma" physical="nic_linux|ram" virtualAddress="16#00a0_0000#" writable="true" executable="false"/>
+				<memory logical="dma" physical="nic_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="nic" physical="ethernet"/>
@@ -20,7 +20,7 @@
 		</domain>
 		<domain name="usb_domain">
 			<memory>
-				<memory logical="dma" physical="usb_linux|ram" virtualAddress="16#00a0_0000#" writable="true" executable="false"/>
+				<memory logical="dma" physical="usb_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="xhci" physical="xhci"/>
@@ -40,8 +40,8 @@
 		<subject name="nic_linux" profile="linux">
 			<bootparams>lpj=10000 console=hvc pci=noearly notsc</bootparams>
 			<memory>
-				<memory logical="ram" physical="nic_linux|ram" virtualAddress="16#00a0_0000#" writable="true" executable="true"/>
-				<memory logical="initramfs" physical="initramfs" virtualAddress="16#1000_0000#" writable="false" executable="false"/>
+				<memory logical="initramfs" physical="initramfs" virtualAddress="16#00a0_0000#" writable="false" executable="false"/>
+				<memory logical="ram" physical="nic_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
 				<device logical="serial" physical="debugconsole">
@@ -79,8 +79,8 @@
 		<subject name="usb_linux" profile="linux">
 			<bootparams>lpj=10000 console=hvc pci=noearly notsc</bootparams>
 			<memory>
-				<memory logical="ram" physical="usb_linux|ram" virtualAddress="16#00a0_0000#" writable="true" executable="true"/>
-				<memory logical="initramfs" physical="initramfs" virtualAddress="16#40a0_0000#" writable="false" executable="false"/>
+				<memory logical="initramfs" physical="initramfs" virtualAddress="16#00a0_0000#" writable="false" executable="false"/>
+				<memory logical="ram" physical="usb_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
 				<device logical="cmos_rtc" physical="cmos_rtc">

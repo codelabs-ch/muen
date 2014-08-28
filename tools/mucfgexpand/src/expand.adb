@@ -19,6 +19,7 @@
 with Mulog;
 
 with Stage1.Pre_Checks;
+with Stage1.Expansion;
 with Stage2.Pre_Checks;
 with Stage2.Expansion;
 
@@ -37,6 +38,10 @@ is
       Stage1.Pre_Checks.Register_All;
       Mulog.Log (Msg => "Registered stage 1 pre-checks"
                  & Stage1.Pre_Checks.Get_Count'Img);
+      Stage1.Expansion.Register_All;
+      Mulog.Log (Msg => "Registered stage 1 expanders"
+                 & Stage1.Expansion.Get_Count'Img);
+
       Stage2.Pre_Checks.Register_All;
       Mulog.Log (Msg => "Registered stage 2 pre-checks"
                  & Stage2.Pre_Checks.Get_Count'Img);
@@ -60,6 +65,7 @@ is
          Data => Policy);
 
       Stage1.Pre_Checks.Clear;
+      Stage1.Expansion.Clear;
       Stage2.Pre_Checks.Clear;
       Stage2.Expansion.Clear;
       Post_Checks.Clear;
@@ -67,6 +73,7 @@ is
    exception
       when others =>
          Stage1.Pre_Checks.Clear;
+         Stage1.Expansion.Clear;
          Stage2.Pre_Checks.Clear;
          Stage2.Expansion.Clear;
          Post_Checks.Clear;

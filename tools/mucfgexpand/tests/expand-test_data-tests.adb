@@ -47,6 +47,8 @@ package body Expand.Test_Data.Tests is
          Ada.Directories.Delete_File (Name => Filename);
          Assert (Condition => Stage1.Pre_Checks.Get_Count = 0,
                  Message   => "Pre-checks not zero (stage 1)");
+         Assert (Condition => Stage1.Expansion.Get_Count = 0,
+                 Message   => "Expanders not zero (stage 1)");
          Assert (Condition => Stage2.Pre_Checks.Get_Count = 0,
                  Message   => "Pre-checks not zero (stage 2)");
          Assert (Condition => Stage2.Expansion.Get_Count = 0,
@@ -86,6 +88,8 @@ package body Expand.Test_Data.Tests is
 
          Assert (Condition => Stage1.Pre_Checks.Get_Count = 0,
                  Message   => "Pre-checks not zero (stage 1)");
+         Assert (Condition => Stage1.Expansion.Get_Count = 0,
+                 Message   => "Expanders not zero (stage 1)");
          Assert (Condition => Stage2.Pre_Checks.Get_Count = 0,
                  Message   => "Pre-checks not zero (stage 2)");
          Assert (Condition => Stage2.Expansion.Get_Count = 0,

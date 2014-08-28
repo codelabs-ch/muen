@@ -39,6 +39,7 @@ is
    is
       use Cfgchecks;
    begin
+      Check_Procs.Register (Process => Subject_Component_References'Access);
       Check_Procs.Register (Process => Subject_Channel_Exports'Access);
    end Register_All;
 

@@ -45,10 +45,6 @@ is
       use Expanders;
    begin
 
-      --  Create optional subject elements such as memory first.
-
-      Procs.Register (Process => Subjects.Add_Missing_Elements'Access);
-
       --  Add tau0 subject prior to subject-related memory expanders (state,
       --  VMCS and bitmaps).
 

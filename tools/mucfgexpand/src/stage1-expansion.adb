@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Expanders.Subjects;
 with Expanders.Components;
 
 package body Stage1.Expansion
@@ -39,6 +40,11 @@ is
    is
       use Expanders;
    begin
+
+      --  Create optional subject elements such as memory first.
+
+      Procs.Register (Process => Subjects.Add_Missing_Elements'Access);
+
       Procs.Register (Process => Components.Add_Binaries'Access);
       Procs.Register (Process => Components.Remove_Components'Access);
       Procs.Register (Process => Components.Remove_Component_Reference'Access);

@@ -258,11 +258,50 @@ package body Expand.Pre_Checks.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Subject_Resource_Maps_Logical_Uniqueness (Gnattest_T : in out Test);
+   procedure Test_Subject_Resource_Maps_Logical_Uniqueness_4e4f1e (Gnattest_T : in out Test) renames Test_Subject_Resource_Maps_Logical_Uniqueness;
+--  id:2.2/4e4f1e224492b324/Subject_Resource_Maps_Logical_Uniqueness/1/0/
+   procedure Test_Subject_Resource_Maps_Logical_Uniqueness (Gnattest_T : in out Test) is
+   --  expand-pre_checks.ads:53:4:Subject_Resource_Maps_Logical_Uniqueness
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Policy.Doc,
+         XPath => "/system/subjects/subject[@name='subject1']/component/"
+         & "map[@logical='secondary_data']",
+         Name  => "logical",
+         Value => "primary_data");
+
+      begin
+         Subject_Resource_Maps_Logical_Uniqueness (XML_Data => Policy);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Mucfgcheck.Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Multiple logical resource mappings with name "
+                    & "'primary_data' in subject 'subject1'",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Subject_Resource_Maps_Logical_Uniqueness;
+--  end read only
+
+
+--  begin read only
    procedure Test_Channel_Reader_Writer (Gnattest_T : in out Test);
    procedure Test_Channel_Reader_Writer_918b3c (Gnattest_T : in out Test) renames Test_Channel_Reader_Writer;
 --  id:2.2/918b3c5761bd21a7/Channel_Reader_Writer/1/0/
    procedure Test_Channel_Reader_Writer (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:53:4:Channel_Reader_Writer
+   --  expand-pre_checks.ads:57:4:Channel_Reader_Writer
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -379,7 +418,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Channel_Writer_Has_Event_ID_ae7fe0 (Gnattest_T : in out Test) renames Test_Channel_Writer_Has_Event_ID;
 --  id:2.2/ae7fe00845fcf90b/Channel_Writer_Has_Event_ID/1/0/
    procedure Test_Channel_Writer_Has_Event_ID (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:56:4:Channel_Writer_Has_Event_ID
+   --  expand-pre_checks.ads:60:4:Channel_Writer_Has_Event_ID
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -418,7 +457,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Channel_Reader_Has_Event_Vector_dc496b (Gnattest_T : in out Test) renames Test_Channel_Reader_Has_Event_Vector;
 --  id:2.2/dc496b276bd400a4/Channel_Reader_Has_Event_Vector/1/0/
    procedure Test_Channel_Reader_Has_Event_Vector (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:60:4:Channel_Reader_Has_Event_Vector
+   --  expand-pre_checks.ads:64:4:Channel_Reader_Has_Event_Vector
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -458,7 +497,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Platform_CPU_Count_Presence_a69356 (Gnattest_T : in out Test) renames Test_Platform_CPU_Count_Presence;
 --  id:2.2/a6935685458554d5/Platform_CPU_Count_Presence/1/0/
    procedure Test_Platform_CPU_Count_Presence (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:64:4:Platform_CPU_Count_Presence
+   --  expand-pre_checks.ads:68:4:Platform_CPU_Count_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -494,7 +533,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Platform_IOAPIC_Presence_c56d2d (Gnattest_T : in out Test) renames Test_Platform_IOAPIC_Presence;
 --  id:2.2/c56d2d279580918e/Platform_IOAPIC_Presence/1/0/
    procedure Test_Platform_IOAPIC_Presence (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:67:4:Platform_IOAPIC_Presence
+   --  expand-pre_checks.ads:71:4:Platform_IOAPIC_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -575,7 +614,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Platform_IOMMU_Memory_4183d0 (Gnattest_T : in out Test) renames Test_Platform_IOMMU_Memory;
 --  id:2.2/4183d0fc1a20cebd/Platform_IOMMU_Memory/1/0/
    procedure Test_Platform_IOMMU_Memory (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:70:4:Platform_IOMMU_Memory
+   --  expand-pre_checks.ads:74:4:Platform_IOMMU_Memory
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -643,7 +682,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Subject_Component_References_0ac6d5 (Gnattest_T : in out Test) renames Test_Subject_Component_References;
 --  id:2.2/0ac6d5c2c7416f1f/Subject_Component_References/1/0/
    procedure Test_Subject_Component_References (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:73:4:Subject_Component_References
+   --  expand-pre_checks.ads:77:4:Subject_Component_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -681,7 +720,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Component_Channel_Name_Uniqueness_00e23b (Gnattest_T : in out Test) renames Test_Component_Channel_Name_Uniqueness;
 --  id:2.2/00e23bc975658da7/Component_Channel_Name_Uniqueness/1/0/
    procedure Test_Component_Channel_Name_Uniqueness (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:76:4:Component_Channel_Name_Uniqueness
+   --  expand-pre_checks.ads:80:4:Component_Channel_Name_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -720,7 +759,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Component_Channel_Size_0e858d (Gnattest_T : in out Test) renames Test_Component_Channel_Size;
 --  id:2.2/0e858d3a74aed20c/Component_Channel_Size/1/0/
    procedure Test_Component_Channel_Size (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:81:4:Component_Channel_Size
+   --  expand-pre_checks.ads:85:4:Component_Channel_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

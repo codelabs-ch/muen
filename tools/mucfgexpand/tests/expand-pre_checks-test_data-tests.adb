@@ -744,10 +744,10 @@ package body Expand.Pre_Checks.Test_Data.Tests is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Component 'linux' referenced by subject 'lnx' requests "
-                    & "size 16#1000# for logical channel 'primary_data' but "
-                    & "linked physical channel 'data_channel' has size "
-                    & "16#4000#",
+                    = "Component 'subject1' referenced by subject 'subject1' "
+                    & "requests size 16#1000# for logical channel "
+                    & "'primary_data' but linked physical channel "
+                    & "'data_channel' has size 16#4000#",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

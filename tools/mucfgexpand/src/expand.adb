@@ -54,6 +54,7 @@ is
 
       Mulog.Log (Msg => "STAGE 1 processing");
       Stage1.Pre_Checks.Run (Data => Policy);
+      Stage1.Expansion.Run (Data => Policy);
       Mulog.Log (Msg => "STAGE 2 processing");
       Stage2.Pre_Checks.Run (Data => Policy);
       Stage2.Expansion.Run (Data => Policy);

@@ -124,7 +124,7 @@ is
       Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject[@component]");
+           XPath => "/system/subjects/subject[component]");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
@@ -132,8 +132,6 @@ is
               := DOM.Core.Nodes.Item (List  => Subjects,
                                       Index => I);
          begin
-            DOM.Core.Elements.Remove_Attribute (Elem => Subj_Node,
-                                                Name => "component");
             Muxml.Utils.Remove_Child
               (Node       => Subj_Node,
                Child_Name => "component");

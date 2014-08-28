@@ -52,10 +52,16 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
                  Name => "name");
+            Comp_Ref_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => DOM.Core.Elements.Get_Elements_By_Tag_Name
+                   (Elem => Subj_Node,
+                    Name => "component"),
+                 Index => 0);
             Comp_Ref : constant String
               := DOM.Core.Elements.Get_Attribute
-                (Elem => Subj_Node,
-                 Name => "component");
+                (Elem => Comp_Ref_Node,
+                 Name => "ref");
             Comp_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Nodes     => Components,

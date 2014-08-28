@@ -124,7 +124,10 @@
     <writer event="1" logical="primary_data" physical="data_channel" virtualAddress="16#3000#"/>
     <writer event="1" logical="secondary_data" physical="data_channel2" virtualAddress="16#5000#"/>
    </channels>
-   <component ref="subject1"/>
+   <component ref="subject1">
+    <map logical="primary_data" physical="data_channel"/>
+    <map logical="secondary_data" physical="data_channel2"/>
+   </component>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

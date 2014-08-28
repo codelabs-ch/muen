@@ -143,7 +143,10 @@
    <monitor>
     <state subject="lnx" virtualAddress="16#4000#" writable="true"/>
    </monitor>
-   <component ref="subject1"/>
+   <component ref="subject1">
+    <map logical="primary_data" physical="data_channel"/>
+    <map logical="secondary_data" physical="data_channel2"/>
+   </component>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

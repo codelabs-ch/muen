@@ -45,6 +45,8 @@ is
         (Process => Component_Channel_Name_Uniqueness'Access);
       Check_Procs.Register
         (Process => Subject_Channel_Exports'Access);
+      Check_Procs.Register
+        (Process => Component_Channel_Size'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

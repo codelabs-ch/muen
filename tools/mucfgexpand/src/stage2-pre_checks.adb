@@ -86,8 +86,6 @@ is
       --  Register after platform CPU count presence check.
 
       Check_Procs.Register (Process => Mucfgcheck.Platform.CPU_Count'Access);
-
-      Check_Procs.Register (Process => Component_Channel_Size'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

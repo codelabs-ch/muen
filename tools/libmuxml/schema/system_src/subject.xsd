@@ -47,6 +47,9 @@
 	</xs:complexType>
 
 	<xs:complexType name="componentReferenceType">
+		<xs:sequence>
+			<xs:element name="map" type="resourceMappingType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
 		<xs:attribute name="ref" type="nameType" use="required"/>
 	</xs:complexType>
 

@@ -50,7 +50,9 @@
    <channels>
     <writer event="1" logical="channel" physical="data_channel" virtualAddress="16#2000#"/>
    </channels>
-   <component ref="tau0"/>
+   <component ref="tau0">
+    <map logical="logical_channel" physical="physical_channel"/>
+   </component>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

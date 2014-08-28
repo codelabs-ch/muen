@@ -9,4 +9,5 @@
 		<writer logical="time" physical="virtual_time" virtualAddress="16#0002_0000#"/>
 		<writer logical="console" physical="time_console" virtualAddress="16#000b_8000#" event="1"/>
 	</channels>
+	<component ref="time"/>
 </subject>

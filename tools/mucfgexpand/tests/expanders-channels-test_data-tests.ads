@@ -10,7 +10,7 @@ package Expanders.Channels.Test_Data.Tests is
    with null record;
 
    procedure Test_Add_Physical_Memory_127041 (Gnattest_T : in out Test);
-   --  expanders-channels.ads:24:4:Add_Physical_Memory
+   --  expanders-channels.ads:26:4:Add_Physical_Memory
 
 end Expanders.Channels.Test_Data.Tests;
 --  end read only

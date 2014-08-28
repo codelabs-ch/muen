@@ -10,7 +10,7 @@ package Expanders.Platform.Test_Data.Tests is
    with null record;
 
    procedure Test_Add_PCI_Config_Space_138943 (Gnattest_T : in out Test);
-   --  expanders-platform.ads:23:4:Add_PCI_Config_Space
+   --  expanders-platform.ads:25:4:Add_PCI_Config_Space
 
 end Expanders.Platform.Test_Data.Tests;
 --  end read only

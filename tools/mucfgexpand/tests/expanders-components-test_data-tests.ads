@@ -10,13 +10,13 @@ package Expanders.Components.Test_Data.Tests is
    with null record;
 
    procedure Test_Add_Binaries_531b41 (Gnattest_T : in out Test);
-   --  expanders-components.ads:24:4:Add_Binaries
+   --  expanders-components.ads:26:4:Add_Binaries
 
    procedure Test_Remove_Components_6de748 (Gnattest_T : in out Test);
-   --  expanders-components.ads:27:4:Remove_Components
+   --  expanders-components.ads:29:4:Remove_Components
 
    procedure Test_Remove_Component_Reference_da90cf (Gnattest_T : in out Test);
-   --  expanders-components.ads:30:4:Remove_Component_Reference
+   --  expanders-components.ads:32:4:Remove_Component_Reference
 
 end Expanders.Components.Test_Data.Tests;
 --  end read only

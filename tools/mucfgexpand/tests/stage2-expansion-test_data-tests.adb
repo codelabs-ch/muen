@@ -3,11 +3,11 @@
 --  Such changes will be kept during further regeneration of this file.
 --  All code placed outside of test routine bodies will be lost. The
 --  code intended to set up and tear down the test environment should be
---  placed into Expanders.Test_Data.
+--  placed into Stage2.Expansion.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
 
-package body Expanders.Test_Data.Tests is
+package body Stage2.Expansion.Test_Data.Tests is
 
 
 --  begin read only
@@ -15,7 +15,7 @@ package body Expanders.Test_Data.Tests is
    procedure Test_Register_All_3f90ea (Gnattest_T : in out Test) renames Test_Register_All;
 --  id:2.2/3f90ea30314141bf/Register_All/1/0/
    procedure Test_Register_All (Gnattest_T : in out Test) is
-   --  expanders.ads:26:4:Register_All
+   --  stage2-expansion.ads:26:4:Register_All
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -34,7 +34,7 @@ package body Expanders.Test_Data.Tests is
    procedure Test_Run_9b6b0d (Gnattest_T : in out Test) renames Test_Run;
 --  id:2.2/9b6b0dee792a1a08/Run/1/0/
    procedure Test_Run (Gnattest_T : in out Test) is
-   --  expanders.ads:29:4:Run
+   --  stage2-expansion.ads:29:4:Run
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -55,7 +55,7 @@ package body Expanders.Test_Data.Tests is
    procedure Test_Get_Count_1fbd7c (Gnattest_T : in out Test) renames Test_Get_Count;
 --  id:2.2/1fbd7c784b3d55c2/Get_Count/1/0/
    procedure Test_Get_Count (Gnattest_T : in out Test) is
-   --  expanders.ads:32:4:Get_Count
+   --  stage2-expansion.ads:32:4:Get_Count
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -77,7 +77,7 @@ package body Expanders.Test_Data.Tests is
    procedure Test_Clear_4b4f85 (Gnattest_T : in out Test) renames Test_Clear;
 --  id:2.2/4b4f85da05a9b689/Clear/1/0/
    procedure Test_Clear (Gnattest_T : in out Test) is
-   --  expanders.ads:35:4:Clear
+   --  stage2-expansion.ads:35:4:Clear
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -97,4 +97,4 @@ package body Expanders.Test_Data.Tests is
    end Test_Clear;
 --  end read only
 
-end Expanders.Test_Data.Tests;
+end Stage2.Expansion.Test_Data.Tests;

@@ -11,7 +11,8 @@ with Muxml.Utils;
 
 with Expand.Pre_Checks;
 with Expand.Post_Checks;
-with Expanders;
+
+with Stage2.Expansion;
 
 with Test_Utils;
 

@@ -15,7 +15,7 @@ package body Expanders.Platform.Test_Data.Tests is
    procedure Test_Add_PCI_Config_Space_138943 (Gnattest_T : in out Test) renames Test_Add_PCI_Config_Space;
 --  id:2.2/1389432568272396/Add_PCI_Config_Space/1/0/
    procedure Test_Add_PCI_Config_Space (Gnattest_T : in out Test) is
-   --  expanders-platform.ads:23:4:Add_PCI_Config_Space
+   --  expanders-platform.ads:25:4:Add_PCI_Config_Space
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

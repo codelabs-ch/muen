@@ -24,7 +24,7 @@ with Expanders.Channels;
 with Expanders.Platform;
 with Expanders.Device_Domains;
 
-package body Expanders
+package body Stage2.Expansion
 is
 
    -------------------------------------------------------------------------
@@ -43,6 +43,7 @@ is
 
    procedure Register_All
    is
+      use Expanders;
    begin
 
       --  Create optional subject elements such as memory first.
@@ -106,4 +107,4 @@ is
 
    procedure Run (Data : in out Muxml.XML_Data_Type) renames Procs.Run;
 
-end Expanders;
+end Stage2.Expansion;

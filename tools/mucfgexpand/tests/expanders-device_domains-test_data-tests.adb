@@ -15,7 +15,7 @@ package body Expanders.Device_Domains.Test_Data.Tests is
    procedure Test_Add_Section_Skeleton_797fa9 (Gnattest_T : in out Test) renames Test_Add_Section_Skeleton;
 --  id:2.2/797fa93bd19d8580/Add_Section_Skeleton/1/0/
    procedure Test_Add_Section_Skeleton (Gnattest_T : in out Test) is
-   --  expanders-device_domains.ads:23:4:Add_Section_Skeleton
+   --  expanders-device_domains.ads:25:4:Add_Section_Skeleton
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -36,7 +36,7 @@ package body Expanders.Device_Domains.Test_Data.Tests is
    procedure Test_Add_Domain_IDs_acdb9f (Gnattest_T : in out Test) renames Test_Add_Domain_IDs;
 --  id:2.2/acdb9ff1b910151d/Add_Domain_IDs/1/0/
    procedure Test_Add_Domain_IDs (Gnattest_T : in out Test) is
-   --  expanders-device_domains.ads:26:4:Add_Domain_IDs
+   --  expanders-device_domains.ads:28:4:Add_Domain_IDs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -57,7 +57,7 @@ package body Expanders.Device_Domains.Test_Data.Tests is
    procedure Test_Add_Tables_17f65c (Gnattest_T : in out Test) renames Test_Add_Tables;
 --  id:2.2/17f65ca27fa9a88d/Add_Tables/1/0/
    procedure Test_Add_Tables (Gnattest_T : in out Test) is
-   --  expanders-device_domains.ads:29:4:Add_Tables
+   --  expanders-device_domains.ads:31:4:Add_Tables
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

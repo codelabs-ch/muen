@@ -17,18 +17,26 @@
 --
 
 with Muxml;
+with Mutools.Processors;
 
-package Expanders.Components
+package Stage2.Expansion
 is
 
-   --  Add component binary to subjects as physical memory regions and
-   --  mappings.
-   procedure Add_Binaries (Data : in out Muxml.XML_Data_Type);
+   --  Register all expanders.
+   procedure Register_All;
 
-   --  Remove components section from policy.
-   procedure Remove_Components (Data : in out Muxml.XML_Data_Type);
+   --  Run registered expanders.
+   procedure Run (Data : in out Muxml.XML_Data_Type);
 
-   --  Remove component attribute from subject nodes.
-   procedure Remove_Component_Reference (Data : in out Muxml.XML_Data_Type);
+   --  Return number of registered expanders.
+   function Get_Count return Natural;
 
-end Expanders.Components;
+   --  Clear registered expanders.
+   procedure Clear;
+
+private
+
+   package Procs is new Mutools.Processors
+     (Param_Type => Muxml.XML_Data_Type);
+
+end Stage2.Expansion;

@@ -20,7 +20,8 @@ with Mulog;
 
 with Expand.Pre_Checks;
 with Expand.Post_Checks;
-with Expanders;
+
+with Stage2.Expansion;
 
 package body Expand
 is
@@ -38,12 +39,12 @@ is
       Post_Checks.Register_All;
       Mulog.Log
         (Msg => "Registered post-checks" & Post_Checks.Get_Count'Img);
-      Expanders.Register_All;
-      Mulog.Log
-        (Msg => "Registered expanders" & Expanders.Get_Count'Img);
+      Stage2.Expansion.Register_All;
+      Mulog.Log (Msg => "Registered stage 2 expanders"
+                 & Stage2.Expansion.Get_Count'Img);
 
       Pre_Checks.Run (Data => Policy);
-      Expanders.Run (Data => Policy);
+      Stage2.Expansion.Run (Data => Policy);
       Post_Checks.Run (Data => Policy);
 
       Muxml.Write
@@ -52,13 +53,13 @@ is
          Data => Policy);
 
       Pre_Checks.Clear;
-      Expanders.Clear;
+      Stage2.Expansion.Clear;
       Post_Checks.Clear;
 
    exception
       when others =>
          Pre_Checks.Clear;
-         Expanders.Clear;
+         Stage2.Expansion.Clear;
          Post_Checks.Clear;
          raise;
    end Run;

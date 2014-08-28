@@ -15,7 +15,7 @@ package body Expanders.Subjects.Test_Data.Tests is
    procedure Test_Handle_Profile_63fad5 (Gnattest_T : in out Test) renames Test_Handle_Profile;
 --  id:2.2/63fad54f185e99dc/Handle_Profile/1/0/
    procedure Test_Handle_Profile (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:24:4:Handle_Profile
+   --  expanders-subjects.ads:26:4:Handle_Profile
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -35,7 +35,7 @@ package body Expanders.Subjects.Test_Data.Tests is
    procedure Test_Add_Tau0_485f2f (Gnattest_T : in out Test) renames Test_Add_Tau0;
 --  id:2.2/485f2f136ee7d8d2/Add_Tau0/1/0/
    procedure Test_Add_Tau0 (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:27:4:Add_Tau0
+   --  expanders-subjects.ads:29:4:Add_Tau0
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -55,7 +55,7 @@ package body Expanders.Subjects.Test_Data.Tests is
    procedure Test_Handle_Monitors_f27dfd (Gnattest_T : in out Test) renames Test_Handle_Monitors;
 --  id:2.2/f27dfdc9e8bf4f96/Handle_Monitors/1/0/
    procedure Test_Handle_Monitors (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:31:4:Handle_Monitors
+   --  expanders-subjects.ads:33:4:Handle_Monitors
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -75,7 +75,7 @@ package body Expanders.Subjects.Test_Data.Tests is
    procedure Test_Add_Ids_619049 (Gnattest_T : in out Test) renames Test_Add_Ids;
 --  id:2.2/6190493a9f24bf67/Add_Ids/1/0/
    procedure Test_Add_Ids (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:34:4:Add_Ids
+   --  expanders-subjects.ads:36:4:Add_Ids
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -95,7 +95,7 @@ package body Expanders.Subjects.Test_Data.Tests is
    procedure Test_Add_Missing_Elements_154aec (Gnattest_T : in out Test) renames Test_Add_Missing_Elements;
 --  id:2.2/154aec16850b8f76/Add_Missing_Elements/1/0/
    procedure Test_Add_Missing_Elements (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:37:4:Add_Missing_Elements
+   --  expanders-subjects.ads:39:4:Add_Missing_Elements
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -115,7 +115,7 @@ package body Expanders.Subjects.Test_Data.Tests is
    procedure Test_Add_Channel_Mappings_4547d6 (Gnattest_T : in out Test) renames Test_Add_Channel_Mappings;
 --  id:2.2/4547d6b6e6f42707/Add_Channel_Mappings/1/0/
    procedure Test_Add_Channel_Mappings (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:40:4:Add_Channel_Mappings
+   --  expanders-subjects.ads:42:4:Add_Channel_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -135,7 +135,7 @@ package body Expanders.Subjects.Test_Data.Tests is
    procedure Test_Add_Channel_Events_e021f9 (Gnattest_T : in out Test) renames Test_Add_Channel_Events;
 --  id:2.2/e021f991d3ef8e8e/Add_Channel_Events/1/0/
    procedure Test_Add_Channel_Events (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:43:4:Add_Channel_Events
+   --  expanders-subjects.ads:45:4:Add_Channel_Events
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -155,7 +155,7 @@ package body Expanders.Subjects.Test_Data.Tests is
    procedure Test_Remove_Channel_Elements_d2d8a9 (Gnattest_T : in out Test) renames Test_Remove_Channel_Elements;
 --  id:2.2/d2d8a9d28497a995/Remove_Channel_Elements/1/0/
    procedure Test_Remove_Channel_Elements (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:46:4:Remove_Channel_Elements
+   --  expanders-subjects.ads:48:4:Remove_Channel_Elements
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -175,7 +175,7 @@ package body Expanders.Subjects.Test_Data.Tests is
    procedure Test_Add_Default_Events_b015b8 (Gnattest_T : in out Test) renames Test_Add_Default_Events;
 --  id:2.2/b015b89079ac2230/Add_Default_Events/1/0/
    procedure Test_Add_Default_Events (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:49:4:Add_Default_Events
+   --  expanders-subjects.ads:51:4:Add_Default_Events
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -195,7 +195,7 @@ package body Expanders.Subjects.Test_Data.Tests is
    procedure Test_Add_CPU_Ids_cf5c89 (Gnattest_T : in out Test) renames Test_Add_CPU_Ids;
 --  id:2.2/cf5c8998ce7da859/Add_CPU_Ids/1/0/
    procedure Test_Add_CPU_Ids (Gnattest_T : in out Test) is
-   --  expanders-subjects.ads:52:4:Add_CPU_Ids
+   --  expanders-subjects.ads:54:4:Add_CPU_Ids
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

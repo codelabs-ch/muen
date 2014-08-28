@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Expanders.Components;
+
 package body Stage1.Expansion
 is
 
@@ -35,8 +37,9 @@ is
 
    procedure Register_All
    is
+      use Expanders;
    begin
-      null;
+      Procs.Register (Process => Components.Add_Binaries'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

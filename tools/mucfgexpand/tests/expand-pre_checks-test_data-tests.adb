@@ -249,7 +249,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Subject 'subject1' does not export logical channel "
                     & "'primary_data' as requested by referenced component "
-                    & "'subject1'",
+                    & "'c1'",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -693,7 +693,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
-         XPath => "/system/components/component[@name='subject1']/channels/"
+         XPath => "/system/components/component[@name='c1']/channels/"
          & "writer[@logical='secondary_data']",
          Name  => "logical",
          Value => "primary_data");
@@ -707,7 +707,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Multiple channels with name 'primary_data' in component"
-                    & " 'subject1'",
+                    & " 'c1'",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -744,7 +744,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Component 'subject1' referenced by subject 'subject1' "
+                    = "Component 'c1' referenced by subject 'subject1' "
                     & "requests size 16#1000# for logical channel "
                     & "'primary_data' but linked physical channel "
                     & "'data_channel' has size 16#4000#",

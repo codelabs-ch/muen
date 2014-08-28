@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Cfgchecks;
+
 package body Stage1.Pre_Checks
 is
 
@@ -35,8 +37,9 @@ is
 
    procedure Register_All
    is
+      use Cfgchecks;
    begin
-      null;
+      Check_Procs.Register (Process => Subject_Channel_Exports'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

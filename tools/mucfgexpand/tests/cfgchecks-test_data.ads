@@ -5,7 +5,16 @@
 
 with AUnit.Test_Fixtures;
 
-package Stage2.Pre_Checks.Test_Data is
+with Ada.Exceptions;
+
+with DOM.Core.Nodes;
+with DOM.Core.Documents;
+with DOM.Core.Elements;
+
+with Muxml.Utils;
+with Mucfgcheck;
+
+package Cfgchecks.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -15,8 +24,4 @@ package Stage2.Pre_Checks.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
-   Test_Counter : Natural := 0;
-
-   procedure Inc_Counter (XML_Data : Muxml.XML_Data_Type);
-
-end Stage2.Pre_Checks.Test_Data;
+end Cfgchecks.Test_Data;

@@ -102,7 +102,7 @@
   </component>
  </components>
  <subjects>
-  <subject component="linux" name="lnx">
+  <subject name="lnx">
    <vcpu>
     <vmx>
      <controls>
@@ -310,7 +310,7 @@
    </channels>
    <component ref="linux"/>
   </subject>
-  <subject component="subject1" name="subject1">
+  <subject name="subject1">
    <vcpu>
     <vmx>
      <controls>

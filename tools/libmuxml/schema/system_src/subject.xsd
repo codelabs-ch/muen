@@ -46,4 +46,8 @@
 		<xs:attribute name="size"     type="word64Type" use="required"/>
 	</xs:complexType>
 
+	<xs:complexType name="componentReferenceType">
+		<xs:attribute name="ref" type="nameType" use="required"/>
+	</xs:complexType>
+
 </xs:schema>

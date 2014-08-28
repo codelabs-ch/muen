@@ -25,6 +25,7 @@
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
    <events/>
+   <component ref="linux"/>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

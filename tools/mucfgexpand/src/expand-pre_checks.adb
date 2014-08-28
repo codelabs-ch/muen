@@ -622,38 +622,40 @@ is
                 (N     => Comp_Node,
                  XPath => "channels/*");
          begin
-            Mulog.Log (Msg => "Checking match of" & DOM.Core.Nodes.Length
-                       (List => Mappings)'Img & " logical channel mappings(s) "
-                       & "of subject '" & Subj_Name & "' with component '"
-                       & Comp_Name & "'");
+            if DOM.Core.Nodes.Length (Comp_Channels) > 0 then
+               Mulog.Log (Msg => "Checking export of" & DOM.Core.Nodes.Length
+                          (List => Mappings)'Img & " logical channel mappings"
+                          & "(s) in subject '" & Subj_Name & "' with component"
+                          & " '" & Comp_Name & "'");
 
-            for J in 0 .. DOM.Core.Nodes.Length (List => Comp_Channels) - 1
-            loop
-               declare
-                  use type DOM.Core.Node;
+               for J in 0 .. DOM.Core.Nodes.Length (List => Comp_Channels) - 1
+               loop
+                  declare
+                     use type DOM.Core.Node;
 
-                  Comp_Channel_Node : constant DOM.Core.Node
-                    := DOM.Core.Nodes.Item
-                      (List  => Comp_Channels,
-                       Index => J);
-                  Comp_Channel_Name : constant String
-                    := DOM.Core.Elements.Get_Attribute
-                      (Elem => Comp_Channel_Node,
-                       Name => "logical");
-                  Subj_Channel_Link : constant DOM.Core.Node
-                    := Muxml.Utils.Get_Element
-                      (Nodes     => Mappings,
-                       Ref_Attr  => "logical",
-                       Ref_Value => Comp_Channel_Name);
-               begin
-                  if Subj_Channel_Link = null then
-                     raise Mucfgcheck.Validation_Error with "Subject '"
-                       & Subj_Name & "' does not export logical channel '"
-                       & Comp_Channel_Name & "' as requested by referenced "
-                       & "component '" & Comp_Name & "'";
-                  end if;
-               end;
-            end loop;
+                     Comp_Channel_Node : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Item
+                         (List  => Comp_Channels,
+                          Index => J);
+                     Comp_Channel_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Comp_Channel_Node,
+                          Name => "logical");
+                     Subj_Channel_Link : constant DOM.Core.Node
+                       := Muxml.Utils.Get_Element
+                         (Nodes     => Mappings,
+                          Ref_Attr  => "logical",
+                          Ref_Value => Comp_Channel_Name);
+                  begin
+                     if Subj_Channel_Link = null then
+                        raise Mucfgcheck.Validation_Error with "Subject '"
+                          & Subj_Name & "' does not export logical channel '"
+                          & Comp_Channel_Name & "' as requested by referenced "
+                          & "component '" & Comp_Name & "'";
+                     end if;
+                  end;
+               end loop;
+            end if;
          end;
       end loop;
    end Subject_Channel_Exports;

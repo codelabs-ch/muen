@@ -113,7 +113,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Remove_Component_Attr (Data : in out Muxml.XML_Data_Type)
+   procedure Remove_Component_Reference (Data : in out Muxml.XML_Data_Type)
    is
       Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
@@ -130,7 +130,7 @@ is
                                                 Name => "component");
          end;
       end loop;
-   end Remove_Component_Attr;
+   end Remove_Component_Reference;
 
    -------------------------------------------------------------------------
 

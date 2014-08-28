@@ -51,22 +51,22 @@ package body Expanders.Components.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Remove_Component_Attr (Gnattest_T : in out Test);
-   procedure Test_Remove_Component_Attr_bcb9b3 (Gnattest_T : in out Test) renames Test_Remove_Component_Attr;
---  id:2.2/bcb9b3d376f0c3ae/Remove_Component_Attr/1/0/
-   procedure Test_Remove_Component_Attr (Gnattest_T : in out Test) is
-   --  expanders-components.ads:30:4:Remove_Component_Attr
+   procedure Test_Remove_Component_Reference (Gnattest_T : in out Test);
+   procedure Test_Remove_Component_Reference_da90cf (Gnattest_T : in out Test) renames Test_Remove_Component_Reference;
+--  id:2.2/da90cfc643c98267/Remove_Component_Reference/1/0/
+   procedure Test_Remove_Component_Reference (Gnattest_T : in out Test) is
+   --  expanders-components.ads:30:4:Remove_Component_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
    begin
       Test_Utils.Expander.Run_Test
-        (Filename     => "obj/components_remove_attr.xml",
-         Ref_Filename => "data/components_remove_attr.ref.xml",
-         Expander     => Remove_Component_Attr'Access);
+        (Filename     => "obj/components_remove_reference.xml",
+         Ref_Filename => "data/components_remove_reference.ref.xml",
+         Expander     => Remove_Component_Reference'Access);
 --  begin read only
-   end Test_Remove_Component_Attr;
+   end Test_Remove_Component_Reference;
 --  end read only
 
 end Expanders.Components.Test_Data.Tests;

@@ -526,16 +526,16 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
                  Name => "name");
-            Subj_Channels : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => Subj_Node,
-                 XPath => "channels/*");
             Comp_Ref_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => DOM.Core.Elements.Get_Elements_By_Tag_Name
                    (Elem => Subj_Node,
                     Name => "component"),
                  Index => 0);
+            Mappings      : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Ref_Node,
+                 XPath => "map");
             Comp_Name     : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Comp_Ref_Node,
@@ -551,9 +551,9 @@ is
                  XPath => "channels/*");
          begin
             Mulog.Log (Msg => "Checking match of" & DOM.Core.Nodes.Length
-                       (List => Subj_Channels)'Img & " logical channel "
-                       & "export(s) of subject '" & Subj_Name & "' with "
-                       & "component '" & Comp_Name & "'");
+                       (List => Mappings)'Img & " logical channel mappings(s) "
+                       & "of subject '" & Subj_Name & "' with component '"
+                       & Comp_Name & "'");
 
             for J in 0 .. DOM.Core.Nodes.Length (List => Comp_Channels) - 1
             loop
@@ -568,24 +568,17 @@ is
                     := DOM.Core.Elements.Get_Attribute
                       (Elem => Comp_Channel_Node,
                        Name => "logical");
-                  Comp_Channel_Tag  : constant String
-                    := DOM.Core.Elements.Get_Tag_Name
-                      (Elem => Comp_Channel_Node);
                   Subj_Channel_Link : constant DOM.Core.Node
                     := Muxml.Utils.Get_Element
-                      (Nodes     => Subj_Channels,
+                      (Nodes     => Mappings,
                        Ref_Attr  => "logical",
                        Ref_Value => Comp_Channel_Name);
                begin
-                  if Subj_Channel_Link = null
-                    or else Comp_Channel_Tag /= DOM.Core.Elements.Get_Tag_Name
-                      (Elem => Subj_Channel_Link)
-                  then
+                  if Subj_Channel_Link = null then
                      raise Mucfgcheck.Validation_Error with "Subject '"
-                       & Subj_Name & "' does not export logical "
-                       & Comp_Channel_Tag & " channel '" & Comp_Channel_Name
-                       & "' as requested by referenced component '" & Comp_Name
-                       & "'";
+                       & Subj_Name & "' does not export logical channel '"
+                       & Comp_Channel_Name & "' as requested by referenced "
+                       & "component '" & Comp_Name & "'";
                   end if;
                end;
             end loop;

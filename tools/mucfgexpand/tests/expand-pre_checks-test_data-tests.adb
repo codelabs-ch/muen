@@ -234,8 +234,8 @@ package body Expand.Pre_Checks.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
-         XPath => "/system/subjects/subject/channels/reader"
-         & "[@physical='data_channel']",
+         XPath => "/system/subjects/subject/component"
+         & "/map[@physical='data_channel']",
          Name  => "logical",
          Value => "nonexistent");
 
@@ -247,9 +247,9 @@ package body Expand.Pre_Checks.Test_Data.Tests is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'lnx' does not export logical reader channel "
+                    = "Subject 'subject1' does not export logical channel "
                     & "'primary_data' as requested by referenced component "
-                    & "'linux'",
+                    & "'subject1'",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

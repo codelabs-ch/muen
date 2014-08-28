@@ -13,8 +13,7 @@
 			<xs:element name="component"  type="componentReferenceType" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="subjectBaseAttrs"/>
-		<xs:attribute name="component" type="nameType"           use="required"/>
-		<xs:attribute name="profile"   type="subjectProfileType" use="required"/>
+		<xs:attribute name="profile" type="subjectProfileType" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="binaryType">

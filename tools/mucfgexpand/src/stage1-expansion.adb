@@ -40,6 +40,7 @@ is
       use Expanders;
    begin
       Procs.Register (Process => Components.Add_Binaries'Access);
+      Procs.Register (Process => Components.Remove_Components'Access);
    end Register_All;
 
    -------------------------------------------------------------------------

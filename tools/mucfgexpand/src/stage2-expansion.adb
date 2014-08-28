@@ -61,7 +61,6 @@ is
       Procs.Register (Process => Subjects.Add_Ids'Access);
       Procs.Register (Process => Subjects.Add_CPU_Ids'Access);
 
-      Procs.Register (Process => Components.Remove_Components'Access);
       Procs.Register (Process => Components.Remove_Component_Reference'Access);
       Procs.Register (Process => Platform.Add_PCI_Config_Space'Access);
       Procs.Register (Process => Memory.Add_Missing_Attributes'Access);

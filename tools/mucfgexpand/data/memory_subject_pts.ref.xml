@@ -107,6 +107,7 @@
     <reader logical="primary_data" physical="data_channel" vector="12" virtualAddress="16#6000#"/>
     <reader logical="secondary_data" physical="data_channel2" virtualAddress="16#7000#"/>
    </channels>
+   <component ref="linux"/>
   </subject>
   <subject component="subject1" name="subject1" profile="native">
    <memory>
@@ -131,6 +132,7 @@
    <monitor>
     <state subject="lnx" virtualAddress="16#4000#" writable="true"/>
    </monitor>
+   <component ref="subject1"/>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

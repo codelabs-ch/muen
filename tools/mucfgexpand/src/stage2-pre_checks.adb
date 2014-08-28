@@ -36,7 +36,7 @@ with Mucfgcheck.Subject;
 
 pragma Elaborate_All (Mutools.Immutable_Processors);
 
-package body Expand.Pre_Checks
+package body Stage2.Pre_Checks
 is
 
    --  Check the existence of channel endpoint (reader or writer) event
@@ -869,4 +869,4 @@ is
       end if;
    end Tau0_Presence_In_Scheduling;
 
-end Expand.Pre_Checks;
+end Stage2.Pre_Checks;

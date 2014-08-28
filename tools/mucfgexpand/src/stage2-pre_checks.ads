@@ -19,7 +19,7 @@
 with Muxml;
 with Mutools.Immutable_Processors;
 
-package Expand.Pre_Checks
+package Stage2.Pre_Checks
 is
 
    --  Register all pre-checks.
@@ -34,7 +34,7 @@ is
    --  Clear registered pre-checks;
    procedure Clear;
 
-   --  Expander specific pre-checks.
+   --  Expander specific stage 2 pre-checks.
 
    --  Check that tau0 is present in the scheduling plan.
    procedure Tau0_Presence_In_Scheduling (XML_Data : Muxml.XML_Data_Type);
@@ -97,4 +97,4 @@ private
    package Check_Procs is new
      Mutools.Immutable_Processors (Param_Type => Muxml.XML_Data_Type);
 
-end Expand.Pre_Checks;
+end Stage2.Pre_Checks;

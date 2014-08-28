@@ -9,9 +9,9 @@ with Ada.Directories;
 
 with Muxml.Utils;
 
-with Expand.Pre_Checks;
 with Expand.Post_Checks;
 
+with Stage2.Pre_Checks;
 with Stage2.Expansion;
 
 with Test_Utils;

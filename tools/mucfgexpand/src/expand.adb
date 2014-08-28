@@ -18,10 +18,10 @@
 
 with Mulog;
 
-with Expand.Pre_Checks;
-with Expand.Post_Checks;
-
+with Stage2.Pre_Checks;
 with Stage2.Expansion;
+
+with Expand.Post_Checks;
 
 package body Expand
 is
@@ -33,17 +33,17 @@ is
       Output_File :        String)
    is
    begin
-      Pre_Checks.Register_All;
-      Mulog.Log
-        (Msg => "Registered pre-checks" & Pre_Checks.Get_Count'Img);
-      Post_Checks.Register_All;
-      Mulog.Log
-        (Msg => "Registered post-checks" & Post_Checks.Get_Count'Img);
+      Stage2.Pre_Checks.Register_All;
+      Mulog.Log (Msg => "Registered stage 2 pre-checks"
+                 & Stage2.Pre_Checks.Get_Count'Img);
       Stage2.Expansion.Register_All;
       Mulog.Log (Msg => "Registered stage 2 expanders"
                  & Stage2.Expansion.Get_Count'Img);
 
-      Pre_Checks.Run (Data => Policy);
+      Post_Checks.Register_All;
+      Mulog.Log (Msg => "Registered post-checks" & Post_Checks.Get_Count'Img);
+
+      Stage2.Pre_Checks.Run (Data => Policy);
       Stage2.Expansion.Run (Data => Policy);
       Post_Checks.Run (Data => Policy);
 
@@ -52,13 +52,13 @@ is
          Kind => Muxml.Format_A,
          Data => Policy);
 
-      Pre_Checks.Clear;
+      Stage2.Pre_Checks.Clear;
       Stage2.Expansion.Clear;
       Post_Checks.Clear;
 
    exception
       when others =>
-         Pre_Checks.Clear;
+         Stage2.Pre_Checks.Clear;
          Stage2.Expansion.Clear;
          Post_Checks.Clear;
          raise;

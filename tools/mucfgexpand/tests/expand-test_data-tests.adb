@@ -45,7 +45,7 @@ package body Expand.Test_Data.Tests is
                  Message   => "Policy mismatch");
 
          Ada.Directories.Delete_File (Name => Filename);
-         Assert (Condition => Pre_Checks.Get_Count = 0,
+         Assert (Condition => Stage2.Pre_Checks.Get_Count = 0,
                  Message   => "Pre-checks not zero");
          Assert (Condition => Stage2.Expansion.Get_Count = 0,
                  Message   => "Expanders not zero (stage 2)");
@@ -82,7 +82,7 @@ package body Expand.Test_Data.Tests is
             when E : others => null;
          end;
 
-         Assert (Condition => Pre_Checks.Get_Count = 0,
+         Assert (Condition => Stage2.Pre_Checks.Get_Count = 0,
                  Message   => "Pre-checks not zero");
          Assert (Condition => Stage2.Expansion.Get_Count = 0,
                  Message   => "Expanders not zero (stage2)");

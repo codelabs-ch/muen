@@ -3,7 +3,7 @@
 --  automatically. Contents of this package can be modified in any way
 --  except for sections surrounded by a 'read only' marker.
 
-package body Expand.Pre_Checks.Test_Data is
+package body Stage2.Pre_Checks.Test_Data is
 
    -------------------------------------------------------------------------
 
@@ -30,4 +30,4 @@ package body Expand.Pre_Checks.Test_Data is
       Test_Counter := Test_Counter + 1;
    end Inc_Counter;
 
-end Expand.Pre_Checks.Test_Data;
+end Stage2.Pre_Checks.Test_Data;

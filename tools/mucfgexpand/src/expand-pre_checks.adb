@@ -544,6 +544,8 @@ is
       Check_Procs.Register (Process => Tau0_Presence_In_Scheduling'Access);
       Check_Procs.Register
         (Process => Subject_Resource_Maps_Logical_Uniqueness'Access);
+      Check_Procs.Register
+        (Process => Subject_Resource_Maps_Physical_Uniqueness'Access);
       Check_Procs.Register (Process => Subject_Monitor_References'Access);
       Check_Procs.Register (Process => Subject_Channel_References'Access);
       Check_Procs.Register (Process => Subject_Component_References'Access);

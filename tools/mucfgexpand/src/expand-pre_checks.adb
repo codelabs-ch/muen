@@ -649,9 +649,9 @@ is
       is
          Ref_Comp_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Node,
-            Name => "component");
+            Name => "ref");
          Subj_Name     : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Node,
+           (Elem => DOM.Core.Nodes.Parent_Node (N => Node),
             Name => "name");
       begin
          return "Component '" & Ref_Comp_Name & "' referenced by subject '"
@@ -666,7 +666,7 @@ is
       is
          Ref_Name  : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Left,
-            Name => "component");
+            Name => "ref");
          Comp_Name : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Right,
             Name => "name");
@@ -676,7 +676,7 @@ is
    begin
       Mucfgcheck.For_Each_Match
         (XML_Data     => XML_Data,
-         Source_XPath => "/system/subjects/subject",
+         Source_XPath => "/system/subjects/subject/component",
          Ref_XPath    => "/system/components/component",
          Log_Message  => "subject component reference(s)",
          Error        => Error_Msg'Access,

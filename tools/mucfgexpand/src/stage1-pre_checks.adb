@@ -46,6 +46,8 @@ is
       Check_Procs.Register
         (Process => Subject_Resource_Maps_Physical_Uniqueness'Access);
       Check_Procs.Register
+        (Process => Subject_Resource_Maps_Physical_References'Access);
+      Check_Procs.Register
         (Process => Subject_Resource_Maps_Logical_Uniqueness'Access);
       Check_Procs.Register
         (Process => Subject_Channel_Exports'Access);

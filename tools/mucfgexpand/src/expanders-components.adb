@@ -128,6 +128,9 @@ is
          begin
             DOM.Core.Elements.Remove_Attribute (Elem => Subj_Node,
                                                 Name => "component");
+            Muxml.Utils.Remove_Child
+              (Node       => Subj_Node,
+               Child_Name => "component");
          end;
       end loop;
    end Remove_Component_Reference;

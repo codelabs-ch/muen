@@ -74,6 +74,7 @@
     </device>
    </devices>
    <events/>
+   <component ref="lnx"/>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

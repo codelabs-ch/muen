@@ -18,6 +18,7 @@
 
 with Mulog;
 
+with Stage1.Pre_Checks;
 with Stage2.Pre_Checks;
 with Stage2.Expansion;
 
@@ -33,6 +34,9 @@ is
       Output_File :        String)
    is
    begin
+      Stage1.Pre_Checks.Register_All;
+      Mulog.Log (Msg => "Registered stage 1 pre-checks"
+                 & Stage1.Pre_Checks.Get_Count'Img);
       Stage2.Pre_Checks.Register_All;
       Mulog.Log (Msg => "Registered stage 2 pre-checks"
                  & Stage2.Pre_Checks.Get_Count'Img);
@@ -43,6 +47,9 @@ is
       Post_Checks.Register_All;
       Mulog.Log (Msg => "Registered post-checks" & Post_Checks.Get_Count'Img);
 
+      Mulog.Log (Msg => "STAGE 1 processing");
+      Stage1.Pre_Checks.Run (Data => Policy);
+      Mulog.Log (Msg => "STAGE 2 processing");
       Stage2.Pre_Checks.Run (Data => Policy);
       Stage2.Expansion.Run (Data => Policy);
       Post_Checks.Run (Data => Policy);
@@ -52,12 +59,14 @@ is
          Kind => Muxml.Format_A,
          Data => Policy);
 
+      Stage1.Pre_Checks.Clear;
       Stage2.Pre_Checks.Clear;
       Stage2.Expansion.Clear;
       Post_Checks.Clear;
 
    exception
       when others =>
+         Stage1.Pre_Checks.Clear;
          Stage2.Pre_Checks.Clear;
          Stage2.Expansion.Clear;
          Post_Checks.Clear;

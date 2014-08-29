@@ -722,8 +722,8 @@ package body Cfgchecks.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
-         XPath => "/system/components/component[@name='c1']/channels/"
-         & "writer[@logical='secondary_data']",
+         XPath => "/system/components/component[@name='c2']/channels/"
+         & "reader[@logical='secondary_data']",
          Name  => "logical",
          Value => "primary_data");
 
@@ -736,7 +736,7 @@ package body Cfgchecks.Test_Data.Tests is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Multiple channels with name 'primary_data' in component"
-                    & " 'c1'",
+                    & " 'c2'",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

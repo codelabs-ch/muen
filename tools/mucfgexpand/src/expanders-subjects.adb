@@ -555,6 +555,12 @@ is
         (Data         => Data,
          Element_Name => "bootparams",
          Ref_Names    => (1 => To_Unbounded_String ("memory")));
+      Add_Optional_Element
+        (Data         => Data,
+         Element_Name => "channels",
+         Ref_Names    => (1 => To_Unbounded_String ("monitor"),
+                          2 => To_Unbounded_String ("component")));
+
    end Add_Missing_Elements;
 
    -------------------------------------------------------------------------

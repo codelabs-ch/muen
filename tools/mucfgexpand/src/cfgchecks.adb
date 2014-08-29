@@ -331,10 +331,10 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
                  Name => "name");
-            Subj_Channels : constant DOM.Core.Node_List
+            Subj_Mappings : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subj_Node,
-                 XPath => "channels/*");
+                 XPath => "component/map");
             Comp_Ref_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Doc   => Subj_Node,
@@ -378,7 +378,7 @@ is
                           Name => "size");
                      Subj_Channel_Link : constant DOM.Core.Node
                        := Muxml.Utils.Get_Element
-                         (Nodes     => Subj_Channels,
+                         (Nodes     => Subj_Mappings,
                           Ref_Attr  => "logical",
                           Ref_Value => Comp_Channel_Name);
                      Phys_Channel_Name : constant String

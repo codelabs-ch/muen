@@ -115,6 +115,97 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Channels (Data : in out Muxml.XML_Data_Type)
+   is
+      Components : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/components/component");
+      Subjects   : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject[@name!='tau0']");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
+         declare
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+            Subj_Channel_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj_Node,
+                 XPath => "channels");
+
+            Comp_Ref_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj_Node,
+                 XPath => "component");
+            Comp_Ref : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Comp_Ref_Node,
+                 Name => "ref");
+            Mappings : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Ref_Node,
+                 XPath => "map");
+            Comp_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Components,
+                 Ref_Attr  => "name",
+                 Ref_Value => Comp_Ref);
+            Comp_Channels : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => Comp_Node,
+                 XPath => "channels/*");
+         begin
+            if DOM.Core.Nodes.Length (List => Comp_Channels) > 0 then
+               Mulog.Log (Msg => "Expanding" & DOM.Core.Nodes.Length
+                          (List => Comp_Channels)'Img & " logical channel(s) "
+                          & "of component '" & Comp_Ref & "' to subject '"
+                          & Subj_Name & "'");
+
+               for J in 0 .. DOM.Core.Nodes.Length (List => Comp_Channels) - 1
+               loop
+                  declare
+                     Logical_Channel : constant DOM.Core.Node
+                       := DOM.Core.Nodes.Clone_Node
+                         (N    => DOM.Core.Nodes.Item
+                            (List  => Comp_Channels,
+                             Index => J),
+                          Deep => False);
+                     Logical_Channel_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Logical_Channel,
+                          Name => "logical");
+                     Physical_Channel_Name : constant String
+                       := DOM.Core.Elements.Get_Attribute
+                         (Elem => Muxml.Utils.Get_Element
+                            (Nodes     => Mappings,
+                             Ref_Attr  => "logical",
+                             Ref_Value => Logical_Channel_Name),
+                          Name => "physical");
+                  begin
+                     DOM.Core.Elements.Set_Attribute
+                       (Elem  => Logical_Channel,
+                        Name  => "physical",
+                        Value => Physical_Channel_Name);
+                     Muxml.Utils.Append_Child
+                       (Node      => Subj_Channel_Node,
+                        New_Child => Logical_Channel);
+                  end;
+               end loop;
+            end if;
+         end;
+      end loop;
+   end Add_Channels;
+
+   -------------------------------------------------------------------------
+
    procedure Remove_Component_Reference (Data : in out Muxml.XML_Data_Type)
    is
       Subjects : constant DOM.Core.Node_List

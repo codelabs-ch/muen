@@ -63,18 +63,14 @@
  </channels>
  <components>
   <component name="linux">
-   <channels>
-    <reader logical="primary_data" size="16#1000#" vector="12" virtualAddress="16#6000#"/>
-    <reader logical="secondary_data" size="16#2000#" virtualAddress="16#7000#"/>
-   </channels>
    <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
   </component>
-  <component name="subject1">
+  <component name="c1">
    <channels>
     <writer event="1" logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>
     <writer event="1" logical="secondary_data" size="16#2000#" virtualAddress="16#3000#"/>
    </channels>
-   <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
+   <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
   </component>
  </components>
  <kernel>
@@ -147,7 +143,10 @@
    <monitor>
     <state subject="lnx" virtualAddress="16#4000#" writable="true"/>
    </monitor>
-   <component ref="subject1"/>
+   <component ref="c1">
+    <map logical="primary_data" physical="data_channel"/>
+    <map logical="secondary_data" physical="data_channel2"/>
+   </component>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

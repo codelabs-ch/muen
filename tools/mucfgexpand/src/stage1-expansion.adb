@@ -46,6 +46,7 @@ is
       Procs.Register (Process => Subjects.Add_Missing_Elements'Access);
 
       Procs.Register (Process => Components.Add_Binaries'Access);
+      Procs.Register (Process => Components.Add_Channels'Access);
       Procs.Register (Process => Components.Remove_Components'Access);
       Procs.Register (Process => Components.Remove_Component_Reference'Access);
    end Register_All;

@@ -782,7 +782,7 @@ package body Cfgchecks.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
-         XPath => "/system/channels/channel[@name='data_channel']",
+         XPath => "/system/channels/channel[@name='data_channel3']",
          Name  => "size",
          Value => "16#4000#");
 
@@ -794,10 +794,10 @@ package body Cfgchecks.Test_Data.Tests is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Component 'c1' referenced by subject 'subject1' "
+                    = "Component 'c2' referenced by subject 'subject2' "
                     & "requests size 16#1000# for logical channel "
                     & "'primary_data' but linked physical channel "
-                    & "'data_channel' has size 16#4000#",
+                    & "'data_channel3' has size 16#4000#",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

@@ -52,10 +52,16 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
                  Name => "name");
+            Comp_Ref_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => DOM.Core.Elements.Get_Elements_By_Tag_Name
+                   (Elem => Subj_Node,
+                    Name => "component"),
+                 Index => 0);
             Comp_Ref : constant String
               := DOM.Core.Elements.Get_Attribute
-                (Elem => Subj_Node,
-                 Name => "component");
+                (Elem => Comp_Ref_Node,
+                 Name => "ref");
             Comp_Node : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Nodes     => Components,
@@ -113,12 +119,12 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Remove_Component_Attr (Data : in out Muxml.XML_Data_Type)
+   procedure Remove_Component_Reference (Data : in out Muxml.XML_Data_Type)
    is
       Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
-           XPath => "/system/subjects/subject[@component]");
+           XPath => "/system/subjects/subject[component]");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
@@ -126,11 +132,12 @@ is
               := DOM.Core.Nodes.Item (List  => Subjects,
                                       Index => I);
          begin
-            DOM.Core.Elements.Remove_Attribute (Elem => Subj_Node,
-                                                Name => "component");
+            Muxml.Utils.Remove_Child
+              (Node       => Subj_Node,
+               Child_Name => "component");
          end;
       end loop;
-   end Remove_Component_Attr;
+   end Remove_Component_Reference;
 
    -------------------------------------------------------------------------
 

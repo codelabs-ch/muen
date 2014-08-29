@@ -41,7 +41,7 @@
 		<include href="subject_nic_sm.xml"/>
 		<include href="subject_usb_sm.xml"/>
 
-		<subject name="nic_linux" component="linux" profile="linux">
+		<subject name="nic_linux" profile="linux">
 			<bootparams>lpj=10000 console=hvc pci=noearly notsc</bootparams>
 			<memory>
 				<memory logical="initramfs" physical="initramfs_integ" virtualAddress="16#00a0_0000#" writable="false" executable="false"/>
@@ -77,9 +77,10 @@
 				<reader logical="virtual_keyboard" physical="nic_virtual_keyboard" virtualAddress="16#3000#" vector="49"/>
 				<writer logical="virtual_console" physical="nic_virtual_console" virtualAddress="16#4000#" event="1"/>
 			</channels>
+			<component ref="linux"/>
 		</subject>
 
-		<subject name="usb_linux" component="linux" profile="linux">
+		<subject name="usb_linux" profile="linux">
 			<bootparams>lpj=10000 console=hvc pci=noearly notsc</bootparams>
 			<memory>
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#00a0_0000#" writable="false" executable="false"/>
@@ -111,6 +112,7 @@
 				<reader logical="virtual_keyboard" physical="usb_virtual_keyboard" virtualAddress="16#3000#" vector="49"/>
 				<writer logical="virtual_console" physical="usb_virtual_console" virtualAddress="16#4000#" event="1"/>
 			</channels>
+			<component ref="linux"/>
 		</subject>
 	</subjects>
 

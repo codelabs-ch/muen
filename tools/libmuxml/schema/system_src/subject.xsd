@@ -3,17 +3,17 @@
 
 	<xs:complexType name="subjectType">
 		<xs:sequence>
-			<xs:element name="vcpu"       type="vcpuType"              minOccurs="0" maxOccurs="1"/>
-			<xs:element name="bootparams" type="xs:string"             minOccurs="0" maxOccurs="1"/>
-			<xs:element name="memory"     type="memoryRefsType"        minOccurs="0" maxOccurs="1"/>
-			<xs:element name="devices"    type="devicesRefType"        minOccurs="0" maxOccurs="1"/>
-			<xs:element name="events"     type="subjectEventsType"     minOccurs="1" maxOccurs="1"/>
-			<xs:element name="channels"   type="channelReferencesType" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="monitor"    type="monitorType"           minOccurs="0" maxOccurs="1"/>
+			<xs:element name="vcpu"       type="vcpuType"               minOccurs="0" maxOccurs="1"/>
+			<xs:element name="bootparams" type="xs:string"              minOccurs="0" maxOccurs="1"/>
+			<xs:element name="memory"     type="memoryRefsType"         minOccurs="0" maxOccurs="1"/>
+			<xs:element name="devices"    type="devicesRefType"         minOccurs="0" maxOccurs="1"/>
+			<xs:element name="events"     type="subjectEventsType"      minOccurs="1" maxOccurs="1"/>
+			<xs:element name="channels"   type="channelReferencesType"  minOccurs="0" maxOccurs="1"/>
+			<xs:element name="monitor"    type="monitorType"            minOccurs="0" maxOccurs="1"/>
+			<xs:element name="component"  type="componentReferenceType" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attributeGroup ref="subjectBaseAttrs"/>
-		<xs:attribute name="component" type="nameType"           use="required"/>
-		<xs:attribute name="profile"   type="subjectProfileType" use="required"/>
+		<xs:attribute name="profile" type="subjectProfileType" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="binaryType">
@@ -44,6 +44,10 @@
 	<xs:complexType name="initrdType">
 		<xs:attribute name="filename" type="xs:string"  use="required"/>
 		<xs:attribute name="size"     type="word64Type" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="componentReferenceType">
+		<xs:attribute name="ref" type="nameType" use="required"/>
 	</xs:complexType>
 
 </xs:schema>

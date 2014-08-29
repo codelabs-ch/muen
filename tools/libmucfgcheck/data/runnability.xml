@@ -37,7 +37,7 @@
   </component>
  </components>
  <subjects>
-  <subject name="subj1" component="c1" profile="native">
+  <subject name="subj1" profile="native">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
@@ -54,8 +54,9 @@
      <event physical="to_subj1" logical="to_subj1" vector="none"/>
     </target>
    </events>
+   <component ref="c1"/>
   </subject>
-  <subject name="subj2" component="c2" profile="native">
+  <subject name="subj2" profile="native">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
@@ -75,8 +76,9 @@
      <event physical="to_subj2" logical="to_subj2" vector="none"/>
     </target>
    </events>
+   <component ref="c2"/>
   </subject>
-  <subject name="subj3" component="c3" profile="native">
+  <subject name="subj3" profile="native">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
@@ -94,8 +96,9 @@
      <event physical="to_subj3_from_subj2" logical="from_subj2" vector="none"/>
     </target>
    </events>
+   <component ref="c3"/>
   </subject>
-  <subject name="subj4" component="c4" profile="native">
+  <subject name="subj4" profile="native">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
@@ -113,6 +116,7 @@
      <event physical="to_subj4_from_subj3" logical="from_subj3" vector="none"/>
     </target>
    </events>
+   <component ref="c4"/>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

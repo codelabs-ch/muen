@@ -40,7 +40,7 @@
   </component>
  </components>
  <subjects>
-  <subject component="tau0" name="tau0" profile="native">
+  <subject name="tau0" profile="native">
    <bootparams/>
    <memory>
     <memory executable="true" logical="text" physical="tau0-text" virtualAddress="16#0000#" writable="false"/>
@@ -50,6 +50,7 @@
    <channels>
     <writer event="1" logical="channel" physical="data_channel" virtualAddress="16#2000#"/>
    </channels>
+   <component ref="tau0"/>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

@@ -78,7 +78,7 @@
   </component>
  </components>
  <subjects>
-  <subject component="linux" cpu="0" name="lnx" profile="linux">
+  <subject cpu="0" name="lnx" profile="linux">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
    </memory>
@@ -101,8 +101,9 @@
     <reader logical="primary_data" physical="data_channel" vector="12" virtualAddress="16#6000#"/>
     <reader logical="secondary_data" physical="data_channel2" virtualAddress="16#7000#"/>
    </channels>
+   <component ref="linux"/>
   </subject>
-  <subject component="subject1" cpu="0" name="subject1" profile="native">
+  <subject cpu="0" name="subject1" profile="native">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
    </memory>
@@ -125,6 +126,7 @@
    <monitor>
     <state subject="lnx" virtualAddress="16#4000#" writable="true"/>
    </monitor>
+   <component ref="subject1"/>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

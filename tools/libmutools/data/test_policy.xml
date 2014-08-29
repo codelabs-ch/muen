@@ -37,7 +37,7 @@
   </component>
  </components>
  <subjects>
-  <subject component="lnx" name="lnx" profile="linux">
+  <subject name="lnx" profile="linux">
    <vcpu>
     <vmx>
      <controls>
@@ -72,6 +72,7 @@
     </device>
    </devices>
    <events/>
+   <component ref="lnx"/>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

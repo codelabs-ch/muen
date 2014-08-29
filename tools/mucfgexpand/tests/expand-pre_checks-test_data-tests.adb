@@ -655,8 +655,8 @@ package body Expand.Pre_Checks.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
-         XPath => "/system/subjects/subject[@name='lnx']",
-         Name  => "component",
+         XPath => "/system/subjects/subject[@name='lnx']/component",
+         Name  => "ref",
          Value => "nonexistent");
 
       begin

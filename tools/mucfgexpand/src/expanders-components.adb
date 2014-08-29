@@ -53,11 +53,9 @@ is
                 (Elem => Subj_Node,
                  Name => "name");
             Comp_Ref_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => DOM.Core.Elements.Get_Elements_By_Tag_Name
-                   (Elem => Subj_Node,
-                    Name => "component"),
-                 Index => 0);
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj_Node,
+                 XPath => "component");
             Comp_Ref : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Comp_Ref_Node,
@@ -69,11 +67,9 @@ is
                  Ref_Value => Comp_Ref);
 
             Bin_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => DOM.Core.Elements.Get_Elements_By_Tag_Name
-                   (Elem => Comp_Node,
-                    Name => "binary"),
-                 Index => 0);
+              := Muxml.Utils.Get_Element
+                (Doc   => Comp_Node,
+                 XPath => "binary");
             Filename : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Bin_Node,

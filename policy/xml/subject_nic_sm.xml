@@ -11,9 +11,6 @@
 			<event physical="trap_to_nic_sm" logical="handle_linux_trap" vector="36"/>
 		</target>
 	</events>
-	<channels>
-		<writer logical="console" physical="nic_sm_console" virtualAddress="16#000b_8000#" event="1"/>
-	</channels>
 	<monitor>
 		<state subject="nic_linux" virtualAddress="16#001e_0000#" writable="true"/>
 	</monitor>

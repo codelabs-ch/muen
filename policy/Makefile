@@ -3,6 +3,9 @@ LAST_CFG = $(shell cat $(OBJ_DIR)/.cfg 2>/dev/null)
 
 PLATFORM = platform/$(HARDWARE).xml
 
+SOURCES  = $(wildcard xml/*.xml)
+SOURCEs += $(PLATFORM)
+
 GENERATORS =         \
 	$(MUGENACPI)     \
 	$(MUGENIOBM)     \
@@ -26,7 +29,7 @@ cfgchange:
 	$(if $(findstring $(HARDWARE)/$(SYSTEM),$(LAST_CFG)),,rm -f $(OBJ_DIR)/*; \
 		echo $(HARDWARE)/$(SYSTEM) > $(OBJ_DIR)/.cfg)
 
-$(POLICY_SRC): $(MUCFGMERGE) $(POLICY) $(PLATFORM)
+$(POLICY_SRC): $(MUCFGMERGE) $(SOURCES)
 	@$(MUCFGMERGE) -p$(PLATFORM) $(POLICY) $(POLICY_SRC)
 
 $(POLICY_A): $(POLICY_SRC) $(MUCFGEXPAND)

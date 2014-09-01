@@ -23,7 +23,7 @@ with Expanders.Channels;
 with Expanders.Platform;
 with Expanders.Device_Domains;
 
-package body Expanders
+package body Stage2.Expansion
 is
 
    -------------------------------------------------------------------------
@@ -42,6 +42,7 @@ is
 
    procedure Register_All
    is
+      use Expanders;
    begin
 
       --  Add tau0 subject prior to subject-related memory expanders (state,
@@ -71,11 +72,6 @@ is
       Procs.Register (Process => Kernel.Map_Tau0_Interface'Access);
       Procs.Register (Process => Kernel.Add_Devices'Access);
 
-      --  Create optional subject elements such as memory first.
-
-      Procs.Register (Process => Subjects.Add_Missing_Elements'Access);
-
-      Procs.Register (Process => Subjects.Add_Binaries'Access);
       Procs.Register (Process => Subjects.Handle_Profile'Access);
       Procs.Register (Process => Subjects.Handle_Monitors'Access);
       Procs.Register (Process => Subjects.Add_Channel_Mappings'Access);
@@ -103,4 +99,4 @@ is
 
    procedure Run (Data : in out Muxml.XML_Data_Type) renames Procs.Run;
 
-end Expanders;
+end Stage2.Expansion;

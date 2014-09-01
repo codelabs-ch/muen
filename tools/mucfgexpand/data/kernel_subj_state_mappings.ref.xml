@@ -60,14 +60,33 @@
  <channels>
   <channel hasEvent="ipi" name="data_channel" size="16#1000#"/>
   <channel hasEvent="switch" name="data_channel2" size="16#2000#"/>
+  <channel name="data_channel3" size="16#1000#"/>
+  <channel name="data_channel4" size="16#1000#"/>
  </channels>
+ <components>
+  <component name="linux">
+   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
+  </component>
+  <component name="c1">
+   <binary filename="c1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
+  </component>
+  <component name="c2">
+   <channels>
+    <reader logical="primary_data" size="16#1000#" virtualAddress="16#3000#"/>
+    <reader logical="secondary_data" size="16#1000#" virtualAddress="16#4000#"/>
+   </channels>
+   <binary filename="c2_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
+  </component>
+ </components>
  <kernel>
   <memory>
    <cpu id="0">
     <memory executable="false" logical="lnx_state" physical="lnx_state" virtualAddress="16#0030_1000#" writable="true"/>
     <memory executable="false" logical="subject1_state" physical="subject1_state" virtualAddress="16#0030_2000#" writable="true"/>
    </cpu>
-   <cpu id="1"/>
+   <cpu id="1">
+    <memory executable="false" logical="subject2_state" physical="subject2_state" virtualAddress="16#0030_3000#" writable="true"/>
+   </cpu>
   </memory>
   <devices/>
  </kernel>
@@ -92,10 +111,12 @@
     </source>
    </events>
    <channels>
-    <reader logical="primary_data" physical="data_channel" vector="12" virtualAddress="16#6000#"/>
-    <reader logical="secondary_data" physical="data_channel2" virtualAddress="16#7000#"/>
+    <reader logical="channel_1" physical="data_channel" vector="12" virtualAddress="16#6000#"/>
+    <reader logical="channel_2" physical="data_channel2" virtualAddress="16#7000#"/>
+    <writer logical="channel_3" physical="data_channel3" virtualAddress="16#9000#"/>
+    <writer logical="channel_4" physical="data_channel4" virtualAddress="16#a000#"/>
    </channels>
-   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
+   <component ref="linux"/>
   </subject>
   <subject cpu="0" id="2" name="subject1" profile="native">
    <memory>
@@ -117,10 +138,24 @@
     <writer event="1" logical="primary_data" physical="data_channel" virtualAddress="16#3000#"/>
     <writer event="1" logical="secondary_data" physical="data_channel2" virtualAddress="16#5000#"/>
    </channels>
-   <binary filename="subject1_bin" size="16#1000#" virtualAddress="16#0020_0000#"/>
    <monitor>
     <state subject="lnx" virtualAddress="16#4000#" writable="true"/>
    </monitor>
+   <component ref="c1">
+    <map logical="primary_data" physical="data_channel"/>
+    <map logical="secondary_data" physical="data_channel2"/>
+   </component>
+  </subject>
+  <subject cpu="1" id="3" name="subject2" profile="native">
+   <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+   </memory>
+   <devices/>
+   <events/>
+   <component ref="c2">
+    <map logical="primary_data" physical="data_channel3"/>
+    <map logical="secondary_data" physical="data_channel4"/>
+   </component>
   </subject>
  </subjects>
  <scheduling tickRate="10000">
@@ -129,7 +164,8 @@
     <minorFrame subject="lnx" ticks="80"/>
    </cpu>
    <cpu id="1">
-    <minorFrame subject="tau0" ticks="80"/>
+    <minorFrame subject="tau0" ticks="40"/>
+    <minorFrame subject="subject2" ticks="40"/>
    </cpu>
   </majorFrame>
  </scheduling>

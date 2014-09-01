@@ -16,12 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Muxml;
+
 package Expanders.Subjects
 is
-
-   --  Add subject binary physical memory regions and mappings. Removes the
-   --  binary element after processing.
-   procedure Add_Binaries (Data : in out Muxml.XML_Data_Type);
 
    --  Add subject profile related XML elements. Removes the profile attribute
    --  after processing.

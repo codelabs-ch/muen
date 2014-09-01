@@ -22,6 +22,20 @@
   <event name="to_subj4_from_subj2" mode="switch"/>
   <event name="to_subj4_from_subj3" mode="switch"/>
  </events>
+ <components>
+  <component name="c1">
+   <binary filename="c1_bin" size="16#1000#" virtualAddress="16#2000#"/>
+  </component>
+  <component name="c2">
+   <binary filename="c2_bin" size="16#1000#" virtualAddress="16#2000#"/>
+  </component>
+  <component name="c3">
+   <binary filename="c3_bin" size="16#1000#" virtualAddress="16#2000#"/>
+  </component>
+  <component name="c4">
+   <binary filename="c4_bin" size="16#1000#" virtualAddress="16#2000#"/>
+  </component>
+ </components>
  <subjects>
   <subject name="subj1" profile="native">
    <memory>
@@ -40,7 +54,7 @@
      <event physical="to_subj1" logical="to_subj1" vector="none"/>
     </target>
    </events>
-   <binary filename="subj1_bin" size="16#1000#" virtualAddress="16#2000#"/>
+   <component ref="c1"/>
   </subject>
   <subject name="subj2" profile="native">
    <memory>
@@ -62,7 +76,7 @@
      <event physical="to_subj2" logical="to_subj2" vector="none"/>
     </target>
    </events>
-   <binary filename="subj2_bin" size="16#1000#" virtualAddress="16#2000#"/>
+   <component ref="c2"/>
   </subject>
   <subject name="subj3" profile="native">
    <memory>
@@ -82,7 +96,7 @@
      <event physical="to_subj3_from_subj2" logical="from_subj2" vector="none"/>
     </target>
    </events>
-   <binary filename="subj1_bin" size="16#1000#" virtualAddress="16#2000#"/>
+   <component ref="c3"/>
   </subject>
   <subject name="subj4" profile="native">
    <memory>
@@ -102,7 +116,7 @@
      <event physical="to_subj4_from_subj3" logical="from_subj3" vector="none"/>
     </target>
    </events>
-   <binary filename="subj1_bin" size="16#1000#" virtualAddress="16#2000#"/>
+   <component ref="c4"/>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

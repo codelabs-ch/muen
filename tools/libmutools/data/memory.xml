@@ -33,6 +33,11 @@
   <memory alignment="16#0020_0000#" caching="WC" name="noaddress" size="16#8000#"/>
  </memory>
  <events/>
+ <components>
+  <component name="lnx">
+   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
+  </component>
+ </components>
  <subjects>
   <subject name="lnx" profile="linux">
    <vcpu>
@@ -69,7 +74,7 @@
     </device>
    </devices>
    <events/>
-   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
+   <component ref="lnx"/>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

@@ -5,7 +5,7 @@
 
 with AUnit.Test_Fixtures;
 
-package Expanders.Test_Data is
+package Stage1.Expansion.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -19,4 +19,4 @@ package Expanders.Test_Data is
 
    procedure Inc_Counter (XML_Data : in out Muxml.XML_Data_Type);
 
-end Expanders.Test_Data;
+end Stage1.Expansion.Test_Data;

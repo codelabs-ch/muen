@@ -17,24 +17,9 @@
 --
 
 with Muxml;
-with Mutools.Immutable_Processors;
 
-package Expand.Pre_Checks
+package Cfgchecks
 is
-
-   --  Register all pre-checks.
-   procedure Register_All;
-
-   --  Run registered pre-checks.
-   procedure Run (Data : Muxml.XML_Data_Type);
-
-   --  Return number of registered pre-checks.
-   function Get_Count return Natural;
-
-   --  Clear registered pre-checks;
-   procedure Clear;
-
-   --  Expander specific pre-checks.
 
    --  Check that tau0 is present in the scheduling plan.
    procedure Tau0_Presence_In_Scheduling (XML_Data : Muxml.XML_Data_Type);
@@ -44,6 +29,22 @@ is
 
    --  Check subject channel references.
    procedure Subject_Channel_References (XML_Data : Muxml.XML_Data_Type);
+
+   --  Check that a subject exports the logical channels requested by the
+   --  referenced component.
+   procedure Subject_Channel_Exports (XML_Data : Muxml.XML_Data_Type);
+
+   --  Check that subject logical component resource mappings are unique.
+   procedure Subject_Resource_Maps_Logical_Uniqueness
+     (XML_Data : Muxml.XML_Data_Type);
+
+   --  Check that subject physical component resource mappings are unique.
+   procedure Subject_Resource_Maps_Physical_Uniqueness
+     (XML_Data : Muxml.XML_Data_Type);
+
+   --  Check that subject physical component resource mappings are valid.
+   procedure Subject_Resource_Maps_Physical_References
+     (XML_Data : Muxml.XML_Data_Type);
 
    --  Check that each channel has exactly one reader and one writer.
    procedure Channel_Reader_Writer (XML_Data : Muxml.XML_Data_Type);
@@ -65,9 +66,15 @@ is
    --  Check that IOMMU devices provide a single memory resource.
    procedure Platform_IOMMU_Memory (XML_Data : Muxml.XML_Data_Type);
 
-private
+   --  Check subject component references.
+   procedure Subject_Component_References (XML_Data : Muxml.XML_Data_Type);
 
-   package Check_Procs is new
-     Mutools.Immutable_Processors (Param_Type => Muxml.XML_Data_Type);
+   --  Check that component logical channel names are unique.
+   procedure Component_Channel_Name_Uniqueness
+     (XML_Data : Muxml.XML_Data_Type);
 
-end Expand.Pre_Checks;
+   --  Check that requested logical channel sizes match the linked physical
+   --  channel sizes.
+   procedure Component_Channel_Size (XML_Data : Muxml.XML_Data_Type);
+
+end Cfgchecks;

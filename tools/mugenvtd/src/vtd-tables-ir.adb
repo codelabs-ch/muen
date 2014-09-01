@@ -16,13 +16,26 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libpaging/libpaging";
-with "../libmutools/libmutools";
-with "../libtest/libtest";
+package body VTd.Tables.IR
+is
 
-project GNATtest_Mugenvtd extends "../tools.gpr" is
+   -------------------------------------------------------------------------
 
-   for Source_Dirs use ("src", "tests/additional");
-   for Object_Dir use "obj/tests";
+   procedure Add_Entry
+     (IRT    : in out IR_Table_Type;
+      Index  :        Index_Range;
+      Vector :        Interfaces.Unsigned_8;
+      DST    :        Interfaces.Unsigned_32;
+      SID    :        Interfaces.Unsigned_16)
+   is
+      E : constant IR_Entry_Type
+        := (Present => 1,
+            V       => Vector,
+            DST     => DST,
+            SID     => SID,
+            others  => <>);
+   begin
+      IRT.Entries (Index) := E;
+   end Add_Entry;
 
-end GNATtest_Mugenvtd;
+end VTd.Tables.IR;

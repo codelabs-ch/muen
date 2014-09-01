@@ -16,13 +16,14 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libpaging/libpaging";
-with "../libmutools/libmutools";
-with "../libtest/libtest";
+with VTd.Tables.IR;
 
-project GNATtest_Mugenvtd extends "../tools.gpr" is
+package VTd.Instances
+is
 
-   for Source_Dirs use ("src", "tests/additional");
-   for Object_Dir use "obj/tests";
+   subtype Test_Range is Tables.IR_Entry_Range range 1 .. 4;
 
-end GNATtest_Mugenvtd;
+   package IR_Tables is new Tables.IR
+     (Index_Range => Test_Range);
+
+end VTd.Instances;

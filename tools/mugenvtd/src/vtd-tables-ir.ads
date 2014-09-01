@@ -18,8 +18,24 @@
 
 with Interfaces;
 
+generic
+
+   type Index_Range is new IR_Entry_Range;
+
 package VTd.Tables.IR
 is
+
+   --  Interrupt Remapping Table, see Intel VT-d specification, section
+   --  5.3.2.1.
+   type IR_Table_Type is private;
+
+   --  Add an entry with given index and values to Interrupt Remapping Table.
+   procedure Add_Entry
+     (IRT    : in out IR_Table_Type;
+      Index  :        Index_Range;
+      Vector :        Interfaces.Unsigned_8;
+      DST    :        Interfaces.Unsigned_32;
+      SID    :        Interfaces.Unsigned_16);
 
 private
 
@@ -63,5 +79,15 @@ private
       SVT        at 0 range 82 .. 83;
       Reserved_3 at 0 range 84 .. 127;
    end record;
+
+   type IR_Entry_Array is array (Index_Range) of IR_Entry_Type
+     with
+       Pack;
+
+   type IR_Table_Type is record
+      Entries : IR_Entry_Array;
+   end record
+     with
+       Pack;
 
 end VTd.Tables.IR;

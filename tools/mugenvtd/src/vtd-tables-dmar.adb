@@ -16,7 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Streams.Stream_IO;
 with Ada.Unchecked_Conversion;
 
 package body VTd.Tables.DMAR
@@ -26,11 +25,6 @@ is
 
    subtype Table_Stream is Ada.Streams.Stream_Element_Array
      (1 .. Mutools.Constants.Page_Size);
-
-   --  Write given stream to file.
-   procedure Write
-     (Stream   : Ada.Streams.Stream_Element_Array;
-      Filename : String);
 
    -------------------------------------------------------------------------
 
@@ -92,22 +86,5 @@ is
       Write (Stream   => Convert (S => CT),
              Filename => Filename);
    end Serialize;
-
-   -------------------------------------------------------------------------
-
-   procedure Write
-     (Stream   : Ada.Streams.Stream_Element_Array;
-      Filename : String)
-   is
-      File : Ada.Streams.Stream_IO.File_Type;
-   begin
-      Ada.Streams.Stream_IO.Create
-        (File => File,
-         Mode => Ada.Streams.Stream_IO.Out_File,
-         Name => Filename);
-      Ada.Streams.Stream_IO.Write (File => File,
-                                   Item => Stream);
-      Ada.Streams.Stream_IO.Close (File => File);
-   end Write;
 
 end VTd.Tables.DMAR;

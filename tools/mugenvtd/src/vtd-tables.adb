@@ -16,27 +16,26 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-private with Ada.Streams;
+with Ada.Streams.Stream_IO;
 
-package VTd.Tables
+package body VTd.Tables
 is
 
-   --  Maximal number of entries in Interrupt Remapping Table.
-   type IR_Entry_Range is range 1 .. 2 ** 16;
+   -------------------------------------------------------------------------
 
-private
-
-   type Bit_Type is range 0 .. 1
-     with
-       Size => 1;
-
-   type Bit_Array is array (Positive range <>) of Bit_Type
-     with
-       Pack;
-
-   --  Write given stream to file.
    procedure Write
      (Stream   : Ada.Streams.Stream_Element_Array;
-      Filename : String);
+      Filename : String)
+   is
+      File : Ada.Streams.Stream_IO.File_Type;
+   begin
+      Ada.Streams.Stream_IO.Create
+        (File => File,
+         Mode => Ada.Streams.Stream_IO.Out_File,
+         Name => Filename);
+      Ada.Streams.Stream_IO.Write (File => File,
+                                   Item => Stream);
+      Ada.Streams.Stream_IO.Close (File => File);
+   end Write;
 
 end VTd.Tables;

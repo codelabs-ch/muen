@@ -3,19 +3,19 @@
 --  Such changes will be kept during further regeneration of this file.
 --  All code placed outside of test routine bodies will be lost. The
 --  code intended to set up and tear down the test environment should be
---  placed into VTd.Tables.Test_Data.
+--  placed into VTd.Tables.DMAR.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
 
-package body VTd.Tables.Test_Data.Tests is
+package body VTd.Tables.DMAR.Test_Data.Tests is
 
 
 --  begin read only
    procedure Test_1_Add_Entry (Gnattest_T : in out Test);
-   procedure Test_Add_Entry_2b23ee (Gnattest_T : in out Test) renames Test_1_Add_Entry;
---  id:2.2/2b23ee4a1e3f5824/Add_Entry/1/0/
+   procedure Test_Add_Entry_8b8c3f (Gnattest_T : in out Test) renames Test_1_Add_Entry;
+--  id:2.2/8b8c3fdf5a8640e8/Add_Entry/1/0/
    procedure Test_1_Add_Entry (Gnattest_T : in out Test) is
-   --  vtd-tables.ads:42:4:Add_Entry
+   --  vtd-tables-dmar.ads:42:4:Add_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -37,7 +37,6 @@ package body VTd.Tables.Test_Data.Tests is
               Message   => "Entry not present (2)");
       Assert (Condition => Root_Table.Entries (255).CTP = 16#000f_ffff#,
               Message   => "CTP mismatch (2)");
-
 --  begin read only
    end Test_1_Add_Entry;
 --  end read only
@@ -45,10 +44,10 @@ package body VTd.Tables.Test_Data.Tests is
 
 --  begin read only
    procedure Test_1_Serialize (Gnattest_T : in out Test);
-   procedure Test_Serialize_3e830c (Gnattest_T : in out Test) renames Test_1_Serialize;
---  id:2.2/3e830c731d3b0f3a/Serialize/1/0/
+   procedure Test_Serialize_e2a2dc (Gnattest_T : in out Test) renames Test_1_Serialize;
+--  id:2.2/e2a2dcc5067cf156/Serialize/1/0/
    procedure Test_1_Serialize (Gnattest_T : in out Test) is
-   --  vtd-tables.ads:48:4:Serialize
+   --  vtd-tables-dmar.ads:48:4:Serialize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -83,10 +82,10 @@ package body VTd.Tables.Test_Data.Tests is
 
 --  begin read only
    procedure Test_2_Add_Entry (Gnattest_T : in out Test);
-   procedure Test_Add_Entry_f03eb2 (Gnattest_T : in out Test) renames Test_2_Add_Entry;
---  id:2.2/f03eb2d99e674632/Add_Entry/0/0/
+   procedure Test_Add_Entry_73d269 (Gnattest_T : in out Test) renames Test_2_Add_Entry;
+--  id:2.2/73d2694c2df5428c/Add_Entry/0/0/
    procedure Test_2_Add_Entry (Gnattest_T : in out Test) is
-   --  vtd-tables.ads:64:4:Add_Entry
+   --  vtd-tables-dmar.ads:64:4:Add_Entry
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -113,10 +112,10 @@ package body VTd.Tables.Test_Data.Tests is
 
 --  begin read only
    procedure Test_2_Serialize (Gnattest_T : in out Test);
-   procedure Test_Serialize_eeeebf (Gnattest_T : in out Test) renames Test_2_Serialize;
---  id:2.2/eeeebf76e1fa2a78/Serialize/0/0/
+   procedure Test_Serialize_6c46d8 (Gnattest_T : in out Test) renames Test_2_Serialize;
+--  id:2.2/6c46d8a0ab462cd7/Serialize/0/0/
    procedure Test_2_Serialize (Gnattest_T : in out Test) is
-   --  vtd-tables.ads:72:4:Serialize
+   --  vtd-tables-dmar.ads:72:4:Serialize
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -152,4 +151,4 @@ package body VTd.Tables.Test_Data.Tests is
    end Test_2_Serialize;
 --  end read only
 
-end VTd.Tables.Test_Data.Tests;
+end VTd.Tables.DMAR.Test_Data.Tests;

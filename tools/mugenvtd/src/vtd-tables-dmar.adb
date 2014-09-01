@@ -19,7 +19,7 @@
 with Ada.Streams.Stream_IO;
 with Ada.Unchecked_Conversion;
 
-package body VTd.Tables
+package body VTd.Tables.DMAR
 is
 
    use type Ada.Streams.Stream_Element_Offset;
@@ -110,4 +110,4 @@ is
       Ada.Streams.Stream_IO.Close (File => File);
    end Write;
 
-end VTd.Tables;
+end VTd.Tables.DMAR;

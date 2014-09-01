@@ -19,6 +19,9 @@
 package VTd.Tables
 is
 
+   --  Maximal number of entries in Interrupt Remapping Table.
+   type IR_Entry_Range is range 1 .. 2 ** 16;
+
 private
 
    type Bit_Type is range 0 .. 1

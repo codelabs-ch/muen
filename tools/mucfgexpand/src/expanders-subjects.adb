@@ -40,12 +40,17 @@ with Expanders.Subjects.Profiles;
 package body Expanders.Subjects
 is
 
+   use Ada.Strings.Unbounded;
+
+   type Ref_Elements_Type is array (Positive range <>) of Unbounded_String;
+
    --  Add element with given name to subjects missing such an element. The new
-   --  node is inserted before the reference node with the specified name.
+   --  node is inserted before the first existing reference node given as name.
+   --  If the reference node is not found, the element is not added.
    procedure Add_Optional_Element
      (Data         : in out Muxml.XML_Data_Type;
       Element_Name :        String;
-      Ref_Name     :        String);
+      Ref_Names    :        Ref_Elements_Type);
 
    -------------------------------------------------------------------------
 
@@ -157,8 +162,6 @@ is
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Channels) - 1 loop
          declare
-            use Ada.Strings.Unbounded;
-
             Channel_Node : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Channels,
@@ -540,15 +543,24 @@ is
    procedure Add_Missing_Elements (Data : in out Muxml.XML_Data_Type)
    is
    begin
-      Add_Optional_Element (Data         => Data,
-                            Element_Name => "devices",
-                            Ref_Name     => "events");
-      Add_Optional_Element (Data         => Data,
-                            Element_Name => "memory",
-                            Ref_Name     => "devices");
-      Add_Optional_Element (Data         => Data,
-                            Element_Name => "bootparams",
-                            Ref_Name     => "memory");
+      Add_Optional_Element
+        (Data         => Data,
+         Element_Name => "devices",
+         Ref_Names    => (1 => To_Unbounded_String ("events")));
+      Add_Optional_Element
+        (Data         => Data,
+         Element_Name => "memory",
+         Ref_Names    => (1 => To_Unbounded_String ("devices")));
+      Add_Optional_Element
+        (Data         => Data,
+         Element_Name => "bootparams",
+         Ref_Names    => (1 => To_Unbounded_String ("memory")));
+      Add_Optional_Element
+        (Data         => Data,
+         Element_Name => "channels",
+         Ref_Names    => (1 => To_Unbounded_String ("monitor"),
+                          2 => To_Unbounded_String ("component")));
+
    end Add_Missing_Elements;
 
    -------------------------------------------------------------------------
@@ -556,33 +568,44 @@ is
    procedure Add_Optional_Element
      (Data         : in out Muxml.XML_Data_Type;
       Element_Name :        String;
-      Ref_Name     :        String)
+      Ref_Names    :        Ref_Elements_Type)
    is
-      Nodes : constant DOM.Core.Node_List
+      Subjects : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject[not (" & Element_Name & ")]");
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
          declare
-            Subj_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => Nodes,
-                 Index => I);
-            Ref_Node  : constant DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Doc   => Subj_Node,
-                 XPath => Ref_Name);
             Elem_Node : DOM.Core.Node
               := DOM.Core.Documents.Create_Element
                 (Doc      => Data.Doc,
                  Tag_Name => Element_Name);
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subjects,
+                 Index => I);
          begin
-            Elem_Node := DOM.Core.Nodes.Insert_Before
-              (N         => Subj_Node,
-               New_Child => Elem_Node,
-               Ref_Child => Ref_Node);
-            pragma Unreferenced (Elem_Node);
+            Lookup_Ref_Node :
+            for Ref of Ref_Names loop
+               declare
+                  use type DOM.Core.Node;
+
+                  Ref_Node : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Doc   => Subj_Node,
+                       XPath => To_String (Ref));
+               begin
+                  if Ref_Node /= null then
+                     Elem_Node := DOM.Core.Nodes.Insert_Before
+                       (N         => Subj_Node,
+                        New_Child => Elem_Node,
+                        Ref_Child => Ref_Node);
+
+                     exit Lookup_Ref_Node;
+                  end if;
+               end;
+            end loop Lookup_Ref_Node;
          end;
       end loop;
    end Add_Optional_Element;

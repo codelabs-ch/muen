@@ -18,13 +18,12 @@
 
 with Expanders.Memory;
 with Expanders.Kernel;
-with Expanders.Components;
 with Expanders.Subjects;
 with Expanders.Channels;
 with Expanders.Platform;
 with Expanders.Device_Domains;
 
-package body Expanders
+package body Stage2.Expansion
 is
 
    -------------------------------------------------------------------------
@@ -43,11 +42,8 @@ is
 
    procedure Register_All
    is
+      use Expanders;
    begin
-
-      --  Create optional subject elements such as memory first.
-
-      Procs.Register (Process => Subjects.Add_Missing_Elements'Access);
 
       --  Add tau0 subject prior to subject-related memory expanders (state,
       --  VMCS and bitmaps).
@@ -60,9 +56,6 @@ is
       Procs.Register (Process => Subjects.Add_Ids'Access);
       Procs.Register (Process => Subjects.Add_CPU_Ids'Access);
 
-      Procs.Register (Process => Components.Add_Binaries'Access);
-      Procs.Register (Process => Components.Remove_Components'Access);
-      Procs.Register (Process => Components.Remove_Component_Reference'Access);
       Procs.Register (Process => Platform.Add_PCI_Config_Space'Access);
       Procs.Register (Process => Memory.Add_Missing_Attributes'Access);
       Procs.Register (Process => Memory.Add_Kernel_Binary'Access);
@@ -106,4 +99,4 @@ is
 
    procedure Run (Data : in out Muxml.XML_Data_Type) renames Procs.Run;
 
-end Expanders;
+end Stage2.Expansion;

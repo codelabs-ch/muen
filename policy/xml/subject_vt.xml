@@ -11,15 +11,6 @@
 		</device>
 	</devices>
 	<events/>
-	<channels>
-		<reader logical="console_1" physical="nic_virtual_console" virtualAddress="16#0010_0000#" vector="34"/>
-		<reader logical="console_2" physical="usb_virtual_console" virtualAddress="16#0011_0000#" vector="35"/>
-		<reader logical="console_3" physical="nic_sm_console" virtualAddress="16#0012_0000#" vector="36"/>
-		<reader logical="console_4" physical="usb_sm_console" virtualAddress="16#0013_0000#" vector="37"/>
-		<reader logical="console_5" physical="time_console" virtualAddress="16#0014_0000#" vector="38"/>
-		<writer logical="keyboard_1" physical="nic_virtual_keyboard" virtualAddress="16#0005_0000#" event="1"/>
-		<writer logical="keyboard_2" physical="usb_virtual_keyboard" virtualAddress="16#0005_1000#" event="2"/>
-	</channels>
 	<component ref="vt">
 		<map logical="console_1" physical="nic_virtual_console"/>
 		<map logical="console_2" physical="usb_virtual_console"/>

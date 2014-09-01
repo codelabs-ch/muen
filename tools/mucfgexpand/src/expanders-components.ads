@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Muxml;
+
 package Expanders.Components
 is
 
@@ -23,10 +25,13 @@ is
    --  mappings.
    procedure Add_Binaries (Data : in out Muxml.XML_Data_Type);
 
+   --  Expand logical component channels to subject channels.
+   procedure Add_Channels (Data : in out Muxml.XML_Data_Type);
+
    --  Remove components section from policy.
    procedure Remove_Components (Data : in out Muxml.XML_Data_Type);
 
-   --  Remove component attribute from subject nodes.
+   --  Remove component element from subject nodes.
    procedure Remove_Component_Reference (Data : in out Muxml.XML_Data_Type);
 
 end Expanders.Components;

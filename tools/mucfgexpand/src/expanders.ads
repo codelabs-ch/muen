@@ -16,29 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muxml;
-with Mutools.Processors;
-
 package Expanders
 is
 
-   --  Register all expanders.
-   procedure Register_All;
-
-   --  Run registered expanders.
-   procedure Run (Data : in out Muxml.XML_Data_Type);
-
-   --  Return number of registered expanders.
-   function Get_Count return Natural;
-
-   --  Clear registered expanders.
-   procedure Clear;
-
    Expansion_Error : exception;
-
-private
-
-   package Procs is new Mutools.Processors
-     (Param_Type => Muxml.XML_Data_Type);
 
 end Expanders;

@@ -15,7 +15,7 @@ package body Expanders.Channels.Test_Data.Tests is
    procedure Test_Add_Physical_Memory_127041 (Gnattest_T : in out Test) renames Test_Add_Physical_Memory;
 --  id:2.2/127041296e3a499b/Add_Physical_Memory/1/0/
    procedure Test_Add_Physical_Memory (Gnattest_T : in out Test) is
-   --  expanders-channels.ads:24:4:Add_Physical_Memory
+   --  expanders-channels.ads:26:4:Add_Physical_Memory
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

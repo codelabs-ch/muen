@@ -52,6 +52,7 @@
      <event physical="to_subj1" logical="to_subj1" vector="none"/>
     </target>
    </events>
+   <component ref="c1"/>
   </subject>
   <subject name="subj2" profile="native">
    <memory>
@@ -73,6 +74,7 @@
      <event physical="to_subj2" logical="to_subj2" vector="none"/>
     </target>
    </events>
+   <component ref="c2"/>
   </subject>
   <subject name="subj3" profile="native">
    <memory>
@@ -92,6 +94,7 @@
      <event physical="to_subj3_from_subj2" logical="to_subj3_from_subj2" vector="none"/>
     </target>
    </events>
+   <component ref="c3"/>
   </subject>
  </subjects>
  <scheduling tickRate="10000">

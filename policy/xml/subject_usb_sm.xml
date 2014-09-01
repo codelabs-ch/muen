@@ -11,9 +11,6 @@
 			<event logical="handle_linux_trap" physical="trap_to_usb_sm" vector="36"/>
 		</target>
 	</events>
-	<channels>
-		<writer logical="console" physical="usb_sm_console" virtualAddress="16#000b_8000#" event="1"/>
-	</channels>
 	<monitor>
 		<state subject="usb_linux" virtualAddress="16#001e_0000#" writable="true"/>
 	</monitor>

@@ -10,13 +10,13 @@ package Expanders.Device_Domains.Test_Data.Tests is
    with null record;
 
    procedure Test_Add_Section_Skeleton_797fa9 (Gnattest_T : in out Test);
-   --  expanders-device_domains.ads:23:4:Add_Section_Skeleton
+   --  expanders-device_domains.ads:25:4:Add_Section_Skeleton
 
    procedure Test_Add_Domain_IDs_acdb9f (Gnattest_T : in out Test);
-   --  expanders-device_domains.ads:26:4:Add_Domain_IDs
+   --  expanders-device_domains.ads:28:4:Add_Domain_IDs
 
    procedure Test_Add_Tables_17f65c (Gnattest_T : in out Test);
-   --  expanders-device_domains.ads:29:4:Add_Tables
+   --  expanders-device_domains.ads:31:4:Add_Tables
 
 end Expanders.Device_Domains.Test_Data.Tests;
 --  end read only

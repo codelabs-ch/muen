@@ -3,9 +3,7 @@
 --  automatically. Contents of this package can be modified in any way
 --  except for sections surrounded by a 'read only' marker.
 
-package body Expand.Pre_Checks.Test_Data is
-
-   -------------------------------------------------------------------------
+package body Cfgchecks.Test_Data is
 
    procedure Set_Up (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
@@ -13,21 +11,10 @@ package body Expand.Pre_Checks.Test_Data is
       null;
    end Set_Up;
 
-   -------------------------------------------------------------------------
-
    procedure Tear_Down (Gnattest_T : in out Test) is
       pragma Unreferenced (Gnattest_T);
    begin
-      Clear;
-      Test_Counter := 0;
+      null;
    end Tear_Down;
 
-   -------------------------------------------------------------------------
-
-   procedure Inc_Counter (XML_Data : Muxml.XML_Data_Type)
-   is
-   begin
-      Test_Counter := Test_Counter + 1;
-   end Inc_Counter;
-
-end Expand.Pre_Checks.Test_Data;
+end Cfgchecks.Test_Data;

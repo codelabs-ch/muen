@@ -27,16 +27,9 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
-with Mutools.Immutable_Processors;
-with Mucfgcheck.Memory;
-with Mucfgcheck.Device;
-with Mucfgcheck.Events;
-with Mucfgcheck.Platform;
-with Mucfgcheck.Subject;
+with Mucfgcheck;
 
-pragma Elaborate_All (Mutools.Immutable_Processors);
-
-package body Expand.Pre_Checks
+package body Cfgchecks
 is
 
    --  Check the existence of channel endpoint (reader or writer) event
@@ -251,14 +244,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Clear
-   is
-   begin
-      Check_Procs.Clear;
-   end Clear;
-
-   -------------------------------------------------------------------------
-
    procedure Component_Channel_Name_Uniqueness
      (XML_Data : Muxml.XML_Data_Type)
    is
@@ -346,16 +331,14 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
                  Name => "name");
-            Subj_Channels : constant DOM.Core.Node_List
+            Subj_Mappings : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Subj_Node,
-                 XPath => "channels/*");
+                 XPath => "component/map");
             Comp_Ref_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => DOM.Core.Elements.Get_Elements_By_Tag_Name
-                   (Elem => Subj_Node,
-                    Name => "component"),
-                 Index => 0);
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj_Node,
+                 XPath => "component");
             Comp_Name     : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Comp_Ref_Node,
@@ -395,7 +378,7 @@ is
                           Name => "size");
                      Subj_Channel_Link : constant DOM.Core.Node
                        := Muxml.Utils.Get_Element
-                         (Nodes     => Subj_Channels,
+                         (Nodes     => Subj_Mappings,
                           Ref_Attr  => "logical",
                           Ref_Value => Comp_Channel_Name);
                      Phys_Channel_Name : constant String
@@ -428,10 +411,6 @@ is
          end;
       end loop;
    end Component_Channel_Size;
-
-   -------------------------------------------------------------------------
-
-   function Get_Count return Natural renames Check_Procs.Get_Count;
 
    -------------------------------------------------------------------------
 
@@ -521,61 +500,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Register_All
-   is
-   begin
-      Check_Procs.Register
-        (Process => Mucfgcheck.Memory.Physical_Memory_References'Access);
-      Check_Procs.Register
-        (Process => Mucfgcheck.Device.Device_Memory_References'Access);
-      Check_Procs.Register
-        (Process => Mucfgcheck.Device.PCI_Device_BDF_Uniqueness'Access);
-      Check_Procs.Register
-        (Process => Mucfgcheck.Device.IOMMU_Region_Size'Access);
-      Check_Procs.Register
-        (Process => Mucfgcheck.Platform.PCI_Config_Space_Address'Access);
-      Check_Procs.Register
-        (Process => Mucfgcheck.Events.Subject_Event_References'Access);
-      Check_Procs.Register
-        (Process => Mucfgcheck.Events.Source_Targets'Access);
-      Check_Procs.Register
-        (Process => Mucfgcheck.Events.Self_References'Access);
-      Check_Procs.Register
-        (Process => Mucfgcheck.Subject.Runnability'Access);
-
-      Check_Procs.Register (Process => Tau0_Presence_In_Scheduling'Access);
-      Check_Procs.Register
-        (Process => Subject_Resource_Maps_Logical_Uniqueness'Access);
-      Check_Procs.Register
-        (Process => Subject_Resource_Maps_Physical_Uniqueness'Access);
-      Check_Procs.Register
-        (Process => Subject_Resource_Maps_Physical_References'Access);
-      Check_Procs.Register (Process => Subject_Monitor_References'Access);
-      Check_Procs.Register (Process => Subject_Channel_References'Access);
-      Check_Procs.Register (Process => Subject_Component_References'Access);
-      Check_Procs.Register (Process => Subject_Channel_Exports'Access);
-      Check_Procs.Register (Process => Channel_Reader_Writer'Access);
-      Check_Procs.Register (Process => Channel_Writer_Has_Event_ID'Access);
-      Check_Procs.Register (Process => Channel_Reader_Has_Event_Vector'Access);
-      Check_Procs.Register (Process => Platform_CPU_Count_Presence'Access);
-      Check_Procs.Register (Process => Platform_IOAPIC_Presence'Access);
-      Check_Procs.Register (Process => Platform_IOMMU_Memory'Access);
-
-      --  Register after platform CPU count presence check.
-
-      Check_Procs.Register (Process => Mucfgcheck.Platform.CPU_Count'Access);
-
-      Check_Procs.Register
-        (Process => Component_Channel_Name_Uniqueness'Access);
-      Check_Procs.Register (Process => Component_Channel_Size'Access);
-   end Register_All;
-
-   -------------------------------------------------------------------------
-
-   procedure Run (Data : Muxml.XML_Data_Type) renames Check_Procs.Run;
-
-   -------------------------------------------------------------------------
-
    procedure Subject_Channel_Exports (XML_Data : Muxml.XML_Data_Type)
    is
       Components : constant DOM.Core.Node_List
@@ -599,11 +523,9 @@ is
                 (Elem => Subj_Node,
                  Name => "name");
             Comp_Ref_Node : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => DOM.Core.Elements.Get_Elements_By_Tag_Name
-                   (Elem => Subj_Node,
-                    Name => "component"),
-                 Index => 0);
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj_Node,
+                 XPath => "component");
             Mappings      : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Comp_Ref_Node,
@@ -869,4 +791,4 @@ is
       end if;
    end Tau0_Presence_In_Scheduling;
 
-end Expand.Pre_Checks;
+end Cfgchecks;

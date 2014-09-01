@@ -17,24 +17,9 @@
 --
 
 with Muxml;
-with Mutools.Immutable_Processors;
 
-package Expand.Pre_Checks
+package Cfgchecks
 is
-
-   --  Register all pre-checks.
-   procedure Register_All;
-
-   --  Run registered pre-checks.
-   procedure Run (Data : Muxml.XML_Data_Type);
-
-   --  Return number of registered pre-checks.
-   function Get_Count return Natural;
-
-   --  Clear registered pre-checks;
-   procedure Clear;
-
-   --  Expander specific pre-checks.
 
    --  Check that tau0 is present in the scheduling plan.
    procedure Tau0_Presence_In_Scheduling (XML_Data : Muxml.XML_Data_Type);
@@ -92,9 +77,4 @@ is
    --  channel sizes.
    procedure Component_Channel_Size (XML_Data : Muxml.XML_Data_Type);
 
-private
-
-   package Check_Procs is new
-     Mutools.Immutable_Processors (Param_Type => Muxml.XML_Data_Type);
-
-end Expand.Pre_Checks;
+end Cfgchecks;

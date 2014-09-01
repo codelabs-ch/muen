@@ -3,99 +3,11 @@
 --  Such changes will be kept during further regeneration of this file.
 --  All code placed outside of test routine bodies will be lost. The
 --  code intended to set up and tear down the test environment should be
---  placed into Expand.Pre_Checks.Test_Data.
+--  placed into Cfgchecks.Test_Data.
 
 with AUnit.Assertions; use AUnit.Assertions;
 
-package body Expand.Pre_Checks.Test_Data.Tests is
-
-
---  begin read only
-   procedure Test_Register_All (Gnattest_T : in out Test);
-   procedure Test_Register_All_3f90ea (Gnattest_T : in out Test) renames Test_Register_All;
---  id:2.2/3f90ea30314141bf/Register_All/1/0/
-   procedure Test_Register_All (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:26:4:Register_All
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-   begin
-      Register_All;
-      Assert (Condition => Check_Procs.Get_Count = 26,
-              Message   => "Count mismatch:" & Get_Count'Img);
---  begin read only
-   end Test_Register_All;
---  end read only
-
-
---  begin read only
-   procedure Test_Run (Gnattest_T : in out Test);
-   procedure Test_Run_9b6b0d (Gnattest_T : in out Test) renames Test_Run;
---  id:2.2/9b6b0dee792a1a08/Run/1/0/
-   procedure Test_Run (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:29:4:Run
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Policy : Muxml.XML_Data_Type;
-   begin
-      Check_Procs.Register (Process => Inc_Counter'Access);
-      Run (Data => Policy);
-      Assert (Condition => Test_Counter = 1,
-              Message   => "Counter not 1:" & Test_Counter'Img);
---  begin read only
-   end Test_Run;
---  end read only
-
-
---  begin read only
-   procedure Test_Get_Count (Gnattest_T : in out Test);
-   procedure Test_Get_Count_1fbd7c (Gnattest_T : in out Test) renames Test_Get_Count;
---  id:2.2/1fbd7c784b3d55c2/Get_Count/1/0/
-   procedure Test_Get_Count (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:32:4:Get_Count
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-   begin
-      Assert (Condition => Get_Count = 0,
-              Message   => "Count not zero");
-
-      Check_Procs.Register (Process => Inc_Counter'Access);
-      Assert (Condition => Check_Procs.Get_Count = 1,
-              Message   => "Count not 1");
---  begin read only
-   end Test_Get_Count;
---  end read only
-
-
---  begin read only
-   procedure Test_Clear (Gnattest_T : in out Test);
-   procedure Test_Clear_4b4f85 (Gnattest_T : in out Test) renames Test_Clear;
---  id:2.2/4b4f85da05a9b689/Clear/1/0/
-   procedure Test_Clear (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:35:4:Clear
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-   begin
-      Assert (Condition => Check_Procs.Get_Count = 0,
-              Message   => "Procs not empty");
-
-      Check_Procs.Register (Process => Inc_Counter'Access);
-      Assert (Condition => Check_Procs.Get_Count /= 0,
-              Message   => "Procs count still zero");
-
-      Clear;
-      Assert (Condition => Check_Procs.Get_Count = 0,
-              Message   => "Procs not cleared");
---  begin read only
-   end Test_Clear;
---  end read only
+package body Cfgchecks.Test_Data.Tests is
 
 
 --  begin read only
@@ -103,7 +15,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Tau0_Presence_In_Scheduling_8c7e59 (Gnattest_T : in out Test) renames Test_Tau0_Presence_In_Scheduling;
 --  id:2.2/8c7e594b2b87e9fe/Tau0_Presence_In_Scheduling/1/0/
    procedure Test_Tau0_Presence_In_Scheduling (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:40:4:Tau0_Presence_In_Scheduling
+   --  cfgchecks.ads:25:4:Tau0_Presence_In_Scheduling
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -145,7 +57,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Subject_Monitor_References_3a1ff8 (Gnattest_T : in out Test) renames Test_Subject_Monitor_References;
 --  id:2.2/3a1ff8d2d6e965b6/Subject_Monitor_References/1/0/
    procedure Test_Subject_Monitor_References (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:43:4:Subject_Monitor_References
+   --  cfgchecks.ads:28:4:Subject_Monitor_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -183,7 +95,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Subject_Channel_References_b0f446 (Gnattest_T : in out Test) renames Test_Subject_Channel_References;
 --  id:2.2/b0f44645f4ddfb91/Subject_Channel_References/1/0/
    procedure Test_Subject_Channel_References (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:46:4:Subject_Channel_References
+   --  cfgchecks.ads:31:4:Subject_Channel_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -222,7 +134,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Subject_Channel_Exports_eaca98 (Gnattest_T : in out Test) renames Test_Subject_Channel_Exports;
 --  id:2.2/eaca98df92f7e5c8/Subject_Channel_Exports/1/0/
    procedure Test_Subject_Channel_Exports (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:50:4:Subject_Channel_Exports
+   --  cfgchecks.ads:35:4:Subject_Channel_Exports
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -234,8 +146,8 @@ package body Expand.Pre_Checks.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
-         XPath => "/system/subjects/subject/component"
-         & "/map[@physical='data_channel']",
+         XPath => "/system/subjects/subject[@name='subject2']/component"
+         & "/map[@logical='primary_data']",
          Name  => "logical",
          Value => "nonexistent");
 
@@ -247,9 +159,9 @@ package body Expand.Pre_Checks.Test_Data.Tests is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'subject1' does not export logical channel "
+                    = "Subject 'subject2' does not export logical channel "
                     & "'primary_data' as requested by referenced component "
-                    & "'c1'",
+                    & "'c2'",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -262,7 +174,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Subject_Resource_Maps_Logical_Uniqueness_4e4f1e (Gnattest_T : in out Test) renames Test_Subject_Resource_Maps_Logical_Uniqueness;
 --  id:2.2/4e4f1e224492b324/Subject_Resource_Maps_Logical_Uniqueness/1/0/
    procedure Test_Subject_Resource_Maps_Logical_Uniqueness (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:53:4:Subject_Resource_Maps_Logical_Uniqueness
+   --  cfgchecks.ads:38:4:Subject_Resource_Maps_Logical_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -301,7 +213,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Subject_Resource_Maps_Physical_Uniqueness_205f09 (Gnattest_T : in out Test) renames Test_Subject_Resource_Maps_Physical_Uniqueness;
 --  id:2.2/205f09d9298f08c0/Subject_Resource_Maps_Physical_Uniqueness/1/0/
    procedure Test_Subject_Resource_Maps_Physical_Uniqueness (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:57:4:Subject_Resource_Maps_Physical_Uniqueness
+   --  cfgchecks.ads:42:4:Subject_Resource_Maps_Physical_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -340,7 +252,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Subject_Resource_Maps_Physical_References_9ccc85 (Gnattest_T : in out Test) renames Test_Subject_Resource_Maps_Physical_References;
 --  id:2.2/9ccc851dbe0378ad/Subject_Resource_Maps_Physical_References/1/0/
    procedure Test_Subject_Resource_Maps_Physical_References (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:61:4:Subject_Resource_Maps_Physical_References
+   --  cfgchecks.ads:46:4:Subject_Resource_Maps_Physical_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -379,7 +291,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Channel_Reader_Writer_918b3c (Gnattest_T : in out Test) renames Test_Channel_Reader_Writer;
 --  id:2.2/918b3c5761bd21a7/Channel_Reader_Writer/1/0/
    procedure Test_Channel_Reader_Writer (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:65:4:Channel_Reader_Writer
+   --  cfgchecks.ads:50:4:Channel_Reader_Writer
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -417,6 +329,27 @@ package body Expand.Pre_Checks.Test_Data.Tests is
                Value => "16#6000#");
             Muxml.Utils.Append_Child (Node      => Node,
                                       New_Child => Reader);
+         end;
+
+         --  Remove 'unexpanded' channels of subject2 first.
+
+         declare
+            Node : DOM.Core.Node;
+         begin
+            Node := DOM.Core.Nodes.Remove_Child
+              (N         => Muxml.Utils.Get_Element
+                 (Doc   => Policy.Doc,
+                  XPath => "/system/channels"),
+               Old_Child => Muxml.Utils.Get_Element
+                 (Doc   => Policy.Doc,
+                  XPath => "/system/channels/channel[@name='data_channel3']"));
+            Node := DOM.Core.Nodes.Remove_Child
+              (N         => Muxml.Utils.Get_Element
+                 (Doc   => Policy.Doc,
+                  XPath => "/system/channels"),
+               Old_Child => Muxml.Utils.Get_Element
+                 (Doc   => Policy.Doc,
+                  XPath => "/system/channels/channel[@name='data_channel4']"));
          end;
 
          Channel_Reader_Writer (XML_Data => Policy);
@@ -496,7 +429,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Channel_Writer_Has_Event_ID_ae7fe0 (Gnattest_T : in out Test) renames Test_Channel_Writer_Has_Event_ID;
 --  id:2.2/ae7fe00845fcf90b/Channel_Writer_Has_Event_ID/1/0/
    procedure Test_Channel_Writer_Has_Event_ID (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:68:4:Channel_Writer_Has_Event_ID
+   --  cfgchecks.ads:53:4:Channel_Writer_Has_Event_ID
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -535,7 +468,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Channel_Reader_Has_Event_Vector_dc496b (Gnattest_T : in out Test) renames Test_Channel_Reader_Has_Event_Vector;
 --  id:2.2/dc496b276bd400a4/Channel_Reader_Has_Event_Vector/1/0/
    procedure Test_Channel_Reader_Has_Event_Vector (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:72:4:Channel_Reader_Has_Event_Vector
+   --  cfgchecks.ads:57:4:Channel_Reader_Has_Event_Vector
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -575,7 +508,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Platform_CPU_Count_Presence_a69356 (Gnattest_T : in out Test) renames Test_Platform_CPU_Count_Presence;
 --  id:2.2/a6935685458554d5/Platform_CPU_Count_Presence/1/0/
    procedure Test_Platform_CPU_Count_Presence (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:76:4:Platform_CPU_Count_Presence
+   --  cfgchecks.ads:61:4:Platform_CPU_Count_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -611,7 +544,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Platform_IOAPIC_Presence_c56d2d (Gnattest_T : in out Test) renames Test_Platform_IOAPIC_Presence;
 --  id:2.2/c56d2d279580918e/Platform_IOAPIC_Presence/1/0/
    procedure Test_Platform_IOAPIC_Presence (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:79:4:Platform_IOAPIC_Presence
+   --  cfgchecks.ads:64:4:Platform_IOAPIC_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -692,7 +625,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Platform_IOMMU_Memory_4183d0 (Gnattest_T : in out Test) renames Test_Platform_IOMMU_Memory;
 --  id:2.2/4183d0fc1a20cebd/Platform_IOMMU_Memory/1/0/
    procedure Test_Platform_IOMMU_Memory (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:82:4:Platform_IOMMU_Memory
+   --  cfgchecks.ads:67:4:Platform_IOMMU_Memory
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -760,7 +693,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Subject_Component_References_0ac6d5 (Gnattest_T : in out Test) renames Test_Subject_Component_References;
 --  id:2.2/0ac6d5c2c7416f1f/Subject_Component_References/1/0/
    procedure Test_Subject_Component_References (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:85:4:Subject_Component_References
+   --  cfgchecks.ads:70:4:Subject_Component_References
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -798,7 +731,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Component_Channel_Name_Uniqueness_00e23b (Gnattest_T : in out Test) renames Test_Component_Channel_Name_Uniqueness;
 --  id:2.2/00e23bc975658da7/Component_Channel_Name_Uniqueness/1/0/
    procedure Test_Component_Channel_Name_Uniqueness (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:88:4:Component_Channel_Name_Uniqueness
+   --  cfgchecks.ads:73:4:Component_Channel_Name_Uniqueness
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -810,8 +743,8 @@ package body Expand.Pre_Checks.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
-         XPath => "/system/components/component[@name='c1']/channels/"
-         & "writer[@logical='secondary_data']",
+         XPath => "/system/components/component[@name='c2']/channels/"
+         & "reader[@logical='secondary_data']",
          Name  => "logical",
          Value => "primary_data");
 
@@ -824,7 +757,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Multiple channels with name 'primary_data' in component"
-                    & " 'c1'",
+                    & " 'c2'",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -837,7 +770,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
    procedure Test_Component_Channel_Size_0e858d (Gnattest_T : in out Test) renames Test_Component_Channel_Size;
 --  id:2.2/0e858d3a74aed20c/Component_Channel_Size/1/0/
    procedure Test_Component_Channel_Size (Gnattest_T : in out Test) is
-   --  expand-pre_checks.ads:93:4:Component_Channel_Size
+   --  cfgchecks.ads:78:4:Component_Channel_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -849,7 +782,7 @@ package body Expand.Pre_Checks.Test_Data.Tests is
                    File => "data/test_policy.xml");
       Muxml.Utils.Set_Attribute
         (Doc   => Policy.Doc,
-         XPath => "/system/channels/channel[@name='data_channel']",
+         XPath => "/system/channels/channel[@name='data_channel3']",
          Name  => "size",
          Value => "16#4000#");
 
@@ -861,14 +794,14 @@ package body Expand.Pre_Checks.Test_Data.Tests is
       exception
          when E : Mucfgcheck.Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Component 'c1' referenced by subject 'subject1' "
+                    = "Component 'c2' referenced by subject 'subject2' "
                     & "requests size 16#1000# for logical channel "
                     & "'primary_data' but linked physical channel "
-                    & "'data_channel' has size 16#4000#",
+                    & "'data_channel3' has size 16#4000#",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
    end Test_Component_Channel_Size;
 --  end read only
 
-end Expand.Pre_Checks.Test_Data.Tests;
+end Cfgchecks.Test_Data.Tests;

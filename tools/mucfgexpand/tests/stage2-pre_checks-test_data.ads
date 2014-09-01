@@ -5,18 +5,7 @@
 
 with AUnit.Test_Fixtures;
 
-with Ada.Exceptions;
-
-with DOM.Core.Nodes;
-with DOM.Core.Documents;
-with DOM.Core.Elements;
-
-with Muxml.Utils;
-with Mucfgcheck;
-
-with Test_Utils;
-
-package Expand.Pre_Checks.Test_Data is
+package Stage2.Pre_Checks.Test_Data is
 
 --  begin read only
    type Test is new AUnit.Test_Fixtures.Test_Fixture
@@ -30,4 +19,4 @@ package Expand.Pre_Checks.Test_Data is
 
    procedure Inc_Counter (XML_Data : Muxml.XML_Data_Type);
 
-end Expand.Pre_Checks.Test_Data;
+end Stage2.Pre_Checks.Test_Data;

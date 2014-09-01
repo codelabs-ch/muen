@@ -45,10 +45,14 @@ package body Expand.Test_Data.Tests is
                  Message   => "Policy mismatch");
 
          Ada.Directories.Delete_File (Name => Filename);
-         Assert (Condition => Pre_Checks.Get_Count = 0,
-                 Message   => "Pre-checks not zero");
-         Assert (Condition => Expanders.Get_Count = 0,
-                 Message   => "Expanders not zero");
+         Assert (Condition => Stage1.Pre_Checks.Get_Count = 0,
+                 Message   => "Pre-checks not zero (stage 1)");
+         Assert (Condition => Stage1.Expansion.Get_Count = 0,
+                 Message   => "Expanders not zero (stage 1)");
+         Assert (Condition => Stage2.Pre_Checks.Get_Count = 0,
+                 Message   => "Pre-checks not zero (stage 2)");
+         Assert (Condition => Stage2.Expansion.Get_Count = 0,
+                 Message   => "Expanders not zero (stage 2)");
          Assert (Condition => Post_Checks.Get_Count = 0,
                  Message   => "Post-checks not zero");
       end Execute_Run;
@@ -82,10 +86,14 @@ package body Expand.Test_Data.Tests is
             when E : others => null;
          end;
 
-         Assert (Condition => Pre_Checks.Get_Count = 0,
-                 Message   => "Pre-checks not zero");
-         Assert (Condition => Expanders.Get_Count = 0,
-                 Message   => "Expanders not zero");
+         Assert (Condition => Stage1.Pre_Checks.Get_Count = 0,
+                 Message   => "Pre-checks not zero (stage 1)");
+         Assert (Condition => Stage1.Expansion.Get_Count = 0,
+                 Message   => "Expanders not zero (stage 1)");
+         Assert (Condition => Stage2.Pre_Checks.Get_Count = 0,
+                 Message   => "Pre-checks not zero (stage 2)");
+         Assert (Condition => Stage2.Expansion.Get_Count = 0,
+                 Message   => "Expanders not zero (stage2)");
          Assert (Condition => Post_Checks.Get_Count = 0,
                  Message   => "Post-checks not zero");
       end Trigger_Exception;

@@ -90,6 +90,10 @@
 		<memory alignment="16#1000#" name="vtd_net_domain_pt" physicalAddress="16#001f_c000#" size="16#3000#" caching="WB" type="system_pt">
 			<file filename="vtd_net_domain_pt" offset="none"/>
 		</memory>
+
+		<memory alignment="16#1000#" caching="WB" name="vtd_ir" physicalAddress="16#001f_f000#" size="16#1000#" type="system_vtd_ir">
+			<file filename="vtd_ir" offset="none"/>
+		</memory>
 	</memory>
 
 	<deviceDomains>

@@ -35,6 +35,7 @@ with Mutools.Utils;
 with Mutools.XML_Utils;
 
 with VTd.Tables.DMAR;
+with VTd.Tables.IR;
 
 package body VTd.Generator
 is
@@ -56,6 +57,12 @@ is
    --  Write device security domain pagetables as specified by the policy to
    --  the given output directory.
    procedure Write_Domain_Pagetables
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type);
+
+   --  Write VT-d IR table to the given output directory. Currently, a default
+   --  table with two entries is written, both enries' Present flag is cleared.
+   procedure Write_IR_Table
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
@@ -83,6 +90,9 @@ is
         (Output_Dir => Output_Dir,
          Policy     => Policy);
       Write_Domain_Pagetables
+        (Output_Dir => Output_Dir,
+         Policy     => Policy);
+      Write_IR_Table
         (Output_Dir => Output_Dir,
          Policy     => Policy);
    end Write;
@@ -343,6 +353,34 @@ is
          end;
       end loop;
    end Write_Domain_Pagetables;
+
+   -------------------------------------------------------------------------
+
+   procedure Write_IR_Table
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type)
+   is
+      subtype Entry_Range is Tables.IR_Entry_Range range 1 .. 2;
+
+      package IR_Table is new Tables.IR
+        (Index_Range => Entry_Range);
+
+      IRT      : IR_Table.IR_Table_Type;
+      IRT_File : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Muxml.Utils.Get_Element
+             (Doc   => Policy.Doc,
+              XPath => "/system/memory/memory[@type='system_vtd_ir']/file"
+              & "[@filename='vtd_ir']"),
+           Name => "filename");
+   begin
+      if IRT_File'Length > 0 then
+         Mulog.Log (Msg => "Writing VT-d interrupt remapping table to file '"
+                    & Output_Dir & "/" & IRT_File & "'");
+         IR_Table.Serialize (IRT      => IRT,
+                             Filename => Output_Dir & "/" & IRT_File);
+      end if;
+   end Write_IR_Table;
 
    -------------------------------------------------------------------------
 

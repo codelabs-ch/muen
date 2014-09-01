@@ -30,6 +30,7 @@
 			<xs:enumeration value="system_pt"/>
 			<xs:enumeration value="system_vtd_root"/>
 			<xs:enumeration value="system_vtd_context"/>
+			<xs:enumeration value="system_vtd_ir"/>
 			<xs:enumeration value="kernel"/>
 			<xs:enumeration value="kernel_binary"/>
 			<xs:enumeration value="kernel_interface"/>

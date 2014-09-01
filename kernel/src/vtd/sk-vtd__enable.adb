@@ -194,8 +194,8 @@ is
       Caps    : Types.Reg_Capability_Type;
       Extcaps : Types.Reg_Extcapability_Type;
 
-      Supported_Version, Nr_Domains, AGAW_39_Bit : Boolean;
-      Matching_FRO, Matching_NFR, Matching_IRO   : Boolean;
+      Supported_Version, Nr_Domains, AGAW_39_Bit, IR_Support : Boolean;
+      Matching_FRO, Matching_NFR, Matching_IRO               : Boolean;
    begin
       Version := IOMMUs (Idx).Version;
       Supported_Version := Version.MAX = 1 and then Version.MIN = 0;
@@ -237,12 +237,18 @@ is
                       (Msg  => "Unsupported IOMMU IRO",
                        Item => SK.Word16 (Extcaps.IRO)));
 
+      IR_Support := Extcaps.IR = 1;
+      pragma Debug
+        (not IR_Support,
+         KC.Put_Line (Item => "No support for Interrupt Remapping"));
+
       Result := Supported_Version and
         Nr_Domains                and
         AGAW_39_Bit               and
         Matching_FRO              and
         Matching_NFR              and
-        Matching_IRO;
+        Matching_IRO              and
+        IR_Support;
    end Check_Capabilities;
 
    -------------------------------------------------------------------------

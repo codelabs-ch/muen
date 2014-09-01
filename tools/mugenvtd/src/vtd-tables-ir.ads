@@ -37,6 +37,12 @@ is
       DST    :        Interfaces.Unsigned_32;
       SID    :        Interfaces.Unsigned_16);
 
+   --  Serialize given Interrupt Remapping Table to file with specified
+   --  filename.
+   procedure Serialize
+     (IRT      : IR_Table_Type;
+      Filename : String);
+
 private
 
    SID_SQ_Verification : constant Bit_Array (1 .. 2) := (1 => 0, 2 => 1);

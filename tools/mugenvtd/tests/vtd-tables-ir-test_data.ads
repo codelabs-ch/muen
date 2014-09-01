@@ -5,6 +5,10 @@
 
 with AUnit.Test_Fixtures;
 
+with Ada.Directories;
+
+with Test_Utils;
+
 generic
    type GNATtest_Test_Type is new AUnit.Test_Fixtures.Test_Fixture
      with private;

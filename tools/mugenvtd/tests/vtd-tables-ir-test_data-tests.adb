@@ -39,4 +39,24 @@ package body VTd.Tables.IR.Test_Data.Tests is
    end Test_Add_Entry;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Serialize (Gnattest_T : in out Test);
+   procedure Test_Serialize_5ca693 (Gnattest_T : in out Test) renames Test_Serialize;
+--  id:2.2/5ca693daea6db0b3/Serialize/1/0/
+   procedure Test_Serialize (Gnattest_T : in out Test) is
+   --  vtd-tables-ir.ads:42:4:Serialize
+--  end read only
+   begin
+      Serialize (IRT      => Gnattest_T.IRT,
+                 Filename => "obj/serialize_irt");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "obj/serialize_irt",
+               Filename2 => "data/serialize_irt"),
+              Message   => "Table mismatch");
+      Ada.Directories.Delete_File (Name => "obj/serialize_irt");
+--  begin read only
+   end Test_Serialize;
+--  end read only
+
 end VTd.Tables.IR.Test_Data.Tests;

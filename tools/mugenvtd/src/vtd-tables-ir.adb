@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Unchecked_Conversion;
+
 package body VTd.Tables.IR
 is
 
@@ -37,5 +39,26 @@ is
    begin
       IRT.Entries (Index) := E;
    end Add_Entry;
+
+   -------------------------------------------------------------------------
+
+   procedure Serialize
+     (IRT      : IR_Table_Type;
+      Filename : String)
+   is
+      use type Ada.Streams.Stream_Element_Offset;
+
+      subtype Table_Stream is Ada.Streams.Stream_Element_Array
+        (1 .. IRT'Size / 8);
+
+      --  IR_Table_Type'Write adds additional output so manual conversion to
+      --  stream array is necessary.
+      function Convert is new Ada.Unchecked_Conversion
+        (Source => IR_Table_Type,
+         Target => Table_Stream);
+   begin
+      Write (Stream   => Convert (S => IRT),
+             Filename => Filename);
+   end Serialize;
 
 end VTd.Tables.IR;

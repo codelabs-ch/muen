@@ -131,6 +131,20 @@ is
          File_Name   => "vtd_root",
          File_Offset => "none");
 
+      --  Interrupt Remapping (IR) table.
+
+      Mulog.Log (Msg => "Adding VT-d IR table");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Data,
+         Name        => "vtd_ir",
+         Address     => "",
+         Size        => "16#1000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "system_vtd_ir",
+         File_Name   => "vtd_ir",
+         File_Offset => "none");
+
       --  Do not expand regions used for context and address translation tables
       --  if no device domains are specified in the policy.
 

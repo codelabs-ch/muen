@@ -37,6 +37,7 @@ is
    RED_INTPOL       : constant := 13;
    RED_TRIGGER_MODE : constant := 15;
    RED_MASK         : constant := 16;
+   RED_INTFORMAT    : constant := 48;
 
    Register_Select : SK.Word32
    with
@@ -74,6 +75,9 @@ is
       use type Skp.Interrupts.IRQ_Level_Type;
    begin
       Redir_Entry := SK.Word64 (Vector);
+
+      Redir_Entry := SK.Bit_Set (Value => Redir_Entry,
+                                 Pos   => RED_INTFORMAT);
 
       if Trigger_Mode = Skp.Interrupts.Level then
          Redir_Entry := SK.Bit_Set (Value => Redir_Entry,

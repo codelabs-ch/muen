@@ -410,6 +410,35 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Enable Interrupt Remapping (IR) for IOMMU with given index.
+   procedure Enable_Interrupt_Remapping
+     (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
+      Success : out Boolean)
+     with
+       SPARK_Mode => $Complete_Proofs,  -- [N425-012]
+       Global     => (In_Out => IOMMUs),
+       Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+   is
+      use type SK.VTd.Types.Bit_Type;
+
+      Global_Command : Types.Reg_Global_Command_Type;
+      Global_Status  : Types.Reg_Global_Status_Type;
+   begin
+      Global_Status := IOMMUs (IOMMU).Global_Status;
+      Set_Command_From_Status (Command => Global_Command,
+                               Status  => Global_Status);
+      Global_Command.IRE := 1;
+      IOMMUs (IOMMU).Global_Command := Global_Command;
+
+      for J in 1 .. Loop_Count_Max loop
+         Global_Status := IOMMUs (IOMMU).Global_Status;
+         exit when Global_Status.IRES = 1;
+      end loop;
+      Success := Global_Status.IRES = 1;
+   end Enable_Interrupt_Remapping;
+
+   -------------------------------------------------------------------------
+
    pragma $Prove_Warnings (Off, "unused variable ""IOMMU""");
    procedure VTd_Error
      (IOMMU   : Skp.IOMMU.IOMMU_Device_Range;
@@ -519,6 +548,16 @@ is
             if True then  --  Workaround for No_Return placement limitation
                VTd_Error (IOMMU   => I,
                           Message => "unable to set IR table address");
+            end if;
+         end if;
+
+         Enable_Interrupt_Remapping (IOMMU   => I,
+                                     Success => Status);
+         if not Status then
+            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
+            if True then  --  Workaround for No_Return placement limitation
+               VTd_Error (IOMMU   => I,
+                          Message => "error enabling interrupt remapping");
             end if;
          end if;
 

@@ -372,6 +372,44 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Set Interrupt Remap Table address and size for IOMMU with given index.
+   procedure Set_IR_Table_Address
+     (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
+      Address :     Types.Bit_52_Type;
+      Size    :     Types.Bit_4_Type;
+      Success : out Boolean)
+     with
+       SPARK_Mode => $Complete_Proofs,  -- [N425-012]
+       Global     => (In_Out => IOMMUs),
+       Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU, Address, Size))
+   is
+      use type SK.VTd.Types.Bit_Type;
+
+      Global_Status  : Types.Reg_Global_Status_Type;
+      Global_Command : Types.Reg_Global_Command_Type;
+      IRT_Address    : constant Types.Reg_IRT_Address
+        := (IRTA     => Address,
+            S        => Size,
+            EIME     => 1,
+            Reserved => (others => 0));
+   begin
+      IOMMUs (IOMMU).IRT_Address := IRT_Address;
+
+      Global_Status := IOMMUs (IOMMU).Global_Status;
+      Set_Command_From_Status (Command => Global_Command,
+                               Status  => Global_Status);
+      Global_Command.SIRTP := 1;
+      IOMMUs (IOMMU).Global_Command := Global_Command;
+
+      for J in 1 .. Loop_Count_Max loop
+         Global_Status := IOMMUs (IOMMU).Global_Status;
+         exit when Global_Status.IRTPS = 1;
+      end loop;
+      Success := Global_Status.IRTPS = 1;
+   end Set_IR_Table_Address;
+
+   -------------------------------------------------------------------------
+
    pragma $Prove_Warnings (Off, "unused variable ""IOMMU""");
    procedure VTd_Error
      (IOMMU   : Skp.IOMMU.IOMMU_Device_Range;
@@ -425,6 +463,8 @@ is
          pragma Debug (Set_Fault_Event_Mask (IOMMU  => I,
                                              Enable => False));
 
+         --  DMAR
+
          Set_Root_Table_Address
            (IOMMU   => I,
             Address => Skp.IOMMU.Root_Table_Address,
@@ -465,6 +505,20 @@ is
             if True then  --  Workaround for No_Return placement limitation
                VTd_Error (IOMMU   => I,
                           Message => "error enabling translation");
+            end if;
+         end if;
+
+         --  IR
+
+         Set_IR_Table_Address (IOMMU   => I,
+                               Address => Skp.IOMMU.IR_Table_Address,
+                               Size    => Skp.IOMMU.IR_Table_Size,
+                               Success => Status);
+         if not Status then
+            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
+            if True then  --  Workaround for No_Return placement limitation
+               VTd_Error (IOMMU   => I,
+                          Message => "unable to set IR table address");
             end if;
          end if;
 

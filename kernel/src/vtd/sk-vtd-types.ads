@@ -321,8 +321,24 @@ is
       FEEh             at 0 range 20 .. 31;
    end record;
 
-   --  IOTLB Invalidate Register (dynamic)
+   --  Interrupt Remapping Table Address Register
+   type Reg_IRT_Address is record
+      S        : Bit_4_Type;
+      Reserved : Bit_Array (1 .. 7);
+      EIME     : Bit_Type;
+      IRTA     : Bit_52_Type;
+   end record
+     with
+       Size => 64;
 
+   for Reg_IRT_Address use record
+      S        at 0 range  0 .. 3;
+      Reserved at 0 range  4 .. 10;
+      EIME     at 0 range 11 .. 11;
+      IRTA     at 0 range 12 .. 63;
+   end record;
+
+   --  IOTLB Invalidate Register (dynamic)
    type Reg_IOTLB_Invalidate is record
       Unused   : Bit_Array (1 .. 60);
       IIRG     : Bit_2_Type;

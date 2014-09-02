@@ -707,25 +707,34 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      Filename    : constant String := Output_Dir & "/skp-iommu.ads";
-      Root_Addr   : constant String
+      Filename     : constant String := Output_Dir & "/skp-iommu.ads";
+      Root_Addr    : constant String
         := Muxml.Utils.Get_Attribute
           (Doc   => Policy.Doc,
            XPath => "/system/memory/memory[@type='system_vtd_root']",
            Name  => "physicalAddress");
-      Base_Addr   : constant String
+      IRT_Addr_Str : constant String
+        := Muxml.Utils.Get_Attribute
+          (Doc   => Policy.Doc,
+           XPath => "/system/memory/memory[@type='system_vtd_ir']",
+           Name  => "physicalAddress");
+      IRT_Addr     : Interfaces.Unsigned_64
+        := (if IRT_Addr_Str'Length > 0
+            then Interfaces.Unsigned_64'Value (IRT_Addr_Str) else 0);
+      Base_Addr    : constant String
         := Muxml.Utils.Get_Attribute
           (Doc   => Policy.Doc,
            XPath => "/system/kernel/devices/device[@physical='iommu_1']/"
              & "memory[@physical='mmio']",
            Name  => "virtualAddress");
-      IOMMUs      : constant DOM.Core.Node_List
+      IOMMUs       : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/kernel/devices/device["
            & "starts-with(string(@physical),'iommu')]/memory");
-      IOMMU_Count : constant Natural := DOM.Core.Nodes.Length (List => IOMMUs);
-      Tmpl        : Mutools.Templates.Template_Type;
+      IOMMU_Count  : constant Natural := DOM.Core.Nodes.Length
+        (List => IOMMUs);
+      Tmpl         : Mutools.Templates.Template_Type;
    begin
       Mulog.Log (Msg => "Writing IOMMU spec to '" & Filename & "'");
 
@@ -736,6 +745,7 @@ is
         (Template => Tmpl,
          Pattern  => "__root_table_addr__",
          Content  => (if Root_Addr'Length > 0 then Root_Addr else "0"));
+
       Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__base_addr__",
@@ -744,6 +754,18 @@ is
         (Template => Tmpl,
          Pattern  => "__iommu_device_range__",
          Content  => "1 .." & IOMMU_Count'Img);
+
+      --  Shifted, 4KB aligned IR table address (see Intel VT-d specification,
+      --  section 10.4.29).
+
+      if IRT_Addr > 0 then
+         IRT_Addr := IRT_Addr / 2 ** 12;
+      end if;
+
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__ir_table_addr__",
+         Content  => Mutools.Utils.To_Hex (Number => IRT_Addr));
 
       Mutools.Templates.Write
         (Template => Tmpl,

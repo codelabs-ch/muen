@@ -107,34 +107,34 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Setup_IRQ_Routing
+   procedure Setup_IRQ_Routing (VTd_Enabled : Boolean)
    is
       Route   : Skp.Interrupts.IRQ_Route_Type;
-      APIC_ID : SK.Byte;
+      Dest_ID : SK.Byte;
    begin
       for I in Skp.Interrupts.Routing_Range loop
-         pragma $Prove_Warnings (Off, "statement has no effect",
-            Reason => "Warning appears to be spurious");
-         Route   := Skp.Interrupts.IRQ_Routing (I);
-         pragma $Prove_Warnings (On, "statement has no effect");
+         Route := Skp.Interrupts.IRQ_Routing (I);
 
-         APIC_ID := CPU_Registry.Get_APIC_ID (CPU_ID => Route.CPU);
+         if VTd_Enabled then
+            Dest_ID := Route.IRQ;
+         else
+            Dest_ID := CPU_Registry.Get_APIC_ID (CPU_ID => Route.CPU);
+         end if;
 
          pragma Debug (Dump.Print_IRQ_Routing
                        (IRQ         => Route.IRQ,
                         Vector      => SK.Byte (Route.Vector),
                         CPU_ID      => SK.Byte (Route.CPU),
-                        Dest_ID     => APIC_ID,
-                        VTd_Enabled => False));
+                        Dest_ID     => Dest_ID,
+                        VTd_Enabled => VTd_Enabled));
 
-         if Skp.Interrupts.IRQ_Routing (I).Vector /= Skp.Invalid_Vector then
+         if Route.Vector /= Skp.Invalid_Vector then
             IO_Apic.Route_IRQ
-              (IRQ            => Skp.Interrupts.IRQ_Routing (I).IRQ,
-               Vector         =>
-                 SK.Byte (Skp.Interrupts.IRQ_Routing (I).Vector),
-               Trigger_Mode   => Skp.Interrupts.IRQ_Routing (I).IRQ_Mode,
-               Trigger_Level  => Skp.Interrupts.IRQ_Routing (I).IRQ_Level,
-               Destination_Id => APIC_ID);
+              (IRQ            => Route.IRQ,
+               Vector         => SK.Byte (Route.Vector),
+               Trigger_Mode   => Route.IRQ_Mode,
+               Trigger_Level  => Route.IRQ_Level,
+               Destination_Id => Dest_ID);
          end if;
       end loop;
    end Setup_IRQ_Routing;

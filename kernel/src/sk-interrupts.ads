@@ -55,10 +55,10 @@ is
       Depends => (X86_64.State =>+ null);
 
    --  Setup I/O APIC IRQ routing.
-   procedure Setup_IRQ_Routing
+   procedure Setup_IRQ_Routing (VTd_Enabled : Boolean)
    with
       Global  => (Input => CPU_Registry.State, In_Out => IO_Apic.State),
-      Depends => (IO_Apic.State =>+ CPU_Registry.State);
+      Depends => (IO_Apic.State =>+ (CPU_Registry.State, VTd_Enabled));
 
    pragma $Prove_Warnings (Off, "unused variable ""Unused_Context""",
       Reason => "Unused Context is only used for debugging");

@@ -32,6 +32,7 @@ with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.XML_Utils;
 with Mutools.Templates;
+with Mutools.Constants;
 
 with Spec.Utils;
 with Spec.Kernel;
@@ -538,10 +539,6 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-
-      --  Device IRQ to host vector remapping offset.
-      Host_IRQ_Remap_Offset : constant := 32;
-
       Subjects  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -588,7 +585,8 @@ is
            (DOM.Core.Elements.Get_Attribute
               (Elem => Physical_IRQ,
                Name => "number"));
-         Host_Vector : constant Natural := IRQ_Nr + Host_IRQ_Remap_Offset;
+         Host_Vector : constant Natural := IRQ_Nr
+           + Mutools.Constants.Host_IRQ_Remap_Offset;
          CPU : constant Natural := Natural'Value
            (DOM.Core.Elements.Get_Attribute
               (Elem => Owner,
@@ -682,7 +680,7 @@ is
       Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__remap_offset__",
-         Content  => Host_IRQ_Remap_Offset'Img);
+         Content  => Mutools.Constants.Host_IRQ_Remap_Offset'Img);
       Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__routing_range__",

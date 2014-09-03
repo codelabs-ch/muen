@@ -41,4 +41,7 @@ is
    --  table 24-11.
    MSR_Store_Entry_Size : constant := 16;
 
+   --  Device IRQ to host vector remapping offset.
+   Host_IRQ_Remap_Offset : constant := 32;
+
 end Mutools.Constants;

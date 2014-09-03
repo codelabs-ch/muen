@@ -360,7 +360,7 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
-      subtype Entry_Range is Tables.IR_Entry_Range range 1 .. 2;
+      subtype Entry_Range is Tables.IR_Entry_Range range 0 .. 255;
 
       package IR_Table is new Tables.IR
         (Index_Range => Entry_Range);

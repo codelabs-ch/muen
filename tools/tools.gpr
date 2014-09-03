@@ -31,7 +31,9 @@ abstract project Tools is
    end case;
 
    case Shared_Tools.Linking is
-      when "static"  => Binder_Switches := Binder_Switches & "-static";
+      when "static"  =>
+         Linker_Switches := Linker_Switches & "-static";
+         Binder_Switches := Binder_Switches & "-static";
       when "dynamic" => null;
    end case;
 

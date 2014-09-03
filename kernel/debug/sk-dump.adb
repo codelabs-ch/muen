@@ -33,10 +33,11 @@ is
    -------------------------------------------------------------------------
 
    procedure Print_IRQ_Routing
-     (IRQ     : SK.Byte;
-      Vector  : SK.Byte;
-      CPU_ID  : SK.Byte;
-      Dest_ID : SK.Byte)
+     (IRQ         : SK.Byte;
+      Vector      : SK.Byte;
+      CPU_ID      : SK.Byte;
+      Dest_ID     : SK.Byte;
+      VTd_Enabled : Boolean)
    is
    begin
       Locks.Acquire;
@@ -46,8 +47,13 @@ is
       KC.Put_Byte   (Item => Vector);
       KC.Put_String (Item => " to CPU ");
       KC.Put_Byte   (Item => CPU_ID);
-      KC.Put_String (Item => " with APIC ID ");
-      KC.Put_Byte   (Item => Dest_ID);
+
+      if VTd_Enabled then
+         KC.Put_String (Item => ", VT-d IRT index ");
+      else
+         KC.Put_String (Item => " with APIC ID ");
+      end if;
+      KC.Put_Byte (Item => Dest_ID);
       KC.New_Line;
       Locks.Release;
    end Print_IRQ_Routing;

@@ -33,12 +33,16 @@ with Muxml.Utils;
 with Mutools.Files;
 with Mutools.Utils;
 with Mutools.XML_Utils;
+with Mutools.Constants;
 
 with VTd.Tables.DMAR;
 with VTd.Tables.IR;
 
 package body VTd.Generator
 is
+
+   --  I/O APIC bus(8)/dev(5)/func(3) f0:1f.00
+   IOAPIC_Bus_Dev_Func : constant := 16#f0f8#;
 
    package MX renames Mutools.XML_Utils;
 
@@ -373,10 +377,64 @@ is
               XPath => "/system/memory/memory[@type='system_vtd_ir']/file"
               & "[@filename='vtd_ir']"),
            Name => "filename");
+      IRQs     : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/subjects/subject/devices/device/irq");
    begin
-      if IRT_File'Length > 0 then
+      if IRT_File'Length > 0 and then DOM.Core.Nodes.Length (List => IRQs) > 0
+      then
          Mulog.Log (Msg => "Writing VT-d interrupt remapping table to file '"
                     & Output_Dir & "/" & IRT_File & "'");
+
+         for I in 0 .. DOM.Core.Nodes.Length (List => IRQs) - 1 loop
+            declare
+               use type Interfaces.Unsigned_8;
+
+               IRQ : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => IRQs,
+                    Index => I);
+               IRQ_Ref : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => IRQ,
+                    Name => "physical");
+               Dev : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Parent_Node (N => IRQ);
+               Dev_Ref : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Dev,
+                    Name => "physical");
+               IRQ_Phys : constant Entry_Range
+                 := Entry_Range'Value
+                   (Muxml.Utils.Get_Attribute
+                      (Doc   => Policy.Doc,
+                       XPath => "/system/platform/devices/device[@name='"
+                       & Dev_Ref & "']/irq[@name='" & IRQ_Ref & "']",
+                       Name  => "number"));
+               Host_Vector : constant Interfaces.Unsigned_8
+                 := Interfaces.Unsigned_8 (IRQ_Phys)
+                 + Mutools.Constants.Host_IRQ_Remap_Offset;
+               CPU_ID : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Muxml.Utils.Ancestor_Node
+                      (Node  => Dev,
+                       Level => 2),
+                    Name => "cpu");
+            begin
+               Mulog.Log (Msg => "Adding IRT entry at index" & IRQ_Phys'Img
+                          & " for physical device '" & Dev_Ref & "', host"
+                          & " vector" & Host_Vector'Img & ", CPU " & CPU_ID);
+
+               IR_Table.Add_Entry
+                 (IRT    => IRT,
+                  Index  => IRQ_Phys,
+                  Vector => Host_Vector,
+                  DST    => Interfaces.Unsigned_32'Value (CPU_ID),
+                  SID    => IOAPIC_Bus_Dev_Func);
+            end;
+         end loop;
+
          IR_Table.Serialize (IRT      => IRT,
                              Filename => Output_Dir & "/" & IRT_File);
       end if;

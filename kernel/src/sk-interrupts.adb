@@ -109,16 +109,25 @@ is
 
    procedure Setup_IRQ_Routing (VTd_Enabled : Boolean)
    is
-      Route   : Skp.Interrupts.IRQ_Route_Type;
-      Dest_ID : SK.Byte;
+      Route    : Skp.Interrupts.IRQ_Route_Type;
+      Dest_ID  : SK.Byte;
+      Shiftpos : Natural;
    begin
       for I in Skp.Interrupts.Routing_Range loop
          Route := Skp.Interrupts.IRQ_Routing (I);
 
          if VTd_Enabled then
-            Dest_ID := Route.IRQ;
+
+            --  See Intel VT-d specification, section 5.5.1.
+
+            Shiftpos := 49;
+            Dest_ID  := Route.IRQ;
          else
-            Dest_ID := CPU_Registry.Get_APIC_ID (CPU_ID => Route.CPU);
+
+            --  See Intel IOAPIC specification, section 3.2.4.
+
+            Shiftpos := 56;
+            Dest_ID  := CPU_Registry.Get_APIC_ID (CPU_ID => Route.CPU);
          end if;
 
          pragma Debug (Dump.Print_IRQ_Routing
@@ -134,7 +143,7 @@ is
                Vector         => SK.Byte (Route.Vector),
                Trigger_Mode   => Route.IRQ_Mode,
                Trigger_Level  => Route.IRQ_Level,
-               Destination_Id => Dest_ID);
+               Destination_Id => SK.Word64 (Dest_ID) * 2 ** Shiftpos);
          end if;
       end loop;
    end Setup_IRQ_Routing;

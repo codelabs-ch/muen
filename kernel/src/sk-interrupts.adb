@@ -124,7 +124,7 @@ is
                        (IRQ     => Route.IRQ,
                         Vector  => SK.Byte (Route.Vector),
                         CPU_ID  => SK.Byte (Route.CPU),
-                        APIC_ID => APIC_ID));
+                        Dest_ID => APIC_ID));
 
          if Skp.Interrupts.IRQ_Routing (I).Vector /= Skp.Invalid_Vector then
             IO_Apic.Route_IRQ

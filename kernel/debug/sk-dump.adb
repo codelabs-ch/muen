@@ -36,7 +36,7 @@ is
      (IRQ     : SK.Byte;
       Vector  : SK.Byte;
       CPU_ID  : SK.Byte;
-      APIC_ID : SK.Byte)
+      Dest_ID : SK.Byte)
    is
    begin
       Locks.Acquire;
@@ -47,7 +47,7 @@ is
       KC.Put_String (Item => " to CPU ");
       KC.Put_Byte   (Item => CPU_ID);
       KC.Put_String (Item => " with APIC ID ");
-      KC.Put_Byte   (Item => APIC_ID);
+      KC.Put_Byte   (Item => Dest_ID);
       KC.New_Line;
       Locks.Release;
    end Print_IRQ_Routing;

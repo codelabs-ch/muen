@@ -35,7 +35,7 @@ is
      (IRQ     : SK.Byte;
       Vector  : SK.Byte;
       CPU_ID  : SK.Byte;
-      APIC_ID : SK.Byte);
+      Dest_ID : SK.Byte);
 
    --  Print ISR execution environment state.
    procedure Print_ISR_State (Context : Isr_Context_Type);

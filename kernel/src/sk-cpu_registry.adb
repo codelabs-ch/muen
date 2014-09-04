@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.Dump;
+
 package body SK.CPU_Registry
 with
    Refined_State => (State => CPUs)
@@ -36,6 +38,9 @@ is
    is
    begin
       CPUs (CPU_ID) := APIC_ID;
+      pragma Debug (Dump.Print_CPU_IDs
+                    (CPU_ID  => SK.Byte (CPU_ID),
+                     APIC_ID => APIC_ID));
    end Register;
 
    -------------------------------------------------------------------------

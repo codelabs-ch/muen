@@ -38,6 +38,11 @@ is
       Dest_ID     : SK.Byte;
       VTd_Enabled : Boolean);
 
+   --  Print CPU IDs.
+   procedure Print_CPU_IDs
+     (CPU_ID  : SK.Byte;
+      APIC_ID : SK.Byte);
+
    --  Print ISR execution environment state.
    procedure Print_ISR_State (Context : Isr_Context_Type);
    pragma Inline_Always (Print_ISR_State);

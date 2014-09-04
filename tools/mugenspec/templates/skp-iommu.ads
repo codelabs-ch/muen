@@ -5,7 +5,7 @@ is
    Base_Address       : constant := __base_addr__;
 
    IR_Table_Address   : constant := __ir_table_addr__;
-   IR_Table_Size      : constant := 0;
+   IR_Table_Size      : constant := 7;
 
    type IOMMU_Device_Range is range __iommu_device_range__;
 

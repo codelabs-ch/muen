@@ -1,15 +1,12 @@
 BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
 
-SPARK_BODIES = $(patsubst %.ad*,%.adb,$(SPARK_FILES))
-
 SPARK_OPTS =             \
-	--warnings=on    \
+	--warnings=error \
 	-f               \
 	--proof=per_path \
 	--timeout=10     \
 	-Xbuild=prove    \
 	-j$(NUM_CPUS)    \
-
 
 ALL = $(OBJ_DIR)/$(PACKAGE)
 

@@ -34,6 +34,7 @@ with Mutools.XML_Utils;
 with Mutools.Templates;
 
 with Spec.Utils;
+with Spec.Kernel;
 
 with String_Templates;
 
@@ -463,6 +464,9 @@ is
                       Policy     => Policy);
       Write_IOMMU (Output_Dir => Output_Dir,
                    Policy     => Policy);
+      Kernel.Write_Project_File
+        (Output_Dir => Output_Dir,
+         Policy     => Policy);
    end Write;
 
    -------------------------------------------------------------------------

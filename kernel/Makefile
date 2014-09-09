@@ -4,8 +4,18 @@ VERSION_SPEC = src/sk-version.ads
 VERSION      = $(GIT_REV)
 GIT_REV      = $(shell git describe --always --dirty="-UNCLEAN")
 
+GNATPROVE_DATE  := $(shell gnatprove --version | cut -d "(" -f2 | cut -d ")" -f1)
+COMPLETE_PROOFS := $(shell expr $(GNATPROVE_DATE) \>= 20140901)
+ifeq ($(COMPLETE_PROOFS),1)
+PROOF_OPTS = -Xproofs=complete
+else
+PROOF_OPTS = -Xproofs=limited
+endif
+
 include ../Makeconf
 include ../Makespark
+
+SPARK_OPTS += $(PROOF_OPTS)
 
 all: $(ALL) install
 
@@ -27,10 +37,10 @@ $(VERSION_SPEC): .git-rev
 	@echo "end SK.Version;"                        >> $@
 
 $(OBJ_DIR)/debug/$(PACKAGE): $(VERSION_SPEC)
-	gprbuild $(BUILD_OPTS) -P$(PACKAGE) -Xbuild=debug
+	gprbuild $(BUILD_OPTS) -P$(PACKAGE) -Xbuild=debug $(PROOF_OPTS)
 
 $(OBJ_DIR)/release/$(PACKAGE): $(VERSION_SPEC)
-	gprbuild $(BUILD_OPTS) -P$(PACKAGE) -Xbuild=release
+	gprbuild $(BUILD_OPTS) -P$(PACKAGE) -Xbuild=release $(PROOF_OPTS)
 
 $(OBJ_DIR)/$(PACKAGE): $(OBJ_DIR)/debug/$(PACKAGE) $(OBJ_DIR)/release/$(PACKAGE)
 	@cp $< $@

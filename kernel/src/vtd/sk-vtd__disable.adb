@@ -16,24 +16,28 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with X86_64;
-
-package SK.VTd
+package body SK.VTd
 with
-   Abstract_State =>
-     (State with External => (Async_Writers, Async_Readers, Effective_Writes)),
-   Initializes    => State
+  SPARK_Mode => Off
 is
 
-   --  Initialize VT-d device isolation.
-   procedure Initialize
-   with
-      Global  => (In_Out => (X86_64.State, State)),
-      Depends => ((X86_64.State, State) =>+ State);
+   -------------------------------------------------------------------------
 
-   --  Process fault reported by IOMMU.
    procedure Process_Fault
    with
-      Global => (In_Out => State);
+      SPARK_Mode => Off
+   is
+   begin
+      null;
+   end Process_Fault;
+   -------------------------------------------------------------------------
+
+   procedure Initialize
+   with
+      SPARK_Mode => Off
+   is
+   begin
+      null;
+   end Initialize;
 
 end SK.VTd;

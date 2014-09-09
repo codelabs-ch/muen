@@ -24,6 +24,7 @@ with SK.Dump;
 with SK.KC;
 with SK.CPU;
 with SK.VTd.Types;
+with SK.VTd.Dump;
 pragma $Release_Warnings (Off, "unit * is not referenced");
 with SK.Apic;
 with SK.Constants;
@@ -130,42 +131,18 @@ is
          Status := IOMMUs (I).Fault_Status;
 
          if Status.PPF = 1 then
-            pragma Debug (KC.Put_String (Item => "VT-d fault with FRI "));
-            pragma Debug (KC.Put_Byte (Item => Status.FRI));
-            pragma Debug (KC.Put_String (Item => " - "));
-
             declare
-               use type SK.VTd.Types.Bit_52_Type;
-
                Dummy : Types.Reg_Fault_Recording_Type;
             begin
                pragma $Prove_Warnings (Off, "unused assignment");
                Dummy := IOMMUs (I).Fault_Recording;
                pragma $Prove_Warnings (On, "unused assignment");
-
-               pragma Debug (Dummy.F = 1, KC.Put_String (Item => "Reason: "));
-               pragma Debug (Dummy.F = 1, KC.Put_Byte   (Item => Dummy.FR));
-               pragma Debug (Dummy.F = 1, KC.Put_String (Item => ", Info: "));
-               pragma Debug (Dummy.F = 1, KC.Put_Word64
-                             (Item => SK.Word64 (Dummy.FI * 2 ** 12)));
-               pragma Debug (Dummy.F = 1, KC.Put_String (Item => ", Type: "));
-               pragma Debug (Dummy.F = 1 and Dummy.T = 0,
-                             KC.Put_String ("Write"));
-               pragma Debug (Dummy.F = 1 and Dummy.T = 1,
-                             KC.Put_String ("Read"));
-               pragma Debug (Dummy.F = 1,
-                             KC.Put_String (Item => ", Source: "));
-               pragma Debug (Dummy.F = 1, KC.Put_Byte
-                               (Item => SK.Byte (Dummy.SID / 2 ** 8)));
-               pragma Debug (Dummy.F = 1, KC.Put_String (Item => ":"));
-               pragma Debug (Dummy.F = 1, KC.Put_Byte
-                             (Item => SK.Byte
-                              ((Dummy.SID / 2 ** 3) and 16#1f#)));
-               pragma Debug (Dummy.F = 1, KC.Put_String (Item => "."));
-               pragma Debug (Dummy.F = 1, KC.Put_Byte
-                             (Item => SK.Byte (Dummy.SID and 16#07#)));
-               pragma Debug (Dummy.F = 1, KC.New_Line);
+               pragma Debug (SK.VTd.Dump.Print_VTd_Fault
+                             (IOMMU  => I,
+                              Status => Status,
+                              Fault  => Dummy));
             end;
+
             Clear_Fault_Record (IOMMU => I);
          end if;
       end loop;

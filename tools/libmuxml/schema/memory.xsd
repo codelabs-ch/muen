@@ -87,13 +87,12 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:complexType name="memRefType">
-		<xs:attribute name="logical"        type="nameType"    use="required"/>
-		<xs:attribute name="physical"       type="nameType"    use="required"/>
-		<xs:attribute name="virtualAddress" type="word64Type"  use="required"/>
-		<xs:attribute name="writable"       type="booleanType" use="required"/>
-		<xs:attribute name="executable"     type="booleanType" use="required"/>
-	</xs:complexType>
+	<xs:attributeGroup name="memRefBaseAttrs">
+		<xs:attribute name="logical"    type="nameType"    use="required"/>
+		<xs:attribute name="physical"   type="nameType"    use="required"/>
+		<xs:attribute name="writable"   type="booleanType" use="required"/>
+		<xs:attribute name="executable" type="booleanType" use="required"/>
+	</xs:attributeGroup>
 
 	<xs:complexType name="memoryBaseType" abstract="true">
 		<xs:choice minOccurs="0" maxOccurs="1">

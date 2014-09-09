@@ -209,4 +209,43 @@ package body Expanders.Subjects.Test_Data.Tests is
    end Test_Add_CPU_Ids;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Add_Device_Memory_Mappings (Gnattest_T : in out Test);
+   procedure Test_Add_Device_Memory_Mappings_c30caf (Gnattest_T : in out Test) renames Test_Add_Device_Memory_Mappings;
+--  id:2.2/c30cafc35150bb96/Add_Device_Memory_Mappings/1/0/
+   procedure Test_Add_Device_Memory_Mappings (Gnattest_T : in out Test) is
+   --  expanders-subjects.ads:58:4:Add_Device_Memory_Mappings
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy : Muxml.XML_Data_Type;
+      Path   : constant String := "/system/subjects/subject[@name='lnx']/"
+        & "devices/device/memory[@logical='mmio']";
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      declare
+         Node : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element (Doc   => Policy.Doc,
+                                       XPath => Path);
+      begin
+         DOM.Core.Elements.Remove_Attribute (Elem => Node,
+                                             Name => "virtualAddress");
+      end;
+
+      Add_Device_Memory_Mappings (Data => Policy);
+
+      Assert (Condition => Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => Path,
+               Name  => "virtualAddress") = "16#d252_0000#",
+              Message   => "Address mismatch");
+--  begin read only
+   end Test_Add_Device_Memory_Mappings;
+--  end read only
+
 end Expanders.Subjects.Test_Data.Tests;

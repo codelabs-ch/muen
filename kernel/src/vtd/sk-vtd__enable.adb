@@ -20,6 +20,7 @@ with System;
 
 with Skp.IOMMU;
 
+with SK.Dump;
 with SK.KC;
 with SK.CPU;
 pragma $Release_Warnings (Off, "unit * is not referenced");
@@ -598,12 +599,10 @@ is
       Version := IOMMUs (Idx).Version;
       Supported_Version := Version.MAX = 1 and then Version.MIN = 0;
       pragma Debug (not Supported_Version,
-                    KC.Put_String (Item => "Unsupported IOMMU version "));
-      pragma Debug (not Supported_Version,
-                    KC.Put_Byte (Item => SK.Byte (Version.MAX)));
-      pragma Debug (not Supported_Version,
-                    KC.Put_Byte (Item => SK.Byte (Version.MIN)));
-      pragma Debug (not Supported_Version, KC.New_Line);
+                    SK.Dump.Print_Message_16
+                      (Msg  => "Unsupported IOMMU version",
+                       Item => SK.Word16 (Version.MAX) * 2 ** 8 +
+                           SK.Word16 (Version.MIN)));
 
       Caps := IOMMUs (Idx).Capability;
 
@@ -618,27 +617,24 @@ is
          KC.Put_Line (Item => "No support for 39-bit AGAW in IOMMU"));
 
       Matching_FRO := Caps.FRO * 16 = FR_Offset;
-
       pragma Debug (not Matching_FRO,
-                    KC.Put_String (Item => "Unsupported IOMMU FRO "));
-      pragma Debug (not Matching_FRO,
-                    KC.Put_Word16 (Item => SK.Word16 (Caps.FRO)));
-      pragma Debug (not Matching_FRO, KC.New_Line);
+                    SK.Dump.Print_Message_16
+                      (Msg  => "Unsupported IOMMU FRO",
+                       Item => SK.Word16 (Caps.FRO)));
 
       Matching_NFR := Caps.NFR = 0 ;
       pragma Debug (not Matching_NFR,
-                    KC.Put_String (Item => "Unsupported IOMMU NFR "));
-      pragma Debug (not Matching_NFR, KC.Put_Byte (Item => Caps.NFR));
-      pragma Debug (not Matching_NFR, KC.New_Line);
+                    SK.Dump.Print_Message_8
+                      (Msg  => "Unsupported IOMMU NFR",
+                       Item => Caps.NFR));
 
       Extcaps := IOMMUs (Idx).Ext_Capability;
 
       Matching_IRO := Extcaps.IRO * 16 + 8 = IOTLB_Offset;
       pragma Debug (not Matching_IRO,
-                    KC.Put_String (Item => "Unsupported IOMMU IRO "));
-      pragma Debug (not Matching_IRO,
-                    KC.Put_Word16 (Item => SK.Word16 (Extcaps.IRO)));
-      pragma Debug (not Matching_IRO, KC.New_Line);
+                    SK.Dump.Print_Message_16
+                      (Msg  => "Unsupported IOMMU IRO",
+                       Item => SK.Word16 (Extcaps.IRO)));
 
       Result := Supported_Version and
         Nr_Domains                and
@@ -849,9 +845,9 @@ is
          end if;
 
          pragma Debug
-           (KC.Put_String ("VT-d DMA address translation for IOMMU "));
-         pragma Debug (KC.Put_Byte (SK.Byte (I)));
-         pragma Debug (KC.Put_Line (" enabled"));
+           (SK.Dump.Print_Message_8
+              (Msg  => "VT-d DMA address translation enabled for IOMMU",
+               Item => SK.Byte (I)));
       end loop;
    end Initialize;
 

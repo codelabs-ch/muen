@@ -53,4 +53,8 @@ is
    --  Add cpu ids.
    procedure Add_CPU_Ids (Data : in out Muxml.XML_Data_Type);
 
+   --  Add identity-mappings for device memory (if not explicitly specified by
+   --  the user).
+   procedure Add_Device_Memory_Mappings (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Subjects;

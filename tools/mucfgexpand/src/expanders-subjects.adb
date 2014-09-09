@@ -506,6 +506,56 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Device_Memory_Mappings (Data : in out Muxml.XML_Data_Type)
+   is
+      Unmapped_Memory : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/devices/device/memory"
+           & "[not (@virtualAddress)]");
+      Count : constant Natural := DOM.Core.Nodes.Length
+        (List => Unmapped_Memory);
+   begin
+      if Count = 0 then
+         return;
+      end if;
+
+      Mulog.Log (Msg => "Adding" & Count'Img & " identity mapping(s) for "
+                 & "device memory");
+
+      for I in 0 .. Count - 1 loop
+         declare
+            Memory_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Unmapped_Memory,
+                 Index => I);
+            Memory_Ref : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Memory_Node,
+                 Name => "physical");
+            Dev_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Parent_Node (N => Memory_Node);
+            Dev_Ref : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Dev_Node,
+                 Name => "physical");
+            Physmem_Addr : constant String
+              := Muxml.Utils.Get_Attribute
+                (Doc   => Data.Doc,
+                 XPath => "/system/platform/devices/device[@name='" & Dev_Ref
+                 & "']/memory[@name='" & Memory_Ref & "']",
+                 Name  => "physicalAddress");
+         begin
+            DOM.Core.Elements.Set_Attribute
+              (Elem  => Memory_Node,
+               Name  => "virtualAddress",
+               Value => Physmem_Addr);
+         end;
+      end loop;
+   end Add_Device_Memory_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Ids (Data : in out Muxml.XML_Data_Type)
    is
       Nodes  : constant DOM.Core.Node_List

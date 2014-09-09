@@ -5,6 +5,11 @@
 
 with AUnit.Test_Fixtures;
 
+with DOM.Core;
+with DOM.Core.Elements;
+
+with Muxml.Utils;
+
 with Test_Utils.Expander;
 
 package Expanders.Subjects.Test_Data is

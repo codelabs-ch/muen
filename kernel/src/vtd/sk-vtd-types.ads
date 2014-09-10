@@ -416,6 +416,7 @@ is
       Fault_Event_Control : Reg_Fault_Event_Control_Type;
       Fault_Event_Data    : Reg_Fault_Event_Data_Type;
       Fault_Event_Address : Reg_Fault_Event_Address_Type;
+      IRT_Address         : Reg_IRT_Address;
       IOTLB_Invalidate    : Reg_IOTLB_Invalidate;
       Fault_Recording     : Reg_Fault_Recording_Type;
    end record
@@ -437,6 +438,7 @@ is
       Fault_Event_Control at 16#38# range 0 .. 31;
       Fault_Event_Data    at 16#3c# range 0 .. 31;
       Fault_Event_Address at 16#40# range 0 .. 31;
+      IRT_Address         at 16#b8# range 0 .. 63;
       IOTLB_Invalidate    at IOTLB_Offset range 0 .. 63;
       Fault_Recording     at FR_Offset    range 0 .. 127;
    end record;

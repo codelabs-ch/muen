@@ -123,7 +123,7 @@ the C run-time `LIBRARY_PATH`:
 
   $ export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
 
-To build the Muen tools, RTS, kernel and example subjects on Debian wheezy
+To build the Muen tools, RTS, kernel and example components on Debian wheezy
 change to the Muen source directory and issue the following commands:
 
   $ git submodule init

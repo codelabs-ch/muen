@@ -18,13 +18,13 @@
 
 with "libsparkcrypto";
 
-project Crypter extends "../subject" is
+project Crypter extends "../component" is
 
    for Languages use ("Ada");
    for Source_Dirs use
      ("../../common/src",
       "../../common/debug",
-      "../../policy/include/",
+      "../../policy/obj",
       "src",
       "debug");
    for Object_Dir use "obj";

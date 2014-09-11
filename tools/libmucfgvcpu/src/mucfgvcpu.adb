@@ -19,7 +19,7 @@
 with Ada.Strings.Unbounded;
 
 with DOM.Core.Nodes;
-with DOM.Core.Documents;
+with DOM.Core.Documents.Local;
 
 with Muxml.Utils;
 
@@ -50,13 +50,19 @@ is
      (Profile : Profile_Type;
       Node    : DOM.Core.Node)
    is
+      Doc_Node  : constant DOM.Core.Document
+        := DOM.Core.Nodes.Owner_Document (N => Node);
       Data      : Muxml.XML_Data_Type;
       VCPU_Node : DOM.Core.Node;
    begin
       Muxml.Parse_String (Data => Data,
                           Kind => Muxml.VCPU_Profile,
                           XML  => Profile_Map (Profile).XML.all);
-      VCPU_Node := DOM.Core.Documents.Get_Element (Doc => Data.Doc);
+      VCPU_Node := DOM.Core.Documents.Local.Adopt_Node
+        (Doc    => Doc_Node,
+         Source => DOM.Core.Documents.Local.Clone_Node
+           (N    => DOM.Core.Documents.Get_Element (Doc => Data.Doc),
+            Deep => True));
 
       Muxml.Utils.Merge
         (Left      => VCPU_Node,

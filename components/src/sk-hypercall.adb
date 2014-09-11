@@ -25,7 +25,7 @@ is
 
    procedure Trigger_Event (Number : SK.Byte)
    is
-      Id : SK.Word64 := Word64 (Number);
+      Id : constant SK.Word64 := Word64 (Number);
    begin
       System.Machine_Code.Asm
         (Template => "movq %0, %%rax; vmcall",

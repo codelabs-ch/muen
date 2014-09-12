@@ -94,14 +94,6 @@ is
          New_Child => Top_Node,
          Old_Child => Platform_Node);
       DOM.Core.Nodes.Free (N => Platform_Node);
-
-      --  The platform document must not be freed since some resources
-      --  referenced by the merged DOM tree are not copied to the Node's
-      --  document. This can be removed as soon as XML/Ada supports import of
-      --  nodes into a document.
-
-      Platform.Doc := null;
-      pragma Unreferenced (Platform);
    end Merge_Platform;
 
    -------------------------------------------------------------------------
@@ -149,14 +141,6 @@ is
                New_Child => Top_Node,
                Old_Child => Inc_Node);
             DOM.Core.Nodes.Free (N => Inc_Node);
-
-            --  The included document must not be freed since some resources
-            --  referenced by the merged DOM tree are not copied to the Node's
-            --  document. This can be removed as soon as XML/Ada supports
-            --  import of nodes into a document.
-
-            Content.Doc := null;
-            pragma Unreferenced (Content);
          end;
       end loop;
    end Merge_XIncludes;

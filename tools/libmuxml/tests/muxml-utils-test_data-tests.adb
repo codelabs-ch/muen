@@ -804,8 +804,8 @@ package body Muxml.Utils.Test_Data.Tests is
                Name  => "selector") = "16#0008#",
             Message   => "Unexpected cs selector attribute in vcpu policy");
 
-         Merge (Left  => Data.Doc,
-                Right => Doc);
+         Merge (Left  => DOM.Core.Documents.Get_Element (Doc => Data.Doc),
+                Right => DOM.Core.Documents.Get_Element (Doc => Doc));
 
          Assert (Condition => Get_Attribute
                  (Doc   => Data.Doc,

@@ -31,6 +31,8 @@ pragma Warnings (On);
 package body DOM.Core.Documents.Local
 is
 
+   use type Unicode.CES.Byte_Sequence_Access;
+
    -------------------------------------------------------------------------
 
    function Adopt_Node (Doc : Document; Source : Node) return Node is
@@ -154,5 +156,103 @@ is
       Source.Parent := Node (Doc);
       return Source;
    end Adopt_Node;
+
+   -------------------------------------------------------------------------
+
+   function Clone_Node (N : Node; Deep : Boolean) return Node is
+      Clone : Node;
+
+      function Clone_List
+        (List       : Node_List;
+         Deep       : Boolean) return Node_List;
+      --  Return a clone of List. If Deep is True, then each item in the list
+      --  is also cloned
+
+      ----------------
+      -- Clone_List --
+      ----------------
+
+      function Clone_List
+        (List       : Node_List;
+         Deep       : Boolean) return Node_List
+      is
+         L : Node_List := Null_List;
+      begin
+         if List /= Null_List and then Deep then
+            L := (Items => new Node_Array (List.Items'First .. List.Last),
+                  Last  => List.Last);
+            for J in L.Items'First .. L.Last loop
+               L.Items (J) := Clone_Node (List.Items (J), Deep);
+               L.Items (J).Parent := Clone;
+               L.Items (J).Parent_Is_Owner := False;
+            end loop;
+         end if;
+         return L;
+      end Clone_List;
+
+   begin
+      Clone := new Node_Record (N.Node_Type);
+      Clone.Parent := Owner_Document (N);
+      Clone.Parent_Is_Owner := True;
+
+      case N.Node_Type is
+         when Element_Node =>
+            Clone.Name := N.Name;
+            Clone.Children := Clone_List (N.Children,  Deep);
+            Clone.Attributes := Named_Node_Map
+              (Clone_List (Node_List (N.Attributes), True));
+
+         when Attribute_Node =>
+            Clone.Attr_Name := N.Attr_Name;
+            Clone.Attr_Value := N.Attr_Value;
+            Clone.Specified := N.Specified;
+            Clone.Is_Id := N.Is_Id;
+
+         when Text_Node =>
+            if N.Text /= null then
+               Clone.Text := new DOM_String'(N.Text.all);
+            end if;
+
+         when Cdata_Section_Node =>
+            if N.Cdata /= null then
+               Clone.Cdata := new DOM_String'(N.Cdata.all);
+            end if;
+
+         when Entity_Reference_Node =>
+            Clone.Entity_Reference_Name := N.Entity_Reference_Name;
+
+         when Entity_Node =>
+            Clone.Entity_Name := N.Entity_Name;
+
+         when Processing_Instruction_Node =>
+            Clone.Target  := N.Target;
+            Clone.Pi_Data := N.Pi_Data;
+
+         when Comment_Node =>
+            pragma Assert (N.Comment /= null);
+            Clone.Comment := new DOM_String'(N.Comment.all);
+
+         when Document_Node =>
+            Clone.Doc_Children := Clone_List (N.Doc_Children, Deep);
+
+         when Document_Type_Node =>
+            Clone.Document_Type_Name :=
+              new DOM_String'(N.Document_Type_Name.all);
+            Clone.Doc_Type_Children := Clone_List (N.Doc_Type_Children, Deep);
+
+         when Document_Fragment_Node =>
+            Clone.Doc_Frag_Children := Clone_List (N.Doc_Frag_Children, Deep);
+
+         when Notation_Node =>
+            if N.Public_ID /= null then
+               Clone.Public_ID := new DOM_String'(N.Public_ID.all);
+            end if;
+
+            if N.System_ID /= null then
+               Clone.System_ID := new DOM_String'(N.System_ID.all);
+            end if;
+      end case;
+      return Clone;
+   end Clone_Node;
 
 end DOM.Core.Documents.Local;

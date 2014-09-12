@@ -24,10 +24,13 @@
 package DOM.Core.Documents.Local
 is
 
-   --  NOTE: This is a local copy of DOM.Core.Documents.Adopt_Node function.
+   --  NOTE: These are local copies of the DOM.Core.Documents.Adopt_Node and
+   --        DOM.Core.Nodes.Clone_Node functions.
    --        The package can be dropped when only XML/Ada versions that contain
    --        fixes for tickets [N411-012] and [N910-017] are used.
 
    function Adopt_Node (Doc : Document; Source : Node) return Node;
+
+   function Clone_Node (N : Node; Deep : Boolean) return Node;
 
 end DOM.Core.Documents.Local;

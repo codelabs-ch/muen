@@ -10,7 +10,10 @@ package DOM.Core.Documents.Local.Test_Data.Tests is
    with null record;
 
    procedure Test_Adopt_Node_6a4a84 (Gnattest_T : in out Test);
-   --  dom-core-documents-local.ads:31:4:Adopt_Node
+   --  dom-core-documents-local.ads:32:4:Adopt_Node
+
+   procedure Test_Clone_Node_891724 (Gnattest_T : in out Test);
+   --  dom-core-documents-local.ads:34:4:Clone_Node
 
 end DOM.Core.Documents.Local.Test_Data.Tests;
 --  end read only

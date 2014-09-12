@@ -6,6 +6,7 @@
 with AUnit.Test_Fixtures;
 
 with DOM.Core.Nodes;
+with DOM.Core.Elements;
 
 package DOM.Core.Documents.Local.Test_Data is
 

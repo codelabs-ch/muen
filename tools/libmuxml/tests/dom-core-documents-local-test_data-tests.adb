@@ -15,7 +15,7 @@ package body DOM.Core.Documents.Local.Test_Data.Tests is
    procedure Test_Adopt_Node_6a4a84 (Gnattest_T : in out Test) renames Test_Adopt_Node;
 --  id:2.2/6a4a8407a73d6d53/Adopt_Node/1/0/
    procedure Test_Adopt_Node (Gnattest_T : in out Test) is
-   --  dom-core-documents-local.ads:31:4:Adopt_Node
+   --  dom-core-documents-local.ads:32:4:Adopt_Node
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -41,6 +41,57 @@ package body DOM.Core.Documents.Local.Test_Data.Tests is
               Message   => "Node not adopted");
 --  begin read only
    end Test_Adopt_Node;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Clone_Node (Gnattest_T : in out Test);
+   procedure Test_Clone_Node_891724 (Gnattest_T : in out Test) renames Test_Clone_Node;
+--  id:2.2/8917241662f94bd7/Clone_Node/1/0/
+   procedure Test_Clone_Node (Gnattest_T : in out Test) is
+   --  dom-core-documents-local.ads:34:4:Clone_Node
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Sax.Symbols.Symbol;
+
+      Doc            : DOM.Core.Document;
+      Impl           : DOM.Core.DOM_Implementation;
+      Node_A, Node_B : DOM.Core.Node;
+   begin
+      Doc := DOM.Core.Create_Document (Implementation => Impl);
+      Node_A := DOM.Core.Documents.Create_Element
+        (Doc      => Doc,
+         Tag_Name => "A");
+      DOM.Core.Elements.Set_Attribute (Elem  => Node_A,
+                                       Name  => "attr1",
+                                       Value => "foo");
+      DOM.Core.Elements.Set_Attribute (Elem  => Node_A,
+                                       Name  => "attr2",
+                                       Value => "bar");
+
+      Node_B := Clone_Node (N    => Node_A,
+                            Deep => True);
+
+      Assert (Condition => Node_B.Attributes.Last = 1,
+              Message   => "Attribute count mismatch");
+      for I in 0 .. Node_B.Attributes.Last loop
+         Assert (Condition => Node_B.Attributes.Items (I).Attr_Name
+                 = Node_A.Attributes.Items (I).Attr_Name,
+                 Message   => "Attr_Name mismatch" & I'Img);
+         Assert (Condition => Node_B.Attributes.Items (I).Attr_Value
+                 = Node_A.Attributes.Items (I).Attr_Value,
+                 Message   => "Attr_Value mismatch" & I'Img);
+         Assert (Condition => Node_B.Attributes.Items (I).Is_Id
+                 = Node_A.Attributes.Items (I).Is_Id,
+                 Message   => "Is_Id mismatch" & I'Img);
+         Assert (Condition => Node_B.Attributes.Items (I).Specified
+                 = Node_A.Attributes.Items (I).Specified,
+                 Message   => "Specified mismatch" & I'Img);
+      end loop;
+--  begin read only
+   end Test_Clone_Node;
 --  end read only
 
 end DOM.Core.Documents.Local.Test_Data.Tests;

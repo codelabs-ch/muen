@@ -73,14 +73,6 @@ is
          New_Child => VCPU_Node,
          Old_Child => Node);
       DOM.Core.Nodes.Free (N => VCPU_Node);
-
-      --  The profile's document must not be freed since some resources
-      --  referenced by the merged DOM tree are not copied to the Node's
-      --  document. This can be removed as soon as XML/Ada supports import of
-      --  nodes into a document.
-
-      Data.Doc := null;
-      pragma Unreferenced (Data);
    end Set_VCPU_Profile;
 
 end Mucfgvcpu;

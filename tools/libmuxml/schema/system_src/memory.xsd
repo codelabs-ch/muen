@@ -38,6 +38,7 @@
 			<xs:enumeration value="subject_acpi_fadt"/>
 			<xs:enumeration value="subject_acpi_dsdt"/>
 			<xs:enumeration value="subject_zeropage"/>
+			<xs:enumeration value="subject_device"/>
 		</xs:restriction>
 	</xs:simpleType>
 

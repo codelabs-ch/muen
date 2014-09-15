@@ -35,6 +35,10 @@ is
    subtype Kernel_Memory  is Memory_Kind range Kernel  .. Kernel_Interface;
    subtype Subject_Memory is Memory_Kind range Subject .. Subject_Device;
 
+   subtype DMA_Memory is
+     Subject_Memory with Static_Predicate =>
+       DMA_Memory in Subject | Subject_Device;
+
    --  MSR access modes.
    type MSR_Mode_Type is (R, W, RW);
 

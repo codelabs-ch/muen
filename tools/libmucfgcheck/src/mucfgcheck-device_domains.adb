@@ -157,7 +157,7 @@ is
                    (Elem => Phys_Mem,
                     Name => "type"));
          begin
-            if Mem_Type /= Mutools.Types.Subject then
+            if not (Mem_Type in Mutools.Types.DMA_Memory) then
                raise Validation_Error with "Device domain memory '"
                  & Phys_Name & "' has invalid memory type " & Mem_Type'Img;
             end if;

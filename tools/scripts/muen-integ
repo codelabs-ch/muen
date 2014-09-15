@@ -230,7 +230,7 @@ check_if_head
 
 execute "git checkout $COMMIT"
 execute "make distclean"
-execute "cd subjects/linux/src"
+execute "cd components/linux/src"
 execute "git clean -dxf"
 execute "cd $WORKDIR"
 

@@ -31,10 +31,17 @@ is
       Subject_Channel, Subject_State, Subject_Bios, Subject_Acpi_Rsdp,
       Subject_Acpi_Xsdt, Subject_Acpi_Fadt, Subject_Acpi_Dsdt, Subject_Device);
 
-   subtype System_Memory  is Memory_Kind range System  .. System_Vtd_Context;
-   subtype Kernel_Memory  is Memory_Kind range Kernel  .. Kernel_Interface;
+   --  Memory reserved for system use. Can neither be referenced by kernel nor
+   --  subjects.
+   subtype System_Memory is Memory_Kind range System .. System_Vtd_Context;
+
+   --  Memory used by kernel resources.
+   subtype Kernel_Memory is Memory_Kind range Kernel .. Kernel_Interface;
+
+   --  Memory mappable by subjects.
    subtype Subject_Memory is Memory_Kind range Subject .. Subject_Device;
 
+   --  Memory usable for device domains/DMA.
    subtype DMA_Memory is
      Subject_Memory with Static_Predicate =>
        DMA_Memory in Subject | Subject_Device;

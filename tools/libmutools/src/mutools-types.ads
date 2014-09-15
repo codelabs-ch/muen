@@ -29,11 +29,11 @@ is
       Kernel, Kernel_Binary, Kernel_Interface,
       Subject, Subject_Info, Subject_Binary, Subject_Zeropage, Subject_Initrd,
       Subject_Channel, Subject_State, Subject_Bios, Subject_Acpi_Rsdp,
-      Subject_Acpi_Xsdt, Subject_Acpi_Fadt, Subject_Acpi_Dsdt);
+      Subject_Acpi_Xsdt, Subject_Acpi_Fadt, Subject_Acpi_Dsdt, Subject_Device);
 
    subtype System_Memory  is Memory_Kind range System  .. System_Vtd_Context;
    subtype Kernel_Memory  is Memory_Kind range Kernel  .. Kernel_Interface;
-   subtype Subject_Memory is Memory_Kind range Subject .. Subject_Acpi_Dsdt;
+   subtype Subject_Memory is Memory_Kind range Subject .. Subject_Device;
 
    --  MSR access modes.
    type MSR_Mode_Type is (R, W, RW);

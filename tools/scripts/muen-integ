@@ -246,7 +246,10 @@ if [ $CHECK_HEAD -eq 1 ]; then
 fi
 
 execute "git checkout $COMMIT"
-workdir_clean
+
+if [ $DO_CLEAN_WORKDIR -eq 1 ]; then
+	workdir_clean
+fi
 
 GITLOG=`git log -1`
 execute "git submodule update"

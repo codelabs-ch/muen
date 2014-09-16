@@ -72,6 +72,15 @@ save_artifacts()
 	cp $WORKDIR/emulate/serial.out $LOGDIR >>$LOGFILE 2>&1
 }
 
+send_mail()
+{
+	status=$1
+	message=$2
+	subject="[muen-integration] $status: B$BUILDID, $FBRANCH, $COMMIT"
+
+	__send_mail "$status" "$subject" "$message"
+}
+
 passed()
 {
 	log "State -> PASSED"

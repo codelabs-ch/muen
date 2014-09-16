@@ -15,13 +15,14 @@ execute()
 	fi
 }
 
-send_mail()
+__send_mail()
 {
 	status=$1
-	message=$2
+	subject=$2
+	message=$3
 
 	for mail in $RECIPIENTS
 	do
-		echo -e "To: $mail\nFrom: $SENDER\nSubject: [muen-integration] $status: B$BUILDID, $FBRANCH, $COMMIT\n\n$message" | /usr/sbin/sendmail -t -F "$SENDER" -f "$SENDER"
+		echo -e "To: $mail\nFrom: $SENDER\nSubject: $subject\n\n$message" | /usr/sbin/sendmail -t -F "$SENDER" -f "$SENDER"
 	done
 }

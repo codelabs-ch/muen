@@ -33,8 +33,6 @@ SAVE_ARTIFACTS=0
 PID_HTTP=0
 PID_XTERM=0
 
-TARGET_IP=192.168.254.2
-
 export PATH=/usr/lib/ccache:/opt/gnat/bin:/opt/spark/bin:$PATH
 export DISPLAY=:0
 export AMT_PASSWORD=XXX
@@ -254,6 +252,6 @@ GITLOG=`git log -1`
 execute "git submodule update"
 
 bochs_emulate
-hw_deploy intel-nuc-dc53427hye $TARGET_IP
+hw_deploy $HARDWARE $TARGET_IP
 
 passed

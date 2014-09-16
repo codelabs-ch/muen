@@ -29,9 +29,8 @@ WORKDIR=$SCRIPTDIR/../..
 HARBOR="Harbormaster build http://muen-builder.codelabs.local/B$BUILDID"
 SAVE_ARTIFACTS=0
 
-# servers
-PID_HTTP=0
-PID_XTERM=0
+# servers to kill on exit
+KILL_ON_EXIT_PIDS=()
 
 export PATH=/usr/lib/ccache:/opt/gnat/bin:/opt/spark/bin:$PATH
 export DISPLAY=:0
@@ -60,14 +59,10 @@ release_file_lock()
 
 cleanup()
 {
-	if [ $PID_HTTP -ne 0 ]; then
-		log "Stopping HTTP server ($PID_HTTP)"
-		kill $PID_HTTP || true >>$LOGFILE 2>&1
-	fi
-	if [ $PID_XTERM -ne 0 ]; then
-		log "Stopping AMT console ($PID_XTERM)"
-		kill $PID_XTERM || true >>$LOGFILE 2>&1
-	fi
+	for pid in ${KILL_ON_EXIT_PIDS[@]}; do
+		log "Killing server process with PID $pid"
+		kill -kill $pid >>$LOGFILE 2>&1 || true
+	done
 
 	release_file_lock
 }
@@ -177,29 +172,27 @@ hw_deploy()
 
 	execute "ping -c 6 $target_ip"
 	xterm -e script -f -c "amtterm $target_ip" $LOGDIR/amt.out &
-	PID_XTERM=$!
-	log "xterm pid is $PID_XTERM"
+	pid_xterm=$!
+	log "xterm pid is $pid_xterm"
 
 	execute "make deploy HARDWARE=$hardware SYSTEM=integration_tests"
 
 	cd $ROOT; python -m SimpleHTTPServer 10000 >$LOGDIR/http.out 2>&1 &
-	PID_HTTP=$!
-	log "SimpleHTTPServer pid is $PID_HTTP"
+	pid_http=$!
+	log "SimpleHTTPServer pid is $pid_http"
 	cd $WORKDIR
 
 	execute "sleep $HW_BOOTWAIT"
 
-	kill $PID_XTERM >>$LOGFILE 2>&1
+	kill $pid_xterm >>$LOGFILE 2>&1
 	if [ $? -ne 0 ]; then
 		log "Stopping AMT console failed, retrying on exit"
-	else
-		PID_XTERM=0
+		KILL_ON_EXIT_PIDS+=($pid_xterm)
 	fi
-	kill $PID_HTTP >>$LOGFILE 2>&1
+	kill $pid_http >>$LOGFILE 2>&1
 	if [ $? -ne 0 ]; then
 		log "Stopping HTTP server failed, retrying on exit"
-	else
-		PID_HTTP=0
+		KILL_ON_EXIT_PIDS+=($pid_http)
 	fi
 
 	echo y | amttool $target_ip powerdown >>$LOGFILE 2>&1

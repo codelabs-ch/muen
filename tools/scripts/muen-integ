@@ -173,12 +173,14 @@ bochs_emulate()
 
 nuc_deploy()
 {
+	hardware=$1
+
 	execute "ping -c 6 $TARGET_IP"
 	xterm -e script -f -c "amtterm $TARGET_IP" $LOGDIR/amt.out &
 	PID_XTERM=$!
 	log "xterm pid is $PID_XTERM"
 
-	execute "make deploy HARDWARE=intel-nuc-dc53427hye SYSTEM=integration_tests"
+	execute "make deploy HARDWARE=$hardware SYSTEM=integration_tests"
 
 	cd $ROOT; python -m SimpleHTTPServer 10000 >$LOGDIR/http.out 2>&1 &
 	PID_HTTP=$!
@@ -251,6 +253,6 @@ GITLOG=`git log -1`
 execute "git submodule update"
 
 bochs_emulate
-nuc_deploy
+nuc_deploy intel-nuc-dc53427hye
 
 passed

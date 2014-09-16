@@ -77,6 +77,23 @@ expect()
 	fi
 }
 
+expect_from_file()
+{
+	pattern_file=$1
+	path=$2
+
+	while read line
+	do
+		file=`echo $line | cut -d\; -f1`
+		pattern=`echo $line | cut -d\; -f2`
+		if [ -z "$file" ]; then
+			continue
+		fi
+
+		expect $path/$file "$pattern"
+	done < $pattern_file
+}
+
 bochs_emulate()
 {
 	SAVE_ARTIFACTS=1
@@ -85,12 +102,7 @@ bochs_emulate()
 	save_artifacts
 	SAVE_ARTIFACTS=0
 
-	expect $LOGDIR/serial.out "Booting Muen kernel"
-	expect $LOGDIR/serial.out "Welcome to Linux on Muen SK"
-
-	expect $LOGDIR/bochsout.txt "CPU 1 started up at 0000:00000000 by APIC"
-	expect $LOGDIR/bochsout.txt "CPU 2 started up at 0000:00000000 by APIC"
-	expect $LOGDIR/bochsout.txt "CPU 3 started up at 0000:00000000 by APIC"
+	expect_from_file $SCRIPTDIR/expect.bochs "$LOGDIR"
 
 	execute "make -C emulate clean"
 }
@@ -131,18 +143,7 @@ hw_deploy()
 	echo y | amttool $target_ip powerdown >>$LOGFILE 2>&1
 	execute "make -C deploy clean"
 
-	expect $hw_logdir/amt.out "Booting Muen kernel"
-	expect $hw_logdir/amt.out "Routing IRQ 01 as vector 21 to CPU 00 with APIC ID 00"
-	expect $hw_logdir/amt.out "Routing IRQ 14 as vector 34 to CPU 01 with APIC ID 01"
-	expect $hw_logdir/amt.out "Routing IRQ 10 as vector 30 to CPU 03 with APIC ID 03"
-	expect $hw_logdir/amt.out "VT-d DMA address translation enabled for IOMMU 01"
-	expect $hw_logdir/amt.out "VT-d DMA address translation enabled for IOMMU 02"
-	expect $hw_logdir/amt.out "Console output round 100"
-	expect $hw_logdir/amt.out "100%"
-	expect $hw_logdir/amt.out "stresstest DONE"
-	expect $hw_logdir/amt.out "integtest DONE"
-
-	expect $hw_logdir/http.out "200"
+	expect_from_file $SCRIPTDIR/expect.hw_common "$hw_logdir"
 }
 
 mkdir -p $LOGDIR

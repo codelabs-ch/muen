@@ -171,7 +171,7 @@ bochs_emulate()
 	execute "make -C emulate clean"
 }
 
-nuc_deploy()
+hw_deploy()
 {
 	hardware=$1
 
@@ -253,6 +253,6 @@ GITLOG=`git log -1`
 execute "git submodule update"
 
 bochs_emulate
-nuc_deploy intel-nuc-dc53427hye
+hw_deploy intel-nuc-dc53427hye
 
 passed

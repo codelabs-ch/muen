@@ -155,11 +155,9 @@ expect()
 
 bochs_emulate()
 {
-	BOOTWAIT=40
-
 	SAVE_ARTIFACTS=1
 	execute "make emulate"
-	execute "sleep $BOOTWAIT"
+	execute "sleep $BOOTWAIT_BOCHS"
 	save_artifacts
 	SAVE_ARTIFACTS=0
 

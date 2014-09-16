@@ -174,9 +174,10 @@ bochs_emulate()
 hw_deploy()
 {
 	hardware=$1
+	target_ip=$2
 
-	execute "ping -c 6 $TARGET_IP"
-	xterm -e script -f -c "amtterm $TARGET_IP" $LOGDIR/amt.out &
+	execute "ping -c 6 $target_ip"
+	xterm -e script -f -c "amtterm $target_ip" $LOGDIR/amt.out &
 	PID_XTERM=$!
 	log "xterm pid is $PID_XTERM"
 
@@ -202,7 +203,7 @@ hw_deploy()
 		PID_HTTP=0
 	fi
 
-	echo y | amttool $TARGET_IP powerdown >>$LOGFILE 2>&1
+	echo y | amttool $target_ip powerdown >>$LOGFILE 2>&1
 	execute "make -C deploy clean"
 
 	expect $LOGDIR/amt.out "Booting Muen kernel"
@@ -253,6 +254,6 @@ GITLOG=`git log -1`
 execute "git submodule update"
 
 bochs_emulate
-hw_deploy intel-nuc-dc53427hye
+hw_deploy intel-nuc-dc53427hye $TARGET_IP
 
 passed

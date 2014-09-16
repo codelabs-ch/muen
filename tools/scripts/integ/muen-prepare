@@ -1,5 +1,13 @@
 #!/bin/bash
 
+if [ ! $# -eq 3 ]; then
+	echo "Usage: $0 <config_file> <commit> <build ID>"
+	exit 1
+fi
+
+COMMIT=$2
+BUILDID=$3
+
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 source $SCRIPTDIR/args.sh
@@ -93,6 +101,7 @@ workdir_clean
 
 log "Calling '$INTEG_SCRIPT' for branch $FBRANCH"
 export FBRANCH=$FBRANCH
+export BUILDID=$BUILDID
 
 # must be the last command to get the exit status right
-$INTEG_SCRIPT $CONFIG $COMMIT $BUILDID
+$INTEG_SCRIPT $CONFIG

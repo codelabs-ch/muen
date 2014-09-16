@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ ! $# -eq 1 ]; then
+	echo "Usage: $0 <config_file>"
+	exit 1
+fi
+
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 source $SCRIPTDIR/args.sh

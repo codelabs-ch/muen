@@ -24,7 +24,7 @@ fi
 source $CONFIG
 
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-WORKDIR=$SCRIPTDIR/../..
+WORKDIR=$SCRIPTDIR/../../..
 
 HARBOR="Harbormaster build http://muen-builder.codelabs.local/B$BUILDID"
 SAVE_ARTIFACTS=0

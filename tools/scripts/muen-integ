@@ -232,7 +232,10 @@ acquire_file_lock
 execute "cd $WORKDIR"
 execute "git remote prune origin"
 execute "git fetch"
-check_if_head
+
+if [ $CHECK_HEAD -eq 1 ]; then
+	check_if_head
+fi
 
 execute "git checkout $COMMIT"
 execute "make distclean"

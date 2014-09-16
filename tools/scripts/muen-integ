@@ -221,6 +221,15 @@ nuc_deploy()
 	expect $LOGDIR/http.out "200"
 }
 
+workdir_clean()
+{
+	execute "git remote prune origin"
+	execute "make distclean"
+	execute "cd components/linux/src"
+	execute "git clean -dxf"
+	execute "cd $WORKDIR"
+}
+
 mkdir -p $LOGDIR
 
 log "Muen integration test starting for commit $COMMIT"
@@ -230,7 +239,6 @@ echo "Logging to file $LOGFILE"
 acquire_file_lock
 
 execute "cd $WORKDIR"
-execute "git remote prune origin"
 execute "git fetch"
 
 if [ $CHECK_HEAD -eq 1 ]; then
@@ -238,10 +246,7 @@ if [ $CHECK_HEAD -eq 1 ]; then
 fi
 
 execute "git checkout $COMMIT"
-execute "make distclean"
-execute "cd components/linux/src"
-execute "git clean -dxf"
-execute "cd $WORKDIR"
+workdir_clean
 
 GITLOG=`git log -1`
 execute "git submodule update"

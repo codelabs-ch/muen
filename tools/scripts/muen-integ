@@ -173,8 +173,6 @@ bochs_emulate()
 
 nuc_deploy()
 {
-	BOOTWAIT=110
-
 	execute "ping -c 6 $TARGET_IP"
 	xterm -e script -f -c "amtterm $TARGET_IP" $LOGDIR/amt.out &
 	PID_XTERM=$!
@@ -187,7 +185,7 @@ nuc_deploy()
 	log "SimpleHTTPServer pid is $PID_HTTP"
 	cd $WORKDIR
 
-	execute "sleep $BOOTWAIT"
+	execute "sleep $HW_BOOTWAIT"
 
 	kill $PID_XTERM >>$LOGFILE 2>&1
 	if [ $? -ne 0 ]; then

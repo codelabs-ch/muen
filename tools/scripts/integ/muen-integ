@@ -146,6 +146,16 @@ hw_deploy()
 	expect_from_file $SCRIPTDIR/expect.hw_common "$hw_logdir"
 }
 
+deploy_to_hardware()
+{
+	for ip_hw in ${TARGETS[@]}; do
+		ip=`echo $ip_hw | cut -d\; -f1`
+		hw=`echo $ip_hw | cut -d\; -f2`
+		log "Deploying to target $ip with hardware $hw"
+		hw_deploy $hw $ip
+	done
+}
+
 mkdir -p $LOGDIR
 
 echo "Logging to file $LOGFILE"
@@ -155,6 +165,6 @@ GITLOG=`git log -1`
 execute "cd $WORKDIR"
 
 bochs_emulate
-hw_deploy $HARDWARE $TARGET_IP
+deploy_to_hardware
 
 passed

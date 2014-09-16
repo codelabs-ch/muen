@@ -17,6 +17,6 @@ BOOTWAIT_BOCHS=40
 # seconds to wait for hardware target to boot
 HW_BOOTWAIT=110
 
-# target IP and hardware
-TARGET_IP=192.168.254.2
-HARDWARE=lenovo-t430s
+# target IPs and associated hardware
+TARGETS=()
+TARGETS+=('192.168.254.2;lenovo-t430s')

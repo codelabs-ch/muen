@@ -5,9 +5,6 @@ LOGDIR=$ROOT/logs/$BUILDID
 LOGFILE=$LOGDIR/build.log
 LOCK=/tmp/muen-integ.running
 
-DO_CLEAN_WORKDIR=0
-CHECK_HEAD=0
-
 AMT_PASSWORD=XXX
 
 # mail settings

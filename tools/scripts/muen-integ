@@ -5,6 +5,9 @@ if [ ! $# -eq 2 ]; then
 	exit 1
 fi
 
+SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKDIR=$SCRIPTDIR/../..
+
 COMMIT=$1
 BUILDID=$2
 HARBOR="Harbormaster build http://muen-builder.codelabs.local/B$BUILDID"
@@ -218,10 +221,6 @@ log "$HARBOR"
 echo "Logging to file $LOGFILE"
 
 acquire_file_lock
-
-execute "cd $ROOT"
-
-WORKDIR=$ROOT/muen
 
 execute "cd $WORKDIR"
 execute "git remote prune origin"

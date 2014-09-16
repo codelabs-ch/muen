@@ -99,7 +99,7 @@ environment listed in the following table.
 |===================================================================
 | Operating system     | Debian GNU/Linux 7 (wheezy), x86_64
 | Ada compiler         | GNAT GPL 2014
-| GCC version          | 4.7.4 [TBD] for GNAT GPL 2014
+| GCC version          | 4.7.4 20140401 for GNAT GPL 2014
 | SPARK version        | GPL 2014
 | Emulator             | Bochs from svn (>= r12175)
 | Hardware             | Lenovo T430s with Intel Core i7 3520M

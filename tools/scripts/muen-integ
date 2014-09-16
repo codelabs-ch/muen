@@ -170,14 +170,17 @@ hw_deploy()
 	hardware=$1
 	target_ip=$2
 
+	hw_logdir=$LOGDIR/$hardware
+	execute "mkdir -p $hw_logdir"
+
 	execute "ping -c 6 $target_ip"
-	xterm -e script -f -c "amtterm $target_ip" $LOGDIR/amt.out &
+	xterm -e script -f -c "amtterm $target_ip" $hw_logdir/amt.out &
 	pid_xterm=$!
 	log "xterm pid is $pid_xterm"
 
 	execute "make deploy HARDWARE=$hardware SYSTEM=integration_tests"
 
-	cd $ROOT; python -m SimpleHTTPServer 10000 >$LOGDIR/http.out 2>&1 &
+	cd $ROOT; python -m SimpleHTTPServer 10000 >$hw_logdir/http.out 2>&1 &
 	pid_http=$!
 	log "SimpleHTTPServer pid is $pid_http"
 	cd $WORKDIR
@@ -198,18 +201,18 @@ hw_deploy()
 	echo y | amttool $target_ip powerdown >>$LOGFILE 2>&1
 	execute "make -C deploy clean"
 
-	expect $LOGDIR/amt.out "Booting Muen kernel"
-	expect $LOGDIR/amt.out "Routing IRQ 01 as vector 21 to CPU 00 with APIC ID 00"
-	expect $LOGDIR/amt.out "Routing IRQ 14 as vector 34 to CPU 01 with APIC ID 01"
-	expect $LOGDIR/amt.out "Routing IRQ 10 as vector 30 to CPU 03 with APIC ID 03"
-	expect $LOGDIR/amt.out "VT-d DMA address translation enabled for IOMMU 01"
-	expect $LOGDIR/amt.out "VT-d DMA address translation enabled for IOMMU 02"
-	expect $LOGDIR/amt.out "Console output round 100"
-	expect $LOGDIR/amt.out "100%"
-	expect $LOGDIR/amt.out "stresstest DONE"
-	expect $LOGDIR/amt.out "integtest DONE"
+	expect $hw_logdir/amt.out "Booting Muen kernel"
+	expect $hw_logdir/amt.out "Routing IRQ 01 as vector 21 to CPU 00 with APIC ID 00"
+	expect $hw_logdir/amt.out "Routing IRQ 14 as vector 34 to CPU 01 with APIC ID 01"
+	expect $hw_logdir/amt.out "Routing IRQ 10 as vector 30 to CPU 03 with APIC ID 03"
+	expect $hw_logdir/amt.out "VT-d DMA address translation enabled for IOMMU 01"
+	expect $hw_logdir/amt.out "VT-d DMA address translation enabled for IOMMU 02"
+	expect $hw_logdir/amt.out "Console output round 100"
+	expect $hw_logdir/amt.out "100%"
+	expect $hw_logdir/amt.out "stresstest DONE"
+	expect $hw_logdir/amt.out "integtest DONE"
 
-	expect $LOGDIR/http.out "200"
+	expect $hw_logdir/http.out "200"
 }
 
 workdir_clean()

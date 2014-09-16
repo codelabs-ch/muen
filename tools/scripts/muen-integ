@@ -35,8 +35,9 @@ PID_XTERM=0
 
 export PATH=/usr/lib/ccache:/opt/gnat/bin:/opt/spark/bin:$PATH
 export DISPLAY=:0
-export AMT_PASSWORD=XXX
 export CC="ccache gcc"
+
+export AMT_PASSWORD=$AMT_PASSWORD
 
 trap cleanup EXIT
 

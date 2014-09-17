@@ -112,7 +112,7 @@ workdir_clean
 
 log "Calling '$INTEG_SCRIPT' for branch $FBRANCH"
 
-$INTEG_SCRIPT $CONFIG
+$INTEG_SCRIPT $CONFIG $BUILDID
 if [ $? -eq 0 ]; then
 	send_mail PASSED "Integration test successful for:\n\n$GITLOG"
 	exit 0

@@ -1,9 +1,11 @@
 #!/bin/bash
 
-if [ ! $# -eq 1 ]; then
-	echo "Usage: $0 <config_file>"
+if [ ! $# -eq 2 ]; then
+	echo "Usage: $0 <config_file> <build ID>"
 	exit 1
 fi
+
+BUILDID=$2
 
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

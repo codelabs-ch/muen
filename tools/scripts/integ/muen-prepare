@@ -18,6 +18,10 @@ INTEG_SCRIPT=$WORKDIR/tools/scripts/integ/muen-integ
 
 HARBOR="Harbormaster build http://muen-builder.codelabs.local/B$BUILDID"
 
+export PATH=/usr/lib/ccache:/opt/gnat/bin:/opt/spark/bin:$PATH
+export DISPLAY=:0
+export CC="ccache gcc"
+
 trap release_file_lock EXIT
 
 acquire_file_lock()

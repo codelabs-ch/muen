@@ -19,10 +19,6 @@ SAVE_ARTIFACTS=0
 # servers to kill on exit
 KILL_ON_EXIT_PIDS=()
 
-export PATH=/usr/lib/ccache:/opt/gnat/bin:/opt/spark/bin:$PATH
-export DISPLAY=:0
-export CC="ccache gcc"
-
 export AMT_PASSWORD=$AMT_PASSWORD
 
 trap cleanup EXIT

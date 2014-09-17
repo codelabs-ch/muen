@@ -138,6 +138,7 @@ deploy_to_hardware()
 {
 	for ip_hw in ${TARGETS[@]}; do
 		ip=`echo $ip_hw | cut -d\; -f1`
+		export TARGET_IP=$ip
 		hw=`echo $ip_hw | cut -d\; -f2`
 		log "Deploying to target $ip with hardware $hw"
 		hw_deploy $hw $ip

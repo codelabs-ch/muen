@@ -108,6 +108,7 @@ execute "git fetch"
 check_if_head
 
 execute "git checkout $COMMIT"
+execute "git submodule init"
 execute "git submodule update"
 
 GITLOG=`git log -1`

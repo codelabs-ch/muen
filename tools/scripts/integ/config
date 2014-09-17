@@ -5,7 +5,8 @@ LOGDIR=$ROOT/logs/$BUILDID
 LOGFILE=$LOGDIR/build.log
 LOCK=/tmp/muen-integ.running
 
-AMT_PASSWORD=XXX
+# AMT password, only set if not present in the environment
+: ${AMT_PASSWORD=XXX}
 
 # mail settings
 RECIPIENTS="postmaster@localhost"

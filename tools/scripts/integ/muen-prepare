@@ -67,6 +67,15 @@ send_mail()
 {
 	status=$1
 	message=$2
+	subject="[muen-integration] $status: B$BUILDID, $FBRANCH, $COMMIT"
+
+	__send_mail "$status" "$subject" "$message"
+}
+
+send_mail_workdir()
+{
+	status=$1
+	message=$2
 	subject="[muen-prepare] $status (workdir): B$BUILDID"
 
 	__send_mail "$status" "$subject" "$message"
@@ -75,7 +84,7 @@ send_mail()
 failed()
 {
 	log "Failed to prepare workdir '$WORKDIR'"
-	send_mail FAILED "Workdir setup failed.\n\nLog:\n`tail -n 50 $LOGFILE`"
+	send_mail_workdir FAILED "Workdir setup failed.\n\nLog:\n`tail -n 50 $LOGFILE`"
 	exit 1
 }
 
@@ -97,11 +106,17 @@ check_if_head
 execute "git checkout $COMMIT"
 execute "git submodule update"
 
+GITLOG=`git log -1`
+
 workdir_clean
 
 log "Calling '$INTEG_SCRIPT' for branch $FBRANCH"
-export FBRANCH=$FBRANCH
-export BUILDID=$BUILDID
 
-# must be the last command to get the exit status right
 $INTEG_SCRIPT $CONFIG
+if [ $? -eq 0 ]; then
+	send_mail PASSED "Integration test successful for:\n\n$GITLOG"
+	exit 0
+else
+	send_mail FAILED "Integration test failed for:\n\n$GITLOG\n\nLog:\n`tail -n 50 $LOGFILE`"
+	exit 1
+fi

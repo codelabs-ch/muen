@@ -40,25 +40,15 @@ save_artifacts()
 	cp $WORKDIR/emulate/serial.out $LOGDIR >>$LOGFILE 2>&1
 }
 
-send_mail()
-{
-	status=$1
-	message=$2
-	subject="[muen-integration] $status: B$BUILDID, $FBRANCH, $COMMIT"
-
-	__send_mail "$status" "$subject" "$message"
-}
-
 passed()
 {
 	log "State -> PASSED"
-	send_mail PASSED "Integration test successful for:\n\n$GITLOG"
+	exit 0
 }
 
 failed()
 {
 	log "State -> FAILED"
-	send_mail FAILED "Integration test failed for:\n\n$GITLOG\n\nLog:\n`tail -n 50 $LOGFILE`"
 	if [ $SAVE_ARTIFACTS -ne 0 ]; then
 		save_artifacts
 	fi
@@ -159,8 +149,6 @@ deploy_to_hardware()
 mkdir -p $LOGDIR
 
 echo "Logging to file $LOGFILE"
-
-GITLOG=`git log -1`
 
 execute "cd $WORKDIR"
 

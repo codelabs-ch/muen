@@ -8,7 +8,7 @@ LOCK=/tmp/muen-integ.running
 AMT_PASSWORD=XXX
 
 # mail settings
-RECIPIENTS="reet@codelabs.ch ken@codelabs.ch"
+RECIPIENTS="postmaster@localhost"
 SENDER="muen.builder@gmail.com"
 
 # seconds to wait for bochs target to boot

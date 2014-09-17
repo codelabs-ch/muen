@@ -121,6 +121,10 @@ if [ $? -eq 0 ]; then
 	send_mail PASSED "Integration test successful for:\n\n$GITLOG"
 	exit 0
 else
+	if [ -n "$NOTIFY_FAIL_CMD" ]; then
+		log "Calling notify command '$NOTIFY_FAIL_CMD'"
+		$NOTIFY_FAIL_CMD
+	fi
 	send_mail FAILED "Integration test failed for:\n\n$GITLOG\n\nLog:\n`tail -n 50 $LOGFILE`"
 	exit 1
 fi

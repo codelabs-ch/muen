@@ -1,0 +1,157 @@
+#!/bin/bash
+
+if [ ! $# -eq 2 ]; then
+	echo "Usage: $0 <config_file> <build ID>"
+	exit 1
+fi
+
+BUILDID=$2
+
+SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+source $SCRIPTDIR/args.sh
+source $SCRIPTDIR/func.sh
+
+WORKDIR=$SCRIPTDIR/../../..
+
+SAVE_ARTIFACTS=0
+
+# servers to kill on exit
+KILL_ON_EXIT_PIDS=()
+
+export AMT_PASSWORD=$AMT_PASSWORD
+
+trap cleanup EXIT
+
+cleanup()
+{
+	for pid in ${KILL_ON_EXIT_PIDS[@]}; do
+		log "Killing server process with PID $pid"
+		kill -kill $pid >>$LOGFILE 2>&1 || true
+	done
+}
+
+save_artifacts()
+{
+	cp $WORKDIR/emulate/bochsout.txt $LOGDIR >>$LOGFILE 2>&1
+	cp $WORKDIR/emulate/emulate.out $LOGDIR >>$LOGFILE 2>&1
+	cp $WORKDIR/emulate/serial.out $LOGDIR >>$LOGFILE 2>&1
+}
+
+passed()
+{
+	log "State -> PASSED"
+	exit 0
+}
+
+failed()
+{
+	log "State -> FAILED"
+	if [ $SAVE_ARTIFACTS -ne 0 ]; then
+		save_artifacts
+	fi
+	exit 1
+}
+
+expect()
+{
+	file=$1
+	pattern=$2
+	log "Expect pattern '$pattern' in file '$file'"
+	grep "$pattern" $file >>$LOGFILE 2>&1
+	if [ $? -ne 0 ]; then
+		log "Expected pattern '$pattern' not found in '$file'"
+		failed
+	fi
+}
+
+expect_from_file()
+{
+	pattern_file=$1
+	path=$2
+
+	while read line
+	do
+		file=`echo $line | cut -d\; -f1`
+		pattern=`echo $line | cut -d\; -f2`
+		if [ -z "$file" ]; then
+			continue
+		fi
+
+		expect $path/$file "$pattern"
+	done < $pattern_file
+}
+
+bochs_emulate()
+{
+	SAVE_ARTIFACTS=1
+	execute "make emulate"
+	execute "sleep $BOOTWAIT_BOCHS"
+	save_artifacts
+	SAVE_ARTIFACTS=0
+
+	expect_from_file $SCRIPTDIR/expect.bochs "$LOGDIR"
+
+	execute "make -C emulate clean"
+}
+
+hw_deploy()
+{
+	hardware=$1
+	target_ip=$2
+
+	hw_logdir=$LOGDIR/$hardware
+	execute "mkdir -p $hw_logdir"
+
+	execute "ping -c 6 $target_ip"
+	xterm -e script -f -c "amtterm $target_ip" $hw_logdir/amt.out &
+	pid_xterm=$!
+	log "xterm pid is $pid_xterm"
+
+	execute "make deploy HARDWARE=$hardware SYSTEM=integration_tests"
+
+	cd $ROOT; python -m SimpleHTTPServer 10000 >$hw_logdir/http.out 2>&1 &
+	pid_http=$!
+	log "SimpleHTTPServer pid is $pid_http"
+	cd $WORKDIR
+
+	execute "sleep $HW_BOOTWAIT"
+
+	kill $pid_xterm >>$LOGFILE 2>&1
+	if [ $? -ne 0 ]; then
+		log "Stopping AMT console failed, retrying on exit"
+		KILL_ON_EXIT_PIDS+=($pid_xterm)
+	fi
+	kill $pid_http >>$LOGFILE 2>&1
+	if [ $? -ne 0 ]; then
+		log "Stopping HTTP server failed, retrying on exit"
+		KILL_ON_EXIT_PIDS+=($pid_http)
+	fi
+
+	echo y | amttool $target_ip powerdown >>$LOGFILE 2>&1
+	execute "make -C deploy clean"
+
+	expect_from_file $SCRIPTDIR/expect.hw_common "$hw_logdir"
+}
+
+deploy_to_hardware()
+{
+	for ip_hw in ${TARGETS[@]}; do
+		ip=`echo $ip_hw | cut -d\; -f1`
+		export TARGET_IP=$ip
+		hw=`echo $ip_hw | cut -d\; -f2`
+		log "Deploying to target $ip with hardware $hw"
+		hw_deploy $hw $ip
+	done
+}
+
+mkdir -p $LOGDIR
+
+echo "Logging to file $LOGFILE"
+
+execute "cd $WORKDIR"
+
+bochs_emulate
+deploy_to_hardware
+
+passed

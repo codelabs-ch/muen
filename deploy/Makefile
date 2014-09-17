@@ -1,7 +1,7 @@
 PACK_DIR = $(CURDIR)/../pack/obj
 HTTP_LOG = $(CURDIR)/http.log
 
-TARGET_IP = 192.168.254.2
+TARGET_IP ?= 192.168.254.2
 
 HTTP_STATE   = `cat $(HTTP_LOG)`
 TARGET_STATE = `amttool $(TARGET_IP) | sed -n 's/Powerstate: \s //p'`

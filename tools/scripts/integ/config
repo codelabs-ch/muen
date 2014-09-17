@@ -1,0 +1,26 @@
+### muen_integ_config ###
+
+ROOT=$HOME/Builds
+LOGDIR=$ROOT/logs/$BUILDID
+LOGFILE=$LOGDIR/build.log
+LOCK=/tmp/muen-integ.running
+
+# AMT password, only set if not present in the environment
+: ${AMT_PASSWORD=XXX}
+
+# mail settings
+RECIPIENTS="postmaster@localhost"
+SENDER="muen.builder@gmail.com"
+
+# seconds to wait for bochs target to boot
+BOOTWAIT_BOCHS=40
+
+# seconds to wait for hardware target to boot
+HW_BOOTWAIT=110
+
+# target IPs and associated hardware
+TARGETS=()
+TARGETS+=('192.168.254.2;lenovo-t430s')
+
+# optional notify command executed when build fails
+NOTIFY_FAIL_CMD=""

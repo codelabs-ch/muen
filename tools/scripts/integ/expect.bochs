@@ -1,0 +1,5 @@
+serial.out;Booting Muen kernel
+serial.out;Welcome to Linux on Muen SK
+bochsout.txt;CPU 1 started up at 0000:00000000 by APIC
+bochsout.txt;CPU 2 started up at 0000:00000000 by APIC
+bochsout.txt;CPU 3 started up at 0000:00000000 by APIC

@@ -263,7 +263,10 @@ is
       Global_Command : Types.Reg_Global_Command_Type;
    begin
       IOMMUs (IOMMU).Root_Table_Address := Address;
-      Global_Command      := IOMMUs (IOMMU).Global_Command;
+
+      Global_Status := IOMMUs (IOMMU).Global_Status;
+      Set_Command_From_Status (Command => Global_Command,
+                               Status  => Global_Status);
       Global_Command.SRTP := 1;
       IOMMUs (IOMMU).Global_Command := Global_Command;
 
@@ -344,7 +347,9 @@ is
       Global_Command : Types.Reg_Global_Command_Type;
       Global_Status  : Types.Reg_Global_Status_Type;
    begin
-      Global_Command    := IOMMUs (IOMMU).Global_Command;
+      Global_Status := IOMMUs (IOMMU).Global_Status;
+      Set_Command_From_Status (Command => Global_Command,
+                               Status  => Global_Status);
       Global_Command.TE := 1;
       IOMMUs (IOMMU).Global_Command := Global_Command;
 

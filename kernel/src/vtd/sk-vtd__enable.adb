@@ -49,6 +49,31 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Set command register fields based on given status register values.
+   --  The current state of the global command register must be reconstructed
+   --  from the global status register since command register values are
+   --  *undefined* when read, see Intel VT-d spec, section 11.4.4.
+   procedure Set_Command_From_Status
+     (Command : out Types.Reg_Global_Command_Type;
+      Status  :     Types.Reg_Global_Status_Type)
+   with
+      Depends => (Command => Status)
+   is
+   begin
+      Command := (CFI      => Status.CFIS,
+                  SIRTP    => Status.IRTPS,
+                  IRE      => Status.IRES,
+                  QIE      => Status.QIES,
+                  WBF      => Status.WBFS,
+                  EAFL     => Status.AFLS,
+                  SFL      => Status.FLS,
+                  SRTP     => Status.RTPS,
+                  TE       => Status.TES,
+                  Reserved => (others => 0));
+   end Set_Command_From_Status;
+
+   -------------------------------------------------------------------------
+
    --  Clears the Fault recording register and the Primary Fault Overflow flag
    --  of the specified IOMMU.
    procedure Clear_Fault_Record (IOMMU : Skp.IOMMU.IOMMU_Device_Range)

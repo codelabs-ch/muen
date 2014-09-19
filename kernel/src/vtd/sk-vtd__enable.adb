@@ -428,6 +428,16 @@ is
             end if;
          end if;
 
+         declare
+            Dummy : Types.Reg_Global_Status_Type;
+         begin
+            pragma $Prove_Warnings (Off, "unused assignment");
+            Dummy := IOMMUs (I).Global_Status;
+            pragma $Prove_Warnings (On, "unused assignment");
+            pragma Debug (VTd.Dump.Print_Global_Status
+                          (IOMMU  => I,
+                           Status => Dummy));
+         end;
          pragma Debug
            (SK.Dump.Print_Message_8
               (Msg  => "VT-d DMA address translation enabled for IOMMU",

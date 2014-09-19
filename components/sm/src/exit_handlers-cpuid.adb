@@ -38,9 +38,9 @@ is
             --  Get vendor ID.
 
             --  Return the vendor ID for a GenuineIntel processor and set
-            --  the highest valid CPUID number to 1.
+            --  the highest valid CPUID number to 2.
 
-            State.Regs.RAX := 1;
+            State.Regs.RAX := 2;
             State.Regs.RBX := 16#756e_6547#;
             State.Regs.RCX := 16#6c65_746e#;
             State.Regs.RDX := 16#4965_6e69#;
@@ -69,6 +69,17 @@ is
             --  Bit 25 -   SSE: SSE support
             --  Bit 26 -  SSE2: SSE2 support
             State.Regs.RDX := 16#0708_8969#;
+         when 2 =>
+
+            --  Return Cache and TLB Descriptor information of a Pentium 4
+            --  processor (values taken from [1]).
+            --
+            --  [1] - http://x86.renejeschke.de/html/file_module_x86_id_45.html
+
+            State.Regs.RAX := 16#665b_5001#;
+            State.Regs.RBX := 0;
+            State.Regs.RCX := 0;
+            State.Regs.RDX := 16#007a_7000#;
          when 16#8000_0000# =>
 
             --  Get Highest Extended Function Supported.

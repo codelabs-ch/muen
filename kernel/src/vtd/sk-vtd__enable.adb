@@ -292,9 +292,13 @@ is
 
       Context_Command : Types.Reg_Context_Command_Type;
    begin
-      Context_Command      := IOMMUs (IOMMU).Context_Command;
-      Context_Command.ICC  := 1;
-      Context_Command.CIRG := 1;
+
+      --  Explicitly set Unused values to 0.
+
+      Context_Command.Unused := (others => 0);
+      Context_Command.ICC    := 1;
+      Context_Command.CIRG   := 1;
+
       IOMMUs (IOMMU).Context_Command := Context_Command;
 
       for J in 1 .. Loop_Count_Max loop

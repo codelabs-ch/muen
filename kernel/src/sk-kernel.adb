@@ -22,6 +22,7 @@ with SK.KC;
 with SK.Version;
 with SK.System_State;
 with SK.VMX;
+with SK.VTd.Interrupts;
 
 package body SK.Kernel
 is
@@ -76,7 +77,7 @@ is
       if Is_Bsp then
          Interrupts.Disable_Legacy_PIC;
          --  TODO: Read VTd status from feature package.
-         Interrupts.Setup_IRQ_Routing (VTd_Enabled => True);
+         VTd.Interrupts.Setup_IRQ_Routing (VTd_Enabled => True);
          VTd.Initialize;
       end if;
 

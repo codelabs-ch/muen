@@ -18,8 +18,6 @@
 
 with System.Storage_Elements;
 
-with Skp.Interrupts;
-
 with SK.CPU;
 with SK.Descriptors;
 with SK.Dump;
@@ -29,7 +27,7 @@ use type SK.Descriptors.Pseudo_Descriptor_Type;
 
 package body SK.Interrupts
 with
-   Refined_State => (State =>  (IDT, IDT_Pointer))
+   Refined_State => (State => (IDT, IDT_Pointer))
 is
 
    subtype Exception_Range is Skp.Vector_Range range 0 .. 19;
@@ -104,49 +102,6 @@ is
       CPU.Lidt (Address => SK.Word64 (System.Storage_Elements.To_Integer
                 (Value => IDT_Pointer'Address)));
    end Load;
-
-   -------------------------------------------------------------------------
-
-   procedure Setup_IRQ_Routing (VTd_Enabled : Boolean)
-   is
-      Route    : Skp.Interrupts.IRQ_Route_Type;
-      Dest_ID  : SK.Byte;
-      Shiftpos : Natural;
-   begin
-      for I in Skp.Interrupts.Routing_Range loop
-         Route := Skp.Interrupts.IRQ_Routing (I);
-
-         if VTd_Enabled then
-
-            --  See Intel VT-d specification, section 5.5.1.
-
-            Shiftpos := 49;
-            Dest_ID  := Route.IRQ;
-         else
-
-            --  See Intel IOAPIC specification, section 3.2.4.
-
-            Shiftpos := 56;
-            Dest_ID  := CPU_Registry.Get_APIC_ID (CPU_ID => Route.CPU);
-         end if;
-
-         pragma Debug (Dump.Print_IRQ_Routing
-                       (IRQ         => Route.IRQ,
-                        Vector      => SK.Byte (Route.Vector),
-                        CPU_ID      => SK.Byte (Route.CPU),
-                        Dest_ID     => Dest_ID,
-                        VTd_Enabled => VTd_Enabled));
-
-         if Route.Vector /= Skp.Invalid_Vector then
-            IO_Apic.Route_IRQ
-              (IRQ            => Route.IRQ,
-               Vector         => SK.Byte (Route.Vector),
-               Trigger_Mode   => Route.IRQ_Mode,
-               Trigger_Level  => Route.IRQ_Level,
-               Destination_Id => SK.Word64 (Dest_ID) * 2 ** Shiftpos);
-         end if;
-      end loop;
-   end Setup_IRQ_Routing;
 
    -------------------------------------------------------------------------
 

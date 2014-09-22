@@ -472,10 +472,6 @@ is
                           (IOMMU  => I,
                            Status => Dummy));
          end;
-         pragma Debug
-           (SK.Dump.Print_Message_8
-              (Msg  => "VT-d DMA address translation enabled for IOMMU",
-               Item => SK.Byte (I)));
       end loop;
    end Initialize;
 

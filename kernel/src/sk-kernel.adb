@@ -76,8 +76,7 @@ is
 
       if Is_Bsp then
          Interrupts.Disable_Legacy_PIC;
-         --  TODO: Read VTd status from feature package.
-         VTd.Interrupts.Setup_IRQ_Routing (VTd_Enabled => True);
+         VTd.Interrupts.Setup_IRQ_Routing;
          VTd.Initialize;
       end if;
 

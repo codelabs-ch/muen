@@ -22,10 +22,10 @@ with SK.CPU_Registry;
 package SK.VTd.Interrupts
 is
 
-   --  Setup I/O APIC IRQ routing.
-   procedure Setup_IRQ_Routing (VTd_Enabled : Boolean)
+   --  Setup I/O APIC IRQ routing (VT-d disabled).
+   procedure Setup_IRQ_Routing
    with
       Global  => (Input => CPU_Registry.State, In_Out => IO_Apic.State),
-      Depends => (IO_Apic.State =>+ (CPU_Registry.State, VTd_Enabled));
+      Depends => (IO_Apic.State =>+ (CPU_Registry.State));
 
 end SK.VTd.Interrupts;

@@ -23,39 +23,30 @@ with SK.Dump;
 package body SK.VTd.Interrupts
 is
 
+   --  Position of the destination ID in an I/O APIC RTE for VT-d IR. See Intel
+   --  VT-d specification, section 5.5.1.
+
+   Dest_ID_Shiftpos : constant Natural := 49;
+
    -------------------------------------------------------------------------
 
-   procedure Setup_IRQ_Routing (VTd_Enabled : Boolean)
+   procedure Setup_IRQ_Routing
    is
       use type Skp.Dst_Vector_Range;
 
-      Route    : Skp.Interrupts.IRQ_Route_Type;
-      Dest_ID  : SK.Byte;
-      Shiftpos : Natural;
+      Route   : Skp.Interrupts.IRQ_Route_Type;
+      Dest_ID : SK.Byte;
    begin
       for I in Skp.Interrupts.Routing_Range loop
-         Route := Skp.Interrupts.IRQ_Routing (I);
-
-         if VTd_Enabled then
-
-            --  See Intel VT-d specification, section 5.5.1.
-
-            Shiftpos := 49;
-            Dest_ID  := Route.IRQ;
-         else
-
-            --  See Intel IOAPIC specification, section 3.2.4.
-
-            Shiftpos := 56;
-            Dest_ID  := CPU_Registry.Get_APIC_ID (CPU_ID => Route.CPU);
-         end if;
+         Route   := Skp.Interrupts.IRQ_Routing (I);
+         Dest_ID := Route.IRQ;
 
          pragma Debug (Dump.Print_IRQ_Routing
                        (IRQ         => Route.IRQ,
                         Vector      => SK.Byte (Route.Vector),
                         CPU_ID      => SK.Byte (Route.CPU),
                         Dest_ID     => Dest_ID,
-                        VTd_Enabled => VTd_Enabled));
+                        VTd_Enabled => True));
 
          if Route.Vector /= Skp.Invalid_Vector then
             IO_Apic.Route_IRQ
@@ -63,7 +54,7 @@ is
                Vector         => SK.Byte (Route.Vector),
                Trigger_Mode   => Route.IRQ_Mode,
                Trigger_Level  => Route.IRQ_Level,
-               Destination_Id => SK.Word64 (Dest_ID) * 2 ** Shiftpos);
+               Destination_Id => SK.Word64 (Dest_ID) * 2 ** Dest_ID_Shiftpos);
          end if;
       end loop;
    end Setup_IRQ_Routing;

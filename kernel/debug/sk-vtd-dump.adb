@@ -26,6 +26,40 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Print_Global_Status
+     (IOMMU  : Skp.IOMMU.IOMMU_Device_Range;
+      Status : Types.Reg_Global_Status_Type)
+   is
+   begin
+      Locks.Acquire;
+
+      KC.Put_String (Item => "IOMMU ");
+      KC.Put_Byte   (Item => SK.Byte (IOMMU));
+      KC.Put_String (Item => ": TES ");
+      KC.Put_Byte   (Item => SK.Byte (Status.TES));
+      KC.Put_String (Item => ", RTPS ");
+      KC.Put_Byte   (Item => SK.Byte (Status.RTPS));
+      KC.Put_String (Item => ", FLS ");
+      KC.Put_Byte   (Item => SK.Byte (Status.FLS));
+      KC.Put_String (Item => ", AFLS ");
+      KC.Put_Byte   (Item => SK.Byte (Status.AFLS));
+      KC.Put_String (Item => ", WBFS ");
+      KC.Put_Byte   (Item => SK.Byte (Status.WBFS));
+      KC.Put_String (Item => ", QIES ");
+      KC.Put_Byte   (Item => SK.Byte (Status.QIES));
+      KC.Put_String (Item => ", IRES ");
+      KC.Put_Byte   (Item => SK.Byte (Status.IRES));
+      KC.Put_String (Item => ", IRTPS ");
+      KC.Put_Byte   (Item => SK.Byte (Status.IRTPS));
+      KC.Put_String (Item => ", CFIS ");
+      KC.Put_Byte   (Item => SK.Byte (Status.CFIS));
+      KC.New_Line;
+
+      Locks.Release;
+   end Print_Global_Status;
+
+   -------------------------------------------------------------------------
+
    procedure Print_VTd_Fault
      (IOMMU  : Skp.IOMMU.IOMMU_Device_Range;
       Status : Types.Reg_Fault_Status_Type;

@@ -31,4 +31,9 @@ is
       Status : Types.Reg_Fault_Status_Type;
       Fault  : Types.Reg_Fault_Recording_Type);
 
+   --  Print general remapping hardware status for given IOMMU.
+   procedure Print_Global_Status
+     (IOMMU  : Skp.IOMMU.IOMMU_Device_Range;
+      Status : Types.Reg_Global_Status_Type);
+
 end SK.VTd.Dump;

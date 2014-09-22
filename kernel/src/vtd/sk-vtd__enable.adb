@@ -49,6 +49,31 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Set command register fields based on given status register values.
+   --  The current state of the global command register must be reconstructed
+   --  from the global status register since command register values are
+   --  *undefined* when read, see Intel VT-d spec, section 11.4.4.
+   procedure Set_Command_From_Status
+     (Command : out Types.Reg_Global_Command_Type;
+      Status  :     Types.Reg_Global_Status_Type)
+   with
+      Depends => (Command => Status)
+   is
+   begin
+      Command := (CFI      => Status.CFIS,
+                  SIRTP    => Status.IRTPS,
+                  IRE      => Status.IRES,
+                  QIE      => Status.QIES,
+                  WBF      => Status.WBFS,
+                  EAFL     => Status.AFLS,
+                  SFL      => Status.FLS,
+                  SRTP     => Status.RTPS,
+                  TE       => Status.TES,
+                  Reserved => (others => 0));
+   end Set_Command_From_Status;
+
+   -------------------------------------------------------------------------
+
    --  Clears the Fault recording register and the Primary Fault Overflow flag
    --  of the specified IOMMU.
    procedure Clear_Fault_Record (IOMMU : Skp.IOMMU.IOMMU_Device_Range)
@@ -238,7 +263,10 @@ is
       Global_Command : Types.Reg_Global_Command_Type;
    begin
       IOMMUs (IOMMU).Root_Table_Address := Address;
-      Global_Command      := IOMMUs (IOMMU).Global_Command;
+
+      Global_Status := IOMMUs (IOMMU).Global_Status;
+      Set_Command_From_Status (Command => Global_Command,
+                               Status  => Global_Status);
       Global_Command.SRTP := 1;
       IOMMUs (IOMMU).Global_Command := Global_Command;
 
@@ -264,9 +292,13 @@ is
 
       Context_Command : Types.Reg_Context_Command_Type;
    begin
-      Context_Command      := IOMMUs (IOMMU).Context_Command;
-      Context_Command.ICC  := 1;
-      Context_Command.CIRG := 1;
+
+      --  Explicitly set Unused values to 0.
+
+      Context_Command.Unused := (others => 0);
+      Context_Command.ICC    := 1;
+      Context_Command.CIRG   := 1;
+
       IOMMUs (IOMMU).Context_Command := Context_Command;
 
       for J in 1 .. Loop_Count_Max loop
@@ -319,7 +351,9 @@ is
       Global_Command : Types.Reg_Global_Command_Type;
       Global_Status  : Types.Reg_Global_Status_Type;
    begin
-      Global_Command    := IOMMUs (IOMMU).Global_Command;
+      Global_Status := IOMMUs (IOMMU).Global_Status;
+      Set_Command_From_Status (Command => Global_Command,
+                               Status  => Global_Status);
       Global_Command.TE := 1;
       IOMMUs (IOMMU).Global_Command := Global_Command;
 
@@ -428,10 +462,16 @@ is
             end if;
          end if;
 
-         pragma Debug
-           (SK.Dump.Print_Message_8
-              (Msg  => "VT-d DMA address translation enabled for IOMMU",
-               Item => SK.Byte (I)));
+         declare
+            Dummy : Types.Reg_Global_Status_Type;
+         begin
+            pragma $Prove_Warnings (Off, "unused assignment");
+            Dummy := IOMMUs (I).Global_Status;
+            pragma $Prove_Warnings (On, "unused assignment");
+            pragma Debug (VTd.Dump.Print_Global_Status
+                          (IOMMU  => I,
+                           Status => Dummy));
+         end;
       end loop;
    end Initialize;
 

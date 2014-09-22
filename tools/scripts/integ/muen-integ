@@ -26,7 +26,6 @@ trap cleanup EXIT
 cleanup()
 {
 	for pid in ${KILL_ON_EXIT_PIDS[@]}; do
-		log "Killing server process with PID $pid"
 		kill -kill $pid >>$LOGFILE 2>&1 || true
 	done
 }
@@ -106,28 +105,20 @@ hw_deploy()
 	execute "ping -c 6 $target_ip"
 	xterm -e script -f -c "amtterm $target_ip" $hw_logdir/amt.out &
 	pid_xterm=$!
-	log "xterm pid is $pid_xterm"
+	KILL_ON_EXIT_PIDS+=($pid_xterm)
 
 	execute "make -C kernel clean"
 	execute "make deploy HARDWARE=$hardware SYSTEM=integration_tests"
 
 	cd $ROOT; python -m SimpleHTTPServer 10000 >$hw_logdir/http.out 2>&1 &
 	pid_http=$!
-	log "SimpleHTTPServer pid is $pid_http"
+	KILL_ON_EXIT_PIDS+=($pid_http)
 	cd $WORKDIR
 
 	execute "sleep $HW_BOOTWAIT"
 
 	kill $pid_xterm >>$LOGFILE 2>&1
-	if [ $? -ne 0 ]; then
-		log "Stopping AMT console failed, retrying on exit"
-		KILL_ON_EXIT_PIDS+=($pid_xterm)
-	fi
 	kill $pid_http >>$LOGFILE 2>&1
-	if [ $? -ne 0 ]; then
-		log "Stopping HTTP server failed, retrying on exit"
-		KILL_ON_EXIT_PIDS+=($pid_http)
-	fi
 
 	echo y | amttool $target_ip powerdown >>$LOGFILE 2>&1
 	execute "make -C deploy clean"

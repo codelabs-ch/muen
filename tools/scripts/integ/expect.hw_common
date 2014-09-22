@@ -3,9 +3,7 @@ amt.out;Routing IRQ 01 as vector 21 to CPU 00 with APIC ID 00
 amt.out;Routing IRQ 14 as vector 34 to CPU 01 with APIC ID 01
 amt.out;Routing IRQ 10 as vector 30 to CPU 03 with APIC ID 03
 amt.out;IOMMU 01: TES 01, RTPS 01, FLS 00, AFLS 00, WBFS 00, QIES 00, IRES 00, IRTPS 00, CFIS 00
-amt.out;VT-d DMA address translation enabled for IOMMU 01
 amt.out;IOMMU 02: TES 01, RTPS 01, FLS 00, AFLS 00, WBFS 00, QIES 00, IRES 00, IRTPS 00, CFIS 00
-amt.out;VT-d DMA address translation enabled for IOMMU 02
 amt.out;Console output round 100
 amt.out;100%
 amt.out;stresstest DONE

@@ -108,6 +108,7 @@ hw_deploy()
 	pid_xterm=$!
 	log "xterm pid is $pid_xterm"
 
+	execute "make -C kernel clean"
 	execute "make deploy HARDWARE=$hardware SYSTEM=integration_tests"
 
 	cd $ROOT; python -m SimpleHTTPServer 10000 >$hw_logdir/http.out 2>&1 &

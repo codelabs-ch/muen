@@ -38,7 +38,11 @@ is
       Dest_ID : SK.Byte;
    begin
       for I in Skp.Interrupts.Routing_Range loop
-         Route   := Skp.Interrupts.IRQ_Routing (I);
+         pragma $Prove_Warnings (Off, "statement has no effect",
+            Reason => "Warning appears to be spurious");
+         Route := Skp.Interrupts.IRQ_Routing (I);
+         pragma $Prove_Warnings (On, "statement has no effect");
+
          Dest_ID := CPU_Registry.Get_APIC_ID (CPU_ID => Route.CPU);
 
          pragma Debug (Dump.Print_IRQ_Routing

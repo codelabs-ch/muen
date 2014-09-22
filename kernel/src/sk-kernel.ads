@@ -24,6 +24,7 @@ with SK.MP;
 with SK.Scheduler;
 with SK.Subjects;
 with SK.VTd;
+
 with X86_64;
 
 package SK.Kernel

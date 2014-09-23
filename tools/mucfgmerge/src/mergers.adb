@@ -20,7 +20,7 @@ with Ada.Strings.Unbounded;
 
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
-with DOM.Core.Documents;
+with DOM.Core.Documents.Local;
 
 with McKae.XML.XPath.XIA;
 
@@ -48,6 +48,7 @@ is
 
       Platform      : Muxml.XML_Data_Type;
       Platform_Node : DOM.Core.Node;
+      Top_Node      : DOM.Core.Node;
    begin
       Muxml.Parse (Data => Platform,
                    Kind => Muxml.Platform_Config,
@@ -55,6 +56,12 @@ is
       Platform_Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
          XPath => "/system/platform");
+
+      Top_Node := DOM.Core.Documents.Local.Adopt_Node
+        (Doc    => Policy.Doc,
+         Source => DOM.Core.Documents.Local.Clone_Node
+           (N    => DOM.Core.Documents.Get_Element (Doc => Platform.Doc),
+            Deep => True));
 
       if Platform_Node = null then
          declare
@@ -77,24 +84,16 @@ is
          end;
       else
          Muxml.Utils.Merge
-           (Left      => DOM.Core.Documents.Get_Element (Doc => Platform.Doc),
+           (Left      => Top_Node,
             Right     => Platform_Node,
             List_Tags => Platform_List_Tags);
       end if;
 
       Platform_Node := DOM.Core.Nodes.Replace_Child
         (N         => DOM.Core.Nodes.Parent_Node (N => Platform_Node),
-         New_Child => DOM.Core.Documents.Get_Element (Doc => Platform.Doc),
+         New_Child => Top_Node,
          Old_Child => Platform_Node);
       DOM.Core.Nodes.Free (N => Platform_Node);
-
-      --  The platform document must not be freed since some resources
-      --  referenced by the merged DOM tree are not copied to the Node's
-      --  document. This can be removed as soon as XML/Ada supports import of
-      --  nodes into a document.
-
-      Platform.Doc := null;
-      pragma Unreferenced (Platform);
    end Merge_Platform;
 
    -------------------------------------------------------------------------
@@ -123,6 +122,7 @@ is
                 (Elem => Inc_Node,
                  Name => "href");
             Content  : Muxml.XML_Data_Type;
+            Top_Node : DOM.Core.Node;
          begin
             Muxml.Parse (Data => Content,
                          Kind => Muxml.None,
@@ -130,21 +130,17 @@ is
 
             Merge_XIncludes (Policy  => Content,
                              Basedir => Basedir);
+            Top_Node := DOM.Core.Documents.Local.Adopt_Node
+              (Doc    => Policy.Doc,
+               Source => DOM.Core.Documents.Local.Clone_Node
+                 (N    => DOM.Core.Documents.Get_Element (Doc => Content.Doc),
+                  Deep => True));
 
             Inc_Node :=  DOM.Core.Nodes.Replace_Child
               (N         => DOM.Core.Nodes.Parent_Node (N => Inc_Node),
-               New_Child => DOM.Core.Documents.Get_Element
-                 (Doc => Content.Doc),
+               New_Child => Top_Node,
                Old_Child => Inc_Node);
             DOM.Core.Nodes.Free (N => Inc_Node);
-
-            --  The included document must not be freed since some resources
-            --  referenced by the merged DOM tree are not copied to the Node's
-            --  document. This can be removed as soon as XML/Ada supports
-            --  import of nodes into a document.
-
-            Content.Doc := null;
-            pragma Unreferenced (Content);
          end;
       end loop;
    end Merge_XIncludes;

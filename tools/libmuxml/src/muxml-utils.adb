@@ -20,6 +20,7 @@ with DOM.Core.Append_Node;
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 with DOM.Core.Attrs;
+with DOM.Core.Documents.Local;
 
 with McKae.XML.XPath.XIA;
 
@@ -271,6 +272,11 @@ is
       Right     : DOM.Core.Node;
       List_Tags : Tags_Type := No_Tags)
    is
+      use type DOM.Core.Node;
+
+      Left_Doc : constant DOM.Core.Document
+        := DOM.Core.Nodes.Owner_Document (N => Left);
+
       --  Returns True if the given name matches a list tag.
       function Is_List_Tag (Name : String) return Boolean;
 
@@ -292,9 +298,8 @@ is
       then
          return;
       end if;
-      declare
-         use type DOM.Core.Node;
 
+      declare
          R_Child : DOM.Core.Node := DOM.Core.Nodes.First_Child (N => Right);
       begin
          while R_Child /= null loop
@@ -322,9 +327,11 @@ is
 
                   Append_Child
                     (Node      => Left,
-                     New_Child => DOM.Core.Nodes.Clone_Node
-                       (N    => R_Child,
-                        Deep => True));
+                     New_Child => DOM.Core.Documents.Local.Adopt_Node
+                       (Doc    => Left_Doc,
+                        Source => DOM.Core.Documents.Local.Clone_Node
+                          (N    => R_Child,
+                           Deep => True)));
                else
                   Merge (Left      => L_Child,
                          Right     => R_Child,

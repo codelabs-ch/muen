@@ -19,7 +19,7 @@
 with Ada.Strings.Unbounded;
 
 with DOM.Core.Nodes;
-with DOM.Core.Documents;
+with DOM.Core.Documents.Local;
 
 with Muxml.Utils;
 
@@ -50,13 +50,19 @@ is
      (Profile : Profile_Type;
       Node    : DOM.Core.Node)
    is
+      Doc_Node  : constant DOM.Core.Document
+        := DOM.Core.Nodes.Owner_Document (N => Node);
       Data      : Muxml.XML_Data_Type;
       VCPU_Node : DOM.Core.Node;
    begin
       Muxml.Parse_String (Data => Data,
                           Kind => Muxml.VCPU_Profile,
                           XML  => Profile_Map (Profile).XML.all);
-      VCPU_Node := DOM.Core.Documents.Get_Element (Doc => Data.Doc);
+      VCPU_Node := DOM.Core.Documents.Local.Adopt_Node
+        (Doc    => Doc_Node,
+         Source => DOM.Core.Documents.Local.Clone_Node
+           (N    => DOM.Core.Documents.Get_Element (Doc => Data.Doc),
+            Deep => True));
 
       Muxml.Utils.Merge
         (Left      => VCPU_Node,
@@ -67,14 +73,6 @@ is
          New_Child => VCPU_Node,
          Old_Child => Node);
       DOM.Core.Nodes.Free (N => VCPU_Node);
-
-      --  The profile's document must not be freed since some resources
-      --  referenced by the merged DOM tree are not copied to the Node's
-      --  document. This can be removed as soon as XML/Ada supports import of
-      --  nodes into a document.
-
-      Data.Doc := null;
-      pragma Unreferenced (Data);
    end Set_VCPU_Profile;
 
 end Mucfgvcpu;

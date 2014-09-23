@@ -569,7 +569,7 @@ is
          --  IR
 
          Set_IR_Table_Address (IOMMU   => I,
-                               Address => Skp.IOMMU.IR_Table_Address,
+                               Address => Skp.IOMMU.IR_Table_Phys_Address,
                                Size    => Skp.IOMMU.IR_Table_Size,
                                Success => Status);
          if not Status then

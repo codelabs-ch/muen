@@ -22,7 +22,8 @@ is
    Kernel_RO_Section_Size      : constant := 16#0002_1000#;
    Kernel_RO_Section_Addr      : constant := 16#0011_f000#;
    Tau0_Interface_Virtual_Addr : constant := 16#001f_f000#;
-   Kernel_Devices_Virtual_Addr : constant := 16#0020_0000#;
-   Subject_States_Virtual_Addr : constant := 16#0030_0000#;
+   VTd_IRT_Virtual_Addr        : constant := 16#0020_0000#;
+   Kernel_Devices_Virtual_Addr : constant := 16#0030_0000#;
+   Subject_States_Virtual_Addr : constant := 16#0040_0000#;
 
 end Expanders.Config;

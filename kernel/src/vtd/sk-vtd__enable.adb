@@ -410,6 +410,35 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Block Compatibility Format Interrupts (CFI).
+   procedure Block_CF_Interrupts
+     (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
+      Success : out Boolean)
+     with
+       SPARK_Mode => $Complete_Proofs,  -- [N425-012]
+       Global     => (In_Out => IOMMUs),
+       Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+   is
+      use type SK.VTd.Types.Bit_Type;
+
+      Global_Command : Types.Reg_Global_Command_Type;
+      Global_Status  : Types.Reg_Global_Status_Type;
+   begin
+      Global_Status := IOMMUs (IOMMU).Global_Status;
+      Set_Command_From_Status (Command => Global_Command,
+                               Status  => Global_Status);
+      Global_Command.CFI := 0;
+      IOMMUs (IOMMU).Global_Command := Global_Command;
+
+      for J in 1 .. Loop_Count_Max loop
+         Global_Status := IOMMUs (IOMMU).Global_Status;
+         exit when Global_Status.CFIS = 0;
+      end loop;
+      Success := Global_Status.CFIS = 0;
+   end Block_CF_Interrupts;
+
+   -------------------------------------------------------------------------
+
    --  Enable Interrupt Remapping (IR) for IOMMU with given index.
    procedure Enable_Interrupt_Remapping
      (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
@@ -548,6 +577,16 @@ is
             if True then  --  Workaround for No_Return placement limitation
                VTd_Error (IOMMU   => I,
                           Message => "unable to set IR table address");
+            end if;
+         end if;
+
+         Block_CF_Interrupts (IOMMU   => I,
+                              Success => Status);
+         if not Status then
+            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
+            if True then  --  Workaround for No_Return placement limitation
+               VTd_Error (IOMMU   => I,
+                          Message => "unable to block CF interrupts");
             end if;
          end if;
 

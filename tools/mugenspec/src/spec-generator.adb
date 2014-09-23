@@ -714,7 +714,7 @@ is
       IRT_Addr_Str : constant String
         := Muxml.Utils.Get_Attribute
           (Doc   => Policy.Doc,
-           XPath => "/system/memory/memory[@type='system_vtd_ir']",
+           XPath => "/system/memory/memory[@type='kernel_vtd_ir']",
            Name  => "physicalAddress");
       IRT_Addr     : Interfaces.Unsigned_64
         := (if IRT_Addr_Str'Length > 0

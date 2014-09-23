@@ -146,7 +146,7 @@ is
          Size        => "16#1000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
-         Memory_Type => "system_vtd_ir",
+         Memory_Type => "kernel_vtd_ir",
          File_Name   => "vtd_ir",
          File_Offset => "none");
 

@@ -762,7 +762,7 @@ is
 
       Mutools.Templates.Replace
         (Template => Tmpl,
-         Pattern  => "__ir_table_addr__",
+         Pattern  => "__ir_table_phys_addr__",
          Content  => Mutools.Utils.To_Hex (Number => IRT_Addr));
 
       Mutools.Templates.Write

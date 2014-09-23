@@ -46,7 +46,7 @@ is
 
 private
 
-   SID_SQ_Verification : constant Bit_Array (1 .. 2) := (1 => 0, 2 => 1);
+   SID_SQ_Verification : constant Bit_Array (1 .. 2) := (1 => 1, 2 => 0);
 
    --  Interrupt Remapping Table Entry (IRTE), see Intel VT-d specification,
    --  section 9.10.

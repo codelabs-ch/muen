@@ -24,11 +24,11 @@ is
    --  Maximal number of entries in Interrupt Remapping Table.
    type IR_Entry_Range is range 0 .. 2 ** 16 - 1;
 
-private
-
    type Bit_Type is range 0 .. 1
      with
        Size => 1;
+
+private
 
    type Bit_Array is array (Positive range <>) of Bit_Type
      with

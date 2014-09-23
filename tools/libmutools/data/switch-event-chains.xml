@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<system>
+ <platform>
+  <processor logicalCpus="1" speed="2900" vmxTimerRate="5"/>
+  <memory>
+   <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
+  </memory>
+  <devices>
+   <device name="debugconsole" shared="false">
+    <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
+   </device>
+  </devices>
+ </platform>
+ <memory>
+  <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
+ </memory>
+ <events>
+  <event name="to_subj1" mode="switch"/>
+  <event name="to_subj2" mode="switch"/>
+  <event name="to_subj3_from_subj2" mode="switch"/>
+  <event name="to_subj3_from_subj4" mode="switch"/>
+  <event name="to_subj4_from_subj2" mode="switch"/>
+  <event name="to_subj4_from_subj3" mode="switch"/>
+ </events>
+ <components>
+  <component name="c1">
+   <binary filename="c1_bin" size="16#1000#" virtualAddress="16#2000#"/>
+  </component>
+  <component name="c2">
+   <binary filename="c2_bin" size="16#1000#" virtualAddress="16#2000#"/>
+  </component>
+  <component name="c3">
+   <binary filename="c3_bin" size="16#1000#" virtualAddress="16#2000#"/>
+  </component>
+  <component name="c4">
+   <binary filename="c4_bin" size="16#1000#" virtualAddress="16#2000#"/>
+  </component>
+ </components>
+ <subjects>
+  <subject name="subj1" profile="native">
+   <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+   </memory>
+   <devices/>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <default action="continue">
+       <notify physical="to_subj2"/>
+      </default>
+     </group>
+    </source>
+    <target>
+     <event physical="to_subj1" logical="to_subj1" vector="none"/>
+    </target>
+   </events>
+   <component ref="c1"/>
+  </subject>
+  <subject name="subj2" profile="native">
+   <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+   </memory>
+   <devices/>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <event id="1" logical="to_subj3" action="continue">
+       <notify physical="to_subj3_from_subj2"/>
+      </event>
+      <event id="2" logical="to_subj4" action="continue">
+       <notify physical="to_subj4_from_subj2"/>
+      </event>
+     </group>
+    </source>
+    <target>
+     <event physical="to_subj2" logical="to_subj2" vector="none"/>
+    </target>
+   </events>
+   <component ref="c2"/>
+  </subject>
+  <subject name="subj3" profile="native">
+   <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+   </memory>
+   <devices/>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <event id="1" logical="to_subj4" action="continue">
+       <notify physical="to_subj4_from_subj3"/>
+      </event>
+     </group>
+    </source>
+    <target>
+     <event physical="to_subj3_from_subj4" logical="from_subj4" vector="none"/>
+     <event physical="to_subj3_from_subj2" logical="from_subj2" vector="none"/>
+    </target>
+   </events>
+   <component ref="c3"/>
+  </subject>
+  <subject name="subj4" profile="native">
+   <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+   </memory>
+   <devices/>
+   <events>
+    <source>
+     <group name="vmx_exit">
+      <event id="1" logical="to_subj3" action="continue">
+       <notify physical="to_subj3_from_subj4"/>
+      </event>
+     </group>
+    </source>
+    <target>
+     <event physical="to_subj4_from_subj2" logical="from_subj2" vector="none"/>
+     <event physical="to_subj4_from_subj3" logical="from_subj3" vector="none"/>
+    </target>
+   </events>
+   <component ref="c4"/>
+  </subject>
+  <subject name="subj5" profile="native">
+   <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+   </memory>
+   <devices/>
+   <events/>
+   <component ref="c1"/>
+  </subject>
+ </subjects>
+ <scheduling tickRate="10000">
+  <majorFrame>
+   <cpu id="0">
+    <minorFrame subject="subj1" ticks="80"/>
+   </cpu>
+   <cpu id="1">
+    <minorFrame subject="subj5" ticks="40"/>
+    <minorFrame subject="subj5" ticks="40"/>
+   </cpu>
+  </majorFrame>
+ </scheduling>
+</system>

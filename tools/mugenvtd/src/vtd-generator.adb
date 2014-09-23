@@ -390,6 +390,7 @@ is
          for I in 0 .. DOM.Core.Nodes.Length (List => IRQs) - 1 loop
             declare
                use type Interfaces.Unsigned_8;
+               use type DOM.Core.Node;
 
                IRQ : constant DOM.Core.Node
                  := DOM.Core.Nodes.Item
@@ -405,13 +406,21 @@ is
                  := DOM.Core.Elements.Get_Attribute
                    (Elem => Dev,
                     Name => "physical");
+               Dev_Phys : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Doc   => Policy.Doc,
+                    XPath => "/system/platform/devices/device[@name='"
+                    & Dev_Ref & "']");
                IRQ_Phys : constant Entry_Range
                  := Entry_Range'Value
                    (Muxml.Utils.Get_Attribute
-                      (Doc   => Policy.Doc,
-                       XPath => "/system/platform/devices/device[@name='"
-                       & Dev_Ref & "']/irq[@name='" & IRQ_Ref & "']",
+                      (Doc   => Dev_Phys,
+                       XPath => "irq[@name='" & IRQ_Ref & "']",
                        Name  => "number"));
+               TM : constant Tables.Bit_Type
+                 := (if Muxml.Utils.Get_Element
+                     (Doc   => Dev_Phys,
+                      XPath => "pci") = null then 0 else 1);
                Host_Vector : constant Interfaces.Unsigned_8
                  := Interfaces.Unsigned_8 (IRQ_Phys)
                  + Mutools.Constants.Host_IRQ_Remap_Offset;
@@ -432,7 +441,7 @@ is
                   Vector => Host_Vector,
                   DST    => Interfaces.Unsigned_32'Value (CPU_ID),
                   SID    => IOAPIC_Bus_Dev_Func,
-                  TM     => 1);
+                  TM     => TM);
             end;
          end loop;
 

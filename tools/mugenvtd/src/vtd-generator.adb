@@ -431,7 +431,8 @@ is
                   Index  => IRQ_Phys,
                   Vector => Host_Vector,
                   DST    => Interfaces.Unsigned_32'Value (CPU_ID),
-                  SID    => IOAPIC_Bus_Dev_Func);
+                  SID    => IOAPIC_Bus_Dev_Func,
+                  TM     => 1);
             end;
          end loop;
 

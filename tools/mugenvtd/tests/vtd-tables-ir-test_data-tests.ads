@@ -10,11 +10,11 @@ package VTd.Tables.IR.Test_Data.Tests is
    type Test is new GNATtest_Generated.GNATtest_Standard.VTd.Tables.IR.Test_Data.Test
    with null record;
 
-   procedure Test_Add_Entry_5b70f8 (Gnattest_T : in out Test);
+   procedure Test_Add_Entry_45a094 (Gnattest_T : in out Test);
    --  vtd-tables-ir.ads:33:4:Add_Entry
 
    procedure Test_Serialize_5ca693 (Gnattest_T : in out Test);
-   --  vtd-tables-ir.ads:42:4:Serialize
+   --  vtd-tables-ir.ads:43:4:Serialize
 
 end VTd.Tables.IR.Test_Data.Tests;
 --  end read only

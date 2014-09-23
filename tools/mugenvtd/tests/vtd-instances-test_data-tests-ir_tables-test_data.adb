@@ -24,7 +24,8 @@ package body VTd.Instances.Test_Data.Tests.IR_Tables.Test_Data is
          Index  => Test_Range'Last,
          Vector => 12,
          DST    => 122344,
-         SID    => 404);
+         SID    => 404,
+         TM     => 1);
    end User_Set_Up;
 
    procedure User_Tear_Down (Gnattest_T : in out New_Test) is
@@ -34,7 +35,8 @@ package body VTd.Instances.Test_Data.Tests.IR_Tables.Test_Data is
          Index  => Test_Range'Last,
          Vector => 0,
          DST    => 0,
-         SID    => 0);
+         SID    => 0,
+         TM     => 0);
    end User_Tear_Down;
 
 end VTd.Instances.Test_Data.Tests.IR_Tables.Test_Data;

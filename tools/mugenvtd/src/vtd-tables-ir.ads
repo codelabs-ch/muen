@@ -35,7 +35,8 @@ is
       Index  :        Index_Range;
       Vector :        Interfaces.Unsigned_8;
       DST    :        Interfaces.Unsigned_32;
-      SID    :        Interfaces.Unsigned_16);
+      SID    :        Interfaces.Unsigned_16;
+      TM     :        Bit_Type);
 
    --  Serialize given Interrupt Remapping Table to file with specified
    --  filename.
@@ -54,7 +55,7 @@ private
       FPD        : Bit_Type               := 0;
       DM         : Bit_Type               := 0;
       RH         : Bit_Type               := 0;
-      TM         : Bit_Type               := 1;
+      TM         : Bit_Type               := 0;
       DLM        : Bit_Array (1 .. 3)     := (others => 0);
       AVAIL      : Bit_Array (1 .. 4)     := (others => 0);
       Reserved_1 : Bit_Array (1 .. 4)     := (others => 0);

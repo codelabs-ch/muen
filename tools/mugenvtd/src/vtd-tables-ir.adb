@@ -28,13 +28,15 @@ is
       Index  :        Index_Range;
       Vector :        Interfaces.Unsigned_8;
       DST    :        Interfaces.Unsigned_32;
-      SID    :        Interfaces.Unsigned_16)
+      SID    :        Interfaces.Unsigned_16;
+      TM     :        Bit_Type)
    is
       E : constant IR_Entry_Type
         := (Present => 1,
             V       => Vector,
             DST     => DST,
             SID     => SID,
+            TM      => TM,
             others  => <>);
    begin
       IRT.Entries (Index) := E;

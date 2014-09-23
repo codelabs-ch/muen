@@ -12,8 +12,8 @@ package body VTd.Tables.IR.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Add_Entry (Gnattest_T : in out Test);
-   procedure Test_Add_Entry_5b70f8 (Gnattest_T : in out Test) renames Test_Add_Entry;
---  id:2.2/5b70f8c6d03e95bc/Add_Entry/1/0/
+   procedure Test_Add_Entry_45a094 (Gnattest_T : in out Test) renames Test_Add_Entry;
+--  id:2.2/45a0947c33b7369f/Add_Entry/1/0/
    procedure Test_Add_Entry (Gnattest_T : in out Test) is
    --  vtd-tables-ir.ads:33:4:Add_Entry
 --  end read only
@@ -35,6 +35,8 @@ package body VTd.Tables.IR.Test_Data.Tests is
               Message   => "DST mismatch");
       Assert (Condition => E.SID = 404,
               Message   => "SID mismatch");
+      Assert (Condition => E.TM = 1,
+              Message   => "TM mismatch");
 --  begin read only
    end Test_Add_Entry;
 --  end read only
@@ -45,7 +47,7 @@ package body VTd.Tables.IR.Test_Data.Tests is
    procedure Test_Serialize_5ca693 (Gnattest_T : in out Test) renames Test_Serialize;
 --  id:2.2/5ca693daea6db0b3/Serialize/1/0/
    procedure Test_Serialize (Gnattest_T : in out Test) is
-   --  vtd-tables-ir.ads:42:4:Serialize
+   --  vtd-tables-ir.ads:43:4:Serialize
 --  end read only
    begin
       Serialize (IRT      => Gnattest_T.IRT,

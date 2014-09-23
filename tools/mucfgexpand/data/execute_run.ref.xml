@@ -199,6 +199,7 @@
     <memory executable="false" logical="lnx_state" physical="lnx_state" virtualAddress="16#0040_1000#" writable="true"/>
     <memory executable="false" logical="subject1_state" physical="subject1_state" virtualAddress="16#0040_2000#" writable="true"/>
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
+    <memory executable="false" logical="vtd_ir" physical="vtd_ir" virtualAddress="16#0020_0000#" writable="true"/>
    </cpu>
    <cpu id="1">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>

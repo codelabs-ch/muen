@@ -25,4 +25,8 @@ package Expanders.Device_Domains.Test_Data is
    procedure Remove_Device_Domains
      (Data : in out Muxml.XML_Data_Type);
 
+   --  Add deviceDomains and kernel sections.
+   procedure Add_Section_Skeleton_And_Kernel
+     (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Device_Domains.Test_Data;

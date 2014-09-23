@@ -32,7 +32,7 @@ pragma $Release_Warnings (On, "unit * is not referenced");
 
 package body SK.VTd
 with
-  Refined_State => (State => IOMMUs)
+   Refined_State => (State => IOMMUs)
 is
 
    --  Maximum number of busy-loops to perform when waiting for the hardware to

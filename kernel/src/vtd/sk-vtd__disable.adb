@@ -30,6 +30,7 @@ is
    begin
       null;
    end Process_Fault;
+
    -------------------------------------------------------------------------
 
    procedure Initialize
@@ -39,5 +40,15 @@ is
    begin
       null;
    end Initialize;
+
+   -------------------------------------------------------------------------
+
+   procedure Update_IRT_Destinations
+   with
+      SPARK_Mode => Off
+   is
+   begin
+      null;
+   end Update_IRT_Destinations;
 
 end SK.VTd;

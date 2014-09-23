@@ -32,7 +32,7 @@ pragma $Release_Warnings (On, "unit * is not referenced");
 
 package body SK.VTd
 with
-   Refined_State => (State => IOMMUs)
+   Refined_State => (State => (IOMMUs, IRT))
 is
 
    --  Maximum number of busy-loops to perform when waiting for the hardware to
@@ -46,6 +46,47 @@ is
        Async_Readers,
        Effective_Writes,
        Address => System'To_Address (Skp.IOMMU.Base_Address);
+
+   type IRT_Range is range 0 .. 2 ** (Skp.IOMMU.IR_Table_Size + 1) - 1;
+
+   type IRT_Type is array (IRT_Range) of Types.IR_Entry_Type;
+
+   IRT : IRT_Type
+     with
+       Volatile,
+       Async_Writers,
+       Async_Readers,
+       Effective_Writes,
+       Address => System'To_Address (Skp.IOMMU.IR_Table_Virt_Address);
+
+   -------------------------------------------------------------------------
+
+   procedure Update_IRT_Destinations
+   with
+      Refined_Global  => (Input => CPU_Registry.State, In_Out => IRT),
+      Refined_Depends => (IRT =>+ CPU_Registry.State)
+   is
+      use type Types.Bit_Type;
+
+      IRTE    : Types.IR_Entry_Type;
+      APIC_ID : SK.Word32;
+   begin
+      for I in IRT_Range loop
+         IRTE := IRT (I);
+
+         if IRTE.Present = 1 then
+            APIC_ID := SK.Word32
+              (CPU_Registry.Get_APIC_ID
+                 (CPU_ID => Skp.CPU_Range
+                      (IRTE.DST)));
+
+            if IRTE.DST /= APIC_ID then
+               IRTE.DST := APIC_ID;
+               IRT (I)  := IRTE;
+            end if;
+         end if;
+      end loop;
+   end Update_IRT_Destinations;
 
    -------------------------------------------------------------------------
 

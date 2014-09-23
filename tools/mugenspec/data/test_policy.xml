@@ -131,6 +131,7 @@
 				<memory logical="data" physical="kernel_data" writable="true" executable="true" virtualAddress="16#0011_8000#"/>
 				<memory logical="tau0_interface" physical="sys_interface" writable="false" executable="false" virtualAddress="16#001f_f000#"/>
 				<memory logical="tau0_state" physical="tau0_state" writable="true" executable="false" virtualAddress="16#001e_0000#"/>
+				<memory logical="vtd_ir" physical="vtd_ir" writable="true" executable="false" virtualAddress="16#0020_0000#"/>
 			</cpu>
 			<cpu id="1">
 				<memory logical="text" physical="kernel_text" writable="true" executable="true" virtualAddress="16#0010_0000#"/>

@@ -568,11 +568,91 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Get_Executing_CPU (Gnattest_T : in out Test);
+   procedure Test_Get_Executing_CPU_1c35bd (Gnattest_T : in out Test) renames Test_Get_Executing_CPU;
+--  id:2.2/1c35bd06b291292c/Get_Executing_CPU/1/0/
+   procedure Test_Get_Executing_CPU (Gnattest_T : in out Test) is
+   --  mutools-xml_utils.ads:124:4:Get_Executing_CPU
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_Src,
+                   File => "data/switch-event-chains.xml");
+
+      Assert (Condition => Get_Executing_CPU
+              (Data    => Data,
+               Subject => Muxml.Utils.Get_Element
+                 (Doc   => Data.Doc,
+                  XPath => "/system/subjects/subject[@name='subj1']")) = 0,
+              Message   => "Subj1 CPU mismatch");
+
+      Assert (Condition => Get_Executing_CPU
+              (Data    => Data,
+               Subject => Muxml.Utils.Get_Element
+                 (Doc   => Data.Doc,
+                  XPath => "/system/subjects/subject[@name='subj2']")) = 0,
+              Message   => "Subj2 CPU mismatch");
+      Assert (Condition => Get_Executing_CPU
+              (Data    => Data,
+               Subject => Muxml.Utils.Get_Element
+                 (Doc   => Data.Doc,
+                  XPath => "/system/subjects/subject[@name='subj3']")) = 0,
+              Message   => "Subj3 CPU mismatch");
+      Assert (Condition => Get_Executing_CPU
+              (Data    => Data,
+               Subject => Muxml.Utils.Get_Element
+                 (Doc   => Data.Doc,
+                  XPath => "/system/subjects/subject[@name='subj4']")) = 0,
+              Message   => "Subj4 CPU mismatch (1)");
+      Assert (Condition => Get_Executing_CPU
+              (Data    => Data,
+               Subject => Muxml.Utils.Get_Element
+                 (Doc   => Data.Doc,
+                  XPath => "/system/subjects/subject[@name='subj5']")) = 1,
+              Message   => "Subj5 CPU mismatch");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='to_subj4_from_subj2']",
+         Name  => "mode",
+         Value => "ipi");
+
+      --  Must not change CPU of subj4 since it is still executable via subj3.
+
+      Assert (Condition => Get_Executing_CPU
+              (Data    => Data,
+               Subject => Muxml.Utils.Get_Element
+                 (Doc   => Data.Doc,
+                  XPath => "/system/subjects/subject[@name='subj4']")) = 0,
+              Message   => "Subj4 CPU mismatch (2)");
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/events/event[@name='to_subj3_from_subj2']",
+         Name  => "mode",
+         Value => "ipi");
+
+      Assert (Condition => Get_Executing_CPU
+              (Data    => Data,
+               Subject => Muxml.Utils.Get_Element
+                 (Doc   => Data.Doc,
+                  XPath => "/system/subjects/subject[@name='subj3']")) = -1,
+              Message   => "Subj3 CPU mismatch (2)");
+--  begin read only
+   end Test_Get_Executing_CPU;
+--  end read only
+
+
+--  begin read only
    procedure Test_Is_PCI_Device_Reference (Gnattest_T : in out Test);
    procedure Test_Is_PCI_Device_Reference_c44529 (Gnattest_T : in out Test) renames Test_Is_PCI_Device_Reference;
 --  id:2.2/c4452982639ee4fa/Is_PCI_Device_Reference/1/0/
    procedure Test_Is_PCI_Device_Reference (Gnattest_T : in out Test) is
-   --  mutools-xml_utils.ads:122:4:Is_PCI_Device_Reference
+   --  mutools-xml_utils.ads:130:4:Is_PCI_Device_Reference
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

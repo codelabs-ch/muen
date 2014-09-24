@@ -18,6 +18,9 @@
 
 with Interfaces;
 
+with Ada.Strings.Unbounded.Hash;
+with Ada.Containers.Hashed_Maps;
+
 with DOM.Core.Nodes;
 with DOM.Core.Documents;
 with DOM.Core.Elements;
@@ -257,6 +260,110 @@ is
    begin
       return DOM.Core.Nodes.Length (List => CPUs);
    end Get_Active_CPU_Count;
+
+   -------------------------------------------------------------------------
+
+   function Get_Executing_CPU
+     (Data    : Muxml.XML_Data_Type;
+      Subject : DOM.Core.Node)
+      return Integer
+   is
+      package Subject_CPU_Package is new Ada.Containers.Hashed_Maps
+        (Key_Type        => Ada.Strings.Unbounded.Unbounded_String,
+         Element_Type    => Integer,
+         Hash            => Ada.Strings.Unbounded.Hash,
+         Equivalent_Keys => Ada.Strings.Unbounded."=");
+
+      use type Subject_CPU_Package.Cursor;
+
+      Minor_Frames : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
+
+      --  Subject to CPU mapping.
+      Subj_CPU_Map : Subject_CPU_Package.Map;
+
+      --  Find CPU that runs the given subject. A value of -1 is returned if no
+      --  CPU can execute the subject.
+      function Find_CPU (Subject : DOM.Core.Node) return Integer;
+
+      ----------------------------------------------------------------------
+
+      function Find_CPU (Subject : DOM.Core.Node) return Integer
+      is
+         Subj_Name : constant Ada.Strings.Unbounded.Unbounded_String
+           := Ada.Strings.Unbounded.To_Unbounded_String
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Subject,
+                 Name => "name"));
+         Pos       : constant Subject_CPU_Package.Cursor
+           := Subject_CPU_Package.Find
+             (Container => Subj_CPU_Map,
+              Key       => Subj_Name);
+         CPU       : Integer := -1;
+      begin
+         if Pos = Subject_CPU_Package.No_Element then
+            declare
+               use type DOM.Core.Node;
+
+               Minor_Frame : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Nodes     => Minor_Frames,
+                    Ref_Attr  => "subject",
+                    Ref_Value => Ada.Strings.Unbounded.To_String (Subj_Name));
+            begin
+               if Minor_Frame = null then
+
+                  --  Recursively check if subject is switch target of
+                  --  a scheduled subject.
+
+                  declare
+                     Src_Subjs    : constant DOM.Core.Node_List
+                       := Mutools.XML_Utils.Get_Switch_Sources
+                         (Data   => Data,
+                          Target => Subject);
+                     Switch_Count : constant Integer
+                       := DOM.Core.Nodes.Length (List => Src_Subjs);
+                  begin
+                     Subj_CPU_Map.Insert
+                       (Key      => Subj_Name,
+                        New_Item => -1);
+
+                     for J in 0 .. Switch_Count - 1 loop
+                        CPU := Find_CPU
+                          (Subject => DOM.Core.Nodes.Item
+                             (List  => Src_Subjs,
+                              Index => J));
+                        exit when CPU /= -1;
+                     end loop;
+
+                     if CPU /= -1 then
+                        Subj_CPU_Map.Replace
+                          (Key      => Subj_Name,
+                           New_Item => CPU);
+                     end if;
+                  end;
+               else
+                  CPU := Integer'Value
+                    (DOM.Core.Elements.Get_Attribute
+                       (Elem => DOM.Core.Nodes.Parent_Node
+                            (N => Minor_Frame),
+                        Name => "id"));
+                  Subj_CPU_Map.Insert
+                    (Key      => Subj_Name,
+                     New_Item => CPU);
+               end if;
+            end;
+         else
+            CPU := Subject_CPU_Package.Element (Position => Pos);
+         end if;
+
+         return CPU;
+      end Find_CPU;
+   begin
+      return Find_CPU (Subject => Subject);
+   end Get_Executing_CPU;
 
    -------------------------------------------------------------------------
 

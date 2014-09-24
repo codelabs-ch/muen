@@ -313,14 +313,10 @@ is
 
    procedure Add_CPU_Ids (Data : in out Muxml.XML_Data_Type)
    is
-      Nodes  : constant DOM.Core.Node_List
+      Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject");
-      Frames : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/scheduling/majorFrame/cpu/minorFrame");
    begin
       for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
          declare
@@ -334,57 +330,19 @@ is
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Subj_Node,
                  Name => "name");
-            Frame_Node : DOM.Core.Node
-              := Muxml.Utils.Get_Element
-                (Nodes     => Frames,
-                 Ref_Attr  => "subject",
-                 Ref_Value => Subj_Name);
-            CPU_Node   : DOM.Core.Node;
+            CPU_Id     : constant Integer
+              := Mutools.XML_Utils.Get_Executing_CPU
+                (Data    => Data,
+                 Subject => Subj_Node);
+            CPU_Id_Str : constant String
+              := Ada.Strings.Fixed.Trim (Source => CPU_Id'Img,
+                                         Side   => Ada.Strings.Left);
          begin
-            if Frame_Node = null then
-
-               --  Subject is executed via switch events.
-
-               declare
-                  Src_Subjs    : constant DOM.Core.Node_List
-                    := Mutools.XML_Utils.Get_Switch_Sources
-                      (Data   => Data,
-                       Target => Subj_Node);
-                  Switch_Count : constant Integer
-                    := DOM.Core.Nodes.Length (List => Src_Subjs);
-               begin
-                  for J in 0 .. Switch_Count - 1 loop
-                     declare
-                        Cur_Src_Name : constant String
-                          := DOM.Core.Elements.Get_Attribute
-                            (Elem => DOM.Core.Nodes.Item (List  => Src_Subjs,
-                                                          Index => J),
-                             Name => "name");
-                     begin
-                        Frame_Node := Muxml.Utils.Get_Element
-                          (Nodes     => Frames,
-                           Ref_Attr  => "subject",
-                           Ref_Value => Cur_Src_Name);
-                        exit when Frame_Node /= null;
-                     end;
-                  end loop;
-               end;
-            end if;
-
-            CPU_Node := DOM.Core.Nodes.Parent_Node (N => Frame_Node);
-
-            declare
-               CPU_Id : constant String
-                 := DOM.Core.Elements.Get_Attribute
-                   (Elem  => CPU_Node,
-                    Name  => "id");
-            begin
-               Mulog.Log (Msg => "Setting cpu of subject '" & Subj_Name
-                          & "' to " & CPU_Id);
-               DOM.Core.Elements.Set_Attribute (Elem  => Subj_Node,
-                                                Name  => "cpu",
-                                                Value => CPU_Id);
-            end;
+            Mulog.Log (Msg => "Setting cpu of subject '" & Subj_Name
+                       & "' to " & CPU_Id_Str);
+            DOM.Core.Elements.Set_Attribute (Elem  => Subj_Node,
+                                             Name  => "cpu",
+                                             Value => CPU_Id_Str);
          end;
       end loop;
    end Add_CPU_Ids;

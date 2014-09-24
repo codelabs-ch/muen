@@ -118,11 +118,23 @@
    </events>
    <component ref="c4"/>
   </subject>
+  <subject name="subj5" profile="native">
+   <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+   </memory>
+   <devices/>
+   <events/>
+   <component ref="c1"/>
+  </subject>
  </subjects>
  <scheduling tickRate="10000">
   <majorFrame>
    <cpu id="0">
     <minorFrame subject="subj1" ticks="80"/>
+   </cpu>
+   <cpu id="1">
+    <minorFrame subject="subj5" ticks="40"/>
+    <minorFrame subject="subj5" ticks="40"/>
    </cpu>
   </majorFrame>
  </scheduling>

@@ -193,8 +193,8 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       Data : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Data,
-                   Kind => Muxml.Format_Src,
-                   File => "data/runnability.xml");
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
       --  Must not raise an exception.
 
@@ -202,17 +202,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/events/event[@name='to_subj4_from_subj2']",
-         Name  => "mode",
-         Value => "ipi");
-
-      --  Must not raise an exception since subj4 is still schedulable.
-
-      Runnability (XML_Data => Data);
-
-      Muxml.Utils.Set_Attribute
-        (Doc   => Data.Doc,
-         XPath => "/system/events/event[@name='to_subj3_from_subj2']",
+         XPath => "/system/events/event[@name='trap_to_sm']",
          Name  => "mode",
          Value => "ipi");
 
@@ -224,7 +214,7 @@ package body Mucfgcheck.Subject.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Subject 'subj3' is neither referenced in the scheduling"
+                    = "Subject 'sm' is neither referenced in the scheduling"
                     & " plan nor schedulable via switch events",
                     Message   => "Exception mismatch");
       end;

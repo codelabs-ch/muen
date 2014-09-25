@@ -61,6 +61,10 @@ is
    --  unique per subject.
    procedure Device_Reference_BDF_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that all device references specifying a bus, device, function
+   --  triplet are references to physical PCI devices.
+   procedure PCI_Device_References (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate presence of debug console device with I/O port resource.
    procedure Debugconsole_Presence (XML_Data : Muxml.XML_Data_Type);
 

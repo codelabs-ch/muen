@@ -516,6 +516,60 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure PCI_Device_References (XML_Data : Muxml.XML_Data_Type)
+   is
+      PCI_Devs     : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/platform/devices/device[pci]");
+      PCI_Dev_Refs : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject/devices/device[pci]");
+      Refs_Count   : constant Natural
+        := DOM.Core.Nodes.Length (List => PCI_Dev_Refs);
+   begin
+      if Refs_Count > 1 then
+         Mulog.Log (Msg => "Checking" & Refs_Count'Img
+                    & " PCI device reference(s)");
+
+         for I in 0 .. Refs_Count - 1 loop
+            declare
+               use type DOM.Core.Node;
+
+               Dev_Ref   : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => PCI_Dev_Refs,
+                                         Index => I);
+               Subj_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Muxml.Utils.Ancestor_Node
+                      (Node  => Dev_Ref,
+                       Level => 2),
+                    Name => "name");
+               Log_Name  : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Dev_Ref,
+                    Name => "logical");
+               Phys_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Dev_Ref,
+                    Name => "physical");
+               Phys_Dev  : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Nodes     => PCI_Devs,
+                    Ref_Attr  => "name",
+                    Ref_Value => Phys_Name);
+            begin
+               if Phys_Dev = null then
+                  raise Validation_Error with "Logical PCI device '" & Log_Name
+                    & "' of subject '" & Subj_Name & "' references physical"
+                    & " non-PCI device '" & Phys_Name & "'";
+               end if;
+            end;
+         end loop;
+      end if;
+   end PCI_Device_References;
+
+   -------------------------------------------------------------------------
+
    procedure Physical_Device_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query

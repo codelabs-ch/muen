@@ -18,9 +18,9 @@ BOOTWAIT_BOCHS=40
 # seconds to wait for hardware target to boot
 HW_BOOTWAIT=110
 
-# target IPs and associated hardware
+# target IPs, associated system policy and platform config
 TARGETS=()
-TARGETS+=('192.168.254.2;lenovo-t430s')
+TARGETS+=('192.168.254.2;integration_tests;lenovo-t430s')
 
 # optional notify command executed when build fails
 NOTIFY_FAIL_CMD=""

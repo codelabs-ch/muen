@@ -63,14 +63,14 @@ is
          declare
             use type DOM.Core.Node;
 
-            Device    : constant DOM.Core.Node := DOM.Core.Nodes.Item
+            Device : constant DOM.Core.Node := DOM.Core.Nodes.Item
               (List  => PCI_Devices,
                Index => I);
-            Dev_Name  : constant String
+            Dev_Name : constant String
               := DOM.Core.Elements.Get_Attribute
                 (Elem => Device,
                  Name => "name");
-            BFD_Node  : constant DOM.Core.Node := Muxml.Utils.Get_Element
+            BFD_Node : constant DOM.Core.Node := Muxml.Utils.Get_Element
               (Doc   => Device,
                XPath => "pci");
             PCI_Cfg_Addr : constant Interfaces.Unsigned_64

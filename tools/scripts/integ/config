@@ -19,8 +19,12 @@ BOOTWAIT_BOCHS=40
 HW_BOOTWAIT=110
 
 # target IPs, associated system policy and platform config
+#
+# optionally, a target-specific expect file can be specified. The file path is
+# treated relatively to the scripts/integ directory.
 TARGETS=()
 TARGETS+=('192.168.254.2;integration_tests;lenovo-t430s')
+#TARGETS+=('192.168.254.3;integration_tests;kontron-ktqm77;expect.kt')
 
 # optional notify command executed when build fails
 NOTIFY_FAIL_CMD=""

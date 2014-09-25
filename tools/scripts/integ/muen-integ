@@ -81,6 +81,14 @@ expect_from_file()
 	done < $pattern_file
 }
 
+file_exists()
+{
+	if [ ! -f $1 ]; then
+		log "File '$1' does not exist"
+		failed
+	fi
+}
+
 bochs_emulate()
 {
 	SAVE_ARTIFACTS=1

@@ -101,6 +101,8 @@ is
       XML_Processors.Register
         (Process => Device.Physical_Device_References'Access);
       XML_Processors.Register
+        (Process => Device.PCI_Device_References'Access);
+      XML_Processors.Register
         (Process => Device.Physical_IRQ_Uniqueness'Access);
       XML_Processors.Register
         (Process => Device.Device_IRQ_Name_Uniqueness'Access);

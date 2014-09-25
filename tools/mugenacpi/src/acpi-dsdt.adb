@@ -105,22 +105,15 @@ is
              (DOM.Core.Elements.Get_Attribute
                 (Elem => Dev_Irq,
                  Name => "vector")) - Linux_Irq_Offset;
+         Logical_Dev   : constant DOM.Core.Node
+           := DOM.Core.Nodes.Parent_Node (N => Dev_Irq);
          Log_Dev_Name  : constant String
            := DOM.Core.Elements.Get_Attribute
-           (Elem => DOM.Core.Nodes.Parent_Node (N => Dev_Irq),
-            Name => "logical");
-         Phys_Dev_Name : constant String
-           := DOM.Core.Elements.Get_Attribute
-           (Elem => DOM.Core.Nodes.Parent_Node (N => Dev_Irq),
-            Name => "physical");
-         Physical_Dev  : constant DOM.Core.Node
-           := Muxml.Utils.Get_Element
-             (Nodes     => Devices,
-              Ref_Attr  => "name",
-              Ref_Value => Phys_Dev_Name);
+             (Elem => Logical_Dev,
+              Name => "logical");
          PCI_Node      : constant DOM.Core.Node
            := Muxml.Utils.Get_Element
-             (Doc   => Physical_Dev,
+             (Doc   => Logical_Dev,
               XPath => "pci");
          Bus_Nr        : constant Interfaces.Unsigned_64
            := Interfaces.Unsigned_64'Value

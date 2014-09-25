@@ -42,5 +42,8 @@ package Expanders.Subjects.Test_Data.Tests is
    procedure Test_Add_Device_Memory_Mappings_c30caf (Gnattest_T : in out Test);
    --  expanders-subjects.ads:58:4:Add_Device_Memory_Mappings
 
+   procedure Test_Add_Device_BDFs_e4e082 (Gnattest_T : in out Test);
+   --  expanders-subjects.ads:62:4:Add_Device_BDFs
+
 end Expanders.Subjects.Test_Data.Tests;
 --  end read only

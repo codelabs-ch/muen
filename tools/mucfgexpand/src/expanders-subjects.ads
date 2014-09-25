@@ -57,4 +57,8 @@ is
    --  the user).
    procedure Add_Device_Memory_Mappings (Data : in out Muxml.XML_Data_Type);
 
+   --  Add BDF definitions for PCI devices (if not explicitly specified by the
+   --  user).
+   procedure Add_Device_BDFs (Data : in out Muxml.XML_Data_Type);
+
 end Expanders.Subjects;

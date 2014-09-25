@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
@@ -461,6 +463,102 @@ is
       end loop;
 
    end Add_Default_Events;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Device_BDFs (Data : in out Muxml.XML_Data_Type)
+   is
+      PCI_Devices  : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/platform/devices/device[pci]");
+      Subj_Devices : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject/devices/device[not (pci)]");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Subj_Devices) - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Subj_Dev  : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Subj_Devices,
+                 Index => I);
+            Log_Name  : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Dev,
+                 Name => "logical");
+            Phys_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Dev,
+                 Name => "physical");
+            Phys_Dev  : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => PCI_Devices,
+                 Ref_Attr  => "name",
+                 Ref_Value => Phys_Name);
+         begin
+            if Phys_Dev /= null then
+               declare
+                  PCI_Node  : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Doc   => Phys_Dev,
+                       XPath => "pci");
+                  Bus_Nr    : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => PCI_Node,
+                       Name => "bus");
+                  Device_Nr : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => PCI_Node,
+                       Name => "device");
+                  Func_Nr   : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => PCI_Node,
+                       Name => "function");
+                  BDF_Node  : DOM.Core.Node
+                    := DOM.Core.Documents.Create_Element
+                      (Doc      => Data.Doc,
+                       Tag_Name => "pci");
+               begin
+                  Mulog.Log
+                    (Msg => "Setting BDF of logical device '" & Log_Name
+                     & "' to "
+                     & Mutools.Utils.To_Hex
+                       (Number     => Interfaces.Unsigned_64'Value (Bus_Nr),
+                        Normalize  => False,
+                        Byte_Short => True) & ":"
+                     & Mutools.Utils.To_Hex
+                       (Number     => Interfaces.Unsigned_64'Value (Device_Nr),
+                        Normalize  => False,
+                        Byte_Short => True) & "."
+                     & Mutools.Utils.To_Hex
+                       (Number     => Interfaces.Unsigned_64'Value (Func_Nr),
+                        Normalize  => False,
+                        Byte_Short => True));
+
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => BDF_Node,
+                     Name  => "bus",
+                     Value => Bus_Nr);
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => BDF_Node,
+                     Name  => "device",
+                     Value => Device_Nr);
+                  DOM.Core.Elements.Set_Attribute
+                    (Elem  => BDF_Node,
+                     Name  => "function",
+                     Value => Func_Nr);
+                  BDF_Node :=  DOM.Core.Nodes.Insert_Before
+                    (N         => Subj_Dev,
+                     New_Child => BDF_Node,
+                     Ref_Child => DOM.Core.Nodes.First_Child (N => Subj_Dev));
+               end;
+            end if;
+         end;
+      end loop;
+   end Add_Device_BDFs;
 
    -------------------------------------------------------------------------
 

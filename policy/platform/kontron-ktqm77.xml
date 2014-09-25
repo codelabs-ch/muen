@@ -23,5 +23,17 @@
 			<memory name="mmio1" physicalAddress="16#f7f0_0000#" size="16#0002_0000#" caching="UC"/>
 			<memory name="mmio2" physicalAddress="16#f7f3_9000#" size="16#1000#" caching="UC"/>
 		</device>
+		<device name="ethernet_2" shared="false">
+			<pci bus="16#04#" device="16#00#" function="0"/>
+			<irq name="irq" number="18"/>
+			<memory name="mmio1" physicalAddress="16#f7e0_0000#" size="16#0002_0000#" caching="UC"/>
+			<memory name="mmio2" physicalAddress="16#f7e2_0000#" size="16#4000#" caching="UC"/>
+		</device>
+		<device name="ethernet_3" shared="false">
+			<pci bus="16#05#" device="16#00#" function="0"/>
+			<irq name="irq" number="19"/>
+			<memory name="mmio1" physicalAddress="16#f7d0_0000#" size="16#0002_0000#" caching="UC"/>
+			<memory name="mmio2" physicalAddress="16#f7d2_0000#" size="16#4000#" caching="UC"/>
+		</device>
 	</devices>
 </platform>

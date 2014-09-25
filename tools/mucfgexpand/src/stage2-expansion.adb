@@ -56,7 +56,6 @@ is
       Procs.Register (Process => Subjects.Add_Ids'Access);
       Procs.Register (Process => Subjects.Add_CPU_Ids'Access);
 
-      Procs.Register (Process => Platform.Add_PCI_Config_Space'Access);
       Procs.Register (Process => Memory.Add_Missing_Attributes'Access);
       Procs.Register (Process => Memory.Add_Kernel_Binary'Access);
       Procs.Register (Process => Memory.Add_Stack_Store'Access);
@@ -79,7 +78,12 @@ is
       Procs.Register (Process => Subjects.Remove_Channel_Elements'Access);
       Procs.Register (Process => Subjects.Add_Default_Events'Access);
       Procs.Register (Process => Subjects.Add_Device_Memory_Mappings'Access);
+      Procs.Register (Process => Subjects.Add_Device_BDFs'Access);
       Procs.Register (Process => Channels.Add_Physical_Memory'Access);
+
+      --  BDF of device references must be expanded
+
+      Procs.Register (Process => Platform.Add_PCI_Config_Space'Access);
 
       --  Subject profiles must be expanded since they may add MSR registers.
 

@@ -248,4 +248,62 @@ package body Expanders.Subjects.Test_Data.Tests is
    end Test_Add_Device_Memory_Mappings;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Add_Device_BDFs (Gnattest_T : in out Test);
+   procedure Test_Add_Device_BDFs_e4e082 (Gnattest_T : in out Test) renames Test_Add_Device_BDFs;
+--  id:2.2/e4e082898d30fd9b/Add_Device_BDFs/1/0/
+   procedure Test_Add_Device_BDFs (Gnattest_T : in out Test) is
+   --  expanders-subjects.ads:62:4:Add_Device_BDFs
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Policy    : Muxml.XML_Data_Type;
+      XHCI_Path : constant String := "/system/subjects/subject/devices/"
+        & "device[@physical='xhci']/pci";
+      NIC_Path  : constant String := "/system/subjects/subject/devices/"
+        & "device[@physical='nic1']/pci";
+   begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+
+      Add_Device_BDFs (Data => Policy);
+
+      Assert (Condition => Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => XHCI_Path,
+               Name  => "bus") = "16#00#",
+              Message   => "Bus mismatch (XHCI)");
+      Assert (Condition => Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => XHCI_Path,
+               Name  => "device") = "16#14#",
+              Message   => "Device mismatch (XHCI)");
+      Assert (Condition => Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => XHCI_Path,
+               Name  => "function") = "0",
+              Message   => "Function mismatch (XHCI)");
+
+      Assert (Condition => Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => NIC_Path,
+               Name  => "bus") = "16#00#",
+              Message   => "Bus mismatch (NIC)");
+      Assert (Condition => Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => NIC_Path,
+               Name  => "device") = "16#19#",
+              Message   => "Device mismatch (NIC)");
+      Assert (Condition => Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => NIC_Path,
+               Name  => "function") = "0",
+              Message   => "Function mismatch (NIC)");
+--  begin read only
+   end Test_Add_Device_BDFs;
+--  end read only
+
 end Expanders.Subjects.Test_Data.Tests;

@@ -22,7 +22,7 @@ package body Stage2.Expansion.Test_Data.Tests is
 
    begin
       Register_All;
-      Assert (Condition => Procs.Get_Count = 32,
+      Assert (Condition => Procs.Get_Count = 33,
               Message   => "Count mismatch:" & Get_Count'Img);
 --  begin read only
    end Test_Register_All;

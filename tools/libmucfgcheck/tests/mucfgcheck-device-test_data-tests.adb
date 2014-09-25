@@ -512,12 +512,35 @@ package body Mucfgcheck.Device.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      --  Positive test, must not raise an exception.
 
+      Device_Reference_BDF_Uniqueness (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/devices/device/"
+         & "pci[@device='16#19#']",
+         Name  => "device",
+         Value => "16#14#");
+
+      begin
+         Device_Reference_BDF_Uniqueness (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical PCI devices 'xhci' and 'eth0' of subject "
+                    & "'linux' have identical BDF",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Device_Reference_BDF_Uniqueness;
 --  end read only

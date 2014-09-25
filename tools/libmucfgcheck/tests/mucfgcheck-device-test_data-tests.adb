@@ -494,8 +494,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "PCI devices 'xhci' and 'ethernet' have identical BDF "
-                    & "16#00#:16#14#:0",
+                    = "PCI devices 'xhci' and 'ethernet' have identical BDF",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

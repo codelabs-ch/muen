@@ -421,8 +421,7 @@ is
                     Name => "name");
             begin
                raise Validation_Error with "PCI devices '" & Left_Name
-                 & "' and '" & Right_Name & "' have identical BDF " & Left_Bus
-                 & ":" & Left_Dev & ":" & Left_Fn;
+                 & "' and '" & Right_Name & "' have identical BDF";
             end;
          end if;
       end Check_Inequality;

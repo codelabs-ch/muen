@@ -200,6 +200,74 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Device_Reference_BDF_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+      PCI_Subjs   : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject[devices/device/pci]");
+
+      --  Node of current subject.
+      Cur_Subject : DOM.Core.Node;
+
+      --  Check inequality of PCI device reference bus, device, function
+      --   triplets.
+      procedure Check_Inequality (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Inequality (Left, Right : DOM.Core.Node)
+      is
+      begin
+         if Equal_BDFs (Left  => Left,
+                        Right => Right)
+         then
+            declare
+               Left_Name  : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => DOM.Core.Nodes.Parent_Node (N => Left),
+                    Name => "logical");
+               Right_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => DOM.Core.Nodes.Parent_Node (N => Right),
+                    Name => "logical");
+               Subj_Name  : constant String := DOM.Core.Elements.Get_Attribute
+                 (Elem => Cur_Subject,
+                  Name => "name");
+            begin
+               raise Validation_Error with "Logical PCI devices '" & Left_Name
+                 & "' and '" & Right_Name & "' of subject '"
+                 & Subj_Name & "' have identical BDF";
+            end;
+         end if;
+      end Check_Inequality;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => PCI_Subjs) - 1 loop
+         Cur_Subject := DOM.Core.Nodes.Item (List  => PCI_Subjs,
+                                             Index => I);
+         declare
+            PCI_Devs  : constant DOM.Core.Node_List := XPath_Query
+              (N     => Cur_Subject,
+               XPath => "devices/device/pci");
+            Subj_Name : constant String := DOM.Core.Elements.Get_Attribute
+              (Elem => Cur_Subject,
+               Name => "name");
+         begin
+            if DOM.Core.Nodes.Length (List => PCI_Devs) > 1 then
+               Mulog.Log (Msg => "Checking uniqueness of"
+                          & DOM.Core.Nodes.Length (List => PCI_Devs)'Img
+                          & " device reference BDF(s) of subject '"
+                          & Subj_Name & "'");
+
+               Compare_All (Nodes      => PCI_Devs,
+                            Comparator => Check_Inequality'Access);
+            end if;
+         end;
+      end loop;
+
+   end Device_Reference_BDF_Uniqueness;
+
+   -------------------------------------------------------------------------
+
    procedure Device_Sharing (XML_Data : Muxml.XML_Data_Type)
    is
       Devices : constant DOM.Core.Node_List := XPath_Query

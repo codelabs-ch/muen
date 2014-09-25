@@ -503,11 +503,32 @@ package body Mucfgcheck.Device.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Device_Reference_BDF_Uniqueness (Gnattest_T : in out Test);
+   procedure Test_Device_Reference_BDF_Uniqueness_639981 (Gnattest_T : in out Test) renames Test_Device_Reference_BDF_Uniqueness;
+--  id:2.2/63998159ef33e880/Device_Reference_BDF_Uniqueness/1/0/
+   procedure Test_Device_Reference_BDF_Uniqueness (Gnattest_T : in out Test) is
+   --  mucfgcheck-device.ads:62:4:Device_Reference_BDF_Uniqueness
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Device_Reference_BDF_Uniqueness;
+--  end read only
+
+
+--  begin read only
    procedure Test_Debugconsole_Presence (Gnattest_T : in out Test);
    procedure Test_Debugconsole_Presence_b13687 (Gnattest_T : in out Test) renames Test_Debugconsole_Presence;
 --  id:2.2/b13687f7ed7372fc/Debugconsole_Presence/1/0/
    procedure Test_Debugconsole_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-device.ads:61:4:Debugconsole_Presence
+   --  mucfgcheck-device.ads:65:4:Debugconsole_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -545,7 +566,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
    procedure Test_IOMMU_Region_Size_7f9036 (Gnattest_T : in out Test) renames Test_IOMMU_Region_Size;
 --  id:2.2/7f903633b01e1f7b/IOMMU_Region_Size/1/0/
    procedure Test_IOMMU_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-device.ads:64:4:IOMMU_Region_Size
+   --  mucfgcheck-device.ads:68:4:IOMMU_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

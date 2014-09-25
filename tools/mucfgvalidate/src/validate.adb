@@ -121,6 +121,8 @@ is
       XML_Processors.Register
         (Process => Device.PCI_Device_BDF_Uniqueness'Access);
       XML_Processors.Register
+        (Process => Device.Device_Reference_BDF_Uniqueness'Access);
+      XML_Processors.Register
         (Process => Device.Debugconsole_Presence'Access);
       XML_Processors.Register
         (Process => Device.IOMMU_Region_Size'Access);

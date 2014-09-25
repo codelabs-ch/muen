@@ -96,22 +96,23 @@ bochs_emulate()
 
 hw_deploy()
 {
-	hardware=$1
-	target_ip=$2
+	local target_ip=$1
+	local system=$2
+	local platform=$3
 
-	hw_logdir=$LOGDIR/$hardware
-	execute "mkdir -p $hw_logdir"
+	local target_logdir=$LOGDIR/$system-$platform
+	execute "mkdir -p $target_logdir"
 
 	execute "ping -c 6 $target_ip"
-	xterm -e script -f -c "amtterm $target_ip" $hw_logdir/amt.out &
-	pid_xterm=$!
+	xterm -e script -f -c "amtterm $target_ip" $target_logdir/amt.out &
+	local pid_xterm=$!
 	KILL_ON_EXIT_PIDS+=($pid_xterm)
 
 	execute "make -C kernel clean"
-	execute "make deploy HARDWARE=$hardware SYSTEM=integration_tests"
+	execute "make deploy HARDWARE=$platform SYSTEM=$system"
 
-	cd $ROOT; python -m SimpleHTTPServer 10000 >$hw_logdir/http.out 2>&1 &
-	pid_http=$!
+	cd $ROOT; python -m SimpleHTTPServer 10000 >$target_logdir/http.out 2>&1 &
+	local pid_http=$!
 	KILL_ON_EXIT_PIDS+=($pid_http)
 	cd $WORKDIR
 
@@ -123,17 +124,18 @@ hw_deploy()
 	echo y | amttool $target_ip powerdown >>$LOGFILE 2>&1
 	execute "make -C deploy clean"
 
-	expect_from_file $SCRIPTDIR/expect.hw_common "$hw_logdir"
+	expect_from_file $SCRIPTDIR/expect.hw_common "$target_logdir"
 }
 
 deploy_to_hardware()
 {
-	for ip_hw in ${TARGETS[@]}; do
-		ip=`echo $ip_hw | cut -d\; -f1`
+	for item in ${TARGETS[@]}; do
+		ip=`echo $item | cut -d\; -f1`
 		export TARGET_IP=$ip
-		hw=`echo $ip_hw | cut -d\; -f2`
-		log "Deploying to target $ip with hardware $hw"
-		hw_deploy $hw $ip
+		system=`echo $item | cut -d\; -f2`
+		platform=`echo $item | cut -d\; -f3`
+		log "Deploying to target $ip with system '$system' and platform '$platform'"
+		hw_deploy $ip $system $platform
 	done
 }
 

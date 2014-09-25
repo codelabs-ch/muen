@@ -43,10 +43,10 @@ release_file_lock()
 
 check_if_head()
 {
-	remotes=`git branch -r --contains $COMMIT`
+	local remotes=`git branch -r --contains $COMMIT`
 	for remote in $remotes
 	do
-		head=`git rev-parse $remote`
+		local head=`git rev-parse $remote`
 		if [ "$COMMIT" = "$head" ]; then
 			log "Commit $COMMIT is HEAD of $remote branch"
 			FBRANCH=$remote
@@ -69,18 +69,18 @@ workdir_clean()
 
 send_mail()
 {
-	status=$1
-	message=$2
-	subject="[muen-integration] $status: B$BUILDID, $FBRANCH, $COMMIT"
+	local status=$1
+	local message=$2
+	local subject="[muen-integration] $status: B$BUILDID, $FBRANCH, $COMMIT"
 
 	__send_mail "$status" "$subject" "$message"
 }
 
 send_mail_workdir()
 {
-	status=$1
-	message=$2
-	subject="[muen-prepare] $status (workdir): B$BUILDID"
+	local status=$1
+	local message=$2
+	local subject="[muen-prepare] $status (workdir): B$BUILDID"
 
 	__send_mail "$status" "$subject" "$message"
 }

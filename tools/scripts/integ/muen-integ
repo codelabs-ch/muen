@@ -54,8 +54,8 @@ failed()
 
 expect()
 {
-	file=$1
-	pattern=$2
+	local file=$1
+	local pattern=$2
 	log "Expect pattern '$pattern' in file '$file'"
 	grep "$pattern" $file >>$LOGFILE 2>&1
 	if [ $? -ne 0 ]; then
@@ -66,13 +66,13 @@ expect()
 
 expect_from_file()
 {
-	pattern_file=$1
-	path=$2
+	local pattern_file=$1
+	local path=$2
 
 	while read line
 	do
-		file=`echo $line | cut -d\; -f1`
-		pattern=`echo $line | cut -d\; -f2`
+		local file=`echo $line | cut -d\; -f1`
+		local pattern=`echo $line | cut -d\; -f2`
 		if [ -z "$file" ]; then
 			continue
 		fi

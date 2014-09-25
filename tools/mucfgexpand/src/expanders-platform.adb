@@ -97,15 +97,27 @@ is
                Alignment   => "",
                Memory_Type => ""));
             if Dev_Ref_Node /= null then
-               Muxml.Utils.Append_Child
-                 (Node      => Dev_Ref_Node,
-                  New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
-                    (Policy        => Data,
-                     Logical_Name  => "mmconf",
-                     Physical_Name => "mmconf",
-                     Address       => PCI_Cfg_Addr_Str,
-                     Writable      => True,
-                     Executable    => False));
+               declare
+                  Virtual_BFD_Node         : constant DOM.Core.Node
+                    := Muxml.Utils.Get_Element
+                      (Doc   => Dev_Ref_Node,
+                       XPath => "pci");
+                  Virtual_PCI_Cfg_Addr_Str : constant String
+                    := Mutools.Utils.To_Hex
+                      (Number => Calculate_PCI_Cfg_Address
+                         (Base_Address => Cfg_Start_Addr,
+                          PCI_Node     => Virtual_BFD_Node));
+               begin
+                  Muxml.Utils.Append_Child
+                    (Node      => Dev_Ref_Node,
+                     New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+                       (Policy        => Data,
+                        Logical_Name  => "mmconf",
+                        Physical_Name => "mmconf",
+                        Address       => Virtual_PCI_Cfg_Addr_Str,
+                        Writable      => True,
+                        Executable    => False));
+               end;
             end if;
          end;
       end loop;

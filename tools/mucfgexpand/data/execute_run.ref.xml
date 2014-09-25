@@ -966,7 +966,7 @@
      <irq logical="irq" physical="irq" vector="56"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d252_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d262_0000#" writable="true"/>
-     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#fa3c_8000#" writable="true"/>
+     <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80c_8000#" writable="true"/>
     </device>
    </devices>
    <events>

@@ -107,6 +107,7 @@ hw_deploy()
 	local target_ip=$1
 	local system=$2
 	local platform=$3
+	local expect=$4
 
 	local target_logdir=$LOGDIR/$system-$platform
 	execute "mkdir -p $target_logdir"
@@ -133,6 +134,11 @@ hw_deploy()
 	execute "make -C deploy clean"
 
 	expect_from_file $SCRIPTDIR/expect.hw_common "$target_logdir"
+
+	if [ ! -z "$expect" ]; then
+		file_exists $SCRIPTDIR/$expect
+		expect_from_file $SCRIPTDIR/$expect "$target_logdir"
+	fi
 }
 
 deploy_to_hardware()
@@ -142,8 +148,9 @@ deploy_to_hardware()
 		export TARGET_IP=$ip
 		system=`echo $item | cut -d\; -f2`
 		platform=`echo $item | cut -d\; -f3`
+		expect=`echo $item | cut -d\; -f4`
 		log "Deploying to target $ip with system '$system' and platform '$platform'"
-		hw_deploy $ip $system $platform
+		hw_deploy $ip $system $platform $expect
 	done
 }
 

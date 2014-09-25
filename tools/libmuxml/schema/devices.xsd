@@ -32,6 +32,7 @@
 
 	<xs:complexType name="deviceRefType">
 		<xs:sequence>
+			<xs:element name="pci"    type="pciType"       minOccurs="0" maxOccurs="1"/>
 			<xs:element name="memory" type="memRefType"    minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="ioPort" type="ioPortRefType" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="irq"    type="irqRefType"    minOccurs="0" maxOccurs="unbounded"/>

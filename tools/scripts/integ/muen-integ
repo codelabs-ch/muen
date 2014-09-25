@@ -54,8 +54,8 @@ failed()
 
 expect()
 {
-	file=$1
-	pattern=$2
+	local file=$1
+	local pattern=$2
 	log "Expect pattern '$pattern' in file '$file'"
 	grep "$pattern" $file >>$LOGFILE 2>&1
 	if [ $? -ne 0 ]; then
@@ -66,19 +66,27 @@ expect()
 
 expect_from_file()
 {
-	pattern_file=$1
-	path=$2
+	local pattern_file=$1
+	local path=$2
 
 	while read line
 	do
-		file=`echo $line | cut -d\; -f1`
-		pattern=`echo $line | cut -d\; -f2`
+		local file=`echo $line | cut -d\; -f1`
+		local pattern=`echo $line | cut -d\; -f2`
 		if [ -z "$file" ]; then
 			continue
 		fi
 
 		expect $path/$file "$pattern"
 	done < $pattern_file
+}
+
+file_exists()
+{
+	if [ ! -f $1 ]; then
+		log "File '$1' does not exist"
+		failed
+	fi
 }
 
 bochs_emulate()
@@ -96,22 +104,24 @@ bochs_emulate()
 
 hw_deploy()
 {
-	hardware=$1
-	target_ip=$2
+	local target_ip=$1
+	local system=$2
+	local platform=$3
+	local expect=$4
 
-	hw_logdir=$LOGDIR/$hardware
-	execute "mkdir -p $hw_logdir"
+	local target_logdir=$LOGDIR/$system-$platform
+	execute "mkdir -p $target_logdir"
 
 	execute "ping -c 6 $target_ip"
-	xterm -e script -f -c "amtterm $target_ip" $hw_logdir/amt.out &
-	pid_xterm=$!
+	xterm -e script -f -c "amtterm $target_ip" $target_logdir/amt.out &
+	local pid_xterm=$!
 	KILL_ON_EXIT_PIDS+=($pid_xterm)
 
 	execute "make -C kernel clean"
-	execute "make deploy HARDWARE=$hardware SYSTEM=integration_tests"
+	execute "make deploy HARDWARE=$platform SYSTEM=$system"
 
-	cd $ROOT; python -m SimpleHTTPServer 10000 >$hw_logdir/http.out 2>&1 &
-	pid_http=$!
+	cd $ROOT; python -m SimpleHTTPServer 10000 >$target_logdir/http.out 2>&1 &
+	local pid_http=$!
 	KILL_ON_EXIT_PIDS+=($pid_http)
 	cd $WORKDIR
 
@@ -123,17 +133,24 @@ hw_deploy()
 	echo y | amttool $target_ip powerdown >>$LOGFILE 2>&1
 	execute "make -C deploy clean"
 
-	expect_from_file $SCRIPTDIR/expect.hw_common "$hw_logdir"
+	expect_from_file $SCRIPTDIR/expect.hw_common "$target_logdir"
+
+	if [ ! -z "$expect" ]; then
+		file_exists $SCRIPTDIR/$expect
+		expect_from_file $SCRIPTDIR/$expect "$target_logdir"
+	fi
 }
 
 deploy_to_hardware()
 {
-	for ip_hw in ${TARGETS[@]}; do
-		ip=`echo $ip_hw | cut -d\; -f1`
+	for item in ${TARGETS[@]}; do
+		ip=`echo $item | cut -d\; -f1`
 		export TARGET_IP=$ip
-		hw=`echo $ip_hw | cut -d\; -f2`
-		log "Deploying to target $ip with hardware $hw"
-		hw_deploy $hw $ip
+		system=`echo $item | cut -d\; -f2`
+		platform=`echo $item | cut -d\; -f3`
+		expect=`echo $item | cut -d\; -f4`
+		log "Deploying to target $ip with system '$system' and platform '$platform'"
+		hw_deploy $ip $system $platform $expect
 	done
 }
 

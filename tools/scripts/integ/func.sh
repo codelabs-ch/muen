@@ -5,10 +5,10 @@ log()
 
 execute()
 {
-	cmd=$1
+	local cmd=$1
 	log "Executing command '$cmd'"
 	$cmd >> $LOGFILE 2>&1
-	status=$?
+	local status=$?
 	if [ $status -ne 0 ]; then
 		log "! Command '$cmd' failed (status $status)"
 		failed
@@ -17,9 +17,9 @@ execute()
 
 __send_mail()
 {
-	status=$1
-	subject=$2
-	message=$3
+	local status=$1
+	local subject=$2
+	local message=$3
 
 	for mail in $RECIPIENTS
 	do

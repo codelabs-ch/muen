@@ -15,7 +15,7 @@
 				<ioPort end="16#02ff#" name="serial" start="16#02f8#"/>
 			</device>
 			<device name="ethernet" shared="false">
-				<pci bus="16#00#" device="16#19#" function="0"/>
+				<pci bus="16#03#" device="16#00#" function="0"/>
 				<irq name="irq_1" number="20"/>
 				<irq name="irq_2" number="21"/>
 				<memory caching="UC" name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
@@ -247,6 +247,7 @@
 					<ioPort logical="port" physical="serial"/>
 				</device>
 				<device logical="eth0" physical="ethernet">
+					<pci bus="16#00#" device="16#19#" function="0"/>
 					<irq logical="eth0_irq_1" physical="irq_1" vector="59"/>
 					<irq logical="eth0_irq_2" physical="irq_2" vector="60"/>
 					<memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d250_0000#" writable="true"/>

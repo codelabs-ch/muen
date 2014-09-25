@@ -45,6 +45,10 @@ is
       Resource_Type : String;
       Element_Name  : String);
 
+   --  Returns true if Left and Right have the same PCI device bus, device,
+   --  function triplets.
+   function Equal_BDFs (Left, Right : DOM.Core.Node) return Boolean;
+
    -------------------------------------------------------------------------
 
    procedure Check_Device_Resource_Name_Uniqueness
@@ -262,6 +266,34 @@ is
       end loop;
    end Device_Sharing;
 
+   ----------------------------------------------------------------------
+
+   function Equal_BDFs (Left, Right : DOM.Core.Node) return Boolean
+   is
+      Left_Bus  : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Left,
+         Name => "bus");
+      Left_Dev  : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Left,
+         Name => "device");
+      Left_Fn   : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Left,
+         Name => "function");
+      Right_Bus : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Right,
+         Name => "bus");
+      Right_Dev : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Right,
+         Name => "device");
+      Right_Fn  : constant String := DOM.Core.Elements.Get_Attribute
+        (Elem => Right,
+         Name => "function");
+   begin
+      return Left_Bus = Right_Bus
+        and then Left_Dev = Right_Dev
+        and then Left_Fn  = Right_Fn;
+   end Equal_BDFs;
+
    -------------------------------------------------------------------------
 
    procedure IO_Port_References (XML_Data : Muxml.XML_Data_Type)
@@ -387,28 +419,9 @@ is
 
       procedure Check_Inequality (Left, Right : DOM.Core.Node)
       is
-         Left_Bus  : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Left,
-            Name => "bus");
-         Left_Dev  : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Left,
-            Name => "device");
-         Left_Fn   : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Left,
-            Name => "function");
-         Right_Bus : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Right,
-            Name => "bus");
-         Right_Dev : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Right,
-            Name => "device");
-         Right_Fn  : constant String := DOM.Core.Elements.Get_Attribute
-           (Elem => Right,
-            Name => "function");
       begin
-         if Left_Bus = Right_Bus
-           and then Left_Dev = Right_Dev
-           and then Left_Fn  = Right_Fn
+         if Equal_BDFs (Left  => Left,
+                        Right => Right)
          then
             declare
                Left_Name  : constant String

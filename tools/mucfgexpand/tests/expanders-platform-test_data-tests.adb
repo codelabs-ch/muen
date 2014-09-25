@@ -24,6 +24,7 @@ package body Expanders.Platform.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/platform_pci_config_space.xml",
          Ref_Filename => "data/platform_pci_config_space.ref.xml",
+         Pre          => Subjects.Add_Device_BDFs'Access,
          Expander     => Add_PCI_Config_Space'Access);
 --  begin read only
    end Test_Add_PCI_Config_Space;

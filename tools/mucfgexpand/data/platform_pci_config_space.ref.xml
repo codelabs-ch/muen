@@ -87,6 +87,7 @@
    </memory>
    <devices>
     <device logical="xhci" physical="xhci">
+     <pci bus="16#00#" device="16#14#" function="0"/>
      <irq logical="irq" physical="irq" vector="55"/>
      <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
      <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80a_0000#" writable="true"/>

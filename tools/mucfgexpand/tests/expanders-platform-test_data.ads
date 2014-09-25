@@ -5,6 +5,8 @@
 
 with AUnit.Test_Fixtures;
 
+with Expanders.Subjects;
+
 with Test_Utils.Expander;
 
 package Expanders.Platform.Test_Data is

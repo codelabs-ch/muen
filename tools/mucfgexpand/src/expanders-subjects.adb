@@ -518,9 +518,9 @@ is
                       (Elem => PCI_Node,
                        Name => "function");
                   BDF_Node  : DOM.Core.Node
-                    := DOM.Core.Documents.Create_Element
-                      (Doc      => Data.Doc,
-                       Tag_Name => "pci");
+                    := DOM.Core.Nodes.Clone_Node
+                      (N    => PCI_Node,
+                       Deep => True);
                begin
                   Mulog.Log
                     (Msg => "Setting BDF of logical device '" & Log_Name
@@ -538,19 +538,7 @@ is
                         Normalize  => False,
                         Byte_Short => True));
 
-                  DOM.Core.Elements.Set_Attribute
-                    (Elem  => BDF_Node,
-                     Name  => "bus",
-                     Value => Bus_Nr);
-                  DOM.Core.Elements.Set_Attribute
-                    (Elem  => BDF_Node,
-                     Name  => "device",
-                     Value => Device_Nr);
-                  DOM.Core.Elements.Set_Attribute
-                    (Elem  => BDF_Node,
-                     Name  => "function",
-                     Value => Func_Nr);
-                  BDF_Node :=  DOM.Core.Nodes.Insert_Before
+                  BDF_Node := DOM.Core.Nodes.Insert_Before
                     (N         => Subj_Dev,
                      New_Child => BDF_Node,
                      Ref_Child => DOM.Core.Nodes.First_Child (N => Subj_Dev));

@@ -79,6 +79,7 @@ is
       Procs.Register (Process => Subjects.Remove_Channel_Elements'Access);
       Procs.Register (Process => Subjects.Add_Default_Events'Access);
       Procs.Register (Process => Subjects.Add_Device_Memory_Mappings'Access);
+      Procs.Register (Process => Subjects.Add_Device_BDFs'Access);
       Procs.Register (Process => Channels.Add_Physical_Memory'Access);
 
       --  Subject profiles must be expanded since they may add MSR registers.

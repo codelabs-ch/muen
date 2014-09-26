@@ -28,6 +28,7 @@ with McKae.XML.XPath.XIA;
 with Mulog;
 with Muxml.Utils;
 with Mutools.Constants;
+with Mutools.Utils;
 
 package body Mucfgcheck.Device
 is
@@ -273,6 +274,53 @@ is
       end loop;
 
    end Device_Reference_BDF_Uniqueness;
+
+   -------------------------------------------------------------------------
+
+   procedure Device_References_PCI_Bus_Number (XML_Data : Muxml.XML_Data_Type)
+   is
+      PCI_Dev_Refs : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/subjects/subject/devices/device/pci");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => PCI_Dev_Refs) - 1 loop
+         declare
+            PCI_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => PCI_Dev_Refs,
+                 Index => I);
+            Bus_Nr   : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => PCI_Node,
+                    Name => "bus"));
+         begin
+            if Bus_Nr /= 0 then
+               declare
+                  Log_Dev_Name : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => DOM.Core.Nodes.Parent_Node (N => PCI_Node),
+                       Name => "logical");
+                  Subj_Name    : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Muxml.Utils.Ancestor_Node
+                         (Node  => PCI_Node,
+                          Level => 3),
+                       Name => "name");
+               begin
+                  raise Validation_Error with "Logical PCI device '"
+                    & Log_Dev_Name & "' of subject '" & Subj_Name
+                    & "' specifies invalid bus number "
+                    & Mutools.Utils.To_Hex
+                    (Number     => Bus_Nr,
+                     Normalize  => True,
+                     Byte_Short => True)
+                    & " should be 16#00#";
+               end;
+            end if;
+         end;
+      end loop;
+   end Device_References_PCI_Bus_Number;
 
    -------------------------------------------------------------------------
 

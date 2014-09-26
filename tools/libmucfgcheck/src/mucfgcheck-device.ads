@@ -69,6 +69,9 @@ is
    --  function triplet are references to physical legacy (non-PCI) devices.
    procedure Legacy_Device_References (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that all logical PCI devices specify bus number 16#00#.
+   procedure Device_References_PCI_Bus_Number (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate presence of debug console device with I/O port resource.
    procedure Debugconsole_Presence (XML_Data : Muxml.XML_Data_Type);
 

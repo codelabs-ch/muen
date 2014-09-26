@@ -643,12 +643,35 @@ package body Mucfgcheck.Device.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      --  Positive test, must not raise an exception.
 
+      Device_References_PCI_Bus_Number (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/devices/"
+         & "device[@physical='xhci']/pci",
+         Name  => "bus",
+         Value => "16#04#");
+
+      begin
+         Device_References_PCI_Bus_Number (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical PCI device 'xhci' of subject 'linux' specifies"
+                    & " invalid bus number 16#04# should be 16#00#",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Device_References_PCI_Bus_Number;
 --  end read only

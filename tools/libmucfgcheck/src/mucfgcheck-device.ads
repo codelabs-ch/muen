@@ -65,6 +65,10 @@ is
    --  triplet are references to physical PCI devices.
    procedure PCI_Device_References (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that all device references not specifying a bus, device,
+   --  function triplet are references to physical legacy (non-PCI) devices.
+   procedure Legacy_Device_References (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate presence of debug console device with I/O port resource.
    procedure Debugconsole_Presence (XML_Data : Muxml.XML_Data_Type);
 

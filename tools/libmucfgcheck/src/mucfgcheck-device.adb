@@ -482,6 +482,19 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Legacy_Device_References (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Match_Device_Reference
+        (XML_Data            => XML_Data,
+         Logical_Devs_XPath  => "/system/subjects/subject/devices"
+         & "/device[not (pci)]",
+         Physical_Devs_XPath => "/system/platform/devices/device[not (pci)]",
+         Device_Type         => "legacy");
+   end Legacy_Device_References;
+
+   -------------------------------------------------------------------------
+
    procedure Match_Device_Reference
      (XML_Data            : Muxml.XML_Data_Type;
       Logical_Devs_XPath  : String;

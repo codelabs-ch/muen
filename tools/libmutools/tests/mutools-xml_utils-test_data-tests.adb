@@ -110,12 +110,32 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Filename : constant String := "obj/memory_with_fill.xml";
+      Policy   : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
+      Add_Memory_Region
+        (Policy       => Policy,
+         Name         => "test",
+         Address      => "16#2000#",
+         Size         => "16#4000#",
+         Caching      => "WB",
+         Alignment    => "16#1000#",
+         Memory_Type  => "",
+         Fill_Pattern => "16#fe#");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      Muxml.Write (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => Filename);
 
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => Filename,
+               Filename2 => "data/memory_with_fill.xml"),
+              Message   => "Policy mismatch");
+
+      Ada.Directories.Delete_File (Name => Filename);
 --  begin read only
    end Test_3_Add_Memory_Region;
 --  end read only

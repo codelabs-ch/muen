@@ -58,13 +58,14 @@ is
             Mulog.Log (Msg => "Adding physical memory region with size "
                        & Channel_Size & " for channel '" & Channel_Name & "'");
             Mutools.XML_Utils.Add_Memory_Region
-              (Policy      => Data,
-               Name        => Channel_Name,
-               Address     => "",
-               Size        => Channel_Size,
-               Caching     => "WB",
-               Alignment   => "16#1000#",
-               Memory_Type => "subject_channel");
+              (Policy       => Data,
+               Name         => Channel_Name,
+               Address      => "",
+               Size         => Channel_Size,
+               Caching      => "WB",
+               Alignment    => "16#1000#",
+               Memory_Type  => "subject_channel",
+               Fill_Pattern => "16#00#");
          end;
       end loop;
 

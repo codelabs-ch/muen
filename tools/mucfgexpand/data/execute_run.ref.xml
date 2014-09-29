@@ -120,10 +120,18 @@
   <memory alignment="16#1000#" caching="WB" name="lnx|acpi_empty" size="16#c000#" type="subject_bios"/>
   <memory alignment="16#1000#" caching="WB" name="lnx|lowmem" size="16#0008_6000#" type="subject"/>
   <memory alignment="16#1000#" caching="WB" name="lnx|bios" size="16#0001_0000#" type="subject_bios"/>
-  <memory alignment="16#1000#" caching="WB" name="data_channel" size="16#1000#" type="subject_channel"/>
-  <memory alignment="16#1000#" caching="WB" name="data_channel2" size="16#2000#" type="subject_channel"/>
-  <memory alignment="16#1000#" caching="WB" name="data_channel3" size="16#1000#" type="subject_channel"/>
-  <memory alignment="16#1000#" caching="WB" name="data_channel4" size="16#1000#" type="subject_channel"/>
+  <memory alignment="16#1000#" caching="WB" name="data_channel" size="16#1000#" type="subject_channel">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="data_channel2" size="16#2000#" type="subject_channel">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="data_channel3" size="16#1000#" type="subject_channel">
+   <fill pattern="16#00#"/>
+  </memory>
+  <memory alignment="16#1000#" caching="WB" name="data_channel4" size="16#1000#" type="subject_channel">
+   <fill pattern="16#00#"/>
+  </memory>
   <memory alignment="16#1000#" caching="WB" name="lnx|msrstore" size="16#1000#" type="system_msrstore">
    <file filename="lnx_msrstore" offset="none"/>
   </memory>

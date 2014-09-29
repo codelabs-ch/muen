@@ -57,7 +57,7 @@ expect()
 	local file=$1
 	local pattern=$2
 	log "Expect pattern '$pattern' in file '$file'"
-	grep "$pattern" $file >>$LOGFILE 2>&1
+	strings $file | grep "$pattern" >>$LOGFILE 2>&1
 	if [ $? -ne 0 ]; then
 		log "Expected pattern '$pattern' not found in '$file'"
 		failed

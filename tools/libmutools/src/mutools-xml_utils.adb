@@ -110,6 +110,47 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Memory_Region
+     (Policy       : in out Muxml.XML_Data_Type;
+      Name         :        String;
+      Address      :        String;
+      Size         :        String;
+      Caching      :        String;
+      Alignment    :        String;
+      Memory_Type  :        String;
+      Fill_Pattern :        String)
+   is
+      Section   : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Policy.Doc,
+           XPath => "/system/memory");
+      Mem_Node  : constant DOM.Core.Node
+        := Create_Memory_Node
+          (Policy      => Policy,
+           Name        => Name,
+           Address     => Address,
+           Size        => Size,
+           Caching     => Caching,
+           Alignment   => Alignment,
+           Memory_Type => Memory_Type);
+      Fill_Node : constant DOM.Core.Node
+        := DOM.Core.Documents.Create_Element
+          (Doc      => Policy.Doc,
+           Tag_Name => "fill");
+   begin
+      Muxml.Utils.Append_Child (Node      => Section,
+                                New_Child => Mem_Node);
+      Muxml.Utils.Append_Child (Node      => Mem_Node,
+                                New_Child => Fill_Node);
+
+      DOM.Core.Elements.Set_Attribute
+        (Elem  => Fill_Node,
+         Name  => "pattern",
+         Value => Fill_Pattern);
+   end Add_Memory_Region;
+
+   -------------------------------------------------------------------------
+
    function Calculate_MSR_Count
      (MSRs                   : DOM.Core.Node_List;
       DEBUGCTL_Control       : Boolean;

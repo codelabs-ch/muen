@@ -101,6 +101,10 @@ is
       XML_Processors.Register
         (Process => Device.Physical_Device_References'Access);
       XML_Processors.Register
+        (Process => Device.Legacy_Device_References'Access);
+      XML_Processors.Register
+        (Process => Device.PCI_Device_References'Access);
+      XML_Processors.Register
         (Process => Device.Physical_IRQ_Uniqueness'Access);
       XML_Processors.Register
         (Process => Device.Device_IRQ_Name_Uniqueness'Access);
@@ -120,6 +124,10 @@ is
         (Process => Device.Device_Sharing'Access);
       XML_Processors.Register
         (Process => Device.PCI_Device_BDF_Uniqueness'Access);
+      XML_Processors.Register
+        (Process => Device.Device_Reference_BDF_Uniqueness'Access);
+      XML_Processors.Register
+        (Process => Device.Device_References_PCI_Bus_Number'Access);
       XML_Processors.Register
         (Process => Device.Debugconsole_Presence'Access);
       XML_Processors.Register

@@ -494,8 +494,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "PCI devices 'xhci' and 'ethernet' have identical BDF "
-                    & "16#00#:16#14#:0",
+                    = "PCI devices 'xhci' and 'ethernet' have identical BDF",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -504,11 +503,186 @@ package body Mucfgcheck.Device.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Device_Reference_BDF_Uniqueness (Gnattest_T : in out Test);
+   procedure Test_Device_Reference_BDF_Uniqueness_639981 (Gnattest_T : in out Test) renames Test_Device_Reference_BDF_Uniqueness;
+--  id:2.2/63998159ef33e880/Device_Reference_BDF_Uniqueness/1/0/
+   procedure Test_Device_Reference_BDF_Uniqueness (Gnattest_T : in out Test) is
+   --  mucfgcheck-device.ads:62:4:Device_Reference_BDF_Uniqueness
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Device_Reference_BDF_Uniqueness (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/devices/device/"
+         & "pci[@device='16#19#']",
+         Name  => "device",
+         Value => "16#14#");
+
+      begin
+         Device_Reference_BDF_Uniqueness (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical PCI devices 'xhci' and 'eth0' of subject "
+                    & "'linux' have identical BDF",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Device_Reference_BDF_Uniqueness;
+--  end read only
+
+
+--  begin read only
+   procedure Test_PCI_Device_References (Gnattest_T : in out Test);
+   procedure Test_PCI_Device_References_76ba6c (Gnattest_T : in out Test) renames Test_PCI_Device_References;
+--  id:2.2/76ba6cac9424ec00/PCI_Device_References/1/0/
+   procedure Test_PCI_Device_References (Gnattest_T : in out Test) is
+   --  mucfgcheck-device.ads:66:4:PCI_Device_References
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      PCI_Device_References (XML_Data => Data);
+
+      Muxml.Utils.Remove_Child
+        (Node       => Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/devices/device[@name='xhci']"),
+         Child_Name => "pci");
+
+      begin
+         PCI_Device_References (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical PCI device 'xhci' of subject 'linux' references"
+                    & " physical non-PCI device 'xhci'",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_PCI_Device_References;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Legacy_Device_References (Gnattest_T : in out Test);
+   procedure Test_Legacy_Device_References_73e649 (Gnattest_T : in out Test) renames Test_Legacy_Device_References;
+--  id:2.2/73e6491f4fa978a4/Legacy_Device_References/1/0/
+   procedure Test_Legacy_Device_References (Gnattest_T : in out Test) is
+   --  mucfgcheck-device.ads:70:4:Legacy_Device_References
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Legacy_Device_References (XML_Data => Data);
+
+      Muxml.Utils.Remove_Child
+        (Node       => Muxml.Utils.Get_Element
+           (Doc   => Data.Doc,
+            XPath => "/system/subjects/subject/devices/"
+            & "device[@physical='ethernet']"),
+         Child_Name => "pci");
+
+      begin
+         Legacy_Device_References (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical legacy device 'eth0' of subject 'linux'"
+                    & " references physical non-legacy device 'ethernet'",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Legacy_Device_References;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Device_References_PCI_Bus_Number (Gnattest_T : in out Test);
+   procedure Test_Device_References_PCI_Bus_Number_994df0 (Gnattest_T : in out Test) renames Test_Device_References_PCI_Bus_Number;
+--  id:2.2/994df063b163349f/Device_References_PCI_Bus_Number/1/0/
+   procedure Test_Device_References_PCI_Bus_Number (Gnattest_T : in out Test) is
+   --  mucfgcheck-device.ads:73:4:Device_References_PCI_Bus_Number
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Device_References_PCI_Bus_Number (XML_Data => Data);
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/devices/"
+         & "device[@physical='xhci']/pci",
+         Name  => "bus",
+         Value => "16#04#");
+
+      begin
+         Device_References_PCI_Bus_Number (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Logical PCI device 'xhci' of subject 'linux' specifies"
+                    & " invalid bus number 16#04# should be 16#00#",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Device_References_PCI_Bus_Number;
+--  end read only
+
+
+--  begin read only
    procedure Test_Debugconsole_Presence (Gnattest_T : in out Test);
    procedure Test_Debugconsole_Presence_b13687 (Gnattest_T : in out Test) renames Test_Debugconsole_Presence;
 --  id:2.2/b13687f7ed7372fc/Debugconsole_Presence/1/0/
    procedure Test_Debugconsole_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-device.ads:61:4:Debugconsole_Presence
+   --  mucfgcheck-device.ads:76:4:Debugconsole_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -546,7 +720,7 @@ package body Mucfgcheck.Device.Test_Data.Tests is
    procedure Test_IOMMU_Region_Size_7f9036 (Gnattest_T : in out Test) renames Test_IOMMU_Region_Size;
 --  id:2.2/7f903633b01e1f7b/IOMMU_Region_Size/1/0/
    procedure Test_IOMMU_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-device.ads:64:4:IOMMU_Region_Size
+   --  mucfgcheck-device.ads:79:4:IOMMU_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

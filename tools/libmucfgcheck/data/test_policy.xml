@@ -648,6 +648,7 @@
      <ioPort logical="port_64" physical="port_64"/>
     </device>
     <device logical="wireless" physical="wireless">
+     <pci bus="16#00#" device="16#1a#" function="0"/>
      <irq logical="wlan_irq" physical="irq" vector="57"/>
      <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d1c0_0000#" writable="true"/>
      <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f830_0000#" writable="true"/>
@@ -1252,11 +1253,13 @@
      <ioPort logical="ports" physical="ports"/>
     </device>
     <device logical="xhci" physical="xhci">
+     <pci bus="16#00#" device="16#14#" function="0"/>
      <irq logical="xhci_irq" physical="irq" vector="55"/>
      <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
      <memory executable="false" logical="mmconf" physical="mmconf" virtualAddress="16#f80a_0000#" writable="true"/>
     </device>
     <device logical="eth0" physical="ethernet">
+     <pci bus="16#00#" device="16#19#" function="0"/>
      <irq logical="eth0_irq" physical="irq" vector="59"/>
      <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d250_0000#" writable="true"/>
      <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d253_b000#" writable="true"/>

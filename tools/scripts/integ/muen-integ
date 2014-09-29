@@ -71,8 +71,8 @@ expect_from_file()
 
 	while IFS= read -r line
 	do
-		local file=`echo $line | cut -d\; -f1`
-		local pattern=`echo $line | cut -d\; -f2`
+		local file=`echo "$line" | cut -d\; -f1`
+		local pattern=`echo "$line" | cut -d\; -f2`
 		if [ -z "$file" ]; then
 			continue
 		fi

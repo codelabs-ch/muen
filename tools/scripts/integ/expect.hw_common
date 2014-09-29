@@ -6,7 +6,7 @@ amt.out;IOMMU 01: TES 01, RTPS 01, FLS 00, AFLS 00, WBFS 00, QIES 00, IRES 00, I
 amt.out;IOMMU 02: TES 01, RTPS 01, FLS 00, AFLS 00, WBFS 00, QIES 00, IRES 00, IRTPS 00, CFIS 00
 amt.out;Console output round 100
 amt.out;100%
-amt.out;stresstest DONE
-amt.out;integtest DONE
+amt.out;*** '/usr/bin/stresstest' DONE
+amt.out;*** '/usr/bin/integtest' DONE
 
 http.out;200

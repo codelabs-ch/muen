@@ -1,6 +1,6 @@
 log()
 {
-	echo $1 | tee -a $LOGFILE
+	echo "$1" | tee -a $LOGFILE
 }
 
 execute()

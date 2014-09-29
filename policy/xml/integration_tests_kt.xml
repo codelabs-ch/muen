@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<system>
+	<include href="common_platform.xml"/>
+
+	<memory>
+		<include href="common_memory.xml"/>
+
+		<memory name="initramfs_integ" size="16#0040_0000#" caching="WB" type="subject_initrd">
+			<file filename="initramfs_integ_kt.cpio.gz" offset="16#0000#"/>
+		</memory>
+		<memory name="nic_linux|ram" size="16#4000_0000#" alignment="16#0020_0000#" caching="WB"/>
+		<memory name="usb_linux|ram" size="16#0f60_0000#" alignment="16#0020_0000#" caching="WB"/>
+	</memory>
+
+	<deviceDomains>
+		<domain name="nic_domain">
+			<memory>
+				<memory logical="dma" physical="nic_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="false"/>
+			</memory>
+			<devices>
+				<device logical="nic1" physical="ethernet"/>
+				<device logical="nic2" physical="ethernet_2"/>
+			</devices>
+		</domain>
+		<domain name="usb_domain">
+			<memory>
+				<memory logical="dma" physical="usb_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="false"/>
+			</memory>
+			<devices>
+				<device logical="xhci" physical="xhci"/>
+			</devices>
+		</domain>
+	</deviceDomains>
+
+	<include href="common_events.xml"/>
+	<include href="common_channels.xml"/>
+	<include href="common_components.xml"/>
+
+	<subjects>
+		<include href="subject_vt.xml"/>
+		<include href="subject_time.xml"/>
+		<include href="subject_nic_sm.xml"/>
+		<include href="subject_usb_sm.xml"/>
+
+		<subject name="nic_linux" profile="linux">
+			<bootparams>lpj=10000 console=hvc pci=noearly notsc</bootparams>
+			<memory>
+				<memory logical="initramfs" physical="initramfs_integ" virtualAddress="16#00a0_0000#" writable="false" executable="false"/>
+				<memory logical="ram" physical="nic_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="true"/>
+			</memory>
+			<devices>
+				<device logical="serial" physical="debugconsole">
+					<ioPort logical="port" physical="port"/>
+				</device>
+				<device logical="cmos_rtc" physical="cmos_rtc">
+					<ioPort logical="ports" physical="ports"/>
+				</device>
+				<device logical="nic1" physical="ethernet">
+					<irq logical="nic1_irq" physical="irq" vector="59"/>
+					<memory logical="mmio1" physical="mmio1" writable="true" executable="false"/>
+					<memory logical="mmio2" physical="mmio2" writable="true" executable="false"/>
+				</device>
+				<device logical="nic2" physical="ethernet_2">
+					<pci bus="16#00#" device="16#1f#" function="0"/>
+					<irq logical="nic1_irq" physical="irq" vector="60"/>
+					<memory logical="mmio1" physical="mmio1" writable="true" executable="false"/>
+					<memory logical="mmio2" physical="mmio2" writable="true" executable="false"/>
+				</device>
+			</devices>
+			<events>
+				<source>
+					<group name="vmx_exit">
+						<default action="continue">
+							<notify physical="trap_to_nic_sm"/>
+						</default>
+					</group>
+				</source>
+				<target>
+					<event physical="resume_nic_linux" logical="resume_after_trap" vector="none"/>
+				</target>
+			</events>
+			<channels>
+				<reader logical="virtual_time" physical="virtual_time" virtualAddress="16#2000#"/>
+				<reader logical="virtual_keyboard" physical="nic_virtual_keyboard" virtualAddress="16#3000#" vector="49"/>
+				<writer logical="virtual_console" physical="nic_virtual_console" virtualAddress="16#4000#" event="1"/>
+			</channels>
+			<component ref="linux"/>
+		</subject>
+
+		<subject name="usb_linux" profile="linux">
+			<bootparams>lpj=10000 console=hvc pci=noearly notsc</bootparams>
+			<memory>
+				<memory logical="initramfs" physical="initramfs" virtualAddress="16#00a0_0000#" writable="false" executable="false"/>
+				<memory logical="ram" physical="usb_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="true"/>
+			</memory>
+			<devices>
+				<device logical="cmos_rtc" physical="cmos_rtc">
+					<ioPort logical="ports" physical="ports"/>
+				</device>
+				<device logical="xhci" physical="xhci">
+					<irq logical="xhci_irq" physical="irq" vector="55"/>
+					<memory logical="mmio" physical="mmio" writable="true" executable="false"/>
+				</device>
+			</devices>
+			<events>
+				<source>
+					<group name="vmx_exit">
+						<default action="continue">
+							<notify physical="trap_to_usb_sm"/>
+						</default>
+					</group>
+				</source>
+				<target>
+					<event logical="resume_after_trap" physical="resume_usb_linux" vector="none"/>
+				</target>
+			</events>
+			<channels>
+				<reader logical="virtual_time" physical="virtual_time" virtualAddress="16#2000#"/>
+				<reader logical="virtual_keyboard" physical="usb_virtual_keyboard" virtualAddress="16#3000#" vector="49"/>
+				<writer logical="virtual_console" physical="usb_virtual_console" virtualAddress="16#4000#" event="1"/>
+			</channels>
+			<component ref="linux"/>
+		</subject>
+	</subjects>
+
+	<include href="common_scheduling.xml"/>
+
+</system>

@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<system>
+ <platform>
+  <processor logicalCpus="2" speed="2900" vmxTimerRate="5"/>
+  <memory>
+   <memoryBlock allocatable="true" name="ram_1" physicalAddress="16#0000#" size="16#8000_0000#"/>
+  </memory>
+  <devices>
+   <device name="debugconsole" shared="false">
+    <ioPort end="16#50b8#" name="serial" start="16#50b0#"/>
+   </device>
+   <device name="xhci" shared="false">
+    <pci bus="16#23#" device="16#14#" function="0"/>
+    <irq name="irq" number="16"/>
+    <memory caching="UC" name="mmio" physicalAddress="16#d252_0000#" size="16#0001_0000#"/>
+   </device>
+   <device name="ethernet" shared="false">
+    <pci bus="16#02#" device="16#19#" function="0"/>
+    <irq name="irq" number="20"/>
+    <memory caching="UC" name="mmio1" physicalAddress="16#d250_0000#" size="16#0002_0000#"/>
+    <memory caching="UC" name="mmio2" physicalAddress="16#d253_b000#" size="16#1000#"/>
+   </device>
+   <device name="unassigned" shared="false">
+    <pci bus="16#05#" device="16#11#" function="0"/>
+    <irq name="irq" number="10"/>
+    <memory caching="UC" name="mmio" physicalAddress="16#f250_0000#" size="16#0002_0000#"/>
+   </device>
+  </devices>
+ </platform>
+ <memory>
+  <memory caching="WB" name="dummy" physicalAddress="16#1000#" size="16#1000#"/>
+  <memory alignment="16#1000#" caching="WB" name="test" physicalAddress="16#2000#" size="16#4000#">
+   <fill pattern="16#fe#"/>
+  </memory>
+ </memory>
+ <events/>
+ <components>
+  <component name="lnx">
+   <binary filename="lnx_bin" size="16#1000#" virtualAddress="16#2000#"/>
+  </component>
+ </components>
+ <subjects>
+  <subject name="lnx" profile="linux">
+   <vcpu>
+    <vmx>
+     <controls>
+      <entry>
+       <LoadDebugControls>0</LoadDebugControls>
+       <LoadIA32PERFGLOBALCTRL>0</LoadIA32PERFGLOBALCTRL>
+       <LoadIA32PAT>0</LoadIA32PAT>
+       <LoadIA32EFER>0</LoadIA32EFER>
+      </entry>
+      <exit>
+       <SaveDebugControls>0</SaveDebugControls>
+       <SaveIA32PAT>0</SaveIA32PAT>
+       <LoadIA32PAT>0</LoadIA32PAT>
+       <SaveIA32EFER>0</SaveIA32EFER>
+       <LoadIA32EFER>0</LoadIA32EFER>
+      </exit>
+     </controls>
+    </vmx>
+   </vcpu>
+   <memory>
+    <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
+   </memory>
+   <devices>
+    <device logical="xhci" physical="xhci">
+     <irq logical="xhci_irq" physical="irq" vector="55"/>
+     <memory executable="false" logical="mmio" physical="mmio" virtualAddress="16#d252_0000#" writable="true"/>
+    </device>
+    <device logical="eth0" physical="ethernet">
+     <irq logical="eth0_irq" physical="irq" vector="59"/>
+     <memory executable="false" logical="mmio1" physical="mmio1" virtualAddress="16#d250_0000#" writable="true"/>
+     <memory executable="false" logical="mmio2" physical="mmio2" virtualAddress="16#d253_b000#" writable="true"/>
+    </device>
+   </devices>
+   <events/>
+   <component ref="lnx"/>
+  </subject>
+ </subjects>
+ <scheduling tickRate="10000">
+  <majorFrame>
+   <cpu id="0">
+    <minorFrame subject="lnx" ticks="80"/>
+   </cpu>
+   <cpu id="1">
+    <minorFrame subject="subject1" ticks="40"/>
+    <minorFrame subject="tau0" ticks="40"/>
+   </cpu>
+  </majorFrame>
+ </scheduling>
+</system>
+

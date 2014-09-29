@@ -48,6 +48,18 @@ is
       File_Name   :        String;
       File_Offset :        String);
 
+   --  Add pattern-filled physical memory region element with given parameters
+   --  to policy.
+   procedure Add_Memory_Region
+     (Policy       : in out Muxml.XML_Data_Type;
+      Name         :        String;
+      Address      :        String;
+      Size         :        String;
+      Caching      :        String;
+      Alignment    :        String;
+      Memory_Type  :        String;
+      Fill_Pattern :        String);
+
    --  Create memory node element with given parameters.
    function Create_Memory_Node
      (Policy      : in out Muxml.XML_Data_Type;

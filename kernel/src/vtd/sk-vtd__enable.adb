@@ -238,7 +238,7 @@ is
       Extcaps : Types.Reg_Extcapability_Type;
 
       Supported_Version, Nr_Domains, AGAW_39_Bit, IR_Support : Boolean;
-      Matching_FRO, Matching_NFR, Matching_IRO               : Boolean;
+      EIM_Support, Matching_FRO, Matching_NFR, Matching_IRO  : Boolean;
    begin
       Version := IOMMUs (Idx).Version;
       Supported_Version := Version.MAX = 1 and then Version.MIN = 0;
@@ -285,13 +285,19 @@ is
         (not IR_Support,
          KC.Put_Line (Item => "No support for Interrupt Remapping"));
 
+      EIM_Support := Extcaps.EIM = 1;
+      pragma Debug
+        (not EIM_Support,
+         KC.Put_Line (Item => "No support for Extended Interrupt Mode"));
+
       Result := Supported_Version and
         Nr_Domains                and
         AGAW_39_Bit               and
         Matching_FRO              and
         Matching_NFR              and
         Matching_IRO              and
-        IR_Support;
+        IR_Support                and
+        EIM_Support;
    end Check_Capabilities;
 
    -------------------------------------------------------------------------

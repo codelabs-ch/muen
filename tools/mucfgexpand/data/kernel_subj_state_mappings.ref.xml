@@ -81,11 +81,11 @@
  <kernel>
   <memory>
    <cpu id="0">
-    <memory executable="false" logical="lnx_state" physical="lnx_state" virtualAddress="16#0040_1000#" writable="true"/>
-    <memory executable="false" logical="subject1_state" physical="subject1_state" virtualAddress="16#0040_2000#" writable="true"/>
+    <memory executable="false" logical="lnx_state" physical="lnx_state" virtualAddress="16#0030_1000#" writable="true"/>
+    <memory executable="false" logical="subject1_state" physical="subject1_state" virtualAddress="16#0030_2000#" writable="true"/>
    </cpu>
    <cpu id="1">
-    <memory executable="false" logical="subject2_state" physical="subject2_state" virtualAddress="16#0040_3000#" writable="true"/>
+    <memory executable="false" logical="subject2_state" physical="subject2_state" virtualAddress="16#0030_3000#" writable="true"/>
    </cpu>
   </memory>
   <devices/>

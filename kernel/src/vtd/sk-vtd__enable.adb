@@ -49,7 +49,9 @@ is
 
    type IRT_Range is range 0 .. 2 ** (Skp.IOMMU.IR_Table_Size + 1) - 1;
 
-   type IRT_Type is array (IRT_Range) of Types.IR_Entry_Type;
+   type IRT_Type is array (IRT_Range) of Types.IR_Entry_Type
+     with
+       Size => Natural (IRT_Range'Last + 1) * 128;
 
    IRT : IRT_Type
      with

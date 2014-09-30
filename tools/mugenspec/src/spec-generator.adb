@@ -765,9 +765,7 @@ is
       --  Shifted, 4KB aligned IR table address (see Intel VT-d specification,
       --  section 10.4.29).
 
-      if IRT_Phys_Addr > 0 then
-         IRT_Phys_Addr := IRT_Phys_Addr / 2 ** 12;
-      end if;
+      IRT_Phys_Addr := IRT_Phys_Addr / 2 ** 12;
 
       Mutools.Templates.Replace
         (Template => Tmpl,

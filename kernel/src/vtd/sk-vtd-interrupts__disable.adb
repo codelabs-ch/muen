@@ -46,11 +46,11 @@ is
          Dest_ID := CPU_Registry.Get_APIC_ID (CPU_ID => Route.CPU);
 
          pragma Debug (Dump.Print_IRQ_Routing
-                       (IRQ         => Route.IRQ,
-                        Vector      => SK.Byte (Route.Vector),
-                        CPU_ID      => SK.Byte (Route.CPU),
-                        Dest_ID     => Dest_ID,
-                        VTd_Enabled => False));
+                       (IRQ          => Route.IRQ,
+                        Vector       => SK.Byte (Route.Vector),
+                        CPU_ID       => SK.Byte (Route.CPU),
+                        Dest_ID      => Dest_ID,
+                        Dest_ID_Name => "APIC ID"));
 
          if Route.Vector /= Skp.Invalid_Vector then
             IO_Apic.Route_IRQ

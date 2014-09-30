@@ -32,11 +32,11 @@ is
 
    --  Print IRQ Routing.
    procedure Print_IRQ_Routing
-     (IRQ         : SK.Byte;
-      Vector      : SK.Byte;
-      CPU_ID      : SK.Byte;
-      Dest_ID     : SK.Byte;
-      VTd_Enabled : Boolean);
+     (IRQ          : SK.Byte;
+      Vector       : SK.Byte;
+      CPU_ID       : SK.Byte;
+      Dest_ID      : SK.Byte;
+      Dest_ID_Name : String);
 
    --  Print CPU IDs.
    procedure Print_CPU_IDs

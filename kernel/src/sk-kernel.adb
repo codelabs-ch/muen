@@ -76,7 +76,6 @@ is
 
       if Is_Bsp then
          Interrupts.Disable_Legacy_PIC;
-         VTd.Update_IRT_Destinations;
          VTd.Interrupts.Setup_IRQ_Routing;
          VTd.Initialize;
       end if;

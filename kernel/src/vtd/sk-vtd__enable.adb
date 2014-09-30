@@ -63,10 +63,13 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Update destination IDs in Interrupt Remapping Table (IRT). This
+   --  procedure must be called on systems where the APIC ID of logical
+   --  processors is not equal the CPU ID acquired on startup.
    procedure Update_IRT_Destinations
    with
-      Refined_Global  => (Input => CPU_Registry.State, In_Out => IRT),
-      Refined_Depends => (IRT =>+ CPU_Registry.State)
+      Global  => (Input => CPU_Registry.State, In_Out => IRT),
+      Depends => (IRT =>+ CPU_Registry.State)
    is
       use type Types.Bit_Type;
 
@@ -543,8 +546,10 @@ is
    procedure Initialize
    with
       SPARK_Mode      => $Complete_Proofs,  -- [N722-005]
-      Refined_Global  => (In_Out => (X86_64.State, IOMMUs)),
-      Refined_Depends => ((X86_64.State, IOMMUs) =>+ IOMMUs)
+      Refined_Global  => (Input  => CPU_Registry.State,
+                          In_Out => (X86_64.State, IOMMUs, IRT)),
+      Refined_Depends => ((X86_64.State, IOMMUs) =>+ IOMMUs,
+                          IRT =>+ (IOMMUs, CPU_Registry.State))
    is
       Needed_Caps_Present, Status : Boolean;
    begin
@@ -616,6 +621,8 @@ is
          end if;
 
          --  IR
+
+         Update_IRT_Destinations;
 
          Set_IR_Table_Address (IOMMU   => I,
                                Address => Skp.IOMMU.IR_Table_Phys_Address,

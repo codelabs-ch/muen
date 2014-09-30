@@ -30,16 +30,10 @@ is
    --  Initialize VT-d device isolation.
    procedure Initialize
    with
-      Global  => (In_Out => (X86_64.State, State)),
-      Depends => ((X86_64.State, State) =>+ State);
-
-   --  Update destination IDs in Interrupt Remapping Table (IRT). This
-   --  procedure must be called on systems where the APIC ID of logical
-   --  processors is not equal the CPU ID acquired on startup.
-   procedure Update_IRT_Destinations
-   with
-      Global  => (Input => CPU_Registry.State, In_Out => State),
-      Depends => (State =>+ CPU_Registry.State);
+      Global  => (Input  => CPU_Registry.State,
+                  In_Out => (X86_64.State, State)),
+      Depends => (X86_64.State =>+ State,
+                  State        =>+ CPU_Registry.State);
 
    --  Process fault reported by IOMMU.
    procedure Process_Fault

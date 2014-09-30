@@ -46,6 +46,12 @@ is
 
 private
 
+   --  SVT (Source Validation Type) value of 01b: Verify requester-id in
+   --  interrupt request using SID and SQ fields in the IRTE.
+   --
+   --  The SQ field is 00b: Verify the interrupt request by comparing all
+   --  16-bits of SID field with the 16-bit requester-id of the interrupt
+   --  request.
    SID_SQ_Verification : constant Bit_Array (1 .. 2) := (1 => 1, 2 => 0);
 
    --  Interrupt Remapping Table Entry (IRTE), see Intel VT-d specification,

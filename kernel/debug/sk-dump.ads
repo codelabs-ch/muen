@@ -32,9 +32,15 @@ is
 
    --  Print IRQ Routing.
    procedure Print_IRQ_Routing
-     (IRQ     : SK.Byte;
-      Vector  : SK.Byte;
-      CPU_ID  : SK.Byte;
+     (IRQ          : SK.Byte;
+      Vector       : SK.Byte;
+      CPU_ID       : SK.Byte;
+      Dest_ID      : SK.Byte;
+      Dest_ID_Name : String);
+
+   --  Print CPU IDs.
+   procedure Print_CPU_IDs
+     (CPU_ID  : SK.Byte;
       APIC_ID : SK.Byte);
 
    --  Print ISR execution environment state.

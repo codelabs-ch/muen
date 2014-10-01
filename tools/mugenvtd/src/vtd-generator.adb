@@ -33,11 +33,16 @@ with Muxml.Utils;
 with Mutools.Files;
 with Mutools.Utils;
 with Mutools.XML_Utils;
+with Mutools.Constants;
 
-with VTd.Tables;
+with VTd.Tables.DMAR;
+with VTd.Tables.IR;
 
 package body VTd.Generator
 is
+
+   --  I/O APIC bus(8)/dev(5)/func(3) f0:1f.00
+   IOAPIC_Bus_Dev_Func : constant := 16#f0f8#;
 
    package MX renames Mutools.XML_Utils;
 
@@ -56,6 +61,12 @@ is
    --  Write device security domain pagetables as specified by the policy to
    --  the given output directory.
    procedure Write_Domain_Pagetables
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type);
+
+   --  Write VT-d IR table to the given output directory. Currently, a default
+   --  table with two entries is written, both enries' Present flag is cleared.
+   procedure Write_IR_Table
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type);
 
@@ -85,6 +96,9 @@ is
       Write_Domain_Pagetables
         (Output_Dir => Output_Dir,
          Policy     => Policy);
+      Write_IR_Table
+        (Output_Dir => Output_Dir,
+         Policy     => Policy);
    end Write;
 
    -------------------------------------------------------------------------
@@ -110,7 +124,7 @@ is
 
       while MX.PCI_Bus_Set.Has_Element (Position => Ctx_Pos) loop
          declare
-            Ctx_Table : Tables.Context_Table_Type;
+            Ctx_Table : Tables.DMAR.Context_Table_Type;
             Ctx_Bus   : constant MX.PCI_Bus_Range
               := MX.PCI_Bus_Set.Element (Position => Ctx_Pos);
             Bus_Str   : constant String
@@ -136,13 +150,13 @@ is
                   PCI_Node : constant DOM.Core.Node
                     := DOM.Core.Nodes.Item (List  => Devices,
                                             Index => I);
-                  Dev      : constant Tables.Device_Range
-                    := Tables.Device_Range'Value
+                  Dev      : constant Tables.DMAR.Device_Range
+                    := Tables.DMAR.Device_Range'Value
                       (DOM.Core.Elements.Get_Attribute
                          (Elem => PCI_Node,
                           Name => "device"));
-                  Func     : constant Tables.Function_Range
-                    := Tables.Function_Range'Value
+                  Func     : constant Tables.DMAR.Function_Range
+                    := Tables.DMAR.Function_Range'Value
                       (DOM.Core.Elements.Get_Attribute
                          (Elem => PCI_Node,
                           Name => "function"));
@@ -167,8 +181,8 @@ is
                           := DOM.Core.Elements.Get_Attribute
                             (Elem => Domain,
                              Name => "name");
-                        DID      : constant Tables.Domain_Range
-                          := Tables.Domain_Range'Value
+                        DID      : constant Tables.DMAR.Domain_Range
+                          := Tables.DMAR.Domain_Range'Value
                             (DOM.Core.Elements.Get_Attribute
                                (Elem => Domain,
                                 Name => "id"));
@@ -178,8 +192,8 @@ is
                              XPath => "/system/memory/memory[@type='system_pt'"
                              & " and contains(string(@name),'" & Dom_Name
                              & "')]");
-                        PT_Addr  : constant Tables.Table_Pointer_Type
-                          := Tables.Table_Pointer_Type'Value
+                        PT_Addr  : constant Tables.DMAR.Table_Pointer_Type
+                          := Tables.DMAR.Table_Pointer_Type'Value
                             (DOM.Core.Elements.Get_Attribute
                                (Elem => PT_Node,
                                 Name => "physicalAddress"));
@@ -196,7 +210,7 @@ is
                            & " => Domain '" & Dom_Name & "', ID" & DID'Img
                            & ", SLPTPTR " & Mutools.Utils.To_Hex
                              (Number => Interfaces.Unsigned_64 (PT_Addr)));
-                        Tables.Add_Entry
+                        Tables.DMAR.Add_Entry
                           (CT      => Ctx_Table,
                            Device  => Dev,
                            Func    => Func,
@@ -209,8 +223,8 @@ is
 
             Mulog.Log (Msg => "Writing VT-d context table for bus "
                        & Bus_Str_N & " to file '" & Filename & "'");
-            Tables.Serialize (CT       => Ctx_Table,
-                              Filename => Filename);
+            Tables.DMAR.Serialize (CT       => Ctx_Table,
+                                   Filename => Filename);
          end;
 
          MX.PCI_Bus_Set.Next (Position => Ctx_Pos);
@@ -346,6 +360,98 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Write_IR_Table
+     (Output_Dir : String;
+      Policy     : Muxml.XML_Data_Type)
+   is
+      subtype Entry_Range is Tables.IR_Entry_Range range 0 .. 255;
+
+      package IR_Table is new Tables.IR
+        (Index_Range => Entry_Range);
+
+      IRT      : IR_Table.IR_Table_Type;
+      IRT_File : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Muxml.Utils.Get_Element
+             (Doc   => Policy.Doc,
+              XPath => "/system/memory/memory[@type='kernel_vtd_ir']/file"
+              & "[@filename='vtd_ir']"),
+           Name => "filename");
+      IRQs     : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Policy.Doc,
+           XPath => "/system/subjects/subject/devices/device/irq");
+   begin
+      if IRT_File'Length > 0 and then DOM.Core.Nodes.Length (List => IRQs) > 0
+      then
+         Mulog.Log (Msg => "Writing VT-d interrupt remapping table to file '"
+                    & Output_Dir & "/" & IRT_File & "'");
+
+         for I in 0 .. DOM.Core.Nodes.Length (List => IRQs) - 1 loop
+            declare
+               use type Interfaces.Unsigned_8;
+               use type DOM.Core.Node;
+
+               IRQ : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => IRQs,
+                    Index => I);
+               IRQ_Ref : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => IRQ,
+                    Name => "physical");
+               Dev : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Parent_Node (N => IRQ);
+               Dev_Ref : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Dev,
+                    Name => "physical");
+               Dev_Phys : constant DOM.Core.Node
+                 := Muxml.Utils.Get_Element
+                   (Doc   => Policy.Doc,
+                    XPath => "/system/platform/devices/device[@name='"
+                    & Dev_Ref & "']");
+               IRQ_Phys : constant Entry_Range
+                 := Entry_Range'Value
+                   (Muxml.Utils.Get_Attribute
+                      (Doc   => Dev_Phys,
+                       XPath => "irq[@name='" & IRQ_Ref & "']",
+                       Name  => "number"));
+               TM : constant Tables.Bit_Type
+                 := (if Muxml.Utils.Get_Element
+                     (Doc   => Dev_Phys,
+                      XPath => "pci") = null then 0 else 1);
+               Host_Vector : constant Interfaces.Unsigned_8
+                 := Interfaces.Unsigned_8 (IRQ_Phys)
+                 + Mutools.Constants.Host_IRQ_Remap_Offset;
+               CPU_ID : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Muxml.Utils.Ancestor_Node
+                      (Node  => Dev,
+                       Level => 2),
+                    Name => "cpu");
+            begin
+               Mulog.Log (Msg => "Adding IRT entry at index" & IRQ_Phys'Img
+                          & " for physical device '" & Dev_Ref & "', host"
+                          & " vector" & Host_Vector'Img & ", CPU " & CPU_ID);
+
+               IR_Table.Add_Entry
+                 (IRT    => IRT,
+                  Index  => IRQ_Phys,
+                  Vector => Host_Vector,
+                  DST    => Interfaces.Unsigned_32'Value (CPU_ID),
+                  SID    => IOAPIC_Bus_Dev_Func,
+                  TM     => TM);
+            end;
+         end loop;
+
+         IR_Table.Serialize (IRT      => IRT,
+                             Filename => Output_Dir & "/" & IRT_File);
+      end if;
+   end Write_IR_Table;
+
+   -------------------------------------------------------------------------
+
    procedure Write_Root_Table
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
@@ -357,7 +463,7 @@ is
       Buses     : constant MX.PCI_Bus_Set.Set := MX.Get_Occupied_PCI_Buses
         (Data => Policy);
       Ctx_Pos   : MX.PCI_Bus_Set.Cursor       := Buses.First;
-      Root      : Tables.Root_Table_Type;
+      Root      : Tables.DMAR.Root_Table_Type;
       Root_File : constant String
         := DOM.Core.Elements.Get_Attribute
           (Elem => Muxml.Utils.Get_Element
@@ -385,8 +491,8 @@ is
                    (Doc   => Policy.Doc,
                     XPath => "/system/memory/memory[@type='system_vtd_"
                     & "context']/file[@filename='" & Filename & "']/..");
-               Ctx_Addr  : constant Tables.Table_Pointer_Type
-                 := Tables.Table_Pointer_Type'Value
+               Ctx_Addr  : constant Tables.DMAR.Table_Pointer_Type
+                 := Tables.DMAR.Table_Pointer_Type'Value
                    (DOM.Core.Elements.Get_Attribute
                       (Elem => Mem_Node,
                        Name => "physicalAddress"));
@@ -394,9 +500,10 @@ is
                Mulog.Log (Msg => "Adding root entry for PCI bus " & Bus_Str_N
                           & ": " & Mutools.Utils.To_Hex
                             (Number => Interfaces.Unsigned_64 (Ctx_Addr)));
-               Tables.Add_Entry (RT  => Root,
-                                 Bus => Tables.Table_Index_Type (Ctx_Bus),
-                                 CTP => Ctx_Addr);
+               Tables.DMAR.Add_Entry
+                 (RT  => Root,
+                  Bus => Tables.DMAR.Table_Index_Type (Ctx_Bus),
+                  CTP => Ctx_Addr);
             end;
 
             MX.PCI_Bus_Set.Next (Position => Ctx_Pos);
@@ -405,8 +512,8 @@ is
 
       Mulog.Log (Msg => "Writing VT-d root table to file '" & Output_Dir & "/"
                  & Root_File & "'");
-      Tables.Serialize (RT       => Root,
-                        Filename => Output_Dir & "/" & Root_File);
+      Tables.DMAR.Serialize (RT       => Root,
+                             Filename => Output_Dir & "/" & Root_File);
    end Write_Root_Table;
 
 end VTd.Generator;

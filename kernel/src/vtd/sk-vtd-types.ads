@@ -321,8 +321,24 @@ is
       FEEh             at 0 range 20 .. 31;
    end record;
 
-   --  IOTLB Invalidate Register (dynamic)
+   --  Interrupt Remapping Table Address Register
+   type Reg_IRT_Address is record
+      S        : Bit_4_Type;
+      Reserved : Bit_Array (1 .. 7);
+      EIME     : Bit_Type;
+      IRTA     : Bit_52_Type;
+   end record
+     with
+       Size => 64;
 
+   for Reg_IRT_Address use record
+      S        at 0 range  0 .. 3;
+      Reserved at 0 range  4 .. 10;
+      EIME     at 0 range 11 .. 11;
+      IRTA     at 0 range 12 .. 63;
+   end record;
+
+   --  IOTLB Invalidate Register (dynamic)
    type Reg_IOTLB_Invalidate is record
       Unused   : Bit_Array (1 .. 60);
       IIRG     : Bit_2_Type;
@@ -400,6 +416,7 @@ is
       Fault_Event_Control : Reg_Fault_Event_Control_Type;
       Fault_Event_Data    : Reg_Fault_Event_Data_Type;
       Fault_Event_Address : Reg_Fault_Event_Address_Type;
+      IRT_Address         : Reg_IRT_Address;
       IOTLB_Invalidate    : Reg_IOTLB_Invalidate;
       Fault_Recording     : Reg_Fault_Recording_Type;
    end record
@@ -421,6 +438,7 @@ is
       Fault_Event_Control at 16#38# range 0 .. 31;
       Fault_Event_Data    at 16#3c# range 0 .. 31;
       Fault_Event_Address at 16#40# range 0 .. 31;
+      IRT_Address         at 16#b8# range 0 .. 63;
       IOTLB_Invalidate    at IOTLB_Offset range 0 .. 63;
       Fault_Recording     at FR_Offset    range 0 .. 127;
    end record;
@@ -431,5 +449,23 @@ is
      with
        Component_Size => Page_Size * 8;
    pragma $Build_Warnings (On, "*padded by * bits");
+
+   --  Simplified Interrupt Remapping Table Entry (IRTE), see Intel VT-d
+   --  specification, section 9.10. Only the Present and DST fields are
+   --  accessed by the kernel.
+   type IR_Entry_Type is record
+      Present  : Bit_Type;
+      Unused_1 : Bit_Array (1 .. 31);
+      DST      : SK.Word32;
+      Unused_2 : Bit_Array (1 .. 64);
+   end record
+     with Size => 128;
+
+   for IR_Entry_Type use record
+      Present  at 0 range  0 .. 0;
+      Unused_1 at 0 range  1 .. 31;
+      DST      at 0 range 32 .. 63;
+      Unused_2 at 0 range 64 .. 127;
+   end record;
 
 end SK.VTd.Types;

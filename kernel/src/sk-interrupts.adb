@@ -18,8 +18,6 @@
 
 with System.Storage_Elements;
 
-with Skp.Interrupts;
-
 with SK.CPU;
 with SK.Descriptors;
 with SK.Dump;
@@ -29,7 +27,7 @@ use type SK.Descriptors.Pseudo_Descriptor_Type;
 
 package body SK.Interrupts
 with
-   Refined_State => (State =>  (IDT, IDT_Pointer))
+   Refined_State => (State => (IDT, IDT_Pointer))
 is
 
    subtype Exception_Range is Skp.Vector_Range range 0 .. 19;
@@ -104,39 +102,6 @@ is
       CPU.Lidt (Address => SK.Word64 (System.Storage_Elements.To_Integer
                 (Value => IDT_Pointer'Address)));
    end Load;
-
-   -------------------------------------------------------------------------
-
-   procedure Setup_IRQ_Routing
-   is
-      Route   : Skp.Interrupts.IRQ_Route_Type;
-      APIC_ID : SK.Byte;
-   begin
-      for I in Skp.Interrupts.Routing_Range loop
-         pragma $Prove_Warnings (Off, "statement has no effect",
-            Reason => "Warning appears to be spurious");
-         Route   := Skp.Interrupts.IRQ_Routing (I);
-         pragma $Prove_Warnings (On, "statement has no effect");
-
-         APIC_ID := CPU_Registry.Get_APIC_ID (CPU_ID => Route.CPU);
-
-         pragma Debug (Dump.Print_IRQ_Routing
-                       (IRQ     => Route.IRQ,
-                        Vector  => SK.Byte (Route.Vector),
-                        CPU_ID  => SK.Byte (Route.CPU),
-                        APIC_ID => APIC_ID));
-
-         if Skp.Interrupts.IRQ_Routing (I).Vector /= Skp.Invalid_Vector then
-            IO_Apic.Route_IRQ
-              (IRQ            => Skp.Interrupts.IRQ_Routing (I).IRQ,
-               Vector         =>
-                 SK.Byte (Skp.Interrupts.IRQ_Routing (I).Vector),
-               Trigger_Mode   => Skp.Interrupts.IRQ_Routing (I).IRQ_Mode,
-               Trigger_Level  => Skp.Interrupts.IRQ_Routing (I).IRQ_Level,
-               Destination_Id => APIC_ID);
-         end if;
-      end loop;
-   end Setup_IRQ_Routing;
 
    -------------------------------------------------------------------------
 

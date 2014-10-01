@@ -132,7 +132,7 @@ package body Spec.Generator.Test_Data.Tests is
                       File => "data/test_policy.xml");
 
          declare
-            IOMMUs  : constant DOM.Core.Node_List
+            IOMMUs : constant DOM.Core.Node_List
               := McKae.XML.XPath.XIA.XPath_Query
                 (N     => Policy.Doc,
                  XPath => "/system/kernel/devices/device"

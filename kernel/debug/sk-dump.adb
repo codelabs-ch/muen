@@ -32,11 +32,28 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Print_IRQ_Routing
-     (IRQ     : SK.Byte;
-      Vector  : SK.Byte;
-      CPU_ID  : SK.Byte;
+   procedure Print_CPU_IDs
+     (CPU_ID  : SK.Byte;
       APIC_ID : SK.Byte)
+   is
+   begin
+      Locks.Acquire;
+      KC.Put_String (Item => "CPU ");
+      KC.Put_Byte   (Item => CPU_ID);
+      KC.Put_String (Item => " registered with APIC ID ");
+      KC.Put_Byte   (Item => APIC_ID);
+      KC.New_Line;
+      Locks.Release;
+   end Print_CPU_IDs;
+
+   -------------------------------------------------------------------------
+
+   procedure Print_IRQ_Routing
+     (IRQ          : SK.Byte;
+      Vector       : SK.Byte;
+      CPU_ID       : SK.Byte;
+      Dest_ID      : SK.Byte;
+      Dest_ID_Name : String)
    is
    begin
       Locks.Acquire;
@@ -46,8 +63,10 @@ is
       KC.Put_Byte   (Item => Vector);
       KC.Put_String (Item => " to CPU ");
       KC.Put_Byte   (Item => CPU_ID);
-      KC.Put_String (Item => " with APIC ID ");
-      KC.Put_Byte   (Item => APIC_ID);
+      KC.Put_String (Item => ", ");
+      KC.Put_String (Item => Dest_ID_Name);
+      KC.Put_String (Item => " ");
+      KC.Put_Byte (Item => Dest_ID);
       KC.New_Line;
       Locks.Release;
    end Print_IRQ_Routing;

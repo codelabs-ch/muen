@@ -31,6 +31,7 @@ with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.XML_Utils;
 
+with Expanders.Config;
 with Expanders.XML_Utils;
 
 package body Expanders.Device_Domains
@@ -111,6 +112,10 @@ is
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/deviceDomains/domain");
+      BSP     : constant DOM.Core.Node
+        := Muxml.Utils.Get_Element
+          (Doc   => Data.Doc,
+           XPath => "/system/kernel/memory/cpu[@id='0']");
    begin
       if DOM.Core.Nodes.Length (List => IOMMUs) = 0 then
          Mulog.Log (Msg => "No IOMMU device found, not adding VT-d tables");
@@ -130,6 +135,33 @@ is
          Memory_Type => "system_vtd_root",
          File_Name   => "vtd_root",
          File_Offset => "none");
+
+      --  Interrupt Remapping (IR) table.
+
+      Mulog.Log (Msg => "Adding VT-d IR table");
+      Mutools.XML_Utils.Add_Memory_Region
+        (Policy      => Data,
+         Name        => "vtd_ir",
+         Address     => "",
+         Size        => "16#1000#",
+         Caching     => "WB",
+         Alignment   => "16#1000#",
+         Memory_Type => "kernel_vtd_ir",
+         File_Name   => "vtd_ir",
+         File_Offset => "none");
+
+      --  Map IRT on BSP kernel.
+
+      Muxml.Utils.Append_Child
+        (Node      => BSP,
+         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+           (Policy        => Data,
+            Logical_Name  => "vtd_ir",
+            Physical_Name => "vtd_ir",
+            Address       => Mutools.Utils.To_Hex
+              (Number => Config.VTd_IRT_Virtual_Addr),
+            Writable      => True,
+            Executable    => False));
 
       --  Do not expand regions used for context and address translation tables
       --  if no device domains are specified in the policy.

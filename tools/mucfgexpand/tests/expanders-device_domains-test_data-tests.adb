@@ -66,7 +66,7 @@ package body Expanders.Device_Domains.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/device_domains_tables.xml",
          Ref_Filename => "data/device_domains_tables.ref.xml",
-         Pre          => Add_Section_Skeleton'Access,
+         Pre          => Add_Section_Skeleton_And_Kernel'Access,
          Expander     => Add_Tables'Access);
 --  begin read only
    end Test_Add_Tables;

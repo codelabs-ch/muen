@@ -3,6 +3,8 @@
 --  automatically. Contents of this package can be modified in any way
 --  except for sections surrounded by a 'read only' marker.
 
+with Expanders.Kernel;
+
 package body Expanders.Device_Domains.Test_Data is
 
    -------------------------------------------------------------------------
@@ -20,6 +22,16 @@ package body Expanders.Device_Domains.Test_Data is
    begin
       null;
    end Tear_Down;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Section_Skeleton_And_Kernel
+     (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Add_Section_Skeleton (Data => Data);
+      Kernel.Add_Section_Skeleton (Data => Data);
+   end Add_Section_Skeleton_And_Kernel;
 
    -------------------------------------------------------------------------
 

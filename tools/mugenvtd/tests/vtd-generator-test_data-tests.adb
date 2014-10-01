@@ -27,6 +27,7 @@ package body VTd.Generator.Test_Data.Tests is
       Context_23 : constant String := "obj/vtd_context_bus_23";
       Lnx_Dom_Pt : constant String := "obj/vtd_lnx_domain_pt";
       Net_Dom_Pt : constant String := "obj/vtd_net_domain_pt";
+      IR_Table   : constant String := "obj/vtd_ir";
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_B,
@@ -55,12 +56,17 @@ package body VTd.Generator.Test_Data.Tests is
               (Filename1 => "data/vtd_net_domain_pt.ref",
                Filename2 => Net_Dom_Pt),
               Message   => "Net device domain paging structures mismatch");
+      Assert (Condition => Test_Utils.Equal_Files
+              (Filename1 => "data/vtd_ir",
+               Filename2 => IR_Table),
+              Message   => "IR table mismatch");
 
       Ada.Directories.Delete_File (Name => Root_Table);
       Ada.Directories.Delete_File (Name => Context_0);
       Ada.Directories.Delete_File (Name => Context_23);
       Ada.Directories.Delete_File (Name => Lnx_Dom_Pt);
       Ada.Directories.Delete_File (Name => Net_Dom_Pt);
+      Ada.Directories.Delete_File (Name => IR_Table);
 
       Muxml.Utils.Remove_Child
         (Node       => DOM.Core.Documents.Get_Element (Doc => Policy.Doc),

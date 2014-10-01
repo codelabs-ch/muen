@@ -25,14 +25,15 @@ with
    Initializes    => State
 is
 
-   --  Route IRQ as interrupt with specified vector to APIC given by
-   --  destination id.
+   --  Route IRQ as interrupt with specified vector to given destination. The
+   --  destination ID is either an APIC ID or an IRTE index. It must be
+   --  calculated by the client and is used as-is.
    procedure Route_IRQ
      (IRQ            : SK.Byte;
       Vector         : SK.Byte;
       Trigger_Mode   : Skp.Interrupts.IRQ_Mode_Type;
       Trigger_Level  : Skp.Interrupts.IRQ_Level_Type;
-      Destination_Id : SK.Byte)
+      Destination_Id : SK.Word64)
    with
       Global  => (Output => State),  --  XXX Logically output state *is* In_Out
       Depends => (State => (Destination_Id, IRQ, Trigger_Mode, Trigger_Level,

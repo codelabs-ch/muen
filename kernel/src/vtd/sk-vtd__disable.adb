@@ -30,6 +30,7 @@ is
    begin
       null;
    end Process_Fault;
+
    -------------------------------------------------------------------------
 
    procedure Initialize

@@ -33,6 +33,7 @@
 			<xs:enumeration value="kernel"/>
 			<xs:enumeration value="kernel_binary"/>
 			<xs:enumeration value="kernel_interface"/>
+			<xs:enumeration value="kernel_vtd_ir"/>
 			<xs:enumeration value="subject"/>
 			<xs:enumeration value="subject_info"/>
 			<xs:enumeration value="subject_state"/>

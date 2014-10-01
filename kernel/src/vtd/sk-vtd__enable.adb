@@ -32,7 +32,7 @@ pragma $Release_Warnings (On, "unit * is not referenced");
 
 package body SK.VTd
 with
-  Refined_State => (State => IOMMUs)
+   Refined_State => (State => (IOMMUs, IRT))
 is
 
    --  Maximum number of busy-loops to perform when waiting for the hardware to
@@ -46,6 +46,52 @@ is
        Async_Readers,
        Effective_Writes,
        Address => System'To_Address (Skp.IOMMU.Base_Address);
+
+   type IRT_Range is range 0 .. 2 ** (Skp.IOMMU.IR_Table_Size + 1) - 1;
+
+   type IRT_Type is array (IRT_Range) of Types.IR_Entry_Type
+     with
+       Size => Natural (IRT_Range'Last + 1) * 128;
+
+   IRT : IRT_Type
+     with
+       Volatile,
+       Async_Writers,
+       Async_Readers,
+       Effective_Writes,
+       Address => System'To_Address (Skp.IOMMU.IR_Table_Virt_Address);
+
+   -------------------------------------------------------------------------
+
+   --  Update destination IDs in Interrupt Remapping Table (IRT). This
+   --  procedure must be called on systems where the APIC ID of logical
+   --  processors is not equal the CPU ID acquired on startup.
+   procedure Update_IRT_Destinations
+   with
+      Global  => (Input => CPU_Registry.State, In_Out => IRT),
+      Depends => (IRT =>+ CPU_Registry.State)
+   is
+      use type Types.Bit_Type;
+
+      IRTE    : Types.IR_Entry_Type;
+      APIC_ID : SK.Word32;
+   begin
+      for I in IRT_Range loop
+         IRTE := IRT (I);
+
+         if IRTE.Present = 1 then
+            APIC_ID := SK.Word32
+              (CPU_Registry.Get_APIC_ID
+                 (CPU_ID => Skp.CPU_Range
+                      (IRTE.DST)));
+
+            if IRTE.DST /= APIC_ID then
+               IRTE.DST := APIC_ID;
+               IRT (I)  := IRTE;
+            end if;
+         end if;
+      end loop;
+   end Update_IRT_Destinations;
 
    -------------------------------------------------------------------------
 
@@ -194,8 +240,8 @@ is
       Caps    : Types.Reg_Capability_Type;
       Extcaps : Types.Reg_Extcapability_Type;
 
-      Supported_Version, Nr_Domains, AGAW_39_Bit : Boolean;
-      Matching_FRO, Matching_NFR, Matching_IRO   : Boolean;
+      Supported_Version, Nr_Domains, AGAW_39_Bit, IR_Support : Boolean;
+      EIM_Support, Matching_FRO, Matching_NFR, Matching_IRO  : Boolean;
    begin
       Version := IOMMUs (Idx).Version;
       Supported_Version := Version.MAX = 1 and then Version.MIN = 0;
@@ -237,12 +283,24 @@ is
                       (Msg  => "Unsupported IOMMU IRO",
                        Item => SK.Word16 (Extcaps.IRO)));
 
+      IR_Support := Extcaps.IR = 1;
+      pragma Debug
+        (not IR_Support,
+         KC.Put_Line (Item => "No support for Interrupt Remapping"));
+
+      EIM_Support := Extcaps.EIM = 1;
+      pragma Debug
+        (not EIM_Support,
+         KC.Put_Line (Item => "No support for Extended Interrupt Mode"));
+
       Result := Supported_Version and
         Nr_Domains                and
         AGAW_39_Bit               and
         Matching_FRO              and
         Matching_NFR              and
-        Matching_IRO;
+        Matching_IRO              and
+        IR_Support                and
+        EIM_Support;
    end Check_Capabilities;
 
    -------------------------------------------------------------------------
@@ -366,6 +424,102 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Set Interrupt Remap Table address and size for IOMMU with given index.
+   procedure Set_IR_Table_Address
+     (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
+      Address :     Types.Bit_52_Type;
+      Size    :     Types.Bit_4_Type;
+      Success : out Boolean)
+     with
+       SPARK_Mode => $Complete_Proofs,  -- [N425-012]
+       Global     => (In_Out => IOMMUs),
+       Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU, Address, Size))
+   is
+      use type SK.VTd.Types.Bit_Type;
+
+      Global_Status  : Types.Reg_Global_Status_Type;
+      Global_Command : Types.Reg_Global_Command_Type;
+      IRT_Address    : constant Types.Reg_IRT_Address
+        := (IRTA     => Address,
+            S        => Size,
+            EIME     => 1,
+            Reserved => (others => 0));
+   begin
+      IOMMUs (IOMMU).IRT_Address := IRT_Address;
+
+      Global_Status := IOMMUs (IOMMU).Global_Status;
+      Set_Command_From_Status (Command => Global_Command,
+                               Status  => Global_Status);
+      Global_Command.SIRTP := 1;
+      IOMMUs (IOMMU).Global_Command := Global_Command;
+
+      for J in 1 .. Loop_Count_Max loop
+         Global_Status := IOMMUs (IOMMU).Global_Status;
+         exit when Global_Status.IRTPS = 1;
+      end loop;
+      Success := Global_Status.IRTPS = 1;
+   end Set_IR_Table_Address;
+
+   -------------------------------------------------------------------------
+
+   --  Block Compatibility Format Interrupts (CFI).
+   procedure Block_CF_Interrupts
+     (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
+      Success : out Boolean)
+     with
+       SPARK_Mode => $Complete_Proofs,  -- [N425-012]
+       Global     => (In_Out => IOMMUs),
+       Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+   is
+      use type SK.VTd.Types.Bit_Type;
+
+      Global_Command : Types.Reg_Global_Command_Type;
+      Global_Status  : Types.Reg_Global_Status_Type;
+   begin
+      Global_Status := IOMMUs (IOMMU).Global_Status;
+      Set_Command_From_Status (Command => Global_Command,
+                               Status  => Global_Status);
+      Global_Command.CFI := 0;
+      IOMMUs (IOMMU).Global_Command := Global_Command;
+
+      for J in 1 .. Loop_Count_Max loop
+         Global_Status := IOMMUs (IOMMU).Global_Status;
+         exit when Global_Status.CFIS = 0;
+      end loop;
+      Success := Global_Status.CFIS = 0;
+   end Block_CF_Interrupts;
+
+   -------------------------------------------------------------------------
+
+   --  Enable Interrupt Remapping (IR) for IOMMU with given index.
+   procedure Enable_Interrupt_Remapping
+     (IOMMU   :     Skp.IOMMU.IOMMU_Device_Range;
+      Success : out Boolean)
+     with
+       SPARK_Mode => $Complete_Proofs,  -- [N425-012]
+       Global     => (In_Out => IOMMUs),
+       Depends    => ((IOMMUs, Success) => (IOMMUs, IOMMU))
+   is
+      use type SK.VTd.Types.Bit_Type;
+
+      Global_Command : Types.Reg_Global_Command_Type;
+      Global_Status  : Types.Reg_Global_Status_Type;
+   begin
+      Global_Status := IOMMUs (IOMMU).Global_Status;
+      Set_Command_From_Status (Command => Global_Command,
+                               Status  => Global_Status);
+      Global_Command.IRE := 1;
+      IOMMUs (IOMMU).Global_Command := Global_Command;
+
+      for J in 1 .. Loop_Count_Max loop
+         Global_Status := IOMMUs (IOMMU).Global_Status;
+         exit when Global_Status.IRES = 1;
+      end loop;
+      Success := Global_Status.IRES = 1;
+   end Enable_Interrupt_Remapping;
+
+   -------------------------------------------------------------------------
+
    pragma $Prove_Warnings (Off, "unused variable ""IOMMU""");
    procedure VTd_Error
      (IOMMU   : Skp.IOMMU.IOMMU_Device_Range;
@@ -392,8 +546,10 @@ is
    procedure Initialize
    with
       SPARK_Mode      => $Complete_Proofs,  -- [N722-005]
-      Refined_Global  => (In_Out => (X86_64.State, IOMMUs)),
-      Refined_Depends => ((X86_64.State, IOMMUs) =>+ IOMMUs)
+      Refined_Global  => (Input  => CPU_Registry.State,
+                          In_Out => (X86_64.State, IOMMUs, IRT)),
+      Refined_Depends => ((X86_64.State, IOMMUs) =>+ IOMMUs,
+                          IRT =>+ (IOMMUs, CPU_Registry.State))
    is
       Needed_Caps_Present, Status : Boolean;
    begin
@@ -418,6 +574,8 @@ is
                         APIC_ID => SK.Apic.Get_ID));
          pragma Debug (Set_Fault_Event_Mask (IOMMU  => I,
                                              Enable => False));
+
+         --  DMAR
 
          Set_Root_Table_Address
            (IOMMU   => I,
@@ -459,6 +617,42 @@ is
             if True then  --  Workaround for No_Return placement limitation
                VTd_Error (IOMMU   => I,
                           Message => "error enabling translation");
+            end if;
+         end if;
+
+         --  IR
+
+         Update_IRT_Destinations;
+
+         Set_IR_Table_Address (IOMMU   => I,
+                               Address => Skp.IOMMU.IR_Table_Phys_Address,
+                               Size    => Skp.IOMMU.IR_Table_Size,
+                               Success => Status);
+         if not Status then
+            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
+            if True then  --  Workaround for No_Return placement limitation
+               VTd_Error (IOMMU   => I,
+                          Message => "unable to set IR table address");
+            end if;
+         end if;
+
+         Block_CF_Interrupts (IOMMU   => I,
+                              Success => Status);
+         if not Status then
+            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
+            if True then  --  Workaround for No_Return placement limitation
+               VTd_Error (IOMMU   => I,
+                          Message => "unable to block CF interrupts");
+            end if;
+         end if;
+
+         Enable_Interrupt_Remapping (IOMMU   => I,
+                                     Success => Status);
+         if not Status then
+            pragma Assume (False);  --  Workaround for No_Return: Pre=>False
+            if True then  --  Workaround for No_Return placement limitation
+               VTd_Error (IOMMU   => I,
+                          Message => "error enabling interrupt remapping");
             end if;
          end if;
 

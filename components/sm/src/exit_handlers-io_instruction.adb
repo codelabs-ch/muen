@@ -137,19 +137,11 @@ is
                        16#cfe# |    --  PCI Data            (hardcoded)
                        16#cff# =>   --  PCI Data            (hardcoded)
                      --  ignore writes, read 00/ff
-                     case Info.Port_Number is
-                        when 16#40# =>
-                           Subject.Text_IO.Put_String
-                             (Item => "(40) i8253/4 PIT_CH0  ");
-                        when 16#43# =>
-                           Subject.Text_IO.Put_String
-                             (Item => "(43) i8253/4 PIT_MODE ");
-                        when others =>
-                           Subject.Text_IO.Put_String (Item => " ");
-                           Subject.Text_IO.Put_Word16
-                             (Item => Info.Port_Number);
-                           Subject.Text_IO.Put_String (Item => "  ");
-                     end case;
+
+                     Subject.Text_IO.Put_Word16
+                       (Item => Info.Port_Number);
+                     Subject.Text_IO.Put_String (Item => " ");
+
                      case Info.Direction is
                         when Dir_In =>
                            Subject.Text_IO.Put_String (Item => "read.");

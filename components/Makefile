@@ -7,17 +7,17 @@ COMPONENTS = \
 	time     \
 	vt
 
-COMPONENTS_CLEAN = $(COMPONENTS:%=clean-%)
+COMPONENTS_INSTALL = $(COMPONENTS:%=install-%)
+COMPONENTS_CLEAN   = $(COMPONENTS:%=clean-%)
 
 all: $(COMPONENTS) install
 
 $(COMPONENTS):
 	@$(MAKE) -C $@
 
-install:
-	@for component in $(COMPONENTS); do \
-		$(MAKE) $@ -C $$component || exit 1; \
-	done
+install: $(COMPONENTS_INSTALL)
+$(COMPONENTS_INSTALL): $(COMPONENTS)
+	@$(MAKE) -C $(@:install-%=%) install
 
 clean: $(COMPONENTS_CLEAN)
 $(COMPONENTS_CLEAN):

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -24,27 +24,26 @@ with Skp.Scheduling;
 use type Skp.Scheduling.Major_Frame_Range;
 
 package body Tau0_Kernel_Iface
---# own
---#    State is out Active_Major, Cur_Major;
+with
+   Refined_State => (State => (Cur_Major, Active_Major))
 is
 
    Cur_Major : Skp.Scheduling.Major_Frame_Range
      := Skp.Scheduling.Major_Frame_Range'First;
 
-   Active_Major : Skp.Scheduling.Major_Frame_Range;
-   for Active_Major'Address use System'To_Address
-     (Skp.Kernel.Tau0_Iface_Address);
-   pragma Atomic (Active_Major);
+   Active_Major : Skp.Scheduling.Major_Frame_Range := Cur_Major
+   with
+      Atomic,
+      Async_Readers,
+      Address => System'To_Address (Skp.Kernel.Tau0_Iface_Address);
 
    -------------------------------------------------------------------------
 
    procedure Switch_Major_Frame
-   --# global
-   --#       out Active_Major;
-   --#    in out Cur_Major;
-   --# derives
-   --#    Cur_Major    from * &
-   --#    Active_Major from Cur_Major;
+   with
+      Refined_Global  => (In_Out => Cur_Major,
+                          Output => Active_Major),
+      Refined_Depends => ((Active_Major, Cur_Major) => Cur_Major)
    is
    begin
 

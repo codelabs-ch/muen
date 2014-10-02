@@ -154,7 +154,7 @@ is
                         when Dir_In =>
                            Subject.Text_IO.Put_String (Item => "read.");
                            case Info.Port_Number is
-                              when 16#64# | 16#70# | 16#71# =>
+                              when 16#64# =>
                                  State.Regs.RAX :=
                                    State.Regs.RAX and not 16#ff#;
                               when others =>

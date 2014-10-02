@@ -7,6 +7,8 @@ COMPONENTS = \
 	time     \
 	vt
 
+COMPONENTS_CLEAN = $(COMPONENTS:%=clean-%)
+
 all: $(COMPONENTS) install
 
 $(COMPONENTS):
@@ -17,7 +19,8 @@ install:
 		$(MAKE) $@ -C $$component || exit 1; \
 	done
 
-clean:
-	@for subj in $(COMPONENTS); do make clean -C $$subj; done
+clean: $(COMPONENTS_CLEAN)
+$(COMPONENTS_CLEAN):
+	@$(MAKE) -C $(@:clean-%=%) clean
 
 .PHONY: $(COMPONENTS)

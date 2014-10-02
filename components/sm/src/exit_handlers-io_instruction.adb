@@ -73,8 +73,42 @@ is
    --  by Intel SDM Vol. 3C, section 27.2.1, table 27-5.
    function To_IO_Info (Qualification : SK.Word64) return IO_Info_Type;
 
+   --  Ignore acces to port: Do nothing on write, fake read.
+   procedure Ignore_Access (Info : IO_Info_Type);
+
    --  Returns True if the I/O operation is a reboot request.
    function Is_Reboot_Request (Info : IO_Info_Type) return Boolean;
+
+   -------------------------------------------------------------------------
+
+   procedure Ignore_Access (Info : IO_Info_Type)
+   is
+      use type SK.Word64;
+
+      Mask : SK.Word64;
+   begin
+      Subject.Text_IO.Put_Word16
+        (Item => Info.Port_Number);
+      Subject.Text_IO.Put_String (Item => " ignore ");
+
+      case Info.Size is
+         when One_Byte  => Mask := 16#ff#;
+         when Two_Byte  => Mask := 16#ffff#;
+         when Four_Byte => Mask := 16#ffff_ffff#;
+         when others    => null;
+      end case;
+
+      case Info.Direction is
+         when Dir_In =>
+            Subject.Text_IO.Put_String (Item => "read");
+            State.Regs.RAX := State.Regs.RAX or Mask;
+         when Dir_Out =>
+            Subject.Text_IO.Put_String (Item => "write ");
+            Subject.Text_IO.Put_Word32
+              (SK.Word32'Mod (State.Regs.RAX and Mask));
+      end case;
+      Subject.Text_IO.New_Line;
+   end Ignore_Access;
 
    -------------------------------------------------------------------------
 
@@ -104,130 +138,56 @@ is
          Subject.Text_IO.Put_Line
            (Item => "I/O instructions with string and REP not supported");
          Halt := True;
+      elsif Info.Size not in One_Byte | Two_Byte | Four_Byte then
+         Subject.Text_IO.Put_Line
+           (Item => "I/O instruction with invalid access size 16#");
+         Subject.Text_IO.Put_Byte (Item => SK.Byte (Info.Size));
+         Subject.Text_IO.Put_Line (Item => "#");
+         Halt := True;
       else
-         case Info.Size is
-            when One_Byte =>
-               case Info.Port_Number is
-                  --  Only handle these ports by now:
-                  when 16#20#  |    --  PIC_MASTER_CMD      (hardcoded)
-                       16#21#  |    --  PIC_MASTER_DATA     (hardcoded)
-                       16#a0#  |    --  PIC_SLAVE_CMD       (hardcoded)
-                       16#a1#  |    --  PIC_SLAVE_DATA      (hardcoded)
-                       16#40#  |    --  i8253/4 PIT_CH0     (hardcoded)
-                       16#43#  |    --  i8253/4 PIT_MODE    (hardcoded)
-                       16#60#  |    --  i8042 DATA          (configurable)
-                       16#64#  |    --  i8042 CMD/STATUS    (configurable)
-                       16#80#  |    --  PORT80              (hardcoded)
-                       16#2e9# |    --  COM 4               (configurable)
-                       16#2f9# |    --  COM 2               (configurable)
-                       16#2fa# |    --  82C710 C&T mouse port chip   (conf.)
-                       16#390# |    --  82C710 C&T mouse port chip   (conf.)
-                       16#391# |    --  82C710 C&T mouse port chip   (conf.)
-                       16#3e9# |    --  COM 3               (configurable)
-                       16#3f9# |    --  COM 1               (configurable)
-                       16#3fa# |    --  82C710 C&T mouse port chip   (conf.)
-                       16#4d0# |    --  PIC_ELCR1           (hardcoded,ACPI)
-                       16#4d1# |    --  PIC_ELCR2           (hardcoded,ACPI)
-                       16#cf8# |    --  PCI Addr            (hardcoded)
-                       16#cf9# |    --  PCI Addr            (hardcoded)
-                       16#cfa# |    --  PCI Addr            (hardcoded)
-                       16#cfb# |    --  PCI Addr            (hardcoded)
-                       16#cfc# |    --  PCI Data            (hardcoded)
-                       16#cfd# |    --  PCI Data            (hardcoded)
-                       16#cfe# |    --  PCI Data            (hardcoded)
-                       16#cff# =>   --  PCI Data            (hardcoded)
-                     --  ignore writes, read 00/ff
-
-                     Subject.Text_IO.Put_Word16
-                       (Item => Info.Port_Number);
-                     Subject.Text_IO.Put_String (Item => " ");
-
-                     case Info.Direction is
-                        when Dir_In =>
-                           Subject.Text_IO.Put_String (Item => "read.");
-                           case Info.Port_Number is
-                              when others =>
-                                 State.Regs.RAX := State.Regs.RAX or 16#ff#;
-                           end case;
-                        when Dir_Out =>
-                           Subject.Text_IO.Put_String (Item => "write: ");
-                           Subject.Text_IO.Put_Byte
-                             (Item => SK.Byte (State.Regs.RAX and 16#ff#));
-                     end case;
-                     Subject.Text_IO.New_Line;
-                  when others =>
-                     Subject.Text_IO.Put_String
-                       (Item => "Unhandled byte access to I/O port ");
-                     Subject.Text_IO.Put_Word16 (Item => Info.Port_Number);
-                     Subject.Text_IO.New_Line;
-                     Halt := True;
-               end case;
-            when Two_Byte =>
-               case Info.Port_Number is
-                  --  Only handle these ports by now:
-                  when 16#0cf8# |   --  PCI Addr            (hardcoded)
-                       16#0cfa# |   --  PCI Addr            (hardcoded)
-                       16#0cfc# |   --  PCI Data            (hardcoded)
-                       16#0cfe# =>  --  PCI Data            (hardcoded)
-                     Subject.Text_IO.Put_String (Item => " ");
-                     Subject.Text_IO.Put_Word16 (Item => Info.Port_Number);
-                     Subject.Text_IO.Put_String (Item => "  ");
-                     case Info.Direction is
-                        when Dir_In =>
-                           Subject.Text_IO.Put_String (Item => "read.");
-                           State.Regs.RAX := State.Regs.RAX or 16#ffff#;
-                        when Dir_Out =>
-                           Subject.Text_IO.Put_String (Item => "write: ");
-                           Subject.Text_IO.Put_Word16
-                             (Item => SK.Word16 (State.Regs.RAX and 16#ffff#));
-                     end case;
-                     Subject.Text_IO.New_Line;
-                  when others =>
-                     Subject.Text_IO.Put_String
-                       (Item => "Unhandled word16 access to I/O port ");
-                     Subject.Text_IO.Put_Word16 (Item => Info.Port_Number);
-                     Subject.Text_IO.New_Line;
-                     Halt := True;
-               end case;
-            when Four_Byte =>
-               case Info.Port_Number is
-                  --  Only handle these ports by now:
-                  when 16#0cf8# |   --  PCI Addr            (hardcoded)
-                       16#0cfc# =>  --  PCI Data            (hardcoded)
-                     Subject.Text_IO.Put_String (Item => " ");
-                     Subject.Text_IO.Put_Word16 (Item => Info.Port_Number);
-                     Subject.Text_IO.Put_String (Item => "  ");
-                     case Info.Direction is
-                        when Dir_In =>
-                           Subject.Text_IO.Put_String (Item => "read.");
-                           State.Regs.RAX := State.Regs.RAX or 16#ffff_ffff#;
-                        when Dir_Out =>
-                           Subject.Text_IO.Put_String (Item => "write: ");
-                           Subject.Text_IO.Put_Word32
-                             (Item => SK.Word32
-                                (State.Regs.RAX and 16#ffff_ffff#));
-                     end case;
-                     Subject.Text_IO.New_Line;
-                  when others =>
-                     Subject.Text_IO.Put_String
-                       (Item => "Unhandled word32 access to I/O port ");
-                     Subject.Text_IO.Put_Word16 (Item => Info.Port_Number);
-                     Subject.Text_IO.New_Line;
-                     Halt := True;
-               end case;
+         case Info.Port_Number is
+            when 16#0020# |  --  PIC_MASTER_CMD   (hardcoded)
+                 16#0021# |  --  PIC_MASTER_DATA  (hardcoded)
+                 16#00a0# |  --  PIC_SLAVE_CMD    (hardcoded)
+                 16#00a1# |  --  PIC_SLAVE_DATA   (hardcoded)
+                 16#0040# |  --  i8253/4 PIT_CH0  (hardcoded)
+                 16#0043# |  --  i8253/4 PIT_MODE (hardcoded)
+                 16#0060# |  --  i8042 DATA       (configurable)
+                 16#0080# |  --  PORT80           (hardcoded)
+                 16#02e9# |  --  COM 4            (configurable)
+                 16#02f9# |  --  COM 2            (configurable)
+                 16#02fa# |  --  82C710 C&T mouse port chip   (conf.)
+                 16#0390# |  --  82C710 C&T mouse port chip   (conf.)
+                 16#0391# |  --  82C710 C&T mouse port chip   (conf.)
+                 16#03e9# |  --  COM 3            (configurable)
+                 16#03f9# |  --  COM 1            (configurable)
+                 16#03fa# |  --  82C710 C&T mouse port chip   (conf.)
+                 16#04d0# |  --  PIC_ELCR1        (hardcoded,ACPI)
+                 16#04d1# |  --  PIC_ELCR2        (hardcoded,ACPI)
+                 16#0cf8# |  --  PCI Addr         (hardcoded)
+                 16#0cf9# |  --  PCI Addr         (hardcoded)
+                 16#0cfa# |  --  PCI Addr         (hardcoded)
+                 16#0cfb# |  --  PCI Addr         (hardcoded)
+                 16#0cfc# |  --  PCI Data         (hardcoded)
+                 16#0cfd# |  --  PCI Data         (hardcoded)
+                 16#0cfe# |  --  PCI Data         (hardcoded)
+                 16#0cff# => --  PCI Data         (hardcoded)
+               Ignore_Access (Info => Info);
+            when 16#64# =>   --  i8042 CMD/STATUS (configurable)
+               if Is_Reboot_Request (Info => Info) then
+                  Subject.Text_IO.Put_Line
+                    (Item => "Reboot requested via pulse of CPU RESET pin");
+                  Halt := True;
+               else
+                  Ignore_Access (Info => Info);
+               end if;
             when others =>
                Subject.Text_IO.Put_String
-                 (Item => "I/O instruction with invalid access size 16#");
-               Subject.Text_IO.Put_Byte (Item => SK.Byte (Info.Size));
-               Subject.Text_IO.Put_Line (Item => "#");
+                 (Item => "Unhandled access to I/O port ");
+               Subject.Text_IO.Put_Word16 (Item => Info.Port_Number);
+               Subject.Text_IO.New_Line;
                Halt := True;
          end case;
-
-         if Is_Reboot_Request (Info => Info) then
-            Subject.Text_IO.Put_Line
-              (Item => "Reboot requested via pulse of CPU RESET pin");
-            Halt := True;
-         end if;
       end if;
    end Process;
 

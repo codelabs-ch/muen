@@ -76,8 +76,42 @@ is
    --  Ignore acces to port: Do nothing on write, fake read.
    procedure Ignore_Access (Info : IO_Info_Type);
 
-   --  Returns True if the I/O operation is a reboot request.
-   function Is_Reboot_Request (Info : IO_Info_Type) return Boolean;
+   --  Emulate i8042 controller.
+   procedure Emulate_i8042
+     (Info :     IO_Info_Type;
+      Halt : out Boolean);
+
+   -------------------------------------------------------------------------
+
+   procedure Emulate_i8042
+     (Info :     IO_Info_Type;
+      Halt : out Boolean)
+   is
+      use type SK.Word16;
+      use type SK.Word64;
+
+      --  Returns True if the I/O operation is a reboot request.
+      function Is_Reboot_Request return Boolean;
+      function Is_Reboot_Request return Boolean
+      is
+         use type SK.Byte;
+      begin
+         return Info.Port_Number = 16#64#
+           and then Info.Direction = Dir_Out
+           and then SK.Byte'Mod (State.Regs.RAX) = 16#fe#;
+      end Is_Reboot_Request;
+   begin
+      if Is_Reboot_Request then
+         Subject.Text_IO.Put_Line
+           (Item => "Reboot requested via pulse of CPU RESET pin");
+         Halt := True;
+         return;
+      end if;
+
+      if Info.Port_Number = 16#64# and Info.Direction = Dir_In then
+         State.Regs.RAX := State.Regs.RAX and not 16#ff#;
+      end if;
+   end Emulate_i8042;
 
    -------------------------------------------------------------------------
 
@@ -112,18 +146,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Is_Reboot_Request (Info : IO_Info_Type) return Boolean
-   is
-      use type SK.Byte;
-      use type SK.Word16;
-   begin
-      return Info.Port_Number = 16#64#
-        and then Info.Direction = Dir_Out
-        and then SK.Byte'Mod (State.Regs.RAX) = 16#fe#;
-   end Is_Reboot_Request;
-
-   -------------------------------------------------------------------------
-
    procedure Process (Halt : out Boolean)
    is
       use type SK.Word64;
@@ -152,7 +174,6 @@ is
                  16#00a1# |  --  PIC_SLAVE_DATA   (hardcoded)
                  16#0040# |  --  i8253/4 PIT_CH0  (hardcoded)
                  16#0043# |  --  i8253/4 PIT_MODE (hardcoded)
-                 16#0060# |  --  i8042 DATA       (configurable)
                  16#0080# |  --  PORT80           (hardcoded)
                  16#02e9# |  --  COM 4            (configurable)
                  16#02f9# |  --  COM 2            (configurable)
@@ -173,14 +194,9 @@ is
                  16#0cfe# |  --  PCI Data         (hardcoded)
                  16#0cff# => --  PCI Data         (hardcoded)
                Ignore_Access (Info => Info);
-            when 16#64# =>   --  i8042 CMD/STATUS (configurable)
-               if Is_Reboot_Request (Info => Info) then
-                  Subject.Text_IO.Put_Line
-                    (Item => "Reboot requested via pulse of CPU RESET pin");
-                  Halt := True;
-               else
-                  Ignore_Access (Info => Info);
-               end if;
+            when 16#60# | 16#64# =>
+               Emulate_i8042 (Info => Info,
+                              Halt => Halt);
             when others =>
                Subject.Text_IO.Put_String
                  (Item => "Unhandled access to I/O port ");

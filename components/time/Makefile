@@ -1,11 +1,3 @@
-include ../../Makeconf
+COMPONENT = time
 
-BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
-
-all: time
-
-time:
-	gprbuild $(BUILD_OPTS) -P$@
-
-clean:
-	@rm -rf $(OBJ_DIR)
+include ../component_native.mk

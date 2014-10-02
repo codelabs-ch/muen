@@ -60,6 +60,7 @@ is
             --  Features:
             --  Bit  1 -   FPU: x87 enabled
             --  Bit  3 -   PSE: Page Size Extensions
+            --  Bit  4 -   TSC: Time Stamp Counter
             --  Bit  5 -   MSR: RD/WR MSR
             --  Bit  6 -   PAE: PAE and 64bit page tables
             --  Bit  8 -   CX8: CMPXCHG8B Instruction
@@ -69,7 +70,7 @@ is
             --  Bit 24 -  FXSR: FX SAVE/RESTORE
             --  Bit 25 -   SSE: SSE support
             --  Bit 26 -  SSE2: SSE2 support
-            State.Regs.RDX := 16#0708_8969#;
+            State.Regs.RDX := 16#0708_8979#;
          when 2 =>
 
             --  Return Cache and TLB Descriptor information of a Pentium 4
@@ -90,7 +91,7 @@ is
 
             --  Get Extended CPU Features
 
-            --  Bit 29 -   LM: Long Mode
+            --  Bit 29 - LM: Long Mode
             State.Regs.RDX := 16#2000_0000#;
          when others =>
             pragma Debug (Subject.Text_IO.Put_String

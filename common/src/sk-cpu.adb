@@ -229,6 +229,23 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure RDTSC
+     (EAX : out SK.Word32;
+      EDX : out SK.Word32)
+   with
+      SPARK_Mode => Off
+   is
+   begin
+      System.Machine_Code.Asm
+        (Template => "rdtsc",
+         Outputs  =>
+           (SK.Word32'Asm_Output ("=a", EAX),
+            SK.Word32'Asm_Output ("=d", EDX)),
+         Volatile => True);
+   end RDTSC;
+
+   -------------------------------------------------------------------------
+
    procedure Set_CR2 (Value : SK.Word64)
    with
       SPARK_Mode => Off

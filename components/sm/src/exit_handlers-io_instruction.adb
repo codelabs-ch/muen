@@ -146,9 +146,6 @@ is
                         when Dir_In =>
                            Subject.Text_IO.Put_String (Item => "read.");
                            case Info.Port_Number is
-                              when 16#64# =>
-                                 State.Regs.RAX :=
-                                   State.Regs.RAX and not 16#ff#;
                               when others =>
                                  State.Regs.RAX := State.Regs.RAX or 16#ff#;
                            end case;

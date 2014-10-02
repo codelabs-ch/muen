@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -22,14 +22,9 @@ with Tau0_Kernel_Iface;
 
 use type SK.Word32;
 
---# inherit
---#    SK,
---#    Tau0_Kernel_Iface;
-
---# main_program
 procedure Tau0
---# global
---#    in out Tau0_Kernel_Iface.State;
+with
+   Global => (In_Out => Tau0_Kernel_Iface.State)
 is
    Counter : SK.Word32;
 begin

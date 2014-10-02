@@ -45,7 +45,7 @@
 		<include href="subject_usb_sm.xml"/>
 
 		<subject name="nic_linux" profile="linux">
-			<bootparams>console=hvc pci=noearly</bootparams>
+			<bootparams>console=hvc pci=noearly tsc=reliable</bootparams>
 			<memory>
 				<memory logical="initramfs" physical="initramfs_integ" virtualAddress="16#00a0_0000#" writable="false" executable="false"/>
 				<memory logical="ram" physical="nic_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="true"/>
@@ -90,7 +90,7 @@
 		</subject>
 
 		<subject name="usb_linux" profile="linux">
-			<bootparams>console=hvc pci=noearly</bootparams>
+			<bootparams>console=hvc pci=noearly tsc=reliable</bootparams>
 			<memory>
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#00a0_0000#" writable="false" executable="false"/>
 				<memory logical="ram" physical="usb_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="true"/>

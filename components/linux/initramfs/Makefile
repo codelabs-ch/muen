@@ -13,7 +13,7 @@ OBJDIR := $(shell mkdir -p $(OBJ_DIR))
 all: $(WGETS)
 
 $(OBJ_DIR)/%.cpio.gz:
-	@wget $(SITE)/$*.cpio.gz -O $@.tmp
+	@wget -c $(SITE)/$*.cpio.gz -O $@.tmp
 	@mv $@.tmp $@
 
 clean:

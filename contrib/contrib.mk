@@ -2,7 +2,7 @@ include ../Makeconf
 
 ifndef CMD_DL
 define CMD_DL
-	@cd $(TMP) && wget $(SRC)
+	@cd $(TMP) && wget -c $(SRC)
 endef
 endif
 

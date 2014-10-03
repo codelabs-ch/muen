@@ -7,21 +7,20 @@ COMPONENTS = \
 	time     \
 	vt
 
-BINARIES = \
-	$(subst linux,,$(COMPONENTS))
+COMPONENTS_INSTALL = $(COMPONENTS:%=install-%)
+COMPONENTS_CLEAN   = $(COMPONENTS:%=clean-%)
 
 all: $(COMPONENTS) install
 
 $(COMPONENTS):
 	@$(MAKE) -C $@
 
-install:
-	@for bin in $(BINARIES); do \
-		$(TO_RAW_CMD) $$bin/obj/$$bin $(POLICY_OBJ_DIR)/$$bin || exit 1; \
-	done
-	$(MAKE) -C linux $@
+install: $(COMPONENTS_INSTALL)
+$(COMPONENTS_INSTALL): $(COMPONENTS)
+	@$(MAKE) -C $(@:install-%=%) install
 
-clean:
-	@for subj in $(COMPONENTS); do make clean -C $$subj; done
+clean: $(COMPONENTS_CLEAN)
+$(COMPONENTS_CLEAN):
+	@$(MAKE) -C $(@:clean-%=%) clean
 
 .PHONY: $(COMPONENTS)

@@ -30,9 +30,9 @@ project Component is
    package Compiler is
       for Required_Switches ("Asm") use ("-x", "assembler-with-cpp");
       for Default_Switches ("Ada") use Shared.Ada_Compiler_Switches
-        & ("-gnatwale", "-Wstack-usage=8192", "-Werror");
+        & Shared.Warning_Switches & Shared.Build_Warning_Switches;
       for Switches ("sk*.ad*") use Shared.Spark_Compiler_Switches
-        & ("-gnatwale", "-Wstack-usage=8192", "-Werror");
+        & Shared.Warning_Switches & Shared.Build_Warning_Switches;
    end Compiler;
 
    package Linker is

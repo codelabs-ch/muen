@@ -22,7 +22,10 @@ package Interrupt_Handler
 is
 
    --  Interrupt handler.
-   procedure Handle_Interrupt (Vector : SK.Byte);
-   pragma Export (C, Handle_Interrupt, "dispatch_interrupt");
+   procedure Handle_Interrupt (Vector : SK.Byte)
+     with
+       Export,
+       Convention => C,
+       Link_Name  => "dispatch_interrupt";
 
 end Interrupt_Handler;

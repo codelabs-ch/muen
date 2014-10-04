@@ -28,8 +28,8 @@ with Mux.Channels;
 package body Mux.Terminals
 is
 
-   Active_Slot : Slot_Range := Slot_Range'First;
-   pragma Atomic (Active_Slot);
+   Active_Slot : Slot_Range := Slot_Range'First
+     with Atomic;
 
    VGA_CRT_Register       : constant := 16#3d4#;
    VGA_CRT_Idx_Start_High : constant := 16#0c#;

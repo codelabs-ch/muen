@@ -56,6 +56,7 @@ is
       String_Instr : Boolean;
       REP_Prefixed : Boolean;
       Op_Encoding  : Operand_Encoding_Type;
+      Reserved     : Bit_Array (1 .. 9);
       Port_Number  : SK.Word16;
    end record
      with Size => 64;
@@ -66,6 +67,7 @@ is
       String_Instr at 0 range  4 ..  4;
       REP_Prefixed at 0 range  5 ..  5;
       Op_Encoding  at 0 range  6 ..  6;
+      Reserved     at 0 range  7 .. 15;
       Port_Number  at 0 range 16 .. 31;
    end record;
 

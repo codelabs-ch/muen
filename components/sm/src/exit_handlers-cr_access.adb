@@ -76,7 +76,9 @@ is
       CR_Number     : CR_Number_Type;
       CR_Access     : CR_Access_Type;
       LMSW_Operand  : LMSW_Operand_Type;
+      Reserved_1    : Bit_Type;
       Data_Register : Data_Register_Type;
+      Reserved_2    : Bit_Array (1 .. 4);
       Source_Data   : SK.Word16;
    end record
      with Size => 64;
@@ -85,7 +87,9 @@ is
       CR_Number     at 0 range  0 ..  3;
       CR_Access     at 0 range  4 ..  5;
       LMSW_Operand  at 0 range  6 ..  6;
+      Reserved_1    at 0 range  7 ..  7;
       Data_Register at 0 range  8 .. 11;
+      Reserved_2    at 0 range 12 .. 15;
       Source_Data   at 0 range 16 .. 31;
    end record;
 

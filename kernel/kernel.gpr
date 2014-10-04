@@ -32,12 +32,6 @@ project Kernel is
    Extra_Warning_Switches := ();
    Preprocessor_Switches := ();
 
-   Build_Warning_Switches :=
-     ("-Wstack-usage=8192",
-      "-Wuninitialized",
-      "-Wall",
-      "-Werror");
-
    case Build_Mode is
       when "debug" =>
          Extra_Dirs := ("../common/" & Build_Mode, Build_Mode);
@@ -47,7 +41,7 @@ project Kernel is
             "-gnateDProve_Warnings=Ignored_Warnings",
             "-gnateDDebug_Warnings=Warnings",
             "-gnateDRelease_Warnings=Ignored_Warnings");
-         Extra_Warning_Switches := Build_Warning_Switches;
+         Extra_Warning_Switches := Shared.Build_Warning_Switches;
 
       when "release" =>
          Extra_Dirs := (Build_Mode);
@@ -57,7 +51,7 @@ project Kernel is
             "-gnateDProve_Warnings=Ignored_Warnings",
             "-gnateDDebug_Warnings=Ignored_Warnings",
             "-gnateDRelease_Warnings=Warnings");
-         Extra_Warning_Switches := Build_Warning_Switches;
+         Extra_Warning_Switches := Shared.Build_Warning_Switches;
 
       when "prove" =>
          Extra_Dirs := ("release", "spark");
@@ -66,7 +60,7 @@ project Kernel is
             "-gnateDProve_Warnings=Warnings",
             "-gnateDDebug_Warnings=Debug",
             "-gnateDRelease_Warnings=Warnings");
-         Extra_Warning_Switches := ("-gnatw.W");
+         Extra_Warning_Switches := Shared.Prove_Warning_Switches;
 
    end case;
 
@@ -81,7 +75,7 @@ project Kernel is
 
    end case;
 
-   Warning_Switches := ("-gnatwale.e.Y.N") & Extra_Warning_Switches;
+   Warning_Switches := Shared.Warning_Switches & Extra_Warning_Switches;
 
    for Languages use ("Ada") & Extra_Languages;
 

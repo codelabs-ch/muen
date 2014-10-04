@@ -27,10 +27,10 @@ is
 
    --  Returns True if the channel has valid dimensions.
    function Is_Valid
-     (Protocol     : Header_Field_Type;
-      Size         : Header_Field_Type;
-      Elements     : Header_Field_Type;
-      Channel_Size : Header_Field_Type)
+     (Channel_Protocol : Header_Field_Type;
+      Element_Size     : Header_Field_Type;
+      Element_Count    : Header_Field_Type;
+      Channel_Size     : Header_Field_Type)
       return Boolean;
 
    --  Synchronize reader with given channel.
@@ -77,15 +77,15 @@ is
    -------------------------------------------------------------------------
 
    function Is_Valid
-     (Protocol     : Header_Field_Type;
-      Size         : Header_Field_Type;
-      Elements     : Header_Field_Type;
-      Channel_Size : Header_Field_Type)
+     (Channel_Protocol : Header_Field_Type;
+      Element_Size     : Header_Field_Type;
+      Element_Count    : Header_Field_Type;
+      Channel_Size     : Header_Field_Type)
       return Boolean
    is
    begin
-      return Size * Elements = Channel_Size
-        and Protocol = Reader.Protocol;
+      return Element_Size * Element_Count = Channel_Size
+        and Channel_Protocol = Reader.Protocol;
    end Is_Valid;
 
    -------------------------------------------------------------------------
@@ -149,10 +149,10 @@ is
          Result := Inactive;
       else
          if Channel.Header.Transport = SHMStream_Marker and then
-           Is_Valid (Protocol     => Channel.Header.Protocol,
-                     Size         => Channel.Header.Size,
-                     Elements     => Channel.Header.Elements,
-                     Channel_Size => Header_Field_Type
+           Is_Valid (Channel_Protocol => Channel.Header.Protocol,
+                     Element_Size     => Channel.Header.Size,
+                     Element_Count    => Channel.Header.Elements,
+                     Channel_Size     => Header_Field_Type
                        (Elements * (Element_Type'Size / 8)))
          then
             Reader.Epoch    := Channel.Header.Epoch;

@@ -75,8 +75,6 @@ project Kernel is
 
    end case;
 
-   Warning_Switches := Shared.Warning_Switches & Extra_Warning_Switches;
-
    for Languages use ("Ada") & Extra_Languages;
 
    for Source_Dirs use
@@ -101,7 +99,8 @@ project Kernel is
       for Dependency_Switches ("Asm") use ("-MMD", "-MF", "");
       for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches
         & Preprocessor_Switches
-        & Warning_Switches;
+        & Shared.Warning_Switches
+        & Extra_Warning_Switches;
 
       for Local_Configuration_Pragmas use "../config/restrictions-" & Build_Mode & ".adc";
    end Compiler;

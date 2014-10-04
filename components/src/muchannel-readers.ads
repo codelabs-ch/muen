@@ -21,7 +21,7 @@ generic
    --  Protocol identifier.
    Protocol : Muchannel.Header_Field_Type;
 
-package Muchannel.Reader
+package Muchannel.Readers
 is
 
    type Result_Type is
@@ -71,4 +71,4 @@ private
                      Elements => Header_Field_Type'First,
                      RC       => Header_Field_Type (Data_Range'First));
 
-end Muchannel.Reader;
+end Muchannel.Readers;

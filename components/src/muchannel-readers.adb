@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-package body Muchannel.Reader
+package body Muchannel.Readers
 is
 
    --  Returns True if the epoch of the channel and the reader are out of sync.
@@ -85,7 +85,7 @@ is
    is
    begin
       return Element_Size * Element_Count = Channel_Size
-        and Channel_Protocol = Reader.Protocol;
+        and Channel_Protocol = Readers.Protocol;
    end Is_Valid;
 
    -------------------------------------------------------------------------
@@ -174,4 +174,4 @@ is
       end if;
    end Synchronize;
 
-end Muchannel.Reader;
+end Muchannel.Readers;

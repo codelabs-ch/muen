@@ -20,12 +20,12 @@ with SK;
 
 with Tau0_Kernel_Iface;
 
-use type SK.Word32;
-
 procedure Tau0
 with
    Global => (In_Out => Tau0_Kernel_Iface.State)
 is
+   use type SK.Word32;
+
    Counter : SK.Word32;
 begin
    Counter := 0;

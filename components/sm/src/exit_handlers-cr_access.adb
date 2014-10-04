@@ -36,7 +36,7 @@ is
      with Size => 4;
 
    type CR_Access_Type is (MOV_To_CR, MOV_From_CR, CLTS, LMSW)
-     with Size => 4;
+     with Size => 2;
    for CR_Access_Type use
      (MOV_To_CR   => 0,
       MOV_From_CR => 1,

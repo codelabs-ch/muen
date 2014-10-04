@@ -33,4 +33,14 @@ abstract project Shared is
         "-gnatf",
         "-gnato");
 
+   Warning_Switches := ("-gnatwale.e.Y.N");
+
+   Build_Warning_Switches :=
+     ("-Wstack-usage=8192",
+      "-Wuninitialized",
+      "-Wall",
+      "-Werror");
+
+   Prove_Warning_Switches := ("-gnatw.W");
+
 end Shared;

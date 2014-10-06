@@ -1,10 +1,10 @@
 include ../Makeconf
 
-COMPONENTS = \
-	linux    \
-	sm       \
-	tau0     \
-	time     \
+COMPONENTS ?= \
+	linux     \
+	sm        \
+	tau0      \
+	time      \
 	vt
 
 COMPONENTS_INSTALL = $(COMPONENTS:%=install-%)

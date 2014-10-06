@@ -13,6 +13,7 @@ amt.out;e1000e 0000:00:1f.0 eth1: MAC: 3, PHY: 8, PBA No: FFFFFF-0FF
 amt.out;Using Muen time channel at address 0x
 amt.out;Switched to clocksource muen-timer
 amt.out;e1000e: eth0 NIC Link is Up
+amt.out;e1000e: eth1 NIC Link is Up
 amt.out;00:19.0 Ethernet controller: Intel Corporation 82579LM Gigabit Network Connection (rev 04)
 amt.out;00:1f.0 Ethernet controller: Intel Corporation 82574L Gigabit Network Connection
 amt.out;64 bytes from 192.168.254.1: seq=.* ttl=.* time=.* ms

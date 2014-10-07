@@ -17,17 +17,15 @@
 --
 
 package Interrupts
---# own
---#    State;
---# initializes
---#    State;
+with
+   Abstract_State => State,
+   Initializes    => State
 is
 
    --  Initialize subject interrupt handling.
-   procedure Initialize;
-   --# global
-   --#    in out State;
-   --# derives
-   --#    State from *;
+   procedure Initialize
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ null);
 
 end Interrupts;

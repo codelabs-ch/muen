@@ -18,10 +18,11 @@
 
 project Tau0 extends "../component_spark" is
 
-   for Languages use ("Ada");
-   for Source_Dirs use ("../../policy/obj", "src");
-   for Object_Dir use "obj";
+   Extra_Dirs := Component_Spark.Src_Dirs & Component_Spark.Extra_Dirs;
 
+   for Languages use ("Ada", "Asm");
+   for Source_Dirs use ("../../policy/obj", "src") & Extra_Dirs;
+   for Object_Dir use "obj/" & Component_Spark.Build_Mode;
    for Main use ("tau0");
 
 end Tau0;

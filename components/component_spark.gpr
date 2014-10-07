@@ -18,7 +18,45 @@
 
 with "../config/shared";
 
-project Component_Spark extends "component" is
+abstract project Component_Spark is
+
+   type Build_Type is ("debug", "release", "prove");
+   Build_Mode : Build_Type := external ("build", "prove");
+
+   Src_Dirs := ("../../common/src", "../src");
+   Extra_Dirs := ();
+   Extra_Warning_Switches := ();
+   Preprocessor_Switches := ();
+
+   case Build_Mode is
+      when "debug" =>
+         Extra_Dirs := ("../../common/" & Build_Mode, "../src/" & Build_Mode);
+         Preprocessor_Switches :=
+           ("-gnateDBuild_Warnings=Warnings",
+            "-gnateDProve_Warnings=Ignored_Warnings",
+            "-gnateDDebug_Warnings=Warnings",
+            "-gnateDRelease_Warnings=Ignored_Warnings");
+         Extra_Warning_Switches := Shared.Build_Warning_Switches;
+
+      when "release" =>
+         Extra_Dirs := ("../src/" & Build_Mode);
+         Preprocessor_Switches :=
+           ("-gnateDBuild_Warnings=Warnings",
+            "-gnateDProve_Warnings=Ignored_Warnings",
+            "-gnateDDebug_Warnings=Ignored_Warnings",
+            "-gnateDRelease_Warnings=Warnings");
+         Extra_Warning_Switches := Shared.Build_Warning_Switches;
+
+      when "prove" =>
+         Extra_Dirs := ("../src/release");
+         Preprocessor_Switches :=
+           ("-gnateDBuild_Warnings=Debug",
+            "-gnateDProve_Warnings=Warnings",
+            "-gnateDDebug_Warnings=Debug",
+            "-gnateDRelease_Warnings=Warnings");
+         Extra_Warning_Switches := Shared.Prove_Warning_Switches;
+
+   end case;
 
    package Builder is
       for Global_Configuration_Pragmas use "../config/restrictions.adc";
@@ -26,8 +64,22 @@ project Component_Spark extends "component" is
 
    package Compiler is
       for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches
-        & Shared.Warning_Switches & Shared.Build_Warning_Switches;
-      for Local_Configuration_Pragmas use "../config/restrictions-prove.adc";
+        & Preprocessor_Switches
+        & Shared.Warning_Switches
+        & Extra_Warning_Switches;
+
+      for Local_Configuration_Pragmas use "../config/restrictions-" & Build_Mode & ".adc";
    end Compiler;
+
+   package Linker is
+      for Default_Switches ("Ada") use
+        ("-T", "../component.ld",
+         "-nostdlib",
+         "-n");
+   end Linker;
+
+   package Naming is
+      for Body_Suffix ("Asm") use ".S";
+   end Naming;
 
 end Component_Spark;

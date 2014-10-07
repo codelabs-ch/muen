@@ -8,4 +8,8 @@ project Libsparkcrypto is
       "../lsc/tmp/libsparkcrypto/src/shared/little_endian");
    for Object_Dir use "../build/libsparkcrypto";
 
+   package Compiler is
+      for Local_Configuration_Pragmas use "libsparkcrypto.adc";
+   end Compiler;
+
 end Libsparkcrypto;

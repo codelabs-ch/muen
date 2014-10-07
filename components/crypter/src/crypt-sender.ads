@@ -16,18 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
---# inherit
---#    Crypt;
 package Crypt.Sender
---# own
---#    out State;
+with
+   Abstract_State => (State with External => Async_Readers),
+   Initializes    => State
 is
 
    --  Copies the given response message into the crypter response page.
-   procedure Send (Res : Crypt.Message_Type);
-   --# global
-   --#    out State;
-   --# derives
-   --#    State from Res;
+   procedure Send (Res : Crypt.Message_Type)
+   with
+      Global  => (Output => State),
+      Depends => (State => Res);
 
 end Crypt.Sender;

@@ -33,6 +33,8 @@ project Component is
         & Shared.Warning_Switches & Shared.Build_Warning_Switches;
       for Switches ("sk*.ad*") use Shared.Spark_Compiler_Switches
         & Shared.Warning_Switches & Shared.Build_Warning_Switches;
+      for Switches ("interrupts.ad*") use Shared.Spark_Compiler_Switches
+        & Shared.Warning_Switches & Shared.Build_Warning_Switches;
    end Compiler;
 
    package Linker is

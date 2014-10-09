@@ -62,16 +62,15 @@ is
 
    -------------------------------------------------------------------------
 
-   function Has_Pending_Data
-     (Channel : Channel_Type;
-      Reader  : Reader_Type)
-      return Boolean
+   procedure Has_Pending_Data
+     (Channel :     Channel_Type;
+      Reader  :     Reader_Type;
+      Result  : out Boolean)
    is
-      Active : Boolean;
    begin
       Is_Active (Channel => Channel,
-                 Result => Active);
-      return Active and then
+                 Result => Result);
+      Result := Result and then
         Reader.RC < Channel.Header.WC and then
         not Has_Epoch_Changed (Channel => Channel,
                                Reader  => Reader);

@@ -27,7 +27,15 @@ is
    is
       Channel_Epoch : constant Header_Field_Type := Channel.Header.Epoch;
    begin
-      Result := Channel_Epoch /= Null_Epoch;
+      Result := Is_Active_Channel (Epoch => Channel_Epoch);
    end Is_Active;
+
+   -------------------------------------------------------------------------
+
+   function Is_Active_Channel (Epoch : Header_Field_Type) return Boolean
+   is
+   begin
+      return Epoch /= Null_Epoch;
+   end Is_Active_Channel;
 
 end Muchannel;

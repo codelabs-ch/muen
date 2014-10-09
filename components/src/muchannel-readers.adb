@@ -68,9 +68,7 @@ is
       Result  : out Boolean)
    is
    begin
-      Is_Active (Channel => Channel,
-                 Result => Result);
-      Result := Result and then
+      Result := Is_Active_Channel (Epoch => Channel_Epoch) and then
         Reader.RC < Channel.Header.WC and then
         not Has_Epoch_Changed (Channel => Channel,
                                Reader  => Reader);
@@ -99,11 +97,8 @@ is
       Result  :    out Result_Type)
    is
       Position : Data_Range;
-      Active   : Boolean;
    begin
-      Is_Active (Channel => Channel,
-                 Result  => Active);
-      if not Active then
+      if not Is_Active_Channel (Epoch => Channel_Epoch) then
          Result := Inactive;
       else
          if Reader.Epoch = Null_Epoch or else
@@ -149,11 +144,8 @@ is
       Reader  : out Reader_Type;
       Result  : out Result_Type)
    is
-      Active   : Boolean;
    begin
-      Is_Active (Channel => Channel,
-                 Result  => Active);
-      if not Active then
+      if not Is_Active_Channel (Epoch => Channel_Epoch) then
          Result := Inactive;
       else
          if Channel.Header.Transport = SHMStream_Marker and then

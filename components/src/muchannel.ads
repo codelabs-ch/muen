@@ -41,7 +41,9 @@ package Muchannel is
    Header_Size : constant Positive;
 
    --  Returns True if the channel is currently active.
-   function Is_Active (Channel : Channel_Type) return Boolean;
+   procedure Is_Active
+     (Channel :     Channel_Type;
+      Result  : out Boolean);
 
 private
 

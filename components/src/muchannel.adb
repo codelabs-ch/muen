@@ -21,10 +21,13 @@ is
 
    -------------------------------------------------------------------------
 
-   function Is_Active (Channel : Channel_Type) return Boolean
+   procedure Is_Active
+     (Channel :     Channel_Type;
+      Result  : out Boolean)
    is
+      Channel_Epoch : constant Header_Field_Type := Channel.Header.Epoch;
    begin
-      return Channel.Header.Epoch /= Null_Epoch;
+      Result := Channel_Epoch /= Null_Epoch;
    end Is_Active;
 
 end Muchannel;

@@ -37,7 +37,7 @@ is
 
       --  Deactivate previous epoch.
 
-      Deactivate (Channel => Channel);
+      Channel.Header.Epoch := Null_Epoch;
 
       --  Initialize channel header.
 
@@ -66,11 +66,12 @@ is
      (Channel : in out Channel_Type;
       Element :        Element_Type)
    is
-      WC       : Header_Field_Type;
-      Position : Data_Range;
+      Element_Count : constant Header_Field_Type := Channel.Header.Elements;
+      WC            : Header_Field_Type;
+      Position      : Data_Range;
    begin
       WC       := Channel.Header.WC;
-      Position := Data_Range (WC mod Channel.Header.Elements);
+      Position := Data_Range (WC mod Element_Count);
       WC       := WC + 1;
 
       Channel.Header.WSC      := WC;

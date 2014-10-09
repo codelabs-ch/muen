@@ -28,6 +28,7 @@ is
 
    Channel : VT_Channel.Channel_Type
      with
+       Async_Readers,
        Address => System'To_Address (Channel_Address);
 
    Notify : Boolean := False;

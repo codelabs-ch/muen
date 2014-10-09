@@ -23,6 +23,9 @@ abstract project Component_Spark is
    type Build_Type is ("debug", "release", "prove");
    Build_Mode : Build_Type := external ("build", "prove");
 
+   type Proof_Type is ("limited", "complete");
+   Proof_Mode : Proof_Type := external ("proofs", "limited");
+
    Src_Dirs := ("../../common/src", "../src");
    Extra_Dirs := ();
    Extra_Warning_Switches := ();
@@ -55,6 +58,17 @@ abstract project Component_Spark is
             "-gnateDDebug_Warnings=Debug",
             "-gnateDRelease_Warnings=Warnings");
          Extra_Warning_Switches := Shared.Prove_Warning_Switches;
+
+   end case;
+
+   case Proof_Mode is
+      when "limited" =>
+         Preprocessor_Switches := Preprocessor_Switches &
+         ("-gnateDComplete_Proofs=Off");
+
+      when "complete" =>
+         Preprocessor_Switches := Preprocessor_Switches &
+         ("-gnateDComplete_Proofs=On");
 
    end case;
 

@@ -21,8 +21,8 @@ is
 
    --  Returns True if the epoch of the channel and the reader are out of sync.
    function Has_Epoch_Changed
-     (Channel : Channel_Type;
-      Reader  : Reader_Type)
+     (Channel_Epoch : Header_Field_Type;
+      Reader        : Reader_Type)
       return Boolean;
 
    --  Returns True if the channel has valid dimensions.
@@ -52,12 +52,12 @@ is
    -------------------------------------------------------------------------
 
    function Has_Epoch_Changed
-     (Channel : Channel_Type;
-      Reader  : Reader_Type)
+     (Channel_Epoch : Header_Field_Type;
+      Reader        : Reader_Type)
       return Boolean
    is
    begin
-      return Reader.Epoch /= Channel.Header.Epoch;
+      return Reader.Epoch /= Channel_Epoch;
    end Has_Epoch_Changed;
 
    -------------------------------------------------------------------------
@@ -67,11 +67,13 @@ is
       Reader  :     Reader_Type;
       Result  : out Boolean)
    is
+      Channel_Epoch : constant Header_Field_Type := Channel.Header.Epoch;
    begin
       Result := Is_Active_Channel (Epoch => Channel_Epoch) and then
         Reader.RC < Channel.Header.WC and then
-        not Has_Epoch_Changed (Channel => Channel,
-                               Reader  => Reader);
+        not Has_Epoch_Changed
+          (Channel_Epoch => Channel_Epoch,
+           Reader        => Reader);
    end Has_Pending_Data;
 
    -------------------------------------------------------------------------
@@ -96,14 +98,15 @@ is
       Element :    out Element_Type;
       Result  :    out Result_Type)
    is
-      Position : Data_Range;
+      Position      : Data_Range;
+      Channel_Epoch : Header_Field_Type := Channel.Header.Epoch;
    begin
       if not Is_Active_Channel (Epoch => Channel_Epoch) then
          Result := Inactive;
       else
          if Reader.Epoch = Null_Epoch or else
-           Has_Epoch_Changed (Channel => Channel,
-                              Reader  => Reader)
+           Has_Epoch_Changed (Channel_Epoch => Channel_Epoch,
+                              Reader        => Reader)
          then
             Synchronize (Channel => Channel,
                          Reader  => Reader,
@@ -128,8 +131,9 @@ is
                Result    := Success;
                Reader.RC := Reader.RC + 1;
             end if;
-            if Has_Epoch_Changed (Channel => Channel,
-                                  Reader  => Reader)
+            Channel_Epoch := Channel.Header.Epoch;
+            if Has_Epoch_Changed (Channel_Epoch => Channel_Epoch,
+                                  Reader        => Reader)
             then
                Result := Epoch_Changed;
             end if;
@@ -144,6 +148,7 @@ is
       Reader  : out Reader_Type;
       Result  : out Result_Type)
    is
+      Channel_Epoch : Header_Field_Type := Channel.Header.Epoch;
    begin
       if not Is_Active_Channel (Epoch => Channel_Epoch) then
          Result := Inactive;
@@ -161,8 +166,9 @@ is
             Reader.Elements := Channel.Header.Elements;
             Reader.RC       := Header_Field_Type (Data_Range'First);
 
-            if Has_Epoch_Changed (Reader  => Reader,
-                                  Channel => Channel)
+            Channel_Epoch := Channel.Header.Epoch;
+            if Has_Epoch_Changed (Channel_Epoch => Channel_Epoch,
+                                  Reader        => Reader)
             then
                Result := Epoch_Changed;
             else

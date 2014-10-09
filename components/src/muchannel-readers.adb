@@ -33,12 +33,6 @@ is
       Channel_Size     : Header_Field_Type)
       return Boolean;
 
-   --  Synchronize reader with given channel.
-   procedure Synchronize
-     (Channel :     Channel_Type;
-      Reader  : out Reader_Type;
-      Result  : out Result_Type);
-
    -------------------------------------------------------------------------
 
    procedure Drain
@@ -101,6 +95,7 @@ is
    is
       Position      : Data_Range;
       Count         : Header_Field_Type;
+      Transport     : Header_Field_Type;
       Channel_Epoch : Header_Field_Type := Channel.Header.Epoch;
    begin
       if not Is_Active_Channel (Epoch => Channel_Epoch) then
@@ -110,9 +105,34 @@ is
            Has_Epoch_Changed (Channel_Epoch => Channel_Epoch,
                               Reader        => Reader)
          then
-            Synchronize (Channel => Channel,
-                         Reader  => Reader,
-                         Result  => Result);
+            Transport       := Channel.Header.Transport;
+            Reader.Protocol := Channel.Header.Protocol;
+            Reader.Size     := Channel.Header.Size;
+            Reader.Elements := Channel.Header.Elements;
+
+            if Transport = SHMStream_Marker and then
+              Is_Valid (Channel_Protocol => Reader.Protocol,
+                        Element_Size     => Reader.Size,
+                        Element_Count    => Reader.Elements,
+                        Channel_Size     => Header_Field_Type
+                          (Elements * (Element_Type'Size / 8)))
+            then
+               Reader.Epoch := Channel.Header.Epoch;
+               Reader.RC    := Header_Field_Type (Data_Range'First);
+
+               Channel_Epoch := Channel.Header.Epoch;
+               if Has_Epoch_Changed (Channel_Epoch => Channel_Epoch,
+                                     Reader        => Reader)
+               then
+                  Result := Epoch_Changed;
+               else
+                  Result := Success;
+               end if;
+            else
+               Reader := Null_Reader;
+               Result := Incompatible_Interface;
+            end if;
+
             if Result /= Success then
                return;
             end if;
@@ -144,48 +164,5 @@ is
          end if;
       end if;
    end Read;
-
-   -------------------------------------------------------------------------
-
-   procedure Synchronize
-     (Channel :     Channel_Type;
-      Reader  : out Reader_Type;
-      Result  : out Result_Type)
-   is
-      Channel_Epoch : Header_Field_Type := Channel.Header.Epoch;
-      Transport     : Header_Field_Type;
-   begin
-      if not Is_Active_Channel (Epoch => Channel_Epoch) then
-         Result := Inactive;
-      else
-         Transport       := Channel.Header.Transport;
-         Reader.Protocol := Channel.Header.Protocol;
-         Reader.Size     := Channel.Header.Size;
-         Reader.Elements := Channel.Header.Elements;
-
-         if Transport = SHMStream_Marker and then
-           Is_Valid (Channel_Protocol => Reader.Protocol,
-                     Element_Size     => Reader.Size,
-                     Element_Count    => Reader.Elements,
-                     Channel_Size     => Header_Field_Type
-                       (Elements * (Element_Type'Size / 8)))
-         then
-            Reader.Epoch    := Channel.Header.Epoch;
-            Reader.RC       := Header_Field_Type (Data_Range'First);
-
-            Channel_Epoch := Channel.Header.Epoch;
-            if Has_Epoch_Changed (Channel_Epoch => Channel_Epoch,
-                                  Reader        => Reader)
-            then
-               Result := Epoch_Changed;
-            else
-               Result := Success;
-            end if;
-         else
-            Reader := Null_Reader;
-            Result := Incompatible_Interface;
-         end if;
-      end if;
-   end Synchronize;
 
 end Muchannel.Readers;

@@ -68,9 +68,10 @@ is
       Result  : out Boolean)
    is
       Channel_Epoch : constant Header_Field_Type := Channel.Header.Epoch;
+      Write_Count   : constant Header_Field_Type := Channel.Header.WC;
    begin
       Result := Is_Active_Channel (Epoch => Channel_Epoch) and then
-        Reader.RC < Channel.Header.WC and then
+        Reader.RC < Write_Count and then
         not Has_Epoch_Changed
           (Channel_Epoch => Channel_Epoch,
            Reader        => Reader);
@@ -99,6 +100,7 @@ is
       Result  :    out Result_Type)
    is
       Position      : Data_Range;
+      Count         : Header_Field_Type;
       Channel_Epoch : Header_Field_Type := Channel.Header.Epoch;
    begin
       if not Is_Active_Channel (Epoch => Channel_Epoch) then
@@ -116,7 +118,8 @@ is
             end if;
          end if;
 
-         if Reader.RC >= Channel.Header.WC then
+         Count := Channel.Header.WC;
+         if Reader.RC >= Count then
             Result := No_Data;
          else
             Position := Data_Range (Reader.RC mod Reader.Elements);
@@ -124,7 +127,8 @@ is
 
             --  Check for element overwrite by writer.
 
-            if Channel.Header.WSC > Reader.RC + Reader.Elements then
+            Count := Channel.Header.WSC;
+            if Count > Reader.RC + Reader.Elements then
                Result    := Overrun_Detected;
                Reader.RC := Channel.Header.WC;
             else
@@ -149,21 +153,24 @@ is
       Result  : out Result_Type)
    is
       Channel_Epoch : Header_Field_Type := Channel.Header.Epoch;
+      Transport     : Header_Field_Type;
    begin
       if not Is_Active_Channel (Epoch => Channel_Epoch) then
          Result := Inactive;
       else
-         if Channel.Header.Transport = SHMStream_Marker and then
-           Is_Valid (Channel_Protocol => Channel.Header.Protocol,
-                     Element_Size     => Channel.Header.Size,
-                     Element_Count    => Channel.Header.Elements,
+         Transport       := Channel.Header.Transport;
+         Reader.Protocol := Channel.Header.Protocol;
+         Reader.Size     := Channel.Header.Size;
+         Reader.Elements := Channel.Header.Elements;
+
+         if Transport = SHMStream_Marker and then
+           Is_Valid (Channel_Protocol => Reader.Protocol,
+                     Element_Size     => Reader.Size,
+                     Element_Count    => Reader.Elements,
                      Channel_Size     => Header_Field_Type
                        (Elements * (Element_Type'Size / 8)))
          then
             Reader.Epoch    := Channel.Header.Epoch;
-            Reader.Protocol := Channel.Header.Protocol;
-            Reader.Size     := Channel.Header.Size;
-            Reader.Elements := Channel.Header.Elements;
             Reader.RC       := Header_Field_Type (Data_Range'First);
 
             Channel_Epoch := Channel.Header.Epoch;
@@ -175,6 +182,7 @@ is
                Result := Success;
             end if;
          else
+            Reader := Null_Reader;
             Result := Incompatible_Interface;
          end if;
       end if;

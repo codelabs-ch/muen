@@ -23,9 +23,10 @@ with Subject.Text_IO;
 procedure Time
 is
    --  Time page
-   Time : SK.Word64;
-   for Time'Address use System'To_Address (16#20000#);
-   pragma Volatile (Time);
+   Counter : SK.Word64
+     with
+       Volatile,
+       Address => System'To_Address (16#20000#);
 
    use type SK.Word64;
 begin
@@ -38,6 +39,6 @@ begin
          SK.IO.Outb (Port  => 16#80#,
                      Value => 16#00#);
       end loop;
-      Time := Time + 1;
+      Counter := Counter + 1;
    end loop;
 end Time;

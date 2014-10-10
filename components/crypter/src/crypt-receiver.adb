@@ -19,21 +19,22 @@
 with System;
 
 package body Crypt.Receiver
---# own State is in Request;
+with
+   Refined_State => (State => Request)
 is
 
-   Request : Crypt.Message_Type;
-   for Request'Address use System'To_Address (16#10000#);
-   pragma Volatile (Request);
-   --# assert Request'Always_Valid;
+   Request : Crypt.Message_Type
+     with
+       Volatile,
+       Async_Writers,
+       Address => System'To_Address (16#10000#);
 
    -------------------------------------------------------------------------
 
    procedure Receive (Req : out Crypt.Message_Type)
-   --# global
-   --#    in Request;
-   --# derives
-   --#    Req from Request;
+   with
+      Refined_Global  => (Input => Request),
+      Refined_Depends => (Req => Request)
    is
    begin
       Req := Request;

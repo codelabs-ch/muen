@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,20 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
---# inherit
---#    Skp.Kernel,
---#    Skp.Scheduling;
 package Tau0_Kernel_Iface
---# own
---#    State;
---# initializes
---#    State;
+with
+   Abstract_State => (State with External => Async_Readers),
+   Initializes    => State
 is
 
-   procedure Switch_Major_Frame;
-   --# global
-   --#    in out State;
-   --# derives
-   --#    State from *;
+   procedure Switch_Major_Frame
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ null);
 
 end Tau0_Kernel_Iface;

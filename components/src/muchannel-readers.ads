@@ -21,7 +21,7 @@ generic
    --  Protocol identifier.
    Protocol : Muchannel.Header_Field_Type;
 
-package Muchannel.Reader
+package Muchannel.Readers
 is
 
    type Result_Type is
@@ -35,10 +35,10 @@ is
    type Reader_Type is private;
 
    --  Returns True if the channel is active and has pending data to be read.
-   function Has_Pending_Data
-     (Channel : Channel_Type;
-      Reader  : Reader_Type)
-      return Boolean;
+   procedure Has_Pending_Data
+     (Channel :     Channel_Type;
+      Reader  :     Reader_Type;
+      Result  : out Boolean);
 
    --  Read next element from given channel.
    procedure Read
@@ -71,4 +71,4 @@ private
                      Elements => Header_Field_Type'First,
                      RC       => Header_Field_Type (Data_Range'First));
 
-end Muchannel.Reader;
+end Muchannel.Readers;

@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muchannel.Reader;
+with Muchannel.Readers;
 with Muchannel.Writer;
 
 with Input;
@@ -28,7 +28,7 @@ is
      (Element_Type => Character,
       Elements     => 65472);
 
-   package VT_Channel_Rdr is new VT_Channel.Reader (Protocol => 1);
+   package VT_Channel_Rdr is new VT_Channel.Readers (Protocol => 1);
    package VT_Channel_Wtr is new VT_Channel.Writer
      (Protocol     => 1,
       Null_Element => ASCII.NUL);

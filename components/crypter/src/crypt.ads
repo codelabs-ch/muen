@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -18,12 +18,10 @@
 
 with SK;
 
-use type SK.Word16;
-
---# inherit
---#    SK;
 package Crypt
 is
+
+   use type SK.Word16;
 
    subtype Data_Range is SK.Word16 range 1 .. 2048;
 

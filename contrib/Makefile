@@ -1,6 +1,7 @@
 RECIPES =   \
 	ada-bfd \
 	alog    \
+	lsc     \
 	xia
 
 all: build_recipes

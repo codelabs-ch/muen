@@ -19,24 +19,27 @@
 with System;
 
 package body Crypt.Sender
---# own
---#    State is out Response;
+with
+   Refined_State => (State => Response)
 is
 
-   Response : Crypt.Message_Type;
-   for Response'Address use System'To_Address (16#20000#);
-   pragma Volatile (Response);
+   Response : Crypt.Message_Type
+     with
+       Volatile,
+       Async_Readers,
+       Address => System'To_Address (16#20000#);
 
    -------------------------------------------------------------------------
 
    procedure Send (Res : Crypt.Message_Type)
-   --# global
-   --#    out Response;
-   --# derives
-   --#    Response from Res;
+   with
+      Refined_Global  => (Output   => Response),
+      Refined_Depends => (Response => Res)
    is
    begin
       Response := Res;
    end Send;
 
+begin
+   Response := Crypt.Null_Message;
 end Crypt.Sender;

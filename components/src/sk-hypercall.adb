@@ -24,6 +24,8 @@ is
    -------------------------------------------------------------------------
 
    procedure Trigger_Event (Number : SK.Byte)
+   with
+      SPARK_Mode => Off
    is
       Id : constant SK.Word64 := Word64 (Number);
    begin

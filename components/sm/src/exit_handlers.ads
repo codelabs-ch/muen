@@ -18,4 +18,15 @@
 
 package Exit_Handlers
 is
+
+private
+
+   type Bit_Type is range 0 .. 1
+     with
+       Size => 1;
+
+   type Bit_Array is array (Positive range <>) of Bit_Type
+     with
+       Pack;
+
 end Exit_Handlers;

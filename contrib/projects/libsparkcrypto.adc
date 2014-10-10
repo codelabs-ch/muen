@@ -1,0 +1,4 @@
+pragma Warnings (Off, "subprogram * has no effect",
+                 Reason => "Unused libsparkcrypto debug subprogram");
+pragma Warnings (Off, "unused variable *",
+                 Reason => "Unused libsparkcrypto debug data");

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -17,9 +17,8 @@
 --
 
 with "../config/shared";
-with "../policy/obj/policy";
 
-project Kernel is
+abstract project Component_Spark is
 
    type Build_Type is ("debug", "release", "prove");
    Build_Mode : Build_Type := external ("build", "prove");
@@ -27,15 +26,14 @@ project Kernel is
    type Proof_Type is ("limited", "complete");
    Proof_Mode : Proof_Type := external ("proofs", "limited");
 
+   Src_Dirs := ("../../common/src", "../src");
    Extra_Dirs := ();
-   Extra_Languages := ();
    Extra_Warning_Switches := ();
    Preprocessor_Switches := ();
 
    case Build_Mode is
       when "debug" =>
-         Extra_Dirs := ("../common/" & Build_Mode, Build_Mode);
-         Extra_Languages := ("Asm");
+         Extra_Dirs := ("../../common/" & Build_Mode, "../src/" & Build_Mode);
          Preprocessor_Switches :=
            ("-gnateDBuild_Warnings=Warnings",
             "-gnateDProve_Warnings=Ignored_Warnings",
@@ -44,8 +42,7 @@ project Kernel is
          Extra_Warning_Switches := Shared.Build_Warning_Switches;
 
       when "release" =>
-         Extra_Dirs := (Build_Mode);
-         Extra_Languages := ("Asm");
+         Extra_Dirs := ("../src/" & Build_Mode);
          Preprocessor_Switches :=
            ("-gnateDBuild_Warnings=Warnings",
             "-gnateDProve_Warnings=Ignored_Warnings",
@@ -54,7 +51,7 @@ project Kernel is
          Extra_Warning_Switches := Shared.Build_Warning_Switches;
 
       when "prove" =>
-         Extra_Dirs := ("release", "spark");
+         Extra_Dirs := ("../src/release");
          Preprocessor_Switches :=
            ("-gnateDBuild_Warnings=Debug",
             "-gnateDProve_Warnings=Warnings",
@@ -73,28 +70,11 @@ project Kernel is
          ("-gnateDComplete_Proofs=On");
    end case;
 
-   for Languages use ("Ada") & Extra_Languages;
-
-   for Source_Dirs use
-     ("../common/src",
-      "../policy/obj",
-      "src/**") &
-     Extra_Dirs;
-
-   for Object_Dir use "obj/" & Build_Mode;
-
-   for Main use ("init");
-
    package Builder is
-      for Executable ("init.S") use "kernel";
       for Global_Configuration_Pragmas use "../config/restrictions.adc";
-      for Global_Compilation_Switches ("Asm") use ("-mno-red-zone");
-      for Global_Compilation_Switches ("Ada") use ("-mno-red-zone");
    end Builder;
 
    package Compiler is
-      for Required_Switches ("Asm") use ("-x", "assembler-with-cpp");
-      for Dependency_Switches ("Asm") use ("-MMD", "-MF", "");
       for Default_Switches ("Ada") use Shared.Spark_Compiler_Switches
         & Preprocessor_Switches
         & Shared.Warning_Switches
@@ -103,17 +83,14 @@ project Kernel is
    end Compiler;
 
    package Linker is
-      for Default_Switches ("Asm") use
-        ("-T", "kernel.ld",
+      for Default_Switches ("Ada") use
+        ("-T", "../component.ld",
          "-nostdlib",
          "-n");
    end Linker;
 
    package Naming is
       for Body_Suffix ("Asm") use ".S";
-      for Body ("SK.VTd") use "sk-vtd__" & Policy.IOMMU_Support & ".adb";
-      for Spec ("SK.VTd.Interrupts") use "sk-vtd-interrupts__" & Policy.IOMMU_Support & ".ads";
-      for Body ("SK.VTd.Interrupts") use "sk-vtd-interrupts__" & Policy.IOMMU_Support & ".adb";
    end Naming;
 
-end Kernel;
+end Component_Spark;

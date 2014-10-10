@@ -16,9 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with System;
-
 with SK.Console_Channel;
 
 package Subject.Console is new SK.Console_Channel
-  (Channel_Address => System'To_Address (16#000b_8000#));
+  (Channel_Address => 16#000b_8000#);

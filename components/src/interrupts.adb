@@ -26,13 +26,16 @@ with SK.TSS;
 with SK.Descriptors;
 
 package body Interrupts
+with
+   SPARK_Mode => Off
 is
 
-   --# hide Interrupts;
-
    subtype ISR_Array is SK.Descriptors.ISR_Array (Skp.Vector_Range);
-   ISRs : ISR_Array;
-   pragma Import (C, ISRs, "isrlist");
+   ISRs : ISR_Array
+     with
+       Import,
+       Convention => C,
+       Link_Name  => "isrlist";
 
    subtype IDT_Type is SK.Descriptors.IDT_Type (Skp.Vector_Range);
    IDT : IDT_Type := (others => SK.Descriptors.Null_Gate);
@@ -41,8 +44,9 @@ is
    IDT_Descriptor : SK.Descriptors.Pseudo_Descriptor_Type;
 
    type GDT_Type is array (1 .. 5) of SK.Word64;
-   GDT : GDT_Type;
-   for GDT'Alignment use 8;
+   GDT : GDT_Type
+     with
+       Alignment => 8;
 
    --  GDT descriptor, loaded into GDTR.
    GDT_Descriptor : SK.Descriptors.Pseudo_Descriptor_Type;

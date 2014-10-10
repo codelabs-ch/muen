@@ -16,41 +16,33 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
+
 with Skp;
 
 with SK.CPU;
 with SK.Hypercall;
 
-with Subject.Text_IO;
 with Interrupts;
 
 with Crypt.Receiver;
 with Crypt.Sender;
 with Crypt.Hasher;
+
+pragma $Prove_Warnings (Off, "unit * is not referenced",
+                        Reason => "Only used for debug");
+with Subject.Text_IO;
 with Crypt.Debug;
+pragma $Prove_Warnings (On, "unit * is not referenced");
 
 with Handler;
 
---# inherit
---#    System,
---#    Skp,
---#    SK.CPU,
---#    SK.Hypercall,
---#    X86_64,
---#    Interrupts,
---#    Handler,
---#    Crypt.Receiver,
---#    Crypt.Sender,
---#    Crypt.Hasher;
-
---# main_program
 procedure Crypter
---# global
---#    in     Handler.Requesting_Subject;
---#    in     Crypt.Receiver.State;
---#       out Crypt.Sender.State;
---#    in out Interrupts.State;
---#    in out X86_64.State;
+with
+   Global =>
+     (Input  => Crypt.Receiver.State,
+      Output => Crypt.Sender.State,
+      In_Out => (X86_64.State, Interrupts.State, Handler.Requesting_Subject))
 is
    Client_Id : Skp.Subject_Id_Type;
    Request   : Crypt.Message_Type;
@@ -73,7 +65,12 @@ begin
 
       Response := Crypt.Null_Message;
       Crypt.Receiver.Receive (Req => Request);
+      pragma $Prove_Warnings
+        (Off, "attribute Valid is assumed to return True",
+         Reason => "Current proof limitation of GNATProve");
       if Request.Size'Valid then
+         pragma $Prove_Warnings
+           (On, "attribute Valid is assumed to return True");
          pragma Debug (Subject.Text_IO.Put_String (Item => " Size : "));
          pragma Debug (Subject.Text_IO.Put_Word16 (Item => Request.Size));
          pragma Debug (Subject.Text_IO.New_Line);

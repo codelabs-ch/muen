@@ -16,7 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+pragma $Prove_Warnings (Off, "unit Subject.Text_IO is not referenced",
+                        Reason => "Only used for debug");
 with Subject.Text_IO;
+pragma $Prove_Warnings (On, "unit Subject.Text_IO is not referenced");
 
 package body Handler
 is

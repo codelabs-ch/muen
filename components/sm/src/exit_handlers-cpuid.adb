@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -92,9 +92,10 @@ is
             --  Bit 29 -   LM: Long Mode
             State.Regs.RDX := 16#2000_0000#;
          when others =>
-            Subject.Text_IO.Put_String (Item => "Unknown CPUID function ");
-            Subject.Text_IO.Put_Word64 (Item => State.Regs.RAX);
-            Subject.Text_IO.New_Line;
+            pragma Debug (Subject.Text_IO.Put_String
+                          (Item => "Unknown CPUID function "));
+            pragma Debug (Subject.Text_IO.Put_Word64 (Item => State.Regs.RAX));
+            pragma Debug (Subject.Text_IO.New_Line);
             Halt := True;
       end case;
    end Process;

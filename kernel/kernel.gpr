@@ -61,7 +61,6 @@ project Kernel is
             "-gnateDDebug_Warnings=Debug",
             "-gnateDRelease_Warnings=Warnings");
          Extra_Warning_Switches := Shared.Prove_Warning_Switches;
-
    end case;
 
    case Proof_Mode is
@@ -72,7 +71,6 @@ project Kernel is
       when "complete" =>
          Preprocessor_Switches := Preprocessor_Switches &
          ("-gnateDComplete_Proofs=On");
-
    end case;
 
    for Languages use ("Ada") & Extra_Languages;
@@ -101,7 +99,6 @@ project Kernel is
         & Preprocessor_Switches
         & Shared.Warning_Switches
         & Extra_Warning_Switches;
-
       for Local_Configuration_Pragmas use "../config/restrictions-" & Build_Mode & ".adc";
    end Compiler;
 

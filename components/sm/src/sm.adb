@@ -47,8 +47,8 @@ is
    Dump_And_Halt : Boolean  := False;
 begin
    pragma Debug (Subject.Console.Enable_Notification);
-   Subject.Text_IO.Init;
-   Subject.Text_IO.Put_Line ("SM subject running");
+   pragma Debug (Subject.Text_IO.Init);
+   pragma Debug (Subject.Text_IO.Put_Line ("SM subject running"));
    Interrupts.Initialize;
 
    SK.CPU.Sti;
@@ -77,8 +77,8 @@ begin
       elsif State.Exit_Reason = SK.Constants.EXIT_REASON_EPT_VIOLATION then
          Exit_Handlers.EPT_Violation.Process (Halt => Dump_And_Halt);
       else
-         Subject.Text_IO.Put_Line
-           (Item => "Unhandled trap for associated subject");
+         pragma Debug (Subject.Text_IO.Put_Line
+                       (Item => "Unhandled trap for associated subject"));
 
          Dump_And_Halt := True;
       end if;

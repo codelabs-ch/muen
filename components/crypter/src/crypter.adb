@@ -65,9 +65,12 @@ begin
 
       Response := Crypt.Null_Message;
       Crypt.Receiver.Receive (Req => Request);
-      pragma Warnings (Off);
+      pragma $Prove_Warnings
+        (Off, "attribute Valid is assumed to return True",
+         Reason => "Current proof limitation of GNATProve");
       if Request.Size'Valid then
-         pragma Warnings (On);
+         pragma $Prove_Warnings
+           (On, "attribute Valid is assumed to return True");
          pragma Debug (Subject.Text_IO.Put_String (Item => " Size : "));
          pragma Debug (Subject.Text_IO.Put_Word16 (Item => Request.Size));
          pragma Debug (Subject.Text_IO.New_Line);

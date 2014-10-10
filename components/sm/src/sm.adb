@@ -46,7 +46,7 @@ is
    Resume_Event  : constant := 4;
    Dump_And_Halt : Boolean  := False;
 begin
-   Subject.Console.Enable_Notification;
+   pragma Debug (Subject.Console.Enable_Notification);
    Subject.Text_IO.Init;
    Subject.Text_IO.Put_Line ("SM subject running");
    Interrupts.Initialize;

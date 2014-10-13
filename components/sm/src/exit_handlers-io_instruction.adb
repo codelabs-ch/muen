@@ -71,53 +71,9 @@ is
       Port_Number  at 0 range 16 .. 31;
    end record;
 
-   --  Return I/O instruction information from exit qualification, as specified
-   --  by Intel SDM Vol. 3C, section 27.2.1, table 27-5.
-   function To_IO_Info (Qualification : SK.Word64) return IO_Info_Type;
+   -------------------------------------------------------------------------
 
    --  Ignore acces to port: Do nothing on write, fake read.
-   procedure Ignore_Access (Info : IO_Info_Type);
-
-   --  Emulate i8042 controller.
-   procedure Emulate_i8042
-     (Info :     IO_Info_Type;
-      Halt : out Boolean);
-
-   -------------------------------------------------------------------------
-
-   procedure Emulate_i8042
-     (Info :     IO_Info_Type;
-      Halt : out Boolean)
-   is
-      use type SK.Word16;
-      use type SK.Word64;
-
-      --  Returns True if the I/O operation is a reboot request.
-      function Is_Reboot_Request return Boolean;
-      function Is_Reboot_Request return Boolean
-      is
-         use type SK.Byte;
-      begin
-         return Info.Port_Number = 16#64#
-           and then Info.Direction = Dir_Out
-           and then SK.Byte'Mod (State.Regs.RAX) = 16#fe#;
-      end Is_Reboot_Request;
-   begin
-      if Is_Reboot_Request then
-         pragma Debug
-           (Subject.Text_IO.Put_Line
-              (Item => "Reboot requested via pulse of CPU RESET pin"));
-         Halt := True;
-         return;
-      end if;
-
-      if Info.Port_Number = 16#64# and Info.Direction = Dir_In then
-         State.Regs.RAX := State.Regs.RAX and not 16#ff#;
-      end if;
-   end Emulate_i8042;
-
-   -------------------------------------------------------------------------
-
    procedure Ignore_Access (Info : IO_Info_Type)
    is
       use type SK.Word64;
@@ -151,10 +107,45 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Emulate i8042 controller.
+   procedure Emulate_i8042
+     (Info :     IO_Info_Type;
+      Halt : out Boolean)
+   is
+      use type SK.Byte;
+      use type SK.Word16;
+      use type SK.Word64;
+   begin
+      if Info.Port_Number = 16#64#
+        and then Info.Direction = Dir_Out
+        and then SK.Byte'Mod (State.Regs.RAX) = 16#fe#
+      then
+         pragma Debug
+           (Subject.Text_IO.Put_Line
+              (Item => "Reboot requested via pulse of CPU RESET pin"));
+         Halt := True;
+      elsif Info.Port_Number = 16#64# and Info.Direction = Dir_In then
+         State.Regs.RAX := State.Regs.RAX and not 16#ff#;
+      end if;
+   end Emulate_i8042;
+
+   -------------------------------------------------------------------------
+
+   --  Return I/O instruction information from exit qualification, as specified
+   --  by Intel SDM Vol. 3C, section 27.2.1, table 27-5.
+   function To_IO_Info (Qualification : SK.Word64) return IO_Info_Type
+   is
+      function To_IO_Information is new Ada.Unchecked_Conversion
+        (Source => SK.Word64,
+         Target => IO_Info_Type);
+   begin
+      return To_IO_Information (Qualification);
+   end To_IO_Info;
+
+   -------------------------------------------------------------------------
+
    procedure Process (Halt : out Boolean)
    is
-      use type SK.Word64;
-
       Info : IO_Info_Type;
    begin
       Halt := False;
@@ -214,16 +205,5 @@ is
          end case;
       end if;
    end Process;
-
-   -------------------------------------------------------------------------
-
-   function To_IO_Info (Qualification : SK.Word64) return IO_Info_Type
-   is
-      function To_IO_Information is new Ada.Unchecked_Conversion
-        (Source => SK.Word64,
-         Target => IO_Info_Type);
-   begin
-      return To_IO_Information (Qualification);
-   end To_IO_Info;
 
 end Exit_Handlers.IO_Instruction;

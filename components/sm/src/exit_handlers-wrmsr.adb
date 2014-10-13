@@ -39,17 +39,7 @@ is
       Halt := False;
 
       case MSR is
-         when IA32_BIOS_SIGN_ID |
-              IA32_PMC0         =>
-            Subject.Text_IO.Put_String (Item => "WRMSR 16#");
-            Subject.Text_IO.Put_Word32 (Item => MSR);
-            Subject.Text_IO.Put_String (Item => "#: ");
-            Subject.Text_IO.Put_Word32
-              (Item => SK.Word32 (State.Regs.RDX and 16#ffff_ffff#));
-            Subject.Text_IO.Put_String (Item => ":");
-            Subject.Text_IO.Put_Word32
-              (Item => SK.Word32 (State.Regs.RAX and 16#ffff_ffff#));
-            Subject.Text_IO.New_Line;
+         when IA32_BIOS_SIGN_ID | IA32_PMC0 => null;
          when others =>
             Subject.Text_IO.Put_String
               (Item => "Unhandled write access to MSR 16#");

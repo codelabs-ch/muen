@@ -23,7 +23,8 @@ with SK;
 package Subject_Info
 is
 
-   State : SK.Subject_State_Type;
-   for State'Address use System'To_Address (16#1e0000#);
+   State : SK.Subject_State_Type
+     with
+       Address => System'To_Address (16#1e0000#);
 
 end Subject_Info;

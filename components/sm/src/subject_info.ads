@@ -21,6 +21,8 @@ with System;
 with SK;
 
 package Subject_Info
+with
+   Initializes => State
 is
 
    State : SK.Subject_State_Type

@@ -78,7 +78,8 @@ is
    is
       use type SK.Word64;
 
-      Mask : SK.Word64;
+      RAX  : constant SK.Word64 := State.Regs.RAX;
+      Mask : SK.Word64          := 0;
    begin
       pragma Debug (Subject.Text_IO.Put_Word16
                     (Item => Info.Port_Number));
@@ -92,7 +93,7 @@ is
       end case;
 
       if Info.Direction = Dir_In then
-         State.Regs.RAX := State.Regs.RAX or Mask;
+         State.Regs.RAX := RAX or Mask;
       end if;
 
       pragma Debug (Info.Direction = Dir_In,
@@ -100,8 +101,7 @@ is
       pragma Debug (Info.Direction = Dir_Out,
                     Subject.Text_IO.Put_String (Item => "write "));
       pragma Debug (Info.Direction = Dir_Out,
-                    Subject.Text_IO.Put_Word32
-                      (SK.Word32'Mod (State.Regs.RAX and Mask)));
+                    Subject.Text_IO.Put_Word32 (SK.Word32'Mod (RAX and Mask)));
       pragma Debug (Subject.Text_IO.New_Line);
    end Ignore_Access;
 
@@ -115,17 +115,19 @@ is
       use type SK.Byte;
       use type SK.Word16;
       use type SK.Word64;
+
+      RAX : constant SK.Word64 := State.Regs.RAX;
    begin
       if Info.Port_Number = 16#64#
         and then Info.Direction = Dir_Out
-        and then SK.Byte'Mod (State.Regs.RAX) = 16#fe#
+        and then SK.Byte'Mod (RAX) = 16#fe#
       then
          pragma Debug
            (Subject.Text_IO.Put_Line
               (Item => "Reboot requested via pulse of CPU RESET pin"));
          Halt := True;
       elsif Info.Port_Number = 16#64# and Info.Direction = Dir_In then
-         State.Regs.RAX := State.Regs.RAX and not 16#ff#;
+         State.Regs.RAX := RAX and not 16#ff#;
       end if;
    end Emulate_i8042;
 
@@ -146,11 +148,12 @@ is
 
    procedure Process (Halt : out Boolean)
    is
-      Info : IO_Info_Type;
+      Info   : IO_Info_Type;
+      Exit_Q : constant SK.Word64 := State.Exit_Qualification;
    begin
       Halt := False;
 
-      Info := To_IO_Info (Qualification => State.Exit_Qualification);
+      Info := To_IO_Info (Qualification => Exit_Q);
 
       if Info.String_Instr or Info.REP_Prefixed then
          pragma Debug

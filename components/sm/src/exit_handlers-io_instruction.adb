@@ -109,6 +109,10 @@ is
    procedure Emulate_i8042
      (Info :     IO_Info_Type;
       Halt : out Boolean)
+   with
+      Global  => (In_Out => Subject_Info.State),
+      Depends => (Subject_Info.State =>+ Info,
+                  Halt => (Info, Subject_Info.State))
    is
       use type SK.Byte;
       use type SK.Word16;
@@ -116,6 +120,8 @@ is
 
       RAX : constant SK.Word64 := State.Regs.RAX;
    begin
+      Halt := False;
+
       if Info.Port_Number = 16#64#
         and then Info.Direction = Dir_Out
         and then SK.Byte'Mod (RAX) = 16#fe#

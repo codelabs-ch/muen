@@ -118,32 +118,38 @@ is
             if Info.Data_Register = RAX then
                State.SHADOW_CR0 := State.Regs.RAX;
                State.CR0 := State.SHADOW_CR0 or 16#20#; -- CR0_FIXED0
-               Subject.Text_IO.Put_String
-                 (Item => "Accepting mov eax, cr0 at ");
-               Subject.Text_IO.Put_Word64 (State.RIP);
-               Subject.Text_IO.Put_String (Item => ". set to ");
-               Subject.Text_IO.Put_Word64 (State.SHADOW_CR0);
-               Subject.Text_IO.Put_String (Item => " and ");
-               Subject.Text_IO.Put_Word64 (State.CR0);
-               Subject.Text_IO.New_Line;
+               pragma Debug (Subject.Text_IO.Put_String
+                             (Item => "Accepting mov eax, cr0 at "));
+               pragma Debug (Subject.Text_IO.Put_Word64 (State.RIP));
+               pragma Debug (Subject.Text_IO.Put_String (Item => ", set to "));
+               pragma Debug (Subject.Text_IO.Put_Word64 (State.SHADOW_CR0));
+               pragma Debug (Subject.Text_IO.Put_String (Item => " and "));
+               pragma Debug (Subject.Text_IO.Put_Word64 (State.CR0));
+               pragma Debug (Subject.Text_IO.New_Line);
             else
-               Subject.Text_IO.Put_String (Item => "MOV to CR ");
-               Subject.Text_IO.Put_Byte   (Item => SK.Byte (Info.CR_Number));
-               Subject.Text_IO.Put_String (Item => " from ");
-               Subject.Text_IO.Put_String
-                 (Item => To_String (Reg => (Info.Data_Register)));
-               Subject.Text_IO.Put_Line   (Item => " not implemented");
+               pragma Debug (Subject.Text_IO.Put_String
+                             (Item => "MOV to CR "));
+               pragma Debug (Subject.Text_IO.Put_Byte
+                             (Item => SK.Byte (Info.CR_Number)));
+               pragma Debug (Subject.Text_IO.Put_String (Item => " from "));
+               pragma Debug (Subject.Text_IO.Put_String
+                             (Item => To_String
+                              (Reg => Info.Data_Register)));
+               pragma Debug (Subject.Text_IO.Put_Line
+                             (Item => " not implemented"));
                Halt := True;
             end if;
          else
-            Subject.Text_IO.Put_String (Item => "Unhandled MOV to CR ");
-            Subject.Text_IO.Put_Byte   (Item => SK.Byte (Info.CR_Number));
-            Subject.Text_IO.New_Line;
+            pragma Debug (Subject.Text_IO.Put_String
+                          (Item => "Unhandled MOV to CR "));
+            pragma Debug (Subject.Text_IO.Put_Byte
+                          (Item => SK.Byte (Info.CR_Number)));
+            pragma Debug (Subject.Text_IO.New_Line);
             Halt := True;
          end if;
       else
-         Subject.Text_IO.Put_String (Item => "Unhandled CR access method");
-         Subject.Text_IO.New_Line;
+         pragma Debug (Subject.Text_IO.Put_Line
+                       (Item => "Unhandled CR access method"));
          Halt := True;
       end if;
    end Process;

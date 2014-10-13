@@ -22,8 +22,6 @@ with SK;
 
 with Subject.Text_IO;
 
-with Subject_Info;
-
 package body Exit_Handlers.IO_Instruction
 is
 

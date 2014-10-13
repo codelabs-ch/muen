@@ -73,6 +73,9 @@ is
 
    --  Ignore acces to port: Do nothing on write, fake read.
    procedure Ignore_Access (Info : IO_Info_Type)
+   with
+      Global  => (In_Out => Subject_Info.State),
+      Depends => (Subject_Info.State =>+ Info)
    is
       use type SK.Word64;
 

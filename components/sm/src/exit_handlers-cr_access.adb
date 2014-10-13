@@ -93,9 +93,18 @@ is
       Source_Data   at 0 range 16 .. 31;
    end record;
 
+   -------------------------------------------------------------------------
+
    --  Return CR access information from exit qualification, as specified by
    --  Intel SDM Vol. 3C, section 27.2.1, table 27-3.
-   function To_CR_Info (Qualification : SK.Word64) return CR_Info_Type;
+   function To_CR_Info (Qualification : SK.Word64) return CR_Info_Type
+   is
+      function To_CR_Information is new Ada.Unchecked_Conversion
+        (Source => SK.Word64,
+         Target => CR_Info_Type);
+   begin
+      return To_CR_Information (Qualification);
+   end To_CR_Info;
 
    -------------------------------------------------------------------------
 
@@ -141,16 +150,5 @@ is
          Halt := True;
       end if;
    end Process;
-
-   -------------------------------------------------------------------------
-
-   function To_CR_Info (Qualification : SK.Word64) return CR_Info_Type
-   is
-      function To_CR_Information is new Ada.Unchecked_Conversion
-        (Source => SK.Word64,
-         Target => CR_Info_Type);
-   begin
-      return To_CR_Information (Qualification);
-   end To_CR_Info;
 
 end Exit_Handlers.CR_Access;

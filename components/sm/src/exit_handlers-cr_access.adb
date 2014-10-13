@@ -110,22 +110,26 @@ is
 
    procedure Process (Halt : out Boolean)
    is
-      Info : CR_Info_Type;
+      Info       : CR_Info_Type;
+      CR0        : SK.Word64;
+      Exit_Q     : constant SK.Word64 := State.Exit_Qualification;
+      SHADOW_CR0 : constant SK.Word64 := State.Regs.RAX;
    begin
       Halt := False;
 
-      Info := To_CR_Info (Qualification => State.Exit_Qualification);
+      Info := To_CR_Info (Qualification => Exit_Q);
 
       if Info.CR_Access = MOV_To_CR then
          if Info.CR_Number = 0 then
             if Info.Data_Register = RAX then
-               State.SHADOW_CR0 := State.Regs.RAX;
-               State.CR0 := State.SHADOW_CR0 or 16#20#; -- CR0_FIXED0
+               State.SHADOW_CR0 := SHADOW_CR0;
+               CR0              := SHADOW_CR0 or 16#20#; -- CR0_FIXED0
+               State.CR0        := CR0;
                pragma Debug (Subject.Text_IO.Put_String
                              (Item => "Accepting mov eax, cr0: SHADOW_CR0 "));
-               pragma Debug (Subject.Text_IO.Put_Word64 (State.SHADOW_CR0));
+               pragma Debug (Subject.Text_IO.Put_Word64 (SHADOW_CR0));
                pragma Debug (Subject.Text_IO.Put_String (Item => ", CR0 "));
-               pragma Debug (Subject.Text_IO.Put_Word64 (State.CR0));
+               pragma Debug (Subject.Text_IO.Put_Word64 (CR0));
                pragma Debug (Subject.Text_IO.New_Line);
             else
                pragma Debug (Subject.Text_IO.Put_String

@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK;
+
 with Subject.Text_IO;
 
 with Subject_Info;
@@ -29,10 +31,11 @@ is
 
    procedure Process (Halt : out Boolean)
    is
+      RAX : constant SK.Word64 := State.Regs.RAX;
    begin
       Halt := False;
 
-      case State.Regs.RAX is
+      case RAX is
          when 0 =>
 
             --  Get vendor ID.
@@ -94,7 +97,7 @@ is
          when others =>
             pragma Debug (Subject.Text_IO.Put_String
                           (Item => "Unknown CPUID function "));
-            pragma Debug (Subject.Text_IO.Put_Word64 (Item => State.Regs.RAX));
+            pragma Debug (Subject.Text_IO.Put_Word64 (Item => RAX));
             pragma Debug (Subject.Text_IO.New_Line);
             Halt := True;
       end case;

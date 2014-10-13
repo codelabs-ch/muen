@@ -52,9 +52,9 @@ is
               IA32_PERFEVTSEL1  |
               IA32_PERFEVTSEL2  |
               IA32_PERFEVTSEL3  =>
-            Subject.Text_IO.Put_String (Item => "RDMSR 16#");
-            Subject.Text_IO.Put_Word32 (Item => MSR);
-            Subject.Text_IO.Put_Line   (Item => "#");
+            pragma Debug (Subject.Text_IO.Put_String (Item => "RDMSR 16#"));
+            pragma Debug (Subject.Text_IO.Put_Word32 (Item => MSR));
+            pragma Debug (Subject.Text_IO.Put_Line   (Item => "#"));
             State.Regs.RAX := State.Regs.RAX and not 16#ffff_ffff#;
             State.Regs.RDX := State.Regs.RDX and not 16#ffff_ffff#;
          when IA32_MISC_ENABLE =>
@@ -65,10 +65,10 @@ is
             State.Regs.RAX := 16#1800#;
             State.Regs.RDX := 0;
          when others =>
-            Subject.Text_IO.Put_String
-              (Item => "Unhandled read access to MSR 16#");
-            Subject.Text_IO.Put_Word32 (Item => MSR);
-            Subject.Text_IO.Put_Line (Item => "#");
+            pragma Debug (Subject.Text_IO.Put_String
+                          (Item => "Unhandled read access to MSR 16#"));
+            pragma Debug (Subject.Text_IO.Put_Word32 (Item => MSR));
+            pragma Debug (Subject.Text_IO.Put_Line   (Item => "#"));
             Halt := True;
       end case;
    end Process;

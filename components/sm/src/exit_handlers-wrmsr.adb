@@ -41,10 +41,10 @@ is
       case MSR is
          when IA32_BIOS_SIGN_ID | IA32_PMC0 => null;
          when others =>
-            Subject.Text_IO.Put_String
-              (Item => "Unhandled write access to MSR 16#");
-            Subject.Text_IO.Put_Word32 (Item => MSR);
-            Subject.Text_IO.Put_Line (Item => "#");
+            pragma Debug (Subject.Text_IO.Put_String
+                          (Item => "Unhandled write access to MSR 16#"));
+            pragma Debug (Subject.Text_IO.Put_Word32 (Item => MSR));
+            pragma Debug (Subject.Text_IO.Put_Line (Item => "#"));
             Halt := True;
       end case;
    end Process;

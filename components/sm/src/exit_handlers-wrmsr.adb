@@ -34,7 +34,8 @@ is
    is
       use type SK.Word64;
 
-      MSR : constant SK.Word32 := SK.Word32 (State.Regs.RCX);
+      RCX : constant SK.Word64 := State.Regs.RCX;
+      MSR : constant SK.Word32 := SK.Word32 (RCX);
    begin
       Halt := False;
 

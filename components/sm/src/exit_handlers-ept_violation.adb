@@ -78,12 +78,14 @@ is
 
    procedure Process (Halt : out Boolean)
    is
-      Info : constant EPTV_Info_Type := To_EPTV_Info
-        (Qualification => Subject_Info.State.Exit_Qualification);
+      Exit_Q : constant SK.Word64 := Subject_Info.State.Exit_Qualification;
+      GPA    : constant SK.Word64 := State.Guest_Phys_Addr;
+      Info   : constant EPTV_Info_Type
+        := To_EPTV_Info (Qualification => Exit_Q);
    begin
       Halt := True;
 
-      if State.Guest_Phys_Addr in MMConf_Region and then Info.Read then
+      if GPA in MMConf_Region and then Info.Read then
 
          --  Return 16#ffff# to indicate a non-existent device.
 
@@ -91,22 +93,17 @@ is
          Halt           := False;
       end if;
 
-      pragma Debug (State.Guest_Phys_Addr not in MMConf_Region,
+      pragma Debug (GPA not in MMConf_Region,
                     Subject.Text_IO.Put_String (Item => "Invalid "));
-      pragma Debug (State.Guest_Phys_Addr not in MMConf_Region
-                    and then Info.Read,
+      pragma Debug (GPA not in MMConf_Region and then Info.Read,
                     Subject.Text_IO.Put_String (Item => "read"));
-      pragma Debug (State.Guest_Phys_Addr not in MMConf_Region
-                    and then Info.Write,
+      pragma Debug (GPA not in MMConf_Region and then Info.Write,
                     Subject.Text_IO.Put_String (Item => "write"));
-      pragma Debug (State.Guest_Phys_Addr not in MMConf_Region,
-                    Subject.Text_IO.Put_String
-                      (Item => " access at guest physical address "));
-      pragma Debug (State.Guest_Phys_Addr not in MMConf_Region,
-                    Subject.Text_IO.Put_Word64
-                      (Item => State.Guest_Phys_Addr));
-      pragma Debug (State.Guest_Phys_Addr not in MMConf_Region,
-                    Subject.Text_IO.New_Line);
+      pragma Debug (GPA not in MMConf_Region, Subject.Text_IO.Put_String
+                    (Item => " access at guest physical address "));
+      pragma Debug (GPA not in MMConf_Region, Subject.Text_IO.Put_Word64
+                    (Item => GPA));
+      pragma Debug (GPA not in MMConf_Region, Subject.Text_IO.New_Line);
    end Process;
 
 end Exit_Handlers.EPT_Violation;

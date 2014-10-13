@@ -66,18 +66,24 @@ is
 
          State.Regs.RAX := 16#ffff#;
          Halt           := False;
-      else
-         Subject.Text_IO.Put_String (Item => "Invalid ");
-         if Info.Read then
-            Subject.Text_IO.Put_String (Item => "read");
-         else
-            Subject.Text_IO.Put_String (Item => "write");
-         end if;
-         Subject.Text_IO.Put_String
-           (Item => " access at guest physical address ");
-         Subject.Text_IO.Put_Word64 (Item => State.Guest_Phys_Addr);
-         Subject.Text_IO.New_Line;
       end if;
+
+      pragma Debug (State.Guest_Phys_Addr not in MMConf_Region,
+                    Subject.Text_IO.Put_String (Item => "Invalid "));
+      pragma Debug (State.Guest_Phys_Addr not in MMConf_Region
+                    and then Info.Read,
+                    Subject.Text_IO.Put_String (Item => "read"));
+      pragma Debug (State.Guest_Phys_Addr not in MMConf_Region
+                    and then Info.Write,
+                    Subject.Text_IO.Put_String (Item => "write"));
+      pragma Debug (State.Guest_Phys_Addr not in MMConf_Region,
+                    Subject.Text_IO.Put_String
+                      (Item => " access at guest physical address "));
+      pragma Debug (State.Guest_Phys_Addr not in MMConf_Region,
+                    Subject.Text_IO.Put_Word64
+                      (Item => State.Guest_Phys_Addr));
+      pragma Debug (State.Guest_Phys_Addr not in MMConf_Region,
+                    Subject.Text_IO.New_Line);
    end Process;
 
    -------------------------------------------------------------------------

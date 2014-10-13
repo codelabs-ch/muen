@@ -45,6 +45,8 @@ is
 
    Resume_Event  : constant := 4;
    Dump_And_Halt : Boolean  := False;
+
+   Exit_Reason, RIP, Instruction_Len : SK.Word64;
 begin
    pragma Debug (Subject.Console.Enable_Notification);
    pragma Debug (Subject.Text_IO.Init);
@@ -55,26 +57,28 @@ begin
    SK.CPU.Hlt;
 
    loop
-      if State.Exit_Reason = SK.Constants.EXIT_REASON_CPUID then
+      Exit_Reason := State.Exit_Reason;
+
+      if Exit_Reason = SK.Constants.EXIT_REASON_CPUID then
          Exit_Handlers.CPUID.Process (Halt => Dump_And_Halt);
-      elsif State.Exit_Reason = SK.Constants.EXIT_REASON_INVLPG
-        or else State.Exit_Reason = SK.Constants.EXIT_REASON_DR_ACCESS
+      elsif Exit_Reason = SK.Constants.EXIT_REASON_INVLPG
+        or else Exit_Reason = SK.Constants.EXIT_REASON_DR_ACCESS
       then
 
          --  Ignore INVLPG and MOV DR for now.
          null;
 
-      elsif State.Exit_Reason = SK.Constants.EXIT_REASON_RDTSC then
+      elsif Exit_Reason = SK.Constants.EXIT_REASON_RDTSC then
          Exit_Handlers.RDTSC.Process (Halt => Dump_And_Halt);
-      elsif State.Exit_Reason = SK.Constants.EXIT_REASON_IO_INSTRUCTION then
+      elsif Exit_Reason = SK.Constants.EXIT_REASON_IO_INSTRUCTION then
          Exit_Handlers.IO_Instruction.Process (Halt => Dump_And_Halt);
-      elsif State.Exit_Reason = SK.Constants.EXIT_REASON_RDMSR then
+      elsif Exit_Reason = SK.Constants.EXIT_REASON_RDMSR then
          Exit_Handlers.RDMSR.Process (Halt => Dump_And_Halt);
-      elsif State.Exit_Reason = SK.Constants.EXIT_REASON_WRMSR then
+      elsif Exit_Reason = SK.Constants.EXIT_REASON_WRMSR then
          Exit_Handlers.WRMSR.Process (Halt => Dump_And_Halt);
-      elsif State.Exit_Reason = SK.Constants.EXIT_REASON_CR_ACCESS then
+      elsif Exit_Reason = SK.Constants.EXIT_REASON_CR_ACCESS then
          Exit_Handlers.CR_Access.Process (Halt => Dump_And_Halt);
-      elsif State.Exit_Reason = SK.Constants.EXIT_REASON_EPT_VIOLATION then
+      elsif Exit_Reason = SK.Constants.EXIT_REASON_EPT_VIOLATION then
          Exit_Handlers.EPT_Violation.Process (Halt => Dump_And_Halt);
       else
          pragma Debug (Subject.Text_IO.Put_Line
@@ -84,7 +88,9 @@ begin
       end if;
 
       if not Dump_And_Halt then
-         State.RIP := State.RIP + State.Instruction_Len;
+         RIP             := State.RIP;
+         Instruction_Len := State.Instruction_Len;
+         State.RIP       := RIP + Instruction_Len;
          SK.Hypercall.Trigger_Event (Number => Resume_Event);
       else
          pragma Debug (Debug_Ops.Dump_State);

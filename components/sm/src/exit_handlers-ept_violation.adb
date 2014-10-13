@@ -41,15 +41,38 @@ is
       NMI_Blocking      : Boolean;
    end record;
 
-   --  Return EPT violation information from exit qualification, as specified
-   --  by Intel SDM Vol. 3C, section 27.2.1, table 27-7.
-   function To_EPTV_Info (Qualification : SK.Word64) return EPTV_Info_Type;
-
    MMConf_Base_Address : constant SK.Word64 := 16#f800_0000#;
    MMConf_Size         : constant SK.Word64 := 16#0100_0000#;
 
    subtype MMConf_Region is SK.Word64 range
      MMConf_Base_Address .. MMConf_Base_Address + MMConf_Size - 1;
+
+   -------------------------------------------------------------------------
+
+   --  Return EPT violation information from exit qualification, as specified
+   --  by Intel SDM Vol. 3C, section 27.2.1, table 27-7.
+   function To_EPTV_Info (Qualification : SK.Word64) return EPTV_Info_Type
+   is
+      Info : EPTV_Info_Type;
+   begin
+      Info.Read              := SK.Bit_Test (Value => Qualification,
+                                             Pos   => 0);
+      Info.Write             := SK.Bit_Test (Value => Qualification,
+                                             Pos   => 1);
+      Info.Instruction_Fetch := SK.Bit_Test (Value => Qualification,
+                                             Pos   => 2);
+      Info.Is_Readable       := SK.Bit_Test (Value => Qualification,
+                                             Pos   => 3);
+      Info.Is_Writable       := SK.Bit_Test (Value => Qualification,
+                                             Pos   => 4);
+      Info.Valid_Address     := SK.Bit_Test (Value => Qualification,
+                                             Pos   => 7);
+      Info.Is_Linear_Access  := SK.Bit_Test (Value => Qualification,
+                                             Pos   => 8);
+      Info.NMI_Blocking      := SK.Bit_Test (Value => Qualification,
+                                             Pos   => 12);
+      return Info;
+   end To_EPTV_Info;
 
    -------------------------------------------------------------------------
 
@@ -85,30 +108,5 @@ is
       pragma Debug (State.Guest_Phys_Addr not in MMConf_Region,
                     Subject.Text_IO.New_Line);
    end Process;
-
-   -------------------------------------------------------------------------
-
-   function To_EPTV_Info (Qualification : SK.Word64) return EPTV_Info_Type
-   is
-      Info : EPTV_Info_Type;
-   begin
-      Info.Read              := SK.Bit_Test (Value => Qualification,
-                                             Pos   => 0);
-      Info.Write             := SK.Bit_Test (Value => Qualification,
-                                             Pos   => 1);
-      Info.Instruction_Fetch := SK.Bit_Test (Value => Qualification,
-                                             Pos   => 2);
-      Info.Is_Readable       := SK.Bit_Test (Value => Qualification,
-                                             Pos   => 3);
-      Info.Is_Writable       := SK.Bit_Test (Value => Qualification,
-                                             Pos   => 4);
-      Info.Valid_Address     := SK.Bit_Test (Value => Qualification,
-                                             Pos   => 7);
-      Info.Is_Linear_Access  := SK.Bit_Test (Value => Qualification,
-                                             Pos   => 8);
-      Info.NMI_Blocking      := SK.Bit_Test (Value => Qualification,
-                                             Pos   => 12);
-      return Info;
-   end To_EPTV_Info;
 
 end Exit_Handlers.EPT_Violation;

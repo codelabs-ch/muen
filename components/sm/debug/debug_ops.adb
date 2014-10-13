@@ -23,6 +23,8 @@ with Subject.Text_IO;
 with Subject_Info;
 
 package body Debug_Ops
+with
+   SPARK_Mode => Off
 is
 
    -------------------------------------------------------------------------

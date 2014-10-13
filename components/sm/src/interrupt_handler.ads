@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -22,10 +22,15 @@ package Interrupt_Handler
 is
 
    --  Interrupt handler.
+   pragma $Prove_Warnings
+     (Off, "subprogram ""Handle_Interrupt"" has no effect",
+      Reason => "Only used to wakeup subject");
    procedure Handle_Interrupt (Vector : SK.Byte)
      with
        Export,
        Convention => C,
        Link_Name  => "dispatch_interrupt";
+   pragma $Prove_Warnings
+     (On, "subprogram ""Handle_Interrupt"" has no effect");
 
 end Interrupt_Handler;

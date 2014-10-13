@@ -34,7 +34,10 @@ is
    is
       use type SK.Word64;
 
-      MSR : constant SK.Word32 := SK.Word32 (State.Regs.RCX);
+      RAX : constant SK.Word64 := State.Regs.RAX;
+      RCX : constant SK.Word64 := State.Regs.RCX;
+      RDX : constant SK.Word64 := State.Regs.RDX;
+      MSR : constant SK.Word32 := SK.Word32 (RCX);
    begin
       Halt := False;
 
@@ -55,8 +58,8 @@ is
             pragma Debug (Subject.Text_IO.Put_String (Item => "RDMSR 16#"));
             pragma Debug (Subject.Text_IO.Put_Word32 (Item => MSR));
             pragma Debug (Subject.Text_IO.Put_Line   (Item => "#"));
-            State.Regs.RAX := State.Regs.RAX and not 16#ffff_ffff#;
-            State.Regs.RDX := State.Regs.RDX and not 16#ffff_ffff#;
+            State.Regs.RAX := RAX and not 16#ffff_ffff#;
+            State.Regs.RDX := RDX and not 16#ffff_ffff#;
          when IA32_MISC_ENABLE =>
 
             --  Bit 11: Branch Trace Storage Unavailable

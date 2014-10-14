@@ -232,10 +232,11 @@ is
             Pos   => Bit_In_Word);
 
          if Found then
-            Atomic_Bit_Clear (Field => Global_Events (Subject) (Event_Word),
-                              Pos   => Bit_In_Word);
             Event := SK.Byte (Event_Word) * SK.Byte (Bits_In_Word)
               + SK.Byte (Bit_In_Word);
+            Atomic_Event_Clear
+              (Event_Bit_Pos => Event_Count * Event_Pos_Type
+                 (Subject) + Event_Pos_Type (Event));
             exit Search_Event_Words;
          end if;
       end loop Search_Event_Words;

@@ -1,3 +1,4 @@
 COMPONENT = sm
+PACKAGE   = $(COMPONENT)
 
-include ../component_native.mk
+include ../component_spark.mk

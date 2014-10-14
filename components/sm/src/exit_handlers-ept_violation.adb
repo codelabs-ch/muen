@@ -20,8 +20,6 @@ with SK;
 
 with Subject.Text_IO;
 
-with Subject_Info;
-
 package body Exit_Handlers.EPT_Violation
 is
 
@@ -41,10 +39,6 @@ is
       NMI_Blocking      : Boolean;
    end record;
 
-   --  Return EPT violation information from exit qualification, as specified
-   --  by Intel SDM Vol. 3C, section 27.2.1, table 27-7.
-   function To_EPTV_Info (Qualification : SK.Word64) return EPTV_Info_Type;
-
    MMConf_Base_Address : constant SK.Word64 := 16#f800_0000#;
    MMConf_Size         : constant SK.Word64 := 16#0100_0000#;
 
@@ -53,35 +47,8 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Process (Halt : out Boolean)
-   is
-      Info : constant EPTV_Info_Type := To_EPTV_Info
-        (Qualification => Subject_Info.State.Exit_Qualification);
-   begin
-      Halt := True;
-
-      if State.Guest_Phys_Addr in MMConf_Region and then Info.Read then
-
-         --  Return 16#ffff# to indicate a non-existent device.
-
-         State.Regs.RAX := 16#ffff#;
-         Halt           := False;
-      else
-         Subject.Text_IO.Put_String (Item => "Invalid ");
-         if Info.Read then
-            Subject.Text_IO.Put_String (Item => "read");
-         else
-            Subject.Text_IO.Put_String (Item => "write");
-         end if;
-         Subject.Text_IO.Put_String
-           (Item => " access at guest physical address ");
-         Subject.Text_IO.Put_Word64 (Item => State.Guest_Phys_Addr);
-         Subject.Text_IO.New_Line;
-      end if;
-   end Process;
-
-   -------------------------------------------------------------------------
-
+   --  Return EPT violation information from exit qualification, as specified
+   --  by Intel SDM Vol. 3C, section 27.2.1, table 27-7.
    function To_EPTV_Info (Qualification : SK.Word64) return EPTV_Info_Type
    is
       Info : EPTV_Info_Type;
@@ -104,5 +71,42 @@ is
                                              Pos   => 12);
       return Info;
    end To_EPTV_Info;
+
+   -------------------------------------------------------------------------
+
+   procedure Process (Halt : out Boolean)
+   is
+      Exit_Q : constant SK.Word64 := Subject_Info.State.Exit_Qualification;
+      GPA    : constant SK.Word64 := State.Guest_Phys_Addr;
+
+      pragma $Prove_Warnings
+        (Off, "statement has no effect",
+         Reason => "Spurious warning with gnatprove GPL 2014");
+      Info : constant EPTV_Info_Type
+        := To_EPTV_Info (Qualification => Exit_Q);
+      pragma $Prove_Warnings (On, "statement has no effect");
+   begin
+      Halt := True;
+
+      if GPA in MMConf_Region and then Info.Read then
+
+         --  Return 16#ffff# to indicate a non-existent device.
+
+         State.Regs.RAX := 16#ffff#;
+         Halt           := False;
+      end if;
+
+      pragma Debug (GPA not in MMConf_Region,
+                    Subject.Text_IO.Put_String (Item => "Invalid "));
+      pragma Debug (GPA not in MMConf_Region and then Info.Read,
+                    Subject.Text_IO.Put_String (Item => "read"));
+      pragma Debug (GPA not in MMConf_Region and then Info.Write,
+                    Subject.Text_IO.Put_String (Item => "write"));
+      pragma Debug (GPA not in MMConf_Region, Subject.Text_IO.Put_String
+                    (Item => " access at guest physical address "));
+      pragma Debug (GPA not in MMConf_Region, Subject.Text_IO.Put_Word64
+                    (Item => GPA));
+      pragma Debug (GPA not in MMConf_Region, Subject.Text_IO.New_Line);
+   end Process;
 
 end Exit_Handlers.EPT_Violation;

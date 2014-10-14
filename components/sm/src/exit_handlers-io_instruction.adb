@@ -22,8 +22,6 @@ with SK;
 
 with Subject.Text_IO;
 
-with Subject_Info;
-
 package body Exit_Handlers.IO_Instruction
 is
 
@@ -71,61 +69,22 @@ is
       Port_Number  at 0 range 16 .. 31;
    end record;
 
-   --  Return I/O instruction information from exit qualification, as specified
-   --  by Intel SDM Vol. 3C, section 27.2.1, table 27-5.
-   function To_IO_Info (Qualification : SK.Word64) return IO_Info_Type;
+   -------------------------------------------------------------------------
 
    --  Ignore acces to port: Do nothing on write, fake read.
-   procedure Ignore_Access (Info : IO_Info_Type);
-
-   --  Emulate i8042 controller.
-   procedure Emulate_i8042
-     (Info :     IO_Info_Type;
-      Halt : out Boolean);
-
-   -------------------------------------------------------------------------
-
-   procedure Emulate_i8042
-     (Info :     IO_Info_Type;
-      Halt : out Boolean)
-   is
-      use type SK.Word16;
-      use type SK.Word64;
-
-      --  Returns True if the I/O operation is a reboot request.
-      function Is_Reboot_Request return Boolean;
-      function Is_Reboot_Request return Boolean
-      is
-         use type SK.Byte;
-      begin
-         return Info.Port_Number = 16#64#
-           and then Info.Direction = Dir_Out
-           and then SK.Byte'Mod (State.Regs.RAX) = 16#fe#;
-      end Is_Reboot_Request;
-   begin
-      if Is_Reboot_Request then
-         Subject.Text_IO.Put_Line
-           (Item => "Reboot requested via pulse of CPU RESET pin");
-         Halt := True;
-         return;
-      end if;
-
-      if Info.Port_Number = 16#64# and Info.Direction = Dir_In then
-         State.Regs.RAX := State.Regs.RAX and not 16#ff#;
-      end if;
-   end Emulate_i8042;
-
-   -------------------------------------------------------------------------
-
    procedure Ignore_Access (Info : IO_Info_Type)
+   with
+      Global  => (In_Out => Subject_Info.State),
+      Depends => (Subject_Info.State =>+ Info)
    is
       use type SK.Word64;
 
-      Mask : SK.Word64;
+      RAX  : constant SK.Word64 := State.Regs.RAX;
+      Mask : SK.Word64          := 0;
    begin
-      Subject.Text_IO.Put_Word16
-        (Item => Info.Port_Number);
-      Subject.Text_IO.Put_String (Item => " ignore ");
+      pragma Debug (Subject.Text_IO.Put_Word16
+                    (Item => Info.Port_Number));
+      pragma Debug (Subject.Text_IO.Put_String (Item => " ignore "));
 
       case Info.Size is
          when One_Byte  => Mask := 16#ff#;
@@ -134,39 +93,85 @@ is
          when others    => null;
       end case;
 
-      case Info.Direction is
-         when Dir_In =>
-            Subject.Text_IO.Put_String (Item => "read");
-            State.Regs.RAX := State.Regs.RAX or Mask;
-         when Dir_Out =>
-            Subject.Text_IO.Put_String (Item => "write ");
-            Subject.Text_IO.Put_Word32
-              (SK.Word32'Mod (State.Regs.RAX and Mask));
-      end case;
-      Subject.Text_IO.New_Line;
+      if Info.Direction = Dir_In then
+         State.Regs.RAX := RAX or Mask;
+      end if;
+
+      pragma Debug (Info.Direction = Dir_In,
+                    Subject.Text_IO.Put_String (Item => "read"));
+      pragma Debug (Info.Direction = Dir_Out,
+                    Subject.Text_IO.Put_String (Item => "write "));
+      pragma Debug (Info.Direction = Dir_Out,
+                    Subject.Text_IO.Put_Word32 (SK.Word32'Mod (RAX and Mask)));
+      pragma Debug (Subject.Text_IO.New_Line);
    end Ignore_Access;
+
+   -------------------------------------------------------------------------
+
+   --  Emulate i8042 controller.
+   procedure Emulate_i8042
+     (Info :     IO_Info_Type;
+      Halt : out Boolean)
+   with
+      Global  => (In_Out => Subject_Info.State),
+      Depends => (Subject_Info.State =>+ Info,
+                  Halt => (Info, Subject_Info.State))
+   is
+      use type SK.Byte;
+      use type SK.Word16;
+      use type SK.Word64;
+
+      RAX : constant SK.Word64 := State.Regs.RAX;
+   begin
+      Halt := False;
+
+      if Info.Port_Number = 16#64#
+        and then Info.Direction = Dir_Out
+        and then SK.Byte'Mod (RAX) = 16#fe#
+      then
+         pragma Debug
+           (Subject.Text_IO.Put_Line
+              (Item => "Reboot requested via pulse of CPU RESET pin"));
+         Halt := True;
+      elsif Info.Port_Number = 16#64# and Info.Direction = Dir_In then
+         State.Regs.RAX := RAX and not 16#ff#;
+      end if;
+   end Emulate_i8042;
+
+   -------------------------------------------------------------------------
+
+   --  Return I/O instruction information from exit qualification, as specified
+   --  by Intel SDM Vol. 3C, section 27.2.1, table 27-5.
+   function To_IO_Info (Qualification : SK.Word64) return IO_Info_Type
+   is
+      function To_IO_Information is new Ada.Unchecked_Conversion
+        (Source => SK.Word64,
+         Target => IO_Info_Type);
+   begin
+      return To_IO_Information (Qualification);
+   end To_IO_Info;
 
    -------------------------------------------------------------------------
 
    procedure Process (Halt : out Boolean)
    is
-      use type SK.Word64;
+      Exit_Q : constant SK.Word64    := State.Exit_Qualification;
+      Info   : constant IO_Info_Type := To_IO_Info (Qualification => Exit_Q);
 
-      Info : IO_Info_Type;
    begin
       Halt := False;
 
-      Info := To_IO_Info (Qualification => State.Exit_Qualification);
-
       if Info.String_Instr or Info.REP_Prefixed then
-         Subject.Text_IO.Put_Line
-           (Item => "I/O instructions with string and REP not supported");
+         pragma Debug
+           (Subject.Text_IO.Put_Line
+              (Item => "I/O instructions with string and REP not supported"));
          Halt := True;
       elsif Info.Size not in One_Byte | Two_Byte | Four_Byte then
-         Subject.Text_IO.Put_Line
-           (Item => "I/O instruction with invalid access size 16#");
-         Subject.Text_IO.Put_Byte (Item => SK.Byte (Info.Size));
-         Subject.Text_IO.Put_Line (Item => "#");
+         pragma Debug
+           (Subject.Text_IO.Put_Line
+              (Item => "I/O instruction with invalid access size 16#"));
+         pragma Debug (Subject.Text_IO.Put_Byte (Item => SK.Byte (Info.Size)));
+         pragma Debug (Subject.Text_IO.Put_Line (Item => "#"));
          Halt := True;
       else
          case Info.Port_Number is
@@ -200,24 +205,14 @@ is
                Emulate_i8042 (Info => Info,
                               Halt => Halt);
             when others =>
-               Subject.Text_IO.Put_String
-                 (Item => "Unhandled access to I/O port ");
-               Subject.Text_IO.Put_Word16 (Item => Info.Port_Number);
-               Subject.Text_IO.New_Line;
+               pragma Debug (Subject.Text_IO.Put_String
+                             (Item => "Unhandled access to I/O port "));
+               pragma Debug (Subject.Text_IO.Put_Word16
+                             (Item => Info.Port_Number));
+               pragma Debug (Subject.Text_IO.New_Line);
                Halt := True;
          end case;
       end if;
    end Process;
-
-   -------------------------------------------------------------------------
-
-   function To_IO_Info (Qualification : SK.Word64) return IO_Info_Type
-   is
-      function To_IO_Information is new Ada.Unchecked_Conversion
-        (Source => SK.Word64,
-         Target => IO_Info_Type);
-   begin
-      return To_IO_Information (Qualification);
-   end To_IO_Info;
 
 end Exit_Handlers.IO_Instruction;

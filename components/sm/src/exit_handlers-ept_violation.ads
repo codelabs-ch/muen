@@ -16,10 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Subject_Info;
+
 package Exit_Handlers.EPT_Violation
 is
 
    --  Emulate memory access.
-   procedure Process (Halt : out Boolean);
+   procedure Process (Halt : out Boolean)
+   with
+      Global  => (In_Out => Subject_Info.State),
+      Depends => (Subject_Info.State =>+ null, Halt => Subject_Info.State);
 
 end Exit_Handlers.EPT_Violation;

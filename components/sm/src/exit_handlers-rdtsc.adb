@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -18,26 +18,29 @@
 
 with SK;
 
-with Subject_Info;
-
 package body Exit_Handlers.RDTSC
+with
+   Refined_State => (State => TSC_Counter)
 is
-
-   use Subject_Info;
 
    TSC_Counter : SK.Word64 := 0;
 
    -------------------------------------------------------------------------
 
    procedure Process (Halt : out Boolean)
+   with
+      Refined_Global  => (In_Out => (TSC_Counter, Subject_Info.State)),
+      Refined_Depends => (Halt               => null,
+                          TSC_Counter        =>+ null,
+                          Subject_Info.State =>+ TSC_Counter)
    is
       use type SK.Word64;
    begin
       Halt := False;
 
-      State.Regs.RAX := TSC_Counter and 16#ffff_ffff#;
-      State.Regs.RDX := TSC_Counter / 2 ** 32;
-      TSC_Counter    := TSC_Counter + 1;
+      Subject_Info.State.Regs.RAX := TSC_Counter and 16#ffff_ffff#;
+      Subject_Info.State.Regs.RDX := TSC_Counter / 2 ** 32;
+      TSC_Counter := TSC_Counter + 1;
    end Process;
 
 end Exit_Handlers.RDTSC;

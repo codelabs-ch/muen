@@ -22,8 +22,6 @@ with SK;
 
 with Subject.Text_IO;
 
-with Subject_Info;
-
 package body Exit_Handlers.CR_Access
 is
 
@@ -93,63 +91,10 @@ is
       Source_Data   at 0 range 16 .. 31;
    end record;
 
+   -------------------------------------------------------------------------
+
    --  Return CR access information from exit qualification, as specified by
    --  Intel SDM Vol. 3C, section 27.2.1, table 27-3.
-   function To_CR_Info (Qualification : SK.Word64) return CR_Info_Type;
-
-   --  Register string representation type.
-   subtype Reg_String is String (1 .. 3);
-
-   --  Return string representation of given register.
-   function To_String (Reg : Data_Register_Type) return Reg_String;
-
-   -------------------------------------------------------------------------
-
-   procedure Process (Halt : out Boolean)
-   is
-      Info : CR_Info_Type;
-   begin
-      Halt := False;
-
-      Info := To_CR_Info (Qualification => State.Exit_Qualification);
-
-      if Info.CR_Access = MOV_To_CR then
-         if Info.CR_Number = 0 then
-            if Info.Data_Register = RAX then
-               State.SHADOW_CR0 := State.Regs.RAX;
-               State.CR0 := State.SHADOW_CR0 or 16#20#; -- CR0_FIXED0
-               Subject.Text_IO.Put_String
-                 (Item => "Accepting mov eax, cr0 at ");
-               Subject.Text_IO.Put_Word64 (State.RIP);
-               Subject.Text_IO.Put_String (Item => ". set to ");
-               Subject.Text_IO.Put_Word64 (State.SHADOW_CR0);
-               Subject.Text_IO.Put_String (Item => " and ");
-               Subject.Text_IO.Put_Word64 (State.CR0);
-               Subject.Text_IO.New_Line;
-            else
-               Subject.Text_IO.Put_String (Item => "MOV to CR ");
-               Subject.Text_IO.Put_Byte   (Item => SK.Byte (Info.CR_Number));
-               Subject.Text_IO.Put_String (Item => " from ");
-               Subject.Text_IO.Put_String
-                 (Item => To_String (Reg => (Info.Data_Register)));
-               Subject.Text_IO.Put_Line   (Item => " not implemented");
-               Halt := True;
-            end if;
-         else
-            Subject.Text_IO.Put_String (Item => "Unhandled MOV to CR ");
-            Subject.Text_IO.Put_Byte   (Item => SK.Byte (Info.CR_Number));
-            Subject.Text_IO.New_Line;
-            Halt := True;
-         end if;
-      else
-         Subject.Text_IO.Put_String (Item => "Unhandled CR access method");
-         Subject.Text_IO.New_Line;
-         Halt := True;
-      end if;
-   end Process;
-
-   -------------------------------------------------------------------------
-
    function To_CR_Info (Qualification : SK.Word64) return CR_Info_Type
    is
       function To_CR_Information is new Ada.Unchecked_Conversion
@@ -161,27 +106,55 @@ is
 
    -------------------------------------------------------------------------
 
-   function To_String (Reg : Data_Register_Type) return Reg_String
+   procedure Process (Halt : out Boolean)
    is
-      Reg_Map : constant array (Data_Register_Type) of Reg_String
-        := (RAX => "RAX",
-            RBX => "RBX",
-            RCX => "RCX",
-            RDX => "RDX",
-            RSP => "RSP",
-            RBP => "RBP",
-            RSI => "RSI",
-            RDI => "RDI",
-            R8  => " R8",
-            R9  => " R9",
-            R10 => "R10",
-            R11 => "R11",
-            R12 => "R12",
-            R13 => "R13",
-            R14 => "R14",
-            R15 => "R15");
+      CR0        : SK.Word64;
+      Exit_Q     : constant SK.Word64 := State.Exit_Qualification;
+      SHADOW_CR0 : constant SK.Word64 := State.Regs.RAX;
+
+      pragma $Prove_Warnings
+        (Off, "statement has no effect",
+         Reason => "Spurious warning with gnatprove GPL 2014");
+      Info : constant CR_Info_Type
+        := To_CR_Info (Qualification => Exit_Q);
+      pragma $Prove_Warnings (On, "statement has no effect");
    begin
-      return Reg_Map (Reg);
-   end To_String;
+      Halt := False;
+
+      if Info.CR_Access = MOV_To_CR then
+         if Info.CR_Number = 0 then
+            if Info.Data_Register = RAX then
+               State.SHADOW_CR0 := SHADOW_CR0;
+               CR0              := SHADOW_CR0 or 16#20#; -- CR0_FIXED0
+               State.CR0        := CR0;
+               pragma Debug (Subject.Text_IO.Put_String
+                             (Item => "Accepting mov eax, cr0: SHADOW_CR0 "));
+               pragma Debug (Subject.Text_IO.Put_Word64 (SHADOW_CR0));
+               pragma Debug (Subject.Text_IO.Put_String (Item => ", CR0 "));
+               pragma Debug (Subject.Text_IO.Put_Word64 (CR0));
+               pragma Debug (Subject.Text_IO.New_Line);
+            else
+               pragma Debug (Subject.Text_IO.Put_String
+                             (Item => "MOV to CR "));
+               pragma Debug (Subject.Text_IO.Put_Byte
+                             (Item => SK.Byte (Info.CR_Number)));
+               pragma Debug (Subject.Text_IO.Put_Line
+                             (Item => " from unsupported data register"));
+               Halt := True;
+            end if;
+         else
+            pragma Debug (Subject.Text_IO.Put_String
+                          (Item => "Unhandled MOV to CR "));
+            pragma Debug (Subject.Text_IO.Put_Byte
+                          (Item => SK.Byte (Info.CR_Number)));
+            pragma Debug (Subject.Text_IO.New_Line);
+            Halt := True;
+         end if;
+      else
+         pragma Debug (Subject.Text_IO.Put_Line
+                       (Item => "Unhandled CR access method"));
+         Halt := True;
+      end if;
+   end Process;
 
 end Exit_Handlers.CR_Access;

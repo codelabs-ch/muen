@@ -153,23 +153,21 @@ is
      (Subject       :     Skp.Subject_Id_Type;
       Event_Pending : out Boolean)
    with
-      SPARK_Mode      => $Complete_Proofs,
-      --  Workaround for [N306-030] "Accessing parts of volatile objects"
       Refined_Global  => Global_Events,
       Refined_Depends => (Event_Pending => (Subject, Global_Events))
    is
-      Bits       : SK.Word64;
+      Bits       : Bitfield64_Type;
       Unused_Pos : Event_Bit_Type;
    begin
       Search_Event_Words :
       for Event_Word in reverse Event_Word_Type loop
-         Bits := SK.Word64 (Global_Events (Subject) (Event_Word).Bits);
+         Bits := Global_Events (Subject) (Event_Word).Bits;
 
          pragma $Prove_Warnings
            (Off, "unused assignment to ""Unused_Pos""",
             Reason => "Only Event_Pending is needed");
          Find_Highest_Bit_Set
-           (Field => Bits,
+           (Field => SK.Word64 (Bits),
             Found => Event_Pending,
             Pos   => Unused_Pos);
          pragma $Prove_Warnings (On, "unused assignment to ""Unused_Pos""");

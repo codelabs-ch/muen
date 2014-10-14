@@ -85,6 +85,28 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Clear event at given bit position in global events array.
+   procedure Atomic_Event_Clear (Event_Bit_Pos : Event_Pos_Type)
+   with
+      Global  => (In_Out => Global_Events),
+      Depends => (Global_Events =>+ Event_Bit_Pos);
+
+   procedure Atomic_Event_Clear (Event_Bit_Pos : Event_Pos_Type)
+   with
+      SPARK_Mode => Off
+   is
+   begin
+      System.Machine_Code.Asm
+        (Template => "lock btr %0, (%1)",
+         Inputs   =>
+           (Word64'Asm_Input ("r", Word64 (Event_Bit_Pos)),
+            System.Address'Asm_Input ("r", Global_Events'Address)),
+         Clobber  => "memory",
+         Volatile => True);
+   end Atomic_Event_Clear;
+
+   -------------------------------------------------------------------------
+
    --  Set event at given bit position in global events array.
    procedure Atomic_Event_Set (Event_Bit_Pos : Event_Pos_Type)
    with

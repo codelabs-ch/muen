@@ -155,12 +155,11 @@ is
 
    procedure Process (Halt : out Boolean)
    is
-      Info   : IO_Info_Type;
-      Exit_Q : constant SK.Word64 := State.Exit_Qualification;
+      Exit_Q : constant SK.Word64    := State.Exit_Qualification;
+      Info   : constant IO_Info_Type := To_IO_Info (Qualification => Exit_Q);
+
    begin
       Halt := False;
-
-      Info := To_IO_Info (Qualification => Exit_Q);
 
       if Info.String_Instr or Info.REP_Prefixed then
          pragma Debug

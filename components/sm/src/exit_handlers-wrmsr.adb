@@ -20,8 +20,6 @@ with SK.Constants;
 
 with Subject.Text_IO;
 
-with Subject_Info;
-
 package body Exit_Handlers.WRMSR
 is
 

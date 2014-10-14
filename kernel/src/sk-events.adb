@@ -36,12 +36,10 @@ is
    type Event_Pos_Type is range
      0 .. Event_Count * (Skp.Subject_Id_Type'Last + 1) - 1;
 
-   type Bitfield64_Type is mod 2 ** Bits_In_Word
-   with
-       Atomic;
+   type Bitfield64_Type is mod 2 ** Bits_In_Word;
 
    type Atomic64_Type is record
-      Bits : Bitfield64_Type;
+      Bits : Bitfield64_Type with Atomic;
    end record
    with
        Atomic,

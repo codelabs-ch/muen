@@ -22,6 +22,8 @@ with SK;
 
 with Debug_Ops;
 
+with Types;
+
 package body Exit_Handlers.IO_Instruction
 is
 
@@ -54,7 +56,7 @@ is
       String_Instr : Boolean;
       REP_Prefixed : Boolean;
       Op_Encoding  : Operand_Encoding_Type;
-      Reserved     : Bit_Array (1 .. 9);
+      Reserved     : Types.Bit_Array (1 .. 9);
       Port_Number  : SK.Word16;
    end record
      with Size => 64;

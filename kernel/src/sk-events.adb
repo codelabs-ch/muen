@@ -185,23 +185,21 @@ is
       Found   : out Boolean;
       Event   : out SK.Byte)
    with
-      SPARK_Mode      => Off,
-      --  Workaround for [N306-030] "Accessing parts of volatile objects"
       Refined_Global  => (In_Out => Global_Events),
       Refined_Depends => ((Event, Found, Global_Events) =>
                               (Global_Events, Subject))
    is
-      Bits        : SK.Word64;
+      Bits        : Bitfield64_Type;
       Bit_In_Word : Event_Bit_Type;
    begin
       Event := 0;
 
       Search_Event_Words :
       for Event_Word in reverse Event_Word_Type loop
-         Bits := SK.Word64 (Global_Events (Subject) (Event_Word).Bits);
+         Bits := Global_Events (Subject) (Event_Word).Bits;
 
          Find_Highest_Bit_Set
-           (Field => Bits,
+           (Field => SK.Word64 (Bits),
             Found => Found,
             Pos   => Bit_In_Word);
 

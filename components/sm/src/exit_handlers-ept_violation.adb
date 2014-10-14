@@ -78,8 +78,13 @@ is
    is
       Exit_Q : constant SK.Word64 := Subject_Info.State.Exit_Qualification;
       GPA    : constant SK.Word64 := State.Guest_Phys_Addr;
-      Info   : constant EPTV_Info_Type
+
+      pragma $Prove_Warnings
+        (Off, "statement has no effect",
+         Reason => "Spurious warning with gnatprove GPL 2014");
+      Info : constant EPTV_Info_Type
         := To_EPTV_Info (Qualification => Exit_Q);
+      pragma $Prove_Warnings (On, "statement has no effect");
    begin
       Halt := True;
 

@@ -108,14 +108,18 @@ is
 
    procedure Process (Halt : out Boolean)
    is
-      Info       : CR_Info_Type;
       CR0        : SK.Word64;
       Exit_Q     : constant SK.Word64 := State.Exit_Qualification;
       SHADOW_CR0 : constant SK.Word64 := State.Regs.RAX;
+
+      pragma $Prove_Warnings
+        (Off, "statement has no effect",
+         Reason => "Spurious warning with gnatprove GPL 2014");
+      Info : constant CR_Info_Type
+        := To_CR_Info (Qualification => Exit_Q);
+      pragma $Prove_Warnings (On, "statement has no effect");
    begin
       Halt := False;
-
-      Info := To_CR_Info (Qualification => Exit_Q);
 
       if Info.CR_Access = MOV_To_CR then
          if Info.CR_Number = 0 then

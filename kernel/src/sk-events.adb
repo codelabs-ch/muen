@@ -33,6 +33,9 @@ is
 
    type Event_Bit_Type is range 0 .. (Bits_In_Word - 1);
 
+   type Event_Pos_Type is range
+     0 .. Event_Count * (Skp.Subject_Id_Type'Last + 1) - 1;
+
    type Bitfield64_Type is mod 2 ** Bits_In_Word
    with
        Atomic;
@@ -103,6 +106,28 @@ is
          Clobber  => "memory",
          Volatile => True);
    end Atomic_Bit_Clear;
+
+   -------------------------------------------------------------------------
+
+   --  Set event at given bit position in global events array.
+   procedure Atomic_Event_Set (Event_Bit_Pos : Event_Pos_Type)
+   with
+      Global  => (In_Out => Global_Events),
+      Depends => (Global_Events =>+ Event_Bit_Pos);
+
+   procedure Atomic_Event_Set (Event_Bit_Pos : Event_Pos_Type)
+   with
+      SPARK_Mode => Off
+   is
+   begin
+      System.Machine_Code.Asm
+        (Template => "lock bts %0, (%1)",
+         Inputs   =>
+           (Word64'Asm_Input ("r", Word64 (Event_Bit_Pos)),
+            System.Address'Asm_Input ("r", Global_Events'Address)),
+         Clobber  => "memory",
+         Volatile => True);
+   end Atomic_Event_Set;
 
    -------------------------------------------------------------------------
 

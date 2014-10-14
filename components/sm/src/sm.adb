@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
+
 with SK.CPU;
 with SK.Hypercall;
 with SK.Constants;
@@ -39,6 +41,9 @@ with Debug_Ops;
 pragma Unreferenced (Interrupt_Handler);
 
 procedure Sm
+with
+   Global => (In_Out => (Exit_Handlers.RDTSC.State, Subject_Info.State,
+                         Interrupts.State, X86_64.State))
 is
    use type SK.Word64;
    use Subject_Info;

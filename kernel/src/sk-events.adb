@@ -166,18 +166,13 @@ is
      (Subject : Skp.Subject_Id_Type;
       Event   : SK.Byte)
    with
-      SPARK_Mode      => Off,
-      --  Workaround for [N306-030] "Accessing parts of volatile objects"
       Refined_Global  => (In_Out => Global_Events),
       Refined_Depends => (Global_Events =>+ (Event, Subject))
    is
-      Event_Word : Event_Word_Type;
-      Event_Bit  : Event_Bit_Type;
+      Pos : Event_Pos_Type;
    begin
-      Event_Word := Event_Word_Type (Event / Bits_In_Word);
-      Event_Bit  := Event_Bit_Type (Event mod Bits_In_Word);
-      Atomic_Bit_Set (Field => Global_Events (Subject) (Event_Word),
-                      Pos   => Event_Bit);
+      Pos := Event_Count * Event_Pos_Type (Subject) + Event_Pos_Type (Event);
+      Atomic_Event_Set (Event_Bit_Pos => Pos);
    end Insert_Event;
 
    -------------------------------------------------------------------------

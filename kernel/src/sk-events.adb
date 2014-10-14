@@ -61,30 +61,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Atomic_Bit_Clear
-     (Field : in out Atomic64_Type;
-      Pos   :        Event_Bit_Type)
-   with
-      Depends => (Field =>+ Pos);
-
-   procedure Atomic_Bit_Clear
-     (Field : in out Atomic64_Type;
-      Pos   :        Event_Bit_Type)
-   with
-      SPARK_Mode => Off
-   is
-   begin
-      System.Machine_Code.Asm
-        (Template => "lock btr %0, (%1)",
-         Inputs   =>
-           (Word64'Asm_Input ("r", Word64 (Pos)),
-            System.Address'Asm_Input ("r", Field.Bits'Address)),
-         Clobber  => "memory",
-         Volatile => True);
-   end Atomic_Bit_Clear;
-
-   -------------------------------------------------------------------------
-
    --  Clear event at given bit position in global events array.
    procedure Atomic_Event_Clear (Event_Bit_Pos : Event_Pos_Type)
    with

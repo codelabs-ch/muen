@@ -25,11 +25,16 @@ is
    pragma $Prove_Warnings
      (Off, "subprogram ""Handle_Interrupt"" has no effect",
       Reason => "Only used to wakeup subject");
+   pragma $Prove_Warnings
+     (Off, "unused variable ""Vector""",
+      Reason => "Vector variable is unused");
    procedure Handle_Interrupt (Vector : SK.Byte)
      with
        Export,
        Convention => C,
        Link_Name  => "dispatch_interrupt";
+   pragma $Prove_Warnings
+     (On, "unused variable ""Vector""");
    pragma $Prove_Warnings
      (On, "subprogram ""Handle_Interrupt"" has no effect");
 

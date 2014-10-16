@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -486,16 +486,14 @@ is
          MP.Barrier          =>+ (CPU_Global.State, Current_Major,
                                   X86_64.State),
          (Subjects.State,
-          VTd.State)         =>+ (CPU_Global.State, Current_Major,
-                                  Subjects.State, Subject_Registers,
-                                  X86_64.State),
+          VTd.State)         =>+ (CPU_Global.State, Subjects.State,
+                                  Subject_Registers, X86_64.State),
          X86_64.State        =>+ (CPU_Global.State, Current_Major,
                                   Events.State, New_Major, Subjects.State,
                                   Subject_Registers))
    is
       Exit_Status     : SK.Word64;
       Current_Subject : Skp.Subject_Id_Type;
-      Current_Minor   : CPU_Global.Active_Minor_Frame_Type;
 
       ----------------------------------------------------------------------
 
@@ -514,14 +512,7 @@ is
          CPU.Panic;
       end Panic_Exit_Failure;
    begin
-      pragma $Prove_Warnings (Off, "statement has no effect",
-         Reason => "False positive");
-      Current_Minor := CPU_Global.Get_Current_Minor_Frame;
-      pragma $Prove_Warnings (On, "statement has no effect");
-
-      Current_Subject := CPU_Global.Get_Minor_Frame
-        (Major_Id => Current_Major,
-         Minor_Id => Current_Minor.Minor_Id).Subject_Id;
+      Current_Subject := CPU_Global.Get_Current_Minor_Frame.Subject_Id;
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => Exit_Status);

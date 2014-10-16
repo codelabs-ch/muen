@@ -73,7 +73,7 @@ is
         State               =>+ (CPU_Global.State, Tau0_Kernel_Interface,
                                  X86_64.State),
        (Subjects.State,
-        VTd.State)          =>+ (CPU_Global.State, State, Subjects.State,
+        VTd.State)          =>+ (CPU_Global.State, Subjects.State,
                                  Subject_Registers, X86_64.State),
         X86_64.State        =>+ (CPU_Global.State, Events.State, State,
                                  Subjects.State, Subject_Registers,

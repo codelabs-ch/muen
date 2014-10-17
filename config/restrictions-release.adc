@@ -1,3 +1,4 @@
+pragma Restrictions (No_Exceptions);  --  Workaround for [NA16-048]
 pragma Check_Policy (Debug => Disable);
 pragma Warnings (Off, "unit ""SK.Version"" is not referenced");
 

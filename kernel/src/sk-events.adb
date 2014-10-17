@@ -144,6 +144,9 @@ is
       Pos : Event_Pos_Type;
    begin
       Pos := Event_Count * Event_Pos_Type (Subject) + Event_Pos_Type (Event);
+      pragma Assert (Natural (Pos) >= Event_Count * Subject and
+                       Natural (Pos) < Event_Count * Subject + Event_Count,
+                     "Events of unrelated subject changed");
       Atomic_Event_Set (Event_Bit_Pos => Pos);
    end Insert_Event;
 

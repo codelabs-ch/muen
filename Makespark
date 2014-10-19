@@ -2,11 +2,12 @@ BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
 
 SPARK_OPTS =             \
 	--warnings=error \
+	--report=all     \
 	-f               \
 	--proof=per_path \
 	--timeout=10     \
 	-Xbuild=prove    \
-	-j$(NUM_CPUS)    \
+	-j$(NUM_CPUS)
 
 ALL = $(OBJ_DIR)/$(PACKAGE)
 

@@ -60,7 +60,8 @@ project Kernel is
             "-gnateDProve_Warnings=Warnings",
             "-gnateDDebug_Warnings=Debug",
             "-gnateDRelease_Warnings=Warnings");
-         Extra_Warning_Switches := Shared.Prove_Warning_Switches;
+         Extra_Warning_Switches := Shared.Prove_Warning_Switches
+           & ("-gnat-p");  --  Workaround for [NA16-052]
    end case;
 
    case Proof_Mode is

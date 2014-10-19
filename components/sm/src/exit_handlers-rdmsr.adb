@@ -35,7 +35,7 @@ is
       RAX : constant SK.Word64 := State.Regs.RAX;
       RCX : constant SK.Word64 := State.Regs.RCX;
       RDX : constant SK.Word64 := State.Regs.RDX;
-      MSR : constant SK.Word32 := SK.Word32 (RCX);
+      MSR : constant SK.Word32 := SK.Word32'Mod (RCX);
    begin
       Halt := False;
 

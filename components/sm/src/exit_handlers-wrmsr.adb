@@ -33,7 +33,7 @@ is
       use type SK.Word64;
 
       RCX : constant SK.Word64 := State.Regs.RCX;
-      MSR : constant SK.Word32 := SK.Word32 (RCX);
+      MSR : constant SK.Word32 := SK.Word32'Mod (RCX);
    begin
       Halt := False;
 

@@ -68,22 +68,38 @@ is
    --  processors is not equal the CPU ID acquired on startup.
    procedure Update_IRT_Destinations
    with
-      Global  => (Input => CPU_Registry.State, In_Out => IRT),
-      Depends => (IRT =>+ CPU_Registry.State)
+      Global  => (Input => CPU_Registry.State, In_Out => (IRT, X86_64.State)),
+      Depends => (IRT          =>+ CPU_Registry.State,
+                  X86_64.State =>+ (IRT, CPU_Registry.State))
    is
       use type Types.Bit_Type;
 
       IRTE    : Types.IR_Entry_Type;
+      Dest_ID : SK.Word32;
       APIC_ID : SK.Word32;
    begin
       for I in IRT_Range loop
          IRTE := IRT (I);
 
          if IRTE.Present = 1 then
+            Dest_ID := IRTE.DST;
+            if Dest_ID > SK.Word32 (Skp.CPU_Range'Last) then
+               pragma Debug
+                 (KC.Put_String (Item => "Invalid destination ID "));
+               pragma Debug (KC.Put_Word32 (Item => Dest_ID));
+               pragma Debug (KC.Put_String (Item => " in VT-d IRT entry "));
+               pragma Debug (KC.Put_Byte   (Item => SK.Byte (I)));
+               pragma Debug (KC.New_Line);
+
+               pragma Assume (False);  --  Workaround for No_Return: Pre=>False
+               if True then  --  Workaround for No_Return placement limitation
+                  CPU.Panic;
+               end if;
+            end if;
+
             APIC_ID := SK.Word32
               (CPU_Registry.Get_APIC_ID
-                 (CPU_ID => Skp.CPU_Range
-                      (IRTE.DST)));
+                 (CPU_ID => Skp.CPU_Range (Dest_ID)));
 
             if IRTE.DST /= APIC_ID then
                IRTE.DST := APIC_ID;
@@ -548,8 +564,9 @@ is
       SPARK_Mode      => $Complete_Proofs,  -- [N722-005]
       Refined_Global  => (Input  => CPU_Registry.State,
                           In_Out => (X86_64.State, IOMMUs, IRT)),
-      Refined_Depends => ((X86_64.State, IOMMUs) =>+ IOMMUs,
-                          IRT =>+ (IOMMUs, CPU_Registry.State))
+      Refined_Depends =>
+        (IOMMUs              =>+ null,
+         (IRT, X86_64.State) =>+ (IRT, IOMMUs, CPU_Registry.State))
    is
       Needed_Caps_Present, Status : Boolean;
    begin

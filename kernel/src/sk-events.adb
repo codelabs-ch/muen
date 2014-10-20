@@ -192,6 +192,7 @@ is
    is
       Bits        : Bitfield64_Type;
       Bit_In_Word : Event_Bit_Type;
+      Pos         : Event_Pos_Type;
    begin
       Event := 0;
 
@@ -207,9 +208,13 @@ is
          if Found then
             Event := SK.Byte (Event_Word) * SK.Byte (Bits_In_Word)
               + SK.Byte (Bit_In_Word);
-            Atomic_Event_Clear
-              (Event_Bit_Pos => Event_Count * Event_Pos_Type
-                 (Subject) + Event_Pos_Type (Event));
+            Pos := Event_Count * Event_Pos_Type
+              (Subject) + Event_Pos_Type (Event);
+            pragma Assert
+              (Natural (Pos) >= Event_Count * Subject and then
+               Natural (Pos) <  Event_Count * Subject + Event_Count,
+               "Events of unrelated subject consumed");
+            Atomic_Event_Clear (Event_Bit_Pos => Pos);
             exit Search_Event_Words;
          end if;
       end loop Search_Event_Words;

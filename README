@@ -20,10 +20,13 @@ The covert channel problem -- largely ignored by other platforms -- is
 addressed explicitly by these kernels. SKs are generally more static and
 smaller than dynamic microkernels, which minimizes the possibility of kernel
 failure, enables the application of formal verification techniques and the
-mitigation of covert channels. Muen uses Intel's hardware-assisted
-virtualization technology VT-x as core mechanism to separate components. The
-kernel executes in VMX root mode, while user components, so called 'subjects',
-run in VMX non-root mode.
+mitigation of covert channels.
+
+Muen uses Intel's hardware-assisted virtualization technology VT-x as core
+mechanism to separate components. The kernel executes in VMX root mode, while
+user components, so called 'subjects', run in VMX non-root mode. Hardware
+pass-through is realized using Intel's VT-d DMA and interrupt remapping
+technology. This enables the secure assignment of PCI devices to subjects.
 
 NOTE: Muen is currently a prototype implementation. We do not yet consider it
       to be fit for production use.

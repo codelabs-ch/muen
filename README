@@ -247,7 +247,7 @@ References
 - [[[mboot]]] Multiboot Specification, http://www.gnu.org/software/grub/manual/multiboot/
 - [[[bochs]]] Bochs IA-32 Emulator, http://bochs.sourceforge.net/
 - [[[ipxe]]]  iPXE boot firmware, http://ipxe.org/
-- [[[amt]]]   Intel AMT SoL client + tools, http://www.kraxel.org/cgit/amtterm/
+- [[[amt]]]   Intel AMT SoL client + tools, https://www.kraxel.org/cgit/amtterm/
 - [[[libre]]] AdaCore Libre, http://libre.adacore.com/download/
 
 

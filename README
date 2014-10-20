@@ -191,7 +191,7 @@ number). *All existing data will be erased*.
 If your hardware differs from the default configuration, additionally specify
 the `HARDWARE` variable:
 
-  $ make iso HARDWARE=lenovo-t430s
+  $ make iso HARDWARE=intel-nuc-dc53427hye
 
 Network Boot
 ^^^^^^^^^^^^
@@ -238,7 +238,7 @@ To view the output of the Muen kernel debug console use the command:
 If your hardware differs from the default configuration, additionally specify
 the `HARDWARE` variable:
 
-  $ make deploy HARDWARE=lenovo-t430s
+  $ make deploy HARDWARE=intel-nuc-dc53427hye
 
 References
 ----------

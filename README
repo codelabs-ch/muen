@@ -25,7 +25,7 @@ mitigation of covert channels.
 Muen uses Intel's hardware-assisted virtualization technology VT-x as core
 mechanism to separate components. The kernel executes in VMX root mode, while
 user components, so called 'subjects', run in VMX non-root mode. Hardware
-pass-through is realized using Intel's VT-d DMA and interrupt remapping
+passthrough is realized using Intel's VT-d DMA and interrupt remapping
 technology. This enables the secure assignment of PCI devices to subjects.
 
 NOTE: Muen is currently a prototype implementation. We do not yet consider it
@@ -34,17 +34,19 @@ NOTE: Muen is currently a prototype implementation. We do not yet consider it
 
 Features
 --------
-- Minimal SK for the Intel x86/64 architecture written in the SPARK language
+- Minimal SK for the Intel x86/64 architecture written in SPARK 2014
 - Full availability of source code and documentation
 - Proof of absence of runtime errors
 - Multicore support
 - Nested paging (EPT) and memory typing (PAT)
 - Fixed cyclic scheduling using Intel VMX preemption timer
 - Static assignment of resources according to system policy
+- PCI device passthrough using Intel VT-d (DMAR and IR)
 - Event mechanism
 - Shared memory channels for inter-subject communication
 - Minimal Zero-Footprint Run-Time (RTS)
 - Support for 64-bit native and 32/64-bit VM subjects
+- Subject Monitor written in SPARK 2014
 
 
 Resources

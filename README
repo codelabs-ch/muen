@@ -20,10 +20,13 @@ The covert channel problem -- largely ignored by other platforms -- is
 addressed explicitly by these kernels. SKs are generally more static and
 smaller than dynamic microkernels, which minimizes the possibility of kernel
 failure, enables the application of formal verification techniques and the
-mitigation of covert channels. Muen uses Intel's hardware-assisted
-virtualization technology VT-x as core mechanism to separate components. The
-kernel executes in VMX root mode, while user components, so called 'subjects',
-run in VMX non-root mode.
+mitigation of covert channels.
+
+Muen uses Intel's hardware-assisted virtualization technology VT-x as core
+mechanism to separate components. The kernel executes in VMX root mode, while
+user components, so called 'subjects', run in VMX non-root mode. Hardware
+passthrough is realized using Intel's VT-d DMA and interrupt remapping
+technology. This enables the secure assignment of PCI devices to subjects.
 
 NOTE: Muen is currently a prototype implementation. We do not yet consider it
       to be fit for production use.
@@ -31,17 +34,19 @@ NOTE: Muen is currently a prototype implementation. We do not yet consider it
 
 Features
 --------
-- Minimal SK for the Intel x86/64 architecture written in the SPARK language
+- Minimal SK for the Intel x86/64 architecture written in SPARK 2014
 - Full availability of source code and documentation
 - Proof of absence of runtime errors
 - Multicore support
 - Nested paging (EPT) and memory typing (PAT)
 - Fixed cyclic scheduling using Intel VMX preemption timer
 - Static assignment of resources according to system policy
+- PCI device passthrough using Intel VT-d (DMAR and IR)
 - Event mechanism
 - Shared memory channels for inter-subject communication
 - Minimal Zero-Footprint Run-Time (RTS)
 - Support for 64-bit native and 32/64-bit VM subjects
+- Subject Monitor written in SPARK 2014
 
 
 Resources
@@ -77,7 +82,7 @@ Download
 --------
 The Muen sources are available through the following git repository:
 
-  $ git clone http://git.codelabs.ch/git/muen.git
+  $ git clone --recursive http://git.codelabs.ch/git/muen.git
 
 A browsable version of the repository is available here:
 
@@ -99,9 +104,9 @@ environment listed in the following table.
 |===================================================================
 | Operating system     | Debian GNU/Linux 7 (wheezy), x86_64
 | Ada compiler         | GNAT GPL 2014
-| GCC version          | 4.7.4 [TBD] for GNAT GPL 2014
+| GCC version          | 4.7.4 20140401 for GNAT GPL 2014
 | SPARK version        | GPL 2014
-| Emulator             | Bochs from svn (>= r12175)
+| Emulator             | Bochs (>= version 2.6.5)
 | Hardware             | Lenovo T430s with Intel Core i7 3520M
 | Intel AMT SoL client | amtterm (>= commit 0ece513...)
 |===================================================================
@@ -118,20 +123,18 @@ visible to the Muen build system (assuming that they are installed below
 
   $ export PATH=/opt/gnat/bin:/opt/spark/bin:$PATH
 
-Because the linker of GNAT GPL 2014 is not multiarch <<march>> aware, export
-the C run-time `LIBRARY_PATH`:
-
-  $ export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
-
 To build the Muen tools, RTS, kernel and example components on Debian wheezy
-change to the Muen source directory and issue the following commands:
+change to the Muen source directory and issue the following command:
 
-  $ git submodule init
-  $ git submodule update
   $ make
 
 This will create an image containing the example system which can be booted by
 any Multiboot <<mboot>> compliant bootloader.
+
+For non-multiarch <<march>> aware linkers (e.g. the one provided by GNAT Pro
+7.2.2), it is required to export the C run-time `LIBRARY_PATH`:
+
+  $ export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
 
 
 Deploy
@@ -145,13 +148,12 @@ To ease kernel development, the Muen project makes use of emulation by
 employing the Bochs IA-32 emulator <<bochs>>. Among many other features, Bochs
 has support for multiple processors, APIC emulation and VMX extensions.
 
-Muen needs a recent Bochs version from the project's subversion repository.
-Issue the following commands to checkout, build and install Bochs with
-`/usr/local` prefix:
+Issue the following commands to build and install Bochs with `/usr/local`
+prefix:
 
   $ sudo apt-get install g++ libsdl1.2-dev
-  $ svn checkout svn://svn.code.sf.net/p/bochs/code/trunk bochs-code
-  $ cd bochs-code/bochs
+  $ tar xfvz bochs-2.6.5.tar.gz
+  $ cd bochs-2.6.5
   $ ./configure           \
       --prefix=/usr/local \
       --enable-vmx=2      \
@@ -192,7 +194,7 @@ number). *All existing data will be erased*.
 If your hardware differs from the default configuration, additionally specify
 the `HARDWARE` variable:
 
-  $ make iso HARDWARE=lenovo-t430s
+  $ make iso HARDWARE=intel-nuc-dc53427hye
 
 Network Boot
 ^^^^^^^^^^^^
@@ -239,7 +241,7 @@ To view the output of the Muen kernel debug console use the command:
 If your hardware differs from the default configuration, additionally specify
 the `HARDWARE` variable:
 
-  $ make deploy HARDWARE=lenovo-t430s
+  $ make deploy HARDWARE=intel-nuc-dc53427hye
 
 References
 ----------
@@ -247,7 +249,7 @@ References
 - [[[mboot]]] Multiboot Specification, http://www.gnu.org/software/grub/manual/multiboot/
 - [[[bochs]]] Bochs IA-32 Emulator, http://bochs.sourceforge.net/
 - [[[ipxe]]]  iPXE boot firmware, http://ipxe.org/
-- [[[amt]]]   Intel AMT SoL client + tools, http://www.kraxel.org/cgit/amtterm/
+- [[[amt]]]   Intel AMT SoL client + tools, https://www.kraxel.org/cgit/amtterm/
 - [[[libre]]] AdaCore Libre, http://libre.adacore.com/download/
 
 

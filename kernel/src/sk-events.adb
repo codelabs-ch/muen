@@ -33,12 +33,13 @@ is
 
    type Event_Bit_Type is range 0 .. (Bits_In_Word - 1);
 
-   type Bitfield64_Type is mod 2 ** Bits_In_Word
-   with
-       Atomic;
+   type Event_Pos_Type is range
+     0 .. Event_Count * (Skp.Subject_Id_Type'Last + 1) - 1;
+
+   type Bitfield64_Type is mod 2 ** Bits_In_Word;
 
    type Atomic64_Type is record
-      Bits : Bitfield64_Type;
+      Bits : Bitfield64_Type with Atomic;
    end record
    with
        Atomic,
@@ -58,39 +59,13 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Atomic_Bit_Set
-     (Field : in out Atomic64_Type;
-      Pos   :        Event_Bit_Type)
+   --  Clear event at given bit position in global events array.
+   procedure Atomic_Event_Clear (Event_Bit_Pos : Event_Pos_Type)
    with
-      Depends => (Field =>+ Pos);
+      Global  => (In_Out => Global_Events),
+      Depends => (Global_Events =>+ Event_Bit_Pos);
 
-   procedure Atomic_Bit_Set
-     (Field : in out Atomic64_Type;
-      Pos   :        Event_Bit_Type)
-   with
-      SPARK_Mode => Off
-   is
-   begin
-      System.Machine_Code.Asm
-        (Template => "lock bts %0, (%1)",
-         Inputs   =>
-           (Word64'Asm_Input ("r", Word64 (Pos)),
-            System.Address'Asm_Input ("r", Field.Bits'Address)),
-         Clobber  => "memory",
-         Volatile => True);
-   end Atomic_Bit_Set;
-
-   -------------------------------------------------------------------------
-
-   procedure Atomic_Bit_Clear
-     (Field : in out Atomic64_Type;
-      Pos   :        Event_Bit_Type)
-   with
-      Depends => (Field =>+ Pos);
-
-   procedure Atomic_Bit_Clear
-     (Field : in out Atomic64_Type;
-      Pos   :        Event_Bit_Type)
+   procedure Atomic_Event_Clear (Event_Bit_Pos : Event_Pos_Type)
    with
       SPARK_Mode => Off
    is
@@ -98,11 +73,33 @@ is
       System.Machine_Code.Asm
         (Template => "lock btr %0, (%1)",
          Inputs   =>
-           (Word64'Asm_Input ("r", Word64 (Pos)),
-            System.Address'Asm_Input ("r", Field.Bits'Address)),
+           (Word64'Asm_Input ("r", Word64 (Event_Bit_Pos)),
+            System.Address'Asm_Input ("r", Global_Events'Address)),
          Clobber  => "memory",
          Volatile => True);
-   end Atomic_Bit_Clear;
+   end Atomic_Event_Clear;
+
+   -------------------------------------------------------------------------
+
+   --  Set event at given bit position in global events array.
+   procedure Atomic_Event_Set (Event_Bit_Pos : Event_Pos_Type)
+   with
+      Global  => (In_Out => Global_Events),
+      Depends => (Global_Events =>+ Event_Bit_Pos);
+
+   procedure Atomic_Event_Set (Event_Bit_Pos : Event_Pos_Type)
+   with
+      SPARK_Mode => Off
+   is
+   begin
+      System.Machine_Code.Asm
+        (Template => "lock bts %0, (%1)",
+         Inputs   =>
+           (Word64'Asm_Input ("r", Word64 (Event_Bit_Pos)),
+            System.Address'Asm_Input ("r", Global_Events'Address)),
+         Clobber  => "memory",
+         Volatile => True);
+   end Atomic_Event_Set;
 
    -------------------------------------------------------------------------
 
@@ -141,18 +138,16 @@ is
      (Subject : Skp.Subject_Id_Type;
       Event   : SK.Byte)
    with
-      SPARK_Mode      => Off,
-      --  Workaround for [N306-030] "Accessing parts of volatile objects"
       Refined_Global  => (In_Out => Global_Events),
       Refined_Depends => (Global_Events =>+ (Event, Subject))
    is
-      Event_Word : Event_Word_Type;
-      Event_Bit  : Event_Bit_Type;
+      Pos : Event_Pos_Type;
    begin
-      Event_Word := Event_Word_Type (Event / Bits_In_Word);
-      Event_Bit  := Event_Bit_Type (Event mod Bits_In_Word);
-      Atomic_Bit_Set (Field => Global_Events (Subject) (Event_Word),
-                      Pos   => Event_Bit);
+      Pos := Event_Count * Event_Pos_Type (Subject) + Event_Pos_Type (Event);
+      pragma Assert (Natural (Pos) >= Event_Count * Subject and
+                       Natural (Pos) < Event_Count * Subject + Event_Count,
+                     "Events of unrelated subject changed");
+      Atomic_Event_Set (Event_Bit_Pos => Pos);
    end Insert_Event;
 
    -------------------------------------------------------------------------
@@ -161,22 +156,24 @@ is
      (Subject       :     Skp.Subject_Id_Type;
       Event_Pending : out Boolean)
    with
-      SPARK_Mode      => Off,
-      --  Workaround for [N306-030] "Accessing parts of volatile objects"
       Refined_Global  => Global_Events,
       Refined_Depends => (Event_Pending => (Subject, Global_Events))
    is
-      Bits   : SK.Word64;
-      Bitpos : Event_Bit_Type;
+      Bits       : Bitfield64_Type;
+      Unused_Pos : Event_Bit_Type;
    begin
       Search_Event_Words :
       for Event_Word in reverse Event_Word_Type loop
-         Bits := SK.Word64 (Global_Events (Subject) (Event_Word).Bits);
+         Bits := Global_Events (Subject) (Event_Word).Bits;
 
+         pragma $Prove_Warnings
+           (Off, "unused assignment to ""Unused_Pos""",
+            Reason => "Only Event_Pending is needed");
          Find_Highest_Bit_Set
-           (Field => Bits,
+           (Field => SK.Word64 (Bits),
             Found => Event_Pending,
-            Pos   => Bitpos);
+            Pos   => Unused_Pos);
+         pragma $Prove_Warnings (On, "unused assignment to ""Unused_Pos""");
          exit Search_Event_Words when Event_Pending;
       end loop Search_Event_Words;
 
@@ -189,31 +186,35 @@ is
       Found   : out Boolean;
       Event   : out SK.Byte)
    with
-      SPARK_Mode      => Off,
-      --  Workaround for [N306-030] "Accessing parts of volatile objects"
       Refined_Global  => (In_Out => Global_Events),
       Refined_Depends => ((Event, Found, Global_Events) =>
                               (Global_Events, Subject))
    is
-      Bits        : SK.Word64;
+      Bits        : Bitfield64_Type;
       Bit_In_Word : Event_Bit_Type;
+      Pos         : Event_Pos_Type;
    begin
       Event := 0;
 
       Search_Event_Words :
       for Event_Word in reverse Event_Word_Type loop
-         Bits := SK.Word64 (Global_Events (Subject) (Event_Word).Bits);
+         Bits := Global_Events (Subject) (Event_Word).Bits;
 
          Find_Highest_Bit_Set
-           (Field => Bits,
+           (Field => SK.Word64 (Bits),
             Found => Found,
             Pos   => Bit_In_Word);
 
          if Found then
-            Atomic_Bit_Clear (Field => Global_Events (Subject) (Event_Word),
-                              Pos   => Bit_In_Word);
             Event := SK.Byte (Event_Word) * SK.Byte (Bits_In_Word)
               + SK.Byte (Bit_In_Word);
+            Pos := Event_Count * Event_Pos_Type
+              (Subject) + Event_Pos_Type (Event);
+            pragma Assert
+              (Natural (Pos) >= Event_Count * Subject and then
+               Natural (Pos) <  Event_Count * Subject + Event_Count,
+               "Events of unrelated subject consumed");
+            Atomic_Event_Clear (Event_Bit_Pos => Pos);
             exit Search_Event_Words;
          end if;
       end loop Search_Event_Words;

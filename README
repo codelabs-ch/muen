@@ -77,7 +77,7 @@ Download
 --------
 The Muen sources are available through the following git repository:
 
-  $ git clone http://git.codelabs.ch/git/muen.git
+  $ git clone --recursive http://git.codelabs.ch/git/muen.git
 
 A browsable version of the repository is available here:
 
@@ -124,10 +124,8 @@ the C run-time `LIBRARY_PATH`:
   $ export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
 
 To build the Muen tools, RTS, kernel and example components on Debian wheezy
-change to the Muen source directory and issue the following commands:
+change to the Muen source directory and issue the following command:
 
-  $ git submodule init
-  $ git submodule update
   $ make
 
 This will create an image containing the example system which can be booted by

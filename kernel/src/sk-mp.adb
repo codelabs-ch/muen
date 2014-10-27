@@ -73,8 +73,20 @@ is
          Sense         := CPU_Sense (CPU_Global.CPU_ID);
       else
          while Sense /= CPU_Sense (CPU_Global.CPU_ID) loop
-            System.Machine_Code.Asm (Template => "pause",
-                                     Volatile => True);
+            System.Machine_Code.Asm
+              (Template => "monitor",
+               Inputs   => (System.Address'Asm_Input ("a", Sense'Address),
+                            SK.Word32'Asm_Input ("c", 0),
+                            SK.Word32'Asm_Input ("d", 0)),
+               Volatile => True);
+
+            if Sense /= CPU_Sense (CPU_Global.CPU_ID) then
+               System.Machine_Code.Asm
+                 (Template => "mwait",
+                  Inputs   => (SK.Word32'Asm_Input ("a", 0),
+                               SK.Word32'Asm_Input ("c", 0)),
+                  Volatile => True);
+            end if;
          end loop;
       end if;
    end Wait_For_All;

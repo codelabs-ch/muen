@@ -20,8 +20,6 @@ with System.Machine_Code;
 
 with Skp;
 
-with SK.CPU_Global;
-
 package body SK.MP
 with
    Refined_State => (Barrier => (Sense, CPU_Sense, Barrier_Count))
@@ -59,20 +57,20 @@ is
    procedure Wait_For_All
    with
       SPARK_Mode      => Off,
-      Refined_Global  => (In_Out => (Barrier_Count, CPU_Sense, Sense)),
-      Refined_Depends => ((Barrier_Count, Sense) =>+ Barrier_Count,
-                          CPU_Sense              =>+ Sense)
+      Refined_Global  => (In_Out => (Barrier_Count, Sense)),
+      Refined_Depends => ((Barrier_Count, Sense) =>+ Barrier_Count)
    is
-      Count : SK.Byte;
+      Count     : SK.Byte;
+      Cur_Sense : Boolean;
    begin
-      CPU_Sense (CPU_Global.CPU_ID) := not Sense;
+      Cur_Sense := not Sense;
       Get_And_Increment_Barrier (Count => Count);
 
       if Count = SK.Byte (Skp.CPU_Range'Last) then
          Barrier_Count := 0;
-         Sense         := CPU_Sense (CPU_Global.CPU_ID);
+         Sense         := Cur_Sense;
       else
-         while Sense /= CPU_Sense (CPU_Global.CPU_ID) loop
+         while Sense /= Cur_Sense loop
             System.Machine_Code.Asm (Template => "pause",
                                      Volatile => True);
          end loop;

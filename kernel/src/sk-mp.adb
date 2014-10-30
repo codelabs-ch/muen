@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp;
+
 with SK.Barriers;
 
 package body SK.MP
@@ -42,4 +44,8 @@ is
       Barriers.Wait (All_Barrier);
    end Wait_For_All;
 
+begin
+   Barriers.Set_Size
+     (All_Barrier,                    --  Workaround for [NA10-010]
+      SK.Byte (Skp.CPU_Range'Last));  --  (no named arguments)
 end SK.MP;

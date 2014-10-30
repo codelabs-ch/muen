@@ -72,7 +72,6 @@ is
 
    procedure Wait_For_All
    with
-      SPARK_Mode      => Off,
       Refined_Global  => (In_Out => All_Barrier),
       Refined_Depends => (All_Barrier =>+ null)
    is

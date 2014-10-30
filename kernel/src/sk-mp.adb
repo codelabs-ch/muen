@@ -83,8 +83,8 @@ is
       Barrier_Sense := All_Barrier.Sense;
       CPU_Sense     := not Barrier_Sense;
 
-      Get_And_Increment (Sense_Barrier => All_Barrier,
-                         Count         => Count);
+      Get_And_Increment (All_Barrier,  --  Workaround for [NA10-010]
+                         Count);       --  (no named arguments)
 
       if Count = SK.Byte (Skp.CPU_Range'Last) then
          All_Barrier.Wait_Count := 0;

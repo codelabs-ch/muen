@@ -25,6 +25,13 @@ with
    Refined_State => (Barrier => (Sense, Barrier_Count))
 is
 
+   type Sense_Barrier_Type is record
+      Sense      : Boolean := False with Atomic;
+      Wait_Count : SK.Byte := 0     with Atomic;
+   end record
+     with
+       Volatile;
+
    Sense         : Boolean := False;
    Barrier_Count : SK.Byte := 0
       with Atomic, Async_Readers, Async_Writers;

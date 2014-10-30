@@ -18,8 +18,6 @@
 
 with System.Machine_Code;
 
-with Skp;
-
 with SK.CPU;
 
 package body SK.Barriers
@@ -69,16 +67,18 @@ is
    procedure Wait (Barrier : in out Sense_Barrier_Type)
    is
       Count         : SK.Byte;
+      Barrier_Size  : SK.Byte;
       Barrier_Sense : Boolean;
       CPU_Sense     : Boolean;
    begin
+      Barrier_Size  := Barrier.Size;
       Barrier_Sense := Barrier.Sense;
       CPU_Sense     := not Barrier_Sense;
 
       Get_And_Increment (Barrier,  --  Workaround for [NA10-010]
                          Count);   --  (no named arguments)
 
-      if Count = SK.Byte (Skp.CPU_Range'Last) then
+      if Count = Barrier_Size then
          Barrier.Wait_Count := 0;
          Barrier.Sense      := CPU_Sense;
       else

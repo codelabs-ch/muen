@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,30 +16,22 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.Barriers;
-
-package body SK.MP
-with
-   Refined_State => (Barrier => All_Barrier)
+package SK.Barriers
 is
 
-   All_Barrier : Barriers.Sense_Barrier_Type
-     with
-       Async_Readers,
-       Async_Writers;
+   type Sense_Barrier_Type is private;
 
-   -------------------------------------------------------------------------
-
-   procedure Wait_For_All
+   --  Wait on barrier until it is released.
+   procedure Wait (Barrier : in out Sense_Barrier_Type)
    with
-      Refined_Global  => (In_Out => All_Barrier),
-      Refined_Depends => (All_Barrier =>+ null)
-   is
-   begin
+      Depends => (Barrier =>+ null);
 
-      --  Workaround for [NA10-010] (no named arguments)
+private
 
-      Barriers.Wait (All_Barrier);
-   end Wait_For_All;
+   type Sense_Barrier_Type is record
+      Sense      : Boolean := False with Atomic;
+      Wait_Count : SK.Byte := 0     with Atomic;
+   end record
+     with Volatile;
 
-end SK.MP;
+end SK.Barriers;

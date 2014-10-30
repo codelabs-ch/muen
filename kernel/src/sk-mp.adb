@@ -38,6 +38,30 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Atomically get and increment the wait count. Returns the current number
+   --  of CPUs blocked by the barrier.
+   procedure Get_And_Increment
+     (Sense_Barrier : in out Sense_Barrier_Type;
+      Count         :    out SK.Byte)
+   with
+      SPARK_Mode => Off,
+      Global     => (In_Out => Sense_Barrier),
+      Depends    => ((Sense_Barrier, Count) => Sense_Barrier)
+   is
+   begin
+      Count := 1;
+
+      System.Machine_Code.Asm
+        (Template => "lock xaddb %0, %1",
+         Inputs   => (SK.Byte'Asm_Input ("a", Count),
+                      SK.Byte'Asm_Input ("m", Sense_Barrier.Barrier_Count)),
+         Outputs  => (SK.Byte'Asm_Output ("=a", Count),
+                      SK.Byte'Asm_Output ("=m", Sense_Barrier.Barrier_Count)),
+         Volatile => True);
+   end Get_And_Increment;
+
+   -------------------------------------------------------------------------
+
    procedure Get_And_Increment_Barrier (Count : out SK.Byte)
    with
       SPARK_Mode => Off,

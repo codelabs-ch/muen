@@ -58,16 +58,16 @@ is
       Refined_Depends => ((Barrier_Count, Sense) =>+ Barrier_Count)
    is
       Count     : SK.Byte;
-      Cur_Sense : Boolean;
+      CPU_Sense : Boolean;
    begin
-      Cur_Sense := not Sense;
+      CPU_Sense := not Sense;
       Get_And_Increment_Barrier (Count => Count);
 
       if Count = SK.Byte (Skp.CPU_Range'Last) then
          Barrier_Count := 0;
-         Sense         := Cur_Sense;
+         Sense         := CPU_Sense;
       else
-         while Sense /= Cur_Sense loop
+         while Sense /= CPU_Sense loop
             System.Machine_Code.Asm (Template => "pause",
                                      Volatile => True);
          end loop;

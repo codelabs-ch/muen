@@ -47,9 +47,14 @@ is
      (Sense_Barrier : in out Sense_Barrier_Type;
       Count         :    out SK.Byte)
    with
-      SPARK_Mode => Off,
-      Global     => (In_Out => Sense_Barrier),
-      Depends    => ((Sense_Barrier, Count) => Sense_Barrier)
+      Global  => null,
+      Depends => ((Sense_Barrier, Count) => Sense_Barrier);
+
+   procedure Get_And_Increment
+     (Sense_Barrier : in out Sense_Barrier_Type;
+      Count         :    out SK.Byte)
+   with
+      SPARK_Mode => Off
    is
    begin
       Count := 1;

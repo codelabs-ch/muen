@@ -217,6 +217,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Pause
+   with
+      SPARK_Mode => Off
+   is
+   begin
+      System.Machine_Code.Asm
+        (Template => "pause",
+         Volatile => True);
+   end Pause;
+
+   -------------------------------------------------------------------------
+
    procedure Set_CR2 (Value : SK.Word64)
    with
       SPARK_Mode => Off

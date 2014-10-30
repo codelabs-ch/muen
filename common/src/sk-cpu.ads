@@ -67,6 +67,12 @@ is
      Depends => (X86_64.State =>+ Address),
      Inline_Always;
 
+   --  Spin Loop Hint.
+   procedure Pause
+   with
+      Global => null,
+      Inline_Always;
+
    --  Panic.
    procedure Panic
    with

@@ -20,6 +20,8 @@ with System.Machine_Code;
 
 with Skp;
 
+with SK.CPU;
+
 package body SK.MP
 with
    Refined_State => (Barrier => All_Barrier)
@@ -81,8 +83,7 @@ is
          All_Barrier.Sense      := CPU_Sense;
       else
          while All_Barrier.Sense /= CPU_Sense loop
-            System.Machine_Code.Asm (Template => "pause",
-                                     Volatile => True);
+            CPU.Pause;
          end loop;
       end if;
    end Wait_For_All;

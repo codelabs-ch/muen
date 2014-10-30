@@ -56,6 +56,16 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Set_Size
+     (Barrier : in out Sense_Barrier_Type;
+      Size    :        SK.Byte)
+   is
+   begin
+      Barrier.Size := Size;
+   end Set_Size;
+
+   -------------------------------------------------------------------------
+
    procedure Wait (Barrier : in out Sense_Barrier_Type)
    is
       Count         : SK.Byte;

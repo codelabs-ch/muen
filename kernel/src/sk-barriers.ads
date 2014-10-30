@@ -26,9 +26,18 @@ is
    with
       Depends => (Barrier =>+ null);
 
+   --  Set size of barrier to given value. The size of the barrier specifies
+   --  how many CPUs must wait on the barrier to be released.
+   procedure Set_Size
+     (Barrier : in out Sense_Barrier_Type;
+      Size    :        SK.Byte)
+   with
+      Depends => (Barrier =>+ Size);
+
 private
 
    type Sense_Barrier_Type is record
+      Size       : SK.Byte := 1     with Atomic;
       Sense      : Boolean := False with Atomic;
       Wait_Count : SK.Byte := 0     with Atomic;
    end record

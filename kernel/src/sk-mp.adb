@@ -22,7 +22,7 @@ with Skp;
 
 package body SK.MP
 with
-   Refined_State => (Barrier => (Sense, Barrier_Count))
+   Refined_State => (Barrier => All_Barrier)
 is
 
    type Sense_Barrier_Type is record
@@ -32,9 +32,10 @@ is
      with
        Volatile;
 
-   Sense         : Boolean := False;
-   Barrier_Count : SK.Byte := 0
-      with Atomic, Async_Readers, Async_Writers;
+   All_Barrier : Sense_Barrier_Type
+     with
+       Async_Readers,
+       Async_Writers;
 
    -------------------------------------------------------------------------
 
@@ -54,51 +55,32 @@ is
       System.Machine_Code.Asm
         (Template => "lock xaddb %0, %1",
          Inputs   => (SK.Byte'Asm_Input ("a", Count),
-                      SK.Byte'Asm_Input ("m", Sense_Barrier.Barrier_Count)),
+                      SK.Byte'Asm_Input ("m", Sense_Barrier.Wait_Count)),
          Outputs  => (SK.Byte'Asm_Output ("=a", Count),
-                      SK.Byte'Asm_Output ("=m", Sense_Barrier.Barrier_Count)),
+                      SK.Byte'Asm_Output ("=m", Sense_Barrier.Wait_Count)),
          Volatile => True);
    end Get_And_Increment;
-
-   -------------------------------------------------------------------------
-
-   procedure Get_And_Increment_Barrier (Count : out SK.Byte)
-   with
-      SPARK_Mode => Off,
-      Global     => (In_Out => Barrier_Count),
-      Depends    => ((Barrier_Count, Count) => Barrier_Count)
-   is
-   begin
-      Count := 1;
-
-      System.Machine_Code.Asm
-        (Template => "lock xaddb %0, %1",
-         Inputs   => (SK.Byte'Asm_Input ("a", Count),
-                      SK.Byte'Asm_Input ("m", Barrier_Count)),
-         Outputs  => (SK.Byte'Asm_Output ("=a", Count),
-                      SK.Byte'Asm_Output ("=m", Barrier_Count)),
-         Volatile => True);
-   end Get_And_Increment_Barrier;
 
    -------------------------------------------------------------------------
 
    procedure Wait_For_All
    with
       SPARK_Mode      => Off,
-      Refined_Global  => (In_Out => (Barrier_Count, Sense)),
-      Refined_Depends => ((Barrier_Count, Sense) =>+ Barrier_Count)
+      Refined_Global  => (In_Out => All_Barrier),
+      Refined_Depends => (All_Barrier =>+ null)
    is
       Count     : SK.Byte;
       CPU_Sense : Boolean;
    begin
-      CPU_Sense := not Sense;
-      Get_And_Increment_Barrier (Count => Count);
+      CPU_Sense := not All_Barrier.Sense;
+      Get_And_Increment (Sense_Barrier => All_Barrier,
+                         Count         => Count);
 
       if Count = SK.Byte (Skp.CPU_Range'Last) then
-         Barrier_Count := 0;
-         Sense         := CPU_Sense;
+         All_Barrier.Wait_Count := 0;
+         All_Barrier.Sense      := CPU_Sense;
       else
-         while Sense /= CPU_Sense loop
+         while All_Barrier.Sense /= CPU_Sense loop
             System.Machine_Code.Asm (Template => "pause",
                                      Volatile => True);
          end loop;

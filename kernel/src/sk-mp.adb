@@ -22,14 +22,11 @@ with Skp;
 
 package body SK.MP
 with
-   Refined_State => (Barrier => (Sense, CPU_Sense, Barrier_Count))
+   Refined_State => (Barrier => (Sense, Barrier_Count))
 is
 
-   type Sense_Array is array (Skp.CPU_Range) of Boolean;
-
-   Sense         : Boolean     := False;
-   CPU_Sense     : Sense_Array := Sense_Array'(others => True);
-   Barrier_Count : SK.Byte     := 0
+   Sense         : Boolean := False;
+   Barrier_Count : SK.Byte := 0
       with Atomic, Async_Readers, Async_Writers;
 
    -------------------------------------------------------------------------

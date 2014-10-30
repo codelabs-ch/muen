@@ -76,10 +76,13 @@ is
       Refined_Global  => (In_Out => All_Barrier),
       Refined_Depends => (All_Barrier =>+ null)
    is
-      Count     : SK.Byte;
-      CPU_Sense : Boolean;
+      Count         : SK.Byte;
+      Barrier_Sense : Boolean;
+      CPU_Sense     : Boolean;
    begin
-      CPU_Sense := not All_Barrier.Sense;
+      Barrier_Sense := All_Barrier.Sense;
+      CPU_Sense     := not Barrier_Sense;
+
       Get_And_Increment (Sense_Barrier => All_Barrier,
                          Count         => Count);
 
@@ -87,8 +90,17 @@ is
          All_Barrier.Wait_Count := 0;
          All_Barrier.Sense      := CPU_Sense;
       else
-         while All_Barrier.Sense /= CPU_Sense loop
+         loop
+            pragma $Prove_Warnings (Off, "unused assignment",
+                                    Reason => "Sense is switched by last CPU");
+            Barrier_Sense := All_Barrier.Sense;
+            pragma $Prove_Warnings (On, "unused assignment");
+
+            pragma $Prove_Warnings (Off, "statement has no effect",
+                                    Reason => "Passing time by busy-looping");
+            exit when Barrier_Sense = CPU_Sense;
             CPU.Pause;
+            pragma $Prove_Warnings (On, "statement has no effect");
          end loop;
       end if;
    end Wait_For_All;

@@ -8,12 +8,6 @@
 		<xs:attribute name="tickRate" type="xs:positiveInteger" use="required"/>
 	</xs:complexType>
 
-	<xs:complexType name="majorFrameType">
-		<xs:sequence>
-			<xs:element name="cpu" type="cpuType" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
 	<xs:complexType name="cpuType">
 		<xs:sequence>
 			<xs:element name="minorFrame" type="minorFrameType" minOccurs="1" maxOccurs="unbounded"/>

@@ -221,11 +221,15 @@
     <minorFrame subject="tau0" ticks="40"/>
     <minorFrame subject="tau0" ticks="40"/>
    </cpu>
+   <barriers>
+    <barrier size="1"/>
+   </barriers>
   </majorFrame>
   <majorFrame>
    <cpu id="0">
     <minorFrame subject="tau0" ticks="80"/>
    </cpu>
+   <barriers/>
   </majorFrame>
  </scheduling>
 </system>

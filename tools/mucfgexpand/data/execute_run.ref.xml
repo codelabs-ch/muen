@@ -1189,6 +1189,9 @@
     <minorFrame subject="subject2" ticks="20"/>
     <minorFrame subject="subject2" ticks="20"/>
    </cpu>
+   <barriers>
+    <barrier size="2"/>
+   </barriers>
   </majorFrame>
   <majorFrame>
    <cpu id="0">
@@ -1206,6 +1209,11 @@
     <minorFrame subject="subject2" ticks="20"/>
     <minorFrame subject="tau0" ticks="20"/>
    </cpu>
+   <barriers>
+    <barrier size="2"/>
+    <barrier size="2"/>
+    <barrier size="2"/>
+   </barriers>
   </majorFrame>
  </scheduling>
 </system>

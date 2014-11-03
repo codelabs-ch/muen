@@ -18,4 +18,14 @@
 		<xs:attribute name="size" type="xs:positiveInteger" use="required"/>
 	</xs:complexType>
 
+	<xs:complexType name="minorFrameType">
+		<xs:attribute name="subject" type="nameType"               use="required"/>
+		<xs:attribute name="ticks"   type="xs:positiveInteger"     use="required"/>
+		<xs:attribute name="barrier" type="optionalBarrierRefType" use="optional"/>
+	</xs:complexType>
+
+	<xs:simpleType name="optionalBarrierRefType">
+		<xs:union memberTypes="xs:positiveInteger noneType"/>
+	</xs:simpleType>
+
 </xs:schema>

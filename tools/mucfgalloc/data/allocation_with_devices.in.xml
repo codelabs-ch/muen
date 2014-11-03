@@ -216,6 +216,7 @@
    <cpu id="0">
     <minorFrame subject="s1" ticks="100"/>
    </cpu>
+   <barriers/>
   </majorFrame>
  </scheduling>
 </system>

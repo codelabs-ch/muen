@@ -1213,6 +1213,7 @@
 			<cpu id="3">
 				<minorFrame subject="tau0" ticks="120"/>
 			</cpu>
+			<barriers/>
 		</majorFrame>
 		<majorFrame>
 			<cpu id="0">
@@ -1227,6 +1228,7 @@
 			<cpu id="3">
 				<minorFrame subject="tau0" ticks="120"/>
 			</cpu>
+			<barriers/>
 		</majorFrame>
 	</scheduling>
 

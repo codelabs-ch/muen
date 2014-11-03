@@ -440,6 +440,7 @@
    <cpu id="1">
     <minorFrame subject="subject1" ticks="80"/>
    </cpu>
+   <barriers/>
   </majorFrame>
  </scheduling>
 </system>

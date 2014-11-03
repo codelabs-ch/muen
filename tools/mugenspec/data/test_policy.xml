@@ -817,6 +817,7 @@
 			<cpu id="1">
 				<minorFrame subject="subject1" ticks="1700"/>
 			</cpu>
+			<barriers/>
 		</majorFrame>
 		<majorFrame>
 			<cpu id="0">
@@ -829,6 +830,9 @@
 				<minorFrame subject="subject1" ticks="1000"/>
 				<minorFrame subject="subject1" ticks="700"/>
 			</cpu>
+			<barriers>
+				<barrier size="2"/>
+			</barriers>
 		</majorFrame>
 	</scheduling>
 

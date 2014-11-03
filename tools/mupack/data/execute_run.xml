@@ -228,6 +228,7 @@
 			<cpu id="1">
 				<minorFrame subject="linux" ticks="1700"/>
 			</cpu>
+			<barriers/>
 		</majorFrame>
 	</scheduling>
 

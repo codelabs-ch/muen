@@ -16,6 +16,16 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+private with Mutools.Utils;
+
 package Spec
 is
+
+private
+
+   function Indent
+     (N         : Positive := 1;
+      Unit_Size : Positive := 3)
+      return String renames Mutools.Utils.Indent;
+
 end Spec;

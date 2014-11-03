@@ -52,11 +52,6 @@ is
       return Ada.Strings.Unbounded.Unbounded_String
       renames Ada.Strings.Unbounded.To_Unbounded_String;
 
-   function Indent
-     (N         : Positive := 1;
-      Unit_Size : Positive := 3)
-      return String renames Mutools.Utils.Indent;
-
    --  Return capitalisation of the given string (first letter in uppercase and
    --  the remaining letters in lowercase).
    function Capitalize (Str : String) return String;

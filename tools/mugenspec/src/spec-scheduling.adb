@@ -187,10 +187,14 @@ is
         (Minor : DOM.Core.Node;
          Index : Natural)
       is
-         Ticks : constant Long_Integer := Timer_Factor * Long_Integer'Value
+         Ticks   : constant Long_Integer := Timer_Factor * Long_Integer'Value
            (DOM.Core.Elements.Get_Attribute
               (Elem => Minor,
                Name => "ticks"));
+         Barrier : constant String
+           := DOM.Core.Elements.Get_Attribute
+             (Elem => Minor,
+              Name => "barrier");
 
          Subject    : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Minor,
@@ -203,7 +207,9 @@ is
       begin
          Buffer := Buffer & Indent (N => 4) & Index'Img
            & " => Minor_Frame_Type'(Subject_Id => " & Subject_Id
-           & ", Ticks =>" & Ticks'Img & ")";
+           & ", Ticks =>" & Ticks'Img & "," & ASCII.LF;
+         Buffer := Buffer & Indent (N => 12) & "Barrier    => "
+           & (if Barrier = "none" then "No_Barrier" else Barrier) & ")";
       end Write_Minor_Frame;
    begin
       Mulog.Log (Msg => "Writing scheduling spec for" & CPU_Count'Img

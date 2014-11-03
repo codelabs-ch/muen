@@ -150,13 +150,13 @@
  <scheduling tickRate="10000">
   <majorFrame>
    <cpu id="0">
-    <minorFrame subject="lnx" ticks="60"/>
-    <minorFrame subject="lnx" ticks="20"/>
+    <minorFrame barrier="1" subject="lnx" ticks="60"/>
+    <minorFrame barrier="none" subject="lnx" ticks="20"/>
    </cpu>
    <cpu id="1">
-    <minorFrame subject="tau0" ticks="40"/>
-    <minorFrame subject="subject2" ticks="20"/>
-    <minorFrame subject="subject2" ticks="20"/>
+    <minorFrame barrier="none" subject="tau0" ticks="40"/>
+    <minorFrame barrier="1" subject="subject2" ticks="20"/>
+    <minorFrame barrier="none" subject="subject2" ticks="20"/>
    </cpu>
    <barriers>
     <barrier size="2"/>
@@ -164,19 +164,19 @@
   </majorFrame>
   <majorFrame>
    <cpu id="0">
-    <minorFrame subject="lnx" ticks="10"/>
-    <minorFrame subject="lnx" ticks="20"/>
-    <minorFrame subject="lnx" ticks="40"/>
-    <minorFrame subject="lnx" ticks="20"/>
-    <minorFrame subject="lnx" ticks="10"/>
-    <minorFrame subject="lnx" ticks="10"/>
+    <minorFrame barrier="1" subject="lnx" ticks="10"/>
+    <minorFrame barrier="none" subject="lnx" ticks="20"/>
+    <minorFrame barrier="2" subject="lnx" ticks="40"/>
+    <minorFrame barrier="3" subject="lnx" ticks="20"/>
+    <minorFrame barrier="none" subject="lnx" ticks="10"/>
+    <minorFrame barrier="none" subject="lnx" ticks="10"/>
    </cpu>
    <cpu id="1">
-    <minorFrame subject="tau0" ticks="10"/>
-    <minorFrame subject="subject2" ticks="30"/>
-    <minorFrame subject="tau0" ticks="30"/>
-    <minorFrame subject="subject2" ticks="20"/>
-    <minorFrame subject="tau0" ticks="20"/>
+    <minorFrame barrier="1" subject="tau0" ticks="10"/>
+    <minorFrame barrier="none" subject="subject2" ticks="30"/>
+    <minorFrame barrier="2" subject="tau0" ticks="30"/>
+    <minorFrame barrier="3" subject="subject2" ticks="20"/>
+    <minorFrame barrier="none" subject="tau0" ticks="20"/>
    </cpu>
    <barriers>
     <barrier size="2"/>

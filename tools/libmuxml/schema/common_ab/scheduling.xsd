@@ -4,7 +4,7 @@
 	<xs:complexType name="majorFrameType">
 		<xs:sequence>
 			<xs:element name="cpu"      type="cpuType"      minOccurs="1" maxOccurs="unbounded"/>
-			<xs:element name="barriers" type="barriersType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="barriers" type="barriersType" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 

@@ -812,23 +812,23 @@
 	<scheduling tickRate="1000">
 		<majorFrame>
 			<cpu id="0">
-				<minorFrame subject="tau0" ticks="1700"/>
+				<minorFrame barrier="none" subject="tau0" ticks="1700"/>
 			</cpu>
 			<cpu id="1">
-				<minorFrame subject="subject1" ticks="1700"/>
+				<minorFrame barrier="none" subject="subject1" ticks="1700"/>
 			</cpu>
 			<barriers/>
 		</majorFrame>
 		<majorFrame>
 			<cpu id="0">
-				<minorFrame subject="tau0"     ticks="500"/>
-				<minorFrame subject="subject2" ticks="500"/>
-				<minorFrame subject="tau0"     ticks="500"/>
-				<minorFrame subject="subject2" ticks="200"/>
+				<minorFrame barrier="none" subject="tau0"     ticks="500"/>
+				<minorFrame barrier="1"    subject="subject2" ticks="500"/>
+				<minorFrame barrier="none" subject="tau0"     ticks="500"/>
+				<minorFrame barrier="none" subject="subject2" ticks="200"/>
 			</cpu>
 			<cpu id="1">
-				<minorFrame subject="subject1" ticks="1000"/>
-				<minorFrame subject="subject1" ticks="700"/>
+				<minorFrame barrier="1"    subject="subject1" ticks="1000"/>
+				<minorFrame barrier="none" subject="subject1" ticks="700"/>
 			</cpu>
 			<barriers>
 				<barrier size="2"/>

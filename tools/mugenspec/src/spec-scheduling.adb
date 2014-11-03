@@ -16,6 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
 with DOM.Core.Elements;
@@ -64,11 +65,15 @@ is
       CPU_Count    : constant Natural
         := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Policy);
 
-      Major_Count     : Positive;
-      Max_Minor_Count : Positive;
-      Majors          : DOM.Core.Node_List;
-      Buffer          : Unbounded_String;
-      Tmpl            : Mutools.Templates.Template_Type;
+      Major_Count       : Positive;
+      Max_Minor_Count   : Positive;
+      Max_Barrier_Count : Natural;
+      Majors            : DOM.Core.Node_List;
+      Buffer            : Unbounded_String;
+      Tmpl              : Mutools.Templates.Template_Type;
+
+      --  Returns the maximum count of barriers per major frame.
+      function Get_Max_Barrier_Count (Schedule : DOM.Core.Node) return Natural;
 
       --  Returns the maximum count of minor frames per major frame.
       function Get_Max_Minor_Count (Schedule : DOM.Core.Node) return Positive;
@@ -82,6 +87,37 @@ is
       procedure Write_Minor_Frame
         (Minor : DOM.Core.Node;
          Index : Natural);
+
+      ----------------------------------------------------------------------
+
+      function Get_Max_Barrier_Count (Schedule : DOM.Core.Node) return Natural
+      is
+         Majors   : DOM.Core.Node_List;
+         Barriers : DOM.Core.Node_List;
+         Count    : Natural := 0;
+      begin
+         Majors := McKae.XML.XPath.XIA.XPath_Query
+           (N     => Schedule,
+            XPath => "majorFrame");
+
+         for I in 0 .. DOM.Core.Nodes.Length (List => Majors) - 1 loop
+            Barriers := McKae.XML.XPath.XIA.XPath_Query
+              (N     => DOM.Core.Nodes.Item (List  => Majors,
+                                             Index => I),
+               XPath => "barriers/barrier");
+
+            declare
+               Cur_Count : constant Natural := DOM.Core.Nodes.Length
+                 (List => Barriers);
+            begin
+               if Cur_Count > Count then
+                  Count := Cur_Count;
+               end if;
+            end;
+         end loop;
+
+         return Count;
+      end Get_Max_Barrier_Count;
 
       ----------------------------------------------------------------------
 
@@ -177,8 +213,9 @@ is
         (N     => Scheduling,
          XPath => "majorFrame");
 
-      Major_Count     := DOM.Core.Nodes.Length (List => Majors);
-      Max_Minor_Count := Get_Max_Minor_Count (Schedule => Scheduling);
+      Major_Count       := DOM.Core.Nodes.Length (List => Majors);
+      Max_Minor_Count   := Get_Max_Minor_Count (Schedule => Scheduling);
+      Max_Barrier_Count := Get_Max_Barrier_Count (Schedule => Scheduling);
 
       for CPU in 0 .. CPU_Count - 1 loop
          Buffer := Buffer & Indent
@@ -231,6 +268,12 @@ is
         (Template => Tmpl,
          Pattern  => "__scheduling_plans__",
          Content  => To_String (Buffer));
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__max_barrier_count__",
+         Content  => Ada.Strings.Fixed.Trim
+           (Source => Max_Barrier_Count'Img,
+            Side   => Ada.Strings.Left));
 
       Mutools.Templates.Write
         (Template => Tmpl,

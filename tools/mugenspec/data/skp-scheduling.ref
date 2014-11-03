@@ -3,6 +3,13 @@ with SK;
 package Skp.Scheduling
 is
 
+   type Barrier_Index_Range is range 0 .. 3;
+
+   subtype Barrier_Range is
+     Barrier_Index_Range range 1 .. Barrier_Index_Range'Last;
+
+   No_Barrier : constant Barrier_Index_Range := Barrier_Index_Range'First;
+
    type Minor_Frame_Type is record
       Subject_Id : Skp.Subject_Id_Type;
       Ticks      : SK.Word32;

@@ -12,7 +12,7 @@ is
      (Subject_Id => 0,
       Ticks      => 0);
 
-   type Minor_Frame_Range is range 1 .. 4;
+   type Minor_Frame_Range is range 1 .. 8;
 
    type Minor_Frame_Array is array (Minor_Frame_Range) of Minor_Frame_Type;
 
@@ -21,7 +21,7 @@ is
       Minor_Frames : Minor_Frame_Array;
    end record;
 
-   type Major_Frame_Range is range 0 .. 1;
+   type Major_Frame_Range is range 0 .. 2;
 
    type Major_Frame_Array is array (Major_Frame_Range) of Major_Frame_Type;
 
@@ -46,7 +46,18 @@ is
              1 => Minor_Frame_Type'(Subject_Id => 0, Ticks => 45312500),
              2 => Minor_Frame_Type'(Subject_Id => 2, Ticks => 45312500),
              3 => Minor_Frame_Type'(Subject_Id => 0, Ticks => 45312500),
-             4 => Minor_Frame_Type'(Subject_Id => 2, Ticks => 18125000)))),
+             4 => Minor_Frame_Type'(Subject_Id => 2, Ticks => 18125000),
+             others => Null_Minor_Frame)),
+       2 => Major_Frame_Type'
+         (Length       => 6,
+          Minor_Frames => Minor_Frame_Array'(
+             1 => Minor_Frame_Type'(Subject_Id => 0, Ticks => 27187500),
+             2 => Minor_Frame_Type'(Subject_Id => 2, Ticks => 18125000),
+             3 => Minor_Frame_Type'(Subject_Id => 0, Ticks => 4531250),
+             4 => Minor_Frame_Type'(Subject_Id => 2, Ticks => 6796875),
+             5 => Minor_Frame_Type'(Subject_Id => 0, Ticks => 6796875),
+             6 => Minor_Frame_Type'(Subject_Id => 2, Ticks => 18125000),
+             others => Null_Minor_Frame))),
      1 => Major_Frame_Array'(
        0 => Major_Frame_Type'
          (Length       => 1,
@@ -58,6 +69,17 @@ is
           Minor_Frames => Minor_Frame_Array'(
              1 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 90625000),
              2 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 63437500),
-             others => Null_Minor_Frame))));
+             others => Null_Minor_Frame)),
+       2 => Major_Frame_Type'
+         (Length       => 8,
+          Minor_Frames => Minor_Frame_Array'(
+             1 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 9062500),
+             2 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 9062500),
+             3 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 9062500),
+             4 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 9062500),
+             5 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 9062500),
+             6 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 9062500),
+             7 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 9062500),
+             8 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 9062500)))));
 
 end Skp.Scheduling;

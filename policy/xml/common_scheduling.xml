@@ -6,13 +6,15 @@
 			<minorFrame subject="vt" ticks="50"/>
 		</cpu>
 		<cpu id="1">
-			<minorFrame subject="nic_linux" ticks="120"/>
+			<minorFrame subject="nic_linux" ticks="20"/>
+			<minorFrame subject="nic_linux" ticks="100"/>
 		</cpu>
 		<cpu id="2">
 			<minorFrame subject="time" ticks="120"/>
 		</cpu>
 		<cpu id="3">
-			<minorFrame subject="usb_linux" ticks="120"/>
+			<minorFrame subject="usb_linux" ticks="70"/>
+			<minorFrame subject="usb_linux" ticks="50"/>
 		</cpu>
 	</majorFrame>
 	<majorFrame>

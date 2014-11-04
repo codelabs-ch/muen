@@ -201,9 +201,11 @@ is
    with
       Refined_Global  =>
         (Input  => (Current_Major, Interrupts.State),
-         In_Out => (CPU_Global.State, Subjects.State, X86_64.State)),
+         In_Out => (CPU_Global.State, MP.Barrier, Subjects.State,
+                    X86_64.State)),
       Refined_Depends =>
         (CPU_Global.State =>+ Current_Major,
+         MP.Barrier       =>+ Current_Major,
          Subjects.State   =>+ null,
          X86_64.State     =>+ (CPU_Global.State, Current_Major,
                                Interrupts.State))
@@ -230,6 +232,14 @@ is
            (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First,
             Subject_Id => Plan_Frame.Subject_Id,
             Barrier    => Plan_Frame.Barrier));
+
+      if CPU_Global.Is_BSP then
+
+         --  Set minor frame barriers config.
+
+         MP.Set_Minor_Frame_Barrier_Config
+           (Config => Skp.Scheduling.Barrier_Configs (Current_Major));
+      end if;
 
       --  Setup VMCS and state of subjects running on this logical CPU.
 

@@ -46,9 +46,11 @@ is
    with
       Global  =>
         (Input  => (Interrupts.State, State),
-         In_Out => (CPU_Global.State, Subjects.State, X86_64.State)),
+         In_Out => (CPU_Global.State, MP.Barrier, Subjects.State,
+                    X86_64.State)),
       Depends =>
         (CPU_Global.State =>+ State,
+         MP.Barrier       =>+ State,
          Subjects.State   =>+ null,
          X86_64.State     =>+ (CPU_Global.State, Interrupts.State, State));
 

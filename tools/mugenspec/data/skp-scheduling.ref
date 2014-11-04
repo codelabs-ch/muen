@@ -113,4 +113,22 @@ is
              8 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 9062500,
                                     Barrier    => No_Barrier)))));
 
+   subtype Barrier_Size_Type is
+     Natural range 1 .. Natural (Skp.CPU_Range'Last + 1);
+
+   type Major_Config_Array is array (Barrier_Range) of Barrier_Size_Type;
+
+   type Barrier_Cfgs_Array is array (Major_Frame_Range) of Major_Config_Array;
+
+   Barrier_Configs : constant Barrier_Cfgs_Array := Barrier_Cfgs_Array'(
+      0 => Major_Config_Array'(
+         others => Barrier_Size_Type'First),
+      1 => Major_Config_Array'(
+         1 => 2,
+         others => Barrier_Size_Type'First),
+      2 => Major_Config_Array'(
+         1 => 2,
+         2 => 2,
+         3 => 2));
+
 end Skp.Scheduling;

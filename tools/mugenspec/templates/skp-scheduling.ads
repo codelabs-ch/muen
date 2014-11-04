@@ -45,4 +45,14 @@ is
    Scheduling_Plans : constant Scheduling_Plan_Type := Scheduling_Plan_Type'(
 __scheduling_plans__);
 
+   subtype Barrier_Size_Type is
+     Natural range 1 .. Natural (Skp.CPU_Range'Last + 1);
+
+   type Major_Config_Array is array (Barrier_Range) of Barrier_Size_Type;
+
+   type Barrier_Cfgs_Array is array (Major_Frame_Range) of Major_Config_Array;
+
+   Barrier_Configs : constant Barrier_Cfgs_Array := Barrier_Cfgs_Array'(
+__barrier_configs__);
+
 end Skp.Scheduling;

@@ -59,7 +59,9 @@ is
       Size    :        SK.Byte)
    is
    begin
-      Barrier.Size := Size;
+      Barrier := (Size       => Size,
+                  Sense      => False,
+                  Wait_Count => 0);
    end Set_Size;
 
    -------------------------------------------------------------------------

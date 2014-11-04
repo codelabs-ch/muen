@@ -37,9 +37,9 @@ is
 private
 
    type Sense_Barrier_Type is record
-      Size       : SK.Byte := 1     with Atomic;
-      Sense      : Boolean := False with Atomic;
-      Wait_Count : SK.Byte := 0     with Atomic;
+      Size       : SK.Byte with Atomic;
+      Sense      : Boolean with Atomic;
+      Wait_Count : SK.Byte with Atomic;
    end record
      with Volatile;
 

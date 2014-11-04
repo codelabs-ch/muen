@@ -135,13 +135,12 @@ is
          X86_64.State) =>+
             (CPU_Global.State, Current_Major, New_Major))
    is
+      use type Skp.Scheduling.Barrier_Index_Range;
+
       Minor_Frame : CPU_Global.Active_Minor_Frame_Type;
       Plan_Frame  : Skp.Scheduling.Minor_Frame_Type;
    begin
-      pragma $Prove_Warnings (Off, "statement has no effect",
-                              Reason => "False positive");
       Minor_Frame := CPU_Global.Get_Current_Minor_Frame;
-      pragma $Prove_Warnings (On, "statement has no effect");
 
       if Minor_Frame.Minor_Id < CPU_Global.Get_Major_Length
         (Major_Id => Current_Major)
@@ -150,6 +149,10 @@ is
          --  Switch to next minor frame in current major frame.
 
          Minor_Frame.Minor_Id := Minor_Frame.Minor_Id + 1;
+
+         if Minor_Frame.Barrier /= Skp.Scheduling.No_Barrier then
+            MP.Wait_On_Minor_Frame_Barrier (Index => Minor_Frame.Barrier);
+         end if;
       else
 
          --  Switch to first minor frame in next major frame.
@@ -175,12 +178,9 @@ is
          MP.Wait_For_All;
       end if;
 
-      pragma $Prove_Warnings (Off, "statement has no effect",
-                              Reason => "False positive");
       Plan_Frame := CPU_Global.Get_Minor_Frame
         (Major_Id => Current_Major,
          Minor_Id => Minor_Frame.Minor_Id);
-      pragma $Prove_Warnings (On, "statement has no effect");
 
       if Plan_Frame.Subject_Id /= Minor_Frame.Subject_Id then
 
@@ -232,12 +232,9 @@ is
 
       --  Set initial active minor frame.
 
-      pragma $Prove_Warnings (Off, "statement has no effect",
-                              Reason => "False positive");
       Plan_Frame := CPU_Global.Get_Minor_Frame
         (Major_Id => Current_Major,
          Minor_Id => Skp.Scheduling.Minor_Frame_Range'First);
-      pragma $Prove_Warnings (On, "statement has no effect");
 
       CPU_Global.Set_Current_Minor
         (Frame => CPU_Global.Active_Minor_Frame_Type'

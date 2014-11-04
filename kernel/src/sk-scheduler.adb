@@ -138,7 +138,10 @@ is
       Minor_Frame : CPU_Global.Active_Minor_Frame_Type;
       Plan_Frame  : Skp.Scheduling.Minor_Frame_Type;
    begin
+      pragma $Prove_Warnings (Off, "statement has no effect",
+                              Reason => "False positive");
       Minor_Frame := CPU_Global.Get_Current_Minor_Frame;
+      pragma $Prove_Warnings (On, "statement has no effect");
 
       if Minor_Frame.Minor_Id < CPU_Global.Get_Major_Length
         (Major_Id => Current_Major)
@@ -176,6 +179,7 @@ is
       end if;
 
       Minor_Frame.Subject_Id := Plan_Frame.Subject_Id;
+      Minor_Frame.Barrier    := Plan_Frame.Barrier;
       CPU_Global.Set_Current_Minor (Frame => Minor_Frame);
 
       if Skp.Subjects.Get_Profile
@@ -224,7 +228,8 @@ is
       CPU_Global.Set_Current_Minor
         (Frame => CPU_Global.Active_Minor_Frame_Type'
            (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First,
-            Subject_Id => Plan_Frame.Subject_Id));
+            Subject_Id => Plan_Frame.Subject_Id,
+            Barrier    => Plan_Frame.Barrier));
 
       --  Setup VMCS and state of subjects running on this logical CPU.
 

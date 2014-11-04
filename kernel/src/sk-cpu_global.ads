@@ -41,6 +41,7 @@ is
    type Active_Minor_Frame_Type is record
       Minor_Id   : Skp.Scheduling.Minor_Frame_Range;
       Subject_Id : Skp.Subject_Id_Type;
+      Barrier    : Skp.Scheduling.Barrier_Index_Range;
    end record;
 
    --  Initialize per-CPU storage.

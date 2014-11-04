@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp.Scheduling;
-
 with SK.Barriers;
 
 package body SK.MP
@@ -38,6 +36,23 @@ is
      with
        Async_Readers,
        Async_Writers;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Minor_Frame_Barrier_Config
+     (Config : Skp.Scheduling.Major_Config_Array)
+   with
+      SPARK_Mode      => Off,
+      Refined_Global  => (In_Out => Minor_Frame_Barriers),
+      Refined_Depends => (Minor_Frame_Barriers =>+ Config)
+   is
+   begin
+      for I in Config'Range loop
+         Barriers.Initialize
+           (Minor_Frame_Barriers (I),  --  Workaround for [NA10-010]
+            SK.Byte (Config (I)));     --  (no named arguments)
+      end loop;
+   end Set_Minor_Frame_Barrier_Config;
 
    -------------------------------------------------------------------------
 

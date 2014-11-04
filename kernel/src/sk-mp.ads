@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Skp.Scheduling;
+
 package SK.MP
 with
    Abstract_State =>
@@ -28,5 +30,12 @@ is
    with
       Global  => (In_Out => Barrier),
       Depends => (Barrier =>+ null);
+
+   --  Set minor frame barrier sizes to values specified by given config.
+   procedure Set_Minor_Frame_Barrier_Config
+     (Config : Skp.Scheduling.Major_Config_Array)
+   with
+      Global  => (In_Out => Barrier),
+      Depends => (Barrier =>+ Config);
 
 end SK.MP;

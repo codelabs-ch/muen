@@ -16,14 +16,23 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp;
+with Skp.Scheduling;
 
 with SK.Barriers;
 
 package body SK.MP
 with
-   Refined_State => (Barrier => All_Barrier)
+   Refined_State => (Barrier => (All_Barrier, Minor_Frame_Barriers))
 is
+
+   type Minor_Frame_Barriers_Array is
+     array (Skp.Scheduling.Barrier_Index_Range) of Barriers.Sense_Barrier_Type;
+
+   Minor_Frame_Barriers : Minor_Frame_Barriers_Array
+     with
+       Volatile,
+       Async_Readers,
+       Async_Writers;
 
    All_Barrier : Barriers.Sense_Barrier_Type
      with

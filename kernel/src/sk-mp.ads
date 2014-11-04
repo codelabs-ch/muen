@@ -31,6 +31,13 @@ is
       Global  => (In_Out => Barrier),
       Depends => (Barrier =>+ null);
 
+   --  Blocks until minor frame barrier with given index is released.
+   procedure Wait_On_Minor_Frame_Barrier
+     (Index : Skp.Scheduling.Barrier_Index_Range)
+   with
+      Global  => (In_Out => Barrier),
+      Depends => (Barrier =>+ Index);
+
    --  Set minor frame barrier sizes to values specified by given config.
    procedure Set_Minor_Frame_Barrier_Config
      (Config : Skp.Scheduling.Major_Config_Array)

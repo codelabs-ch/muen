@@ -68,6 +68,22 @@ is
       Barriers.Wait (All_Barrier);
    end Wait_For_All;
 
+   -------------------------------------------------------------------------
+
+   procedure Wait_On_Minor_Frame_Barrier
+     (Index : Skp.Scheduling.Barrier_Index_Range)
+   with
+      SPARK_Mode      => Off,
+      Refined_Global  => (In_Out => Minor_Frame_Barriers),
+      Refined_Depends => (Minor_Frame_Barriers =>+ Index)
+   is
+   begin
+
+      --  Workaround for [NA10-010] (no named arguments)
+
+      Barriers.Wait (Minor_Frame_Barriers (Index));
+   end Wait_On_Minor_Frame_Barrier;
+
 begin
    Barriers.Initialize
      (All_Barrier,                        --  Workaround for [NA10-010]

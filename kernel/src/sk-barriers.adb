@@ -26,7 +26,8 @@ is
    -------------------------------------------------------------------------
 
    --  Atomically get and increment the wait count. Returns the current number
-   --  of CPUs blocked by the barrier.
+   --  of CPUs blocked by the barrier. Note that the calling CPU is not counted
+   --  since it is not (yet) blocked by the barrier.
    procedure Get_And_Increment
      (Sense_Barrier : in out Sense_Barrier_Type;
       Count         :    out SK.Byte)
@@ -80,7 +81,7 @@ is
       Get_And_Increment (Barrier,  --  Workaround for [NA10-010]
                          Count);   --  (no named arguments)
 
-      if Count = Barrier_Size then
+      if Count + 1 = Barrier_Size then
          Barrier.Wait_Count := 0;
          Barrier.Sense      := CPU_Sense;
       else

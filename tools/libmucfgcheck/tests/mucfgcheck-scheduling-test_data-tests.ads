@@ -27,5 +27,8 @@ package Mucfgcheck.Scheduling.Test_Data.Tests is
    procedure Test_Minor_Frame_Sync_Points_cb28c8 (Gnattest_T : in out Test);
    --  mucfgcheck-scheduling.ads:41:4:Minor_Frame_Sync_Points
 
+   procedure Test_Minor_Frame_Barrier_Refs_7035a5 (Gnattest_T : in out Test);
+   --  mucfgcheck-scheduling.ads:44:4:Minor_Frame_Barrier_Refs
+
 end Mucfgcheck.Scheduling.Test_Data.Tests;
 --  end read only

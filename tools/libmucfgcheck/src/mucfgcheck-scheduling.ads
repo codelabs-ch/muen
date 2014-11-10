@@ -40,4 +40,7 @@ is
    --  to the minor frame synchronization points.
    procedure Minor_Frame_Sync_Points (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that minor frame barrier references are valid.
+   procedure Minor_Frame_Barrier_Refs (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Scheduling;

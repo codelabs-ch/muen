@@ -155,6 +155,14 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Minor_Frame_Barrier_Refs (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      null;
+   end Minor_Frame_Barrier_Refs;
+
+   -------------------------------------------------------------------------
+
    procedure Minor_Frame_Sync_Points (XML_Data : Muxml.XML_Data_Type)
    is
       Majors : constant DOM.Core.Node_List

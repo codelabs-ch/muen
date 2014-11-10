@@ -17,7 +17,6 @@
 --
 
 with Ada.Strings.Fixed;
-with Ada.Containers.Ordered_Multisets;
 
 with Interfaces;
 
@@ -29,31 +28,12 @@ with McKae.XML.XPath.XIA;
 
 with Mulog;
 with Muxml.Utils;
+with Mutools.XML_Utils;
 
 package body Expanders.Scheduling
 is
 
    use type Interfaces.Unsigned_64;
-
-   --  Minor frame and its exit time in ticks measured from the start of the
-   --  corresponding major frame.
-   type Deadline_Type is record
-      Exit_Time   : Interfaces.Unsigned_64;
-      Minor_Frame : DOM.Core.Node;
-   end record;
-
-   --  Chronologicaly orders deadlines according to exit time.
-   function "<"
-     (Left, Right : Deadline_Type)
-      return Boolean
-   is (Left.Exit_Time < Right.Exit_Time);
-
-   type Deadline_Array is array (Positive range <>) of Deadline_Type;
-
-   --  Returns the minor frame deadlines for the given major frame.
-   function Get_Minor_Frame_Deadlines
-     (Major : DOM.Core.Node)
-      return Deadline_Array;
 
    -------------------------------------------------------------------------
 
@@ -74,20 +54,21 @@ is
               := DOM.Core.Documents.Create_Element
                 (Doc      => Data.Doc,
                  Tag_Name => "barriers");
-            Minor_Exit_Times : constant Deadline_Array
-              := Get_Minor_Frame_Deadlines (Major => Major_Frame);
+            Minor_Exit_Times : constant Mutools.XML_Utils.Deadline_Array
+              := Mutools.XML_Utils.Get_Minor_Frame_Deadlines
+                (Major => Major_Frame);
             Major_End_Ticks  : constant Interfaces.Unsigned_64
               := Minor_Exit_Times (Minor_Exit_Times'Last).Exit_Time;
 
             Cur_Barrier_Idx  : Positive := 1;
             Cur_Barrier_Size : Positive := 1;
-            Prev_Deadline    : Deadline_Type
+            Prev_Deadline    : Mutools.XML_Utils.Deadline_Type
               := (Exit_Time   => 0,
                   Minor_Frame => null);
          begin
             for I in Minor_Exit_Times'Range loop
                declare
-                  Cur_Deadline : constant Deadline_Type
+                  Cur_Deadline : constant Mutools.XML_Utils.Deadline_Type
                     := Minor_Exit_Times (I);
                begin
                   if Cur_Deadline.Exit_Time = Prev_Deadline.Exit_Time
@@ -151,88 +132,5 @@ is
          end;
       end loop;
    end Add_Barrier_Configs;
-
-   -------------------------------------------------------------------------
-
-   function Get_Minor_Frame_Deadlines
-     (Major : DOM.Core.Node)
-      return Deadline_Array
-   is
-      package Map_Of_Minor_Frame_Deadlines is
-        new Ada.Containers.Ordered_Multisets (Element_Type => Deadline_Type);
-
-      package MOMFD renames Map_Of_Minor_Frame_Deadlines;
-
-      --  Convert a minor frame deadline set to the corresponding deadline
-      --  array.
-      function To_Deadline_Array
-        (Deadline_Set : MOMFD.Set)
-         return Deadline_Array;
-
-      ----------------------------------------------------------------------
-
-      function To_Deadline_Array
-        (Deadline_Set : MOMFD.Set)
-         return Deadline_Array
-      is
-         Size    : constant Natural
-           := Natural (MOMFD.Length (Container => Deadline_Set));
-         Result  : Deadline_Array (1 .. Size);
-         Pos     : MOMFD.Cursor := MOMFD.First (Container => Deadline_Set);
-         Cur_Idx : Natural      := Result'First;
-      begin
-         while MOMFD.Has_Element (Position => Pos) loop
-            Result (Cur_Idx) := MOMFD.Element (Position => Pos);
-            Pos              := MOMFD.Next (Position => Pos);
-            Cur_Idx          := Cur_Idx + 1;
-         end loop;
-
-         return Result;
-      end To_Deadline_Array;
-
-      ----------------------------------------------------------------------
-
-      CPU_Nodes        : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Major,
-           XPath => "cpu");
-      Minor_Exit_Times : MOMFD.Set;
-   begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => CPU_Nodes) - 1 loop
-         declare
-            CPU_Node      : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => CPU_Nodes,
-                 Index => I);
-            Minor_Frames  : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => CPU_Node,
-                 XPath => "minorFrame");
-            Current_Ticks : Interfaces.Unsigned_64 := 0;
-         begin
-            for J in 0 .. DOM.Core.Nodes.Length (List => Minor_Frames) - 1
-            loop
-               declare
-                  Minor_Frame : constant DOM.Core.Node
-                    := DOM.Core.Nodes.Item
-                      (List  => Minor_Frames,
-                       Index => J);
-                  Minor_Ticks : constant Interfaces.Unsigned_64
-                    := Interfaces.Unsigned_64'Value
-                      (DOM.Core.Elements.Get_Attribute
-                         (Elem => Minor_Frame,
-                          Name => "ticks"));
-               begin
-                  Current_Ticks := Current_Ticks + Minor_Ticks;
-                  Minor_Exit_Times.Insert
-                    (New_Item => (Exit_Time   => Current_Ticks,
-                                  Minor_Frame => Minor_Frame));
-               end;
-            end loop;
-         end;
-      end loop;
-
-      return To_Deadline_Array (Deadline_Set => Minor_Exit_Times);
-   end Get_Minor_Frame_Deadlines;
 
 end Expanders.Scheduling;

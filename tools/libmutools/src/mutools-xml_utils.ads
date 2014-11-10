@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with Ada.Containers.Ordered_Sets;
 
 with DOM.Core;
@@ -143,5 +145,19 @@ is
      (Data       : Muxml.XML_Data_Type;
       Device_Ref : DOM.Core.Node)
       return Boolean;
+
+   --  Minor frame and its exit time in ticks measured from the start of the
+   --  corresponding major frame.
+   type Deadline_Type is record
+      Exit_Time   : Interfaces.Unsigned_64;
+      Minor_Frame : DOM.Core.Node;
+   end record;
+
+   type Deadline_Array is array (Positive range <>) of Deadline_Type;
+
+   --  Returns the minor frame deadlines for the given major frame.
+   function Get_Minor_Frame_Deadlines
+     (Major : DOM.Core.Node)
+      return Deadline_Array;
 
 end Mutools.XML_Utils;

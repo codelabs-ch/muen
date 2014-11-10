@@ -33,4 +33,7 @@ is
    --  Validate tick counts in major frame.
    procedure Major_Frame_Ticks (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that barrier sizes do not exceed the number of logical CPUs.
+   procedure Barrier_Size (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Scheduling;

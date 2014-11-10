@@ -32,6 +32,14 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Barrier_Size (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      null;
+   end Barrier_Size;
+
+   -------------------------------------------------------------------------
+
    procedure CPU_Element_Count (XML_Data : Muxml.XML_Data_Type)
    is
       CPU_Count : constant Positive

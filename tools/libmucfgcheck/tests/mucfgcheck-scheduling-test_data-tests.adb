@@ -167,4 +167,49 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
    end Test_Major_Frame_Ticks;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Barrier_Size (Gnattest_T : in out Test);
+   procedure Test_Barrier_Size_dba514 (Gnattest_T : in out Test) renames Test_Barrier_Size;
+--  id:2.2/dba514408c2c4e9a/Barrier_Size/1/0/
+   procedure Test_Barrier_Size (Gnattest_T : in out Test) is
+   --  mucfgcheck-scheduling.ads:37:4:Barrier_Size
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Barrier_Size (XML_Data => Data);
+
+      --  Set invalid barrier size (i.e. larger than CPU count).
+
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/scheduling/majorFrame/barriers/barrier",
+            Name  => "size",
+            Value => "42");
+
+         Barrier_Size (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Minor frame barrier with invalid size 42, must not "
+                    & "exceed 4",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Barrier_Size;
+--  end read only
+
 end Mucfgcheck.Scheduling.Test_Data.Tests;

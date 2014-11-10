@@ -21,5 +21,8 @@ package Mucfgcheck.Scheduling.Test_Data.Tests is
    procedure Test_Major_Frame_Ticks_88421f (Gnattest_T : in out Test);
    --  mucfgcheck-scheduling.ads:34:4:Major_Frame_Ticks
 
+   procedure Test_Barrier_Size_dba514 (Gnattest_T : in out Test);
+   --  mucfgcheck-scheduling.ads:37:4:Barrier_Size
+
 end Mucfgcheck.Scheduling.Test_Data.Tests;
 --  end read only

@@ -34,8 +34,65 @@ is
 
    procedure Barrier_Count (XML_Data : Muxml.XML_Data_Type)
    is
+      Majors : constant DOM.Core.Node_List
+        := XPath_Query (N     => XML_Data.Doc,
+                        XPath => "/system/scheduling/majorFrame");
    begin
-      null;
+      Mulog.Log (Msg => "Checking barrier count in" & DOM.Core.Nodes.Length
+                 (List => Majors)'Img & " scheduling major frame(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Majors) - 1 loop
+         declare
+            Major_Frame    : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Majors,
+                 Index => I);
+            Barriers       : constant DOM.Core.Node_List
+              := XPath_Query (N     => Major_Frame,
+                              XPath => "barriers/barrier");
+            Deadlines      : constant Mutools.XML_Utils.Deadline_Array
+              := Mutools.XML_Utils.Get_Minor_Frame_Deadlines
+                (Major => Major_Frame);
+            End_Ticks      : constant Interfaces.Unsigned_64
+              := Deadlines (Deadlines'Last).Exit_Time;
+
+            Sync_Points    : array (Deadlines'Range) of Positive
+              := (others => 1);
+            Cur_Idx        : Natural                := Sync_Points'First;
+            Prev_Deadline  : Interfaces.Unsigned_64 := 0;
+         begin
+            for Deadline of Deadlines loop
+               if Deadline.Exit_Time /= End_Ticks
+                 and then Deadline.Exit_Time = Prev_Deadline
+               then
+                  Sync_Points (Cur_Idx) := Sync_Points (Cur_Idx) + 1;
+               else
+                  if Sync_Points (Cur_Idx) > 1 then
+                     Cur_Idx := Cur_Idx + 1;
+                  end if;
+               end if;
+               Prev_Deadline := Deadline.Exit_Time;
+            end loop;
+
+            declare
+               Sync_Point_Count : Natural := 0;
+            begin
+               for S of Sync_Points loop
+                  if S > 1 then
+                     Sync_Point_Count := Sync_Point_Count + 1;
+                  end if;
+               end loop;
+
+               if Sync_Point_Count /= DOM.Core.Nodes.Length (List => Barriers)
+               then
+                  raise Validation_Error with "Major frame" & I'Img & " has "
+                    & "invalid barrier count" & DOM.Core.Nodes.Length
+                    (List => Barriers)'Img & ", should be"
+                    & Sync_Point_Count'Img;
+               end if;
+            end;
+         end;
+      end loop;
    end Barrier_Count;
 
    -------------------------------------------------------------------------

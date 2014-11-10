@@ -48,18 +48,12 @@ is
       return Boolean
    is (Left.Exit_Time < Right.Exit_Time);
 
-   package Map_Of_Minor_Frame_Deadlines is new Ada.Containers.Ordered_Multisets
-     (Element_Type => Deadline_Type);
-
-   package MOMFD renames Map_Of_Minor_Frame_Deadlines;
-
    type Deadline_Array is array (Positive range <>) of Deadline_Type;
 
    --  Returns the minor frame deadlines for the given major frame.
-   function Get_Minor_Frame_Deadlines (Major : DOM.Core.Node) return MOMFD.Set;
-
-   --  Convert a minor frame deadline set to the corresponding deadline array.
-   function To_Deadline_Array (Deadline_Set : MOMFD.Set) return Deadline_Array;
+   function Get_Minor_Frame_Deadlines
+     (Major : DOM.Core.Node)
+      return Deadline_Array;
 
    -------------------------------------------------------------------------
 
@@ -81,9 +75,7 @@ is
                 (Doc      => Data.Doc,
                  Tag_Name => "barriers");
             Minor_Exit_Times : constant Deadline_Array
-              := To_Deadline_Array
-                (Deadline_Set => Get_Minor_Frame_Deadlines
-                   (Major => Major_Frame));
+              := Get_Minor_Frame_Deadlines (Major => Major_Frame);
             Major_End_Ticks  : constant Interfaces.Unsigned_64
               := Minor_Exit_Times (Minor_Exit_Times'Last).Exit_Time;
 
@@ -162,8 +154,44 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Minor_Frame_Deadlines (Major : DOM.Core.Node) return MOMFD.Set
+   function Get_Minor_Frame_Deadlines
+     (Major : DOM.Core.Node)
+      return Deadline_Array
    is
+      package Map_Of_Minor_Frame_Deadlines is
+        new Ada.Containers.Ordered_Multisets (Element_Type => Deadline_Type);
+
+      package MOMFD renames Map_Of_Minor_Frame_Deadlines;
+
+      --  Convert a minor frame deadline set to the corresponding deadline
+      --  array.
+      function To_Deadline_Array
+        (Deadline_Set : MOMFD.Set)
+         return Deadline_Array;
+
+      ----------------------------------------------------------------------
+
+      function To_Deadline_Array
+        (Deadline_Set : MOMFD.Set)
+         return Deadline_Array
+      is
+         Size    : constant Natural
+           := Natural (MOMFD.Length (Container => Deadline_Set));
+         Result  : Deadline_Array (1 .. Size);
+         Pos     : MOMFD.Cursor := MOMFD.First (Container => Deadline_Set);
+         Cur_Idx : Natural      := Result'First;
+      begin
+         while MOMFD.Has_Element (Position => Pos) loop
+            Result (Cur_Idx) := MOMFD.Element (Position => Pos);
+            Pos              := MOMFD.Next (Position => Pos);
+            Cur_Idx          := Cur_Idx + 1;
+         end loop;
+
+         return Result;
+      end To_Deadline_Array;
+
+      ----------------------------------------------------------------------
+
       CPU_Nodes        : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Major,
@@ -204,26 +232,7 @@ is
          end;
       end loop;
 
-      return Minor_Exit_Times;
+      return To_Deadline_Array (Deadline_Set => Minor_Exit_Times);
    end Get_Minor_Frame_Deadlines;
-
-   -------------------------------------------------------------------------
-
-   function To_Deadline_Array (Deadline_Set : MOMFD.Set) return Deadline_Array
-   is
-      Size    : constant Natural
-        := Natural (MOMFD.Length (Container => Deadline_Set));
-      Result  : Deadline_Array (1 .. Size);
-      Pos     : MOMFD.Cursor := MOMFD.First (Container => Deadline_Set);
-      Cur_Idx : Natural      := Result'First;
-   begin
-      while MOMFD.Has_Element (Position => Pos) loop
-         Result (Cur_Idx) := MOMFD.Element (Position => Pos);
-         Pos              := MOMFD.Next (Position => Pos);
-         Cur_Idx          := Cur_Idx + 1;
-      end loop;
-
-      return Result;
-   end To_Deadline_Array;
 
 end Expanders.Scheduling;

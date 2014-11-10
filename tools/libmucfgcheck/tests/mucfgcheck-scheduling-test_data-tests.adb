@@ -212,4 +212,51 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
    end Test_Barrier_Size;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Barrier_Count (Gnattest_T : in out Test);
+   procedure Test_Barrier_Count_df1d0a (Gnattest_T : in out Test) renames Test_Barrier_Count;
+--  id:2.2/df1d0ad5a3318215/Barrier_Count/1/0/
+   procedure Test_Barrier_Count (Gnattest_T : in out Test) is
+   --  mucfgcheck-scheduling.ads:41:4:Barrier_Count
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Barrier_Count (XML_Data => Data);
+
+      --  Remove barrier element.
+
+      declare
+         Barriers : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Data.Doc,
+              XPath => "/system/scheduling/majorFrame/barriers");
+      begin
+         Muxml.Utils.Remove_Child
+           (Node       => Barriers,
+            Child_Name => "barrier");
+
+         Barrier_Count (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Major frame 0 has invalid barrier count 3, should be 4",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Barrier_Count;
+--  end read only
+
 end Mucfgcheck.Scheduling.Test_Data.Tests;

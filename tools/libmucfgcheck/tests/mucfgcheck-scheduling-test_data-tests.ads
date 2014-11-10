@@ -24,5 +24,8 @@ package Mucfgcheck.Scheduling.Test_Data.Tests is
    procedure Test_Barrier_Size_dba514 (Gnattest_T : in out Test);
    --  mucfgcheck-scheduling.ads:37:4:Barrier_Size
 
+   procedure Test_Barrier_Count_df1d0a (Gnattest_T : in out Test);
+   --  mucfgcheck-scheduling.ads:41:4:Barrier_Count
+
 end Mucfgcheck.Scheduling.Test_Data.Tests;
 --  end read only

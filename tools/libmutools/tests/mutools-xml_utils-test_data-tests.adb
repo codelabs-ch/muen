@@ -754,12 +754,34 @@ package body Mutools.XML_Utils.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Ref_Deadlines : constant array (1 .. 7) of Interfaces.Unsigned_64
+        := (1 => 20,
+            2 => 40,
+            3 => 40,
+            4 => 60,
+            5 => 60,
+            6 => 80,
+            7 => 80);
+      Policy : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Policy,
+                   Kind => Muxml.Format_Src,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      declare
+         use type Interfaces.Unsigned_64;
 
+         Major     : constant DOM.Core.Node := Muxml.Utils.Get_Element
+           (Doc   => Policy.Doc,
+            XPath => "/system/scheduling/majorFrame");
+         Deadlines : constant Deadline_Array := Get_Minor_Frame_Deadlines
+           (Major => Major);
+      begin
+         for I in Deadlines'Range loop
+            Assert (Condition => Deadlines (I).Exit_Time = Ref_Deadlines (I),
+                    Message   => "Minor frame deadline" & I'Img & " mismatch");
+         end loop;
+      end;
 --  begin read only
    end Test_Get_Minor_Frame_Deadlines;
 --  end read only

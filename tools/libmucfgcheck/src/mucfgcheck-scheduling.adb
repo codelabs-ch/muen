@@ -176,6 +176,8 @@ is
                               XPath => "barriers/barrier");
             Barrier_Count : constant Natural
               := DOM.Core.Nodes.Length (List => Barriers);
+            Barrier_Refs  : array (1 .. Barrier_Count) of Natural
+              := (others => 0);
             Minor_Frames  : constant DOM.Core.Node_List
               := XPath_Query (N     => Major_Frame,
                               XPath => "cpu/minorFrame");
@@ -210,7 +212,29 @@ is
                                 & Barrier_Count'Img;
                            end;
                         end if;
+
+                        Barrier_Refs (Ref_Idx) := Barrier_Refs (Ref_Idx) + 1;
                      end;
+                  end if;
+               end;
+            end loop;
+
+            for J in 1 .. Barrier_Count loop
+               declare
+                  Barrier      : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => Barriers,
+                                            Index => J - 1);
+                  Barrier_Size : constant Natural
+                    := Natural'Value
+                      (DOM.Core.Elements.Get_Attribute
+                         (Elem => Barrier,
+                          Name => "size"));
+               begin
+                  if Barrier_Size /= Barrier_Refs (J) then
+                     raise Validation_Error with "References to "
+                       & "barrier" & J'Img & " of major frame" & I'Img
+                       & " do not match barrier size:" & Barrier_Refs (J)'Img
+                       & " /=" & Barrier_Size'Img;
                   end if;
                end;
             end loop;

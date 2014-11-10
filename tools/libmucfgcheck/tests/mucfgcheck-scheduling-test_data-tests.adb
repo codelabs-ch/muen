@@ -301,6 +301,28 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
 
       Minor_Frame_Barrier_Refs (XML_Data => Data);
 
+      --  Change barrier reference.
+
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/scheduling/majorFrame/cpu/"
+            & "minorFrame[@barrier='3']",
+            Name  => "barrier",
+            Value => "4");
+
+         Minor_Frame_Barrier_Refs (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "References to barrier 3 of major frame 0 do not match "
+                    & "barrier size: 3 /= 4",
+                    Message   => "Exception mismatch");
+      end;
+
       --  Set barrier reference that is too large.
 
       begin

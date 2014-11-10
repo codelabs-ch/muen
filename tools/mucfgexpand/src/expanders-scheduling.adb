@@ -53,6 +53,9 @@ is
 
    package MOMFD renames Map_Of_Minor_Frame_Deadlines;
 
+   --  Returns the minor frame deadlines for the given major frame.
+   function Get_Minor_Frame_Deadlines (Major : DOM.Core.Node) return MOMFD.Set;
+
    -------------------------------------------------------------------------
 
    procedure Add_Barrier_Configs (Data : in out Muxml.XML_Data_Type)
@@ -68,128 +71,136 @@ is
               := DOM.Core.Nodes.Item
                 (List  => Major_Frames,
                  Index => I);
-            CPU_Nodes        : constant DOM.Core.Node_List
-              := McKae.XML.XPath.XIA.XPath_Query
-                (N     => Major_Frame,
-                 XPath => "cpu");
             Barriers_Node    : constant DOM.Core.Node
               := DOM.Core.Documents.Create_Element
                 (Doc      => Data.Doc,
                  Tag_Name => "barriers");
-            Minor_Exit_Times : MOMFD.Set;
-         begin
-            for J in 0 .. DOM.Core.Nodes.Length (List => CPU_Nodes) - 1 loop
-               declare
-                  CPU_Node      : constant DOM.Core.Node
-                    := DOM.Core.Nodes.Item
-                      (List  => CPU_Nodes,
-                       Index => J);
-                  Minor_Frames  : constant DOM.Core.Node_List
-                    := McKae.XML.XPath.XIA.XPath_Query
-                      (N     => CPU_Node,
-                       XPath => "minorFrame");
-                  Current_Ticks : Interfaces.Unsigned_64 := 0;
-               begin
-                  for K in 0 .. DOM.Core.Nodes.Length
-                    (List => Minor_Frames) - 1
-                  loop
-                     declare
-                        Minor_Frame : constant DOM.Core.Node
-                          := DOM.Core.Nodes.Item
-                            (List  => Minor_Frames,
-                             Index => K);
-                        Minor_Ticks : constant Interfaces.Unsigned_64
-                          := Interfaces.Unsigned_64'Value
-                            (DOM.Core.Elements.Get_Attribute
-                               (Elem => Minor_Frame,
-                                Name => "ticks"));
-                     begin
-                        Current_Ticks := Current_Ticks + Minor_Ticks;
-                        Minor_Exit_Times.Insert
-                          (New_Item => (Exit_Time   => Current_Ticks,
-                                        Minor_Frame => Minor_Frame));
-                     end;
-                  end loop;
-               end;
-            end loop;
+            Minor_Exit_Times : constant MOMFD.Set
+              := Get_Minor_Frame_Deadlines (Major => Major_Frame);
+            Major_End_Ticks  : constant Interfaces.Unsigned_64
+              := Minor_Exit_Times.Last_Element.Exit_Time;
 
-            declare
-               Major_End_Ticks  : constant Interfaces.Unsigned_64
-                 := Minor_Exit_Times.Last_Element.Exit_Time;
-               Cur_Barrier_Idx  : Positive := 1;
-               Cur_Barrier_Size : Positive := 1;
-               Prev_Deadline    : Deadline_Type
-                 := (Exit_Time   => 0,
-                     Minor_Frame => null);
-               Pos              : MOMFD.Cursor
-                 := MOMFD.First (Container => Minor_Exit_Times);
-            begin
-               while MOMFD.Has_Element (Position => Pos) loop
-                  declare
-                     Cur_Deadline : constant Deadline_Type
-                       := MOMFD.Element (Position => Pos);
-                  begin
-                     if Cur_Deadline.Exit_Time = Prev_Deadline.Exit_Time
-                       and then Cur_Deadline.Exit_Time /= Major_End_Ticks
-                     then
-                        Cur_Barrier_Size := Cur_Barrier_Size + 1;
-                        if Cur_Barrier_Size = 2 then
-                           DOM.Core.Elements.Set_Attribute
-                             (Elem  => Prev_Deadline.Minor_Frame,
-                              Name  => "barrier",
-                              Value => Ada.Strings.Fixed.Trim
-                                (Source => Cur_Barrier_Idx'Img,
-                                 Side   => Ada.Strings.Left));
-                        end if;
+            Cur_Barrier_Idx  : Positive := 1;
+            Cur_Barrier_Size : Positive := 1;
+            Prev_Deadline    : Deadline_Type
+              := (Exit_Time   => 0,
+                  Minor_Frame => null);
+            Pos              : MOMFD.Cursor
+              := MOMFD.First (Container => Minor_Exit_Times);
+         begin
+            while MOMFD.Has_Element (Position => Pos) loop
+               declare
+                  Cur_Deadline : constant Deadline_Type
+                    := MOMFD.Element (Position => Pos);
+               begin
+                  if Cur_Deadline.Exit_Time = Prev_Deadline.Exit_Time
+                    and then Cur_Deadline.Exit_Time /= Major_End_Ticks
+                  then
+                     Cur_Barrier_Size := Cur_Barrier_Size + 1;
+                     if Cur_Barrier_Size = 2 then
                         DOM.Core.Elements.Set_Attribute
-                          (Elem  => Cur_Deadline.Minor_Frame,
+                          (Elem  => Prev_Deadline.Minor_Frame,
                            Name  => "barrier",
                            Value => Ada.Strings.Fixed.Trim
                              (Source => Cur_Barrier_Idx'Img,
                               Side   => Ada.Strings.Left));
-                     else
-                        if Cur_Barrier_Size > 1 then
-                           declare
-                              Size_Str : constant String
-                                := Ada.Strings.Fixed.Trim
-                                  (Source => Cur_Barrier_Size'Img,
-                                   Side   => Ada.Strings.Left);
-                              Barrier_Node : constant DOM.Core.Node
-                                := DOM.Core.Documents.Create_Element
-                                  (Doc      => Data.Doc,
-                                   Tag_Name => "barrier");
-                           begin
-                              Mulog.Log
-                                (Msg => "Adding barrier to major frame"
-                                 & I'Img & ": size " & Size_Str
-                                 & ", ticks" & Prev_Deadline.Exit_Time'Img);
-                              DOM.Core.Elements.Set_Attribute
-                                (Elem  => Barrier_Node,
-                                 Name  => "size",
-                                 Value => Size_Str);
-                              Muxml.Utils.Append_Child
-                                (Node      => Barriers_Node,
-                                 New_Child => Barrier_Node);
-                           end;
-                           Cur_Barrier_Size := 1;
-                           Cur_Barrier_Idx  := Cur_Barrier_Idx + 1;
-                        end if;
-                        DOM.Core.Elements.Set_Attribute
-                          (Elem  => Cur_Deadline.Minor_Frame,
-                           Name  => "barrier",
-                           Value => "none");
                      end if;
+                     DOM.Core.Elements.Set_Attribute
+                       (Elem  => Cur_Deadline.Minor_Frame,
+                        Name  => "barrier",
+                        Value => Ada.Strings.Fixed.Trim
+                          (Source => Cur_Barrier_Idx'Img,
+                           Side   => Ada.Strings.Left));
+                  else
+                     if Cur_Barrier_Size > 1 then
+                        declare
+                           Size_Str     : constant String
+                             := Ada.Strings.Fixed.Trim
+                               (Source => Cur_Barrier_Size'Img,
+                                Side   => Ada.Strings.Left);
+                           Barrier_Node : constant DOM.Core.Node
+                             := DOM.Core.Documents.Create_Element
+                               (Doc      => Data.Doc,
+                                Tag_Name => "barrier");
+                        begin
+                           Mulog.Log
+                             (Msg => "Adding barrier to major frame"
+                              & I'Img & ": size " & Size_Str
+                              & ", ticks" & Prev_Deadline.Exit_Time'Img);
+                           DOM.Core.Elements.Set_Attribute
+                             (Elem  => Barrier_Node,
+                              Name  => "size",
+                              Value => Size_Str);
+                           Muxml.Utils.Append_Child
+                             (Node      => Barriers_Node,
+                              New_Child => Barrier_Node);
+                        end;
+                        Cur_Barrier_Size := 1;
+                        Cur_Barrier_Idx  := Cur_Barrier_Idx + 1;
+                     end if;
+                     DOM.Core.Elements.Set_Attribute
+                       (Elem  => Cur_Deadline.Minor_Frame,
+                        Name  => "barrier",
+                        Value => "none");
+                  end if;
 
-                     Prev_Deadline := Cur_Deadline;
-                     Pos           := MOMFD.Next (Position => Pos);
-                  end;
-               end loop;
-            end;
+                  Prev_Deadline := Cur_Deadline;
+                  Pos           := MOMFD.Next (Position => Pos);
+               end;
+            end loop;
+
             Muxml.Utils.Append_Child
               (Node      => Major_Frame,
                New_Child => Barriers_Node);
          end;
       end loop;
    end Add_Barrier_Configs;
+
+   -------------------------------------------------------------------------
+
+   function Get_Minor_Frame_Deadlines (Major : DOM.Core.Node) return MOMFD.Set
+   is
+      CPU_Nodes        : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Major,
+           XPath => "cpu");
+      Minor_Exit_Times : MOMFD.Set;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => CPU_Nodes) - 1 loop
+         declare
+            CPU_Node      : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => CPU_Nodes,
+                 Index => I);
+            Minor_Frames  : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => CPU_Node,
+                 XPath => "minorFrame");
+            Current_Ticks : Interfaces.Unsigned_64 := 0;
+         begin
+            for J in 0 .. DOM.Core.Nodes.Length (List => Minor_Frames) - 1
+            loop
+               declare
+                  Minor_Frame : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Minor_Frames,
+                       Index => J);
+                  Minor_Ticks : constant Interfaces.Unsigned_64
+                    := Interfaces.Unsigned_64'Value
+                      (DOM.Core.Elements.Get_Attribute
+                         (Elem => Minor_Frame,
+                          Name => "ticks"));
+               begin
+                  Current_Ticks := Current_Ticks + Minor_Ticks;
+                  Minor_Exit_Times.Insert
+                    (New_Item => (Exit_Time   => Current_Ticks,
+                                  Minor_Frame => Minor_Frame));
+               end;
+            end loop;
+         end;
+      end loop;
+
+      return Minor_Exit_Times;
+   end Get_Minor_Frame_Deadlines;
 
 end Expanders.Scheduling;

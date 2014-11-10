@@ -157,8 +157,65 @@ is
 
    procedure Minor_Frame_Barrier_Refs (XML_Data : Muxml.XML_Data_Type)
    is
+      Majors : constant DOM.Core.Node_List
+        := XPath_Query (N     => XML_Data.Doc,
+                        XPath => "/system/scheduling/majorFrame");
    begin
-      null;
+      Mulog.Log (Msg => "Checking barrier references in"
+                 & DOM.Core.Nodes.Length (List => Majors)'Img
+                 & " scheduling major frame(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Majors) - 1 loop
+         declare
+            Major_Frame   : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Majors,
+                 Index => I);
+            Barriers      : constant DOM.Core.Node_List
+              := XPath_Query (N     => Major_Frame,
+                              XPath => "barriers/barrier");
+            Barrier_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => Barriers);
+            Minor_Frames  : constant DOM.Core.Node_List
+              := XPath_Query (N     => Major_Frame,
+                              XPath => "cpu/minorFrame");
+         begin
+            for J in 0 .. DOM.Core.Nodes.Length (List => Minor_Frames) - 1 loop
+               declare
+                  Minor_Frame : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item (List  => Minor_Frames,
+                                            Index => J);
+                  Barrier_Ref : constant String
+                    := DOM.Core.Elements.Get_Attribute
+                      (Elem => Minor_Frame,
+                       Name => "barrier");
+               begin
+                  if Barrier_Ref /= "none" then
+                     declare
+                        Ref_Idx : constant Natural
+                          := Natural'Value (Barrier_Ref);
+                     begin
+                        if Ref_Idx > Barrier_Count then
+                           declare
+                              CPU_ID : constant String
+                                := DOM.Core.Elements.Get_Attribute
+                                  (Elem => DOM.Core.Nodes.Parent_Node
+                                     (N => Minor_Frame),
+                                   Name => "id");
+                           begin
+                              raise Validation_Error with "Minor frame" & J'Img
+                                & " of CPU " & CPU_ID & " in major frame"
+                                & I'Img & " references invalid barrier"
+                                & Ref_Idx'Img & ", must be less than"
+                                & Barrier_Count'Img;
+                           end;
+                        end if;
+                     end;
+                  end if;
+               end;
+            end loop;
+         end;
+      end loop;
    end Minor_Frame_Barrier_Refs;
 
    -------------------------------------------------------------------------

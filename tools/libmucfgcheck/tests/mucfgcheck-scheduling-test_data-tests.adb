@@ -214,11 +214,11 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Barrier_Count (Gnattest_T : in out Test);
-   procedure Test_Barrier_Count_df1d0a (Gnattest_T : in out Test) renames Test_Barrier_Count;
---  id:2.2/df1d0ad5a3318215/Barrier_Count/1/0/
-   procedure Test_Barrier_Count (Gnattest_T : in out Test) is
-   --  mucfgcheck-scheduling.ads:41:4:Barrier_Count
+   procedure Test_Minor_Frame_Sync_Points (Gnattest_T : in out Test);
+   procedure Test_Minor_Frame_Sync_Points_cb28c8 (Gnattest_T : in out Test) renames Test_Minor_Frame_Sync_Points;
+--  id:2.2/cb28c86f203faa1a/Minor_Frame_Sync_Points/1/0/
+   procedure Test_Minor_Frame_Sync_Points (Gnattest_T : in out Test) is
+   --  mucfgcheck-scheduling.ads:41:4:Minor_Frame_Sync_Points
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -231,7 +231,7 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
 
       --  Positive test, must not raise an exception.
 
-      Barrier_Count (XML_Data => Data);
+      Minor_Frame_Sync_Points (XML_Data => Data);
 
       --  Set invalid barrier size.
 
@@ -242,7 +242,7 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
             Name  => "size",
             Value => "2");
 
-         Barrier_Count (XML_Data => Data);
+         Minor_Frame_Sync_Points (XML_Data => Data);
          Assert (Condition => False,
                  Message   => "Exception expected");
 
@@ -266,7 +266,7 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
            (Node       => Barriers,
             Child_Name => "barrier");
 
-         Barrier_Count (XML_Data => Data);
+         Minor_Frame_Sync_Points (XML_Data => Data);
          Assert (Condition => False,
                  Message   => "Exception expected");
 
@@ -277,7 +277,7 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
                     Message   => "Exception mismatch");
       end;
 --  begin read only
-   end Test_Barrier_Count;
+   end Test_Minor_Frame_Sync_Points;
 --  end read only
 
 end Mucfgcheck.Scheduling.Test_Data.Tests;

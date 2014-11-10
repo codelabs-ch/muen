@@ -38,6 +38,6 @@ is
 
    --  Validate that the barrier sizes and count of a major frame corresponds
    --  to the minor frame synchronization points.
-   procedure Barrier_Count (XML_Data : Muxml.XML_Data_Type);
+   procedure Minor_Frame_Sync_Points (XML_Data : Muxml.XML_Data_Type);
 
 end Mucfgcheck.Scheduling;

@@ -53,8 +53,13 @@ is
 
    package MOMFD renames Map_Of_Minor_Frame_Deadlines;
 
+   type Deadline_Array is array (Positive range <>) of Deadline_Type;
+
    --  Returns the minor frame deadlines for the given major frame.
    function Get_Minor_Frame_Deadlines (Major : DOM.Core.Node) return MOMFD.Set;
+
+   --  Convert a minor frame deadline set to the corresponding deadline array.
+   function To_Deadline_Array (Deadline_Set : MOMFD.Set) return Deadline_Array;
 
    -------------------------------------------------------------------------
 
@@ -75,23 +80,23 @@ is
               := DOM.Core.Documents.Create_Element
                 (Doc      => Data.Doc,
                  Tag_Name => "barriers");
-            Minor_Exit_Times : constant MOMFD.Set
-              := Get_Minor_Frame_Deadlines (Major => Major_Frame);
+            Minor_Exit_Times : constant Deadline_Array
+              := To_Deadline_Array
+                (Deadline_Set => Get_Minor_Frame_Deadlines
+                   (Major => Major_Frame));
             Major_End_Ticks  : constant Interfaces.Unsigned_64
-              := Minor_Exit_Times.Last_Element.Exit_Time;
+              := Minor_Exit_Times (Minor_Exit_Times'Last).Exit_Time;
 
             Cur_Barrier_Idx  : Positive := 1;
             Cur_Barrier_Size : Positive := 1;
             Prev_Deadline    : Deadline_Type
               := (Exit_Time   => 0,
                   Minor_Frame => null);
-            Pos              : MOMFD.Cursor
-              := MOMFD.First (Container => Minor_Exit_Times);
          begin
-            while MOMFD.Has_Element (Position => Pos) loop
+            for I in Minor_Exit_Times'Range loop
                declare
                   Cur_Deadline : constant Deadline_Type
-                    := MOMFD.Element (Position => Pos);
+                    := Minor_Exit_Times (I);
                begin
                   if Cur_Deadline.Exit_Time = Prev_Deadline.Exit_Time
                     and then Cur_Deadline.Exit_Time /= Major_End_Ticks
@@ -145,7 +150,6 @@ is
                   end if;
 
                   Prev_Deadline := Cur_Deadline;
-                  Pos           := MOMFD.Next (Position => Pos);
                end;
             end loop;
 
@@ -202,5 +206,24 @@ is
 
       return Minor_Exit_Times;
    end Get_Minor_Frame_Deadlines;
+
+   -------------------------------------------------------------------------
+
+   function To_Deadline_Array (Deadline_Set : MOMFD.Set) return Deadline_Array
+   is
+      Size    : constant Natural
+        := Natural (MOMFD.Length (Container => Deadline_Set));
+      Result  : Deadline_Array (1 .. Size);
+      Pos     : MOMFD.Cursor := MOMFD.First (Container => Deadline_Set);
+      Cur_Idx : Natural      := Result'First;
+   begin
+      while MOMFD.Has_Element (Position => Pos) loop
+         Result (Cur_Idx) := MOMFD.Element (Position => Pos);
+         Pos              := MOMFD.Next (Position => Pos);
+         Cur_Idx          := Cur_Idx + 1;
+      end loop;
+
+      return Result;
+   end To_Deadline_Array;
 
 end Expanders.Scheduling;

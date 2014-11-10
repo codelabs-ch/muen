@@ -91,6 +91,26 @@ is
                     & Sync_Point_Count'Img;
                end if;
             end;
+
+            for J in 1 .. DOM.Core.Nodes.Length (List => Barriers) loop
+               declare
+                  Barrier : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Barriers,
+                       Index => J - 1);
+                  Barrier_Size : constant Positive := Positive'Value
+                    (DOM.Core.Elements.Get_Attribute
+                       (Elem => Barrier,
+                        Name => "size"));
+               begin
+                  if Barrier_Size /= Sync_Points (J) then
+                     raise Validation_Error with "Barrier" & J'Img & " of "
+                       & "major frame" & I'Img & " has "
+                       & "invalid size" & Barrier_Size'Img & ", should be"
+                       & Sync_Points (J)'Img;
+                  end if;
+               end;
+            end loop;
          end;
       end loop;
    end Barrier_Count;

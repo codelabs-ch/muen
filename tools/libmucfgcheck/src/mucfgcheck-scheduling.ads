@@ -36,8 +36,8 @@ is
    --  Validate that barrier sizes do not exceed the number of logical CPUs.
    procedure Barrier_Size (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that the barrier count of a major frame corresponds to the
-   --  number of minor frame synchronization points.
+   --  Validate that the barrier sizes and count of a major frame corresponds
+   --  to the minor frame synchronization points.
    procedure Barrier_Count (XML_Data : Muxml.XML_Data_Type);
 
 end Mucfgcheck.Scheduling;

@@ -233,6 +233,27 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
 
       Barrier_Count (XML_Data => Data);
 
+      --  Set invalid barrier size.
+
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/scheduling/majorFrame/barriers/barrier[@size='3']",
+            Name  => "size",
+            Value => "2");
+
+         Barrier_Count (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Barrier 1 of major frame 0 has invalid size 2, should"
+                    &" be 3",
+                    Message   => "Exception mismatch");
+      end;
+
       --  Remove barrier element.
 
       declare

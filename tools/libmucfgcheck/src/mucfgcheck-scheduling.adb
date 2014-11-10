@@ -34,8 +34,39 @@ is
 
    procedure Barrier_Size (XML_Data : Muxml.XML_Data_Type)
    is
+      CPU_Count     : constant Positive
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => XML_Data);
+      Barriers      : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/scheduling/majorFrame/barriers/barrier");
+      Barrier_Count : constant Natural := DOM.Core.Nodes.Length
+        (List => Barriers);
    begin
-      null;
+      if Barrier_Count = 0 then
+         return;
+      end if;
+
+      Mulog.Log (Msg => "Checking size of" & Barrier_Count'Img
+                 & " minor frame barrier(s)");
+
+      for I in 0 .. Barrier_Count - 1 loop
+         declare
+            Barrier : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Barriers,
+                 Index => I);
+            Size    : constant Natural := Natural'Value
+              (DOM.Core.Elements.Get_Attribute
+                 (Elem => Barrier,
+                  Name => "size"));
+         begin
+            if Size > CPU_Count then
+               raise Validation_Error with "Minor frame barrier with invalid"
+                 & " size" & Size'Img & ", must not exceed" & CPU_Count'Img;
+            end if;
+         end;
+      end loop;
    end Barrier_Size;
 
    -------------------------------------------------------------------------

@@ -30,9 +30,9 @@ is
      (Off, "*Barrier""",
       Reason => "Barrier is actually mode out but must be in out to enable use"
       & " of Async_Writer aspect for barrier instances");
-   --  Set size of barrier to given value. The size of the barrier specifies
-   --  how many CPUs must wait on the barrier to be released.
-   procedure Set_Size
+   --  Initialize barrier with the given size. The size of the barrier
+   --  specifies how many CPUs must wait on the barrier to be released.
+   procedure Initialize
      (Barrier : in out Sense_Barrier_Type;
       Size    :        SK.Byte)
    with

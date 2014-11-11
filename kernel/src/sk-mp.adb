@@ -45,7 +45,7 @@ is
    end Wait_For_All;
 
 begin
-   Barriers.Set_Size
+   Barriers.Initialize
      (All_Barrier,                    --  Workaround for [NA10-010]
       SK.Byte (Skp.CPU_Range'Last));  --  (no named arguments)
 end SK.MP;

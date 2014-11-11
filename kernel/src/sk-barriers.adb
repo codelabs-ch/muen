@@ -54,7 +54,7 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Size
+   procedure Initialize
      (Barrier : in out Sense_Barrier_Type;
       Size    :        SK.Byte)
    is
@@ -62,7 +62,7 @@ is
       Barrier := (Size       => Size,
                   Sense      => False,
                   Wait_Count => 0);
-   end Set_Size;
+   end Initialize;
 
    -------------------------------------------------------------------------
 

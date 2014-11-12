@@ -169,11 +169,56 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Barrier_ID (Gnattest_T : in out Test);
+   procedure Test_Barrier_ID_f855f1 (Gnattest_T : in out Test) renames Test_Barrier_ID;
+--  id:2.2/f855f1f17e2f5819/Barrier_ID/1/0/
+   procedure Test_Barrier_ID (Gnattest_T : in out Test) is
+   --  mucfgcheck-scheduling.ads:37:4:Barrier_ID
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Barrier_ID (XML_Data => Data);
+
+      --  Set invalid barrier ID (i.e. larger than barrier count).
+
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/scheduling/majorFrame/barriers/barrier",
+            Name  => "id",
+            Value => "42");
+
+         Barrier_ID (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Barrier of major frame 0 has invalid ID 42, must be in "
+                    & "range 1 .. 4",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Barrier_ID;
+--  end read only
+
+
+--  begin read only
    procedure Test_Barrier_Size (Gnattest_T : in out Test);
    procedure Test_Barrier_Size_dba514 (Gnattest_T : in out Test) renames Test_Barrier_Size;
 --  id:2.2/dba514408c2c4e9a/Barrier_Size/1/0/
    procedure Test_Barrier_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-scheduling.ads:37:4:Barrier_Size
+   --  mucfgcheck-scheduling.ads:40:4:Barrier_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -218,7 +263,7 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
    procedure Test_Minor_Frame_Sync_Points_cb28c8 (Gnattest_T : in out Test) renames Test_Minor_Frame_Sync_Points;
 --  id:2.2/cb28c86f203faa1a/Minor_Frame_Sync_Points/1/0/
    procedure Test_Minor_Frame_Sync_Points (Gnattest_T : in out Test) is
-   --  mucfgcheck-scheduling.ads:41:4:Minor_Frame_Sync_Points
+   --  mucfgcheck-scheduling.ads:44:4:Minor_Frame_Sync_Points
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -286,7 +331,7 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
    procedure Test_Minor_Frame_Barrier_Refs_7035a5 (Gnattest_T : in out Test) renames Test_Minor_Frame_Barrier_Refs;
 --  id:2.2/7035a54e1ad8b7e4/Minor_Frame_Barrier_Refs/1/0/
    procedure Test_Minor_Frame_Barrier_Refs (Gnattest_T : in out Test) is
-   --  mucfgcheck-scheduling.ads:44:4:Minor_Frame_Barrier_Refs
+   --  mucfgcheck-scheduling.ads:47:4:Minor_Frame_Barrier_Refs
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

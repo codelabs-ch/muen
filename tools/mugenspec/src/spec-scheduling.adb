@@ -169,15 +169,21 @@ is
 
          for I in 1 .. Barrier_Count loop
             declare
+               Barrier      : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item
+                   (List  => Barriers,
+                    Index => I - 1);
+               Barrier_ID   : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem =>  Barrier,
+                    Name => "id");
                Barrier_Size : constant String
                  := DOM.Core.Elements.Get_Attribute
-                   (Elem =>  DOM.Core.Nodes.Item
-                      (List  => Barriers,
-                       Index => I - 1),
+                   (Elem =>  Barrier,
                     Name => "size");
             begin
-               Barrier_Buffer := Barrier_Buffer & Indent (N => 2) & "  "
-                 & I'Img & " => " & Barrier_Size
+               Barrier_Buffer := Barrier_Buffer & Indent (N => 3)
+                 & Barrier_ID & " => " & Barrier_Size
                  & (if I < Max_Barrier_Count then "," & ASCII.LF else "");
             end;
          end loop;

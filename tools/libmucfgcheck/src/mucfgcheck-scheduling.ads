@@ -33,7 +33,7 @@ is
    --  Validate tick counts in major frame.
    procedure Major_Frame_Ticks (XML_Data : Muxml.XML_Data_Type);
 
-   --  Validate that barrier IDs do not exceed barrier count.
+   --  Validate that barrier IDs do not exceed barrier count and are unique.
    procedure Barrier_ID (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that barrier sizes do not exceed the number of logical CPUs.

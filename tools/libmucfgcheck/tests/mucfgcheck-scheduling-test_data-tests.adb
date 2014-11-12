@@ -188,6 +188,26 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
 
       Barrier_ID (XML_Data => Data);
 
+      --  Set duplicate barrier ID.
+
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/scheduling/majorFrame/barriers/barrier[@id='3']",
+            Name  => "id",
+            Value => "2");
+
+         Barrier_ID (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Major frame 0 has multiple barriers with ID 2",
+                    Message   => "Exception mismatch");
+      end;
+
       --  Set invalid barrier ID (i.e. larger than barrier count).
 
       begin

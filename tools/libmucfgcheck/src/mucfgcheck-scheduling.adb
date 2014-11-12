@@ -52,6 +52,8 @@ is
                               XPath => "barriers/barrier");
             Barrier_Count : constant Natural
               := DOM.Core.Nodes.Length (List => Barriers);
+            IDs_Present   : array (1 .. Barrier_Count) of Boolean
+              := (others => False);
          begin
             for J in 0 .. DOM.Core.Nodes.Length (List => Barriers) - 1 loop
                declare
@@ -68,8 +70,14 @@ is
                      raise Validation_Error with "Barrier of major frame"
                        & I'Img & " has invalid ID" & Barrier_ID'Img
                        & ", must be in range 1 .." & Barrier_Count'Img;
-
                   end if;
+
+                  if IDs_Present (Barrier_ID) then
+                     raise Validation_Error with "Major frame" & I'Img
+                       & " has multiple barriers with ID" & Barrier_ID'Img;
+                  end if;
+
+                  IDs_Present (Barrier_ID) := True;
                end;
             end loop;
          end;

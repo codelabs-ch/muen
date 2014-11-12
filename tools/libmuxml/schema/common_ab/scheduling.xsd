@@ -15,6 +15,7 @@
 	</xs:complexType>
 
 	<xs:complexType name="barrierType">
+		<xs:attribute name="id"   type="xs:positiveInteger" use="optional"/>
 		<xs:attribute name="size" type="xs:positiveInteger" use="required"/>
 	</xs:complexType>
 

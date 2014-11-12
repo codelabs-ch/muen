@@ -219,7 +219,7 @@
     <minorFrame barrier="none" subject="tau0" ticks="40"/>
    </cpu>
    <barriers>
-    <barrier size="1"/>
+    <barrier id="1" size="1"/>
    </barriers>
   </majorFrame>
   <majorFrame>

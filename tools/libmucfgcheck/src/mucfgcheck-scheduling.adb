@@ -34,8 +34,46 @@ is
 
    procedure Barrier_ID (XML_Data : Muxml.XML_Data_Type)
    is
+      Majors : constant DOM.Core.Node_List
+        := XPath_Query (N     => XML_Data.Doc,
+                        XPath => "/system/scheduling/majorFrame");
    begin
-      null;
+      Mulog.Log (Msg => "Checking barrier ID(s) in" & DOM.Core.Nodes.Length
+                 (List => Majors)'Img & " scheduling major frame(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Majors) - 1 loop
+         declare
+            Major         : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Majors,
+                 Index => I);
+            Barriers      : constant DOM.Core.Node_List
+              := XPath_Query (N     => Major,
+                              XPath => "barriers/barrier");
+            Barrier_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => Barriers);
+         begin
+            for J in 0 .. DOM.Core.Nodes.Length (List => Barriers) - 1 loop
+               declare
+                  Barrier    : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Barriers,
+                       Index => J);
+                  Barrier_ID : constant Positive := Positive'Value
+                    (DOM.Core.Elements.Get_Attribute
+                       (Elem => Barrier,
+                        Name => "id"));
+               begin
+                  if Barrier_ID > Barrier_Count then
+                     raise Validation_Error with "Barrier of major frame"
+                       & I'Img & " has invalid ID" & Barrier_ID'Img
+                       & ", must be in range 1 .." & Barrier_Count'Img;
+
+                  end if;
+               end;
+            end loop;
+         end;
+      end loop;
    end Barrier_ID;
 
    -------------------------------------------------------------------------

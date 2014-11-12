@@ -224,16 +224,21 @@ is
                   Barrier      : constant DOM.Core.Node
                     := DOM.Core.Nodes.Item (List  => Barriers,
                                             Index => J - 1);
+                  Barrier_ID   : constant Positive := Positive'Value
+                    (DOM.Core.Elements.Get_Attribute
+                       (Elem => Barrier,
+                        Name => "id"));
                   Barrier_Size : constant Natural
                     := Natural'Value
                       (DOM.Core.Elements.Get_Attribute
                          (Elem => Barrier,
                           Name => "size"));
                begin
-                  if Barrier_Size /= Barrier_Refs (J) then
-                     raise Validation_Error with "References to "
-                       & "barrier" & J'Img & " of major frame" & I'Img
-                       & " do not match barrier size:" & Barrier_Refs (J)'Img
+                  if Barrier_Size /= Barrier_Refs (Barrier_ID) then
+                     raise Validation_Error with "References to barrier"
+                       & Barrier_ID'Img & " of major frame" & I'Img
+                       & " do not match barrier size:"
+                       & Barrier_Refs (Barrier_ID)'Img
                        & " /=" & Barrier_Size'Img;
                   end if;
                end;
@@ -310,16 +315,20 @@ is
                     := DOM.Core.Nodes.Item
                       (List  => Barriers,
                        Index => J - 1);
+                  Barrier_ID   : constant Positive := Positive'Value
+                    (DOM.Core.Elements.Get_Attribute
+                       (Elem => Barrier,
+                        Name => "id"));
                   Barrier_Size : constant Positive := Positive'Value
                     (DOM.Core.Elements.Get_Attribute
                        (Elem => Barrier,
                         Name => "size"));
                begin
-                  if Barrier_Size /= Sync_Points (J) then
-                     raise Validation_Error with "Barrier" & J'Img & " of "
-                       & "major frame" & I'Img & " has "
+                  if Barrier_Size /= Sync_Points (Barrier_ID) then
+                     raise Validation_Error with "Barrier" & Barrier_ID'Img
+                       & " of " & "major frame" & I'Img & " has "
                        & "invalid size" & Barrier_Size'Img & ", should be"
-                       & Sync_Points (J)'Img;
+                       & Sync_Points (Barrier_ID)'Img;
                   end if;
                end;
             end loop;

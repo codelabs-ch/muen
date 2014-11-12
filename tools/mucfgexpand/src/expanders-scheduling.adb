@@ -70,6 +70,10 @@ is
                declare
                   Cur_Deadline : constant Mutools.XML_Utils.Deadline_Type
                     := Minor_Exit_Times (I);
+                  Barrier_ID   : constant String
+                    := Ada.Strings.Fixed.Trim
+                      (Source => Cur_Barrier_Idx'Img,
+                       Side   => Ada.Strings.Left);
                begin
                   if Cur_Deadline.Exit_Time = Prev_Deadline.Exit_Time
                     and then Cur_Deadline.Exit_Time /= Major_End_Ticks
@@ -79,9 +83,7 @@ is
                         DOM.Core.Elements.Set_Attribute
                           (Elem  => Prev_Deadline.Minor_Frame,
                            Name  => "barrier",
-                           Value => Ada.Strings.Fixed.Trim
-                             (Source => Cur_Barrier_Idx'Img,
-                              Side   => Ada.Strings.Left));
+                           Value => Barrier_ID);
                      end if;
                      DOM.Core.Elements.Set_Attribute
                        (Elem  => Cur_Deadline.Minor_Frame,
@@ -102,9 +104,14 @@ is
                                 Tag_Name => "barrier");
                         begin
                            Mulog.Log
-                             (Msg => "Adding barrier to major frame"
-                              & I'Img & ": size " & Size_Str
-                              & ", ticks" & Prev_Deadline.Exit_Time'Img);
+                             (Msg => "Adding barrier with ID " & Barrier_ID
+                              & " to major frame" & I'Img & ": size "
+                              & Size_Str & ", ticks"
+                              & Prev_Deadline.Exit_Time'Img);
+                           DOM.Core.Elements.Set_Attribute
+                             (Elem  => Barrier_Node,
+                              Name  => "id",
+                              Value => Barrier_ID);
                            DOM.Core.Elements.Set_Attribute
                              (Elem  => Barrier_Node,
                               Name  => "size",

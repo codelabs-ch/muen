@@ -59,7 +59,7 @@ is
         (DOM.Core.Elements.Get_Attribute (Elem => Processor,
                                           Name => "vmxTimerRate"));
       Timer_Factor : constant Long_Integer  := CPU_Speed_Hz /
-        (2 ** Timer_Rate * Long_Integer'Value (DOM.Core.Elements.Get_Attribute
+        (Long_Integer'Value (DOM.Core.Elements.Get_Attribute
          (Elem => Scheduling,
           Name => "tickRate")));
       CPU_Count    : constant Natural

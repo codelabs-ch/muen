@@ -3,7 +3,7 @@ with SK;
 package Skp.Scheduling
 is
 
-   VMX_Timer_Rate : constant := __vmx_timer_rate__;
+   VMX_Timer_Rate : constant := 5;
 
    type Barrier_Index_Range is range 0 .. 3;
 

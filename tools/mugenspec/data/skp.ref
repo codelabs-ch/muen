@@ -1,7 +1,9 @@
 package Skp
 is
 
-   type CPU_Range is range 0 .. 1;
+   CPU_Count : constant := 2;
+
+   type CPU_Range is range 0 .. CPU_Count - 1;
 
    subtype Subject_Id_Type is Natural range 0 .. 2;
 

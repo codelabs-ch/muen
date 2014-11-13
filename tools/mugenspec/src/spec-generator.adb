@@ -1467,9 +1467,10 @@ is
       Tmpl := Mutools.Templates.Create (Content => String_Templates.skp_ads);
       Mutools.Templates.Replace
         (Template => Tmpl,
-         Pattern  => "__cpu_range__",
-         Content  => "0 .." & Natural'Image
-           (CPU_Count - 1));
+         Pattern  => "__cpu_count__",
+         Content  => Ada.Strings.Fixed.Trim
+           (Source => CPU_Count'Img,
+            Side   => Ada.Strings.Left));
       Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__subj_range__",

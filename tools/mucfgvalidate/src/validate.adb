@@ -141,6 +141,8 @@ is
       XML_Processors.Register
         (Process => Scheduling.Major_Frame_Ticks'Access);
       XML_Processors.Register
+        (Process => Scheduling.Barrier_ID'Access);
+      XML_Processors.Register
         (Process => Scheduling.Barrier_Size'Access);
       XML_Processors.Register
         (Process => Scheduling.Minor_Frame_Sync_Points'Access);

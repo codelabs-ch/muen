@@ -204,7 +204,8 @@ is
       --  Update preemption timer ticks in subject VMCS.
 
       VMX.VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                      Value => SK.Word64 (Plan_Frame.Ticks));
+                      Value => SK.Word64 (Plan_Frame.Ticks)
+                      / 2 ** Skp.Scheduling.VMX_Timer_Rate);
    end Update_Scheduling_Info;
 
    -------------------------------------------------------------------------
@@ -316,7 +317,8 @@ is
 
       VMX.Load (VMCS_Address => Initial_VMCS_Addr);
       VMX.VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                      Value => SK.Word64 (Plan_Frame.Ticks));
+                      Value => SK.Word64 (Plan_Frame.Ticks)
+                      / 2 ** Skp.Scheduling.VMX_Timer_Rate);
    end Init;
 
    -------------------------------------------------------------------------

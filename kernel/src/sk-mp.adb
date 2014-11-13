@@ -86,6 +86,6 @@ is
 
 begin
    Barriers.Initialize
-     (All_Barrier,                        --  Workaround for [NA10-010]
-      SK.Byte (Skp.CPU_Range'Last) + 1);  --  (no named arguments)
+     (All_Barrier,               --  Workaround for [NA10-010]
+      SK.Byte (Skp.CPU_Count));  --  (no named arguments)
 end SK.MP;

@@ -1,3 +1,3 @@
 COMPONENT = time
 
-include ../component_native.mk
+include ../component_ada.mk

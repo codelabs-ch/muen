@@ -336,9 +336,17 @@ is
                if Deadline.Exit_Time /= End_Ticks
                  and then Deadline.Exit_Time = Prev_Deadline
                then
+
+                  --  Current and previous minor frame have same deadline.
+
                   Sync_Points (Cur_Idx) := Sync_Points (Cur_Idx) + 1;
                else
                   if Sync_Points (Cur_Idx) > 1 then
+
+                     --  Current minor frame has new deadline but preceding
+                     --  minor frames had same exit time so move to next
+                     --  synchronization point.
+
                      Cur_Idx := Cur_Idx + 1;
                   end if;
                end if;

@@ -36,7 +36,9 @@ MUGENZP       ?= $(TOP_DIR)/tools/mugenzp/bin/mugenzp
 MUPACK        ?= $(TOP_DIR)/tools/mupack/bin/mupack
 MULNXBZPATCH  ?= $(TOP_DIR)/tools/mulnxbzpatch/bin/mulnxbzpatch
 
-TO_RAW_OPTS = -O binary --set-section-flags .bss=alloc,load,contents
+TO_RAW_OPTS = -O binary \
+	--set-section-flags .bss=alloc,load,contents \
+	--set-section-flags .stack=alloc,load,contents
 TO_RAW_CMD  = objcopy $(TO_RAW_OPTS)
 
 HARDWARE ?= bochs

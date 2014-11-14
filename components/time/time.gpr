@@ -15,10 +15,12 @@
 
 project Time extends "../component_ada" is
 
-   for Languages use ("Ada");
+   for Languages use ("Ada", "Asm");
    for Source_Dirs use
-     ("../../common/debug",
-      "../../policy/obj",
+     ("../../common/src",
+      "../../common/debug",
+      "../src",
+      "../src/debug",
       "src");
    for Object_Dir use "obj";
 

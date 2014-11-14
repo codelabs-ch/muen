@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with "../libmuchannel/libmuchannel";
+
 project Sm extends "../component_spark" is
 
    Extra_Dirs := Component_Spark.Src_Dirs & Component_Spark.Extra_Dirs;

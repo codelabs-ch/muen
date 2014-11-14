@@ -11,7 +11,7 @@ include ../../Makespark
 
 SPARK_OPTS += $(PROOF_OPTS)
 
-all: $(ALL) install
+all: $(ALL)
 
 $(OBJ_DIR)/debug/$(COMPONENT):
 	gprbuild $(BUILD_OPTS) -P$(COMPONENT) -Xbuild=debug $(PROOF_OPTS)

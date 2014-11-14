@@ -15,11 +15,14 @@ package Mucfgcheck.Platform.Test_Data.Tests is
    procedure Test_Memory_Block_Overlap_12597b (Gnattest_T : in out Test);
    --  mucfgcheck-platform.ads:28:4:Memory_Block_Overlap
 
+   procedure Test_Memory_Block_Size_2aa436 (Gnattest_T : in out Test);
+   --  mucfgcheck-platform.ads:31:4:Memory_Block_Size
+
    procedure Test_PCI_Config_Space_Address_4663d9 (Gnattest_T : in out Test);
-   --  mucfgcheck-platform.ads:32:4:PCI_Config_Space_Address
+   --  mucfgcheck-platform.ads:35:4:PCI_Config_Space_Address
 
    procedure Test_CPU_Count_07d30c (Gnattest_T : in out Test);
-   --  mucfgcheck-platform.ads:35:4:CPU_Count
+   --  mucfgcheck-platform.ads:38:4:CPU_Count
 
 end Mucfgcheck.Platform.Test_Data.Tests;
 --  end read only

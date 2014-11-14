@@ -167,4 +167,250 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
    end Test_Major_Frame_Ticks;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Barrier_ID (Gnattest_T : in out Test);
+   procedure Test_Barrier_ID_f855f1 (Gnattest_T : in out Test) renames Test_Barrier_ID;
+--  id:2.2/f855f1f17e2f5819/Barrier_ID/1/0/
+   procedure Test_Barrier_ID (Gnattest_T : in out Test) is
+   --  mucfgcheck-scheduling.ads:37:4:Barrier_ID
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Barrier_ID (XML_Data => Data);
+
+      --  Set duplicate barrier ID.
+
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/scheduling/majorFrame/barriers/barrier[@id='3']",
+            Name  => "id",
+            Value => "2");
+
+         Barrier_ID (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Major frame 0 has multiple barriers with ID 2",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Set invalid barrier ID (i.e. larger than barrier count).
+
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/scheduling/majorFrame/barriers/barrier",
+            Name  => "id",
+            Value => "42");
+
+         Barrier_ID (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Barrier of major frame 0 has invalid ID 42, must be in "
+                    & "range 1 .. 4",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Barrier_ID;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Barrier_Size (Gnattest_T : in out Test);
+   procedure Test_Barrier_Size_dba514 (Gnattest_T : in out Test) renames Test_Barrier_Size;
+--  id:2.2/dba514408c2c4e9a/Barrier_Size/1/0/
+   procedure Test_Barrier_Size (Gnattest_T : in out Test) is
+   --  mucfgcheck-scheduling.ads:40:4:Barrier_Size
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Barrier_Size (XML_Data => Data);
+
+      --  Set invalid barrier size (i.e. larger than CPU count).
+
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/scheduling/majorFrame/barriers/barrier",
+            Name  => "size",
+            Value => "42");
+
+         Barrier_Size (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Minor frame barrier with invalid size 42, must not "
+                    & "exceed 4",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Barrier_Size;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Minor_Frame_Sync_Points (Gnattest_T : in out Test);
+   procedure Test_Minor_Frame_Sync_Points_cb28c8 (Gnattest_T : in out Test) renames Test_Minor_Frame_Sync_Points;
+--  id:2.2/cb28c86f203faa1a/Minor_Frame_Sync_Points/1/0/
+   procedure Test_Minor_Frame_Sync_Points (Gnattest_T : in out Test) is
+   --  mucfgcheck-scheduling.ads:44:4:Minor_Frame_Sync_Points
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Minor_Frame_Sync_Points (XML_Data => Data);
+
+      --  Set invalid barrier size.
+
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/scheduling/majorFrame/barriers/barrier[@size='3']",
+            Name  => "size",
+            Value => "2");
+
+         Minor_Frame_Sync_Points (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Barrier 1 of major frame 0 has invalid size 2, should"
+                    &" be 3",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Remove barrier element.
+
+      declare
+         Barriers : constant DOM.Core.Node
+           := Muxml.Utils.Get_Element
+             (Doc   => Data.Doc,
+              XPath => "/system/scheduling/majorFrame/barriers");
+      begin
+         Muxml.Utils.Remove_Child
+           (Node       => Barriers,
+            Child_Name => "barrier");
+
+         Minor_Frame_Sync_Points (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Major frame 0 has invalid barrier count 3, should be 4",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Minor_Frame_Sync_Points;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Minor_Frame_Barrier_Refs (Gnattest_T : in out Test);
+   procedure Test_Minor_Frame_Barrier_Refs_7035a5 (Gnattest_T : in out Test) renames Test_Minor_Frame_Barrier_Refs;
+--  id:2.2/7035a54e1ad8b7e4/Minor_Frame_Barrier_Refs/1/0/
+   procedure Test_Minor_Frame_Barrier_Refs (Gnattest_T : in out Test) is
+   --  mucfgcheck-scheduling.ads:47:4:Minor_Frame_Barrier_Refs
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Minor_Frame_Barrier_Refs (XML_Data => Data);
+
+      --  Change barrier reference.
+
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/scheduling/majorFrame/cpu/"
+            & "minorFrame[@barrier='3']",
+            Name  => "barrier",
+            Value => "4");
+
+         Minor_Frame_Barrier_Refs (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "References to barrier 3 of major frame 0 do not match "
+                    & "barrier size: 3 /= 4",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Set barrier reference that is too large.
+
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/scheduling/majorFrame/cpu/"
+            & "minorFrame[@barrier='1']",
+            Name  => "barrier",
+            Value => "42");
+
+         Minor_Frame_Barrier_Refs (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Minor frame 0 of CPU 0 in major frame 0 references "
+                    & "invalid barrier 42, must be less than 4",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Minor_Frame_Barrier_Refs;
+--  end read only
+
 end Mucfgcheck.Scheduling.Test_Data.Tests;

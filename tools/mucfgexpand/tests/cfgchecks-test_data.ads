@@ -11,6 +11,8 @@ with DOM.Core.Nodes;
 with DOM.Core.Documents;
 with DOM.Core.Elements;
 
+with McKae.XML.XPath.XIA;
+
 with Muxml.Utils;
 with Mucfgcheck;
 

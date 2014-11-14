@@ -131,10 +131,12 @@ is
          In_Out => (CPU_Global.State, Current_Major, Events.State,
                     MP.Barrier, X86_64.State)),
       Depends =>
-        ((CPU_Global.State, Current_Major, Events.State, X86_64.State) =>+
-            (CPU_Global.State, Current_Major, New_Major),
-         MP.Barrier =>+ (CPU_Global.State, Current_Major))
+        ((CPU_Global.State, Current_Major, Events.State, MP.Barrier,
+         X86_64.State) =>+
+            (CPU_Global.State, Current_Major, New_Major))
    is
+      use type Skp.Scheduling.Barrier_Index_Range;
+
       Minor_Frame : CPU_Global.Active_Minor_Frame_Type;
       Plan_Frame  : Skp.Scheduling.Minor_Frame_Type;
    begin
@@ -147,6 +149,10 @@ is
          --  Switch to next minor frame in current major frame.
 
          Minor_Frame.Minor_Id := Minor_Frame.Minor_Id + 1;
+
+         if Minor_Frame.Barrier /= Skp.Scheduling.No_Barrier then
+            MP.Wait_On_Minor_Frame_Barrier (Index => Minor_Frame.Barrier);
+         end if;
       else
 
          --  Switch to first minor frame in next major frame.
@@ -155,7 +161,19 @@ is
 
          MP.Wait_For_All;
          if CPU_Global.Is_BSP then
-            Current_Major := New_Major;
+            declare
+               use type Skp.Scheduling.Major_Frame_Range;
+
+               Prev_Major : constant Skp.Scheduling.Major_Frame_Range
+                 := Current_Major;
+            begin
+               Current_Major := New_Major;
+
+               if Current_Major /= Prev_Major then
+                  MP.Set_Minor_Frame_Barrier_Config
+                    (Config => Skp.Scheduling.Barrier_Configs (Current_Major));
+               end if;
+            end;
          end if;
          MP.Wait_For_All;
       end if;
@@ -173,6 +191,7 @@ is
       end if;
 
       Minor_Frame.Subject_Id := Plan_Frame.Subject_Id;
+      Minor_Frame.Barrier    := Plan_Frame.Barrier;
       CPU_Global.Set_Current_Minor (Frame => Minor_Frame);
 
       if Skp.Subjects.Get_Profile
@@ -194,9 +213,11 @@ is
    with
       Refined_Global  =>
         (Input  => (Current_Major, Interrupts.State),
-         In_Out => (CPU_Global.State, Subjects.State, X86_64.State)),
+         In_Out => (CPU_Global.State, MP.Barrier, Subjects.State,
+                    X86_64.State)),
       Refined_Depends =>
         (CPU_Global.State =>+ Current_Major,
+         MP.Barrier       =>+ Current_Major,
          Subjects.State   =>+ null,
          X86_64.State     =>+ (CPU_Global.State, Current_Major,
                                Interrupts.State))
@@ -214,10 +235,20 @@ is
       Plan_Frame := CPU_Global.Get_Minor_Frame
         (Major_Id => Current_Major,
          Minor_Id => Skp.Scheduling.Minor_Frame_Range'First);
+
       CPU_Global.Set_Current_Minor
         (Frame => CPU_Global.Active_Minor_Frame_Type'
            (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First,
-            Subject_Id => Plan_Frame.Subject_Id));
+            Subject_Id => Plan_Frame.Subject_Id,
+            Barrier    => Plan_Frame.Barrier));
+
+      if CPU_Global.Is_BSP then
+
+         --  Set minor frame barriers config.
+
+         MP.Set_Minor_Frame_Barrier_Config
+           (Config => Skp.Scheduling.Barrier_Configs (Current_Major));
+      end if;
 
       --  Setup VMCS and state of subjects running on this logical CPU.
 
@@ -483,7 +514,7 @@ is
           Subject_Registers) =>+ (CPU_Global.State, Current_Major, New_Major,
                                   Subjects.State, Subject_Registers,
                                   X86_64.State),
-         MP.Barrier          =>+ (CPU_Global.State, Current_Major,
+         MP.Barrier          =>+ (CPU_Global.State, Current_Major, New_Major,
                                   X86_64.State),
          (Subjects.State,
           VTd.State)         =>+ (CPU_Global.State, Subjects.State,

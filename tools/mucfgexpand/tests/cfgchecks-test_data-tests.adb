@@ -20,21 +20,33 @@ package body Cfgchecks.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
-      Tau0_Node : DOM.Core.Node;
       Policy    : Muxml.XML_Data_Type;
    begin
       Muxml.Parse (Data => Policy,
                    Kind => Muxml.Format_Src,
                    File => "data/test_policy.xml");
 
-      Tau0_Node := Muxml.Utils.Get_Element
-        (Doc   => Policy.Doc,
-         XPath => "/system/scheduling/majorFrame/cpu/"
-         & "minorFrame[@subject='tau0']");
-      Tau0_Node := DOM.Core.Nodes.Remove_Child
-        (N         => DOM.Core.Nodes.Parent_Node (N => Tau0_Node),
-         Old_Child => Tau0_Node);
-      pragma Unreferenced (Tau0_Node);
+      --  Remove all tau0 minor frames from scheduling plan.
+
+      declare
+         Tau0_Nodes : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Policy.Doc,
+              XPath => "/system/scheduling/majorFrame/cpu/"
+              & "minorFrame[@subject='tau0']");
+      begin
+         for I in 0 .. DOM.Core.Nodes.Length (List => Tau0_Nodes) - 1 loop
+            declare
+               Node : DOM.Core.Node := DOM.Core.Nodes.Item
+                 (List  => Tau0_Nodes,
+                  Index => I);
+            begin
+               Node := DOM.Core.Nodes.Remove_Child
+                 (N         => DOM.Core.Nodes.Parent_Node (N => Node),
+                  Old_Child => Node);
+            end;
+         end loop;
+      end;
 
       begin
          Tau0_Presence_In_Scheduling (XML_Data => Policy);

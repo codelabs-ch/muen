@@ -16,10 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Interfaces;
-
 with Ada.Strings.Unbounded.Hash;
 with Ada.Containers.Hashed_Maps;
+with Ada.Containers.Ordered_Multisets;
 
 with DOM.Core.Nodes;
 with DOM.Core.Documents;
@@ -405,6 +404,96 @@ is
    begin
       return Find_CPU (Subject => Subject);
    end Get_Executing_CPU;
+
+   -------------------------------------------------------------------------
+
+   function Get_Minor_Frame_Deadlines
+     (Major : DOM.Core.Node)
+      return Deadline_Array
+   is
+      use type Interfaces.Unsigned_64;
+
+      function "<"
+        (Left, Right : Deadline_Type)
+         return Boolean
+      is (Left.Exit_Time < Right.Exit_Time);
+
+      package Map_Of_Minor_Frame_Deadlines is
+        new Ada.Containers.Ordered_Multisets (Element_Type => Deadline_Type);
+
+      package MOMFD renames Map_Of_Minor_Frame_Deadlines;
+
+      --  Convert a minor frame deadline set to the corresponding deadline
+      --  array.
+      function To_Deadline_Array
+        (Deadline_Set : MOMFD.Set)
+         return Deadline_Array;
+
+      ----------------------------------------------------------------------
+
+      function To_Deadline_Array
+        (Deadline_Set : MOMFD.Set)
+         return Deadline_Array
+      is
+         Size    : constant Natural
+           := Natural (MOMFD.Length (Container => Deadline_Set));
+         Result  : Deadline_Array (1 .. Size);
+         Pos     : MOMFD.Cursor := MOMFD.First (Container => Deadline_Set);
+         Cur_Idx : Natural      := Result'First;
+      begin
+         while MOMFD.Has_Element (Position => Pos) loop
+            Result (Cur_Idx) := MOMFD.Element (Position => Pos);
+            Pos              := MOMFD.Next (Position => Pos);
+            Cur_Idx          := Cur_Idx + 1;
+         end loop;
+
+         return Result;
+      end To_Deadline_Array;
+
+      ----------------------------------------------------------------------
+
+      CPU_Nodes        : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Major,
+           XPath => "cpu");
+      Minor_Exit_Times : MOMFD.Set;
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => CPU_Nodes) - 1 loop
+         declare
+            CPU_Node      : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => CPU_Nodes,
+                 Index => I);
+            Minor_Frames  : constant DOM.Core.Node_List
+              := McKae.XML.XPath.XIA.XPath_Query
+                (N     => CPU_Node,
+                 XPath => "minorFrame");
+            Current_Ticks : Interfaces.Unsigned_64 := 0;
+         begin
+            for J in 0 .. DOM.Core.Nodes.Length (List => Minor_Frames) - 1
+            loop
+               declare
+                  Minor_Frame : constant DOM.Core.Node
+                    := DOM.Core.Nodes.Item
+                      (List  => Minor_Frames,
+                       Index => J);
+                  Minor_Ticks : constant Interfaces.Unsigned_64
+                    := Interfaces.Unsigned_64'Value
+                      (DOM.Core.Elements.Get_Attribute
+                         (Elem => Minor_Frame,
+                          Name => "ticks"));
+               begin
+                  Current_Ticks := Current_Ticks + Minor_Ticks;
+                  Minor_Exit_Times.Insert
+                    (New_Item => (Exit_Time   => Current_Ticks,
+                                  Minor_Frame => Minor_Frame));
+               end;
+            end loop;
+         end;
+      end loop;
+
+      return To_Deadline_Array (Deadline_Set => Minor_Exit_Times);
+   end Get_Minor_Frame_Deadlines;
 
    -------------------------------------------------------------------------
 

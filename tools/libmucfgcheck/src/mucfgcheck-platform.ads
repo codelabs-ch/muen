@@ -27,6 +27,9 @@ is
    --  Validate that no memory blocks overlap.
    procedure Memory_Block_Overlap (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate size of memory blocks.
+   procedure Memory_Block_Size (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that PCI config space address is specified if PCI devices are
    --  present.
    procedure PCI_Config_Space_Address (XML_Data : Muxml.XML_Data_Type);

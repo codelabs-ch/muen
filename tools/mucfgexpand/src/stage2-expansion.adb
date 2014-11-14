@@ -21,6 +21,7 @@ with Expanders.Kernel;
 with Expanders.Subjects;
 with Expanders.Channels;
 with Expanders.Platform;
+with Expanders.Scheduling;
 with Expanders.Device_Domains;
 
 package body Stage2.Expansion
@@ -80,6 +81,8 @@ is
       Procs.Register (Process => Subjects.Add_Device_Memory_Mappings'Access);
       Procs.Register (Process => Subjects.Add_Device_BDFs'Access);
       Procs.Register (Process => Channels.Add_Physical_Memory'Access);
+
+      Procs.Register (Process => Scheduling.Add_Barrier_Configs'Access);
 
       --  BDF of device references must be expanded
 

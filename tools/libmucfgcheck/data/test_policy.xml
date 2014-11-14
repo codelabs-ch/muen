@@ -1457,32 +1457,50 @@
  <scheduling tickRate="10000">
   <majorFrame>
    <cpu id="0">
-    <minorFrame subject="vt" ticks="60"/>
-    <minorFrame subject="vt" ticks="60"/>
+    <minorFrame barrier="1" subject="vt" ticks="60"/>
+    <minorFrame barrier="3" subject="vt" ticks="60"/>
+    <minorFrame barrier="none" subject="vt" ticks="60"/>
    </cpu>
    <cpu id="1">
-    <minorFrame subject="linux" ticks="120"/>
+    <minorFrame barrier="2" subject="linux" ticks="90"/>
+    <minorFrame barrier="3" subject="linux" ticks="30"/>
+    <minorFrame barrier="4" subject="linux" ticks="30"/>
+    <minorFrame barrier="none" subject="linux" ticks="30"/>
    </cpu>
    <cpu id="2">
-    <minorFrame subject="time" ticks="120"/>
+    <minorFrame barrier="none" subject="time" ticks="30"/>
+    <minorFrame barrier="1" subject="time" ticks="30"/>
+    <minorFrame barrier="2" subject="time" ticks="30"/>
+    <minorFrame barrier="3" subject="time" ticks="30"/>
+    <minorFrame barrier="4" subject="time" ticks="30"/>
+    <minorFrame barrier="none" subject="time" ticks="30"/>
    </cpu>
    <cpu id="3">
-    <minorFrame subject="tau0" ticks="120"/>
+    <minorFrame barrier="1" subject="tau0" ticks="60"/>
+    <minorFrame barrier="3" subject="tau0" ticks="60"/>
+    <minorFrame barrier="none" subject="tau0" ticks="60"/>
    </cpu>
+   <barriers>
+    <barrier id="1" size="3"/>
+    <barrier id="2" size="2"/>
+    <barrier id="3" size="4"/>
+    <barrier id="4" size="2"/>
+   </barriers>
   </majorFrame>
   <majorFrame>
    <cpu id="0">
-    <minorFrame subject="vt" ticks="120"/>
+    <minorFrame barrier="none" subject="vt" ticks="120"/>
    </cpu>
    <cpu id="1">
-    <minorFrame subject="linux" ticks="120"/>
+    <minorFrame barrier="none" subject="linux" ticks="120"/>
    </cpu>
    <cpu id="2">
-    <minorFrame subject="time" ticks="120"/>
+    <minorFrame barrier="none" subject="time" ticks="120"/>
    </cpu>
    <cpu id="3">
-    <minorFrame subject="tau0" ticks="120"/>
+    <minorFrame barrier="none" subject="tau0" ticks="120"/>
    </cpu>
+   <barriers/>
   </majorFrame>
  </scheduling>
 </system>

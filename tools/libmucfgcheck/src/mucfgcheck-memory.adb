@@ -510,7 +510,7 @@ is
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query
         (N     => XML_Data.Doc,
-         XPath => "//*[@size]");
+         XPath => "//memory[@size]");
    begin
       Check_Attribute (Nodes     => Nodes,
                        Node_Type => "physical memory",

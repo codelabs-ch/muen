@@ -141,6 +141,14 @@ is
       XML_Processors.Register
         (Process => Scheduling.Major_Frame_Ticks'Access);
       XML_Processors.Register
+        (Process => Scheduling.Barrier_ID'Access);
+      XML_Processors.Register
+        (Process => Scheduling.Barrier_Size'Access);
+      XML_Processors.Register
+        (Process => Scheduling.Minor_Frame_Sync_Points'Access);
+      XML_Processors.Register
+        (Process => Scheduling.Minor_Frame_Barrier_Refs'Access);
+      XML_Processors.Register
         (Process => Kernel.CPU_Store_Address_Equality'Access);
       XML_Processors.Register
         (Process => Kernel.Stack_Address_Equality'Access);
@@ -174,6 +182,8 @@ is
         (Process => Platform.Memory_Space'Access);
       XML_Processors.Register
         (Process => Platform.Memory_Block_Overlap'Access);
+      XML_Processors.Register
+        (Process => Platform.Memory_Block_Size'Access);
       XML_Processors.Register
         (Process => Platform.PCI_Config_Space_Address'Access);
       XML_Processors.Register

@@ -226,8 +226,9 @@
 	<scheduling tickRate="10000">
 		<majorFrame>
 			<cpu id="1">
-				<minorFrame subject="linux" ticks="1700"/>
+				<minorFrame barrier="none" subject="linux" ticks="1700"/>
 			</cpu>
+			<barriers/>
 		</majorFrame>
 	</scheduling>
 

@@ -33,4 +33,17 @@ is
    --  Validate tick counts in major frame.
    procedure Major_Frame_Ticks (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that barrier IDs do not exceed barrier count and are unique.
+   procedure Barrier_ID (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that barrier sizes do not exceed the number of logical CPUs.
+   procedure Barrier_Size (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that the barrier sizes and count of a major frame corresponds
+   --  to the minor frame synchronization points.
+   procedure Minor_Frame_Sync_Points (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that minor frame barrier references are valid.
+   procedure Minor_Frame_Barrier_Refs (XML_Data : Muxml.XML_Data_Type);
+
 end Mucfgcheck.Scheduling;

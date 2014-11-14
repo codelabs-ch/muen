@@ -16,19 +16,43 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp;
-
 with SK.Barriers;
 
 package body SK.MP
 with
-   Refined_State => (Barrier => All_Barrier)
+   Refined_State => (Barrier => (All_Barrier, Minor_Frame_Barriers))
 is
+
+   type Minor_Frame_Barriers_Array is
+     array (Skp.Scheduling.Barrier_Index_Range) of Barriers.Sense_Barrier_Type;
+
+   Minor_Frame_Barriers : Minor_Frame_Barriers_Array
+     with
+       Volatile,
+       Async_Readers,
+       Async_Writers;
 
    All_Barrier : Barriers.Sense_Barrier_Type
      with
        Async_Readers,
        Async_Writers;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Minor_Frame_Barrier_Config
+     (Config : Skp.Scheduling.Major_Config_Array)
+   with
+      SPARK_Mode      => $Complete_Proofs,  -- [NB04-057]
+      Refined_Global  => (In_Out => Minor_Frame_Barriers),
+      Refined_Depends => (Minor_Frame_Barriers =>+ Config)
+   is
+   begin
+      for I in Config'Range loop
+         Barriers.Initialize
+           (Minor_Frame_Barriers (I),  --  Workaround for [NA10-010]
+            SK.Byte (Config (I)));     --  (no named arguments)
+      end loop;
+   end Set_Minor_Frame_Barrier_Config;
 
    -------------------------------------------------------------------------
 
@@ -44,8 +68,24 @@ is
       Barriers.Wait (All_Barrier);
    end Wait_For_All;
 
+   -------------------------------------------------------------------------
+
+   procedure Wait_On_Minor_Frame_Barrier
+     (Index : Skp.Scheduling.Barrier_Index_Range)
+   with
+      SPARK_Mode      => $Complete_Proofs,  -- [NB04-057]
+      Refined_Global  => (In_Out => Minor_Frame_Barriers),
+      Refined_Depends => (Minor_Frame_Barriers =>+ Index)
+   is
+   begin
+
+      --  Workaround for [NA10-010] (no named arguments)
+
+      Barriers.Wait (Minor_Frame_Barriers (Index));
+   end Wait_On_Minor_Frame_Barrier;
+
 begin
-   Barriers.Set_Size
-     (All_Barrier,                    --  Workaround for [NA10-010]
-      SK.Byte (Skp.CPU_Range'Last));  --  (no named arguments)
+   Barriers.Initialize
+     (All_Barrier,               --  Workaround for [NA10-010]
+      SK.Byte (Skp.CPU_Count));  --  (no named arguments)
 end SK.MP;

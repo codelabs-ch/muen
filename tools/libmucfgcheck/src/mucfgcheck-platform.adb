@@ -24,6 +24,7 @@ with Mulog;
 with Muxml.Utils;
 with Mutools.Utils;
 with Mutools.XML_Utils;
+with Mutools.Constants;
 
 package body Mucfgcheck.Platform
 is
@@ -67,6 +68,23 @@ is
                             Region_Type  => "platform memory block",
                             Address_Attr => "physicalAddress");
    end Memory_Block_Overlap;
+
+   -------------------------------------------------------------------------
+
+   procedure Memory_Block_Size (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/platform/memory/memoryBlock");
+   begin
+      Check_Attribute (Nodes     => Nodes,
+                       Node_Type => "platform memory block",
+                       Attr      => "size",
+                       Name_Attr => "name",
+                       Test      => Mod_Equal_Zero'Access,
+                       Right     => Mutools.Constants.Page_Size,
+                       Error_Msg => "not multiple of page size (4K)");
+   end Memory_Block_Size;
 
    -------------------------------------------------------------------------
 

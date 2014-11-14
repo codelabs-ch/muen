@@ -5,7 +5,7 @@ VERSION      = $(GIT_REV)
 GIT_REV      = $(shell git describe --always --dirty="-UNCLEAN")
 
 GNATPROVE_DATE  := $(shell gnatprove --version | cut -d "(" -f2 | cut -d ")" -f1)
-COMPLETE_PROOFS := $(shell expr $(GNATPROVE_DATE) \>= 20140901)
+COMPLETE_PROOFS := $(shell expr $(GNATPROVE_DATE) \>= 20141106)
 ifeq ($(COMPLETE_PROOFS),1)
 PROOF_OPTS = -Xproofs=complete
 else

@@ -1201,32 +1201,18 @@
 	<scheduling tickRate="10000">
 		<majorFrame>
 			<cpu id="0">
-				<minorFrame subject="vt" ticks="60"/>
-				<minorFrame subject="vt" ticks="60"/>
+				<minorFrame barrier="none" subject="vt" ticks="120"/>
 			</cpu>
 			<cpu id="1">
-				<minorFrame subject="linux" ticks="120"/>
+				<minorFrame barrier="none" subject="linux" ticks="120"/>
 			</cpu>
 			<cpu id="2">
-				<minorFrame subject="time" ticks="120"/>
+				<minorFrame barrier="none" subject="time" ticks="120"/>
 			</cpu>
 			<cpu id="3">
-				<minorFrame subject="tau0" ticks="120"/>
+				<minorFrame barrier="none" subject="tau0" ticks="120"/>
 			</cpu>
-		</majorFrame>
-		<majorFrame>
-			<cpu id="0">
-				<minorFrame subject="vt" ticks="120"/>
-			</cpu>
-			<cpu id="1">
-				<minorFrame subject="linux" ticks="120"/>
-			</cpu>
-			<cpu id="2">
-				<minorFrame subject="time" ticks="120"/>
-			</cpu>
-			<cpu id="3">
-				<minorFrame subject="tau0" ticks="120"/>
-			</cpu>
+			<barriers/>
 		</majorFrame>
 	</scheduling>
 

@@ -26,20 +26,31 @@ is
    with
       Depends => (Barrier =>+ null);
 
-   --  Set size of barrier to given value. The size of the barrier specifies
-   --  how many CPUs must wait on the barrier to be released.
-   procedure Set_Size
+   pragma $Prove_Warnings  --  Workaround for [NB11-009]
+     (Off, "*Barrier""",
+      Reason => "Barrier is actually mode out but must be in out to enable use"
+      & " of Async_Writer aspect for barrier instances");
+   --  Initialize barrier with the given size. The size of the barrier
+   --  specifies how many CPUs must wait on the barrier to be released.
+   procedure Initialize
      (Barrier : in out Sense_Barrier_Type;
       Size    :        SK.Byte)
    with
       Depends => (Barrier =>+ Size);
+   pragma Annotate (GNATprove, Intentional,
+                    "missing dependency ""null => Barrier""",
+                    "Workaround for [NB11-009]");
+   pragma Annotate (GNATprove, Intentional,
+                    "incorrect dependency ""Barrier => Barrier""",
+                    "Workaround for [NB11-009]");
+   pragma $Prove_Warnings (On, "*Barrier""");
 
 private
 
    type Sense_Barrier_Type is record
-      Size       : SK.Byte := 1     with Atomic;
-      Sense      : Boolean := False with Atomic;
-      Wait_Count : SK.Byte := 0     with Atomic;
+      Size       : SK.Byte with Atomic;
+      Sense      : Boolean with Atomic;
+      Wait_Count : SK.Byte with Atomic;
    end record
      with Volatile;
 

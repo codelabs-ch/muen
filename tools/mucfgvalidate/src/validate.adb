@@ -183,6 +183,8 @@ is
       XML_Processors.Register
         (Process => Platform.Memory_Block_Overlap'Access);
       XML_Processors.Register
+        (Process => Platform.Memory_Block_Size'Access);
+      XML_Processors.Register
         (Process => Platform.PCI_Config_Space_Address'Access);
       XML_Processors.Register
         (Process => Platform.CPU_Count'Access);

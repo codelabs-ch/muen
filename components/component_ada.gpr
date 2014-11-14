@@ -18,7 +18,7 @@
 
 with "../config/shared";
 
-abstract project Component_Ada is
+abstract project Component_Ada extends "component_common.gpr" is
 
    package Builder is
       for Global_Configuration_Pragmas use "../config/restrictions-nospark.adc";
@@ -33,16 +33,5 @@ abstract project Component_Ada is
       for Switches ("interrupts.ad*") use Shared.Spark_Compiler_Switches
         & Shared.Warning_Switches & Shared.Build_Warning_Switches;
    end Compiler;
-
-   package Linker is
-      for Default_Switches ("Ada") use
-        ("-T", "../component.ld",
-         "-nostdlib",
-         "-n");
-   end Linker;
-
-   package Naming is
-      for Body_Suffix ("Asm") use ".S";
-   end Naming;
 
 end Component_Ada;

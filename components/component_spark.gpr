@@ -18,7 +18,7 @@
 
 with "../config/shared";
 
-abstract project Component_Spark is
+abstract project Component_Spark extends "component_common.gpr" is
 
    type Build_Type is ("debug", "release", "prove");
    Build_Mode : Build_Type := external ("build", "prove");
@@ -82,16 +82,5 @@ abstract project Component_Spark is
         & Extra_Warning_Switches;
       for Local_Configuration_Pragmas use "../config/restrictions-" & Build_Mode & ".adc";
    end Compiler;
-
-   package Linker is
-      for Default_Switches ("Ada") use
-        ("-T", "../component.ld",
-         "-nostdlib",
-         "-n");
-   end Linker;
-
-   package Naming is
-      for Body_Suffix ("Asm") use ".S";
-   end Naming;
 
 end Component_Spark;

@@ -480,6 +480,13 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Region_Size (XML_Data => Data);
+
+      --  Set invalid memory region size.
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/memory/memory[@name='kernel_text']",

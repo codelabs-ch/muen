@@ -28,6 +28,4 @@ install: $(OBJ_DIR)/$(COMPONENT)
 clean:
 	@rm -rf $(OBJ_DIR)
 
-FORCE:
-
-.PHONY: FORCE $(OBJ_DIR)/debug/$(COMPONENT) $(OBJ_DIR)/release/$(COMPONENT)
+.PHONY: $(OBJ_DIR)/debug/$(COMPONENT) $(OBJ_DIR)/release/$(COMPONENT)

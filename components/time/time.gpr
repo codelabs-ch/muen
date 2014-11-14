@@ -13,6 +13,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with "../libmuchannel/libmuchannel";
+
 project Time extends "../component_ada" is
 
    for Languages use ("Ada", "Asm");

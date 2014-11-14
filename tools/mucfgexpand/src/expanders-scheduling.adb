@@ -65,6 +65,22 @@ is
             Prev_Deadline    : Mutools.XML_Utils.Deadline_Type
               := (Exit_Time   => 0,
                   Minor_Frame => null);
+
+            --  Returns True if the given minor frame deadline is the end of
+            --  the major frame.
+            function Is_Major_Frame_End
+              (Deadline : Mutools.XML_Utils.Deadline_Type)
+               return Boolean;
+
+            ----------------------------------------------------------------
+
+            function Is_Major_Frame_End
+              (Deadline : Mutools.XML_Utils.Deadline_Type)
+               return Boolean
+            is
+            begin
+               return Deadline.Exit_Time = Major_End_Ticks;
+            end Is_Major_Frame_End;
          begin
             for I in Minor_Exit_Times'Range loop
                declare
@@ -76,10 +92,17 @@ is
                        Side   => Ada.Strings.Left);
                begin
                   if Cur_Deadline.Exit_Time = Prev_Deadline.Exit_Time
-                    and then Cur_Deadline.Exit_Time /= Major_End_Ticks
+                    and then not Is_Major_Frame_End (Deadline => Cur_Deadline)
                   then
+
+                     --  Current and previous minor frame have same deadline.
+
                      Cur_Barrier_Size := Cur_Barrier_Size + 1;
+
                      if Cur_Barrier_Size = 2 then
+
+                        --  Set barrer ID of first matching minor frame.
+
                         DOM.Core.Elements.Set_Attribute
                           (Elem  => Prev_Deadline.Minor_Frame,
                            Name  => "barrier",
@@ -88,11 +111,13 @@ is
                      DOM.Core.Elements.Set_Attribute
                        (Elem  => Cur_Deadline.Minor_Frame,
                         Name  => "barrier",
-                        Value => Ada.Strings.Fixed.Trim
-                          (Source => Cur_Barrier_Idx'Img,
-                           Side   => Ada.Strings.Left));
+                        Value => Barrier_ID);
                   else
                      if Cur_Barrier_Size > 1 then
+
+                        --  New minor frame does not synchronize on current
+                        --  barrier. Add barrier and start fresh with next one.
+
                         declare
                            Size_Str     : constant String
                              := Ada.Strings.Fixed.Trim

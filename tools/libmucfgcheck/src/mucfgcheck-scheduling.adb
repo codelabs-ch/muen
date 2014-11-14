@@ -314,23 +314,23 @@ is
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Majors) - 1 loop
          declare
-            Major_Frame    : constant DOM.Core.Node
+            Major_Frame   : constant DOM.Core.Node
               := DOM.Core.Nodes.Item
                 (List  => Majors,
                  Index => I);
-            Barriers       : constant DOM.Core.Node_List
+            Barriers      : constant DOM.Core.Node_List
               := XPath_Query (N     => Major_Frame,
                               XPath => "barriers/barrier");
-            Deadlines      : constant Mutools.XML_Utils.Deadline_Array
+            Deadlines     : constant Mutools.XML_Utils.Deadline_Array
               := Mutools.XML_Utils.Get_Minor_Frame_Deadlines
                 (Major => Major_Frame);
-            End_Ticks      : constant Interfaces.Unsigned_64
+            End_Ticks     : constant Interfaces.Unsigned_64
               := Deadlines (Deadlines'Last).Exit_Time;
 
-            Sync_Points    : array (Deadlines'Range) of Positive
+            Sync_Points   : array (Deadlines'Range) of Positive
               := (others => 1);
-            Cur_Idx        : Natural                := Sync_Points'First;
-            Prev_Deadline  : Interfaces.Unsigned_64 := 0;
+            Cur_Idx       : Natural                := Sync_Points'First;
+            Prev_Deadline : Interfaces.Unsigned_64 := 0;
          begin
             for Deadline of Deadlines loop
                if Deadline.Exit_Time /= End_Ticks

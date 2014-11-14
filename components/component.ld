@@ -22,18 +22,20 @@ SECTIONS
 {
 	/* first page is used as stack guard page */
 
-	.bss 0x1000 :
+	.stack 0x1000 :
 	{
 		. += 0x4000;
-		stack = .;
-		*(.bss)
 	}
 
-	.text 0x6000 :
+	.text :
 	{
 		stub.o(.stub)
 		*(.text)
 	}
+
+	. = ALIGN (4096);
+
+	.bss : { *(.bss) }
 
 	. = ALIGN (4096);
 

@@ -18,7 +18,7 @@
 
 with "../config/shared";
 
-project Component is
+project Component_Ada is
 
    for Languages use ("Ada", "Asm");
    for Source_Dirs use ("src", "src/debug", "../common/src");
@@ -48,4 +48,4 @@ project Component is
       for Body_Suffix ("Asm") use ".S";
    end Naming;
 
-end Component;
+end Component_Ada;

@@ -13,7 +13,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-project Time extends "../component" is
+project Time extends "../component_ada" is
 
    for Languages use ("Ada");
    for Source_Dirs use

@@ -52,14 +52,14 @@ is
       Processor    : constant DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
          XPath => "/system/platform/processor");
-      CPU_Speed_Hz : constant Long_Integer :=  1_000_000 * Long_Integer'Value
+      CPU_Speed_Hz : constant Long_Integer  := 1_000_000 * Long_Integer'Value
         (DOM.Core.Elements.Get_Attribute (Elem => Processor,
                                           Name => "speed"));
-      Timer_Rate   : constant Long_Integer := 2 ** Natural'Value
+      Timer_Rate   : constant Natural       := Natural'Value
         (DOM.Core.Elements.Get_Attribute (Elem => Processor,
                                           Name => "vmxTimerRate"));
-      Timer_Factor : constant Long_Integer := CPU_Speed_Hz /
-        (Timer_Rate * Long_Integer'Value (DOM.Core.Elements.Get_Attribute
+      Timer_Factor : constant Long_Integer  := CPU_Speed_Hz /
+        (Long_Integer'Value (DOM.Core.Elements.Get_Attribute
          (Elem => Scheduling,
           Name => "tickRate")));
       CPU_Count    : constant Natural
@@ -356,6 +356,12 @@ is
         (Template => Tmpl,
          Pattern  => "__barrier_configs__",
          Content  => To_String (Barrier_Buffer));
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__vmx_timer_rate__",
+         Content  => Ada.Strings.Fixed.Trim
+           (Source => Timer_Rate'Img,
+            Side   => Ada.Strings.Left));
 
       Mutools.Templates.Write
         (Template => Tmpl,

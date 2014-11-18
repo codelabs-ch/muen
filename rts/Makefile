@@ -6,7 +6,7 @@ $(OBJ_DIR)/adalib/libgnat.a: $(OBJ_DIR)/adainclude/*.ad[sb]
 	gprbuild --RTS=./obj $(BUILD_OPTS) -P$(PACKAGE)
 
 $(OBJ_DIR)/adainclude/*.ad[sb]: src/*.ad[sb]
-	@mkdir -p $(OBJ_DIR)/adainclude
+	@mkdir -p $(OBJ_DIR)/adainclude $(OBJ_DIR)/adalib
 	cp src/* $(OBJ_DIR)/adainclude
 
 clean:

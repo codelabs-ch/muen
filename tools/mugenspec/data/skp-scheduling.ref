@@ -23,7 +23,7 @@ is
       Ticks      => 0,
       Barrier    => No_Barrier);
 
-   type Minor_Frame_Range is range 1 .. 8;
+   type Minor_Frame_Range is range 1 .. 9;
 
    type Minor_Frame_Array is array (Minor_Frame_Range) of Minor_Frame_Type;
 
@@ -96,7 +96,7 @@ is
                                     Barrier    => No_Barrier),
              others => Null_Minor_Frame)),
        2 => Major_Frame_Type'
-         (Length       => 8,
+         (Length       => 9,
           Minor_Frames => Minor_Frame_Array'(
              1 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 290000000,
                                     Barrier    => No_Barrier),
@@ -109,10 +109,12 @@ is
              5 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 290000000,
                                     Barrier    => 2),
              6 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 290000000,
-                                    Barrier    => 3),
-             7 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 290000000,
                                     Barrier    => No_Barrier),
+             7 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 290000000,
+                                    Barrier    => 3),
              8 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 290000000,
+                                    Barrier    => No_Barrier),
+             9 => Minor_Frame_Type'(Subject_Id => 1, Ticks => 290000000,
                                     Barrier    => No_Barrier)))));
 
    subtype Barrier_Size_Type is

@@ -1,13 +1,6 @@
-include ../../Makeconf
+include ../ada_common.mk
 
-BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
-
-all: $(COMPONENT)
-
-$(COMPONENT):
-	gprbuild $(BUILD_OPTS) -P$(COMPONENT)
+install:
 
 clean:
 	@rm -rf $(OBJ_DIR) lib
-
-install:

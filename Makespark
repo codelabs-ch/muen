@@ -1,6 +1,6 @@
 BUILD_OPTS += --RTS=$(TOP_DIR)/rts/obj
 
-SPARK_OPTS =             \
+SPARK_OPTS =         \
 	--warnings=error \
 	--report=all     \
 	-f               \

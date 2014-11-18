@@ -1,10 +1,11 @@
 include ../Makeconf
 
-COMPONENTS ?= \
-	linux     \
-	sm        \
-	tau0      \
-	time      \
+COMPONENTS ?=    \
+	libmuchannel \
+	linux        \
+	sm           \
+	tau0         \
+	time         \
 	vt
 
 COMPONENTS_INSTALL = $(COMPONENTS:%=install-%)

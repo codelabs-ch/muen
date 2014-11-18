@@ -71,6 +71,7 @@ is
       Majors            : DOM.Core.Node_List;
       Buffer            : Unbounded_String;
       Barrier_Buffer    : Unbounded_String;
+      Major_Info_Buffer : Unbounded_String;
       Tmpl              : Mutools.Templates.Template_Type;
 
       --  Returns the maximum count of barriers per major frame.
@@ -88,6 +89,11 @@ is
       procedure Write_Major_Frame
         (Index  : Natural;
          Minors : DOM.Core.Node_List);
+
+      --  Write info of major frame with given index to buffer.
+      procedure Write_Major_Frame_Info
+        (Index       : Natural;
+         Major_Frame : DOM.Core.Node);
 
       --  Write minor frame with given index to buffer.
       procedure Write_Minor_Frame
@@ -234,6 +240,56 @@ is
 
       ----------------------------------------------------------------------
 
+      procedure Write_Major_Frame_Info
+        (Index       : Natural;
+         Major_Frame : DOM.Core.Node)
+      is
+         Barriers      : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Major_Frame,
+              XPath => "barriers/barrier");
+         Barrier_Count : constant Natural
+           := DOM.Core.Nodes.Length (List => Barriers);
+      begin
+         Major_Info_Buffer := Major_Info_Buffer & Indent (N => 2)
+           & Index'Img & " => Major_Frame_Info_Type'"
+           & ASCII.LF & Indent (N => 3)
+           & "(Barrier_Config => Major_Config_Array'("
+           & ASCII.LF;
+
+         for I in 0 .. Barrier_Count - 1 loop
+            declare
+               Barrier      : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => Barriers,
+                                         Index => I);
+               Barrier_ID   : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Barrier,
+                    Name => "id");
+               Barrier_Size : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Barrier,
+                    Name => "size");
+            begin
+               Major_Info_Buffer := Major_Info_Buffer & Indent (N => 4)
+                 & Barrier_ID & " => " & Barrier_Size;
+
+               if I < Max_Barrier_Count - 1 then
+                  Major_Info_Buffer := Major_Info_Buffer & "," & ASCII.LF;
+               end if;
+            end;
+         end loop;
+
+         if Barrier_Count < Max_Barrier_Count or else Barrier_Count = 0 then
+            Major_Info_Buffer := Major_Info_Buffer & Indent (N => 4)
+              & "others => Barrier_Size_Type'First";
+         end if;
+
+         Major_Info_Buffer := Major_Info_Buffer & "))";
+      end Write_Major_Frame_Info;
+
+      ----------------------------------------------------------------------
+
       procedure Write_Minor_Frame
         (Minor : DOM.Core.Node;
          Index : Natural)
@@ -332,6 +388,27 @@ is
          end loop;
       end;
 
+      declare
+         Major_Frames      : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Scheduling,
+              XPath => "majorFrame");
+         Major_Frame_Count : constant Natural
+           := DOM.Core.Nodes.Length (List => Major_Frames);
+      begin
+         for I in 0 .. Major_Frame_Count - 1 loop
+            Write_Major_Frame_Info
+              (Index       => I,
+               Major_Frame => DOM.Core.Nodes.Item
+                 (List  => Major_Frames,
+                  Index => I));
+
+            if I < Major_Frame_Count - 1 then
+               Major_Info_Buffer := Major_Info_Buffer & "," & ASCII.LF;
+            end if;
+         end loop;
+      end;
+
       Tmpl := Mutools.Templates.Create
         (Content => String_Templates.skp_scheduling_ads);
       Mutools.Templates.Replace
@@ -356,6 +433,10 @@ is
         (Template => Tmpl,
          Pattern  => "__barrier_configs__",
          Content  => To_String (Barrier_Buffer));
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__major_frames_info__",
+         Content  => To_String (Major_Info_Buffer));
       Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__vmx_timer_rate__",

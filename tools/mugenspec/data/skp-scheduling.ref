@@ -141,6 +141,17 @@ is
      of Major_Frame_Info_Type;
 
    Major_Frames : constant Major_Frame_Info_Array := Major_Frame_Info_Array'(
-__major_frames_info__);
+       0 => Major_Frame_Info_Type'
+         (Barrier_Config => Major_Config_Array'(
+            others => Barrier_Size_Type'First)),
+       1 => Major_Frame_Info_Type'
+         (Barrier_Config => Major_Config_Array'(
+            1 => 2,
+            others => Barrier_Size_Type'First)),
+       2 => Major_Frame_Info_Type'
+         (Barrier_Config => Major_Config_Array'(
+            1 => 2,
+            2 => 2,
+            3 => 2)));
 
 end Skp.Scheduling;

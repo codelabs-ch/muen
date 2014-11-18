@@ -50,10 +50,10 @@ __scheduling_plans__);
    subtype Barrier_Size_Type is
      Natural range 1 .. Natural (Skp.CPU_Range'Last + 1);
 
-   type Major_Config_Array is array (Barrier_Range) of Barrier_Size_Type;
+   type Barrier_Config_Array is array (Barrier_Range) of Barrier_Size_Type;
 
    type Major_Frame_Info_Type is record
-      Barrier_Config : Major_Config_Array;
+      Barrier_Config : Barrier_Config_Array;
    end record;
 
    type Major_Frame_Info_Array is array (Major_Frame_Range)

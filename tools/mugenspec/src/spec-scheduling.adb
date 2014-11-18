@@ -203,7 +203,7 @@ is
          Major_Info_Buffer := Major_Info_Buffer & Indent (N => 2)
            & Index'Img & " => Major_Frame_Info_Type'"
            & ASCII.LF & Indent (N => 3)
-           & "(Barrier_Config => Major_Config_Array'("
+           & "(Barrier_Config => Barrier_Config_Array'("
            & ASCII.LF;
 
          for I in 0 .. Barrier_Count - 1 loop

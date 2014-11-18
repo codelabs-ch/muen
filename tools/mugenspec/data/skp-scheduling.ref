@@ -118,10 +118,10 @@ is
    subtype Barrier_Size_Type is
      Natural range 1 .. Natural (Skp.CPU_Range'Last + 1);
 
-   type Major_Config_Array is array (Barrier_Range) of Barrier_Size_Type;
+   type Barrier_Config_Array is array (Barrier_Range) of Barrier_Size_Type;
 
    type Major_Frame_Info_Type is record
-      Barrier_Config : Major_Config_Array;
+      Barrier_Config : Barrier_Config_Array;
    end record;
 
    type Major_Frame_Info_Array is array (Major_Frame_Range)
@@ -129,14 +129,14 @@ is
 
    Major_Frames : constant Major_Frame_Info_Array := Major_Frame_Info_Array'(
        0 => Major_Frame_Info_Type'
-         (Barrier_Config => Major_Config_Array'(
+         (Barrier_Config => Barrier_Config_Array'(
             others => Barrier_Size_Type'First)),
        1 => Major_Frame_Info_Type'
-         (Barrier_Config => Major_Config_Array'(
+         (Barrier_Config => Barrier_Config_Array'(
             1 => 2,
             others => Barrier_Size_Type'First)),
        2 => Major_Frame_Info_Type'
-         (Barrier_Config => Major_Config_Array'(
+         (Barrier_Config => Barrier_Config_Array'(
             1 => 2,
             2 => 2,
             3 => 2)));

@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
@@ -121,10 +123,13 @@ is
         (Index       : Natural;
          Major_Frame : DOM.Core.Node);
 
-      --  Write minor frame with given index to buffer.
+      --  Write minor frame with given index to buffer. The cycles count
+      --  parameter is used to calculate the end time of the minor frame
+      --  relative to the start of the major frame.
       procedure Write_Minor_Frame
-        (Minor : DOM.Core.Node;
-         Index : Natural);
+        (Minor        :        DOM.Core.Node;
+         Index        :        Natural;
+         Cycles_Count : in out Interfaces.Unsigned_64);
 
       ----------------------------------------------------------------------
 
@@ -189,8 +194,9 @@ is
         (Index  : Natural;
          Minors : DOM.Core.Node_List)
       is
-         Minor_Count : constant Positive := DOM.Core.Nodes.Length
+         Minor_Count          : constant Positive := DOM.Core.Nodes.Length
            (List => Minors);
+         Minor_Frame_Deadline : Interfaces.Unsigned_64 := 0;
       begin
          Buffer := Buffer & Indent (N => 2)
            & Index'Img & " => Major_Frame_Type'"
@@ -201,10 +207,11 @@ is
            & ASCII.LF;
 
          for I in 1 .. Minor_Count loop
-            Write_Minor_Frame (Minor => DOM.Core.Nodes.Item
+            Write_Minor_Frame (Minor        => DOM.Core.Nodes.Item
                                (List  => Minors,
                                 Index => I - 1),
-                               Index => I);
+                               Index        => I,
+                               Cycles_Count => Minor_Frame_Deadline);
 
             if I < Minor_Count then
                Buffer := Buffer & "," & ASCII.LF;
@@ -279,9 +286,12 @@ is
       ----------------------------------------------------------------------
 
       procedure Write_Minor_Frame
-        (Minor : DOM.Core.Node;
-         Index : Natural)
+        (Minor        :        DOM.Core.Node;
+         Index        :        Natural;
+         Cycles_Count : in out Interfaces.Unsigned_64)
       is
+         use type Interfaces.Unsigned_64;
+
          Ticks   : constant Long_Integer := Timer_Factor * Long_Integer'Value
            (DOM.Core.Elements.Get_Attribute
               (Elem => Minor,
@@ -300,11 +310,16 @@ is
             Ref_Value => Subject,
             Attr_Name => "id");
       begin
+         Cycles_Count := Cycles_Count + Interfaces.Unsigned_64 (Ticks);
+
          Buffer := Buffer & Indent (N => 4) & Index'Img
            & " => Minor_Frame_Type'(Subject_Id => " & Subject_Id
            & ", Ticks =>" & Ticks'Img & "," & ASCII.LF;
          Buffer := Buffer & Indent (N => 12) & "Barrier    => "
-           & (if Barrier = "none" then "No_Barrier" else Barrier) & ")";
+           & (if Barrier = "none" then "No_Barrier" else Barrier)
+           & "," & ASCII.LF;
+         Buffer := Buffer & Indent (N => 12) & "Deadline   =>"
+           & Cycles_Count'Img & ")";
       end Write_Minor_Frame;
    begin
       Mulog.Log (Msg => "Writing scheduling spec for" & CPU_Count'Img

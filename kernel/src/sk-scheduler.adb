@@ -171,7 +171,8 @@ is
 
                if Current_Major /= Prev_Major then
                   MP.Set_Minor_Frame_Barrier_Config
-                    (Config => Skp.Scheduling.Barrier_Configs (Current_Major));
+                    (Config => Skp.Scheduling.Major_Frames
+                       (Current_Major).Barrier_Config);
                end if;
             end;
          end if;
@@ -248,7 +249,8 @@ is
          --  Set minor frame barriers config.
 
          MP.Set_Minor_Frame_Barrier_Config
-           (Config => Skp.Scheduling.Barrier_Configs (Current_Major));
+           (Config => Skp.Scheduling.Major_Frames
+              (Current_Major).Barrier_Config);
       end if;
 
       --  Setup VMCS and state of subjects running on this logical CPU.

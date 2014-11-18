@@ -91,7 +91,8 @@ is
          Current_Minor_Frame => Active_Minor_Frame_Type'
            (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First,
             Subject_Id => Skp.Subject_Id_Type'First,
-            Barrier    => Skp.Scheduling.No_Barrier));
+            Barrier    => Skp.Scheduling.No_Barrier,
+            Deadline   => SK.Word64'First));
    end Init;
 
    -------------------------------------------------------------------------

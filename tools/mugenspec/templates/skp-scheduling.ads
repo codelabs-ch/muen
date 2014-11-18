@@ -53,6 +53,7 @@ __scheduling_plans__);
    type Barrier_Config_Array is array (Barrier_Range) of Barrier_Size_Type;
 
    type Major_Frame_Info_Type is record
+      Period         : SK.Word64;
       Barrier_Config : Barrier_Config_Array;
    end record;
 

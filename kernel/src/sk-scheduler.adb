@@ -133,10 +133,11 @@ is
       Global  =>
         (Input  => New_Major,
          In_Out => (CPU_Global.State, Current_Major, Events.State,
-                    MP.Barrier, X86_64.State)),
+                    Major_Frame_Start, MP.Barrier, X86_64.State)),
       Depends =>
-        ((CPU_Global.State, Current_Major, Events.State, MP.Barrier,
-         X86_64.State) =>+
+        (Major_Frame_Start =>+ (CPU_Global.State, Current_Major),
+         (CPU_Global.State, Current_Major, Events.State, MP.Barrier,
+          X86_64.State)    =>+
             (CPU_Global.State, Current_Major, New_Major))
    is
       use type Skp.Scheduling.Barrier_Index_Range;
@@ -165,6 +166,9 @@ is
 
          MP.Wait_For_All;
          if CPU_Global.Is_BSP then
+            Major_Frame_Start := Major_Frame_Start
+              + Skp.Scheduling.Major_Frames (Current_Major).Period;
+
             declare
                use type Skp.Scheduling.Major_Frame_Range;
 
@@ -518,7 +522,8 @@ is
       Refined_Global  =>
         (Input  => New_Major,
          In_Out => (CPU_Global.State, Current_Major, Events.State,
-                    MP.Barrier, Subjects.State, VTd.State, X86_64.State)),
+                    Major_Frame_Start, MP.Barrier, Subjects.State, VTd.State,
+                    X86_64.State)),
       Refined_Depends =>
         (CPU_Global.State    =>+ (Current_Major, New_Major, Subject_Registers,
                                   X86_64.State),
@@ -526,6 +531,8 @@ is
          (Events.State,
           Subject_Registers) =>+ (CPU_Global.State, Current_Major, New_Major,
                                   Subjects.State, Subject_Registers,
+                                  X86_64.State),
+         Major_Frame_Start   =>+ (CPU_Global.State, Current_Major,
                                   X86_64.State),
          MP.Barrier          =>+ (CPU_Global.State, Current_Major, New_Major,
                                   X86_64.State),

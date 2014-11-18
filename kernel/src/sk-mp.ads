@@ -40,7 +40,7 @@ is
 
    --  Set minor frame barrier sizes to values specified by given config.
    procedure Set_Minor_Frame_Barrier_Config
-     (Config : Skp.Scheduling.Major_Config_Array)
+     (Config : Skp.Scheduling.Barrier_Config_Array)
    with
       Global  => (In_Out => Barrier),
       Depends => (Barrier =>+ Config);

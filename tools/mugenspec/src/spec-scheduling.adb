@@ -70,7 +70,7 @@ is
       Max_Barrier_Count : Natural;
       Majors            : DOM.Core.Node_List;
       Buffer            : Unbounded_String;
-      Barrier_Buffer    : Unbounded_String;
+      Major_Info_Buffer : Unbounded_String;
       Tmpl              : Mutools.Templates.Template_Type;
 
       --  Returns the maximum count of barriers per major frame.
@@ -79,15 +79,15 @@ is
       --  Returns the maximum count of minor frames per major frame.
       function Get_Max_Minor_Count (Schedule : DOM.Core.Node) return Positive;
 
-      --  Write barrier configuration with given index and barriers to buffer.
-      procedure Write_Barrier_Config
-        (Index  : Natural;
-         Config : DOM.Core.Node);
-
       --  Write major frame with given index and minor frames to buffer.
       procedure Write_Major_Frame
         (Index  : Natural;
          Minors : DOM.Core.Node_List);
+
+      --  Write info of major frame with given index to buffer.
+      procedure Write_Major_Frame_Info
+        (Index       : Natural;
+         Major_Frame : DOM.Core.Node);
 
       --  Write minor frame with given index to buffer.
       procedure Write_Minor_Frame
@@ -153,51 +153,6 @@ is
 
       ----------------------------------------------------------------------
 
-      procedure Write_Barrier_Config
-        (Index  : Natural;
-         Config : DOM.Core.Node)
-      is
-         Barriers      : constant DOM.Core.Node_List
-           := McKae.XML.XPath.XIA.XPath_Query
-             (N     => Config,
-              XPath => "barrier");
-         Barrier_Count : constant Natural
-           := DOM.Core.Nodes.Length (Barriers);
-      begin
-         Barrier_Buffer := Barrier_Buffer & Indent (N => 1) & "  "
-           & Index'Img & " => Major_Config_Array'(" & ASCII.LF;
-
-         for I in 1 .. Barrier_Count loop
-            declare
-               Barrier      : constant DOM.Core.Node
-                 := DOM.Core.Nodes.Item
-                   (List  => Barriers,
-                    Index => I - 1);
-               Barrier_ID   : constant String
-                 := DOM.Core.Elements.Get_Attribute
-                   (Elem =>  Barrier,
-                    Name => "id");
-               Barrier_Size : constant String
-                 := DOM.Core.Elements.Get_Attribute
-                   (Elem =>  Barrier,
-                    Name => "size");
-            begin
-               Barrier_Buffer := Barrier_Buffer & Indent (N => 3)
-                 & Barrier_ID & " => " & Barrier_Size
-                 & (if I < Max_Barrier_Count then "," & ASCII.LF else "");
-            end;
-         end loop;
-
-         if Barrier_Count < Max_Barrier_Count or else Barrier_Count = 0 then
-            Barrier_Buffer := Barrier_Buffer & Indent (N => 3)
-              & "others => Barrier_Size_Type'First";
-         end if;
-
-         Barrier_Buffer := Barrier_Buffer & ")";
-      end Write_Barrier_Config;
-
-      ----------------------------------------------------------------------
-
       procedure Write_Major_Frame
         (Index  : Natural;
          Minors : DOM.Core.Node_List)
@@ -231,6 +186,56 @@ is
 
          Buffer := Buffer & "))";
       end Write_Major_Frame;
+
+      ----------------------------------------------------------------------
+
+      procedure Write_Major_Frame_Info
+        (Index       : Natural;
+         Major_Frame : DOM.Core.Node)
+      is
+         Barriers      : constant DOM.Core.Node_List
+           := McKae.XML.XPath.XIA.XPath_Query
+             (N     => Major_Frame,
+              XPath => "barriers/barrier");
+         Barrier_Count : constant Natural
+           := DOM.Core.Nodes.Length (List => Barriers);
+      begin
+         Major_Info_Buffer := Major_Info_Buffer & Indent (N => 2)
+           & Index'Img & " => Major_Frame_Info_Type'"
+           & ASCII.LF & Indent (N => 3)
+           & "(Barrier_Config => Barrier_Config_Array'("
+           & ASCII.LF;
+
+         for I in 0 .. Barrier_Count - 1 loop
+            declare
+               Barrier      : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => Barriers,
+                                         Index => I);
+               Barrier_ID   : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Barrier,
+                    Name => "id");
+               Barrier_Size : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => Barrier,
+                    Name => "size");
+            begin
+               Major_Info_Buffer := Major_Info_Buffer & Indent (N => 4)
+                 & Barrier_ID & " => " & Barrier_Size;
+
+               if I < Max_Barrier_Count - 1 then
+                  Major_Info_Buffer := Major_Info_Buffer & "," & ASCII.LF;
+               end if;
+            end;
+         end loop;
+
+         if Barrier_Count < Max_Barrier_Count or else Barrier_Count = 0 then
+            Major_Info_Buffer := Major_Info_Buffer & Indent (N => 4)
+              & "others => Barrier_Size_Type'First";
+         end if;
+
+         Major_Info_Buffer := Major_Info_Buffer & "))";
+      end Write_Major_Frame_Info;
 
       ----------------------------------------------------------------------
 
@@ -312,22 +317,22 @@ is
       end loop;
 
       declare
-         Barrier_Cfgs       : constant DOM.Core.Node_List
+         Major_Frames      : constant DOM.Core.Node_List
            := McKae.XML.XPath.XIA.XPath_Query
              (N     => Scheduling,
-              XPath => "majorFrame/barriers");
-         Barrier_Cfgs_Count : constant Natural
-           := DOM.Core.Nodes.Length (List => Barrier_Cfgs);
+              XPath => "majorFrame");
+         Major_Frame_Count : constant Natural
+           := DOM.Core.Nodes.Length (List => Major_Frames);
       begin
-         for I in 0 .. Barrier_Cfgs_Count - 1 loop
-            Write_Barrier_Config
-              (Index  => I,
-               Config => DOM.Core.Nodes.Item
-                 (List  => Barrier_Cfgs,
+         for I in 0 .. Major_Frame_Count - 1 loop
+            Write_Major_Frame_Info
+              (Index       => I,
+               Major_Frame => DOM.Core.Nodes.Item
+                 (List  => Major_Frames,
                   Index => I));
 
-            if I < Barrier_Cfgs_Count - 1 then
-               Barrier_Buffer := Barrier_Buffer & "," & ASCII.LF;
+            if I < Major_Frame_Count - 1 then
+               Major_Info_Buffer := Major_Info_Buffer & "," & ASCII.LF;
             end if;
          end loop;
       end;
@@ -354,8 +359,8 @@ is
             Side   => Ada.Strings.Left));
       Mutools.Templates.Replace
         (Template => Tmpl,
-         Pattern  => "__barrier_configs__",
-         Content  => To_String (Barrier_Buffer));
+         Pattern  => "__major_frames_info__",
+         Content  => To_String (Major_Info_Buffer));
       Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__vmx_timer_rate__",

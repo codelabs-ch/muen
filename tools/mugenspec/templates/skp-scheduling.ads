@@ -50,11 +50,16 @@ __scheduling_plans__);
    subtype Barrier_Size_Type is
      Natural range 1 .. Natural (Skp.CPU_Range'Last + 1);
 
-   type Major_Config_Array is array (Barrier_Range) of Barrier_Size_Type;
+   type Barrier_Config_Array is array (Barrier_Range) of Barrier_Size_Type;
 
-   type Barrier_Cfgs_Array is array (Major_Frame_Range) of Major_Config_Array;
+   type Major_Frame_Info_Type is record
+      Barrier_Config : Barrier_Config_Array;
+   end record;
 
-   Barrier_Configs : constant Barrier_Cfgs_Array := Barrier_Cfgs_Array'(
-__barrier_configs__);
+   type Major_Frame_Info_Array is array (Major_Frame_Range)
+     of Major_Frame_Info_Type;
+
+   Major_Frames : constant Major_Frame_Info_Array := Major_Frame_Info_Array'(
+__major_frames_info__);
 
 end Skp.Scheduling;

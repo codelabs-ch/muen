@@ -57,4 +57,14 @@ __scheduling_plans__);
    Barrier_Configs : constant Barrier_Cfgs_Array := Barrier_Cfgs_Array'(
 __barrier_configs__);
 
+   type Major_Frame_Info_Type is record
+      Barrier_Config : Major_Config_Array;
+   end record;
+
+   type Major_Frame_Info_Array is array (Major_Frame_Range)
+     of Major_Frame_Info_Type;
+
+   Major_Frames : constant Major_Frame_Info_Array := Major_Frame_Info_Array'(
+__major_frames_info__);
+
 end Skp.Scheduling;

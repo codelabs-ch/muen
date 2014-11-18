@@ -132,16 +132,16 @@ is
 
    Major_Frames : constant Major_Frame_Info_Array := Major_Frame_Info_Array'(
        0 => Major_Frame_Info_Type'
-         (Period         => 0,
+         (Period         => 4930000000,
           Barrier_Config => Barrier_Config_Array'(
             others => Barrier_Size_Type'First)),
        1 => Major_Frame_Info_Type'
-         (Period         => 0,
+         (Period         => 4930000000,
           Barrier_Config => Barrier_Config_Array'(
             1 => 2,
             others => Barrier_Size_Type'First)),
        2 => Major_Frame_Info_Type'
-         (Period         => 0,
+         (Period         => 2610000000,
           Barrier_Config => Barrier_Config_Array'(
             1 => 2,
             2 => 2,

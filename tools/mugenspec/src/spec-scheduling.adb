@@ -36,6 +36,38 @@ is
 
    use Ada.Strings.Unbounded;
 
+   --  Returns the sum of all tick values of the given minor frames.
+   function Sum_Ticks
+     (Minor_Frames : DOM.Core.Node_List)
+      return Long_Integer;
+
+   -------------------------------------------------------------------------
+
+   function Sum_Ticks
+     (Minor_Frames : DOM.Core.Node_List)
+      return Long_Integer
+   is
+      Minor_Frame_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Minor_Frames);
+      Sum               : Long_Integer := 0;
+   begin
+      for I in 0 .. Minor_Frame_Count - 1 loop
+         declare
+            Ticks : constant Long_Integer
+              := Long_Integer'Value
+                (DOM.Core.Elements.Get_Attribute
+                   (Elem => DOM.Core.Nodes.Item
+                      (List  => Minor_Frames,
+                       Index => I),
+                    Name => "ticks"));
+         begin
+            Sum := Sum + Ticks;
+         end;
+      end loop;
+
+      return Sum;
+   end Sum_Ticks;
+
    -------------------------------------------------------------------------
 
    procedure Write_Spec_File
@@ -199,11 +231,16 @@ is
               XPath => "barriers/barrier");
          Barrier_Count : constant Natural
            := DOM.Core.Nodes.Length (List => Barriers);
+         Ticks_Period  : constant Long_Integer
+           := Sum_Ticks (Minor_Frames => McKae.XML.XPath.XIA.XPath_Query
+                         (N     => Major_Frame,
+                          XPath => "cpu[@id='0']/minorFrame"));
+         Cycles_Period : constant Long_Integer := Ticks_Period * Timer_Factor;
       begin
          Major_Info_Buffer := Major_Info_Buffer & Indent (N => 2)
            & Index'Img & " => Major_Frame_Info_Type'"
            & ASCII.LF & Indent (N => 3)
-           & "(Period         => 0,"
+           & "(Period         =>" & Cycles_Period'Img & ","
            & ASCII.LF & Indent (N => 3)
            & " Barrier_Config => Barrier_Config_Array'("
            & ASCII.LF;

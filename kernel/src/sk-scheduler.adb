@@ -29,7 +29,8 @@ with SK.Dump;
 
 package body SK.Scheduler
 with
-   Refined_State => (State                 => (Current_Major),
+   Refined_State => (State                 => (Current_Major,
+                                               Major_Frame_Start),
                      Tau0_Kernel_Interface => (New_Major))
 is
 
@@ -42,6 +43,9 @@ is
    --  Current major.
    Current_Major : Skp.Scheduling.Major_Frame_Range
      := Skp.Scheduling.Major_Frame_Range'First;
+
+   --  Current major frame start time in CPU cycles.
+   Major_Frame_Start : SK.Word64 := 0;
 
    -------------------------------------------------------------------------
 
@@ -215,14 +219,15 @@ is
    with
       Refined_Global  =>
         (Input  => (Current_Major, Interrupts.State),
-         In_Out => (CPU_Global.State, MP.Barrier, Subjects.State,
-                    X86_64.State)),
+         In_Out => (CPU_Global.State, Major_Frame_Start, MP.Barrier,
+                    Subjects.State, X86_64.State)),
       Refined_Depends =>
-        (CPU_Global.State =>+ Current_Major,
-         MP.Barrier       =>+ Current_Major,
-         Subjects.State   =>+ null,
-         X86_64.State     =>+ (CPU_Global.State, Current_Major,
-                               Interrupts.State))
+        (CPU_Global.State  =>+ Current_Major,
+         Major_Frame_Start =>+ X86_64.State,
+         MP.Barrier        =>+ Current_Major,
+         Subjects.State    =>+ null,
+         X86_64.State      =>+ (CPU_Global.State, Current_Major,
+                                Interrupts.State))
    is
       Plan_Frame        : Skp.Scheduling.Minor_Frame_Type;
       Initial_VMCS_Addr : SK.Word64 := 0;
@@ -245,6 +250,10 @@ is
             Barrier    => Plan_Frame.Barrier));
 
       if CPU_Global.Is_BSP then
+
+         --  Set initial major frame start time to now.
+
+         Major_Frame_Start := CPU.RDTSC64;
 
          --  Set minor frame barriers config.
 

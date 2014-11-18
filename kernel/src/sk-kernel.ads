@@ -34,10 +34,10 @@ is
    procedure Initialize (Subject_Registers : out SK.CPU_Registers_Type)
    with
       Global  =>
-        (Input  => Scheduler.State,
-         Output => CPU_Global.State,
+        (Output => CPU_Global.State,
          In_Out => (CPU_Registry.State, Interrupts.State, IO_Apic.State,
-                    MP.Barrier, Subjects.State, VTd.State, X86_64.State)),
+                    MP.Barrier, Scheduler.State, Subjects.State, VTd.State,
+                    X86_64.State)),
       Export,
       Convention => C,
       Link_Name  => "sk_initialize";

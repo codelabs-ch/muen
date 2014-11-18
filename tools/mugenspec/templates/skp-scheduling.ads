@@ -52,11 +52,6 @@ __scheduling_plans__);
 
    type Major_Config_Array is array (Barrier_Range) of Barrier_Size_Type;
 
-   type Barrier_Cfgs_Array is array (Major_Frame_Range) of Major_Config_Array;
-
-   Barrier_Configs : constant Barrier_Cfgs_Array := Barrier_Cfgs_Array'(
-__barrier_configs__);
-
    type Major_Frame_Info_Type is record
       Barrier_Config : Major_Config_Array;
    end record;

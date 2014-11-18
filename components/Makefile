@@ -3,6 +3,7 @@ include ../Makeconf
 COMPONENTS ?=    \
 	libmuchannel \
 	crypter      \
+	idle         \
 	linux        \
 	sm           \
 	tau0         \

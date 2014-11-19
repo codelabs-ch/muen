@@ -226,6 +226,38 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Set_VMX_Exit_Timer
+   with
+      Refined_Global  =>
+       (Input  => (CPU_Global.State, Major_Frame_Start),
+        In_Out => X86_64.State),
+      Refined_Depends =>
+       (X86_64.State =>+ (CPU_Global.State, Major_Frame_Start))
+   is
+      Now      : constant SK.Word64 := CPU.RDTSC64;
+      Deadline : SK.Word64;
+      Cycles   : SK.Word64;
+   begin
+
+      --  Absolute deadline is given by start of major frame plus the number of
+      --  CPU cycles until the end of the current minor frame relative to major
+      --  frame start.
+
+      Deadline := Major_Frame_Start +
+        CPU_Global.Get_Current_Minor_Frame.Deadline;
+
+      if Deadline > Now then
+         Cycles := Deadline - Now;
+      else
+         Cycles := 0;
+      end if;
+
+      VMX.VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
+                      Value => Cycles / 2 ** Skp.Scheduling.VMX_Timer_Rate);
+   end Set_VMX_Exit_Timer;
+
+   -------------------------------------------------------------------------
+
    procedure Init
    with
       Refined_Global  =>

@@ -88,6 +88,8 @@ is
       --  Synchronize all logical CPUs.
 
       MP.Wait_For_All;
+
+      Scheduler.Set_VMX_Exit_Timer;
       Subjects.Restore_State
         (Id   => CPU_Global.Get_Current_Minor_Frame.Subject_Id,
          GPRs => Subject_Registers);

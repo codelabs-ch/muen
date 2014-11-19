@@ -109,17 +109,12 @@ is
                   X86_64.State     =>+ New_VMCS),
       Pre     =>  Old_Id /= New_Id
    is
-      Remaining_Ticks : SK.Word64;
    begin
       CPU_Global.Swap_Subject
         (Old_Id => Old_Id,
          New_Id => New_Id);
 
-      VMX.VMCS_Read (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                     Value => Remaining_Ticks);
       VMX.Load (VMCS_Address => New_VMCS);
-      VMX.VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                      Value => Remaining_Ticks);
    end Subject_Handover;
 
    -------------------------------------------------------------------------

@@ -41,22 +41,24 @@ is
    --  Returns the sum of all tick values of the given minor frames.
    function Sum_Ticks
      (Minor_Frames : DOM.Core.Node_List)
-      return Long_Integer;
+      return Interfaces.Unsigned_64;
 
    -------------------------------------------------------------------------
 
    function Sum_Ticks
      (Minor_Frames : DOM.Core.Node_List)
-      return Long_Integer
+      return Interfaces.Unsigned_64
    is
+      use type Interfaces.Unsigned_64;
+
       Minor_Frame_Count : constant Natural
         := DOM.Core.Nodes.Length (List => Minor_Frames);
-      Sum               : Long_Integer := 0;
+      Sum               : Interfaces.Unsigned_64 := 0;
    begin
       for I in 0 .. Minor_Frame_Count - 1 loop
          declare
-            Ticks : constant Long_Integer
-              := Long_Integer'Value
+            Ticks : constant Interfaces.Unsigned_64
+              := Interfaces.Unsigned_64'Value
                 (DOM.Core.Elements.Get_Attribute
                    (Elem => DOM.Core.Nodes.Item
                       (List  => Minor_Frames,
@@ -76,6 +78,8 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
+      use type Interfaces.Unsigned_64;
+
       Subjects     : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -86,16 +90,20 @@ is
       Processor    : constant DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
          XPath => "/system/platform/processor");
-      CPU_Speed_Hz : constant Long_Integer  := 1_000_000 * Long_Integer'Value
-        (DOM.Core.Elements.Get_Attribute (Elem => Processor,
-                                          Name => "speed"));
-      Timer_Rate   : constant Natural       := Natural'Value
-        (DOM.Core.Elements.Get_Attribute (Elem => Processor,
-                                          Name => "vmxTimerRate"));
-      Timer_Factor : constant Long_Integer  := CPU_Speed_Hz /
-        (Long_Integer'Value (DOM.Core.Elements.Get_Attribute
-         (Elem => Scheduling,
-          Name => "tickRate")));
+      CPU_Speed_Hz : constant Interfaces.Unsigned_64
+        := 1_000_000 * Interfaces.Unsigned_64'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => Processor,
+              Name => "speed"));
+      Timer_Rate   : constant Natural
+        := Natural'Value
+          (DOM.Core.Elements.Get_Attribute (Elem => Processor,
+                                            Name => "vmxTimerRate"));
+      Timer_Factor : constant Interfaces.Unsigned_64
+        := CPU_Speed_Hz / Interfaces.Unsigned_64'Value
+          (DOM.Core.Elements.Get_Attribute
+             (Elem => Scheduling,
+              Name => "tickRate"));
       CPU_Count    : constant Natural
         := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Policy);
 
@@ -238,11 +246,12 @@ is
               XPath => "barriers/barrier");
          Barrier_Count : constant Natural
            := DOM.Core.Nodes.Length (List => Barriers);
-         Ticks_Period  : constant Long_Integer
+         Ticks_Period  : constant Interfaces.Unsigned_64
            := Sum_Ticks (Minor_Frames => McKae.XML.XPath.XIA.XPath_Query
                          (N     => Major_Frame,
                           XPath => "cpu[@id='0']/minorFrame"));
-         Cycles_Period : constant Long_Integer := Ticks_Period * Timer_Factor;
+         Cycles_Period : constant Interfaces.Unsigned_64
+           := Ticks_Period * Timer_Factor;
       begin
          Major_Info_Buffer := Major_Info_Buffer & Indent (N => 2)
            & Index'Img & " => Major_Frame_Info_Type'"
@@ -290,12 +299,11 @@ is
          Index        :        Natural;
          Cycles_Count : in out Interfaces.Unsigned_64)
       is
-         use type Interfaces.Unsigned_64;
-
-         Ticks   : constant Long_Integer := Timer_Factor * Long_Integer'Value
-           (DOM.Core.Elements.Get_Attribute
-              (Elem => Minor,
-               Name => "ticks"));
+         Ticks   : constant Interfaces.Unsigned_64
+           := Timer_Factor * Interfaces.Unsigned_64'Value
+             (DOM.Core.Elements.Get_Attribute
+                (Elem => Minor,
+                 Name => "ticks"));
          Barrier : constant String
            := DOM.Core.Elements.Get_Attribute
              (Elem => Minor,
@@ -310,7 +318,7 @@ is
             Ref_Value => Subject,
             Attr_Name => "id");
       begin
-         Cycles_Count := Cycles_Count + Interfaces.Unsigned_64 (Ticks);
+         Cycles_Count := Cycles_Count + Ticks;
 
          Buffer := Buffer & Indent (N => 4) & Index'Img
            & " => Minor_Frame_Type'(Subject_Id => " & Subject_Id

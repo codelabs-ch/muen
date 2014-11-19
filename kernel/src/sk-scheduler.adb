@@ -216,12 +216,6 @@ is
          Events.Insert_Event (Subject => Minor_Frame.Subject_Id,
                               Event   => SK.Constants.Timer_Vector);
       end if;
-
-      --  Update preemption timer ticks in subject VMCS.
-
-      VMX.VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                      Value => SK.Word64 (Plan_Frame.Ticks)
-                      / 2 ** Skp.Scheduling.VMX_Timer_Rate);
    end Update_Scheduling_Info;
 
    -------------------------------------------------------------------------
@@ -580,8 +574,8 @@ is
           VTd.State)         =>+ (CPU_Global.State, Subjects.State,
                                   Subject_Registers, X86_64.State),
          X86_64.State        =>+ (CPU_Global.State, Current_Major,
-                                  Events.State, New_Major, Subjects.State,
-                                  Subject_Registers))
+                                  Events.State, Major_Frame_Start, New_Major,
+                                  Subjects.State, Subject_Registers))
    is
       Exit_Status     : SK.Word64;
       Current_Subject : Skp.Subject_Id_Type;
@@ -641,6 +635,7 @@ is
       Inject_Event
         (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id);
 
+      Set_VMX_Exit_Timer;
       Subjects.Restore_State
         (Id   => CPU_Global.Get_Current_Minor_Frame.Subject_Id,
          GPRs => Subject_Registers);

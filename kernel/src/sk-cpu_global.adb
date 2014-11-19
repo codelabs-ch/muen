@@ -38,7 +38,7 @@ is
    Storage : Storage_Type
    with
       Address => System'To_Address (Skp.Kernel.CPU_Store_Address + 8),
-      Size    =>  8 * (SK.Page_Size - 8);
+      Size    => 8 * (SK.Page_Size - 8);
    pragma $Build_Warnings (On,  "* bits of ""Storage"" unused");
 
    -------------------------------------------------------------------------

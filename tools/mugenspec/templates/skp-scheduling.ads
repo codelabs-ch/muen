@@ -14,14 +14,12 @@ is
 
    type Minor_Frame_Type is record
       Subject_Id : Skp.Subject_Id_Type;
-      Ticks      : SK.Word32;
       Barrier    : Barrier_Index_Range;
       Deadline   : SK.Word64;
    end record;
 
    Null_Minor_Frame : constant Minor_Frame_Type := Minor_Frame_Type'
      (Subject_Id => 0,
-      Ticks      => 0,
       Barrier    => No_Barrier,
       Deadline   => 0);
 

@@ -191,7 +191,7 @@ is
 
       VMX_Support, VMX_Disabled_Locked, Protected_Mode, Paging : Boolean;
       IA_32e_Mode, Apic_Support, CR0_Valid, CR4_Valid          : Boolean;
-      Not_Virtual_8086, In_SMX, XSAVE_Support                  : Boolean;
+      Not_Virtual_8086, In_SMX, XSAVE_Support, Invariant_TSC   : Boolean;
    begin
       VMX_Support := Has_VMX_Support;
       pragma Debug
@@ -265,6 +265,10 @@ is
         (not XSAVE_Support, KC.Put_Line
            (Item => "XSAVE not properly configured"));
 
+      Invariant_TSC := Has_Invariant_TSC;
+      pragma Debug
+        (not Invariant_TSC, KC.Put_Line (Item => "Invariant TSC not present"));
+
       return VMX_Support        and
         not VMX_Disabled_Locked and
         Protected_Mode          and
@@ -275,7 +279,8 @@ is
         CR0_Valid               and
         CR4_Valid               and
         Apic_Support            and
-        XSAVE_Support;
+        XSAVE_Support           and
+        Invariant_TSC;
    end Is_Valid;
 
 end SK.System_State;

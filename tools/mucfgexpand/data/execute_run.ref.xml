@@ -303,7 +303,7 @@
        <LoadIA32PAT>0</LoadIA32PAT>
        <SaveIA32EFER>0</SaveIA32EFER>
        <LoadIA32EFER>0</LoadIA32EFER>
-       <SaveVMXTimerValue>1</SaveVMXTimerValue>
+       <SaveVMXTimerValue>0</SaveVMXTimerValue>
       </exit>
      </controls>
      <masks>
@@ -481,7 +481,7 @@
        <LoadIA32PAT>0</LoadIA32PAT>
        <SaveIA32EFER>1</SaveIA32EFER>
        <LoadIA32EFER>1</LoadIA32EFER>
-       <SaveVMXTimerValue>1</SaveVMXTimerValue>
+       <SaveVMXTimerValue>0</SaveVMXTimerValue>
       </exit>
      </controls>
      <masks>
@@ -864,7 +864,7 @@
        <LoadIA32PAT>0</LoadIA32PAT>
        <SaveIA32EFER>0</SaveIA32EFER>
        <LoadIA32EFER>0</LoadIA32EFER>
-       <SaveVMXTimerValue>1</SaveVMXTimerValue>
+       <SaveVMXTimerValue>0</SaveVMXTimerValue>
       </exit>
      </controls>
      <masks>
@@ -1067,7 +1067,7 @@
        <LoadIA32PAT>0</LoadIA32PAT>
        <SaveIA32EFER>0</SaveIA32EFER>
        <LoadIA32EFER>0</LoadIA32EFER>
-       <SaveVMXTimerValue>1</SaveVMXTimerValue>
+       <SaveVMXTimerValue>0</SaveVMXTimerValue>
       </exit>
      </controls>
      <masks>

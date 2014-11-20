@@ -43,6 +43,7 @@ is
    CR4_SMXE_FLAG                : constant := 14;
 
    CPUID_FEATURE_VMX_FLAG       : constant := 5;
+   CPUID_FEATURE_INVARIANT_TSC  : constant := 8;
    CPUID_FEATURE_LOCAL_APIC     : constant := 9;
    CPUID_FEATURE_X2APIC         : constant := 21;
 

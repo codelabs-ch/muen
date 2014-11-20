@@ -229,6 +229,34 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure RDTSC
+     (EAX : out SK.Word32;
+      EDX : out SK.Word32)
+   with
+      SPARK_Mode => Off
+   is
+   begin
+      System.Machine_Code.Asm
+        (Template => "rdtsc",
+         Outputs  =>
+           (SK.Word32'Asm_Output ("=a", EAX),
+            SK.Word32'Asm_Output ("=d", EDX)),
+         Volatile => True);
+   end RDTSC;
+
+   -------------------------------------------------------------------------
+
+   function RDTSC64 return SK.Word64
+   is
+      Low_Dword, High_Dword : SK.Word32;
+   begin
+      RDTSC (EAX => Low_Dword,
+             EDX => High_Dword);
+      return 2 ** 32 * SK.Word64 (High_Dword) + SK.Word64 (Low_Dword);
+   end RDTSC64;
+
+   -------------------------------------------------------------------------
+
    procedure Set_CR2 (Value : SK.Word64)
    with
       SPARK_Mode => Off

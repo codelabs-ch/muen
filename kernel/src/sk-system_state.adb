@@ -101,6 +101,34 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Returns True if an invariant TSC is present, see Intel SDM Vol. 3B,
+   --  chapter 17.13.1.
+   function Has_Invariant_TSC return Boolean
+   with
+      Global => (Input => X86_64.State)
+   is
+      Unused_EAX, Unused_EBX, Unused_ECX, EDX : SK.Word32;
+   begin
+      Unused_EAX := 16#8000_0007#;
+      Unused_ECX := 0;
+
+      pragma $Prove_Warnings
+        (Off, "unused assignment to ""Unused_E*X""",
+         Reason => "Only parts of the CPUID result is needed");
+      CPU.CPUID
+        (EAX => Unused_EAX,
+         EBX => Unused_EBX,
+         ECX => Unused_ECX,
+         EDX => EDX);
+      pragma $Prove_Warnings (On, "unused assignment to ""Unused_E*X""");
+
+      return Bit_Test
+        (Value => Word64 (EDX),
+         Pos   => Constants.CPUID_FEATURE_INVARIANT_TSC);
+   end Has_Invariant_TSC;
+
+   -------------------------------------------------------------------------
+
    --  Returns True if local APIC is present and supports x2APIC mode, see
    --  Intel SDM 3A, chapters 10.4.2 and 10.12.1.
    function Has_X2_Apic return Boolean

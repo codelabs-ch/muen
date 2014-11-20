@@ -91,6 +91,12 @@ is
       Global => (Input => X86_64.State),
       Inline_Always;
 
+   --  RDTSC (Read Time-Stamp Counter).
+   function RDTSC64 return SK.Word64
+   with
+      Global => (Input => X86_64.State),
+      Inline_Always;
+
    --  Stop CPU.
    procedure Stop
    with

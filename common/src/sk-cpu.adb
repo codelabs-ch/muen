@@ -246,6 +246,17 @@ is
 
    -------------------------------------------------------------------------
 
+   function RDTSC64 return SK.Word64
+   is
+      Low_Dword, High_Dword : SK.Word32;
+   begin
+      RDTSC (EAX => Low_Dword,
+             EDX => High_Dword);
+      return 2 ** 32 * SK.Word64 (High_Dword) + SK.Word64 (Low_Dword);
+   end RDTSC64;
+
+   -------------------------------------------------------------------------
+
    procedure Set_CR2 (Value : SK.Word64)
    with
       SPARK_Mode => Off

@@ -120,9 +120,12 @@ is
    -------------------------------------------------------------------------
 
    --  Update scheduling information. If the end of the current major frame is
-   --  reached, the minor frame index is reset and the major frame is switched
-   --  to the one set by Tau0. Otherwise the minor frame index is incremented
-   --  by 1.
+   --  reached the major frame start time is updated by adding the period of
+   --  the just expired major frame to the current start value. Additionally,
+   --  the minor frame index is reset and the major frame is switched to the
+   --  one set by Tau0.
+   --  On regular minor frame switches the minor frame index is incremented by
+   --  one.
    procedure Update_Scheduling_Info
    with
       Global  =>
@@ -164,6 +167,10 @@ is
 
          MP.Wait_For_All;
          if CPU_Global.Is_BSP then
+
+            --  Increment major frame start time by period of major frame that
+            --  just ended.
+
             Major_Frame_Start := Major_Frame_Start
               + Skp.Scheduling.Major_Frames (Current_Major).Period;
 

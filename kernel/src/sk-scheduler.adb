@@ -254,12 +254,12 @@ is
          In_Out => (CPU_Global.State, Major_Frame_Start, MP.Barrier,
                     Subjects.State, X86_64.State)),
       Refined_Depends =>
-        (CPU_Global.State  =>+ Current_Major,
-         Major_Frame_Start =>+ X86_64.State,
-         MP.Barrier        =>+ Current_Major,
-         Subjects.State    =>+ null,
-         X86_64.State      =>+ (CPU_Global.State, Current_Major,
-                                Interrupts.State))
+        (CPU_Global.State    =>+ Current_Major,
+         MP.Barrier          =>+ Current_Major,
+         Subjects.State      =>+ null,
+         (Major_Frame_Start,
+          X86_64.State)      =>+ (CPU_Global.State, Current_Major,
+                                  Interrupts.State, X86_64.State))
    is
       Plan_Frame        : Skp.Scheduling.Minor_Frame_Type;
       Initial_VMCS_Addr : SK.Word64 := 0;
@@ -284,19 +284,6 @@ is
             Subject_Id => Plan_Frame.Subject_Id,
             Barrier    => Plan_Frame.Barrier,
             Deadline   => Plan_Frame.Deadline));
-
-      if CPU_Global.Is_BSP then
-
-         --  Set initial major frame start time to now.
-
-         Major_Frame_Start := CPU.RDTSC64;
-
-         --  Set minor frame barriers config.
-
-         MP.Set_Minor_Frame_Barrier_Config
-           (Config => Skp.Scheduling.Major_Frames
-              (Current_Major).Barrier_Config);
-      end if;
 
       --  Setup VMCS and state of subjects running on this logical CPU.
 
@@ -363,6 +350,19 @@ is
       --  Load first subject and set preemption timer ticks.
 
       VMX.Load (VMCS_Address => Initial_VMCS_Addr);
+
+      if CPU_Global.Is_BSP then
+
+         --  Set minor frame barriers config.
+
+         MP.Set_Minor_Frame_Barrier_Config
+           (Config => Skp.Scheduling.Major_Frames
+              (Current_Major).Barrier_Config);
+
+         --  Set initial major frame start time to now.
+
+         Major_Frame_Start := CPU.RDTSC64;
+      end if;
    end Init;
 
    -------------------------------------------------------------------------

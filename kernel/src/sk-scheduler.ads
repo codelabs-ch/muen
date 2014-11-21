@@ -51,9 +51,10 @@ is
       Depends =>
         (CPU_Global.State =>+ State,
          MP.Barrier       =>+ State,
-         State            =>+ X86_64.State,
          Subjects.State   =>+ null,
-         X86_64.State     =>+ (CPU_Global.State, Interrupts.State, State));
+         (State,
+          X86_64.State)   =>+ (CPU_Global.State, Interrupts.State, State,
+                               X86_64.State));
 
    --  Set VMX-preemption timer of the currently active VMCS to trigger at the
    --  current deadline. If the deadline has alread passed the timer is set to

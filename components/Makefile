@@ -2,6 +2,7 @@ include ../Makeconf
 
 COMPONENTS ?=    \
 	libmuchannel \
+	libdebuglog  \
 	crypter      \
 	idle         \
 	linux        \

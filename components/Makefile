@@ -4,6 +4,7 @@ COMPONENTS ?=    \
 	libmuchannel \
 	libdebuglog  \
 	crypter      \
+	dbgserver    \
 	idle         \
 	linux        \
 	sm           \

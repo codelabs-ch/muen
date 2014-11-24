@@ -14,14 +14,14 @@ is
 
    type Minor_Frame_Type is record
       Subject_Id : Skp.Subject_Id_Type;
-      Ticks      : SK.Word32;
       Barrier    : Barrier_Index_Range;
+      Deadline   : SK.Word64;
    end record;
 
    Null_Minor_Frame : constant Minor_Frame_Type := Minor_Frame_Type'
      (Subject_Id => 0,
-      Ticks      => 0,
-      Barrier    => No_Barrier);
+      Barrier    => No_Barrier,
+      Deadline   => 0);
 
    type Minor_Frame_Range is range __minor_range__;
 
@@ -53,6 +53,7 @@ __scheduling_plans__);
    type Barrier_Config_Array is array (Barrier_Range) of Barrier_Size_Type;
 
    type Major_Frame_Info_Type is record
+      Period         : SK.Word64;
       Barrier_Config : Barrier_Config_Array;
    end record;
 

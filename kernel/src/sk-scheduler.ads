@@ -45,14 +45,26 @@ is
    procedure Init
    with
       Global  =>
-        (Input  => (Interrupts.State, State),
-         In_Out => (CPU_Global.State, MP.Barrier, Subjects.State,
+        (Input  => Interrupts.State,
+         In_Out => (CPU_Global.State, MP.Barrier, State, Subjects.State,
                     X86_64.State)),
       Depends =>
         (CPU_Global.State =>+ State,
          MP.Barrier       =>+ State,
          Subjects.State   =>+ null,
-         X86_64.State     =>+ (CPU_Global.State, Interrupts.State, State));
+         (State,
+          X86_64.State)   =>+ (CPU_Global.State, Interrupts.State, State,
+                               X86_64.State));
+
+   --  Set VMX-preemption timer of the currently active VMCS to trigger at the
+   --  current deadline. If the deadline has alread passed the timer is set to
+   --  zero.
+   procedure Set_VMX_Exit_Timer
+   with
+      Global  =>
+        (Input  => (CPU_Global.State, State),
+         In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ (CPU_Global.State, State));
 
    --  Handle_Vmx_Exit could be private if spark/init.adb did not need access.
 

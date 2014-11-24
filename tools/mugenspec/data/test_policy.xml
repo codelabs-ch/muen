@@ -849,6 +849,7 @@
 				<minorFrame barrier="1"    subject="subject1" ticks="100"/>
 				<minorFrame barrier="none" subject="subject1" ticks="100"/>
 				<minorFrame barrier="2"    subject="subject1" ticks="100"/>
+				<minorFrame barrier="none" subject="subject1" ticks="100"/>
 				<minorFrame barrier="3"    subject="subject1" ticks="100"/>
 				<minorFrame barrier="none" subject="subject1" ticks="100"/>
 				<minorFrame barrier="none" subject="subject1" ticks="100"/>

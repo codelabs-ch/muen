@@ -29,7 +29,8 @@ with SK.Dump;
 
 package body SK.Scheduler
 with
-   Refined_State => (State                 => (Current_Major),
+   Refined_State => (State                 => (Current_Major,
+                                               Major_Frame_Start),
                      Tau0_Kernel_Interface => (New_Major))
 is
 
@@ -42,6 +43,9 @@ is
    --  Current major.
    Current_Major : Skp.Scheduling.Major_Frame_Range
      := Skp.Scheduling.Major_Frame_Range'First;
+
+   --  Current major frame start time in CPU cycles.
+   Major_Frame_Start : SK.Word64 := 0;
 
    -------------------------------------------------------------------------
 
@@ -105,34 +109,33 @@ is
                   X86_64.State     =>+ New_VMCS),
       Pre     =>  Old_Id /= New_Id
    is
-      Remaining_Ticks : SK.Word64;
    begin
       CPU_Global.Swap_Subject
         (Old_Id => Old_Id,
          New_Id => New_Id);
 
-      VMX.VMCS_Read (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                     Value => Remaining_Ticks);
       VMX.Load (VMCS_Address => New_VMCS);
-      VMX.VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                      Value => Remaining_Ticks);
    end Subject_Handover;
 
    -------------------------------------------------------------------------
 
    --  Update scheduling information. If the end of the current major frame is
-   --  reached, the minor frame index is reset and the major frame is switched
-   --  to the one set by Tau0. Otherwise the minor frame index is incremented
-   --  by 1.
+   --  reached the major frame start time is updated by adding the period of
+   --  the just expired major frame to the current start value. Additionally,
+   --  the minor frame index is reset and the major frame is switched to the
+   --  one set by Tau0.
+   --  On regular minor frame switches the minor frame index is incremented by
+   --  one.
    procedure Update_Scheduling_Info
    with
       Global  =>
         (Input  => New_Major,
          In_Out => (CPU_Global.State, Current_Major, Events.State,
-                    MP.Barrier, X86_64.State)),
+                    Major_Frame_Start, MP.Barrier, X86_64.State)),
       Depends =>
-        ((CPU_Global.State, Current_Major, Events.State, MP.Barrier,
-         X86_64.State) =>+
+        (Major_Frame_Start =>+ (CPU_Global.State, Current_Major),
+         (CPU_Global.State, Current_Major, Events.State, MP.Barrier,
+          X86_64.State)    =>+
             (CPU_Global.State, Current_Major, New_Major))
    is
       use type Skp.Scheduling.Barrier_Index_Range;
@@ -140,7 +143,10 @@ is
       Minor_Frame : CPU_Global.Active_Minor_Frame_Type;
       Plan_Frame  : Skp.Scheduling.Minor_Frame_Type;
    begin
+      pragma $Prove_Warnings (Off, "statement has no effect",
+                              Reason => "False positive of GPL 2014");
       Minor_Frame := CPU_Global.Get_Current_Minor_Frame;
+      pragma $Prove_Warnings (On, "statement has no effect");
 
       if Minor_Frame.Minor_Id < CPU_Global.Get_Major_Length
         (Major_Id => Current_Major)
@@ -161,6 +167,13 @@ is
 
          MP.Wait_For_All;
          if CPU_Global.Is_BSP then
+
+            --  Increment major frame start time by period of major frame that
+            --  just ended.
+
+            Major_Frame_Start := Major_Frame_Start
+              + Skp.Scheduling.Major_Frames (Current_Major).Period;
+
             declare
                use type Skp.Scheduling.Major_Frame_Range;
 
@@ -193,6 +206,7 @@ is
 
       Minor_Frame.Subject_Id := Plan_Frame.Subject_Id;
       Minor_Frame.Barrier    := Plan_Frame.Barrier;
+      Minor_Frame.Deadline   := Plan_Frame.Deadline;
       CPU_Global.Set_Current_Minor (Frame => Minor_Frame);
 
       if Skp.Subjects.Get_Profile
@@ -201,13 +215,39 @@ is
          Events.Insert_Event (Subject => Minor_Frame.Subject_Id,
                               Event   => SK.Constants.Timer_Vector);
       end if;
+   end Update_Scheduling_Info;
 
-      --  Update preemption timer ticks in subject VMCS.
+   -------------------------------------------------------------------------
+
+   procedure Set_VMX_Exit_Timer
+   with
+      Refined_Global  =>
+       (Input  => (CPU_Global.State, Major_Frame_Start),
+        In_Out => X86_64.State),
+      Refined_Depends =>
+       (X86_64.State =>+ (CPU_Global.State, Major_Frame_Start))
+   is
+      Now      : constant SK.Word64 := CPU.RDTSC64;
+      Deadline : SK.Word64;
+      Cycles   : SK.Word64;
+   begin
+
+      --  Absolute deadline is given by start of major frame plus the number of
+      --  CPU cycles until the end of the current minor frame relative to major
+      --  frame start.
+
+      Deadline := Major_Frame_Start +
+        CPU_Global.Get_Current_Minor_Frame.Deadline;
+
+      if Deadline > Now then
+         Cycles := Deadline - Now;
+      else
+         Cycles := 0;
+      end if;
 
       VMX.VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                      Value => SK.Word64 (Plan_Frame.Ticks)
-                      / 2 ** Skp.Scheduling.VMX_Timer_Rate);
-   end Update_Scheduling_Info;
+                      Value => Cycles / 2 ** Skp.Scheduling.VMX_Timer_Rate);
+   end Set_VMX_Exit_Timer;
 
    -------------------------------------------------------------------------
 
@@ -215,14 +255,15 @@ is
    with
       Refined_Global  =>
         (Input  => (Current_Major, Interrupts.State),
-         In_Out => (CPU_Global.State, MP.Barrier, Subjects.State,
-                    X86_64.State)),
+         In_Out => (CPU_Global.State, Major_Frame_Start, MP.Barrier,
+                    Subjects.State, X86_64.State)),
       Refined_Depends =>
-        (CPU_Global.State =>+ Current_Major,
-         MP.Barrier       =>+ Current_Major,
-         Subjects.State   =>+ null,
-         X86_64.State     =>+ (CPU_Global.State, Current_Major,
-                               Interrupts.State))
+        (CPU_Global.State    =>+ Current_Major,
+         MP.Barrier          =>+ Current_Major,
+         Subjects.State      =>+ null,
+         (Major_Frame_Start,
+          X86_64.State)      =>+ (CPU_Global.State, Current_Major,
+                                  Interrupts.State, X86_64.State))
    is
       Plan_Frame        : Skp.Scheduling.Minor_Frame_Type;
       Initial_VMCS_Addr : SK.Word64 := 0;
@@ -242,16 +283,8 @@ is
         (Frame => CPU_Global.Active_Minor_Frame_Type'
            (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First,
             Subject_Id => Plan_Frame.Subject_Id,
-            Barrier    => Plan_Frame.Barrier));
-
-      if CPU_Global.Is_BSP then
-
-         --  Set minor frame barriers config.
-
-         MP.Set_Minor_Frame_Barrier_Config
-           (Config => Skp.Scheduling.Major_Frames
-              (Current_Major).Barrier_Config);
-      end if;
+            Barrier    => Plan_Frame.Barrier,
+            Deadline   => Plan_Frame.Deadline));
 
       --  Setup VMCS and state of subjects running on this logical CPU.
 
@@ -318,9 +351,19 @@ is
       --  Load first subject and set preemption timer ticks.
 
       VMX.Load (VMCS_Address => Initial_VMCS_Addr);
-      VMX.VMCS_Write (Field => Constants.GUEST_VMX_PREEMPT_TIMER,
-                      Value => SK.Word64 (Plan_Frame.Ticks)
-                      / 2 ** Skp.Scheduling.VMX_Timer_Rate);
+
+      if CPU_Global.Is_BSP then
+
+         --  Set minor frame barriers config.
+
+         MP.Set_Minor_Frame_Barrier_Config
+           (Config => Skp.Scheduling.Major_Frames
+              (Current_Major).Barrier_Config);
+
+         --  Set initial major frame start time to now.
+
+         Major_Frame_Start := CPU.RDTSC64;
+      end if;
    end Init;
 
    -------------------------------------------------------------------------
@@ -509,7 +552,8 @@ is
       Refined_Global  =>
         (Input  => New_Major,
          In_Out => (CPU_Global.State, Current_Major, Events.State,
-                    MP.Barrier, Subjects.State, VTd.State, X86_64.State)),
+                    Major_Frame_Start, MP.Barrier, Subjects.State, VTd.State,
+                    X86_64.State)),
       Refined_Depends =>
         (CPU_Global.State    =>+ (Current_Major, New_Major, Subject_Registers,
                                   X86_64.State),
@@ -518,14 +562,16 @@ is
           Subject_Registers) =>+ (CPU_Global.State, Current_Major, New_Major,
                                   Subjects.State, Subject_Registers,
                                   X86_64.State),
+         Major_Frame_Start   =>+ (CPU_Global.State, Current_Major,
+                                  X86_64.State),
          MP.Barrier          =>+ (CPU_Global.State, Current_Major, New_Major,
                                   X86_64.State),
          (Subjects.State,
           VTd.State)         =>+ (CPU_Global.State, Subjects.State,
                                   Subject_Registers, X86_64.State),
          X86_64.State        =>+ (CPU_Global.State, Current_Major,
-                                  Events.State, New_Major, Subjects.State,
-                                  Subject_Registers))
+                                  Events.State, Major_Frame_Start, New_Major,
+                                  Subjects.State, Subject_Registers))
    is
       Exit_Status     : SK.Word64;
       Current_Subject : Skp.Subject_Id_Type;
@@ -585,6 +631,7 @@ is
       Inject_Event
         (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id);
 
+      Set_VMX_Exit_Timer;
       Subjects.Restore_State
         (Id   => CPU_Global.Get_Current_Minor_Frame.Subject_Id,
          GPRs => Subject_Registers);

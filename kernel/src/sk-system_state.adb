@@ -101,6 +101,34 @@ is
 
    -------------------------------------------------------------------------
 
+   --  Returns True if an invariant TSC is present, see Intel SDM Vol. 3B,
+   --  chapter 17.13.1.
+   function Has_Invariant_TSC return Boolean
+   with
+      Global => (Input => X86_64.State)
+   is
+      Unused_EAX, Unused_EBX, Unused_ECX, EDX : SK.Word32;
+   begin
+      Unused_EAX := 16#8000_0007#;
+      Unused_ECX := 0;
+
+      pragma $Prove_Warnings
+        (Off, "unused assignment to ""Unused_E*X""",
+         Reason => "Only parts of the CPUID result is needed");
+      CPU.CPUID
+        (EAX => Unused_EAX,
+         EBX => Unused_EBX,
+         ECX => Unused_ECX,
+         EDX => EDX);
+      pragma $Prove_Warnings (On, "unused assignment to ""Unused_E*X""");
+
+      return Bit_Test
+        (Value => Word64 (EDX),
+         Pos   => Constants.CPUID_FEATURE_INVARIANT_TSC);
+   end Has_Invariant_TSC;
+
+   -------------------------------------------------------------------------
+
    --  Returns True if local APIC is present and supports x2APIC mode, see
    --  Intel SDM 3A, chapters 10.4.2 and 10.12.1.
    function Has_X2_Apic return Boolean
@@ -163,7 +191,7 @@ is
 
       VMX_Support, VMX_Disabled_Locked, Protected_Mode, Paging : Boolean;
       IA_32e_Mode, Apic_Support, CR0_Valid, CR4_Valid          : Boolean;
-      Not_Virtual_8086, In_SMX, XSAVE_Support                  : Boolean;
+      Not_Virtual_8086, In_SMX, XSAVE_Support, Invariant_TSC   : Boolean;
    begin
       VMX_Support := Has_VMX_Support;
       pragma Debug
@@ -237,6 +265,10 @@ is
         (not XSAVE_Support, KC.Put_Line
            (Item => "XSAVE not properly configured"));
 
+      Invariant_TSC := Has_Invariant_TSC;
+      pragma Debug
+        (not Invariant_TSC, KC.Put_Line (Item => "Invariant TSC not present"));
+
       return VMX_Support        and
         not VMX_Disabled_Locked and
         Protected_Mode          and
@@ -247,7 +279,8 @@ is
         CR0_Valid               and
         CR4_Valid               and
         Apic_Support            and
-        XSAVE_Support;
+        XSAVE_Support           and
+        Invariant_TSC;
    end Is_Valid;
 
 end SK.System_State;

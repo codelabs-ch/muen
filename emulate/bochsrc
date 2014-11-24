@@ -1,12 +1,9 @@
 romimage: file=$BXSHARE/BIOS-bochs-latest
 vgaromimage: file=$BXSHARE/VGABIOS-lgpl-latest
 
+cpu: model=corei7_ivy_bridge_3770k
 cpu: count=4, ips=50000000, reset_on_triple_fault=0, ignore_bad_msrs=1, msrs="msrs.def"
 cpu: cpuid_limit_winnt=0
-
-cpuid: x86_64=1, vmx=2, apic=x2apic
-cpuid: family=6, model=0x1a, stepping=5
-cpuid: simd=avx, xsave=1
 
 memory: guest=2048, host=512
 

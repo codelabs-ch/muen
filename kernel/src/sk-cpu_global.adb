@@ -38,7 +38,7 @@ is
    Storage : Storage_Type
    with
       Address => System'To_Address (Skp.Kernel.CPU_Store_Address + 8),
-      Size    =>  8 * (SK.Page_Size - 8);
+      Size    => 8 * (SK.Page_Size - 8);
    pragma $Build_Warnings (On,  "* bits of ""Storage"" unused");
 
    -------------------------------------------------------------------------
@@ -91,7 +91,8 @@ is
          Current_Minor_Frame => Active_Minor_Frame_Type'
            (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First,
             Subject_Id => Skp.Subject_Id_Type'First,
-            Barrier    => Skp.Scheduling.No_Barrier));
+            Barrier    => Skp.Scheduling.No_Barrier,
+            Deadline   => SK.Word64'First));
    end Init;
 
    -------------------------------------------------------------------------

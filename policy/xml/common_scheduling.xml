@@ -14,7 +14,7 @@
 		</cpu>
 		<cpu id="3">
 			<minorFrame subject="usb_linux" ticks="70"/>
-			<minorFrame subject="usb_linux" ticks="50"/>
+			<minorFrame subject="dbgserver" ticks="50"/>
 		</cpu>
 	</majorFrame>
 	<majorFrame>
@@ -29,7 +29,8 @@
 			<minorFrame subject="time" ticks="120"/>
 		</cpu>
 		<cpu id="3">
-			<minorFrame subject="usb_linux" ticks="120"/>
+			<minorFrame subject="usb_linux" ticks="60"/>
+			<minorFrame subject="dbgserver" ticks="60"/>
 		</cpu>
 	</majorFrame>
 </scheduling>

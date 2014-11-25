@@ -138,7 +138,7 @@ is
       Check_Event_Destination (XML_Data  => XML_Data,
                                Mode      => "ipi",
                                Test      => Not_Equals'Access,
-                               Error_Msg => "no IPI allowed");
+                               Error_Msg => "must run on different CPU");
    end IPI_Different_Core;
 
    -------------------------------------------------------------------------

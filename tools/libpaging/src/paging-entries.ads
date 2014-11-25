@@ -71,18 +71,6 @@ is
    --  Returns the memory caching type of the mapped memory region.
    function Get_Caching (E : Table_Entry_Type) return Paging.Caching_Type;
 
-   --  Page Map Level 4 table entry.
-   type PML4_Entry_Type is new Table_Entry_Type with private;
-
-   --  Page directory pointer table entry (level 3).
-   type PDPT_Entry_Type is new Table_Entry_Type with private;
-
-   --  Page directory entry (level 2).
-   type PD_Entry_Type is new Table_Entry_Type with private;
-
-   --  Page-table entry (level 1).
-   type PT_Entry_Type is new Table_Entry_Type with private;
-
 private
 
    type Table_Entry_Type is tagged record
@@ -95,13 +83,5 @@ private
       Global          : Boolean;
       Caching         : Caching_Type;
    end record;
-
-   type PML4_Entry_Type is new Table_Entry_Type with null record;
-
-   type PDPT_Entry_Type is new Table_Entry_Type with null record;
-
-   type PD_Entry_Type is new Table_Entry_Type with null record;
-
-   type PT_Entry_Type is new Table_Entry_Type with null record;
 
 end Paging.Entries;

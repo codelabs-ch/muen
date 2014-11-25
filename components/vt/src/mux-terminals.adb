@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -15,6 +15,8 @@
 --  You should have received a copy of the GNU General Public License
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
+
+with Interfaces;
 
 with SK.CPU;
 with SK.IO;
@@ -106,8 +108,10 @@ is
               Active_Slot /= Slot_Map (Event.Key)
             then
                Set (Slot => Slot_Map (Event.Key));
-               Log.Text_IO.Put_String (Item => "Switching to VT ");
-               Log.Text_IO.Put_Byte (Item => SK.Byte (Slot_Map (Event.Key)));
+               Log.Text_IO.Put (Item => "Switching to VT ");
+               Log.Text_IO.Put_Byte
+                 (Item => Interfaces.Unsigned_8
+                    (Slot_Map (Event.Key)));
                Log.Text_IO.New_Line;
             end if;
          when others =>
@@ -127,6 +131,8 @@ is
    is
       use type SK.Byte;
    begin
+      Log.Text_IO.Put_Line (Item => "VT subject running");
+
       loop
          SK.CPU.Cli;
          if not Has_Pending_Data then
@@ -194,27 +200,27 @@ is
 
                case Res is
                   when VT_Channel_Rdr.Incompatible_Interface =>
-                     Log.Text_IO.Put_String (Item => "Channel ");
-                     Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
+                     Log.Text_IO.Put      (Item => "Channel ");
+                     Log.Text_IO.Put_Byte (Item => Interfaces.Unsigned_8 (C));
                      Log.Text_IO.Put_Line
                        (Item => ": Incompatible interface detected");
                   when VT_Channel_Rdr.Epoch_Changed =>
-                     Log.Text_IO.Put_String (Item => "Channel ");
-                     Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
-                     Log.Text_IO.Put_Line   (Item => ": Epoch changed");
+                     Log.Text_IO.Put      (Item => "Channel ");
+                     Log.Text_IO.Put_Byte (Item => Interfaces.Unsigned_8 (C));
+                     Log.Text_IO.Put_Line (Item => ": Epoch changed");
                   when VT_Channel_Rdr.No_Data =>
                      SK.CPU.Cli;
                      Pending_Data (C) := Channels.Has_Pending_Data
                        (Channel => C);
                      SK.CPU.Sti;
                   when VT_Channel_Rdr.Overrun_Detected =>
-                     Log.Text_IO.Put_String (Item => "Channel ");
-                     Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
-                     Log.Text_IO.Put_Line   (Item => ": Overrun detected");
+                     Log.Text_IO.Put      (Item => "Channel ");
+                     Log.Text_IO.Put_Byte (Item => Interfaces.Unsigned_8 (C));
+                     Log.Text_IO.Put_Line (Item => ": Overrun detected");
                   when VT_Channel_Rdr.Inactive =>
-                     Log.Text_IO.Put_String (Item => "Channel ");
-                     Log.Text_IO.Put_Byte   (Item => SK.Byte (C));
-                     Log.Text_IO.Put_Line   (Item => ": Inactive");
+                     Log.Text_IO.Put      (Item => "Channel ");
+                     Log.Text_IO.Put_Byte (Item => Interfaces.Unsigned_8 (C));
+                     Log.Text_IO.Put_Line (Item => ": Inactive");
                   when VT_Channel_Rdr.Success =>
                      Screens.Update
                        (Screen => Slot_Range (C),

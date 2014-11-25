@@ -16,22 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.Console;
-
-with Mux.Console_Local;
+with Debuglog.Client;
 
 package Log
 is
 
-   package Console is new Mux.Console_Local
-     (Assigned_Slot => Mux.Slot_Range'Last);
-
-   package Text_IO is new SK.Console
-     (Initialize      => Console.Init,
-      Output_New_Line => Console.New_Line,
-      Output_Char     => Console.Put_Char);
-
-   --  Initialize logging.
-   procedure Initialize;
+   package Text_IO renames Debuglog.Client;
 
 end Log;

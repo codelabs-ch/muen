@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ with SK.CPU;
 with Interrupt_Handler;
 pragma Unreferenced (Interrupt_Handler);
 
-with Log;
 with Interrupts;
 with Mux.Terminals;
 
@@ -29,7 +28,6 @@ procedure VT
 is
 begin
    Interrupts.Initialize;
-   Log.Initialize;
    Mux.Terminals.Initialize;
 
    SK.CPU.Sti;

@@ -51,6 +51,9 @@ is
      (E       : in out Table_Entry_Type;
       Address :        Interfaces.Unsigned_64);
 
+   --  Returns True if the table entry is present and not an empty table entry.
+   function Is_Present (E : Table_Entry_Type) return Boolean;
+
    --  Returns True if the table entry allows user access to the mapped memory
    --  region.
    function Is_Readable (E : Table_Entry_Type) return Boolean;

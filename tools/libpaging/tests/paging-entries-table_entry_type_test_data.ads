@@ -25,6 +25,7 @@ package Paging.Entries.Table_Entry_Type_Test_Data is
    Test_Entry : constant Table_Entry_Type
      := Create (Dst_Index   => 42,
                 Dst_Address => 16#1f_f000#,
+                Present     => True,
                 Readable    => True,
                 Writable    => False,
                 Executable  => True,

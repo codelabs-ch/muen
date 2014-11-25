@@ -90,6 +90,14 @@ is
 
    -------------------------------------------------------------------------
 
+   function Is_Present (E : Table_Entry_Type) return Boolean
+   is
+   begin
+      return E.Present;
+   end Is_Present;
+
+   -------------------------------------------------------------------------
+
    function Is_Readable (E : Table_Entry_Type) return Boolean
    is
    begin

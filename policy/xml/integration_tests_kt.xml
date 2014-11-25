@@ -123,6 +123,9 @@
 			</channels>
 			<component ref="linux"/>
 		</subject>
+
+		<!-- The dbgserver subject must be the last subject in the policy -->
+		<include href="subject_dbgserver.xml"/>
 	</subjects>
 
 	<include href="common_scheduling.xml"/>

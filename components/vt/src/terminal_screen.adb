@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Interfaces;
+
 with SK.Console_VGA;
 with SK.Console;
 
@@ -23,6 +25,8 @@ with Log;
 
 package body Terminal_Screen
 is
+
+   package Ifa renames Interfaces;
 
    --  Debug flag.
    D : constant Boolean := False;
@@ -145,8 +149,8 @@ is
    procedure CSI_Dispatch (Char : SK.Byte)
    is
    begin
-      pragma Debug (D, Log.Text_IO.Put_String (Item => "* CSI_Dispatch "));
-      pragma Debug (D, Log.Text_IO.Put_Byte   (Item => Char));
+      pragma Debug (D, Log.Text_IO.Put      (Item => "* CSI_Dispatch "));
+      pragma Debug (D, Log.Text_IO.Put_Byte (Item => Ifa.Unsigned_8 (Char)));
       pragma Debug (D, Log.Text_IO.New_Line);
       pragma Debug (D, Print_CSI_Params);
 
@@ -215,9 +219,9 @@ is
          when 0      => VGA.Delete_Screen_From_Cursor;
          when 2      => VGA.Init;
          when others =>
-            Log.Text_IO.Put_String (Item => "!! Unsupported param ");
-            Log.Text_IO.Put_Byte   (Item => SK.Byte (Fsm.CSI_Params (1)));
-            Log.Text_IO.Put_Line   (Item => " in CSI J");
+            Log.Text_IO.Put      (Item => "!! Unsupported param ");
+            Log.Text_IO.Put_Byte (Item => Ifa.Unsigned_8 (Fsm.CSI_Params (1)));
+            Log.Text_IO.Put_Line (Item => " in CSI J");
       end case;
    end CSI_Erase_Display;
 
@@ -230,10 +234,10 @@ is
       if Fsm.CSI_Param_Idx = 1 then
          Result := To_Height (Param => Fsm.CSI_Params (1));
       elsif Fsm.CSI_Param_Idx /= CSI_Empty_Params then
-         Log.Text_IO.Put_String (Item => "!! Unsupported parameter count 16#");
-         Log.Text_IO.Put_Byte   (Item => SK.Byte (Fsm.CSI_Param_Idx));
-         Log.Text_IO.Put_String (Item => "# in ");
-         Log.Text_IO.Put_Line   (Item => Name);
+         Log.Text_IO.Put      (Item => "!! Unsupported parameter count 16#");
+         Log.Text_IO.Put_Byte (Item => Ifa.Unsigned_8 (Fsm.CSI_Param_Idx));
+         Log.Text_IO.Put      (Item => "# in ");
+         Log.Text_IO.Put_Line (Item => Name);
       end if;
 
       return Result;
@@ -254,10 +258,10 @@ is
          N := To_Height (Param => Fsm.CSI_Params (1));
          M := To_Height (Param => Fsm.CSI_Params (2));
       elsif Fsm.CSI_Param_Idx /= CSI_Empty_Params then
-         Log.Text_IO.Put_String (Item => "!! Unsupported parameter count 16#");
-         Log.Text_IO.Put_Byte   (Item => SK.Byte (Fsm.CSI_Param_Idx));
-         Log.Text_IO.Put_String (Item => "# in ");
-         Log.Text_IO.Put_Line   (Item => Name);
+         Log.Text_IO.Put      (Item => "!! Unsupported parameter count 16#");
+         Log.Text_IO.Put_Byte (Item => Ifa.Unsigned_8 (Fsm.CSI_Param_Idx));
+         Log.Text_IO.Put      (Item => "# in ");
+         Log.Text_IO.Put_Line (Item => Name);
       end if;
    end CSI_Get_Height;
 
@@ -276,10 +280,10 @@ is
          N := To_Height (Param => Fsm.CSI_Params (1));
          M := To_Width  (Param => Fsm.CSI_Params (2));
       elsif Fsm.CSI_Param_Idx /= CSI_Empty_Params then
-         Log.Text_IO.Put_String (Item => "!! Unsupported parameter count 16#");
-         Log.Text_IO.Put_Byte   (Item => SK.Byte (Fsm.CSI_Param_Idx));
-         Log.Text_IO.Put_String (Item => "# in ");
-         Log.Text_IO.Put_Line   (Item => Name);
+         Log.Text_IO.Put      (Item => "!! Unsupported parameter count 16#");
+         Log.Text_IO.Put_Byte (Item => Ifa.Unsigned_8 (Fsm.CSI_Param_Idx));
+         Log.Text_IO.Put      (Item => "# in ");
+         Log.Text_IO.Put_Line (Item => Name);
       end if;
    end CSI_Get_Height_Width;
 
@@ -292,10 +296,10 @@ is
       if Fsm.CSI_Param_Idx = 1 then
          Result := To_Width (Param => Fsm.CSI_Params (1));
       elsif Fsm.CSI_Param_Idx /= CSI_Empty_Params then
-         Log.Text_IO.Put_String (Item => "!! Unsupported parameter count 16#");
-         Log.Text_IO.Put_Byte   (Item => SK.Byte (Fsm.CSI_Param_Idx));
-         Log.Text_IO.Put_String (Item => "# in ");
-         Log.Text_IO.Put_Line   (Item => Name);
+         Log.Text_IO.Put      (Item => "!! Unsupported parameter count 16#");
+         Log.Text_IO.Put_Byte (Item => Ifa.Unsigned_8 (Fsm.CSI_Param_Idx));
+         Log.Text_IO.Put      (Item => "# in ");
+         Log.Text_IO.Put_Line (Item => Name);
       end if;
 
       return Result;
@@ -367,10 +371,11 @@ is
    procedure ESC_Dispatch (Char : SK.Byte)
    is
    begin
-      pragma Debug (D, Log.Text_IO.Put_String (Item => "* ESC_Dispatch "));
-      pragma Debug (D, Log.Text_IO.Put_Byte   (Item => Char));
-      pragma Debug (D, Log.Text_IO.Put_String (Item => ", intermediate "));
-      pragma Debug (D, Log.Text_IO.Put_Byte   (Item => Fsm.ESC_Collect));
+      pragma Debug (D, Log.Text_IO.Put      (Item => "* ESC_Dispatch "));
+      pragma Debug (D, Log.Text_IO.Put_Byte (Item => Ifa.Unsigned_8 (Char)));
+      pragma Debug (D, Log.Text_IO.Put      (Item => ", intermediate "));
+      pragma Debug (D, Log.Text_IO.Put_Byte (Item => Ifa.Unsigned_8
+                                             (Fsm.ESC_Collect)));
       pragma Debug (D, Log.Text_IO.New_Line);
 
       case Char
@@ -419,10 +424,10 @@ is
          return;
       end if;
 
-      Log.Text_IO.Put_String (Item => "CSI params ");
+      Log.Text_IO.Put (Item => "CSI params ");
       for I in CSI_Param_Range'First .. Fsm.CSI_Param_Idx loop
-         Log.Text_IO.Put_Word16 (Item => SK.Word16 (Fsm.CSI_Params (I)));
-         Log.Text_IO.Put_Char (Item => ' ');
+         Log.Text_IO.Put_Word16 (Item => Ifa.Unsigned_16 (Fsm.CSI_Params (I)));
+         Log.Text_IO.Put (Item => ' ');
       end loop;
       Log.Text_IO.New_Line;
    end Print_CSI_Params;
@@ -434,9 +439,9 @@ is
       Char  : SK.Byte)
    is
    begin
-      Log.Text_IO.Put_String (Item => State);
-      Log.Text_IO.Put_String (Item => ": Unknown character ");
-      Log.Text_IO.Put_Byte   (Item => Char);
+      Log.Text_IO.Put      (Item => State);
+      Log.Text_IO.Put      (Item => ": Unknown character ");
+      Log.Text_IO.Put_Byte (Item => Ifa.Unsigned_8 (Char));
       Log.Text_IO.New_Line;
    end Print_Unknown;
 

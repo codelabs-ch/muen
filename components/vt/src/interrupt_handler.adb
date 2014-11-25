@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -15,6 +15,8 @@
 --  You should have received a copy of the GNU General Public License
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
+
+with Interfaces;
 
 with Log;
 with Driver_Keyboard;
@@ -37,8 +39,8 @@ is
       elsif Vector = 49 then
          Driver_Keyboard.Handle;
       else
-         Log.Text_IO.Put_String (Item => "Ignoring spurious interrupt ");
-         Log.Text_IO.Put_Byte   (Item => Vector);
+         Log.Text_IO.Put      (Item => "Ignoring spurious interrupt ");
+         Log.Text_IO.Put_Byte (Item => Interfaces.Unsigned_8 (Vector));
          Log.Text_IO.New_Line;
       end if;
    end Handle_Interrupt;

@@ -1,6 +1,7 @@
 <components>
 	<component name="dbgserver">
 		<channels>
+			<reader logical="channel_subject1" virtualAddress="16#a001_0000#" size="16#0001_0000#"/>
 			<reader logical="channel_subject2" virtualAddress="16#a002_0000#" size="16#0001_0000#"/>
 		</channels>
 		<binary filename="dbgserver" size="16#0010_0000#" virtualAddress="16#1000#"/>
@@ -13,6 +14,7 @@
 			<reader logical="console_4" virtualAddress="16#0013_0000#" size="16#0001_0000#" vector="37"/>
 			<writer logical="keyboard_1" virtualAddress="16#0005_0000#" size="16#1000#" event="1"/>
 			<writer logical="keyboard_2" virtualAddress="16#0005_1000#" size="16#1000#" event="2"/>
+			<writer logical="debuglog" virtualAddress="16#000f_fff0_0000#" size="16#0001_0000#"/>
 		</channels>
 		<binary filename="vt" size="16#0003_0000#" virtualAddress="16#1000#"/>
 	</component>

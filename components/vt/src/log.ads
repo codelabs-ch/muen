@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,25 +16,11 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK.Console;
-
-with Mux.Console_Local;
+with Debuglog.Client;
 
 package Log
 is
 
-   package Console is new Mux.Console_Local
-     (Assigned_Slot => Mux.Slot_Range'Last);
-
-   package Text_IO is new SK.Console
-     (Initialize      => Console.Init,
-      Output_New_Line => Console.New_Line,
-      Output_Char     => Console.Put_Char);
-
-   --  Initialize logging.
-   procedure Initialize;
-
-   --  Clear log.
-   procedure Clear;
+   package Text_IO renames Debuglog.Client;
 
 end Log;

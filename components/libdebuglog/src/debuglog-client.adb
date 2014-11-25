@@ -70,8 +70,8 @@ is
    procedure Put (Item : String)
    is
    begin
-      for C of Item loop
-         Put (Item => C);
+      for I in Item'Range loop
+         Put (Item => Item (I));
       end loop;
    end Put;
 
@@ -95,16 +95,16 @@ is
       use type Interfaces.Unsigned_8;
 
       Temp  : Byte;
-      Image : Byte_Image := Byte_Image'(others => '_');
+      Image : Byte_Image;
    begin
       Temp := Item;
-      for C of reverse Image loop
-         C := Num_To_Char (Value => Nibble_Type (Temp mod 16));
+      for I in reverse Image'Range loop
+         Image (I) := Num_To_Char (Value => Nibble_Type (Temp mod 16));
          Temp := Temp / 16;
       end loop;
 
-      for C of Image loop
-         Put (Item => C);
+      for I in Image'Range loop
+         Put (Item => Image (I));
       end loop;
    end Put_Byte;
 
@@ -193,17 +193,17 @@ is
       Image : Word64_Image := Word64_Image'(others => '_');
    begin
       Temp := Item;
-      for C of reverse Image loop
-         C := Num_To_Char (Value => Nibble_Type (Temp mod 10));
+      for I in reverse Image'Range loop
+         Image (I) := Num_To_Char (Value => Nibble_Type (Temp mod 10));
          Temp := Temp / 10;
          if Temp = 0 then
             exit;
          end if;
       end loop;
 
-      for C of Image loop
-         if C /= '_' then
-            Put (Item => C);
+      for I in Image'Range loop
+         if Image (I) /= '_' then
+            Put (Item => Image (I));
          end if;
       end loop;
    end Put_UInt64;
@@ -216,16 +216,16 @@ is
       use type Interfaces.Unsigned_16;
 
       Temp  : Word16;
-      Image : Word16_Image := Word16_Image'(others => '_');
+      Image : Word16_Image;
    begin
       Temp := Item;
-      for C of reverse Image loop
-         C := Num_To_Char (Value => Nibble_Type (Temp mod 16));
+      for I in reverse Image'Range loop
+         Image (I) := Num_To_Char (Value => Nibble_Type (Temp mod 16));
          Temp := Temp / 16;
       end loop;
 
-      for C of Image loop
-         Put (Item => C);
+      for I in Image'Range loop
+         Put (Item => Image (I));
       end loop;
    end Put_Word16;
 
@@ -237,16 +237,16 @@ is
       use type Interfaces.Unsigned_32;
 
       Temp  : Word32;
-      Image : Word32_Image := Word32_Image'(others => '_');
+      Image : Word32_Image;
    begin
       Temp := Item;
-      for C of reverse Image loop
-         C := Num_To_Char (Value => Nibble_Type (Temp mod 16));
+      for I in reverse Image'Range loop
+         Image (I) := Num_To_Char (Value => Nibble_Type (Temp mod 16));
          Temp := Temp / 16;
       end loop;
 
-      for C of Image loop
-         Put (Item => C);
+      for I in Image'Range loop
+         Put (Item => Image (I));
       end loop;
    end Put_Word32;
 
@@ -258,16 +258,16 @@ is
       use type Interfaces.Unsigned_64;
 
       Temp  : Word64;
-      Image : Word64_Image := Word64_Image'(others => '_');
+      Image : Word64_Image;
    begin
       Temp := Item;
-      for C of reverse Image loop
-         C := Num_To_Char (Value => Nibble_Type (Temp mod 16));
+      for I in reverse Image'Range loop
+         Image (I) := Num_To_Char (Value => Nibble_Type (Temp mod 16));
          Temp := Temp / 16;
       end loop;
 
-      for C of Image loop
-         Put (Item => C);
+      for I in Image'Range loop
+         Put (Item => Image (I));
       end loop;
    end Put_Word64;
 

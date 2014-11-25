@@ -234,12 +234,14 @@ is
       Depends => ((X86_64.State, Success) => (X86_64.State, Field, Value)),
       Inline_Always;
 
+   --  Restore Processor Extended States from given XSAVE area.
    procedure XRSTOR (Source : SK.XSAVE_Area_Type)
    with
       Global  => (In_Out => X86_64.State),
       Depends => (X86_64.State =>+ Source),
       Inline_Always;
 
+   --  Save Processor Extended States to given XSAVE area.
    procedure XSAVE (Target : out SK.XSAVE_Area_Type)
    with
       Global  => (Input => X86_64.State),

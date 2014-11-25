@@ -447,6 +447,10 @@ is
       SPARK_Mode => Off
    is
    begin
+
+      --  Restore mask in EDX:EAX specifies to restore x87, SSE and AVX
+      --  registers, see Intel SDM Vol. 3A, chapter 2.6.
+
       System.Machine_Code.Asm
         (Template => "xrstor64 %2",
          Inputs   => (SK.Word32'Asm_Input ("a", 7),
@@ -462,6 +466,10 @@ is
       SPARK_Mode => Off
    is
    begin
+
+      --  Save mask in EDX:EAX specifies to save x87, SSE and AVX registers,
+      --  see Intel SDM Vol. 3A, chapter 2.6.
+
       System.Machine_Code.Asm
         (Template => "xsave64 %0",
          Inputs   => (SK.Word32'Asm_Input ("a", 7),

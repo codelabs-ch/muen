@@ -34,6 +34,8 @@ with Debuglog.Types;
 with Debuglog.Stream.Writer_Instance;
 
 package body Debuglog.Sink
+with
+   Refined_State => (State => (Message_Channel, Message_Buffer, Message_Index))
 is
 
    use type Interfaces.Unsigned_32;
@@ -41,31 +43,19 @@ is
 
    Message_Channel : Stream.Channel_Type
      with
-       Address => System'To_Address (Config.Channel_Base_Addr);
+       Address => System'To_Address (Config.Channel_Base_Addr),
+       Async_Readers;
 
    Message_Buffer : Types.Data_Type     := Types.Null_Data;
    Message_Index  : Types.Message_Index := Types.Message_Index'First;
 
-   --  RDTSC.
+   -------------------------------------------------------------------------
+
    --  TODO: Remove as soon as SK.CPU.RDTSC is available in a library.
    function RDTSC return Interfaces.Unsigned_64;
-
-   -------------------------------------------------------------------------
-
-   procedure Flush
-   is
-   begin
-      Message_Buffer.Timestamp := RDTSC;
-      Stream.Writer_Instance.Write
-        (Channel => Message_Channel,
-         Element => Message_Buffer);
-      Message_Index  := Types.Message_Index'First;
-      Message_Buffer := Types.Null_Data;
-   end Flush;
-
-   -------------------------------------------------------------------------
-
    function RDTSC return Interfaces.Unsigned_64
+   with
+      SPARK_Mode => Off
    is
       Lo : Interfaces.Unsigned_32;
       Hi : Interfaces.Unsigned_32;
@@ -79,6 +69,21 @@ is
       return Interfaces.Unsigned_64 (Lo) +
         Interfaces.Unsigned_64 (Hi) * 2 ** 32;
    end RDTSC;
+
+   -------------------------------------------------------------------------
+
+   procedure Flush
+   is
+   begin
+      Message_Buffer.Timestamp := RDTSC;
+
+      --  Workaround for [NA10-010] (no named arguments)
+
+      Stream.Writer_Instance.Write (Message_Channel, Message_Buffer);
+
+      Message_Index  := Types.Message_Index'First;
+      Message_Buffer := Types.Null_Data;
+   end Flush;
 
    -------------------------------------------------------------------------
 
@@ -96,7 +101,7 @@ is
       end if;
    end Write_Character;
 begin
-   Stream.Writer_Instance.Initialize
-     (Channel => Message_Channel,
-      Epoch   => 1);
+   --  Workaround for [NA10-010] (no named arguments)
+
+   Stream.Writer_Instance.Initialize (Message_Channel, 1);
 end Debuglog.Sink;

@@ -8,5 +8,6 @@
 	<component ref="time">
 		<map logical="time" physical="virtual_time"/>
 		<map logical="console" physical="time_console"/>
+		<map logical="debuglog" physical="debuglog_subject2"/>
 	</component>
 </subject>

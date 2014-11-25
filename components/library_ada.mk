@@ -1,4 +1,4 @@
-include ../ada_common.mk
+include ../common_ada.mk
 
 install:
 

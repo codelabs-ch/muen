@@ -52,9 +52,9 @@ is
    procedure New_Line
    is
    begin
-      Put (Item => ASCII.CR);
-      Put (Item => ASCII.LF);
-      Flush;
+      Put (Item => Character'Val (16#0d#)); -- CR
+      Put (Item => Character'Val (16#0a#)); -- LF
+      Sink.Flush;
    end New_Line;
 
    -------------------------------------------------------------------------

@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Mutools.Utils;
+
 with Paging.Entries;
 
 package body Paging.IA32e
@@ -99,14 +101,20 @@ is
          Exec_Disable  => Exec_Disable);
 
       if Map_Page then
-         Result := Result or 2 ** Page_Size_Flag;
+         Result := Mutools.Utils.Bit_Set
+           (Value => Result,
+            Pos   => Page_Size_Flag);
 
          if PAT.PAT then
-            Result := Result or 2 ** PD_PAT_Flag;
+            Result := Mutools.Utils.Bit_Set
+              (Value => Result,
+               Pos   => PD_PAT_Flag);
          end if;
 
          if Global then
-            Result := Result or 2 ** Global_Flag;
+            Result := Mutools.Utils.Bit_Set
+              (Value => Result,
+               Pos   => Global_Flag);
          end if;
       end if;
 
@@ -128,26 +136,38 @@ is
    begin
       Result := Address and Address_Mask;
 
-      Result := Result or 2 ** Present_Flag;
+      Result := Mutools.Utils.Bit_Set
+        (Value => Result,
+         Pos   => Present_Flag);
 
       if Writable then
-         Result := Result or 2 ** RW_Flag;
+         Result := Mutools.Utils.Bit_Set
+           (Value => Result,
+            Pos   => RW_Flag);
       end if;
 
       if User_Access then
-         Result := Result or 2 ** US_Flag;
+         Result := Mutools.Utils.Bit_Set
+           (Value => Result,
+            Pos   => US_Flag);
       end if;
 
       if Writethrough then
-         Result := Result or 2 ** PWT_Flag;
+         Result := Mutools.Utils.Bit_Set
+           (Value => Result,
+            Pos   => PWT_Flag);
       end if;
 
       if Cache_Disable then
-         Result := Result or 2 ** PCD_Flag;
+         Result := Mutools.Utils.Bit_Set
+           (Value => Result,
+            Pos   => PCD_Flag);
       end if;
 
       if Exec_Disable then
-         Result := Result or 2 ** NXE_Flag;
+         Result := Mutools.Utils.Bit_Set
+           (Value => Result,
+            Pos   => NXE_Flag);
       end if;
 
       return Result;
@@ -289,11 +309,15 @@ is
             Exec_Disable  => not TEntry.Is_Executable);
 
          if PAT.PAT then
-            Result := Result or 2 ** PTE_PAT_Flag;
+            Result := Mutools.Utils.Bit_Set
+              (Value => Result,
+               Pos   => PTE_PAT_Flag);
          end if;
 
          if TEntry.Is_Global then
-            Result := Result or 2 ** Global_Flag;
+            Result := Mutools.Utils.Bit_Set
+              (Value => Result,
+               Pos   => Global_Flag);
          end if;
 
          Raw_Table (Index) := Result;

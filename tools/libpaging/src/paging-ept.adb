@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Mutools.Utils;
+
 with Paging.Entries;
 
 package body Paging.EPT
@@ -99,7 +101,9 @@ is
          Memory_Type => Memory_Type);
 
       if Map_Page then
-         Result := Result or 2 ** Present_Flag;
+         Result := Mutools.Utils.Bit_Set
+              (Value => Result,
+               Pos   => Present_Flag);
       end if;
 
       return Result;
@@ -121,15 +125,21 @@ is
       Result := Address and Address_Mask;
 
       if Readable then
-         Result := Result or 2 ** Read_Flag;
+         Result := Mutools.Utils.Bit_Set
+           (Value => Result,
+            Pos   => Read_Flag);
       end if;
 
       if Writable then
-         Result := Result or 2 ** Write_Flag;
+         Result := Mutools.Utils.Bit_Set
+           (Value => Result,
+            Pos   => Write_Flag);
       end if;
 
       if Executable then
-         Result := Result or 2 ** Execute_Flag;
+         Result := Mutools.Utils.Bit_Set
+           (Value => Result,
+            Pos   => Execute_Flag);
       end if;
 
       return Result;
@@ -159,7 +169,9 @@ is
 
       if Map_Page then
          if Ignore_PAT then
-            Result := Result or 2 ** Ignore_PAT_Flag;
+            Result := Mutools.Utils.Bit_Set
+              (Value => Result,
+               Pos   => Ignore_PAT_Flag);
          end if;
          Result := Result or EPT_MT_Mapping (Memory_Type);
       end if;

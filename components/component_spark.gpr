@@ -83,4 +83,15 @@ abstract project Component_Spark extends "component_common.gpr" is
       for Local_Configuration_Pragmas use "../config/restrictions-" & Build_Mode & ".adc";
    end Compiler;
 
+   package Linker is
+      for Default_Switches ("Ada") use
+        ("-T", "../component.ld",
+         "-nostdlib",
+         "-n");
+   end Linker;
+
+   package Naming is
+      for Body_Suffix ("Asm") use ".S";
+   end Naming;
+
 end Component_Spark;

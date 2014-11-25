@@ -11,7 +11,6 @@
 			<reader logical="console_2" virtualAddress="16#0011_0000#" size="16#0001_0000#" vector="35"/>
 			<reader logical="console_3" virtualAddress="16#0012_0000#" size="16#0001_0000#" vector="36"/>
 			<reader logical="console_4" virtualAddress="16#0013_0000#" size="16#0001_0000#" vector="37"/>
-			<reader logical="console_5" virtualAddress="16#0014_0000#" size="16#0001_0000#" vector="38"/>
 			<writer logical="keyboard_1" virtualAddress="16#0005_0000#" size="16#1000#" event="1"/>
 			<writer logical="keyboard_2" virtualAddress="16#0005_1000#" size="16#1000#" event="2"/>
 		</channels>
@@ -20,7 +19,6 @@
 	<component name="time">
 		<channels>
 			<writer logical="time" virtualAddress="16#0002_0000#" size="16#1000#"/>
-			<writer logical="console" virtualAddress="16#000b_8000#" size="16#0001_0000#" event="1"/>
 			<writer logical="debuglog" virtualAddress="16#000f_fff0_0000#" size="16#0001_0000#"/>
 		</channels>
 		<binary filename="time" size="16#0001_4000#" virtualAddress="16#1000#"/>

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -29,11 +29,7 @@ with Crypt.Receiver;
 with Crypt.Sender;
 with Crypt.Hasher;
 
-pragma $Prove_Warnings (Off, "unit * is not referenced",
-                        Reason => "Only used for debug");
-with Subject.Text_IO;
 with Crypt.Debug;
-pragma $Prove_Warnings (On, "unit * is not referenced");
 
 with Handler;
 
@@ -44,24 +40,20 @@ with
       Output => Crypt.Sender.State,
       In_Out => (X86_64.State, Interrupts.State, Handler.Requesting_Subject))
 is
-   Client_Id : Skp.Subject_Id_Type;
+   Client_ID : Skp.Subject_Id_Type;
    Request   : Crypt.Message_Type;
    Response  : Crypt.Message_Type;
 begin
-   pragma Debug (Subject.Text_IO.Init);
-   pragma Debug (Subject.Text_IO.Put_Line (Item => "Crypter subject running"));
-   pragma Debug (Subject.Text_IO.Put_Line (Item => "Waiting for requests..."));
+   pragma Debug (Crypt.Debug.Put_Greeter);
    Interrupts.Initialize;
 
    SK.CPU.Sti;
 
    loop
       SK.CPU.Hlt;
-      Client_Id := Handler.Requesting_Subject;
-      pragma Debug (Subject.Text_IO.Put_String
-                    (Item => "Processing request from subject "));
-      pragma Debug (Subject.Text_IO.Put_Byte   (Item => SK.Byte (Client_Id)));
-      pragma Debug (Subject.Text_IO.New_Line);
+      Client_ID := Handler.Requesting_Subject;
+      pragma Debug (Crypt.Debug.Put_Process_Message
+                    (Client_ID => SK.Byte (Client_ID)));
 
       Response := Crypt.Null_Message;
       Crypt.Receiver.Receive (Req => Request);
@@ -71,23 +63,19 @@ begin
       if Request.Size'Valid then
          pragma $Prove_Warnings
            (On, "attribute Valid is assumed to return True");
-         pragma Debug (Subject.Text_IO.Put_String (Item => " Size : "));
-         pragma Debug (Subject.Text_IO.Put_Word16 (Item => Request.Size));
-         pragma Debug (Subject.Text_IO.New_Line);
+         pragma Debug (Crypt.Debug.Put_Word16
+                       (Message => " Size",
+                        Value   => Request.Size));
          Crypt.Hasher.SHA256_Hash (Input  => Request,
                                    Output => Response);
-         pragma Debug (Subject.Text_IO.Put_String (Item => " Hash : "));
-         pragma Debug (Crypt.Debug.Put_Message (Item => Response));
-         pragma Debug (Subject.Text_IO.New_Line);
+         pragma Debug (Crypt.Debug.Put_Hash (Item => Response));
       end if;
       pragma Debug (not Request.Size'Valid,
-                    Subject.Text_IO.Put_String
-                      (Item => "Invalid request message size "));
-      pragma Debug (not Request.Size'Valid,
-                    Subject.Text_IO.Put_Word16 (Item => Request.Size));
-      pragma Debug (not Request.Size'Valid, Subject.Text_IO.New_Line);
+                    Crypt.Debug.Put_Word16
+                      (Message => "Invalid request message size",
+                       Value   => Request.Size));
 
       Crypt.Sender.Send (Res => Response);
-      SK.Hypercall.Trigger_Event (Number => SK.Byte (Client_Id));
+      SK.Hypercall.Trigger_Event (Number => SK.Byte (Client_ID));
    end loop;
 end Crypter;

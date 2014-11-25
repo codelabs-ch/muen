@@ -17,7 +17,7 @@
 --
 
 with "libsparkcrypto";
-with "../libmuchannel/libmuchannel";
+with "../libdebuglog/libdebuglog";
 
 project Crypter extends "../component_spark" is
 

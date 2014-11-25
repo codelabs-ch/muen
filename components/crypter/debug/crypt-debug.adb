@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,19 +16,65 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Subject.Text_IO;
+with Interfaces;
+
+with Debuglog.Client;
 
 package body Crypt.Debug
 is
 
    -------------------------------------------------------------------------
 
-   procedure Put_Message (Item : Crypt.Message_Type)
+   procedure Put_Greeter
    is
    begin
+      Debuglog.Client.Put (Item => "Crypter subject running");
+      Debuglog.Client.Put (Item => "Waiting for requests...");
+   end Put_Greeter;
+
+   -------------------------------------------------------------------------
+
+   procedure Put_Hash (Item : Crypt.Message_Type)
+   is
+   begin
+      Debuglog.Client.Put (Item => " Hash: ");
       for I in Crypt.Data_Range range 1 .. Item.Size loop
-         Subject.Text_IO.Put_Byte (Item => Item.Data (I));
+         Debuglog.Client.Put_Byte
+           (Item => Interfaces.Unsigned_8 (Item.Data (I)));
       end loop;
-   end Put_Message;
+      Debuglog.Client.New_Line;
+   end Put_Hash;
+
+   -------------------------------------------------------------------------
+
+   procedure Put_Process_Message (Client_ID : SK.Byte)
+   is
+   begin
+      Debuglog.Client.Put      (Item => "Processing request from subject ");
+      Debuglog.Client.Put_Byte (Item => Interfaces.Unsigned_8 (Client_ID));
+      Debuglog.Client.New_Line;
+   end Put_Process_Message;
+
+   -------------------------------------------------------------------------
+
+   procedure Put_Spurious (Vector : SK.Byte)
+   is
+   begin
+      Debuglog.Client.Put      (Item => "Ignoring spurious interrupt ");
+      Debuglog.Client.Put_Byte (Item => Interfaces.Unsigned_8 (Vector));
+      Debuglog.Client.New_Line;
+   end Put_Spurious;
+
+   -------------------------------------------------------------------------
+
+   procedure Put_Word16
+     (Message : String;
+      Value   : SK.Word16)
+   is
+   begin
+      Debuglog.Client.Put_Reg16
+        (Name  => Message,
+         Value => Interfaces.Unsigned_16 (Value));
+   end Put_Word16;
 
 end Crypt.Debug;

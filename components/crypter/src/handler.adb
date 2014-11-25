@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,10 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-pragma $Prove_Warnings (Off, "unit Subject.Text_IO is not referenced",
-                        Reason => "Only used for debug");
-with Subject.Text_IO;
-pragma $Prove_Warnings (On, "unit Subject.Text_IO is not referenced");
+with Crypt.Debug;
 
 package body Handler
 is
@@ -37,11 +34,8 @@ is
          Requesting_Subject := Skp.Subject_Id_Type'First;
       end if;
 
-      pragma Debug (Vector < 32,
-                    Subject.Text_IO.Put_String
-                      ("Ignoring spurious interrupt "));
-      pragma Debug (Vector < 32, Subject.Text_IO.Put_Byte (Item => Vector));
-      pragma Debug (Vector < 32, Subject.Text_IO.New_Line);
+      pragma Debug (Vector < 32, Crypt.Debug.Put_Spurious
+                    (Vector => Vector));
    end Handle_Interrupt;
 
 end Handler;

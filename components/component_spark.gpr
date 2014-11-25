@@ -18,7 +18,7 @@
 
 with "../config/shared";
 
-abstract project Component_Spark extends "component_common.gpr" is
+abstract project Component_Spark is
 
    type Build_Type is ("debug", "release", "prove");
    Build_Mode : Build_Type := external ("build", "prove");

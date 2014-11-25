@@ -10,6 +10,7 @@
 	</devices>
 	<events/>
 	<component ref="dbgserver">
+		<map logical="channel_subject1" physical="debuglog_subject1"/>
 		<map logical="channel_subject2" physical="debuglog_subject2"/>
 	</component>
 </subject>

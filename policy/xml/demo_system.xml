@@ -7,6 +7,8 @@
 
 		<memory name="nic_linux|ram" size="16#0f60_0000#" alignment="16#0020_0000#" caching="WB"/>
 		<memory name="usb_linux|ram" size="16#0f60_0000#" alignment="16#0020_0000#" caching="WB"/>
+		<memory name="logbuffer_placeholder0" size="16#0002_0000#" caching="WB"/>
+		<memory name="logbuffer_placeholder" size="16#0005_0000#" caching="WB"/>
 	</memory>
 
 	<include href="common_events.xml"/>
@@ -83,6 +85,9 @@
 			</channels>
 			<component ref="linux"/>
 		</subject>
+
+		<!-- The dbgserver subject must be the last subject in the policy -->
+		<include href="subject_dbgserver.xml"/>
 	</subjects>
 
 	<include href="common_scheduling.xml"/>

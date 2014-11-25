@@ -67,8 +67,6 @@ is
                Trusted => True);
       T4.Init (Label   => "Subject Monitor: USB Linux",
                Trusted => True);
-      T5.Init (Label   => "Time",
-               Trusted => True);
       T6.Init (Label   => "Virtual Terminals (VT)",
                Trusted => True);
    end Init;

@@ -1,0 +1,15 @@
+<subject name="dbgserver" profile="native">
+	<memory>
+		<memory logical="placeholder0" physical="logbuffer_placeholder0" virtualAddress="16#a000_0000#" writable="false" executable="false"/>
+		<memory logical="placeholder" physical="logbuffer_placeholder" virtualAddress="16#a003_0000#" writable="false" executable="false"/>
+	</memory>
+	<devices>
+		<device logical="debugconsole" physical="debugconsole">
+			<ioPort logical="port" physical="port"/>
+		</device>
+	</devices>
+	<events/>
+	<component ref="dbgserver">
+		<map logical="channel_subject2" physical="debuglog_subject2"/>
+	</component>
+</subject>

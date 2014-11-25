@@ -199,8 +199,9 @@ is
                if Ref_Ticks = 0 then
                   Ref_Ticks := CPU_Ticks;
                elsif Ref_Ticks /= CPU_Ticks then
-                  raise Validation_Error with "Invalid CPU elements in "
-                    & "scheduling plan, tick counts differ";
+                  raise Validation_Error with "CPU" & J'Img & " of major frame"
+                    & I'Img & " specifies invalid tick count" & CPU_Ticks'Img
+                    & ", should be" & Ref_Ticks'Img;
                end if;
             end loop;
          end;

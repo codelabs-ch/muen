@@ -145,6 +145,11 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      --  Positive tests, must no raise an exception.
+
+      Major_Frame_Ticks (XML_Data => Data);
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/scheduling/majorFrame/cpu/minorFrame[@ticks='60']",
@@ -159,8 +164,8 @@ package body Mucfgcheck.Scheduling.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Invalid CPU elements in scheduling plan, tick counts "
-                    & "differ",
+                    = "CPU 1 of major frame 0 specifies invalid tick count "
+                    & "180, should be 162",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

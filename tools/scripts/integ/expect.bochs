@@ -1,5 +1,6 @@
 serial.out;Booting Muen kernel
 serial.out;Welcome to Linux on Muen SK
+serial.out;0001|VT subject running
 serial.out;0002|Time subject running
 bochsout.txt;CPU 1 started up at 0000:00000000 by APIC
 bochsout.txt;CPU 2 started up at 0000:00000000 by APIC

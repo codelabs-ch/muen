@@ -24,6 +24,7 @@ is
    function Create
      (Dst_Index   : Table_Range;
       Dst_Address : Interfaces.Unsigned_64;
+      Present     : Boolean := True;
       Readable    : Boolean;
       Writable    : Boolean;
       Executable  : Boolean;
@@ -36,6 +37,7 @@ is
       return Table_Entry_Type'
         (Dst_Table_Index => Dst_Index,
          Dst_Address     => Dst_Address,
+         Present         => Present,
          Readable        => Readable,
          Writable        => Writable,
          Executable      => Executable,

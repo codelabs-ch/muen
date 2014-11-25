@@ -28,6 +28,7 @@ is
    function Create
      (Dst_Index   : Table_Range;
       Dst_Address : Interfaces.Unsigned_64;
+      Present     : Boolean := True;
       Readable    : Boolean;
       Writable    : Boolean;
       Executable  : Boolean;
@@ -76,6 +77,7 @@ private
    type Table_Entry_Type is tagged record
       Dst_Table_Index : Table_Range;
       Dst_Address     : Interfaces.Unsigned_64;
+      Present         : Boolean;
       Readable        : Boolean;
       Writable        : Boolean;
       Executable      : Boolean;

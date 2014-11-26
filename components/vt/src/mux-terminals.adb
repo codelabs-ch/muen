@@ -214,9 +214,7 @@ is
                        (Channel => C);
                      SK.CPU.Sti;
                   when VT_Channel_Rdr.Overrun_Detected =>
-                     Log.Text_IO.Put      (Item => "Channel ");
-                     Log.Text_IO.Put_Byte (Item => Interfaces.Unsigned_8 (C));
-                     Log.Text_IO.Put_Line (Item => ": Overrun detected");
+                     null;
                   when VT_Channel_Rdr.Inactive =>
                      Log.Text_IO.Put      (Item => "Channel ");
                      Log.Text_IO.Put_Byte (Item => Interfaces.Unsigned_8 (C));

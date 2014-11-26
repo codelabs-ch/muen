@@ -5,6 +5,8 @@ is
 
    VMX_Timer_Rate : constant := __vmx_timer_rate__;
 
+   type Scheduling_Group_Range is range __scheduling_group_range__;
+
    type Barrier_Index_Range is range 0 .. __max_barrier_count__;
 
    subtype Barrier_Range is

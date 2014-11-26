@@ -403,6 +403,10 @@ is
         (Content => String_Templates.skp_scheduling_ads);
       Mutools.Templates.Replace
         (Template => Tmpl,
+         Pattern  => "__scheduling_group_range__",
+         Content  => "1 .. 1");
+      Mutools.Templates.Replace
+        (Template => Tmpl,
          Pattern  => "__minor_range__",
          Content  => "1 .." & Max_Minor_Count'Img);
       Mutools.Templates.Replace

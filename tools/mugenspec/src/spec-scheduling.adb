@@ -323,6 +323,8 @@ is
          Buffer := Buffer & Indent (N => 4) & Index'Img
            & " => Minor_Frame_Type'(Subject_Id => " & Subject_Id
            & "," & ASCII.LF;
+         Buffer := Buffer & Indent (N => 12) & "Group_ID   => 0"
+           & "," & ASCII.LF;
          Buffer := Buffer & Indent (N => 12) & "Barrier    => "
            & (if Barrier = "none" then "No_Barrier" else Barrier)
            & "," & ASCII.LF;

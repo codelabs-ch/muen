@@ -26,5 +26,6 @@ TARGETS=()
 TARGETS+=('192.168.254.2;integration_tests;lenovo-t430s')
 #TARGETS+=('192.168.254.3;integration_tests;kontron-ktqm77;expect.kt')
 
-# optional notify command executed when build fails
+# optional notify commands executed when builds are ok or fail
 NOTIFY_FAIL_CMD=""
+NOTIFY_OK_CMD=""

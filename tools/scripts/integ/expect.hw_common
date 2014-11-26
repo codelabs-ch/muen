@@ -1,14 +1,14 @@
-amt.out;Booting Muen kernel
-amt.out;Routing IRQ 01 as vector 21 to CPU 00, VT-d IRT index 01
-amt.out;Routing IRQ 14 as vector 34 to CPU 01, VT-d IRT index 14
-amt.out;Routing IRQ 10 as vector 30 to CPU 03, VT-d IRT index 10
-amt.out;IOMMU 01: TES 01, RTPS 01, FLS 00, AFLS 00, WBFS 00, QIES 00, IRES 01, IRTPS 01, CFIS 00
-amt.out;IOMMU 02: TES 01, RTPS 01, FLS 00, AFLS 00, WBFS 00, QIES 00, IRES 01, IRTPS 01, CFIS 00
-amt.out;0001|VT subject running
-amt.out;0002|Time subject running
-amt.out;Console output round 100
-amt.out;100%
-amt.out;*** '/usr/bin/stresstest' DONE
-amt.out;*** '/usr/bin/integtest' DONE
+serial.out;Booting Muen kernel
+serial.out;Routing IRQ 01 as vector 21 to CPU 00, VT-d IRT index 01
+serial.out;Routing IRQ 14 as vector 34 to CPU 01, VT-d IRT index 14
+serial.out;Routing IRQ 10 as vector 30 to CPU 03, VT-d IRT index 10
+serial.out;IOMMU 01: TES 01, RTPS 01, FLS 00, AFLS 00, WBFS 00, QIES 00, IRES 01, IRTPS 01, CFIS 00
+serial.out;IOMMU 02: TES 01, RTPS 01, FLS 00, AFLS 00, WBFS 00, QIES 00, IRES 01, IRTPS 01, CFIS 00
+serial.out;0001|VT subject running
+serial.out;0002|Time subject running
+serial.out;Console output round 100
+serial.out;100%
+serial.out;*** '/usr/bin/stresstest' DONE
+serial.out;*** '/usr/bin/integtest' DONE
 
 http.out;200

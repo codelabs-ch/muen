@@ -113,7 +113,7 @@ hw_deploy()
 	execute "mkdir -p $target_logdir"
 
 	execute "ping -c 6 $target_ip"
-	xterm -e script -f -c "amtterm $target_ip" $target_logdir/amt.out &
+	xterm -e script -f -c "amtterm $target_ip" $target_logdir/serial.out &
 	local pid_xterm=$!
 	KILL_ON_EXIT_PIDS+=($pid_xterm)
 

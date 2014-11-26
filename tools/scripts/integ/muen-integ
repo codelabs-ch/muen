@@ -97,6 +97,7 @@ bochs_emulate()
 	save_artifacts
 	SAVE_ARTIFACTS=0
 
+	expect_from_file $SCRIPTDIR/expect.common "$LOGDIR"
 	expect_from_file $SCRIPTDIR/expect.bochs "$LOGDIR"
 
 	execute "make -C emulate clean"
@@ -113,7 +114,7 @@ hw_deploy()
 	execute "mkdir -p $target_logdir"
 
 	execute "ping -c 6 $target_ip"
-	xterm -e script -f -c "amtterm $target_ip" $target_logdir/amt.out &
+	xterm -e script -f -c "amtterm $target_ip" $target_logdir/serial.out &
 	local pid_xterm=$!
 	KILL_ON_EXIT_PIDS+=($pid_xterm)
 
@@ -133,6 +134,7 @@ hw_deploy()
 	echo y | amttool $target_ip powerdown >>$LOGFILE 2>&1
 	execute "make -C deploy clean"
 
+	expect_from_file $SCRIPTDIR/expect.common "$target_logdir"
 	expect_from_file $SCRIPTDIR/expect.hw_common "$target_logdir"
 
 	if [ ! -z "$expect" ]; then

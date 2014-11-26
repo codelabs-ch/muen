@@ -92,6 +92,15 @@ failed()
 	exit 1
 }
 
+notify()
+{
+	local cmd=$1
+	if [ -n "$cmd" ]; then
+		log "Calling notify command '$cmd'"
+		$cmd
+	fi
+}
+
 mkdir -p $LOGDIR
 echo "Logging to file $LOGFILE"
 echo > $LOGFILE
@@ -119,13 +128,11 @@ log "Calling '$INTEG_SCRIPT' for branch $FBRANCH"
 
 $INTEG_SCRIPT $CONFIG $BUILDID
 if [ $? -eq 0 ]; then
+	notify "$NOTIFY_OK_CMD"
 	send_mail PASSED "Integration test successful for:\n\n$GITLOG"
 	exit 0
 else
-	if [ -n "$NOTIFY_FAIL_CMD" ]; then
-		log "Calling notify command '$NOTIFY_FAIL_CMD'"
-		$NOTIFY_FAIL_CMD
-	fi
+	notify "$NOTIFY_FAIL_CMD"
 	send_mail FAILED "Integration test failed for:\n\n$GITLOG\n\nLog:\n`tail -n 50 $LOGFILE`"
 	exit 1
 fi

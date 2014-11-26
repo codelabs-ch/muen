@@ -1,20 +1,20 @@
-amt.out;hvc_muen: Using console channel at address 0x
-amt.out;pci 0000:00:19.0: \[8086:1502\] type 00 class 0x020000
-amt.out;pci 0000:00:1f.0: \[8086:10d3\] type 00 class 0x020000
-amt.out;pci 0000:00:19.0: BAR 0: assigned \[mem 0xf7f00000-0xf7f1ffff\]
-amt.out;pci 0000:00:19.0: BAR 1: assigned \[mem 0xf7f39000-0xf7f39fff\]
-amt.out;pci 0000:00:19.0: BAR 2: assigned \[io  0x1000-0x101f\]
-amt.out;pci 0000:00:1f.0: BAR 0: assigned \[mem 0xf7e00000-0xf7e1ffff\]
-amt.out;pci 0000:00:1f.0: BAR 2: assigned \[io  0x1020-0x103f\]
-amt.out;pci 0000:00:1f.0: BAR 3: assigned \[mem 0xf7e20000-0xf7e23fff\]
-amt.out;muen-sinfo: Subject information exports
-amt.out;e1000e 0000:00:19.0 eth0: MAC: 10, PHY: 11, PBA No: FFFFFF-0FF
-amt.out;e1000e 0000:00:1f.0 eth1: MAC: 3, PHY: 8, PBA No: FFFFFF-0FF
-amt.out;Using Muen time channel at address 0x
-amt.out;Switched to clocksource muen-timer
-amt.out;e1000e: eth0 NIC Link is Up
-amt.out;e1000e: eth1 NIC Link is Up
-amt.out;00:19.0 Ethernet controller: Intel Corporation 82579LM Gigabit Network Connection (rev 04)
-amt.out;00:1f.0 Ethernet controller: Intel Corporation 82574L Gigabit Network Connection
-amt.out;64 bytes from 192.168.254.1: seq=.* ttl=.* time=.* ms
-amt.out;*** '/usr/bin/integtest_kt' DONE
+serial.out;hvc_muen: Using console channel at address 0x
+serial.out;pci 0000:00:19.0: \[8086:1502\] type 00 class 0x020000
+serial.out;pci 0000:00:1f.0: \[8086:10d3\] type 00 class 0x020000
+serial.out;pci 0000:00:19.0: BAR 0: assigned \[mem 0xf7f00000-0xf7f1ffff\]
+serial.out;pci 0000:00:19.0: BAR 1: assigned \[mem 0xf7f39000-0xf7f39fff\]
+serial.out;pci 0000:00:19.0: BAR 2: assigned \[io  0x1000-0x101f\]
+serial.out;pci 0000:00:1f.0: BAR 0: assigned \[mem 0xf7e00000-0xf7e1ffff\]
+serial.out;pci 0000:00:1f.0: BAR 2: assigned \[io  0x1020-0x103f\]
+serial.out;pci 0000:00:1f.0: BAR 3: assigned \[mem 0xf7e20000-0xf7e23fff\]
+serial.out;muen-sinfo: Subject information exports
+serial.out;e1000e 0000:00:19.0 eth0: MAC: 10, PHY: 11, PBA No: FFFFFF-0FF
+serial.out;e1000e 0000:00:1f.0 eth1: MAC: 3, PHY: 8, PBA No: FFFFFF-0FF
+serial.out;Using Muen time channel at address 0x
+serial.out;Switched to clocksource muen-timer
+serial.out;e1000e: eth0 NIC Link is Up
+serial.out;e1000e: eth1 NIC Link is Up
+serial.out;00:19.0 Ethernet controller: Intel Corporation 82579LM Gigabit Network Connection (rev 04)
+serial.out;00:1f.0 Ethernet controller: Intel Corporation 82574L Gigabit Network Connection
+serial.out;64 bytes from 192.168.254.1: seq=.* ttl=.* time=.* ms
+serial.out;*** '/usr/bin/integtest_kt' DONE

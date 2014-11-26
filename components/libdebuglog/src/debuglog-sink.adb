@@ -33,6 +33,9 @@ with Debuglog.Config;
 with Debuglog.Types;
 with Debuglog.Stream.Writer_Instance;
 
+--  Disable check subprogram bodies in alphabetical order
+pragma Style_Checks ("-o");
+
 package body Debuglog.Sink
 with
    Refined_State => (State => (Message_Channel, Message_Buffer, Message_Index))
@@ -101,6 +104,7 @@ is
       end if;
    end Write_Character;
 begin
+
    --  Workaround for [NA10-010] (no named arguments)
 
    Stream.Writer_Instance.Initialize (Message_Channel, 1);

@@ -215,7 +215,7 @@ int assert_subject_info(const struct subject_info_type * const info)
 
 int assert_subject_info_type(const int size, const int alignment,
 		const int magic_offset, const int chan_count_offset,
-		const int channels_offset)
+		const int tsc_khz_offset, const int channels_offset)
 {
 	if (sizeof(struct subject_info_type) != size)
 	{
@@ -242,6 +242,13 @@ int assert_subject_info_type(const int size, const int alignment,
 		printf("Sinfo: Invalid 'channel_count' offset %d /= %d\n",
 				chan_count_offset,
 				offsetof(struct subject_info_type, channel_count));
+		return 0;
+	}
+
+	if (offsetof(struct subject_info_type, tsc_khz) != tsc_khz_offset)
+	{
+		printf("Sinfo: Invalid 'tsc_khz' offset %d /= %d\n", tsc_khz_offset,
+				offsetof(struct subject_info_type, tsc_khz));
 		return 0;
 	}
 

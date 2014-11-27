@@ -48,6 +48,7 @@ struct subject_info_type {
 	uint64_t magic;
 	uint8_t channel_count;
 	char padding[7];
+	uint64_t tsc_khz;
 	struct channel_type channels[MAX_CHANNEL_COUNT];
 } __attribute__((packed, aligned (8)));
 

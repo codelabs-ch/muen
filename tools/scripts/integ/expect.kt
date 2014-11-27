@@ -8,10 +8,10 @@ serial.out;pci 0000:00:1f.0: BAR 0: assigned \[mem 0xf7e00000-0xf7e1ffff\]
 serial.out;pci 0000:00:1f.0: BAR 2: assigned \[io  0x1020-0x103f\]
 serial.out;pci 0000:00:1f.0: BAR 3: assigned \[mem 0xf7e20000-0xf7e23fff\]
 serial.out;muen-sinfo: Subject information exports
+serial.out;Hypervisor detected: Muen SK
 serial.out;e1000e 0000:00:19.0 eth0: MAC: 10, PHY: 11, PBA No: FFFFFF-0FF
 serial.out;e1000e 0000:00:1f.0 eth1: MAC: 3, PHY: 8, PBA No: FFFFFF-0FF
-serial.out;Using Muen time channel at address 0x
-serial.out;Switched to clocksource muen-timer
+serial.out;Switched to clocksource tsc
 serial.out;e1000e: eth0 NIC Link is Up
 serial.out;e1000e: eth1 NIC Link is Up
 serial.out;00:19.0 Ethernet controller: Intel Corporation 82579LM Gigabit Network Connection (rev 04)

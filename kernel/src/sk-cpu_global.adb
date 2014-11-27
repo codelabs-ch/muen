@@ -98,20 +98,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Minor_Frame
-     (Major_Id : Skp.Scheduling.Major_Frame_Range;
-      Minor_Id : Skp.Scheduling.Minor_Frame_Range)
-      return Skp.Scheduling.Minor_Frame_Type
-   with
-      Refined_Global => (Input => Per_CPU_Storage)
-   is
-   begin
-      return Per_CPU_Storage.Scheduling_Plan
-        (Major_Id).Minor_Frames (Minor_Id);
-   end Get_Minor_Frame;
-
-   -------------------------------------------------------------------------
-
    function Get_Subject_ID
      (Group : Skp.Scheduling.Scheduling_Group_Range)
       return Skp.Subject_Id_Type

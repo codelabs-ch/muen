@@ -110,12 +110,4 @@ is
    with
       Global  => (Input => State);
 
-   --  Return scheduling minor frame indexed by major and minor id.
-   function Get_Minor_Frame
-     (Major_Id : Skp.Scheduling.Major_Frame_Range;
-      Minor_Id : Skp.Scheduling.Minor_Frame_Range)
-      return Skp.Scheduling.Minor_Frame_Type
-   with
-      Global  => (Input => State);
-
 end SK.CPU_Global;

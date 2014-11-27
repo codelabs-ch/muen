@@ -29,8 +29,7 @@ with SK.Dump;
 
 package body SK.Scheduler
 with
-   Refined_State => (State                 => (Current_Major,
-                                               Major_Frame_Start),
+   Refined_State => (State                 => Major_Frame_Start,
                      Tau0_Kernel_Interface => (New_Major))
 is
 
@@ -39,10 +38,6 @@ is
       Atomic,
       Async_Writers,
       Address => System'To_Address (Skp.Kernel.Tau0_Iface_Address);
-
-   --  Current major.
-   Current_Major : Skp.Scheduling.Major_Frame_Range
-     := Skp.Scheduling.Major_Frame_Range'First;
 
    --  Current major frame start time in CPU cycles.
    Major_Frame_Start : SK.Word64 := 0;

@@ -77,12 +77,6 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ Data);
 
-   --  Set the per-CPU scheduling plan.
-   procedure Set_Scheduling_Plan (Data : Skp.Scheduling.Major_Frame_Array)
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ Data);
-
    --  Returns the ID of the currently active subject.
    function Get_Current_Subject_ID return Skp.Subject_Id_Type
    with

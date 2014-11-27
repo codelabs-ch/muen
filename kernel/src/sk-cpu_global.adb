@@ -179,18 +179,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Scheduling_Plan (Data : Skp.Scheduling.Major_Frame_Array)
-   with
-      Refined_Global  => (In_Out => Per_CPU_Storage),
-      Refined_Depends => (Per_CPU_Storage =>+ Data),
-      Refined_Post    => Per_CPU_Storage.Scheduling_Plan = Data
-   is
-   begin
-      Per_CPU_Storage.Scheduling_Plan := Data;
-   end Set_Scheduling_Plan;
-
-   -------------------------------------------------------------------------
-
    procedure Set_Subject_ID
      (Group      : Skp.Scheduling.Scheduling_Group_Range;
       Subject_ID : Skp.Subject_Id_Type)

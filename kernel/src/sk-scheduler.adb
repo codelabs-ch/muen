@@ -201,9 +201,12 @@ is
          MP.Wait_For_All;
       end if;
 
+      pragma $Prove_Warnings (Off, "statement has no effect",
+                              Reason => "False positive");
       Plan_Frame := CPU_Global.Get_Minor_Frame
         (Major_Id => Current_Major,
          Minor_Id => Minor_Frame.Minor_Id);
+      pragma $Prove_Warnings (On, "statement has no effect");
 
       if Plan_Frame.Subject_Id /= Minor_Frame.Subject_Id then
 
@@ -283,9 +286,12 @@ is
 
       --  Set initial active minor frame.
 
+      pragma $Prove_Warnings (Off, "statement has no effect",
+                              Reason => "False positive");
       Plan_Frame := CPU_Global.Get_Minor_Frame
         (Major_Id => Current_Major,
          Minor_Id => Skp.Scheduling.Minor_Frame_Range'First);
+      pragma $Prove_Warnings (On, "statement has no effect");
 
       CPU_Global.Set_Current_Minor
         (Frame => CPU_Global.Active_Minor_Frame_Type'

@@ -103,6 +103,14 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ (Group, Subject_ID));
 
+   --  Returns the ID of the currently active subject of the specified
+   --  scheduling group.
+   function Get_Subject_ID
+     (Group : Skp.Scheduling.Scheduling_Group_Range)
+      return Skp.Subject_Id_Type
+   with
+      Global  => (Input => State);
+
    --  Return scheduling minor frame indexed by major and minor id.
    function Get_Minor_Frame
      (Major_Id : Skp.Scheduling.Major_Frame_Range;

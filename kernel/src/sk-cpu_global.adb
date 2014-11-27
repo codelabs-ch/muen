@@ -108,6 +108,20 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Subject_ID
+     (Group : Skp.Scheduling.Scheduling_Group_Range)
+      return Skp.Subject_Id_Type
+   with
+      Refined_Global => (Input => Per_CPU_Storage),
+      Refined_Post   =>
+       Get_Subject_ID'Result = Per_CPU_Storage.Scheduling_Groups (Group)
+   is
+   begin
+      return Per_CPU_Storage.Scheduling_Groups (Group);
+   end Get_Subject_ID;
+
+   -------------------------------------------------------------------------
+
    procedure Init
    with
       Refined_Global  => (Output => (Current_Major_Frame, Per_CPU_Storage)),

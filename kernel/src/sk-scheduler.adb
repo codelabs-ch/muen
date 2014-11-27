@@ -106,7 +106,7 @@ is
         := Skp.Scheduling.Get_Group_ID
           (CPU_ID   => CPU_Global.CPU_ID,
            Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
-           Minor_ID => CPU_Global.Get_Current_Minor_Frame.Minor_Id);
+           Minor_ID => CPU_Global.Get_Current_Minor_Frame_ID);
    begin
       CPU_Global.Set_Subject_ID
         (Group      => Current_Sched_Group,
@@ -253,7 +253,7 @@ is
       Deadline := Major_Frame_Start + Skp.Scheduling.Get_Deadline
         (CPU_ID   => CPU_Global.CPU_ID,
          Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
-         Minor_ID => CPU_Global.Get_Current_Minor_Frame.Minor_Id);
+         Minor_ID => CPU_Global.Get_Current_Minor_Frame_ID);
 
       if Deadline > Now then
          Cycles := Deadline - Now;

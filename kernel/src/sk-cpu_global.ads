@@ -65,8 +65,8 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ ID);
 
-   --  Returns the currently active minor frame.
-   function Get_Current_Minor_Frame return Active_Minor_Frame_Type
+   --  Returns the ID of the currently active minor frame.
+   function Get_Current_Minor_Frame_ID return Skp.Scheduling.Minor_Frame_Range
    with
       Global  => (Input => State);
 

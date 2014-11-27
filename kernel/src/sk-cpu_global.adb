@@ -71,15 +71,16 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Current_Minor_Frame return Active_Minor_Frame_Type
+   function Get_Current_Minor_Frame_ID return Skp.Scheduling.Minor_Frame_Range
    with
       Refined_Global => (Input => Per_CPU_Storage),
       Refined_Post   =>
-         Get_Current_Minor_Frame'Result = Per_CPU_Storage.Current_Minor_Frame
+       Get_Current_Minor_Frame_ID'Result =
+         Per_CPU_Storage.Current_Minor_Frame.Minor_Id
    is
    begin
-      return Per_CPU_Storage.Current_Minor_Frame;
-   end Get_Current_Minor_Frame;
+      return Per_CPU_Storage.Current_Minor_Frame.Minor_Id;
+   end Get_Current_Minor_Frame_ID;
 
    -------------------------------------------------------------------------
 

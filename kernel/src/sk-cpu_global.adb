@@ -28,6 +28,7 @@ is
    use type Skp.Scheduling.Major_Frame_Array;
    use type Skp.Scheduling.Major_Frame_Range;
    use type Skp.Scheduling.Minor_Frame_Range;
+   use type Skp.Scheduling.Scheduling_Group_Array;
 
    --  Record used to store per-CPU global data.
    type Storage_Type is record
@@ -159,6 +160,19 @@ is
    begin
       Per_CPU_Storage.Current_Minor_Frame := Frame;
    end Set_Current_Minor;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Scheduling_Groups
+     (Data : Skp.Scheduling.Scheduling_Group_Array)
+   with
+      Refined_Global  => (In_Out => Per_CPU_Storage),
+      Refined_Depends => (Per_CPU_Storage =>+ Data),
+      Refined_Post    => Per_CPU_Storage.Scheduling_Groups = Data
+   is
+   begin
+      Per_CPU_Storage.Scheduling_Groups := Data;
+   end Set_Scheduling_Groups;
 
    -------------------------------------------------------------------------
 

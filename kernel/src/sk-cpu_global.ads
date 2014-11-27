@@ -71,6 +71,13 @@ is
    with
       Global  => (Input => State);
 
+   --  Set the per-CPU scheduling groups.
+   procedure Set_Scheduling_Groups
+     (Data : Skp.Scheduling.Scheduling_Group_Array)
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ Data);
+
    --  Set the per-CPU scheduling plan.
    procedure Set_Scheduling_Plan (Data : Skp.Scheduling.Major_Frame_Array)
    with

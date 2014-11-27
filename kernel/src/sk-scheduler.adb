@@ -214,7 +214,6 @@ is
       end if;
 
       Minor_Frame.Subject_Id := Plan_Frame.Subject_Id;
-      Minor_Frame.Barrier    := Plan_Frame.Barrier;
       Minor_Frame.Deadline   := Plan_Frame.Deadline;
       CPU_Global.Set_Current_Minor (Frame => Minor_Frame);
 
@@ -292,7 +291,6 @@ is
         (Frame => CPU_Global.Active_Minor_Frame_Type'
            (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First,
             Subject_Id => Plan_Frame.Subject_Id,
-            Barrier    => Plan_Frame.Barrier,
             Deadline   => Plan_Frame.Deadline));
 
       --  Setup VMCS and state of subjects running on this logical CPU.

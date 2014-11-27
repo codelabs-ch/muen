@@ -19,7 +19,6 @@
 with System;
 
 with Skp.Kernel;
-with Skp.Scheduling;
 
 package body SK.CPU_Global
 with

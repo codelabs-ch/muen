@@ -127,6 +127,14 @@ is
      (Output_Dir : String;
       Policy     : Muxml.XML_Data_Type)
    is
+      use type Interfaces.Unsigned_64;
+
+      TSC_Khz  : constant Interfaces.Unsigned_64
+        := 1000 * Interfaces.Unsigned_64'Value
+          (Muxml.Utils.Get_Attribute
+             (Doc   => Policy.Doc,
+              XPath => "/system/platform/processor",
+              Name  => "speed"));
       Phys_Mem : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
@@ -138,6 +146,7 @@ is
    begin
       Mulog.Log (Msg => "Found" & DOM.Core.Nodes.Length (List => Sinfos)'Img
                  & " subject info file(s)");
+      Mulog.Log (Msg => "Announcing TSC tick rate of" & TSC_Khz'Img & " kHz");
 
       for I in 0 .. DOM.Core.Nodes.Length (List => Sinfos) - 1 loop
          declare
@@ -166,6 +175,8 @@ is
             Subject_Info : Musinfo.Subject_Info_Type
               := Musinfo.Null_Subject_Info;
          begin
+            Subject_Info.TSC_Khz := TSC_Khz;
+
             for J in 0 .. DOM.Core.Nodes.Length (List => Subj_Memory) - 1 loop
                declare
                   use type Mutools.Types.Memory_Kind;

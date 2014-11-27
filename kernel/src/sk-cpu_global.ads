@@ -18,12 +18,12 @@
 
 with Skp.Scheduling;
 
-use type Skp.CPU_Range;
-
 package SK.CPU_Global
 with
    Abstract_State => State
 is
+
+   use type Skp.CPU_Range;
 
    --  ID of the local CPU.
    CPU_ID : constant Skp.CPU_Range

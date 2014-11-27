@@ -21,13 +21,12 @@ with System;
 with Skp.Kernel;
 with Skp.Scheduling;
 
-use type Skp.Scheduling.Major_Frame_Array;
-
 package body SK.CPU_Global
 with
    Refined_State => (State => (Storage, Current_Major_Frame))
 is
 
+   use type Skp.Scheduling.Major_Frame_Array;
    use type Skp.Scheduling.Major_Frame_Range;
    use type Skp.Scheduling.Minor_Frame_Range;
 

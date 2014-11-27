@@ -146,11 +146,7 @@ is
    begin
       Current_Subject_ID := CPU_Global.Get_Current_Subject_ID;
       Current_Major_ID   := CPU_Global.Get_Current_Major_Frame_ID;
-
-      pragma $Prove_Warnings (Off, "statement has no effect",
-                              Reason => "False positive of GPL 2014");
-      Current_Minor_ID := CPU_Global.Get_Current_Minor_Frame_ID;
-      pragma $Prove_Warnings (On, "statement has no effect");
+      Current_Minor_ID   := CPU_Global.Get_Current_Minor_Frame_ID;
 
       if Current_Minor_ID < CPU_Global.Get_Current_Major_Length then
 

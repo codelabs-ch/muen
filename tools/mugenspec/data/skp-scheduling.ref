@@ -170,4 +170,14 @@ is
             2 => 2,
             3 => 2)));
 
+   --  Returns the barrier index of the specified minor frame for the given
+   --  major frame and CPU identified by ID.
+   function Get_Barrier
+     (CPU_ID   : CPU_Range;
+      Major_ID : Major_Frame_Range;
+      Minor_ID : Minor_Frame_Range)
+      return Barrier_Index_Range
+   is
+     (Scheduling_Plans (CPU_ID)(Major_ID).Minor_Frames (Minor_ID).Barrier);
+
 end Skp.Scheduling;

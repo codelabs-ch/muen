@@ -94,6 +94,15 @@ is
    with
       Global  => (Input => State);
 
+   --  Set the currently active subject ID of the specified scheduling group to
+   --  the given value.
+   procedure Set_Subject_ID
+     (Group      : Skp.Scheduling.Scheduling_Group_Range;
+      Subject_ID : Skp.Subject_Id_Type)
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ (Group, Subject_ID));
+
    --  Return scheduling minor frame indexed by major and minor id.
    function Get_Minor_Frame
      (Major_Id : Skp.Scheduling.Major_Frame_Range;

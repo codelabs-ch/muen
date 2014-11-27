@@ -188,6 +188,20 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Set_Subject_ID
+     (Group      : Skp.Scheduling.Scheduling_Group_Range;
+      Subject_ID : Skp.Subject_Id_Type)
+   with
+      Refined_Global  => (In_Out => Per_CPU_Storage),
+      Refined_Depends => (Per_CPU_Storage =>+ (Group, Subject_ID)),
+      Refined_Post    => Per_CPU_Storage.Scheduling_Groups (Group) = Subject_ID
+   is
+   begin
+      Per_CPU_Storage.Scheduling_Groups (Group):= Subject_ID;
+   end Set_Subject_ID;
+
+   -------------------------------------------------------------------------
+
    procedure Swap_Subject
      (Old_Id : Skp.Subject_Id_Type;
       New_Id : Skp.Subject_Id_Type)

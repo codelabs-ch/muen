@@ -70,6 +70,16 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Current_Subject_ID return Skp.Subject_Id_Type
+   with
+      Refined_Global => (Input => Storage)
+   is
+   begin
+      return Storage.Current_Minor_Frame.Subject_Id;
+   end Get_Current_Subject_ID;
+
+   -------------------------------------------------------------------------
+
    function Get_Major_Length
      (Major_Id : Skp.Scheduling.Major_Frame_Range)
       return Skp.Scheduling.Minor_Frame_Range

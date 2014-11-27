@@ -77,6 +77,11 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ Data);
 
+   --  Returns the ID of the currently active subject.
+   function Get_Current_Subject_ID return Skp.Subject_Id_Type
+   with
+      Global  => (Input => State);
+
    --  Return number of minor frames in given scheduling plan major frame.
    function Get_Major_Length
      (Major_Id : Skp.Scheduling.Major_Frame_Range)

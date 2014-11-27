@@ -547,7 +547,6 @@ is
         (New_Id   => Trap_Entry.Dst_Subject,
          New_VMCS => Skp.Subjects.Get_VMCS_Address
            (Subject_Id => Trap_Entry.Dst_Subject));
-
    end Handle_Trap;
 
    -------------------------------------------------------------------------

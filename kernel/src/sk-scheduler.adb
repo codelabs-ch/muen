@@ -280,6 +280,8 @@ is
    begin
       CPU_Global.Set_Scheduling_Plan
         (Data => Skp.Scheduling.Scheduling_Plans (CPU_Global.CPU_ID));
+      CPU_Global.Set_Scheduling_Groups
+        (Data => Skp.Scheduling.Scheduling_Groups);
 
       --  Set initial active minor frame.
 

@@ -218,30 +218,4 @@ is
       Per_CPU_Storage.Scheduling_Groups (Group):= Subject_ID;
    end Set_Subject_ID;
 
-   -------------------------------------------------------------------------
-
-   procedure Swap_Subject
-     (Old_Id : Skp.Subject_Id_Type;
-      New_Id : Skp.Subject_Id_Type)
-     with
-        Refined_Global  => (In_Out => Per_CPU_Storage),
-        Refined_Depends => (Per_CPU_Storage =>+ (Old_Id, New_Id))
-   is
-   begin
-      for I in Skp.Scheduling.Major_Frame_Range loop
-         for J in Skp.Scheduling.Minor_Frame_Range loop
-            if Per_CPU_Storage.Scheduling_Plan (I).Minor_Frames
-              (J).Subject_Id = Old_Id
-            then
-               Per_CPU_Storage.Scheduling_Plan (I).Minor_Frames
-                 (J).Subject_Id := New_Id;
-            end if;
-         end loop;
-      end loop;
-
-      if Per_CPU_Storage.Current_Minor_Frame.Subject_Id = Old_Id then
-         Per_CPU_Storage.Current_Minor_Frame.Subject_Id := New_Id;
-      end if;
-   end Swap_Subject;
-
 end SK.CPU_Global;

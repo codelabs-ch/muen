@@ -119,14 +119,4 @@ is
    with
       Global  => (Input => State);
 
-   --  Remove subject specified by Old_Id from the scheduling plan and replace
-   --  it with the subject given by New_Id.
-   procedure Swap_Subject
-     (Old_Id : Skp.Subject_Id_Type;
-      New_Id : Skp.Subject_Id_Type)
-   with
-      Global  => (In_Out => State),
-      Depends => (State =>+ (Old_Id, New_Id)),
-      Pre     => Old_Id /= New_Id;
-
 end SK.CPU_Global;

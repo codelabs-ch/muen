@@ -233,10 +233,10 @@ is
    procedure Set_VMX_Exit_Timer
    with
       Refined_Global  =>
-       (Input  => (CPU_Global.State, Current_Major, Major_Frame_Start),
+       (Input  => (CPU_Global.State, Major_Frame_Start),
         In_Out => X86_64.State),
       Refined_Depends =>
-       (X86_64.State =>+ (CPU_Global.State, Current_Major, Major_Frame_Start))
+       (X86_64.State =>+ (CPU_Global.State, Major_Frame_Start))
    is
       Now      : constant SK.Word64 := CPU.RDTSC64;
       Deadline : SK.Word64;
@@ -249,7 +249,7 @@ is
 
       Deadline := Major_Frame_Start + Skp.Scheduling.Get_Deadline
         (CPU_ID   => CPU_Global.CPU_ID,
-         Major_ID => Current_Major,
+         Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
          Minor_ID => CPU_Global.Get_Current_Minor_Frame.Minor_Id);
 
       if Deadline > Now then

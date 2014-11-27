@@ -93,16 +93,14 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Perform subject handover from the old to the new subject.
+   --  Perform subject handover from the currently active to the new subject.
    procedure Subject_Handover
-     (Old_Id   : Skp.Subject_Id_Type;
-      New_Id   : Skp.Subject_Id_Type;
+     (New_Id   : Skp.Subject_Id_Type;
       New_VMCS : SK.Word64)
    with
       Global  => (In_Out => (CPU_Global.State, X86_64.State)),
-      Depends => (CPU_Global.State =>+ (New_Id, Old_Id),
-                  X86_64.State     =>+ New_VMCS),
-      Pre     =>  Old_Id /= New_Id
+      Depends => (CPU_Global.State =>+ New_Id,
+                  X86_64.State     =>+ New_VMCS)
    is
       Current_Sched_Group : constant Skp.Scheduling.Scheduling_Group_Range
         := Skp.Scheduling.Get_Group_ID
@@ -113,10 +111,6 @@ is
       CPU_Global.Set_Subject_ID
         (Group      => Current_Sched_Group,
          Subject_ID => New_Id);
-
-      CPU_Global.Swap_Subject
-        (Old_Id => Old_Id,
-         New_Id => New_Id);
 
       VMX.Load (VMCS_Address => New_VMCS);
    end Subject_Handover;
@@ -439,8 +433,7 @@ is
 
             if Event.Handover then
                Subject_Handover
-                 (Old_Id   => Current_Subject,
-                  New_Id   => Event.Dst_Subject,
+                 (New_Id   => Event.Dst_Subject,
                   New_VMCS => Skp.Subjects.Get_VMCS_Address
                     (Subject_Id => Event.Dst_Subject));
             end if;
@@ -570,8 +563,7 @@ is
       --  Handover to trap handler subject.
 
       Subject_Handover
-        (Old_Id   => Current_Subject,
-         New_Id   => Trap_Entry.Dst_Subject,
+        (New_Id   => Trap_Entry.Dst_Subject,
          New_VMCS => Skp.Subjects.Get_VMCS_Address
            (Subject_Id => Trap_Entry.Dst_Subject));
 

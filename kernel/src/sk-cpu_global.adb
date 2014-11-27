@@ -28,6 +28,8 @@ with
    Refined_State => (State => (Storage, Current_Major_Frame))
 is
 
+   use type Skp.Scheduling.Major_Frame_Range;
+
    --  Record used to store per-CPU global data.
    type Storage_Type is record
       Scheduling_Plan     : Skp.Scheduling.Major_Frame_Array;
@@ -109,6 +111,18 @@ is
       return CPU_ID = Skp.CPU_Range'First;
       pragma Warnings (On);
    end Is_BSP;
+
+   -------------------------------------------------------------------------
+
+   procedure Set_Current_Major_Frame (ID : Skp.Scheduling.Major_Frame_Range)
+   with
+      Refined_Global  => (Output => Current_Major_Frame),
+      Refined_Depends => (Current_Major_Frame => ID),
+      Refined_Post    => Current_Major_Frame = ID
+   is
+   begin
+      Current_Major_Frame := ID;
+   end Set_Current_Major_Frame;
 
    -------------------------------------------------------------------------
 

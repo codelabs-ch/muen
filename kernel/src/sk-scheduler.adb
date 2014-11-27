@@ -104,7 +104,16 @@ is
                   X86_64.State     =>+ New_VMCS),
       Pre     =>  Old_Id /= New_Id
    is
+      Current_Sched_Group : constant Skp.Scheduling.Scheduling_Group_Range
+        := Skp.Scheduling.Get_Group_ID
+          (CPU_ID   => CPU_Global.CPU_ID,
+           Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
+           Minor_ID => CPU_Global.Get_Current_Minor_Frame.Minor_Id);
    begin
+      CPU_Global.Set_Subject_ID
+        (Group      => Current_Sched_Group,
+         Subject_ID => New_Id);
+
       CPU_Global.Swap_Subject
         (Old_Id => Old_Id,
          New_Id => New_Id);
@@ -389,8 +398,9 @@ is
                     X86_64.State)),
       Depends =>
         ((CPU_Global.State,
-          Events.State, X86_64.State) =>+ (Current_Subject, Event_Nr),
-         Subjects.State               =>+ Current_Subject)
+          Events.State,
+          X86_64.State) =>+ (Current_Subject, Event_Nr),
+         Subjects.State =>+ Current_Subject)
    is
       Event       : Skp.Subjects.Event_Entry_Type;
       Dst_CPU     : Skp.CPU_Range;
@@ -487,8 +497,9 @@ is
       Global  =>
         (In_Out => (CPU_Global.State, Events.State, X86_64.State)),
       Depends =>
-        ((CPU_Global.State, Events.State, X86_64.State) =>+
-            (Current_Subject, Trap_Nr))
+        ((CPU_Global.State,
+          Events.State,
+          X86_64.State) =>+ (Current_Subject, Trap_Nr))
    is
       Trap_Entry : Skp.Subjects.Trap_Entry_Type;
 

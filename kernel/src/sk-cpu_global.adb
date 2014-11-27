@@ -25,7 +25,7 @@ use type Skp.Scheduling.Major_Frame_Array;
 
 package body SK.CPU_Global
 with
-   Refined_State => (State => Storage)
+   Refined_State => (State => (Storage, Current_Major_Frame))
 is
 
    --  Record used to store per-CPU global data.
@@ -40,6 +40,8 @@ is
       Address => System'To_Address (Skp.Kernel.CPU_Store_Address + 8),
       Size    => 8 * (SK.Page_Size - 8);
    pragma $Build_Warnings (On,  "* bits of ""Storage"" unused");
+
+   Current_Major_Frame : Skp.Scheduling.Major_Frame_Range;
 
    -------------------------------------------------------------------------
 
@@ -82,11 +84,12 @@ is
 
    procedure Init
    with
-      Refined_Global  => (Output => Storage),
-      Refined_Depends => (Storage => null)
+      Refined_Global  => (Output => (Current_Major_Frame, Storage)),
+      Refined_Depends => ((Current_Major_Frame, Storage) => null)
    is
    begin
-      Storage := Storage_Type'
+      Current_Major_Frame := Skp.Scheduling.Major_Frame_Range'First;
+      Storage             := Storage_Type'
         (Scheduling_Plan     => Skp.Scheduling.Null_Major_Frames,
          Current_Minor_Frame => Active_Minor_Frame_Type'
            (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First,

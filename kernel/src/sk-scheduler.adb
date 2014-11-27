@@ -152,13 +152,22 @@ is
         (Major_Id => Current_Major)
       then
 
-         --  Switch to next minor frame in current major frame.
+         --  Sync on minor frame barrier if necessary and switch to next minor
+         --  frame in current major frame.
+
+         declare
+            Current_Barrier : constant Skp.Scheduling.Barrier_Index_Range
+              := Skp.Scheduling.Get_Barrier
+                (CPU_ID   => CPU_Global.CPU_ID,
+                 Major_ID => Current_Major,
+                 Minor_ID => Minor_Frame.Minor_Id);
+         begin
+            if Current_Barrier /= Skp.Scheduling.No_Barrier then
+               MP.Wait_On_Minor_Frame_Barrier (Index => Current_Barrier);
+            end if;
+         end;
 
          Minor_Frame.Minor_Id := Minor_Frame.Minor_Id + 1;
-
-         if Minor_Frame.Barrier /= Skp.Scheduling.No_Barrier then
-            MP.Wait_On_Minor_Frame_Barrier (Index => Minor_Frame.Barrier);
-         end if;
       else
 
          --  Switch to first minor frame in next major frame.

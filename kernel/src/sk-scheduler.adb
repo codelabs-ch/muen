@@ -221,8 +221,7 @@ is
          end if;
 
          CPU_Global.Set_Current_Minor
-           (Frame => (Minor_Id   => Next_Minor_Frame,
-                      Subject_Id => Next_Subject));
+           (Frame => (Minor_Id => Next_Minor_Frame));
 
          if Skp.Subjects.Get_Profile
            (Subject_Id => Next_Subject) = Skp.Subjects.Vm
@@ -283,7 +282,6 @@ is
           X86_64.State)      =>+ (CPU_Global.State, Interrupts.State,
                                   X86_64.State))
    is
-      Plan_Frame         : Skp.Scheduling.Minor_Frame_Type;
       Initial_Subject_ID : Skp.Subject_Id_Type;
       Initial_VMCS_Addr  : SK.Word64 := 0;
       Controls           : Skp.Subjects.VMX_Controls_Type;
@@ -296,17 +294,9 @@ is
 
       --  Set initial active minor frame.
 
-      pragma $Prove_Warnings (Off, "statement has no effect",
-                              Reason => "False positive");
-      Plan_Frame := CPU_Global.Get_Minor_Frame
-        (Major_Id => Skp.Scheduling.Major_Frame_Range'First,
-         Minor_Id => Skp.Scheduling.Minor_Frame_Range'First);
-      pragma $Prove_Warnings (On, "statement has no effect");
-
       CPU_Global.Set_Current_Minor
         (Frame => CPU_Global.Active_Minor_Frame_Type'
-           (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First,
-            Subject_Id => Plan_Frame.Subject_Id));
+           (Minor_Id => Skp.Scheduling.Minor_Frame_Range'First));
 
       Initial_Subject_ID := CPU_Global.Get_Current_Subject_ID;
 

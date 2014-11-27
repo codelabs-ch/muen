@@ -137,8 +137,7 @@ is
         (Scheduling_Plan     => Skp.Scheduling.Null_Major_Frames,
          Scheduling_Groups   => (others => Skp.Subject_Id_Type'First),
          Current_Minor_Frame => Active_Minor_Frame_Type'
-           (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First,
-            Subject_Id => Skp.Subject_Id_Type'First));
+           (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First));
    end Init;
 
    -------------------------------------------------------------------------

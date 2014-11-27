@@ -269,16 +269,16 @@ is
    procedure Init
    with
       Refined_Global  =>
-        (Input  => (Current_Major, Interrupts.State),
+        (Input  => Interrupts.State,
          In_Out => (CPU_Global.State, Major_Frame_Start, MP.Barrier,
                     Subjects.State, X86_64.State)),
       Refined_Depends =>
-        (CPU_Global.State    =>+ Current_Major,
-         MP.Barrier          =>+ Current_Major,
+        (CPU_Global.State    =>+ null,
+         MP.Barrier          =>+ null,
          Subjects.State      =>+ null,
          (Major_Frame_Start,
-          X86_64.State)      =>+ (CPU_Global.State, Current_Major,
-                                  Interrupts.State, X86_64.State))
+          X86_64.State)      =>+ (CPU_Global.State, Interrupts.State,
+                                  X86_64.State))
    is
       Plan_Frame        : Skp.Scheduling.Minor_Frame_Type;
       Initial_VMCS_Addr : SK.Word64 := 0;
@@ -293,7 +293,7 @@ is
       pragma $Prove_Warnings (Off, "statement has no effect",
                               Reason => "False positive");
       Plan_Frame := CPU_Global.Get_Minor_Frame
-        (Major_Id => Current_Major,
+        (Major_Id => Skp.Scheduling.Major_Frame_Range'First,
          Minor_Id => Skp.Scheduling.Minor_Frame_Range'First);
       pragma $Prove_Warnings (On, "statement has no effect");
 
@@ -374,7 +374,7 @@ is
 
          MP.Set_Minor_Frame_Barrier_Config
            (Config => Skp.Scheduling.Major_Frames
-              (Current_Major).Barrier_Config);
+              (Skp.Scheduling.Major_Frame_Range'First).Barrier_Config);
 
          --  Set initial major frame start time to now.
 

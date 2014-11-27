@@ -287,8 +287,6 @@ is
       Controls           : Skp.Subjects.VMX_Controls_Type;
       VMCS_Addr          : SK.Word64;
    begin
-      CPU_Global.Set_Scheduling_Plan
-        (Data => Skp.Scheduling.Scheduling_Plans (CPU_Global.CPU_ID));
       CPU_Global.Set_Scheduling_Groups
         (Data => Skp.Scheduling.Scheduling_Groups);
 

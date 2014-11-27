@@ -289,11 +289,6 @@ is
       CPU_Global.Set_Scheduling_Groups
         (Data => Skp.Scheduling.Scheduling_Groups);
 
-      --  Set initial active minor frame.
-
-      CPU_Global.Set_Current_Minor_Frame
-        (ID => Skp.Scheduling.Minor_Frame_Range'First);
-
       Initial_Subject_ID := CPU_Global.Get_Current_Subject_ID;
 
       --  Setup VMCS and state of subjects running on this logical CPU.

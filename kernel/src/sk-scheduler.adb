@@ -598,7 +598,7 @@ is
          CPU.Panic;
       end Panic_Exit_Failure;
    begin
-      Current_Subject := CPU_Global.Get_Current_Minor_Frame.Subject_Id;
+      Current_Subject := CPU_Global.Get_Current_Subject_ID;
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => Exit_Status);
@@ -633,12 +633,13 @@ is
                       Trap_Nr         => Exit_Status);
       end if;
 
-      Inject_Event
-        (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id);
+      Current_Subject := CPU_Global.Get_Current_Subject_ID;
+
+      Inject_Event (Subject_Id => Current_Subject);
 
       Set_VMX_Exit_Timer;
       Subjects.Restore_State
-        (Id   => CPU_Global.Get_Current_Minor_Frame.Subject_Id,
+        (Id   => Current_Subject,
          GPRs => Subject_Registers);
    end Handle_Vmx_Exit;
 

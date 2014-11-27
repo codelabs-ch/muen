@@ -8,6 +8,7 @@ serial.out;pci 0000:00:1f.0: BAR 0: assigned \[mem 0xf7e00000-0xf7e1ffff\]
 serial.out;pci 0000:00:1f.0: BAR 2: assigned \[io  0x1020-0x103f\]
 serial.out;pci 0000:00:1f.0: BAR 3: assigned \[mem 0xf7e20000-0xf7e23fff\]
 serial.out;muen-sinfo: Subject information exports
+serial.out;Hypervisor detected: Muen SK
 serial.out;e1000e 0000:00:19.0 eth0: MAC: 10, PHY: 11, PBA No: FFFFFF-0FF
 serial.out;e1000e 0000:00:1f.0 eth1: MAC: 3, PHY: 8, PBA No: FFFFFF-0FF
 serial.out;Switched to clocksource tsc

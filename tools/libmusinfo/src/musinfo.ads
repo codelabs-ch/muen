@@ -147,7 +147,7 @@ is
        Pack,
        Alignment => 8;
 
-   Subject_Info_Type_Size : constant := 8 + 1 + 7 + Channel_Array_Size;
+   Subject_Info_Type_Size : constant := 8 + 1 + 7 + 8 + Channel_Array_Size;
 
    --  Subject info records enable subjects to determine what resources are
    --  provided to them at runtime.
@@ -155,6 +155,7 @@ is
       Magic         : Interfaces.Unsigned_64;
       Channel_Count : Channel_Count_Type;
       Padding       : Bit_Array (1 .. 56);
+      TSC_Khz       : Interfaces.Unsigned_64;
       Channels      : Channel_Array;
    end record
      with
@@ -165,13 +166,15 @@ is
       Magic         at 0  range 0 .. 63;
       Channel_Count at 8  range 0 .. 7;
       Padding       at 9  range 0 .. 55;
-      Channels      at 16 range 0 .. (Channel_Array_Size * 8) - 1;
+      TSC_Khz       at 16 range 0 .. 63;
+      Channels      at 24 range 0 .. (Channel_Array_Size * 8) - 1;
    end record;
 
    Null_Subject_Info : constant Subject_Info_Type
      := (Magic         => Muen_Subject_Info_Magic,
          Channel_Count => Channel_Count_Type'First,
          Padding       => (others => 0),
+         TSC_Khz       => 0,
          Channels      => (others => Null_Channel));
 
 end Musinfo;

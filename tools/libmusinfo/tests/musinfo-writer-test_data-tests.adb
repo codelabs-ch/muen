@@ -31,6 +31,7 @@ package body Musinfo.Writer.Test_Data.Tests is
                Filename2 => "obj/null_info"),
               Message   => "Null info mismatch");
 
+      Info.TSC_Khz := 2893000;
       Utils.Append_Channel
         (Info    => Info,
          Channel => Utils.Create_Channel

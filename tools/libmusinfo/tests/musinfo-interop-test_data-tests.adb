@@ -177,9 +177,9 @@ package body Musinfo.Interop.Test_Data.Tests is
                Alignment            => Subject_Info_Type'Alignment,
                Magic_Offset         => Dummy.Magic'Bit_Position / 8,
                Channel_Count_Offset => Dummy.Channel_Count'Bit_Position / 8,
+               TSC_Khz_Offset       => Dummy.TSC_Khz'Bit_Position / 8,
                Channels_Offset      => Dummy.Channels'Bit_Position / 8) = 1,
               Message   => "C subject info type mismatch");
-
 
 --  begin read only
    end Test_Check_Subject_Info_Type;

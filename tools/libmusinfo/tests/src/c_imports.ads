@@ -78,6 +78,7 @@ is
       Alignment            : Interfaces.C.int;
       Magic_Offset         : Interfaces.C.int;
       Channel_Count_Offset : Interfaces.C.int;
+      TSC_Khz_Offset       : Interfaces.C.int;
       Channels_Offset      : Interfaces.C.int)
       return Interfaces.C.int
      with

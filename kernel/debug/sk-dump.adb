@@ -311,8 +311,7 @@ is
    begin
       Locks.Acquire;
       KC.Put_String (Item => "Error running subject ");
-      KC.Put_Byte   (Item => SK.Byte
-                     (CPU_Global.Get_Current_Minor_Frame.Subject_Id));
+      KC.Put_Byte   (Item => SK.Byte (CPU_Global.Get_Current_Subject_ID));
       KC.New_Line;
 
       CPU.VMREAD (Field   => Constants.VMX_INST_ERROR,

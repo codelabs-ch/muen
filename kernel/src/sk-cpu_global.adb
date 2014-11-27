@@ -32,6 +32,7 @@ is
    --  Record used to store per-CPU global data.
    type Storage_Type is record
       Scheduling_Plan     : Skp.Scheduling.Major_Frame_Array;
+      Scheduling_Groups   : Skp.Scheduling.Scheduling_Group_Array;
       Current_Minor_Frame : Active_Minor_Frame_Type;
    end record;
 
@@ -115,6 +116,7 @@ is
       Current_Major_Frame := Skp.Scheduling.Major_Frame_Range'First;
       Per_CPU_Storage     := Storage_Type'
         (Scheduling_Plan     => Skp.Scheduling.Null_Major_Frames,
+         Scheduling_Groups   => (others => Skp.Subject_Id_Type'First),
          Current_Minor_Frame => Active_Minor_Frame_Type'
            (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First,
             Subject_Id => Skp.Subject_Id_Type'First));

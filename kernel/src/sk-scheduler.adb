@@ -137,15 +137,18 @@ is
          In_Out => (CPU_Global.State, Events.State, Major_Frame_Start,
                     MP.Barrier, X86_64.State)),
       Depends =>
-        (Major_Frame_Start =>+ CPU_Global.State,
-         (CPU_Global.State, Events.State, MP.Barrier,
-          X86_64.State)    =>+ (CPU_Global.State, New_Major))
+        ((Events.State,
+          Major_Frame_Start) =>+ CPU_Global.State,
+         (CPU_Global.State,
+          MP.Barrier,
+          X86_64.State)      =>+ (CPU_Global.State, New_Major))
    is
       use type Skp.Scheduling.Barrier_Index_Range;
 
       Current_Major_ID : Skp.Scheduling.Major_Frame_Range;
       Minor_Frame      : CPU_Global.Active_Minor_Frame_Type;
       Plan_Frame       : Skp.Scheduling.Minor_Frame_Type;
+      Next_Minor_Frame : Skp.Scheduling.Minor_Frame_Range;
    begin
       Current_Major_ID := CPU_Global.Get_Current_Major_Frame_ID;
 
@@ -171,12 +174,12 @@ is
             end if;
          end;
 
-         Minor_Frame.Minor_Id := Minor_Frame.Minor_Id + 1;
+         Next_Minor_Frame := Minor_Frame.Minor_Id + 1;
       else
 
          --  Switch to first minor frame in next major frame.
 
-         Minor_Frame.Minor_Id := Skp.Scheduling.Minor_Frame_Range'First;
+         Next_Minor_Frame := Skp.Scheduling.Minor_Frame_Range'First;
 
          MP.Wait_For_All;
          if CPU_Global.Is_BSP then
@@ -210,7 +213,7 @@ is
                               Reason => "False positive");
       Plan_Frame := CPU_Global.Get_Minor_Frame
         (Major_Id => Current_Major_ID,
-         Minor_Id => Minor_Frame.Minor_Id);
+         Minor_Id => Next_Minor_Frame);
       pragma $Prove_Warnings (On, "statement has no effect");
 
       if Plan_Frame.Subject_Id /= Minor_Frame.Subject_Id then
@@ -221,8 +224,9 @@ is
                    (Subject_Id => Plan_Frame.Subject_Id));
       end if;
 
-      Minor_Frame.Subject_Id := Plan_Frame.Subject_Id;
-      CPU_Global.Set_Current_Minor (Frame => Minor_Frame);
+      CPU_Global.Set_Current_Minor
+        (Frame => (Minor_Id   => Next_Minor_Frame,
+                   Subject_Id => Plan_Frame.Subject_Id));
 
       if Skp.Subjects.Get_Profile
         (Subject_Id => Minor_Frame.Subject_Id) = Skp.Subjects.Vm

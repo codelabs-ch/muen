@@ -33,7 +33,7 @@ is
    --  Record used to store per-CPU global data.
    type Storage_Type is record
       Scheduling_Groups   : Skp.Scheduling.Scheduling_Group_Array;
-      Current_Minor_Frame : Active_Minor_Frame_Type;
+      Current_Minor_Frame : Skp.Scheduling.Minor_Frame_Range;
    end record;
 
    pragma $Build_Warnings (Off, "* bits of ""Per_CPU_Storage"" unused");
@@ -75,11 +75,10 @@ is
    with
       Refined_Global => (Input => Per_CPU_Storage),
       Refined_Post   =>
-       Get_Current_Minor_Frame_ID'Result =
-         Per_CPU_Storage.Current_Minor_Frame.Minor_Id
+       Get_Current_Minor_Frame_ID'Result = Per_CPU_Storage.Current_Minor_Frame
    is
    begin
-      return Per_CPU_Storage.Current_Minor_Frame.Minor_Id;
+      return Per_CPU_Storage.Current_Minor_Frame;
    end Get_Current_Minor_Frame_ID;
 
    -------------------------------------------------------------------------
@@ -93,7 +92,7 @@ is
         (Skp.Scheduling.Get_Group_ID
            (CPU_ID   => CPU_ID,
             Major_ID => Current_Major_Frame,
-            Minor_ID => Per_CPU_Storage.Current_Minor_Frame.Minor_Id));
+            Minor_ID => Per_CPU_Storage.Current_Minor_Frame));
    end Get_Current_Subject_ID;
 
    -------------------------------------------------------------------------
@@ -121,8 +120,7 @@ is
       Current_Major_Frame := Skp.Scheduling.Major_Frame_Range'First;
       Per_CPU_Storage     := Storage_Type'
         (Scheduling_Groups   => (others => Skp.Subject_Id_Type'First),
-         Current_Minor_Frame => Active_Minor_Frame_Type'
-           (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First));
+         Current_Minor_Frame => Skp.Scheduling.Minor_Frame_Range'First);
    end Init;
 
    -------------------------------------------------------------------------
@@ -157,10 +155,10 @@ is
    with
       Refined_Global  => (In_Out => Per_CPU_Storage),
       Refined_Depends => (Per_CPU_Storage =>+ ID),
-      Refined_Post    => Per_CPU_Storage.Current_Minor_Frame.Minor_Id = ID
+      Refined_Post    => Per_CPU_Storage.Current_Minor_Frame = ID
    is
    begin
-      Per_CPU_Storage.Current_Minor_Frame.Minor_Id := ID;
+      Per_CPU_Storage.Current_Minor_Frame := ID;
    end Set_Current_Minor_Frame;
 
    -------------------------------------------------------------------------

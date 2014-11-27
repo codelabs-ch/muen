@@ -37,11 +37,6 @@ is
    with
       Post => Is_BSP'Result = (CPU_ID = Skp.CPU_Range'First);
 
-   --  Currently active minor frame.
-   type Active_Minor_Frame_Type is record
-      Minor_Id : Skp.Scheduling.Minor_Frame_Range;
-   end record;
-
    --  Initialize per-CPU storage.
    procedure Init
    with

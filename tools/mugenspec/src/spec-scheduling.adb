@@ -109,13 +109,14 @@ is
       CPU_Count     : constant Natural
         := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Policy);
 
-      Major_Count       : Positive;
-      Max_Minor_Count   : Positive;
-      Max_Barrier_Count : Natural;
-      Majors            : DOM.Core.Node_List;
-      Buffer            : Unbounded_String;
-      Major_Info_Buffer : Unbounded_String;
-      Tmpl              : Mutools.Templates.Template_Type;
+      Major_Count        : Positive;
+      Max_Minor_Count    : Positive;
+      Max_Barrier_Count  : Natural;
+      Majors             : DOM.Core.Node_List;
+      Buffer             : Unbounded_String;
+      Major_Info_Buffer  : Unbounded_String;
+      Sched_Group_Buffer : Unbounded_String;
+      Tmpl               : Mutools.Templates.Template_Type;
 
       No_Group            : constant Natural := 0;
       Next_Free_Group_ID  : Positive         := 1;
@@ -419,6 +420,33 @@ is
          end loop;
       end;
 
+      declare
+         Last_Group_ID     : constant Natural := Next_Free_Group_ID - 1;
+         Scheduling_Groups : array (1 .. Last_Group_ID) of Natural;
+      begin
+
+         --  Create reverse group ID to subject ID mapping.
+
+         for I in Subject_To_Group_ID'Range loop
+            declare
+               Group_ID : constant Natural := Subject_To_Group_ID (I);
+            begin
+               if Group_ID /= No_Group then
+                  Scheduling_Groups (Group_ID) := I;
+               end if;
+            end;
+         end loop;
+
+         for I in Scheduling_Groups'Range loop
+            Sched_Group_Buffer := Sched_Group_Buffer & Indent (N => 3)
+                 & I'Img & " =>" & Scheduling_Groups (I)'Img;
+
+               if I < Last_Group_ID then
+                  Sched_Group_Buffer := Sched_Group_Buffer & "," & ASCII.LF;
+               end if;
+         end loop;
+      end;
+
       Tmpl := Mutools.Templates.Create
         (Content => String_Templates.skp_scheduling_ads);
       Mutools.Templates.Replace
@@ -453,6 +481,10 @@ is
          Content  => Ada.Strings.Fixed.Trim
            (Source => Timer_Rate'Img,
             Side   => Ada.Strings.Left));
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__scheduling_groups__",
+         Content  => To_String (Sched_Group_Buffer));
 
       Mutools.Templates.Write
         (Template => Tmpl,

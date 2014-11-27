@@ -87,4 +87,11 @@ __major_frames_info__);
    is
      (Scheduling_Plans (CPU_ID)(Major_ID).Minor_Frames (Minor_ID).Deadline);
 
+   type Scheduling_Group_Array is array (Scheduling_Group_Range)
+     of Subject_Id_Type;
+
+   Scheduling_Groups : constant Scheduling_Group_Array
+     := Scheduling_Group_Array'(
+__scheduling_groups__);
+
 end Skp.Scheduling;

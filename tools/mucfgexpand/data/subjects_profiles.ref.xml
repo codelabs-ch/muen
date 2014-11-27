@@ -118,7 +118,7 @@
        <INVLPGExiting>1</INVLPGExiting>
        <MWAITExiting>1</MWAITExiting>
        <RDPMCExiting>1</RDPMCExiting>
-       <RDTSCExiting>1</RDTSCExiting>
+       <RDTSCExiting>0</RDTSCExiting>
        <CR3LoadExiting>0</CR3LoadExiting>
        <CR3StoreExiting>0</CR3StoreExiting>
        <CR8LoadExiting>1</CR8LoadExiting>

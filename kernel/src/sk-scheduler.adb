@@ -289,10 +289,11 @@ is
           X86_64.State)      =>+ (CPU_Global.State, Interrupts.State,
                                   X86_64.State))
    is
-      Plan_Frame        : Skp.Scheduling.Minor_Frame_Type;
-      Initial_VMCS_Addr : SK.Word64 := 0;
-      Controls          : Skp.Subjects.VMX_Controls_Type;
-      VMCS_Addr         : SK.Word64;
+      Plan_Frame         : Skp.Scheduling.Minor_Frame_Type;
+      Initial_Subject_ID : Skp.Subject_Id_Type;
+      Initial_VMCS_Addr  : SK.Word64 := 0;
+      Controls           : Skp.Subjects.VMX_Controls_Type;
+      VMCS_Addr          : SK.Word64;
    begin
       CPU_Global.Set_Scheduling_Plan
         (Data => Skp.Scheduling.Scheduling_Plans (CPU_Global.CPU_ID));
@@ -312,6 +313,8 @@ is
         (Frame => CPU_Global.Active_Minor_Frame_Type'
            (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First,
             Subject_Id => Plan_Frame.Subject_Id));
+
+      Initial_Subject_ID := CPU_Global.Get_Current_Subject_ID;
 
       --  Setup VMCS and state of subjects running on this logical CPU.
 
@@ -357,7 +360,7 @@ is
                CR4_Value    => Skp.Subjects.Get_CR4 (Subject_Id => I),
                CS_Access    => Skp.Subjects.Get_CS_Access (Subject_Id => I));
 
-            if Plan_Frame.Subject_Id = I then
+            if Initial_Subject_ID = I then
                Initial_VMCS_Addr := VMCS_Addr;
             end if;
 

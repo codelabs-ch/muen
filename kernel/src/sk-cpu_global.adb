@@ -47,6 +47,17 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Current_Major_Frame_ID return Skp.Scheduling.Major_Frame_Range
+   with
+      Refined_Global => (Input => Current_Major_Frame),
+      Refined_Post   => Get_Current_Major_Frame_ID'Result = Current_Major_Frame
+   is
+   begin
+      return Current_Major_Frame;
+   end Get_Current_Major_Frame_ID;
+
+   -------------------------------------------------------------------------
+
    function Get_Current_Minor_Frame return Active_Minor_Frame_Type
    with
       Refined_Global => (Input => Storage),

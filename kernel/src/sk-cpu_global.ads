@@ -55,6 +55,11 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ ID);
 
+   --  Returns the ID of the currently active major frame.
+   function Get_Current_Major_Frame_ID return Skp.Scheduling.Major_Frame_Range
+   with
+      Global  => (Input => State);
+
    --  Set the currently active minor frame to specified frame.
    procedure Set_Current_Minor (Frame : Active_Minor_Frame_Type)
    with

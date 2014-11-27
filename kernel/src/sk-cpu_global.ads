@@ -82,10 +82,8 @@ is
    with
       Global  => (Input => State);
 
-   --  Return number of minor frames in given scheduling plan major frame.
-   function Get_Major_Length
-     (Major_Id : Skp.Scheduling.Major_Frame_Range)
-      return Skp.Scheduling.Minor_Frame_Range
+   --  Return number of minor frames in the currently active major frame.
+   function Get_Current_Major_Length return Skp.Scheduling.Minor_Frame_Range
    with
       Global  => (Input => State);
 

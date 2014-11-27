@@ -29,6 +29,7 @@ with
 is
 
    use type Skp.Scheduling.Major_Frame_Range;
+   use type Skp.Scheduling.Minor_Frame_Range;
 
    --  Record used to store per-CPU global data.
    type Storage_Type is record
@@ -58,6 +59,19 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Current_Major_Length return Skp.Scheduling.Minor_Frame_Range
+   with
+      Refined_Global => (Input => Current_Major_Frame),
+      Refined_Post   => Get_Current_Major_Length'Result =
+       Skp.Scheduling.Scheduling_Plans (CPU_ID)(Current_Major_Frame).Length
+   is
+   begin
+      return Skp.Scheduling.Scheduling_Plans
+        (CPU_ID)(Current_Major_Frame).Length;
+   end Get_Current_Major_Length;
+
+   -------------------------------------------------------------------------
+
    function Get_Current_Minor_Frame return Active_Minor_Frame_Type
    with
       Refined_Global => (Input => Storage),
@@ -77,18 +91,6 @@ is
    begin
       return Storage.Current_Minor_Frame.Subject_Id;
    end Get_Current_Subject_ID;
-
-   -------------------------------------------------------------------------
-
-   function Get_Major_Length
-     (Major_Id : Skp.Scheduling.Major_Frame_Range)
-      return Skp.Scheduling.Minor_Frame_Range
-   with
-      Refined_Global => (Input => Storage)
-   is
-   begin
-      return Storage.Scheduling_Plan (Major_Id).Length;
-   end Get_Major_Length;
 
    -------------------------------------------------------------------------
 

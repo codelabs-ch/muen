@@ -145,9 +145,7 @@ is
       Minor_Frame := CPU_Global.Get_Current_Minor_Frame;
       pragma $Prove_Warnings (On, "statement has no effect");
 
-      if Minor_Frame.Minor_Id < CPU_Global.Get_Major_Length
-        (Major_Id => Current_Major_ID)
-      then
+      if Minor_Frame.Minor_Id < CPU_Global.Get_Current_Major_Length then
 
          --  Sync on minor frame barrier if necessary and switch to next minor
          --  frame in current major frame.

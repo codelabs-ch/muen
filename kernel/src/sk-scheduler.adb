@@ -141,7 +141,7 @@ is
 
       Current_Subject_ID : Skp.Subject_Id_Type;
       Current_Major_ID   : Skp.Scheduling.Major_Frame_Range;
-      Minor_Frame        : CPU_Global.Active_Minor_Frame_Type;
+      Current_Minor_ID   : Skp.Scheduling.Minor_Frame_Range;
       Next_Minor_Frame   : Skp.Scheduling.Minor_Frame_Range;
    begin
       Current_Subject_ID := CPU_Global.Get_Current_Subject_ID;
@@ -149,10 +149,10 @@ is
 
       pragma $Prove_Warnings (Off, "statement has no effect",
                               Reason => "False positive of GPL 2014");
-      Minor_Frame := CPU_Global.Get_Current_Minor_Frame;
+      Current_Minor_ID := CPU_Global.Get_Current_Minor_Frame_ID;
       pragma $Prove_Warnings (On, "statement has no effect");
 
-      if Minor_Frame.Minor_Id < CPU_Global.Get_Current_Major_Length then
+      if Current_Minor_ID < CPU_Global.Get_Current_Major_Length then
 
          --  Sync on minor frame barrier if necessary and switch to next minor
          --  frame in current major frame.
@@ -162,14 +162,14 @@ is
               := Skp.Scheduling.Get_Barrier
                 (CPU_ID   => CPU_Global.CPU_ID,
                  Major_ID => Current_Major_ID,
-                 Minor_ID => Minor_Frame.Minor_Id);
+                 Minor_ID => Current_Minor_ID);
          begin
             if Current_Barrier /= Skp.Scheduling.No_Barrier then
                MP.Wait_On_Minor_Frame_Barrier (Index => Current_Barrier);
             end if;
          end;
 
-         Next_Minor_Frame := Minor_Frame.Minor_Id + 1;
+         Next_Minor_Frame := Current_Minor_ID + 1;
       else
 
          --  Switch to first minor frame in next major frame.

@@ -190,6 +190,7 @@ is
                  := Current_Major;
             begin
                Current_Major := New_Major;
+               CPU_Global.Set_Current_Major_Frame (ID => Current_Major);
 
                if Current_Major /= Prev_Major then
                   MP.Set_Minor_Frame_Barrier_Config

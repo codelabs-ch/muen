@@ -137,20 +137,21 @@ is
          In_Out => (CPU_Global.State, Events.State, Major_Frame_Start,
                     MP.Barrier, X86_64.State)),
       Depends =>
-        ((Events.State,
-          Major_Frame_Start) =>+ CPU_Global.State,
+        (Major_Frame_Start  =>+ CPU_Global.State,
          (CPU_Global.State,
+          Events.State,
           MP.Barrier,
-          X86_64.State)      =>+ (CPU_Global.State, New_Major))
+          X86_64.State)     =>+ (CPU_Global.State, New_Major))
    is
       use type Skp.Scheduling.Barrier_Index_Range;
 
-      Current_Major_ID : Skp.Scheduling.Major_Frame_Range;
-      Minor_Frame      : CPU_Global.Active_Minor_Frame_Type;
-      Plan_Frame       : Skp.Scheduling.Minor_Frame_Type;
-      Next_Minor_Frame : Skp.Scheduling.Minor_Frame_Range;
+      Current_Subject_ID : Skp.Subject_Id_Type;
+      Current_Major_ID   : Skp.Scheduling.Major_Frame_Range;
+      Minor_Frame        : CPU_Global.Active_Minor_Frame_Type;
+      Next_Minor_Frame   : Skp.Scheduling.Minor_Frame_Range;
    begin
-      Current_Major_ID := CPU_Global.Get_Current_Major_Frame_ID;
+      Current_Subject_ID := CPU_Global.Get_Current_Subject_ID;
+      Current_Major_ID   := CPU_Global.Get_Current_Major_Frame_ID;
 
       pragma $Prove_Warnings (Off, "statement has no effect",
                               Reason => "False positive of GPL 2014");
@@ -209,31 +210,33 @@ is
          MP.Wait_For_All;
       end if;
 
-      pragma $Prove_Warnings (Off, "statement has no effect",
-                              Reason => "False positive");
-      Plan_Frame := CPU_Global.Get_Minor_Frame
-        (Major_Id => Current_Major_ID,
-         Minor_Id => Next_Minor_Frame);
-      pragma $Prove_Warnings (On, "statement has no effect");
+      declare
+         Next_Subject : constant Skp.Subject_Id_Type
+           := CPU_Global.Get_Subject_ID
+             (Group => Skp.Scheduling.Get_Group_ID
+                (CPU_ID   => CPU_Global.CPU_ID,
+                 Major_ID => Current_Major_ID,
+                 Minor_ID => Next_Minor_Frame));
+      begin
+         if Current_Subject_ID /= Next_Subject then
 
-      if Plan_Frame.Subject_Id /= Minor_Frame.Subject_Id then
+            --  New minor frame contains different subject -> Load VMCS.
 
-         --  New minor frame contains different subject -> Load VMCS.
+            VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
+                      (Subject_Id => Next_Subject));
+         end if;
 
-         VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
-                   (Subject_Id => Plan_Frame.Subject_Id));
-      end if;
+         CPU_Global.Set_Current_Minor
+           (Frame => (Minor_Id   => Next_Minor_Frame,
+                      Subject_Id => Next_Subject));
 
-      CPU_Global.Set_Current_Minor
-        (Frame => (Minor_Id   => Next_Minor_Frame,
-                   Subject_Id => Plan_Frame.Subject_Id));
-
-      if Skp.Subjects.Get_Profile
-        (Subject_Id => Minor_Frame.Subject_Id) = Skp.Subjects.Vm
-      then
-         Events.Insert_Event (Subject => Minor_Frame.Subject_Id,
-                              Event   => SK.Constants.Timer_Vector);
-      end if;
+         if Skp.Subjects.Get_Profile
+           (Subject_Id => Next_Subject) = Skp.Subjects.Vm
+         then
+            Events.Insert_Event (Subject => Next_Subject,
+                                 Event   => SK.Constants.Timer_Vector);
+         end if;
+      end;
    end Update_Scheduling_Info;
 
    -------------------------------------------------------------------------

@@ -220,8 +220,7 @@ is
                       (Subject_Id => Next_Subject));
          end if;
 
-         CPU_Global.Set_Current_Minor
-           (Frame => (Minor_Id => Next_Minor_Frame));
+         CPU_Global.Set_Current_Minor_Frame (ID => Next_Minor_Frame);
 
          if Skp.Subjects.Get_Profile
            (Subject_Id => Next_Subject) = Skp.Subjects.Vm
@@ -292,9 +291,8 @@ is
 
       --  Set initial active minor frame.
 
-      CPU_Global.Set_Current_Minor
-        (Frame => CPU_Global.Active_Minor_Frame_Type'
-           (Minor_Id => Skp.Scheduling.Minor_Frame_Range'First));
+      CPU_Global.Set_Current_Minor_Frame
+        (ID => Skp.Scheduling.Minor_Frame_Range'First);
 
       Initial_Subject_ID := CPU_Global.Get_Current_Subject_ID;
 

@@ -152,15 +152,15 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Current_Minor (Frame : Active_Minor_Frame_Type)
+   procedure Set_Current_Minor_Frame (ID : Skp.Scheduling.Minor_Frame_Range)
    with
       Refined_Global  => (In_Out => Per_CPU_Storage),
-      Refined_Depends => (Per_CPU_Storage =>+ Frame),
-      Refined_Post    => Per_CPU_Storage.Current_Minor_Frame = Frame
+      Refined_Depends => (Per_CPU_Storage =>+ ID),
+      Refined_Post    => Per_CPU_Storage.Current_Minor_Frame.Minor_Id = ID
    is
    begin
-      Per_CPU_Storage.Current_Minor_Frame := Frame;
-   end Set_Current_Minor;
+      Per_CPU_Storage.Current_Minor_Frame.Minor_Id := ID;
+   end Set_Current_Minor_Frame;
 
    -------------------------------------------------------------------------
 

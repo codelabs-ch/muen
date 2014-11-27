@@ -59,11 +59,11 @@ is
    with
       Global  => (Input => State);
 
-   --  Set the currently active minor frame to specified frame.
-   procedure Set_Current_Minor (Frame : Active_Minor_Frame_Type)
+   --  Set the ID of the currently active minor frame to the specified value.
+   procedure Set_Current_Minor_Frame (ID : Skp.Scheduling.Minor_Frame_Range)
    with
       Global  => (In_Out => State),
-      Depends => (State =>+ Frame);
+      Depends => (State =>+ ID);
 
    --  Returns the currently active minor frame.
    function Get_Current_Minor_Frame return Active_Minor_Frame_Type

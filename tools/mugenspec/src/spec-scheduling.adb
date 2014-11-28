@@ -339,15 +339,13 @@ is
          Cycles_Count := Cycles_Count + Ticks;
 
          Buffer := Buffer & Indent (N => 4) & Index'Img
-           & " => Minor_Frame_Type'(Subject_Id =>" & Subject_Id'Img
-           & "," & ASCII.LF;
-         Buffer := Buffer & Indent (N => 12) & "Group_ID   =>"
+           & " => Minor_Frame_Type'(Group_ID =>"
            & Subject_To_Group_ID (Subject_Id)'Img
            & "," & ASCII.LF;
-         Buffer := Buffer & Indent (N => 12) & "Barrier    => "
+         Buffer := Buffer & Indent (N => 12) & "Barrier  => "
            & (if Barrier = "none" then "No_Barrier" else Barrier)
            & "," & ASCII.LF;
-         Buffer := Buffer & Indent (N => 12) & "Deadline   =>"
+         Buffer := Buffer & Indent (N => 12) & "Deadline =>"
            & Cycles_Count'Img & ")";
       end Write_Minor_Frame;
    begin

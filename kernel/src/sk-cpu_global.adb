@@ -85,7 +85,14 @@ is
 
    function Get_Current_Subject_ID return Skp.Subject_Id_Type
    with
-      Refined_Global => (Input => (Per_CPU_Storage, Current_Major_Frame))
+      Refined_Global => (Input => (Per_CPU_Storage, Current_Major_Frame)),
+      Refined_Post   =>
+       Get_Current_Subject_ID'Result =
+           Per_CPU_Storage.Scheduling_Groups
+             (Skp.Scheduling.Get_Group_ID
+                (CPU_ID   => CPU_ID,
+                 Major_ID => Current_Major_Frame,
+                 Minor_ID => Per_CPU_Storage.Current_Minor_Frame))
    is
    begin
       return Per_CPU_Storage.Scheduling_Groups

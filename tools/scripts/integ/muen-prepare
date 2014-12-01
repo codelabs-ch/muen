@@ -96,8 +96,8 @@ notify()
 {
 	local cmd=$1
 	if [ -n "$cmd" ]; then
-		log "Calling notify command '$cmd'"
-		$cmd
+		log "Calling notify command '$cmd $CONFIG $BUILDID'"
+		$cmd $CONFIG $BUILDID
 	fi
 }
 

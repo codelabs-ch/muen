@@ -91,7 +91,7 @@ is
 
       Scheduler.Set_VMX_Exit_Timer;
       Subjects.Restore_State
-        (Id   => CPU_Global.Get_Current_Minor_Frame.Subject_Id,
+        (Id   => CPU_Global.Get_Current_Subject_ID,
          GPRs => Subject_Registers);
 
    end Initialize;

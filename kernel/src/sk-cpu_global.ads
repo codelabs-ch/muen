@@ -18,12 +18,12 @@
 
 with Skp.Scheduling;
 
-use type Skp.CPU_Range;
-
 package SK.CPU_Global
 with
    Abstract_State => State
 is
+
+   use type Skp.CPU_Range;
 
    --  ID of the local CPU.
    CPU_ID : constant Skp.CPU_Range
@@ -41,8 +41,6 @@ is
    type Active_Minor_Frame_Type is record
       Minor_Id   : Skp.Scheduling.Minor_Frame_Range;
       Subject_Id : Skp.Subject_Id_Type;
-      Barrier    : Skp.Scheduling.Barrier_Index_Range;
-      Deadline   : SK.Word64;
    end record;
 
    --  Initialize per-CPU storage.
@@ -50,6 +48,17 @@ is
    with
       Global  => (Output => State),
       Depends => (State => null);
+
+   --  Set the ID of the currently active major frame to the specified value.
+   procedure Set_Current_Major_Frame (ID : Skp.Scheduling.Major_Frame_Range)
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ ID);
+
+   --  Returns the ID of the currently active major frame.
+   function Get_Current_Major_Frame_ID return Skp.Scheduling.Major_Frame_Range
+   with
+      Global  => (Input => State);
 
    --  Set the currently active minor frame to specified frame.
    procedure Set_Current_Minor (Frame : Active_Minor_Frame_Type)
@@ -68,10 +77,13 @@ is
       Global  => (In_Out => State),
       Depends => (State =>+ Data);
 
-   --  Return number of minor frames in given scheduling plan major frame.
-   function Get_Major_Length
-     (Major_Id : Skp.Scheduling.Major_Frame_Range)
-      return Skp.Scheduling.Minor_Frame_Range
+   --  Returns the ID of the currently active subject.
+   function Get_Current_Subject_ID return Skp.Subject_Id_Type
+   with
+      Global  => (Input => State);
+
+   --  Return number of minor frames in the currently active major frame.
+   function Get_Current_Major_Length return Skp.Scheduling.Minor_Frame_Range
    with
       Global  => (Input => State);
 

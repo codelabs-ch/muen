@@ -29,8 +29,7 @@ with SK.Dump;
 
 package body SK.Scheduler
 with
-   Refined_State => (State                 => (Current_Major,
-                                               Major_Frame_Start),
+   Refined_State => (State                 => Major_Frame_Start,
                      Tau0_Kernel_Interface => (New_Major))
 is
 
@@ -39,10 +38,6 @@ is
       Atomic,
       Async_Writers,
       Address => System'To_Address (Skp.Kernel.Tau0_Iface_Address);
-
-   --  Current major.
-   Current_Major : Skp.Scheduling.Major_Frame_Range
-     := Skp.Scheduling.Major_Frame_Range'First;
 
    --  Current major frame start time in CPU cycles.
    Major_Frame_Start : SK.Word64 := 0;
@@ -130,35 +125,44 @@ is
    with
       Global  =>
         (Input  => New_Major,
-         In_Out => (CPU_Global.State, Current_Major, Events.State,
-                    Major_Frame_Start, MP.Barrier, X86_64.State)),
+         In_Out => (CPU_Global.State, Events.State, Major_Frame_Start,
+                    MP.Barrier, X86_64.State)),
       Depends =>
-        (Major_Frame_Start =>+ (CPU_Global.State, Current_Major),
-         (CPU_Global.State, Current_Major, Events.State, MP.Barrier,
-          X86_64.State)    =>+
-            (CPU_Global.State, Current_Major, New_Major))
+        (Major_Frame_Start =>+ CPU_Global.State,
+         (CPU_Global.State, Events.State, MP.Barrier,
+          X86_64.State)    =>+ (CPU_Global.State, New_Major))
    is
       use type Skp.Scheduling.Barrier_Index_Range;
 
-      Minor_Frame : CPU_Global.Active_Minor_Frame_Type;
-      Plan_Frame  : Skp.Scheduling.Minor_Frame_Type;
+      Current_Major_ID : Skp.Scheduling.Major_Frame_Range;
+      Minor_Frame      : CPU_Global.Active_Minor_Frame_Type;
+      Plan_Frame       : Skp.Scheduling.Minor_Frame_Type;
    begin
+      Current_Major_ID := CPU_Global.Get_Current_Major_Frame_ID;
+
       pragma $Prove_Warnings (Off, "statement has no effect",
                               Reason => "False positive of GPL 2014");
       Minor_Frame := CPU_Global.Get_Current_Minor_Frame;
       pragma $Prove_Warnings (On, "statement has no effect");
 
-      if Minor_Frame.Minor_Id < CPU_Global.Get_Major_Length
-        (Major_Id => Current_Major)
-      then
+      if Minor_Frame.Minor_Id < CPU_Global.Get_Current_Major_Length then
 
-         --  Switch to next minor frame in current major frame.
+         --  Sync on minor frame barrier if necessary and switch to next minor
+         --  frame in current major frame.
+
+         declare
+            Current_Barrier : constant Skp.Scheduling.Barrier_Index_Range
+              := Skp.Scheduling.Get_Barrier
+                (CPU_ID   => CPU_Global.CPU_ID,
+                 Major_ID => Current_Major_ID,
+                 Minor_ID => Minor_Frame.Minor_Id);
+         begin
+            if Current_Barrier /= Skp.Scheduling.No_Barrier then
+               MP.Wait_On_Minor_Frame_Barrier (Index => Current_Barrier);
+            end if;
+         end;
 
          Minor_Frame.Minor_Id := Minor_Frame.Minor_Id + 1;
-
-         if Minor_Frame.Barrier /= Skp.Scheduling.No_Barrier then
-            MP.Wait_On_Minor_Frame_Barrier (Index => Minor_Frame.Barrier);
-         end if;
       else
 
          --  Switch to first minor frame in next major frame.
@@ -172,29 +176,33 @@ is
             --  just ended.
 
             Major_Frame_Start := Major_Frame_Start
-              + Skp.Scheduling.Major_Frames (Current_Major).Period;
+              + Skp.Scheduling.Major_Frames (Current_Major_ID).Period;
 
             declare
                use type Skp.Scheduling.Major_Frame_Range;
 
                Prev_Major : constant Skp.Scheduling.Major_Frame_Range
-                 := Current_Major;
+                 := Current_Major_ID;
             begin
-               Current_Major := New_Major;
+               Current_Major_ID := New_Major;
+               CPU_Global.Set_Current_Major_Frame (ID => Current_Major_ID);
 
-               if Current_Major /= Prev_Major then
+               if Current_Major_ID /= Prev_Major then
                   MP.Set_Minor_Frame_Barrier_Config
                     (Config => Skp.Scheduling.Major_Frames
-                       (Current_Major).Barrier_Config);
+                       (Current_Major_ID).Barrier_Config);
                end if;
             end;
          end if;
          MP.Wait_For_All;
       end if;
 
+      pragma $Prove_Warnings (Off, "statement has no effect",
+                              Reason => "False positive");
       Plan_Frame := CPU_Global.Get_Minor_Frame
-        (Major_Id => Current_Major,
+        (Major_Id => Current_Major_ID,
          Minor_Id => Minor_Frame.Minor_Id);
+      pragma $Prove_Warnings (On, "statement has no effect");
 
       if Plan_Frame.Subject_Id /= Minor_Frame.Subject_Id then
 
@@ -205,8 +213,6 @@ is
       end if;
 
       Minor_Frame.Subject_Id := Plan_Frame.Subject_Id;
-      Minor_Frame.Barrier    := Plan_Frame.Barrier;
-      Minor_Frame.Deadline   := Plan_Frame.Deadline;
       CPU_Global.Set_Current_Minor (Frame => Minor_Frame);
 
       if Skp.Subjects.Get_Profile
@@ -236,8 +242,10 @@ is
       --  CPU cycles until the end of the current minor frame relative to major
       --  frame start.
 
-      Deadline := Major_Frame_Start +
-        CPU_Global.Get_Current_Minor_Frame.Deadline;
+      Deadline := Major_Frame_Start + Skp.Scheduling.Get_Deadline
+        (CPU_ID   => CPU_Global.CPU_ID,
+         Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
+         Minor_ID => CPU_Global.Get_Current_Minor_Frame.Minor_Id);
 
       if Deadline > Now then
          Cycles := Deadline - Now;
@@ -254,16 +262,16 @@ is
    procedure Init
    with
       Refined_Global  =>
-        (Input  => (Current_Major, Interrupts.State),
+        (Input  => Interrupts.State,
          In_Out => (CPU_Global.State, Major_Frame_Start, MP.Barrier,
                     Subjects.State, X86_64.State)),
       Refined_Depends =>
-        (CPU_Global.State    =>+ Current_Major,
-         MP.Barrier          =>+ Current_Major,
+        (CPU_Global.State    =>+ null,
+         MP.Barrier          =>+ null,
          Subjects.State      =>+ null,
          (Major_Frame_Start,
-          X86_64.State)      =>+ (CPU_Global.State, Current_Major,
-                                  Interrupts.State, X86_64.State))
+          X86_64.State)      =>+ (CPU_Global.State, Interrupts.State,
+                                  X86_64.State))
    is
       Plan_Frame        : Skp.Scheduling.Minor_Frame_Type;
       Initial_VMCS_Addr : SK.Word64 := 0;
@@ -275,16 +283,17 @@ is
 
       --  Set initial active minor frame.
 
+      pragma $Prove_Warnings (Off, "statement has no effect",
+                              Reason => "False positive");
       Plan_Frame := CPU_Global.Get_Minor_Frame
-        (Major_Id => Current_Major,
+        (Major_Id => Skp.Scheduling.Major_Frame_Range'First,
          Minor_Id => Skp.Scheduling.Minor_Frame_Range'First);
+      pragma $Prove_Warnings (On, "statement has no effect");
 
       CPU_Global.Set_Current_Minor
         (Frame => CPU_Global.Active_Minor_Frame_Type'
            (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First,
-            Subject_Id => Plan_Frame.Subject_Id,
-            Barrier    => Plan_Frame.Barrier,
-            Deadline   => Plan_Frame.Deadline));
+            Subject_Id => Plan_Frame.Subject_Id));
 
       --  Setup VMCS and state of subjects running on this logical CPU.
 
@@ -358,7 +367,7 @@ is
 
          MP.Set_Minor_Frame_Barrier_Config
            (Config => Skp.Scheduling.Major_Frames
-              (Current_Major).Barrier_Config);
+              (Skp.Scheduling.Major_Frame_Range'First).Barrier_Config);
 
          --  Set initial major frame start time to now.
 
@@ -551,27 +560,21 @@ is
    with
       Refined_Global  =>
         (Input  => New_Major,
-         In_Out => (CPU_Global.State, Current_Major, Events.State,
-                    Major_Frame_Start, MP.Barrier, Subjects.State, VTd.State,
-                    X86_64.State)),
+         In_Out => (CPU_Global.State, Events.State, Major_Frame_Start,
+                    MP.Barrier, Subjects.State, VTd.State, X86_64.State)),
       Refined_Depends =>
-        (CPU_Global.State    =>+ (Current_Major, New_Major, Subject_Registers,
-                                  X86_64.State),
-         Current_Major       =>+ (CPU_Global.State, New_Major, X86_64.State),
+        (CPU_Global.State    =>+ (New_Major, Subject_Registers, X86_64.State),
          (Events.State,
-          Subject_Registers) =>+ (CPU_Global.State, Current_Major, New_Major,
-                                  Subjects.State, Subject_Registers,
-                                  X86_64.State),
-         Major_Frame_Start   =>+ (CPU_Global.State, Current_Major,
-                                  X86_64.State),
-         MP.Barrier          =>+ (CPU_Global.State, Current_Major, New_Major,
-                                  X86_64.State),
+          Subject_Registers) =>+ (CPU_Global.State, New_Major, Subjects.State,
+                                  Subject_Registers, X86_64.State),
+         Major_Frame_Start   =>+ (CPU_Global.State, X86_64.State),
+         MP.Barrier          =>+ (CPU_Global.State, New_Major, X86_64.State),
          (Subjects.State,
           VTd.State)         =>+ (CPU_Global.State, Subjects.State,
                                   Subject_Registers, X86_64.State),
-         X86_64.State        =>+ (CPU_Global.State, Current_Major,
-                                  Events.State, Major_Frame_Start, New_Major,
-                                  Subjects.State, Subject_Registers))
+         X86_64.State        =>+ (CPU_Global.State, Events.State,
+                                  Major_Frame_Start, New_Major, Subjects.State,
+                                  Subject_Registers))
    is
       Exit_Status     : SK.Word64;
       Current_Subject : Skp.Subject_Id_Type;
@@ -593,7 +596,7 @@ is
          CPU.Panic;
       end Panic_Exit_Failure;
    begin
-      Current_Subject := CPU_Global.Get_Current_Minor_Frame.Subject_Id;
+      Current_Subject := CPU_Global.Get_Current_Subject_ID;
 
       VMX.VMCS_Read (Field => Constants.VMX_EXIT_REASON,
                      Value => Exit_Status);
@@ -628,12 +631,13 @@ is
                       Trap_Nr         => Exit_Status);
       end if;
 
-      Inject_Event
-        (Subject_Id => CPU_Global.Get_Current_Minor_Frame.Subject_Id);
+      Current_Subject := CPU_Global.Get_Current_Subject_ID;
+
+      Inject_Event (Subject_Id => Current_Subject);
 
       Set_VMX_Exit_Timer;
       Subjects.Restore_State
-        (Id   => CPU_Global.Get_Current_Minor_Frame.Subject_Id,
+        (Id   => Current_Subject,
          GPRs => Subject_Registers);
    end Handle_Vmx_Exit;
 

@@ -63,4 +63,24 @@ __scheduling_plans__);
    Major_Frames : constant Major_Frame_Info_Array := Major_Frame_Info_Array'(
 __major_frames_info__);
 
+   --  Returns the barrier index of the specified minor frame for the given
+   --  major frame and CPU identified by ID.
+   function Get_Barrier
+     (CPU_ID   : CPU_Range;
+      Major_ID : Major_Frame_Range;
+      Minor_ID : Minor_Frame_Range)
+      return Barrier_Index_Range
+   is
+     (Scheduling_Plans (CPU_ID)(Major_ID).Minor_Frames (Minor_ID).Barrier);
+
+   --  Returns the deadline of the specified minor frame for the given major
+   --  frame and CPU identified by ID.
+   function Get_Deadline
+     (CPU_ID   : CPU_Range;
+      Major_ID : Major_Frame_Range;
+      Minor_ID : Minor_Frame_Range)
+      return SK.Word64
+   is
+     (Scheduling_Plans (CPU_ID)(Major_ID).Minor_Frames (Minor_ID).Deadline);
+
 end Skp.Scheduling;

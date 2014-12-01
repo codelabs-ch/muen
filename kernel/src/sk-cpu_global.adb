@@ -36,6 +36,10 @@ is
       Current_Minor_Frame : Skp.Scheduling.Minor_Frame_Range;
    end record;
 
+   Null_Storage : constant Storage_Type := Storage_Type'
+     (Scheduling_Groups   => (others => Skp.Subject_Id_Type'First),
+      Current_Minor_Frame => Skp.Scheduling.Minor_Frame_Range'First);
+
    pragma $Build_Warnings (Off, "* bits of ""Per_CPU_Storage"" unused");
    Per_CPU_Storage : Storage_Type
    with
@@ -121,13 +125,15 @@ is
    procedure Init
    with
       Refined_Global  => (Output => (Current_Major_Frame, Per_CPU_Storage)),
-      Refined_Depends => ((Current_Major_Frame, Per_CPU_Storage) => null)
+      Refined_Depends => ((Current_Major_Frame, Per_CPU_Storage) => null),
+      Refined_Post    =>
+       Current_Major_Frame = Skp.Scheduling.Major_Frame_Range'First and
+       Per_CPU_Storage     = Null_Storage
+
    is
    begin
       Current_Major_Frame := Skp.Scheduling.Major_Frame_Range'First;
-      Per_CPU_Storage     := Storage_Type'
-        (Scheduling_Groups   => (others => Skp.Subject_Id_Type'First),
-         Current_Minor_Frame => Skp.Scheduling.Minor_Frame_Range'First);
+      Per_CPU_Storage     := Null_Storage;
    end Init;
 
    -------------------------------------------------------------------------

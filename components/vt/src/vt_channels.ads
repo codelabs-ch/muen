@@ -27,11 +27,7 @@ is
    package VT_Channel is new Muchannel
      (Element_Type => Character,
       Elements     => 65472);
-
    package VT_Channel_Rdr is new VT_Channel.Readers (Protocol => 1);
-   package VT_Channel_Wtr is new VT_Channel.Writer
-     (Protocol     => 1,
-      Null_Element => ASCII.NUL);
 
    package Key_Channel is new Muchannel
      (Element_Type => Input.Key_Event_Type,

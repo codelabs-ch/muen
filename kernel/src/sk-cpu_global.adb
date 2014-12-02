@@ -28,12 +28,17 @@ is
    use type Skp.Scheduling.Major_Frame_Array;
    use type Skp.Scheduling.Major_Frame_Range;
    use type Skp.Scheduling.Minor_Frame_Range;
+   use type Skp.Scheduling.Scheduling_Group_Array;
 
    --  Record used to store per-CPU global data.
    type Storage_Type is record
-      Scheduling_Plan     : Skp.Scheduling.Major_Frame_Array;
-      Current_Minor_Frame : Active_Minor_Frame_Type;
+      Scheduling_Groups   : Skp.Scheduling.Scheduling_Group_Array;
+      Current_Minor_Frame : Skp.Scheduling.Minor_Frame_Range;
    end record;
+
+   Null_Storage : constant Storage_Type := Storage_Type'
+     (Scheduling_Groups   => (others => Skp.Subject_Id_Type'First),
+      Current_Minor_Frame => Skp.Scheduling.Minor_Frame_Range'First);
 
    pragma $Build_Warnings (Off, "* bits of ""Per_CPU_Storage"" unused");
    Per_CPU_Storage : Storage_Type
@@ -70,54 +75,65 @@ is
 
    -------------------------------------------------------------------------
 
-   function Get_Current_Minor_Frame return Active_Minor_Frame_Type
+   function Get_Current_Minor_Frame_ID return Skp.Scheduling.Minor_Frame_Range
    with
       Refined_Global => (Input => Per_CPU_Storage),
       Refined_Post   =>
-         Get_Current_Minor_Frame'Result = Per_CPU_Storage.Current_Minor_Frame
+       Get_Current_Minor_Frame_ID'Result = Per_CPU_Storage.Current_Minor_Frame
    is
    begin
       return Per_CPU_Storage.Current_Minor_Frame;
-   end Get_Current_Minor_Frame;
+   end Get_Current_Minor_Frame_ID;
 
    -------------------------------------------------------------------------
 
    function Get_Current_Subject_ID return Skp.Subject_Id_Type
    with
-      Refined_Global => (Input => Per_CPU_Storage)
+      Refined_Global => (Input => (Per_CPU_Storage, Current_Major_Frame)),
+      Refined_Post   =>
+       Get_Current_Subject_ID'Result =
+           Per_CPU_Storage.Scheduling_Groups
+             (Skp.Scheduling.Get_Group_ID
+                (CPU_ID   => CPU_ID,
+                 Major_ID => Current_Major_Frame,
+                 Minor_ID => Per_CPU_Storage.Current_Minor_Frame))
    is
    begin
-      return Per_CPU_Storage.Current_Minor_Frame.Subject_Id;
+      return Per_CPU_Storage.Scheduling_Groups
+        (Skp.Scheduling.Get_Group_ID
+           (CPU_ID   => CPU_ID,
+            Major_ID => Current_Major_Frame,
+            Minor_ID => Per_CPU_Storage.Current_Minor_Frame));
    end Get_Current_Subject_ID;
 
    -------------------------------------------------------------------------
 
-   function Get_Minor_Frame
-     (Major_Id : Skp.Scheduling.Major_Frame_Range;
-      Minor_Id : Skp.Scheduling.Minor_Frame_Range)
-      return Skp.Scheduling.Minor_Frame_Type
+   function Get_Subject_ID
+     (Group : Skp.Scheduling.Scheduling_Group_Range)
+      return Skp.Subject_Id_Type
    with
-      Refined_Global => (Input => Per_CPU_Storage)
+      Refined_Global => (Input => Per_CPU_Storage),
+      Refined_Post   =>
+       Get_Subject_ID'Result = Per_CPU_Storage.Scheduling_Groups (Group)
    is
    begin
-      return Per_CPU_Storage.Scheduling_Plan
-        (Major_Id).Minor_Frames (Minor_Id);
-   end Get_Minor_Frame;
+      return Per_CPU_Storage.Scheduling_Groups (Group);
+   end Get_Subject_ID;
 
    -------------------------------------------------------------------------
 
    procedure Init
    with
       Refined_Global  => (Output => (Current_Major_Frame, Per_CPU_Storage)),
-      Refined_Depends => ((Current_Major_Frame, Per_CPU_Storage) => null)
+      Refined_Depends => ((Current_Major_Frame, Per_CPU_Storage) => null),
+      Refined_Post    =>
+       Current_Major_Frame = Skp.Scheduling.Major_Frame_Range'First and
+       Per_CPU_Storage     = Null_Storage
+
    is
    begin
       Current_Major_Frame := Skp.Scheduling.Major_Frame_Range'First;
-      Per_CPU_Storage     := Storage_Type'
-        (Scheduling_Plan     => Skp.Scheduling.Null_Major_Frames,
-         Current_Minor_Frame => Active_Minor_Frame_Type'
-           (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First,
-            Subject_Id => Skp.Subject_Id_Type'First));
+      Per_CPU_Storage     := Null_Storage;
    end Init;
 
    -------------------------------------------------------------------------
@@ -148,52 +164,41 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Set_Current_Minor (Frame : Active_Minor_Frame_Type)
+   procedure Set_Current_Minor_Frame (ID : Skp.Scheduling.Minor_Frame_Range)
    with
       Refined_Global  => (In_Out => Per_CPU_Storage),
-      Refined_Depends => (Per_CPU_Storage =>+ Frame),
-      Refined_Post    => Per_CPU_Storage.Current_Minor_Frame = Frame
+      Refined_Depends => (Per_CPU_Storage =>+ ID),
+      Refined_Post    => Per_CPU_Storage.Current_Minor_Frame = ID
    is
    begin
-      Per_CPU_Storage.Current_Minor_Frame := Frame;
-   end Set_Current_Minor;
+      Per_CPU_Storage.Current_Minor_Frame := ID;
+   end Set_Current_Minor_Frame;
 
    -------------------------------------------------------------------------
 
-   procedure Set_Scheduling_Plan (Data : Skp.Scheduling.Major_Frame_Array)
+   procedure Set_Scheduling_Groups
+     (Data : Skp.Scheduling.Scheduling_Group_Array)
    with
       Refined_Global  => (In_Out => Per_CPU_Storage),
       Refined_Depends => (Per_CPU_Storage =>+ Data),
-      Refined_Post    => Per_CPU_Storage.Scheduling_Plan = Data
+      Refined_Post    => Per_CPU_Storage.Scheduling_Groups = Data
    is
    begin
-      Per_CPU_Storage.Scheduling_Plan := Data;
-   end Set_Scheduling_Plan;
+      Per_CPU_Storage.Scheduling_Groups := Data;
+   end Set_Scheduling_Groups;
 
    -------------------------------------------------------------------------
 
-   procedure Swap_Subject
-     (Old_Id : Skp.Subject_Id_Type;
-      New_Id : Skp.Subject_Id_Type)
-     with
-        Refined_Global  => (In_Out => Per_CPU_Storage),
-        Refined_Depends => (Per_CPU_Storage =>+ (Old_Id, New_Id))
+   procedure Set_Subject_ID
+     (Group      : Skp.Scheduling.Scheduling_Group_Range;
+      Subject_ID : Skp.Subject_Id_Type)
+   with
+      Refined_Global  => (In_Out => Per_CPU_Storage),
+      Refined_Depends => (Per_CPU_Storage =>+ (Group, Subject_ID)),
+      Refined_Post    => Per_CPU_Storage.Scheduling_Groups (Group) = Subject_ID
    is
    begin
-      for I in Skp.Scheduling.Major_Frame_Range loop
-         for J in Skp.Scheduling.Minor_Frame_Range loop
-            if Per_CPU_Storage.Scheduling_Plan (I).Minor_Frames
-              (J).Subject_Id = Old_Id
-            then
-               Per_CPU_Storage.Scheduling_Plan (I).Minor_Frames
-                 (J).Subject_Id := New_Id;
-            end if;
-         end loop;
-      end loop;
-
-      if Per_CPU_Storage.Current_Minor_Frame.Subject_Id = Old_Id then
-         Per_CPU_Storage.Current_Minor_Frame.Subject_Id := New_Id;
-      end if;
-   end Swap_Subject;
+      Per_CPU_Storage.Scheduling_Groups (Group):= Subject_ID;
+   end Set_Subject_ID;
 
 end SK.CPU_Global;

@@ -93,21 +93,24 @@ is
 
    -------------------------------------------------------------------------
 
-   --  Perform subject handover from the old to the new subject.
+   --  Perform subject handover from the currently active to the new subject.
    procedure Subject_Handover
-     (Old_Id   : Skp.Subject_Id_Type;
-      New_Id   : Skp.Subject_Id_Type;
+     (New_Id   : Skp.Subject_Id_Type;
       New_VMCS : SK.Word64)
    with
       Global  => (In_Out => (CPU_Global.State, X86_64.State)),
-      Depends => (CPU_Global.State =>+ (New_Id, Old_Id),
-                  X86_64.State     =>+ New_VMCS),
-      Pre     =>  Old_Id /= New_Id
+      Depends => (CPU_Global.State =>+ New_Id,
+                  X86_64.State     =>+ New_VMCS)
    is
+      Current_Sched_Group : constant Skp.Scheduling.Scheduling_Group_Range
+        := Skp.Scheduling.Get_Group_ID
+          (CPU_ID   => CPU_Global.CPU_ID,
+           Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
+           Minor_ID => CPU_Global.Get_Current_Minor_Frame_ID);
    begin
-      CPU_Global.Swap_Subject
-        (Old_Id => Old_Id,
-         New_Id => New_Id);
+      CPU_Global.Set_Subject_ID
+        (Group      => Current_Sched_Group,
+         Subject_ID => New_Id);
 
       VMX.Load (VMCS_Address => New_VMCS);
    end Subject_Handover;
@@ -128,24 +131,24 @@ is
          In_Out => (CPU_Global.State, Events.State, Major_Frame_Start,
                     MP.Barrier, X86_64.State)),
       Depends =>
-        (Major_Frame_Start =>+ CPU_Global.State,
-         (CPU_Global.State, Events.State, MP.Barrier,
-          X86_64.State)    =>+ (CPU_Global.State, New_Major))
+        (Major_Frame_Start  =>+ CPU_Global.State,
+         (CPU_Global.State,
+          Events.State,
+          MP.Barrier,
+          X86_64.State)     =>+ (CPU_Global.State, New_Major))
    is
       use type Skp.Scheduling.Barrier_Index_Range;
 
-      Current_Major_ID : Skp.Scheduling.Major_Frame_Range;
-      Minor_Frame      : CPU_Global.Active_Minor_Frame_Type;
-      Plan_Frame       : Skp.Scheduling.Minor_Frame_Type;
+      Current_Subject_ID : Skp.Subject_Id_Type;
+      Current_Major_ID   : Skp.Scheduling.Major_Frame_Range;
+      Current_Minor_ID   : Skp.Scheduling.Minor_Frame_Range;
+      Next_Minor_Frame   : Skp.Scheduling.Minor_Frame_Range;
    begin
-      Current_Major_ID := CPU_Global.Get_Current_Major_Frame_ID;
+      Current_Subject_ID := CPU_Global.Get_Current_Subject_ID;
+      Current_Major_ID   := CPU_Global.Get_Current_Major_Frame_ID;
+      Current_Minor_ID   := CPU_Global.Get_Current_Minor_Frame_ID;
 
-      pragma $Prove_Warnings (Off, "statement has no effect",
-                              Reason => "False positive of GPL 2014");
-      Minor_Frame := CPU_Global.Get_Current_Minor_Frame;
-      pragma $Prove_Warnings (On, "statement has no effect");
-
-      if Minor_Frame.Minor_Id < CPU_Global.Get_Current_Major_Length then
+      if Current_Minor_ID < CPU_Global.Get_Current_Major_Length then
 
          --  Sync on minor frame barrier if necessary and switch to next minor
          --  frame in current major frame.
@@ -155,19 +158,19 @@ is
               := Skp.Scheduling.Get_Barrier
                 (CPU_ID   => CPU_Global.CPU_ID,
                  Major_ID => Current_Major_ID,
-                 Minor_ID => Minor_Frame.Minor_Id);
+                 Minor_ID => Current_Minor_ID);
          begin
             if Current_Barrier /= Skp.Scheduling.No_Barrier then
                MP.Wait_On_Minor_Frame_Barrier (Index => Current_Barrier);
             end if;
          end;
 
-         Minor_Frame.Minor_Id := Minor_Frame.Minor_Id + 1;
+         Next_Minor_Frame := Current_Minor_ID + 1;
       else
 
          --  Switch to first minor frame in next major frame.
 
-         Minor_Frame.Minor_Id := Skp.Scheduling.Minor_Frame_Range'First;
+         Next_Minor_Frame := Skp.Scheduling.Minor_Frame_Range'First;
 
          MP.Wait_For_All;
          if CPU_Global.Is_BSP then
@@ -197,30 +200,31 @@ is
          MP.Wait_For_All;
       end if;
 
-      pragma $Prove_Warnings (Off, "statement has no effect",
-                              Reason => "False positive");
-      Plan_Frame := CPU_Global.Get_Minor_Frame
-        (Major_Id => Current_Major_ID,
-         Minor_Id => Minor_Frame.Minor_Id);
-      pragma $Prove_Warnings (On, "statement has no effect");
+      declare
+         Next_Subject : constant Skp.Subject_Id_Type
+           := CPU_Global.Get_Subject_ID
+             (Group => Skp.Scheduling.Get_Group_ID
+                (CPU_ID   => CPU_Global.CPU_ID,
+                 Major_ID => Current_Major_ID,
+                 Minor_ID => Next_Minor_Frame));
+      begin
+         if Current_Subject_ID /= Next_Subject then
 
-      if Plan_Frame.Subject_Id /= Minor_Frame.Subject_Id then
+            --  New minor frame contains different subject -> Load VMCS.
 
-         --  New minor frame contains different subject -> Load VMCS.
+            VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
+                      (Subject_Id => Next_Subject));
+         end if;
 
-         VMX.Load (VMCS_Address => Skp.Subjects.Get_VMCS_Address
-                   (Subject_Id => Plan_Frame.Subject_Id));
-      end if;
+         CPU_Global.Set_Current_Minor_Frame (ID => Next_Minor_Frame);
 
-      Minor_Frame.Subject_Id := Plan_Frame.Subject_Id;
-      CPU_Global.Set_Current_Minor (Frame => Minor_Frame);
-
-      if Skp.Subjects.Get_Profile
-        (Subject_Id => Minor_Frame.Subject_Id) = Skp.Subjects.Vm
-      then
-         Events.Insert_Event (Subject => Minor_Frame.Subject_Id,
-                              Event   => SK.Constants.Timer_Vector);
-      end if;
+         if Skp.Subjects.Get_Profile
+           (Subject_Id => Next_Subject) = Skp.Subjects.Vm
+         then
+            Events.Insert_Event (Subject => Next_Subject,
+                                 Event   => SK.Constants.Timer_Vector);
+         end if;
+      end;
    end Update_Scheduling_Info;
 
    -------------------------------------------------------------------------
@@ -245,7 +249,7 @@ is
       Deadline := Major_Frame_Start + Skp.Scheduling.Get_Deadline
         (CPU_ID   => CPU_Global.CPU_ID,
          Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
-         Minor_ID => CPU_Global.Get_Current_Minor_Frame.Minor_Id);
+         Minor_ID => CPU_Global.Get_Current_Minor_Frame_ID);
 
       if Deadline > Now then
          Cycles := Deadline - Now;
@@ -273,27 +277,15 @@ is
           X86_64.State)      =>+ (CPU_Global.State, Interrupts.State,
                                   X86_64.State))
    is
-      Plan_Frame        : Skp.Scheduling.Minor_Frame_Type;
-      Initial_VMCS_Addr : SK.Word64 := 0;
-      Controls          : Skp.Subjects.VMX_Controls_Type;
-      VMCS_Addr         : SK.Word64;
+      Initial_Subject_ID : Skp.Subject_Id_Type;
+      Initial_VMCS_Addr  : SK.Word64 := 0;
+      Controls           : Skp.Subjects.VMX_Controls_Type;
+      VMCS_Addr          : SK.Word64;
    begin
-      CPU_Global.Set_Scheduling_Plan
-        (Data => Skp.Scheduling.Scheduling_Plans (CPU_Global.CPU_ID));
+      CPU_Global.Set_Scheduling_Groups
+        (Data => Skp.Scheduling.Scheduling_Groups);
 
-      --  Set initial active minor frame.
-
-      pragma $Prove_Warnings (Off, "statement has no effect",
-                              Reason => "False positive");
-      Plan_Frame := CPU_Global.Get_Minor_Frame
-        (Major_Id => Skp.Scheduling.Major_Frame_Range'First,
-         Minor_Id => Skp.Scheduling.Minor_Frame_Range'First);
-      pragma $Prove_Warnings (On, "statement has no effect");
-
-      CPU_Global.Set_Current_Minor
-        (Frame => CPU_Global.Active_Minor_Frame_Type'
-           (Minor_Id   => Skp.Scheduling.Minor_Frame_Range'First,
-            Subject_Id => Plan_Frame.Subject_Id));
+      Initial_Subject_ID := CPU_Global.Get_Current_Subject_ID;
 
       --  Setup VMCS and state of subjects running on this logical CPU.
 
@@ -339,7 +331,7 @@ is
                CR4_Value    => Skp.Subjects.Get_CR4 (Subject_Id => I),
                CS_Access    => Skp.Subjects.Get_CS_Access (Subject_Id => I));
 
-            if Plan_Frame.Subject_Id = I then
+            if Initial_Subject_ID = I then
                Initial_VMCS_Addr := VMCS_Addr;
             end if;
 
@@ -387,8 +379,9 @@ is
                     X86_64.State)),
       Depends =>
         ((CPU_Global.State,
-          Events.State, X86_64.State) =>+ (Current_Subject, Event_Nr),
-         Subjects.State               =>+ Current_Subject)
+          Events.State,
+          X86_64.State) =>+ (Current_Subject, Event_Nr),
+         Subjects.State =>+ Current_Subject)
    is
       Event       : Skp.Subjects.Event_Entry_Type;
       Dst_CPU     : Skp.CPU_Range;
@@ -417,8 +410,7 @@ is
 
             if Event.Handover then
                Subject_Handover
-                 (Old_Id   => Current_Subject,
-                  New_Id   => Event.Dst_Subject,
+                 (New_Id   => Event.Dst_Subject,
                   New_VMCS => Skp.Subjects.Get_VMCS_Address
                     (Subject_Id => Event.Dst_Subject));
             end if;
@@ -485,8 +477,9 @@ is
       Global  =>
         (In_Out => (CPU_Global.State, Events.State, X86_64.State)),
       Depends =>
-        ((CPU_Global.State, Events.State, X86_64.State) =>+
-            (Current_Subject, Trap_Nr))
+        ((CPU_Global.State,
+          Events.State,
+          X86_64.State) =>+ (Current_Subject, Trap_Nr))
    is
       Trap_Entry : Skp.Subjects.Trap_Entry_Type;
 
@@ -547,11 +540,9 @@ is
       --  Handover to trap handler subject.
 
       Subject_Handover
-        (Old_Id   => Current_Subject,
-         New_Id   => Trap_Entry.Dst_Subject,
+        (New_Id   => Trap_Entry.Dst_Subject,
          New_VMCS => Skp.Subjects.Get_VMCS_Address
            (Subject_Id => Trap_Entry.Dst_Subject));
-
    end Handle_Trap;
 
    -------------------------------------------------------------------------

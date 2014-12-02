@@ -80,40 +80,48 @@ is
    is
       use type Interfaces.Unsigned_64;
 
-      Subjects     : constant DOM.Core.Node_List
+      Subjects      : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Policy.Doc,
            XPath => "/system/subjects/subject");
-      Scheduling   : constant DOM.Core.Node := Muxml.Utils.Get_Element
+      Subject_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Subjects);
+      Scheduling    : constant DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
          XPath => "/system/scheduling");
-      Processor    : constant DOM.Core.Node := Muxml.Utils.Get_Element
+      Processor     : constant DOM.Core.Node := Muxml.Utils.Get_Element
         (Doc   => Policy.Doc,
          XPath => "/system/platform/processor");
-      CPU_Speed_Hz : constant Interfaces.Unsigned_64
+      CPU_Speed_Hz  : constant Interfaces.Unsigned_64
         := 1_000_000 * Interfaces.Unsigned_64'Value
           (DOM.Core.Elements.Get_Attribute
              (Elem => Processor,
               Name => "speed"));
-      Timer_Rate   : constant Natural
+      Timer_Rate    : constant Natural
         := Natural'Value
           (DOM.Core.Elements.Get_Attribute (Elem => Processor,
                                             Name => "vmxTimerRate"));
-      Timer_Factor : constant Interfaces.Unsigned_64
+      Timer_Factor  : constant Interfaces.Unsigned_64
         := CPU_Speed_Hz / Interfaces.Unsigned_64'Value
           (DOM.Core.Elements.Get_Attribute
              (Elem => Scheduling,
               Name => "tickRate"));
-      CPU_Count    : constant Natural
+      CPU_Count     : constant Natural
         := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Policy);
 
-      Major_Count       : Positive;
-      Max_Minor_Count   : Positive;
-      Max_Barrier_Count : Natural;
-      Majors            : DOM.Core.Node_List;
-      Buffer            : Unbounded_String;
-      Major_Info_Buffer : Unbounded_String;
-      Tmpl              : Mutools.Templates.Template_Type;
+      Major_Count        : Positive;
+      Max_Minor_Count    : Positive;
+      Max_Barrier_Count  : Natural;
+      Majors             : DOM.Core.Node_List;
+      Buffer             : Unbounded_String;
+      Major_Info_Buffer  : Unbounded_String;
+      Sched_Group_Buffer : Unbounded_String;
+      Tmpl               : Mutools.Templates.Template_Type;
+
+      No_Group            : constant Natural := 0;
+      Next_Free_Group_ID  : Positive         := 1;
+      Subject_To_Group_ID : array (0 .. Subject_Count - 1) of Natural
+        := (others => No_Group);
 
       --  Returns the maximum count of barriers per major frame.
       function Get_Max_Barrier_Count (Schedule : DOM.Core.Node) return Natural;
@@ -312,21 +320,32 @@ is
          Subject    : constant String := DOM.Core.Elements.Get_Attribute
            (Elem => Minor,
             Name => "subject");
-         Subject_Id : constant String := Muxml.Utils.Get_Attribute
-           (Nodes     => Subjects,
-            Ref_Attr  => "name",
-            Ref_Value => Subject,
-            Attr_Name => "id");
+         Subject_Id : constant Natural
+           := Natural'Value
+             (Muxml.Utils.Get_Attribute
+                (Nodes     => Subjects,
+                 Ref_Attr  => "name",
+                 Ref_Value => Subject,
+                 Attr_Name => "id"));
       begin
+         if Subject_To_Group_ID (Subject_Id) = No_Group then
+
+            --  Subject belongs to new scheduling group.
+
+            Subject_To_Group_ID (Subject_Id) := Next_Free_Group_ID;
+            Next_Free_Group_ID := Next_Free_Group_ID + 1;
+         end if;
+
          Cycles_Count := Cycles_Count + Ticks;
 
          Buffer := Buffer & Indent (N => 4) & Index'Img
-           & " => Minor_Frame_Type'(Subject_Id => " & Subject_Id
+           & " => Minor_Frame_Type'(Group_ID =>"
+           & Subject_To_Group_ID (Subject_Id)'Img
            & "," & ASCII.LF;
-         Buffer := Buffer & Indent (N => 12) & "Barrier    => "
+         Buffer := Buffer & Indent (N => 12) & "Barrier  => "
            & (if Barrier = "none" then "No_Barrier" else Barrier)
            & "," & ASCII.LF;
-         Buffer := Buffer & Indent (N => 12) & "Deadline   =>"
+         Buffer := Buffer & Indent (N => 12) & "Deadline =>"
            & Cycles_Count'Img & ")";
       end Write_Minor_Frame;
    begin
@@ -399,8 +418,39 @@ is
          end loop;
       end;
 
+      declare
+         Last_Group_ID     : constant Natural := Next_Free_Group_ID - 1;
+         Scheduling_Groups : array (1 .. Last_Group_ID) of Natural;
+      begin
+
+         --  Create reverse group ID to subject ID mapping.
+
+         for I in Subject_To_Group_ID'Range loop
+            declare
+               Group_ID : constant Natural := Subject_To_Group_ID (I);
+            begin
+               if Group_ID /= No_Group then
+                  Scheduling_Groups (Group_ID) := I;
+               end if;
+            end;
+         end loop;
+
+         for I in Scheduling_Groups'Range loop
+            Sched_Group_Buffer := Sched_Group_Buffer & Indent (N => 3)
+                 & I'Img & " =>" & Scheduling_Groups (I)'Img;
+
+               if I < Last_Group_ID then
+                  Sched_Group_Buffer := Sched_Group_Buffer & "," & ASCII.LF;
+               end if;
+         end loop;
+      end;
+
       Tmpl := Mutools.Templates.Create
         (Content => String_Templates.skp_scheduling_ads);
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__scheduling_group_range__",
+         Content  => "1 .." & Natural'Image (Next_Free_Group_ID - 1));
       Mutools.Templates.Replace
         (Template => Tmpl,
          Pattern  => "__minor_range__",
@@ -429,6 +479,10 @@ is
          Content  => Ada.Strings.Fixed.Trim
            (Source => Timer_Rate'Img,
             Side   => Ada.Strings.Left));
+      Mutools.Templates.Replace
+        (Template => Tmpl,
+         Pattern  => "__scheduling_groups__",
+         Content  => To_String (Sched_Group_Buffer));
 
       Mutools.Templates.Write
         (Template => Tmpl,

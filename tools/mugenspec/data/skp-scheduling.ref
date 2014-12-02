@@ -5,6 +5,8 @@ is
 
    VMX_Timer_Rate : constant := 5;
 
+   type Scheduling_Group_Range is range 1 .. 3;
+
    type Barrier_Index_Range is range 0 .. 3;
 
    subtype Barrier_Range is
@@ -13,15 +15,15 @@ is
    No_Barrier : constant Barrier_Index_Range := Barrier_Index_Range'First;
 
    type Minor_Frame_Type is record
-      Subject_Id : Skp.Subject_Id_Type;
-      Barrier    : Barrier_Index_Range;
-      Deadline   : SK.Word64;
+      Group_ID : Scheduling_Group_Range;
+      Barrier  : Barrier_Index_Range;
+      Deadline : SK.Word64;
    end record;
 
    Null_Minor_Frame : constant Minor_Frame_Type := Minor_Frame_Type'
-     (Subject_Id => 0,
-      Barrier    => No_Barrier,
-      Deadline   => 0);
+     (Group_ID => Scheduling_Group_Range'First,
+      Barrier  => No_Barrier,
+      Deadline => 0);
 
    type Minor_Frame_Range is range 1 .. 9;
 
@@ -49,96 +51,96 @@ is
        0 => Major_Frame_Type'
          (Length       => 1,
           Minor_Frames => Minor_Frame_Array'(
-             1 => Minor_Frame_Type'(Subject_Id => 0,
-                                    Barrier    => No_Barrier,
-                                    Deadline   => 4930000000),
+             1 => Minor_Frame_Type'(Group_ID => 1,
+                                    Barrier  => No_Barrier,
+                                    Deadline => 4930000000),
              others => Null_Minor_Frame)),
        1 => Major_Frame_Type'
          (Length       => 4,
           Minor_Frames => Minor_Frame_Array'(
-             1 => Minor_Frame_Type'(Subject_Id => 0,
-                                    Barrier    => No_Barrier,
-                                    Deadline   => 1450000000),
-             2 => Minor_Frame_Type'(Subject_Id => 2,
-                                    Barrier    => 1,
-                                    Deadline   => 2900000000),
-             3 => Minor_Frame_Type'(Subject_Id => 0,
-                                    Barrier    => No_Barrier,
-                                    Deadline   => 4350000000),
-             4 => Minor_Frame_Type'(Subject_Id => 2,
-                                    Barrier    => No_Barrier,
-                                    Deadline   => 4930000000),
+             1 => Minor_Frame_Type'(Group_ID => 1,
+                                    Barrier  => No_Barrier,
+                                    Deadline => 1450000000),
+             2 => Minor_Frame_Type'(Group_ID => 2,
+                                    Barrier  => 1,
+                                    Deadline => 2900000000),
+             3 => Minor_Frame_Type'(Group_ID => 1,
+                                    Barrier  => No_Barrier,
+                                    Deadline => 4350000000),
+             4 => Minor_Frame_Type'(Group_ID => 2,
+                                    Barrier  => No_Barrier,
+                                    Deadline => 4930000000),
              others => Null_Minor_Frame)),
        2 => Major_Frame_Type'
          (Length       => 6,
           Minor_Frames => Minor_Frame_Array'(
-             1 => Minor_Frame_Type'(Subject_Id => 0,
-                                    Barrier    => 1,
-                                    Deadline   => 870000000),
-             2 => Minor_Frame_Type'(Subject_Id => 2,
-                                    Barrier    => 2,
-                                    Deadline   => 1450000000),
-             3 => Minor_Frame_Type'(Subject_Id => 0,
-                                    Barrier    => No_Barrier,
-                                    Deadline   => 1595000000),
-             4 => Minor_Frame_Type'(Subject_Id => 2,
-                                    Barrier    => No_Barrier,
-                                    Deadline   => 1812500000),
-             5 => Minor_Frame_Type'(Subject_Id => 0,
-                                    Barrier    => 3,
-                                    Deadline   => 2030000000),
-             6 => Minor_Frame_Type'(Subject_Id => 2,
-                                    Barrier    => No_Barrier,
-                                    Deadline   => 2610000000),
+             1 => Minor_Frame_Type'(Group_ID => 1,
+                                    Barrier  => 1,
+                                    Deadline => 870000000),
+             2 => Minor_Frame_Type'(Group_ID => 2,
+                                    Barrier  => 2,
+                                    Deadline => 1450000000),
+             3 => Minor_Frame_Type'(Group_ID => 1,
+                                    Barrier  => No_Barrier,
+                                    Deadline => 1595000000),
+             4 => Minor_Frame_Type'(Group_ID => 2,
+                                    Barrier  => No_Barrier,
+                                    Deadline => 1812500000),
+             5 => Minor_Frame_Type'(Group_ID => 1,
+                                    Barrier  => 3,
+                                    Deadline => 2030000000),
+             6 => Minor_Frame_Type'(Group_ID => 2,
+                                    Barrier  => No_Barrier,
+                                    Deadline => 2610000000),
              others => Null_Minor_Frame))),
      1 => Major_Frame_Array'(
        0 => Major_Frame_Type'
          (Length       => 1,
           Minor_Frames => Minor_Frame_Array'(
-             1 => Minor_Frame_Type'(Subject_Id => 1,
-                                    Barrier    => No_Barrier,
-                                    Deadline   => 4930000000),
+             1 => Minor_Frame_Type'(Group_ID => 3,
+                                    Barrier  => No_Barrier,
+                                    Deadline => 4930000000),
              others => Null_Minor_Frame)),
        1 => Major_Frame_Type'
          (Length       => 2,
           Minor_Frames => Minor_Frame_Array'(
-             1 => Minor_Frame_Type'(Subject_Id => 1,
-                                    Barrier    => 1,
-                                    Deadline   => 2900000000),
-             2 => Minor_Frame_Type'(Subject_Id => 1,
-                                    Barrier    => No_Barrier,
-                                    Deadline   => 4930000000),
+             1 => Minor_Frame_Type'(Group_ID => 3,
+                                    Barrier  => 1,
+                                    Deadline => 2900000000),
+             2 => Minor_Frame_Type'(Group_ID => 3,
+                                    Barrier  => No_Barrier,
+                                    Deadline => 4930000000),
              others => Null_Minor_Frame)),
        2 => Major_Frame_Type'
          (Length       => 9,
           Minor_Frames => Minor_Frame_Array'(
-             1 => Minor_Frame_Type'(Subject_Id => 1,
-                                    Barrier    => No_Barrier,
-                                    Deadline   => 290000000),
-             2 => Minor_Frame_Type'(Subject_Id => 1,
-                                    Barrier    => No_Barrier,
-                                    Deadline   => 580000000),
-             3 => Minor_Frame_Type'(Subject_Id => 1,
-                                    Barrier    => 1,
-                                    Deadline   => 870000000),
-             4 => Minor_Frame_Type'(Subject_Id => 1,
-                                    Barrier    => No_Barrier,
-                                    Deadline   => 1160000000),
-             5 => Minor_Frame_Type'(Subject_Id => 1,
-                                    Barrier    => 2,
-                                    Deadline   => 1450000000),
-             6 => Minor_Frame_Type'(Subject_Id => 1,
-                                    Barrier    => No_Barrier,
-                                    Deadline   => 1740000000),
-             7 => Minor_Frame_Type'(Subject_Id => 1,
-                                    Barrier    => 3,
-                                    Deadline   => 2030000000),
-             8 => Minor_Frame_Type'(Subject_Id => 1,
-                                    Barrier    => No_Barrier,
-                                    Deadline   => 2320000000),
-             9 => Minor_Frame_Type'(Subject_Id => 1,
-                                    Barrier    => No_Barrier,
-                                    Deadline   => 2610000000)))));
+             1 => Minor_Frame_Type'(Group_ID => 3,
+                                    Barrier  => No_Barrier,
+                                    Deadline => 290000000),
+             2 => Minor_Frame_Type'(Group_ID => 3,
+                                    Barrier  => No_Barrier,
+                                    Deadline => 580000000),
+             3 => Minor_Frame_Type'(Group_ID => 3,
+                                    Barrier  => 1,
+                                    Deadline => 870000000),
+             4 => Minor_Frame_Type'(Group_ID => 3,
+                                    Barrier  => No_Barrier,
+                                    Deadline => 1160000000),
+             5 => Minor_Frame_Type'(Group_ID => 3,
+                                    Barrier  => 2,
+                                    Deadline => 1450000000),
+             6 => Minor_Frame_Type'(Group_ID => 3,
+                                    Barrier  => No_Barrier,
+                                    Deadline => 1740000000),
+             7 => Minor_Frame_Type'(Group_ID => 3,
+                                    Barrier  => 3,
+                                    Deadline => 2030000000),
+             8 => Minor_Frame_Type'(Group_ID => 3,
+                                    Barrier  => No_Barrier,
+                                    Deadline => 2320000000),
+             9 => Minor_Frame_Type'(Group_ID => 3,
+                                    Barrier  => No_Barrier,
+                                    Deadline => 2610000000)))));
 
    subtype Barrier_Size_Type is
      Natural range 1 .. Natural (Skp.CPU_Range'Last + 1);
@@ -189,5 +191,24 @@ is
       return SK.Word64
    is
      (Scheduling_Plans (CPU_ID)(Major_ID).Minor_Frames (Minor_ID).Deadline);
+
+   --  Returns the scheduling group ID of the specified minor frame for the
+   --  given major frame and CPU identified by ID.
+   function Get_Group_ID
+     (CPU_ID   : CPU_Range;
+      Major_ID : Major_Frame_Range;
+      Minor_ID : Minor_Frame_Range)
+      return Scheduling_Group_Range
+   is
+     (Scheduling_Plans (CPU_ID)(Major_ID).Minor_Frames (Minor_ID).Group_ID);
+
+   type Scheduling_Group_Array is array (Scheduling_Group_Range)
+     of Subject_Id_Type;
+
+   Scheduling_Groups : constant Scheduling_Group_Array
+     := Scheduling_Group_Array'(
+          1 => 0,
+          2 => 2,
+          3 => 1);
 
 end Skp.Scheduling;

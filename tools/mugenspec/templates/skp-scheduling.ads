@@ -5,6 +5,8 @@ is
 
    VMX_Timer_Rate : constant := __vmx_timer_rate__;
 
+   type Scheduling_Group_Range is range __scheduling_group_range__;
+
    type Barrier_Index_Range is range 0 .. __max_barrier_count__;
 
    subtype Barrier_Range is
@@ -13,15 +15,15 @@ is
    No_Barrier : constant Barrier_Index_Range := Barrier_Index_Range'First;
 
    type Minor_Frame_Type is record
-      Subject_Id : Skp.Subject_Id_Type;
-      Barrier    : Barrier_Index_Range;
-      Deadline   : SK.Word64;
+      Group_ID : Scheduling_Group_Range;
+      Barrier  : Barrier_Index_Range;
+      Deadline : SK.Word64;
    end record;
 
    Null_Minor_Frame : constant Minor_Frame_Type := Minor_Frame_Type'
-     (Subject_Id => 0,
-      Barrier    => No_Barrier,
-      Deadline   => 0);
+     (Group_ID => Scheduling_Group_Range'First,
+      Barrier  => No_Barrier,
+      Deadline => 0);
 
    type Minor_Frame_Range is range __minor_range__;
 
@@ -82,5 +84,22 @@ __major_frames_info__);
       return SK.Word64
    is
      (Scheduling_Plans (CPU_ID)(Major_ID).Minor_Frames (Minor_ID).Deadline);
+
+   --  Returns the scheduling group ID of the specified minor frame for the
+   --  given major frame and CPU identified by ID.
+   function Get_Group_ID
+     (CPU_ID   : CPU_Range;
+      Major_ID : Major_Frame_Range;
+      Minor_ID : Minor_Frame_Range)
+      return Scheduling_Group_Range
+   is
+     (Scheduling_Plans (CPU_ID)(Major_ID).Minor_Frames (Minor_ID).Group_ID);
+
+   type Scheduling_Group_Array is array (Scheduling_Group_Range)
+     of Subject_Id_Type;
+
+   Scheduling_Groups : constant Scheduling_Group_Array
+     := Scheduling_Group_Array'(
+__scheduling_groups__);
 
 end Skp.Scheduling;

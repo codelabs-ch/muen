@@ -37,12 +37,6 @@ is
    with
       Post => Is_BSP'Result = (CPU_ID = Skp.CPU_Range'First);
 
-   --  Currently active minor frame.
-   type Active_Minor_Frame_Type is record
-      Minor_Id   : Skp.Scheduling.Minor_Frame_Range;
-      Subject_Id : Skp.Subject_Id_Type;
-   end record;
-
    --  Initialize per-CPU storage.
    procedure Init
    with
@@ -60,19 +54,20 @@ is
    with
       Global  => (Input => State);
 
-   --  Set the currently active minor frame to specified frame.
-   procedure Set_Current_Minor (Frame : Active_Minor_Frame_Type)
+   --  Set the ID of the currently active minor frame to the specified value.
+   procedure Set_Current_Minor_Frame (ID : Skp.Scheduling.Minor_Frame_Range)
    with
       Global  => (In_Out => State),
-      Depends => (State =>+ Frame);
+      Depends => (State =>+ ID);
 
-   --  Returns the currently active minor frame.
-   function Get_Current_Minor_Frame return Active_Minor_Frame_Type
+   --  Returns the ID of the currently active minor frame.
+   function Get_Current_Minor_Frame_ID return Skp.Scheduling.Minor_Frame_Range
    with
       Global  => (Input => State);
 
-   --  Set the per-CPU scheduling plan.
-   procedure Set_Scheduling_Plan (Data : Skp.Scheduling.Major_Frame_Array)
+   --  Set the per-CPU scheduling groups.
+   procedure Set_Scheduling_Groups
+     (Data : Skp.Scheduling.Scheduling_Group_Array)
    with
       Global  => (In_Out => State),
       Depends => (State =>+ Data);
@@ -87,22 +82,21 @@ is
    with
       Global  => (Input => State);
 
-   --  Return scheduling minor frame indexed by major and minor id.
-   function Get_Minor_Frame
-     (Major_Id : Skp.Scheduling.Major_Frame_Range;
-      Minor_Id : Skp.Scheduling.Minor_Frame_Range)
-      return Skp.Scheduling.Minor_Frame_Type
-   with
-      Global  => (Input => State);
-
-   --  Remove subject specified by Old_Id from the scheduling plan and replace
-   --  it with the subject given by New_Id.
-   procedure Swap_Subject
-     (Old_Id : Skp.Subject_Id_Type;
-      New_Id : Skp.Subject_Id_Type)
+   --  Set the currently active subject ID of the specified scheduling group to
+   --  the given value.
+   procedure Set_Subject_ID
+     (Group      : Skp.Scheduling.Scheduling_Group_Range;
+      Subject_ID : Skp.Subject_Id_Type)
    with
       Global  => (In_Out => State),
-      Depends => (State =>+ (Old_Id, New_Id)),
-      Pre     => Old_Id /= New_Id;
+      Depends => (State =>+ (Group, Subject_ID));
+
+   --  Returns the ID of the currently active subject of the specified
+   --  scheduling group.
+   function Get_Subject_ID
+     (Group : Skp.Scheduling.Scheduling_Group_Range)
+      return Skp.Subject_Id_Type
+   with
+      Global  => (Input => State);
 
 end SK.CPU_Global;

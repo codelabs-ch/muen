@@ -174,6 +174,10 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Put_String (Item : String) renames Subject.Text_IO.Put_String;
+
+   -------------------------------------------------------------------------
+
    procedure Put_Value8
      (Message : String;
       Value   : SK.Byte)

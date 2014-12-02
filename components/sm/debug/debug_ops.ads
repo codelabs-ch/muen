@@ -21,6 +21,9 @@ with SK;
 package Debug_Ops
 is
 
+   --  Output given string.
+   procedure Put_String (Item : String);
+
    --  Output given string and append a new line.
    procedure Put_Line (Item : String);
 

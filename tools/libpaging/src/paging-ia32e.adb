@@ -53,6 +53,14 @@ is
       UC => (PAT => False, PCD => True,  PWT => True),
       WP => (PAT => True,  PCD => False, PWT => False));
 
+   --  PAT entry to memory type mapping.
+   Cache_Mapping : constant array (Natural range 0 .. 4) of Caching_Type
+     := (0 => WB,
+         1 => WT,
+         2 => WC,
+         3 => UC,
+         4 => WP);
+
    --  Table entry address range is bits 12 .. 47.
    Address_Mask : constant Interfaces.Unsigned_64 := 16#0000fffffffff000#;
 

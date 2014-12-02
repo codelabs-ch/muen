@@ -15,7 +15,6 @@
 		<state subject="usb_linux" virtualAddress="16#001e_0000#" writable="true"/>
 	</monitor>
 	<component ref="sm">
-		<map logical="console" physical="usb_sm_console"/>
 		<map logical="debuglog" physical="debuglog_subject3"/>
 	</component>
 </subject>

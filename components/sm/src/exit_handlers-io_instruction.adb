@@ -82,9 +82,9 @@ is
       RAX  : constant SK.Word64 := State.Regs.RAX;
       Mask : SK.Word64          := 0;
    begin
-      pragma Debug (Debug_Ops.Put_String (Item => "Port 16#"));
-      pragma Debug (Debug_Ops.Put_Word16 (Item => Info.Port_Number));
-      pragma Debug (Debug_Ops.Put_String (Item => "# ignore "));
+      pragma Debug (Debug, Debug_Ops.Put_String (Item => "Port 16#"));
+      pragma Debug (Debug, Debug_Ops.Put_Word16 (Item => Info.Port_Number));
+      pragma Debug (Debug, Debug_Ops.Put_String (Item => "# ignore "));
 
       case Info.Size is
          when One_Byte  => Mask := 16#ff#;
@@ -97,9 +97,9 @@ is
          State.Regs.RAX := RAX or Mask;
       end if;
 
-      pragma Debug (Info.Direction = Dir_In,
+      pragma Debug (Debug and then Info.Direction = Dir_In,
                     Debug_Ops.Put_Line (Item => "read"));
-      pragma Debug (Info.Direction = Dir_Out,
+      pragma Debug (Debug and then Info.Direction = Dir_Out,
                     Debug_Ops.Put_Value32
                       (Message => "write",
                        Value   => SK.Word32'Mod (RAX and Mask)));

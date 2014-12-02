@@ -25,6 +25,11 @@ with Dbg.Byte_Queue;
 private package Dbg.Buffers
 is
 
+   --  Log buffer range: The dbgserver subject is excluded as it does not need
+   --  a log buffer.
+   subtype Subject_Buffer_Range is Skp.Subject_Id_Type range
+     Skp.Subject_Id_Type'First .. Skp.Subject_Id_Type'Last - 1;
+
    --  Subject log buffers.
    type Buffer_Type is limited private;
 
@@ -48,13 +53,13 @@ private
       Enabled            : Boolean;
    end record;
 
-   type Subject_Buffers_Type is array
-     (Skp.Subject_Id_Type) of Subject_Buffer_Type;
+   type Subject_Buffers_Type is array (Subject_Buffer_Range)
+     of Subject_Buffer_Type;
 
    type Buffer_Type is record
       Subjects     : Subject_Buffers_Type;
       Is_Idle      : Boolean;
-      Last_Subject : Skp.Subject_Id_Type;
+      Last_Subject : Subject_Buffer_Range;
    end record;
 
 end Dbg.Buffers;

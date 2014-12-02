@@ -27,13 +27,11 @@ abstract project Component_Spark is
    Proof_Mode : Proof_Type := external ("proofs", "limited");
 
    Src_Dirs := ("../../common/src", "../src");
-   Extra_Dirs := ();
    Extra_Warning_Switches := ();
    Preprocessor_Switches := ();
 
    case Build_Mode is
       when "debug" =>
-         Extra_Dirs := ("../../common/" & Build_Mode, "../src/" & Build_Mode);
          Preprocessor_Switches :=
            ("-gnateDBuild_Warnings=Warnings",
             "-gnateDProve_Warnings=Ignored_Warnings",
@@ -42,7 +40,6 @@ abstract project Component_Spark is
          Extra_Warning_Switches := Shared.Build_Warning_Switches;
 
       when "release" =>
-         Extra_Dirs := ("../src/" & Build_Mode);
          Preprocessor_Switches :=
            ("-gnateDBuild_Warnings=Warnings",
             "-gnateDProve_Warnings=Ignored_Warnings",
@@ -51,7 +48,6 @@ abstract project Component_Spark is
          Extra_Warning_Switches := Shared.Build_Warning_Switches;
 
       when "prove" =>
-         Extra_Dirs := ("../src/release");
          Preprocessor_Switches :=
            ("-gnateDBuild_Warnings=Debug",
             "-gnateDProve_Warnings=Warnings",

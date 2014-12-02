@@ -18,7 +18,7 @@
 
 with SK.Constants;
 
-with Subject.Text_IO;
+with Debug_Ops;
 
 package body Exit_Handlers.WRMSR
 is
@@ -40,10 +40,9 @@ is
       case MSR is
          when IA32_BIOS_SIGN_ID | IA32_PMC0 => null;
          when others =>
-            pragma Debug (Subject.Text_IO.Put_String
-                          (Item => "Unhandled write access to MSR 16#"));
-            pragma Debug (Subject.Text_IO.Put_Word32 (Item => MSR));
-            pragma Debug (Subject.Text_IO.Put_Line (Item => "#"));
+            pragma Debug (Debug_Ops.Put_Value32
+                          (Message => "Unhandled write access to MSR",
+                           Value   => MSR));
             Halt := True;
       end case;
    end Process;

@@ -15,6 +15,6 @@
 		<state subject="nic_linux" virtualAddress="16#001e_0000#" writable="true"/>
 	</monitor>
 	<component ref="sm">
-		<map logical="console" physical="nic_sm_console"/>
+		<map logical="debuglog" physical="debuglog_subject2"/>
 	</component>
 </subject>

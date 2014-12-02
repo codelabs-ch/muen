@@ -16,8 +16,42 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK;
+
 package Debug_Ops
 is
+
+   --  Output given string.
+   procedure Put_String (Item : String);
+
+   --  Output given string and append a new line.
+   procedure Put_Line (Item : String);
+
+   --  Output given word in hex.
+   procedure Put_Word16 (Item : SK.Word16);
+
+   --  Output given quadword in hex.
+   procedure Put_Word64 (Item : SK.Word64);
+
+   --  Output value in hex with given prepended message and newline.
+   procedure Put_Value8
+     (Message : String;
+      Value   : SK.Byte);
+
+   --  Output value in hex with given prepended message and newline.
+   procedure Put_Value16
+     (Message : String;
+      Value   : SK.Word16);
+
+   --  Output value in hex with given prepended message and newline.
+   procedure Put_Value32
+     (Message : String;
+      Value   : SK.Word32);
+
+   --  Output value in hex with given prepended message and newline.
+   procedure Put_Value64
+     (Message : String;
+      Value   : SK.Word64);
 
    --  Dump subject state before Halt.
    procedure Dump_State;

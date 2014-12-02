@@ -14,8 +14,6 @@
 	<component ref="vt">
 		<map logical="console_1" physical="nic_virtual_console"/>
 		<map logical="console_2" physical="usb_virtual_console"/>
-		<map logical="console_3" physical="nic_sm_console"/>
-		<map logical="console_4" physical="usb_sm_console"/>
 		<map logical="keyboard_1" physical="nic_virtual_keyboard"/>
 		<map logical="keyboard_2" physical="usb_virtual_keyboard"/>
 		<map logical="debuglog" physical="debuglog_subject1"/>

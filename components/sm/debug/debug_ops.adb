@@ -228,4 +228,8 @@ is
       Subject.Text_IO.Put_Line   (Item => "#");
    end Put_Value64;
 
+   -------------------------------------------------------------------------
+
+   procedure Put_Word16 (Item : SK.Word16) renames Subject.Text_IO.Put_Word16;
+
 end Debug_Ops;

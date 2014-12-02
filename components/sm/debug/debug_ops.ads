@@ -27,6 +27,9 @@ is
    --  Output given string and append a new line.
    procedure Put_Line (Item : String);
 
+   --  Output given word in hex.
+   procedure Put_Word16 (Item : SK.Word16);
+
    --  Output value in hex with given prepended message and newline.
    procedure Put_Value8
      (Message : String;

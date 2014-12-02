@@ -8,7 +8,7 @@
 		<memory name="nic_linux|ram" size="16#0f60_0000#" alignment="16#0020_0000#" caching="WB"/>
 		<memory name="usb_linux|ram" size="16#0f60_0000#" alignment="16#0020_0000#" caching="WB"/>
 		<memory name="logbuffer_placeholder0" size="16#0001_0000#" caching="WB"/>
-		<memory name="logbuffer_placeholder" size="16#0005_0000#" caching="WB"/>
+		<memory name="logbuffer_placeholder" size="16#0006_0000#" caching="WB"/>
 	</memory>
 
 	<include href="common_events.xml"/>
@@ -17,7 +17,6 @@
 
 	<subjects>
 		<include href="subject_vt.xml"/>
-		<include href="subject_time.xml"/>
 		<include href="subject_nic_sm.xml"/>
 		<include href="subject_usb_sm.xml"/>
 
@@ -48,7 +47,6 @@
 				</target>
 			</events>
 			<channels>
-				<reader logical="virtual_time" physical="virtual_time" virtualAddress="16#2000#"/>
 				<reader logical="virtual_keyboard" physical="nic_virtual_keyboard" virtualAddress="16#3000#" vector="49"/>
 				<writer logical="virtual_console" physical="nic_virtual_console" virtualAddress="16#4000#" event="1"/>
 			</channels>
@@ -79,7 +77,6 @@
 				</target>
 			</events>
 			<channels>
-				<reader logical="virtual_time" physical="virtual_time" virtualAddress="16#2000#"/>
 				<reader logical="virtual_keyboard" physical="usb_virtual_keyboard" virtualAddress="16#3000#" vector="49"/>
 				<writer logical="virtual_console" physical="usb_virtual_console" virtualAddress="16#4000#" event="1"/>
 			</channels>

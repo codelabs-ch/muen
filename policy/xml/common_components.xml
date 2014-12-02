@@ -2,7 +2,6 @@
 	<component name="dbgserver">
 		<channels>
 			<reader logical="channel_subject1" virtualAddress="16#a001_0000#" size="16#0001_0000#"/>
-			<reader logical="channel_subject2" virtualAddress="16#a002_0000#" size="16#0001_0000#"/>
 		</channels>
 		<binary filename="dbgserver" size="16#0010_0000#" virtualAddress="16#1000#"/>
 	</component>
@@ -17,13 +16,6 @@
 			<writer logical="debuglog" virtualAddress="16#000f_fff0_0000#" size="16#0001_0000#"/>
 		</channels>
 		<binary filename="vt" size="16#0003_0000#" virtualAddress="16#1000#"/>
-	</component>
-	<component name="time">
-		<channels>
-			<writer logical="time" virtualAddress="16#0002_0000#" size="16#1000#"/>
-			<writer logical="debuglog" virtualAddress="16#000f_fff0_0000#" size="16#0001_0000#"/>
-		</channels>
-		<binary filename="time" size="16#0001_4000#" virtualAddress="16#1000#"/>
 	</component>
 	<component name="sm">
 		<channels>

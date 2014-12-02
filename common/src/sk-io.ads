@@ -27,7 +27,8 @@ is
       Value : out SK.Byte)
    with
       Global  => (Input => X86_64.State),
-      Depends => (Value => (Port, X86_64.State));
+      Depends => (Value => (Port, X86_64.State)),
+      Inline_Always;
 
    --  Send byte to given port.
    procedure Outb
@@ -35,7 +36,8 @@ is
       Value : SK.Byte)
    with
       Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ (Port, Value));
+      Depends => (X86_64.State =>+ (Port, Value)),
+      Inline_Always;
 
    --  Send 16-bit word to given port.
    procedure Outw
@@ -43,6 +45,7 @@ is
       Value : SK.Word16)
    with
       Global  => (In_Out => X86_64.State),
-      Depends => (X86_64.State =>+ (Port, Value));
+      Depends => (X86_64.State =>+ (Port, Value)),
+      Inline_Always;
 
 end SK.IO;

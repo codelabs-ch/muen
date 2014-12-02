@@ -18,7 +18,7 @@
 
 with SK.Constants;
 
-with Subject.Text_IO;
+with Debug_Ops;
 
 package body Exit_Handlers.RDMSR
 is
@@ -53,9 +53,9 @@ is
               IA32_PERFEVTSEL1  |
               IA32_PERFEVTSEL2  |
               IA32_PERFEVTSEL3  =>
-            pragma Debug (Subject.Text_IO.Put_String (Item => "RDMSR 16#"));
-            pragma Debug (Subject.Text_IO.Put_Word32 (Item => MSR));
-            pragma Debug (Subject.Text_IO.Put_Line   (Item => "#"));
+            pragma Debug (Debug_Ops.Put_Value32
+                          (Message => "RDMSR",
+                           Value   => MSR));
             State.Regs.RAX := RAX and not 16#ffff_ffff#;
             State.Regs.RDX := RDX and not 16#ffff_ffff#;
          when IA32_MISC_ENABLE =>
@@ -66,10 +66,9 @@ is
             State.Regs.RAX := 16#1800#;
             State.Regs.RDX := 0;
          when others =>
-            pragma Debug (Subject.Text_IO.Put_String
-                          (Item => "Unhandled read access to MSR 16#"));
-            pragma Debug (Subject.Text_IO.Put_Word32 (Item => MSR));
-            pragma Debug (Subject.Text_IO.Put_Line   (Item => "#"));
+            pragma Debug (Debug_Ops.Put_Value32
+                          (Message => "Unhandled read access to MSR",
+                           Value   => MSR));
             Halt := True;
       end case;
    end Process;

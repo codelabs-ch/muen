@@ -55,7 +55,7 @@ is
 begin
    pragma Debug (Subject.Console.Enable_Notification);
    pragma Debug (Subject.Text_IO.Init);
-   pragma Debug (Subject.Text_IO.Put_Line ("SM subject running"));
+   pragma Debug (Debug_Ops.Put_Line (Item => "SM subject running"));
    Interrupts.Initialize;
 
    SK.CPU.Sti;
@@ -86,7 +86,7 @@ begin
       elsif Exit_Reason = SK.Constants.EXIT_REASON_EPT_VIOLATION then
          Exit_Handlers.EPT_Violation.Process (Halt => Dump_And_Halt);
       else
-         pragma Debug (Subject.Text_IO.Put_Line
+         pragma Debug (Debug_Ops.Put_Line
                        (Item => "Unhandled trap for associated subject"));
 
          Dump_And_Halt := True;

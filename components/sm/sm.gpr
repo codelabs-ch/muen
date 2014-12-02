@@ -16,7 +16,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with "../libmuchannel/libmuchannel";
+with "../libdebuglog/libdebuglog";
 
 project Sm extends "../component_spark" is
 

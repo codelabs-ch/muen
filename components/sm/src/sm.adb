@@ -22,9 +22,6 @@ with SK.CPU;
 with SK.Hypercall;
 with SK.Constants;
 
-with Subject.Console;
-with Subject.Text_IO;
-
 with Interrupts;
 with Interrupt_Handler;
 with Subject_Info;
@@ -53,8 +50,6 @@ is
 
    Exit_Reason, RIP, Instruction_Len : SK.Word64;
 begin
-   pragma Debug (Subject.Console.Enable_Notification);
-   pragma Debug (Subject.Text_IO.Init);
    pragma Debug (Debug_Ops.Put_Line (Item => "SM subject running"));
    Interrupts.Initialize;
 

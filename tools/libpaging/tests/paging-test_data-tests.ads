@@ -12,5 +12,8 @@ package Paging.Test_Data.Tests is
    procedure Test_Get_Indexes_9d42e6 (Gnattest_T : in out Test);
    --  paging.ads:60:4:Get_Indexes
 
+   procedure Test_Get_Index_085052 (Gnattest_T : in out Test);
+   --  paging.ads:66:4:Get_Index
+
 end Paging.Test_Data.Tests;
 --  end read only

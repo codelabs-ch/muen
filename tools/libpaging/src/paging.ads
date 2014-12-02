@@ -61,4 +61,11 @@ is
      (Address :     Interfaces.Unsigned_64;
       Indexes : out Table_Index_Array);
 
+   --  Returns the index of a paging structure at a specified paging level that
+   --  is referenced by a given linear address.
+   function Get_Index
+     (Address : Interfaces.Unsigned_64;
+      Level   : Paging_Level)
+      return Entry_Range;
+
 end Paging;

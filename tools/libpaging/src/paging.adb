@@ -50,6 +50,18 @@ is
 
    -------------------------------------------------------------------------
 
+   function Get_Index
+     (Address : Interfaces.Unsigned_64;
+      Level   : Paging_Level)
+      return Entry_Range
+   is
+   begin
+      return Entry_Range
+        ((Address and Level_Map (Level).Mask) / Level_Map (Level).Size);
+   end Get_Index;
+
+   -------------------------------------------------------------------------
+
    procedure Get_Indexes
      (Address :     Interfaces.Unsigned_64;
       Indexes : out Table_Index_Array)

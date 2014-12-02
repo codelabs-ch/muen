@@ -89,6 +89,33 @@ package body Paging.Test_Data.Tests is
    end Test_Get_Indexes;
 --  end read only
 
+
+--  begin read only
+   procedure Test_Get_Index (Gnattest_T : in out Test);
+   procedure Test_Get_Index_085052 (Gnattest_T : in out Test) renames Test_Get_Index;
+--  id:2.2/0850521be1519b4e/Get_Index/1/0/
+   procedure Test_Get_Index (Gnattest_T : in out Test) is
+   --  paging.ads:66:4:Get_Index
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+   begin
+      Assert (Condition => Get_Index (Address => 16#090a_8fef_f000#,
+                                      Level   => 1) = 18,
+              Message   => "PML4 index mismatch");
+      Assert (Condition => Get_Index (Address => 16#090a_8fef_f000#,
+                                      Level   => 2) = 42,
+              Message   => "PDPT index mismatch");
+      Assert (Condition => Get_Index (Address => 16#090a_8fef_f000#,
+                                      Level   => 3) = 127,
+              Message   => "PD index mismatch");
+      Assert (Condition => Get_Index (Address => 16#090a_8fef_f000#,
+                                      Level   => 4) = 255,
+              Message   => "PT index mismatch");
+--  begin read only
+   end Test_Get_Index;
+--  end read only
+
 --  begin read only
 --  id:2.2/02/
 --

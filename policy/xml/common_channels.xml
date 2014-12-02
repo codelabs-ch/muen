@@ -7,4 +7,6 @@
 	<channel name="usb_sm_console" size="16#0001_0000#" hasEvent="ipi"/>
 
 	<channel name="debuglog_subject1" size="16#0001_0000#"/>
+	<channel name="debuglog_subject2" size="16#0001_0000#"/>
+	<channel name="debuglog_subject3" size="16#0001_0000#"/>
 </channels>

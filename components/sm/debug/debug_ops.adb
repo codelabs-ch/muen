@@ -232,4 +232,8 @@ is
 
    procedure Put_Word16 (Item : SK.Word16) renames Subject.Text_IO.Put_Word16;
 
+   -------------------------------------------------------------------------
+
+   procedure Put_Word64 (Item : SK.Word64) renames Subject.Text_IO.Put_Word64;
+
 end Debug_Ops;

@@ -30,6 +30,9 @@ is
    --  Output given word in hex.
    procedure Put_Word16 (Item : SK.Word16);
 
+   --  Output given quadword in hex.
+   procedure Put_Word64 (Item : SK.Word64);
+
    --  Output value in hex with given prepended message and newline.
    procedure Put_Value8
      (Message : String;

@@ -20,7 +20,7 @@ with Ada.Unchecked_Conversion;
 
 with SK;
 
-with Subject.Text_IO;
+with Debug_Ops;
 
 package body Exit_Handlers.IO_Instruction
 is
@@ -82,9 +82,9 @@ is
       RAX  : constant SK.Word64 := State.Regs.RAX;
       Mask : SK.Word64          := 0;
    begin
-      pragma Debug (Subject.Text_IO.Put_Word16
-                    (Item => Info.Port_Number));
-      pragma Debug (Subject.Text_IO.Put_String (Item => " ignore "));
+      pragma Debug (Debug_Ops.Put_String (Item => "Port 16#"));
+      pragma Debug (Debug_Ops.Put_Word16 (Item => Info.Port_Number));
+      pragma Debug (Debug_Ops.Put_String (Item => "# ignore "));
 
       case Info.Size is
          when One_Byte  => Mask := 16#ff#;
@@ -98,12 +98,11 @@ is
       end if;
 
       pragma Debug (Info.Direction = Dir_In,
-                    Subject.Text_IO.Put_String (Item => "read"));
+                    Debug_Ops.Put_Line (Item => "read"));
       pragma Debug (Info.Direction = Dir_Out,
-                    Subject.Text_IO.Put_String (Item => "write "));
-      pragma Debug (Info.Direction = Dir_Out,
-                    Subject.Text_IO.Put_Word32 (SK.Word32'Mod (RAX and Mask)));
-      pragma Debug (Subject.Text_IO.New_Line);
+                    Debug_Ops.Put_Value32
+                      (Message => "write",
+                       Value   => SK.Word32'Mod (RAX and Mask)));
    end Ignore_Access;
 
    -------------------------------------------------------------------------
@@ -130,7 +129,7 @@ is
         and then SK.Byte'Mod (RAX) = 16#fe#
       then
          pragma Debug
-           (Subject.Text_IO.Put_Line
+           (Debug_Ops.Put_Line
               (Item => "Reboot requested via pulse of CPU RESET pin"));
          Halt := True;
       elsif Info.Port_Number = 16#64# and Info.Direction = Dir_In then
@@ -163,15 +162,14 @@ is
 
       if Info.String_Instr or Info.REP_Prefixed then
          pragma Debug
-           (Subject.Text_IO.Put_Line
+           (Debug_Ops.Put_Line
               (Item => "I/O instructions with string and REP not supported"));
          Halt := True;
       elsif Info.Size not in One_Byte | Two_Byte | Four_Byte then
          pragma Debug
-           (Subject.Text_IO.Put_Line
-              (Item => "I/O instruction with invalid access size 16#"));
-         pragma Debug (Subject.Text_IO.Put_Byte (Item => SK.Byte (Info.Size)));
-         pragma Debug (Subject.Text_IO.Put_Line (Item => "#"));
+           (Debug_Ops.Put_Value8
+              (Message => "I/O instruction with invalid access size",
+               Value   => SK.Byte (Info.Size)));
          Halt := True;
       else
          case Info.Port_Number is
@@ -205,11 +203,9 @@ is
                Emulate_i8042 (Info => Info,
                               Halt => Halt);
             when others =>
-               pragma Debug (Subject.Text_IO.Put_String
-                             (Item => "Unhandled access to I/O port "));
-               pragma Debug (Subject.Text_IO.Put_Word16
-                             (Item => Info.Port_Number));
-               pragma Debug (Subject.Text_IO.New_Line);
+               pragma Debug (Debug_Ops.Put_Value16
+                             (Message => "Unhandled access to I/O port",
+                              Value   => Info.Port_Number));
                Halt := True;
          end case;
       end if;

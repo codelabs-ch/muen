@@ -69,9 +69,8 @@ is
       Cur_Lvl : Natural := 4;
    begin
       for Idx of reverse Indexes loop
-         Idx := Entry_Range
-           ((Address and Level_Map (Paging_Level (Cur_Lvl)).Mask) /
-                Level_Map (Paging_Level (Cur_Lvl)).Size);
+         Idx := Get_Index (Address => Address,
+                           Level   => Paging_Level (Cur_Lvl));
          Cur_Lvl := Cur_Lvl - 1;
       end loop;
    end Get_Indexes;

@@ -29,4 +29,6 @@ private
      with
        Pack;
 
+   Debug : Boolean := False;
+
 end Exit_Handlers;

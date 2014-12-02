@@ -18,7 +18,7 @@
 
 with SK;
 
-with Subject.Text_IO;
+with Debug_Ops;
 
 package body Exit_Handlers.CPUID
 is
@@ -94,10 +94,9 @@ is
             --  Bit 29 - LM: Long Mode
             State.Regs.RDX := 16#2000_0000#;
          when others =>
-            pragma Debug (Subject.Text_IO.Put_String
-                          (Item => "Unknown CPUID function "));
-            pragma Debug (Subject.Text_IO.Put_Word64 (Item => RAX));
-            pragma Debug (Subject.Text_IO.New_Line);
+            pragma Debug (Debug_Ops.Put_Value64
+                          (Message => "Unknown CPUID function",
+                           Value   => RAX));
             Halt := True;
       end case;
    end Process;

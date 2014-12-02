@@ -82,7 +82,6 @@
 				</target>
 			</events>
 			<channels>
-				<reader logical="virtual_time" physical="virtual_time" virtualAddress="16#2000#"/>
 				<reader logical="virtual_keyboard" physical="nic_virtual_keyboard" virtualAddress="16#3000#" vector="49"/>
 				<writer logical="virtual_console" physical="nic_virtual_console" virtualAddress="16#4000#" event="1"/>
 			</channels>
@@ -117,7 +116,6 @@
 				</target>
 			</events>
 			<channels>
-				<reader logical="virtual_time" physical="virtual_time" virtualAddress="16#2000#"/>
 				<reader logical="virtual_keyboard" physical="usb_virtual_keyboard" virtualAddress="16#3000#" vector="49"/>
 				<writer logical="virtual_console" physical="usb_virtual_console" virtualAddress="16#4000#" event="1"/>
 			</channels>

@@ -63,10 +63,6 @@ is
                Trusted => False);
       T2.Init (Label   => "USB Linux",
                Trusted => False);
-      T3.Init (Label   => "Subject Monitor: NIC Linux",
-               Trusted => True);
-      T4.Init (Label   => "Subject Monitor: USB Linux",
-               Trusted => True);
    end Init;
 
    -------------------------------------------------------------------------

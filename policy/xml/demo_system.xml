@@ -17,7 +17,6 @@
 
 	<subjects>
 		<include href="subject_vt.xml"/>
-		<include href="subject_time.xml"/>
 		<include href="subject_nic_sm.xml"/>
 		<include href="subject_usb_sm.xml"/>
 

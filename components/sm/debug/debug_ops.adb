@@ -16,8 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with SK;
-
 with Subject.Text_IO;
 
 with Subject_Info;
@@ -173,5 +171,57 @@ is
    -------------------------------------------------------------------------
 
    procedure Put_Line (Item : String) renames Subject.Text_IO.Put_Line;
+
+   -------------------------------------------------------------------------
+
+   procedure Put_Value8
+     (Message : String;
+      Value   : SK.Byte)
+   is
+   begin
+      Subject.Text_IO.Put_String (Item => Message);
+      Subject.Text_IO.Put_String (Item => " 16#");
+      Subject.Text_IO.Put_Byte   (Item => Value);
+      Subject.Text_IO.Put_Line   (Item => "#");
+   end Put_Value8;
+
+   -------------------------------------------------------------------------
+
+   procedure Put_Value16
+     (Message : String;
+      Value   : SK.Word16)
+   is
+   begin
+      Subject.Text_IO.Put_String (Item => Message);
+      Subject.Text_IO.Put_String (Item => " 16#");
+      Subject.Text_IO.Put_Word16 (Item => Value);
+      Subject.Text_IO.Put_Line   (Item => "#");
+   end Put_Value16;
+
+   -------------------------------------------------------------------------
+
+   procedure Put_Value32
+     (Message : String;
+      Value   : SK.Word32)
+   is
+   begin
+      Subject.Text_IO.Put_String (Item => Message);
+      Subject.Text_IO.Put_String (Item => " 16#");
+      Subject.Text_IO.Put_Word32 (Item => Value);
+      Subject.Text_IO.Put_Line   (Item => "#");
+   end Put_Value32;
+
+   -------------------------------------------------------------------------
+
+   procedure Put_Value64
+     (Message : String;
+      Value   : SK.Word64)
+   is
+   begin
+      Subject.Text_IO.Put_String (Item => Message);
+      Subject.Text_IO.Put_String (Item => " 16#");
+      Subject.Text_IO.Put_Word64 (Item => Value);
+      Subject.Text_IO.Put_Line   (Item => "#");
+   end Put_Value64;
 
 end Debug_Ops;

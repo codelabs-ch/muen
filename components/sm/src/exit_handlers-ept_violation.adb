@@ -18,7 +18,7 @@
 
 with SK;
 
-with Subject.Text_IO;
+with Debug_Ops;
 
 package body Exit_Handlers.EPT_Violation
 is
@@ -97,16 +97,14 @@ is
       end if;
 
       pragma Debug (GPA not in MMConf_Region,
-                    Subject.Text_IO.Put_String (Item => "Invalid "));
+                    Debug_Ops.Put_String (Item => "Invalid "));
       pragma Debug (GPA not in MMConf_Region and then Info.Read,
-                    Subject.Text_IO.Put_String (Item => "read"));
+                    Debug_Ops.Put_String (Item => "read"));
       pragma Debug (GPA not in MMConf_Region and then Info.Write,
-                    Subject.Text_IO.Put_String (Item => "write"));
-      pragma Debug (GPA not in MMConf_Region, Subject.Text_IO.Put_String
-                    (Item => " access at guest physical address "));
-      pragma Debug (GPA not in MMConf_Region, Subject.Text_IO.Put_Word64
-                    (Item => GPA));
-      pragma Debug (GPA not in MMConf_Region, Subject.Text_IO.New_Line);
+                    Debug_Ops.Put_String (Item => "write"));
+      pragma Debug (GPA not in MMConf_Region, Debug_Ops.Put_Value64
+                    (Message => " access at guest physical address",
+                     Value   => GPA));
    end Process;
 
 end Exit_Handlers.EPT_Violation;

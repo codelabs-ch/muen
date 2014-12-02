@@ -32,13 +32,12 @@ is
    --  Log channels for subjects defined in the active system policy. The
    --  dbgserver subject is excluded and it's assumed to be the last (ID wise)
    --  subject in the policy.
-   type Log_Context_Type is array
-     (Skp.Subject_Id_Type'First .. Skp.Subject_Id_Type'Last - 1)
+   type Log_Context_Type is array (Subject_Buffer_Range)
      of Debuglog.Stream.Channel_Type
        with
          Component_Size => 8 * Config.Channel_Size,
-         Size           => 8 * Config.Channel_Size *
-           (Skp.Subject_Id_Type'Last);
+         Size           => 8 * Config.Channel_Size
+           * (Subject_Buffer_Range'Last + 1);
 
    Log_Context : Log_Context_Type
      with
@@ -61,12 +60,12 @@ is
    --  Find subject with oldest message.
    procedure Find_Oldest_Message
      (Buffer         :     Buffer_Type;
-      Oldest_Subject : out Skp.Subject_Id_Type;
+      Oldest_Subject : out Subject_Buffer_Range;
       Found          : out Boolean);
 
    --  Add log line prefix for given subject to output queue.
    procedure Add_Line_Prefix
-     (Subject      :        Skp.Subject_Id_Type;
+     (Subject      :        Subject_Buffer_Range;
       Overrun      :        Boolean;
       New_Epoch    :        Boolean;
       Continuation :        Boolean;
@@ -80,7 +79,7 @@ is
    --  Move message of given subject to output queue.
    procedure Log_Message
      (Buffer       : in out Buffer_Type;
-      Subject      :        Skp.Subject_Id_Type;
+      Subject      :        Subject_Buffer_Range;
       Output_Queue : in out Byte_Queue.Queue_Type);
 
    --  Find oldest message and log it.
@@ -99,7 +98,7 @@ is
    -------------------------------------------------------------------------
 
    procedure Add_Line_Prefix
-     (Subject      :        Skp.Subject_Id_Type;
+     (Subject      :        Subject_Buffer_Range;
       Overrun      :        Boolean;
       New_Epoch    :        Boolean;
       Continuation :        Boolean;
@@ -185,15 +184,15 @@ is
 
    procedure Find_Oldest_Message
      (Buffer         :     Buffer_Type;
-      Oldest_Subject : out Skp.Subject_Id_Type;
+      Oldest_Subject : out Subject_Buffer_Range;
       Found          : out Boolean)
    is
       Candidate_Timestamp : Interfaces.Unsigned_64 := Timestamp_Invalid;
    begin
-      Oldest_Subject := Skp.Subject_Id_Type'First;
+      Oldest_Subject := Subject_Buffer_Range'First;
       Found          := False;
 
-      for Subject in Skp.Subject_Id_Type loop
+      for Subject in Subject_Buffer_Range loop
          if Buffer.Subjects (Subject).Cache.Timestamp < Candidate_Timestamp
          then
             Candidate_Timestamp := Buffer.Subjects (Subject).Cache.Timestamp;
@@ -243,12 +242,12 @@ is
          Subject_Buffer.Enabled            := True;
       end Initialize_Subject;
    begin
-      for Subject in Skp.Subject_Id_Type loop
+      for Subject in Subject_Buffer_Range loop
          Initialize_Subject (Subject_Buffer => Buffer.Subjects (Subject));
       end loop;
 
       Buffer.Is_Idle      := False;
-      Buffer.Last_Subject := Skp.Subject_Id_Type'First;
+      Buffer.Last_Subject := Subject_Buffer_Range'First;
    end Initialize;
 
    -------------------------------------------------------------------------
@@ -265,7 +264,7 @@ is
 
    procedure Log_Message
      (Buffer       : in out Buffer_Type;
-      Subject      :        Skp.Subject_Id_Type;
+      Subject      :        Subject_Buffer_Range;
       Output_Queue : in out Byte_Queue.Queue_Type)
    is
    begin
@@ -301,7 +300,7 @@ is
      (Buffer       : in out Buffer_Type;
       Output_Queue : in out Byte_Queue.Queue_Type)
    is
-      Subject         : Skp.Subject_Id_Type;
+      Subject         : Subject_Buffer_Range;
       Message_Present : Boolean;
    begin
       Find_Oldest_Message (Buffer         => Buffer,
@@ -351,13 +350,13 @@ is
    is
       --  Check given subject buffer for new message.
       procedure Update_Message_Buffer
-        (Subject        :        Skp.Subject_Id_Type;
+        (Subject        :        Subject_Buffer_Range;
          Subject_Buffer : in out Subject_Buffer_Type);
 
       ----------------------------------------------------------------------
 
       procedure Update_Message_Buffer
-        (Subject        :        Skp.Subject_Id_Type;
+        (Subject        :        Subject_Buffer_Range;
          Subject_Buffer : in out Subject_Buffer_Type)
       is
          Read_Result : Debuglog.Stream.Reader.Result_Type;
@@ -386,7 +385,7 @@ is
          end if;
       end Update_Message_Buffer;
    begin
-      for Subject in Skp.Subject_Id_Type loop
+      for Subject in Subject_Buffer_Range loop
          if Buffer.Subjects (Subject).Enabled then
             Update_Message_Buffer
               (Subject        => Subject,

@@ -3,8 +3,6 @@
 	<channel name="usb_virtual_keyboard" size="16#1000#" hasEvent="ipi"/>
 	<channel name="nic_virtual_console" size="16#0001_0000#" hasEvent="ipi"/>
 	<channel name="usb_virtual_console" size="16#0001_0000#" hasEvent="ipi"/>
-	<channel name="nic_sm_console" size="16#0001_0000#" hasEvent="ipi"/>
-	<channel name="usb_sm_console" size="16#0001_0000#" hasEvent="ipi"/>
 
 	<channel name="debuglog_subject1" size="16#0001_0000#"/>
 	<channel name="debuglog_subject2" size="16#0001_0000#"/>

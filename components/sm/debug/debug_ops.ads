@@ -19,6 +19,9 @@
 package Debug_Ops
 is
 
+   --  Output given string and append a new line.
+   procedure Put_Line (Item : String);
+
    --  Dump subject state before Halt.
    procedure Dump_State;
 

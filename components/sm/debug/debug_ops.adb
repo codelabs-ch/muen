@@ -170,4 +170,8 @@ is
       end if;
    end Dump_State;
 
+   -------------------------------------------------------------------------
+
+   procedure Put_Line (Item : String) renames Subject.Text_IO.Put_Line;
+
 end Debug_Ops;

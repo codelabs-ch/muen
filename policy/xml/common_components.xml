@@ -11,8 +11,6 @@
 		<channels>
 			<reader logical="console_1" virtualAddress="16#0010_0000#" size="16#0001_0000#" vector="34"/>
 			<reader logical="console_2" virtualAddress="16#0011_0000#" size="16#0001_0000#" vector="35"/>
-			<reader logical="console_3" virtualAddress="16#0012_0000#" size="16#0001_0000#" vector="36"/>
-			<reader logical="console_4" virtualAddress="16#0013_0000#" size="16#0001_0000#" vector="37"/>
 			<writer logical="keyboard_1" virtualAddress="16#0005_0000#" size="16#1000#" event="1"/>
 			<writer logical="keyboard_2" virtualAddress="16#0005_1000#" size="16#1000#" event="2"/>
 			<writer logical="debuglog" virtualAddress="16#000f_fff0_0000#" size="16#0001_0000#"/>

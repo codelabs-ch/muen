@@ -16,13 +16,9 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp;
-
 with SK.Descriptors;
 
 with X86_64;
-
-use type Skp.Dst_Vector_Range;
 
 package SK.Interrupts
 with

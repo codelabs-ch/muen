@@ -61,6 +61,6 @@ is
       Export,
       Convention => C,
       Link_Name  => "dispatch_interrupt";
-
    pragma $Prove_Warnings (On, "unused variable ""Unused_Context""");
+
 end SK.Interrupts;

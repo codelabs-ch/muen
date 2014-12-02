@@ -10,11 +10,11 @@
 			<minorFrame subject="nic_linux" ticks="100"/>
 		</cpu>
 		<cpu id="2">
-			<minorFrame subject="time" ticks="120"/>
+			<minorFrame subject="usb_linux" ticks="70"/>
+			<minorFrame subject="usb_linux" ticks="50"/>
 		</cpu>
 		<cpu id="3">
-			<minorFrame subject="usb_linux" ticks="70"/>
-			<minorFrame subject="dbgserver" ticks="50"/>
+			<minorFrame subject="dbgserver" ticks="120"/>
 		</cpu>
 	</majorFrame>
 	<majorFrame>
@@ -26,11 +26,10 @@
 			<minorFrame subject="nic_linux" ticks="120"/>
 		</cpu>
 		<cpu id="2">
-			<minorFrame subject="time" ticks="120"/>
+			<minorFrame subject="usb_linux" ticks="120"/>
 		</cpu>
 		<cpu id="3">
-			<minorFrame subject="usb_linux" ticks="60"/>
-			<minorFrame subject="dbgserver" ticks="60"/>
+			<minorFrame subject="dbgserver" ticks="120"/>
 		</cpu>
 	</majorFrame>
 </scheduling>

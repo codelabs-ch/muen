@@ -22,16 +22,7 @@ with SK.Interrupts;
 with SK.MP;
 with SK.Subjects;
 with SK.VTd;
-with Skp.Scheduling;
-with Skp.Subjects;
 with X86_64;
-
-use type Skp.CPU_Range;
-use type Skp.Dst_Vector_Range;
-use type Skp.Scheduling.Minor_Frame_Range;
-use type Skp.Subjects.Trap_Entry_Type;
-use type Skp.Subjects.Event_Entry_Type;
-use type Skp.Subjects.Profile_Kind;
 
 package SK.Scheduler
 with

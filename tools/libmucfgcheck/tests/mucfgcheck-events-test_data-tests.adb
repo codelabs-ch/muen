@@ -222,6 +222,11 @@ package body Mucfgcheck.Events.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      IPI_Different_Core (XML_Data => Data);
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/events/event[@name='trap_to_sm']",
@@ -237,8 +242,8 @@ package body Mucfgcheck.Events.Test_Data.Tests is
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "Destination subject 'sm' (CPU 1) in subject's 'linux' "
-                    & "(CPU 1) ipi notification 'trap_to_sm' invalid - no IPI"
-                    & " allowed",
+                    & "(CPU 1) ipi notification 'trap_to_sm' invalid - must run"
+                    & " on different CPU",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

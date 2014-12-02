@@ -18,10 +18,10 @@
 
 with Skp;
 
-use type Skp.Vector_Range;
-
 package SK.Descriptors
 is
+
+   use type Skp.Vector_Range;
 
    --  Pseudo Descriptor type, see Intel SDM Vol. 3A, chapter 3.5.1.
    type Pseudo_Descriptor_Type is record

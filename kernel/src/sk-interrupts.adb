@@ -18,12 +18,11 @@
 
 with System.Storage_Elements;
 
+with Skp;
+
 with SK.CPU;
-with SK.Descriptors;
 with SK.Dump;
 with SK.IO;
-
-use type SK.Descriptors.Pseudo_Descriptor_Type;
 
 package body SK.Interrupts
 with

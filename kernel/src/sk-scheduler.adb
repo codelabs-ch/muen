@@ -20,6 +20,8 @@ with System;
 
 with Skp.Kernel;
 with Skp.Interrupts;
+with Skp.Scheduling;
+with Skp.Subjects;
 
 with SK.VMX;
 with SK.Constants;
@@ -137,6 +139,7 @@ is
           MP.Barrier,
           X86_64.State)     =>+ (CPU_Global.State, New_Major))
    is
+      use type Skp.Scheduling.Minor_Frame_Range;
       use type Skp.Scheduling.Barrier_Index_Range;
 
       Current_Subject_ID : Skp.Subject_Id_Type;
@@ -201,6 +204,8 @@ is
       end if;
 
       declare
+         use type Skp.Subjects.Profile_Kind;
+
          Next_Subject : constant Skp.Subject_Id_Type
            := CPU_Global.Get_Subject_ID
              (Group => Skp.Scheduling.Get_Group_ID
@@ -277,6 +282,8 @@ is
           X86_64.State)      =>+ (CPU_Global.State, Interrupts.State,
                                   X86_64.State))
    is
+      use type Skp.CPU_Range;
+
       Initial_Subject_ID : Skp.Subject_Id_Type;
       Initial_VMCS_Addr  : SK.Word64 := 0;
       Controls           : Skp.Subjects.VMX_Controls_Type;
@@ -383,6 +390,9 @@ is
           X86_64.State) =>+ (Current_Subject, Event_Nr),
          Subjects.State =>+ Current_Subject)
    is
+      use type Skp.Dst_Vector_Range;
+      use type Skp.Subjects.Event_Entry_Type;
+
       Event       : Skp.Subjects.Event_Entry_Type;
       Dst_CPU     : Skp.CPU_Range;
       Valid_Event : Boolean;
@@ -481,6 +491,8 @@ is
           Events.State,
           X86_64.State) =>+ (Current_Subject, Trap_Nr))
    is
+      use type Skp.Dst_Vector_Range;
+
       Trap_Entry : Skp.Subjects.Trap_Entry_Type;
 
       ----------------------------------------------------------------------

@@ -20,7 +20,7 @@ with Ada.Unchecked_Conversion;
 
 with SK;
 
-with Subject.Text_IO;
+with Debug_Ops;
 
 package body Exit_Handlers.CR_Access
 is
@@ -127,31 +127,27 @@ is
                State.SHADOW_CR0 := SHADOW_CR0;
                CR0              := SHADOW_CR0 or 16#20#; -- CR0_FIXED0
                State.CR0        := CR0;
-               pragma Debug (Subject.Text_IO.Put_String
-                             (Item => "Accepting mov eax, cr0: SHADOW_CR0 "));
-               pragma Debug (Subject.Text_IO.Put_Word64 (SHADOW_CR0));
-               pragma Debug (Subject.Text_IO.Put_String (Item => ", CR0 "));
-               pragma Debug (Subject.Text_IO.Put_Word64 (CR0));
-               pragma Debug (Subject.Text_IO.New_Line);
+               pragma Debug (Debug_Ops.Put_String
+                             (Item => "MOV to CR0: SHADOW_CR0 16#"));
+               pragma Debug (Debug_Ops.Put_Word64 (Item => SHADOW_CR0));
+               pragma Debug (Debug_Ops.Put_String (Item => "#, CR0 #"));
+               pragma Debug (Debug_Ops.Put_Word64 (Item => CR0));
+               pragma Debug (Debug_Ops.Put_Line   (Item => "#"));
             else
-               pragma Debug (Subject.Text_IO.Put_String
-                             (Item => "MOV to CR "));
-               pragma Debug (Subject.Text_IO.Put_Byte
-                             (Item => SK.Byte (Info.CR_Number)));
-               pragma Debug (Subject.Text_IO.Put_Line
-                             (Item => " from unsupported data register"));
+               pragma Debug
+                 (Debug_Ops.Put_Value8
+                    (Message => "MOV from unsupported register to CR ",
+                     Value   => SK.Byte (Info.CR_Number)));
                Halt := True;
             end if;
          else
-            pragma Debug (Subject.Text_IO.Put_String
-                          (Item => "Unhandled MOV to CR "));
-            pragma Debug (Subject.Text_IO.Put_Byte
-                          (Item => SK.Byte (Info.CR_Number)));
-            pragma Debug (Subject.Text_IO.New_Line);
+            pragma Debug (Debug_Ops.Put_Value8
+                          (Message => "Unhandled MOV to CR ",
+                           Value   => SK.Byte (Info.CR_Number)));
             Halt := True;
          end if;
       else
-         pragma Debug (Subject.Text_IO.Put_Line
+         pragma Debug (Debug_Ops.Put_Line
                        (Item => "Unhandled CR access method"));
          Halt := True;
       end if;

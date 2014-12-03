@@ -570,6 +570,8 @@ is
    is
       Needed_Caps_Present, Status : Boolean;
    begin
+      Update_IRT_Destinations;
+
       for I in Skp.IOMMU.IOMMU_Device_Range loop
          Check_Capabilities (Idx    => I,
                              Result => Needed_Caps_Present);
@@ -638,8 +640,6 @@ is
          end if;
 
          --  IR
-
-         Update_IRT_Destinations;
 
          Set_IR_Table_Address (IOMMU   => I,
                                Address => Skp.IOMMU.IR_Table_Phys_Address,

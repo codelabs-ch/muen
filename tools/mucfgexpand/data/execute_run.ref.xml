@@ -140,10 +140,10 @@
   <memory alignment="16#1000#" caching="WB" name="lnx|msrstore" size="16#1000#" type="system_msrstore">
    <file filename="lnx_msrstore" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" size="16#5000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" size="16#6000#" type="system_pt">
    <file filename="kernel_pt_0" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_1|pt" size="16#5000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="kernel_1|pt" size="16#6000#" type="system_pt">
    <file filename="kernel_pt_1" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#4000#" type="system_pt">
@@ -211,6 +211,8 @@
     <memory executable="false" logical="store" physical="kernel_store_0" virtualAddress="16#0011_6000#" writable="true"/>
     <memory executable="false" logical="lnx_state" physical="lnx_state" virtualAddress="16#0030_1000#" writable="true"/>
     <memory executable="false" logical="subject1_state" physical="subject1_state" virtualAddress="16#0030_2000#" writable="true"/>
+    <memory executable="false" logical="lnx_timer" physical="lnx_timer" virtualAddress="16#0040_1000#" writable="true"/>
+    <memory executable="false" logical="subject1_timer" physical="subject1_timer" virtualAddress="16#0040_2000#" writable="true"/>
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
     <memory executable="false" logical="vtd_ir" physical="vtd_ir" virtualAddress="16#001f_e000#" writable="true"/>
    </cpu>
@@ -223,6 +225,8 @@
     <memory executable="false" logical="store" physical="kernel_store_1" virtualAddress="16#0011_6000#" writable="true"/>
     <memory executable="false" logical="tau0_state" physical="tau0_state" virtualAddress="16#0030_0000#" writable="true"/>
     <memory executable="false" logical="subject2_state" physical="subject2_state" virtualAddress="16#0030_3000#" writable="true"/>
+    <memory executable="false" logical="tau0_timer" physical="tau0_timer" virtualAddress="16#0040_0000#" writable="true"/>
+    <memory executable="false" logical="subject2_timer" physical="subject2_timer" virtualAddress="16#0040_3000#" writable="true"/>
    </cpu>
   </memory>
   <devices>

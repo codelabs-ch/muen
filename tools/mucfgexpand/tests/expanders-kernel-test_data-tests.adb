@@ -63,7 +63,7 @@ package body Expanders.Kernel.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/kernel_subj_state_mappings.xml",
          Ref_Filename => "data/kernel_subj_state_mappings.ref.xml",
-         Pre          => Pre_Subj_State_Mappings'Access,
+         Pre          => Pre_Subj_Mappings'Access,
          Expander     => Add_Subj_State_Mappings'Access);
 --  begin read only
    end Test_Add_Subj_State_Mappings;
@@ -84,7 +84,7 @@ package body Expanders.Kernel.Test_Data.Tests is
       Test_Utils.Expander.Run_Test
         (Filename     => "obj/kernel_subj_timer_mappings.xml",
          Ref_Filename => "data/kernel_subj_timer_mappings.ref.xml",
-         Pre          => Pre_Subj_State_Mappings'Access,
+         Pre          => Pre_Subj_Mappings'Access,
          Expander     => Add_Subj_Timer_Mappings'Access);
 --  begin read only
    end Test_Add_Subj_Timer_Mappings;

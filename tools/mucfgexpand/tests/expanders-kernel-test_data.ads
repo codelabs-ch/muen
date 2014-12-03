@@ -20,6 +20,6 @@ package Expanders.Kernel.Test_Data is
    procedure Tear_Down (Gnattest_T : in out Test);
 
    --  Invoke kernel section skeleton and subject id expanders.
-   procedure Pre_Subj_State_Mappings (Data : in out Muxml.XML_Data_Type);
+   procedure Pre_Subj_Mappings (Data : in out Muxml.XML_Data_Type);
 
 end Expanders.Kernel.Test_Data;

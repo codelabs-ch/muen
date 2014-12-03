@@ -33,7 +33,7 @@ is
    type Subject_State_Array is array
      (Skp.Subject_Id_Type) of SK.Subject_State_Type
    with
-      --   Independent_Components,
+      --  Independent_Components,
       --  Although the aspect had to be disabled due to [N508-004],
       --  Independent_Components is assured by the large Component_Size
       --  and alignment.

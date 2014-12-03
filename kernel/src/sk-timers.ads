@@ -24,6 +24,15 @@ with
    Initializes    => State
 is
 
+   --  Get timer information for a subject with given ID.
+   procedure Get_Timer
+     (Subject :     Skp.Subject_Id_Type;
+      Value   : out SK.Word64;
+      Vector  : out SK.Byte)
+   with
+       Global  => (Input => State),
+       Depends => ((Value, Vector) => (State, Subject));
+
    --  Clear timer of subject with given ID.
    procedure Clear_Timer (Subject : Skp.Subject_Id_Type)
    with

@@ -62,6 +62,23 @@ is
       Subject_Timers (Subject) := Null_Timer;
    end Clear_Timer;
 
+   -------------------------------------------------------------------------
+
+   procedure Get_Timer
+     (Subject :     Skp.Subject_Id_Type;
+      Value   : out SK.Word64;
+      Vector  : out SK.Byte)
+   with
+      Refined_Global  => (Input => Subject_Timers),
+      Refined_Depends => ((Value, Vector) => (Subject_Timers, Subject)),
+      Refined_Post    => (Value  = Subject_Timers (Subject).Value and
+                          Vector = Subject_Timers (Subject).Vector)
+   is
+   begin
+      Value  := Subject_Timers (Subject).Value;
+      Vector := Subject_Timers (Subject).Vector;
+   end Get_Timer;
+
 begin
 
    --  FIXME: Initialization of "Subject_Timers" hidden.

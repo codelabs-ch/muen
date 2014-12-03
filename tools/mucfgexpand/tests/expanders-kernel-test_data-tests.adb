@@ -71,11 +71,32 @@ package body Expanders.Kernel.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Add_Subj_Timer_Mappings (Gnattest_T : in out Test);
+   procedure Test_Add_Subj_Timer_Mappings_5a9ef4 (Gnattest_T : in out Test) renames Test_Add_Subj_Timer_Mappings;
+--  id:2.2/5a9ef48e7d6bb030/Add_Subj_Timer_Mappings/1/0/
+   procedure Test_Add_Subj_Timer_Mappings (Gnattest_T : in out Test) is
+   --  expanders-kernel.ads:34:4:Add_Subj_Timer_Mappings
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+      Test_Utils.Expander.Run_Test
+        (Filename     => "obj/kernel_subj_timer_mappings.xml",
+         Ref_Filename => "data/kernel_subj_timer_mappings.ref.xml",
+         Pre          => Pre_Subj_State_Mappings'Access,
+         Expander     => Add_Subj_Timer_Mappings'Access);
+--  begin read only
+   end Test_Add_Subj_Timer_Mappings;
+--  end read only
+
+
+--  begin read only
    procedure Test_Map_Tau0_Interface (Gnattest_T : in out Test);
    procedure Test_Map_Tau0_Interface_1c6595 (Gnattest_T : in out Test) renames Test_Map_Tau0_Interface;
 --  id:2.2/1c659557f0d945b9/Map_Tau0_Interface/1/0/
    procedure Test_Map_Tau0_Interface (Gnattest_T : in out Test) is
-   --  expanders-kernel.ads:34:4:Map_Tau0_Interface
+   --  expanders-kernel.ads:37:4:Map_Tau0_Interface
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -96,7 +117,7 @@ package body Expanders.Kernel.Test_Data.Tests is
    procedure Test_Add_Devices_52dbbf (Gnattest_T : in out Test) renames Test_Add_Devices;
 --  id:2.2/52dbbf91ae5d4040/Add_Devices/1/0/
    procedure Test_Add_Devices (Gnattest_T : in out Test) is
-   --  expanders-kernel.ads:37:4:Add_Devices
+   --  expanders-kernel.ads:40:4:Add_Devices
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

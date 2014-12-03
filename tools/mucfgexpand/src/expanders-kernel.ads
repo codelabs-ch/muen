@@ -30,6 +30,9 @@ is
    --  Add subject state memory mappings.
    procedure Add_Subj_State_Mappings (Data : in out Muxml.XML_Data_Type);
 
+   --  Add subject timer page mappings.
+   procedure Add_Subj_Timer_Mappings (Data : in out Muxml.XML_Data_Type);
+
    --  Map tau0 interface memory region on BSP.
    procedure Map_Tau0_Interface (Data : in out Muxml.XML_Data_Type);
 

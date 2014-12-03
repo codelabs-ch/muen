@@ -76,6 +76,7 @@ is
 
       Procs.Register (Process => Subjects.Handle_Profile'Access);
       Procs.Register (Process => Subjects.Handle_Monitors'Access);
+      Procs.Register (Process => Subjects.Handle_Timers'Access);
       Procs.Register (Process => Subjects.Add_Channel_Mappings'Access);
       Procs.Register (Process => Subjects.Add_Channel_Events'Access);
       Procs.Register (Process => Subjects.Remove_Channel_Elements'Access);

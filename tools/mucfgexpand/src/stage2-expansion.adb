@@ -61,6 +61,7 @@ is
       Procs.Register (Process => Memory.Add_Kernel_Binary'Access);
       Procs.Register (Process => Memory.Add_Stack_Store'Access);
       Procs.Register (Process => Memory.Add_Subject_States'Access);
+      Procs.Register (Process => Memory.Add_Subject_Timer_Pages'Access);
       Procs.Register (Process => Memory.Add_Tau0_Interface'Access);
       Procs.Register (Process => Memory.Add_AP_Trampoline'Access);
       Procs.Register (Process => Memory.Add_VMXON_Regions'Access);

@@ -67,6 +67,10 @@
   <memory alignment="16#1000#" caching="WB" name="lnx_state" size="16#1000#" type="subject_state"/>
   <memory alignment="16#1000#" caching="WB" name="subject1_state" size="16#1000#" type="subject_state"/>
   <memory alignment="16#1000#" caching="WB" name="subject2_state" size="16#1000#" type="subject_state"/>
+  <memory alignment="16#1000#" caching="WB" name="tau0_timer" size="16#1000#" type="subject_timer"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx_timer" size="16#1000#" type="subject_timer"/>
+  <memory alignment="16#1000#" caching="WB" name="subject1_timer" size="16#1000#" type="subject_timer"/>
+  <memory alignment="16#1000#" caching="WB" name="subject2_timer" size="16#1000#" type="subject_timer"/>
   <memory alignment="16#1000#" caching="WB" name="sys_interface" size="16#1000#" type="kernel_interface">
    <fill pattern="16#00#"/>
   </memory>

@@ -21,6 +21,7 @@ with SK.Events;
 with SK.Interrupts;
 with SK.MP;
 with SK.Subjects;
+with SK.Timers;
 with SK.VTd;
 with X86_64;
 
@@ -38,14 +39,15 @@ is
       Global  =>
         (Input  => Interrupts.State,
          In_Out => (CPU_Global.State, MP.Barrier, State, Subjects.State,
-                    X86_64.State)),
+                    Timers.State, X86_64.State)),
       Depends =>
         ((CPU_Global.State,
           MP.Barrier,
-          Subjects.State)   =>+ null,
+          Subjects.State,
+          Timers.State) =>+ null,
          (State,
-          X86_64.State)     =>+ (CPU_Global.State, Interrupts.State,
-                                 X86_64.State));
+          X86_64.State) =>+ (CPU_Global.State, Interrupts.State,
+                             X86_64.State));
 
    --  Set VMX-preemption timer of the currently active VMCS to trigger at the
    --  current deadline. If the deadline has alread passed the timer is set to

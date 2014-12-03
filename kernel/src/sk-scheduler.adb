@@ -274,14 +274,14 @@ is
       Refined_Global  =>
         (Input  => Interrupts.State,
          In_Out => (CPU_Global.State, Major_Frame_Start, MP.Barrier,
-                    Subjects.State, X86_64.State)),
+                    Subjects.State, Timers.State, X86_64.State)),
       Refined_Depends =>
-        (CPU_Global.State    =>+ null,
-         MP.Barrier          =>+ null,
-         Subjects.State      =>+ null,
+        ((CPU_Global.State,
+          MP.Barrier,
+          Subjects.State,
+          Timers.State) =>+ null,
          (Major_Frame_Start,
-          X86_64.State)      =>+ (CPU_Global.State, Interrupts.State,
-                                  X86_64.State))
+          X86_64.State) =>+ (CPU_Global.State, Interrupts.State, X86_64.State))
    is
       use type Skp.CPU_Range;
 
@@ -303,6 +303,10 @@ is
             --  Initialize subject state.
 
             Subjects.Clear_State (Id => I);
+
+            --  Clear subject timer.
+
+            Timers.Clear_Timer (Subject => I);
 
             --  VMCS
 

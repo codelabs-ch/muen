@@ -426,6 +426,40 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Add_Subject_Timer_Pages (Data : in out Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      Mulog.Log (Msg => "Adding timer memory regions for"
+                 & DOM.Core.Nodes.Length (List => Nodes)'Img & " subject(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Nodes,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+         begin
+            Mutools.XML_Utils.Add_Memory_Region
+              (Policy      => Data,
+               Name        => Subj_Name & "_timer",
+               Address     => "",
+               Size        => "16#1000#",
+               Caching     => "WB",
+               Alignment   => "16#1000#",
+               Memory_Type => "subject_timer");
+         end;
+      end loop;
+   end Add_Subject_Timer_Pages;
+
+   -------------------------------------------------------------------------
+
    procedure Add_Tau0_Interface (Data : in out Muxml.XML_Data_Type)
    is
    begin

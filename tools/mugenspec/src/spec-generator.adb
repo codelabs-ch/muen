@@ -1276,17 +1276,7 @@ is
            & " => Subject_Spec_Type'("
            & ASCII.LF
            & Indent & "    CPU_Id             => " & CPU_Id & ","
-           & ASCII.LF
-           & Indent & "    Profile            => ";
-
-         if Muxml.Utils.Get_Element_Value
-           (Doc   => Subject,
-            XPath => "vcpu/vmx/controls/proc2/UnrestrictedGuest") = "1"
-         then
-            Buffer := Buffer & "Vm," & ASCII.LF;
-         else
-            Buffer := Buffer & "Native," & ASCII.LF;
-         end if;
+           & ASCII.LF;
 
          if Muxml.Utils.Get_Element_Value
            (Doc   => Subject,

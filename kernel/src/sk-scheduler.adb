@@ -238,13 +238,6 @@ is
                                  Event   => Timer_Vector);
             Timers.Clear_Timer (Subject => Next_Subject);
          end if;
-
-         if Skp.Subjects.Get_Profile
-           (Subject_Id => Next_Subject) = Skp.Subjects.Vm
-         then
-            Events.Insert_Event (Subject => Next_Subject,
-                                 Event   => SK.Constants.Timer_Vector);
-         end if;
       end;
    end Update_Scheduling_Info;
 

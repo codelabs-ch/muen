@@ -40,6 +40,16 @@ is
    --  Physical start address of VMX-related memory regions.
    VMX_Start_Address : constant Interfaces.Unsigned_64 := 16#1000#;
 
+   --  Add physical memory region with specified parameters for each subject to
+   --  given XML policy.
+   procedure Add_Subject_Memory_Region
+     (Data        : in out Muxml.XML_Data_Type;
+      Region_Type :        String;
+      Address     :        String := "";
+      Size        :        String := "16#1000#";
+      Alignment   :        String := "16#1000#";
+      Caching     :        String := "WB");
+
    -------------------------------------------------------------------------
 
    procedure Add_AP_Trampoline (Data : in out Muxml.XML_Data_Type)
@@ -271,6 +281,48 @@ is
          end;
       end loop;
    end Add_Subject_Bitmaps;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Subject_Memory_Region
+     (Data        : in out Muxml.XML_Data_Type;
+      Region_Type :        String;
+      Address     :        String := "";
+      Size        :        String := "16#1000#";
+      Alignment   :        String := "16#1000#";
+      Caching     :        String := "WB")
+   is
+      Subjects      : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject");
+      Subject_Count : constant Natural
+        := DOM.Core.Nodes.Length (List => Subjects);
+   begin
+      Mulog.Log (Msg => "Adding " & Region_Type & " memory regions for"
+                 & Subject_Count'Img & " subject(s)");
+
+      for I in 0 .. Subject_Count - 1 loop
+         declare
+            Subj_Node : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item (List  => Subjects,
+                                      Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj_Node,
+                 Name => "name");
+         begin
+            Mutools.XML_Utils.Add_Memory_Region
+              (Policy      => Data,
+               Name        => Subj_Name & "_" & Region_Type,
+               Address     => Address,
+               Size        => Size,
+               Caching     => Caching,
+               Alignment   => Alignment,
+               Memory_Type => "subject_" & Region_Type);
+         end;
+      end loop;
+   end Add_Subject_Memory_Region;
 
    -------------------------------------------------------------------------
 

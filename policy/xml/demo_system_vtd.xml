@@ -6,7 +6,9 @@
 		<include href="common_memory.xml"/>
 
 		<memory name="nic_linux|ram" size="16#0f60_0000#" alignment="16#0020_0000#" caching="WB"/>
+		<memory name="nic_linux|lowmem" size="16#0008_6000#" caching="WB"/>
 		<memory name="usb_linux|ram" size="16#4000_0000#" alignment="16#0020_0000#" caching="WB"/>
+		<memory name="usb_linux|lowmem" size="16#0008_6000#" caching="WB"/>
 		<memory name="logbuffer_placeholder0" size="16#0001_0000#" caching="WB"/>
 		<memory name="logbuffer_placeholder" size="16#0002_0000#" caching="WB"/>
 	</memory>
@@ -14,7 +16,8 @@
 	<deviceDomains>
 		<domain name="nic_domain">
 			<memory>
-				<memory logical="dma" physical="nic_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="false"/>
+				<memory logical="dma1" physical="nic_linux|lowmem" virtualAddress="16#0001_a000#" writable="true" executable="false"/>
+				<memory logical="dma2" physical="nic_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="nic" physical="ethernet"/>
@@ -22,7 +25,8 @@
 		</domain>
 		<domain name="usb_domain">
 			<memory>
-				<memory logical="dma" physical="usb_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="false"/>
+				<memory logical="dma1" physical="usb_linux|lowmem" virtualAddress="16#0001_a000#" writable="true" executable="false"/>
+				<memory logical="dma2" physical="usb_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="false"/>
 			</memory>
 			<devices>
 				<device logical="xhci" physical="xhci"/>
@@ -42,6 +46,7 @@
 		<subject name="nic_linux" profile="linux">
 			<bootparams>console=hvc pci=noearly tsc=reliable</bootparams>
 			<memory>
+				<memory logical="lowmem" physical="nic_linux|lowmem" virtualAddress="16#0001_a000#" writable="true" executable="false"/>
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#00a0_0000#" writable="false" executable="false"/>
 				<memory logical="ram" physical="nic_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="true"/>
 			</memory>
@@ -80,6 +85,7 @@
 		<subject name="usb_linux" profile="linux">
 			<bootparams>console=hvc pci=noearly tsc=reliable</bootparams>
 			<memory>
+				<memory logical="lowmem" physical="usb_linux|lowmem" virtualAddress="16#0001_a000#" writable="true" executable="false"/>
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#00a0_0000#" writable="false" executable="false"/>
 				<memory logical="ram" physical="usb_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="true"/>
 			</memory>

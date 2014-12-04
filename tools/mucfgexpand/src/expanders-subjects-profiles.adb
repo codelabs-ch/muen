@@ -179,25 +179,7 @@ is
             Writable      => False,
             Executable    => False));
 
-      Mulog.Log (Msg => "Adding low-mem and BIOS regions for subject '"
-                 & Subj_Name & "'");
-      Mutools.XML_Utils.Add_Memory_Region
-        (Policy      => Data,
-         Name        => Subj_Name & "|lowmem",
-         Address     => "",
-         Size        => "16#0008_6000#",
-         Caching     => "WB",
-         Alignment   => "16#1000#",
-         Memory_Type => "subject");
-      Muxml.Utils.Append_Child
-        (Node      => Subj_Mem_Node,
-         New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
-           (Policy        => Data,
-            Logical_Name  => "lowmem",
-            Physical_Name => Subj_Name & "|lowmem",
-            Address       => "16#0001_a000#",
-            Writable      => True,
-            Executable    => False));
+      Mulog.Log (Msg => "Adding BIOS regions for subject '" & Subj_Name & "'");
       Mutools.XML_Utils.Add_Memory_Region
         (Policy      => Data,
          Name        => Subj_Name & "|bios",

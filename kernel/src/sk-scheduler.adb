@@ -207,8 +207,6 @@ is
       end;
 
       declare
-         use type Skp.Subjects.Profile_Kind;
-
          Next_Subject : constant Skp.Subject_Id_Type
            := CPU_Global.Get_Subject_ID
              (Group => Skp.Scheduling.Get_Group_ID

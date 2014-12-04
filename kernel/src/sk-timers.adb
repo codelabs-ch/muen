@@ -18,6 +18,8 @@
 
 with System;
 
+with Skp.Kernel;
+
 package body SK.Timers
 with
    Refined_State => (State => Subject_Timers)
@@ -48,7 +50,7 @@ is
    --  Subject timer pages.
    Subject_Timers : Subject_Timer_Array
    with
-      Address => System'To_Address (16#0040_0000#);
+      Address => System'To_Address (Skp.Kernel.Subj_Timers_Address);
 
    -------------------------------------------------------------------------
 

@@ -18,9 +18,9 @@
 
 with SK;
 
-with Debug_Ops;
-
 with Types;
+with Devices.i8042;
+with Debug_Ops;
 
 package body Exit_Handlers.IO_Instruction
 is
@@ -63,38 +63,6 @@ is
                       (Message => "write",
                        Value   => SK.Word32'Mod (RAX and Mask)));
    end Ignore_Access;
-
-   -------------------------------------------------------------------------
-
-   --  Emulate i8042 controller.
-   procedure Emulate_i8042
-     (Info :     IO_Info_Type;
-      Halt : out Boolean)
-   with
-      Global  => (In_Out => Subject_Info.State),
-      Depends => (Subject_Info.State =>+ Info,
-                  Halt => (Info, Subject_Info.State))
-   is
-      use type SK.Byte;
-      use type SK.Word16;
-      use type SK.Word64;
-
-      RAX : constant SK.Word64 := State.Regs.RAX;
-   begin
-      Halt := False;
-
-      if Info.Port_Number = 16#64#
-        and then Info.Direction = Dir_Out
-        and then SK.Byte'Mod (RAX) = 16#fe#
-      then
-         pragma Debug
-           (Debug_Ops.Put_Line
-              (Item => "Reboot requested via pulse of CPU RESET pin"));
-         Halt := True;
-      elsif Info.Port_Number = 16#64# and Info.Direction = Dir_In then
-         State.Regs.RAX := RAX and not 16#ff#;
-      end if;
-   end Emulate_i8042;
 
    -------------------------------------------------------------------------
 
@@ -146,8 +114,9 @@ is
                  16#0cff# => --  PCI Data         (hardcoded)
                Ignore_Access (Info => Info);
             when 16#60# | 16#64# =>
-               Emulate_i8042 (Info => Info,
-                              Halt => Halt);
+               Devices.i8042.Emulate
+                 (Info => Info,
+                  Halt => Halt);
             when others =>
                pragma Debug (Debug_Ops.Put_Value16
                              (Message => "Unhandled access to I/O port",

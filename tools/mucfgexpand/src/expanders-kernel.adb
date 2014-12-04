@@ -345,70 +345,11 @@ is
 
    procedure Add_Subj_Timer_Mappings (Data : in out Muxml.XML_Data_Type)
    is
-      Start_Addr : constant := Config.Subject_Timers_Virtual_Addr;
-      CPU_Nodes  : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/kernel/memory/cpu");
-      Subj_Nodes : constant DOM.Core.Node_List
-        := McKae.XML.XPath.XIA.XPath_Query
-          (N     => Data.Doc,
-           XPath => "/system/subjects/subject");
    begin
-      for I in 0 .. DOM.Core.Nodes.Length (List => CPU_Nodes) - 1 loop
-         declare
-            CPU      : constant DOM.Core.Node
-              := DOM.Core.Nodes.Item
-                (List  => CPU_Nodes,
-                 Index => I);
-            CPU_Id   : constant String
-              := DOM.Core.Elements.Get_Attribute
-                (Elem => CPU,
-                 Name => "id");
-            Subjects : constant DOM.Core.Node_List
-              := Muxml.Utils.Get_Elements
-                (Nodes     => Subj_Nodes,
-                 Ref_Attr  => "cpu",
-                 Ref_Value => CPU_Id);
-         begin
-            for J in 0 .. DOM.Core.Nodes.Length (List => Subjects) - 1 loop
-               declare
-                  use type Interfaces.Unsigned_64;
-
-                  Subj      : constant DOM.Core.Node
-                    := DOM.Core.Nodes.Item
-                      (List  => Subjects,
-                       Index => J);
-                  Subj_Name : constant String
-                    := DOM.Core.Elements.Get_Attribute
-                      (Elem => Subj,
-                       Name => "name");
-                  Subj_Id   : constant String
-                    := DOM.Core.Elements.Get_Attribute
-                      (Elem => Subj,
-                       Name => "id");
-                  Address   : constant Interfaces.Unsigned_64
-                    := Start_Addr + Interfaces.Unsigned_64'Value (Subj_Id)
-                    * Mutools.Constants.Page_Size;
-               begin
-                  Mulog.Log (Msg => "Mapping timer page of subject '"
-                             & Subj_Name & "' to address "
-                             & Mutools.Utils.To_Hex (Number => Address)
-                             & " on CPU " & CPU_Id);
-                  Muxml.Utils.Append_Child
-                    (Node      => CPU,
-                     New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
-                       (Policy        => Data,
-                        Logical_Name  => Subj_Name & "_timer",
-                        Physical_Name => Subj_Name & "_timer",
-                        Address       => Mutools.Utils.To_Hex
-                          (Number => Address),
-                        Writable      => True,
-                        Executable    => False));
-               end;
-            end loop;
-         end;
-      end loop;
+      Add_Subject_Mappings
+        (Data         => Data,
+         Base_Address => Config.Subject_Timers_Virtual_Addr,
+         Region_Type  => "timer");
    end Add_Subj_Timer_Mappings;
 
    -------------------------------------------------------------------------

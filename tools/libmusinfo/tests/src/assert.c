@@ -75,45 +75,28 @@ int assert_name_type(const int size, const int alignment,
 	return 1;
 }
 
-int assert_channel_info(const struct channel_type * const channel)
+int assert_channel_info(const struct channel_info_type * const channel_info)
 {
-	if (!assert_name(&channel->name))
-	{
-		return 0;
-	}
-
-	if (channel->address != 0xdeadbeefcafefeed)
-	{
-		printf("Channel: Invalid address 0x%lx\n", channel->address);
-		return 0;
-	}
-
-	if (channel->size != 0x8080ababcdcd9090)
-	{
-		printf("Channel: Invalid size 0x%lx\n", channel->size);
-		return 0;
-	}
-
-	if (!(channel->flags & HAS_EVENT_FLAG))
+	if (!(channel_info->flags & HAS_EVENT_FLAG))
 	{
 		printf("Channel: Has_Event flag not set\n");
 		return 0;
 	}
-	if (!(channel->flags & HAS_VECTOR_FLAG))
+	if (!(channel_info->flags & HAS_VECTOR_FLAG))
 	{
 		printf("Channel: Has_Vector flag not set\n");
 		return 0;
 	}
 
-	if (channel->event != 128)
+	if (channel_info->event != 128)
 	{
-		printf("Channel: Invalid event number %d\n", channel->event);
+		printf("Channel: Invalid event number %d\n", channel_info->event);
 		return 0;
 	}
 
-	if (channel->vector != 255)
+	if (channel_info->vector != 255)
 	{
-		printf("Channel: Invalid vector number %d\n", channel->vector);
+		printf("Channel: Invalid vector number %d\n", channel_info->vector);
 		return 0;
 	}
 
@@ -123,37 +106,37 @@ int assert_channel_info(const struct channel_type * const channel)
 int assert_channel_info_type(const int size, const int alignment,
 		const int flags_offset, const int event_offset, const int vector_offset)
 {
-	if (sizeof(struct channel_type) != size)
+	if (sizeof(struct channel_info_type) != size)
 	{
 		printf("Channel: Invalid size %d /= %d\n", size,
-				sizeof(struct channel_type));
+				sizeof(struct channel_info_type));
 		return 0;
 	}
-	if (__alignof__ (struct channel_type) != alignment)
+	if (__alignof__ (struct channel_info_type) != alignment)
 	{
 		printf("Channel: Invalid alignment %d /= %d\n", alignment,
-				__alignof__ (struct channel_type));
+				__alignof__ (struct channel_info_type));
 		return 0;
 	}
 
-	if (offsetof(struct channel_type, flags) != flags_offset)
+	if (offsetof(struct channel_info_type, flags) != flags_offset)
 	{
 		printf("Channel: Invalid 'flags' offset %d /= %d\n", flags_offset,
-				offsetof(struct channel_type, flags));
+				offsetof(struct channel_info_type, flags));
 		return 0;
 	}
 
-	if (offsetof(struct channel_type, event) != event_offset)
+	if (offsetof(struct channel_info_type, event) != event_offset)
 	{
 		printf("Channel: Invalid 'event' offset %d /= %d\n", event_offset,
-				offsetof(struct channel_type, event));
+				offsetof(struct channel_info_type, event));
 		return 0;
 	}
 
-	if (offsetof(struct channel_type, vector) != vector_offset)
+	if (offsetof(struct channel_info_type, vector) != vector_offset)
 	{
 		printf("Channel: Invalid 'vector' offset %d /= %d\n", vector_offset,
-				offsetof(struct channel_type, vector));
+				offsetof(struct channel_info_type, vector));
 		return 0;
 	}
 
@@ -235,16 +218,17 @@ int assert_subject_info(const struct subject_info_type * const info)
 		return 0;
 	}
 
-	if (info->channel_count != MAX_CHANNEL_COUNT)
+	if (info->channel_info_count != MAX_RESOURCE_COUNT)
 	{
-		printf("Sinfo: Invalid channel count %d\n", info->channel_count);
+		printf("Sinfo: Invalid channel info count %d\n",
+				info->channel_info_count);
 		return 0;
 	}
 
 	int i;
-	for (i = 0; i < info->channel_count; i++)
+	for (i = 0; i < info->channel_info_count; i++)
 	{
-		if (!assert_channel_info(&info->channels[i]))
+		if (!assert_channel_info(&info->channels_info[i]))
 		{
 			return 0;
 		}
@@ -255,7 +239,7 @@ int assert_subject_info(const struct subject_info_type * const info)
 
 int assert_subject_info_type(const int size, const int alignment,
 		const int magic_offset, const int chan_count_offset,
-		const int tsc_khz_offset, const int channels_offset)
+		const int tsc_khz_offset, const int chan_info_offset)
 {
 	if (sizeof(struct subject_info_type) != size)
 	{
@@ -277,11 +261,12 @@ int assert_subject_info_type(const int size, const int alignment,
 		return 0;
 	}
 
-	if (offsetof(struct subject_info_type, channel_count) != chan_count_offset)
+	if (offsetof(struct subject_info_type, channel_info_count)
+			!= chan_count_offset)
 	{
-		printf("Sinfo: Invalid 'channel_count' offset %d /= %d\n",
+		printf("Sinfo: Invalid 'channel_info_count' offset %d /= %d\n",
 				chan_count_offset,
-				offsetof(struct subject_info_type, channel_count));
+				offsetof(struct subject_info_type, channel_info_count));
 		return 0;
 	}
 
@@ -292,10 +277,11 @@ int assert_subject_info_type(const int size, const int alignment,
 		return 0;
 	}
 
-	if (offsetof(struct subject_info_type, channels) != channels_offset)
+	if (offsetof(struct subject_info_type, channels_info) != chan_info_offset)
 	{
-		printf("Sinfo: Invalid 'channels' offset %d /= %d\n", channels_offset,
-				offsetof(struct subject_info_type, channels));
+		printf("Sinfo: Invalid 'channels_info' offset %d /= %d\n",
+				chan_info_offset,
+				offsetof(struct subject_info_type, channels_info));
 		return 0;
 	}
 

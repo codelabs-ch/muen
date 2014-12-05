@@ -39,6 +39,14 @@ is
        Convention => C,
        Link_Name  => "assert_channel";
 
+   function C_Assert_Resource
+     (Resource : System.Address)
+      return Interfaces.C.int
+     with
+       Import     => True,
+       Convention => C,
+       Link_Name  => "assert_resource";
+
    function C_Assert_Subject_Info
      (Info : System.Address)
       return Interfaces.C.int
@@ -72,6 +80,19 @@ is
        Import     => True,
        Convention => C,
        Link_Name  => "assert_channel_type";
+
+   function C_Assert_Resource_Type
+     (Size                    : Interfaces.C.int;
+      Alignment               : Interfaces.C.int;
+      Name_Offset             : Interfaces.C.int;
+      Memregion_Idx_Offset    : Interfaces.C.int;
+      Channel_Info_Idx_Offset : Interfaces.C.int)
+      return Interfaces.C.int
+     with
+       Import     => True,
+       Convention => C,
+       Link_Name  => "assert_resource_type";
+
 
    function C_Assert_Subject_Info_Type
      (Size                 : Interfaces.C.int;

@@ -26,6 +26,9 @@ is
    --  Verify channel type interoperability.
    procedure Channel_To_C;
 
+   --  Verify resource type interoperability.
+   procedure Resource_To_C;
+
    --  Verify subject info type interoperability.
    procedure Subject_Info_To_C;
 
@@ -34,6 +37,9 @@ is
 
    --  Verify channel type equivalence.
    procedure Check_Channel_Type;
+
+   --  Verify resource type equivalence.
+   procedure Check_Resource_Type;
 
    --  Verify subject info type equivalence.
    procedure Check_Subject_Info_Type;

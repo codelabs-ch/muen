@@ -182,6 +182,73 @@ int assert_channel_type(const int size, const int alignment,
 	return 1;
 }
 
+int assert_resource(const struct resource_type * const resource)
+{
+	if (!assert_name(&resource->name))
+	{
+		return 0;
+	}
+
+	if (resource->memregion_idx != 23)
+	{
+		printf("Resource: Invalid memregion index %d\n",
+				resource->memregion_idx);
+		return 0;
+	}
+
+	if (resource->channel_info_idx != 42)
+	{
+		printf("Resource: Invalid channel info index %d\n",
+				resource->channel_info_idx);
+		return 0;
+	}
+
+	return 1;
+}
+
+int assert_resource_type(const int size, const int alignment,
+		const int name_offset, const int memregion_idx_offset,
+		const int chaninfo_idx_offset)
+{
+	if (sizeof(struct resource_type) != size)
+	{
+		printf("Resource: Invalid size %d /= %d\n", size,
+				sizeof(struct resource_type));
+		return 0;
+	}
+	if (__alignof__ (struct resource_type) != alignment)
+	{
+		printf("Resource: Invalid alignment %d /= %d\n", alignment,
+				__alignof__ (struct resource_type));
+		return 0;
+	}
+
+	if (offsetof(struct resource_type, name) != name_offset)
+	{
+		printf("Resource: Invalid 'name' offset %d /= %d\n", name_offset,
+				offsetof(struct resource_type, name));
+		return 0;
+	}
+
+	if (offsetof(struct resource_type, memregion_idx) != memregion_idx_offset)
+	{
+		printf("Resource: Invalid 'memregion_idx' offset %d /= %d\n",
+				memregion_idx_offset,
+				offsetof(struct resource_type, memregion_idx));
+		return 0;
+	}
+
+	if (offsetof(struct resource_type, channel_info_idx) != chaninfo_idx_offset)
+	{
+		printf("Resource: Invalid 'channel_info_idx' offset %d /= %d\n",
+				chaninfo_idx_offset,
+				offsetof(struct resource_type, channel_info_idx));
+		return 0;
+	}
+
+	return 1;
+}
+
 int assert_subject_info(const struct subject_info_type * const info)
 {
 	if (info->magic != MUEN_SUBJECT_INFO_MAGIC)

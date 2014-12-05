@@ -16,7 +16,10 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Debuglog.Client;
+
 with Subject_Info;
+with Devices.UART8250;
 
 package Exit_Handlers.IO_Instruction
 is
@@ -24,7 +27,13 @@ is
    --  Emulate I/O port access.
    procedure Process (Halt : out Boolean)
    with
-      Global  => (In_Out => Subject_Info.State),
-      Depends => (Subject_Info.State =>+ null, Halt => Subject_Info.State);
+      Global  => (In_Out => (Subject_Info.State, Devices.UART8250.State,
+                             Debuglog.Client.State)),
+      Depends =>
+       ((Debuglog.Client.State,
+        Subject_Info.State,
+        Devices.UART8250.State) =>+ (Subject_Info.State,
+                                     Devices.UART8250.State),
+        Halt                    => Subject_Info.State);
 
 end Exit_Handlers.IO_Instruction;

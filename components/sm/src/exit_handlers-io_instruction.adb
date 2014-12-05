@@ -70,7 +70,6 @@ is
    is
       Exit_Q : constant SK.Word64    := State.Exit_Qualification;
       Info   : constant IO_Info_Type := To_IO_Info (Qualification => Exit_Q);
-
    begin
       Halt := False;
 
@@ -100,8 +99,6 @@ is
                  16#0390# |  --  82C710 C&T mouse port chip   (conf.)
                  16#0391# |  --  82C710 C&T mouse port chip   (conf.)
                  16#03e9# |  --  COM 3            (configurable)
-                 16#03f9# |  --  COM 1            (configurable)
-                 16#03fa# |  --  82C710 C&T mouse port chip   (conf.)
                  16#04d0# |  --  PIC_ELCR1        (hardcoded,ACPI)
                  16#04d1# |  --  PIC_ELCR2        (hardcoded,ACPI)
                  16#0cf8# |  --  PCI Addr         (hardcoded)
@@ -115,6 +112,10 @@ is
                Ignore_Access (Info => Info);
             when 16#60# | 16#64# =>
                Devices.i8042.Emulate
+                 (Info => Info,
+                  Halt => Halt);
+            when Devices.UART8250.Com1_Port_Range =>
+               Devices.UART8250.Emulate
                  (Info => Info,
                   Halt => Halt);
             when others =>

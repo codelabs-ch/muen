@@ -93,7 +93,7 @@ is
    procedure Write_Character (Item : Character)
    is
    begin
-      if Item /= ASCII.NUL then
+      if Item /= ASCII.NUL and then Item /= ASCII.CR then
          Message_Buffer.Message (Message_Index) := Item;
 
          if Message_Index = Types.Message_Index'Last then

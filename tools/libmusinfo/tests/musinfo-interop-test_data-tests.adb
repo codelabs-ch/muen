@@ -46,8 +46,8 @@ package body Musinfo.Interop.Test_Data.Tests is
 
       Ref_Str : constant String (Name_Index_Type) := (others => 'a');
    begin
-      Assert (Condition => C_Imports.C_Assert_Channel
-              (Channel => Utils.Create_Channel
+      Assert (Condition => C_Imports.C_Assert_Channel_Info
+              (Channel_Info => Utils.Create_Channel
                (Name       => Utils.Create_Name (Str => Ref_Str),
                 Address    => 16#dead_beef_cafe_feed#,
                 Size       => 16#8080_abab_cdcd_9090#,

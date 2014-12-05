@@ -31,13 +31,13 @@ is
        Convention => C,
        Link_Name  => "assert_name";
 
-   function C_Assert_Channel
-     (Channel : System.Address)
+   function C_Assert_Channel_Info
+     (Channel_Info : System.Address)
       return Interfaces.C.int
      with
        Import     => True,
        Convention => C,
-       Link_Name  => "assert_channel";
+       Link_Name  => "assert_channel_info";
 
    function C_Assert_Resource
      (Resource : System.Address)

@@ -75,7 +75,7 @@ int assert_name_type(const int size, const int alignment,
 	return 1;
 }
 
-int assert_channel(const struct channel_type * const channel)
+int assert_channel_info(const struct channel_type * const channel)
 {
 	if (!assert_name(&channel->name))
 	{
@@ -266,7 +266,7 @@ int assert_subject_info(const struct subject_info_type * const info)
 	int i;
 	for (i = 0; i < info->channel_count; i++)
 	{
-		if (!assert_channel(&info->channels[i]))
+		if (!assert_channel_info(&info->channels[i]))
 		{
 			return 0;
 		}

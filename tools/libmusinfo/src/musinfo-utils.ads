@@ -72,6 +72,9 @@ is
       Event      :        Event_Number_Range;
       Vector     :        Vector_Range)
      with
-       Pre => Info.Channel_Info_Count < Resource_Count_Type'Last;
+       Pre =>
+         Info.Resource_Count < Resource_Count_Type'Last and
+         Info.Memregion_Count < Resource_Count_Type'Last and
+         Info.Channel_Info_Count < Resource_Count_Type'Last;
 
 end Musinfo.Utils;

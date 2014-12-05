@@ -32,8 +32,14 @@ is
       Event      :        Event_Number_Range;
       Vector     :        Vector_Range)
    is
-      pragma Unreferenced (Name, Address, Size, Writable);
    begin
+      Append_Memregion (Info       => Info,
+                        Name       => Name,
+                        Address    => Address,
+                        Size       => Size,
+                        Writable   => Writable,
+                        Executable => False);
+
       Info.Channel_Info_Count := Info.Channel_Info_Count + 1;
       Info.Channels_Info (Info.Channel_Info_Count)
         := Create_Channel_Info
@@ -41,6 +47,9 @@ is
            Has_Vector => Has_Vector,
            Event      => Event,
            Vector     => Vector);
+
+      Info.Resources (Info.Resource_Count).Channel_Info_Idx
+        := Info.Channel_Info_Count;
    end Append_Channel;
 
    -------------------------------------------------------------------------

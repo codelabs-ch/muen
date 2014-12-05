@@ -245,12 +245,34 @@ package body Musinfo.Utils.Test_Data.Tests is
                       Event      => Ref_Event,
                       Vector     => Ref_Vector);
 
+      Assert (Condition => Info.Resource_Count = 1,
+              Message   => "Resource not appended");
+      Assert (Condition => Info.Memregion_Count = 1,
+              Message   => "Memregion not appended");
       Assert (Condition => Info.Channel_Info_Count = 1,
               Message   => "Channel not appended");
 
       declare
+         Resource     : constant Resource_Type     := Info.Resources (1);
          Channel_Info : constant Channel_Info_Type := Info.Channels_Info (1);
+         Memregion    : constant Memregion_Type    := Info.Memregions (1);
       begin
+         Assert (Condition => Resource.Name = Ref_Name,
+                 Message   => "Name mismatch");
+         Assert (Condition => Resource.Memregion_Idx = 1,
+                 Message   => "Memregion index mismatch");
+         Assert (Condition => Resource.Channel_Info_Idx = 1,
+                 Message   => "Channel info index mismatch");
+
+         Assert (Condition => Memregion.Address = Ref_Addr,
+                 Message   => "Address mismatch");
+         Assert (Condition => Memregion.Size = Ref_Size,
+                 Message   => "Size mismatch");
+         Assert (Condition => Memregion.Flags.Writable,
+                 Message   => "Not writable");
+         Assert (Condition => not Memregion.Flags.Executable,
+                 Message   => "Executable");
+
          Assert (Condition => not Channel_Info.Flags.Has_Event,
                  Message   => "Has event");
          Assert (Condition => Channel_Info.Flags.Has_Vector,
@@ -270,6 +292,10 @@ package body Musinfo.Utils.Test_Data.Tests is
                       Has_Vector => True,
                       Event      => Ref_Event,
                       Vector     => Ref_Vector);
+      Assert (Condition => Info.Resource_Count = 2,
+              Message   => "Resource not appended (2)");
+      Assert (Condition => Info.Memregion_Count = 2,
+              Message   => "Memregion not appended (2)");
       Assert (Condition => Info.Channel_Info_Count = 2,
               Message   => "Channel not appended (2)");
 --  begin read only

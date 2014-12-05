@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with SK.Hypercall;
+
 package body Devices.UART8250
 with
    Refined_State => (State => Com1)
@@ -92,6 +94,10 @@ is
                when Register_Base =>
                   Debuglog.Client.Put
                     (Item => (Character'Val (SK.Byte'Mod (RAX and 16#ff#))));
+                  if (Com1.UART.IER and 2) /= 0 then
+                     Com1.UART.IIR := 2;
+                     SK.Hypercall.Trigger_Event (Number => Com1.Event);
+                  end if;
                when Register_IER =>
                   Com1.UART.IER := SK.Byte'Mod (RAX and 16#ff#);
                when others =>

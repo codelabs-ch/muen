@@ -30,6 +30,16 @@ struct name_type {
 	char data[MAX_NAME_LENGTH];
 } __attribute__((packed));
 
+#define MEM_WRITABLE_FLAG   (1 << 0)
+#define MEM_EXECUTABLE_FLAG (1 << 1)
+
+struct memregion_type {
+	uint64_t address;
+	uint64_t size;
+	uint8_t flags;
+	char padding[7];
+} __attribute__((packed, aligned (8)));
+
 #define WRITABLE_FLAG	(1 << 0)
 #define HAS_EVENT_FLAG	(1 << 1)
 #define HAS_VECTOR_FLAG	(1 << 2)

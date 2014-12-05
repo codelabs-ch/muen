@@ -84,10 +84,10 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Append_Channel (Gnattest_T : in out Test);
-   procedure Test_Append_Channel_6c9a46 (Gnattest_T : in out Test) renames Test_Append_Channel;
+   procedure Test_1_Append_Channel (Gnattest_T : in out Test);
+   procedure Test_Append_Channel_6c9a46 (Gnattest_T : in out Test) renames Test_1_Append_Channel;
 --  id:2.2/6c9a465a2a59b39c/Append_Channel/1/0/
-   procedure Test_Append_Channel (Gnattest_T : in out Test) is
+   procedure Test_1_Append_Channel (Gnattest_T : in out Test) is
    --  musinfo-utils.ads:40:4:Append_Channel
 --  end read only
 
@@ -120,7 +120,80 @@ package body Musinfo.Utils.Test_Data.Tests is
       Assert (Condition => Info.Channel_Count = 2,
               Message   => "Channel not appended (2)");
 --  begin read only
-   end Test_Append_Channel;
+   end Test_1_Append_Channel;
+--  end read only
+
+
+--  begin read only
+   procedure Test_2_Append_Channel (Gnattest_T : in out Test);
+   procedure Test_Append_Channel_986bdd (Gnattest_T : in out Test) renames Test_2_Append_Channel;
+--  id:2.2/986bdd786a412b76/Append_Channel/0/0/
+   procedure Test_2_Append_Channel (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:47:4:Append_Channel
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_64;
+
+      Ref_Name   : constant Name_Type := Create_Name (Str => "foo");
+      Ref_Addr   : constant Interfaces.Unsigned_64 := 16#8000_cafe_beef_0000#;
+      Ref_Size   : constant Interfaces.Unsigned_64 := 16#2000#;
+      Ref_Event  : constant Event_Number_Range     := 234;
+      Ref_Vector : constant Vector_Range           := 123;
+
+      Info : Subject_Info_Type := Null_Subject_Info;
+   begin
+      Assert (Condition => Info.Channel_Count = Channel_Count_Type'First,
+              Message   => "Channel present");
+
+      Append_Channel (Info    => Info,
+                      Name       => Ref_Name,
+                      Address    => Ref_Addr,
+                      Size       => Ref_Size,
+                      Writable   => True,
+                      Has_Event  => False,
+                      Has_Vector => True,
+                      Event      => Ref_Event,
+                      Vector     => Ref_Vector);
+
+      Assert (Condition => Info.Channel_Count = 1,
+              Message   => "Channel not appended");
+
+      declare
+         Channel : constant Channel_Type := Info.Channels (1);
+      begin
+         Assert (Condition => Channel.Name = Ref_Name,
+                 Message   => "Name mismatch");
+         Assert (Condition => Channel.Address = Ref_Addr,
+                 Message   => "Address mismatch");
+         Assert (Condition => Channel.Size = Ref_Size,
+                 Message   => "Size mismatch");
+         Assert (Condition => Channel.Flags.Writable,
+                 Message   => "Not writable");
+         Assert (Condition => not Channel.Flags.Has_Event,
+                 Message   => "Has event");
+         Assert (Condition => Channel.Flags.Has_Vector,
+                 Message   => "Has no vector");
+         Assert (Condition => Channel.Event = Ref_Event,
+                 Message   => "Event mismatch");
+         Assert (Condition => Channel.Vector = Ref_Vector,
+                 Message   => "Vector mismatch");
+      end;
+
+      Append_Channel (Info    => Info,
+                      Name       => Ref_Name,
+                      Address    => Ref_Addr,
+                      Size       => Ref_Size,
+                      Writable   => True,
+                      Has_Event  => False,
+                      Has_Vector => True,
+                      Event      => Ref_Event,
+                      Vector     => Ref_Vector);
+      Assert (Condition => Info.Channel_Count = 2,
+              Message   => "Channel not appended (2)");
+--  begin read only
+   end Test_2_Append_Channel;
 --  end read only
 
 end Musinfo.Utils.Test_Data.Tests;

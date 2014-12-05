@@ -43,4 +43,18 @@ is
      with
        Pre => Info.Channel_Count < Channel_Count_Type'Last;
 
+   --  Append channel with specified parameters to given subject info.
+   procedure Append_Channel
+     (Info       : in out Subject_Info_Type;
+      Name       :        Name_Type;
+      Address    :        Interfaces.Unsigned_64;
+      Size       :        Interfaces.Unsigned_64;
+      Writable   :        Boolean;
+      Has_Event  :        Boolean;
+      Has_Vector :        Boolean;
+      Event      :        Event_Number_Range;
+      Vector     :        Vector_Range)
+     with
+       Pre => Info.Channel_Count < Channel_Count_Type'Last;
+
 end Musinfo.Utils;

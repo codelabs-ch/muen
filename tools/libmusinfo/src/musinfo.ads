@@ -227,35 +227,52 @@ is
        Pack,
        Alignment => 8;
 
-   Subject_Info_Type_Size : constant := 8 + 1 + 7 + 8
-     + Channel_Info_Array_Size;
+   Subject_Info_Type_Size : constant := 8 + 1 + 7 + 8 + Resource_Array_Size
+     + Memregion_Array_Size + Channel_Info_Array_Size;
 
    --  Subject info records enable subjects to determine what resources are
    --  provided to them at runtime.
    type Subject_Info_Type is record
       Magic              : Interfaces.Unsigned_64;
+      Resource_Count     : Resource_Count_Type;
+      Memregion_Count    : Resource_Count_Type;
       Channel_Info_Count : Resource_Count_Type;
       Padding            : Bit_Array (1 .. 40);
       TSC_Khz            : Interfaces.Unsigned_64;
+      Resources          : Resource_Array;
+      Memregions         : Memregion_Array;
       Channels_Info      : Channel_Info_Array;
    end record
      with
        Size      => Subject_Info_Type_Size * 8,
        Alignment => 8;
 
+   Memregions_Offset    : constant := 24 + Resource_Array_Size;
+   Channels_Info_Offset : constant := Memregions_Offset + Memregion_Array_Size;
+
    for Subject_Info_Type use record
       Magic              at 0  range 0 .. 63;
-      Channel_Info_Count at 8  range 0 .. 7;
-      Padding            at 9  range 0 .. 55;
+      Resource_Count     at 8  range 0 .. 7;
+      Memregion_Count    at 9  range 0 .. 7;
+      Channel_Info_Count at 10 range 0 .. 7;
+      Padding            at 11 range 0 .. 39;
       TSC_Khz            at 16 range 0 .. 63;
-      Channels_Info      at 24 range 0 .. (Channel_Info_Array_Size * 8) - 1;
+      Resources          at 24 range 0 .. (Resource_Array_Size * 8) - 1;
+      Memregions         at Memregions_Offset range
+        0 .. (Memregion_Array_Size * 8) - 1;
+      Channels_Info      at Channels_Info_Offset range
+        0 .. (Channel_Info_Array_Size * 8) - 1;
    end record;
 
    Null_Subject_Info : constant Subject_Info_Type
      := (Magic              => Muen_Subject_Info_Magic,
+         Resource_Count     => Resource_Count_Type'First,
+         Memregion_Count    => Resource_Count_Type'First,
          Channel_Info_Count => Resource_Count_Type'First,
          Padding            => (others => 0),
          TSC_Khz            => 0,
+         Resources          => (others => Null_Resource),
+         Memregions         => (others => Null_Memregion),
          Channels_Info      => (others => Null_Channel_Info));
 
 end Musinfo;

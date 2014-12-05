@@ -21,8 +21,11 @@ package Musinfo.Utils.Test_Data.Tests is
    procedure Test_Create_Resource_ed1649 (Gnattest_T : in out Test);
    --  musinfo-utils.ads:44:4:Create_Resource
 
+   procedure Test_Append_Memregion_e86464 (Gnattest_T : in out Test);
+   --  musinfo-utils.ads:51:4:Append_Memregion
+
    procedure Test_Append_Channel_986bdd (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:51:4:Append_Channel
+   --  musinfo-utils.ads:64:4:Append_Channel
 
 end Musinfo.Utils.Test_Data.Tests;
 --  end read only

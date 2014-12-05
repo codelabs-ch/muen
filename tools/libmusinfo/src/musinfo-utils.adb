@@ -45,6 +45,33 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Append_Memregion
+     (Info       : in out Subject_Info_Type;
+      Name       :        Name_Type;
+      Address    :        Interfaces.Unsigned_64;
+      Size       :        Interfaces.Unsigned_64;
+      Writable   :        Boolean;
+      Executable :        Boolean)
+   is
+   begin
+      Info.Memregion_Count := Info.Memregion_Count + 1;
+      Info.Memregions (Info.Memregion_Count)
+        := Create_Memregion
+          (Address    => Address,
+           Size       => Size,
+           Writable   => Writable,
+           Executable => Executable);
+
+      Info.Resource_Count := Info.Resource_Count + 1;
+      Info.Resources (Info.Resource_Count)
+        := Create_Resource
+          (Name               => Name,
+           Memregion_Index    => Info.Memregion_Count,
+           Channel_Info_Index => No_Resource);
+   end Append_Memregion;
+
+   -------------------------------------------------------------------------
+
    function Create_Channel_Info
      (Has_Event  : Boolean;
       Has_Vector : Boolean;

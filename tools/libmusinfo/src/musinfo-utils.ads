@@ -47,6 +47,19 @@ is
       Channel_Info_Index : Resource_Count_Type)
       return Resource_Type;
 
+   --  Append memory region with specified parameters to given subject info.
+   procedure Append_Memregion
+     (Info       : in out Subject_Info_Type;
+      Name       :        Name_Type;
+      Address    :        Interfaces.Unsigned_64;
+      Size       :        Interfaces.Unsigned_64;
+      Writable   :        Boolean;
+      Executable :        Boolean)
+     with
+       Pre =>
+         Info.Resource_Count < Resource_Count_Type'Last and
+         Info.Memregion_Count < Resource_Count_Type'Last;
+
    --  Append channel with specified parameters to given subject info.
    procedure Append_Channel
      (Info       : in out Subject_Info_Type;

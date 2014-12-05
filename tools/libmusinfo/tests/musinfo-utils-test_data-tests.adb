@@ -135,11 +135,89 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Append_Memregion (Gnattest_T : in out Test);
+   procedure Test_Append_Memregion_e86464 (Gnattest_T : in out Test) renames Test_Append_Memregion;
+--  id:2.2/e864641e17ff5fa8/Append_Memregion/1/0/
+   procedure Test_Append_Memregion (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:51:4:Append_Memregion
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use type Interfaces.Unsigned_64;
+
+      Ref_Name   : constant Name_Type := Create_Name (Str => "foo");
+      Ref_Addr   : constant Interfaces.Unsigned_64 := 16#cafe_feed_cafe_0000#;
+      Ref_Size   : constant Interfaces.Unsigned_64 := 16#0042_2300#;
+
+      Info : Subject_Info_Type := Null_Subject_Info;
+   begin
+      Assert (Condition => Info.Resource_Count = Resource_Count_Type'First,
+              Message   => "Resource present");
+      Assert (Condition => Info.Memregion_Count = Resource_Count_Type'First,
+              Message   => "Memregion present");
+      Assert (Condition => Info.Channel_Info_Count = Resource_Count_Type'First,
+              Message   => "Channel info present");
+
+      Append_Memregion (Info       => Info,
+                        Name       => Ref_Name,
+                        Address    => Ref_Addr,
+                        Size       => Ref_Size,
+                        Writable   => True,
+                        Executable => False);
+
+      Assert (Condition => Info.Resource_Count = 1,
+              Message   => "Resource not appended");
+      Assert (Condition => Info.Memregion_Count = 1,
+              Message   => "Memregion not appended");
+      Assert (Condition => Info.Channel_Info_Count = Resource_Count_Type'First,
+              Message   => "Channel info appended");
+
+      declare
+         Resource  : constant Resource_Type  := Info.Resources (1);
+         Memregion : constant Memregion_Type := Info.Memregions (1);
+      begin
+         Assert (Condition => Resource.Name = Ref_Name,
+                 Message   => "Name mismatch");
+         Assert (Condition => Resource.Memregion_Idx = 1,
+                 Message   => "Memregion index mismatch");
+         Assert (Condition => Resource.Channel_Info_Idx = No_Resource,
+                 Message   => "Channel info index mismatch");
+
+         Assert (Condition => Memregion.Address = Ref_Addr,
+                 Message   => "Address mismatch");
+         Assert (Condition => Memregion.Size = Ref_Size,
+                 Message   => "Size mismatch");
+         Assert (Condition => Memregion.Flags.Writable,
+                 Message   => "Not writable");
+         Assert (Condition => not Memregion.Flags.Executable,
+                 Message   => "Executable");
+      end;
+
+      Append_Memregion (Info       => Info,
+                        Name       => Ref_Name,
+                        Address    => Ref_Addr,
+                        Size       => Ref_Size,
+                        Writable   => True,
+                        Executable => False);
+
+      Assert (Condition => Info.Resource_Count = 2,
+              Message   => "Resource not appended (2)");
+      Assert (Condition => Info.Memregion_Count = 2,
+              Message   => "Memregion not appended (2)");
+      Assert (Condition => Info.Channel_Info_Count = Resource_Count_Type'First,
+              Message   => "Channel info appended (2)");
+--  begin read only
+   end Test_Append_Memregion;
+--  end read only
+
+
+--  begin read only
    procedure Test_Append_Channel (Gnattest_T : in out Test);
    procedure Test_Append_Channel_986bdd (Gnattest_T : in out Test) renames Test_Append_Channel;
 --  id:2.2/986bdd786a412b76/Append_Channel/0/0/
    procedure Test_Append_Channel (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:51:4:Append_Channel
+   --  musinfo-utils.ads:64:4:Append_Channel
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

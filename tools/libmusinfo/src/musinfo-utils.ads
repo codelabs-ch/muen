@@ -32,13 +32,13 @@ is
       Executable : Boolean)
       return Memregion_Type;
 
-   --  Create channel with given parameters.
-   function Create_Channel
+   --  Create channel information with given parameters.
+   function Create_Channel_Info
      (Has_Event  : Boolean;
       Has_Vector : Boolean;
       Event      : Event_Number_Range;
       Vector     : Vector_Range)
-      return Channel_Type;
+      return Channel_Info_Type;
 
    --  Create resource with given parameters.
    function Create_Resource
@@ -59,6 +59,6 @@ is
       Event      :        Event_Number_Range;
       Vector     :        Vector_Range)
      with
-       Pre => Info.Channel_Count < Channel_Count_Type'Last;
+       Pre => Info.Channel_Info_Count < Resource_Count_Type'Last;
 
 end Musinfo.Utils;

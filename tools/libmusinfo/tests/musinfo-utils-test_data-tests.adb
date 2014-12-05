@@ -69,37 +69,37 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_Create_Channel (Gnattest_T : in out Test);
-   procedure Test_Create_Channel_3a775d (Gnattest_T : in out Test) renames Test_Create_Channel;
---  id:2.2/3a775d425a7d99c9/Create_Channel/1/0/
-   procedure Test_Create_Channel (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:36:4:Create_Channel
+   procedure Test_Create_Channel_Info (Gnattest_T : in out Test);
+   procedure Test_Create_Channel_Info_825d0f (Gnattest_T : in out Test) renames Test_Create_Channel_Info;
+--  id:2.2/825d0f1f0fd8a802/Create_Channel_Info/1/0/
+   procedure Test_Create_Channel_Info (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:36:4:Create_Channel_Info
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
 
       use type Interfaces.Unsigned_64;
 
-      Ref_Event  : constant Event_Number_Range := 234;
-      Ref_Vector : constant Vector_Range       := 123;
-      Channel    : Channel_Type;
+      Ref_Event    : constant Event_Number_Range := 234;
+      Ref_Vector   : constant Vector_Range       := 123;
+      Channel_Info : Channel_Info_Type;
    begin
-      Channel := Create_Channel
+      Channel_Info := Create_Channel_Info
         (Has_Event  => True,
          Has_Vector => False,
          Event      => Ref_Event,
          Vector     => Ref_Vector);
 
-      Assert (Condition => Channel.Flags.Has_Event,
+      Assert (Condition => Channel_Info.Flags.Has_Event,
               Message   => "Has no event");
-      Assert (Condition => not Channel.Flags.Has_Vector,
+      Assert (Condition => not Channel_Info.Flags.Has_Vector,
               Message   => "Has vector");
-      Assert (Condition => Channel.Event = Ref_Event,
+      Assert (Condition => Channel_Info.Event = Ref_Event,
               Message   => "Event mismatch");
-      Assert (Condition => Channel.Vector = Ref_Vector,
+      Assert (Condition => Channel_Info.Vector = Ref_Vector,
               Message   => "Vector mismatch");
 --  begin read only
-   end Test_Create_Channel;
+   end Test_Create_Channel_Info;
 --  end read only
 
 
@@ -154,7 +154,7 @@ package body Musinfo.Utils.Test_Data.Tests is
 
       Info : Subject_Info_Type := Null_Subject_Info;
    begin
-      Assert (Condition => Info.Channel_Count = Channel_Count_Type'First,
+      Assert (Condition => Info.Channel_Info_Count = Resource_Count_Type'First,
               Message   => "Channel present");
 
       Append_Channel (Info    => Info,
@@ -167,19 +167,19 @@ package body Musinfo.Utils.Test_Data.Tests is
                       Event      => Ref_Event,
                       Vector     => Ref_Vector);
 
-      Assert (Condition => Info.Channel_Count = 1,
+      Assert (Condition => Info.Channel_Info_Count = 1,
               Message   => "Channel not appended");
 
       declare
-         Channel : constant Channel_Type := Info.Channels (1);
+         Channel_Info : constant Channel_Info_Type := Info.Channels_Info (1);
       begin
-         Assert (Condition => not Channel.Flags.Has_Event,
+         Assert (Condition => not Channel_Info.Flags.Has_Event,
                  Message   => "Has event");
-         Assert (Condition => Channel.Flags.Has_Vector,
+         Assert (Condition => Channel_Info.Flags.Has_Vector,
                  Message   => "Has no vector");
-         Assert (Condition => Channel.Event = Ref_Event,
+         Assert (Condition => Channel_Info.Event = Ref_Event,
                  Message   => "Event mismatch");
-         Assert (Condition => Channel.Vector = Ref_Vector,
+         Assert (Condition => Channel_Info.Vector = Ref_Vector,
                  Message   => "Vector mismatch");
       end;
 
@@ -192,7 +192,7 @@ package body Musinfo.Utils.Test_Data.Tests is
                       Has_Vector => True,
                       Event      => Ref_Event,
                       Vector     => Ref_Vector);
-      Assert (Condition => Info.Channel_Count = 2,
+      Assert (Condition => Info.Channel_Info_Count = 2,
               Message   => "Channel not appended (2)");
 --  begin read only
    end Test_Append_Channel;

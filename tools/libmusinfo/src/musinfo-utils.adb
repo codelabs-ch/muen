@@ -34,9 +34,9 @@ is
    is
       pragma Unreferenced (Name, Address, Size, Writable);
    begin
-      Info.Channel_Count := Info.Channel_Count + 1;
-      Info.Channels (Info.Channel_Count)
-        := Create_Channel
+      Info.Channel_Info_Count := Info.Channel_Info_Count + 1;
+      Info.Channels_Info (Info.Channel_Info_Count)
+        := Create_Channel_Info
           (Has_Event  => Has_Event,
            Has_Vector => Has_Vector,
            Event      => Event,
@@ -45,21 +45,21 @@ is
 
    -------------------------------------------------------------------------
 
-   function Create_Channel
+   function Create_Channel_Info
      (Has_Event  : Boolean;
       Has_Vector : Boolean;
       Event      : Event_Number_Range;
       Vector     : Vector_Range)
-      return Channel_Type
+      return Channel_Info_Type
    is
    begin
-      return Channel : Channel_Type := Null_Channel do
-         Channel.Flags.Has_Event  := Has_Event;
-         Channel.Flags.Has_Vector := Has_Vector;
-         Channel.Event            := Event;
-         Channel.Vector           := Vector;
+      return Channel_Info : Channel_Info_Type := Null_Channel_Info do
+         Channel_Info.Flags.Has_Event  := Has_Event;
+         Channel_Info.Flags.Has_Vector := Has_Vector;
+         Channel_Info.Event            := Event;
+         Channel_Info.Vector           := Vector;
       end return;
-   end Create_Channel;
+   end Create_Channel_Info;
 
    -------------------------------------------------------------------------
 

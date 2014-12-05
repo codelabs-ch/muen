@@ -139,12 +139,12 @@ is
      with
        Size => 8;
 
-   Channel_Type_Size : constant := 1 + 1 + 1 + 5;
+   Channel_Info_Type_Size : constant := 1 + 1 + 1 + 5;
 
    --  Channel information consist of an optional vector and event number.
    --  The assignment of an optional vector and/or an event to a channel is
    --  indicated by the Has_Event/Vector flags.
-   type Channel_Type is record
+   type Channel_Info_Type is record
       Flags   : Channel_Flags_Type;
       Event   : Event_Number_Range;
       Vector  : Vector_Range;
@@ -152,16 +152,16 @@ is
    end record
      with
        Alignment => 8,
-       Size      => Channel_Type_Size * 8;
+       Size      => Channel_Info_Type_Size * 8;
 
-   for Channel_Type use record
+   for Channel_Info_Type use record
       Flags   at 0 range 0 .. 7;
       Event   at 1 range 0 .. 7;
       Vector  at 2 range 0 .. 7;
       Padding at 3 range 0 .. 39;
    end record;
 
-   Null_Channel : constant Channel_Type
+   Null_Channel_Info : constant Channel_Info_Type
      := (Flags   => Null_Channel_Flags,
          Event   => 0,
          Vector  => 0,
@@ -184,17 +184,10 @@ is
        Pack,
        Alignment => 8;
 
-   type Channel_Count_Type is range 0 .. 255
-     with
-       Size => 8;
+   Channel_Info_Array_Size : constant := Resource_Index_Type'Last
+     * Channel_Info_Type_Size;
 
-   subtype Channel_Index_Type is Channel_Count_Type range
-     1 .. Channel_Count_Type'Last;
-
-   Channel_Array_Size : constant := Channel_Index_Type'Last
-     * Channel_Type_Size;
-
-   type Channel_Array is array (Channel_Index_Type) of Channel_Type
+   type Channel_Info_Array is array (Resource_Index_Type) of Channel_Info_Type
      with
        Pack,
        Alignment => 8;
@@ -234,34 +227,35 @@ is
        Pack,
        Alignment => 8;
 
-   Subject_Info_Type_Size : constant := 8 + 1 + 7 + 8 + Channel_Array_Size;
+   Subject_Info_Type_Size : constant := 8 + 1 + 7 + 8
+     + Channel_Info_Array_Size;
 
    --  Subject info records enable subjects to determine what resources are
    --  provided to them at runtime.
    type Subject_Info_Type is record
-      Magic         : Interfaces.Unsigned_64;
-      Channel_Count : Channel_Count_Type;
-      Padding       : Bit_Array (1 .. 56);
-      TSC_Khz       : Interfaces.Unsigned_64;
-      Channels      : Channel_Array;
+      Magic              : Interfaces.Unsigned_64;
+      Channel_Info_Count : Resource_Count_Type;
+      Padding            : Bit_Array (1 .. 40);
+      TSC_Khz            : Interfaces.Unsigned_64;
+      Channels_Info      : Channel_Info_Array;
    end record
      with
        Size      => Subject_Info_Type_Size * 8,
        Alignment => 8;
 
    for Subject_Info_Type use record
-      Magic         at 0  range 0 .. 63;
-      Channel_Count at 8  range 0 .. 7;
-      Padding       at 9  range 0 .. 55;
-      TSC_Khz       at 16 range 0 .. 63;
-      Channels      at 24 range 0 .. (Channel_Array_Size * 8) - 1;
+      Magic              at 0  range 0 .. 63;
+      Channel_Info_Count at 8  range 0 .. 7;
+      Padding            at 9  range 0 .. 55;
+      TSC_Khz            at 16 range 0 .. 63;
+      Channels_Info      at 24 range 0 .. (Channel_Info_Array_Size * 8) - 1;
    end record;
 
    Null_Subject_Info : constant Subject_Info_Type
-     := (Magic         => Muen_Subject_Info_Magic,
-         Channel_Count => Channel_Count_Type'First,
-         Padding       => (others => 0),
-         TSC_Khz       => 0,
-         Channels      => (others => Null_Channel));
+     := (Magic              => Muen_Subject_Info_Magic,
+         Channel_Info_Count => Resource_Count_Type'First,
+         Padding            => (others => 0),
+         TSC_Khz            => 0,
+         Channels_Info      => (others => Null_Channel_Info));
 
 end Musinfo;

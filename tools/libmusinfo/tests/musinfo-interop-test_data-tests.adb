@@ -47,7 +47,7 @@ package body Musinfo.Interop.Test_Data.Tests is
       Ref_Str : constant String (Name_Index_Type) := (others => 'a');
    begin
       Assert (Condition => C_Imports.C_Assert_Channel_Info
-              (Channel_Info => Utils.Create_Channel
+              (Channel_Info => Utils.Create_Channel_Info
                (Has_Event  => True,
                 Has_Vector => True,
                 Event      => 128,
@@ -98,7 +98,7 @@ package body Musinfo.Interop.Test_Data.Tests is
       Ref_Str : constant String (Name_Index_Type) := (others => 'a');
       Info    : Subject_Info_Type                 := Null_Subject_Info;
    begin
-      for I in Channel_Index_Type loop
+      for I in Resource_Index_Type loop
          Utils.Append_Channel
            (Info       => Info,
             Name       => Utils.Create_Name (Str => Ref_Str),
@@ -158,12 +158,12 @@ package body Musinfo.Interop.Test_Data.Tests is
 
       use type Interfaces.C.int;
 
-      Dummy : Channel_Type;
+      Dummy : Channel_Info_Type;
    begin
 
       Assert (Condition => C_Imports.C_Assert_Channel_Info_Type
-              (Size          => Channel_Type'Size / 8,
-               Alignment     => Channel_Type'Alignment,
+              (Size          => Channel_Info_Type'Size / 8,
+               Alignment     => Channel_Info_Type'Alignment,
                Flags_Offset  => Dummy.Flags'Bit_Position / 8,
                Event_Offset  => Dummy.Event'Bit_Position / 8,
                Vector_Offset => Dummy.Vector'Bit_Position / 8) = 1,
@@ -217,14 +217,15 @@ package body Musinfo.Interop.Test_Data.Tests is
       Dummy : Subject_Info_Type;
    begin
 
-      Assert (Condition => C_Imports.C_Assert_Subject_Info_Type
-              (Size                 => Subject_Info_Type'Size / 8,
-               Alignment            => Subject_Info_Type'Alignment,
-               Magic_Offset         => Dummy.Magic'Bit_Position / 8,
-               Channel_Count_Offset => Dummy.Channel_Count'Bit_Position / 8,
-               TSC_Khz_Offset       => Dummy.TSC_Khz'Bit_Position / 8,
-               Channels_Offset      => Dummy.Channels'Bit_Position / 8) = 1,
-              Message   => "C subject info type mismatch");
+      Assert
+        (Condition => C_Imports.C_Assert_Subject_Info_Type
+           (Size                 => Subject_Info_Type'Size / 8,
+            Alignment            => Subject_Info_Type'Alignment,
+            Magic_Offset         => Dummy.Magic'Bit_Position / 8,
+            Channel_Count_Offset => Dummy.Channel_Info_Count'Bit_Position / 8,
+            TSC_Khz_Offset       => Dummy.TSC_Khz'Bit_Position / 8,
+            Channels_Offset      => Dummy.Channels_Info'Bit_Position / 8) = 1,
+         Message   => "C subject info type mismatch");
 
 --  begin read only
    end Test_Check_Subject_Info_Type;

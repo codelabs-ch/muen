@@ -90,14 +90,17 @@ is
        Convention => C,
        Link_Name  => "assert_resource_type";
 
-
    function C_Assert_Subject_Info_Type
-     (Size                 : Interfaces.C.int;
-      Alignment            : Interfaces.C.int;
-      Magic_Offset         : Interfaces.C.int;
-      Channel_Count_Offset : Interfaces.C.int;
-      TSC_Khz_Offset       : Interfaces.C.int;
-      Channels_Offset      : Interfaces.C.int)
+     (Size                  : Interfaces.C.int;
+      Alignment             : Interfaces.C.int;
+      Magic_Offset          : Interfaces.C.int;
+      Resource_Count_Offset : Interfaces.C.int;
+      Memreg_Count_Offset   : Interfaces.C.int;
+      Channel_Count_Offset  : Interfaces.C.int;
+      TSC_Khz_Offset        : Interfaces.C.int;
+      Resources_Offset      : Interfaces.C.int;
+      Memregions_Offset     : Interfaces.C.int;
+      Channels_Offset       : Interfaces.C.int)
       return Interfaces.C.int
      with
        Import     => True,

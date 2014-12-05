@@ -219,12 +219,16 @@ package body Musinfo.Interop.Test_Data.Tests is
 
       Assert
         (Condition => C_Imports.C_Assert_Subject_Info_Type
-           (Size                 => Subject_Info_Type'Size / 8,
-            Alignment            => Subject_Info_Type'Alignment,
-            Magic_Offset         => Dummy.Magic'Bit_Position / 8,
-            Channel_Count_Offset => Dummy.Channel_Info_Count'Bit_Position / 8,
-            TSC_Khz_Offset       => Dummy.TSC_Khz'Bit_Position / 8,
-            Channels_Offset      => Dummy.Channels_Info'Bit_Position / 8) = 1,
+           (Size                  => Subject_Info_Type'Size / 8,
+            Alignment             => Subject_Info_Type'Alignment,
+            Magic_Offset          => Dummy.Magic'Bit_Position / 8,
+            Resource_Count_Offset => Dummy.Resource_Count'Bit_Position / 8,
+            Memreg_Count_Offset   => Dummy.Memregion_Count'Bit_Position / 8,
+            Channel_Count_Offset  => Dummy.Channel_Info_Count'Bit_Position / 8,
+            TSC_Khz_Offset        => Dummy.TSC_Khz'Bit_Position / 8,
+            Resources_Offset      => Dummy.Resources'Bit_Position / 8,
+            Memregions_Offset     => Dummy.Memregions'Bit_Position / 8,
+            Channels_Offset       => Dummy.Channels_Info'Bit_Position / 8) = 1,
          Message   => "C subject info type mismatch");
 
 --  begin read only

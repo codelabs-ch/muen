@@ -238,8 +238,10 @@ int assert_subject_info(const struct subject_info_type * const info)
 }
 
 int assert_subject_info_type(const int size, const int alignment,
-		const int magic_offset, const int chan_count_offset,
-		const int tsc_khz_offset, const int chan_info_offset)
+		const int magic_offset, const int res_count_offset,
+		const int memreg_count_offset, const int chan_count_offset,
+		const int tsc_khz_offset, const int resources_offset,
+		const int memregions_offset, const int chan_info_offset)
 {
 	if (sizeof(struct subject_info_type) != size)
 	{
@@ -261,6 +263,23 @@ int assert_subject_info_type(const int size, const int alignment,
 		return 0;
 	}
 
+	if (offsetof(struct subject_info_type, resource_count) != res_count_offset)
+	{
+		printf("Sinfo: Invalid 'resource_count' offset %d /= %d\n",
+				res_count_offset,
+				offsetof(struct subject_info_type, resource_count));
+		return 0;
+	}
+
+	if (offsetof(struct subject_info_type, memregion_count)
+			!= memreg_count_offset)
+	{
+		printf("Sinfo: Invalid 'memregion__count' offset %d /= %d\n",
+				memreg_count_offset,
+				offsetof(struct subject_info_type, memregion_count));
+		return 0;
+	}
+
 	if (offsetof(struct subject_info_type, channel_info_count)
 			!= chan_count_offset)
 	{
@@ -274,6 +293,21 @@ int assert_subject_info_type(const int size, const int alignment,
 	{
 		printf("Sinfo: Invalid 'tsc_khz' offset %d /= %d\n", tsc_khz_offset,
 				offsetof(struct subject_info_type, tsc_khz));
+		return 0;
+	}
+
+	if (offsetof(struct subject_info_type, resources) != resources_offset)
+	{
+		printf("Sinfo: Invalid 'resources' offset %d /= %d\n", resources_offset,
+				offsetof(struct subject_info_type, resources));
+		return 0;
+	}
+
+	if (offsetof(struct subject_info_type, memregions) != memregions_offset)
+	{
+		printf("Sinfo: Invalid 'memregions' offset %d /= %d\n",
+				memregions_offset,
+				offsetof(struct subject_info_type, memregions));
 		return 0;
 	}
 

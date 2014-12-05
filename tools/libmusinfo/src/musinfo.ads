@@ -209,6 +209,41 @@ is
        Pack,
        Alignment => 8;
 
+   Resource_Type_Size : constant := 64 + 1 + 1 + 6;
+
+   --  A resource associates a name with a memory region and optionally
+   --  additional channel information using array indexes as references.
+   type Resource_Type is record
+      Name             : Name_Type;
+      Memregion_Idx    : Resource_Count_Type;
+      Channel_Info_Idx : Resource_Count_Type;
+      Padding          : Bit_Array (1 .. 48);
+   end record
+     with
+       Alignment => 8,
+       Size      => Resource_Type_Size * 8;
+
+   for Resource_Type use record
+      Name             at  0 range 0 .. 511;
+      Memregion_Idx    at 64 range 0 .. 7;
+      Channel_Info_Idx at 65 range 0 .. 7;
+      Padding          at 66 range 0 .. 47;
+   end record;
+
+   Null_Resource : constant Resource_Type
+     := (Name             => Null_Name,
+         Memregion_Idx    => No_Resource,
+         Channel_Info_Idx => No_Resource,
+         Padding          => (others => 0));
+
+   Resource_Array_Size : constant := Resource_Index_Type'Last
+     * Resource_Type_Size;
+
+   type Resource_Array is array (Resource_Index_Type) of Resource_Type
+     with
+       Pack,
+       Alignment => 8;
+
    Subject_Info_Type_Size : constant := 8 + 1 + 7 + 8 + Channel_Array_Size;
 
    --  Subject info records enable subjects to determine what resources are

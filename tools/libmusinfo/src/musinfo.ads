@@ -139,16 +139,12 @@ is
      with
        Size => 8;
 
-   Channel_Type_Size : constant := 88;
+   Channel_Type_Size : constant := 1 + 1 + 1 + 5;
 
-   --  A channel is described by its name, memory address and size. The
-   --  Writable flag specifies if the memory region can be written to. Channels
-   --  can optionally have an assigned vector or event which is indicated by
-   --  the Has_Event/Vector flags.
+   --  Channel information consist of an optional vector and event number.
+   --  The assignment of an optional vector and/or an event to a channel is
+   --  indicated by the Has_Event/Vector flags.
    type Channel_Type is record
-      Name    : Name_Type;
-      Address : Interfaces.Unsigned_64;
-      Size    : Interfaces.Unsigned_64;
       Flags   : Channel_Flags_Type;
       Event   : Event_Number_Range;
       Vector  : Vector_Range;
@@ -159,20 +155,14 @@ is
        Size      => Channel_Type_Size * 8;
 
    for Channel_Type use record
-      Name    at  0 range 0 .. 511;
-      Address at 64 range 0 .. 63;
-      Size    at 72 range 0 .. 63;
-      Flags   at 80 range 0 .. 7;
-      Event   at 81 range 0 .. 7;
-      Vector  at 82 range 0 .. 7;
-      Padding at 83 range 0 .. 39;
+      Flags   at 0 range 0 .. 7;
+      Event   at 1 range 0 .. 7;
+      Vector  at 2 range 0 .. 7;
+      Padding at 3 range 0 .. 39;
    end record;
 
    Null_Channel : constant Channel_Type
-     := (Name    => Null_Name,
-         Address => 0,
-         Size    => 0,
-         Flags   => Null_Channel_Flags,
+     := (Flags   => Null_Channel_Flags,
          Event   => 0,
          Vector  => 0,
          Padding => (others => 0));

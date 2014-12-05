@@ -70,8 +70,8 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 --  begin read only
    procedure Test_Create_Channel (Gnattest_T : in out Test);
-   procedure Test_Create_Channel_a2c081 (Gnattest_T : in out Test) renames Test_Create_Channel;
---  id:2.2/a2c0814d7c272b3d/Create_Channel/1/0/
+   procedure Test_Create_Channel_3a775d (Gnattest_T : in out Test) renames Test_Create_Channel;
+--  id:2.2/3a775d425a7d99c9/Create_Channel/1/0/
    procedure Test_Create_Channel (Gnattest_T : in out Test) is
    --  musinfo-utils.ads:36:4:Create_Channel
 --  end read only
@@ -80,29 +80,16 @@ package body Musinfo.Utils.Test_Data.Tests is
 
       use type Interfaces.Unsigned_64;
 
-      Ref_Name   : constant Name_Type := Create_Name (Str => "foo");
-      Ref_Addr   : constant Interfaces.Unsigned_64 := 16#8000_cafe_beef_0000#;
-      Ref_Size   : constant Interfaces.Unsigned_64 := 16#2000#;
-      Ref_Event  : constant Event_Number_Range     := 234;
-      Ref_Vector : constant Vector_Range           := 123;
+      Ref_Event  : constant Event_Number_Range := 234;
+      Ref_Vector : constant Vector_Range       := 123;
       Channel    : Channel_Type;
    begin
       Channel := Create_Channel
-        (Name       => Ref_Name,
-         Address    => Ref_Addr,
-         Size       => Ref_Size,
-         Writable   => False,
-         Has_Event  => True,
+        (Has_Event  => True,
          Has_Vector => False,
          Event      => Ref_Event,
          Vector     => Ref_Vector);
 
-      Assert (Condition => Channel.Name = Ref_Name,
-              Message   => "Name mismatch");
-      Assert (Condition => Channel.Address = Ref_Addr,
-              Message   => "Address mismatch");
-      Assert (Condition => Channel.Size = Ref_Size,
-              Message   => "Size mismatch");
       Assert (Condition => Channel.Flags.Has_Event,
               Message   => "Has no event");
       Assert (Condition => not Channel.Flags.Has_Vector,
@@ -121,7 +108,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Create_Resource_ed1649 (Gnattest_T : in out Test) renames Test_Create_Resource;
 --  id:2.2/ed1649f963c2d696/Create_Resource/1/0/
    procedure Test_Create_Resource (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:48:4:Create_Resource
+   --  musinfo-utils.ads:44:4:Create_Resource
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -152,7 +139,7 @@ package body Musinfo.Utils.Test_Data.Tests is
    procedure Test_Append_Channel_986bdd (Gnattest_T : in out Test) renames Test_Append_Channel;
 --  id:2.2/986bdd786a412b76/Append_Channel/0/0/
    procedure Test_Append_Channel (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:55:4:Append_Channel
+   --  musinfo-utils.ads:51:4:Append_Channel
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -186,12 +173,6 @@ package body Musinfo.Utils.Test_Data.Tests is
       declare
          Channel : constant Channel_Type := Info.Channels (1);
       begin
-         Assert (Condition => Channel.Name = Ref_Name,
-                 Message   => "Name mismatch");
-         Assert (Condition => Channel.Address = Ref_Addr,
-                 Message   => "Address mismatch");
-         Assert (Condition => Channel.Size = Ref_Size,
-                 Message   => "Size mismatch");
          Assert (Condition => not Channel.Flags.Has_Event,
                  Message   => "Has event");
          Assert (Condition => Channel.Flags.Has_Vector,

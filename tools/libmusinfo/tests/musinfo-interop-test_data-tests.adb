@@ -48,11 +48,7 @@ package body Musinfo.Interop.Test_Data.Tests is
    begin
       Assert (Condition => C_Imports.C_Assert_Channel_Info
               (Channel_Info => Utils.Create_Channel
-               (Name       => Utils.Create_Name (Str => Ref_Str),
-                Address    => 16#dead_beef_cafe_feed#,
-                Size       => 16#8080_abab_cdcd_9090#,
-                Writable   => True,
-                Has_Event  => True,
+               (Has_Event  => True,
                 Has_Vector => True,
                 Event      => 128,
                 Vector     => 255)'Address) = 1,

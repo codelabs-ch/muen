@@ -34,11 +34,7 @@ is
 
    --  Create channel with given parameters.
    function Create_Channel
-     (Name       : Name_Type;
-      Address    : Interfaces.Unsigned_64;
-      Size       : Interfaces.Unsigned_64;
-      Writable   : Boolean;
-      Has_Event  : Boolean;
+     (Has_Event  : Boolean;
       Has_Vector : Boolean;
       Event      : Event_Number_Range;
       Vector     : Vector_Range)

@@ -48,17 +48,6 @@ is
 
    -------------------------------------------------------------------------
 
-   procedure Append_Channel
-     (Info    : in out Subject_Info_Type;
-      Channel :        Channel_Type)
-   is
-   begin
-      Info.Channel_Count                 := Info.Channel_Count + 1;
-      Info.Channels (Info.Channel_Count) := Channel;
-   end Append_Channel;
-
-   -------------------------------------------------------------------------
-
    function Create_Channel
      (Name       : Name_Type;
       Address    : Interfaces.Unsigned_64;

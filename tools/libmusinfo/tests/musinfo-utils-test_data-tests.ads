@@ -15,11 +15,8 @@ package Musinfo.Utils.Test_Data.Tests is
    procedure Test_Create_Channel_a2c081 (Gnattest_T : in out Test);
    --  musinfo-utils.ads:28:4:Create_Channel
 
-   procedure Test_Append_Channel_6c9a46 (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:40:4:Append_Channel
-
    procedure Test_Append_Channel_986bdd (Gnattest_T : in out Test);
-   --  musinfo-utils.ads:47:4:Append_Channel
+   --  musinfo-utils.ads:40:4:Append_Channel
 
 end Musinfo.Utils.Test_Data.Tests;
 --  end read only

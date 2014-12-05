@@ -84,52 +84,11 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 
 --  begin read only
-   procedure Test_1_Append_Channel (Gnattest_T : in out Test);
-   procedure Test_Append_Channel_6c9a46 (Gnattest_T : in out Test) renames Test_1_Append_Channel;
---  id:2.2/6c9a465a2a59b39c/Append_Channel/1/0/
-   procedure Test_1_Append_Channel (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:40:4:Append_Channel
---  end read only
-
-      pragma Unreferenced (Gnattest_T);
-
-      Ref_Channel : constant Channel_Type := Create_Channel
-        (Name       => Create_Name (Str => "foobar"),
-         Address    => 16#3000#,
-         Size       => 16#1000#,
-         Writable   => True,
-         Has_Event  => False,
-         Has_Vector => False,
-         Event      => 12,
-         Vector     => 21);
-      Info : Subject_Info_Type := Null_Subject_Info;
-   begin
-      Assert (Condition => Info.Channel_Count = Channel_Count_Type'First,
-              Message   => "Channel present");
-
-      Append_Channel (Info    => Info,
-                      Channel => Ref_Channel);
-
-      Assert (Condition => Info.Channel_Count = 1,
-              Message   => "Channel not appended");
-      Assert (Condition => Info.Channels (1) = Ref_Channel,
-              Message   => "Channel mismatch");
-
-      Utils.Append_Channel (Info    => Info,
-                            Channel => Ref_Channel);
-      Assert (Condition => Info.Channel_Count = 2,
-              Message   => "Channel not appended (2)");
---  begin read only
-   end Test_1_Append_Channel;
---  end read only
-
-
---  begin read only
-   procedure Test_2_Append_Channel (Gnattest_T : in out Test);
-   procedure Test_Append_Channel_986bdd (Gnattest_T : in out Test) renames Test_2_Append_Channel;
+   procedure Test_Append_Channel (Gnattest_T : in out Test);
+   procedure Test_Append_Channel_986bdd (Gnattest_T : in out Test) renames Test_Append_Channel;
 --  id:2.2/986bdd786a412b76/Append_Channel/0/0/
-   procedure Test_2_Append_Channel (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:47:4:Append_Channel
+   procedure Test_Append_Channel (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:40:4:Append_Channel
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -193,7 +152,7 @@ package body Musinfo.Utils.Test_Data.Tests is
       Assert (Condition => Info.Channel_Count = 2,
               Message   => "Channel not appended (2)");
 --  begin read only
-   end Test_2_Append_Channel;
+   end Test_Append_Channel;
 --  end read only
 
 end Musinfo.Utils.Test_Data.Tests;

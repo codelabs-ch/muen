@@ -120,8 +120,7 @@ int assert_channel_info(const struct channel_type * const channel)
 	return 1;
 }
 
-int assert_channel_type(const int size, const int alignment,
-		const int name_offset, const int address_offset, const int size_offset,
+int assert_channel_info_type(const int size, const int alignment,
 		const int flags_offset, const int event_offset, const int vector_offset)
 {
 	if (sizeof(struct channel_type) != size)
@@ -134,27 +133,6 @@ int assert_channel_type(const int size, const int alignment,
 	{
 		printf("Channel: Invalid alignment %d /= %d\n", alignment,
 				__alignof__ (struct channel_type));
-		return 0;
-	}
-
-	if (offsetof(struct channel_type, name) != name_offset)
-	{
-		printf("Channel: Invalid 'name' offset %d /= %d\n", name_offset,
-				offsetof(struct channel_type, name));
-		return 0;
-	}
-
-	if (offsetof(struct channel_type, address) != address_offset)
-	{
-		printf("Channel: Invalid 'address' offset %d /= %d\n", address_offset,
-				offsetof(struct channel_type, address));
-		return 0;
-	}
-
-	if (offsetof(struct channel_type, size) != size_offset)
-	{
-		printf("Channel: Invalid 'size' offset %d /= %d\n", size_offset,
-				offsetof(struct channel_type, size));
 		return 0;
 	}
 

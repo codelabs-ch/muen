@@ -165,15 +165,12 @@ package body Musinfo.Interop.Test_Data.Tests is
       Dummy : Channel_Type;
    begin
 
-      Assert (Condition => C_Imports.C_Assert_Channel_Type
-              (Size           => Channel_Type'Size / 8,
-               Alignment      => Channel_Type'Alignment,
-               Name_Offset    => Dummy.Name'Bit_Position / 8,
-               Address_Offset => Dummy.Address'Bit_Position / 8,
-               Size_Offset    => Dummy.Size'Bit_Position / 8,
-               Flags_Offset   => Dummy.Flags'Bit_Position / 8,
-               Event_Offset   => Dummy.Event'Bit_Position / 8,
-               Vector_Offset  => Dummy.Vector'Bit_Position / 8) = 1,
+      Assert (Condition => C_Imports.C_Assert_Channel_Info_Type
+              (Size          => Channel_Type'Size / 8,
+               Alignment     => Channel_Type'Alignment,
+               Flags_Offset  => Dummy.Flags'Bit_Position / 8,
+               Event_Offset  => Dummy.Event'Bit_Position / 8,
+               Vector_Offset => Dummy.Vector'Bit_Position / 8) = 1,
               Message   => "C channel type mismatch");
 
 --  begin read only

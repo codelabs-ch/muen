@@ -66,20 +66,17 @@ is
        Convention => C,
        Link_Name  => "assert_name_type";
 
-   function C_Assert_Channel_Type
-     (Size           : Interfaces.C.int;
-      Alignment      : Interfaces.C.int;
-      Name_Offset    : Interfaces.C.int;
-      Address_Offset : Interfaces.C.int;
-      Size_Offset    : Interfaces.C.int;
-      Flags_Offset   : Interfaces.C.int;
-      Event_Offset   : Interfaces.C.int;
-      Vector_Offset  : Interfaces.C.int)
+   function C_Assert_Channel_Info_Type
+     (Size          : Interfaces.C.int;
+      Alignment     : Interfaces.C.int;
+      Flags_Offset  : Interfaces.C.int;
+      Event_Offset  : Interfaces.C.int;
+      Vector_Offset : Interfaces.C.int)
       return Interfaces.C.int
      with
        Import     => True,
        Convention => C,
-       Link_Name  => "assert_channel_type";
+       Link_Name  => "assert_channel_info_type";
 
    function C_Assert_Resource_Type
      (Size                    : Interfaces.C.int;

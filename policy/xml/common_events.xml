@@ -3,4 +3,6 @@
 	<event name="resume_usb_linux" mode="switch"/>
 	<event name="trap_to_nic_sm" mode="switch"/>
 	<event name="trap_to_usb_sm" mode="switch"/>
+	<event name="serial_irq4_nic_linux" mode="async"/>
+	<event name="serial_irq4_usb_linux" mode="async"/>
 </events>

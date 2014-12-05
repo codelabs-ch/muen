@@ -53,6 +53,13 @@ struct channel_type {
 	char padding[5];
 } __attribute__((packed, aligned (8)));
 
+struct resource_type {
+	struct name_type name;
+	uint8_t memregion_idx;
+	uint8_t channel_info_idx;
+	char padding[6];
+} __attribute__((packed, aligned (8)));
+
 struct subject_info_type {
 	uint64_t magic;
 	uint8_t channel_count;

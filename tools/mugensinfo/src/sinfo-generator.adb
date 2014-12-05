@@ -109,16 +109,15 @@ is
          & (if Has_Vector then ", vector " & Vector_Str   else ""));
 
       Musinfo.Utils.Append_Channel
-        (Info    => Info,
-         Channel => Musinfo.Utils.Create_Channel
-           (Name       => Musinfo.Utils.Create_Name (Str => Log_Name),
-            Address    => Address,
-            Size       => Size,
-            Writable   => Writable,
-            Has_Event  => Has_Event,
-            Has_Vector => Has_Vector,
-            Event      => Event_Nr,
-            Vector     => Vector));
+        (Info       => Info,
+         Name       => Musinfo.Utils.Create_Name (Str => Log_Name),
+         Address    => Address,
+         Size       => Size,
+         Writable   => Writable,
+         Has_Event  => Has_Event,
+         Has_Vector => Has_Vector,
+         Event      => Event_Nr,
+         Vector     => Vector);
    end Add_Channel_To_Info;
 
    -------------------------------------------------------------------------

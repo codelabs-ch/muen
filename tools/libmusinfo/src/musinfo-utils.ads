@@ -24,6 +24,14 @@ is
      with
        Pre => Str'Length in Name_Index_Type;
 
+   --  Create memory region with given parameters.
+   function Create_Memregion
+     (Address    : Interfaces.Unsigned_64;
+      Size       : Interfaces.Unsigned_64;
+      Writable   : Boolean;
+      Executable : Boolean)
+      return Memregion_Type;
+
    --  Create channel with given parameters.
    function Create_Channel
      (Name       : Name_Type;

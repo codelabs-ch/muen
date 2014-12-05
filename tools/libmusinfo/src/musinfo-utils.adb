@@ -74,6 +74,24 @@ is
 
    -------------------------------------------------------------------------
 
+   function Create_Memregion
+     (Address    : Interfaces.Unsigned_64;
+      Size       : Interfaces.Unsigned_64;
+      Writable   : Boolean;
+      Executable : Boolean)
+      return Memregion_Type
+   is
+   begin
+      return Memregion : Memregion_Type := Null_Memregion do
+         Memregion.Address          := Address;
+         Memregion.Size             := Size;
+         Memregion.Flags.Writable   := Writable;
+         Memregion.Flags.Executable := Executable;
+      end return;
+   end Create_Memregion;
+
+   -------------------------------------------------------------------------
+
    function Create_Name (Str : String) return Name_Type
    is
       Name    : Name_Type := Null_Name;

@@ -65,6 +65,52 @@ is
          Padding => (others => 0),
          Data    => (others => ASCII.NUL));
 
+   --  Memory flags specify if memory regions are writable and/or executable,
+   --  i.e. if instruction fetches from the memory region are allowed.
+   type Memory_Flags_Type is record
+      Writable   : Boolean;
+      Executable : Boolean;
+      Padding    : Bit_Array (1 .. 6);
+   end record
+     with Size => 8;
+
+   for Memory_Flags_Type use record
+      Writable   at 0 range 0 .. 0;
+      Executable at 0 range 1 .. 1;
+      Padding    at 0 range 2 .. 7;
+   end record;
+
+   Null_Memory_Flags : constant Memory_Flags_Type
+     := (Writable   => False,
+         Executable => False,
+         Padding    => (others => 0));
+
+   Memregion_Type_Size : constant := 8 + 8 + 1 + 7;
+
+   --  A memory region is described by its memory address, size and flags.
+   type Memregion_Type is record
+      Address : Interfaces.Unsigned_64;
+      Size    : Interfaces.Unsigned_64;
+      Flags   : Memory_Flags_Type;
+      Padding : Bit_Array (1 .. 55);
+   end record
+     with
+       Alignment => 8,
+       Size      => Memregion_Type_Size * 8;
+
+   for Memregion_Type use record
+      Address at  0 range 0 .. 63;
+      Size    at  8 range 0 .. 63;
+      Flags   at 16 range 0 .. 7;
+      Padding at 17 range 0 .. 55;
+   end record;
+
+   Null_Memregion : constant Memregion_Type
+     := (Address => 0,
+         Size    => 0,
+         Flags   => Null_Memory_Flags,
+         Padding => (others => 0));
+
    type Channel_Flags_Type is record
       Writable   : Boolean;
       Has_Event  : Boolean;

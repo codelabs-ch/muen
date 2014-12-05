@@ -31,11 +31,13 @@ is
 
    type Com_State_Type is record
       Base_Port : SK.Word16;
+      Event     : SK.Byte;
       UART      : UART8250_Type;
    end record;
 
    Com1 : Com_State_Type
      := (Base_Port => Com1_Port_Range'First,
+         Event     => 0,
          UART      => Null_UART8250);
 
    Register_Base : constant := 0;

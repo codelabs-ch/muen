@@ -32,6 +32,13 @@ package body Musinfo.Writer.Test_Data.Tests is
               Message   => "Null info mismatch");
 
       Info.TSC_Khz := 2893000;
+      Utils.Append_Memregion
+        (Info       => Info,
+         Name       => Utils.Create_Name (Str => "region1"),
+         Address    => 16#0020_0000#,
+         Size       => 16#ffee_2000#,
+         Writable   => True,
+         Executable => True);
       Utils.Append_Channel
         (Info       => Info,
          Name       => Utils.Create_Name (Str => "channel1"),
@@ -52,6 +59,13 @@ package body Musinfo.Writer.Test_Data.Tests is
          Has_Vector => True,
          Event      => 0,
          Vector     => 255);
+      Utils.Append_Memregion
+        (Info       => Info,
+         Name       => Utils.Create_Name (Str => "region2"),
+         Address    => 16#bb00_7721_f000#,
+         Size       => 16#000e_0000_0000#,
+         Writable   => True,
+         Executable => False);
       Utils.Append_Channel
         (Info       => Info,
          Name       => Utils.Create_Name (Str => "channel3"),

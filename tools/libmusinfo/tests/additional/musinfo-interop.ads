@@ -23,6 +23,9 @@ is
    --  Verify name type interoperability.
    procedure Name_To_C;
 
+   --  Verify memregion type interoperability.
+   procedure Memregion_To_C;
+
    --  Verify channel type interoperability.
    procedure Channel_To_C;
 
@@ -34,6 +37,9 @@ is
 
    --  Verify name type equivalence.
    procedure Check_Name_Type;
+
+   --  Verify memregion type equivalence.
+   procedure Check_Memregion_Type;
 
    --  Verify channel type equivalence.
    procedure Check_Channel_Type;

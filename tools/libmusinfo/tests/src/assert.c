@@ -75,6 +75,76 @@ int assert_name_type(const int size, const int alignment,
 	return 1;
 }
 
+int assert_memregion(const struct memregion_type * const memregion)
+{
+	if (memregion->address != 0xdeadbeefcafefeed)
+	{
+		printf("Memregion: Invalid address 0x%lx\n", memregion->address);
+		return 0;
+	}
+
+	if (memregion->size != 0x8080ababcdcd9090)
+	{
+		printf("Memregion: Invalid size 0x%lx\n", memregion->size);
+		return 0;
+	}
+
+	if (!(memregion->flags & MEM_WRITABLE_FLAG))
+	{
+		printf("Memregion: Writable flag not set\n");
+		return 0;
+	}
+
+	if (!(memregion->flags & MEM_EXECUTABLE_FLAG))
+	{
+		printf("Memregion: Executable flag not set\n");
+		return 0;
+	}
+
+	return 1;
+}
+
+int assert_memregion_type(const int size, const int alignment,
+		const int address_offset, const int size_offset, const int flags_offset)
+{
+	if (sizeof(struct memregion_type) != size)
+	{
+		printf("Memregion: Invalid size %d /= %d\n", size,
+				sizeof(struct memregion_type));
+		return 0;
+	}
+
+	if (__alignof__ (struct memregion_type) != alignment)
+	{
+		printf("Memregion: Invalid alignment %d /= %d\n", alignment,
+				__alignof__ (struct memregion_type));
+		return 0;
+	}
+
+	if (offsetof(struct memregion_type, address) != address_offset)
+	{
+		printf("Memregion: Invalid 'address' offset %d /= %d\n", address_offset,
+				offsetof(struct memregion_type, address));
+		return 0;
+	}
+
+	if (offsetof(struct memregion_type, size) != size_offset)
+	{
+		printf("Memregion: Invalid 'size' offset %d /= %d\n", size_offset,
+				offsetof(struct memregion_type, size));
+		return 0;
+	}
+
+	if (offsetof(struct memregion_type, flags) != flags_offset)
+	{
+		printf("Memregion: Invalid 'flags' offset %d /= %d\n", flags_offset,
+				offsetof(struct memregion_type, flags));
+		return 0;
+	}
+
+	return 1;
+}
+
 int assert_channel_info(const struct channel_info_type * const channel_info)
 {
 	if (!(channel_info->flags & HAS_EVENT_FLAG))

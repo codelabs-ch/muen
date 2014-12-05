@@ -31,6 +31,14 @@ is
        Convention => C,
        Link_Name  => "assert_name";
 
+   function C_Assert_Memregion
+     (Memregion : System.Address)
+      return Interfaces.C.int
+     with
+       Import     => True,
+       Convention => C,
+       Link_Name  => "assert_memregion";
+
    function C_Assert_Channel_Info
      (Channel_Info : System.Address)
       return Interfaces.C.int
@@ -65,6 +73,18 @@ is
        Import     => True,
        Convention => C,
        Link_Name  => "assert_name_type";
+
+   function C_Assert_Memregion_Type
+     (Size           : Interfaces.C.int;
+      Alignment      : Interfaces.C.int;
+      Address_Offset : Interfaces.C.int;
+      Size_Offset    : Interfaces.C.int;
+      Flags_Offset   : Interfaces.C.int)
+      return Interfaces.C.int
+     with
+       Import     => True,
+       Convention => C,
+       Link_Name  => "assert_memregion_type";
 
    function C_Assert_Channel_Info_Type
      (Size          : Interfaces.C.int;

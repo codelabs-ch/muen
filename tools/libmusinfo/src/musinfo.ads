@@ -178,6 +178,23 @@ is
          Vector  => 0,
          Padding => (others => 0));
 
+   type Resource_Count_Type is range 0 .. 255
+     with
+       Size => 8;
+
+   No_Resource : constant Resource_Count_Type := Resource_Count_Type'First;
+
+   subtype Resource_Index_Type is Resource_Count_Type range
+     1 .. Resource_Count_Type'Last;
+
+   Memregion_Array_Size : constant := Resource_Index_Type'Last
+     * Memregion_Type_Size;
+
+   type Memregion_Array is array (Resource_Index_Type) of Memregion_Type
+     with
+       Pack,
+       Alignment => 8;
+
    type Channel_Count_Type is range 0 .. 255
      with
        Size => 8;

@@ -59,12 +59,12 @@ is
       Vector     : Vector_Range)
       return Channel_Type
    is
+      pragma Unreferenced (Writable);
    begin
       return Channel : Channel_Type := Null_Channel do
          Channel.Name             := Name;
          Channel.Address          := Address;
          Channel.Size             := Size;
-         Channel.Flags.Writable   := Writable;
          Channel.Flags.Has_Event  := Has_Event;
          Channel.Flags.Has_Vector := Has_Vector;
          Channel.Event            := Event;

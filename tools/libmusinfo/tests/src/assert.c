@@ -94,11 +94,6 @@ int assert_channel(const struct channel_type * const channel)
 		return 0;
 	}
 
-	if (!(channel->flags & WRITABLE_FLAG))
-	{
-		printf("Channel: Writable flag not set\n");
-		return 0;
-	}
 	if (!(channel->flags & HAS_EVENT_FLAG))
 	{
 		printf("Channel: Has_Event flag not set\n");

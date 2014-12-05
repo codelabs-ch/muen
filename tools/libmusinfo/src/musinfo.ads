@@ -111,24 +111,23 @@ is
          Flags   => Null_Memory_Flags,
          Padding => (others => 0));
 
+   --  Channel flags indicate if a channel has an associated vector and or
+   --  event number.
    type Channel_Flags_Type is record
-      Writable   : Boolean;
       Has_Event  : Boolean;
       Has_Vector : Boolean;
-      Padding    : Bit_Array (1 .. 5);
+      Padding    : Bit_Array (1 .. 6);
    end record
      with Size => 8;
 
    for Channel_Flags_Type use record
-      Writable   at 0 range 0 .. 0;
-      Has_Event  at 0 range 1 .. 1;
-      Has_Vector at 0 range 2 .. 2;
-      Padding    at 0 range 3 .. 7;
+      Has_Event  at 0 range 0 .. 0;
+      Has_Vector at 0 range 1 .. 1;
+      Padding    at 0 range 2 .. 7;
    end record;
 
-   Null_Flags : constant Channel_Flags_Type
-     := (Writable   => False,
-         Has_Event  => False,
+   Null_Channel_Flags : constant Channel_Flags_Type
+     := (Has_Event  => False,
          Has_Vector => False,
          Padding    => (others => 0));
 
@@ -173,7 +172,7 @@ is
      := (Name    => Null_Name,
          Address => 0,
          Size    => 0,
-         Flags   => Null_Flags,
+         Flags   => Null_Channel_Flags,
          Event   => 0,
          Vector  => 0,
          Padding => (others => 0));

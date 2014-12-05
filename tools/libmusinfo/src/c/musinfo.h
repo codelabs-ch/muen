@@ -40,9 +40,8 @@ struct memregion_type {
 	char padding[7];
 } __attribute__((packed, aligned (8)));
 
-#define WRITABLE_FLAG	(1 << 0)
-#define HAS_EVENT_FLAG	(1 << 1)
-#define HAS_VECTOR_FLAG	(1 << 2)
+#define HAS_EVENT_FLAG  (1 << 0)
+#define HAS_VECTOR_FLAG (1 << 1)
 
 struct channel_type {
 	struct name_type name;

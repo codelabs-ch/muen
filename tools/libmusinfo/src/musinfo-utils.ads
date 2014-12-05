@@ -44,6 +44,13 @@ is
       Vector     : Vector_Range)
       return Channel_Type;
 
+   --  Create resource with given parameters.
+   function Create_Resource
+     (Name               : Name_Type;
+      Memregion_Index    : Resource_Count_Type;
+      Channel_Info_Index : Resource_Count_Type)
+      return Resource_Type;
+
    --  Append channel with specified parameters to given subject info.
    procedure Append_Channel
      (Info       : in out Subject_Info_Type;

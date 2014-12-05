@@ -117,11 +117,42 @@ package body Musinfo.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Create_Resource (Gnattest_T : in out Test);
+   procedure Test_Create_Resource_ed1649 (Gnattest_T : in out Test) renames Test_Create_Resource;
+--  id:2.2/ed1649f963c2d696/Create_Resource/1/0/
+   procedure Test_Create_Resource (Gnattest_T : in out Test) is
+   --  musinfo-utils.ads:48:4:Create_Resource
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Ref_Name     : constant Name_Type := Create_Name (Str => "bar");
+      Ref_Mem_Idx  : constant Resource_Index_Type := 5;
+      Ref_Chan_Idx : constant Resource_Index_Type := 128;
+      Resource     : Resource_Type;
+   begin
+      Resource := Create_Resource
+        (Name               => Ref_Name,
+         Memregion_Index    => Ref_Mem_Idx,
+         Channel_Info_Index => Ref_Chan_Idx);
+
+      Assert (Condition => Resource.Name = Ref_Name,
+              Message   => "Name mismatch");
+      Assert (Condition => Resource.Memregion_Idx = Ref_Mem_Idx,
+              Message   => "Memregion index mismatch");
+      Assert (Condition => Resource.Channel_Info_Idx = Ref_Chan_Idx,
+              Message   => "Channel info index mismatch");
+--  begin read only
+   end Test_Create_Resource;
+--  end read only
+
+
+--  begin read only
    procedure Test_Append_Channel (Gnattest_T : in out Test);
    procedure Test_Append_Channel_986bdd (Gnattest_T : in out Test) renames Test_Append_Channel;
 --  id:2.2/986bdd786a412b76/Append_Channel/0/0/
    procedure Test_Append_Channel (Gnattest_T : in out Test) is
-   --  musinfo-utils.ads:48:4:Append_Channel
+   --  musinfo-utils.ads:55:4:Append_Channel
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

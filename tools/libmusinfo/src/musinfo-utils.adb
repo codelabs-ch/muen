@@ -107,4 +107,20 @@ is
       return Name;
    end Create_Name;
 
+   -------------------------------------------------------------------------
+
+   function Create_Resource
+     (Name               : Name_Type;
+      Memregion_Index    : Resource_Count_Type;
+      Channel_Info_Index : Resource_Count_Type)
+      return Resource_Type
+   is
+   begin
+      return Resource : Resource_Type := Null_Resource do
+         Resource.Name             := Name;
+         Resource.Memregion_Idx    := Memregion_Index;
+         Resource.Channel_Info_Idx := Channel_Info_Index;
+      end return;
+   end Create_Resource;
+
 end Musinfo.Utils;

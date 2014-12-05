@@ -96,7 +96,8 @@ is
       if Item /= ASCII.NUL and then Item /= ASCII.CR then
          Message_Buffer.Message (Message_Index) := Item;
 
-         if Message_Index = Types.Message_Index'Last then
+         if Message_Index = Types.Message_Index'Last or else Item = ASCII.LF
+         then
             Flush;
          else
             Message_Index := Message_Index + 1;

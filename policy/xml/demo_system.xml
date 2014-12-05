@@ -43,7 +43,8 @@
 					</group>
 				</source>
 				<target>
-					<event physical="resume_nic_linux" logical="resume_after_trap" vector="none"/>
+					<event logical="resume_after_trap" physical="resume_nic_linux" vector="none"/>
+					<event logical="serial_irq4" physical="serial_irq4_nic_linux" vector="52"/>
 				</target>
 			</events>
 			<channels>
@@ -75,6 +76,7 @@
 				</source>
 				<target>
 					<event logical="resume_after_trap" physical="resume_usb_linux" vector="none"/>
+					<event logical="serial_irq4" physical="serial_irq4_usb_linux" vector="52"/>
 				</target>
 			</events>
 			<channels>

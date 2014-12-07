@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
+
 with Debuglog.Client;
 
 with Subject_Info;
@@ -28,12 +30,13 @@ is
    procedure Process (Halt : out Boolean)
    with
       Global  => (In_Out => (Subject_Info.State, Devices.UART8250.State,
-                             Debuglog.Client.State)),
+                             Debuglog.Client.State, X86_64.State)),
       Depends =>
        ((Debuglog.Client.State,
         Subject_Info.State,
-        Devices.UART8250.State) =>+ (Subject_Info.State,
-                                     Devices.UART8250.State),
-        Halt                    => Subject_Info.State);
+        Devices.UART8250.State,
+        X86_64.State) =>+ (Subject_Info.State,
+                           Devices.UART8250.State),
+        Halt          => Subject_Info.State);
 
 end Exit_Handlers.IO_Instruction;

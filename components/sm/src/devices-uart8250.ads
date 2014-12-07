@@ -16,6 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
+
 with SK;
 
 with Debuglog.Client;
@@ -38,10 +40,12 @@ is
       Halt : out Boolean)
    with
       Global  => (In_Out => (State, Subject_Info.State,
-                             Debuglog.Client.State)),
-      Depends => ((State, Subject_Info.State, Debuglog.Client.State) =>+
-                    (State, Info, Subject_Info.State),
-                  Halt => null),
+                             Debuglog.Client.State, X86_64.State)),
+      Depends =>
+        ((State, Subject_Info.State, Debuglog.Client.State) =>+
+           (State, Info, Subject_Info.State),
+         X86_64.State =>+ (State, Info),
+         Halt         => null),
       Post    => Halt = False;
 
 end Devices.UART8250;

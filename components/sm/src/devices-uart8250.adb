@@ -56,11 +56,12 @@ is
       Halt : out Boolean)
    with
       Refined_Global  => (In_Out => (Com1, Subject_Info.State,
-                                     Debuglog.Client.State)),
+                                     Debuglog.Client.State, X86_64.State)),
       Refined_Depends =>
         ((Com1, Subject_Info.State, Debuglog.Client.State) =>+
            (Com1, Info, Subject_Info.State),
-         Halt => null)
+         X86_64.State =>+ (Com1, Info),
+         Halt         => null)
    is
       use type SK.Byte;
       use type SK.Word16;

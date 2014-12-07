@@ -16,10 +16,15 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with X86_64;
+
 package SK.Hypercall
 is
 
    --  Trigger event with given number.
-   procedure Trigger_Event (Number : SK.Byte);
+   procedure Trigger_Event (Number : SK.Byte)
+   with
+      Global  => (In_Out => X86_64.State),
+      Depends => (X86_64.State =>+ Number);
 
 end SK.Hypercall;

@@ -113,7 +113,7 @@ environment listed in the following table.
 
 Install the Debian packages needed to build Muen:
 
-  $ sudo apt-get install binutils-dev git-core iasl libc6-dev tidy wget xorriso xsltproc zlib1g-dev
+  $ sudo apt-get install binutils-dev git-core grub-pc-bin iasl libc6-dev tidy wget xorriso xsltproc zlib1g-dev
 
 The Ada and SPARK packages currently available in Debian wheezy are too old to
 build Muen. GNAT GPL 2014 and SPARK 2014 from AdaCore's <<libre>> site must be

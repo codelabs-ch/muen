@@ -42,6 +42,16 @@ is
       Virt_Mem_Node :        DOM.Core.Node;
       Phys_Mem_Node :        DOM.Core.Node);
 
+   --  Get memory region information from given virtual and physical memory
+   --  nodes.
+   procedure Get_Memory_Info
+     (Virt_Mem_Node :     DOM.Core.Node;
+      Phys_Mem_Node :     DOM.Core.Node;
+      Address       : out Interfaces.Unsigned_64;
+      Size          : out Interfaces.Unsigned_64;
+      Writable      : out Boolean;
+      Executable    : out Boolean);
+
    -------------------------------------------------------------------------
 
    procedure Add_Channel_To_Info
@@ -51,25 +61,13 @@ is
       Virt_Mem_Node :        DOM.Core.Node;
       Phys_Mem_Node :        DOM.Core.Node)
    is
-      Address : constant Interfaces.Unsigned_64
-        := Interfaces.Unsigned_64'Value
-          (DOM.Core.Elements.Get_Attribute
-             (Elem => Virt_Mem_Node,
-              Name => "virtualAddress"));
-      Writable : constant Boolean
-        := Boolean'Value
-          (DOM.Core.Elements.Get_Attribute
-             (Elem => Virt_Mem_Node,
-              Name => "writable"));
+      Address, Size        : Interfaces.Unsigned_64;
+      Writable, Executable : Boolean;
+
       Log_Name : constant String
         := DOM.Core.Elements.Get_Attribute
           (Elem => Virt_Mem_Node,
            Name => "logical");
-      Size : constant Interfaces.Unsigned_64
-        := Interfaces.Unsigned_64'Value
-          (DOM.Core.Elements.Get_Attribute
-             (Elem => Phys_Mem_Node,
-              Name => "size"));
       Phys_Name : constant String
         := DOM.Core.Elements.Get_Attribute
           (Elem => Phys_Mem_Node,
@@ -91,6 +89,14 @@ is
       Has_Vector : constant Boolean     := Vector_Str'Length > 0;
       Vector     : Musinfo.Vector_Range := Musinfo.Vector_Range'First;
    begin
+      Get_Memory_Info
+        (Virt_Mem_Node => Virt_Mem_Node,
+         Phys_Mem_Node => Phys_Mem_Node,
+         Address       => Address,
+         Size          => Size,
+         Writable      => Writable,
+         Executable    => Executable);
+
       if Has_Event then
          Event_Nr := Musinfo.Event_Number_Range'Value (Event_ID_Str);
       end if;
@@ -119,6 +125,35 @@ is
          Event      => Event_Nr,
          Vector     => Vector);
    end Add_Channel_To_Info;
+
+   -------------------------------------------------------------------------
+
+   procedure Get_Memory_Info
+     (Virt_Mem_Node :     DOM.Core.Node;
+      Phys_Mem_Node :     DOM.Core.Node;
+      Address       : out Interfaces.Unsigned_64;
+      Size          : out Interfaces.Unsigned_64;
+      Writable      : out Boolean;
+      Executable    : out Boolean)
+   is
+   begin
+      Address := Interfaces.Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Virt_Mem_Node,
+            Name => "virtualAddress"));
+      Size := Interfaces.Unsigned_64'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Phys_Mem_Node,
+            Name => "size"));
+      Writable := Boolean'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Virt_Mem_Node,
+            Name => "writable"));
+      Executable := Boolean'Value
+        (DOM.Core.Elements.Get_Attribute
+           (Elem => Virt_Mem_Node,
+            Name => "executable"));
+   end Get_Memory_Info;
 
    -------------------------------------------------------------------------
 

@@ -26,7 +26,7 @@
 --
 
 with Debuglog.Utils;
-with Debuglog.Sink;
+private with Debuglog.Sink;
 
 package body Debuglog.Client
 is

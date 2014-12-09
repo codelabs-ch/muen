@@ -25,7 +25,7 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-package Debuglog.Sink
+private package Debuglog.Sink
 is
 
    --  Flush buffers.

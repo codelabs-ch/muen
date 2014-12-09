@@ -88,7 +88,8 @@ is
    procedure New_Line
    is
    begin
-      Put_Char (Item => Character'Val (10));
+      Put_Char (Item => ASCII.CR);
+      Put_Char (Item => ASCII.LF);
    end New_Line;
 
    -------------------------------------------------------------------------

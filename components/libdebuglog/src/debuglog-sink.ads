@@ -26,9 +26,6 @@
 --
 
 package Debuglog.Sink
-with
-   Abstract_State => (State with External => (Async_Readers)),
-   Initializes    => State
 is
 
    --  Flush buffers.

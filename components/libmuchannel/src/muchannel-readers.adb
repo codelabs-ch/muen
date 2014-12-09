@@ -108,6 +108,8 @@ is
       Transport     : Header_Field_Type;
       Channel_Epoch : Header_Field_Type := Channel.Header.Epoch;
    begin
+      Element := Null_Element;
+
       if not Is_Active_Channel (Epoch => Channel_Epoch) then
          Result := Inactive;
       else

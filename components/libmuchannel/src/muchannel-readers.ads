@@ -31,6 +31,9 @@ generic
    --  Protocol identifier.
    Protocol : Muchannel.Header_Field_Type;
 
+   --  Empty element.
+   Null_Element : Element_Type;
+
 package Muchannel.Readers
 is
 

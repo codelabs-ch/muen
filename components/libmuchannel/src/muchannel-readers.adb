@@ -37,10 +37,10 @@ is
 
    --  Returns True if the channel has valid dimensions.
    function Is_Valid
-     (Channel_Protocol : Header_Field_Type;
-      Element_Size     : Header_Field_Type;
-      Element_Count    : Header_Field_Type;
-      Channel_Size     : Header_Field_Type)
+     (C_Protocol : Header_Field_Type;
+      C_Size     : Header_Field_Type;
+      E_Size     : Header_Field_Type;
+      E_Count    : Header_Field_Type)
       return Boolean;
 
    -------------------------------------------------------------------------
@@ -84,15 +84,15 @@ is
    -------------------------------------------------------------------------
 
    function Is_Valid
-     (Channel_Protocol : Header_Field_Type;
-      Element_Size     : Header_Field_Type;
-      Element_Count    : Header_Field_Type;
-      Channel_Size     : Header_Field_Type)
+     (C_Protocol : Header_Field_Type;
+      C_Size     : Header_Field_Type;
+      E_Size     : Header_Field_Type;
+      E_Count    : Header_Field_Type)
       return Boolean
    is
    begin
-      return Element_Size * Element_Count = Channel_Size
-        and Channel_Protocol = Readers.Protocol;
+      return E_Size * E_Count = C_Size
+        and C_Protocol = Readers.Protocol;
    end Is_Valid;
 
    -------------------------------------------------------------------------
@@ -121,11 +121,11 @@ is
             Reader.Elements := Channel.Header.Elements;
 
             if Transport = SHMStream_Marker and then
-              Is_Valid (Channel_Protocol => Reader.Protocol,
-                        Element_Size     => Reader.Size,
-                        Element_Count    => Reader.Elements,
-                        Channel_Size     => Header_Field_Type
-                          (Elements * (Element_Type'Size / 8)))
+              Is_Valid (C_Protocol => Reader.Protocol,
+                        C_Size     => Header_Field_Type
+                          (Elements * (Element_Type'Size / 8)),
+                        E_Size     => Reader.Size,
+                        E_Count    => Reader.Elements)
             then
                Reader.Epoch := Channel.Header.Epoch;
                Reader.RC    := Header_Field_Type (Data_Range'First);

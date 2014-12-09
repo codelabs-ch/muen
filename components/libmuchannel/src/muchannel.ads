@@ -36,6 +36,9 @@ generic
    --  Elements transported via channel instance.
    type Element_Type is private;
 
+   --  Element size in bytes.
+   Element_Size : Positive;
+
    --  Capacity of channel in number of elements.
    Elements : Positive;
 
@@ -100,7 +103,7 @@ private
    type Data_Type  is array (Data_Range) of Element_Type
      with Pack;
 
-   Data_Size : constant Positive := Data_Type'Size / 8;
+   Data_Size : constant Positive := Data_Type'Length * Element_Size;
 
    type Channel_Type is record
       Header : Header_Type;

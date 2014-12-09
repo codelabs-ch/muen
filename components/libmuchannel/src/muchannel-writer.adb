@@ -53,7 +53,7 @@ is
 
       Channel.Header.Transport := SHMStream_Marker;
       Channel.Header.Protocol  := Writer.Protocol;
-      Channel.Header.Size      := Element_Type'Size / 8;
+      Channel.Header.Size      := Header_Field_Type (Element_Size);
       Channel.Header.Elements  := Header_Field_Type (Elements);
       Channel.Header.Reserved  := 0;
       Channel.Header.WSC       := 0;

@@ -30,4 +30,5 @@ with Muchannel.Readers;
 with Debuglog.Constants;
 
 package Debuglog.Stream.Reader is new Debuglog.Stream.Readers
-  (Protocol => Constants.Protocol_Number);
+  (Protocol     => Constants.Protocol_Number,
+   Null_Element => Types.Null_Data);

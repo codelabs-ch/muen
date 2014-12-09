@@ -42,6 +42,14 @@ is
       Virt_Mem_Node :        DOM.Core.Node;
       Phys_Mem_Node :        DOM.Core.Node);
 
+   --  Add memory region with given physical and virtual memory nodes of
+   --  specified subject to given subject info data.
+   procedure Add_Memregion_To_Info
+     (Info          : in out Musinfo.Subject_Info_Type;
+      Subject_Name  :        String;
+      Virt_Mem_Node :        DOM.Core.Node;
+      Phys_Mem_Node :        DOM.Core.Node);
+
    --  Get memory region information from given virtual and physical memory
    --  nodes.
    procedure Get_Memory_Info
@@ -125,6 +133,51 @@ is
          Event      => Event_Nr,
          Vector     => Vector);
    end Add_Channel_To_Info;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Memregion_To_Info
+     (Info          : in out Musinfo.Subject_Info_Type;
+      Subject_Name  :        String;
+      Virt_Mem_Node :        DOM.Core.Node;
+      Phys_Mem_Node :        DOM.Core.Node)
+   is
+      Address, Size        : Interfaces.Unsigned_64;
+      Writable, Executable : Boolean;
+
+      Log_Name : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Virt_Mem_Node,
+           Name => "logical");
+      Phys_Name : constant String
+        := DOM.Core.Elements.Get_Attribute
+          (Elem => Phys_Mem_Node,
+           Name => "name");
+   begin
+      Get_Memory_Info
+        (Virt_Mem_Node => Virt_Mem_Node,
+         Phys_Mem_Node => Phys_Mem_Node,
+         Address       => Address,
+         Size          => Size,
+         Writable      => Writable,
+         Executable    => Executable);
+
+      Mulog.Log
+        (Msg => "Announcing memregion to subject '" & Subject_Name
+         & "': " & Log_Name & "[" & Phys_Name & "]@"
+         & Mutools.Utils.To_Hex (Number => Address)
+         & ", size " & Mutools.Utils.To_Hex (Number => Size) & ", "
+         & (if Writable   then "writable" else "read-only") & ", "
+         & (if Executable then "executable" else "non-executable"));
+
+      Musinfo.Utils.Append_Memregion
+        (Info       => Info,
+         Name       => Musinfo.Utils.Create_Name (Str => Log_Name),
+         Address    => Address,
+         Size       => Size,
+         Writable   => Writable,
+         Executable => Executable);
+   end Add_Memregion_To_Info;
 
    -------------------------------------------------------------------------
 
@@ -238,6 +291,12 @@ is
                      Add_Channel_To_Info
                        (Info          => Subject_Info,
                         Subject_Node  => Subj_Node,
+                        Subject_Name  => Subj_Name,
+                        Virt_Mem_Node => Virt_Mem_Node,
+                        Phys_Mem_Node => Phys_Mem_Node);
+                  else
+                     Add_Memregion_To_Info
+                       (Info          => Subject_Info,
                         Subject_Name  => Subj_Name,
                         Virt_Mem_Node => Virt_Mem_Node,
                         Phys_Mem_Node => Phys_Mem_Node);

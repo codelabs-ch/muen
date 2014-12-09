@@ -68,6 +68,8 @@ private
 
    for Header_Field_Type'Size use 64;
 
+   Header_Size : constant Positive := 64;
+
    --  Channel header as specified by SHMStream v2 protocol.
    type Header_Type is record
       Transport : Header_Field_Type with Atomic;
@@ -80,7 +82,7 @@ private
       WC        : Header_Field_Type with Atomic;
    end record
      with Alignment => 64,
-          Size      => 64 * 8;
+          Size      => 8 * Header_Size;
 
    for Header_Type use record
       Transport at  0 range 0 .. 63;
@@ -92,8 +94,6 @@ private
       WSC       at 48 range 0 .. 63;
       WC        at 56 range 0 .. 63;
    end record;
-
-   Header_Size : constant Positive := Header_Type'Size / 8;
 
    --  Channel data stored as array of elements.
    type Data_Range is new Natural range 0 .. Elements - 1;

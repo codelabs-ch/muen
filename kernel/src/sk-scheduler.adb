@@ -126,7 +126,9 @@ is
    --  one set by Tau0.
    --  On regular minor frame switches the minor frame index is incremented by
    --  one.
-   procedure Update_Scheduling_Info
+   --  The current subject parameter is used to determine whether a new VMCS
+   --  must be loaded, i.e. the next, to-be scheduled subject is not the same.
+   procedure Update_Scheduling_Info (Current_Subject : Skp.Subject_Id_Type)
    with
       Global  =>
         (Input  => New_Major,
@@ -136,17 +138,14 @@ is
         (Major_Frame_Start  =>+ CPU_Global.State,
          (CPU_Global.State,
           Events.State,
-          MP.Barrier,
-          X86_64.State)     =>+ (CPU_Global.State, New_Major))
+          MP.Barrier)       =>+ (CPU_Global.State, New_Major),
+          X86_64.State      =>+ (CPU_Global.State, New_Major, Current_Subject))
    is
       use type Skp.Scheduling.Minor_Frame_Range;
       use type Skp.Scheduling.Barrier_Index_Range;
 
-      Current_Subject_ID : Skp.Subject_Id_Type;
-      Next_Minor_Frame   : Skp.Scheduling.Minor_Frame_Range;
+      Next_Minor_Frame : Skp.Scheduling.Minor_Frame_Range;
    begin
-      Current_Subject_ID := CPU_Global.Get_Current_Subject_ID;
-
       declare
          Current_Major_ID : constant Skp.Scheduling.Major_Frame_Range
            := CPU_Global.Get_Current_Major_Frame_ID;
@@ -215,7 +214,7 @@ is
                  Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
                  Minor_ID => Next_Minor_Frame));
       begin
-         if Current_Subject_ID /= Next_Subject then
+         if Current_Subject /= Next_Subject then
 
             --  New minor frame contains different subject -> Load VMCS.
 
@@ -625,7 +624,7 @@ is
 
          --  Minor frame ticks consumed, update scheduling information.
 
-         Update_Scheduling_Info;
+         Update_Scheduling_Info (Current_Subject => Current_Subject);
       elsif Exit_Status = Constants.EXIT_REASON_INTERRUPT_WINDOW then
 
          --  Resume subject to inject pending event.

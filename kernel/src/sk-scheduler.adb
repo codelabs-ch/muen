@@ -143,65 +143,68 @@ is
       use type Skp.Scheduling.Barrier_Index_Range;
 
       Current_Subject_ID : Skp.Subject_Id_Type;
-      Current_Major_ID   : Skp.Scheduling.Major_Frame_Range;
       Current_Minor_ID   : Skp.Scheduling.Minor_Frame_Range;
       Next_Minor_Frame   : Skp.Scheduling.Minor_Frame_Range;
    begin
       Current_Subject_ID := CPU_Global.Get_Current_Subject_ID;
-      Current_Major_ID   := CPU_Global.Get_Current_Major_Frame_ID;
       Current_Minor_ID   := CPU_Global.Get_Current_Minor_Frame_ID;
 
-      if Current_Minor_ID < CPU_Global.Get_Current_Major_Length then
+      declare
+         Current_Major_ID : Skp.Scheduling.Major_Frame_Range
+           := CPU_Global.Get_Current_Major_Frame_ID;
+      begin
+         if Current_Minor_ID < CPU_Global.Get_Current_Major_Length then
 
-         --  Sync on minor frame barrier if necessary and switch to next minor
-         --  frame in current major frame.
-
-         declare
-            Current_Barrier : constant Skp.Scheduling.Barrier_Index_Range
-              := Skp.Scheduling.Get_Barrier
-                (CPU_ID   => CPU_Global.CPU_ID,
-                 Major_ID => Current_Major_ID,
-                 Minor_ID => Current_Minor_ID);
-         begin
-            if Current_Barrier /= Skp.Scheduling.No_Barrier then
-               MP.Wait_On_Minor_Frame_Barrier (Index => Current_Barrier);
-            end if;
-         end;
-
-         Next_Minor_Frame := Current_Minor_ID + 1;
-      else
-
-         --  Switch to first minor frame in next major frame.
-
-         Next_Minor_Frame := Skp.Scheduling.Minor_Frame_Range'First;
-
-         MP.Wait_For_All;
-         if CPU_Global.Is_BSP then
-
-            --  Increment major frame start time by period of major frame that
-            --  just ended.
-
-            Major_Frame_Start := Major_Frame_Start
-              + Skp.Scheduling.Major_Frames (Current_Major_ID).Period;
+            --  Sync on minor frame barrier if necessary and switch to next
+            --  minor frame in current major frame.
 
             declare
-               use type Skp.Scheduling.Major_Frame_Range;
-
-               Prev_Major : constant Skp.Scheduling.Major_Frame_Range
-                 := Current_Major_ID;
+               Current_Barrier : constant Skp.Scheduling.Barrier_Index_Range
+                 := Skp.Scheduling.Get_Barrier
+                   (CPU_ID   => CPU_Global.CPU_ID,
+                    Major_ID => Current_Major_ID,
+                    Minor_ID => Current_Minor_ID);
             begin
-               Current_Major_ID := New_Major;
-               CPU_Global.Set_Current_Major_Frame (ID => Current_Major_ID);
-
-               if Current_Major_ID /= Prev_Major then
-                  MP.Set_Minor_Frame_Barrier_Config
-                    (Config => Skp.Scheduling.Major_Frames
-                       (Current_Major_ID).Barrier_Config);
+               if Current_Barrier /= Skp.Scheduling.No_Barrier then
+                  MP.Wait_On_Minor_Frame_Barrier (Index => Current_Barrier);
                end if;
             end;
+
+            Next_Minor_Frame := Current_Minor_ID + 1;
+         else
+
+            --  Switch to first minor frame in next major frame.
+
+            Next_Minor_Frame := Skp.Scheduling.Minor_Frame_Range'First;
+
+            MP.Wait_For_All;
+            if CPU_Global.Is_BSP then
+
+               --  Increment major frame start time by period of major frame
+               --  that just ended.
+
+               Major_Frame_Start := Major_Frame_Start
+                 + Skp.Scheduling.Major_Frames (Current_Major_ID).Period;
+
+               declare
+                  use type Skp.Scheduling.Major_Frame_Range;
+
+                  Prev_Major : constant Skp.Scheduling.Major_Frame_Range
+                    := Current_Major_ID;
+               begin
+                  Current_Major_ID := New_Major;
+                  CPU_Global.Set_Current_Major_Frame (ID => Current_Major_ID);
+
+                  if Current_Major_ID /= Prev_Major then
+                     MP.Set_Minor_Frame_Barrier_Config
+                       (Config => Skp.Scheduling.Major_Frames
+                          (Current_Major_ID).Barrier_Config);
+                  end if;
+               end;
+            end if;
+            MP.Wait_For_All;
          end if;
-         MP.Wait_For_All;
-      end if;
+      end;
 
       declare
          use type Skp.Subjects.Profile_Kind;

@@ -148,7 +148,7 @@ is
       Current_Subject_ID := CPU_Global.Get_Current_Subject_ID;
 
       declare
-         Current_Major_ID : Skp.Scheduling.Major_Frame_Range
+         Current_Major_ID : constant Skp.Scheduling.Major_Frame_Range
            := CPU_Global.Get_Current_Major_Frame_ID;
          Current_Minor_ID : constant Skp.Scheduling.Minor_Frame_Range
            := CPU_Global.Get_Current_Minor_Frame_ID;
@@ -189,16 +189,15 @@ is
                declare
                   use type Skp.Scheduling.Major_Frame_Range;
 
-                  Prev_Major : constant Skp.Scheduling.Major_Frame_Range
-                    := Current_Major_ID;
+                  Next_Major_ID : constant Skp.Scheduling.Major_Frame_Range
+                    := New_Major;
                begin
-                  Current_Major_ID := New_Major;
-                  CPU_Global.Set_Current_Major_Frame (ID => Current_Major_ID);
+                  CPU_Global.Set_Current_Major_Frame (ID => Next_Major_ID);
 
-                  if Current_Major_ID /= Prev_Major then
+                  if Current_Major_ID /= Next_Major_ID then
                      MP.Set_Minor_Frame_Barrier_Config
                        (Config => Skp.Scheduling.Major_Frames
-                          (Current_Major_ID).Barrier_Config);
+                          (Next_Major_ID).Barrier_Config);
                   end if;
                end;
             end if;

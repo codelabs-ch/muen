@@ -24,6 +24,7 @@
 #define MUEN_SUBJECT_INFO_MAGIC	0x01006f666e69756dULL
 #define MAX_NAME_LENGTH		63
 #define MAX_RESOURCE_COUNT	255
+#define NO_RESOURCE			0
 
 struct name_type {
 	uint8_t length;

@@ -143,15 +143,15 @@ is
       use type Skp.Scheduling.Barrier_Index_Range;
 
       Current_Subject_ID : Skp.Subject_Id_Type;
-      Current_Minor_ID   : Skp.Scheduling.Minor_Frame_Range;
       Next_Minor_Frame   : Skp.Scheduling.Minor_Frame_Range;
    begin
       Current_Subject_ID := CPU_Global.Get_Current_Subject_ID;
-      Current_Minor_ID   := CPU_Global.Get_Current_Minor_Frame_ID;
 
       declare
          Current_Major_ID : Skp.Scheduling.Major_Frame_Range
            := CPU_Global.Get_Current_Major_Frame_ID;
+         Current_Minor_ID : constant Skp.Scheduling.Minor_Frame_Range
+           := CPU_Global.Get_Current_Minor_Frame_ID;
       begin
          if Current_Minor_ID < CPU_Global.Get_Current_Major_Length then
 

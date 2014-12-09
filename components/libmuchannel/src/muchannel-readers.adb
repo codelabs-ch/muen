@@ -154,7 +154,8 @@ is
          if Reader.RC >= Count then
             Result := No_Data;
          else
-            Position := Data_Range (Reader.RC mod Reader.Elements);
+            Position := Data_Range (Reader.RC mod Header_Field_Type
+                                    (Elements));
             Element  := Channel.Data (Position);
 
             --  Check for element overwrite by writer.

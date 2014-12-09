@@ -76,12 +76,11 @@ is
      (Channel : in out Channel_Type;
       Element :        Element_Type)
    is
-      Element_Count : constant Header_Field_Type := Channel.Header.Elements;
-      WC            : Header_Field_Type;
-      Position      : Data_Range;
+      WC       : Header_Field_Type;
+      Position : Data_Range;
    begin
       WC       := Channel.Header.WC;
-      Position := Data_Range (WC mod Element_Count);
+      Position := Data_Range (WC mod Header_Field_Type (Elements));
       WC       := WC + 1;
 
       Channel.Header.WSC      := WC;

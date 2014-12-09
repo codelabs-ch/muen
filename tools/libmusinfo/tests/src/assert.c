@@ -147,12 +147,12 @@ int assert_memregion_type(const int size, const int alignment,
 
 int assert_channel_info(const struct channel_info_type * const channel_info)
 {
-	if (!(channel_info->flags & HAS_EVENT_FLAG))
+	if (!(channel_info->flags & CHAN_EVENT_FLAG))
 	{
 		printf("Channel: Has_Event flag not set\n");
 		return 0;
 	}
-	if (!(channel_info->flags & HAS_VECTOR_FLAG))
+	if (!(channel_info->flags & CHAN_VECTOR_FLAG))
 	{
 		printf("Channel: Has_Vector flag not set\n");
 		return 0;

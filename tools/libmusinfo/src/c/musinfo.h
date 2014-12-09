@@ -40,8 +40,8 @@ struct memregion_type {
 	char padding[7];
 } __attribute__((packed, aligned (8)));
 
-#define HAS_EVENT_FLAG  (1 << 0)
-#define HAS_VECTOR_FLAG (1 << 1)
+#define CHAN_EVENT_FLAG  (1 << 0)
+#define CHAN_VECTOR_FLAG (1 << 1)
 
 struct channel_info_type {
 	uint8_t flags;

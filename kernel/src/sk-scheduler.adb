@@ -210,7 +210,7 @@ is
            := CPU_Global.Get_Subject_ID
              (Group => Skp.Scheduling.Get_Group_ID
                 (CPU_ID   => CPU_Global.CPU_ID,
-                 Major_ID => Current_Major_ID,
+                 Major_ID => CPU_Global.Get_Current_Major_Frame_ID,
                  Minor_ID => Next_Minor_Frame));
       begin
          if Current_Subject_ID /= Next_Subject then

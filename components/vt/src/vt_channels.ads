@@ -28,16 +28,16 @@ is
      (Element_Type => Character,
       Element_Size => 1,
       Elements     => 65472,
-      Null_Element => ASCII.NUL);
-   package VT_Channel_Rdr is new VT_Channel.Readers
-     (Protocol => 1);
+      Null_Element => ASCII.NUL,
+      Protocol     => 1);
+   package VT_Channel_Rdr is new VT_Channel.Readers;
 
    package Key_Channel is new Muchannel
      (Element_Type => Input.Key_Event_Type,
       Element_Size => Input.Key_Event_Type'Size / 8,
       Elements     => 2016,
-      Null_Element => Input.Null_Key_Event);
-   package Key_Channel_Wtr is new Key_Channel.Writer
-     (Protocol => 2);
+      Null_Element => Input.Null_Key_Event,
+      Protocol     => 2);
+   package Key_Channel_Wtr is new Key_Channel.Writer;
 
 end VT_Channels;

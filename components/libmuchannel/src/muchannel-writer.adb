@@ -52,7 +52,7 @@ is
       --  Initialize channel header.
 
       Channel.Header.Transport := SHMStream_Marker;
-      Channel.Header.Protocol  := Writer.Protocol;
+      Channel.Header.Protocol  := Header_Field_Type (Protocol);
       Channel.Header.Size      := Header_Field_Type (Element_Size);
       Channel.Header.Elements  := Header_Field_Type (Elements);
       Channel.Header.Reserved  := 0;

@@ -26,6 +26,8 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with Interfaces;
+
 --  Muen shared memory channels.
 --
 --  Muen shared memory channels are an implementation of the SHMStream
@@ -44,6 +46,9 @@ generic
 
    --  Null element.
    Null_Element : Element_Type;
+
+   --  Protocol identifier.
+   Protocol : Interfaces.Unsigned_64;
 
 package Muchannel is
 

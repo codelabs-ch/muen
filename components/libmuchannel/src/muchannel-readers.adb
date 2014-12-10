@@ -92,7 +92,7 @@ is
    is
    begin
       return E_Size * E_Count = C_Size
-        and C_Protocol = Readers.Protocol;
+        and C_Protocol = Header_Field_Type (Protocol);
    end Is_Valid;
 
    -------------------------------------------------------------------------

@@ -27,10 +27,6 @@
 --
 
 generic
-
-   --  Protocol identifier.
-   Protocol : Muchannel.Header_Field_Type;
-
 package Muchannel.Readers
 is
 

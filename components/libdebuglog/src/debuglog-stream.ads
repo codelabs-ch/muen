@@ -32,4 +32,5 @@ with Debuglog.Types;
 package Debuglog.Stream is new Muchannel
   (Element_Type => Types.Data_Type,
    Element_Size => Types.Data_Size,
-   Elements     => 1023);
+   Elements     => 1023,
+   Null_Element => Types.Null_Data);

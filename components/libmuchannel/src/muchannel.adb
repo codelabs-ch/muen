@@ -29,6 +29,9 @@
 package body Muchannel
 is
 
+   --  Used in Readers and Writer child packages.
+   pragma Unreferenced (Null_Element);
+
    -------------------------------------------------------------------------
 
    procedure Is_Active

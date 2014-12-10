@@ -42,6 +42,9 @@ generic
    --  Capacity of channel in number of elements.
    Elements : Positive;
 
+   --  Null element.
+   Null_Element : Element_Type;
+
 package Muchannel is
 
    --  Communication channel used by reader and writer.

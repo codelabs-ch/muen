@@ -24,7 +24,7 @@ with
 is
 
    type Spin_Lock_Type is record
-      Locked : SK.Byte;
+      Locked : SK.Word32;
    end record;
 
    Lock : Spin_Lock_Type;
@@ -33,12 +33,12 @@ is
 
    procedure Acquire
    is
-      Result : SK.Byte;
+      Result : SK.Word32;
    begin
       loop
          System.Machine_Code.Asm
-           (Template => "mov $1, %%eax; lock xchgl %%eax, (%%edx); pause",
-            Outputs  => (SK.Byte'Asm_Output ("=a", Result)),
+           (Template => "mov $1, %%eax; lock xchgl %%eax, (%%rdx); pause",
+            Outputs  => (SK.Word32'Asm_Output ("=a", Result)),
             Inputs   => (System.Address'Asm_Input ("d", Lock.Locked'Address)));
 
          if Result = 0 then
@@ -53,8 +53,8 @@ is
    is
    begin
       System.Machine_Code.Asm
-        (Template => "movq $0, %0",
-         Outputs  => (SK.Byte'Asm_Output ("=m", Lock.Locked)),
+        (Template => "movl $0, %0",
+         Outputs  => (SK.Word32'Asm_Output ("=m", Lock.Locked)),
          Volatile => True);
    end Release;
 

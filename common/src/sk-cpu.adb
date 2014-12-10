@@ -51,8 +51,7 @@ is
          Outputs  => (SK.Word32'Asm_Output ("=a", EAX),
                       SK.Word32'Asm_Output ("=b", EBX),
                       SK.Word32'Asm_Output ("=c", ECX),
-                      SK.Word32'Asm_Output ("=d", EDX)),
-         Volatile => True);
+                      SK.Word32'Asm_Output ("=d", EDX)));
    end CPUID;
 
    -------------------------------------------------------------------------

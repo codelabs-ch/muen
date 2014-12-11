@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -52,8 +52,8 @@ is
       --  Initialize channel header.
 
       Channel.Header.Transport := SHMStream_Marker;
-      Channel.Header.Protocol  := Writer.Protocol;
-      Channel.Header.Size      := Element_Type'Size / 8;
+      Channel.Header.Protocol  := Header_Field_Type (Protocol);
+      Channel.Header.Size      := Header_Field_Type (Element_Size);
       Channel.Header.Elements  := Header_Field_Type (Elements);
       Channel.Header.Reserved  := 0;
       Channel.Header.WSC       := 0;
@@ -76,12 +76,11 @@ is
      (Channel : in out Channel_Type;
       Element :        Element_Type)
    is
-      Element_Count : constant Header_Field_Type := Channel.Header.Elements;
-      WC            : Header_Field_Type;
-      Position      : Data_Range;
+      WC       : Header_Field_Type;
+      Position : Data_Range;
    begin
       WC       := Channel.Header.WC;
-      Position := Data_Range (WC mod Element_Count);
+      Position := Data_Range (WC mod Header_Field_Type (Elements));
       WC       := WC + 1;
 
       Channel.Header.WSC      := WC;

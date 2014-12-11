@@ -25,10 +25,7 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-package Debuglog.Sink
-with
-   Abstract_State => (State with External => (Async_Readers)),
-   Initializes    => State
+private package Debuglog.Sink
 is
 
    --  Flush buffers.

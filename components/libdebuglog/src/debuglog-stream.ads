@@ -28,7 +28,11 @@
 with Muchannel;
 
 with Debuglog.Types;
+with Debuglog.Constants;
 
 package Debuglog.Stream is new Muchannel
   (Element_Type => Types.Data_Type,
-   Elements     => 1023);
+   Element_Size => Types.Data_Size,
+   Elements     => 1023,
+   Null_Element => Types.Null_Data,
+   Protocol     => Constants.Protocol_Number);

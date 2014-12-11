@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -27,13 +27,6 @@
 --
 
 generic
-
-   --  Protocol identifier.
-   Protocol : Muchannel.Header_Field_Type;
-
-   --  Null element used for channel initialization.
-   Null_Element : Muchannel.Element_Type;
-
 package Muchannel.Writer
 is
 

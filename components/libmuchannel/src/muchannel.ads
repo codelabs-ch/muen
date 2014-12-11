@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -26,6 +26,8 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
+with Interfaces;
+
 --  Muen shared memory channels.
 --
 --  Muen shared memory channels are an implementation of the SHMStream
@@ -36,8 +38,17 @@ generic
    --  Elements transported via channel instance.
    type Element_Type is private;
 
+   --  Element size in bytes.
+   Element_Size : Positive;
+
    --  Capacity of channel in number of elements.
    Elements : Positive;
+
+   --  Null element.
+   Null_Element : Element_Type;
+
+   --  Protocol identifier.
+   Protocol : Interfaces.Unsigned_64;
 
 package Muchannel is
 
@@ -68,6 +79,8 @@ private
 
    for Header_Field_Type'Size use 64;
 
+   Header_Size : constant Positive := 64;
+
    --  Channel header as specified by SHMStream v2 protocol.
    type Header_Type is record
       Transport : Header_Field_Type with Atomic;
@@ -80,7 +93,7 @@ private
       WC        : Header_Field_Type with Atomic;
    end record
      with Alignment => 64,
-          Size      => 64 * 8;
+          Size      => 8 * Header_Size;
 
    for Header_Type use record
       Transport at  0 range 0 .. 63;
@@ -93,14 +106,12 @@ private
       WC        at 56 range 0 .. 63;
    end record;
 
-   Header_Size : constant Positive := Header_Type'Size / 8;
-
    --  Channel data stored as array of elements.
    type Data_Range is new Natural range 0 .. Elements - 1;
    type Data_Type  is array (Data_Range) of Element_Type
      with Pack;
 
-   Data_Size : constant Positive := Data_Type'Size / 8;
+   Data_Size : constant Positive := Data_Type'Length * Element_Size;
 
    type Channel_Type is record
       Header : Header_Type;

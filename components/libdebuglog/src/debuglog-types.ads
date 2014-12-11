@@ -33,11 +33,13 @@ is
    subtype Message_Index is Positive range 1 .. 56;
    subtype Message_Type is String (Message_Index);
 
+   Data_Size : constant := 64;
+
    type Data_Type is record
       Timestamp : Interfaces.Unsigned_64;
       Message   : Message_Type;
    end record
-     with Size => 8 * 64;
+     with Size => 8 * Data_Size;
 
    for Data_Type use record
       Timestamp at 0 range 0 ..  8 * 8 - 1;

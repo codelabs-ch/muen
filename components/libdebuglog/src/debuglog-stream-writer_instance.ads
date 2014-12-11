@@ -27,8 +27,4 @@
 
 with Muchannel.Writer;
 
-with Debuglog.Constants;
-
-package Debuglog.Stream.Writer_Instance is new Stream.Writer
-  (Protocol     => Constants.Protocol_Number,
-   Null_Element => Types.Null_Data);
+package Debuglog.Stream.Writer_Instance is new Stream.Writer;

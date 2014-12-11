@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -28,6 +28,9 @@
 
 package body Muchannel
 is
+
+   --  Used in Readers and Writer child packages.
+   pragma Unreferenced (Null_Element, Protocol);
 
    -------------------------------------------------------------------------
 

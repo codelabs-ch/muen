@@ -38,7 +38,7 @@ pragma Style_Checks ("-o");
 
 package body Debuglog.Sink
 with
-   Refined_State => (State => (Message_Channel, Message_Buffer, Message_Index))
+   SPARK_Mode => Off
 is
 
    use type Interfaces.Unsigned_32;

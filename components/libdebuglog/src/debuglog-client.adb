@@ -26,9 +26,11 @@
 --
 
 with Debuglog.Utils;
-with Debuglog.Sink;
+private with Debuglog.Sink;
 
 package body Debuglog.Client
+with
+   SPARK_Mode => Off
 is
 
    type Word64_Image_Index is range 0 .. 15;

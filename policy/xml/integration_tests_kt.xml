@@ -6,7 +6,7 @@
 		<include href="common_memory.xml"/>
 
 		<memory name="initramfs_integ" size="16#0040_0000#" caching="WB" type="subject_initrd">
-			<file filename="initramfs_integ_kt.cpio.gz" offset="16#0000#"/>
+			<file filename="initramfs_integ_kt.cpio.gz" offset="none"/>
 		</memory>
 		<memory name="nic_linux|ram" size="16#4000_0000#" alignment="16#0020_0000#" caching="WB"/>
 		<memory name="nic_linux|lowmem" size="16#0008_6000#" caching="WB"/>

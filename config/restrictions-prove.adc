@@ -1,11 +1,2 @@
 pragma Check_Policy (Debug => Disable);
 pragma Warnings (Off, "unit ""SK.Version"" is not referenced");
-
-pragma Warnings (Off, "pragma ""ATOMIC"" is not yet supported in flow analysis",
-  Reason => "Atomic not modelled");
-pragma Warnings (Off, "pragma ""ATOMIC"" is not yet supported in proof",
-  Reason => "Atomic not modelled");
-pragma Warnings (Off, "pragma ""ATOMIC"" ignored in flow analysis (not yet supported)",
-  Reason => "Atomic not modelled");
-pragma Warnings (Off, "pragma ""ATOMIC"" ignored in proof (not yet supported)",
-  Reason => "Atomic not modelled");

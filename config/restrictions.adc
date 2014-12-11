@@ -19,3 +19,12 @@ pragma Restrictions (No_Wide_Characters);
 pragma Restrictions (Static_Storage_Size);
 pragma SPARK_Mode;
 pragma Overflow_Mode (General => Strict, Assertions => Eliminated);
+
+pragma Warnings (Off, "pragma ""ATOMIC"" is not yet supported in flow analysis",
+  Reason => "Atomic not modelled");
+pragma Warnings (Off, "pragma ""ATOMIC"" is not yet supported in proof",
+  Reason => "Atomic not modelled");
+pragma Warnings (Off, "pragma ""ATOMIC"" ignored in flow analysis (not yet supported)",
+  Reason => "Atomic not modelled");
+pragma Warnings (Off, "pragma ""ATOMIC"" ignored in proof (not yet supported)",
+  Reason => "Atomic not modelled");

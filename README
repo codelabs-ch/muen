@@ -28,8 +28,8 @@ user components, so called 'subjects', run in VMX non-root mode. Hardware
 passthrough is realized using Intel's VT-d DMA and interrupt remapping
 technology. This enables the secure assignment of PCI devices to subjects.
 
-NOTE: Muen is currently a prototype implementation. We do not yet consider it
-      to be fit for production use.
+NOTE: Muen is under active development. We do not yet consider it to be fit for
+      production use.
 
 
 Features

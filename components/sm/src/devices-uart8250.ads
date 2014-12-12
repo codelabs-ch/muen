@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -18,25 +18,35 @@
 
 with X86_64;
 
+with SK;
+
 with Debuglog.Client;
 
+with Types;
 with Subject_Info;
-with Devices.UART8250;
 
-package Exit_Handlers.IO_Instruction
+package Devices.UART8250
+with
+   Abstract_State => State,
+   Initializes    => State
 is
 
-   --  Emulate I/O port access.
-   procedure Process (Halt : out Boolean)
+   --  Emulated COM port ranges.
+   subtype Com1_Port_Range is SK.Word16 range 16#03f8# .. 16#03ff#;
+
+   --  Emulate UART 8250 controller COM1.
+   procedure Emulate
+     (Info :     Types.IO_Info_Type;
+      Halt : out Boolean)
    with
-      Global  => (In_Out => (Subject_Info.State, Devices.UART8250.State,
+      Global  => (In_Out => (State, Subject_Info.State,
                              Debuglog.Client.State, X86_64.State)),
       Depends =>
-       ((Debuglog.Client.State,
-        Subject_Info.State,
-        Devices.UART8250.State,
-        X86_64.State) =>+ (Subject_Info.State,
-                           Devices.UART8250.State),
-        Halt          => Subject_Info.State);
+        ((State, Subject_Info.State, Debuglog.Client.State) =>+
+           (State, Info, Subject_Info.State),
+         X86_64.State =>+ (State, Info),
+         Halt         => null),
+      Post    => Halt = False,
+      Pre     => Info.Port_Number in Com1_Port_Range;
 
-end Exit_Handlers.IO_Instruction;
+end Devices.UART8250;

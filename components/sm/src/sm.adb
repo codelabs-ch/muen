@@ -32,6 +32,9 @@ with Exit_Handlers.RDMSR;
 with Exit_Handlers.WRMSR;
 with Exit_Handlers.CR_Access;
 with Exit_Handlers.RDTSC;
+with Devices.UART8250;
+
+with Debuglog.Client;
 
 with Debug_Ops;
 
@@ -40,7 +43,8 @@ pragma Unreferenced (Interrupt_Handler);
 procedure Sm
 with
    Global => (In_Out => (Exit_Handlers.RDTSC.State, Subject_Info.State,
-                         Interrupts.State, X86_64.State))
+                         Devices.UART8250.State, Interrupts.State,
+                         Debuglog.Client.State, X86_64.State))
 is
    use type SK.Word64;
    use Subject_Info;

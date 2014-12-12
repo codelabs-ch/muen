@@ -30,7 +30,7 @@ is
    FCR_Offset  : constant SK.Word16 := 16#2#;
    LSR_Offset  : constant SK.Word16 := 16#5#;
 
-   --  UART_Data_Ready              : constant SK.Byte := 16#01#;
+   UART_Data_Ready              : constant SK.Byte := 16#01#;
    UART_THR_Empty_And_Line_Idle : constant SK.Byte := 16#20#;
    UART_FIFO_Enable             : constant SK.Byte := 16#01#;
 
@@ -49,27 +49,25 @@ is
       (Input_Queue  : in out Byte_Queue.Queue_Type;
        Output_Queue : in out Byte_Queue.Queue_Type)
    is
-      pragma Unreferenced (Input_Queue);
-
       use type SK.Byte;
 
       LSR         : SK.Byte;
       Length      : Natural;
       Byte_Buffer : Byte_Arrays.Single_Byte_Array := (1 => 0);
    begin
---        while Byte_Queue.Bytes_Free (Queue => Input_Queue) > 0 loop
---           SK.IO.Inb (Port  => Serial_Port + LSR_Offset,
---                      Value => LSR);
---
---           exit when (LSR and UART_Data_Ready) /= UART_Data_Ready;
---
---           SK.IO.Inb (Port  => Serial_Port,
---                      Value => SK.Byte (Byte_Buffer (1)));
---
---           Byte_Queue.Append (Queue  => Input_Queue,
---                              Buffer => Byte_Buffer,
---                              Length => 1);
---        end loop;
+      while Byte_Queue.Bytes_Free (Queue => Input_Queue) > 0 loop
+         SK.IO.Inb (Port  => Serial_Port + LSR_Offset,
+                    Value => LSR);
+
+         exit when (LSR and UART_Data_Ready) /= UART_Data_Ready;
+
+         SK.IO.Inb (Port  => Serial_Port,
+                    Value => SK.Byte (Byte_Buffer (1)));
+
+         Byte_Queue.Append (Queue  => Input_Queue,
+                            Buffer => Byte_Buffer,
+                            Length => 1);
+      end loop;
 
       while Byte_Queue.Bytes_Used (Queue => Output_Queue) > 0 loop
          SK.IO.Inb (Port  => Serial_Port + LSR_Offset,

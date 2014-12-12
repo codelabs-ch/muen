@@ -47,16 +47,13 @@
 		<include href="subject_usb_sm.xml"/>
 
 		<subject name="nic_linux" profile="linux">
-			<bootparams>console=hvc pci=noearly tsc=reliable</bootparams>
+			<bootparams>console=hvc console=ttyS0 pci=noearly tsc=reliable</bootparams>
 			<memory>
 				<memory logical="lowmem" physical="nic_linux|lowmem" virtualAddress="16#0001_a000#" writable="true" executable="false"/>
 				<memory logical="initramfs" physical="initramfs_integ" virtualAddress="16#00a0_0000#" writable="false" executable="false"/>
 				<memory logical="ram" physical="nic_linux|ram" virtualAddress="16#00e0_0000#" writable="true" executable="true"/>
 			</memory>
 			<devices>
-				<device logical="serial" physical="debugconsole">
-					<ioPort logical="port" physical="port"/>
-				</device>
 				<device logical="cmos_rtc" physical="cmos_rtc">
 					<ioPort logical="ports" physical="ports"/>
 				</device>
@@ -75,7 +72,8 @@
 					</group>
 				</source>
 				<target>
-					<event physical="resume_nic_linux" logical="resume_after_trap" vector="none"/>
+					<event logical="resume_after_trap" physical="resume_nic_linux" vector="none"/>
+					<event logical="serial_irq4" physical="serial_irq4_nic_linux" vector="52"/>
 				</target>
 			</events>
 			<channels>
@@ -86,7 +84,7 @@
 		</subject>
 
 		<subject name="usb_linux" profile="linux">
-			<bootparams>console=hvc pci=noearly tsc=reliable</bootparams>
+			<bootparams>console=hvc console=ttyS0 pci=noearly tsc=reliable</bootparams>
 			<memory>
 				<memory logical="lowmem" physical="usb_linux|lowmem" virtualAddress="16#0001_a000#" writable="true" executable="false"/>
 				<memory logical="initramfs" physical="initramfs" virtualAddress="16#00a0_0000#" writable="false" executable="false"/>
@@ -111,6 +109,7 @@
 				</source>
 				<target>
 					<event logical="resume_after_trap" physical="resume_usb_linux" vector="none"/>
+					<event logical="serial_irq4" physical="serial_irq4_usb_linux" vector="52"/>
 				</target>
 			</events>
 			<channels>

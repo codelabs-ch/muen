@@ -13,6 +13,7 @@ source $SCRIPTDIR/args.sh
 source $SCRIPTDIR/func.sh
 
 WORKDIR=$SCRIPTDIR/../../..
+MULOG=$SCRIPTDIR/../mulog.py
 
 SAVE_ARTIFACTS=0
 
@@ -57,7 +58,7 @@ expect()
 	local file=$1
 	local pattern=$2
 	log "Expect pattern '$pattern' in file '$file'"
-	strings $file | grep "$pattern" >>$LOGFILE 2>&1
+	$MULOG $file | grep "$pattern" >>$LOGFILE 2>&1
 	if [ $? -ne 0 ]; then
 		log "Expected pattern '$pattern' not found in '$file'"
 		failed

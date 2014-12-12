@@ -2,6 +2,9 @@
 	<events>
 		<source>
 			<group name="vmcall">
+				<event id="0" logical="serial_irq4" action="continue">
+					<notify physical="serial_irq4_usb_linux"/>
+				</event>
 				<event id="4" logical="resume_usb_linux" action="continue">
 					<notify physical="resume_usb_linux"/>
 				</event>

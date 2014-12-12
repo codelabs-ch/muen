@@ -3,7 +3,7 @@
 	<processor logicalCpus="4" speed="50" vmxTimerRate="0"/>
 	<memory/>
 	<devices>
-		<device name="debugconsole" shared="true">
+		<device name="debugconsole" shared="false">
 			<ioPort name="port" start="16#03f8#" end="16#03ff#"/>
 		</device>
 	</devices>

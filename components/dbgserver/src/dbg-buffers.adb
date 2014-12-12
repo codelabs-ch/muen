@@ -20,7 +20,7 @@ with System;
 with Interfaces;
 
 with Dbg.Config;
---  with Dbg.Byte_Arrays;
+with Dbg.Byte_Arrays;
 with Dbg.Byte_Queue.Format;
 
 package body Dbg.Buffers
@@ -93,7 +93,7 @@ is
       Output_Queue : in out Byte_Queue.Queue_Type);
 
    --  Echo content of input queue into output queue.
-   --  procedure Echo (Input, Output : in out Byte_Queue.Queue_Type);
+   procedure Echo (Input, Output : in out Byte_Queue.Queue_Type);
 
    -------------------------------------------------------------------------
 
@@ -154,31 +154,31 @@ is
 
    ----------------------------------------------------------------------
 
---     procedure Echo (Input, Output : in out Byte_Queue.Queue_Type)
---     is
---        subtype Echo_Buffer_Range is Positive range 1 .. 64;
---        subtype Echo_Buffer_Type is Byte_Arrays.Byte_Array
---          (Echo_Buffer_Range);
---
---        Echo_Buffer : Echo_Buffer_Type;
---        Length      : Natural;
---     begin
---        if Byte_Queue.Bytes_Free (Queue => Output) >= Echo_Buffer'Length
---          and Byte_Queue.Bytes_Used (Queue => Input) > 0
---        then
---           Byte_Queue.Peek
---             (Queue  => Input,
---              Buffer => Echo_Buffer,
---              Length => Length);
---           Byte_Queue.Drop_Bytes
---             (Queue  => Input,
---              Length => Length);
---           Byte_Queue.Append
---             (Queue  => Output,
---              Buffer => Echo_Buffer,
---              Length => Length);
---        end if;
---     end Echo;
+   procedure Echo (Input, Output : in out Byte_Queue.Queue_Type)
+   is
+      subtype Echo_Buffer_Range is Positive range 1 .. 64;
+      subtype Echo_Buffer_Type is Byte_Arrays.Byte_Array
+        (Echo_Buffer_Range);
+
+      Echo_Buffer : Echo_Buffer_Type;
+      Length      : Natural;
+   begin
+      if Byte_Queue.Bytes_Free (Queue => Output) >= Echo_Buffer'Length
+        and Byte_Queue.Bytes_Used (Queue => Input) > 0
+      then
+         Byte_Queue.Peek
+           (Queue  => Input,
+            Buffer => Echo_Buffer,
+            Length => Length);
+         Byte_Queue.Drop_Bytes
+           (Queue  => Input,
+            Length => Length);
+         Byte_Queue.Append
+           (Queue  => Output,
+            Buffer => Echo_Buffer,
+            Length => Length);
+      end if;
+   end Echo;
 
    -------------------------------------------------------------------------
 
@@ -333,15 +333,14 @@ is
       Output_Queue : in out Byte_Queue.Queue_Type)
 
    is
-      pragma Unreferenced (Input_Queue);
    begin
       Update_Message_Buffers
         (Buffer => Buffer);
       Log_Oldest_Message
         (Buffer       => Buffer,
          Output_Queue => Output_Queue);
---        Echo (Input  => Input_Queue,
---              Output => Output_Queue);
+      Echo (Input  => Input_Queue,
+            Output => Output_Queue);
    end Run;
 
    -------------------------------------------------------------------------

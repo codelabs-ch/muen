@@ -46,6 +46,7 @@ is
            (State, Info, Subject_Info.State),
          X86_64.State =>+ (State, Info),
          Halt         => null),
-      Post    => Halt = False;
+      Post    => Halt = False,
+      Pre     => Info.Port_Number in Com1_Port_Range;
 
 end Devices.UART8250;

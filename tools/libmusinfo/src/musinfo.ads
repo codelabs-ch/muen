@@ -266,9 +266,9 @@ is
 
    Null_Subject_Info : constant Subject_Info_Type
      := (Magic              => Muen_Subject_Info_Magic,
-         Resource_Count     => Resource_Count_Type'First,
-         Memregion_Count    => Resource_Count_Type'First,
-         Channel_Info_Count => Resource_Count_Type'First,
+         Resource_Count     => No_Resource,
+         Memregion_Count    => No_Resource,
+         Channel_Info_Count => No_Resource,
          Padding            => (others => 0),
          TSC_Khz            => 0,
          Resources          => (others => Null_Resource),

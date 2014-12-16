@@ -10,16 +10,19 @@ package Paging.IA32e.Test_Data.Tests is
    with null record;
 
    procedure Test_Serialize_PML4_2c71ff (Gnattest_T : in out Test);
-   --  paging-ia32e.ads:28:4:Serialize_PML4
+   --  paging-ia32e.ads:29:4:Serialize_PML4
 
    procedure Test_Serialize_PDPT_94a8de (Gnattest_T : in out Test);
-   --  paging-ia32e.ads:34:4:Serialize_PDPT
+   --  paging-ia32e.ads:35:4:Serialize_PDPT
 
    procedure Test_Serialize_PD_8965c8 (Gnattest_T : in out Test);
-   --  paging-ia32e.ads:40:4:Serialize_PD
+   --  paging-ia32e.ads:41:4:Serialize_PD
 
    procedure Test_Serialize_PT_21f341 (Gnattest_T : in out Test);
-   --  paging-ia32e.ads:46:4:Serialize_PT
+   --  paging-ia32e.ads:47:4:Serialize_PT
+
+   procedure Test_Deserialze_PML4_Entry_9da287 (Gnattest_T : in out Test);
+   --  paging-ia32e.ads:52:4:Deserialze_PML4_Entry
 
 end Paging.IA32e.Test_Data.Tests;
 --  end read only

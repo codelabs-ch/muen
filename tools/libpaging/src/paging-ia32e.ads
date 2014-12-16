@@ -19,6 +19,7 @@
 with Ada.Streams;
 
 with Paging.Tables;
+with Paging.Entries;
 
 package Paging.IA32e
 is
@@ -46,5 +47,10 @@ is
    procedure Serialize_PT
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
       Table  : Tables.Page_Table_Type);
+
+   --  Create single PML4 entry from given stream data.
+   procedure Deserialze_PML4_Entry
+     (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table_Entry : out Entries.Table_Entry_Type);
 
 end Paging.IA32e;

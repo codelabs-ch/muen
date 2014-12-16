@@ -85,6 +85,13 @@ is
       Exec_Disable : Boolean)
       return Interfaces.Unsigned_64;
 
+   --  Create table entry of specified level based on given raw IA-32e paging
+   --  structure entry.
+   function Create_Entry
+     (Raw_Entry : Interfaces.Unsigned_64;
+      Level     : Paging_Level)
+      return Entries.Table_Entry_Type;
+
    -------------------------------------------------------------------------
 
    function Create_Dir_Entry
@@ -128,6 +135,70 @@ is
 
       return Result;
    end Create_Dir_Entry;
+
+   -------------------------------------------------------------------------
+
+   function Create_Entry
+     (Raw_Entry : Interfaces.Unsigned_64;
+      Level     : Paging_Level)
+      return Entries.Table_Entry_Type
+   is
+      Dst_Addr  : constant Interfaces.Unsigned_64
+        := Raw_Entry and Address_Mask;
+      Maps_Page : constant Boolean := Mutools.Utils.Bit_Test
+           (Value => Raw_Entry,
+            Pos   => Page_Size_Flag) or Level = Paging_Level'Last;
+      PAT_Bit   : constant Boolean := Mutools.Utils.Bit_Test
+        (Value => Raw_Entry,
+         Pos   => (if Level < Paging_Level'Last
+                   then PD_PAT_Flag
+                   else PTE_PAT_Flag));
+      PCD_Bit   : constant Boolean := Mutools.Utils.Bit_Test
+        (Value => Raw_Entry,
+         Pos   => PCD_Flag);
+      PWT_Bit   : constant Boolean := Mutools.Utils.Bit_Test
+        (Value => Raw_Entry,
+         Pos   => PWT_Flag);
+      PAT_Index : Natural := 0;
+   begin
+
+      --  For PAT index calculation see Intel SDM Vol. 3A, section 4.9.2.
+
+      PAT_Index :=
+        (if PAT_Bit and Maps_Page then 4 else 0) +
+        (if PCD_Bit then 2 else 0) +
+        (if PWT_Bit then 1 else 0);
+
+      if not (PAT_Index in Cache_Mapping'Range) then
+         raise Constraint_Error with "Level" & Level'Img & " entry has invalid"
+           & " caching type - PAT: " & PAT_Bit'Img & ", PCD: " & PCD_Bit'Img
+           & ", PWT: " & PWT_Bit'Img;
+      end if;
+
+      return Entries.Create
+        (Dst_Index   =>
+           (if Maps_Page then 0
+            else Table_Range (Get_Index (Address => Dst_Addr,
+                                         Level   => Level))),
+         Dst_Address => Dst_Addr,
+         Present     => Mutools.Utils.Bit_Test
+           (Value => Raw_Entry,
+            Pos   => Present_Flag),
+         Readable    => Mutools.Utils.Bit_Test
+           (Value => Raw_Entry,
+            Pos   => US_Flag),
+         Writable    => Mutools.Utils.Bit_Test
+           (Value => Raw_Entry,
+            Pos   => RW_Flag),
+         Executable  => not Mutools.Utils.Bit_Test
+           (Value => Raw_Entry,
+            Pos   => NXE_Flag),
+         Maps_Page   => Maps_Page,
+         Global      => Mutools.Utils.Bit_Test
+           (Value => Raw_Entry,
+            Pos   => Global_Flag),
+         Caching     => Cache_Mapping (PAT_Index));
+   end Create_Entry;
 
    -------------------------------------------------------------------------
 

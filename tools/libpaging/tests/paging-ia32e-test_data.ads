@@ -45,4 +45,15 @@ package Paging.IA32e.Test_Data is
         Global      => False,
         Caching     => UC);
 
+   Ref_PD_Entry   : constant Entries.Table_Entry_Type
+     := Entries.Create
+       (Dst_Index   => 0,
+        Dst_Address => 16#001f_3000#,
+        Readable    => True,
+        Writable    => True,
+        Executable  => True,
+        Maps_Page   => False,
+        Global      => False,
+        Caching     => UC);
+
 end Paging.IA32e.Test_Data;

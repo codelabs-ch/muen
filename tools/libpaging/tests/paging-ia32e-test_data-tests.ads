@@ -27,5 +27,8 @@ package Paging.IA32e.Test_Data.Tests is
    procedure Test_Deserialze_PDPT_Entry_f53807 (Gnattest_T : in out Test);
    --  paging-ia32e.ads:57:4:Deserialze_PDPT_Entry
 
+   procedure Test_Deserialze_PD_Entry_cdf777 (Gnattest_T : in out Test);
+   --  paging-ia32e.ads:62:4:Deserialze_PD_Entry
+
 end Paging.IA32e.Test_Data.Tests;
 --  end read only

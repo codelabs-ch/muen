@@ -124,15 +124,7 @@ package body Paging.IA32e.Test_Data.Tests is
                                    Address => 16#001f_2000#);
       Tables.Add_Entry (Table => PD,
                         Index => 0,
-                        E     => Entries.Create
-                          (Dst_Index   => 0,
-                           Dst_Address => 16#001f_3000#,
-                           Readable    => True,
-                           Writable    => True,
-                           Executable  => True,
-                           Maps_Page   => False,
-                           Global      => False,
-                           Caching     => UC));
+                        E     => Ref_PD_Entry);
 
       declare
          use Ada.Streams.Stream_IO;
@@ -298,6 +290,49 @@ package body Paging.IA32e.Test_Data.Tests is
       end;
 --  begin read only
    end Test_Deserialze_PDPT_Entry;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Deserialze_PD_Entry (Gnattest_T : in out Test);
+   procedure Test_Deserialze_PD_Entry_cdf777 (Gnattest_T : in out Test) renames Test_Deserialze_PD_Entry;
+--  id:2.2/cdf7771059204699/Deserialze_PD_Entry/1/0/
+   procedure Test_Deserialze_PD_Entry (Gnattest_T : in out Test) is
+   --  paging-ia32e.ads:62:4:Deserialze_PD_Entry
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Ada.Streams.Stream_IO;
+
+      File : File_Type;
+   begin
+      Ada.Streams.Stream_IO.Open
+        (File => File,
+         Mode => Ada.Streams.Stream_IO.In_File,
+         Name => "data/ia32e_pd.ref");
+
+      declare
+         use type Entries.Table_Entry_Type;
+
+         PD_Entry : Entries.Table_Entry_Type;
+      begin
+         Deserialze_PD_Entry (Stream      => Stream (File => File),
+                              Table_Entry => PD_Entry);
+         Close (File => File);
+
+         Assert (Condition => PD_Entry = Ref_PD_Entry,
+                 Message   => "Deserialized PD entry mismatch");
+
+      exception
+         when others =>
+            if Is_Open (File => File) then
+               Close (File => File);
+            end if;
+            raise;
+      end;
+--  begin read only
+   end Test_Deserialze_PD_Entry;
 --  end read only
 
 --  begin read only

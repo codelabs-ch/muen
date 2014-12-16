@@ -256,8 +256,8 @@ is
       Caps    : Types.Reg_Capability_Type;
       Extcaps : Types.Reg_Extcapability_Type;
 
-      Supported_Version, Nr_Domains, AGAW_39_Bit, IR_Support : Boolean;
-      EIM_Support, Matching_FRO, Matching_NFR, Matching_IRO  : Boolean;
+      Supported_Version, Nr_Domains, AGAW_Support, IR_Support : Boolean;
+      EIM_Support, Matching_FRO, Matching_NFR, Matching_IRO   : Boolean;
    begin
       Version := IOMMUs (Idx).Version;
       Supported_Version := Version.MAX = 1 and then Version.MIN = 0;
@@ -274,10 +274,11 @@ is
         (not Nr_Domains,
          KC.Put_Line (Item => "IOMMU supports less than 256 domains"));
 
-      AGAW_39_Bit := Caps.SAGAW (2) = 1;
-      pragma Debug
-        (not AGAW_39_Bit,
-         KC.Put_Line (Item => "No support for 39-bit AGAW in IOMMU"));
+      AGAW_Support := Caps.SAGAW (Skp.IOMMU.Cap_AGAW_Bit) = 1;
+      pragma Debug (not AGAW_Support,
+                    SK.Dump.Print_Message_8
+                      (Msg  => "IOMMU SAGAW bit clear at position",
+                       Item => Skp.IOMMU.Cap_AGAW_Bit));
 
       Matching_FRO := Caps.FRO * 16 = Types.FR_Offset;
       pragma Debug (not Matching_FRO,
@@ -311,7 +312,7 @@ is
 
       Result := Supported_Version and
         Nr_Domains                and
-        AGAW_39_Bit               and
+        AGAW_Support              and
         Matching_FRO              and
         Matching_NFR              and
         Matching_IRO              and

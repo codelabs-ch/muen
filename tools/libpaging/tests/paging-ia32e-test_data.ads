@@ -23,4 +23,15 @@ package Paging.IA32e.Test_Data is
    procedure Set_Up (Gnattest_T : in out Test);
    procedure Tear_Down (Gnattest_T : in out Test);
 
+   Ref_PML4_Entry : constant Entries.Table_Entry_Type
+     := Entries.Create
+       (Dst_Index   => 0,
+        Dst_Address => 16#001f_1000#,
+        Readable    => True,
+        Writable    => True,
+        Executable  => True,
+        Maps_Page   => False,
+        Global      => False,
+        Caching     => WC);
+
 end Paging.IA32e.Test_Data;

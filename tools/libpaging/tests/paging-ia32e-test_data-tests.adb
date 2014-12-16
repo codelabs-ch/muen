@@ -45,15 +45,7 @@ package body Paging.IA32e.Test_Data.Tests is
                                    Address => 16#001f_0000#);
       Tables.Add_Entry (Table => PML4,
                         Index => 0,
-                        E     => Entries.Create
-                          (Dst_Index   => 0,
-                           Dst_Address => 16#001f_1000#,
-                           Readable    => True,
-                           Writable    => True,
-                           Executable  => True,
-                           Maps_Page   => False,
-                           Global      => False,
-                           Caching     => WC));
+                        E     => Ref_PML4_Entry);
 
       declare
          use Ada.Streams.Stream_IO;

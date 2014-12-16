@@ -18,11 +18,14 @@ package Expanders.Kernel.Test_Data.Tests is
    procedure Test_Add_Subj_State_Mappings_5c5e62 (Gnattest_T : in out Test);
    --  expanders-kernel.ads:31:4:Add_Subj_State_Mappings
 
+   procedure Test_Add_Subj_Timer_Mappings_5a9ef4 (Gnattest_T : in out Test);
+   --  expanders-kernel.ads:34:4:Add_Subj_Timer_Mappings
+
    procedure Test_Map_Tau0_Interface_1c6595 (Gnattest_T : in out Test);
-   --  expanders-kernel.ads:34:4:Map_Tau0_Interface
+   --  expanders-kernel.ads:37:4:Map_Tau0_Interface
 
    procedure Test_Add_Devices_52dbbf (Gnattest_T : in out Test);
-   --  expanders-kernel.ads:37:4:Add_Devices
+   --  expanders-kernel.ads:40:4:Add_Devices
 
 end Expanders.Kernel.Test_Data.Tests;
 --  end read only

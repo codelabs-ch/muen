@@ -929,6 +929,49 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Handle_Timers (Data : in out Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List
+        := McKae.XML.XPath.XIA.XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/subjects/subject");
+   begin
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            use type DOM.Core.Node;
+            use type Mucfgvcpu.Profile_Type;
+
+            Subj : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Nodes,
+                 Index => I);
+            Subj_Name : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Subj,
+                 Name => "name");
+            Subj_Mem_Node : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Doc   => Subj,
+                 XPath => "memory");
+         begin
+            Mulog.Log
+              (Msg => "Adding timer page for subject '" & Subj_Name & "'");
+
+            Muxml.Utils.Append_Child
+              (Node      => Subj_Mem_Node,
+               New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
+                 (Policy        => Data,
+                  Logical_Name  => "timer",
+                  Physical_Name => Subj_Name & "_timer",
+                  Address       => "16#000e_0000_0000#",
+                  Writable      => True,
+                  Executable    => False));
+         end;
+      end loop;
+   end Handle_Timers;
+
+   -------------------------------------------------------------------------
+
    procedure Remove_Channel_Elements (Data : in out Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List

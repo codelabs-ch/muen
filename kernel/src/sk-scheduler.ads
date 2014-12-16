@@ -21,6 +21,7 @@ with SK.Events;
 with SK.Interrupts;
 with SK.MP;
 with SK.Subjects;
+with SK.Timers;
 with SK.VTd;
 with X86_64;
 
@@ -38,14 +39,15 @@ is
       Global  =>
         (Input  => Interrupts.State,
          In_Out => (CPU_Global.State, MP.Barrier, State, Subjects.State,
-                    X86_64.State)),
+                    Timers.State, X86_64.State)),
       Depends =>
         ((CPU_Global.State,
           MP.Barrier,
-          Subjects.State)   =>+ null,
+          Subjects.State,
+          Timers.State) =>+ null,
          (State,
-          X86_64.State)     =>+ (CPU_Global.State, Interrupts.State,
-                                 X86_64.State));
+          X86_64.State) =>+ (CPU_Global.State, Interrupts.State,
+                             X86_64.State));
 
    --  Set VMX-preemption timer of the currently active VMCS to trigger at the
    --  current deadline. If the deadline has alread passed the timer is set to
@@ -66,23 +68,26 @@ is
       Global     =>
         (Input  => Tau0_Kernel_Interface,
          In_Out => (CPU_Global.State, Events.State, MP.Barrier, State,
-                    Subjects.State, VTd.State, X86_64.State)),
+                    Subjects.State, Timers.State, VTd.State, X86_64.State)),
       Depends    =>
-       (CPU_Global.State    =>+ (Subject_Registers, Tau0_Kernel_Interface,
-                                 X86_64.State),
-        (Events.State,
-         Subject_Registers) =>+ (CPU_Global.State, Subjects.State,
-                                 Subject_Registers, Tau0_Kernel_Interface,
-                                 X86_64.State),
-        MP.Barrier          =>+ (CPU_Global.State, Tau0_Kernel_Interface,
-                                 X86_64.State),
-        State               =>+ (CPU_Global.State, X86_64.State),
-       (Subjects.State,
-        VTd.State)          =>+ (CPU_Global.State, Subjects.State,
-                                 Subject_Registers, X86_64.State),
-        X86_64.State        =>+ (CPU_Global.State, Events.State, State,
-                                 Subjects.State, Subject_Registers,
-                                 Tau0_Kernel_Interface)),
+       (CPU_Global.State  =>+ (Subject_Registers, Tau0_Kernel_Interface,
+                               X86_64.State),
+        Events.State      =>+ (CPU_Global.State, Subjects.State,
+                               Subject_Registers, Tau0_Kernel_Interface,
+                               Timers.State, X86_64.State),
+        Subject_Registers =>+ (CPU_Global.State, Subjects.State,
+                               Subject_Registers, Tau0_Kernel_Interface,
+                               X86_64.State),
+        (MP.Barrier,
+         Timers.State)    =>+ (CPU_Global.State, Tau0_Kernel_Interface,
+                               X86_64.State),
+        State             =>+ (CPU_Global.State, X86_64.State),
+        (Subjects.State,
+         VTd.State)       =>+ (CPU_Global.State, Subjects.State,
+                               Subject_Registers, X86_64.State),
+        X86_64.State      =>+ (CPU_Global.State, Events.State, State,
+                               Subjects.State, Subject_Registers,
+                               Timers.State, Tau0_Kernel_Interface)),
       Export,
       Convention => C,
       Link_Name  => "handle_vmx_exit";

@@ -16,7 +16,7 @@ def append(prefix, line):
 filename = sys.argv[1]
 
 f = open(filename)
-lines = [line.strip() for line in f]
+lines = [line.rstrip('\r\n') for line in f]
 f.close()
 
 p = re.compile('[0-9]{4}>')

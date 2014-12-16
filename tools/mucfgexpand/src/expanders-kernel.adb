@@ -37,6 +37,14 @@ with Expanders.Config;
 package body Expanders.Kernel
 is
 
+   --  Add mappings of subject memory regions with given type to corresponding
+   --  kernels (i.e. subjects that are executed on that particular logical
+   --  CPU).
+   procedure Add_Subject_Mappings
+     (Data         : in out Muxml.XML_Data_Type;
+      Base_Address :        Interfaces.Unsigned_64;
+      Region_Type  :        String);
+
    -------------------------------------------------------------------------
 
    procedure Add_Binary_Mappings (Data : in out Muxml.XML_Data_Type)
@@ -326,12 +334,36 @@ is
 
    procedure Add_Subj_State_Mappings (Data : in out Muxml.XML_Data_Type)
    is
-      State_Start : constant := Config.Subject_States_Virtual_Addr;
-      CPU_Nodes   : constant DOM.Core.Node_List
+   begin
+      Add_Subject_Mappings
+        (Data         => Data,
+         Base_Address => Config.Subject_States_Virtual_Addr,
+         Region_Type  => "state");
+   end Add_Subj_State_Mappings;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Subj_Timer_Mappings (Data : in out Muxml.XML_Data_Type)
+   is
+   begin
+      Add_Subject_Mappings
+        (Data         => Data,
+         Base_Address => Config.Subject_Timers_Virtual_Addr,
+         Region_Type  => "timer");
+   end Add_Subj_Timer_Mappings;
+
+   -------------------------------------------------------------------------
+
+   procedure Add_Subject_Mappings
+     (Data         : in out Muxml.XML_Data_Type;
+      Base_Address :        Interfaces.Unsigned_64;
+      Region_Type  :        String)
+   is
+      CPU_Nodes  : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/kernel/memory/cpu");
-      Subj_Nodes  : constant DOM.Core.Node_List
+      Subj_Nodes : constant DOM.Core.Node_List
         := McKae.XML.XPath.XIA.XPath_Query
           (N     => Data.Doc,
            XPath => "/system/subjects/subject");
@@ -369,18 +401,19 @@ is
                       (Elem => Subj,
                        Name => "id");
                   Address   : constant Interfaces.Unsigned_64
-                    := State_Start + Interfaces.Unsigned_64'Value (Subj_Id)
+                    := Base_Address + Interfaces.Unsigned_64'Value (Subj_Id)
                     * Mutools.Constants.Page_Size;
                begin
-                  Mulog.Log (Msg => "Mapping state of subject '" & Subj_Name
-                             & "' to address " & Mutools.Utils.To_Hex
+                  Mulog.Log (Msg => "Mapping " & Region_Type & " of subject '"
+                             & Subj_Name & "' to address "
+                             & Mutools.Utils.To_Hex
                                (Number => Address) & " on CPU " & CPU_Id);
                   Muxml.Utils.Append_Child
                     (Node      => CPU,
                      New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                        (Policy        => Data,
-                        Logical_Name  => Subj_Name & "_state",
-                        Physical_Name => Subj_Name & "_state",
+                        Logical_Name  => Subj_Name & "_" & Region_Type,
+                        Physical_Name => Subj_Name & "_" & Region_Type,
                         Address       => Mutools.Utils.To_Hex
                           (Number => Address),
                         Writable      => True,
@@ -389,7 +422,7 @@ is
             end loop;
          end;
       end loop;
-   end Add_Subj_State_Mappings;
+   end Add_Subject_Mappings;
 
    -------------------------------------------------------------------------
 

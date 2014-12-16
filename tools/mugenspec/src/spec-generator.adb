@@ -923,6 +923,12 @@ is
                XPath => "/system/kernel/memory/cpu/"
                & "memory[@logical='tau0_state']",
                Name  => "virtualAddress"));
+         Subj_Timers_Addr : constant Unsigned_64 := Unsigned_64'Value
+           (Muxml.Utils.Get_Attribute
+              (Doc   => Policy.Doc,
+               XPath => "/system/kernel/memory/cpu/"
+               & "memory[@logical='tau0_timer']",
+               Name  => "virtualAddress"));
          IO_Apic_Addr     : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
@@ -953,6 +959,10 @@ is
            (Template => Tmpl,
             Pattern  => "__subj_states_addr__",
             Content  => Mutools.Utils.To_Hex (Number => Subj_States_Addr));
+         Mutools.Templates.Replace
+           (Template => Tmpl,
+            Pattern  => "__subj_timers_addr__",
+            Content  => Mutools.Utils.To_Hex (Number => Subj_Timers_Addr));
          Mutools.Templates.Replace
            (Template => Tmpl,
             Pattern  => "__ioapic_addr__",
@@ -1276,17 +1286,7 @@ is
            & " => Subject_Spec_Type'("
            & ASCII.LF
            & Indent & "    CPU_Id             => " & CPU_Id & ","
-           & ASCII.LF
-           & Indent & "    Profile            => ";
-
-         if Muxml.Utils.Get_Element_Value
-           (Doc   => Subject,
-            XPath => "vcpu/vmx/controls/proc2/UnrestrictedGuest") = "1"
-         then
-            Buffer := Buffer & "Vm," & ASCII.LF;
-         else
-            Buffer := Buffer & "Native," & ASCII.LF;
-         end if;
+           & ASCII.LF;
 
          if Muxml.Utils.Get_Element_Value
            (Doc   => Subject,

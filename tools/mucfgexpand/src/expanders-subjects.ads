@@ -32,6 +32,9 @@ is
    --  element after processing.
    procedure Handle_Monitors (Data : in out Muxml.XML_Data_Type);
 
+   --  Add subject timer mappings.
+   procedure Handle_Timers (Data : in out Muxml.XML_Data_Type);
+
    --  Add subject ids.
    procedure Add_Ids (Data : in out Muxml.XML_Data_Type);
 

@@ -23,12 +23,12 @@ package body Expanders.Kernel.Test_Data is
 
    -------------------------------------------------------------------------
 
-   procedure Pre_Subj_State_Mappings (Data : in out Muxml.XML_Data_Type)
+   procedure Pre_Subj_Mappings (Data : in out Muxml.XML_Data_Type)
    is
    begin
       Add_Section_Skeleton (Data => Data);
       Subjects.Add_Ids (Data => Data);
       Subjects.Add_CPU_Ids (Data => Data);
-   end Pre_Subj_State_Mappings;
+   end Pre_Subj_Mappings;
 
 end Expanders.Kernel.Test_Data;

@@ -5,6 +5,7 @@ is
    CPU_Store_Address   : constant := __cpu_store_addr__;
    Tau0_Iface_Address  : constant := __tau0_iface_addr__;
    Subj_States_Address : constant := __subj_states_addr__;
+   Subj_Timers_Address : constant := __subj_timers_addr__;
    IO_Apic_Address     : constant := __ioapic_addr__;
 
 end Skp.Kernel;

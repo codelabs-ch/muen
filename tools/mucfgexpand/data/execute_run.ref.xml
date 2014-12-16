@@ -67,6 +67,10 @@
   <memory alignment="16#1000#" caching="WB" name="lnx_state" size="16#1000#" type="subject_state"/>
   <memory alignment="16#1000#" caching="WB" name="subject1_state" size="16#1000#" type="subject_state"/>
   <memory alignment="16#1000#" caching="WB" name="subject2_state" size="16#1000#" type="subject_state"/>
+  <memory alignment="16#1000#" caching="WB" name="tau0_timer" size="16#1000#" type="subject_timer"/>
+  <memory alignment="16#1000#" caching="WB" name="lnx_timer" size="16#1000#" type="subject_timer"/>
+  <memory alignment="16#1000#" caching="WB" name="subject1_timer" size="16#1000#" type="subject_timer"/>
+  <memory alignment="16#1000#" caching="WB" name="subject2_timer" size="16#1000#" type="subject_timer"/>
   <memory alignment="16#1000#" caching="WB" name="sys_interface" size="16#1000#" type="kernel_interface">
    <fill pattern="16#00#"/>
   </memory>
@@ -136,22 +140,22 @@
   <memory alignment="16#1000#" caching="WB" name="lnx|msrstore" size="16#1000#" type="system_msrstore">
    <file filename="lnx_msrstore" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" size="16#5000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="kernel_0|pt" size="16#6000#" type="system_pt">
    <file filename="kernel_pt_0" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="kernel_1|pt" size="16#5000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="kernel_1|pt" size="16#6000#" type="system_pt">
    <file filename="kernel_pt_1" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#4000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="tau0|pt" size="16#6000#" type="system_pt">
    <file filename="tau0_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#7000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="lnx|pt" size="16#9000#" type="system_pt">
    <file filename="lnx_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#9000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="subject1|pt" size="16#b000#" type="system_pt">
    <file filename="subject1_pt" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="subject2|pt" size="16#5000#" type="system_pt">
+  <memory alignment="16#1000#" caching="WB" name="subject2|pt" size="16#7000#" type="system_pt">
    <file filename="subject2_pt" offset="none"/>
   </memory>
   <memory alignment="16#1000#" caching="WB" name="vtd_root" size="16#1000#" type="system_vtd_root">
@@ -207,6 +211,8 @@
     <memory executable="false" logical="store" physical="kernel_store_0" virtualAddress="16#0011_6000#" writable="true"/>
     <memory executable="false" logical="lnx_state" physical="lnx_state" virtualAddress="16#0030_1000#" writable="true"/>
     <memory executable="false" logical="subject1_state" physical="subject1_state" virtualAddress="16#0030_2000#" writable="true"/>
+    <memory executable="false" logical="lnx_timer" physical="lnx_timer" virtualAddress="16#0040_1000#" writable="true"/>
+    <memory executable="false" logical="subject1_timer" physical="subject1_timer" virtualAddress="16#0040_2000#" writable="true"/>
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
     <memory executable="false" logical="vtd_ir" physical="vtd_ir" virtualAddress="16#001f_e000#" writable="true"/>
    </cpu>
@@ -219,6 +225,8 @@
     <memory executable="false" logical="store" physical="kernel_store_1" virtualAddress="16#0011_6000#" writable="true"/>
     <memory executable="false" logical="tau0_state" physical="tau0_state" virtualAddress="16#0030_0000#" writable="true"/>
     <memory executable="false" logical="subject2_state" physical="subject2_state" virtualAddress="16#0030_3000#" writable="true"/>
+    <memory executable="false" logical="tau0_timer" physical="tau0_timer" virtualAddress="16#0040_0000#" writable="true"/>
+    <memory executable="false" logical="subject2_timer" physical="subject2_timer" virtualAddress="16#0040_3000#" writable="true"/>
    </cpu>
   </memory>
   <devices>
@@ -408,6 +416,7 @@
    <memory>
     <memory executable="false" logical="sys_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="true"/>
     <memory executable="true" logical="binary" physical="tau0|bin" virtualAddress="16#1000#" writable="true"/>
+    <memory executable="false" logical="timer" physical="tau0_timer" virtualAddress="16#000e_0000_0000#" writable="true"/>
    </memory>
    <devices/>
    <events/>
@@ -599,6 +608,7 @@
     <memory executable="false" logical="acpi_free" physical="lnx|acpi_empty" virtualAddress="16#000e_4000#" writable="false"/>
     <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000c_0000#" writable="false"/>
     <memory executable="false" logical="bios" physical="lnx|bios" virtualAddress="16#000d_0000#" writable="false"/>
+    <memory executable="false" logical="timer" physical="lnx_timer" virtualAddress="16#000e_0000_0000#" writable="true"/>
     <memory executable="false" logical="channel_1" physical="data_channel" virtualAddress="16#6000#" writable="false"/>
     <memory executable="false" logical="channel_2" physical="data_channel2" virtualAddress="16#7000#" writable="false"/>
     <memory executable="false" logical="channel_3" physical="data_channel3" virtualAddress="16#9000#" writable="true"/>
@@ -969,6 +979,7 @@
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
     <memory executable="true" logical="binary" physical="subject1|bin" virtualAddress="16#0020_0000#" writable="true"/>
     <memory executable="false" logical="lnx_state" physical="lnx_state" virtualAddress="16#4000#" writable="true"/>
+    <memory executable="false" logical="timer" physical="subject1_timer" virtualAddress="16#000e_0000_0000#" writable="true"/>
     <memory executable="false" logical="primary_data" physical="data_channel" virtualAddress="16#3000#" writable="true"/>
     <memory executable="false" logical="secondary_data" physical="data_channel2" virtualAddress="16#5000#" writable="true"/>
    </memory>
@@ -1171,6 +1182,7 @@
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
     <memory executable="true" logical="binary" physical="subject2|bin" virtualAddress="16#0020_0000#" writable="true"/>
+    <memory executable="false" logical="timer" physical="subject2_timer" virtualAddress="16#000e_0000_0000#" writable="true"/>
     <memory executable="false" logical="primary_data" physical="data_channel3" virtualAddress="16#3000#" writable="false"/>
     <memory executable="false" logical="secondary_data" physical="data_channel4" virtualAddress="16#4000#" writable="false"/>
    </memory>

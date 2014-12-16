@@ -28,8 +28,9 @@ is
       System_Msrstore, System_Pt, System_Vtd_Root, System_Vtd_Context,
       Kernel, Kernel_Binary, Kernel_Interface,
       Subject, Subject_Info, Subject_Binary, Subject_Zeropage, Subject_Initrd,
-      Subject_Channel, Subject_State, Subject_Bios, Subject_Acpi_Rsdp,
-      Subject_Acpi_Xsdt, Subject_Acpi_Fadt, Subject_Acpi_Dsdt, Subject_Device);
+      Subject_Channel, Subject_State, Subject_Timer, Subject_Bios,
+      Subject_Acpi_Rsdp, Subject_Acpi_Xsdt, Subject_Acpi_Fadt,
+      Subject_Acpi_Dsdt, Subject_Device);
 
    --  Memory reserved for system use. Can neither be referenced by kernel nor
    --  subjects.

@@ -16,27 +16,27 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Muxml;
+with Skp;
 
-package Expanders.Kernel
+package SK.Timers
+with
+   Abstract_State => State,
+   Initializes    => State
 is
 
-   --  Add kernel section skeleton.
-   procedure Add_Section_Skeleton (Data : in out Muxml.XML_Data_Type);
+   --  Get timer information for a subject with given ID.
+   procedure Get_Timer
+     (Subject :     Skp.Subject_Id_Type;
+      Value   : out SK.Word64;
+      Vector  : out SK.Byte)
+   with
+       Global  => (Input => State),
+       Depends => ((Value, Vector) => (State, Subject));
 
-   --  Add kernel memory mappings (binary, stack and store).
-   procedure Add_Binary_Mappings (Data : in out Muxml.XML_Data_Type);
+   --  Clear timer of subject with given ID.
+   procedure Clear_Timer (Subject : Skp.Subject_Id_Type)
+   with
+      Global  => (In_Out => State),
+      Depends => (State =>+ Subject);
 
-   --  Add subject state memory mappings.
-   procedure Add_Subj_State_Mappings (Data : in out Muxml.XML_Data_Type);
-
-   --  Add subject timer page mappings.
-   procedure Add_Subj_Timer_Mappings (Data : in out Muxml.XML_Data_Type);
-
-   --  Map tau0 interface memory region on BSP.
-   procedure Map_Tau0_Interface (Data : in out Muxml.XML_Data_Type);
-
-   --  Add devices to kernel section.
-   procedure Add_Devices (Data : in out Muxml.XML_Data_Type);
-
-end Expanders.Kernel;
+end SK.Timers;

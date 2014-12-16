@@ -25,5 +25,6 @@ is
    Tau0_Interface_Virtual_Addr : constant := 16#001f_f000#;
    Kernel_Devices_Virtual_Addr : constant := 16#0020_0000#;
    Subject_States_Virtual_Addr : constant := 16#0030_0000#;
+   Subject_Timers_Virtual_Addr : constant := 16#0040_0000#;
 
 end Expanders.Config;

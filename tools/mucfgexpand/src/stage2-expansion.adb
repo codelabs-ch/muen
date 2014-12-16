@@ -61,6 +61,7 @@ is
       Procs.Register (Process => Memory.Add_Kernel_Binary'Access);
       Procs.Register (Process => Memory.Add_Stack_Store'Access);
       Procs.Register (Process => Memory.Add_Subject_States'Access);
+      Procs.Register (Process => Memory.Add_Subject_Timer_Pages'Access);
       Procs.Register (Process => Memory.Add_Tau0_Interface'Access);
       Procs.Register (Process => Memory.Add_AP_Trampoline'Access);
       Procs.Register (Process => Memory.Add_VMXON_Regions'Access);
@@ -69,11 +70,13 @@ is
       Procs.Register (Process => Kernel.Add_Section_Skeleton'Access);
       Procs.Register (Process => Kernel.Add_Binary_Mappings'Access);
       Procs.Register (Process => Kernel.Add_Subj_State_Mappings'Access);
+      Procs.Register (Process => Kernel.Add_Subj_Timer_Mappings'Access);
       Procs.Register (Process => Kernel.Map_Tau0_Interface'Access);
       Procs.Register (Process => Kernel.Add_Devices'Access);
 
       Procs.Register (Process => Subjects.Handle_Profile'Access);
       Procs.Register (Process => Subjects.Handle_Monitors'Access);
+      Procs.Register (Process => Subjects.Handle_Timers'Access);
       Procs.Register (Process => Subjects.Add_Channel_Mappings'Access);
       Procs.Register (Process => Subjects.Add_Channel_Events'Access);
       Procs.Register (Process => Subjects.Remove_Channel_Elements'Access);

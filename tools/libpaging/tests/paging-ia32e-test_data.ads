@@ -56,4 +56,26 @@ package Paging.IA32e.Test_Data is
         Global      => False,
         Caching     => UC);
 
+   Ref_PT_Entry_0 : constant Entries.Table_Entry_Type
+     := Entries.Create
+       (Dst_Index   => 0,
+        Dst_Address => 16#0024_0000#,
+        Readable    => True,
+        Writable    => True,
+        Executable  => True,
+        Maps_Page   => False,
+        Global      => False,
+        Caching     => WB);
+
+   Ref_PT_Entry_256 : constant Entries.Table_Entry_Type
+     := Entries.Create
+       (Dst_Index   => 0,
+        Dst_Address => 16#001f_f000#,
+        Readable    => True,
+        Writable    => False,
+        Executable  => False,
+        Maps_Page   => False,
+        Global      => False,
+        Caching     => UC);
+
 end Paging.IA32e.Test_Data;

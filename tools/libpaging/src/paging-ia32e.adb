@@ -290,6 +290,20 @@ is
    end Deserialze_PML4_Entry;
 
    -------------------------------------------------------------------------
+
+   procedure Deserialze_PT_Entry
+     (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table_Entry : out Entries.Table_Entry_Type)
+   is
+      Raw_Entry : Interfaces.Unsigned_64;
+   begin
+      Interfaces.Unsigned_64'Read (Stream, Raw_Entry);
+      Table_Entry := Create_Entry (Raw_Entry => Raw_Entry,
+                                   Level     => 4);
+   end Deserialze_PT_Entry;
+
+   -------------------------------------------------------------------------
+
    procedure Serialize_PD
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
       Table  : Tables.Page_Table_Type)

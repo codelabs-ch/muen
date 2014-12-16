@@ -164,26 +164,10 @@ package body Paging.IA32e.Test_Data.Tests is
                                    Address => 16#001f_3000#);
       Tables.Add_Entry (Table => PT,
                         Index => 0,
-                        E     => Entries.Create
-                          (Dst_Index   => 0,
-                           Dst_Address => 16#0024_0000#,
-                           Readable    => True,
-                           Writable    => True,
-                           Executable  => True,
-                           Maps_Page   => False,
-                           Global      => False,
-                           Caching     => WB));
+                        E     => Ref_PT_Entry_0);
       Tables.Add_Entry (Table => PT,
                         Index => 256,
-                        E     => Entries.Create
-                          (Dst_Index   => 0,
-                           Dst_Address => 16#001f_f000#,
-                           Readable    => True,
-                           Writable    => False,
-                           Executable  => False,
-                           Maps_Page   => False,
-                           Global      => False,
-                           Caching     => UC));
+                        E     => Ref_PT_Entry_256);
 
       declare
          use Ada.Streams.Stream_IO;
@@ -333,6 +317,27 @@ package body Paging.IA32e.Test_Data.Tests is
       end;
 --  begin read only
    end Test_Deserialze_PD_Entry;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Deserialze_PT_Entry (Gnattest_T : in out Test);
+   procedure Test_Deserialze_PT_Entry_3a3c51 (Gnattest_T : in out Test) renames Test_Deserialze_PT_Entry;
+--  id:2.2/3a3c5176bca7d21e/Deserialze_PT_Entry/1/0/
+   procedure Test_Deserialze_PT_Entry (Gnattest_T : in out Test) is
+   --  paging-ia32e.ads:67:4:Deserialze_PT_Entry
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Deserialze_PT_Entry;
 --  end read only
 
 --  begin read only

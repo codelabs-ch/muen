@@ -84,15 +84,7 @@ package body Paging.IA32e.Test_Data.Tests is
                                    Address => 16#001f_1000#);
       Tables.Add_Entry (Table => PDPT,
                         Index => 0,
-                        E     => Entries.Create
-                          (Dst_Index   => 0,
-                           Dst_Address => 16#001f_2000#,
-                           Readable    => True,
-                           Writable    => True,
-                           Executable  => True,
-                           Maps_Page   => False,
-                           Global      => False,
-                           Caching     => UC));
+                        E     => Ref_PDPT_Entry);
 
       declare
          use Ada.Streams.Stream_IO;
@@ -263,6 +255,49 @@ package body Paging.IA32e.Test_Data.Tests is
       end;
 --  begin read only
    end Test_Deserialze_PML4_Entry;
+--  end read only
+
+
+--  begin read only
+   procedure Test_Deserialze_PDPT_Entry (Gnattest_T : in out Test);
+   procedure Test_Deserialze_PDPT_Entry_f53807 (Gnattest_T : in out Test) renames Test_Deserialze_PDPT_Entry;
+--  id:2.2/f5380744c07dff21/Deserialze_PDPT_Entry/1/0/
+   procedure Test_Deserialze_PDPT_Entry (Gnattest_T : in out Test) is
+   --  paging-ia32e.ads:57:4:Deserialze_PDPT_Entry
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      use Ada.Streams.Stream_IO;
+
+      File : File_Type;
+   begin
+      Ada.Streams.Stream_IO.Open
+        (File => File,
+         Mode => Ada.Streams.Stream_IO.In_File,
+         Name => "data/ia32e_pdpt.ref");
+
+      declare
+         use type Entries.Table_Entry_Type;
+
+         PDPT_Entry : Entries.Table_Entry_Type;
+      begin
+         Deserialze_PDPT_Entry (Stream      => Stream (File => File),
+                                Table_Entry => PDPT_Entry);
+         Close (File => File);
+
+         Assert (Condition => PDPT_Entry = Ref_PDPT_Entry,
+                 Message   => "Deserialized PDPT entry mismatch");
+
+      exception
+         when others =>
+            if Is_Open (File => File) then
+               Close (File => File);
+            end if;
+            raise;
+      end;
+--  begin read only
+   end Test_Deserialze_PDPT_Entry;
 --  end read only
 
 --  begin read only

@@ -68,7 +68,7 @@ is
         (Policy      => Data,
          Name        => Subj_Name & "|sinfo",
          Address     => "",
-         Size        => "16#6000#",
+         Size        => "16#7000#",
          Caching     => "WB",
          Alignment   => "16#1000#",
          Memory_Type => "subject_info",

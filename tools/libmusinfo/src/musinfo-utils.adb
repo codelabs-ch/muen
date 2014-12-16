@@ -22,39 +22,98 @@ is
    -------------------------------------------------------------------------
 
    procedure Append_Channel
-     (Info    : in out Subject_Info_Type;
-      Channel :        Channel_Type)
+     (Info       : in out Subject_Info_Type;
+      Name       :        Name_Type;
+      Address    :        Interfaces.Unsigned_64;
+      Size       :        Interfaces.Unsigned_64;
+      Writable   :        Boolean;
+      Has_Event  :        Boolean;
+      Has_Vector :        Boolean;
+      Event      :        Event_Number_Range;
+      Vector     :        Vector_Range)
    is
    begin
-      Info.Channel_Count                 := Info.Channel_Count + 1;
-      Info.Channels (Info.Channel_Count) := Channel;
+      Append_Memregion (Info       => Info,
+                        Name       => Name,
+                        Address    => Address,
+                        Size       => Size,
+                        Writable   => Writable,
+                        Executable => False);
+
+      Info.Channel_Info_Count := Info.Channel_Info_Count + 1;
+      Info.Channels_Info (Info.Channel_Info_Count)
+        := Create_Channel_Info
+          (Has_Event  => Has_Event,
+           Has_Vector => Has_Vector,
+           Event      => Event,
+           Vector     => Vector);
+
+      Info.Resources (Info.Resource_Count).Channel_Info_Idx
+        := Info.Channel_Info_Count;
    end Append_Channel;
 
    -------------------------------------------------------------------------
 
-   function Create_Channel
-     (Name       : Name_Type;
-      Address    : Interfaces.Unsigned_64;
-      Size       : Interfaces.Unsigned_64;
-      Writable   : Boolean;
-      Has_Event  : Boolean;
+   procedure Append_Memregion
+     (Info       : in out Subject_Info_Type;
+      Name       :        Name_Type;
+      Address    :        Interfaces.Unsigned_64;
+      Size       :        Interfaces.Unsigned_64;
+      Writable   :        Boolean;
+      Executable :        Boolean)
+   is
+   begin
+      Info.Memregion_Count := Info.Memregion_Count + 1;
+      Info.Memregions (Info.Memregion_Count)
+        := Create_Memregion
+          (Address    => Address,
+           Size       => Size,
+           Writable   => Writable,
+           Executable => Executable);
+
+      Info.Resource_Count := Info.Resource_Count + 1;
+      Info.Resources (Info.Resource_Count)
+        := Create_Resource
+          (Name               => Name,
+           Memregion_Index    => Info.Memregion_Count,
+           Channel_Info_Index => No_Resource);
+   end Append_Memregion;
+
+   -------------------------------------------------------------------------
+
+   function Create_Channel_Info
+     (Has_Event  : Boolean;
       Has_Vector : Boolean;
       Event      : Event_Number_Range;
       Vector     : Vector_Range)
-      return Channel_Type
+      return Channel_Info_Type
    is
    begin
-      return Channel : Channel_Type := Null_Channel do
-         Channel.Name             := Name;
-         Channel.Address          := Address;
-         Channel.Size             := Size;
-         Channel.Flags.Writable   := Writable;
-         Channel.Flags.Has_Event  := Has_Event;
-         Channel.Flags.Has_Vector := Has_Vector;
-         Channel.Event            := Event;
-         Channel.Vector           := Vector;
+      return Channel_Info : Channel_Info_Type := Null_Channel_Info do
+         Channel_Info.Flags.Has_Event  := Has_Event;
+         Channel_Info.Flags.Has_Vector := Has_Vector;
+         Channel_Info.Event            := Event;
+         Channel_Info.Vector           := Vector;
       end return;
-   end Create_Channel;
+   end Create_Channel_Info;
+
+   -------------------------------------------------------------------------
+
+   function Create_Memregion
+     (Address    : Interfaces.Unsigned_64;
+      Size       : Interfaces.Unsigned_64;
+      Writable   : Boolean;
+      Executable : Boolean)
+      return Memregion_Type
+   is
+   begin
+      return Memregion : Memregion_Type := Null_Memregion do
+         Memregion.Address          := Address;
+         Memregion.Size             := Size;
+         Memregion.Flags.Writable   := Writable;
+         Memregion.Flags.Executable := Executable;
+      end return;
+   end Create_Memregion;
 
    -------------------------------------------------------------------------
 
@@ -72,5 +131,21 @@ is
 
       return Name;
    end Create_Name;
+
+   -------------------------------------------------------------------------
+
+   function Create_Resource
+     (Name               : Name_Type;
+      Memregion_Index    : Resource_Count_Type;
+      Channel_Info_Index : Resource_Count_Type)
+      return Resource_Type
+   is
+   begin
+      return Resource : Resource_Type := Null_Resource do
+         Resource.Name             := Name;
+         Resource.Memregion_Idx    := Memregion_Index;
+         Resource.Channel_Info_Idx := Channel_Info_Index;
+      end return;
+   end Create_Resource;
 
 end Musinfo.Utils;

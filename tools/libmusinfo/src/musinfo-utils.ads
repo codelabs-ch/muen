@@ -24,23 +24,57 @@ is
      with
        Pre => Str'Length in Name_Index_Type;
 
-   --  Create channel with given parameters.
-   function Create_Channel
-     (Name       : Name_Type;
-      Address    : Interfaces.Unsigned_64;
+   --  Create memory region with given parameters.
+   function Create_Memregion
+     (Address    : Interfaces.Unsigned_64;
       Size       : Interfaces.Unsigned_64;
       Writable   : Boolean;
-      Has_Event  : Boolean;
+      Executable : Boolean)
+      return Memregion_Type;
+
+   --  Create channel information with given parameters.
+   function Create_Channel_Info
+     (Has_Event  : Boolean;
       Has_Vector : Boolean;
       Event      : Event_Number_Range;
       Vector     : Vector_Range)
-      return Channel_Type;
+      return Channel_Info_Type;
 
-   --  Append channel to subject info.
-   procedure Append_Channel
-     (Info    : in out Subject_Info_Type;
-      Channel :        Channel_Type)
+   --  Create resource with given parameters.
+   function Create_Resource
+     (Name               : Name_Type;
+      Memregion_Index    : Resource_Count_Type;
+      Channel_Info_Index : Resource_Count_Type)
+      return Resource_Type;
+
+   --  Append memory region with specified parameters to given subject info.
+   procedure Append_Memregion
+     (Info       : in out Subject_Info_Type;
+      Name       :        Name_Type;
+      Address    :        Interfaces.Unsigned_64;
+      Size       :        Interfaces.Unsigned_64;
+      Writable   :        Boolean;
+      Executable :        Boolean)
      with
-       Pre => Info.Channel_Count < Channel_Count_Type'Last;
+       Pre =>
+         Info.Resource_Count < Resource_Count_Type'Last and
+         Info.Memregion_Count < Resource_Count_Type'Last;
+
+   --  Append channel with specified parameters to given subject info.
+   procedure Append_Channel
+     (Info       : in out Subject_Info_Type;
+      Name       :        Name_Type;
+      Address    :        Interfaces.Unsigned_64;
+      Size       :        Interfaces.Unsigned_64;
+      Writable   :        Boolean;
+      Has_Event  :        Boolean;
+      Has_Vector :        Boolean;
+      Event      :        Event_Number_Range;
+      Vector     :        Vector_Range)
+     with
+       Pre =>
+         Info.Resource_Count < Resource_Count_Type'Last and
+         Info.Memregion_Count < Resource_Count_Type'Last and
+         Info.Channel_Info_Count < Resource_Count_Type'Last;
 
 end Musinfo.Utils;

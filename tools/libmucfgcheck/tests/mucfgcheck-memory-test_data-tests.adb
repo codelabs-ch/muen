@@ -991,12 +991,61 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      --  Positive test, must not raise an exception.
 
+      Timer_Memory_Mappings (XML_Data => Data);
+
+
+      --  Multiple kernel timer mappings.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@physical='vt_state']",
+         Name  => "physical",
+         Value => "sm_timer");
+      begin
+         Timer_Memory_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Timer memory region 'sm_timer' has multiple kernel "
+                    & "mappings: 2",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  No kernel timer mapping.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@logical='sm_timer']",
+         Name  => "physical",
+         Value => "nonexistent");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@logical='vt_state']",
+         Name  => "physical",
+         Value => "nonexistent");
+      begin
+         Timer_Memory_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Timer memory region 'sm_timer' is not mapped by any "
+                    & "kernel",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Timer_Memory_Mappings;
 --  end read only

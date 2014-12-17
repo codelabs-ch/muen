@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -19,8 +19,6 @@
 with System.Machine_Code;
 with System.Storage_Elements;
 
-with Skp;
-
 with SK.CPU;
 with SK.TSS;
 with SK.Descriptors;
@@ -30,15 +28,16 @@ with
    SPARK_Mode => Off
 is
 
-   subtype ISR_Array is SK.Descriptors.ISR_Array (Skp.Vector_Range);
+   subtype ISR_Array is SK.Descriptors.ISR_Array
+     (SK.Descriptors.Vector_Range);
    ISRs : ISR_Array
      with
        Import,
        Convention => C,
        Link_Name  => "isrlist";
 
-   subtype IDT_Type is SK.Descriptors.IDT_Type (Skp.Vector_Range);
-   IDT : IDT_Type := (others => SK.Descriptors.Null_Gate);
+   subtype IDT_Type is SK.Descriptors.IDT_Type (SK.Descriptors.Vector_Range);
+   IDT : IDT_Type;
 
    --  IDT descriptor, loaded into IDTR.
    IDT_Descriptor : SK.Descriptors.Pseudo_Descriptor_Type;

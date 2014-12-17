@@ -89,7 +89,8 @@ is
    procedure System_Memory_Mappings (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that timer memory regions are mapped by exactly one subject and
-   --  the corresponding kernel running that subject.
+   --  the corresponding kernel running that subject. Also verify that the
+   --  kernel mapping is at the expected virtual location.
    procedure Timer_Memory_Mappings (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate size of VT-d root table region.

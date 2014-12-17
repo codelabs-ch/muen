@@ -567,6 +567,54 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Timer_Memory_Mappings (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes           : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/memory/memory[@type='subject_timer']");
+      Kernel_Mappings : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/kernel/memory/cpu/memory");
+   begin
+      Mulog.Log (Msg => "Checking mapping of" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " timer memory region(s)");
+
+      for I in 0 .. DOM.Core.Nodes.Length (List => Nodes) - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            Phys_Mem         : constant DOM.Core.Node
+              := DOM.Core.Nodes.Item
+                (List  => Nodes,
+                 Index => I);
+            Phys_Name        : constant String
+              := DOM.Core.Elements.Get_Attribute
+                (Elem => Phys_Mem,
+                 Name => "name");
+            Kernel_Mem       : constant DOM.Core.Node_List
+              := Muxml.Utils.Get_Elements
+                (Nodes     => Kernel_Mappings,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Phys_Name);
+            Kernel_Map_Count : constant Natural
+              := DOM.Core.Nodes.Length (List => Kernel_Mem);
+         begin
+            if Kernel_Map_Count = 0 then
+               raise Validation_Error with "Timer memory region '"
+                 & Phys_Name & "' is not mapped by any kernel";
+            elsif Kernel_Map_Count > 1 then
+               raise Validation_Error with "Timer memory region '"
+                 & Phys_Name & "' has multiple kernel mappings:"
+                 & Kernel_Map_Count'Img;
+            end if;
+         end;
+      end loop;
+   end Timer_Memory_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure Virtual_Address_Alignment (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query

@@ -1001,6 +1001,47 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       Timer_Memory_Mappings (XML_Data => Data);
 
+      --  Multiple subject timer mappings.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/memory/"
+         & "memory[@physical='sm_console']",
+         Name  => "physical",
+         Value => "linux_timer");
+      begin
+         Timer_Memory_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Timer memory region 'linux_timer' has multiple subject "
+                    & "mappings: 2",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  No subject timer mapping.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/memory/"
+         & "memory[@physical='sm_timer']",
+         Name  => "physical",
+         Value => "nonexistent");
+      begin
+         Timer_Memory_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Timer memory region 'sm_timer' is not mapped by any "
+                    & "subject",
+                    Message   => "Exception mismatch");
+      end;
 
       --  Multiple kernel timer mappings.
 

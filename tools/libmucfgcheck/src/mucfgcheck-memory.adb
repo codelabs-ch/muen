@@ -577,6 +577,10 @@ is
         := XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/kernel/memory/cpu/memory");
+      Subj_Mappings   : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject/memory/memory");
    begin
       Mulog.Log (Msg => "Checking mapping of" & DOM.Core.Nodes.Length
                  (List => Nodes)'Img & " timer memory region(s)");
@@ -600,6 +604,13 @@ is
                  Ref_Value => Phys_Name);
             Kernel_Map_Count : constant Natural
               := DOM.Core.Nodes.Length (List => Kernel_Mem);
+            Subj_Mem         : constant DOM.Core.Node_List
+              := Muxml.Utils.Get_Elements
+                (Nodes     => Subj_Mappings,
+                 Ref_Attr  => "physical",
+                 Ref_Value => Phys_Name);
+            Subj_Map_Count   : constant Natural
+              := DOM.Core.Nodes.Length (List => Subj_Mem);
          begin
             if Kernel_Map_Count = 0 then
                raise Validation_Error with "Timer memory region '"
@@ -608,6 +619,15 @@ is
                raise Validation_Error with "Timer memory region '"
                  & Phys_Name & "' has multiple kernel mappings:"
                  & Kernel_Map_Count'Img;
+            end if;
+
+            if Subj_Map_Count = 0 then
+               raise Validation_Error with "Timer memory region '"
+                 & Phys_Name & "' is not mapped by any subject";
+            elsif Subj_Map_Count > 1 then
+               raise Validation_Error with "Timer memory region '"
+                 & Phys_Name & "' has multiple subject mappings:"
+                 & Subj_Map_Count'Img;
             end if;
          end;
       end loop;

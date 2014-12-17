@@ -629,6 +629,38 @@ is
                  & Phys_Name & "' has multiple subject mappings:"
                  & Subj_Map_Count'Img;
             end if;
+
+            declare
+               Kernel_Mem_Node : constant DOM.Core.Node
+                 := DOM.Core.Nodes.Item (List  => Kernel_Mem,
+                                         Index => 0);
+               Kernel_CPU_ID   : constant Natural
+                 := Natural'Value
+                   (DOM.Core.Elements.Get_Attribute
+                      (Elem => DOM.Core.Nodes.Parent_Node
+                         (N => Kernel_Mem_Node),
+                       Name => "id"));
+               Subj_Node       : constant DOM.Core.Node
+                 := Muxml.Utils.Ancestor_Node
+                   (Node  => DOM.Core.Nodes.Item
+                      (List  => Subj_Mem,
+                       Index => 0),
+                    Level => 2);
+               Subj_CPU_ID     : constant Natural
+                 := Natural'Value
+                   (DOM.Core.Elements.Get_Attribute
+                      (Elem => Subj_Node,
+                       Name => "cpu"));
+            begin
+               if Kernel_CPU_ID /= Subj_CPU_ID then
+                  raise Validation_Error with "Timer memory region '"
+                    & Phys_Name & "' mapped by kernel and subject '"
+                    & DOM.Core.Elements.Get_Attribute (Elem => Subj_Node,
+                                                       Name => "name")
+                    & "' with different CPU ID:" & Kernel_CPU_ID'Img & " /="
+                    & Subj_CPU_ID'Img;
+               end if;
+            end;
          end;
       end loop;
    end Timer_Memory_Mappings;

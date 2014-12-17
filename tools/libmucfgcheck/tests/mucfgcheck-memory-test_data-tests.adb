@@ -1001,6 +1001,26 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       Timer_Memory_Mappings (XML_Data => Data);
 
+      --  Kernel and subject with different CPU.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']",
+         Name  => "cpu",
+         Value => "0");
+      begin
+         Timer_Memory_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Timer memory region 'linux_timer' mapped by kernel and "
+                    & "subject 'linux' with different CPU ID: 1 /= 0",
+                    Message   => "Exception mismatch");
+      end;
+
       --  Multiple subject timer mappings.
 
       Muxml.Utils.Set_Attribute

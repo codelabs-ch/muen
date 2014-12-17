@@ -1001,6 +1001,27 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       Timer_Memory_Mappings (XML_Data => Data);
 
+      --  Kernel timer mappings with differnt virtual base addresses.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@logical='linux_timer']",
+         Name  => "virtualAddress",
+         Value => "16#ffff_f000#");
+      begin
+         Timer_Memory_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Timer memory region 'linux_timer' mapped at unexpected "
+                    & "kernel virtual address 16#ffff_f000#, should be "
+                    & "16#0040_3000#",
+                    Message   => "Exception mismatch");
+      end;
+
       --  Kernel and subject with different CPU.
 
       Muxml.Utils.Set_Attribute

@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -16,12 +16,8 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Skp;
-
 package SK.Descriptors
 is
-
-   use type Skp.Vector_Range;
 
    --  Pseudo Descriptor type, see Intel SDM Vol. 3A, chapter 3.5.1.
    type Pseudo_Descriptor_Type is record
@@ -41,14 +37,13 @@ is
 
    Null_Gate : constant Gate_Type;
 
-   --  Range of descriptor table entries.
-   type Descriptor_Table_Range is range 1 .. 256;
+   type Vector_Range is range 0 .. 255;
 
    --  The ISR array type stores addresses of Interrupt Service Routines.
-   type ISR_Array is array (Skp.Vector_Range range <>) of SK.Word64;
+   type ISR_Array is array (Vector_Range range <>) of SK.Word64;
 
    --  Interrupt descriptor table, see Intel SDM Vol. 3A, chapter 6.10.
-   type IDT_Type is array (Skp.Vector_Range range <>) of Gate_Type;
+   type IDT_Type is array (Vector_Range range <>) of Gate_Type;
 
    --  Setup IDT using the given ISR addresses and IST index. The IST
    --  parameter specifies the index of the TSS RSP entry containing the stack
@@ -61,6 +56,9 @@ is
    with
       Depends => (IDT =>+ (ISRs, IST)),
       Pre     => ISRs'First = IDT'First and ISRs'Last = IDT'Last and IST <= 7;
+
+   --  Range of descriptor table entries.
+   type Descriptor_Table_Range is range 1 .. 256;
 
    --  Create pseudo-descriptor from given descriptor table address and length.
    function Create_Descriptor

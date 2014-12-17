@@ -1,6 +1,6 @@
 --
---  Copyright (C) 2013  Reto Buerki <reet@codelabs.ch>
---  Copyright (C) 2013  Adrian-Ken Rueegsegger <ken@codelabs.ch>
+--  Copyright (C) 2013, 2014  Reto Buerki <reet@codelabs.ch>
+--  Copyright (C) 2013, 2014  Adrian-Ken Rueegsegger <ken@codelabs.ch>
 --
 --  This program is free software: you can redistribute it and/or modify
 --  it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ is
       IST  :        Natural)
    is
    begin
-      for I in Skp.Vector_Range range ISRs'Range loop
+      for I in Vector_Range range ISRs'Range loop
          IDT (I) := Gate_Type'
            (Offset_15_00     => SK.Word16'Mod
               (ISRs (I) and 16#0000_0000_0000_ffff#),

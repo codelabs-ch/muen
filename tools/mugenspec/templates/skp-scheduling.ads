@@ -50,7 +50,7 @@ is
 __scheduling_plans__);
 
    subtype Barrier_Size_Type is
-     Natural range 1 .. Natural (Skp.CPU_Range'Last + 1);
+     Natural range 1 .. Natural (Skp.CPU_Range'Last) + 1;
 
    type Barrier_Config_Array is array (Barrier_Range) of Barrier_Size_Type;
 

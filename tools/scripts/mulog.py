@@ -19,7 +19,7 @@ f = open(filename)
 lines = [line.rstrip('\r\n') for line in f]
 f.close()
 
-p = re.compile('[0-9]{4}>')
+p = re.compile('[0-9a-fA-F]{4}>')
 
 for line in lines:
 	m = p.match(line)

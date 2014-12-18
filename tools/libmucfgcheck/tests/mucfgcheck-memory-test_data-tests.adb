@@ -820,8 +820,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel store region 'kernel_store_0' for logical CPU 0"
-                    & " not found",
+                    = "Kernel per-CPU store region 'kernel_store_0' for "
+                    & "logical CPU 0 not found",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

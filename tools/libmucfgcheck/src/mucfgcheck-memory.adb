@@ -1072,37 +1072,12 @@ is
 
    procedure VMXON_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      CPU_Count   : constant Positive
-        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => XML_Data);
-      Phys_Memory : constant DOM.Core.Node_List
-        := XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => "/system/memory/memory");
    begin
-      Mulog.Log (Msg => "Checking presence of" & CPU_Count'Img
-                 & " VMXON region(s)");
-
-      for I in 0 .. CPU_Count - 1 loop
-         declare
-            use type DOM.Core.Node;
-
-            CPU_Str  : constant String
-              := Ada.Strings.Fixed.Trim
-                (Source => I'Img,
-                 Side   => Ada.Strings.Left);
-            Mem_Name : constant String
-              := "kernel_" & CPU_Str & "|vmxon";
-         begin
-            if Muxml.Utils.Get_Element
-              (Nodes     => Phys_Memory,
-               Ref_Attr  => "name",
-               Ref_Value => Mem_Name) = null
-            then
-               raise Validation_Error with "VMXON region '" & Mem_Name
-                 & "' for logical CPU " & CPU_Str & " not found";
-            end if;
-         end;
-      end loop;
+      Check_Kernel_Region_Presence
+        (Data        => XML_Data,
+         Region_Kind => "VMXON",
+         Name_Prefix => "kernel",
+         Name_Suffix => "|vmxon");
    end VMXON_Region_Presence;
 
    -------------------------------------------------------------------------

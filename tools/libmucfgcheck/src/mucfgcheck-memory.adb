@@ -1016,8 +1016,8 @@ is
               Name => "name");
          Ref_Name  : constant String := Subj_Name & "|vmcs";
       begin
-         return "VMCS region '" & Ref_Name & "' for subject " & Subj_Name
-           & " not found";
+         return "VMCS region '" & Ref_Name & "' for subject '" & Subj_Name
+           & "' not found";
       end Error_Msg;
 
       ----------------------------------------------------------------------

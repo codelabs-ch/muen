@@ -198,7 +198,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMCS region 'linux|vmcs' for subject linux not found",
+                    = "VMCS region 'linux|vmcs' for subject 'linux' not found",
                     Message   => "Exception mismatch");
       end;
 
@@ -218,7 +218,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMCS region 'vt|vmcs' for subject vt not found",
+                    = "VMCS region 'vt|vmcs' for subject 'vt' not found",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

@@ -982,11 +982,163 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Timer_Memory_Mappings (Gnattest_T : in out Test);
+   procedure Test_Timer_Memory_Mappings_71b857 (Gnattest_T : in out Test) renames Test_Timer_Memory_Mappings;
+--  id:2.2/71b857113d544661/Timer_Memory_Mappings/1/0/
+   procedure Test_Timer_Memory_Mappings (Gnattest_T : in out Test) is
+   --  mucfgcheck-memory.ads:94:4:Timer_Memory_Mappings
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Timer_Memory_Mappings (XML_Data => Data);
+
+      --  Kernel timer mappings with differnt virtual base addresses.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@logical='linux_timer']",
+         Name  => "virtualAddress",
+         Value => "16#ffff_f000#");
+      begin
+         Timer_Memory_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Timer memory region 'linux_timer' mapped at unexpected "
+                    & "kernel virtual address 16#ffff_f000#, should be "
+                    & "16#0040_3000#",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Kernel and subject with different CPU.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']",
+         Name  => "cpu",
+         Value => "0");
+      begin
+         Timer_Memory_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Timer memory region 'linux_timer' mapped by kernel and "
+                    & "subject 'linux' with different CPU ID: 1 /= 0",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Multiple subject timer mappings.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/memory/"
+         & "memory[@physical='sm_console']",
+         Name  => "physical",
+         Value => "linux_timer");
+      begin
+         Timer_Memory_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Timer memory region 'linux_timer' has multiple subject "
+                    & "mappings: 2",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  No subject timer mapping.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject/memory/"
+         & "memory[@physical='sm_timer']",
+         Name  => "physical",
+         Value => "nonexistent");
+      begin
+         Timer_Memory_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Timer memory region 'sm_timer' is not mapped by any "
+                    & "subject",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Multiple kernel timer mappings.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@physical='vt_state']",
+         Name  => "physical",
+         Value => "sm_timer");
+      begin
+         Timer_Memory_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Timer memory region 'sm_timer' has multiple kernel "
+                    & "mappings: 2",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  No kernel timer mapping.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@logical='sm_timer']",
+         Name  => "physical",
+         Value => "nonexistent");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@logical='vt_state']",
+         Name  => "physical",
+         Value => "nonexistent");
+      begin
+         Timer_Memory_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Timer memory region 'sm_timer' is not mapped by any "
+                    & "kernel",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Timer_Memory_Mappings;
+--  end read only
+
+
+--  begin read only
    procedure Test_VTd_Root_Region_Size (Gnattest_T : in out Test);
    procedure Test_VTd_Root_Region_Size_bc3a31 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Size;
 --  id:2.2/bc3a31ac2395433f/VTd_Root_Region_Size/1/0/
    procedure Test_VTd_Root_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:92:4:VTd_Root_Region_Size
+   --  mucfgcheck-memory.ads:97:4:VTd_Root_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1024,7 +1176,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Context_Region_Size_4d6204 (Gnattest_T : in out Test) renames Test_VTd_Context_Region_Size;
 --  id:2.2/4d620465079ba6ad/VTd_Context_Region_Size/1/0/
    procedure Test_VTd_Context_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:95:4:VTd_Context_Region_Size
+   --  mucfgcheck-memory.ads:100:4:VTd_Context_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1062,7 +1214,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Root_Region_Presence_b744c5 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Presence;
 --  id:2.2/b744c5d7d5100d62/VTd_Root_Region_Presence/1/0/
    procedure Test_VTd_Root_Region_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:98:4:VTd_Root_Region_Presence
+   --  mucfgcheck-memory.ads:103:4:VTd_Root_Region_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

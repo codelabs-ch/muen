@@ -199,6 +199,8 @@
   <memory alignment="16#1000#" caching="WB" name="vtd_context_3" physicalAddress="16#cafe_4000#" size="16#1000#" type="system_vtd_context">
    <file filename="vtd_context_bus_3" offset="none"/>
   </memory>
+  <memory alignment="16#1000#" caching="WB" name="sm_timer" physicalAddress="16#1fa4_1000#" size="16#1000#" type="subject_timer"/>
+  <memory alignment="16#1000#" caching="WB" name="linux_timer" physicalAddress="16#1fa4_2000#" size="16#1000#" type="subject_timer"/>
  </memory>
  <deviceDomains>
   <domain id="1" name="linux_domain">
@@ -248,6 +250,8 @@
     <memory executable="false" logical="store" physical="kernel_store_1" virtualAddress="16#0011_6000#" writable="true"/>
     <memory executable="false" logical="sm_state" physical="sm_state" virtualAddress="16#001e_3000#" writable="true"/>
     <memory executable="false" logical="linux_state" physical="linux_state" virtualAddress="16#001e_4000#" writable="true"/>
+    <memory executable="false" logical="sm_timer" physical="sm_timer" virtualAddress="16#0040_2000#" writable="true"/>
+    <memory executable="false" logical="linux_timer" physical="linux_timer" virtualAddress="16#0040_3000#" writable="true"/>
    </cpu>
    <cpu id="2">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
@@ -1034,6 +1038,7 @@
    <memory>
     <memory executable="true" logical="binary" physical="sm|bin" virtualAddress="16#1000#" writable="true"/>
     <memory executable="false" logical="linux_state" physical="linux_state" virtualAddress="16#001e_0000#" writable="true"/>
+    <memory executable="false" logical="timer" physical="sm_timer" virtualAddress="16#000e_0000_0000#" writable="true"/>
     <memory executable="false" logical="sm_console" physical="sm_console" virtualAddress="16#000b_8000#" writable="true"/>
    </memory>
    <devices/>
@@ -1242,6 +1247,7 @@
     <memory executable="false" logical="bios" physical="linux|bios" virtualAddress="16#000d_0000#" writable="false"/>
     <memory executable="false" logical="bios" physical="linux|bios" virtualAddress="16#000f_0000#" writable="false"/>
     <memory executable="false" logical="virtual_time" physical="virtual_time" virtualAddress="16#2000#" writable="false"/>
+    <memory executable="false" logical="timer" physical="linux_timer" virtualAddress="16#000e_0000_0000#" writable="true"/>
     <memory executable="false" logical="linux_keyboard" physical="linux_keyboard" virtualAddress="16#3000#" writable="false"/>
     <memory executable="false" logical="linux_console" physical="linux_console" virtualAddress="16#4000#" writable="true"/>
    </memory>

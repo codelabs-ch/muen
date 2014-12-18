@@ -58,18 +58,21 @@ is
       Check_Subject_Mappings : Boolean);
 
    --  Check presence of physical kernel memory region with given name prefix
-   --  for each CPU. The specified region kind is used in log messages.
+   --  and suffix for each CPU. The specified region kind is used in log
+   --  messages.
    procedure Check_Kernel_Region_Presence
      (Data        : Muxml.XML_Data_Type;
       Region_Kind : String;
-      Name_Prefix : String);
+      Name_Prefix : String;
+      Name_Suffix : String := "");
 
    -------------------------------------------------------------------------
 
    procedure Check_Kernel_Region_Presence
      (Data        : Muxml.XML_Data_Type;
       Region_Kind : String;
-      Name_Prefix : String)
+      Name_Prefix : String;
+      Name_Suffix : String := "")
    is
       CPU_Count    : constant Positive
         := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Data);
@@ -90,7 +93,7 @@ is
                 (Source => I'Img,
                  Side   => Ada.Strings.Left);
             Mem_Name : constant String
-              := Name_Prefix & "_" & CPU_Str;
+              := Name_Prefix & "_" & CPU_Str & Name_Suffix;
             Node     : constant DOM.Core.Node
               := Muxml.Utils.Get_Element
                 (Nodes     => Physical_Mem,

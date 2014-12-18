@@ -32,6 +32,7 @@
 		<memory alignment="16#1000#" name="linux|acpi_rsdp" size="16#0001_3000#" physicalAddress="16#0011_0000#" caching="WB" type="subject_acpi_rsdp">
 			<file filename="sections.ref" offset="none"/>
 		</memory>
+		<memory alignment="16#1000#" name="linux|state" size="16#1000#" physicalAddress="16#0040_0000#" caching="WB" type="subject_state"/>
 	</memory>
 
 	<deviceDomains/>
@@ -45,6 +46,7 @@
 				<memory logical="data" physical="kernel_data" writable="true" executable="false" virtualAddress="16#0011_0000#"/>
 				<memory logical="store" physical="kernel_store_0" writable="true" executable="false" virtualAddress="16#0021_0000#"/>
 				<memory logical="stack" physical="kernel_stack_0" writable="true" executable="false" virtualAddress="16#0021_1000#"/>
+				<memory logical="linux|state" physical="linux|state" writable="true" executable="false" virtualAddress="16#0030_0000#"/>
 			</cpu>
 		</memory>
 		<devices>

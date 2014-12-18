@@ -57,6 +57,55 @@ is
       Region_Type            : String;
       Check_Subject_Mappings : Boolean);
 
+   --  Check presence of physical kernel memory region with given name prefix
+   --  for each CPU. The specified region kind is used in log messages.
+   procedure Check_Kernel_Region_Presence
+     (Data        : Muxml.XML_Data_Type;
+      Region_Kind : String;
+      Name_Prefix : String);
+
+   -------------------------------------------------------------------------
+
+   procedure Check_Kernel_Region_Presence
+     (Data        : Muxml.XML_Data_Type;
+      Region_Kind : String;
+      Name_Prefix : String)
+   is
+      CPU_Count    : constant Positive
+        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => Data);
+      Physical_Mem : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => Data.Doc,
+           XPath => "/system/memory/memory");
+   begin
+      Mulog.Log (Msg => "Checking presence of" & CPU_Count'Img & " "
+                 & Region_Kind & " region(s)");
+
+      for I in 0 .. CPU_Count - 1 loop
+         declare
+            use type DOM.Core.Node;
+
+            CPU_Str  : constant String
+              := Ada.Strings.Fixed.Trim
+                (Source => I'Img,
+                 Side   => Ada.Strings.Left);
+            Mem_Name : constant String
+              := Name_Prefix & "_" & CPU_Str;
+            Node     : constant DOM.Core.Node
+              := Muxml.Utils.Get_Element
+                (Nodes     => Physical_Mem,
+                 Ref_Attr  => "name",
+                 Ref_Value => Mem_Name);
+         begin
+            if Node = null then
+               raise Validation_Error with Mutools.Utils.Capitalize
+                 (Str => Region_Kind) & " region '" & Mem_Name
+                 & "' for logical CPU " & CPU_Str & " not found";
+            end if;
+         end;
+      end loop;
+   end Check_Kernel_Region_Presence;
+
    -------------------------------------------------------------------------
 
    procedure Check_Subject_Region_Mappings

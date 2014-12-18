@@ -1036,12 +1036,13 @@ is
          return Ref_Name = Mem_Name;
       end Match_Region_Name;
    begin
-      For_Each_Match (XML_Data     => XML_Data,
-                      Source_XPath => "/system/subjects/subject",
-                      Ref_XPath    => "/system/memory/memory",
-                      Log_Message  => "VMCS region(s) for presence",
-                      Error        => Error_Msg'Access,
-                      Match        => Match_Region_Name'Access);
+      For_Each_Match
+        (XML_Data     => XML_Data,
+         Source_XPath => "/system/subjects/subject",
+         Ref_XPath    => "/system/memory/memory[@type='system_vmcs']",
+         Log_Message  => "VMCS region(s) for presence",
+         Error        => Error_Msg'Access,
+         Match        => Match_Region_Name'Access);
    end VMCS_Region_Presence;
 
    -------------------------------------------------------------------------

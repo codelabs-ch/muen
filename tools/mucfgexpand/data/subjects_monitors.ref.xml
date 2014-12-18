@@ -109,7 +109,7 @@
   <subject name="subject1" profile="native">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
-    <memory executable="false" logical="lnx_state" physical="lnx_state" virtualAddress="16#4000#" writable="true"/>
+    <memory executable="false" logical="lnx|state" physical="lnx|state" virtualAddress="16#4000#" writable="true"/>
    </memory>
    <devices>
     <device logical="nic1" physical="nic1">

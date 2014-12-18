@@ -412,8 +412,8 @@ is
                     (Node      => CPU,
                      New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                        (Policy        => Data,
-                        Logical_Name  => Subj_Name & "_" & Region_Type,
-                        Physical_Name => Subj_Name & "_" & Region_Type,
+                        Logical_Name  => Subj_Name & "|" & Region_Type,
+                        Physical_Name => Subj_Name & "|" & Region_Type,
                         Address       => Mutools.Utils.To_Hex
                           (Number => Address),
                         Writable      => True,

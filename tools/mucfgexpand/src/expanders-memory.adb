@@ -314,7 +314,7 @@ is
          begin
             Mutools.XML_Utils.Add_Memory_Region
               (Policy      => Data,
-               Name        => Subj_Name & "_" & Region_Type,
+               Name        => Subj_Name & "|" & Region_Type,
                Address     => Address,
                Size        => Size,
                Caching     => Caching,

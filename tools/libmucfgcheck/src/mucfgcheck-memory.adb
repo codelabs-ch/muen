@@ -581,6 +581,10 @@ is
         := XPath_Query
           (N     => XML_Data.Doc,
            XPath => "/system/subjects/subject/memory/memory");
+      Subjects        : constant DOM.Core.Node_List
+        := XPath_Query
+          (N     => XML_Data.Doc,
+           XPath => "/system/subjects/subject");
 
       Virt_Timer_Base_Addr : Interfaces.Unsigned_64 := 0;
    begin
@@ -648,11 +652,11 @@ is
                          (N => Kernel_Mem_Node),
                        Name => "id"));
                Subj_Node       : constant DOM.Core.Node
-                 := Muxml.Utils.Ancestor_Node
-                   (Node  => DOM.Core.Nodes.Item
-                      (List  => Subj_Mem,
-                       Index => 0),
-                    Level => 2);
+                 := Muxml.Utils.Get_Element
+                   (Nodes     => Subjects,
+                    Ref_Attr  => "name",
+                    Ref_Value => Mutools.Utils.Decode_Entity_Name
+                      (Encoded_Str => Phys_Name));
                Subj_CPU_ID     : constant Natural
                  := Natural'Value
                    (DOM.Core.Elements.Get_Attribute

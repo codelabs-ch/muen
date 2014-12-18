@@ -201,11 +201,12 @@ package body Mutools.Utils.Test_Data.Tests is
       pragma Unreferenced (Gnattest_T);
 
    begin
-
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
-
+      Assert (Condition => Capitalize (Str => "foo") = "Foo",
+              Message   => "'Foo' mismatch");
+      Assert (Condition => Capitalize (Str => "Bar") = "Bar",
+              Message   => "'Bar' mismatch");
+      Assert (Condition => Capitalize (Str => "fOoBaR") = "Foobar",
+              Message   => "'Foobar' mismatch");
 --  begin read only
    end Test_Capitalize;
 --  end read only

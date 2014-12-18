@@ -991,12 +991,102 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      --  Positive test, must not raise an exception.
 
+      Subject_State_Mappings (XML_Data => Data);
+
+      --  Kernel subject state mappings with differnt virtual base addresses.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@logical='linux|state']",
+         Name  => "virtualAddress",
+         Value => "16#cafe_0000#");
+      begin
+         Subject_State_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject state memory region 'linux|state' mapped at "
+                    & "unexpected kernel virtual address 16#cafe_0000#, should"
+                    & " be 16#001e_4000#",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Kernel and subject with different CPU.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']",
+         Name  => "cpu",
+         Value => "0");
+      begin
+         Subject_State_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject state memory region 'linux|state' mapped by "
+                    & "kernel and subject 'linux' with different CPU ID: "
+                    & "1 /= 0",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Multiple kernel subject state mappings.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@physical='sm|timer']",
+         Name  => "physical",
+         Value => "vt|state");
+      begin
+         Subject_State_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject state memory region 'vt|state' has multiple "
+                    & "kernel mappings: 2",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  No kernel subject state mapping.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@logical='sm|timer']",
+         Name  => "physical",
+         Value => "nonexistent");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@logical='vt|state']",
+         Name  => "physical",
+         Value => "nonexistent");
+      begin
+         Subject_State_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject state memory region 'vt|state' is not mapped by"
+                    & " any kernel",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Subject_State_Mappings;
 --  end read only

@@ -87,6 +87,8 @@ is
       XML_Processors.Register
         (Process => Memory.System_Memory_Mappings'Access);
       XML_Processors.Register
+        (Process => Memory.Subject_State_Mappings'Access);
+      XML_Processors.Register
         (Process => Memory.Timer_Memory_Mappings'Access);
       XML_Processors.Register
         (Process => Memory.VTd_Root_Region_Presence'Access);

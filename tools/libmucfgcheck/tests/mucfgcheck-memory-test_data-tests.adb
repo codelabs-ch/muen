@@ -177,6 +177,13 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      VMCS_Region_Presence (XML_Data => Data);
+
+      --  Missing VMCS region.
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/memory/memory[@name='linux|vmcs']",
@@ -192,6 +199,26 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
                     = "VMCS region 'linux|vmcs' for subject linux not found",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  VMCS region with incorrect region type.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='vt|vmcs']",
+         Name  => "type",
+         Value => "system");
+
+      begin
+         VMCS_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMCS region 'vt|vmcs' for subject vt not found",
                     Message   => "Exception mismatch");
       end;
 --  begin read only

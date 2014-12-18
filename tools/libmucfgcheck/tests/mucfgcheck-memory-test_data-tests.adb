@@ -915,12 +915,57 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      --  Positive test, must not raise an exception.
 
+      Subject_State_Region_Presence (XML_Data => Data);
+
+      --  Missings subject state region.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='vt|state']",
+         Name  => "name",
+         Value => "foobar");
+
+      begin
+         Subject_State_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject state region 'vt|state' for subject 'vt' not"
+                    & " found",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Subject state region with incorrect region type.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='tau0|state']",
+         Name  => "type",
+         Value => "subject");
+
+      begin
+         Subject_State_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject state region 'tau0|state' for subject 'tau0'"
+                    & " not found",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_Subject_State_Region_Presence;
 --  end read only

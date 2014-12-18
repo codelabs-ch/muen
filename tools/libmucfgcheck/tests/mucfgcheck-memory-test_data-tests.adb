@@ -1005,7 +1005,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/kernel/memory/cpu/memory[@logical='linux_timer']",
+         XPath => "/system/kernel/memory/cpu/memory[@logical='linux|timer']",
          Name  => "virtualAddress",
          Value => "16#ffff_f000#");
       begin
@@ -1016,7 +1016,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Timer memory region 'linux_timer' mapped at unexpected "
+                    = "Timer memory region 'linux|timer' mapped at unexpected "
                     & "kernel virtual address 16#ffff_f000#, should be "
                     & "16#0040_3000#",
                     Message   => "Exception mismatch");
@@ -1037,7 +1037,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Timer memory region 'linux_timer' mapped by kernel and "
+                    = "Timer memory region 'linux|timer' mapped by kernel and "
                     & "subject 'linux' with different CPU ID: 1 /= 0",
                     Message   => "Exception mismatch");
       end;
@@ -1049,7 +1049,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/subjects/subject/memory/"
          & "memory[@physical='sm_console']",
          Name  => "physical",
-         Value => "linux_timer");
+         Value => "linux|timer");
       begin
          Timer_Memory_Mappings (XML_Data => Data);
          Assert (Condition => False,
@@ -1058,7 +1058,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Timer memory region 'linux_timer' has multiple subject "
+                    = "Timer memory region 'linux|timer' has multiple subject "
                     & "mappings: 2",
                     Message   => "Exception mismatch");
       end;
@@ -1068,7 +1068,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/subjects/subject/memory/"
-         & "memory[@physical='sm_timer']",
+         & "memory[@physical='sm|timer']",
          Name  => "physical",
          Value => "nonexistent");
       begin
@@ -1079,7 +1079,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Timer memory region 'sm_timer' is not mapped by any "
+                    = "Timer memory region 'sm|timer' is not mapped by any "
                     & "subject",
                     Message   => "Exception mismatch");
       end;
@@ -1088,9 +1088,9 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/kernel/memory/cpu/memory[@physical='vt_state']",
+         XPath => "/system/kernel/memory/cpu/memory[@physical='vt|state']",
          Name  => "physical",
-         Value => "sm_timer");
+         Value => "sm|timer");
       begin
          Timer_Memory_Mappings (XML_Data => Data);
          Assert (Condition => False,
@@ -1099,7 +1099,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Timer memory region 'sm_timer' has multiple kernel "
+                    = "Timer memory region 'sm|timer' has multiple kernel "
                     & "mappings: 2",
                     Message   => "Exception mismatch");
       end;
@@ -1108,12 +1108,12 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/kernel/memory/cpu/memory[@logical='sm_timer']",
+         XPath => "/system/kernel/memory/cpu/memory[@logical='sm|timer']",
          Name  => "physical",
          Value => "nonexistent");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/kernel/memory/cpu/memory[@logical='vt_state']",
+         XPath => "/system/kernel/memory/cpu/memory[@logical='vt|state']",
          Name  => "physical",
          Value => "nonexistent");
       begin
@@ -1124,7 +1124,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Timer memory region 'sm_timer' is not mapped by any "
+                    = "Timer memory region 'sm|timer' is not mapped by any "
                     & "kernel",
                     Message   => "Exception mismatch");
       end;

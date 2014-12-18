@@ -78,11 +78,11 @@
   <memory alignment="16#1000#" caching="WB" name="kernel_store_2" physicalAddress="16#0fea_3000#" size="16#1000#" type="kernel"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_stack_3" physicalAddress="16#0fe9_f000#" size="16#2000#" type="kernel"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_store_3" physicalAddress="16#0fea_4000#" size="16#1000#" type="kernel"/>
-  <memory alignment="16#1000#" caching="WB" name="tau0_state" physicalAddress="16#0fea_9000#" size="16#1000#" type="subject_state"/>
-  <memory alignment="16#1000#" caching="WB" name="vt_state" physicalAddress="16#0fea_c000#" size="16#1000#" type="subject_state"/>
-  <memory alignment="16#1000#" caching="WB" name="time_state" physicalAddress="16#0fea_a000#" size="16#1000#" type="subject_state"/>
-  <memory alignment="16#1000#" caching="WB" name="sm_state" physicalAddress="16#0fea_7000#" size="16#1000#" type="subject_state"/>
-  <memory alignment="16#1000#" caching="WB" name="linux_state" physicalAddress="16#0fea_6000#" size="16#1000#" type="subject_state"/>
+  <memory alignment="16#1000#" caching="WB" name="tau0|state" physicalAddress="16#0fea_9000#" size="16#1000#" type="subject_state"/>
+  <memory alignment="16#1000#" caching="WB" name="vt|state" physicalAddress="16#0fea_c000#" size="16#1000#" type="subject_state"/>
+  <memory alignment="16#1000#" caching="WB" name="time|state" physicalAddress="16#0fea_a000#" size="16#1000#" type="subject_state"/>
+  <memory alignment="16#1000#" caching="WB" name="sm|state" physicalAddress="16#0fea_7000#" size="16#1000#" type="subject_state"/>
+  <memory alignment="16#1000#" caching="WB" name="linux|state" physicalAddress="16#0fea_6000#" size="16#1000#" type="subject_state"/>
   <memory alignment="16#1000#" caching="WB" name="sys_interface" physicalAddress="16#0fea_8000#" size="16#1000#" type="kernel_interface"/>
   <memory alignment="16#1000#" caching="WB" name="trampoline" physicalAddress="16#0000#" size="16#1000#" type="system"/>
   <memory alignment="16#1000#" caching="WB" name="kernel_0|vmxon" physicalAddress="16#1000#" size="16#1000#" type="system_vmxon"/>
@@ -199,8 +199,8 @@
   <memory alignment="16#1000#" caching="WB" name="vtd_context_3" physicalAddress="16#cafe_4000#" size="16#1000#" type="system_vtd_context">
    <file filename="vtd_context_bus_3" offset="none"/>
   </memory>
-  <memory alignment="16#1000#" caching="WB" name="sm_timer" physicalAddress="16#1fa4_1000#" size="16#1000#" type="subject_timer"/>
-  <memory alignment="16#1000#" caching="WB" name="linux_timer" physicalAddress="16#1fa4_2000#" size="16#1000#" type="subject_timer"/>
+  <memory alignment="16#1000#" caching="WB" name="sm|timer" physicalAddress="16#1fa4_1000#" size="16#1000#" type="subject_timer"/>
+  <memory alignment="16#1000#" caching="WB" name="linux|timer" physicalAddress="16#1fa4_2000#" size="16#1000#" type="subject_timer"/>
  </memory>
  <deviceDomains>
   <domain id="1" name="linux_domain">
@@ -238,7 +238,7 @@
     <memory executable="false" logical="ro" physical="kernel_ro" virtualAddress="16#0011_f000#" writable="false"/>
     <memory executable="false" logical="stack" physical="kernel_stack_0" virtualAddress="16#0011_3000#" writable="true"/>
     <memory executable="false" logical="store" physical="kernel_store_0" virtualAddress="16#0011_6000#" writable="true"/>
-    <memory executable="false" logical="vt_state" physical="vt_state" virtualAddress="16#001e_1000#" writable="true"/>
+    <memory executable="false" logical="vt|state" physical="vt|state" virtualAddress="16#001e_1000#" writable="true"/>
     <memory executable="false" logical="tau0_interface" physical="sys_interface" virtualAddress="16#001f_f000#" writable="false"/>
    </cpu>
    <cpu id="1">
@@ -248,10 +248,10 @@
     <memory executable="false" logical="ro" physical="kernel_ro" virtualAddress="16#0011_f000#" writable="false"/>
     <memory executable="false" logical="stack" physical="kernel_stack_1" virtualAddress="16#0011_3000#" writable="true"/>
     <memory executable="false" logical="store" physical="kernel_store_1" virtualAddress="16#0011_6000#" writable="true"/>
-    <memory executable="false" logical="sm_state" physical="sm_state" virtualAddress="16#001e_3000#" writable="true"/>
-    <memory executable="false" logical="linux_state" physical="linux_state" virtualAddress="16#001e_4000#" writable="true"/>
-    <memory executable="false" logical="sm_timer" physical="sm_timer" virtualAddress="16#0040_2000#" writable="true"/>
-    <memory executable="false" logical="linux_timer" physical="linux_timer" virtualAddress="16#0040_3000#" writable="true"/>
+    <memory executable="false" logical="sm|state" physical="sm|state" virtualAddress="16#001e_3000#" writable="true"/>
+    <memory executable="false" logical="linux|state" physical="linux|state" virtualAddress="16#001e_4000#" writable="true"/>
+    <memory executable="false" logical="sm|timer" physical="sm|timer" virtualAddress="16#0040_2000#" writable="true"/>
+    <memory executable="false" logical="linux|timer" physical="linux|timer" virtualAddress="16#0040_3000#" writable="true"/>
    </cpu>
    <cpu id="2">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
@@ -260,7 +260,7 @@
     <memory executable="false" logical="ro" physical="kernel_ro" virtualAddress="16#0011_f000#" writable="false"/>
     <memory executable="false" logical="stack" physical="kernel_stack_2" virtualAddress="16#0011_3000#" writable="true"/>
     <memory executable="false" logical="store" physical="kernel_store_2" virtualAddress="16#0011_6000#" writable="true"/>
-    <memory executable="false" logical="time_state" physical="time_state" virtualAddress="16#001e_2000#" writable="true"/>
+    <memory executable="false" logical="time|state" physical="time|state" virtualAddress="16#001e_2000#" writable="true"/>
    </cpu>
    <cpu id="3">
     <memory executable="true" logical="text" physical="kernel_text" virtualAddress="16#0010_0000#" writable="false"/>
@@ -269,7 +269,7 @@
     <memory executable="false" logical="ro" physical="kernel_ro" virtualAddress="16#0011_f000#" writable="false"/>
     <memory executable="false" logical="stack" physical="kernel_stack_3" virtualAddress="16#0011_3000#" writable="true"/>
     <memory executable="false" logical="store" physical="kernel_store_3" virtualAddress="16#0011_6000#" writable="true"/>
-    <memory executable="false" logical="tau0_state" physical="tau0_state" virtualAddress="16#001e_0000#" writable="true"/>
+    <memory executable="false" logical="tau0|state" physical="tau0|state" virtualAddress="16#001e_0000#" writable="true"/>
    </cpu>
   </memory>
   <devices>
@@ -1037,8 +1037,8 @@
    <bootparams/>
    <memory>
     <memory executable="true" logical="binary" physical="sm|bin" virtualAddress="16#1000#" writable="true"/>
-    <memory executable="false" logical="linux_state" physical="linux_state" virtualAddress="16#001e_0000#" writable="true"/>
-    <memory executable="false" logical="timer" physical="sm_timer" virtualAddress="16#000e_0000_0000#" writable="true"/>
+    <memory executable="false" logical="linux|state" physical="linux|state" virtualAddress="16#001e_0000#" writable="true"/>
+    <memory executable="false" logical="timer" physical="sm|timer" virtualAddress="16#000e_0000_0000#" writable="true"/>
     <memory executable="false" logical="sm_console" physical="sm_console" virtualAddress="16#000b_8000#" writable="true"/>
    </memory>
    <devices/>
@@ -1247,7 +1247,7 @@
     <memory executable="false" logical="bios" physical="linux|bios" virtualAddress="16#000d_0000#" writable="false"/>
     <memory executable="false" logical="bios" physical="linux|bios" virtualAddress="16#000f_0000#" writable="false"/>
     <memory executable="false" logical="virtual_time" physical="virtual_time" virtualAddress="16#2000#" writable="false"/>
-    <memory executable="false" logical="timer" physical="linux_timer" virtualAddress="16#000e_0000_0000#" writable="true"/>
+    <memory executable="false" logical="timer" physical="linux|timer" virtualAddress="16#000e_0000_0000#" writable="true"/>
     <memory executable="false" logical="linux_keyboard" physical="linux_keyboard" virtualAddress="16#3000#" writable="false"/>
     <memory executable="false" logical="linux_console" physical="linux_console" virtualAddress="16#4000#" writable="true"/>
    </memory>

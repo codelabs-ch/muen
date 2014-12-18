@@ -393,6 +393,34 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Physical_Memory_References (XML_Data => Data);
+
+      --  Invalid kernel memory reference.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_text']",
+         Name  => "name",
+         Value => "foobar");
+
+      begin
+         Physical_Memory_References (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Physical memory 'kernel_text' referenced by logical "
+                    & "memory 'text' not found",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Invalid subject memory reference.
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/memory/memory[@name='linux|ram']",

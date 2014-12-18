@@ -692,6 +692,18 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure Subject_State_Mappings (XML_Data : Muxml.XML_Data_Type)
+   is
+   begin
+      Check_Subject_Region_Mappings
+        (Data                   => XML_Data,
+         Mapping_Name           => "subject state",
+         Region_Type            => "subject_state",
+         Check_Subject_Mappings => False);
+   end Subject_State_Mappings;
+
+   -------------------------------------------------------------------------
+
    procedure System_Memory_Mappings (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes      : constant DOM.Core.Node_List

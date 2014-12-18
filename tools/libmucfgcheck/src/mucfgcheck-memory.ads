@@ -88,6 +88,11 @@ is
    --  Validate system memory mappings.
    procedure System_Memory_Mappings (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that subject state memory regions are mapped by the kernel
+   --  running that subject. Also verify that the kernel mapping is at the
+   --  expected virtual location.
+   procedure Subject_State_Mappings (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that timer memory regions are mapped by exactly one subject and
    --  the corresponding kernel running that subject. Also verify that the
    --  kernel mapping is at the expected virtual location.

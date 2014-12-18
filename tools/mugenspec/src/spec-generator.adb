@@ -921,13 +921,13 @@ is
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/kernel/memory/cpu/"
-               & "memory[@logical='tau0_state']",
+               & "memory[@logical='tau0|state']",
                Name  => "virtualAddress"));
          Subj_Timers_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/kernel/memory/cpu/"
-               & "memory[@logical='tau0_timer']",
+               & "memory[@logical='tau0|timer']",
                Name  => "virtualAddress"));
          IO_Apic_Addr     : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute

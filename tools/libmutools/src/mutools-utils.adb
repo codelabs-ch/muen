@@ -84,7 +84,7 @@ is
 
    function Capitalize (Str : String) return String
    is
-      Result : String := Ada.Characters.Handling.To_Lower (Item => Str);
+      Result : String := Str;
    begin
       Result (Result'First) := Ada.Characters.Handling.To_Upper
         (Item => Result (Result'First));

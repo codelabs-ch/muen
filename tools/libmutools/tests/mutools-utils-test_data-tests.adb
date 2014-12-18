@@ -205,8 +205,8 @@ package body Mutools.Utils.Test_Data.Tests is
               Message   => "'Foo' mismatch");
       Assert (Condition => Capitalize (Str => "Bar") = "Bar",
               Message   => "'Bar' mismatch");
-      Assert (Condition => Capitalize (Str => "fOoBaR") = "Foobar",
-              Message   => "'Foobar' mismatch");
+      Assert (Condition => Capitalize (Str => "foBaR") = "FoBaR",
+              Message   => "'FoBaR' mismatch");
 --  begin read only
    end Test_Capitalize;
 --  end read only

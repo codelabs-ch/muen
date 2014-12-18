@@ -191,11 +191,32 @@ package body Mutools.Utils.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Capitalize (Gnattest_T : in out Test);
+   procedure Test_Capitalize_34c1e1 (Gnattest_T : in out Test) renames Test_Capitalize;
+--  id:2.2/34c1e1ae8aad6455/Capitalize/1/0/
+   procedure Test_Capitalize (Gnattest_T : in out Test) is
+   --  mutools-utils.ads:64:4:Capitalize
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+   begin
+
+      AUnit.Assertions.Assert
+        (Gnattest_Generated.Default_Assert_Value,
+         "Test not implemented.");
+
+--  begin read only
+   end Test_Capitalize;
+--  end read only
+
+
+--  begin read only
    procedure Test_Decode_Entity_Name (Gnattest_T : in out Test);
    procedure Test_Decode_Entity_Name_ec79f4 (Gnattest_T : in out Test) renames Test_Decode_Entity_Name;
 --  id:2.2/ec79f4ba16a29875/Decode_Entity_Name/1/0/
    procedure Test_Decode_Entity_Name (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:64:4:Decode_Entity_Name
+   --  mutools-utils.ads:68:4:Decode_Entity_Name
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -214,7 +235,7 @@ package body Mutools.Utils.Test_Data.Tests is
    procedure Test_Is_Managed_By_VMX_d49f3b (Gnattest_T : in out Test) renames Test_Is_Managed_By_VMX;
 --  id:2.2/d49f3b4fcfb97944/Is_Managed_By_VMX/1/0/
    procedure Test_Is_Managed_By_VMX (Gnattest_T : in out Test) is
-   --  mutools-utils.ads:69:4:Is_Managed_By_VMX
+   --  mutools-utils.ads:73:4:Is_Managed_By_VMX
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

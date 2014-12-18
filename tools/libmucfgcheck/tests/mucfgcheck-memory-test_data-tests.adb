@@ -858,7 +858,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel PT region 'kernel_0|pt' for logical CPU 0"
+                    = "Kernel pagetable region 'kernel_0|pt' for logical CPU 0"
                     & " not found",
                     Message   => "Exception mismatch");
       end;

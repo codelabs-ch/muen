@@ -486,38 +486,12 @@ is
 
    procedure Kernel_PT_Region_Presence (XML_Data : Muxml.XML_Data_Type)
    is
-      CPU_Count    : constant Positive
-        := Mutools.XML_Utils.Get_Active_CPU_Count (Data => XML_Data);
-      Physical_Mem : constant DOM.Core.Node_List
-        := XPath_Query
-          (N     => XML_Data.Doc,
-           XPath => "/system/memory/memory");
-      Node         : DOM.Core.Node;
    begin
-      Mulog.Log (Msg => "Checking presence of" & CPU_Count'Img
-                 & " kernel PT region(s)");
-
-      for I in 0 .. CPU_Count - 1 loop
-         declare
-            use type DOM.Core.Node;
-
-            CPU_Str  : constant String
-              := Ada.Strings.Fixed.Trim
-                (Source => I'Img,
-                 Side   => Ada.Strings.Left);
-            Mem_Name : constant String
-              := "kernel_" & CPU_Str & "|pt";
-         begin
-            Node := Muxml.Utils.Get_Element
-              (Nodes     => Physical_Mem,
-               Ref_Attr  => "name",
-               Ref_Value => Mem_Name);
-            if Node = null then
-               raise Validation_Error with "Kernel PT region '" & Mem_Name
-                 & "' for logical CPU " & CPU_Str & " not found";
-            end if;
-         end;
-      end loop;
+      Check_Kernel_Region_Presence
+        (Data        => XML_Data,
+         Region_Kind => "kernel pagetable",
+         Name_Prefix => "kernel",
+         Name_Suffix => "|pt");
    end Kernel_PT_Region_Presence;
 
    -------------------------------------------------------------------------

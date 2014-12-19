@@ -85,8 +85,8 @@ is
                  XPath => "file",
                  Name  => "filename");
          begin
-            Mulog.Log (Msg => "Writing I/O bitmap of " & Name & " to '"
-                       & Filename & "'");
+            Mulog.Log (Msg => "Writing I/O bitmap of subject '" & Name
+                       & "' to '" & Filename & "'");
             Write_IO_Bitmap (Policy   => Policy,
                              Ports    => Ports,
                              Filename => Filename);

@@ -123,6 +123,8 @@ is
       XML_Processors.Register
         (Process => Device.IO_Port_References'Access);
       XML_Processors.Register
+        (Process => Device.IO_Port_Uniqueness'Access);
+      XML_Processors.Register
         (Process => Device.Device_Memory_Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Device.Device_Memory_References'Access);

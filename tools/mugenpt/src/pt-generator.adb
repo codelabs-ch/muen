@@ -365,7 +365,8 @@ is
             end if;
 
             Mulog.Log (Msg => "Writing " & Paging_Mode'Img & " pagetable of "
-                       & Name & " to '" & Output_Dir & "/" & Filename & "'");
+                       & "subject '" & Name & "' to '" & Output_Dir & "/"
+                       & Filename & "'");
             Write_Pagetable
               (Policy       => Policy,
                Memory       => Nodes,

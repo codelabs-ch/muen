@@ -432,7 +432,7 @@ is
         (Doc   => Data.Doc,
          XPath => "/system/kernel/memory/cpu[@id='0']");
    begin
-      Mulog.Log (Msg => "Mapping tau0 system interface on CPU 0");
+      Mulog.Log (Msg => "Mapping 'tau0' system interface on CPU 0");
 
       Muxml.Utils.Append_Child
         (Node      => BSP,

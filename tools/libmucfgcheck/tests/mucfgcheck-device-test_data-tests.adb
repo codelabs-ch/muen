@@ -310,12 +310,60 @@ package body Mucfgcheck.Device.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      Data : Muxml.XML_Data_Type;
    begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      --  Positive test, must not raise an exception.
 
+      IO_Port_Uniqueness (XML_Data => Data);
+
+
+      --  Single port overlap.
+
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/devices/device[@name='cmos_rtc']/"
+            & "ioPort",
+            Name  => "end",
+            Value => "16#0080#");
+
+         IO_Port_Uniqueness (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Devices 'cmos_rtc' and 'port80' have overlapping I/O "
+                    & "port(s)",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Full range overlap.
+
+      begin
+         Muxml.Utils.Set_Attribute
+           (Doc   => Data.Doc,
+            XPath => "/system/platform/devices/device[@name='keyboard']/"
+            & "ioPort[@name='port_64']",
+            Name  => "end",
+            Value => "16#0090#");
+
+         IO_Port_Uniqueness (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Devices 'keyboard' and 'cmos_rtc' have overlapping I/O "
+                    & "port(s)",
+                    Message   => "Exception mismatch");
+      end;
 --  begin read only
    end Test_IO_Port_Uniqueness;
 --  end read only

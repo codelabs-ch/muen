@@ -85,8 +85,8 @@ is
                  XPath => "file",
                  Name  => "filename");
          begin
-            Mulog.Log (Msg => "Writing MSR bitmap of " & Name & " to '"
-                       & Filename & "'");
+            Mulog.Log (Msg => "Writing MSR bitmap of subject '" & Name
+                       & "' to '" & Filename & "'");
             Write_MSR_Bitmap (Registers => Registers,
                               Filename  => Filename);
          end;

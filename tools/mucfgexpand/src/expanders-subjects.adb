@@ -852,8 +852,8 @@ is
               (Node      => Mem_Node,
                New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
-                  Logical_Name  => Monitored_Subj_Name & "_state",
-                  Physical_Name => Monitored_Subj_Name & "_state",
+                  Logical_Name  => Monitored_Subj_Name & "|state",
+                  Physical_Name => Monitored_Subj_Name & "|state",
                   Address       => Address,
                   Writable      => Writable,
                   Executable    => False));
@@ -962,7 +962,7 @@ is
                New_Child => Mutools.XML_Utils.Create_Virtual_Memory_Node
                  (Policy        => Data,
                   Logical_Name  => "timer",
-                  Physical_Name => Subj_Name & "_timer",
+                  Physical_Name => Subj_Name & "|timer",
                   Address       => "16#000e_0000_0000#",
                   Writable      => True,
                   Executable    => False));

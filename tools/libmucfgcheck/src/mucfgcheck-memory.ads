@@ -82,11 +82,19 @@ is
    --  Validate that kernel PT regions are in the first 4G.
    procedure Kernel_PT_Below_4G (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that a subject state memory region exists for every subject.
+   procedure Subject_State_Region_Presence (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate kernel memory mappings.
    procedure Kernel_Memory_Mappings (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate system memory mappings.
    procedure System_Memory_Mappings (XML_Data : Muxml.XML_Data_Type);
+
+   --  Validate that subject state memory regions are mapped by the kernel
+   --  running that subject. Also verify that the kernel mapping is at the
+   --  expected virtual location.
+   procedure Subject_State_Mappings (XML_Data : Muxml.XML_Data_Type);
 
    --  Validate that timer memory regions are mapped by exactly one subject and
    --  the corresponding kernel running that subject. Also verify that the

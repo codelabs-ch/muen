@@ -18,6 +18,7 @@
 --
 
 with Ada.Strings.Fixed;
+with Ada.Characters.Handling;
 
 with Mutools.Constants;
 
@@ -78,6 +79,17 @@ is
    begin
       return (Value and 2 ** Natural (Pos)) /= 0;
    end Bit_Test;
+
+   -------------------------------------------------------------------------
+
+   function Capitalize (Str : String) return String
+   is
+      Result : String := Str;
+   begin
+      Result (Result'First) := Ada.Characters.Handling.To_Upper
+        (Item => Result (Result'First));
+      return Result;
+   end Capitalize;
 
    -------------------------------------------------------------------------
 

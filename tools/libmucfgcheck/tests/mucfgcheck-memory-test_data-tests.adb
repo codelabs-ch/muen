@@ -177,6 +177,13 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      VMCS_Region_Presence (XML_Data => Data);
+
+      --  Missing VMCS region.
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/memory/memory[@name='linux|vmcs']",
@@ -191,7 +198,27 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "VMCS region 'linux|vmcs' for subject linux not found",
+                    = "VMCS region 'linux|vmcs' for subject 'linux' not found",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  VMCS region with incorrect region type.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='vt|vmcs']",
+         Name  => "type",
+         Value => "system");
+
+      begin
+         VMCS_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "VMCS region 'vt|vmcs' for subject 'vt' not found",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -366,6 +393,34 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       Muxml.Parse (Data => Data,
                    Kind => Muxml.Format_B,
                    File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Physical_Memory_References (XML_Data => Data);
+
+      --  Invalid kernel memory reference.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='kernel_text']",
+         Name  => "name",
+         Value => "foobar");
+
+      begin
+         Physical_Memory_References (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Physical memory 'kernel_text' referenced by logical "
+                    & "memory 'text' not found",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Invalid subject memory reference.
+
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/memory/memory[@name='linux|ram']",
@@ -820,8 +875,8 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel store region 'kernel_store_0' for logical CPU 0"
-                    & " not found",
+                    = "Kernel per-CPU store region 'kernel_store_0' for "
+                    & "logical CPU 0 not found",
                     Message   => "Exception mismatch");
       end;
 --  begin read only
@@ -858,7 +913,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Kernel PT region 'kernel_0|pt' for logical CPU 0"
+                    = "Kernel pagetable region 'kernel_0|pt' for logical CPU 0"
                     & " not found",
                     Message   => "Exception mismatch");
       end;
@@ -906,11 +961,77 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Subject_State_Region_Presence (Gnattest_T : in out Test);
+   procedure Test_Subject_State_Region_Presence_33b778 (Gnattest_T : in out Test) renames Test_Subject_State_Region_Presence;
+--  id:2.2/33b77883901d3c36/Subject_State_Region_Presence/1/0/
+   procedure Test_Subject_State_Region_Presence (Gnattest_T : in out Test) is
+   --  mucfgcheck-memory.ads:86:4:Subject_State_Region_Presence
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Subject_State_Region_Presence (XML_Data => Data);
+
+      --  Missings subject state region.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='vt|state']",
+         Name  => "name",
+         Value => "foobar");
+
+      begin
+         Subject_State_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject state region 'vt|state' for subject 'vt' not"
+                    & " found",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Subject state region with incorrect region type.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/memory/memory[@name='tau0|state']",
+         Name  => "type",
+         Value => "subject");
+
+      begin
+         Subject_State_Region_Presence (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject state region 'tau0|state' for subject 'tau0'"
+                    & " not found",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Subject_State_Region_Presence;
+--  end read only
+
+
+--  begin read only
    procedure Test_Kernel_Memory_Mappings (Gnattest_T : in out Test);
    procedure Test_Kernel_Memory_Mappings_fe36fc (Gnattest_T : in out Test) renames Test_Kernel_Memory_Mappings;
 --  id:2.2/fe36fc1c47e6055f/Kernel_Memory_Mappings/1/0/
    procedure Test_Kernel_Memory_Mappings (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:86:4:Kernel_Memory_Mappings
+   --  mucfgcheck-memory.ads:89:4:Kernel_Memory_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -948,7 +1069,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_System_Memory_Mappings_6ca6be (Gnattest_T : in out Test) renames Test_System_Memory_Mappings;
 --  id:2.2/6ca6befcb4661223/System_Memory_Mappings/1/0/
    procedure Test_System_Memory_Mappings (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:89:4:System_Memory_Mappings
+   --  mucfgcheck-memory.ads:92:4:System_Memory_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -982,11 +1103,122 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
 
 --  begin read only
+   procedure Test_Subject_State_Mappings (Gnattest_T : in out Test);
+   procedure Test_Subject_State_Mappings_5f6e13 (Gnattest_T : in out Test) renames Test_Subject_State_Mappings;
+--  id:2.2/5f6e1350f2cd2bf6/Subject_State_Mappings/1/0/
+   procedure Test_Subject_State_Mappings (Gnattest_T : in out Test) is
+   --  mucfgcheck-memory.ads:97:4:Subject_State_Mappings
+--  end read only
+
+      pragma Unreferenced (Gnattest_T);
+
+      Data : Muxml.XML_Data_Type;
+   begin
+      Muxml.Parse (Data => Data,
+                   Kind => Muxml.Format_B,
+                   File => "data/test_policy.xml");
+
+      --  Positive test, must not raise an exception.
+
+      Subject_State_Mappings (XML_Data => Data);
+
+      --  Kernel subject state mappings with differnt virtual base addresses.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@logical='linux|state']",
+         Name  => "virtualAddress",
+         Value => "16#cafe_0000#");
+      begin
+         Subject_State_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject state memory region 'linux|state' mapped at "
+                    & "unexpected kernel virtual address 16#cafe_0000#, should"
+                    & " be 16#001e_4000#",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Kernel and subject with different CPU.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/subjects/subject[@name='linux']",
+         Name  => "cpu",
+         Value => "0");
+      begin
+         Subject_State_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject state memory region 'linux|state' mapped by "
+                    & "kernel and subject 'linux' with different CPU ID: "
+                    & "1 /= 0",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  Multiple kernel subject state mappings.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@physical='sm|timer']",
+         Name  => "physical",
+         Value => "vt|state");
+      begin
+         Subject_State_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject state memory region 'vt|state' has multiple "
+                    & "kernel mappings: 2",
+                    Message   => "Exception mismatch");
+      end;
+
+      --  No kernel subject state mapping.
+
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@logical='sm|timer']",
+         Name  => "physical",
+         Value => "nonexistent");
+      Muxml.Utils.Set_Attribute
+        (Doc   => Data.Doc,
+         XPath => "/system/kernel/memory/cpu/memory[@logical='vt|state']",
+         Name  => "physical",
+         Value => "nonexistent");
+      begin
+         Subject_State_Mappings (XML_Data => Data);
+         Assert (Condition => False,
+                 Message   => "Exception expected");
+
+      exception
+         when E : Validation_Error =>
+            Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
+                    = "Subject state memory region 'vt|state' is not mapped by"
+                    & " any kernel",
+                    Message   => "Exception mismatch");
+      end;
+--  begin read only
+   end Test_Subject_State_Mappings;
+--  end read only
+
+
+--  begin read only
    procedure Test_Timer_Memory_Mappings (Gnattest_T : in out Test);
    procedure Test_Timer_Memory_Mappings_71b857 (Gnattest_T : in out Test) renames Test_Timer_Memory_Mappings;
 --  id:2.2/71b857113d544661/Timer_Memory_Mappings/1/0/
    procedure Test_Timer_Memory_Mappings (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:94:4:Timer_Memory_Mappings
+   --  mucfgcheck-memory.ads:102:4:Timer_Memory_Mappings
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1005,7 +1237,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/kernel/memory/cpu/memory[@logical='linux_timer']",
+         XPath => "/system/kernel/memory/cpu/memory[@logical='linux|timer']",
          Name  => "virtualAddress",
          Value => "16#ffff_f000#");
       begin
@@ -1016,7 +1248,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Timer memory region 'linux_timer' mapped at unexpected "
+                    = "Timer memory region 'linux|timer' mapped at unexpected "
                     & "kernel virtual address 16#ffff_f000#, should be "
                     & "16#0040_3000#",
                     Message   => "Exception mismatch");
@@ -1037,7 +1269,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Timer memory region 'linux_timer' mapped by kernel and "
+                    = "Timer memory region 'linux|timer' mapped by kernel and "
                     & "subject 'linux' with different CPU ID: 1 /= 0",
                     Message   => "Exception mismatch");
       end;
@@ -1049,7 +1281,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
          XPath => "/system/subjects/subject/memory/"
          & "memory[@physical='sm_console']",
          Name  => "physical",
-         Value => "linux_timer");
+         Value => "linux|timer");
       begin
          Timer_Memory_Mappings (XML_Data => Data);
          Assert (Condition => False,
@@ -1058,7 +1290,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Timer memory region 'linux_timer' has multiple subject "
+                    = "Timer memory region 'linux|timer' has multiple subject "
                     & "mappings: 2",
                     Message   => "Exception mismatch");
       end;
@@ -1068,7 +1300,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
          XPath => "/system/subjects/subject/memory/"
-         & "memory[@physical='sm_timer']",
+         & "memory[@physical='sm|timer']",
          Name  => "physical",
          Value => "nonexistent");
       begin
@@ -1079,7 +1311,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Timer memory region 'sm_timer' is not mapped by any "
+                    = "Timer memory region 'sm|timer' is not mapped by any "
                     & "subject",
                     Message   => "Exception mismatch");
       end;
@@ -1088,9 +1320,9 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/kernel/memory/cpu/memory[@physical='vt_state']",
+         XPath => "/system/kernel/memory/cpu/memory[@physical='vt|state']",
          Name  => "physical",
-         Value => "sm_timer");
+         Value => "sm|timer");
       begin
          Timer_Memory_Mappings (XML_Data => Data);
          Assert (Condition => False,
@@ -1099,7 +1331,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Timer memory region 'sm_timer' has multiple kernel "
+                    = "Timer memory region 'sm|timer' has multiple kernel "
                     & "mappings: 2",
                     Message   => "Exception mismatch");
       end;
@@ -1108,12 +1340,12 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
 
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/kernel/memory/cpu/memory[@logical='sm_timer']",
+         XPath => "/system/kernel/memory/cpu/memory[@logical='sm|timer']",
          Name  => "physical",
          Value => "nonexistent");
       Muxml.Utils.Set_Attribute
         (Doc   => Data.Doc,
-         XPath => "/system/kernel/memory/cpu/memory[@logical='vt_state']",
+         XPath => "/system/kernel/memory/cpu/memory[@logical='vt|state']",
          Name  => "physical",
          Value => "nonexistent");
       begin
@@ -1124,7 +1356,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
       exception
          when E : Validation_Error =>
             Assert (Condition => Ada.Exceptions.Exception_Message (X => E)
-                    = "Timer memory region 'sm_timer' is not mapped by any "
+                    = "Timer memory region 'sm|timer' is not mapped by any "
                     & "kernel",
                     Message   => "Exception mismatch");
       end;
@@ -1138,7 +1370,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Root_Region_Size_bc3a31 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Size;
 --  id:2.2/bc3a31ac2395433f/VTd_Root_Region_Size/1/0/
    procedure Test_VTd_Root_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:97:4:VTd_Root_Region_Size
+   --  mucfgcheck-memory.ads:105:4:VTd_Root_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1176,7 +1408,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Context_Region_Size_4d6204 (Gnattest_T : in out Test) renames Test_VTd_Context_Region_Size;
 --  id:2.2/4d620465079ba6ad/VTd_Context_Region_Size/1/0/
    procedure Test_VTd_Context_Region_Size (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:100:4:VTd_Context_Region_Size
+   --  mucfgcheck-memory.ads:108:4:VTd_Context_Region_Size
 --  end read only
 
       pragma Unreferenced (Gnattest_T);
@@ -1214,7 +1446,7 @@ package body Mucfgcheck.Memory.Test_Data.Tests is
    procedure Test_VTd_Root_Region_Presence_b744c5 (Gnattest_T : in out Test) renames Test_VTd_Root_Region_Presence;
 --  id:2.2/b744c5d7d5100d62/VTd_Root_Region_Presence/1/0/
    procedure Test_VTd_Root_Region_Presence (Gnattest_T : in out Test) is
-   --  mucfgcheck-memory.ads:103:4:VTd_Root_Region_Presence
+   --  mucfgcheck-memory.ads:111:4:VTd_Root_Region_Presence
 --  end read only
 
       pragma Unreferenced (Gnattest_T);

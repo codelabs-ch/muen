@@ -82,7 +82,7 @@
   <subject name="lnx" profile="linux">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#3000#" writable="true"/>
-    <memory executable="false" logical="timer" physical="lnx_timer" virtualAddress="16#000e_0000_0000#" writable="true"/>
+    <memory executable="false" logical="timer" physical="lnx|timer" virtualAddress="16#000e_0000_0000#" writable="true"/>
    </memory>
    <devices>
     <device logical="xhci" physical="xhci">
@@ -110,7 +110,7 @@
   <subject name="subject1" profile="native">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
-    <memory executable="false" logical="timer" physical="subject1_timer" virtualAddress="16#000e_0000_0000#" writable="true"/>
+    <memory executable="false" logical="timer" physical="subject1|timer" virtualAddress="16#000e_0000_0000#" writable="true"/>
    </memory>
    <devices>
     <device logical="nic1" physical="nic1">
@@ -140,7 +140,7 @@
   <subject name="subject2" profile="native">
    <memory>
     <memory executable="false" logical="dummy" physical="dummy" virtualAddress="16#1000#" writable="true"/>
-    <memory executable="false" logical="timer" physical="subject2_timer" virtualAddress="16#000e_0000_0000#" writable="true"/>
+    <memory executable="false" logical="timer" physical="subject2|timer" virtualAddress="16#000e_0000_0000#" writable="true"/>
    </memory>
    <devices/>
    <events/>

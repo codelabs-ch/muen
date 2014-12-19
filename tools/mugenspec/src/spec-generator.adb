@@ -16,7 +16,6 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Characters.Handling;
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
@@ -52,10 +51,6 @@ is
      (Source : String)
       return Ada.Strings.Unbounded.Unbounded_String
       renames Ada.Strings.Unbounded.To_Unbounded_String;
-
-   --  Return capitalisation of the given string (first letter in uppercase and
-   --  the remaining letters in lowercase).
-   function Capitalize (Str : String) return String;
 
    type Pin_Ctrl_Type is
      (ExternalInterruptExiting,
@@ -390,17 +385,6 @@ is
 
    -------------------------------------------------------------------------
 
-   function Capitalize (Str : String) return String
-   is
-      Result : String := Ada.Characters.Handling.To_Lower (Item => Str);
-   begin
-      Result (Result'First) := Ada.Characters.Handling.To_Upper
-        (Item => Result (Result'First));
-      return Result;
-   end Capitalize;
-
-   -------------------------------------------------------------------------
-
    function Get_Kernel_PML4_Addrs
      (Physical_Memory : DOM.Core.Node_List;
       CPU_Count       : Positive)
@@ -484,7 +468,7 @@ is
               XPath => "/system/platform/devices/device"
               & "[@name='debugconsole' and ioPort/@name='port']");
          Dev_Name      : constant String
-           := Capitalize
+           := Mutools.Utils.Capitalize
              (Str => DOM.Core.Elements.Get_Attribute
                 (Elem => Debug_Console,
                  Name => "name"));
@@ -493,7 +477,7 @@ is
              (Doc   => Debug_Console,
               XPath => "ioPort[@name='port']");
          Name          : constant String
-           := Capitalize
+           := Mutools.Utils.Capitalize
              (Str => DOM.Core.Elements.Get_Attribute
                 (Elem => Port,
                  Name => "name"));
@@ -921,13 +905,13 @@ is
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/kernel/memory/cpu/"
-               & "memory[@logical='tau0_state']",
+               & "memory[@logical='tau0|state']",
                Name  => "virtualAddress"));
          Subj_Timers_Addr : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute
               (Doc   => Policy.Doc,
                XPath => "/system/kernel/memory/cpu/"
-               & "memory[@logical='tau0_timer']",
+               & "memory[@logical='tau0|timer']",
                Name  => "virtualAddress"));
          IO_Apic_Addr     : constant Unsigned_64 := Unsigned_64'Value
            (Muxml.Utils.Get_Attribute

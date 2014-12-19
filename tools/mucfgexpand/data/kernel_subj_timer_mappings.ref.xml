@@ -81,11 +81,11 @@
  <kernel>
   <memory>
    <cpu id="0">
-    <memory executable="false" logical="lnx_timer" physical="lnx_timer" virtualAddress="16#0040_1000#" writable="true"/>
-    <memory executable="false" logical="subject1_timer" physical="subject1_timer" virtualAddress="16#0040_2000#" writable="true"/>
+    <memory executable="false" logical="lnx|timer" physical="lnx|timer" virtualAddress="16#0040_1000#" writable="true"/>
+    <memory executable="false" logical="subject1|timer" physical="subject1|timer" virtualAddress="16#0040_2000#" writable="true"/>
    </cpu>
    <cpu id="1">
-    <memory executable="false" logical="subject2_timer" physical="subject2_timer" virtualAddress="16#0040_3000#" writable="true"/>
+    <memory executable="false" logical="subject2|timer" physical="subject2|timer" virtualAddress="16#0040_3000#" writable="true"/>
    </cpu>
   </memory>
   <devices/>

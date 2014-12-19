@@ -130,8 +130,8 @@
 				<memory logical="store" physical="kernel_store_0" writable="true" executable="false" virtualAddress="16#0011_6000#"/>
 				<memory logical="data" physical="kernel_data" writable="true" executable="true" virtualAddress="16#0011_8000#"/>
 				<memory logical="tau0_interface" physical="sys_interface" writable="false" executable="false" virtualAddress="16#001f_f000#"/>
-				<memory logical="tau0_state" physical="tau0_state" writable="true" executable="false" virtualAddress="16#001e_0000#"/>
-				<memory logical="tau0_timer" physical="tau0_timer" writable="true" executable="false" virtualAddress="16#0040_0000#"/>
+				<memory logical="tau0|state" physical="tau0|state" writable="true" executable="false" virtualAddress="16#001e_0000#"/>
+				<memory logical="tau0|timer" physical="tau0|timer" writable="true" executable="false" virtualAddress="16#0040_0000#"/>
 				<memory logical="vtd_ir" physical="vtd_ir" writable="true" executable="false" virtualAddress="16#0020_0000#"/>
 			</cpu>
 			<cpu id="1">

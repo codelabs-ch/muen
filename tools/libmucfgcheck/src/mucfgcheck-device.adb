@@ -500,6 +500,65 @@ is
 
    -------------------------------------------------------------------------
 
+   procedure IO_Port_Uniqueness (XML_Data : Muxml.XML_Data_Type)
+   is
+      Nodes : constant DOM.Core.Node_List := XPath_Query
+        (N     => XML_Data.Doc,
+         XPath => "/system/platform/devices/device/ioPort");
+
+      --  Check inequality/non-overlap of I/O port ranges.
+      procedure Check_Inequality (Left, Right : DOM.Core.Node);
+
+      ----------------------------------------------------------------------
+
+      procedure Check_Inequality (Left, Right : DOM.Core.Node)
+      is
+         Left_Start  : constant Natural := Natural'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Left,
+               Name => "start"));
+         Left_End    : constant Natural := Natural'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Left,
+               Name => "end"));
+         Right_Start : constant Natural := Natural'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Right,
+               Name => "start"));
+         Right_End   : constant Natural := Natural'Value
+           (DOM.Core.Elements.Get_Attribute
+              (Elem => Right,
+               Name => "end"));
+      begin
+         if (Left_Start <= Right_Start and then Left_End >= Right_Start)
+           or (Right_Start <= Left_Start and then Right_End >= Left_Start)
+         then
+            declare
+               Left_Dev_Name  : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                 (Elem => DOM.Core.Nodes.Parent_Node (N => Left),
+                  Name => "name");
+               Right_Dev_Name : constant String
+                 := DOM.Core.Elements.Get_Attribute
+                   (Elem => DOM.Core.Nodes.Parent_Node (N => Right),
+                    Name => "name");
+            begin
+               raise Validation_Error with "Devices '" & Left_Dev_Name
+                 & "' and '" & Right_Dev_Name & "' have overlapping I/O "
+                 & "port(s)";
+            end;
+         end if;
+      end Check_Inequality;
+   begin
+      Mulog.Log (Msg => "Checking uniqueness of" & DOM.Core.Nodes.Length
+                 (List => Nodes)'Img & " device I/O port(s)");
+
+      Compare_All (Nodes      => Nodes,
+                   Comparator => Check_Inequality'Access);
+   end IO_Port_Uniqueness;
+
+   -------------------------------------------------------------------------
+
    procedure IOMMU_Region_Size (XML_Data : Muxml.XML_Data_Type)
    is
       Nodes : constant DOM.Core.Node_List := XPath_Query

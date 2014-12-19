@@ -83,9 +83,13 @@ is
       XML_Processors.Register
         (Process => Memory.Kernel_PT_Below_4G'Access);
       XML_Processors.Register
+        (Process => Memory.Subject_State_Region_Presence'Access);
+      XML_Processors.Register
         (Process => Memory.Kernel_Memory_Mappings'Access);
       XML_Processors.Register
         (Process => Memory.System_Memory_Mappings'Access);
+      XML_Processors.Register
+        (Process => Memory.Subject_State_Mappings'Access);
       XML_Processors.Register
         (Process => Memory.Timer_Memory_Mappings'Access);
       XML_Processors.Register
@@ -118,6 +122,8 @@ is
         (Process => Device.Device_IO_Port_Name_Uniqueness'Access);
       XML_Processors.Register
         (Process => Device.IO_Port_References'Access);
+      XML_Processors.Register
+        (Process => Device.IO_Port_Uniqueness'Access);
       XML_Processors.Register
         (Process => Device.Device_Memory_Name_Uniqueness'Access);
       XML_Processors.Register

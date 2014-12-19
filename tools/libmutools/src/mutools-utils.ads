@@ -59,6 +59,10 @@ is
       Unit_Size : Positive := 3)
       return String;
 
+   --  Return capitalised version of the given string (first letter in
+   --  uppercase and the remaining letters remain as-is).
+   function Capitalize (Str : String) return String;
+
    --  Extract entity name from given encoded string (e.g. 'linux|zp' or
    --  'kernel_0|vmxon').
    function Decode_Entity_Name (Encoded_Str : String) return String;

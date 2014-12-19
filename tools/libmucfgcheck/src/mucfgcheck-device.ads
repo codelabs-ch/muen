@@ -42,6 +42,9 @@ is
    --  Validate that physical I/O ports referenced by logical I/O ports exists.
    procedure IO_Port_References (XML_Data : Muxml.XML_Data_Type);
 
+   --  Validate that all physical I/O ports are unique.
+   procedure IO_Port_Uniqueness (XML_Data : Muxml.XML_Data_Type);
+
    --  Validate that physical I/O port names are unique per device.
    procedure Device_IO_Port_Name_Uniqueness (XML_Data : Muxml.XML_Data_Type);
 

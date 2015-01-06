@@ -30,8 +30,11 @@ package Paging.EPT.Test_Data.Tests is
    procedure Test_Deserialze_PD_Entry_cdf777 (Gnattest_T : in out Test);
    --  paging-ept.ads:57:4:Deserialze_PD_Entry
 
+   procedure Test_Deserialze_PT_Entry_3a3c51 (Gnattest_T : in out Test);
+   --  paging-ept.ads:62:4:Deserialze_PT_Entry
+
    procedure Test_Cache_Mapping_c80d4a (Gnattest_T : in out Test);
-   --  paging-ept.ads:65:4:Cache_Mapping
+   --  paging-ept.ads:70:4:Cache_Mapping
 
 end Paging.EPT.Test_Data.Tests;
 --  end read only

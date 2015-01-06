@@ -68,4 +68,15 @@ package Paging.EPT.Test_Data is
         Global      => False,
         Caching     => UC);
 
+   Ref_PT_Entry     : constant Entries.Table_Entry_Type
+     := Entries.Create
+       (Dst_Index   => 0,
+        Dst_Address => 16#000b_8000#,
+        Readable    => True,
+        Writable    => True,
+        Executable  => False,
+        Maps_Page   => True,
+        Global      => False,
+        Caching     => WC);
+
 end Paging.EPT.Test_Data;

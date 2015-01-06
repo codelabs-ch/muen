@@ -330,12 +330,40 @@ package body Paging.IA32e.Test_Data.Tests is
 
       pragma Unreferenced (Gnattest_T);
 
+      use Ada.Streams.Stream_IO;
+
+      File : File_Type;
    begin
+      Open (File => File,
+            Mode => In_File,
+            Name => "data/ia32e_pt.ref");
 
-      AUnit.Assertions.Assert
-        (Gnattest_Generated.Default_Assert_Value,
-         "Test not implemented.");
+      declare
+         use type Entries.Table_Entry_Type;
 
+         PT_Entry : Entries.Table_Entry_Type;
+      begin
+         Deserialze_PT_Entry (Stream      => Stream (File => File),
+                              Table_Entry => PT_Entry);
+         Assert (Condition => PT_Entry = Ref_PT_Entry_0,
+                 Message   => "Deserialized PT entry 0 mismatch");
+
+         Set_Index (File => File,
+                    To   => 256 * 8 + 1);
+         Deserialze_PT_Entry (Stream      => Stream (File => File),
+                              Table_Entry => PT_Entry);
+         Close (File => File);
+
+         Assert (Condition => PT_Entry = Ref_PT_Entry_256,
+                 Message   => "Deserialized PT entry 256 mismatch");
+
+      exception
+         when others =>
+            if Is_Open (File => File) then
+               Close (File => File);
+            end if;
+            raise;
+      end;
 --  begin read only
    end Test_Deserialze_PT_Entry;
 --  end read only

@@ -48,6 +48,7 @@ is
    --  Create page table entry.
    function Create_Entry
      (Address    : Interfaces.Unsigned_64;
+      Present    : Boolean;
       Readable   : Boolean;
       Writable   : Boolean;
       Executable : Boolean)
@@ -56,6 +57,7 @@ is
    --  Create mapping entry with given parameters.
    function Create_Map_Entry
      (Address     : Interfaces.Unsigned_64;
+      Present     : Boolean;
       Readable    : Boolean;
       Writable    : Boolean;
       Executable  : Boolean;
@@ -67,6 +69,7 @@ is
    --  Create directory entry with given parameters.
    function Create_Dir_Entry
      (Address     : Interfaces.Unsigned_64;
+      Present     : Boolean;
       Readable    : Boolean;
       Writable    : Boolean;
       Executable  : Boolean;
@@ -79,6 +82,7 @@ is
 
    function Create_Dir_Entry
      (Address     : Interfaces.Unsigned_64;
+      Present     : Boolean;
       Readable    : Boolean;
       Writable    : Boolean;
       Executable  : Boolean;
@@ -93,6 +97,7 @@ is
    begin
       Result := Create_Map_Entry
         (Address     => Address,
+         Present     => Present,
          Readable    => Readable,
          Writable    => Writable,
          Executable  => Executable,
@@ -102,8 +107,8 @@ is
 
       if Map_Page then
          Result := Mutools.Utils.Bit_Set
-              (Value => Result,
-               Pos   => Present_Flag);
+           (Value => Result,
+            Pos   => Present_Flag);
       end if;
 
       return Result;
@@ -113,6 +118,7 @@ is
 
    function Create_Entry
      (Address    : Interfaces.Unsigned_64;
+      Present    : Boolean;
       Readable   : Boolean;
       Writable   : Boolean;
       Executable : Boolean)
@@ -120,26 +126,27 @@ is
    is
       use type Interfaces.Unsigned_64;
 
-      Result : Interfaces.Unsigned_64;
+      Result : Interfaces.Unsigned_64 := 0;
    begin
-      Result := Address and Address_Mask;
+      if Present then
+         Result := Address and Address_Mask;
+         if Readable then
+            Result := Mutools.Utils.Bit_Set
+              (Value => Result,
+               Pos   => Read_Flag);
+         end if;
 
-      if Readable then
-         Result := Mutools.Utils.Bit_Set
-           (Value => Result,
-            Pos   => Read_Flag);
-      end if;
+         if Writable then
+            Result := Mutools.Utils.Bit_Set
+              (Value => Result,
+               Pos   => Write_Flag);
+         end if;
 
-      if Writable then
-         Result := Mutools.Utils.Bit_Set
-           (Value => Result,
-            Pos   => Write_Flag);
-      end if;
-
-      if Executable then
-         Result := Mutools.Utils.Bit_Set
-           (Value => Result,
-            Pos   => Execute_Flag);
+         if Executable then
+            Result := Mutools.Utils.Bit_Set
+              (Value => Result,
+               Pos   => Execute_Flag);
+         end if;
       end if;
 
       return Result;
@@ -149,6 +156,7 @@ is
 
    function Create_Map_Entry
      (Address     : Interfaces.Unsigned_64;
+      Present     : Boolean;
       Readable    : Boolean;
       Writable    : Boolean;
       Executable  : Boolean;
@@ -163,6 +171,7 @@ is
    begin
       Result := Create_Entry
         (Address    => Address,
+         Present    => Present,
          Readable   => Readable,
          Writable   => Writable,
          Executable => Executable);
@@ -201,6 +210,7 @@ is
       begin
          Raw_Table (Index) := Create_Dir_Entry
            (Address     => TEntry.Get_Dst_Address,
+            Present     => TEntry.Is_Present,
             Readable    => TEntry.Is_Readable,
             Writable    => TEntry.Is_Writable,
             Executable  => TEntry.Is_Executable,
@@ -236,6 +246,7 @@ is
       begin
          Raw_Table (Index) := Create_Dir_Entry
            (Address     => TEntry.Get_Dst_Address,
+            Present     => TEntry.Is_Present,
             Readable    => TEntry.Is_Readable,
             Writable    => TEntry.Is_Writable,
             Executable  => TEntry.Is_Executable,
@@ -270,10 +281,11 @@ is
       is
       begin
          Raw_Table (Index) := Create_Entry
-           (Address     => TEntry.Get_Dst_Address,
-            Readable    => TEntry.Is_Readable,
-            Writable    => TEntry.Is_Writable,
-            Executable  => TEntry.Is_Executable);
+           (Address    => TEntry.Get_Dst_Address,
+            Present    => TEntry.Is_Present,
+            Readable   => TEntry.Is_Readable,
+            Writable   => TEntry.Is_Writable,
+            Executable => TEntry.Is_Executable);
       end Add_To_Raw_Table;
    begin
       Tables.Iterate (Table   => Table,
@@ -303,6 +315,7 @@ is
       begin
          Raw_Table (Index) := Create_Map_Entry
            (Address     => TEntry.Get_Dst_Address,
+            Present     => TEntry.Is_Present,
             Readable    => TEntry.Is_Readable,
             Writable    => TEntry.Is_Writable,
             Executable  => TEntry.Is_Executable,

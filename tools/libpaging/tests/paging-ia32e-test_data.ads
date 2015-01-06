@@ -63,7 +63,7 @@ package Paging.IA32e.Test_Data is
         Readable    => True,
         Writable    => True,
         Executable  => True,
-        Maps_Page   => False,
+        Maps_Page   => True,
         Global      => False,
         Caching     => WB);
 
@@ -74,7 +74,7 @@ package Paging.IA32e.Test_Data is
         Readable    => True,
         Writable    => False,
         Executable  => False,
-        Maps_Page   => False,
+        Maps_Page   => True,
         Global      => False,
         Caching     => UC);
 

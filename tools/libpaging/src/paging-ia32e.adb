@@ -67,6 +67,7 @@ is
      (Address       : Interfaces.Unsigned_64;
       Writable      : Boolean;
       User_Access   : Boolean;
+      Present       : Boolean;
       Writethrough  : Boolean;
       Cache_Disable : Boolean;
       Exec_Disable  : Boolean)
@@ -77,6 +78,7 @@ is
      (Address      : Interfaces.Unsigned_64;
       Writable     : Boolean;
       User_Access  : Boolean;
+      Present      : Boolean;
       Map_Page     : Boolean;
       Global       : Boolean;
       Caching      : Caching_Type;
@@ -96,6 +98,7 @@ is
      (Address      : Interfaces.Unsigned_64;
       Writable     : Boolean;
       User_Access  : Boolean;
+      Present      : Boolean;
       Map_Page     : Boolean;
       Global       : Boolean;
       Caching      : Caching_Type;
@@ -109,6 +112,7 @@ is
         (Address       => Address,
          Writable      => Writable,
          User_Access   => User_Access,
+         Present       => Present,
          Writethrough  => PAT.PWT,
          Cache_Disable => PAT.PCD,
          Exec_Disable  => Exec_Disable);
@@ -204,6 +208,7 @@ is
      (Address       : Interfaces.Unsigned_64;
       Writable      : Boolean;
       User_Access   : Boolean;
+      Present       : Boolean;
       Writethrough  : Boolean;
       Cache_Disable : Boolean;
       Exec_Disable  : Boolean)
@@ -213,9 +218,11 @@ is
    begin
       Result := Address and Address_Mask;
 
-      Result := Mutools.Utils.Bit_Set
-        (Value => Result,
-         Pos   => Present_Flag);
+      if Present then
+         Result := Mutools.Utils.Bit_Set
+           (Value => Result,
+            Pos   => Present_Flag);
+      end if;
 
       if Writable then
          Result := Mutools.Utils.Bit_Set
@@ -326,6 +333,7 @@ is
            (Address      => TEntry.Get_Dst_Address,
             Writable     => TEntry.Is_Writable,
             User_Access  => TEntry.Is_Readable,
+            Present      => TEntry.Is_Present,
             Map_Page     => TEntry.Maps_Page,
             Global       => TEntry.Is_Global,
             Caching      => TEntry.Get_Caching,
@@ -361,6 +369,7 @@ is
            (Address      => TEntry.Get_Dst_Address,
             Writable     => TEntry.Is_Writable,
             User_Access  => TEntry.Is_Readable,
+            Present      => TEntry.Is_Present,
             Map_Page     => TEntry.Maps_Page,
             Global       => TEntry.Is_Global,
             Caching      => TEntry.Get_Caching,
@@ -397,6 +406,7 @@ is
            (Address       => TEntry.Get_Dst_Address,
             Writable      => TEntry.Is_Writable,
             User_Access   => TEntry.Is_Readable,
+            Present       => TEntry.Is_Present,
             Writethrough  => PAT.PWT,
             Cache_Disable => PAT.PCD,
             Exec_Disable  => not TEntry.Is_Executable);
@@ -433,6 +443,7 @@ is
            (Address       => TEntry.Get_Dst_Address,
             Writable      => TEntry.Is_Writable,
             User_Access   => TEntry.Is_Readable,
+            Present       => TEntry.Is_Present,
             Writethrough  => PAT.PWT,
             Cache_Disable => PAT.PCD,
             Exec_Disable  => not TEntry.Is_Executable);

@@ -18,8 +18,6 @@
 
 with Mutools.Utils;
 
-with Paging.Entries;
-
 package body Paging.EPT
 is
 
@@ -255,6 +253,19 @@ is
 
       return Result;
    end Create_Map_Entry;
+
+   -------------------------------------------------------------------------
+
+   procedure Deserialze_PML4_Entry
+     (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
+      Table_Entry : out Entries.Table_Entry_Type)
+   is
+      Raw_Entry : Interfaces.Unsigned_64;
+   begin
+      Interfaces.Unsigned_64'Read (Stream, Raw_Entry);
+      Table_Entry := Create_Entry (Raw_Entry => Raw_Entry,
+                                   Level     => 1);
+   end Deserialze_PML4_Entry;
 
    -------------------------------------------------------------------------
 
